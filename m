@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 991A4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:28:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C270C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:28:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62E152078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:28:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED3DE207FB
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:28:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662535;
-	bh=2jPL/UbYewWsAEwE08ia4yDFpKrMQa6hoEZi5i09um8=;
+	s=default; t=1591662539;
+	bh=SCfhZTIaHqAp/kDN9R0eV/qpGB7J/zlJUu4kD5LbpR4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fnfxuq7TA4VAO/9B/JEt+K6Y7o06GNnVzjq/VsDzCdPW7nqcp+4Dnzs9C6MUuNIgp
-	 4zOk5frZl20eUoL3qcRV5u7JAntz53XlGWyFNJSI9by+38H2XJdNSXVfo5eKY6tYqI
-	 XY/cKq9KSLEauQ/m/ABe28iLwn+SfqmxdauT5vNk=
+	b=OP2Z7v/GuefsJWDpSCRUiYvVNygyMx42C7fzZ7s7JcHDaodiWZyg3n5QWzAP+onT5
+	 1sOOF4yjlLR6oyVIhjmnZ2OA7TieolK7AGo9VVmbyNuhC9QN14L+vUVj9etiTBfW3t
+	 AzhAiqXbVFQdK9pU9WLIZr6OFGQC5dNgbU0FloAQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731743AbgFIA2x (ORCPT
+        id S1732974AbgFIA25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:28:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37656 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:28:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729403AbgFHXQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:16:20 -0400
+        id S1727961AbgFHXQR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:16:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EFDD20872;
-        Mon,  8 Jun 2020 23:16:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF3D220870;
+        Mon,  8 Jun 2020 23:16:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658179;
-        bh=2jPL/UbYewWsAEwE08ia4yDFpKrMQa6hoEZi5i09um8=;
+        s=default; t=1591658176;
+        bh=SCfhZTIaHqAp/kDN9R0eV/qpGB7J/zlJUu4kD5LbpR4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hO+P0qgAzpdqJMLebZFLuePARzxjaTvm6qfGio88T7vQKVOz/kbx0bjsCrUXbNAuY
-         UmQcFpMDJJMJIRGTV682w0zjnDHWasHD18KqegI9kg7aQKrGHSJR++jXsZZZi9Jji6
-         hnRha2wQPAUVlAd5TJFeuMRQOKS6NuC+KcU/oPHo=
+        b=NlDhpgY3zdcxammlDi8Szyi/2zvJ7gXCxtW6Sj36eBLjcVLWP8V0YZzSg+3m1gA9m
+         CSVMqQGDB3WdER5VEAm3VKPmQ6SogVBPMEi5POAlcXYptnXQ1GPLA8WJLD3LHNm6Oa
+         BMON3MP4ROd0jd18g6uM9jR/fV13LPqWfQ5QsVZg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.6 204/606] sched/fair: Fix reordering of enqueue/dequeue_task_fair()
-Date:   Mon,  8 Jun 2020 19:05:29 -0400
-Message-Id: <20200608231211.3363633-204-sashal@kernel.org>
+Cc:     Andrii Nakryiko <andriin@fb.com>, Jann Horn <jannh@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 202/606] bpf: Prevent mmap()'ing read-only maps as writable
+Date:   Mon,  8 Jun 2020 19:05:27 -0400
+Message-Id: <20200608231211.3363633-202-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -59,80 +60,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Guittot <vincent.guittot@linaro.org>
+From: Andrii Nakryiko <andriin@fb.com>
 
-[ Upstream commit 5ab297bab984310267734dfbcc8104566658ebef ]
+[ Upstream commit dfeb376dd4cb2c5004aeb625e2475f58a5ff2ea7 ]
 
-Even when a cgroup is throttled, the group se of a child cgroup can still
-be enqueued and its gse->on_rq stays true. When a task is enqueued on such
-child, we still have to update the load_avg and increase
-h_nr_running of the throttled cfs. Nevertheless, the 1st
-for_each_sched_entity() loop is skipped because of gse->on_rq == true and the
-2nd loop because the cfs is throttled whereas we have to update both
-load_avg with the old h_nr_running and increase h_nr_running in such case.
+As discussed in [0], it's dangerous to allow mapping BPF map, that's meant to
+be frozen and is read-only on BPF program side, because that allows user-space
+to actually store a writable view to the page even after it is frozen. This is
+exacerbated by BPF verifier making a strong assumption that contents of such
+frozen map will remain unchanged. To prevent this, disallow mapping
+BPF_F_RDONLY_PROG mmap()'able BPF maps as writable, ever.
 
-The same sequence can happen during dequeue when se moves to parent before
-breaking in the 1st loop.
+  [0] https://lore.kernel.org/bpf/CAEf4BzYGWYhXdp6BJ7_=9OQPJxQpgug080MMjdSB72i9R+5c6g@mail.gmail.com/
 
-Note that the update of load_avg will effectively happen only once in order
-to sync up to the throttled time. Next call for updating load_avg will stop
-early because the clock stays unchanged.
-
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Fixes: 6d4d22468dae ("sched/fair: Reorder enqueue/dequeue_task_fair path")
-Link: https://lkml.kernel.org/r/20200306084208.12583-1-vincent.guittot@linaro.org
+Fixes: fc9702273e2e ("bpf: Add mmap() support for BPF_MAP_TYPE_ARRAY")
+Suggested-by: Jann Horn <jannh@google.com>
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Reviewed-by: Jann Horn <jannh@google.com>
+Link: https://lore.kernel.org/bpf/20200519053824.1089415-1-andriin@fb.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/fair.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ kernel/bpf/syscall.c                          | 17 ++++++++++++++---
+ tools/testing/selftests/bpf/prog_tests/mmap.c | 13 ++++++++++++-
+ tools/testing/selftests/bpf/progs/test_mmap.c |  8 ++++++++
+ 3 files changed, 34 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index a486bf3d5078..7cd86641b44b 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5289,15 +5289,15 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- 	for_each_sched_entity(se) {
- 		cfs_rq = cfs_rq_of(se);
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index e04ea4c8f935..c0ab9bfdf28a 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -629,9 +629,20 @@ static int bpf_map_mmap(struct file *filp, struct vm_area_struct *vma)
  
--		/* end evaluation on encountering a throttled cfs_rq */
--		if (cfs_rq_throttled(cfs_rq))
--			goto enqueue_throttle;
--
- 		update_load_avg(cfs_rq, se, UPDATE_TG);
- 		update_cfs_group(se);
+ 	mutex_lock(&map->freeze_mutex);
  
- 		cfs_rq->h_nr_running++;
- 		cfs_rq->idle_h_nr_running += idle_h_nr_running;
-+
-+		/* end evaluation on encountering a throttled cfs_rq */
-+		if (cfs_rq_throttled(cfs_rq))
-+			goto enqueue_throttle;
+-	if ((vma->vm_flags & VM_WRITE) && map->frozen) {
+-		err = -EPERM;
+-		goto out;
++	if (vma->vm_flags & VM_WRITE) {
++		if (map->frozen) {
++			err = -EPERM;
++			goto out;
++		}
++		/* map is meant to be read-only, so do not allow mapping as
++		 * writable, because it's possible to leak a writable page
++		 * reference and allows user-space to still modify it after
++		 * freezing, while verifier will assume contents do not change
++		 */
++		if (map->map_flags & BPF_F_RDONLY_PROG) {
++			err = -EACCES;
++			goto out;
++		}
  	}
  
- enqueue_throttle:
-@@ -5386,15 +5386,16 @@ static void dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- 	for_each_sched_entity(se) {
- 		cfs_rq = cfs_rq_of(se);
+ 	/* set default open/close callbacks */
+diff --git a/tools/testing/selftests/bpf/prog_tests/mmap.c b/tools/testing/selftests/bpf/prog_tests/mmap.c
+index b0e789678aa4..5495b669fccc 100644
+--- a/tools/testing/selftests/bpf/prog_tests/mmap.c
++++ b/tools/testing/selftests/bpf/prog_tests/mmap.c
+@@ -19,7 +19,7 @@ void test_mmap(void)
+ 	const size_t map_sz = roundup_page(sizeof(struct map_data));
+ 	const int zero = 0, one = 1, two = 2, far = 1500;
+ 	const long page_size = sysconf(_SC_PAGE_SIZE);
+-	int err, duration = 0, i, data_map_fd;
++	int err, duration = 0, i, data_map_fd, rdmap_fd;
+ 	struct bpf_map *data_map, *bss_map;
+ 	void *bss_mmaped = NULL, *map_mmaped = NULL, *tmp1, *tmp2;
+ 	struct test_mmap__bss *bss_data;
+@@ -36,6 +36,17 @@ void test_mmap(void)
+ 	data_map = skel->maps.data_map;
+ 	data_map_fd = bpf_map__fd(data_map);
  
--		/* end evaluation on encountering a throttled cfs_rq */
--		if (cfs_rq_throttled(cfs_rq))
--			goto dequeue_throttle;
--
- 		update_load_avg(cfs_rq, se, UPDATE_TG);
- 		update_cfs_group(se);
- 
- 		cfs_rq->h_nr_running--;
- 		cfs_rq->idle_h_nr_running -= idle_h_nr_running;
++	rdmap_fd = bpf_map__fd(skel->maps.rdonly_map);
++	tmp1 = mmap(NULL, 4096, PROT_READ | PROT_WRITE, MAP_SHARED, rdmap_fd, 0);
++	if (CHECK(tmp1 != MAP_FAILED, "rdonly_write_mmap", "unexpected success\n")) {
++		munmap(tmp1, 4096);
++		goto cleanup;
++	}
++	/* now double-check if it's mmap()'able at all */
++	tmp1 = mmap(NULL, 4096, PROT_READ, MAP_SHARED, rdmap_fd, 0);
++	if (CHECK(tmp1 == MAP_FAILED, "rdonly_read_mmap", "failed: %d\n", errno))
++		goto cleanup;
 +
-+		/* end evaluation on encountering a throttled cfs_rq */
-+		if (cfs_rq_throttled(cfs_rq))
-+			goto dequeue_throttle;
-+
- 	}
+ 	bss_mmaped = mmap(NULL, bss_sz, PROT_READ | PROT_WRITE, MAP_SHARED,
+ 			  bpf_map__fd(bss_map), 0);
+ 	if (CHECK(bss_mmaped == MAP_FAILED, "bss_mmap",
+diff --git a/tools/testing/selftests/bpf/progs/test_mmap.c b/tools/testing/selftests/bpf/progs/test_mmap.c
+index 6239596cd14e..4eb42cff5fe9 100644
+--- a/tools/testing/selftests/bpf/progs/test_mmap.c
++++ b/tools/testing/selftests/bpf/progs/test_mmap.c
+@@ -7,6 +7,14 @@
  
- dequeue_throttle:
+ char _license[] SEC("license") = "GPL";
+ 
++struct {
++	__uint(type, BPF_MAP_TYPE_ARRAY);
++	__uint(max_entries, 4096);
++	__uint(map_flags, BPF_F_MMAPABLE | BPF_F_RDONLY_PROG);
++	__type(key, __u32);
++	__type(value, char);
++} rdonly_map SEC(".maps");
++
+ struct {
+ 	__uint(type, BPF_MAP_TYPE_ARRAY);
+ 	__uint(max_entries, 512 * 4); /* at least 4 pages of data */
 -- 
 2.25.1
 
