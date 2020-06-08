@@ -2,201 +2,154 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF85C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 03:34:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6760EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 03:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 700E820774
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 03:34:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D5402067B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 03:35:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=adit-jv.com header.i=@adit-jv.com header.b="4Luth47s"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Tsu6pd/G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728984AbgFHDeb (ORCPT
+        id S1728993AbgFHDf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 23:34:31 -0400
-Received: from ma-dnext03.denso.co.jp ([133.192.181.78]:54988 "EHLO
-        ma-dnext03.denso.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728065AbgFHDea (ORCPT
+        Sun, 7 Jun 2020 23:35:58 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43170 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728781AbgFHDf6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 23:34:30 -0400
-X-Greylist: delayed 555 seconds by postgrey-1.27 at vger.kernel.org; Sun, 07 Jun 2020 23:34:29 EDT
-Received: from grdma01h.denso.co.jp (unknown [133.192.24.24])
-        by ma-dnext03.denso.co.jp (Postfix) with ESMTP id D5B7E5D011C;
-        Mon,  8 Jun 2020 12:25:12 +0900 (JST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=adit-jv.com;
-        s=jpadit-jvmail2011; t=1591586712;
-        bh=holotR25MoQcrX0pBCrpZj4TxKa2LtqzjI7kvv+9c3A=;
-        h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-         MIME-Version:Content-Type;
-        b=4Luth47sSIPifry+JR5PvbuLwOPeDbnJIupuG0UKhqGOi7og2FsQG6DVbrYyxyMY3
-         KHz5SR3swOo06IuYLb5YDm7qv8ikaINN4poiD0Zz7Gn0EbfBZ+wC95tq1XtE65ZNBe
-         wId2eDwv2MWI9SOM/NUSKAvZ9oA9mc7MWysVNkC8TjQ+mRHuIYeNnIzejhpY8VE01A
-         lMZ8SnoCEEwmqyFs+ZSole+Fs5drbUh7TE2pL9gfBUOYuh4N9flTKpl2/jGbSrRryo
-         xDN76+ZQn3KWGShatk12K4Ke5Y8ei0NzO0TnN60mCs35dG3AibDTp6t+rrWdqwap9L
-         iT2aQPqkSv57Q==
-Received: by grdma01h.denso.co.jp (Postfix, from userid 0)
-        id CC4D6C04E02; Mon,  8 Jun 2020 12:25:12 +0900 (JST)
-Received: from smtp0.denso.co.jp [133.192.24.87] 
-         by grdma01h. with ESMTP id NAA09474;
-         Mon, 8 Jun 2020 12:25:12 +0900
-Received: from ky0exch01.adit-jv.com ([10.71.113.8])
-        by smtp00.denso.co.jp (MOS 4.4.7-GA)
-        with ESMTP id FZQ69071;
-        Mon, 8 Jun 2020 12:25:12 +0900
-Received: from jp-u0004.adit-jv.com (10.71.112.120) by ky0exch01.adit-jv.com
- (10.71.113.8) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 8 Jun 2020
- 12:25:11 +0900
-From:   Suresh Udipi <sudipi@jp.adit-jv.com>
-To:     <mrodin@de.adit-jv.com>
-CC:     <efriedrich@de.adit-jv.com>, <erosca@de.adit-jv.com>,
-        <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>, <mchehab@kernel.org>,
-        <michael@rodin.online>, <niklas.soderlund@ragnatech.se>,
-        <sudipi@jp.adit-jv.com>, <securitycheck@denso.co.jp>,
-        Kazuyoshi Akiyama <akiyama@nds-osk.co.jp>
-Subject: [PATCH v6] media: rcar-csi2: Correct the selection of hsfreqrange
-Date:   Mon, 8 Jun 2020 12:25:03 +0900
-Message-ID: <1591586703-32246-1-git-send-email-sudipi@jp.adit-jv.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <20200605184426.GA5206@vmlxhi-121.adit-jv.com>
-References: <20200605184426.GA5206@vmlxhi-121.adit-jv.com>
+        Sun, 7 Jun 2020 23:35:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591587356;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=H+iuslj2NkA9AsSp4gCUbTEgravqmEYd45b4226klfw=;
+        b=Tsu6pd/Gp6dY8Cmjamc4HfJ+7XQy62MyrGTIsuJoFywC8+oBk+8hnDoNyVFZsivrsc2sPW
+        XDUZngyJIdQUuuqKzIkJs24TB3piO6leRNp9LzqerXBMWr+4YII8lStETM31/Y0rWcPSsE
+        RcR+0a/xo/zabAq5aUoRujvLqkEw2YA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-6-e59_DPlKOFSrX1a8uR0vBA-1; Sun, 07 Jun 2020 23:35:54 -0400
+X-MC-Unique: e59_DPlKOFSrX1a8uR0vBA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 826D31005512;
+        Mon,  8 Jun 2020 03:35:53 +0000 (UTC)
+Received: from [10.72.13.71] (ovpn-13-71.pek2.redhat.com [10.72.13.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5E73F768AE;
+        Mon,  8 Jun 2020 03:35:42 +0000 (UTC)
+Subject: Re: [PATCH RFC 03/13] vhost: batching fetches
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        =?UTF-8?Q?Eugenio_P=c3=a9rez?= <eperezma@redhat.com>,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org
+References: <20200602130543.578420-1-mst@redhat.com>
+ <20200602130543.578420-4-mst@redhat.com>
+ <3323daa2-19ed-02de-0ff7-ab150f949fff@redhat.com>
+ <20200604045830-mutt-send-email-mst@kernel.org>
+ <6c2e6cc7-27c5-445b-f252-0356ff8a83f3@redhat.com>
+ <20200607095219-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <0d791fe6-8fbe-ddcc-07fa-efbd4fac5ea4@redhat.com>
+Date:   Mon, 8 Jun 2020 11:35:40 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.71.112.120]
+In-Reply-To: <20200607095219-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hsfreqrange should be chosen based on the calculated mbps which
-is closer to the default bit rate  and within the range as per
-table[1]. But current calculation always selects first value which
-is greater than or equal to the calculated mbps which may lead
-to chosing a wrong range in some cases.
 
-For example for 360 mbps for H3/M3N
-Existing logic selects
-Calculated value 360Mbps : Default 400Mbps Range [368.125 -433.125 mbps]
-
-This hsfreqrange is out of range.
-
-The logic is changed to get the default value which is closest to the
-calculated value [1]
-
-Calculated value 360Mbps : Default 350Mbps  Range [320.625 -380.625 mpbs]
-
-[1] specs r19uh0105ej0200-r-car-3rd-generation.pdf [Table 25.9]
-
-Please note that According to Renesas in Table 25.9 the range for
-220 default value is corrected as below
-
- |Range (Mbps)     |  Default  Bit rate (Mbps) |
- -----------------------------------------------
- | 197.125-244.125 |     220                   |
- -----------------------------------------------
-
-Fixes: 769afd212b16 ("media: rcar-csi2: add Renesas R-Car MIPI CSI-2 receiver driver")
-
-Signed-off-by: Suresh Udipi <sudipi@jp.adit-jv.com>
-Signed-off-by: Kazuyoshi Akiyama <akiyama@nds-osk.co.jp>
-Signed-off-by: Michael Rodin <mrodin@de.adit-jv.com>
----
- Changes in v2:
-  - Added the boundary check for the maximum bit rate.
-
-  - Simplified the logic by remmoving range check
-    as only the closest default value covers most
-    of the use cases.
-
-  - Aligning the commit message based on the above change
-
-
- Changes in v3:
-    - Added max member from struct rcsi2_mbps_reg.
-      mbps varialbe cannot be removed from rcsi2_mbps_reg,
-      since this structure is reused for
-      phtw_mbps_h3_v3h_m3n/phtw_mbps_v3m_e3 where mbps is
-      used.
-
-
-   -  Update the walk of the array in rcsi2_set_phypll() so that it finds
-      the first entry where the calculated bit rate is less than the max.
-
-   - Support lower bit rates less than 80Mbps like 48Mbps
-     (Raspberry pi camera 640x480 connected to Kingfisher)
-     can also be supported by selecting the lowest default bit rate 80Mbps
-     as done before this fix
-
-   - Alignement of the commit message based on above changes.
-
- Changes in v4:
-  -  Remove unncessary braces.
-
- Changes in v5:
-   - Removed mbps variable in rcsi2_mbps_reg and aligned all 
-     tables accordingly
-	 
- Changes in v6
-   - Renesas correct the range of default value 220Mbps. Now
-     if we select the nearest value to the default value all
-	 the values are in range. So reverting back to original patch
-	 
-   - Added warning for values less than Minimum 80Mbps
+On 2020/6/7 下午9:57, Michael S. Tsirkin wrote:
+> On Fri, Jun 05, 2020 at 11:40:17AM +0800, Jason Wang wrote:
+>> On 2020/6/4 下午4:59, Michael S. Tsirkin wrote:
+>>> On Wed, Jun 03, 2020 at 03:27:39PM +0800, Jason Wang wrote:
+>>>> On 2020/6/2 下午9:06, Michael S. Tsirkin wrote:
+>>>>> With this patch applied, new and old code perform identically.
+>>>>>
+>>>>> Lots of extra optimizations are now possible, e.g.
+>>>>> we can fetch multiple heads with copy_from/to_user now.
+>>>>> We can get rid of maintaining the log array.  Etc etc.
+>>>>>
+>>>>> Signed-off-by: Michael S. Tsirkin<mst@redhat.com>
+>>>>> Signed-off-by: Eugenio Pérez<eperezma@redhat.com>
+>>>>> Link:https://lore.kernel.org/r/20200401183118.8334-4-eperezma@redhat.com
+>>>>> Signed-off-by: Michael S. Tsirkin<mst@redhat.com>
+>>>>> ---
+>>>>>     drivers/vhost/test.c  |  2 +-
+>>>>>     drivers/vhost/vhost.c | 47 ++++++++++++++++++++++++++++++++++++++-----
+>>>>>     drivers/vhost/vhost.h |  5 ++++-
+>>>>>     3 files changed, 47 insertions(+), 7 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/vhost/test.c b/drivers/vhost/test.c
+>>>>> index 9a3a09005e03..02806d6f84ef 100644
+>>>>> --- a/drivers/vhost/test.c
+>>>>> +++ b/drivers/vhost/test.c
+>>>>> @@ -119,7 +119,7 @@ static int vhost_test_open(struct inode *inode, struct file *f)
+>>>>>     	dev = &n->dev;
+>>>>>     	vqs[VHOST_TEST_VQ] = &n->vqs[VHOST_TEST_VQ];
+>>>>>     	n->vqs[VHOST_TEST_VQ].handle_kick = handle_vq_kick;
+>>>>> -	vhost_dev_init(dev, vqs, VHOST_TEST_VQ_MAX, UIO_MAXIOV,
+>>>>> +	vhost_dev_init(dev, vqs, VHOST_TEST_VQ_MAX, UIO_MAXIOV + 64,
+>>>>>     		       VHOST_TEST_PKT_WEIGHT, VHOST_TEST_WEIGHT, NULL);
+>>>>>     	f->private_data = n;
+>>>>> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+>>>>> index 8f9a07282625..aca2a5b0d078 100644
+>>>>> --- a/drivers/vhost/vhost.c
+>>>>> +++ b/drivers/vhost/vhost.c
+>>>>> @@ -299,6 +299,7 @@ static void vhost_vq_reset(struct vhost_dev *dev,
+>>>>>     {
+>>>>>     	vq->num = 1;
+>>>>>     	vq->ndescs = 0;
+>>>>> +	vq->first_desc = 0;
+>>>>>     	vq->desc = NULL;
+>>>>>     	vq->avail = NULL;
+>>>>>     	vq->used = NULL;
+>>>>> @@ -367,6 +368,11 @@ static int vhost_worker(void *data)
+>>>>>     	return 0;
+>>>>>     }
+>>>>> +static int vhost_vq_num_batch_descs(struct vhost_virtqueue *vq)
+>>>>> +{
+>>>>> +	return vq->max_descs - UIO_MAXIOV;
+>>>>> +}
+>>>> 1 descriptor does not mean 1 iov, e.g userspace may pass several 1 byte
+>>>> length memory regions for us to translate.
+>>>>
+>>> Yes but I don't see the relevance. This tells us how many descriptors to
+>>> batch, not how many IOVs.
+>> Yes, but questions are:
+>>
+>> - this introduce another obstacle to support more than 1K queue size
+>> - if we support 1K queue size, does it mean we need to cache 1K descriptors,
+>> which seems a large stress on the cache
+>>
+>> Thanks
+>>
+>>
+> Still don't understand the relevance. We support up to 1K descriptors
+> per buffer just for IOV since we always did. This adds 64 more
+> descriptors - is that a big deal?
 
 
- drivers/media/platform/rcar-vin/rcar-csi2.c | 23 ++++++++++++++++++-----
- 1 file changed, 18 insertions(+), 5 deletions(-)
+If I understanding correctly, for net, the code tries to batch 
+descriptors for at last one packet.
 
-diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c b/drivers/media/platform/rcar-vin/rcar-csi2.c
-index 151e6a9..8c502b7 100644
---- a/drivers/media/platform/rcar-vin/rcar-csi2.c
-+++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
-@@ -199,6 +199,8 @@ static const struct rcsi2_mbps_reg phtw_mbps_v3m_e3[] = {
- /* PHY Frequency Control */
- #define PHYPLL_REG			0x68
- #define PHYPLL_HSFREQRANGE(n)		((n) << 16)
-+#define PHYPLL_HSFREQRANGE_MAX		1500
-+#define PHYPLL_HSFREQRANGE_MIN		  80
- 
- static const struct rcsi2_mbps_reg hsfreqrange_h3_v3h_m3n[] = {
- 	{ .mbps =   80, .reg = 0x00 },
-@@ -431,16 +433,27 @@ static int rcsi2_wait_phy_start(struct rcar_csi2 *priv)
- static int rcsi2_set_phypll(struct rcar_csi2 *priv, unsigned int mbps)
- {
- 	const struct rcsi2_mbps_reg *hsfreq;
-+	const struct rcsi2_mbps_reg *hsfreq_prev = NULL;
- 
--	for (hsfreq = priv->info->hsfreqrange; hsfreq->mbps != 0; hsfreq++)
--		if (hsfreq->mbps >= mbps)
--			break;
--
--	if (!hsfreq->mbps) {
-+	if (mbps > PHYPLL_HSFREQRANGE_MAX) {
- 		dev_err(priv->dev, "Unsupported PHY speed (%u Mbps)", mbps);
- 		return -ERANGE;
- 	}
- 
-+	if (mbps < PHYPLL_HSFREQRANGE_MIN)
-+		dev_warn(priv->dev, "PHY speed (%u Mbps) less \
-+			 than Min 80Mbps\n", mbps);
-+
-+	for (hsfreq = priv->info->hsfreqrange; hsfreq->mbps != 0; hsfreq++) {
-+		if (hsfreq->mbps >= mbps)
-+			break;
-+		hsfreq_prev = hsfreq;
-+	}
-+
-+	if (hsfreq_prev &&
-+	    ((mbps - hsfreq_prev->mbps) <= (hsfreq->mbps - mbps)))
-+		hsfreq = hsfreq_prev;
-+
- 	rcsi2_write(priv, PHYPLL_REG, PHYPLL_HSFREQRANGE(hsfreq->reg));
- 
- 	return 0;
--- 
-2.7.4
+If we allow 1K queue size then we allow a packet that consists of 1K 
+descriptors. Then we need to cache 1K descriptors.
+
+Thanks
 
