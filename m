@@ -2,130 +2,110 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9568FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D56C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7330620659
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:44:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591659880;
-	bh=2ved1gwBbFnsvB8In8AxS051g4Ygu+m7vTx5SAx02eg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nEGjHJStZN1AA3YITlBFpYCL11m0IJnDMmHDEzBwqTOV9KHR0lhA3a01FDv1AEW9P
-	 ytuYvpVdx2aYoZuNW75O/t957Okfm+X0vzCGNSLlldXXFt7cdtZUCNzTaAx8JiA9/1
-	 hwaxbzw6GBgoi/1B/sEQ4GzX2XebdKObY1k2PAHc=
+	by mail.kernel.org (Postfix) with ESMTP id F0BC42078D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:44:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T6g4FgP/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732067AbgFHX0x (ORCPT
+        id S1732401AbgFHXol (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:26:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45824 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729163AbgFHXVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:21:34 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 785F120B80;
-        Mon,  8 Jun 2020 23:21:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658494;
-        bh=2ved1gwBbFnsvB8In8AxS051g4Ygu+m7vTx5SAx02eg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VE5zVnWUAwZ9H6CP2lZjdqNb/Q9iqlj059LGaT/kbfYgHg/42xpOqJ3LNPGbm7Cxa
-         WmdaUlkG6NSSpapP/TC1BixY2q+xVv9JpM/v+/rpiQ6zHss6ZrEII/ZahPxmtqx3bm
-         x1rPwhpjizl/vgcZYxd5UBvx6ABF0fJmq8SpsanM=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Erez Shitrit <erezsh@mellanox.com>,
-        Alex Vesker <valex@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 127/175] net/mlx5e: IPoIB, Drop multicast packets that this interface sent
-Date:   Mon,  8 Jun 2020 19:18:00 -0400
-Message-Id: <20200608231848.3366970-127-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
-References: <20200608231848.3366970-1-sashal@kernel.org>
+        Mon, 8 Jun 2020 19:44:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43364 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730540AbgFHXoi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:44:38 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 915CAC08C5C2
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 16:44:38 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id w1so19166202qkw.5
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 16:44:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gs6xQWOcGcanVIymuBusEerQJN8/eccvFb5JF12HOsY=;
+        b=T6g4FgP/EG+S8J0dp+tNKaVDqGkjGRk6p41N/PfIs/f4GlpNxo3c9SbowX+umQuBRN
+         eu6h/vMBvNAdoMEJdssQkFJyyPHmHtnBUe9aGjD9uPeTr5tHrpCk6MxLcFFKfRAh/tjM
+         PMM5spbgykS+j6ImdKEhx3Lz+Cid2DPS39kVmu9uF3Z6dq6jskzPRztOgbVGzj5NoasH
+         tZk5dVSV6iaMAjzy7vrknO5zYs5CuxJZpBVroZyo+egR77R11MzeWPxPYlkIpR3uT4Xg
+         mwfc0Gk13EYGK2lh5nOEQLInindjaVSKhUh2uXVK8q8hk+sX/JdeAuPUd4jgSdiQxRLc
+         McBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gs6xQWOcGcanVIymuBusEerQJN8/eccvFb5JF12HOsY=;
+        b=RJll+z2wd0Wc3YEnjnNMxX5MzjjxZOYctdNKxiAIhm4oFypewJQ7pOGANRWqSXLQbJ
+         JMRVRoi9ZxrK/GelkzEVetQ40xb4FrakkAM1qrNwR2j4jAmh4cDeS7qVnTPR7sU9KeAb
+         ry+aqraD9nQiKl9mwGvcsJcFVyrnTllnuFieBIf8a7Hu5amAnrFzb1Hn9RdZaIqiVypc
+         im4ugiL4eRzsxAF0a7/gz5tWd8V2CklaCHVX59hvsQv7nVuLu2eMrhzM8BlC2M7n8swI
+         W5Vmp8vDQBcGiI8Hbf6kIduHPAQ51alXzxploR42YY9OPsLdFLxwmKt+DoQnSSmA6rMk
+         RyQw==
+X-Gm-Message-State: AOAM533cEx5FwQWpr/DAmZpYo8kYdzNteTat0vHwjmG8vig6JAy82z8X
+        zrBaEC7pDpxMO/PCOSL85/GWuvrsnlMUSjR3dP8OVQ==
+X-Google-Smtp-Source: ABdhPJxKTLQNJam9JoiPaSDgXVfBJ+DOjhT5E0yiLmJEI1zwOdTGg0siAWIYukyho5a8+cEQtzNUeMwoj2dKza1o4zg=
+X-Received: by 2002:a37:ec4:: with SMTP id 187mr23555902qko.124.1591659877470;
+ Mon, 08 Jun 2020 16:44:37 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20200410225208.109717-3-joshdon@google.com> <158835733205.8414.9136130857443620621.tip-bot2@tip-bot2>
+ <BL0PR14MB3779C02BB87DC4426C4761639A840@BL0PR14MB3779.namprd14.prod.outlook.com>
+ <20200608145304.GA24379@lorien.usersys.redhat.com> <BL0PR14MB3779AD967619031948957C549A850@BL0PR14MB3779.namprd14.prod.outlook.com>
+In-Reply-To: <BL0PR14MB3779AD967619031948957C549A850@BL0PR14MB3779.namprd14.prod.outlook.com>
+From:   Josh Don <joshdon@google.com>
+Date:   Mon, 8 Jun 2020 16:44:26 -0700
+Message-ID: <CABk29Ns_tziZ_vLzWhq3YDA=LtmCmcacDv+hEUbBVdFVV1w13Q@mail.gmail.com>
+Subject: Re: [tip: sched/core] sched/fair: Remove distribute_running from CFS bandwidth
+To:     Tao Zhou <ouwen210@hotmail.com>
+Cc:     Phil Auld <pauld@redhat.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        x86 <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Erez Shitrit <erezsh@mellanox.com>
+Hi Tao,
 
-[ Upstream commit 8b46d424a743ddfef8056d5167f13ee7ebd1dcad ]
+On Mon, Jun 8, 2020 at 4:01 PM Tao Zhou <ouwen210@hotmail.com> wrote:
+> After commit ab93a4bc955b, cfs_b->distribute_running is not used and
+> removed. The lock/unlock protecting it are not removed and remain in
+> the code. One benefit of removing them is that it can elimite the code
+> size a little.
+>
+> Fixes: ab93a4bc955b ("sched/fair: Remove distribute_running from CFS bandwidth")
+> ---
+>  kernel/sched/fair.c | 3 ---
+>  1 file changed, 3 deletions(-)
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 35f4cc024dcf..cc2e1e839e03 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -5089,9 +5089,6 @@ static void do_sched_cfs_slack_timer(struct cfs_bandwidth *cfs_b)
+>                 return;
+>
+>         distribute_cfs_runtime(cfs_b);
+> -
+> -       raw_spin_lock_irqsave(&cfs_b->lock, flags);
+> -       raw_spin_unlock_irqrestore(&cfs_b->lock, flags);
+>  }
 
-After enabled loopback packets for IPoIB, we need to drop these packets
-that this HCA has replicated and came back to the same interface that
-sent them.
+Thanks, I missed the now-useless lock acquire in my revert.
 
-Fixes: 4c6c615e3f30 ("net/mlx5e: IPoIB, Add PKEY child interface nic profile")
-Signed-off-by: Erez Shitrit <erezsh@mellanox.com>
-Reviewed-by: Alex Vesker <valex@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/mellanox/mlx5/core/en_rx.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+s/elimite/eliminate
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c b/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
-index c4eed5bbcd45..066bada4ccd1 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
-@@ -1428,6 +1428,7 @@ int mlx5e_poll_rx_cq(struct mlx5e_cq *cq, int budget)
- 
- #ifdef CONFIG_MLX5_CORE_IPOIB
- 
-+#define MLX5_IB_GRH_SGID_OFFSET 8
- #define MLX5_IB_GRH_DGID_OFFSET 24
- #define MLX5_GID_SIZE           16
- 
-@@ -1441,6 +1442,7 @@ static inline void mlx5i_complete_rx_cqe(struct mlx5e_rq *rq,
- 	struct net_device *netdev;
- 	struct mlx5e_priv *priv;
- 	char *pseudo_header;
-+	u32 flags_rqpn;
- 	u32 qpn;
- 	u8 *dgid;
- 	u8 g;
-@@ -1462,7 +1464,8 @@ static inline void mlx5i_complete_rx_cqe(struct mlx5e_rq *rq,
- 	tstamp = &priv->tstamp;
- 	stats = &priv->channel_stats[rq->ix].rq;
- 
--	g = (be32_to_cpu(cqe->flags_rqpn) >> 28) & 3;
-+	flags_rqpn = be32_to_cpu(cqe->flags_rqpn);
-+	g = (flags_rqpn >> 28) & 3;
- 	dgid = skb->data + MLX5_IB_GRH_DGID_OFFSET;
- 	if ((!g) || dgid[0] != 0xff)
- 		skb->pkt_type = PACKET_HOST;
-@@ -1471,9 +1474,15 @@ static inline void mlx5i_complete_rx_cqe(struct mlx5e_rq *rq,
- 	else
- 		skb->pkt_type = PACKET_MULTICAST;
- 
--	/* TODO: IB/ipoib: Allow mcast packets from other VFs
--	 * 68996a6e760e5c74654723eeb57bf65628ae87f4
-+	/* Drop packets that this interface sent, ie multicast packets
-+	 * that the HCA has replicated.
- 	 */
-+	if (g && (qpn == (flags_rqpn & 0xffffff)) &&
-+	    (memcmp(netdev->dev_addr + 4, skb->data + MLX5_IB_GRH_SGID_OFFSET,
-+		    MLX5_GID_SIZE) == 0)) {
-+		skb->dev = NULL;
-+		return;
-+	}
- 
- 	skb_pull(skb, MLX5_IB_GRH_BYTES);
- 
--- 
-2.25.1
+Reviewed-by: Josh Don <joshdon@google.com>
 
+Best,
+Josh
