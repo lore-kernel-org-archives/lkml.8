@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B966C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA55C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60B9B2086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:06:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60ED920801
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:07:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591657615;
-	bh=zJyy96p/S5Lp67gqr1bh7mhGEJc1LIXF5relYqsc5RM=;
+	s=default; t=1591657622;
+	bh=URSM4OVSd3VdBQHRpH5PXvzyY3qrWEOKrHQAtea9Itk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D2CkRpl81zXnAuL8TJLIp66g2DT81UY7b0tJkI5cBfkl5ZPAnNH9a8sWGGr52L8KZ
-	 UdHBYnBugkOKr8dbsgs43l2nEnb0pV77bXNq9GiJ22fZAIe6cYWyBq/LLlHmHZYy8o
-	 LJmFYYHsib4YODvbiSMVNEv7Jhg7/CdhX/1/ni1c=
+	b=wOw7g/S5YDWT0dkUFEn+PC3C96CZ0sV65c9ePl1XbOyN00iUrKXShM3bDP5u1hqrz
+	 zbXX/xrifLIJUZgw3YUOYBX9h9A2a2N4CxWJBIF4abattBrbm29t4r3j+WcVK2KoOy
+	 GqPbNCxJdANhG3CxQuHY42Bib3+kHm5rMrbMxgs4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgFHXGy (ORCPT
+        id S1727125AbgFHXG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:06:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49682 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:06:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727004AbgFHXGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:06:31 -0400
+        id S1727010AbgFHXGd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:06:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC83D20774;
-        Mon,  8 Jun 2020 23:06:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 542F02076C;
+        Mon,  8 Jun 2020 23:06:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657590;
-        bh=zJyy96p/S5Lp67gqr1bh7mhGEJc1LIXF5relYqsc5RM=;
+        s=default; t=1591657593;
+        bh=URSM4OVSd3VdBQHRpH5PXvzyY3qrWEOKrHQAtea9Itk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SWuAW5ks9URcrPAuqgZb08nUkOdo+EE+XPtSAzshPhJXKNbwntu1Ho+tltJAo/wyT
-         Zq5Vqp2wEt392zhL20zb0UdqZR2b2Iam1TLVYcvSYPu/g+sZHugHLIMvKAzvpbCc7l
-         PDn2I+0/9pqeRF8ULlyV/QlMjkDqg0s6l6Sifw68=
+        b=nXHZGou2DqBTPFsVuY9HKXlHWZI4PBVsyeu6721ZO61faGWNpMRl1Z0fx4cSidQF4
+         TLvkYWZsqf+59prx3C6SLFxYbS0mkU0J0q8tY80j4Uo8KCn/sgUmSrq7fFDlipHLxh
+         YkjifqmuTae5/xkopQhEJ3Nv3bvpUqSOEPH2YjGE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 018/274] spi: spi-mem: Fix Dual/Quad modes on Octal-capable devices
-Date:   Mon,  8 Jun 2020 19:01:51 -0400
-Message-Id: <20200608230607.3361041-18-sashal@kernel.org>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.7 020/274] drm/bridge: panel: Return always an error pointer in drm_panel_bridge_add()
+Date:   Mon,  8 Jun 2020 19:01:53 -0400
+Message-Id: <20200608230607.3361041-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -59,49 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-[ Upstream commit 80300a7d5f2d7178335652f41d2e55ba898b4ec1 ]
+[ Upstream commit 30be3031087139061de4421bf52015931eaab569 ]
 
-Currently buswidths 2 and 4 are rejected for a device that advertises
-Octal capabilities.  Allow these buswidths, just like is done for
-buswidth 2 and Quad-capable devices.
+Since commit 89958b7cd955 ("drm/bridge: panel: Infer connector type from
+panel by default"), drm_panel_bridge_add() and their variants can return
+NULL and an error pointer. This is fine but none of the actual users of
+the API are checking for the NULL value. Instead of change all the
+users, seems reasonable to return an error pointer instead. So change
+the returned value for those functions when the connector type is unknown.
 
-Fixes: b12a084c8729ef42 ("spi: spi-mem: add support for octal mode I/O data transfer")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20200416101418.14379-1-geert+renesas@glider.be
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200416210654.2468805-1-enric.balletbo@collabora.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-mem.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/bridge/panel.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/spi/spi-mem.c b/drivers/spi/spi-mem.c
-index adaa0c49f966..9a86cc27fcc0 100644
---- a/drivers/spi/spi-mem.c
-+++ b/drivers/spi/spi-mem.c
-@@ -108,15 +108,17 @@ static int spi_check_buswidth_req(struct spi_mem *mem, u8 buswidth, bool tx)
- 		return 0;
+diff --git a/drivers/gpu/drm/bridge/panel.c b/drivers/gpu/drm/bridge/panel.c
+index 8461ee8304ba..7a3df0f319f3 100644
+--- a/drivers/gpu/drm/bridge/panel.c
++++ b/drivers/gpu/drm/bridge/panel.c
+@@ -166,7 +166,7 @@ static const struct drm_bridge_funcs panel_bridge_bridge_funcs = {
+  *
+  * The connector type is set to @panel->connector_type, which must be set to a
+  * known type. Calling this function with a panel whose connector type is
+- * DRM_MODE_CONNECTOR_Unknown will return NULL.
++ * DRM_MODE_CONNECTOR_Unknown will return ERR_PTR(-EINVAL).
+  *
+  * See devm_drm_panel_bridge_add() for an automatically managed version of this
+  * function.
+@@ -174,7 +174,7 @@ static const struct drm_bridge_funcs panel_bridge_bridge_funcs = {
+ struct drm_bridge *drm_panel_bridge_add(struct drm_panel *panel)
+ {
+ 	if (WARN_ON(panel->connector_type == DRM_MODE_CONNECTOR_Unknown))
+-		return NULL;
++		return ERR_PTR(-EINVAL);
  
- 	case 2:
--		if ((tx && (mode & (SPI_TX_DUAL | SPI_TX_QUAD))) ||
--		    (!tx && (mode & (SPI_RX_DUAL | SPI_RX_QUAD))))
-+		if ((tx &&
-+		     (mode & (SPI_TX_DUAL | SPI_TX_QUAD | SPI_TX_OCTAL))) ||
-+		    (!tx &&
-+		     (mode & (SPI_RX_DUAL | SPI_RX_QUAD | SPI_RX_OCTAL))))
- 			return 0;
+ 	return drm_panel_bridge_add_typed(panel, panel->connector_type);
+ }
+@@ -265,7 +265,7 @@ struct drm_bridge *devm_drm_panel_bridge_add(struct device *dev,
+ 					     struct drm_panel *panel)
+ {
+ 	if (WARN_ON(panel->connector_type == DRM_MODE_CONNECTOR_Unknown))
+-		return NULL;
++		return ERR_PTR(-EINVAL);
  
- 		break;
- 
- 	case 4:
--		if ((tx && (mode & SPI_TX_QUAD)) ||
--		    (!tx && (mode & SPI_RX_QUAD)))
-+		if ((tx && (mode & (SPI_TX_QUAD | SPI_TX_OCTAL))) ||
-+		    (!tx && (mode & (SPI_RX_QUAD | SPI_RX_OCTAL))))
- 			return 0;
- 
- 		break;
+ 	return devm_drm_panel_bridge_add_typed(dev, panel,
+ 					       panel->connector_type);
 -- 
 2.25.1
 
