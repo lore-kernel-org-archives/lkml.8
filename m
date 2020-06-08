@@ -2,130 +2,158 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2031C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 19:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F85C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 19:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6F7D206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 19:57:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 714B0206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 19:58:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gZsTvqRs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i9lBX/+X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726581AbgFHT5i (ORCPT
+        id S1726615AbgFHT6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 15:57:38 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:57986 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726212AbgFHT5h (ORCPT
+        Mon, 8 Jun 2020 15:58:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36738 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726586AbgFHT6R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 15:57:37 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 058JqQeF116937;
-        Mon, 8 Jun 2020 19:57:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=KDFjcWm9j7Q4j8SV51GuXqHkSHKfdCAlDd8oZwlZJUU=;
- b=gZsTvqRsizIQv9Mzkcr+RseyRpK3il3RRv9/9k8lzK42626sp7VrkybGtYtNxvzIccLq
- vipb0Wtj7op1BhCJjlIp9qFscdQlJE1EOU5jlis2mlbLzdN9r3LAY16jtlvhGlSF+qz7
- Vym2RtTw7hjIPKiauZMVc2hvuFPojcAsqfgHjHdau5LbihbjtnTNiuXAlSlUE28WDdX0
- Y+PMcNNSjD2qA2PJpL0FXqWOCDAq2tNmBKDJihAALw9zheMBlgbfl65iBpkIL0IWO1hM
- Xxq2HXeBZ11ImUTaCnEi3hcGvLtPhvV+Yw6ZEWbY/cClkQ+1MzusFDbCnuvMOkk2hST7 Bw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 31g3smrp1w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 08 Jun 2020 19:57:30 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 058JsJHo017653;
-        Mon, 8 Jun 2020 19:55:29 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 31gn23sput-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 08 Jun 2020 19:55:29 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 058JtSb7014764;
-        Mon, 8 Jun 2020 19:55:28 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 08 Jun 2020 12:55:28 -0700
-Date:   Mon, 8 Jun 2020 22:55:21 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Souptick Joarder <jrdr.linux@gmail.com>
-Cc:     "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        Bharath Vedartham <linux.bhar@gmail.com>,
-        harshjain32@gmail.com, John Hubbard <jhubbard@nvidia.com>,
-        Simon =?iso-8859-1?Q?Sandstr=F6m?= <simon@nikanor.nu>,
-        linux-kernel@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>,
-        jane.pnx9@gmail.com
-Subject: Re: [PATCH] staging: kpc2000: kpc_dma: Convert get_user_pages() -->
- pin_user_pages()
-Message-ID: <20200608195520.GB30374@kadam>
-References: <1590947491-11194-1-git-send-email-jrdr.linux@gmail.com>
- <7e725dd0-7423-b85b-ff56-9705419d13b9@nvidia.com>
- <CAFqt6zbsNcHWF-0Na2xMKdJQs2kVkLHTCw=cytvdo+z-axx97Q@mail.gmail.com>
- <20200608191459.GZ30374@kadam>
- <CAFqt6zYqnRWYSKoZ2yAdcAK7WWa311Mmmc3Y3dm8CO9r79ZtYg@mail.gmail.com>
+        Mon, 8 Jun 2020 15:58:17 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2314BC08C5C2;
+        Mon,  8 Jun 2020 12:58:17 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id l26so719393wme.3;
+        Mon, 08 Jun 2020 12:58:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=hdQaIlY7CCtvVuS9ppbF0BzHnZFr+mv1ZVx/h1Baqkk=;
+        b=i9lBX/+XoJVZ4smkO6RXjNuKvBeBSn7Jezy6IKlbX1vzVqHheo10kSfSIHx8hKrfNy
+         al3momOoRbDC/qO/NExvm5ij8QaHZP+qxrY85+7iDCCflNQkQZg+GxGlU0OG/WBD6n9N
+         hMHlAd3B4WPZe3FxPBwOX92MBq5DQVlV0YZ/wUQEhiPh6ghBqmUBROnYhApUugkxP8X7
+         Nbgl6pWLBWOTMeVJs84+sXpXhkfmS7nbuXTKQSy0/27MxFqc39p3j8IXWS2PPuwwbNvu
+         C5MHFDJuEuh83QQmyJvuGP0MmyJ0pfpoVzwlcCaG3coppPYlXTCyCvHHVK+Ll7zPJ++f
+         kuWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hdQaIlY7CCtvVuS9ppbF0BzHnZFr+mv1ZVx/h1Baqkk=;
+        b=RJuIWwvaaV+yj9bTH9gU8zkgVTiqgnuaQPNZgp/j9JNPmpYJ5hMRH1YLX9+5FsMDOx
+         E+vBTS3abV6G+fZs4f1X6YE9MzN8jbe+AkbAmJWl+5gY7qpp/ahx5BhVYnvbrzujXO14
+         aGrw131iqno0ybv33kwD4ie3dsCPSjmEK2Zjf97BCQzNwCKxjF2HyJnZWh037gWyRDrB
+         miQx8B/YsYEhczC4SD65r/VVNv+yr1cg+ff8Ne8AHl8KskAIyo8OOHqa6uTDmPREXlok
+         OJc0+J50+wB06fb0vVR4L1+Ot+HwmO4EvdwHmz5obDtpXGGH1wC9Nc0nFdR130eOOA7w
+         ZIRw==
+X-Gm-Message-State: AOAM5321CrGzQG5WXTMIevGvuB6ZUbJz/LYfZEDzdiukmTcRyNdSfSnW
+        6AbCZ2t8wRt1IJeAR3yOx78=
+X-Google-Smtp-Source: ABdhPJypEeqfejRUltyYbz5n5bW5+Ans7YR1WBmQV7ByI2tOOKYM8eGJckH5rGeMzXQrm13AkAWBIw==
+X-Received: by 2002:a7b:cbd9:: with SMTP id n25mr349108wmi.30.1591646295437;
+        Mon, 08 Jun 2020 12:58:15 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id e10sm782956wrn.11.2020.06.08.12.58.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Jun 2020 12:58:14 -0700 (PDT)
+Subject: Re: [PATCH 1/9] dt-bindings: reset: Add a binding for the RPi
+ Firmware USB reset
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
+        robh@kernel.org, mathias.nyman@linux.intel.com,
+        Eric Anholt <eric@anholt.net>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-usb@vger.kernel.org,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>
+Cc:     linux-kernel@vger.kernel.org, tim.gover@raspberrypi.org,
+        helgaas@kernel.org, lorenzo.pieralisi@arm.com,
+        Rob Herring <robh+dt@kernel.org>
+References: <20200608192701.18355-1-nsaenzjulienne@suse.de>
+ <20200608192701.18355-2-nsaenzjulienne@suse.de>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <ffc9ec9e-bd1c-a8dd-8a68-a15bf95c919b@gmail.com>
+Date:   Mon, 8 Jun 2020 12:58:09 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFqt6zYqnRWYSKoZ2yAdcAK7WWa311Mmmc3Y3dm8CO9r79ZtYg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9646 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=2 mlxscore=0
- phishscore=0 adultscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006080138
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9646 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
- lowpriorityscore=0 impostorscore=0 cotscore=-2147483648 suspectscore=2
- spamscore=0 bulkscore=0 malwarescore=0 phishscore=0 mlxscore=0
- mlxlogscore=999 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006080138
+In-Reply-To: <20200608192701.18355-2-nsaenzjulienne@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 01:03:51AM +0530, Souptick Joarder wrote:
-> On Tue, Jun 9, 2020 at 12:47 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
-> >
-> > On Tue, Jun 09, 2020 at 12:31:42AM +0530, Souptick Joarder wrote:
-> > > > > @@ -189,10 +192,9 @@ static int kpc_dma_transfer(struct dev_private_data *priv,
-> > > > >       sg_free_table(&acd->sgt);
-> > > > >    err_dma_map_sg:
-> > > > >    err_alloc_sg_table:
-> > > >
-> > > > So now we end up with two unnecessary labels. Probably best to delete two of these
-> > > > three and name the remaining one appropriately:
-> > >
-> > > Hmm, I thought about it. But later decided to wait for review comments
-> > > on the same in v1.
-> > > I will remove it now.
-> >
-> > These are all unrelated to pin_user_pages().  Please don't do it in the
-> > same patch. Staging code is there because it's ugly...  If you don't
-> > want to do unrelated changes to label names then you don't have to.
+
+
+On 6/8/2020 12:26 PM, Nicolas Saenz Julienne wrote:
+> The firmware running on the RPi VideoCore can be used to reset and
+> initialize the board's xHCI controller. The reset controller is passed
+> to the PCI device through the DT, hence this binding.
 > 
-> What I am planning is to put this changes in a series. One patch will take care
-> of pin_user_pages() related changes, 2nd patch will take care of minor bug
-> fix in error path + level correction and 3rd patch
-> will take care of set_page_dirty() -> set_page_dirty_lock().
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> ---
+>  .../arm/bcm/raspberrypi,bcm2835-firmware.yaml | 21 +++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
+> index b48ed875eb8e..8f9d0986c28f 100644
+> --- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
+> +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
+> @@ -39,6 +39,22 @@ properties:
+>        - compatible
+>        - "#clock-cells"
+>  
+> +  usb-reset:
+> +    type: object
+> +
+> +    properties:
+> +      compatible:
+> +        const: raspberrypi,firmware-usb-reset
+
+I would make this less USB centric, even if this is the only consumer of
+the reset controller for now, there could, in premise be other blocks
+that require a reset (e.g.: V3D) that would involve going to the VPU
+firmware because of various requirements (security, register blocking etc.).
+
+> +
+> +      "#clock-cells":
+
+Did not you mean #reset-cells here?
 
 
-Always do bug fixes first.  Always do the easiest least controversial
-after first.
+> +        const: 0
+> +        description: >
+> +          There is only one reset line available, so no need for cell decoding.
+> +
+> +    required:
+> +      - compatible
+> +      - "#reset-cells"
+> +
+>      additionalProperties: false
+>  
+>  required:
+> @@ -55,5 +71,10 @@ examples:
+>              compatible = "raspberrypi,firmware-clocks";
+>              #clock-cells = <1>;
+>          };
+> +
+> +        usb_reset: usb-reset {
+> +            compatible = "raspberrypi,firmware-usb-reset";
+> +            #reset-cells = <0>;
+> +        };
+>      };
+>  ...
+> 
 
-Do the error handling bug first.  Change "rv" to int.  That's closely
-related to the error handling.  Then set_page_dirty_lock().  Then the
-conversion to pin_user_pages().
-
-Then if you want you can do any unrelated clean ups and error label
-renames as patch 4.
-
-regards,
-dan carpenter
-
+-- 
+Florian
