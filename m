@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9389C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:23:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F6D5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AED342072F
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:23:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E62842072F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:23:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658599;
-	bh=LpxpxJ35oFWhuM87IgD9IRxSyxS+069w7P+E9CDeK6M=;
+	s=default; t=1591658604;
+	bh=XO+oMWgl804ly3oZq6jef/75wIN+ikeQHz5cht/6Jlk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oQADKoamNzcnBg4AoQ8T/qrsniB6IxvriPMWKyDbRpAYupvYZAyh2SbWce1cyIu7J
-	 q721zb+NwXOzGIfVISr0ev+0n4SzNsnlN1+jq+kwOmOr/NhfIgu4wDd1UjnWElsy5U
-	 1ffvAGBw8yLF5DExyMCq+ZNcOsP2zICQ34H6ddLU=
+	b=e1gzDVQJY2FEM48VusnkwfYh4uyUJ+G/64sOp7aLoz8H9VBe5J4v9TaiqHoh7cjJk
+	 fNNEAXMAukxUjR2sqdMWhAUpnI5f/MKQmBE3xDVd3nuq35z8L09kXz8OANvfXxCn1l
+	 Z5dJb3EDHZueelvOxCxhiJUVQAjMPH/QWnEwLWSc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731474AbgFHXXS (ORCPT
+        id S1731047AbgFHXXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:23:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40540 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:23:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730623AbgFHXSW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:18:22 -0400
+        id S1730185AbgFHXSY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:18:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E2532086A;
-        Mon,  8 Jun 2020 23:18:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 223FC20872;
+        Mon,  8 Jun 2020 23:18:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658302;
-        bh=LpxpxJ35oFWhuM87IgD9IRxSyxS+069w7P+E9CDeK6M=;
+        s=default; t=1591658304;
+        bh=XO+oMWgl804ly3oZq6jef/75wIN+ikeQHz5cht/6Jlk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eAuYSR+uO5U0EiLS42w6u1n6RktmRfZa6o/JzhlkuQ9FjJ7+cDT9RXeoOTy8UxIyg
-         fhw2J5G+jpbmyz1hsCEZmszVnUnAqCwPZcH2Zu9a2bciJ0uertQNVXPNHx3crmZbt0
-         fkf5kGjFme78dUPLUsmnpsxjefUvLnN2MvtSyrp4=
+        b=Xm/hTo4KHT86N5nV05g54s5fOho83plsj5/n++8MTJ79cx5ojVYBaI640N4BaAuTg
+         errbVSAbboX1rm/pDJkgTede2JsuSAgDcl3LV03fdFaETDQvt1SPi14ZpfYyYnp1xX
+         5iefqXaYjmuaYxzFSKr7ZjxQqztdss8ulfPmg2qo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.6 305/606] gpu/drm: Ingenic: Fix opaque pointer casted to wrong type
-Date:   Mon,  8 Jun 2020 19:07:10 -0400
-Message-Id: <20200608231211.3363633-305-sashal@kernel.org>
+Cc:     Kaike Wan <kaike.wan@intel.com>, Lin Yi <teroincn@gmail.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 306/606] IB/qib: Call kobject_put() when kobject_init_and_add() fails
+Date:   Mon,  8 Jun 2020 19:07:11 -0400
+Message-Id: <20200608231211.3363633-306-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -60,40 +62,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Cercueil <paul@crapouillou.net>
+From: Kaike Wan <kaike.wan@intel.com>
 
-[ Upstream commit abf56fadf0e208abfb13ad1ac0094416058da0ad ]
+[ Upstream commit a35cd6447effd5c239b564c80fa109d05ff3d114 ]
 
-The opaque pointer passed to the IRQ handler is a pointer to the
-drm_device, not a pointer to our ingenic_drm structure.
+When kobject_init_and_add() returns an error in the function
+qib_create_port_files(), the function kobject_put() is not called for the
+corresponding kobject, which potentially leads to memory leak.
 
-It still worked, because our ingenic_drm structure contains the
-drm_device as its first field, so the pointer received had the same
-value, but this was not semantically correct.
+This patch fixes the issue by calling kobject_put() even if
+kobject_init_and_add() fails. In addition, the ppd->diagc_kobj is released
+along with other kobjects when the sysfs is unregistered.
 
-Cc: stable@vger.kernel.org # v5.3
-Fixes: 90b86fcc47b4 ("DRM: Add KMS driver for the Ingenic JZ47xx SoCs")
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200516215057.392609-5-paul@crapouillou.net
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
+Fixes: f931551bafe1 ("IB/qib: Add new qib driver for QLogic PCIe InfiniBand adapters")
+Link: https://lore.kernel.org/r/20200512031328.189865.48627.stgit@awfm-01.aw.intel.com
+Cc: <stable@vger.kernel.org>
+Suggested-by: Lin Yi <teroincn@gmail.com>
+Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/ingenic/ingenic-drm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/hw/qib/qib_sysfs.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c b/drivers/gpu/drm/ingenic/ingenic-drm.c
-index 8f5077370a52..e9900e078d51 100644
---- a/drivers/gpu/drm/ingenic/ingenic-drm.c
-+++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
-@@ -474,7 +474,7 @@ static int ingenic_drm_encoder_atomic_check(struct drm_encoder *encoder,
+diff --git a/drivers/infiniband/hw/qib/qib_sysfs.c b/drivers/infiniband/hw/qib/qib_sysfs.c
+index 568b21eb6ea1..021df0654ba7 100644
+--- a/drivers/infiniband/hw/qib/qib_sysfs.c
++++ b/drivers/infiniband/hw/qib/qib_sysfs.c
+@@ -760,7 +760,7 @@ int qib_create_port_files(struct ib_device *ibdev, u8 port_num,
+ 		qib_dev_err(dd,
+ 			"Skipping linkcontrol sysfs info, (err %d) port %u\n",
+ 			ret, port_num);
+-		goto bail;
++		goto bail_link;
+ 	}
+ 	kobject_uevent(&ppd->pport_kobj, KOBJ_ADD);
  
- static irqreturn_t ingenic_drm_irq_handler(int irq, void *arg)
- {
--	struct ingenic_drm *priv = arg;
-+	struct ingenic_drm *priv = drm_device_get_priv(arg);
- 	unsigned int state;
+@@ -770,7 +770,7 @@ int qib_create_port_files(struct ib_device *ibdev, u8 port_num,
+ 		qib_dev_err(dd,
+ 			"Skipping sl2vl sysfs info, (err %d) port %u\n",
+ 			ret, port_num);
+-		goto bail_link;
++		goto bail_sl;
+ 	}
+ 	kobject_uevent(&ppd->sl2vl_kobj, KOBJ_ADD);
  
- 	regmap_read(priv->map, JZ_REG_LCD_STATE, &state);
+@@ -780,7 +780,7 @@ int qib_create_port_files(struct ib_device *ibdev, u8 port_num,
+ 		qib_dev_err(dd,
+ 			"Skipping diag_counters sysfs info, (err %d) port %u\n",
+ 			ret, port_num);
+-		goto bail_sl;
++		goto bail_diagc;
+ 	}
+ 	kobject_uevent(&ppd->diagc_kobj, KOBJ_ADD);
+ 
+@@ -793,7 +793,7 @@ int qib_create_port_files(struct ib_device *ibdev, u8 port_num,
+ 		qib_dev_err(dd,
+ 		 "Skipping Congestion Control sysfs info, (err %d) port %u\n",
+ 		 ret, port_num);
+-		goto bail_diagc;
++		goto bail_cc;
+ 	}
+ 
+ 	kobject_uevent(&ppd->pport_cc_kobj, KOBJ_ADD);
+@@ -854,6 +854,7 @@ void qib_verbs_unregister_sysfs(struct qib_devdata *dd)
+ 				&cc_table_bin_attr);
+ 			kobject_put(&ppd->pport_cc_kobj);
+ 		}
++		kobject_put(&ppd->diagc_kobj);
+ 		kobject_put(&ppd->sl2vl_kobj);
+ 		kobject_put(&ppd->pport_kobj);
+ 	}
 -- 
 2.25.1
 
