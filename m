@@ -2,104 +2,156 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C664C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 571D3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:42:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA410207C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:42:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591659761;
-	bh=Uw9/vRLVgKmqGjw40c38O9e7lpuxn5NHt5DzieU+7Dk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oVQHLg29XmGIIPc6lDbk44+iXKSHQ5U9FkK7RGILMHzxjJxovMVzvACfeHnUpM/yN
-	 4qpaheN8y1LiYXWGnwwbLtJcb58lpNTh2SdaI8jlzJFwGFlYEBH0oLdjMzvbx4sOFk
-	 YnhGn0+Kxn2q9VqIDtYiBn2hZsH0b5m1lk0TxJEU=
+	by mail.kernel.org (Postfix) with ESMTP id 21F012068D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:42:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Fii8ZR3Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732330AbgFHXmk (ORCPT
+        id S1732369AbgFHXmp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:42:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55866 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730851AbgFHX10 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:27:26 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C678F20814;
-        Mon,  8 Jun 2020 23:27:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658845;
-        bh=Uw9/vRLVgKmqGjw40c38O9e7lpuxn5NHt5DzieU+7Dk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mZRqxq92u8uzqxU+dAL69JEkOW37PKEZHjyL4q6HUKBrtusXkY8hO/ztIRBDBUPLd
-         awR7dEK0Rbnhuzluz5o54xJw1WbkQbZLUvbaR2EcDLlHzOutifOj/rWkRo1RtgW3l8
-         8gRPYfUFhNtUSEDI4tPNFT1ERWQ0ycN9WxVmcQmI=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Will Deacon <will@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Sasha Levin <sashal@kernel.org>,
-        kgdb-bugreport@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.9 33/50] kgdb: Fix spurious true from in_dbg_master()
-Date:   Mon,  8 Jun 2020 19:26:23 -0400
-Message-Id: <20200608232640.3370262-33-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608232640.3370262-1-sashal@kernel.org>
-References: <20200608232640.3370262-1-sashal@kernel.org>
+        Mon, 8 Jun 2020 19:42:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40728 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732123AbgFHX1W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:27:22 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14266C08C5C2;
+        Mon,  8 Jun 2020 16:27:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=xyZktwFw/PfsepqoistGI2Zu+WjsJE4jBtC4bLVR/g8=; b=Fii8ZR3Zn1fZFppUKCqm/mn0Dq
+        UBpNtB5T+cpC0wr3Jrs+s3i2idqfUkLdYq3lL1Hpk4JwBtRwFfaQAfSxvrpA+d48EU7sEc5DRYe6i
+        grcj1T87C4EgzRG2XZOSpnd5ggrc6vqRoM2NSrS4v9EIxFPRPaPdYbry4SBd0XNPbQx0ioKUUDJbK
+        B9l4Ib84cCkXQ5zeUEjxX0bugeeii4iwsxTAuswXTW4DTJL7Vf0Q9ZCAEcLESx9GqbxV001Dguhz1
+        XafVgjFI/Uqab7m9UfW4kOIDyf2tJnQh9ATHNZf4X789rri0PyEipT/zjeWrXvQ8GSMIOPOsF5bLb
+        3rXV9wNw==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jiRAe-000826-92; Mon, 08 Jun 2020 23:27:12 +0000
+Subject: Re: [PATCH v2 3/3] platform/x86: dell-wmi: add new dmi keys to
+ bios_to_linux_keycode
+To:     Y Paritcher <y.linux@paritcher.com>
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
+        Mario.Limonciello@dell.com
+References: <cover.1591584631.git.y.linux@paritcher.com>
+ <cover.1591656154.git.y.linux@paritcher.com>
+ <d585d2a0f01a6b9480352530b571dec2d1afd79f.1591656154.git.y.linux@paritcher.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <8053252a-83ad-bcaa-2830-ccfbca1b4152@infradead.org>
+Date:   Mon, 8 Jun 2020 16:27:10 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <d585d2a0f01a6b9480352530b571dec2d1afd79f.1591656154.git.y.linux@paritcher.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Thompson <daniel.thompson@linaro.org>
+Hi--
 
-[ Upstream commit 3fec4aecb311995189217e64d725cfe84a568de3 ]
+On 6/8/20 4:05 PM, Y Paritcher wrote:
+> Increase length of bios_to_linux_keycode to 2 bytes (the true size of a
+> keycode) to allow for a new keycode 0xffff, this silences the following
+> messages being logged at startup on a Dell Inspiron 5593:
+> 
+>     dell_wmi: firmware scancode 0x48 maps to unrecognized keycode 0xffff
+>     dell_wmi: firmware scancode 0x50 maps to unrecognized keycode 0xffff
+> 
+> as per this code comment:
+> 
+>    Log if we find an entry in the DMI table that we don't
+>    understand.  If this happens, we should figure out what
+>    the entry means and add it to bios_to_linux_keycode.
+> 
+> These are keycodes included in the 0xB2 DMI table, for which the
+> corosponding keys are not known.
 
-Currently there is a small window where a badly timed migration could
-cause in_dbg_master() to spuriously return true. Specifically if we
-migrate to a new core after reading the processor id and the previous
-core takes a breakpoint then we will evaluate true if we read
-kgdb_active before we get the IPI to bring us to halt.
+  corresponding
 
-Fix this by checking irqs_disabled() first. Interrupts are always
-disabled when we are executing the kgdb trap so this is an acceptable
-prerequisite. This also allows us to replace raw_smp_processor_id()
-with smp_processor_id() since the short circuit logic will prevent
-warnings from PREEMPT_DEBUG.
+> 
+> Now when a user will encounter this key, a proper message wil be printed:
+> 
+>     dell_wmi: Unknown key with type 0xXXXX and code 0xXXXX pressed
+> 
+> This will then allow the key to be identified properly.
+> 
+> Signed-off-by: Y Paritcher <y.linux@paritcher.com>
+> ---
+>  drivers/platform/x86/dell-wmi.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
+> index 6b510f8431a3..dae1db96b5a0 100644
+> --- a/drivers/platform/x86/dell-wmi.c
+> +++ b/drivers/platform/x86/dell-wmi.c
+> @@ -196,7 +196,7 @@ struct dell_dmi_results {
+>  };
+>  
+>  /* Uninitialized entries here are KEY_RESERVED == 0. */
+> -static const u16 bios_to_linux_keycode[256] = {
+> +static const u16 bios_to_linux_keycode[65536] = {
 
-Fixes: dcc7871128e9 ("kgdb: core changes to support kdb")
-Suggested-by: Will Deacon <will@kernel.org>
-Link: https://lore.kernel.org/r/20200506164223.2875760-1-daniel.thompson@linaro.org
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- include/linux/kgdb.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+It surely seems odd to me to expand an array from 512 bytes to 128 Kbytes
+just to handle one special case.  Can't it be handled in code as a
+special case?
 
-diff --git a/include/linux/kgdb.h b/include/linux/kgdb.h
-index e465bb15912d..6be5545d3584 100644
---- a/include/linux/kgdb.h
-+++ b/include/linux/kgdb.h
-@@ -317,7 +317,7 @@ extern void gdbstub_exit(int status);
- extern int			kgdb_single_step;
- extern atomic_t			kgdb_active;
- #define in_dbg_master() \
--	(raw_smp_processor_id() == atomic_read(&kgdb_active))
-+	(irqs_disabled() && (smp_processor_id() == atomic_read(&kgdb_active)))
- extern bool dbg_is_early;
- extern void __init dbg_late_init(void);
- #else /* ! CONFIG_KGDB */
+>  	[0]	= KEY_MEDIA,
+>  	[1]	= KEY_NEXTSONG,
+>  	[2]	= KEY_PLAYPAUSE,
+> @@ -237,6 +237,7 @@ static const u16 bios_to_linux_keycode[256] = {
+>  	[37]	= KEY_UNKNOWN,
+>  	[38]	= KEY_MICMUTE,
+>  	[255]	= KEY_PROG3,
+> +	[65535]	= KEY_UNKNOWN,
+>  };
+>  
+>  /*
+> @@ -503,10 +504,7 @@ static void handle_dmi_entry(const struct dmi_header *dm, void *opaque)
+>  					&table->keymap[i];
+>  
+>  		/* Uninitialized entries are 0 aka KEY_RESERVED. */
+> -		u16 keycode = (bios_entry->keycode <
+> -			       ARRAY_SIZE(bios_to_linux_keycode)) ?
+> -			bios_to_linux_keycode[bios_entry->keycode] :
+> -			KEY_RESERVED;
+> +		u16 keycode = bios_to_linux_keycode[bios_entry->keycode];
+>  
+>  		/*
+>  		 * Log if we find an entry in the DMI table that we don't
+> 
+
+Something like:
+
+		u16 keycode;
+
+		keycode = bios_entry->keycode == 0xffff ? KEY_UNKNOWN :
+			(bios_entry->keycode <
+			       ARRAY_SIZE(bios_to_linux_keycode)) ?
+			bios_to_linux_keycode[bios_entry->keycode] :
+			KEY_RESERVED;
+
+
+
+Also please fix this:
+(no To-header on input) <>
+
 -- 
-2.25.1
+~Randy
 
