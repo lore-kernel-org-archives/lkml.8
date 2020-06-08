@@ -2,719 +2,1827 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 955DCC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C829EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EE672076A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DC842076A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:54:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="T/sjhwoJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729464AbgFHKvx (ORCPT
+        id S1729421AbgFHKyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 06:51:53 -0400
-Received: from mga18.intel.com ([134.134.136.126]:63769 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729310AbgFHKvs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 06:51:48 -0400
-IronPort-SDR: RHLrJXNuOMBbqPpWBSaqsQ7LqiefwyDcrk1rTwoYDkCq6ftL+IcIkZk+rR3E9JTmcQTbpgZIl8
- QQF6LSG7PGcg==
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2020 03:51:46 -0700
-IronPort-SDR: cjf6WICHXFT7zxVLXTcWDUoRjpiekbOuSzet4o3Oxn0LQJDxsmdq7VcmmQ9oMEX1YY5fYDAEmk
- aKILGS520ajw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,487,1583222400"; 
-   d="gz'50?scan'50,208,50";a="295412067"
-Received: from lkp-server01.sh.intel.com (HELO 3b764b36c89c) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 08 Jun 2020 03:51:44 -0700
-Received: from kbuild by 3b764b36c89c with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jiFNX-0000ip-DG; Mon, 08 Jun 2020 10:51:43 +0000
-Date:   Mon, 8 Jun 2020 18:51:04 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        Leon Romanovsky <leonro@mellanox.com>
-Subject: include/asm-generic/mmiowb.h:56:9: sparse: sparse: context imbalance
- in 'cm_queue_work_unlock' - unexpected unlock
-Message-ID: <202006081801.JXwcpMrJ%lkp@intel.com>
+        Mon, 8 Jun 2020 06:54:45 -0400
+Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:48547 "EHLO
+        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726202AbgFHKyo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 06:54:44 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id iFQEjQOAvCKzeiFQHjlkRl; Mon, 08 Jun 2020 12:54:35 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1591613675; bh=JwiNATWvHmYPC822WoZvJngHWwwJGvWgPN16ySnOo58=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=T/sjhwoJcrYywHLU7bPr54rWUbjlh7tPVFa2uLee6MsOoXIi70Q403e6lxsT+8B8r
+         OtmZvEItM/kSl37ujukyzvd+N98GKPihb6Cp3AYc1h6zx2NCJQ8V8oJQcszAEmucV8
+         oGiWH4nRlCMrAXABUu224G/jhv43uVUSM7uoG/JWLwVteER8gNmXlI17Dw7Hn8Ql+f
+         7YAvhUQV66djMEjiM7Nr9pVssyg3M9WTU7nlNt64acgBVlbSNcTSTJwnxd5SmOF0j9
+         PKOY4+2/74AOu8SndRNc05iuaiNMr6XvPxbSHh4t1EZA2tp57jmEqhdQt3ZZkwchV7
+         07nn6D6mfAIxQ==
+Subject: Re: [PATCH RESEND v9 18/18] media: platform: Add jpeg enc feature
+To:     Xia Jiang <xia.jiang@mediatek.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rick Chang <rick.chang@mediatek.com>
+Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tomasz Figa <tfiga@chromium.org>, srv_heupstream@mediatek.com,
+        senozhatsky@chromium.org, mojahsu@chromium.org,
+        drinkcat@chromium.org, maoguang.meng@mediatek.com,
+        sj.huang@mediatek.com
+References: <20200604090553.10861-1-xia.jiang@mediatek.com>
+ <20200604090553.10861-20-xia.jiang@mediatek.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <ad649e4e-bc7e-3443-37fa-4dd64bef76db@xs4all.nl>
+Date:   Mon, 8 Jun 2020 12:54:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="KsGdsel6WgEHnImy"
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200604090553.10861-20-xia.jiang@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfFZtUiLhwOOZqX7dHKnJuPRHIdNJkSbibRMdpM4yssmj5MEelfUf4Dffc85UV1PFqxglu9FMIljH2jFoaz89504BSIO5NEVn9nn3Nx1uGLLXEjx41TMh
+ CiDyylLkeXZrb2esBRdC2YvwDeMSBJeXhZUAuxQrvr4dBk7zL6zt3NEGUqjgTAx3x3i1OfpQnVrse3T6l3L8bI3sLAqlrzmPWWpEmXc1UEzXOwYp7YRAz+yS
+ sHL/EpE/Eelcs8DZBcvzVHLtliDhsgzYRXNoqJ7vWMlwN112j95UrF+6Kk4BOnNL+QK8gNs87DCQF4Q/07PaU9R7e7JsuCrIqRvZyataa7a40ZBgMgAtYrg0
+ feediZbgbGa2DJV647p7wWuXUzQQ4lkZW6iB8m1HV596JlEm2UoqR2x5La1KzTH8wCL/zgQAC87GI2XkSMD0twGx+2iPctZjSpkgKEtpRyNpTUpVzXRgt53/
+ u/h5wCEqRLxHAx+FUmSrLd7MJOGPYXJkQmYgeMuXjOMkWaahGWOTZ2rIo205aSAs5LtFptj3qDc6+Ufu5tzQp53DVqdnr15Hdit5erKeTQasQI9IUoyL8HcI
+ I2A5iz9jeCwmUix8JghB25gc/72F8I77zkmcE3yL/SWC0c8gIm7yV5277nMjdnmbXVF9K2dbPIJilL/lksQJJPcZFF1SlAfaBUsGuXiiWeIijbo0H+ND/aIS
+ l8zn/sFs8V2letNQ0LhgVkNzJSOI8ju3OeAXtESpxww7Sa0+v6jSvhdMowMSzxCL5RaL6Cn54hruEpxFGrtb2sF69bXBhNwfhpMarQP4M6shOX2GKF2HJw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 04/06/2020 11:05, Xia Jiang wrote:
+> Add mtk jpeg encode v4l2 driver based on jpeg decode, because that jpeg
+> decode and encode have great similarities with function operation.
+> 
+> Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
+> ---
+> v9: add member variable(struct v4l2_rect) in out_q structure for storing
+>     the active crop information.
+>     move the renaming exsting functions/defines/variables to a separate patch.
+> ---
+>  drivers/media/platform/mtk-jpeg/Makefile      |   5 +-
+>  .../media/platform/mtk-jpeg/mtk_jpeg_core.c   | 845 +++++++++++++++---
+>  .../media/platform/mtk-jpeg/mtk_jpeg_core.h   |  44 +-
+>  .../media/platform/mtk-jpeg/mtk_jpeg_enc_hw.c | 193 ++++
+>  .../media/platform/mtk-jpeg/mtk_jpeg_enc_hw.h | 123 +++
+>  5 files changed, 1084 insertions(+), 126 deletions(-)
+>  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_hw.c
+>  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_hw.h
+> 
+> diff --git a/drivers/media/platform/mtk-jpeg/Makefile b/drivers/media/platform/mtk-jpeg/Makefile
+> index 48516dcf96e6..76c33aad0f3f 100644
+> --- a/drivers/media/platform/mtk-jpeg/Makefile
+> +++ b/drivers/media/platform/mtk-jpeg/Makefile
+> @@ -1,3 +1,6 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+> -mtk_jpeg-objs := mtk_jpeg_core.o mtk_jpeg_dec_hw.o mtk_jpeg_dec_parse.o
+> +mtk_jpeg-objs := mtk_jpeg_core.o \
+> +		 mtk_jpeg_dec_hw.o \
+> +		 mtk_jpeg_dec_parse.o \
+> +		 mtk_jpeg_enc_hw.o
+>  obj-$(CONFIG_VIDEO_MEDIATEK_JPEG) += mtk_jpeg.o
+> diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
+> index 29b8b82c606c..d7ef69920530 100644
+> --- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
+> +++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
+> @@ -3,6 +3,7 @@
+>   * Copyright (c) 2016 MediaTek Inc.
+>   * Author: Ming Hsiu Tsai <minghsiu.tsai@mediatek.com>
+>   *         Rick Chang <rick.chang@mediatek.com>
+> + *         Xia Jiang <xia.jiang@mediatek.com>
+>   */
+>  
+>  #include <linux/clk.h>
+> @@ -23,10 +24,59 @@
+>  #include <media/videobuf2-dma-contig.h>
+>  #include <soc/mediatek/smi.h>
+>  
+> +#include "mtk_jpeg_enc_hw.h"
+>  #include "mtk_jpeg_dec_hw.h"
+>  #include "mtk_jpeg_core.h"
+>  #include "mtk_jpeg_dec_parse.h"
+>  
+> +static struct mtk_jpeg_fmt mtk_jpeg_enc_formats[] = {
+> +	{
+> +		.fourcc		= V4L2_PIX_FMT_JPEG,
+> +		.colplanes	= 1,
+> +		.flags		= MTK_JPEG_FMT_FLAG_ENC_CAPTURE,
+> +	},
+> +	{
+> +		.fourcc		= V4L2_PIX_FMT_NV12M,
+> +		.hw_format	= JPEG_ENC_YUV_FORMAT_NV12,
+> +		.h_sample	= {4, 4},
+> +		.v_sample	= {4, 2},
+> +		.colplanes	= 2,
+> +		.h_align	= 4,
+> +		.v_align	= 4,
+> +		.flags		= MTK_JPEG_FMT_FLAG_ENC_OUTPUT,
+> +	},
+> +	{
+> +		.fourcc		= V4L2_PIX_FMT_NV21M,
+> +		.hw_format	= JEPG_ENC_YUV_FORMAT_NV21,
+> +		.h_sample	= {4, 4},
+> +		.v_sample	= {4, 2},
+> +		.colplanes	= 2,
+> +		.h_align	= 4,
+> +		.v_align	= 4,
+> +		.flags		= MTK_JPEG_FMT_FLAG_ENC_OUTPUT,
+> +	},
+> +	{
+> +		.fourcc		= V4L2_PIX_FMT_YUYV,
+> +		.hw_format	= JPEG_ENC_YUV_FORMAT_YUYV,
+> +		.h_sample	= {8},
+> +		.v_sample	= {4},
+> +		.colplanes	= 1,
+> +		.h_align	= 5,
+> +		.v_align	= 3,
+> +		.flags		= MTK_JPEG_FMT_FLAG_ENC_OUTPUT,
+> +	},
+> +	{
+> +		.fourcc		= V4L2_PIX_FMT_YVYU,
+> +		.hw_format	= JPEG_ENC_YUV_FORMAT_YVYU,
+> +		.h_sample	= {8},
+> +		.v_sample	= {4},
+> +		.colplanes	= 1,
+> +		.h_align	= 5,
+> +		.v_align	= 3,
+> +		.flags		= MTK_JPEG_FMT_FLAG_ENC_OUTPUT,
+> +	},
+> +};
+> +
+>  static struct mtk_jpeg_fmt mtk_jpeg_dec_formats[] = {
+>  	{
+>  		.fourcc		= V4L2_PIX_FMT_JPEG,
+> @@ -53,6 +103,7 @@ static struct mtk_jpeg_fmt mtk_jpeg_dec_formats[] = {
+>  	},
+>  };
+>  
+> +#define MTK_JPEG_ENC_NUM_FORMATS ARRAY_SIZE(mtk_jpeg_enc_formats)
+>  #define MTK_JPEG_DEC_NUM_FORMATS ARRAY_SIZE(mtk_jpeg_dec_formats)
+>  
+>  struct mtk_jpeg_src_buf {
+> @@ -64,6 +115,11 @@ struct mtk_jpeg_src_buf {
+>  static int debug;
+>  module_param(debug, int, 0644);
+>  
+> +static inline struct mtk_jpeg_ctx *ctrl_to_ctx(struct v4l2_ctrl *ctrl)
+> +{
+> +	return container_of(ctrl->handler, struct mtk_jpeg_ctx, ctrl_hdl);
+> +}
+> +
+>  static inline struct mtk_jpeg_ctx *mtk_jpeg_fh_to_ctx(struct v4l2_fh *fh)
+>  {
+>  	return container_of(fh, struct mtk_jpeg_ctx, fh);
+> @@ -75,6 +131,19 @@ static inline struct mtk_jpeg_src_buf *mtk_jpeg_vb2_to_srcbuf(
+>  	return container_of(to_vb2_v4l2_buffer(vb), struct mtk_jpeg_src_buf, b);
+>  }
+>  
+> +static int mtk_jpeg_enc_querycap(struct file *file, void *priv,
+> +				 struct v4l2_capability *cap)
+> +{
+> +	struct mtk_jpeg_dev *jpeg = video_drvdata(file);
+> +
+> +	strscpy(cap->driver, MTK_JPEG_NAME, sizeof(cap->driver));
+> +	strscpy(cap->card, MTK_JPEG_NAME " encoder", sizeof(cap->card));
+> +	snprintf(cap->bus_info, sizeof(cap->bus_info), "platform:%s",
+> +		 dev_name(jpeg->dev));
+> +
+> +	return 0;
+> +}
+> +
+>  static int mtk_jpeg_dec_querycap(struct file *file, void *priv,
+>  				 struct v4l2_capability *cap)
+>  {
+> @@ -88,6 +157,54 @@ static int mtk_jpeg_dec_querycap(struct file *file, void *priv,
+>  	return 0;
+>  }
+>  
+> +static int vidioc_jpeg_enc_s_ctrl(struct v4l2_ctrl *ctrl)
+> +{
+> +	struct mtk_jpeg_ctx *ctx = ctrl_to_ctx(ctrl);
+> +
+> +	switch (ctrl->id) {
+> +	case V4L2_CID_JPEG_RESTART_INTERVAL:
+> +		ctx->restart_interval = ctrl->val;
+> +		break;
+> +	case V4L2_CID_JPEG_COMPRESSION_QUALITY:
+> +		ctx->enc_quality = ctrl->val;
+> +		break;
+> +	case V4L2_CID_JPEG_ACTIVE_MARKER:
+> +		ctx->enable_exif = ctrl->val & V4L2_JPEG_ACTIVE_MARKER_APP1 ?
+> +				   true : false;
+> +		break;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct v4l2_ctrl_ops mtk_jpeg_enc_ctrl_ops = {
+> +	.s_ctrl = vidioc_jpeg_enc_s_ctrl,
+> +};
+> +
+> +static int mtk_jpeg_enc_ctrls_setup(struct mtk_jpeg_ctx *ctx)
+> +{
+> +	const struct v4l2_ctrl_ops *ops = &mtk_jpeg_enc_ctrl_ops;
+> +	struct v4l2_ctrl_handler *handler = &ctx->ctrl_hdl;
+> +
+> +	v4l2_ctrl_handler_init(handler, 3);
+> +
+> +	v4l2_ctrl_new_std(handler, ops, V4L2_CID_JPEG_RESTART_INTERVAL, 0, 100,
+> +			  1, 0);
+> +	v4l2_ctrl_new_std(handler, ops, V4L2_CID_JPEG_COMPRESSION_QUALITY, 48,
+> +			  100, 1, 90);
+> +	v4l2_ctrl_new_std(handler, ops, V4L2_CID_JPEG_ACTIVE_MARKER, 0,
+> +			  V4L2_JPEG_ACTIVE_MARKER_APP1, 0, 0);
+> +
+> +	if (handler->error) {
+> +		v4l2_ctrl_handler_free(&ctx->ctrl_hdl);
+> +		return handler->error;
+> +	}
+> +
+> +	v4l2_ctrl_handler_setup(&ctx->ctrl_hdl);
+> +
+> +	return 0;
+> +}
+> +
+>  static int mtk_jpeg_enum_fmt(struct mtk_jpeg_fmt *mtk_jpeg_formats, int n,
+>  			     struct v4l2_fmtdesc *f, u32 type)
+>  {
+> @@ -109,6 +226,14 @@ static int mtk_jpeg_enum_fmt(struct mtk_jpeg_fmt *mtk_jpeg_formats, int n,
+>  	return 0;
+>  }
+>  
+> +static int mtk_jpeg_enc_enum_fmt_vid_cap(struct file *file, void *priv,
+> +					 struct v4l2_fmtdesc *f)
+> +{
+> +	return mtk_jpeg_enum_fmt(mtk_jpeg_enc_formats,
+> +				 MTK_JPEG_ENC_NUM_FORMATS, f,
+> +				 MTK_JPEG_FMT_FLAG_ENC_CAPTURE);
+> +}
+> +
+>  static int mtk_jpeg_dec_enum_fmt_vid_cap(struct file *file, void *priv,
+>  					 struct v4l2_fmtdesc *f)
+>  {
+> @@ -117,6 +242,14 @@ static int mtk_jpeg_dec_enum_fmt_vid_cap(struct file *file, void *priv,
+>  				 MTK_JPEG_FMT_FLAG_DEC_CAPTURE);
+>  }
+>  
+> +static int mtk_jpeg_enc_enum_fmt_vid_out(struct file *file, void *priv,
+> +					 struct v4l2_fmtdesc *f)
+> +{
+> +	return mtk_jpeg_enum_fmt(mtk_jpeg_enc_formats,
+> +				 MTK_JPEG_ENC_NUM_FORMATS, f,
+> +				 MTK_JPEG_FMT_FLAG_ENC_OUTPUT);
+> +}
+> +
+>  static int mtk_jpeg_dec_enum_fmt_vid_out(struct file *file, void *priv,
+>  					 struct v4l2_fmtdesc *f)
+>  {
+> @@ -132,93 +265,66 @@ mtk_jpeg_get_q_data(struct mtk_jpeg_ctx *ctx, enum v4l2_buf_type type)
+>  	return &ctx->cap_q;
+>  }
+>  
+> -static struct mtk_jpeg_fmt *mtk_jpeg_find_format(struct mtk_jpeg_ctx *ctx,
+> -						 u32 pixelformat,
+> +static struct mtk_jpeg_fmt *mtk_jpeg_find_format(u32 pixelformat,
+>  						 unsigned int fmt_type)
+>  {
+> -	unsigned int k, fmt_flag;
+> +	unsigned int k;
+> +	struct mtk_jpeg_fmt *fmt;
+>  
+> -	fmt_flag = (fmt_type == MTK_JPEG_FMT_TYPE_OUTPUT) ?
+> -		   MTK_JPEG_FMT_FLAG_DEC_OUTPUT :
+> -		   MTK_JPEG_FMT_FLAG_DEC_CAPTURE;
+> +	for (k = 0; k < MTK_JPEG_ENC_NUM_FORMATS; k++) {
+> +		fmt = &mtk_jpeg_enc_formats[k];
+> +
+> +		if (fmt->fourcc == pixelformat && fmt->flags & fmt_type)
+> +			return fmt;
+> +	}
+>  
+>  	for (k = 0; k < MTK_JPEG_DEC_NUM_FORMATS; k++) {
+> -		struct mtk_jpeg_fmt *fmt = &mtk_jpeg_dec_formats[k];
+> +		fmt = &mtk_jpeg_dec_formats[k];
+>  
+> -		if (fmt->fourcc == pixelformat && fmt->flags & fmt_flag)
+> +		if (fmt->fourcc == pixelformat && fmt->flags & fmt_type)
+>  			return fmt;
+>  	}
+>  
+>  	return NULL;
+>  }
+>  
+> -static void mtk_jpeg_adjust_fmt_mplane(struct mtk_jpeg_ctx *ctx,
+> -				       struct v4l2_format *f)
+> -{
+> -	struct v4l2_pix_format_mplane *pix_mp = &f->fmt.pix_mp;
+> -	struct mtk_jpeg_q_data *q_data;
+> -	int i;
+> -
+> -	q_data = mtk_jpeg_get_q_data(ctx, f->type);
+> -
+> -	pix_mp->width = q_data->w;
+> -	pix_mp->height = q_data->h;
+> -	pix_mp->pixelformat = q_data->fmt->fourcc;
+> -	pix_mp->num_planes = q_data->fmt->colplanes;
+> -
+> -	for (i = 0; i < pix_mp->num_planes; i++) {
+> -		pix_mp->plane_fmt[i].bytesperline = q_data->bytesperline[i];
+> -		pix_mp->plane_fmt[i].sizeimage = q_data->sizeimage[i];
+> -	}
+> -}
+> -
+> -static int mtk_jpeg_try_fmt_mplane(struct v4l2_format *f,
+> -				   struct mtk_jpeg_fmt *fmt,
+> -				   struct mtk_jpeg_ctx *ctx, int q_type)
+> +static int vidioc_try_fmt(struct v4l2_format *f, struct mtk_jpeg_fmt *fmt)
+>  {
+>  	struct v4l2_pix_format_mplane *pix_mp = &f->fmt.pix_mp;
+>  	int i;
+>  
+>  	pix_mp->field = V4L2_FIELD_NONE;
+> -
+> -	if (ctx->state != MTK_JPEG_INIT) {
+> -		mtk_jpeg_adjust_fmt_mplane(ctx, f);
 
---KsGdsel6WgEHnImy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The removal of this function seems unrelated to adding the jpeg enc feature.
+It's not obvious to me why this is no longer needed and what replaces it.
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   af7b4801030c07637840191c69eb666917e4135d
-commit: e83f195aa45c1ffd73b3a950a887e41c260cf194 RDMA/cm: Pull duplicated code into cm_queue_work_unlock()
-date:   4 weeks ago
-config: riscv-randconfig-s032-20200608 (attached as .config)
-compiler: riscv64-linux-gcc (GCC) 9.3.0
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-247-gcadbd124-dirty
-        git checkout e83f195aa45c1ffd73b3a950a887e41c260cf194
-        # save the attached .config to linux build tree
-        make W=1 C=1 ARCH=riscv CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+I think this is something that should be split off to its own patch.
 
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
+> -		return 0;
+> -	}
+> -
+>  	pix_mp->num_planes = fmt->colplanes;
+>  	pix_mp->pixelformat = fmt->fourcc;
+>  
+> -	if (q_type == MTK_JPEG_FMT_TYPE_OUTPUT) {
+> -		struct v4l2_plane_pix_format *pfmt = &pix_mp->plane_fmt[0];
+> -
+> +	if (fmt->fourcc == V4L2_PIX_FMT_JPEG) {
+>  		pix_mp->height = clamp(pix_mp->height, MTK_JPEG_MIN_HEIGHT,
+>  				       MTK_JPEG_MAX_HEIGHT);
+>  		pix_mp->width = clamp(pix_mp->width, MTK_JPEG_MIN_WIDTH,
+>  				      MTK_JPEG_MAX_WIDTH);
+> -
+> -		pfmt->bytesperline = 0;
+> -		/* Source size must be aligned to 128 */
+> -		pfmt->sizeimage = round_up(pfmt->sizeimage, 128);
+> -		if (pfmt->sizeimage == 0)
+> -			pfmt->sizeimage = MTK_JPEG_DEFAULT_SIZEIMAGE;
+> -		return 0;
+> +		pix_mp->plane_fmt[0].bytesperline = 0;
+> +		pix_mp->plane_fmt[0].sizeimage =
+> +				round_up(pix_mp->plane_fmt[0].sizeimage, 128);
+> +		if (pix_mp->plane_fmt[0].sizeimage == 0)
+> +			pix_mp->plane_fmt[0].sizeimage =
+> +				MTK_JPEG_DEFAULT_SIZEIMAGE;
+> +	} else {
+> +		pix_mp->height = clamp(round_up(pix_mp->height, fmt->v_align),
+> +				       MTK_JPEG_MIN_HEIGHT,
+> +				       MTK_JPEG_MAX_HEIGHT);
+> +		pix_mp->width = clamp(round_up(pix_mp->width, fmt->h_align),
+> +				      MTK_JPEG_MIN_WIDTH, MTK_JPEG_MAX_WIDTH);
+> +		for (i = 0; i < pix_mp->num_planes; i++) {
+> +			struct v4l2_plane_pix_format *pfmt =
+> +							&pix_mp->plane_fmt[i];
+> +			u32 stride = pix_mp->width * fmt->h_sample[i] / 4;
+> +			u32 h = pix_mp->height * fmt->v_sample[i] / 4;
+> +
+> +			pfmt->bytesperline = stride;
+> +			pfmt->sizeimage = stride * h;
+> +		}
+>  	}
+>  
+> -	/* type is MTK_JPEG_FMT_TYPE_CAPTURE */
+> -	pix_mp->height = clamp(round_up(pix_mp->height, fmt->v_align),
+> -			       MTK_JPEG_MIN_HEIGHT, MTK_JPEG_MAX_HEIGHT);
+> -	pix_mp->width = clamp(round_up(pix_mp->width, fmt->h_align),
+> -			      MTK_JPEG_MIN_WIDTH, MTK_JPEG_MAX_WIDTH);
+> -
+> -	for (i = 0; i < fmt->colplanes; i++) {
+> -		struct v4l2_plane_pix_format *pfmt = &pix_mp->plane_fmt[i];
+> -		u32 stride = pix_mp->width * fmt->h_sample[i] / 4;
+> -		u32 h = pix_mp->height * fmt->v_sample[i] / 4;
+> -
+> -		pfmt->bytesperline = stride;
+> -		pfmt->sizeimage = stride * h;
+> -	}
+>  	return 0;
+>  }
+>  
+> @@ -271,14 +377,35 @@ static int mtk_jpeg_g_fmt_vid_mplane(struct file *file, void *priv,
+>  	return 0;
+>  }
+>  
+> +static int mtk_jpeg_enc_try_fmt_vid_cap_mplane(struct file *file, void *priv,
+> +					       struct v4l2_format *f)
+> +{
+> +	struct mtk_jpeg_ctx *ctx = mtk_jpeg_fh_to_ctx(priv);
+> +	struct mtk_jpeg_fmt *fmt;
+> +
+> +	fmt = mtk_jpeg_find_format(f->fmt.pix_mp.pixelformat,
+> +				   MTK_JPEG_FMT_FLAG_ENC_CAPTURE);
+> +	if (!fmt)
+> +		fmt = ctx->cap_q.fmt;
+> +
+> +	v4l2_dbg(2, debug, &ctx->jpeg->v4l2_dev, "(%d) try_fmt:%c%c%c%c\n",
+> +		 f->type,
+> +		 (fmt->fourcc & 0xff),
+> +		 (fmt->fourcc >>  8 & 0xff),
+> +		 (fmt->fourcc >> 16 & 0xff),
+> +		 (fmt->fourcc >> 24 & 0xff));
+> +
+> +	return vidioc_try_fmt(f, fmt);
+> +}
+> +
+>  static int mtk_jpeg_dec_try_fmt_vid_cap_mplane(struct file *file, void *priv,
+>  					       struct v4l2_format *f)
+>  {
+>  	struct mtk_jpeg_ctx *ctx = mtk_jpeg_fh_to_ctx(priv);
+>  	struct mtk_jpeg_fmt *fmt;
+>  
+> -	fmt = mtk_jpeg_find_format(ctx, f->fmt.pix_mp.pixelformat,
+> -				   MTK_JPEG_FMT_TYPE_CAPTURE);
+> +	fmt = mtk_jpeg_find_format(f->fmt.pix_mp.pixelformat,
+> +				   MTK_JPEG_FMT_FLAG_DEC_CAPTURE);
+>  	if (!fmt)
+>  		fmt = ctx->cap_q.fmt;
+>  
+> @@ -289,7 +416,33 @@ static int mtk_jpeg_dec_try_fmt_vid_cap_mplane(struct file *file, void *priv,
+>  		 (fmt->fourcc >> 16 & 0xff),
+>  		 (fmt->fourcc >> 24 & 0xff));
+>  
+> -	return mtk_jpeg_try_fmt_mplane(f, fmt, ctx, MTK_JPEG_FMT_TYPE_CAPTURE);
+> +	if (ctx->state != MTK_JPEG_INIT) {
+> +		mtk_jpeg_g_fmt_vid_mplane(file, priv, f);
+> +		return 0;
+> +	}
 
+This is probably related to the same mtk_jpeg_adjust_fmt_mplane() removal.
 
-sparse warnings: (new ones prefixed by >>)
+> +
+> +	return vidioc_try_fmt(f, fmt);
+> +}
+> +
+> +static int mtk_jpeg_enc_try_fmt_vid_out_mplane(struct file *file, void *priv,
+> +					       struct v4l2_format *f)
+> +{
+> +	struct mtk_jpeg_ctx *ctx = mtk_jpeg_fh_to_ctx(priv);
+> +	struct mtk_jpeg_fmt *fmt;
+> +
+> +	fmt = mtk_jpeg_find_format(f->fmt.pix_mp.pixelformat,
+> +				   MTK_JPEG_FMT_FLAG_ENC_OUTPUT);
+> +	if (!fmt)
+> +		fmt = ctx->out_q.fmt;
+> +
+> +	v4l2_dbg(2, debug, &ctx->jpeg->v4l2_dev, "(%d) try_fmt:%c%c%c%c\n",
+> +		 f->type,
+> +		 (fmt->fourcc & 0xff),
+> +		 (fmt->fourcc >>  8 & 0xff),
+> +		 (fmt->fourcc >> 16 & 0xff),
+> +		 (fmt->fourcc >> 24 & 0xff));
+> +
+> +	return vidioc_try_fmt(f, fmt);
+>  }
+>  
+>  static int mtk_jpeg_dec_try_fmt_vid_out_mplane(struct file *file, void *priv,
+> @@ -298,8 +451,8 @@ static int mtk_jpeg_dec_try_fmt_vid_out_mplane(struct file *file, void *priv,
+>  	struct mtk_jpeg_ctx *ctx = mtk_jpeg_fh_to_ctx(priv);
+>  	struct mtk_jpeg_fmt *fmt;
+>  
+> -	fmt = mtk_jpeg_find_format(ctx, f->fmt.pix_mp.pixelformat,
+> -				   MTK_JPEG_FMT_TYPE_OUTPUT);
+> +	fmt = mtk_jpeg_find_format(f->fmt.pix_mp.pixelformat,
+> +				   MTK_JPEG_FMT_FLAG_DEC_OUTPUT);
+>  	if (!fmt)
+>  		fmt = ctx->out_q.fmt;
+>  
+> @@ -310,17 +463,21 @@ static int mtk_jpeg_dec_try_fmt_vid_out_mplane(struct file *file, void *priv,
+>  		 (fmt->fourcc >> 16 & 0xff),
+>  		 (fmt->fourcc >> 24 & 0xff));
+>  
+> -	return mtk_jpeg_try_fmt_mplane(f, fmt, ctx, MTK_JPEG_FMT_TYPE_OUTPUT);
+> +	if (ctx->state != MTK_JPEG_INIT) {
+> +		mtk_jpeg_g_fmt_vid_mplane(file, priv, f);
+> +		return 0;
+> +	}
 
-   drivers/infiniband/core/cm.c:1297:21: sparse: sparse: cast from restricted __be32
->> include/asm-generic/mmiowb.h:56:9: sparse: sparse: context imbalance in 'cm_queue_work_unlock' - unexpected unlock
-   drivers/infiniband/core/cm.c:2043:12: sparse: sparse: context imbalance in 'cm_req_handler' - different lock contexts for basic block
-   drivers/infiniband/core/cm.c:2422:12: sparse: sparse: context imbalance in 'cm_rep_handler' - different lock contexts for basic block
-   drivers/infiniband/core/cm.c:2533:12: sparse: sparse: context imbalance in 'cm_establish_handler' - different lock contexts for basic block
-   drivers/infiniband/core/cm.c:2556:12: sparse: sparse: context imbalance in 'cm_rtu_handler' - different lock contexts for basic block
-   drivers/infiniband/core/cm.c:2770:12: sparse: sparse: context imbalance in 'cm_dreq_handler' - different lock contexts for basic block
-   drivers/infiniband/core/cm.c:2847:12: sparse: sparse: context imbalance in 'cm_drep_handler' - different lock contexts for basic block
-   drivers/infiniband/core/cm.c:2995:12: sparse: sparse: context imbalance in 'cm_rej_handler' - wrong count at exit
-   drivers/infiniband/core/cm.c:3153:12: sparse: sparse: context imbalance in 'cm_mra_handler' - different lock contexts for basic block
-   drivers/infiniband/core/cm.c:3271:12: sparse: sparse: context imbalance in 'cm_lap_handler' - different lock contexts for basic block
-   drivers/infiniband/core/cm.c:3360:12: sparse: sparse: context imbalance in 'cm_apr_handler' - different lock contexts for basic block
-   drivers/infiniband/core/cm.c:3405:12: sparse: sparse: context imbalance in 'cm_timewait_handler' - different lock contexts for basic block
+Ditto.
 
-vim +/cm_queue_work_unlock +56 include/asm-generic/mmiowb.h
+> +
+> +	return vidioc_try_fmt(f, fmt);
+>  }
+>  
+>  static int mtk_jpeg_s_fmt_mplane(struct mtk_jpeg_ctx *ctx,
+> -				 struct v4l2_format *f)
+> +				 struct v4l2_format *f, unsigned int fmt_type)
+>  {
+>  	struct vb2_queue *vq;
+>  	struct mtk_jpeg_q_data *q_data = NULL;
+>  	struct v4l2_pix_format_mplane *pix_mp = &f->fmt.pix_mp;
+>  	struct mtk_jpeg_dev *jpeg = ctx->jpeg;
+> -	unsigned int f_type;
+>  	int i;
+>  
+>  	vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, f->type);
+> @@ -334,12 +491,11 @@ static int mtk_jpeg_s_fmt_mplane(struct mtk_jpeg_ctx *ctx,
+>  		return -EBUSY;
+>  	}
+>  
+> -	f_type = V4L2_TYPE_IS_OUTPUT(f->type) ?
+> -			 MTK_JPEG_FMT_TYPE_OUTPUT : MTK_JPEG_FMT_TYPE_CAPTURE;
+> -
+> -	q_data->fmt = mtk_jpeg_find_format(ctx, pix_mp->pixelformat, f_type);
+> +	q_data->fmt = mtk_jpeg_find_format(pix_mp->pixelformat, fmt_type);
+>  	q_data->w = pix_mp->width;
+>  	q_data->h = pix_mp->height;
+> +	q_data->crop_rect.width = pix_mp->width;
+> +	q_data->crop_rect.height = pix_mp->height;
+>  	ctx->colorspace = pix_mp->colorspace;
+>  	ctx->ycbcr_enc = pix_mp->ycbcr_enc;
+>  	ctx->xfer_func = pix_mp->xfer_func;
+> @@ -365,6 +521,19 @@ static int mtk_jpeg_s_fmt_mplane(struct mtk_jpeg_ctx *ctx,
+>  	return 0;
+>  }
+>  
+> +static int mtk_jpeg_enc_s_fmt_vid_out_mplane(struct file *file, void *priv,
+> +					     struct v4l2_format *f)
+> +{
+> +	int ret;
+> +
+> +	ret = mtk_jpeg_enc_try_fmt_vid_out_mplane(file, priv, f);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return mtk_jpeg_s_fmt_mplane(mtk_jpeg_fh_to_ctx(priv), f,
+> +				     MTK_JPEG_FMT_FLAG_ENC_OUTPUT);
+> +}
+> +
+>  static int mtk_jpeg_dec_s_fmt_vid_out_mplane(struct file *file, void *priv,
+>  					     struct v4l2_format *f)
+>  {
+> @@ -374,7 +543,21 @@ static int mtk_jpeg_dec_s_fmt_vid_out_mplane(struct file *file, void *priv,
+>  	if (ret)
+>  		return ret;
+>  
+> -	return mtk_jpeg_s_fmt_mplane(mtk_jpeg_fh_to_ctx(priv), f);
+> +	return mtk_jpeg_s_fmt_mplane(mtk_jpeg_fh_to_ctx(priv), f,
+> +				     MTK_JPEG_FMT_FLAG_DEC_OUTPUT);
+> +}
+> +
+> +static int mtk_jpeg_enc_s_fmt_vid_cap_mplane(struct file *file, void *priv,
+> +					     struct v4l2_format *f)
+> +{
+> +	int ret;
+> +
+> +	ret = mtk_jpeg_enc_try_fmt_vid_cap_mplane(file, priv, f);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return mtk_jpeg_s_fmt_mplane(mtk_jpeg_fh_to_ctx(priv), f,
+> +				     MTK_JPEG_FMT_FLAG_ENC_CAPTURE);
+>  }
+>  
+>  static int mtk_jpeg_dec_s_fmt_vid_cap_mplane(struct file *file, void *priv,
+> @@ -386,7 +569,8 @@ static int mtk_jpeg_dec_s_fmt_vid_cap_mplane(struct file *file, void *priv,
+>  	if (ret)
+>  		return ret;
+>  
+> -	return mtk_jpeg_s_fmt_mplane(mtk_jpeg_fh_to_ctx(priv), f);
+> +	return mtk_jpeg_s_fmt_mplane(mtk_jpeg_fh_to_ctx(priv), f,
+> +				     MTK_JPEG_FMT_FLAG_DEC_CAPTURE);
+>  }
+>  
+>  static void mtk_jpeg_queue_src_chg_event(struct mtk_jpeg_ctx *ctx)
+> @@ -411,6 +595,29 @@ static int mtk_jpeg_subscribe_event(struct v4l2_fh *fh,
+>  	return v4l2_ctrl_subscribe_event(fh, sub);
+>  }
+>  
+> +static int mtk_jpeg_enc_g_selection(struct file *file, void *priv,
+> +				    struct v4l2_selection *s)
+> +{
+> +	struct mtk_jpeg_ctx *ctx = mtk_jpeg_fh_to_ctx(priv);
+> +
+> +	if (s->type != V4L2_BUF_TYPE_VIDEO_OUTPUT)
+> +		return -EINVAL;
+> +
+> +	switch (s->target) {
+> +	case V4L2_SEL_TGT_CROP:
+> +	case V4L2_SEL_TGT_CROP_BOUNDS:
+> +	case V4L2_SEL_TGT_CROP_DEFAULT:
+> +		s->r.width = ctx->out_q.w;
+> +		s->r.height = ctx->out_q.h;
 
-d1be6a28b13ce6d Will Deacon 2019-02-22  46  
-d1be6a28b13ce6d Will Deacon 2019-02-22  47  static inline void mmiowb_spin_unlock(void)
-d1be6a28b13ce6d Will Deacon 2019-02-22  48  {
-d1be6a28b13ce6d Will Deacon 2019-02-22  49  	struct mmiowb_state *ms = __mmiowb_state();
-d1be6a28b13ce6d Will Deacon 2019-02-22  50  
-d1be6a28b13ce6d Will Deacon 2019-02-22  51  	if (unlikely(ms->mmiowb_pending)) {
-d1be6a28b13ce6d Will Deacon 2019-02-22  52  		ms->mmiowb_pending = 0;
-d1be6a28b13ce6d Will Deacon 2019-02-22  53  		mmiowb();
-d1be6a28b13ce6d Will Deacon 2019-02-22  54  	}
-d1be6a28b13ce6d Will Deacon 2019-02-22  55  
-d1be6a28b13ce6d Will Deacon 2019-02-22 @56  	ms->nesting_count--;
+If TGT_CROP can be set, then g_selection should return ctx->out_q.crop_rect
+for that target, and not ctx->out_q.w/h. That's for CROP_BOUNDS/CROP_DEFAULT
+only.
 
-:::::: The code at line 56 was first introduced by commit
-:::::: d1be6a28b13ce6d1bc42bf9b6a9454c65839225b asm-generic/mmiowb: Add generic implementation of mmiowb() tracking
+> +		s->r.left = 0;
+> +		s->r.top = 0;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +	return 0;
+> +}
+> +
+>  static int mtk_jpeg_dec_g_selection(struct file *file, void *priv,
+>  				    struct v4l2_selection *s)
+>  {
+> @@ -440,6 +647,29 @@ static int mtk_jpeg_dec_g_selection(struct file *file, void *priv,
+>  	return 0;
+>  }
+>  
+> +static int mtk_jpeg_enc_s_selection(struct file *file, void *priv,
+> +				    struct v4l2_selection *s)
+> +{
+> +	struct mtk_jpeg_ctx *ctx = mtk_jpeg_fh_to_ctx(priv);
+> +
+> +	if (s->type != V4L2_BUF_TYPE_VIDEO_OUTPUT)
+> +		return -EINVAL;
+> +
+> +	switch (s->target) {
+> +	case V4L2_SEL_TGT_CROP:
+> +		s->r.left = 0;
+> +		s->r.top = 0;
 
-:::::: TO: Will Deacon <will.deacon@arm.com>
-:::::: CC: Will Deacon <will.deacon@arm.com>
+Is it a hardware limitation that left/top can only be 0?
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> +		s->r.width = min(s->r.width, ctx->out_q.w);
+> +		s->r.height = min(s->r.height, ctx->out_q.h);
+> +		ctx->out_q.crop_rect = s->r;
 
---KsGdsel6WgEHnImy
-Content-Type: application/gzip
-Content-Disposition: attachment; filename=".config.gz"
-Content-Transfer-Encoding: base64
+I'd rename crop_rect to enc_crop_rect.
 
-H4sICBoT3l4AAy5jb25maWcAjBzbchu37r1foWlf2oektpS48TnjBy6XKzHam0lKsv2y48hK
-qqltZWy5l78/APcGcrk67XSSLACCJAjiRlI//fDThL0dD0/3x/32/vHxn8m33fPu5f64e5h8
-3T/u/juJi0lemImIpXkPxOn++e3vX1/2r9s/Jx/f//b+7N3L9nyy3L087x4n/PD8df/tDZrv
-D88//PQD/P8TAJ++A6eX/0xsq4sP7x6Rx7tv2+3k5znnv0wu38/enwEtL/JEzivOK6krwFz9
-04Lgo1oLpWWRX12ezc7OWkQad/Dp7MOZ/a/jk7J83qHPCPsF0xXTWTUvTNF3QhAyT2UuBqgN
-U3mVsdtIVKtc5tJIlso7ETuEsdQsSsW/IJbqutoUatlDzEIJFkP3SQF/VIZpRFoxzu26PE5e
-d8e3772wkHEl8nXFFEhDZtJczaYo9WY8RVZKGIwR2kz2r5PnwxE5dOIrOEtbCf34YwhcsRUV
-UrSSIHPNUkPoY5GwVWqqRaFNzjJx9ePPz4fn3S8dgb7Va1mSBW0A+Dc3aQ8vCy1vqux6JVYi
-DO2bdJNcaZHKiE6vQ7EV6G1g4gu2FiAyvqgpkCdL01bWsDCT17cvr/+8HndPvaznIhdKcrtu
-elFsiH4SjMw/C25QoEE0X8jSVYG4yJjMQ7BqIYXCUd4OeWVaIuUoYsBWl0xpEW5j6UW0mifa
-Cnb3/DA5fPXkEGqUwbJLkGYep0IN+XLQpKVYi9zoVrZm/7R7eQ2J10i+rIpcgGhNzyovqsUd
-6nFmJdqtLABL6KOIJQ+sb91Kwqg8Tg4LOV9USmjoOQNldxWoEcFguH3zUgmRlQb45iIwhBa9
-LtJVbpi6pV03yBPNeAGtWqHxcvWruX/9Y3KE4UzuYWivx/vj6+R+uz28PR/3z988MUKDinHL
-Q+ZzogR8IWIwM0JlLMW+tF4pIqNIxwAtOMCxvRnHVOsZnRCaKm2Y0cFtWGoZlO6/mBexZTAn
-qYuU4eai7KyIFF9NdECpQJwV4OhY4bMSN6A9Ifnrmpg290A408oBIUOYfJr2ekowuQCRazHn
-USq1ofvLHXO3/5f1P4hFWHbKUXAKXoC3AM29euotN5roBMyTTMzV9IzCUX4ZuyH482mvdTI3
-S7DrifB4nM/8TV3rkN3arX7q7e+7hzdw8pOvu/vj28vu1YKbaQawnmOFzs+nn/qZWcusV2VZ
-KDPE8rkqVqWmS5qJjM+Dqhely6ZBYLFrRD2jnn/CpKpcTK+Eia4iMHcbGZtFgKMyVZBn01Mp
-Yz0AqjhjTh81OAHduxMqOCtYSy3czeY2jsVacjHoCtq527qBR2USGIF1CaE9UvBlR8MMIzYW
-vD84GrASjoOGRczDlgGDgDw0D5ifAgwJAmRcf3dtc2HG2ILw+bIsQHPQwJtChSx0rcgY39ip
-UNYQEMBCxwIsJGdGxKGVFikjfhn1DIRuAzJFgzz8Zhlw08VKwZL0YZOKq/mddPoFUASgaXBS
-gEzvMjaGu7kLjRLbkPjNfn8gwy4K9DWNvenlx6uiBLcIAWuVFApdLfyVsZyHBOlTa/iHE+s5
-MV79DRaYixJNORhZRlXV08VRS21jD1QThzUKuovm2g1dByh+QFm7fQK1RpDGusQGizQBOTm+
-kkE4laycjlZG3HifoLg9xMadNZhn5Q1f0B7KgvLScp6zNCGqZMdLATayogAmyVLLolopx/uz
-eC21aOVDZg7mM2JKSSrLJZLcZnoIqRzhdlArD9wVRq7d5SQr0i9rFok4Du4sKyTUuMoNHZss
-s9y9fD28PN0/b3cT8efuGeIFBo6GY8QAsVodMDUr2jMJxh//kmM7sHVWM6uDs1p3nFSLmSpS
-y5CpSVnk2Jd0FY2QwWKouWhzKrcRYNErYBxRKdDpIgsxWaySBHK+kgEbkDokc2AA3eizSCRk
-uCHbbjejtZxOKuCmny3xxYdIEmeipOZrz4tnGQMPl4NdgzSryiAjOf90ioDdXE0/OAyrrMqK
-WDjuPlsFhn4HgXgFvnQ27cewZpbv1eyy2+UN5ONFDwFBFUkCHvXq7O9PZ24ZwQ4yAa2GTQKZ
-Nub23hQ3DFTCRkcQUy9Wc2HSaCyWsS7V9mhXxjFdPVXDJCGbD+JLvrSL05LRKBXBkI/BMOd6
-iG8jN8egEWC3ayu78I5R7FI5Bjm2Al8IU3AcX0egV9kQutgIyLLIWMq5seWRFHYSmKBZE0Ae
-OKzk427bVI56nS8g4JQJjC3o9hC9luFAHlBLkcfq1giqyW5Xtq/y8f6IBmBy/Of7jvZu106t
-Z1MZ6KBBXnwg9p2jpqawhePU1gd669AhWH4bcmZFvAKp6Lp0QE0zuykXtxqVbzonaqUzUkbI
-lY0Irz6R5LYwZbqykWJol69gqzRr5MQfdsNJzSoelHficuuE6kqQWmsnIWjHdledn52FLP9d
-Nf145qX5M5fU4xJmcwVsiJYIjtb5lAvoMxMcZ3QAssN31JBXUpjMYlsWhAiua+5Q1sp0+Asy
-HXAm9992T+BLhnxKsk/KrDYJjnnO0FNjrBWPhuBAw9MlbbW5ht27gaBZJInkEt1U40PCKzY2
-TKfaeP+y/X1/hL0Csnn3sPsOjYNT6utp1hYtimI5tAWgsrYk05Q5PROJeSBYYIxFCnU7gowl
-BORAw4jy131r6yWaoqX2sLWoBuGFEnOf0sJt7mENbhWvskFX1qDXKlWBHzU0amoSWtsY3KyB
-0UJAjCUijwtaLa9Mg4IKuRb0BrDgMXh2pnw+MOlmRKXgYCiJS6ltisbp2PAVrbwvmKK8bavO
-hkaEkN6DhYhgFhumnJy1DnNmU3CiNiINrZSB5TZgfVUONk9tSEh8AoUFBRpfdXHfnBfrd1/u
-X3cPkz/q3fr95fB1/1iXvboNgGQN4zFrjYOzZHUEJKo2KG2jnFM9+aHQ/9kbpCKQYcAviBBt
-qKwz7P3MWy1/+TCh4liUoRumQa3yILhu0SH7qKnfH0GD2vogxbvaf5qepJThmkuDRlXBCuO4
-u8MYaANBodao/l3xoJKZjYOcGkIOagxb4DaLijQ8flCtrKVbYkoy2rGuC3spmKkV2d5RU9Pq
-PpeV5lrCxrleCW1cDCb7kZ4HgRAqhSoDRsyVNMGiQYOqzLnj/loCDG3j4KRtfat2TJWt8KvA
-rJFoE3kTAECVXQ97w4AwCUvYSgSkW5TMUYza8d2/HPeo+xMDQYCbhzFlpM31W8cWWhodF7on
-JWluIh1w78O8HunsMnCHXLozBhiaXZokN+CmBEeA1knXp0FFX8EkLg9ayaIuIcVgPt0DQ4Jc
-3kbUQbTgKLm+eiJHLU4nndHS+TktJdlV1qXM7e4Gc+mc5jR4a8xr/ClcsO0GlFCMNaZIt3Vn
-XLNMFhui+923laT4e7d9O95/edzZw+WJTbqPRKaRzJPMwKZTsjQB9g0eszFHb3twSPlrLFgZ
-3hfKsZTT+PZuDcaGZ8ee7Z4OL/9MshNxXZMkkvoPAMD3xwKDmkDQgmUXK8yahuJ1mYJ/LY1F
-29j+0v5H99Qc1xMNZTiTx7QB9lusKuMn6nkBGXTVHErXdhPLcVpfnZOUJRWwVRloayjXLosi
-tQrcAqJV2EDdzZIiDe33RIG9r9Y2QiIBsVAYFdmzJBJCYo1a5HyRMXpe3ilGaUQdADHHn48v
-WicJQcUCESbIEn2WCxQBGOiPDUbJmi0jEKMReRuCWsXJd8e/Di9/QAgRyAQgvoIBPLnfEOWy
-eQ9c5ZJESfgFGyTzIG4TDOXI2sBncyAQSgUBaQpiu24SlblfWBxxIw0LZem88EC2HPvkgGxB
-IcEKrwvXqwgSllRy52DUojI5x0pDYLB1S9ANqY3k2utdlhhyXHlHBEsRSrh1RqwBfHgSvIlL
-e8whqBYSYE1OLKRwLJIs6/I0Z9oEdwUQdDmeKiA+DLltILI4vMoCIRI9VSirMi/97ype8NIb
-BoKxyF+ODQMJFFOh4zG7H0pZ9mKpIbAbQJ+y1Y2PwLoChN/ejkL6nhJF08zKOyzVtznAiqUU
-g2MeWa5NqAaDuFUc7jcpVj4bAPWjHDmQQjoWOtqzGAhQyVQaSLc/njw+An214SOyryfmVyYo
-1p+WBQ41r4IuQmCUTKPWbq+KbSxifFyIhTWGdK24DQfb0CX8c34qouto+CqiiWl7X6jFX/24
-ffuy3/7ocs/ij16C0WnQ+sLV8vVFs4nwSkMy0qQ5o0LDUcVuZoRTvhhf9Yvhsl946+6gOjtE
-e89keeGuz0VttUKLfNFD3WmGt4FFaWkG5ACrLlRobSw6jyEostGHuS2FN+DBuBDobWWA1NvM
-mSlavhLrPFjp1R4W7D4mXz64tglBYIChO8tSZjqr1tNRyYj5RZVuRkRqsRBYhO4R9QT1qaSj
-cWVKmbYRb2l46X0ONLaGYp+Dm3nUXuHlQKw0YdBzkgZCPVuLAc+YlV40SInralUoRi79QhaY
-yZhz39ghqDUpNrpBwIRzGb8Obn+6jCokmg6LnRQ9C1YqR7voB9AUcRf32z+cu1At875XytNr
-RRppbtzrAPBdxdG8KqLPPA+vV03TWLbajdUrDHYsePlghFwv2Pmw7wDhyL0zS+/1T3ysj226
-o4tc91i7E3LBIFROMXir84l+4RGHZOh6eq4WztVtaW+S9kYewb4baiN7k/V84QNCIBuH9Ecz
-DQyv9UkedKFIkrJcuIyysmA+o0hNLz59CF2QnRoyD/zq7kkSFha+noUWgzafQ5RFLAP9iJSM
-58L/ruQ8A2XMi6Ksz/H7jLfGr2F6TQk6nAPaNNNuXE1v6TSAJw8A9hVzqsvZ7DyMixTP2rBt
-lOBEU/DOpcjjMMVcb/xQs0XVg3VCuRYl4B8jgWFLkpllmO1S342xLbhIi1A1gRJd8xEZwrJc
-zs5mY8z1Z3Z+fvZxzEp3dEYxmQbttV34T2fTc1KE6WHVfE2ViyCyGtH1FgsOHYYUPyXxGnxM
-6SZi6ZJODQuUrAT/jIhQ0jb9SPtMWRm+rF0uivBgLtJiU7Kc9tmA2t043qjKF8RCEaCNbsOY
-RLF5JvIR7KIowwjr5YOYrIhkipXfIBaDHNzfQSQa0gFiDghxY6pFrMLDmZ9qieYyNFLKtRHO
-QN6UBsV0QvCUtA7uaBoihECV/BiyurUTqu9PWid//bZ724GP/rWpkXonPw19xaPrcW7VwkSu
-CbTAhFYFW6jjfVpgqaTjvlq4jU6vRzczkqhgetRidRINe9O2PuwBjbhOh3MwUTIE8kgP20ME
-GGjO7MyehsOeq5FDh5Yg1n5o6hHA37YgOmypQmatE+l1MyRfKMtobBX4oliG74i0FNfJ6UXi
-eEPjxKCS65pkOCzOlmIo1+Q6NM7FIjk5ilKGgroWG6xO2mapG1b3Kx4uc3TrMLwiUO+sx/vX
-1/3X/daL5rEdT70BAACPNN2rJC3CcJnH4mZkUkhhjcMHV6wITzZD2Go2pZragOyxffgicENw
-Qk/tEPS6HHaG0IvQnCDr35zgxtv7xL6MIId8CnMLevmWIGOGL7z7k7a8ZBEnGjLuVbcBUBdd
-hc8LMXP4Y1RbkCCTatyUIYGG/DMV/iQRkwfPZrox4ftCdwEsO5mVwwmAFbDkA4S9ghboG8YU
-ihBaNMZHQ2b1Yg27zop4CJdJUKB1cWCkAm3Lf4mwPPFU4ymAaKzdENHsKn+2hrenEKcMmUwI
-05gTtxjnGi/MF/j6rx9QBP6Q2bPbEKz959pJUAg6DV9ZJyQxC+sdIcnDF9IIRTZabKc9jcaL
-PhFJxnqMvWA+Mk+8+TRWeykg7VlDfhPeruv2pOHJh3inEh04hZQQL+cQlD3YDrFyEX36RhUn
-lflyLBXH3ePqIEIgXXP8sIU1keyI7uV6Qbtd6NEQwAoK0gp/T6UzsIUa67yAHLVUOdehIqkq
-yTRUYp+x0crdjfukqHnfggxxF4aePfQUgwMaW2XHt1b6tnLv9UfXjh3H6/Gfg29U7cV5owTL
-mosd3vEGXp2pX/y6J42T4+71GIiQy6WZi3xUarEqSkhUcmkK781RUzMbsPcQ9ISzrz9kisXW
-hjV3RLZ/7I4Tdf+wP+DdquNhe3gkB6IMc0VanIFvsA4Zw8vv65HISBWO1VeFFoN4ht28n36c
-PDdTeNj9ud/uJg8v+z/dOx1LqZ3KzgWeyIZtSnkt8B1l0JLcwiar8BJhEt9Qk9nBFwE4LHIP
-u2UZvR5ycvidPlI3Bh94zENuPAAgotUZBMw3bovP55ezy7a2C4BJXHcV+5JC4vWgw/XNAKRT
-znK3U29jI4izlOO1fDygCdoPJEpScTNgNlfcrQzYabD8DtJclodqckiwXDNchpJLQd/P2KE0
-cnTHZ/8sU2bwGdQI04aIS3eEnP/225k/QgvEi9ZjvCy+7dBvLROJfyfh7AwpMvxzhHcp2LKd
-uscYK1PhO9UWWyRuoYIAIfjymdVXyeqLB+H3NwENIzssZBRZAmZV2aJzbyQamC3ABCXSU9jH
-+eA+g7cSOzIvAFA3S+e6clIt6UYaMdKJjCq18s6rNlKJNHwnciPx8cuT89nI0D6WuOrezahk
-KVOSh9bfQBU7Hs4CZV6uzAA6L/30+tILtC/L/q6c4ycuA+9CybLL0PErF+WiwkuRVEMaGBaF
-jbkdu+jekeEtZic87Yeb0BJOgmcKc2lY6gJzui8bQLViyrjQhU+mF7GthTYu9v5lkux3j/g6
-7Onp7blJkCc/A+kvjWEmZtIykJnLMaGFuQZQyamj0wgu848fPiAi7LNritnsJEUmuSrqHxWZ
-Bn8oAWnU2pMVQgKyseB6oHR+ZnoOf7MwNEQ/XIsaFhJCflMiamToepZsVP7RY1YDO25dmPKv
-1q7lVHa5rJt9kbL44PC3hbinxTHMzt6jI0dBqgDNTv3A2j6szuilYhuZiTXG5z3QXv2zF/B6
-Y8NkWtS7ohMfxCcGiNr4fux4SDQhaKvjYy6/fh9B79T6H81vjuggMPTcCJ0QXmCEMDl0gRGw
-TDuvZRpI6HVkh7OvYDQbeTHmkuFbuX9FfPL9M5JVpXEHij/EMgAEf5kFcdcrqZbam88JQ4tY
-Vb8hbB4l2ofs4cHB9lpFPm+bXQRfoSLWuX2JAMGZNz9ZrF0ApEkegNU5UZ/yNY/SSndD16kB
-wLaH5+PL4RF/KqKPzZ1RJwb+DD8eQzT+AtHgXlmHGNHA6gYfw94MRhTvXvffnjf3Lzs7OH6A
-f+i3798PL0dyhRMZxBtXRwFQiXIIK72LyxRuhzimXC2NKP1lzMAd5sHg6tTw6yvNhy8g4/0j
-onf+9Po7tONU9eLcP+zw4bRF9wuIv5kTEhVnscjpc38KtTIYQQ3k2SIaoY6hTvGkMm1D0v87
-ne71QVhhO2UWzw/fD/tnVwCwWWP7yNZfxxbe/BhDsERl6WDfmvZwjoyk663r//Wv/XH7e3hP
-UduwaeotRnAqiNMseg6c0Z+7KHnGJXMnhxD7gKniMviTJcABPEBXI+DvtvcvD5MvL/uHbzSY
-uhU5/a0R+1kVUx8CO7xY+EAjfQjYAvsMdkBZ6IWM3CnEF79NL0PXwz5Nzy7J0XgtDbyZY+8o
-u09rWSljt47UP7Xcbxt/Oyn8O+Kr+kncQqQlDXodMFhas3B+kG1tspI+H28hVdb8rlSXu7A8
-Zmn9PrGfsKq5J1JlG6ZE/bNv/+PsyXrcxpH+K/30YRfYwVi+/TAPOm2mdbUo23JehN5ND6ax
-SSZIZ7Cz/35ZJCVVUUX34AuQxKoqUrxE1s1Z07PX71/+A/vL59/VV/MdRUJc9XwTaWgAae4l
-gQxDEzLt2iYc34Y6MpXSMZnjIIwtZQkUN5TnkaO5mRUYwtPwond7NIp8OlANHB1I4Mg4uFrQ
-bcSF1QeNcnBDZUEDh4/ZllUnelGxWi5NFMpbGQ+kdVNFiDlt0iOJHzHPmgV2YYqfEW7B/hrM
-QBC7M68Qh/0koJeDmFQ9nRmebkBleo91srsMwcAmWLiqq7w63vAUeL4HE5f9x9tcxgIjEaS7
-KHqziUwq6ZPoHc5yittGNY37UKV493ieKyNmUogMvSklUrUXbUIe9LTJQZ02Rat9e/7+RvWO
-LQTx7nSUG1GjAAJF93mMuUBVZXMChFZzpFP9DG9gUCacpWpuNg7yp8BbQX8ubWIRmh1rTgii
-Z1XmN3YS5iOiB+qsfiq2A2LhTCKW9vvz17fPRljLn/87G7oof1Rfl9Mt04k5qG+Ir0PWsjZ/
-BcZCZQuxyrinonQKTvt8lngqlTJLiHwrC5eSTmlV++d7DIhUH5+xicy25yYsfm6q4ufs8/Ob
-OsR/e/3GaLxhgWWCjtOHNEljZ4MBuPp2x32HLtFMaBNYpRM6+dYg7B9RWD72Onlaj9xOGezy
-LnZNsfB+ETCwpbs6NbRs05w3kY6dKZTQ7nzMAFfHZTiHnluRO99UWDgAaqPQH3wkU9eXeEgM
-6J85w7k/f/sG5hYLhEhFQ/X8L7WhudNbwf7YwRCCG6mkw6STi4S12zgLtuH+npEaiKrMHeYB
-A4HkihHKefEaUx7TQpTifbJaVDqo0dckrVmiRTUD6qHXa6G/QIqGhs4YyAYNtcK8N+wmlc3L
-519/Ao75+fXry6cHVZXf3ASvKeLNJpi1WUMhN08mONcZROPoqgEj89n6q08zkPrrwtSzOpPb
-MDcp3NaLw9bBpo1OXQDYYLmfba5LcwQa8fn17d8/VV9/imGEfEolKJlU8XGFzGHaF0tx0H3x
-S7CeQ9tf1tOUvD/a+E2lYnZNFjcyEmoTBQwLhCUsspsJfnaX+UBjmRrPRA1UFQ0qwKhlBxvr
-UY2wpw5NlcYxiGunsCiIGcZDoGMc/0u3pWs/7ykuqoZ5kMOa5//8rM7lZyX3fX4AmodfzXY0
-CcVYOzPWpETrMBeujsdLl/A+G9N0hRnHEY/4ohMx0x9q4RjBnEUNvUqrBWYHafH69i+6ZGXB
-+FGM9cA/iiu912ojpHKFEyEfqxLSRM/akdew8f2f+X+pBOXi4YuJcGa0ZVChKcCdMO9XhZt8
-jhwOQQH6a64zx8hTlSfuVqEJojSyDgpTItoBlymWxQgspMGAOubnNPKvHV0z7DWe4T3dlAQI
-ksDY4KRFn0GV4d8QPN22JLeHAkLcPsSoEWAaNvmNRz1W0QcCSG5lWAjyVn1oEddNBSPSlHou
-U9qQIsEiWAUpfJSUewGWD+cZMAiwihEY2ANIqjbFM+rEcGjZWVAfdvv97rBlxnSgUNs9zhtq
-EpMQTxabq6Q85zk8cJqeBPggtxKtk5MSTiRRr5ZdN6c4F9SNeICDHxTngWHRSRMREzc89yaS
-akzTznt3DH2JOG/HASsfk3lTZbfnWspv7XpAwDMnTi7YDwGDrWxNsrtRgqsvS0MICjLQFqQt
-2WysTxg/SWOL6diNYNnNVeXlpUjnunGAuklTh4G94MxRmtBEeYIiC1ucAXO6FhXnzKCRWRg1
-IsbO7hpKDYkAcuKwCSpsjmk7L6HBvkWGSYgFmsChMI9r45qYJ/EQjsfOXN0RJpvlpuuTGmfJ
-R0Cr85nW/LkobrDTcN/2KSzbCvGArcgKZ8Y0aNd1OEowlofVUq4XCKYOzryCZPLg36Q9Pibc
-qe5Fjk7jsE7kYb9Yhtj+KWS+PCwWiBE0kOUCaSvTUlaN7FuF2dBEgQMqOgW7HZ8wcCDRrz8s
-OL76VMTb1YZIjYkMtns+IbPkP2qizqeHi7E09TLJUsy0QBR208qOKJ4udViyPGW8tOk9TVKd
-VHGOxdzaYuBqC1gi13oLzNNjGKODwYKLsNvud5sZ+WEVd8QP3sKVKN7vD6c6ldxYWqI0DRaL
-NV7pTovHbkW7YOEsPgNzRBwE7EMpz0Xd4oQr7cufz28P4uvbj+9/fNHJfN9+e/6uhIMfoEaC
-Vz58VsLCwyf1eb1+g5/48oSemlb+H5XNF1wu5MxLY/gUIHYzBL1CnQ+Ck/j6Q3Hcin9Q/Nn3
-l8/6Mp7Z9F6quidczqUi28m9SqYWKsHl+sQL52l84szJeq2GeVw11NNtXMPUK+AURmEZ9qHA
-Kl6ysRmhGVx2reA266rOwQZu95MyOhRJD4wYTpAbY3u7LkOSemmIdYVwoFrHm40LSDfGtkIn
-NH34m5ref//j4cfzt5d/PMTJT2r5/h1lrRpOfnyCnxoDazlmgPV8HoscmWriE/I3gzaP+60D
-j7XtqWydkYFbHY7OVSAKKsFPT9sVSOfbYXG/ObMga8GNuzrnWLDQ/3IYCTcteeC5iNR/DEIb
-8UniW4NqalsXWv9uP5zBuBqXOqzR1RieSTA4rdaeRQCYUe+O0cqQ8SfFQLSeE2GSqOyWhgKx
-TOnSQL64C2517Tv1R38Osyadata5VONUwYMqSHTRFq7G2VcqtKZeWiYMY3i/t5CId+ZVw45n
-AGDWkOBXM1xVsVq6FCDstCbddF/IXzaQlHty6bRE5kKqwXTI7bCW0JwXswTeBFvAhVvMS5r0
-aN0UzSUB9zp7cDt7eLezh7/S2cPdzs5IcXc9o3Jw+z1rEu31fOpFfFh33NlvtuzL/DPWMPdA
-Rxi4XSfHUrDFnQt3c9d5h9TX6Ox/YRMXsnFoU1X1kpj1CsUB6VOkTK9OVIRLYZmlLzME07u6
-XQH0iwtdQt/An1ceieIUl7qHX5pa6fBD8G1bP93Zcc6ZPMXeT/MEfFPtNvbWRG6vbg1NdyGi
-jPc4Nc3iuVZ7Iner4BAkzksz6xLHQl2dvsYd+et3zKlTuzOgMx1WcyA4uztQ2abzfVHeis0q
-3qtvgssxpEme1AErYtCSuDU+5SGRD0fgsM/Td+X1vcFN4tVh86d3/4FmHnZrZwKvyS44dLM3
-ea/30TxRobd1p9l1sV8sgtn4RBl00VeV9SN3C8WnNJeiUgUrT3J/fFQzZhynNyeKw3yAw1mi
-3bJlDUOMWqfASnO1KYgyxfE6RaJP4cUMEswhc6L1ZktgkyoEa4it6oq9PgAu5DqDFRjbUazP
-8cR+aoh33i3a8pWzXXpUqhX6HGqxC+uEQ2rXwq1Bl8zoUhiorHG+UNLCUZ2T8MBHAkElatWo
-E0niLDSJdtKVQo0BZL6HW6kw7lxC5vE6TQhU5yQiEFmGtb6AEAPbk9CG74uAzJ7G9II74FO/
-KZQ2G5mJwDUqmY82RHtgYQiEWmOTpALBxWzg5aRzZBMM/VIV4GPauKM8rim+oeZWDzJ5Z5oC
-BEZRO8LwFWR5+JjSGsB0ppOe4DoMcDCrNYqnPoXy5OYSn9FnKdVqFb03nNYOlR566bx9zLTN
-biRWMxdXHuYqO0vu7kFIZvIQrA7rh79lr99frurv3+dirGLbUgj/QT5xFtLLqF4y4JImFZ3g
-leQdau42ZKhe1WpjspBxUCD2qrRDgD7vqkycDFRarcgOEjTxeA7ZrIPp01nfgosWdmnUp5Me
-0M2G0qZhMYfoO4H6qKnCBOK+fQRNdS6TpopE6aXQ9yj5sGEM9+KAL+G59tGAP2EU5hAcQPbr
-MIbMAuwYidpFWcSly2n0IZiWWZfASEkAJsXPRNtywqtqh0xpkhv1S1Y5zVlCo5R1wHClb7Qs
-20b9wM597bkkD/1FL5mmkkp4R7Ve0hY54lqjQ4kTHpc5SSUmz+UxLcDZA4lQTUyKmGfFaFE+
-ZAAvNgEvFxl8E17voeOQTSRnkVVxWPz556wpFo4ZzOFtQu04HP1yAXrtefMHlGs991DRmEvI
-ZGe8Q+Vsi0pe3358f/3nH6AGlMarO0T3V8x9U6INdsnYrLQt0lbvIMAvh0PIJowmxMSFACpt
-ktSXkwPSn0Wx2uAzkutlQPnMMQM6LFvx5MsmV7S7zWrBVVtc9vt0u9hyoSUjDUTTgWkeUsd5
-E+ERqsN6t/sLJLPQN45wvzvcTxpn+tCxIvlA48vv9xSHeyZPHgQZtemjEjbFHCkLGd9Ldofx
-vgBEjlTbvZn6LnCiy7S/yHi3UtIYF5A9xb/8xSU/nk0Qzk8s8NT8Do1Q7E9SNf0qrkgwlI5w
-WMWbHTK1TND9AWvpG3JFZHurT5W7iOxbwiSsW8r2WBDYCxpgB7yrYahC8dLvE+VhrNlUXyqh
-ka5NcVyV4kJL7ORgnvuq0DcDHauyJ9KtNXW08v0GFeFHj2GeUPkyEQ0EitlQewEJ5cDoxrce
-BwJYEBXiksI2X5KngD4RYQsAvCAf5r7vc3jxWbH+yHRhnvsy2u+xvgKVMHwQ8a1Yo7WoHkxU
-37mtZJqTWwssDhi+e3gqRxbAlrBJS8oODVFc0hgYvSq4nAxQjCgoNECdIKK6MOTypsS8wvqy
-TCWcJ1Mc9QRgJtnW/EYDjTS5kHAj2rnzAbeW1PiD89j9aZ2FvinOLKJPOsr9dNV5nB0MMauR
-Wi8C37zYnhTHC3cnq08Rp7DC8IsHHh07HtEciVLMvLOvPbcK5OLp7MY6OShoAv9ZWrXQO0Mp
-ZIy2ZroPYTp9Owr6lIybMd7rJ4nGWdFc45LUE2qPSDyx1ogkVbI4PgSidEnOHfNsVt4Mqv5j
-YKsZTMsjROdtEfLxdgqv7zXxIzAdaIT1c1/W0qpoID8qxNC17H6UnT+IVqLE8PY0zIrLh2A/
-S1tmSx2r6uhxFUdUp3N4TX2XQVgasV9usB8ZRoHHN3Fm4MOJAbxw6RZ868SRz2ir4Bc+L6Ho
-fEUUwvMSwPiqW/taphC+MrFHyVEECz7nkTjyq/9D8c7OV4TNJaX5C4tL4ewQkzr38cgmNn+8
-EcccePbqMvHL1ZvDskKroci7dZ8SMduC4ATgRGjAUpWIBrm+9wMZSO1Lp/qNX62ksPJ6F53x
-UivupRIUvOlLEU1Fv2s1Mrv1qmM/Yk0uU2x5U0x6bHNjW/3bPZx94iu/4WwB8BQscAb0TMkd
-Jd+uMmxpq+YAuV/tlzMxbyifQr503qOQUDVVWRU0sWPGn3i43Dtb0351WMz2xbBzdtLlo2v2
-spS1m7CbbcNFnbG8rQRRVY+86VAdjtW7x5y9qiotj6L0SvIDbVpK0LIhJV9Vipm8a6mNJe1+
-jaBGBPF7qvEJUqililOaRrEpSsepc6qgSd55g5V7pxfsg9UB34cBz21VzQB9jYXGAagvXG6v
-QpJLNgbsPlgeKLSv8gQSCGq3AOT4tA+2B/ajaNRZbAzSbHch+WPz3pzKsAAN3P2BkWk6S2w8
-oKpciaW5zzUBUwqfZpQQvbOuQGcw+5RkER+C+EC237QWceC5RhoqOQQB68UAqPVy4e1uDPGX
-3lyrA1mrN1Jkk20LuHkjpZ7OFqrEr0yHDfONNUR3EtENFLFgl4k8k2PvFNb1rUhDNlxVK2Mp
-2w8XtbL7mzjzr7uVVQ1OGpjPvsZ9lx/5C3dQ2TY9nVsidxrIe8vGe1GYxV8EkgfUQ9+cBDa+
-jSAnAh7giotRk46vcEUVX8VHwsab5/66MV4GyEBi4b6bzS1BdJY2KJvpEKIR5XgTIVcFf+E8
-ardxSp7abZ2Uw06YDdVF5LmaCYPgxr8TjdqLedYySbjJURxJjU5v0GU0kEer4WCKZWng5ksn
-lFVrp41zFQWapAAEEoM9WJCzwiBEG4XYR3KooIe77lioG2eGUbB8mpRYzSjeXmvVsVkjNKkV
-7mn9R3LCaNBJgL8MnS2NcIIBDKx+2i+23MULGq35uEIIGiMHmCoGBaCvnNUXOI3tanxNY326
-OanMAIAdjq5g/JnY0zSB60mP4BJgECYyQogH9egNrJUZYnHDBKz3J3LNZFjokGJePWfVhi7B
-gDaRUlFPGqrWlPYUNKYrrCnb7wyYdbgojKHNDMKkvLLaPK629X4feJseizhMfA23uhC30kQt
-Mfsuts6kBl566akUsG28DwJqtNOF1nsGuN1xwAMdzUx0aUJBIq5z9d2QsiZ4u7uGN0qbg8tf
-GyyCIHYnPu9aT0+sjOoOzwBW0omvoJa8aAsms40H3DoDNspa7vuVbKOYjDD3vBzSI7ZwnZBd
-e0QBvV+sfEvvaXzXtMVaS4/TAMtYeuoBxnLeT23McZqjON9g0XGWOzALqM9AxJLWMlh7CNCe
-QUe1BSwb+JfISLngXlDXOHdYXfeRTNybYgGcpBDe6UkFqPDe6/MAWdT4BkUNgf3d2e7quiKX
-ywAgxY9tTZH0BjKodnDXRyCdGKilrjaSHwuZn0Zf/9Pvbz9+env99PJwltEY8QBlXl4+vXzS
-+Q0AM2T+Dj89f/vx8h25tkz8hsPPa9z1tQi7B/BC+fzy9vYQff/9+dM/n79+QkFtJoTpq750
-Gzfix++qmhdbAyBwhLM18L1b/cgr4aTUNp0reqJ5sgeIGzOp4VrvzHEwgMyaGb2anNmoQCrv
-n/UlWGjEP72+wRh8IrnZlouFmlnC1oVlxyeMqWPFTSpZkmlcFjZ0yaiWIekAnsD3GMeXXgpQ
-SHCWmlJ7D9GctuDBM+UfHTZnmZR455s/9omsXVAeVFo9pUfqC4Aefnv+/knn5OKC3HWhUxbz
-/hIjWn+K7rvCS5E1oiV3wBmMrNM0yUI284YmEOp3aYyhTtHrdnvgowUNXg3WB9ZyZiuuMQtX
-XujlSRd1TDtBuzZi7NsfP7zxU04KaP3oJIs2sCyDuPKcRKkbDLgCQbg3uUgYEFJnvX4sWL8Z
-Q1KEioPrHk20/5jg6TN8qK9f1Xby6zOJb7WFqrNMzRtZOKTnxTy5g5XqSE7LvvslWCzX92lu
-v+y2e7dbH6qbc8MEQacXdjDSi6OMRpPjS4BiSj6mt6giiRQHiGJfkZiCoPVms9/jNjg4Ll/h
-RNI+RtzLnhTXtFkw7wPEjkcsgy2HSOydIs12T67/Gwnyx8eIT2A/koCkc68bOhsQrE3s1zti
-2zjcroMt002F2a8DfvTMcr3frrzYr5bc7kgoViumUWqj3a02B3ZEipjX+kwEdRMsg3vvLdNr
-S7elEQV30ICNgVOqjURWBciOzLHKk0zIE5MOb04s2+oaKs787svO5WPEzZxsizpl4OJJbpcd
-g6jU7rJme90Wy76tzvGJv4Rporvm68VqwSyWzvOtxGENbDc7VEpSu/eyolVsdkE14Gh38u47
-aluC68sRQzlA+lDJCBXKCTQhViSNwwRnVTEjOq6ihnjOjJhjtuSMxxO+wQYmAlYLmG3L8SzU
-N1ywF66ORCDtNXCjGVeDFEl6hSuxeCX3SNcWrOJ/eklWNdSN10H1yxV/vI9017BpRMWJCSNJ
-ER61UZIZJu3cXzURM5MaFYX65gdmBOAWDlY6mTp/FYl6YKr+eErL0zlkMEl0YKDHsEhj7LY2
-vePcRJDIKuu4tSg3SihnEHDeOklVR1xXh/wxMVLUHevKNeIzKcIt8ewxn5O+Tp5bcxYN24bh
-EqaJQkAICanTphXYkx7jw2S33x3wbM2x3tsbKOlfoGkUrxN4vCwJYVukeV90rafRZzBhdbEg
-viOYIjovg0XAHX8zKmzWwkhQGVRl2ou43K+CvYfoto/b4hgEC98Qxre2lbXfcj6nXc+IGVJI
-31Rjiw1GnsKilieBA+8xOk1b4WtuegxzVqiYE4GHtMBXmBCSDoS9Bd++mesNRh6rKhGdb2JP
-ahNNWQ0NIhK5UBPb+foot/K223I8CmnHufzoG8DHNlsGy50Hm+MLoCjGM2HXENSbVxu46CVw
-NOWYQPFsQbBf8IEFhDCWm4XHqEPoChkEnAKeEKV5BlHBol7zHSv0g28iRNFtz3nfyve3DiXK
-diyjTd72uAuWnn0wLZ204mRiEiVZtptuseXx+ncjjidPef37Kjx7cAtRr6vVpoOe+sbC7Gfv
-dPCatFpX73jiY5KzjHRG1EqK9r1NRP8WSjpa8atONVd/5J5Vq9DLxaJzslXOKdb3kJ6PyCJ7
-4Xt5U/Q4SzT5vkWehon36xfyLx1osg18fBQlKzI2pbVDhDWvBNXttxvP19PWcrtZ7Dq+mx/T
-drtcrviiHw2T6NktmupU2NPvvTNSyTPETdHKAELGc2Zlv4fg666vSkeScegUWxGsuUPGovXp
-r2SX/zF2Jc1x48j6r+g4HTH9mvty6AOLZJVokSx2kcUq+VKhljSvFc+WHLJ6xv73D5kASSwJ
-1hxsSfklVmJJALlMi4eCbprMDZXtVtxs+GeHtWkYLKrQouJ9cxkrdm4YSPF3ug46xzHred4Q
-434H0dQHzYRBduwp4IYd3KkK7jqP1neaYHh3ZZsbKSBLPEUJMb4PZvcjio1b6/uhQh/+Q0mP
-7fmyh4nyreC01ufuPHxKzZZi3KLG9kzBee7LTNdC1jjyxnXSFRxMOGv4juJD2IVkmEaem1y6
-04EPELPK4my9sNhzE5zY0WRGkRM45ndQuI7Thafec1ndwEPW1Vp0+TZ0It9nZ/Qj8QHybRLG
-wUrndafm2mADFksjD3eJE0It6RsLaTge9kN2uAdXUHsl1gZnKbKUNUJMMw3LinPtB2ezjwRg
-XcSn0ZP5NjlHFH4YvYitVnz00HdFEmcUUpwEXzzxyWp+la6ciyRNoENa31DqvQhtHV/LgFH0
-HRrpXiE8u+n8rmtQPJ0iXzEJSmBUcxsqdn78sW56Bql+29/ovrnUWuKf8L/wE6iQu+ygXLoJ
-al51vafz1tWGU5dXRaRrVrQKJsy8yHSMCC8x9rSH/EJUI+uwGl/17Pj1b0/5ZDnyLplbCRcW
-ojfmTCbape3DMCEymRlqSYaYiWVzdJ071yzjsmUbtfu75PCO+naLoz7i7Ya/cf318P7wCA+u
-hhPQQVZBG6VvnHPLboi60vZ1NjlGnDknBukF9GTSxkEiXzbVZP0/dW5bnVO24g+qYh93lIRk
-cr7XBfoOPA57ML0yBnj//P7y8IVQ5sGTMPe/nMsGMQJIPN0T6Exm23l3KDFMCRWbgkziRmHo
-ZJcxYyQ66IvMvYVbyTuyTma3yqCioCkD5Vn2K6Pk1+tTYEIaPHtSS5vM1R4wpmf/e0ChB3aA
-q5pyZiELKs9D2RYlfR8nM2b4hHoZIbcr1SpOqgaYAtlafBi8JCF1djkThMNZXL1zH8Vvr79C
-WsaNAw2f3k1nkzw91LsGj//6l5iApTddjUPdiiSidUB86hujnL7aVqPJysnWnPo8b8+dhSyl
-0vu0z92o6mPalxtnEev6pyHbqZFhVRwxvXwJAwkfFklzFMpMm+xYsGNE+bvrhuyousJp6wmh
-J9T1dI1U2JoL25DMhrJNin183gjX6MpDR/oI4+C2ry91R/YfQlULQc5JPAdV8wx8G1W7KmdL
-qLlKwDLw2fVD8/t3B35kn6NmKEutnk0+HGpNy1RAPLJdW2iOING8YIAeofQO7/M6K9TQZ/n9
-Z3jPIfVe9+eMa/bVimYtkNHjneLI7b7N4aTTdCbtspM6sZI9araTEtAiCkxPm4PFM1B72fXU
-k167/7xvFCV1dH8/kF66MBQauKRR/HRxag96YosS0jgFeiMmKygvGHHNBAs6arToqCnqFMIb
-yzTwl47qmorJ2G2heHxBKkbLRM9a8rEBEfBUfbE5h0IWrpvNH/G2iv8qhGX3ppzAVjqt/FM2
-5LeF/MjJC4cD8X6rcm/MAmWJR3f6M5MusAcyybFRLR8WnPcbpRfcdXXFTfBFGEv0V/doF+Lm
-gSprSIOP1SZrL4GjGg0s9ICyVu3zgxfIN0ndFGlelkOtdVrKYd3G2k5rApfjnYZN8z87LcN1
-mrDZmdMhMpsXRko+lqViyNm/TtF5QlJFD3aBwUmP32vZshQ8ktYWgbbHcT/Ib5oAYrYqaRwg
-IPRhf1bULaec+sH3P3eePW4723nqe1tYQlPklxZZMUAPx35AX8Q8jqWpb8QKNnXA5ECQ0FpU
-RGAdslcmMwOsEb8QvGWpFK0sRuTGEVwx/+8vHy/fvjz/YC2AemDsJ6oybBfd8PMby7Kuy3ZX
-6hWZrCssVeEwlP3VTFcPeeA7VDiTiaPLszQMXLVTFuAHAVQtbIxG2y/cxkMiFuUqf1Of864u
-5Im52m9yehHgFA5Rapl9oxi6YBfXu/2mGkwia+IkFENh8+kUgmIuH0usYjcsZ0b/6+37x2os
-YZ555YZ+qDYZiZFPEM++VremiGVPmIKWuLLOAE7kxNG+XNWrL2FA66rqbLmmg+mOl/iUrIYo
-WtCyAXbUurnqwzDVWsiIkXyvI2hpZIzNkQxEJ5AOfTYuc/jn94/nrzd/QqRSEXDuH1/ZV/jy
-8+b565/PT6Ch/Zvg+pWdbSAS3S+ycixOWDA2WplFTC6rdi3G+FXPLRooHaZohr7OxpXksvMS
-wMqmHD2VJCyplOrjCiEH7NnT+j3Ae1c2XU25BAJwj5pvaoFsGpDxwAA73PnkGwp+2WaQ/ekB
-bTah4/rsP9gK/soEbAb9xqfPg1CdJ3SYsSo8yJKlxCHb90y6mkWL/cdffJ0QmUtDRNaPt85t
-pTXDcaONZvNLIkkE9NB7intvtapgLCyw8lxhsW2L8pY218tXnmnzou2BRgRDncSOk4Qr9wod
-6Y+/U+X6W4tr/64zve2BY5zHL2+P/0eZSjDw4oZJAk5fc1OXWxhDcJuwG9CSbsvhtD+gYQ6K
-p+gdCJzjCiMJNhrY+HrCSLps0GHB3/9HHglmfeZTgdiklutNEZ9ZAJcdO650sgVf1SrGkBI/
-7G3bY5trl46QE/uNLoIDkmgIw0CUTXe3qBft/WtCm7zz/N5JJFsagbBz1k4+78z0sxs6agCe
-CRmaLbUWTDh/VqJS4kvOSkrhHuOnTmfj4rbNdtnBhBoQ+TKz+nkfxLUbmgkQ8EOqeuUfR7Zs
-bQ7VkZLpYelVLuYEAUP3gR9hEdsvdOdYBvutdmswJakOf6huR/h3FszLKRxWewywYanPNHTU
-ErhONaokcSGUBzL8+vDtG9sicfMjll1MGQdnbqdLjjUebBYvm+w4ETRShotT1m3k1QapcMlr
-S7Ed4IfjOlor52lDbFmc4WDZ6BG9rU+F0dnoamOkDyq8azdJ1MfU8Odw2X5WdLX4J8yaLCw8
-8ISxOeqYdq8piPuzznff5/JhDIlim1WJYMu7FdLfJE7bR8AsXiH1+cc3tsJSI0MYWNganhVt
-p3+f04VL9ebQdLQqI1V1eCfT9WhtKhMeUEjpRMDwPK130tBVuZe4jnzoIHqBz59tYfaOnNmm
-iJ3QS7QiGNVNDOqnrP18GeRo6kjmwppGrDs/DXyjr8SKZ3YVqJFYu2FalZVBpaoKiZ7hCgxG
-CQgkkbWjEU+NaSrInv4BZvsCrRSu0mAr5NQkfqgXwYhpqoRUIz6ZOL5VVz7lkMgKSGIEVRf0
-0SfbzkxIySEvMFpyKHLfc8+kAEfUQ/+ee3CxTXTDSTrpnVy4sJzEYPfX/7wIybZ5YKcgdRYz
-Xi7qoUXPnvqMC0vRe0EifTIZcU/KhdQCWVbbhaHfKWHPiPrK7ei/PPz7WW8Cl7zBWyF9Jzez
-9LZbu5kD2kiKIyqHMhE0CGzEC3CGfi0X17fnQt3KKByer3yIGWDClPYhljQ+NYNUDnUcSYBv
-z9W/5KRpgcpl7bKQDDIpc8SJQ1crTlxLL5ROQCdJSjeWFwV1XM2CIfo/zUZpbUTfWXkni5vI
-pDmfkoiG6KZj8Ougvf2SzPWQe2lIq8vJfM0Q0SZ3MpMolK6ykCgslebo/JhAXXKXGAAOXP5L
-72I8mYotb0Fwly6D1vr3x66r783Kcbrp5pBmswXK7cApCDBKm5KQJrMiv2yygS1XynU233d4
-IvrunXW1CQsQronBZQsIUU4kTTxREoRVSNIglA4yEwJDX7YnlenyXFHoroXfM/nrcsfE71FZ
-nyas31AHj6kxDJUTTZFqtERGpps/vJj2yD5xgHlBzGQAs7IC8czmIcJ2W+UKRFR0Ul8kqzUx
-sQyS1KEm1MQxSSxECXWXxF68mr9lc1yKx94jMx/8KKQMSCaGohzwJhA7IYjkG2OpdSgd2pBU
-unmeEPahAjc8m0kQSIm8APDCmM4qxntwo3UMClnHr/Zd32z8IF4ZMbvsuCv50hm48qIxM4j3
-7JVePAxsAoZm3Y957zqORzRKl/o1/8T452VUQ1FyorgjvK1Mbxjtwwc7mFFaXyJYcxEHrhzQ
-TKZLlVnoDdjBUQkACG1AZMsqtaSQYyjIgBvHZIrUk2f4Agzx2bUAgR1QY7DJUGSJVS3zxOQT
-ssJBdVTvx1SF+jyOyB4/V5dt1k4hZIjuQiUxsiXDuaOWgAkv+shzzAwhVjdVkyq8u2TNxkyw
-ZUdWJ9zSQOJtd2Ze2zj047AngIEJ/cchG0oC3NWhm6hqXjPgOX1DdcKObYRkCNcF98h0/NGE
-EgQmltvqNnJ9ogerTZOVRDUZvdMCI04I3C1Z5I6ZZ0iISfEpDzyTymSKg+tRXxdj7u1KM8ly
-X0rUj6+S1LlH5YiJAjmgW4QpsGUpl3jYpkJbDso8nktHdlF4PFqzTOIIQktFA48MbKNyEDMH
-ttjIiYjVABGXWB0RiBJVcWmBUmpjkxh8N1aFDgmLItL7hcLhp+aHRCDwLFWK6GskhSONLYlZ
-da8MgSbvfGe13kMOVmpUk8t267mbJr86w+om8omJ0cQ+MaybOKRaw+hr34bBxH5bNwmxJ4D7
-E7qI5Mo4b5L1OqRkaSn5bRmdEnAlOPR8QrZAQBWsVGi9DV2exP7qdAOOwCOWxHbI+WVP1Q97
-cjlr84FNrrVmAUdM7d8MYEcocssAKHVoZYmZp0Mfl1eavk3ClF7uusamtDinPjVX9q3+dnCJ
-ljGyR4hjjOz/IMk5KT8J5Y7VOhZNyRYo+uwz8ZRN7gbk2Uri8FyHnCIMik6exdh8rmnT50Hc
-rC0qEws9NTi68VdX4z6/DSOIXs4DnZndDjg1jBHwI7KPh6GPyePdUrWGrciUcJ27XlIktNTf
-x/D2YMqgrDcTUiRsM89JSYGGIVeGOWPxvStLekwsLMNtk+vGKgJpOnbWWC0UWdYGFTKQ+y5D
-Ame1uoyB6iVGD9W73AkZqyxKojXxdBxcjz6njEPi+WvVOSV+HPuE8A1AooQPlwCIK06mSD0b
-QDYNkfVVgLHUcRJazINknkgNmyqBbObc0pFZVKbylrqNnHm0ByLcPbLaIEDIuKHq0XTSwMqm
-ZEf8Foy3xP0njwd8afrfHZ15OvYvV4EC2NOtmWCIxwsOd8Chc2dR6BWsRcl1vnb7EfzGdpdT
-RXrFovi3WXVgS3x2KKk6ypxgI8idKq1kfT1LayVJTnAwjv9d5VytHuoOSR/byAFiTKH530rb
-0L89eSM8Zby8QEy69z91iqY3OJPb/Sm736t22DPIDQxQi/lStjAqKG2emR1c16HqE+TnEPkZ
-SiPc/+zDx+NfT2//e9O9P3+8fH1++/vjZvf27+f31zf5qmnOpTuUohD4AESbVAY2B4ke0pna
-/b67ztVlSggzik0eupgp1bEWfsze3j+Gc8plKdpvhzl3+p6bXwuSTIJFWKKb9hv8NXsZWuqT
-8Nyo7JDfsj23GvKspnT8l2MSlRfoqDhRulZB8dohVXBOLQzFVhJ/rqoDvMCZU0SoBpG1Kk7r
-3Tp5QlgpGA6mEAWVyj6rqyZ2HRe82lBapZHvOGW/AVhOxtUyLInAvCzzXJFm0i/49c+H789P
-y1jKH96flCEEpuX5WucXg6Ie3LNqdfu+rzaKQV6/UVl6VEZVU+XV7R6fpYjUE6oTwSJGT7UM
-f4WF2oahJkW1X81hYrCk55YzcxBOuvYqk16CQC2PLpu8ycjKAWCsCmiL8K+/Xx9Bn9QaYqHZ
-FnpENEaR3vWW+Qf03o9d+kgzwZ7lDbjBLakLQ486UWPqbPCS2LnoHYMYursBo0otJonBc1vn
-sqddAFj3hKmjuvhEepGGsducRnuDzp3nGF40JAZTq2mhriQz1DxnoqriOZMt1y0zbrm7WvCV
-rwLLuk8flCA9wKFntYOaWew1xH2DuvOcQV9vNKO6ob1N7GDun89rH+a2ithJiHtnXZ62BlDR
-76tcKQ+oLCPa6KDuGCiHxwNCL3tcgtJ0h7ZAQ425vNkXivkrA3SdOaBxr1AORQz10YXkyLF/
-MXxPDWP6ckMwxHFknYjmq+tCTSJ10ErvsGYRSUA/XguGJHVW65iknn1QIZ5eSZ9Sip+IDpGf
-xloDJ/FDbwuTxY6WfKY3evkbzW6HbO4+ZwZ9nVdLpfTwZHwIHYtyAMJ5OITkBSOid4mqIYbE
-Nhwi19ZlfZkTO0VfBXGku7dDoAllR40zSQ97BPS7+4QNWE/vd7jcItuXbc6h49hcgGJSoSHK
-PZIMzcvj+9vzl+fHj/e315fH7zeI31ST33pSZAYWc9mbTO//+zyVek3KSxJNcX2Y6ZvXrEyr
-dA1obpBazSLDujmq2eh6tKDe6jqh6v8TXem51LIgedlT6sHpSWQdhpxhZXsServ2iQytYa1d
-2aEERxhRr4NSGYnaJZNisPY1DHVgieoROTCq/rIoMLagk9dj05nAnE0Tkh0Lxaej8JdmJjjV
-rhf7BFA3fugbw2bI/TBJV3ryj+acUIqdAI7nJNREFtnCRRWcDtXnfWuIQAoPO60FFudjAvbd
-tS1evzJbaKqZtKBPqtbygocuHkHfnVTskllQZeYnhQhleXXlGkDwoL69WJy2xkw65UXqB7Ta
-9aooP+U8u/pbqrl4/9MiHC8AD9E17usBnuSVeFETC7hKOHLPJf2xIRUFF2a47cLLrpmdKpWJ
-MDtl5imQKgktEJxKkiikazkdWVZrlxWhnyZk3vzwQUHU8UFC+dhYLdYwqZA+DBd/acRzyQoh
-4lLINmtDPwyVM8SCWo6Vko9IFJqpjDkyhuqT/oJXfZ36pFa6whN5sZtR+bPlKvItPTwvMqu5
-wz4Zk3VHxKORJPbIUYj7SUim4WsomYhBURxRqUAkD2XZWYE0aVvBkiggC0MosnwOFH5D6sil
-l4t1onNAuf56FonjWbLIO5e160otulCJ7SIjSRKmlvYxjLTokVn+iFPPIXNmwr/rWipt009X
-WeSzw4IIIYtCiHOChG6Pn0stsLHJNCaJE5ENQighRxBCKZ3q1FAp0IoArabJuuLJYbWisDFS
-Gfde02WywwcV6m2fpA+bJI6oB26JZzpCUOXWOwjdS/ZBz5I5UWaBEvDFQ+TIZLvQZeOESiYJ
-1iTm+bZJy0Vljz7S6WwxLcRpbK7FObfG5qmHPhubNuVsbKlLC3UG29W6cWn4CtdotTFfeLhY
-uDqCZglRILlx3AVKux+qbaW68zrk1pNoCc5HwKhjj57glnvZr89PLw83j2/vRJw3nirPGrhD
-nBIrDyGA80BBl2GcWKzlg6O5gclvC6uZ2yEDa8BrOfXFwZ4FdM+1DNgfoEJcqx2oY5dipHxg
-jlVRYnBoefpw4hjUHit8Ay7VMtINxMK3fGIprXJg4PSsGGexWSuOC81N1cJql7U7MhYX5rs9
-tWBLNBfJWjbdlSxPSIzWaJH3FLAlg9tgsuzM6pl1AxO6f3cjNRmEP4H7Xawn/VCPbOjlqC/R
-3wMTtnpQxCWf/xjzsS7nThFG+jCQqZCO+FHBBpUYFEt/BvVsCC9eP+iaAmNTNh4YYl3jQ5um
-NSZoyX9VKgz4NUZ+vcQn8PPTTdPkv8Ej0eQmRr1Panp8QQIP2Ct5bF/enyEW6s0/qrIsb1w/
-DX6ZIrYq+UEjttWhLAYqwCEO1M1x62lXcwudmAtIZz2873oyRZPVTBifFzL89A+vjy9fvjy8
-/1y8G338/cp+/pNV5/X7G/zy4j2yv769/PPmX+9vrx/sVPv9F3OswPw9jOgTqy9rNh6ty0g2
-DBneyc9eAMrXx7cnLPTpefpNFI++V97Q1c5fz1++sR/gYWkOWpv9/fTyJqX69v72+Px9Tvj1
-5YfW73wJGEa8o7GuNEORxYHvmUsVA9KENBQXeAnRDsNcX6aQ7jlmhk3f+QEpO3I8731f9qAy
-UUNf1TJf6LXvUcdoUY969D0nq3LP3+iZHovM9QOi0WxzjWPqdLjAfkos650X901HCfqcod+3
-95fNsGXS/uw25FD08+dcNlXBn2URD7eJrOPL0/OblZltAOzY7uuN3AyJmxLEMDIbwMgRfTfK
-8bvecS0GeOLj1kk0xlG0xsMaFbvkra2Mn4mhOHYhHWNEwuWD6UyOHcfYR4eTl8hhbCZqmjpG
-HyI1oqiuUdzYnX1uRyJ9M5iaD8rMJT517Mr+M8T4Pnshm35qbs+vcx5U365+IeRI7GMbR1FM
-zFsO0A9cC4cfUIdRCVd1HwVwlyTuyne97RPPmfsgf/j6/P4glkvTvSlPsx+9KCBaAfSQjkCy
-MCS0DC8x2PtvP0aROQb3YxilxPK1H+PYs7ecwbwVBjWmqDHFmxI5jH0UecbYb4a0cVXV2RkY
-XMvxZ+YYHZe6QF5wxZ2iGIwHdl6CEOI6cPgUBq07ffGafWpKZpuG1f9z9mzLjeM6/orrPJzq
-qa3Z0cWy5Yd5kCXZ5li3SLJj94sqJ+PuTk0SdyXpPdv79QuQuvACJrP7MNMxAPECgiQIgkAQ
-qnfDnGbzePf6TRIP4yu09tCHV0GBVxKL9yQBjYDzhVGxmKMPT7Az/9fl6fL8Nm7g2veHKoGx
-8V375iUo+Jo+bf6/iQrur1AD7PxoYh8qMDaPZeDtmuFr0A5nXNfR6VFtBNXcg+k9KksPr/cX
-0JOeL1eMwqkqIvrsXPrmkpkH3nJljOtw8SSFAvp/qEKiN3Bu0to13XbqOFUfaw8FfwMuhuTH
-69v16eF/LjNQTIUqaOp6/AsMwVhltK+tTAYqk8sj/v8NwtCz3TXqdGQ0LLNa2aasYVdhuFSu
-cWR0GgV0/kSTaknXkLeeuHWw4OTwCgbOt+K8xcKKc31LbzFvuGup7xR7jny5oeICx7F+pwfH
-VlpzyuDTgD6XmYRL+2mhJ4vn8yZ0bHzB2Sq/VjEFwbV0cRM7SjJcA+fZusixpIeGWbm1kHRu
-y+CkVgVqz8dkeRjWzQIK/Iib7SFaKYk41WntuYFFqFm7ctWLHhlbw8ZDGwq0Efcdt6aeUygy
-m7uJCyyW424Y+LUjci9OobuJ5Ute114vMzRPbYaD7HCO5Ga91zdYYe9e/px9er17g+X+4e3y
-y3TmnVZ6PLs37doJV9JJogcuXHnCCODRWTn/TQBdk3IBRwGTdKEoC9x0BNNGXl04LAyTxned
-cX/UOnXPQ5r+x+zt8gI75Rsmn7B2L6lPe93KNayosZfQqWd4axnORJvBqwjDuXyZNwHHRgPo
-1+bvjACcBeauzkIOlENX8Rpa39Uq/ZzBOPkLCqiPabBz5x4xpl4YmqPvUKPvmXLCB1pnsJAU
-6ijYsz90Qq1rOCaOEy4MaIgPyRXgMW3c00r/vp/WiWu0XKAEl81aofyTTh+Zwi8+X+g9FWDq
-UmgaRJ2RIFi6xLcN7F0GG2ESOFYuYijNyDX5BS1furIMtrNPf2eiNFWoOB6MsJPBCG/pGG0V
-YPosMUqfT13C9rM0UavJFnMRiMmYubBQUioTt1CfWlNwYdIExKTxA00WErZGdstxPWRwbICX
-CCahlTGSbL2yD2XfK20WRpuVo8trGrsm63G2+eTFpBiYxIPtrNZHEaBzVw2ZhIi6zbyQDH83
-YT2jBbhWUrexnNmJC9sk2vfLRJbLuF/IVYlUysWZrp0BCXEgX85KaJ9imKf67IpjGGa3/lRc
-X96+zaKny8vD/d3zb/vry+XuedZOU+i3mO8/SXt8p+kgiphw2dKysg5cT98KEej6mqiuYziu
-6ptDtk1a31ezpktw2pgjESzoAMSCAobSNvx8EjvaHhAdwsAzREJAO/pWQCI4zrPfzW3KHVcw
-1iR/fwlbecaKATMv/GAR9ZxGqU3dtP/5f2pCG+MrBUoxmPujaTh5+Prwdvco6y+z6/Pjz17P
-+63KMrVUAFBbGvQNFntyt+Oo1Whba9J4yLYxmE5mX64vQkfRRRcWY391Ov9h4VlWrHdeoAkk
-wlYGrDLHg0Nt2wC6Zs3VlwYj2DrLBVZbKPEAbsz7bNuE28ym03GsvjFH7Rq0UV/ncRItFoGm
-3rKTFzjBUa+Un2U82+FoWOgtHvSI3pX1ofEpYxL/uInL1jMucndplhapscLF16en67PkHP4p
-LQLH89xf6GQs2hafeM6KNrIKbcEzKmyv18dXzCwAUnd5vH6fPV/+bV80k0Oen7uNZopRT0TG
-wYcXsn25+/4Nvd8NN4bjNsLsQNK1ugDwS+ttdeAX1kMbaukJIPzoclYxUMOUzA0ITypYv05D
-/iKaI0jGA9Xl1EuxCd2k2QavitWa93nTZ+cx4Zv1hFLq23DPA/KttkKHqZ46OIImeHObY0oV
-excq9KiwdGCb5pi82dpQBTdekvbXHLOrcRMqfS7SQ4EytVCLFSlTMncx1zvP8+ycKm4RW5HJ
-PA2qPvW7ZLW0tU3oB3VOGZ55b0s40kek3MpfqR8dt2T6M44C9ukdrOOoxoe+uySnc4eMRNkx
-oVxBEF9FRZoNo5E8vH5/vPs5q+6eL4/aAHBCmCjQlrRuQJ7kNBcTwbpMux1DR09vuUpsFO3R
-ddzbQ94V2ULvlqD6qMm9kZaqIM1YEnX7xA9aV42+PNFsUnZiRbfHN8ws99YR6Q+q0J8xtMLm
-DBusN0+Yt4h8h+wfw/yte/xnFYZurIprT1IUZYY5vJzl6nMcUSR/JKzLWqgsT51A8RKcaPas
-2CasqTCUxj5xVstEjt0s8TKNEmxS1u6hqF0COrRyqz1RFuUxQsoCzkgBeXc70ZYZy9NTl8UJ
-/lkcgJ8lVXtZswZDqu66skUX+hXZ37JJ8D8Yj9YLwmUX+G1D0cH/o6bEfJDH48l1No4/L2ju
-1FFTrdO6PsOS3ZaHeNfEdZoWtDzU0TlhII91vli6K1K1oGj7+0qqwDLe807/sXOCZeHo9g/y
-k2JddvUaBj2xuBdK4h/lzQEEslkk7iJ5f6Qm2tTfRR4ltBLJwv/DOckGaZIqDCOng5/zwEs3
-jktzVaaPog8ambJ92c392+PG3ZKVw+ZaddkNiEjtNifZY9cgahx/eVwmtx8Qzf3WzVILEWth
-QNgJTofLpWxSlkjQzSOKT3NvHu0riqKtD9lZzKbVsru9OW1J4YepU6XAp1NVOUEQe0vhut5v
-GNqqLH++rlkih6yUVtkBoyzsk6K3fnn486u5b/E8V0lDuSry3b9fbQBU8CDJ+rjjsg3YxKoi
-5JjFfccqDNWVVCd8Lb1Nu3UYOEe/29zq5eHWXLWFP6fPoLy7dZSkXdWEC8/TOTGi5sY0BaUB
-/mMh/d5YULCVI7/DGIAY1c8oDXejnuvWqdvuWIHpFuKFD4xyYSOxVN2WzY6tI/EwbrmYq7Kl
-YZfvYkMNC4vhppq7js5pQDTFIoCxJ1/aDd9Wies1jhvoDBB+vzBdouK08C0hDHXCJf3AbdDL
-0JEkcF1T4esRqIlSE8WUcq0JdVxtqafTXEBP2r4DgM1aBaU8x3i3QWdw0NTJjQq2vbRoud7d
-3RxYvdeoMHFVnye4n6Sbl7uny+xfP758ATUz0f1dQMmP8wSD1E7lAIx7fp9lkPR3r8xz1V75
-Kkli5TePlHRMG9mxW6p3gy6dWVbDlDcQcVmdoY7IQIASuE3XGVM/ac4NXRYiyLIQQZcF/E/Z
-tujSImGRsrHzLrW7HkOMNBLAP+SXUE0Lc/m9b3kvSjlxHTI13YC6kSad/EYWK4rifca2O7Xx
-mK+hPwypxaBmjV1tWbElRePbkHTRiJqCnGd1fZDcZAFU5Z5SAfyGIdiUuJr3C7nGgfgMipNu
-o5jQEaydwBr9K5Y3LX1LCsgDShddHIbfEvkz5VY3bsKDaShAkTdVq7dPpkq/yJ3whtP8hBpH
-iC6gZkcllkoPstfIsdrb1gFMSwNTfLpQPHhWIa1WAexyhimNtbx6FN25adnNgXoCMhGpTeyB
-wn/HLDA6poXOCdhiLaYFFJX27JKvUAVOGw6AdLFVhBC7pfaLHidzVv6uoXwZEB4dtcfFI9D6
-QHyiiOKYzAiOFKzRm8CazrdNJ450A1000xIWPWZtxv5cU27egPGTzUkZVASI9ppg5YUJAI9l
-mZSlqzXm2IKeRJskccUCrQf2Ouu41VRCJ74Q+YqUxVGd4/5GwGDLjGDfParRCBVkfGhaMggT
-sriP+qEsV+scxKmdB5aDGZC8k+cCmSIeoOtzNMVzQ5nbZt0aOKmtaj2Mv0rZJrHG+wFrXW16
-S4iyZzZ4ybZUF9R86SrnClLf4NvN+u7+r8eHr9/eZv+cwfl+eNpv2FLx7B9nUdPg8ycWK3MJ
-ccMbFaLd42RVC/hp4oeknE8maowmYWAqNavahODPSG/pgJATVZTgS17lzKAhyRwXUv3Ew1qp
-BPGq/90S+NNzJ6I4wlEruuisCoOATgc0tg21TjU62IQcXqySU0IaFEsouKkdx8BzlllFtX+d
-LFxnaWFNHZ/igt5PpNJTzVGnF+kPBFcy+WO8WkncuNsqrZKheXXQw+Lr8+v1ETSv/qQhNDD6
-kgH+bEo1IB6A4S8R9bKJ8VWhJduduPiYSqDA8G92yIvm99Ch8XV52/zuBeMSAIskqCSbDTq/
-6CUTyD4RUlfVoH3X6lZNUNdla79koIvv1eU22qflUU8ENtzyvM9xab0p9fzffQnGVdDQ56Y8
-FEo2oaZQpIqP+I4l5vDu5OMU/JhSfLV1WmzbnVwq4OvolmTLAUunEFhmv+4ZLWq+X+7xhhi/
-NU4A+GE0R8Oj2sAoruW02iOo22y0tnZRZXN+5tjGEmWfIw9weKOUIs6jNNszKeUuwuIdGmjV
-dsU7Br/OerPi8kDH2kBkHmHsVvMb7ldp+SY+V3DmaNTKYai2ZYEWa9XAMUA7MncffpniRdxG
-LQ2fC5a52uX08z41GrpN8zWrqT2JYzfyPSSHZGXNykOjlwNFc1O3dYT2Z0ovQcxtlLVlpVZz
-ZOktN7Yb7T3X9smOBAyD01pqYm2ql/dHtK5t49TesmIXFWrL9mmBqdbbUoNnsUhEqALVLFAC
-VJRHOsgdR5dbhpPIKm6gmOfA/1StKAce1qUm43l03oCKo01IWPi4UGkFMNgVcHvQGZSXBSww
-6dna4vyQtez9sS9ayqyLmLJu073aElASMEo3yJnCOwlsnwpV2kbZuTjpnahgYuOubPkqiwpu
-co+1Ock3IG3xaiK8ZFMZ3d826LXyLGAZK6h9luPbNNKmF4DSrIHVNzVmGNRQZQfqapKPKg9P
-Ik8UvHKKGiZFFxpBxNrbwE7b/lGe36miZcdSrQOmbZOaIo7G5i2legtkDcclkUh46rsMNRaz
-A25jXdX4KviWsbxsU7VJJ1bkpd65z2ld6h1TCc4JbEpkTHnOHJ6ToNsd1npXe4w4Afa/7JtU
-pqcHGF4TERvr6KRA6gFoi971GQklpwGFdkDIwOH7Q7Puyh2c+hST48RfxBOBLRCcoeJUMzq6
-NxIcsop1tpQ4SAB/FjY9HvE8LPouarpdnGi1W74QcbY5y5AIuyppKCO8+vbz9eEeGJ3d/aS9
-i4qy4gWe4pTR3jSI5VHcj0YXe36/U5NWTJRsU9p40Z6rlDbA4Ic1arHNLWvJfSLPJcNKdVs3
-6Q3oCGoU1x5svjebyujWmIphKmkE9fEzfg9HdRaDOBwiHtFFIu5dicS7CR4IQsSC2F1f31C7
-Hpy8iFCj+LmRGljCNQnIrlobB3XQEDQ3NZhCRG26wFexEsUJEaDpljv86726YI9oNzlVY7kB
-eY2aqLAhjVyQKrq1ZJVSqJLbOG9277ewD8pPNWOD/8qugxMqZ9k6jQ7a0EVZXNbaaLINLHDK
-fETwO4YqUYlgb9zoHIjXS9LNA3FHHlpHE1lEHKDRbAHib3m5hcMJ5wB0JIGRtpQe3+xippe8
-a26sRQ73mlqRCk3e7j8YxhMofrTaKg21FvXGIIhyLaNeDtp/y8ijfJHe4mItzQP8JaxeFKwb
-lMXpZIu4dY2GjwLmVLe7RUfDYpuap1W0ixhnQv59FLWuJz/UFdDCd7xA9sgR4MZfYJh9FbqO
-84XvhWbTEB5QRn6O5kY6vWIO9CigYjIbwIs55Z41YldykPMR6rgnrQciip5RQRVHq4B8i8LR
-amRoUTxGP54bnEAwGd6wxwYBke5sxMkZsiYgwQ8Ak3Hre2yo2boHcEj6UEwcCHR29dCBASbT
-Fpbox5zAGtxMfK4aaDlsjHpm+2ideFpYR9G31g9W9O0Ex7dxhKHp3iHI4mDlkr4IQm6MWJgS
-WH55Noqx7AwuaKUo7jJ83ybeYmX2iTW+u8l81xIVWabR0slpCwH36//X48PzX5/cX7hWVG/X
-s96A+uMZnVsJxXf2aTpC/KItJWs8TOVa//QI4qLT2QnGVKPEULyGeIrY4P3csA2DFMNw7GT7
-8vD1q7ncoWq8FWZcrSKB4OmerHI2EJWw3u7K1mxtj89b2nynEO1S0Mlgd6dVTIWUvIemSeOK
-cmBRSKIYzoqsPWuDMqD5rLb1bMjupA4G5/rD9zd87/Q6exOsn+SouLx9eXh8Qyfp6/OXh6+z
-TzhCb3cvXy9vuhCN41BHRYOeMpZWiniD1nZWeuYpmqxIW5tfvlYc2nHtAjhwto+DPhYitF22
-Rt/fM/E1g/8XoLwUksfwBBO52PJI0U8ldJQkPaPIHkiUebuLKTsaTMT5R40o4zrJI0sT1sWp
-7chgkvhRV5/UIN0Iaxht9JZKZVXJqMNkmkSx6YmEUJnpnCpDf8KzmaFNpbKdYuo2RkesqQ4E
-DKrZ1B0A7mLQP890FYgHXFvuaFFE/HstKI6gPw5nNADMHgYHNmlZQ0JWtBvRVb15HFPVpb0B
-nEKbBHL76qNyVEQ7BjaFOJ0P5CIkOhnuuKeI1uvgcypbjCZMWn5WoyiPmNP7hSYNv9o2ihTw
-Loa15KBeV8kUS8rlUiJYLD2z6N05DwM1G9CAwixp9NN2iUJLUDNghmwnOrgJYl+JDN4jWJO5
-npofRUWRD+k0koVZ7gngAVUqz7dMh52WKRyaNRznLyyBg2WixYdVyOEBRsbO3VaJLq3A+zxy
-Gm5ImWB8tL7xvb1J38f6NRFj4hKjR1RMYopESeYxYBo4Aa3kW/8Bscl9l2pHDbPFJZgA8CB0
-SbjjkYOd5nAWpJXk8eMjkFhiMo8kYUimER57GORmq5oEpu4Y/xDDOqlrj7yOof9vgWb90diI
-9BhCylyzjPkNxz9ifgv4mHrWFEDP5XmoaYasYvOdY/V49waK99NH7XG9kJiQAA9cYvAQHvjU
-4OHKFQbdJspZRikgEt1SjYQ5Yby58+7iqKeEGMau3bvLNiKXpXwetqQ7uUzgk+KIGDWCn07Q
-5Atv7lHDsr6Zh5bYE+PIVUFM5qweCHBkifk2ZnehVjLu8vNOmZ/PxU1eDWJ7ff4Vtfh3JWQw
-J5rrQQt/OdQSYuQBGHq89J3xGT0e9RoRWfHd+gfDonIbjnkE0VvLjDkMqPVhM7t+x4wwcuS5
-cxGj27eaWfKWwyn3F15Ml5fHdHJwl+tH7PBOlnwmKEjg6FU1xKcczlW2VPOhHV4SqP0Yio0O
-p/4FjHK3lczny5BSAVi+xQfZjKE3nHRt1rqLvS9pRVVU8wcFFX+M+TSBxYs3jpwyZffguuQM
-DVSwsAx2ORxHIvllUNW/vSzbEfePfwxIfLeM/nprzLKtXErKGNpsKlFwyyXBBq1b/RcT4KAe
-puBnFzPqchkxFRfLtGD1jXRRhvGrMQY3hYhSJQsWguC8FZekXzCvAv0wda9DRMAx8qSWXdWH
-plGJ8g3G3JQ8y+ox6rcKVXstIGgnOpB8PiZVZGAHHM8Py8o2k2Mfc2CNrwjkSJ8cqpfTx4K8
-f7m+Xr+8zXY/v19efj3Ovv64vL5J155T5qcPSIc2bOv0vD4otw5NG21ZQR2FxrVGztTcw7qK
-VXSi8j0+cc/Kcn+QnVcwYzLgMGE1zB85WwK3MCFu8unjMRDix+v9X8In9t/Xl7+mtQuL2TXJ
-niqDUO5V5GoeKo7dEtaWsUQiaVjgzxVbroYMqB1MpXHnZNsAM7di5BgiEiZO4nTp0H1F3EoO
-AyLjeLyLLq7o+swkKwjuk8vRa870NZmFiSIUCvuHVLf0owqJ5BhTEUMkgj5zm2XY+iQNuSXF
-phiBDSwX5MZkEdZR7m9BFy76G2Mh3Zyyuf54odIscysorPmSCwiHwOaylidNtm/qmDda0jdY
-Ex8FvXTHiw5M+L4TJmy7mK9l1wiyKeOHEcvWpeIyNGY4yHfUoocXjDUsieIrtRjFlFFfnq5v
-FwygT1ozUnRfMU0nfaOJj0Wh359evxJ6U5U3ckI7/Mk3PB3G/dC3aEnviqiF4X6HAACKwsnx
-Yr+g26y0bdTB0N31lvGsC+LYdP3x/CfP6TA9NhQI4MWn5ufr2+VpVoKwfXv4/svsFS8Jvjzc
-S44CIgjG0+P1K4Cbq2osGqJdEGjxHRR4+dP6mYkVLxNernd/3l+fbN+ReE5QnKrfNi+Xy+v9
-3eNldnN9YTe2Qj4iFWbw/8xPtgIMHEfe/Phfyp5kuZFcx/t8haNOc+iOllKLpcM7MBdJWc7N
-mSlZ5UuGylZVKca2PF7idb2vH4DMBSRBRc+lXAJAJlcQBLEcnqBpzraz+GH28PG/W9L709Pp
-5W+ropZ2H8Oy2QOj2rLLgyncfeXGG4/kU06d0J37zxYE2bkYy2a3KqNbZt9G+zqQNpKyydHf
-Hw/A0NQKJGtLI8aUxc1XEWiRO1vUqhJwyPLnREvizGfc4uGcnkxmHFcfCLqHPrPshWOlo6iz
-mStpeEtS1ovl9YQPwtaSVOmMz1nX4juDKGIuAoyN2lbHFAk/GmWPrxE0nY2+z5FKy4MufaaG
-v5H+pEClg9v3Ejjv2m9pWPXfVcWW0ZvVfbVqCvlmpEg8SgK3SdsJqUW0BSyJVzw8HJ+Ob+fn
-44e26kS4TzQNbAswE+r6qRizFz9ATGncSfVbd6v00wCWReuXx0J1+lB4VNsZiokewx/urGU4
-Yn33JYaGY0MA1RoSI0r15UmozwrcGVqE2MeVA4equQ7fN+tmX4V8jLCbffAVA/CwoaaDiacn
-9UxTcT2dzVyJdwE71yKPp2KhJd4DwHI2G5spwRXU+BCA2EbJ0OA0Gvc+mHs0H2dV3ywmelBs
-BPnC3P/dMacvQLUoXw5wZMoYaW1cQGCQwBXNJXo9Wo5LTXUGMI+NXQOIOc1ron438QoT4mKU
-jCShaxDQyyWxqAkwyuho3GhJwKNsFyV50bkJUUO1zf6aai/jTKD/olY6qQNvSmPYS8BiZgCW
-eiB7sR+73hPwrjUfO4z4gmIyZd9G4B7c3I8Xi7ZxfYlMbK9dGkTF8YHZQhmmSim37fDAag19
-SLV9DssmNgozJLsL9UsCwNOlF8pTMs3DNt0yWZSYMd7oYS3LjxZjvhkSXcHm5E7FITO8WWmb
-Jzzlmy6vdICWQ6cpJVZzkDv4Qq0ws++KdDvn0i6h+0gGBryKtMicyLXKqApEEjF1khKthPv6
-BIKOIWRt0mDqzfhdPRRQJX4dn6UZstK40l1cJ7CUik3LfOkxEM0XI/O3fiAEQbXQ9pm41Zkb
-VhqXGICkWhfUBK8qKi0Xy/1iuacDYTVY6YxPj53OGAawvYrqrmftGaKO7Hb18+juDCdf5eun
-c4ap6mQVVTsS6rpSFV25vk2D6GohjaNLr5DHtcOqB2vFbE9yvfDseTaaayaimOOblRUAMZ3O
-DdLZcsJZJwFmvtAY+Wy+nJtiSVjkNcgHrGa9mk5pRqB07k30+M3ASGdsAHNELPQArsBYp9ee
-g0VAA2YzyuLVLkcjDjLpF4dTWSLAWnj8fH7ufD/pJpTzpEIvSd9XdjtaFbQhVY7/+3l8efh9
-Vf1++fh1fD/9B+3ewrBq4+0S9cn6+HJ8O3yc3/4KTxif9/snvgvQZXaRTr0I/jq8H/9MgAzu
-tcn5/Hr13/AdDBzcteOdtIPW/f8tOfj3X+yhtpp//n47vz+cX49X7yaP8tP1eK6xIvxthAjZ
-i8rD2NoszFyfhBWsv5U5CJvcciu2kxE1uWwB7EZV1bCiqUSxkmlcryeeGfzBWJb2uChWeDw8
-ffwi/LyDvn1clYeP41V6fjl96Kx+FU2no6mx1SajsStNikJ6bPPYLxEkbZxq2ufz6fH08due
-XpF6kzEN37yp6aGyCVH42zumb7NN45A3edvUlefRiuRvffY29VZnKFV8PRpx/AQRnhad1eqR
-YhawAT/QlvX5eHj/fFN5uT5hhLQFHRsLOh4WdN+U1T6vFtfq0sZfX9L9nJc342yHq3Xerlae
-Rq3OpErnYbXn+Za7L8r8VQY6GCaUnB9fYYYmDmlYhNs9rCv2KMIENtqtCyCYVpOjLcJqOdHD
-X0rY0pFMzd+Mr1l7cERQWSdIJ95Yz/WAIEfOcEBNHKFpAnQCYJX1gJjrt7514Yli5BD5FRLG
-YTRa8bN5W81hcYuEe4zuJYwq8ZYjmq9Jx3iaCYWEjdnDld7Wk8qxNYsy503Hv1Zi7I1ZS7Gi
-HM3onu3axzhm1OWMNZ9IdrCCpgHhw8DIplZGLQXj9QJZLsYTdt7yop6MdOeGAjrjjRDK1lXF
-4zFrkoEIPdEsXNQnE0eOeNip211c8aJOUE2mY42xS9A1N8TdiNYwuzNqTSMBCwNwfa2JZgCa
-ziZ8R7fVbLzwuIN0F2TJVMuCoiATwvR3USqvZibESBCazHl11z1MDMzCmPJnnTupB+bDz5fj
-h1J2MAfRzWJ5TURT+XtGf4+WS3o0taqyVKwzFqifNQCZjB06L6SO6jyN0O+Zqr7SNJjMPD14
-aMu55RekTHFhmuGSOFtMJ/aOahHmodOhyxRWInN4dM/v3ED+V58Z6/Xp+Ld2G5F3p612xdMI
-26Pz4en04poden3LAriSM6NFaJQqtg8KQ7/MfkclB2h9Oa7+vFLJvZ7OL0dT3I8xEEK5LWpO
-q0unCM2kuWsm/5X2RH0BwUpl8X35+fkE/389v59QiOfOWcn1p02R8x7I/6Q2TQh/PX/AEX9i
-1NEzT0suVo31jIFwMzOSeuPNDI4aVrNaIBMhjKZIUM7kLmVGg9jGwhhS4SpJi+W44/aO6lQR
-dSvC1KYg2zDswC9G81GqGa/4aeGxDChMNsCtaDj2AhPGOY/GqGLDKxQj7ZCLg2Jsyuf9ZSQZ
-U6lZ/TY4TpFMxnqk3LSazdn0uYiYEKO9lsmoCDUs1GQd9WzK2t1uCm801yjvCwHC1Jxds9Z8
-DJLmy+nlp7YLKKPXkO3Mnv8+PaOAjhvgUabre2DmWco5MxpgG8P3lxgSIWp2VIHvjz3qMloY
-lk3lKsTMyOypW670m1e1X87YeUVKmpQ+mU2S0b4f636ULvattTp4Pz+h/51LkU9MDC5SKtZ4
-fH5F1QK7VSQfGgngiFFaONY8orh1l+yXo/mYaoQkROcmdQqiMZ8wXqI4dVENDJjOqvzthRon
-ZjpFxMDaZ7+4SyMzrkW3Iu5IHBf40bvKEJARlRVBok6jpNkkQRjIKp4pclUlzao26pXuvxOd
-UPrD0gcM2QBpyWM0CtXxehSIFFXj/GODwpkB79SBXd7KbCRMXJLyFm1whu8K6EQcUDOZEG1n
-0FRyEE1kW5siibWg2tZX+o8UIrhpDOs+PxdlCEdKEHv8/orKGBoTF3lQC/LkBBwtqvGZt8ao
-eHomG4XzyyCtar/V23O3F0mG4kHSrO+IOY2EY3hz5aLa6nGLzber6vP7u7RqGIautftsAD1U
-QYBtCiAN7QeY8CUT+Ajv6SWxRGvD3dR5WWqOjhQpa6T3GoKrYpB4eOsAJMMlGqf7RXrriM2i
-mr2HcWEaj8hiLxpvkaXNpqKrRENh37RViw2ERV+YH9UoUlEUmzyLmjRM53OHqgsJ8yBKctS4
-l2HEm1MglZrdyAgTMvBlbU5JUYwJFvBBHQLi/Qc/2iA2RJDyYbtzqvRSuv+0T02Pb+fTo6aD
-ycIyN6P79e9Minw48PxsF8YpYT1+coMydFOgZ2APRUfM5Eb7HSQiJtwJKWoSRgR/kN7kK1kj
-0xvVAAwgR+PUi31ruqzByOdaz0X603ZQbMH4ZlmFIrUY2ebu6uPt8CBFCGJr3LGMmjfJVGuh
-3rBDzFTZ66WLtRZBvLUjLOBiU8iXHmZ0sEyTrsuOONhp56xEX8j9IPHhimfxKzbbhoznViTR
-fshgT65snNUXXPDgprC+Xno8q0C8I9wToqRxJ39BtMzEirTJC3K8VLFuuYm/8WRwfa9K4tSn
-UeoRoF62g7rUIirL616gotSzZrfbTAthBmd1c7sVYRjR4y6vau1Colubqfeg0xNIIZJzaMO6
-EyiPgiwKt8lClBV74QRcjFFjNPfkfe01LqfkfT0xcANm2ujbR4K2GHsS5Dis1V0M76KYWiNI
-rApW+HYabEteWy9JDNnoqx9qHB9/O/2YofrUD0SwoYasUQzDBRjDX7kDA3HAx+vpSdAuFz3G
-efs98oFmL+qaNwL/Kgk404KuaeT37TavhQ6iY0rAekw2hOQZpufAyL5b/kREojtR8o40iHSN
-7npV4VrSFNYKhAbwmAcMrsA8m8wDRcgp3ut2cp5NCL+OeqycOLk11+Z6sonLbdZUIgO6xnLX
-Mqit7ht4UcF088Exhs9FK8xQF6+4ZZ7FST+S3cL1ujEYODKCMEA0P2xtCbXi6Ph0iH7wLhTu
-9qJVXo2tg29ICmk9IQLHUSPrl7E74uwrMM2YjafSNQNYrtQmxHnG9SS5Z3MM9NgpV+i+qjk9
-NL+TVCodugs7SBvmTs+yEidRt+I1KQ3ELTR6+qZR8I0Akbr8VtQxdfXVwHDIr/UEDpVcUSzj
-XFVmBp7QBMQKoALf0GqFQnBGXi0XGszCEID+Z9IhQB6KK9cSKErAtyWQ2xgjYdTpYjkKW5eR
-ZlB7u0rrZsdpsBSG6GdkBZ0heSdrbet8VU1dy1uhHbtOnoBkLQTbitg6te5zlABjimOyMv30
-GaAYgzfGPEQN/OF5J0Mrkjshs/8kSX7HtJOUibMw2ju+neGSkyv9ch2YVVGOi6OeNIJBzgtt
-ESnx5fDwS8/vtqrk+czKyy21Ig//LPP0r3AXSqGIkYniKl/CbY6fqG246oa8q5yvUKmT8+qv
-laj/ivb4b1Ybn+y3Sm3w6LSCknwDdj01Kd0FNMLcdAV6v04n1xw+ztFbp4rqf305vZ8Xi9ny
-z/EXumcH0m294hTssieNztEcX/j8+LHonXCz2pKUJMh9KEp0ecdO6MVxVQqQ9+Pn4/nqBzfe
-UuzSVGcI6B1DKDDYxElYRoSZ3kRlRsta98HNdg2MzGcnr486u47XIqtR6aL5Mas/w5Hd3fzt
-zvTCf1wp33Pl700ZRIm+0taoi9DFg8TKkhUieWq4GNrGVRMgMBSyNsZ+ZEpjUTf9hMhqbuT6
-xteVKet0kLbSkQW/g1MuMv1CBiz6zivZSrsXSHy1TTFNhEMCb2uwhHSNgAgj+NQPfyr7O/cJ
-GzJKIUFeMdtdooeiBdz6cWbXHcgMIFme8QcrJYJDNneIBJSsiu8j13dWYpdvS0PEGh70/dg1
-sUEpUu0klL+VvBRGO7Lz4CZcbfQF28GUpGSdCCyVOvrsemEd4Zw1GIrfiO1gUEh1Bm9awVGi
-mw8f4a4n76RvE36vxfPqwUpWtaE52+r9/eW2OkTcHj+V2jtf+vLe8wMTpX4UhmweomHwS7FO
-IxDm5DSpuiZENbF3rZA0xsy1mjCUGsxlUxi339tsP7XYGwDnro+UVp0KglEM0eXrWx+7eriw
-GwSuAIpWRXnNBZZQZMAtjCDZRVVrhvDqN57ACWpyOj6j6dsVCSyIHs1p0juqKa3EQm4CN3ox
-HRidpk9XaFxZ/6AFpIbLfezEDuZTtBcdGX+h4Dr2T0rQvnL0fJ/6Jn95PP54Onwcv1iEVmal
-FoOe0e4PrOS1mSlWCl53AhLDziHkWsewgqgT1FHAykAZlc7rDlz17vLyhhdcMmPr4u+dZ/zW
-YrIpiEMnIZHa+7iCNLypWYlBZDKHxIMl8abWxmUMM7ZzLRFKilGCRHrbw7gSPpw727Cww0AC
-Qaj/gr7rSgUFnFgAjmpqAIrMGNlQcRe4b+Xb2hjTsKmCKlYovp9hs0pABodZ7CtoketSet+B
-OJWT/sgz3PhpNhK7wY6LFVu62mZlEZi/mzVlHACoIglrbkpfN4lU5N10xJnUWmGeigBTI/Ar
-oCvk0CsEUbExDpkWdFFvFsRGmbjV0VWcOlxiBd7Qh0arFUknUFLdRQLDfuCdg0+dI6m2BSaY
-cuNdgq1EWvt+gDpsmns8urUU8lXuAiHbvv6+FArtjBbGmS24BvbABobOlUxlWThYV0I3UEL4
-OXejRoLuUt7ApZyvcCC5nlzrtQ+Y65kDs5hppmAGjltABom7YmKzpWOoh4GBGTsxnhMzcWKm
-7q7N+TTsBhHnMm6QLB1fX07mLszM1f/lxNXL5XTpGudrTdOMuLjKcS01fDhKrfTYY/0OTBpj
-WmTgNr093TfH5pB3CH47UwrORI/inf3kTM8pfu5qEx/Sk1JwURa17k4cwzDVR6yHz8xO3OTx
-ouG5SI/mbnuITEWAgj7Ni9SBgwjuigEHz+poW+ZmMySuzEXNJ3bvSb6VcZLEgTmiiFuLCDAX
-CmN6rxt9XBAcQ1tFFtptjbMtTWuv9TjmOl1vy5uYppNDBOoiyRNEktK2w88LWsRtFuMuYLoU
-583dLVXkam/kyvf2+PD5hoaQVsjH1pKk/wz+bsrodhtVtVPtgJlXYxB24coL9Bi7jhwlNSYn
-i0LDRqV9t+ngz9oXm3CD6eVVskKHuNI+xGH8wEpai9Vl7EhCfuEBvUNR4VFGoduIMoyySAV5
-R029lEsC6aJPKA2iC6hmJVTeWE2tgHb2gaRB3ZJKYss0s1NCD70WNCNFlf7rC3qyPp7//fLH
-78Pz4Y+n8+Hx9fTyx/vhxxHqOT3+gcHJf+Kc//H99ccXtQxujm8vx6erX4e3x6M0BR6WgzJd
-OT6f335fnV5O6NB2+s+h9Z/tFloW19iF4EYq3+jTWYw5CNSQkaQEtOsdzQo2niNvwWDUwrej
-Q7u70buTm+u9a+k+L9U9gYpWMuyp7pOvYGmUBsU3E7qnEQAUqLg1IaWIwzks0yDfDSi5BZDd
-qVeat9+vH+erh/Pb8er8dvXr+PQq3aY1YnzlFAU54DSwZ8MjEbJAm7S6CeJiQ1XIBsIustES
-ZBKgTVpmaw7GEhLth9FwZ0uEq/E3RWFT31AzqK4GVGTYpMDPxZqpt4VrpjYtastbG+kF++uZ
-tK6wql+vxt4i3SYWItsmPJBrSSH/utsi/4TmgsSHyw0waAsuw/N1hrif359OD3/+z/H31YNc
-uD8xYfNva72WlbCaG2qBiVtgFISOm1yHL8OKc2nt+rItd5E3m42X3YYSnx+/0HPl4fBxfLyK
-XmQ70Y3n36ePX1fi/f38cJKo8PBxsBoeBKk1AGsGFmzgVBTeqMiTb+gAyXRNROsYY4a7G19F
-t/HOGqcIKgY+uevG3JfhCp7PjzTDRNcMP7DKByvfbm5tr+WAWYARtbBtYUl5Z8HylU1XYGPM
-D++Zj8BZf1eKwqLNNmQ0jbHEXJv11p4HfIHqR2pzeP/lGqhU2I3bpHqSkq7N0BH3pO1UTZ1/
-1fH9w/5YGUw8ZmIQbEH3e8lPzbb5ibiJPHsmFbyyZ7gM6vEojFc2U2Hr74faYnHhlIExdDGs
-U2mmbg9smYZjmriBgOlVewB7szkHnng2dbURY6sxAMQqGPBszLFIQHCXuw6bTrgyaF/j56ye
-rOWU63K8tGf4rlCNUOf96fWX5jDYcwt7owAM40hamyHb+rG9AkQZ2DMHYs7dKmbO6w4xqCHN
-/mI2J7hZXWK+Aq8HRuwgguO4IsI5JUZ3SDDDsJJ/mRbebMS94B+lujkTSSXY8AkGH7eXjkpB
-agLLAr1CLHhqj3wd2UdgfZe3AfpZ+DCWXbDrV3Tx08Tvfpzk05HNrOmjegtbTO01qT2xDrBN
-wEyZ+YCqXOYOL4/n56vs8/n78a0LpsO1FFOGNUHBSYJh6cuwblse07JnDmNk3aS4gNftDhRW
-lV9jTCQWoTsTvcwRua5B4ductA7RtPyVEwglvpOkLy3UnrhkTSFNKingW8cZtEPaXxt3i6fT
-97cD3KTezp8fpxfmcExin+U/Es5xFUS0B5EdfN+mYXFq5/XFuU8oEr50L/ddroGKhzaa4zYI
-7w5HkGPxGX98iWT4vDmnlOzS3A9dHeRJ9xpA6v64M6va8Gnc4DaaphHqSqSiBd+DbBtEDGDz
-Q4rN7zIP5fvp54vy93z4dXz4H7hiDwtHvXLi/GISxKrXAJHXK5NCrk78H+ayGMwN/8FXuyr9
-OBPlN2Uyu+rWeOJc3OryTS/lHaTx4Z4D3KXU1DLoIskbIvsxHP2YE4Lw287NMIvQuDCmzyhB
-XoZ0Q0CD0whua6mvpZVQii6R2HUWMi23clHp5zeAu0lca7fjYDzXKWwJMGjietvopXQhFH72
-6Vl0LiYxSRxE/jdeca+RTC+RiPJOsE/tCu/HegvnGssJpka7uHcn2Ba22B0QGbSXs4e3cZGF
-eUq6z1RrWIAQqDKB0uFoz4QcWD+a7xWrMaDUekWHcjVrViwUypqvIDXbPmqwMpBLMKEfxuy+
-0Xyz1O9mT3NotDDptlnYtLGgk9kCRZlysHoDe8RCVAWcQRbUD77SzdtCHbM49K1Z31Nfa4LQ
-JCcNPrV3KKMWhstB2FR5kmvSMIVirUTx7wdEEPSl8X6PE1WVB7HMNQADUwpNxyz916grpwLJ
-rEQa00A4pgkdqkWDXcz3qbKUNvOptvMQA21MhLTb2US6BzRiZYKc3MrTJGUSlxFBtU7UeJGd
-WWzhekebGt5SPpjkPv0C/r60SbNEty9Myq16tSCiw/9Vdiy7bePAX8lxF9gN6iBos4ccaImy
-BUuiokfc9iJkXcMwukkD2yn8+TszpCQ+Rk57CJKQIz6H8+LMMPvaNcJCrrR6QOZs9ZqXqeOO
-GKe58z/8k9jPFKo0xlewgaPZmdsTVTShvweW1h7Q3fkuKLEJOhV9PLuvrVDhp/OMp7ZUW0pR
-Zdj6NIgAFlX4IDYA+iR2t2dmNB+C0cw+nGcX+qrbAuc11RNUz27ONzdeTyCQzz6ebU5VY2i4
-svdL5rj8jgsNXkvEslS2/yuguINqeGdULEaeZ92ZBcKEf+5TVUndmHuV0otHVPp62L+cvut0
-I8/b4y68byMRZtUZb2c3GGjVoXcIb0vWvnRdphYZyCPZYDH/NAnx0Kayub8d14yeEwtbuB1H
-Qe+OmaHE6AnF7m38pRB5yrgOWQ55+VyBbNDJqgJYjvtrtxX4AeFqrmpp78XkKg668f6/7d+n
-/bORFI8EutHlh3DNdV9GPQrKMGaojWTsELaxti6zlGcsA0i8FlVyO/H9vOFzES7iOYagpiX7
-Mp4s6K4gb9HMgqGG1iGpYEUpYuz+bvbPjY3bJXAPDOzPvUBeEVNrUMnFOEjMMoJhUHCGbKqo
-J1Hr4ESMz8hFE1nmJL+GxoTRtRZNJLazFnCs9bBLRUFxtT8dU+53nqgqksb3S7+mbuPJL2MC
-4Q0ZKvab/uTG23/fdju8PUxfjqfDG6bttHAmF4uUQmnsZ+qswuEKU+/UPVBCDkonUuFbMElW
-arxsx8cjx4f+zORdx9V5Lfjb0l+amNu09ugMMRaDcAL10NzGDu1axAwJivzcYAJzmxjrxrDW
-4/5eRY/mwfUfNazWhY0RVAZ4UqvCUTfd8q5QJozZVfAcmK+y4qM5xvFhgPIFkErFAuMuPanE
-g1JzDO3lHRrM6coEFyZjKumqvXVfiKyBHMSmSmJmEZc66C8f87CEri/cyP+hqpozheUC9Bbb
-s2MI+jIgIBG2gsEiUzE5r0LledtpDl77Hev3cMhdIGzZEAGUddmIm4iGtxKAAaFxSBfTyt3P
-AmeDEb2DPVpiciX/VBD8lfrxevzrCpN+v71q4rN8etk5UZglYGOEng9KsYN26jGPRSudR0TT
-iKQFdEoeitGDoS3HNz1G7FBJE1Y6DB4fEsltQOqDs31MAg+jtFYKO+uWLZyuRtR8uoj1A7AC
-YBQxe5OCZ8lMzE0CcmmdtXcT0P5vb0jwGRqlz4sXnqcLXYmAyshV2eYxXNsuwuLmrKQsNVHS
-lim8th3p8B/H1/0LXuXCFJ7fTtvzFv7YnjbX19d/2phiSAvI4G0jP0/4bRucNO8HXgB5v5Fq
-XcucfZeXqkHJRTGvzmBy/int01mQkbt/4dfGNEoKANjXoE/3hPK2XutB8gL5b6yhowT00SN9
-JyiUALfp2gIvdmDbtfEnJC4rTa4nTvp3zV2/PZ2erpCtbtBSGQiZZOX02Z0p9LeQOwQ9gWzS
-JNVi0nh2kaEUHfEdUOIwt2o64T91ccRuVxFIv6DrpyIb0mRVUcsdJHszLdtH1CJVTrph/6yK
-d/YfQZCak9w5ELmbmV0fxAJhoXxg4637RI3O+P1lByKkpcqKWMmF46ETW4B4g0GC3PjRqldE
-XxplHY9ClXrMjtvgo+ySttDi8uXaRSXK5QQMlXY5JVMi17Iq9kAw9JvWEiFJpnYcM/HzyI3B
-I4XYDyUG/RAVcYB3JC341eBy1OsUxX1/kAF8rzpPADK2kmC3kQchYvTfcLaEYGFHKwS3qpea
-MK91O41oUSv81tLdpczhMIJITwvHk1yoBjaaXGpIc6XJUS7XmWiCxTRYYXbeoRgatKsLkJaW
-isNg/e0cKCLsp568l7LFqbsQdN0DiKLAZNIYD0pfSlbk6YEBVXuwED3CGjMYfwn6LHx9xh0f
-5TU66zw7wfrQKRmvhfhQuvGQvAPZdwh6HcioFBbI28fMrjUCKGQ5rUfYPU8Bh2hItpvOv9ap
-Bb7AM+FeTd7UuIpe3kHiCIf9cfPT4Qm2DazZHk/IolEqi3783B6edk468FVbsBaUnsuhlYjy
-lZs8SNb1Wc4DjRAqIUI43Z7l4i8bRJJ3oLycTNY5E2mG2ppbonXFXssdtxercrGSvSs9jwQI
-hUirOR9HmBAiQRnJbd0Z42AumNaIQPGJ1KPBztIZagXMhAgsjBKRbfJle0CMEE1dj2weEwK3
-bW0y/R/D7pN/duoBAA==
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int mtk_jpeg_dec_s_selection(struct file *file, void *priv,
+>  				    struct v4l2_selection *s)
+>  {
 
---KsGdsel6WgEHnImy--
+I also looked at the current decoder selection code and I see no reason why
+s_selection is supported at all for the decoder since you can't actually set
+a compose rectangle, whatever you pass is just ignored.
+
+I would recommend that mtk_jpeg_dec_s_selection() is just removed in a separate
+patch. The presence of that ioctl suggests that you can set the compose rectangle
+when in reality you can't. That can be confusing for applications.
+
+> @@ -484,6 +714,33 @@ static int mtk_jpeg_qbuf(struct file *file, void *priv, struct v4l2_buffer *buf)
+>  	return v4l2_m2m_qbuf(file, fh->m2m_ctx, buf);
+>  }
+>  
+> +static const struct v4l2_ioctl_ops mtk_jpeg_enc_ioctl_ops = {
+> +	.vidioc_querycap                = mtk_jpeg_enc_querycap,
+> +	.vidioc_enum_fmt_vid_cap	= mtk_jpeg_enc_enum_fmt_vid_cap,
+> +	.vidioc_enum_fmt_vid_out	= mtk_jpeg_enc_enum_fmt_vid_out,
+> +	.vidioc_try_fmt_vid_cap_mplane	= mtk_jpeg_enc_try_fmt_vid_cap_mplane,
+> +	.vidioc_try_fmt_vid_out_mplane	= mtk_jpeg_enc_try_fmt_vid_out_mplane,
+> +	.vidioc_g_fmt_vid_cap_mplane    = mtk_jpeg_g_fmt_vid_mplane,
+> +	.vidioc_g_fmt_vid_out_mplane    = mtk_jpeg_g_fmt_vid_mplane,
+> +	.vidioc_s_fmt_vid_cap_mplane    = mtk_jpeg_enc_s_fmt_vid_cap_mplane,
+> +	.vidioc_s_fmt_vid_out_mplane    = mtk_jpeg_enc_s_fmt_vid_out_mplane,
+> +	.vidioc_qbuf                    = mtk_jpeg_qbuf,
+> +	.vidioc_subscribe_event         = mtk_jpeg_subscribe_event,
+> +	.vidioc_g_selection		= mtk_jpeg_enc_g_selection,
+> +	.vidioc_s_selection		= mtk_jpeg_enc_s_selection,
+> +
+> +	.vidioc_create_bufs		= v4l2_m2m_ioctl_create_bufs,
+> +	.vidioc_prepare_buf		= v4l2_m2m_ioctl_prepare_buf,
+> +	.vidioc_reqbufs                 = v4l2_m2m_ioctl_reqbufs,
+> +	.vidioc_querybuf                = v4l2_m2m_ioctl_querybuf,
+> +	.vidioc_dqbuf                   = v4l2_m2m_ioctl_dqbuf,
+> +	.vidioc_expbuf                  = v4l2_m2m_ioctl_expbuf,
+> +	.vidioc_streamon                = v4l2_m2m_ioctl_streamon,
+> +	.vidioc_streamoff               = v4l2_m2m_ioctl_streamoff,
+> +
+> +	.vidioc_unsubscribe_event	= v4l2_event_unsubscribe,
+> +};
+> +
+>  static const struct v4l2_ioctl_ops mtk_jpeg_dec_ioctl_ops = {
+>  	.vidioc_querycap                = mtk_jpeg_dec_querycap,
+>  	.vidioc_enum_fmt_vid_cap	= mtk_jpeg_dec_enum_fmt_vid_cap,
+> @@ -575,8 +832,9 @@ static bool mtk_jpeg_check_resolution_change(struct mtk_jpeg_ctx *ctx,
+>  	}
+>  
+>  	q_data = &ctx->cap_q;
+> -	if (q_data->fmt != mtk_jpeg_find_format(ctx, param->dst_fourcc,
+> -						MTK_JPEG_FMT_TYPE_CAPTURE)) {
+> +	if (q_data->fmt !=
+> +	    mtk_jpeg_find_format(param->dst_fourcc,
+> +				 MTK_JPEG_FMT_FLAG_DEC_CAPTURE)) {
+>  		v4l2_dbg(1, debug, &jpeg->v4l2_dev, "format change\n");
+>  		return true;
+>  	}
+> @@ -597,9 +855,8 @@ static void mtk_jpeg_set_queue_data(struct mtk_jpeg_ctx *ctx,
+>  	q_data = &ctx->cap_q;
+>  	q_data->w = param->dec_w;
+>  	q_data->h = param->dec_h;
+> -	q_data->fmt = mtk_jpeg_find_format(ctx,
+> -					   param->dst_fourcc,
+> -					   MTK_JPEG_FMT_TYPE_CAPTURE);
+> +	q_data->fmt = mtk_jpeg_find_format(param->dst_fourcc,
+> +					   MTK_JPEG_FMT_FLAG_DEC_CAPTURE);
+>  
+>  	for (i = 0; i < q_data->fmt->colplanes; i++) {
+>  		q_data->bytesperline[i] = param->mem_stride[i];
+> @@ -616,6 +873,17 @@ static void mtk_jpeg_set_queue_data(struct mtk_jpeg_ctx *ctx,
+>  		 param->dec_w, param->dec_h);
+>  }
+>  
+> +static void mtk_jpeg_enc_buf_queue(struct vb2_buffer *vb)
+> +{
+> +	struct mtk_jpeg_ctx *ctx = vb2_get_drv_priv(vb->vb2_queue);
+> +	struct mtk_jpeg_dev *jpeg = ctx->jpeg;
+> +
+> +	v4l2_dbg(2, debug, &jpeg->v4l2_dev, "(%d) buf_q id=%d, vb=%p\n",
+> +		 vb->vb2_queue->type, vb->index, vb);
+> +
+> +	v4l2_m2m_buf_queue(ctx->fh.m2m_ctx, to_vb2_v4l2_buffer(vb));
+> +}
+> +
+>  static void mtk_jpeg_dec_buf_queue(struct vb2_buffer *vb)
+>  {
+>  	struct mtk_jpeg_ctx *ctx = vb2_get_drv_priv(vb->vb2_queue);
+> @@ -664,6 +932,15 @@ static struct vb2_v4l2_buffer *mtk_jpeg_buf_remove(struct mtk_jpeg_ctx *ctx,
+>  		return v4l2_m2m_dst_buf_remove(ctx->fh.m2m_ctx);
+>  }
+>  
+> +static void mtk_jpeg_enc_stop_streaming(struct vb2_queue *q)
+> +{
+> +	struct mtk_jpeg_ctx *ctx = vb2_get_drv_priv(q);
+> +	struct vb2_v4l2_buffer *vb;
+> +
+> +	while ((vb = mtk_jpeg_buf_remove(ctx, q->type)))
+> +		v4l2_m2m_buf_done(vb, VB2_BUF_STATE_ERROR);
+> +}
+> +
+>  static void mtk_jpeg_dec_stop_streaming(struct vb2_queue *q)
+>  {
+>  	struct mtk_jpeg_ctx *ctx = vb2_get_drv_priv(q);
+> @@ -699,6 +976,15 @@ static const struct vb2_ops mtk_jpeg_dec_qops = {
+>  	.stop_streaming     = mtk_jpeg_dec_stop_streaming,
+>  };
+>  
+> +static const struct vb2_ops mtk_jpeg_enc_qops = {
+> +	.queue_setup        = mtk_jpeg_queue_setup,
+> +	.buf_prepare        = mtk_jpeg_buf_prepare,
+> +	.buf_queue          = mtk_jpeg_enc_buf_queue,
+> +	.wait_prepare       = vb2_ops_wait_prepare,
+> +	.wait_finish        = vb2_ops_wait_finish,
+> +	.stop_streaming     = mtk_jpeg_enc_stop_streaming,
+> +};
+> +
+>  static void mtk_jpeg_set_dec_src(struct mtk_jpeg_ctx *ctx,
+>  				 struct vb2_buffer *src_buf,
+>  				 struct mtk_jpeg_bs *bs)
+> @@ -736,6 +1022,85 @@ static int mtk_jpeg_set_dec_dst(struct mtk_jpeg_ctx *ctx,
+>  	return 0;
+>  }
+>  
+> +static void mtk_jpeg_set_enc_dst(struct mtk_jpeg_ctx *ctx, void __iomem *base,
+> +				 struct vb2_buffer *dst_buf,
+> +				 struct mtk_jpeg_enc_bs *bs)
+> +{
+> +	bs->dma_addr = vb2_dma_contig_plane_dma_addr(dst_buf, 0);
+> +	bs->dma_addr_offset = ctx->enable_exif ? MTK_JPEG_MAX_EXIF_SIZE : 0;
+> +	bs->dma_addr_offsetmask = bs->dma_addr & JPEG_ENC_DST_ADDR_OFFSET_MASK;
+> +	bs->size = vb2_plane_size(dst_buf, 0);
+> +
+> +	mtk_jpeg_enc_set_dst_addr(base, bs->dma_addr, bs->size,
+> +				  bs->dma_addr_offset,
+> +				  bs->dma_addr_offsetmask);
+> +}
+> +
+> +static void mtk_jpeg_set_enc_src(struct mtk_jpeg_ctx *ctx, void __iomem *base,
+> +				 struct vb2_buffer *src_buf)
+> +{
+> +	int i;
+> +	dma_addr_t	dma_addr;
+> +
+> +	mtk_jpeg_enc_set_img_size(base, ctx->out_q.crop_rect.width,
+> +				  ctx->out_q.crop_rect.height);
+> +	mtk_jpeg_enc_set_blk_num(base, ctx->out_q.fmt->fourcc,
+> +				 ctx->out_q.crop_rect.width,
+> +				 ctx->out_q.crop_rect.height);
+> +	mtk_jpeg_enc_set_stride(base, ctx->out_q.fmt->fourcc, ctx->out_q.w,
+> +				ctx->out_q.h, ctx->out_q.bytesperline[0]);
+> +
+> +	for (i = 0; i < src_buf->num_planes; i++) {
+> +		dma_addr = vb2_dma_contig_plane_dma_addr(src_buf, i) +
+> +			   src_buf->planes[i].data_offset;
+> +		mtk_jpeg_enc_set_src_addr(base, dma_addr, i);
+> +	}
+> +}
+> +
+> +static void mtk_jpeg_enc_device_run(void *priv)
+> +{
+> +	struct mtk_jpeg_ctx *ctx = priv;
+> +	struct mtk_jpeg_dev *jpeg = ctx->jpeg;
+> +	struct vb2_v4l2_buffer *src_buf, *dst_buf;
+> +	enum vb2_buffer_state buf_state = VB2_BUF_STATE_ERROR;
+> +	unsigned long flags;
+> +	struct mtk_jpeg_src_buf *jpeg_src_buf;
+> +	struct mtk_jpeg_enc_bs enc_bs;
+> +	int ret;
+> +
+> +	src_buf = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
+> +	dst_buf = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
+> +	jpeg_src_buf = mtk_jpeg_vb2_to_srcbuf(&src_buf->vb2_buf);
+> +
+> +	ret = pm_runtime_get_sync(jpeg->dev);
+> +	if (ret < 0)
+> +		goto enc_end;
+> +
+> +	spin_lock_irqsave(&jpeg->hw_lock, flags);
+> +
+> +	/*
+> +	 * Resetting the hardware every frame is to ensure that all the
+> +	 * registers are cleared. This is a hardware requirement.
+> +	 */
+> +	mtk_jpeg_enc_reset(jpeg->reg_base);
+> +
+> +	mtk_jpeg_set_enc_dst(ctx, jpeg->reg_base, &dst_buf->vb2_buf, &enc_bs);
+> +	mtk_jpeg_set_enc_src(ctx, jpeg->reg_base, &src_buf->vb2_buf);
+> +	mtk_jpeg_enc_set_config(jpeg->reg_base, ctx->out_q.fmt->hw_format,
+> +				ctx->enable_exif, ctx->enc_quality,
+> +				ctx->restart_interval);
+> +	mtk_jpeg_enc_start(jpeg->reg_base);
+> +	spin_unlock_irqrestore(&jpeg->hw_lock, flags);
+> +	return;
+> +
+> +enc_end:
+> +	v4l2_m2m_src_buf_remove(ctx->fh.m2m_ctx);
+> +	v4l2_m2m_dst_buf_remove(ctx->fh.m2m_ctx);
+> +	v4l2_m2m_buf_done(src_buf, buf_state);
+> +	v4l2_m2m_buf_done(dst_buf, buf_state);
+> +	v4l2_m2m_job_finish(jpeg->m2m_dev, ctx->fh.m2m_ctx);
+> +}
+> +
+>  static void mtk_jpeg_dec_device_run(void *priv)
+>  {
+>  	struct mtk_jpeg_ctx *ctx = priv;
+> @@ -785,6 +1150,11 @@ static void mtk_jpeg_dec_device_run(void *priv)
+>  	v4l2_m2m_job_finish(jpeg->m2m_dev, ctx->fh.m2m_ctx);
+>  }
+>  
+> +static int mtk_jpeg_enc_job_ready(void *priv)
+> +{
+> +		return 1;
+> +}
+> +
+>  static int mtk_jpeg_dec_job_ready(void *priv)
+>  {
+>  	struct mtk_jpeg_ctx *ctx = priv;
+> @@ -792,6 +1162,11 @@ static int mtk_jpeg_dec_job_ready(void *priv)
+>  	return (ctx->state == MTK_JPEG_RUNNING) ? 1 : 0;
+>  }
+>  
+> +static const struct v4l2_m2m_ops mtk_jpeg_enc_m2m_ops = {
+> +	.device_run = mtk_jpeg_enc_device_run,
+> +	.job_ready  = mtk_jpeg_enc_job_ready,
+> +};
+> +
+>  static const struct v4l2_m2m_ops mtk_jpeg_dec_m2m_ops = {
+>  	.device_run = mtk_jpeg_dec_device_run,
+>  	.job_ready  = mtk_jpeg_dec_job_ready,
+> @@ -830,24 +1205,109 @@ static int mtk_jpeg_dec_queue_init(void *priv, struct vb2_queue *src_vq,
+>  	return ret;
+>  }
+>  
+> -static void mtk_jpeg_clk_on(struct mtk_jpeg_dev *jpeg)
+> +static int mtk_jpeg_enc_queue_init(void *priv, struct vb2_queue *src_vq,
+> +				   struct vb2_queue *dst_vq)
+>  {
+> +	struct mtk_jpeg_ctx *ctx = priv;
+>  	int ret;
+>  
+> +	src_vq->type = V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE;
+> +	src_vq->io_modes = VB2_DMABUF | VB2_MMAP;
+> +	src_vq->drv_priv = ctx;
+> +	src_vq->buf_struct_size = sizeof(struct mtk_jpeg_src_buf);
+> +	src_vq->ops = &mtk_jpeg_enc_qops;
+> +	src_vq->mem_ops = &vb2_dma_contig_memops;
+> +	src_vq->timestamp_flags = V4L2_BUF_FLAG_TIMESTAMP_COPY;
+> +	src_vq->lock = &ctx->jpeg->lock;
+> +	src_vq->dev = ctx->jpeg->dev;
+> +	ret = vb2_queue_init(src_vq);
+> +	if (ret)
+> +		return ret;
+> +
+> +	dst_vq->type = V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE;
+> +	dst_vq->io_modes = VB2_DMABUF | VB2_MMAP;
+> +	dst_vq->drv_priv = ctx;
+> +	dst_vq->buf_struct_size = sizeof(struct v4l2_m2m_buffer);
+> +	dst_vq->ops = &mtk_jpeg_enc_qops;
+> +	dst_vq->mem_ops = &vb2_dma_contig_memops;
+> +	dst_vq->timestamp_flags = V4L2_BUF_FLAG_TIMESTAMP_COPY;
+> +	dst_vq->lock = &ctx->jpeg->lock;
+> +	dst_vq->dev = ctx->jpeg->dev;
+> +	ret = vb2_queue_init(dst_vq);
+> +
+> +	return ret;
+> +}
+> +
+> +static void mtk_jpeg_clk_on(struct mtk_jpeg_dev *jpeg)
+> +{
+> +	int ret, i;
+> +
+>  	ret = mtk_smi_larb_get(jpeg->larb);
+>  	if (ret)
+>  		dev_err(jpeg->dev, "mtk_smi_larb_get larbvdec fail %d\n", ret);
+> -	clk_prepare_enable(jpeg->clk_jdec_smi);
+> -	clk_prepare_enable(jpeg->clk_jdec);
+> +
+> +	for (i = 0; i < jpeg->variant->num_clocks; i++) {
+> +		ret = clk_prepare_enable(jpeg->clocks[i]);
+> +		if (ret) {
+> +			while (--i >= 0)
+> +				clk_disable_unprepare(jpeg->clocks[i]);
+> +		}
+> +	}
+>  }
+>  
+>  static void mtk_jpeg_clk_off(struct mtk_jpeg_dev *jpeg)
+>  {
+> -	clk_disable_unprepare(jpeg->clk_jdec);
+> -	clk_disable_unprepare(jpeg->clk_jdec_smi);
+> +	int i;
+> +
+> +	for (i = jpeg->variant->num_clocks - 1; i >= 0; i--)
+> +		clk_disable_unprepare(jpeg->clocks[i]);
+>  	mtk_smi_larb_put(jpeg->larb);
+>  }
+>  
+> +static irqreturn_t mtk_jpeg_enc_irq(int irq, void *priv)
+> +{
+> +	struct mtk_jpeg_dev *jpeg = priv;
+> +	struct mtk_jpeg_ctx *ctx;
+> +	struct vb2_v4l2_buffer *src_buf, *dst_buf;
+> +	struct mtk_jpeg_src_buf *jpeg_src_buf;
+> +	enum vb2_buffer_state buf_state = VB2_BUF_STATE_ERROR;
+> +	u32 enc_irq_ret;
+> +	u32 enc_ret, result_size;
+> +
+> +	ctx = v4l2_m2m_get_curr_priv(jpeg->m2m_dev);
+> +	if (!ctx) {
+> +		v4l2_err(&jpeg->v4l2_dev, "Context is NULL\n");
+> +		return IRQ_HANDLED;
+> +	}
+> +
+> +	src_buf = v4l2_m2m_src_buf_remove(ctx->fh.m2m_ctx);
+> +	dst_buf = v4l2_m2m_dst_buf_remove(ctx->fh.m2m_ctx);
+> +	jpeg_src_buf = mtk_jpeg_vb2_to_srcbuf(&src_buf->vb2_buf);
+> +
+> +	enc_ret = mtk_jpeg_enc_get_and_clear_int_status(jpeg->reg_base);
+> +	enc_irq_ret = mtk_jpeg_enc_enum_result(jpeg->reg_base, enc_ret);
+> +
+> +	if (enc_irq_ret >= MTK_JPEG_ENC_RESULT_STALL)
+> +		mtk_jpeg_enc_reset(jpeg->reg_base);
+> +
+> +	if (enc_irq_ret != MTK_JPEG_ENC_RESULT_DONE) {
+> +		dev_err(jpeg->dev, "encode failed\n");
+> +		goto enc_end;
+> +	}
+> +
+> +	result_size = mtk_jpeg_enc_get_file_size(jpeg->reg_base);
+> +	vb2_set_plane_payload(&dst_buf->vb2_buf, 0, result_size);
+> +
+> +	buf_state = VB2_BUF_STATE_DONE;
+> +
+> +enc_end:
+> +	v4l2_m2m_buf_done(src_buf, buf_state);
+> +	v4l2_m2m_buf_done(dst_buf, buf_state);
+> +	v4l2_m2m_job_finish(jpeg->m2m_dev, ctx->fh.m2m_ctx);
+> +	pm_runtime_put(ctx->jpeg->dev);
+> +	return IRQ_HANDLED;
+> +}
+> +
+>  static irqreturn_t mtk_jpeg_dec_irq(int irq, void *priv)
+>  {
+>  	struct mtk_jpeg_dev *jpeg = priv;
+> @@ -893,36 +1353,130 @@ static irqreturn_t mtk_jpeg_dec_irq(int irq, void *priv)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> +static void mtk_jpeg_set_enc_default_params(struct mtk_jpeg_ctx *ctx)
+> +{
+> +	struct mtk_jpeg_q_data *q = &ctx->out_q;
+> +	struct v4l2_pix_format_mplane *pix_mp;
+> +
+> +	pix_mp = kmalloc(sizeof(*pix_mp), GFP_KERNEL);
+
+Huh? It's allocated, but not freed?
+
+This appears to be a temporary struct, so why not just do:
+
+	struct v4l2_pix_format_mplane pix_mp = {};
+
+> +
+> +	ctx->fh.ctrl_handler = &ctx->ctrl_hdl;
+> +	ctx->colorspace = V4L2_COLORSPACE_JPEG,
+> +	ctx->ycbcr_enc = V4L2_YCBCR_ENC_DEFAULT;
+> +	ctx->quantization = V4L2_QUANTIZATION_DEFAULT;
+> +	ctx->xfer_func = V4L2_XFER_FUNC_DEFAULT;
+> +	pix_mp->width = MTK_JPEG_MIN_WIDTH;
+> +	pix_mp->height = MTK_JPEG_MIN_HEIGHT;
+> +
+> +	q->fmt = mtk_jpeg_find_format(V4L2_PIX_FMT_YUYV,
+> +				      MTK_JPEG_FMT_FLAG_ENC_OUTPUT);
+> +	vidioc_try_fmt(container_of(pix_mp, struct v4l2_format,
+> +				    fmt.pix_mp), q->fmt);
+
+Yuck. Just change the vidioc_try_fmt prototype where the first argument is
+a v4l2_pix_format_mplane pointer instead of a v4l2_format pointer.
+
+> +	q->w = pix_mp->width;
+> +	q->h = pix_mp->height;
+> +	q->crop_rect.width = pix_mp->width;
+> +	q->crop_rect.height = pix_mp->height;
+> +	q->sizeimage[0] = pix_mp->plane_fmt[0].sizeimage;
+> +	q->bytesperline[0] = pix_mp->plane_fmt[0].bytesperline;
+> +
+> +	q = &ctx->cap_q;
+> +	q->fmt = mtk_jpeg_find_format(V4L2_PIX_FMT_JPEG,
+> +				      MTK_JPEG_FMT_FLAG_ENC_CAPTURE);
+> +	pix_mp->width = MTK_JPEG_MIN_WIDTH;
+> +	pix_mp->height = MTK_JPEG_MIN_HEIGHT;
+> +	vidioc_try_fmt(container_of(pix_mp, struct v4l2_format,
+> +				    fmt.pix_mp), q->fmt);
+> +	q->w = pix_mp->width;
+> +	q->h = pix_mp->height;
+> +	q->sizeimage[0] = pix_mp->plane_fmt[0].sizeimage;
+> +	q->bytesperline[0] = pix_mp->plane_fmt[0].bytesperline;
+> +}
+> +
+>  static void mtk_jpeg_set_dec_default_params(struct mtk_jpeg_ctx *ctx)
+>  {
+>  	struct mtk_jpeg_q_data *q = &ctx->out_q;
+> +	struct v4l2_pix_format_mplane *pix_mp;
+>  	int i;
+>  
+> +	pix_mp = kmalloc(sizeof(*pix_mp), GFP_KERNEL);
+
+Ditto.
+
+> +
+> +	ctx->fh.ctrl_handler = &ctx->ctrl_hdl;
+>  	ctx->colorspace = V4L2_COLORSPACE_JPEG,
+>  	ctx->ycbcr_enc = V4L2_YCBCR_ENC_DEFAULT;
+>  	ctx->quantization = V4L2_QUANTIZATION_DEFAULT;
+>  	ctx->xfer_func = V4L2_XFER_FUNC_DEFAULT;
+> -
+> -	q->fmt = mtk_jpeg_find_format(ctx, V4L2_PIX_FMT_JPEG,
+> -					      MTK_JPEG_FMT_TYPE_OUTPUT);
+> -	q->w = MTK_JPEG_MIN_WIDTH;
+> -	q->h = MTK_JPEG_MIN_HEIGHT;
+> -	q->bytesperline[0] = 0;
+> -	q->sizeimage[0] = MTK_JPEG_DEFAULT_SIZEIMAGE;
+> +	pix_mp->width = MTK_JPEG_MIN_WIDTH;
+> +	pix_mp->height = MTK_JPEG_MIN_HEIGHT;
+> +
+> +	q->fmt = mtk_jpeg_find_format(V4L2_PIX_FMT_JPEG,
+> +				      MTK_JPEG_FMT_FLAG_DEC_OUTPUT);
+> +	vidioc_try_fmt(container_of(pix_mp, struct v4l2_format,
+> +				    fmt.pix_mp), q->fmt);
+> +	q->w = pix_mp->width;
+> +	q->h = pix_mp->height;
+> +	q->sizeimage[0] = pix_mp->plane_fmt[0].sizeimage;
+> +	q->bytesperline[0] = pix_mp->plane_fmt[0].bytesperline;
+>  
+>  	q = &ctx->cap_q;
+> -	q->fmt = mtk_jpeg_find_format(ctx, V4L2_PIX_FMT_YUV420M,
+> -					      MTK_JPEG_FMT_TYPE_CAPTURE);
+> -	q->w = MTK_JPEG_MIN_WIDTH;
+> -	q->h = MTK_JPEG_MIN_HEIGHT;
+> -
+> +	q->fmt = mtk_jpeg_find_format(V4L2_PIX_FMT_YUV420M,
+> +				      MTK_JPEG_FMT_FLAG_DEC_CAPTURE);
+> +	pix_mp->width = MTK_JPEG_MIN_WIDTH;
+> +	pix_mp->height = MTK_JPEG_MIN_HEIGHT;
+> +	vidioc_try_fmt(container_of(pix_mp, struct v4l2_format,
+> +				    fmt.pix_mp), q->fmt);
+> +	q->w = pix_mp->width;
+> +	q->h = pix_mp->height;
+>  	for (i = 0; i < q->fmt->colplanes; i++) {
+> -		u32 stride = q->w * q->fmt->h_sample[i] / 4;
+> -		u32 h = q->h * q->fmt->v_sample[i] / 4;
+> +		q->sizeimage[i] = pix_mp->plane_fmt[i].sizeimage;
+> +		q->bytesperline[i] = pix_mp->plane_fmt[i].bytesperline;
+> +	}
+> +}
+>  
+> -		q->bytesperline[i] = stride;
+> -		q->sizeimage[i] = stride * h;
+> +static int mtk_jpeg_enc_open(struct file *file)
+> +{
+> +	struct mtk_jpeg_dev *jpeg = video_drvdata(file);
+> +	struct video_device *vfd = video_devdata(file);
+> +	struct mtk_jpeg_ctx *ctx;
+> +	int ret = 0;
+> +
+> +	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
+> +	if (!ctx)
+> +		return -ENOMEM;
+> +
+> +	if (mutex_lock_interruptible(&jpeg->lock)) {
+> +		ret = -ERESTARTSYS;
+> +		goto free;
+> +	}
+> +
+> +	v4l2_fh_init(&ctx->fh, vfd);
+> +	file->private_data = &ctx->fh;
+> +	v4l2_fh_add(&ctx->fh);
+> +
+> +	ctx->jpeg = jpeg;
+> +	ctx->fh.m2m_ctx = v4l2_m2m_ctx_init(jpeg->m2m_dev, ctx,
+> +					    mtk_jpeg_enc_queue_init);
+> +	if (IS_ERR(ctx->fh.m2m_ctx)) {
+> +		ret = PTR_ERR(ctx->fh.m2m_ctx);
+> +		goto error;
+>  	}
+> +
+> +	ret = mtk_jpeg_enc_ctrls_setup(ctx);
+> +	if (ret) {
+> +		v4l2_err(&jpeg->v4l2_dev, "Failed to setup jpeg enc controls\n");
+> +		goto error;
+> +	}
+> +	mtk_jpeg_set_enc_default_params(ctx);
+> +
+> +	mutex_unlock(&jpeg->lock);
+> +	return 0;
+> +
+> +error:
+> +	v4l2_fh_del(&ctx->fh);
+> +	v4l2_fh_exit(&ctx->fh);
+> +	mutex_unlock(&jpeg->lock);
+> +free:
+> +	kfree(ctx);
+> +	return ret;
+>  }
+>  
+>  static int mtk_jpeg_dec_open(struct file *file)
+> @@ -953,6 +1507,12 @@ static int mtk_jpeg_dec_open(struct file *file)
+>  		goto error;
+>  	}
+>  
+> +	v4l2_ctrl_handler_init(&ctx->ctrl_hdl, 0);
+> +	ret = v4l2_ctrl_handler_setup(&ctx->ctrl_hdl);
+> +	if (ret) {
+> +		v4l2_err(&jpeg->v4l2_dev, "Failed to setup jpeg dec controls\n");
+> +		goto error;
+> +	}
+>  	mtk_jpeg_set_dec_default_params(ctx);
+>  	mutex_unlock(&jpeg->lock);
+>  	return 0;
+> @@ -973,6 +1533,7 @@ static int mtk_jpeg_release(struct file *file)
+>  
+>  	mutex_lock(&jpeg->lock);
+>  	v4l2_m2m_ctx_release(ctx->fh.m2m_ctx);
+> +	v4l2_ctrl_handler_free(&ctx->ctrl_hdl);
+>  	v4l2_fh_del(&ctx->fh);
+>  	v4l2_fh_exit(&ctx->fh);
+>  	kfree(ctx);
+> @@ -980,6 +1541,15 @@ static int mtk_jpeg_release(struct file *file)
+>  	return 0;
+>  }
+>  
+> +static const struct v4l2_file_operations mtk_jpeg_enc_fops = {
+> +	.owner          = THIS_MODULE,
+> +	.open           = mtk_jpeg_enc_open,
+> +	.release        = mtk_jpeg_release,
+> +	.poll           = v4l2_m2m_fop_poll,
+> +	.unlocked_ioctl = video_ioctl2,
+> +	.mmap           = v4l2_m2m_fop_mmap,
+> +};
+> +
+>  static const struct v4l2_file_operations mtk_jpeg_dec_fops = {
+>  	.owner          = THIS_MODULE,
+>  	.open           = mtk_jpeg_dec_open,
+> @@ -993,6 +1563,7 @@ static int mtk_jpeg_clk_init(struct mtk_jpeg_dev *jpeg)
+>  {
+>  	struct device_node *node;
+>  	struct platform_device *pdev;
+> +	int i;
+>  
+>  	node = of_parse_phandle(jpeg->dev->of_node, "mediatek,larb", 0);
+>  	if (!node)
+> @@ -1006,12 +1577,17 @@ static int mtk_jpeg_clk_init(struct mtk_jpeg_dev *jpeg)
+>  
+>  	jpeg->larb = &pdev->dev;
+>  
+> -	jpeg->clk_jdec = devm_clk_get(jpeg->dev, "jpgdec");
+> -	if (IS_ERR(jpeg->clk_jdec))
+> -		return PTR_ERR(jpeg->clk_jdec);
+> +	for (i = 0; i < jpeg->variant->num_clocks; i++) {
+> +		jpeg->clocks[i] = devm_clk_get(jpeg->dev,
+> +					       jpeg->variant->clk_names[i]);
+> +		if (IS_ERR(jpeg->clocks[i])) {
+> +			dev_err(&pdev->dev, "failed to get clock: %s\n",
+> +				jpeg->variant->clk_names[i]);
+> +			return PTR_ERR(jpeg->clocks[i]);
+> +		}
+> +	}
+>  
+> -	jpeg->clk_jdec_smi = devm_clk_get(jpeg->dev, "jpgdec-smi");
+> -	return PTR_ERR_OR_ZERO(jpeg->clk_jdec_smi);
+> +	return 0;
+>  }
+>  
+>  static int mtk_jpeg_probe(struct platform_device *pdev)
+> @@ -1028,6 +1604,7 @@ static int mtk_jpeg_probe(struct platform_device *pdev)
+>  	mutex_init(&jpeg->lock);
+>  	spin_lock_init(&jpeg->hw_lock);
+>  	jpeg->dev = &pdev->dev;
+> +	jpeg->variant = of_device_get_match_data(jpeg->dev);
+>  
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	jpeg->reg_base = devm_ioremap_resource(&pdev->dev, res);
+> @@ -1042,8 +1619,12 @@ static int mtk_jpeg_probe(struct platform_device *pdev)
+>  		return jpeg_irq;
+>  	}
+>  
+> -	ret = devm_request_irq(&pdev->dev, jpeg_irq, mtk_jpeg_dec_irq, 0,
+> -			       pdev->name, jpeg);
+> +	if (jpeg->variant->is_encoder)
+> +		ret = devm_request_irq(&pdev->dev, jpeg_irq, mtk_jpeg_enc_irq,
+> +				       0, pdev->name, jpeg);
+> +	else
+> +		ret = devm_request_irq(&pdev->dev, jpeg_irq, mtk_jpeg_dec_irq,
+> +				       0, pdev->name, jpeg);
+>  	if (ret) {
+>  		dev_err(&pdev->dev, "Failed to request jpeg_irq %d (%d)\n",
+>  			jpeg_irq, ret);
+> @@ -1063,7 +1644,10 @@ static int mtk_jpeg_probe(struct platform_device *pdev)
+>  		goto err_dev_register;
+>  	}
+>  
+> -	jpeg->m2m_dev = v4l2_m2m_init(&mtk_jpeg_dec_m2m_ops);
+> +	if (jpeg->variant->is_encoder)
+> +		jpeg->m2m_dev = v4l2_m2m_init(&mtk_jpeg_enc_m2m_ops);
+> +	else
+> +		jpeg->m2m_dev = v4l2_m2m_init(&mtk_jpeg_dec_m2m_ops);
+>  	if (IS_ERR(jpeg->m2m_dev)) {
+>  		v4l2_err(&jpeg->v4l2_dev, "Failed to init mem2mem device\n");
+>  		ret = PTR_ERR(jpeg->m2m_dev);
+> @@ -1076,9 +1660,15 @@ static int mtk_jpeg_probe(struct platform_device *pdev)
+>  		goto err_vfd_jpeg_alloc;
+>  	}
+>  	snprintf(jpeg->vdev->name, sizeof(jpeg->vdev->name),
+> -		 "%s-dec", MTK_JPEG_NAME);
+> -	jpeg->vdev->fops = &mtk_jpeg_dec_fops;
+> -	jpeg->vdev->ioctl_ops = &mtk_jpeg_dec_ioctl_ops;
+> +		 "%s-%s", MTK_JPEG_NAME,
+> +		 jpeg->variant->is_encoder ? "enc" : "dec");
+> +	if (jpeg->variant->is_encoder) {
+> +		jpeg->vdev->fops = &mtk_jpeg_enc_fops;
+> +		jpeg->vdev->ioctl_ops = &mtk_jpeg_enc_ioctl_ops;
+> +	} else {
+> +		jpeg->vdev->fops = &mtk_jpeg_dec_fops;
+> +		jpeg->vdev->ioctl_ops = &mtk_jpeg_dec_ioctl_ops;
+> +	}
+>  	jpeg->vdev->minor = -1;
+>  	jpeg->vdev->release = video_device_release;
+>  	jpeg->vdev->lock = &jpeg->lock;
+> @@ -1095,8 +1685,9 @@ static int mtk_jpeg_probe(struct platform_device *pdev)
+>  
+>  	video_set_drvdata(jpeg->vdev, jpeg);
+>  	v4l2_info(&jpeg->v4l2_dev,
+> -		  "decoder device registered as /dev/video%d (%d,%d)\n",
+> -		  jpeg->vdev->num, VIDEO_MAJOR, jpeg->vdev->minor);
+> +		  "jpeg %s device registered as /dev/video%d (%d,%d)\n",
+> +		  jpeg->variant->is_encoder ? "enc" : "dec", jpeg->vdev->num,
+> +		  VIDEO_MAJOR, jpeg->vdev->minor);
+>  
+>  	platform_set_drvdata(pdev, jpeg);
+>  
+> @@ -1187,14 +1778,36 @@ static const struct dev_pm_ops mtk_jpeg_pm_ops = {
+>  	SET_RUNTIME_PM_OPS(mtk_jpeg_pm_suspend, mtk_jpeg_pm_resume, NULL)
+>  };
+>  
+> +static struct mtk_jpeg_variant mt8173_jpeg_drvdata = {
+> +	.is_encoder	= false,
+> +	.clk_names	= {"jpgdec-smi", "jpgdec"},
+> +	.num_clocks	= 2,
+> +};
+> +
+> +static struct mtk_jpeg_variant mt2701_jpeg_drvdata = {
+> +	.is_encoder	= false,
+> +	.clk_names	= {"jpgdec-smi", "jpgdec"},
+> +	.num_clocks	= 2,
+> +};
+> +
+> +static struct mtk_jpeg_variant mtk_jpeg_drvdata = {
+> +	.is_encoder	= true,
+> +	.clk_names	= {"jpgenc"},
+> +	.num_clocks	= 1,
+> +};
+> +
+>  static const struct of_device_id mtk_jpeg_match[] = {
+>  	{
+>  		.compatible = "mediatek,mt8173-jpgdec",
+> -		.data       = NULL,
+> +		.data = &mt8173_jpeg_drvdata,
+>  	},
+>  	{
+>  		.compatible = "mediatek,mt2701-jpgdec",
+> -		.data       = NULL,
+> +		.data = &mt2701_jpeg_drvdata,
+> +	},
+> +	{
+> +		.compatible = "mediatek,mtk-jpgenc",
+> +		.data = &mtk_jpeg_drvdata,
+>  	},
+>  	{},
+>  };
+> diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h
+> index 0b59e48495d5..9ec2c3350a16 100644
+> --- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h
+> +++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h
+> @@ -3,6 +3,7 @@
+>   * Copyright (c) 2016 MediaTek Inc.
+>   * Author: Ming Hsiu Tsai <minghsiu.tsai@mediatek.com>
+>   *         Rick Chang <rick.chang@mediatek.com>
+> + *         Xia Jiang <xia.jiang@mediatek.com>
+>   */
+>  
+>  #ifndef _MTK_JPEG_CORE_H
+> @@ -16,19 +17,21 @@
+>  #define MTK_JPEG_NAME		"mtk-jpeg"
+>  
+>  #define MTK_JPEG_COMP_MAX		3
+> +#define MTK_JPEG_MAX_CLOCKS		2
+> +
+>  
+>  #define MTK_JPEG_FMT_FLAG_DEC_OUTPUT	BIT(0)
+>  #define MTK_JPEG_FMT_FLAG_DEC_CAPTURE	BIT(1)
+> -
+> -#define MTK_JPEG_FMT_TYPE_OUTPUT	1
+> -#define MTK_JPEG_FMT_TYPE_CAPTURE	2
+> +#define MTK_JPEG_FMT_FLAG_ENC_OUTPUT	BIT(2)
+> +#define MTK_JPEG_FMT_FLAG_ENC_CAPTURE	BIT(3)
+>  
+>  #define MTK_JPEG_MIN_WIDTH	32U
+>  #define MTK_JPEG_MIN_HEIGHT	32U
+> -#define MTK_JPEG_MAX_WIDTH	8192U
+> -#define MTK_JPEG_MAX_HEIGHT	8192U
+> +#define MTK_JPEG_MAX_WIDTH	65535U
+> +#define MTK_JPEG_MAX_HEIGHT	65535U
+>  
+>  #define MTK_JPEG_DEFAULT_SIZEIMAGE	(1 * 1024 * 1024)
+> +#define MTK_JPEG_MAX_EXIF_SIZE	(64 * 1024)
+>  
+>  /**
+>   * enum mtk_jpeg_ctx_state - states of the context state machine
+> @@ -42,6 +45,18 @@ enum mtk_jpeg_ctx_state {
+>  	MTK_JPEG_SOURCE_CHANGE,
+>  };
+>  
+> +/**
+> + * mtk_jpeg_variant - mtk jpeg driver variant
+> + * @is_encoder:		driver mode is jpeg encoder
+> + * @clk_names:		clock names
+> + * @num_clocks:		numbers of clock
+> + */
+> +struct mtk_jpeg_variant {
+> +	bool is_encoder;
+> +	const char		*clk_names[MTK_JPEG_MAX_CLOCKS];
+> +	int			num_clocks;
+> +};
+> +
+>  /**
+>   * struct mt_jpeg - JPEG IP abstraction
+>   * @lock:		the mutex protecting this structure
+> @@ -53,9 +68,9 @@ enum mtk_jpeg_ctx_state {
+>   * @alloc_ctx:		videobuf2 memory allocator's context
+>   * @vdev:		video device node for jpeg mem2mem mode
+>   * @reg_base:		JPEG registers mapping
+> - * @clk_jdec:		JPEG hw working clock
+> - * @clk_jdec_smi:	JPEG SMI bus clock
+>   * @larb:		SMI device
+> + * @clocks:		JPEG IP clock(s)
+> + * @variant:		driver variant to be used
+>   */
+>  struct mtk_jpeg_dev {
+>  	struct mutex		lock;
+> @@ -67,14 +82,15 @@ struct mtk_jpeg_dev {
+>  	void			*alloc_ctx;
+>  	struct video_device	*vdev;
+>  	void __iomem		*reg_base;
+> -	struct clk		*clk_jdec;
+> -	struct clk		*clk_jdec_smi;
+>  	struct device		*larb;
+> +	struct clk		*clocks[MTK_JPEG_MAX_CLOCKS];
+> +	const struct mtk_jpeg_variant *variant;
+>  };
+>  
+>  /**
+>   * struct jpeg_fmt - driver's internal color format data
+>   * @fourcc:	the fourcc code, 0 if not applicable
+> + * @hw_format:	hardware format value
+>   * @h_sample:	horizontal sample count of plane in 4 * 4 pixel image
+>   * @v_sample:	vertical sample count of plane in 4 * 4 pixel image
+>   * @colplanes:	number of color planes (1 for packed formats)
+> @@ -84,6 +100,7 @@ struct mtk_jpeg_dev {
+>   */
+>  struct mtk_jpeg_fmt {
+>  	u32	fourcc;
+> +	u32	hw_format;
+>  	int	h_sample[VIDEO_MAX_PLANES];
+>  	int	v_sample[VIDEO_MAX_PLANES];
+>  	int	colplanes;
+> @@ -107,6 +124,7 @@ struct mtk_jpeg_q_data {
+>  	u32			h;
+>  	u32			bytesperline[VIDEO_MAX_PLANES];
+>  	u32			sizeimage[VIDEO_MAX_PLANES];
+> +	struct v4l2_rect	crop_rect;
+>  };
+>  
+>  /**
+> @@ -116,6 +134,10 @@ struct mtk_jpeg_q_data {
+>   * @cap_q:		destination (capture) queue queue information
+>   * @fh:			V4L2 file handle
+>   * @state:		state of the context
+> + * @enable_exif:	enable exif mode of jpeg encoder
+> + * @enc_quality:	jpeg encoder quality
+> + * @restart_interval:	jpeg encoder restart interval
+> + * @ctrl_hdl:		controls handler
+>   * @colorspace: enum v4l2_colorspace; supplemental to pixelformat
+>   * @ycbcr_enc: enum v4l2_ycbcr_encoding, Y'CbCr encoding
+>   * @quantization: enum v4l2_quantization, colorspace quantization
+> @@ -127,6 +149,10 @@ struct mtk_jpeg_ctx {
+>  	struct mtk_jpeg_q_data		cap_q;
+>  	struct v4l2_fh			fh;
+>  	enum mtk_jpeg_ctx_state		state;
+> +	bool				enable_exif;
+> +	u8				enc_quality;
+> +	u8				restart_interval;
+> +	struct v4l2_ctrl_handler	ctrl_hdl;
+>  
+>  	enum v4l2_colorspace colorspace;
+>  	enum v4l2_ycbcr_encoding ycbcr_enc;
+> diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_hw.c b/drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_hw.c
+> new file mode 100644
+> index 000000000000..7fc1de920a75
+> --- /dev/null
+> +++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_hw.c
+> @@ -0,0 +1,193 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2019 MediaTek Inc.
+> + * Author: Xia Jiang <xia.jiang@mediatek.com>
+> + *
+> + */
+> +
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <media/videobuf2-core.h>
+> +
+> +#include "mtk_jpeg_enc_hw.h"
+> +
+> +static const struct mtk_jpeg_enc_qlt mtk_jpeg_enc_quality[] = {
+> +	{.quality_param = 34, .hardware_value = JPEG_ENC_QUALITY_Q34},
+> +	{.quality_param = 39, .hardware_value = JPEG_ENC_QUALITY_Q39},
+> +	{.quality_param = 48, .hardware_value = JPEG_ENC_QUALITY_Q48},
+> +	{.quality_param = 60, .hardware_value = JPEG_ENC_QUALITY_Q60},
+> +	{.quality_param = 64, .hardware_value = JPEG_ENC_QUALITY_Q64},
+> +	{.quality_param = 68, .hardware_value = JPEG_ENC_QUALITY_Q68},
+> +	{.quality_param = 74, .hardware_value = JPEG_ENC_QUALITY_Q74},
+> +	{.quality_param = 80, .hardware_value = JPEG_ENC_QUALITY_Q80},
+> +	{.quality_param = 82, .hardware_value = JPEG_ENC_QUALITY_Q82},
+> +	{.quality_param = 84, .hardware_value = JPEG_ENC_QUALITY_Q84},
+> +	{.quality_param = 87, .hardware_value = JPEG_ENC_QUALITY_Q87},
+> +	{.quality_param = 90, .hardware_value = JPEG_ENC_QUALITY_Q90},
+> +	{.quality_param = 92, .hardware_value = JPEG_ENC_QUALITY_Q92},
+> +	{.quality_param = 95, .hardware_value = JPEG_ENC_QUALITY_Q95},
+> +	{.quality_param = 97, .hardware_value = JPEG_ENC_QUALITY_Q97},
+> +};
+> +
+> +void mtk_jpeg_enc_reset(void __iomem *base)
+> +{
+> +	writel(0x00, base + JPEG_ENC_RSTB);
+> +	writel(JPEG_ENC_RESET_BIT, base + JPEG_ENC_RSTB);
+> +	writel(0x00, base + JPEG_ENC_CODEC_SEL);
+> +}
+> +
+> +u32 mtk_jpeg_enc_get_and_clear_int_status(void __iomem *base)
+> +{
+> +	u32 ret;
+> +
+> +	ret = readl(base + JPEG_ENC_INT_STS) &
+> +		    JPEG_ENC_INT_STATUS_MASK_ALLIRQ;
+> +	if (ret)
+> +		writel(0, base + JPEG_ENC_INT_STS);
+> +
+> +	return ret;
+> +}
+> +
+> +u32 mtk_jpeg_enc_get_file_size(void __iomem *base)
+> +{
+> +	return readl(base + JPEG_ENC_DMA_ADDR0) -
+> +	       readl(base + JPEG_ENC_DST_ADDR0);
+> +}
+> +
+> +u32 mtk_jpeg_enc_enum_result(void __iomem *base, u32 irq_status)
+> +{
+> +	if (irq_status & JPEG_ENC_INT_STATUS_DONE)
+> +		return MTK_JPEG_ENC_RESULT_DONE;
+> +	else if (irq_status & JPEG_ENC_INT_STATUS_STALL)
+> +		return MTK_JPEG_ENC_RESULT_STALL;
+> +	else
+> +		return MTK_JPEG_ENC_RESULT_VCODEC_IRQ;
+> +}
+> +
+> +void mtk_jpeg_enc_set_img_size(void __iomem *base, u32 width, u32 height)
+> +{
+> +	u32 value;
+> +
+> +	value = width << 16 | height;
+> +	writel(value, base + JPEG_ENC_IMG_SIZE);
+> +}
+> +
+> +void mtk_jpeg_enc_set_blk_num(void __iomem *base, u32 enc_format, u32 width,
+> +			      u32 height)
+> +{
+> +	u32 blk_num;
+> +	u32 is_420;
+> +	u32 padding_width;
+> +	u32 padding_height;
+> +	u32 luma_blocks;
+> +	u32 chroma_blocks;
+> +
+> +	is_420 = (enc_format == V4L2_PIX_FMT_NV12M ||
+> +		  enc_format == V4L2_PIX_FMT_NV21M) ? 1 : 0;
+> +	padding_width = round_up(width, 16);
+> +	padding_height = round_up(height, is_420 ? 16 : 8);
+> +
+> +	luma_blocks = padding_width / 8 * padding_height / 8;
+> +	if (is_420)
+> +		chroma_blocks = luma_blocks / 4;
+> +	else
+> +		chroma_blocks = luma_blocks / 2;
+> +
+> +	blk_num = luma_blocks + 2 * chroma_blocks - 1;
+> +
+> +	writel(blk_num, base + JPEG_ENC_BLK_NUM);
+> +}
+> +
+> +void mtk_jpeg_enc_set_stride(void __iomem *base, u32 enc_format, u32 width,
+> +			     u32 height, u32 bytesperline)
+> +{
+> +	u32 img_stride;
+> +	u32 mem_stride;
+> +
+> +	if (enc_format == V4L2_PIX_FMT_NV12M ||
+> +	    enc_format == V4L2_PIX_FMT_NV21M) {
+> +		img_stride = round_up(width, 16);
+> +		mem_stride = bytesperline;
+> +	} else {
+> +		img_stride = round_up(width * 2, 32);
+> +		mem_stride = img_stride;
+> +	}
+> +
+> +	writel(img_stride, base + JPEG_ENC_IMG_STRIDE);
+> +	writel(mem_stride, base + JPEG_ENC_STRIDE);
+> +}
+> +
+> +void mtk_jpeg_enc_set_src_addr(void __iomem *base, u32 src_addr,
+> +			       u32 plane_index)
+> +{
+> +	if (!plane_index)
+> +		writel(src_addr, base + JPEG_ENC_SRC_LUMA_ADDR);
+> +	else
+> +		writel(src_addr, base + JPEG_ENC_SRC_CHROMA_ADDR);
+> +}
+> +
+> +void mtk_jpeg_enc_set_dst_addr(void __iomem *base, u32 dst_addr,
+> +			       u32 stall_size, u32 init_offset,
+> +			       u32 offset_mask)
+> +{
+> +	writel(init_offset & ~0xf, base + JPEG_ENC_OFFSET_ADDR);
+> +	writel(offset_mask & 0xf, base + JPEG_ENC_BYTE_OFFSET_MASK);
+> +	writel(dst_addr & ~0xf, base + JPEG_ENC_DST_ADDR0);
+> +	writel((dst_addr + stall_size) & ~0xf, base + JPEG_ENC_STALL_ADDR0);
+> +}
+> +
+> +static void mtk_jpeg_enc_set_quality(void __iomem *base, u32 quality)
+> +{
+> +	u32 value;
+> +	u32 i, enc_quality;
+> +
+> +	enc_quality = mtk_jpeg_enc_quality[0].hardware_value;
+> +	for (i = 0; i < ARRAY_SIZE(mtk_jpeg_enc_quality); i++) {
+> +		if (quality <= mtk_jpeg_enc_quality[i].quality_param) {
+> +			enc_quality = mtk_jpeg_enc_quality[i].hardware_value;
+> +			break;
+> +		}
+> +	}
+> +
+> +	value = readl(base + JPEG_ENC_QUALITY);
+> +	value = (value & JPEG_ENC_QUALITY_MASK) | enc_quality;
+> +	writel(value, base + JPEG_ENC_QUALITY);
+> +}
+> +
+> +static void mtk_jpeg_enc_set_ctrl(void __iomem *base, u32 enc_format,
+> +				  bool exif_en, u32 restart_interval)
+> +{
+> +	u32 value;
+> +
+> +	value = readl(base + JPEG_ENC_CTRL);
+> +	value &= ~JPEG_ENC_CTRL_YUV_FORMAT_MASK;
+> +	value |= (enc_format & 3) << 3;
+> +	if (exif_en)
+> +		value |= JPEG_ENC_CTRL_FILE_FORMAT_BIT;
+> +	else
+> +		value &= ~JPEG_ENC_CTRL_FILE_FORMAT_BIT;
+> +	if (restart_interval)
+> +		value |= JPEG_ENC_CTRL_RESTART_EN_BIT;
+> +	else
+> +		value &= ~JPEG_ENC_CTRL_RESTART_EN_BIT;
+> +	writel(value, base + JPEG_ENC_CTRL);
+> +}
+> +
+> +void mtk_jpeg_enc_set_config(void __iomem *base, u32 enc_format, bool exif_en,
+> +			     u32 quality, u32 restart_interval)
+> +{
+> +	mtk_jpeg_enc_set_quality(base, quality);
+> +
+> +	mtk_jpeg_enc_set_ctrl(base, enc_format, exif_en, restart_interval);
+> +
+> +	writel(restart_interval, base + JPEG_ENC_RST_MCU_NUM);
+> +}
+> +
+> +void mtk_jpeg_enc_start(void __iomem *base)
+> +{
+> +	u32 value;
+> +
+> +	value = readl(base + JPEG_ENC_CTRL);
+> +	value |= JPEG_ENC_CTRL_INT_EN_BIT | JPEG_ENC_CTRL_ENABLE_BIT;
+> +	writel(value, base + JPEG_ENC_CTRL);
+> +}
+> diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_hw.h b/drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_hw.h
+> new file mode 100644
+> index 000000000000..73faf49b667c
+> --- /dev/null
+> +++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_hw.h
+> @@ -0,0 +1,123 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (c) 2019 MediaTek Inc.
+> + * Author: Xia Jiang <xia.jiang@mediatek.com>
+> + *
+> + */
+> +
+> +#ifndef _MTK_JPEG_ENC_HW_H
+> +#define _MTK_JPEG_ENC_HW_H
+> +
+> +#include <media/videobuf2-core.h>
+> +
+> +#include "mtk_jpeg_core.h"
+> +
+> +#define JPEG_ENC_INT_STATUS_DONE	BIT(0)
+> +#define JPEG_ENC_INT_STATUS_STALL	BIT(1)
+> +#define JPEG_ENC_INT_STATUS_VCODEC_IRQ	BIT(4)
+> +#define JPEG_ENC_INT_STATUS_MASK_ALLIRQ	0x13
+> +
+> +#define JPEG_ENC_DST_ADDR_OFFSET_MASK	GENMASK(3, 0)
+> +#define JPEG_ENC_QUALITY_MASK		GENMASK(31, 16)
+> +
+> +#define JPEG_ENC_CTRL_YUV_FORMAT_MASK	0x18
+> +#define JPEG_ENC_CTRL_RESTART_EN_BIT	BIT(10)
+> +#define JPEG_ENC_CTRL_FILE_FORMAT_BIT	BIT(5)
+> +#define JPEG_ENC_CTRL_INT_EN_BIT	BIT(2)
+> +#define JPEG_ENC_CTRL_ENABLE_BIT	BIT(0)
+> +#define JPEG_ENC_RESET_BIT		BIT(0)
+> +
+> +#define JPEG_ENC_YUV_FORMAT_YUYV	0
+> +#define JPEG_ENC_YUV_FORMAT_YVYU	1
+> +#define JPEG_ENC_YUV_FORMAT_NV12	2
+> +#define JEPG_ENC_YUV_FORMAT_NV21	3
+> +
+> +#define JPEG_ENC_QUALITY_Q60		0x0
+> +#define JPEG_ENC_QUALITY_Q80		0x1
+> +#define JPEG_ENC_QUALITY_Q90		0x2
+> +#define JPEG_ENC_QUALITY_Q95		0x3
+> +#define JPEG_ENC_QUALITY_Q39		0x4
+> +#define JPEG_ENC_QUALITY_Q68		0x5
+> +#define JPEG_ENC_QUALITY_Q84		0x6
+> +#define JPEG_ENC_QUALITY_Q92		0x7
+> +#define JPEG_ENC_QUALITY_Q48		0x8
+> +#define JPEG_ENC_QUALITY_Q74		0xa
+> +#define JPEG_ENC_QUALITY_Q87		0xb
+> +#define JPEG_ENC_QUALITY_Q34		0xc
+> +#define JPEG_ENC_QUALITY_Q64		0xe
+> +#define JPEG_ENC_QUALITY_Q82		0xf
+> +#define JPEG_ENC_QUALITY_Q97		0x10
+> +
+> +#define JPEG_ENC_RSTB			0x100
+> +#define JPEG_ENC_CTRL			0x104
+> +#define JPEG_ENC_QUALITY		0x108
+> +#define JPEG_ENC_BLK_NUM		0x10C
+> +#define JPEG_ENC_BLK_CNT		0x110
+> +#define JPEG_ENC_INT_STS		0x11c
+> +#define JPEG_ENC_DST_ADDR0		0x120
+> +#define JPEG_ENC_DMA_ADDR0		0x124
+> +#define JPEG_ENC_STALL_ADDR0		0x128
+> +#define JPEG_ENC_OFFSET_ADDR		0x138
+> +#define JPEG_ENC_RST_MCU_NUM		0x150
+> +#define JPEG_ENC_IMG_SIZE		0x154
+> +#define JPEG_ENC_DEBUG_INFO0		0x160
+> +#define JPEG_ENC_DEBUG_INFO1		0x164
+> +#define JPEG_ENC_TOTAL_CYCLE		0x168
+> +#define JPEG_ENC_BYTE_OFFSET_MASK	0x16c
+> +#define JPEG_ENC_SRC_LUMA_ADDR		0x170
+> +#define JPEG_ENC_SRC_CHROMA_ADDR	0x174
+> +#define JPEG_ENC_STRIDE			0x178
+> +#define JPEG_ENC_IMG_STRIDE		0x17c
+> +#define JPEG_ENC_DCM_CTRL		0x300
+> +#define JPEG_ENC_CODEC_SEL		0x314
+> +#define JPEG_ENC_ULTRA_THRES		0x318
+> +
+> +enum {
+> +	MTK_JPEG_ENC_RESULT_DONE,
+> +	MTK_JPEG_ENC_RESULT_STALL,
+> +	MTK_JPEG_ENC_RESULT_VCODEC_IRQ
+> +};
+> +
+> +/**
+> + * struct mtk_jpeg_enc_qlt - JPEG encoder quality data
+> + * @quality_param:	quality value
+> + * @hardware_value:	hardware value of quality
+> + */
+> +struct mtk_jpeg_enc_qlt {
+> +	u8	quality_param;
+> +	u8	hardware_value;
+> +};
+> +
+> +/**
+> + * struct mt_jpeg_enc_bs - JPEG encoder bitstream  buffer
+> + * @dma_addr:			JPEG encoder destination address
+> + * @size:			JPEG encoder bistream size
+> + * @dma_addr_offset:		JPEG encoder offset address
+> + * @dma_addr_offsetmask:	JPEG encoder destination address offset mask
+> + */
+> +struct mtk_jpeg_enc_bs {
+> +	dma_addr_t	dma_addr;
+> +	size_t		size;
+> +	u32		dma_addr_offset;
+> +	u32		dma_addr_offsetmask;
+> +};
+> +
+> +void mtk_jpeg_enc_reset(void __iomem *base);
+> +u32 mtk_jpeg_enc_get_and_clear_int_status(void __iomem *base);
+> +u32 mtk_jpeg_enc_get_file_size(void __iomem *base);
+> +u32 mtk_jpeg_enc_enum_result(void __iomem *base, u32 irq_status);
+> +void mtk_jpeg_enc_set_img_size(void __iomem *base, u32 width, u32 height);
+> +void mtk_jpeg_enc_set_blk_num(void __iomem *base, u32 enc_format, u32 width,
+> +			      u32 height);
+> +void mtk_jpeg_enc_set_stride(void __iomem *base, u32 enc_format, u32 width,
+> +			     u32 height, u32 bytesperline);
+> +void mtk_jpeg_enc_set_src_addr(void __iomem *base, u32 src_addr,
+> +			       u32 plane_index);
+> +void mtk_jpeg_enc_set_dst_addr(void __iomem *base, u32 dst_addr,
+> +			       u32 stall_size, u32 init_offset,
+> +			       u32 offset_mask);
+> +void mtk_jpeg_enc_set_config(void __iomem *base, u32 enc_format, bool exif_en,
+> +			     u32 quality, u32 restart_interval);
+> +void mtk_jpeg_enc_start(void __iomem *enc_reg_base);
+> +
+> +#endif /* _MTK_JPEG_ENC_HW_H */
+> 
+
+Regards,
+
+	Hans
