@@ -2,57 +2,59 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1514C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 15:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BAD2C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 15:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAEFD206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 15:17:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591629462;
-	bh=Ny5i86JNHb2JrfgvoHzy6RFfNKJ3tbWvSq/XAKgkm08=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b60iX2iqYSW8lswFObBa7sRNEgu2tvn2BKQKwx8+a0TPoNbNpqjpuOlg5gHSQVjhP
-	 tt6K64lBIvCrzVH3MWN2Y3iDJCQz7Es9rqUaDaila4DbFyofQ7H4hmsfC+AfXkdxBf
-	 U+uE5gh25V3/USbqN+xixb9CK28QXrAL/qcu6OIs=
+	by mail.kernel.org (Postfix) with ESMTP id 211C7206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 15:17:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730223AbgFHPRl (ORCPT
+        id S1730230AbgFHPRp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 11:17:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42332 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729843AbgFHPRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 11:17:38 -0400
-Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAFF92074B;
-        Mon,  8 Jun 2020 15:17:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591629458;
-        bh=Ny5i86JNHb2JrfgvoHzy6RFfNKJ3tbWvSq/XAKgkm08=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PvI3QXx8W2L0h8pF0A8QH45i43twi6umaI2taBWcBNgfeyrWFUp1y4QNznuyGNAAA
-         EqNYyBmpeHlUFxziOpaZeUH4Vvgcq9DN9bGvs6LhWrbagwIZx5qvFGjwqyPjCWtUfE
-         9RL+2w7SJQbnYPz3mcB/qhro8Yvk658sjG2IPX7g=
-From:   Will Deacon <will@kernel.org>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joe Perches <joe@perches.com>
-Cc:     Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [Possible PATCH]arm64: ftrace: Change CONFIG_FTRACE_WITH_REGS to CONFIG_DYNAMIC_FTRACE_WITH_REGS
-Date:   Mon,  8 Jun 2020 16:17:30 +0100
-Message-Id: <159162750580.200319.6583744463210432522.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <b9b27f2233bd1fa31d72ff937beefdae0e2104e5.camel@perches.com>
-References: <b9b27f2233bd1fa31d72ff937beefdae0e2104e5.camel@perches.com>
+        Mon, 8 Jun 2020 11:17:45 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:37113 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730220AbgFHPRm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 11:17:42 -0400
+Received: by mail-lj1-f194.google.com with SMTP id e4so21008384ljn.4;
+        Mon, 08 Jun 2020 08:17:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=OsWMPsmZoyIJzuygJAaRJCsAmuz070EmkzRigfL9BXc=;
+        b=h11QtlVxQVU2MeFrxPO28lfUOn/bKnfCvp5z50lW9G13BNoMCyJXWuGsG4LGUtezXa
+         9jDiHsEpRBOXn7CZt2m+rG+Ro/X1t3pzn+4BG7vyxNrxDHIAovZ+2uzi0/VFjvY6XRJH
+         q1fcO9p/nGnQv9SJv/b/P5LAKNFHvMEztHL6MYho58j0oypMm1rCEnZfcu4jLojZ4qou
+         fTulMXVCf9eKRHKrRbDH65tjs2gJ8AGxDPXf7HVoqdmzAIUJGExLl/I615sudMvJ+/X1
+         ovFkyIQalXz6wyPCYDPUz/QHSgUZgpAwIRxJtsna9rI9K60f43ys3Yw5eNdp8Cwt80qT
+         CnyA==
+X-Gm-Message-State: AOAM530lDC/izRbtj8zFHlkqEmFMtSzEmZMQabadlRQK/GdMXkJDpdR2
+        uGCCOJvr4enIr5kUl97GVto=
+X-Google-Smtp-Source: ABdhPJzDUCdm1G2TGpfofl/wlFzlXPT1eIy4dTUHaK0MG2U+WNevg620xxVGee8AVKlTDm/4kibqzg==
+X-Received: by 2002:a2e:2f0a:: with SMTP id v10mr11160069ljv.163.1591629460131;
+        Mon, 08 Jun 2020 08:17:40 -0700 (PDT)
+Received: from localhost.localdomain ([213.87.137.116])
+        by smtp.googlemail.com with ESMTPSA id x28sm4416704lfg.86.2020.06.08.08.17.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jun 2020 08:17:39 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>
+Cc:     Denis Efremov <efremov@linux.com>,
+        Steven Price <steven.price@arm.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Rob Herring <robh@kernel.org>, stable@vger.kernel.org
+Subject: [PATCH v2] drm/panfrost: Use kvfree() to free bo->sgts
+Date:   Mon,  8 Jun 2020 18:17:28 +0300
+Message-Id: <20200608151728.234026-1-efremov@linux.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200605185207.76661-1-efremov@linux.com>
+References: <20200605185207.76661-1-efremov@linux.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -60,18 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 06 Jun 2020 12:25:50 -0700, Joe Perches wrote:
-> CONFIG_FTRACE_WITH_REGS does not exist as a Kconfig symbol.
+Use kvfree() to free bo->sgts, because the memory is allocated with
+kvmalloc_array() in panfrost_mmu_map_fault_addr().
 
-Applied to arm64 (for-next/core), thanks!
+Fixes: 187d2929206e ("drm/panfrost: Add support for GPU heap allocations")
+Cc: stable@vger.kernel.org
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+Change in v2:
+ - kvfree() fixed in panfrost_gem_free_object(), thanks to Steven Price
 
-[1/1] arm64: ftrace: Change CONFIG_FTRACE_WITH_REGS to CONFIG_DYNAMIC_FTRACE_WITH_REGS
-      https://git.kernel.org/arm64/c/91970bef48d6
+ drivers/gpu/drm/panfrost/panfrost_gem.c | 2 +-
+ drivers/gpu/drm/panfrost/panfrost_mmu.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Cheers,
+diff --git a/drivers/gpu/drm/panfrost/panfrost_gem.c b/drivers/gpu/drm/panfrost/panfrost_gem.c
+index 17b654e1eb94..556181ea4a07 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_gem.c
++++ b/drivers/gpu/drm/panfrost/panfrost_gem.c
+@@ -46,7 +46,7 @@ static void panfrost_gem_free_object(struct drm_gem_object *obj)
+ 				sg_free_table(&bo->sgts[i]);
+ 			}
+ 		}
+-		kfree(bo->sgts);
++		kvfree(bo->sgts);
+ 	}
+ 
+ 	drm_gem_shmem_free_object(obj);
+diff --git a/drivers/gpu/drm/panfrost/panfrost_mmu.c b/drivers/gpu/drm/panfrost/panfrost_mmu.c
+index ed28aeba6d59..3c8ae7411c80 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_mmu.c
++++ b/drivers/gpu/drm/panfrost/panfrost_mmu.c
+@@ -486,7 +486,7 @@ static int panfrost_mmu_map_fault_addr(struct panfrost_device *pfdev, int as,
+ 		pages = kvmalloc_array(bo->base.base.size >> PAGE_SHIFT,
+ 				       sizeof(struct page *), GFP_KERNEL | __GFP_ZERO);
+ 		if (!pages) {
+-			kfree(bo->sgts);
++			kvfree(bo->sgts);
+ 			bo->sgts = NULL;
+ 			mutex_unlock(&bo->base.pages_lock);
+ 			ret = -ENOMEM;
 -- 
-Will
+2.26.2
 
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
