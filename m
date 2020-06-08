@@ -2,118 +2,135 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03300C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35964C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C552720774
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:22:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E2D6206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:23:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZxMZviQz"
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="ndOHGLTa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730472AbgFHQWo (ORCPT
+        id S1730498AbgFHQXB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 12:22:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59824 "EHLO
+        Mon, 8 Jun 2020 12:23:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730383AbgFHQWn (ORCPT
+        with ESMTP id S1730484AbgFHQW6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 12:22:43 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C6F5C08C5C2;
-        Mon,  8 Jun 2020 09:22:42 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id t7so8988746pgt.3;
-        Mon, 08 Jun 2020 09:22:42 -0700 (PDT)
+        Mon, 8 Jun 2020 12:22:58 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA854C08C5C5
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 09:22:56 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id x6so18021963wrm.13
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 09:22:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=cloudflare.com; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=xb9iduIo0ZsY8UkuJNW0EYDly2gzKS1dDnF5Tlucm3E=;
-        b=ZxMZviQzRAeJ5DYVXko9AgnUzdM+2XqibnUTpLy53K/ePADf3nmLYW8DBnT5/aKoIL
-         awbhhoGIqdDybOaGZ7VBexdf371ynrzzMrAq6zwTY3CXtFMFR8OBdoQSwtjBo9TzwdIc
-         TVxxa6xjPf+NciarOzBz7a354AQp9mdHivGVD3N/9+oBGCiSqER9KZA67fFU5vrX8vMQ
-         aD8umA50I5wjNKq1ULpY4j/kXYULB450Zx06+gjAe1ySU5kWjpDFX48Vged7P4Ps7qnt
-         LeTOuy+pUf0e23rx8MlIYOdyAuHrTi0leShThPh5oJJdRxxkwoP4z1wtV8trIWBfq0bT
-         zW1g==
+        bh=Hs1EELNtgkaMondyRtgQ/6Z9mw2fYYd1xiptMHkTtFA=;
+        b=ndOHGLTaByr9ofdCBK5UVRXpqyxBmcTEBUOqz/laTHtMlkelV5nMDGwIxHLn+n7LAx
+         6AG+1gPjhoqT0/eGqnxXkMs+4kwhXHbdLD51zfWNha64FIlC5WiZ3l/VfS2224OY1pP5
+         oqOnyaC2rND5M+dX4Nqp3MLtFrp1wWjZnDDbw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=xb9iduIo0ZsY8UkuJNW0EYDly2gzKS1dDnF5Tlucm3E=;
-        b=bKSPV9qn0TIxQeHBHJXo6HxZoMzsCCi8i8cOqqTe9WkRAnabZqaGTP2LT8lVukpvji
-         sSiDhseWm6Jyse1IaPKc9/flOU52WwJYdbH/M2wdYa/2FZUA50UfW7C/h5daPXxnJ/HB
-         H2VQ4pz6fZtOrtmK07co4mKD6ZOZ6PGDzG4zO+gVB5Y/HH0k3isaTdSlaJ6ZQ8gBa9NP
-         ggu9Ty6Qr/mv8iYI/oTNPN/x5xlLfD91sQhqohlw5m5w3FICbNAYbg30JQd219zxBGLE
-         pmCcc/C9gBdXvOii0BAfv3JoaBCfEVLkq1279tgUW0mSuB+rq6GtlxiHKLZJuQbfUTKu
-         l7oA==
-X-Gm-Message-State: AOAM5338QVyPXQEnUc6XIileuyRfKuEnjvUQnmORqMTRnXVPaRAGxHOO
-        xAdLczn+2ZKDMInrEKRzljM=
-X-Google-Smtp-Source: ABdhPJxYAdGwPeXtwY/l/RnJjV2BHHPTERXRM6uP6tdjLlvz+7+36VZTNJg5ogRbBq84QCGe0sAkZA==
-X-Received: by 2002:a63:5024:: with SMTP id e36mr20019756pgb.438.1591633361854;
-        Mon, 08 Jun 2020 09:22:41 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id c9sm7015334pfr.72.2020.06.08.09.22.37
+        bh=Hs1EELNtgkaMondyRtgQ/6Z9mw2fYYd1xiptMHkTtFA=;
+        b=lcpB7lpByqmaUPhbMO5R7qwAdJGDE+vL2UZ2XUjVR1kd5oDYqNOWh+8uFAw75Gwz/f
+         Juiaf60zlPZARBELTGaeEXuUX4JO2UAyho22cWkGMrYJ8fbirzg6PsjjnjtUCE3ZFGkh
+         MBxWLxVvPtGNtk1ko3D3jtXmXl1LB9zt7ak8yRTjkBtiHBx3/H/FTpvsMG5gZfXH1XcR
+         dBtbboEqkuQFYHnIAZ/NTUReie1jUZwKOH/XIdbW28PBcl5rznxrxHr0gBxGfytE2auy
+         4qrtXb2au+7Tws/VJ/NL+uxLRRm8TQbhde3xFAPMHqnCbi6cEbf1OOLY2pkCyLt2pOr3
+         GHXQ==
+X-Gm-Message-State: AOAM533tsBq5lB6G91jfwl/G4UN3lnceMotMu6I9j9QCzB1XDxCrgrDx
+        +ZpAjELW4dOcwJNIUf7lL0cnDzwxxu9TmQ==
+X-Google-Smtp-Source: ABdhPJzP+Yico773WoQLz8PnS8XimH0eOsVTKoFbV8W6LsSuKSkEQnAXSFPDmG0XSmY2ceDAtZiaaA==
+X-Received: by 2002:adf:9c12:: with SMTP id f18mr26206857wrc.105.1591633375425;
+        Mon, 08 Jun 2020 09:22:55 -0700 (PDT)
+Received: from antares.lan (f.7.9.4.f.9.a.d.f.4.a.3.6.5.1.0.f.f.6.2.a.5.a.7.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:7a5a:26ff:156:3a4f:da9f:497f])
+        by smtp.gmail.com with ESMTPSA id w3sm50929wmg.44.2020.06.08.09.22.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 09:22:41 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] mmc: sdhci-of-arasan: Add missed checks for devm_clk_register()
-Date:   Tue,  9 Jun 2020 00:22:26 +0800
-Message-Id: <20200608162226.3259186-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        Mon, 08 Jun 2020 09:22:54 -0700 (PDT)
+From:   Lorenz Bauer <lmb@cloudflare.com>
+To:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Shuah Khan <shuah@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>, Roman Gushchin <guro@fb.com>
+Cc:     kernel-team@cloudflare.com, Lorenz Bauer <lmb@cloudflare.com>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: [PATCH bpf] bpf: cgroup: allow multi-attach program to replace itself
+Date:   Mon,  8 Jun 2020 17:22:01 +0100
+Message-Id: <20200608162202.94002-1-lmb@cloudflare.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These functions do not check the return value of devm_clk_register():
-  - sdhci_arasan_register_sdcardclk()
-  - sdhci_arasan_register_sampleclk()
+When using BPF_PROG_ATTACH to attach a program to a cgroup in
+BPF_F_ALLOW_MULTI mode, it is not possible to replace a program
+with itself. This is because the check for duplicate programs
+doesn't take the replacement program into account.
 
-Therefore, add the missed checks to fix them.
+Replacing a program with itself might seem weird, but it has
+some uses: first, it allows resetting the associated cgroup storage.
+Second, it makes the API consistent with the non-ALLOW_MULTI usage,
+where it is possible to replace a program with itself. Third, it
+aligns BPF_PROG_ATTACH with bpf_link, where replacing itself is
+also supported.
 
-Fixes: c390f2110adf1 ("mmc: sdhci-of-arasan: Add ability to export card clock")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Sice this code has been refactored a few times this change will
+only apply to v5.7 and later. Adjustments could be made to
+commit 1020c1f24a94 ("bpf: Simplify __cgroup_bpf_attach") and
+commit d7bf2c10af05 ("bpf: allocate cgroup storage entries on attaching bpf programs")
+as well as commit 324bda9e6c5a ("bpf: multi program support for cgroup+bpf")
+
+Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
+Fixes: af6eea57437a ("bpf: Implement bpf_link-based cgroup BPF program attachment")
 ---
- drivers/mmc/host/sdhci-of-arasan.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ kernel/bpf/cgroup.c                                        | 2 +-
+ .../testing/selftests/bpf/prog_tests/cgroup_attach_multi.c | 7 +++++++
+ 2 files changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
-index db9b544465cd..fb26e743e1fd 100644
---- a/drivers/mmc/host/sdhci-of-arasan.c
-+++ b/drivers/mmc/host/sdhci-of-arasan.c
-@@ -1299,6 +1299,8 @@ sdhci_arasan_register_sdcardclk(struct sdhci_arasan_data *sdhci_arasan,
- 	clk_data->sdcardclk_hw.init = &sdcardclk_init;
- 	clk_data->sdcardclk =
- 		devm_clk_register(dev, &clk_data->sdcardclk_hw);
-+	if (IS_ERR(clk_data->sdcardclk))
-+		return PTR_ERR(clk_data->sdcardclk);
- 	clk_data->sdcardclk_hw.init = NULL;
+diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
+index fdf7836750a3..4d76f16524cc 100644
+--- a/kernel/bpf/cgroup.c
++++ b/kernel/bpf/cgroup.c
+@@ -378,7 +378,7 @@ static struct bpf_prog_list *find_attach_entry(struct list_head *progs,
+ 	}
  
- 	ret = of_clk_add_provider(np, of_clk_src_simple_get,
-@@ -1349,6 +1351,8 @@ sdhci_arasan_register_sampleclk(struct sdhci_arasan_data *sdhci_arasan,
- 	clk_data->sampleclk_hw.init = &sampleclk_init;
- 	clk_data->sampleclk =
- 		devm_clk_register(dev, &clk_data->sampleclk_hw);
-+	if (IS_ERR(clk_data->sampleclk))
-+		return PTR_ERR(clk_data->sampleclk);
- 	clk_data->sampleclk_hw.init = NULL;
+ 	list_for_each_entry(pl, progs, node) {
+-		if (prog && pl->prog == prog)
++		if (prog && pl->prog == prog && prog != replace_prog)
+ 			/* disallow attaching the same prog twice */
+ 			return ERR_PTR(-EINVAL);
+ 		if (link && pl->link == link)
+diff --git a/tools/testing/selftests/bpf/prog_tests/cgroup_attach_multi.c b/tools/testing/selftests/bpf/prog_tests/cgroup_attach_multi.c
+index 139f8e82c7c6..b549fcfacc0b 100644
+--- a/tools/testing/selftests/bpf/prog_tests/cgroup_attach_multi.c
++++ b/tools/testing/selftests/bpf/prog_tests/cgroup_attach_multi.c
+@@ -230,6 +230,13 @@ void test_cgroup_attach_multi(void)
+ 		  "prog_replace", "errno=%d\n", errno))
+ 		goto err;
  
- 	ret = of_clk_add_provider(np, of_clk_src_simple_get,
++	/* replace program with itself */
++	attach_opts.replace_prog_fd = allow_prog[6];
++	if (CHECK(bpf_prog_attach_xattr(allow_prog[6], cg1,
++					BPF_CGROUP_INET_EGRESS, &attach_opts),
++		  "prog_replace", "errno=%d\n", errno))
++		goto err;
++
+ 	value = 0;
+ 	CHECK_FAIL(bpf_map_update_elem(map_fd, &key, &value, 0));
+ 	CHECK_FAIL(system(PING_CMD));
 -- 
-2.26.2
+2.25.1
 
