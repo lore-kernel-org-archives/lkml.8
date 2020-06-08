@@ -2,132 +2,121 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE7EDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C033C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A901D206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:46:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12513206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:46:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="erxhDPNn"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TbcMdd/8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729039AbgFHHqT (ORCPT
+        id S1729040AbgFHHqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 03:46:19 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:41574 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726009AbgFHHqS (ORCPT
+        Mon, 8 Jun 2020 03:46:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36324 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729047AbgFHHqf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 03:46:18 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0587gKLL115387;
-        Mon, 8 Jun 2020 07:46:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=8rrtKpLZ9/CR8naOspdvNYopCWuxb6yq6XYdbSHeJDI=;
- b=erxhDPNnvfts6Zmhdvp6x0aoHgIPbDppoam3P4iL2BQeIPXm68bc7K9TI654WaXKKiLQ
- usNY9LWxA1tgnrcAwSsusgtE9TIhqCTtSULJvgUA5P68fKWBiNY4DudT8ulH6FiuobcF
- CZohSHr1GL+4CZ3jmhwfhkTpOZq8ZF7i8TNLWyA5bANwG6JST3f7Ngb4jgAYmwusM40Q
- KLbubhfVZFDtKqcg8SPm0iZAxk8ixZyG7OEPeF+LzeU7gUw+aq8oh8UIxcEbqyptNbfF
- Pp5xTpkQyTUYAfBNHSvXsDJ7MznkP00BcuX4ICuCnNsjVlldB/sVwhBdWYS/LvvLyhSI NQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 31g3smn8ns-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 08 Jun 2020 07:46:00 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0587baH2126029;
-        Mon, 8 Jun 2020 07:45:59 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 31gn2uuu53-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 08 Jun 2020 07:45:59 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0587jvuL012057;
-        Mon, 8 Jun 2020 07:45:57 GMT
-Received: from [10.175.49.179] (/10.175.49.179)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 08 Jun 2020 00:45:57 -0700
-Subject: Re: WARNING: CPU: 1 PID: 52 at mm/page_alloc.c:4826
- __alloc_pages_nodemask (Re: [PATCH 5/5] sysctl: pass kernel pointers to
- ->proc_handler)
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        linux-kernel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        bpf@vger.kernel.org, Andrey Ignatov <rdna@fb.com>
-References: <20200424064338.538313-1-hch@lst.de>
- <20200424064338.538313-6-hch@lst.de>
- <1fc7ce08-26a7-59ff-e580-4e6c22554752@oracle.com>
- <20200608065120.GA17859@lst.de>
-From:   Vegard Nossum <vegard.nossum@oracle.com>
-Message-ID: <c0f216d1-edc1-68e6-7f3e-c00e33452707@oracle.com>
-Date:   Mon, 8 Jun 2020 09:45:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 8 Jun 2020 03:46:35 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81706C08C5C7
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 00:46:34 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id l11so16267064wru.0
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 00:46:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=Ii1LpA7xPLv2wdGt5UuWPaO4p+SzGddtJEFd/ScE1mM=;
+        b=TbcMdd/8OOsDoTOIeYwoPHkpvrb7BLpJgvs3osnO9kgBDS52ZeSXUiVqA3cdbFfqgQ
+         j+Keb/5fI6A4lol2GJ6ijyjT5cuYD1OchuUXj4zFjT5O9U0kOCVWpub3uGIR4ix8Y4he
+         9LTLgODzbNdftzIB37a00BFCiR2bFxcMbQA44dL/XUL5uFD2NS0l4to3bE/K1fctTx0j
+         2K3o8Z/L7yYzIVoHwF6wYOfG05xBe9ZVWwdsQ4gRjdL5lRFe8YSTkdhtduLscBq/eYKi
+         58Q8jTnzbtIIt5FtaVALNA++QK8rJRqW2Uvyj29SIiBZmzT/CCw00/+UGW8ZAC0BmEPE
+         sHzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Ii1LpA7xPLv2wdGt5UuWPaO4p+SzGddtJEFd/ScE1mM=;
+        b=pvf1qEHUA/AfoGvsyv7A9CBd0QIlPMTPZ0gPaxaR7G7JzlIaV7edwdDRrgf3XF0M72
+         Oye4GHm+hJKtv27i4tbM7l9k4PLTeRUYWI/N3QorGrUro/EGor+4sdJkJgbeUrVFhqOD
+         EJp54ivCahwDvhcGvHYUYAeVioJIIkb5c+TZTRwwfrlWkldicqECADWdGupyL4l4PKV2
+         0b35OsLQxekYEh6TxxUHyZcwVdSVL/2zQFbPVLP6JIJ4ehlM9io4M091WzmE5D427sq6
+         K+RxxiLN3e2jnVsUHZwt/RPBVI0Qja6HFcw3yodv1y4YjC19qA/+sqKnCRYtgeqUE432
+         zWTw==
+X-Gm-Message-State: AOAM533nRh/tbbVoyeQ4juT0JayXxYBjmfQmFqQ3ZmsUyxbIXawYu2yY
+        4xjCu/V3vWrlnSJW+d+cBJ9hXg==
+X-Google-Smtp-Source: ABdhPJylRQSYQXNyAZiyW6rrMJLInL4XF8pMc/Y82ccj0fV0f6vQenutBOzt90BsWef9ORNQoVIZrQ==
+X-Received: by 2002:adf:a449:: with SMTP id e9mr21978811wra.294.1591602392643;
+        Mon, 08 Jun 2020 00:46:32 -0700 (PDT)
+Received: from dell ([95.147.198.92])
+        by smtp.gmail.com with ESMTPSA id u3sm22618436wrw.89.2020.06.08.00.46.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jun 2020 00:46:31 -0700 (PDT)
+Date:   Mon, 8 Jun 2020 08:46:30 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 05/11] pwm: add support for sl28cpld PWM controller
+Message-ID: <20200608074630.GA3567@dell>
+References: <20200604211039.12689-1-michael@walle.cc>
+ <20200604211039.12689-6-michael@walle.cc>
+ <20200605084915.GE3714@dell>
+ <b3324f5c1c908edc89a9cd2676644dfe@walle.cc>
 MIME-Version: 1.0
-In-Reply-To: <20200608065120.GA17859@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9645 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 malwarescore=0
- bulkscore=0 adultscore=0 mlxlogscore=999 spamscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006080058
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9645 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
- lowpriorityscore=0 impostorscore=0 cotscore=-2147483648 suspectscore=0
- spamscore=0 bulkscore=0 malwarescore=0 phishscore=0 mlxscore=0
- mlxlogscore=999 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006080058
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b3324f5c1c908edc89a9cd2676644dfe@walle.cc>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 05 Jun 2020, Michael Walle wrote:
 
-On 2020-06-08 08:51, Christoph Hellwig wrote:
-> On Thu, Jun 04, 2020 at 10:22:21PM +0200, Vegard Nossum wrote:
->> It's easy to reproduce by just doing
->>
->>      read(open("/proc/sys/vm/swappiness", O_RDONLY), 0, 512UL * 1024 * 1024
->> * 1024);
->>
->> or so. Reverting the commit fixes the issue for me.
+> Am 2020-06-05 10:49, schrieb Lee Jones:
+> [..]
+> > > +static inline struct sl28cpld_pwm *to_sl28cpld_pwm(struct pwm_chip
+> > > *chip)
+> > > +{
+> > > +	return container_of(chip, struct sl28cpld_pwm, pwm_chip);
+> > > +}
+> > 
+> > Why not save yourself the trouble and just:
+> > 
+> >   struct sl28cpld_pwm *pwm = dev_get_drvdata(chip->dev);
 > 
-> Yes, doing giant allocations will fail and trace.  We have to options
-> here that both seems sensible:
-> 
->   - trunate sysctrl calls to some sensible length
->   - (optionally) use vmalloc
-> 
-> Is this a real application or just a test case trying to do the
-> stupidmost possible thing?
-> 
+> Is there a reason why not a single pwm driver uses something like that?
 
-Just a test case.
+Copy/paste?  Habit?
 
-Allowing the kernel to allocate an unbounded amount of memory on behalf
-of userspace is an easy DOS.
-
-All the length checks were already in there, e.g.
-
-  static int cmm_timeout_handler(struct ctl_table *ctl, int write,
-                               void __user *buffer, size_t *lenp, loff_t 
-*ppos)
-  {
-         char buf[64], *p;
-[...]
-                 len = min(*lenp, sizeof(buf));
-                 if (copy_from_user(buf, buffer, len))
-                         return -EFAULT;
-
-
-Vegard
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
