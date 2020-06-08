@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A240CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B1DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D27420774
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:46:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF4F9207FB
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:46:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663578;
-	bh=m23dLoyLhJjCU66alnaUcLHfXVkJjzbVDLW3x6HWfMs=;
+	s=default; t=1591663586;
+	bh=87ai8exqIO0/5aKSt3LHjxMtckrsMxd+6M0b2LS5y40=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jjAn6WFGENE2FmW7+SlTsDQBe4qKyhWViqjAS42p4idsjZ+aNm9AdSqn54wkFGRT0
-	 +Dys6o/JEiOuzeHjpVYb0w4v/1WrTaeqvP1a2ks1s2MYPTjubT0HufnCzd35IyNWyA
-	 /7zc9H312SHuXYyM6lywsbTh/Njb4xHQ2/Z1ZBbM=
+	b=nZ8S1s3sJd6eHKjprN7uSGkddzOnmjE0s4nlvOfH+9yjmEzF6QElfXKBBM1mH1oKB
+	 xksnYG6tOTVu6fZptSbji8wStSqejZFuq3C7QS2coQf0QpoMu0X84zfsrFW6RPUc8D
+	 0nlGlCPPzlyuvDUyIV23cLXJNJxYa8qFO0oTclaY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728127AbgFHXLm (ORCPT
+        id S1733091AbgFIAqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:11:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56110 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:46:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728338AbgFHXKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:10:06 -0400
+        id S1728211AbgFHXLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:11:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A86A220C56;
-        Mon,  8 Jun 2020 23:10:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79A7020C56;
+        Mon,  8 Jun 2020 23:11:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657805;
-        bh=m23dLoyLhJjCU66alnaUcLHfXVkJjzbVDLW3x6HWfMs=;
+        s=default; t=1591657898;
+        bh=87ai8exqIO0/5aKSt3LHjxMtckrsMxd+6M0b2LS5y40=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=01kjMDb/AP1kRQNYo7AAj0DKxqu0R2Lqpq448Jq+DjtXS89myjSmCgM/2754SmGyi
-         8xpwwezkF73s/u0BE3G8IZ6o+wNMUe77O6ElqdhfOrFWIrWN457nNeJgY1oXNeOMqp
-         2NILtVs5WEPVSFiw5bqGy9fXruI0DDEPV1VIoPKY=
+        b=S63siA8MQS1vxdJ0GdTCOGAMlr3z7X2ELwmEXC+h2T1l1iLMSfbiATBEO+m+azcDi
+         ZpRxJq5RrqfnsbQvz8oMi5bsbGC1Q5k2A5ExNOft0nrNsl/baAfbozAqahioNGf3uP
+         IbnQChboyretzCeg4Ap7ck8P3z61DAdio0r4cOcw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Weiping Zhang <zhangweiping@didiglobal.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 182/274] nvme-pci: align io queue count with allocted nvme_queue in nvme_probe
-Date:   Mon,  8 Jun 2020 19:04:35 -0400
-Message-Id: <20200608230607.3361041-182-sashal@kernel.org>
+Cc:     Xie XiuQi <xiexiuqi@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 252/274] ixgbe: fix signed-integer-overflow warning
+Date:   Mon,  8 Jun 2020 19:05:45 -0400
+Message-Id: <20200608230607.3361041-252-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -61,176 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Weiping Zhang <zhangweiping@didiglobal.com>
+From: Xie XiuQi <xiexiuqi@huawei.com>
 
-[ Upstream commit 2a5bcfdd41d68559567cec3c124a75e093506cc1 ]
+[ Upstream commit 3b70683fc4d68f5d915d9dc7e5ba72c732c7315c ]
 
-Since commit 147b27e4bd08 ("nvme-pci: allocate device queues storage
-space at probe"), nvme_alloc_queue does not alloc the nvme queues
-itself anymore.
+ubsan report this warning, fix it by adding a unsigned suffix.
 
-If the write/poll_queues module parameters are changed at runtime to
-values larger than the number of allocated queues in nvme_probe,
-nvme_alloc_queue will access unallocated memory.
+UBSAN: signed-integer-overflow in
+drivers/net/ethernet/intel/ixgbe/ixgbe_common.c:2246:26
+65535 * 65537 cannot be represented in type 'int'
+CPU: 21 PID: 7 Comm: kworker/u256:0 Not tainted 5.7.0-rc3-debug+ #39
+Hardware name: Huawei TaiShan 2280 V2/BC82AMDC, BIOS 2280-V2 03/27/2020
+Workqueue: ixgbe ixgbe_service_task [ixgbe]
+Call trace:
+ dump_backtrace+0x0/0x3f0
+ show_stack+0x28/0x38
+ dump_stack+0x154/0x1e4
+ ubsan_epilogue+0x18/0x60
+ handle_overflow+0xf8/0x148
+ __ubsan_handle_mul_overflow+0x34/0x48
+ ixgbe_fc_enable_generic+0x4d0/0x590 [ixgbe]
+ ixgbe_service_task+0xc20/0x1f78 [ixgbe]
+ process_one_work+0x8f0/0xf18
+ worker_thread+0x430/0x6d0
+ kthread+0x218/0x238
+ ret_from_fork+0x10/0x18
 
-Add a new nr_allocated_queues member to struct nvme_dev to record how
-many queues were alloctated in nvme_probe to avoid using more than the
-allocated queues after a reset following a change to the
-write/poll_queues module parameters.
-
-Also add nr_write_queues and nr_poll_queues members to allow refreshing
-the number of write and poll queues based on a change to the module
-parameters when resetting the controller.
-
-Fixes: 147b27e4bd08 ("nvme-pci: allocate device queues storage space at probe")
-Signed-off-by: Weiping Zhang <zhangweiping@didiglobal.com>
-Reviewed-by: Keith Busch <kbusch@kernel.org>
-Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
-[hch: add nvme_max_io_queues, update the commit message]
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Xie XiuQi <xiexiuqi@huawei.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/pci.c | 57 ++++++++++++++++++++++++-----------------
- 1 file changed, 33 insertions(+), 24 deletions(-)
+ drivers/net/ethernet/intel/ixgbe/ixgbe_common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index cc46e250fcac..dcf597fbafad 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -128,6 +128,9 @@ struct nvme_dev {
- 	dma_addr_t host_mem_descs_dma;
- 	struct nvme_host_mem_buf_desc *host_mem_descs;
- 	void **host_mem_desc_bufs;
-+	unsigned int nr_allocated_queues;
-+	unsigned int nr_write_queues;
-+	unsigned int nr_poll_queues;
- };
- 
- static int io_queue_depth_set(const char *val, const struct kernel_param *kp)
-@@ -209,25 +212,14 @@ struct nvme_iod {
- 	struct scatterlist *sg;
- };
- 
--static unsigned int max_io_queues(void)
-+static inline unsigned int nvme_dbbuf_size(struct nvme_dev *dev)
- {
--	return num_possible_cpus() + write_queues + poll_queues;
--}
--
--static unsigned int max_queue_count(void)
--{
--	/* IO queues + admin queue */
--	return 1 + max_io_queues();
--}
--
--static inline unsigned int nvme_dbbuf_size(u32 stride)
--{
--	return (max_queue_count() * 8 * stride);
-+	return dev->nr_allocated_queues * 8 * dev->db_stride;
- }
- 
- static int nvme_dbbuf_dma_alloc(struct nvme_dev *dev)
- {
--	unsigned int mem_size = nvme_dbbuf_size(dev->db_stride);
-+	unsigned int mem_size = nvme_dbbuf_size(dev);
- 
- 	if (dev->dbbuf_dbs)
- 		return 0;
-@@ -252,7 +244,7 @@ static int nvme_dbbuf_dma_alloc(struct nvme_dev *dev)
- 
- static void nvme_dbbuf_dma_free(struct nvme_dev *dev)
- {
--	unsigned int mem_size = nvme_dbbuf_size(dev->db_stride);
-+	unsigned int mem_size = nvme_dbbuf_size(dev);
- 
- 	if (dev->dbbuf_dbs) {
- 		dma_free_coherent(dev->dev, mem_size,
-@@ -2003,7 +1995,7 @@ static int nvme_setup_host_mem(struct nvme_dev *dev)
- static void nvme_calc_irq_sets(struct irq_affinity *affd, unsigned int nrirqs)
- {
- 	struct nvme_dev *dev = affd->priv;
--	unsigned int nr_read_queues;
-+	unsigned int nr_read_queues, nr_write_queues = dev->nr_write_queues;
- 
- 	/*
- 	 * If there is no interupt available for queues, ensure that
-@@ -2019,12 +2011,12 @@ static void nvme_calc_irq_sets(struct irq_affinity *affd, unsigned int nrirqs)
- 	if (!nrirqs) {
- 		nrirqs = 1;
- 		nr_read_queues = 0;
--	} else if (nrirqs == 1 || !write_queues) {
-+	} else if (nrirqs == 1 || !nr_write_queues) {
- 		nr_read_queues = 0;
--	} else if (write_queues >= nrirqs) {
-+	} else if (nr_write_queues >= nrirqs) {
- 		nr_read_queues = 1;
- 	} else {
--		nr_read_queues = nrirqs - write_queues;
-+		nr_read_queues = nrirqs - nr_write_queues;
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c
+index 0bd1294ba517..39c5e6fdb72c 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c
+@@ -2243,7 +2243,7 @@ s32 ixgbe_fc_enable_generic(struct ixgbe_hw *hw)
  	}
  
- 	dev->io_queues[HCTX_TYPE_DEFAULT] = nrirqs - nr_read_queues;
-@@ -2048,7 +2040,7 @@ static int nvme_setup_irqs(struct nvme_dev *dev, unsigned int nr_io_queues)
- 	 * Poll queues don't need interrupts, but we need at least one IO
- 	 * queue left over for non-polled IO.
- 	 */
--	this_p_queues = poll_queues;
-+	this_p_queues = dev->nr_poll_queues;
- 	if (this_p_queues >= nr_io_queues) {
- 		this_p_queues = nr_io_queues - 1;
- 		irq_queues = 1;
-@@ -2078,14 +2070,25 @@ static void nvme_disable_io_queues(struct nvme_dev *dev)
- 		__nvme_disable_io_queues(dev, nvme_admin_delete_cq);
- }
- 
-+static unsigned int nvme_max_io_queues(struct nvme_dev *dev)
-+{
-+	return num_possible_cpus() + dev->nr_write_queues + dev->nr_poll_queues;
-+}
-+
- static int nvme_setup_io_queues(struct nvme_dev *dev)
- {
- 	struct nvme_queue *adminq = &dev->queues[0];
- 	struct pci_dev *pdev = to_pci_dev(dev->dev);
--	int result, nr_io_queues;
-+	unsigned int nr_io_queues;
- 	unsigned long size;
-+	int result;
- 
--	nr_io_queues = max_io_queues();
-+	/*
-+	 * Sample the module parameters once at reset time so that we have
-+	 * stable values to work with.
-+	 */
-+	dev->nr_write_queues = write_queues;
-+	dev->nr_poll_queues = poll_queues;
- 
- 	/*
- 	 * If tags are shared with admin queue (Apple bug), then
-@@ -2093,6 +2096,9 @@ static int nvme_setup_io_queues(struct nvme_dev *dev)
- 	 */
- 	if (dev->ctrl.quirks & NVME_QUIRK_SHARED_TAGS)
- 		nr_io_queues = 1;
-+	else
-+		nr_io_queues = min(nvme_max_io_queues(dev),
-+				   dev->nr_allocated_queues - 1);
- 
- 	result = nvme_set_queue_count(&dev->ctrl, &nr_io_queues);
- 	if (result < 0)
-@@ -2767,8 +2773,11 @@ static int nvme_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	if (!dev)
- 		return -ENOMEM;
- 
--	dev->queues = kcalloc_node(max_queue_count(), sizeof(struct nvme_queue),
--					GFP_KERNEL, node);
-+	dev->nr_write_queues = write_queues;
-+	dev->nr_poll_queues = poll_queues;
-+	dev->nr_allocated_queues = nvme_max_io_queues(dev) + 1;
-+	dev->queues = kcalloc_node(dev->nr_allocated_queues,
-+			sizeof(struct nvme_queue), GFP_KERNEL, node);
- 	if (!dev->queues)
- 		goto free;
+ 	/* Configure pause time (2 TCs per register) */
+-	reg = hw->fc.pause_time * 0x00010001;
++	reg = hw->fc.pause_time * 0x00010001U;
+ 	for (i = 0; i < (MAX_TRAFFIC_CLASS / 2); i++)
+ 		IXGBE_WRITE_REG(hw, IXGBE_FCTTV(i), reg);
  
 -- 
 2.25.1
