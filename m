@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E49AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 00:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 272B9C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 00:59:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB37B2075A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 00:59:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0D5D2075A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 00:59:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729067AbgFHA7B (ORCPT
+        id S1729108AbgFHA73 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 20:59:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58474 "EHLO
+        Sun, 7 Jun 2020 20:59:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728969AbgFHA6z (ORCPT
+        with ESMTP id S1728966AbgFHA6k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 20:58:55 -0400
+        Sun, 7 Jun 2020 20:58:40 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CA91C08C5C3;
-        Sun,  7 Jun 2020 17:58:55 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E260C08C5C3;
+        Sun,  7 Jun 2020 17:58:40 -0700 (PDT)
 Received: from [5.158.153.53] (helo=debian-buster-darwi.lab.linutronix.de.)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
         (Exim 4.80)
         (envelope-from <a.darwish@linutronix.de>)
-        id 1ji67g-0000y6-9U; Mon, 08 Jun 2020 02:58:44 +0200
+        id 1ji67W-0000w0-Gy; Mon, 08 Jun 2020 02:58:34 +0200
 From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
@@ -37,12 +37,10 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Steven Rostedt <rostedt@goodmis.org>,
         LKML <linux-kernel@vger.kernel.org>,
         "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org
-Subject: [PATCH v2 15/18] NFSv4: Use sequence counter with associated spinlock
-Date:   Mon,  8 Jun 2020 02:57:26 +0200
-Message-Id: <20200608005729.1874024-16-a.darwish@linutronix.de>
+        Song Liu <song@kernel.org>, linux-raid@vger.kernel.org
+Subject: [PATCH v2 13/18] raid5: Use sequence counter with associated spinlock
+Date:   Mon,  8 Jun 2020 02:57:24 +0200
+Message-Id: <20200608005729.1874024-14-a.darwish@linutronix.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200608005729.1874024-1-a.darwish@linutronix.de>
 References: <20200519214547.352050-1-a.darwish@linutronix.de>
@@ -72,36 +70,36 @@ neither storage size nor runtime overhead.
 
 Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
 ---
- fs/nfs/nfs4_fs.h   | 2 +-
- fs/nfs/nfs4state.c | 2 +-
+ drivers/md/raid5.c | 2 +-
+ drivers/md/raid5.h | 2 +-
  2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
-index 2b7f6dcd2eb8..210e590e1f71 100644
---- a/fs/nfs/nfs4_fs.h
-+++ b/fs/nfs/nfs4_fs.h
-@@ -117,7 +117,7 @@ struct nfs4_state_owner {
- 	unsigned long	     so_flags;
- 	struct list_head     so_states;
- 	struct nfs_seqid_counter so_seqid;
--	seqcount_t	     so_reclaim_seqcount;
-+	seqcount_spinlock_t  so_reclaim_seqcount;
- 	struct mutex	     so_delegreturn_mutex;
- };
- 
-diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-index a8dc25ce48bb..b1dba24918f8 100644
---- a/fs/nfs/nfs4state.c
-+++ b/fs/nfs/nfs4state.c
-@@ -509,7 +509,7 @@ nfs4_alloc_state_owner(struct nfs_server *server,
- 	nfs4_init_seqid_counter(&sp->so_seqid);
- 	atomic_set(&sp->so_count, 1);
- 	INIT_LIST_HEAD(&sp->so_lru);
--	seqcount_init(&sp->so_reclaim_seqcount);
-+	seqcount_spinlock_init(&sp->so_reclaim_seqcount, &sp->so_lock);
- 	mutex_init(&sp->so_delegreturn_mutex);
- 	return sp;
- }
+diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+index ba00e9877f02..69f31c675b58 100644
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -6929,7 +6929,7 @@ static struct r5conf *setup_conf(struct mddev *mddev)
+ 	} else
+ 		goto abort;
+ 	spin_lock_init(&conf->device_lock);
+-	seqcount_init(&conf->gen_lock);
++	seqcount_spinlock_init(&conf->gen_lock, &conf->device_lock);
+ 	mutex_init(&conf->cache_size_mutex);
+ 	init_waitqueue_head(&conf->wait_for_quiescent);
+ 	init_waitqueue_head(&conf->wait_for_stripe);
+diff --git a/drivers/md/raid5.h b/drivers/md/raid5.h
+index f90e0704bed9..a2c9e9e9f5ac 100644
+--- a/drivers/md/raid5.h
++++ b/drivers/md/raid5.h
+@@ -589,7 +589,7 @@ struct r5conf {
+ 	int			prev_chunk_sectors;
+ 	int			prev_algo;
+ 	short			generation; /* increments with every reshape */
+-	seqcount_t		gen_lock;	/* lock against generation changes */
++	seqcount_spinlock_t	gen_lock;	/* lock against generation changes */
+ 	unsigned long		reshape_checkpoint; /* Time we last updated
+ 						     * metadata */
+ 	long long		min_offset_diff; /* minimum difference between
 -- 
 2.20.1
 
