@@ -2,430 +2,83 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F226FC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:30:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E634DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9C8A207ED
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:30:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591633800;
-	bh=WId2O+4oR90wlumtkq9+wp5vWxkl7/ULmgTLvpPt8Xs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=UV60jseDe2g865aa8pVVNhUznyFsvbOpejBPQDjAZUfVE68gRT3/L2RC5yCiD3lRD
-	 rnmroxZurVNt5lPreeA0eLY2L+j/2XXvklDfTIgVvq123ZyKQpa5XWIhHRTJwPqtmi
-	 iJtNr+YhnBnyCM9GyBCRgZTv0EpPQYCk8Vbw6qys=
+	by mail.kernel.org (Postfix) with ESMTP id C0A0B2053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:31:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EBplNvga"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730548AbgFHQaA (ORCPT
+        id S1730553AbgFHQbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 12:30:00 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:37987 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730434AbgFHQ37 (ORCPT
+        Mon, 8 Jun 2020 12:31:17 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:49212 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730434AbgFHQbQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 12:29:59 -0400
-Received: by mail-oi1-f195.google.com with SMTP id c194so15850324oig.5;
-        Mon, 08 Jun 2020 09:29:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fOCz5AMVmkoDT9UWa5EYaA8n0BUUQ9NtrKf8MrA4iUo=;
-        b=srooHgSsZ3cb0ZxG+N8WlY6BxjgSEViAZjENnh/awqXiXTrfYmLtikPPjd0n5FcATr
-         7DYbLGr6HJn4UhR2r5ppepPFP/YI1wAoudC4w5YGM8/FnlGM1WsQTHNEc0LFF8MCLXLF
-         66IjfnGIZ1elPTiD4RKQx9qTCdOMme0tNsqjAaCqJjrdVi67I/kOt3Ugrk1LX/KBR4Da
-         XqzJaumOC3SQGvuH/Pthj0qwsXR2oFNueTY8Hpq124gAW3WRC2ZVWBy7YKui/Ir5iDy/
-         osDKmaNb6G40fV1R40iXciaq34JtuKQS1Czs0+UF8wKp1p7xKWtmR3Vru5VNI8gByIXh
-         SvdQ==
-X-Gm-Message-State: AOAM533NhBCjt/+R7zpMW3//Zmex6EzzOfQzAZjn0zWDZkMIdDyMHyjf
-        lbQD38lZfC6AX6NXbTYDHXuHsKd+Vc/ZrIqyU+c=
-X-Google-Smtp-Source: ABdhPJyaJS8pUkyQMwjlxOCDRVHoq+IDJNCjc0i0F6k0f4uN5oATQKTIFRusvkcGfZnP9DpZrmYxvH719scXCH7xVkg=
-X-Received: by 2002:aca:ad88:: with SMTP id w130mr133563oie.103.1591633798163;
- Mon, 08 Jun 2020 09:29:58 -0700 (PDT)
-MIME-Version: 1.0
-References: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com>
- <CAPcyv4hWLKP7fdLhWLn8vxf5rJKvKyU0yLfDs0XMjW-9U9tM-g@mail.gmail.com>
- <CAJZ5v0gAJyCi4YiVP4LuH3sCBWMArODDxkjKqk28Svug1+bTtw@mail.gmail.com> <3070471.70pOHYMNIP@kreacher>
-In-Reply-To: <3070471.70pOHYMNIP@kreacher>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 8 Jun 2020 18:29:47 +0200
-Message-ID: <CAJZ5v0gpfpunS1BJY2Dknhgnq-2yWs+orxa9K+K-AohmXo_JjA@mail.gmail.com>
-Subject: Re: [RFT][PATCH] ACPI: OSL: Use rwlock instead of RCU for memory management
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Len Brown <lenb@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rafael J Wysocki <rafael.j.wysocki@intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Ira Weiny <ira.weiny@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Bob Moore <robert.moore@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 8 Jun 2020 12:31:16 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 058G9MiM066579;
+        Mon, 8 Jun 2020 16:31:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2020-01-29;
+ bh=tYYiyASbtZojC1CqxMm1OnNF5Ok/Fu5wHgNs6PBEbjI=;
+ b=EBplNvgag2qURqZrox4y/jD+u/uvttDNaSmSql1f6SDchYho4FZFfDyP+lQGmQ0+hB2P
+ XAHa7f+/6kHA3wolXPjC3UyU/T3EBvg2sh/+D7N/o2/2kuO/z/Pyl+2/35s3PKwn5AJa
+ /KyCDz90Rp38qu/yJH8E0MHU9AQBZ2YBHIn5H0ccOJMwWS/VF1nz3mCjWChikVEZM+Wy
+ cj2VIKHvImqIQ6MEz/hIVRt+UGQVf0X7ziCcIXMhzWTZS97wSxMz8jNGY3vxPQxopt6D
+ wsSeaPzDJjbftNJtL4wh9+jO19R/lrT3V6LRAYa0g8WKJvEp+E/F6Q3q/FRutQMM/Y83 SQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 31g2jqyugn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 08 Jun 2020 16:31:02 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 058GDrHh012273;
+        Mon, 8 Jun 2020 16:29:02 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 31gn2vev4d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 08 Jun 2020 16:29:02 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 058GSxWn012649;
+        Mon, 8 Jun 2020 16:29:00 GMT
+Received: from localhost.localdomain (/10.211.9.80)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 08 Jun 2020 09:28:58 -0700
+From:   Dongli Zhang <dongli.zhang@oracle.com>
+To:     linux-nvme@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, hch@lst.de, sagi@grimberg.me,
+        chaitanya.kulkarni@wdc.com, kbusch@kernel.org, axboe@fb.com
+Subject: [PATCH 0/2] nvme: simple cleanup
+Date:   Mon,  8 Jun 2020 09:20:00 -0700
+Message-Id: <20200608162002.17017-1-dongli.zhang@oracle.com>
+X-Mailer: git-send-email 2.17.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9646 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 malwarescore=0
+ bulkscore=0 adultscore=0 mlxlogscore=593 spamscore=0 suspectscore=1
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006080116
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9646 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 impostorscore=0
+ cotscore=-2147483648 priorityscore=1501 spamscore=0 suspectscore=1
+ lowpriorityscore=0 bulkscore=0 mlxlogscore=621 malwarescore=0 mlxscore=0
+ phishscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006080116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 8, 2020 at 5:33 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
->
-> On Saturday, June 6, 2020 8:56:26 AM CEST Rafael J. Wysocki wrote:
-> > On Fri, Jun 5, 2020 at 7:09 PM Dan Williams <dan.j.williams@intel.com> wrote:
-> > >
-> > > On Fri, Jun 5, 2020 at 7:06 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> > > >
-> > > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > Subject: [PATCH] ACPI: OSL: Use rwlock instead of RCU for memory management
-> > > >
-> > > > The ACPI OS layer uses RCU to protect the list of ACPI memory
-> > > > mappings from being walked while it is updated.  Among other
-> > > > situations, that list can be walked in non-NMI interrupt context,
-> > > > so using a sleeping lock to protect it is not an option.
-> > > >
-> > > > However, performance issues related to the RCU usage in there
-> > > > appear, as described by Dan Williams:
-> > > >
-> > > > "Recently a performance problem was reported for a process invoking
-> > > > a non-trival ASL program. The method call in this case ends up
-> > > > repetitively triggering a call path like:
-> > > >
-> > > >     acpi_ex_store
-> > > >     acpi_ex_store_object_to_node
-> > > >     acpi_ex_write_data_to_field
-> > > >     acpi_ex_insert_into_field
-> > > >     acpi_ex_write_with_update_rule
-> > > >     acpi_ex_field_datum_io
-> > > >     acpi_ex_access_region
-> > > >     acpi_ev_address_space_dispatch
-> > > >     acpi_ex_system_memory_space_handler
-> > > >     acpi_os_map_cleanup.part.14
-> > > >     _synchronize_rcu_expedited.constprop.89
-> > > >     schedule
-> > > >
-> > > > The end result of frequent synchronize_rcu_expedited() invocation is
-> > > > tiny sub-millisecond spurts of execution where the scheduler freely
-> > > > migrates this apparently sleepy task. The overhead of frequent
-> > > > scheduler invocation multiplies the execution time by a factor
-> > > > of 2-3X."
-> > > >
-> > > > In order to avoid these issues, replace the RCU in the ACPI OS
-> > > > layer by an rwlock.
-> > > >
-> > > > That rwlock should not be frequently contended, so the performance
-> > > > impact of it is not expected to be significant.
-> > > >
-> > > > Reported-by: Dan Williams <dan.j.williams@intel.com>
-> > > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > ---
-> > > >
-> > > > Hi Dan,
-> > > >
-> > > > This is a possible fix for the ACPI OSL RCU-related performance issues, but
-> > > > can you please arrange for the testing of it on the affected systems?
-> > >
-> > > Ugh, is it really this simple? I did not realize the read-side is NMI
-> > > safe. I'll take a look.
-> >
-> > But if an NMI triggers while the lock is being held for writing, it
-> > will deadlock, won't it?
-> >
-> > OTOH, according to the RCU documentation it is valid to call
-> > rcu_read_[un]lock() from an NMI handler (see Interrupts and NMIs in
-> > Documentation/RCU/Design/Requirements/Requirements.rst) so we are good
-> > from this perspective today.
-> >
-> > Unless we teach APEI to avoid mapping lookups from
-> > apei_{read|write}(), which wouldn't be unreasonable by itself, we need
-> > to hold on to the RCU in ACPI OSL, so it looks like addressing the
-> > problem in ACPICA is the best way to do it (and the current ACPICA
-> > code in question is suboptimal, so it would be good to rework it
-> > anyway).
-> >
-> > Cheers!
->
-> I've sent the prototype patch below to you, Bob and Erik in private, so
-> here it goes to the lists for completeness.
->
-> It introduces a "fast-path" variant of acpi_os_map_memory() that only
-> returns non-NULL if a matching mapping is already there in the list
-> and reworks acpi_ex_system_memory_space_handler() to use it.
->
-> The idea is to do a fast-path lookup first for every new mapping and
-> only run the full acpi_os_map_memory() if that returns NULL and then
-> save the mapping return by it and do a fast-path lookup for it again
-> to bump up its reference counter in the OSL layer.  That should prevent
-> the mappings from going away until the opregions that they belong to
-> go away (the opregion deactivation code is updated too to remove the
-> saved mappings), so in the cases when there's not too much opregion
-> creation and removal activity, it should make the RCU-related overhead
-> go away.
->
-> Please test.
->
-> Cheers!
->
-> ---
->  drivers/acpi/acpica/evrgnini.c    |   14 ++++++++-
->  drivers/acpi/acpica/exregion.c    |   49 +++++++++++++++++++++++++++++--
->  drivers/acpi/osl.c                |   59 ++++++++++++++++++++++++++++----------
->  include/acpi/actypes.h            |    7 ++++
->  include/acpi/platform/aclinuxex.h |    2 +
->  5 files changed, 112 insertions(+), 19 deletions(-)
->
-> Index: linux-pm/drivers/acpi/osl.c
-> ===================================================================
-> --- linux-pm.orig/drivers/acpi/osl.c
-> +++ linux-pm/drivers/acpi/osl.c
-> @@ -302,21 +302,8 @@ static void acpi_unmap(acpi_physical_add
->                 iounmap(vaddr);
->  }
->
-> -/**
-> - * acpi_os_map_iomem - Get a virtual address for a given physical address range.
-> - * @phys: Start of the physical address range to map.
-> - * @size: Size of the physical address range to map.
-> - *
-> - * Look up the given physical address range in the list of existing ACPI memory
-> - * mappings.  If found, get a reference to it and return a pointer to it (its
-> - * virtual address).  If not found, map it, add it to that list and return a
-> - * pointer to it.
-> - *
-> - * During early init (when acpi_permanent_mmap has not been set yet) this
-> - * routine simply calls __acpi_map_table() to get the job done.
-> - */
-> -void __iomem __ref
-> -*acpi_os_map_iomem(acpi_physical_address phys, acpi_size size)
-> +static void __iomem __ref *__acpi_os_map_iomem(acpi_physical_address phys,
-> +                                              acpi_size size, bool fastpath)
->  {
->         struct acpi_ioremap *map;
->         void __iomem *virt;
-> @@ -339,6 +326,11 @@ void __iomem __ref
->                 goto out;
->         }
->
-> +       if (fastpath) {
-> +               mutex_unlock(&acpi_ioremap_lock);
-> +               return NULL;
-> +       }
-> +
->         map = kzalloc(sizeof(*map), GFP_KERNEL);
->         if (!map) {
->                 mutex_unlock(&acpi_ioremap_lock);
-> @@ -366,6 +358,25 @@ out:
->         mutex_unlock(&acpi_ioremap_lock);
->         return map->virt + (phys - map->phys);
->  }
-> +
-> +/**
-> + * acpi_os_map_iomem - Get a virtual address for a given physical address range.
-> + * @phys: Start of the physical address range to map.
-> + * @size: Size of the physical address range to map.
-> + *
-> + * Look up the given physical address range in the list of existing ACPI memory
-> + * mappings.  If found, get a reference to it and return a pointer representing
-> + * its virtual address.  If not found, map it, add it to that list and return a
-> + * pointer representing its virtual address.
-> + *
-> + * During early init (when acpi_permanent_mmap has not been set yet) call
-> + * __acpi_map_table() to obtain the mapping.
-> + */
-> +void __iomem __ref *acpi_os_map_iomem(acpi_physical_address phys,
-> +                                     acpi_size size)
-> +{
-> +       return __acpi_os_map_iomem(phys, size, false);
-> +}
->  EXPORT_SYMBOL_GPL(acpi_os_map_iomem);
->
->  void *__ref acpi_os_map_memory(acpi_physical_address phys, acpi_size size)
-> @@ -374,6 +385,24 @@ void *__ref acpi_os_map_memory(acpi_phys
->  }
->  EXPORT_SYMBOL_GPL(acpi_os_map_memory);
->
-> +/**
-> + * acpi_os_map_memory_fastpath - Fast-path physical-to-virtual address mapping.
-> + * @phys: Start of the physical address range to map.
-> + * @size: Size of the physical address range to map.
-> + *
-> + * Look up the given physical address range in the list of existing ACPI memory
-> + * mappings.  If found, get a reference to it and return a pointer representing
-> + * its virtual address.  If not found, return NULL.
-> + *
-> + * During early init (when acpi_permanent_mmap has not been set yet) call
-> + * __acpi_map_table() to obtain the mapping.
-> + */
-> +void __ref *acpi_os_map_memory_fastpath(acpi_physical_address phys,
-> +                                       acpi_size size)
-> +{
-> +       return __acpi_os_map_iomem(phys, size, true);
-> +}
-> +
->  /* Must be called with mutex_lock(&acpi_ioremap_lock) */
->  static unsigned long acpi_os_drop_map_ref(struct acpi_ioremap *map)
->  {
-> Index: linux-pm/include/acpi/actypes.h
-> ===================================================================
-> --- linux-pm.orig/include/acpi/actypes.h
-> +++ linux-pm/include/acpi/actypes.h
-> @@ -1200,12 +1200,19 @@ struct acpi_pci_id {
->         u16 function;
->  };
->
-> +struct acpi_mem_mapping {
-> +       u8 *logical_address;
-> +       acpi_size length;
-> +       struct acpi_mem_mapping *next;
-> +};
-> +
->  struct acpi_mem_space_context {
->         u32 length;
->         acpi_physical_address address;
->         acpi_physical_address mapped_physical_address;
->         u8 *mapped_logical_address;
->         acpi_size mapped_length;
-> +       struct acpi_mem_mapping *first_mapping;
->  };
->
->  /*
-> Index: linux-pm/drivers/acpi/acpica/exregion.c
-> ===================================================================
-> --- linux-pm.orig/drivers/acpi/acpica/exregion.c
-> +++ linux-pm/drivers/acpi/acpica/exregion.c
-> @@ -44,6 +44,9 @@ acpi_ex_system_memory_space_handler(u32
->         u32 length;
->         acpi_size map_length;
->         acpi_size page_boundary_map_length;
-> +#ifdef ACPI_OS_MAP_MEMORY_FASTPATH
-> +       struct acpi_mem_mapping *new_mapping;
-> +#endif
->  #ifdef ACPI_MISALIGNMENT_NOT_SUPPORTED
->         u32 remainder;
->  #endif
-> @@ -143,9 +146,20 @@ acpi_ex_system_memory_space_handler(u32
->
->                 /* Create a new mapping starting at the address given */
->
-> -               mem_info->mapped_logical_address =
-> -                   acpi_os_map_memory(address, map_length);
-> -               if (!mem_info->mapped_logical_address) {
-> +#ifdef ACPI_OS_MAP_MEMORY_FASTPATH
-> +               /* Look for an existing mapping matching the request at hand. */
-> +               logical_addr_ptr = acpi_os_map_memory_fastpath(address, length);
+Just cleanup without functional change.
 
-s/length/map_length/
+Thank you very much!
 
-but the patch should still work as is, with more overhead though.
+Dongli Zhang
 
-> +               if (logical_addr_ptr) {
-> +                       /*
-> +                        * A matching mapping has been found, so cache it and
-> +                        * carry our the access as requested.
-> +                        */
-> +                       goto access;
-> +               }
-> +#endif /* ACPI_OS_MAP_MEMORY_FASTPATH */
-> +
-> +               logical_addr_ptr = acpi_os_map_memory(address, map_length);
-> +               if (!logical_addr_ptr) {
->                         ACPI_ERROR((AE_INFO,
->                                     "Could not map memory at 0x%8.8X%8.8X, size %u",
->                                     ACPI_FORMAT_UINT64(address),
-> @@ -154,8 +168,37 @@ acpi_ex_system_memory_space_handler(u32
->                         return_ACPI_STATUS(AE_NO_MEMORY);
->                 }
->
-> +#ifdef ACPI_OS_MAP_MEMORY_FASTPATH
-> +               new_mapping = ACPI_ALLOCATE_ZEROED(sizeof(*new_mapping));
-> +               if (new_mapping) {
-> +                       new_mapping->logical_address = logical_addr_ptr;
-> +                       new_mapping->length = map_length;
-> +                       new_mapping->next = mem_info->first_mapping;
-> +                       mem_info->first_mapping = new_mapping;
-> +                       /*
-> +                        * Carry out an extra fast-path lookup to get one more
-> +                        * reference to this mapping to prevent it from getting
-> +                        * dropped if a future access involving this region does
-> +                        * not fall into it.
-> +                        */
-> +                       acpi_os_map_memory_fastpath(address, map_length);
-> +               } else {
-> +                       /*
-> +                        * No room to save the new mapping, but this is not
-> +                        * critical.  Just log the error and carry out the
-> +                        * access as requested.
-> +                        */
-> +                       ACPI_ERROR((AE_INFO,
-> +                                   "Not enough memory to save memory mapping at 0x%8.8X%8.8X, size %u",
-> +                                   ACPI_FORMAT_UINT64(address),
-> +                                   (u32)map_length));
-> +               }
-> +
-> +access:
-> +#endif /* ACPI_OS_MAP_MEMORY_FASTPATH */
->                 /* Save the physical address and mapping size */
->
-> +               mem_info->mapped_logical_address = logical_addr_ptr;
->                 mem_info->mapped_physical_address = address;
->                 mem_info->mapped_length = map_length;
->         }
-> Index: linux-pm/drivers/acpi/acpica/evrgnini.c
-> ===================================================================
-> --- linux-pm.orig/drivers/acpi/acpica/evrgnini.c
-> +++ linux-pm/drivers/acpi/acpica/evrgnini.c
-> @@ -38,6 +38,9 @@ acpi_ev_system_memory_region_setup(acpi_
->         union acpi_operand_object *region_desc =
->             (union acpi_operand_object *)handle;
->         struct acpi_mem_space_context *local_region_context;
-> +#ifdef ACPI_OS_MAP_MEMORY_FASTPATH
-> +       struct acpi_mem_mapping *mapping;
-> +#endif
->
->         ACPI_FUNCTION_TRACE(ev_system_memory_region_setup);
->
-> @@ -46,13 +49,22 @@ acpi_ev_system_memory_region_setup(acpi_
->                         local_region_context =
->                             (struct acpi_mem_space_context *)*region_context;
->
-> -                       /* Delete a cached mapping if present */
-> +                       /* Delete memory mappings if present */
->
->                         if (local_region_context->mapped_length) {
->                                 acpi_os_unmap_memory(local_region_context->
->                                                      mapped_logical_address,
->                                                      local_region_context->
->                                                      mapped_length);
-> +#ifdef ACPI_OS_MAP_MEMORY_FASTPATH
-> +                               while (local_region_context->first_mapping) {
-> +                                       mapping = local_region_context->first_mapping;
-> +                                       local_region_context->first_mapping = mapping->next;
-> +                                       acpi_os_unmap_memory(mapping->logical_address,
-> +                                                            mapping->length);
-> +                                       ACPI_FREE(mapping);
-> +                               }
-> +#endif /* ACPI_OS_MAP_MEMORY_FASTPATH */
->                         }
->                         ACPI_FREE(local_region_context);
->                         *region_context = NULL;
-> Index: linux-pm/include/acpi/platform/aclinuxex.h
-> ===================================================================
-> --- linux-pm.orig/include/acpi/platform/aclinuxex.h
-> +++ linux-pm/include/acpi/platform/aclinuxex.h
-> @@ -138,6 +138,8 @@ static inline void acpi_os_terminate_deb
->  /*
->   * OSL interfaces added by Linux
->   */
-> +#define ACPI_OS_MAP_MEMORY_FASTPATH
-> +void *acpi_os_map_memory_fastpath(acpi_physical_address where, acpi_size length);
->
->  #endif                         /* __KERNEL__ */
->
->
->
->
+
