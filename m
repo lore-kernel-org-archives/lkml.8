@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DA8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:22:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43995C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0764F20899
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:22:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 208702089D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:23:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658578;
-	bh=PWB2t7f58OTgQdOQWXKpGzdge1XV4v+1OvpmDWYEvUA=;
+	s=default; t=1591658581;
+	bh=wtn7EdCa698or5TkAj8+NLx0LcLzplalDi2MP5Q8pLI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xZSQQMBH33LLBrowq0zwypa2VnlRVmg5FkTgBLM83dHnxVk3NZk7WupZjWseJIhe0
-	 9CdlbQhf3DMQp7S5WdtStbO0eRIrLgPRjDbYVrmyLSPLfOxO9UGqNDon67W0Bj2CrN
-	 USFSgAf47V/EpVUgcTX7PFrbQOaXdbM/eyAg3HnE=
+	b=Xs9BGBGB1zlPEapZQrZf+duPxfyO232mmwoCNHB/QAcSUpMvJZbRZoM0LCD4PBBRf
+	 9q/eDro7WT5vxn433NP3RYzrK9HG/Nml7tsFCiAL3sgMs/QbFiFjmyAm0nPVlFyU6X
+	 BmtgO1E8UGjH1RJETDs/eKUy4dti+QfmAE2SKosI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730336AbgFHXW5 (ORCPT
+        id S1731416AbgFHXW7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:22:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40174 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:22:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729310AbgFHXSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:18:04 -0400
+        id S1730583AbgFHXSJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:18:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0046E2089D;
-        Mon,  8 Jun 2020 23:18:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B39A20885;
+        Mon,  8 Jun 2020 23:18:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658284;
-        bh=PWB2t7f58OTgQdOQWXKpGzdge1XV4v+1OvpmDWYEvUA=;
+        s=default; t=1591658289;
+        bh=wtn7EdCa698or5TkAj8+NLx0LcLzplalDi2MP5Q8pLI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N4fmsvgenQuY2IoUcE/sRJdhBQSSdd3l3VCjLGuYM7X2dga0Ima3QD+AEiLz6K0av
-         ILzZG4u6YYnuP03eaFc2MwPHRgnXHfuCUpNOyTclZnvYQT4r8xAZ1x+XMoWPwS0m+i
-         Aw9UAoeF/nNlZtpqITG/AyY3s0LTcFLHqb/KySN8=
+        b=qnI78AOL2TsgopTvdxpGcOn7fWM9IrOk0Bp0JT4uQ/nhWEY8tAFv2iOPub777xUy7
+         S00klizWhOgwXkkIQFAlD28KiC1QavC3j5TTgRr0A9gWPXmr7OSbemZeZH/HEUvB8j
+         J9n3RcLoVw8BpY7on7ye5MGVlqtKgRbAZ1xUgKnM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Hilliard <james.hilliard1@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 289/606] Input: usbtouchscreen - add support for BonXeon TP
-Date:   Mon,  8 Jun 2020 19:06:54 -0400
-Message-Id: <20200608231211.3363633-289-sashal@kernel.org>
+Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 293/606] gpio: mvebu: Fix probing for chips without PWM
+Date:   Mon,  8 Jun 2020 19:06:58 -0400
+Message-Id: <20200608231211.3363633-293-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -59,35 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Hilliard <james.hilliard1@gmail.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
 
-[ Upstream commit e3b4f94ef52ae1592cbe199bd38dbdc0d58b2217 ]
+[ Upstream commit 19c26d90ff4ca08ef2a2fef23cc9c13cfbfd891e ]
 
-Based on available information this uses the singletouch irtouch
-protocol. This is tested and confirmed to be fully functional on
-the BonXeon TP hardware I have.
+The PWM iomem resource is optional and its presence indicates whether
+the GPIO chip has a PWM or not, which is why mvebu_pwm_probe() returned
+successfully when the PWM resource was not present. With f51b18d92b66
+the driver switched to devm_platform_ioremap_resource_byname() and
+its error return is propagated to the caller, so now a missing PWM resource
+leads to a probe error in the driver.
 
-Signed-off-by: James Hilliard <james.hilliard1@gmail.com>
-Link: https://lore.kernel.org/r/20200413184217.55700-1-james.hilliard1@gmail.com
-Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To fix this explicitly test for the presence of the PWM resource and
+return successfully when it's not there. Do this check before the check
+for the clock is done (which GPIO chips without a PWM do not have). Also
+move the existing comment why the PWM resource is optional up to the
+actual check.
+
+Fixes: f51b18d92b66 ("gpio: mvebu: use devm_platform_ioremap_resource_byname()")
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/touchscreen/usbtouchscreen.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpio/gpio-mvebu.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/input/touchscreen/usbtouchscreen.c b/drivers/input/touchscreen/usbtouchscreen.c
-index 16d70201de4a..397cb1d3f481 100644
---- a/drivers/input/touchscreen/usbtouchscreen.c
-+++ b/drivers/input/touchscreen/usbtouchscreen.c
-@@ -182,6 +182,7 @@ static const struct usb_device_id usbtouch_devices[] = {
- #endif
+diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+index d2b999c7987f..f0c5433a327f 100644
+--- a/drivers/gpio/gpio-mvebu.c
++++ b/drivers/gpio/gpio-mvebu.c
+@@ -782,6 +782,15 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
+ 				     "marvell,armada-370-gpio"))
+ 		return 0;
  
- #ifdef CONFIG_TOUCHSCREEN_USB_IRTOUCH
-+	{USB_DEVICE(0x255e, 0x0001), .driver_info = DEVTYPE_IRTOUCH},
- 	{USB_DEVICE(0x595a, 0x0001), .driver_info = DEVTYPE_IRTOUCH},
- 	{USB_DEVICE(0x6615, 0x0001), .driver_info = DEVTYPE_IRTOUCH},
- 	{USB_DEVICE(0x6615, 0x0012), .driver_info = DEVTYPE_IRTOUCH_HIRES},
++	/*
++	 * There are only two sets of PWM configuration registers for
++	 * all the GPIO lines on those SoCs which this driver reserves
++	 * for the first two GPIO chips. So if the resource is missing
++	 * we can't treat it as an error.
++	 */
++	if (!platform_get_resource_byname(pdev, IORESOURCE_MEM, "pwm"))
++		return 0;
++
+ 	if (IS_ERR(mvchip->clk))
+ 		return PTR_ERR(mvchip->clk);
+ 
+@@ -804,12 +813,6 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
+ 	mvchip->mvpwm = mvpwm;
+ 	mvpwm->mvchip = mvchip;
+ 
+-	/*
+-	 * There are only two sets of PWM configuration registers for
+-	 * all the GPIO lines on those SoCs which this driver reserves
+-	 * for the first two GPIO chips. So if the resource is missing
+-	 * we can't treat it as an error.
+-	 */
+ 	mvpwm->membase = devm_platform_ioremap_resource_byname(pdev, "pwm");
+ 	if (IS_ERR(mvpwm->membase))
+ 		return PTR_ERR(mvpwm->membase);
 -- 
 2.25.1
 
