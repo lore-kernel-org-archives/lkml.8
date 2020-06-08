@@ -2,53 +2,57 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56EC8C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27356C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:06:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 354C12072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:06:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F01AE207C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:06:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591661190;
-	bh=QAMWE1/DBYx5+V1FZnPPGk7MNCHZVe3zjX7evAGd5dE=;
+	s=default; t=1591661202;
+	bh=f3UQOmDiQE88hlsy01etg3kz41zegwDdc0uGCUHCiaA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DIdNMeuZR3YiAEUbHUiZS+SmfePUwiVwBs7GG01rkOIQ48M+dBEPT+MQHKWNptDFI
-	 ac5kuCGJsL+bcSDUEgPAb+AssKM5bMEVPTCx2EgMBufb7bRASy02NYnCNFRG4eHLfV
-	 llSr9k3vPfFpILszQ6YUVwGBXkqlJ1INC4ckxCKA=
+	b=pPCWq5fD+OHoNkODPvM5Z+sLzjSdwAipA1pIIXrG3/gXZjmFHwS6RxSH5ks98C+8Y
+	 U2mZ7R0Tc9aVDSvQSBQlbun8dl0Qmx5AYggYN86nNHJ9XdDc9jhuMef7wdI/x74G5E
+	 F10aArwlBvJCuovs9G0kMHTdUXD/QwNcuoS9n5n8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732876AbgFIAG3 (ORCPT
+        id S1730946AbgFIAGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:06:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45286 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:06:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45094 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728187AbgFHXVI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:21:08 -0400
+        id S1731102AbgFHXVE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:21:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93C1020872;
-        Mon,  8 Jun 2020 23:21:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 330B220870;
+        Mon,  8 Jun 2020 23:21:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658468;
-        bh=QAMWE1/DBYx5+V1FZnPPGk7MNCHZVe3zjX7evAGd5dE=;
+        s=default; t=1591658464;
+        bh=f3UQOmDiQE88hlsy01etg3kz41zegwDdc0uGCUHCiaA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FOJQ4xYGnWEZUZ7tzqkQiAC1FTbNzRp9HnFjgn7ygDxSDUEptSdyRXGAsAEidIVUp
-         5Q9au3TGd25nwLiTl/Uy3Y7DLVEb83cTAoja8Wx+1akVguFhOrTOmbclfAJsvgCzyP
-         Nl5gdubDovZ6qjLY675fIjYtciXhXycTe5WN6Fno=
+        b=bp6fXYmPpxac0AFtnOUxpM0Jmb8YMg7f3vHlECgGVn7qiXkeEqy2tUUpRZ1D/QCSs
+         iqkQO12FQx9Es0EbVhXq8VyM5h7yzUuu8kafTHBr9UsJCfToMUnsgrRz6MJcZ8Boxl
+         IeNxHX5l4G5GkkaIIBzPYoSf96k8jN/cldiJAkI4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Brian Foster <bfoster@redhat.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Allison Collins <allison.henderson@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 106/175] xfs: reset buffer write failure state on successful completion
-Date:   Mon,  8 Jun 2020 19:17:39 -0400
-Message-Id: <20200608231848.3366970-106-sashal@kernel.org>
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Fangrui Song <maskray@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        "Maciej W . Rozycki" <macro@linux-mips.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Sasha Levin <sashal@kernel.org>, linux-mips@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.4 103/175] MIPS: Truncate link address into 32bit for 32bit kernel
+Date:   Mon,  8 Jun 2020 19:17:36 -0400
+Message-Id: <20200608231848.3366970-103-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
 References: <20200608231848.3366970-1-sashal@kernel.org>
@@ -61,81 +65,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Foster <bfoster@redhat.com>
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
 
-[ Upstream commit b6983e80b03bd4fd42de71993b3ac7403edac758 ]
+[ Upstream commit ff487d41036035376e47972c7c522490b839ab37 ]
 
-The buffer write failure flag is intended to control the internal
-write retry that XFS has historically implemented to help mitigate
-the severity of transient I/O errors. The flag is set when a buffer
-is resubmitted from the I/O completion path due to a previous
-failure. It is checked on subsequent I/O completions to skip the
-internal retry and fall through to the higher level configurable
-error handling mechanism. The flag is cleared in the synchronous and
-delwri submission paths and also checked in various places to log
-write failure messages.
+LLD failed to link vmlinux with 64bit load address for 32bit ELF
+while bfd will strip 64bit address into 32bit silently.
+To fix LLD build, we should truncate load address provided by platform
+into 32bit for 32bit kernel.
 
-There are a couple minor problems with the current usage of this
-flag. One is that we issue an internal retry after every submission
-from xfsaild due to how delwri submission clears the flag. This
-results in double the expected or configured number of write
-attempts when under sustained failures. Another more subtle issue is
-that the flag is never cleared on successful I/O completion. This
-can cause xfs_wait_buftarg() to suggest that dirty buffers are being
-thrown away due to the existence of the flag, when the reality is
-that the flag might still be set because the write succeeded on the
-retry.
-
-Clear the write failure flag on successful I/O completion to address
-both of these problems. This means that the internal retry attempt
-occurs once since the last time a buffer write failed and that
-various other contexts only see the flag set when the immediately
-previous write attempt has failed.
-
-Signed-off-by: Brian Foster <bfoster@redhat.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Allison Collins <allison.henderson@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Link: https://github.com/ClangBuiltLinux/linux/issues/786
+Link: https://sourceware.org/bugzilla/show_bug.cgi?id=25784
+Reviewed-by: Fangrui Song <maskray@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+Cc: Maciej W. Rozycki <macro@linux-mips.org>
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_buf.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ arch/mips/Makefile                 | 13 ++++++++++++-
+ arch/mips/boot/compressed/Makefile |  2 +-
+ arch/mips/kernel/vmlinux.lds.S     |  2 +-
+ 3 files changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
-index 0abba171aa89..1264ac63e4e5 100644
---- a/fs/xfs/xfs_buf.c
-+++ b/fs/xfs/xfs_buf.c
-@@ -1162,8 +1162,10 @@ xfs_buf_ioend(
- 		bp->b_ops->verify_read(bp);
- 	}
+diff --git a/arch/mips/Makefile b/arch/mips/Makefile
+index cdc09b71febe..5403a91ce098 100644
+--- a/arch/mips/Makefile
++++ b/arch/mips/Makefile
+@@ -285,12 +285,23 @@ ifdef CONFIG_64BIT
+   endif
+ endif
  
--	if (!bp->b_error)
-+	if (!bp->b_error) {
-+		bp->b_flags &= ~XBF_WRITE_FAIL;
- 		bp->b_flags |= XBF_DONE;
-+	}
++# When linking a 32-bit executable the LLVM linker cannot cope with a
++# 32-bit load address that has been sign-extended to 64 bits.  Simply
++# remove the upper 32 bits then, as it is safe to do so with other
++# linkers.
++ifdef CONFIG_64BIT
++	load-ld			= $(load-y)
++else
++	load-ld			= $(subst 0xffffffff,0x,$(load-y))
++endif
++
+ KBUILD_AFLAGS	+= $(cflags-y)
+ KBUILD_CFLAGS	+= $(cflags-y)
+-KBUILD_CPPFLAGS += -DVMLINUX_LOAD_ADDRESS=$(load-y)
++KBUILD_CPPFLAGS += -DVMLINUX_LOAD_ADDRESS=$(load-y) -DLINKER_LOAD_ADDRESS=$(load-ld)
+ KBUILD_CPPFLAGS += -DDATAOFFSET=$(if $(dataoffset-y),$(dataoffset-y),0)
  
- 	if (bp->b_iodone)
- 		(*(bp->b_iodone))(bp);
-@@ -1223,7 +1225,7 @@ xfs_bwrite(
+ bootvars-y	= VMLINUX_LOAD_ADDRESS=$(load-y) \
++		  LINKER_LOAD_ADDRESS=$(load-ld) \
+ 		  VMLINUX_ENTRY_ADDRESS=$(entry-y) \
+ 		  PLATFORM="$(platform-y)" \
+ 		  ITS_INPUTS="$(its-y)"
+diff --git a/arch/mips/boot/compressed/Makefile b/arch/mips/boot/compressed/Makefile
+index d859f079b771..378cbfb31ee7 100644
+--- a/arch/mips/boot/compressed/Makefile
++++ b/arch/mips/boot/compressed/Makefile
+@@ -90,7 +90,7 @@ ifneq ($(zload-y),)
+ VMLINUZ_LOAD_ADDRESS := $(zload-y)
+ else
+ VMLINUZ_LOAD_ADDRESS = $(shell $(obj)/calc_vmlinuz_load_addr \
+-		$(obj)/vmlinux.bin $(VMLINUX_LOAD_ADDRESS))
++		$(obj)/vmlinux.bin $(LINKER_LOAD_ADDRESS))
+ endif
+ UIMAGE_LOADADDR = $(VMLINUZ_LOAD_ADDRESS)
  
- 	bp->b_flags |= XBF_WRITE;
- 	bp->b_flags &= ~(XBF_ASYNC | XBF_READ | _XBF_DELWRI_Q |
--			 XBF_WRITE_FAIL | XBF_DONE);
-+			 XBF_DONE);
- 
- 	error = xfs_buf_submit(bp);
- 	if (error)
-@@ -1929,7 +1931,7 @@ xfs_buf_delwri_submit_buffers(
- 		 * synchronously. Otherwise, drop the buffer from the delwri
- 		 * queue and submit async.
- 		 */
--		bp->b_flags &= ~(_XBF_DELWRI_Q | XBF_WRITE_FAIL);
-+		bp->b_flags &= ~_XBF_DELWRI_Q;
- 		bp->b_flags |= XBF_WRITE;
- 		if (wait_list) {
- 			bp->b_flags &= ~XBF_ASYNC;
+diff --git a/arch/mips/kernel/vmlinux.lds.S b/arch/mips/kernel/vmlinux.lds.S
+index 33ee0d18fb0a..eb9d7af93836 100644
+--- a/arch/mips/kernel/vmlinux.lds.S
++++ b/arch/mips/kernel/vmlinux.lds.S
+@@ -50,7 +50,7 @@ SECTIONS
+ 	/* . = 0xa800000000300000; */
+ 	. = 0xffffffff80300000;
+ #endif
+-	. = VMLINUX_LOAD_ADDRESS;
++	. = LINKER_LOAD_ADDRESS;
+ 	/* read-only */
+ 	_text = .;	/* Text and read-only data */
+ 	.text : {
 -- 
 2.25.1
 
