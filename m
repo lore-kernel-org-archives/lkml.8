@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47390C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:57:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5AEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A85F20737
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:57:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A8F920737
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:57:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591664245;
-	bh=LqIvZdy0rZViN+9Rw5CFoFIo9NiAxYZqFGNN6r9tn/o=;
+	s=default; t=1591664258;
+	bh=SWWGoQsVVAyjX/AN81bixPfF8lDzZ/UMYuq0YgzmvUs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gb2ygByBk/d73K7yX/9ERXYHbIAotsWvpJTD9pIQU7+qBmJxGcQ9+d8iAOuUAEE7T
-	 2SQaWAHMjVl+w/wAFTaSvWkb0wIGDSV9ijpRNO1OKFbyO6lUFRG3nvbc8f2FmgRkAX
-	 Ni2qo1sH/W/LS5skB2y308sC1GQW/qxytM91wQDg=
+	b=PZc9Zuh+AzQGnteJNLmhfSXpV1BWfONaJVZ/NMjlilSVC+IoVXcfHVCJ0PxBADTC7
+	 sSnQKJqNjf9vfXgC3QN9qHgDmXlTKq82bigPEO9z1Rd/LL41wFNgQFVSY/D2fNOZgu
+	 iUhYCdkjmxkranyHq9/3j6ENymACo3WsfKzFR/+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733301AbgFIA5Y (ORCPT
+        id S2388067AbgFIA5h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:57:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54468 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:57:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728273AbgFHXIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:08:53 -0400
+        id S1728262AbgFHXIu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:08:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1BC820890;
-        Mon,  8 Jun 2020 23:08:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10950208C7;
+        Mon,  8 Jun 2020 23:08:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657733;
-        bh=LqIvZdy0rZViN+9Rw5CFoFIo9NiAxYZqFGNN6r9tn/o=;
+        s=default; t=1591657729;
+        bh=SWWGoQsVVAyjX/AN81bixPfF8lDzZ/UMYuq0YgzmvUs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n1mK95cfqwdhOTBa4rQ1ZwJxhYxOzm2hG0j28XhtUnwFZhCX/XVy+RrmIlqnVbi0Y
-         MqxzqiPQizq7FQFZ38DqiT3EqJWuevboRGMvgnkJEfPz3o1TnPcN/80ohKLRhjRZbF
-         uCOO2nYMwH1pgiQW0O1OdHr/ruHCngA6/SunVm5c=
+        b=AQ6VfoPodepn32on6YldBsZakXGLZ2rsGgt+KUpcALeqGTla3c5h7X27iXe1pRgX9
+         IUAdDgHjyhtv0B7Q/S0VHWx6gNfoaACjo47k9SuR8TE+dK5fT9TtywEPDdCU5x5jkp
+         WHCHsT4To1unWZq44INcFyBVd3Ev/KOIw67IkCB0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 124/274] netfilter: nft_nat: return EOPNOTSUPP if type or flags are not supported
-Date:   Mon,  8 Jun 2020 19:03:37 -0400
-Message-Id: <20200608230607.3361041-124-sashal@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-bcache@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 121/274] bcache: remove a duplicate ->make_request_fn assignment
+Date:   Mon,  8 Jun 2020 19:03:34 -0400
+Message-Id: <20200608230607.3361041-121-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -60,41 +58,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit 0d7c83463fdf7841350f37960a7abadd3e650b41 ]
+[ Upstream commit a91b2014fc31dc6eaa02ca33aa3b4d1b6e4a0207 ]
 
-Instead of EINVAL which should be used for malformed netlink messages.
+The make_request_fn pointer should only be assigned by blk_alloc_queue.
+Fix a left over manual initialization.
 
-Fixes: eb31628e37a0 ("netfilter: nf_tables: Add support for IPv6 NAT")
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: ff27668ce809 ("bcache: pass the make_request methods to blk_queue_make_request")
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_nat.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/md/bcache/request.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/net/netfilter/nft_nat.c b/net/netfilter/nft_nat.c
-index 8b44a4de5329..bb49a217635e 100644
---- a/net/netfilter/nft_nat.c
-+++ b/net/netfilter/nft_nat.c
-@@ -129,7 +129,7 @@ static int nft_nat_init(const struct nft_ctx *ctx, const struct nft_expr *expr,
- 		priv->type = NF_NAT_MANIP_DST;
- 		break;
- 	default:
--		return -EINVAL;
-+		return -EOPNOTSUPP;
- 	}
+diff --git a/drivers/md/bcache/request.c b/drivers/md/bcache/request.c
+index 71a90fbec314..77d1a2697517 100644
+--- a/drivers/md/bcache/request.c
++++ b/drivers/md/bcache/request.c
+@@ -1372,7 +1372,6 @@ void bch_flash_dev_request_init(struct bcache_device *d)
+ {
+ 	struct gendisk *g = d->disk;
  
- 	if (tb[NFTA_NAT_FAMILY] == NULL)
-@@ -196,7 +196,7 @@ static int nft_nat_init(const struct nft_ctx *ctx, const struct nft_expr *expr,
- 	if (tb[NFTA_NAT_FLAGS]) {
- 		priv->flags = ntohl(nla_get_be32(tb[NFTA_NAT_FLAGS]));
- 		if (priv->flags & ~NF_NAT_RANGE_MASK)
--			return -EINVAL;
-+			return -EOPNOTSUPP;
- 	}
- 
- 	return nf_ct_netns_get(ctx->net, family);
+-	g->queue->make_request_fn		= flash_dev_make_request;
+ 	g->queue->backing_dev_info->congested_fn = flash_dev_congested;
+ 	d->cache_miss				= flash_dev_cache_miss;
+ 	d->ioctl				= flash_dev_ioctl;
 -- 
 2.25.1
 
