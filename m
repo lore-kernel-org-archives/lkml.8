@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B70BEC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 558F9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EE62208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:22:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 318412089D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:22:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658527;
-	bh=PwGEB/vLSvl2vUNqv3qWtWIltm08uq5RJYrsOTA1Xek=;
+	s=default; t=1591658535;
+	bh=Va4bxQT4rSos0RV3A0bab4uHESC1vcR9w9aXywjzpWg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nFxf/bed9xVJck59AdZi8JYfv5HkpK/ekuJS2rUQ9Yw4VAtNkVbh3kmuPBGAwr429
-	 6WE4obU/Ev5ALsK98IBo7doGX8DFAcecVMmz4SFpsrvV0D6DZStbQDN/kWhH2CNKSs
-	 tbxSTjux1n80+7a0lPqlb9W9dKz71OS/LVKcnER4=
+	b=AX6aFGrMt/uONRufxDgQPfoOAOfqCIaaPbbgIDYj1o2NOT0ha/mUO415TkEg4bdlc
+	 jrIvLEQ8pNMmiPsAtoimxicoFz1YLlVlYWcXQquam4nW62Z59dHZLbLiFxGdPO23So
+	 HhqYhrd1HLWWHj7UghOBCzk5BuM6ZZmAE4IsZQ9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731256AbgFHXWF (ORCPT
+        id S1731273AbgFHXWN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:22:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39272 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:22:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730481AbgFHXRe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:17:34 -0400
+        id S1730492AbgFHXRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:17:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0BED20853;
-        Mon,  8 Jun 2020 23:17:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 384412087E;
+        Mon,  8 Jun 2020 23:17:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658254;
-        bh=PwGEB/vLSvl2vUNqv3qWtWIltm08uq5RJYrsOTA1Xek=;
+        s=default; t=1591658258;
+        bh=Va4bxQT4rSos0RV3A0bab4uHESC1vcR9w9aXywjzpWg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YrLEj3TRUToTIIh8hhkGB5Jyqx2MWLbTU3ECkpTK1VKoataJ/RsslleO2kasZVBYP
-         fhzOLiq8HUHmvE9gMsOyTLCjnz1kYi1rZsVR2+5xS+GD0m/p0NKNNPoniKZNIr+eSn
-         Ui3H6Mv3lJRrhysx8Mfp9GKA30HubODnK/bYDo/Q=
+        b=liF0FW89DWFyEmcM7fAJ1d4p/RvVYD+8rkuccN3KaIWCv6Qrep3z8zh5HbcJRAftA
+         q+4BI8yuJMMjwnBQ4HVpe+MojDnTHmV/yQOGPgGSwGE8edzzyIn1chpeMkECrNR42U
+         Uu1WJC4yaxbBa07S9RDGvqgMNsOai6C4ghU0eVPI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
-Subject: [PATCH AUTOSEL 5.6 263/606] gfs2: move privileged user check to gfs2_quota_lock_check
-Date:   Mon,  8 Jun 2020 19:06:28 -0400
-Message-Id: <20200608231211.3363633-263-sashal@kernel.org>
+Cc:     Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.6 266/606] drm/amd/powerplay: perform PG ungate prior to CG ungate
+Date:   Mon,  8 Jun 2020 19:06:31 -0400
+Message-Id: <20200608231211.3363633-266-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -59,55 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Peterson <rpeterso@redhat.com>
+From: Evan Quan <evan.quan@amd.com>
 
-[ Upstream commit 4ed0c30811cb4d30ef89850b787a53a84d5d2bcb ]
+[ Upstream commit f4fcfa4282c1a1bf51475ebb0ffda623eebf1191 ]
 
-Before this patch, function gfs2_quota_lock checked if it was called
-from a privileged user, and if so, it bypassed the quota check:
-superuser can operate outside the quotas.
-That's the wrong place for the check because the lock/unlock functions
-are separate from the lock_check function, and you can do lock and
-unlock without actually checking the quotas.
+Since gfxoff should be disabled first before trying to access those
+GC registers.
 
-This patch moves the check to gfs2_quota_lock_check.
-
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Signed-off-by: Evan Quan <evan.quan@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/quota.c | 3 +--
- fs/gfs2/quota.h | 3 ++-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/amd/powerplay/amd_powerplay.c | 6 +++---
+ drivers/gpu/drm/amd/powerplay/amdgpu_smu.c    | 6 +++---
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/fs/gfs2/quota.c b/fs/gfs2/quota.c
-index e9f93045eb01..832d44782f74 100644
---- a/fs/gfs2/quota.c
-+++ b/fs/gfs2/quota.c
-@@ -1040,8 +1040,7 @@ int gfs2_quota_lock(struct gfs2_inode *ip, kuid_t uid, kgid_t gid)
- 	u32 x;
- 	int error = 0;
- 
--	if (capable(CAP_SYS_RESOURCE) ||
--	    sdp->sd_args.ar_quota != GFS2_QUOTA_ON)
-+	if (sdp->sd_args.ar_quota != GFS2_QUOTA_ON)
- 		return 0;
- 
- 	error = gfs2_quota_hold(ip, uid, gid);
-diff --git a/fs/gfs2/quota.h b/fs/gfs2/quota.h
-index 765627d9a91e..fe68a91dc16f 100644
---- a/fs/gfs2/quota.h
-+++ b/fs/gfs2/quota.h
-@@ -44,7 +44,8 @@ static inline int gfs2_quota_lock_check(struct gfs2_inode *ip,
- 	int ret;
- 
- 	ap->allowed = UINT_MAX; /* Assume we are permitted a whole lot */
--	if (sdp->sd_args.ar_quota == GFS2_QUOTA_OFF)
-+	if (capable(CAP_SYS_RESOURCE) ||
-+	    sdp->sd_args.ar_quota == GFS2_QUOTA_OFF)
- 		return 0;
- 	ret = gfs2_quota_lock(ip, NO_UID_QUOTA_CHANGE, NO_GID_QUOTA_CHANGE);
- 	if (ret)
+diff --git a/drivers/gpu/drm/amd/powerplay/amd_powerplay.c b/drivers/gpu/drm/amd/powerplay/amd_powerplay.c
+index e4e5a53b2b4e..8e2acb4df860 100644
+--- a/drivers/gpu/drm/amd/powerplay/amd_powerplay.c
++++ b/drivers/gpu/drm/amd/powerplay/amd_powerplay.c
+@@ -319,12 +319,12 @@ static void pp_dpm_en_umd_pstate(struct pp_hwmgr  *hwmgr,
+ 		if (*level & profile_mode_mask) {
+ 			hwmgr->saved_dpm_level = hwmgr->dpm_level;
+ 			hwmgr->en_umd_pstate = true;
+-			amdgpu_device_ip_set_clockgating_state(hwmgr->adev,
+-						AMD_IP_BLOCK_TYPE_GFX,
+-						AMD_CG_STATE_UNGATE);
+ 			amdgpu_device_ip_set_powergating_state(hwmgr->adev,
+ 					AMD_IP_BLOCK_TYPE_GFX,
+ 					AMD_PG_STATE_UNGATE);
++			amdgpu_device_ip_set_clockgating_state(hwmgr->adev,
++						AMD_IP_BLOCK_TYPE_GFX,
++						AMD_CG_STATE_UNGATE);
+ 		}
+ 	} else {
+ 		/* exit umd pstate, restore level, enable gfx cg*/
+diff --git a/drivers/gpu/drm/amd/powerplay/amdgpu_smu.c b/drivers/gpu/drm/amd/powerplay/amdgpu_smu.c
+index 96e81c7bc266..e2565967db07 100644
+--- a/drivers/gpu/drm/amd/powerplay/amdgpu_smu.c
++++ b/drivers/gpu/drm/amd/powerplay/amdgpu_smu.c
+@@ -1675,12 +1675,12 @@ static int smu_enable_umd_pstate(void *handle,
+ 		if (*level & profile_mode_mask) {
+ 			smu_dpm_ctx->saved_dpm_level = smu_dpm_ctx->dpm_level;
+ 			smu_dpm_ctx->enable_umd_pstate = true;
+-			amdgpu_device_ip_set_clockgating_state(smu->adev,
+-							       AMD_IP_BLOCK_TYPE_GFX,
+-							       AMD_CG_STATE_UNGATE);
+ 			amdgpu_device_ip_set_powergating_state(smu->adev,
+ 							       AMD_IP_BLOCK_TYPE_GFX,
+ 							       AMD_PG_STATE_UNGATE);
++			amdgpu_device_ip_set_clockgating_state(smu->adev,
++							       AMD_IP_BLOCK_TYPE_GFX,
++							       AMD_CG_STATE_UNGATE);
+ 		}
+ 	} else {
+ 		/* exit umd pstate, restore level, enable gfx cg*/
 -- 
 2.25.1
 
