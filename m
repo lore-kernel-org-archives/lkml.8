@@ -6,226 +6,184 @@ X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54911C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 13:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BBCAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:02:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22267206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 13:56:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AAEA206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:02:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="sV7kmoaN"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="BxO8zwns"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729882AbgFHN4h (ORCPT
+        id S1729863AbgFHOCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 09:56:37 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:12407 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728799AbgFHN4f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 09:56:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1591624595; x=1623160595;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=bVJ4KOa8pad+GQLBr/cyk0fAVQ9B94wv/q+cz6Xt+bE=;
-  b=sV7kmoaNmFKjPSyZH7gRFW8deZhEfE2ShIZgGhHARKkmmn8Qzib12rrb
-   tSCU59hnsvAMdQYMSEJYfooyzfsRmGFTWSaX7of4YI28AodBSC1a7Ylo1
-   wsdOWUqXYAHaFt7/5TnbqANrAg+Qm0GYZSq/Z5eSkUpQNeutT6JySokW3
-   6gDJsTxLMUCsOh6CV+a1IUJNdPj3THBFFj1cMY4ZTwMPbWzqAg7KoWLlC
-   4ebAVkvo+hdaq0N/7Dp7gI7cdwVKWZsCulafcmyLZkA9XMvAso983fzRI
-   IKWW6K3yGXlvx9JxWwfW6nbSR7pxqE5TgOs24Ll23xFjSqAB08jzIcRED
-   A==;
-IronPort-SDR: C8Xr94BcqocK4nupxF/eU6NtUd/Pt+swdFdKKd1as8NeZNtO+mEnOwZQ9wMZLtv41zGoD82pQO
- riVvhJyXZr6usnhzjq01Vfcm8OCNPlA5W3K50XjPC78GIxlfIEe2QjlLE0PbWBDt06xpFPOnY7
- 2a3RmTZtHJLmcEC7L9V9GPhLEgo+wpHzR9rXNiObtN92tm/6swfRNpl5i3Qg+TzF9Y+kTWlZAL
- uRPIK1a9qc/JDDno7tU59OD3Araj9k0JLKJraLFJuPsN1PRBVTrSDJX17uIC5A1ihISmRJu7CA
- d3I=
-X-IronPort-AV: E=Sophos;i="5.73,487,1583218800"; 
-   d="scan'208";a="82649276"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 08 Jun 2020 06:56:34 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 8 Jun 2020 06:56:32 -0700
-Received: from localhost (10.10.115.15) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server id 15.1.1847.3 via Frontend
- Transport; Mon, 8 Jun 2020 06:56:34 -0700
-Date:   Mon, 8 Jun 2020 15:56:33 +0200
-From:   "Allan W. Nielsen" <allan.nielsen@microchip.com>
-To:     Vladimir Oltean <olteanv@gmail.com>
-CC:     Xiaoliang Yang <xiaoliang.yang_1@nxp.com>, Po Liu <po.liu@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        "Li Yang" <leoyang.li@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Jiri Pirko" <jiri@resnulli.us>, Ido Schimmel <idosch@idosch.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        "Nikolay Aleksandrov" <nikolay@cumulusnetworks.com>,
-        Roopa Prabhu <roopa@cumulusnetworks.com>,
-        netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Joergen Andreasen <joergen.andreasen@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        <linux-devel@linux.nxdi.nxp.com>
-Subject: Re: [PATCH v2 net-next 03/10] net: mscc: ocelot: allocated rules to
- different hardware VCAP TCAMs by chain index
-Message-ID: <20200608135633.jznoxwny6qtzxjng@ws.localdomain>
-References: <20200602051828.5734-1-xiaoliang.yang_1@nxp.com>
- <20200602051828.5734-4-xiaoliang.yang_1@nxp.com>
- <20200602083613.ddzjh54zxtbklytw@ws.localdomain>
- <CA+h21hocBOyuDFvnLq-sBEG5phaJPxbhvZ_P5H8HnTkBDv1x+w@mail.gmail.com>
+        Mon, 8 Jun 2020 10:02:13 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:28261 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729175AbgFHOCM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 10:02:12 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591624931; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=tEdZ6QUxV0aIalkZh0RUwZLDn+U3wprRkWo1uaBu5Io=;
+ b=BxO8zwnsQcaobtqJpzUw3xHdSEax5KrNEqA05lGuVNnj8tU0M51rtvfe+rFFiTivfOC/65f1
+ tS3KaL4aBi4A5dC7+gTnW0w3mtXVi9nXUbkV20mnxFbW68uA4txun1C9QIPJGsnlP5cw2aTj
+ jctt0WOyEHnyjCRvpdniWhcIgQU=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
+ 5ede44b4754b690164dac635 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 08 Jun 2020 14:01:24
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 7CF70C43395; Mon,  8 Jun 2020 14:01:24 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7F59CC433C6;
+        Mon,  8 Jun 2020 14:01:23 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CA+h21hocBOyuDFvnLq-sBEG5phaJPxbhvZ_P5H8HnTkBDv1x+w@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 08 Jun 2020 19:31:23 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [RFC PATCH] iommu/arm-smmu: Remove shutdown callback
+In-Reply-To: <20200608113852.GA3108@willie-the-truck>
+References: <20200607110918.1733-1-saiprakash.ranjan@codeaurora.org>
+ <20200608081846.GA1542@willie-the-truck>
+ <08c293eefc20bc2c67f2d2639b93f0a5@codeaurora.org>
+ <20200608113852.GA3108@willie-the-truck>
+Message-ID: <dbd12d8017fc6b84232be7359437eb3b@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03.06.2020 13:04, Vladimir Oltean wrote:
->On Tue, 2 Jun 2020 at 11:38, Allan W. Nielsen
-><allan.nielsen@microchip.com> wrote:
->>
->> Hi Xiaoliang,
->>
->> Happy to see that you are moving in the directions of multi chain - this
->> seems ilke a much better fit to me.
->>
->>
->> On 02.06.2020 13:18, Xiaoliang Yang wrote:
->> >There are three hardware TCAMs for ocelot chips: IS1, IS2 and ES0. Each
->> >one supports different actions. The hardware flow order is: IS1->IS2->ES0.
+Hi Will,
+
+On 2020-06-08 17:08, Will Deacon wrote:
+> On Mon, Jun 08, 2020 at 02:43:03PM +0530, Sai Prakash Ranjan wrote:
+>> On 2020-06-08 13:48, Will Deacon wrote:
+>> > On Sun, Jun 07, 2020 at 04:39:18PM +0530, Sai Prakash Ranjan wrote:
+>> > > Remove SMMU shutdown callback since it seems to cause more
+>> > > problems than benefits. With this callback, we need to make
+>> > > sure that all clients/consumers of SMMU do not perform any
+>> > > DMA activity once the SMMU is shutdown and translation is
+>> > > disabled. In other words we need to add shutdown callbacks
+>> > > for all those clients to make sure they do not perform any
+>> > > DMA or else we see all kinds of weird crashes during reboot
+>> > > or shutdown. This is clearly not scalable as the number of
+>> > > clients of SMMU would vary across SoCs and we would need to
+>> > > add shutdown callbacks to almost all drivers eventually.
+>> > > This callback was added for kexec usecase where it was known
+>> > > to cause memory corruptions when SMMU was not shutdown but
+>> > > that does not directly relate to SMMU because the memory
+>> > > corruption could be because of the client of SMMU which is
+>> > > not shutdown properly before booting into new kernel. So in
+>> > > that case, we need to identify the client of SMMU causing
+>> > > the memory corruption and add appropriate shutdown callback
+>> > > to the client rather than to the SMMU.
+>> > >
+>> > > Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>> > > ---
+>> > >  drivers/iommu/arm-smmu-v3.c | 6 ------
+>> > >  drivers/iommu/arm-smmu.c    | 6 ------
+>> > >  2 files changed, 12 deletions(-)
 >> >
->> >This patch add three blocks to store rules according to chain index.
->> >chain 0 is offloaded to IS1, chain 1 is offloaded to IS2, and egress chain
->> >0 is offloaded to ES0.
->>
->> Using "static" allocation to to say chain-X goes to TCAM Y, also seems
->> like the right approach to me. Given the capabilities of the HW, this
->> will most likely be the easiest scheme to implement and to explain to
->> the end-user.
->>
->> But I think we should make some adjustments to this mapping schema.
->>
->> Here are some important "things" I would like to consider when defining
->> this schema:
->>
->> - As you explain, we have 3 TCAMs (IS1, IS2 and ES0), but we have 3
->>    parallel lookups in IS1 and 2 parallel lookups in IS2 - and also these
->>    TCAMs has a wide verity of keys.
->>
->> - We can utilize these multiple parallel lookups such that it seems like
->>    they are done in serial (that is if they do not touch the same
->>    actions), but as they are done in parallel they can not influence each
->>    other.
->>
->> - We can let IS1 influence the IS2 lookup (like the GOTO actions was
->>    intended to be used).
->>
->> - The chip also has other QoS classification facilities which sits
->>    before the TCAM (take a look at 3.7.3 QoS, DP, and DSCP Classification
->>    in vsc7514 datasheet). It we at some point in time want to enable
->>    this, then I think we need to do that in the same tc-flower framework.
->>
->> Here is my initial suggestion for an alternative chain-schema:
->>
->> Chain 0:           The default chain - today this is in IS2. If we proceed
->>                     with this as is - then this will change.
->> Chain 1-9999:      These are offloaded by "basic" classification.
->> Chain 10000-19999: These are offloaded in IS1
->>                     Chain 10000: Lookup-0 in IS1, and here we could limit the
->>                                  action to do QoS related stuff (priority
->>                                  update)
->>                     Chain 11000: Lookup-1 in IS1, here we could do VLAN
->>                                  stuff
->>                     Chain 12000: Lookup-2 in IS1, here we could apply the
->>                                  "PAG" which is essentially a GOTO.
->>
->> Chain 20000-29999: These are offloaded in IS2
->>                     Chain 20000-20255: Lookup-0 in IS2, where CHAIN-ID -
->>                                        20000 is the PAG value.
->>                     Chain 21000-21000: Lookup-1 in IS2.
->>
->> All these chains should be optional - users should only need to
->> configure the chains they need. To make this work, we need to configure
->> both the desired actions (could be priority update) and the goto action.
->> Remember in HW, all packets goes through this process, while in SW they
->> only follow the "goto" path.
->>
->> An example could be (I have not tested this yet - sorry):
->>
->> tc qdisc add dev eth0 ingress
->>
->> # Activate lookup 11000. We can not do any other rules in chain 0, also
->> # this implicitly means that we do not want any chains <11000.
->> tc filter add dev eth0 parent ffff: chain 0
->>     action
->>     matchall goto 11000
->>
->> tc filter add dev eth0 parent ffff: chain 11000 \
->>     flower src_mac 00:01:00:00:00:00/00:ff:00:00:00:00 \
->>     action \
->>     vlan modify id 1234 \
->>     pipe \
->>     goto 20001
->>
->> tc filter add dev eth0 parent ffff: chain 20001 ...
->>
->> Maybe it would be an idea to create some use-cases, implement them in a
->> test which can pass with today's SW, and then once we have a common
->> understanding of what we want, we can implement it?
->>
->> /Allan
->>
->> >Using action goto chain to express flow order as follows:
->> >        tc filter add dev swp0 chain 0 parent ffff: flower skip_sw \
->> >        action goto chain 1
+>> > This feels like a giant bodge to me and I think that any driver which
+>> > continues to perform DMA after its ->shutdown() function has been
+>> > invoked
+>> > is buggy. Wouldn't that cause problems with kexec(), for example?
 >> >
->> >Signed-off-by: Xiaoliang Yang <xiaoliang.yang_1@nxp.com>
->> >---
->> > drivers/net/ethernet/mscc/ocelot_ace.c    | 51 +++++++++++++++--------
->> > drivers/net/ethernet/mscc/ocelot_ace.h    |  7 ++--
->> > drivers/net/ethernet/mscc/ocelot_flower.c | 46 +++++++++++++++++---
->> > include/soc/mscc/ocelot.h                 |  2 +-
->> > include/soc/mscc/ocelot_vcap.h            |  4 +-
->> > 5 files changed, 81 insertions(+), 29 deletions(-)
->
->> /Allan
->
->What would be the advantage, from a user perspective, in exposing the
->3 IS1 lookups as separate chains with orthogonal actions?
->If the user wants to add an IS1 action that performs QoS
->classification, VLAN classification and selects a custom PAG, they
->would have to install 3 separate filters with the same key, each into
->its own chain. Then the driver would be smart enough to figure out
->that the 3 keys are actually the same, so it could merge them.
->In comparison, we could just add a single filter to the IS1 chain,
->with 3 actions (skbedit priority, vlan modify, goto is2).
+>> 
+>> Yes it is definitely a bug in the client driver if DMA is performed
+>> after shutdown callback of that respective driver is invoked and it 
+>> must
+>> be fixed in that driver. But here the problem I was describing is not 
+>> that,
+>> most of the drivers do not have a shutdown callback to begin with and 
+>> adding
+>> it just because of shutdown dependency on SMMU doesn't seem so well 
+>> because
+>> we can have many more such clients in the future and then we have to 
+>> just go
+>> on adding the shutdown callbacks everywhere.
+> 
+> I'm not sure why you're trying to treat these cases differently. It's 
+> also
+> not "just because of SMMU", is it? Like I said, kexec() would be broken
+> regardless.
+> 
+> The bottom line is that after running ->shutdown() (or skipping it if 
+> it's
+> not implemented) for a driver, then the device must no longer perform 
+> DMA.
+> 
 
-Hi, I realize I forgot to answer this one - sorry.
+Yes it's not just because of SMMU. Now I understand that we indeed need
+to shutdown SMMU like any other driver and we need to fix the client
+drivers as well.
 
-The reason for this design is that we have use-cases where the rules to
-do QoS classification must not impact VLAN classification. The easiest
-way to do that, it to have it in separated lookups.
+>> > There's a clear shutdown dependency ordering, where the clients of the
+>> > SMMU need to shutdown before the SMMU itself, but that's not really
+>> > the SMMU driver's problem to solve.
+>> >
+>> 
+>> The problem with kexec may not be directly related to SMMU as you said
+>> above if DMA is performed after the client shutdown callback, then its 
+>> a
+>> bug in the client driver, so that needs to be fixed in the client 
+>> driver,
+>> not the SMMU. So is there any point in having the SMMU shutdown 
+>> callback?
+> 
+> Given that the SMMU mediates DMA transactions for all upstream masters
+> based on in-memory data (e.g. page tables), then I think it's a /very/
+> good idea to tear that down as part of the shutdown callback before
+> the memory is effectively free()d.
+> 
+> One thing I would be in favour of is changing the ->shutdown() code to
+> honour disable_bypass=1 so that we put the SMMU in an aborting state
+> instead of passthrough. Would that help at all? It would at least
+> avoid the memory corruption on missing shutdown callback.
+> 
 
-But we could make this more flexible to support your use-case better. A
-alternative approach would be to assign exclusive-right-to-action on
-first use. If the user choose to use the VLAN update in a given loopup,
-then it cannot be used in others.
+This would be good, however this would then mask the fact that it is
+client drivers who are buggy and if we stop seeing issues, then no one
+will bother fixing the client drivers. So we better go ahead and fix
+the client drivers first and I will drop this patch.
 
-If the user attempt to use a given action across different lookups we
-need to return an error.
+>> As you see, with this SMMU shutdown callback, we need to add shutdown
+>> callbacks in all the client drivers.
+> 
+> I don't see the problem with that. Why is it a problem?
+> 
 
-Would that work for you? Any downside in such approach?
+Not a problem, I wanted to confirm if kexec issue was indeed only due to
+client driver bugs or SMMU has also some contribution. We have already
+started adding client driver shutdown callbacks [1][2], but I also
+wanted to get this clarified, so sent this patch as RFC.
 
-/Allan
+[1] - 
+https://lore.kernel.org/lkml/1591009402-681-1-git-send-email-mkrishn@codeaurora.org/
+[2] - 
+https://lore.kernel.org/lkml/28123d1e19f235f97555ee36a5ed8b52d20cbdea.1590947174.git.saiprakash.ranjan@codeaurora.org/
 
+Thanks,
+Sai
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
