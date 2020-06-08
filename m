@@ -2,81 +2,98 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D068BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 05:59:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4900EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 06:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B16B02076A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 05:59:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C6302076A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 06:00:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MIjjkgQm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728652AbgFHF7b (ORCPT
+        id S1728819AbgFHF77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 01:59:31 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:10459 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728053AbgFHF7b (ORCPT
+        Mon, 8 Jun 2020 01:59:59 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:31202 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728053AbgFHF77 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 01:59:31 -0400
-X-IronPort-AV: E=Sophos;i="5.73,487,1583190000"; 
-   d="scan'208";a="453434732"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jun 2020 07:59:29 +0200
-Date:   Mon, 8 Jun 2020 07:59:29 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Al Viro <viro@zeniv.linux.org.uk>
-cc:     "Rodolfo C. Villordo" <rodolfovillordo@gmail.com>,
-        Forest Bond <forest@alittletooquiet.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Forest Bond <forest@alittletooquiet.net>,Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>,devel@driverdev.osuosl.org,linux-kernel@vger.kernel.org
-In-Reply-To: <20200608054614.GO23230@ZenIV.linux.org.uk>
-Message-ID: <alpine.DEB.2.21.2006080758510.2430@hadrien>
-References: <20200607224156.GA24090@ip-172-31-24-31.ec2.internal> <20200608054614.GO23230@ZenIV.linux.org.uk>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 8 Jun 2020 01:59:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591595997;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=KEx8ZqL8ihg/Wp01+GT3ORMPuHVkx1qLDRLe1b2G/YM=;
+        b=MIjjkgQmmtGUVwTAbCE1+ib8Wou8DWJe/jhaTbLRfVYOnt2dBFRKt5ak/fYPJDxDEoCOvL
+        Z3tMvmwI35Zq3CbcDulgtfPzjF24Pk6kP8RswLpRC8Fnmt+q9Y+3dIOQ1Xub6vE/lIiPmN
+        JMIeOnhRSpfX5gp8R/lCMYqTS+n7N6M=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-12-uAPymGhDMT-eKX29LkcFSA-1; Mon, 08 Jun 2020 01:59:55 -0400
+X-MC-Unique: uAPymGhDMT-eKX29LkcFSA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 19D7818A8220;
+        Mon,  8 Jun 2020 05:59:54 +0000 (UTC)
+Received: from [10.72.13.71] (ovpn-13-71.pek2.redhat.com [10.72.13.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3CBCA1A927;
+        Mon,  8 Jun 2020 05:59:42 +0000 (UTC)
+Subject: Re: [PATCH] virtio-mem: drop unnecessary initialization
+To:     "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     kernel test robot <lkp@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        virtualization@lists.linux-foundation.org
+References: <20200608054517.708167-1-mst@redhat.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <5d00d5e0-0430-dabd-9486-ca363453928f@redhat.com>
+Date:   Mon, 8 Jun 2020 13:59:40 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200608054517.708167-1-mst@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-
-On Mon, 8 Jun 2020, Al Viro wrote:
-
-> On Sun, Jun 07, 2020 at 10:41:56PM +0000, Rodolfo C. Villordo wrote:
-> > Multiple line over 80 characters fixes by splitting in multiple lines.
-> > Warning found by checkpatch.pl
+On 2020/6/8 下午1:45, Michael S. Tsirkin wrote:
+> rc is initialized to -ENIVAL but that's never used. Drop it.
 >
-> I doubt that checkpatch.pl can catch the real problems there:
+> Fixes: 5f1f79bbc9e2 ("virtio-mem: Paravirtualized memory hotplug")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> ---
+>   drivers/virtio/virtio_mem.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> * Hungarian Notation Sucks.  Really.
-> * so does CamelCase, especially for wonders like s_uGetRTSCTSRsvTime
+> diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
+> index f658fe9149be..2f357142ea5e 100644
+> --- a/drivers/virtio/virtio_mem.c
+> +++ b/drivers/virtio/virtio_mem.c
+> @@ -1768,7 +1768,7 @@ static void virtio_mem_delete_resource(struct virtio_mem *vm)
+>   static int virtio_mem_probe(struct virtio_device *vdev)
+>   {
+>   	struct virtio_mem *vm;
+> -	int rc = -EINVAL;
+> +	int rc;
+>   
+>   	BUILD_BUG_ON(sizeof(struct virtio_mem_req) != 24);
+>   	BUILD_BUG_ON(sizeof(struct virtio_mem_resp) != 10);
 
-Rodolfo,
 
-If you work hard with Coccinelle and python scripting, it can help with
-the first two problems.
-
-julia
+Acked-by: Jason Wang <jasowang@redhat.com>
 
 
-> * local variables are useful
-> * if a long expression keeps cropping up all over the place, you
-> probably are missing an inline helper.
->
-> PS: this
-> > -			buf->time_stamp_off_a = vnt_time_stamp_off(pDevice, wCurrentRate);
-> > -			buf->time_stamp_off_b = vnt_time_stamp_off(pDevice, pDevice->byTopCCKBasicRate);
-> > +			buf->time_stamp_off_a =
-> > +				vnt_time_stamp_off(pDevice, wCurrentRate);
-> > +			buf->time_stamp_off_b =
-> > +				vnt_time_stamp_off(pDevice,
-> > +						   pDevice->byTopCCKBasicRate);
-> is no improvement.
->
