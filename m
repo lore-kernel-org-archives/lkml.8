@@ -2,134 +2,212 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD01C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7275C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:50:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3544E206D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C35F1206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:50:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="jT8m11dT"
+	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="hkDyJPIW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729276AbgFHJtB (ORCPT
+        id S1729289AbgFHJuE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 05:49:01 -0400
-Received: from mout.web.de ([212.227.17.11]:57125 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729196AbgFHJtA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 05:49:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1591609711;
-        bh=UhBiCaqphOFBsqidZEeg4p1ZwCwt6Ym07NneRfrn9Oc=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=jT8m11dTEEeH5QhiWWRLD6oa6ZwiX7g0uMKfDJx/jG5hsBIV9XW+go3Fl4SjN5XO/
-         YjgfiNS5kz44B9dYjLKXf6wLGj33hwZXSYSrlvMrWb996s4nE7npd4MjH1LODbWBsO
-         8uERkV7g+1t78IO8aYelceDcWCvOspfOoYeQOmZk=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.49.116.236]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MZUWH-1jNfdK1x9x-00LEpo; Mon, 08
- Jun 2020 11:48:31 +0200
-To:     Christoph Hellwig <hch@lst.de>, Jason Yan <yanaijie@huawei.com>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Cc:     hulkci@huawei.com, linux-kernel@vger.kernel.org,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Jan Kara <jack@suse.cz>, Jens Axboe <axboe@kernel.dk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Ming Lei <ming.lei@redhat.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>
-Subject: Re: [PATCH v4] block: Fix use-after-free in blkdev_get()
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <1612c34d-cd28-b80c-7296-5e17276a6596@web.de>
-Date:   Mon, 8 Jun 2020 11:48:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Mon, 8 Jun 2020 05:50:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55602 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729227AbgFHJuB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 05:50:01 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAACBC08C5C5
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 02:49:59 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id f7so17550854ejq.6
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 02:49:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bowu5S2kLRuujMs4c7peqMpp/j0/TN2F5Fz+wpb7ydQ=;
+        b=hkDyJPIWslLC9m9KSdfkJN50IY+SjmiZM6B4D1trkHnzwxFSKZBby522cIEJnmrIBb
+         lotbEeWNLZQBjUnqQ1+N2eeJ5NeqInEGrM73s5a2BdseJH2JZ/dhW2LZWGLMQmT/H63V
+         l6s9HGAL4H6Xe0oKLIMQliPy6K0gF96V+4oPH6qmzlUPNu+cQLrUN8E/VswoeMCGy0Vx
+         XaAGKzPyOYww2P8na1SvJb459iEWK8wc59bhuue+Q17YP0zUdHTyE0JtO+BN+F2jZrJg
+         BbJAPn7OGTjP+p5oFpIjc/8k4MNv9cT9Xv8q1ZASOgbqVN2yO/4vJ7s5uATSgbKghbRK
+         784Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bowu5S2kLRuujMs4c7peqMpp/j0/TN2F5Fz+wpb7ydQ=;
+        b=A6hc8bVi7bBsNRrnkT/jlvJN9Ja3EacH5tUcZ8JgoEC6a+PbnOoB9WVllwM6mir2To
+         x4SDIhWOYh11FcKRbLOrBaGgyHZEhbovy9s7NmzL1Pm16VjonS3PUjMUBFzWkdlTlOPP
+         k+28l6lECd0E/SeskIPyAWSWMtgbJ1tqP+elXda9e5Bn+xM72A87d998kkYr9SMuwy1t
+         hm7LkrMoFB4oSxqB+VjRG4AUD0U+gT7fiUHqwZO99/DlYXWGK4pgpV+wNGmmWF90nqq+
+         oNenbNpbVcoyNXzcpEO7iRcjSUgeg0IoH1VbZFq9MBniB7okImNmY+xKgx6EaC8uYiW4
+         KRDQ==
+X-Gm-Message-State: AOAM530SPUjnOyN+W+TPNG63ZdTZ2iqcOObTU6I/x9RWi5CvGIcIWi0W
+        cQ+INc4b1TBQGQ1QMtL+/NPs8Q==
+X-Google-Smtp-Source: ABdhPJw6zPYO7Ns1y9ZYS2jdqo5E8/ZXxETtL5izFfAKlRPo2xWy2hfeIyBsJJhlo1e/0t5i5zbFCw==
+X-Received: by 2002:a17:906:6c82:: with SMTP id s2mr19815065ejr.215.1591609798352;
+        Mon, 08 Jun 2020 02:49:58 -0700 (PDT)
+Received: from localhost.localdomain (dh207-96-217.xnet.hr. [88.207.96.217])
+        by smtp.googlemail.com with ESMTPSA id d11sm7354549edy.79.2020.06.08.02.49.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jun 2020 02:49:57 -0700 (PDT)
+From:   Robert Marko <robert.marko@sartura.hr>
+To:     agross@kernel.org, bjorn.andersson@linaro.org,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Christian Lamparter <chunkeey@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Robert Marko <robert.marko@sartura.hr>,
+        Luka Perkov <luka.perkov@sartura.hr>
+Subject: [PATCH] clk: qcom: ipq4019: fix apss cpu overclocking
+Date:   Mon,  8 Jun 2020 11:47:15 +0200
+Message-Id: <20200608094714.382149-1-robert.marko@sartura.hr>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:B+MuEzlT+1aT+Ll+008LUVKbn2mDNk507K37ypy/kCpWohG9L9L
- M+RDYntpOkH+3xGeFGD5BVBYlPB2XD4v8Her+Ok8GkOfBUigzDBHjk5hrxOJjXxPurG2ih9
- GbAC3f4YtrUUyB/SXTEPU+eAA60uY7oJsT6KY3kN2lQzUiOnLgVy511gt2BOSoQbuTw5+12
- OPrZwwoKmrf663Z5ZNBHg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:vQ61dujnjZ4=:l8lJZipZHgM0kGa221lFkq
- 8cVikUCsOCp3L7zMLhBF8149YrC0Z/o7s/l+QbuzHvAIcNV/yEeGpCMK5qYMl+0LD8tCd5YGa
- rnmHvoILzZBXXnRP6x11TfvrGOVyFl5qprSZASF3Uts9nAggQBof32wPyHI8WozLztMKAa5Er
- olL4+Fv98+2kzEwZtTI/HX+Jfdk65pB4St2AS5ECoEZCwhitqYebz9L3z54HLgKBS8EvJwNG4
- rS3wYYtY3tqMUKcalDfYY3aX+cHN4dFWMh1dIKO6K8p32cBMy7D7m3xfEBjYQLz2AnnyeTnF7
- sY2cvGQI5vS+SoGuTFu1cZlcoyo+3eTWfq++mfu4WZTEuE2Ljx0zE3DmbwJunvyrztqJTiPPx
- GFXOQDdidsFYmZ66TFTem9LPgablqasRG9meq9OIOtmDoJiXrTkAd2DrRhPC09//N8TzIkfla
- 86pxA5W3DKJQD4IzQLSVXkYTkmNXMGmM94s36Oi8DK/9NCzFZqpGDMgvWFWbt1JANtg2WAnID
- QHzkSKPaemsoa1sbR8LbXYZdK+aqWUj1cU7AjHjUlf5AEuj6JSRkHT3DvZvfbJS1LKWUteEe7
- QKV6oFGw86Lh9jW22673BGVjel22I2OXe2+7W3EJmEDvMFkWjmMQe0zVoSYd4afUUgzOMEEwS
- DuqHlEdgJog15Ar1l9NQjUmZLhJH6O83/IQbBffoqYvad9v/D91c+o+pfY3/LfcSscjle4xj7
- aHkPiJATV42jAWO/SWdEZasn0NA0dQPnjsEMZgRy6CvX8cMtUQWVrxOvDoQri8ROezOBGsflW
- 2FjahTChF4SAa+cN8nBEMJScWL/PhOKc2tZ3Ex5uNhu90akQ820eAz191r5c+lg4KK1Y8yDaI
- +dUTOotxlyAmbxVv6Idmb1y3Kk2COXxS9J6V1P6bMZztbasqYTJ0pZrx/d7ELJaHyP0b9ExUi
- iy5iA2LpRZZqoYeioUl7iNNN1o9q0+P4rHMSDkhoJgzTp1f1Ki2QCVUgLOvkjvYQMd02hqW8B
- YHbdMoLVl8SAVwxZo6CKD9ilBd1iUzke3EKWRUzWZRUEj139vc1b2R3cjH3iXSq9YhFbVrQME
- rR1kd4ucNJ/xNXsHDV6MH2oNvxN610dPHBXBwoEQ6yuQxvZO1owvXgUsiH3rlz6gcWDImFdjm
- y2wSNciO3iNghQjBiGd3qPJMEZWCLJi39rarnMNvEMpriHP8TapmBly/3QE4gCtb0TINRsNkK
- JiH9HGDqlnIb6Bvs7
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Looks good,
->
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
+From: Christian Lamparter <chunkeey@gmail.com>
 
-How does this feedback fit to remaining typos in the change description?
-Do you care for any further improvements of the commit message
-besides the discussed tag =E2=80=9CFixes=E2=80=9D?
+There's an interaction issue between the clk changes:"
+clk: qcom: ipq4019: Add the apss cpu pll divider clock node
+clk: qcom: ipq4019: remove fixed clocks and add pll clocks
+" and the cpufreq-dt.
 
-Regards,
-Markus
+cpufreq-dt is now spamming the kernel-log with the following:
+
+[ 1099.190658] cpu cpu0: dev_pm_opp_set_rate: failed to find current OPP
+for freq 761142857 (-34)
+
+This only happens on certain devices like the Compex WPJ428
+and AVM FritzBox!4040. However, other devices like the Asus
+RT-AC58U and Meraki MR33 work just fine.
+
+The issue stem from the fact that all higher CPU-Clocks
+are achieved by switching the clock-parent to the P_DDRPLLAPSS
+(ddrpllapss). Which is set by Qualcomm's proprietary bootcode
+as part of the DDR calibration.
+
+For example, the FB4040 uses 256 MiB Nanya NT5CC128M16IP clocked
+at round 533 MHz (ddrpllsdcc = 190285714 Hz).
+
+whereas the 128 MiB Nanya NT5CC64M16GP-DI in the ASUS RT-AC58U is
+clocked at a slightly higher 537 MHz ( ddrpllsdcc = 192000000 Hz).
+
+This patch attempts to fix the issue by modifying
+clk_cpu_div_round_rate(), clk_cpu_div_set_rate(), clk_cpu_div_recalc_rate()
+to use a new qcom_find_freq_close() function, which returns the closest
+matching frequency, instead of the next higher. This way, the SoC in
+the FB4040 (with its max clock speed of 710.4 MHz) will no longer
+try to overclock to 761 MHz.
+
+Fixes: d83dcacea18 ("clk: qcom: ipq4019: Add the apss cpu pll divider clock node")
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: John Crispin <john@phrozen.org>
+Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+Cc: Luka Perkov <luka.perkov@sartura.hr>
+---
+Changes from v1 to v2:
+* Resolve warnings discovered by the kbot
+* Return the return of regmap_update_bits instead of not using it at all
+
+ drivers/clk/qcom/gcc-ipq4019.c | 36 ++++++++++++++++++++++++++++++----
+ 1 file changed, 32 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/clk/qcom/gcc-ipq4019.c b/drivers/clk/qcom/gcc-ipq4019.c
+index ef5137fd50f3..62fa17a4291c 100644
+--- a/drivers/clk/qcom/gcc-ipq4019.c
++++ b/drivers/clk/qcom/gcc-ipq4019.c
+@@ -1243,6 +1243,29 @@ static const struct clk_fepll_vco gcc_fepll_vco = {
+ 	.reg = 0x2f020,
+ };
+ 
++
++static const struct freq_tbl *qcom_find_freq_close(const struct freq_tbl *f,
++					     unsigned long rate)
++{
++	const struct freq_tbl *last = NULL;
++
++	for ( ; f->freq; f++) {
++		if (rate == f->freq)
++			return f;
++
++		if (f->freq > rate) {
++			if (!last ||
++			   (f->freq - rate) < (rate - last->freq))
++				return f;
++			else
++				return last;
++		}
++		last = f;
++	}
++
++	return last;
++}
++
+ /*
+  * Round rate function for APSS CPU PLL Clock divider.
+  * It looks up the frequency table and returns the next higher frequency
+@@ -1255,7 +1278,7 @@ static long clk_cpu_div_round_rate(struct clk_hw *hw, unsigned long rate,
+ 	struct clk_hw *p_hw;
+ 	const struct freq_tbl *f;
+ 
+-	f = qcom_find_freq(pll->freq_tbl, rate);
++	f = qcom_find_freq_close(pll->freq_tbl, rate);
+ 	if (!f)
+ 		return -EINVAL;
+ 
+@@ -1278,7 +1301,7 @@ static int clk_cpu_div_set_rate(struct clk_hw *hw, unsigned long rate,
+ 	u32 mask;
+ 	int ret;
+ 
+-	f = qcom_find_freq(pll->freq_tbl, rate);
++	f = qcom_find_freq_close(pll->freq_tbl, rate);
+ 	if (!f)
+ 		return -EINVAL;
+ 
+@@ -1292,7 +1315,7 @@ static int clk_cpu_div_set_rate(struct clk_hw *hw, unsigned long rate,
+ 	 */
+ 	udelay(1);
+ 
+-	return 0;
++	return ret;
+ };
+ 
+ /*
+@@ -1305,6 +1328,7 @@ static unsigned long
+ clk_cpu_div_recalc_rate(struct clk_hw *hw,
+ 			unsigned long parent_rate)
+ {
++	const struct freq_tbl *f;
+ 	struct clk_fepll *pll = to_clk_fepll(hw);
+ 	u32 cdiv, pre_div;
+ 	u64 rate;
+@@ -1325,7 +1349,11 @@ clk_cpu_div_recalc_rate(struct clk_hw *hw,
+ 	rate = clk_fepll_vco_calc_rate(pll, parent_rate) * 2;
+ 	do_div(rate, pre_div);
+ 
+-	return rate;
++	f = qcom_find_freq_close(pll->freq_tbl, rate);
++	if (!f)
++		return rate;
++
++	return f->freq;
+ };
+ 
+ static const struct clk_ops clk_regmap_cpu_div_ops = {
+-- 
+2.26.2
+
