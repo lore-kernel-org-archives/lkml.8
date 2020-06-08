@@ -4,60 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49859C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D6BBC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26771206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:35:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B938206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:35:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662951;
-	bh=6HOsWHnTqpNN0Ww98s4zhADHwT4C9g+b0ZwlZiz0xY8=;
+	s=default; t=1591662954;
+	bh=bo6hTaU0KUVde9fRpgkiN2cbwe68KbW08+C5HgKmd04=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dSFAKAROSF5TnzXFCMEC0Ih+gIKjzA3epAq4G/sKG4mo8VaED29e7dXW34yGYxg4b
-	 iMPW9z42Snq3sTU14Ig96DZBd2FfvLeQy9U/WZRDM4mQFlGP0OpDUXkdHIIx9hW0Na
-	 jY2GabO2sY1G+X1ey0+bmzLEnZ9b9iy1UjDlMtB8=
+	b=dfVNPeMRKN/zixbXsNux8gnciTNQvSENCdaLk7XYhGyovj9Mk2Sjo4WSlfyrkm+ne
+	 7V0NA/4A1BlGi63CUcKHaRtXZHAiAbQF+49Z7f9iYl0xICDQtcw4sZdsv3bjxYp4Tg
+	 6IejeuTHIPA8mXxKzCaiZVmZVJS6luj86CbbdveM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729773AbgFHXOT (ORCPT
+        id S1731041AbgFIAfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:14:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58710 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:35:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728956AbgFHXLn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:11:43 -0400
+        id S1729769AbgFHXOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:14:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46390208C7;
-        Mon,  8 Jun 2020 23:11:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85B9320B80;
+        Mon,  8 Jun 2020 23:14:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657902;
-        bh=6HOsWHnTqpNN0Ww98s4zhADHwT4C9g+b0ZwlZiz0xY8=;
+        s=default; t=1591658058;
+        bh=bo6hTaU0KUVde9fRpgkiN2cbwe68KbW08+C5HgKmd04=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q6+yK5xcXoToxsmXCxnJ0RYvbO864SOBliytRVPEtlmn+RjiKVCAp6pqzQydEFfdp
-         pOFVoI2sIVECZu+C1suSAC/C3xVXxPLux/To68X1yXnRyrHJCxE0ryhhNBGuZp+HWJ
-         VkkwIiisMKmGrEKZ4RyVGhHlaUXzO6/vR/6fy0Z8=
+        b=Pa6IxtfXKEHoiaJXLj1jm43Dux7aDuBiUqzLEgR0LUsTitEarWhk41RxLgnFVk503
+         lPbWJx4fVQekrC0wkwXiXxST0+ZxAKNGI/YmgEg1c9uO24gixpBbA+TfEjOQQI8Yof
+         uj2AthcbpQxyTv9Wf9eT/OI3jBP46fpXvExOjS+Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Feng Tang <feng.tang@intel.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 255/274] spi: dw: Return any value retrieved from the dma_transfer callback
-Date:   Mon,  8 Jun 2020 19:05:48 -0400
-Message-Id: <20200608230607.3361041-255-sashal@kernel.org>
+Cc:     Fabian Schindlatz <fabian.schindlatz@fau.de>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 105/606] HID: logitech: Add support for Logitech G11 extra keys
+Date:   Mon,  8 Jun 2020 19:03:50 -0400
+Message-Id: <20200608231211.3363633-105-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
-References: <20200608230607.3361041-1-sashal@kernel.org>
+In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
+References: <20200608231211.3363633-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -67,69 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+From: Fabian Schindlatz <fabian.schindlatz@fau.de>
 
-[ Upstream commit f0410bbf7d0fb80149e3b17d11d31f5b5197873e ]
+[ Upstream commit b1bd0f75288f60e8d142a1b3e979ed0192c04931 ]
 
-DW APB SSI DMA-part of the driver may need to perform the requested
-SPI-transfer synchronously. In that case the dma_transfer() callback
-will return 0 as a marker of the SPI transfer being finished so the
-SPI core doesn't need to wait and may proceed with the SPI message
-trasnfers pumping procedure. This will be needed to fix the problem
-when DMA transactions are finished, but there is still data left in
-the SPI Tx/Rx FIFOs being sent/received. But for now make dma_transfer
-to return 1 as the normal dw_spi_transfer_one() method.
+The Logitech G11 keyboard is a cheap variant of the G15 without the LCD
+screen. It uses the same layout for its extra and macro keys (G1 - G18,
+M1-M3, MR) and - from the input subsystem's perspective - behaves just
+like the G15, so we can treat it as such.
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Feng Tang <feng.tang@intel.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Link: https://lore.kernel.org/r/20200529131205.31838-3-Sergey.Semin@baikalelectronics.ru
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Tested it with my own keyboard.
+
+Signed-off-by: Fabian Schindlatz <fabian.schindlatz@fau.de>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-dw-mid.c | 2 +-
- drivers/spi/spi-dw.c     | 7 ++-----
- 2 files changed, 3 insertions(+), 6 deletions(-)
+ drivers/hid/hid-ids.h    | 1 +
+ drivers/hid/hid-lg-g15.c | 4 ++++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/drivers/spi/spi-dw-mid.c b/drivers/spi/spi-dw-mid.c
-index e6c045ecffba..23cebdeb67e2 100644
---- a/drivers/spi/spi-dw-mid.c
-+++ b/drivers/spi/spi-dw-mid.c
-@@ -266,7 +266,7 @@ static int mid_spi_dma_transfer(struct dw_spi *dws, struct spi_transfer *xfer)
- 		dma_async_issue_pending(dws->txchan);
- 	}
- 
--	return 0;
-+	return 1;
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 309510a72c5e..40697af0ca35 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -756,6 +756,7 @@
+ #define USB_DEVICE_ID_LOGITECH_RUMBLEPAD2	0xc218
+ #define USB_DEVICE_ID_LOGITECH_RUMBLEPAD2_2	0xc219
+ #define USB_DEVICE_ID_LOGITECH_G15_LCD		0xc222
++#define USB_DEVICE_ID_LOGITECH_G11		0xc225
+ #define USB_DEVICE_ID_LOGITECH_G15_V2_LCD	0xc227
+ #define USB_DEVICE_ID_LOGITECH_G510		0xc22d
+ #define USB_DEVICE_ID_LOGITECH_G510_USB_AUDIO	0xc22e
+diff --git a/drivers/hid/hid-lg-g15.c b/drivers/hid/hid-lg-g15.c
+index ad4b5412a9f4..ef0cbcd7540d 100644
+--- a/drivers/hid/hid-lg-g15.c
++++ b/drivers/hid/hid-lg-g15.c
+@@ -872,6 +872,10 @@ static int lg_g15_probe(struct hid_device *hdev, const struct hid_device_id *id)
  }
  
- static void mid_spi_dma_stop(struct dw_spi *dws)
-diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
-index e8f275c850ce..594a1ac09d9c 100644
---- a/drivers/spi/spi-dw.c
-+++ b/drivers/spi/spi-dw.c
-@@ -373,11 +373,8 @@ static int dw_spi_transfer_one(struct spi_controller *master,
- 
- 	spi_enable_chip(dws, 1);
- 
--	if (dws->dma_mapped) {
--		ret = dws->dma_ops->dma_transfer(dws, transfer);
--		if (ret < 0)
--			return ret;
--	}
-+	if (dws->dma_mapped)
-+		return dws->dma_ops->dma_transfer(dws, transfer);
- 
- 	if (chip->poll_mode)
- 		return poll_transfer(dws);
+ static const struct hid_device_id lg_g15_devices[] = {
++	/* The G11 is a G15 without the LCD, treat it as a G15 */
++	{ HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH,
++		USB_DEVICE_ID_LOGITECH_G11),
++		.driver_data = LG_G15 },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH,
+ 			 USB_DEVICE_ID_LOGITECH_G15_LCD),
+ 		.driver_data = LG_G15 },
 -- 
 2.25.1
 
