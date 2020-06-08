@@ -2,69 +2,91 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B33AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B30C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:09:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07003207BC
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:09:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mrrf00JD"
+	by mail.kernel.org (Postfix) with ESMTP id 37F522076A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:09:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591600182;
+	bh=rjBLjDjW1O9fGRBJf6kjv/K3zXOgcWg6SA2GxlenQUo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bxWUtlAgl63BEpNxkVgjcR7mdnAT1IlP51yGdURpfYLHguwp3RYERJceqaQ4lZjqb
+	 RqmP9Uy2iy7Q8HuWDtVmY9ykFsz8cSVxHiAiobMNCtVaAeChq75WG1D/1ylDD18vov
+	 4GPkOe0QAF/hPMZsmOzkwlFChoXi+VfUqirGMHfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728727AbgFHHJh (ORCPT
+        id S1729006AbgFHHJl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 03:09:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58788 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727966AbgFHHJg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 03:09:36 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CADBFC08C5C3
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 00:09:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=riTlVvjTBVFVzOBQ14vr3osfjEjXKYJJb4irFAZraug=; b=mrrf00JD+nWPYE2DUp6aInWaGN
-        a0TxqMgzuk/LZrKik9Im/aZcH6eN6HqEQ6SXpJb1qToyKWPK/mAAx6+qceEklRjCStr6sT9NR15iC
-        G7zApsVtqHeNiJLCkNz/l/f3NxMiEJWdWykEdvN17+3WrJmZ37+O4628h8PIkyaTbI6dyc4WpeS7w
-        /CvBKq3CoXFkMGqT8kq6RGDfyyGSqG9B735Rq17SHasqFOmkkWHaOJJgPzhNxGk2HMBsdqDvWOL8X
-        KixbEX6rwCAMRY9fmWt8XRMo5f6s2AsghXmBgqFVATH/dejo6gIXS5Uuonc7MSsGYPgNwsGeoeC2q
-        1wRSFvkQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jiBuY-0003VP-6I; Mon, 08 Jun 2020 07:09:34 +0000
-Date:   Mon, 8 Jun 2020 00:09:34 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Stefano Stabellini <sstabellini@kernel.org>
-Cc:     jgross@suse.com, boris.ostrovsky@oracle.com,
-        konrad.wilk@oracle.com, xen-devel@lists.xenproject.org,
-        linux-kernel@vger.kernel.org, tamas@tklengyel.com,
-        roman@zededa.com,
-        Stefano Stabellini <stefano.stabellini@xilinx.com>
-Subject: Re: [PATCH v2 09/11] swiotlb-xen: rename xen_phys_to_bus to
- xen_phys_to_dma and xen_bus_to_phys to xen_dma_to_phys
-Message-ID: <20200608070934.GE15742@infradead.org>
-References: <alpine.DEB.2.21.2006031506590.6774@sstabellini-ThinkPad-T480s>
- <20200603222247.11681-9-sstabellini@kernel.org>
+        Mon, 8 Jun 2020 03:09:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33884 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727966AbgFHHJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 03:09:38 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D92FE204EF;
+        Mon,  8 Jun 2020 07:09:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591600177;
+        bh=rjBLjDjW1O9fGRBJf6kjv/K3zXOgcWg6SA2GxlenQUo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pV7zn0HjBkPTH1rFr/cRU+ZpTXJyYcNmWp+gw0iMmCCAAh/ir+o04fbw3JuqBDR81
+         Kxp8krRzNTiB2yteIVm77VaSqGr7xthU4h/vQ+OR2nvGkId4m/0itdRo1Obwd69XIi
+         nEbWRIadXESsfCcJN0lTqzbyBCZrbiTu+TysZzRQ=
+Date:   Mon, 8 Jun 2020 08:09:30 +0100
+From:   Will Deacon <will@kernel.org>
+To:     syzbot <syzbot+830c6dbfc71edc4f0b8f@syzkaller.appspotmail.com>
+Cc:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, davem@davemloft.net, dsahern@gmail.com,
+        ebiederm@xmission.com, edumazet@google.com, eric.dumazet@gmail.com,
+        hawk@kernel.org, jiri@mellanox.com, johannes.berg@intel.com,
+        john.fastabend@gmail.com, kafai@fb.com, kpsingh@chromium.org,
+        kuba@kernel.org, leon@kernel.org, linux-kernel@vger.kernel.org,
+        mkubecek@suse.cz, netdev@vger.kernel.org,
+        saiprakash.ranjan@codeaurora.org, songliubraving@fb.com,
+        suzuki.poulose@arm.com, syzkaller-bugs@googlegroups.com, yhs@fb.com
+Subject: Re: WARNING in dev_change_net_namespace
+Message-ID: <20200608070930.GA555@willie-the-truck>
+References: <000000000000c54420059e4f08ff@google.com>
+ <00000000000011eb1705a76ad69d@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200603222247.11681-9-sstabellini@kernel.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <00000000000011eb1705a76ad69d@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 03:22:45PM -0700, Stefano Stabellini wrote:
-> so that their names can better describe their behavior.
+On Sat, Jun 06, 2020 at 07:03:03AM -0700, syzbot wrote:
+> syzbot has bisected this bug to:
 > 
-> No functional changes.
+> commit 13dc4d836179444f0ca90188cfccd23f9cd9ff05
+> Author: Will Deacon <will@kernel.org>
+> Date:   Tue Apr 21 14:29:18 2020 +0000
+> 
+>     arm64: cpufeature: Remove redundant call to id_aa64pfr0_32bit_el0()
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=109aa3b1100000
+> start commit:   7ae77150 Merge tag 'powerpc-5.8-1' of git://git.kernel.org..
+> git tree:       upstream
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=129aa3b1100000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=149aa3b1100000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=be4578b3f1083656
+> dashboard link: https://syzkaller.appspot.com/bug?extid=830c6dbfc71edc4f0b8f
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12032832100000
+> 
+> Reported-by: syzbot+830c6dbfc71edc4f0b8f@syzkaller.appspotmail.com
+> Fixes: 13dc4d836179 ("arm64: cpufeature: Remove redundant call to id_aa64pfr0_32bit_el0()")
 
-I think this should go with the actual change, and adding the
-parameters.  Touching this function piecemail in three patches for
-what really is a single logical change is rather strange.
+
+Yeah... I doubt that very much.
+
+Will
