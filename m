@@ -2,32 +2,32 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6281CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 00:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB8D5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 00:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43C642075A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 00:58:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E8A22081A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 00:58:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728761AbgFHA6N (ORCPT
+        id S1728900AbgFHA6X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 20:58:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58326 "EHLO
+        Sun, 7 Jun 2020 20:58:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728657AbgFHA6G (ORCPT
+        with ESMTP id S1728667AbgFHA6G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 7 Jun 2020 20:58:06 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40705C08C5C3
-        for <linux-kernel@vger.kernel.org>; Sun,  7 Jun 2020 17:58:06 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79C2FC08C5C4;
+        Sun,  7 Jun 2020 17:58:06 -0700 (PDT)
 Received: from [5.158.153.53] (helo=debian-buster-darwi.lab.linutronix.de.)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
         (Exim 4.80)
         (envelope-from <a.darwish@linutronix.de>)
-        id 1ji66y-0000nK-57; Mon, 08 Jun 2020 02:58:00 +0200
+        id 1ji66U-0000hc-WF; Mon, 08 Jun 2020 02:57:31 +0200
 From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
@@ -37,21 +37,20 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Steven Rostedt <rostedt@goodmis.org>,
         LKML <linux-kernel@vger.kernel.org>,
         "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
         David Airlie <airlied@linux.ie>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org
-Subject: [PATCH v2 06/18] dma-buf: Use sequence counter with associated wound/wait mutex
-Date:   Mon,  8 Jun 2020 02:57:17 +0200
-Message-Id: <20200608005729.1874024-7-a.darwish@linutronix.de>
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH v2 00/18] seqlock: Extend seqcount API with associated locks
+Date:   Mon,  8 Jun 2020 02:57:11 +0200
+Message-Id: <20200608005729.1874024-1-a.darwish@linutronix.de>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200608005729.1874024-1-a.darwish@linutronix.de>
+In-Reply-To: <20200519214547.352050-1-a.darwish@linutronix.de>
 References: <20200519214547.352050-1-a.darwish@linutronix.de>
- <20200608005729.1874024-1-a.darwish@linutronix.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Linutronix-Spam-Score: -1.0
@@ -62,126 +61,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A sequence counter write side critical section must be protected by some
-form of locking to serialize writers. If the serialization primitive is
-not disabling preemption implicitly, preemption has to be explicitly
-disabled before entering the sequence counter write side critical
-section.
+Hi,
 
-The dma-buf reservation subsystem uses plain sequence counters to manage
-updates to reservations. Writer serialization is accomplished through a
-wound/wait mutex.
+This is v2 of the seqlock patch series:
 
-Acquiring a wound/wait mutex does not disable preemption, so this needs
-to be done manually before and after the write side critical section.
+   [PATCH v1 00/25] seqlock: Extend seqcount API with associated locks
+   https://lore.kernel.org/lkml/20200519214547.352050-1-a.darwish@linutronix.de
 
-Use the newly-added seqcount_ww_mutex_t instead:
+Patches 1=>3 of this v2 series add documentation for the existing
+seqlock.h datatypes and APIs. Hopefully they can hit v5.8 -rc2 or -rc3.
 
-  - It associates the ww_mutex with the sequence count, which enables
-    lockdep to validate that the write side critical section is properly
-    serialized.
+Changelog-v2
+============
 
-  - It removes the need to explicitly add preempt_disable/enable()
-    around the write side critical section because the write_begin/end()
-    functions for this new data type automatically do this.
+1. Drop, for now, the seqlock v1 patches #7 and #8. These patches added
+lockdep non-preemptibility checks to seqcount_t write paths, but they
+now depend on on-going work by Peter:
 
-If lockdep is disabled this ww_mutex lock association is compiled out
-and has neither storage size nor runtime overhead.
+   [PATCH v3 0/5] lockdep: Change IRQ state tracking to use per-cpu variables
+   https://lkml.kernel.org/r/20200529213550.683440625@infradead.org
 
-Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
----
- drivers/dma-buf/dma-resv.c                       | 8 +-------
- drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c | 2 --
- include/linux/dma-resv.h                         | 2 +-
- 3 files changed, 2 insertions(+), 10 deletions(-)
+   [PATCH 00/14] x86/entry: disallow #DB more and x86/entry lockdep/nmi
+   https://lkml.kernel.org/r/20200529212728.795169701@infradead.org
 
-diff --git a/drivers/dma-buf/dma-resv.c b/drivers/dma-buf/dma-resv.c
-index 590ce7ad60a0..3aba2b2bfc48 100644
---- a/drivers/dma-buf/dma-resv.c
-+++ b/drivers/dma-buf/dma-resv.c
-@@ -128,7 +128,7 @@ subsys_initcall(dma_resv_lockdep);
- void dma_resv_init(struct dma_resv *obj)
- {
- 	ww_mutex_init(&obj->lock, &reservation_ww_class);
--	seqcount_init(&obj->seq);
-+	seqcount_ww_mutex_init(&obj->seq, &obj->lock);
- 
- 	RCU_INIT_POINTER(obj->fence, NULL);
- 	RCU_INIT_POINTER(obj->fence_excl, NULL);
-@@ -259,7 +259,6 @@ void dma_resv_add_shared_fence(struct dma_resv *obj, struct dma_fence *fence)
- 	fobj = dma_resv_get_list(obj);
- 	count = fobj->shared_count;
- 
--	preempt_disable();
- 	write_seqcount_begin(&obj->seq);
- 
- 	for (i = 0; i < count; ++i) {
-@@ -281,7 +280,6 @@ void dma_resv_add_shared_fence(struct dma_resv *obj, struct dma_fence *fence)
- 	smp_store_mb(fobj->shared_count, count);
- 
- 	write_seqcount_end(&obj->seq);
--	preempt_enable();
- 	dma_fence_put(old);
- }
- EXPORT_SYMBOL(dma_resv_add_shared_fence);
-@@ -308,14 +306,12 @@ void dma_resv_add_excl_fence(struct dma_resv *obj, struct dma_fence *fence)
- 	if (fence)
- 		dma_fence_get(fence);
- 
--	preempt_disable();
- 	write_seqcount_begin(&obj->seq);
- 	/* write_seqcount_begin provides the necessary memory barrier */
- 	RCU_INIT_POINTER(obj->fence_excl, fence);
- 	if (old)
- 		old->shared_count = 0;
- 	write_seqcount_end(&obj->seq);
--	preempt_enable();
- 
- 	/* inplace update, no shared fences */
- 	while (i--)
-@@ -393,13 +389,11 @@ int dma_resv_copy_fences(struct dma_resv *dst, struct dma_resv *src)
- 	src_list = dma_resv_get_list(dst);
- 	old = dma_resv_get_excl(dst);
- 
--	preempt_disable();
- 	write_seqcount_begin(&dst->seq);
- 	/* write_seqcount_begin provides the necessary memory barrier */
- 	RCU_INIT_POINTER(dst->fence_excl, new);
- 	RCU_INIT_POINTER(dst->fence, dst_list);
- 	write_seqcount_end(&dst->seq);
--	preempt_enable();
- 
- 	dma_resv_list_free(src_list);
- 	dma_fence_put(old);
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-index 6a5b91d23fd9..c71c0bb6ce26 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-@@ -258,11 +258,9 @@ static int amdgpu_amdkfd_remove_eviction_fence(struct amdgpu_bo *bo,
- 	new->shared_count = k;
- 
- 	/* Install the new fence list, seqcount provides the barriers */
--	preempt_disable();
- 	write_seqcount_begin(&resv->seq);
- 	RCU_INIT_POINTER(resv->fence, new);
- 	write_seqcount_end(&resv->seq);
--	preempt_enable();
- 
- 	/* Drop the references to the removed fences or move them to ef_list */
- 	for (i = j, k = 0; i < old->shared_count; ++i) {
-diff --git a/include/linux/dma-resv.h b/include/linux/dma-resv.h
-index a6538ae7d93f..d44a77e8a7e3 100644
---- a/include/linux/dma-resv.h
-+++ b/include/linux/dma-resv.h
-@@ -69,7 +69,7 @@ struct dma_resv_list {
-  */
- struct dma_resv {
- 	struct ww_mutex lock;
--	seqcount_t seq;
-+	seqcount_ww_mutex_t seq;
- 
- 	struct dma_fence __rcu *fence_excl;
- 	struct dma_resv_list __rcu *fence;
--- 
+Once Peter's work get merged, I'll send the non-preemptibility checks as
+a separate series.
+
+2. Drop the v1 seqcount_t call-sites bugfixes. I've already posted them
+in an isolated series. They got merged into their respective trees, and
+will hit v5.8-rc1 soon:
+
+   [PATCH v2 0/6] seqlock: seqcount_t call sites bugfixes
+   https://lore.kernel.org/lkml/20200603144949.1122421-1-a.darwish@linutronix.de
+
+3. Patch #1: Add a small paragraph explaining that seqcount_t/seqlock_t
+cannot be used if the protected data contains pointers. A similar
+paragraph already existed in seqlock.h, but got mistakenly dropped.
+
+4. Patch #2: Don't add RST directives inside kernel-doc comments. Peter
+doesn't like them :) I've kept the indentation though, and found a
+minimal way for Sphinx to properly render these code samples without too
+much disruption.
+
+5. Patch #3: Brush up the introduced kernel-doc comments. Make them more
+consistent overall, and more concise.
+
+Thanks,
+
+8<--------------
+
+Ahmed S. Darwish (18):
+  Documentation: locking: Describe seqlock design and usage
+  seqlock: Properly format kernel-doc code samples
+  seqlock: Add missing kernel-doc annotations
+  seqlock: Extend seqcount API with associated locks
+  dma-buf: Remove custom seqcount lockdep class key
+  dma-buf: Use sequence counter with associated wound/wait mutex
+  sched: tasks: Use sequence counter with associated spinlock
+  netfilter: conntrack: Use sequence counter with associated spinlock
+  netfilter: nft_set_rbtree: Use sequence counter with associated rwlock
+  xfrm: policy: Use sequence counters with associated lock
+  timekeeping: Use sequence counter with associated raw spinlock
+  vfs: Use sequence counter with associated spinlock
+  raid5: Use sequence counter with associated spinlock
+  iocost: Use sequence counter with associated spinlock
+  NFSv4: Use sequence counter with associated spinlock
+  userfaultfd: Use sequence counter with associated spinlock
+  kvm/eventfd: Use sequence counter with associated spinlock
+  hrtimer: Use sequence counter with associated raw spinlock
+
+ Documentation/locking/index.rst               |   1 +
+ Documentation/locking/seqlock.rst             | 242 +++++
+ MAINTAINERS                                   |   2 +-
+ block/blk-iocost.c                            |   5 +-
+ drivers/dma-buf/dma-resv.c                    |  15 +-
+ .../gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c  |   2 -
+ drivers/md/raid5.c                            |   2 +-
+ drivers/md/raid5.h                            |   2 +-
+ fs/dcache.c                                   |   2 +-
+ fs/fs_struct.c                                |   4 +-
+ fs/nfs/nfs4_fs.h                              |   2 +-
+ fs/nfs/nfs4state.c                            |   2 +-
+ fs/userfaultfd.c                              |   4 +-
+ include/linux/dcache.h                        |   2 +-
+ include/linux/dma-resv.h                      |   4 +-
+ include/linux/fs_struct.h                     |   2 +-
+ include/linux/hrtimer.h                       |   2 +-
+ include/linux/kvm_irqfd.h                     |   2 +-
+ include/linux/sched.h                         |   2 +-
+ include/linux/seqlock.h                       | 855 ++++++++++++++----
+ include/linux/seqlock_types_internal.h        | 187 ++++
+ include/net/netfilter/nf_conntrack.h          |   2 +-
+ init/init_task.c                              |   3 +-
+ kernel/fork.c                                 |   2 +-
+ kernel/time/hrtimer.c                         |  13 +-
+ kernel/time/timekeeping.c                     |  19 +-
+ net/netfilter/nf_conntrack_core.c             |   5 +-
+ net/netfilter/nft_set_rbtree.c                |   4 +-
+ net/xfrm/xfrm_policy.c                        |  10 +-
+ virt/kvm/eventfd.c                            |   2 +-
+ 30 files changed, 1175 insertions(+), 226 deletions(-)
+ create mode 100644 Documentation/locking/seqlock.rst
+ create mode 100644 include/linux/seqlock_types_internal.h
+
+base-commit: 3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162
+--
 2.20.1
-
