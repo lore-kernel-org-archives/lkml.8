@@ -2,150 +2,236 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3343DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A240CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B9CD20774
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:46:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="3J5kaZr1"
+	by mail.kernel.org (Postfix) with ESMTP id 7D27420774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:46:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591663578;
+	bh=m23dLoyLhJjCU66alnaUcLHfXVkJjzbVDLW3x6HWfMs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=jjAn6WFGENE2FmW7+SlTsDQBe4qKyhWViqjAS42p4idsjZ+aNm9AdSqn54wkFGRT0
+	 +Dys6o/JEiOuzeHjpVYb0w4v/1WrTaeqvP1a2ks1s2MYPTjubT0HufnCzd35IyNWyA
+	 /7zc9H312SHuXYyM6lywsbTh/Njb4xHQ2/Z1ZBbM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733294AbgFIAqI (ORCPT
+        id S1728127AbgFHXLm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:46:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52824 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729559AbgFIAqC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 20:46:02 -0400
-Received: from mail-ot1-x363.google.com (mail-ot1-x363.google.com [IPv6:2607:f8b0:4864:20::363])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A2FDC03E969
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 17:46:01 -0700 (PDT)
-Received: by mail-ot1-x363.google.com with SMTP id n6so5913920otl.0
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 17:46:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:dkim-signature:from:to:cc:subject:date
-         :message-id:in-reply-to:references:content-transfer-encoding;
-        bh=NKSJp0rZrw1+cKT/x08zXjzbpHqLU8j+v1TneyTidX4=;
-        b=kfvgcVAnS1CeClTtPwQakmiXugkL1wHk0BbPkua+4k8ke2Vp/hOqUmBfaKkp06w+8j
-         xNijS9wcOW9/wwE5rYZDE+q5A+sUTZJRw6lZsGEhf8JjLhtFdD4NbRRm1FaAI9ECaoCw
-         HYyuDzRQG4+xDD8M96ixQz4mWxS80wTk0YrOtL3AmPvrPu7ymmYyXtP+YBXnswZ5/EmQ
-         3xi3mT77U20pw8rNi/jmHLf8FXMfDrlR7nFWglX/aWS7Z9uu5oy0Hl0OXRbc+DKZPmTM
-         AC1HAN25HBhdjJ849Cp6wsUya6g4hByS5tl4MIkMcEAQl1J4xllyW1V7TIG2k9ppo7VK
-         6IJA==
-X-Gm-Message-State: AOAM530PwSy0qmQxkdjQE9BzkqCSaUW+YRoLHhNAdfa7tOC03BYsGaoB
-        L0LdR7D+y0Vgy/lZyhG6/yengDxnVgSBLmKoyxdjwQINv12/
-X-Google-Smtp-Source: ABdhPJw0RrINSi0Nk5/hDpaHJzNHQDZThqaFZ+50TnYmqReJYNYn8O6jMQwcW0TY8GgrGAM5wURE2fGA9QNP
-X-Received: by 2002:a05:6830:1490:: with SMTP id s16mr20388013otq.74.1591663560501;
-        Mon, 08 Jun 2020 17:46:00 -0700 (PDT)
-Received: from smtp.aristanetworks.com (smtp.aristanetworks.com. [52.0.43.43])
-        by smtp-relay.gmail.com with ESMTPS id m4sm1417083oop.4.2020.06.08.17.46.00
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Jun 2020 17:46:00 -0700 (PDT)
-X-Relaying-Domain: arista.com
-Received: from chmeee (unknown [10.95.85.208])
-        by smtp.aristanetworks.com (Postfix) with ESMTP id 8E36A3002D17;
-        Mon,  8 Jun 2020 17:45:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arista.com;
-        s=Arista-A; t=1591663559;
-        bh=NKSJp0rZrw1+cKT/x08zXjzbpHqLU8j+v1TneyTidX4=;
+        Mon, 8 Jun 2020 19:11:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56110 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728338AbgFHXKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:10:06 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A86A220C56;
+        Mon,  8 Jun 2020 23:10:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591657805;
+        bh=m23dLoyLhJjCU66alnaUcLHfXVkJjzbVDLW3x6HWfMs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=3J5kaZr1W/Tba7a0Donvx5VHiNzWXfoDjbRVOW8UkDKZAPDwMOtADpSJzSi+R+s68
-         lpOhcvisCPLrW8OQxQNRcoS8XWbH7JgjGudfIcsmnUFUnZE/5XWvCI/ZoBZNop544N
-         rwTrAIAwUd240TkN20zajDQZZNshyXFD4fxP31Hs/s2bBnVz3EknFpVb0FECfsYp3x
-         5atcP2O5L5U7jWtGEdpHCCUGgG1f/CV31ysx15Zh9J8lV/E2wJp5Stpr/sYbi47HHa
-         WQNIWZrO47A40Ar9bEi8Jmwm1govO7xUqxKPYeS6OAa0/aoUjo8K/ZMkZbCG1AnvPy
-         HSpVEyyt9gEyw==
-Received: from kevmitch by chmeee with local (Exim 4.93)
-        (envelope-from <kevmitch@chmeee>)
-        id 1jiSOr-005RRq-FD; Mon, 08 Jun 2020 17:45:57 -0700
-From:   Kevin Mitchell <kevmitch@arista.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>,
-        Kevin Mitchell <kevmitch@arista.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        David Rientjes <rientjes@google.com>,
-        Dou Liyang <douly.fnst@cn.fujitsu.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] x86/apic: remove boot_cpu_physical_apicid hacks
-Date:   Mon,  8 Jun 2020 17:44:49 -0700
-Message-Id: <20200609004451.1296880-2-kevmitch@arista.com>
-In-Reply-To: <20200609004451.1296880-1-kevmitch@arista.com>
-References: <20200609004451.1296880-1-kevmitch@arista.com>
+        b=01kjMDb/AP1kRQNYo7AAj0DKxqu0R2Lqpq448Jq+DjtXS89myjSmCgM/2754SmGyi
+         8xpwwezkF73s/u0BE3G8IZ6o+wNMUe77O6ElqdhfOrFWIrWN457nNeJgY1oXNeOMqp
+         2NILtVs5WEPVSFiw5bqGy9fXruI0DDEPV1VIoPKY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Weiping Zhang <zhangweiping@didiglobal.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 182/274] nvme-pci: align io queue count with allocted nvme_queue in nvme_probe
+Date:   Mon,  8 Jun 2020 19:04:35 -0400
+Message-Id: <20200608230607.3361041-182-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
+References: <20200608230607.3361041-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that mpparse can be relied upon to not sabotage
-boot_cpu_physical_apicid with nonsense, the hacks that tried to work
-around that nonsense can be removed.
+From: Weiping Zhang <zhangweiping@didiglobal.com>
 
-Signed-off-by: Kevin Mitchell <kevmitch@arista.com>
+[ Upstream commit 2a5bcfdd41d68559567cec3c124a75e093506cc1 ]
+
+Since commit 147b27e4bd08 ("nvme-pci: allocate device queues storage
+space at probe"), nvme_alloc_queue does not alloc the nvme queues
+itself anymore.
+
+If the write/poll_queues module parameters are changed at runtime to
+values larger than the number of allocated queues in nvme_probe,
+nvme_alloc_queue will access unallocated memory.
+
+Add a new nr_allocated_queues member to struct nvme_dev to record how
+many queues were alloctated in nvme_probe to avoid using more than the
+allocated queues after a reset following a change to the
+write/poll_queues module parameters.
+
+Also add nr_write_queues and nr_poll_queues members to allow refreshing
+the number of write and poll queues based on a change to the module
+parameters when resetting the controller.
+
+Fixes: 147b27e4bd08 ("nvme-pci: allocate device queues storage space at probe")
+Signed-off-by: Weiping Zhang <zhangweiping@didiglobal.com>
+Reviewed-by: Keith Busch <kbusch@kernel.org>
+Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
+[hch: add nvme_max_io_queues, update the commit message]
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/apic/apic.c | 30 +-----------------------------
- 1 file changed, 1 insertion(+), 29 deletions(-)
+ drivers/nvme/host/pci.c | 57 ++++++++++++++++++++++++-----------------
+ 1 file changed, 33 insertions(+), 24 deletions(-)
 
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index 4b1d31be50b4..c1722a71aca5 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -2361,27 +2361,8 @@ int generic_processor_info(int apicid, int version)
- 	bool boot_cpu_detected = physid_isset(boot_cpu_physical_apicid,
- 				phys_cpu_present_map);
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index cc46e250fcac..dcf597fbafad 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -128,6 +128,9 @@ struct nvme_dev {
+ 	dma_addr_t host_mem_descs_dma;
+ 	struct nvme_host_mem_buf_desc *host_mem_descs;
+ 	void **host_mem_desc_bufs;
++	unsigned int nr_allocated_queues;
++	unsigned int nr_write_queues;
++	unsigned int nr_poll_queues;
+ };
  
--	/*
--	 * boot_cpu_physical_apicid is designed to have the apicid
--	 * returned by read_apic_id(), i.e, the apicid of the
--	 * currently booting-up processor. However, on some platforms,
--	 * it is temporarily modified by the apicid reported as BSP
--	 * through MP table. Concretely:
--	 *
--	 * - arch/x86/kernel/mpparse.c: MP_processor_info()
--	 * - arch/x86/mm/amdtopology.c: amd_numa_init()
--	 *
--	 * This function is executed with the modified
--	 * boot_cpu_physical_apicid. So, disabled_cpu_apicid kernel
--	 * parameter doesn't work to disable APs on kdump 2nd kernel.
--	 *
--	 * Since fixing handling of boot_cpu_physical_apicid requires
--	 * another discussion and tests on each platform, we leave it
--	 * for now and here we use read_apic_id() directly in this
--	 * function, generic_processor_info().
--	 */
- 	if (disabled_cpu_apicid != BAD_APICID &&
--	    disabled_cpu_apicid != read_apic_id() &&
-+	    disabled_cpu_apicid != boot_cpu_physical_apicid &&
- 	    disabled_cpu_apicid == apicid) {
- 		int thiscpu = num_processors + disabled_cpus;
+ static int io_queue_depth_set(const char *val, const struct kernel_param *kp)
+@@ -209,25 +212,14 @@ struct nvme_iod {
+ 	struct scatterlist *sg;
+ };
  
-@@ -2498,15 +2479,6 @@ static void __init apic_bsp_up_setup(void)
+-static unsigned int max_io_queues(void)
++static inline unsigned int nvme_dbbuf_size(struct nvme_dev *dev)
  {
- #ifdef CONFIG_X86_64
- 	apic_write(APIC_ID, apic->set_apic_id(boot_cpu_physical_apicid));
--#else
--	/*
--	 * Hack: In case of kdump, after a crash, kernel might be booting
--	 * on a cpu with non-zero lapic id. But boot_cpu_physical_apicid
--	 * might be zero if read from MP tables. Get it from LAPIC.
--	 */
--# ifdef CONFIG_CRASH_DUMP
--	boot_cpu_physical_apicid = read_apic_id();
--# endif
- #endif
- 	physid_set_mask_of_physid(boot_cpu_physical_apicid, &phys_cpu_present_map);
+-	return num_possible_cpus() + write_queues + poll_queues;
+-}
+-
+-static unsigned int max_queue_count(void)
+-{
+-	/* IO queues + admin queue */
+-	return 1 + max_io_queues();
+-}
+-
+-static inline unsigned int nvme_dbbuf_size(u32 stride)
+-{
+-	return (max_queue_count() * 8 * stride);
++	return dev->nr_allocated_queues * 8 * dev->db_stride;
  }
+ 
+ static int nvme_dbbuf_dma_alloc(struct nvme_dev *dev)
+ {
+-	unsigned int mem_size = nvme_dbbuf_size(dev->db_stride);
++	unsigned int mem_size = nvme_dbbuf_size(dev);
+ 
+ 	if (dev->dbbuf_dbs)
+ 		return 0;
+@@ -252,7 +244,7 @@ static int nvme_dbbuf_dma_alloc(struct nvme_dev *dev)
+ 
+ static void nvme_dbbuf_dma_free(struct nvme_dev *dev)
+ {
+-	unsigned int mem_size = nvme_dbbuf_size(dev->db_stride);
++	unsigned int mem_size = nvme_dbbuf_size(dev);
+ 
+ 	if (dev->dbbuf_dbs) {
+ 		dma_free_coherent(dev->dev, mem_size,
+@@ -2003,7 +1995,7 @@ static int nvme_setup_host_mem(struct nvme_dev *dev)
+ static void nvme_calc_irq_sets(struct irq_affinity *affd, unsigned int nrirqs)
+ {
+ 	struct nvme_dev *dev = affd->priv;
+-	unsigned int nr_read_queues;
++	unsigned int nr_read_queues, nr_write_queues = dev->nr_write_queues;
+ 
+ 	/*
+ 	 * If there is no interupt available for queues, ensure that
+@@ -2019,12 +2011,12 @@ static void nvme_calc_irq_sets(struct irq_affinity *affd, unsigned int nrirqs)
+ 	if (!nrirqs) {
+ 		nrirqs = 1;
+ 		nr_read_queues = 0;
+-	} else if (nrirqs == 1 || !write_queues) {
++	} else if (nrirqs == 1 || !nr_write_queues) {
+ 		nr_read_queues = 0;
+-	} else if (write_queues >= nrirqs) {
++	} else if (nr_write_queues >= nrirqs) {
+ 		nr_read_queues = 1;
+ 	} else {
+-		nr_read_queues = nrirqs - write_queues;
++		nr_read_queues = nrirqs - nr_write_queues;
+ 	}
+ 
+ 	dev->io_queues[HCTX_TYPE_DEFAULT] = nrirqs - nr_read_queues;
+@@ -2048,7 +2040,7 @@ static int nvme_setup_irqs(struct nvme_dev *dev, unsigned int nr_io_queues)
+ 	 * Poll queues don't need interrupts, but we need at least one IO
+ 	 * queue left over for non-polled IO.
+ 	 */
+-	this_p_queues = poll_queues;
++	this_p_queues = dev->nr_poll_queues;
+ 	if (this_p_queues >= nr_io_queues) {
+ 		this_p_queues = nr_io_queues - 1;
+ 		irq_queues = 1;
+@@ -2078,14 +2070,25 @@ static void nvme_disable_io_queues(struct nvme_dev *dev)
+ 		__nvme_disable_io_queues(dev, nvme_admin_delete_cq);
+ }
+ 
++static unsigned int nvme_max_io_queues(struct nvme_dev *dev)
++{
++	return num_possible_cpus() + dev->nr_write_queues + dev->nr_poll_queues;
++}
++
+ static int nvme_setup_io_queues(struct nvme_dev *dev)
+ {
+ 	struct nvme_queue *adminq = &dev->queues[0];
+ 	struct pci_dev *pdev = to_pci_dev(dev->dev);
+-	int result, nr_io_queues;
++	unsigned int nr_io_queues;
+ 	unsigned long size;
++	int result;
+ 
+-	nr_io_queues = max_io_queues();
++	/*
++	 * Sample the module parameters once at reset time so that we have
++	 * stable values to work with.
++	 */
++	dev->nr_write_queues = write_queues;
++	dev->nr_poll_queues = poll_queues;
+ 
+ 	/*
+ 	 * If tags are shared with admin queue (Apple bug), then
+@@ -2093,6 +2096,9 @@ static int nvme_setup_io_queues(struct nvme_dev *dev)
+ 	 */
+ 	if (dev->ctrl.quirks & NVME_QUIRK_SHARED_TAGS)
+ 		nr_io_queues = 1;
++	else
++		nr_io_queues = min(nvme_max_io_queues(dev),
++				   dev->nr_allocated_queues - 1);
+ 
+ 	result = nvme_set_queue_count(&dev->ctrl, &nr_io_queues);
+ 	if (result < 0)
+@@ -2767,8 +2773,11 @@ static int nvme_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	if (!dev)
+ 		return -ENOMEM;
+ 
+-	dev->queues = kcalloc_node(max_queue_count(), sizeof(struct nvme_queue),
+-					GFP_KERNEL, node);
++	dev->nr_write_queues = write_queues;
++	dev->nr_poll_queues = poll_queues;
++	dev->nr_allocated_queues = nvme_max_io_queues(dev) + 1;
++	dev->queues = kcalloc_node(dev->nr_allocated_queues,
++			sizeof(struct nvme_queue), GFP_KERNEL, node);
+ 	if (!dev->queues)
+ 		goto free;
+ 
 -- 
-2.26.2
+2.25.1
 
