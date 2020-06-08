@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C63AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B26C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:10:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6526208B6
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:09:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F3C220C56
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:10:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591657800;
-	bh=fe6JlMkedmaY+Fx6mlPmGF1n1tIJcCuXDwOukd/h1yw=;
+	s=default; t=1591657803;
+	bh=t8EX+OcVvPjkVogK7HTxyL6ukX9m/HBgPkG41B/CT7o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xLDGQWnTRmJCV8yE+C3loGmGTl17Rc/9tvflJnc+l+8gzOGmssKj88VMlYo4TPNo8
-	 jmMeqGFYo1dJYwJUReMgjaL56pBsk51xC5qGcUJn8yiXDQNVq/vAo1KJ2DFWVtBEB9
-	 baN1k6WjbRQeUSyln/ZdYZAS5FwUr/H0MyAZ2Xxo=
+	b=Br+dKtc89szGTQoemGF1zfNjtwG9HJlY7EosqBhZI5WuFqgSqZvevSYCXvitNE+nW
+	 m1QbTy49XWYlfg8UTvuhp9q85xP6J/SZJXqOrXXn1vcuFpkUrnS650cHerHM3yK9OO
+	 t7qf7k0sgTKELiJWg0brGfbsxEKCaO2pRjEdNvqU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728539AbgFHXJ6 (ORCPT
+        id S1728552AbgFHXKB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:09:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54482 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:10:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728282AbgFHXIz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:08:55 -0400
+        id S1728314AbgFHXJC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:09:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A9BB208B6;
-        Mon,  8 Jun 2020 23:08:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB0CB208E4;
+        Mon,  8 Jun 2020 23:09:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657734;
-        bh=fe6JlMkedmaY+Fx6mlPmGF1n1tIJcCuXDwOukd/h1yw=;
+        s=default; t=1591657741;
+        bh=t8EX+OcVvPjkVogK7HTxyL6ukX9m/HBgPkG41B/CT7o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PKn5jX7dIGmba3l9J/1JuUoIlobHcVR7Y24KQowsnG2bojfmF6gOU7LXjMlYQBYbL
-         kn8RberEpnIz4gtEQnTWPZrCcFgV9+BFBMBdNi9V6KJRle2wuoG7rv5azTsWftpgDl
-         BvXLQrJw8nmg0k3z+XPfo3BIjgEfthyOSuQjYrUk=
+        b=IroOBB1iUIAbfWFEHwfez+w4FimyjYl1vuD59NknoZ2ENcif8Ul+4Z7s9EM+6mNXx
+         OdNuQ9pXXqiVIg/He419YAyJvdXbpePYsXTJUHCaSXxKlxdJnJGNLAC5+ci33MozDM
+         8S4O/QBqADEG0DZtfGNkdVyHBR/7e6zUNrS2TKGA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, ath11k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 125/274] ath11k: use GFP_ATOMIC under spin lock
-Date:   Mon,  8 Jun 2020 19:03:38 -0400
-Message-Id: <20200608230607.3361041-125-sashal@kernel.org>
+Cc:     Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 130/274] selftests/bpf: Fix memory leak in test selector
+Date:   Mon,  8 Jun 2020 19:03:43 -0400
+Message-Id: <20200608230607.3361041-130-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -60,34 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Andrii Nakryiko <andriin@fb.com>
 
-[ Upstream commit 69c93f9674c97dc439cdc0527811f8ad104c2e35 ]
+[ Upstream commit f25d5416d64c796aa639136eb0b076c8bd579b54 ]
 
-A spin lock is taken here so we should use GFP_ATOMIC.
+Free test selector substrings, which were strdup()'ed.
 
-Fixes: d5c65159f289 ("ath11k: driver for Qualcomm IEEE 802.11ax devices")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200427092417.56236-1-weiyongjun1@huawei.com
+Fixes: b65053cd94f4 ("selftests/bpf: Add whitelist/blacklist of test names to test_progs")
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Link: https://lore.kernel.org/bpf/20200429012111.277390-6-andriin@fb.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath11k/dp_rx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/bpf/test_progs.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath11k/dp_rx.c b/drivers/net/wireless/ath/ath11k/dp_rx.c
-index f74a0e74bf3e..34b1e8e6a7fb 100644
---- a/drivers/net/wireless/ath/ath11k/dp_rx.c
-+++ b/drivers/net/wireless/ath/ath11k/dp_rx.c
-@@ -892,7 +892,7 @@ int ath11k_peer_rx_tid_setup(struct ath11k *ar, const u8 *peer_mac, int vdev_id,
- 	else
- 		hw_desc_sz = ath11k_hal_reo_qdesc_size(DP_BA_WIN_SZ_MAX, tid);
+diff --git a/tools/testing/selftests/bpf/test_progs.c b/tools/testing/selftests/bpf/test_progs.c
+index b521e0a512b6..86d0020c9eec 100644
+--- a/tools/testing/selftests/bpf/test_progs.c
++++ b/tools/testing/selftests/bpf/test_progs.c
+@@ -420,6 +420,18 @@ static int libbpf_print_fn(enum libbpf_print_level level,
+ 	return 0;
+ }
  
--	vaddr = kzalloc(hw_desc_sz + HAL_LINK_DESC_ALIGN - 1, GFP_KERNEL);
-+	vaddr = kzalloc(hw_desc_sz + HAL_LINK_DESC_ALIGN - 1, GFP_ATOMIC);
- 	if (!vaddr) {
- 		spin_unlock_bh(&ab->base_lock);
- 		return -ENOMEM;
++static void free_str_set(const struct str_set *set)
++{
++	int i;
++
++	if (!set)
++		return;
++
++	for (i = 0; i < set->cnt; i++)
++		free((void *)set->strs[i]);
++	free(set->strs);
++}
++
+ static int parse_str_list(const char *s, struct str_set *set)
+ {
+ 	char *input, *state = NULL, *next, **tmp, **strs = NULL;
+@@ -756,11 +768,11 @@ int main(int argc, char **argv)
+ 	fprintf(stdout, "Summary: %d/%d PASSED, %d SKIPPED, %d FAILED\n",
+ 		env.succ_cnt, env.sub_succ_cnt, env.skip_cnt, env.fail_cnt);
+ 
+-	free(env.test_selector.blacklist.strs);
+-	free(env.test_selector.whitelist.strs);
++	free_str_set(&env.test_selector.blacklist);
++	free_str_set(&env.test_selector.whitelist);
+ 	free(env.test_selector.num_set);
+-	free(env.subtest_selector.blacklist.strs);
+-	free(env.subtest_selector.whitelist.strs);
++	free_str_set(&env.subtest_selector.blacklist);
++	free_str_set(&env.subtest_selector.whitelist);
+ 	free(env.subtest_selector.num_set);
+ 
+ 	return env.fail_cnt ? EXIT_FAILURE : EXIT_SUCCESS;
 -- 
 2.25.1
 
