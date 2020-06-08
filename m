@@ -2,100 +2,295 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3528CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:36:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C04C4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:36:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15E46207C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:36:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 994FF20842
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:36:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591659404;
-	bh=4kZSus6Sp1gMeKhcgP8+VZ03/LLAoT9JPsTdmVO+bag=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TsvgJ4N3Gk7N/H+tZWkN4esOeq+lkLhEQPof8fVUZQ9+OimH6OWrxF23kThjT82j1
-	 Qkzy+RaqqzbCV3VaQlRwRKNCi8WZcWbBSBTzPDb4aNtgtENT5/DR3h/ETrGJkVKmPF
-	 pbpIZYKpniSu0SuIAarJH9ZB6dUJsAy6cDgYhFTI=
+	s=default; t=1591659405;
+	bh=FHtGawH0TjQcTuYJjPPT2lGpA/0yJm0D5hOLbhJG35c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=LQpqZ9RyUI5tuJP5yE+NrBTdIYLY2KqsCw5YnxWZudxFznt7w6siAI8gj6Dzvp4Ga
+	 6r/AKdQJEqFpyQ/7WIkdXcf0rIuJCJXGi4yEgMY9TX73fZ9p92vNTywGI5XiE8PJBl
+	 jf6trKsGB9ZrD0HFvDRwxs8bHvL51LP6oqbRX0bw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387754AbgFHXap (ORCPT
+        id S1732394AbgFHXam (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:30:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50898 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:30:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731655AbgFHXYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:24:43 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1731653AbgFHXYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:24:42 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D06F2208A9;
-        Mon,  8 Jun 2020 23:24:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96CD320899;
+        Mon,  8 Jun 2020 23:24:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658683;
-        bh=4kZSus6Sp1gMeKhcgP8+VZ03/LLAoT9JPsTdmVO+bag=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Si2oLuBzf22ZCtuQ/7ujy1Gsrnw7uAhdsofc8wTvlN5ux/Qe1UzJV3ejO+gdmuyqh
-         SsXc5n/B4AXNj0ON3HARHcBv0+weApetNfcUcTqh6wB9apGb1MnJxBsv53rEK1PxbN
-         mC2So5KaiR/J2h/WoEedcoZssGEaocdAGCVJEXZQ=
-Received: by pali.im (Postfix)
-        id A9332263E; Tue,  9 Jun 2020 01:24:40 +0200 (CEST)
-Date:   Tue, 9 Jun 2020 01:24:40 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Y Paritcher <y.linux@paritcher.com>
-Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Mario.Limonciello@dell.com
-Subject: Re: [PATCH v2 1/3] platform/x86: dell-wmi: add new backlight events
-Message-ID: <20200608232440.a5tpxvf4mami563m@pali>
-References: <cover.1591584631.git.y.linux@paritcher.com>
- <cover.1591656154.git.y.linux@paritcher.com>
- <1ddd0496403199130532923e4ccb30481ff167b6.1591656154.git.y.linux@paritcher.com>
+        s=default; t=1591658681;
+        bh=FHtGawH0TjQcTuYJjPPT2lGpA/0yJm0D5hOLbhJG35c=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=wXIrLWyIbe6cUjfvAOxAF7HcggdiRfM4rZ3pBb4K+srfaRay2vDg4tMtdg/FnnnSy
+         6aNUVCd0PVE/73HCdekQGhvP8c4jjpoN9VZ5SMpxQoyaG9XZ3JrDIdc7Eb33PbD/rK
+         TY/IAggLfhX+v2KaFsw77yKk1iGi58O9UW1skdDE=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Dave Chinner <david@fromorbit.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 092/106] xfs: gut error handling in xfs_trans_unreserve_and_mod_sb()
+Date:   Mon,  8 Jun 2020 19:22:24 -0400
+Message-Id: <20200608232238.3368589-92-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200608232238.3368589-1-sashal@kernel.org>
+References: <20200608232238.3368589-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1ddd0496403199130532923e4ccb30481ff167b6.1591656154.git.y.linux@paritcher.com>
-User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday 08 June 2020 19:05:28 Y Paritcher wrote:
-> Add events with a type of 0x0010 and a code of 0x57 / 0x58,
-> this silences the following messages being logged on a
-> Dell Inspiron 5593:
-> 
-> dell_wmi: Unknown key with type 0x0010 and code 0x0057 pressed
-> dell_wmi: Unknown key with type 0x0010 and code 0x0058 pressed
-> 
-> These are brightness events and will be handled by acpi-video
-> 
-> Signed-off-by: Y Paritcher <y.linux@paritcher.com>
+From: Dave Chinner <david@fromorbit.com>
 
-Reviewed-by: Pali Rohár <pali@kernel.org>
+[ Upstream commit dc3ffbb14060c943469d5e12900db3a60bc3fa64 ]
 
-> ---
->  drivers/platform/x86/dell-wmi.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-> index c25a4286d766..0b2edfe2767d 100644
-> --- a/drivers/platform/x86/dell-wmi.c
-> +++ b/drivers/platform/x86/dell-wmi.c
-> @@ -255,6 +255,10 @@ static const struct key_entry dell_wmi_keymap_type_0010[] = {
->  	/* Keyboard backlight change notification */
->  	{ KE_IGNORE, 0x3f, { KEY_RESERVED } },
->  
-> +	/* Backlight brightness level */
-> +	{ KE_KEY,    0x57, { KEY_BRIGHTNESSDOWN } },
-> +	{ KE_KEY,    0x58, { KEY_BRIGHTNESSUP } },
-> +
->  	/* Mic mute */
->  	{ KE_KEY, 0x150, { KEY_MICMUTE } },
->  
-> -- 
-> 2.27.0
-> 
+xfs: gut error handling in xfs_trans_unreserve_and_mod_sb()
+
+From: Dave Chinner <dchinner@redhat.com>
+
+The error handling in xfs_trans_unreserve_and_mod_sb() is largely
+incorrect - rolling back the changes in the transaction if only one
+counter underruns makes all the other counters incorrect. We still
+allow the change to proceed and committing the transaction, except
+now we have multiple incorrect counters instead of a single
+underflow.
+
+Further, we don't actually report the error to the caller, so this
+is completely silent except on debug kernels that will assert on
+failure before we even get to the rollback code.  Hence this error
+handling is broken, untested, and largely unnecessary complexity.
+
+Just remove it.
+
+Signed-off-by: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/xfs/xfs_trans.c | 163 ++++++---------------------------------------
+ 1 file changed, 20 insertions(+), 143 deletions(-)
+
+diff --git a/fs/xfs/xfs_trans.c b/fs/xfs/xfs_trans.c
+index 912b42f5fe4a..6da25cfadf30 100644
+--- a/fs/xfs/xfs_trans.c
++++ b/fs/xfs/xfs_trans.c
+@@ -530,57 +530,9 @@ xfs_trans_apply_sb_deltas(
+ 				  sizeof(sbp->sb_frextents) - 1);
+ }
+ 
+-STATIC int
+-xfs_sb_mod8(
+-	uint8_t			*field,
+-	int8_t			delta)
+-{
+-	int8_t			counter = *field;
+-
+-	counter += delta;
+-	if (counter < 0) {
+-		ASSERT(0);
+-		return -EINVAL;
+-	}
+-	*field = counter;
+-	return 0;
+-}
+-
+-STATIC int
+-xfs_sb_mod32(
+-	uint32_t		*field,
+-	int32_t			delta)
+-{
+-	int32_t			counter = *field;
+-
+-	counter += delta;
+-	if (counter < 0) {
+-		ASSERT(0);
+-		return -EINVAL;
+-	}
+-	*field = counter;
+-	return 0;
+-}
+-
+-STATIC int
+-xfs_sb_mod64(
+-	uint64_t		*field,
+-	int64_t			delta)
+-{
+-	int64_t			counter = *field;
+-
+-	counter += delta;
+-	if (counter < 0) {
+-		ASSERT(0);
+-		return -EINVAL;
+-	}
+-	*field = counter;
+-	return 0;
+-}
+-
+ /*
+- * xfs_trans_unreserve_and_mod_sb() is called to release unused reservations
+- * and apply superblock counter changes to the in-core superblock.  The
++ * xfs_trans_unreserve_and_mod_sb() is called to release unused reservations and
++ * apply superblock counter changes to the in-core superblock.  The
+  * t_res_fdblocks_delta and t_res_frextents_delta fields are explicitly NOT
+  * applied to the in-core superblock.  The idea is that that has already been
+  * done.
+@@ -625,20 +577,17 @@ xfs_trans_unreserve_and_mod_sb(
+ 	/* apply the per-cpu counters */
+ 	if (blkdelta) {
+ 		error = xfs_mod_fdblocks(mp, blkdelta, rsvd);
+-		if (error)
+-			goto out;
++		ASSERT(!error);
+ 	}
+ 
+ 	if (idelta) {
+ 		error = xfs_mod_icount(mp, idelta);
+-		if (error)
+-			goto out_undo_fdblocks;
++		ASSERT(!error);
+ 	}
+ 
+ 	if (ifreedelta) {
+ 		error = xfs_mod_ifree(mp, ifreedelta);
+-		if (error)
+-			goto out_undo_icount;
++		ASSERT(!error);
+ 	}
+ 
+ 	if (rtxdelta == 0 && !(tp->t_flags & XFS_TRANS_SB_DIRTY))
+@@ -646,95 +595,23 @@ xfs_trans_unreserve_and_mod_sb(
+ 
+ 	/* apply remaining deltas */
+ 	spin_lock(&mp->m_sb_lock);
+-	if (rtxdelta) {
+-		error = xfs_sb_mod64(&mp->m_sb.sb_frextents, rtxdelta);
+-		if (error)
+-			goto out_undo_ifree;
+-	}
+-
+-	if (tp->t_dblocks_delta != 0) {
+-		error = xfs_sb_mod64(&mp->m_sb.sb_dblocks, tp->t_dblocks_delta);
+-		if (error)
+-			goto out_undo_frextents;
+-	}
+-	if (tp->t_agcount_delta != 0) {
+-		error = xfs_sb_mod32(&mp->m_sb.sb_agcount, tp->t_agcount_delta);
+-		if (error)
+-			goto out_undo_dblocks;
+-	}
+-	if (tp->t_imaxpct_delta != 0) {
+-		error = xfs_sb_mod8(&mp->m_sb.sb_imax_pct, tp->t_imaxpct_delta);
+-		if (error)
+-			goto out_undo_agcount;
+-	}
+-	if (tp->t_rextsize_delta != 0) {
+-		error = xfs_sb_mod32(&mp->m_sb.sb_rextsize,
+-				     tp->t_rextsize_delta);
+-		if (error)
+-			goto out_undo_imaxpct;
+-	}
+-	if (tp->t_rbmblocks_delta != 0) {
+-		error = xfs_sb_mod32(&mp->m_sb.sb_rbmblocks,
+-				     tp->t_rbmblocks_delta);
+-		if (error)
+-			goto out_undo_rextsize;
+-	}
+-	if (tp->t_rblocks_delta != 0) {
+-		error = xfs_sb_mod64(&mp->m_sb.sb_rblocks, tp->t_rblocks_delta);
+-		if (error)
+-			goto out_undo_rbmblocks;
+-	}
+-	if (tp->t_rextents_delta != 0) {
+-		error = xfs_sb_mod64(&mp->m_sb.sb_rextents,
+-				     tp->t_rextents_delta);
+-		if (error)
+-			goto out_undo_rblocks;
+-	}
+-	if (tp->t_rextslog_delta != 0) {
+-		error = xfs_sb_mod8(&mp->m_sb.sb_rextslog,
+-				     tp->t_rextslog_delta);
+-		if (error)
+-			goto out_undo_rextents;
+-	}
++	mp->m_sb.sb_frextents += rtxdelta;
++	mp->m_sb.sb_dblocks += tp->t_dblocks_delta;
++	mp->m_sb.sb_agcount += tp->t_agcount_delta;
++	mp->m_sb.sb_imax_pct += tp->t_imaxpct_delta;
++	mp->m_sb.sb_rextsize += tp->t_rextsize_delta;
++	mp->m_sb.sb_rbmblocks += tp->t_rbmblocks_delta;
++	mp->m_sb.sb_rblocks += tp->t_rblocks_delta;
++	mp->m_sb.sb_rextents += tp->t_rextents_delta;
++	mp->m_sb.sb_rextslog += tp->t_rextslog_delta;
+ 	spin_unlock(&mp->m_sb_lock);
+-	return;
+ 
+-out_undo_rextents:
+-	if (tp->t_rextents_delta)
+-		xfs_sb_mod64(&mp->m_sb.sb_rextents, -tp->t_rextents_delta);
+-out_undo_rblocks:
+-	if (tp->t_rblocks_delta)
+-		xfs_sb_mod64(&mp->m_sb.sb_rblocks, -tp->t_rblocks_delta);
+-out_undo_rbmblocks:
+-	if (tp->t_rbmblocks_delta)
+-		xfs_sb_mod32(&mp->m_sb.sb_rbmblocks, -tp->t_rbmblocks_delta);
+-out_undo_rextsize:
+-	if (tp->t_rextsize_delta)
+-		xfs_sb_mod32(&mp->m_sb.sb_rextsize, -tp->t_rextsize_delta);
+-out_undo_imaxpct:
+-	if (tp->t_rextsize_delta)
+-		xfs_sb_mod8(&mp->m_sb.sb_imax_pct, -tp->t_imaxpct_delta);
+-out_undo_agcount:
+-	if (tp->t_agcount_delta)
+-		xfs_sb_mod32(&mp->m_sb.sb_agcount, -tp->t_agcount_delta);
+-out_undo_dblocks:
+-	if (tp->t_dblocks_delta)
+-		xfs_sb_mod64(&mp->m_sb.sb_dblocks, -tp->t_dblocks_delta);
+-out_undo_frextents:
+-	if (rtxdelta)
+-		xfs_sb_mod64(&mp->m_sb.sb_frextents, -rtxdelta);
+-out_undo_ifree:
+-	spin_unlock(&mp->m_sb_lock);
+-	if (ifreedelta)
+-		xfs_mod_ifree(mp, -ifreedelta);
+-out_undo_icount:
+-	if (idelta)
+-		xfs_mod_icount(mp, -idelta);
+-out_undo_fdblocks:
+-	if (blkdelta)
+-		xfs_mod_fdblocks(mp, -blkdelta, rsvd);
+-out:
+-	ASSERT(error == 0);
++	/*
++	 * Debug checks outside of the spinlock so they don't lock up the
++	 * machine if they fail.
++	 */
++	ASSERT(mp->m_sb.sb_imax_pct >= 0);
++	ASSERT(mp->m_sb.sb_rextslog >= 0);
+ 	return;
+ }
+ 
+-- 
+2.25.1
+
