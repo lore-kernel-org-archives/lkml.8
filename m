@@ -2,136 +2,124 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE64C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:08:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB9DFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83F53206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:08:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2056206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:11:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NUFbq78O"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g21KG36U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729717AbgFHMIf (ORCPT
+        id S1729691AbgFHMLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 08:08:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48720 "EHLO
+        Mon, 8 Jun 2020 08:11:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729607AbgFHMIe (ORCPT
+        with ESMTP id S1729310AbgFHMLU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 08:08:34 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 749D5C08C5C2
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 05:08:33 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id a9so16582306ljn.6
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 05:08:33 -0700 (PDT)
+        Mon, 8 Jun 2020 08:11:20 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5EFDC08C5C2;
+        Mon,  8 Jun 2020 05:11:19 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id t7so8682091pgt.3;
+        Mon, 08 Jun 2020 05:11:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=jVAlJ3ENw6iA1llBw77h70B7LKCg5s0+Fsgmgt32t0A=;
-        b=NUFbq78O8TZa5gq48JT652lCI13tv+Cj890fyZENeoLHgvu0yriNuP84rHD4AFNmRP
-         nbf0XqeFJDEnrQrMiaLB1FTwaMk37gtPlL7fHuX257DuLecgRLhbgGxUiB50sqmFxt7T
-         ovo7cQQA59+hPnNclow+RLxZMM0iwNCwYM7KWQnH0qScFp2IdaCAx3sXJuYM73CMIaoG
-         NardiJ1us3g5b9B4PdTnP7j+63esEy8uUrhwbKYSVUreMH4lULwxeik5AUnSAjit4jMT
-         l7QGBMyY+vPOtl6cc6ap2cIR31UZbaide0nqXX2nxbqKpCqiXBYnpiWLPOa3m586t5ci
-         ymrw==
+        bh=ltyhMEkISX5kr7cpVF0JSUjRPfEgCrElNZMuYmRJ7Fs=;
+        b=g21KG36UQZBZgT0ff9ZNcPra0WKx8ZP3mpu6p2d0+L2Auc6tKCoucLeRxERzyK2kIw
+         g3uIktUQ7uP0kXuGVWz1NBNYvV3a4bEWVmbqE3E6/NiKyFVQ4xWE/FQEGsol/4Ia0ord
+         XiFwyNap2P6+nzC0MdfIXZPILjtIpbrermT9vZh5xCvr+NfyS1EsMHC21RUFgcw0pQNr
+         9xfzihQYHMDi8xDrt5Q4Jpb2QOAqcqAB8Esh3Y/IvoPS44GGi8197IpU/1FFaHpgn2Yi
+         4EXyr4Af+Sx/JDoXmgxQE6NIjAhVXYg9JDrwKTAe+/Tm4ua9H0kRqKgcxBqS4Lpr35rV
+         0BrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=jVAlJ3ENw6iA1llBw77h70B7LKCg5s0+Fsgmgt32t0A=;
-        b=dF3NnOp9rdlXc+9xNkIrvHUkioCLu3ogfNscPtGGBHHUCljODmf22YZzJjIcuQmIC7
-         jDu+/9KWY8A9R6q+Kt2eQN/ZjN7jaCZfO1GtbKW86f8ErhgkOHAR54FTgMETh5K914hp
-         atkn2AnrfZEn38IGQobu/wmTTD/tT3vYYMtWvjRj4NCleJh45e2SUL/BFxjyUk4pNCrU
-         v6lLXfNVCNYBFjI2kBygk7yE155gCpaUwtzwtDX5yP+D3m+8SIugwgKHZbglg2TjNTpH
-         5d6wvysTpYrDecHNUUKB2BADEJfQmv5NqFL1fSTofTS187dx9mYoz+7ZXnTuUz0d1Cce
-         qr5Q==
-X-Gm-Message-State: AOAM530kNgggScOmzWIYW19sfUD29+drXqfYEi6+9+xU+Hnv9RJuqQ+c
-        SExQQTJgT+cVDTwvkK62BLmG2fk9WTWonGCLpJc=
-X-Google-Smtp-Source: ABdhPJxjEDGndqA79nMvT+RfirGdYB/AMAQHxy38HosGZ4pQ3QHmx1QVN56pdxR8Crg2cSGSfeFDv68qgIP2MaDKfyA=
-X-Received: by 2002:a2e:1453:: with SMTP id 19mr11718756lju.155.1591618111949;
- Mon, 08 Jun 2020 05:08:31 -0700 (PDT)
+        bh=ltyhMEkISX5kr7cpVF0JSUjRPfEgCrElNZMuYmRJ7Fs=;
+        b=CQpomzP+NxMmG5ZuGigJcaEOCf7VKX/uuPweGNF3nY0Anzcu8np38d6Rfkd8+4/ftN
+         C28yyRM15vo0F/NExDFoTSrbTUKqKuDhLNp2FhcrGa2IcvZuDi4Ym6irnAAqCEZ9XC3v
+         uh8DWkIXBNXgfa+EorIKrYspbHoMlsWR8sN8s5at7+EBatNBmCwMKNpCFRgC4Gd0y9eU
+         GljahWc0Lj4j8R+gqAseWjwrFn4Z4FJbRnwuG3mhaIJ/wvz80SalgxKZzOvGt+BNBUQP
+         9riFkaE2Nvr6Z7Bl10yosGrveE09LddlZebI7aU3rm//RVtBdQ9pyYpys6Kn2BkLE0vC
+         xKVA==
+X-Gm-Message-State: AOAM530UtFj9yJs5POYcfd19UXxp+A+OnY1GRv+vnC+e9PVr4cmzAUOS
+        28Eyb6lLdTleXEpFSCqvYNeWPhOJJQGbBPzMfp0=
+X-Google-Smtp-Source: ABdhPJx44q8S4qifyalZWMQom7WKFwfOCX1Qrq4jLFlVgpAbO87RQMtPOuOzn6ZLUFp7twftKCnxvLma5jPZUD2HaPA=
+X-Received: by 2002:a63:305:: with SMTP id 5mr19335432pgd.74.1591618279199;
+ Mon, 08 Jun 2020 05:11:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <202006080221.W31nOYBR%lkp@intel.com>
-In-Reply-To: <202006080221.W31nOYBR%lkp@intel.com>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Mon, 8 Jun 2020 20:07:29 +0800
-Message-ID: <CADBw62qBkjftmi-4pR+NVs3P=os+nzjF9wK06=oU89w9kdxQAg@mail.gmail.com>
-Subject: Re: drivers/hwspinlock/sirf_hwspinlock.c:87:34: warning: unused
- variable 'sirf_hwpinlock_ids'
-To:     kernel test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org, clang-built-linux@googlegroups.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
+References: <20200324175719.62496-1-andriy.shevchenko@linux.intel.com>
+ <20200325032901.29551-1-saravanak@google.com> <20200325125120.GX1922688@smile.fi.intel.com>
+ <295d25de-f01e-26de-02d6-1ac0c149d828@arm.com> <20200326163110.GD1922688@smile.fi.intel.com>
+ <20200608091712.GA28093@pengutronix.de> <CAHp75VfQvT1VSXhNtfLMLzwYcN+4g=jVRkBHc=ZS0180BRzAJg@mail.gmail.com>
+ <20200608115917.f5dhazixnxunl5o5@pengutronix.de>
+In-Reply-To: <20200608115917.f5dhazixnxunl5o5@pengutronix.de>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 8 Jun 2020 15:11:07 +0300
+Message-ID: <CAHp75VcnkSrb5B8dQE-Tg=mzzUbKZkk3ykm6sxEjNyHWLcF26w@mail.gmail.com>
+Subject: Re: [PATCH v3] driver core: Break infinite loop when deferred probe
+ can't be satisfied
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Grant Likely <grant.likely@arm.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        artem.bityutskiy@linux.intel.com, Felipe Balbi <balbi@kernel.org>,
+        Mark Brown <broonie@kernel.org>, Ferry Toth <fntoth@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, kernel-team@android.com,
+        nd <nd@arm.com>, Sascha Hauer <kernel@pengutronix.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 8, 2020 at 2:38 AM kernel test robot <lkp@intel.com> wrote:
->
-> Hi Baolin,
->
-> First bad commit (maybe != root cause):
->
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   3b69e8b4571125bec1f77f886174fe6cab6b9d75
-> commit: ffd0bbfb378ecd56eac22bf932ccdbf89ac7f725 hwspinlock: Allow drivers to be built with COMPILE_TEST
-> date:   2 months ago
-> config: arm-randconfig-r001-20200607 (attached as .config)
-> compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project e429cffd4f228f70c1d9df0e5d77c08590dd9766)
-> reproduce (this is a W=1 build):
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # install arm cross compiling tool for clang build
->         # apt-get install binutils-arm-linux-gnueabi
->         git checkout ffd0bbfb378ecd56eac22bf932ccdbf89ac7f725
->         # save the attached .config to linux build tree
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross ARCH=arm
->
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
->
-> All warnings (new ones prefixed by >>, old ones prefixed by <<):
->
-> >> drivers/hwspinlock/sirf_hwspinlock.c:87:34: warning: unused variable 'sirf_hwpinlock_ids' [-Wunused-const-variable]
-> static const struct of_device_id sirf_hwpinlock_ids[] = {
+On Mon, Jun 8, 2020 at 2:59 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
+> On 20-06-08 14:13, Andy Shevchenko wrote:
+> > On Mon, Jun 8, 2020 at 12:20 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
+> > > On 20-03-26 18:31, Andy Shevchenko wrote:
 
-In your testing configuration, the CONFIG_OF is not select, so the
-macro 'of_match_ptr' becomes NULL, which triggers this waring. I think
-we can remove the redundant "of_match_ptr" to fix this warning. Thanks
-for your report.
+> > > sorry for picking this up again but I stumbled above the same issue
+> > > within the driver imx/drm driver which is using the component framework.
+> > > I end up in a infinity boot loop if I enabled the HDMI (which is the
+> > > DesignWare bridge device) and the LVDS support and the LVDS bind return
+> > > with EPROBE_DEFER. There are no words within the component framework docs
+> > > which says that this is forbidden. Of course we can work-around the
+> > > driver-core framework but IMHO this shouldn't be the way to go. I do not
+> > > say that we should revert the commit introducing the regression but we
+> > > should address this not only by extending the docs since the most
+> > > drm-drivers are using the component framework and can end up in the same
+> > > situation.
+> > >
+> > > > > It can be solved by refactoring the driver probe routine. If a resource is
+> > > > > required to be present, then check that it is available early; before
+> > > > > registering child devices.
+> > > >
+> > > > We fix one and leave others.
+> > >
+> > > E.g. the imx-drm and the sunxi driver...
+> >
+> > Just out of curiosity, does my patch fix an issue for you?
+>
+> I didn't applied your patch yet. I can test it if you want.
 
-> ^
-> 1 warning generated.
->
-> vim +/sirf_hwpinlock_ids +87 drivers/hwspinlock/sirf_hwspinlock.c
->
-> cc16d664e21ef6 Wei Chen 2015-05-26  86
-> cc16d664e21ef6 Wei Chen 2015-05-26 @87  static const struct of_device_id sirf_hwpinlock_ids[] = {
-> cc16d664e21ef6 Wei Chen 2015-05-26  88          { .compatible = "sirf,hwspinlock", },
-> cc16d664e21ef6 Wei Chen 2015-05-26  89          {},
-> cc16d664e21ef6 Wei Chen 2015-05-26  90  };
-> cc16d664e21ef6 Wei Chen 2015-05-26  91  MODULE_DEVICE_TABLE(of, sirf_hwpinlock_ids);
-> cc16d664e21ef6 Wei Chen 2015-05-26  92
->
-> :::::: The code at line 87 was first introduced by commit
-> :::::: cc16d664e21ef640faaf51e9952384cf90b92d9f hwspinlock: add a CSR atlas7 driver
->
-> :::::: TO: Wei Chen <wei.chen@csr.com>
-> :::::: CC: Ohad Ben-Cohen <ohad@wizery.com>
->
-> ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+If you can, thanks!
 
-
+> > > > > The proposed solution to modify driver core is fragile and susceptible to
+> > > > > side effects from other probe paths. I don't think it is the right approach.
 
 -- 
-Baolin Wang
+With Best Regards,
+Andy Shevchenko
