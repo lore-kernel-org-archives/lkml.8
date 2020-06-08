@@ -2,142 +2,172 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA042C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C460C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCCCC20774
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:28:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59FE62076A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:30:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729411AbgFHK21 (ORCPT
+        id S1729335AbgFHKad (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 06:28:27 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57882 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729393AbgFHK2Z (ORCPT
+        Mon, 8 Jun 2020 06:30:33 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:58978 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729281AbgFHKad (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 06:28:25 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 058ABstu178122;
-        Mon, 8 Jun 2020 06:28:10 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31g59r9m0u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 08 Jun 2020 06:28:10 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 058AMoMC010283;
-        Mon, 8 Jun 2020 06:28:09 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31g59r9kyv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 08 Jun 2020 06:28:09 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 058AQ566011235;
-        Mon, 8 Jun 2020 10:28:07 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma05fra.de.ibm.com with ESMTP id 31g2s7sgxw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 08 Jun 2020 10:28:07 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 058AS5bq6685010
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 8 Jun 2020 10:28:05 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F0AF7AE056;
-        Mon,  8 Jun 2020 10:28:04 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 242A6AE053;
-        Mon,  8 Jun 2020 10:28:04 +0000 (GMT)
-Received: from oc3871087118.ibm.com (unknown [9.145.56.93])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon,  8 Jun 2020 10:28:04 +0000 (GMT)
-Date:   Mon, 8 Jun 2020 12:28:02 +0200
-From:   Alexander Gordeev <agordeev@linux.ibm.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-s390@vger.kernel.org, Stable <stable@vger.kernel.org>,
-        Yury Norov <yury.norov@gmail.com>,
-        Amritha Nambiar <amritha.nambiar@intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        "Tobin C . Harding" <tobin@kernel.org>,
-        Vineet Gupta <vineet.gupta1@synopsys.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Willem de Bruijn <willemb@google.com>
-Subject: Re: [PATCH RESEND] lib: fix bitmap_parse() on 64-bit big endian archs
-Message-ID: <20200608102801.GA22989@oc3871087118.ibm.com>
-References: <1589798090-11136-1-git-send-email-agordeev@linux.ibm.com>
- <CAHp75VdM2yrpd2d3pK2RkmbhF3yiM4=fiTXL4i3yu3AxV3wY-A@mail.gmail.com>
- <20200518115059.GA19150@oc3871087118.ibm.com>
- <20200602102430.GA17703@oc3871087118.ibm.com>
- <20200605132558.GM2428291@smile.fi.intel.com>
+        Mon, 8 Jun 2020 06:30:33 -0400
+Received: from fsav303.sakura.ne.jp (fsav303.sakura.ne.jp [153.120.85.134])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 058AUTai079333;
+        Mon, 8 Jun 2020 19:30:29 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav303.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav303.sakura.ne.jp);
+ Mon, 08 Jun 2020 19:30:29 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav303.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 058AUS5G079324
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Mon, 8 Jun 2020 19:30:29 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH v2] twist: allow converting pr_devel()/pr_debug() into
+ snprintf()
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     syzkaller <syzkaller@googlegroups.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+References: <e3b30905-4497-29b4-4636-a313283dbc56@i-love.sakura.ne.jp>
+ <20200528065603.3596-1-penguin-kernel@I-love.SAKURA.ne.jp>
+ <20200528110646.GC11286@linux-b0ei>
+ <e0d6c04f-7601-51e7-c969-300e938dedc0@i-love.sakura.ne.jp>
+ <CAHk-=wgz=7MGxxX-tmMmdCsKyYJkuyxNc-4uLP=e_eEV=OzUaw@mail.gmail.com>
+ <CAHk-=wjW+_pjJzVRMuCbLhbWLkvEQVYJoXVBYGNW2PUgtX1fDw@mail.gmail.com>
+ <13b0a475-e70e-c490-d34d-0c7a34facf7c@i-love.sakura.ne.jp>
+ <CAHk-=wjj9ooYACNvO2P_Gr_=aN0g=iEqtg0TwBJo18wbn4gthg@mail.gmail.com>
+ <6116ed2e-cee1-d82f-6b68-ddb1bbb6abe2@i-love.sakura.ne.jp>
+ <CAHk-=wiVQUo_RJAaivHU5MFdznNOX4GKgJH1xrFc83e9oLnuvQ@mail.gmail.com>
+ <19d377d3-8037-8090-0f99-447f72cc1d8c@i-love.sakura.ne.jp>
+ <38df9737-3c04-dca2-0df4-115a9c1634e5@i-love.sakura.ne.jp>
+ <CACT4Y+Z58Z8u1g8SBy-i1WxLMrdmXvggsLFAhfbLc8D=uffPyA@mail.gmail.com>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <e51f5885-5508-7574-e5b9-e931a1164d3f@i-love.sakura.ne.jp>
+Date:   Mon, 8 Jun 2020 19:30:26 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200605132558.GM2428291@smile.fi.intel.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-08_07:2020-06-08,2020-06-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
- impostorscore=0 clxscore=1015 adultscore=0 spamscore=0 phishscore=0
- malwarescore=0 mlxlogscore=999 cotscore=-2147483648 bulkscore=0
- suspectscore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006080073
+In-Reply-To: <CACT4Y+Z58Z8u1g8SBy-i1WxLMrdmXvggsLFAhfbLc8D=uffPyA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 04:25:58PM +0300, Andy Shevchenko wrote:
-> Test case, please.
-
-Hi Andy,
-
-Below is the output of the runtime kernel test "test_bitmap".
-I resent the patch with Andrew Morton on CC, but did not include
-the excessive test output:
-
-test_bitmap: parse: 4: input is 1, result is 0x100000000, expected 0x1
-test_bitmap: parse: 5: input is deadbeef, result is 0xdeadbeef00000000, expected 0xdeadbeef
-test_bitmap: parse: 6: input is 1,0, result is 0x1, expected 0x100000000
-test_bitmap: parse: 7: input is deadbeef,,0,1, result is 0x1, expected 0xdeadbeef
-test_bitmap: parse: 8: input is deadbeef,1,0, result is 0x1, expected 0x100000000
-test_bitmap: parse: 9: input is baadf00d,deadbeef,1,0, result is 0x1, expected 0x100000000
-test_bitmap: parse: 10: input is badf00d,deadbeef,1,0, errno is -75, expected 0
-test_bitmap: parse: 11: input is badf00d,deadbeef,1,0, errno is -75, expected 0
-test_bitmap: parse: 12: input is   badf00d,deadbeef,1,0  , errno is -75, expected 0
-test_bitmap: parse: 13: input is  , badf00d,deadbeef,1,0 , , errno is -75, expected 0
-test_bitmap: parse: 14: input is  , badf00d, ,, ,,deadbeef,1,0 , , errno is -75, expected 0
-test_bitmap: parse: 16: input is 3,0, errno is 0, expected -75
-test_bitmap: parse_user: 4: input is 1, result is 0x100000000, expected 0x1
-test_bitmap: parse_user: 5: input is deadbeef, result is 0xdeadbeef00000000, expected 0xdeadbeef
-test_bitmap: parse_user: 6: input is 1,0, result is 0x1, expected 0x100000000
-test_bitmap: parse_user: 7: input is deadbeef,,0,1, result is 0x1, expected 0xdeadbeef
-test_bitmap: parse_user: 8: input is deadbeef,1,0, result is 0x1, expected 0x100000000
-test_bitmap: parse_user: 9: input is baadf00d,deadbeef,1,0, result is 0x1, expected 0x100000000
-test_bitmap: parse_user: 10: input is badf00d,deadbeef,1,0, errno is -75, expected 0
-test_bitmap: parse_user: 11: input is badf00d,deadbeef,1,0, errno is -75, expected 0
-test_bitmap: parse_user: 12: input is   badf00d,deadbeef,1,0  , errno is -75, expected 0
-test_bitmap: parse_user: 13: input is  , badf00d,deadbeef,1,0 , , errno is -75, expected 0
-test_bitmap: parse_user: 14: input is  , badf00d, ,, ,,deadbeef,1,0 , , errno is -75, expected 0
-test_bitmap: parse_user: 16: input is 3,0, errno is 0, expected -75
-
-Thanks!
-
-
-> Yes, you can simulate BE test case on LE platform and vise versa.
+On 2020/06/08 16:48, Dmitry Vyukov wrote:
+>> (5) Anything else?
 > 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+> Reading:
+> https://www.kernel.org/doc/html/latest/admin-guide/bootconfig.html#boot-kernel-with-a-boot-config
+> It seems that boot config is just a more complex way to provide
+> command line arguments. syzbot already supports command line
+> arguments, and it looks much simpler and no additional work required.
+> Why do we want to use boot config?
+
+Since the max length a bootloader can accept for kernel command line arguments is finite (e.g.
+https://bugzilla.redhat.com/show_bug.cgi?id=1239170 ), we can't specify as many arguments as
+we want. Since Linus is expecting to specify independently upon boot, length for the kernel
+command line arguments might exceed that limit. The boot config is a method for allowing longer
+kernel command line arguments, at the cost of mandating use of the initramfs file.
+
+>> (2) The boot-config file is embedded into initramfs file. Since syzkaller builds
+>>     kernels with almost-allyesconfig, booting syzkaller kernels do not require
+>>     initramfs for loading kernel modules needed for mounting the root partition.
+>>     In fact, according to "unexpected kernel reboot" report which contains boot messages,
+>>     I can't find "Unpacking initramfs..." message. It seems that syzkaller kernels do not
+>>     use initramfs file.
+>>
+>>     Is it possible for syzkaller to enforce performing steps for creating an initramfs,
+>>     embedding the boot-config file
+>>     ( https://www.kernel.org/doc/html/latest/admin-guide/bootconfig.html#boot-kernel-with-a-boot-config),
+>>     and loading that initramfs whenever booting the syzkaller kernels?
+>>     By the way, I do worry that people forget to perform these steps when they do
+>>     their tests without asking syzbot...
 > 
+> I think we have some confusion between syzkaller and syzbot here.
+> syzkaller itself does not enforce/require any kernel configuration,
+> hardware nor use or not use of initramfs. In fact, qemu VM type
+> supports initramfs today. Or syzkaller can work with bare machines
+> where all setup is up to the user.
+> syzbot is just one deployment of syzkaller with a particular
+> configuration/hardware.
+
+OK.
+
 > 
+> If this feature is useful for any linux kernel fuzzing, then we need
+> to have a plan for all users and setups.
+
+Build-time switching can support all users and setups, for the kernel is built for intended
+environment/purpose only. Assuming that this feature is useful for any linux kernel fuzzing,
+we need to care about whether we can specify longer kernel command line arguments on every
+environment in order to support boot-time switching.
+
+> 
+> And, yes, an additional context is kernel developers reproducing bugs.
+> Not all of them may be happy about any additional steps, nor will
+> follow them.
+
+But there will be bugs which could not be found unless we twist kernel behavior.
+Not mandate specifying appropriate twist options to the kernel command line
+arguments can prevent automated/manual testings from finding/reproducing bugs.
+
+> 
+> Answering your question, syzkaller can do some sanity checking of the
+> provided machine/kernel and reject working with it. If you tell me
+> what exactly needs to be checked, I can think where this code should
+> go.
+> However, again, I am not sure if one is using, say, Android phones and
+> they don't envision use of initramfs, then what?
+
+If use of initramfs cannot be mandated, we might fail to specify necessary
+twist options to the kernel command line (due to length limitation).
+
+> 
+> For syzbot, the build happens here:
+> https://github.com/google/syzkaller/blob/7751efd04aebb07bc82b5c0e8eeaca07be1ae112/pkg/build/linux.go#L72
+> I don't know if initramfs is supported with GCE machines and what
+> exactly is required.
+
+Neither do I. I'm not familiar with bootloaders.
+
+> 
+>> (4) Of course, "your-config" file would not change so frequently, but "#syz test" command
+>>     relies on external file in "syzkaller tree" makes it impossible to try different
+>>     configuration when I have to ask syzbot to test. (Since I don't have hardware which
+>>     syzbot is reporting problems, I have to ask syzbot when I can't reproduce the problem
+>>     in my environment.)
+>>
+>>     https://syzkaller.appspot.com/text?tag=Patch&x=135f254a100000 is an example of
+>>     need to enforce CONFIG_DEBUG_INFO_BTF=n in order to workaround build failure during
+>>     "#syz test" command. If we bring "which twist options should be enabled" to an external
+>>     boot-config file, I can't ask syzbot to try different twist options (except directly
+>>     patching the kernel source which handles "which twist options should be enabled").
+>>     Can syzbot solve this concern?
+> 
+> The CONFIG_DEBUG_INFO_BTF relates to build config. This can't be
+> solved during boot, right? So what is the relation?
+
+This is an approach for embedding twist options into build-time conditions in order to
+compensate for lack of ability to temporarily change the kernel command line arguments
+(when it is difficult to temporarily change the kernel command line arguments).
+
