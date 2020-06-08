@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB27C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50C43C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AF7220801
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:12:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B6D220775
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:12:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591661569;
-	bh=9ARbGD5hH1cGXAdbi3g8ZxYL3XHkazo9g99L1YSsr3Y=;
+	s=default; t=1591661572;
+	bh=iU1CM9SPcW/noFanT1tMurPLEB8VOhD9CCIlegcOL3g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wMdDfYA/qdnsYCM3eb/YdjRROkSQaxDri3dStMJcvmyNApItWHIVoN5dAYaWqg7oF
-	 J00SY1kJnAZBwXkaOd8/5fQPFcFrMUTAWzICY2FExLG3ldWYBWXfga4SG6QZMR6Jaf
-	 IFl6fLA5pRg53jMfFc2aEYGsARHFU9NeOxX4ZH50=
+	b=vjzX2HJ/OYCTHBThAxucAEEZfGnzMO0ZVbfVR2wbZYRUME+OsTnUtSTSZL0CZ+8FL
+	 OywtUQTm7s1Gkh/4cpi/vsxU1qYvCOQNNlDOfHW+wQgvol3je6Ldj0e9YyU8h9Hoyp
+	 NXyRppDC1pzAB0T0/PLoTiHWlArtmUvzQqWZMg0Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388030AbgFIAMr (ORCPT
+        id S1732486AbgFIAMu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:12:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42602 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:12:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730439AbgFHXTi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:19:38 -0400
+        id S1730830AbgFHXTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:19:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B22242087E;
-        Mon,  8 Jun 2020 23:19:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91EF62086A;
+        Mon,  8 Jun 2020 23:19:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658378;
-        bh=9ARbGD5hH1cGXAdbi3g8ZxYL3XHkazo9g99L1YSsr3Y=;
+        s=default; t=1591658377;
+        bh=iU1CM9SPcW/noFanT1tMurPLEB8VOhD9CCIlegcOL3g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=buIiLcnwfzkiYMldM9PanY7xlFRAEuvLQc1n+ltcp2ik/Kl2KVPfyf6uGpW+fKlxV
-         5IsMdJaqNb7PUk04zY1ov7uiJiWgFFoaI/m91m5VDp3HM/vCU7MlLBcSb1xbVLXXD9
-         R+XPIPN0+q+MTRt1VlbZTx5FQNA4th4uJfcN/leo=
+        b=HxpvxOFfdO4tUS0t+PzskLqTL+j1cSNlvNxQqVXZYudq9PapiCjQgIqdzsHPY5FdB
+         rLLrJx7ALl/Mdcs3hkxyNHlqU2pDE7mwNopOYyMLlyDkW7k83DFFcdXRlLSelJllf9
+         A3nyhRAAtk8QCN/RW9gd5T9AoBn6z/76fhXMe0bo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Douglas Anderson <dianders@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Daniel Thompson <daniel.thompson@linaro.org>,
         Sasha Levin <sashal@kernel.org>,
         kgdb-bugreport@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.4 040/175] kgdb: Prevent infinite recursive entries to the debugger
-Date:   Mon,  8 Jun 2020 19:16:33 -0400
-Message-Id: <20200608231848.3366970-40-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 039/175] kgdb: Disable WARN_CONSOLE_UNLOCKED for all kgdb
+Date:   Mon,  8 Jun 2020 19:16:32 -0400
+Message-Id: <20200608231848.3366970-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
 References: <20200608231848.3366970-1-sashal@kernel.org>
@@ -62,34 +63,70 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Douglas Anderson <dianders@chromium.org>
 
-[ Upstream commit 3ca676e4ca60d1834bb77535dafe24169cadacef ]
+[ Upstream commit 202164fbfa2b2ffa3e66b504e0f126ba9a745006 ]
 
-If we detect that we recursively entered the debugger we should hack
-our I/O ops to NULL so that the panic() in the next line won't
-actually cause another recursion into the debugger.  The first line of
-kgdb_panic() will check this and return.
+In commit 81eaadcae81b ("kgdboc: disable the console lock when in
+kgdb") we avoided the WARN_CONSOLE_UNLOCKED() yell when we were in
+kgdboc.  That still works fine, but it turns out that we get a similar
+yell when using other I/O drivers.  One example is the "I/O driver"
+for the kgdb test suite (kgdbts).  When I enabled that I again got the
+same yells.
+
+Even though "kgdbts" doesn't actually interact with the user over the
+console, using it still causes kgdb to print to the consoles.  That
+trips the same warning:
+  con_is_visible+0x60/0x68
+  con_scroll+0x110/0x1b8
+  lf+0x4c/0xc8
+  vt_console_print+0x1b8/0x348
+  vkdb_printf+0x320/0x89c
+  kdb_printf+0x68/0x90
+  kdb_main_loop+0x190/0x860
+  kdb_stub+0x2cc/0x3ec
+  kgdb_cpu_enter+0x268/0x744
+  kgdb_handle_exception+0x1a4/0x200
+  kgdb_compiled_brk_fn+0x34/0x44
+  brk_handler+0x7c/0xb8
+  do_debug_exception+0x1b4/0x228
+
+Let's increment/decrement the "ignore_console_lock_warning" variable
+all the time when we enter the debugger.
+
+This will allow us to later revert commit 81eaadcae81b ("kgdboc:
+disable the console lock when in kgdb").
 
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-Link: https://lore.kernel.org/r/20200507130644.v4.6.I89de39f68736c9de610e6f241e68d8dbc44bc266@changeid
+Link: https://lore.kernel.org/r/20200507130644.v4.1.Ied2b058357152ebcc8bf68edd6f20a11d98d7d4e@changeid
 Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/debug/debug_core.c | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/debug/debug_core.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
-index d0d557c0ceff..7d54c7c28054 100644
+index f76d6f77dd5e..d0d557c0ceff 100644
 --- a/kernel/debug/debug_core.c
 +++ b/kernel/debug/debug_core.c
-@@ -501,6 +501,7 @@ static int kgdb_reenter_check(struct kgdb_state *ks)
+@@ -634,6 +634,8 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
+ 	if (kgdb_skipexception(ks->ex_vector, ks->linux_regs))
+ 		goto kgdb_restore;
  
- 	if (exception_level > 1) {
- 		dump_stack();
-+		kgdb_io_module_registered = false;
- 		panic("Recursive entry to debugger");
- 	}
++	atomic_inc(&ignore_console_lock_warning);
++
+ 	/* Call the I/O driver's pre_exception routine */
+ 	if (dbg_io_ops->pre_exception)
+ 		dbg_io_ops->pre_exception();
+@@ -706,6 +708,8 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
+ 	if (dbg_io_ops->post_exception)
+ 		dbg_io_ops->post_exception();
  
++	atomic_dec(&ignore_console_lock_warning);
++
+ 	if (!kgdb_single_step) {
+ 		raw_spin_unlock(&dbg_slave_lock);
+ 		/* Wait till all the CPUs have quit from the debugger. */
 -- 
 2.25.1
 
