@@ -2,160 +2,89 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 645DEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 17:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA0C1C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 17:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44837206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 17:50:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90B41206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 17:51:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591638620;
-	bh=BOMvK8twEoxR2gwl3HoMy3REosGmlB54aUnofqfDoas=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OU06hg+WIwXReinhhwX8xTW9lXux2l0g8RAEvu6n8v4/RNeAtR2SjhjTWhaVPwF5r
-	 Ma/G6uBmNqBGC5abPAgh/ryr4DdFVoAtYZp0PhHFlaVszJKosU4B5LCTDIFfdAUao0
-	 M+jmztgezKqGqleiFOa4hJkxGTs3wqJt0u624eCE=
+	s=default; t=1591638673;
+	bh=D3wXppTORQC+JC0dFtrdJuZe1H4pJQ8bCoTFA0U9esw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=F3uJ9jZsp8F7GHHSHFkOi2OWHGt9kD5kRmyFTwUjE97o70UXQQiOUr6SHkRobeqjr
+	 tKAXQN2VqjPz/kR2IhNbYMgO+7uTu+aWnremjDsyVDFmpL4lpoXdPtpuACwy9LqHlb
+	 lrkC90rr22tfPIobtM13om4DXj5w3mrmY1GUSp0g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730459AbgFHRuT (ORCPT
+        id S1730493AbgFHRvN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 13:50:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41452 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 13:51:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730379AbgFHRuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 13:50:19 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726097AbgFHRvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 13:51:10 -0400
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08123206A4;
-        Mon,  8 Jun 2020 17:50:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F0CE20775;
+        Mon,  8 Jun 2020 17:51:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591638618;
-        bh=BOMvK8twEoxR2gwl3HoMy3REosGmlB54aUnofqfDoas=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1aK5QW9RqII2SRd29V0nMDSbTZciFbUOl0ilBGgnUUh3VxRo2eW52VYb23WShnlvG
-         Au+nfCKDOICC2QyN1+b9IcWsg7odj6Zk3TwDH0b6aw+sdGNuU7kNlrUiQP3BjJ82tp
-         ZG8Ov275r8bWZFXRoh/xoLe1djlonSYzyZpdMJhw=
-Date:   Mon, 8 Jun 2020 19:50:15 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jesse Barnes <jsbarnes@google.com>
-Cc:     Rajat Jain <rajatja@google.com>, Rajat Jain <rajatxjain@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Zubin Mithra <zsm@google.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
- "whitelisted" drivers
-Message-ID: <20200608175015.GA457685@kroah.com>
-References: <20200602050626.GA2174820@kroah.com>
- <CAA93t1puWzFx=1h0xkZEkpzPJJbBAF7ONL_wicSGxHjq7KL+WA@mail.gmail.com>
- <20200603060751.GA465970@kroah.com>
- <CACK8Z6EXDf2vUuJbKm18R6HovwUZia4y_qUrTW8ZW+8LA2+RgA@mail.gmail.com>
- <20200603121613.GA1488883@kroah.com>
- <CACK8Z6EOGduHX1m7eyhFgsGV7CYiVN0en4U0cM4BEWJwk2bmoA@mail.gmail.com>
- <20200605080229.GC2209311@kroah.com>
- <CACK8Z6GR7-wseug=TtVyRarVZX_ao2geoLDNBwjtB+5Y7VWNEQ@mail.gmail.com>
- <20200607113632.GA49147@kroah.com>
- <CAJmaN=m5cGc8019LocvHTo-1U6beA9-h=T-YZtQEYEb_ry=b+Q@mail.gmail.com>
+        s=default; t=1591638670;
+        bh=D3wXppTORQC+JC0dFtrdJuZe1H4pJQ8bCoTFA0U9esw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=s2AR2Yrg/tJxynRmYNFBC6UXPd8+EqR744bap35dWc+yAqhWlbSSNSqCkGx+KvwzN
+         Ae8CjtbPpIoe3NwZ6bCYWQ8n5Q8pblA8VuRdz23DNBuskDG1e7DZHNAA2tho0c9Pbt
+         XHHIZV4VahsfNehm/kKb4FtyB9oV+rZWgzUW9pLo=
+Received: by mail-ot1-f52.google.com with SMTP id 69so14373441otv.2;
+        Mon, 08 Jun 2020 10:51:10 -0700 (PDT)
+X-Gm-Message-State: AOAM532UNvwMZT22kcRKQeXo7GqU6iIhdMKoI2Tzx/Hp1l56NykAWT08
+        OekTuDRAQIQVjIi2UhqKbuz0gM/Io6uqul/puA==
+X-Google-Smtp-Source: ABdhPJxe0EkadgRIWouviW9EZkoWQwgnCT0eAlnT5eiamTIRGqJZGjSFGRHmq77px3PI9IxPj0Gq8fbQMt6pPNoMHBY=
+X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr18915553ots.192.1591638669404;
+ Mon, 08 Jun 2020 10:51:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJmaN=m5cGc8019LocvHTo-1U6beA9-h=T-YZtQEYEb_ry=b+Q@mail.gmail.com>
+References: <20200604120504.32425-1-dmurphy@ti.com> <20200604120504.32425-7-dmurphy@ti.com>
+ <20200604230456.GA6520@bogus> <f8d648cc-9ff6-33a7-6da9-300a6b5b7d1c@ti.com>
+In-Reply-To: <f8d648cc-9ff6-33a7-6da9-300a6b5b7d1c@ti.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 8 Jun 2020 11:50:57 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqK6Wy1=T6vLn9dNd5tiK-_MdGcWEJWeJT8KCqqRXQ5eVw@mail.gmail.com>
+Message-ID: <CAL_JsqK6Wy1=T6vLn9dNd5tiK-_MdGcWEJWeJT8KCqqRXQ5eVw@mail.gmail.com>
+Subject: Re: [PATCH v26 06/15] dt-bindings: leds: Convert leds-lp55xx to yaml
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 10:03:38AM -0700, Jesse Barnes wrote:
-> > > I feel a lot of resistance to the proposal, however, I'm not hearing
-> > > any realistic solutions that may help us to move forward. We want to
-> > > go with a solution that is acceptable upstream as that is our mission,
-> > > and also helps the community, however the behemoth task of "inspect
-> > > all drivers and fix them" before launching a product is really an
-> > > unfair ask I feel :-(. Can you help us by suggesting a proposal that
-> > > does not require us to trust a driver equally for internal / external
-> > > devices?
-> >
-> > I have no idea why you feel you have to "inspect all drivers" other than
-> > the fact that for some reason _you_ do not feel they are secure today.
-> >
-> > What type of "assurance" are you, or anyone else going to be able to
-> > provide for any kernel driver that would meet such a "I feel good now"
-> > level?  Have you done that work for any specific driver already so that
-> > you can show us what you mean by this effort?  Perhaps it's as simple as
-> > "oh look, this tool over here runs 'clean' on the source code, all is
-> > good!", or not, I really have no idea.
-> 
-> I think there's a disconnect somewhere in this discussion... maybe
-> we're just approaching this with different assumptions?
-> 
-> I think you recognize the potential for driver vulnerabilities when
-> binding to new or potentially hostile devices that may be spoofing
-> DID/VID/class/etc than then go on to abuse driver trust or the driver
-> using unvalidated inputs from the device to crash or run arbitrary
-> code on the target system.
-> 
-> Yes such drivers should be fixed, no doubt.  But without lots of
-> fuzzing (we're working on this) and testing we'd like to avoid
-> exposing that attack surface at all.
-> 
-> I think your suggestion to disable driver binding once the initial
-> bus/slot devices have been bound will probably work for this
-> situation.  I just wanted to be clear that without some auditing,
-> fuzzing, and additional testing, we simply have to assume that drivers
-> are *not* secure and avoid using them on untrusted devices until we're
-> fairly confident they can handle them (whether just misbehaving or
-> malicious), in combination with other approaches like IOMMUs of
-> course.  And this isn't because we don't trust driver authors or
-> kernel developers to dtrt, it's just that for many devices (maybe USB
-> is an exception) I think driver authors haven't had to consider this
-> case much, and so I think it's prudent to expect bugs in this area
-> that we need to find & fix.
+On Thu, Jun 4, 2020 at 6:08 PM Dan Murphy <dmurphy@ti.com> wrote:
+>
+> Rob
+>
+> On 6/4/20 6:04 PM, Rob Herring wrote:
+> > On Thu, Jun 04, 2020 at 07:04:55AM -0500, Dan Murphy wrote:
+> >> Convert the leds-lp55xx.txt to yaml binding.
+>
+> I will fix all your comments.
+>
+> But why does your BOT have checkpatch warnings?
+>
+> https://gitlab.com/robherring/linux-dt-review/-/jobs/581282098/artifacts/file/checkpatch-1303471.log
+>
+> Is this because checkpatch thinks the .txt file is invalid?
 
-For USB, yes, we have now had to deal with "untrusted devices" lieing
-about their ids and sending us horrible data.  That's all due to the
-fuzzing tools that have been written over the past few years, and now we
-have some of those in the kernel tree itself to help with that testing.
+Because there's a bug in checkpatch.pl on handling these conversion patches.
 
-For PCI, heh, good luck, those assumptions about "devices sending valid
-data" are everywhere, if our experience with USB is any indication.
+checkpatch.pl runs mainly because it was easy for me to setup and get
+integrated into the patchwork checks.
 
-But, to take USB as an example, this is exactly what the USB
-"authorized" flag is there for, it's a "trust" setting that userspace
-has control over.  This came from the wireless USB spec, where it was
-determined that you could not trust devices.  So just use that same
-model here, move it to the driver core for all busses to use and you
-should be fine.
-
-If that doesn't meet your needs, please let me know the specifics of
-why, with patches :)
-
-Now, as to you all getting some sort of "Hardware flag" to determine
-"inside" vs. "outside" devices, hah, good luck!  It took us a long time
-to get that for USB, and even then, BIOSes lie and get it wrong all the
-time.  So you will have to also deal with that in some way, for your
-userspace policy.
-
-good luck!
-
-greg k-h
+Rob
