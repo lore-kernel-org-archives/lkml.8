@@ -2,118 +2,115 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17BEBC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B45C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFD4320810
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:06:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA06B206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:08:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vJ/uPack"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729698AbgFHMGW (ORCPT
+        id S1729731AbgFHMIg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 08:06:22 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:8828 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729620AbgFHMGW (ORCPT
+        Mon, 8 Jun 2020 08:08:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48722 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729620AbgFHMIe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 08:06:22 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 058C4Q96145904;
-        Mon, 8 Jun 2020 08:05:21 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31hmpwrj2f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 08 Jun 2020 08:05:21 -0400
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 058C5DwW150022;
-        Mon, 8 Jun 2020 08:05:17 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31hmpwrgxs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 08 Jun 2020 08:05:16 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 058C162I023522;
-        Mon, 8 Jun 2020 12:02:31 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma02fra.de.ibm.com with ESMTP id 31g2s81kfd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 08 Jun 2020 12:02:31 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 058C2SIj47775812
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 8 Jun 2020 12:02:28 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C857EA405C;
-        Mon,  8 Jun 2020 12:02:28 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4C0B5A4068;
-        Mon,  8 Jun 2020 12:02:25 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.178.150])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  8 Jun 2020 12:02:25 +0000 (GMT)
-Message-ID: <1591617744.4638.42.camel@linux.ibm.com>
-Subject: Re: [v1 PATCH 1/2] Refactoring carrying over IMA measuremnet logs
- over Kexec.
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Prakhar Srivastava <prsriva@linux.microsoft.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Cc:     catalin.marinas@arm.com, will@kernel.org, mpe@ellerman.id.au,
-        benh@kernel.crashing.org, paulus@samba.org, robh+dt@kernel.org,
-        frowand.list@gmail.com, dmitry.kasatkin@gmail.com,
-        jmorris@namei.org, serge@hallyn.com, pasha.tatashin@soleen.com,
-        allison@lohutok.net, kstewart@linuxfoundation.org,
-        takahiro.akashi@linaro.org, tglx@linutronix.de,
-        vincenzo.frascino@arm.com, mark.rutland@arm.com,
-        masahiroy@kernel.org, james.morse@arm.com, bhsharma@redhat.com,
-        mbrugger@suse.com, hsinyi@chromium.org, tao.li@vivo.com,
-        christophe.leroy@c-s.fr, gregkh@linuxfoundation.org,
-        nramas@linux.microsoft.com, tusharsu@linux.microsoft.com,
-        balajib@linux.microsoft.com
-Date:   Mon, 08 Jun 2020 08:02:24 -0400
-In-Reply-To: <20200607233323.22375-2-prsriva@linux.microsoft.com>
-References: <20200607233323.22375-1-prsriva@linux.microsoft.com>
-         <20200607233323.22375-2-prsriva@linux.microsoft.com>
+        Mon, 8 Jun 2020 08:08:34 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 440CDC08C5C3;
+        Mon,  8 Jun 2020 05:08:34 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id u8so625959pje.4;
+        Mon, 08 Jun 2020 05:08:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GgBLJ7JgYkUWmLexKJuiXlhG+mT6+4JFyp/4DW8tzGE=;
+        b=vJ/uPackHiPEJpZBFGnMo0PZ+sGgOm0fjmWvkr04D7egXmPEkO7765q7IUD80bf47p
+         yNiQ1KAqLgbb/VH1WwLqld0pq6TENtx1IWKkr2R9EVrCww+3BzJqxtuN8CXfsQw33gr2
+         7RbgwWrYzuJ/l0x7Jz89G/3lSH3K77eXgtyDI/h/Smp6H7TUKjn/Ap/+cCcTHPRI3HSB
+         aFD72mATaPb8OMMuAY4jvN+y6vLeCdwjNSUthRZ68UjU3TlMFIZ1jhztXa0EzqZKWamc
+         PQWzGy7lCE6n1JbgiV/Bc2jA9k1ktjPPu5q/8gYFvH+qZRgFyT5dIsaAWKGQPFEQL+dy
+         w82A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GgBLJ7JgYkUWmLexKJuiXlhG+mT6+4JFyp/4DW8tzGE=;
+        b=JGUogKpZNvgEy739GNIuIgfrIPw1cMPq0ApLU40LK+oWsgmQhoydhlK1J2a2jOViTh
+         aWUw/LEj2RglI3IMzyWGRXkhacgrK8zSnTt5Z2JHt9nADx1CepZMlVWBj13zrSlQzJzI
+         RMtT25SKk1gv+dvgRqeZLExtMyaEL4hpoYBHtDGCfvoXBRsGzEgyS2ET0vnQ2ramtm30
+         UytwEncajG0nmRwEOL6/Q2hJhkqy82ZmPQJ/ZRwXRZqSvazaCxVjOSP7VJeTGswXU9Ik
+         col1ILoKjEDxVZ1Co+IVDCsnhwyp4w+qMybWLe0/StVSU4VJ5Crz1hsOPCKtKLcLtfbW
+         qkIQ==
+X-Gm-Message-State: AOAM5333GrIfAzRvihmp3OLiTvTlzqW6PSMJcNXRJIPvHOHcAfjyiIYm
+        O99tTj1cZ3mnRFF4HA1WmVHLrgVNpNgDdW7Evz0=
+X-Google-Smtp-Source: ABdhPJxAPNmHSfHtvMBx5TWv9upG1K159+p1oEp8DWJbk7GDq5o7a0a9+BJV/Hn+lXIAa8n6+PaeEPGzGGJeqEi1EYA=
+X-Received: by 2002:a17:90a:b30d:: with SMTP id d13mr10169919pjr.181.1591618113794;
+ Mon, 08 Jun 2020 05:08:33 -0700 (PDT)
+MIME-Version: 1.0
+References: <1591611829-23071-1-git-send-email-agordeev@linux.ibm.com> <CAHp75VcFdrvNMj0TL8ZHxShqqGDM31Hy8vitmn9HOPjZ6f9uYw@mail.gmail.com>
+In-Reply-To: <CAHp75VcFdrvNMj0TL8ZHxShqqGDM31Hy8vitmn9HOPjZ6f9uYw@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 8 Jun 2020 15:08:22 +0300
+Message-ID: <CAHp75Ve98sbs9do=vD7fk+iWWgTPfQ=8HT1Nh4ehBtdtp7joKQ@mail.gmail.com>
+Subject: Re: [PATCH RESEND2] lib: fix bitmap_parse() on 64-bit big endian archs
+To:     Alexander Gordeev <agordeev@linux.ibm.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-s390@vger.kernel.org, Stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yury Norov <yury.norov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Amritha Nambiar <amritha.nambiar@intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        "Tobin C . Harding" <tobin@kernel.org>,
+        Vineet Gupta <vineet.gupta1@synopsys.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Willem de Bruijn <willemb@google.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-08_11:2020-06-08,2020-06-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0
- cotscore=-2147483648 spamscore=0 bulkscore=0 lowpriorityscore=0
- impostorscore=0 suspectscore=0 malwarescore=0 adultscore=0 mlxlogscore=945
- priorityscore=1501 phishscore=0 clxscore=1011 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006080093
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prakhar,
+On Mon, Jun 8, 2020 at 3:03 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Mon, Jun 8, 2020 at 1:26 PM Alexander Gordeev <agordeev@linux.ibm.com> wrote:
 
-On Sun, 2020-06-07 at 16:33 -0700, Prakhar Srivastava wrote:
-> This patch moves the non-architecture specific code out of powerpc and
->  adds to security/ima. 
-> Update the arm64 and powerpc kexec file load paths to carry the IMA measurement
-> logs.
+...
 
-From your patch description, this patch should be broken up.  Moving
-the non-architecture specific code out of powerpc should be one patch.
- Additional support should be in another patch.  After each patch, the
-code should work properly.
+> Can't we simple do
+>
+>         int chunk_index = 0;
+>         ...
+>         do {
+> #if defined(CONFIG_64BIT) && defined(__BIG_ENDIAN)
+>                end = bitmap_get_x32_reverse(start, end,
+> bitmap[chunk_index ^ 1]);
+> #else
+>                end = bitmap_get_x32_reverse(start, end, bitmap[chunk_index]);
+> #endif
+>         ...
+>         } while (++chunk_index);
+>
+> ?
 
-Before posting patches, please review them, making sure
-unnecessary/unwanted changes haven't crept in - commenting out code,
-moving code without removing the original code.
+And moreover, we simple can replace bitmap by maskp here, and drop it
+from definition block.
 
-thanks,
-
-Mimi
+-- 
+With Best Regards,
+Andy Shevchenko
