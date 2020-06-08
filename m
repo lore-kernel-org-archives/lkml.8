@@ -7,49 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D2C9C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5219DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2085A204EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:51:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AEDE204EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:51:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660286;
-	bh=2Q9Yr7e7ItrZAW0q4ARj2n/qHLvZhPdCDaCzDRgnIQQ=;
+	s=default; t=1591660288;
+	bh=7NsuvXTif01JnkdbHSo08MuqQTzSoDAw+D/hR9QqYyg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NXQOqbCRCteEjYhworslNZZwgL2f8VKrzW+LheLI5dxUHShI/VD1h3Zd7fwsqa+ql
-	 6KVnc02sK6doE0gHlo2+NURwHR7XMpQeJwdiDyWFl3VlNLRngr+f1wsEvzPYF/rZo8
-	 9deupbYbJeoBNMsSmfunACWjrN2LhsAm9DrAY1LE=
+	b=hOOLx2mR3HLT69pp/MK0YDxRpvaCxQrXh5CaHleK6h8miCI61WBk68SKoftFqw/SS
+	 DdGXD4BJj813a56tmRPNs9OCGXYjUC9T7EJzIE6XForOE4GIagqc61omD/a4xvC/2a
+	 2EqiJg65ySWgCtwuoD8sBS69x/UBDeWCNzZYX3jM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732657AbgFHXvW (ORCPT
+        id S1731746AbgFHXZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:51:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51534 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:25:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731753AbgFHXZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:25:07 -0400
+        id S1730541AbgFHXUD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:20:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67D7820842;
-        Mon,  8 Jun 2020 23:25:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED1E920842;
+        Mon,  8 Jun 2020 23:20:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658707;
-        bh=2Q9Yr7e7ItrZAW0q4ARj2n/qHLvZhPdCDaCzDRgnIQQ=;
+        s=default; t=1591658402;
+        bh=7NsuvXTif01JnkdbHSo08MuqQTzSoDAw+D/hR9QqYyg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=driqYrPFlGRJclcXWv4UnWSrMwpkEx0DwQdxCrrWHi2CPopsRw6hPZ92b2zcfkLcc
-         ka+2qC6X2pVHCR3qAXSMIUUlEIRJKmMxuJtJ4Knwa43abSUyPPOR11/EWEYjc91gTQ
-         kpMjXxlVhiLv5JmzAbEbci4wtv3bs3mpJFPCsuV8=
+        b=18Ns0+m9zNFG1amRijtElzut4WA4/gs65HWZlH/EZshaeP4NDzfKATZyIX1hyt+BR
+         u5S1BKJBwA8fV+qZJiJb2XR0kJJvQKkANvHX4eRch4sIpZINhu+FmGgAhdeVHSUyOS
+         fiLz1yR+NaCnYUwX7emtxxTnhRcfPAADaoBoEiGM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Brad Love <brad@nextdimension.cc>, Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 05/72] media: si2157: Better check for running tuner in init
-Date:   Mon,  8 Jun 2020 19:23:53 -0400
-Message-Id: <20200608232500.3369581-5-sashal@kernel.org>
+Cc:     Jon Doron <arilou@gmail.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Roman Kagan <rvkagan@yandex-team.ru>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 057/175] x86/kvm/hyper-v: Explicitly align hcall param for kvm_hyperv_exit
+Date:   Mon,  8 Jun 2020 19:16:50 -0400
+Message-Id: <20200608231848.3366970-57-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608232500.3369581-1-sashal@kernel.org>
-References: <20200608232500.3369581-1-sashal@kernel.org>
+In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
+References: <20200608231848.3366970-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,59 +62,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brad Love <brad@nextdimension.cc>
+From: Jon Doron <arilou@gmail.com>
 
-[ Upstream commit e955f959ac52e145f27ff2be9078b646d0352af0 ]
+[ Upstream commit f7d31e65368aeef973fab788aa22c4f1d5a6af66 ]
 
-Getting the Xtal trim property to check if running is less error prone.
-Reset if_frequency if state is unknown.
+The problem the patch is trying to address is the fact that 'struct
+kvm_hyperv_exit' has different layout on when compiling in 32 and 64 bit
+modes.
 
-Replaces the previous "garbage check".
+In 64-bit mode the default alignment boundary is 64 bits thus
+forcing extra gaps after 'type' and 'msr' but in 32-bit mode the
+boundary is at 32 bits thus no extra gaps.
 
-Signed-off-by: Brad Love <brad@nextdimension.cc>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+This is an issue as even when the kernel is 64 bit, the userspace using
+the interface can be both 32 and 64 bit but the same 32 bit userspace has
+to work with 32 bit kernel.
+
+The issue is fixed by forcing the 64 bit layout, this leads to ABI
+change for 32 bit builds and while we are obviously breaking '32 bit
+userspace with 32 bit kernel' case, we're fixing the '32 bit userspace
+with 64 bit kernel' one.
+
+As the interface has no (known) users and 32 bit KVM is rather baroque
+nowadays, this seems like a reasonable decision.
+
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Jon Doron <arilou@gmail.com>
+Message-Id: <20200424113746.3473563-2-arilou@gmail.com>
+Reviewed-by: Roman Kagan <rvkagan@yandex-team.ru>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/tuners/si2157.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ Documentation/virt/kvm/api.txt | 2 ++
+ include/uapi/linux/kvm.h       | 2 ++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/drivers/media/tuners/si2157.c b/drivers/media/tuners/si2157.c
-index e35b1faf0ddc..c826997f5433 100644
---- a/drivers/media/tuners/si2157.c
-+++ b/drivers/media/tuners/si2157.c
-@@ -84,24 +84,23 @@ static int si2157_init(struct dvb_frontend *fe)
- 	struct si2157_cmd cmd;
- 	const struct firmware *fw;
- 	const char *fw_name;
--	unsigned int uitmp, chip_id;
-+	unsigned int chip_id, xtal_trim;
- 
- 	dev_dbg(&client->dev, "\n");
- 
--	/* Returned IF frequency is garbage when firmware is not running */
--	memcpy(cmd.args, "\x15\x00\x06\x07", 4);
-+	/* Try to get Xtal trim property, to verify tuner still running */
-+	memcpy(cmd.args, "\x15\x00\x04\x02", 4);
- 	cmd.wlen = 4;
- 	cmd.rlen = 4;
- 	ret = si2157_cmd_execute(client, &cmd);
--	if (ret)
--		goto err;
- 
--	uitmp = cmd.args[2] << 0 | cmd.args[3] << 8;
--	dev_dbg(&client->dev, "if_frequency kHz=%u\n", uitmp);
-+	xtal_trim = cmd.args[2] | (cmd.args[3] << 8);
- 
--	if (uitmp == dev->if_frequency / 1000)
-+	if (ret == 0 && xtal_trim < 16)
- 		goto warm;
- 
-+	dev->if_frequency = 0; /* we no longer know current tuner state */
-+
- 	/* power up */
- 	if (dev->chiptype == SI2157_CHIPTYPE_SI2146) {
- 		memcpy(cmd.args, "\xc0\x05\x01\x00\x00\x0b\x00\x00\x01", 9);
+diff --git a/Documentation/virt/kvm/api.txt b/Documentation/virt/kvm/api.txt
+index 4833904d32a5..a18e996fa54b 100644
+--- a/Documentation/virt/kvm/api.txt
++++ b/Documentation/virt/kvm/api.txt
+@@ -4444,9 +4444,11 @@ EOI was received.
+ #define KVM_EXIT_HYPERV_SYNIC          1
+ #define KVM_EXIT_HYPERV_HCALL          2
+ 			__u32 type;
++			__u32 pad1;
+ 			union {
+ 				struct {
+ 					__u32 msr;
++					__u32 pad2;
+ 					__u64 control;
+ 					__u64 evt_page;
+ 					__u64 msg_page;
+diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+index 52641d8ca9e8..e735bc4075dc 100644
+--- a/include/uapi/linux/kvm.h
++++ b/include/uapi/linux/kvm.h
+@@ -189,9 +189,11 @@ struct kvm_hyperv_exit {
+ #define KVM_EXIT_HYPERV_SYNIC          1
+ #define KVM_EXIT_HYPERV_HCALL          2
+ 	__u32 type;
++	__u32 pad1;
+ 	union {
+ 		struct {
+ 			__u32 msr;
++			__u32 pad2;
+ 			__u64 control;
+ 			__u64 evt_page;
+ 			__u64 msg_page;
 -- 
 2.25.1
 
