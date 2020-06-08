@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57742C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E82C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 399C720872
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:21:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45D6720897
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:21:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658510;
-	bh=oEewM0dkDkgCwwft76H40HPXAdaBytAgQDChrE8c0FQ=;
+	s=default; t=1591658515;
+	bh=kl7MXkBZJGC6s8thZUM2YDAIP7k2Z9xNDyBuU/WLlk8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lC+l2U8ZEq3FS7jwksnu10KIQd8u6FFKgscLp7BZFomG6IJdw/wynq7ZrY82aZb8p
-	 VxG7ubgMtmeUQCXxO2XCSikM0pqeNDCf9z5d4lm/RIqo2UY8yVkxYl7XNrpIEFw0tO
-	 lljWX97KYGasuQLQ3VwX5Pao02jdx3mHujjOf0/k=
+	b=lpDdndCiDyd6YNwejyWxW2egMPnjEKsR/+Zc9BgLB+Ado+7Sx8GSAZJKSiBRUPGkD
+	 FTkwqPB6jWBJLOqwNfrebwq1nd0cVVOcfL/n2UdFJoZPh7ALtMRF91tHTC28u3N5Pl
+	 r7WeYzEYV3r9x8Dkcci/Xgx2ZerIx5O6y0qmb7QA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731213AbgFHXVs (ORCPT
+        id S1731228AbgFHXVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:21:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38966 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:21:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730017AbgFHXR0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:17:26 -0400
+        id S1729680AbgFHXR3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:17:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DDFC2086A;
-        Mon,  8 Jun 2020 23:17:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E79BA20899;
+        Mon,  8 Jun 2020 23:17:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658246;
-        bh=oEewM0dkDkgCwwft76H40HPXAdaBytAgQDChrE8c0FQ=;
+        s=default; t=1591658248;
+        bh=kl7MXkBZJGC6s8thZUM2YDAIP7k2Z9xNDyBuU/WLlk8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yuwcPbBwSu3cPQOHb96YKnHgjXwKZejehVDLhN5EH0OvhDxc3mfuSknzWwrNwu1EI
-         wO/gLldZhTk/RNH18uuLa9Q8KTcSgD1YKei2ufuRkPEqC07L57xGBzeehK+6Pz95l0
-         T6T4/jnyZ3hjlkbScBiIS4RSu9hh1dWVwCNYVqwc=
+        b=r+74YaG3d5z4l1KyordyVQV1GB/b2YN5LUnOTWdMsqDIIvMEu0fq5Ps4uZZueXdWP
+         3hC1k+jxroysNojiwtiZhhfTRMQXNjbfaT6k7QQQTeq5nHusc7Qi2+nUk7gfjVfJSo
+         Knalf2RQ3/cl/8/rjQwsXFj7XcIBegx3+Z3+WokA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johan Jonker <jbx6244@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 256/606] ARM: dts: rockchip: fix pinctrl sub nodename for spi in rk322x.dtsi
-Date:   Mon,  8 Jun 2020 19:06:21 -0400
-Message-Id: <20200608231211.3363633-256-sashal@kernel.org>
+Cc:     Andrew Oakley <andrew@adoakley.name>, Takashi Iwai <tiwai@suse.de>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.6 258/606] ALSA: usb-audio: add mapping for ASRock TRX40 Creator
+Date:   Mon,  8 Jun 2020 19:06:23 -0400
+Message-Id: <20200608231211.3363633-258-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -60,59 +58,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Jonker <jbx6244@gmail.com>
+From: Andrew Oakley <andrew@adoakley.name>
 
-[ Upstream commit 855bdca1781c79eb661f89c8944c4a719ce720e8 ]
+[ Upstream commit da7a8f1a8fc3e14c6dcc52b4098bddb8f20390be ]
 
-A test with the command below gives these errors:
+This is another TRX40 based motherboard with ALC1220-VB USB-audio
+that requires a static mapping table.
 
-arch/arm/boot/dts/rk3229-evb.dt.yaml: spi-0:
-'#address-cells' is a required property
-arch/arm/boot/dts/rk3229-evb.dt.yaml: spi-1:
-'#address-cells' is a required property
-arch/arm/boot/dts/rk3229-xms6.dt.yaml: spi-0:
-'#address-cells' is a required property
-arch/arm/boot/dts/rk3229-xms6.dt.yaml: spi-1:
-'#address-cells' is a required property
+This motherboard also has a PCI device which advertises no codecs.  The
+PCI ID is 1022:1487 and PCI SSID is 1022:d102.  As this is using the AMD
+vendor ID, don't blacklist for now in case other boards have a working
+audio device with the same ssid.
 
-The $nodename pattern for spi nodes is
-"^spi(@.*|-[0-9a-f])*$". To prevent warnings rename
-'spi-0' and 'spi-1' pinctrl sub nodenames to
-'spi0' and 'spi1' in 'rk322x.dtsi'.
+alsa-info.sh report for this board:
+http://alsa-project.org/db/?f=0a742f89066527497b77ce16bca486daccf8a70c
 
-make ARCH=arm dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/spi/spi-controller.yaml
-
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-Link: https://lore.kernel.org/r/20200424123923.8192-1-jbx6244@gmail.com
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Andrew Oakley <andrew@adoakley.name>
+Link: https://lore.kernel.org/r/20200503141639.35519-1-andrew@adoakley.name
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/rk322x.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/usb/mixer_maps.c   | 5 +++++
+ sound/usb/quirks-table.h | 1 +
+ 2 files changed, 6 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
-index 729119952c68..a83f65486ad4 100644
---- a/arch/arm/boot/dts/rk322x.dtsi
-+++ b/arch/arm/boot/dts/rk322x.dtsi
-@@ -1033,7 +1033,7 @@ i2c3_xfer: i2c3-xfer {
- 			};
- 		};
+diff --git a/sound/usb/mixer_maps.c b/sound/usb/mixer_maps.c
+index 0260c750e156..bfdc6ad52785 100644
+--- a/sound/usb/mixer_maps.c
++++ b/sound/usb/mixer_maps.c
+@@ -549,6 +549,11 @@ static const struct usbmix_ctl_map usbmix_ctl_maps[] = {
+ 		.map = trx40_mobo_map,
+ 		.connector_map = trx40_mobo_connector_map,
+ 	},
++	{	/* Asrock TRX40 Creator */
++		.id = USB_ID(0x26ce, 0x0a01),
++		.map = trx40_mobo_map,
++		.connector_map = trx40_mobo_connector_map,
++	},
+ 	{ 0 } /* terminator */
+ };
  
--		spi-0 {
-+		spi0 {
- 			spi0_clk: spi0-clk {
- 				rockchip,pins = <0 RK_PB1 2 &pcfg_pull_up>;
- 			};
-@@ -1051,7 +1051,7 @@ spi0_cs1: spi0-cs1 {
- 			};
- 		};
+diff --git a/sound/usb/quirks-table.h b/sound/usb/quirks-table.h
+index 8c2f5c23e1b4..aa4c16ce0e57 100644
+--- a/sound/usb/quirks-table.h
++++ b/sound/usb/quirks-table.h
+@@ -3647,6 +3647,7 @@ AU0828_DEVICE(0x2040, 0x7270, "Hauppauge", "HVR-950Q"),
+ ALC1220_VB_DESKTOP(0x0414, 0xa002), /* Gigabyte TRX40 Aorus Pro WiFi */
+ ALC1220_VB_DESKTOP(0x0db0, 0x0d64), /* MSI TRX40 Creator */
+ ALC1220_VB_DESKTOP(0x0db0, 0x543d), /* MSI TRX40 */
++ALC1220_VB_DESKTOP(0x26ce, 0x0a01), /* Asrock TRX40 Creator */
+ #undef ALC1220_VB_DESKTOP
  
--		spi-1 {
-+		spi1 {
- 			spi1_clk: spi1-clk {
- 				rockchip,pins = <0 RK_PC7 2 &pcfg_pull_up>;
- 			};
+ #undef USB_DEVICE_VENDOR_SPEC
 -- 
 2.25.1
 
