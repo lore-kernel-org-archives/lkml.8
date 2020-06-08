@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EAE5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3553C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0FBD2074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:20:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C07432074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:20:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662020;
-	bh=KIVtMWsZYjSeXPcrFP3pyIwtXZ4XUtv5qHuAvVcJRs8=;
+	s=default; t=1591662025;
+	bh=EttFuyWUsVA2+0so7dutokKTLb7us68VFKlExgm5ag4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K1V/i41kJDbriGkRKFoOpdUQAsQ3y87Y5WpMJW2yuIBbBMTy2vshwM4vF9BhA4OWX
-	 a1E4eMozak/dYOo9U1r+TEHVqhdOz6YlHEu2lzmtauEXzdMOSc/pXWGq+G2UycBy/8
-	 tjVwhKMOcZV7lAQFty6vODa0SRJt1NmX82+PeNdA=
+	b=DePQp+akdbrNnUoB+hxibSr1p0bdBL0l1zJFeKA7ABNowrBMF03bTH1xpfpL9sjjw
+	 XeeDefGgyPybQ3g9/ZyCsSB5uORPu+oV5d/uwuSdsiOC5/AuzaQpYEvdGOYpRejEAB
+	 aKTZ/MtQSkYe/kPH3eZntIMTtmOY6ecDuCe63v5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730571AbgFHXSD (ORCPT
+        id S1730959AbgFIAUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:18:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34680 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:20:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729801AbgFHXOZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:14:25 -0400
+        id S1730116AbgFHXSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:18:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CB1B20C09;
-        Mon,  8 Jun 2020 23:14:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D56B520823;
+        Mon,  8 Jun 2020 23:18:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658065;
-        bh=KIVtMWsZYjSeXPcrFP3pyIwtXZ4XUtv5qHuAvVcJRs8=;
+        s=default; t=1591658283;
+        bh=EttFuyWUsVA2+0so7dutokKTLb7us68VFKlExgm5ag4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VQ462wQb5I53Aca1fy2iy4ObG5pEKhHfXZGMQk8j43fTHUKSOPunlTddC5kOp6cAP
-         lDzEit+uKumjpnWuHPmiBI9OrwxH+o8/nAHi8JGMjkz4puUia6I8VR8GBUfI/QtUTv
-         +hxM+rS3y9UO1s0RqExcy6AK3lVndv5ql9MYC20Y=
+        b=e646brd31a7ET/ANAANtpY6scNT0oIxilSA/IBIzRzW9FDak0UNekxxyUtPei6zwC
+         VfO6vcJFuz61VWBUYKHs1KvkxUgSOgTyrf00L2yfjm3R0j3fwKq4+Wg6vkiqUUYPZa
+         mefIpb0b9jbgc02xoX3JgXz5LhQy2WiAS5ahcDJI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefano Garzarella <sgarzare@redhat.com>,
+Cc:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        syzbot+bb82cafc737c002d11ca@syzkaller.appspotmail.com,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 111/606] vhost/vsock: fix packet delivery order to monitoring devices
-Date:   Mon,  8 Jun 2020 19:03:56 -0400
-Message-Id: <20200608231211.3363633-111-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 288/606] drivers: net: hamradio: Fix suspicious RCU usage warning in bpqether.c
+Date:   Mon,  8 Jun 2020 19:06:53 -0400
+Message-Id: <20200608231211.3363633-288-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -60,45 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefano Garzarella <sgarzare@redhat.com>
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-[ Upstream commit 107bc0766b9feb5113074c753735a3f115c2141f ]
+[ Upstream commit 95f59bf88bb75281cc626e283ecefdd5d5641427 ]
 
-We want to deliver packets to monitoring devices before it is
-put in the virtqueue, to avoid that replies can appear in the
-packet capture before the transmitted packet.
+This patch fixes the following warning:
+=============================
+WARNING: suspicious RCU usage
+5.7.0-rc5-next-20200514-syzkaller #0 Not tainted
+-----------------------------
+drivers/net/hamradio/bpqether.c:149 RCU-list traversed in non-reader section!!
 
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+Since rtnl lock is held, pass this cond in list_for_each_entry_rcu().
+
+Reported-by: syzbot+bb82cafc737c002d11ca@syzkaller.appspotmail.com
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vhost/vsock.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/net/hamradio/bpqether.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
-index bb3f63386b47..53294c2f8cff 100644
---- a/drivers/vhost/vsock.c
-+++ b/drivers/vhost/vsock.c
-@@ -181,14 +181,14 @@ vhost_transport_do_send_pkt(struct vhost_vsock *vsock,
- 			break;
- 		}
+diff --git a/drivers/net/hamradio/bpqether.c b/drivers/net/hamradio/bpqether.c
+index fbea6f232819..e2ad3c2e8df5 100644
+--- a/drivers/net/hamradio/bpqether.c
++++ b/drivers/net/hamradio/bpqether.c
+@@ -127,7 +127,8 @@ static inline struct net_device *bpq_get_ax25_dev(struct net_device *dev)
+ {
+ 	struct bpqdev *bpq;
  
--		vhost_add_used(vq, head, sizeof(pkt->hdr) + payload_len);
--		added = true;
--
--		/* Deliver to monitoring devices all correctly transmitted
--		 * packets.
-+		/* Deliver to monitoring devices all packets that we
-+		 * will transmit.
- 		 */
- 		virtio_transport_deliver_tap_pkt(pkt);
- 
-+		vhost_add_used(vq, head, sizeof(pkt->hdr) + payload_len);
-+		added = true;
-+
- 		pkt->off += payload_len;
- 		total_len += payload_len;
- 
+-	list_for_each_entry_rcu(bpq, &bpq_devices, bpq_list) {
++	list_for_each_entry_rcu(bpq, &bpq_devices, bpq_list,
++				lockdep_rtnl_is_held()) {
+ 		if (bpq->ethdev == dev)
+ 			return bpq->axdev;
+ 	}
 -- 
 2.25.1
 
