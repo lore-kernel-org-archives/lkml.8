@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96614C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2895FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7837921531
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0716A2068D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:15:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658112;
-	bh=5GzVTt+R+n0VqvXUNrg3imlRJK7rHOoKij++fVk9bF8=;
+	s=default; t=1591658116;
+	bh=Gb4m4Bg7zSFEgsq+BlQuMfZGMwCh1LLMqd3yI6mgJ00=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=piZavAaVAgSaSXO8i6qtCDEPuxWwlBzikeARL5GoHimBxqSD+kQ90JaBpAWbtLzo7
-	 beb62147DBTyEcmgXNGt7uA+l28CSTlAk0GFpHH8aObHzngK5DMwfaxbcxfcItwQBx
-	 b1kYDsTvUA7hPfOJDuevClwJ8hnntP5sAx8+VgA4=
+	b=ajcQcMviNmUFDSIeuBUAnVVzavHLUejz7Eilp2gISq7g5GTdYK+5Dnnoy63JMXrT/
+	 HC3OQAzM8MyUCdGO8xrze4h8oX9QyaPaXEYNimi5bfjSZbJdFaKO6VaB5yFZ+piNl/
+	 yc3yIhkhljDY/ZUh+5n/D6TdFEVzzLZIwicZZgq8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730002AbgFHXPL (ORCPT
+        id S1728988AbgFHXPO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:15:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60232 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:15:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728058AbgFHXMj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:12:39 -0400
+        id S1728134AbgFHXMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:12:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 291302100A;
-        Mon,  8 Jun 2020 23:12:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BB3C212CC;
+        Mon,  8 Jun 2020 23:12:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657958;
-        bh=5GzVTt+R+n0VqvXUNrg3imlRJK7rHOoKij++fVk9bF8=;
+        s=default; t=1591657962;
+        bh=Gb4m4Bg7zSFEgsq+BlQuMfZGMwCh1LLMqd3yI6mgJ00=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SRpeiHzSdUnTi+nakwXHlOPjo1OJs61eIpulrbbFRDo1BzuOcW5ynlHAQOYxcTqM+
-         afFF7p1r4MZaHaSpWj3OEMkyFzXxI7D3SA00+BZ624Mjg2Da3k17+PFc3Z8jzmEF8E
-         1CRxMU3WjHHIHBEA0I7cx7PXs14eRqcZaIW6+xZE=
+        b=yaOo7wwk+ghb0sVQfevFXDdiHqkcdKc1OWumfWE76vAp3CmH93q3KwuuHQx/eKuB/
+         S4yzaPvSsmhuy+ottEq4+OIHyGQP4StyJ1XWntTbUDvueeV85q1NdIBdYcsmayluJs
+         G3W6UbaWkOKAdWMWKXU0OdBQ7yDpuitdCCLSvOzI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.6 023/606] ALSA: hda/realtek - Add COEF workaround for ASUS ZenBook UX431DA
-Date:   Mon,  8 Jun 2020 19:02:28 -0400
-Message-Id: <20200608231211.3363633-23-sashal@kernel.org>
+Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Hardik Gajjar <hgajjar@de.adit-jv.com>,
+        linux-renesas-soc@vger.kernel.org, linux-usb@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH AUTOSEL 5.6 026/606] usb: core: hub: limit HUB_QUIRK_DISABLE_AUTOSUSPEND to USB5534B
+Date:   Mon,  8 Jun 2020 19:02:31 -0400
+Message-Id: <20200608231211.3363633-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -59,63 +62,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Eugeniu Rosca <erosca@de.adit-jv.com>
 
-commit 1b94e59d30afecf18254ad413e953e7587645a20 upstream.
+commit 76e1ef1d81a4129d7e2fb8c48c83b166d1c8e040 upstream.
 
-ASUS ZenBook UX431DA requires an additional COEF setup when booted
-from the recent Windows 10, otherwise it produces the noisy output.
-The quirk turns on COEF 0x1b bit 10 that has been cleared supposedly
-due to the pop noise reduction.
+On Tue, May 12, 2020 at 09:36:07PM +0800, Kai-Heng Feng wrote [1]:
+> This patch prevents my Raven Ridge xHCI from getting runtime suspend.
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207553
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Link: https://lore.kernel.org/r/20200512073203.14091-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+The problem described in v5.6 commit 1208f9e1d758c9 ("USB: hub: Fix the
+broken detection of USB3 device in SMSC hub") applies solely to the
+USB5534B hub [2] present on the Kingfisher Infotainment Carrier Board,
+manufactured by Shimafuji Electric Inc [3].
+
+Despite that, the aforementioned commit applied the quirk to _all_ hubs
+carrying vendor ID 0x424 (i.e. SMSC), of which there are more [4] than
+initially expected. Consequently, the quirk is now enabled on platforms
+carrying SMSC/Microchip hub models which potentially don't exhibit the
+original issue.
+
+To avoid reports like [1], further limit the quirk's scope to
+USB5534B [2], by employing both Vendor and Product ID checks.
+
+Tested on H3ULCB + Kingfisher rev. M05.
+
+[1] https://lore.kernel.org/linux-renesas-soc/73933975-6F0E-40F5-9584-D2B8F615C0F3@canonical.com/
+[2] https://www.microchip.com/wwwproducts/en/USB5534B
+[3] http://www.shimafuji.co.jp/wp/wp-content/uploads/2018/08/SBEV-RCAR-KF-M06Board_HWSpecificationEN_Rev130.pdf
+[4] https://devicehunt.com/search/type/usb/vendor/0424/device/any
+
+Fixes: 1208f9e1d758c9 ("USB: hub: Fix the broken detection of USB3 device in SMSC hub")
+Cc: stable@vger.kernel.org # v4.14+
+Cc: Alan Stern <stern@rowland.harvard.edu>
+Cc: Hardik Gajjar <hgajjar@de.adit-jv.com>
+Cc: linux-renesas-soc@vger.kernel.org
+Cc: linux-usb@vger.kernel.org
+Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Link: https://lore.kernel.org/r/20200514220246.13290-1-erosca@de.adit-jv.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- sound/pci/hda/patch_realtek.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/usb/core/hub.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index e787792770be..d6bc39dce4cf 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -5978,6 +5978,7 @@ enum {
- 	ALC294_FIXUP_ASUS_DUAL_SPK,
- 	ALC285_FIXUP_THINKPAD_HEADSET_JACK,
- 	ALC294_FIXUP_ASUS_HPE,
-+	ALC294_FIXUP_ASUS_COEF_1B,
- 	ALC285_FIXUP_HP_GPIO_LED,
- };
+diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+index 2b6565c06c23..fc748c731832 100644
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -39,6 +39,7 @@
  
-@@ -7112,6 +7113,17 @@ static const struct hda_fixup alc269_fixups[] = {
- 		.chained = true,
- 		.chain_id = ALC294_FIXUP_ASUS_HEADSET_MIC
- 	},
-+	[ALC294_FIXUP_ASUS_COEF_1B] = {
-+		.type = HDA_FIXUP_VERBS,
-+		.v.verbs = (const struct hda_verb[]) {
-+			/* Set bit 10 to correct noisy output after reboot from
-+			 * Windows 10 (due to pop noise reduction?)
-+			 */
-+			{ 0x20, AC_VERB_SET_COEF_INDEX, 0x1b },
-+			{ 0x20, AC_VERB_SET_PROC_COEF, 0x4e4b },
-+			{ }
-+		},
-+	},
- 	[ALC285_FIXUP_HP_GPIO_LED] = {
- 		.type = HDA_FIXUP_FUNC,
- 		.v.func = alc285_fixup_hp_gpio_led,
-@@ -7283,6 +7295,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x1043, 0x19ce, "ASUS B9450FA", ALC294_FIXUP_ASUS_HPE),
- 	SND_PCI_QUIRK(0x1043, 0x1a13, "Asus G73Jw", ALC269_FIXUP_ASUS_G73JW),
- 	SND_PCI_QUIRK(0x1043, 0x1a30, "ASUS X705UD", ALC256_FIXUP_ASUS_MIC),
-+	SND_PCI_QUIRK(0x1043, 0x1b11, "ASUS UX431DA", ALC294_FIXUP_ASUS_COEF_1B),
- 	SND_PCI_QUIRK(0x1043, 0x1b13, "Asus U41SV", ALC269_FIXUP_INV_DMIC),
- 	SND_PCI_QUIRK(0x1043, 0x1bbd, "ASUS Z550MA", ALC255_FIXUP_ASUS_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1043, 0x1c23, "Asus X55U", ALC269_FIXUP_LIMIT_INT_MIC_BOOST),
+ #define USB_VENDOR_GENESYS_LOGIC		0x05e3
+ #define USB_VENDOR_SMSC				0x0424
++#define USB_PRODUCT_USB5534B			0x5534
+ #define HUB_QUIRK_CHECK_PORT_AUTOSUSPEND	0x01
+ #define HUB_QUIRK_DISABLE_AUTOSUSPEND		0x02
+ 
+@@ -5621,8 +5622,11 @@ static void hub_event(struct work_struct *work)
+ }
+ 
+ static const struct usb_device_id hub_id_table[] = {
+-    { .match_flags = USB_DEVICE_ID_MATCH_VENDOR | USB_DEVICE_ID_MATCH_INT_CLASS,
++    { .match_flags = USB_DEVICE_ID_MATCH_VENDOR
++                   | USB_DEVICE_ID_MATCH_PRODUCT
++                   | USB_DEVICE_ID_MATCH_INT_CLASS,
+       .idVendor = USB_VENDOR_SMSC,
++      .idProduct = USB_PRODUCT_USB5534B,
+       .bInterfaceClass = USB_CLASS_HUB,
+       .driver_info = HUB_QUIRK_DISABLE_AUTOSUSPEND},
+     { .match_flags = USB_DEVICE_ID_MATCH_VENDOR
 -- 
 2.25.1
 
