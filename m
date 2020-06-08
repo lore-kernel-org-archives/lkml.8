@@ -2,172 +2,110 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C460C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB792C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59FE62076A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:30:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C814D2076A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:34:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729335AbgFHKad (ORCPT
+        id S1729342AbgFHKeL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 06:30:33 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:58978 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729281AbgFHKad (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 06:30:33 -0400
-Received: from fsav303.sakura.ne.jp (fsav303.sakura.ne.jp [153.120.85.134])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 058AUTai079333;
-        Mon, 8 Jun 2020 19:30:29 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav303.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav303.sakura.ne.jp);
- Mon, 08 Jun 2020 19:30:29 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav303.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 058AUS5G079324
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Mon, 8 Jun 2020 19:30:29 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH v2] twist: allow converting pr_devel()/pr_debug() into
- snprintf()
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     syzkaller <syzkaller@googlegroups.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ondrej Mosnacek <omosnace@redhat.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-References: <e3b30905-4497-29b4-4636-a313283dbc56@i-love.sakura.ne.jp>
- <20200528065603.3596-1-penguin-kernel@I-love.SAKURA.ne.jp>
- <20200528110646.GC11286@linux-b0ei>
- <e0d6c04f-7601-51e7-c969-300e938dedc0@i-love.sakura.ne.jp>
- <CAHk-=wgz=7MGxxX-tmMmdCsKyYJkuyxNc-4uLP=e_eEV=OzUaw@mail.gmail.com>
- <CAHk-=wjW+_pjJzVRMuCbLhbWLkvEQVYJoXVBYGNW2PUgtX1fDw@mail.gmail.com>
- <13b0a475-e70e-c490-d34d-0c7a34facf7c@i-love.sakura.ne.jp>
- <CAHk-=wjj9ooYACNvO2P_Gr_=aN0g=iEqtg0TwBJo18wbn4gthg@mail.gmail.com>
- <6116ed2e-cee1-d82f-6b68-ddb1bbb6abe2@i-love.sakura.ne.jp>
- <CAHk-=wiVQUo_RJAaivHU5MFdznNOX4GKgJH1xrFc83e9oLnuvQ@mail.gmail.com>
- <19d377d3-8037-8090-0f99-447f72cc1d8c@i-love.sakura.ne.jp>
- <38df9737-3c04-dca2-0df4-115a9c1634e5@i-love.sakura.ne.jp>
- <CACT4Y+Z58Z8u1g8SBy-i1WxLMrdmXvggsLFAhfbLc8D=uffPyA@mail.gmail.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <e51f5885-5508-7574-e5b9-e931a1164d3f@i-love.sakura.ne.jp>
-Date:   Mon, 8 Jun 2020 19:30:26 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 8 Jun 2020 06:34:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:50944 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729172AbgFHKeL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 06:34:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6C2E11FB;
+        Mon,  8 Jun 2020 03:34:10 -0700 (PDT)
+Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BF0333F73D;
+        Mon,  8 Jun 2020 03:34:05 -0700 (PDT)
+Date:   Mon, 8 Jun 2020 11:34:00 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Wooyeon Kim <wooy88.kim@samsung.com>, hk92.kim@samsung.com,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Bhupesh Sharma <bhsharma@redhat.com>, yb.song@samsung.com,
+        yj.yim@samsung.com, Julien Grall <julien.grall@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will@kernel.org>, jinsoo37.kim@samsung.com,
+        hyewon.ryu@samsung.com, yhwan.joo@samsung.com,
+        Anisse Astier <aastier@freebox.fr>,
+        Marc Zyngier <maz@kernel.org>,
+        Allison Randal <allison@lohutok.net>, dongww.kim@samsung.com,
+        Sanghoon Lee <shoon114.lee@samsung.com>, jihun.kim@samsung.com,
+        hyeyeon5.shim@samsung.com, Kees Cook <keescook@chromium.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Wooki Min <wooki.min@samsung.com>,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        junik.lee@samsung.com, sgun.bae@samsung.com,
+        Jeongtae Park <jtp.park@samsung.com>, kgene.kim@samsung.com,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        Steve Capper <steve.capper@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>, dh.han@samsung.com
+Subject: Re: [PATCH] arm64: fpsimd: Added API to manage fpsimd state inside
+ kernel
+Message-ID: <20200608103340.GA31466@arm.com>
+References: <CGME20200605073214epcas2p1576f3f90dbcefaad6180f2559ca5980d@epcas2p1.samsung.com>
+ <20200605073052.23044-1-wooy88.kim@samsung.com>
+ <20200605103705.GD85498@C02TD0UTHF1T.local>
 MIME-Version: 1.0
-In-Reply-To: <CACT4Y+Z58Z8u1g8SBy-i1WxLMrdmXvggsLFAhfbLc8D=uffPyA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200605103705.GD85498@C02TD0UTHF1T.local>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/06/08 16:48, Dmitry Vyukov wrote:
->> (5) Anything else?
+On Fri, Jun 05, 2020 at 11:37:05AM +0100, Mark Rutland wrote:
+> Hi Wooyeon,
 > 
-> Reading:
-> https://www.kernel.org/doc/html/latest/admin-guide/bootconfig.html#boot-kernel-with-a-boot-config
-> It seems that boot config is just a more complex way to provide
-> command line arguments. syzbot already supports command line
-> arguments, and it looks much simpler and no additional work required.
-> Why do we want to use boot config?
-
-Since the max length a bootloader can accept for kernel command line arguments is finite (e.g.
-https://bugzilla.redhat.com/show_bug.cgi?id=1239170 ), we can't specify as many arguments as
-we want. Since Linus is expecting to specify independently upon boot, length for the kernel
-command line arguments might exceed that limit. The boot config is a method for allowing longer
-kernel command line arguments, at the cost of mandating use of the initramfs file.
-
->> (2) The boot-config file is embedded into initramfs file. Since syzkaller builds
->>     kernels with almost-allyesconfig, booting syzkaller kernels do not require
->>     initramfs for loading kernel modules needed for mounting the root partition.
->>     In fact, according to "unexpected kernel reboot" report which contains boot messages,
->>     I can't find "Unpacking initramfs..." message. It seems that syzkaller kernels do not
->>     use initramfs file.
->>
->>     Is it possible for syzkaller to enforce performing steps for creating an initramfs,
->>     embedding the boot-config file
->>     ( https://www.kernel.org/doc/html/latest/admin-guide/bootconfig.html#boot-kernel-with-a-boot-config),
->>     and loading that initramfs whenever booting the syzkaller kernels?
->>     By the way, I do worry that people forget to perform these steps when they do
->>     their tests without asking syzbot...
+> There are a *lot* of people Cc' here, many of whomo will find this
+> irrelevant. Please try to keep the Cc list constrained to a reasonable
+> number of interested parties.
 > 
-> I think we have some confusion between syzkaller and syzbot here.
-> syzkaller itself does not enforce/require any kernel configuration,
-> hardware nor use or not use of initramfs. In fact, qemu VM type
-> supports initramfs today. Or syzkaller can work with bare machines
-> where all setup is up to the user.
-> syzbot is just one deployment of syzkaller with a particular
-> configuration/hardware.
-
-OK.
-
+> On Fri, Jun 05, 2020 at 04:30:52PM +0900, Wooyeon Kim wrote:
+> > From: Wooki Min <wooki.min@samsung.com>
+> > 
+> >      This is an patch to use FPSIMD register in Kernel space.
+> >      It need to manage to use FPSIMD register without damaging it
+> >      of the user task.
+> >      Following items have been implemented and added.
 > 
-> If this feature is useful for any linux kernel fuzzing, then we need
-> to have a plan for all users and setups.
-
-Build-time switching can support all users and setups, for the kernel is built for intended
-environment/purpose only. Assuming that this feature is useful for any linux kernel fuzzing,
-we need to care about whether we can specify longer kernel command line arguments on every
-environment in order to support boot-time switching.
-
+> Please introduce the problem you are trying to solve in more detail. We
+> already have kernel_neon_{begin,end}() for kernel-mode NEON; why is that
+> not sufficient for your needs? Please answer this before considering
+> other details.
 > 
-> And, yes, an additional context is kernel developers reproducing bugs.
-> Not all of them may be happy about any additional steps, nor will
-> follow them.
-
-But there will be bugs which could not be found unless we twist kernel behavior.
-Not mandate specifying appropriate twist options to the kernel command line
-arguments can prevent automated/manual testings from finding/reproducing bugs.
-
+> What do you want to use this for?
 > 
-> Answering your question, syzkaller can do some sanity checking of the
-> provided machine/kernel and reject working with it. If you tell me
-> what exactly needs to be checked, I can think where this code should
-> go.
-> However, again, I am not sure if one is using, say, Android phones and
-> they don't envision use of initramfs, then what?
-
-If use of initramfs cannot be mandated, we might fail to specify necessary
-twist options to the kernel command line (due to length limitation).
-
+> > 
+> >      1. Using FPSIMD in ISR (in_interrupt)
+> > 	It can used __efi_fpsimd_begin/__efi_fpsimd_end
+> > 	which is already implemented.
+> > 	Save fpsimd state before entering ISR,
+> > 	and restore fpsimd state after ISR ends.
+> > 	For use in external kernel module,
+> > 	it is declared as EXPORT_SYMBOL.
 > 
-> For syzbot, the build happens here:
-> https://github.com/google/syzkaller/blob/7751efd04aebb07bc82b5c0e8eeaca07be1ae112/pkg/build/linux.go#L72
-> I don't know if initramfs is supported with GCE machines and what
-> exactly is required.
+> This patch adds no in-tree modular users of this, so per the usual
+> conventions, NAK to EXPORT_SYMBOL().
 
-Neither do I. I'm not familiar with bootloaders.
+Ack, this looks supicious.  Can you explain why your usecase _requires_
+FPSIMD in hardirq context?
 
-> 
->> (4) Of course, "your-config" file would not change so frequently, but "#syz test" command
->>     relies on external file in "syzkaller tree" makes it impossible to try different
->>     configuration when I have to ask syzbot to test. (Since I don't have hardware which
->>     syzbot is reporting problems, I have to ask syzbot when I can't reproduce the problem
->>     in my environment.)
->>
->>     https://syzkaller.appspot.com/text?tag=Patch&x=135f254a100000 is an example of
->>     need to enforce CONFIG_DEBUG_INFO_BTF=n in order to workaround build failure during
->>     "#syz test" command. If we bring "which twist options should be enabled" to an external
->>     boot-config file, I can't ask syzbot to try different twist options (except directly
->>     patching the kernel source which handles "which twist options should be enabled").
->>     Can syzbot solve this concern?
-> 
-> The CONFIG_DEBUG_INFO_BTF relates to build config. This can't be
-> solved during boot, right? So what is the relation?
+For now, these functions are strictly for EFI use only and should never
+be used by modules.
 
-This is an approach for embedding twist options into build-time conditions in order to
-compensate for lack of ability to temporarily change the kernel command line arguments
-(when it is difficult to temporarily change the kernel command line arguments).
-
+Cheers
+---Dave
