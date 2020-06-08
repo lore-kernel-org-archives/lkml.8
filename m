@@ -2,53 +2,53 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E409C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 831BEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:55:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC74520737
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:55:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61BBF20737
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:55:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591664147;
-	bh=shKfPmny0Xk+z6QTEuZIiryuf3ktSCpn4+P8VnIPKmM=;
+	s=default; t=1591664150;
+	bh=HrQ0JH3fWf2Xyn1OUWcR/S2dJr+n45S5WHwcAjxQsoQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qOASz3JhHBrgjMCEGssuueHGMBHcXTWaAw/FKOF/Agjqoc5LGT8yXKAj5/Yvq92XV
-	 o5Gdj4I02yfDu59L5JVF4TzfQv/89nq7COmaFyudqK3+dEAHvk05gg6e/myKm3NDQB
-	 90W9Mp0YV8ualAd1WK5ROzAE7kcPwLmjpkM0T7lI=
+	b=hPPWTmTrRtXmSeSWCOhSJRMcEH80x//sBro3mzioR/IsKopjAMt0URsRbtrJACKSM
+	 WIOONDOlgBdcA2JpZ+S5ZMoiRzzFiT+Z1mzYS5l32QTjbyMWzNc0/6fKBu9rfuhUzq
+	 gL5gvJgGk+5J8wjbVIRYn5bknTWgU9plSbara6Qc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731466AbgFIAzp (ORCPT
+        id S1730741AbgFIAzt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:55:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54986 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:55:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728377AbgFHXJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:09:16 -0400
+        id S1728376AbgFHXJP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:09:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1E2120890;
-        Mon,  8 Jun 2020 23:09:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79D21208C3;
+        Mon,  8 Jun 2020 23:09:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657755;
-        bh=shKfPmny0Xk+z6QTEuZIiryuf3ktSCpn4+P8VnIPKmM=;
+        s=default; t=1591657754;
+        bh=HrQ0JH3fWf2Xyn1OUWcR/S2dJr+n45S5WHwcAjxQsoQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iFs9iKl+90UzgJN8wlwBZyDZ+0q2sMLFIpwErgqLD+ZTuOzusiv547ZAAn2l/VhjY
-         7kgb9NOnrhSMjjXXOSbY4gBlpIf3koGIT4ax+oH07l4uFqbCDZOcawRPghWvU/a2Gy
-         FskhDJWRzJuNFZiGRzy9QDTAFkbup53ehIlCj+dM=
+        b=C9YI7QvfCKl6pvLiDc+/+HtKFgdO/DrRSprevzbUy8J8xsLo+9Mbg9zWe5uhTpYYb
+         sU2gobW40ztCeyX+v6cqDenk0dcK6cBaTB1R3Z4zJaxZMel7aHa1tQKLOL0FTdHctT
+         qFBS7DMUOV0jsiuSDLHVsyZHk/gDFOJAP3+7+re0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Dmitry Golovin <dima@golovin.in>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+Cc:     Doug Berger <opendmb@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.7 141/274] lib/mpi: Fix 64-bit MIPS build with Clang
-Date:   Mon,  8 Jun 2020 19:03:54 -0400
-Message-Id: <20200608230607.3361041-141-sashal@kernel.org>
+        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 140/274] net: bcmgenet: Fix WoL with password after deep sleep
+Date:   Mon,  8 Jun 2020 19:03:53 -0400
+Message-Id: <20200608230607.3361041-140-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -61,67 +61,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Doug Berger <opendmb@gmail.com>
 
-[ Upstream commit 18f1ca46858eac22437819937ae44aa9a8f9f2fa ]
+[ Upstream commit 6f7689057a0f10a6c967b9f2759d7a3dc948b930 ]
 
-When building 64r6_defconfig with CONFIG_MIPS32_O32 disabled and
-CONFIG_CRYPTO_RSA enabled:
+Broadcom STB chips support a deep sleep mode where all register contents
+are lost. Because we were stashing the MagicPacket password into some of
+these registers a suspend into that deep sleep then a resumption would
+not lead to being able to wake-up from MagicPacket with password again.
 
-lib/mpi/generic_mpih-mul1.c:37:24: error: invalid use of a cast in a
-inline asm context requiring an l-value: remove the cast
-or build with -fheinous-gnu-extensions
-                umul_ppmm(prod_high, prod_low, s1_ptr[j], s2_limb);
-                ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-lib/mpi/longlong.h:664:22: note: expanded from macro 'umul_ppmm'
-                 : "=d" ((UDItype)(w0))
-                         ~~~~~~~~~~^~~
-lib/mpi/generic_mpih-mul1.c:37:13: error: invalid use of a cast in a
-inline asm context requiring an l-value: remove the cast
-or build with -fheinous-gnu-extensions
-                umul_ppmm(prod_high, prod_low, s1_ptr[j], s2_limb);
-                ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-lib/mpi/longlong.h:668:22: note: expanded from macro 'umul_ppmm'
-                 : "=d" ((UDItype)(w1))
-                         ~~~~~~~~~~^~~
-2 errors generated.
+Fix this by keeping a software copy of the password and program it
+during suspend.
 
-This special case for umul_ppmm for MIPS64r6 was added in
-commit bbc25bee37d2b ("lib/mpi: Fix umul_ppmm() for MIPS64r6"), due to
-GCC being inefficient and emitting a __multi3 intrinsic.
-
-There is no such issue with clang; with this patch applied, I can build
-this configuration without any problems and there are no link errors
-like mentioned in the commit above (which I can still reproduce with
-GCC 9.3.0 when that commit is reverted). Only use this definition when
-GCC is being used.
-
-This really should have been caught by commit b0c091ae04f67 ("lib/mpi:
-Eliminate unused umul_ppmm definitions for MIPS") when I was messing
-around in this area but I was not testing 64-bit MIPS at the time.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/885
-Reported-by: Dmitry Golovin <dima@golovin.in>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: c51de7f3976b ("net: bcmgenet: add Wake-on-LAN support code")
+Suggested-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Doug Berger <opendmb@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/mpi/longlong.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../net/ethernet/broadcom/genet/bcmgenet.h    |  2 +
+ .../ethernet/broadcom/genet/bcmgenet_wol.c    | 39 +++++++++----------
+ 2 files changed, 20 insertions(+), 21 deletions(-)
 
-diff --git a/lib/mpi/longlong.h b/lib/mpi/longlong.h
-index 891e1c3549c4..afbd99987cf8 100644
---- a/lib/mpi/longlong.h
-+++ b/lib/mpi/longlong.h
-@@ -653,7 +653,7 @@ do {						\
- 	**************  MIPS/64  **************
- 	***************************************/
- #if (defined(__mips) && __mips >= 3) && W_TYPE_SIZE == 64
--#if defined(__mips_isa_rev) && __mips_isa_rev >= 6
-+#if defined(__mips_isa_rev) && __mips_isa_rev >= 6 && defined(CONFIG_CC_IS_GCC)
- /*
-  * GCC ends up emitting a __multi3 intrinsic call for MIPS64r6 with the plain C
-  * code below, so we special case MIPS64r6 until the compiler can do better.
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.h b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
+index daf8fb2c39b6..c3bfe97f2e5c 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.h
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
+@@ -14,6 +14,7 @@
+ #include <linux/if_vlan.h>
+ #include <linux/phy.h>
+ #include <linux/dim.h>
++#include <linux/ethtool.h>
+ 
+ /* total number of Buffer Descriptors, same for Rx/Tx */
+ #define TOTAL_DESC				256
+@@ -676,6 +677,7 @@ struct bcmgenet_priv {
+ 	/* WOL */
+ 	struct clk *clk_wol;
+ 	u32 wolopts;
++	u8 sopass[SOPASS_MAX];
+ 
+ 	struct bcmgenet_mib_counters mib;
+ 
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c b/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
+index c9a43695b182..597c0498689a 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
+@@ -41,18 +41,13 @@
+ void bcmgenet_get_wol(struct net_device *dev, struct ethtool_wolinfo *wol)
+ {
+ 	struct bcmgenet_priv *priv = netdev_priv(dev);
+-	u32 reg;
+ 
+ 	wol->supported = WAKE_MAGIC | WAKE_MAGICSECURE;
+ 	wol->wolopts = priv->wolopts;
+ 	memset(wol->sopass, 0, sizeof(wol->sopass));
+ 
+-	if (wol->wolopts & WAKE_MAGICSECURE) {
+-		reg = bcmgenet_umac_readl(priv, UMAC_MPD_PW_MS);
+-		put_unaligned_be16(reg, &wol->sopass[0]);
+-		reg = bcmgenet_umac_readl(priv, UMAC_MPD_PW_LS);
+-		put_unaligned_be32(reg, &wol->sopass[2]);
+-	}
++	if (wol->wolopts & WAKE_MAGICSECURE)
++		memcpy(wol->sopass, priv->sopass, sizeof(priv->sopass));
+ }
+ 
+ /* ethtool function - set WOL (Wake on LAN) settings.
+@@ -62,7 +57,6 @@ int bcmgenet_set_wol(struct net_device *dev, struct ethtool_wolinfo *wol)
+ {
+ 	struct bcmgenet_priv *priv = netdev_priv(dev);
+ 	struct device *kdev = &priv->pdev->dev;
+-	u32 reg;
+ 
+ 	if (!device_can_wakeup(kdev))
+ 		return -ENOTSUPP;
+@@ -70,17 +64,8 @@ int bcmgenet_set_wol(struct net_device *dev, struct ethtool_wolinfo *wol)
+ 	if (wol->wolopts & ~(WAKE_MAGIC | WAKE_MAGICSECURE))
+ 		return -EINVAL;
+ 
+-	reg = bcmgenet_umac_readl(priv, UMAC_MPD_CTRL);
+-	if (wol->wolopts & WAKE_MAGICSECURE) {
+-		bcmgenet_umac_writel(priv, get_unaligned_be16(&wol->sopass[0]),
+-				     UMAC_MPD_PW_MS);
+-		bcmgenet_umac_writel(priv, get_unaligned_be32(&wol->sopass[2]),
+-				     UMAC_MPD_PW_LS);
+-		reg |= MPD_PW_EN;
+-	} else {
+-		reg &= ~MPD_PW_EN;
+-	}
+-	bcmgenet_umac_writel(priv, reg, UMAC_MPD_CTRL);
++	if (wol->wolopts & WAKE_MAGICSECURE)
++		memcpy(priv->sopass, wol->sopass, sizeof(priv->sopass));
+ 
+ 	/* Flag the device and relevant IRQ as wakeup capable */
+ 	if (wol->wolopts) {
+@@ -120,6 +105,14 @@ static int bcmgenet_poll_wol_status(struct bcmgenet_priv *priv)
+ 	return retries;
+ }
+ 
++static void bcmgenet_set_mpd_password(struct bcmgenet_priv *priv)
++{
++	bcmgenet_umac_writel(priv, get_unaligned_be16(&priv->sopass[0]),
++			     UMAC_MPD_PW_MS);
++	bcmgenet_umac_writel(priv, get_unaligned_be32(&priv->sopass[2]),
++			     UMAC_MPD_PW_LS);
++}
++
+ int bcmgenet_wol_power_down_cfg(struct bcmgenet_priv *priv,
+ 				enum bcmgenet_power_mode mode)
+ {
+@@ -144,13 +137,17 @@ int bcmgenet_wol_power_down_cfg(struct bcmgenet_priv *priv,
+ 
+ 	reg = bcmgenet_umac_readl(priv, UMAC_MPD_CTRL);
+ 	reg |= MPD_EN;
++	if (priv->wolopts & WAKE_MAGICSECURE) {
++		bcmgenet_set_mpd_password(priv);
++		reg |= MPD_PW_EN;
++	}
+ 	bcmgenet_umac_writel(priv, reg, UMAC_MPD_CTRL);
+ 
+ 	/* Do not leave UniMAC in MPD mode only */
+ 	retries = bcmgenet_poll_wol_status(priv);
+ 	if (retries < 0) {
+ 		reg = bcmgenet_umac_readl(priv, UMAC_MPD_CTRL);
+-		reg &= ~MPD_EN;
++		reg &= ~(MPD_EN | MPD_PW_EN);
+ 		bcmgenet_umac_writel(priv, reg, UMAC_MPD_CTRL);
+ 		return retries;
+ 	}
+@@ -189,7 +186,7 @@ void bcmgenet_wol_power_up_cfg(struct bcmgenet_priv *priv,
+ 	reg = bcmgenet_umac_readl(priv, UMAC_MPD_CTRL);
+ 	if (!(reg & MPD_EN))
+ 		return;	/* already powered up so skip the rest */
+-	reg &= ~MPD_EN;
++	reg &= ~(MPD_EN | MPD_PW_EN);
+ 	bcmgenet_umac_writel(priv, reg, UMAC_MPD_CTRL);
+ 
+ 	/* Disable CRC Forward */
 -- 
 2.25.1
 
