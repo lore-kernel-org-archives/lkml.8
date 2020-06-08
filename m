@@ -2,84 +2,185 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UPPERCASE_50_75,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AEFCC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:09:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE0B8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 447712072F
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:09:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B464D2076C
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:11:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729832AbgFHOJJ (ORCPT
+        id S1729943AbgFHOLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 10:09:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39144 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726092AbgFHOJI (ORCPT
+        Mon, 8 Jun 2020 10:11:34 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:32932 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729832AbgFHOL2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 10:09:08 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 231AAC08C5C2;
-        Mon,  8 Jun 2020 07:09:08 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jiISS-00083D-MF; Mon, 08 Jun 2020 16:09:00 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 22334100F9F; Mon,  8 Jun 2020 16:09:00 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Sean Nyekjaer <sean@geanix.com>,
-        Lorenzo Bianconi <lorenzo@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     linux-iio <linux-iio@vger.kernel.org>
-Subject: Re: IIO timestamp get skewed when suspending (st_lsm6dsx)
-In-Reply-To: <fbef0ac8-e313-c20c-9300-9dee00588102@geanix.com>
-References: <20200603080619.GA544784@lore-desk.lan> <91165f5d-8cba-3ea2-67dc-99d65bce3d19@geanix.com> <20200603102841.GC544784@lore-desk.lan> <d3288925-0891-8c72-b0e7-2b71ff50e1d3@geanix.com> <20200603105105.GD544784@lore-desk.lan> <a6716a15-abf9-3218-00b8-fb7f257e5649@geanix.com> <20200603121227.GE544784@lore-desk.lan> <55fb09cf-76ab-0c42-7283-0836838f2deb@geanix.com> <20200603125630.GF544784@lore-desk.lan> <2d60c115-a634-c25f-b50b-38f13cac6229@geanix.com> <20200603134033.GG544784@lore-desk.lan> <2d8b2b9b-5e63-1254-04d9-8b9be0d91877@geanix.com> <fbef0ac8-e313-c20c-9300-9dee00588102@geanix.com>
-Date:   Mon, 08 Jun 2020 16:09:00 +0200
-Message-ID: <87k10habur.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Mon, 8 Jun 2020 10:11:28 -0400
+Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 08 Jun 2020 07:11:26 -0700
+Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
+  by ironmsg04-sd.qualcomm.com with ESMTP; 08 Jun 2020 07:11:22 -0700
+Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
+        id 4384A2180E; Mon,  8 Jun 2020 19:41:21 +0530 (IST)
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
+        vkoul@kernel.org, robh+dt@kernel.org, mgautam@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     Sivaprakash Murugesan <sivaprak@codeaurora.org>,
+        Balaji Prakash J <bjagadee@codeaurora.org>
+Subject: [PATCH V3 3/5] phy: qcom-qmp: Add USB QMP PHY support for IPQ8074
+Date:   Mon,  8 Jun 2020 19:41:17 +0530
+Message-Id: <1591625479-4483-4-git-send-email-sivaprak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1591625479-4483-1-git-send-email-sivaprak@codeaurora.org>
+References: <1591625479-4483-1-git-send-email-sivaprak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean,
+Add QMP USB PHY found in IPQ8074
 
-Sean Nyekjaer <sean@geanix.com> writes:
-> I have a question regarding CLOCK_REALTIME and CLOCK_BOOTTIME when 
-> resuming from suspend.
->
-> We have run into problems with
-> drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c + the first patch from
-> Lorenzo Bianconi in this thread.  The accelerometer have an internal
-> FIFO that includes a timestamp. When we resume from suspend, the
-> driver resets the fifo ts counter and sets an internal reference to
-> that time.
->
-> But to me it looks like both CLOCK_REALTIME and CLOCK_BOOTIME aren't 
-> ready when st_lsm6dsx_resume() is called.
+Co-developed-by: Balaji Prakash J <bjagadee@codeaurora.org>
+Signed-off-by: Balaji Prakash J <bjagadee@codeaurora.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+---
+ drivers/phy/qualcomm/phy-qcom-qmp.c | 102 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 102 insertions(+)
 
-That depends on your system. Timekeeping is resumed way before drivers
-are resumed, but the suspend time injection might happen late when there
-is no early device to read from. In this case it happens when the RTC is
-resumed.
-
-If the IIO driver resumes before the RTC which injects the suspend time,
-then the core time is still in the past. And RTC is using the default
-resume mechanism, so depending on device/class registration order this
-might be the case. Deferring to the PM & RTC wizards.
-
-Thanks,
-
-        tglx
-
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+index e91040a..544f140 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp.c
++++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+@@ -198,6 +198,81 @@ static const unsigned int sm8150_ufsphy_regs_layout[QPHY_LAYOUT_SIZE] = {
+ 	[QPHY_SW_RESET]			= QPHY_V4_PCS_UFS_SW_RESET,
+ };
+ 
++static const struct qmp_phy_init_tbl ipq8074_usb3_serdes_tbl[] = {
++	QMP_PHY_INIT_CFG(QSERDES_COM_SYSCLK_EN_SEL, 0x1a),
++	QMP_PHY_INIT_CFG(QSERDES_COM_BIAS_EN_CLKBUFLR_EN, 0x08),
++	QMP_PHY_INIT_CFG(QSERDES_COM_CLK_SELECT, 0x30),
++	QMP_PHY_INIT_CFG(QSERDES_COM_BG_TRIM, 0x0f),
++	QMP_PHY_INIT_CFG(QSERDES_RX_UCDR_FASTLOCK_FO_GAIN, 0x0b),
++	QMP_PHY_INIT_CFG(QSERDES_COM_SVS_MODE_CLK_SEL, 0x01),
++	QMP_PHY_INIT_CFG(QSERDES_COM_HSCLK_SEL, 0x00),
++	QMP_PHY_INIT_CFG(QSERDES_COM_CMN_CONFIG, 0x06),
++	QMP_PHY_INIT_CFG(QSERDES_COM_PLL_IVCO, 0x0f),
++	QMP_PHY_INIT_CFG(QSERDES_COM_SYS_CLK_CTRL, 0x06),
++	/* PLL and Loop filter settings */
++	QMP_PHY_INIT_CFG(QSERDES_COM_DEC_START_MODE0, 0x82),
++	QMP_PHY_INIT_CFG(QSERDES_COM_DIV_FRAC_START1_MODE0, 0x55),
++	QMP_PHY_INIT_CFG(QSERDES_COM_DIV_FRAC_START2_MODE0, 0x55),
++	QMP_PHY_INIT_CFG(QSERDES_COM_DIV_FRAC_START3_MODE0, 0x03),
++	QMP_PHY_INIT_CFG(QSERDES_COM_CP_CTRL_MODE0, 0x0b),
++	QMP_PHY_INIT_CFG(QSERDES_COM_PLL_RCTRL_MODE0, 0x16),
++	QMP_PHY_INIT_CFG(QSERDES_COM_PLL_CCTRL_MODE0, 0x28),
++	QMP_PHY_INIT_CFG(QSERDES_COM_INTEGLOOP_GAIN0_MODE0, 0x80),
++	QMP_PHY_INIT_CFG(QSERDES_COM_LOCK_CMP1_MODE0, 0x15),
++	QMP_PHY_INIT_CFG(QSERDES_COM_LOCK_CMP2_MODE0, 0x34),
++	QMP_PHY_INIT_CFG(QSERDES_COM_LOCK_CMP3_MODE0, 0x00),
++	QMP_PHY_INIT_CFG(QSERDES_COM_CORE_CLK_EN, 0x00),
++	QMP_PHY_INIT_CFG(QSERDES_COM_LOCK_CMP_CFG, 0x00),
++	QMP_PHY_INIT_CFG(QSERDES_COM_VCO_TUNE_MAP, 0x00),
++	QMP_PHY_INIT_CFG(QSERDES_COM_BG_TIMER, 0x0a),
++	/* SSC settings */
++	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_EN_CENTER, 0x01),
++	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_PER1, 0x31),
++	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_PER2, 0x01),
++	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_ADJ_PER1, 0x00),
++	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_ADJ_PER2, 0x00),
++	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_STEP_SIZE1, 0xde),
++	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_STEP_SIZE2, 0x07),
++};
++
++static const struct qmp_phy_init_tbl ipq8074_usb3_rx_tbl[] = {
++	QMP_PHY_INIT_CFG(QSERDES_RX_UCDR_SO_GAIN, 0x06),
++	QMP_PHY_INIT_CFG(QSERDES_RX_RX_EQU_ADAPTOR_CNTRL2, 0x02),
++	QMP_PHY_INIT_CFG(QSERDES_RX_RX_EQU_ADAPTOR_CNTRL3, 0x4c),
++	QMP_PHY_INIT_CFG(QSERDES_RX_RX_EQU_ADAPTOR_CNTRL4, 0xb8),
++	QMP_PHY_INIT_CFG(QSERDES_RX_RX_EQ_OFFSET_ADAPTOR_CNTRL1, 0x77),
++	QMP_PHY_INIT_CFG(QSERDES_RX_RX_OFFSET_ADAPTOR_CNTRL2, 0x80),
++	QMP_PHY_INIT_CFG(QSERDES_RX_SIGDET_CNTRL, 0x03),
++	QMP_PHY_INIT_CFG(QSERDES_RX_SIGDET_DEGLITCH_CNTRL, 0x16),
++	QMP_PHY_INIT_CFG(QSERDES_RX_SIGDET_ENABLES, 0x0),
++};
++
++static const struct qmp_phy_init_tbl ipq8074_usb3_pcs_tbl[] = {
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_TXDEEMPH_M6DB_V0, 0x15),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_TXDEEMPH_M3P5DB_V0, 0x0e),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_FLL_CNTRL2, 0x83),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_FLL_CNTRL1, 0x02),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_FLL_CNT_VAL_L, 0x09),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_FLL_CNT_VAL_H_TOL, 0xa2),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_FLL_MAN_CODE, 0x85),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_LOCK_DETECT_CONFIG1, 0xd1),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_LOCK_DETECT_CONFIG2, 0x1f),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_LOCK_DETECT_CONFIG3, 0x47),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_POWER_STATE_CONFIG2, 0x1b),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_RXEQTRAINING_WAIT_TIME, 0x75),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_RXEQTRAINING_RUN_TIME, 0x13),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_LFPS_TX_ECSTART_EQTLOCK, 0x86),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_PWRUP_RESET_DLY_TIME_AUXCLK, 0x04),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_TSYNC_RSYNC_TIME, 0x44),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_RCVR_DTCT_DLY_P1U2_L, 0xe7),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_RCVR_DTCT_DLY_P1U2_H, 0x03),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_RCVR_DTCT_DLY_U3_L, 0x40),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_RCVR_DTCT_DLY_U3_H, 0x00),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_RX_SIGDET_LVL, 0x88),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_TXDEEMPH_M6DB_V0, 0x17),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_TXDEEMPH_M3P5DB_V0, 0x0f),
++};
++
+ static const struct qmp_phy_init_tbl msm8996_pcie_serdes_tbl[] = {
+ 	QMP_PHY_INIT_CFG(QSERDES_COM_BIAS_EN_CLKBUFLR_EN, 0x1c),
+ 	QMP_PHY_INIT_CFG(QSERDES_COM_CLK_ENABLE1, 0x10),
+@@ -1593,6 +1668,30 @@ static const char * const qmp_phy_vreg_l[] = {
+ 	"vdda-phy", "vdda-pll",
+ };
+ 
++static const struct qmp_phy_cfg ipq8074_usb3phy_cfg = {
++	.type			= PHY_TYPE_USB3,
++	.nlanes			= 1,
++
++	.serdes_tbl		= ipq8074_usb3_serdes_tbl,
++	.serdes_tbl_num		= ARRAY_SIZE(ipq8074_usb3_serdes_tbl),
++	.tx_tbl			= msm8996_usb3_tx_tbl,
++	.tx_tbl_num		= ARRAY_SIZE(msm8996_usb3_tx_tbl),
++	.rx_tbl			= ipq8074_usb3_rx_tbl,
++	.rx_tbl_num		= ARRAY_SIZE(ipq8074_usb3_rx_tbl),
++	.pcs_tbl		= ipq8074_usb3_pcs_tbl,
++	.pcs_tbl_num		= ARRAY_SIZE(ipq8074_usb3_pcs_tbl),
++	.clk_list		= msm8996_phy_clk_l,
++	.num_clks		= ARRAY_SIZE(msm8996_phy_clk_l),
++	.reset_list		= msm8996_usb3phy_reset_l,
++	.num_resets		= ARRAY_SIZE(msm8996_usb3phy_reset_l),
++	.vreg_list		= qmp_phy_vreg_l,
++	.num_vregs		= ARRAY_SIZE(qmp_phy_vreg_l),
++	.regs			= usb3phy_regs_layout,
++
++	.start_ctrl		= SERDES_START | PCS_START,
++	.pwrdn_ctrl		= SW_PWRDN,
++};
++
+ static const struct qmp_phy_cfg msm8996_pciephy_cfg = {
+ 	.type			= PHY_TYPE_PCIE,
+ 	.nlanes			= 3,
+@@ -2699,6 +2798,9 @@ int qcom_qmp_phy_create(struct device *dev, struct device_node *np, int id)
+ 
+ static const struct of_device_id qcom_qmp_phy_of_match_table[] = {
+ 	{
++		.compatible = "qcom,ipq8074-qmp-usb3-phy",
++		.data = &ipq8074_usb3phy_cfg,
++	}, {
+ 		.compatible = "qcom,msm8996-qmp-pcie-phy",
+ 		.data = &msm8996_pciephy_cfg,
+ 	}, {
+-- 
+2.7.4
 
