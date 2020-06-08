@@ -2,148 +2,301 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E337C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A87BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 117A92074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:30:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="g1OhfxSf"
+	by mail.kernel.org (Postfix) with ESMTP id 7A72F2074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:31:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729736AbgFHMas (ORCPT
+        id S1729761AbgFHMbN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 08:30:48 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:63712 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729628AbgFHMaq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 08:30:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1591619445; x=1623155445;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=DqVy/lhHPIGLZ2gVhB+SkFZeyg+IWDog1e2aJcvmuys=;
-  b=g1OhfxSf5bNH9eAHqIYKROqAvUjUVp3nWW1gh82kObKtTEJMjCi7u/kS
-   4ODNpg64G444b0cON5Z98FKcDZJxRryfUoQp5JUbkJbaY5vcof0mGC2uR
-   mDOsuMwTePtyywqvq9jXo5OQtwkitq3T7TkxHY82KN3Hp+Isv+rS/MNT+
-   quRkeYQtfAbgrnEfwFQAPvX8i9zOY6rYLgdByMmmbL/FYkLIR8qYNIdbf
-   hDvjxvcmE4T7sxpZ+6kkqbNZr86UY0JchhZZGgWzfclw541hESHCi6XwM
-   /xOewbTChL9GP8OJcSK1o5UpnC6YD4LfVX++c3CTp8TjZ5snElnh4rw/L
-   g==;
-IronPort-SDR: BrcHFuJ/CQnl0R+wYshXSuibM0g4Hv44Xsj9CFkUwDVQh+f3qllEPIsWKCCnWEPOVK4fTqlzS/
- VBQv+MUopWl4M1on8o/VU19//2S0q5NG2ttiUNiROeXy3A4knhTuk4NcA2Z5a3RkZLwDLViwDU
- AtXaPMkH7UNmQ3VjPPe5lCx/QJXeWml2xlcbSSjA26dPupO4VfYZhxJ3I5ZY+4Q/armI/ZOGO8
- oOBz5R0WgFHfQIGZmg6r4QS+dJX8D6/zuXhzEdaudAeOR5AA77oTieC9Ov0R6soxulLTqMOyDC
- 4+c=
-X-IronPort-AV: E=Sophos;i="5.73,487,1583218800"; 
-   d="scan'208";a="79311433"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 08 Jun 2020 05:30:44 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Mon, 8 Jun 2020 05:30:44 -0700
-Received: from soft-dev15.microsemi.net (10.10.115.15) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Mon, 8 Jun 2020 05:30:39 -0700
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-List-Id: <soc.lore.kernel.org>
-To:     SoC Team <soc@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Olof Johansson <olof@lixom.net>,
-        "Michael Turquette" <mturquette@baylibre.com>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v2 00/10] Adding support for Microchip Sparx5 SoC
-Date:   Mon, 8 Jun 2020 14:30:14 +0200
-Message-ID: <20200608123024.5330-1-lars.povlsen@microchip.com>
-X-Mailer: git-send-email 2.27.0
+        Mon, 8 Jun 2020 08:31:13 -0400
+Received: from foss.arm.com ([217.140.110.172]:52148 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729628AbgFHMbK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 08:31:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E77441FB;
+        Mon,  8 Jun 2020 05:31:08 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3E00B3F52E;
+        Mon,  8 Jun 2020 05:31:06 -0700 (PDT)
+Date:   Mon, 8 Jun 2020 13:31:03 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Mel Gorman <mgorman@suse.de>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Quentin Perret <qperret@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        linux-doc@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-fs <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
+ boost value
+Message-ID: <20200608123102.6sdhdhit7lac5cfl@e107158-lin.cambridge.arm.com>
+References: <20200528132327.GB706460@hirez.programming.kicks-ass.net>
+ <20200528155800.yjrmx3hj72xreryh@e107158-lin.cambridge.arm.com>
+ <20200528161112.GI2483@worktop.programming.kicks-ass.net>
+ <20200529100806.GA3070@suse.de>
+ <edd80c0d-b7c8-4314-74da-08590170e6f5@arm.com>
+ <87v9k84knx.derkling@matbug.net>
+ <20200603101022.GG3070@suse.de>
+ <CAKfTPtAvMvPk5Ea2kaxXE8GzQ+Nc_PS+EKB1jAa03iJwQORSqA@mail.gmail.com>
+ <20200603165200.v2ypeagziht7kxdw@e107158-lin.cambridge.arm.com>
+ <CAKfTPtC6TvUL83VdWuGfbKm0CkXB85YQ5qkagK9aiDB8Hqrn_Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAKfTPtC6TvUL83VdWuGfbKm0CkXB85YQ5qkagK9aiDB8Hqrn_Q@mail.gmail.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series adds support for Microchip Sparx5 SoC, the CPU
-system of a advanced, TSN capable gigabit switch. The CPU is an armv8
-x 2 CPU core (A53).
+On 06/04/20 14:14, Vincent Guittot wrote:
 
-Although this is an ARM core, it shares some peripherals with the
-Microsemi Ocelot SoC.
+[...]
 
-Changes in v2:
-- Misc fixes to bindings/arm/microchip,sparx5.yaml
-- Changed clock driver to platform driver, among other fixes
-- arch/arm64/boot/dts/microchip/sparx5.dtsi:
- - Added pmu and psci node, using PSCI
- - Updates to GICv3 register spaces (GICV/GICH)
- - Updated timer interrupt specifiers
-- pinctrl: ocelot: Fixed symbol clashes from powerpc
-- pinctrl: ocelot: Patches already in next-20200605 have been removed
-    from this series.
+> I have tried your patch and I don't see any difference compared to
+> previous tests. Let me give you more details of my setup:
+> I create 3 levels of cgroups and usually run the tests in the 4 levels
+> (which includes root). The result above are for the root level
+> 
+> But I see a difference at other levels:
+> 
+>                            root           level 1       level 2       level 3
+> 
+> /w patch uclamp disable     50097         46615         43806         41078
+> tip uclamp enable           48706(-2.78%) 45583(-2.21%) 42851(-2.18%)
+> 40313(-1.86%)
+> /w patch uclamp enable      48882(-2.43%) 45774(-1.80%) 43108(-1.59%)
+> 40667(-1.00%)
+> 
+> Whereas tip with uclamp stays around 2% behind tip without uclamp, the
+> diff of uclamp with your patch tends to decrease when we increase the
+> number of level
 
-Lars Povlsen (10):
-  dt-bindings: arm: sparx5: Add documentation for Microchip Sparx5 SoC
-  arm64: sparx5: Add support for Microchip 2xA53 SoC
-  arm64: dts: sparx5: Add basic cpu support
-  arm64: dts: sparx5: Add pinctrl support
-  pinctrl: ocelot: Add Sparx5 SoC support
-  dt-bindings: clock: sparx5: Add Sparx5 SoC DPLL clock
-  dt-bindings: clock: sparx5: Add bindings include file
-  clk: sparx5: Add Sparx5 SoC DPLL clock driver
-  arm64: dts: sparx5: Add Sparx5 SoC DPLL clock
-  arm64: dts: sparx5: Add i2c devices, i2c muxes
+So I did try to dig more into this, but I think it's either not a good
+reproducer or what we're observing here is uArch level latencies caused by the
+new code that seem to produce a bigger knock on effect than what they really
+are.
 
- .../bindings/arm/microchip,sparx5.yaml        |  65 +++
- .../bindings/clock/microchip,sparx5-dpll.yaml |  52 +++
- .../devicetree/bindings/mfd/syscon.yaml       |   1 +
- MAINTAINERS                                   |   9 +
- arch/arm64/Kconfig.platforms                  |  14 +
- arch/arm64/boot/dts/Makefile                  |   1 +
- arch/arm64/boot/dts/microchip/Makefile        |   4 +
- arch/arm64/boot/dts/microchip/sparx5.dtsi     | 213 +++++++++
- .../boot/dts/microchip/sparx5_pcb125.dts      |  21 +
- .../boot/dts/microchip/sparx5_pcb134.dts      |  17 +
- .../dts/microchip/sparx5_pcb134_board.dtsi    | 252 ++++++++++
- .../boot/dts/microchip/sparx5_pcb134_emmc.dts |  17 +
- .../boot/dts/microchip/sparx5_pcb135.dts      |  17 +
- .../dts/microchip/sparx5_pcb135_board.dtsi    |  92 ++++
- .../boot/dts/microchip/sparx5_pcb135_emmc.dts |  17 +
- .../boot/dts/microchip/sparx5_pcb_common.dtsi |  19 +
- drivers/clk/Makefile                          |   1 +
- drivers/clk/clk-sparx5.c                      | 312 +++++++++++++
- drivers/pinctrl/pinctrl-ocelot.c              | 431 +++++++++++++++++-
- include/dt-bindings/clock/microchip,sparx5.h  |  23 +
- 20 files changed, 1577 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/arm/microchip,sparx5.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/microchip,sparx5-dpll.yaml
- create mode 100644 arch/arm64/boot/dts/microchip/Makefile
- create mode 100644 arch/arm64/boot/dts/microchip/sparx5.dtsi
- create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
- create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb134.dts
- create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
- create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb134_emmc.dts
- create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb135.dts
- create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi
- create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb135_emmc.dts
- create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb_common.dtsi
- create mode 100644 drivers/clk/clk-sparx5.c
- create mode 100644 include/dt-bindings/clock/microchip,sparx5.h
+First, CONFIG_FAIR_GROUP_SCHED is 'expensive', for some definition of
+expensive..
+
+*** uclamp disabled/fair group enabled ***
+
+	# Executed 50000 pipe operations between two threads
+
+	     Total time: 0.958 [sec]
+
+	      19.177100 usecs/op
+		  52145 ops/sec
+
+*** uclamp disabled/fair group disabled ***
+
+	# Executed 50000 pipe operations between two threads
+	     Total time: 0.808 [sec]
+
+	     16.176200 usecs/op
+		 61819 ops/sec
+
+So there's a 15.6% drop in ops/sec when enabling this option. I think it's good
+to look at the absolutely number of usecs/op, Fair group adds around
+3 usecs/op.
+
+I dropped FAIR_GROUP_SCHED from my config to eliminate this overhead and focus
+on solely on uclamp overhead.
+
+With uclamp enabled but no fair group I get
+
+*** uclamp enabled/fair group disabled ***
+
+	# Executed 50000 pipe operations between two threads
+	     Total time: 0.856 [sec]
+
+	     17.125740 usecs/op
+		 58391 ops/sec
+
+The drop is 5.5% in ops/sec. Or 1 usecs/op.
+
+I don't know what's the expectation here. 1 us could be a lot, but I don't
+think we expect the new code to take more than few 100s of ns anyway. If you
+add potential caching effects, reaching 1 us wouldn't be that hard.
+
+Note that in my runs I chose performance governor and use `taskset 0x2` to
+force running on a big core to make sure the runs are repeatable.
+
+On Juno-r2 I managed to scrap most of the 1 us with the below patch. It seems
+there was weird branching behavior that affects the I$ in my case. It'd be good
+to try it out to see if it makes a difference for you.
+
+The I$ effect is my best educated guess. Perf doesn't catch this path and
+I couldn't convince it to look at cache and branch misses between 2 specific
+points.
+
+Other subtle code shuffling did have weird effect on the result too. One worthy
+one is making uclamp_rq_dec() noinline gains back ~400 ns. Making
+uclamp_rq_inc() noinline *too* cancels this gain out :-/
+
+
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 0464569f26a7..0835ee20a3c7 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -1071,13 +1071,11 @@ static inline void uclamp_rq_dec_id(struct rq *rq, struct task_struct *p,
+ 
+ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
+ {
+-	enum uclamp_id clamp_id;
+-
+ 	if (unlikely(!p->sched_class->uclamp_enabled))
+ 		return;
+ 
+-	for_each_clamp_id(clamp_id)
+-		uclamp_rq_inc_id(rq, p, clamp_id);
++	uclamp_rq_inc_id(rq, p, UCLAMP_MIN);
++	uclamp_rq_inc_id(rq, p, UCLAMP_MAX);
+ 
+ 	/* Reset clamp idle holding when there is one RUNNABLE task */
+ 	if (rq->uclamp_flags & UCLAMP_FLAG_IDLE)
+@@ -1086,13 +1084,11 @@ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
+ 
+ static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p)
+ {
+-	enum uclamp_id clamp_id;
+-
+ 	if (unlikely(!p->sched_class->uclamp_enabled))
+ 		return;
+ 
+-	for_each_clamp_id(clamp_id)
+-		uclamp_rq_dec_id(rq, p, clamp_id);
++	uclamp_rq_dec_id(rq, p, UCLAMP_MIN);
++	uclamp_rq_dec_id(rq, p, UCLAMP_MAX);
+ }
+ 
+ static inline void
+
+
+FWIW I fail to see activate/deactivate_task in perf record. They don't show up
+on the list which means this micro benchmark doesn't stress them as Mel's test
+does.
+
+Worth noting that I did try running the same test on 2 vCPU VirtualBox VM and
+64 vCPU qemu and I couldn't spot a difference when uclamp was enabled/disabled
+in these 2 environments.
+
+> 
+> Beside this, that's also interesting to notice the ~6% of perf impact
+> between each level for the same image
+
+Beside my observation above, I captured this function_graph when
+FAIR_GROUP_SCHED is enabled. What I pasted below is a particularly bad
+deactivation, it's not always that costly.
+
+This ran happened was recorded with uclamp disabled.
+
+I admit I don't know how much of these numbers is ftrace overhead. When trying
+to capture similar runs for uclamp, the numbers didn't add up compared to
+running the test without ftrace generating the graph. If juno is suffering from
+bad branching costs in this path, then I suspect ftrace will amplify this as
+AFAIU it'll cause extra jumps on entry and exit.
+
+
+
+      sched-pipe-6532  [001]  9407.276302: funcgraph_entry:                   |  deactivate_task() {
+      sched-pipe-6532  [001]  9407.276302: funcgraph_entry:                   |    dequeue_task_fair() {
+      sched-pipe-6532  [001]  9407.276303: funcgraph_entry:                   |      update_curr() {
+      sched-pipe-6532  [001]  9407.276304: funcgraph_entry:        0.780 us   |        update_min_vruntime();
+      sched-pipe-6532  [001]  9407.276306: funcgraph_entry:                   |        cpuacct_charge() {
+      sched-pipe-6532  [001]  9407.276306: funcgraph_entry:        0.820 us   |          __rcu_read_lock();
+      sched-pipe-6532  [001]  9407.276308: funcgraph_entry:        0.740 us   |          __rcu_read_unlock();
+      sched-pipe-6532  [001]  9407.276309: funcgraph_exit:         3.980 us   |        }
+      sched-pipe-6532  [001]  9407.276310: funcgraph_entry:        0.720 us   |        __rcu_read_lock();
+      sched-pipe-6532  [001]  9407.276312: funcgraph_entry:        0.720 us   |        __rcu_read_unlock();
+      sched-pipe-6532  [001]  9407.276313: funcgraph_exit:         9.840 us   |      }
+      sched-pipe-6532  [001]  9407.276314: funcgraph_entry:                   |      __update_load_avg_se() {
+      sched-pipe-6532  [001]  9407.276315: funcgraph_entry:        0.720 us   |        __accumulate_pelt_segments();
+      sched-pipe-6532  [001]  9407.276316: funcgraph_exit:         2.260 us   |      }
+      sched-pipe-6532  [001]  9407.276317: funcgraph_entry:                   |      __update_load_avg_cfs_rq() {
+      sched-pipe-6532  [001]  9407.276318: funcgraph_entry:        0.860 us   |        __accumulate_pelt_segments();
+      sched-pipe-6532  [001]  9407.276319: funcgraph_exit:         2.340 us   |      }
+      sched-pipe-6532  [001]  9407.276320: funcgraph_entry:        0.760 us   |      clear_buddies();
+      sched-pipe-6532  [001]  9407.276321: funcgraph_entry:        0.800 us   |      account_entity_dequeue();
+      sched-pipe-6532  [001]  9407.276323: funcgraph_entry:        0.720 us   |      update_cfs_group();
+      sched-pipe-6532  [001]  9407.276324: funcgraph_entry:        0.740 us   |      update_min_vruntime();
+      sched-pipe-6532  [001]  9407.276326: funcgraph_entry:        0.720 us   |      set_next_buddy();
+      sched-pipe-6532  [001]  9407.276327: funcgraph_entry:                   |      __update_load_avg_se() {
+      sched-pipe-6532  [001]  9407.276328: funcgraph_entry:        0.740 us   |        __accumulate_pelt_segments();
+      sched-pipe-6532  [001]  9407.276329: funcgraph_exit:         2.220 us   |      }
+      sched-pipe-6532  [001]  9407.276330: funcgraph_entry:                   |      __update_load_avg_cfs_rq() {
+      sched-pipe-6532  [001]  9407.276331: funcgraph_entry:        0.740 us   |        __accumulate_pelt_segments();
+      sched-pipe-6532  [001]  9407.276332: funcgraph_exit:         2.180 us   |      }
+      sched-pipe-6532  [001]  9407.276333: funcgraph_entry:                   |      update_cfs_group() {
+      sched-pipe-6532  [001]  9407.276334: funcgraph_entry:                   |        reweight_entity() {
+      sched-pipe-6532  [001]  9407.276335: funcgraph_entry:                   |          update_curr() {
+      sched-pipe-6532  [001]  9407.276335: funcgraph_entry:        0.720 us   |            __calc_delta();
+      sched-pipe-6532  [001]  9407.276337: funcgraph_entry:        0.740 us   |            update_min_vruntime();
+      sched-pipe-6532  [001]  9407.276338: funcgraph_exit:         3.560 us   |          }
+      sched-pipe-6532  [001]  9407.276339: funcgraph_entry:        0.720 us   |          account_entity_dequeue();
+      sched-pipe-6532  [001]  9407.276340: funcgraph_entry:        0.720 us   |          account_entity_enqueue();
+      sched-pipe-6532  [001]  9407.276342: funcgraph_exit:         7.860 us   |        }
+      sched-pipe-6532  [001]  9407.276342: funcgraph_exit:         9.280 us   |      }
+      sched-pipe-6532  [001]  9407.276343: funcgraph_entry:                   |      __update_load_avg_se() {
+      sched-pipe-6532  [001]  9407.276344: funcgraph_entry:        0.720 us   |        __accumulate_pelt_segments();
+      sched-pipe-6532  [001]  9407.276345: funcgraph_exit:         2.180 us   |      }
+      sched-pipe-6532  [001]  9407.276346: funcgraph_entry:                   |      __update_load_avg_cfs_rq() {
+      sched-pipe-6532  [001]  9407.276347: funcgraph_entry:        0.740 us   |        __accumulate_pelt_segments();
+      sched-pipe-6532  [001]  9407.276348: funcgraph_exit:         2.180 us   |      }
+      sched-pipe-6532  [001]  9407.276349: funcgraph_entry:                   |      update_cfs_group() {
+      sched-pipe-6532  [001]  9407.276350: funcgraph_entry:                   |        reweight_entity() {
+      sched-pipe-6532  [001]  9407.276350: funcgraph_entry:                   |          update_curr() {
+      sched-pipe-6532  [001]  9407.276351: funcgraph_entry:        0.740 us   |            __calc_delta();
+      sched-pipe-6532  [001]  9407.276353: funcgraph_entry:        0.720 us   |            update_min_vruntime();
+      sched-pipe-6532  [001]  9407.276354: funcgraph_exit:         3.580 us   |          }
+      sched-pipe-6532  [001]  9407.276355: funcgraph_entry:        0.740 us   |          account_entity_dequeue();
+      sched-pipe-6532  [001]  9407.276356: funcgraph_entry:        0.720 us   |          account_entity_enqueue();
+      sched-pipe-6532  [001]  9407.276358: funcgraph_exit:         7.960 us   |        }
+      sched-pipe-6532  [001]  9407.276358: funcgraph_exit:         9.400 us   |      }
+      sched-pipe-6532  [001]  9407.276360: funcgraph_entry:                   |      __update_load_avg_se() {
+      sched-pipe-6532  [001]  9407.276360: funcgraph_entry:        0.740 us   |        __accumulate_pelt_segments();
+      sched-pipe-6532  [001]  9407.276362: funcgraph_exit:         2.220 us   |      }
+      sched-pipe-6532  [001]  9407.276362: funcgraph_entry:                   |      __update_load_avg_cfs_rq() {
+      sched-pipe-6532  [001]  9407.276363: funcgraph_entry:        0.740 us   |        __accumulate_pelt_segments();
+      sched-pipe-6532  [001]  9407.276365: funcgraph_exit:         2.160 us   |      }
+      sched-pipe-6532  [001]  9407.276366: funcgraph_entry:                   |      update_cfs_group() {
+      sched-pipe-6532  [001]  9407.276367: funcgraph_entry:                   |        reweight_entity() {
+      sched-pipe-6532  [001]  9407.276368: funcgraph_entry:                   |          update_curr() {
+      sched-pipe-6532  [001]  9407.276368: funcgraph_entry:        0.720 us   |            __calc_delta();
+      sched-pipe-6532  [001]  9407.276370: funcgraph_entry:        0.720 us   |            update_min_vruntime();
+      sched-pipe-6532  [001]  9407.276371: funcgraph_exit:         3.540 us   |          }
+      sched-pipe-6532  [001]  9407.276372: funcgraph_entry:        0.740 us   |          account_entity_dequeue();
+      sched-pipe-6532  [001]  9407.276373: funcgraph_entry:        0.720 us   |          account_entity_enqueue();
+      sched-pipe-6532  [001]  9407.276375: funcgraph_exit:         7.840 us   |        }
+      sched-pipe-6532  [001]  9407.276375: funcgraph_exit:         9.300 us   |      }
+      sched-pipe-6532  [001]  9407.276376: funcgraph_entry:        0.720 us   |      hrtick_update();
+      sched-pipe-6532  [001]  9407.276377: funcgraph_exit:       + 75.000 us  |    }
+      sched-pipe-6532  [001]  9407.276378: funcgraph_exit:       + 76.700 us  |  }
+
+
+Cheers
 
 --
-2.27.0
+Qais Yousef
