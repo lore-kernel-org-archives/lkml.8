@@ -6,71 +6,65 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C768C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:46:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C412EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2472E2072F
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:46:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98E392072F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:46:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591620410;
-	bh=FCAvqfmKFayKCxPdwRtAqVx7sG8HLE4jjh4Q6F84pqk=;
+	s=default; t=1591620414;
+	bh=ZlhD1tJDGs6Xuk/L72mq94VHLVq1v1h4LgiSJwwWzz4=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=wT25dUe3yWuVy5IwKq/w07jkbCE2QWkyZILSgZqTeBGlXBZLiNKs8NQfoemdWhaXQ
-	 2hUtGZGtm/banCH0FXWLsiTLSsU0mxh8a38R8zL/IUUoSdXXasT34STne4CN0SCsdE
-	 1xA+E3YOUXTrWCx/m0st+sYwbllKiqPpWG1ttyK0=
+	b=gGJe30U+emAK7MWm5ozPEbqnSaT818mcw60STsmquFHQw0bOca9Tti+4iPVqFKDm0
+	 gB+8U1CViQh/f0D6EE7vFxy2+6JgGGuJ+PXwUT6pQtb0nsbdqXQf+jHAU8GEBZbTFJ
+	 tKG4Hlz4kyKazcfkCmZvgdPL2l51WSwSZ5yAruyY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729069AbgFHMqt (ORCPT
+        id S1729348AbgFHMqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 08:46:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53978 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 08:46:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728173AbgFHMqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 08:46:14 -0400
+        id S1729002AbgFHMqY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 08:46:24 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 213622072F;
-        Mon,  8 Jun 2020 12:46:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DB862072F;
+        Mon,  8 Jun 2020 12:46:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591620371;
-        bh=FCAvqfmKFayKCxPdwRtAqVx7sG8HLE4jjh4Q6F84pqk=;
+        s=default; t=1591620381;
+        bh=ZlhD1tJDGs6Xuk/L72mq94VHLVq1v1h4LgiSJwwWzz4=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=pvoyh0Wmbo79Pc12rA2pIrsB8hDaGNNVxeCDJUrDxMXEg53yWzsj/jpoCMVRQ/D+k
-         iS4q0ZxJQwdYgnH5S5bPje7+IJARN2szNwFq7POidTzoZLNpDR/H7bW51LWAzgk6YT
-         GT/iYSpw5umoi75sI57tbGb1OzSZk8hx6Qd8TspE=
-Date:   Mon, 08 Jun 2020 13:46:09 +0100
+        b=KsG2/cPFPIGxQydpcKQ5AGNfDUyyi/dcTPGvm890x/YEXcZVB6g9MQRKEYH6jr/wa
+         liuQCFjZqYb96pPlFbQ0mYKCQqJPjykVyG6CiEJJETdgi3pJuHu+p1lNcJReGqFbE0
+         BNIye1Qe7Pr73BymGHck5TbGYAIGzhRSteJ+284I=
+Date:   Mon, 08 Jun 2020 13:46:19 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Colin King <colin.king@canonical.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-amlogic@lists.infradead.org, alsa-devel@alsa-project.org,
-        Takashi Iwai <tiwai@suse.com>
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-In-Reply-To: <20200604171216.60043-1-colin.king@canonical.com>
-References: <20200604171216.60043-1-colin.king@canonical.com>
-Subject: Re: [PATCH] ASoC: meson: fix memory leak of links if allocation of ldata fails
-Message-Id: <159162036934.23368.2440967052610831030.b4-ty@kernel.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20200607093421.22209-1-brgl@bgdev.pl>
+References: <20200607093421.22209-1-brgl@bgdev.pl>
+Subject: Re: [PATCH] regmap: fix the kerneldoc for regmap_test_bits()
+Message-Id: <159162037977.23406.68181793825135924.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 4 Jun 2020 18:12:16 +0100, Colin King wrote:
-> Currently if the allocation of ldata fails the error return path
-> does not kfree the allocated links object.  Fix this by adding
-> an error exit return path that performs the necessary kfree'ing.
+On Sun, 7 Jun 2020 11:34:21 +0200, Bartosz Golaszewski wrote:
+> The kerneldoc comment for regmap_test_bits() says that it returns -1 on
+> regmap_read() failure. This is not true - it will propagate the error
+> code returned by regmap_read(). Fix it.
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git for-next
 
 Thanks!
 
-[1/1] ASoC: meson: fix memory leak of links if allocation of ldata fails
-      commit: 6e801dc411329aff592fbd48fb116183d0acdb00
+[1/1] regmap: fix the kerneldoc for regmap_test_bits()
+      commit: e680a4098f6404191e0e438a9758715b0bff6d7f
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
