@@ -2,141 +2,84 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59FABC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AEFCC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34B252076A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:07:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rrKet/Q2"
+	by mail.kernel.org (Postfix) with ESMTP id 447712072F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:09:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729775AbgFHOHv (ORCPT
+        id S1729832AbgFHOJJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 10:07:51 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:24196 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726097AbgFHOHv (ORCPT
+        Mon, 8 Jun 2020 10:09:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39144 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726092AbgFHOJI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 10:07:51 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591625270; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=2lAq2rIQvCTa/HMObWUZHG77iDOvmKG/k0U9on+s/5c=;
- b=rrKet/Q227AueU46F8vw3V/Cx8hemq9TLIuXOguA9XoGqXHuSg7k6qJn4+1eV7JPW+lZ/NU8
- SUNCHzSWv9FGj/0G0rCHEOk7V1WlcTE8QM9Zu/omR1VaIM1my/6F3LegDJ+0X75ivCWch+3L
- dsZETmt49h5O4YnCXl6xqbcYsyE=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 5ede4631ceb4684f60fcf631 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 08 Jun 2020 14:07:45
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 99298C433AF; Mon,  8 Jun 2020 14:07:44 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 05A65C433C6;
-        Mon,  8 Jun 2020 14:07:44 +0000 (UTC)
+        Mon, 8 Jun 2020 10:09:08 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 231AAC08C5C2;
+        Mon,  8 Jun 2020 07:09:08 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jiISS-00083D-MF; Mon, 08 Jun 2020 16:09:00 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 22334100F9F; Mon,  8 Jun 2020 16:09:00 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Sean Nyekjaer <sean@geanix.com>,
+        Lorenzo Bianconi <lorenzo@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     linux-iio <linux-iio@vger.kernel.org>
+Subject: Re: IIO timestamp get skewed when suspending (st_lsm6dsx)
+In-Reply-To: <fbef0ac8-e313-c20c-9300-9dee00588102@geanix.com>
+References: <20200603080619.GA544784@lore-desk.lan> <91165f5d-8cba-3ea2-67dc-99d65bce3d19@geanix.com> <20200603102841.GC544784@lore-desk.lan> <d3288925-0891-8c72-b0e7-2b71ff50e1d3@geanix.com> <20200603105105.GD544784@lore-desk.lan> <a6716a15-abf9-3218-00b8-fb7f257e5649@geanix.com> <20200603121227.GE544784@lore-desk.lan> <55fb09cf-76ab-0c42-7283-0836838f2deb@geanix.com> <20200603125630.GF544784@lore-desk.lan> <2d60c115-a634-c25f-b50b-38f13cac6229@geanix.com> <20200603134033.GG544784@lore-desk.lan> <2d8b2b9b-5e63-1254-04d9-8b9be0d91877@geanix.com> <fbef0ac8-e313-c20c-9300-9dee00588102@geanix.com>
+Date:   Mon, 08 Jun 2020 16:09:00 +0200
+Message-ID: <87k10habur.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 08 Jun 2020 19:37:43 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm@vger.kernel.org,
-        Coresight ML <coresight@lists.linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH 2/2] coresight: tmc: Add shutdown callback for TMC ETR/ETF
-In-Reply-To: <da1fdf765ea29cfe7a44145b17431721@codeaurora.org>
-References: <cover.1590947174.git.saiprakash.ranjan@codeaurora.org>
- <28123d1e19f235f97555ee36a5ed8b52d20cbdea.1590947174.git.saiprakash.ranjan@codeaurora.org>
- <20200601212858.GB24287@xps15>
- <6d759cc28628ea72767c1304883630eb@codeaurora.org>
- <CAJ9a7VhMbdqVBHxEXGYxFkgPnnQqNnDAz=wkHP3s7Ntw0iLmKA@mail.gmail.com>
- <f0357072de96970b641bbd0da98c1d61@codeaurora.org>
- <CAJ9a7Vj9STJw4jBxWU_9wHftj4Q7+k8o1nTc8tr21KjYi0RkpQ@mail.gmail.com>
- <4a09cd2e054836d85f2e024ca4435e91@codeaurora.org>
- <CAJ9a7VgCFeHNbY_9Gwvu6uT9MFBeY=_GCaN4N1dwmm+iNpfJOw@mail.gmail.com>
- <1a5a6a6d-b86d-df45-cf91-7081e70d88a3@arm.com>
- <20200603174426.GA23165@xps15>
- <da1fdf765ea29cfe7a44145b17431721@codeaurora.org>
-Message-ID: <dfa6aa626f075f49d9ba1ae8ffa3d384@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mathieu, Mike
+Sean,
 
-On 2020-06-04 12:57, Sai Prakash Ranjan wrote:
-> 
+Sean Nyekjaer <sean@geanix.com> writes:
+> I have a question regarding CLOCK_REALTIME and CLOCK_BOOTTIME when 
+> resuming from suspend.
+>
+> We have run into problems with
+> drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c + the first patch from
+> Lorenzo Bianconi in this thread.  The accelerometer have an internal
+> FIFO that includes a timestamp. When we resume from suspend, the
+> driver resets the fifo ts counter and sets an internal reference to
+> that time.
+>
+> But to me it looks like both CLOCK_REALTIME and CLOCK_BOOTIME aren't 
+> ready when st_lsm6dsx_resume() is called.
 
-[...]
+That depends on your system. Timekeeping is resumed way before drivers
+are resumed, but the suspend time injection might happen late when there
+is no early device to read from. In this case it happens when the RTC is
+resumed.
 
->> 
->> Robin has a point - user space is long gone at this time.  As such the 
->> first
->> question to ask is what kind of CS session was running at the time the 
->> system
->> was shutting down.  Was it a perf session of a sysfs session?
->> 
->> I'm guessing it was a sysfs session because user space has been blown 
->> away a
->> while back and part of that process should have killed all perf 
->> sessions.
-> 
-> I was enabling trace via sysfs.
-> 
->> 
->> If I am correct then simply switching off the ETR HW in the shutdown() 
->> amba bus
->> callback should be fine - otherwise Mike's approach is mandatory.  
->> There is
->> also the exchange between Robin and Sai about removing the SMMU 
->> shutdown
->> callback, but that thread is still incomplete.
->> 
-> 
-> If Robin is hinting at removing SMMU shutdown callback, then I think 
-> adding
-> all these shutdown callbacks to all clients of SMMU can be avoided. Git 
-> blaming
-> the thing shows it was added to avoid some kexec memory corruption.
-> 
-
-I think I misread the cryptic hint from Robin and it is not right to 
-remove
-SMMU shutdown callback. For more details on why that was a bad idea and 
-would
-break kexec, please refer to [1].
-
-As for the coresight, can I disable the ETR only in the tmc shutdown 
-callback
-or are we still concerned about the userspace coming into picture?
-
-[1] https://lore.kernel.org/patchwork/patch/1253131/
+If the IIO driver resumes before the RTC which injects the suspend time,
+then the core time is still in the past. And RTC is using the default
+resume mechanism, so depending on device/class registration order this
+might be the case. Deferring to the PM & RTC wizards.
 
 Thanks,
-Sai
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+        tglx
+
+
