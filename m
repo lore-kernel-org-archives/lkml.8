@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEAF6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4212AC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:21:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA680208FE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:21:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B5F3208B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:21:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658484;
-	bh=SIl+6gDDlAgE5/oHLwCHDU0dl1CfSAmHwDjMoN+E624=;
+	s=default; t=1591658490;
+	bh=LuiEROCkKB7x4Xb7YK6DwbYp0sWvzdSAfVc37/OTPnA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SDiEbnWV++k3yc/9BMLqLM1J3meWCc85VkNuNtBkcJZATyIFwiDa3OBrMG8+PCkEh
-	 m4hZaNiaHKkVXQKcPV/LWmtOENvkkRzBVqeT7nHVSAJfsaEzgZfK+Y6CXoWU5WY+L6
-	 yLNWHaeNSEcF1GUQEVHuUnFr3afuSe/7Op/yzKME=
+	b=vdI+LcYaPTsKUkRvJVw5DXXufIgi4SCU4r2uE9i6KUZjDpU97vWdvlvV6ZHjuHGcq
+	 ZKjeH1wk49hLgXNziGY4i1MtWJmKglbteArcs/by8ae78ZXTZS/hy6RPdu8LhSTCcz
+	 Bn+40ESiZlssGV9QZdAtS1e/d9UFavpLne7+BOkk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729452AbgFHXVT (ORCPT
+        id S1731160AbgFHXV3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:21:19 -0400
+        Mon, 8 Jun 2020 19:21:29 -0400
 Received: from mail.kernel.org ([198.145.29.99]:38480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728533AbgFHXRL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:17:11 -0400
+        id S1729972AbgFHXRU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:17:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FE702085B;
-        Mon,  8 Jun 2020 23:17:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55CB320885;
+        Mon,  8 Jun 2020 23:17:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658230;
-        bh=SIl+6gDDlAgE5/oHLwCHDU0dl1CfSAmHwDjMoN+E624=;
+        s=default; t=1591658240;
+        bh=LuiEROCkKB7x4Xb7YK6DwbYp0sWvzdSAfVc37/OTPnA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yLthxuXYvCYJ7MI8sg9feveoDnJzzFyhGAh7aPcuA0SRknYTkEimPV3bmB5DkvjLu
-         17Xd7yUTDyBttw0TAB21CVrWFfixwf/Z+nEdxTaBo+BtRFahxRCoRVp254D9zR7Ap6
-         axi4IpzbCSr8FPvBqqGZUSsqcHy0I/pZI2DxOBJE=
+        b=hPsDlgddNHeeFacmwgEttrvTkPrbYbJ+/Gdw+ZZ10QFLTXzt8UrpgncqXCreksd39
+         NQFyYyEd4hoS5U6YbcSsTcUCL36IcYt1itWUqvQI9Q1ZJQKxVdj2KC8pGsqzj5UHle
+         39gQgtgxdJnU1mrr6TFBiT285nMfhNCToI5qt7ZQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vadim Fedorenko <vfedorenko@novek.ru>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 243/606] net/tls: fix encryption error checking
-Date:   Mon,  8 Jun 2020 19:06:08 -0400
-Message-Id: <20200608231211.3363633-243-sashal@kernel.org>
+Cc:     Johan Jonker <jbx6244@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 251/606] ARM: dts: rockchip: fix phy nodename for rk3228-evb
+Date:   Mon,  8 Jun 2020 19:06:16 -0400
+Message-Id: <20200608231211.3363633-251-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -60,74 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vadim Fedorenko <vfedorenko@novek.ru>
+From: Johan Jonker <jbx6244@gmail.com>
 
-commit a7bff11f6f9afa87c25711db8050c9b5324db0e2 upstream.
+[ Upstream commit 287e0d538fcec2f6e8eb1e565bf0749f3b90186d ]
 
-bpf_exec_tx_verdict() can return negative value for copied
-variable. In that case this value will be pushed back to caller
-and the real error code will be lost. Fix it using signed type and
-checking for positive value.
+A test with the command below gives for example this error:
 
-Fixes: d10523d0b3d7 ("net/tls: free the record on encryption error")
-Fixes: d3b18ad31f93 ("tls: add bpf support to sk_msg handling")
-Signed-off-by: Vadim Fedorenko <vfedorenko@novek.ru>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+arch/arm/boot/dts/rk3228-evb.dt.yaml: phy@0:
+'#phy-cells' is a required property
+
+The phy nodename is normally used by a phy-handle.
+This node is however compatible with
+"ethernet-phy-id1234.d400", "ethernet-phy-ieee802.3-c22"
+which is just been added to 'ethernet-phy.yaml'.
+So change nodename to 'ethernet-phy' for which '#phy-cells'
+is not a required property
+
+make ARCH=arm dtbs_check
+DT_SCHEMA_FILES=~/.local/lib/python3.5/site-packages/dtschema/schemas/
+phy/phy-provider.yaml
+
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Link: https://lore.kernel.org/r/20200416170321.4216-1-jbx6244@gmail.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/tls/tls_sw.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ arch/arm/boot/dts/rk3228-evb.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/tls/tls_sw.c b/net/tls/tls_sw.c
-index ffa3cbc5449d..34684b98c792 100644
---- a/net/tls/tls_sw.c
-+++ b/net/tls/tls_sw.c
-@@ -784,7 +784,7 @@ static int tls_push_record(struct sock *sk, int flags,
+diff --git a/arch/arm/boot/dts/rk3228-evb.dts b/arch/arm/boot/dts/rk3228-evb.dts
+index 5670b33fd1bd..aed879db6c15 100644
+--- a/arch/arm/boot/dts/rk3228-evb.dts
++++ b/arch/arm/boot/dts/rk3228-evb.dts
+@@ -46,7 +46,7 @@ mdio {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
  
- static int bpf_exec_tx_verdict(struct sk_msg *msg, struct sock *sk,
- 			       bool full_record, u8 record_type,
--			       size_t *copied, int flags)
-+			       ssize_t *copied, int flags)
- {
- 	struct tls_context *tls_ctx = tls_get_ctx(sk);
- 	struct tls_sw_context_tx *ctx = tls_sw_ctx_tx(tls_ctx);
-@@ -920,7 +920,8 @@ int tls_sw_sendmsg(struct sock *sk, struct msghdr *msg, size_t size)
- 	unsigned char record_type = TLS_RECORD_TYPE_DATA;
- 	bool is_kvec = iov_iter_is_kvec(&msg->msg_iter);
- 	bool eor = !(msg->msg_flags & MSG_MORE);
--	size_t try_to_copy, copied = 0;
-+	size_t try_to_copy;
-+	ssize_t copied = 0;
- 	struct sk_msg *msg_pl, *msg_en;
- 	struct tls_rec *rec;
- 	int required_size;
-@@ -1129,7 +1130,7 @@ int tls_sw_sendmsg(struct sock *sk, struct msghdr *msg, size_t size)
- 
- 	release_sock(sk);
- 	mutex_unlock(&tls_ctx->tx_lock);
--	return copied ? copied : ret;
-+	return copied > 0 ? copied : ret;
- }
- 
- static int tls_sw_do_sendpage(struct sock *sk, struct page *page,
-@@ -1143,7 +1144,7 @@ static int tls_sw_do_sendpage(struct sock *sk, struct page *page,
- 	struct sk_msg *msg_pl;
- 	struct tls_rec *rec;
- 	int num_async = 0;
--	size_t copied = 0;
-+	ssize_t copied = 0;
- 	bool full_record;
- 	int record_room;
- 	int ret = 0;
-@@ -1245,7 +1246,7 @@ static int tls_sw_do_sendpage(struct sock *sk, struct page *page,
- 	}
- sendpage_end:
- 	ret = sk_stream_error(sk, flags, ret);
--	return copied ? copied : ret;
-+	return copied > 0 ? copied : ret;
- }
- 
- int tls_sw_sendpage_locked(struct sock *sk, struct page *page,
+-		phy: phy@0 {
++		phy: ethernet-phy@0 {
+ 			compatible = "ethernet-phy-id1234.d400", "ethernet-phy-ieee802.3-c22";
+ 			reg = <0>;
+ 			clocks = <&cru SCLK_MAC_PHY>;
 -- 
 2.25.1
 
