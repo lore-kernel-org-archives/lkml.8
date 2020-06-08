@@ -4,55 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77FEAC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF4CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:01:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D15920801
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:01:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1029D2074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:01:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660885;
-	bh=fkfXndqxh4AQ+gd8Jrw7nvbRge50YW+KBgsDLiMt3sE=;
+	s=default; t=1591660894;
+	bh=otPiUuOD4KPszx0jfuOEfJp3SN2g/6T5J0y2DSIW3mY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gtZl033wRro6mipNNKyG3ROnV1I/oRjdGlKf7tEQukBZJcOxluFpUpAZEa2SJYlNf
-	 9Nzj8sBc4b3lkA273weh+tN9uAOx4yv7mpPhfeLcD0HsUZz82kJ5AboiCJnNF3TtL1
-	 KDsA4Hpa7O5QuY4wqs4JuxdJkh0i0ymw8hO8I+Q4=
+	b=1Ce4keZUaaTSlsDzsa7GUe94inZ6LXmW3ohxL8mN3E4gV2VqsSswJ0u7i8INGHsWp
+	 SDADS/jKSModY8Ig7SSwiJveiJ8vwF9Zabi6Qy3k84C/NEaLcEpnGPmCP1XtSxkYXJ
+	 Ffj88kIrwl6+agytwB7yw3JRKP9X19DOXa/Y/10k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732219AbgFIABY (ORCPT
+        id S1731312AbgFHXW0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:01:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47020 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:22:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731316AbgFHXW1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:22:27 -0400
+        id S1730533AbgFHXRw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:17:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 596B920814;
-        Mon,  8 Jun 2020 23:22:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D10C2083E;
+        Mon,  8 Jun 2020 23:17:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658547;
-        bh=fkfXndqxh4AQ+gd8Jrw7nvbRge50YW+KBgsDLiMt3sE=;
+        s=default; t=1591658272;
+        bh=otPiUuOD4KPszx0jfuOEfJp3SN2g/6T5J0y2DSIW3mY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gVFE+KqDnx6Y3GdO2prr0DnT49WQDMW+xPPxoRK8AJLi5hgt9bUjI7IsIPFg5YMfS
-         yUy2auXeN8Jc84me6YdiGAPLZXwbAt+0L3gbEmOo3cuAv9duGTf3xINqkaJL68k5T8
-         Wi6Q89meJ9oLtq8MXEFnlvKn/Kri/QsEBYSI+QFA=
+        b=YWMbSl0mWXb2NOfYWIbxZacz9NlfqsJJ9H7Tq7avk/rr4eFyvFMGy1KqbBM8WhILW
+         o/qngdEZMNTFWs0rCEbd0LEzEeKxqDGKBsDJ9MTBklUUJxGAcMq1Iz5F0Bbm6sEG5P
+         0sNYLhDG1G+UTlx194qRtdc1i0flNPMikW8Ulxd4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eelco Chaudron <echaudro@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 168/175] libbpf: Fix perf_buffer__free() API for sparse allocs
-Date:   Mon,  8 Jun 2020 19:18:41 -0400
-Message-Id: <20200608231848.3366970-168-sashal@kernel.org>
+Cc:     Tero Kristo <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 278/606] clk: ti: am33xx: fix RTC clock parent
+Date:   Mon,  8 Jun 2020 19:06:43 -0400
+Message-Id: <20200608231211.3363633-278-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
-References: <20200608231848.3366970-1-sashal@kernel.org>
+In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
+References: <20200608231211.3363633-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,42 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eelco Chaudron <echaudro@redhat.com>
+From: Tero Kristo <t-kristo@ti.com>
 
-[ Upstream commit 601b05ca6edb0422bf6ce313fbfd55ec7bbbc0fd ]
+[ Upstream commit dc6dbd51009fc412729c307161f442c0a08618f4 ]
 
-In case the cpu_bufs are sparsely allocated they are not all
-free'ed. These changes will fix this.
+Right now, trying to use RTC purely with the ti-sysc / clkctrl framework
+fails to enable the RTC module properly. Based on experimentation, this
+appears to be because RTC is sourced from the clkdiv32k optional clock.
+TRM is not very clear on this topic, but fix the RTC to use the proper
+source clock nevertheless.
 
-Fixes: fb84b8224655 ("libbpf: add perf buffer API")
-Signed-off-by: Eelco Chaudron <echaudro@redhat.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Link: https://lore.kernel.org/bpf/159056888305.330763.9684536967379110349.stgit@ebuild
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Reported-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+Link: https://lkml.kernel.org/r/20200424152301.4018-1-t-kristo@ti.com
+Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/bpf/libbpf.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/clk/ti/clk-33xx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index 281cc65276e0..2a1dbf52fc9a 100644
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -5358,9 +5358,12 @@ void perf_buffer__free(struct perf_buffer *pb)
- 	if (!pb)
- 		return;
- 	if (pb->cpu_bufs) {
--		for (i = 0; i < pb->cpu_cnt && pb->cpu_bufs[i]; i++) {
-+		for (i = 0; i < pb->cpu_cnt; i++) {
- 			struct perf_cpu_buf *cpu_buf = pb->cpu_bufs[i];
+diff --git a/drivers/clk/ti/clk-33xx.c b/drivers/clk/ti/clk-33xx.c
+index e001b9bcb6bf..7dc30dd6c8d5 100644
+--- a/drivers/clk/ti/clk-33xx.c
++++ b/drivers/clk/ti/clk-33xx.c
+@@ -212,7 +212,7 @@ static const struct omap_clkctrl_reg_data am3_mpu_clkctrl_regs[] __initconst = {
+ };
  
-+			if (!cpu_buf)
-+				continue;
-+
- 			bpf_map_delete_elem(pb->map_fd, &cpu_buf->map_key);
- 			perf_buffer__free_cpu_buf(pb, cpu_buf);
- 		}
+ static const struct omap_clkctrl_reg_data am3_l4_rtc_clkctrl_regs[] __initconst = {
+-	{ AM3_L4_RTC_RTC_CLKCTRL, NULL, CLKF_SW_SUP, "clk_32768_ck" },
++	{ AM3_L4_RTC_RTC_CLKCTRL, NULL, CLKF_SW_SUP, "clk-24mhz-clkctrl:0000:0" },
+ 	{ 0 },
+ };
+ 
 -- 
 2.25.1
 
