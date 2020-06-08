@@ -2,94 +2,128 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1544BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 22:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E64C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 22:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA274206D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 22:11:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3E172074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 22:12:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591654334;
+	bh=MdIzGLv9I80UNxTGOqTFO0/YhkX9e3Wi16ba3p9F01A=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=wgQzHN8HmYmgGSqE1UT6hkg7zUNS+/+/hBhwLv+bVcXgOaJGt2lhuXWw3vz2tLSE+
+	 +bG4NEmOhbk3B385ZiPwjlhvB8WsNPmae38vMz4QDj+Q7DQVBJCN+7AGfg+TJpElAi
+	 ZdKpK/xy0GaUVQT6OTbQ+GSBHoGIumPGdFNhDcL8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbgFHWLa (ORCPT
+        id S1726831AbgFHWMN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 18:11:30 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:29272 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726598AbgFHWL3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 18:11:29 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 058M4pLw083317;
-        Mon, 8 Jun 2020 18:11:28 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31g5fcdj5y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 08 Jun 2020 18:11:28 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 058MBIi7016910;
-        Mon, 8 Jun 2020 22:11:26 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma03ams.nl.ibm.com with ESMTP id 31g2s7vr9h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 08 Jun 2020 22:11:26 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 058MBNxY50462888
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 8 Jun 2020 22:11:23 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 68144A4040;
-        Mon,  8 Jun 2020 22:11:23 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0C8C9A404D;
-        Mon,  8 Jun 2020 22:11:23 +0000 (GMT)
-Received: from localhost (unknown [9.145.156.224])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon,  8 Jun 2020 22:11:22 +0000 (GMT)
-Date:   Tue, 9 Jun 2020 00:11:21 +0200
-From:   Vasily Gorbik <gor@linux.ibm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>
-Subject: Re: [GIT PULL] s390 patches for the 5.8 merge window
-Message-ID: <your-ad-here.call-01591654281-ext-4683@work.hours>
-References: <your-ad-here.call-01591630479-ext-3636@work.hours>
- <CAHk-=whC98Ge2Y2uooRkbt11R1QpF0283Oqnz6X6AUBa_XBbzQ@mail.gmail.com>
- <CAHk-=whnntptk9j7KgtPQY5yNEkL5J64mAsqZgdV_4FLtiFboQ@mail.gmail.com>
+        Mon, 8 Jun 2020 18:12:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37714 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726598AbgFHWMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 18:12:13 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49E60206D5;
+        Mon,  8 Jun 2020 22:12:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591654332;
+        bh=MdIzGLv9I80UNxTGOqTFO0/YhkX9e3Wi16ba3p9F01A=;
+        h=Date:From:To:Cc:Subject:From;
+        b=2ljm5wis4+a4ngtn74BBfgckBP6UFZHWcQLN/WpclaXMFk98SpoM0JOM2KAPXwhrO
+         8Ld36qLno58XrSujIpJfGn5f/FIHWGphw+QWbTsDPC2s7C6Edrei3rfrN+SwQPwYIA
+         e07OCuBDZ793txLsukmAMbyAD5FDD2feJr4ozFOY=
+Date:   Mon, 8 Jun 2020 17:17:23 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] overflow.h: Add flex_array_size() helper
+Message-ID: <20200608221723.GA23644@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=whnntptk9j7KgtPQY5yNEkL5J64mAsqZgdV_4FLtiFboQ@mail.gmail.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-08_18:2020-06-08,2020-06-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
- priorityscore=1501 mlxscore=0 spamscore=0 mlxlogscore=840 malwarescore=0
- lowpriorityscore=0 suspectscore=1 phishscore=0 cotscore=-2147483648
- bulkscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006080149
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 12:12:57PM -0700, Linus Torvalds wrote:
-> On Mon, Jun 8, 2020 at 12:09 PM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > On Mon, Jun 8, 2020 at 8:35 AM Vasily Gorbik <gor@linux.ibm.com> wrote:
-> > >
-> > > Please note 2 minor merge conflict resolutions below:
-> >
-> > There was a third because of the iommu tree I merged today.
+Add flex_array_size() helper for the calculation of the size, in bytes,
+of a flexible array member contained within an enclosing structure.
 
-Looks fine, thank you.
+Example of usage:
 
-> Oh, and please don't post the whole patch in your pull request.
+struct something {
+	size_t count;
+	struct foo items[];
+};
 
-Yes, this was not intentional. Sorry about that.
+struct something *instance;
 
-Vasily
+instance = kmalloc(struct_size(instance, items, count), GFP_KERNEL);
+instance->count = count;
+
+memcpy(instance->items, source, flex_array_size(instance, items, instance->count));
+
+The helper returns SIZE_MAX on overflow instead of wrapping around.
+
+(Additionally replace parameter n with count in struct_size() for
+homogeneity).
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ include/linux/overflow.h | 25 +++++++++++++++++++++----
+ 1 file changed, 21 insertions(+), 4 deletions(-)
+
+diff --git a/include/linux/overflow.h b/include/linux/overflow.h
+index 659045046468f..473af79f11ccf 100644
+--- a/include/linux/overflow.h
++++ b/include/linux/overflow.h
+@@ -304,16 +304,33 @@ static inline __must_check size_t __ab_c_size(size_t a, size_t b, size_t c)
+  * struct_size() - Calculate size of structure with trailing array.
+  * @p: Pointer to the structure.
+  * @member: Name of the array member.
+- * @n: Number of elements in the array.
++ * @count: Number of elements in the array.
+  *
+  * Calculates size of memory needed for structure @p followed by an
+- * array of @n @member elements.
++ * array of @count @member elements.
+  *
+  * Return: number of bytes needed or SIZE_MAX on overflow.
+  */
+-#define struct_size(p, member, n)					\
+-	__ab_c_size(n,							\
++#define struct_size(p, member, count)					\
++	__ab_c_size(count,							\
+ 		    sizeof(*(p)->member) + __must_be_array((p)->member),\
+ 		    sizeof(*(p)))
+ 
++/**
++ * flex_array_size() - Calculate size of a flexible array member within
++ * an enclosing structure.
++ *
++ * @p: Pointer to the structure.
++ * @member: Name of the flexible array member.
++ * @count: Number of elements in the array.
++ *
++ * Calculates size of memory needed for flexible array @member of @count
++ * elements within structure @p.
++ *
++ * Return: number of bytes needed or SIZE_MAX on overflow.
++ */
++#define flex_array_size(p, member, count)					\
++	array_size(count,							\
++		    sizeof((p)->member[0]) + __must_be_array((p)->member))
++
+ #endif /* __LINUX_OVERFLOW_H */
+-- 
+2.27.0
+
