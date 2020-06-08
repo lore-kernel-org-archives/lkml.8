@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7843CC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03996C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5481820890
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:09:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3264208C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:09:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591657752;
-	bh=1nuTO3/C9PLdayS+YAYuAtfHYtA++BUHbRE+Z0bXpyw=;
+	s=default; t=1591657758;
+	bh=UgH8czb3Zqf99cuf6/cq5xSM1xd308oDJ5vXdkILL9g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NTD7qYQ4vYYPEYfe3Z8f6HpvWvkzL68JdEXrKrViMEkxsMaPPNowl924vyjUMeYgq
-	 iA64TrZ4POyg5pjZsPOcf7TYGh4hjDMKafwF8DtT6taFjZGMVFLht3VSfV64neeoVY
-	 GgVHQZP1uOBmM/ho0aGMItnuYz1Wmp4ndtZOPyAM=
+	b=EBItEE8riSewvieO7ljLt37k4QzAWSWl7lULkcP8MaIXKZ/deJPxLoYkjeCUG+mdp
+	 uRx8e5HhIaV2C16PdzDAyfRO9LubssInRwlTqgZ6QKUvw5mWwF5SLnlU6MszT6kvmt
+	 mre3R0YR0XPG9mGwteGuUfpKqvXbam2eIu61gm24=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728366AbgFHXJL (ORCPT
+        id S1728028AbgFHXJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:09:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53082 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:09:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728096AbgFHXIG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:08:06 -0400
+        id S1728107AbgFHXIL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:08:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10F2D2085B;
-        Mon,  8 Jun 2020 23:08:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3832B20842;
+        Mon,  8 Jun 2020 23:08:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657686;
-        bh=1nuTO3/C9PLdayS+YAYuAtfHYtA++BUHbRE+Z0bXpyw=;
+        s=default; t=1591657691;
+        bh=UgH8czb3Zqf99cuf6/cq5xSM1xd308oDJ5vXdkILL9g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TUhikeQflvAJ4Kv3CTONiPHy11fM/FeFSahA0BPnkewMN6GP0LWprWE3nHF5kW//W
-         afpsHT8pc3abywmCIEx+aVa7OVZEveEnSk8B5Ycb/jekr4ejHZwRZckFVUtAnHbqiA
-         GTeOS4WADwO7mQrpLutvIdIHS6/wJkDWKLZvzTMo=
+        b=NImMvxuqEixileN0cKasTp1aFKdtMLCwg1iIfjFyF9fv37jbF6iU7Ct6dEOMmIxa7
+         LLgNlo/97uYHUknNhQvR+Di4AMmidwrMVeXXL/99neosQJYELI35TL23LxOfpeiRwS
+         8NbV7BOq/QM++pzixWzH2Y1W+cGAvdILbkhsrDc8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Elena Petrova <lenaptr@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.7 088/274] ubsan: entirely disable alignment checks under UBSAN_TRAP
-Date:   Mon,  8 Jun 2020 19:03:01 -0400
-Message-Id: <20200608230607.3361041-88-sashal@kernel.org>
+Cc:     Venkateswara Naralasetty <vnaralas@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 092/274] ath10k: fix kernel null pointer dereference
+Date:   Mon,  8 Jun 2020 19:03:05 -0400
+Message-Id: <20200608230607.3361041-92-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -64,46 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Venkateswara Naralasetty <vnaralas@codeaurora.org>
 
-[ Upstream commit 9380ce246a052a1e00121cd480028b6907aeae38 ]
+[ Upstream commit acb31476adc9ff271140cdd4d3c707ff0c97f5a4 ]
 
-Commit 8d58f222e85f ("ubsan: disable UBSAN_ALIGNMENT under
-COMPILE_TEST") tried to fix the pathological results of UBSAN_ALIGNMENT
-with UBSAN_TRAP (which objtool would rightly scream about), but it made
-an assumption about how COMPILE_TEST gets set (it is not set for
-randconfig).  As a result, we need a bigger hammer here: just don't
-allow the alignment checks with the trap mode.
+Currently sta airtime is updated without any lock in case of
+host based airtime calculation. Which may result in accessing the
+invalid sta pointer in case of continuous station connect/disconnect.
 
-Fixes: 8d58f222e85f ("ubsan: disable UBSAN_ALIGNMENT under COMPILE_TEST")
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Elena Petrova <lenaptr@google.com>
-Link: http://lkml.kernel.org/r/202005291236.000FCB6@keescook
-Link: https://lore.kernel.org/lkml/742521db-1e8c-0d7a-1ed4-a908894fb497@infradead.org/
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+This patch fix the kernel null pointer dereference by updating the
+station airtime with proper RCU lock in case of host based airtime
+calculation.
+
+Proceeding with the analysis of "ARM Kernel Panic".
+The APSS crash happened due to OOPS on CPU 0.
+Crash Signature : Unable to handle kernel NULL pointer dereference
+at virtual address 00000300
+During the crash,
+PC points to "ieee80211_sta_register_airtime+0x1c/0x448 [mac80211]"
+LR points to "ath10k_txrx_tx_unref+0x17c/0x364 [ath10k_core]".
+The Backtrace obtained is as follows:
+[<bf880238>] (ieee80211_sta_register_airtime [mac80211]) from
+[<bf945a38>] (ath10k_txrx_tx_unref+0x17c/0x364 [ath10k_core])
+[<bf945a38>] (ath10k_txrx_tx_unref [ath10k_core]) from
+[<bf9428e4>] (ath10k_htt_txrx_compl_task+0xa50/0xfc0 [ath10k_core])
+[<bf9428e4>] (ath10k_htt_txrx_compl_task [ath10k_core]) from
+[<bf9b9bc8>] (ath10k_pci_napi_poll+0x50/0xf8 [ath10k_pci])
+[<bf9b9bc8>] (ath10k_pci_napi_poll [ath10k_pci]) from
+[<c059e3b0>] (net_rx_action+0xac/0x160)
+[<c059e3b0>] (net_rx_action) from [<c02329a4>] (__do_softirq+0x104/0x294)
+[<c02329a4>] (__do_softirq) from [<c0232b64>] (run_ksoftirqd+0x30/0x90)
+[<c0232b64>] (run_ksoftirqd) from [<c024e358>] (smpboot_thread_fn+0x25c/0x274)
+[<c024e358>] (smpboot_thread_fn) from [<c02482fc>] (kthread+0xd8/0xec)
+
+Tested HW: QCA9888
+Tested FW: 10.4-3.10-00047
+
+Signed-off-by: Venkateswara Naralasetty <vnaralas@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/1585736290-17661-1-git-send-email-vnaralas@codeaurora.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/Kconfig.ubsan | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath10k/txrx.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
-index 929211039bac..27bcc2568c95 100644
---- a/lib/Kconfig.ubsan
-+++ b/lib/Kconfig.ubsan
-@@ -63,7 +63,7 @@ config UBSAN_SANITIZE_ALL
- config UBSAN_ALIGNMENT
- 	bool "Enable checks for pointers alignment"
- 	default !HAVE_EFFICIENT_UNALIGNED_ACCESS
--	depends on !X86 || !COMPILE_TEST
-+	depends on !UBSAN_TRAP
- 	help
- 	  This option enables the check of unaligned memory accesses.
- 	  Enabling this option on architectures that support unaligned
+diff --git a/drivers/net/wireless/ath/ath10k/txrx.c b/drivers/net/wireless/ath/ath10k/txrx.c
+index 39abf8b12903..f46b9083bbf1 100644
+--- a/drivers/net/wireless/ath/ath10k/txrx.c
++++ b/drivers/net/wireless/ath/ath10k/txrx.c
+@@ -84,9 +84,11 @@ int ath10k_txrx_tx_unref(struct ath10k_htt *htt,
+ 		wake_up(&htt->empty_tx_wq);
+ 	spin_unlock_bh(&htt->tx_lock);
+ 
++	rcu_read_lock();
+ 	if (txq && txq->sta && skb_cb->airtime_est)
+ 		ieee80211_sta_register_airtime(txq->sta, txq->tid,
+ 					       skb_cb->airtime_est, 0);
++	rcu_read_unlock();
+ 
+ 	if (ar->bus_param.dev_type != ATH10K_DEV_TYPE_HL)
+ 		dma_unmap_single(dev, skb_cb->paddr, msdu->len, DMA_TO_DEVICE);
 -- 
 2.25.1
 
