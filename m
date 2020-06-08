@@ -7,51 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B682C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC69C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:37:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 079C3206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:37:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB441206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:37:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663020;
-	bh=EnRmq9zh4Y6NmpMblMq2iXljdkShGO0VJYzbMq6hjsk=;
+	s=default; t=1591663024;
+	bh=iBUom3UexuJtoL9Ox33IMnAZayXMsAmGh1AfuUlcV8s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MbC2fxBYlLSitfUPKLB8CrtGFnWMG1VWKcGhUG2CVPiB7TfeFHGLWafXuy1qxfoEc
-	 mRoiuEdBHbbsjkM9DTJroB3BTznDDLcPfH+WbmzGTziASbXBUbcDB6utrJcARIeURn
-	 0BIH4bVdSvmRehuIuPARhEtHJsP7EJvfl14ihmk4=
+	b=KtboRj1QBdAgw2QavzxZYZcKhWPJRo51RRCTvRNk9yyXZAszwsWIZHkhIODpUuKx9
+	 Jr1BewHuR1fS6QtfWromyMetZUzAJW2xqgvSVSavZ8euLiNb0YT0dqgnIJsyCmSbNT
+	 DTakBvdSv5hsTXb0gXk01GPVr0euAyAieBfO7+nU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729626AbgFHXNw (ORCPT
+        id S1729634AbgFIAhC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:13:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58442 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:37:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728025AbgFHXLb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:11:31 -0400
+        id S1729633AbgFHXNw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:13:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F7312100A;
-        Mon,  8 Jun 2020 23:11:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 934D6212CC;
+        Mon,  8 Jun 2020 23:13:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657890;
-        bh=EnRmq9zh4Y6NmpMblMq2iXljdkShGO0VJYzbMq6hjsk=;
+        s=default; t=1591658032;
+        bh=iBUom3UexuJtoL9Ox33IMnAZayXMsAmGh1AfuUlcV8s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ed4XYjuISYG5bn5+kayhiq1cD1jwbGJEnmtq9nRFkkJlnWLeAyatgxaiNaWs9/rtv
-         nvWO9ItxdHS0Erb/1zioo/Z8Y4MkvsFJZAGcdIYOJc39q+O11DAzy2tZ2OzcF5pLYa
-         mTrsn56l1rkhKbnzaDk9A18+/hZlb/zE1vHFyL1c=
+        b=d0eL5QqP8ei447D5afqv2l8GxkeH0hRjTbXsuTBo8hNRWhZOQ/0TMNh+8UEqOXG/j
+         HAbV9zm/3zV08DTc+C0eAKCu3kPi8SDoGSySu2aa5lZSXjIp2aTTfiI34Kv0jUZrLb
+         GHZNcoh36qrUTd6wS0qdbPS9Fd9fXyXxUv3OO6sg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-mmc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 246/274] mmc: sdhci-msm: Set SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12 quirk
-Date:   Mon,  8 Jun 2020 19:05:39 -0400
-Message-Id: <20200608230607.3361041-246-sashal@kernel.org>
+Cc:     Roberto Sassu <roberto.sassu@huawei.com>,
+        Krzysztof Struczynski <krzysztof.struczynski@huawei.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 083/606] evm: Check also if *tfm is an error pointer in init_desc()
+Date:   Mon,  8 Jun 2020 19:03:28 -0400
+Message-Id: <20200608231211.3363633-83-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
-References: <20200608230607.3361041-1-sashal@kernel.org>
+In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
+References: <20200608231211.3363633-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,37 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+From: Roberto Sassu <roberto.sassu@huawei.com>
 
-[ Upstream commit d863cb03fb2aac07f017b2a1d923cdbc35021280 ]
+[ Upstream commit 53de3b080d5eae31d0de219617155dcc34e7d698 ]
 
-sdhci-msm can support auto cmd12.
-So enable SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12 quirk.
+This patch avoids a kernel panic due to accessing an error pointer set by
+crypto_alloc_shash(). It occurs especially when there are many files that
+require an unsupported algorithm, as it would increase the likelihood of
+the following race condition:
 
-Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Link: https://lore.kernel.org/r/1587363626-20413-3-git-send-email-vbadigan@codeaurora.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Task A: *tfm = crypto_alloc_shash() <= error pointer
+Task B: if (*tfm == NULL) <= *tfm is not NULL, use it
+Task B: rc = crypto_shash_init(desc) <= panic
+Task A: *tfm = NULL
+
+This patch uses the IS_ERR_OR_NULL macro to determine whether or not a new
+crypto context must be created.
+
+Cc: stable@vger.kernel.org
+Fixes: d46eb3699502b ("evm: crypto hash replaced by shash")
+Co-developed-by: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+Signed-off-by: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci-msm.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ security/integrity/evm/evm_crypto.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-index a8bcb3f16aa4..11139d7d394a 100644
---- a/drivers/mmc/host/sdhci-msm.c
-+++ b/drivers/mmc/host/sdhci-msm.c
-@@ -1882,7 +1882,9 @@ static const struct sdhci_ops sdhci_msm_ops = {
- static const struct sdhci_pltfm_data sdhci_msm_pdata = {
- 	.quirks = SDHCI_QUIRK_BROKEN_CARD_DETECTION |
- 		  SDHCI_QUIRK_SINGLE_POWER_WRITE |
--		  SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN,
-+		  SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN |
-+		  SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12,
-+
- 	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
- 	.ops = &sdhci_msm_ops,
- };
+diff --git a/security/integrity/evm/evm_crypto.c b/security/integrity/evm/evm_crypto.c
+index d485f6fc908e..302adeb2d37b 100644
+--- a/security/integrity/evm/evm_crypto.c
++++ b/security/integrity/evm/evm_crypto.c
+@@ -93,7 +93,7 @@ static struct shash_desc *init_desc(char type, uint8_t hash_algo)
+ 		algo = hash_algo_name[hash_algo];
+ 	}
+ 
+-	if (*tfm == NULL) {
++	if (IS_ERR_OR_NULL(*tfm)) {
+ 		mutex_lock(&mutex);
+ 		if (*tfm)
+ 			goto out;
 -- 
 2.25.1
 
