@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 221CFC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB0BDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB21820760
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93D4020842
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:03:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591664585;
-	bh=PRuINvBRZW2mZwEv6yL9odErB1I7qLxkutEUY51xAFc=;
+	s=default; t=1591664598;
+	bh=UpSHGXHv/QX6A4IS4joM6P1Hlv2s0Ot6ssUtVZvGDcI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zrNx3aNGASvBE7RnriImwx75Dik7DXWLIR6AnWi6p2F3oB0avX8ZSPk5iIy9uEMD1
-	 HDaM3Xs/S5MG+kdBo9AuEX6VwVCDRyW2IYqA/CNzHHEgVy44lS9yo5zzsbk21+ycW8
-	 6BLdOardTK0whh3bzIFOVmAnUYBVIC0CtxrZKZRI=
+	b=UT/J+qqnxoKCTlj3BlcPJx6NqiJ1+L/MnYIckn42ccJmB6hpPYV4n7Zx/jsmQzSKg
+	 NTqTo2fY0siAQX5EO5jOFwDF6uMcZydyIUHZbs5rSDMEhmr7Eb+H6X6ba2gGIo374/
+	 vrKjY8UkqrgjPnqZvjdnDUVS6CspBm6sI0y2d3T4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728126AbgFIBDE (ORCPT
+        id S2388143AbgFIBDR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 21:03:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52444 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 21:03:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728012AbgFHXHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:07:49 -0400
+        id S1727982AbgFHXHo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:07:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B99522086A;
-        Mon,  8 Jun 2020 23:07:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7CF22086A;
+        Mon,  8 Jun 2020 23:07:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657668;
-        bh=PRuINvBRZW2mZwEv6yL9odErB1I7qLxkutEUY51xAFc=;
+        s=default; t=1591657664;
+        bh=UpSHGXHv/QX6A4IS4joM6P1Hlv2s0Ot6ssUtVZvGDcI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UJUV0YaVsV7c2Vo+aIuG2esMjFNttNQCp9gIq4S37E3DtsvCslivS0wX9BbEzutp7
-         R+MecZQAIJQVSV18Zcl27yUJK3bRB5drN9AJ/uH0PF2Uev8v5oKqGMNHsOIOfeyJN4
-         2h+BXF0Os6EALcOKpvCzC4JTZNDh54fhQpDaqhg4=
+        b=Irnm2iouMUWw8XYm3CAJQ7FcwuhUpKfTkxpj4hbR7WmmxBwqkeQLPE7+1HF9yf5+w
+         LB8aV9TfHmtxUW3hhk3Bgaa1XlbzBiC9uiSm8FexDC6ofABsdMcGiKzoZcAVjaVW/U
+         vNobKHNDAhfy2MEmm78zS9acSutFmE/5OMVdcRcY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
+Cc:     Marta Plantykow <marta.a.plantykow@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-bluetooth@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 078/274] Bluetooth: btmtkuart: Improve exception handling in btmtuart_probe()
-Date:   Mon,  8 Jun 2020 19:02:51 -0400
-Message-Id: <20200608230607.3361041-78-sashal@kernel.org>
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 075/274] ice: Change number of XDP TxQ to 0 when destroying rings
+Date:   Mon,  8 Jun 2020 19:02:48 -0400
+Message-Id: <20200608230607.3361041-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -62,68 +62,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Marta Plantykow <marta.a.plantykow@intel.com>
 
-[ Upstream commit 4803c54ca24923a30664bea2a7772db6e7303c51 ]
+[ Upstream commit c8f135c6ee7851ad72bd4d877216950fcbd45fb6 ]
 
-Calls of the functions clk_disable_unprepare() and hci_free_dev()
-were missing for the exception handling.
-Thus add the missed function calls together with corresponding
-jump targets.
+When XDP Tx rings are destroyed the number of XDP Tx queues
+is not changing. This patch is changing this number to 0.
 
-Fixes: 055825614c6b ("Bluetooth: btmtkuart: add an implementation for clock osc property")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Marta Plantykow <marta.a.plantykow@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/btmtkuart.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/intel/ice/ice_main.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/bluetooth/btmtkuart.c b/drivers/bluetooth/btmtkuart.c
-index e11169ad8247..8a81fbca5c9d 100644
---- a/drivers/bluetooth/btmtkuart.c
-+++ b/drivers/bluetooth/btmtkuart.c
-@@ -1015,7 +1015,7 @@ static int btmtkuart_probe(struct serdev_device *serdev)
- 	if (btmtkuart_is_standalone(bdev)) {
- 		err = clk_prepare_enable(bdev->osc);
- 		if (err < 0)
--			return err;
-+			goto err_hci_free_dev;
+diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
+index 5b190c257124..599dab844034 100644
+--- a/drivers/net/ethernet/intel/ice/ice_main.c
++++ b/drivers/net/ethernet/intel/ice/ice_main.c
+@@ -1898,6 +1898,9 @@ int ice_destroy_xdp_rings(struct ice_vsi *vsi)
+ 	for (i = 0; i < vsi->tc_cfg.numtc; i++)
+ 		max_txqs[i] = vsi->num_txq;
  
- 		if (bdev->boot) {
- 			gpiod_set_value_cansleep(bdev->boot, 1);
-@@ -1028,10 +1028,8 @@ static int btmtkuart_probe(struct serdev_device *serdev)
- 
- 		/* Power on */
- 		err = regulator_enable(bdev->vcc);
--		if (err < 0) {
--			clk_disable_unprepare(bdev->osc);
--			return err;
--		}
-+		if (err < 0)
-+			goto err_clk_disable_unprepare;
- 
- 		/* Reset if the reset-gpios is available otherwise the board
- 		 * -level design should be guaranteed.
-@@ -1063,7 +1061,6 @@ static int btmtkuart_probe(struct serdev_device *serdev)
- 	err = hci_register_dev(hdev);
- 	if (err < 0) {
- 		dev_err(&serdev->dev, "Can't register HCI device\n");
--		hci_free_dev(hdev);
- 		goto err_regulator_disable;
- 	}
- 
-@@ -1072,6 +1069,11 @@ static int btmtkuart_probe(struct serdev_device *serdev)
- err_regulator_disable:
- 	if (btmtkuart_is_standalone(bdev))
- 		regulator_disable(bdev->vcc);
-+err_clk_disable_unprepare:
-+	if (btmtkuart_is_standalone(bdev))
-+		clk_disable_unprepare(bdev->osc);
-+err_hci_free_dev:
-+	hci_free_dev(hdev);
- 
- 	return err;
++	/* change number of XDP Tx queues to 0 */
++	vsi->num_xdp_txq = 0;
++
+ 	return ice_cfg_vsi_lan(vsi->port_info, vsi->idx, vsi->tc_cfg.ena_tc,
+ 			       max_txqs);
  }
 -- 
 2.25.1
