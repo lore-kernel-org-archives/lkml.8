@@ -4,53 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88642C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFBAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6705D2072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:06:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 634FF2072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:06:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591661177;
-	bh=B89FK8vACx+eNd7wzQx7lR+6NkbB8MD1A2RxKuGY980=;
+	s=default; t=1591661180;
+	bh=jZy1as2piln0ccgJTMijtHWVIfUeLePmLd17SQs+ztc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gAX0ITgWp1hsa2Pw/K/TQpWKW65GH9gedaqhR5luj2VPfhqhQt2gEs93rkrUMJe1s
-	 YBUB/1V0UVQAhi6fiLYPBDTCrPhbLNaboyCGIxf/tWrP4V/2xaPziripw7/HrBNbXw
-	 tHli+oouDFAom5XH9nxZ/b0yNKdyEQnl87ns1MJI=
+	b=qmNzWOI5pvjxJg2n4j+tx80xgVtHuRpqi9EJlxJOPm6Nf2lmDH/pWBigErOx/ImbS
+	 MJ2oHCmt+fqCO+Caf7JfFEyJBA65FI75Q30wEdx3y9imTotcfXtTc2WmQAX2HuLSMY
+	 P4mWBXKhZngrc8B8rEiMgxmEFqtsswZn58RanMWo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731672AbgFIAGP (ORCPT
+        id S1729965AbgFHXVK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:06:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45354 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:21:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731114AbgFHXVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:21:12 -0400
+        id S1730399AbgFHXRH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:17:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4807B2088E;
-        Mon,  8 Jun 2020 23:21:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 367EC2083E;
+        Mon,  8 Jun 2020 23:17:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658471;
-        bh=B89FK8vACx+eNd7wzQx7lR+6NkbB8MD1A2RxKuGY980=;
+        s=default; t=1591658227;
+        bh=jZy1as2piln0ccgJTMijtHWVIfUeLePmLd17SQs+ztc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1/spxXIWVGSM3pNb+uDq6VtT2oHhUmB7MjJgUFxUQDMqcPZr7QakT7JptmgF3JzTV
-         8FIZcZQ2oUJBr0rTpeDCCw8WrvN3XqDI4w4ak2VRmFv6Qb0DgRpukPP/8aIktbLB6D
-         dmRYDSvFQPRil8xpNy1B/4VAcmZuGKTdVN1a0L2s=
+        b=ZRTiBoEtGWDOXqrhnTDRI2LAgU2lwrpRe8V/rPXON18ofurM7TLEupHxNtH/uJ3x3
+         ih4XYWGjDxVzKhMScTFfhxmpcOJjvH38SYdSpuejZ1moHe/Bop0Ce7Gkyjkkunh3Gp
+         4s29a0N3fEn5JQxrFJ6NAFbt2YhQWO9TSovjCxgA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        David Hildenbrand <david@redhat.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
         Sasha Levin <sashal@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 109/175] platform/x86: intel-vbtn: Split keymap into buttons and switches parts
-Date:   Mon,  8 Jun 2020 19:17:42 -0400
-Message-Id: <20200608231848.3366970-109-sashal@kernel.org>
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 5.6 240/606] Revert "virtio-balloon: Revert "virtio-balloon: Switch back to OOM handler for VIRTIO_BALLOON_F_DEFLATE_ON_OOM""
+Date:   Mon,  8 Jun 2020 19:06:05 -0400
+Message-Id: <20200608231211.3363633-240-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
-References: <20200608231848.3366970-1-sashal@kernel.org>
+In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
+References: <20200608231211.3363633-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,82 +62,205 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-[ Upstream commit f6ba524970c4b73b234bf41ecd6628f5803b1559 ]
+This reverts commit 37681282be8e89ae8baf26753bf489837d74e08e which is
+commit 835a6a649d0dd1b1f46759eb60fff2f63ed253a7 upstream.
 
-Split the sparse keymap into 2 separate keymaps, a buttons and a switches
-keymap and combine the 2 to a single map again in intel_vbtn_input_setup().
+Jiri and David agree that it is not needed in the 5.6.y tree, so revert
+it.
 
-This is a preparation patch for not telling userspace that we have switches
-when we do not have them (and for doing the same for the buttons).
-
-Fixes: de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode switch on 2-in-1's")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reported-by: Jiri Slaby <jslaby@suse.cz>
+Reported-by: David Hildenbrand <david@redhat.com>
+Cc: Michael S. Tsirkin <mst@redhat.com>
+Cc: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/platform/x86/intel-vbtn.c | 28 +++++++++++++++++++++++++---
- 1 file changed, 25 insertions(+), 3 deletions(-)
+ drivers/virtio/virtio_balloon.c | 107 +++++++++++++-------------------
+ 1 file changed, 44 insertions(+), 63 deletions(-)
 
-diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-index 3b3789bb8ec5..2ab3dbd26b5e 100644
---- a/drivers/platform/x86/intel-vbtn.c
-+++ b/drivers/platform/x86/intel-vbtn.c
-@@ -39,14 +39,20 @@ static const struct key_entry intel_vbtn_keymap[] = {
- 	{ KE_IGNORE, 0xC7, { KEY_VOLUMEDOWN } },	/* volume-down key release */
- 	{ KE_KEY,    0xC8, { KEY_ROTATE_LOCK_TOGGLE } },	/* rotate-lock key press */
- 	{ KE_KEY,    0xC9, { KEY_ROTATE_LOCK_TOGGLE } },	/* rotate-lock key release */
-+};
+diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+index 341458fd95ca..44375a22307b 100644
+--- a/drivers/virtio/virtio_balloon.c
++++ b/drivers/virtio/virtio_balloon.c
+@@ -14,6 +14,7 @@
+ #include <linux/slab.h>
+ #include <linux/module.h>
+ #include <linux/balloon_compaction.h>
++#include <linux/oom.h>
+ #include <linux/wait.h>
+ #include <linux/mm.h>
+ #include <linux/mount.h>
+@@ -27,7 +28,9 @@
+  */
+ #define VIRTIO_BALLOON_PAGES_PER_PAGE (unsigned)(PAGE_SIZE >> VIRTIO_BALLOON_PFN_SHIFT)
+ #define VIRTIO_BALLOON_ARRAY_PFNS_MAX 256
+-#define VIRTBALLOON_OOM_NOTIFY_PRIORITY 80
++/* Maximum number of (4k) pages to deflate on OOM notifications. */
++#define VIRTIO_BALLOON_OOM_NR_PAGES 256
++#define VIRTIO_BALLOON_OOM_NOTIFY_PRIORITY 80
+ 
+ #define VIRTIO_BALLOON_FREE_PAGE_ALLOC_FLAG (__GFP_NORETRY | __GFP_NOWARN | \
+ 					     __GFP_NOMEMALLOC)
+@@ -112,8 +115,11 @@ struct virtio_balloon {
+ 	/* Memory statistics */
+ 	struct virtio_balloon_stat stats[VIRTIO_BALLOON_S_NR];
+ 
+-	/* To register a shrinker to shrink memory upon memory pressure */
++	/* Shrinker to return free pages - VIRTIO_BALLOON_F_FREE_PAGE_HINT */
+ 	struct shrinker shrinker;
 +
-+static const struct key_entry intel_vbtn_switchmap[] = {
- 	{ KE_SW,     0xCA, { .sw = { SW_DOCK, 1 } } },		/* Docked */
- 	{ KE_SW,     0xCB, { .sw = { SW_DOCK, 0 } } },		/* Undocked */
- 	{ KE_SW,     0xCC, { .sw = { SW_TABLET_MODE, 1 } } },	/* Tablet */
- 	{ KE_SW,     0xCD, { .sw = { SW_TABLET_MODE, 0 } } },	/* Laptop */
--	{ KE_END },
++	/* OOM notifier to deflate on OOM - VIRTIO_BALLOON_F_DEFLATE_ON_OOM */
++	struct notifier_block oom_nb;
  };
  
-+#define KEYMAP_LEN \
-+	(ARRAY_SIZE(intel_vbtn_keymap) + ARRAY_SIZE(intel_vbtn_switchmap) + 1)
-+
- struct intel_vbtn_priv {
-+	struct key_entry keymap[KEYMAP_LEN];
- 	struct input_dev *input_dev;
- 	bool wakeup_mode;
- };
-@@ -54,13 +60,29 @@ struct intel_vbtn_priv {
- static int intel_vbtn_input_setup(struct platform_device *device)
+ static struct virtio_device_id id_table[] = {
+@@ -788,50 +794,13 @@ static unsigned long shrink_free_pages(struct virtio_balloon *vb,
+ 	return blocks_freed * VIRTIO_BALLOON_HINT_BLOCK_PAGES;
+ }
+ 
+-static unsigned long leak_balloon_pages(struct virtio_balloon *vb,
+-                                          unsigned long pages_to_free)
+-{
+-	return leak_balloon(vb, pages_to_free * VIRTIO_BALLOON_PAGES_PER_PAGE) /
+-		VIRTIO_BALLOON_PAGES_PER_PAGE;
+-}
+-
+-static unsigned long shrink_balloon_pages(struct virtio_balloon *vb,
+-					  unsigned long pages_to_free)
+-{
+-	unsigned long pages_freed = 0;
+-
+-	/*
+-	 * One invocation of leak_balloon can deflate at most
+-	 * VIRTIO_BALLOON_ARRAY_PFNS_MAX balloon pages, so we call it
+-	 * multiple times to deflate pages till reaching pages_to_free.
+-	 */
+-	while (vb->num_pages && pages_freed < pages_to_free)
+-		pages_freed += leak_balloon_pages(vb,
+-						  pages_to_free - pages_freed);
+-
+-	update_balloon_size(vb);
+-
+-	return pages_freed;
+-}
+-
+ static unsigned long virtio_balloon_shrinker_scan(struct shrinker *shrinker,
+ 						  struct shrink_control *sc)
  {
- 	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
--	int ret;
-+	int ret, keymap_len = 0;
+-	unsigned long pages_to_free, pages_freed = 0;
+ 	struct virtio_balloon *vb = container_of(shrinker,
+ 					struct virtio_balloon, shrinker);
+ 
+-	pages_to_free = sc->nr_to_scan;
+-
+-	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
+-		pages_freed = shrink_free_pages(vb, pages_to_free);
+-
+-	if (pages_freed >= pages_to_free)
+-		return pages_freed;
+-
+-	pages_freed += shrink_balloon_pages(vb, pages_to_free - pages_freed);
+-
+-	return pages_freed;
++	return shrink_free_pages(vb, sc->nr_to_scan);
+ }
+ 
+ static unsigned long virtio_balloon_shrinker_count(struct shrinker *shrinker,
+@@ -839,26 +808,22 @@ static unsigned long virtio_balloon_shrinker_count(struct shrinker *shrinker,
+ {
+ 	struct virtio_balloon *vb = container_of(shrinker,
+ 					struct virtio_balloon, shrinker);
+-	unsigned long count;
+-
+-	count = vb->num_pages / VIRTIO_BALLOON_PAGES_PER_PAGE;
+-	count += vb->num_free_page_blocks * VIRTIO_BALLOON_HINT_BLOCK_PAGES;
+ 
+-	return count;
++	return vb->num_free_page_blocks * VIRTIO_BALLOON_HINT_BLOCK_PAGES;
+ }
+ 
+-static void virtio_balloon_unregister_shrinker(struct virtio_balloon *vb)
++static int virtio_balloon_oom_notify(struct notifier_block *nb,
++				     unsigned long dummy, void *parm)
+ {
+-	unregister_shrinker(&vb->shrinker);
+-}
++	struct virtio_balloon *vb = container_of(nb,
++						 struct virtio_balloon, oom_nb);
++	unsigned long *freed = parm;
+ 
+-static int virtio_balloon_register_shrinker(struct virtio_balloon *vb)
+-{
+-	vb->shrinker.scan_objects = virtio_balloon_shrinker_scan;
+-	vb->shrinker.count_objects = virtio_balloon_shrinker_count;
+-	vb->shrinker.seeks = DEFAULT_SEEKS;
++	*freed += leak_balloon(vb, VIRTIO_BALLOON_OOM_NR_PAGES) /
++		  VIRTIO_BALLOON_PAGES_PER_PAGE;
++	update_balloon_size(vb);
+ 
+-	return register_shrinker(&vb->shrinker);
++	return NOTIFY_OK;
+ }
+ 
+ static int virtballoon_probe(struct virtio_device *vdev)
+@@ -935,22 +900,35 @@ static int virtballoon_probe(struct virtio_device *vdev)
+ 			virtio_cwrite(vb->vdev, struct virtio_balloon_config,
+ 				      poison_val, &poison_val);
+ 		}
+-	}
+-	/*
+-	 * We continue to use VIRTIO_BALLOON_F_DEFLATE_ON_OOM to decide if a
+-	 * shrinker needs to be registered to relieve memory pressure.
+-	 */
+-	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM)) {
+-		err = virtio_balloon_register_shrinker(vb);
 +
-+	if (true) {
-+		memcpy(&priv->keymap[keymap_len], intel_vbtn_keymap,
-+		       ARRAY_SIZE(intel_vbtn_keymap) *
-+		       sizeof(struct key_entry));
-+		keymap_len += ARRAY_SIZE(intel_vbtn_keymap);
++		/*
++		 * We're allowed to reuse any free pages, even if they are
++		 * still to be processed by the host.
++		 */
++		vb->shrinker.scan_objects = virtio_balloon_shrinker_scan;
++		vb->shrinker.count_objects = virtio_balloon_shrinker_count;
++		vb->shrinker.seeks = DEFAULT_SEEKS;
++		err = register_shrinker(&vb->shrinker);
+ 		if (err)
+ 			goto out_del_balloon_wq;
+ 	}
++	if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM)) {
++		vb->oom_nb.notifier_call = virtio_balloon_oom_notify;
++		vb->oom_nb.priority = VIRTIO_BALLOON_OOM_NOTIFY_PRIORITY;
++		err = register_oom_notifier(&vb->oom_nb);
++		if (err < 0)
++			goto out_unregister_shrinker;
 +	}
 +
-+	if (true) {
-+		memcpy(&priv->keymap[keymap_len], intel_vbtn_switchmap,
-+		       ARRAY_SIZE(intel_vbtn_switchmap) *
-+		       sizeof(struct key_entry));
-+		keymap_len += ARRAY_SIZE(intel_vbtn_switchmap);
-+	}
+ 	virtio_device_ready(vdev);
+ 
+ 	if (towards_target(vb))
+ 		virtballoon_changed(vdev);
+ 	return 0;
+ 
++out_unregister_shrinker:
++	if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
++		unregister_shrinker(&vb->shrinker);
+ out_del_balloon_wq:
+ 	if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
+ 		destroy_workqueue(vb->balloon_wq);
+@@ -989,8 +967,11 @@ static void virtballoon_remove(struct virtio_device *vdev)
+ {
+ 	struct virtio_balloon *vb = vdev->priv;
+ 
+-	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM))
+-		virtio_balloon_unregister_shrinker(vb);
++	if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM))
++		unregister_oom_notifier(&vb->oom_nb);
++	if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
++		unregister_shrinker(&vb->shrinker);
 +
-+	priv->keymap[keymap_len].type = KE_END;
- 
- 	priv->input_dev = devm_input_allocate_device(&device->dev);
- 	if (!priv->input_dev)
- 		return -ENOMEM;
- 
--	ret = sparse_keymap_setup(priv->input_dev, intel_vbtn_keymap, NULL);
-+	ret = sparse_keymap_setup(priv->input_dev, priv->keymap, NULL);
- 	if (ret)
- 		return ret;
- 
+ 	spin_lock_irq(&vb->stop_update_lock);
+ 	vb->stop_update = true;
+ 	spin_unlock_irq(&vb->stop_update_lock);
 -- 
 2.25.1
 
