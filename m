@@ -6,107 +6,83 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 716D8C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 216DEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5584F207ED
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:27:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03D592072F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:27:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729963AbgFHO1o (ORCPT
+        id S1730000AbgFHO1v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 10:27:44 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:45769 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728472AbgFHO1n (ORCPT
+        Mon, 8 Jun 2020 10:27:51 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23878 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726074AbgFHO1u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 10:27:43 -0400
-Received: by mail-ot1-f66.google.com with SMTP id m2so13756726otr.12;
-        Mon, 08 Jun 2020 07:27:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UXkSZNHi/WgIFB2sRa6DAx0hWylWs93z0GvndY1AAZs=;
-        b=rvlE251EcZtMNJsFOuM3VOfmXPvbgMbN6ZI906LhX4VQTWlcEs1Ew8fQ7nPNzu2qjr
-         j7actgTCI3/eJYd1j6zkpIqQ69INraX2p8dgth9L7n19mESEi2ZuUvpe0s9e51znz9QT
-         MnPToWl1sw/FT+8WbR/n1/EUu4HtICPM5GjBGhTM7S7wdeLVJBMoJ42eoYTZq6RvJhV1
-         QKgX+kigY0PiAMLlc0+UIbixPnueNAdxwWpr8GG3Gz/Wgezqnl2cXYrwFdaO8TQLt6Bp
-         dc05ebg+2Z3Bpj7wWKGOP+dseKdTWXRinvK+NkIaHuTfX+lc/wrRvuq/3S9+DTZ+0WIH
-         YbKQ==
-X-Gm-Message-State: AOAM533KUCT+O7ZEJA2oUmA6BTZDa80patA50dVIGnc5n+jhMKS1dDdu
-        sRqqRysUusJw/XdkSEfoir1X+4jsAYjZSyGhyPw=
-X-Google-Smtp-Source: ABdhPJxNgjxje+XshY61E4Thz/w6k4S3aOlbBBI4Xqo+OMNuRMsgD44RP+i7RwXHJABQLDAYJVkZB3AufOf/JKhLqYI=
-X-Received: by 2002:a05:6830:141a:: with SMTP id v26mr17972661otp.250.1591626461597;
- Mon, 08 Jun 2020 07:27:41 -0700 (PDT)
+        Mon, 8 Jun 2020 10:27:50 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 058ERRRI021326;
+        Mon, 8 Jun 2020 10:27:29 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31g7n7yqry-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 08 Jun 2020 10:27:29 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 058EPDgE017538;
+        Mon, 8 Jun 2020 14:27:11 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma03ams.nl.ibm.com with ESMTP id 31g2s7v51w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 08 Jun 2020 14:27:11 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 058ER8TO27197480
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 8 Jun 2020 14:27:08 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 766E211C05B;
+        Mon,  8 Jun 2020 14:27:08 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 372A011C066;
+        Mon,  8 Jun 2020 14:27:08 +0000 (GMT)
+Received: from osiris (unknown [9.171.20.146])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon,  8 Jun 2020 14:27:08 +0000 (GMT)
+Date:   Mon, 8 Jun 2020 16:27:06 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Zou Wei <zou_wei@huawei.com>
+Cc:     freude@linux.ibm.com, gor@linux.ibm.com, borntraeger@de.ibm.com,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] s390/zcrypt: fix kzalloc-simple.cocci warnings
+Message-ID: <20200608142706.GB7478@osiris>
+References: <1587472548-105240-1-git-send-email-zou_wei@huawei.com>
 MIME-Version: 1.0
-References: <1591555267-21822-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1591555267-21822-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1591555267-21822-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 8 Jun 2020 16:27:30 +0200
-Message-ID: <CAMuHMdU35fvy2TM+u=Zu3-4aVnzOC1Sxophu8WaExS7unVH1fg@mail.gmail.com>
-Subject: Re: [PATCH 03/11] arm64: dts: renesas: hihope-common: Separate out
- Rev.2.0 specific into hihope-common-rev2.dtsi file
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1587472548-105240-1-git-send-email-zou_wei@huawei.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-08_12:2020-06-08,2020-06-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 bulkscore=0
+ priorityscore=1501 clxscore=1011 adultscore=0 lowpriorityscore=0
+ mlxscore=0 malwarescore=0 impostorscore=0 phishscore=0 mlxlogscore=808
+ suspectscore=1 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006080100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
+On Tue, Apr 21, 2020 at 08:35:48PM +0800, Zou Wei wrote:
+> This patch fixes below warning reported by coccicheck
+> 
+> drivers/s390/crypto/zcrypt_ep11misc.c:198:8-15: WARNING:
+> kzalloc should be used for cprb, instead of kmalloc/memset
+> 
+> Fixes: 7384eb725e2d ("s390/zcrypt: add new low level ep11 functions support file")
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Zou Wei <zou_wei@huawei.com>
+> ---
+>  drivers/s390/crypto/zcrypt_ep11misc.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 
-Thanks for your patch!
-
-On Sun, Jun 7, 2020 at 8:41 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Separate out Rev.2.0 specific hardware changes into
-> hihope-common-rev2.dtsi file so that hihope-common.dtsi can be used
-> by all the variants for RZ/G2M[N] boards.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/renesas/hihope-common-rev2.dtsi
-> @@ -0,0 +1,101 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Device Tree Source for the HiHope RZ/G2[MN] main board Rev.2.0 common
-> + * parts
-> + *
-> + * Copyright (C) 2020 Renesas Electronics Corp.
-> + */
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-
-What about adding
-
-    #include "hihope-common.dtsi"
-
-here?
-Then the *rev2.dts files have to include only "hihope-common-rev2.dtsi",
-and get "hihope-common.dtsi" for free?
-
-The same is true for the rev4.dtsi and the rev4.dts files.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Applied, however without Fixes tag, since this was not a bug.
