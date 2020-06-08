@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CDC5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98364C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:55:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BB672078C
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:55:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7012B2078C
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:55:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660510;
-	bh=yelJ21b3v0Rc7rYz3Zzu5h2wxtT86ub0XQvVeh7D2zE=;
+	s=default; t=1591660514;
+	bh=49zfERSjk9j/+MtSTyS6zjJNybRRJ7SHS9cxP6Yyjng=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uAllw52GnQuLxfztQr8PLmkOxIxweCgt05+mH5wI3RbP14z5dJPSJ+/5Vs6FMDdYB
-	 9SdVCxZ+2fM516ZP++BXb8pDnH39CCG1IBb4fo/1yoT4GrXxEhzNW6VMPJkKnAPxPe
-	 4VDF93gSIPFPjSGcg4y8I0LgvW3DUbYDd8Git0bM=
+	b=vNkCCuam0u2cGxWaP15z4fJ+S+sggebDUZRhvSRVWj2i11yfQjuN78KAa1M/nLsw+
+	 4eSlHmZbdMxbQTWbb6s6pY+ZeGmGQ3+OPKXquaL1ng85xYUVpVcSbf7RPXYwi0vESc
+	 H9+CbLUdzluG02lpvJ92nWAaZKBnjqCxS5rBCtcU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731579AbgFHXYG (ORCPT
+        id S2387910AbgFHXzN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:24:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41134 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:55:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729186AbgFHXSo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:18:44 -0400
+        id S1731582AbgFHXYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:24:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1566A20842;
-        Mon,  8 Jun 2020 23:18:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FDB1208B3;
+        Mon,  8 Jun 2020 23:24:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658324;
-        bh=yelJ21b3v0Rc7rYz3Zzu5h2wxtT86ub0XQvVeh7D2zE=;
+        s=default; t=1591658647;
+        bh=49zfERSjk9j/+MtSTyS6zjJNybRRJ7SHS9cxP6Yyjng=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=13+czhf0MrDvFxljm2he3+ntQM/pIT958vXsn/NOHq9yqrPAfmmbnPWTm3anPzZNE
-         XklqtRQgCy9wsXNrVQsfKTDnKG3/rXnnibhZ59aA/iHJQvEhDrKnAkLbBHJDstQi9W
-         eaZeY0DTJN1k4zKylzxAyFEZ2VSot2YAuCU5Ggz0=
+        b=TbHc/ynsYruc435t/sf93g0SrHmA36WnsPZkRqMBdD748jlOitWSxkkioo9McD5EA
+         x5FeLv9Dg614/hJXffOMPIyn5XG9IJZUtoKoRSUp3sdTheYgVtz+rzINxpT67OS6Q0
+         6WN+bmJh95YSp2ypO3qcIV3/jP0tTkqitySy2f/4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kailang Yang <kailang@realtek.com>, Takashi Iwai <tiwai@suse.de>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.6 324/606] ALSA: hda/realtek - Add new codec supported for ALC287
-Date:   Mon,  8 Jun 2020 19:07:29 -0400
-Message-Id: <20200608231211.3363633-324-sashal@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
+        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 067/106] nvme: refine the Qemu Identify CNS quirk
+Date:   Mon,  8 Jun 2020 19:21:59 -0400
+Message-Id: <20200608232238.3368589-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
-References: <20200608231211.3363633-1-sashal@kernel.org>
+In-Reply-To: <20200608232238.3368589-1-sashal@kernel.org>
+References: <20200608232238.3368589-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,49 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kailang Yang <kailang@realtek.com>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit 630e36126e420e1756378b3427b42711ce0b9ddd ]
+[ Upstream commit b9a5c3d4c34d8bd9fd75f7f28d18a57cb68da237 ]
 
-Enable new codec supported for ALC287.
+Add a helper to check if we can use Identify CNS values > 1, and refine
+the Qemu quirk to not apply to reported versions larger than 1.1, as the
+Qemu implementation had been fixed by then.
 
-Signed-off-by: Kailang Yang <kailang@realtek.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/dcf5ce5507104d0589a917cbb71dc3c6@realtek.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Keith Busch <kbusch@kernel.org>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/nvme/host/core.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 92c6e58c3862..e62d58872b6e 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -384,6 +384,7 @@ static void alc_fill_eapd_coef(struct hda_codec *codec)
- 	case 0x10ec0282:
- 	case 0x10ec0283:
- 	case 0x10ec0286:
-+	case 0x10ec0287:
- 	case 0x10ec0288:
- 	case 0x10ec0285:
- 	case 0x10ec0298:
-@@ -8292,6 +8293,7 @@ static int patch_alc269(struct hda_codec *codec)
- 	case 0x10ec0215:
- 	case 0x10ec0245:
- 	case 0x10ec0285:
-+	case 0x10ec0287:
- 	case 0x10ec0289:
- 		spec->codec_variant = ALC269_TYPE_ALC215;
- 		spec->shutup = alc225_shutup;
-@@ -9570,6 +9572,7 @@ static const struct hda_device_id snd_hda_id_realtek[] = {
- 	HDA_CODEC_ENTRY(0x10ec0284, "ALC284", patch_alc269),
- 	HDA_CODEC_ENTRY(0x10ec0285, "ALC285", patch_alc269),
- 	HDA_CODEC_ENTRY(0x10ec0286, "ALC286", patch_alc269),
-+	HDA_CODEC_ENTRY(0x10ec0287, "ALC287", patch_alc269),
- 	HDA_CODEC_ENTRY(0x10ec0288, "ALC288", patch_alc269),
- 	HDA_CODEC_ENTRY(0x10ec0289, "ALC289", patch_alc269),
- 	HDA_CODEC_ENTRY(0x10ec0290, "ALC290", patch_alc269),
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index d5359c7c811a..0d60f2f8f3ee 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -926,6 +926,19 @@ void nvme_stop_keep_alive(struct nvme_ctrl *ctrl)
+ }
+ EXPORT_SYMBOL_GPL(nvme_stop_keep_alive);
+ 
++/*
++ * In NVMe 1.0 the CNS field was just a binary controller or namespace
++ * flag, thus sending any new CNS opcodes has a big chance of not working.
++ * Qemu unfortunately had that bug after reporting a 1.1 version compliance
++ * (but not for any later version).
++ */
++static bool nvme_ctrl_limited_cns(struct nvme_ctrl *ctrl)
++{
++	if (ctrl->quirks & NVME_QUIRK_IDENTIFY_CNS)
++		return ctrl->vs < NVME_VS(1, 2, 0);
++	return ctrl->vs < NVME_VS(1, 1, 0);
++}
++
+ static int nvme_identify_ctrl(struct nvme_ctrl *dev, struct nvme_id_ctrl **id)
+ {
+ 	struct nvme_command c = { };
+@@ -3368,8 +3381,7 @@ static void nvme_scan_work(struct work_struct *work)
+ 
+ 	mutex_lock(&ctrl->scan_lock);
+ 	nn = le32_to_cpu(id->nn);
+-	if (ctrl->vs >= NVME_VS(1, 1, 0) &&
+-	    !(ctrl->quirks & NVME_QUIRK_IDENTIFY_CNS)) {
++	if (!nvme_ctrl_limited_cns(ctrl)) {
+ 		if (!nvme_scan_ns_list(ctrl, nn))
+ 			goto out_free_id;
+ 	}
 -- 
 2.25.1
 
