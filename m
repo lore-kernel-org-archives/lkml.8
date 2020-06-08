@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E320DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 00:58:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C352AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 00:58:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2A5A20810
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 00:58:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A70222077D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 00:58:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728979AbgFHA6l (ORCPT
+        id S1728996AbgFHA6o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 20:58:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58386 "EHLO
+        Sun, 7 Jun 2020 20:58:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728667AbgFHA61 (ORCPT
+        with ESMTP id S1728973AbgFHA6l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 20:58:27 -0400
+        Sun, 7 Jun 2020 20:58:41 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2ACAC08C5C3;
-        Sun,  7 Jun 2020 17:58:26 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1269DC08C5C5;
+        Sun,  7 Jun 2020 17:58:41 -0700 (PDT)
 Received: from [5.158.153.53] (helo=debian-buster-darwi.lab.linutronix.de.)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
         (Exim 4.80)
         (envelope-from <a.darwish@linutronix.de>)
-        id 1ji678-0000qF-22; Mon, 08 Jun 2020 02:58:10 +0200
+        id 1ji67R-0000vA-Ml; Mon, 08 Jun 2020 02:58:29 +0200
 From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
@@ -37,16 +37,12 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Steven Rostedt <rostedt@goodmis.org>,
         LKML <linux-kernel@vger.kernel.org>,
         "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH v2 08/18] netfilter: conntrack: Use sequence counter with associated spinlock
-Date:   Mon,  8 Jun 2020 02:57:19 +0200
-Message-Id: <20200608005729.1874024-9-a.darwish@linutronix.de>
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH v2 12/18] vfs: Use sequence counter with associated spinlock
+Date:   Mon,  8 Jun 2020 02:57:23 +0200
+Message-Id: <20200608005729.1874024-13-a.darwish@linutronix.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200608005729.1874024-1-a.darwish@linutronix.de>
 References: <20200519214547.352050-1-a.darwish@linutronix.de>
@@ -76,46 +72,72 @@ neither storage size nor runtime overhead.
 
 Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
 ---
- include/net/netfilter/nf_conntrack.h | 2 +-
- net/netfilter/nf_conntrack_core.c    | 5 +++--
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ fs/dcache.c               | 2 +-
+ fs/fs_struct.c            | 4 ++--
+ include/linux/dcache.h    | 2 +-
+ include/linux/fs_struct.h | 2 +-
+ 4 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/include/net/netfilter/nf_conntrack.h b/include/net/netfilter/nf_conntrack.h
-index 90690e37a56f..ea4e2010b246 100644
---- a/include/net/netfilter/nf_conntrack.h
-+++ b/include/net/netfilter/nf_conntrack.h
-@@ -286,7 +286,7 @@ int nf_conntrack_hash_resize(unsigned int hashsize);
+diff --git a/fs/dcache.c b/fs/dcache.c
+index b280e07e162b..e5f365d8fd67 100644
+--- a/fs/dcache.c
++++ b/fs/dcache.c
+@@ -1727,7 +1727,7 @@ static struct dentry *__d_alloc(struct super_block *sb, const struct qstr *name)
+ 	dentry->d_lockref.count = 1;
+ 	dentry->d_flags = 0;
+ 	spin_lock_init(&dentry->d_lock);
+-	seqcount_init(&dentry->d_seq);
++	seqcount_spinlock_init(&dentry->d_seq, &dentry->d_lock);
+ 	dentry->d_inode = NULL;
+ 	dentry->d_parent = dentry;
+ 	dentry->d_sb = sb;
+diff --git a/fs/fs_struct.c b/fs/fs_struct.c
+index ca639ed967b7..04b3f5b9c629 100644
+--- a/fs/fs_struct.c
++++ b/fs/fs_struct.c
+@@ -117,7 +117,7 @@ struct fs_struct *copy_fs_struct(struct fs_struct *old)
+ 		fs->users = 1;
+ 		fs->in_exec = 0;
+ 		spin_lock_init(&fs->lock);
+-		seqcount_init(&fs->seq);
++		seqcount_spinlock_init(&fs->seq, &fs->lock);
+ 		fs->umask = old->umask;
  
- extern struct hlist_nulls_head *nf_conntrack_hash;
- extern unsigned int nf_conntrack_htable_size;
--extern seqcount_t nf_conntrack_generation;
-+extern seqcount_spinlock_t nf_conntrack_generation;
- extern unsigned int nf_conntrack_max;
- 
- /* must be called with rcu read lock held */
-diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
-index bb72ca5f3999..1f9518569195 100644
---- a/net/netfilter/nf_conntrack_core.c
-+++ b/net/netfilter/nf_conntrack_core.c
-@@ -180,7 +180,7 @@ EXPORT_SYMBOL_GPL(nf_conntrack_htable_size);
- 
- unsigned int nf_conntrack_max __read_mostly;
- EXPORT_SYMBOL_GPL(nf_conntrack_max);
--seqcount_t nf_conntrack_generation __read_mostly;
-+seqcount_spinlock_t nf_conntrack_generation __read_mostly;
- static unsigned int nf_conntrack_hash_rnd __read_mostly;
- 
- static u32 hash_conntrack_raw(const struct nf_conntrack_tuple *tuple,
-@@ -2589,7 +2589,8 @@ int nf_conntrack_init_start(void)
- 	/* struct nf_ct_ext uses u8 to store offsets/size */
- 	BUILD_BUG_ON(total_extension_size() > 255u);
- 
--	seqcount_init(&nf_conntrack_generation);
-+	seqcount_spinlock_init(&nf_conntrack_generation,
-+			       &nf_conntrack_locks_all_lock);
- 
- 	for (i = 0; i < CONNTRACK_LOCKS; i++)
- 		spin_lock_init(&nf_conntrack_locks[i]);
+ 		spin_lock(&old->lock);
+@@ -163,6 +163,6 @@ EXPORT_SYMBOL(current_umask);
+ struct fs_struct init_fs = {
+ 	.users		= 1,
+ 	.lock		= __SPIN_LOCK_UNLOCKED(init_fs.lock),
+-	.seq		= SEQCNT_ZERO(init_fs.seq),
++	.seq		= SEQCNT_SPINLOCK_ZERO(init_fs.seq, &init_fs.lock),
+ 	.umask		= 0022,
+ };
+diff --git a/include/linux/dcache.h b/include/linux/dcache.h
+index c1488cc84fd9..235563da356d 100644
+--- a/include/linux/dcache.h
++++ b/include/linux/dcache.h
+@@ -89,7 +89,7 @@ extern struct dentry_stat_t dentry_stat;
+ struct dentry {
+ 	/* RCU lookup touched fields */
+ 	unsigned int d_flags;		/* protected by d_lock */
+-	seqcount_t d_seq;		/* per dentry seqlock */
++	seqcount_spinlock_t d_seq;	/* per dentry seqlock */
+ 	struct hlist_bl_node d_hash;	/* lookup hash list */
+ 	struct dentry *d_parent;	/* parent directory */
+ 	struct qstr d_name;
+diff --git a/include/linux/fs_struct.h b/include/linux/fs_struct.h
+index cf1015abfbf2..783b48dedb72 100644
+--- a/include/linux/fs_struct.h
++++ b/include/linux/fs_struct.h
+@@ -9,7 +9,7 @@
+ struct fs_struct {
+ 	int users;
+ 	spinlock_t lock;
+-	seqcount_t seq;
++	seqcount_spinlock_t seq;
+ 	int umask;
+ 	int in_exec;
+ 	struct path root, pwd;
 -- 
 2.20.1
 
