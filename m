@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D516FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E8D4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B510E20659
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:44:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5031B2078D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:44:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591659894;
-	bh=17kbZ1WrKBdQWj2NDXfl3kg9/sIviW/uMiZRiZRnHHk=;
+	s=default; t=1591659898;
+	bh=/YRsKm+UuUQSjVNhO4o+amEOfE2Aw0EN2Skl2Q46c+Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QRrpQIrq5Hzx14HH2KTF4Bzqbq1clO4fgWasPdoZDCDXI0TsYmAYPbFeUOvkuT/kv
-	 9j+eLTrX0qOLKs8lOUJvvHg5Elm3GVdEtwWcl5zixMZpRzbU+aZNO+McPUWRq7Gv3o
-	 4hH5vfakb5sAO1WoNhpDfdCOE239LmvNdGkGOh4Q=
+	b=VOtc3Hfoi59Le3kob9f9xF0NhAFarJTSNrE7p/V1HX7sIS6fCoicsS9YFntTktADo
+	 7dCjFuehpREzlykbPhuOJO9U9m+nuOgzSs7+mEWZpB3YB02vh7P99Mw/GXVh29wGya
+	 uLG6aZSDCaAIjuOzReUTcCBLgtN5E6F71nM2fYVY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732050AbgFHX0s (ORCPT
+        id S1731466AbgFHXo4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:26:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45590 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:44:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731157AbgFHXVc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:21:32 -0400
+        id S1732042AbgFHX0u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:26:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A272208B8;
-        Mon,  8 Jun 2020 23:21:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B4762072F;
+        Mon,  8 Jun 2020 23:26:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658491;
-        bh=17kbZ1WrKBdQWj2NDXfl3kg9/sIviW/uMiZRiZRnHHk=;
+        s=default; t=1591658810;
+        bh=/YRsKm+UuUQSjVNhO4o+amEOfE2Aw0EN2Skl2Q46c+Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QggN4+cXg9hQ0HqFj0JlZxUOYZ/QwZ+06mEgMGaJTpwGjrVfpNGgUWrSJHxL91nnj
-         QjwZcNqcwMAi1ZIVFmjYf6w1MTwfSHwDLRoPaxlFgr85e7sLnw3rZixM2i9dfLgEWv
-         uauh4i2m/HwDXInlTPjR96N9zzjANgWMR7opEz8I=
+        b=lx0VLFRJ2a312UGj1WC3l1BfOJIlbn9yCNFuk3difwrH23LSRXP7yfZjgY8VOmGCt
+         cyTGq0RuP+OWYgum4DS6CIU/3mGiWeWLtLAvUpbgRSwDRpv4N6Yl8brewx5F9sYQmI
+         iQtGvp0E2KZk7GvH/yD97c3tEwhP+VjvnyKPSeWI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vlad Buslov <vladbu@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 125/175] selftests: fix flower parent qdisc
-Date:   Mon,  8 Jun 2020 19:17:58 -0400
-Message-Id: <20200608231848.3366970-125-sashal@kernel.org>
+        kgdb-bugreport@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.9 08/50] kgdb: Prevent infinite recursive entries to the debugger
+Date:   Mon,  8 Jun 2020 19:25:58 -0400
+Message-Id: <20200608232640.3370262-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
-References: <20200608231848.3366970-1-sashal@kernel.org>
+In-Reply-To: <20200608232640.3370262-1-sashal@kernel.org>
+References: <20200608232640.3370262-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,83 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vlad Buslov <vladbu@mellanox.com>
+From: Douglas Anderson <dianders@chromium.org>
 
-[ Upstream commit 0531b0357ba37464e5c0033e1b7c69bbf5ecd8fb ]
+[ Upstream commit 3ca676e4ca60d1834bb77535dafe24169cadacef ]
 
-Flower tests used to create ingress filter with specified parent qdisc
-"parent ffff:" but dump them on "ingress". With recent commit that fixed
-tcm_parent handling in dump those are not considered same parent anymore,
-which causes iproute2 tc to emit additional "parent ffff:" in first line of
-filter dump output. The change in output causes filter match in tests to
-fail.
+If we detect that we recursively entered the debugger we should hack
+our I/O ops to NULL so that the panic() in the next line won't
+actually cause another recursion into the debugger.  The first line of
+kgdb_panic() will check this and return.
 
-Prevent parent qdisc output when dumping filters in flower tests by always
-correctly specifying "ingress" parent both when creating and dumping
-filters.
-
-Fixes: a7df4870d79b ("net_sched: fix tcm_parent in tc filter dump")
-Signed-off-by: Vlad Buslov <vladbu@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+Link: https://lore.kernel.org/r/20200507130644.v4.6.I89de39f68736c9de610e6f241e68d8dbc44bc266@changeid
+Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../selftests/tc-testing/tc-tests/filters/tests.json        | 6 +++---
- tools/testing/selftests/tc-testing/tdc_batch.py             | 6 +++---
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ kernel/debug/debug_core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/testing/selftests/tc-testing/tc-tests/filters/tests.json b/tools/testing/selftests/tc-testing/tc-tests/filters/tests.json
-index 0f89cd50a94b..152ffa45e857 100644
---- a/tools/testing/selftests/tc-testing/tc-tests/filters/tests.json
-+++ b/tools/testing/selftests/tc-testing/tc-tests/filters/tests.json
-@@ -54,7 +54,7 @@
-         "setup": [
-             "$TC qdisc add dev $DEV2 ingress"
-         ],
--        "cmdUnderTest": "$TC filter add dev $DEV2 protocol ip pref 1 parent ffff: handle 0xffffffff flower action ok",
-+        "cmdUnderTest": "$TC filter add dev $DEV2 protocol ip pref 1 ingress handle 0xffffffff flower action ok",
-         "expExitCode": "0",
-         "verifyCmd": "$TC filter show dev $DEV2 ingress",
-         "matchPattern": "filter protocol ip pref 1 flower.*handle 0xffffffff",
-@@ -99,9 +99,9 @@
-         },
-         "setup": [
-             "$TC qdisc add dev $DEV2 ingress",
--            "$TC filter add dev $DEV2 protocol ip prio 1 parent ffff: flower dst_mac e4:11:22:11:4a:51 src_mac e4:11:22:11:4a:50 ip_proto tcp src_ip 1.1.1.1 dst_ip 2.2.2.2 action drop"
-+            "$TC filter add dev $DEV2 protocol ip prio 1 ingress flower dst_mac e4:11:22:11:4a:51 src_mac e4:11:22:11:4a:50 ip_proto tcp src_ip 1.1.1.1 dst_ip 2.2.2.2 action drop"
-         ],
--        "cmdUnderTest": "$TC filter add dev $DEV2 protocol ip prio 1 parent ffff: flower dst_mac e4:11:22:11:4a:51 src_mac e4:11:22:11:4a:50 ip_proto tcp src_ip 1.1.1.1 dst_ip 2.2.2.2 action drop",
-+        "cmdUnderTest": "$TC filter add dev $DEV2 protocol ip prio 1 ingress flower dst_mac e4:11:22:11:4a:51 src_mac e4:11:22:11:4a:50 ip_proto tcp src_ip 1.1.1.1 dst_ip 2.2.2.2 action drop",
-         "expExitCode": "2",
-         "verifyCmd": "$TC -s filter show dev $DEV2 ingress",
-         "matchPattern": "filter protocol ip pref 1 flower chain 0 handle",
-diff --git a/tools/testing/selftests/tc-testing/tdc_batch.py b/tools/testing/selftests/tc-testing/tdc_batch.py
-index 6a2bd2cf528e..995f66ce43eb 100755
---- a/tools/testing/selftests/tc-testing/tdc_batch.py
-+++ b/tools/testing/selftests/tc-testing/tdc_batch.py
-@@ -72,21 +72,21 @@ mac_prefix = args.mac_prefix
+diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
+index 79517e5549f1..9c939c6bf21c 100644
+--- a/kernel/debug/debug_core.c
++++ b/kernel/debug/debug_core.c
+@@ -443,6 +443,7 @@ static int kgdb_reenter_check(struct kgdb_state *ks)
  
- def format_add_filter(device, prio, handle, skip, src_mac, dst_mac,
-                       share_action):
--    return ("filter add dev {} {} protocol ip parent ffff: handle {} "
-+    return ("filter add dev {} {} protocol ip ingress handle {} "
-             " flower {} src_mac {} dst_mac {} action drop {}".format(
-                 device, prio, handle, skip, src_mac, dst_mac, share_action))
- 
- 
- def format_rep_filter(device, prio, handle, skip, src_mac, dst_mac,
-                       share_action):
--    return ("filter replace dev {} {} protocol ip parent ffff: handle {} "
-+    return ("filter replace dev {} {} protocol ip ingress handle {} "
-             " flower {} src_mac {} dst_mac {} action drop {}".format(
-                 device, prio, handle, skip, src_mac, dst_mac, share_action))
- 
- 
- def format_del_filter(device, prio, handle, skip, src_mac, dst_mac,
-                       share_action):
--    return ("filter del dev {} {} protocol ip parent ffff: handle {} "
-+    return ("filter del dev {} {} protocol ip ingress handle {} "
-             "flower".format(device, prio, handle))
- 
+ 	if (exception_level > 1) {
+ 		dump_stack();
++		kgdb_io_module_registered = false;
+ 		panic("Recursive entry to debugger");
+ 	}
  
 -- 
 2.25.1
