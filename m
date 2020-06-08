@@ -1,4 +1,4 @@
-Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 943A0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8DE4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:00:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6819020659
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:59:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A12812074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:00:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660797;
-	bh=yKkzUylOknIwecsv8r1l0CYmrdBOv5/1gOFSrHKSh6k=;
+	s=default; t=1591660817;
+	bh=Rf+/owul+CG1XcnLh7G/H67RI/5knus/0Lkvl89ilTE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ClVQELhmhzvextJLyH7eXONUO+8DHr+hsp4ay4T28k60dKx+crQKLDAZym9byKTZe
-	 QXiKYMrar15gpBH5DutETU5uM2dPfpl4FxLM20RnFkYwMURn3ONohS6zd4vcJpAsGs
-	 xEBRhr3YPBbHMbT/ZJEAqkNHYsHAZ7yZD9T9/cVI=
+	b=v9AoDxxvpJ7Ee+gBKrdyeKcIy96S63hFE/plqMEXXg1tUiN3L3d/AqaGrzxOfECYU
+	 0/lP7XBTuSYn7nQ2LubtInq47cDhC2bv3fAaO9CeEJqZO7v7ofp41V08pA97kFlk1K
+	 6p5Yk+EEWAuVRWchOfgqk7GQKu2sppWQHUYCJfCg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732708AbgFHX74 (ORCPT
+        id S1732764AbgFIAAQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:59:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47434 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:00:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731360AbgFHXWn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:22:43 -0400
+        id S1731352AbgFHXWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:22:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0454E2072F;
-        Mon,  8 Jun 2020 23:22:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E672520842;
+        Mon,  8 Jun 2020 23:22:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658563;
-        bh=yKkzUylOknIwecsv8r1l0CYmrdBOv5/1gOFSrHKSh6k=;
+        s=default; t=1591658562;
+        bh=Rf+/owul+CG1XcnLh7G/H67RI/5knus/0Lkvl89ilTE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I9UDFavuNbrBdLPPhUN75J9gco6ObsPjUcn31GslbH18hnXG9vjQ5KU8+c7B5HwMF
-         7EkeXPGBppo1/SRDF7sLj/R6qSv6dFYN7E704Nb+76V+yHOMvTVrnWFf7jJOlH1W1R
-         mB/uO6xF4+83EP/eGNlt8+vXucOoxfTP5GAdRJBw=
+        b=l0In5Nsj3fQvcPtpa9gWQ/OEIDmwLnGJGplr+8351mtucVxQLfCz1CUsdtOyTepel
+         lKYC18PXi1xFUWAO3eoLXZ5JP5TkFRm5kCKAMGz5oBnKJF+OhACDQpx16hHhBYjCql
+         hH329p2eOD27K6G9LpdsYRib+vIIhJ8IIO+roFH4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 004/106] crypto: ccp -- don't "select" CONFIG_DMADEVICES
-Date:   Mon,  8 Jun 2020 19:20:56 -0400
-Message-Id: <20200608232238.3368589-4-sashal@kernel.org>
+Cc:     Bogdan Togorean <bogdan.togorean@analog.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 003/106] drm: bridge: adv7511: Extend list of audio sample rates
+Date:   Mon,  8 Jun 2020 19:20:55 -0400
+Message-Id: <20200608232238.3368589-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608232238.3368589-1-sashal@kernel.org>
 References: <20200608232238.3368589-1-sashal@kernel.org>
@@ -60,57 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Bogdan Togorean <bogdan.togorean@analog.com>
 
-[ Upstream commit eebac678556d6927f09a992872f4464cf3aecc76 ]
+[ Upstream commit b97b6a1f6e14a25d1e1ca2a46c5fa3e2ca374e22 ]
 
-DMADEVICES is the top-level option for the slave DMA
-subsystem, and should not be selected by device drivers,
-as this can cause circular dependencies such as:
+ADV7511 support sample rates up to 192kHz. CTS and N parameters should
+be computed accordingly so this commit extend the list up to maximum
+supported sample rate.
 
-drivers/net/ethernet/freescale/Kconfig:6:error: recursive dependency detected!
-drivers/net/ethernet/freescale/Kconfig:6:	symbol NET_VENDOR_FREESCALE depends on PPC_BESTCOMM
-drivers/dma/bestcomm/Kconfig:6:	symbol PPC_BESTCOMM depends on DMADEVICES
-drivers/dma/Kconfig:6:	symbol DMADEVICES is selected by CRYPTO_DEV_SP_CCP
-drivers/crypto/ccp/Kconfig:10:	symbol CRYPTO_DEV_SP_CCP depends on CRYPTO
-crypto/Kconfig:16:	symbol CRYPTO is selected by LIBCRC32C
-lib/Kconfig:222:	symbol LIBCRC32C is selected by LIQUIDIO
-drivers/net/ethernet/cavium/Kconfig:65:	symbol LIQUIDIO depends on PTP_1588_CLOCK
-drivers/ptp/Kconfig:8:	symbol PTP_1588_CLOCK is implied by FEC
-drivers/net/ethernet/freescale/Kconfig:23:	symbol FEC depends on NET_VENDOR_FREESCALE
-
-The LIQUIDIO driver causing this problem is addressed in a
-separate patch, but this change is needed to prevent it from
-happening again.
-
-Using "depends on DMADEVICES" is what we do for all other
-implementations of slave DMA controllers as well.
-
-Fixes: b3c2fee5d66b ("crypto: ccp - Ensure all dependencies are specified")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Bogdan Togorean <bogdan.togorean@analog.com>
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200413113513.86091-2-bogdan.togorean@analog.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/ccp/Kconfig | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/gpu/drm/bridge/adv7511/adv7511_audio.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/crypto/ccp/Kconfig b/drivers/crypto/ccp/Kconfig
-index b9dfae47aefd..7f5fc705503d 100644
---- a/drivers/crypto/ccp/Kconfig
-+++ b/drivers/crypto/ccp/Kconfig
-@@ -9,10 +9,9 @@ config CRYPTO_DEV_CCP_DD
- config CRYPTO_DEV_SP_CCP
- 	bool "Cryptographic Coprocessor device"
- 	default y
--	depends on CRYPTO_DEV_CCP_DD
-+	depends on CRYPTO_DEV_CCP_DD && DMADEVICES
- 	select HW_RANDOM
- 	select DMA_ENGINE
--	select DMADEVICES
- 	select CRYPTO_SHA1
- 	select CRYPTO_SHA256
- 	help
+diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c b/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c
+index 1b4783d45c53..3a218b56a008 100644
+--- a/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c
++++ b/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c
+@@ -20,13 +20,15 @@ static void adv7511_calc_cts_n(unsigned int f_tmds, unsigned int fs,
+ {
+ 	switch (fs) {
+ 	case 32000:
+-		*n = 4096;
++	case 48000:
++	case 96000:
++	case 192000:
++		*n = fs * 128 / 1000;
+ 		break;
+ 	case 44100:
+-		*n = 6272;
+-		break;
+-	case 48000:
+-		*n = 6144;
++	case 88200:
++	case 176400:
++		*n = fs * 128 / 900;
+ 		break;
+ 	}
+ 
 -- 
 2.25.1
 
