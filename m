@@ -2,224 +2,153 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9885C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 19:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77249C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 19:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B00CE20760
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 19:28:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B66B2076A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 19:30:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Pgtv+SSc"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="zvg3KOzs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726725AbgFHT2h (ORCPT
+        id S1726486AbgFHTah (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 15:28:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60354 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726410AbgFHT2e (ORCPT
+        Mon, 8 Jun 2020 15:30:37 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:32908 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726227AbgFHTaf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 15:28:34 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D92BC08C5C2
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 12:28:33 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id c14so18442762qka.11
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 12:28:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=k9wukxxtlg/uismwI/UMnm3Bx/cnmFE7m1b5ib9kprU=;
-        b=Pgtv+SSciXljqnf+92jyUjHCiyePaXchSbLnisVnEOScpkJatv+yERrrZBYCZLd3ow
-         DuA7ZKiHaU0yDaZtzunN/nmNAjL3urizirZBy9BGfZ3CAPNb1YtSZhG/oUR3KfQ0p4vF
-         oX+BdvugIk5A8V/0bC69OJ24MW08RyoiXiP+6YepB1RI+98wRikGIXMAe1t3zKNr9m2h
-         32v+hPahc8twDVp+By9KbcG/Yg+BCvsfoGU6vITHJyXAxVBbQHP/320Hwu/2lXiKI9/+
-         Ui1mD/c9x52pYPBNSU6flJ7dOff61qwSDLOrrXISQ/8+ZSRr11LX8PATxqJWCZkZvh4M
-         bV5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=k9wukxxtlg/uismwI/UMnm3Bx/cnmFE7m1b5ib9kprU=;
-        b=Lzm0ET3+zm7d45lnas+fLTM44f9u8PeYX5KO9u0knwuHjCHbeoqSaHwSIG31MLhgvJ
-         r7bNMimtrytbkB8J6iTAIHJBc3t2VvwTV1Se9pbr7jGQHSgAkQrdnrbEGESzBEVnr1a1
-         3OuYpfr28ZKpNnrIBOiaXfA3997mdTThf8kihrfuHz+faA0QQiq2rgzGR9Gm2PZlzx5H
-         ITfo6cW5SIpKpB0yLrPKUyISLbUmwDRUmyCSFjGLbWV5rZ+S/GrmZR5n489BL0sluO29
-         EzhAsBCz+3TzvoFbL0iCNkfdLHc2YtKE4CIdam9vzS8Q2BnvbNlrQpAL750XH9TABIR2
-         jC/g==
-X-Gm-Message-State: AOAM5339/wMpvjR0uJvBC98Eq3dK/JcXUeP0nbNW77DVEEeD6qCuuy11
-        pYB7aEsG4pqgHCyo9xrpmcl9iA==
-X-Google-Smtp-Source: ABdhPJz+Arj7Rd047gQ/TSazKm79Nf89ldxGO7ovHCUa3TI33gR3dVoHNtdcrf9U3W0goX/uDHjWoQ==
-X-Received: by 2002:a37:9f0b:: with SMTP id i11mr23180985qke.481.1591644512610;
-        Mon, 08 Jun 2020 12:28:32 -0700 (PDT)
-Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id k10sm7475862qkh.47.2020.06.08.12.28.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 12:28:31 -0700 (PDT)
-Date:   Mon, 8 Jun 2020 15:28:28 -0400
-From:   Qian Cai <cai@lca.pw>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     kernel test robot <rong.a.chen@intel.com>,
-        clang-built-linux@googlegroups.com, LKP <lkp@lists.01.org>,
-        "Linus, Torvalds," <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: 0887a7ebc9 ("ubsan: add trap instrumentation option"): BUG:
- kernel hang in early-boot stage, last printk: early console in setup code
-Message-ID: <20200608192828.GB987@lca.pw>
-References: <20200608060407.GX12456@shao2-debian>
- <202006081144.933995E4@keescook>
+        Mon, 8 Jun 2020 15:30:35 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 058JMqx1159496;
+        Mon, 8 Jun 2020 19:30:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=0sALcyIxJSnN9+c+WtRbO4KtGtcxXsp/c2OGd5SgOaM=;
+ b=zvg3KOzs15PB4FwfOitluImkirmlmR4qwiSt3u5BZI3DauJOftsBInJq81e3pa5fF84N
+ JcAM/0ve364zESBc6/+kBsjksLQwTfDPfDC1D+rX/8trd10HgHFqIcQ+zp+QvV8Mg+jc
+ hQk+dOnLL+AttdgqwWmzPmKaXZC6TcRW4rpW3yFhfTW0EEfl3y92y6CcmRQM9+JxJCPg
+ 0rAXmzH0ciJ4iCBDhTxE8FPqAvVYHzbl1FSmtpFJrmetkew26oFNtLIuyNxHy1HvVfDR
+ Umx+VgcWYZRnzgUtJFDo6EaLTZ96a/CuLuzThoLJYPJzju3sf4kJ0V42OInno/CLl1B9 7Q== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 31g33m0n50-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 08 Jun 2020 19:30:19 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 058JOLDp147960;
+        Mon, 8 Jun 2020 19:30:19 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 31gmwqbw2c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 08 Jun 2020 19:30:19 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 058JUEL9020772;
+        Mon, 8 Jun 2020 19:30:15 GMT
+Received: from [10.39.231.199] (/10.39.231.199)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 08 Jun 2020 12:30:14 -0700
+Subject: Re: [PATCH] x86/xen: Fix a -Wmissing prototypes warning for
+ xen_start_kernel()
+To:     Benjamin Thiel <b.thiel@posteo.de>, Borislav Petkov <bp@alien8.de>,
+        Juergen Gross <jgross@suse.com>
+Cc:     x86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20200606142721.19486-1-b.thiel@posteo.de>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Autocrypt: addr=boris.ostrovsky@oracle.com; keydata=
+ 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
+ Jg6OxFYd01z+a+oL
+Message-ID: <21d6821e-e488-138e-a0be-2177c4aa13b2@oracle.com>
+Date:   Mon, 8 Jun 2020 15:30:13 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202006081144.933995E4@keescook>
+In-Reply-To: <20200606142721.19486-1-b.thiel@posteo.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9646 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0 adultscore=0
+ mlxscore=0 mlxlogscore=999 bulkscore=0 malwarescore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006080136
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9646 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0 spamscore=0
+ cotscore=-2147483648 malwarescore=0 phishscore=0 mlxscore=0 clxscore=1011
+ lowpriorityscore=0 impostorscore=0 priorityscore=1501 mlxlogscore=999
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006080136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 12:00:11PM -0700, Kees Cook wrote:
-> On Mon, Jun 08, 2020 at 02:04:08PM +0800, kernel test robot wrote:
-> > The issue seems due to the lack of "-fsanitize-undefined-trap-on-error" in clang.
-> 
-> Hm? No, that's supported in Clang (at least as far back as Clang 9.)
-> 
-> > Greetings,
-> > 
-> > 0day kernel testing robot got the below dmesg and the first bad commit is
-> > 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> > 
-> > commit 0887a7ebc97770c7870abf3075a2e8cd502a7f52
-> > Author:     Kees Cook <keescook@chromium.org>
-> > AuthorDate: Mon Apr 6 20:12:27 2020 -0700
-> > Commit:     Linus Torvalds <torvalds@linux-foundation.org>
-> > CommitDate: Tue Apr 7 10:43:44 2020 -0700
-> > 
-> >     ubsan: add trap instrumentation option
-> 
-> In the randconfig, I see CONFIG_UBSAN_TRAP is enabled with lots of other
-> UBSAN options. If you're not expecting the results, it's very likely the
-> false positives in UBSAN are going to do bad things. :) This is "working
-> as expected", as noted in the commit log quoted below.
-> 
-> >     
-> >     Patch series "ubsan: Split out bounds checker", v5.
-> >     
-> >     This splits out the bounds checker so it can be individually used.  This
-> >     is enabled in Android and hopefully for syzbot.  Includes LKDTM tests for
-> >     behavioral corner-cases (beyond just the bounds checker), and adjusts
-> >     ubsan and kasan slightly for correct panic handling.
-> >     
-> >     This patch (of 6):
-> >     
-> >     The Undefined Behavior Sanitizer can operate in two modes: warning
-> >     reporting mode via lib/ubsan.c handler calls, or trap mode, which uses
-> >     __builtin_trap() as the handler.  Using lib/ubsan.c means the kernel image
-> >     is about 5% larger (due to all the debugging text and reporting structures
-> >     to capture details about the warning conditions).  Using the trap mode,
-> >     the image size changes are much smaller, though at the loss of the
-> >     "warning only" mode.
-> >     
-> >     In order to give greater flexibility to system builders that want minimal
-> >     changes to image size and are prepared to deal with kernel code being
-> >     aborted and potentially destabilizing the system, this introduces
-> >     CONFIG_UBSAN_TRAP.  The resulting image sizes comparison:
-> >     
-> >        text    data     bss       dec       hex     filename
-> >     19533663   6183037  18554956  44271656  2a38828 vmlinux.stock
-> >     19991849   7618513  18874448  46484810  2c54d4a vmlinux.ubsan
-> >     19712181   6284181  18366540  44362902  2a4ec96 vmlinux.ubsan-trap
-> >     
-> >     CONFIG_UBSAN=y:      image +4.8% (text +2.3%, data +18.9%)
-> >     CONFIG_UBSAN_TRAP=y: image +0.2% (text +0.9%, data +1.6%)
-> >     
-> >     Additionally adjusts the CONFIG_UBSAN Kconfig help for clarity and removes
-> >     the mention of non-existing boot param "ubsan_handle".
-> 
-> If you're trying to _boot_ a randconfig, I suspect there are going to be
-> a lot of surprises with UBSAN (in any mode) enabled. Right now, likely the
-> least noisy of them all is UBSAN_BOUNDS, which was split out for fuzzers.
-> 
-> FWIW, the dmesg appears to be catching a NULL pointer dereference
-> (enabled via CONFIG_UBSAN_MISC):
-> 
-> [    0.047646] UBSAN: Undefined behaviour in drivers/acpi/acpica/tbfadt.c:459:37
-> [    0.047650] member access within null pointer of type 'struct acpi_table_fadt'
-> [    0.047655] CPU: 0 PID: 0 Comm: swapper Not tainted 5.6.0-11597-g7baf219982281 #1
-> [    0.047659] Call Trace:
-> [    0.047676]  dump_stack+0x88/0xb9
-> [    0.047684]  ? ubsan_prologue+0x21/0x46
-> [    0.047689]  ? ubsan_type_mismatch_common+0x188/0x19e
-> [    0.047695]  ? __ubsan_handle_type_mismatch_v1+0x45/0x4a
-> [    0.047701]  ? acpi_tb_create_local_fadt+0xaa/0x435
-> [    0.047706]  ? acpi_tb_parse_fadt+0x54/0xd4
-> [    0.047712]  ? acpi_tb_parse_root_table+0x192/0x1bf
-> [    0.047717]  ? acpi_table_init+0x3b/0x56
-> [    0.047721]  ? acpi_boot_table_init+0xf/0x6e
-> [    0.047726]  ? setup_arch+0x459/0x520
-> [    0.047732]  ? start_kernel+0x5e/0x3ba
-> [    0.047737]  ? secondary_startup_64+0xa4/0xb0
-> 
-> I'm not sure how ACPI defines acpi_gbl_FADT though? There's no
-> dereference...
-> 
-> 459:         if (acpi_gbl_FADT.header.length <= ACPI_FADT_V2_SIZE) {
-> 
-> 
-> BTW, this report only contained 1 actual dmesg. There were two files with
-> dmesg file names, but one of them was the gzipped reproduction steps again.
-
-No, it does not complain about a NULL pointer dereference but rather a
-member access within NULL pointer.
-
-# ./scripts/faddr2line vmlinux acpi_tb_create_local_fadt+0x104/0x6ec
-acpi_tb_create_local_fadt+0x104/0x6ec:
-acpi_tb_convert_fadt at drivers/acpi/acpica/tbfadt.c:459
-(inlined by) acpi_tb_create_local_fadt at drivers/acpi/acpica/tbfadt.c:388
-
-Clang would report several of those,
-
-https://lore.kernel.org/lkml/CA6078C3-3489-40E4-B756-A0AF6DB3A3A5@lca.pw/
-
-There are many examples how to "fix" those.
-
-$ git log  --oneline --grep='member access within null pointer'
-
-Anyway, this line,
-
-        if (acpi_gbl_FADT.header.length <= ACPI_FADT_V2_SIZE) {
-
-acpi_gbl_FADT was defined in,
-
-.//include/acpi/acpixf.h:266:ACPI_GLOBAL(struct acpi_table_fadt, acpi_gbl_FADT);
-
-#ifdef DEFINE_ACPI_GLOBALS
-#define ACPI_GLOBAL(type,name) \
-	extern type name; \
-	type name
+On 6/6/20 10:27 AM, Benjamin Thiel wrote:
+> Fix:
+>
+>   arch/x86/xen/enlighten_pv.c:1212:34:
+>   warning: no previous prototype for =E2=80=98xen_start_kernel=E2=80=99=
+ [-Wmissing-prototypes]
+>   asmlinkage __visible void __init xen_start_kernel(void)
+>
+> Add a prototype for xen_start_kernel() in a separate xen-specific heade=
+r.
 
 
-
-#define ACPI_INIT_GLOBAL(type,name,value) \
-	type name=value
-
-
-
-#else
-#ifndef ACPI_GLOBAL
-#define ACPI_GLOBAL(type,name) \
-	extern type name
-#endif
+TBH I am not sure it's worth a new header file for a routine that is
+only called from assembly (and never returns). I'd just add the
+prototype right above function definition, with a comment describing
+why. I see a few examples of this in the tree. Or maybe we even have an
+attribute for this case?
 
 
+(I also suspect the same may be needed for xen_prepare_pvh() BTW).
 
-#ifndef ACPI_INIT_GLOBAL
-#define ACPI_INIT_GLOBAL(type,name,value) \
-	extern type name
-#endif
-#endif
+
+-boris
+
+
