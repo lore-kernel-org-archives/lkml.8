@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B03AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56FCEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:50:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1102120810
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:50:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3515920872
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:50:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663820;
-	bh=YI/7tjuFBmB0rVIIsPJ7JnNmguqrLJZDN6HRzg1aR3c=;
+	s=default; t=1591663823;
+	bh=eZBp0tsDujcrF4Qv8GoWmXbcnp4p9Qe7aDwVYZD6/yg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=id3uA3xKubPUXAHkTKoYwBHtmCB0XByWUNVOaKn1e5h//nbO4WUnPr+PpD9VVEtmP
-	 K9Yno//1MAiuV0eXlcYFDl3pxQxxp8awqOVCul6J/rYuJW/i8OqdhZ9rPEdHNid4+U
-	 aevmW6HYqneo24R2PlffKByYu1lG/yo7OdkFVZvw=
+	b=z+3irl1bIr6LF3V1DEy9b4uPqCsB0dvjARXZ/wWYAxJHlklGWDlb3gtAsCirCztso
+	 mbVRjdYy8aufoyE3fmwDoMvaz+gDXq6wL24OtBMbl4VuozgQ2yB+dVfxYlthNsmowR
+	 qVN02yKxYy4cmVbAgkpfvyCeMjx129a1UOdB49ro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387910AbgFIAuQ (ORCPT
+        id S1728711AbgFIAuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:50:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56670 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:50:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728688AbgFHXKc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:10:32 -0400
+        id S1728680AbgFHXKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:10:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7208F20890;
-        Mon,  8 Jun 2020 23:10:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 102CA20B80;
+        Mon,  8 Jun 2020 23:10:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657832;
-        bh=YI/7tjuFBmB0rVIIsPJ7JnNmguqrLJZDN6HRzg1aR3c=;
+        s=default; t=1591657831;
+        bh=eZBp0tsDujcrF4Qv8GoWmXbcnp4p9Qe7aDwVYZD6/yg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D6lqGC2oXWHI1yllfZlbMDyWVn/7QoTXFwEtKP13qMGJhUJZzFvG35S6qsc7QRmR0
-         cXdzaa7K70vmVOB+fdh9zCG2mW8ZWO7wrRqR1fdjDN9z25M8vDggKpjhEXmwoqGhOJ
-         Wr0Jjqp/n8O+dnwhT9PMkIGpA/AqT/vgRzS39WwQ=
+        b=l0qSSwPM5IgKH3FNyWY8dE9U1ZF/8XvrKxJ0rtiohfV8syQpcnfZbzkHzlIg0MOIi
+         Qs52tNU3de00EmHgsIOhH5sDwWo1zOE24giowPgQdt4t4vj5Lib5Kaq+Vd5qG5qNMV
+         yMdY6Ej4LDfj853T/upz42t3wY5JYXD2c8JQv2VM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tejun Heo <tj@kernel.org>, Andy Newell <newella@fb.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 202/274] iocost: don't let vrate run wild while there's no saturation signal
-Date:   Mon,  8 Jun 2020 19:04:55 -0400
-Message-Id: <20200608230607.3361041-202-sashal@kernel.org>
+Cc:     DENG Qingfang <dqfext@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 201/274] net: dsa: mt7530: set CPU port to fallback mode
+Date:   Mon,  8 Jun 2020 19:04:54 -0400
+Message-Id: <20200608230607.3361041-201-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -59,101 +62,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejun Heo <tj@kernel.org>
+From: DENG Qingfang <dqfext@gmail.com>
 
-[ Upstream commit 81ca627a933063fa63a6d4c66425de822a2ab7f5 ]
+[ Upstream commit 38152ea37d8bdaffa22603e0a5b5b86cfa8714c9 ]
 
-When the QoS targets are met and nothing is being throttled, there's
-no way to tell how saturated the underlying device is - it could be
-almost entirely idle, at the cusp of saturation or anywhere inbetween.
-Given that there's no information, it's best to keep vrate as-is in
-this state.  Before 7cd806a9a953 ("iocost: improve nr_lagging
-handling"), this was the case - if the device isn't missing QoS
-targets and nothing is being throttled, busy_level was reset to zero.
+Currently, setting a bridge's self PVID to other value and deleting
+the default VID 1 renders untagged ports of that VLAN unable to talk to
+the CPU port:
 
-While fixing nr_lagging handling, 7cd806a9a953 ("iocost: improve
-nr_lagging handling") broke this.  Now, while the device is hitting
-QoS targets and nothing is being throttled, vrate keeps getting
-adjusted according to the existing busy_level.
+	bridge vlan add dev br0 vid 2 pvid untagged self
+	bridge vlan del dev br0 vid 1 self
+	bridge vlan add dev sw0p0 vid 2 pvid untagged
+	bridge vlan del dev sw0p0 vid 1
+	# br0 cannot send untagged frames out of sw0p0 anymore
 
-This led to vrate keeping climing till it hits max when there's an IO
-issuer with limited request concurrency if the vrate started low.
-vrate starts getting adjusted upwards until the issuer can issue IOs
-w/o being throttled.  From then on, QoS targets keeps getting met and
-nothing on the system needs throttling and vrate keeps getting
-increased due to the existing busy_level.
+That is because the CPU port is set to security mode and its PVID is
+still 1, and untagged frames are dropped due to VLAN member violation.
 
-This patch makes the following changes to the busy_level logic.
+Set the CPU port to fallback mode so untagged frames can pass through.
 
-* Reset busy_level if nr_shortages is zero to avoid the above
-  scenario.
-
-* Make non-zero nr_lagging block lowering nr_level but still clear
-  positive busy_level if there's clear non-saturation signal - QoS
-  targets are met and nr_shortages is non-zero.  nr_lagging's role is
-  preventing adjusting vrate upwards while there are long-running
-  commands and it shouldn't keep busy_level positive while there's
-  clear non-saturation signal.
-
-* Restructure code for clarity and add comments.
-
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Reported-by: Andy Newell <newella@fb.com>
-Fixes: 7cd806a9a953 ("iocost: improve nr_lagging handling")
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 83163f7dca56 ("net: dsa: mediatek: add VLAN support for MT7530")
+Signed-off-by: DENG Qingfang <dqfext@gmail.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-iocost.c | 28 ++++++++++++++++++++++++----
- 1 file changed, 24 insertions(+), 4 deletions(-)
+ drivers/net/dsa/mt7530.c | 11 ++++++++---
+ drivers/net/dsa/mt7530.h |  6 ++++++
+ 2 files changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/block/blk-iocost.c b/block/blk-iocost.c
-index 7c1fe605d0d6..ef193389fffe 100644
---- a/block/blk-iocost.c
-+++ b/block/blk-iocost.c
-@@ -1543,19 +1543,39 @@ static void ioc_timer_fn(struct timer_list *timer)
- 	if (rq_wait_pct > RQ_WAIT_BUSY_PCT ||
- 	    missed_ppm[READ] > ppm_rthr ||
- 	    missed_ppm[WRITE] > ppm_wthr) {
-+		/* clearly missing QoS targets, slow down vrate */
- 		ioc->busy_level = max(ioc->busy_level, 0);
- 		ioc->busy_level++;
- 	} else if (rq_wait_pct <= RQ_WAIT_BUSY_PCT * UNBUSY_THR_PCT / 100 &&
- 		   missed_ppm[READ] <= ppm_rthr * UNBUSY_THR_PCT / 100 &&
- 		   missed_ppm[WRITE] <= ppm_wthr * UNBUSY_THR_PCT / 100) {
--		/* take action iff there is contention */
--		if (nr_shortages && !nr_lagging) {
-+		/* QoS targets are being met with >25% margin */
-+		if (nr_shortages) {
-+			/*
-+			 * We're throttling while the device has spare
-+			 * capacity.  If vrate was being slowed down, stop.
-+			 */
- 			ioc->busy_level = min(ioc->busy_level, 0);
--			/* redistribute surpluses first */
--			if (!nr_surpluses)
-+
-+			/*
-+			 * If there are IOs spanning multiple periods, wait
-+			 * them out before pushing the device harder.  If
-+			 * there are surpluses, let redistribution work it
-+			 * out first.
-+			 */
-+			if (!nr_lagging && !nr_surpluses)
- 				ioc->busy_level--;
-+		} else {
-+			/*
-+			 * Nobody is being throttled and the users aren't
-+			 * issuing enough IOs to saturate the device.  We
-+			 * simply don't know how close the device is to
-+			 * saturation.  Coast.
-+			 */
-+			ioc->busy_level = 0;
- 		}
- 	} else {
-+		/* inside the hysterisis margin, we're good */
- 		ioc->busy_level = 0;
- 	}
+diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
+index 34e4aadfa705..b75d09783a05 100644
+--- a/drivers/net/dsa/mt7530.c
++++ b/drivers/net/dsa/mt7530.c
+@@ -807,10 +807,15 @@ mt7530_port_set_vlan_aware(struct dsa_switch *ds, int port)
+ 		   PCR_MATRIX_MASK, PCR_MATRIX(MT7530_ALL_MEMBERS));
  
+ 	/* Trapped into security mode allows packet forwarding through VLAN
+-	 * table lookup.
++	 * table lookup. CPU port is set to fallback mode to let untagged
++	 * frames pass through.
+ 	 */
+-	mt7530_rmw(priv, MT7530_PCR_P(port), PCR_PORT_VLAN_MASK,
+-		   MT7530_PORT_SECURITY_MODE);
++	if (dsa_is_cpu_port(ds, port))
++		mt7530_rmw(priv, MT7530_PCR_P(port), PCR_PORT_VLAN_MASK,
++			   MT7530_PORT_FALLBACK_MODE);
++	else
++		mt7530_rmw(priv, MT7530_PCR_P(port), PCR_PORT_VLAN_MASK,
++			   MT7530_PORT_SECURITY_MODE);
+ 
+ 	/* Set the port as a user port which is to be able to recognize VID
+ 	 * from incoming packets before fetching entry within the VLAN table.
+diff --git a/drivers/net/dsa/mt7530.h b/drivers/net/dsa/mt7530.h
+index 82af4d2d406e..14de60d0b9ca 100644
+--- a/drivers/net/dsa/mt7530.h
++++ b/drivers/net/dsa/mt7530.h
+@@ -153,6 +153,12 @@ enum mt7530_port_mode {
+ 	/* Port Matrix Mode: Frames are forwarded by the PCR_MATRIX members. */
+ 	MT7530_PORT_MATRIX_MODE = PORT_VLAN(0),
+ 
++	/* Fallback Mode: Forward received frames with ingress ports that do
++	 * not belong to the VLAN member. Frames whose VID is not listed on
++	 * the VLAN table are forwarded by the PCR_MATRIX members.
++	 */
++	MT7530_PORT_FALLBACK_MODE = PORT_VLAN(1),
++
+ 	/* Security Mode: Discard any frame due to ingress membership
+ 	 * violation or VID missed on the VLAN table.
+ 	 */
 -- 
 2.25.1
 
