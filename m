@@ -2,124 +2,116 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB9DFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:11:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C57C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:12:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2056206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:11:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF256206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:12:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g21KG36U"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DfM0dsqO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729691AbgFHMLV (ORCPT
+        id S1729713AbgFHMMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 08:11:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49156 "EHLO
+        Mon, 8 Jun 2020 08:12:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729310AbgFHMLU (ORCPT
+        with ESMTP id S1729691AbgFHMMd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 08:11:20 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5EFDC08C5C2;
-        Mon,  8 Jun 2020 05:11:19 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id t7so8682091pgt.3;
-        Mon, 08 Jun 2020 05:11:19 -0700 (PDT)
+        Mon, 8 Jun 2020 08:12:33 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 706C6C08C5C2
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 05:12:31 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id e125so10063602lfd.1
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 05:12:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ltyhMEkISX5kr7cpVF0JSUjRPfEgCrElNZMuYmRJ7Fs=;
-        b=g21KG36UQZBZgT0ff9ZNcPra0WKx8ZP3mpu6p2d0+L2Auc6tKCoucLeRxERzyK2kIw
-         g3uIktUQ7uP0kXuGVWz1NBNYvV3a4bEWVmbqE3E6/NiKyFVQ4xWE/FQEGsol/4Ia0ord
-         XiFwyNap2P6+nzC0MdfIXZPILjtIpbrermT9vZh5xCvr+NfyS1EsMHC21RUFgcw0pQNr
-         9xfzihQYHMDi8xDrt5Q4Jpb2QOAqcqAB8Esh3Y/IvoPS44GGi8197IpU/1FFaHpgn2Yi
-         4EXyr4Af+Sx/JDoXmgxQE6NIjAhVXYg9JDrwKTAe+/Tm4ua9H0kRqKgcxBqS4Lpr35rV
-         0BrA==
+        bh=TBN6LwR1xQ7giOqILnPE//JlJlIgyTPuIyOhAD+Fs0g=;
+        b=DfM0dsqO0f/Qnck/+Ah62rrhJWnxesv6sNiGtGlrUMkIZe0uxoX3qyYJ/QidMJamvz
+         L6Bnwt3S8/SXA6KWjuV0bzahAGv1Sl1x5CS5ZEehyidgKzWz4cs/2fohftpz4t03IhmP
+         CIv70QYr+yH0TB6vG8xKqYy3fw6Phyc4Ob7FxTujExXWYnwYzNFN5dt5DjZOB2jtHVyi
+         pScpc+vtrc/434ZaGx0d5mEXfZ/lyQGuLIT9J5uRdtiXT2AiODcOPqwI9F21ZHqEftmT
+         +8AxS85z10y6qTHVnRXGdeaO6dgqPm/WflvEoPVFPCoCi/JhDSoY89tbNu6R2JazK7tp
+         A7tQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ltyhMEkISX5kr7cpVF0JSUjRPfEgCrElNZMuYmRJ7Fs=;
-        b=CQpomzP+NxMmG5ZuGigJcaEOCf7VKX/uuPweGNF3nY0Anzcu8np38d6Rfkd8+4/ftN
-         C28yyRM15vo0F/NExDFoTSrbTUKqKuDhLNp2FhcrGa2IcvZuDi4Ym6irnAAqCEZ9XC3v
-         uh8DWkIXBNXgfa+EorIKrYspbHoMlsWR8sN8s5at7+EBatNBmCwMKNpCFRgC4Gd0y9eU
-         GljahWc0Lj4j8R+gqAseWjwrFn4Z4FJbRnwuG3mhaIJ/wvz80SalgxKZzOvGt+BNBUQP
-         9riFkaE2Nvr6Z7Bl10yosGrveE09LddlZebI7aU3rm//RVtBdQ9pyYpys6Kn2BkLE0vC
-         xKVA==
-X-Gm-Message-State: AOAM530UtFj9yJs5POYcfd19UXxp+A+OnY1GRv+vnC+e9PVr4cmzAUOS
-        28Eyb6lLdTleXEpFSCqvYNeWPhOJJQGbBPzMfp0=
-X-Google-Smtp-Source: ABdhPJx44q8S4qifyalZWMQom7WKFwfOCX1Qrq4jLFlVgpAbO87RQMtPOuOzn6ZLUFp7twftKCnxvLma5jPZUD2HaPA=
-X-Received: by 2002:a63:305:: with SMTP id 5mr19335432pgd.74.1591618279199;
- Mon, 08 Jun 2020 05:11:19 -0700 (PDT)
+        bh=TBN6LwR1xQ7giOqILnPE//JlJlIgyTPuIyOhAD+Fs0g=;
+        b=R05cNj28hxzllEU+Arf60KEaJsHjcfDWetY6kUcH5OiriqZtHdEyEyoClG/pr9/5Q1
+         zOQYuVu29wP6dr+jcZiXV6j5m2KrJXJnfonb7FHn0Ve0mSy22eyySFSdEDRR3Pqc1P/8
+         1O9/zuUc5lK2GIfpbNppEWuva72pgGvaRYTlynPoxwbz/1UIrqEax3DajzNJHwR4FTaw
+         1vbx4MEZx99lOqzdvBFgFdEKUl4hycPtBY4QRkAKbtLtWj5rqgjCnk4bQeG/XILUhiw+
+         WBTUNnNFzHZ7344UKlqYUBz3zOgzNT21QJOp1QfFDfzibjJlvdntNuLqdKnRT6DmpoDx
+         vpkQ==
+X-Gm-Message-State: AOAM532gBDkIbiEhOir7HO8G9X4HcRCP/GF1nqabvJc6HdWFPEts6mmO
+        1gdUAoAxnNrdpEZu1pbTigH1iFvapAb5nOAU6daiYg==
+X-Google-Smtp-Source: ABdhPJxmk7CcERIdwxefncHfN7iBpWg2VOzmqMraSrfW9OEJJz2SzxogXSAbo+g1hJ04P05NhatbtFCl4F1ofn3LcNs=
+X-Received: by 2002:a19:c8cb:: with SMTP id y194mr12833236lff.89.1591618349925;
+ Mon, 08 Jun 2020 05:12:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200324175719.62496-1-andriy.shevchenko@linux.intel.com>
- <20200325032901.29551-1-saravanak@google.com> <20200325125120.GX1922688@smile.fi.intel.com>
- <295d25de-f01e-26de-02d6-1ac0c149d828@arm.com> <20200326163110.GD1922688@smile.fi.intel.com>
- <20200608091712.GA28093@pengutronix.de> <CAHp75VfQvT1VSXhNtfLMLzwYcN+4g=jVRkBHc=ZS0180BRzAJg@mail.gmail.com>
- <20200608115917.f5dhazixnxunl5o5@pengutronix.de>
-In-Reply-To: <20200608115917.f5dhazixnxunl5o5@pengutronix.de>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 8 Jun 2020 15:11:07 +0300
-Message-ID: <CAHp75VcnkSrb5B8dQE-Tg=mzzUbKZkk3ykm6sxEjNyHWLcF26w@mail.gmail.com>
-Subject: Re: [PATCH v3] driver core: Break infinite loop when deferred probe
- can't be satisfied
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Grant Likely <grant.likely@arm.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        artem.bityutskiy@linux.intel.com, Felipe Balbi <balbi@kernel.org>,
-        Mark Brown <broonie@kernel.org>, Ferry Toth <fntoth@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, kernel-team@android.com,
-        nd <nd@arm.com>, Sascha Hauer <kernel@pengutronix.de>
+References: <20200526104717.3181-1-dinghao.liu@zju.edu.cn> <CACRpkdZi=UaGES_bupj_fQB+sPj5zOvONdCn7_Rs_j9mcukAAQ@mail.gmail.com>
+ <20200531150000.20d1ec61@archlinux>
+In-Reply-To: <20200531150000.20d1ec61@archlinux>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 8 Jun 2020 14:12:18 +0200
+Message-ID: <CACRpkdZy0Pip1ii0g+PYpnkO21e6=J0ZXzudEgvEycCbmWYJxA@mail.gmail.com>
+Subject: Re: [PATCH] [v2] iio: magnetometer: ak8974: Fix runtime PM imbalance
+ on error
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Dinghao Liu <dinghao.liu@zju.edu.cn>, Kangjie Lu <kjlu@umn.edu>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 8, 2020 at 2:59 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
-> On 20-06-08 14:13, Andy Shevchenko wrote:
-> > On Mon, Jun 8, 2020 at 12:20 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
-> > > On 20-03-26 18:31, Andy Shevchenko wrote:
+Hi Jonathan,
 
-> > > sorry for picking this up again but I stumbled above the same issue
-> > > within the driver imx/drm driver which is using the component framework.
-> > > I end up in a infinity boot loop if I enabled the HDMI (which is the
-> > > DesignWare bridge device) and the LVDS support and the LVDS bind return
-> > > with EPROBE_DEFER. There are no words within the component framework docs
-> > > which says that this is forbidden. Of course we can work-around the
-> > > driver-core framework but IMHO this shouldn't be the way to go. I do not
-> > > say that we should revert the commit introducing the regression but we
-> > > should address this not only by extending the docs since the most
-> > > drm-drivers are using the component framework and can end up in the same
-> > > situation.
-> > >
-> > > > > It can be solved by refactoring the driver probe routine. If a resource is
-> > > > > required to be present, then check that it is available early; before
-> > > > > registering child devices.
-> > > >
-> > > > We fix one and leave others.
-> > >
-> > > E.g. the imx-drm and the sunxi driver...
-> >
-> > Just out of curiosity, does my patch fix an issue for you?
+sorry for missing this :(
+
+On Sun, May 31, 2020 at 4:00 PM Jonathan Cameron <jic23@kernel.org> wrote:
+> On Tue, 26 May 2020 13:13:56 +0200
+> Linus Walleij <linus.walleij@linaro.org> wrote:
 >
-> I didn't applied your patch yet. I can test it if you want.
+> > On Tue, May 26, 2020 at 12:47 PM Dinghao Liu <dinghao.liu@zju.edu.cn> wrote:
+> >
+> > > When devm_regmap_init_i2c() returns an error code, a pairing
+> > > runtime PM usage counter decrement is needed to keep the
+> > > counter balanced. For error paths after ak8974_set_power(),
+> > > ak8974_detect() and ak8974_reset(), things are the same.
+> > >
+> > > However, When iio_triggered_buffer_setup() returns an error
+> > > code, there will be two PM usgae counter decrements.
+> > >
+> > > Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+> > > ---
+> > >
+> > > Changelog:
+> > >
+> > > v2: - Change 3 goto targets from "power_off" to
+> > >       "disabel_pm". Remove unused lable "power_off".
+> > >       Move 3 PM runtime related calls to the end of
+> > >       the function.
+> >
+> > Thanks for fixing this Dinghao!
+> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>
+> Could I have a fixes tag for this one?
 
-If you can, thanks!
+It's been  there since the beginning so:
+Fixes: 7c94a8b2ee8c ("iio: magn: add a driver for AK8974")
 
-> > > > > The proposed solution to modify driver core is fragile and susceptible to
-> > > > > side effects from other probe paths. I don't think it is the right approach.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Yours,
+Linus Walleij
