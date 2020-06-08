@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02062C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F095EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBD3E204EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5182204EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:52:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660352;
-	bh=4aSMtzqJJndbwSqCLBktDy6vMXgnT+YthzhW1XOHtAk=;
+	s=default; t=1591660355;
+	bh=fxZGaojEJpYGKfDWhwHhEvBbr2EQND6yhWyZ18FBUqI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qyI3YPFwgPfnqlaQvgEgahF4MUCa9vWeD8+Ztg4vDBHppNb8bIlMmcXdCvKmX1mRy
-	 QQ1AmEDLO3IcDpcssTl+/sMEtvELLGvrkL/xqXkM81MiGlPglUizUMHleRzKMQt1U/
-	 oz6dY40mjOS8r6hV8Xuf2i0BA5pDxQG+x7sbpaNI=
+	b=KlSitREsU+H1mDopxvAWvNkRjyOolSc+K8/1B16039mhsOrC52OGaMYEFVJcNRY8r
+	 eEkuXzadjKU1fhBkVqVDxMZXxt9HWLHJavr07pfzgNWJzTb9mBAdavM7jRrpezkQD6
+	 IodswTvRbEqyzPdrOVTEw4iztsNJSs28wxUfAYL8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731677AbgFHXYt (ORCPT
+        id S1732553AbgFHXwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:24:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42346 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:52:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730800AbgFHXTb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:19:31 -0400
+        id S1731673AbgFHXYt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:24:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB8D52088E;
-        Mon,  8 Jun 2020 23:19:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C49221501;
+        Mon,  8 Jun 2020 23:24:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658371;
-        bh=4aSMtzqJJndbwSqCLBktDy6vMXgnT+YthzhW1XOHtAk=;
+        s=default; t=1591658688;
+        bh=fxZGaojEJpYGKfDWhwHhEvBbr2EQND6yhWyZ18FBUqI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rDXOks5iCiKgsBsQQAQTmciFG73psRbr0nEEXftelW8QGpW8u1ycUscw/q2X5eUXs
-         RgZCmtSevobMK3qppy3fyM/ZIWM93m23IruNfAaHybcsXPsCflXNKr82KWt82tgQje
-         3Fa0N4/eJM1H0VQuJttDuvMP++KSsPPFuz4SPaE4=
+        b=Wjm/mLB5I+WiC4c+fJf2MgWSu6DyHeAgdu90TTU9kjyXm7W6ZVT80N6Mv2708iOEw
+         9JsaBw+++XfhLwQr7AKt9mWwmIwFCzh9rAF2MIEQLB54SSzpmDhmuJQ713JO0N6e2m
+         42JUStt1xOjLn+jyE+Rq5fq5qT89JLbsFz9wgJhs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jeremy Cline <jcline@redhat.com>,
-        "Frank Ch . Eigler" <fche@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-security-module@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 034/175] lockdown: Allow unprivileged users to see lockdown status
-Date:   Mon,  8 Jun 2020 19:16:27 -0400
-Message-Id: <20200608231848.3366970-34-sashal@kernel.org>
+Cc:     Haibo Chen <haibo.chen@nxp.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 098/106] mmc: sdhci-esdhc-imx: fix the mask for tuning start point
+Date:   Mon,  8 Jun 2020 19:22:30 -0400
+Message-Id: <20200608232238.3368589-98-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
-References: <20200608231848.3366970-1-sashal@kernel.org>
+In-Reply-To: <20200608232238.3368589-1-sashal@kernel.org>
+References: <20200608232238.3368589-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,38 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Cline <jcline@redhat.com>
+From: Haibo Chen <haibo.chen@nxp.com>
 
-[ Upstream commit 60cf7c5ed5f7087c4de87a7676b8c82d96fd166c ]
+[ Upstream commit 1194be8c949b8190b2882ad8335a5d98aa50c735 ]
 
-A number of userspace tools, such as systemtap, need a way to see the
-current lockdown state so they can gracefully deal with the kernel being
-locked down. The state is already exposed in
-/sys/kernel/security/lockdown, but is only readable by root. Adjust the
-permissions so unprivileged users can read the state.
+According the RM, the bit[6~0] of register ESDHC_TUNING_CTRL is
+TUNING_START_TAP, bit[7] of this register is to disable the command
+CRC check for standard tuning. So fix it here.
 
-Fixes: 000d388ed3bb ("security: Add a static lockdown policy LSM")
-Cc: Frank Ch. Eigler <fche@redhat.com>
-Signed-off-by: Jeremy Cline <jcline@redhat.com>
-Signed-off-by: James Morris <jmorris@namei.org>
+Fixes: d87fc9663688 ("mmc: sdhci-esdhc-imx: support setting tuning start point")
+Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
+Link: https://lore.kernel.org/r/1590488522-9292-1-git-send-email-haibo.chen@nxp.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/lockdown/lockdown.c | 2 +-
+ drivers/mmc/host/sdhci-esdhc-imx.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
-index 40b790536def..ae594c0a127f 100644
---- a/security/lockdown/lockdown.c
-+++ b/security/lockdown/lockdown.c
-@@ -175,7 +175,7 @@ static int __init lockdown_secfs_init(void)
- {
- 	struct dentry *dentry;
+diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
+index 629860f7327c..bd502f4f4704 100644
+--- a/drivers/mmc/host/sdhci-esdhc-imx.c
++++ b/drivers/mmc/host/sdhci-esdhc-imx.c
+@@ -82,7 +82,7 @@
+ #define ESDHC_STD_TUNING_EN		(1 << 24)
+ /* NOTE: the minimum valid tuning start tap for mx6sl is 1 */
+ #define ESDHC_TUNING_START_TAP_DEFAULT	0x1
+-#define ESDHC_TUNING_START_TAP_MASK	0xff
++#define ESDHC_TUNING_START_TAP_MASK	0x7f
+ #define ESDHC_TUNING_STEP_MASK		0x00070000
+ #define ESDHC_TUNING_STEP_SHIFT		16
  
--	dentry = securityfs_create_file("lockdown", 0600, NULL, NULL,
-+	dentry = securityfs_create_file("lockdown", 0644, NULL, NULL,
- 					&lockdown_ops);
- 	return PTR_ERR_OR_ZERO(dentry);
- }
 -- 
 2.25.1
 
