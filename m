@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AEB9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2690BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:23:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB7D3207F9
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:23:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05B1820775
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:23:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662204;
-	bh=QjEB0Q4at39Hn1yjCnUiHIPirakk1sVSHcqnMKYyqHg=;
+	s=default; t=1591662207;
+	bh=UxLFJSi2vnUJFRKmV691Uu4lf4Mr1Wmc8LbfMJiz7KI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b9q8paofaabzyKlkFun1GN/hlVPtkF4vvoldBPaUgL/UonVMG4x0wSZYTYRuIopx3
-	 7VMWUjtkE2eN3dYS4a5rTpgqX0n971uuPjciEhfFn8jtFIen80AyUfb3oorB5EhmH0
-	 tV0aqeDvNr7P72Mceplqw7vYuW2mbrDKtmjqvIK8=
+	b=NhNMO6nP706ZuVNVgdCCPykLz2KYugJdGROc7vZZGET92E4U+ynXf4tqjzR00EqQy
+	 46a7ezVPJ6o1yPYNWpvFZby/0NhIa/70Z0emAGiGq/BXP93osDEJuY1r9dkCLTUGil
+	 CjuO1ABuLaTE3wdaEIA4r0haaVNceJua+gBlolRI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733020AbgFIAXW (ORCPT
+        id S1733028AbgFIAX0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:23:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38406 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:23:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730427AbgFHXRQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:17:16 -0400
+        id S1729148AbgFHXRP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:17:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAD2E2078D;
-        Mon,  8 Jun 2020 23:17:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 780CB2083E;
+        Mon,  8 Jun 2020 23:17:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658236;
-        bh=QjEB0Q4at39Hn1yjCnUiHIPirakk1sVSHcqnMKYyqHg=;
+        s=default; t=1591658235;
+        bh=UxLFJSi2vnUJFRKmV691Uu4lf4Mr1Wmc8LbfMJiz7KI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z8ZCSSuGjLmxHqqtJPx8Ls3UVVcLtEc7JQqNquNAzTB7W6GV2Pvfik7fMYLVnZ1lp
-         H9FB4nclKZMFfOSPW0gGtcqogq/Sju/sdUUjuLtxycTUaRLD9spNtEtHxyQGc45ARJ
-         RZaHVnVy4UwZaLNdaYN8lDscj0rJJBxy7qzbUi0A=
+        b=o/PYnR28aUUEshZruVU+htmWXhxxUT4Emg6Vw1Ygee4KoefXr9F6B385lCCbNxbea
+         kLxn88Pj170BjC+GXaVODDS5V2QrVl/sEBd1dwiJ/YKDCED5uVdoOdcWxa7Y5zG43E
+         z4uAOw+cPZ/wO+pKJNvdU25EkCGewUFtttQkP1es=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiri Pirko <jiri@mellanox.com>,
-        Danielle Ratson <danieller@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
+Cc:     Tang Bin <tangbin@cmss.chinamobile.com>,
+        Zhang Shengju <zhangshengju@cmss.chinamobile.com>,
         "David S . Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 248/606] mlxsw: spectrum: Fix use-after-free of split/unsplit/type_set in case reload fails
-Date:   Mon,  8 Jun 2020 19:06:13 -0400
-Message-Id: <20200608231211.3363633-248-sashal@kernel.org>
+        linux-mips@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 247/606] net: sgi: ioc3-eth: Fix return value check in ioc3eth_probe()
+Date:   Mon,  8 Jun 2020 19:06:12 -0400
+Message-Id: <20200608231211.3363633-247-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -62,111 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Pirko <jiri@mellanox.com>
+From: Tang Bin <tangbin@cmss.chinamobile.com>
 
-commit 4340f42f207eacb81e7a6b6bb1e3b6afad9a2e26 upstream.
+commit a7654211d0ffeaa8eb0545ea00f8445242cbce05 upstream.
 
-In case of reload fail, the mlxsw_sp->ports contains a pointer to a
-freed memory (either by reload_down() or reload_up() error path).
-Fix this by initializing the pointer to NULL and checking it before
-dereferencing in split/unsplit/type_set callpaths.
+In the function devm_platform_ioremap_resource(), if get resource
+failed, the return value is ERR_PTR() not NULL. Thus it must be
+replaced by IS_ERR(), or else it may result in crashes if a critical
+error path is encountered.
 
-Fixes: 24cc68ad6c46 ("mlxsw: core: Add support for reload")
-Reported-by: Danielle Ratson <danieller@mellanox.com>
-Signed-off-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Fixes: 0ce5ebd24d25 ("mfd: ioc3: Add driver for SGI IOC3 chip")
+Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/spectrum.c | 14 ++++++++++++--
- drivers/net/ethernet/mellanox/mlxsw/switchx2.c |  8 ++++++++
- 2 files changed, 20 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/sgi/ioc3-eth.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-index 7358b5bc7eb6..58ebabe99876 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-@@ -4043,6 +4043,7 @@ static void mlxsw_sp_ports_remove(struct mlxsw_sp *mlxsw_sp)
- 			mlxsw_sp_port_remove(mlxsw_sp, i);
- 	mlxsw_sp_cpu_port_remove(mlxsw_sp);
- 	kfree(mlxsw_sp->ports);
-+	mlxsw_sp->ports = NULL;
- }
+diff --git a/drivers/net/ethernet/sgi/ioc3-eth.c b/drivers/net/ethernet/sgi/ioc3-eth.c
+index db6b2988e632..f4895777f5e3 100644
+--- a/drivers/net/ethernet/sgi/ioc3-eth.c
++++ b/drivers/net/ethernet/sgi/ioc3-eth.c
+@@ -865,14 +865,14 @@ static int ioc3eth_probe(struct platform_device *pdev)
+ 	ip = netdev_priv(dev);
+ 	ip->dma_dev = pdev->dev.parent;
+ 	ip->regs = devm_platform_ioremap_resource(pdev, 0);
+-	if (!ip->regs) {
+-		err = -ENOMEM;
++	if (IS_ERR(ip->regs)) {
++		err = PTR_ERR(ip->regs);
+ 		goto out_free;
+ 	}
  
- static int mlxsw_sp_ports_create(struct mlxsw_sp *mlxsw_sp)
-@@ -4079,6 +4080,7 @@ static int mlxsw_sp_ports_create(struct mlxsw_sp *mlxsw_sp)
- 	mlxsw_sp_cpu_port_remove(mlxsw_sp);
- err_cpu_port_create:
- 	kfree(mlxsw_sp->ports);
-+	mlxsw_sp->ports = NULL;
- 	return err;
- }
- 
-@@ -4200,6 +4202,14 @@ static int mlxsw_sp_local_ports_offset(struct mlxsw_core *mlxsw_core,
- 	return mlxsw_core_res_get(mlxsw_core, local_ports_in_x_res_id);
- }
- 
-+static struct mlxsw_sp_port *
-+mlxsw_sp_port_get_by_local_port(struct mlxsw_sp *mlxsw_sp, u8 local_port)
-+{
-+	if (mlxsw_sp->ports && mlxsw_sp->ports[local_port])
-+		return mlxsw_sp->ports[local_port];
-+	return NULL;
-+}
-+
- static int mlxsw_sp_port_split(struct mlxsw_core *mlxsw_core, u8 local_port,
- 			       unsigned int count,
- 			       struct netlink_ext_ack *extack)
-@@ -4213,7 +4223,7 @@ static int mlxsw_sp_port_split(struct mlxsw_core *mlxsw_core, u8 local_port,
- 	int i;
- 	int err;
- 
--	mlxsw_sp_port = mlxsw_sp->ports[local_port];
-+	mlxsw_sp_port = mlxsw_sp_port_get_by_local_port(mlxsw_sp, local_port);
- 	if (!mlxsw_sp_port) {
- 		dev_err(mlxsw_sp->bus_info->dev, "Port number \"%d\" does not exist\n",
- 			local_port);
-@@ -4308,7 +4318,7 @@ static int mlxsw_sp_port_unsplit(struct mlxsw_core *mlxsw_core, u8 local_port,
- 	int offset;
- 	int i;
- 
--	mlxsw_sp_port = mlxsw_sp->ports[local_port];
-+	mlxsw_sp_port = mlxsw_sp_port_get_by_local_port(mlxsw_sp, local_port);
- 	if (!mlxsw_sp_port) {
- 		dev_err(mlxsw_sp->bus_info->dev, "Port number \"%d\" does not exist\n",
- 			local_port);
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/switchx2.c b/drivers/net/ethernet/mellanox/mlxsw/switchx2.c
-index f0e98ec8f1ee..c69232445ab7 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/switchx2.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/switchx2.c
-@@ -1259,6 +1259,7 @@ static void mlxsw_sx_ports_remove(struct mlxsw_sx *mlxsw_sx)
- 		if (mlxsw_sx_port_created(mlxsw_sx, i))
- 			mlxsw_sx_port_remove(mlxsw_sx, i);
- 	kfree(mlxsw_sx->ports);
-+	mlxsw_sx->ports = NULL;
- }
- 
- static int mlxsw_sx_ports_create(struct mlxsw_sx *mlxsw_sx)
-@@ -1293,6 +1294,7 @@ static int mlxsw_sx_ports_create(struct mlxsw_sx *mlxsw_sx)
- 		if (mlxsw_sx_port_created(mlxsw_sx, i))
- 			mlxsw_sx_port_remove(mlxsw_sx, i);
- 	kfree(mlxsw_sx->ports);
-+	mlxsw_sx->ports = NULL;
- 	return err;
- }
- 
-@@ -1376,6 +1378,12 @@ static int mlxsw_sx_port_type_set(struct mlxsw_core *mlxsw_core, u8 local_port,
- 	u8 module, width;
- 	int err;
- 
-+	if (!mlxsw_sx->ports || !mlxsw_sx->ports[local_port]) {
-+		dev_err(mlxsw_sx->bus_info->dev, "Port number \"%d\" does not exist\n",
-+			local_port);
-+		return -EINVAL;
-+	}
-+
- 	if (new_type == DEVLINK_PORT_TYPE_AUTO)
- 		return -EOPNOTSUPP;
+ 	ip->ssram = devm_platform_ioremap_resource(pdev, 1);
+-	if (!ip->ssram) {
+-		err = -ENOMEM;
++	if (IS_ERR(ip->ssram)) {
++		err = PTR_ERR(ip->ssram);
+ 		goto out_free;
+ 	}
  
 -- 
 2.25.1
