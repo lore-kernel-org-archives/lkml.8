@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EFF3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A6FCC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:28:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5C5120812
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:28:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73205207FB
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:28:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662517;
-	bh=r5tRlKrPIjPzgPOx5E5MajABmzT+tdUaLM1FnQDBtfA=;
+	s=default; t=1591662529;
+	bh=ArSUKznHQe9HVtC3B3Rux1wUN+mSMi63toyl8MmeAQw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EdopVXZ3HueQpemwySW5FIw5R3bK4eO1KxgFjSTjCSgzx4kotadY2T7zpWi15lJHV
-	 PvTL9fLSasK6ToNzruNmLFSoe1mwRXjbAhrNc6OlgB4Ubr9FpdXaqCLIs+YYhvdev9
-	 oWx/GTj6gTcslRZyJge9g3dCRi0UvIe6kUfi5a4Q=
+	b=ExYPJxqoIJctMbPw3VDZAPPpNc9pFVXA4Yo0shNPTJxLOZeKcXS7D4Oqhbyovn0Va
+	 WYZBgw+pWcDL7QD3quAouK4Gc/2ZklUorw5o1fGujrPHFKM5YdFqw8WcV/Fe4kvyVF
+	 2q+xA5I6fNTHMk/N6oI7J67Gt+rD+NPhR7onyS+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732752AbgFIA2f (ORCPT
+        id S1732833AbgFIA2r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:28:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37812 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:28:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728743AbgFHXQ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:16:26 -0400
+        id S1729599AbgFHXQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:16:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18E962078D;
-        Mon,  8 Jun 2020 23:16:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A3742068D;
+        Mon,  8 Jun 2020 23:16:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658185;
-        bh=r5tRlKrPIjPzgPOx5E5MajABmzT+tdUaLM1FnQDBtfA=;
+        s=default; t=1591658178;
+        bh=ArSUKznHQe9HVtC3B3Rux1wUN+mSMi63toyl8MmeAQw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ujFjlWUg8aVF/2iczQPzeNJbmOMvXkvhP+H0DpHrkJWssRWGJsljEcZX8MDCetWA8
-         bvIxreNwWj1FJwbjMixDJnqk5gulfUqGIlEp9mebZiOLFB5yYaqoWULQVuah+4J0+4
-         iAbkrjpR90eHy4X3T8ttKQAUfaZL6+IuPBGF/nGM=
+        b=0LxQU+ENIhqr3I8qyN+Gq8qvMDLgfGGZWyvlQjQVEi2sj/RwB3p8jM7K9S8oVl9sH
+         qcGjvbh7EyRkZNCOkVrgHd6SFLkOAI+S4VmocKCgC3gS1u2Exybv9pddNUhLEkSV3p
+         hfWN+Wj77kryKZQrJ/jhz5Dewd+C+3Q62ZS/qX2c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 208/606] dpaa_eth: fix usage as DSA master, try 3
-Date:   Mon,  8 Jun 2020 19:05:33 -0400
-Message-Id: <20200608231211.3363633-208-sashal@kernel.org>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 203/606] sched/fair: Reorder enqueue/dequeue_task_fair path
+Date:   Mon,  8 Jun 2020 19:05:28 -0400
+Message-Id: <20200608231211.3363633-203-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -61,76 +64,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
 
-[ Upstream commit 5d14c304bfc14b4fd052dc83d5224376b48f52f0 ]
+[ Upstream commit 6d4d22468dae3d8757af9f8b81b848a76ef4409d ]
 
-The dpaa-eth driver probes on compatible string for the MAC node, and
-the fman/mac.c driver allocates a dpaa-ethernet platform device that
-triggers the probing of the dpaa-eth net device driver.
+The walk through the cgroup hierarchy during the enqueue/dequeue of a task
+is split in 2 distinct parts for throttled cfs_rq without any added value
+but making code less readable.
 
-All of this is fine, but the problem is that the struct device of the
-dpaa_eth net_device is 2 parents away from the MAC which can be
-referenced via of_node. So of_find_net_device_by_node can't find it, and
-DSA switches won't be able to probe on top of FMan ports.
+Change the code ordering such that everything related to a cfs_rq
+(throttled or not) will be done in the same loop.
 
-It would be a bit silly to modify a core function
-(of_find_net_device_by_node) to look for dev->parent->parent->of_node
-just for one driver. We're just 1 step away from implementing full
-recursion.
+In addition, the same steps ordering is used when updating a cfs_rq:
 
-Actually there have already been at least 2 previous attempts to make
-this work:
-- Commit a1a50c8e4c24 ("fsl/man: Inherit parent device and of_node")
-- One or more of the patches in "[v3,0/6] adapt DPAA drivers for DSA":
-  https://patchwork.ozlabs.org/project/netdev/cover/1508178970-28945-1-git-send-email-madalin.bucur@nxp.com/
-  (I couldn't really figure out which one was supposed to solve the
-  problem and how).
+ - update_load_avg
+ - update_cfs_group
+ - update *h_nr_running
 
-Point being, it looks like this is still pretty much a problem today.
-On T1040, the /sys/class/net/eth0 symlink currently points to
+This reordering enables the use of h_nr_running in PELT algorithm.
 
-../../devices/platform/ffe000000.soc/ffe400000.fman/ffe4e6000.ethernet/dpaa-ethernet.0/net/eth0
+No functional and performance changes are expected and have been noticed
+during tests.
 
-which pretty much illustrates the problem. The closest of_node we've got
-is the "fsl,fman-memac" at /soc@ffe000000/fman@400000/ethernet@e6000,
-which is what we'd like to be able to reference from DSA as host port.
-
-For of_find_net_device_by_node to find the eth0 port, we would need the
-parent of the eth0 net_device to not be the "dpaa-ethernet" platform
-device, but to point 1 level higher, aka the "fsl,fman-memac" node
-directly. The new sysfs path would look like this:
-
-../../devices/platform/ffe000000.soc/ffe400000.fman/ffe4e6000.ethernet/net/eth0
-
-And this is exactly what SET_NETDEV_DEV does. It sets the parent of the
-net_device. The new parent has an of_node associated with it, and
-of_dev_node_match already checks for the of_node of the device or of its
-parent.
-
-Fixes: a1a50c8e4c24 ("fsl/man: Inherit parent device and of_node")
-Fixes: c6e26ea8c893 ("dpaa_eth: change device used")
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: "Dietmar Eggemann <dietmar.eggemann@arm.com>"
+Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Cc: Valentin Schneider <valentin.schneider@arm.com>
+Cc: Phil Auld <pauld@redhat.com>
+Cc: Hillf Danton <hdanton@sina.com>
+Link: https://lore.kernel.org/r/20200224095223.13361-5-mgorman@techsingularity.net
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/dpaa/dpaa_eth.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/sched/fair.c | 42 ++++++++++++++++++++----------------------
+ 1 file changed, 20 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-index ca74a684a904..ab337632793b 100644
---- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-+++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-@@ -2902,7 +2902,7 @@ static int dpaa_eth_probe(struct platform_device *pdev)
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index c76a20648b72..a486bf3d5078 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -5276,32 +5276,31 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+ 		cfs_rq = cfs_rq_of(se);
+ 		enqueue_entity(cfs_rq, se, flags);
+ 
+-		/*
+-		 * end evaluation on encountering a throttled cfs_rq
+-		 *
+-		 * note: in the case of encountering a throttled cfs_rq we will
+-		 * post the final h_nr_running increment below.
+-		 */
+-		if (cfs_rq_throttled(cfs_rq))
+-			break;
+ 		cfs_rq->h_nr_running++;
+ 		cfs_rq->idle_h_nr_running += idle_h_nr_running;
+ 
++		/* end evaluation on encountering a throttled cfs_rq */
++		if (cfs_rq_throttled(cfs_rq))
++			goto enqueue_throttle;
++
+ 		flags = ENQUEUE_WAKEUP;
  	}
  
- 	/* Do this here, so we can be verbose early */
--	SET_NETDEV_DEV(net_dev, dev);
-+	SET_NETDEV_DEV(net_dev, dev->parent);
- 	dev_set_drvdata(dev, net_dev);
+ 	for_each_sched_entity(se) {
+ 		cfs_rq = cfs_rq_of(se);
+-		cfs_rq->h_nr_running++;
+-		cfs_rq->idle_h_nr_running += idle_h_nr_running;
  
- 	priv = netdev_priv(net_dev);
++		/* end evaluation on encountering a throttled cfs_rq */
+ 		if (cfs_rq_throttled(cfs_rq))
+-			break;
++			goto enqueue_throttle;
+ 
+ 		update_load_avg(cfs_rq, se, UPDATE_TG);
+ 		update_cfs_group(se);
++
++		cfs_rq->h_nr_running++;
++		cfs_rq->idle_h_nr_running += idle_h_nr_running;
+ 	}
+ 
++enqueue_throttle:
+ 	if (!se) {
+ 		add_nr_running(rq, 1);
+ 		/*
+@@ -5362,17 +5361,13 @@ static void dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+ 		cfs_rq = cfs_rq_of(se);
+ 		dequeue_entity(cfs_rq, se, flags);
+ 
+-		/*
+-		 * end evaluation on encountering a throttled cfs_rq
+-		 *
+-		 * note: in the case of encountering a throttled cfs_rq we will
+-		 * post the final h_nr_running decrement below.
+-		*/
+-		if (cfs_rq_throttled(cfs_rq))
+-			break;
+ 		cfs_rq->h_nr_running--;
+ 		cfs_rq->idle_h_nr_running -= idle_h_nr_running;
+ 
++		/* end evaluation on encountering a throttled cfs_rq */
++		if (cfs_rq_throttled(cfs_rq))
++			goto dequeue_throttle;
++
+ 		/* Don't dequeue parent if it has other entities besides us */
+ 		if (cfs_rq->load.weight) {
+ 			/* Avoid re-evaluating load for this entity: */
+@@ -5390,16 +5385,19 @@ static void dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+ 
+ 	for_each_sched_entity(se) {
+ 		cfs_rq = cfs_rq_of(se);
+-		cfs_rq->h_nr_running--;
+-		cfs_rq->idle_h_nr_running -= idle_h_nr_running;
+ 
++		/* end evaluation on encountering a throttled cfs_rq */
+ 		if (cfs_rq_throttled(cfs_rq))
+-			break;
++			goto dequeue_throttle;
+ 
+ 		update_load_avg(cfs_rq, se, UPDATE_TG);
+ 		update_cfs_group(se);
++
++		cfs_rq->h_nr_running--;
++		cfs_rq->idle_h_nr_running -= idle_h_nr_running;
+ 	}
+ 
++dequeue_throttle:
+ 	if (!se)
+ 		sub_nr_running(rq, 1);
+ 
 -- 
 2.25.1
 
