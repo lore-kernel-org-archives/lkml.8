@@ -2,114 +2,187 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA76C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E16C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C988206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:36:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591634190;
-	bh=TQYnd+7jrdlMhST038vUWV9CRgsCgFOs6vSSUKQVhvk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=L/o+wkK1SUaxv5KIxd6/PypnGkOu9dzI0S2nLDmyEFwZnq9U9Jw102o31bcyng9i3
-	 rzcmR7rF5pjKORFaZmZoaZJ6lZabKF8L2w3b0N8Zs4aZ9pvhJGPqhLyx4zjK3TBXa8
-	 XoK1ed6gYHKWIFPSXJSNv9J0ZGTX/3LvWQtGNtIw=
+	by mail.kernel.org (Postfix) with ESMTP id 851BF206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:36:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QVsWop8T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730591AbgFHQga (ORCPT
+        id S1730583AbgFHQg3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 12:36:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45604 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730432AbgFHQg3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 8 Jun 2020 12:36:29 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32F6D2053B;
-        Mon,  8 Jun 2020 16:36:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591634188;
-        bh=TQYnd+7jrdlMhST038vUWV9CRgsCgFOs6vSSUKQVhvk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fHvmWE+Dn5EuiO+5LGDqUG5J2MILT8zrgz5QMTPOA5V/y+KfKyO65h4SHsGdNo9AH
-         pZa7mFa43e4UgC0jb6MCJj59hSFAHgvCk+w1r5Fo7w9h1VJK1WCgyXBYbdAiB7YKVv
-         JDR81MmamaXyS62q2oZRspCUy/5XSQ8chVAgD3UI=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id AB51640AFD; Mon,  8 Jun 2020 13:36:25 -0300 (-03)
-Date:   Mon, 8 Jun 2020 13:36:25 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Hongbo Yao <yaohongbo@huawei.com>
-Cc:     alexander.shishkin@linux.intel.com, mark.rutland@arm.com,
-        jolsa@redhat.com, namhyung@kernel.org, liwei391@huawei.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] perf util: Fix null pointer dereference
-Message-ID: <20200608163625.GC3073@kernel.org>
-References: <20200605091740.40206-1-yaohongbo@huawei.com>
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33730 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730383AbgFHQg2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 12:36:28 -0400
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E08BCC08C5C2;
+        Mon,  8 Jun 2020 09:36:26 -0700 (PDT)
+Received: by mail-wr1-x431.google.com with SMTP id j10so18123067wrw.8;
+        Mon, 08 Jun 2020 09:36:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3stWFcqpZacdXnYKEcQBZXFbyXJauSreLLB+1339PuE=;
+        b=QVsWop8TvbeU+82QPebxlev1TVdNdtCPSmWxkC03+UP9maAAepadnsvPzIo5qatEkS
+         cbRVAKES/f+scM2Kbapn8dNUBq7HOMMI9NOPmdPtZw6cq70fqWwOdU5VueI82Qt80g76
+         E5vtg6O6d1Ovr2NhL0tPDN9xRiaER0fMQnbui4CCZW/0LFG+4EiX9hQ6an78c7ifU7L3
+         uItV5TAcskznFIMfyQur9MdKstNtVbyS/vtThgsn4eJQJUJ2m1E4ITecAPM/OFC/g4zt
+         F4WwhB7C8YprZFcd/OKMlMxXWxkagFlcrO3t8JpGrcSnLym9nOAalcpKT96eLUqhk2uT
+         B9FQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3stWFcqpZacdXnYKEcQBZXFbyXJauSreLLB+1339PuE=;
+        b=L5i0RXxAXVxtF8GigZHRifLmFYIRvob7GIOAAQuq/q5rsxTpEE4WkxmCEuky4t2SV0
+         0HuZHc7xaHwfqgL9vzLmXmsCAubyC7sJH4mN8l9YV5ZbwYOFdJsK5yJljlEff+zaAReH
+         tasz3DJbg/g1ErKgm7E5xiqY7q+H7wGwpLLraOOurChS6gCZRuUXbd8A81P//zBzGUX0
+         z1qh3LEAYXAMA/AKC7bFBkMPoI/5YTE6mHZwhIWKoc1WEVG+KndJI0KOj8Y4iyujInHk
+         zdCXeUfyiqXINfEkpXw+iGfscUOhOF6jmOedrpG2E5bsosg/gJVxoNNoqW6inw7GM03B
+         P/sA==
+X-Gm-Message-State: AOAM531nUP54geJKgPiyOOs0EMmD5XLb+lS34JXhB/8abLoZWH8BWAQl
+        ObZ/VK0criy9QbmtADTAMl96mMhXDpU=
+X-Google-Smtp-Source: ABdhPJz5v+//ef9firCDrVujLSIV8U1MSYCLUa7XmsEihy92XMWl4dCyIk+RbgCTn4vad+Do9wQDfQ==
+X-Received: by 2002:adf:fd4b:: with SMTP id h11mr23749652wrs.209.1591634185217;
+        Mon, 08 Jun 2020 09:36:25 -0700 (PDT)
+Received: from kwango.local (ip-94-112-129-237.net.upcbroadband.cz. [94.112.129.237])
+        by smtp.gmail.com with ESMTPSA id v19sm101069wml.26.2020.06.08.09.36.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jun 2020 09:36:24 -0700 (PDT)
+From:   Ilya Dryomov <idryomov@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Ceph updates for 5.8-rc1
+Date:   Mon,  8 Jun 2020 18:36:26 +0200
+Message-Id: <20200608163626.7339-1-idryomov@gmail.com>
+X-Mailer: git-send-email 2.19.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200605091740.40206-1-yaohongbo@huawei.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Jun 05, 2020 at 05:17:40PM +0800, Hongbo Yao escreveu:
-> If config->aggr_map is Null and config->aggr_get_id is not Null,
-> the function print_aggr() will still calling arrg_update_shadow(),
-> which can result in accessing the invalid pointer.
+Hi Linus,
 
-Looks legit, but you forgot to add this:
+The following changes since commit 3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162:
 
-Cc: Jiri Olsa <jolsa@kernel.org>
-Fixes: 088519f318be ("perf stat: Move the display functions to stat-display.c")
+  Linux 5.7 (2020-05-31 16:49:15 -0700)
 
-That is not completely correct as this is just moving pre-existing code
-(and bugs) to a different place, but at least the stable guys will get
-this fix back to a good number of kernels.
+are available in the Git repository at:
 
-Also you forgot to CC lkml,
+  https://github.com/ceph/ceph-client.git tags/ceph-for-5.8-rc1
 
-Thanks, applied.
+for you to fetch changes up to dc1dad8e1a612650b1e786e992cb0c6e101e226a:
 
-- Arnaldo
- 
-> Signed-off-by: Hongbo Yao <yaohongbo@huawei.com>
-> ---
->  tools/perf/util/stat-display.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-> index 3c6976f7574c..57d0706e1330 100644
-> --- a/tools/perf/util/stat-display.c
-> +++ b/tools/perf/util/stat-display.c
-> @@ -668,7 +668,7 @@ static void print_aggr(struct perf_stat_config *config,
->  	int s;
->  	bool first;
->  
-> -	if (!(config->aggr_map || config->aggr_get_id))
-> +	if (!config->aggr_map || !config->aggr_get_id)
->  		return;
->  
->  	aggr_update_shadow(config, evlist);
-> @@ -1169,7 +1169,7 @@ static void print_percore(struct perf_stat_config *config,
->  	int s;
->  	bool first = true;
->  
-> -	if (!(config->aggr_map || config->aggr_get_id))
-> +	if (!config->aggr_map || !config->aggr_get_id)
->  		return;
->  
->  	if (config->percore_show_thread)
-> -- 
-> 2.20.1
-> 
+  rbd: compression_hint option (2020-06-01 23:32:35 +0200)
 
--- 
+----------------------------------------------------------------
+The highlights are:
 
-- Arnaldo
+- OSD/MDS latency and caps cache metrics infrastructure for the
+  filesytem (Xiubo Li).  Currently available through debugfs and
+  will be periodically sent to the MDS in the future.
+
+- support for replica reads (balanced and localized reads) for
+  rbd and the filesystem (myself).  The default remains to always
+  read from primary, users can opt-in with the new crush_location
+  and read_from_replica options.  Note that reading from replica
+  is safe for general use only since Octopus.
+
+- support for RADOS allocation hint flags (myself).  Currently
+  used by rbd to propagate the compressible/incompressible hint
+  given with the new compression_hint map option and ready for
+  passing on more advanced hints, e.g. based on fadvise() from
+  the filesystem.
+
+- support for efficient cross-quota-realm renames (Luis Henriques)
+
+- assorted cap handling improvements and cleanups, particularly
+  untangling some of the locking (Jeff Layton)
+
+----------------------------------------------------------------
+Gustavo A. R. Silva (1):
+      libceph, rbd: replace zero-length array with flexible-array
+
+Ilya Dryomov (7):
+      libceph: add non-asserting rbtree insertion helper
+      libceph: decode CRUSH device/bucket types and names
+      libceph: crush_location infrastructure
+      libceph: support for balanced and localized reads
+      libceph: read_from_replica option
+      libceph: support for alloc hint flags
+      rbd: compression_hint option
+
+Jeff Layton (11):
+      ceph: reorganize __send_cap for less spinlock abuse
+      ceph: split up __finish_cap_flush
+      ceph: add comments for handle_cap_flush_ack logic
+      ceph: don't release i_ceph_lock in handle_cap_trunc
+      ceph: don't take i_ceph_lock in handle_cap_import
+      ceph: document what protects i_dirty_item and i_flushing_item
+      ceph: fix potential race in ceph_check_caps
+      ceph: throw a warning if we destroy session with mutex still locked
+      ceph: convert mdsc->cap_dirty to a per-session list
+      ceph: request expedited service on session's last cap flush
+      ceph: ceph_kick_flushing_caps needs the s_mutex
+
+Luis Henriques (3):
+      ceph: normalize 'delta' parameter usage in check_quota_exceeded
+      ceph: allow rename operation under different quota realms
+      ceph: don't return -ESTALE if there's still an open file
+
+Xiubo Li (6):
+      ceph: add dentry lease metric support
+      ceph: add caps perf metric for each superblock
+      ceph: add read/write latency metric support
+      ceph: add metadata perf metric support
+      ceph: make sure mdsc->mutex is nested in s->s_mutex to fix dead lock
+      ceph: skip checking caps when session reconnecting and releasing reqs
+
+Yan, Zheng (1):
+      ceph: reset i_requested_max_size if file write is not wanted
+
+ drivers/block/rbd.c             |  44 ++++-
+ drivers/block/rbd_types.h       |   2 +-
+ fs/ceph/Makefile                |   2 +-
+ fs/ceph/acl.c                   |   2 +-
+ fs/ceph/addr.c                  |  20 ++
+ fs/ceph/caps.c                  | 425 ++++++++++++++++++++++++++--------------
+ fs/ceph/debugfs.c               | 100 +++++++++-
+ fs/ceph/dir.c                   |  26 ++-
+ fs/ceph/export.c                |   9 +-
+ fs/ceph/file.c                  |  30 +++
+ fs/ceph/inode.c                 |   4 +-
+ fs/ceph/mds_client.c            |  48 ++++-
+ fs/ceph/mds_client.h            |  15 +-
+ fs/ceph/metric.c                | 148 ++++++++++++++
+ fs/ceph/metric.h                |  62 ++++++
+ fs/ceph/quota.c                 |  62 +++++-
+ fs/ceph/super.h                 |  34 +++-
+ fs/ceph/xattr.c                 |   4 +-
+ include/linux/ceph/libceph.h    |  13 +-
+ include/linux/ceph/mon_client.h |   2 +-
+ include/linux/ceph/osd_client.h |   8 +-
+ include/linux/ceph/osdmap.h     |  19 +-
+ include/linux/ceph/rados.h      |  14 ++
+ include/linux/crush/crush.h     |  14 +-
+ net/ceph/ceph_common.c          |  75 +++++++
+ net/ceph/crush/crush.c          |   3 +-
+ net/ceph/debugfs.c              |   6 +-
+ net/ceph/osd_client.c           | 103 +++++++++-
+ net/ceph/osdmap.c               | 363 +++++++++++++++++++++++++++++-----
+ 29 files changed, 1405 insertions(+), 252 deletions(-)
+ create mode 100644 fs/ceph/metric.c
+ create mode 100644 fs/ceph/metric.h
