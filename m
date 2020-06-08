@@ -2,205 +2,505 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E19C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 720A0C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6ECB206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:51:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44056206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:53:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nwOoyph2"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q9xBtCmL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729214AbgFHMv5 (ORCPT
+        id S1729424AbgFHMxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 08:51:57 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:46914 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729041AbgFHMvz (ORCPT
+        Mon, 8 Jun 2020 08:53:07 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:49133 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728245AbgFHMxC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 08:51:55 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 058CktmJ031202;
-        Mon, 8 Jun 2020 12:51:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=JDcagXN5IWgnkWEj/jglT9oGKYFcCwv8Ecb8T8hrDIM=;
- b=nwOoyph2HIYkEkWJ47UFPHLPrmmZGFrF7oO8k0qKJrcMrbN7KDjj5f1RPICGeSa2AyfN
- gIcLtqGpPhSszIMurJjPuG+tTJOk3zkypo3YWe9yGfXbH9k9uOGZTcNsjVcJWd5/Kw+b
- jEgnfd352G2nzwEUe0KJGPkGeMkfoTezrsWC6zSRIuGOgZL3YlOIPhcJJClewe5MgLCk
- oBZiw/EbTZ+m+dS2ewtVUg54gTeZE+x8X1gcvtdBnP2wxIHUmNTCdHXqCJPxg6KWo6e1
- AK7NsQ6Bh9IfDehcEeLGciHyqdbn5cO5Fc2DhZQ/7GCfmp88d+CKmWbUZioWTjpJWcFe Vw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 31g33kxpuc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 08 Jun 2020 12:51:39 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 058CmKgC002344;
-        Mon, 8 Jun 2020 12:51:38 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 31gmwpw71j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 08 Jun 2020 12:51:38 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 058CpaHM028413;
-        Mon, 8 Jun 2020 12:51:36 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 08 Jun 2020 05:51:35 -0700
-Date:   Mon, 8 Jun 2020 15:51:27 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Lukasz Luba <lukasz.luba@arm.com>
-Cc:     kbuild@lists.01.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com, lkp@intel.com,
-        Dan Carpenter <error27@gmail.com>, kbuild-all@lists.01.org,
-        Dietmar.Eggemann@arm.com, cw00.choi@samsung.com
-Subject: Re: [PATCH v8 4/8] PM / EM: add support for other devices than CPUs
- in Energy Model
-Message-ID: <20200608125127.GN22511@kadam>
-References: <20200608115155.GY30374@kadam>
- <b347fb60-46d3-e59c-59fa-a2b10932fc49@arm.com>
+        Mon, 8 Jun 2020 08:53:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591620779;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=pyZgoc1IoaMWB9Jefr7e/GoAFJJxo7imj3dgpBB/etA=;
+        b=Q9xBtCmLqPQ3iU8Jj6zxMDUkHZHgJXa1FekUy5CYBEPdi71YqS0K8NCoJVs8Hvm4o7mxnC
+        h5RWYOchhY8YbUsz/L1PRhfjSR3WNebmCxuv6Ofh3oMvnaOyfrdIO1dC+v74i0/hYZhVa9
+        13GvidL7SSd4RqPJbW5h4FH1Nu3y1Yw=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-344-yOtu8SYmMaWeFvrurBr7QQ-1; Mon, 08 Jun 2020 08:52:58 -0400
+X-MC-Unique: yOtu8SYmMaWeFvrurBr7QQ-1
+Received: by mail-wr1-f71.google.com with SMTP id m14so7110591wrj.12
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 05:52:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=pyZgoc1IoaMWB9Jefr7e/GoAFJJxo7imj3dgpBB/etA=;
+        b=g8j0ncm+jyy1wSdPXVkNidU7najGDPGcbODa0+wakj/RUD5AfNa5oE5uIwrXF3LPAY
+         QR2io6hQwyvAQu7h3y5ook+PCTI79myYZ8GhYrXvKgrsGC11K+IrxTcw0skbmTwqwKjf
+         WIqoDDWO3ipJ8HOLm0VDuC4zGSLbLf2nHlqQg3dmhGCbOwI8y0+8Yazmk5udlDdWwG5Q
+         facKuERkSOKVbjhtZ09fzi2Qy3vtk63zMpYmi+IBI0cYb+TiPqFH23lnR6rym5FtwU+O
+         OVq0Gurr9ldBbCl1boGFBQRKVjZNPxdsoNAv01InZbyB7RCJfDIK8XHJZbCNA7eZ9pnt
+         966w==
+X-Gm-Message-State: AOAM531hyyGRGWVVQT3kbobv6UPsCNNQNDuCrD1YjFX/tHuQukwXs1Sr
+        xW8oPLawLAKRaxjrxuBQcyEvt3EzKW5Ls+K2xjpN5Y+IR8z3dgK95ka6Dzk7gNq9jjRKZMv9UAk
+        s3g4gn/XCxFNYnuy/a661G0Gy
+X-Received: by 2002:a7b:cb93:: with SMTP id m19mr17016541wmi.165.1591620776335;
+        Mon, 08 Jun 2020 05:52:56 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzEdknqoJU3HSkUfhKPXzphp7+7B7/1HQpacB61dXsZyraKBYychpqxInl7px+4iWcK/8HI/Q==
+X-Received: by 2002:a7b:cb93:: with SMTP id m19mr17016499wmi.165.1591620775843;
+        Mon, 08 Jun 2020 05:52:55 -0700 (PDT)
+Received: from redhat.com (bzq-109-64-41-91.red.bezeqint.net. [109.64.41.91])
+        by smtp.gmail.com with ESMTPSA id g187sm22919251wma.17.2020.06.08.05.52.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jun 2020 05:52:55 -0700 (PDT)
+Date:   Mon, 8 Jun 2020 08:52:53 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
+        eperezma@redhat.com
+Subject: [PATCH RFC v6 01/11] vhost: option to fetch descriptors through an
+ independent struct
+Message-ID: <20200608125238.728563-2-mst@redhat.com>
+References: <20200608125238.728563-1-mst@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <b347fb60-46d3-e59c-59fa-a2b10932fc49@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9645 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0 adultscore=0
- mlxscore=0 mlxlogscore=999 bulkscore=0 malwarescore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006080095
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9645 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0 spamscore=0
- cotscore=-2147483648 malwarescore=0 phishscore=0 mlxscore=0 clxscore=1015
- lowpriorityscore=0 impostorscore=0 priorityscore=1501 mlxlogscore=999
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006080095
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200608125238.728563-1-mst@redhat.com>
+X-Mailer: git-send-email 2.24.1.751.gd10ce2899c
+X-Mutt-Fcc: =sent
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 01:34:37PM +0100, Lukasz Luba wrote:
-> Hi Dan,
-> 
-> Thank you for your analyzes.
-> 
-> On 6/8/20 12:51 PM, Dan Carpenter wrote:
-> > Hi Lukasz,
-> > 
-> > I love your patch! Perhaps something to improve:
-> > 
-> > url:    https://github.com/0day-ci/linux/commits/Lukasz-Luba/Add-support-for-devices-in-the-Energy-Model/20200527-180614
-> > base:   https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git linux-next
-> > 
-> > config: i386-randconfig-m021-20200605 (attached as .config)
-> > compiler: gcc-9 (Debian 9.3.0-13) 9.3.0
-> > 
-> > If you fix the issue, kindly add following tag as appropriate
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > 
-> > smatch warnings:
-> > kernel/power/energy_model.c:316 em_dev_register_perf_domain() error: we previously assumed 'dev->em_pd' could be null (see line 277)
-> > 
-> > # https://github.com/0day-ci/linux/commit/110d050cb7ba1c96e63ada498979d1fd99529be2
-> > git remote add linux-review https://github.com/0day-ci/linux
-> > git remote update linux-review
-> > git checkout 110d050cb7ba1c96e63ada498979d1fd99529be2
-> > vim +316 kernel/power/energy_model.c
-> > 
-> > 0e294e607adaf3 Lukasz Luba     2020-05-27  262  int em_dev_register_perf_domain(struct device *dev, unsigned int nr_states,
-> > 110d050cb7ba1c Lukasz Luba     2020-05-27  263  				struct em_data_callback *cb, cpumask_t *cpus)
-> > 27871f7a8a341e Quentin Perret  2018-12-03  264  {
-> > 27871f7a8a341e Quentin Perret  2018-12-03  265  	unsigned long cap, prev_cap = 0;
-> > 110d050cb7ba1c Lukasz Luba     2020-05-27  266  	int cpu, ret;
-> > 27871f7a8a341e Quentin Perret  2018-12-03  267
-> > 110d050cb7ba1c Lukasz Luba     2020-05-27  268  	if (!dev || !nr_states || !cb)
-> > 27871f7a8a341e Quentin Perret  2018-12-03  269  		return -EINVAL;
-> > 27871f7a8a341e Quentin Perret  2018-12-03  270
-> > 27871f7a8a341e Quentin Perret  2018-12-03  271  	/*
-> > 27871f7a8a341e Quentin Perret  2018-12-03  272  	 * Use a mutex to serialize the registration of performance domains and
-> > 27871f7a8a341e Quentin Perret  2018-12-03  273  	 * let the driver-defined callback functions sleep.
-> > 27871f7a8a341e Quentin Perret  2018-12-03  274  	 */
-> > 27871f7a8a341e Quentin Perret  2018-12-03  275  	mutex_lock(&em_pd_mutex);
-> > 27871f7a8a341e Quentin Perret  2018-12-03  276
-> > 110d050cb7ba1c Lukasz Luba     2020-05-27 @277  	if (dev->em_pd) {
-> >                                                              ^^^^^^^^^^
-> > Check for NULL.
-> > 
-> > 27871f7a8a341e Quentin Perret  2018-12-03  278  		ret = -EEXIST;
-> > 27871f7a8a341e Quentin Perret  2018-12-03  279  		goto unlock;
-> > 27871f7a8a341e Quentin Perret  2018-12-03  280  	}
-> > 27871f7a8a341e Quentin Perret  2018-12-03  281
-> > 110d050cb7ba1c Lukasz Luba     2020-05-27  282  	if (_is_cpu_device(dev)) {
-> > 110d050cb7ba1c Lukasz Luba     2020-05-27  283  		if (!cpus) {
-> > 110d050cb7ba1c Lukasz Luba     2020-05-27  284  			dev_err(dev, "EM: invalid CPU mask\n");
-> > 110d050cb7ba1c Lukasz Luba     2020-05-27  285  			ret = -EINVAL;
-> > 110d050cb7ba1c Lukasz Luba     2020-05-27  286  			goto unlock;
-> > 110d050cb7ba1c Lukasz Luba     2020-05-27  287  		}
-> > 110d050cb7ba1c Lukasz Luba     2020-05-27  288
-> > 110d050cb7ba1c Lukasz Luba     2020-05-27  289  		for_each_cpu(cpu, cpus) {
-> > 110d050cb7ba1c Lukasz Luba     2020-05-27  290  			if (em_cpu_get(cpu)) {
-> > 110d050cb7ba1c Lukasz Luba     2020-05-27  291  				dev_err(dev, "EM: exists for CPU%d\n", cpu);
-> > 110d050cb7ba1c Lukasz Luba     2020-05-27  292  				ret = -EEXIST;
-> > 110d050cb7ba1c Lukasz Luba     2020-05-27  293  				goto unlock;
-> > 110d050cb7ba1c Lukasz Luba     2020-05-27  294  			}
-> > 27871f7a8a341e Quentin Perret  2018-12-03  295  			/*
-> > 110d050cb7ba1c Lukasz Luba     2020-05-27  296  			 * All CPUs of a domain must have the same
-> > 110d050cb7ba1c Lukasz Luba     2020-05-27  297  			 * micro-architecture since they all share the same
-> > 110d050cb7ba1c Lukasz Luba     2020-05-27  298  			 * table.
-> > 27871f7a8a341e Quentin Perret  2018-12-03  299  			 */
-> > 8ec59c0f5f4966 Vincent Guittot 2019-06-17  300  			cap = arch_scale_cpu_capacity(cpu);
-> > 27871f7a8a341e Quentin Perret  2018-12-03  301  			if (prev_cap && prev_cap != cap) {
-> > 110d050cb7ba1c Lukasz Luba     2020-05-27  302  				dev_err(dev, "EM: CPUs of %*pbl must have the same capacity\n",
-> > 110d050cb7ba1c Lukasz Luba     2020-05-27  303  					cpumask_pr_args(cpus));
-> > 110d050cb7ba1c Lukasz Luba     2020-05-27  304
-> > 27871f7a8a341e Quentin Perret  2018-12-03  305  				ret = -EINVAL;
-> > 27871f7a8a341e Quentin Perret  2018-12-03  306  				goto unlock;
-> > 27871f7a8a341e Quentin Perret  2018-12-03  307  			}
-> > 27871f7a8a341e Quentin Perret  2018-12-03  308  			prev_cap = cap;
-> > 27871f7a8a341e Quentin Perret  2018-12-03  309  		}
-> > 110d050cb7ba1c Lukasz Luba     2020-05-27  310  	}
-> > 27871f7a8a341e Quentin Perret  2018-12-03  311
-> > 110d050cb7ba1c Lukasz Luba     2020-05-27  312  	ret = em_create_pd(dev, nr_states, cb, cpus);
-> > 
-> > 
-> > If it's a _is_cpu_device() then it iterates through a bunch of devices
-> > and sets up cpu_dev->em_pd for each.  Presumably one of the devices is
-> > "dev" or this would crash pretty early on in testing?
-> 
-> Yes, all of the devices taken from 'cpus' mask will get the em_pd set
-> including the suspected @dev.
-> To calm down this static analyzer I can remove the 'else'
-> in line 204 to make 'dev->em_pd = pd' set always.
-> 199         if (_is_cpu_device(dev))
-> 200                 for_each_cpu(cpu, cpus) {
-> 201                         cpu_dev = get_cpu_device(cpu);
-> 202                         cpu_dev->em_pd = pd;
-> 203                 }
-> 204         else
-> 205                 dev->em_pd = pd;
-> 
-> 
-> Do you think it's a good solution and will work for this tool?
+The idea is to support multiple ring formats by converting
+to a format-independent array of descriptors.
 
-It's not about the tool...  Ignore the tool when it's wrong.  But I do
-think the code is slightly more clear without the else statement.
+This costs extra cycles, but we gain in ability
+to fetch a batch of descriptors in one go, which
+is good for code cache locality.
 
-Arguments could be made either way.  Removing the else statement means
-we set dev->em_pd twice...  But I *personally* lean vaguely towards
-removing the else statement.  :P
+When used, this causes a minor performance degradation,
+it's been kept as simple as possible for ease of review.
+A follow-up patch gets us back the performance by adding batching.
 
-That would make the warning go away as well.
+To simplify benchmarking, I kept the old code around so one can switch
+back and forth between old and new code. This will go away in the final
+submission.
 
-regards,
-dan carpenter
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Signed-off-by: Eugenio Pérez <eperezma@redhat.com>
+Link: https://lore.kernel.org/r/20200401183118.8334-2-eperezma@redhat.com
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+---
+ drivers/vhost/vhost.c | 305 +++++++++++++++++++++++++++++++++++++++++-
+ drivers/vhost/vhost.h |  16 +++
+ 2 files changed, 320 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+index 172da092107e..180b7b58c76b 100644
+--- a/drivers/vhost/vhost.c
++++ b/drivers/vhost/vhost.c
+@@ -303,6 +303,7 @@ static void vhost_vq_reset(struct vhost_dev *dev,
+ 			   struct vhost_virtqueue *vq)
+ {
+ 	vq->num = 1;
++	vq->ndescs = 0;
+ 	vq->desc = NULL;
+ 	vq->avail = NULL;
+ 	vq->used = NULL;
+@@ -373,6 +374,9 @@ static int vhost_worker(void *data)
+ 
+ static void vhost_vq_free_iovecs(struct vhost_virtqueue *vq)
+ {
++	kfree(vq->descs);
++	vq->descs = NULL;
++	vq->max_descs = 0;
+ 	kfree(vq->indirect);
+ 	vq->indirect = NULL;
+ 	kfree(vq->log);
+@@ -389,6 +393,10 @@ static long vhost_dev_alloc_iovecs(struct vhost_dev *dev)
+ 
+ 	for (i = 0; i < dev->nvqs; ++i) {
+ 		vq = dev->vqs[i];
++		vq->max_descs = dev->iov_limit;
++		vq->descs = kmalloc_array(vq->max_descs,
++					  sizeof(*vq->descs),
++					  GFP_KERNEL);
+ 		vq->indirect = kmalloc_array(UIO_MAXIOV,
+ 					     sizeof(*vq->indirect),
+ 					     GFP_KERNEL);
+@@ -396,7 +404,7 @@ static long vhost_dev_alloc_iovecs(struct vhost_dev *dev)
+ 					GFP_KERNEL);
+ 		vq->heads = kmalloc_array(dev->iov_limit, sizeof(*vq->heads),
+ 					  GFP_KERNEL);
+-		if (!vq->indirect || !vq->log || !vq->heads)
++		if (!vq->indirect || !vq->log || !vq->heads || !vq->descs)
+ 			goto err_nomem;
+ 	}
+ 	return 0;
+@@ -488,6 +496,8 @@ void vhost_dev_init(struct vhost_dev *dev,
+ 
+ 	for (i = 0; i < dev->nvqs; ++i) {
+ 		vq = dev->vqs[i];
++		vq->descs = NULL;
++		vq->max_descs = 0;
+ 		vq->log = NULL;
+ 		vq->indirect = NULL;
+ 		vq->heads = NULL;
+@@ -2315,6 +2325,299 @@ int vhost_get_vq_desc(struct vhost_virtqueue *vq,
+ }
+ EXPORT_SYMBOL_GPL(vhost_get_vq_desc);
+ 
++static struct vhost_desc *peek_split_desc(struct vhost_virtqueue *vq)
++{
++	BUG_ON(!vq->ndescs);
++	return &vq->descs[vq->ndescs - 1];
++}
++
++static void pop_split_desc(struct vhost_virtqueue *vq)
++{
++	BUG_ON(!vq->ndescs);
++	--vq->ndescs;
++}
++
++#define VHOST_DESC_FLAGS (VRING_DESC_F_INDIRECT | VRING_DESC_F_WRITE | \
++			  VRING_DESC_F_NEXT)
++static int push_split_desc(struct vhost_virtqueue *vq, struct vring_desc *desc, u16 id)
++{
++	struct vhost_desc *h;
++
++	if (unlikely(vq->ndescs >= vq->max_descs))
++		return -EINVAL;
++	h = &vq->descs[vq->ndescs++];
++	h->addr = vhost64_to_cpu(vq, desc->addr);
++	h->len = vhost32_to_cpu(vq, desc->len);
++	h->flags = vhost16_to_cpu(vq, desc->flags) & VHOST_DESC_FLAGS;
++	h->id = id;
++
++	return 0;
++}
++
++static int fetch_indirect_descs(struct vhost_virtqueue *vq,
++				struct vhost_desc *indirect,
++				u16 head)
++{
++	struct vring_desc desc;
++	unsigned int i = 0, count, found = 0;
++	u32 len = indirect->len;
++	struct iov_iter from;
++	int ret;
++
++	/* Sanity check */
++	if (unlikely(len % sizeof desc)) {
++		vq_err(vq, "Invalid length in indirect descriptor: "
++		       "len 0x%llx not multiple of 0x%zx\n",
++		       (unsigned long long)len,
++		       sizeof desc);
++		return -EINVAL;
++	}
++
++	ret = translate_desc(vq, indirect->addr, len, vq->indirect,
++			     UIO_MAXIOV, VHOST_ACCESS_RO);
++	if (unlikely(ret < 0)) {
++		if (ret != -EAGAIN)
++			vq_err(vq, "Translation failure %d in indirect.\n", ret);
++		return ret;
++	}
++	iov_iter_init(&from, READ, vq->indirect, ret, len);
++
++	/* We will use the result as an address to read from, so most
++	 * architectures only need a compiler barrier here. */
++	read_barrier_depends();
++
++	count = len / sizeof desc;
++	/* Buffers are chained via a 16 bit next field, so
++	 * we can have at most 2^16 of these. */
++	if (unlikely(count > USHRT_MAX + 1)) {
++		vq_err(vq, "Indirect buffer length too big: %d\n",
++		       indirect->len);
++		return -E2BIG;
++	}
++	if (unlikely(vq->ndescs + count > vq->max_descs)) {
++		vq_err(vq, "Too many indirect + direct descs: %d + %d\n",
++		       vq->ndescs, indirect->len);
++		return -E2BIG;
++	}
++
++	do {
++		if (unlikely(++found > count)) {
++			vq_err(vq, "Loop detected: last one at %u "
++			       "indirect size %u\n",
++			       i, count);
++			return -EINVAL;
++		}
++		if (unlikely(!copy_from_iter_full(&desc, sizeof(desc), &from))) {
++			vq_err(vq, "Failed indirect descriptor: idx %d, %zx\n",
++			       i, (size_t)indirect->addr + i * sizeof desc);
++			return -EINVAL;
++		}
++		if (unlikely(desc.flags & cpu_to_vhost16(vq, VRING_DESC_F_INDIRECT))) {
++			vq_err(vq, "Nested indirect descriptor: idx %d, %zx\n",
++			       i, (size_t)indirect->addr + i * sizeof desc);
++			return -EINVAL;
++		}
++
++		/* Note: push_split_desc can't fail here:
++		 * we never fetch unless there's space. */
++		ret = push_split_desc(vq, &desc, head);
++		WARN_ON(ret);
++	} while ((i = next_desc(vq, &desc)) != -1);
++	return 0;
++}
++
++/* This function returns a value > 0 if a descriptor was found, or 0 if none were found.
++ * A negative code is returned on error. */
++static int fetch_descs(struct vhost_virtqueue *vq)
++{
++	unsigned int i, head, found = 0;
++	struct vhost_desc *last;
++	struct vring_desc desc;
++	__virtio16 avail_idx;
++	__virtio16 ring_head;
++	u16 last_avail_idx;
++	int ret;
++
++	/* Check it isn't doing very strange things with descriptor numbers. */
++	last_avail_idx = vq->last_avail_idx;
++
++	if (vq->avail_idx == vq->last_avail_idx) {
++		if (unlikely(vhost_get_avail_idx(vq, &avail_idx))) {
++			vq_err(vq, "Failed to access avail idx at %p\n",
++				&vq->avail->idx);
++			return -EFAULT;
++		}
++		vq->avail_idx = vhost16_to_cpu(vq, avail_idx);
++
++		if (unlikely((u16)(vq->avail_idx - last_avail_idx) > vq->num)) {
++			vq_err(vq, "Guest moved used index from %u to %u",
++				last_avail_idx, vq->avail_idx);
++			return -EFAULT;
++		}
++
++		/* If there's nothing new since last we looked, return
++		 * invalid.
++		 */
++		if (vq->avail_idx == last_avail_idx)
++			return 0;
++
++		/* Only get avail ring entries after they have been
++		 * exposed by guest.
++		 */
++		smp_rmb();
++	}
++
++	/* Grab the next descriptor number they're advertising */
++	if (unlikely(vhost_get_avail_head(vq, &ring_head, last_avail_idx))) {
++		vq_err(vq, "Failed to read head: idx %d address %p\n",
++		       last_avail_idx,
++		       &vq->avail->ring[last_avail_idx % vq->num]);
++		return -EFAULT;
++	}
++
++	head = vhost16_to_cpu(vq, ring_head);
++
++	/* If their number is silly, that's an error. */
++	if (unlikely(head >= vq->num)) {
++		vq_err(vq, "Guest says index %u > %u is available",
++		       head, vq->num);
++		return -EINVAL;
++	}
++
++	i = head;
++	do {
++		if (unlikely(i >= vq->num)) {
++			vq_err(vq, "Desc index is %u > %u, head = %u",
++			       i, vq->num, head);
++			return -EINVAL;
++		}
++		if (unlikely(++found > vq->num)) {
++			vq_err(vq, "Loop detected: last one at %u "
++			       "vq size %u head %u\n",
++			       i, vq->num, head);
++			return -EINVAL;
++		}
++		ret = vhost_get_desc(vq, &desc, i);
++		if (unlikely(ret)) {
++			vq_err(vq, "Failed to get descriptor: idx %d addr %p\n",
++			       i, vq->desc + i);
++			return -EFAULT;
++		}
++		ret = push_split_desc(vq, &desc, head);
++		if (unlikely(ret)) {
++			vq_err(vq, "Failed to save descriptor: idx %d\n", i);
++			return -EINVAL;
++		}
++	} while ((i = next_desc(vq, &desc)) != -1);
++
++	last = peek_split_desc(vq);
++	if (unlikely(last->flags & VRING_DESC_F_INDIRECT)) {
++		pop_split_desc(vq);
++		ret = fetch_indirect_descs(vq, last, head);
++		if (unlikely(ret < 0)) {
++			if (ret != -EAGAIN)
++				vq_err(vq, "Failure detected "
++				       "in indirect descriptor at idx %d\n", head);
++			return ret;
++		}
++	}
++
++	/* Assume notifications from guest are disabled at this point,
++	 * if they aren't we would need to update avail_event index. */
++	BUG_ON(!(vq->used_flags & VRING_USED_F_NO_NOTIFY));
++
++	/* On success, increment avail index. */
++	vq->last_avail_idx++;
++
++	return 1;
++}
++
++/* This looks in the virtqueue and for the first available buffer, and converts
++ * it to an iovec for convenient access.  Since descriptors consist of some
++ * number of output then some number of input descriptors, it's actually two
++ * iovecs, but we pack them into one and note how many of each there were.
++ *
++ * This function returns the descriptor number found, or vq->num (which is
++ * never a valid descriptor number) if none was found.  A negative code is
++ * returned on error. */
++int vhost_get_vq_desc_batch(struct vhost_virtqueue *vq,
++		      struct iovec iov[], unsigned int iov_size,
++		      unsigned int *out_num, unsigned int *in_num,
++		      struct vhost_log *log, unsigned int *log_num)
++{
++	int ret = fetch_descs(vq);
++	int i;
++
++	if (ret <= 0)
++		goto err_fetch;
++
++	/* Now convert to IOV */
++	/* When we start there are none of either input nor output. */
++	*out_num = *in_num = 0;
++	if (unlikely(log))
++		*log_num = 0;
++
++	for (i = 0; i < vq->ndescs; ++i) {
++		unsigned iov_count = *in_num + *out_num;
++		struct vhost_desc *desc = &vq->descs[i];
++		int access;
++
++		if (desc->flags & ~VHOST_DESC_FLAGS) {
++			vq_err(vq, "Unexpected flags: 0x%x at descriptor id 0x%x\n",
++			       desc->flags, desc->id);
++			ret = -EINVAL;
++			goto err;
++		}
++		if (desc->flags & VRING_DESC_F_WRITE)
++			access = VHOST_ACCESS_WO;
++		else
++			access = VHOST_ACCESS_RO;
++		ret = translate_desc(vq, desc->addr,
++				     desc->len, iov + iov_count,
++				     iov_size - iov_count, access);
++		if (unlikely(ret < 0)) {
++			if (ret != -EAGAIN)
++				vq_err(vq, "Translation failure %d descriptor idx %d\n",
++					ret, i);
++			goto err;
++		}
++		if (access == VHOST_ACCESS_WO) {
++			/* If this is an input descriptor,
++			 * increment that count. */
++			*in_num += ret;
++			if (unlikely(log && ret)) {
++				log[*log_num].addr = desc->addr;
++				log[*log_num].len = desc->len;
++				++*log_num;
++			}
++		} else {
++			/* If it's an output descriptor, they're all supposed
++			 * to come before any input descriptors. */
++			if (unlikely(*in_num)) {
++				vq_err(vq, "Descriptor has out after in: "
++				       "idx %d\n", i);
++				ret = -EINVAL;
++				goto err;
++			}
++			*out_num += ret;
++		}
++
++		ret = desc->id;
++	}
++
++	vq->ndescs = 0;
++
++	return ret;
++
++err:
++	vhost_discard_vq_desc(vq, 1);
++err_fetch:
++	vq->ndescs = 0;
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(vhost_get_vq_desc_batch);
++
+ /* Reverse the effect of vhost_get_vq_desc. Useful for error handling. */
+ void vhost_discard_vq_desc(struct vhost_virtqueue *vq, int n)
+ {
+diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+index c8e96a095d3b..87089d51490d 100644
+--- a/drivers/vhost/vhost.h
++++ b/drivers/vhost/vhost.h
+@@ -60,6 +60,13 @@ enum vhost_uaddr_type {
+ 	VHOST_NUM_ADDRS = 3,
+ };
+ 
++struct vhost_desc {
++	u64 addr;
++	u32 len;
++	u16 flags; /* VRING_DESC_F_WRITE, VRING_DESC_F_NEXT */
++	u16 id;
++};
++
+ /* The virtqueue structure describes a queue attached to a device. */
+ struct vhost_virtqueue {
+ 	struct vhost_dev *dev;
+@@ -71,6 +78,11 @@ struct vhost_virtqueue {
+ 	vring_avail_t __user *avail;
+ 	vring_used_t __user *used;
+ 	const struct vhost_iotlb_map *meta_iotlb[VHOST_NUM_ADDRS];
++
++	struct vhost_desc *descs;
++	int ndescs;
++	int max_descs;
++
+ 	struct file *kick;
+ 	struct eventfd_ctx *call_ctx;
+ 	struct eventfd_ctx *error_ctx;
+@@ -177,6 +189,10 @@ long vhost_vring_ioctl(struct vhost_dev *d, unsigned int ioctl, void __user *arg
+ bool vhost_vq_access_ok(struct vhost_virtqueue *vq);
+ bool vhost_log_access_ok(struct vhost_dev *);
+ 
++int vhost_get_vq_desc_batch(struct vhost_virtqueue *,
++		      struct iovec iov[], unsigned int iov_count,
++		      unsigned int *out_num, unsigned int *in_num,
++		      struct vhost_log *log, unsigned int *log_num);
+ int vhost_get_vq_desc(struct vhost_virtqueue *,
+ 		      struct iovec iov[], unsigned int iov_count,
+ 		      unsigned int *out_num, unsigned int *in_num,
+-- 
+MST
 
