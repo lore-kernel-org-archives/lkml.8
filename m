@@ -2,166 +2,152 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42328C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92DC7C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CAF32063A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:42:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6072120775
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:42:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IUlTeRvU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EQi7Q05s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726100AbgFHSmC (ORCPT
+        id S1726105AbgFHSm3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 14:42:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53106 "EHLO
+        Mon, 8 Jun 2020 14:42:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726027AbgFHSl7 (ORCPT
+        with ESMTP id S1725868AbgFHSm2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 14:41:59 -0400
-Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4D52C08C5C2
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 11:41:58 -0700 (PDT)
-Received: by mail-lj1-x232.google.com with SMTP id n23so21813738ljh.7
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 11:41:58 -0700 (PDT)
+        Mon, 8 Jun 2020 14:42:28 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95691C08C5C2;
+        Mon,  8 Jun 2020 11:42:28 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id a25so21821867ljp.3;
+        Mon, 08 Jun 2020 11:42:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xdYVMi4TB1AynZV/TE42S+K8GYgFVjpwEvPiHdeHwW0=;
-        b=IUlTeRvUgK8FEJG+Sn6jQfueJQe1C/imU4WYRWV2PuXL0DIMXxcRLd3RBoYavNHScZ
-         vX2zz4xElfE07LNxxcY2PcKOxWZWYDTr8eMWppKxcAh/KsojiLKR0rLTYeoejnobKNG2
-         pZZpZMagWFDlGfMHVB9lzDhGFxuyRd9QkEU5pjXEJUfHLdAGS+6qV2MaQqpWxMcvG49q
-         Iulw8WcBepoCEeFsp2tPHSSde26hUfJCgue82fduBrgy5NlOaekOMZ0Hch2/fBWLkiYF
-         8BspwkgWLKWZedKJ76UM/ofI/g9mHhZeGTfF/87eYzZ17X6TjR5lB+2Y3N9AL7r9yqi1
-         gSjA==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9KtGypd9O3mkYSni3haeyAzkPLbqdCH0D7DlGVhpZjw=;
+        b=EQi7Q05sApuRKinL0weqgIZ+qtNLmOyyNoTVeNKrqARzk6pjV4hDiK0+YlgsiQYMpz
+         rKCcHDJGdNg1byzLxnXS6IBvppM3bFYsiiDqd/UzaZyj1HoYS7bQbJKkDyZpWQ2GEF8p
+         coCy/q/gwJlTB5Wnyuj5kBpcAGuskwFgdp1vEFrKWCa06+aBsVnnA3XO5QrTK3GCnSIC
+         q/qdRKwtCJMr5wqf11Zt0JOhyV+YNGbNEQCxHzCJDlYpa0NwUzVLWotSe7zK9sY2VJFd
+         pcyAIaK08Yvsv/v4MaVFnhnMuC+6SDkZpK5108yo66mA1Wpu493hsL/RWswyTLEjN6di
+         lbqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xdYVMi4TB1AynZV/TE42S+K8GYgFVjpwEvPiHdeHwW0=;
-        b=ErEvR3d82HUeSxUNSCdW8Z9nIIJPjJfqCqM+H9OXhEnl8VISgnmM/ae+x6/jH4rs7M
-         SkkqGlnhelbP4aahUzXvefD+b1QZMpx5b3JOIZ4L6MFE2G/SGPxgFMK3ZZjOb51Sv1pc
-         ksnOFv8c1TMtvZth9DnXH/AJQVzepYEJHIxJx83JT2rCQYsgqTGvf68/LdIlAZFQ86l2
-         nyWluj6MnqcUvCd4pt/4fRqnWOteqsPlvRPfIkG4SkgQBFv8/EVvDXnx1FwQkV+MQJrk
-         KF9Yp19ID73AfibXu4fK7QoBQoV/XmGXv2OOJZ289yx5FnYHF/yOgWyB+FgJHweZZskX
-         Y8cg==
-X-Gm-Message-State: AOAM5311s1baVQjqkrj1eQdaODGHA2f34+iiQ9j3oHrxh+sz1lyk4Obz
-        tgXHmzZqlIr+6obnHTPkyrR/x3/n+tYHAXgSEW6dJQ==
-X-Google-Smtp-Source: ABdhPJzTbJz0aBGuHmzGA+lFFgmNz5sWB5R746ny52RgSF2CDnKe0/GyLz0cvZeq0OMLOIp+8mvZ6xdkOTsXbpZwDuA=
-X-Received: by 2002:a2e:908f:: with SMTP id l15mr7160592ljg.307.1591641716733;
- Mon, 08 Jun 2020 11:41:56 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9KtGypd9O3mkYSni3haeyAzkPLbqdCH0D7DlGVhpZjw=;
+        b=OTV9ElaStklNM1pzyl3SesOSvjQgK3pNd3NESfHIA0tt5Z8IcqSgRyIJYDiL4rRqB/
+         d0u0iq4yBx8vfXEwOO9O34uTkiN0IcWulTEwslWGyhpZ64tRDaUu2omHBlw/NEACxtjA
+         f8G0lYOEk1uKXYz8wO7J8cHTDfvvW4DGgZduJZn5uqn5nDMy1P2MHHmujFnAfOHwfcKT
+         7XXNyZs4TpUzqJRgVEjfjlO2ntB5xTY+SSmfAp5jmdwCjf+q+AUEKoQ7GgmIfIPErRHY
+         N0As1Vjjyn8xbl97cLqHAcpU8VyUp2zOmbs48QJHT0fXUsxqvhr5HFsB93u83FRYRYXg
+         BCqw==
+X-Gm-Message-State: AOAM530/R4bJj5dTYDWaoln9vdaks5vlcp9shz8JJ3cEf2qb65VQtB1O
+        zn7cYenXm3JEgvwHwpcULEY=
+X-Google-Smtp-Source: ABdhPJwic3xfHer3oWZ0zX8I7mh+bnifoX6KvHs0VAbxX+HeZIeWgS2ec3WZvMRw1viBDesSnAaraQ==
+X-Received: by 2002:a05:651c:cc:: with SMTP id 12mr11940769ljr.397.1591641747059;
+        Mon, 08 Jun 2020 11:42:27 -0700 (PDT)
+Received: from rikard (h-82-196-111-136.NA.cust.bahnhof.se. [82.196.111.136])
+        by smtp.gmail.com with ESMTPSA id r13sm3883494ljh.66.2020.06.08.11.42.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jun 2020 11:42:26 -0700 (PDT)
+From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
+X-Google-Original-From: Rikard Falkeborn <rikard.falkeborn>
+Date:   Mon, 8 Jun 2020 20:42:22 +0200
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Rikard Falkeborn <rikard.falkeborn@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, emil.l.velikov@gmail.com,
+        Kees Cook <keescook@chromium.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kbuild test robot <lkp@intel.com>, syednwaris@gmail.com,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v2 2/2] bits: Add tests of GENMASK
+Message-ID: <20200608184222.GA899@rikard>
+References: <20200604233003.GA102768@rikard>
+ <20200607203411.70913-1-rikard.falkeborn@gmail.com>
+ <20200607203411.70913-2-rikard.falkeborn@gmail.com>
+ <CAMuHMdVm_ptUipb==jt1aL4RLcRU=OHawV1j4xfB1_z7S-FPxQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200602050626.GA2174820@kroah.com> <CAA93t1puWzFx=1h0xkZEkpzPJJbBAF7ONL_wicSGxHjq7KL+WA@mail.gmail.com>
- <20200603060751.GA465970@kroah.com> <CACK8Z6EXDf2vUuJbKm18R6HovwUZia4y_qUrTW8ZW+8LA2+RgA@mail.gmail.com>
- <20200603121613.GA1488883@kroah.com> <CACK8Z6EOGduHX1m7eyhFgsGV7CYiVN0en4U0cM4BEWJwk2bmoA@mail.gmail.com>
- <20200605080229.GC2209311@kroah.com> <CACK8Z6GR7-wseug=TtVyRarVZX_ao2geoLDNBwjtB+5Y7VWNEQ@mail.gmail.com>
- <20200607113632.GA49147@kroah.com> <CAJmaN=m5cGc8019LocvHTo-1U6beA9-h=T-YZtQEYEb_ry=b+Q@mail.gmail.com>
- <20200608175015.GA457685@kroah.com> <CAJmaN=mvnrLLkJC=6ddO_Rj+1FpRHoQzWFo9W3AZmsW_qS5CYQ@mail.gmail.com>
-In-Reply-To: <CAJmaN=mvnrLLkJC=6ddO_Rj+1FpRHoQzWFo9W3AZmsW_qS5CYQ@mail.gmail.com>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Mon, 8 Jun 2020 11:41:19 -0700
-Message-ID: <CACK8Z6GZprVZMM=JQ-9zjosYQ6OLpifp_g8RmSTa3HwWWTB8Lw@mail.gmail.com>
-Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
- "whitelisted" drivers
-To:     Jesse Barnes <jsbarnes@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Zubin Mithra <zsm@google.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVm_ptUipb==jt1aL4RLcRU=OHawV1j4xfB1_z7S-FPxQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jesse and Greg,
-
-On Mon, Jun 8, 2020 at 11:30 AM Jesse Barnes <jsbarnes@google.com> wrote:
->
-> > > I think your suggestion to disable driver binding once the initial
-> > > bus/slot devices have been bound will probably work for this
-> > > situation.  I just wanted to be clear that without some auditing,
-> > > fuzzing, and additional testing, we simply have to assume that drivers
-> > > are *not* secure and avoid using them on untrusted devices until we're
-> > > fairly confident they can handle them (whether just misbehaving or
-> > > malicious), in combination with other approaches like IOMMUs of
-> > > course.  And this isn't because we don't trust driver authors or
-> > > kernel developers to dtrt, it's just that for many devices (maybe USB
-> > > is an exception) I think driver authors haven't had to consider this
-> > > case much, and so I think it's prudent to expect bugs in this area
-> > > that we need to find & fix.
+On Mon, Jun 08, 2020 at 09:33:05AM +0200, Geert Uytterhoeven wrote:
+> Hi Richard,
+> 
+> Thanks for your patch!
+> 
+> On Sun, Jun 7, 2020 at 10:35 PM Rikard Falkeborn
+> <rikard.falkeborn@gmail.com> wrote:
+> > Add tests of GENMASK and GENMASK_ULL.
 > >
-> > For USB, yes, we have now had to deal with "untrusted devices" lieing
-> > about their ids and sending us horrible data.  That's all due to the
-> > fuzzing tools that have been written over the past few years, and now we
-> > have some of those in the kernel tree itself to help with that testing.
+> > A few test cases that should fail compilation are provided under ifdef.
+> 
+> It doesn't hurt to mention the name of the #ifdef here.
+> 
+> > Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+> 
+> > --- /dev/null
+> > +++ b/lib/test_bits.c
+> > @@ -0,0 +1,73 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + * Test cases for functions and macrso in bits.h
+> > + */
+> > +
+> > +#include <kunit/test.h>
+> > +#include <linux/bits.h>
+> > +
+> > +
+> > +void genmask_test(struct kunit *test)
+> > +{
+> > +       KUNIT_EXPECT_EQ(test, 1ul, GENMASK(0, 0));
+> > +       KUNIT_EXPECT_EQ(test, 3ul, GENMASK(1, 0));
+> > +       KUNIT_EXPECT_EQ(test, 6ul, GENMASK(2, 1));
+> > +       KUNIT_EXPECT_EQ(test, 0xFFFFFFFFul, GENMASK(31, 0));
+> > +
+> > +#ifdef TEST_BITS_COMPILE
+> 
+> "#ifdef TEST_GENMASK_FAILURES"?
 
-This is great to hear! I tried to look up but didn't find anything
-else in-kernel, except the kcov support to export coverage info for
-userspace fuzzers. Can you please give us some pointers for in-kernel
-fuzzing tools?
+Much better! I'll update that (and add the ifdef to the commit message)
+for v3.
 
-> >
-> > For PCI, heh, good luck, those assumptions about "devices sending valid
-> > data" are everywhere, if our experience with USB is any indication.
-> >
-> > But, to take USB as an example, this is exactly what the USB
-> > "authorized" flag is there for, it's a "trust" setting that userspace
-> > has control over.  This came from the wireless USB spec, where it was
-> > determined that you could not trust devices.  So just use that same
-> > model here, move it to the driver core for all busses to use and you
-> > should be fine.
-> >
-> > If that doesn't meet your needs, please let me know the specifics of
-> > why, with patches :)
->
-> Yeah will do for sure.  I don't want to carry a big infra for this on our own!
->
-> > Now, as to you all getting some sort of "Hardware flag" to determine
-> > "inside" vs. "outside" devices, hah, good luck!  It took us a long time
-> > to get that for USB, and even then, BIOSes lie and get it wrong all the
-> > time.  So you will have to also deal with that in some way, for your
-> > userspace policy.
->
-> I think that's inherently platform specific to some extent.  We can do
-> it with our coreboot based firmware, but there's no guarantee other
-> vendors will adopt the same approach.  But I think at least for the
-> ChromeOS ecosystem we can come up with something that'll work, and
-> allow us to dtrt in userspace wrt driver binding.
+Thanks
 
-Agree, we can work with our firmware teams to get that right, and then
-expose it from kernel to userspace to help it implement the policy we
-want.
-
-Thanks & Best Regards,
-
-Rajat
-
->
-> Thanks,
-> Jesse
+Rikard
+> 
+> > +       /* these should fail compilation */
+> > +       GENMASK(0, 1);
+> > +       GENMASK(0, 10);
+> > +       GENMASK(9, 10);
+> > +#endif
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> -- 
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
