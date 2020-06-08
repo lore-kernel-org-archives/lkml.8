@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C07B6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C71C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8628020775
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:25:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8C8220775
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:25:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662333;
-	bh=AOqm3Fgp/+ECFDkKYPL67fC7r9lGY6j3IklwCRudwTk=;
+	s=default; t=1591662336;
+	bh=Fq08WiGXR6FwbLRZUz7UkKFRbZajXaHYhJA5CPalye4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s9aeZcBOGdg59hFQdLINKqGXnpiLd4CfiAxTPv8PSGJiDrzr/X7WpisXbqXpCNahq
-	 9kgR8p82Ie1c4yPSbsPPscrPyopMCj3NZhkqsQZgC0AsL/UMu0EybISFOvi475kV4C
-	 HbyizATf0dpVb3AxsjXVEnpQIQ+RvqtuxmvctvSI=
+	b=fZTleiBPUaWjf/1Ml6NCo8rpqPTOgP8KSJS2HE6uE2eLTCYxeWdtqzxgah8+4tHHW
+	 XKYkwWLqqFGxodpCsnlywj8npj7pycSPv9SN5Mow3fBeLrOiyO/QpwEu2lYUEYUI7v
+	 E7NHl5Y0zCBWjolX+FUwmnrJb3/fhcMfPFXbv60I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730371AbgFHXQ4 (ORCPT
+        id S1732962AbgFIAZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:16:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33906 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:25:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38350 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728813AbgFHXN5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:13:57 -0400
+        id S1730368AbgFHXQ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:16:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AB6C21527;
-        Mon,  8 Jun 2020 23:13:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9166B2086A;
+        Mon,  8 Jun 2020 23:16:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658036;
-        bh=AOqm3Fgp/+ECFDkKYPL67fC7r9lGY6j3IklwCRudwTk=;
+        s=default; t=1591658216;
+        bh=Fq08WiGXR6FwbLRZUz7UkKFRbZajXaHYhJA5CPalye4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gJ6pKdvVbrVwu8aiArkJ8OjSufGr4VyO5H+DAOhN3XZCIoZQvu5xXh7qMoa43xIzq
-         chdA/Q7iUmEWHhOYNcenhFgEzkhf+9HeVqhk+sUhZehSTH60kNGf1O/IgFnkF4sV+U
-         R6/52VlN9rc0bUb+4xZpO8fCAp6z1pK0XHIbsGWM=
+        b=QOZi2ymahb+IfL4B35bBNUnYcCh737K8CxPG9B9tAfi7JSK2Bj2W9ly+a+62g67aQ
+         roJ3f0VJNDicKFwkAfXskQyyGyAWpgdMSzOR46C5Re4cVFOdcQOPT1f0NkHu10QuAg
+         Gm9YzoRKOZjikeJar4b5R5Xa2qw6pY35tuI2DwvM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Biggers <ebiggers@google.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Richard Weinberger <richard@nod.at>,
-        Sasha Levin <sashal@kernel.org>, linux-mtd@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 086/606] ubifs: fix wrong use of crypto_shash_descsize()
-Date:   Mon,  8 Jun 2020 19:03:31 -0400
-Message-Id: <20200608231211.3363633-86-sashal@kernel.org>
+Cc:     Moshe Shemesh <moshe@mellanox.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        netdev@vger.kernel.org, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 232/606] net/mlx5e: Update netdev txq on completions during closure
+Date:   Mon,  8 Jun 2020 19:05:57 -0400
+Message-Id: <20200608231211.3363633-232-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -60,109 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Moshe Shemesh <moshe@mellanox.com>
 
-[ Upstream commit 3c3c32f85b6cc05e5db78693457deff03ac0f434 ]
+[ Upstream commit 5e911e2c06bd8c17df29147a5e2d4b17fafda024 ]
 
-crypto_shash_descsize() returns the size of the shash_desc context
-needed to compute the hash, not the size of the hash itself.
+On sq closure when we free its descriptors, we should also update netdev
+txq on completions which would not arrive. Otherwise if we reopen sqs
+and attach them back, for example on fw fatal recovery flow, we may get
+tx timeout.
 
-crypto_shash_digestsize() would be correct, or alternatively using
-c->hash_len and c->hmac_desc_len which already store the correct values.
-But actually it's simpler to just use stack arrays, so do that instead.
-
-Fixes: 49525e5eecca ("ubifs: Add helper functions for authentication support")
-Fixes: da8ef65f9573 ("ubifs: Authenticate replayed journal")
-Cc: <stable@vger.kernel.org> # v4.20+
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Acked-by: Sascha Hauer <s.hauer@pengutronix.de>
-Signed-off-by: Richard Weinberger <richard@nod.at>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 29429f3300a3 ("net/mlx5e: Timeout if SQ doesn't flush during close")
+Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
+Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/ubifs/auth.c   | 17 ++++-------------
- fs/ubifs/replay.c | 13 ++-----------
- 2 files changed, 6 insertions(+), 24 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_tx.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/fs/ubifs/auth.c b/fs/ubifs/auth.c
-index 8cdbd53d780c..f985a3fbbb36 100644
---- a/fs/ubifs/auth.c
-+++ b/fs/ubifs/auth.c
-@@ -79,13 +79,9 @@ int ubifs_prepare_auth_node(struct ubifs_info *c, void *node,
- 			     struct shash_desc *inhash)
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
+index ee60383adc5b..c2b801b435cf 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
+@@ -538,10 +538,9 @@ bool mlx5e_poll_tx_cq(struct mlx5e_cq *cq, int napi_budget)
+ void mlx5e_free_txqsq_descs(struct mlx5e_txqsq *sq)
  {
- 	struct ubifs_auth_node *auth = node;
--	u8 *hash;
-+	u8 hash[UBIFS_HASH_ARR_SZ];
- 	int err;
+ 	struct mlx5e_tx_wqe_info *wi;
++	u32 dma_fifo_cc, nbytes = 0;
++	u16 ci, sqcc, npkts = 0;
+ 	struct sk_buff *skb;
+-	u32 dma_fifo_cc;
+-	u16 sqcc;
+-	u16 ci;
+ 	int i;
  
--	hash = kmalloc(crypto_shash_descsize(c->hash_tfm), GFP_NOFS);
--	if (!hash)
--		return -ENOMEM;
--
- 	{
- 		SHASH_DESC_ON_STACK(hash_desc, c->hash_tfm);
+ 	sqcc = sq->cc;
+@@ -566,11 +565,15 @@ void mlx5e_free_txqsq_descs(struct mlx5e_txqsq *sq)
+ 		}
  
-@@ -94,21 +90,16 @@ int ubifs_prepare_auth_node(struct ubifs_info *c, void *node,
- 
- 		err = crypto_shash_final(hash_desc, hash);
- 		if (err)
--			goto out;
-+			return err;
+ 		dev_kfree_skb_any(skb);
++		npkts++;
++		nbytes += wi->num_bytes;
+ 		sqcc += wi->num_wqebbs;
  	}
  
- 	err = ubifs_hash_calc_hmac(c, hash, auth->hmac);
- 	if (err)
--		goto out;
-+		return err;
- 
- 	auth->ch.node_type = UBIFS_AUTH_NODE;
- 	ubifs_prepare_node(c, auth, ubifs_auth_node_sz(c), 0);
--
--	err = 0;
--out:
--	kfree(hash);
--
--	return err;
-+	return 0;
+ 	sq->dma_fifo_cc = dma_fifo_cc;
+ 	sq->cc = sqcc;
++
++	netdev_tx_completed_queue(sq->txq, npkts, nbytes);
  }
  
- static struct shash_desc *ubifs_get_desc(const struct ubifs_info *c,
-diff --git a/fs/ubifs/replay.c b/fs/ubifs/replay.c
-index b28ac4dfb407..01fcf7975047 100644
---- a/fs/ubifs/replay.c
-+++ b/fs/ubifs/replay.c
-@@ -601,18 +601,12 @@ static int authenticate_sleb(struct ubifs_info *c, struct ubifs_scan_leb *sleb,
- 	struct ubifs_scan_node *snod;
- 	int n_nodes = 0;
- 	int err;
--	u8 *hash, *hmac;
-+	u8 hash[UBIFS_HASH_ARR_SZ];
-+	u8 hmac[UBIFS_HMAC_ARR_SZ];
- 
- 	if (!ubifs_authenticated(c))
- 		return sleb->nodes_cnt;
- 
--	hash = kmalloc(crypto_shash_descsize(c->hash_tfm), GFP_NOFS);
--	hmac = kmalloc(c->hmac_desc_len, GFP_NOFS);
--	if (!hash || !hmac) {
--		err = -ENOMEM;
--		goto out;
--	}
--
- 	list_for_each_entry(snod, &sleb->nodes, list) {
- 
- 		n_nodes++;
-@@ -662,9 +656,6 @@ static int authenticate_sleb(struct ubifs_info *c, struct ubifs_scan_leb *sleb,
- 		err = 0;
- 	}
- out:
--	kfree(hash);
--	kfree(hmac);
--
- 	return err ? err : n_nodes - n_not_auth;
- }
- 
+ #ifdef CONFIG_MLX5_CORE_IPOIB
 -- 
 2.25.1
 
