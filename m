@@ -2,221 +2,312 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8980DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 22:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E6ACC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 22:20:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D67F2074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 22:18:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ejr4QghZ"
+	by mail.kernel.org (Postfix) with ESMTP id 1E8652068D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 22:20:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726841AbgFHWSf (ORCPT
+        id S1726765AbgFHWUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 18:18:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58402 "EHLO
+        Mon, 8 Jun 2020 18:20:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726723AbgFHWSd (ORCPT
+        with ESMTP id S1726723AbgFHWUz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 18:18:33 -0400
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64F62C08C5C3;
-        Mon,  8 Jun 2020 15:18:31 -0700 (PDT)
-Received: by mail-lf1-x135.google.com with SMTP id r125so11190926lff.13;
-        Mon, 08 Jun 2020 15:18:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=3cj4YRriK6RG2zO+1VlCMmTo55/LdEBC06tW7WJo9oc=;
-        b=Ejr4QghZfg7ORiC6TAW55v4FZzVyc7T9LothiKRr5uPhJC+4RtkJ/vTPx0tTkxa4Yc
-         e0VmKf29I5onAa+vj3jKRSS8X1LJCUYOoEnn3/t+aLfyOeY4PjPnGZH9VytJRDoimWRV
-         W8hF+pM8u5X55tWNnw577pfDTPAaALWDq6475dpUfJtmoebxylNrWW1z7twPpDzLY0vF
-         BOcC9qG4EEDf2BRuxvacrsbVBvH8SBrxsJq1n4gU1kR3qpRqeUDQyFG/yk/F/BxI2AV6
-         ZYAeDyUhBVGUzd0gK0fwergPdFSjTjX7+ddDOzVVpwmSwXWwb6IG7yFlaa5iWavTapvZ
-         dCfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=3cj4YRriK6RG2zO+1VlCMmTo55/LdEBC06tW7WJo9oc=;
-        b=Jw3QmkCCnQQzErNjRJnpx9ndwExvPIa3jZS8WRm4pcCpd0pBC4Q2+wMsimjqG7TAgY
-         wjx/X9e26RJXSVqbvCaW7s09OAjo7Y/2WlmnQRcMjVb+dzUsoxiGH+YmLKq2QpZ+XvgF
-         OGC8yGoNdOkLfjGYl5f8YJB7smPeCydecACaZlukCuG34+gKYkJsPtIM4h2m7R9P27HQ
-         oDmPczpZTcE1w+omiBcKvFQLcD26Fbv5500Osx0fHYob3BBpMBDCdnhywkz3fi2lNLPB
-         6WoDvmjlSAsRJdTQ91KvFZqZ0HXFbCpXsYAOsKZLLMjUw1KPH+cfg9soW1YpuWiHN/Mo
-         CMng==
-X-Gm-Message-State: AOAM532i/bNNqxKFeg0FK2UEgr8L7jFs3AQXaC6TwPne5hGFai3M5mMg
-        6eHw58aQw0mO8z04KdZ4MsNOSfSoLLQ=
-X-Google-Smtp-Source: ABdhPJxOVzHt7OGf4JQ/FA1hUGewxMnqHBONXLD4NI04VY1UulUbPCgAR9/lRZYz74qTjaANihgjFg==
-X-Received: by 2002:a05:6512:110e:: with SMTP id l14mr12917094lfg.25.1591654709878;
-        Mon, 08 Jun 2020 15:18:29 -0700 (PDT)
-Received: from localhost.localdomain (h-82-196-111-136.NA.cust.bahnhof.se. [82.196.111.136])
-        by smtp.gmail.com with ESMTPSA id n1sm3966237ljg.131.2020.06.08.15.18.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 15:18:29 -0700 (PDT)
-From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
-To:     rikard.falkeborn@gmail.com
-Cc:     akpm@linux-foundation.org, andy.shevchenko@gmail.com,
-        arnd@arndb.de, emil.l.velikov@gmail.com, geert@linux-m68k.org,
-        keescook@chromium.org, linus.walleij@linaro.org,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lkp@intel.com, syednwaris@gmail.com, vilhelm.gray@gmail.com,
-        yamada.masahiro@socionext.com
-Subject: [PATCH v3 2/2] bits: Add tests of GENMASK
-Date:   Tue,  9 Jun 2020 00:18:23 +0200
-Message-Id: <20200608221823.35799-2-rikard.falkeborn@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200608221823.35799-1-rikard.falkeborn@gmail.com>
-References: <20200608184222.GA899@rikard>
- <20200608221823.35799-1-rikard.falkeborn@gmail.com>
+        Mon, 8 Jun 2020 18:20:55 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18C50C08C5C2
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 15:20:55 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jiQ7j-0000OO-90; Tue, 09 Jun 2020 00:20:08 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 8ACDF101181; Tue,  9 Jun 2020 00:20:06 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Qian Cai <cai@lca.pw>, Peter Zijlstra <peterz@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        Alexander Potapenko <glider@google.com>
+Subject: Re: [patch V9 10/39] x86/entry: Provide helpers for execute on irqstack
+In-Reply-To: <20200608160144.GA987@lca.pw>
+References: <20200521200513.656533920@linutronix.de> <20200521202117.763775313@linutronix.de> <20200605171816.GA4259@lca.pw> <20200605173622.GL3976@hirez.programming.kicks-ass.net> <20200608160144.GA987@lca.pw>
+Date:   Tue, 09 Jun 2020 00:20:06 +0200
+Message-ID: <87pna98ajt.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add tests of GENMASK and GENMASK_ULL.
+Qian,
 
-A few test cases that should fail compilation are provided
-under #ifdef TEST_GENMASK_FAILURES
+can you please ensure that people who got cc'ed because the problem
+affects their subsystem are included on your replies even if you are
+replying to a different subthread?
 
-Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+I explicitely did:
+
+     Cc:+ Alexander
+
+at the very beginning of my reply:
+
+   https://lore.kernel.org/r/87v9k3jdc6.fsf@nanos.tec.linutronix.de
+
+to make you aware of that.
+
+Yes, email sucks, but it sucks even more when people are careless.
+
+Qian Cai <cai@lca.pw> writes:
+> On Fri, Jun 05, 2020 at 07:36:22PM +0200, Peter Zijlstra wrote:
+>
+> Even after I trimmed the .config [1] to the barely minimal, a subset of LTP
+> test still unable to finish on those AMD servers with page_owner=on.
+
+What a surprise...
+
+> [1]:
+> https://raw.githubusercontent.com/cailca/linux-mm/master/x86.config
+>
+> It looks like because this new IRQ entry introduced by this patch,
+>
+> </IRQ>
+> asm_call_on_stack at arch/x86/entry/entry_64.S:710
+> handle_edge_irq at kernel/irq/chip.c:832
+>
+> which will running out of the stack depot limit due to nested loops
+> below.
+>
+> which has this loop,
+>
+> 	do {
+> 		...
+> 		handle_irq_event(desc);
+> 		...
+> 	} while ((desc->istate & IRQS_PENDING) &&
+> 		!irqd_irq_disabled(&desc->irq_data));
+
+This loop has absolutely nothing to do with stack entry usage. 
+
+foo()
+  do {
+     bar();
+  } while (condition);
+}
+
+If you take a stack trace inside bar() it will be the same stack trace
+for every single loop iteration. And that stack trace will not be any
+different from:
+
+foo()
+{
+  bar():
+}
+
+assumed that the call chain leading to foo() is the same in both cases.
+
+And you can add even more loops in subsequent call chains within
+bar(). They do not matter at all.
+
+>  Here has a nested loop,
+>
+>	    for_each_action_of_desc(desc, action) {
+>		    ...
+>		    res = action->handler(irq, action->dev_id);
+>		    ...
+>	    }
+
+And this one is completely irrelevant because the interrupt which we are
+looking at is a PCI interrupt which CANNOT be shared. IOW, the number of
+loop iterations and the number of handlers invoked is exactly ONE.
+
+I seriously have no idea what you are trying to demonstrate by finding
+loops in a SINGLE callchain.
+
+> Here has one more nested loop,
+>
+> 	while (table->orig_nents) {
+> 		...
+> 		free_fn(sgl, alloc_size);
+> 		...
+> 	}
+>
+> free_fn() will call kmem_cache_free(). Since we have page_owner=on, it
+> will call save_stack() to save the each free stack trace.
+
+That stack trace for each invocation of free_fn() in this loop is
+exactly the same stack trace. The same stack trace is not eating up any
+memory because the hash matches, i.e. the stack trace in the depot is
+already known.
+
+Here is the simplified difference between the old code and the new code:
+
+  Old                             New
+
+  handle_edge_irq                 handle_edge_irq
+  do_IRQ	                  asm_call_on_stack
+  common_interrupt                common_interrupt
+                                  asm_common_interrupt
+
+IOW, for every _UNIQUE_ interrupt related call chain, there is exactly
+ONE stack entry more than before.
+
+For a loop which generates the exact same stack trace for every
+iteration this extra entry is not a problem.
+
+But what matters is that interrupts can hit any random code path. So the
+amount of possible non-unique call chains is pretty much unlimited. And
+with a high number of non-unique call chains the extra entry starts to
+matter.
+
+It's trival math, isn't it?
+
+TS  = Total Size of depot
+as  = average size of all stored unique stack traces
+ms  = maximum number of unqiue stack traces which fit in TS
+
+    ms_old = TS / as
+
+Lets further assume that the vast majority of stack traces are taken
+from interrupt context. That means with the new code this results in:
+
+    ms_new = TS / (as + 1)
+
+==> ms_new = ms_old * as / (as + 1)
+
+Depending on the value of 'as' the +1 can shave off a significant
+percentage of capacity. IOW, the capacity is simply too small now for
+the test scenario you are running. Truly a surprising outcome, right?
+
+To get facts instead of useless loop theories, can you please apply the
+patch below, enable DEBUGFS and provide the output of
+
+       /sys/kernel/debug/stackdepot/info
+
+for a kernel before that change and after? Please read out that file at
+periodically roughly the same amounts of time after starting your test
+scenario.
+
+Note, that I doubled the size of the stack depot so that we get real
+numbers and not the cutoff by the size limit. IOW, the warning should
+not trigger anymore. If it triggers nevertheless then the numbers will
+still tell us an interesting story.
+
+Thanks,
+
+        tglx
 ---
-I did not move it to test_bitops.c, because I think it makes more sense
-that test_bitops.c tests bitops.h and test_bits.c tests bits.h, but if
-you disagree, I can move it.
+ lib/stackdepot.c |   43 ++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 42 insertions(+), 1 deletion(-)
 
-v2-v3
-Updated commit message and ifdef after suggestion fron Geert. Also fixed
-a typo in the description of the file.
-
-v1-v2
-New patch.
-
- lib/Kconfig.debug | 11 +++++++
- lib/Makefile      |  1 +
- lib/test_bits.c   | 73 +++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 85 insertions(+)
- create mode 100644 lib/test_bits.c
-
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 333e878d8af9..9557cb570fb9 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -2182,6 +2182,17 @@ config LINEAR_RANGES_TEST
+--- a/lib/stackdepot.c
++++ b/lib/stackdepot.c
+@@ -31,6 +31,7 @@
+ #include <linux/stackdepot.h>
+ #include <linux/string.h>
+ #include <linux/types.h>
++#include <linux/debugfs.h>
  
- 	  If unsure, say N.
+ #define DEPOT_STACK_BITS (sizeof(depot_stack_handle_t) * 8)
  
-+config BITS_TEST
-+	tristate "KUnit test for bits.h"
-+	depends on KUNIT
-+	help
-+	  This builds the bits unit test.
-+	  Tests the logic of macros defined in bits.h.
-+	  For more information on KUnit and unit tests in general please refer
-+	  to the KUnit documentation in Documentation/dev-tools/kunit/.
+@@ -42,7 +43,7 @@
+ 					STACK_ALLOC_ALIGN)
+ #define STACK_ALLOC_INDEX_BITS (DEPOT_STACK_BITS - \
+ 		STACK_ALLOC_NULL_PROTECTION_BITS - STACK_ALLOC_OFFSET_BITS)
+-#define STACK_ALLOC_SLABS_CAP 8192
++#define STACK_ALLOC_SLABS_CAP 16384
+ #define STACK_ALLOC_MAX_SLABS \
+ 	(((1LL << (STACK_ALLOC_INDEX_BITS)) < STACK_ALLOC_SLABS_CAP) ? \
+ 	 (1LL << (STACK_ALLOC_INDEX_BITS)) : STACK_ALLOC_SLABS_CAP)
+@@ -70,6 +71,7 @@ static void *stack_slabs[STACK_ALLOC_MAX
+ static int depot_index;
+ static int next_slab_inited;
+ static size_t depot_offset;
++static unsigned long unique_stacks;
+ static DEFINE_SPINLOCK(depot_lock);
+ 
+ static bool init_stack_slab(void **prealloc)
+@@ -138,6 +140,7 @@ static struct stack_record *depot_alloc_
+ 	stack->handle.valid = 1;
+ 	memcpy(stack->entries, entries, size * sizeof(unsigned long));
+ 	depot_offset += required_size;
++	unique_stacks++;
+ 
+ 	return stack;
+ }
+@@ -340,3 +343,41 @@ unsigned int filter_irq_stacks(unsigned
+ 	return nr_entries;
+ }
+ EXPORT_SYMBOL_GPL(filter_irq_stacks);
 +
-+	  If unsure, say N.
-+
- config TEST_UDELAY
- 	tristate "udelay test driver"
- 	help
-diff --git a/lib/Makefile b/lib/Makefile
-index 315516fa4ef4..2ce9892e3e63 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -314,3 +314,4 @@ obj-$(CONFIG_OBJAGG) += objagg.o
- # KUnit tests
- obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
- obj-$(CONFIG_LINEAR_RANGES_TEST) += test_linear_ranges.o
-+obj-$(CONFIG_BITS_TEST) += test_bits.o
-diff --git a/lib/test_bits.c b/lib/test_bits.c
-new file mode 100644
-index 000000000000..e2fcf24463bf
---- /dev/null
-+++ b/lib/test_bits.c
-@@ -0,0 +1,73 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Test cases for functions and macros in bits.h
-+ */
-+
-+#include <kunit/test.h>
-+#include <linux/bits.h>
-+
-+
-+void genmask_test(struct kunit *test)
++static int debug_show(struct seq_file *m, void *p)
 +{
-+	KUNIT_EXPECT_EQ(test, 1ul, GENMASK(0, 0));
-+	KUNIT_EXPECT_EQ(test, 3ul, GENMASK(1, 0));
-+	KUNIT_EXPECT_EQ(test, 6ul, GENMASK(2, 1));
-+	KUNIT_EXPECT_EQ(test, 0xFFFFFFFFul, GENMASK(31, 0));
++	unsigned long unst;
++	int didx, doff;
 +
-+#ifdef TEST_GENMASK_FAILURES
-+	/* these should fail compilation */
-+	GENMASK(0, 1);
-+	GENMASK(0, 10);
-+	GENMASK(9, 10);
-+#endif
++	spin_lock_irq(&depot_lock);
++	unst = unique_stacks;
++	didx = depot_index;
++	doff = depot_offset;
++	spin_unlock_irq(&depot_lock);
 +
-+
++	seq_printf(m, "Unique stacks: %lu\n", unst);
++	seq_printf(m, "Depot index:   %d\n", didx);
++	seq_printf(m, "Depot offset:  %d\n", doff);
++	return 0;
 +}
 +
-+void genmask_ull_test(struct kunit *test)
++static int debug_open(struct inode *inode, struct file *file)
 +{
-+	KUNIT_EXPECT_EQ(test, 1ull, GENMASK_ULL(0, 0));
-+	KUNIT_EXPECT_EQ(test, 3ull, GENMASK_ULL(1, 0));
-+	KUNIT_EXPECT_EQ(test, 0x000000ffffe00000ull, GENMASK_ULL(39, 21));
-+	KUNIT_EXPECT_EQ(test, 0xffffffffffffffffull, GENMASK_ULL(63, 0));
-+
-+#ifdef TEST_GENMASK_FAILURES
-+	/* these should fail compilation */
-+	GENMASK_ULL(0, 1);
-+	GENMASK_ULL(0, 10);
-+	GENMASK_ULL(9, 10);
-+#endif
++	return single_open(file, debug_show, inode->i_private);
 +}
 +
-+void genmask_input_check_test(struct kunit *test)
-+{
-+	unsigned int x, y;
-+	int z, w;
-+
-+	/* Unknown input */
-+	KUNIT_EXPECT_EQ(test, 0, GENMASK_INPUT_CHECK(x, 0));
-+	KUNIT_EXPECT_EQ(test, 0, GENMASK_INPUT_CHECK(0, x));
-+	KUNIT_EXPECT_EQ(test, 0, GENMASK_INPUT_CHECK(x, y));
-+
-+	KUNIT_EXPECT_EQ(test, 0, GENMASK_INPUT_CHECK(z, 0));
-+	KUNIT_EXPECT_EQ(test, 0, GENMASK_INPUT_CHECK(0, z));
-+	KUNIT_EXPECT_EQ(test, 0, GENMASK_INPUT_CHECK(z, w));
-+
-+	/* Valid input */
-+	KUNIT_EXPECT_EQ(test, 0, GENMASK_INPUT_CHECK(1, 1));
-+	KUNIT_EXPECT_EQ(test, 0, GENMASK_INPUT_CHECK(39, 21));
-+}
-+
-+
-+static struct kunit_case bits_test_cases[] = {
-+	KUNIT_CASE(genmask_test),
-+	KUNIT_CASE(genmask_ull_test),
-+	KUNIT_CASE(genmask_input_check_test),
-+	{}
++static const struct file_operations dfs_ops = {
++	.open		= debug_open,
++	.read		= seq_read,
++	.llseek		= seq_lseek,
++	.release	= single_release,
 +};
 +
-+static struct kunit_suite bits_test_suite = {
-+	.name = "bits-test",
-+	.test_cases = bits_test_cases,
-+};
-+kunit_test_suite(bits_test_suite);
--- 
-2.27.0
++static int __init debugfs_init(void)
++{
++	struct dentry *root_dir = debugfs_create_dir("stackdepot", NULL);
++
++	debugfs_create_file("info", 0444, root_dir, NULL, &dfs_ops);
++	return 0;
++}
++__initcall(debugfs_init);
+
 
