@@ -2,247 +2,225 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E79C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2040CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:59:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06B122076A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:57:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E37B12074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:59:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bYuLeFsF"
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="XKzY/dMo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726231AbgFHS5A (ORCPT
+        id S1726409AbgFHS7h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 14:57:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55442 "EHLO
+        Mon, 8 Jun 2020 14:59:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726202AbgFHS44 (ORCPT
+        with ESMTP id S1726197AbgFHS7f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 14:56:56 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 651AEC08C5C7
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 11:56:55 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id g10so543630wmh.4
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 11:56:55 -0700 (PDT)
+        Mon, 8 Jun 2020 14:59:35 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E119EC08C5C2
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 11:59:34 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id z1so15614293qtn.2
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 11:59:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=bbezwn5gwDlTS6iFB4r9mviI0BHif4uVVFtQV600W10=;
-        b=bYuLeFsFLMkDx3qZeqjTwTuymeICsPggctKvZNcicEBsCT6pD6pMA7MDedxcCgxxxv
-         DaXRWn69Tos6NjXf9n4UhHrwGd5gC47tLeiiskVQVlVn7tUdf+gKVD++b2pSx6mjt0Wt
-         /GROQLIkv8ERRIXfaTl+IBNn5ySBixDUBCavUZXD4GOr2RPx8jv98AlcXxuFAvV8TSzH
-         uUzKSnqPFAIyr30pkKt7Dm8kolIvPkY4GfLVcdkgaBEz6LXVbdJwTjtf+/4f8Isg7P1S
-         KORdnXpCjh3OH33CQNPDcXraPiI3zvS0de9sedU66a7jPu3xIf4o9mtqTrhWJsUZrxQa
-         4t6g==
+        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=1LNXy0gulshDF6Am2ORMrlABkF4RBeFdpjJ6l6ghlxc=;
+        b=XKzY/dMoRNR8g2sNEYdfjb4hTfUUulqOlT+yf47tp2KJzcr32jQMJqtK5NJop2cINl
+         9Ebd8hsMhE+MWHwkXW/PjQHzQNVi+QxoJYp5ggn+JZbE6bIhHzJaCbg54yeBdVYaKhiU
+         GLOT0fN/40VD6Gf5soYESTPoFMs5u410zhTCtMMxSiTNAF1IeqSGJW4F19rGX+ddm8Lh
+         2XsHczdkDeRkyYoLm+k6ElJtv/2AnJKWR7j2B8380LonwThSgmeNaioKv+cKsl8yX/fK
+         v69JfJPGaD79z/9nCqUM3LDP+XzmX2bnG5R8IMygXAh/DNaCOzAO7QTc8Jl1vn0W6Czd
+         fQRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=bbezwn5gwDlTS6iFB4r9mviI0BHif4uVVFtQV600W10=;
-        b=KBW5YM7vqdGfRHUXrPoaHR/Ze/eeElJgtdbl2cvMHrNtfp/lVlMvk7EsWVaretNivI
-         OziX9ji/xv7mD0bpCWUGqZlYA9OGHnnIxSqclh+SnUONu0xEaixoV8gt71i/ZPmebnxV
-         detm6uDUr5kH2kvy9sNKaMxWxD/I9ZO0zOFMfK8s9T6lZ/yIuXdYnjj9ql+j+2TQURJ7
-         H/L/ipZY2FFcwa17dlIfepNyaJ3Lkbwsv7F44IvKWXoFmbyv+XreuUlwV4ehqtOTz1OZ
-         1uG7Y2O+LQAuj6VntVCRJEqG7D/HcUU9+jJAuW0hVxhiDHOZKGczgZYvjHmUlMwd9Ruq
-         pMaA==
-X-Gm-Message-State: AOAM531g3BU4sGg160B9fWMEJUz/1kS6ydrd/5vyttAAcJ3hk/g+RqLA
-        jYn5FWz1BUVm/EP8OIzGFnAJZA==
-X-Google-Smtp-Source: ABdhPJyiWUVMEiOfAXAeFrqmYgqJgRJgWv1aBrPn0d5IckEE0fOBQCHvZfLUDwPo686MnqwrE6u1gg==
-X-Received: by 2002:a1c:80d4:: with SMTP id b203mr135522wmd.138.1591642613825;
-        Mon, 08 Jun 2020 11:56:53 -0700 (PDT)
-Received: from dell ([95.147.198.92])
-        by smtp.gmail.com with ESMTPSA id l17sm431519wmi.16.2020.06.08.11.56.52
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=1LNXy0gulshDF6Am2ORMrlABkF4RBeFdpjJ6l6ghlxc=;
+        b=PV4w4V2LHgwfQeFYrhhzaBD7oXzhICAFF0+DXUOpDPwZPA/wzElh501yXkOV3R8joA
+         wuq2VGTqvhbQwhm64xj85eXmD4j4co1sfb8ad4eN6eGUkfQFcnpjpUeaalUU6+IUy2w3
+         UKeT6DcX7AscKtbOMmeOczmKe78e9FJolj2IlzzAv4rbTQNNiQrGqcOV1mTjqY7AP88B
+         XjirdFTRkbzrOgtdzugT1tYQNGJYsZq2nw77NJHQR/DP8GTQ+Hzdf3iGWg3rl2SsL5sY
+         zEXOwsK5rtOPp1E7OrJvoYVKjxVh7v3+VbSXi40XABsAoobnyNRdKFH3yka2VngE0VFB
+         1eQA==
+X-Gm-Message-State: AOAM533Qu0/8UaqwKc2tUlzUNho7rqhNGBgZUHxBqiwX8A3yXOYhIu7M
+        1toLpdDM7YmKc6A05LfgSQfSwg==
+X-Google-Smtp-Source: ABdhPJzsZQLMeKY0DCqtO/KRhmtkfC5lUzy0bMjqjQup+oWO9tomqEZelGqLBLNBAwZlmugb1j09Jg==
+X-Received: by 2002:ac8:7350:: with SMTP id q16mr24420939qtp.74.1591642773976;
+        Mon, 08 Jun 2020 11:59:33 -0700 (PDT)
+Received: from skullcanyon (marriott-chateau-champlain-montreal.sites.intello.com. [66.171.169.34])
+        by smtp.gmail.com with ESMTPSA id z194sm7357905qkb.73.2020.06.08.11.59.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 11:56:53 -0700 (PDT)
-Date:   Mon, 8 Jun 2020 19:56:51 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        david.m.ertman@intel.com, shiraz.saleem@intel.com,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld
- management controller
-Message-ID: <20200608185651.GD4106@dell>
-References: <20200604211039.12689-1-michael@walle.cc>
- <20200604211039.12689-3-michael@walle.cc>
- <20200605065709.GD3714@dell>
- <20200605105026.GC5413@sirena.org.uk>
- <c5632bfab3956265e90fc2fb6c0b3cae@walle.cc>
- <20200606114645.GB2055@sirena.org.uk>
- <dc052a5c77171014ecc465b1da8b7ef8@walle.cc>
- <20200608082827.GB3567@dell>
- <CAHp75VdiH=J-ovCdh1RFJDW_bJM8=pbXRaHmB691GLb-5oBmYQ@mail.gmail.com>
- <7d7feb374cbf5a587dc1ce65fc3ad672@walle.cc>
+        Mon, 08 Jun 2020 11:59:33 -0700 (PDT)
+Message-ID: <f6d35521b61da395528d6dd1164a9af6c3acd664.camel@ndufresne.ca>
+Subject: Re: [PATCH 1/5] media: videodev2: add Compressed Framebuffer pixel
+ formats
+From:   Nicolas Dufresne <nicolas@ndufresne.ca>
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Neil Armstrong <narmstrong@baylibre.com>
+Cc:     linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Maxime Jourdan <mjourdan@baylibre.com>,
+        Tomasz Figa <tfiga@chromium.org>
+Date:   Mon, 08 Jun 2020 14:59:32 -0400
+In-Reply-To: <2a0db0a4-9d04-f20c-39d8-ff25e07e64b7@xs4all.nl>
+References: <20200604135317.9235-1-narmstrong@baylibre.com>
+         <20200604135317.9235-2-narmstrong@baylibre.com>
+         <02aa06fd8397b77c9a75d3a8399cb55d3b4d39c1.camel@ndufresne.ca>
+         <4d22ff40-11ac-c77a-564d-af9a678f23af@baylibre.com>
+         <a15dea55-3ca4-2a65-5c56-6c1edd2de405@xs4all.nl>
+         <a4c5ae79-1d4d-4c1e-1535-c6c8b02d4b6f@baylibre.com>
+         <2a0db0a4-9d04-f20c-39d8-ff25e07e64b7@xs4all.nl>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <7d7feb374cbf5a587dc1ce65fc3ad672@walle.cc>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 08 Jun 2020, Michael Walle wrote:
-
-> Am 2020-06-08 12:02, schrieb Andy Shevchenko:
-> > +Cc: some Intel people WRT our internal discussion about similar
-> > problem and solutions.
+Le lundi 08 juin 2020 à 16:43 +0200, Hans Verkuil a écrit :
+> On 08/06/2020 16:14, Neil Armstrong wrote:
+> > On 08/06/2020 11:26, Hans Verkuil wrote:
+> > > On 08/06/2020 10:16, Neil Armstrong wrote:
+> > > > Hi Nicolas,
+> > > > 
+> > > > On 05/06/2020 17:35, Nicolas Dufresne wrote:
+> > > > > Le jeudi 04 juin 2020 à 15:53 +0200, Neil Armstrong a écrit :
+> > > > > > From: Maxime Jourdan <mjourdan@baylibre.com>
+> > > > > > 
+> > > > > > Add two generic Compressed Framebuffer pixel formats to be used
+> > > > > > with a modifier when imported back in another subsystem like DRM/KMS.
+> > > > > > 
+> > > > > > These pixel formats represents generic 8bits and 10bits compressed buffers
+> > > > > > with a vendor specific layout.
+> > > > > > 
+> > > > > > These are aligned with the DRM_FORMAT_YUV420_8BIT and DRM_FORMAT_YUV420_10BIT
+> > > > > > used to describe the underlying compressed buffers used for ARM Framebuffer
+> > > > > > Compression. In the Amlogic case, the compression is different but the
+> > > > > > underlying buffer components is the same.
+> > > > > > 
+> > > > > > Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
+> > > > > > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> > > > > > ---
+> > > > > >  drivers/media/v4l2-core/v4l2-ioctl.c | 2 ++
+> > > > > >  include/uapi/linux/videodev2.h       | 9 +++++++++
+> > > > > >  2 files changed, 11 insertions(+)
+> > > > > > 
+> > > > > > diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+> > > > > > index 2322f08a98be..8f14adfd5bc5 100644
+> > > > > > --- a/drivers/media/v4l2-core/v4l2-ioctl.c
+> > > > > > +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+> > > > > > @@ -1447,6 +1447,8 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
+> > > > > >  		case V4L2_PIX_FMT_S5C_UYVY_JPG:	descr = "S5C73MX interleaved UYVY/JPEG"; break;
+> > > > > >  		case V4L2_PIX_FMT_MT21C:	descr = "Mediatek Compressed Format"; break;
+> > > > > >  		case V4L2_PIX_FMT_SUNXI_TILED_NV12: descr = "Sunxi Tiled NV12 Format"; break;
+> > > > > > +		case V4L2_PIX_FMT_YUV420_8BIT:	descr = "Compressed YUV 4:2:0 8-bit Format"; break;
+> > > > > > +		case V4L2_PIX_FMT_YUV420_10BIT:	descr = "Compressed YUV 4:2:0 10-bit Format"; break;
 > > 
-> > On Mon, Jun 8, 2020 at 11:30 AM Lee Jones <lee.jones@linaro.org> wrote:
-> > > On Sat, 06 Jun 2020, Michael Walle wrote:
-> > > > Am 2020-06-06 13:46, schrieb Mark Brown:
-> > > > > On Fri, Jun 05, 2020 at 10:07:36PM +0200, Michael Walle wrote:
-> > > > > > Am 2020-06-05 12:50, schrieb Mark Brown:
+> > [..]
 > > 
-> > ...
+> > > > > I'll remind that the modifier implementation has great value and is
+> > > > > much more scalable then the current V4L2 approach. There has been some
+> > > > > early proposal for this, maybe it's time to prioritize because this
+> > > > > list will starts growing with hundred or even thousands or format,
+> > > > > which is clearly indicated by the increase of modifier generator macro
+> > > > > on the DRM side.
+> > > > 
+> > > > Yes, but until the migration of drm_fourcc and v4l2 fourcc into a common one
+> > > > is decided, I'm stuck and this is the only intermediate solution I found.
+> > > 
+> > > We can safely assume that drm fourcc and v4l2 fourcc won't be merged.
+> > > 
+> > > There is too much divergence and not enough interest in creating common
+> > > fourccs.
+> > > 
+> > > But we *do* want to share the modifiers.
+> > > 
+> > > > We have a working solution with Boris's patchset with ext_fmt passing the
+> > > > modifier to user-space.
+> > > > 
+> > > > but anyway, since the goal is to merge the fourcc between DRM & V4L2, these YUV420_*BIT
+> > > > will still be needed if we pass the modifier with an extended format struct.
+> > > 
+> > > We tried merging fourccs but that ran into resistance. Frankly, I wouldn't
+> > > bother with this, it is much easier to just create a conversion table in the
+> > > kernel docs.
+> > > 
+> > > So don't block on this, I would really prefer if the ext_fmt series is picked
+> > > up again and rebased and reposted and then worked on. The stateless codec support
+> > > is taking less time (it's shaping up well) so there is more time to work on this.
 > > 
-> > > Right.  I'm suggesting a means to extrapolate complex shared and
-> > > sometimes intertwined batches of register sets to be consumed by
-> > > multiple (sub-)devices spanning different subsystems.
-> > > 
-> > > Actually scrap that.  The most common case I see is a single Regmap
-> > > covering all child-devices.
+> > Ok, I already starting discussing with Helen Koike about the ext_fnt re-spin.
 > > 
-> > Yes, because often we need a synchronization across the entire address
-> > space of the (parent) device in question.
+> > Should I re-introduce different v4l2 pixfmt for these DRM YUV420_*BIT or I can keep this
+> > patch along the new ext_fmt and shared modifiers ?
+> 
+> So to be clear the DRM_FORMAT_YUV420_8BIT/10BIT fourccs define that this is a
+> buffer containing compressed YUV420 in 8 or 10 bit and the modifier tells userspace
+> which compression is used, right?
+> 
+> And we would add V4L2_PIX_FMT_YUV420_8BIT/_10BIT that, I assume, use the same
+> fourcc values as the DRM variants?
+> 
+> Since these fourccs are basically useless without V4L2 modifier support it would
+> only make sense in combination with the ext_fmt series.
+
+I personally still think that adding these fourcc will just create a
+source of confusion and that fourcc should not be tried to be matched
+at the cost of tripling the already duplicated pixel formats. Userspace
+already need to implement translation anyway.
+
+On DRM side, new fourcc was not create for NV12+modifier, I don't see
+why planar YUV420 has to be different, with or without ext_fmt.
+
+Nicolas
+ 
+> 
+> Regards,
+> 
+> 	Hans
+> 
+> > Neil
 > > 
-> > >  It would be great if there was a way in
-> > > which we could make an assumption that the entire register address
-> > > space for a 'tagged' (MFD) device is to be shared (via Regmap) between
-> > > each of the devices described by its child-nodes.  Probably by picking
-> > > up on the 'simple-mfd' compatible string in the first instance.
+> > > I believe we really need this since v4l2_buffer and v4l2_format are a real mess.
 > > > 
-> > > Rob, is the above something you would contemplate?
+> > > Regards,
 > > > 
-> > > Michael, do your register addresses overlap i.e. are they intermingled
-> > > with one another?  Do multiple child devices need access to the same
-> > > registers i.e. are they shared?
-> 
-> No they don't overlap, expect for maybe the version register, which is
-> just there once and not per function block.
-
-Then what's stopping you having each device Regmap their own space?
-
-The issues I wish to resolve using 'simple-mfd' are when sub-devices
-register maps overlap and intertwine.
-
-> > > > > > But, there is more in my driver:
-> > > > > >  (1) there is a version check
+> > > 	Hans
 > > > 
-> > > If we can rid the Regmap dependency, then creating an entire driver to
-> > > conduct a version check is unjustifiable.  This could become an inline
-> > > function which is called by each of the sub-devices instead, for
-> > > example.
-> 
-> sounds good to me. (although there would then be a probe fail per sub-device
-> if the version is not supported)
+> > > > > >  		default:
+> > > > > >  			if (fmt->description[0])
+> > > > > >  				return;
+> > > > > > diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+> > > > > > index c3a1cf1c507f..90b9949acb8a 100644
+> > > > > > --- a/include/uapi/linux/videodev2.h
+> > > > > > +++ b/include/uapi/linux/videodev2.h
+> > > > > > @@ -705,6 +705,15 @@ struct v4l2_pix_format {
+> > > > > >  #define V4L2_PIX_FMT_FWHT     v4l2_fourcc('F', 'W', 'H', 'T') /* Fast Walsh Hadamard Transform (vicodec) */
+> > > > > >  #define V4L2_PIX_FMT_FWHT_STATELESS     v4l2_fourcc('S', 'F', 'W', 'H') /* Stateless FWHT (vicodec) */
+> > > > > >  
+> > > > > > +/*
+> > > > > > + * Compressed Luminance+Chrominance meta-formats
+> > > > > > + * In these formats, the component ordering is specified (Y, followed by U
+> > > > > > + * then V), but the exact Linear layout is undefined.
+> > > > > > + * These formats can only be used with a non-Linear modifier.
+> > > > > > + */
+> > > > > > +#define V4L2_PIX_FMT_YUV420_8BIT	v4l2_fourcc('Y', 'U', '0', '8') /* 1-plane YUV 4:2:0 8-bit */
+> > > > > > +#define V4L2_PIX_FMT_YUV420_10BIT	v4l2_fourcc('Y', 'U', '1', '0') /* 1-plane YUV 4:2:0 10-bit */
+> > > > > > +
+> > > > > >  /*  Vendor-specific formats   */
+> > > > > >  #define V4L2_PIX_FMT_CPIA1    v4l2_fourcc('C', 'P', 'I', 'A') /* cpia1 YUV */
+> > > > > >  #define V4L2_PIX_FMT_WNVA     v4l2_fourcc('W', 'N', 'V', 'A') /* Winnov hw compress */
+> > > > 
+> > > > [1] https://patchwork.freedesktop.org/series/73722/#rev7
+> > > > 
 
-I don't see an issue with that.  I would put that check inside a
-shared call though, complete with support for locking.
-
-> > > > > >  (2) there is another function for which there is no suitable linux
-> > > > > >      subsystem I'm aware of and thus which I'd like to us sysfs
-> > > > > >      attributes for: This controller supports 16 non-volatile
-> > > > > >      configuration bits. (this is still TBD)
-> > > 
-> > > There is a place for everything in Linux.
-> > > 
-> > > What do these bits configure?
-> 
-> - hardware strappings which have to be there before the board powers up,
->   like clocking mode for different SerDes settings
-> - "keep-in-reset" bits for onboard peripherals if you want to save power
-> - disable watchdog bits (there is a watchdog which is active right from
->   the start and supervises the bootloader start and switches to failsafe
->   mode if it wasn't successfully started)
-> - special boot modes, like eMMC, etc.
-> 
-> Think of it as a 16bit configuration word.
-
-And you wish for users to be able to view these at run-time?
-
-Can they adapt any of them on-the-fly or will the be RO?
-
-> > > > > TBH I'd also say that the enumeration of the subdevices for this
-> > > > > device should be in the device rather than the DT, they don't
-> > > > > seem to be things that exist outside of this one device.
-> > > >
-> > > > We're going circles here, formerly they were enumerated in the MFD.
-> > > > Yes, they are devices which aren't likely be used outside a
-> > > > "sl28cpld", but there might there might be other versions of the
-> > > > sl28cpld with other components on different base addresses. I
-> > > > don't care if they are enumerated in DT or MFD, actually, I'd
-> > > > prefer the latter. _But_ I would like to have the device tree
-> > > > properties for its subdevices, e.g. the ones for the watchdog or
-> > > > whatever components there might be in the future.
-> > > 
-> > > [...]
-> > > 
-> > > > MFD core can
-> > > > match a device tree node today; but only one per unique compatible
-> > > > string. So what should I use to differentiate the different
-> > > > subdevices?
-> > > 
-> > > Right.  I have been aware of this issue.  The only suitable solution
-> > > to this would be to match on 'reg'.
-> 
-> see below (1)
-> 
-> > > 
-> > > FYI: I plan to fix this.
-> > > 
-> > > If your register map needs to change, then I suggest that this is
-> > > either a new device or at least a different version of the device and
-> > > would also have to be represented as different (sub-)mfd_cell.
-> > > 
-> > > > Rob suggested the internal offset, which I did here.
-> > > 
-> > > FWIW, I don't like this idea.  DTs should not have to be modified
-> > > (either in the first instance or subsequently) or specifically
-> > > designed to patch inadequacies in any given OS.
-> 
-> How does (1) play together with this? What do you propose the "reg"
-> property should contain?
-
-Whatever is in the 'reg' property contained in the Device Tree node.
-Either the full address or an offset would be suitable.
-
-Caveat: All this thinking has been done on-the-fly.  I would need to
-look at some examples of existing devices and start coding before I
-could really think the solution through.
-
-Happy to discuss and/or take recommendations though.
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
