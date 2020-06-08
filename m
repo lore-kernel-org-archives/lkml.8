@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0AE8C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE9FC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7064208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:09:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3243220C56
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:09:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591657791;
-	bh=TT+8tMvqgygFxoAAc7BZuKJHREEz6edhkE6V6E4qA9c=;
+	s=default; t=1591657795;
+	bh=fK82cI40GO1yH3Ip1kLba1zXWfkLTxYg+MFpEbXh69w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b3w6mFOfVEggY3zT19YDiVoW3Kch4xyo6BHv5m2aUpzlj0R/6EuZfkLst4nU4BL2g
-	 wBya2+MiToSwjwY38YKyy7I8Bqi4TKTFfWH/sr0cOSV6aM/p5mtNmZrjIZZXh1T0zr
-	 rkYt6+AVqrQZpZwBEo5xJVh2c0FfFF4VPTcrhMC0=
+	b=hvwY4XhFjoEW2x4SZJfGHUwJeOpeTTXG7QWZ8v4JtEWqombYpkxvKeFICMdEXF0kF
+	 jnsKO9eyUljF/6uzvYrYQo70UY5KJinqVgw4DgVcfqxrwKiI1ZLhWf51oQ5aIUOF9T
+	 glPWBMaK9LpNGHWU3qm0jIn4ui3oRQEnHehWkDs8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728519AbgFHXJu (ORCPT
+        id S1728530AbgFHXJx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:09:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54208 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:09:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726992AbgFHXIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:08:45 -0400
+        id S1727000AbgFHXIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:08:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13A8C2085B;
-        Mon,  8 Jun 2020 23:08:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6ED9D2085B;
+        Mon,  8 Jun 2020 23:08:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657725;
-        bh=TT+8tMvqgygFxoAAc7BZuKJHREEz6edhkE6V6E4qA9c=;
+        s=default; t=1591657732;
+        bh=fK82cI40GO1yH3Ip1kLba1zXWfkLTxYg+MFpEbXh69w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=af7CblJ72Q4b5/8AjOe6ptfhTA2uhYvi5uJb841LlN4IvzfOkiIRs2LgTOWYYxAhX
-         QJW4lms//2dBFCVDEw3ktK1hCYaAGc2pjYIghk9LlbXqp1a+gbWU+e+aimRkmWGL3I
-         Fl2yHb0NU0HSPJvJXxZlwJgcRTkVsYCMyN4oNYkY=
+        b=AB2x00QQzebqBsUwR4YxJzpr5+xeA8I+kaWTScWv1pvzB4lZ32TZQhAQ72rT/0Htb
+         iYMGZaiSMGr4z7ARXLCAUdlKvhYOxRin5QoowGhMP6wiqZswdRHKYnI2JDZ92dWtE7
+         6L5THfCOknEfk/y7lgBM629S6VtZ+NFlKLGNfXbU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paul Hsieh <paul.hsieh@amd.com>, Eric Yang <eric.yang2@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.7 117/274] drm/amd/display: dmcu wait loop calculation is incorrect in RV
-Date:   Mon,  8 Jun 2020 19:03:30 -0400
-Message-Id: <20200608230607.3361041-117-sashal@kernel.org>
+Cc:     Luke Nelson <lukenels@cs.washington.edu>,
+        Luke Nelson <luke.r.nels@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Xi Wang <xi.wang@gmail.com>, Sasha Levin <sashal@kernel.org>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 123/274] bpf, riscv: Fix tail call count off by one in RV32 BPF JIT
+Date:   Mon,  8 Jun 2020 19:03:36 -0400
+Message-Id: <20200608230607.3361041-123-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -61,40 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Hsieh <paul.hsieh@amd.com>
+From: Luke Nelson <lukenels@cs.washington.edu>
 
-[ Upstream commit 7fc5c319efceaed1a23b7ef35c333553ce39fecf ]
+[ Upstream commit 745abfaa9eafa597d31fdf24a3249e5206a98768 ]
 
-[Why]
-Driver already get display clock from SMU base on MHz, but driver read
-again and mutiple 1000 cause wait loop value is overflow.
+This patch fixes an off by one error in the RV32 JIT handling for BPF
+tail call. Currently, the code decrements TCC before checking if it
+is less than zero. This limits the maximum number of tail calls to 32
+instead of 33 as in other JITs. The fix is to instead check the old
+value of TCC before decrementing.
 
-[How]
-remove coding error
-
-Signed-off-by: Paul Hsieh <paul.hsieh@amd.com>
-Reviewed-by: Eric Yang <eric.yang2@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: 5f316b65e99f ("riscv, bpf: Add RV32G eBPF JIT")
+Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Xi Wang <xi.wang@gmail.com>
+Link: https://lore.kernel.org/bpf/20200421002804.5118-1-luke.r.nels@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../drm/amd/display/dc/clk_mgr/dcn10/rv1_clk_mgr_vbios_smu.c   | 3 ---
- 1 file changed, 3 deletions(-)
+ arch/riscv/net/bpf_jit_comp32.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn10/rv1_clk_mgr_vbios_smu.c b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn10/rv1_clk_mgr_vbios_smu.c
-index 97b7f32294fd..c320b7af7d34 100644
---- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn10/rv1_clk_mgr_vbios_smu.c
-+++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn10/rv1_clk_mgr_vbios_smu.c
-@@ -97,9 +97,6 @@ int rv1_vbios_smu_set_dispclk(struct clk_mgr_internal *clk_mgr, int requested_di
- 			VBIOSSMC_MSG_SetDispclkFreq,
- 			requested_dispclk_khz / 1000);
+diff --git a/arch/riscv/net/bpf_jit_comp32.c b/arch/riscv/net/bpf_jit_comp32.c
+index 302934177760..11083d4d5f2d 100644
+--- a/arch/riscv/net/bpf_jit_comp32.c
++++ b/arch/riscv/net/bpf_jit_comp32.c
+@@ -770,12 +770,13 @@ static int emit_bpf_tail_call(int insn, struct rv_jit_context *ctx)
+ 	emit_bcc(BPF_JGE, lo(idx_reg), RV_REG_T1, off, ctx);
  
--	/* Actual dispclk set is returned in the parameter register */
--	actual_dispclk_set_mhz = REG_READ(MP1_SMN_C2PMSG_83) * 1000;
--
- 	if (!IS_FPGA_MAXIMUS_DC(dc->ctx->dce_environment)) {
- 		if (dmcu && dmcu->funcs->is_dmcu_initialized(dmcu)) {
- 			if (clk_mgr->dfs_bypass_disp_clk != actual_dispclk_set_mhz)
+ 	/*
+-	 * if ((temp_tcc = tcc - 1) < 0)
++	 * temp_tcc = tcc - 1;
++	 * if (tcc < 0)
+ 	 *   goto out;
+ 	 */
+ 	emit(rv_addi(RV_REG_T1, RV_REG_TCC, -1), ctx);
+ 	off = (tc_ninsn - (ctx->ninsns - start_insn)) << 2;
+-	emit_bcc(BPF_JSLT, RV_REG_T1, RV_REG_ZERO, off, ctx);
++	emit_bcc(BPF_JSLT, RV_REG_TCC, RV_REG_ZERO, off, ctx);
+ 
+ 	/*
+ 	 * prog = array->ptrs[index];
 -- 
 2.25.1
 
