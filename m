@@ -3,61 +3,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,LOTS_OF_MONEY,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E7CCC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43CF0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 173AE2072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:30:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18111206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:30:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662624;
-	bh=RyU8bCmCzVxSV2P47dF/Ddb+fy18hma9gz8vKz6FU4k=;
+	s=default; t=1591662625;
+	bh=qlHFhiF+yd/ECgPkPqNQR8a1vcazpWtXpQJzzcBVVrM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cGrtuGL9HcnGKSuKM6kazSm7d42UQfzH2M7hTnc3hNfGQvTxfp4n7N+XhfnP0/4Hn
-	 OGTisAK1157BkHS6G4Ume9a1HN2S5yCh1bxsRIzqhy5UKi8gDPL7BtwIbWdb1huFRG
-	 of//h0YGczNWZHvGKnUxpPivZ96PafJFG9ruqnuw=
+	b=seQ2zs7FSUYziVbJ6zqokBpTUQ7nhMvxEghl5flKvaBrvoxUV9Xtp+6VnuP+mLt47
+	 YP7WqEBQd/iXJKaijGwJyvTnhSbHvVO1Uz9nPxR+KWv7DSsUpHmil6wVYsbNAmX8wa
+	 /XRe6GfQ02TvuoWmKpnYpqD/MiW1faiGjoBBylN4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730796AbgFIAaW (ORCPT
+        id S1730117AbgFHXPx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:30:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37070 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:15:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730119AbgFHXPz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:15:55 -0400
+        id S1728549AbgFHXNQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:13:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACE242076A;
-        Mon,  8 Jun 2020 23:15:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9EB120B80;
+        Mon,  8 Jun 2020 23:13:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658154;
-        bh=RyU8bCmCzVxSV2P47dF/Ddb+fy18hma9gz8vKz6FU4k=;
+        s=default; t=1591657996;
+        bh=qlHFhiF+yd/ECgPkPqNQR8a1vcazpWtXpQJzzcBVVrM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i9/1dbXIPdp39E9OwOyyPDCNsWx1RMQtvSu4w8JY168NaNjgKA7aGG3jocoAtfWyI
-         BI12xEQxIl+fdlB13lw2LzoNUV9qwQRDMcRINzhHaD9iW31bse4zkdzp5eD9jnvDES
-         ax7s4S5MTgb3aJWWj4BtGdTquH+0RtmvgX7BYP5s=
+        b=KZ+HQY7IIYqj1Bey5NkId3fJim4XCcIKr6ktITAkCc+Z22O6MDOuz5ttVfE9BVBPb
+         Md91OJ+lefwxRlC8FWpIu60lAGBOugkzbCM3tQx+EZkS2KlZ+EHGx0cNYkyMb7E5wI
+         gSup3v82wAZ5UF9d/Bc69DbITjVYO1q66yjrNX+4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-nvdimm@lists.01.org
-Subject: [PATCH AUTOSEL 5.6 186/606] device-dax: don't leak kernel memory to user space after unloading kmem
-Date:   Mon,  8 Jun 2020 19:05:11 -0400
-Message-Id: <20200608231211.3363633-186-sashal@kernel.org>
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.6 054/606] Revert "ALSA: hda/realtek: Fix pop noise on ALC225"
+Date:   Mon,  8 Jun 2020 19:02:59 -0400
+Message-Id: <20200608231211.3363633-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -66,128 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit 60858c00e5f018eda711a3aa84cf62214ef62d61 upstream.
+commit f41224efcf8aafe80ea47ac870c5e32f3209ffc8 upstream.
 
-Assume we have kmem configured and loaded:
+This reverts commit 3b36b13d5e69d6f51ff1c55d1b404a74646c9757.
 
-  [root@localhost ~]# cat /proc/iomem
-  ...
-  140000000-33fffffff : Persistent Memory$
-    140000000-1481fffff : namespace0.0
-    150000000-33fffffff : dax0.0
-      150000000-33fffffff : System RAM
+Enable power save node breaks some systems with ACL225. Revert the patch
+and use a platform specific quirk for the original issue isntead.
 
-Assume we try to unload kmem. This force-unloading will work, even if
-memory cannot get removed from the system.
-
-  [root@localhost ~]# rmmod kmem
-  [   86.380228] removing memory fails, because memory [0x0000000150000000-0x0000000157ffffff] is onlined
-  ...
-  [   86.431225] kmem dax0.0: DAX region [mem 0x150000000-0x33fffffff] cannot be hotremoved until the next reboot
-
-Now, we can reconfigure the namespace:
-
-  [root@localhost ~]# ndctl create-namespace --force --reconfig=namespace0.0 --mode=devdax
-  [  131.409351] nd_pmem namespace0.0: could not reserve region [mem 0x140000000-0x33fffffff]dax
-  [  131.410147] nd_pmem: probe of namespace0.0 failed with error -16namespace0.0 --mode=devdax
-  ...
-
-This fails as expected due to the busy memory resource, and the memory
-cannot be used.  However, the dax0.0 device is removed, and along its
-name.
-
-The name of the memory resource now points at freed memory (name of the
-device):
-
-  [root@localhost ~]# cat /proc/iomem
-  ...
-  140000000-33fffffff : Persistent Memory
-    140000000-1481fffff : namespace0.0
-    150000000-33fffffff : �_�^7_��/_��wR��WQ���^��� ...
-    150000000-33fffffff : System RAM
-
-We have to make sure to duplicate the string.  While at it, remove the
-superfluous setting of the name and fixup a stale comment.
-
-Fixes: 9f960da72b25 ("device-dax: "Hotremove" persistent memory that is used like normal RAM")
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: <stable@vger.kernel.org>	[5.3]
-Link: http://lkml.kernel.org/r/20200508084217.9160-2-david@redhat.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 3b36b13d5e69 ("ALSA: hda/realtek: Fix pop noise on ALC225")
+BugLink: https://bugs.launchpad.net/bugs/1875916
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Link: https://lore.kernel.org/r/20200503152449.22761-1-kai.heng.feng@canonical.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/dax/kmem.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ sound/pci/hda/patch_realtek.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
-index 3d0a7e702c94..1e678bdf5aed 100644
---- a/drivers/dax/kmem.c
-+++ b/drivers/dax/kmem.c
-@@ -22,6 +22,7 @@ int dev_dax_kmem_probe(struct device *dev)
- 	resource_size_t kmem_size;
- 	resource_size_t kmem_end;
- 	struct resource *new_res;
-+	const char *new_res_name;
- 	int numa_node;
- 	int rc;
- 
-@@ -48,11 +49,16 @@ int dev_dax_kmem_probe(struct device *dev)
- 	kmem_size &= ~(memory_block_size_bytes() - 1);
- 	kmem_end = kmem_start + kmem_size;
- 
--	/* Region is permanently reserved.  Hot-remove not yet implemented. */
--	new_res = request_mem_region(kmem_start, kmem_size, dev_name(dev));
-+	new_res_name = kstrdup(dev_name(dev), GFP_KERNEL);
-+	if (!new_res_name)
-+		return -ENOMEM;
-+
-+	/* Region is permanently reserved if hotremove fails. */
-+	new_res = request_mem_region(kmem_start, kmem_size, new_res_name);
- 	if (!new_res) {
- 		dev_warn(dev, "could not reserve region [%pa-%pa]\n",
- 			 &kmem_start, &kmem_end);
-+		kfree(new_res_name);
- 		return -EBUSY;
- 	}
- 
-@@ -63,12 +69,12 @@ int dev_dax_kmem_probe(struct device *dev)
- 	 * unknown to us that will break add_memory() below.
- 	 */
- 	new_res->flags = IORESOURCE_SYSTEM_RAM;
--	new_res->name = dev_name(dev);
- 
- 	rc = add_memory(numa_node, new_res->start, resource_size(new_res));
- 	if (rc) {
- 		release_resource(new_res);
- 		kfree(new_res);
-+		kfree(new_res_name);
- 		return rc;
- 	}
- 	dev_dax->dax_kmem_res = new_res;
-@@ -83,6 +89,7 @@ static int dev_dax_kmem_remove(struct device *dev)
- 	struct resource *res = dev_dax->dax_kmem_res;
- 	resource_size_t kmem_start = res->start;
- 	resource_size_t kmem_size = resource_size(res);
-+	const char *res_name = res->name;
- 	int rc;
- 
- 	/*
-@@ -102,6 +109,7 @@ static int dev_dax_kmem_remove(struct device *dev)
- 	/* Release and free dax resources */
- 	release_resource(res);
- 	kfree(res);
-+	kfree(res_name);
- 	dev_dax->dax_kmem_res = NULL;
- 
- 	return 0;
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index d6bc39dce4cf..d73c814358bf 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -8121,8 +8121,6 @@ static int patch_alc269(struct hda_codec *codec)
+ 		spec->gen.mixer_nid = 0;
+ 		break;
+ 	case 0x10ec0225:
+-		codec->power_save_node = 1;
+-		/* fall through */
+ 	case 0x10ec0295:
+ 	case 0x10ec0299:
+ 		spec->codec_variant = ALC269_TYPE_ALC225;
 -- 
 2.25.1
 
