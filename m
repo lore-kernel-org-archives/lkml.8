@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFEF7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45BE8C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 986942076C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:08:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D0822076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:08:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591664891;
-	bh=VYWenzQ8i2lLQM7eSA2bTGMvfrUBJTLf4bOKdgHsOGE=;
+	s=default; t=1591664904;
+	bh=PG0qiH2KEanMcWHB5FHf6WHtqvnKB05Xm9dmC6kGVQA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YdkbwDUwnGGhBgI+jqLp6rafwCTeFnkmzGyiersQ1jAo3U09+AGzAlWfMSHvjxvsO
-	 DSA7qbXFIf4CeZXuKOkP7kOStJoqAovmCPxE23oulB/DI+T0T4KQT+/HAGlQUkWUhY
-	 tNsSrgV3uUC2RnmUpBXBHeRq7s03Lh25xDX6Ab/4=
+	b=DBrulnMvSL+aJheVEJJpm+RQ34o9HaSralouF1Uq33eGawrjOxxqmG1oqZWUpjeZb
+	 36/3y+0abFaANwmCLwXa6MZDQ+VmIDVPTf7EBa5lJ9mapnAX+cbqxAkyBun/A7Q1QQ
+	 IGZnWFmWjQ63eYvEPXrhfrwP7ON575gkg14kfBsk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388214AbgFIBH5 (ORCPT
+        id S2388223AbgFIBIX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 21:07:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50204 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 21:08:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727088AbgFHXGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:06:52 -0400
+        id S1727076AbgFHXGs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:06:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4AC920820;
-        Mon,  8 Jun 2020 23:06:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B8EB20775;
+        Mon,  8 Jun 2020 23:06:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657612;
-        bh=VYWenzQ8i2lLQM7eSA2bTGMvfrUBJTLf4bOKdgHsOGE=;
+        s=default; t=1591657607;
+        bh=PG0qiH2KEanMcWHB5FHf6WHtqvnKB05Xm9dmC6kGVQA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rgKodUlOOq6h5Df8UQp+9PzVQTaXFRpiKBgGZQk8K3tImYRDjRTvkI+eswaHW725y
-         pkcUXWWJtBFv22zLgVE2xrnXLN0TvpyCASV4JRFPdRIgLoOnYoqdDd2qD3CBArGbCx
-         zC9dLdztHN7UmPdkOR3Hsq4h6RwFi46LYy++hRQQ=
+        b=rmJfWDAQ3hLW+8uWpVXf4bpBV29BISzh1lslYqykuhQPSPR1kB3AnR0e19Nhdepal
+         mT07F/I5CIlT40wvpGUUmYvRb+fOidbqg5de6ySkdCyIyxeYIHr/1ixQvFpW1lo3ht
+         2/y8/4bB0ai8/0RgBriVwBpYNVGirgPaVirJ7+EY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dejin Zheng <zhengdejin5@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Yan-Hsuan Chuang <yhchuang@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 035/274] rtw88: fix an issue about leak system resources
-Date:   Mon,  8 Jun 2020 19:02:08 -0400
-Message-Id: <20200608230607.3361041-35-sashal@kernel.org>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 032/274] arm64: cacheflush: Fix KGDB trap detection
+Date:   Mon,  8 Jun 2020 19:02:05 -0400
+Message-Id: <20200608230607.3361041-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -62,37 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dejin Zheng <zhengdejin5@gmail.com>
+From: Daniel Thompson <daniel.thompson@linaro.org>
 
-[ Upstream commit 191f6b08bfef24e1a9641eaac96ed030a7be4599 ]
+[ Upstream commit ab8ad279ceac4fc78ae4dcf1a26326e05695e537 ]
 
-the related system resources were not released when pci_iomap() return
-error in the rtw_pci_io_mapping() function. add pci_release_regions() to
-fix it.
+flush_icache_range() contains a bodge to avoid issuing IPIs when the kgdb
+trap handler is running because issuing IPIs is unsafe (and not needed)
+in this execution context. However the current test, based on
+kgdb_connected is flawed: it both over-matches and under-matches.
 
-Fixes: e3037485c68ec1a ("rtw88: new Realtek 802.11ac driver")
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-Acked-by: Yan-Hsuan Chuang <yhchuang@realtek.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200504083442.3033-1-zhengdejin5@gmail.com
+The over match occurs because kgdb_connected is set when gdb attaches
+to the stub and remains set during normal running. This is relatively
+harmelss because in almost all cases irq_disabled() will be false.
+
+The under match is more serious. When kdb is used instead of kgdb to access
+the debugger then kgdb_connected is not set in all the places that the
+debug core updates sw breakpoints (and hence flushes the icache). This
+can lead to deadlock.
+
+Fix by replacing the ad-hoc check with the proper kgdb macro. This also
+allows us to drop the #ifdef wrapper.
+
+Fixes: 3b8c9f1cdfc5 ("arm64: IPI each CPU after invalidating the I-cache for kernel mappings")
+Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Link: https://lore.kernel.org/r/20200504170518.2959478-1-daniel.thompson@linaro.org
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtw88/pci.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/include/asm/cacheflush.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/realtek/rtw88/pci.c b/drivers/net/wireless/realtek/rtw88/pci.c
-index 1af87eb2e53a..d735f3127fe8 100644
---- a/drivers/net/wireless/realtek/rtw88/pci.c
-+++ b/drivers/net/wireless/realtek/rtw88/pci.c
-@@ -1091,6 +1091,7 @@ static int rtw_pci_io_mapping(struct rtw_dev *rtwdev,
- 	len = pci_resource_len(pdev, bar_id);
- 	rtwpci->mmap = pci_iomap(pdev, bar_id, len);
- 	if (!rtwpci->mmap) {
-+		pci_release_regions(pdev);
- 		rtw_err(rtwdev, "failed to map pci memory\n");
- 		return -ENOMEM;
- 	}
+diff --git a/arch/arm64/include/asm/cacheflush.h b/arch/arm64/include/asm/cacheflush.h
+index e6cca3d4acf7..ce50c1f1f1ea 100644
+--- a/arch/arm64/include/asm/cacheflush.h
++++ b/arch/arm64/include/asm/cacheflush.h
+@@ -79,7 +79,7 @@ static inline void flush_icache_range(unsigned long start, unsigned long end)
+ 	 * IPI all online CPUs so that they undergo a context synchronization
+ 	 * event and are forced to refetch the new instructions.
+ 	 */
+-#ifdef CONFIG_KGDB
++
+ 	/*
+ 	 * KGDB performs cache maintenance with interrupts disabled, so we
+ 	 * will deadlock trying to IPI the secondary CPUs. In theory, we can
+@@ -89,9 +89,9 @@ static inline void flush_icache_range(unsigned long start, unsigned long end)
+ 	 * the patching operation, so we don't need extra IPIs here anyway.
+ 	 * In which case, add a KGDB-specific bodge and return early.
+ 	 */
+-	if (kgdb_connected && irqs_disabled())
++	if (in_dbg_master())
+ 		return;
+-#endif
++
+ 	kick_all_cpus_sync();
+ }
+ 
 -- 
 2.25.1
 
