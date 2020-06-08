@@ -2,156 +2,161 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1173C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 02:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B22FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 02:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88BBF2075A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 02:54:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="izDTLbNF"
+	by mail.kernel.org (Postfix) with ESMTP id 6B4EB2077D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 02:58:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728956AbgFHCyd (ORCPT
+        id S1728736AbgFHC6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 22:54:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47982 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728908AbgFHCyb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 22:54:31 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 934A5C08C5C5
-        for <linux-kernel@vger.kernel.org>; Sun,  7 Jun 2020 19:54:30 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id k2so5139280pjs.2
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Jun 2020 19:54:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=TNiiby0GhibJHmG02ytGWtb3GrXv/h2IE3SFE6qK8wY=;
-        b=izDTLbNFapAPFawYa8bP5L1UpCxlkSTCCzx2ye/9STM1DqXymdysNnGkX12FV0/OIo
-         tKcjXEIEuxSNO572pWS545T9DoQqGqTM8DmMcj/pjObZb/s4KuucXPV8lxnGJsPOEWOP
-         creFxg4Q8lnO5UPN6FiY9AkscKdJteM1nKY+Qmci5RctGzZp1Lm8RhpxAeqkzQiUCQxI
-         Gn/htYffz0hnLWeWv7zjKwwzU0TiNbE2IVaAoUldJmQdAcEGN9qicP3+rskQKiUOfzQ9
-         T1+IF9bYkLx6QP/gZ6BWN651hoOpft0Cc6Lq2cjMJoEoVussc3m5Gv9e47HSM5NkG+Yl
-         PSSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=TNiiby0GhibJHmG02ytGWtb3GrXv/h2IE3SFE6qK8wY=;
-        b=cqBB1p5bYZoV8kfEdF31LXumnX6KcBj5D9vrP0wRPJxqGLmBw/rAGWREIV6mfxZdIK
-         pB0ur3nrwJ8dk6ahAanpWNKbmoV4tn9IoZWBgUEX3XSxpwSSTtRI9ATyeCVPc1jZK71e
-         F1B3QbSmgWqzZeFbzldrG2zoy6sD3lE6loWRwvFgOThQ+SaSeTXmS4tj1eLLxE6lbUsd
-         ZRq3gORzjqYS9JMlbB5dyhdjwVT3OzeNcBjk1J6obYAcgENA9ueQYAErrY1wFUqfhfgn
-         AdlGvCw7OnPhCko5pEHUsuLiIzpHXr+HPsVnkMlGHhSlJ5lARDIon8ZeCYdgDCD8k+6+
-         rvdQ==
-X-Gm-Message-State: AOAM531plsR7GVk+WpRG9qVBVPyDQzLk2eTHliMYZ7k1DL4cYx9OxDUo
-        4wXMWuzv9Pp2S0d3RCWNqYSpOw==
-X-Google-Smtp-Source: ABdhPJxkqD1zFPHkx/wch8a4hS4Dcd7qZB1Ug7k+ig+u/wKNnkcnbqH/JdvGWQP6MIHxl1bz+Ni7fQ==
-X-Received: by 2002:a17:90a:f3c4:: with SMTP id ha4mr15260604pjb.18.1591584870012;
-        Sun, 07 Jun 2020 19:54:30 -0700 (PDT)
-Received: from [10.80.2.98] ([45.135.186.73])
-        by smtp.gmail.com with ESMTPSA id t9sm9533489pjs.16.2020.06.07.19.54.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 07 Jun 2020 19:54:29 -0700 (PDT)
-Subject: Re: [PATCH 0/2] Introduce PCI_FIXUP_IOMMU
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        jean-philippe <jean-philippe@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
-References: <20200605231909.GA1155454@bjorn-Precision-5520>
-From:   Zhangfei Gao <zhangfei.gao@linaro.org>
-Message-ID: <be91b0f0-c685-789d-6868-1c8ebd62b770@linaro.org>
-Date:   Mon, 8 Jun 2020 10:54:15 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sun, 7 Jun 2020 22:58:55 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5862 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728065AbgFHC6z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jun 2020 22:58:55 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id D4266A8D4C9B446D8409;
+        Mon,  8 Jun 2020 10:58:51 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 8 Jun 2020
+ 10:58:49 +0800
+Subject: Re: [PATCH] f2fs: allow writeback on error status filesystem
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
+References: <20200605085453.45717-1-yuchao0@huawei.com>
+ <20200607211748.GA26785@google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <025cde14-3b4e-b9db-d359-513a44e9c1a1@huawei.com>
+Date:   Mon, 8 Jun 2020 10:58:50 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20200605231909.GA1155454@bjorn-Precision-5520>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200607211748.GA26785@google.com>
+Content-Type: text/plain; charset="windows-1252"
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Bjorn
-
-On 2020/6/6 上午7:19, Bjorn Helgaas wrote:
-> On Thu, Jun 04, 2020 at 09:33:07PM +0800, Zhangfei Gao wrote:
->> On 2020/6/2 上午1:41, Bjorn Helgaas wrote:
->>> On Thu, May 28, 2020 at 09:33:44AM +0200, Joerg Roedel wrote:
->>>> On Wed, May 27, 2020 at 01:18:42PM -0500, Bjorn Helgaas wrote:
->>>>> Is this slowdown significant?  We already iterate over every device
->>>>> when applying PCI_FIXUP_FINAL quirks, so if we used the existing
->>>>> PCI_FIXUP_FINAL, we wouldn't be adding a new loop.  We would only be
->>>>> adding two more iterations to the loop in pci_do_fixups() that tries
->>>>> to match quirks against the current device.  I doubt that would be a
->>>>> measurable slowdown.
->>>> I don't know how significant it is, but I remember people complaining
->>>> about adding new PCI quirks because it takes too long for them to run
->>>> them all. That was in the discussion about the quirk disabling ATS on
->>>> AMD Stoney systems.
->>>>
->>>> So it probably depends on how many PCI devices are in the system whether
->>>> it causes any measureable slowdown.
->>> I found this [1] from Paul Menzel, which was a slowdown caused by
->>> quirk_usb_early_handoff().  I think the real problem is individual
->>> quirks that take a long time.
->>>
->>> The PCI_FIXUP_IOMMU things we're talking about should be fast, and of
->>> course, they're only run for matching devices anyway.  So I'd rather
->>> keep them as PCI_FIXUP_FINAL than add a whole new phase.
->>>
->> Thanks Bjorn for taking time for this.
->> If so, it would be much simpler.
+On 2020/6/8 5:17, Jaegeuk Kim wrote:
+> On 06/05, Chao Yu wrote:
+>>     71.07%     0.01%  kworker/u256:1+  [kernel.kallsyms]  [k] wb_writeback
+>>             |
+>>              --71.06%--wb_writeback
+>>                        |
+>>                        |--68.96%--__writeback_inodes_wb
+>>                        |          |
+>>                        |           --68.95%--writeback_sb_inodes
+>>                        |                     |
+>>                        |                     |--65.08%--__writeback_single_inode
+>>                        |                     |          |
+>>                        |                     |           --64.35%--do_writepages
+>>                        |                     |                     |
+>>                        |                     |                     |--59.83%--f2fs_write_node_pages
+>>                        |                     |                     |          |
+>>                        |                     |                     |           --59.74%--f2fs_sync_node_pages
+>>                        |                     |                     |                     |
+>>                        |                     |                     |                     |--27.91%--pagevec_lookup_range_tag
+>>                        |                     |                     |                     |          |
+>>                        |                     |                     |                     |           --27.90%--find_get_pages_range_tag
 >>
->> +++ b/drivers/iommu/iommu.c
->> @@ -2418,6 +2418,10 @@ int iommu_fwspec_init(struct device *dev, struct
->> fwnode_handle *iommu_fwnode,
->>          fwspec->iommu_fwnode = iommu_fwnode;
->>          fwspec->ops = ops;
->>          dev_iommu_fwspec_set(dev, fwspec);
->> +
->> +       if (dev_is_pci(dev))
->> +               pci_fixup_device(pci_fixup_final, to_pci_dev(dev));
->> +
->>
->> Then pci_fixup_final will be called twice, the first in pci_bus_add_device.
->> Here in iommu_fwspec_init is the second time, specifically for iommu_fwspec.
->> Will send this when 5.8-rc1 is open.
-> Wait, this whole fixup approach seems wrong to me.  No matter how you
-> do the fixup, it's still a fixup, which means it requires ongoing
-> maintenance.  Surely we don't want to have to add the Vendor/Device ID
-> for every new AMBA device that comes along, do we?
->
->
-Here the fake pci device has standard PCI cfg space, but physical 
-implementation is base on AMBA
-They can provide pasid feature.
-However,
-1, does not support tlp since they are not real pci devices.
-2. does not support pri, instead support stall (provided by smmu)
-And stall is not a pci feature, so it is not described in struct 
-pci_dev, but in struct iommu_fwspec.
-So we use this fixup to tell pci system that the devices can support 
-stall, and hereby support pasid.
+>> If filesystem was injected w/ checkpoint errror, before umount, kworker
+>> will always hold one core in order to writeback a large number of node
+>> pages, that looks not reasonable, to avoid that, we can allow data/node
+>> write in such case, since we can force all data/node writes with OPU mode,
+>> and clear recovery flag on node, and checkpoint is not allowed as well,
+>> so we don't need to worry about writeback's effect on data/node in
+>> previous checkpoint, then with this way, it can decrease memory footprint
+>> cost by node/data pages and avoid looping into data/node writeback
+>> process.
+> 
+> This patch breaks fault injection test with filesystem corruption. Please check.
 
-Thanks
+My bad, will check soon.
+
+Thanks,
+
+> 
+>>
+>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+>> ---
+>>  fs/f2fs/data.c | 19 ++++++++++++-------
+>>  fs/f2fs/node.c |  7 +++++--
+>>  2 files changed, 17 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+>> index 9d40db50cd65..2b3c846181bb 100644
+>> --- a/fs/f2fs/data.c
+>> +++ b/fs/f2fs/data.c
+>> @@ -2519,6 +2519,8 @@ bool f2fs_should_update_outplace(struct inode *inode, struct f2fs_io_info *fio)
+>>  {
+>>  	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+>>  
+>> +	if (unlikely(f2fs_cp_error(sbi)))
+>> +		return true;
+>>  	if (f2fs_lfs_mode(sbi))
+>>  		return true;
+>>  	if (S_ISDIR(inode->i_mode))
+>> @@ -2702,13 +2704,16 @@ int f2fs_write_single_data_page(struct page *page, int *submitted,
+>>  	/* we should bypass data pages to proceed the kworkder jobs */
+>>  	if (unlikely(f2fs_cp_error(sbi))) {
+>>  		mapping_set_error(page->mapping, -EIO);
+>> -		/*
+>> -		 * don't drop any dirty dentry pages for keeping lastest
+>> -		 * directory structure.
+>> -		 */
+>> -		if (S_ISDIR(inode->i_mode))
+>> -			goto redirty_out;
+>> -		goto out;
+>> +
+>> +		if (has_not_enough_free_secs(sbi, 0, 0)) {
+>> +			/*
+>> +			 * don't drop any dirty dentry pages for keeping lastest
+>> +			 * directory structure.
+>> +			 */
+>> +			if (S_ISDIR(inode->i_mode))
+>> +				goto redirty_out;
+>> +			goto out;
+>> +		}
+>>  	}
+>>  
+>>  	if (unlikely(is_sbi_flag_set(sbi, SBI_POR_DOING)))
+>> diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+>> index 03e24df1c84f..372c04efad38 100644
+>> --- a/fs/f2fs/node.c
+>> +++ b/fs/f2fs/node.c
+>> @@ -1527,7 +1527,10 @@ static int __write_node_page(struct page *page, bool atomic, bool *submitted,
+>>  			unlock_page(page);
+>>  			return 0;
+>>  		}
+>> -		goto redirty_out;
+>> +		if (has_not_enough_free_secs(sbi, 0, 0))
+>> +			goto redirty_out;
+>> +		set_fsync_mark(page, 0);
+>> +		set_dentry_mark(page, 0);
+>>  	}
+>>  
+>>  	if (unlikely(is_sbi_flag_set(sbi, SBI_POR_DOING)))
+>> @@ -1568,7 +1571,7 @@ static int __write_node_page(struct page *page, bool atomic, bool *submitted,
+>>  		goto redirty_out;
+>>  	}
+>>  
+>> -	if (atomic && !test_opt(sbi, NOBARRIER))
+>> +	if (atomic && !test_opt(sbi, NOBARRIER) && !f2fs_cp_error(sbi))
+>>  		fio.op_flags |= REQ_PREFLUSH | REQ_FUA;
+>>  
+>>  	/* should add to global list before clearing PAGECACHE status */
+>> -- 
+>> 2.18.0.rc1
+> .
+> 
