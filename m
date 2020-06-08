@@ -2,106 +2,185 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 136B7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D1AFC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:44:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E05EB20760
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:44:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C7A4206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:44:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r4puKIU7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D5dYpCpC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729260AbgFHJoW (ORCPT
+        id S1729298AbgFHJo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 05:44:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54724 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729144AbgFHJoV (ORCPT
+        Mon, 8 Jun 2020 05:44:29 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:52683 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729267AbgFHJo1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 05:44:21 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41F94C08C5C3;
-        Mon,  8 Jun 2020 02:44:21 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id l26so14651714wme.3;
-        Mon, 08 Jun 2020 02:44:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=NXI0Z0J/4ooSNFN2GwSVlyNdAvGywcRXeFQ5674Mtzc=;
-        b=r4puKIU7t9t/z+Akeod8D0rhFdVAmL/DY1c4jq8ct0lJu6WcDcmDglH2T3nsaLueoh
-         FYqSCosvbu7c0507caUgc8lPWCxfNOJBR1NNb+E9V2372WvWAqBrSfgKH0+uRFP59I6m
-         OrY4syPydx3wueiiSOjsaeEfC8VD0l57zSAuCbHlyOpVnB5qrvDsl1rrS0yc3xht9Q98
-         eqqxs8zSHCyrU4X2e3+7YJKeCai2Ux6gFUS2KzsfjiPFzapXmPMBixsnWTXtKGSTMWwq
-         8NjaS5aZSDjHwq+j+4zWD/pj/BUNzIthnKixB0NCrgvuy7u2NoSrqk/UBmGnsZcWOV3W
-         P4Kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=NXI0Z0J/4ooSNFN2GwSVlyNdAvGywcRXeFQ5674Mtzc=;
-        b=BOuc6YuXwAAX4zEx0DPo3tmH5jGNt3/rNMMJzBqOWccFl8Hlm4KLidfQ/rcQoCNQV8
-         s6lwpz44PVqAd23mEcS9tocwccSeSE3ZnHOyLQ6CTPiD8Om3P902eJfDrRqGOeL0fEYn
-         thhYOeYqW5yzyOrtmgKHxGgDDhJDeXMqW24SgiQMEdftMRy0hgl+Xxofttfv0zYpqxJL
-         ZOSM9UsaChTOV7YfTNmPEQTvNhgTtB0DNTX0mqGZyeTIO5rs3Ti0zYEv8pSiJTH3zByJ
-         PSjgIaLx1YDhKgY3JvJ2KUlrdhRui9fwvxJt8iYah4Wg22tE+LvLHxFzz7cymphGFhwk
-         FxAw==
-X-Gm-Message-State: AOAM533Mu4nBgrHyW9GZ2um3twRshOX+eWYVEN9u44r9NJXtW/OieW6t
-        e3iMp9YnkOg/wgzMnGvUU7k=
-X-Google-Smtp-Source: ABdhPJyhhWTEMpHKx5xQFfbXhw9ERansrUFCr10VFQiatRUTj4yVSTkoPUwZkwxzRuhA6tnFNbtzhw==
-X-Received: by 2002:a7b:cb11:: with SMTP id u17mr2312826wmj.84.1591609460016;
-        Mon, 08 Jun 2020 02:44:20 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e0a:181:90d0:6ce1:d6aa:6a23:353b])
-        by smtp.gmail.com with ESMTPSA id y37sm26415505wrd.55.2020.06.08.02.44.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 02:44:19 -0700 (PDT)
-From:   Richard Genoud <richard.genoud@gmail.com>
-To:     Dan Murphy <dmurphy@ti.com>, Sriram Dash <sriram.dash@samsung.com>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Faiz Abbas <faiz_abbas@ti.com>
-Cc:     linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Richard Genoud <richard.genoud@gmail.com>
-Subject: [PATCH] can: m_can_platform: fix m_can_runtime_suspend()
-Date:   Mon,  8 Jun 2020 11:43:48 +0200
-Message-Id: <20200608094348.12650-1-richard.genoud@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 8 Jun 2020 05:44:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591609465;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/UosqSxCh5JuCf83w6SVNyttSVeqWDozCD9jkpIiB4s=;
+        b=D5dYpCpCgX0V9rzCQGH7WCd+iiU/zNy3bMD7Dpbhe5aJ7x/EMe+tplvVx2DsgG7rl5M6gC
+        91HGbYny9395GzR0J1q5os0hu6t0uhM9ZX165KFyh0wOCOi62haCKlsCXyMq2VUO8tedsA
+        dasWTjQLrkQYfLgnKTRCBwDM7OTPWRo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-196-C0fOS73UNGSerR78MqhKCw-1; Mon, 08 Jun 2020 05:44:21 -0400
+X-MC-Unique: C0fOS73UNGSerR78MqhKCw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1D37A107ACF3;
+        Mon,  8 Jun 2020 09:44:19 +0000 (UTC)
+Received: from [10.72.13.71] (ovpn-13-71.pek2.redhat.com [10.72.13.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 456F21084436;
+        Mon,  8 Jun 2020 09:44:02 +0000 (UTC)
+Subject: Re: [PATCH 5/6] vdpa: introduce virtio pci driver
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rob.miller@broadcom.com, lingshan.zhu@intel.com,
+        eperezma@redhat.com, lulu@redhat.com, shahafs@mellanox.com,
+        hanand@xilinx.com, mhabets@solarflare.com, gdawar@xilinx.com,
+        saugatm@xilinx.com, vmireyno@marvell.com,
+        zhangweining@ruijie.com.cn, eli@mellanox.com
+References: <20200529080303.15449-1-jasowang@redhat.com>
+ <20200529080303.15449-6-jasowang@redhat.com>
+ <20200602010332-mutt-send-email-mst@kernel.org>
+ <5dbb0386-beeb-5bf4-d12e-fb5427486bb8@redhat.com>
+ <6b1d1ef3-d65e-08c2-5b65-32969bb5ecbc@redhat.com>
+ <20200607095012-mutt-send-email-mst@kernel.org>
+ <9b1abd2b-232c-aa0f-d8bb-03e65fd47de2@redhat.com>
+ <20200608021438-mutt-send-email-mst@kernel.org>
+ <a1b1b7fb-b097-17b7-2e3a-0da07d2e48ae@redhat.com>
+ <20200608052041-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <9d2571b6-0b95-53b3-6989-b4d801eeb623@redhat.com>
+Date:   Mon, 8 Jun 2020 17:43:58 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
+In-Reply-To: <20200608052041-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit f524f829b75a ("can: m_can: Create a m_can platform
-framework"), the can peripheral on STM32MP1 wasn't working anymore.
 
-The reason was a bad copy/paste maneuver that added a call to
-m_can_class_suspend() in m_can_runtime_suspend().
+On 2020/6/8 下午5:31, Michael S. Tsirkin wrote:
+> On Mon, Jun 08, 2020 at 05:18:44PM +0800, Jason Wang wrote:
+>> On 2020/6/8 下午2:32, Michael S. Tsirkin wrote:
+>>> On Mon, Jun 08, 2020 at 11:32:31AM +0800, Jason Wang wrote:
+>>>> On 2020/6/7 下午9:51, Michael S. Tsirkin wrote:
+>>>>> On Fri, Jun 05, 2020 at 04:54:17PM +0800, Jason Wang wrote:
+>>>>>> On 2020/6/2 下午3:08, Jason Wang wrote:
+>>>>>>>>> +static const struct pci_device_id vp_vdpa_id_table[] = {
+>>>>>>>>> +    { PCI_DEVICE(PCI_VENDOR_ID_REDHAT_QUMRANET, PCI_ANY_ID) },
+>>>>>>>>> +    { 0 }
+>>>>>>>>> +};
+>>>>>>>> This looks like it'll create a mess with either virtio pci
+>>>>>>>> or vdpa being loaded at random. Maybe just don't specify
+>>>>>>>> any IDs for now. Down the road we could get a
+>>>>>>>> distinct vendor ID or a range of device IDs for this.
+>>>>>>> Right, will do.
+>>>>>>>
+>>>>>>> Thanks
+>>>>>> Rethink about this. If we don't specify any ID, the binding won't work.
+>>>>> We can bind manually. It's not really for production anyway, so
+>>>>> not a big deal imho.
+>>>> I think you mean doing it via "new_id", right.
+>>> I really meant driver_override. This is what people have been using
+>>> with pci-stub for years now.
+>>
+>> Do you want me to implement "driver_overrid" in this series, or a NULL
+>> id_table is sufficient?
+>
+> Doesn't the pci subsystem create driver_override for all devices
+> on the pci bus?
 
-Tested on STM32MP157C-DK2 and emSBC-Argon
 
-Fixes: f524f829b75a ("can: m_can: Create a m_can platform framework")
-Signed-off-by: Richard Genoud <richard.genoud@gmail.com>
----
- drivers/net/can/m_can/m_can_platform.c | 2 --
- 1 file changed, 2 deletions(-)
+Yes, I miss this.
 
-diff --git a/drivers/net/can/m_can/m_can_platform.c b/drivers/net/can/m_can/m_can_platform.c
-index 38ea5e600fb8..e6d0cb9ee02f 100644
---- a/drivers/net/can/m_can/m_can_platform.c
-+++ b/drivers/net/can/m_can/m_can_platform.c
-@@ -144,8 +144,6 @@ static int __maybe_unused m_can_runtime_suspend(struct device *dev)
- 	struct net_device *ndev = dev_get_drvdata(dev);
- 	struct m_can_classdev *mcan_class = netdev_priv(ndev);
- 
--	m_can_class_suspend(dev);
--
- 	clk_disable_unprepare(mcan_class->cclk);
- 	clk_disable_unprepare(mcan_class->hclk);
- 
+
+>>>>>> How about using a dedicated subsystem vendor id for this?
+>>>>>>
+>>>>>> Thanks
+>>>>> If virtio vendor id is used then standard driver is expected
+>>>>> to bind, right? Maybe use a dedicated vendor id?
+>>>> I meant something like:
+>>>>
+>>>> static const struct pci_device_id vp_vdpa_id_table[] = {
+>>>>       { PCI_DEVICE_SUB(PCI_VENDOR_ID_REDHAT_QUMRANET, PCI_ANY_ID,
+>>>> VP_TEST_VENDOR_ID, VP_TEST_DEVICE_ID) },
+>>>>       { 0 }
+>>>> };
+>>>>
+>>>> Thanks
+>>>>
+>>> Then regular virtio will still bind to it. It has
+>>>
+>>> drivers/virtio/virtio_pci_common.c:     { PCI_DEVICE(PCI_VENDOR_ID_REDHAT_QUMRANET, PCI_ANY_ID) },
+>>>
+>>>
+>> IFCVF use this to avoid the binding to regular virtio device.
+>
+> Ow. Indeed:
+>
+> #define IFCVF_VENDOR_ID         0x1AF4
+>
+> Which is of course not an IFCVF vendor id, it's the Red Hat vendor ID.
+>
+> I missed that.
+>
+> Does it actually work if you bind a virtio driver to it?
+
+
+It works.
+
+
+> I'm guessing no otherwise they wouldn't need IFC driver, right?
+>
+
+Looking at the driver, they used a dedicated bar for dealing with 
+virtqueue state save/restore. It
+
+
+>
+>
+>> Looking at
+>> pci_match_one_device() it checks both subvendor and subdevice there.
+>>
+>> Thanks
+>
+> But IIUC there is no guarantee that driver with a specific subvendor
+> matches in presence of a generic one.
+> So either IFC or virtio pci can win, whichever binds first.
+
+
+I'm not sure I get there. But I try manually bind IFCVF to qemu's 
+virtio-net-pci, and it fails.
+
+Thanks
+
+
+>
+> I guess we need to blacklist IFC in virtio pci probe code. Ugh.
+
+
+
+>
+
