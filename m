@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3308EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEAF6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:21:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BE0D20823
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA680208FE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:21:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658477;
-	bh=qvjhPUaOb17erKSTZsgaGvHyxeBQAmA1wh8ItEi5JFs=;
+	s=default; t=1591658484;
+	bh=SIl+6gDDlAgE5/oHLwCHDU0dl1CfSAmHwDjMoN+E624=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wzapcioP/To1WkPqpgcysm92MMSaJ2q3LiKeZjQy7XcMD26q7MftertkHF4wWzs9j
-	 dmwbdc97WRqL9y2/iWRpwjWfrBMYIbTtnYzNN/JuixPkY0AGobyh0k9CPI8Tb22TNm
-	 t8yFtVB7XmPzCRvx8xlD3AibqJxIGnFPg92wsst4=
+	b=SDiEbnWV++k3yc/9BMLqLM1J3meWCc85VkNuNtBkcJZATyIFwiDa3OBrMG8+PCkEh
+	 m4hZaNiaHKkVXQKcPV/LWmtOENvkkRzBVqeT7nHVSAJfsaEzgZfK+Y6CXoWU5WY+L6
+	 yLNWHaeNSEcF1GUQEVHuUnFr3afuSe/7Op/yzKME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731125AbgFHXVQ (ORCPT
+        id S1729452AbgFHXVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:21:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38648 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:21:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728511AbgFHXRJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:17:09 -0400
+        id S1728533AbgFHXRL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:17:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8B9520814;
-        Mon,  8 Jun 2020 23:17:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FE702085B;
+        Mon,  8 Jun 2020 23:17:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658229;
-        bh=qvjhPUaOb17erKSTZsgaGvHyxeBQAmA1wh8ItEi5JFs=;
+        s=default; t=1591658230;
+        bh=SIl+6gDDlAgE5/oHLwCHDU0dl1CfSAmHwDjMoN+E624=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sbgc+cCgObyR6DolAbH4hB7buOuBhfVNEZLtjR1eiJUq2pajlbhlhSgjl7zfwznpz
-         c1BrvZrJ8GXZCNJpJKj0kXtAm49vN9o5XP9OeBrZ8ZtlfhYFgwCZ9WYk+aGClndbH5
-         nWcbDHWnsNodKtuwsIpzFsoPhVOtAkXTeV/mj+3E=
+        b=yLthxuXYvCYJ7MI8sg9feveoDnJzzFyhGAh7aPcuA0SRknYTkEimPV3bmB5DkvjLu
+         17Xd7yUTDyBttw0TAB21CVrWFfixwf/Z+nEdxTaBo+BtRFahxRCoRVp254D9zR7Ap6
+         axi4IpzbCSr8FPvBqqGZUSsqcHy0I/pZI2DxOBJE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Roi Dayan <roid@mellanox.com>, Mark Bloch <markb@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
+Cc:     Vadim Fedorenko <vfedorenko@novek.ru>,
+        "David S . Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        netdev@vger.kernel.org, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 242/606] net/mlx5: Annotate mutex destroy for root ns
-Date:   Mon,  8 Jun 2020 19:06:07 -0400
-Message-Id: <20200608231211.3363633-242-sashal@kernel.org>
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 243/606] net/tls: fix encryption error checking
+Date:   Mon,  8 Jun 2020 19:06:08 -0400
+Message-Id: <20200608231211.3363633-243-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -60,38 +60,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roi Dayan <roid@mellanox.com>
+From: Vadim Fedorenko <vfedorenko@novek.ru>
 
-commit 9ca415399dae133b00273a4283ef31d003a6818d upstream.
+commit a7bff11f6f9afa87c25711db8050c9b5324db0e2 upstream.
 
-Invoke mutex_destroy() to catch any errors.
+bpf_exec_tx_verdict() can return negative value for copied
+variable. In that case this value will be pushed back to caller
+and the real error code will be lost. Fix it using signed type and
+checking for positive value.
 
-Fixes: 2cc43b494a6c ("net/mlx5_core: Managing root flow table")
-Signed-off-by: Roi Dayan <roid@mellanox.com>
-Reviewed-by: Mark Bloch <markb@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Fixes: d10523d0b3d7 ("net/tls: free the record on encryption error")
+Fixes: d3b18ad31f93 ("tls: add bpf support to sk_msg handling")
+Signed-off-by: Vadim Fedorenko <vfedorenko@novek.ru>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/fs_core.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ net/tls/tls_sw.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c b/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
-index cdc566768a07..cf09cfc33234 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
-@@ -416,6 +416,12 @@ static void del_sw_ns(struct fs_node *node)
+diff --git a/net/tls/tls_sw.c b/net/tls/tls_sw.c
+index ffa3cbc5449d..34684b98c792 100644
+--- a/net/tls/tls_sw.c
++++ b/net/tls/tls_sw.c
+@@ -784,7 +784,7 @@ static int tls_push_record(struct sock *sk, int flags,
  
- static void del_sw_prio(struct fs_node *node)
+ static int bpf_exec_tx_verdict(struct sk_msg *msg, struct sock *sk,
+ 			       bool full_record, u8 record_type,
+-			       size_t *copied, int flags)
++			       ssize_t *copied, int flags)
  {
-+	struct mlx5_flow_root_namespace *root_ns;
-+	struct mlx5_flow_namespace *ns;
-+
-+	fs_get_obj(ns, node);
-+	root_ns = container_of(ns, struct mlx5_flow_root_namespace, ns);
-+	mutex_destroy(&root_ns->chain_lock);
- 	kfree(node);
+ 	struct tls_context *tls_ctx = tls_get_ctx(sk);
+ 	struct tls_sw_context_tx *ctx = tls_sw_ctx_tx(tls_ctx);
+@@ -920,7 +920,8 @@ int tls_sw_sendmsg(struct sock *sk, struct msghdr *msg, size_t size)
+ 	unsigned char record_type = TLS_RECORD_TYPE_DATA;
+ 	bool is_kvec = iov_iter_is_kvec(&msg->msg_iter);
+ 	bool eor = !(msg->msg_flags & MSG_MORE);
+-	size_t try_to_copy, copied = 0;
++	size_t try_to_copy;
++	ssize_t copied = 0;
+ 	struct sk_msg *msg_pl, *msg_en;
+ 	struct tls_rec *rec;
+ 	int required_size;
+@@ -1129,7 +1130,7 @@ int tls_sw_sendmsg(struct sock *sk, struct msghdr *msg, size_t size)
+ 
+ 	release_sock(sk);
+ 	mutex_unlock(&tls_ctx->tx_lock);
+-	return copied ? copied : ret;
++	return copied > 0 ? copied : ret;
  }
  
+ static int tls_sw_do_sendpage(struct sock *sk, struct page *page,
+@@ -1143,7 +1144,7 @@ static int tls_sw_do_sendpage(struct sock *sk, struct page *page,
+ 	struct sk_msg *msg_pl;
+ 	struct tls_rec *rec;
+ 	int num_async = 0;
+-	size_t copied = 0;
++	ssize_t copied = 0;
+ 	bool full_record;
+ 	int record_room;
+ 	int ret = 0;
+@@ -1245,7 +1246,7 @@ static int tls_sw_do_sendpage(struct sock *sk, struct page *page,
+ 	}
+ sendpage_end:
+ 	ret = sk_stream_error(sk, flags, ret);
+-	return copied ? copied : ret;
++	return copied > 0 ? copied : ret;
+ }
+ 
+ int tls_sw_sendpage_locked(struct sock *sk, struct page *page,
 -- 
 2.25.1
 
