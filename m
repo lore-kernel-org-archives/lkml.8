@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFEE3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:29:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08222C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACAC22087E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:29:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA529207C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:30:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658996;
-	bh=nPdV4t7L8LJ5km4yZ5iFxKLzj/Qptp1g8r/Ljh9YXK4=;
+	s=default; t=1591659010;
+	bh=kG9t7AnTnL9Y93YN+7mvClU3moEy9xDxPacmFdvK0/w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oNeWJugT1iaRecFuOojXzeMJc8kzb+k70LApONGkiGexo3PpD+nHZVqu5b27cy8Sk
-	 J8qLiZgG7GAfeJWuIr6unH9+GnISy8mY394RCh9klumamAiJQhkrwMd6/O0Sgtbh8T
-	 2kkzP3JSvKeG7evKUzb84YMCZquPZDpBJvQfR2lI=
+	b=lPg/VXfPhbrzAKKldkJnXhuloqZIxyG6JAYrwW9eD/ENti+YkvvlB0tQa1w2Zg3kX
+	 M1kacxCYoYc5jWlpdhN9AzsF8GlM2zs8MAz8p7dSeActPP/XbT6hMRUKhwgOH+f54W
+	 lgrTrlkmI1af2eBfqmOPPVrxbp2QZhQQYpN12dOY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732176AbgFHX3z (ORCPT
+        id S1731616AbgFHXaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:29:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49932 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:30:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731561AbgFHXYB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:24:01 -0400
+        id S2387481AbgFHXYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:24:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7688B20899;
-        Mon,  8 Jun 2020 23:24:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A1CE20B80;
+        Mon,  8 Jun 2020 23:24:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658641;
-        bh=nPdV4t7L8LJ5km4yZ5iFxKLzj/Qptp1g8r/Ljh9YXK4=;
+        s=default; t=1591658648;
+        bh=kG9t7AnTnL9Y93YN+7mvClU3moEy9xDxPacmFdvK0/w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mI3uLrNCNjhI5VmDL/YzRe4pbikQVQIF3xblUEacY/W7sWW3NDkNxx9aIETk8Gdbr
-         Xz62ZQ+evBdR7t2SqmhFVPRZVUCF4N0C7wxKIqJRwFHm28O9vlYrGP9X0ztUmzpf3n
-         OwMnMquqFOry5B+5T5dCOze/fMQvfNsNRLTB+ZEU=
+        b=rKbS3RFuzSJjzPaVpZBiSAxvixZj7Tc825KXZ3aeIJYXYtTu/W87XmdCDV4fGgdQt
+         hQArhcm9Xkv0SIriiojJVx8bkVZia/r8Bb5hQ+qnsPGX/+ITrwCSUOVn7146PwBQPi
+         e0Rby6vssq50+VgOWlH9VVyYGNwrcxU6jIB95YDI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Brian Foster <bfoster@redhat.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Allison Collins <allison.henderson@oracle.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 062/106] xfs: fix duplicate verification from xfs_qm_dqflush()
-Date:   Mon,  8 Jun 2020 19:21:54 -0400
-Message-Id: <20200608232238.3368589-62-sashal@kernel.org>
+Cc:     Rakesh Pillai <pillair@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 068/106] ath10k: Remove msdu from idr when management pkt send fails
+Date:   Mon,  8 Jun 2020 19:22:00 -0400
+Message-Id: <20200608232238.3368589-68-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608232238.3368589-1-sashal@kernel.org>
 References: <20200608232238.3368589-1-sashal@kernel.org>
@@ -62,48 +60,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Foster <bfoster@redhat.com>
+From: Rakesh Pillai <pillair@codeaurora.org>
 
-[ Upstream commit 629dcb38dc351947ed6a26a997d4b587f3bd5c7e ]
+[ Upstream commit c730c477176ad4af86d9aae4d360a7ad840b073a ]
 
-The pre-flush dquot verification in xfs_qm_dqflush() duplicates the
-read verifier by checking the dquot in the on-disk buffer. Instead,
-verify the in-core variant before it is flushed to the buffer.
+Currently when the sending of any management pkt
+via wmi command fails, the packet is being unmapped
+freed in the error handling. But the idr entry added,
+which is used to track these packet is not getting removed.
 
-Fixes: 7224fa482a6d ("xfs: add full xfs_dqblk verifier")
-Signed-off-by: Brian Foster <bfoster@redhat.com>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Allison Collins <allison.henderson@oracle.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Hence, during unload, in wmi cleanup, all the entries
+in IDR are removed and the corresponding buffer is
+attempted to be freed. This can cause a situation where
+one packet is attempted to be freed twice.
+
+Fix this error by rmeoving the msdu from the idr
+list when the sending of a management packet over
+wmi fails.
+
+Tested HW: WCN3990
+Tested FW: WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1
+
+Fixes: 1807da49733e ("ath10k: wmi: add management tx by reference support over wmi")
+Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/1588667015-25490-1-git-send-email-pillair@codeaurora.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_dquot.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/net/wireless/ath/ath10k/mac.c     |  3 +++
+ drivers/net/wireless/ath/ath10k/wmi-ops.h | 10 ++++++++++
+ drivers/net/wireless/ath/ath10k/wmi-tlv.c | 15 +++++++++++++++
+ 3 files changed, 28 insertions(+)
 
-diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
-index a1af984e4913..59b2b29542f4 100644
---- a/fs/xfs/xfs_dquot.c
-+++ b/fs/xfs/xfs_dquot.c
-@@ -1120,13 +1120,12 @@ xfs_qm_dqflush(
- 	dqb = bp->b_addr + dqp->q_bufoffset;
- 	ddqp = &dqb->dd_diskdq;
+diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
+index a09d7a07e90a..81af403c19c2 100644
+--- a/drivers/net/wireless/ath/ath10k/mac.c
++++ b/drivers/net/wireless/ath/ath10k/mac.c
+@@ -3852,6 +3852,9 @@ void ath10k_mgmt_over_wmi_tx_work(struct work_struct *work)
+ 			if (ret) {
+ 				ath10k_warn(ar, "failed to transmit management frame by ref via WMI: %d\n",
+ 					    ret);
++				/* remove this msdu from idr tracking */
++				ath10k_wmi_cleanup_mgmt_tx_send(ar, skb);
++
+ 				dma_unmap_single(ar->dev, paddr, skb->len,
+ 						 DMA_TO_DEVICE);
+ 				ieee80211_free_txskb(ar->hw, skb);
+diff --git a/drivers/net/wireless/ath/ath10k/wmi-ops.h b/drivers/net/wireless/ath/ath10k/wmi-ops.h
+index 7fd63bbf8e24..b6cd33fa79f8 100644
+--- a/drivers/net/wireless/ath/ath10k/wmi-ops.h
++++ b/drivers/net/wireless/ath/ath10k/wmi-ops.h
+@@ -139,6 +139,7 @@ struct wmi_ops {
+ 	struct sk_buff *(*gen_mgmt_tx_send)(struct ath10k *ar,
+ 					    struct sk_buff *skb,
+ 					    dma_addr_t paddr);
++	int (*cleanup_mgmt_tx_send)(struct ath10k *ar, struct sk_buff *msdu);
+ 	struct sk_buff *(*gen_dbglog_cfg)(struct ath10k *ar, u64 module_enable,
+ 					  u32 log_level);
+ 	struct sk_buff *(*gen_pktlog_enable)(struct ath10k *ar, u32 filter);
+@@ -431,6 +432,15 @@ ath10k_wmi_get_txbf_conf_scheme(struct ath10k *ar)
+ 	return ar->wmi.ops->get_txbf_conf_scheme(ar);
+ }
  
--	/*
--	 * A simple sanity check in case we got a corrupted dquot.
--	 */
--	fa = xfs_dqblk_verify(mp, dqb, be32_to_cpu(ddqp->d_id), 0);
-+	/* sanity check the in-core structure before we flush */
-+	fa = xfs_dquot_verify(mp, &dqp->q_core, be32_to_cpu(dqp->q_core.d_id),
-+			      0);
- 	if (fa) {
- 		xfs_alert(mp, "corrupt dquot ID 0x%x in memory at %pS",
--				be32_to_cpu(ddqp->d_id), fa);
-+				be32_to_cpu(dqp->q_core.d_id), fa);
- 		xfs_buf_relse(bp);
- 		xfs_dqfunlock(dqp);
- 		xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_INCORE);
++static inline int
++ath10k_wmi_cleanup_mgmt_tx_send(struct ath10k *ar, struct sk_buff *msdu)
++{
++	if (!ar->wmi.ops->cleanup_mgmt_tx_send)
++		return -EOPNOTSUPP;
++
++	return ar->wmi.ops->cleanup_mgmt_tx_send(ar, msdu);
++}
++
+ static inline int
+ ath10k_wmi_mgmt_tx_send(struct ath10k *ar, struct sk_buff *msdu,
+ 			dma_addr_t paddr)
+diff --git a/drivers/net/wireless/ath/ath10k/wmi-tlv.c b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
+index 248decb494c2..7f435fa29f75 100644
+--- a/drivers/net/wireless/ath/ath10k/wmi-tlv.c
++++ b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
+@@ -2638,6 +2638,18 @@ ath10k_wmi_tlv_op_gen_request_stats(struct ath10k *ar, u32 stats_mask)
+ 	return skb;
+ }
+ 
++static int
++ath10k_wmi_tlv_op_cleanup_mgmt_tx_send(struct ath10k *ar,
++				       struct sk_buff *msdu)
++{
++	struct ath10k_skb_cb *cb = ATH10K_SKB_CB(msdu);
++	struct ath10k_wmi *wmi = &ar->wmi;
++
++	idr_remove(&wmi->mgmt_pending_tx, cb->msdu_id);
++
++	return 0;
++}
++
+ static int
+ ath10k_wmi_mgmt_tx_alloc_msdu_id(struct ath10k *ar, struct sk_buff *skb,
+ 				 dma_addr_t paddr)
+@@ -2710,6 +2722,8 @@ ath10k_wmi_tlv_op_gen_mgmt_tx_send(struct ath10k *ar, struct sk_buff *msdu,
+ 	if (desc_id < 0)
+ 		goto err_free_skb;
+ 
++	cb->msdu_id = desc_id;
++
+ 	ptr = (void *)skb->data;
+ 	tlv = ptr;
+ 	tlv->tag = __cpu_to_le16(WMI_TLV_TAG_STRUCT_MGMT_TX_CMD);
+@@ -3949,6 +3963,7 @@ static const struct wmi_ops wmi_tlv_ops = {
+ 	.gen_force_fw_hang = ath10k_wmi_tlv_op_gen_force_fw_hang,
+ 	/* .gen_mgmt_tx = not implemented; HTT is used */
+ 	.gen_mgmt_tx_send = ath10k_wmi_tlv_op_gen_mgmt_tx_send,
++	.cleanup_mgmt_tx_send = ath10k_wmi_tlv_op_cleanup_mgmt_tx_send,
+ 	.gen_dbglog_cfg = ath10k_wmi_tlv_op_gen_dbglog_cfg,
+ 	.gen_pktlog_enable = ath10k_wmi_tlv_op_gen_pktlog_enable,
+ 	.gen_pktlog_disable = ath10k_wmi_tlv_op_gen_pktlog_disable,
 -- 
 2.25.1
 
