@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B3BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D8B1C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4E64207C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:39:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75DFD2074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:39:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591659576;
-	bh=vupYtHh+zi9vBtEtZ9bTOPCO4HoBCBq9wOTHXWHbTOA=;
+	s=default; t=1591659579;
+	bh=FnpfvCY1kK+oJUKHHBWMuFJE4lUNfe9+BmbcSoGl+oM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TmoUkMHilNhICHxuu1Bl7OSf5YIrLErHzrjvNIx0mvCvHplHccQlZzQP7+K1djgAI
-	 Sa/L6r6Pj/ET+klhd5SMd/QY4gVKFRFUcceSJ0cj/ProarDR8CowAGaaQMz3ZKflyK
-	 6JogGepGdkghu8ixWptB0CzR4a8G8s/x5UiQ/zmI=
+	b=uft50P/qUYBCAJGExzmEjRuInOa4UKzx9qbWwqUSh1LufiBjWw1+XcsmnQEs+gGZc
+	 IPZCAj4dPEFkok9IZk0V/KvvfizJeNdxIAw9vNR0t1kWDMNHo2E482Z3/ZRPqNM0Ew
+	 MY18cRYuPnSa6NBnyZA3Nw6gPYVHVq/I/AqRlcY0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387619AbgFHXjf (ORCPT
+        id S2387719AbgFHX2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:39:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57496 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387718AbgFHX2O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 8 Jun 2020 19:28:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47000 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387407AbgFHXW0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:22:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFACB20775;
-        Mon,  8 Jun 2020 23:28:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33212208A7;
+        Mon,  8 Jun 2020 23:22:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658893;
-        bh=vupYtHh+zi9vBtEtZ9bTOPCO4HoBCBq9wOTHXWHbTOA=;
+        s=default; t=1591658545;
+        bh=FnpfvCY1kK+oJUKHHBWMuFJE4lUNfe9+BmbcSoGl+oM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0B0TTQ22PNEPzJvwRsalZVo2PFlBmvj127yRwtQ5pwqz4+cM0pRQfTGMTrRr1A0ds
-         4JIbPoMPonQ35IZNHGZ1whRFWrQMeI0qs92JJqdPBCw2P36R8hVLUrziKLvA5G8lZT
-         tbXeHxy90hL1M8fXBoug8khGe75WXbWQniIX0HIc=
+        b=xuMPGiqo+vf7nLRpPE2gMbOCkuVb/lNzxY3WJNmiHKYtpeCiFuxKMvYf2VYNkM0vT
+         TUuOpra093uQDkROMIhYKdlhD9MswWwAn7/UT2ldOB6Cc0VI/80c2Q4aReOvGbXZ7D
+         4LCI1mr0aMvS6oh2iCZaIOsNu4ZkwubJQVhnGGKs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Juxin Gao <gaojuxin@loongson.cn>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Sasha Levin <sashal@kernel.org>, linux-mips@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 16/37] MIPS: Make sparse_init() using top-down allocation
-Date:   Mon,  8 Jun 2020 19:27:28 -0400
-Message-Id: <20200608232750.3370747-16-sashal@kernel.org>
+Cc:     Ido Schimmel <idosch@mellanox.com>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 167/175] vxlan: Avoid infinite loop when suppressing NS messages with invalid options
+Date:   Mon,  8 Jun 2020 19:18:40 -0400
+Message-Id: <20200608231848.3366970-167-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608232750.3370747-1-sashal@kernel.org>
-References: <20200608232750.3370747-1-sashal@kernel.org>
+In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
+References: <20200608231848.3366970-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,96 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
+From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit 269b3a9ac538c4ae87f84be640b9fa89914a2489 ]
+[ Upstream commit 8066e6b449e050675df48e7c4b16c29f00507ff0 ]
 
-In the current code, if CONFIG_SWIOTLB is set, when failed to get IO TLB
-memory from the low pages by plat_swiotlb_setup(), it may lead to the boot
-process failed with kernel panic.
+When proxy mode is enabled the vxlan device might reply to Neighbor
+Solicitation (NS) messages on behalf of remote hosts.
 
-(1) On the Loongson and SiByte platform
-arch/mips/loongson64/dma.c
-arch/mips/sibyte/common/dma.c
-void __init plat_swiotlb_setup(void)
-{
-	swiotlb_init(1);
-}
+In case the NS message includes the "Source link-layer address" option
+[1], the vxlan device will use the specified address as the link-layer
+destination address in its reply.
 
-kernel/dma/swiotlb.c
-void  __init
-swiotlb_init(int verbose)
-{
-...
-	vstart = memblock_alloc_low(PAGE_ALIGN(bytes), PAGE_SIZE);
-	if (vstart && !swiotlb_init_with_tbl(vstart, io_tlb_nslabs, verbose))
-		return;
-...
-	pr_warn("Cannot allocate buffer");
-	no_iotlb_memory = true;
-}
+To avoid an infinite loop, break out of the options parsing loop when
+encountering an option with length zero and disregard the NS message.
 
-phys_addr_t swiotlb_tbl_map_single()
-{
-...
-	if (no_iotlb_memory)
-		panic("Can not allocate SWIOTLB buffer earlier ...");
-...
-}
+This is consistent with the IPv6 ndisc code and RFC 4886 which states
+that "Nodes MUST silently discard an ND packet that contains an option
+with length zero" [2].
 
-(2) On the Cavium OCTEON platform
-arch/mips/cavium-octeon/dma-octeon.c
-void __init plat_swiotlb_setup(void)
-{
-...
-	octeon_swiotlb = memblock_alloc_low(swiotlbsize, PAGE_SIZE);
-	if (!octeon_swiotlb)
-		panic("%s: Failed to allocate %zu bytes align=%lx\n",
-		      __func__, swiotlbsize, PAGE_SIZE);
-...
-}
+[1] https://tools.ietf.org/html/rfc4861#section-4.3
+[2] https://tools.ietf.org/html/rfc4861#section-4.6
 
-Because IO_TLB_DEFAULT_SIZE is 64M, if the rest size of low memory is less
-than 64M when call plat_swiotlb_setup(), we can easily reproduce the panic
-case.
-
-In order to reduce the possibility of kernel panic when failed to get IO
-TLB memory under CONFIG_SWIOTLB, it is better to allocate low memory as
-small as possible before plat_swiotlb_setup(), so make sparse_init() using
-top-down allocation.
-
-Reported-by: Juxin Gao <gaojuxin@loongson.cn>
-Co-developed-by: Juxin Gao <gaojuxin@loongson.cn>
-Signed-off-by: Juxin Gao <gaojuxin@loongson.cn>
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Fixes: 4b29dba9c085 ("vxlan: fix nonfunctional neigh_reduce()")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/kernel/setup.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/net/vxlan.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
-index 8fa30516f39d..33f5aeaf0024 100644
---- a/arch/mips/kernel/setup.c
-+++ b/arch/mips/kernel/setup.c
-@@ -769,7 +769,17 @@ static void __init arch_mem_init(char **cmdline_p)
- 				BOOTMEM_DEFAULT);
- #endif
- 	device_tree_init();
-+
-+	/*
-+	 * In order to reduce the possibility of kernel panic when failed to
-+	 * get IO TLB memory under CONFIG_SWIOTLB, it is better to allocate
-+	 * low memory as small as possible before plat_swiotlb_setup(), so
-+	 * make sparse_init() using top-down allocation.
-+	 */
-+	memblock_set_bottom_up(false);
- 	sparse_init();
-+	memblock_set_bottom_up(true);
-+
- 	plat_swiotlb_setup();
- 	paging_init();
- 
+diff --git a/drivers/net/vxlan.c b/drivers/net/vxlan.c
+index ae59fca96032..03434db36b5c 100644
+--- a/drivers/net/vxlan.c
++++ b/drivers/net/vxlan.c
+@@ -1924,6 +1924,10 @@ static struct sk_buff *vxlan_na_create(struct sk_buff *request,
+ 	ns_olen = request->len - skb_network_offset(request) -
+ 		sizeof(struct ipv6hdr) - sizeof(*ns);
+ 	for (i = 0; i < ns_olen-1; i += (ns->opt[i+1]<<3)) {
++		if (!ns->opt[i + 1]) {
++			kfree_skb(reply);
++			return NULL;
++		}
+ 		if (ns->opt[i] == ND_OPT_SOURCE_LL_ADDR) {
+ 			daddr = ns->opt + i + sizeof(struct nd_opt_hdr);
+ 			break;
 -- 
 2.25.1
 
