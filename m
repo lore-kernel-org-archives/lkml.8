@@ -2,130 +2,204 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80CB3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D73C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6600F2053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:39:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90FF620656
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:43:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="lXCo703u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730049AbgFHOjD (ORCPT
+        id S1730032AbgFHOnT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 10:39:03 -0400
-Received: from mga18.intel.com ([134.134.136.126]:18724 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729948AbgFHOjC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 10:39:02 -0400
-IronPort-SDR: N3GlEXhnqNMQCejY1ESzxMxGyx1TkspY5lrO6C5ixCJNEn4Ke0NQ6XL0L/wSzrlHwsIYs3mBgX
- I4BA1zZP/RHQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2020 07:39:00 -0700
-IronPort-SDR: D0ix12Bs+J8SSR/5T0JAzVazG4EHYXaHaQZdGGJV/fhEXHozxda9QrerepGNKMsiM62mxWyYUq
- S2ymqfWc8sVQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,487,1583222400"; 
-   d="scan'208";a="305840070"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by fmsmga002.fm.intel.com with ESMTP; 08 Jun 2020 07:38:59 -0700
-Date:   Mon, 8 Jun 2020 07:38:59 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Marcelo Bandeira Condotta <mcondotta@redhat.com>,
-        Makarand Sonare <makarandsonare@google.com>,
-        Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] KVM: selftests: fix vmx_preemption_timer_test build
- with GCC10
-Message-ID: <20200608143859.GA8223@linux.intel.com>
-References: <20200608112346.593513-1-vkuznets@redhat.com>
- <20200608112346.593513-2-vkuznets@redhat.com>
- <39c73030-49ff-f25c-74de-9a52579eefbe@redhat.com>
+        Mon, 8 Jun 2020 10:43:19 -0400
+Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:34969 "EHLO
+        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729948AbgFHOnS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 10:43:18 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id iIzYjRwAsCKzeiIzbjmpDv; Mon, 08 Jun 2020 16:43:15 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1591627395; bh=pNmlUcaLydVQs8c0KPtxW18ChQ+9wIDu23I5D8PG9ns=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=lXCo703uwISHHqPVb6LTcqFk1zNpzIkdhr02b5dliC8MlC2/rjrPwyE2XU608Nt09
+         xZ9RfHLMOUST+ISspnRMwOMIvx+pg+q+zx8hWQ4pghyAFQkpQ3I+IYdWx/xwRUtmg8
+         49UW5n/YV9yqxbKA+r/688nnMTIp4XIUmbCfPT94ixhwsPr1uKVYdqMaweA2Evx0bU
+         xjpsPkQ3qcSuJh9PhpOjXemxrCAHPwjKS7k8JOi+3q27ZsKc0Bssx41HDEZAXS5awd
+         QUc1lJsv6deDzJ1Z2dZwe6ovg+I7Kk795sKZHv9gMUmZc03XJctF4lmWq1WLk61tZb
+         8XCblszNv+ZWA==
+Subject: Re: [PATCH 1/5] media: videodev2: add Compressed Framebuffer pixel
+ formats
+To:     Neil Armstrong <narmstrong@baylibre.com>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>
+Cc:     linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Maxime Jourdan <mjourdan@baylibre.com>,
+        Tomasz Figa <tfiga@chromium.org>
+References: <20200604135317.9235-1-narmstrong@baylibre.com>
+ <20200604135317.9235-2-narmstrong@baylibre.com>
+ <02aa06fd8397b77c9a75d3a8399cb55d3b4d39c1.camel@ndufresne.ca>
+ <4d22ff40-11ac-c77a-564d-af9a678f23af@baylibre.com>
+ <a15dea55-3ca4-2a65-5c56-6c1edd2de405@xs4all.nl>
+ <a4c5ae79-1d4d-4c1e-1535-c6c8b02d4b6f@baylibre.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <2a0db0a4-9d04-f20c-39d8-ff25e07e64b7@xs4all.nl>
+Date:   Mon, 8 Jun 2020 16:43:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <39c73030-49ff-f25c-74de-9a52579eefbe@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <a4c5ae79-1d4d-4c1e-1535-c6c8b02d4b6f@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfLyiiimZ6YdsUbH2tz9gxpGCvK/fKk/xvLXfYWzoiateyJhQ0WV54t8begnlvmJru1Ht1bY5+UvW1rQaAFymDZhRDME3mQSFAKi18y7URqpcxn9hWHrG
+ P9tgUzo/h6059EbdQo08Kgs/7fr/iP57hoJxgK3gP4AlNaIbXwX4mAT1H2vFaDcLEh69CeeBgg5q9Hc3GBwD9my05rakpAaB54pCYOSGYbYxZuaqjiXqBqcZ
+ Wv4IB38oR84t4kT17uZEFyXPkJUP4omGWaZaFB+bK10JKirQzctsRn6H4l+PZdr2eiqDM2AbSlK5SxKdCx2PDlbrWdGe8dSuZZPfx86evzb8UWkQddtQhFOp
+ MOQO/ayVZSY2I+/gJX308rbxogdZkMyjLJJDR9qwHrUTrVRmruRCyjxpQVapx8hwGCi6Vzls/pbZmgoUC0TU9vK8xu81Icgni5oQpm9tuZC1XszVBXw=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 01:57:03PM +0200, Paolo Bonzini wrote:
-> On 08/06/20 13:23, Vitaly Kuznetsov wrote:
-> > GCC10 fails to build vmx_preemption_timer_test:
-> > 
-> > gcc -Wall -Wstrict-prototypes -Wuninitialized -O2 -g -std=gnu99
-> > -fno-stack-protector -fno-PIE -I../../../../tools/include
-> >  -I../../../../tools/arch/x86/include -I../../../../usr/include/
-> >  -Iinclude -Ix86_64 -Iinclude/x86_64 -I..  -pthread  -no-pie
-> >  x86_64/evmcs_test.c ./linux/tools/testing/selftests/kselftest_harness.h
-> >  ./linux/tools/testing/selftests/kselftest.h
-> >  ./linux/tools/testing/selftests/kvm/libkvm.a
-> >  -o ./linux/tools/testing/selftests/kvm/x86_64/evmcs_test
-> > /usr/bin/ld: ./linux/tools/testing/selftests/kvm/libkvm.a(vmx.o):
-> >  ./linux/tools/testing/selftests/kvm/include/x86_64/vmx.h:603:
-> >  multiple definition of `ctrl_exit_rev'; /tmp/ccMQpvNt.o:
-> >  ./linux/tools/testing/selftests/kvm/include/x86_64/vmx.h:603:
-> >  first defined here
-> > /usr/bin/ld: ./linux/tools/testing/selftests/kvm/libkvm.a(vmx.o):
-> >  ./linux/tools/testing/selftests/kvm/include/x86_64/vmx.h:602:
-> >  multiple definition of `ctrl_pin_rev'; /tmp/ccMQpvNt.o:
-> >  ./linux/tools/testing/selftests/kvm/include/x86_64/vmx.h:602:
-> >  first defined here
-> >  ...
-> > 
-> > ctrl_exit_rev/ctrl_pin_rev/basic variables are only used in
-> > vmx_preemption_timer_test.c, just move them there.
-> > 
-> > Fixes: 8d7fbf01f9af ("KVM: selftests: VMX preemption timer migration test")
-> > Reported-by: Marcelo Bandeira Condotta <mcondotta@redhat.com>
-> > Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> > ---
-> >  tools/testing/selftests/kvm/include/x86_64/vmx.h              | 4 ----
-> >  .../testing/selftests/kvm/x86_64/vmx_preemption_timer_test.c  | 4 ++++
-> >  2 files changed, 4 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/tools/testing/selftests/kvm/include/x86_64/vmx.h b/tools/testing/selftests/kvm/include/x86_64/vmx.h
-> > index ccff3e6e2704..766af9944294 100644
-> > --- a/tools/testing/selftests/kvm/include/x86_64/vmx.h
-> > +++ b/tools/testing/selftests/kvm/include/x86_64/vmx.h
-> > @@ -598,10 +598,6 @@ union vmx_ctrl_msr {
-> >  	};
-> >  };
-> >  
-> > -union vmx_basic basic;
-> > -union vmx_ctrl_msr ctrl_pin_rev;
-> > -union vmx_ctrl_msr ctrl_exit_rev;
-> > -
-> >  struct vmx_pages *vcpu_alloc_vmx(struct kvm_vm *vm, vm_vaddr_t *p_vmx_gva);
-> >  bool prepare_for_vmx_operation(struct vmx_pages *vmx);
-> >  void prepare_vmcs(struct vmx_pages *vmx, void *guest_rip, void *guest_rsp);
-> > diff --git a/tools/testing/selftests/kvm/x86_64/vmx_preemption_timer_test.c b/tools/testing/selftests/kvm/x86_64/vmx_preemption_timer_test.c
-> > index cc72b6188ca7..a7737af1224f 100644
-> > --- a/tools/testing/selftests/kvm/x86_64/vmx_preemption_timer_test.c
-> > +++ b/tools/testing/selftests/kvm/x86_64/vmx_preemption_timer_test.c
-> > @@ -31,6 +31,10 @@ bool l2_save_restore_done;
-> >  static u64 l2_vmx_pt_start;
-> >  volatile u64 l2_vmx_pt_finish;
-> >  
-> > +union vmx_basic basic;
-> > +union vmx_ctrl_msr ctrl_pin_rev;
-> > +union vmx_ctrl_msr ctrl_exit_rev;
-> > +
-> >  void l2_guest_code(void)
-> >  {
-> >  	u64 vmx_pt_delta;
-> > 
+On 08/06/2020 16:14, Neil Armstrong wrote:
+> On 08/06/2020 11:26, Hans Verkuil wrote:
+>> On 08/06/2020 10:16, Neil Armstrong wrote:
+>>> Hi Nicolas,
+>>>
+>>> On 05/06/2020 17:35, Nicolas Dufresne wrote:
+>>>> Le jeudi 04 juin 2020 à 15:53 +0200, Neil Armstrong a écrit :
+>>>>> From: Maxime Jourdan <mjourdan@baylibre.com>
+>>>>>
+>>>>> Add two generic Compressed Framebuffer pixel formats to be used
+>>>>> with a modifier when imported back in another subsystem like DRM/KMS.
+>>>>>
+>>>>> These pixel formats represents generic 8bits and 10bits compressed buffers
+>>>>> with a vendor specific layout.
+>>>>>
+>>>>> These are aligned with the DRM_FORMAT_YUV420_8BIT and DRM_FORMAT_YUV420_10BIT
+>>>>> used to describe the underlying compressed buffers used for ARM Framebuffer
+>>>>> Compression. In the Amlogic case, the compression is different but the
+>>>>> underlying buffer components is the same.
+>>>>>
+>>>>> Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
+>>>>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>>>>> ---
+>>>>>  drivers/media/v4l2-core/v4l2-ioctl.c | 2 ++
+>>>>>  include/uapi/linux/videodev2.h       | 9 +++++++++
+>>>>>  2 files changed, 11 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+>>>>> index 2322f08a98be..8f14adfd5bc5 100644
+>>>>> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
+>>>>> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+>>>>> @@ -1447,6 +1447,8 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
+>>>>>  		case V4L2_PIX_FMT_S5C_UYVY_JPG:	descr = "S5C73MX interleaved UYVY/JPEG"; break;
+>>>>>  		case V4L2_PIX_FMT_MT21C:	descr = "Mediatek Compressed Format"; break;
+>>>>>  		case V4L2_PIX_FMT_SUNXI_TILED_NV12: descr = "Sunxi Tiled NV12 Format"; break;
+>>>>> +		case V4L2_PIX_FMT_YUV420_8BIT:	descr = "Compressed YUV 4:2:0 8-bit Format"; break;
+>>>>> +		case V4L2_PIX_FMT_YUV420_10BIT:	descr = "Compressed YUV 4:2:0 10-bit Format"; break;
 > 
-> Queued both, thanks.
+> [..]
+> 
+>>>>
+>>>> I'll remind that the modifier implementation has great value and is
+>>>> much more scalable then the current V4L2 approach. There has been some
+>>>> early proposal for this, maybe it's time to prioritize because this
+>>>> list will starts growing with hundred or even thousands or format,
+>>>> which is clearly indicated by the increase of modifier generator macro
+>>>> on the DRM side.
+>>>
+>>> Yes, but until the migration of drm_fourcc and v4l2 fourcc into a common one
+>>> is decided, I'm stuck and this is the only intermediate solution I found.
+>>
+>> We can safely assume that drm fourcc and v4l2 fourcc won't be merged.
+>>
+>> There is too much divergence and not enough interest in creating common
+>> fourccs.
+>>
+>> But we *do* want to share the modifiers.
+>>
+>>>
+>>> We have a working solution with Boris's patchset with ext_fmt passing the
+>>> modifier to user-space.
+>>>
+>>> but anyway, since the goal is to merge the fourcc between DRM & V4L2, these YUV420_*BIT
+>>> will still be needed if we pass the modifier with an extended format struct.
+>>
+>> We tried merging fourccs but that ran into resistance. Frankly, I wouldn't
+>> bother with this, it is much easier to just create a conversion table in the
+>> kernel docs.
+>>
+>> So don't block on this, I would really prefer if the ext_fmt series is picked
+>> up again and rebased and reposted and then worked on. The stateless codec support
+>> is taking less time (it's shaping up well) so there is more time to work on this.
+> 
+> Ok, I already starting discussing with Helen Koike about the ext_fnt re-spin.
+> 
+> Should I re-introduce different v4l2 pixfmt for these DRM YUV420_*BIT or I can keep this
+> patch along the new ext_fmt and shared modifiers ?
 
-Hmm, someone go awry with your queue a while back?
+So to be clear the DRM_FORMAT_YUV420_8BIT/10BIT fourccs define that this is a
+buffer containing compressed YUV420 in 8 or 10 bit and the modifier tells userspace
+which compression is used, right?
 
-https://lkml.kernel.org/r/ce6a5284-e09b-2f51-8cb6-baa29b3ac5c3@redhat.com
+And we would add V4L2_PIX_FMT_YUV420_8BIT/_10BIT that, I assume, use the same
+fourcc values as the DRM variants?
+
+Since these fourccs are basically useless without V4L2 modifier support it would
+only make sense in combination with the ext_fmt series.
+
+Regards,
+
+	Hans
+
+> 
+> Neil
+> 
+>>
+>> I believe we really need this since v4l2_buffer and v4l2_format are a real mess.
+>>
+>> Regards,
+>>
+>> 	Hans
+>>
+>>>
+>>>>
+>>>>>  		default:
+>>>>>  			if (fmt->description[0])
+>>>>>  				return;
+>>>>> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+>>>>> index c3a1cf1c507f..90b9949acb8a 100644
+>>>>> --- a/include/uapi/linux/videodev2.h
+>>>>> +++ b/include/uapi/linux/videodev2.h
+>>>>> @@ -705,6 +705,15 @@ struct v4l2_pix_format {
+>>>>>  #define V4L2_PIX_FMT_FWHT     v4l2_fourcc('F', 'W', 'H', 'T') /* Fast Walsh Hadamard Transform (vicodec) */
+>>>>>  #define V4L2_PIX_FMT_FWHT_STATELESS     v4l2_fourcc('S', 'F', 'W', 'H') /* Stateless FWHT (vicodec) */
+>>>>>  
+>>>>> +/*
+>>>>> + * Compressed Luminance+Chrominance meta-formats
+>>>>> + * In these formats, the component ordering is specified (Y, followed by U
+>>>>> + * then V), but the exact Linear layout is undefined.
+>>>>> + * These formats can only be used with a non-Linear modifier.
+>>>>> + */
+>>>>> +#define V4L2_PIX_FMT_YUV420_8BIT	v4l2_fourcc('Y', 'U', '0', '8') /* 1-plane YUV 4:2:0 8-bit */
+>>>>> +#define V4L2_PIX_FMT_YUV420_10BIT	v4l2_fourcc('Y', 'U', '1', '0') /* 1-plane YUV 4:2:0 10-bit */
+>>>>> +
+>>>>>  /*  Vendor-specific formats   */
+>>>>>  #define V4L2_PIX_FMT_CPIA1    v4l2_fourcc('C', 'P', 'I', 'A') /* cpia1 YUV */
+>>>>>  #define V4L2_PIX_FMT_WNVA     v4l2_fourcc('W', 'N', 'V', 'A') /* Winnov hw compress */
+>>>>
+>>>
+>>> [1] https://patchwork.freedesktop.org/series/73722/#rev7
+>>>
+>>
+> 
+
