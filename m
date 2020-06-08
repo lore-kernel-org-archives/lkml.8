@@ -7,55 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 523A9C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D252C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33B4920737
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:54:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34C0A20737
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:54:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660452;
-	bh=roViRovz+ySXxtyVFp7quuCERrlKwSGt4JrFFfEiK+Q=;
+	s=default; t=1591660469;
+	bh=F2UQ3f/EJyLX8uuLRDqCa52FwSXPHX2BTvdYFegJOio=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r6xZzenyempvocFrn/7IW1eawpYvbFebBu7wCm0jYcwlS1WvqnF6CvINEpyjKACtI
-	 rHkPz/AD8zcpEfx/uS6LOTCC19ATGgUwkiVmv4veic0x876kRrvaIGy6KM9qbr34QD
-	 lfZt56uunr+LhP2Nfzo3oPq3S7XvNJl2v2/3Oz6Y=
+	b=ejlig/T3WyHuJx9NqrJkLsalPnV2zwbCRroOZqJZ1drUldJabnQELtdxQuWnT0b4E
+	 6Id+SVFXwBIG5EVQiAAIQ5xAofn28LbieBRc2Gu5u6/GP8LDSyt+LJrFGh5Txr1AQ9
+	 p3FPwKZNqdvbRnnAKE564cKb+zVjt4/Oc/waW0/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732725AbgFHXyL (ORCPT
+        id S1732730AbgFHXy0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:54:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50320 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:54:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731603AbgFHXYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:24:17 -0400
+        id S1727045AbgFHXYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:24:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1EFC208E4;
-        Mon,  8 Jun 2020 23:24:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F3F12074B;
+        Mon,  8 Jun 2020 23:24:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658656;
-        bh=roViRovz+ySXxtyVFp7quuCERrlKwSGt4JrFFfEiK+Q=;
+        s=default; t=1591658655;
+        bh=F2UQ3f/EJyLX8uuLRDqCa52FwSXPHX2BTvdYFegJOio=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NnYriqcXQpz3sRISZZZCx0UmuavC6lZ9/BZ/rneNYouaF37RDtRnXsDTjbR37AZuN
-         7g0Y8m3psTKfOToypS6DFAhiFog2pOYsIWVxtAO4SiDq9KHHrnzxqBTVeYQyJfwgnh
-         L0yDAwdb0ruaiUJzdG3QkvUGNUwvLcJ+H5QEhtM0=
+        b=i9+qSicAo2zEcve4uB7nPflL65Ypx3DeaYT5wZetPTkZ6YfYxg3lRL7DRw2JOepfW
+         T/X/xrlpsypTWY++jM+8dwuV2Yh9+wqAdRENLxSEwKJl3iEAAxTKkvEt8pR3CGbUiH
+         hRb3c208abLzBJO4t8+N5iO3BZNam6PKGq/ENA7c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jesper Dangaard Brouer <brouer@redhat.com>,
-        Mao Wenan <maowenan@huawei.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Toshiaki Makita <toshiaki.makita1@gmail.com>,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+Cc:     DENG Qingfang <dqfext@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 074/106] veth: Adjust hard_start offset on redirect XDP frames
-Date:   Mon,  8 Jun 2020 19:22:06 -0400
-Message-Id: <20200608232238.3368589-74-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 073/106] net: dsa: mt7530: set CPU port to fallback mode
+Date:   Mon,  8 Jun 2020 19:22:05 -0400
+Message-Id: <20200608232238.3368589-73-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608232238.3368589-1-sashal@kernel.org>
 References: <20200608232238.3368589-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -64,84 +62,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jesper Dangaard Brouer <brouer@redhat.com>
+From: DENG Qingfang <dqfext@gmail.com>
 
-[ Upstream commit 5c8572251fabc5bb49fd623c064e95a9daf6a3e3 ]
+[ Upstream commit 38152ea37d8bdaffa22603e0a5b5b86cfa8714c9 ]
 
-When native XDP redirect into a veth device, the frame arrives in the
-xdp_frame structure. It is then processed in veth_xdp_rcv_one(),
-which can run a new XDP bpf_prog on the packet. Doing so requires
-converting xdp_frame to xdp_buff, but the tricky part is that
-xdp_frame memory area is located in the top (data_hard_start) memory
-area that xdp_buff will point into.
+Currently, setting a bridge's self PVID to other value and deleting
+the default VID 1 renders untagged ports of that VLAN unable to talk to
+the CPU port:
 
-The current code tried to protect the xdp_frame area, by assigning
-xdp_buff.data_hard_start past this memory. This results in 32 bytes
-less headroom to expand into via BPF-helper bpf_xdp_adjust_head().
+	bridge vlan add dev br0 vid 2 pvid untagged self
+	bridge vlan del dev br0 vid 1 self
+	bridge vlan add dev sw0p0 vid 2 pvid untagged
+	bridge vlan del dev sw0p0 vid 1
+	# br0 cannot send untagged frames out of sw0p0 anymore
 
-This protect step is actually not needed, because BPF-helper
-bpf_xdp_adjust_head() already reserve this area, and don't allow
-BPF-prog to expand into it. Thus, it is safe to point data_hard_start
-directly at xdp_frame memory area.
+That is because the CPU port is set to security mode and its PVID is
+still 1, and untagged frames are dropped due to VLAN member violation.
 
-Fixes: 9fc8d518d9d5 ("veth: Handle xdp_frames in xdp napi ring")
-Reported-by: Mao Wenan <maowenan@huawei.com>
-Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: Toshiaki Makita <toshiaki.makita1@gmail.com>
-Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Link: https://lore.kernel.org/bpf/158945338331.97035.5923525383710752178.stgit@firesoul
+Set the CPU port to fallback mode so untagged frames can pass through.
+
+Fixes: 83163f7dca56 ("net: dsa: mediatek: add VLAN support for MT7530")
+Signed-off-by: DENG Qingfang <dqfext@gmail.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/veth.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/dsa/mt7530.c | 11 ++++++++---
+ drivers/net/dsa/mt7530.h |  6 ++++++
+ 2 files changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/veth.c b/drivers/net/veth.c
-index 41a00cd76955..2abbad1abaf2 100644
---- a/drivers/net/veth.c
-+++ b/drivers/net/veth.c
-@@ -377,13 +377,15 @@ static struct sk_buff *veth_xdp_rcv_one(struct veth_rq *rq,
- 					unsigned int *xdp_xmit)
- {
- 	void *hard_start = frame->data - frame->headroom;
--	void *head = hard_start - sizeof(struct xdp_frame);
- 	int len = frame->len, delta = 0;
- 	struct xdp_frame orig_frame;
- 	struct bpf_prog *xdp_prog;
- 	unsigned int headroom;
- 	struct sk_buff *skb;
+diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
+index 8b39a211ecb6..616afd81536a 100644
+--- a/drivers/net/dsa/mt7530.c
++++ b/drivers/net/dsa/mt7530.c
+@@ -860,10 +860,15 @@ mt7530_port_set_vlan_aware(struct dsa_switch *ds, int port)
+ 		   PCR_MATRIX_MASK, PCR_MATRIX(MT7530_ALL_MEMBERS));
  
-+	/* bpf_xdp_adjust_head() assures BPF cannot access xdp_frame area */
-+	hard_start -= sizeof(struct xdp_frame);
+ 	/* Trapped into security mode allows packet forwarding through VLAN
+-	 * table lookup.
++	 * table lookup. CPU port is set to fallback mode to let untagged
++	 * frames pass through.
+ 	 */
+-	mt7530_rmw(priv, MT7530_PCR_P(port), PCR_PORT_VLAN_MASK,
+-		   MT7530_PORT_SECURITY_MODE);
++	if (dsa_is_cpu_port(ds, port))
++		mt7530_rmw(priv, MT7530_PCR_P(port), PCR_PORT_VLAN_MASK,
++			   MT7530_PORT_FALLBACK_MODE);
++	else
++		mt7530_rmw(priv, MT7530_PCR_P(port), PCR_PORT_VLAN_MASK,
++			   MT7530_PORT_SECURITY_MODE);
+ 
+ 	/* Set the port as a user port which is to be able to recognize VID
+ 	 * from incoming packets before fetching entry within the VLAN table.
+diff --git a/drivers/net/dsa/mt7530.h b/drivers/net/dsa/mt7530.h
+index 403adbe5a4b4..101d309ee445 100644
+--- a/drivers/net/dsa/mt7530.h
++++ b/drivers/net/dsa/mt7530.h
+@@ -148,6 +148,12 @@ enum mt7530_port_mode {
+ 	/* Port Matrix Mode: Frames are forwarded by the PCR_MATRIX members. */
+ 	MT7530_PORT_MATRIX_MODE = PORT_VLAN(0),
+ 
++	/* Fallback Mode: Forward received frames with ingress ports that do
++	 * not belong to the VLAN member. Frames whose VID is not listed on
++	 * the VLAN table are forwarded by the PCR_MATRIX members.
++	 */
++	MT7530_PORT_FALLBACK_MODE = PORT_VLAN(1),
 +
- 	rcu_read_lock();
- 	xdp_prog = rcu_dereference(rq->xdp_prog);
- 	if (likely(xdp_prog)) {
-@@ -405,7 +407,6 @@ static struct sk_buff *veth_xdp_rcv_one(struct veth_rq *rq,
- 			break;
- 		case XDP_TX:
- 			orig_frame = *frame;
--			xdp.data_hard_start = head;
- 			xdp.rxq->mem = frame->mem;
- 			if (unlikely(veth_xdp_tx(rq->dev, &xdp) < 0)) {
- 				trace_xdp_exception(rq->dev, xdp_prog, act);
-@@ -417,7 +418,6 @@ static struct sk_buff *veth_xdp_rcv_one(struct veth_rq *rq,
- 			goto xdp_xmit;
- 		case XDP_REDIRECT:
- 			orig_frame = *frame;
--			xdp.data_hard_start = head;
- 			xdp.rxq->mem = frame->mem;
- 			if (xdp_do_redirect(rq->dev, &xdp, xdp_prog)) {
- 				frame = &orig_frame;
-@@ -437,7 +437,7 @@ static struct sk_buff *veth_xdp_rcv_one(struct veth_rq *rq,
- 	rcu_read_unlock();
- 
- 	headroom = sizeof(struct xdp_frame) + frame->headroom - delta;
--	skb = veth_build_skb(head, headroom, len, 0);
-+	skb = veth_build_skb(hard_start, headroom, len, 0);
- 	if (!skb) {
- 		xdp_return_frame(frame);
- 		goto err;
+ 	/* Security Mode: Discard any frame due to ingress membership
+ 	 * violation or VID missed on the VLAN table.
+ 	 */
 -- 
 2.25.1
 
