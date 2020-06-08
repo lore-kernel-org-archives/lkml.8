@@ -2,147 +2,93 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26ADCC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 22:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B30DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 22:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B04520760
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 22:53:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oUIUtFOD"
+	by mail.kernel.org (Postfix) with ESMTP id 1B6AE206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 22:54:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591656848;
+	bh=aFtqwt+bYOZhJ7U9irm3TzEiOtvg48f3YiInMbcBYs0=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=R6KfbZc9nGVo+2wbeUCFbcT5UkXsA5WtWqZcb+tfIuhCpOYYZ9rzzzGtbcW73pcEP
+	 at2bVoM1KlncUPobQOW8NJAd+mFeVnpdzDNZo28nB/y0F3FLHVlmCL+2mFND+vf9WW
+	 G1Xl7FxoQc0WYFmKFusymotKY8SSEjv81Jv6XXcU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbgFHWx5 (ORCPT
+        id S1726900AbgFHWyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 18:53:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35602 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726741AbgFHWxz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 18:53:55 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79F4DC08C5C2;
-        Mon,  8 Jun 2020 15:53:55 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id l1so14791248ede.11;
-        Mon, 08 Jun 2020 15:53:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=o0dkW7AvLyKn1HRWpsXIOwbF0Y+dLturfn26dWeNBGk=;
-        b=oUIUtFODJiEax1cYkKvYmwAdbOx/v8zdOrVZjhTeHg6/0BEdjS1WeDOIvOZ3WMb7/i
-         ONJQj9vfW3ieG2L3o2wsqtHBNoMNMe0kdkpPu0rhTZ2QSLOgtlPblqJ264grL9R+WwlL
-         7kR8ay5zlNj18Un3z9RIxrNLAzj3b6mRroHeqYtD09xsq62yqPZ7dHPaNSD5vqvJRgB3
-         tdCRffLsbtIGDVwc0U62UqtymSVZErg50b+7kgsYm9l8F9rZhjK/gEVBiVT/Vn4nuK/1
-         FiocN+z1p5MEN7CyXQV0CRu18kNf1pHA5GgmoLMFu+qoZ9Q5zfrmT5ME7kJeoWR6apjq
-         tZ9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=o0dkW7AvLyKn1HRWpsXIOwbF0Y+dLturfn26dWeNBGk=;
-        b=npldMPLKtImlug97zypKL7xLXWE/DJ9m7b3LS2sAP0G6CuupMtR2QLOo3ym9YewKdh
-         ysyx3hauiwfHdoRyOQWpe4ZxvsIb2eo7EFdj2ZzsGE4+slQKycKl9sjIjrVfmr0vg7k+
-         IvnULWcu1/KZIVb1RfjnTt18JHZkQn4ZaT6QQwLnANuRyZ0KkBG9sTm5IcWnpU+145+a
-         d1aeN1krKNafD7nnhZirx0RzZAz83btKsB8CihDtQJd8JBfYfIHCh3SimEIMZE/tpypJ
-         Qz0Dtk/pv13UeEFrZDa9hAYR3aXPtucI1uDpSfPSuapyT+9jibzd1nh10VCYfhFXymxW
-         FgIw==
-X-Gm-Message-State: AOAM53259hekU0D6RNwfYv/FuuP7cAxcBJbE3YQJ7XUeKzLqrQH4cA53
-        tsKrgW2vzMhF/fDK7UiwHNuewfF6u09DGi5EgkE=
-X-Google-Smtp-Source: ABdhPJwibOfu09ZokvFJB8guqz4Rh/t6R+97kctxbqsoYNwmzeb7qaLLtQeLrCUX3dmQ1Jq2dt20A6x9O/nH7nNQ8Mg=
-X-Received: by 2002:a50:9d46:: with SMTP id j6mr24741835edk.362.1591656833950;
- Mon, 08 Jun 2020 15:53:53 -0700 (PDT)
+        Mon, 8 Jun 2020 18:54:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38466 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726741AbgFHWyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 18:54:00 -0400
+Received: from localhost (c-67-164-102-47.hsd1.ca.comcast.net [67.164.102.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A0DD2076A;
+        Mon,  8 Jun 2020 22:53:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591656839;
+        bh=aFtqwt+bYOZhJ7U9irm3TzEiOtvg48f3YiInMbcBYs0=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=sV9brVTS0fbsMYHJ/0OiYUYepwLpKHZZvVEPsCcTclhj201DpvYC6IxwM1XDwdEIe
+         K1aFJ5vaHAov9BwrlY9IHX4mYNHZkTNxt1DgO7EyhoVEcdrayUCUJJ00a6kr5y+QET
+         7Agxg++7d8MkC5wB88ZPCM3NNvh4ps0v1mIPE2Lo=
+Date:   Mon, 8 Jun 2020 15:53:58 -0700 (PDT)
+From:   Stefano Stabellini <sstabellini@kernel.org>
+X-X-Sender: sstabellini@sstabellini-ThinkPad-T480s
+To:     Christoph Hellwig <hch@infradead.org>
+cc:     Stefano Stabellini <sstabellini@kernel.org>, jgross@suse.com,
+        boris.ostrovsky@oracle.com, konrad.wilk@oracle.com,
+        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+        tamas@tklengyel.com, roman@zededa.com,
+        Stefano Stabellini <stefano.stabellini@xilinx.com>
+Subject: Re: [PATCH v2 01/11] swiotlb-xen: use vmalloc_to_page on vmalloc
+ virt addresses
+In-Reply-To: <20200608070411.GA15742@infradead.org>
+Message-ID: <alpine.DEB.2.21.2006081539110.2815@sstabellini-ThinkPad-T480s>
+References: <alpine.DEB.2.21.2006031506590.6774@sstabellini-ThinkPad-T480s> <20200603222247.11681-1-sstabellini@kernel.org> <20200608070411.GA15742@infradead.org>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <1585044079-358-1-git-send-email-kalyan_t@codeaurora.org>
- <CALAqxLViRrga-XW2o1J1JutFdS1d-qmmgOrEP2beNygw3A7H4A@mail.gmail.com> <CALAqxLWbhioSH4pFyM348VrGWxRXHQV1s9bdz6HArYguLtAFcw@mail.gmail.com>
-In-Reply-To: <CALAqxLWbhioSH4pFyM348VrGWxRXHQV1s9bdz6HArYguLtAFcw@mail.gmail.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Mon, 8 Jun 2020 15:54:19 -0700
-Message-ID: <CAF6AEGvGxyen5DbYCoc1x5ZeWiZo0mgvtsNev0k7WJnw+Xgqjg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] drm/msm/dpu: add support for color processing blocks
- in dpu driver
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Krishna Manikandan <mkrishn@codeaurora.org>,
-        Raviteja Tamatam <travitej@codeaurora.org>,
-        Doug Anderson <dianders@chromium.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 8, 2020 at 3:37 PM John Stultz <john.stultz@linaro.org> wrote:
->
-> On Mon, Jun 8, 2020 at 3:25 PM John Stultz <john.stultz@linaro.org> wrote:
-> >
-> > On Wed, Mar 25, 2020 at 1:17 AM Kalyan Thota <kalyan_t@codeaurora.org> wrote:
-> > >
-> > > This change adds support to configure dspp blocks in
-> > > the dpu driver.
-> > >
-> > > Macro description of the changes coming in this patch.
-> > > 1) Add dspp definitions in the hw catalog.
-> > > 2) Add capability to reserve dspp blocks in the display data path.
-> > > 3) Attach the reserved block to the encoder.
-> > >
-> > > Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
-> >
-> > Hey all,
-> >   With this patch now merged upstream, I'm seeing a regression on
-> > db845c that I bisected down to it.
-> >
-> > When I boot up I see:
-> > [   40.976737] [drm:_dpu_rm_check_lm_and_get_connected_blks] [dpu
-> > error]failed to get dspp on lm 0
-> > [   40.985600] [drm:_dpu_rm_check_lm_and_get_connected_blks] [dpu
-> > error]failed to get dspp on lm 0
-> > [   40.994587] [drm:_dpu_rm_check_lm_and_get_connected_blks] [dpu
-> > error]failed to get dspp on lm 0
-> > [   41.003492] [drm:_dpu_rm_check_lm_and_get_connected_blks] [dpu
-> > error]failed to get dspp on lm 0
-> > [   41.012283] [drm:_dpu_rm_make_reservation] [dpu error]unable to
-> > find appropriate mixers
-> > [   41.020369] [drm:dpu_rm_reserve] [dpu error]failed to reserve hw
-> > resources: -119
-> >
-> > Over and over, and the display doesn't start up.
-> >
-> > I suspect we're supposed to catch the following check before the failure:
-> >
-> > +       if (!reqs->topology.num_dspp)
-> > +               return true;
-> >
-> > I suspect the issue is in dpu_encoder_get_topology() we don't fully
-> > initialize the topology structure on the stack before returning it.
-> >
-> > Does that sound plausible or is there likely some other cause?
->
-> This guess is wrong. The topology.num_dspp is 2, but lm_cfg->dspp is
-> coming back as zero.
->
-> I'll continue digging to see if I can understand better whats going wrong.
->
+Hi Christoph,
 
-It looks like no DSPP was added to 845, see sdm845_lm vs sc7180_lm
+Thanks you for the review.
 
 
-Kaylan, can this be fixed sanely to make DSPP optional, or should we
-revert and try again next time?
+On Mon, 8 Jun 2020, Christoph Hellwig wrote:
+> Well, this isn't just RPi4, but basically any ARM or ARM64 system
+> with non-coherent DMA (which is most of them).
 
-BR,
--R
+Well... yes :-)
+
+
+> > +	struct page *pg;
+> 
+> Please spell out page.
+
+OK
+
+
+> >  
+> >  	if (hwdev && hwdev->coherent_dma_mask)
+> >  		dma_mask = hwdev->coherent_dma_mask;
+> > @@ -346,9 +347,11 @@ xen_swiotlb_free_coherent(struct device *hwdev, size_t size, void *vaddr,
+> >  	/* Convert the size to actually allocated. */
+> >  	size = 1UL << (order + XEN_PAGE_SHIFT);
+> >  
+> > +	pg = is_vmalloc_addr(vaddr) ? vmalloc_to_page(vaddr) :
+> > +				      virt_to_page(vaddr);
+> 
+> Please use plain old if/else to make this more readable.
+
+Sure
