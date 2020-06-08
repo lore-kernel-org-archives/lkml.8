@@ -2,184 +2,112 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9AEEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71BC0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3F542078D
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:06:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BA482076C
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:06:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591632392;
+	bh=dm6VccpRTR1gI7kUqPERR2PbR74WR6VaKZUAB+c2esQ=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=MWIFF5bVz5w4tOceOZ49mscBuAnTwKoPipyZiEjg/Alhib84wP9XnnOTFRHgHyCAw
+	 znZ+PLG3fYgF/v7qpUvh+BJ9/EVi2vphK0kvWi+2b3hk/q184ZLSFQvdfwjPhYlU2b
+	 kgCJdGHQ8PrHVO1uKH/Is4YJpAZ3osFDxDWRSvW8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730453AbgFHQGS (ORCPT
+        id S1730462AbgFHQGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 12:06:18 -0400
-Received: from outbound-smtp20.blacknight.com ([46.22.139.247]:41187 "EHLO
-        outbound-smtp20.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730409AbgFHQGR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 12:06:17 -0400
-Received: from mail.blacknight.com (pemlinmail03.blacknight.ie [81.17.254.16])
-        by outbound-smtp20.blacknight.com (Postfix) with ESMTPS id AFB701C33CE
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 17:06:15 +0100 (IST)
-Received: (qmail 1248 invoked from network); 8 Jun 2020 16:06:15 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 8 Jun 2020 16:06:15 -0000
-Date:   Mon, 8 Jun 2020 17:06:14 +0100
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Jan Kara <jack@suse.cz>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] fsnotify: Rearrange fast path to minimise overhead when
- there is no watcher
-Message-ID: <20200608160614.GH3127@techsingularity.net>
-References: <20200608140557.GG3127@techsingularity.net>
- <CAOQ4uxhb1p5_rO9VjNb6assCczwQRx3xdAOXZ9S=mOA1g-0JVg@mail.gmail.com>
+        Mon, 8 Jun 2020 12:06:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32776 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730388AbgFHQGa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 12:06:30 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6271E2063A;
+        Mon,  8 Jun 2020 16:06:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591632389;
+        bh=dm6VccpRTR1gI7kUqPERR2PbR74WR6VaKZUAB+c2esQ=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=V1bojjCySPFLPUNHBAblR1JQV1Yd0V08M3uj4/5cam+MdvjROUmJG8sxOqOF7hiq8
+         GmDVvSYFfe/V13gMKTu+cWriFJo2Fdk8yvLoMpnzpFg6I88+hJjr6Bn191LxzFBHo7
+         cYHCN0NOHCRGvl/EPaM+NIN1DTA7GVEJZ0ScLn1s=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 451BD3522A6D; Mon,  8 Jun 2020 09:06:29 -0700 (PDT)
+Date:   Mon, 8 Jun 2020 09:06:29 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Kefeng Wang <wangkefeng.wang@huawei.com>,
+        kernel test robot <lkp@intel.com>,
+        Ingo Molnar <mingo@kernel.org>, kbuild-all@lists.01.org,
+        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org
+Subject: Re: [rcu:dev.2020.06.02a 67/90] kernel/rcu/rcuperf.c:727:38:
+ warning: format specifies type 'size_t' (aka 'unsigned int') but the
+ argument has type 'unsigned long'
+Message-ID: <20200608160629.GJ4455@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <202006060704.dM7SxfSK%lkp@intel.com>
+ <20200606001914.GE4455@paulmck-ThinkPad-P72>
+ <20200607190057.GA19362@paulmck-ThinkPad-P72>
+ <f6df7c3e-4c43-47eb-4c4f-a5e9de0d332f@huawei.com>
+ <20200608032632.GA2618368@ubuntu-n2-xlarge-x86>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAOQ4uxhb1p5_rO9VjNb6assCczwQRx3xdAOXZ9S=mOA1g-0JVg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200608032632.GA2618368@ubuntu-n2-xlarge-x86>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 06:03:56PM +0300, Amir Goldstein wrote:
-> > @@ -315,17 +315,12 @@ int fsnotify(struct inode *to_tell, __u32 mask, const void *data, int data_is,
-> >         struct fsnotify_iter_info iter_info = {};
-> >         struct super_block *sb = to_tell->i_sb;
-> >         struct mount *mnt = NULL;
-> > -       __u32 mnt_or_sb_mask = sb->s_fsnotify_mask;
-> > +       __u32 mnt_or_sb_mask;
-> >         int ret = 0;
-> > -       __u32 test_mask = (mask & ALL_FSNOTIFY_EVENTS);
-> > +       __u32 test_mask;
-> >
-> > -       if (path) {
-> > +       if (path)
-> >                 mnt = real_mount(path->mnt);
-> > -               mnt_or_sb_mask |= mnt->mnt_fsnotify_mask;
-> > -       }
-> > -       /* An event "on child" is not intended for a mount/sb mark */
-> > -       if (mask & FS_EVENT_ON_CHILD)
-> > -               mnt_or_sb_mask = 0;
-> >
-> >         /*
-> >          * Optimization: srcu_read_lock() has a memory barrier which can
-> > @@ -337,11 +332,21 @@ int fsnotify(struct inode *to_tell, __u32 mask, const void *data, int data_is,
-> >         if (!to_tell->i_fsnotify_marks && !sb->s_fsnotify_marks &&
-> >             (!mnt || !mnt->mnt_fsnotify_marks))
-> >                 return 0;
-> > +
-> > +       /* An event "on child" is not intended for a mount/sb mark */
-> > +       mnt_or_sb_mask = 0;
-> > +       if (!(mask & FS_EVENT_ON_CHILD)) {
-> > +               mnt_or_sb_mask = sb->s_fsnotify_mask;
-> > +               if (path)
-> > +                       mnt_or_sb_mask |= mnt->mnt_fsnotify_mask;
-> > +       }
-> > +
-> 
-> Are you sure that loading ->_fsnotify_mask is so much more expensive
-> than only checking ->_fsnotify_marks? They are surely on the same cache line.
-> Isn't it possible that you just moved the penalty to ->_fsnotify_marks check
-> with this change?
+On Sun, Jun 07, 2020 at 08:26:32PM -0700, Nathan Chancellor wrote:
+> On Mon, Jun 08, 2020 at 09:56:16AM +0800, Kefeng Wang wrote:
+> > 
+> > On 2020/6/8 3:00, Paul E. McKenney wrote:
+> > > On Fri, Jun 05, 2020 at 05:19:14PM -0700, Paul E. McKenney wrote:
+> > > > On Sat, Jun 06, 2020 at 07:07:10AM +0800, kernel test robot wrote:
+> > > > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2020.06.02a
+> > > > > head:   5216948905dd07a84cef8a7dc72c2ec076802efd
+> > > > > commit: 7d16add62717136b1839f0b3d7ea4cbb98f38c2a [67/90] rcuperf: Fix kfree_mult to match printk() format
+> > > > > config: arm-randconfig-r004-20200605 (attached as .config)
+> > > > > compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project 6dd738e2f0609f7d3313b574a1d471263d2d3ba1)
+> > > > > reproduce (this is a W=1 build):
+> > > > >          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+> > > > >          chmod +x ~/bin/make.cross
+> > > > >          # install arm cross compiling tool for clang build
+> > > > >          # apt-get install binutils-arm-linux-gnueabi
+> > > > >          git checkout 7d16add62717136b1839f0b3d7ea4cbb98f38c2a
+> > > > >          # save the attached .config to linux build tree
+> > > > >          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross ARCH=arm
+> > > > > 
+> > > > > If you fix the issue, kindly add following tag as appropriate
+> > > > > Reported-by: kernel test robot <lkp@intel.com>
+> > > > Adding Kefeng on CC.  Kefeng, thoughts?
+> > > Like this, perhaps?
+> > 
+> > Hi Paul，I check https://lkml.org/lkml/2020/6/2/286 and <https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git/log/?h=dev.2020.06.02a>
+> > 
+> > https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git/log/?h=dev.2020.06.02a
+> > 
+> > There are two different ways to fix the same issue
+> > 
+> > patch 1:  rcuperf: Fix printk format warning urgent-for-mingo
+> > 
+> > patch 2:  'rcuperf: Fix kfree_mult to match printk() format' from Ingo 
+> > after my patch
+> > 
+> > since patch1 already merged,  patch2 is not needed, so skip patch2?
 
-The profile indicated that the cost was in this line
+Good point, done, and thank you both!
 
-	mnt_or_sb_mask |= mnt->mnt_fsnotify_mask;
-
-as opposed to the other checks. Hence, I deferred the calculation of
-mnt_or_sb_mask until it was definitely needed. However, it's perfectly
-possible that the line simply looked hot because the function entry was
-hot in general.
-
-> Did you test performance with just the fsnotify_parent() change alone?
-> 
-
-No, but I can. I looked at the profile of fsnotify() first before moving
-on to fsnotify_parent() but I didn't test them in isolation as deferring
-unnecessarily calculations in a fast path seemed reasonable.
-
-> In any case, this hunk seriously conflicts with a patch set I am working on,
-> so I would rather not merging this change as is.
-> 
-> If you provide me the feedback that testing ->_fsnotify_marks before loading
-> ->_fsnotify_mask is beneficial on its own, then I will work this change into
-> my series.
-> 
-
-Will do. If the fsnotify_parent() changes are useful on their own, I'll
-post a v2 of the patch with just that change.
-
-> >         /*
-> >          * if this is a modify event we may need to clear the ignored masks
-> >          * otherwise return if neither the inode nor the vfsmount/sb care about
-> >          * this type of event.
-> >          */
-> > +       test_mask = (mask & ALL_FSNOTIFY_EVENTS);
-> >         if (!(mask & FS_MODIFY) &&
-> >             !(test_mask & (to_tell->i_fsnotify_mask | mnt_or_sb_mask)))
-> >                 return 0;
-> > diff --git a/include/linux/fsnotify.h b/include/linux/fsnotify.h
-> > index 5ab28f6c7d26..508f6bb0b06b 100644
-> > --- a/include/linux/fsnotify.h
-> > +++ b/include/linux/fsnotify.h
-> > @@ -44,6 +44,16 @@ static inline void fsnotify_dirent(struct inode *dir, struct dentry *dentry,
-> >         fsnotify_name(dir, mask, d_inode(dentry), &dentry->d_name, 0);
-> >  }
-> >
-> > +/* Notify this dentry's parent about a child's events. */
-> > +static inline int fsnotify_parent(struct dentry *dentry, __u32 mask,
-> > +                                 const void *data, int data_type)
-> > +{
-> > +       if (!(dentry->d_flags & DCACHE_FSNOTIFY_PARENT_WATCHED))
-> > +               return 0;
-> > +
-> > +       return __fsnotify_parent(dentry, mask, data, data_type);
-> > +}
-> > +
-> 
-> This change looks good as is, but I'm afraid my series is going to
-> make it obsolete.
-> It may very well be that my series will introduce more performance
-> penalty to your workload.
-> 
-> It would be very much appreciated if you could run a test for me.
-> I will gladly work in some more optimizations into my series.
-> 
-> You can find the relevant part of my work at:
-> https://github.com/amir73il/linux/commits/fsnotify_name
-> 
-
-Sure.
-
-> What this work does essentially is two things:
-> 1. Call backend once instead of twice when both inode and parent are
->     watching.
-> 2. Snapshot name and parent inode to pass to backend not only when
->     parent is watching, but also when an sb/mnt mark exists which
->     requests to get file names with events.
-> 
-> Compared to the existing implementation of fsnotify_parent(),
-> my code needs to also test bits in inode->i_fsnotify_mask,
-> inode->i_sb->s_fsnotify_mask and mnt->mnt_fsnotify_mask
-> before the fast path can be taken.
-> So its back to square one w.r.t your optimizations.
-> 
-
-Seems fair but it may be worth noting that the changes appear to be
-optimising the case where there are watchers. The case where there are
-no watchers at all is also interesting and probably a lot more common. I
-didn't look too closely at your series as I'm not familiar with fsnotify
-in general. However, at a glance it looks like fsnotify_parent() executes
-a substantial amount of code even if there are no watchers but I could
-be wrong.
-
--- 
-Mel Gorman
-SUSE Labs
+							Thanx, Paul
