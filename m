@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B39CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F300C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:50:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43CF82087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:50:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D51A120760
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:50:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663838;
-	bh=lO4eUHWmNCZ+YKJkGjlVsdAeLu+g8LxUW8/i3uYUDzo=;
+	s=default; t=1591663840;
+	bh=RErxoPQL57Pp8qE20X8tNu1DhNmZrHDXsOBxyT30KC0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vbu2wgKR7q6jylBNsgy79bc+uSafVn6VLVBMMbB3TcjC9wRAZFVswRHxb2tksJ4/X
-	 RGu/E5EZMa8HPnHhf39op8le5buLcYf5FP8zRAoDuGbVqTyZEIpGlMqsgN+Dpz7BS4
-	 FydO8/zLsM2xyrFuPT4pH8cIK8NqI4FlpaSUeGus=
+	b=PoE63t8nqRRzsna62LjE7lUNDLPO4NeczMpPOKR11Rm+s1K3XjVNgccIuSlNQrK3s
+	 /gM5PsvdFpXAsfc+xE9Ti+MZmXqQkzBdejXT/qe2tbCge12DBRya4UD06O2vjmMGQT
+	 dPILGXu8r+wJ9+xZKyzFULcKwrxyti9GFdmFvUy4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732146AbgFIAuh (ORCPT
+        id S1733249AbgFIAuj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:50:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56618 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:50:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728668AbgFHXK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:10:29 -0400
+        id S1728649AbgFHXK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:10:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8345208C7;
-        Mon,  8 Jun 2020 23:10:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36954208FE;
+        Mon,  8 Jun 2020 23:10:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657829;
-        bh=lO4eUHWmNCZ+YKJkGjlVsdAeLu+g8LxUW8/i3uYUDzo=;
+        s=default; t=1591657827;
+        bh=RErxoPQL57Pp8qE20X8tNu1DhNmZrHDXsOBxyT30KC0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sc4XU9/i9dbnpqh8oxTjqd8TNeQ6Kf6pt3b0KC4Om6qWJxxqfvJ6W7NZ0MExAP3u8
-         5+pZkvjaMr2hOBcRnexOnJqdBR2p4qzjcPyZqnWTsji3zP19dVkHJlVsUe9hjAQR9z
-         dGTm5FB+YFVvuJE35nIOhvkAnqub5jCLfHBROG0c=
+        b=hqXphQ5lg5hMJQ1SXB3cDmkqGOz9lsSunvgbshaIpZ6XSOfsJg2TzMqzWUJqES51v
+         sy3jrJZQ7c6HuhAGJDqSvk5Qdk9gOm1u0KD7KoHCnMZjYqXmVvovxavkSsB6suAKBe
+         kTDTdXQLrXsgSEKe6tTG0a0bKX6qBAptXhKUKULc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Coly Li <colyli@suse.de>, Michal Hocko <mhocko@suse.com>,
-        Song Liu <songliubraving@fb.com>,
-        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 200/274] raid5: remove gfp flags from scribble_alloc()
-Date:   Mon,  8 Jun 2020 19:04:53 -0400
-Message-Id: <20200608230607.3361041-200-sashal@kernel.org>
+Cc:     Chung-Hsien Hsu <stanley.hsu@cypress.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 198/274] brcmfmac: fix WPA/WPA2-PSK 4-way handshake offload and SAE offload failures
+Date:   Mon,  8 Jun 2020 19:04:51 -0400
+Message-Id: <20200608230607.3361041-198-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -59,79 +63,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Chung-Hsien Hsu <stanley.hsu@cypress.com>
 
-[ Upstream commit ba54d4d4d2844c234f1b4692bd8c9e0f833c8a54 ]
+[ Upstream commit b2fe11f0777311a764e47e2f9437809b4673b7b1 ]
 
-Using GFP_NOIO flag to call scribble_alloc() from resize_chunk() does
-not have the expected behavior. kvmalloc_array() inside scribble_alloc()
-which receives the GFP_NOIO flag will eventually call kmalloc_node() to
-allocate physically continuous pages.
+An incorrect value of use_fwsup is set for 4-way handshake offload for
+WPA//WPA2-PSK, caused by commit 3b1e0a7bdfee ("brcmfmac: add support for
+SAE authentication offload"). It results in missing bit
+BRCMF_VIF_STATUS_EAP_SUCCESS set in brcmf_is_linkup() and causes the
+failure. This patch correct the value for the case.
 
-Now we have memalloc scope APIs in mddev_suspend()/mddev_resume() to
-prevent memory reclaim I/Os during raid array suspend context, calling
-to kvmalloc_array() with GFP_KERNEL flag may avoid deadlock of recursive
-I/O as expected.
+Also setting bit BRCMF_VIF_STATUS_EAP_SUCCESS for SAE offload case in
+brcmf_is_linkup() to fix SAE offload failure.
 
-This patch removes the useless gfp flags from parameters list of
-scribble_alloc(), and call kvmalloc_array() with GFP_KERNEL flag. The
-incorrect GFP_NOIO flag does not exist anymore.
-
-Fixes: b330e6a49dc3 ("md: convert to kvmalloc")
-Suggested-by: Michal Hocko <mhocko@suse.com>
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Fixes: 3b1e0a7bdfee ("brcmfmac: add support for SAE authentication offload")
+Signed-off-by: Chung-Hsien Hsu <stanley.hsu@cypress.com>
+Signed-off-by: Chi-Hsien Lin <chi-hsien.lin@cypress.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/1589277788-119966-1-git-send-email-chi-hsien.lin@cypress.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/raid5.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ .../wireless/broadcom/brcm80211/brcmfmac/cfg80211.c  | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index ba00e9877f02..190dd70db514 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -2228,14 +2228,19 @@ static int grow_stripes(struct r5conf *conf, int num)
-  * of the P and Q blocks.
-  */
- static int scribble_alloc(struct raid5_percpu *percpu,
--			  int num, int cnt, gfp_t flags)
-+			  int num, int cnt)
- {
- 	size_t obj_size =
- 		sizeof(struct page *) * (num+2) +
- 		sizeof(addr_conv_t) * (num+2);
- 	void *scribble;
- 
--	scribble = kvmalloc_array(cnt, obj_size, flags);
-+	/*
-+	 * If here is in raid array suspend context, it is in memalloc noio
-+	 * context as well, there is no potential recursive memory reclaim
-+	 * I/Os with the GFP_KERNEL flag.
-+	 */
-+	scribble = kvmalloc_array(cnt, obj_size, GFP_KERNEL);
- 	if (!scribble)
- 		return -ENOMEM;
- 
-@@ -2267,8 +2272,7 @@ static int resize_chunks(struct r5conf *conf, int new_disks, int new_sectors)
- 
- 		percpu = per_cpu_ptr(conf->percpu, cpu);
- 		err = scribble_alloc(percpu, new_disks,
--				     new_sectors / STRIPE_SECTORS,
--				     GFP_NOIO);
-+				     new_sectors / STRIPE_SECTORS);
- 		if (err)
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+index 2ba165330038..bacd762cdf3e 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+@@ -1819,6 +1819,10 @@ brcmf_set_key_mgmt(struct net_device *ndev, struct cfg80211_connect_params *sme)
+ 		switch (sme->crypto.akm_suites[0]) {
+ 		case WLAN_AKM_SUITE_SAE:
+ 			val = WPA3_AUTH_SAE_PSK;
++			if (sme->crypto.sae_pwd) {
++				brcmf_dbg(INFO, "using SAE offload\n");
++				profile->use_fwsup = BRCMF_PROFILE_FWSUP_SAE;
++			}
  			break;
+ 		default:
+ 			bphy_err(drvr, "invalid cipher group (%d)\n",
+@@ -2104,11 +2108,6 @@ brcmf_cfg80211_connect(struct wiphy *wiphy, struct net_device *ndev,
+ 		goto done;
  	}
-@@ -6759,8 +6763,7 @@ static int alloc_scratch_buffer(struct r5conf *conf, struct raid5_percpu *percpu
- 			       conf->previous_raid_disks),
- 			   max(conf->chunk_sectors,
- 			       conf->prev_chunk_sectors)
--			   / STRIPE_SECTORS,
--			   GFP_KERNEL)) {
-+			   / STRIPE_SECTORS)) {
- 		free_scratch_buffer(conf, percpu);
- 		return -ENOMEM;
- 	}
+ 
+-	if (sme->crypto.sae_pwd) {
+-		brcmf_dbg(INFO, "using SAE offload\n");
+-		profile->use_fwsup = BRCMF_PROFILE_FWSUP_SAE;
+-	}
+-
+ 	if (sme->crypto.psk &&
+ 	    profile->use_fwsup != BRCMF_PROFILE_FWSUP_SAE) {
+ 		if (WARN_ON(profile->use_fwsup != BRCMF_PROFILE_FWSUP_NONE)) {
+@@ -5495,7 +5494,8 @@ static bool brcmf_is_linkup(struct brcmf_cfg80211_vif *vif,
+ 	u32 event = e->event_code;
+ 	u32 status = e->status;
+ 
+-	if (vif->profile.use_fwsup == BRCMF_PROFILE_FWSUP_PSK &&
++	if ((vif->profile.use_fwsup == BRCMF_PROFILE_FWSUP_PSK ||
++	     vif->profile.use_fwsup == BRCMF_PROFILE_FWSUP_SAE) &&
+ 	    event == BRCMF_E_PSK_SUP &&
+ 	    status == BRCMF_E_STATUS_FWSUP_COMPLETED)
+ 		set_bit(BRCMF_VIF_STATUS_EAP_SUCCESS, &vif->sme_state);
 -- 
 2.25.1
 
