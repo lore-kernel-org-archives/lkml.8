@@ -2,188 +2,339 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD657C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A83C1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:34:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B18C9206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:33:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="XuiJE5tm"
+	by mail.kernel.org (Postfix) with ESMTP id 7E59C2072F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:34:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729243AbgFHJdh (ORCPT
+        id S1729217AbgFHJeg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 05:33:37 -0400
-Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:38987 "EHLO
-        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729156AbgFHJdf (ORCPT
+        Mon, 8 Jun 2020 05:34:36 -0400
+Received: from mx57.baidu.com ([61.135.168.57]:37536 "EHLO
+        tc-sys-mailedm05.tc.baidu.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729156AbgFHJef (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 05:33:35 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id iE9hjPpCYCKzeiE9ljlLi6; Mon, 08 Jun 2020 11:33:33 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1591608813; bh=cLw7g/W1n9Lz4PzgWG++xt7db/QIniJKRYrvzv+LmpI=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=XuiJE5tm7nJ65OCmEUYzzgv+oXWB1vTSt6ra9oMJCGoe5QaMdeF4/BXEHoMX1JwjE
-         DRrOYwqj//H5WEVET4D3WXCTFM3Il3TiTbURrs16T9GSMdcKCoKsQ1G8VutUG4aDNn
-         jsmVrfFkKEPdplEd7UVJdajPcpxTlpS9gbHMGfZVzK6ERC80RzfYRg2rNQiOpPiNGF
-         zvliVrVSW2f/MEKe5f2aobH2/Vu+sYgdLJ5xyCNXoCU4970V5tYOgLkI4x+xePDU1h
-         yezBA8w1O2KDyc22aYrcaInd04CTbENqj1A+s4Gpehr9DyZ1TPSAEpkNO6kvNDjCgV
-         Qs6W23YVGEwgQ==
-Subject: Re: [RFC PATCH] vimc: Add colors' order over test image
-To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
-        Kaaira Gupta <kgupta@es.iitr.ac.in>,
-        linux-media@vger.kernel.org,
-        Helen Koike <helen.koike@collabora.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-kernel@vger.kernel.org, kieran.bingham@ideasonboard.com,
-        laurent.pinchart@ideasonboard.com
-References: <20200607135325.GA16838@kaaira-HP-Pavilion-Notebook>
- <5866f6c9-36c7-ffe3-41b3-94f184cd9e5d@collabora.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <38db03a4-6b22-c341-103c-ed0d4dcce856@xs4all.nl>
-Date:   Mon, 8 Jun 2020 11:33:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <5866f6c9-36c7-ffe3-41b3-94f184cd9e5d@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfFQ4iOic1wuAuKIkxtn75SWuT3pbstCQqhMnUJoY3nZSvaW4G/CIbIoeRFVYDFObkICjf1fqNLtzjYOz0UW3D9YP7ySYKza4BiUAFV994nen+SpIE/zo
- Yr12wvNrVMMu6ZGZ0NPfp9F8rj42k8PGdgl8tbqV8lnoiYSTgS3yZWLUFAw3+UcSXv+BuIFh6kiOGt75qBmwf5Iz7q357UZUO5mC00/UXO6Q71983AOreoxV
- 6blWO2aFtkvu//EgmC4yLdLZNAASk9EojAC4O+znlx6Gk14NW+9rIBO2nB1RiUgQPJusPuals7cZDm0tILCGta/L5Xc4VG3UlI28FJxavInXdyndasD5mHTT
- GInmdMgo39bW0tniMtAEFl0HuNVbXUPJeVRLrp8FZ1PDDUeFqW3IqH+NUNQ4/89+el2EIcsK5VbmXC3reIDP3NhBR6YROHi+fQnGc/XRCuy+XnJeyukYQgKS
- pkS/jj/2rsHSmowS8HjWHUZetgr19Jr5FMNeHQ==
+        Mon, 8 Jun 2020 05:34:35 -0400
+Received: from localhost (cp01-cos-dev01.cp01.baidu.com [10.92.119.46])
+        by tc-sys-mailedm05.tc.baidu.com (Postfix) with ESMTP id 9C1AF1EBA001;
+        Mon,  8 Jun 2020 17:34:18 +0800 (CST)
+From:   Li RongQing <lirongqing@baidu.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org, x86@kernel.org,
+        hpa@zytor.com, bp@alien8.de, mingo@redhat.com, tglx@linutronix.de,
+        jmattson@google.com, wanpengli@tencent.com, vkuznets@redhat.com,
+        sean.j.christopherson@intel.com, pbonzini@redhat.com,
+        xiaoyao.li@intel.com, lirongqing@baidu.com, wei.huang2@amd.com
+Subject: [PATCH][v7] KVM: X86: support APERF/MPERF registers
+Date:   Mon,  8 Jun 2020 17:34:18 +0800
+Message-Id: <1591608858-10935-1-git-send-email-lirongqing@baidu.com>
+X-Mailer: git-send-email 1.7.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/06/2020 09:10, Dafna Hirschfeld wrote:
-> Hi,
-> 
-> On 07.06.20 15:53, Kaaira Gupta wrote:
->> Currently there is no method to know if the test image generated by vimc
->> is correct (except for comparing it with a known 'correct' image). Add
->> text over the test image, representing the correct order of colors.
->>
->> I have sent it as an RFC because we can add the text as an optional
->> control, and maybe we can print some other useful information as well
->> (like vivid does).
-> 
-> Yes, it seems like a good idea to add it as a control of the sensor.
-> 
->>
->> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
->> --->   drivers/media/test-drivers/vimc/Kconfig       | 2 ++
->>   drivers/media/test-drivers/vimc/vimc-core.c   | 9 +++++++++
->>   drivers/media/test-drivers/vimc/vimc-sensor.c | 8 ++++++++
->>   3 files changed, 19 insertions(+)
->>
->> diff --git a/drivers/media/test-drivers/vimc/Kconfig b/drivers/media/test-drivers/vimc/Kconfig
->> index 4068a67585f9..da4b2ad6e40c 100644
->> --- a/drivers/media/test-drivers/vimc/Kconfig
->> +++ b/drivers/media/test-drivers/vimc/Kconfig
->> @@ -2,6 +2,8 @@
->>   config VIDEO_VIMC
->>   	tristate "Virtual Media Controller Driver (VIMC)"
->>   	depends on VIDEO_DEV && VIDEO_V4L2
->> +	select FONT_SUPPORT
->> +	select FONT_8x16
->>   	select MEDIA_CONTROLLER
->>   	select VIDEO_V4L2_SUBDEV_API
->>   	select VIDEOBUF2_VMALLOC
->> diff --git a/drivers/media/test-drivers/vimc/vimc-core.c b/drivers/media/test-drivers/vimc/vimc-core.c
->> index 11210aaa2551..8142bfbcbd49 100644
->> --- a/drivers/media/test-drivers/vimc/vimc-core.c
->> +++ b/drivers/media/test-drivers/vimc/vimc-core.c
->> @@ -5,10 +5,12 @@
->>    * Copyright (C) 2015-2017 Helen Koike <helen.fornazier@gmail.com>
->>    */
->>   
->> +#include <linux/font.h>
->>   #include <linux/init.h>
->>   #include <linux/module.h>
->>   #include <linux/platform_device.h>
->>   #include <media/media-device.h>
->> +#include <media/tpg/v4l2-tpg.h>
->>   #include <media/v4l2-device.h>
->>   
->>   #include "vimc-common.h"
->> @@ -265,7 +267,14 @@ static int vimc_probe(struct platform_device *pdev)
->>   {
->>   	struct vimc_device *vimc;
->>   	int ret;
->> +	const struct font_desc *font = find_font("VGA8x16");
->>   
->> +	if (font == NULL) {
->> +		pr_err("vimc: could not find font\n");
->> +		return -ENODEV;
->> +	}
->> +
->> +	tpg_set_font(font->data);
-> 
-> I think the code that set the format should move to the
-> code that registers the sensor in vimc-sensor.c
-> 
->>   	dev_dbg(&pdev->dev, "probe");
->>   
->>   	vimc = kzalloc(sizeof(*vimc), GFP_KERNEL);
->> diff --git a/drivers/media/test-drivers/vimc/vimc-sensor.c b/drivers/media/test-drivers/vimc/vimc-sensor.c
->> index a2f09ac9a360..4b13955c502a 100644
->> --- a/drivers/media/test-drivers/vimc/vimc-sensor.c
->> +++ b/drivers/media/test-drivers/vimc/vimc-sensor.c
->> @@ -185,10 +185,18 @@ static const struct v4l2_subdev_pad_ops vimc_sen_pad_ops = {
->>   static void *vimc_sen_process_frame(struct vimc_ent_device *ved,
->>   				    const void *sink_frame)
->>   {
->> +	u8 *basep[TPG_MAX_PLANES][2];
->> +	char str[100];
->>   	struct vimc_sen_device *vsen = container_of(ved, struct vimc_sen_device,
->>   						    ved);
->>   
->> +	tpg_calc_text_basep(&vsen->tpg, basep, 0, vsen->frame);
->>   	tpg_fill_plane_buffer(&vsen->tpg, 0, 0, vsen->frame);
->> +
->> +	snprintf(str, sizeof(str),
->> +		 "Order: white, yellow, cyan, green, magenta, red, blue, black");
-> The colors are generated by the tpg, so I think it should be a feature of the tpg to print the colors.
+Guest kernel reports a fixed cpu frequency in /proc/cpuinfo,
+this is confused to user when turbo is enable, and aperf/mperf
+can be used to show current cpu frequency after 7d5905dc14a
+"(x86 / CPU: Always show current CPU frequency in /proc/cpuinfo)"
+so guest should support aperf/mperf capability
 
-I agree. The tpg knows where each color is and based on the width and height it can
-print the text. A tpg_gen_pattern_text() function that does the work would be very
-nice.
+This patch implements aperf/mperf by three mode: none, software
+emulation, and pass-through
 
-It also doesn't make sense for all patterns, so this is really a nice feature to
-incorporate into the TPG itself and enable it via a vivid and vimc control.
+None: default mode, guest does not support aperf/mperf
 
-Regards,
+Software emulation: the period of aperf/mperf in guest mode are
+accumulated as emulated value
 
-	Hans
+Pass-though: it is only suitable for pinned vcpu
 
-> 
-> For example, a function in v4l2-tpg-core.c that get the pattern as an argument and return
-> this string, or maybe returns a const pointer to the array of colors, or something like that.
-> Then maybe we can add a control in vivid for the same tpg feature.
-> 
-> Note also that the sensor has a control to change the pattern: vimc_sen_ctrl_test_pattern
-> So the string depends on that pattern.
-> 
-> Thanks,
-> Dafna
-> 
-> 
->> +	tpg_gen_text(&vsen->tpg, basep, 1, 1, str);
->> +
->>   	return vsen->frame;
->>   }
->>   
->>
+And a per-VM capability is added to configure aperfmperf mode
+
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+Signed-off-by: Chai Wen <chaiwen@baidu.com>
+Signed-off-by: Jia Lina <jialina01@baidu.com>
+---
+diff v6:
+drop the unneed check from kvm_update_cpuid and __do_cpuid_func
+add the validation check in kvm_vm_ioctl_enable_cap
+thank for Jim Mattson,  Paolo Bonzini and Xiaoyao Li
+
+diff v5:
+return error if guest is configured with aperf/mperf, but host cpu has not
+
+diff v4:
+fix maybe-uninitialized warning
+
+diff v3:
+fix interception of MSR_IA32_APERF/MPERF in svm
+thanks for wei.huang2 
+
+diff v2:
+support aperfmperf pass though
+move common codes to kvm_get_msr_common
+thanks for Xiaoyao Li and Peter Zijlstra
+
+diff v1:
+1. support AMD, but not test
+2. support per-vm capability to enable
+Documentation/virt/kvm/api.rst  | 16 ++++++++++++
+ arch/x86/include/asm/kvm_host.h | 11 ++++++++
+ arch/x86/kvm/svm/svm.c          |  8 ++++++
+ arch/x86/kvm/vmx/vmx.c          |  6 +++++
+ arch/x86/kvm/x86.c              | 56 +++++++++++++++++++++++++++++++++++++++++
+ arch/x86/kvm/x86.h              | 15 +++++++++++
+ include/uapi/linux/kvm.h        |  1 +
+ 7 files changed, 113 insertions(+)
+
+diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+index 426f94582b7a..ae30ac02a771 100644
+--- a/Documentation/virt/kvm/api.rst
++++ b/Documentation/virt/kvm/api.rst
+@@ -6150,3 +6150,19 @@ KVM can therefore start protected VMs.
+ This capability governs the KVM_S390_PV_COMMAND ioctl and the
+ KVM_MP_STATE_LOAD MP_STATE. KVM_SET_MP_STATE can fail for protected
+ guests when the state change is invalid.
++
++8.23 KVM_CAP_APERFMPERF
++----------------------------
++
++:Architectures: x86
++:Parameters: args[0] is aperfmperf mode;
++             0 for not support, it is default mode
++             1 for software emulation
++             2 for pass-through which is only suitable for pinned vcpu
++:Returns: 0 on success, -EINVAL when args[0] contains invalid,
++           -EBUSY if vcpus has been created
++
++Enabling this capability on a VM provides guest with aperf/mperf
++register, which are used to get cpu running frequency currently
++
++Do not enable KVM_CAP_APERFMPERF if host does not support aperf/mperf
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 1da5858501ca..7d1d3668c4f1 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -829,6 +829,9 @@ struct kvm_vcpu_arch {
+ 
+ 	/* AMD MSRC001_0015 Hardware Configuration */
+ 	u64 msr_hwcr;
++
++	u64 v_mperf;
++	u64 v_aperf;
+ };
+ 
+ struct kvm_lpage_info {
+@@ -907,6 +910,12 @@ enum kvm_irqchip_mode {
+ 	KVM_IRQCHIP_SPLIT,        /* created with KVM_CAP_SPLIT_IRQCHIP */
+ };
+ 
++enum kvm_aperfmperf_mode {
++	KVM_APERFMPERF_NONE,
++	KVM_APERFMPERF_SOFT,      /* software emulate aperfmperf */
++	KVM_APERFMPERF_PT,        /* pass-through aperfmperf to guest */
++};
++
+ #define APICV_INHIBIT_REASON_DISABLE    0
+ #define APICV_INHIBIT_REASON_HYPERV     1
+ #define APICV_INHIBIT_REASON_NESTED     2
+@@ -1004,6 +1013,8 @@ struct kvm_arch {
+ 
+ 	struct kvm_pmu_event_filter *pmu_event_filter;
+ 	struct task_struct *nx_lpage_recovery_thread;
++
++	enum kvm_aperfmperf_mode aperfmperf_mode;
+ };
+ 
+ struct kvm_vm_stat {
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 9e333b91ff78..0db7d866e09f 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -1198,6 +1198,14 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
+ 	svm->msrpm = page_address(msrpm_pages);
+ 	svm_vcpu_init_msrpm(svm->msrpm);
+ 
++	if (guest_aperfmperf_soft(vcpu->kvm)) {
++		set_msr_interception(svm->msrpm, MSR_IA32_MPERF, 0, 0);
++		set_msr_interception(svm->msrpm, MSR_IA32_APERF, 0, 0);
++	} else if (guest_aperfmperf_pt(vcpu->kvm)) {
++		set_msr_interception(svm->msrpm, MSR_IA32_MPERF, 1, 0);
++		set_msr_interception(svm->msrpm, MSR_IA32_APERF, 1, 0);
++	}
++
+ 	svm->nested.msrpm = page_address(nested_msrpm_pages);
+ 	svm_vcpu_init_msrpm(svm->nested.msrpm);
+ 
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 170cc76a581f..952e3728ca86 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -6914,6 +6914,12 @@ static int vmx_create_vcpu(struct kvm_vcpu *vcpu)
+ 		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C6_RESIDENCY, MSR_TYPE_R);
+ 		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C7_RESIDENCY, MSR_TYPE_R);
+ 	}
++
++	if (guest_aperfmperf_pt(vcpu->kvm)) {
++		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_MPERF, MSR_TYPE_R);
++		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_APERF, MSR_TYPE_R);
++	}
++
+ 	vmx->msr_bitmap_mode = 0;
+ 
+ 	vmx->loaded_vmcs = &vmx->vmcs01;
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 9e41b5135340..84884f4778cb 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -3324,6 +3324,12 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 	case MSR_K7_HWCR:
+ 		msr_info->data = vcpu->arch.msr_hwcr;
+ 		break;
++	case MSR_IA32_MPERF:
++		msr_info->data = vcpu->arch.v_mperf;
++		break;
++	case MSR_IA32_APERF:
++		msr_info->data = vcpu->arch.v_aperf;
++		break;
+ 	default:
+ 		if (kvm_pmu_is_valid_msr(vcpu, msr_info->index))
+ 			return kvm_pmu_get_msr(vcpu, msr_info);
+@@ -3534,6 +3540,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+ 	case KVM_CAP_HYPERV_ENLIGHTENED_VMCS:
+ 		r = kvm_x86_ops.nested_ops->enable_evmcs != NULL;
+ 		break;
++	case KVM_CAP_APERFMPERF:
++		r = boot_cpu_has(X86_FEATURE_APERFMPERF) ? 1 : 0;
++		break;
+ 	default:
+ 		break;
+ 	}
+@@ -4985,6 +4994,25 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
+ 		kvm->arch.exception_payload_enabled = cap->args[0];
+ 		r = 0;
+ 		break;
++	case KVM_CAP_APERFMPERF:
++		r = 0;
++		mutex_lock(&kvm->lock);
++		if (kvm->created_vcpus)
++			r = -EBUSY;
++		if (r)
++			goto aperfmperf_unlock;
++
++		r = -EINVAL;
++		if (cap->args[0] > KVM_APERFMPERF_PT)
++			goto aperfmperf_unlock;
++		if (cap->args[0] != KVM_APERFMPERF_NONE
++				&& !boot_cpu_has(X86_FEATURE_APERFMPERF))
++			goto aperfmperf_unlock;
++		r = 0;
++		kvm->arch.aperfmperf_mode = cap->args[0];
++aperfmperf_unlock:
++		mutex_unlock(&kvm->lock);
++		break;
+ 	default:
+ 		r = -EINVAL;
+ 		break;
+@@ -8311,6 +8339,25 @@ void __kvm_request_immediate_exit(struct kvm_vcpu *vcpu)
+ }
+ EXPORT_SYMBOL_GPL(__kvm_request_immediate_exit);
+ 
++
++static void guest_enter_aperfmperf(u64 *mperf, u64 *aperf)
++{
++	rdmsrl(MSR_IA32_MPERF, *mperf);
++	rdmsrl(MSR_IA32_APERF, *aperf);
++}
++
++static void guest_exit_aperfmperf(struct kvm_vcpu *vcpu,
++		u64 mperf, u64 aperf)
++{
++	u64 perf;
++
++	rdmsrl(MSR_IA32_MPERF, perf);
++	vcpu->arch.v_mperf += perf - mperf;
++
++	rdmsrl(MSR_IA32_APERF, perf);
++	vcpu->arch.v_aperf += perf - aperf;
++}
++
+ /*
+  * Returns 1 to let vcpu_run() continue the guest execution loop without
+  * exiting to the userspace.  Otherwise, the value will be returned to the
+@@ -8324,6 +8371,8 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 		kvm_cpu_accept_dm_intr(vcpu);
+ 	fastpath_t exit_fastpath;
+ 
++	bool enable_aperfmperf = guest_aperfmperf_soft(vcpu->kvm);
++	u64 uninitialized_var(mperf), uninitialized_var(aperf);
+ 	bool req_immediate_exit = false;
+ 
+ 	if (kvm_request_pending(vcpu)) {
+@@ -8462,6 +8511,9 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 
+ 	preempt_disable();
+ 
++	if (unlikely(enable_aperfmperf))
++		guest_enter_aperfmperf(&mperf, &aperf);
++
+ 	kvm_x86_ops.prepare_guest_switch(vcpu);
+ 
+ 	/*
+@@ -8583,6 +8635,10 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 	}
+ 
+ 	local_irq_enable();
++
++	if (unlikely(enable_aperfmperf))
++		guest_exit_aperfmperf(vcpu, mperf, aperf);
++
+ 	preempt_enable();
+ 
+ 	vcpu->srcu_idx = srcu_read_lock(&vcpu->kvm->srcu);
+diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+index 6eb62e97e59f..8216f697c53c 100644
+--- a/arch/x86/kvm/x86.h
++++ b/arch/x86/kvm/x86.h
+@@ -361,6 +361,21 @@ static inline bool kvm_dr7_valid(u64 data)
+ 	return !(data >> 32);
+ }
+ 
++static inline bool guest_has_aperfmperf(struct kvm *kvm)
++{
++	return kvm->arch.aperfmperf_mode != KVM_APERFMPERF_NONE;
++}
++
++static inline bool guest_aperfmperf_soft(struct kvm *kvm)
++{
++	return kvm->arch.aperfmperf_mode == KVM_APERFMPERF_SOFT;
++}
++
++static inline bool guest_aperfmperf_pt(struct kvm *kvm)
++{
++	return kvm->arch.aperfmperf_mode == KVM_APERFMPERF_PT;
++}
++
+ void kvm_load_guest_xsave_state(struct kvm_vcpu *vcpu);
+ void kvm_load_host_xsave_state(struct kvm_vcpu *vcpu);
+ u64 kvm_spec_ctrl_valid_bits(struct kvm_vcpu *vcpu);
+diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+index 4fdf30316582..c240941d7821 100644
+--- a/include/uapi/linux/kvm.h
++++ b/include/uapi/linux/kvm.h
+@@ -1031,6 +1031,7 @@ struct kvm_ppc_resize_hpt {
+ #define KVM_CAP_PPC_SECURE_GUEST 181
+ #define KVM_CAP_HALT_POLL 182
+ #define KVM_CAP_ASYNC_PF_INT 183
++#define KVM_CAP_APERFMPERF 184
+ 
+ #ifdef KVM_CAP_IRQ_ROUTING
+ 
+-- 
+2.16.2
 
