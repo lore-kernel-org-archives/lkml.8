@@ -7,47 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06659C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B62C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D235B20775
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:34:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38886206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:34:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591659294;
-	bh=nsW59QYiE+70W8//0AtPqDPYbwUyl/wZLv8TQkNyFTo=;
+	s=default; t=1591659298;
+	bh=6kMPdUFE150+BlX703K5Ki/VlX6lvcj6VOQhqc0pvzY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1LhN4ixRxb8kW9koh1a0xN77053GG/uD8ozKMODhN7SCDlRIriHa2GuSP78TJPDSQ
-	 EnNWQjEntsyoXEBUhIbGCQ7tZKWFH6ZE0KTc64hyDbTiU0thEmL5xtnhD2dprOIjdL
-	 ofI/t7lgRYx1Zu4b5rWX0CzXqsajuTdNSD9DwPEY=
+	b=nQM4time8Tsjx7tGGiM5GrFWw2OyL22vGrMrCfZwCtE8nDniybXrBUfSnvybdzrwo
+	 H4k1OG+KAs3Z+zrQay8X1KPqsf5V5WwJXMGve8FriQbUkGoGAaJbdeWrDeZGvg7nxn
+	 WBR/xbzdGCryH/k6EHtHSgcxBq0Cyhn65QLTuROY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731726AbgFHXex (ORCPT
+        id S2387678AbgFHXe4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:34:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57662 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:34:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732202AbgFHX2S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:28:18 -0400
+        id S1732213AbgFHX2X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:28:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BE992074B;
-        Mon,  8 Jun 2020 23:28:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47E0B20814;
+        Mon,  8 Jun 2020 23:28:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658898;
-        bh=nsW59QYiE+70W8//0AtPqDPYbwUyl/wZLv8TQkNyFTo=;
+        s=default; t=1591658902;
+        bh=6kMPdUFE150+BlX703K5Ki/VlX6lvcj6VOQhqc0pvzY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dEfZpMRFsge7q/MQnQThTqdSVmNTUz+iQs3PfL9ihCu6jP9K/UbaVxesipVSq7A3n
-         DkLsCasxcvIg3cDAgyMsXiTblK85RxhGSbI623mgp4Sc8/vffmLiwcmmhKNFCdNmG2
-         Z3bodw/keJQmncNsNAacpgxa9PgnZCCXY3h81aPY=
+        b=dwkaB8kjN/lD7Jd7gfrifbwz6YVsWs/KAicFdkAkQJjsp620bjodJ4+qHZqlNkhMV
+         BpCdJnPpH2biQH5usHLU9PbLEAncoAIeFGHLXuWLdsQzdlAJVHIN9u/dkWEsFfFbG3
+         7Zke3lBvSEwWTbJhVCVsP9jYjsb/G/+zSbFdadRc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yunjian Wang <wangyunjian@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.4 20/37] net: allwinner: Fix use correct return type for ndo_start_xmit()
-Date:   Mon,  8 Jun 2020 19:27:32 -0400
-Message-Id: <20200608232750.3370747-20-sashal@kernel.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
+        linux-mips@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 23/37] mips: cm: Fix an invalid error code of INTVN_*_ERR
+Date:   Mon,  8 Jun 2020 19:27:35 -0400
+Message-Id: <20200608232750.3370747-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608232750.3370747-1-sashal@kernel.org>
 References: <20200608232750.3370747-1-sashal@kernel.org>
@@ -60,42 +65,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunjian Wang <wangyunjian@huawei.com>
+From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-[ Upstream commit 09f6c44aaae0f1bdb8b983d7762676d5018c53bc ]
+[ Upstream commit 8a0efb8b101665a843205eab3d67ab09cb2d9a8d ]
 
-The method ndo_start_xmit() returns a value of type netdev_tx_t. Fix
-the ndo function to use the correct type. And emac_start_xmit() can
-leak one skb if 'channel' == 3.
+Commit 3885c2b463f6 ("MIPS: CM: Add support for reporting CM cache
+errors") adds cm2_causes[] array with map of error type ID and
+pointers to the short description string. There is a mistake in
+the table, since according to MIPS32 manual CM2_ERROR_TYPE = {17,18}
+correspond to INTVN_WR_ERR and INTVN_RD_ERR, while the table
+claims they have {0x17,0x18} codes. This is obviously hex-dec
+copy-paste bug. Moreover codes {0x18 - 0x1a} indicate L2 ECC errors.
 
-Signed-off-by: Yunjian Wang <wangyunjian@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 3885c2b463f6 ("MIPS: CM: Add support for reporting CM cache errors")
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-pm@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/allwinner/sun4i-emac.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/mips/kernel/mips-cm.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/allwinner/sun4i-emac.c b/drivers/net/ethernet/allwinner/sun4i-emac.c
-index 8d50314ac3eb..dde3cd2d4763 100644
---- a/drivers/net/ethernet/allwinner/sun4i-emac.c
-+++ b/drivers/net/ethernet/allwinner/sun4i-emac.c
-@@ -438,7 +438,7 @@ static void emac_timeout(struct net_device *dev)
- /* Hardware start transmission.
-  * Send a packet to media from the upper layer.
-  */
--static int emac_start_xmit(struct sk_buff *skb, struct net_device *dev)
-+static netdev_tx_t emac_start_xmit(struct sk_buff *skb, struct net_device *dev)
- {
- 	struct emac_board_info *db = netdev_priv(dev);
- 	unsigned long channel;
-@@ -446,7 +446,7 @@ static int emac_start_xmit(struct sk_buff *skb, struct net_device *dev)
- 
- 	channel = db->tx_fifo_stat & 3;
- 	if (channel == 3)
--		return 1;
-+		return NETDEV_TX_BUSY;
- 
- 	channel = (channel == 1 ? 1 : 0);
+diff --git a/arch/mips/kernel/mips-cm.c b/arch/mips/kernel/mips-cm.c
+index 76f18c56141c..3458d23d230c 100644
+--- a/arch/mips/kernel/mips-cm.c
++++ b/arch/mips/kernel/mips-cm.c
+@@ -123,9 +123,9 @@ static char *cm2_causes[32] = {
+ 	"COH_RD_ERR", "MMIO_WR_ERR", "MMIO_RD_ERR", "0x07",
+ 	"0x08", "0x09", "0x0a", "0x0b",
+ 	"0x0c", "0x0d", "0x0e", "0x0f",
+-	"0x10", "0x11", "0x12", "0x13",
+-	"0x14", "0x15", "0x16", "INTVN_WR_ERR",
+-	"INTVN_RD_ERR", "0x19", "0x1a", "0x1b",
++	"0x10", "INTVN_WR_ERR", "INTVN_RD_ERR", "0x13",
++	"0x14", "0x15", "0x16", "0x17",
++	"0x18", "0x19", "0x1a", "0x1b",
+ 	"0x1c", "0x1d", "0x1e", "0x1f"
+ };
  
 -- 
 2.25.1
