@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 805F2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:59:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 943A0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5565320659
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:59:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6819020659
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:59:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660792;
-	bh=hu3+Cu1mobOMU0osGTqGMIyMafxT7FTy0kESiJ1M/lw=;
+	s=default; t=1591660797;
+	bh=yKkzUylOknIwecsv8r1l0CYmrdBOv5/1gOFSrHKSh6k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G4+AzaqAqqGrdqg+5O6a4V18y5zQIFxXdVFYBcH+J2wl6ShLTZrfKIm0ZqPhm2whn
-	 yEqtk3xArOlBOiiEQB4hHL5/7AWnGpCsQrhKB3WIlR3yBkzjNtKg9iMyFUfXz1+TTI
-	 kVJ8vmATRsNP13//rRiHiPmN6Z6M+JQ0fHLhjj9w=
+	b=ClVQELhmhzvextJLyH7eXONUO+8DHr+hsp4ay4T28k60dKx+crQKLDAZym9byKTZe
+	 QXiKYMrar15gpBH5DutETU5uM2dPfpl4FxLM20RnFkYwMURn3ONohS6zd4vcJpAsGs
+	 xEBRhr3YPBbHMbT/ZJEAqkNHYsHAZ7yZD9T9/cVI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731365AbgFHXWo (ORCPT
+        id S1732708AbgFHX74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:22:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39990 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:59:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730558AbgFHXR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:17:57 -0400
+        id S1731360AbgFHXWn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:22:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F2BE20814;
-        Mon,  8 Jun 2020 23:17:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0454E2072F;
+        Mon,  8 Jun 2020 23:22:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658277;
-        bh=hu3+Cu1mobOMU0osGTqGMIyMafxT7FTy0kESiJ1M/lw=;
+        s=default; t=1591658563;
+        bh=yKkzUylOknIwecsv8r1l0CYmrdBOv5/1gOFSrHKSh6k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VuabL1NWuEBlL7Zr75lqzMXqbohEBlj7mKna/ytld7u8fYAtPmHHRQTK1one0+LZW
-         UxTOYfbDj+aHdTHNDuSpCp+8MgrwpxIJ+Ax+rnGevpuVHgByVs8Z29metOiwFXSKyC
-         EenPSGgaV3WvXowGa0q3UKoNcYzV4eSwvf3tgqr4=
+        b=I9UDFavuNbrBdLPPhUN75J9gco6ObsPjUcn31GslbH18hnXG9vjQ5KU8+c7B5HwMF
+         7EkeXPGBppo1/SRDF7sLj/R6qSv6dFYN7E704Nb+76V+yHOMvTVrnWFf7jJOlH1W1R
+         mB/uO6xF4+83EP/eGNlt8+vXucOoxfTP5GAdRJBw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Amy Shih <amy.shih@advantech.com.tw>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 283/606] hwmon: (nct7904) Fix incorrect range of temperature limit registers
-Date:   Mon,  8 Jun 2020 19:06:48 -0400
-Message-Id: <20200608231211.3363633-283-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 004/106] crypto: ccp -- don't "select" CONFIG_DMADEVICES
+Date:   Mon,  8 Jun 2020 19:20:56 -0400
+Message-Id: <20200608232238.3368589-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
-References: <20200608231211.3363633-1-sashal@kernel.org>
+In-Reply-To: <20200608232238.3368589-1-sashal@kernel.org>
+References: <20200608232238.3368589-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,44 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amy Shih <amy.shih@advantech.com.tw>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 7b2fd270af27edaf02acb41a7babe805a9441914 ]
+[ Upstream commit eebac678556d6927f09a992872f4464cf3aecc76 ]
 
-The format of temperature limitation registers are 8-bit 2's complement
-and the range is -128~127.
-Converts the reading value to signed char to fix the incorrect range
-of temperature limitation registers.
+DMADEVICES is the top-level option for the slave DMA
+subsystem, and should not be selected by device drivers,
+as this can cause circular dependencies such as:
 
-Signed-off-by: Amy Shih <amy.shih@advantech.com.tw>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+drivers/net/ethernet/freescale/Kconfig:6:error: recursive dependency detected!
+drivers/net/ethernet/freescale/Kconfig:6:	symbol NET_VENDOR_FREESCALE depends on PPC_BESTCOMM
+drivers/dma/bestcomm/Kconfig:6:	symbol PPC_BESTCOMM depends on DMADEVICES
+drivers/dma/Kconfig:6:	symbol DMADEVICES is selected by CRYPTO_DEV_SP_CCP
+drivers/crypto/ccp/Kconfig:10:	symbol CRYPTO_DEV_SP_CCP depends on CRYPTO
+crypto/Kconfig:16:	symbol CRYPTO is selected by LIBCRC32C
+lib/Kconfig:222:	symbol LIBCRC32C is selected by LIQUIDIO
+drivers/net/ethernet/cavium/Kconfig:65:	symbol LIQUIDIO depends on PTP_1588_CLOCK
+drivers/ptp/Kconfig:8:	symbol PTP_1588_CLOCK is implied by FEC
+drivers/net/ethernet/freescale/Kconfig:23:	symbol FEC depends on NET_VENDOR_FREESCALE
+
+The LIQUIDIO driver causing this problem is addressed in a
+separate patch, but this change is needed to prevent it from
+happening again.
+
+Using "depends on DMADEVICES" is what we do for all other
+implementations of slave DMA controllers as well.
+
+Fixes: b3c2fee5d66b ("crypto: ccp - Ensure all dependencies are specified")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/nct7904.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/crypto/ccp/Kconfig | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/hwmon/nct7904.c b/drivers/hwmon/nct7904.c
-index 281c81edabc6..dfb122b5e1b7 100644
---- a/drivers/hwmon/nct7904.c
-+++ b/drivers/hwmon/nct7904.c
-@@ -356,6 +356,7 @@ static int nct7904_read_temp(struct device *dev, u32 attr, int channel,
- 	struct nct7904_data *data = dev_get_drvdata(dev);
- 	int ret, temp;
- 	unsigned int reg1, reg2, reg3;
-+	s8 temps;
- 
- 	switch (attr) {
- 	case hwmon_temp_input:
-@@ -461,7 +462,8 @@ static int nct7904_read_temp(struct device *dev, u32 attr, int channel,
- 
- 	if (ret < 0)
- 		return ret;
--	*val = ret * 1000;
-+	temps = ret;
-+	*val = temps * 1000;
- 	return 0;
- }
- 
+diff --git a/drivers/crypto/ccp/Kconfig b/drivers/crypto/ccp/Kconfig
+index b9dfae47aefd..7f5fc705503d 100644
+--- a/drivers/crypto/ccp/Kconfig
++++ b/drivers/crypto/ccp/Kconfig
+@@ -9,10 +9,9 @@ config CRYPTO_DEV_CCP_DD
+ config CRYPTO_DEV_SP_CCP
+ 	bool "Cryptographic Coprocessor device"
+ 	default y
+-	depends on CRYPTO_DEV_CCP_DD
++	depends on CRYPTO_DEV_CCP_DD && DMADEVICES
+ 	select HW_RANDOM
+ 	select DMA_ENGINE
+-	select DMADEVICES
+ 	select CRYPTO_SHA1
+ 	select CRYPTO_SHA256
+ 	help
 -- 
 2.25.1
 
