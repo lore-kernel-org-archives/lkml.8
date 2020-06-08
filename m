@@ -4,73 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C8E3C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 20:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91817C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 20:44:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 217A2206D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 20:44:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61D4820774
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 20:44:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="SJTSV2+Z"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="izdEU63J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgFHUoj (ORCPT
+        id S1726771AbgFHUop (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 16:44:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43974 "EHLO
+        Mon, 8 Jun 2020 16:44:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726881AbgFHUoa (ORCPT
+        with ESMTP id S1726875AbgFHUo1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 16:44:30 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B733DC0A88B4
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 13:44:17 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id cv17so9014916qvb.13
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 13:44:17 -0700 (PDT)
+        Mon, 8 Jun 2020 16:44:27 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B70A9C08C5CB
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 13:44:16 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id er17so9047093qvb.8
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 13:44:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=marek-ca.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=acHevj3wQIcryhB7O2ZRO4PATF9eIWbo+G1WRkznV+0=;
-        b=SJTSV2+Z6VNkFlhdlnWtITIVaf5vYoqSYKr/f34664q6R+QXXEV+tgRZ1FHi/+E000
-         Me6yk+QNbCBGelQ4P8PI20FbKZAZLoNFWmZ3HZE4EqK4iuDEH60ryY2dISsf9y3argHu
-         UMPAB4Swt6oUhedie/XcWLz2KkFOcXE+6wCHKUGd2O9Tq444VcZvSUQc8hYhHY1pn3NX
-         GQ/Crp3r1oq3LYlCpjCS9HmMuxEiEK9ZKef+xUVC+ih5B+N98Y8rB9YafCduk4sQKpit
-         m1kjz5WQ6UsujVM0dfRYbpOYlCQLsp+Ps7L+DqkjqhiCv+PUA2Fc3tPXduqWNHZnTe7s
-         ExJw==
+        bh=GeS57nqw38MaaFBYUxKJYofMdDxv41hdDhrvNhyT71U=;
+        b=izdEU63JBRBlTIYJi2dlajVxsC8GIc4Ja/EpX8IoEH9m3Yn7PzeiCBuziBJZcx7QTH
+         eivbQrpXFzyiiTg2BOzbVMqeIqULBRWtbCi2XF63rprhzLG8fC1njxBHqij2l+CFNQ7b
+         KQrcLbl2n+GQTAtCjAr0JSThSCzSBvqRVda8jbeh6/7SlCmdGkxeIoegb/trCvXaXV0u
+         /yCRDWK0omQYvulLWHYXOrBD8c6OWcsydoLf9GPU3vc16Jick4vv1eLmeI0Ayrw+XKKC
+         +WFK8YNB4rWVq5uPOXneIjJOb3ysYiOCA5nlkV9Vw3SucwkKjU6lcSAen7GhoROgV/jC
+         +S2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=acHevj3wQIcryhB7O2ZRO4PATF9eIWbo+G1WRkznV+0=;
-        b=FHr4irVoV5ppzEiGu9YiaKR5fu0VrSuktpSyGTO0tRC7u7NCMPQqAl04bPydT1Q/ig
-         Qh2QZipoOcV4RyF3+0IGda8C+jl0gQS6tlFNhegPFZ806W6ZwV9hCsO3oizNev5MctBE
-         7K7lw3fTQT848JsMyeSa67gVhw7IetfH2xKTzetWTMGr9zOqmozGBgm3+9rQ55uCJMbm
-         Fz05VNM+Xk72n/0Wys8KXlY27VKqrqIdkeNH9ck/OrBZQs4wqvyZ/YUCMnfgq8mqE7TA
-         rL+p3x2Z9gUMTcpNBGdw+ACzXjpQTTKOl/oREBoX8gyxK5WUU1TnFXVWre3sOwef04TJ
-         wMAQ==
-X-Gm-Message-State: AOAM533c5qQpurVZm/sMzPAsukXRcK6R5t1jdPc9QZ/AlgdUVSdAM/NT
-        48DOT3KnfFmHMmL1xyemQP9h9A==
-X-Google-Smtp-Source: ABdhPJzOla+D8EOOeekqVt/wBj46R/nJoH0uM20TvTKVjJNwP4MBDNiTWp7yPIFrDtsJ9VawFCxsyA==
-X-Received: by 2002:ad4:5668:: with SMTP id bm8mr549681qvb.248.1591649056614;
-        Mon, 08 Jun 2020 13:44:16 -0700 (PDT)
+        bh=GeS57nqw38MaaFBYUxKJYofMdDxv41hdDhrvNhyT71U=;
+        b=W/dW19dSOhnCMmqk6O8g+aFuDpxXyLeMcjCUpMCz2wdTwQddMXEARa7MNVIJcWQSdM
+         Kmy2Jr0l4tA0bC/ZJZ96cF6Dg6wZ121504Blmx74biPIRROXzOJPnjkS9BqVz2XVkEqF
+         4t4dnm778CxML/yDHj0LYfEgvUCvnHvwCm+BEAtUwI2RWvi0Fo28/J3gcukM/Jyocenj
+         MzYdz3BPleyXpPun66BgzTGiDizzD0LbDzAkCs0OBM95qClW2aUsVo3B9u0pAiyzMecz
+         nHbuBAuIGYSPlXiJtPtNocwHjeFw02Ioa/FELa+L2NCV1KB8i+kv26SnmS1eBFBLELsc
+         wIgA==
+X-Gm-Message-State: AOAM532Iy/qVWvXCD198qrlqm0EvzyDjWANLpA3JmkyhCE3q2w4M861K
+        xAYXaxLnPA6rnJ4lbTLzGvRpAQ==
+X-Google-Smtp-Source: ABdhPJzp1kY0Eq7ZnTPcv/fOpYkKQkoZv/tdIOc8Qlnkptw4yJZWeRurqIVGk4BRqBQE3LECzd3F8w==
+X-Received: by 2002:a05:6214:aaf:: with SMTP id ew15mr576826qvb.110.1591649055572;
+        Mon, 08 Jun 2020 13:44:15 -0700 (PDT)
 Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id y16sm8895565qty.1.2020.06.08.13.44.15
+        by smtp.gmail.com with ESMTPSA id y16sm8895565qty.1.2020.06.08.13.44.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 13:44:16 -0700 (PDT)
+        Mon, 08 Jun 2020 13:44:15 -0700 (PDT)
 From:   Jonathan Marek <jonathan@marek.ca>
 To:     alsa-devel@alsa-project.org
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
+Cc:     Vinod Koul <vkoul@kernel.org>,
         Sanyog Kale <sanyog.r.kale@intel.com>,
         Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        linux-arm-msm@vger.kernel.org (open list:ARM/QUALCOMM SUPPORT),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 5/5] soundwire: qcom: enable CPU interrupts for mmio devices
-Date:   Mon,  8 Jun 2020 16:43:46 -0400
-Message-Id: <20200608204347.19685-6-jonathan@marek.ca>
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-kernel@vger.kernel.org (open list),
+        linux-arm-msm@vger.kernel.org (open list:ARM/QUALCOMM SUPPORT)
+Subject: [PATCH 4/5] soundwire: qcom: avoid dependency on CONFIG_SLIMBUS
+Date:   Mon,  8 Jun 2020 16:43:45 -0400
+Message-Id: <20200608204347.19685-5-jonathan@marek.ca>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200608204347.19685-1-jonathan@marek.ca>
 References: <20200608204347.19685-1-jonathan@marek.ca>
@@ -81,38 +81,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows the CPU to receive interrupts.
+The driver may be used without slimbus, so don't depend on slimbus.
 
 Signed-off-by: Jonathan Marek <jonathan@marek.ca>
 ---
- drivers/soundwire/qcom.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/soundwire/Kconfig | 1 -
+ drivers/soundwire/qcom.c  | 5 +++++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/soundwire/Kconfig b/drivers/soundwire/Kconfig
+index fa2b4ab92ed9..d121cf739090 100644
+--- a/drivers/soundwire/Kconfig
++++ b/drivers/soundwire/Kconfig
+@@ -33,7 +33,6 @@ config SOUNDWIRE_INTEL
+ 
+ config SOUNDWIRE_QCOM
+ 	tristate "Qualcomm SoundWire Master driver"
+-	depends on SLIMBUS
+ 	depends on SND_SOC
+ 	help
+ 	  SoundWire Qualcomm Master driver.
 diff --git a/drivers/soundwire/qcom.c b/drivers/soundwire/qcom.c
-index ac81c64768ea..58ffb46e0d64 100644
+index 14334442615f..ac81c64768ea 100644
 --- a/drivers/soundwire/qcom.c
 +++ b/drivers/soundwire/qcom.c
-@@ -34,6 +34,7 @@
- #define SWRM_INTERRUPT_STATUS_SPECIAL_CMD_ID_FINISHED		BIT(10)
- #define SWRM_INTERRUPT_MASK_ADDR				0x204
- #define SWRM_INTERRUPT_CLEAR					0x208
-+#define SWRM_INTERRUPT_CPU_EN					0x210
- #define SWRM_CMD_FIFO_WR_CMD					0x300
- #define SWRM_CMD_FIFO_RD_CMD					0x304
- #define SWRM_CMD_FIFO_CMD					0x308
-@@ -325,6 +326,12 @@ static int qcom_swrm_init(struct qcom_swrm_ctrl *ctrl)
- 	ctrl->reg_write(ctrl, SWRM_COMP_CFG_ADDR,
- 			SWRM_COMP_CFG_IRQ_LEVEL_OR_PULSE_MSK |
- 			SWRM_COMP_CFG_ENABLE_MSK);
-+
-+	/* enable CPU IRQs */
-+	if (ctrl->mmio) {
-+		ctrl->reg_write(ctrl, SWRM_INTERRUPT_CPU_EN,
-+				SWRM_INTERRUPT_STATUS_RMSK);
-+	}
- 	return 0;
- }
+@@ -769,13 +769,18 @@ static int qcom_swrm_probe(struct platform_device *pdev)
+ 	if (!ctrl)
+ 		return -ENOMEM;
  
++#ifdef CONFIG_SLIMBUS
+ 	if (dev->parent->bus == &slimbus_bus) {
++#else
++	if (false) {
++#endif
+ 		ctrl->reg_read = qcom_swrm_ahb_reg_read;
+ 		ctrl->reg_write = qcom_swrm_ahb_reg_write;
+ 		ctrl->regmap = dev_get_regmap(dev->parent, NULL);
+ 		if (!ctrl->regmap)
+ 			return -EINVAL;
+ 	} else {
++
+ 		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 
+ 		ctrl->reg_read = qcom_swrm_cpu_reg_read;
 -- 
 2.26.1
 
