@@ -2,126 +2,225 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D56DEC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 22:26:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F63DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 22:29:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1AAC20760
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 22:26:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC2D42068D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 22:29:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BLSZRjuy"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="YsGDe0Js"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbgFHW0E (ORCPT
+        id S1726855AbgFHW3m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 18:26:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59568 "EHLO
+        Mon, 8 Jun 2020 18:29:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726730AbgFHW0D (ORCPT
+        with ESMTP id S1726765AbgFHW3j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 18:26:03 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04562C08C5C4
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 15:26:01 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id n70so2567172ota.5
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 15:26:01 -0700 (PDT)
+        Mon, 8 Jun 2020 18:29:39 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E3D5C08C5C6
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 15:29:39 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id t16so7212255plo.7
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 15:29:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bc9tsjIFv/jB6QM+YnSZNZcJOlFnkdAaejqLZYVYxEA=;
-        b=BLSZRjuywFEWfrzDsWBfP9L/UD63HowwitzIJ8ZQDiSGzaYpks1b2U9LlDoJlCAh1B
-         7bRYKtOaOCcX+qfCaB6XxW9qtpsYVIXv/rO7pUoQsHxqBBQwuNStQYxxdUZrcY2sVEaF
-         JRUw0EUxUgkG0aW2gXuz6MlGRVnC8wq/zbzOso/uojEYoGpZkJ3lkVls7CABw8X8WADe
-         InLkZddLI8woa2s6PnDkQfNqc7WBwUC3zdRkcvTRJYZ00vxHgTbPq4RmVVRCVUhaua0h
-         NLDvKCNa9F/wn2ffBc3CxlbvQsUPJagssMuZmOxuDDe5F4a5UBg6InhK9JLs8kq2F5Dx
-         M4VA==
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=Ivfzr79vmJM2ezUGqOHZFSzxnQToj12hwiva2AjxDYk=;
+        b=YsGDe0JsHjrhCdZfhLSt+zXND+h5/vcEmVjSaGonV8inAFYY2m6YDRobjI4HRJ16kW
+         LxARXowlzaNoerKwRoTiT7xgryv5CVO4/qugFUasKxbLS7jXkvbjS9gkuSalDnBUvniq
+         ixYgSQ7tGlOF8FSM/PVKb4CbMYUkHpy8rntWk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bc9tsjIFv/jB6QM+YnSZNZcJOlFnkdAaejqLZYVYxEA=;
-        b=ito828qwu3A+kfB0rbRmh96Ebo4xOJI7MuALrP1dQA39ec02B9DoK6H1Tjfz2Spppx
-         vorHRsLcSOnJ6RbFV7mZJ/VCxKJdTiiSBJkHSwzb53A+j+tDWpnKDRGPSS3Q7zADyrwB
-         NKx7Jg4eeGTxHTaq99xkirvIpnfXyAThB6pydXqnyfOEKpX47DUVNt91InplcyNakbs+
-         wbPmsv9pMm9M+X1679rIjD7UdCQdj7CHaJOkeLz92YB3qK6qK65bI1Ci6QrONGth7iji
-         ulT49utLUXi1IdMXY1g+MiNHUe826z0YrFMF69O0zp8O7aBtJKxP2TJUMb3BhGigaZAN
-         ZZaw==
-X-Gm-Message-State: AOAM532fdxi/ueavFr/P1iMYXOsM6tqXMrys6p2JEBVHcjkqTpPoRlmj
-        mHHDwUbCJ9bg0lUUYN8sM5BNU3hTQ0U5cgDRSvbd6g==
-X-Google-Smtp-Source: ABdhPJyMp64A28sOxzeSkkFqGhDUVU7DykXVmi2Ng6Irnv+4+gn54jjMjWOaLN2VKHEcZDo9gLdLayjCOhVevAod6FU=
-X-Received: by 2002:a9d:26:: with SMTP id 35mr12455930ota.352.1591655160681;
- Mon, 08 Jun 2020 15:26:00 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=Ivfzr79vmJM2ezUGqOHZFSzxnQToj12hwiva2AjxDYk=;
+        b=VnW1nRe3lF056/Y4BLx0NyfjjMMWSamruiDimekUA2O2ufBuk7oNRqGu/6pmw5WjSV
+         k5y9GPSgtFP6ZNjzYSmt4FGhPJ+WKa/VErDgV+1Jz5OgYWjEIFtnmtKTPctw9eUL2nML
+         bb7pdm2atbhlyBw0+/oHtgDJSzeGiKJnEHxBCKF7j92vGsDHtrHPMKb5XLXTzcxVy9Cf
+         mM626k1z0lkkxCiLqomhBfsvIsgvCYMwGA/PcjRqu6quvt9/HNaJYqVdeWXgX6idesFr
+         EspGyE2VF3XBapFXmQSajOmvZIhi4dfgEDTjnCee068aCqikp79qjw14CEclAk0LvmIT
+         VnEw==
+X-Gm-Message-State: AOAM533kGA3rGPKz1seSAzU55QvMdfdBhWFavPk1f+4b5PRaPpPQY6DI
+        4E1ypBxgYKFBVN3kxBsRmAq6mg==
+X-Google-Smtp-Source: ABdhPJwKi2BxlrETO2znZc4aO5UDzp8kr5PBqQNwoJ+QnwSe4jXBo2gq9ETf+gqzDgFASjIn4X+7Ow==
+X-Received: by 2002:a17:902:7c8f:: with SMTP id y15mr739497pll.95.1591655378632;
+        Mon, 08 Jun 2020 15:29:38 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id a14sm7807017pfc.133.2020.06.08.15.29.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Jun 2020 15:29:37 -0700 (PDT)
+Subject: Re: [PATCH v7 1/8] fs: introduce kernel_pread_file* support
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Wolfram Sang <wsa@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Christoph Hellwig <hch@infradead.org>
+References: <20200606050458.17281-1-scott.branden@broadcom.com>
+ <20200606050458.17281-2-scott.branden@broadcom.com>
+ <20200606155216.GP19604@bombadil.infradead.org>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <ea16c19e-bd60-82ec-4825-05e233667f9f@broadcom.com>
+Date:   Mon, 8 Jun 2020 15:29:22 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <1585044079-358-1-git-send-email-kalyan_t@codeaurora.org>
-In-Reply-To: <1585044079-358-1-git-send-email-kalyan_t@codeaurora.org>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Mon, 8 Jun 2020 15:25:48 -0700
-Message-ID: <CALAqxLViRrga-XW2o1J1JutFdS1d-qmmgOrEP2beNygw3A7H4A@mail.gmail.com>
-Subject: Re: [PATCH 1/2] drm/msm/dpu: add support for color processing blocks
- in dpu driver
-To:     Kalyan Thota <kalyan_t@codeaurora.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno@lists.freedesktop.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, mkrishn@codeaurora.org,
-        travitej@codeaurora.org, Doug Anderson <dianders@chromium.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Sean Paul <seanpaul@chromium.org>, hoegsberg@chromium.org,
-        Rob Clark <robdclark@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200606155216.GP19604@bombadil.infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 1:17 AM Kalyan Thota <kalyan_t@codeaurora.org> wrote:
+Hi Matthew,
+
+I am requesting the experts in the filesystem subsystem to come to a 
+consensus here.
+This is not my area of expertise at all but every time I have addressed 
+all of the
+outstanding concerns someone else comes along and raises another one.
+
+Please see me comments below.
+
+On 2020-06-06 8:52 a.m., Matthew Wilcox wrote:
+> On Fri, Jun 05, 2020 at 10:04:51PM -0700, Scott Branden wrote:
+>> -int kernel_read_file(struct file *file, void **buf, loff_t *size,
+>> -		     loff_t max_size, enum kernel_read_file_id id)
+>> -{
+>> -	loff_t i_size, pos;
+Please note that how checkpatch generated the diff here.  The code 
+modifications
+below are for a new function kernel_pread_file, they do not modify the 
+existing API
+kernel_read_file.  kernel_read_file requests the ENTIRE file is read.  
+So we need to be
+able to differentiate whether it is ok to read just a portion of the 
+file or not.
+>> +int kernel_pread_file(struct file *file, void **buf, loff_t *size,
+>> +		      loff_t pos, loff_t max_size,
+>> +		      enum kernel_pread_opt opt,
+>> +		      enum kernel_read_file_id id)
+So, to share common code a new kernel_pread_opt needed to be added in 
+order to specify whether
+it was ok to read a partial file or not, and provide an offset into the 
+file where to begin reading.
+The meaning of parameters doesn't change in the bonkers API. max_size 
+still means max size, etc.
+These options are needed so common code can be shared with 
+kernel_read_file api.
+
+The partial read option is then needed further in the depths of the 
+kernel read for IMA operation as IMA does
+things differently for optimization of whether it is OK to do a partial 
+read of the file or not.
+>> +{
+>> +	loff_t alloc_size;
+>> +	loff_t buf_pos;
+>> +	loff_t read_end;
+>> +	loff_t i_size;
+>>   	ssize_t bytes = 0;
+>>   	int ret;
+>>   
+> Look, it's not your fault, but this is a great example of how we end
+> up with atrocious interfaces.  Someone comes along and implements a
+> simple DWIM interface that solves their problem.  Then somebody else
+> adds a slight variant that solves their problem, and so on and so on,
+> and we end up with this bonkers API where the arguments literally change
+> meaning depending on other arguments.
+I don't see what arguments are changing meaning.  Please explain what is 
+changing meaning.
+The diff below is for kernel_pread_file, not kernel_read_file. Perhaps 
+that is where your confusion is.
 >
-> This change adds support to configure dspp blocks in
-> the dpu driver.
+>> @@ -950,21 +955,31 @@ int kernel_read_file(struct file *file, void **buf, loff_t *size,
+>>   		ret = -EINVAL;
+>>   		goto out;
+>>   	}
+>> -	if (i_size > SIZE_MAX || (max_size > 0 && i_size > max_size)) {
+>> +
+>> +	/* Default read to end of file */
+>> +	read_end = i_size;
+>> +
+>> +	/* Allow reading partial portion of file */
+>> +	if ((opt == KERNEL_PREAD_PART) &&
+>> +	    (i_size > (pos + max_size)))
+>> +		read_end = pos + max_size;
+>> +
+>> +	alloc_size = read_end - pos;
+>> +	if (i_size > SIZE_MAX || (max_size > 0 && alloc_size > max_size)) {
+>>   		ret = -EFBIG;
+>>   		goto out;
+> ... like that.
+like what?  We need to determine how much of the file to read based on 
+size of file, position in file, and max size we can read.
 >
-> Macro description of the changes coming in this patch.
-> 1) Add dspp definitions in the hw catalog.
-> 2) Add capability to reserve dspp blocks in the display data path.
-> 3) Attach the reserved block to the encoder.
+> I think what we actually want is:
 >
-> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
+> ssize_t vmap_file_range(struct file *, loff_t start, loff_t end, void **bufp);
+> void vunmap_file_range(struct file *, void *buf);
+>
+> If end > i_size, limit the allocation to i_size.  Returns the number
+> of bytes allocated, or a negative errno.  Writes the pointer allocated
+> to *bufp.  Internally, it should use the page cache to read in the pages
+> (taking appropriate reference counts).  Then it maps them using vmap()
+> instead of copying them to a private vmalloc() array.
+> kernel_read_file() can be converted to use this API.  The users will
+> need to be changed to call kernel_read_end(struct file *file, void *buf)
+> instead of vfree() so it can call allow_write_access() for them.
+>
+> vmap_file_range() has a lot of potential uses.  I'm surprised we don't
+> have it already, to be honest.
+Such a change sounds like it could be done in a later patch series.
+It's an incomplete solution.  It would work for some of the needed 
+operations but not others.
+For kernel_read_file, I don't see how in your new API it indicates if 
+the end of the file was reached or not.
+Also, please note that buffers may be preallocated  and shouldn't be 
+freed by the kernel in some cases and
+allocated and freed by the kernel in others.
 
-Hey all,
-  With this patch now merged upstream, I'm seeing a regression on
-db845c that I bisected down to it.
+Your proposed change doesn't exist and is not simple as it sounds or 
+meet all the needs of the existing kernel_read_file
+function, IMA, and new partial kernel_pread_file?
 
-When I boot up I see:
-[   40.976737] [drm:_dpu_rm_check_lm_and_get_connected_blks] [dpu
-error]failed to get dspp on lm 0
-[   40.985600] [drm:_dpu_rm_check_lm_and_get_connected_blks] [dpu
-error]failed to get dspp on lm 0
-[   40.994587] [drm:_dpu_rm_check_lm_and_get_connected_blks] [dpu
-error]failed to get dspp on lm 0
-[   41.003492] [drm:_dpu_rm_check_lm_and_get_connected_blks] [dpu
-error]failed to get dspp on lm 0
-[   41.012283] [drm:_dpu_rm_make_reservation] [dpu error]unable to
-find appropriate mixers
-[   41.020369] [drm:dpu_rm_reserve] [dpu error]failed to reserve hw
-resources: -119
+Patch v7 does not break existing functions or rearchitect things in a 
+dramatic way.  They fit into existing code,
+will not break the existing codepaths (which some didn't even have a 
+test case until I added one), and can
+be improved upon as need with your vmap_file_range or others once those 
+have been developed, tested, and
+proven by someone.
 
-Over and over, and the display doesn't start up.
-
-I suspect we're supposed to catch the following check before the failure:
-
-+       if (!reqs->topology.num_dspp)
-+               return true;
-
-I suspect the issue is in dpu_encoder_get_topology() we don't fully
-initialize the topology structure on the stack before returning it.
-
-Does that sound plausible or is there likely some other cause?
-
-thanks
--john
+I would like the experts here to decide on what needs to be done so we 
+can move forward
+and get kernel_pread_file support added soon.
+Thanks,
+Scott
