@@ -2,230 +2,185 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE3E5C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 08:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84EFDC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 08:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A19F2067B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 08:57:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CEA92067B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 08:58:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y9+UtojW"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="U2MXGgYg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729172AbgFHI5d (ORCPT
+        id S1729188AbgFHI6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 04:57:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47428 "EHLO
+        Mon, 8 Jun 2020 04:58:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726597AbgFHI5c (ORCPT
+        with ESMTP id S1729173AbgFHI6a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 04:57:32 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1BCEC08C5C4;
-        Mon,  8 Jun 2020 01:57:31 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id a13so15981423ilh.3;
-        Mon, 08 Jun 2020 01:57:31 -0700 (PDT)
+        Mon, 8 Jun 2020 04:58:30 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 531E1C08C5C4
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 01:58:30 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id q11so16501785wrp.3
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 01:58:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZhUJIihNsOJBPcBzEUBiE7/iTHmbpkI3L5KiEBlzlAw=;
-        b=Y9+UtojWa2WvofBKlqksrH2UxqOeor9ywSsTiV/vDSFGtDp5oN9ImT7jixVrCmdrv7
-         KqNvYCOlvk6+QKy0dRkO4iGrNI1kmjIN/u1NVSqW1i1b/KF63PcNOO/bFR5fou29C499
-         imfbf9MzdZyRbHyCiRH8irRF8ehZh/IUDpq6TclCsORYbkamGlPncs3p/d40LqM/8v0O
-         +fDZsW+XFyhc934YqXtULIaXiGVuUIDbErtxW3Jcylu0nj4HGVsGOYIqFaPoNNpjmbZy
-         2J56AZj9w8fwtGQ2NO7AePx8m8uSEytRjzYL5oCw63lDRsB4J+xLIy9/+aw4NX/Oh//i
-         Tqkw==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:autocrypt:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=eOsSx8TO4GPhy55v1CqoOAgdbtSQo/SHQ+NgMjMA2Yk=;
+        b=U2MXGgYgcXrRM+aLfbAO2iRky+nl+BvJRUC1Eis64grwX/xgbNKGUwVTOH9piWF6De
+         EbW96ciF2F/AKJ4hC6NmJXdPE6ptBcg7FquqnVVNS0I4lhj9t0Uv++3UunL/V8uGKs72
+         fyE+lg25kbd9rc77jwqrL6IQP6gTpXXuy4sTQm5jmLy0J60QHw/L7ciIMH9iapx+Ix71
+         LSJn0Mkxh/PJP1QWiXJzgjzhilDKGIH7V6ZJCeU3/MXin8MdSbEZHP579/qXE/NWlLm+
+         8A+lt0UFGeyUW34w5mma6OBgHNYCIjC7aA24/27uBiC8Wz/7CZwYNOv/x4ZHMkgb1TWS
+         r3kg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZhUJIihNsOJBPcBzEUBiE7/iTHmbpkI3L5KiEBlzlAw=;
-        b=WHeY0+r4m4nE9G/x683xsnmbknJAA8PUeEDr7lcw8ojSvRJ5wQf0oknqzk2mmWPqWe
-         kJSh6QZ2GhH+hC1s04BjsnFjokILqb8KpQ4ypHb1e3EEzr84ll27LIE78N/MKdN0KELx
-         a3h6TBa9oOlXQItS/PfgJ8WygUv5B/ecq7ILVEOyT/6NQjh6YeSCyazJd7ph0PFZJyjy
-         mWeu8xsFvuvSt/JGLjQsRazJ0lduRxPib9xHZRVgzGY4F7GXksgEb8G2uvaYHEzLJo2r
-         ZjLwAavJKTTwY6HUn55xrw0appCQJWeK3tyVrp7ezxTIeq9oiP2+FYeTFOECYaxAgueV
-         AufQ==
-X-Gm-Message-State: AOAM532D6J6vIPVcXqhKHY+epFW5KqrlagWgzAymlGieEptz42As1kom
-        bYhVaMpiZ9bYtDPX5RbPBbOQCnN0YGtHWZ7pVhg=
-X-Google-Smtp-Source: ABdhPJwyPmJaXLtSbRr/u7WSBpcrHXUO5Dpivercq2zRD4AQJbzLRnckACLEYWNLFcrCuA7qfpn1FslH2bosTiVE5PA=
-X-Received: by 2002:a92:9f12:: with SMTP id u18mr20674915ili.287.1591606651183;
- Mon, 08 Jun 2020 01:57:31 -0700 (PDT)
+        h=x-gm-message-state:subject:to:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=eOsSx8TO4GPhy55v1CqoOAgdbtSQo/SHQ+NgMjMA2Yk=;
+        b=trHiY2rIt/fIGcSpQfMokjylI3aEUrOylxNyG18qn3w0aWEowyYgDbt+wfoWjKOgHb
+         6DVSrFIUgI+qKgdrRmNz+vvO11UdcaxqgVpcMnpZa8+BCNQ1VAtmxZInANbtGdVtd7pQ
+         xT3TfhR0Z3ONuvLmW413sYBIZkqKoV01i8VlUU2oVcFc6peb6oZFo2XfemDyacfcR6z4
+         n4RUkaTzzPXdvd5xvxPAv41CnEM9hWCWO3p0ryICspvpTq+ryTXqvdRtdP99K2TtvXYT
+         KgMcmWTVfpJjW+9qNwC2eAEGcWsqvJc4DidZkg5Kk0W/uV7V+XW31R+SpxFGbCZiYsgY
+         pbHQ==
+X-Gm-Message-State: AOAM532395PLLpjNd/kYm0dzC5CjGFtAX0q/JbMSQsLS2sa3uCFWmjhR
+        MisfJHeuJjBokLe72BEy0xHCyib5oBf5nA==
+X-Google-Smtp-Source: ABdhPJyEVEciXStXqHeGxwSSTRdKtKQl2EaYqQ62y/rqtrnUKzV3w9ikPqQmnUDh+v/gCPo+c47Diw==
+X-Received: by 2002:adf:dec5:: with SMTP id i5mr23825847wrn.16.1591606708537;
+        Mon, 08 Jun 2020 01:58:28 -0700 (PDT)
+Received: from ?IPv6:2a01:e35:2ec0:82b0:22:5867:d2c6:75f4? ([2a01:e35:2ec0:82b0:22:5867:d2c6:75f4])
+        by smtp.gmail.com with ESMTPSA id f11sm22859698wrj.2.2020.06.08.01.58.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Jun 2020 01:58:27 -0700 (PDT)
+Subject: Re: [PATCH] soc: amlogic: meson-gx-socinfo: Fix S905X3 ID
+To:     Christian Hewitt <christianshewitt@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200604044808.30995-1-christianshewitt@gmail.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <7d58e4db-2893-3675-eb93-ea14c3534b5b@baylibre.com>
+Date:   Mon, 8 Jun 2020 10:58:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200605213853.14959-1-sean.j.christopherson@intel.com> <20200605213853.14959-22-sean.j.christopherson@intel.com>
-In-Reply-To: <20200605213853.14959-22-sean.j.christopherson@intel.com>
-From:   Huacai Chen <chenhuacai@gmail.com>
-Date:   Mon, 8 Jun 2020 16:57:20 +0800
-Message-ID: <CAAhV-H4XrXx9ktum-E706ggukSU77hdN-iofJ-DDGtLeGt+KPA@mail.gmail.com>
-Subject: Re: [PATCH 21/21] KVM: MIPS: Use common KVM implementation of MMU
- memory caches
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Marc Zyngier <maz@kernel.org>, Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        kvmarm@lists.cs.columbia.edu,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        kvm <kvm@vger.kernel.org>, kvm-ppc@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Feiner <pfeiner@google.com>,
-        Peter Shier <pshier@google.com>,
-        Junaid Shahid <junaids@google.com>,
-        Ben Gardon <bgardon@google.com>,
-        Christoffer Dall <christoffer.dall@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200604044808.30995-1-christianshewitt@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reviewed-by: Huacai Chen <chenhc@lemote.com>
+Hi,
 
-On Sat, Jun 6, 2020 at 5:41 AM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> Move to the common MMU memory cache implementation now that the common
-> code and MIPS's existing code are semantically compatible.
->
-> No functional change intended.
->
-> Suggested-by: Christoffer Dall <christoffer.dall@arm.com>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+On 04/06/2020 06:48, Christian Hewitt wrote:
+> The current value is taken from Amlogic's 4.9 bsp kernel which appears
+> to use the wrong ID. For comparison, here's before/after:
+> 
+> [    0.152237] soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:c (10:2) Detected
+> [    0.152463] soc soc0: Amlogic Meson SM1 (S905X3) Revision 2b:c (10:2) Detected
+
+For SM1 we have weird values, here are the one we gen on KernelCI:
+SEI610 (S905D3):
+Amlogic Meson SM1 (Unknown) Revision 2b:c (50:2)
+
+VIM3L (S905D3)
+Amlogic Meson SM1 (Unknown) Revision 2b:c (4:2)
+
+And you report now:
+Odroid-C4 (S905X4)
+Amlogic Meson SM1 (Unknown) Revision 2b:c (10:2)
+
+And at the time you reported:
+VIM3L (S905D3)
+Amlogic Meson SM1 (S905D3) Revision 2b:c (b0:2)
+
+So I'm quite lost here....
+
+Neil
+
+> 
+> Fixes c9cc9bec36d0 ("soc: amlogic: meson-gx-socinfo: Add SM1 and S905X3 IDs")
+> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 > ---
->  arch/mips/include/asm/kvm_host.h  | 11 ---------
->  arch/mips/include/asm/kvm_types.h |  2 ++
->  arch/mips/kvm/mmu.c               | 40 ++++---------------------------
->  3 files changed, 7 insertions(+), 46 deletions(-)
->
-> diff --git a/arch/mips/include/asm/kvm_host.h b/arch/mips/include/asm/kvm_host.h
-> index 363e7a89d173..f49617175f60 100644
-> --- a/arch/mips/include/asm/kvm_host.h
-> +++ b/arch/mips/include/asm/kvm_host.h
-> @@ -335,17 +335,6 @@ struct kvm_mips_tlb {
->         long tlb_lo[2];
+>  drivers/soc/amlogic/meson-gx-socinfo.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/soc/amlogic/meson-gx-socinfo.c b/drivers/soc/amlogic/meson-gx-socinfo.c
+> index 01fc0d20a70d..c38a1e4db28b 100644
+> --- a/drivers/soc/amlogic/meson-gx-socinfo.c
+> +++ b/drivers/soc/amlogic/meson-gx-socinfo.c
+> @@ -68,7 +68,7 @@ static const struct meson_gx_package_id {
+>  	{ "S905X2", 0x28, 0x40, 0xf0 },
+>  	{ "S922X", 0x29, 0x40, 0xf0 },
+>  	{ "A311D", 0x29, 0x10, 0xf0 },
+> -	{ "S905X3", 0x2b, 0x5, 0xf },
+> +	{ "S905X3", 0x2b, 0x10, 0xf0 },
+>  	{ "S905D3", 0x2b, 0xb0, 0xf0 },
+>  	{ "A113L", 0x2c, 0x0, 0xf8 },
 >  };
->
-> -#define KVM_NR_MEM_OBJS     4
-> -
-> -/*
-> - * We don't want allocation failures within the mmu code, so we preallocate
-> - * enough memory for a single page fault in a cache.
-> - */
-> -struct kvm_mmu_memory_cache {
-> -       int nobjs;
-> -       void *objects[KVM_NR_MEM_OBJS];
-> -};
-> -
->  #define KVM_MIPS_AUX_FPU       0x1
->  #define KVM_MIPS_AUX_MSA       0x2
->
-> diff --git a/arch/mips/include/asm/kvm_types.h b/arch/mips/include/asm/kvm_types.h
-> index 5efeb32a5926..213754d9ef6b 100644
-> --- a/arch/mips/include/asm/kvm_types.h
-> +++ b/arch/mips/include/asm/kvm_types.h
-> @@ -2,4 +2,6 @@
->  #ifndef _ASM_MIPS_KVM_TYPES_H
->  #define _ASM_MIPS_KVM_TYPES_H
->
-> +#define KVM_ARCH_NR_OBJS_PER_MEMORY_CACHE     4
-> +
->  #endif /* _ASM_MIPS_KVM_TYPES_H */
-> diff --git a/arch/mips/kvm/mmu.c b/arch/mips/kvm/mmu.c
-> index 41a4a063a730..d6acd88c0c46 100644
-> --- a/arch/mips/kvm/mmu.c
-> +++ b/arch/mips/kvm/mmu.c
-> @@ -25,39 +25,9 @@
->  #define KVM_MMU_CACHE_MIN_PAGES 2
->  #endif
->
-> -static int mmu_topup_memory_cache(struct kvm_mmu_memory_cache *cache, int min)
-> -{
-> -       void *page;
-> -
-> -       if (cache->nobjs >= min)
-> -               return 0;
-> -       while (cache->nobjs < ARRAY_SIZE(cache->objects)) {
-> -               page = (void *)__get_free_page(GFP_KERNEL_ACCOUNT);
-> -               if (!page)
-> -                       return -ENOMEM;
-> -               cache->objects[cache->nobjs++] = page;
-> -       }
-> -       return 0;
-> -}
-> -
-> -static void mmu_free_memory_cache(struct kvm_mmu_memory_cache *mc)
-> -{
-> -       while (mc->nobjs)
-> -               free_page((unsigned long)mc->objects[--mc->nobjs]);
-> -}
-> -
-> -static void *mmu_memory_cache_alloc(struct kvm_mmu_memory_cache *mc)
-> -{
-> -       void *p;
-> -
-> -       BUG_ON(!mc || !mc->nobjs);
-> -       p = mc->objects[--mc->nobjs];
-> -       return p;
-> -}
-> -
->  void kvm_mmu_free_memory_caches(struct kvm_vcpu *vcpu)
->  {
-> -       mmu_free_memory_cache(&vcpu->arch.mmu_page_cache);
-> +       kvm_mmu_free_memory_cache(&vcpu->arch.mmu_page_cache);
->  }
->
->  /**
-> @@ -151,7 +121,7 @@ static pte_t *kvm_mips_walk_pgd(pgd_t *pgd, struct kvm_mmu_memory_cache *cache,
->
->                 if (!cache)
->                         return NULL;
-> -               new_pmd = mmu_memory_cache_alloc(cache);
-> +               new_pmd = kvm_mmu_memory_cache_alloc(cache);
->                 pmd_init((unsigned long)new_pmd,
->                          (unsigned long)invalid_pte_table);
->                 pud_populate(NULL, pud, new_pmd);
-> @@ -162,7 +132,7 @@ static pte_t *kvm_mips_walk_pgd(pgd_t *pgd, struct kvm_mmu_memory_cache *cache,
->
->                 if (!cache)
->                         return NULL;
-> -               new_pte = mmu_memory_cache_alloc(cache);
-> +               new_pte = kvm_mmu_memory_cache_alloc(cache);
->                 clear_page(new_pte);
->                 pmd_populate_kernel(NULL, pmd, new_pte);
->         }
-> @@ -709,7 +679,7 @@ static int kvm_mips_map_page(struct kvm_vcpu *vcpu, unsigned long gpa,
->                 goto out;
->
->         /* We need a minimum of cached pages ready for page table creation */
-> -       err = mmu_topup_memory_cache(memcache, KVM_MMU_CACHE_MIN_PAGES);
-> +       err = kvm_mmu_topup_memory_cache(memcache, KVM_MMU_CACHE_MIN_PAGES);
->         if (err)
->                 goto out;
->
-> @@ -793,7 +763,7 @@ static pte_t *kvm_trap_emul_pte_for_gva(struct kvm_vcpu *vcpu,
->         int ret;
->
->         /* We need a minimum of cached pages ready for page table creation */
-> -       ret = mmu_topup_memory_cache(memcache, KVM_MMU_CACHE_MIN_PAGES);
-> +       ret = kvm_mmu_topup_memory_cache(memcache, KVM_MMU_CACHE_MIN_PAGES);
->         if (ret)
->                 return NULL;
->
-> --
-> 2.26.0
->
+> 
+
