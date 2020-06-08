@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A6A0C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C537FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:57:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E63F20659
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:57:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A29920659
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:57:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660648;
-	bh=JpyXvZPwGmhcDX7HBvEqn00iZ7V++vRJV0NKykGQJf4=;
+	s=default; t=1591660651;
+	bh=kHnwlx9BCRreA8gSpamAv5AUS0PWWZVe+8Pj/JLgOwo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HpGytMmz8sR697muPD5x6FlxgLUTjrWh7bTsTflKETqiHDix7wDwWQMlgk92rV0VJ
-	 zlkOgvxNOA316JXr16Y12SiQZaddWTaN1+Buo/lIvTcnQkoKjAsi9GBPpZrWvJERqJ
-	 QxVXgelj41FAJ/3L+GsvAcTDIBhtN1ku3OFMZNWo=
+	b=Ylesc4G2rGdzJztj8LLHhAQ/UhrLirohY35ch1BIOJZJK8oimVOK3FAKy0ZKZg4pq
+	 QIhxTIlXFrSDXT6zmt2KAJ9skMw1IT8pDiBley+eOdNa7zvSeCAlq16ehX7fRb40vh
+	 8KhGIc+zxc5ZxqzlFzMAN1tPTVcdrnqFSpA5aMwE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728684AbgFHX51 (ORCPT
+        id S1727979AbgFHXX2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:57:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48868 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:23:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731498AbgFHXXa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:23:30 -0400
+        id S1729134AbgFHXS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:18:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9DBB20842;
-        Mon,  8 Jun 2020 23:23:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A21C02088E;
+        Mon,  8 Jun 2020 23:18:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658609;
-        bh=JpyXvZPwGmhcDX7HBvEqn00iZ7V++vRJV0NKykGQJf4=;
+        s=default; t=1591658305;
+        bh=kHnwlx9BCRreA8gSpamAv5AUS0PWWZVe+8Pj/JLgOwo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bGZ3deS5CSi9ULJyTo2SuhMYTr2BSPG+XVsvahwyVs5Q+wzBDB2Hz5eBddSvQlApv
-         STtUv1vN7u9pOcBo6Rlb+Yk6jTF4PGaPRxebbFDPECnYP4rDJQffyDs7xQfw67HnyI
-         JquoYKifkO8O85ZkaGxPoSvwFv+clxtR4XRdtPSg=
+        b=mr0MEHwvY1KKWj4DljtbQrNio5LtuHRBDWVbr8a0smgLDOuywmXaP78DCzIZcSsY2
+         KEIUjwsrBZn6AV+y9XdnSHw+0LptDfMNkPXhZoMCnvctA8h8zJv7QdK5dM4fNhYuPO
+         3DZlTTuUBZN5qFp6QjLMoovMrKlZxfNJnkgG9qu8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jitao Shi <jitao.shi@mediatek.com>, Rob Herring <robh@kernel.org>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 036/106] dt-bindings: display: mediatek: control dpi pins mode to avoid leakage
-Date:   Mon,  8 Jun 2020 19:21:28 -0400
-Message-Id: <20200608232238.3368589-36-sashal@kernel.org>
+Cc:     Robert Beckett <bob.beckett@collabora.com>,
+        Ian Ray <ian.ray@ge.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 307/606] ARM: dts/imx6q-bx50v3: Set display interface clock parents
+Date:   Mon,  8 Jun 2020 19:07:12 -0400
+Message-Id: <20200608231211.3363633-307-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608232238.3368589-1-sashal@kernel.org>
-References: <20200608232238.3368589-1-sashal@kernel.org>
+In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
+References: <20200608231211.3363633-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,46 +62,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jitao Shi <jitao.shi@mediatek.com>
+From: Robert Beckett <bob.beckett@collabora.com>
 
-[ Upstream commit b0ff9b590733079f7f9453e5976a9dd2630949e3 ]
+[ Upstream commit 665e7c73a7724a393b4ec92d1ae1e029925ef2b7 ]
 
-Add property "pinctrl-names" to swap pin mode between gpio and dpi mode.
-Set the dpi pins to gpio mode and output-low to avoid leakage current
-when dpi disabled.
+Avoid LDB and IPU DI clocks both using the same parent. LDB requires
+pasthrough clock to avoid breaking timing while IPU DI does not.
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-Signed-off-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Force IPU DI clocks to use IMX6QDL_CLK_PLL2_PFD0_352M as parent
+and LDB to use IMX6QDL_CLK_PLL5_VIDEO_DIV.
+
+This fixes an issue where attempting atomic modeset while using
+HDMI and display port at the same time causes LDB clock programming
+to destroy the programming of HDMI that was done during the same
+modeset.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Robert Beckett <bob.beckett@collabora.com>
+[Use IMX6QDL_CLK_PLL2_PFD0_352M instead of IMX6QDL_CLK_PLL2_PFD2_396M
+ originally chosen by Robert Beckett to avoid affecting eMMC clock
+ by DRM atomic updates]
+Signed-off-by: Ian Ray <ian.ray@ge.com>
+[Squash Robert's and Ian's commits for bisectability, update patch
+ description and add stable tag]
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../devicetree/bindings/display/mediatek/mediatek,dpi.txt   | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm/boot/dts/imx6q-b450v3.dts  |  7 -------
+ arch/arm/boot/dts/imx6q-b650v3.dts  |  7 -------
+ arch/arm/boot/dts/imx6q-b850v3.dts  | 11 -----------
+ arch/arm/boot/dts/imx6q-bx50v3.dtsi | 15 +++++++++++++++
+ 4 files changed, 15 insertions(+), 25 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-index b6a7e7397b8b..b944fe067188 100644
---- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-+++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-@@ -16,6 +16,9 @@ Required properties:
-   Documentation/devicetree/bindings/graph.txt. This port should be connected
-   to the input port of an attached HDMI or LVDS encoder chip.
+diff --git a/arch/arm/boot/dts/imx6q-b450v3.dts b/arch/arm/boot/dts/imx6q-b450v3.dts
+index 95b8f2d71821..fb0980190aa0 100644
+--- a/arch/arm/boot/dts/imx6q-b450v3.dts
++++ b/arch/arm/boot/dts/imx6q-b450v3.dts
+@@ -65,13 +65,6 @@ panel_in_lvds0: endpoint {
+ 	};
+ };
  
-+Optional properties:
-+- pinctrl-names: Contain "default" and "sleep".
+-&clks {
+-	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
+-			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>;
+-	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL3_USB_OTG>,
+-				 <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
+-};
+-
+ &ldb {
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/imx6q-b650v3.dts b/arch/arm/boot/dts/imx6q-b650v3.dts
+index 611cb7ae7e55..8f762d9c5ae9 100644
+--- a/arch/arm/boot/dts/imx6q-b650v3.dts
++++ b/arch/arm/boot/dts/imx6q-b650v3.dts
+@@ -65,13 +65,6 @@ panel_in_lvds0: endpoint {
+ 	};
+ };
+ 
+-&clks {
+-	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
+-			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>;
+-	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL3_USB_OTG>,
+-				 <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
+-};
+-
+ &ldb {
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/imx6q-b850v3.dts b/arch/arm/boot/dts/imx6q-b850v3.dts
+index e4cb118f88c6..1ea64ecf4291 100644
+--- a/arch/arm/boot/dts/imx6q-b850v3.dts
++++ b/arch/arm/boot/dts/imx6q-b850v3.dts
+@@ -53,17 +53,6 @@ chosen {
+ 	};
+ };
+ 
+-&clks {
+-	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
+-			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>,
+-			  <&clks IMX6QDL_CLK_IPU1_DI0_PRE_SEL>,
+-			  <&clks IMX6QDL_CLK_IPU2_DI0_PRE_SEL>;
+-	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL5_VIDEO_DIV>,
+-				 <&clks IMX6QDL_CLK_PLL5_VIDEO_DIV>,
+-				 <&clks IMX6QDL_CLK_PLL2_PFD2_396M>,
+-				 <&clks IMX6QDL_CLK_PLL2_PFD2_396M>;
+-};
+-
+ &ldb {
+ 	fsl,dual-channel;
+ 	status = "okay";
+diff --git a/arch/arm/boot/dts/imx6q-bx50v3.dtsi b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+index fa27dcdf06f1..1938b04199c4 100644
+--- a/arch/arm/boot/dts/imx6q-bx50v3.dtsi
++++ b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+@@ -377,3 +377,18 @@ pci_root: root@0,0 {
+ 		#interrupt-cells = <1>;
+ 	};
+ };
 +
- Example:
- 
- dpi0: dpi@1401d000 {
-@@ -26,6 +29,9 @@ dpi0: dpi@1401d000 {
- 		 <&mmsys CLK_MM_DPI_ENGINE>,
- 		 <&apmixedsys CLK_APMIXED_TVDPLL>;
- 	clock-names = "pixel", "engine", "pll";
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&dpi_pin_func>;
-+	pinctrl-1 = <&dpi_pin_idle>;
- 
- 	port {
- 		dpi0_out: endpoint {
++&clks {
++	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
++			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>,
++			  <&clks IMX6QDL_CLK_IPU1_DI0_PRE_SEL>,
++			  <&clks IMX6QDL_CLK_IPU1_DI1_PRE_SEL>,
++			  <&clks IMX6QDL_CLK_IPU2_DI0_PRE_SEL>,
++			  <&clks IMX6QDL_CLK_IPU2_DI1_PRE_SEL>;
++	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL5_VIDEO_DIV>,
++				 <&clks IMX6QDL_CLK_PLL5_VIDEO_DIV>,
++				 <&clks IMX6QDL_CLK_PLL2_PFD0_352M>,
++				 <&clks IMX6QDL_CLK_PLL2_PFD0_352M>,
++				 <&clks IMX6QDL_CLK_PLL2_PFD0_352M>,
++				 <&clks IMX6QDL_CLK_PLL2_PFD0_352M>;
++};
 -- 
 2.25.1
 
