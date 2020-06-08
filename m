@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 431DBC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:43:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E7EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:43:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1731E2078D
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:43:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47A3520659
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:43:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591659787;
-	bh=/747nDpUrA+HrhPyngwEof3PhSh74KiCISRw9/z8wE4=;
+	s=default; t=1591659790;
+	bh=PHQbE860ApbPuK+H3E8U3wnViA0onuHhCR33vzRV5Io=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hcpmNK3O16Ar5Bnm0VEaGBfHil4FD5yarYiZN+K39nc8BwdR0jBRxGp87EvM/+66Q
-	 SvRkJienwv1AyKfQT0E9KwNDVe//+KU1Gukf7DpyYYeFDbxOyYf6y+3xtjI2E/vWGD
-	 9bZ1Ggus25cCTSTlnIbDvga48X2yR9kdOopZE2lc=
+	b=09wGteCkOI9chGN5xB6oQ7KgGoKxj3xgpLT34gQ0LmgDF5e/4HEBcS9Nq5i44KL7p
+	 VXfA0xHntUUrRxqDlC8gTYKh5fmnQ7KU5Av6qFInW7eKmpQahi8427qv80jP2cTm7F
+	 g8Bu+R2dY7UrYTYPyoSGFGeem8ezn/icUUke2MJc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731752AbgFHX1O (ORCPT
+        id S1732104AbgFHXnJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:27:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46228 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:43:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730510AbgFHXVx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:21:53 -0400
+        id S1731732AbgFHX1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:27:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A67920899;
-        Mon,  8 Jun 2020 23:21:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CBD420801;
+        Mon,  8 Jun 2020 23:27:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658513;
-        bh=/747nDpUrA+HrhPyngwEof3PhSh74KiCISRw9/z8wE4=;
+        s=default; t=1591658835;
+        bh=PHQbE860ApbPuK+H3E8U3wnViA0onuHhCR33vzRV5Io=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vz337WBolvU5zSAitlAIhtWfro20ELN4uvwfNqEd7IBE1LjBG9g6Y/IITeSZq9Qzl
-         lKHhZos9y2hdshDZlNLslJOJ++PsVAIBit1AfNgp24T5mvJQdEYPr7kDurdfd3P5QZ
-         0cJAuQuOk0v4FV3SLoq1sNEmMCmsts7A6wT40DAs=
+        b=yhNiF6adbtZVjRaICAF4zgW5r3LClhwHUUc0jSr7nFUSf4Df4hRjDA9BwoPgvEJ5G
+         uNUeiVtdYvfjhNHV3L90RW5i+VJ0MKbjhLZrBT+N8x53xJ5qVOtVn7mIQgB1wCoFeL
+         8Oc97hhSEr/ZTLtXPP4UVlqMtnDm+tCdhw1oRdqY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kaige Li <likaige@loongson.cn>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Sasha Levin <sashal@kernel.org>, linux-mips@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 142/175] MIPS: tools: Fix resource leak in elf-entry.c
-Date:   Mon,  8 Jun 2020 19:18:15 -0400
-Message-Id: <20200608231848.3366970-142-sashal@kernel.org>
+Cc:     Barret Rhoden <brho@google.com>,
+        syzbot+bb4935a5c09b5ff79940@syzkaller.appspotmail.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 25/50] perf: Add cond_resched() to task_function_call()
+Date:   Mon,  8 Jun 2020 19:26:15 -0400
+Message-Id: <20200608232640.3370262-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
-References: <20200608231848.3366970-1-sashal@kernel.org>
+In-Reply-To: <20200608232640.3370262-1-sashal@kernel.org>
+References: <20200608232640.3370262-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,65 +60,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kaige Li <likaige@loongson.cn>
+From: Barret Rhoden <brho@google.com>
 
-[ Upstream commit f33a0b941017b9cb5a4e975af198b855b2f2b455 ]
+[ Upstream commit 2ed6edd33a214bca02bd2b45e3fc3038a059436b ]
 
-There is a file descriptor resource leak in elf-entry.c, fix this
-by adding fclose() before return and die.
+Under rare circumstances, task_function_call() can repeatedly fail and
+cause a soft lockup.
 
-Signed-off-by: Kaige Li <likaige@loongson.cn>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+There is a slight race where the process is no longer running on the cpu
+we targeted by the time remote_function() runs.  The code will simply
+try again.  If we are very unlucky, this will continue to fail, until a
+watchdog fires.  This can happen in a heavily loaded, multi-core virtual
+machine.
+
+Reported-by: syzbot+bb4935a5c09b5ff79940@syzkaller.appspotmail.com
+Signed-off-by: Barret Rhoden <brho@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200414222920.121401-1-brho@google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/tools/elf-entry.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ kernel/events/core.c | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
-diff --git a/arch/mips/tools/elf-entry.c b/arch/mips/tools/elf-entry.c
-index adde79ce7fc0..dbd14ff05b4c 100644
---- a/arch/mips/tools/elf-entry.c
-+++ b/arch/mips/tools/elf-entry.c
-@@ -51,11 +51,14 @@ int main(int argc, const char *argv[])
- 	nread = fread(&hdr, 1, sizeof(hdr), file);
- 	if (nread != sizeof(hdr)) {
- 		perror("Unable to read input file");
-+		fclose(file);
- 		return EXIT_FAILURE;
- 	}
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 1f27b73bd7d4..b562467d2d49 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -90,11 +90,11 @@ static void remote_function(void *data)
+  * @info:	the function call argument
+  *
+  * Calls the function @func when the task is currently running. This might
+- * be on the current CPU, which just calls the function directly
++ * be on the current CPU, which just calls the function directly.  This will
++ * retry due to any failures in smp_call_function_single(), such as if the
++ * task_cpu() goes offline concurrently.
+  *
+- * returns: @func return value, or
+- *	    -ESRCH  - when the process isn't running
+- *	    -EAGAIN - when the process moved away
++ * returns @func return value or -ESRCH when the process isn't running
+  */
+ static int
+ task_function_call(struct task_struct *p, remote_function_f func, void *info)
+@@ -107,11 +107,16 @@ task_function_call(struct task_struct *p, remote_function_f func, void *info)
+ 	};
+ 	int ret;
  
--	if (memcmp(hdr.ehdr32.e_ident, ELFMAG, SELFMAG))
-+	if (memcmp(hdr.ehdr32.e_ident, ELFMAG, SELFMAG)) {
-+		fclose(file);
- 		die("Input is not an ELF\n");
+-	do {
+-		ret = smp_call_function_single(task_cpu(p), remote_function, &data, 1);
+-		if (!ret)
+-			ret = data.ret;
+-	} while (ret == -EAGAIN);
++	for (;;) {
++		ret = smp_call_function_single(task_cpu(p), remote_function,
++					       &data, 1);
++		ret = !ret ? data.ret : -EAGAIN;
++
++		if (ret != -EAGAIN)
++			break;
++
++		cond_resched();
 +	}
  
- 	switch (hdr.ehdr32.e_ident[EI_CLASS]) {
- 	case ELFCLASS32:
-@@ -67,6 +70,7 @@ int main(int argc, const char *argv[])
- 			entry = be32toh(hdr.ehdr32.e_entry);
- 			break;
- 		default:
-+			fclose(file);
- 			die("Invalid ELF encoding\n");
- 		}
- 
-@@ -83,14 +87,17 @@ int main(int argc, const char *argv[])
- 			entry = be64toh(hdr.ehdr64.e_entry);
- 			break;
- 		default:
-+			fclose(file);
- 			die("Invalid ELF encoding\n");
- 		}
- 		break;
- 
- 	default:
-+		fclose(file);
- 		die("Invalid ELF class\n");
- 	}
- 
- 	printf("0x%016" PRIx64 "\n", entry);
-+	fclose(file);
- 	return EXIT_SUCCESS;
+ 	return ret;
  }
 -- 
 2.25.1
