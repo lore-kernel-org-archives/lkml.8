@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9158C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:25:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6D5C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:25:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A6E420760
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:25:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BECF420775
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:25:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658751;
-	bh=gRvA4RA6qMcH6wSnGVRJgIELsFKdf6nOsc4b+itrtws=;
+	s=default; t=1591658756;
+	bh=ce0isAu4Cmsi2XbgqA4dLuWU6vjSgdACuLihU0af/wQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rslQKCmpvDnaO5TxeZthb8l7nSVZxOCzw9wiRPNXugCC+0rcKFZp1qF+qZ/eF+zpi
-	 K7OftHTmdH3oaOkLCK1fz5uTOpTIvQiXMfPsuCiYuKDtCE6frFj/HWhuvLWplDNK/X
-	 /IpwVvqJUhy5idJdbpWZITB1o67lWbRENvdl1tds=
+	b=A8vXQH8zOlA4Qo6EiMfrQjkDx7F0FCf+YUuLEJJh3ZQAAdH/aWRHiR5x9y5S/KdIQ
+	 LYX2jyBHfar5s2Ny/OWFICnRwBM24XVF6NQb8hIoWdzta0E5u67QPV5BrTYlRS1flx
+	 F6f3dlPobXQf/MiueR2ji2ch6Mju35MPkKTtVsdQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731871AbgFHXZu (ORCPT
+        id S1731886AbgFHXZy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:25:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44566 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:25:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731029AbgFHXUq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:20:46 -0400
+        id S1730607AbgFHXUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:20:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C81E22074B;
-        Mon,  8 Jun 2020 23:20:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E319020842;
+        Mon,  8 Jun 2020 23:20:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658446;
-        bh=gRvA4RA6qMcH6wSnGVRJgIELsFKdf6nOsc4b+itrtws=;
+        s=default; t=1591658447;
+        bh=ce0isAu4Cmsi2XbgqA4dLuWU6vjSgdACuLihU0af/wQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EL69EmBW4MWUKpKDYkx4rjfUU6onUxmW0DnpEoB5lE/IGtyttmqKl04qy752K7tq1
-         ZBvGOMtrmzfVshqHQALxz7ZVGC+f8JRTxarWLxTAcEI4LuI4qu8nL4ffmhPdUaNMav
-         zEJMWmIqqiVwlLzMpsj71sNwcmkWKzMqaO6hK8Mc=
+        b=ke8MWeJAN9T18uwufLUD+3pSOWcG6z7yIPEDvcoSuyvdk6EmMvi/jPspooxGLDUAt
+         OjGOWV9nUIxl4OtdGRvetF6fdI6RyRgHevW8sL7dk01IDJ4gSCt9ytOIAVXX/36fh0
+         F2Bbdphxve6iqEboeWiKaPYHorgtqnZxOY3cyTT8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jann Horn <jannh@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 088/175] exit: Move preemption fixup up, move blocking operations down
-Date:   Mon,  8 Jun 2020 19:17:21 -0400
-Message-Id: <20200608231848.3366970-88-sashal@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>, Qian Cai <cai@lca.pw>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.4 089/175] sched/core: Fix illegal RCU from offline CPUs
+Date:   Mon,  8 Jun 2020 19:17:22 -0400
+Message-Id: <20200608231848.3366970-89-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
 References: <20200608231848.3366970-1-sashal@kernel.org>
@@ -59,82 +59,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit 586b58cac8b4683eb58a1446fbc399de18974e40 ]
+[ Upstream commit bf2c59fce4074e55d622089b34be3a6bc95484fb ]
 
-With CONFIG_DEBUG_ATOMIC_SLEEP=y and CONFIG_CGROUPS=y, kernel oopses in
-non-preemptible context look untidy; after the main oops, the kernel prints
-a "sleeping function called from invalid context" report because
-exit_signals() -> cgroup_threadgroup_change_begin() -> percpu_down_read()
-can sleep, and that happens before the preempt_count_set(PREEMPT_ENABLED)
-fixup.
+In the CPU-offline process, it calls mmdrop() after idle entry and the
+subsequent call to cpuhp_report_idle_dead(). Once execution passes the
+call to rcu_report_dead(), RCU is ignoring the CPU, which results in
+lockdep complaining when mmdrop() uses RCU from either memcg or
+debugobjects below.
 
-It looks like the same thing applies to profile_task_exit() and
-kcov_task_exit().
+Fix it by cleaning up the active_mm state from BP instead. Every arch
+which has CONFIG_HOTPLUG_CPU should have already called idle_task_exit()
+from AP. The only exception is parisc because it switches them to
+&init_mm unconditionally (see smp_boot_one_cpu() and smp_cpu_init()),
+but the patch will still work there because it calls mmgrab(&init_mm) in
+smp_cpu_init() and then should call mmdrop(&init_mm) in finish_cpu().
 
-Fix it by moving the preemption fixup up and the calls to
-profile_task_exit() and kcov_task_exit() down.
+  WARNING: suspicious RCU usage
+  -----------------------------
+  kernel/workqueue.c:710 RCU or wq_pool_mutex should be held!
 
-Fixes: 1dc0fffc48af ("sched/core: Robustify preemption leak checks")
-Signed-off-by: Jann Horn <jannh@google.com>
+  other info that might help us debug this:
+
+  RCU used illegally from offline CPU!
+  Call Trace:
+   dump_stack+0xf4/0x164 (unreliable)
+   lockdep_rcu_suspicious+0x140/0x164
+   get_work_pool+0x110/0x150
+   __queue_work+0x1bc/0xca0
+   queue_work_on+0x114/0x120
+   css_release+0x9c/0xc0
+   percpu_ref_put_many+0x204/0x230
+   free_pcp_prepare+0x264/0x570
+   free_unref_page+0x38/0xf0
+   __mmdrop+0x21c/0x2c0
+   idle_task_exit+0x170/0x1b0
+   pnv_smp_cpu_kill_self+0x38/0x2e0
+   cpu_die+0x48/0x64
+   arch_cpu_idle_dead+0x30/0x50
+   do_idle+0x2f4/0x470
+   cpu_startup_entry+0x38/0x40
+   start_secondary+0x7a8/0xa80
+   start_secondary_resume+0x10/0x14
+
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200305220657.46800-1-jannh@google.com
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
+Link: https://lkml.kernel.org/r/20200401214033.8448-1-cai@lca.pw
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/exit.c | 25 ++++++++++++++++---------
- 1 file changed, 16 insertions(+), 9 deletions(-)
+ arch/powerpc/platforms/powernv/smp.c |  1 -
+ include/linux/sched/mm.h             |  2 ++
+ kernel/cpu.c                         | 18 +++++++++++++++++-
+ kernel/sched/core.c                  |  5 +++--
+ 4 files changed, 22 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 22dfaac9e48c..fa46977b9c07 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -713,8 +713,12 @@ void __noreturn do_exit(long code)
- 	struct task_struct *tsk = current;
- 	int group_dead;
+diff --git a/arch/powerpc/platforms/powernv/smp.c b/arch/powerpc/platforms/powernv/smp.c
+index 13e251699346..b2ba3e95bda7 100644
+--- a/arch/powerpc/platforms/powernv/smp.c
++++ b/arch/powerpc/platforms/powernv/smp.c
+@@ -167,7 +167,6 @@ static void pnv_smp_cpu_kill_self(void)
+ 	/* Standard hot unplug procedure */
  
--	profile_task_exit(tsk);
--	kcov_task_exit(tsk);
+ 	idle_task_exit();
+-	current->active_mm = NULL; /* for sanity */
+ 	cpu = smp_processor_id();
+ 	DBG("CPU%d offline\n", cpu);
+ 	generic_set_cpu_dead(cpu);
+diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
+index c49257a3b510..a132d875d351 100644
+--- a/include/linux/sched/mm.h
++++ b/include/linux/sched/mm.h
+@@ -49,6 +49,8 @@ static inline void mmdrop(struct mm_struct *mm)
+ 		__mmdrop(mm);
+ }
+ 
++void mmdrop(struct mm_struct *mm);
++
+ /*
+  * This has to be called after a get_task_mm()/mmget_not_zero()
+  * followed by taking the mmap_sem for writing before modifying the
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index d7890c1285bf..7527825ac7da 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -3,6 +3,7 @@
+  *
+  * This code is licenced under the GPL.
+  */
++#include <linux/sched/mm.h>
+ #include <linux/proc_fs.h>
+ #include <linux/smp.h>
+ #include <linux/init.h>
+@@ -564,6 +565,21 @@ static int bringup_cpu(unsigned int cpu)
+ 	return bringup_wait_for_ap(cpu);
+ }
+ 
++static int finish_cpu(unsigned int cpu)
++{
++	struct task_struct *idle = idle_thread_get(cpu);
++	struct mm_struct *mm = idle->active_mm;
++
 +	/*
-+	 * We can get here from a kernel oops, sometimes with preemption off.
-+	 * Start by checking for critical errors.
-+	 * Then fix up important state like USER_DS and preemption.
-+	 * Then do everything else.
++	 * idle_task_exit() will have switched to &init_mm, now
++	 * clean up any remaining active_mm state.
 +	 */
- 
- 	WARN_ON(blk_needs_flush_plug(tsk));
- 
-@@ -732,6 +736,16 @@ void __noreturn do_exit(long code)
- 	 */
- 	set_fs(USER_DS);
- 
-+	if (unlikely(in_atomic())) {
-+		pr_info("note: %s[%d] exited with preempt_count %d\n",
-+			current->comm, task_pid_nr(current),
-+			preempt_count());
-+		preempt_count_set(PREEMPT_ENABLED);
-+	}
++	if (mm != &init_mm)
++		idle->active_mm = &init_mm;
++	mmdrop(mm);
++	return 0;
++}
 +
-+	profile_task_exit(tsk);
-+	kcov_task_exit(tsk);
+ /*
+  * Hotplug state machine related functions
+  */
+@@ -1434,7 +1450,7 @@ static struct cpuhp_step cpuhp_hp_states[] = {
+ 	[CPUHP_BRINGUP_CPU] = {
+ 		.name			= "cpu:bringup",
+ 		.startup.single		= bringup_cpu,
+-		.teardown.single	= NULL,
++		.teardown.single	= finish_cpu,
+ 		.cant_stop		= true,
+ 	},
+ 	/* Final state before CPU kills itself */
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index e99d326fa569..4874e1468279 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -6177,13 +6177,14 @@ void idle_task_exit(void)
+ 	struct mm_struct *mm = current->active_mm;
+ 
+ 	BUG_ON(cpu_online(smp_processor_id()));
++	BUG_ON(current != this_rq()->idle);
+ 
+ 	if (mm != &init_mm) {
+ 		switch_mm(mm, &init_mm, current);
+-		current->active_mm = &init_mm;
+ 		finish_arch_post_lock_switch();
+ 	}
+-	mmdrop(mm);
 +
- 	ptrace_event(PTRACE_EVENT_EXIT, code);
++	/* finish_cpu(), as ran on the BP, will clean up the active_mm state */
+ }
  
- 	validate_creds_for_do_exit(tsk);
-@@ -749,13 +763,6 @@ void __noreturn do_exit(long code)
- 
- 	exit_signals(tsk);  /* sets PF_EXITING */
- 
--	if (unlikely(in_atomic())) {
--		pr_info("note: %s[%d] exited with preempt_count %d\n",
--			current->comm, task_pid_nr(current),
--			preempt_count());
--		preempt_count_set(PREEMPT_ENABLED);
--	}
--
- 	/* sync mm's RSS info before statistics gathering */
- 	if (tsk->mm)
- 		sync_mm_rss(tsk->mm);
+ /*
 -- 
 2.25.1
 
