@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76388C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D9DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:30:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5210920659
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:30:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A610220775
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:30:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591659015;
-	bh=IqCUM9sZg594VtkheaSNPK3OdjQSTv3twTQ/DtdW8k8=;
+	s=default; t=1591659017;
+	bh=Te9F/yrPuD9RjkO3+zwkcMIepHyknzxLlgjxALhWRIc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jSb11MnfMBd4Dc+en7MGa4R8t3bgsz2VDtKPpV/KiiueJ+nUKwLYIPQr8dO+UjAj8
-	 Aenn+g0Oe+95UqTbIvO2VhMgw8vJ4ekZYywpKwxFXFUU9ly/Gul3+gZjdlfqFRZD3i
-	 RhpO/4E8mNZWen+3CPi4+Uii7AJ+m+kP9bNtOUi4=
+	b=SL0Ur7Uo+CtkbS7pymOYdSCsFSlE1jpE512tCGoOSYXaq+CEztVYJRBYn85ENtUKx
+	 dpC6aDbTbY+2a3K9ixZswhoIUEKdKP4yVa10Pjf/cFX19HoAkvyUiKwY/S7LeTy7fJ
+	 dsRFAUq3lsxpxkuqxdNJQc99e8niavK9IabY68iM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732345AbgFHXaO (ORCPT
+        id S1732354AbgFHXaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:30:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50254 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:30:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387494AbgFHXYN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:24:13 -0400
+        id S1729292AbgFHXYT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:24:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA99820C09;
-        Mon,  8 Jun 2020 23:24:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E6712089D;
+        Mon,  8 Jun 2020 23:24:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658652;
-        bh=IqCUM9sZg594VtkheaSNPK3OdjQSTv3twTQ/DtdW8k8=;
+        s=default; t=1591658659;
+        bh=Te9F/yrPuD9RjkO3+zwkcMIepHyknzxLlgjxALhWRIc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Eqs4ko/ZwLhdCeE2CTzK/RymRNakwWD5+OkYkSD20NLAq5c9UeXn12gXOh4nMA4Kq
-         gO9jzBNFVYuY422qcCpqlGmm58iF4TRBCn3eRqQOcoyxtNiiww0uUrtP9GOIFXeay8
-         1fBfOAfLtr068UN0xeKCVNyUzMRhszv5Gms93kRo=
+        b=w3xfyooWSQ2V0worS9/cdvnmvl+79vXG4+739rxs030gKvmI70CC+3fkoyhEeTNVk
+         JXeGbTPwTfRewvpWBbaNBdJrZIGmn8OWyOavSZmyS8t2FlmIv/hYdzs0AOsRLNhYx/
+         2XGB0kkDHXGu+BDk0tlYZza42pw+6vGBZMQf/LFw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ryder Lee <ryder.lee@mediatek.com>,
-        Chih-Min Chen <chih-min.chen@mediatek.com>,
-        Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 071/106] mt76: avoid rx reorder buffer overflow
-Date:   Mon,  8 Jun 2020 19:22:03 -0400
-Message-Id: <20200608232238.3368589-71-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 076/106] rtlwifi: Fix a double free in _rtl_usb_tx_urb_setup()
+Date:   Mon,  8 Jun 2020 19:22:08 -0400
+Message-Id: <20200608232238.3368589-76-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608232238.3368589-1-sashal@kernel.org>
 References: <20200608232238.3368589-1-sashal@kernel.org>
@@ -62,78 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ryder Lee <ryder.lee@mediatek.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 7c4f744d6703757be959f521a7a441bf34745d99 ]
+[ Upstream commit beb12813bc75d4a23de43b85ad1c7cb28d27631e ]
 
-Enlarge slot to support 11ax 256 BA (256 MPDUs in an AMPDU)
+Seven years ago we tried to fix a leak but actually introduced a double
+free instead.  It was an understandable mistake because the code was a
+bit confusing and the free was done in the wrong place.  The "skb"
+pointer is freed in both _rtl_usb_tx_urb_setup() and _rtl_usb_transmit().
+The free belongs _rtl_usb_transmit() instead of _rtl_usb_tx_urb_setup()
+and I've cleaned the code up a bit to hopefully make it more clear.
 
-Signed-off-by: Chih-Min Chen <chih-min.chen@mediatek.com>
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Fixes: 36ef0b473fbf ("rtlwifi: usb: add missing freeing of skbuff")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200513093951.GD347693@mwanda
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mediatek/mt76/agg-rx.c | 8 ++++----
- drivers/net/wireless/mediatek/mt76/mt76.h   | 6 +++---
- 2 files changed, 7 insertions(+), 7 deletions(-)
+ drivers/net/wireless/realtek/rtlwifi/usb.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/agg-rx.c b/drivers/net/wireless/mediatek/mt76/agg-rx.c
-index 73c8b2805c97..d44d57e6eb27 100644
---- a/drivers/net/wireless/mediatek/mt76/agg-rx.c
-+++ b/drivers/net/wireless/mediatek/mt76/agg-rx.c
-@@ -154,8 +154,8 @@ void mt76_rx_aggr_reorder(struct sk_buff *skb, struct sk_buff_head *frames)
- 	struct ieee80211_sta *sta;
- 	struct mt76_rx_tid *tid;
- 	bool sn_less;
--	u16 seqno, head, size;
--	u8 ackp, idx;
-+	u16 seqno, head, size, idx;
-+	u8 ackp;
+diff --git a/drivers/net/wireless/realtek/rtlwifi/usb.c b/drivers/net/wireless/realtek/rtlwifi/usb.c
+index 1181b725f503..1893640555c1 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/usb.c
++++ b/drivers/net/wireless/realtek/rtlwifi/usb.c
+@@ -910,10 +910,8 @@ static struct urb *_rtl_usb_tx_urb_setup(struct ieee80211_hw *hw,
  
- 	__skb_queue_tail(frames, skb);
+ 	WARN_ON(NULL == skb);
+ 	_urb = usb_alloc_urb(0, GFP_ATOMIC);
+-	if (!_urb) {
+-		kfree_skb(skb);
++	if (!_urb)
+ 		return NULL;
+-	}
+ 	_rtl_install_trx_info(rtlusb, skb, ep_num);
+ 	usb_fill_bulk_urb(_urb, rtlusb->udev, usb_sndbulkpipe(rtlusb->udev,
+ 			  ep_num), skb->data, skb->len, _rtl_tx_complete, skb);
+@@ -927,7 +925,6 @@ static void _rtl_usb_transmit(struct ieee80211_hw *hw, struct sk_buff *skb,
+ 	struct rtl_usb *rtlusb = rtl_usbdev(rtl_usbpriv(hw));
+ 	u32 ep_num;
+ 	struct urb *_urb = NULL;
+-	struct sk_buff *_skb = NULL;
  
-@@ -240,7 +240,7 @@ void mt76_rx_aggr_reorder(struct sk_buff *skb, struct sk_buff_head *frames)
- }
- 
- int mt76_rx_aggr_start(struct mt76_dev *dev, struct mt76_wcid *wcid, u8 tidno,
--		       u16 ssn, u8 size)
-+		       u16 ssn, u16 size)
- {
- 	struct mt76_rx_tid *tid;
- 
-@@ -264,7 +264,7 @@ EXPORT_SYMBOL_GPL(mt76_rx_aggr_start);
- 
- static void mt76_rx_aggr_shutdown(struct mt76_dev *dev, struct mt76_rx_tid *tid)
- {
--	u8 size = tid->size;
-+	u16 size = tid->size;
- 	int i;
- 
- 	cancel_delayed_work(&tid->reorder_work);
-diff --git a/drivers/net/wireless/mediatek/mt76/mt76.h b/drivers/net/wireless/mediatek/mt76/mt76.h
-index 2eab35879163..7b1667ec619e 100644
---- a/drivers/net/wireless/mediatek/mt76/mt76.h
-+++ b/drivers/net/wireless/mediatek/mt76/mt76.h
-@@ -193,8 +193,8 @@ struct mt76_rx_tid {
- 	struct delayed_work reorder_work;
- 
- 	u16 head;
--	u8 size;
--	u8 nframes;
-+	u16 size;
-+	u16 nframes;
- 
- 	u8 started:1, stopped:1, timer_pending:1;
- 
-@@ -537,7 +537,7 @@ int mt76_get_survey(struct ieee80211_hw *hw, int idx,
- void mt76_set_stream_caps(struct mt76_dev *dev, bool vht);
- 
- int mt76_rx_aggr_start(struct mt76_dev *dev, struct mt76_wcid *wcid, u8 tid,
--		       u16 ssn, u8 size);
-+		       u16 ssn, u16 size);
- void mt76_rx_aggr_stop(struct mt76_dev *dev, struct mt76_wcid *wcid, u8 tid);
- 
- void mt76_wcid_key_setup(struct mt76_dev *dev, struct mt76_wcid *wcid,
+ 	WARN_ON(NULL == rtlusb->usb_tx_aggregate_hdl);
+ 	if (unlikely(IS_USB_STOP(rtlusb))) {
+@@ -936,8 +933,7 @@ static void _rtl_usb_transmit(struct ieee80211_hw *hw, struct sk_buff *skb,
+ 		return;
+ 	}
+ 	ep_num = rtlusb->ep_map.ep_mapping[qnum];
+-	_skb = skb;
+-	_urb = _rtl_usb_tx_urb_setup(hw, _skb, ep_num);
++	_urb = _rtl_usb_tx_urb_setup(hw, skb, ep_num);
+ 	if (unlikely(!_urb)) {
+ 		pr_err("Can't allocate urb. Drop skb!\n");
+ 		kfree_skb(skb);
 -- 
 2.25.1
 
