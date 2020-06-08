@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B7EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:02:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D48C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:02:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7A4120737
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:02:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9566A20737
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:02:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591664536;
-	bh=j6UMYv/Uq7h+aGYlgoZS4ffwA3i/V3dW4llsla38PK0=;
+	s=default; t=1591664552;
+	bh=q1B3KQSxSxg9ydVzTPnGVgzi89sxg0AINlENfzb4HD4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FbLB5BGoPwPYzy8Ta7KHvFs0xjTrtcCoPzvtrCslzeE+/6prGDoXnOJz2whxnF7Bc
-	 hC7k7vlfoTk9tUVpscsfWU7S+1/QVuJ2sdc7kW/Dz3ayWsHX2Gjracz6W4YmxPsDrM
-	 Na5TmD95an7sbqnlRAj+GMWsbtw+ys50huuuTIUg=
+	b=Gg1QXX2ZeWEKv2OVvlzYwNWy3yyphextapmajVJXRneAkEQdsm7scdB9xag9IVpda
+	 /8jlupFf09jt7C5iWWosGQyhNmhDdoHZmZRLjo+KMpeTLj563eN4MkqPNjn9riLCPQ
+	 kyOzN6F/mr16jNatC5WTiDuBGpWyz940P4zRWPv0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733256AbgFIBCP (ORCPT
+        id S1730889AbgFIBCb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 21:02:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52784 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 21:02:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728060AbgFHXH5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:07:57 -0400
+        id S1728049AbgFHXHz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:07:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6BB22087E;
-        Mon,  8 Jun 2020 23:07:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A33462086A;
+        Mon,  8 Jun 2020 23:07:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657676;
-        bh=j6UMYv/Uq7h+aGYlgoZS4ffwA3i/V3dW4llsla38PK0=;
+        s=default; t=1591657675;
+        bh=q1B3KQSxSxg9ydVzTPnGVgzi89sxg0AINlENfzb4HD4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RoU4TOGqd9y6w5CHHhFk7Nosj9PVPdRo+E3YBgEmKF8cW/Tex2XKuyQOBRmSXz9aA
-         vi6fRLFdJ4sWgZhkugrhJRwBn3hklab5/l1Ndud/HIbN3ahYd3WIK/QQnoFMyICPqK
-         /lIiSsHUttdCitVY0VsrAlJKJUUJzr7Pd5gRo4BM=
+        b=lUgohl814ilyn9UHqDppjqJI0bQyreoKPebLRnZB82R6TzPyDUfoax398LFTr2+Dr
+         ps/XFLff3V7e0lGj14wldA+Pn+Xg9adqpfR5CC2l/Oro/AxetR8a+9PEUMHQKjm15r
+         MzcarSYryu0g4Gz4l7Lh77aR/jQgl750o5q3obNU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Willem de Bruijn <willemb@google.com>,
-        Petar Penkov <ppenkov@google.com>,
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 084/274] tun: correct header offsets in napi frags mode
-Date:   Mon,  8 Jun 2020 19:02:57 -0400
-Message-Id: <20200608230607.3361041-84-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 083/274] net: vmxnet3: fix possible buffer overflow caused by bad DMA value in vmxnet3_get_rss()
+Date:   Mon,  8 Jun 2020 19:02:56 -0400
+Message-Id: <20200608230607.3361041-83-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -61,68 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willem de Bruijn <willemb@google.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 96aa1b22bd6bb9fccf62f6261f390ed6f3e7967f ]
+[ Upstream commit 3e1c6846b9e108740ef8a37be80314053f5dd52a ]
 
-Tun in IFF_NAPI_FRAGS mode calls napi_gro_frags. Unlike netif_rx and
-netif_gro_receive, this expects skb->data to point to the mac layer.
+The value adapter->rss_conf is stored in DMA memory, and it is assigned
+to rssConf, so rssConf->indTableSize can be modified at anytime by
+malicious hardware. Because rssConf->indTableSize is assigned to n,
+buffer overflow may occur when the code "rssConf->indTable[n]" is
+executed.
 
-But skb_probe_transport_header, __skb_get_hash_symmetric, and
-xdp_do_generic in tun_get_user need skb->data to point to the network
-header. Flow dissection also needs skb->protocol set, so
-eth_type_trans has to be called.
+To fix this possible bug, n is checked after being used.
 
-Ensure the link layer header lies in linear as eth_type_trans pulls
-ETH_HLEN. Then take the same code paths for frags as for not frags.
-Push the link layer header back just before calling napi_gro_frags.
-
-By pulling up to ETH_HLEN from frag0 into linear, this disables the
-frag0 optimization in the special case when IFF_NAPI_FRAGS is used
-with zero length iov[0] (and thus empty skb->linear).
-
-Fixes: 90e33d459407 ("tun: enable napi_gro_frags() for TUN/TAP driver")
-Signed-off-by: Willem de Bruijn <willemb@google.com>
-Acked-by: Petar Penkov <ppenkov@google.com>
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/tun.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ drivers/net/vmxnet3/vmxnet3_ethtool.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/tun.c b/drivers/net/tun.c
-index 44889eba1dbc..b984733c6c31 100644
---- a/drivers/net/tun.c
-+++ b/drivers/net/tun.c
-@@ -1871,8 +1871,11 @@ static ssize_t tun_get_user(struct tun_struct *tun, struct tun_file *tfile,
- 		skb->dev = tun->dev;
- 		break;
- 	case IFF_TAP:
--		if (!frags)
--			skb->protocol = eth_type_trans(skb, tun->dev);
-+		if (frags && !pskb_may_pull(skb, ETH_HLEN)) {
-+			err = -ENOMEM;
-+			goto drop;
-+		}
-+		skb->protocol = eth_type_trans(skb, tun->dev);
- 		break;
- 	}
- 
-@@ -1929,9 +1932,12 @@ static ssize_t tun_get_user(struct tun_struct *tun, struct tun_file *tfile,
- 	}
- 
- 	if (frags) {
-+		u32 headlen;
-+
- 		/* Exercise flow dissector code path. */
--		u32 headlen = eth_get_headlen(tun->dev, skb->data,
--					      skb_headlen(skb));
-+		skb_push(skb, ETH_HLEN);
-+		headlen = eth_get_headlen(tun->dev, skb->data,
-+					  skb_headlen(skb));
- 
- 		if (unlikely(headlen > skb_headlen(skb))) {
- 			this_cpu_inc(tun->pcpu_stats->rx_dropped);
+diff --git a/drivers/net/vmxnet3/vmxnet3_ethtool.c b/drivers/net/vmxnet3/vmxnet3_ethtool.c
+index 6528940ce5f3..b53bb8bcd47f 100644
+--- a/drivers/net/vmxnet3/vmxnet3_ethtool.c
++++ b/drivers/net/vmxnet3/vmxnet3_ethtool.c
+@@ -700,6 +700,8 @@ vmxnet3_get_rss(struct net_device *netdev, u32 *p, u8 *key, u8 *hfunc)
+ 		*hfunc = ETH_RSS_HASH_TOP;
+ 	if (!p)
+ 		return 0;
++	if (n > UPT1_RSS_MAX_IND_TABLE_SIZE)
++		return 0;
+ 	while (n--)
+ 		p[n] = rssConf->indTable[n];
+ 	return 0;
 -- 
 2.25.1
 
