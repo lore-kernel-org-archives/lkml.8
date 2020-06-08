@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4780AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B68C2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:16:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BE512078D
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:16:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7952B2078D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:16:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658184;
-	bh=eQL/+0ePE1H1rx1MzZmNKPOckAY08l+N/zU64kPQEBc=;
+	s=default; t=1591658190;
+	bh=vmoLWAo5KLzzGbl+cpVVg7fwErGmTejbl4EZpzONxoA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gsckIqaPmSyZRpFmnKjSUrLJWk1cuks8D5ZqGrmRxMlwoSxxh1o0WVVwEU4FnNVOl
-	 BoEl7dteVj2si88ZpY9oYeKOpiG69OaY5mcBWZWcPM/DYEqPc22InGhUtq4bTADcRw
-	 jQLFwH2Al/udimsWJHYMggjmm5NPCDlQs4HHl4ec=
+	b=0QP0j8H6kXZiSJrNp1dRL873EH2JDlcnSMzvDe0r+n2aXzQqxOOSfWExdfhuORC6O
+	 dkkhQ+U9kTvK4rYle1sIw0PTDLfGPz604tlbyn6N2diRxewKgzm7BTWN5DNHE51wWC
+	 DwhOecTixOHxfLhqa1QKfI9KrNBGSWLaWFIoeSfk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728646AbgFHXQW (ORCPT
+        id S1730243AbgFHXQ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:16:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33498 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:16:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729530AbgFHXNj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:13:39 -0400
+        id S1728902AbgFHXNl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:13:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1151320C09;
-        Mon,  8 Jun 2020 23:13:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C45F2151B;
+        Mon,  8 Jun 2020 23:13:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658018;
-        bh=eQL/+0ePE1H1rx1MzZmNKPOckAY08l+N/zU64kPQEBc=;
+        s=default; t=1591658021;
+        bh=vmoLWAo5KLzzGbl+cpVVg7fwErGmTejbl4EZpzONxoA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MOWsZUlglupL7r1XrSwkAFWcOcdcTd/CpexrCDHc/j3RA+lOXAsR/NZqueRDUlc7p
-         L1vPoM1nIT0wZNN74PaxIBPO8Qal+ySmOmIExF3gHD8nXEgXkFlQrS8ReXph6YilUN
-         INcZJFPAKie5aneB5jC71Ex7wxCKQ0jMTDFnRVGc=
+        b=0wpvdC/w4L1YEwSMIfik8HA7QNpDPBzj5Zc7VssXz4qtZR6FCFhWKSpQ5/cwABZvW
+         bqq01F2uzEhh7zDqZ5GE4bm5+QZSeP0XxYOqpa00sAtqaMte8nipR4of/FDbtmI+UQ
+         yhqxbn2MOOBwcP8++wHlFuEM+3Z21RbdEJpkQ5ok=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jason Gunthorpe <jgg@mellanox.com>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
+Cc:     Jim Mattson <jmattson@google.com>, Jue Wang <juew@google.com>,
+        Peter Shier <pshier@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 072/606] RDMA/uverbs: Move IB_EVENT_DEVICE_FATAL to destroy_uobj
-Date:   Mon,  8 Jun 2020 19:03:17 -0400
-Message-Id: <20200608231211.3363633-72-sashal@kernel.org>
+        kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 074/606] KVM: x86: Fix off-by-one error in kvm_vcpu_ioctl_x86_setup_mce
+Date:   Mon,  8 Jun 2020 19:03:19 -0400
+Message-Id: <20200608231211.3363633-74-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -61,89 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Jim Mattson <jmattson@google.com>
 
-commit ccfdbaa5cf4601b9b71601893029dcc9245c002b upstream.
+commit c4e0e4ab4cf3ec2b3f0b628ead108d677644ebd9 upstream.
 
-When multiple async FDs were allowed to exist the idea was for all
-broadcast events to be delivered to all async FDs, however
-IB_EVENT_DEVICE_FATAL was missed.
+Bank_num is a one-based count of banks, not a zero-based index. It
+overflows the allocated space only when strictly greater than
+KVM_MAX_MCE_BANKS.
 
-Instead of having ib_uverbs_free_hw_resources() special case the global
-async_fd, have it cause the event during the uobject destruction. Every
-async fd is now a uobject so simply generate the IB_EVENT_DEVICE_FATAL
-while destroying the async fd uobject. This ensures every async FD gets a
-copy of the event.
-
-Fixes: d680e88e2013 ("RDMA/core: Add UVERBS_METHOD_ASYNC_EVENT_ALLOC")
-Link: https://lore.kernel.org/r/20200507063348.98713-3-leon@kernel.org
-Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: a9e38c3e01ad ("KVM: x86: Catch potential overrun in MCE setup")
+Signed-off-by: Jue Wang <juew@google.com>
+Signed-off-by: Jim Mattson <jmattson@google.com>
+Reviewed-by: Peter Shier <pshier@google.com>
+Message-Id: <20200511225616.19557-1-jmattson@google.com>
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/infiniband/core/uverbs.h                    |  3 +++
- drivers/infiniband/core/uverbs_main.c               | 10 +++-------
- drivers/infiniband/core/uverbs_std_types_async_fd.c |  4 ++++
- 3 files changed, 10 insertions(+), 7 deletions(-)
+ arch/x86/kvm/x86.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/core/uverbs.h b/drivers/infiniband/core/uverbs.h
-index 2673cb1cd655..3d189c7ee59e 100644
---- a/drivers/infiniband/core/uverbs.h
-+++ b/drivers/infiniband/core/uverbs.h
-@@ -228,6 +228,9 @@ void ib_uverbs_release_ucq(struct ib_uverbs_completion_event_file *ev_file,
- 			   struct ib_ucq_object *uobj);
- void ib_uverbs_release_uevent(struct ib_uevent_object *uobj);
- void ib_uverbs_release_file(struct kref *ref);
-+void ib_uverbs_async_handler(struct ib_uverbs_async_event_file *async_file,
-+			     __u64 element, __u64 event,
-+			     struct list_head *obj_list, u32 *counter);
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 56a21dd7c1a0..7f3371a39ed0 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -3739,7 +3739,7 @@ static int kvm_vcpu_ioctl_x86_setup_mce(struct kvm_vcpu *vcpu,
+ 	unsigned bank_num = mcg_cap & 0xff, bank;
  
- void ib_uverbs_comp_handler(struct ib_cq *cq, void *cq_context);
- void ib_uverbs_cq_event_handler(struct ib_event *event, void *context_ptr);
-diff --git a/drivers/infiniband/core/uverbs_main.c b/drivers/infiniband/core/uverbs_main.c
-index cb5b59123d8f..1bab8de14757 100644
---- a/drivers/infiniband/core/uverbs_main.c
-+++ b/drivers/infiniband/core/uverbs_main.c
-@@ -386,10 +386,9 @@ void ib_uverbs_comp_handler(struct ib_cq *cq, void *cq_context)
- 	kill_fasync(&ev_queue->async_queue, SIGIO, POLL_IN);
- }
- 
--static void
--ib_uverbs_async_handler(struct ib_uverbs_async_event_file *async_file,
--			__u64 element, __u64 event, struct list_head *obj_list,
--			u32 *counter)
-+void ib_uverbs_async_handler(struct ib_uverbs_async_event_file *async_file,
-+			     __u64 element, __u64 event,
-+			     struct list_head *obj_list, u32 *counter)
- {
- 	struct ib_uverbs_event *entry;
- 	unsigned long flags;
-@@ -1187,9 +1186,6 @@ static void ib_uverbs_free_hw_resources(struct ib_uverbs_device *uverbs_dev,
- 		 */
- 		mutex_unlock(&uverbs_dev->lists_mutex);
- 
--		ib_uverbs_async_handler(READ_ONCE(file->async_file), 0,
--					IB_EVENT_DEVICE_FATAL, NULL, NULL);
--
- 		uverbs_destroy_ufile_hw(file, RDMA_REMOVE_DRIVER_REMOVE);
- 		kref_put(&file->ref, ib_uverbs_release_file);
- 
-diff --git a/drivers/infiniband/core/uverbs_std_types_async_fd.c b/drivers/infiniband/core/uverbs_std_types_async_fd.c
-index 462deb506b16..61899eaf1f91 100644
---- a/drivers/infiniband/core/uverbs_std_types_async_fd.c
-+++ b/drivers/infiniband/core/uverbs_std_types_async_fd.c
-@@ -26,6 +26,10 @@ static int uverbs_async_event_destroy_uobj(struct ib_uobject *uobj,
- 		container_of(uobj, struct ib_uverbs_async_event_file, uobj);
- 
- 	ib_unregister_event_handler(&event_file->event_handler);
-+
-+	if (why == RDMA_REMOVE_DRIVER_REMOVE)
-+		ib_uverbs_async_handler(event_file, 0, IB_EVENT_DEVICE_FATAL,
-+					NULL, NULL);
- 	return 0;
- }
- 
+ 	r = -EINVAL;
+-	if (!bank_num || bank_num >= KVM_MAX_MCE_BANKS)
++	if (!bank_num || bank_num > KVM_MAX_MCE_BANKS)
+ 		goto out;
+ 	if (mcg_cap & ~(kvm_mce_cap_supported | 0xff | 0xff0000))
+ 		goto out;
 -- 
 2.25.1
 
