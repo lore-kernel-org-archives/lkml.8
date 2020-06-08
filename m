@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1257EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE48C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1B322076C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:45:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C48EC20812
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:45:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663550;
-	bh=T+jPFC0lA+eBgkxLgd3PN4lxPcbqGMXjwaRExUrc1pA=;
+	s=default; t=1591663556;
+	bh=jBjbkxP1iiBAvE6/2yxT7Dz+8SrZGpJOC8QuAynfkJg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wSpaxxn8cG92ff4PBjF///RpZeulEgQoDy8XOWk4SeNXgBS3uWTHKmuEJ+GDFFqCd
-	 fzpcOQ0IBDzIMtQ1PXrDXmCTng3o9aXSt/xg57zYsXBvoDIJiM4xJ3IsaalxIKJAv5
-	 rhm6kChTC8O+l7lEsvqJIGIKrUZVO7a8EMVBiQAY=
+	b=L7u0tHQmjFqQGlfmoL5L53GxXrB0BU1xBAs0BCgNoX1inU9vm+KKYAirJIhzGTVKE
+	 bZp9X5jyBJ6jfOLLwkTwP6YPGDla5A2OKLD2Z5mLS4lENxfpHlGIX3DZDJGwZt35qJ
+	 KQEB1hQFAWTM8pOkcB5O3nQDkAYJrk0Pk6StXN0I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733285AbgFIApp (ORCPT
+        id S1728971AbgFHXLp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:45:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58772 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728970AbgFHXLp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 8 Jun 2020 19:11:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56160 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728575AbgFHXKH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:10:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4458620C56;
-        Mon,  8 Jun 2020 23:11:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 085FD21475;
+        Mon,  8 Jun 2020 23:10:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657905;
-        bh=T+jPFC0lA+eBgkxLgd3PN4lxPcbqGMXjwaRExUrc1pA=;
+        s=default; t=1591657806;
+        bh=jBjbkxP1iiBAvE6/2yxT7Dz+8SrZGpJOC8QuAynfkJg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wpauXWF0xUP/EW+swiGrLj8liDsHnL+S8AW+VkjDO6s4bdx0HuNWU5Hh1wE3UH3zT
-         Wm1Jo/Z7KcgH2KrLcp2Fs23m/huH3apgLJuPORLQZ76sj8c7V7kWChy53jIbQ7h7MX
-         dnM3cgwWSf+JmyDFlzXruaJFpbkLMUdgOyU0yaSw=
+        b=iJlh3yd5WIbE+DTy8OIJfwMVrSYJl8biQCYJWZyD20KTjGH2NXiBjc9rZ4EYBC9cQ
+         lQB/UKzKyZB1ieVanEytud1jIow5c258sIFYgfcVHG/aV8h5h0Fz2Dyppoh1kzxsyM
+         jZsYVdALjx97LIW3Ix9hw8o4I5WXGuoeQSI/UvxY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Angelo Dureghello <angelo.dureghello@timesys.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 257/274] spi: spi-fsl-dspi: fix native data copy
-Date:   Mon,  8 Jun 2020 19:05:50 -0400
-Message-Id: <20200608230607.3361041-257-sashal@kernel.org>
+Cc:     Sagi Grimberg <sagi@grimberg.me>, Christoph Hellwig <hch@lst.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 183/274] nvme-tcp: use bh_lock in data_ready
+Date:   Mon,  8 Jun 2020 19:04:36 -0400
+Message-Id: <20200608230607.3361041-183-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -60,69 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Angelo Dureghello <angelo.dureghello@timesys.com>
+From: Sagi Grimberg <sagi@grimberg.me>
 
-[ Upstream commit 263b81dc6c932c8bc550d5e7bfc178d2b3fc491e ]
+[ Upstream commit 386e5e6e1aa90b479fcf0467935922df8524393d ]
 
-ColdFire is a big-endian cpu with a big-endian dspi hw module,
-so, it uses native access, but memcpy breaks the endianness.
+data_ready may be invoked from send context or from
+softirq, so need bh locking for that.
 
-So, if i understand properly, by native copy we would mean
-be(cpu)->be(dspi) or le(cpu)->le(dspi) accesses, so my fix
-shouldn't break anything, but i couldn't test it on LS family,
-so every test is really appreciated.
-
-Fixes: 53fadb4d90c7 ("spi: spi-fsl-dspi: Simplify bytes_per_word gymnastics")
-Signed-off-by: Angelo Dureghello <angelo.dureghello@timesys.com>
-Tested-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Reviewed-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Link: https://lore.kernel.org/r/20200529195756.184677-1-angelo.dureghello@timesys.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 3f2304f8c6d6 ("nvme-tcp: add NVMe over TCP host driver")
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-fsl-dspi.c | 24 ++++++++++++++++++++++--
- 1 file changed, 22 insertions(+), 2 deletions(-)
+ drivers/nvme/host/tcp.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index 50e41f66a2d7..2e9f9adc5900 100644
---- a/drivers/spi/spi-fsl-dspi.c
-+++ b/drivers/spi/spi-fsl-dspi.c
-@@ -246,13 +246,33 @@ struct fsl_dspi {
- 
- static void dspi_native_host_to_dev(struct fsl_dspi *dspi, u32 *txdata)
+diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
+index c15a92163c1f..4862fa962011 100644
+--- a/drivers/nvme/host/tcp.c
++++ b/drivers/nvme/host/tcp.c
+@@ -794,11 +794,11 @@ static void nvme_tcp_data_ready(struct sock *sk)
  {
--	memcpy(txdata, dspi->tx, dspi->oper_word_size);
-+	switch (dspi->oper_word_size) {
-+	case 1:
-+		*txdata = *(u8 *)dspi->tx;
-+		break;
-+	case 2:
-+		*txdata = *(u16 *)dspi->tx;
-+		break;
-+	case 4:
-+		*txdata = *(u32 *)dspi->tx;
-+		break;
-+	}
- 	dspi->tx += dspi->oper_word_size;
+ 	struct nvme_tcp_queue *queue;
+ 
+-	read_lock(&sk->sk_callback_lock);
++	read_lock_bh(&sk->sk_callback_lock);
+ 	queue = sk->sk_user_data;
+ 	if (likely(queue && queue->rd_enabled))
+ 		queue_work_on(queue->io_cpu, nvme_tcp_wq, &queue->io_work);
+-	read_unlock(&sk->sk_callback_lock);
++	read_unlock_bh(&sk->sk_callback_lock);
  }
  
- static void dspi_native_dev_to_host(struct fsl_dspi *dspi, u32 rxdata)
- {
--	memcpy(dspi->rx, &rxdata, dspi->oper_word_size);
-+	switch (dspi->oper_word_size) {
-+	case 1:
-+		*(u8 *)dspi->rx = rxdata;
-+		break;
-+	case 2:
-+		*(u16 *)dspi->rx = rxdata;
-+		break;
-+	case 4:
-+		*(u32 *)dspi->rx = rxdata;
-+		break;
-+	}
- 	dspi->rx += dspi->oper_word_size;
- }
- 
+ static void nvme_tcp_write_space(struct sock *sk)
 -- 
 2.25.1
 
