@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEBC2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:24:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9510C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:25:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7812214D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:24:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B81A420814
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:25:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658692;
-	bh=3PuiUQqDTe/7yEbzJ6QkJxv9BBE61RSsdN3LyjCVq2A=;
+	s=default; t=1591658701;
+	bh=LrwI3WVVMEZTLt+oktHm+tTG2mf3KGJ3BQ4rafhaoYY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RDiSB837hfPTEBB+G5zw9kNK9jsvBEdgqgIryHtcJxWUO+RIwxLGVEZ6Z+AN2BGD4
-	 aj/nVKIAlhxzh+oUJdD4/0R3OnmoV6/6Z9iJVUyFnI4Ka1hKdtb8E1YRYvFVCbsIvX
-	 Bjj81gRRJuiC1+XKaMiqqksf06pdqAaVNUuBbAuo=
+	b=fdQSP+KdEqWY90hizmEr5UjGS35Hx1Bi0c2OQahtEda0MPJG3AUSHNOfHWFU8xVgl
+	 5WiaIrouAPKRquFMixcJsQGmRQIBRuKn48WppWQRtaMaSTIa/jVPbFt02xHit3jaVc
+	 dEyFpw83nMBAH3jCA6oTX6b7u/LNw6aI0wA/vf9o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731687AbgFHXYv (ORCPT
+        id S1731726AbgFHXZA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:24:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42402 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:25:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730803AbgFHXTd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:19:33 -0400
+        id S1730875AbgFHXTy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:19:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D339E2086A;
-        Mon,  8 Jun 2020 23:19:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4854920814;
+        Mon,  8 Jun 2020 23:19:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658372;
-        bh=3PuiUQqDTe/7yEbzJ6QkJxv9BBE61RSsdN3LyjCVq2A=;
+        s=default; t=1591658394;
+        bh=LrwI3WVVMEZTLt+oktHm+tTG2mf3KGJ3BQ4rafhaoYY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PVB0UJnh+X/PZ77XJKYy0Oir0Kcc2cdWr2Lx+lownIryuTaQ+XrA/YqZSl1ADooBX
-         Tjpn7DUG5vH4HzvdicXv8mS3o5F3XoV3wv68EDvImFGbpbJ5QhGM9Fj5Vgnat0glGv
-         NjXxcxaeByoYei/+n9T42ktT/dFfHuBt/7v/EY8s=
+        b=rDQJhI3p5YHJbgNnYb3jvpLxeHef65/yiWfBpOvQuhPyq3lutdVsC1Lrjrs8FN6hP
+         jnHrsl1RyNDKQLkhMLl5lt7d7TH7+RwNd4k3J74zsjvWLHx6nqHbXo4A24gzoAGt6T
+         67nAPT7MNfuBIbRp7cAVzLN85psVyZMSzi7DOKHg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jesper Dangaard Brouer <brouer@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+Cc:     Sven Eckelmann <sven@narfation.org>,
+        Matthias Schiffer <mschiffer@universe-factory.net>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
         Sasha Levin <sashal@kernel.org>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 035/175] ixgbe: Fix XDP redirect on archs with PAGE_SIZE above 4K
-Date:   Mon,  8 Jun 2020 19:16:28 -0400
-Message-Id: <20200608231848.3366970-35-sashal@kernel.org>
+        b.a.t.m.a.n@lists.open-mesh.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 051/175] batman-adv: Revert "disable ethtool link speed detection when auto negotiation off"
+Date:   Mon,  8 Jun 2020 19:16:44 -0400
+Message-Id: <20200608231848.3366970-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
 References: <20200608231848.3366970-1-sashal@kernel.org>
@@ -62,46 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jesper Dangaard Brouer <brouer@redhat.com>
+From: Sven Eckelmann <sven@narfation.org>
 
-[ Upstream commit 88eb0ee17b2ece64fcf6689a4557a5c2e7a89c4b ]
+[ Upstream commit 9ad346c90509ebd983f60da7d082f261ad329507 ]
 
-The ixgbe driver have another memory model when compiled on archs with
-PAGE_SIZE above 4096 bytes. In this mode it doesn't split the page in
-two halves, but instead increment rx_buffer->page_offset by truesize of
-packet (which include headroom and tailroom for skb_shared_info).
+The commit 8c46fcd78308 ("batman-adv: disable ethtool link speed detection
+when auto negotiation off") disabled the usage of ethtool's link_ksetting
+when auto negotation was enabled due to invalid values when used with
+tun/tap virtual net_devices. According to the patch, automatic measurements
+should be used for these kind of interfaces.
 
-This is done correctly in ixgbe_build_skb(), but in ixgbe_rx_buffer_flip
-which is currently only called on XDP_TX and XDP_REDIRECT, it forgets
-to add the tailroom for skb_shared_info. This breaks XDP_REDIRECT, for
-veth and cpumap.  Fix by adding size of skb_shared_info tailroom.
+But there are major flaws with this argumentation:
 
-Maintainers notice: This fix have been queued to Jeff.
+* automatic measurements are not implemented
+* auto negotiation has nothing to do with the validity of the retrieved
+  values
 
-Fixes: 6453073987ba ("ixgbe: add initial support for xdp redirect")
-Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Cc: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Link: https://lore.kernel.org/bpf/158945344946.97035.17031588499266605743.stgit@firesoul
+The first point has to be fixed by a longer patch series. The "validity"
+part of the second point must be addressed in the same patch series by
+dropping the usage of ethtool's link_ksetting (thus always doing automatic
+measurements over ethernet).
+
+Drop the patch again to have more default values for various net_device
+types/configurations. The user can still overwrite them using the
+batadv_hardif's BATADV_ATTR_THROUGHPUT_OVERRIDE.
+
+Reported-by: Matthias Schiffer <mschiffer@universe-factory.net>
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/batman-adv/bat_v_elp.c | 15 +--------------
+ 1 file changed, 1 insertion(+), 14 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-index a26f9fb95ac0..edaa0bffa5c3 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-@@ -2254,7 +2254,8 @@ static void ixgbe_rx_buffer_flip(struct ixgbe_ring *rx_ring,
- 	rx_buffer->page_offset ^= truesize;
- #else
- 	unsigned int truesize = ring_uses_build_skb(rx_ring) ?
--				SKB_DATA_ALIGN(IXGBE_SKB_PAD + size) :
-+				SKB_DATA_ALIGN(IXGBE_SKB_PAD + size) +
-+				SKB_DATA_ALIGN(sizeof(struct skb_shared_info)) :
- 				SKB_DATA_ALIGN(size);
- 
- 	rx_buffer->page_offset += truesize;
+diff --git a/net/batman-adv/bat_v_elp.c b/net/batman-adv/bat_v_elp.c
+index 2614a9caee00..a39af0eefad3 100644
+--- a/net/batman-adv/bat_v_elp.c
++++ b/net/batman-adv/bat_v_elp.c
+@@ -120,20 +120,7 @@ static u32 batadv_v_elp_get_throughput(struct batadv_hardif_neigh_node *neigh)
+ 	rtnl_lock();
+ 	ret = __ethtool_get_link_ksettings(hard_iface->net_dev, &link_settings);
+ 	rtnl_unlock();
+-
+-	/* Virtual interface drivers such as tun / tap interfaces, VLAN, etc
+-	 * tend to initialize the interface throughput with some value for the
+-	 * sake of having a throughput number to export via ethtool. This
+-	 * exported throughput leaves batman-adv to conclude the interface
+-	 * throughput is genuine (reflecting reality), thus no measurements
+-	 * are necessary.
+-	 *
+-	 * Based on the observation that those interface types also tend to set
+-	 * the link auto-negotiation to 'off', batman-adv shall check this
+-	 * setting to differentiate between genuine link throughput information
+-	 * and placeholders installed by virtual interfaces.
+-	 */
+-	if (ret == 0 && link_settings.base.autoneg == AUTONEG_ENABLE) {
++	if (ret == 0) {
+ 		/* link characteristics might change over time */
+ 		if (link_settings.base.duplex == DUPLEX_FULL)
+ 			hard_iface->bat_v.flags |= BATADV_FULL_DUPLEX;
 -- 
 2.25.1
 
