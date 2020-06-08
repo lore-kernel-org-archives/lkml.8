@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C860BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF770C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:20:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A60220872
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:20:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84B902074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:20:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658442;
-	bh=BllGiQowdWfc/9MF8P9IN9Fo7/HBXLoDGNo0wcpxFiM=;
+	s=default; t=1591658449;
+	bh=cpNcsyP96V0xPvcpUSTt8b+S6Y2aJ4SjDn/xXmL06hI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OsxicsMcuEWeGLwltIcaCAQ7X32IPN0esWqY6XT3uYUaKVWNjEAmUtR1/P8/MMGuo
-	 Elc0sPxpd7RY2i7bg81gYdYn4PRnnDI9Z0yWEAGLrqpzw1vOQNsSG/spA9vKdFFzqc
-	 lx70APekvtnns9cmmL3cf03fIxwsAm2K1J4ZR74U=
+	b=fHquo6amKv3wb4Hv+hwB49PS2s94MpBiZWzOAMsf4pwlm4H4vZaUZCKGJvJUjD2a/
+	 FV6oDNGPNbRwq5rVznyjtiPPqAaJUCoUN2GBixoCpP2/IjVKi/Y5UBnLGIvg6QFTn0
+	 SE9jaIXCKSvgg/PWp+7jWNBWq06WCohzSzSbnDM4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731011AbgFHXUk (ORCPT
+        id S1731025AbgFHXUo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:20:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37990 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:20:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730272AbgFHXQf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:16:35 -0400
+        id S1727887AbgFHXQk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:16:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2EEF2083E;
-        Mon,  8 Jun 2020 23:16:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABCE420842;
+        Mon,  8 Jun 2020 23:16:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658195;
-        bh=BllGiQowdWfc/9MF8P9IN9Fo7/HBXLoDGNo0wcpxFiM=;
+        s=default; t=1591658200;
+        bh=cpNcsyP96V0xPvcpUSTt8b+S6Y2aJ4SjDn/xXmL06hI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kITkeSXzbT/SR1/4ROeE1LcZa3Q56hRcR3fJKRgaaIwHmodptzdxO4RSLpkMQ3Zb5
-         kS393C6d9Zz/o328O2p4+phWUOF7tU++0MPvsaC2NPuibdSK439lk0GMAuHD48X23o
-         oSSXtLqedCmwZvCFKcx6pl2uVjkAHEx5xuAk/3Lo=
+        b=SEdkfIoywhUtSCHGrsSkzonhdqhbw6AK3i1tfPGAyzPPSGH0DzT3kT+giH5espemC
+         xpyAp+fFP9DmB3TapTkLrTGLbGzOn/jKj5MOY6RMJzw/qeeDJ0ulAAg6SGHh34frCb
+         Rvsk10x6hew5ksblmdzErIWjn6zGFDY4c95YktOw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vadim Fedorenko <vfedorenko@novek.ru>,
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        kbuild test robot <lkp@intel.com>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         "David S . Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 216/606] net: ipip: fix wrong address family in init error path
-Date:   Mon,  8 Jun 2020 19:05:41 -0400
-Message-Id: <20200608231211.3363633-216-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 220/606] net: qrtr: Fix passing invalid reference to qrtr_local_enqueue()
+Date:   Mon,  8 Jun 2020 19:05:45 -0400
+Message-Id: <20200608231211.3363633-220-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -60,34 +63,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vadim Fedorenko <vfedorenko@novek.ru>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-[ Upstream commit 57ebc8f08504f176eb0f25b3e0fde517dec61a4f ]
+[ Upstream commit d28ea1fbbf437054ef339afec241019f2c4e2bb6 ]
 
-In case of error with MPLS support the code is misusing AF_INET
-instead of AF_MPLS.
+Once the traversal of the list is completed with list_for_each_entry(),
+the iterator (node) will point to an invalid object. So passing this to
+qrtr_local_enqueue() which is outside of the iterator block is erroneous
+eventhough the object is not used.
 
-Fixes: 1b69e7e6c4da ("ipip: support MPLS over IPv4")
-Signed-off-by: Vadim Fedorenko <vfedorenko@novek.ru>
+So fix this by passing NULL to qrtr_local_enqueue().
+
+Fixes: bdabad3e363d ("net: Add Qualcomm IPC router")
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Julia Lawall <julia.lawall@lip6.fr>
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/ipip.c | 2 +-
+ net/qrtr/qrtr.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/ipv4/ipip.c b/net/ipv4/ipip.c
-index 2f01cf6fa0de..678575adaf3b 100644
---- a/net/ipv4/ipip.c
-+++ b/net/ipv4/ipip.c
-@@ -698,7 +698,7 @@ static int __init ipip_init(void)
+diff --git a/net/qrtr/qrtr.c b/net/qrtr/qrtr.c
+index b7b854621c26..9d38c14d251a 100644
+--- a/net/qrtr/qrtr.c
++++ b/net/qrtr/qrtr.c
+@@ -855,7 +855,7 @@ static int qrtr_bcast_enqueue(struct qrtr_node *node, struct sk_buff *skb,
+ 	}
+ 	mutex_unlock(&qrtr_node_lock);
  
- rtnl_link_failed:
- #if IS_ENABLED(CONFIG_MPLS)
--	xfrm4_tunnel_deregister(&mplsip_handler, AF_INET);
-+	xfrm4_tunnel_deregister(&mplsip_handler, AF_MPLS);
- xfrm_tunnel_mplsip_failed:
+-	qrtr_local_enqueue(node, skb, type, from, to);
++	qrtr_local_enqueue(NULL, skb, type, from, to);
  
- #endif
+ 	return 0;
+ }
 -- 
 2.25.1
 
