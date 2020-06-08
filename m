@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A803C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA865C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55B002074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:03:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A96C020872
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:03:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660992;
-	bh=ROUYVJJ3ePUN3a1iYmd1eoCs5co0/fGeJQMZ/InFDNc=;
+	s=default; t=1591660993;
+	bh=Hqb3JCTnyLZlBBfWXKLb88KwmLzBABnD3JY3uKw1hDQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KYY35xkv5fylXoOCWsL2yYDgDaw8DBQR9wozx7dSpcZLwfLJr7YGEymJVgoncZoKB
-	 vWkWUbSEBMAzOpzQNkwNHD9YQ2+mnn/2fzlViy9r6eV8zV0/qJm0mbZeAR7m1K1Q/U
-	 L1fzX9YVO5lisVfpoBPMSteSvoJnqSSMqYH+ORIg=
+	b=xVybv4dH32Njtxdu6qOWAfyuA9hBtxJ5y8Bnw7NqvKD+AK27AqlFTIzbWPlm9CWzs
+	 fufSxkxvi+qMAxEr0yLrjW7JW9wde2PXwvmYU/mtFDzlvQ8yHUyJCXhlZctQqLR4W2
+	 ud0gLO1GXzrloSWuM95afdVkeNCgJnLOGhxAQSfs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731461AbgFIADH (ORCPT
+        id S1732303AbgFIADM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:03:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46394 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:03:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730895AbgFHXWA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:22:00 -0400
+        id S1730847AbgFHXV7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:21:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A652020814;
-        Mon,  8 Jun 2020 23:21:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82F9B2089D;
+        Mon,  8 Jun 2020 23:21:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658520;
-        bh=ROUYVJJ3ePUN3a1iYmd1eoCs5co0/fGeJQMZ/InFDNc=;
+        s=default; t=1591658519;
+        bh=Hqb3JCTnyLZlBBfWXKLb88KwmLzBABnD3JY3uKw1hDQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xl7Bq7PaVJwrh+P6/ISN/lfOWHsX/pu5NrmOIDZnwKXRTqFO515g+5Bmisx/nc4v0
-         rQRWZCfxU5Al2YeifmZMHFPRdGFgDVxPyhR9s+sUtePRK2OFNXEeMfRNq0yLb3Q+de
-         lxePr4KVW14WLIvpFFsrAOqLUh+W5kXA/PfwJtTw=
+        b=s+S4BDD0WIXqw8XxemUKew6NKbNcrWVM7gVEmrB3awo/MypafECEYF2CuD6EeMQY/
+         IxMkGrz0BDroUB80klR92fU10FdvBFyzWnqsIyPRwC3NOTk/uH6UiP4LvnP5xyyhKK
+         HFpfgN1vd14+dikFZM0iFDc/uTN4pVzPWcbaO9yo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fugang Duan <fugang.duan@nxp.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 146/175] net: ethernet: fec: move GPR register offset and bit into DT
-Date:   Mon,  8 Jun 2020 19:18:19 -0400
-Message-Id: <20200608231848.3366970-146-sashal@kernel.org>
+Cc:     Qu Wenruo <wqu@suse.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 145/175] btrfs: qgroup: mark qgroup inconsistent if we're inherting snapshot to a new qgroup
+Date:   Mon,  8 Jun 2020 19:18:18 -0400
+Message-Id: <20200608231848.3366970-145-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
 References: <20200608231848.3366970-1-sashal@kernel.org>
@@ -59,109 +59,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fugang Duan <fugang.duan@nxp.com>
+From: Qu Wenruo <wqu@suse.com>
 
-[ Upstream commit 8a448bf832af537d26aa557d183a16943dce4510 ]
+[ Upstream commit cbab8ade585a18c4334b085564d9d046e01a3f70 ]
 
-The commit da722186f654 (net: fec: set GPR bit on suspend by DT
-configuration) set the GPR reigster offset and bit in driver for
-wake on lan feature.
+[BUG]
+For the following operation, qgroup is guaranteed to be screwed up due
+to snapshot adding to a new qgroup:
 
-But it introduces two issues here:
-- one SOC has two instances, they have different bit
-- different SOCs may have different offset and bit
+  # mkfs.btrfs -f $dev
+  # mount $dev $mnt
+  # btrfs qgroup en $mnt
+  # btrfs subv create $mnt/src
+  # xfs_io -f -c "pwrite 0 1m" $mnt/src/file
+  # sync
+  # btrfs qgroup create 1/0 $mnt/src
+  # btrfs subv snapshot -i 1/0 $mnt/src $mnt/snapshot
+  # btrfs qgroup show -prce $mnt/src
+  qgroupid         rfer         excl     max_rfer     max_excl parent  child
+  --------         ----         ----     --------     -------- ------  -----
+  0/5          16.00KiB     16.00KiB         none         none ---     ---
+  0/257         1.02MiB     16.00KiB         none         none ---     ---
+  0/258         1.02MiB     16.00KiB         none         none 1/0     ---
+  1/0             0.00B        0.00B         none         none ---     0/258
+	        ^^^^^^^^^^^^^^^^^^^^
 
-So to support wake-on-lan feature on other i.MX platforms, it should
-configure the GPR reigster offset and bit from DT.
+[CAUSE]
+The problem is in btrfs_qgroup_inherit(), we don't have good enough
+check to determine if the new relation would break the existing
+accounting.
 
-So the patch is to improve the commit da722186f654 (net: fec: set GPR
-bit on suspend by DT configuration) to support multiple ethernet
-instances on i.MX series.
+Unlike btrfs_add_qgroup_relation(), which has proper check to determine
+if we can do quick update without a rescan, in btrfs_qgroup_inherit() we
+can even assign a snapshot to multiple qgroups.
 
-v2:
- * switch back to store the quirks bitmask in driver_data
-v3:
- * suggested by Sascha Hauer, use a struct fec_devinfo for
-   abstracting differences between different hardware variants,
-   it can give more freedom to describe the differences.
+[FIX]
+Fix it by manually marking qgroup inconsistent for snapshot inheritance.
 
-Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+For subvolume creation, since all its extents are exclusively owned, we
+don't need to rescan.
+
+In theory, we should call relation check like quick_update_accounting()
+when doing qgroup inheritance and inform user about qgroup accounting
+inconsistency.
+
+But we don't have good mechanism to relay that back to the user in the
+snapshot creation context, thus we can only silently mark the qgroup
+inconsistent.
+
+Anyway, user shouldn't use qgroup inheritance during snapshot creation,
+and should add qgroup relationship after snapshot creation by 'btrfs
+qgroup assign', which has a much better UI to inform user about qgroup
+inconsistent and kick in rescan automatically.
+
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/fec_main.c | 24 +++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ fs/btrfs/qgroup.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
-index 39c112f1543c..f0acbfa31482 100644
---- a/drivers/net/ethernet/freescale/fec_main.c
-+++ b/drivers/net/ethernet/freescale/fec_main.c
-@@ -88,8 +88,6 @@ static void fec_enet_itr_coal_init(struct net_device *ndev);
+diff --git a/fs/btrfs/qgroup.c b/fs/btrfs/qgroup.c
+index 590defdf8860..b94f6f99e90d 100644
+--- a/fs/btrfs/qgroup.c
++++ b/fs/btrfs/qgroup.c
+@@ -2636,6 +2636,7 @@ int btrfs_qgroup_inherit(struct btrfs_trans_handle *trans, u64 srcid,
+ 	struct btrfs_root *quota_root;
+ 	struct btrfs_qgroup *srcgroup;
+ 	struct btrfs_qgroup *dstgroup;
++	bool need_rescan = false;
+ 	u32 level_size = 0;
+ 	u64 nums;
  
- struct fec_devinfo {
- 	u32 quirks;
--	u8 stop_gpr_reg;
--	u8 stop_gpr_bit;
- };
- 
- static const struct fec_devinfo fec_imx25_info = {
-@@ -112,8 +110,6 @@ static const struct fec_devinfo fec_imx6q_info = {
- 		  FEC_QUIRK_HAS_BUFDESC_EX | FEC_QUIRK_HAS_CSUM |
- 		  FEC_QUIRK_HAS_VLAN | FEC_QUIRK_ERR006358 |
- 		  FEC_QUIRK_HAS_RACC,
--	.stop_gpr_reg = 0x34,
--	.stop_gpr_bit = 27,
- };
- 
- static const struct fec_devinfo fec_mvf600_info = {
-@@ -3452,19 +3448,23 @@ static int fec_enet_get_irq_cnt(struct platform_device *pdev)
- }
- 
- static int fec_enet_init_stop_mode(struct fec_enet_private *fep,
--				   struct fec_devinfo *dev_info,
- 				   struct device_node *np)
- {
- 	struct device_node *gpr_np;
-+	u32 out_val[3];
- 	int ret = 0;
- 
--	if (!dev_info)
--		return 0;
--
--	gpr_np = of_parse_phandle(np, "gpr", 0);
-+	gpr_np = of_parse_phandle(np, "fsl,stop-mode", 0);
- 	if (!gpr_np)
- 		return 0;
- 
-+	ret = of_property_read_u32_array(np, "fsl,stop-mode", out_val,
-+					 ARRAY_SIZE(out_val));
-+	if (ret) {
-+		dev_dbg(&fep->pdev->dev, "no stop mode property\n");
-+		return ret;
-+	}
+@@ -2779,6 +2780,13 @@ int btrfs_qgroup_inherit(struct btrfs_trans_handle *trans, u64 srcid,
+ 				goto unlock;
+ 		}
+ 		++i_qgroups;
 +
- 	fep->stop_gpr.gpr = syscon_node_to_regmap(gpr_np);
- 	if (IS_ERR(fep->stop_gpr.gpr)) {
- 		dev_err(&fep->pdev->dev, "could not find gpr regmap\n");
-@@ -3473,8 +3473,8 @@ static int fec_enet_init_stop_mode(struct fec_enet_private *fep,
- 		goto out;
++		/*
++		 * If we're doing a snapshot, and adding the snapshot to a new
++		 * qgroup, the numbers are guaranteed to be incorrect.
++		 */
++		if (srcid)
++			need_rescan = true;
  	}
  
--	fep->stop_gpr.reg = dev_info->stop_gpr_reg;
--	fep->stop_gpr.bit = dev_info->stop_gpr_bit;
-+	fep->stop_gpr.reg = out_val[1];
-+	fep->stop_gpr.bit = out_val[2];
+ 	for (i = 0; i <  inherit->num_ref_copies; ++i, i_qgroups += 2) {
+@@ -2798,6 +2806,9 @@ int btrfs_qgroup_inherit(struct btrfs_trans_handle *trans, u64 srcid,
  
+ 		dst->rfer = src->rfer - level_size;
+ 		dst->rfer_cmpr = src->rfer_cmpr - level_size;
++
++		/* Manually tweaking numbers certainly needs a rescan */
++		need_rescan = true;
+ 	}
+ 	for (i = 0; i <  inherit->num_excl_copies; ++i, i_qgroups += 2) {
+ 		struct btrfs_qgroup *src;
+@@ -2816,6 +2827,7 @@ int btrfs_qgroup_inherit(struct btrfs_trans_handle *trans, u64 srcid,
+ 
+ 		dst->excl = src->excl + level_size;
+ 		dst->excl_cmpr = src->excl_cmpr + level_size;
++		need_rescan = true;
+ 	}
+ 
+ unlock:
+@@ -2823,6 +2835,8 @@ int btrfs_qgroup_inherit(struct btrfs_trans_handle *trans, u64 srcid,
  out:
- 	of_node_put(gpr_np);
-@@ -3550,7 +3550,7 @@ fec_probe(struct platform_device *pdev)
- 	if (of_get_property(np, "fsl,magic-packet", NULL))
- 		fep->wol_flag |= FEC_WOL_HAS_MAGIC_PACKET;
- 
--	ret = fec_enet_init_stop_mode(fep, dev_info, np);
-+	ret = fec_enet_init_stop_mode(fep, np);
- 	if (ret)
- 		goto failed_stop_mode;
+ 	if (!committing)
+ 		mutex_unlock(&fs_info->qgroup_ioctl_lock);
++	if (need_rescan)
++		fs_info->qgroup_flags |= BTRFS_QGROUP_STATUS_FLAG_INCONSISTENT;
+ 	return ret;
+ }
  
 -- 
 2.25.1
