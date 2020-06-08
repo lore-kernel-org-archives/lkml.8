@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE69C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:28:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41896C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D72EB2078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:28:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EEBC20884
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:28:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662483;
-	bh=O4sIm0dMTHqRZCNxs3PMb5hcgRJULMMM54RSsYvmZzM=;
+	s=default; t=1591662491;
+	bh=HDdW0MJUTbfnO2m1+2iJ3oY3VCGxouDs0bFCj228V14=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=151XskYgVBKrQyxgsOYe9U2Ty3WFuubWOl6W4DvdN/YjWFLeguhJT808suKMMQadw
-	 zVGwdK8XZVqw4eHYZl55lleHkYFmzOwrlTho9Ov68g+SCSQbEgN9EsLtSzyzDZx068
-	 j3IvEyuJZvsL/TRARSmGaE7O1TfOiHI0mv/acWfs=
+	b=I3waHt7MqJ4a6X03BIRmX5/Rlo7bXAfe9qQzbilGkxyOXDPyZFn9Pe02Ww0bXj1XK
+	 SG2Ys+VVna4PzIbQ1/tLIKtKcEiOBPyIngTmA7Rz5P13wxjVuTWj0Xh4pzxBfQ1BJ8
+	 lhA2RBMGYls8Lido9/TY7XRExWlZ+Ejx+hpGYMEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730264AbgFHXQe (ORCPT
+        id S1731922AbgFIA2J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:16:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33578 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:28:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729551AbgFHXNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:13:43 -0400
+        id S1729029AbgFHXQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:16:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADBF7214D8;
-        Mon,  8 Jun 2020 23:13:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DBA320801;
+        Mon,  8 Jun 2020 23:16:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658022;
-        bh=O4sIm0dMTHqRZCNxs3PMb5hcgRJULMMM54RSsYvmZzM=;
+        s=default; t=1591658192;
+        bh=HDdW0MJUTbfnO2m1+2iJ3oY3VCGxouDs0bFCj228V14=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F1yw1wz+uI9OEFQsyy85GOQZGHGC3KoGlB+D/SIm0JmdbSTAmmD1l3wts9O9c//c6
-         ic/0LubGEJyDE4eQxEaPXgyJbTzL7zLwOZb0IVHgz4KJJTij391/f4h86OZSLw2S8F
-         MGGaJuS01F2kLvG7WOQmjW/T54rB3TZcAW3IkKb8=
+        b=fetSKYARyY5K1G7B9kIQTXpruLbS7rF6pypWv8r3Qj7P7s3SqTs7S7oiQSMHtPuMn
+         Do1Y43pDfZniDYisxIMHI94ya7rN99bp1FbHvzj5K7PJ4/d20nFHrkkYBQseCWpqvF
+         qsZnneOmPszl9l9CgDbzjRXiKMTJ9ZOXtAnAtoRY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yonghong Song <yhs@fb.com>, Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
+Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 075/606] bpf: Enforce returning 0 for fentry/fexit progs
-Date:   Mon,  8 Jun 2020 19:03:20 -0400
-Message-Id: <20200608231211.3363633-75-sashal@kernel.org>
+        linux-omap@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 213/606] net: ethernet: ti: cpsw: fix ASSERT_RTNL() warning during suspend
+Date:   Mon,  8 Jun 2020 19:05:38 -0400
+Message-Id: <20200608231211.3363633-213-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -60,64 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yonghong Song <yhs@fb.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
 
-commit e92888c72fbdc6f9d07b3b0604c012e81d7c0da7 upstream.
+[ Upstream commit 4c64b83d03f4aafcdf710caad994cbc855802e74 ]
 
-Currently, tracing/fentry and tracing/fexit prog
-return values are not enforced. In trampoline codes,
-the fentry/fexit prog return values are ignored.
-Let us enforce it to be 0 to avoid confusion and
-allows potential future extension.
+vlan_for_each() are required to be called with rtnl_lock taken, otherwise
+ASSERT_RTNL() warning will be triggered - which happens now during System
+resume from suspend:
+  cpsw_suspend()
+  |- cpsw_ndo_stop()
+    |- __hw_addr_ref_unsync_dev()
+      |- cpsw_purge_all_mc()
+         |- vlan_for_each()
+            |- ASSERT_RTNL();
 
-This patch also explicitly added return value
-checking for tracing/raw_tp, tracing/fmod_ret,
-and freplace programs such that these program
-return values can be anything. The purpose are
-two folds:
- 1. to make it explicit about return value expectations
-    for these programs in verifier.
- 2. for tracing prog_type, if a future attach type
-    is added, the default is -ENOTSUPP which will
-    enforce to specify return value ranges explicitly.
+Hence, fix it by surrounding cpsw_ndo_stop() by rtnl_lock/unlock() calls.
 
-Fixes: fec56f5890d9 ("bpf: Introduce BPF trampoline")
-Signed-off-by: Yonghong Song <yhs@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Link: https://lore.kernel.org/bpf/20200514053206.1298415-1-yhs@fb.com
+Fixes: 15180eca569b ("net: ethernet: ti: cpsw: fix vlan mcast")
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- kernel/bpf/verifier.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/net/ethernet/ti/cpsw.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 1c53ccbd5b5d..c1bb5be530e9 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -6498,6 +6498,22 @@ static int check_return_code(struct bpf_verifier_env *env)
- 			return 0;
- 		range = tnum_const(0);
- 		break;
-+	case BPF_PROG_TYPE_TRACING:
-+		switch (env->prog->expected_attach_type) {
-+		case BPF_TRACE_FENTRY:
-+		case BPF_TRACE_FEXIT:
-+			range = tnum_const(0);
-+			break;
-+		case BPF_TRACE_RAW_TP:
-+			return 0;
-+		default:
-+			return -ENOTSUPP;
-+		}
-+		break;
-+	case BPF_PROG_TYPE_EXT:
-+		/* freplace program can return anything as its return value
-+		 * depends on the to-be-replaced kernel func or bpf program.
-+		 */
- 	default:
- 		return 0;
- 	}
+diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
+index 6ae4a72e6f43..5577ff0b7663 100644
+--- a/drivers/net/ethernet/ti/cpsw.c
++++ b/drivers/net/ethernet/ti/cpsw.c
+@@ -1752,11 +1752,15 @@ static int cpsw_suspend(struct device *dev)
+ 	struct cpsw_common *cpsw = dev_get_drvdata(dev);
+ 	int i;
+ 
++	rtnl_lock();
++
+ 	for (i = 0; i < cpsw->data.slaves; i++)
+ 		if (cpsw->slaves[i].ndev)
+ 			if (netif_running(cpsw->slaves[i].ndev))
+ 				cpsw_ndo_stop(cpsw->slaves[i].ndev);
+ 
++	rtnl_unlock();
++
+ 	/* Select sleep pin state */
+ 	pinctrl_pm_select_sleep_state(dev);
+ 
 -- 
 2.25.1
 
