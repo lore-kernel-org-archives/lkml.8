@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 267ADC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA12C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB3102076C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:04:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 494CB2076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:04:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591664684;
-	bh=B3xFYh7AMdy6830NHmMW9gIz6XlazHF4qwfRiP3z9Wo=;
+	s=default; t=1591664688;
+	bh=YE2oEMu6XyWmC2vXfQbvn/OXs6e+k5Ysv8EGha9IAKY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ywp/7XsvYXxUYLM+mTZQQtv2RdoqTZ+q2aiMakruRRlbO0p41HXrSOCFa+fjfO98E
-	 z5fDm+kMMTkaEWFhixtlWXo1bGiAWuWfseYUFHLvW5Iqh/Z9ICZkDLWG02m63gY6PK
-	 GVe3ic+1zqW5CC6OtFMw+/QlSQPZpVyIOb7o9oGc=
+	b=rDzwjzVpRjs8Qi3pBgSE/UrwgPlDl84I2plc6GuLnzFV4UlcAa9mmfCCrxcdXOKVY
+	 gRB+KHazoCYQJ8tLN0av6N2Z/iR+FFm/d+GNVVNnbrR456AcN2ca3ysvyMcZNsyV1i
+	 2l8eJL9YE34vcYsOm/r3N2vv8hcQxYgeO9C28HaE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727870AbgFHXHW (ORCPT
+        id S1728060AbgFIBEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:07:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50164 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 21:04:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727065AbgFHXGq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:06:46 -0400
+        id S1727866AbgFHXHW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:07:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56F8120820;
-        Mon,  8 Jun 2020 23:06:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 427F920888;
+        Mon,  8 Jun 2020 23:07:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657605;
-        bh=B3xFYh7AMdy6830NHmMW9gIz6XlazHF4qwfRiP3z9Wo=;
+        s=default; t=1591657642;
+        bh=YE2oEMu6XyWmC2vXfQbvn/OXs6e+k5Ysv8EGha9IAKY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oKcy2C9BkzC6s21iJyLzYHi6LDHVpBHzYXsesCn/x0B6w5Pafg+wo6zGfhG5Nz2tD
-         zIQqnhqsp1OaAgKysJkfmyzT+Eni5CGqfAAc+wXOJ8X0FB6IU7R3hKbaa8CAZMEFGA
-         2+2zVjrbdLg4UJLqxTkVWXg9fFUp4lVtyaVs9KmA=
+        b=vq3CXwS5riurYyniTn2wDL2g6iruKlXF/O1OrrnMMI8uYpXATpiUtjeAgFcO6UiNy
+         M7fd0sJ+yx1nUKqaI00KSJvdpaCRCpeXbZumSdsVXZp0ufOROOgyWpipaCdI1DIASl
+         xOk65YxxlQ7ir1q9nQpboSrPO3zMNb8iXqRuouZg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Fangrui Song <maskray@google.com>,
-        Sasha Levin <sashal@kernel.org>, linux-efi@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.7 030/274] efi/libstub/x86: Work around LLVM ELF quirk build regression
-Date:   Mon,  8 Jun 2020 19:02:03 -0400
-Message-Id: <20200608230607.3361041-30-sashal@kernel.org>
+Cc:     Tuan Phan <tuanphan@os.amperecomputing.com>,
+        Hanjun Guo <guoahanjun@huawei.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 059/274] ACPI/IORT: Fix PMCG node single ID mapping handling
+Date:   Mon,  8 Jun 2020 19:02:32 -0400
+Message-Id: <20200608230607.3361041-59-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -64,49 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Tuan Phan <tuanphan@os.amperecomputing.com>
 
-[ Upstream commit f77767ed5f4d398b29119563155e4ece2dfeee13 ]
+[ Upstream commit 50c8ab8d9fbf5b18d5162a797ca26568afc0af1a ]
 
-When building the x86 EFI stub with Clang, the libstub Makefile rules
-that manipulate the ELF object files may throw an error like:
+An IORT PMCG node can have no ID mapping if its overflow interrupt is
+wire based therefore the code that parses the PMCG node can not assume
+the node will always have a single mapping present at index 0.
 
-    STUBCPY drivers/firmware/efi/libstub/efi-stub-helper.stub.o
-  strip: drivers/firmware/efi/libstub/efi-stub-helper.stub.o: Failed to find link section for section 10
-  objcopy: drivers/firmware/efi/libstub/efi-stub-helper.stub.o: Failed to find link section for section 10
+Fix iort_get_id_mapping_index() by checking for an overflow interrupt
+and mapping count.
 
-This is the result of a LLVM feature [0] where symbol references are
-stored in a LLVM specific .llvm_addrsig section in a non-transparent way,
-causing generic ELF tools such as strip or objcopy to choke on them.
+Fixes: 24e516049360 ("ACPI/IORT: Add support for PMCG")
 
-So force the compiler not to emit these sections, by passing the
-appropriate command line option.
-
-[0] https://sourceware.org/bugzilla/show_bug.cgi?id=23817
-
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Peter Collingbourne <pcc@google.com>
-Cc: Sami Tolvanen <samitolvanen@google.com>
-Reported-by: Arnd Bergmann <arnd@arndb.de>
-Suggested-by: Fangrui Song <maskray@google.com>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Tuan Phan <tuanphan@os.amperecomputing.com>
+Reviewed-by: Hanjun Guo <guoahanjun@huawei.com>
+Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Link: https://lore.kernel.org/r/1589994787-28637-1-git-send-email-tuanphan@os.amperecomputing.com
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/efi/libstub/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/acpi/arm64/iort.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-index 094eabdecfe6..d85016553f14 100644
---- a/drivers/firmware/efi/libstub/Makefile
-+++ b/drivers/firmware/efi/libstub/Makefile
-@@ -30,6 +30,7 @@ KBUILD_CFLAGS			:= $(cflags-y) -DDISABLE_BRANCH_PROFILING \
- 				   -D__NO_FORTIFY \
- 				   $(call cc-option,-ffreestanding) \
- 				   $(call cc-option,-fno-stack-protector) \
-+				   $(call cc-option,-fno-addrsig) \
- 				   -D__DISABLE_EXPORTS
+diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
+index 7d04424189df..ec04435a7cea 100644
+--- a/drivers/acpi/arm64/iort.c
++++ b/drivers/acpi/arm64/iort.c
+@@ -414,6 +414,7 @@ static struct acpi_iort_node *iort_node_get_id(struct acpi_iort_node *node,
+ static int iort_get_id_mapping_index(struct acpi_iort_node *node)
+ {
+ 	struct acpi_iort_smmu_v3 *smmu;
++	struct acpi_iort_pmcg *pmcg;
  
- GCOV_PROFILE			:= n
+ 	switch (node->type) {
+ 	case ACPI_IORT_NODE_SMMU_V3:
+@@ -441,6 +442,10 @@ static int iort_get_id_mapping_index(struct acpi_iort_node *node)
+ 
+ 		return smmu->id_mapping_index;
+ 	case ACPI_IORT_NODE_PMCG:
++		pmcg = (struct acpi_iort_pmcg *)node->node_data;
++		if (pmcg->overflow_gsiv || node->mapping_count == 0)
++			return -EINVAL;
++
+ 		return 0;
+ 	default:
+ 		return -EINVAL;
 -- 
 2.25.1
 
