@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF3B0C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25860C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBCA721556
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:13:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0755D21527
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:14:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658029;
-	bh=8ytuBy4b62zsfobpy3ImeP8JbnWVrWV3o5vABkvCtmw=;
+	s=default; t=1591658049;
+	bh=6qFB+xmqfN7wt3Btr+n50UrRMA+WUXiQ88tCbhKAgm0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GDG43s8jib7a98CrdzBDvBlY+ox3FgIsHu3Cn7OzAxDr7GHgJmJfpZsPX1ph3uvJp
-	 9gB1/KlRZNkWTYk6DwYsnGXZbV6KezCEAsUoD3YkwfRr4EJpMQ8c7q72iNsZ1fFoyR
-	 sNHiSrTx73lx+izhaoQmmKq8febfgs6Vx9MNYoMg=
+	b=X9TCgAn7/M1P04ncPn47mJ4F7q8u0lPCRbHNeGEScvzb5um4XVqx9z4f3R/e+W6zB
+	 U5kakoLCZjl5Vy8D7JFfUw+HknoFhFP1TGjzGs2/t/bBiLcWQLW1zf+l/oc8V3LjDm
+	 q0acJ9g1ouCB6+ji8f9qsSggIUlTApxtjW+nm2Ps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728787AbgFHXNs (ORCPT
+        id S1729717AbgFHXOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:13:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58418 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:14:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728908AbgFHXL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:11:29 -0400
+        id S1728941AbgFHXLk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:11:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02E8220897;
-        Mon,  8 Jun 2020 23:11:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E343B20897;
+        Mon,  8 Jun 2020 23:11:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657889;
-        bh=8ytuBy4b62zsfobpy3ImeP8JbnWVrWV3o5vABkvCtmw=;
+        s=default; t=1591657899;
+        bh=6qFB+xmqfN7wt3Btr+n50UrRMA+WUXiQ88tCbhKAgm0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q9ok72UT3eWh5tiCYk/2OMepss5v+ki2yWhrgP3HCrYb3LFDpU2Evyqx3d5dRUrV1
-         maugMZN1MAMgQ2U35/RKJNhxyuu6FmnxQM3DXuRr//NiGx1jl8FBTuHk+wBIn8uv2z
-         So0+FI10zfIiOMWT1Y7GVBUpvXnpRPqLxMplvCkQ=
+        b=NcVAQO8WgMuZiME8wwVHlXlkkj1n5Gpzr7k1er9V6yIM7OXEc9biqPsoCGnt8/a6P
+         FuIcQqQZUirAzElBu/wqlAZmpHkfI+3OTaZUX5QqtRNePflZEqmZHuGY9PeLSri9UQ
+         okmemf525p1r/DT8h8/+x0GAHmxzviOmuaVyK5U4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Vasut <marex@denx.de>, Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 245/274] mmc: mmci: Switch to mmc_regulator_set_vqmmc()
-Date:   Mon,  8 Jun 2020 19:05:38 -0400
-Message-Id: <20200608230607.3361041-245-sashal@kernel.org>
+Cc:     Sharon <sara.sharon@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 253/274] iwlwifi: mvm: fix aux station leak
+Date:   Mon,  8 Jun 2020 19:05:46 -0400
+Message-Id: <20200608230607.3361041-253-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -58,73 +60,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Vasut <marex@denx.de>
+From: Sharon <sara.sharon@intel.com>
 
-[ Upstream commit 3e09a81e166c0a5544832459be17561a6b231ac7 ]
+[ Upstream commit f327236df2afc8c3c711e7e070f122c26974f4da ]
 
-Instead of reimplementing the logic in mmc_regulator_set_vqmmc(), use the
-mmc code function directly.
+When mvm is initialized we alloc aux station with aux queue.
+We later free the station memory when driver is stopped, but we
+never free the queue's memory, which casues a leak.
 
-This also allows us to fix a related issue on STM32MP1, when a voltage
-switch of 1.8V is done for the eMMC, but the current level is already set
-to 1.8V. More precisely, in this scenario the call to the
-->post_sig_volt_switch() hangs, indefinitely waiting for the voltage switch
-to complete. Fix this problem by checking if mmc_regulator_set_vqmmc()
-returned 1 and then skip invoking the callback.
+Add a proper de-initialization of the station.
 
-Signed-off-by: Marek Vasut <marex@denx.de>
-Link: https://lore.kernel.org/r/20200416163649.336967-3-marex@denx.de
-[Ulf: Updated the commit message]
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Sharon <sara.sharon@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Link: https://lore.kernel.org/r/iwlwifi.20200529092401.0121c5be55e9.Id7516fbb3482131d0c9dfb51ff20b226617ddb49@changeid
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/mmci.c | 30 ++++++++----------------------
- 1 file changed, 8 insertions(+), 22 deletions(-)
+ .../net/wireless/intel/iwlwifi/mvm/mac80211.c  |  5 ++---
+ drivers/net/wireless/intel/iwlwifi/mvm/sta.c   | 18 +++++++++++++-----
+ drivers/net/wireless/intel/iwlwifi/mvm/sta.h   |  6 +++---
+ 3 files changed, 18 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
-index 647567def612..a69d6a0c2e15 100644
---- a/drivers/mmc/host/mmci.c
-+++ b/drivers/mmc/host/mmci.c
-@@ -1861,31 +1861,17 @@ static int mmci_get_cd(struct mmc_host *mmc)
- static int mmci_sig_volt_switch(struct mmc_host *mmc, struct mmc_ios *ios)
- {
- 	struct mmci_host *host = mmc_priv(mmc);
--	int ret = 0;
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
+index 7aa1350b093e..cf3c46c9b1ee 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
+@@ -1209,14 +1209,13 @@ void __iwl_mvm_mac_stop(struct iwl_mvm *mvm)
+ 	 */
+ 	flush_work(&mvm->roc_done_wk);
+ 
++	iwl_mvm_rm_aux_sta(mvm);
++
+ 	iwl_mvm_stop_device(mvm);
+ 
+ 	iwl_mvm_async_handlers_purge(mvm);
+ 	/* async_handlers_list is empty and will stay empty: HW is stopped */
+ 
+-	/* the fw is stopped, the aux sta is dead: clean up driver state */
+-	iwl_mvm_del_aux_sta(mvm);
 -
--	if (!IS_ERR(mmc->supply.vqmmc)) {
-+	int ret;
- 
--		switch (ios->signal_voltage) {
--		case MMC_SIGNAL_VOLTAGE_330:
--			ret = regulator_set_voltage(mmc->supply.vqmmc,
--						2700000, 3600000);
--			break;
--		case MMC_SIGNAL_VOLTAGE_180:
--			ret = regulator_set_voltage(mmc->supply.vqmmc,
--						1700000, 1950000);
--			break;
--		case MMC_SIGNAL_VOLTAGE_120:
--			ret = regulator_set_voltage(mmc->supply.vqmmc,
--						1100000, 1300000);
--			break;
--		}
-+	ret = mmc_regulator_set_vqmmc(mmc, ios);
- 
--		if (!ret && host->ops && host->ops->post_sig_volt_switch)
--			ret = host->ops->post_sig_volt_switch(host, ios);
-+	if (!ret && host->ops && host->ops->post_sig_volt_switch)
-+		ret = host->ops->post_sig_volt_switch(host, ios);
-+	else if (ret)
-+		ret = 0;
- 
--		if (ret)
--			dev_warn(mmc_dev(mmc), "Voltage switch failed\n");
--	}
-+	if (ret < 0)
-+		dev_warn(mmc_dev(mmc), "Voltage switch failed\n");
- 
+ 	/*
+ 	 * Clear IN_HW_RESTART and HW_RESTART_REQUESTED flag when stopping the
+ 	 * hw (as restart_complete() won't be called in this case) and mac80211
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
+index 56ae72debb96..07ca8c91499d 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
+@@ -2080,16 +2080,24 @@ int iwl_mvm_rm_snif_sta(struct iwl_mvm *mvm, struct ieee80211_vif *vif)
  	return ret;
  }
+ 
+-void iwl_mvm_dealloc_snif_sta(struct iwl_mvm *mvm)
++int iwl_mvm_rm_aux_sta(struct iwl_mvm *mvm)
+ {
+-	iwl_mvm_dealloc_int_sta(mvm, &mvm->snif_sta);
+-}
++	int ret;
+ 
+-void iwl_mvm_del_aux_sta(struct iwl_mvm *mvm)
+-{
+ 	lockdep_assert_held(&mvm->mutex);
+ 
++	iwl_mvm_disable_txq(mvm, NULL, mvm->aux_queue, IWL_MAX_TID_COUNT, 0);
++	ret = iwl_mvm_rm_sta_common(mvm, mvm->aux_sta.sta_id);
++	if (ret)
++		IWL_WARN(mvm, "Failed sending remove station\n");
+ 	iwl_mvm_dealloc_int_sta(mvm, &mvm->aux_sta);
++
++	return ret;
++}
++
++void iwl_mvm_dealloc_snif_sta(struct iwl_mvm *mvm)
++{
++	iwl_mvm_dealloc_int_sta(mvm, &mvm->snif_sta);
+ }
+ 
+ /*
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/sta.h b/drivers/net/wireless/intel/iwlwifi/mvm/sta.h
+index 8d70093847cb..da2d1ac01229 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/sta.h
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/sta.h
+@@ -8,7 +8,7 @@
+  * Copyright(c) 2012 - 2014 Intel Corporation. All rights reserved.
+  * Copyright(c) 2013 - 2014 Intel Mobile Communications GmbH
+  * Copyright(c) 2015 - 2016 Intel Deutschland GmbH
+- * Copyright(c) 2018 - 2019 Intel Corporation
++ * Copyright(c) 2018 - 2020 Intel Corporation
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of version 2 of the GNU General Public License as
+@@ -31,7 +31,7 @@
+  * Copyright(c) 2012 - 2014 Intel Corporation. All rights reserved.
+  * Copyright(c) 2013 - 2014 Intel Mobile Communications GmbH
+  * Copyright(c) 2015 - 2016 Intel Deutschland GmbH
+- * Copyright(c) 2018 - 2019 Intel Corporation
++ * Copyright(c) 2018 - 2020 Intel Corporation
+  * All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without
+@@ -541,7 +541,7 @@ int iwl_mvm_sta_tx_agg(struct iwl_mvm *mvm, struct ieee80211_sta *sta,
+ 		       int tid, u8 queue, bool start);
+ 
+ int iwl_mvm_add_aux_sta(struct iwl_mvm *mvm);
+-void iwl_mvm_del_aux_sta(struct iwl_mvm *mvm);
++int iwl_mvm_rm_aux_sta(struct iwl_mvm *mvm);
+ 
+ int iwl_mvm_alloc_bcast_sta(struct iwl_mvm *mvm, struct ieee80211_vif *vif);
+ int iwl_mvm_send_add_bcast_sta(struct iwl_mvm *mvm, struct ieee80211_vif *vif);
 -- 
 2.25.1
 
