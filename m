@@ -7,49 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA22DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:52:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 445B2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:52:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1332204EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:52:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1205B204EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:52:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660321;
-	bh=E0SZMsJZ5fPOnwF6Lflu+D2Uif5yyqCVMNhKdwUo0/I=;
+	s=default; t=1591660328;
+	bh=Aay7g+6QoqcAa867zA6NxerJV2IzWmFYYUuikQsOEp4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i/9tp2OnF32ku+NzOsU0PB0iS22oooTeB/NP4QODyY56bVsLq413jxpHHKRs6RUKb
-	 6/X52veJ6m3FZSujKr9OcpTn7Yvss7wERpWRQFp/zUJQUOXh7ZWSYVTbzYfHYRIbUN
-	 ldUaWOLXAL1b4wY6iPvtM5Q4Nia/1ofLauRAhreA=
+	b=rrpyo1/TPdX4tJWDKijiEdbVsd6VsD1L2yPvBbRr+ZM0sByf2jjuWUFzpcWl/Ghfc
+	 BRoeVMGmIRf7k7yRYJBmPxldRESMiQD+nOKddhi0autaATGiGLAuTcGRCeV/8+Wfin
+	 okbf4pcNbZaUaoMGBJepJf/qQqxKn6xux4zzW1Ag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731717AbgFHXY7 (ORCPT
+        id S1731701AbgFHXY4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:24:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43058 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:24:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729561AbgFHXTw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:19:52 -0400
+        id S1730807AbgFHXTe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:19:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECB9320842;
-        Mon,  8 Jun 2020 23:19:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2ACE821556;
+        Mon,  8 Jun 2020 23:19:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658391;
-        bh=E0SZMsJZ5fPOnwF6Lflu+D2Uif5yyqCVMNhKdwUo0/I=;
+        s=default; t=1591658374;
+        bh=Aay7g+6QoqcAa867zA6NxerJV2IzWmFYYUuikQsOEp4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IvpnWajaisU84m/jIrSri7AkiFvT2GXEQ+UnIjCknXIXwYLz/1b/40zdRywvI9OMc
-         Wb/FutXE2MvLdXa0fHuOSn0GAFFH/Hq1EIb99F7gIFGQCKlFZUtUoETrf85gurEVmA
-         7IP3/tu9D41w/9ZRUypFYVV3OKNl1ZW62TiouWu0=
+        b=UitV0NYQIiE2TkALyDzAj3bVuMrEoWi1WOmpMHKcVE8iBlpiYkOq9oVtRYioP5FnE
+         xbYBr35bOUfTIyHK7vMSu2F0JFfm7OG8ryeEJKvY1n4+WkVn6pWPYE5fgay4SipCw4
+         mSB94S3H25yKLbZ6gU3m4OlLJoTB+fgWFaqFpELo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Filipe Manana <fdmanana@suse.com>, David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 049/175] btrfs: do not ignore error from btrfs_next_leaf() when inserting checksums
-Date:   Mon,  8 Jun 2020 19:16:42 -0400
-Message-Id: <20200608231848.3366970-49-sashal@kernel.org>
+Cc:     Koba Ko <koba.ko@canonical.com>,
+        Mario Limonciello <Mario.limonciello@dell.com>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 036/175] platform/x86: dell-laptop: don't register micmute LED if there is no token
+Date:   Mon,  8 Jun 2020 19:16:29 -0400
+Message-Id: <20200608231848.3366970-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
 References: <20200608231848.3366970-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -58,46 +63,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Koba Ko <koba.ko@canonical.com>
 
-[ Upstream commit 7e4a3f7ed5d54926ec671bbb13e171cfe179cc50 ]
+[ Upstream commit 257e03a334ccb96e657bf5f6ab3b5693a22c2aa4 ]
 
-We are currently treating any non-zero return value from btrfs_next_leaf()
-the same way, by going to the code that inserts a new checksum item in the
-tree. However if btrfs_next_leaf() returns an error (a value < 0), we
-should just stop and return the error, and not behave as if nothing has
-happened, since in that case we do not have a way to know if there is a
-next leaf or we are currently at the last leaf already.
+On Dell G3-3590, error message is issued during boot up,
+"platform::micmute: Setting an LED's brightness failed (-19)",
+but there's no micmute led on the machine.
 
-So fix that by returning the error from btrfs_next_leaf().
+Get the related tokens of SMBIOS, GLOBAL_MIC_MUTE_DISABLE/ENABLE.
+If one of two tokens doesn't exist,
+don't call led_classdev_register() for platform::micmute.
+After that, you wouldn't see the platform::micmute in /sys/class/leds/,
+and the error message wouldn't see in dmesg.
 
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: d00fa46e0a2c6 ("platform/x86: dell-laptop: Add micmute LED trigger support")
+Signed-off-by: Koba Ko <koba.ko@canonical.com>
+Reviewed-by: Mario Limonciello <Mario.limonciello@dell.com>
+Reviewed-by: Pali Rohár <pali@kernel.org>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/file-item.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/platform/x86/dell-laptop.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/fs/btrfs/file-item.c b/fs/btrfs/file-item.c
-index f62a179f85bb..2b8f29c07668 100644
---- a/fs/btrfs/file-item.c
-+++ b/fs/btrfs/file-item.c
-@@ -798,10 +798,12 @@ int btrfs_csum_file_blocks(struct btrfs_trans_handle *trans,
- 		nritems = btrfs_header_nritems(path->nodes[0]);
- 		if (!nritems || (path->slots[0] >= nritems - 1)) {
- 			ret = btrfs_next_leaf(root, path);
--			if (ret == 1)
-+			if (ret < 0) {
-+				goto out;
-+			} else if (ret > 0) {
- 				found_next = 1;
--			if (ret != 0)
- 				goto insert;
-+			}
- 			slot = path->slots[0];
- 		}
- 		btrfs_item_key_to_cpu(path->nodes[0], &found_key, slot);
+diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
+index 74e988f839e8..4c1dd1d4e60b 100644
+--- a/drivers/platform/x86/dell-laptop.c
++++ b/drivers/platform/x86/dell-laptop.c
+@@ -2204,10 +2204,13 @@ static int __init dell_init(void)
+ 
+ 	dell_laptop_register_notifier(&dell_laptop_notifier);
+ 
+-	micmute_led_cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
+-	ret = led_classdev_register(&platform_device->dev, &micmute_led_cdev);
+-	if (ret < 0)
+-		goto fail_led;
++	if (dell_smbios_find_token(GLOBAL_MIC_MUTE_DISABLE) &&
++	    dell_smbios_find_token(GLOBAL_MIC_MUTE_ENABLE)) {
++		micmute_led_cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
++		ret = led_classdev_register(&platform_device->dev, &micmute_led_cdev);
++		if (ret < 0)
++			goto fail_led;
++	}
+ 
+ 	if (acpi_video_get_backlight_type() != acpi_backlight_vendor)
+ 		return 0;
 -- 
 2.25.1
 
