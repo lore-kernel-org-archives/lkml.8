@@ -2,53 +2,57 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF30C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B1CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E995A2074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:28:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C7012074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:28:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JyjcLiLn"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EN76A0in"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729767AbgFHM2R (ORCPT
+        id S1729781AbgFHM2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 08:28:17 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:58365 "EHLO
+        Mon, 8 Jun 2020 08:28:21 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:53347 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729746AbgFHM2N (ORCPT
+        by vger.kernel.org with ESMTP id S1729752AbgFHM2R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 08:28:13 -0400
+        Mon, 8 Jun 2020 08:28:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591619291;
+        s=mimecast20190719; t=1591619295;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=ClBDHBDktbLIW5J/z+Ht3YsS2xmoHHnGoFvx6CMwhtw=;
-        b=JyjcLiLnmVwp8zLWI/xDN54qD/jh+wEgP5yTn9EwTNyuGjCFpHErRpVQNGbte6I7pzkO/F
-        VxWD/PxSQPQvjQ/TdYfTrpVXLobtFnzin8z+Uu38rUDf5B4cD8NVaOARuSkTo165yv8DL7
-        1DxUguaGvnytM6kQSR1KuB7glF8LVbU=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=t1ZQ22N4GS1aOVvRJb6q+OxNNqR941WJ3Ue4dl0p7rw=;
+        b=EN76A0inAykuDp23x6YBDSsYdfL/xL+BT37DKnQjv4iuJfkaNrEmosWfL8BSh0ipY/dYLs
+        POX3qubeC2xCfUDTQO4zfQwc3GaUr/fbY54BMahKG6KWgsT+SUBZq7aX+6hkTzJDiGUKT4
+        MULJtMqLu1yNPFo4ZtHg7bVMyjy0sSo=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-461-WOF0bhi7OyuMdL1nq3ePNg-1; Mon, 08 Jun 2020 08:28:04 -0400
-X-MC-Unique: WOF0bhi7OyuMdL1nq3ePNg-1
+ us-mta-286-fonlKfq2PLiCRa6Xci7Qkg-1; Mon, 08 Jun 2020 08:28:04 -0400
+X-MC-Unique: fonlKfq2PLiCRa6Xci7Qkg-1
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 74999107ACF2;
-        Mon,  8 Jun 2020 12:28:02 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 51AC6108BD0A;
+        Mon,  8 Jun 2020 12:28:03 +0000 (UTC)
 Received: from virtlab710.virt.lab.eng.bos.redhat.com (virtlab710.virt.lab.eng.bos.redhat.com [10.19.152.252])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C69E57BFE3;
-        Mon,  8 Jun 2020 12:28:01 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A4822768BB;
+        Mon,  8 Jun 2020 12:28:02 +0000 (UTC)
 From:   Cathy Avery <cavery@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         pbonzini@redhat.com
-Subject: [PATCH kvm-unit-tests 0/2] svm: INIT test and test_run on selected vcpu
-Date:   Mon,  8 Jun 2020 08:27:58 -0400
-Message-Id: <20200608122800.6315-1-cavery@redhat.com>
+Subject: [PATCH kvm-unit-tests 1/2] svm: Add ability to execute test via test_run on a vcpu other than vcpu 0
+Date:   Mon,  8 Jun 2020 08:27:59 -0400
+Message-Id: <20200608122800.6315-2-cavery@redhat.com>
+In-Reply-To: <20200608122800.6315-1-cavery@redhat.com>
+References: <20200608122800.6315-1-cavery@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
@@ -57,19 +61,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-INIT intercept test and the ability to execute test_run
-on a selected vcpu.
+When running tests that can result in a vcpu being left in an
+indeterminate state it is useful to be able to run the test on
+a vcpu other than 0. This patch allows test_run to be executed
+on any vcpu indicated by the on_vcpu member of the svm_test struct.
+The initialized state of the vcpu0 registers used to populate the
+vmcb is carried forward to the other vcpus.
 
-Cathy Avery (2):
-  svm: Add ability to execute test via test_run on a vcpu other than
-    vcpu 0
-  svm: INIT intercept test
+Signed-off-by: Cathy Avery <cavery@redhat.com>
+---
+ x86/svm.c | 49 ++++++++++++++++++++++++++++++++++++++++++++++++-
+ x86/svm.h | 13 +++++++++++++
+ 2 files changed, 61 insertions(+), 1 deletion(-)
 
- x86/svm.c       | 49 ++++++++++++++++++++++++++++++++++++++++++++++++-
- x86/svm.h       | 13 +++++++++++++
- x86/svm_tests.c | 40 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 101 insertions(+), 1 deletion(-)
-
+diff --git a/x86/svm.c b/x86/svm.c
+index 41685bf..9f7ae7e 100644
+--- a/x86/svm.c
++++ b/x86/svm.c
+@@ -367,6 +367,45 @@ test_wanted(const char *name, char *filters[], int filter_count)
+         }
+ }
+ 
++static void set_additional_vpcu_regs(struct extra_vcpu_info *info)
++{
++    wrmsr(MSR_VM_HSAVE_PA, info->hsave);
++    wrmsr(MSR_EFER, rdmsr(MSR_EFER) | EFER_SVME);
++    wrmsr(MSR_EFER, rdmsr(MSR_EFER) | EFER_NX);
++    write_cr3(info->cr3);
++    write_cr4(info->cr4);
++    write_cr0(info->cr0);
++    write_dr6(info->dr6);
++    write_dr7(info->dr7);
++    write_cr2(info->cr2);
++    wrmsr(MSR_IA32_CR_PAT, info->g_pat);
++    wrmsr(MSR_IA32_DEBUGCTLMSR, info->dbgctl);
++}
++
++static void get_additional_vcpu_regs(struct extra_vcpu_info *info)
++{
++    info->hsave = rdmsr(MSR_VM_HSAVE_PA);
++    info->cr3 = read_cr3();
++    info->cr4 = read_cr4();
++    info->cr0 = read_cr0();
++    info->dr7 = read_dr7();
++    info->dr6 = read_dr6();
++    info->cr2 = read_cr2();
++    info->g_pat = rdmsr(MSR_IA32_CR_PAT);
++    info->dbgctl = rdmsr(MSR_IA32_DEBUGCTLMSR);
++}
++
++static void init_additional_vcpu_regs(void)
++{
++    int i;
++    struct extra_vcpu_info info;
++
++    get_additional_vcpu_regs(&info);
++
++    for (i = 1; i < cpu_count(); i++)
++        on_cpu(i, (void *)set_additional_vpcu_regs, &info);
++}
++
+ int main(int ac, char **av)
+ {
+ 	int i = 0;
+@@ -384,6 +423,8 @@ int main(int ac, char **av)
+ 
+ 	setup_svm();
+ 
++        init_additional_vcpu_regs();
++
+ 	vmcb = alloc_page();
+ 
+ 	for (; svm_tests[i].name != NULL; i++) {
+@@ -392,7 +433,13 @@ int main(int ac, char **av)
+ 		if (svm_tests[i].supported && !svm_tests[i].supported())
+ 			continue;
+ 		if (svm_tests[i].v2 == NULL) {
+-			test_run(&svm_tests[i]);
++			if (svm_tests[i].on_vcpu) {
++				if (cpu_count() <= svm_tests[i].on_vcpu)
++					continue;
++				on_cpu(svm_tests[i].on_vcpu, (void *)test_run, &svm_tests[i]);
++			}
++			else
++				test_run(&svm_tests[i]);
+ 		} else {
+ 			vmcb_ident(vmcb);
+ 			v2_test = &(svm_tests[i]);
+diff --git a/x86/svm.h b/x86/svm.h
+index 645deb7..d023a32 100644
+--- a/x86/svm.h
++++ b/x86/svm.h
+@@ -338,6 +338,7 @@ struct svm_test {
+ 	ulong scratch;
+ 	/* Alternative test interface. */
+ 	void (*v2)(void);
++	int on_vcpu;
+ };
+ 
+ struct regs {
+@@ -360,6 +361,18 @@ struct regs {
+ 	u64 rflags;
+ };
+ 
++struct extra_vcpu_info {
++	u64 hsave;
++	u64 cr3;
++	u64 cr4;
++	u64 cr0;
++	u64 dr7;
++	u64 dr6;
++	u64 cr2;
++	u64 g_pat;
++	u64 dbgctl;
++};
++
+ typedef void (*test_guest_func)(struct svm_test *);
+ 
+ u64 *npt_get_pte(u64 address);
 -- 
 2.20.1
 
