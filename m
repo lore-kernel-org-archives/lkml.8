@@ -2,301 +2,214 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED8EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC79DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44ED62083E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:03:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C502F208B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:04:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ibhuqKC5"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D9fTI1IW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730083AbgFHSD0 (ORCPT
+        id S1730175AbgFHSEC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 14:03:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47138 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729827AbgFHSDZ (ORCPT
+        Mon, 8 Jun 2020 14:04:02 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53053 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729843AbgFHSEB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 14:03:25 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBE0EC08C5C2;
-        Mon,  8 Jun 2020 11:03:25 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id ne5so157181pjb.5;
-        Mon, 08 Jun 2020 11:03:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=GeRA3EczrVklFeQkto1N+CGMtbQRIWePjBzYeQl41iQ=;
-        b=ibhuqKC5D7PbWd38N11DgQgVajEu06dMIx4r6UJX+jl187YfWd23pfReQUxhWMYAV0
-         yqOZyBnCkEjAgPd7UMCKfH/MKZQd3WW5WGF1De/aSFoeiTci1F42nzJUYgNTaXQYoSB+
-         IOAmVZ/hNQPjDdhqYaZClQJu3l2CTBvjqT0lQCnnpOYXmW+F/qxw0iUCS8fou/+ZM2Df
-         Igy6qc48NsqqLZG4ZBT05ScPlkXZstWwjIR1s9zGHyr8K8Qo843od8pkaUAan+3UdMDu
-         2DgQrEfAYTT/COKzzvSUEMN1gEZF5r+K6m2WkllS9sDr2yy++Tm9MxmipxLl7qvCGI6w
-         FERw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=GeRA3EczrVklFeQkto1N+CGMtbQRIWePjBzYeQl41iQ=;
-        b=agcucTFQGCyt1jtz61MMiWPFdftTs4r08j42+zH3BSn2eU8XYUffS9uUGLwlFsPUUL
-         W4U0VV9lTm10qTFiS28AslCQepYq+63qQtFTyKVJTWUIPDAtZCxbfDUpbv+MIkzmHR8D
-         B0YTbnKvoyAKalBivyYZDQoJH9L1fI8n0DMqQIYltqI1MNkQhB6hDukXszKMdxZq5S10
-         vwLpG2+B7QJhlo7vwW6ErseJcnzApL5c+MKHLIO3poOXtmBca9Oq9ihaoutcseYGreX1
-         x5RLUYYeREV7oa293qkJg8C4eQsIfzwbN4w9thIZvAd4sFF32caOQ8e08ndxTJJrfj/d
-         m4Ng==
-X-Gm-Message-State: AOAM53087TDPlLO2eW0XeSSFQ1m+a2svzkzExPydMjRCpXOGNZzR+xNa
-        RcSC0baMyrKfyBuX1g0zXIR7gZf8
-X-Google-Smtp-Source: ABdhPJyNG7LC4ULyzjxEAhb3BFIfgpWXbA0C7dwCIUwrAKfGe01qzhv6iWGuT42Semyu5gBEqbm2wA==
-X-Received: by 2002:a17:902:b60e:: with SMTP id b14mr22117pls.81.1591639405153;
-        Mon, 08 Jun 2020 11:03:25 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id y4sm7835613pfr.182.2020.06.08.11.03.23
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 08 Jun 2020 11:03:24 -0700 (PDT)
-Date:   Mon, 8 Jun 2020 11:03:22 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Subject: Re: [PATCH] kbuild: fix broken builds because of GZIP,BZIP2,LZOP
- variables
-Message-ID: <20200608180322.GA20788@roeck-us.net>
+        Mon, 8 Jun 2020 14:04:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591639439;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=uw5NjJ0WopWX8Tckd6/nHTcQhEVOsQbonk1220jJm6A=;
+        b=D9fTI1IW3bvq2obozeWrpvNTqCyeK7j7sa1GVbd3Vl4DH0ZkXpG1d9SEM18UrJotlvSisA
+        4W6Yjblw3JzQOaEVZSPMx4F3JI7tl6NLgbeKu9HGydcpwW7ucnyoEeAg2xw3djxfsrBdhp
+        CFEE0kZnlETzWYzAGQX38wCmqzSuf+k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-170-mA0IjPaLOdWDFywZFnhrIg-1; Mon, 08 Jun 2020 14:03:52 -0400
+X-MC-Unique: mA0IjPaLOdWDFywZFnhrIg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6FAD91005510;
+        Mon,  8 Jun 2020 18:03:49 +0000 (UTC)
+Received: from madcap2.tricolour.ca (unknown [10.10.110.54])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9756760BF3;
+        Mon,  8 Jun 2020 18:03:33 +0000 (UTC)
+Date:   Mon, 8 Jun 2020 14:03:30 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>, nhorman@tuxdriver.com,
+        linux-api@vger.kernel.org, containers@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
+        linux-audit@redhat.com, netfilter-devel@vger.kernel.org,
+        simo@redhat.com, netdev@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
+        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
+Subject: Re: [PATCH ghak90 V8 07/16] audit: add contid support for signalling
+ the audit daemon
+Message-ID: <20200608180330.z23hohfa2nclhxf5@madcap2.tricolour.ca>
+References: <20200330134705.jlrkoiqpgjh3rvoh@madcap2.tricolour.ca>
+ <CAHC9VhQTsEMcYAF1CSHrrVn07DR450W9j6sFVfKAQZ0VpheOfw@mail.gmail.com>
+ <20200330162156.mzh2tsnovngudlx2@madcap2.tricolour.ca>
+ <CAHC9VhTRzZXJ6yUFL+xZWHNWZFTyiizBK12ntrcSwmgmySbkWw@mail.gmail.com>
+ <20200330174937.xalrsiev7q3yxsx2@madcap2.tricolour.ca>
+ <CAHC9VhR_bKSHDn2WAUgkquu+COwZUanc0RV3GRjMDvpoJ5krjQ@mail.gmail.com>
+ <871ronf9x2.fsf@x220.int.ebiederm.org>
+ <CAHC9VhR3gbmj5+5MY-whLtStKqDEHgvMRigU9hW0X1kpxF91ag@mail.gmail.com>
+ <871rol7nw3.fsf@x220.int.ebiederm.org>
+ <CAHC9VhQvhja=vUEbT3uJgQqpj-480HZzWV7b5oc2GWtzFN1qJw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAHC9VhQvhja=vUEbT3uJgQqpj-480HZzWV7b5oc2GWtzFN1qJw@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 12:59:44PM +0300, Denis Efremov wrote:
-> Redefine GZIP, BZIP2, LZOP variables as KGZIP, KBZIP2, KLZOP resp.
-> GZIP, BZIP2, LZOP env variables are reserved by the tools. The original
-> attempt to redefine them internally doesn't work in makefiles/scripts
-> intercall scenarios, e.g., "make GZIP=gzip bindeb-pkg" and results in
-> broken builds. There can be other broken build commands because of this,
-> so the universal solution is to use non-reserved env variables for the
-> compression tools.
+On 2020-04-22 13:24, Paul Moore wrote:
+> On Fri, Apr 17, 2020 at 6:26 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+> > Paul Moore <paul@paul-moore.com> writes:
+> > > On Thu, Apr 16, 2020 at 4:36 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+> > >> Paul Moore <paul@paul-moore.com> writes:
+> > >> > On Mon, Mar 30, 2020 at 1:49 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > >> >> On 2020-03-30 13:34, Paul Moore wrote:
+> > >> >> > On Mon, Mar 30, 2020 at 12:22 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > >> >> > > On 2020-03-30 10:26, Paul Moore wrote:
+> > >> >> > > > On Mon, Mar 30, 2020 at 9:47 AM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > >> >> > > > > On 2020-03-28 23:11, Paul Moore wrote:
+> > >> >> > > > > > On Tue, Mar 24, 2020 at 5:02 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > >> >> > > > > > > On 2020-03-23 20:16, Paul Moore wrote:
+> > >> >> > > > > > > > On Thu, Mar 19, 2020 at 6:03 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > >> >> > > > > > > > > On 2020-03-18 18:06, Paul Moore wrote:
+> > >> >
+> > >> > ...
+> > >> >
+> > >> >> > > Well, every time a record gets generated, *any* record gets generated,
+> > >> >> > > we'll need to check for which audit daemons this record is in scope and
+> > >> >> > > generate a different one for each depending on the content and whether
+> > >> >> > > or not the content is influenced by the scope.
+> > >> >> >
+> > >> >> > That's the problem right there - we don't want to have to generate a
+> > >> >> > unique record for *each* auditd on *every* record.  That is a recipe
+> > >> >> > for disaster.
+> > >> >> >
+> > >> >> > Solving this for all of the known audit records is not something we
+> > >> >> > need to worry about in depth at the moment (although giving it some
+> > >> >> > casual thought is not a bad thing), but solving this for the audit
+> > >> >> > container ID information *is* something we need to worry about right
+> > >> >> > now.
+> > >> >>
+> > >> >> If you think that a different nested contid value string per daemon is
+> > >> >> not acceptable, then we are back to issuing a record that has only *one*
+> > >> >> contid listed without any nesting information.  This brings us back to
+> > >> >> the original problem of keeping *all* audit log history since the boot
+> > >> >> of the machine to be able to track the nesting of any particular contid.
+> > >> >
+> > >> > I'm not ruling anything out, except for the "let's just completely
+> > >> > regenerate every record for each auditd instance".
+> > >>
+> > >> Paul I am a bit confused about what you are referring to when you say
+> > >> regenerate every record.
+> > >>
+> > >> Are you saying that you don't want to repeat the sequence:
+> > >>         audit_log_start(...);
+> > >>         audit_log_format(...);
+> > >>         audit_log_end(...);
+> > >> for every nested audit daemon?
+> > >
+> > > If it can be avoided yes.  Audit performance is already not-awesome,
+> > > this would make it even worse.
+> >
+> > As far as I can see not repeating sequences like that is fundamental
+> > for making this work at all.  Just because only the audit subsystem
+> > should know about one or multiple audit daemons.  Nothing else should
+> > care.
 > 
-> Fixes: 8dfb61dcbace ("kbuild: add variables for compression tools")
-> Signed-off-by: Denis Efremov <efremov@linux.com>
+> Yes, exactly, this has been mentioned in the past.  Both the
+> performance hit and the code complication in the caller are things we
+> must avoid.
+> 
+> > >> Or are you saying that you would like to literraly want to send the same
+> > >> skb to each of the nested audit daemons?
+> > >
+> > > Ideally we would reuse the generated audit messages as much as
+> > > possible.  Less work is better.  That's really my main concern here,
+> > > let's make sure we aren't going to totally tank performance when we
+> > > have a bunch of nested audit daemons.
+> >
+> > So I think there are two parts of this answer.  Assuming we are talking
+> > about nesting audit daemons in containers we will have different
+> > rulesets and I expect most of the events for a nested audit daemon won't
+> > be of interest to the outer audit daemon.
+> 
+> Yes, this is another thing that Richard and I have discussed in the
+> past.  We will basically need to create per-daemon queues, rules,
+> tracking state, etc.; that is easy enough.  What will be slightly more
+> tricky is the part where we apply the filters to the individual
+> records and decide if that record is valid/desired for a given daemon.
+> I think it can be done without too much pain, and any changes to the
+> callers, but it will require a bit of work to make sure it is done
+> well and that records are needlessly duplicated in the kernel.
+> 
+> > Beyond that it should be very straight forward to keep a pointer and
+> > leave the buffer as a scatter gather list until audit_log_end
+> > and translate pids, and rewrite ACIDs attributes in audit_log_end
+> > when we build the final packet.  Either through collaboration with
+> > audit_log_format or a special audit_log command that carefully sets
+> > up the handful of things that need that information.
+> 
+> In order to maximize record re-use I think we will want to hold off on
+> assembling the final packet until it is sent to the daemons in the
+> kauditd thread.  We'll also likely need to create special
+> audit_log_XXX functions to capture fields which we know will need
+> translation, e.g. ACID information.  (the reason for the new
+> audit_log_XXX functions would be to mark the new sg element and ensure
+> the buffer is handled correctly)
+> 
+> Regardless of the details, I think the scatter gather approach is the
+> key here - that seems like the best design idea I've seen thus far.
+> It enables us to replace portions of the record as needed ... and
+> possibly use the existing skb cow stuff ... it has been a while, but
+> does the skb cow functions handle scatter gather skbs or do they need
+> to be linear?
 
-Tested-by: Guenter Roeck <linux@roeck-us.net>
+How does the selection of this data management technique affect our
+choice of field format?  Does this lock the field value to a fixed
+length?  Does the use of scatter/gather techniques or structures allow
+the use of different lengths of data for each destination (auditd)?  I
+could see different target audit daemons triggering or switching to a
+different chunk of data and length.  This does raise a concern related
+to the previous sig_info2 discussion that the struct contobj that exists
+at the time of audit_log_exit called could have been reaped by the time
+the buffer is pulled from the queue for transmission to auditd, but we
+could hold a reference to it as is done for sig_info2.
 
-> ---
->  Makefile                          | 24 +++++-------------------
->  arch/arm/boot/deflate_xip_data.sh |  2 +-
->  arch/ia64/Makefile                |  2 +-
->  arch/m68k/Makefile                |  8 ++++----
->  arch/parisc/Makefile              |  2 +-
->  scripts/Makefile.lib              |  6 +++---
->  scripts/Makefile.package          |  6 +++---
->  scripts/package/buildtar          |  4 ++--
->  8 files changed, 20 insertions(+), 34 deletions(-)
-> 
-> diff --git a/Makefile b/Makefile
-> index 839f9fee22cb..e43d193bb3b2 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -458,27 +458,13 @@ PYTHON		= python
->  PYTHON3		= python3
->  CHECK		= sparse
->  BASH		= bash
-> -GZIP		= gzip
-> -BZIP2		= bzip2
-> -LZOP		= lzop
-> +KGZIP		= gzip
-> +KBZIP2		= bzip2
-> +KLZOP		= lzop
->  LZMA		= lzma
->  LZ4		= lz4c
->  XZ		= xz
->  
-> -# GZIP, BZIP2, LZOP env vars are used by the tools. Support them as the command
-> -# line interface, but use _GZIP, _BZIP2, _LZOP internally.
-> -_GZIP          := $(GZIP)
-> -_BZIP2         := $(BZIP2)
-> -_LZOP          := $(LZOP)
-> -
-> -# Reset GZIP, BZIP2, LZOP in this Makefile
-> -override GZIP=
-> -override BZIP2=
-> -override LZOP=
-> -
-> -# Reset GZIP, BZIP2, LZOP in recursive invocations
-> -MAKEOVERRIDES += GZIP= BZIP2= LZOP=
-> -
->  CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
->  		  -Wbitwise -Wno-return-void -Wno-unknown-attribute $(CF)
->  NOSTDINC_FLAGS :=
-> @@ -526,7 +512,7 @@ CLANG_FLAGS :=
->  export ARCH SRCARCH CONFIG_SHELL BASH HOSTCC KBUILD_HOSTCFLAGS CROSS_COMPILE LD CC
->  export CPP AR NM STRIP OBJCOPY OBJDUMP OBJSIZE READELF PAHOLE LEX YACC AWK INSTALLKERNEL
->  export PERL PYTHON PYTHON3 CHECK CHECKFLAGS MAKE UTS_MACHINE HOSTCXX
-> -export _GZIP _BZIP2 _LZOP LZMA LZ4 XZ
-> +export KGZIP KBZIP2 KLZOP LZMA LZ4 XZ
->  export KBUILD_HOSTCXXFLAGS KBUILD_HOSTLDFLAGS KBUILD_HOSTLDLIBS LDFLAGS_MODULE
->  
->  export KBUILD_CPPFLAGS NOSTDINC_FLAGS LINUXINCLUDE OBJCOPYFLAGS KBUILD_LDFLAGS
-> @@ -1047,7 +1033,7 @@ export mod_strip_cmd
->  mod_compress_cmd = true
->  ifdef CONFIG_MODULE_COMPRESS
->    ifdef CONFIG_MODULE_COMPRESS_GZIP
-> -    mod_compress_cmd = $(_GZIP) -n -f
-> +    mod_compress_cmd = $(KGZIP) -n -f
->    endif # CONFIG_MODULE_COMPRESS_GZIP
->    ifdef CONFIG_MODULE_COMPRESS_XZ
->      mod_compress_cmd = $(XZ) -f
-> diff --git a/arch/arm/boot/deflate_xip_data.sh b/arch/arm/boot/deflate_xip_data.sh
-> index 739f0464321e..304495c3c2c5 100755
-> --- a/arch/arm/boot/deflate_xip_data.sh
-> +++ b/arch/arm/boot/deflate_xip_data.sh
-> @@ -56,7 +56,7 @@ trap 'rm -f "$XIPIMAGE.tmp"; exit 1' 1 2 3
->  # substitute the data section by a compressed version
->  $DD if="$XIPIMAGE" count=$data_start iflag=count_bytes of="$XIPIMAGE.tmp"
->  $DD if="$XIPIMAGE"  skip=$data_start iflag=skip_bytes |
-> -$_GZIP -9 >> "$XIPIMAGE.tmp"
-> +$KGZIP -9 >> "$XIPIMAGE.tmp"
->  
->  # replace kernel binary
->  mv -f "$XIPIMAGE.tmp" "$XIPIMAGE"
-> diff --git a/arch/ia64/Makefile b/arch/ia64/Makefile
-> index f817f3d5e758..2876a7df1b0a 100644
-> --- a/arch/ia64/Makefile
-> +++ b/arch/ia64/Makefile
-> @@ -40,7 +40,7 @@ $(error Sorry, you need a newer version of the assember, one that is built from
->  endif
->  
->  quiet_cmd_gzip = GZIP    $@
-> -cmd_gzip = cat $(real-prereqs) | $(_GZIP) -n -f -9 > $@
-> +cmd_gzip = cat $(real-prereqs) | $(KGZIP) -n -f -9 > $@
->  
->  quiet_cmd_objcopy = OBJCOPY $@
->  cmd_objcopy = $(OBJCOPY) $(OBJCOPYFLAGS) $(OBJCOPYFLAGS_$(@F)) $< $@
-> diff --git a/arch/m68k/Makefile b/arch/m68k/Makefile
-> index ce6db5e5a5a3..0415d28dbe4f 100644
-> --- a/arch/m68k/Makefile
-> +++ b/arch/m68k/Makefile
-> @@ -135,10 +135,10 @@ vmlinux.gz: vmlinux
->  ifndef CONFIG_KGDB
->  	cp vmlinux vmlinux.tmp
->  	$(STRIP) vmlinux.tmp
-> -	$(_GZIP) -9c vmlinux.tmp >vmlinux.gz
-> +	$(KGZIP) -9c vmlinux.tmp >vmlinux.gz
->  	rm vmlinux.tmp
->  else
-> -	$(_GZIP) -9c vmlinux >vmlinux.gz
-> +	$(KGZIP) -9c vmlinux >vmlinux.gz
->  endif
->  
->  bzImage: vmlinux.bz2
-> @@ -148,10 +148,10 @@ vmlinux.bz2: vmlinux
->  ifndef CONFIG_KGDB
->  	cp vmlinux vmlinux.tmp
->  	$(STRIP) vmlinux.tmp
-> -	$(_BZIP2) -1c vmlinux.tmp >vmlinux.bz2
-> +	$(KBZIP2) -1c vmlinux.tmp >vmlinux.bz2
->  	rm vmlinux.tmp
->  else
-> -	$(_BZIP2) -1c vmlinux >vmlinux.bz2
-> +	$(KBZIP2) -1c vmlinux >vmlinux.bz2
->  endif
->  
->  archclean:
-> diff --git a/arch/parisc/Makefile b/arch/parisc/Makefile
-> index 182a5bca3e2c..5140c602207f 100644
-> --- a/arch/parisc/Makefile
-> +++ b/arch/parisc/Makefile
-> @@ -162,7 +162,7 @@ vmlinuz: bzImage
->  	$(OBJCOPY) $(boot)/bzImage $@
->  else
->  vmlinuz: vmlinux
-> -	@$(_GZIP) -cf -9 $< > $@
-> +	@$(KGZIP) -cf -9 $< > $@
->  endif
->  
->  install:
-> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-> index 127f2a7e3ced..94eeddb2e599 100644
-> --- a/scripts/Makefile.lib
-> +++ b/scripts/Makefile.lib
-> @@ -244,7 +244,7 @@ cmd_objcopy = $(OBJCOPY) $(OBJCOPYFLAGS) $(OBJCOPYFLAGS_$(@F)) $< $@
->  # ---------------------------------------------------------------------------
->  
->  quiet_cmd_gzip = GZIP    $@
-> -      cmd_gzip = cat $(real-prereqs) | $(_GZIP) -n -f -9 > $@
-> +      cmd_gzip = cat $(real-prereqs) | $(KGZIP) -n -f -9 > $@
->  
->  # DTC
->  # ---------------------------------------------------------------------------
-> @@ -337,7 +337,7 @@ printf "%08x\n" $$dec_size |						\
->  )
->  
->  quiet_cmd_bzip2 = BZIP2   $@
-> -      cmd_bzip2 = { cat $(real-prereqs) | $(_BZIP2) -9; $(size_append); } > $@
-> +      cmd_bzip2 = { cat $(real-prereqs) | $(KBZIP2) -9; $(size_append); } > $@
->  
->  # Lzma
->  # ---------------------------------------------------------------------------
-> @@ -346,7 +346,7 @@ quiet_cmd_lzma = LZMA    $@
->        cmd_lzma = { cat $(real-prereqs) | $(LZMA) -9; $(size_append); } > $@
->  
->  quiet_cmd_lzo = LZO     $@
-> -      cmd_lzo = { cat $(real-prereqs) | $(_LZOP) -9; $(size_append); } > $@
-> +      cmd_lzo = { cat $(real-prereqs) | $(KLZOP) -9; $(size_append); } > $@
->  
->  quiet_cmd_lz4 = LZ4     $@
->        cmd_lz4 = { cat $(real-prereqs) | $(LZ4) -l -c1 stdin stdout; \
-> diff --git a/scripts/Makefile.package b/scripts/Makefile.package
-> index b2b6153af63a..f952fb64789d 100644
-> --- a/scripts/Makefile.package
-> +++ b/scripts/Makefile.package
-> @@ -45,7 +45,7 @@ if test "$(objtree)" != "$(srctree)"; then \
->  	false; \
->  fi ; \
->  $(srctree)/scripts/setlocalversion --save-scmversion; \
-> -tar -I $(_GZIP) -c $(RCS_TAR_IGNORE) -f $(2).tar.gz \
-> +tar -I $(KGZIP) -c $(RCS_TAR_IGNORE) -f $(2).tar.gz \
->  	--transform 's:^:$(2)/:S' $(TAR_CONTENT) $(3); \
->  rm -f $(objtree)/.scmversion
->  
-> @@ -127,8 +127,8 @@ util/PERF-VERSION-GEN $(CURDIR)/$(perf-tar)/);              \
->  tar rf $(perf-tar).tar $(perf-tar)/HEAD $(perf-tar)/PERF-VERSION-FILE; \
->  rm -r $(perf-tar);                                                  \
->  $(if $(findstring tar-src,$@),,                                     \
-> -$(if $(findstring bz2,$@),$(_BZIP2),                                 \
-> -$(if $(findstring gz,$@),$(_GZIP),                                  \
-> +$(if $(findstring bz2,$@),$(KBZIP2),                                 \
-> +$(if $(findstring gz,$@),$(KGZIP),                                  \
->  $(if $(findstring xz,$@),$(XZ),                                     \
->  $(error unknown target $@))))                                       \
->  	-f -9 $(perf-tar).tar)
-> diff --git a/scripts/package/buildtar b/scripts/package/buildtar
-> index ad62c6879622..fb1578e72ab9 100755
-> --- a/scripts/package/buildtar
-> +++ b/scripts/package/buildtar
-> @@ -28,11 +28,11 @@ case "${1}" in
->  		opts=
->  		;;
->  	targz-pkg)
-> -		opts="-I ${_GZIP}"
-> +		opts="-I ${KGZIP}"
->  		tarball=${tarball}.gz
->  		;;
->  	tarbz2-pkg)
-> -		opts="-I ${_BZIP2}"
-> +		opts="-I ${KBZIP2}"
->  		tarball=${tarball}.bz2
->  		;;
->  	tarxz-pkg)
-> -- 
-> 2.26.2
-> 
+Looking through the kernel scatter/gather possibilities, I see struct
+iovec which is used by the readv/writev/preadv/pwritev syscalls, but I'm
+understanding that this is a kernel implementation that will be not
+visible to user space.  So would the struct scatterlist be the right
+choice?
+
+> paul moore
+
+- RGB
+
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
+
