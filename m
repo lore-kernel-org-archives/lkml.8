@@ -2,106 +2,214 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46652C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F23AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:51:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D987206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:51:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47611206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:51:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EBZG0FZn"
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="zXeep99q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729044AbgFHMvZ (ORCPT
+        id S1729129AbgFHMvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 08:51:25 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:28471 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728007AbgFHMvX (ORCPT
+        Mon, 8 Jun 2020 08:51:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55386 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729067AbgFHMvt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 08:51:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591620681;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=NVMeqLaZj5lyXYDnWx/hOG/1m/ddxwQgh2GukSpwT7M=;
-        b=EBZG0FZnhii4SzWsAn7JuZPxiddtEkA1kagbpkd8f1vvUULIdwCkzYug4dPhrp9w/7Dqqa
-        QfYdrezc5n2Zms4W4FFt9ainiVlDpZlCNfCGyH9NXGXVUvYcSegqKSnXYOgJJCcg4sU34i
-        G9Crda2O3sgTTqujcYejoG8pnOmAL4g=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-299-6do5kTHKP92CdjjlpjiwCQ-1; Mon, 08 Jun 2020 08:51:20 -0400
-X-MC-Unique: 6do5kTHKP92CdjjlpjiwCQ-1
-Received: by mail-ej1-f71.google.com with SMTP id m22so6060233ejn.4
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 05:51:19 -0700 (PDT)
+        Mon, 8 Jun 2020 08:51:49 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63A0FC08C5C4
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 05:51:48 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id u26so14222639wmn.1
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 05:51:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=RQ9IkLJcPxxdwMnFNgYtyz5I6q1qTuVmz3PvLx350Z0=;
+        b=zXeep99q/zbX8e2PLLd3XsP4HTRGYC1t27NxGAJMM2uonq6XDmzM0TsgQBTDiGBWKP
+         g7You/eCsit/qWUBiHXrazPa9h0KXliXBIe0ct+XR1B2sVMxL2ZLEJj09X+f5tUBNQgr
+         b0caMvDYzHLwVott4fOSJp4q6uBRwD5vJkC2ruqWHkkIbivcLu9SeGmX/Z1SYSPhDrWY
+         D5rrKt3hmMIkskkc0R9CzAajVLtWyxUL0sYtfF3XFIPEVOj0isFom72JNqVkb+lqDaY0
+         DjOKra/jBIPxsRlMPg93/AUhqxSCDCbQkTFgfl0rFrLOowS81RGfWyOQeNx7RArkxscL
+         WcZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=NVMeqLaZj5lyXYDnWx/hOG/1m/ddxwQgh2GukSpwT7M=;
-        b=WGTYIEWqPSc5YczSg8SbkJdX/dIIBveT/6q7s3kjZrEmL5X6FU4BtwMkEkNqWChW2c
-         O8loglfaQ5bNgleLTscAK2AWXiq8P7s60vFWqryTUMOFxbxbBHXqWPVDCw+9I5cb9/DZ
-         Ju9HclwWzLKXtBdllk/iHGvGX1ifXDhWp1SfmMnbLceFe3p8IwXs/ry7V4N1DcLngHAX
-         q4RkctzbyxkhY1vhShDBB6VFOHWkNj5aFPt3Xf0NdiaQfPLkP9padjLYZLOVHG+gYHJO
-         q8ynvsBT64w/W3UPt1aV7LVnCvovK7XCOIPxXpmQD2PGMzVCVFHASXAK8/leqFJOdYJD
-         4c8Q==
-X-Gm-Message-State: AOAM531Ev3Lq/Bw0183QHUqJNG7NakV7y0f5m9Wht0XlMwXUNcWnNL7J
-        slVwdekwbLxQD4klLntxRE7i9yxcuTOkWxa3AYqeEtx6XsDuu8bImgxWI8zAT/dvO76WWWZ6IZo
-        rsZRPzqrQZ1w7B3lBsmeER2RH
-X-Received: by 2002:a17:906:5c0a:: with SMTP id e10mr6274850ejq.389.1591620678814;
-        Mon, 08 Jun 2020 05:51:18 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwwznb3Q7pGSNhjg8K3PzgwiJgh47LL1CoCkfvLhLC73i7kpFcsGfbIbjtXZtfhoqoraDN5Qg==
-X-Received: by 2002:a17:906:5c0a:: with SMTP id e10mr6274841ejq.389.1591620678637;
-        Mon, 08 Jun 2020 05:51:18 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id ok21sm9905881ejb.82.2020.06.08.05.51.17
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=RQ9IkLJcPxxdwMnFNgYtyz5I6q1qTuVmz3PvLx350Z0=;
+        b=R+0DcqQvX3JHXnSgP7nCzvD1fIIqCG1skHz1L2AQUs4OXWXrby3K29sVcH/Dr8JAig
+         2awzp1/iCNrVmUo5JB6UAeaSfr5UUT6vHp25RHsDiQ66J5EuK4QZVuiMz4dmX0GHnC9I
+         LSoIUhRjWB4g56s7IsDJJruIU9hMSuQjWigKeFqcRPLIx10jz7tA9xSzgCA6xp4z3SJJ
+         uCoVcKNWPORPA6a/R5LG40ENl8jAG5ZJqOcgDqvNr4q0vxP1ff/eZtd6QGRmTX2gK8/M
+         UL4eru+3TqPKfWBzEmGLSufGrO45Ojh/rt1IZ43tsNac4E3YjnpYGWKAVHHuR5cuLss/
+         NAIg==
+X-Gm-Message-State: AOAM530Oqs/pBmIpYvMHoNg60UVVtC0b6Ng6Zl5k271NjUVYa6AoQ9LE
+        wMew0Xn5g3EP1bv/MIoZ1GXLNQ==
+X-Google-Smtp-Source: ABdhPJy9T0TdAgpweJ8YNtjyu1W96KCySc0VhJEpsiNZJNGp3RqKAYy1y6XC1kHyqBYRgOyvbVWufQ==
+X-Received: by 2002:a1c:2943:: with SMTP id p64mr15869799wmp.42.1591620706816;
+        Mon, 08 Jun 2020 05:51:46 -0700 (PDT)
+Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
+        by smtp.gmail.com with ESMTPSA id z25sm22021479wmf.10.2020.06.08.05.51.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 05:51:18 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Qian Cai <cai@lca.pw>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [PATCH] KVM: SVM: fix calls to is_intercept
-In-Reply-To: <20200608121428.9214-1-pbonzini@redhat.com>
-References: <20200608121428.9214-1-pbonzini@redhat.com>
-Date:   Mon, 08 Jun 2020 14:51:17 +0200
-Message-ID: <87wo4hbu0q.fsf@vitty.brq.redhat.com>
+        Mon, 08 Jun 2020 05:51:46 -0700 (PDT)
+Date:   Mon, 8 Jun 2020 14:51:43 +0200
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Tony Lindgren <tony@atomide.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@beagleboard.org>
+Subject: [PATCH v2] pinctrl-single: fix pcs_parse_pinconf() return value
+Message-ID: <20200608125143.GA2789203@x1>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Paolo Bonzini <pbonzini@redhat.com> writes:
+This patch causes pcs_parse_pinconf() to return -ENOTSUPP when no
+pinctrl_map is added.  The current behavior is to return 0 when
+!PCS_HAS_PINCONF or !nconfs.  Thus pcs_parse_one_pinctrl_entry()
+incorrectly assumes that a map was added and sets num_maps = 2.
 
-> is_intercept takes an INTERCEPT_* constant, not SVM_EXIT_*; because
-> of this, the compiler was removing the body of the conditionals,
-> as if is_intercept returned 0.
->
-> This unveils a latent bug: when clearing the VINTR intercept,
-> int_ctl must also be changed in the L1 VMCB (svm->nested.hsave),
-> just like the intercept itself is also changed in the L1 VMCB.
-> Otherwise V_IRQ remains set and, due to the VINTR intercept being clear,
-> we get a spurious injection of a vector 0 interrupt on the next
-> L2->L1 vmexit.
->
-> Reported-by: Qian Cai <cai@lca.pw>
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
-> 	Vitaly, can you give this a shot with Hyper-V?  I have already
-> 	placed it on kvm/queue, it passes both svm.flat and KVM-on-KVM
-> 	smoke tests.
+Analysis:
+=========
+The function pcs_parse_one_pinctrl_entry() calls pcs_parse_pinconf()
+if PCS_HAS_PINCONF is enabled.  The function pcs_parse_pinconf()
+returns 0 to indicate there was no error and num_maps is then set to 2:
 
-Quickly smoke-tested this with WS2016/2019 BIOS/UEFI and the patch
-doesn't seem to break anything. I'm having issues trying to launch a
-Gen2 (UEFI) VM in Hyper-V (Gen1 works OK) but the behavior looks exactly
-the same pre- and post-patch.
+ 980 static int pcs_parse_one_pinctrl_entry(struct pcs_device *pcs,
+ 981                                                 struct device_node *np,
+ 982                                                 struct pinctrl_map **map,
+ 983                                                 unsigned *num_maps,
+ 984                                                 const char **pgnames)
+ 985 {
+<snip>
+1053         (*map)->type = PIN_MAP_TYPE_MUX_GROUP;
+1054         (*map)->data.mux.group = np->name;
+1055         (*map)->data.mux.function = np->name;
+1056
+1057         if (PCS_HAS_PINCONF && function) {
+1058                 res = pcs_parse_pinconf(pcs, np, function, map);
+1059                 if (res)
+1060                         goto free_pingroups;
+1061                 *num_maps = 2;
+1062         } else {
+1063                 *num_maps = 1;
+1064         }
 
+However, pcs_parse_pinconf() will also return 0 if !PCS_HAS_PINCONF or
+!nconfs.  I believe these conditions should indicate that no map was
+added by returning -ENOTSUPP. Otherwise pcs_parse_one_pinctrl_entry()
+will set num_maps = 2 even though no maps were successfully added, as
+it does not reach "m++" on line 940:
+
+ 895 static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
+ 896                              struct pcs_function *func,
+ 897                              struct pinctrl_map **map)
+ 898
+ 899 {
+ 900         struct pinctrl_map *m = *map;
+<snip>
+ 917         /* If pinconf isn't supported, don't parse properties in below. */
+ 918         if (!PCS_HAS_PINCONF)
+ 919                 return 0;
+ 920
+ 921         /* cacluate how much properties are supported in current node */
+ 922         for (i = 0; i < ARRAY_SIZE(prop2); i++) {
+ 923                 if (of_find_property(np, prop2[i].name, NULL))
+ 924                         nconfs++;
+ 925         }
+ 926         for (i = 0; i < ARRAY_SIZE(prop4); i++) {
+ 927                 if (of_find_property(np, prop4[i].name, NULL))
+ 928                         nconfs++;
+ 929         }
+ 930         if (!nconfs)
+ 919                 return 0;
+ 932
+ 933         func->conf = devm_kcalloc(pcs->dev,
+ 934                                   nconfs, sizeof(struct pcs_conf_vals),
+ 935                                   GFP_KERNEL);
+ 936         if (!func->conf)
+ 937                 return -ENOMEM;
+ 938         func->nconfs = nconfs;
+ 939         conf = &(func->conf[0]);
+ 940         m++;
+
+This situtation will cause a boot failure [0] on the BeagleBone Black
+(AM3358) when am33xx_pinmux node in arch/arm/boot/dts/am33xx-l4.dtsi
+has compatible = "pinconf-single" instead of "pinctrl-single".
+
+The patch fixes this issue by returning -ENOSUPP when !PCS_HAS_PINCONF
+or !nconfs, so that pcs_parse_one_pinctrl_entry() will know that no
+map was added.  
+
+Logic is also added to pcs_parse_one_pinctrl_entry() to distinguish
+between -ENOSUPP and other errors.  In the case of -ENOSUPP, num_maps
+is set to 1 as it is valid for pinconf to be enabled and a given pin
+group to not any pinconf properties.
+
+[0] https://lore.kernel.org/linux-omap/20200529175544.GA3766151@x1/
+
+Fixes: 9dddb4df90d1 ("pinctrl: single: support generic pinconf")
+Signed-off-by: Drew Fustini <drew@beagleboard.org>
+---
+changes from V1 [0]:
+- if pcs_parse_pinconf() returns -ENOSUPP, then set num_maps to 1 and
+  proceed normally as it is valid for group to have no pinconf props
+- added Fixes: tag thanks to Gustavo A. R. Silva
+
+[0] https://lore.kernel.org/linux-omap/20200531204147.GA664833@x1/
+
+ drivers/pinctrl/pinctrl-single.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
+index 1e0614daee9b..a9d511982780 100644
+--- a/drivers/pinctrl/pinctrl-single.c
++++ b/drivers/pinctrl/pinctrl-single.c
+@@ -916,7 +916,7 @@ static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
+ 
+ 	/* If pinconf isn't supported, don't parse properties in below. */
+ 	if (!PCS_HAS_PINCONF)
+-		return 0;
++		return -ENOTSUPP;
+ 
+ 	/* cacluate how much properties are supported in current node */
+ 	for (i = 0; i < ARRAY_SIZE(prop2); i++) {
+@@ -928,7 +928,7 @@ static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
+ 			nconfs++;
+ 	}
+ 	if (!nconfs)
+-		return 0;
++		return -ENOTSUPP;
+ 
+ 	func->conf = devm_kcalloc(pcs->dev,
+ 				  nconfs, sizeof(struct pcs_conf_vals),
+@@ -1056,9 +1056,12 @@ static int pcs_parse_one_pinctrl_entry(struct pcs_device *pcs,
+ 
+ 	if (PCS_HAS_PINCONF && function) {
+ 		res = pcs_parse_pinconf(pcs, np, function, map);
+-		if (res)
++		if (res == 0)
++			*num_maps = 2;
++		else if (res == -ENOTSUPP)
++			*num_maps = 1;
++		else
+ 			goto free_pingroups;
+-		*num_maps = 2;
+ 	} else {
+ 		*num_maps = 1;
+ 	}
 -- 
-Vitaly
-
+2.25.1
