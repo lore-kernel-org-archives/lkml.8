@@ -2,170 +2,135 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CBA6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 20:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FD88C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 20:58:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCDC82068D
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 20:57:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEBE72076C
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 20:58:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oo1e6e+n"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="16CZH6v6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbgFHU5S (ORCPT
+        id S1726749AbgFHU6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 16:57:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45930 "EHLO
+        Mon, 8 Jun 2020 16:58:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbgFHU5R (ORCPT
+        with ESMTP id S1726227AbgFHU6E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 16:57:17 -0400
-Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEB3FC08C5C2
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 13:57:16 -0700 (PDT)
-Received: by mail-qk1-x749.google.com with SMTP id a6so15418757qka.9
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 13:57:16 -0700 (PDT)
+        Mon, 8 Jun 2020 16:58:04 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 946FFC08C5C2
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 13:58:04 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id q8so18744875qkm.12
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 13:58:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=n0Z0MVW9fjL11OJnRXmUnpTQPi7wV6ggXRGNscFMQpE=;
-        b=oo1e6e+nKKXbeOsMhQCwbm6s/L45uVQdd/hGh3/yPQQOcvkOLFMzvCnGOkZ/M4dVDX
-         1oVCNc2iXN7++m4+rOZmjF0iFk1fuK/YEPAZXwUCVC7IVo878hSqVKtkRBhYi6aPbt9H
-         iIStaqx25B2k3CpwnBtkUyxXbpbpZZG/SSlqAD3nKeW/3YfkmWxbR5TyhkKstzLoqyUH
-         Yy90d3w2oPVcq4YL6lYzFLyB2mh8sXBHbuNJjNjZOutWJsBC9ylJF4mXEwj0O6IbUvHk
-         BQzUSOYm0OUb6Xnqj5jfUYvyej9eIoZCxE9ERJwYLUo7hRSehhA1kZVJC3cTkVB0YfFM
-         XHUA==
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=gAhxsPhFzj8ko5Ff5RM8OuwLL2KNe1g6ry7IsPK4YPM=;
+        b=16CZH6v6kmNHVqda0GleO/jK9emlQUk0HrH+pniwLB19gv2DmUZedX1TBvRssaAQi6
+         FGLFcjSQVlbS8QQ2KtMP2HBxTZ7HnxctjxHPpdhwsW40BsmSTmMCHVfVeXtdWN4Bi6Ju
+         s+mVt/z45r8Mr7kJ6O0XzcviuZmsZireLMRgl7efhjzxbZmm+hf8KRPbS+jgUqo9MVjn
+         3Rg3QTG2S6ZhEVm+RMyhY+gsy5ErZOIcQxerJHb/KfJJtY+0M3R//ych0Dy5ctAu0GIc
+         87PQeTQSEoRWGK8v6p/MG7KKuVW+ITxTJv7h828VKy28xF/sgTJebb9iesq6h7mzki59
+         WG6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=n0Z0MVW9fjL11OJnRXmUnpTQPi7wV6ggXRGNscFMQpE=;
-        b=AAMkx/hX0c78LVYBoux5NQ3nZqEPuUCHNd6bmbC+BJnDy7Pc7/cjY4AxwmIqB5Sil8
-         Dqv+q2fSn2V8A97Ir40Kxh7mLglon5YaK7I8nWPbeXAH1NCcSOteoSkmgDfkqxGFn2Ss
-         gH6d5KwpDrq0QnGYeFxtpSLkDx1Vn0l3j9Z8xLXpxTDlFWwJbkw8Sfk2e8EsEBGeMmmj
-         hwzgAmiTmeOvtf6e/KXdrVWa1iTL9n30wc/A2rwD+iLnccmt/rZqbsfW0fs+y5JMiJVb
-         S2s3fg7Zh0S7u4IBQpTOkvmjN1XsGb5wSJaUdH4usJH00FsBrynBWefQz1cCKZeI3hrA
-         ucRg==
-X-Gm-Message-State: AOAM531SJ6Y8zgKsfphu7C7e6plMFN31THsBwtaU+VZViWnVR/Fh6mKQ
-        G1XXC2NnUquMKTfJGwEgJaW6+xmARP/eppgQ7wg=
-X-Google-Smtp-Source: ABdhPJwVKC1j3i6Ut6j8xgrtVABDjElPORqoydWyMT9uIcnpRaKe05GOFjjqf5w7zzY2GkvtF57h3f/PX45fHBLS67A=
-X-Received: by 2002:a0c:f652:: with SMTP id s18mr597254qvm.96.1591649835537;
- Mon, 08 Jun 2020 13:57:15 -0700 (PDT)
-Date:   Mon,  8 Jun 2020 13:57:08 -0700
-In-Reply-To: <20200528072031.GA22156@willie-the-truck>
-Message-Id: <20200608205711.109418-1-ndesaulniers@google.com>
-Mime-Version: 1.0
-References: <20200528072031.GA22156@willie-the-truck>
-X-Mailer: git-send-email 2.27.0.278.ge193c7cf3a9-goog
-Subject: [PATCH v2] arm64: vdso32: add CONFIG_THUMB2_COMPAT_VDSO
-From:   Nick Desaulniers <ndesaulniers@google.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Stephen Boyd <swboyd@google.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Luis Lozano <llozano@google.com>,
-        Manoj Gupta <manojgupta@google.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gAhxsPhFzj8ko5Ff5RM8OuwLL2KNe1g6ry7IsPK4YPM=;
+        b=V2tx0gLc+cZyhaLZzqe10QhGNs7BlwyKO6AtS+77PkEJfHi/aeZDjkLpqHRauMmkwu
+         /UYB7njUJU57wki1BcmDvtUbr1iJ7pVohiFm+4GAP+74V/DUdnNYQRn0RMw/0sLWeXPr
+         oRBuQYcW3JFUEPVft9qNHeriUoLMbOl5iI9WOONA8QFrAKHb2AyDspMYIuyvlBFlNqSj
+         DloG8JV9cL+DrtvO9CM0JwzKxZuah7L/uoY5Ph/s3a+XPa6m6/tfokx7QEt0fbM2YpJ4
+         VtEpw2Ae9wwVyz+9U4ZGzRJ/7aNqukBMZTukbV1oxkQLELIYgoh7JfkSsF/WAzkIc1zO
+         MBpQ==
+X-Gm-Message-State: AOAM5307TgcI5qFz2WM041BJ1vmJK0DXbZFH5V4Lt/h8TxNXEUf8btIr
+        /dludQOoMGwxaye8aZluB2e+CgGRBEQ=
+X-Google-Smtp-Source: ABdhPJxI8g/kaTI+YUdB4Xk1DMGdnAx4W0tVDym/m03YVgr8CP0pb9duFQuz7lWNGN7rE3IPJPeIXw==
+X-Received: by 2002:a37:ac03:: with SMTP id e3mr24122797qkm.350.1591649883869;
+        Mon, 08 Jun 2020 13:58:03 -0700 (PDT)
+Received: from [192.168.0.189] ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id d193sm7950035qke.124.2020.06.08.13.58.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Jun 2020 13:58:03 -0700 (PDT)
+Subject: Re: [PATCH 4/5] soundwire: qcom: avoid dependency on CONFIG_SLIMBUS
+From:   Jonathan Marek <jonathan@marek.ca>
+To:     alsa-devel@alsa-project.org
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Sanyog Kale <sanyog.r.kale@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>
+References: <20200608204347.19685-1-jonathan@marek.ca>
+ <20200608204347.19685-5-jonathan@marek.ca>
+Message-ID: <931e8e36-63b5-2a29-1b0c-ee7f8ffbea64@marek.ca>
+Date:   Mon, 8 Jun 2020 16:58:25 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <20200608204347.19685-5-jonathan@marek.ca>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow the compat vdso (32b) to be compiled as either THUMB2 (default) or
-ARM.
+On 6/8/20 4:43 PM, Jonathan Marek wrote:
+> The driver may be used without slimbus, so don't depend on slimbus.
+> 
+> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+> ---
+>   drivers/soundwire/Kconfig | 1 -
+>   drivers/soundwire/qcom.c  | 5 +++++
+>   2 files changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/soundwire/Kconfig b/drivers/soundwire/Kconfig
+> index fa2b4ab92ed9..d121cf739090 100644
+> --- a/drivers/soundwire/Kconfig
+> +++ b/drivers/soundwire/Kconfig
+> @@ -33,7 +33,6 @@ config SOUNDWIRE_INTEL
+>   
+>   config SOUNDWIRE_QCOM
+>   	tristate "Qualcomm SoundWire Master driver"
+> -	depends on SLIMBUS
+>   	depends on SND_SOC
+>   	help
+>   	  SoundWire Qualcomm Master driver.
+> diff --git a/drivers/soundwire/qcom.c b/drivers/soundwire/qcom.c
+> index 14334442615f..ac81c64768ea 100644
+> --- a/drivers/soundwire/qcom.c
+> +++ b/drivers/soundwire/qcom.c
+> @@ -769,13 +769,18 @@ static int qcom_swrm_probe(struct platform_device *pdev)
+>   	if (!ctrl)
+>   		return -ENOMEM;
+>   
+> +#ifdef CONFIG_SLIMBUS
+>   	if (dev->parent->bus == &slimbus_bus) {
+> +#else
+> +	if (false) {
+> +#endif
+>   		ctrl->reg_read = qcom_swrm_ahb_reg_read;
+>   		ctrl->reg_write = qcom_swrm_ahb_reg_write;
+>   		ctrl->regmap = dev_get_regmap(dev->parent, NULL);
+>   		if (!ctrl->regmap)
+>   			return -EINVAL;
+>   	} else {
+> +
 
-For THUMB2, the register r7 is reserved for the frame pointer, but
-code in arch/arm64/include/asm/vdso/compat_gettimeofday.h
-uses r7. Explicitly set -fomit-frame-pointer, since unwinding through
-interworked THUMB2 and ARM is unreliable anyways. See also how
-CONFIG_UNWINDER_FRAME_POINTER cannot be selected for
-CONFIG_THUMB2_KERNEL for ARCH=arm.
+Oops, ended up with a stray whitespace here, will fix for v2.
 
-This also helps toolchains that differ in their implicit value if the
-choice of -f{no-}omit-frame-pointer is left unspecified, to not error on
-the use of r7.
-
-2019 Q4 ARM AAPCS seeks to standardize the use of r11 as the reserved
-frame pointer register, but no production compiler that can compile the
-Linux kernel currently implements this.  We're actively discussing such
-a transition with ARM toolchain developers currently.
-
-Link: https://static.docs.arm.com/ihi0042/i/aapcs32.pdf
-Link: https://bugs.chromium.org/p/chromium/issues/detail?id=1084372
-Cc: Stephen Boyd <swboyd@google.com>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: Dave Martin <Dave.Martin@arm.com>
-Reported-by: Luis Lozano <llozano@google.com>
-Tested-by: Manoj Gupta <manojgupta@google.com>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
----
-Changes V1 -> V2:
-* add THUMB2_COMPAT_VDSO config, making -mthumb/-marm configurable
-  rather than hard coding.
-* Fixed https://reviews.llvm.org/D80828 in Clang, but still an issue.
-  Not due to implicit state of -marm vs -mthumb, but actually
-  -f{no-}omit-frame-pointer due to
-  https://source.chromium.org/chromiumos/chromiumos/codesearch/+/master:src/third_party/toolchain-utils/compiler_wrapper/config.go;l=110,
-  which prefixes -fno-omit-frame-pointer for all arches and projects.
-  Projects that don't set -f{no-}omit-frame-pointer thus don't overwrite
-  the prefixed -fno-omit-frame-pointer, which is an issue when inline
-  asm compiled as -mthumb uses r7.
-* I don't have a strong preference on the default state of this config.
-
- arch/arm64/Kconfig                | 8 ++++++++
- arch/arm64/kernel/vdso32/Makefile | 8 ++++++++
- 2 files changed, 16 insertions(+)
-
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 7f9d38444d6d..fe9e6b231cac 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -1299,6 +1299,14 @@ config COMPAT_VDSO
- 	  You must have a 32-bit build of glibc 2.22 or later for programs
- 	  to seamlessly take advantage of this.
- 
-+config THUMB2_COMPAT_VDSO
-+	bool "Compile the vDSO in THUMB2 mode"
-+	depends on COMPAT_VDSO
-+	default y
-+	help
-+	  Compile the compat vDSO with -mthumb -fomit-frame-pointer if y, otherwise
-+	  as -marm.
-+
- menuconfig ARMV8_DEPRECATED
- 	bool "Emulate deprecated/obsolete ARMv8 instructions"
- 	depends on SYSCTL
-diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
-index 3964738ebbde..7ea1e827e505 100644
---- a/arch/arm64/kernel/vdso32/Makefile
-+++ b/arch/arm64/kernel/vdso32/Makefile
-@@ -105,6 +105,14 @@ VDSO_CFLAGS += -D__uint128_t='void*'
- VDSO_CFLAGS += $(call cc32-disable-warning,shift-count-overflow)
- VDSO_CFLAGS += -Wno-int-to-pointer-cast
- 
-+# Compile as THUMB2 or ARM. Unwinding via frame-pointers in THUMB2 is
-+# unreliable.
-+ifeq ($(CONFIG_THUMB2_COMPAT_VDSO), y)
-+VDSO_CFLAGS += -mthumb -fomit-frame-pointer
-+else
-+VDSO_CFLAGS += -marm
-+endif
-+
- VDSO_AFLAGS := $(VDSO_CAFLAGS)
- VDSO_AFLAGS += -D__ASSEMBLY__
- 
--- 
-2.27.0.278.ge193c7cf3a9-goog
-
+>   		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>   
+>   		ctrl->reg_read = qcom_swrm_cpu_reg_read;
+> 
