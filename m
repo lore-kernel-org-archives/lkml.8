@@ -2,75 +2,143 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD7DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 15:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC98C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 15:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C91C206D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 15:20:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 346A6206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 15:21:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="Wg5tn5H1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730236AbgFHPUa (ORCPT
+        id S1730242AbgFHPVd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 11:20:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50188 "EHLO
+        Mon, 8 Jun 2020 11:21:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729668AbgFHPU3 (ORCPT
+        with ESMTP id S1729668AbgFHPVb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 11:20:29 -0400
-Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4A44C08C5C2;
-        Mon,  8 Jun 2020 08:20:29 -0700 (PDT)
-Received: from lwn.net (localhost [127.0.0.1])
+        Mon, 8 Jun 2020 11:21:31 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BBFAC08C5C2;
+        Mon,  8 Jun 2020 08:21:31 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id B580535A;
-        Mon,  8 Jun 2020 15:20:28 +0000 (UTC)
-Date:   Mon, 8 Jun 2020 09:20:27 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Daniel Kiss <daniel.kiss@arm.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        Luigi Semenzato <semenzato@chromium.org>,
-        Aubrey Li <aubrey.li@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>, Chao Yu <chao@kernel.org>,
-        NeilBrown <neilb@suse.de>, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 0/2] a couple documentation fixes
-Message-ID: <20200608092027.46363063@lwn.net>
-In-Reply-To: <cover.1591137229.git.mchehab+huawei@kernel.org>
-References: <cover.1591137229.git.mchehab+huawei@kernel.org>
-Organization: LWN.net
+        by ssl.serverraum.org (Postfix) with ESMTPSA id D311822EDB;
+        Mon,  8 Jun 2020 17:21:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1591629687;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=w5/wFYr0WrHR2BGw4sUPuRmTmyyZEDrBDXp7xE6Rcqs=;
+        b=Wg5tn5H1faOtr0XnIGPDSGd5kyucCSnasem9z0pro05j+LKp9YmcltmJYSntceVYHtAZHW
+        CWFWp/mjoJ2xvRoKRmfTvpANiM8L6SG62R4HTUanniYR0aE0wa6xqFpGLIlU1qOlaKndyr
+        yx9pmn5kqLEjpxuBMngTNYuCFJX99fM=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 08 Jun 2020 17:21:20 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 03/16] mfd: mfd-core: match device tree node against
+ reg property
+In-Reply-To: <20200608142413.GA4106@dell>
+References: <20200423174543.17161-1-michael@walle.cc>
+ <20200423174543.17161-4-michael@walle.cc>
+ <67e90dafd67c285158c2c6f67f92edb7@walle.cc> <20200515102848.GH271301@dell>
+ <159e68b4ce53630ef906b2fcbca925bd@walle.cc> <20200608142413.GA4106@dell>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <7566ef30fea9740f427f392aabde0eac@walle.cc>
+X-Sender: michael@walle.cc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed,  3 Jun 2020 00:38:12 +0200
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
-
-> It follows a couple of fixes for two tables that got broken, probably due to
-> some conflict between the ReST conversion patches and ungoing updates.
+Am 2020-06-08 16:24, schrieb Lee Jones:
+> On Mon, 25 May 2020, Michael Walle wrote:
+>> Am 2020-05-15 12:28, schrieb Lee Jones:
+>> > On Thu, 30 Apr 2020, Michael Walle wrote:
+>> >
+>> > > Hi Lee,
+>> > >
+>> > > Am 2020-04-23 19:45, schrieb Michael Walle:
+>> > > > There might be multiple children with the device tree compatible, for
+>> > > > example if a MFD has multiple instances of the same function. In this
+>> > > > case only the first is matched and the other children get a wrong
+>> > > > of_node reference.
+>> > > > Add a new option to match also against the unit address of the child
+>> > > > node. Additonally, a new helper OF_MFD_CELL_REG is added.
 > 
-> IMO, it would be nice to have those two applied during the merge window,
-> as they produce a too noisy output.
+> [...]
+> 
+>> > > > diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
+>> > > > index d01d1299e49d..c2c0ad6b14f3 100644
+>> > > > --- a/include/linux/mfd/core.h
+>> > > > +++ b/include/linux/mfd/core.h
+>> > > > @@ -13,8 +13,11 @@
+>> > > >  #include <linux/platform_device.h>
+>> > > >
+>> > > >  #define MFD_RES_SIZE(arr) (sizeof(arr) / sizeof(struct resource))
+>> > > > +#define MFD_OF_REG_VALID	BIT(31)
+>> >
+>> > What about 64bit platforms?
+>> 
+>> The idea was to have this as a logical number. I.e. for now you may 
+>> only
+>> have one subdevice per unique compatible string. In fact, if you have 
+>> a
+>> look at the ab8500.c, there are multiple "stericsson,ab8500-pwm"
+>> subdevices. But there is only one DT node for all three of it. I guess
+>> this works as long as you don't use phandles to reference the pwm node
+>> in the device tree. Or you don't want to use device tree properties
+>> per subdevice (for example the "timeout-sec" of a watchdog device).
+> 
+> This is not a good example, as the "stericsson,ab8500-pwm" is
+> legitimate.  Here we are registering 3 potential devices, but only
+> instantiating 1 of them.
 
-The problems all came from trees other than docs-next, so the patch
-doesn't apply there now.  I'll merge with mainline after -rc1 and, if the
-problems haven't been fixed elsewhere, I'll apply the patches then.
+Mh?
 
-Thanks,
+static const struct mfd_cell ab8500_devs[] = {
+..
+        OF_MFD_CELL("ab8500-pwm",
+                     NULL, NULL, 0, 1, "stericsson,ab8500-pwm"),
+         OF_MFD_CELL("ab8500-pwm",
+                     NULL, NULL, 0, 2, "stericsson,ab8500-pwm"),
+         OF_MFD_CELL("ab8500-pwm",
+                     NULL, NULL, 0, 3, "stericsson,ab8500-pwm"),
+..
+}
 
-jon
+And in pwm-ab8500.c there are three offsets based on the pdev->id.
+
+Am I missing something here?
+
+-- 
+-michael
