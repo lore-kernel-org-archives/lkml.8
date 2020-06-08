@@ -2,136 +2,119 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2913C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 17:32:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDAA4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 17:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2A55208A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 17:32:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b2exqroG"
+	by mail.kernel.org (Postfix) with ESMTP id B3EBB20870
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 17:32:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730747AbgFHRca (ORCPT
+        id S1730755AbgFHRck (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 13:32:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42376 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbgFHRc3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 13:32:29 -0400
-Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90D42C08C5C2;
-        Mon,  8 Jun 2020 10:32:28 -0700 (PDT)
-Received: by mail-qk1-x734.google.com with SMTP id n11so18071330qkn.8;
-        Mon, 08 Jun 2020 10:32:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wiyYnmTzYSUjW1pI9XvsoK8vnffjXKMIWRhj22x93qs=;
-        b=b2exqroGLJlKAiaFUB2ayaR382R7eYydqlnzQ3J8KOhtVI+eCiT6ow6HhiuRmKrFxe
-         A/roIyJagDiFHrSCNYv3d2Ne1RDCywJiVAMlJSblHpyxM5w9LoxUD3gBDmr6k1JI64S6
-         mCY/VfNsW5JeIlU0+VffIKg8OFUhV3hcLdRQfm9QwedkklNCWWt2/HPWV+lpuSSkK9Yo
-         FqPKBfxxPpRlJ/UVrIcCqM3zsoqhzWF5/RMC8jgD9zWVTQvJvKj7UfrI1maibEIzcpi5
-         Ru7wbKiFTlweCkKeZA3MEsegm9xKPQGXwpsFOiKl58mGoeGdy27fRVDdZsxuu0ZKp7zQ
-         tXWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wiyYnmTzYSUjW1pI9XvsoK8vnffjXKMIWRhj22x93qs=;
-        b=C6T19w4XkHfEIfDAyP6fIATwhiIaA4cRUWvkLpr+M6CJxQhaPYm9ti2VUXxBAGLvEd
-         t3p1z7oS6eU3mOKgwEk4p3KuXuV2Sfsf+RHI9MakHrZlvlbknEtusInlD39AuOn4HiLw
-         hCbyWYb7Q8vnK/vl/ZeiVJlJO0La4qcCUzAAydFSwCTRTmmroNsHFN+wyyjQ7PQif8VZ
-         9GAcpN19AosPG4VzwHZI53O1Hm+IEzreSquZ8bzaY5JD2omWGFleqTy9kWg4HMltXNmf
-         Aoi6nSysVGL74po1niYfbAiKB1vHHpSXWeQxA667ZCBtqX7Je9pE/C3X3aYmN+Jc+F+B
-         YvBA==
-X-Gm-Message-State: AOAM531rbTJaHQBMIHQL0HTUepNFPNKDQJT4X6wXGXxIcXDck9Bist+t
-        /bQ2mEXW43Kk2gLFl366p93h68jIYVin2DujyWQ=
-X-Google-Smtp-Source: ABdhPJxRA8BbenfYxtHxRI4JRkin2d7mG5O5bq5gnYS6ILL2A+WZIOC5fFk25VSq99xAbRWYSrTHHmhgaavstmXh/pk=
-X-Received: by 2002:a37:a89:: with SMTP id 131mr23050145qkk.92.1591637547514;
- Mon, 08 Jun 2020 10:32:27 -0700 (PDT)
+        Mon, 8 Jun 2020 13:32:40 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39180 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725948AbgFHRck (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 13:32:40 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 0C724AD2C;
+        Mon,  8 Jun 2020 17:32:42 +0000 (UTC)
+Subject: Re: [PATCH v5 00/18] Rework READ_ONCE() to improve codegen
+To:     Marco Elver <elver@google.com>, Borislav Petkov <bp@alien8.de>
+Cc:     Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>, ndesaulniers@google.com
+References: <20200513124021.GB20278@willie-the-truck>
+ <CANpmjNM5XW+ufJ6Mw2Tn7aShRCZaUPGcH=u=4Sk5kqLKyf3v5A@mail.gmail.com>
+ <20200513165008.GA24836@willie-the-truck>
+ <CANpmjNN=n59ue06s0MfmRFvKX=WB2NgLgbP6kG_MYCGy2R6PHg@mail.gmail.com>
+ <20200513174747.GB24836@willie-the-truck>
+ <CANpmjNNOpJk0tprXKB_deiNAv_UmmORf1-2uajLhnLWQQ1hvoA@mail.gmail.com>
+ <20200513212520.GC28594@willie-the-truck>
+ <CANpmjNOAi2K6knC9OFUGjpMo-rvtLDzKMb==J=vTRkmaWctFaQ@mail.gmail.com>
+ <20200514110537.GC4280@willie-the-truck> <20200603185220.GA20613@zn.tnic>
+ <20200603192353.GA180529@google.com>
+From:   =?UTF-8?Q?Martin_Li=c5=a1ka?= <mliska@suse.cz>
+Message-ID: <87213fd1-950d-c2d5-4aa0-2f53ea3b505c@suse.cz>
+Date:   Mon, 8 Jun 2020 19:32:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-References: <20200608161150.GA3073@kernel.org>
-In-Reply-To: <20200608161150.GA3073@kernel.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Mon, 8 Jun 2020 10:32:16 -0700
-Message-ID: <CAEf4BzbEcV6YaezP4yY8J=kYSBhh0cRHCvgCUe9xvB12mF08qg@mail.gmail.com>
-Subject: Re: libbpf's hashmap use of __WORDSIZE
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Ian Rogers <irogers@google.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Pekka Enberg <penberg@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Irina Tirdea <irina.tirdea@intel.com>,
-        bpf <bpf@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200603192353.GA180529@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 8, 2020 at 9:11 AM Arnaldo Carvalho de Melo
-<arnaldo.melo@gmail.com> wrote:
->
-> Hi Andrii,
->
->         We've got that hashmap.[ch] copy from libbpf so that we can
-> build perf in systems where libbpf isn't available, and to make it build
-> in all the containers I regularly test build perf I had to add the patch
-> below, I test build with many versions of both gcc and clang and
-> multiple libcs.
->
->   https://gcc.gnu.org/onlinedocs/cpp/Common-Predefined-Macros.html
->
-> The way that tools/include/linux/bitops.h has been doing since 2012 is
-> explained in:
->
->   http://git.kernel.org/torvalds/c/3f34f6c0233ae055b5
->
-> Please take a look and see if you find it acceptable,
->
+On 6/3/20 9:23 PM, Marco Elver wrote:
+> 
+> 
+> On Wed, 03 Jun 2020, Borislav Petkov wrote:
+> 
+>> On Thu, May 14, 2020 at 12:05:38PM +0100, Will Deacon wrote:
+>>> Talking off-list, Clang >= 7 is pretty reasonable wrt inlining decisions
+>>> and the behaviour for __always_inline is:
+>>>
+>>>    * An __always_inline function inlined into a __no_sanitize function is
+>>>      not instrumented
+>>>    * An __always_inline function inlined into an instrumented function is
+>>>      instrumented
+>>>    * You can't mark a function as both __always_inline __no_sanitize, because
+>>>      __no_sanitize functions are never inlined
+>>>
+>>> GCC, on the other hand, may still inline __no_sanitize functions and then
+>>> subsequently instrument them.
+>>
+>> Yeah, about that: I've been looking for a way to trigger this so that
+>> I can show preprocessed source to gcc people. So do you guys have a
+>> .config or somesuch I can try?
+> 
+> For example take this:
+> 
+> 	int x;
+> 
+> 	static inline __attribute__((no_sanitize_thread)) void do_not_sanitize(void) {
+> 	  x++;
+> 	}
+> 
+> 	void sanitize_this(void) {
+> 	  do_not_sanitize();
+> 	}
+> 
+> Then
+> 
+> 	gcc-10 -O3 -fsanitize=thread -o example.o -c example.c
+> 	objdump -D example.o
+
+Hello.
+
+Thank you for the example. It seems to me that Clang does not inline a no_sanitize_* function
+into one which is instrumented. Is it a documented behavior ([1] doesn't mention that)?
+If so, we can do the same in GCC.
+
+Thanks,
+Martin
+
+[1] https://clang.llvm.org/docs/AttributeReference.html#no-sanitize
+
+> 
+> will show that do_not_sanitize() was inlined into sanitize_this() and is
+> instrumented. (With Clang this doesn't happen.)
+> 
+> Hope this is enough.
+> 
 > Thanks,
->
-> - Arnaldo
->
->   Warning: Kernel ABI header at 'tools/perf/util/hashmap.h' differs from latest version at 'tools/lib/bpf/hashmap.h'
->   diff -u tools/perf/util/hashmap.h tools/lib/bpf/hashmap.h
->
-> $ diff -u tools/lib/bpf/hashmap.h tools/perf/util/hashmap.h
-> --- tools/lib/bpf/hashmap.h     2020-06-05 13:25:27.822079838 -0300
-> +++ tools/perf/util/hashmap.h   2020-06-05 13:25:27.838079794 -0300
-> @@ -10,10 +10,9 @@
->
->  #include <stdbool.h>
->  #include <stddef.h>
-> -#ifdef __GLIBC__
-> -#include <bits/wordsize.h>
-> -#else
-> -#include <bits/reg.h>
-> +#include <limits.h>
-> +#ifndef __WORDSIZE
-> +#define __WORDSIZE (__SIZEOF_LONG__ * 8)
->  #endif
+> -- Marco
+> 
 
-This looks fine, I also build-tested it in Travis CI, so all good.
-There is actually __SIZEOF_SIZE_T__, which is more directly what
-hash_bits work with, but I don't think it matters for any reasonable
-system in use :)
-
-So yeah,
-
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-
-Are you going to do this change for libbpf's variant, or should I
-submit a separate patch?
-
->
->  static inline size_t hash_bits(size_t h, int bits)
