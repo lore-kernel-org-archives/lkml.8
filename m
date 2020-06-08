@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC1BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E6CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCC3B2083B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:55:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3998920737
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:55:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660540;
-	bh=sKZcWyp++va0RYlP8fE5B/2tUxL5JWyf+WqesDEiMhw=;
+	s=default; t=1591660549;
+	bh=WI3HQ8lMCRznQ3o12AJnapm9JrQWYpgFcNojPlKXQAQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=arybXIJIzVuLaej/L1ZUuNgpj2cB0uUTqeLvGpG0Zc7JZZ6VFJ3T1nSIu6r4XG3vA
-	 8jk0qBj+kDuwCTOdpbnlt1DUCMGYR9shPz/NxE45zRRDRfFvAx30wppAT9DAZxNK2u
-	 v/AI2EDZOvuA3LCSMA4AqdDX3U6JnDE+PLmY2jAY=
+	b=1k+Uosmc6OxTvjQ12OyNcCqnOQzQM/bDn0ZSJ7DbtYwX/9N0ZKszKk3B9CiXElSV5
+	 f58HLJxIwsRuuM4okwyXI7d0dFGDXJo8p42b4HTnkwDzCQoFVSKboCCc4HCJeh6t8F
+	 25ynm4Entcpq8H9DbZHFb/J9iNKL8ENtrXa4vnEE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387470AbgFHXX4 (ORCPT
+        id S1732046AbgFHXzs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:23:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40982 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:55:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729566AbgFHXSk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:18:40 -0400
+        id S1731550AbgFHXXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:23:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DD2420814;
-        Mon,  8 Jun 2020 23:18:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A77A2072F;
+        Mon,  8 Jun 2020 23:23:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658320;
-        bh=sKZcWyp++va0RYlP8fE5B/2tUxL5JWyf+WqesDEiMhw=;
+        s=default; t=1591658634;
+        bh=WI3HQ8lMCRznQ3o12AJnapm9JrQWYpgFcNojPlKXQAQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uCYi31k4uBbxOVf+hC3aDZFjMjUcFn31D5K2np5nYvolR+V+IEEyxFLFBj+WiO43D
-         FGXHFNdQqO8gdazk3eyER8PZJ5y9J0tVPC9KwyHwAlTZr3UpyZTydbDSqiHM3q9pMb
-         Wy8jkAPL+YezWk09vmM1+IGC59Hihq6HLPzPjtHg=
+        b=S9QWUKkwZAAdhSy/kzu10zdmKQ87UMJrlDkQ94Pvjq4/XSK9MiVNibpfjasOzKRiF
+         Ajz61oQMXp46gHNDi1Z35UF1TVNUuEv2tVA4pGN8raobm1uBUYGzDzvCIzD+zLwH0T
+         4fk9HKViClDfKI9ekzBu2zqKZrP5/vgktcQzmyak=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chris Chiu <chiu@endlessm.com>, Takashi Iwai <tiwai@suse.de>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.6 320/606] ALSA: usb-audio: mixer: volume quirk for ESS Technology Asus USB DAC
-Date:   Mon,  8 Jun 2020 19:07:25 -0400
-Message-Id: <20200608231211.3363633-320-sashal@kernel.org>
+Cc:     Devulapally Shiva Krishna <shiva@chelsio.com>,
+        Ayush Sawal <ayush.sawal@chelsio.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 057/106] Crypto/chcr: fix for ccm(aes) failed test
+Date:   Mon,  8 Jun 2020 19:21:49 -0400
+Message-Id: <20200608232238.3368589-57-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
-References: <20200608231211.3363633-1-sashal@kernel.org>
+In-Reply-To: <20200608232238.3368589-1-sashal@kernel.org>
+References: <20200608232238.3368589-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,50 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Chiu <chiu@endlessm.com>
+From: Devulapally Shiva Krishna <shiva@chelsio.com>
 
-[ Upstream commit 4020d1ccbe55bdf67b31d718d2400506eaf4b43f ]
+[ Upstream commit 10b0c75d7bc19606fa9a62c8ab9180e95c0e0385 ]
 
-The Asus USB DAC is a USB type-C audio dongle for connecting to
-the headset and headphone. The volume minimum value -23040 which
-is 0xa600 in hexadecimal with the resolution value 1 indicates
-this should be endianness issue caused by the firmware bug. Add
-a volume quirk to fix the volume control problem.
+The ccm(aes) test fails when req->assoclen > ~240bytes.
 
-Also fixes this warning:
-  Warning! Unlikely big volume range (=23040), cval->res is probably wrong.
-  [5] FU [Headset Capture Volume] ch = 1, val = -23040/0/1
-  Warning! Unlikely big volume range (=23040), cval->res is probably wrong.
-  [7] FU [Headset Playback Volume] ch = 1, val = -23040/0/1
+The problem is the value assigned to auth_offset is wrong.
+As auth_offset is unsigned char, it can take max value as 255.
+So fix it by making it unsigned int.
 
-Signed-off-by: Chris Chiu <chiu@endlessm.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200526062613.55401-1-chiu@endlessm.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Ayush Sawal <ayush.sawal@chelsio.com>
+Signed-off-by: Devulapally Shiva Krishna <shiva@chelsio.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/mixer.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/crypto/chelsio/chcr_algo.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
-index 7a2961ad60de..68fefe55e5c0 100644
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -1171,6 +1171,14 @@ static void volume_control_quirks(struct usb_mixer_elem_info *cval,
- 			cval->res = 384;
- 		}
- 		break;
-+	case USB_ID(0x0495, 0x3042): /* ESS Technology Asus USB DAC */
-+		if ((strstr(kctl->id.name, "Playback Volume") != NULL) ||
-+			strstr(kctl->id.name, "Capture Volume") != NULL) {
-+			cval->min >>= 8;
-+			cval->max = 0;
-+			cval->res = 1;
-+		}
-+		break;
- 	}
- }
+diff --git a/drivers/crypto/chelsio/chcr_algo.c b/drivers/crypto/chelsio/chcr_algo.c
+index c435f89f34e3..9b3c259f081d 100644
+--- a/drivers/crypto/chelsio/chcr_algo.c
++++ b/drivers/crypto/chelsio/chcr_algo.c
+@@ -2764,7 +2764,7 @@ static void fill_sec_cpl_for_aead(struct cpl_tx_sec_pdu *sec_cpl,
+ 	unsigned int mac_mode = CHCR_SCMD_AUTH_MODE_CBCMAC;
+ 	unsigned int c_id = a_ctx(tfm)->dev->rx_channel_id;
+ 	unsigned int ccm_xtra;
+-	unsigned char tag_offset = 0, auth_offset = 0;
++	unsigned int tag_offset = 0, auth_offset = 0;
+ 	unsigned int assoclen;
  
+ 	if (get_aead_subtype(tfm) == CRYPTO_ALG_SUB_TYPE_AEAD_RFC4309)
 -- 
 2.25.1
 
