@@ -2,114 +2,193 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98364C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:55:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11446C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7012B2078C
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:55:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E234A20659
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:55:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660514;
-	bh=49zfERSjk9j/+MtSTyS6zjJNybRRJ7SHS9cxP6Yyjng=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vNkCCuam0u2cGxWaP15z4fJ+S+sggebDUZRhvSRVWj2i11yfQjuN78KAa1M/nLsw+
-	 4eSlHmZbdMxbQTWbb6s6pY+ZeGmGQ3+OPKXquaL1ng85xYUVpVcSbf7RPXYwi0vESc
-	 H9+CbLUdzluG02lpvJ92nWAaZKBnjqCxS5rBCtcU=
+	s=default; t=1591660518;
+	bh=jdEldZpfK4zYkAX2jFTC/ShU1g0BC6ZePRI0yc3ko1k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=g7/41NS50R/pygkN/skgf3AogiJRTvRn4clTuk/U5If1S36viwuiB8QWVZ6lJSCyZ
+	 fzn/KGfL4hRAfvnPWoQktb2k62HOXmdCfD4RpKwHCBfl/MM53Kn9g5dm5YvjY/eEUk
+	 LwVa5Uf+qC/k9T2Rnzhaul5CIlg52SpkldqssGUc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387910AbgFHXzN (ORCPT
+        id S1731723AbgFHXzR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:55:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50110 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:55:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731582AbgFHXYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:24:06 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2387857AbgFHXzL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:55:11 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FDB1208B3;
-        Mon,  8 Jun 2020 23:24:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 614FA20659;
+        Mon,  8 Jun 2020 23:55:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658647;
-        bh=49zfERSjk9j/+MtSTyS6zjJNybRRJ7SHS9cxP6Yyjng=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TbHc/ynsYruc435t/sf93g0SrHmA36WnsPZkRqMBdD748jlOitWSxkkioo9McD5EA
-         x5FeLv9Dg614/hJXffOMPIyn5XG9IJZUtoKoRSUp3sdTheYgVtz+rzINxpT67OS6Q0
-         6WN+bmJh95YSp2ypO3qcIV3/jP0tTkqitySy2f/4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
-        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 067/106] nvme: refine the Qemu Identify CNS quirk
-Date:   Mon,  8 Jun 2020 19:21:59 -0400
-Message-Id: <20200608232238.3368589-67-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608232238.3368589-1-sashal@kernel.org>
-References: <20200608232238.3368589-1-sashal@kernel.org>
+        s=default; t=1591660510;
+        bh=jdEldZpfK4zYkAX2jFTC/ShU1g0BC6ZePRI0yc3ko1k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WGjg7Ef05QjYfKu1Y1MiIM4Ms8WXmngXEnv7nrWh62eQMh7h1OuqXscsVr4ywJb9B
+         Lupda/jVNKHz0qRtCeAEnvGCKLNsL+aKTo/fsSIAarVdSDLZcooPrNpjsdgG3sjaVs
+         Fc20bi9/UjjjuMC9b+rFKNmjmsaAlB4zLtTpnOBo=
+Received: by pali.im (Postfix)
+        id 8F10E263E; Tue,  9 Jun 2020 01:55:08 +0200 (CEST)
+Date:   Tue, 9 Jun 2020 01:55:08 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Y Paritcher <y.linux@paritcher.com>, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Mario.Limonciello@dell.com
+Subject: Re: [PATCH v2 3/3] platform/x86: dell-wmi: add new dmi keys to
+ bios_to_linux_keycode
+Message-ID: <20200608235508.wthtgilgmifwfgz2@pali>
+References: <cover.1591584631.git.y.linux@paritcher.com>
+ <cover.1591656154.git.y.linux@paritcher.com>
+ <d585d2a0f01a6b9480352530b571dec2d1afd79f.1591656154.git.y.linux@paritcher.com>
+ <8053252a-83ad-bcaa-2830-ccfbca1b4152@infradead.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8053252a-83ad-bcaa-2830-ccfbca1b4152@infradead.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+Hello!
 
-[ Upstream commit b9a5c3d4c34d8bd9fd75f7f28d18a57cb68da237 ]
+On Monday 08 June 2020 16:27:10 Randy Dunlap wrote:
+> Hi--
+> 
+> On 6/8/20 4:05 PM, Y Paritcher wrote:
+> > Increase length of bios_to_linux_keycode to 2 bytes (the true size of a
+> > keycode) to allow for a new keycode 0xffff, this silences the following
+> > messages being logged at startup on a Dell Inspiron 5593:
+> > 
+> >     dell_wmi: firmware scancode 0x48 maps to unrecognized keycode 0xffff
+> >     dell_wmi: firmware scancode 0x50 maps to unrecognized keycode 0xffff
 
-Add a helper to check if we can use Identify CNS values > 1, and refine
-the Qemu quirk to not apply to reported versions larger than 1.1, as the
-Qemu implementation had been fixed by then.
+Which keys generate these two scancodes? Or how have you been able to
+trigger these scancodes (in case they are not generated by key press)?
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Keith Busch <kbusch@kernel.org>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/nvme/host/core.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+It is important to know for which key or event or feature we need to
+include this patch and therefore what feature is currently
+non-functional on that laptop.
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index d5359c7c811a..0d60f2f8f3ee 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -926,6 +926,19 @@ void nvme_stop_keep_alive(struct nvme_ctrl *ctrl)
- }
- EXPORT_SYMBOL_GPL(nvme_stop_keep_alive);
- 
-+/*
-+ * In NVMe 1.0 the CNS field was just a binary controller or namespace
-+ * flag, thus sending any new CNS opcodes has a big chance of not working.
-+ * Qemu unfortunately had that bug after reporting a 1.1 version compliance
-+ * (but not for any later version).
-+ */
-+static bool nvme_ctrl_limited_cns(struct nvme_ctrl *ctrl)
-+{
-+	if (ctrl->quirks & NVME_QUIRK_IDENTIFY_CNS)
-+		return ctrl->vs < NVME_VS(1, 2, 0);
-+	return ctrl->vs < NVME_VS(1, 1, 0);
-+}
-+
- static int nvme_identify_ctrl(struct nvme_ctrl *dev, struct nvme_id_ctrl **id)
- {
- 	struct nvme_command c = { };
-@@ -3368,8 +3381,7 @@ static void nvme_scan_work(struct work_struct *work)
- 
- 	mutex_lock(&ctrl->scan_lock);
- 	nn = le32_to_cpu(id->nn);
--	if (ctrl->vs >= NVME_VS(1, 1, 0) &&
--	    !(ctrl->quirks & NVME_QUIRK_IDENTIFY_CNS)) {
-+	if (!nvme_ctrl_limited_cns(ctrl)) {
- 		if (!nvme_scan_ns_list(ctrl, nn))
- 			goto out_free_id;
- 	}
--- 
-2.25.1
+> > as per this code comment:
+> > 
+> >    Log if we find an entry in the DMI table that we don't
+> >    understand.  If this happens, we should figure out what
+> >    the entry means and add it to bios_to_linux_keycode.
+> > 
+> > These are keycodes included in the 0xB2 DMI table, for which the
+> > corosponding keys are not known.
+> 
+>   corresponding
+> 
+> > 
+> > Now when a user will encounter this key, a proper message wil be printed:
+> > 
+> >     dell_wmi: Unknown key with type 0xXXXX and code 0xXXXX pressed
+> > 
+> > This will then allow the key to be identified properly.
+> > 
+> > Signed-off-by: Y Paritcher <y.linux@paritcher.com>
+> > ---
+> >  drivers/platform/x86/dell-wmi.c | 8 +++-----
+> >  1 file changed, 3 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
+> > index 6b510f8431a3..dae1db96b5a0 100644
+> > --- a/drivers/platform/x86/dell-wmi.c
+> > +++ b/drivers/platform/x86/dell-wmi.c
+> > @@ -196,7 +196,7 @@ struct dell_dmi_results {
+> >  };
+> >  
+> >  /* Uninitialized entries here are KEY_RESERVED == 0. */
+> > -static const u16 bios_to_linux_keycode[256] = {
+> > +static const u16 bios_to_linux_keycode[65536] = {
+> 
+> It surely seems odd to me to expand an array from 512 bytes to 128 Kbytes
+> just to handle one special case.  Can't it be handled in code as a
+> special case?
 
+I already wrote that more developers would not be happy about this
+change. I would rather to see e.g. that Randy's suggestion with 0xffff
+check as increasing memory usage.
+
+> >  	[0]	= KEY_MEDIA,
+> >  	[1]	= KEY_NEXTSONG,
+> >  	[2]	= KEY_PLAYPAUSE,
+> > @@ -237,6 +237,7 @@ static const u16 bios_to_linux_keycode[256] = {
+> >  	[37]	= KEY_UNKNOWN,
+> >  	[38]	= KEY_MICMUTE,
+> >  	[255]	= KEY_PROG3,
+> > +	[65535]	= KEY_UNKNOWN,
+
+Looking at the last two lines... and for me it looks like that 0x00FF
+and 0xFFFF are just "placeholders" or special values for unknown /
+custom / unsupported / reserved / special / ... codes.
+
+It is really suspicious why first 38 values are defined, then there is
+gap, then one value 255 and then huge gap to 65535.
+
+Mario, this looks like some mapping table between internal Dell BIOS key
+code and standard Linux key code. Are you able to get access to some
+documentation which contains explanation of those Dell key numbers?
+It could really help us to understand these gaps and what is correct
+interpretation of these numbers.
+
+E.g. I remember that pressing Fn+Q or Fn+W on some Dell Latitude
+generates code 255, which could prove my thesis about "special codes"
+(which are probably not found in e.g. Windows or Linux mapping tables).
+
+> >  };
+> >  
+> >  /*
+> > @@ -503,10 +504,7 @@ static void handle_dmi_entry(const struct dmi_header *dm, void *opaque)
+> >  					&table->keymap[i];
+> >  
+> >  		/* Uninitialized entries are 0 aka KEY_RESERVED. */
+> > -		u16 keycode = (bios_entry->keycode <
+> > -			       ARRAY_SIZE(bios_to_linux_keycode)) ?
+> > -			bios_to_linux_keycode[bios_entry->keycode] :
+> > -			KEY_RESERVED;
+> > +		u16 keycode = bios_to_linux_keycode[bios_entry->keycode];
+> >  
+> >  		/*
+> >  		 * Log if we find an entry in the DMI table that we don't
+> > 
+> 
+> Something like:
+> 
+> 		u16 keycode;
+> 
+> 		keycode = bios_entry->keycode == 0xffff ? KEY_UNKNOWN :
+> 			(bios_entry->keycode <
+> 			       ARRAY_SIZE(bios_to_linux_keycode)) ?
+> 			bios_to_linux_keycode[bios_entry->keycode] :
+> 			KEY_RESERVED;
+> 
+> 
+> 
+> Also please fix this:
+> (no To-header on input) <>
+
+Hint: specifying git send-email with '--to' argument instead of '--cc'
+should help.
+
+> 
+> -- 
+> ~Randy
+> 
