@@ -2,125 +2,103 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52FCEC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E9D0C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C47920774
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B584206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:56:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mFuZaL8A"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hnKDm+e2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729543AbgFHM4F (ORCPT
+        id S1729319AbgFHM4i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 08:56:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56076 "EHLO
+        Mon, 8 Jun 2020 08:56:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729598AbgFHM4A (ORCPT
+        with ESMTP id S1728931AbgFHM4h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 08:56:00 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF530C08C5C3
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 05:55:59 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id y13so18178718eju.2
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 05:55:59 -0700 (PDT)
+        Mon, 8 Jun 2020 08:56:37 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDD66C08C5C2;
+        Mon,  8 Jun 2020 05:56:36 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id l27so18197192ejc.1;
+        Mon, 08 Jun 2020 05:56:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xZSmmZRxwaSFlAQ/QPHWTlQ0XQomYLOTrs+C/wJekUA=;
-        b=mFuZaL8Amji3XMg7qBHt7NINexu2PtEC0PZmD6/aic1G6PxN3jrHLJhlfgHB+Nz/A3
-         R4tJ/+qCzUaAXSjccefK4FZu8QdxG3Tngq6xK3TiD+n3MFguSlSYgovB921h5N0CM2ju
-         e4jfx/ygOkF+OHIDkGxJBqAhqtxsv/luEXU0HzeOU6xuSoxfrESAaN4SJbJRSjroDDtK
-         YACni5/Fuk9coJZC7Bk5QKOtrXBbwn5QfyYY0XtgvsIQy/haDuPfFSvqW4LT0ZRfEMyM
-         uS6qlWTjEerIRGZF3JHB3ZcBIGdK8N9NQEfAlJbDKMYg9ZBzfBolw2RmzDLckWoby07p
-         J5xg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3UgnuIt4eUiizz8RKz+CLNlYY+s+snxRvwn2Nqiv8mA=;
+        b=hnKDm+e2wot8X7hijnXlTxsjlMzVZArEMQbqShrDH6BDk82Q6ZkDZvU9ieBAB3VXsj
+         Sw0/GsjulOpiufvM9GBWh1bFGDpFygFoqIVcxFSAjZM45cWJlpjXeL3ePl5g9RD8bIUE
+         6kukCAywLyQ19gqgsYBKwAflTXhxGLjdSh6Qu5fd7mVBJcgM/hi6VHnCyjb4HRe4RrZy
+         b7Xkpjf9ogah8/JARCAT5p5Bda1Tbhh3iZXkAF7tgNeBS2mNErfLjAunjpd1wV42eyaD
+         jlhLAZCSQMmZxrLezsMEjlvIQMNG9UB2EDzN+3DlOz9LBfzIXnFM0tw49prqWFSt6U+1
+         JmPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xZSmmZRxwaSFlAQ/QPHWTlQ0XQomYLOTrs+C/wJekUA=;
-        b=a63gAlc8oTQNC+A+6OySFm6rwqpnBN7N4DyWMUqJGZCqxfwbk1CQBVn92S6IfOJw98
-         2EelApt+JQC/jc0T4JeGjjMg+N+IB+/kFcwYViSaytiF4dp13hkZwZzLXl1nTVfoAGwq
-         DfNsqBXTvQ1P9PflIXVA+wiWReCDv60n0vLa98hX4lvmpfHfuN9Rbrau8fSsMrtPgOIv
-         +UOQf66c1WulezCEn8jLgohgAaNihs/890P1Nrn3qOwGKUKk7o/pl081X0lHQNWPCa05
-         AeU07b5cnPOsfIRIjRvsH1tSrFvRNcRTKM3H+nOYVY355f/OVJfUXdgSzxv+jmsfGdza
-         SuZA==
-X-Gm-Message-State: AOAM530i9wDZnPDJxeaGTKQo63c37vggV/4YmofrkZL/51DqRusUxd3R
-        PdoRhEysiaOoCzUdav8uE60A9/dwicN+Xg==
-X-Google-Smtp-Source: ABdhPJyRYlLmXuOs2DMxSSDWSWQfxH/DHqvXwEjiSNo2xPN+Oc3rBv33mEMqAe7gDQBH8U9xTnMiug==
-X-Received: by 2002:a17:906:39d9:: with SMTP id i25mr20331284eje.510.1591620958326;
-        Mon, 08 Jun 2020 05:55:58 -0700 (PDT)
-Received: from localhost.localdomain ([2001:171b:226e:c200:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id h9sm10602388ejc.96.2020.06.08.05.55.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 05:55:57 -0700 (PDT)
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Cc:     mhiramat@kernel.org, rostedt@goodmis.org, mingo@redhat.com,
-        ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
-        songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        john.fastabend@gmail.com, kpsingh@chromium.org,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>
-Subject: [PATCH] tracing/probe: Fix bpf_task_fd_query() for kprobes and uprobes
-Date:   Mon,  8 Jun 2020 14:45:32 +0200
-Message-Id: <20200608124531.819838-1-jean-philippe@linaro.org>
-X-Mailer: git-send-email 2.27.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3UgnuIt4eUiizz8RKz+CLNlYY+s+snxRvwn2Nqiv8mA=;
+        b=YUgSmjEoTDPWr5ut1H+sl7v7XGhPMEPIKI6YqgmIpm8uN5YNvdELrEYolG91MiksRT
+         DHDeHux2KUQresSsLwXIcLw2KLHcQ7QRCg6HL+lOfhMiZx8sAeGD+xTC2JETLZg/qiAS
+         AaWQO0VChht1KOdNgQOBzzK2smvKq8/OgKakxgLy+jbEsb9DyLFgqS0IvSNNFHrWGryB
+         8CW3rTyFZOmPMWKJlq+g4zY1g0nhOdeB4SO0H0+T+t8KnOJQjkpu44IRpPHurGZIbovM
+         xV65z0ggHDEvh162NNuq2/N61FKaMO8ufqaFeXjWNxv/vFciDlLSV7YtcI/usHlEzXS0
+         QATg==
+X-Gm-Message-State: AOAM532sBj61khfY7t9EYSQIHqDK3ryMYth/W1DZW49KpX914kwM1th+
+        BbbjN78e2gwM7z0g+aVqS+w4HnFx7CqArkdoPmQ=
+X-Google-Smtp-Source: ABdhPJyghfSi7+bGOS7SQqFDAcG804xFwgxwAKvBvSPJfgOsYDUEIS+KYDI19lMl7J6498uIrMhJhNEBfHuxmhpBMek=
+X-Received: by 2002:a17:906:160a:: with SMTP id m10mr21575123ejd.170.1591620995724;
+ Mon, 08 Jun 2020 05:56:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200605125545.31974-1-frank@allwinnertech.com> <20200605151810.vmgnnzp7cadfwsu5@gilmour.lan>
+In-Reply-To: <20200605151810.vmgnnzp7cadfwsu5@gilmour.lan>
+From:   Frank Lee <tiny.windzz@gmail.com>
+Date:   Mon, 8 Jun 2020 20:54:51 +0800
+Message-ID: <CAEExFWuoHhLqt4aukmP30SSXmwnmYuRq2t5HWKUBvreeABg=XQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mmc: sunxi-mmc: do not hide address in sunxi_mmc_irq()
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Frank Lee <frank@allwinnertech.com>, chaotian.jing@mediatek.com,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Chen-Yu Tsai <wens@csie.org>, rmfrfs@gmail.com, marex@denx.de,
+        linux-mmc@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 60d53e2c3b75 ("tracing/probe: Split trace_event related data from
-trace_probe") removed the trace_[ku]probe structure from the
-trace_event_call->data pointer. As bpf_get_[ku]probe_info() were
-forgotten in that change, fix them now. These functions are currently
-only used by the bpf_task_fd_query() syscall handler to collect
-information about a perf event.
+On Fri, Jun 5, 2020 at 11:18 PM Maxime Ripard <maxime@cerno.tech> wrote:
+>
+> Hi,
+>
+> On Fri, Jun 05, 2020 at 08:55:44PM +0800, Frank Lee wrote:
+> > From: Yangtao Li <tiny.windzz@gmail.com>
+> >
+> > Using %px to show the actual address in sunxi_mmc_irq()
+> > to help us to debug issue.
+> >
+> > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> > Signed-off-by: Frank Lee <frank@allwinnertech.com>
+>
+> I'm fairly sure this hash is on purpose, and both the commit log of the
+> %px introduction (ad67b74d2469) and the checkpatch message are pretty
+> explicit about it.
+>
+> What issue were you trying to solve here?
 
-Fixes: 60d53e2c3b75 ("tracing/probe: Split trace_event related data from trace_probe")
-Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
----
-Found while trying to run the task_fd_query BPF sample. I intend to try
-and move that sample to kselftests since it seems like a useful
-regression test.
----
- kernel/trace/trace_kprobe.c | 2 +-
- kernel/trace/trace_uprobe.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+There doesn't seem to be a strong requirement to force this to be printed out,
+I just think that ____ptrval____ is very unpleasant.
 
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 35989383ae113..8eeb95e04bf52 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -1629,7 +1629,7 @@ int bpf_get_kprobe_info(const struct perf_event *event, u32 *fd_type,
- 	if (perf_type_tracepoint)
- 		tk = find_trace_kprobe(pevent, group);
- 	else
--		tk = event->tp_event->data;
-+		tk = trace_kprobe_primary_from_call(event->tp_event);
- 	if (!tk)
- 		return -EINVAL;
- 
-diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-index 2a8e8e9c1c754..fdd47f99b18fd 100644
---- a/kernel/trace/trace_uprobe.c
-+++ b/kernel/trace/trace_uprobe.c
-@@ -1412,7 +1412,7 @@ int bpf_get_uprobe_info(const struct perf_event *event, u32 *fd_type,
- 	if (perf_type_tracepoint)
- 		tu = find_probe_event(pevent, group);
- 	else
--		tu = event->tp_event->data;
-+		tu = trace_uprobe_primary_from_call(event->tp_event);
- 	if (!tu)
- 		return -EINVAL;
- 
--- 
-2.27.0
+Or delete %p directly?
 
+Yangtao
