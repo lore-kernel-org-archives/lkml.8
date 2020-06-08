@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8342BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB120C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FF492087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:54:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FC5720774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:54:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591664092;
-	bh=Ua04pMjpye9PITZFvdpeHXmH7tJJFLNH+IV3ssmzsA0=;
+	s=default; t=1591664096;
+	bh=Sl/PYpXNg++EVQUk+AQqR0ej8vbmve0/ub7u9lPRBMY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Psxxg7+Bd55B6EQDdISBKi88HTCTo0mFirfrpsZhXHRSmlwkzeEWNDNrhHPDt1DLJ
-	 jTkupldVV3PkaxBlzdQZLtIF13jHOTcWB/rY5zCkpfG0WIq+QxTlH0gGX4G7+kMaeU
-	 J6zpOSt1ncktjch/LKOfgJFotl1HWOWAfze+IkRs=
+	b=c2nsc745O9l4WC13FF/JcqVZe7epI0AbxJoAcPV86fdDYEiYb7PNOpD2Cku/0WOhZ
+	 niz5zq0rvpiLnJ4YUK36SB6Hlse8g+id/nDr2sT+hIecE56FJUaisfUnsHFM3c3PY5
+	 AQNbYgrmpBqczkhalyw1u9CxzbhG3qCFDwyV67j4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730562AbgFIAyr (ORCPT
+        id S1731755AbgFIAyo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:54:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55234 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:54:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726970AbgFHXJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728423AbgFHXJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 8 Jun 2020 19:09:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAA94208B8;
-        Mon,  8 Jun 2020 23:09:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F352E208C3;
+        Mon,  8 Jun 2020 23:09:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657770;
-        bh=Ua04pMjpye9PITZFvdpeHXmH7tJJFLNH+IV3ssmzsA0=;
+        s=default; t=1591657771;
+        bh=Sl/PYpXNg++EVQUk+AQqR0ej8vbmve0/ub7u9lPRBMY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KTzcm84WpsKqitHrQ1vBbGILl8PTvX4kQcMz+3k+pDP3uoFHoZY22S6+lbsJmyW7n
-         emu+57FMPgthyLKNwdU1kzc09QhmUkuChu+6+pvNObsVXSPEux9WHa/luFMch/BRCf
-         o8b3jU/48/GEpEzSP0LF6/iObKQ0dppmthzuzO/k=
+        b=NeELp2pjl36MzAMRdPZaZKHlcTTbpu2DLTvfPnWfEZrRxfB53jd7a75gmj0kXPSwV
+         JzVwRlM6M90BJLtUvEnloFpG9Ehv9Ey4ejcQsWEZVzRi+UAvNSss5H5QXLU+WsKHI1
+         BHMP6d4s2OTrddoC/lLpGx+YLPRDtbi3x/SMAFTI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 154/274] drivers: net: davinci_mdio: fix potential NULL dereference in davinci_mdio_probe()
-Date:   Mon,  8 Jun 2020 19:04:07 -0400
-Message-Id: <20200608230607.3361041-154-sashal@kernel.org>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 155/274] cpufreq: qcom: fix wrong compatible binding
+Date:   Mon,  8 Jun 2020 19:04:08 -0400
+Message-Id: <20200608230607.3361041-155-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -61,48 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Ansuel Smith <ansuelsmth@gmail.com>
 
-[ Upstream commit e00edb4efbbc07425441a3be2aa87abaf5800d96 ]
+[ Upstream commit 2dea651680cea1f3a29925de51002f33d1f55711 ]
 
-platform_get_resource() may fail and return NULL, so we should
-better check it's return value to avoid a NULL pointer dereference
-since devm_ioremap() does not check input parameters for null.
+Binding in Documentation is still "operating-points-v2-kryo-cpu".
+Restore the old binding to fix the compatibility problem.
 
-This is detected by Coccinelle semantic patch.
-
-@@
-expression pdev, res, n, t, e, e1, e2;
-@@
-
-res = \(platform_get_resource\|platform_get_resource_byname\)(pdev, t, n);
-+ if (!res)
-+   return -EINVAL;
-... when != res == NULL
-e = devm_ioremap(e1, res->start, e2);
-
-Fixes: 03f66f067560 ("net: ethernet: ti: davinci_mdio: use devm_ioremap()")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: a8811ec764f9 ("cpufreq: qcom: Add support for krait based socs")
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ti/davinci_mdio.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/cpufreq/qcom-cpufreq-nvmem.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/ti/davinci_mdio.c b/drivers/net/ethernet/ti/davinci_mdio.c
-index 38b7f6d35759..702fdc393da0 100644
---- a/drivers/net/ethernet/ti/davinci_mdio.c
-+++ b/drivers/net/ethernet/ti/davinci_mdio.c
-@@ -397,6 +397,8 @@ static int davinci_mdio_probe(struct platform_device *pdev)
- 	data->dev = dev;
+diff --git a/drivers/cpufreq/qcom-cpufreq-nvmem.c b/drivers/cpufreq/qcom-cpufreq-nvmem.c
+index a1b8238872a2..d06b37822c3d 100644
+--- a/drivers/cpufreq/qcom-cpufreq-nvmem.c
++++ b/drivers/cpufreq/qcom-cpufreq-nvmem.c
+@@ -277,7 +277,7 @@ static int qcom_cpufreq_probe(struct platform_device *pdev)
+ 	if (!np)
+ 		return -ENOENT;
  
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res)
-+		return -EINVAL;
- 	data->regs = devm_ioremap(dev, res->start, resource_size(res));
- 	if (!data->regs)
- 		return -ENOMEM;
+-	ret = of_device_is_compatible(np, "operating-points-v2-qcom-cpu");
++	ret = of_device_is_compatible(np, "operating-points-v2-kryo-cpu");
+ 	if (!ret) {
+ 		of_node_put(np);
+ 		return -ENOENT;
 -- 
 2.25.1
 
