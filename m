@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EBD5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3672C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:24:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A3BA208B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:24:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 934C8208E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:24:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658659;
-	bh=KXSAq0Og5Tz6OtS3O4BGo0p1Xs/Cmyx2cDecbwU+sxo=;
+	s=default; t=1591658677;
+	bh=elBE11fQiN4qbvXIOtPynWlN6qJBOFWfp7dr4xXo6MY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e4+6KNbSX/XGsmAD/vG0CKj5qbh8mPqItRFF49eIcaAtLzyCaE7Hgu/oaCZlBvia2
-	 4iXYYYhYru7kUm1abdEOxXgvk3fETbqsAwlYsm9DFH5qhLM0eC3b5E7h6mH68lUApe
-	 izGW/LxdwiXkE9EAGkFedf8adL3FHhrRccw69mFE=
+	b=Zx2sxuAQAkUJ5eUBC6XX3l/QpBn9l6Wu4oc3hOjwW3hwNMMLmn0t1ZGcZa8BBVJlC
+	 q93aVAs6DRKqT0B248lus/PF/iS7BENMCRhPVVn2hzbmr5AC0OCvqtn9aL5LDkQrLE
+	 Rc36UEh2tXMGk4jl9tlrDZv/T+6TXHT5FZBOgS6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387498AbgFHXYR (ORCPT
+        id S2387510AbgFHXYe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:24:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41786 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:24:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729897AbgFHXTH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:19:07 -0400
+        id S1730766AbgFHXTR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:19:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B140E20870;
-        Mon,  8 Jun 2020 23:19:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51E212083E;
+        Mon,  8 Jun 2020 23:19:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658347;
-        bh=KXSAq0Og5Tz6OtS3O4BGo0p1Xs/Cmyx2cDecbwU+sxo=;
+        s=default; t=1591658357;
+        bh=elBE11fQiN4qbvXIOtPynWlN6qJBOFWfp7dr4xXo6MY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p1YsHucFMAMAIGsnBdO9YzPsIriH46Qa8liq5BdlyBJ1fHnfbkHII/kB7zjCp1P7t
-         yvLdIfBtvHg5eBKPsdrePC8SLj/H6aMI3HlxDiWKk0QAYUtP5zBnA4QViR59Ypoxgl
-         jmAWDay5e8hDYpE2caL7+o9+IAv99gpRON+3kS6Y=
+        b=pDTrdO53CYIqty9VZfI5HpOf3HOPeH4Jb+N09DjwV+f/jRN15M9RS1nkkWwgCu8hG
+         ZymzmZt33A3ZXT5KZJuuke+GbWpc3A42Oy3ggBhhjCMeNLFkCLRgkWUa4muRhlj4oH
+         VP90kR6rX/PhfLzJRI/Zqz0PDhYI9YVBZ0CQfiU4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gavin Shan <gshan@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 015/175] arm64/kernel: Fix range on invalidating dcache for boot page tables
-Date:   Mon,  8 Jun 2020 19:16:08 -0400
-Message-Id: <20200608231848.3366970-15-sashal@kernel.org>
+Cc:     Wen Gong <wgong@codeaurora.org>, Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 023/175] ath10k: remove the max_sched_scan_reqs value
+Date:   Mon,  8 Jun 2020 19:16:16 -0400
+Message-Id: <20200608231848.3366970-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
 References: <20200608231848.3366970-1-sashal@kernel.org>
@@ -59,93 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gavin Shan <gshan@redhat.com>
+From: Wen Gong <wgong@codeaurora.org>
 
-[ Upstream commit 9d2d75ede59bc1edd8561f2ee9d4702a5ea0ae30 ]
+[ Upstream commit d431f8939c1419854dfe89dd345387f5397c6edd ]
 
-Prior to commit 8eb7e28d4c642c31 ("arm64/mm: move runtime pgds to
-rodata"), idmap_pgd_dir, tramp_pg_dir, reserved_ttbr0, swapper_pg_dir,
-and init_pg_dir were contiguous at the end of the kernel image. The
-maintenance at the end of __create_page_tables assumed these were
-contiguous, and affected everything from the start of idmap_pg_dir
-to the end of init_pg_dir.
+The struct cfg80211_wowlan of NET_DETECT WoWLAN feature share the same
+struct cfg80211_sched_scan_request together with scheduled scan request
+feature, and max_sched_scan_reqs of wiphy is only used for sched scan,
+and ath10k does not support scheduled scan request feature, so ath10k
+does not set flag NL80211_FEATURE_SCHED_SCAN_RANDOM_MAC_ADDR, but ath10k
+set max_sched_scan_reqs of wiphy to a non zero value 1, then function
+nl80211_add_commands_unsplit of cfg80211 will set it support command
+NL80211_CMD_START_SCHED_SCAN because max_sched_scan_reqs is a non zero
+value, but actually ath10k not support it, then it leads a mismatch result
+for sched scan of cfg80211, then application shill found the mismatch and
+stop running case of MAC random address scan and then the case fail.
 
-That commit moved all but init_pg_dir into the .rodata section, with
-other data placed between idmap_pg_dir and init_pg_dir, but did not
-update the maintenance. Hence the maintenance is performed on much
-more data than necessary (but as the bootloader previously made this
-clean to the PoC there is no functional problem).
+After remove max_sched_scan_reqs value, it keeps match for sched scan and
+case of MAC random address scan pass.
 
-As we only alter idmap_pg_dir, and init_pg_dir, we only need to perform
-maintenance for these. As the other dirs are in .rodata, the bootloader
-will have initialised them as expected and cleaned them to the PoC. The
-kernel will initialize them as necessary after enabling the MMU.
+Tested with QCA6174 SDIO with firmware WLAN.RMH.4.4.1-00029.
+Tested with QCA6174 PCIe with firmware WLAN.RM.4.4.1-00110-QCARMSWP-1.
 
-This patch reworks the maintenance to only cover the idmap_pg_dir and
-init_pg_dir to avoid this unnecessary work.
-
-Signed-off-by: Gavin Shan <gshan@redhat.com>
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-Link: https://lore.kernel.org/r/20200427235700.112220-1-gshan@redhat.com
-Signed-off-by: Will Deacon <will@kernel.org>
+Fixes: ce834e280f2f875 ("ath10k: support NET_DETECT WoWLAN feature")
+Signed-off-by: Wen Gong <wgong@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20191114050001.4658-1-wgong@codeaurora.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/pgtable.h |  1 +
- arch/arm64/kernel/head.S         | 12 +++++++++---
- arch/arm64/kernel/vmlinux.lds.S  |  1 +
- 3 files changed, 11 insertions(+), 3 deletions(-)
+ drivers/net/wireless/ath/ath10k/mac.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index 13ebe2bad79f..41dd4b1f0ccb 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -456,6 +456,7 @@ extern pgd_t init_pg_dir[PTRS_PER_PGD];
- extern pgd_t init_pg_end[];
- extern pgd_t swapper_pg_dir[PTRS_PER_PGD];
- extern pgd_t idmap_pg_dir[PTRS_PER_PGD];
-+extern pgd_t idmap_pg_end[];
- extern pgd_t tramp_pg_dir[PTRS_PER_PGD];
+diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
+index 36d24ea126a2..b0f6f2727053 100644
+--- a/drivers/net/wireless/ath/ath10k/mac.c
++++ b/drivers/net/wireless/ath/ath10k/mac.c
+@@ -8811,7 +8811,6 @@ int ath10k_mac_register(struct ath10k *ar)
+ 	ar->hw->wiphy->max_scan_ie_len = WLAN_SCAN_PARAMS_MAX_IE_LEN;
  
- extern void set_swapper_pgd(pgd_t *pgdp, pgd_t pgd);
-diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
-index 989b1944cb71..bdb5ec341900 100644
---- a/arch/arm64/kernel/head.S
-+++ b/arch/arm64/kernel/head.S
-@@ -393,13 +393,19 @@ __create_page_tables:
- 
- 	/*
- 	 * Since the page tables have been populated with non-cacheable
--	 * accesses (MMU disabled), invalidate the idmap and swapper page
--	 * tables again to remove any speculatively loaded cache lines.
-+	 * accesses (MMU disabled), invalidate those tables again to
-+	 * remove any speculatively loaded cache lines.
- 	 */
-+	dmb	sy
-+
- 	adrp	x0, idmap_pg_dir
-+	adrp	x1, idmap_pg_end
-+	sub	x1, x1, x0
-+	bl	__inval_dcache_area
-+
-+	adrp	x0, init_pg_dir
- 	adrp	x1, init_pg_end
- 	sub	x1, x1, x0
--	dmb	sy
- 	bl	__inval_dcache_area
- 
- 	ret	x28
-diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
-index aa76f7259668..e1af25dbc57e 100644
---- a/arch/arm64/kernel/vmlinux.lds.S
-+++ b/arch/arm64/kernel/vmlinux.lds.S
-@@ -142,6 +142,7 @@ SECTIONS
- 	. = ALIGN(PAGE_SIZE);
- 	idmap_pg_dir = .;
- 	. += IDMAP_DIR_SIZE;
-+	idmap_pg_end = .;
- 
- #ifdef CONFIG_UNMAP_KERNEL_AT_EL0
- 	tramp_pg_dir = .;
+ 	if (test_bit(WMI_SERVICE_NLO, ar->wmi.svc_map)) {
+-		ar->hw->wiphy->max_sched_scan_reqs = 1;
+ 		ar->hw->wiphy->max_sched_scan_ssids = WMI_PNO_MAX_SUPP_NETWORKS;
+ 		ar->hw->wiphy->max_match_sets = WMI_PNO_MAX_SUPP_NETWORKS;
+ 		ar->hw->wiphy->max_sched_scan_ie_len = WMI_PNO_MAX_IE_LENGTH;
 -- 
 2.25.1
 
