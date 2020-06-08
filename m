@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB4D6C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C4AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D5C42076C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:00:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAE032076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:00:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591664425;
-	bh=ryU2J0iK8Lex4mHvGq6NX9OPCyzlM1AV6h7MRDb0HtI=;
+	s=default; t=1591664435;
+	bh=+2NOhQ0peQsJcxduJPSM0cvQWxmusNKkC9yPB/u6K58=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lTiS+fWOdxOUlAKZvIN5Cw4+unF1D86kIyWp2Str5KEg38hC/xzZdo8OueI+Tch75
-	 Uahu72RiMvRAY/k/R+14OkwB4/EI4fgrcyV36OGZPgwYymsr5N3zm5+kM2cSjX0m9l
-	 VxkL7WoqTHoWcxJk/9jM5OiUvFOG4q7AzeS01C2I=
+	b=defWogjdloy96VCUpUBOltLtgDv4RDDLatem5qfyKOn0zeh3L2llaskB/WNw2J4OE
+	 y38dcii5s8ciJOGCWCHkQS41sM4YwsK5m8f7+mt9tW+qJmvsXZVQ+06LSNIQPme0Iz
+	 pcDlf6rK+VD4oWqo+E0Z5S0bsVNRfu7cMkgXcseg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388078AbgFIBAX (ORCPT
+        id S2388097AbgFIBAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 21:00:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53506 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 21:00:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728147AbgFHXIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:08:21 -0400
+        id S1728144AbgFHXIT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:08:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76C7C20890;
-        Mon,  8 Jun 2020 23:08:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BC23208B3;
+        Mon,  8 Jun 2020 23:08:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657700;
-        bh=ryU2J0iK8Lex4mHvGq6NX9OPCyzlM1AV6h7MRDb0HtI=;
+        s=default; t=1591657699;
+        bh=+2NOhQ0peQsJcxduJPSM0cvQWxmusNKkC9yPB/u6K58=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bOmxFonwECq+KXAJx4aadvoSiznPcPdML6oDnUKGm4K4VIVzXrjqHMxYqVq5QnyCC
-         86MLw55ZuJf90VPu7kQUorF5rYCc0TfvclNxpxnDevAq8iBoQvH2FqQzIceunMD/zQ
-         EE6sk5fAr5CJ7QdeeJrQULkc2hmgMo9biFufiGuc=
+        b=zE/h0stFZvhtamSDe92/jiNDqFbmUzzmXsxUfZDbMGXamzwjeMAGXU+yWynb5eE28
+         qvZJRbDXXrBOcLcMC0kCpO27GfSBDVKYzkO2cNbpoEy1jUqOPeOAkQ5sOMk78OHzRV
+         2tfZrWKAGEtLf/7/Q1/z9RgkOyaSGXcDMUz/AYmg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jaehoon Chung <jh80.chung@samsung.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 099/274] brcmfmac: fix wrong location to get firmware feature
-Date:   Mon,  8 Jun 2020 19:03:12 -0400
-Message-Id: <20200608230607.3361041-99-sashal@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 098/274] spi: Respect DataBitLength field of SpiSerialBusV2() ACPI resource
+Date:   Mon,  8 Jun 2020 19:03:11 -0400
+Message-Id: <20200608230607.3361041-98-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -62,43 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jaehoon Chung <jh80.chung@samsung.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit c57673852062428cdeabdd6501ac8b8e4c302067 ]
+[ Upstream commit 0dadde344d965566589cd82797893d5aa06557a3 ]
 
-sup_wpa feature is getting after setting feature_disable flag.
-If firmware is supported sup_wpa feature,  it's always enabled
-regardless of feature_disable flag.
+By unknown reason the commit 64bee4d28c9e
+  ("spi / ACPI: add ACPI enumeration support")
+missed the DataBitLength property to encounter when parse SPI slave
+device data from ACPI.
 
-Fixes: b8a64f0e96c2 ("brcmfmac: support 4-way handshake offloading for WPA/WPA2-PSK")
-Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200330052528.10503-1-jh80.chung@samsung.com
+Fill the gap here.
+
+Fixes: 64bee4d28c9e ("spi / ACPI: add ACPI enumeration support")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Link: https://lore.kernel.org/r/20200413180406.1826-1-andriy.shevchenko@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/spi/spi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
-index 5da0dda0d899..0dcefbd0c000 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
-@@ -285,13 +285,14 @@ void brcmf_feat_attach(struct brcmf_pub *drvr)
- 	if (!err)
- 		ifp->drvr->feat_flags |= BIT(BRCMF_FEAT_SCAN_RANDOM_MAC);
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index c92c89467e7e..e0e27fe06878 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -2111,6 +2111,7 @@ static int acpi_spi_add_resource(struct acpi_resource *ares, void *data)
+ 			}
  
-+	brcmf_feat_iovar_int_get(ifp, BRCMF_FEAT_FWSUP, "sup_wpa");
-+
- 	if (drvr->settings->feature_disable) {
- 		brcmf_dbg(INFO, "Features: 0x%02x, disable: 0x%02x\n",
- 			  ifp->drvr->feat_flags,
- 			  drvr->settings->feature_disable);
- 		ifp->drvr->feat_flags &= ~drvr->settings->feature_disable;
- 	}
--	brcmf_feat_iovar_int_get(ifp, BRCMF_FEAT_FWSUP, "sup_wpa");
+ 			lookup->max_speed_hz = sb->connection_speed;
++			lookup->bits_per_word = sb->data_bit_length;
  
- 	brcmf_feat_firmware_overrides(drvr);
- 
+ 			if (sb->clock_phase == ACPI_SPI_SECOND_PHASE)
+ 				lookup->mode |= SPI_CPHA;
 -- 
 2.25.1
 
