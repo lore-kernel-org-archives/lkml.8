@@ -2,126 +2,101 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5183C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49166C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:29:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFD2A206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:28:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 180CE20814
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:29:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="cWdlGqhA"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="xR5FMYiQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730496AbgFHQ2C (ORCPT
+        id S1730537AbgFHQ3T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 12:28:02 -0400
-Received: from m15111.mail.126.com ([220.181.15.111]:54020 "EHLO
-        m15111.mail.126.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726042AbgFHQ2B (ORCPT
+        Mon, 8 Jun 2020 12:29:19 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:32976 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730382AbgFHQ3S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 12:28:01 -0400
-X-Greylist: delayed 1897 seconds by postgrey-1.27 at vger.kernel.org; Mon, 08 Jun 2020 12:27:58 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-        s=s110527; h=From:Subject:Date:Message-Id; bh=DMG1x6PUP5eE1dmHHA
-        dR6SfyvqYK7zNd6DIJ1Bsh6lI=; b=cWdlGqhAptDsUTxrixJL7jSXjxjmpdsXSB
-        7L8MY54VG8LlSC4x7LdC7PgSGc7wlS0SHILWbdVuBS+sL+qlS2elPauHMSl9CJQL
-        oeM4o7pLK45ST8g8bmhqmVvKYLJXXmzS/4WX0CcRreIefJChXGh/Ku2KJYcuhG/y
-        sxHlft+os=
-Received: from 192.168.137.250 (unknown [112.10.75.37])
-        by smtp1 (Coremail) with SMTP id C8mowAD3Mh2hX95e45kmGQ--.43847S3;
-        Mon, 08 Jun 2020 23:56:19 +0800 (CST)
-From:   Xianting Tian <xianting_tian@126.com>
-To:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] direct-io: pass correct argument to dio_complete
-Date:   Mon,  8 Jun 2020 11:56:17 -0400
-Message-Id: <1591631777-9708-1-git-send-email-xianting_tian@126.com>
-X-Mailer: git-send-email 1.8.3.1
-X-CM-TRANSID: C8mowAD3Mh2hX95e45kmGQ--.43847S3
-X-Coremail-Antispam: 1Uf129KBjvJXoWxZw45KFyxtr4ktw17ur4xCrg_yoW5CrWkpF
-        yjg3y7KFWavas2yw1UAF4xZF4xWrWkGF4UWrWF9w17Ary3Jrn7tF4rKryfAr4UJrn3try2
-        qr409rW5J3WqyaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jrManUUUUU=
-X-Originating-IP: [112.10.75.37]
-X-CM-SenderInfo: h0ld03plqjs3xldqqiyswou0bp/1tbiwQM9pFpD+k1vMgAAso
+        Mon, 8 Jun 2020 12:29:18 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 058G8YAa145658;
+        Mon, 8 Jun 2020 16:29:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
+ bh=04Il17JgmO/yFBoVWabXMI9zWbJmJBkARiQl8/paJGA=;
+ b=xR5FMYiQJIN6zTJejYqSu2UZBMXU7pU1+JKan9x178k/67WykfcQIm9DqbetVnFlSmnn
+ 0bcd8/dbPizTQ6pZ1ew2Rg8XBhiOalcAnAMBodckSk+1CeVRBikrdQeHhhr7BCmgB6Zn
+ sZu7satUxRvKDd++ksn4pZ4o6wGURvkMbhteCTDunYl7AInZGGy0jKaya3fe/c98n/CE
+ ZYaS2k4u8N0VVsOxr2EoSExocsMNH5tcYWRnr+/5LYPZZx6PAuv3fUVmM5EsqqcPc1UP
+ eOjpt460/X2Of1vwTK8hZHwxB/J55yGSCKjfjdp+8CWEk2/HGc3lbiR8YbQXbchFSBBu kg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 31g3smqqnt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 08 Jun 2020 16:29:02 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 058GEYMh114574;
+        Mon, 8 Jun 2020 16:29:02 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 31gmwq5yjs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 08 Jun 2020 16:29:02 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 058GSxih024264;
+        Mon, 8 Jun 2020 16:29:00 GMT
+Received: from localhost.localdomain (/10.211.9.80)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 08 Jun 2020 09:28:59 -0700
+From:   Dongli Zhang <dongli.zhang@oracle.com>
+To:     linux-nvme@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, hch@lst.de, sagi@grimberg.me,
+        chaitanya.kulkarni@wdc.com, kbusch@kernel.org, axboe@fb.com
+Subject: [PATCH 1/2] nvmet-loop: remove unused 'target_ctrl' in nvme_loop_ctrl
+Date:   Mon,  8 Jun 2020 09:20:01 -0700
+Message-Id: <20200608162002.17017-2-dongli.zhang@oracle.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200608162002.17017-1-dongli.zhang@oracle.com>
+References: <20200608162002.17017-1-dongli.zhang@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9646 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 spamscore=0 adultscore=0
+ mlxscore=0 mlxlogscore=999 bulkscore=0 malwarescore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006080116
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9646 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 impostorscore=0 cotscore=-2147483648 suspectscore=1
+ spamscore=0 bulkscore=0 malwarescore=0 phishscore=0 mlxscore=0
+ mlxlogscore=999 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006080116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When submit async direct-io write operation in function
-do_blockdev_direct_IO, 'struct dio' records the info of all bios,
-initial value of dio->refcount is set to 1, 'dio->refcount++' is
-executed in dio_bio_submit when submit one bio, 'dio->refcount--'
-is executed in bio completion handler dio_bio_end_aio.
+This field is never used since the introduction of nvme loopback by
+commit 3a85a5de29ea ("nvme-loop: add a NVMe loopback host driver").
 
-In do_blockdev_direct_IO, it also calls drop_refcount to do
-'dio->refcount--', then judge if dio->refcount is 0, if yes, it
-will call dio_complete to complete the dio:
-    if (drop_refcount(dio) == 0) {
-          retval = dio_complete(dio, retval, DIO_COMPLETE_INVALIDATE);
-    } else
-
-dio_bio_end_aio and drop_refcount will race to judge if dio->refcount
-is 0:
-1, if dio_bio_end_aio finds dio->refcount is 0, it will queue work if
-   defer_completion is set, work handler
-   dio_aio_complete_work->dio_complete will be called:
-      dio_complete(dio, 0,
-                    DIO_COMPLETE_ASYNC | DIO_COMPLETE_INVALIDATE);
-   if defer_completion not set, it will call:
-      dio_complete(dio, 0, DIO_COMPLETE_ASYNC);
-   In above two cases, because DIO_COMPLETE_ASYNC is passed to
-   dio_complete. So in dio_complete, it will call aio completion handler:
-      dio->iocb->ki_complete(dio->iocb, ret, 0);
-   As ki_complete is set to aio_complete for async io, which will fill
-   an event to ring buffer, then user can use io_getevents to get this
-   event.
-2, if drop_refcount finds dio->refcount is 0, it will call:
-      dio_complete(dio, retval, DIO_COMPLETE_INVALIDATE);
-   As no DIO_COMPLETE_ASYNC is passed to dio_complete. So in dio_complete,
-   ki_complete(aio_complete) will not be called. Eventually, no one fills
-   the completion event to ring buffer, so user can't get the completion
-   event via io_getevents.
-
-Currently, we doesn't meet above issue with existing kernel code,
-I think because do_blockdev_direct_IO is called in bio submission path,
-it will be quickly completed before all aync bios completion in almost
-all cases, so when drop_refcounng is executing, it finds dio->refcount is
-not 0 after 'dio->refcount--'. But when the last bio completed,
-dio_bio_end_aio will be called, which will find dio->refcount is 0,
-then below code will be executed and the async events ring buffer getting
-to be filled:
-      dio_complete(dio, 0, DIO_COMPLETE_ASYNC | DIO_COMPLETE_INVALIDATE);
-      or
-      dio_complete(dio, 0, DIO_COMPLETE_ASYNC);
-
-Make the code logically with this patch and cover above scenario.
-
-Signed-off-by: Xianting Tian <xianting_tian@126.com>
+Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
 ---
- fs/direct-io.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/nvme/target/loop.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/fs/direct-io.c b/fs/direct-io.c
-index 1543b5a..552459f 100644
---- a/fs/direct-io.c
-+++ b/fs/direct-io.c
-@@ -1345,7 +1345,9 @@ static inline int drop_refcount(struct dio *dio)
- 		dio_await_completion(dio);
+diff --git a/drivers/nvme/target/loop.c b/drivers/nvme/target/loop.c
+index 0d54e730cbf2..e8fa70c15143 100644
+--- a/drivers/nvme/target/loop.c
++++ b/drivers/nvme/target/loop.c
+@@ -36,7 +36,6 @@ struct nvme_loop_ctrl {
+ 	struct nvme_loop_iod	async_event_iod;
+ 	struct nvme_ctrl	ctrl;
  
- 	if (drop_refcount(dio) == 0) {
--		retval = dio_complete(dio, retval, DIO_COMPLETE_INVALIDATE);
-+		retval = dio_complete(dio, retval, dio->is_async ?
-+				DIO_COMPLETE_ASYNC | DIO_COMPLETE_INVALIDATE :
-+				DIO_COMPLETE_INVALIDATE);
- 	} else
- 		BUG_ON(retval != -EIOCBQUEUED);
+-	struct nvmet_ctrl	*target_ctrl;
+ 	struct nvmet_port	*port;
+ };
  
 -- 
-1.8.3.1
+2.17.1
 
