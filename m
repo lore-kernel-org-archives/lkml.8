@@ -2,58 +2,126 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B47F9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1732C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 947A8206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:26:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8892A206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:26:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729556AbgFHL0h (ORCPT
+        id S1729592AbgFHL0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 07:26:37 -0400
-Received: from verein.lst.de ([213.95.11.211]:36827 "EHLO verein.lst.de"
+        Mon, 8 Jun 2020 07:26:55 -0400
+Received: from foss.arm.com ([217.140.110.172]:51570 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729310AbgFHL0h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 07:26:37 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id F1A6C68B02; Mon,  8 Jun 2020 13:26:33 +0200 (CEST)
-Date:   Mon, 8 Jun 2020 13:26:33 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     Christoph Hellwig <hch@lst.de>, Jason Yan <yanaijie@huawei.com>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        hulkci@huawei.com, linux-kernel@vger.kernel.org,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Jan Kara <jack@suse.cz>, Jens Axboe <axboe@kernel.dk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Ming Lei <ming.lei@redhat.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>
-Subject: Re: [PATCH v4] block: Fix use-after-free in blkdev_get()
-Message-ID: <20200608112633.GA21310@lst.de>
-References: <1612c34d-cd28-b80c-7296-5e17276a6596@web.de>
+        id S1729310AbgFHL0y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 07:26:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 915C01FB;
+        Mon,  8 Jun 2020 04:26:53 -0700 (PDT)
+Received: from [10.57.9.113] (unknown [10.57.9.113])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7FFEC3F73D;
+        Mon,  8 Jun 2020 04:26:52 -0700 (PDT)
+Subject: Re: [RFC PATCH] iommu/arm-smmu: Remove shutdown callback
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Will Deacon <will@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20200607110918.1733-1-saiprakash.ranjan@codeaurora.org>
+ <20200608081846.GA1542@willie-the-truck>
+ <08c293eefc20bc2c67f2d2639b93f0a5@codeaurora.org>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <e072f61a-d6cf-2e34-efd5-c1db38c5c622@arm.com>
+Date:   Mon, 8 Jun 2020 12:26:46 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <08c293eefc20bc2c67f2d2639b93f0a5@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1612c34d-cd28-b80c-7296-5e17276a6596@web.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 11:48:24AM +0200, Markus Elfring wrote:
-> > Looks good,
-> >
-> > Reviewed-by: Christoph Hellwig <hch@lst.de>
+On 2020-06-08 10:13, Sai Prakash Ranjan wrote:
+> Hi Will,
 > 
-> How does this feedback fit to remaining typos in the change description?
-> Do you care for any further improvements of the commit message
-> besides the discussed tag “Fixes”?
+> On 2020-06-08 13:48, Will Deacon wrote:
+>> On Sun, Jun 07, 2020 at 04:39:18PM +0530, Sai Prakash Ranjan wrote:
+>>> Remove SMMU shutdown callback since it seems to cause more
+>>> problems than benefits. With this callback, we need to make
+>>> sure that all clients/consumers of SMMU do not perform any
+>>> DMA activity once the SMMU is shutdown and translation is
+>>> disabled. In other words we need to add shutdown callbacks
+>>> for all those clients to make sure they do not perform any
+>>> DMA or else we see all kinds of weird crashes during reboot
+>>> or shutdown. This is clearly not scalable as the number of
+>>> clients of SMMU would vary across SoCs and we would need to
+>>> add shutdown callbacks to almost all drivers eventually.
+>>> This callback was added for kexec usecase where it was known
+>>> to cause memory corruptions when SMMU was not shutdown but
+>>> that does not directly relate to SMMU because the memory
+>>> corruption could be because of the client of SMMU which is
+>>> not shutdown properly before booting into new kernel. So in
+>>> that case, we need to identify the client of SMMU causing
+>>> the memory corruption and add appropriate shutdown callback
+>>> to the client rather than to the SMMU.
+>>>
+>>> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>>> ---
+>>>  drivers/iommu/arm-smmu-v3.c | 6 ------
+>>>  drivers/iommu/arm-smmu.c    | 6 ------
+>>>  2 files changed, 12 deletions(-)
+>>
+>> This feels like a giant bodge to me and I think that any driver which
+>> continues to perform DMA after its ->shutdown() function has been invoked
+>> is buggy. Wouldn't that cause problems with kexec(), for example?
+>>
+> 
+> Yes it is definitely a bug in the client driver if DMA is performed
+> after shutdown callback of that respective driver is invoked and it must
+> be fixed in that driver. But here the problem I was describing is not that,
+> most of the drivers do not have a shutdown callback to begin with and 
+> adding
+> it just because of shutdown dependency on SMMU doesn't seem so well because
+> we can have many more such clients in the future and then we have to 
+> just go
+> on adding the shutdown callbacks everywhere.
 
-Just go away please.
+Yes, indeed we do. Like it or not, kexec is a thing, and about 98% of 
+drivers will have been written without considering it.
+
+If fixing one problem exposes lots of other problems, can you honestly 
+say that the best solution is to go back and re-break the original thing?
+
+>> There's a clear shutdown dependency ordering, where the clients of the
+>> SMMU need to shutdown before the SMMU itself, but that's not really
+>> the SMMU driver's problem to solve.
+>>
+> 
+> The problem with kexec may not be directly related to SMMU as you said
+> above if DMA is performed after the client shutdown callback, then its a
+> bug in the client driver, so that needs to be fixed in the client driver,
+> not the SMMU. So is there any point in having the SMMU shutdown callback?
+
+The point is that kexec needs to return the system to a state as close 
+to reset as possible. The SMMU is at least as relevant as any other 
+device in that regard, if not far more so - consider if the first kernel 
+*did* leave it enabled with whatever left-over translations in place, 
+and kexec'ed into another OS that wasn't SMMU-aware...
+
+> As you see, with this SMMU shutdown callback, we need to add shutdown
+> callbacks in all the client drivers.
+
+Yes. And if you really want to argue against that, then at least be 
+consistent and propose removing shutdown from *all* the IOMMU drivers. 
+And then probably propose removing kexec support from all their 
+respective architectures... ;)
+
+Robin.
