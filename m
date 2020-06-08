@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B8B5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B03AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB87720760
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:50:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1102120810
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:50:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663813;
-	bh=DqbIC+qFwTwJvEUr9A+FWIEILOijxXRKAeWP716pKv4=;
+	s=default; t=1591663820;
+	bh=YI/7tjuFBmB0rVIIsPJ7JnNmguqrLJZDN6HRzg1aR3c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p+Tu7evG9CZcDnsZtnyBEosmgIekrlYS9KAPJh/djqfkdd/DT402b5SsFh+d7a9Zc
-	 EMoV7eQjecylyBeGH5VZe2ky9hEXqRe1Cdwc9vKEW4ZwiVmAOZ5AaoaVZugQ/601sJ
-	 QZZBGkj5bLc8U2F3BYBP7x/yyv5ftAoXX/skZteY=
+	b=id3uA3xKubPUXAHkTKoYwBHtmCB0XByWUNVOaKn1e5h//nbO4WUnPr+PpD9VVEtmP
+	 K9Yno//1MAiuV0eXlcYFDl3pxQxxp8awqOVCul6J/rYuJW/i8OqdhZ9rPEdHNid4+U
+	 aevmW6HYqneo24R2PlffKByYu1lG/yo7OdkFVZvw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728694AbgFHXKe (ORCPT
+        id S2387910AbgFIAuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:10:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55022 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:50:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728382AbgFHXJT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:09:19 -0400
+        id S1728688AbgFHXKc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:10:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2146820897;
-        Mon,  8 Jun 2020 23:09:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7208F20890;
+        Mon,  8 Jun 2020 23:10:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657758;
-        bh=DqbIC+qFwTwJvEUr9A+FWIEILOijxXRKAeWP716pKv4=;
+        s=default; t=1591657832;
+        bh=YI/7tjuFBmB0rVIIsPJ7JnNmguqrLJZDN6HRzg1aR3c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gqNNAwg67f73jhwcPxFySDvMt7RKb86/3U1G8rsjstP3uwLeazR9yigLkF9OYfh9O
-         2yhS5pGvpHW4qPzleZFZyTx95RuWvhgZedHPy0TBE6HogIVPvjQ6W4Wj2wR+M8pQOs
-         d9W8Yrs+EDtdwyQ2kS5/L+cm8Ub7Re6riBMSGG5s=
+        b=D6lqGC2oXWHI1yllfZlbMDyWVn/7QoTXFwEtKP13qMGJhUJZzFvG35S6qsc7QRmR0
+         cXdzaa7K70vmVOB+fdh9zCG2mW8ZWO7wrRqR1fdjDN9z25M8vDggKpjhEXmwoqGhOJ
+         Wr0Jjqp/n8O+dnwhT9PMkIGpA/AqT/vgRzS39WwQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jann Horn <jannh@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.7 144/274] exit: Move preemption fixup up, move blocking operations down
-Date:   Mon,  8 Jun 2020 19:03:57 -0400
-Message-Id: <20200608230607.3361041-144-sashal@kernel.org>
+Cc:     Tejun Heo <tj@kernel.org>, Andy Newell <newella@fb.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 202/274] iocost: don't let vrate run wild while there's no saturation signal
+Date:   Mon,  8 Jun 2020 19:04:55 -0400
+Message-Id: <20200608230607.3361041-202-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -59,82 +59,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Tejun Heo <tj@kernel.org>
 
-[ Upstream commit 586b58cac8b4683eb58a1446fbc399de18974e40 ]
+[ Upstream commit 81ca627a933063fa63a6d4c66425de822a2ab7f5 ]
 
-With CONFIG_DEBUG_ATOMIC_SLEEP=y and CONFIG_CGROUPS=y, kernel oopses in
-non-preemptible context look untidy; after the main oops, the kernel prints
-a "sleeping function called from invalid context" report because
-exit_signals() -> cgroup_threadgroup_change_begin() -> percpu_down_read()
-can sleep, and that happens before the preempt_count_set(PREEMPT_ENABLED)
-fixup.
+When the QoS targets are met and nothing is being throttled, there's
+no way to tell how saturated the underlying device is - it could be
+almost entirely idle, at the cusp of saturation or anywhere inbetween.
+Given that there's no information, it's best to keep vrate as-is in
+this state.  Before 7cd806a9a953 ("iocost: improve nr_lagging
+handling"), this was the case - if the device isn't missing QoS
+targets and nothing is being throttled, busy_level was reset to zero.
 
-It looks like the same thing applies to profile_task_exit() and
-kcov_task_exit().
+While fixing nr_lagging handling, 7cd806a9a953 ("iocost: improve
+nr_lagging handling") broke this.  Now, while the device is hitting
+QoS targets and nothing is being throttled, vrate keeps getting
+adjusted according to the existing busy_level.
 
-Fix it by moving the preemption fixup up and the calls to
-profile_task_exit() and kcov_task_exit() down.
+This led to vrate keeping climing till it hits max when there's an IO
+issuer with limited request concurrency if the vrate started low.
+vrate starts getting adjusted upwards until the issuer can issue IOs
+w/o being throttled.  From then on, QoS targets keeps getting met and
+nothing on the system needs throttling and vrate keeps getting
+increased due to the existing busy_level.
 
-Fixes: 1dc0fffc48af ("sched/core: Robustify preemption leak checks")
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200305220657.46800-1-jannh@google.com
+This patch makes the following changes to the busy_level logic.
+
+* Reset busy_level if nr_shortages is zero to avoid the above
+  scenario.
+
+* Make non-zero nr_lagging block lowering nr_level but still clear
+  positive busy_level if there's clear non-saturation signal - QoS
+  targets are met and nr_shortages is non-zero.  nr_lagging's role is
+  preventing adjusting vrate upwards while there are long-running
+  commands and it shouldn't keep busy_level positive while there's
+  clear non-saturation signal.
+
+* Restructure code for clarity and add comments.
+
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Reported-by: Andy Newell <newella@fb.com>
+Fixes: 7cd806a9a953 ("iocost: improve nr_lagging handling")
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/exit.c | 25 ++++++++++++++++---------
- 1 file changed, 16 insertions(+), 9 deletions(-)
+ block/blk-iocost.c | 28 ++++++++++++++++++++++++----
+ 1 file changed, 24 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/exit.c b/kernel/exit.c
-index ce2a75bc0ade..d56fe51bdf07 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -708,8 +708,12 @@ void __noreturn do_exit(long code)
- 	struct task_struct *tsk = current;
- 	int group_dead;
- 
--	profile_task_exit(tsk);
--	kcov_task_exit(tsk);
-+	/*
-+	 * We can get here from a kernel oops, sometimes with preemption off.
-+	 * Start by checking for critical errors.
-+	 * Then fix up important state like USER_DS and preemption.
-+	 * Then do everything else.
-+	 */
- 
- 	WARN_ON(blk_needs_flush_plug(tsk));
- 
-@@ -727,6 +731,16 @@ void __noreturn do_exit(long code)
- 	 */
- 	set_fs(USER_DS);
- 
-+	if (unlikely(in_atomic())) {
-+		pr_info("note: %s[%d] exited with preempt_count %d\n",
-+			current->comm, task_pid_nr(current),
-+			preempt_count());
-+		preempt_count_set(PREEMPT_ENABLED);
-+	}
+diff --git a/block/blk-iocost.c b/block/blk-iocost.c
+index 7c1fe605d0d6..ef193389fffe 100644
+--- a/block/blk-iocost.c
++++ b/block/blk-iocost.c
+@@ -1543,19 +1543,39 @@ static void ioc_timer_fn(struct timer_list *timer)
+ 	if (rq_wait_pct > RQ_WAIT_BUSY_PCT ||
+ 	    missed_ppm[READ] > ppm_rthr ||
+ 	    missed_ppm[WRITE] > ppm_wthr) {
++		/* clearly missing QoS targets, slow down vrate */
+ 		ioc->busy_level = max(ioc->busy_level, 0);
+ 		ioc->busy_level++;
+ 	} else if (rq_wait_pct <= RQ_WAIT_BUSY_PCT * UNBUSY_THR_PCT / 100 &&
+ 		   missed_ppm[READ] <= ppm_rthr * UNBUSY_THR_PCT / 100 &&
+ 		   missed_ppm[WRITE] <= ppm_wthr * UNBUSY_THR_PCT / 100) {
+-		/* take action iff there is contention */
+-		if (nr_shortages && !nr_lagging) {
++		/* QoS targets are being met with >25% margin */
++		if (nr_shortages) {
++			/*
++			 * We're throttling while the device has spare
++			 * capacity.  If vrate was being slowed down, stop.
++			 */
+ 			ioc->busy_level = min(ioc->busy_level, 0);
+-			/* redistribute surpluses first */
+-			if (!nr_surpluses)
 +
-+	profile_task_exit(tsk);
-+	kcov_task_exit(tsk);
-+
- 	ptrace_event(PTRACE_EVENT_EXIT, code);
++			/*
++			 * If there are IOs spanning multiple periods, wait
++			 * them out before pushing the device harder.  If
++			 * there are surpluses, let redistribution work it
++			 * out first.
++			 */
++			if (!nr_lagging && !nr_surpluses)
+ 				ioc->busy_level--;
++		} else {
++			/*
++			 * Nobody is being throttled and the users aren't
++			 * issuing enough IOs to saturate the device.  We
++			 * simply don't know how close the device is to
++			 * saturation.  Coast.
++			 */
++			ioc->busy_level = 0;
+ 		}
+ 	} else {
++		/* inside the hysterisis margin, we're good */
+ 		ioc->busy_level = 0;
+ 	}
  
- 	validate_creds_for_do_exit(tsk);
-@@ -744,13 +758,6 @@ void __noreturn do_exit(long code)
- 
- 	exit_signals(tsk);  /* sets PF_EXITING */
- 
--	if (unlikely(in_atomic())) {
--		pr_info("note: %s[%d] exited with preempt_count %d\n",
--			current->comm, task_pid_nr(current),
--			preempt_count());
--		preempt_count_set(PREEMPT_ENABLED);
--	}
--
- 	/* sync mm's RSS info before statistics gathering */
- 	if (tsk->mm)
- 		sync_mm_rss(tsk->mm);
 -- 
 2.25.1
 
