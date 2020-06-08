@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B33C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD1CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EED592078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:38:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EFEB20853
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:38:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663093;
-	bh=onZzfpPcuwRTXdEaoOhP1R+4XpAuWxWKhY9z4Kw7/F8=;
+	s=default; t=1591663097;
+	bh=GY94fw2tmRpgKnavShB9H5aWlS1x0zlJD2H7yvEEPJk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wadZmBWrmKFsw1faXclf1QT7fwpsOBUY/53kWfqgp8GhHYWVPtowHRLdJ/HlGcl5n
-	 xxlvE8PTsDxAeox+VdHD75nhk5FqBiKyLbJNxvplK+pQ64oFu2khhcIj5xfJ1hTIEr
-	 cDq4NVx39/9PDLaDByx6TSRzoo2EXjfZF/Cly2gI=
+	b=p4WmgiP63H1yn/9nG7GqyK117HZwMjUG2hP9oU3Vif5ElWb+Q0owaPLvxVTOKjBt+
+	 KPHxaE9V4PCJ2l/KsPronDKK5wuji07MwTOoNFBvT3xycnUD7m4YOC0YPIckDu2Zvy
+	 7GDZGALAfaVhr5hsn5z/etq/D1UH1Hqrh1lwFEZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732787AbgFIAiL (ORCPT
+        id S1731325AbgFIAiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:38:11 -0400
+        Mon, 8 Jun 2020 20:38:16 -0400
 Received: from mail.kernel.org ([198.145.29.99]:33358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729524AbgFHXNg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:13:36 -0400
+        id S1729439AbgFHXNd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:13:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F288208C3;
-        Mon,  8 Jun 2020 23:13:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06C09212CC;
+        Mon,  8 Jun 2020 23:13:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658016;
-        bh=onZzfpPcuwRTXdEaoOhP1R+4XpAuWxWKhY9z4Kw7/F8=;
+        s=default; t=1591658012;
+        bh=GY94fw2tmRpgKnavShB9H5aWlS1x0zlJD2H7yvEEPJk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n9Yf7+ps2huDjUaxQ7IspvY4n+e55ZX/OJcHcMT2WYcw8Xw6mICzAzl91OmEv1gFP
-         rhNSILi0zZ1vhAbIIvBHbn5Na2pkef38t71xEL8hEGNEND/AU36RoStmU1RQaoWKxM
-         AHQbg8ZjL29FhA0bbUgMM72njxMC3oxvNjrLUIoE=
+        b=xmRXp1W7r8xMc1fGZOU9syO0Z/TfDJv909MUtIwmYXsJLxmiw/hcf/yj9WCzDsbTi
+         UQcv7yYKj893ARVHJkE1XZRJjyo/glSiQn3/CI/3lduQuDxi5ajPBq4v7qls/ov+90
+         KYjMQcC56YXqswdjkSu0bMe3tlrNWiZxDfh/ZQM0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nayna Jain <nayna@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mimi Zohar <zohar@linux.ibm.com>,
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.6 070/606] powerpc/ima: Fix secure boot rules in ima arch policy
-Date:   Mon,  8 Jun 2020 19:03:15 -0400
-Message-Id: <20200608231211.3363633-70-sashal@kernel.org>
+        linux-nfs@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 067/606] SUNRPC: Revert 241b1f419f0e ("SUNRPC: Remove xdr_buf_trim()")
+Date:   Mon,  8 Jun 2020 19:03:12 -0400
+Message-Id: <20200608231211.3363633-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -61,62 +59,144 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nayna Jain <nayna@linux.ibm.com>
+From: Chuck Lever <chuck.lever@oracle.com>
 
-commit fa4f3f56ccd28ac031ab275e673ed4098855fed4 upstream.
+commit 0a8e7b7d08466b5fc52f8e96070acc116d82a8bb upstream.
 
-To prevent verifying the kernel module appended signature
-twice (finit_module), once by the module_sig_check() and again by IMA,
-powerpc secure boot rules define an IMA architecture specific policy
-rule only if CONFIG_MODULE_SIG_FORCE is not enabled. This,
-unfortunately, does not take into account the ability of enabling
-"sig_enforce" on the boot command line (module.sig_enforce=1).
+I've noticed that when krb5i or krb5p security is in use,
+retransmitted requests are missing the server's duplicate reply
+cache. The computed checksum on the retransmitted request does not
+match the cached checksum, resulting in the server performing the
+retransmitted request again instead of returning the cached reply.
 
-Including the IMA module appraise rule results in failing the
-finit_module syscall, unless the module signing public key is loaded
-onto the IMA keyring.
+The assumptions made when removing xdr_buf_trim() were not correct.
+In the send paths, the upper layer has already set the segment
+lengths correctly, and shorting the buffer's content is simply a
+matter of reducing buf->len.
 
-This patch fixes secure boot policy rules to be based on
-CONFIG_MODULE_SIG instead.
+xdr_buf_trim() is the right answer in the receive/unwrap path on
+both the client and the server. The buffer segment lengths have to
+be shortened one-by-one.
 
-Fixes: 4238fad366a6 ("powerpc/ima: Add support to initialize ima policy rules")
-Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
-Link: https://lore.kernel.org/r/1588342612-14532-1-git-send-email-nayna@linux.ibm.com
+On the server side in particular, head.iov_len needs to be updated
+correctly to enable nfsd_cache_csum() to work correctly. The simple
+buf->len computation doesn't do that, and that results in
+checksumming stale data in the buffer.
+
+The problem isn't noticed until there's significant instability of
+the RPC transport. At that point, the reliability of retransmit
+detection on the server becomes crucial.
+
+Fixes: 241b1f419f0e ("SUNRPC: Remove xdr_buf_trim()")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/powerpc/kernel/ima_arch.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ include/linux/sunrpc/xdr.h          |  1 +
+ net/sunrpc/auth_gss/gss_krb5_wrap.c |  7 +++--
+ net/sunrpc/auth_gss/svcauth_gss.c   |  2 +-
+ net/sunrpc/xdr.c                    | 41 +++++++++++++++++++++++++++++
+ 4 files changed, 46 insertions(+), 5 deletions(-)
 
-diff --git a/arch/powerpc/kernel/ima_arch.c b/arch/powerpc/kernel/ima_arch.c
-index e34116255ced..957abd592075 100644
---- a/arch/powerpc/kernel/ima_arch.c
-+++ b/arch/powerpc/kernel/ima_arch.c
-@@ -19,12 +19,12 @@ bool arch_ima_get_secureboot(void)
-  * to be stored as an xattr or as an appended signature.
-  *
-  * To avoid duplicate signature verification as much as possible, the IMA
-- * policy rule for module appraisal is added only if CONFIG_MODULE_SIG_FORCE
-+ * policy rule for module appraisal is added only if CONFIG_MODULE_SIG
-  * is not enabled.
-  */
- static const char *const secure_rules[] = {
- 	"appraise func=KEXEC_KERNEL_CHECK appraise_flag=check_blacklist appraise_type=imasig|modsig",
--#ifndef CONFIG_MODULE_SIG_FORCE
-+#ifndef CONFIG_MODULE_SIG
- 	"appraise func=MODULE_CHECK appraise_flag=check_blacklist appraise_type=imasig|modsig",
- #endif
- 	NULL
-@@ -50,7 +50,7 @@ static const char *const secure_and_trusted_rules[] = {
- 	"measure func=KEXEC_KERNEL_CHECK template=ima-modsig",
- 	"measure func=MODULE_CHECK template=ima-modsig",
- 	"appraise func=KEXEC_KERNEL_CHECK appraise_flag=check_blacklist appraise_type=imasig|modsig",
--#ifndef CONFIG_MODULE_SIG_FORCE
-+#ifndef CONFIG_MODULE_SIG
- 	"appraise func=MODULE_CHECK appraise_flag=check_blacklist appraise_type=imasig|modsig",
- #endif
- 	NULL
+diff --git a/include/linux/sunrpc/xdr.h b/include/linux/sunrpc/xdr.h
+index b41f34977995..ae2b1449dc09 100644
+--- a/include/linux/sunrpc/xdr.h
++++ b/include/linux/sunrpc/xdr.h
+@@ -184,6 +184,7 @@ xdr_adjust_iovec(struct kvec *iov, __be32 *p)
+ extern void xdr_shift_buf(struct xdr_buf *, size_t);
+ extern void xdr_buf_from_iov(struct kvec *, struct xdr_buf *);
+ extern int xdr_buf_subsegment(struct xdr_buf *, struct xdr_buf *, unsigned int, unsigned int);
++extern void xdr_buf_trim(struct xdr_buf *, unsigned int);
+ extern int xdr_buf_read_mic(struct xdr_buf *, struct xdr_netobj *, unsigned int);
+ extern int read_bytes_from_xdr_buf(struct xdr_buf *, unsigned int, void *, unsigned int);
+ extern int write_bytes_to_xdr_buf(struct xdr_buf *, unsigned int, void *, unsigned int);
+diff --git a/net/sunrpc/auth_gss/gss_krb5_wrap.c b/net/sunrpc/auth_gss/gss_krb5_wrap.c
+index 4905652e7567..cf0fd170ac18 100644
+--- a/net/sunrpc/auth_gss/gss_krb5_wrap.c
++++ b/net/sunrpc/auth_gss/gss_krb5_wrap.c
+@@ -580,15 +580,14 @@ gss_unwrap_kerberos_v2(struct krb5_ctx *kctx, int offset, int len,
+ 	 */
+ 	movelen = min_t(unsigned int, buf->head[0].iov_len, len);
+ 	movelen -= offset + GSS_KRB5_TOK_HDR_LEN + headskip;
+-	if (offset + GSS_KRB5_TOK_HDR_LEN + headskip + movelen >
+-	    buf->head[0].iov_len)
+-		return GSS_S_FAILURE;
++	BUG_ON(offset + GSS_KRB5_TOK_HDR_LEN + headskip + movelen >
++							buf->head[0].iov_len);
+ 	memmove(ptr, ptr + GSS_KRB5_TOK_HDR_LEN + headskip, movelen);
+ 	buf->head[0].iov_len -= GSS_KRB5_TOK_HDR_LEN + headskip;
+ 	buf->len = len - GSS_KRB5_TOK_HDR_LEN + headskip;
+ 
+ 	/* Trim off the trailing "extra count" and checksum blob */
+-	buf->len -= ec + GSS_KRB5_TOK_HDR_LEN + tailskip;
++	xdr_buf_trim(buf, ec + GSS_KRB5_TOK_HDR_LEN + tailskip);
+ 
+ 	*align = XDR_QUADLEN(GSS_KRB5_TOK_HDR_LEN + headskip);
+ 	*slack = *align + XDR_QUADLEN(ec + GSS_KRB5_TOK_HDR_LEN + tailskip);
+diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/svcauth_gss.c
+index 559053646e12..322fd48887f9 100644
+--- a/net/sunrpc/auth_gss/svcauth_gss.c
++++ b/net/sunrpc/auth_gss/svcauth_gss.c
+@@ -900,7 +900,7 @@ unwrap_integ_data(struct svc_rqst *rqstp, struct xdr_buf *buf, u32 seq, struct g
+ 	if (svc_getnl(&buf->head[0]) != seq)
+ 		goto out;
+ 	/* trim off the mic and padding at the end before returning */
+-	buf->len -= 4 + round_up_to_quad(mic.len);
++	xdr_buf_trim(buf, round_up_to_quad(mic.len) + 4);
+ 	stat = 0;
+ out:
+ 	kfree(mic.data);
+diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
+index e5497dc2475b..f6da616267ce 100644
+--- a/net/sunrpc/xdr.c
++++ b/net/sunrpc/xdr.c
+@@ -1150,6 +1150,47 @@ xdr_buf_subsegment(struct xdr_buf *buf, struct xdr_buf *subbuf,
+ }
+ EXPORT_SYMBOL_GPL(xdr_buf_subsegment);
+ 
++/**
++ * xdr_buf_trim - lop at most "len" bytes off the end of "buf"
++ * @buf: buf to be trimmed
++ * @len: number of bytes to reduce "buf" by
++ *
++ * Trim an xdr_buf by the given number of bytes by fixing up the lengths. Note
++ * that it's possible that we'll trim less than that amount if the xdr_buf is
++ * too small, or if (for instance) it's all in the head and the parser has
++ * already read too far into it.
++ */
++void xdr_buf_trim(struct xdr_buf *buf, unsigned int len)
++{
++	size_t cur;
++	unsigned int trim = len;
++
++	if (buf->tail[0].iov_len) {
++		cur = min_t(size_t, buf->tail[0].iov_len, trim);
++		buf->tail[0].iov_len -= cur;
++		trim -= cur;
++		if (!trim)
++			goto fix_len;
++	}
++
++	if (buf->page_len) {
++		cur = min_t(unsigned int, buf->page_len, trim);
++		buf->page_len -= cur;
++		trim -= cur;
++		if (!trim)
++			goto fix_len;
++	}
++
++	if (buf->head[0].iov_len) {
++		cur = min_t(size_t, buf->head[0].iov_len, trim);
++		buf->head[0].iov_len -= cur;
++		trim -= cur;
++	}
++fix_len:
++	buf->len -= (len - trim);
++}
++EXPORT_SYMBOL_GPL(xdr_buf_trim);
++
+ static void __read_bytes_from_xdr_buf(struct xdr_buf *subbuf, void *obj, unsigned int len)
+ {
+ 	unsigned int this_len;
 -- 
 2.25.1
 
