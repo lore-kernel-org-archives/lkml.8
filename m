@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7600FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:16:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CCBBC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:16:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B55020823
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:16:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 066242085B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:16:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658170;
-	bh=BhGOM1jW327fu3Be7hLYIarcEr4CmakEcQukh31BnIA=;
+	s=default; t=1591658174;
+	bh=53hf1uz8lRodea9WxTNtIUA0Ing2SP3IUDfkzRMcjXA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IvHce0MHed4wYrSzSaGhKPe2BM0X/XkdpugiS8R9grSO0XoCC6jNBKVNbNMa2gIKG
-	 CHOFcXi6PuoeXd4b7RQnLaeSdBISPrEIGqiAtm6tP+J/OSJzvyaINmUqkWzcXf12z8
-	 zoKiONRwKo0/af6NucMAEM7e5jF/uKAkx5auOxis=
+	b=LE0Kh2y2fcyrk/OLM5q7lBiNe3u0R2eQUL36uAeKX1FR4zZXFYqngNkbD9ub3A8W4
+	 dkaspyh1oD31teU+Put50sXJNS99DpBjq0mdH7ZtdjHCIRQxH+paa/U7w1GhS2JFaZ
+	 8S8RtmTyy/hxFtc3ezdPTPGQIMZ+ptSxgblxTo24=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730181AbgFHXQJ (ORCPT
+        id S1728224AbgFHXQM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:16:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33186 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:16:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729342AbgFHXNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:13:25 -0400
+        id S1729398AbgFHXN3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:13:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A081208C3;
-        Mon,  8 Jun 2020 23:13:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49E9221501;
+        Mon,  8 Jun 2020 23:13:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658005;
-        bh=BhGOM1jW327fu3Be7hLYIarcEr4CmakEcQukh31BnIA=;
+        s=default; t=1591658009;
+        bh=53hf1uz8lRodea9WxTNtIUA0Ing2SP3IUDfkzRMcjXA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WD8+x1z1um0Me4sbVFCI0qWQ8vzHHjZ8ls737WCW+picLCZHRpPTD67HX5rI5+CDC
-         krA7c39vP6m9cxDuKW3jycG6dlYA0l2g73swytJrhn6ouQ14WnbslsKyvJ/fZ4KXhj
-         DObTQi/J9PTovkPwuwrcHmJXM45z5boyV3Rfy0Vs=
+        b=OmgQ0rFUyMxZiZ7B4LGS2LP+bVz/ItUcraQam6iln6pbrepgLRFAGtkFdM8soECuN
+         vQ7KYSf58lAj5rs8EsGXNAG5FgK0Xb+zLbeKcpZw86ZuiCCiOqKZASJtTqKz8fv+8N
+         Mb1bYZVMBXdvKHxV7J2ZfxFxESbNROxkjBpjqh6M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chen-Yu Tsai <wens@csie.org>, Heiko Stuebner <heiko@sntech.de>,
+Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 061/606] arm64: dts: rockchip: Rename dwc3 device nodes on rk3399 to make dtc happy
-Date:   Mon,  8 Jun 2020 19:03:06 -0400
-Message-Id: <20200608231211.3363633-61-sashal@kernel.org>
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 064/606] arm64: dts: renesas: r8a77980: Fix IPMMU VIP[01] nodes
+Date:   Mon,  8 Jun 2020 19:03:09 -0400
+Message-Id: <20200608231211.3363633-64-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -60,48 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-commit 190c7f6fd43a776d4a6da1dac44408104649e9b7 upstream.
+commit f4d71c6ea9e58c07dd4d02d09c5dd9bb780ec4b1 upstream.
 
-The device tree compiler complains that the dwc3 nodes have regs
-properties but no matching unit addresses.
+Missing the renesas,ipmmu-main property on ipmmu_vip[01] nodes.
 
-Add the unit addresses to the device node name. While at it, also rename
-the nodes from "dwc3" to "usb", as guidelines require device nodes have
-generic names.
-
-Fixes: 7144224f2c2b ("arm64: dts: rockchip: support dwc3 USB for rk3399")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Link: https://lore.kernel.org/r/20200327030414.5903-7-wens@kernel.org
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Fixes: 55697cbb44e4 ("arm64: dts: renesas: r8a779{65,80,90}: Add IPMMU devices nodes)
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Link: https://lore.kernel.org/r/1587108543-23786-1-git-send-email-yoshihiro.shimoda.uh@renesas.com
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/renesas/r8a77980.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 33cc21fcf4c1..5c4238a80144 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -410,7 +410,7 @@ usbdrd3_0: usb@fe800000 {
- 		reset-names = "usb3-otg";
- 		status = "disabled";
- 
--		usbdrd_dwc3_0: dwc3 {
-+		usbdrd_dwc3_0: usb@fe800000 {
- 			compatible = "snps,dwc3";
- 			reg = <0x0 0xfe800000 0x0 0x100000>;
- 			interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH 0>;
-@@ -446,7 +446,7 @@ usbdrd3_1: usb@fe900000 {
- 		reset-names = "usb3-otg";
- 		status = "disabled";
- 
--		usbdrd_dwc3_1: dwc3 {
-+		usbdrd_dwc3_1: usb@fe900000 {
- 			compatible = "snps,dwc3";
- 			reg = <0x0 0xfe900000 0x0 0x100000>;
- 			interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH 0>;
+diff --git a/arch/arm64/boot/dts/renesas/r8a77980.dtsi b/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+index b340fb469999..1692bc95129e 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77980.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+@@ -1318,6 +1318,7 @@ ipmmu_vi0: mmu@febd0000 {
+ 		ipmmu_vip0: mmu@e7b00000 {
+ 			compatible = "renesas,ipmmu-r8a77980";
+ 			reg = <0 0xe7b00000 0 0x1000>;
++			renesas,ipmmu-main = <&ipmmu_mm 4>;
+ 			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+ 			#iommu-cells = <1>;
+ 		};
+@@ -1325,6 +1326,7 @@ ipmmu_vip0: mmu@e7b00000 {
+ 		ipmmu_vip1: mmu@e7960000 {
+ 			compatible = "renesas,ipmmu-r8a77980";
+ 			reg = <0 0xe7960000 0 0x1000>;
++			renesas,ipmmu-main = <&ipmmu_mm 11>;
+ 			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+ 			#iommu-cells = <1>;
+ 		};
 -- 
 2.25.1
 
