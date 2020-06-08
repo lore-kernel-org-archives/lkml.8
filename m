@@ -7,55 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87471C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41A2CC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:37:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B77B2072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:37:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21115206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:37:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663058;
-	bh=8LKkSmb+vl2Qod9UjEFoRnxV0NQLj0PnYzV7F1Rt0VE=;
+	s=default; t=1591663071;
+	bh=cxtuvjAdp9f4Te01/+BlbAfNdOyNnBZ251CMnNbZcN4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o4inXMa5Dx4hdgUC1yxLmWYtZPXnWoGBGCR3OwjM2WPAhQnWzDeFcStYphY5+tQrK
-	 g2kHQmxzzRUE4pmvww85zMDF8K7LEeeqAQvkvNexBA8KVOI/tVBm/B7NJQGkbfdIth
-	 bFbiiQypdCuktMvfYAlYOPSrL4uM4TrMXJEKw0xI=
+	b=AeYBYBb/3/IOpsylY3wqWWLkDUqoG0FwnOIc8nSYMEB+jnA3SOgKe5KWybpLnpSAp
+	 xyvBNtG+kujo9S3I9b97VY4cazE8+inRsuVW+vXjoybREzDY3Patf7KIoads5SueDv
+	 Hpv9j/OJlrH9VplHxZq7BMHj79vvsjJGlmFyM4yo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728372AbgFIAhh (ORCPT
+        id S1729533AbgFHXNl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:37:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33622 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:13:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728729AbgFHXNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:13:46 -0400
+        id S1728902AbgFHXLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:11:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56C8321531;
-        Mon,  8 Jun 2020 23:13:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 538F020B80;
+        Mon,  8 Jun 2020 23:11:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658025;
-        bh=8LKkSmb+vl2Qod9UjEFoRnxV0NQLj0PnYzV7F1Rt0VE=;
+        s=default; t=1591657885;
+        bh=cxtuvjAdp9f4Te01/+BlbAfNdOyNnBZ251CMnNbZcN4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mp2ki8QheQA4RVefEe177A8fH1b8ZRNKxUDRQiIWp+ryAJDmg6lyvML1Ed8K+DVRS
-         kNMIBqClYjYRVxHXsYl/kRLGjXKt3chydNckxLX659Lehejg3qH/IR0BS88/DA5XBd
-         gZOBp/McGKG89tWJTTeaQBwg9M8VAhwlV3XHDqA4=
+        b=UXZE9uecEFG/RGV1hTcN/ZpNH6INmOv/mvA2v97cy0oMqxE0AfL/WcerD2RGhHLKU
+         oybdXOHZJq6ZbWnOPOsjBhm6LzU7D+27vHd0dfY7RnbrpxwcgGHMDbJlmioMpQV7qs
+         Na+Kew31n3rbNPZDP/M/oYCXI4zoIiynRzZN+iyE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-doc@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 077/606] bpf: Restrict bpf_trace_printk()'s %s usage and add %pks, %pus specifier
-Date:   Mon,  8 Jun 2020 19:03:22 -0400
-Message-Id: <20200608231211.3363633-77-sashal@kernel.org>
+Cc:     Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-bcache@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 241/274] bcache: fix refcount underflow in bcache_device_free()
+Date:   Mon,  8 Jun 2020 19:05:34 -0400
+Message-Id: <20200608230607.3361041-241-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
-References: <20200608231211.3363633-1-sashal@kernel.org>
+In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
+References: <20200608230607.3361041-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -65,232 +58,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Borkmann <daniel@iogearbox.net>
+From: Coly Li <colyli@suse.de>
 
-commit b2a5212fb634561bb734c6356904e37f6665b955 upstream.
+[ Upstream commit 86da9f736740eba602389908574dfbb0f517baa5 ]
 
-Usage of plain %s conversion specifier in bpf_trace_printk() suffers from the
-very same issue as bpf_probe_read{,str}() helpers, that is, it is broken on
-archs with overlapping address ranges.
+The problematic code piece in bcache_device_free() is,
 
-While the helpers have been addressed through work in 6ae08ae3dea2 ("bpf: Add
-probe_read_{user, kernel} and probe_read_{user, kernel}_str helpers"), we need
-an option for bpf_trace_printk() as well to fix it.
+ 785 static void bcache_device_free(struct bcache_device *d)
+ 786 {
+ 787     struct gendisk *disk = d->disk;
+ [snipped]
+ 799     if (disk) {
+ 800             if (disk->flags & GENHD_FL_UP)
+ 801                     del_gendisk(disk);
+ 802
+ 803             if (disk->queue)
+ 804                     blk_cleanup_queue(disk->queue);
+ 805
+ 806             ida_simple_remove(&bcache_device_idx,
+ 807                               first_minor_to_idx(disk->first_minor));
+ 808             put_disk(disk);
+ 809         }
+ [snipped]
+ 816 }
 
-Similarly as with the helpers, force users to make an explicit choice by adding
-%pks and %pus specifier to bpf_trace_printk() which will then pick the corresponding
-strncpy_from_unsafe*() variant to perform the access under KERNEL_DS or USER_DS.
-The %pk* (kernel specifier) and %pu* (user specifier) can later also be extended
-for other objects aside strings that are probed and printed under tracing, and
-reused out of other facilities like bpf_seq_printf() or BTF based type printing.
+At line 808, put_disk(disk) may encounter kobject refcount of 'disk'
+being underflow.
 
-Existing behavior of %s for current users is still kept working for archs where it
-is not broken and therefore gated through CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE.
-For archs not having this property we fall-back to pick probing under KERNEL_DS as
-a sensible default.
+Here is how to reproduce the issue,
+- Attche the backing device to a cache device and do random write to
+  make the cache being dirty.
+- Stop the bcache device while the cache device has dirty data of the
+  backing device.
+- Only register the backing device back, NOT register cache device.
+- The bcache device node /dev/bcache0 won't show up, because backing
+  device waits for the cache device shows up for the missing dirty
+  data.
+- Now echo 1 into /sys/fs/bcache/pendings_cleanup, to stop the pending
+  backing device.
+- After the pending backing device stopped, use 'dmesg' to check kernel
+  message, a use-after-free warning from KASA reported the refcount of
+  kobject linked to the 'disk' is underflow.
 
-Fixes: 8d3b7dce8622 ("bpf: add support for %s specifier to bpf_trace_printk()")
-Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-Reported-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Brendan Gregg <brendan.d.gregg@gmail.com>
-Link: https://lore.kernel.org/bpf/20200515101118.6508-4-daniel@iogearbox.net
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The dropping refcount at line 808 in the above code piece is added by
+add_disk(d->disk) in bch_cached_dev_run(). But in the above condition
+the cache device is not registered, bch_cached_dev_run() has no chance
+to be called and the refcount is not added. The put_disk() for a non-
+added refcount of gendisk kobject triggers a underflow warning.
+
+This patch checks whether GENHD_FL_UP is set in disk->flags, if it is
+not set then the bcache device was not added, don't call put_disk()
+and the the underflow issue can be avoided.
+
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/core-api/printk-formats.rst | 14 ++++
- kernel/trace/bpf_trace.c                  | 94 +++++++++++++++--------
- lib/vsprintf.c                            | 12 +++
- 3 files changed, 88 insertions(+), 32 deletions(-)
+ drivers/md/bcache/super.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
-index 8ebe46b1af39..5dfcc4592b23 100644
---- a/Documentation/core-api/printk-formats.rst
-+++ b/Documentation/core-api/printk-formats.rst
-@@ -112,6 +112,20 @@ used when printing stack backtraces. The specifier takes into
- consideration the effect of compiler optimisations which may occur
- when tail-calls are used and marked with the noreturn GCC attribute.
+diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+index d98354fa28e3..4d8bf731b118 100644
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -797,7 +797,9 @@ static void bcache_device_free(struct bcache_device *d)
+ 		bcache_device_detach(d);
  
-+Probed Pointers from BPF / tracing
-+----------------------------------
+ 	if (disk) {
+-		if (disk->flags & GENHD_FL_UP)
++		bool disk_added = (disk->flags & GENHD_FL_UP) != 0;
 +
-+::
-+
-+	%pks	kernel string
-+	%pus	user string
-+
-+The ``k`` and ``u`` specifiers are used for printing prior probed memory from
-+either kernel memory (k) or user memory (u). The subsequent ``s`` specifier
-+results in printing a string. For direct use in regular vsnprintf() the (k)
-+and (u) annotation is ignored, however, when used out of BPF's bpf_trace_printk(),
-+for example, it reads the memory it is pointing to without faulting.
-+
- Kernel Pointers
- ---------------
++		if (disk_added)
+ 			del_gendisk(disk);
  
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 68250d433bd7..b899a2d7e900 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -325,17 +325,15 @@ static const struct bpf_func_proto *bpf_get_probe_write_proto(void)
+ 		if (disk->queue)
+@@ -805,7 +807,8 @@ static void bcache_device_free(struct bcache_device *d)
  
- /*
-  * Only limited trace_printk() conversion specifiers allowed:
-- * %d %i %u %x %ld %li %lu %lx %lld %lli %llu %llx %p %s
-+ * %d %i %u %x %ld %li %lu %lx %lld %lli %llu %llx %p %pks %pus %s
-  */
- BPF_CALL_5(bpf_trace_printk, char *, fmt, u32, fmt_size, u64, arg1,
- 	   u64, arg2, u64, arg3)
- {
-+	int i, mod[3] = {}, fmt_cnt = 0;
-+	char buf[64], fmt_ptype;
-+	void *unsafe_ptr = NULL;
- 	bool str_seen = false;
--	int mod[3] = {};
--	int fmt_cnt = 0;
--	u64 unsafe_addr;
--	char buf[64];
--	int i;
- 
- 	/*
- 	 * bpf_check()->check_func_arg()->check_stack_boundary()
-@@ -361,40 +359,71 @@ BPF_CALL_5(bpf_trace_printk, char *, fmt, u32, fmt_size, u64, arg1,
- 		if (fmt[i] == 'l') {
- 			mod[fmt_cnt]++;
- 			i++;
--		} else if (fmt[i] == 'p' || fmt[i] == 's') {
-+		} else if (fmt[i] == 'p') {
- 			mod[fmt_cnt]++;
-+			if ((fmt[i + 1] == 'k' ||
-+			     fmt[i + 1] == 'u') &&
-+			    fmt[i + 2] == 's') {
-+				fmt_ptype = fmt[i + 1];
-+				i += 2;
-+				goto fmt_str;
-+			}
-+
- 			/* disallow any further format extensions */
- 			if (fmt[i + 1] != 0 &&
- 			    !isspace(fmt[i + 1]) &&
- 			    !ispunct(fmt[i + 1]))
- 				return -EINVAL;
--			fmt_cnt++;
--			if (fmt[i] == 's') {
--				if (str_seen)
--					/* allow only one '%s' per fmt string */
--					return -EINVAL;
--				str_seen = true;
--
--				switch (fmt_cnt) {
--				case 1:
--					unsafe_addr = arg1;
--					arg1 = (long) buf;
--					break;
--				case 2:
--					unsafe_addr = arg2;
--					arg2 = (long) buf;
--					break;
--				case 3:
--					unsafe_addr = arg3;
--					arg3 = (long) buf;
--					break;
--				}
--				buf[0] = 0;
--				strncpy_from_unsafe(buf,
--						    (void *) (long) unsafe_addr,
-+
-+			goto fmt_next;
-+		} else if (fmt[i] == 's') {
-+			mod[fmt_cnt]++;
-+			fmt_ptype = fmt[i];
-+fmt_str:
-+			if (str_seen)
-+				/* allow only one '%s' per fmt string */
-+				return -EINVAL;
-+			str_seen = true;
-+
-+			if (fmt[i + 1] != 0 &&
-+			    !isspace(fmt[i + 1]) &&
-+			    !ispunct(fmt[i + 1]))
-+				return -EINVAL;
-+
-+			switch (fmt_cnt) {
-+			case 0:
-+				unsafe_ptr = (void *)(long)arg1;
-+				arg1 = (long)buf;
-+				break;
-+			case 1:
-+				unsafe_ptr = (void *)(long)arg2;
-+				arg2 = (long)buf;
-+				break;
-+			case 2:
-+				unsafe_ptr = (void *)(long)arg3;
-+				arg3 = (long)buf;
-+				break;
-+			}
-+
-+			buf[0] = 0;
-+			switch (fmt_ptype) {
-+			case 's':
-+#ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
-+				strncpy_from_unsafe(buf, unsafe_ptr,
- 						    sizeof(buf));
-+				break;
-+#endif
-+			case 'k':
-+				strncpy_from_unsafe_strict(buf, unsafe_ptr,
-+							   sizeof(buf));
-+				break;
-+			case 'u':
-+				strncpy_from_unsafe_user(buf,
-+					(__force void __user *)unsafe_ptr,
-+							 sizeof(buf));
-+				break;
- 			}
--			continue;
-+			goto fmt_next;
- 		}
- 
- 		if (fmt[i] == 'l') {
-@@ -405,6 +434,7 @@ BPF_CALL_5(bpf_trace_printk, char *, fmt, u32, fmt_size, u64, arg1,
- 		if (fmt[i] != 'i' && fmt[i] != 'd' &&
- 		    fmt[i] != 'u' && fmt[i] != 'x')
- 			return -EINVAL;
-+fmt_next:
- 		fmt_cnt++;
+ 		ida_simple_remove(&bcache_device_idx,
+ 				  first_minor_to_idx(disk->first_minor));
+-		put_disk(disk);
++		if (disk_added)
++			put_disk(disk);
  	}
  
-diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-index 7c488a1ce318..532b6606a18a 100644
---- a/lib/vsprintf.c
-+++ b/lib/vsprintf.c
-@@ -2168,6 +2168,10 @@ char *fwnode_string(char *buf, char *end, struct fwnode_handle *fwnode,
-  *		f full name
-  *		P node name, including a possible unit address
-  * - 'x' For printing the address. Equivalent to "%lx".
-+ * - '[ku]s' For a BPF/tracing related format specifier, e.g. used out of
-+ *           bpf_trace_printk() where [ku] prefix specifies either kernel (k)
-+ *           or user (u) memory to probe, and:
-+ *              s a string, equivalent to "%s" on direct vsnprintf() use
-  *
-  * ** When making changes please also update:
-  *	Documentation/core-api/printk-formats.rst
-@@ -2251,6 +2255,14 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
- 		if (!IS_ERR(ptr))
- 			break;
- 		return err_ptr(buf, end, ptr, spec);
-+	case 'u':
-+	case 'k':
-+		switch (fmt[1]) {
-+		case 's':
-+			return string(buf, end, ptr, spec);
-+		default:
-+			return error_string(buf, end, "(einval)", spec);
-+		}
- 	}
- 
- 	/* default is to _not_ leak addresses, hash before printing */
+ 	bioset_exit(&d->bio_split);
 -- 
 2.25.1
 
