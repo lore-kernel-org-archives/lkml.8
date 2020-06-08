@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38EC4C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD32EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B915207C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:26:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E3152068D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:26:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658797;
-	bh=GRU7Is+Jtn3XDw/qay4/IT0NjJ1woWRDgZg4hmYqCTg=;
+	s=default; t=1591658800;
+	bh=caU9kQfvMODb0OJ2Hu0o+ztCJtskyU9GmhAPkivUg70=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G91up7YLkgrdK6mKXGVQJHFW3j2t/Bkhn2hs9Yw3cOpwmqTsJHXEJuaI0rxwm/mEx
-	 91pq+QVMXWeCpv64zmxNtdB6pzrtvdl6BqTWXyCsFGMnZ5SjPm5UA2PkHc9a4GJxFq
-	 5j/nUwuVTH2WlGU7OUvakXJ8s0BqAbAeoFODj1rM=
+	b=jv0FHiaIhrEiXNo5J0UOb0wIH0B5adLjn7cU4I/Zos5WXtw6IYRGMbOOQMRgN9XIT
+	 s90u74NH/rcJvXwtvW7w2m5VU60VJl8JgpCJKWRXVViR2Nb5u40XGW1YRyoy1wS4Q5
+	 WO+RXjffNf1kziPeOxInvUj5Bk6yoU7TZ3+unja4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731992AbgFHX0f (ORCPT
+        id S1732007AbgFHX0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:26:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45366 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:26:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731117AbgFHXVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:21:13 -0400
+        id S1730394AbgFHXVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:21:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A8D120870;
-        Mon,  8 Jun 2020 23:21:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96CD320823;
+        Mon,  8 Jun 2020 23:21:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658473;
-        bh=GRU7Is+Jtn3XDw/qay4/IT0NjJ1woWRDgZg4hmYqCTg=;
+        s=default; t=1591658475;
+        bh=caU9kQfvMODb0OJ2Hu0o+ztCJtskyU9GmhAPkivUg70=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D/F8MsRy9A1Ys6gLMW6C/SxFJlJWuRFGQjOXF8L4pThpZ4CxpvZkE/a+LdKDyrD20
-         lllyKs1bwvV0nltKy9puIaVWiqWPc6q4PQQ9Hom4Si/G8E4OeTsMAaaNHZmPeBl1xo
-         Yq1lQK4fQN1atjpDx890JY76ThvEWO67NsxgeaCA=
+        b=oTei9LQKW1gU1ekE14ScOuYJADuOQdK++79/m5/BWEutTTbC03BqVAJhHnpjp6hfP
+         Vurinn8MKRWkTtrWlTNhQjHyQEt2oOlyNioEYsxlj8BkdwbFCU/YqDv+as8HS9BxSd
+         YWdfV8878uDo3DGw4TtA7an0mOmCBavwsDasp6IA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+Cc:     Mordechay Goodstein <mordechay.goodstein@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
         Sasha Levin <sashal@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 110/175] platform/x86: intel-vbtn: Do not advertise switches to userspace if they are not there
-Date:   Mon,  8 Jun 2020 19:17:43 -0400
-Message-Id: <20200608231848.3366970-110-sashal@kernel.org>
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 112/175] iwlwifi: avoid debug max amsdu config overwriting itself
+Date:   Mon,  8 Jun 2020 19:17:45 -0400
+Message-Id: <20200608231848.3366970-112-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
 References: <20200608231848.3366970-1-sashal@kernel.org>
@@ -60,105 +60,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Mordechay Goodstein <mordechay.goodstein@intel.com>
 
-[ Upstream commit 990fbb48067bf8cfa34b7d1e6e1674eaaef2f450 ]
+[ Upstream commit a65a5824298b06049dbaceb8a9bd19709dc9507c ]
 
-Commit de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode
-switch on 2-in-1's") added a DMI chassis-type check to avoid accidentally
-reporting SW_TABLET_MODE = 1 to userspace on laptops (specifically on the
-Dell XPS 9360), to avoid e.g. userspace ignoring touchpad events because
-userspace thought the device was in tablet-mode.
+If we set amsdu_len one after another the second one overwrites
+the orig_amsdu_len so allow only moving from debug to non debug state.
 
-But if we are not getting the initial status of the switch because the
-device does not have a tablet mode, then we really should not advertise
-the presence of a tablet-mode switch to userspace at all, as userspace may
-use the mere presence of this switch for certain heuristics.
+Also the TLC update check was wrong: it was checking that also the orig
+is smaller then the new updated size, which is not the case in debug
+amsdu mode.
 
-Fixes: de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode switch on 2-in-1's")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Mordechay Goodstein <mordechay.goodstein@intel.com>
+Fixes: af2984e9e625 ("iwlwifi: mvm: add a debugfs entry to set a fixed size AMSDU for all TX packets")
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Link: https://lore.kernel.org/r/iwlwifi.20200424182644.e565446a4fce.I9729d8c520d8b8bb4de9a5cdc62e01eb85168aac@changeid
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel-vbtn.c | 25 +++++++++++++++++++------
- 1 file changed, 19 insertions(+), 6 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/debugfs.c | 11 +++++++----
+ drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c   | 15 ++++++++-------
+ 2 files changed, 15 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-index 2ab3dbd26b5e..ab33349035b1 100644
---- a/drivers/platform/x86/intel-vbtn.c
-+++ b/drivers/platform/x86/intel-vbtn.c
-@@ -54,6 +54,7 @@ static const struct key_entry intel_vbtn_switchmap[] = {
- struct intel_vbtn_priv {
- 	struct key_entry keymap[KEYMAP_LEN];
- 	struct input_dev *input_dev;
-+	bool has_switches;
- 	bool wakeup_mode;
- };
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/debugfs.c b/drivers/net/wireless/intel/iwlwifi/mvm/debugfs.c
+index ad18c2f1a806..524f9dd2323d 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/debugfs.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/debugfs.c
+@@ -5,10 +5,9 @@
+  *
+  * GPL LICENSE SUMMARY
+  *
+- * Copyright(c) 2012 - 2014 Intel Corporation. All rights reserved.
+  * Copyright(c) 2013 - 2015 Intel Mobile Communications GmbH
+  * Copyright(c) 2016 - 2017 Intel Deutschland GmbH
+- * Copyright(c) 2018 - 2019 Intel Corporation
++ * Copyright(c) 2012 - 2014, 2018 - 2020 Intel Corporation
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of version 2 of the GNU General Public License as
+@@ -28,10 +27,9 @@
+  *
+  * BSD LICENSE
+  *
+- * Copyright(c) 2012 - 2014 Intel Corporation. All rights reserved.
+  * Copyright(c) 2013 - 2015 Intel Mobile Communications GmbH
+  * Copyright(c) 2016 - 2017 Intel Deutschland GmbH
+- * Copyright(c) 2018 - 2019 Intel Corporation
++ * Copyright(c) 2012 - 2014, 2018 - 2020 Intel Corporation
+  * All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without
+@@ -478,6 +476,11 @@ static ssize_t iwl_dbgfs_amsdu_len_write(struct ieee80211_sta *sta,
+ 	if (kstrtou16(buf, 0, &amsdu_len))
+ 		return -EINVAL;
  
-@@ -69,7 +70,7 @@ static int intel_vbtn_input_setup(struct platform_device *device)
- 		keymap_len += ARRAY_SIZE(intel_vbtn_keymap);
- 	}
- 
--	if (true) {
-+	if (priv->has_switches) {
- 		memcpy(&priv->keymap[keymap_len], intel_vbtn_switchmap,
- 		       ARRAY_SIZE(intel_vbtn_switchmap) *
- 		       sizeof(struct key_entry));
-@@ -137,16 +138,12 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
- 
- static void detect_tablet_mode(struct platform_device *device)
- {
--	const char *chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
- 	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
- 	acpi_handle handle = ACPI_HANDLE(&device->dev);
- 	unsigned long long vgbs;
- 	acpi_status status;
- 	int m;
- 
--	if (!(chassis_type && strcmp(chassis_type, "31") == 0))
--		return;
--
- 	status = acpi_evaluate_integer(handle, "VGBS", NULL, &vgbs);
- 	if (ACPI_FAILURE(status))
- 		return;
-@@ -157,6 +154,19 @@ static void detect_tablet_mode(struct platform_device *device)
- 	input_report_switch(priv->input_dev, SW_DOCK, m);
- }
- 
-+static bool intel_vbtn_has_switches(acpi_handle handle)
-+{
-+	const char *chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
-+	unsigned long long vgbs;
-+	acpi_status status;
++	/* only change from debug set <-> debug unset */
++	if ((amsdu_len && mvmsta->orig_amsdu_len) ||
++	    (!!amsdu_len && mvmsta->orig_amsdu_len))
++		return -EBUSY;
 +
-+	if (!(chassis_type && strcmp(chassis_type, "31") == 0))
-+		return false;
-+
-+	status = acpi_evaluate_integer(handle, "VGBS", NULL, &vgbs);
-+	return ACPI_SUCCESS(status);
-+}
-+
- static int intel_vbtn_probe(struct platform_device *device)
- {
- 	acpi_handle handle = ACPI_HANDLE(&device->dev);
-@@ -175,13 +185,16 @@ static int intel_vbtn_probe(struct platform_device *device)
- 		return -ENOMEM;
- 	dev_set_drvdata(&device->dev, priv);
+ 	if (amsdu_len) {
+ 		mvmsta->orig_amsdu_len = sta->max_amsdu_len;
+ 		sta->max_amsdu_len = amsdu_len;
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c b/drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c
+index 5b2bd603febf..be8bc0601d7b 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c
+@@ -367,14 +367,15 @@ void iwl_mvm_tlc_update_notif(struct iwl_mvm *mvm,
+ 		u16 size = le32_to_cpu(notif->amsdu_size);
+ 		int i;
  
-+	priv->has_switches = intel_vbtn_has_switches(handle);
-+
- 	err = intel_vbtn_input_setup(device);
- 	if (err) {
- 		pr_err("Failed to setup Intel Virtual Button\n");
- 		return err;
- 	}
+-		/*
+-		 * In debug sta->max_amsdu_len < size
+-		 * so also check with orig_amsdu_len which holds the original
+-		 * data before debugfs changed the value
+-		 */
+-		if (WARN_ON(sta->max_amsdu_len < size &&
+-			    mvmsta->orig_amsdu_len < size))
++		if (sta->max_amsdu_len < size) {
++			/*
++			 * In debug sta->max_amsdu_len < size
++			 * so also check with orig_amsdu_len which holds the
++			 * original data before debugfs changed the value
++			 */
++			WARN_ON(mvmsta->orig_amsdu_len < size);
+ 			goto out;
++		}
  
--	detect_tablet_mode(device);
-+	if (priv->has_switches)
-+		detect_tablet_mode(device);
- 
- 	status = acpi_install_notify_handler(handle,
- 					     ACPI_DEVICE_NOTIFY,
+ 		mvmsta->amsdu_enabled = le32_to_cpu(notif->amsdu_enabled);
+ 		mvmsta->max_amsdu_len = size;
 -- 
 2.25.1
 
