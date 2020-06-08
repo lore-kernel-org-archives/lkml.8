@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF4CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A854C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1029D2074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:01:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0097A2074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:01:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660894;
-	bh=otPiUuOD4KPszx0jfuOEfJp3SN2g/6T5J0y2DSIW3mY=;
+	s=default; t=1591660899;
+	bh=vN3bm/W5eDb1TaNYXCarzKAed2YV4sq1ytDMwUyY3ec=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1Ce4keZUaaTSlsDzsa7GUe94inZ6LXmW3ohxL8mN3E4gV2VqsSswJ0u7i8INGHsWp
-	 SDADS/jKSModY8Ig7SSwiJveiJ8vwF9Zabi6Qy3k84C/NEaLcEpnGPmCP1XtSxkYXJ
-	 Ffj88kIrwl6+agytwB7yw3JRKP9X19DOXa/Y/10k=
+	b=x87jdw/Aq/6MUVFArJH3Y0pm4mpWbv+It4jOEs4USFhfpCA04z5c3+enoh4lw7XxF
+	 hsHr/QPf3Vhruaq/9SQdQDSroqKB+nnynodAtOKP8QnYNYSAi9QNw9bnKqy6jhiIrS
+	 YCn3M8OLHiOmjICu9Tgj17zTdieHdaFGF3hW34b0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731312AbgFHXW0 (ORCPT
+        id S1731305AbgFHXWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:22:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39804 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:22:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730533AbgFHXRw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:17:52 -0400
+        id S1730505AbgFHXRo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:17:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D10C2083E;
-        Mon,  8 Jun 2020 23:17:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 028732086A;
+        Mon,  8 Jun 2020 23:17:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658272;
-        bh=otPiUuOD4KPszx0jfuOEfJp3SN2g/6T5J0y2DSIW3mY=;
+        s=default; t=1591658263;
+        bh=vN3bm/W5eDb1TaNYXCarzKAed2YV4sq1ytDMwUyY3ec=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YWMbSl0mWXb2NOfYWIbxZacz9NlfqsJJ9H7Tq7avk/rr4eFyvFMGy1KqbBM8WhILW
-         o/qngdEZMNTFWs0rCEbd0LEzEeKxqDGKBsDJ9MTBklUUJxGAcMq1Iz5F0Bbm6sEG5P
-         0sNYLhDG1G+UTlx194qRtdc1i0flNPMikW8Ulxd4=
+        b=gKeZUGvC+brXbZup/MX5N6jEkUOt8rbibWQYW5euM979yYfNrjRT8SIIxIImV91IF
+         hZRf2G9iVljAY5I7adpcLtCVuHFpSB9bZvIMGwAfzm7TFtro4dm/ZVE1+1mz9wGjH7
+         FRZLNXA2l8r4bCU2vYwweMJ1SoXKEsUEYqtcLKkA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tero Kristo <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 278/606] clk: ti: am33xx: fix RTC clock parent
-Date:   Mon,  8 Jun 2020 19:06:43 -0400
-Message-Id: <20200608231211.3363633-278-sashal@kernel.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        kbuild test robot <lkp@intel.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 271/606] usb: gadget: legacy: fix redundant initialization warnings
+Date:   Mon,  8 Jun 2020 19:06:36 -0400
+Message-Id: <20200608231211.3363633-271-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -60,39 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tero Kristo <t-kristo@ti.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit dc6dbd51009fc412729c307161f442c0a08618f4 ]
+[ Upstream commit d13cce757954fa663c69845611957396843ed87a ]
 
-Right now, trying to use RTC purely with the ti-sysc / clkctrl framework
-fails to enable the RTC module properly. Based on experimentation, this
-appears to be because RTC is sourced from the clkdiv32k optional clock.
-TRM is not very clear on this topic, but fix the RTC to use the proper
-source clock nevertheless.
+Fix the following cppcheck warnings:
 
-Reported-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Link: https://lkml.kernel.org/r/20200424152301.4018-1-t-kristo@ti.com
-Acked-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+drivers/usb/gadget/legacy/inode.c:1364:8: style: Redundant initialization for 'value'. The initialized value is overwritten$
+ value = -EOPNOTSUPP;
+       ^
+drivers/usb/gadget/legacy/inode.c:1331:15: note: value is initialized
+ int    value = -EOPNOTSUPP;
+              ^
+drivers/usb/gadget/legacy/inode.c:1364:8: note: value is overwritten
+ value = -EOPNOTSUPP;
+       ^
+drivers/usb/gadget/legacy/inode.c:1817:8: style: Redundant initialization for 'value'. The initialized value is overwritten$
+ value = -EINVAL;
+       ^
+drivers/usb/gadget/legacy/inode.c:1787:18: note: value is initialized
+ ssize_t   value = len, length = len;
+                 ^
+drivers/usb/gadget/legacy/inode.c:1817:8: note: value is overwritten
+ value = -EINVAL;
+       ^
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
+
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/ti/clk-33xx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/gadget/legacy/inode.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/clk/ti/clk-33xx.c b/drivers/clk/ti/clk-33xx.c
-index e001b9bcb6bf..7dc30dd6c8d5 100644
---- a/drivers/clk/ti/clk-33xx.c
-+++ b/drivers/clk/ti/clk-33xx.c
-@@ -212,7 +212,7 @@ static const struct omap_clkctrl_reg_data am3_mpu_clkctrl_regs[] __initconst = {
- };
+diff --git a/drivers/usb/gadget/legacy/inode.c b/drivers/usb/gadget/legacy/inode.c
+index b47938dff1a2..238f555fe494 100644
+--- a/drivers/usb/gadget/legacy/inode.c
++++ b/drivers/usb/gadget/legacy/inode.c
+@@ -1361,7 +1361,6 @@ gadgetfs_setup (struct usb_gadget *gadget, const struct usb_ctrlrequest *ctrl)
  
- static const struct omap_clkctrl_reg_data am3_l4_rtc_clkctrl_regs[] __initconst = {
--	{ AM3_L4_RTC_RTC_CLKCTRL, NULL, CLKF_SW_SUP, "clk_32768_ck" },
-+	{ AM3_L4_RTC_RTC_CLKCTRL, NULL, CLKF_SW_SUP, "clk-24mhz-clkctrl:0000:0" },
- 	{ 0 },
- };
+ 	req->buf = dev->rbuf;
+ 	req->context = NULL;
+-	value = -EOPNOTSUPP;
+ 	switch (ctrl->bRequest) {
  
+ 	case USB_REQ_GET_DESCRIPTOR:
+@@ -1784,7 +1783,7 @@ static ssize_t
+ dev_config (struct file *fd, const char __user *buf, size_t len, loff_t *ptr)
+ {
+ 	struct dev_data		*dev = fd->private_data;
+-	ssize_t			value = len, length = len;
++	ssize_t			value, length = len;
+ 	unsigned		total;
+ 	u32			tag;
+ 	char			*kbuf;
 -- 
 2.25.1
 
