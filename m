@@ -2,152 +2,156 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C93C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 08:54:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19407C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 08:56:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2B4E2067B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 08:54:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBC452067B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 08:56:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="oyN1beHn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UhoDqW1r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729110AbgFHIys (ORCPT
+        id S1729133AbgFHI4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 04:54:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46966 "EHLO
+        Mon, 8 Jun 2020 04:56:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728038AbgFHIyq (ORCPT
+        with ESMTP id S1726535AbgFHI4p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 04:54:46 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00926C08C5C3
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 01:54:45 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id c194so14585532oig.5
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 01:54:45 -0700 (PDT)
+        Mon, 8 Jun 2020 04:56:45 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34462C08C5C3;
+        Mon,  8 Jun 2020 01:56:45 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id o5so17680202iow.8;
+        Mon, 08 Jun 2020 01:56:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ROtyPLWOkg3okEi0NwLW2pBM+z9aAMRVrxbgfI3b4pA=;
-        b=oyN1beHnXFlzy17CoMj9454c1AhUKNbnqwww/OhaskO1c/8CRxytsLJXVJDHlN05Gw
-         WmiJ+1iANSVlyy/ds3iGQteP/3++tq4IesYmnWm4A7ygHPQs5n6/Pw2GXRBG29ui74pH
-         /S/iBgNXOLO65muneufsTjAi4FcxT9owaoaBM5Rr+dTbcvW9Kv3EmK1wm6aE954iVjip
-         Kkqpk4YTWgK0gpPDaq1/LPAlgS/ZdNvfTlXYzei/S8U2KlyZZm/9wrFTAIZjZYz24SeL
-         RoAYrY2DptV5CvyK9HPKIKcjyjufSIIhevJ5ZAV+ItCz+p+kRfVOXBR4zRz1LjvctzuR
-         i36g==
+        bh=DxNt0eIwm9p9g/mQmVwYWK8COQJtmgwTgesczuWioPg=;
+        b=UhoDqW1r+NKy9FmTgwkOvep3I+dcHP4n4QbazpDBw5ENhBd5iDewyg+kEYSpd//7qj
+         GVeay4/TsadhtoRTPVrfnbOmd+BjIKzn5RPbIogb/LQ2BGY6OUJDouApGyodISusf/fw
+         HWbbT9X5pFBE/YIu/EvTPI86t9yV/EBzxNwgyAzf6bzcWD4LMmP9HrFC6zeW8ETQSxj2
+         sIbmHWf1MRilR55K95KR5ISOQoAS2PpIOLjHX+u0zcesqRUgPheyMLAOzC/FcO3E5hul
+         zBSXRWDsnkp9IcSK37yk4s0sZAYsSWhF0/rXYQDtxSNdVsZ2RzaYi1pJPNWQzrItm4rV
+         Xh0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ROtyPLWOkg3okEi0NwLW2pBM+z9aAMRVrxbgfI3b4pA=;
-        b=iMinGO9jgsQrPVXao5Oq7kSYb85qlP77/cJklopWoMRJHGzr+KKLUtX+iE+FK0qMUZ
-         ByPgrTdvb1BrLlJpCxqlk9CitOcq6vy8YSdxaGYoA/ZfeX954CDmGFStT2bCLV5sUHI0
-         1MElTeGPyHiqMd5p73F3oHSGgc7Fr1nxwOn9iZAHpECpj0AYXSWhmmnkPWz8bNPUhOxh
-         7w1uiFKSH5TTPnaw0e9ySkuI3HnAWvTRsraoJ0He9EfVrpfAMTU3+oXfb9o2xZfETUpJ
-         ylC6PcbxXNzrhB2uEeE9JIjFnK5IAQZytogPAG7sXBjdpA3N1XEbVA51SabDtySoI0ux
-         yfow==
-X-Gm-Message-State: AOAM530P5hH+pcp/avp57gTfz+B/bRuHuyIXUlDqBTMbru1oQKrLiXaL
-        X3ThZLzqrJ2fLVpP1YN09HX9uiLFkzsvSmTAlz8lZg==
-X-Google-Smtp-Source: ABdhPJw3WRh2WfxEBjtsdO03XTNK03wW3y9RUU7sMpsZrszM14VEdv9E5G/pg0FmlIzdgCjMBDPPxY/Uye5UqFZSCoE=
-X-Received: by 2002:aca:a8c3:: with SMTP id r186mr9889996oie.173.1591606485156;
- Mon, 08 Jun 2020 01:54:45 -0700 (PDT)
+        bh=DxNt0eIwm9p9g/mQmVwYWK8COQJtmgwTgesczuWioPg=;
+        b=ihWjIkSrzfUiF05s2QKmB7J+q53FxfMNomP2+hd9LVf4Yh94ISYQj6NEr7LmPoUDCg
+         cu2KsCCq5guZDu2IK62Xz8xf8yGELu9T81WZE5RsnLjm2l4Q3sGJBPUYPsgoN33D0e1N
+         6hcOFKWLt8QjhKHWoGA/jsCON5PJU69D9Qbw5KOc9pF4RalS//v9OuMUhVRhAEoruind
+         S3AosRRfW12uml70vccPVNjs2jS/RQDrJFR8kgTw3VcK4PH1UBMw5FB5xnNfaJVLcmJi
+         sxCCGsy5cwlk1UJ1xw1p2msfu76BjvTRkjDq6vsBNVulVnHFIoGtjh1j5hb0IkJ+H2Bm
+         kmVw==
+X-Gm-Message-State: AOAM5321wp4Xc6nvfBH4Z4TR+pZO0EiVH0Zju6XYyPMO/AHF+iAn5yRC
+        jIJg+iAaTvqfwBMdWya3qbboLKDS7Me6DM03neHFRAp0qK9nHw==
+X-Google-Smtp-Source: ABdhPJy33K/MZi/8fowNpbavwNCsNJmtMmm7LuXYb74EHZQGkej9w1i7LTwl8SZ8cZENnVTKt5AurBBwAssQbfegELw=
+X-Received: by 2002:a05:6602:13c6:: with SMTP id o6mr20248830iov.84.1591606604459;
+ Mon, 08 Jun 2020 01:56:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200604120905.1344074-1-robert.marko@sartura.hr> <202006050445.tiQi7ZvY%lkp@intel.com>
-In-Reply-To: <202006050445.tiQi7ZvY%lkp@intel.com>
-From:   Robert Marko <robert.marko@sartura.hr>
-Date:   Mon, 8 Jun 2020 10:54:34 +0200
-Message-ID: <CA+HBbNFpHugbM6LDGAtJHj4ZAz-K5ojkovaVZ04V3QJS-hytUw@mail.gmail.com>
-Subject: Re: [PATCH] clk: qcom: ipq4019: fix apss cpu overclocking
-To:     kernel test robot <lkp@intel.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>, sboyd@kernel.org,
-        Abhishek Sahu <absahu@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kbuild-all@lists.01.org, clang-built-linux@googlegroups.com,
-        Christian Lamparter <chunkeey@gmail.com>,
-        John Crispin <john@phrozen.org>
+References: <20200605213853.14959-1-sean.j.christopherson@intel.com> <20200605213853.14959-20-sean.j.christopherson@intel.com>
+In-Reply-To: <20200605213853.14959-20-sean.j.christopherson@intel.com>
+From:   Huacai Chen <chenhuacai@gmail.com>
+Date:   Mon, 8 Jun 2020 16:56:32 +0800
+Message-ID: <CAAhV-H6v+tO6PCqjfDcecxk-mUk8YEmSDUMjOXMj1hL5=XSpSw@mail.gmail.com>
+Subject: Re: [PATCH 19/21] KVM: MIPS: Drop @max param from mmu_topup_memory_cache()
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Marc Zyngier <maz@kernel.org>, Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        kvmarm@lists.cs.columbia.edu,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        kvm <kvm@vger.kernel.org>, kvm-ppc@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Feiner <pfeiner@google.com>,
+        Peter Shier <pshier@google.com>,
+        Junaid Shahid <junaids@google.com>,
+        Ben Gardon <bgardon@google.com>,
+        Christoffer Dall <christoffer.dall@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry for asking, but are these warnings relevant?
-GCC9.3 does not throw them
+Reviewed-by: Huacai Chen <chenhc@lemote.com>
 
-Regards
-Robert
-
-On Thu, Jun 4, 2020 at 10:25 PM kernel test robot <lkp@intel.com> wrote:
+On Sat, Jun 6, 2020 at 5:44 AM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
 >
-> Hi Robert,
+> Replace the @max param in mmu_topup_memory_cache() and instead use
+> ARRAY_SIZE() to terminate the loop to fill the cache.  This removes a
+> BUG_ON() and sets the stage for moving MIPS to the common memory cache
+> implementation.
 >
-> I love your patch! Perhaps something to improve:
+> No functional change intended.
 >
-> [auto build test WARNING on clk/clk-next]
-> [also build test WARNING on v5.7 next-20200604]
-> [if your patch is applied to the wrong git tree, please drop us a note to help
-> improve the system. BTW, we also suggest to use '--base' option to specify the
-> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
->
-> url:    https://github.com/0day-ci/linux/commits/Robert-Marko/clk-qcom-ipq4019-fix-apss-cpu-overclocking/20200605-002859
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git clk-next
-> config: x86_64-allyesconfig (attached as .config)
-> compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project ac47588bc4ff5927a01ed6fcd269ce86aba52a7c)
-> reproduce (this is a W=1 build):
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # install x86_64 cross compiling tool for clang build
->         # apt-get install binutils-x86-64-linux-gnu
->         # save the attached .config to linux build tree
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross ARCH=x86_64
->
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
->
-> All warnings (new ones prefixed by >>, old ones prefixed by <<):
->
-> >> drivers/clk/qcom/gcc-ipq4019.c:1247:24: warning: no previous prototype for function 'qcom_find_freq_close' [-Wmissing-prototypes]
-> const struct freq_tbl *qcom_find_freq_close(const struct freq_tbl *f,
-> ^
-> drivers/clk/qcom/gcc-ipq4019.c:1247:7: note: declare 'static' if the function is not intended to be used outside of this translation unit
-> const struct freq_tbl *qcom_find_freq_close(const struct freq_tbl *f,
-> ^
-> static
-> 1 warning generated.
->
-> vim +/qcom_find_freq_close +1247 drivers/clk/qcom/gcc-ipq4019.c
->
->   1245
->   1246
-> > 1247  const struct freq_tbl *qcom_find_freq_close(const struct freq_tbl *f,
->   1248                                               unsigned long rate)
->   1249  {
->   1250          const struct freq_tbl *last = NULL;
->   1251
->   1252          for ( ; f->freq; f++) {
->   1253                  if (rate == f->freq)
->   1254                          return f;
->   1255
->   1256                  if (f->freq > rate) {
->   1257                          if (!last ||
->   1258                             (f->freq - rate) < (rate - last->freq))
->   1259                                  return f;
->   1260                          else
->   1261                                  return last;
->   1262                  }
->   1263                  last = f;
->   1264          }
->   1265
->   1266          return last;
->   1267  }
->   1268
->
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 > ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+>  arch/mips/kvm/mmu.c | 12 ++++--------
+>  1 file changed, 4 insertions(+), 8 deletions(-)
+>
+> diff --git a/arch/mips/kvm/mmu.c b/arch/mips/kvm/mmu.c
+> index 7dad7a293eae..94562c54b930 100644
+> --- a/arch/mips/kvm/mmu.c
+> +++ b/arch/mips/kvm/mmu.c
+> @@ -25,15 +25,13 @@
+>  #define KVM_MMU_CACHE_MIN_PAGES 2
+>  #endif
+>
+> -static int mmu_topup_memory_cache(struct kvm_mmu_memory_cache *cache,
+> -                                 int min, int max)
+> +static int mmu_topup_memory_cache(struct kvm_mmu_memory_cache *cache, int min)
+>  {
+>         void *page;
+>
+> -       BUG_ON(max > KVM_NR_MEM_OBJS);
+>         if (cache->nobjs >= min)
+>                 return 0;
+> -       while (cache->nobjs < max) {
+> +       while (cache->nobjs < ARRAY_SIZE(cache->objects)) {
+>                 page = (void *)__get_free_page(GFP_KERNEL);
+>                 if (!page)
+>                         return -ENOMEM;
+> @@ -711,8 +709,7 @@ static int kvm_mips_map_page(struct kvm_vcpu *vcpu, unsigned long gpa,
+>                 goto out;
+>
+>         /* We need a minimum of cached pages ready for page table creation */
+> -       err = mmu_topup_memory_cache(memcache, KVM_MMU_CACHE_MIN_PAGES,
+> -                                    KVM_NR_MEM_OBJS);
+> +       err = mmu_topup_memory_cache(memcache, KVM_MMU_CACHE_MIN_PAGES);
+>         if (err)
+>                 goto out;
+>
+> @@ -796,8 +793,7 @@ static pte_t *kvm_trap_emul_pte_for_gva(struct kvm_vcpu *vcpu,
+>         int ret;
+>
+>         /* We need a minimum of cached pages ready for page table creation */
+> -       ret = mmu_topup_memory_cache(memcache, KVM_MMU_CACHE_MIN_PAGES,
+> -                                    KVM_NR_MEM_OBJS);
+> +       ret = mmu_topup_memory_cache(memcache, KVM_MMU_CACHE_MIN_PAGES);
+>         if (ret)
+>                 return NULL;
+>
+> --
+> 2.26.0
+>
