@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CCCEC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D72C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:31:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 406472078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:31:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D19D2078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:31:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662701;
-	bh=gL58T2l+VxFbECqv+1prH9CNa859ONoY9tJLzNTc4zQ=;
+	s=default; t=1591662706;
+	bh=44g2p60ef6jX0NKp5biRUFqEU0/P6TtB7D5IGi8TaZw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F8GcyPTM2d5xr50Qi1kWKCoXkUW16oceI3ndqnBT01+xJ26wTRxP7ZZDhw/94xsKC
-	 1oiMT5RA5OAoFhwMryElkdlLKRPkakditbuya82pgy0WNrPGz1NDMXGt1gbqy8dH+a
-	 fljMDY7ByV2l+B8J70TjDCHWLhCFgf/4DPT5s5y4=
+	b=NDAgLx6A/13qKY9xJeQLZxHSqa7lqD5pupDysFTvkqrtYYrGwY55qVIq0DemxkYdt
+	 qEJRhnHCascW6qQV0C2T4Z/+qAZINXmBUpGNLLgczDGivU+Bx6zHZ7zreCIhdkaWCg
+	 K1ucty8EnHtOgsolKpjT4/QFzfkQ52K2RO0g3pMc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733094AbgFIAbf (ORCPT
+        id S1733105AbgFIAbp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:31:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36358 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:31:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730042AbgFHXPa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:15:30 -0400
+        id S1728917AbgFHXP2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:15:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72D6920659;
-        Mon,  8 Jun 2020 23:15:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 248A620760;
+        Mon,  8 Jun 2020 23:15:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658130;
-        bh=gL58T2l+VxFbECqv+1prH9CNa859ONoY9tJLzNTc4zQ=;
+        s=default; t=1591658128;
+        bh=44g2p60ef6jX0NKp5biRUFqEU0/P6TtB7D5IGi8TaZw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nKGoQXZRlFxBGarqTQ65InCkk8fuMcDGmawFsgMhAiGuuGW9rx9+6NRaseg2mh+Fe
-         /w0xZijq1ia4iwFYElMa+yhIO/VP4ED/s3JHAIJeRnlt822K0Jij7K4M2renHflB3v
-         sndO38juaU5Ex2erDYiEHVyC0XOD3zpM1c5KAh0Q=
+        b=KKQI4w4sAQr5p7P9i4PVhBeUJe07y0I6i9Mvtt8i3r1q8a3NNgQVvfJZizGRLo7oP
+         ayhc7lKmR75CNEsra+zMKjWhB+g5FOZBdF54htF41sgzswcFgQrMF4uSzR9YoAZqtW
+         PZlC7445OEnQLhlIF7HgNO8C3YJ7DvTnElhfSjIU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.6 165/606] virtio-balloon: Revert "virtio-balloon: Switch back to OOM handler for VIRTIO_BALLOON_F_DEFLATE_ON_OOM"
-Date:   Mon,  8 Jun 2020 19:04:50 -0400
-Message-Id: <20200608231211.3363633-165-sashal@kernel.org>
+Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
+        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
+        Matthew Auld <matthew.auld@intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.6 163/606] drm/i915: Propagate error from completed fences
+Date:   Mon,  8 Jun 2020 19:04:48 -0400
+Message-Id: <20200608231211.3363633-163-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -59,203 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Michael S. Tsirkin" <mst@redhat.com>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-[ Upstream commit 835a6a649d0dd1b1f46759eb60fff2f63ed253a7 ]
+commit bc850943486887e3859597a266767f95db90aa72 upstream.
 
-This reverts commit 5a6b4cc5b7a1892a8d7f63d6cbac6e0ae2a9d031.
+We need to preserve fatal errors from fences that are being terminated
+as we hook them up.
 
-It has been queued properly in the akpm tree, this version is just
-creating conflicts.
-
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: ef4688497512 ("drm/i915: Propagate fence errors")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Cc: Matthew Auld <matthew.auld@intel.com>
+Reviewed-by: Matthew Auld <matthew.auld@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200506162136.3325-1-chris@chris-wilson.co.uk
+(cherry picked from commit 24fe5f2ab2478053d50a3bc629ada895903a5cbc)
+Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/virtio/virtio_balloon.c | 107 +++++++++++++++++++-------------
- 1 file changed, 63 insertions(+), 44 deletions(-)
+ drivers/gpu/drm/i915/i915_request.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-index 44375a22307b..341458fd95ca 100644
---- a/drivers/virtio/virtio_balloon.c
-+++ b/drivers/virtio/virtio_balloon.c
-@@ -14,7 +14,6 @@
- #include <linux/slab.h>
- #include <linux/module.h>
- #include <linux/balloon_compaction.h>
--#include <linux/oom.h>
- #include <linux/wait.h>
- #include <linux/mm.h>
- #include <linux/mount.h>
-@@ -28,9 +27,7 @@
-  */
- #define VIRTIO_BALLOON_PAGES_PER_PAGE (unsigned)(PAGE_SIZE >> VIRTIO_BALLOON_PFN_SHIFT)
- #define VIRTIO_BALLOON_ARRAY_PFNS_MAX 256
--/* Maximum number of (4k) pages to deflate on OOM notifications. */
--#define VIRTIO_BALLOON_OOM_NR_PAGES 256
--#define VIRTIO_BALLOON_OOM_NOTIFY_PRIORITY 80
-+#define VIRTBALLOON_OOM_NOTIFY_PRIORITY 80
+diff --git a/drivers/gpu/drm/i915/i915_request.c b/drivers/gpu/drm/i915/i915_request.c
+index 32ab154db788..1f50fc8bcebf 100644
+--- a/drivers/gpu/drm/i915/i915_request.c
++++ b/drivers/gpu/drm/i915/i915_request.c
+@@ -947,8 +947,10 @@ i915_request_await_request(struct i915_request *to, struct i915_request *from)
+ 	GEM_BUG_ON(to == from);
+ 	GEM_BUG_ON(to->timeline == from->timeline);
  
- #define VIRTIO_BALLOON_FREE_PAGE_ALLOC_FLAG (__GFP_NORETRY | __GFP_NOWARN | \
- 					     __GFP_NOMEMALLOC)
-@@ -115,11 +112,8 @@ struct virtio_balloon {
- 	/* Memory statistics */
- 	struct virtio_balloon_stat stats[VIRTIO_BALLOON_S_NR];
- 
--	/* Shrinker to return free pages - VIRTIO_BALLOON_F_FREE_PAGE_HINT */
-+	/* To register a shrinker to shrink memory upon memory pressure */
- 	struct shrinker shrinker;
--
--	/* OOM notifier to deflate on OOM - VIRTIO_BALLOON_F_DEFLATE_ON_OOM */
--	struct notifier_block oom_nb;
- };
- 
- static struct virtio_device_id id_table[] = {
-@@ -794,13 +788,50 @@ static unsigned long shrink_free_pages(struct virtio_balloon *vb,
- 	return blocks_freed * VIRTIO_BALLOON_HINT_BLOCK_PAGES;
- }
- 
-+static unsigned long leak_balloon_pages(struct virtio_balloon *vb,
-+                                          unsigned long pages_to_free)
-+{
-+	return leak_balloon(vb, pages_to_free * VIRTIO_BALLOON_PAGES_PER_PAGE) /
-+		VIRTIO_BALLOON_PAGES_PER_PAGE;
-+}
-+
-+static unsigned long shrink_balloon_pages(struct virtio_balloon *vb,
-+					  unsigned long pages_to_free)
-+{
-+	unsigned long pages_freed = 0;
-+
-+	/*
-+	 * One invocation of leak_balloon can deflate at most
-+	 * VIRTIO_BALLOON_ARRAY_PFNS_MAX balloon pages, so we call it
-+	 * multiple times to deflate pages till reaching pages_to_free.
-+	 */
-+	while (vb->num_pages && pages_freed < pages_to_free)
-+		pages_freed += leak_balloon_pages(vb,
-+						  pages_to_free - pages_freed);
-+
-+	update_balloon_size(vb);
-+
-+	return pages_freed;
-+}
-+
- static unsigned long virtio_balloon_shrinker_scan(struct shrinker *shrinker,
- 						  struct shrink_control *sc)
- {
-+	unsigned long pages_to_free, pages_freed = 0;
- 	struct virtio_balloon *vb = container_of(shrinker,
- 					struct virtio_balloon, shrinker);
- 
--	return shrink_free_pages(vb, sc->nr_to_scan);
-+	pages_to_free = sc->nr_to_scan;
-+
-+	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
-+		pages_freed = shrink_free_pages(vb, pages_to_free);
-+
-+	if (pages_freed >= pages_to_free)
-+		return pages_freed;
-+
-+	pages_freed += shrink_balloon_pages(vb, pages_to_free - pages_freed);
-+
-+	return pages_freed;
- }
- 
- static unsigned long virtio_balloon_shrinker_count(struct shrinker *shrinker,
-@@ -808,22 +839,26 @@ static unsigned long virtio_balloon_shrinker_count(struct shrinker *shrinker,
- {
- 	struct virtio_balloon *vb = container_of(shrinker,
- 					struct virtio_balloon, shrinker);
-+	unsigned long count;
-+
-+	count = vb->num_pages / VIRTIO_BALLOON_PAGES_PER_PAGE;
-+	count += vb->num_free_page_blocks * VIRTIO_BALLOON_HINT_BLOCK_PAGES;
- 
--	return vb->num_free_page_blocks * VIRTIO_BALLOON_HINT_BLOCK_PAGES;
-+	return count;
- }
- 
--static int virtio_balloon_oom_notify(struct notifier_block *nb,
--				     unsigned long dummy, void *parm)
-+static void virtio_balloon_unregister_shrinker(struct virtio_balloon *vb)
- {
--	struct virtio_balloon *vb = container_of(nb,
--						 struct virtio_balloon, oom_nb);
--	unsigned long *freed = parm;
-+	unregister_shrinker(&vb->shrinker);
-+}
- 
--	*freed += leak_balloon(vb, VIRTIO_BALLOON_OOM_NR_PAGES) /
--		  VIRTIO_BALLOON_PAGES_PER_PAGE;
--	update_balloon_size(vb);
-+static int virtio_balloon_register_shrinker(struct virtio_balloon *vb)
-+{
-+	vb->shrinker.scan_objects = virtio_balloon_shrinker_scan;
-+	vb->shrinker.count_objects = virtio_balloon_shrinker_count;
-+	vb->shrinker.seeks = DEFAULT_SEEKS;
- 
--	return NOTIFY_OK;
-+	return register_shrinker(&vb->shrinker);
- }
- 
- static int virtballoon_probe(struct virtio_device *vdev)
-@@ -900,35 +935,22 @@ static int virtballoon_probe(struct virtio_device *vdev)
- 			virtio_cwrite(vb->vdev, struct virtio_balloon_config,
- 				      poison_val, &poison_val);
- 		}
--
--		/*
--		 * We're allowed to reuse any free pages, even if they are
--		 * still to be processed by the host.
--		 */
--		vb->shrinker.scan_objects = virtio_balloon_shrinker_scan;
--		vb->shrinker.count_objects = virtio_balloon_shrinker_count;
--		vb->shrinker.seeks = DEFAULT_SEEKS;
--		err = register_shrinker(&vb->shrinker);
+-	if (i915_request_completed(from))
++	if (i915_request_completed(from)) {
++		i915_sw_fence_set_error_once(&to->submit, from->fence.error);
+ 		return 0;
 +	}
-+	/*
-+	 * We continue to use VIRTIO_BALLOON_F_DEFLATE_ON_OOM to decide if a
-+	 * shrinker needs to be registered to relieve memory pressure.
-+	 */
-+	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM)) {
-+		err = virtio_balloon_register_shrinker(vb);
- 		if (err)
- 			goto out_del_balloon_wq;
- 	}
--	if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM)) {
--		vb->oom_nb.notifier_call = virtio_balloon_oom_notify;
--		vb->oom_nb.priority = VIRTIO_BALLOON_OOM_NOTIFY_PRIORITY;
--		err = register_oom_notifier(&vb->oom_nb);
--		if (err < 0)
--			goto out_unregister_shrinker;
--	}
--
- 	virtio_device_ready(vdev);
  
- 	if (towards_target(vb))
- 		virtballoon_changed(vdev);
- 	return 0;
- 
--out_unregister_shrinker:
--	if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
--		unregister_shrinker(&vb->shrinker);
- out_del_balloon_wq:
- 	if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
- 		destroy_workqueue(vb->balloon_wq);
-@@ -967,11 +989,8 @@ static void virtballoon_remove(struct virtio_device *vdev)
- {
- 	struct virtio_balloon *vb = vdev->priv;
- 
--	if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM))
--		unregister_oom_notifier(&vb->oom_nb);
--	if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
--		unregister_shrinker(&vb->shrinker);
--
-+	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM))
-+		virtio_balloon_unregister_shrinker(vb);
- 	spin_lock_irq(&vb->stop_update_lock);
- 	vb->stop_update = true;
- 	spin_unlock_irq(&vb->stop_update_lock);
+ 	if (to->engine->schedule) {
+ 		ret = i915_sched_node_add_dependency(&to->sched,
 -- 
 2.25.1
 
