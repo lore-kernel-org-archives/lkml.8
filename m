@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB94C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78154C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FD342074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F41D2074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:28:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658885;
-	bh=95mQw3pyXUqcksGZvoa25uW50dFOr48wkL6V9bdfdcY=;
+	s=default; t=1591658890;
+	bh=56jubeqSvCe5abxjdH8iGRYSrHs+X6XVvwqLUlx67Zo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bwlM9Qmu8d4UX7rSyRxRp+scju3vxBYXpVA7zP/hSaX6O5JS1219+Hvgw9npJwt2T
-	 rR7RL9uNEIc+s6+5t/Ke7KD9LF0BPVJ5yEA5nlvA5yLAIcp5RLFIAz84imxMS5CEIN
-	 tcG0AvX+7xoVTEq/7iwmv1BhB8imgSKMEzuNTZ0o=
+	b=p/s6W9SuKID6IFejRJQb8NuP9iD146xkmhF+lU/0lziGooksq2sX4VgcGHZPEgpOI
+	 wlYqcQtS/ELoPUHnwFukBanXksA1n8PL38jGV4APxlfXYt2Tf8B6csoJ7PZZqLjm1S
+	 YrMyxHTDvJnk8QlyDCaGv9C23boUxUXcxr9LE9+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387684AbgFHX2E (ORCPT
+        id S2387696AbgFHX2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:28:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46930 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:28:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728175AbgFHXWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:22:23 -0400
+        id S2387397AbgFHXWZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:22:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7C4120842;
-        Mon,  8 Jun 2020 23:22:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECF582086A;
+        Mon,  8 Jun 2020 23:22:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658543;
-        bh=95mQw3pyXUqcksGZvoa25uW50dFOr48wkL6V9bdfdcY=;
+        s=default; t=1591658544;
+        bh=56jubeqSvCe5abxjdH8iGRYSrHs+X6XVvwqLUlx67Zo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QSYZdoezPHMYGC58IPpjw2UJuQ0vN2PDkxWKByxWlONJWr9uFJ7CqDLP31a1tGhYc
-         ggtx++nKulclbK6bUZV5ZD36rfzFzNxsPrXhJ+WzAH62jsi5pAsJbYQGRAF9nIYHel
-         IcpD6ewq8IiVGnBeHswZr5J264QacG8Az+PpaW10=
+        b=DACyNFBNx8YZ0aOdjm+9JGcUp790ezNSDkuLCn1zFIwl/+vqVlInDxrm4vEusVrgH
+         aAFxfO/nQw7VsyTHSByQJKJ9ElPu3HSiWoWoZHtPCnwR5oJv4ml6daW1ux4x8vzYNc
+         psgd6PD5wGIXwz4aTzQI/BldxW63bJrqLx0Ik5w0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Mario Limonciello <Mario.limonciello@dell.com>,
+Cc:     Chris Chiu <chiu@endlessm.com>,
+        Hans de Goede <hdegoede@redhat.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>,
+        acpi4asus-user@lists.sourceforge.net,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 165/175] platform/x86: intel-vbtn: Only blacklist SW_TABLET_MODE on the 9 / "Laptop" chasis-type
-Date:   Mon,  8 Jun 2020 19:18:38 -0400
-Message-Id: <20200608231848.3366970-165-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 166/175] platform/x86: asus_wmi: Reserve more space for struct bias_args
+Date:   Mon,  8 Jun 2020 19:18:39 -0400
+Message-Id: <20200608231848.3366970-166-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
 References: <20200608231848.3366970-1-sashal@kernel.org>
@@ -62,80 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Chris Chiu <chiu@endlessm.com>
 
-[ Upstream commit cfae58ed681c5fe0185db843013ecc71cd265ebf ]
+[ Upstream commit 7b91f1565fbfbe5a162d91f8a1f6c5580c2fc1d0 ]
 
-The HP Stream x360 11-p000nd no longer report SW_TABLET_MODE state / events
-with recent kernels. This model reports a chassis-type of 10 / "Notebook"
-which is not on the recently introduced chassis-type whitelist
+On the ASUS laptop UX325JA/UX425JA, most of the media keys are not
+working due to the ASUS WMI driver fails to be loaded. The ACPI error
+as follows leads to the failure of asus_wmi_evaluate_method.
+  ACPI BIOS Error (bug): AE_AML_BUFFER_LIMIT, Field [IIA3] at bit offset/length 96/32 exceeds size of target Buffer (96 bits) (20200326/dsopcode-203)
+  No Local Variables are initialized for Method [WMNB]
+  ACPI Error: Aborting method \_SB.ATKD.WMNB due to previous error (AE_AML_BUFFER_LIMIT) (20200326/psparse-531)
 
-Commit de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode
-switch on 2-in-1's") added a chassis-type whitelist and only listed 31 /
-"Convertible" as being capable of generating valid SW_TABLET_MOD events.
+The DSDT for the WMNB part shows that 5 DWORD required for local
+variables and the 3rd variable IIA3 hit the buffer limit.
 
-Commit 1fac39fd0316 ("platform/x86: intel-vbtn: Also handle tablet-mode
-switch on "Detachable" and "Portable" chassis-types") extended the
-whitelist with chassis-types 8 / "Portable" and 32 / "Detachable".
+Method (WMNB, 3, Serialized)
+{ ..
+    CreateDWordField (Arg2, Zero, IIA0)
+    CreateDWordField (Arg2, 0x04, IIA1)
+    CreateDWordField (Arg2, 0x08, IIA2)
+    CreateDWordField (Arg2, 0x0C, IIA3)
+    CreateDWordField (Arg2, 0x10, IIA4)
+    Local0 = (Arg1 & 0xFFFFFFFF)
+    If ((Local0 == 0x54494E49))
+  ..
+}
 
-And now we need to exten the whitelist again with 10 / "Notebook"...
+The limitation is determined by the input acpi_buffer size passed
+to the wmi_evaluate_method. Since the struct bios_args is the data
+structure used as input buffer by default for all ASUS WMI calls,
+the size needs to be expanded to fix the problem.
 
-The issue original fixed by the whitelist is really a ACPI DSDT bug on
-the Dell XPS 9360 where it has a VGBS which reports it is in tablet mode
-even though it is not a 2-in-1 at all, but a regular laptop.
-
-So since this is a workaround for a DSDT issue on that specific model,
-instead of extending the whitelist over and over again, lets switch to
-a blacklist and only blacklist the chassis-type of the model for which
-the chassis-type check was added.
-
-Note this also fixes the current version of the code no longer checking
-if dmi_get_system_info(DMI_CHASSIS_TYPE) returns NULL.
-
-Fixes: 1fac39fd0316 ("platform/x86: intel-vbtn: Also handle tablet-mode switch on "Detachable" and "Portable" chassis-types")
-Cc: Mario Limonciello <mario.limonciello@dell.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Mario Limonciello <Mario.limonciello@dell.com>
+Signed-off-by: Chris Chiu <chiu@endlessm.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel-vbtn.c | 19 ++++++++-----------
- 1 file changed, 8 insertions(+), 11 deletions(-)
+ drivers/platform/x86/asus-wmi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-index 5acfa08b5dac..cb2a80fdd8f4 100644
---- a/drivers/platform/x86/intel-vbtn.c
-+++ b/drivers/platform/x86/intel-vbtn.c
-@@ -157,21 +157,18 @@ static void detect_tablet_mode(struct platform_device *device)
- static bool intel_vbtn_has_switches(acpi_handle handle)
- {
- 	const char *chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
--	unsigned long chassis_type_int;
- 	unsigned long long vgbs;
- 	acpi_status status;
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 41e28552b2ce..b1f4a31ba1ee 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -111,6 +111,8 @@ struct bios_args {
+ 	u32 arg0;
+ 	u32 arg1;
+ 	u32 arg2; /* At least TUF Gaming series uses 3 dword input buffer. */
++	u32 arg4;
++	u32 arg5;
+ } __packed;
  
--	if (kstrtoul(chassis_type, 10, &chassis_type_int))
--		return false;
--
--	switch (chassis_type_int) {
--	case  8: /* Portable */
--	case 31: /* Convertible */
--	case 32: /* Detachable */
--		break;
--	default:
-+	/*
-+	 * Some normal laptops have a VGBS method despite being non-convertible
-+	 * and their VGBS method always returns 0, causing detect_tablet_mode()
-+	 * to report SW_TABLET_MODE=1 to userspace, which causes issues.
-+	 * These laptops have a DMI chassis_type of 9 ("Laptop"), do not report
-+	 * switches on any devices with a DMI chassis_type of 9.
-+	 */
-+	if (chassis_type && strcmp(chassis_type, "9") == 0)
- 		return false;
--	}
- 
- 	status = acpi_evaluate_integer(handle, "VGBS", NULL, &vgbs);
- 	return ACPI_SUCCESS(status);
+ /*
 -- 
 2.25.1
 
