@@ -7,56 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31978C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B38FC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:09:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AEB8208C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:09:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A983208FE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:09:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591657768;
-	bh=ulgzXYC0umJqLr8UKHgIViy/K3yWrij/YDsys4Du2PI=;
+	s=default; t=1591657783;
+	bh=lpX2+wur1t1gEsxx2uAp+EdCAOVN3IOjp4QxKK+GMt4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xFVUj3SjFkz5QDUrkghD4eTcdcxOibzZw7H1ZRy6eQQWaWheHemtQyQYeF+1Uxge3
-	 62hkpTpjqi9iPrdGlcPkDYC9FfB+f8wxkctA7exN2jp2l2SPVuWFWCA0dbiJrIC7M8
-	 4euwY6nu2UupBSve0ABJ/Uz3pNKuGMf8SECHXEZg=
+	b=nrhK1E+v56dNnrld5rWEqhHu23PBuRApmne7QI4YXFfVYylcEJDRicHRQ0kT2IcRe
+	 zdSAAl2Ra4ntKdEOF8P1kaXGX0BJZQN3649T+Llp2SE9NY+7tl8wrk0FuUx4sr41YZ
+	 4HTf1UfxBdNaNorW6Fc94wKRT8GciGPrsOSr0cNE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728414AbgFHXJ0 (ORCPT
+        id S1728487AbgFHXJm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:09:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53582 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:09:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728127AbgFHXIY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:08:24 -0400
+        id S1728197AbgFHXIg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:08:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 097FA2085B;
-        Mon,  8 Jun 2020 23:08:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBD0920890;
+        Mon,  8 Jun 2020 23:08:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657703;
-        bh=ulgzXYC0umJqLr8UKHgIViy/K3yWrij/YDsys4Du2PI=;
+        s=default; t=1591657715;
+        bh=lpX2+wur1t1gEsxx2uAp+EdCAOVN3IOjp4QxKK+GMt4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fnUR+2mRT4CJmeSQyuvD+ETxomCONtNToZ6fJWU7XP09If04OsGz4pgJv0iMjH2dK
-         G1iFvDzt1SrJc0UG4f+pP7d+Mg75hZ1vVcVU4Bk19dH5TuN4mslZ3EfXAUklW6vPyo
-         zQJXvTvkka0LRwL4IEpkqNiN1U5DXqcDl8NcgG44=
+        b=cMFxXh4XMeVV2ADCYMblsHnOVD8Tt3lmB7/dOPaAEoubIf5/QAG8P7TH4gBlAuOVR
+         ImrkkZGr3V6b35EcXo2MhJFigkhfeiuK9OTV/aE0ds89JaFxJmWkgQj4cgRSiA/Ywh
+         yW93W5prYv0rYMiDVEJuFAaQK80MR9APcY6q8IHQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andrey Zhizhikin <andrey.z@gmail.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.7 101/274] tools api fs: Make xxx__mountpoint() more scalable
-Date:   Mon,  8 Jun 2020 19:03:14 -0400
-Message-Id: <20200608230607.3361041-101-sashal@kernel.org>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 110/274] media: imx: utils: fix media bus format enumeration
+Date:   Mon,  8 Jun 2020 19:03:23 -0400
+Message-Id: <20200608230607.3361041-110-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -69,180 +62,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephane Eranian <eranian@google.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
 
-[ Upstream commit c6fddb28bad26e5472cb7acf7b04cd5126f1a4ab ]
+[ Upstream commit 1df2148fdfc036c9350d41ae81b09b3f8897c9b6 ]
 
-The xxx_mountpoint() interface provided by fs.c finds mount points for
-common pseudo filesystems. The first time xxx_mountpoint() is invoked,
-it scans the mount table (/proc/mounts) looking for a match. If found,
-it is cached. The price to scan /proc/mounts is paid once if the mount
-is found.
-
-When the mount point is not found, subsequent calls to xxx_mountpoint()
-scan /proc/mounts over and over again.  There is no caching.
-
-This causes a scaling issue in perf record with hugeltbfs__mountpoint().
-The function is called for each process found in
-synthesize__mmap_events().  If the machine has thousands of processes
-and if the /proc/mounts has many entries this could cause major overhead
-in perf record. We have observed multi-second slowdowns on some
-configurations.
-
-As an example on a laptop:
+Iterate over all media bus formats, not just over the first format in
+each imx_media_pixfmt entry.
 
 Before:
 
-  $ sudo umount /dev/hugepages
-  $ strace -e trace=openat -o /tmp/tt perf record -a ls
-  $ fgrep mounts /tmp/tt
-  285
+  $ v4l2-ctl -d $(media-ctl -e ipu1_csi0) --list-subdev-mbus-codes 0
+  ioctl: VIDIOC_SUBDEV_ENUM_MBUS_CODE (pad=0)
+	0x2006: MEDIA_BUS_FMT_UYVY8_2X8
+	0x2008: MEDIA_BUS_FMT_YUYV8_2X8
+	0x1008: MEDIA_BUS_FMT_RGB565_2X8_LE
+	0x100a: MEDIA_BUS_FMT_RGB888_1X24
+	0x100d: MEDIA_BUS_FMT_ARGB8888_1X32
+	0x3001: MEDIA_BUS_FMT_SBGGR8_1X8
+	0x3013: MEDIA_BUS_FMT_SGBRG8_1X8
+	0x3002: MEDIA_BUS_FMT_SGRBG8_1X8
+	0x3014: MEDIA_BUS_FMT_SRGGB8_1X8
+	0x3007: MEDIA_BUS_FMT_SBGGR10_1X10
+	0x300e: MEDIA_BUS_FMT_SGBRG10_1X10
+	0x300a: MEDIA_BUS_FMT_SGRBG10_1X10
+	0x300f: MEDIA_BUS_FMT_SRGGB10_1X10
+	0x2001: MEDIA_BUS_FMT_Y8_1X8
+	0x200a: MEDIA_BUS_FMT_Y10_1X10
 
 After:
 
-  $ sudo umount /dev/hugepages
-  $ strace -e trace=openat -o /tmp/tt perf record -a ls
-  $ fgrep mounts /tmp/tt
-  1
+  $ v4l2-ctl -d $(media-ctl -e ipu1_csi0) --list-subdev-mbus-codes 0
+  ioctl: VIDIOC_SUBDEV_ENUM_MBUS_CODE (pad=0)
+	0x2006: MEDIA_BUS_FMT_UYVY8_2X8
+	0x200f: MEDIA_BUS_FMT_UYVY8_1X16
+	0x2008: MEDIA_BUS_FMT_YUYV8_2X8
+	0x2011: MEDIA_BUS_FMT_YUYV8_1X16
+	0x1008: MEDIA_BUS_FMT_RGB565_2X8_LE
+	0x100a: MEDIA_BUS_FMT_RGB888_1X24
+	0x100c: MEDIA_BUS_FMT_RGB888_2X12_LE
+	0x100d: MEDIA_BUS_FMT_ARGB8888_1X32
+	0x3001: MEDIA_BUS_FMT_SBGGR8_1X8
+	0x3013: MEDIA_BUS_FMT_SGBRG8_1X8
+	0x3002: MEDIA_BUS_FMT_SGRBG8_1X8
+	0x3014: MEDIA_BUS_FMT_SRGGB8_1X8
+	0x3007: MEDIA_BUS_FMT_SBGGR10_1X10
+	0x3008: MEDIA_BUS_FMT_SBGGR12_1X12
+	0x3019: MEDIA_BUS_FMT_SBGGR14_1X14
+	0x301d: MEDIA_BUS_FMT_SBGGR16_1X16
+	0x300e: MEDIA_BUS_FMT_SGBRG10_1X10
+	0x3010: MEDIA_BUS_FMT_SGBRG12_1X12
+	0x301a: MEDIA_BUS_FMT_SGBRG14_1X14
+	0x301e: MEDIA_BUS_FMT_SGBRG16_1X16
+	0x300a: MEDIA_BUS_FMT_SGRBG10_1X10
+	0x3011: MEDIA_BUS_FMT_SGRBG12_1X12
+	0x301b: MEDIA_BUS_FMT_SGRBG14_1X14
+	0x301f: MEDIA_BUS_FMT_SGRBG16_1X16
+	0x300f: MEDIA_BUS_FMT_SRGGB10_1X10
+	0x3012: MEDIA_BUS_FMT_SRGGB12_1X12
+	0x301c: MEDIA_BUS_FMT_SRGGB14_1X14
+	0x3020: MEDIA_BUS_FMT_SRGGB16_1X16
+	0x2001: MEDIA_BUS_FMT_Y8_1X8
+	0x200a: MEDIA_BUS_FMT_Y10_1X10
+	0x2013: MEDIA_BUS_FMT_Y12_1X12
 
-One could argue that the non-caching in case the moint point is not
-found is intentional. That way subsequent calls may discover a moint
-point if the sysadmin mounts the filesystem. But the same argument could
-be made against caching the mount point. It could be unmounted causing
-errors.  It all depends on the intent of the interface. This patch
-assumes it is expected to scan /proc/mounts once. The patch documents
-the caching behavior in the fs.h header file.
+[laurent.pinchart@ideasonboard.com: Decrement index to replace loop counter k]
+[laurent.pinchart@ideasonboard.com: Return directly from within the loops]
 
-An alternative would be to just fix perf record. But it would solve the
-problem with hugetlbs__mountpoint() but there could be similar issues
-(possibly down the line) with other xxx_mountpoint() calls in perf or
-other tools.
-
-Signed-off-by: Stephane Eranian <eranian@google.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andrey Zhizhikin <andrey.z@gmail.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lore.kernel.org/lkml/20200402154357.107873-3-irogers@google.com
-Signed-off-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: e130291212df5 ("[media] media: Add i.MX media core driver")
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/api/fs/fs.c | 17 +++++++++++++++++
- tools/lib/api/fs/fs.h | 12 ++++++++++++
- 2 files changed, 29 insertions(+)
+ drivers/staging/media/imx/imx-media-utils.c | 22 +++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
 
-diff --git a/tools/lib/api/fs/fs.c b/tools/lib/api/fs/fs.c
-index 027b18f7ed8c..82f53d81a7a7 100644
---- a/tools/lib/api/fs/fs.c
-+++ b/tools/lib/api/fs/fs.c
-@@ -90,6 +90,7 @@ struct fs {
- 	const char * const	*mounts;
- 	char			 path[PATH_MAX];
- 	bool			 found;
-+	bool			 checked;
- 	long			 magic;
- };
+diff --git a/drivers/staging/media/imx/imx-media-utils.c b/drivers/staging/media/imx/imx-media-utils.c
+index 39469031e510..00a71f01786c 100644
+--- a/drivers/staging/media/imx/imx-media-utils.c
++++ b/drivers/staging/media/imx/imx-media-utils.c
+@@ -269,6 +269,7 @@ static int enum_format(u32 *fourcc, u32 *code, u32 index,
+ 	for (i = 0; i < ARRAY_SIZE(pixel_formats); i++) {
+ 		const struct imx_media_pixfmt *fmt = &pixel_formats[i];
+ 		enum codespace_sel fmt_cs_sel;
++		unsigned int j;
  
-@@ -111,31 +112,37 @@ static struct fs fs__entries[] = {
- 		.name	= "sysfs",
- 		.mounts	= sysfs__fs_known_mountpoints,
- 		.magic	= SYSFS_MAGIC,
-+		.checked = false,
- 	},
- 	[FS__PROCFS] = {
- 		.name	= "proc",
- 		.mounts	= procfs__known_mountpoints,
- 		.magic	= PROC_SUPER_MAGIC,
-+		.checked = false,
- 	},
- 	[FS__DEBUGFS] = {
- 		.name	= "debugfs",
- 		.mounts	= debugfs__known_mountpoints,
- 		.magic	= DEBUGFS_MAGIC,
-+		.checked = false,
- 	},
- 	[FS__TRACEFS] = {
- 		.name	= "tracefs",
- 		.mounts	= tracefs__known_mountpoints,
- 		.magic	= TRACEFS_MAGIC,
-+		.checked = false,
- 	},
- 	[FS__HUGETLBFS] = {
- 		.name	= "hugetlbfs",
- 		.mounts = hugetlbfs__known_mountpoints,
- 		.magic	= HUGETLBFS_MAGIC,
-+		.checked = false,
- 	},
- 	[FS__BPF_FS] = {
- 		.name	= "bpf",
- 		.mounts = bpf_fs__known_mountpoints,
- 		.magic	= BPF_FS_MAGIC,
-+		.checked = false,
- 	},
- };
+ 		fmt_cs_sel = (fmt->cs == IPUV3_COLORSPACE_YUV) ?
+ 			CS_SEL_YUV : CS_SEL_RGB;
+@@ -278,15 +279,24 @@ static int enum_format(u32 *fourcc, u32 *code, u32 index,
+ 		    (!allow_bayer && fmt->bayer))
+ 			continue;
  
-@@ -158,6 +165,7 @@ static bool fs__read_mounts(struct fs *fs)
+-		if (index == 0) {
+-			if (fourcc)
+-				*fourcc = fmt->fourcc;
+-			if (code)
+-				*code = fmt->codes[0];
++		if (fourcc && index == 0) {
++			*fourcc = fmt->fourcc;
+ 			return 0;
+ 		}
+ 
+-		index--;
++		if (!code) {
++			index--;
++			continue;
++		}
++
++		for (j = 0; j < ARRAY_SIZE(fmt->codes) && fmt->codes[j]; j++) {
++			if (index == 0) {
++				*code = fmt->codes[j];
++				return 0;
++			}
++
++			index--;
++		}
  	}
  
- 	fclose(fp);
-+	fs->checked = true;
- 	return fs->found = found;
- }
- 
-@@ -220,6 +228,7 @@ static bool fs__env_override(struct fs *fs)
- 		return false;
- 
- 	fs->found = true;
-+	fs->checked = true;
- 	strncpy(fs->path, override_path, sizeof(fs->path) - 1);
- 	fs->path[sizeof(fs->path) - 1] = '\0';
- 	return true;
-@@ -246,6 +255,14 @@ static const char *fs__mountpoint(int idx)
- 	if (fs->found)
- 		return (const char *)fs->path;
- 
-+	/* the mount point was already checked for the mount point
-+	 * but and did not exist, so return NULL to avoid scanning again.
-+	 * This makes the found and not found paths cost equivalent
-+	 * in case of multiple calls.
-+	 */
-+	if (fs->checked)
-+		return NULL;
-+
- 	return fs__get_mountpoint(fs);
- }
- 
-diff --git a/tools/lib/api/fs/fs.h b/tools/lib/api/fs/fs.h
-index 936edb95e1f3..aa222ca30311 100644
---- a/tools/lib/api/fs/fs.h
-+++ b/tools/lib/api/fs/fs.h
-@@ -18,6 +18,18 @@
- 	const char *name##__mount(void);	\
- 	bool name##__configured(void);		\
- 
-+/*
-+ * The xxxx__mountpoint() entry points find the first match mount point for each
-+ * filesystems listed below, where xxxx is the filesystem type.
-+ *
-+ * The interface is as follows:
-+ *
-+ * - If a mount point is found on first call, it is cached and used for all
-+ *   subsequent calls.
-+ *
-+ * - If a mount point is not found, NULL is returned on first call and all
-+ *   subsequent calls.
-+ */
- FS(sysfs)
- FS(procfs)
- FS(debugfs)
+ 	return -EINVAL;
 -- 
 2.25.1
 
