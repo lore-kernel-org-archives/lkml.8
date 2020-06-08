@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19330C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:36:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE1C3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E76642078C
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:36:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAB1E20760
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:37:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591659413;
-	bh=LdNzVHSOMoY3VrTfF8wSlN0qzmWL8FJ+lC8X3l9ZdLo=;
+	s=default; t=1591659426;
+	bh=AkF7ESRN7gEo8vZRwFbfbG41S8dDAfNaq+MGOqkesXE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UrqQJEtSHcFGjZROT3gPCljGVIjhQlERHyFWcUJu0UFFPBE/I8tWy8NLyeDcnItOX
-	 qwpCgLEbgH+yzcrms22pZ+8jq9B/YuzAoB1/raVOqGZTZcIitX5qL5WCDpL9KY21PZ
-	 +EyBbeIPcQ8KZslBN9F6VGFx2XXpIYBn0AecFm7U=
+	b=owSiP5B/+RAcmNjwCsNLjck+rgRhNyQqeQXKTLxQcN1cx6r61I+N823JCUCjGgyEB
+	 C05sKzsgIrvoxl+yCZsxLJ+7H9+ZVfWV9zlRku9EI7qtcf/8FNf/S2kqMkr/L3dFlM
+	 g9sDziQ9HsI6TPaVZi1INH37wCvu60xwBMbknqmQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387584AbgFHXaf (ORCPT
+        id S1732325AbgFHXaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:30:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50744 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:30:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731638AbgFHXYg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:24:36 -0400
+        id S1731569AbgFHXYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:24:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 239C620897;
-        Mon,  8 Jun 2020 23:24:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEDEC20B80;
+        Mon,  8 Jun 2020 23:24:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658675;
-        bh=LdNzVHSOMoY3VrTfF8wSlN0qzmWL8FJ+lC8X3l9ZdLo=;
+        s=default; t=1591658644;
+        bh=AkF7ESRN7gEo8vZRwFbfbG41S8dDAfNaq+MGOqkesXE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JrJYx+0HibGNUBPp/rZ9Oy7C1fHOeqrUSmMSxn6oBrkMtgGk6cgcqZ8TByj0yBtUB
-         EK8HW2J1tUIw+71P3gGd73TrIcliTBSe4LxIY41hO39q8DvIzVJQU3H2TF59Yf3Ma8
-         TDpkyqrOJG7FqyTFwhhrmdvgi2nAgfUXdDq8HNi0=
+        b=yryAarFmJNjx/NRmlZ3hyI+axRPvvqKIDqoNKp347ZAwGakHJVwnrjierFdcAteEj
+         1tzULyrczO7n09Lv6UOn110RoZ6tLlkMd/hggVFOi+8rSL9kZXZGs+dFGMlolwYDKs
+         5OkAhhKWV2cME3VUWtc8GpgbbNvpB4W5MA6DpOM8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fugang Duan <fugang.duan@nxp.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 087/106] net: ethernet: fec: move GPR register offset and bit into DT
-Date:   Mon,  8 Jun 2020 19:22:19 -0400
-Message-Id: <20200608232238.3368589-87-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 065/106] platform/x86: intel-vbtn: Do not advertise switches to userspace if they are not there
+Date:   Mon,  8 Jun 2020 19:21:57 -0400
+Message-Id: <20200608232238.3368589-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608232238.3368589-1-sashal@kernel.org>
 References: <20200608232238.3368589-1-sashal@kernel.org>
@@ -59,110 +60,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fugang Duan <fugang.duan@nxp.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 8a448bf832af537d26aa557d183a16943dce4510 ]
+[ Upstream commit 990fbb48067bf8cfa34b7d1e6e1674eaaef2f450 ]
 
-The commit da722186f654 (net: fec: set GPR bit on suspend by DT
-configuration) set the GPR reigster offset and bit in driver for
-wake on lan feature.
+Commit de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode
+switch on 2-in-1's") added a DMI chassis-type check to avoid accidentally
+reporting SW_TABLET_MODE = 1 to userspace on laptops (specifically on the
+Dell XPS 9360), to avoid e.g. userspace ignoring touchpad events because
+userspace thought the device was in tablet-mode.
 
-But it introduces two issues here:
-- one SOC has two instances, they have different bit
-- different SOCs may have different offset and bit
+But if we are not getting the initial status of the switch because the
+device does not have a tablet mode, then we really should not advertise
+the presence of a tablet-mode switch to userspace at all, as userspace may
+use the mere presence of this switch for certain heuristics.
 
-So to support wake-on-lan feature on other i.MX platforms, it should
-configure the GPR reigster offset and bit from DT.
-
-So the patch is to improve the commit da722186f654 (net: fec: set GPR
-bit on suspend by DT configuration) to support multiple ethernet
-instances on i.MX series.
-
-v2:
- * switch back to store the quirks bitmask in driver_data
-v3:
- * suggested by Sascha Hauer, use a struct fec_devinfo for
-   abstracting differences between different hardware variants,
-   it can give more freedom to describe the differences.
-
-Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode switch on 2-in-1's")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/fec_main.c | 24 +++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ drivers/platform/x86/intel-vbtn.c | 25 +++++++++++++++++++------
+ 1 file changed, 19 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
-index 48c58f93b124..6702bc2dd92f 100644
---- a/drivers/net/ethernet/freescale/fec_main.c
-+++ b/drivers/net/ethernet/freescale/fec_main.c
-@@ -88,8 +88,6 @@ static void fec_enet_itr_coal_init(struct net_device *ndev);
- 
- struct fec_devinfo {
- 	u32 quirks;
--	u8 stop_gpr_reg;
--	u8 stop_gpr_bit;
+diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+index e42203776727..23cda7aa96cd 100644
+--- a/drivers/platform/x86/intel-vbtn.c
++++ b/drivers/platform/x86/intel-vbtn.c
+@@ -54,6 +54,7 @@ static const struct key_entry intel_vbtn_switchmap[] = {
+ struct intel_vbtn_priv {
+ 	struct key_entry keymap[KEYMAP_LEN];
+ 	struct input_dev *input_dev;
++	bool has_switches;
+ 	bool wakeup_mode;
  };
  
- static const struct fec_devinfo fec_imx25_info = {
-@@ -112,8 +110,6 @@ static const struct fec_devinfo fec_imx6q_info = {
- 		  FEC_QUIRK_HAS_BUFDESC_EX | FEC_QUIRK_HAS_CSUM |
- 		  FEC_QUIRK_HAS_VLAN | FEC_QUIRK_ERR006358 |
- 		  FEC_QUIRK_HAS_RACC,
--	.stop_gpr_reg = 0x34,
--	.stop_gpr_bit = 27,
- };
- 
- static const struct fec_devinfo fec_mvf600_info = {
-@@ -3401,19 +3397,23 @@ static int fec_enet_get_irq_cnt(struct platform_device *pdev)
- }
- 
- static int fec_enet_init_stop_mode(struct fec_enet_private *fep,
--				   struct fec_devinfo *dev_info,
- 				   struct device_node *np)
- {
- 	struct device_node *gpr_np;
-+	u32 out_val[3];
- 	int ret = 0;
- 
--	if (!dev_info)
--		return 0;
--
--	gpr_np = of_parse_phandle(np, "gpr", 0);
-+	gpr_np = of_parse_phandle(np, "fsl,stop-mode", 0);
- 	if (!gpr_np)
- 		return 0;
- 
-+	ret = of_property_read_u32_array(np, "fsl,stop-mode", out_val,
-+					 ARRAY_SIZE(out_val));
-+	if (ret) {
-+		dev_dbg(&fep->pdev->dev, "no stop mode property\n");
-+		return ret;
-+	}
-+
- 	fep->stop_gpr.gpr = syscon_node_to_regmap(gpr_np);
- 	if (IS_ERR(fep->stop_gpr.gpr)) {
- 		dev_err(&fep->pdev->dev, "could not find gpr regmap\n");
-@@ -3422,8 +3422,8 @@ static int fec_enet_init_stop_mode(struct fec_enet_private *fep,
- 		goto out;
+@@ -69,7 +70,7 @@ static int intel_vbtn_input_setup(struct platform_device *device)
+ 		keymap_len += ARRAY_SIZE(intel_vbtn_keymap);
  	}
  
--	fep->stop_gpr.reg = dev_info->stop_gpr_reg;
--	fep->stop_gpr.bit = dev_info->stop_gpr_bit;
-+	fep->stop_gpr.reg = out_val[1];
-+	fep->stop_gpr.bit = out_val[2];
+-	if (true) {
++	if (priv->has_switches) {
+ 		memcpy(&priv->keymap[keymap_len], intel_vbtn_switchmap,
+ 		       ARRAY_SIZE(intel_vbtn_switchmap) *
+ 		       sizeof(struct key_entry));
+@@ -137,16 +138,12 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
  
- out:
- 	of_node_put(gpr_np);
-@@ -3501,7 +3501,7 @@ fec_probe(struct platform_device *pdev)
- 	if (of_get_property(np, "fsl,magic-packet", NULL))
- 		fep->wol_flag |= FEC_WOL_HAS_MAGIC_PACKET;
+ static void detect_tablet_mode(struct platform_device *device)
+ {
+-	const char *chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
+ 	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
+ 	acpi_handle handle = ACPI_HANDLE(&device->dev);
+ 	unsigned long long vgbs;
+ 	acpi_status status;
+ 	int m;
  
--	ret = fec_enet_init_stop_mode(fep, dev_info, np);
-+	ret = fec_enet_init_stop_mode(fep, np);
- 	if (ret)
- 		goto failed_stop_mode;
+-	if (!(chassis_type && strcmp(chassis_type, "31") == 0))
+-		return;
+-
+ 	status = acpi_evaluate_integer(handle, "VGBS", NULL, &vgbs);
+ 	if (ACPI_FAILURE(status))
+ 		return;
+@@ -157,6 +154,19 @@ static void detect_tablet_mode(struct platform_device *device)
+ 	input_report_switch(priv->input_dev, SW_DOCK, m);
+ }
  
++static bool intel_vbtn_has_switches(acpi_handle handle)
++{
++	const char *chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
++	unsigned long long vgbs;
++	acpi_status status;
++
++	if (!(chassis_type && strcmp(chassis_type, "31") == 0))
++		return false;
++
++	status = acpi_evaluate_integer(handle, "VGBS", NULL, &vgbs);
++	return ACPI_SUCCESS(status);
++}
++
+ static int intel_vbtn_probe(struct platform_device *device)
+ {
+ 	acpi_handle handle = ACPI_HANDLE(&device->dev);
+@@ -175,13 +185,16 @@ static int intel_vbtn_probe(struct platform_device *device)
+ 		return -ENOMEM;
+ 	dev_set_drvdata(&device->dev, priv);
+ 
++	priv->has_switches = intel_vbtn_has_switches(handle);
++
+ 	err = intel_vbtn_input_setup(device);
+ 	if (err) {
+ 		pr_err("Failed to setup Intel Virtual Button\n");
+ 		return err;
+ 	}
+ 
+-	detect_tablet_mode(device);
++	if (priv->has_switches)
++		detect_tablet_mode(device);
+ 
+ 	status = acpi_install_notify_handler(handle,
+ 					     ACPI_DEVICE_NOTIFY,
 -- 
 2.25.1
 
