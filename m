@@ -2,156 +2,238 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A213EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 00:42:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E37ADC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 00:49:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D2E62075A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 00:42:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB7AE20774
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 00:49:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LdiOo35Y"
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="R1e4YW7j";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="AsPcByuH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728199AbgFHAmF (ORCPT
+        id S1728193AbgFHAt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 20:42:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55828 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728001AbgFHAmE (ORCPT
+        Sun, 7 Jun 2020 20:49:56 -0400
+Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:46803 "EHLO
+        wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728001AbgFHAty (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 20:42:04 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97D31C08C5C3
-        for <linux-kernel@vger.kernel.org>; Sun,  7 Jun 2020 17:42:03 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id k186so19325602ybc.19
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Jun 2020 17:42:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=R/WAosFhbNpsRWMToZp58lnog9BqD/v/8CzzxwISND0=;
-        b=LdiOo35YxRIRIs6AkhF7gd2MD5UqfGvjmmW2Ypa0bR56W80JvmWuMjq81Qo65lBrnk
-         9lQ3Fdq7J2Zuh4uzNST28UmvdVpks6/O91f/wn3R9ia/NsiaiLW/nZTu1FVmMQgubQLK
-         2xPMpgfOvdz1HU2pl02Ne3RKUoN/BkfUvMD3kWACB1q1qQr7zAap3NweKtF0DkFngdMF
-         L+yz5IjfbwYAklkEI4l5exA7h3sEz5Uhn89GznVjr+4KO1N1NywBFiTo3OW4Wn8vBy7F
-         di/xXi//ccq9CUmVV4I12cX5gTyyZP/RlpvNC3d9Nk2jmJqXP9/Guwg3+KGQqcOt0FMI
-         Fgrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=R/WAosFhbNpsRWMToZp58lnog9BqD/v/8CzzxwISND0=;
-        b=iAr7zGOqhFmOJ5NQHMlJ3RQnv4tSKwskrCHBJDEFPSj/Rh2eFFfOX6N7/i+u5/VyLW
-         +iQhNUF9ekz4eY5GpKmKILcT35ow5D2ZArE64Wttf8ujmZyr6LZ/spzKXyGmhm23+HW9
-         ugBLDyXFhi7LVhbono/hjyIAJsIDeranrLKSYE7l1i/ivnfu6J7nQJCnxleKqU7J/qWh
-         GKvL0N1k0HVXmuHnogJ9Y7qttaf2jt4wE7jtpiFLLEUZlleS+871Hu18/q5AMWXK27zy
-         ypqvJM2hrMA7RNJ2yV0F7auz/lpUCdUfGdn70o7dnk7pUwTKiJfnU4/RLMIPwufRbZna
-         To2g==
-X-Gm-Message-State: AOAM533bDL1xzSufoYMmmvmFiOgTdyfE8woM8QZTh7m/Sw5JC7QEqBrs
-        cUqg4ydwg+TlhPXaSeLMlYZOBDDh9BGLGXwI
-X-Google-Smtp-Source: ABdhPJwFMrumkHVFDTPTUg7mt2z9sUVrELoIw4bTlRKa9uLJQUYUsTRAlUGzUJgtUp7lvuNh/VJL6AWaaipSJBs8
-X-Received: by 2002:a05:6902:4a2:: with SMTP id r2mr9439390ybs.176.1591576921786;
- Sun, 07 Jun 2020 17:42:01 -0700 (PDT)
-Date:   Mon,  8 Jun 2020 02:41:53 +0200
-Message-Id: <fcd1cd16eac1d2c01a66befd8ea4afc6f8d09833.1591576806.git.andreyknvl@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.27.0.278.ge193c7cf3a9-goog
-Subject: [PATCH] kcov: check kcov_softirq in kcov_remote_stop()
-From:   Andrey Konovalov <andreyknvl@google.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Andrey Konovalov <andreyknvl@google.com>
+        Sun, 7 Jun 2020 20:49:54 -0400
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailnew.west.internal (Postfix) with ESMTP id B763F54A;
+        Sun,  7 Jun 2020 20:49:52 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Sun, 07 Jun 2020 20:49:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
+        ypy9wHdt9x60QtCjqTWqlpCz6bFcBx77MRo3WMv+OYo=; b=R1e4YW7jAr1iLQH3
+        7j3yOhEh8Qw5GDDVKsF+mwfl7lZ5C7iXNFO676mPkJ6+xYmusnFJkRGJ6bM0LKMq
+        yXg4+U7CYOy2Eem+mMuA3n75h+NJWVsb87F6kV8an2y0NcNc+ZlgjJsc9pvlsVZq
+        zySVPEvzvkk/rTuxM+/0VVaxX9dhT8Kzd9Q4Go06iPxS8YlFpTAdk0ShxMZ9tJJt
+        VmuXuflejR4dV5U2wOiMuRQbQuAud4UeZ84u6Y2C831xzqbziEcf+n2J54TrUCh4
+        Px1pn0IsC0OF8UDKUiLmtCyZjddSeUd8IxVLtEUlPJTEkidqxY5kJwG4/7Jk/9W1
+        753MGA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=ypy9wHdt9x60QtCjqTWqlpCz6bFcBx77MRo3WMv+O
+        Yo=; b=AsPcByuHOh2lcHRZkGhqUAl2xQavgf8MaWNs6JvlZstYXj4SGF6fEa5IO
+        IXrNBNEQoJTZ63mWWSZAN4/opi9UVWsyevyQKpT3Mbu8McemhGGR9eRQfyDJ/Q5B
+        j98FzF2Rrv7LD0dmXwlo/9IEDDAl/H0qouuzZxRx5TgWy+Iwr/OLymWIu3jCMhNX
+        6XUUq7u17JLNKHReIkBGBfpZMzHAh942z87heJe5J/wEI5ia63EYi9JG1wCI3ngp
+        Jw6nfgzbX6Rsc5cfzU9+XGwqKGfMIp9n/YgTzlSP8+PGWK6osb0rqkJYRsECVy/d
+        mADU9PxrTmJ/UeDGJfN/Xf0kJCzBw==
+X-ME-Sender: <xms:L4vdXl0FGKqcyzyA0OTu1RuAHNddQN_dNHQTk7kLJPxUSwLtnWVl5Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudehtddggedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepkffuhffvffgjfhgtfggggfesthejredttderjeenucfhrhhomhepkfgrnhcu
+    mfgvnhhtuceorhgrvhgvnhesthhhvghmrgifrdhnvghtqeenucggtffrrghtthgvrhhnpe
+    ekkeejieeiieegvedvvdejjeegfeffleekudekgedvudeggeevgfekvdfhvdelfeenucff
+    ohhmrghinhepghhithhhuhgsrdgtohhmnecukfhppeehkedrjedrvddvtddrgeejnecuve
+    hluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprhgrvhgvnhes
+    thhhvghmrgifrdhnvght
+X-ME-Proxy: <xmx:L4vdXsHyveDhLmE2Eetk_vf6buSMTCWyUZdIj7_AVDRNwZsalSGKmQ>
+    <xmx:L4vdXl4aRnjipMc7x4jy5Bcc-eiNzD7b3SeyCi8_u_QzrYrdrX9GKA>
+    <xmx:L4vdXi0aFUn6K-x440t7FFmqqUrVfN_cxvo8TqM2gOFS0LJxhg6hrQ>
+    <xmx:MIvdXjAgCZJSjnV-zQF1iNSvJuM6UsNWHBFbMbnNlKjOI6tfSMyTrKqZ37w>
+Received: from mickey.themaw.net (58-7-220-47.dyn.iinet.net.au [58.7.220.47])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 15BAE3060FE7;
+        Sun,  7 Jun 2020 20:49:46 -0400 (EDT)
+Message-ID: <4e388597a0fc05fc553c7afd5076d77e232f875e.camel@themaw.net>
+Subject: Re: [GIT PULL] General notification queue and key notifications
+From:   Ian Kent <raven@themaw.net>
+To:     David Howells <dhowells@redhat.com>, torvalds@linux-foundation.org
+Cc:     viro@zeniv.linux.org.uk, dray@redhat.com, kzak@redhat.com,
+        mszeredi@redhat.com, swhiteho@redhat.com, jlayton@redhat.com,
+        andres@anarazel.de, christian.brauner@ubuntu.com,
+        jarkko.sakkinen@linux.intel.com, keyrings@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 08 Jun 2020 08:49:43 +0800
+In-Reply-To: <639a79d90f51da0b53a0ba45ec28d5b0dd9fee7b.camel@themaw.net>
+References: <1503686.1591113304@warthog.procyon.org.uk>
+         <639a79d90f51da0b53a0ba45ec28d5b0dd9fee7b.camel@themaw.net>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kcov_remote_stop() should check that the corresponding kcov_remote_start()
-actually found the specified remote handle and started collecting
-coverage. This is done by checking the per thread kcov_softirq flag.
+On Wed, 2020-06-03 at 10:15 +0800, Ian Kent wrote:
+> On Tue, 2020-06-02 at 16:55 +0100, David Howells wrote:
+> > [[ With regard to the mount/sb notifications and fsinfo(), Karel
+> > Zak
+> > and
+> >    Ian Kent have been working on making libmount use them,
+> > preparatory to
+> >    working on systemd:
+> > 
+> > 	https://github.com/karelzak/util-linux/commits/topic/fsinfo
+> > 	
+> > https://github.com/raven-au/util-linux/commits/topic/fsinfo.public
+> > 
+> >    Development has stalled briefly due to other commitments, so I'm
+> > not
+> >    sure I can ask you to pull those parts of the series for
+> > now.  Christian
+> >    Brauner would like to use them in lxc, but hasn't started.
+> >    ]]
+> 
+> Linus,
+> 
+> Just so your aware of what has been done and where we are at here's
+> a summary.
+> 
+> Karel has done quite a bit of work on libmount (at this stage it's
+> getting hold of the mount information, aka. fsinfo()) and most of
+> what I have done is included in that too which you can see in Karel's
+> repo above). You can see a couple of bug fixes and a little bit of
+> new code present in my repo which hasn't been sent over to Karel
+> yet.
+> 
+> This infrastructure is essential before notifications work is started
+> which is where we will see the most improvement.
+> 
+> It turns out that while systemd uses libmount it has it's own
+> notifications handling sub-system as it deals with several event
+> types, not just mount information, in the same area. So,
+> unfortunately,
+> changes will need to be made there as well as in libmount, more so
+> than the trivial changes to use fsinfo() via libmount.
+> 
+> That's where we are at the moment and I will get back to it once
+> I've dealt with a few things I postponed to work on libmount.
+> 
+> If you would like a more detailed account of what we have found I
+> can provide that too.
+> 
+> Is there anything else you would like from me or Karel?
 
-A particular failure scenario where this was observed involved a softirq
-with a remote coverage collection section coming between check_kcov_mode()
-and the access to t->kcov_area in __sanitizer_cov_trace_pc(). In that
-softirq kcov_remote_start() bailed out after kcov_remote_find() check, but
-the matching kcov_remote_stop() didn't check if kcov_remote_start()
-succeeded, and overwrote per thread kcov parameters with invalid (zero)
-values.
+I think there's a bit more I should say about this.
 
-Fixes: 5ff3b30ab57d ("kcov: collect coverage from interrupts")
-Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
----
- kernel/kcov.c | 26 ++++++++++++++++++--------
- 1 file changed, 18 insertions(+), 8 deletions(-)
+One reason work hasn't progressed further on this is I spent
+quite a bit of time looking at the affects of using fsinfo().
 
-diff --git a/kernel/kcov.c b/kernel/kcov.c
-index 55c5d883a93e..6afae0bcbac4 100644
---- a/kernel/kcov.c
-+++ b/kernel/kcov.c
-@@ -427,7 +427,8 @@ void kcov_task_exit(struct task_struct *t)
- 	 *        WARN_ON(!kcov->remote && kcov->t != t);
- 	 *
- 	 * For KCOV_REMOTE_ENABLE devices, the exiting task is either:
--	 * 2. A remote task between kcov_remote_start() and kcov_remote_stop().
-+	 *
-+	 * 1. A remote task between kcov_remote_start() and kcov_remote_stop().
- 	 *    In this case we should print a warning right away, since a task
- 	 *    shouldn't be exiting when it's in a kcov coverage collection
- 	 *    section. Here t points to the task that is collecting remote
-@@ -437,7 +438,7 @@ void kcov_task_exit(struct task_struct *t)
- 	 *        WARN_ON(kcov->remote && kcov->t != t);
- 	 *
- 	 * 2. The task that created kcov exiting without calling KCOV_DISABLE,
--	 *    and then again we can make sure that t->kcov->t == t:
-+	 *    and then again we make sure that t->kcov->t == t:
- 	 *        WARN_ON(kcov->remote && kcov->t != t);
- 	 *
- 	 * By combining all three checks into one we get:
-@@ -764,7 +765,7 @@ static const struct file_operations kcov_fops = {
-  * Internally, kcov_remote_start() looks up the kcov device associated with the
-  * provided handle, allocates an area for coverage collection, and saves the
-  * pointers to kcov and area into the current task_struct to allow coverage to
-- * be collected via __sanitizer_cov_trace_pc()
-+ * be collected via __sanitizer_cov_trace_pc().
-  * In turns kcov_remote_stop() clears those pointers from task_struct to stop
-  * collecting coverage and copies all collected coverage into the kcov area.
-  */
-@@ -972,16 +973,25 @@ void kcov_remote_stop(void)
- 		local_irq_restore(flags);
- 		return;
- 	}
--	kcov = t->kcov;
--	area = t->kcov_area;
--	size = t->kcov_size;
--	sequence = t->kcov_sequence;
--
-+	/*
-+	 * When in softirq, check if the corresponding kcov_remote_start()
-+	 * actually found the remote handle and started collecting coverage.
-+	 */
-+	if (in_serving_softirq() && !t->kcov_softirq) {
-+		local_irq_restore(flags);
-+		return;
-+	}
-+	/* Make sure that kcov_softirq is only set when in softirq. */
- 	if (WARN_ON(!in_serving_softirq() && t->kcov_softirq)) {
- 		local_irq_restore(flags);
- 		return;
- 	}
- 
-+	kcov = t->kcov;
-+	area = t->kcov_area;
-+	size = t->kcov_size;
-+	sequence = t->kcov_sequence;
-+
- 	kcov_stop(t);
- 	if (in_serving_softirq()) {
- 		t->kcov_softirq = 0;
--- 
-2.27.0.278.ge193c7cf3a9-goog
+My testing was done by using a large autofs direct mount map of
+20000 entries which means that at autofs startup 20000 autofs
+mounts must be done and at autofs shutdown those 20000 mounts
+must be umounted. Not very scientific but something to use to
+get a feel for the affect of our changes.
+
+Initially just using fsinfo() to load all the mount entries was
+done to see how that would perform. This was done in a way that
+required no modifications to library user code but didn't get
+much improvement.
+
+Next loading all the mount ids (alone) for mount entry traversal
+was done and the various fields retrieved on-demand (implemented
+by Karel).
+
+Loading the entire mount table and then traversing the entries
+means the mount table is always possibly out of date. And loading
+the ids and getting the fields on-demand might have made that
+problem worse. But loading only the mount ids and using an
+on-demand method to get needed fields worked surprisingly well.
+
+The main issue is a mount going away while getting the fields.
+Testing showed that simply checking the field is valid and
+ignoring the entry if it isn't is enough to handle that case.
+
+Also the mount going away after the needed fields have been
+retrieved must be handled by callers of libmount as mounts
+can just as easily go away after reading the proc based tables.
+
+The case of the underlying mount information changing needs to
+be considered too. We will need to do better on that in the
+future but it too is a problem with the proc table handing and
+hasn't seen problems logged against libmount for it AFAIK.
+
+So, all in all, this approach worked pretty well as libmount
+users do use the getter access methods to retrieve the mount
+entry fields (which is required for the on-demand method to
+work). Certainly systemd always uses them (and it looks like
+udisks2 does too).
+
+Unfortunately using the libmount on-demand implementation
+requires library user code be modified (only a little in
+the systemd case) to use the implementation.
+
+Testing showed that we get between 10-15% reduction in
+overhead and CPU usage remained high.
+
+I think processing large numbers of mounts is simply a lot
+of work and there are particular cases that will remain that
+require the use of the load and traverse method. For example
+matching all mounts with a given prefix string (one of the
+systemd use cases).
+
+It's hard to get information about this but I can say that
+running pref during the autofs start and stop shows the bulk
+of the counter hits on the fsinfo() table construction code
+so that ahs to be where the overhead is.
+
+The unavoidable conclusion is that the load and traverse method
+that's been imposed on us for so long (even before libmount)
+for mount handling is what we need to get away from. After all,
+this is essentially where the problem comes from in the first
+place. And fsinfo() is designed to not need to use this method
+for getting mount information for that reason.
+
+There's also the notifications side of things which is the next
+area to work on. Looking at systemd I see that monitoring the
+proc mount table leads to a load, traverse, and process of the
+entire table for every single notification. It's clear that's
+because of the (what I'll call) anonymous notifications that we
+have now.
+
+The notifications in David's series carry event specific
+information, for example the mount id for mount notifications
+and the libmount fsinfo() implementation is written to use the
+mount id (lowest overhead lookup option), so there has to be
+significant improvement for this case.
+
+But systemd has it's own notifications handling code so there
+will need to be non-trivial changes there as well as changes
+in libmount.
+
+Bottom line is we have a bit of a challenge with this because we
+are trying to change coding practices developed over many years
+that, necessarily, use a load/traverse method and it's going to
+take quite a while to change these coding practices.
+
+My question is, is there something specific, besides what we are
+doing, that you'd like to see done now in order to get the series
+merged?
+
+Ian
 
