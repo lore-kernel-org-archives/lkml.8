@@ -2,121 +2,119 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C033C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE292C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:46:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12513206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:46:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TbcMdd/8"
+	by mail.kernel.org (Postfix) with ESMTP id D26022076C
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:46:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729040AbgFHHqi (ORCPT
+        id S1729075AbgFHHq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 03:46:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36324 "EHLO
+        Mon, 8 Jun 2020 03:46:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729047AbgFHHqf (ORCPT
+        with ESMTP id S1729047AbgFHHq5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 03:46:35 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81706C08C5C7
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 00:46:34 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id l11so16267064wru.0
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 00:46:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Ii1LpA7xPLv2wdGt5UuWPaO4p+SzGddtJEFd/ScE1mM=;
-        b=TbcMdd/8OOsDoTOIeYwoPHkpvrb7BLpJgvs3osnO9kgBDS52ZeSXUiVqA3cdbFfqgQ
-         j+Keb/5fI6A4lol2GJ6ijyjT5cuYD1OchuUXj4zFjT5O9U0kOCVWpub3uGIR4ix8Y4he
-         9LTLgODzbNdftzIB37a00BFCiR2bFxcMbQA44dL/XUL5uFD2NS0l4to3bE/K1fctTx0j
-         2K3o8Z/L7yYzIVoHwF6wYOfG05xBe9ZVWwdsQ4gRjdL5lRFe8YSTkdhtduLscBq/eYKi
-         58Q8jTnzbtIIt5FtaVALNA++QK8rJRqW2Uvyj29SIiBZmzT/CCw00/+UGW8ZAC0BmEPE
-         sHzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Ii1LpA7xPLv2wdGt5UuWPaO4p+SzGddtJEFd/ScE1mM=;
-        b=pvf1qEHUA/AfoGvsyv7A9CBd0QIlPMTPZ0gPaxaR7G7JzlIaV7edwdDRrgf3XF0M72
-         Oye4GHm+hJKtv27i4tbM7l9k4PLTeRUYWI/N3QorGrUro/EGor+4sdJkJgbeUrVFhqOD
-         EJp54ivCahwDvhcGvHYUYAeVioJIIkb5c+TZTRwwfrlWkldicqECADWdGupyL4l4PKV2
-         0b35OsLQxekYEh6TxxUHyZcwVdSVL/2zQFbPVLP6JIJ4ehlM9io4M091WzmE5D427sq6
-         K+RxxiLN3e2jnVsUHZwt/RPBVI0Qja6HFcw3yodv1y4YjC19qA/+sqKnCRYtgeqUE432
-         zWTw==
-X-Gm-Message-State: AOAM533nRh/tbbVoyeQ4juT0JayXxYBjmfQmFqQ3ZmsUyxbIXawYu2yY
-        4xjCu/V3vWrlnSJW+d+cBJ9hXg==
-X-Google-Smtp-Source: ABdhPJylRQSYQXNyAZiyW6rrMJLInL4XF8pMc/Y82ccj0fV0f6vQenutBOzt90BsWef9ORNQoVIZrQ==
-X-Received: by 2002:adf:a449:: with SMTP id e9mr21978811wra.294.1591602392643;
-        Mon, 08 Jun 2020 00:46:32 -0700 (PDT)
-Received: from dell ([95.147.198.92])
-        by smtp.gmail.com with ESMTPSA id u3sm22618436wrw.89.2020.06.08.00.46.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 00:46:31 -0700 (PDT)
-Date:   Mon, 8 Jun 2020 08:46:30 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 05/11] pwm: add support for sl28cpld PWM controller
-Message-ID: <20200608074630.GA3567@dell>
-References: <20200604211039.12689-1-michael@walle.cc>
- <20200604211039.12689-6-michael@walle.cc>
- <20200605084915.GE3714@dell>
- <b3324f5c1c908edc89a9cd2676644dfe@walle.cc>
+        Mon, 8 Jun 2020 03:46:57 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74FF1C08C5C4
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 00:46:57 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jiCUc-0006ou-Jk; Mon, 08 Jun 2020 09:46:50 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jiCUb-000511-Lj; Mon, 08 Jun 2020 09:46:49 +0200
+Date:   Mon, 8 Jun 2020 09:46:49 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] media: tvp5150: Add missed media_entity_cleanup()
+Message-ID: <20200608074649.bppdrdoxn6xig6jy@pengutronix.de>
+References: <20200606143918.2869528-1-hslester96@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b3324f5c1c908edc89a9cd2676644dfe@walle.cc>
+In-Reply-To: <20200606143918.2869528-1-hslester96@gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 09:45:45 up 205 days, 23:04, 198 users,  load average: 0.11, 0.08,
+ 0.02
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 05 Jun 2020, Michael Walle wrote:
+Hi,
 
-> Am 2020-06-05 10:49, schrieb Lee Jones:
-> [..]
-> > > +static inline struct sl28cpld_pwm *to_sl28cpld_pwm(struct pwm_chip
-> > > *chip)
-> > > +{
-> > > +	return container_of(chip, struct sl28cpld_pwm, pwm_chip);
-> > > +}
-> > 
-> > Why not save yourself the trouble and just:
-> > 
-> >   struct sl28cpld_pwm *pwm = dev_get_drvdata(chip->dev);
+thanks for covering that. Appart of the fact that this function does
+nothing:
+
+Reviewed-by: Marco Felsch <m.felsch@pengutronix.de>
+
+On 20-06-06 22:39, Chuhong Yuan wrote:
+> This driver does not call media_entity_cleanup() in the error handler
+> of tvp5150_registered() and tvp5150_remove(), while it has called
+> media_entity_pads_init() at first.
+> Add the missed calls to fix it.
 > 
-> Is there a reason why not a single pwm driver uses something like that?
-
-Copy/paste?  Habit?
+> Fixes: 0556f1d580d4 ("media: tvp5150: add input source selection of_graph support")
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> ---
+>  drivers/media/i2c/tvp5150.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
+> index eb39cf5ea089..9df575238952 100644
+> --- a/drivers/media/i2c/tvp5150.c
+> +++ b/drivers/media/i2c/tvp5150.c
+> @@ -1664,8 +1664,10 @@ static int tvp5150_registered(struct v4l2_subdev *sd)
+>  	return 0;
+>  
+>  err:
+> -	for (i = 0; i < decoder->connectors_num; i++)
+> +	for (i = 0; i < decoder->connectors_num; i++) {
+>  		media_device_unregister_entity(&decoder->connectors[i].ent);
+> +		media_entity_cleanup(&decoder->connectors[i].ent);
+> +	}
+>  	return ret;
+>  #endif
+>  
+> @@ -2248,8 +2250,10 @@ static int tvp5150_remove(struct i2c_client *c)
+>  
+>  	for (i = 0; i < decoder->connectors_num; i++)
+>  		v4l2_fwnode_connector_free(&decoder->connectors[i].base);
+> -	for (i = 0; i < decoder->connectors_num; i++)
+> +	for (i = 0; i < decoder->connectors_num; i++) {
+>  		media_device_unregister_entity(&decoder->connectors[i].ent);
+> +		media_entity_cleanup(&decoder->connectors[i].ent);
+> +	}
+>  	v4l2_async_unregister_subdev(sd);
+>  	v4l2_ctrl_handler_free(&decoder->hdl);
+>  	pm_runtime_disable(&c->dev);
+> -- 
+> 2.26.2
+> 
+> 
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
