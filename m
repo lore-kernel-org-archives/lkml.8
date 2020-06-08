@@ -2,234 +2,473 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DAE2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 01:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF39C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 01:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26210206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 01:38:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B951206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 01:41:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728532AbgFHBi1 (ORCPT
+        id S1728462AbgFHBlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 21:38:27 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:59254 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728065AbgFHBi1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 21:38:27 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 97C8DC15F024697CFB60;
-        Mon,  8 Jun 2020 09:38:24 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Mon, 8 Jun 2020
- 09:38:17 +0800
-From:   Jason Yan <yanaijie@huawei.com>
-To:     <viro@zeniv.linux.org.uk>, <axboe@kernel.dk>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-block@vger.kernel.org>
-CC:     Jason Yan <yanaijie@huawei.com>, Christoph Hellwig <hch@lst.de>,
-        Ming Lei <ming.lei@redhat.com>, Jan Kara <jack@suse.cz>,
-        Hulk Robot <hulkci@huawei.com>
-Subject: [PATCH v4] block: Fix use-after-free in blkdev_get()
-Date:   Mon, 8 Jun 2020 10:05:57 +0800
-Message-ID: <20200608020557.31668-1-yanaijie@huawei.com>
-X-Mailer: git-send-email 2.21.3
+        Sun, 7 Jun 2020 21:41:20 -0400
+Received: from mga03.intel.com ([134.134.136.65]:27214 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728065AbgFHBlT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jun 2020 21:41:19 -0400
+IronPort-SDR: 2pE3qk9eFHr0J/0gYZQjFLRYOVguZn0gJXOw3GepdGVPD6dz3tjQHfdZkVbqCk366WKvs2wmjo
+ OvwXhHIesabQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2020 18:41:17 -0700
+IronPort-SDR: TZG95OK6FwB+LKHeMujdT2WoyURi0oqBAUdj5EMDfbigk+hwFXSLPpu0gJLXVtQ4nOxR/sr+s1
+ 3iOQjgCmjutA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,486,1583222400"; 
+   d="scan'208";a="259283887"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga007.jf.intel.com with ESMTP; 07 Jun 2020 18:41:17 -0700
+Received: from [10.238.0.150] (hongyuni-mobl1.ccr.corp.intel.com [10.238.0.150])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 3794C5805B5;
+        Sun,  7 Jun 2020 18:41:12 -0700 (PDT)
+Subject: Re: [PATCH updated v2] sched/fair: core wide cfs task priority
+ comparison
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Aaron Lu <aaron.lwe@gmail.com>
+Cc:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Aaron Lu <aaron.lu@linux.alibaba.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        "Li, Aubrey" <aubrey.li@linux.intel.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>
+References: <CANaguZAXsjD=X-bB7dvQZ3FSqLioiZU=YREHH_7JqiFsZCTxHA@mail.gmail.com>
+ <20200417094045.GA197704@ziqianlu-desktop.localdomain>
+ <20200420080759.GA224731@ziqianlu-desktop.localdomain>
+ <CANaguZDP3nyBdjLeeCZGoUoYk6Lf0HUv19N2Qxo4CpZfrjPZHA@mail.gmail.com>
+ <20200421025131.GA227300@aaronlu-desktop>
+ <20200424142443.GA263207@aaronlu-desktop>
+ <20200506143506.GH5298@hirez.programming.kicks-ass.net>
+ <20200508084419.GA120223@aaronlu-desktop>
+ <20200508090925.GV5298@hirez.programming.kicks-ass.net>
+ <20200508123457.GA122180@aaronlu-desktop>
+ <20200514130248.GD2940@hirez.programming.kicks-ass.net>
+From:   "Ning, Hongyu" <hongyu.ning@linux.intel.com>
+Message-ID: <0da15134-6ef6-d88f-f020-15ad8e0a22e6@linux.intel.com>
+Date:   Mon, 8 Jun 2020 09:41:10 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200514130248.GD2940@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In blkdev_get() we call __blkdev_get() to do some internal jobs and if
-there is some errors in __blkdev_get(), the bdput() is called which
-means we have released the refcount of the bdev (actually the refcount of
-the bdev inode). This means we cannot access bdev after that point. But
-acctually bdev is still accessed in blkdev_get() after calling
-__blkdev_get(). This results in use-after-free if the refcount is the
-last one we released in __blkdev_get(). Let's take a look at the
-following scenerio:
+On 2020/5/14 21:02, Peter Zijlstra wrote:
+> On Fri, May 08, 2020 at 08:34:57PM +0800, Aaron Lu wrote:
+>> With this said, I realized a workaround for the issue described above:
+>> when the core went from 'compatible mode'(step 1-3) to 'incompatible
+>> mode'(step 4), reset all root level sched entities' vruntime to be the
+>> same as the core wide min_vruntime. After all, the core is transforming
+>> from two runqueue mode to single runqueue mode... I think this can solve
+>> the issue to some extent but I may miss other scenarios.
+> 
+> A little something like so, this syncs min_vruntime when we switch to
+> single queue mode. This is very much SMT2 only, I got my head in twist
+> when thikning about more siblings, I'll have to try again later.
+> 
+> This very much retains the horrible approximation of S we always do.
+> 
+> Also, it is _completely_ untested...
+> 
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -102,7 +102,6 @@ static inline int __task_prio(struct tas
+>  /* real prio, less is less */
+>  static inline bool prio_less(struct task_struct *a, struct task_struct *b)
+>  {
+> -
+>  	int pa = __task_prio(a), pb = __task_prio(b);
+>  
+>  	if (-pa < -pb)
+> @@ -114,19 +113,8 @@ static inline bool prio_less(struct task
+>  	if (pa == -1) /* dl_prio() doesn't work because of stop_class above */
+>  		return !dl_time_before(a->dl.deadline, b->dl.deadline);
+>  
+> -	if (pa == MAX_RT_PRIO + MAX_NICE)  { /* fair */
+> -		u64 vruntime = b->se.vruntime;
+> -
+> -		/*
+> -		 * Normalize the vruntime if tasks are in different cpus.
+> -		 */
+> -		if (task_cpu(a) != task_cpu(b)) {
+> -			vruntime -= task_cfs_rq(b)->min_vruntime;
+> -			vruntime += task_cfs_rq(a)->min_vruntime;
+> -		}
+> -
+> -		return !((s64)(a->se.vruntime - vruntime) <= 0);
+> -	}
+> +	if (pa == MAX_RT_PRIO + MAX_NICE)
+> +		return cfs_prio_less(a, b);
+>  
+>  	return false;
+>  }
+> @@ -4293,10 +4281,11 @@ static struct task_struct *
+>  pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+>  {
+>  	struct task_struct *next, *max = NULL;
+> +	int old_active = 0, new_active = 0;
+>  	const struct sched_class *class;
+>  	const struct cpumask *smt_mask;
+> -	int i, j, cpu;
+>  	bool need_sync = false;
+> +	int i, j, cpu;
+>  
+>  	cpu = cpu_of(rq);
+>  	if (cpu_is_offline(cpu))
+> @@ -4349,10 +4338,14 @@ pick_next_task(struct rq *rq, struct tas
+>  		rq_i->core_pick = NULL;
+>  
+>  		if (rq_i->core_forceidle) {
+> +			// XXX is_idle_task(rq_i->curr) && rq_i->nr_running ??
+>  			need_sync = true;
+>  			rq_i->core_forceidle = false;
+>  		}
+>  
+> +		if (!is_idle_task(rq_i->curr))
+> +			old_active++;
+> +
+>  		if (i != cpu)
+>  			update_rq_clock(rq_i);
+>  	}
+> @@ -4463,8 +4456,12 @@ next_class:;
+>  
+>  		WARN_ON_ONCE(!rq_i->core_pick);
+>  
+> -		if (is_idle_task(rq_i->core_pick) && rq_i->nr_running)
+> -			rq_i->core_forceidle = true;
+> +		if (is_idle_task(rq_i->core_pick)) {
+> +			if (rq_i->nr_running)
+> +				rq_i->core_forceidle = true;
+> +		} else {
+> +			new_active++;
+> +		}
+>  
+>  		if (i == cpu)
+>  			continue;
+> @@ -4476,6 +4473,16 @@ next_class:;
+>  		WARN_ON_ONCE(!cookie_match(next, rq_i->core_pick));
+>  	}
+>  
+> +	/* XXX SMT2 only */
+> +	if (new_active == 1 && old_active > 1) {
+> +		/*
+> +		 * We just dropped into single-rq mode, increment the sequence
+> +		 * count to trigger the vruntime sync.
+> +		 */
+> +		rq->core->core_sync_seq++;
+> +	}
+> +	rq->core->core_active = new_active;
+> +
+>  done:
+>  	set_next_task(rq, next);
+>  	return next;
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -386,6 +386,12 @@ is_same_group(struct sched_entity *se, s
+>  	return NULL;
+>  }
+>  
+> +static inline bool
+> +is_same_tg(struct sched_entity *se, struct sched_entity *pse)
+> +{
+> +	return se->cfs_rq->tg == pse->cfs_rq->tg;
+> +}
+> +
+>  static inline struct sched_entity *parent_entity(struct sched_entity *se)
+>  {
+>  	return se->parent;
+> @@ -394,8 +400,6 @@ static inline struct sched_entity *paren
+>  static void
+>  find_matching_se(struct sched_entity **se, struct sched_entity **pse)
+>  {
+> -	int se_depth, pse_depth;
+> -
+>  	/*
+>  	 * preemption test can be made between sibling entities who are in the
+>  	 * same cfs_rq i.e who have a common parent. Walk up the hierarchy of
+> @@ -403,23 +407,16 @@ find_matching_se(struct sched_entity **s
+>  	 * parent.
+>  	 */
+>  
+> -	/* First walk up until both entities are at same depth */
+> -	se_depth = (*se)->depth;
+> -	pse_depth = (*pse)->depth;
+> -
+> -	while (se_depth > pse_depth) {
+> -		se_depth--;
+> -		*se = parent_entity(*se);
+> -	}
+> -
+> -	while (pse_depth > se_depth) {
+> -		pse_depth--;
+> -		*pse = parent_entity(*pse);
+> -	}
+> +	/* XXX we now have 3 of these loops, C stinks */
+>  
+>  	while (!is_same_group(*se, *pse)) {
+> -		*se = parent_entity(*se);
+> -		*pse = parent_entity(*pse);
+> +		int se_depth = (*se)->depth;
+> +		int pse_depth = (*pse)->depth;
+> +
+> +		if (se_depth <= pse_depth)
+> +			*pse = parent_entity(*pse);
+> +		if (se_depth >= pse_depth)
+> +			*se = parent_entity(*se);
+>  	}
+>  }
+>  
+> @@ -455,6 +452,12 @@ static inline struct sched_entity *paren
+>  	return NULL;
+>  }
+>  
+> +static inline bool
+> +is_same_tg(struct sched_entity *se, struct sched_entity *pse)
+> +{
+> +	return true;
+> +}
+> +
+>  static inline void
+>  find_matching_se(struct sched_entity **se, struct sched_entity **pse)
+>  {
+> @@ -462,6 +465,31 @@ find_matching_se(struct sched_entity **s
+>  
+>  #endif	/* CONFIG_FAIR_GROUP_SCHED */
+>  
+> +bool cfs_prio_less(struct task_struct *a, struct task_struct *b)
+> +{
+> +	struct sched_entity *se_a = &a->se, *se_b = &b->se;
+> +	struct cfs_rq *cfs_rq_a, *cfa_rq_b;
+> +	u64 vruntime_a, vruntime_b;
+> +
+> +	while (!is_same_tg(se_a, se_b)) {
+> +		int se_a_depth = se_a->depth;
+> +		int se_b_depth = se_b->depth;
+> +
+> +		if (se_a_depth <= se_b_depth)
+> +			se_b = parent_entity(se_b);
+> +		if (se_a_depth >= se_b_depth)
+> +			se_a = parent_entity(se_a);
+> +	}
+> +
+> +	cfs_rq_a = cfs_rq_of(se_a);
+> +	cfs_rq_b = cfs_rq_of(se_b);
+> +
+> +	vruntime_a = se_a->vruntime - cfs_rq_a->core_vruntime;
+> +	vruntime_b = se_b->vruntime - cfs_rq_b->core_vruntime;
+> +
+> +	return !((s64)(vruntime_a - vruntime_b) <= 0);
+> +}
+> +
+>  static __always_inline
+>  void account_cfs_rq_runtime(struct cfs_rq *cfs_rq, u64 delta_exec);
+>  
+> @@ -6891,6 +6919,18 @@ static void check_preempt_wakeup(struct
+>  		set_last_buddy(se);
+>  }
+>  
+> +static void core_sync_entity(struct rq *rq, struct cfs_rq *cfs_rq)
+> +{
+> +	if (!sched_core_enabled())
+> +		return;
+> +
+> +	if (rq->core->core_sync_seq == cfs_rq->core_sync_seq)
+> +		return;
+> +
+> +	cfs_rq->core_sync_seq = rq->core->core_sync_seq;
+> +	cfs_rq->core_vruntime = cfs_rq->min_vruntime;
+> +}
+> +
+>  static struct task_struct *pick_task_fair(struct rq *rq)
+>  {
+>  	struct cfs_rq *cfs_rq = &rq->cfs;
+> @@ -6902,6 +6942,14 @@ static struct task_struct *pick_task_fai
+>  	do {
+>  		struct sched_entity *curr = cfs_rq->curr;
+>  
+> +		/*
+> +		 * Propagate the sync state down to whatever cfs_rq we need,
+> +		 * the active cfs_rq's will have been done by
+> +		 * set_next_task_fair(), the rest is inactive and will not have
+> +		 * changed due to the current running task.
+> +		 */
+> +		core_sync_entity(rq, cfs_rq);
+> +
+>  		se = pick_next_entity(cfs_rq, NULL);
+>  
+>  		if (curr) {
+> @@ -10825,7 +10873,8 @@ static void switched_to_fair(struct rq *
+>  	}
+>  }
+>  
+> -/* Account for a task changing its policy or group.
+> +/*
+> + * Account for a task changing its policy or group.
+>   *
+>   * This routine is mostly called to set cfs_rq->curr field when a task
+>   * migrates between groups/classes.
+> @@ -10847,6 +10896,9 @@ static void set_next_task_fair(struct rq
+>  	for_each_sched_entity(se) {
+>  		struct cfs_rq *cfs_rq = cfs_rq_of(se);
+>  
+> +		/* snapshot vruntime before using it */
+> +		core_sync_entity(rq, cfs_rq);
+> +
+>  		set_next_entity(cfs_rq, se);
+>  		/* ensure bandwidth has been allocated on our new cfs_rq */
+>  		account_cfs_rq_runtime(cfs_rq, 0);
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -503,6 +503,10 @@ struct cfs_rq {
+>  	unsigned int		h_nr_running;      /* SCHED_{NORMAL,BATCH,IDLE} */
+>  	unsigned int		idle_h_nr_running; /* SCHED_IDLE */
+>  
+> +#ifdef CONFIG_SCHED_CORE
+> +	unsigned int		core_sync_seq;
+> +	u64			core_vruntime;
+> +#endif
+>  	u64			exec_clock;
+>  	u64			min_vruntime;
+>  #ifndef CONFIG_64BIT
+> @@ -1035,12 +1039,15 @@ struct rq {
+>  	unsigned int		core_enabled;
+>  	unsigned int		core_sched_seq;
+>  	struct rb_root		core_tree;
+> -	bool			core_forceidle;
+> +	unsigned int		core_forceidle;
+>  
+>  	/* shared state */
+>  	unsigned int		core_task_seq;
+>  	unsigned int		core_pick_seq;
+>  	unsigned long		core_cookie;
+> +	unsigned int		core_sync_seq;
+> +	unsigned int		core_active;
+> +
+>  #endif
+>  };
+>  
+> @@ -2592,6 +2599,8 @@ static inline bool sched_energy_enabled(
+>  
+>  #endif /* CONFIG_ENERGY_MODEL && CONFIG_CPU_FREQ_GOV_SCHEDUTIL */
+>  
+> +extern bool cfs_prio_less(struct task_struct *a, struct task_struct *b);
+> +
+>  #ifdef CONFIG_MEMBARRIER
+>  /*
+>   * The scheduler provides memory barriers required by membarrier between:
+> 
 
-  CPU0            CPU1                    CPU2
-blkdev_open     blkdev_open           Remove disk
-                  bd_acquire
-		  blkdev_get
-		    __blkdev_get      del_gendisk
-					bdev_unhash_inode
-  bd_acquire          bdev_get_gendisk
-    bd_forget           failed because of unhashed
-	  bdput
-	              bdput (the last one)
-		        bdev_evict_inode
+here is a quick test update based on Peter's fairness patch above:
 
-	  	    access bdev => use after free
+- Kernel under test: 
+A: Core scheduling v5 community base + Peter's fairness patch (by reverting Aaron's fairness patch)
+https://github.com/digitalocean/linux-coresched/tree/coresched/v5-v5.5.y + Peter's patch above
+B: Core scheduling v5 community base (with Aaron's fairness patchset)
+https://github.com/digitalocean/linux-coresched/tree/coresched/v5-v5.5.y (with Aaron's fairness patch）
 
-[  459.350216] BUG: KASAN: use-after-free in __lock_acquire+0x24c1/0x31b0
-[  459.351190] Read of size 8 at addr ffff88806c815a80 by task syz-executor.0/20132
-[  459.352347]
-[  459.352594] CPU: 0 PID: 20132 Comm: syz-executor.0 Not tainted 4.19.90 #2
-[  459.353628] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-[  459.354947] Call Trace:
-[  459.355337]  dump_stack+0x111/0x19e
-[  459.355879]  ? __lock_acquire+0x24c1/0x31b0
-[  459.356523]  print_address_description+0x60/0x223
-[  459.357248]  ? __lock_acquire+0x24c1/0x31b0
-[  459.357887]  kasan_report.cold+0xae/0x2d8
-[  459.358503]  __lock_acquire+0x24c1/0x31b0
-[  459.359120]  ? _raw_spin_unlock_irq+0x24/0x40
-[  459.359784]  ? lockdep_hardirqs_on+0x37b/0x580
-[  459.360465]  ? _raw_spin_unlock_irq+0x24/0x40
-[  459.361123]  ? finish_task_switch+0x125/0x600
-[  459.361812]  ? finish_task_switch+0xee/0x600
-[  459.362471]  ? mark_held_locks+0xf0/0xf0
-[  459.363108]  ? __schedule+0x96f/0x21d0
-[  459.363716]  lock_acquire+0x111/0x320
-[  459.364285]  ? blkdev_get+0xce/0xbe0
-[  459.364846]  ? blkdev_get+0xce/0xbe0
-[  459.365390]  __mutex_lock+0xf9/0x12a0
-[  459.365948]  ? blkdev_get+0xce/0xbe0
-[  459.366493]  ? bdev_evict_inode+0x1f0/0x1f0
-[  459.367130]  ? blkdev_get+0xce/0xbe0
-[  459.367678]  ? destroy_inode+0xbc/0x110
-[  459.368261]  ? mutex_trylock+0x1a0/0x1a0
-[  459.368867]  ? __blkdev_get+0x3e6/0x1280
-[  459.369463]  ? bdev_disk_changed+0x1d0/0x1d0
-[  459.370114]  ? blkdev_get+0xce/0xbe0
-[  459.370656]  blkdev_get+0xce/0xbe0
-[  459.371178]  ? find_held_lock+0x2c/0x110
-[  459.371774]  ? __blkdev_get+0x1280/0x1280
-[  459.372383]  ? lock_downgrade+0x680/0x680
-[  459.373002]  ? lock_acquire+0x111/0x320
-[  459.373587]  ? bd_acquire+0x21/0x2c0
-[  459.374134]  ? do_raw_spin_unlock+0x4f/0x250
-[  459.374780]  blkdev_open+0x202/0x290
-[  459.375325]  do_dentry_open+0x49e/0x1050
-[  459.375924]  ? blkdev_get_by_dev+0x70/0x70
-[  459.376543]  ? __x64_sys_fchdir+0x1f0/0x1f0
-[  459.377192]  ? inode_permission+0xbe/0x3a0
-[  459.377818]  path_openat+0x148c/0x3f50
-[  459.378392]  ? kmem_cache_alloc+0xd5/0x280
-[  459.379016]  ? entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[  459.379802]  ? path_lookupat.isra.0+0x900/0x900
-[  459.380489]  ? __lock_is_held+0xad/0x140
-[  459.381093]  do_filp_open+0x1a1/0x280
-[  459.381654]  ? may_open_dev+0xf0/0xf0
-[  459.382214]  ? find_held_lock+0x2c/0x110
-[  459.382816]  ? lock_downgrade+0x680/0x680
-[  459.383425]  ? __lock_is_held+0xad/0x140
-[  459.384024]  ? do_raw_spin_unlock+0x4f/0x250
-[  459.384668]  ? _raw_spin_unlock+0x1f/0x30
-[  459.385280]  ? __alloc_fd+0x448/0x560
-[  459.385841]  do_sys_open+0x3c3/0x500
-[  459.386386]  ? filp_open+0x70/0x70
-[  459.386911]  ? trace_hardirqs_on_thunk+0x1a/0x1c
-[  459.387610]  ? trace_hardirqs_off_caller+0x55/0x1c0
-[  459.388342]  ? do_syscall_64+0x1a/0x520
-[  459.388930]  do_syscall_64+0xc3/0x520
-[  459.389490]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[  459.390248] RIP: 0033:0x416211
-[  459.390720] Code: 75 14 b8 02 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83
-04 19 00 00 c3 48 83 ec 08 e8 0a fa ff ff 48 89 04 24 b8 02 00 00 00 0f
-   05 <48> 8b 3c 24 48 89 c2 e8 53 fa ff ff 48 89 d0 48 83 c4 08 48 3d
-      01
-[  459.393483] RSP: 002b:00007fe45dfe9a60 EFLAGS: 00000293 ORIG_RAX: 0000000000000002
-[  459.394610] RAX: ffffffffffffffda RBX: 00007fe45dfea6d4 RCX: 0000000000416211
-[  459.395678] RDX: 00007fe45dfe9b0a RSI: 0000000000000002 RDI: 00007fe45dfe9b00
-[  459.396758] RBP: 000000000076bf20 R08: 0000000000000000 R09: 000000000000000a
-[  459.397930] R10: 0000000000000075 R11: 0000000000000293 R12: 00000000ffffffff
-[  459.399022] R13: 0000000000000bd9 R14: 00000000004cdb80 R15: 000000000076bf2c
-[  459.400168]
-[  459.400430] Allocated by task 20132:
-[  459.401038]  kasan_kmalloc+0xbf/0xe0
-[  459.401652]  kmem_cache_alloc+0xd5/0x280
-[  459.402330]  bdev_alloc_inode+0x18/0x40
-[  459.402970]  alloc_inode+0x5f/0x180
-[  459.403510]  iget5_locked+0x57/0xd0
-[  459.404095]  bdget+0x94/0x4e0
-[  459.404607]  bd_acquire+0xfa/0x2c0
-[  459.405113]  blkdev_open+0x110/0x290
-[  459.405702]  do_dentry_open+0x49e/0x1050
-[  459.406340]  path_openat+0x148c/0x3f50
-[  459.406926]  do_filp_open+0x1a1/0x280
-[  459.407471]  do_sys_open+0x3c3/0x500
-[  459.408010]  do_syscall_64+0xc3/0x520
-[  459.408572]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[  459.409415]
-[  459.409679] Freed by task 1262:
-[  459.410212]  __kasan_slab_free+0x129/0x170
-[  459.410919]  kmem_cache_free+0xb2/0x2a0
-[  459.411564]  rcu_process_callbacks+0xbb2/0x2320
-[  459.412318]  __do_softirq+0x225/0x8ac
+- Test results briefing:
+OVERALL PERFORMANCE ARE THE SAME FOR FOLLOWING 3 TEST SETS, BETWEEN 2 KERNEL TEST BUILDS
 
-Fix this by delaying bdput() to the end of blkdev_get() which means we
-have finished accessing bdev.
+- Test set based on sysbench 1.1.0-bd4b418:
+1: sysbench cpu in cgroup cpu 0 + sysbench cpu in cgroup cpu 1 (192 workload tasks for each cgroup)
+2: sysbench mysql in cgroup mysql 0 + sysbench mysql in cgroup mysql 1 (192 workload tasks for each cgroup)
+3: sysbench cpu in cgroup cpu 0 + sysbench mysql in cgroup mysql 0 (192 workload tasks for each cgroup)
 
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Ming Lei <ming.lei@redhat.com>
-Cc: Jan Kara <jack@suse.cz>
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
----
- v4: Remove uneeded braces and add Reviewed-by tag from Jan Kara.
- v3: Add bdput() when __blkdev_get() calling itself failed.
- v2: Add Reported-by tag and cc linux-block mailing list
+- Test environment:
+Intel Xeon Server platform
+CPU(s):              192
+On-line CPU(s) list: 0-191
+Thread(s) per core:  2
+Core(s) per socket:  48
+Socket(s):           2
+NUMA node(s):        4
 
- fs/block_dev.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+- Test results:
 
-diff --git a/fs/block_dev.c b/fs/block_dev.c
-index 47860e589388..08c87db3a92b 100644
---- a/fs/block_dev.c
-+++ b/fs/block_dev.c
-@@ -1565,10 +1565,8 @@ static int __blkdev_get(struct block_device *bdev, fmode_t mode, int for_part)
- 	 */
- 	if (!for_part) {
- 		ret = devcgroup_inode_permission(bdev->bd_inode, perm);
--		if (ret != 0) {
--			bdput(bdev);
-+		if (ret != 0)
- 			return ret;
--		}
- 	}
- 
-  restart:
-@@ -1637,8 +1635,10 @@ static int __blkdev_get(struct block_device *bdev, fmode_t mode, int for_part)
- 				goto out_clear;
- 			BUG_ON(for_part);
- 			ret = __blkdev_get(whole, mode, 1);
--			if (ret)
-+			if (ret) {
-+				bdput(whole);
- 				goto out_clear;
-+			}
- 			bdev->bd_contains = whole;
- 			bdev->bd_part = disk_get_part(disk, partno);
- 			if (!(disk->flags & GENHD_FL_UP) ||
-@@ -1688,7 +1688,6 @@ static int __blkdev_get(struct block_device *bdev, fmode_t mode, int for_part)
- 	disk_unblock_events(disk);
- 	put_disk_and_module(disk);
-  out:
--	bdput(bdev);
- 
- 	return ret;
- }
-@@ -1755,6 +1754,9 @@ int blkdev_get(struct block_device *bdev, fmode_t mode, void *holder)
- 		bdput(whole);
- 	}
- 
-+	if (res)
-+		bdput(bdev);
-+
- 	return res;
- }
- EXPORT_SYMBOL(blkdev_get);
--- 
-2.21.3
+Note: 
+1: test results in following tables are Tput normalized to default baseline
+2: test setting in following tables:
+2.1: default -> core scheduling disabled
+2.2: coresched -> core scheduling enabled
+3. default test results are reused between 2 kernel test builds
 
+
+Test set 1:
++----------------------------------+-------+-----------+-------------+-------------+---------------+------+-------------+-------------+---------------+---------------+
+| setting                          | ***   | default   | default     | coresched   | coresched     | **   | default     | default     | coresched     | coresched     |
++==================================+=======+===========+=============+=============+===============+======+=============+=============+===============+===============+
+| cgroups                          | ***   | cg cpu 0  | cg cpu 0    | cg cpu 0    | cg cpu 0      | **   | cg cpu 1    | cg cpu 1    | cg cpu 1      | cg cpu 1      |
++----------------------------------+-------+-----------+-------------+-------------+---------------+------+-------------+-------------+---------------+---------------+
+| sysbench workload                | ***   | cpu       | cpu         | cpu         | cpu           | **   | cpu         | cpu         | cpu           | cpu           |
++----------------------------------+-------+-----------+-------------+-------------+---------------+------+-------------+-------------+---------------+---------------+
+| record item                      | ***   | Tput_avg  | Tput_stdev% | Tput_avg    | Tput_stdev%   | **   | Tput_avg    | Tput_stdev% | Tput_avg      | Tput_stdev%   |
++----------------------------------+-------+-----------+-------------+-------------+---------------+------+-------------+-------------+---------------+---------------+
+| Kernel_A(Peter's fairness patch) | ***   |           |             | 0.96        | 3.45%         | **   |             |             | 1.03          | 3.60%         |
++----------------------------------+-------+ 1         + 1.14%       +-------------+---------------+------+ 1           + 1.20%       +---------------+---------------+
+| Kernel_B(Aaron's fairness patch) | ***   |           |             | 0.98        | 1.75%         | **   |             |             | 1.01          | 1.83%         |
++----------------------------------+-------+-----------+-------------+-------------+---------------+------+-------------+-------------+---------------+---------------+
+
+Test set 2:
++----------------------------------+-------+------------+-------------+-------------+---------------+------+-------------+-------------+---------------+---------------+
+| setting                          | ***   | default    | default     | coresched   | coresched     | **   | default     | default     | coresched     | coresched     |
++==================================+=======+============+=============+=============+===============+======+=============+=============+===============+===============+
+| cgroups                          | ***   | cg mysql 0 | cg mysql 0  | cg mysql 0  | cg mysql 0    | **   | cg mysql 1  | cg mysql 1  | cg mysql 1    | cg mysql 1    |
++----------------------------------+-------+------------+-------------+-------------+---------------+------+-------------+-------------+---------------+---------------+
+| sysbench workload                | ***   | mysql      | mysql       | mysql       | mysql         | **   | mysql       | mysql       | mysql         | mysql         |
++----------------------------------+-------+------------+-------------+-------------+---------------+------+-------------+-------------+---------------+---------------+
+| record item                      | ***   | Tput_avg   | Tput_stdev% | Tput_avg    | Tput_stdev%   | **   | Tput_avg    | Tput_stdev% | Tput_avg      | Tput_stdev%   |
++----------------------------------+-------+------------+-------------+-------------+---------------+------+-------------+-------------+---------------+---------------+
+| Kernel_A(Peter's fairness patch) | ***   |            |             | 0.98        | 2.00%         | **   |             |             | 0.98          | 1.98%         |
++----------------------------------+-------+ 1          + 1.85%       +-------------+---------------+------+ 1           + 1.84%       +---------------+---------------+
+| Kernel_B(Aaron's fairness patch) | ***   |            |             | 1.01        | 1.61%         | **   |             |             | 1.01          | 1.59%         |
++----------------------------------+-------+------------+-------------+-------------+---------------+------+-------------+-------------+---------------+---------------+
+
+Test set 3:
++----------------------------------+-------+-----------+-------------+-------------+---------------+------+-------------+-------------+---------------+---------------+
+| setting                          | ***   | default   | default     | coresched   | coresched     | **   | default     | default     | coresched     | coresched     |
++==================================+=======+===========+=============+=============+===============+======+=============+=============+===============+===============+
+| cgroups                          | ***   | cg cpu    | cg cpu      | cg cpu      | cg cpu        | **   | cg mysql    | cg mysql    | cg mysql      | cg mysql      |
++----------------------------------+-------+-----------+-------------+-------------+---------------+------+-------------+-------------+---------------+---------------+
+| sysbench workload                | ***   | cpu       | cpu         | cpu         | cpu           | **   | mysql       | mysql       | mysql         | mysql         |
++----------------------------------+-------+-----------+-------------+-------------+---------------+------+-------------+-------------+---------------+---------------+
+| record item                      | ***   | Tput_avg  | Tput_stdev% | Tput_avg    | Tput_stdev%   | **   | Tput_avg    | Tput_stdev% | Tput_avg      | Tput_stdev%   |
++----------------------------------+-------+-----------+-------------+-------------+---------------+------+-------------+-------------+---------------+---------------+
+| Kernel_A(Peter's fairness patch) | ***   |           |             | 1.01        | 4.67%         | **   |             |             | 0.84          | 25.89%        |
++----------------------------------+-------+ 1         + 1.56%       +-------------+---------------+------+ 1           + 3.17%       +---------------+---------------+
+| Kernel_B(Aaron's fairness patch) | ***   |           |             | 0.99        | 4.17%         | **   |             |             | 0.89          | 16.44%        |
++----------------------------------+-------+-----------+-------------+-------------+---------------+------+-------------+-------------+---------------+---------------+
