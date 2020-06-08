@@ -2,202 +2,166 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E2BCC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6914EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DEF720659
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:46:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="emZT5qAq"
+	by mail.kernel.org (Postfix) with ESMTP id 4407220659
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:47:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730079AbgFHOqm (ORCPT
+        id S1730088AbgFHOrR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 10:46:42 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:41656 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729958AbgFHOqj (ORCPT
+        Mon, 8 Jun 2020 10:47:17 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39789 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729958AbgFHOrQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 10:46:39 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 058EcS1K177007;
-        Mon, 8 Jun 2020 14:46:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=3ST82eFgXt92EYVicsN7tP+o1dS2XHSuxwNV51uYE34=;
- b=emZT5qAq70yICtdA+THiWQjdCFWPX8H0CxPo2Phb1FN7m11+APRVT8VHbZeW7OK70fnO
- Koi2TdhrMUER4tesMGga9dV/nrsJl0SRlZL6LRO1njB/kbCNOJsF5urNh+fJu5cJgKQv
- isJSOXXqBqe98vG1q+cywTzIC8Rp22oSTIN6kMv8d+Eyv/uf5yKGDXWgruorQ7iBSjiT
- oGssVa8Vxj4e4YgGf63zjG5UipnPdACdw4rpihNOE8bjf5b+7HJnGJkNI4zDrWOk5aED
- p398jmdmUUVFDDwLbq/RH08AiHkqrPCGj3isFFPOrmLraOu/p7TOHEx2ckeW2ws4z7wv +A== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 31g3smq65g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 08 Jun 2020 14:46:29 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 058EhbPI007318;
-        Mon, 8 Jun 2020 14:46:29 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 31gn2vah5v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 08 Jun 2020 14:46:29 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 058EkSRD015634;
-        Mon, 8 Jun 2020 14:46:28 GMT
-Received: from ca-common-hq.us.oracle.com (/10.211.9.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 08 Jun 2020 07:46:27 -0700
-From:   Divya Indi <divya.indi@oracle.com>
-To:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Jason Gunthorpe <jgg@ziepe.ca>, Kaike Wan <kaike.wan@intel.com>
-Cc:     Gerd Rausch <gerd.rausch@oracle.com>,
-        =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
-        Srinivas Eeda <srinivas.eeda@oracle.com>,
-        Rama Nichanamatlu <rama.nichanamatlu@oracle.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Divya Indi <divya.indi@oracle.com>
-Subject: [PATCH v3] IB/sa: Resolving use-after-free in ib_nl_send_msg
-Date:   Mon,  8 Jun 2020 07:46:16 -0700
-Message-Id: <1591627576-920-2-git-send-email-divya.indi@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1591627576-920-1-git-send-email-divya.indi@oracle.com>
-References: <1591627576-920-1-git-send-email-divya.indi@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9645 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 malwarescore=0
- bulkscore=0 adultscore=0 mlxlogscore=999 spamscore=0 suspectscore=2
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006080110
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9645 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
- lowpriorityscore=0 impostorscore=0 cotscore=-2147483648 suspectscore=2
- spamscore=0 bulkscore=0 malwarescore=0 phishscore=0 mlxscore=0
- mlxlogscore=999 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006080109
+        Mon, 8 Jun 2020 10:47:16 -0400
+Received: by mail-ot1-f67.google.com with SMTP id g5so13825243otg.6;
+        Mon, 08 Jun 2020 07:47:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZNiDF0QbRkAC5PAOtg/PZzyEBv0aXwpLIdiYmMTWuTc=;
+        b=b+hF0HVggEGlmJeLVLQUigCTohD01p4PxOaneGxkPxViDAr3uzMNjwRcEoOkSd1WRt
+         UY5KU2J7WgcWTQqZCzFa20V2iUnspwT3vAlkcBIskKrJtszfAawtnSRJ1rq1A/S33x5B
+         MRUkC3NDA1h4QV7ZPyw0lCouQL0AUrBpaagNOagaB/IipBw+e8HNOHIYnQW+B19Uiuvf
+         ceIGbLU2cdjbFwo1puzAj4n4k6IwTJf1CLX3B8L6PgrPG8xI5aIuWstSzb0KrH4y4vQQ
+         iAYhnMXcYnFA2Mc/E5AjdO+t6K/pefcT+fSVtgxkX9Z+7GG/Lrf31Erp3mp4TgeIGJ+W
+         urww==
+X-Gm-Message-State: AOAM532emiWgISRNWtfzfyrWZ430nLUItyyvNBYtZNw/0ASwxKLX8+Zg
+        TRAB3EyEUhdw8qznc4wY3yz59W17t7gUha8WnZ8CfQ==
+X-Google-Smtp-Source: ABdhPJwFXW1J7g59xQQtXSD0pqJ6GWtqJJB8QVdlpiTxNufVuBC9KwHKN3UJS4dx7m96rMgujU5VUpDYNuVG2Kl16iU=
+X-Received: by 2002:a9d:62c2:: with SMTP id z2mr17492225otk.145.1591627635517;
+ Mon, 08 Jun 2020 07:47:15 -0700 (PDT)
+MIME-Version: 1.0
+References: <1591555267-21822-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1591555267-21822-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1591555267-21822-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 8 Jun 2020 16:47:03 +0200
+Message-ID: <CAMuHMdWKhq63yT9XbbV4Nmr0EJZcGQ396pVCqkrzMTmgunznaQ@mail.gmail.com>
+Subject: Re: [PATCH 03/11] arm64: dts: renesas: hihope-common: Separate out
+ Rev.2.0 specific into hihope-common-rev2.dtsi file
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 3ebd2fd0d011 ("IB/sa: Put netlink request into the request list before sending")'
--
-1. Adds the query to the request list before ib_nl_snd_msg.
-2. Removes ib_nl_send_msg from within the spinlock which also makes it
-possible to allocate memory with GFP_KERNEL.
+Hi Prabhakar,
 
-However, if there is a delay in sending out the request (For
-eg: Delay due to low memory situation) the timer to handle request timeout
-might kick in before the request is sent out to ibacm via netlink.
-ib_nl_request_timeout may release the query causing a use after free situation
-while accessing the query in ib_nl_send_msg.
+On Sun, Jun 7, 2020 at 8:41 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Separate out Rev.2.0 specific hardware changes into
+> hihope-common-rev2.dtsi file so that hihope-common.dtsi can be used
+> by all the variants for RZ/G2M[N] boards.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-Call Trace for the above race:
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/renesas/hihope-common-rev2.dtsi
 
-[<ffffffffa02f43cb>] ? ib_pack+0x17b/0x240 [ib_core]
-[<ffffffffa032aef1>] ib_sa_path_rec_get+0x181/0x200 [ib_sa]
-[<ffffffffa0379db0>] rdma_resolve_route+0x3c0/0x8d0 [rdma_cm]
-[<ffffffffa0374450>] ? cma_bind_port+0xa0/0xa0 [rdma_cm]
-[<ffffffffa040f850>] ? rds_rdma_cm_event_handler_cmn+0x850/0x850
-[rds_rdma]
-[<ffffffffa040f22c>] rds_rdma_cm_event_handler_cmn+0x22c/0x850
-[rds_rdma]
-[<ffffffffa040f860>] rds_rdma_cm_event_handler+0x10/0x20 [rds_rdma]
-[<ffffffffa037778e>] addr_handler+0x9e/0x140 [rdma_cm]
-[<ffffffffa026cdb4>] process_req+0x134/0x190 [ib_addr]
-[<ffffffff810a02f9>] process_one_work+0x169/0x4a0
-[<ffffffff810a0b2b>] worker_thread+0x5b/0x560
-[<ffffffff810a0ad0>] ? flush_delayed_work+0x50/0x50
-[<ffffffff810a68fb>] kthread+0xcb/0xf0
-[<ffffffff816ec49a>] ? __schedule+0x24a/0x810
-[<ffffffff816ec49a>] ? __schedule+0x24a/0x810
-[<ffffffff810a6830>] ? kthread_create_on_node+0x180/0x180
-[<ffffffff816f25a7>] ret_from_fork+0x47/0x90
-[<ffffffff810a6830>] ? kthread_create_on_node+0x180/0x180
-....
-RIP  [<ffffffffa03296cd>] send_mad+0x33d/0x5d0 [ib_sa]
+Perhaps just hihope-rev2.dtsi, i.e. without the "common-"?
 
-To resolve the above issue -
-1. Add the req to the request list only after the request has been sent out.
-2. To handle the race where response comes in before adding request to
-the request list, send(rdma_nl_multicast) and add to list while holding the
-spinlock - request_lock.
-3. Use GFP_NOWAIT for rdma_nl_multicast since it is called while holding
-a spinlock. In case of memory allocation failure, request will go out to SA.
+> @@ -0,0 +1,101 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Device Tree Source for the HiHope RZ/G2[MN] main board Rev.2.0 common
+> + * parts
+> + *
+> + * Copyright (C) 2020 Renesas Electronics Corp.
+> + */
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +
+> +/ {
+> +       leds {
+> +               compatible = "gpio-leds";
+> +
+> +               bt_active_led {
+> +                       label = "blue:bt";
+> +                       gpios = <&gpio7  0 GPIO_ACTIVE_HIGH>;
+> +                       linux,default-trigger = "hci0-power";
+> +                       default-state = "off";
+> +               };
+> +
+> +               led0 {
+> +                       gpios = <&gpio6 11 GPIO_ACTIVE_HIGH>;
+> +               };
+> +
+> +               led1 {
+> +                       gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
+> +               };
+> +
+> +               led2 {
+> +                       gpios = <&gpio6 13 GPIO_ACTIVE_HIGH>;
+> +               };
+> +
+> +               led3 {
+> +                       gpios = <&gpio0  0 GPIO_ACTIVE_HIGH>;
+> +               };
 
-Signed-off-by: Divya Indi <divya.indi@oracle.com>
-Fixes: 3ebd2fd0d011 ("IB/sa: Put netlink request into the request list
-before sending")
----
- drivers/infiniband/core/sa_query.c | 34 +++++++++++++++++-----------------
- 1 file changed, 17 insertions(+), 17 deletions(-)
+led1, led2, and led3 are present on both, so I'd keep them in
+hihope-common.dtsi.
 
-diff --git a/drivers/infiniband/core/sa_query.c b/drivers/infiniband/core/sa_query.c
-index 74e0058..042c99b 100644
---- a/drivers/infiniband/core/sa_query.c
-+++ b/drivers/infiniband/core/sa_query.c
-@@ -836,6 +836,9 @@ static int ib_nl_send_msg(struct ib_sa_query *query, gfp_t gfp_mask)
- 	void *data;
- 	struct ib_sa_mad *mad;
- 	int len;
-+	unsigned long flags;
-+	unsigned long delay;
-+	int ret;
- 
- 	mad = query->mad_buf->mad;
- 	len = ib_nl_get_path_rec_attrs_len(mad->sa_hdr.comp_mask);
-@@ -860,35 +863,32 @@ static int ib_nl_send_msg(struct ib_sa_query *query, gfp_t gfp_mask)
- 	/* Repair the nlmsg header length */
- 	nlmsg_end(skb, nlh);
- 
--	return rdma_nl_multicast(&init_net, skb, RDMA_NL_GROUP_LS, gfp_mask);
-+	spin_lock_irqsave(&ib_nl_request_lock, flags);
-+	ret =  rdma_nl_multicast(&init_net, skb, RDMA_NL_GROUP_LS, GFP_NOWAIT);
-+	if (!ret) {
-+		/* Put the request on the list.*/
-+		delay = msecs_to_jiffies(sa_local_svc_timeout_ms);
-+		query->timeout = delay + jiffies;
-+		list_add_tail(&query->list, &ib_nl_request_list);
-+		/* Start the timeout if this is the only request */
-+		if (ib_nl_request_list.next == &query->list)
-+			queue_delayed_work(ib_nl_wq, &ib_nl_timed_work, delay);
-+	}
-+	spin_unlock_irqrestore(&ib_nl_request_lock, flags);
-+
-+	return ret;
- }
- 
- static int ib_nl_make_request(struct ib_sa_query *query, gfp_t gfp_mask)
- {
--	unsigned long flags;
--	unsigned long delay;
- 	int ret;
- 
- 	INIT_LIST_HEAD(&query->list);
- 	query->seq = (u32)atomic_inc_return(&ib_nl_sa_request_seq);
- 
--	/* Put the request on the list first.*/
--	spin_lock_irqsave(&ib_nl_request_lock, flags);
--	delay = msecs_to_jiffies(sa_local_svc_timeout_ms);
--	query->timeout = delay + jiffies;
--	list_add_tail(&query->list, &ib_nl_request_list);
--	/* Start the timeout if this is the only request */
--	if (ib_nl_request_list.next == &query->list)
--		queue_delayed_work(ib_nl_wq, &ib_nl_timed_work, delay);
--	spin_unlock_irqrestore(&ib_nl_request_lock, flags);
--
- 	ret = ib_nl_send_msg(query, gfp_mask);
- 	if (ret) {
- 		ret = -EIO;
--		/* Remove the request */
--		spin_lock_irqsave(&ib_nl_request_lock, flags);
--		list_del(&query->list);
--		spin_unlock_irqrestore(&ib_nl_request_lock, flags);
- 	}
- 
- 	return ret;
+> +
+> +               wlan_active_led {
+> +                       label = "yellow:wlan";
+> +                       gpios = <&gpio7  1 GPIO_ACTIVE_HIGH>;
+> +                       linux,default-trigger = "phy0tx";
+> +                       default-state = "off";
+> +               };
+> +       };
+> +
+> +       wlan_en_reg: regulator-wlan_en {
+> +               compatible = "regulator-fixed";
+> +               regulator-name = "wlan-en-regulator";
+> +               regulator-min-microvolt = <1800000>;
+> +               regulator-max-microvolt = <1800000>;
+> +               startup-delay-us = <70000>;
+> +
+> +               gpio = <&gpio_expander 1 GPIO_ACTIVE_HIGH>;
+> +               enable-active-high;
+> +       };
+
+Same for the WLAN regulator, especially as it is referenced from
+hihope-common.dtsi.
+As the GPIO  line differs between the two variants, you just need
+to add the gpio property in the revision-specific file.
+
+> +};
+> +
+> +&hscif0 {
+> +       bluetooth {
+> +               compatible = "ti,wl1837-st";
+> +               enable-gpios = <&gpio_expander 2 GPIO_ACTIVE_HIGH>;
+> +       };
+> +};
+
+As node is small, and the GPIO line differs from the two variants,
+I think duplicating it in both revision-specific files is fine, though.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-1.8.3.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
