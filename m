@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB8EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DC49C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E7392078D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:18:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4137120801
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:18:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591661901;
-	bh=Yn3ATB0DMOTHJ/cc/Ku3BysKcjUHDwZ0Jtkt8knF+ZA=;
+	s=default; t=1591661904;
+	bh=JnivCYcVOZ73WwbFWkQucbsHSKqUdGvKU95EX62tYBQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k2fM8/Nv1loltpurVeIo4j0IyLoglxSzPXDOCcyd+Ru5N3o4GgfZxlf9qucvC6443
-	 DxofN+wgVpSSxlb6lENSta5AcM11G1yGhGSQpD6uIxwLi3kCPF7cTF1ibfFnF+zk7g
-	 EM1EuJZqDPVgaA2664lLgAX2DvNDWkrDpW0QYi0U=
+	b=wxoZ+bsBAsXEnwSzC6H3U/7beCQa8l8KTPbQJEmrxIjlP2npAOG6QzvOBNvSjew+k
+	 3pC8vhujRpRi2GYRqp80N6aagJoV6+SjTq1bnxSXBKpoRzSexvyCepgBRkxY4EQt3M
+	 tJpuorv8Xa/uhuv+xn9fVpL301hAsMOqah65idas=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732461AbgFIAST (ORCPT
+        id S1730666AbgFHXSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:18:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40992 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:18:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730672AbgFHXSl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:18:41 -0400
+        id S1729951AbgFHXO5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:14:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E6FD2085B;
-        Mon,  8 Jun 2020 23:18:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2FFA21534;
+        Mon,  8 Jun 2020 23:14:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658321;
-        bh=Yn3ATB0DMOTHJ/cc/Ku3BysKcjUHDwZ0Jtkt8knF+ZA=;
+        s=default; t=1591658097;
+        bh=JnivCYcVOZ73WwbFWkQucbsHSKqUdGvKU95EX62tYBQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AbuI8FThWZbs8AdoWSbhYfSZQ3x75Lr+f7zXe5eXFyTeoChwtddO6HrSpwN0JAkMe
-         /YcLOvv3lQWfgKj5Tna//KVpHd2ef9mOeFHtUsmMWn2ZJKnUb02z1oGjWKL57D/9o/
-         nMCi9dx0FFHP2S7CR2l8TaUxs0+GiY7p9lLYWPZI=
+        b=Pfy2QRSJUgcTMqjQr0g11kIETH6v3yyxrywI0DE1WWMoAg4uSq6Jbk+uqo1m6eXWD
+         yrMknGtYka4FruzoNuSn/ViLokkCa2s5uAfaOFRV+rrWPR0naqMcymp7QGlgX25FQ/
+         hMqMrJqkctGZ3cuPTKslUTZpRxB01pU+vv164T1k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-security-module@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 321/606] exec: Always set cap_ambient in cap_bprm_set_creds
-Date:   Mon,  8 Jun 2020 19:07:26 -0400
-Message-Id: <20200608231211.3363633-321-sashal@kernel.org>
+Cc:     Jian-Hong Pan <jian-hong@endlessm.com>,
+        Daniel Drake <drake@endlessm.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.6 139/606] ALSA: hda/realtek - Enable headset mic of ASUS UX550GE with ALC295
+Date:   Mon,  8 Jun 2020 19:04:24 -0400
+Message-Id: <20200608231211.3363633-139-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -60,50 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Eric W. Biederman" <ebiederm@xmission.com>
+From: Jian-Hong Pan <jian-hong@endlessm.com>
 
-[ Upstream commit a4ae32c71fe90794127b32d26d7ad795813b502e ]
+[ Upstream commit ad97d667854c2fbce05a004e107f358ef4b04cf6 ]
 
-An invariant of cap_bprm_set_creds is that every field in the new cred
-structure that cap_bprm_set_creds might set, needs to be set every
-time to ensure the fields does not get a stale value.
+The ASUS laptop UX550GE with ALC295 can't detect the headset microphone
+until ALC295_FIXUP_ASUS_MIC_NO_PRESENCE quirk applied.
 
-The field cap_ambient is not set every time cap_bprm_set_creds is
-called, which means that if there is a suid or sgid script with an
-interpreter that has neither the suid nor the sgid bits set the
-interpreter should be able to accept ambient credentials.
-Unfortuantely because cap_ambient is not reset to it's original value
-the interpreter can not accept ambient credentials.
-
-Given that the ambient capability set is expected to be controlled by
-the caller, I don't think this is particularly serious.  But it is
-definitely worth fixing so the code works correctly.
-
-I have tested to verify my reading of the code is correct and the
-interpreter of a sgid can receive ambient capabilities with this
-change and cannot receive ambient capabilities without this change.
-
-Cc: stable@vger.kernel.org
-Cc: Andy Lutomirski <luto@kernel.org>
-Fixes: 58319057b784 ("capabilities: ambient capabilities")
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+Signed-off-by: Daniel Drake <drake@endlessm.com>
+Link: https://lore.kernel.org/r/20200512061525.133985-2-jian-hong@endlessm.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/commoncap.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/pci/hda/patch_realtek.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/security/commoncap.c b/security/commoncap.c
-index f4ee0ae106b2..0ca31c8bc0b1 100644
---- a/security/commoncap.c
-+++ b/security/commoncap.c
-@@ -812,6 +812,7 @@ int cap_bprm_set_creds(struct linux_binprm *bprm)
- 	int ret;
- 	kuid_t root_uid;
- 
-+	new->cap_ambient = old->cap_ambient;
- 	if (WARN_ON(!cap_ambient_invariant_ok(old)))
- 		return -EPERM;
- 
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index f92cd420e98d..ece762d0c714 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -8050,6 +8050,10 @@ static const struct snd_hda_pin_quirk alc269_pin_fixup_tbl[] = {
+ 		{0x12, 0x90a60130},
+ 		{0x17, 0x90170110},
+ 		{0x21, 0x03211020}),
++	SND_HDA_PIN_QUIRK(0x10ec0295, 0x1043, "ASUS", ALC295_FIXUP_ASUS_MIC_NO_PRESENCE,
++		{0x12, 0x90a60120},
++		{0x17, 0x90170110},
++		{0x21, 0x04211030}),
+ 	SND_HDA_PIN_QUIRK(0x10ec0295, 0x1043, "ASUS", ALC295_FIXUP_ASUS_MIC_NO_PRESENCE,
+ 		{0x12, 0x90a60130},
+ 		{0x17, 0x90170110},
 -- 
 2.25.1
 
