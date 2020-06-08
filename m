@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11199C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3EA3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D74B420885
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:18:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7FC72086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:18:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658310;
-	bh=DjlhHUZDtsooc2pYbEF4q0noeXu2UUg4RSSjcFAuF0E=;
+	s=default; t=1591658316;
+	bh=hH8VdHMcoSdW4iq/P16jtsTULNtxfV93v0SaSsDH9LE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=biKyHA3RnH12a97/a7R8ZXDJovzPd2xWKltrRwm5mtTC2TVvoWYWPsO4GTljGv1hN
-	 3OlOidOHQGr3vEc2rH7/1wusaHrpLt1Qbu41lrmDgQhQLnmcUP3IE9z3Ch56cmMS2l
-	 7f7P5Hzk2t4c5ZhV846blwQy9XcAL/zXK9pgmZJ0=
+	b=c1QkCEGZvmAa32GhzS6SwckuQmN3Vn80k/uCIf1/iTkJjsP/itL04mtx9+a48Bczn
+	 LW/GC8RCN10ORmg9CvPbUazkTgkoMGcv7xyhRqyciqH47h/FTAkYsfS914o1nYqzju
+	 cgUg4lCWKA/cwZ4q47hwCqX1tfvUebSF/dcC/NLY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727098AbgFHXS3 (ORCPT
+        id S1730654AbgFHXSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:18:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35384 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:18:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728339AbgFHXOu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:14:50 -0400
+        id S1729059AbgFHXOz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:14:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B30AB215A4;
-        Mon,  8 Jun 2020 23:14:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D9DD2158C;
+        Mon,  8 Jun 2020 23:14:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658090;
-        bh=DjlhHUZDtsooc2pYbEF4q0noeXu2UUg4RSSjcFAuF0E=;
+        s=default; t=1591658095;
+        bh=hH8VdHMcoSdW4iq/P16jtsTULNtxfV93v0SaSsDH9LE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sKKsQHjcTHF4gRtbVQ3QockKkfTOhRdkYlEQETOYlAO7wDC2fC8BaAZzhtVHAzWXJ
-         8lKZZlEbRmK7CreHksR+tZzXNMfqVl+sNAqgKrvar6n9/O0ayiYJMKW4ZlQGLglUB1
-         TD8T/2uFd3IyUoDwgg6V+1922CVcP+KoyKcK7Hxs=
+        b=o8WzBhaou6blv1CXvicM13zj0rZNFP/Bzx3t4QqEd2hYri8vjiFzV/4xuggbPv5BC
+         Vq9K1jISbAl/GXCL2Ksa4lPW1+YNvffIy/qF7NyYvPAT8kc3IAEoGhJ9O6dTx6kHMg
+         z/cgJKole8wizIQVT//g73h6zI9KFphIdrr5/DRA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yunfeng Ye <yeyunfeng@huawei.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.6 133/606] tools/bootconfig: Fix resource leak in apply_xbc()
-Date:   Mon,  8 Jun 2020 19:04:18 -0400
-Message-Id: <20200608231211.3363633-133-sashal@kernel.org>
+Cc:     Mike Pozulp <pozulp.kernel@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.6 137/606] ALSA: hda/realtek: Add quirk for Samsung Notebook
+Date:   Mon,  8 Jun 2020 19:04:22 -0400
+Message-Id: <20200608231211.3363633-137-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -60,65 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunfeng Ye <yeyunfeng@huawei.com>
+From: Mike Pozulp <pozulp.kernel@gmail.com>
 
-[ Upstream commit 8842604446d1f005abcbf8c63c12eabdb5695094 ]
+[ Upstream commit 14425f1f521fdfe274a7bb390637c786432e08b4 ]
 
-Fix the @data and @fd allocations that are leaked in the error path of
-apply_xbc().
+Some models of the Samsung Notebook 9 have very quiet and distorted
+headphone output. This quirk changes the VREF value of the ALC298
+codec NID 0x1a from default HIZ to new 100.
 
-Link: http://lkml.kernel.org/r/583a49c9-c27a-931d-e6c2-6f63a4b18bea@huawei.com
+[ adjusted to 5.7-base and rearranged in SSID order -- tiwai ]
 
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Mike Pozulp <pozulp.kernel@gmail.com>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207423
+Link: https://lore.kernel.org/r/20200510032838.1989130-1-pozulp.kernel@gmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/bootconfig/main.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ sound/pci/hda/patch_realtek.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
-index a9b97814d1a9..5dbe893cf00c 100644
---- a/tools/bootconfig/main.c
-+++ b/tools/bootconfig/main.c
-@@ -287,6 +287,7 @@ int apply_xbc(const char *path, const char *xbc_path)
- 	ret = delete_xbc(path);
- 	if (ret < 0) {
- 		pr_err("Failed to delete previous boot config: %d\n", ret);
-+		free(data);
- 		return ret;
- 	}
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index 368ed3678fc2..b377aca71cbf 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -6095,6 +6095,7 @@ enum {
+ 	ALC285_FIXUP_HP_GPIO_LED,
+ 	ALC285_FIXUP_HP_MUTE_LED,
+ 	ALC236_FIXUP_HP_MUTE_LED,
++	ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET,
+ };
  
-@@ -294,24 +295,26 @@ int apply_xbc(const char *path, const char *xbc_path)
- 	fd = open(path, O_RDWR | O_APPEND);
- 	if (fd < 0) {
- 		pr_err("Failed to open %s: %d\n", path, fd);
-+		free(data);
- 		return fd;
- 	}
- 	/* TODO: Ensure the @path is initramfs/initrd image */
- 	ret = write(fd, data, size + 8);
- 	if (ret < 0) {
- 		pr_err("Failed to apply a boot config: %d\n", ret);
--		return ret;
-+		goto out;
- 	}
- 	/* Write a magic word of the bootconfig */
- 	ret = write(fd, BOOTCONFIG_MAGIC, BOOTCONFIG_MAGIC_LEN);
- 	if (ret < 0) {
- 		pr_err("Failed to apply a boot config magic: %d\n", ret);
--		return ret;
-+		goto out;
- 	}
-+out:
- 	close(fd);
- 	free(data);
+ static const struct hda_fixup alc269_fixups[] = {
+@@ -7251,6 +7252,13 @@ static const struct hda_fixup alc269_fixups[] = {
+ 		.type = HDA_FIXUP_FUNC,
+ 		.v.func = alc236_fixup_hp_mute_led,
+ 	},
++	[ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET] = {
++		.type = HDA_FIXUP_VERBS,
++		.v.verbs = (const struct hda_verb[]) {
++			{ 0x1a, AC_VERB_SET_PIN_WIDGET_CONTROL, 0xc5 },
++			{ }
++		},
++	},
+ };
  
--	return 0;
-+	return ret;
- }
- 
- int usage(void)
+ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+@@ -7446,6 +7454,8 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x10ec, 0x10f2, "Intel Reference board", ALC700_FIXUP_INTEL_REFERENCE),
+ 	SND_PCI_QUIRK(0x10f7, 0x8338, "Panasonic CF-SZ6", ALC269_FIXUP_HEADSET_MODE),
+ 	SND_PCI_QUIRK(0x144d, 0xc109, "Samsung Ativ book 9 (NP900X3G)", ALC269_FIXUP_INV_DMIC),
++	SND_PCI_QUIRK(0x144d, 0xc169, "Samsung Notebook 9 Pen (NP930SBE-K01US)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
++	SND_PCI_QUIRK(0x144d, 0xc176, "Samsung Notebook 9 Pro (NP930MBE-K04US)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
+ 	SND_PCI_QUIRK(0x144d, 0xc740, "Samsung Ativ book 8 (NP870Z5G)", ALC269_FIXUP_ATIV_BOOK_8),
+ 	SND_PCI_QUIRK(0x1458, 0xfa53, "Gigabyte BXBT-2807", ALC283_FIXUP_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1462, 0xb120, "MSI Cubi MS-B120", ALC283_FIXUP_HEADSET_MIC),
 -- 
 2.25.1
 
