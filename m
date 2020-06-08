@@ -2,186 +2,325 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79BBBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 15:59:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E48C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:01:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AE2D206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 15:59:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3939B206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:01:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="k1kRHG1C"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="jhdk9/q3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730403AbgFHP7p (ORCPT
+        id S1730406AbgFHQBz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 11:59:45 -0400
-Received: from mail-eopbgr70058.outbound.protection.outlook.com ([40.107.7.58]:6228
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730231AbgFHP7o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 11:59:44 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DgiVubfLuwyePKy8lbkcchHrrCnMOAmKuF6ZVUvxk+BH13iU05bNeux7i1wDtTTZDp0bpg4xeC1Udx9oJSRbV3U0bXRhKrjf8LItieRaA5YkRVdBM1iBIumvhjVumpoyA+TtGTYcjRJafHqTzy243Vw5nDI99jfiJrWQ1oG3P8tHDvSBk5ttCuAhrqgAf3gJ4YKWjVpEdi9AVCenPgjqIPWCLncLyToOpggKQMQnKbsBixYcZOjGMjvGnWQiy0Qnt9Qtj3B9vc/JWDFJZ5v/xUkjnIYjyloMldJYx15U4ytgEw73EcXwL23bQPiQhbYgPmpZK2ow3+n0gYZzPstc9Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cQeVuWMrxJv9rWbmIQYRQOMNIbLCkE1hW8H3vyg8e+c=;
- b=N67HaBbecM30DXkImqr+lhZIROr4Oor5pbxZkUjp/JDQECOMH9mN9OjicX/E6AO4QTuXd86/RazdRuna3wTfp67Ec7l4hBuux+9SAEMVcp87jprYphyx5PyaqscbuYsxHHHGSrCvcCV+JwEVna4PFpNtjp6MYUH+YwtkzewRJrzTcEhQEADx8HmMAd1NYjp7S8zOkuYkk8ktMTmX8lgyfomnHotZdg820ng0y+aF7zA6Ike/X7zjrC0NaC4kMpbjst3weV2YQ0aBHZxUTHytErvBK9cValSMdLusdJlDHeEJ47ujjTF684q2O02/YQoJ3VTdvJXYCkxuq/DDt9YUPg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cQeVuWMrxJv9rWbmIQYRQOMNIbLCkE1hW8H3vyg8e+c=;
- b=k1kRHG1C15kC/gsA5zmWsdv6JVQ7gI6g+TcbIXPLzLu5x055G97kntDbmy0jmOsnx6kTKlT87R0rbmNwzFteksBgkDXPqNRSqP5nb0db7thFNUlX5aRd9PrG102EpA9YfXcDlH7ONP2d83qcDuLM8yFx1mIOzj3zPFSmGqonHcA=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=mellanox.com;
-Received: from AM0PR0502MB3826.eurprd05.prod.outlook.com
- (2603:10a6:208:1b::25) by AM0PR0502MB3971.eurprd05.prod.outlook.com
- (2603:10a6:208:11::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.20; Mon, 8 Jun
- 2020 15:59:37 +0000
-Received: from AM0PR0502MB3826.eurprd05.prod.outlook.com
- ([fe80::2dae:c2a2:c26a:f5b]) by AM0PR0502MB3826.eurprd05.prod.outlook.com
- ([fe80::2dae:c2a2:c26a:f5b%7]) with mapi id 15.20.3066.023; Mon, 8 Jun 2020
- 15:59:37 +0000
-Subject: Re: [RFC PATCH net-next 05/10] Documentation: networking:
- ethtool-netlink: Add link extended state
-To:     Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org
-Cc:     davem@davemloft.net, kuba@kernel.org, corbet@lwn.net,
-        jiri@mellanox.com, idosch@mellanox.com, shuah@kernel.org,
-        mkubecek@suse.cz, gustavo@embeddedor.com,
-        cforno12@linux.vnet.ibm.com, andrew@lunn.ch,
-        linux@rempel-privat.de, alexandru.ardelean@analog.com,
-        ayal@mellanox.com, petrm@mellanox.com, mlxsw@mellanox.com,
-        liuhangbin@gmail.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-References: <20200607145945.30559-1-amitc@mellanox.com>
- <20200607145945.30559-6-amitc@mellanox.com>
- <de5a37cd-df07-4912-6928-f1c3effba01b@gmail.com>
-From:   Amit Cohen <amitc@mellanox.com>
-Message-ID: <8096f9ba-4fa9-bbad-7501-6c8e3d4dd1ac@mellanox.com>
-Date:   Mon, 8 Jun 2020 18:59:17 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-In-Reply-To: <de5a37cd-df07-4912-6928-f1c3effba01b@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM0PR04CA0041.eurprd04.prod.outlook.com
- (2603:10a6:208:1::18) To AM0PR0502MB3826.eurprd05.prod.outlook.com
- (2603:10a6:208:1b::25)
+        Mon, 8 Jun 2020 12:01:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56616 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730333AbgFHQBy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 12:01:54 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61BBFC08C5C2
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 09:01:54 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id c14so17718145qka.11
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 09:01:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=jngli69wtcZzfyBEOrs03Gydg7Lp/ZzXybsuab5m/qs=;
+        b=jhdk9/q3050nAHCHoI/SiXp0MXyvFeurDELd2Xtf0om2gIa37xD7TDuLKmtposTE8d
+         jSX+O+SR3vS3MY7bHnQbcDfonFDZ96oEeq5bml01PWq8Q6RdHgJJeO9e/eq7nLE1vYx9
+         JLdZ6S4KTweU9HBw+0G04qEzvyYnkzuiuBhDuEggIGyWSbAQkvcmbrAdhhH4gxDIyfQt
+         vJGKRt/YpFEWsUaWprkmQm6Zyv2M78Hq7CCxvqimW4pv48l9fTGbijW4JdLRgA5vDg6d
+         b3Yjr3yghqg6Ekm9Ke8vKfZCdFAteW9i5on2/NcUUm3qsrXyHF+Zylu36Br0X2OwDd99
+         EDUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jngli69wtcZzfyBEOrs03Gydg7Lp/ZzXybsuab5m/qs=;
+        b=aVVufcVsNBYBxx8I+pQvRWnWg0BTWW7SU3s37JKRAPufnzGFfM8EMiJCIX7XHMe4TJ
+         8GAHtnL9M1ddy5q4KXYDHXbGHIjPcG633Of3cgYZLlOrcesb1naqa02oWAovhH8DoNNI
+         qhCH2KNJakQbtQCBwuynqNBQ69S0Cu9EnliuNcU3PXH5c8Y/nW/aNi5TnUdL62in2bmT
+         lmjuRP1p5SGPkK4b1CE1e01Ce18iimP1RkZriESOYLeCb50rpbif3Y687XKU89sLMmV7
+         kHaPRubksoXsR0vu+22zZ32GzNQ9GhP4It1hkcF8Jr8P+8JPdFh/xIuA9YiJVq/TtkWg
+         WjHA==
+X-Gm-Message-State: AOAM531WMAKT390aIf+9bXTaEoyjquE3/cx5UB0wBPnhRUi+OZ3+rPx7
+        kd4QnyBEdWgor09WrvGtErnCgQ==
+X-Google-Smtp-Source: ABdhPJzdTKHQDdG2U7PEgt7+fa6QeQEYg9LDjmhGDNLAGhcGQVUhV/CJLDNAVbFt+N6KG9clRIlCwg==
+X-Received: by 2002:a37:38c:: with SMTP id 134mr23916749qkd.434.1591632113366;
+        Mon, 08 Jun 2020 09:01:53 -0700 (PDT)
+Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id q187sm7297239qka.34.2020.06.08.09.01.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jun 2020 09:01:52 -0700 (PDT)
+Date:   Mon, 8 Jun 2020 12:01:44 -0400
+From:   Qian Cai <cai@lca.pw>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>
+Subject: Re: [patch V9 10/39] x86/entry: Provide helpers for execute on
+ irqstack
+Message-ID: <20200608160144.GA987@lca.pw>
+References: <20200521200513.656533920@linutronix.de>
+ <20200521202117.763775313@linutronix.de>
+ <20200605171816.GA4259@lca.pw>
+ <20200605173622.GL3976@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.1.7] (87.68.150.248) by AM0PR04CA0041.eurprd04.prod.outlook.com (2603:10a6:208:1::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18 via Frontend Transport; Mon, 8 Jun 2020 15:59:35 +0000
-X-Originating-IP: [87.68.150.248]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: a538ecbd-fa05-45d9-9b64-08d80bc4f1f8
-X-MS-TrafficTypeDiagnostic: AM0PR0502MB3971:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR0502MB397159DDBE7D4F3F325AAC93D7850@AM0PR0502MB3971.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 042857DBB5
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: /HaknT/j6xMnTkjAbES4WVmkXP9ZaOWKdNph4ofH0oH5R7y0yVkCy5Je3XSOivkbXY2WAuahSuvkTeKwb8BpY9BR+YPrWkREQVY2eohXi3oQjFx2oRKv+NJPRfP7Jd3KBIKDB/ykjXHi5dsbi2G0oGLPwDP01GMVUzUAn1esl0rCgpQKoeoMCMwnSmE1WiIc7HiyJwRW8eofESHHvrffE5xBuiPsuzoMdcsNrlAjPfaF6pHTQ4Ypiint8SJGshg8Wh9cYubxwFBPus+jopVoXzTkwMHxGXt//9VA1Y8mxTkK1Vsba/Avl9mEAikLpjfl3dw2Gz2NmnlNCDdghSLVNlREaDQh1Rg+EIDTty4iZe+NiWdjvo5ZCOIyAhRBoLrp
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR0502MB3826.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(366004)(376002)(39860400002)(346002)(16576012)(316002)(5660300002)(66556008)(6666004)(31696002)(66946007)(2616005)(956004)(53546011)(2906002)(36756003)(6486002)(66476007)(52116002)(8936002)(7416002)(8676002)(4326008)(186003)(26005)(16526019)(478600001)(83380400001)(86362001)(31686004)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: Mv7r3ut4qEn+WMnlppE57VWNZxXlo/baRItxIkZnZrzPhpjgxt2X5JcfeDpfYO0aRCPSzISZ1Mw3q0vgXvcLH7jjQqNNwMimk5LXYJPIQbBO58pPyw/9G7saoWwg1KN3ncN0VfRcGN14wEkzjvg/i9gUXdRK+QrsMAiunVvMpQMycto+5UIFTZWDB0IDeoZMYUVWflc3upGBZsgW3kG1BAOKCilGuOMYIwKS/4y+YS0L4hSumLpIVbr6NSR59xvGZuUofwHSGGz4TKoKYOfipAY2D12abZ1ENjLsNbfrx+eM41gmRQi1SHp0EP3QCphq/AHyVyZEsrkyuG9HSheK3Arxzz7jx94jRgomxSk+SoA8S/Laq6yCQQHjRSJ21tIXn7PbEe1i4hRhUnM7oXACvK01vilRh9+fFSeROrBZrx4NTUzWfS17m5DnTIhcFmjb+uQDuFp2yON+fbAe9r6laYRixlMc4+FL+7C0eyHp06I=
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a538ecbd-fa05-45d9-9b64-08d80bc4f1f8
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jun 2020 15:59:37.7680
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6YcSiqs4GwZ9CJUNr8eTPxrm95RUxd4s91+m+h/ERtZzPxhdktEz2jzLDBbE0hpU6nqtn721mWuxSQ5HcMEOFw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR0502MB3971
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200605173622.GL3976@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07-Jun-20 22:11, Florian Fainelli wrote:
+On Fri, Jun 05, 2020 at 07:36:22PM +0200, Peter Zijlstra wrote:
+> On Fri, Jun 05, 2020 at 01:18:16PM -0400, Qian Cai wrote:
+> > On Thu, May 21, 2020 at 10:05:23PM +0200, Thomas Gleixner wrote:
+> > > From: Thomas Gleixner <tglx@linutronix.de>
+> > > 
+> > > Device interrupt handlers and system vector handlers are executed on the
+> > > interrupt stack. The stack switch happens in the low level assembly entry
+> > > code. This conflicts with the efforts to consolidate the exit code in C to
+> > > ensure correctness vs. RCU and tracing.
+> > > 
+> > > As there is no way to move #DB away from IST due to the MOV SS issue, the
+> > > requirements vs. #DB and NMI for switching to the interrupt stack do not
+> > > exist anymore. The only requirement is that interrupts are disabled.
+> > > 
+> > > That allows to move the stack switching to C code which simplifies the
+> > > entry/exit handling further because it allows to switch stacks after
+> > > handling the entry and on exit before handling RCU, return to usermode and
+> > > kernel preemption in the same way as for regular exceptions.
+> > > 
+> > > The initial attempt of having the stack switching in inline ASM caused too
+> > > much headache vs. objtool and the unwinder. After analysing the use cases
+> > > it was agreed on that having the stack switch in ASM for the price of an
+> > > indirect call is acceptable as the main users are indirect call heavy
+> > > anyway and the few system vectors which are empty shells (scheduler IPI and
+> > > KVM posted interrupt vectors) can run from the regular stack.
+> > > 
+> > > Provide helper functions to check whether the interrupt stack is already
+> > > active and whether stack switching is required.
+> > > 
+> > > 64 bit only for now. 32 bit has a variant of that already. Once this is
+> > > cleaned up the two implementations might be consolidated as a cleanup on
+> > > top.
+> > > 
+> > > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> > 
+> > Reverted this commit and the rest of series (with trivial fixup) as well
+> > as the two dependencies [1],
+> > 
+> > 8449e768dcb8 ("x86/entry: Remove debug IDT frobbing")
+> > 029149180d1d ("x86/entry: Rename trace_hardirqs_off_prepare()")
+> > 
+> > fixed the warning under some memory pressure on AMD NUMA servers.
 > 
+> The warning ?
 > 
-> On 6/7/2020 7:59 AM, Amit Cohen wrote:
->> Add link extended state attributes.
->>
->> Signed-off-by: Amit Cohen <amitc@mellanox.com>
->> Reviewed-by: Petr Machata <petrm@mellanox.com>
->> Reviewed-by: Jiri Pirko <jiri@mellanox.com>
-> 
-> If you need to resubmit, I would swap the order of patches #4 and #5
-> such that the documentation comes first.
-> 
-> [snip]
+> > [ 9371.959858]  asm_call_on_stack+0x12/0x20
+> > asm_call_on_stack at arch/x86/entry/entry_64.S:710
 
-ok
+Even after I trimmed the .config [1] to the barely minimal, a subset of LTP
+test still unable to finish on those AMD servers with page_owner=on.
 
-> 
->>  
->> +Link extended states:
->> +
->> +  ============================    =============================================
->> +  ``Autoneg failure``             Failure during auto negotiation mechanism
->> +
->> +  ``Link training failure``       Failure during link training
->> +
->> +  ``Link logical mismatch``       Logical mismatch in physical coding sublayer
->> +                                  or forward error correction sublayer
->> +
->> +  ``Bad signal integrity``        Signal integrity issues
->> +
->> +  ``No cable``                    No cable connected
->> +
->> +  ``Cable issue``                 Failure is related to cable,
->> +                                  e.g., unsupported cable
->> +
->> +  ``EEPROM issue``                Failure is related to EEPROM, e.g., failure
->> +                                  during reading or parsing the data
->> +
->> +  ``Calibration failure``         Failure during calibration algorithm
->> +
->> +  ``Power budget exceeded``       The hardware is not able to provide the
->> +                                  power required from cable or module
->> +
->> +  ``Overheat``                    The module is overheated
->> +  ============================    =============================================
->> +
->> +Many of the substates are obvious, or terms that someone working in the
->> +particular area will be familiar with. The following table summarizes some
->> +that are not:
-> 
-> Not sure this comment is helping that much, how about documenting each
-> of the sub-states currently defined, even if this is just paraphrasing
-> their own name? Being able to quickly go to the documentation rather
-> than looking at the header is appreciable.
-> 
-> Thank you!
+[1]:
+https://raw.githubusercontent.com/cailca/linux-mm/master/x86.config
 
-np, I'll add.
-> 
->> +
->> +Link extended substates:
->> +
->> +  ============================    =============================================
->> +  ``Unsupported rate``            The system attempted to operate the cable at
->> +                                  a rate that is not formally supported, which
->> +                                  led to signal integrity issues
-> 
-> Do you have examples? Would you consider a 4-pair copper cable for
-> Gigabit that has a damaged pair and would downshift somehow fall in that
-> category?
-> 
+It looks like because this new IRQ entry introduced by this patch,
 
-For example, this statement might appear when an 100G OPTICs (not copper) which is used in 40G rate and sees high BER (when using Parallel Detect).
-In this situation we recommend to  see the other end configuration and understand why it is configured to lower speed.
+</IRQ>
+asm_call_on_stack at arch/x86/entry/entry_64.S:710
+handle_edge_irq at kernel/irq/chip.c:832
 
-Regarding your example, if it stays on the same speed and have high BER you should expect a different BAD SI statement.
+which will running out of the stack depot limit due to nested loops
+below.
 
+which has this loop,
+
+	do {
+		...
+		handle_irq_event(desc);
+		...
+	} while ((desc->istate & IRQS_PENDING) &&
+		!irqd_irq_disabled(&desc->irq_data));
+
+handle_irq_event at kernel/irq/handle.c:215
+__handle_irq_event_percpu at kernel/irq/handle.c:156
+
+Here has a nested loop,
+
+	for_each_action_of_desc(desc, action) {
+		...
+		res = action->handler(irq, action->dev_id);
+		...
+	}
+
+pqi_irq_handler at drivers/scsi/smartpqi/smartpqi_init.c:3462
+pqi_process_io_intr at drivers/scsi/smartpqi/smartpqi_init.c:2992
+
+Here has another nested loop,
+
+	while (1) {
+		...
+		io_request->io_complete_callback(io_request,
+			io_request->context);
+		...
+	}
+
+scsi_mq_done at drivers/scsi/scsi_lib.c:1602
+blk_mq_complete_request at block/blk-mq.c:677
+blk_mq_force_complete_rq at block/blk-mq.c:637
+scsi_io_completion at drivers/scsi/scsi_lib.c:934
+scsi_end_request at drivers/scsi/scsi_lib.c:584
+scsi_mq_uninit_cmd at drivers/scsi/scsi_lib.c:547
+scsi_free_sgtables at drivers/scsi/scsi_lib.c:537
+__sg_free_table at lib/scatterlist.c:225
+
+Here has one more nested loop,
+
+	while (table->orig_nents) {
+		...
+		free_fn(sgl, alloc_size);
+		...
+	}
+
+free_fn() will call kmem_cache_free(). Since we have page_owner=on, it
+will call save_stack() to save the each free stack trace.
+
+> > 
+> > [ 9371.260161] ------------[ cut here ]------------
+> > [ 9371.267143] Stack depot reached limit capacity
+> > [ 9371.267193] WARNING: CPU: 19 PID: 1181 at lib/stackdepot.c:115 stack_depot_save+0x3d9/0x57d
+> 
+> Is this _the_ warning?
+> 
+> Maybe it really is running out of storage, I don't think this patch is
+> to blame. The unwind here looks good, so why would the stack-depot
+> unwind be any different?
+> 
+> > [ 9371.281470] Modules linked in: brd vfat fat ext4 crc16 mbcache jbd2 loop kvm_amd kvm ses enclosure dax_pmem irqbypass dax_pmem_core acpi_cpufreq ip_tables x_table
+> > s xfs sd_mod bnxt_en smartpqi scsi_transport_sas tg3 i40e libphy firmware_class dm_mirror dm_region_hash dm_log dm_mod [last unloaded: dummy_del_mod]
+> > [ 9371.310176] CPU: 19 PID: 1181 Comm: systemd-journal Tainted: G           O      5.7.0-next-20200604+ #1
+> > [ 9371.320700] Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 03/09/2018
+> > [ 9371.329987] RIP: 0010:stack_depot_save+0x3d9/0x57d
+> > [ 9371.335513] Code: 1d 9b bc 68 01 80 fb 01 0f 87 c0 01 00 00 80 e3 01 75 1f 4c 89 45 c0 c6 05 82 bc 68 01 01 48 c7 c7 e0 85 63 9f e8 9d 74 9d ff <0f> 0b 90 90 4c 8
+> > b 45 c0 48 c7 c7 80 1a d0 9f 4c 89 c6 e8 b0 2b 46
+> > [ 9371.355426] RSP: 0018:ffffc90007260490 EFLAGS: 00010082
+> > [ 9371.361387] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff9ed3207f
+> > [ 9371.369544] RDX: 0000000000000007 RSI: dffffc0000000000 RDI: 0000000000000000
+> > [ 9371.377428] RBP: ffffc900072604f8 R08: fffffbfff3f37539 R09: fffffbfff3f37539
+> > [ 9371.385310] R10: ffffffff9f9ba9c3 R11: fffffbfff3f37538 R12: ffffc90007260508
+> > [ 9371.393521] R13: 0000000000000036 R14: 0000000000000000 R15: 000000000009fb52
+> > [ 9371.401403] FS:  00007fc9849f2980(0000) GS:ffff88942fb80000(0000) knlGS:0000000000000000
+> > [ 9371.410244] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [ 9371.417007] CR2: 00007f20d02c3000 CR3: 0000000440b9c000 CR4: 00000000003406e0
+> > [ 9371.424889] Call Trace:
+> > [ 9371.428054]  <IRQ>
+> > [ 9371.436315]  save_stack+0x3f/0x50
+> > [ 9371.734034]  kasan_slab_free+0xe/0x10
+> > [ 9371.738798]  slab_free_freelist_hook+0x5d/0x1c0
+> > [ 9371.748886]  kmem_cache_free+0x10c/0x390
+> > [ 9371.758450]  mempool_free_slab+0x17/0x20
+> > [ 9371.763522]  mempool_free+0x65/0x170
+> > [ 9371.767825]  bio_free+0x14c/0x210
+> > [ 9371.771864]  bio_put+0x59/0x70
+> > [ 9371.775644]  end_swap_bio_write+0x199/0x250
+> > [ 9371.780556]  bio_endio+0x22c/0x4e0
+> > [ 9371.784709]  dec_pending+0x1bf/0x3e0 [dm_mod]
+> > [ 9371.790207]  clone_endio+0x129/0x3d0 [dm_mod]
+> > [ 9371.800746]  bio_endio+0x22c/0x4e0
+> > [ 9371.809262]  blk_update_request+0x3bb/0x980
+> > [ 9371.814605]  scsi_end_request+0x53/0x420
+> > [ 9371.824002]  scsi_io_completion+0x10a/0x830
+> > [ 9371.844445]  scsi_finish_command+0x1b9/0x250
+> > [ 9371.849445]  scsi_softirq_done+0x1ab/0x1f0
+> > [ 9371.854272]  blk_mq_force_complete_rq+0x217/0x250
+> > [ 9371.859708]  blk_mq_complete_request+0xe/0x20
+> > [ 9371.865171]  scsi_mq_done+0xc1/0x220
+> > [ 9371.869479]  pqi_aio_io_complete+0x83/0x2c0 [smartpqi]
+> > [ 9371.881764]  pqi_irq_handler+0x1fc/0x13f0 [smartpqi]
+> > [ 9371.914115]  __handle_irq_event_percpu+0x81/0x550
+> > [ 9371.924289]  handle_irq_event_percpu+0x70/0x100
+> > [ 9371.945559]  handle_irq_event+0x5a/0x8b
+> > [ 9371.950121]  handle_edge_irq+0x10c/0x370
+> > [ 9371.950121]  handle_edge_irq+0x10c/0x370
+> > [ 9371.959858]  asm_call_on_stack+0x12/0x20
+> > asm_call_on_stack at arch/x86/entry/entry_64.S:710
+> > [ 9371.964899]  </IRQ>
+> > [ 9371.967716]  common_interrupt+0x185/0x2a0
+> > [ 9371.972455]  asm_common_interrupt+0x1e/0x40
+> > [ 9371.977368] RIP: 0010:__asan_load4+0x8/0xa0
+> > [ 9371.982281] Code: 00 e8 5c f4 ff ff 5d c3 40 38 f0 0f 9e c0 84 c0 75 e5 5d c3 48 c1 e8 03 80 3c 10 00 75 ed 5d c3 66 90 55 48 89 e5 48 8b 4d 08 <48> 83 ff fb 77 6c eb 3a 0f 1f 00 48 b8 00 00 00 00 00 00 00 ff 48
+> > [ 9372.002246] RSP: 0018:ffffc9000b12f0e8 EFLAGS: 00000202
+> > [ 9372.008207] RAX: 0000000000000000 RBX: ffffc9000b12f150 RCX: ffffffff9ed32487
+> > [ 9372.016489] RDX: 0000000000000007 RSI: 0000000000000002 RDI: ffffffff9ff92a94
+> > [ 9372.024370] RBP: ffffc9000b12f0e8 R08: fffffbfff3ff1d4d R09: fffffbfff3ff1d4d
+> > [ 9372.032252] R10: ffffffff9ff8ea67 R11: fffffbfff3ff1d4c R12: 0000000000000000
+> > [ 9372.040490] R13: ffffc9000b12f358 R14: 000000000000000c R15: 0000000000000005
+> > [ 9372.053899]  debug_lockdep_rcu_enabled+0x27/0x60
+> > [ 9372.059248]  rcu_read_lock_held_common+0x12/0x60
+> > [ 9372.064989]  rcu_read_lock_sched_held+0x60/0xe0
+> > [ 9372.080338]  shrink_active_list+0xbfd/0xc30
+> > [ 9372.120481]  shrink_lruvec+0xbf1/0x11b0
+> > [ 9372.150410]  shrink_node+0x344/0xd10
+> > [ 9372.154719]  do_try_to_free_pages+0x263/0xa00
+> > [ 9372.169860]  try_to_free_pages+0x239/0x570
+> > [ 9372.179356]  __alloc_pages_slowpath.constprop.59+0x5dd/0x1880
+> > [ 9372.215762]  __alloc_pages_nodemask+0x562/0x670
+> > [ 9372.232686]  alloc_pages_current+0x9c/0x110
+> > [ 9372.237599]  alloc_slab_page+0x355/0x530
+> > [ 9372.242755]  allocate_slab+0x485/0x5a0
+> > [ 9372.247232]  new_slab+0x46/0x70
+> > [ 9372.251095]  ___slab_alloc+0x35f/0x810
+> > [ 9372.274485]  __slab_alloc+0x43/0x70
+> > [ 9372.287650]  kmem_cache_alloc+0x257/0x3d0
+> > [ 9372.298182]  prepare_creds+0x26/0x130
+> > [ 9372.302571]  do_faccessat+0x255/0x3e0
+> > [ 9372.321591]  __x64_sys_access+0x38/0x40
+> > [ 9372.326154]  do_syscall_64+0x64/0x340
+> > [ 9372.330542]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > [ 9372.336329] RIP: 0033:0x7fc983a21bfb
+> > [ 9372.341050] Code: Bad RIP value.
+> > [ 9372.345000] RSP: 002b:00007fffd543cde8 EFLAGS: 00000246 ORIG_RAX: 0000000000000015
+> > [ 9372.353319] RAX: ffffffffffffffda RBX: 00007fffd543fa40 RCX: 00007fc983a21bfb
+> > [ 9372.361199] RDX: 00007fc983cf1c00 RSI: 0000000000000000 RDI: 00005573ed458090
+> > [ 9372.369512] RBP: 00007fffd543cf30 R08: 00005573ed44ab99 R09: 0000000000000007
+> > [ 9372.377393] R10: 0000000000000041 R11: 0000000000000246 R12: 0000000000000000
+> > [ 9372.385275] R13: 0000000000000000 R14: 00007fffd543cea0 R15: 00005573eecd2990
+> > [ 9372.393608] irq event stamp: 27274496
+> > [ 9372.397999] hardirqs last  enabled at (27274495): [<ffffffff9e635b8e>] free_unref_page_list+0x2ee/0x400
+> > [ 9372.408152] hardirqs last disabled at (27274496): [<ffffffff9ed2c22b>] idtentry_enter_cond_rcu+0x1b/0x50
+> > [ 9372.418695] softirqs last  enabled at (27272816): [<ffffffff9f000478>] __do_softirq+0x478/0x784
+> > [ 9372.428154] softirqs last disabled at (27272807): [<ffffffff9e2d0b41>] irq_exit_rcu+0xd1/0xe0
+> > [ 9372.437435] ---[ end trace d2ebac1fad6e452e ]---
