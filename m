@@ -2,214 +2,234 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9165BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 01:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DAE2C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 01:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68D7E2075A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 01:33:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="B5UxJNKy"
+	by mail.kernel.org (Postfix) with ESMTP id 26210206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 01:38:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728629AbgFHBdX (ORCPT
+        id S1728532AbgFHBi1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 21:33:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35550 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727972AbgFHBdV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 21:33:21 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67988C08C5C3
-        for <linux-kernel@vger.kernel.org>; Sun,  7 Jun 2020 18:33:21 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id e16so13531241qtg.0
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Jun 2020 18:33:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lWjZ0ATSaEye0Bi2OFiSChYlU/sVI6QI0KBmWOw2/ME=;
-        b=B5UxJNKy+Gku93rPNEm+OScpi1AgEe9k+fedHSTZjhSZKs+0NOi77JqT3RVE7UJQHz
-         gX8Nd82uP8BI34gepu9gQsaTgthEVw1ScOJ+vV5HRSOIMVZUEBJtHAvRnz4u5RbNWpYq
-         TASQxquIYZ+4NleP6+w1br6oU0gJcj07/F7gg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lWjZ0ATSaEye0Bi2OFiSChYlU/sVI6QI0KBmWOw2/ME=;
-        b=lu0diHPkrXNMfJj7rdM7tcXkZDeb9f1SCIT17Qk8SE2zXUO0WpiprJgyR+G5kwlSbC
-         wP1kN+T5+33Oil/D/yMsd5NqKU/xN72FiyYIuY3wqaOLJm5KphtzASsLVClu+OZrF3B7
-         kH0ArgPH2ZkEeaC1ZKzaxV8eA0kZa5b/5CAqILIPOymzL1pewDxqYddjJLJniFeafpZz
-         +nxI4dTxVk3yudwFgtmGIrDgfLTp5LWvv5jxcTsAiot6L7S7QvWEDJOhHLom1ZDA6il1
-         G9L75fOH6c2qU9D/DvCbczwM46ldAZ0PLaX58zbAlymFdij635ckm5Vzzm51XknpO4uU
-         y2mA==
-X-Gm-Message-State: AOAM5308E7EgOpZ6/gcOiDnw1UaHok8OWCPGbY765xHhxZI4Zt3Ph7qv
-        qmM18x/te1jVz0+5Qt7WR3jYs8Qp5O//wTrkmU48dA==
-X-Google-Smtp-Source: ABdhPJw4OhRhvJvUEtwywNu0NEGhO7Zgx4/6suiIs89J/Z3riECqRRbSUeDB2bVSSaqL0ISmU4q4EcJtUtS32ixDf8U=
-X-Received: by 2002:aed:21a4:: with SMTP id l33mr17978554qtc.72.1591580000574;
- Sun, 07 Jun 2020 18:33:20 -0700 (PDT)
+        Sun, 7 Jun 2020 21:38:27 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:59254 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728065AbgFHBi1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jun 2020 21:38:27 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 97C8DC15F024697CFB60;
+        Mon,  8 Jun 2020 09:38:24 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Mon, 8 Jun 2020
+ 09:38:17 +0800
+From:   Jason Yan <yanaijie@huawei.com>
+To:     <viro@zeniv.linux.org.uk>, <axboe@kernel.dk>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-block@vger.kernel.org>
+CC:     Jason Yan <yanaijie@huawei.com>, Christoph Hellwig <hch@lst.de>,
+        Ming Lei <ming.lei@redhat.com>, Jan Kara <jack@suse.cz>,
+        Hulk Robot <hulkci@huawei.com>
+Subject: [PATCH v4] block: Fix use-after-free in blkdev_get()
+Date:   Mon, 8 Jun 2020 10:05:57 +0800
+Message-ID: <20200608020557.31668-1-yanaijie@huawei.com>
+X-Mailer: git-send-email 2.21.3
 MIME-Version: 1.0
-References: <20200526105811.30784-1-stevensd@chromium.org> <20200526105811.30784-2-stevensd@chromium.org>
- <20200604145620-mutt-send-email-mst@kernel.org> <CAD=HUj74mKs5AfcViD3CBva86E0Hvg_pmYChAJe3ny8jtnZ8Tw@mail.gmail.com>
- <20200606160155-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20200606160155-mutt-send-email-mst@kernel.org>
-From:   David Stevens <stevensd@chromium.org>
-Date:   Mon, 8 Jun 2020 10:33:09 +0900
-Message-ID: <CAD=HUj5Jn+grQVfxmPSSnERdGwnu8RceDsdpWpoxXH+WL4k+qw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] virtio: add dma-buf support for exported objects
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Gerd Hoffmann <kraxel@redhat.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Jason Wang <jasowang@redhat.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        open list <linux-kernel@vger.kernel.org>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        "open list:VIRTIO GPU DRIVER" 
-        <virtualization@lists.linux-foundation.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>, virtio-dev@lists.oasis-open.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 7, 2020 at 5:04 AM Michael S. Tsirkin <mst@redhat.com> wrote:
->
-> On Fri, Jun 05, 2020 at 10:28:42AM +0900, David Stevens wrote:
-> > On Fri, Jun 5, 2020 at 4:05 AM Michael S. Tsirkin <mst@redhat.com> wrote:
-> > >
-> > > On Tue, May 26, 2020 at 07:58:09PM +0900, David Stevens wrote:
-> > > > This change adds a new flavor of dma-bufs that can be used by virtio
-> > > > drivers to share exported objects. A virtio dma-buf can be queried by
-> > > > virtio drivers to obtain the UUID which identifies the underlying
-> > > > exported object.
-> > > >
-> > > > Signed-off-by: David Stevens <stevensd@chromium.org>
-> > >
-> > > Is this just for graphics? If yes I'd rather we put it in the graphics
-> > > driver. We can always move it later ...
-> >
-> > As stated in the cover letter, this will be used by virtio-video.
-> >
-> > The proposed virtio-video patches: https://markmail.org/thread/p5d3k566srtdtute
-> > The patch which imports these dma-bufs (slightly out of data, uses v3
-> > of this patch set): https://markmail.org/thread/j4xlqaaim266qpks
-> >
-> > > > ---
-> > > >  drivers/virtio/Makefile         |  2 +-
-> > > >  drivers/virtio/virtio.c         |  6 +++
-> > > >  drivers/virtio/virtio_dma_buf.c | 89 +++++++++++++++++++++++++++++++++
-> > > >  include/linux/virtio.h          |  1 +
-> > > >  include/linux/virtio_dma_buf.h  | 58 +++++++++++++++++++++
-> > > >  5 files changed, 155 insertions(+), 1 deletion(-)
-> > > >  create mode 100644 drivers/virtio/virtio_dma_buf.c
-> > > >  create mode 100644 include/linux/virtio_dma_buf.h
-> > > >
-> > > > diff --git a/drivers/virtio/Makefile b/drivers/virtio/Makefile
-> > > > index 29a1386ecc03..ecdae5b596de 100644
-> > > > --- a/drivers/virtio/Makefile
-> > > > +++ b/drivers/virtio/Makefile
-> > > > @@ -1,5 +1,5 @@
-> > > >  # SPDX-License-Identifier: GPL-2.0
-> > > > -obj-$(CONFIG_VIRTIO) += virtio.o virtio_ring.o
-> > > > +obj-$(CONFIG_VIRTIO) += virtio.o virtio_ring.o virtio_dma_buf.o
-> > > >  obj-$(CONFIG_VIRTIO_MMIO) += virtio_mmio.o
-> > > >  obj-$(CONFIG_VIRTIO_PCI) += virtio_pci.o
-> > > >  virtio_pci-y := virtio_pci_modern.o virtio_pci_common.o
-> > > > diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
-> > > > index a977e32a88f2..5d46f0ded92d 100644
-> > > > --- a/drivers/virtio/virtio.c
-> > > > +++ b/drivers/virtio/virtio.c
-> > > > @@ -357,6 +357,12 @@ int register_virtio_device(struct virtio_device *dev)
-> > > >  }
-> > > >  EXPORT_SYMBOL_GPL(register_virtio_device);
-> > > >
-> > > > +bool is_virtio_device(struct device *dev)
-> > > > +{
-> > > > +     return dev->bus == &virtio_bus;
-> > > > +}
-> > > > +EXPORT_SYMBOL_GPL(is_virtio_device);
-> > > > +
-> > > >  void unregister_virtio_device(struct virtio_device *dev)
-> > > >  {
-> > > >       int index = dev->index; /* save for after device release */
-> > > > diff --git a/drivers/virtio/virtio_dma_buf.c b/drivers/virtio/virtio_dma_buf.c
-> > > > new file mode 100644
-> > > > index 000000000000..23e3399b11ed
-> > > > --- /dev/null
-> > > > +++ b/drivers/virtio/virtio_dma_buf.c
-> > > > @@ -0,0 +1,89 @@
-> > > > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > > > +/*
-> > > > + * dma-bufs for virtio exported objects
-> > > > + *
-> > > > + * Copyright (C) 2020 Google, Inc.
-> > > > + */
-> > > > +
-> > > > +#include <linux/virtio_dma_buf.h>
-> > > > +
-> > > > +/**
-> > > > + * virtio_dma_buf_export - Creates a new dma-buf for a virtio exported object
-> > > > + *
-> > > > + * This wraps dma_buf_export() to allow virtio drivers to create a dma-buf
-> > > > + * for an virtio exported object that can be queried by other virtio drivers
-> > > > + * for the object's UUID.
-> > > > + */
-> > > > +struct dma_buf *virtio_dma_buf_export(
-> > > > +             const struct virtio_dma_buf_export_info *virtio_exp_info)
-> > > > +{
-> > > > +     struct dma_buf_export_info exp_info;
-> > > > +
-> > > > +     if (!virtio_exp_info->ops
-> > > > +             || virtio_exp_info->ops->ops.attach != &virtio_dma_buf_attach
-> > > > +             || !virtio_exp_info->ops->get_uuid) {
-> > > > +             return ERR_PTR(-EINVAL);
-> > > > +     }
-> > > > +
-> > > > +     exp_info.exp_name = virtio_exp_info->exp_name;
-> > > > +     exp_info.owner = virtio_exp_info->owner;
-> > > > +     exp_info.ops = &virtio_exp_info->ops->ops;
-> > > > +     exp_info.size = virtio_exp_info->size;
-> > > > +     exp_info.flags = virtio_exp_info->flags;
-> > > > +     exp_info.resv = virtio_exp_info->resv;
-> > > > +     exp_info.priv = virtio_exp_info->priv;
-> > > > +     BUILD_BUG_ON(sizeof(struct virtio_dma_buf_export_info)
-> > > > +                  != sizeof(struct dma_buf_export_info));
-> > >
-> > > This is the only part that gives me pause. Why do we need this hack?
-> > > What's wrong with just using dma_buf_export_info directly,
-> > > and if you want the virtio ops, just using container_off?
-> >
-> > This approach provides a more explicit type signature and a little
-> > more type safety, I think. If others don't think it's a worthwhile
-> > tradeoff, I can remove it.
-> >
-> > -David
->
-> The cost is that if dma_buf_export_info changes even slightly, we get
-> weird crashes.
+In blkdev_get() we call __blkdev_get() to do some internal jobs and if
+there is some errors in __blkdev_get(), the bdput() is called which
+means we have released the refcount of the bdev (actually the refcount of
+the bdev inode). This means we cannot access bdev after that point. But
+acctually bdev is still accessed in blkdev_get() after calling
+__blkdev_get(). This results in use-after-free if the refcount is the
+last one we released in __blkdev_get(). Let's take a look at the
+following scenerio:
 
-I'm not sure I understand what types of changes you're referring to.
-As this is written, virtio-dma-buf is just another client of the
-dma-buf API. If this were rewritten to use dma-buf directly, then
-whatever code calls virtio_dma_buf_export would become a client of the
-dma-buf API. If the semantics of existing fields in the dma-buf API
-were changed and virtio-dma-buf wasn't updated, then yes, you could
-get weird crashes from virtio-dma-buf. However, the same problem would
-exist if virtio_dma_buf_export used dma-buf directly - changes to
-dma-buf's semantics could cause weird crashes if the caller of
-virtio_dma_buf_export wasn't updated properly. The only potential
-source of problems I see is if virtio_dma_buf_export_info wasn't
-updated properly, but virtio_dma_buf_export_info is dead simple, so I
-don't know if that's really a problem.
+  CPU0            CPU1                    CPU2
+blkdev_open     blkdev_open           Remove disk
+                  bd_acquire
+		  blkdev_get
+		    __blkdev_get      del_gendisk
+					bdev_unhash_inode
+  bd_acquire          bdev_get_gendisk
+    bd_forget           failed because of unhashed
+	  bdput
+	              bdput (the last one)
+		        bdev_evict_inode
 
--David
+	  	    access bdev => use after free
+
+[  459.350216] BUG: KASAN: use-after-free in __lock_acquire+0x24c1/0x31b0
+[  459.351190] Read of size 8 at addr ffff88806c815a80 by task syz-executor.0/20132
+[  459.352347]
+[  459.352594] CPU: 0 PID: 20132 Comm: syz-executor.0 Not tainted 4.19.90 #2
+[  459.353628] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+[  459.354947] Call Trace:
+[  459.355337]  dump_stack+0x111/0x19e
+[  459.355879]  ? __lock_acquire+0x24c1/0x31b0
+[  459.356523]  print_address_description+0x60/0x223
+[  459.357248]  ? __lock_acquire+0x24c1/0x31b0
+[  459.357887]  kasan_report.cold+0xae/0x2d8
+[  459.358503]  __lock_acquire+0x24c1/0x31b0
+[  459.359120]  ? _raw_spin_unlock_irq+0x24/0x40
+[  459.359784]  ? lockdep_hardirqs_on+0x37b/0x580
+[  459.360465]  ? _raw_spin_unlock_irq+0x24/0x40
+[  459.361123]  ? finish_task_switch+0x125/0x600
+[  459.361812]  ? finish_task_switch+0xee/0x600
+[  459.362471]  ? mark_held_locks+0xf0/0xf0
+[  459.363108]  ? __schedule+0x96f/0x21d0
+[  459.363716]  lock_acquire+0x111/0x320
+[  459.364285]  ? blkdev_get+0xce/0xbe0
+[  459.364846]  ? blkdev_get+0xce/0xbe0
+[  459.365390]  __mutex_lock+0xf9/0x12a0
+[  459.365948]  ? blkdev_get+0xce/0xbe0
+[  459.366493]  ? bdev_evict_inode+0x1f0/0x1f0
+[  459.367130]  ? blkdev_get+0xce/0xbe0
+[  459.367678]  ? destroy_inode+0xbc/0x110
+[  459.368261]  ? mutex_trylock+0x1a0/0x1a0
+[  459.368867]  ? __blkdev_get+0x3e6/0x1280
+[  459.369463]  ? bdev_disk_changed+0x1d0/0x1d0
+[  459.370114]  ? blkdev_get+0xce/0xbe0
+[  459.370656]  blkdev_get+0xce/0xbe0
+[  459.371178]  ? find_held_lock+0x2c/0x110
+[  459.371774]  ? __blkdev_get+0x1280/0x1280
+[  459.372383]  ? lock_downgrade+0x680/0x680
+[  459.373002]  ? lock_acquire+0x111/0x320
+[  459.373587]  ? bd_acquire+0x21/0x2c0
+[  459.374134]  ? do_raw_spin_unlock+0x4f/0x250
+[  459.374780]  blkdev_open+0x202/0x290
+[  459.375325]  do_dentry_open+0x49e/0x1050
+[  459.375924]  ? blkdev_get_by_dev+0x70/0x70
+[  459.376543]  ? __x64_sys_fchdir+0x1f0/0x1f0
+[  459.377192]  ? inode_permission+0xbe/0x3a0
+[  459.377818]  path_openat+0x148c/0x3f50
+[  459.378392]  ? kmem_cache_alloc+0xd5/0x280
+[  459.379016]  ? entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[  459.379802]  ? path_lookupat.isra.0+0x900/0x900
+[  459.380489]  ? __lock_is_held+0xad/0x140
+[  459.381093]  do_filp_open+0x1a1/0x280
+[  459.381654]  ? may_open_dev+0xf0/0xf0
+[  459.382214]  ? find_held_lock+0x2c/0x110
+[  459.382816]  ? lock_downgrade+0x680/0x680
+[  459.383425]  ? __lock_is_held+0xad/0x140
+[  459.384024]  ? do_raw_spin_unlock+0x4f/0x250
+[  459.384668]  ? _raw_spin_unlock+0x1f/0x30
+[  459.385280]  ? __alloc_fd+0x448/0x560
+[  459.385841]  do_sys_open+0x3c3/0x500
+[  459.386386]  ? filp_open+0x70/0x70
+[  459.386911]  ? trace_hardirqs_on_thunk+0x1a/0x1c
+[  459.387610]  ? trace_hardirqs_off_caller+0x55/0x1c0
+[  459.388342]  ? do_syscall_64+0x1a/0x520
+[  459.388930]  do_syscall_64+0xc3/0x520
+[  459.389490]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[  459.390248] RIP: 0033:0x416211
+[  459.390720] Code: 75 14 b8 02 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83
+04 19 00 00 c3 48 83 ec 08 e8 0a fa ff ff 48 89 04 24 b8 02 00 00 00 0f
+   05 <48> 8b 3c 24 48 89 c2 e8 53 fa ff ff 48 89 d0 48 83 c4 08 48 3d
+      01
+[  459.393483] RSP: 002b:00007fe45dfe9a60 EFLAGS: 00000293 ORIG_RAX: 0000000000000002
+[  459.394610] RAX: ffffffffffffffda RBX: 00007fe45dfea6d4 RCX: 0000000000416211
+[  459.395678] RDX: 00007fe45dfe9b0a RSI: 0000000000000002 RDI: 00007fe45dfe9b00
+[  459.396758] RBP: 000000000076bf20 R08: 0000000000000000 R09: 000000000000000a
+[  459.397930] R10: 0000000000000075 R11: 0000000000000293 R12: 00000000ffffffff
+[  459.399022] R13: 0000000000000bd9 R14: 00000000004cdb80 R15: 000000000076bf2c
+[  459.400168]
+[  459.400430] Allocated by task 20132:
+[  459.401038]  kasan_kmalloc+0xbf/0xe0
+[  459.401652]  kmem_cache_alloc+0xd5/0x280
+[  459.402330]  bdev_alloc_inode+0x18/0x40
+[  459.402970]  alloc_inode+0x5f/0x180
+[  459.403510]  iget5_locked+0x57/0xd0
+[  459.404095]  bdget+0x94/0x4e0
+[  459.404607]  bd_acquire+0xfa/0x2c0
+[  459.405113]  blkdev_open+0x110/0x290
+[  459.405702]  do_dentry_open+0x49e/0x1050
+[  459.406340]  path_openat+0x148c/0x3f50
+[  459.406926]  do_filp_open+0x1a1/0x280
+[  459.407471]  do_sys_open+0x3c3/0x500
+[  459.408010]  do_syscall_64+0xc3/0x520
+[  459.408572]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[  459.409415]
+[  459.409679] Freed by task 1262:
+[  459.410212]  __kasan_slab_free+0x129/0x170
+[  459.410919]  kmem_cache_free+0xb2/0x2a0
+[  459.411564]  rcu_process_callbacks+0xbb2/0x2320
+[  459.412318]  __do_softirq+0x225/0x8ac
+
+Fix this by delaying bdput() to the end of blkdev_get() which means we
+have finished accessing bdev.
+
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Ming Lei <ming.lei@redhat.com>
+Cc: Jan Kara <jack@suse.cz>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+---
+ v4: Remove uneeded braces and add Reviewed-by tag from Jan Kara.
+ v3: Add bdput() when __blkdev_get() calling itself failed.
+ v2: Add Reported-by tag and cc linux-block mailing list
+
+ fs/block_dev.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/fs/block_dev.c b/fs/block_dev.c
+index 47860e589388..08c87db3a92b 100644
+--- a/fs/block_dev.c
++++ b/fs/block_dev.c
+@@ -1565,10 +1565,8 @@ static int __blkdev_get(struct block_device *bdev, fmode_t mode, int for_part)
+ 	 */
+ 	if (!for_part) {
+ 		ret = devcgroup_inode_permission(bdev->bd_inode, perm);
+-		if (ret != 0) {
+-			bdput(bdev);
++		if (ret != 0)
+ 			return ret;
+-		}
+ 	}
+ 
+  restart:
+@@ -1637,8 +1635,10 @@ static int __blkdev_get(struct block_device *bdev, fmode_t mode, int for_part)
+ 				goto out_clear;
+ 			BUG_ON(for_part);
+ 			ret = __blkdev_get(whole, mode, 1);
+-			if (ret)
++			if (ret) {
++				bdput(whole);
+ 				goto out_clear;
++			}
+ 			bdev->bd_contains = whole;
+ 			bdev->bd_part = disk_get_part(disk, partno);
+ 			if (!(disk->flags & GENHD_FL_UP) ||
+@@ -1688,7 +1688,6 @@ static int __blkdev_get(struct block_device *bdev, fmode_t mode, int for_part)
+ 	disk_unblock_events(disk);
+ 	put_disk_and_module(disk);
+  out:
+-	bdput(bdev);
+ 
+ 	return ret;
+ }
+@@ -1755,6 +1754,9 @@ int blkdev_get(struct block_device *bdev, fmode_t mode, void *holder)
+ 		bdput(whole);
+ 	}
+ 
++	if (res)
++		bdput(bdev);
++
+ 	return res;
+ }
+ EXPORT_SYMBOL(blkdev_get);
+-- 
+2.21.3
+
