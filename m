@@ -2,164 +2,72 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03AAAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 01:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6654C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 01:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6BDE20812
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 01:49:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="ar+tXOUH"
+	by mail.kernel.org (Postfix) with ESMTP id ADD1B20774
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 01:50:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728751AbgFHBtL (ORCPT
+        id S1728767AbgFHBuU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 21:49:11 -0400
-Received: from mail-eopbgr1310098.outbound.protection.outlook.com ([40.107.131.98]:2117
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        Sun, 7 Jun 2020 21:50:20 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:55584 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728106AbgFHBtJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 21:49:09 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ObHdg+ERru0vw/uy3WZg+6d9Yx2mYd9w58GdjvE4jcCwJMKNrt5iuQrpUJz396aOisDZPTd3nqTxXPNQn82/wp4hkgY6ETwXMQucOaXrUFPafV7gP/IDKyTWyFIcoZ1XuZA7jFobey7rJvYBERJ15IGf3hAnXuaRqxmtDet57jnW3cei9FZ0bw+eSXhX1G7sgauV9pOpFb0A3Aw46TfT5puZ98OryGsru4Ef4PIPyYydj1J9q7NPWgxfqVQEyYvnCj05fuIiljnRs4DX3TDa5mvAYaibJVu9DB7fzM2BEPJdfkRX/C3BAZ+y1zeogbcbsZ8VlEg630ol8PB3qQ3wyw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1XaGzB4IfuEA47m+wIkfxPqgtDStoBtC8hqFWlrsge0=;
- b=Br08GEKbBB4HTpU4d9Lnprkg4G8evuaEyhMi3inhw35ghVFfqpKDyKy/nfw0/R+xDcw4jxU3PNh5nRjaQV1nWbG5txW6lALiH4q7lZHAKayjoTOsMMZ8t5wfnY3AAxKLtWQQYSvapDKCINb9fWiM+SYqZOAY79t2dhwQi1hz0bfV1To0SBZWh49id0ZhYEjji5Vgb13FZIcoFrP7dxcfE4OQj/hiT9IIuA5mIFSB5rhEEf9XG7o08sULaFjrFIBiU1t4WNixK4Z2bg3tokOLPG2nZaMstHzpTDlzaIutToqLVBjppKEaAliMDcYRXXpmmTP9fmKiuPRAH1br/AFaaA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1XaGzB4IfuEA47m+wIkfxPqgtDStoBtC8hqFWlrsge0=;
- b=ar+tXOUHX4pV/KW4yLbSEEuXOfTp5FsS91nYZE1zj2+RdiryJdD4s1iSVFLgg8P+v/2XJNY54sQGNOMV6T9Y9TWSmL0mNDfKIivA7SizG35plIn4ku1/NstvbBU6V+Tk1yohYiPrF2sUtTAbVO/k6UxxiYUp3MfSZF28utAQHd4=
-Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com (2603:1096:404:d5::22)
- by TY2PR01MB2890.jpnprd01.prod.outlook.com (2603:1096:404:7a::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.23; Mon, 8 Jun
- 2020 01:49:04 +0000
-Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com
- ([fe80::2da1:bdb7:9089:7f43]) by TY2PR01MB3692.jpnprd01.prod.outlook.com
- ([fe80::2da1:bdb7:9089:7f43%3]) with mapi id 15.20.3066.023; Mon, 8 Jun 2020
- 01:49:04 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>, "kjlu@umn.edu" <kjlu@umn.edu>
-CC:     Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] [v2] PCI: rcar: Fix runtime PM imbalance on error
-Thread-Topic: [PATCH] [v2] PCI: rcar: Fix runtime PM imbalance on error
-Thread-Index: AQHWPK55A5hD61SJZES1zQODpY1sK6jN8Qxw
-Date:   Mon, 8 Jun 2020 01:49:04 +0000
-Message-ID: <TY2PR01MB36925A93AA081BF478CA8DB8D8850@TY2PR01MB3692.jpnprd01.prod.outlook.com>
-References: <20200607093134.6393-1-dinghao.liu@zju.edu.cn>
-In-Reply-To: <20200607093134.6393-1-dinghao.liu@zju.edu.cn>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: zju.edu.cn; dkim=none (message not signed)
- header.d=none;zju.edu.cn; dmarc=none action=none header.from=renesas.com;
-x-originating-ip: [124.210.22.195]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 230b62a2-aea0-4105-ec5e-08d80b4e1fe7
-x-ms-traffictypediagnostic: TY2PR01MB2890:
-x-microsoft-antispam-prvs: <TY2PR01MB28907402AE1CB312F2BC66B6D8850@TY2PR01MB2890.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1169;
-x-forefront-prvs: 042857DBB5
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: hN8yQa8fTqZoZPXhIKJMiI6X/p2OVeVpQftq3Eh2ndMhgqla0z45/EDOlQstxAhD2oF7zTB9WW0VtVfThN/3n5UUU03GleSinI3t57AKUYWD7xablkbGw9WeibxNHNF/2c1bK/SHBdh636jSp1lPPVRZA6jNtk9+BsRkPxFdrLzg3rA96LE/oTeQgqUuRNMWjzeXIi0LMlaQ2RUl3ZWc/Sea8kgcQSPjtRA+kQYiCdhqyxFzYJihFz/x9TKl0ENNcHg2QPugXuVQ58bfAcr4nrErBhQUHnYMaxnANfI56aZV9rR9mViDN3aIMEwifeqBNaDvXCHW3O2t2wokdOBPoA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR01MB3692.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(136003)(346002)(376002)(396003)(55016002)(8676002)(9686003)(478600001)(86362001)(2906002)(8936002)(7696005)(110136005)(54906003)(76116006)(316002)(64756008)(71200400001)(66446008)(66556008)(4326008)(66946007)(66476007)(26005)(6506007)(55236004)(52536014)(186003)(33656002)(5660300002)(83380400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: Zb4fCDlCE1W/l2E9Ys6ryqL+dTuOPKvnpe6Zu3BtZZw3pkfcJ4ak7gdtvcUNeZNlU8g6kwiKF4qkKeSj8uHVnsJVB8Il5UP1Pcvjht8bliTdWk1CgIP3bLofMbHkBBwZ92bzWrCV7m4DA+X4DM4HfYJQikFMohyzgK9A9gGb7mZK6xxHK5wEFCqIdD7LtJ26qItx/flwJAPnyFg8l1WoPwt+B7eDL5SlmIIU7+6rvJaDS2dQ4ZKoM/qqMcf6bnoPeqTmFbdy4EPiVpqEFsjscgaqwYAF+Oh8gwUYdyYCmFfJBSQmlX1dy/+5O9/b3ZL9spUXKii4o/ZojRqk4WnhLrQf00/Iq1mxcwqAQatRsInZ8q5C6kzBQ2sJMFGF/gESTqYpzb1hlK81kx46H5bj/cWW9LYE4zVNGMe5RtyoW2q8nXpO88U+0zGJPlL9oCilhh4uReSzHOhyx9wKwnH8i2p0EZb30o++KJ3Zu4nB0UdMt0rzulFWoeTae6eLTKAr
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1728106AbgFHBuS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jun 2020 21:50:18 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 9167966CFE953DFC9BB7;
+        Mon,  8 Jun 2020 09:50:13 +0800 (CST)
+Received: from huawei.com (10.67.174.156) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Mon, 8 Jun 2020
+ 09:50:02 +0800
+From:   Chen Tao <chentao107@huawei.com>
+To:     <sean@poorly.run>, <airlied@linux.ie>, <daniel@ffwll.ch>
+CC:     <ddavenport@chromium.org>, <zhengbin13@huawei.com>,
+        <sam@ravnborg.org>, <kalyan_t@codeaurora.org>,
+        <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <chentao107@huawei.com>
+Subject: [PATCH] drm/msm/dpu: fix error return code in dpu_encoder_init
+Date:   Mon, 8 Jun 2020 09:48:59 +0800
+Message-ID: <20200608014859.120021-1-chentao107@huawei.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 230b62a2-aea0-4105-ec5e-08d80b4e1fe7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jun 2020 01:49:04.2213
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: t9wKaMo0zDUJ+LUox5ur1AkNa9trQRVxx2/nGmg9h2AOwgtz6IpXlxF8858E0JbHiDZ0tXBu+zYsFo50jk9Z2G+sSw0azbM0NtCT2x8pJxD5j/avPvVzWFisQ0qoteWl
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY2PR01MB2890
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.174.156]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dinghao,
+Fix to return negative error code -ENOMEM with the use of
+ERR_PTR from dpu_encoder_init.
 
-> From: Dinghao Liu, Sent: Sunday, June 7, 2020 6:32 PM
->=20
-> pm_runtime_get_sync() increments the runtime PM usage counter even
-> the call returns an error code. Thus a corresponding decrement is
-> needed on the error handling path to keep the counter balanced.
->=20
-> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+Fixes: 25fdd5933e4c ("drm/msm: Add SDM845 DPU support")
+Signed-off-by: Chen Tao <chentao107@huawei.com>
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thank you for your patch! I think we can add Fixes tag like below.
-
-Fixes: 0df6150e7ceb ("PCI: rcar: Use runtime PM to control controller clock=
-")
-
-And, I reviewed this patch. So,
-
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-
-Best regards,
-Yoshihiro Shimoda
-
-> ---
->=20
-> Changelog:
->=20
-> v2: - Remove unnecessary 'err_pm_put' label.
->       Refine commit message.
-> ---
->  drivers/pci/controller/pcie-rcar.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/pci/controller/pcie-rcar.c b/drivers/pci/controller/=
-pcie-rcar.c
-> index 759c6542c5c8..f9595ab54bc4 100644
-> --- a/drivers/pci/controller/pcie-rcar.c
-> +++ b/drivers/pci/controller/pcie-rcar.c
-> @@ -1143,7 +1143,7 @@ static int rcar_pcie_probe(struct platform_device *=
-pdev)
->  	err =3D rcar_pcie_get_resources(pcie);
->  	if (err < 0) {
->  		dev_err(dev, "failed to request resources: %d\n", err);
-> -		goto err_pm_put;
-> +		goto err_pm_disable;
->  	}
->=20
->  	err =3D clk_prepare_enable(pcie->bus_clk);
-> @@ -1206,10 +1206,8 @@ static int rcar_pcie_probe(struct platform_device =
-*pdev)
->  	irq_dispose_mapping(pcie->msi.irq2);
->  	irq_dispose_mapping(pcie->msi.irq1);
->=20
-> -err_pm_put:
-> -	pm_runtime_put(dev);
-> -
->  err_pm_disable:
-> +	pm_runtime_put(dev);
->  	pm_runtime_disable(dev);
->  	pci_free_resource_list(&pcie->resources);
->=20
-> --
-> 2.17.1
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+index a1b79ee2bd9d..a2f6b688a976 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+@@ -2173,7 +2173,7 @@ struct drm_encoder *dpu_encoder_init(struct drm_device *dev,
+ 
+ 	dpu_enc = devm_kzalloc(dev->dev, sizeof(*dpu_enc), GFP_KERNEL);
+ 	if (!dpu_enc)
+-		return ERR_PTR(ENOMEM);
++		return ERR_PTR(-ENOMEM);
+ 
+ 	rc = drm_encoder_init(dev, &dpu_enc->base, &dpu_encoder_funcs,
+ 			drm_enc_mode, NULL);
+-- 
+2.22.0
 
