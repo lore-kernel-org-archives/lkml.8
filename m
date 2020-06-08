@@ -4,48 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CDA5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5772C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D258F2078C
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:31:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6FDB2089D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:31:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591659097;
-	bh=Gww3TbrH3eF0jQEmWRGZutj5P7IuAJBkE8VkTY5CPag=;
+	s=default; t=1591659100;
+	bh=asa8ONHvLvSLrkUv5RGqx9vJCcv05F7tTMtmQgGoEZs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1n0DIEMvEg6N/DFeS/b0fbAV1mL+pbBajdyygbDJfmE/UcsUJbv9+ECb4+GEchAVM
-	 jhr1m6Wiph3/I0iREU4+KfH6Bcg2S4xny+G2+YRtirIEW0BzgcjNhGZEFednelhFpy
-	 pFOGrsmwIsxYNcvPx4cghC9eexGH83ktj7b2toNM=
+	b=JLYeYg4Y7g2FeRADi0wdr7bPhz6HkmO/MpSjRYFGaXYg2SUFdgWr641owT+oeCKtz
+	 0EzDYppy4pEtij6gNyIIlbdHh3HrtEYB1gPA36xKQFLIzQDD2JKhdUPaUkTGcDpRxP
+	 DN0wIlkKblU5WvQYMJezhSbD4ZYUt4GouCsJk0eo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730540AbgFHXbg (ORCPT
+        id S1732401AbgFHXbj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:31:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51912 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:31:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731141AbgFHXZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:25:24 -0400
+        id S1731459AbgFHXZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:25:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF88D2078D;
-        Mon,  8 Jun 2020 23:25:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD7642064C;
+        Mon,  8 Jun 2020 23:25:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658723;
-        bh=Gww3TbrH3eF0jQEmWRGZutj5P7IuAJBkE8VkTY5CPag=;
+        s=default; t=1591658724;
+        bh=asa8ONHvLvSLrkUv5RGqx9vJCcv05F7tTMtmQgGoEZs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tFTf///JbFpJhd8T+0dgnQyIjj1WIGzRWB0JyaK2u5XV3kTgp9HlR+/20W46uFVWk
-         LkHylQdqJOC58Cw3/8v8hcpeXITIl4nUDsC9LwCSC9iE9D/EJKDNIH0+ka+rTC580h
-         6u+6rbRyYtMv/WwrAz9YxeM6XN7NJ22ciwyYGQsk=
+        b=UkSVm8N3Q5YlsD+bmYLlQVZUGk/J9kC1My7oIUZE8+ijPrvdqY6M+GuQpGgU9knxH
+         OyF3ORkUqxm5Zv9+UdvRtujHYEfS2PenkVjSmrP2e/lvEY0GDKtM04O1J05RhitfZL
+         tccno7jjEyirQq74PYMw6gbaqGgqoNhHFF9b6sdU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Filipe Manana <fdmanana@suse.com>, David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 17/72] btrfs: do not ignore error from btrfs_next_leaf() when inserting checksums
-Date:   Mon,  8 Jun 2020 19:24:05 -0400
-Message-Id: <20200608232500.3369581-17-sashal@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 18/72] ARM: 8978/1: mm: make act_mm() respect THREAD_SIZE
+Date:   Mon,  8 Jun 2020 19:24:06 -0400
+Message-Id: <20200608232500.3369581-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608232500.3369581-1-sashal@kernel.org>
 References: <20200608232500.3369581-1-sashal@kernel.org>
@@ -58,46 +62,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-[ Upstream commit 7e4a3f7ed5d54926ec671bbb13e171cfe179cc50 ]
+[ Upstream commit e1de94380af588bdf6ad6f0cc1f75004c35bc096 ]
 
-We are currently treating any non-zero return value from btrfs_next_leaf()
-the same way, by going to the code that inserts a new checksum item in the
-tree. However if btrfs_next_leaf() returns an error (a value < 0), we
-should just stop and return the error, and not behave as if nothing has
-happened, since in that case we do not have a way to know if there is a
-next leaf or we are currently at the last leaf already.
+Recent work with KASan exposed the folling hard-coded bitmask
+in arch/arm/mm/proc-macros.S:
 
-So fix that by returning the error from btrfs_next_leaf().
+  bic     rd, sp, #8128
+  bic     rd, rd, #63
 
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+This forms the bitmask 0x1FFF that is coinciding with
+(PAGE_SIZE << THREAD_SIZE_ORDER) - 1, this code was assuming
+that THREAD_SIZE is always 8K (8192).
+
+As KASan was increasing THREAD_SIZE_ORDER to 2, I ran into
+this bug.
+
+Fix it by this little oneline suggested by Ard:
+
+  bic     rd, sp, #(THREAD_SIZE - 1) & ~63
+
+Where THREAD_SIZE is defined using THREAD_SIZE_ORDER.
+
+We have to also include <linux/const.h> since the THREAD_SIZE
+expands to use the _AC() macro.
+
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Suggested-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/file-item.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/arm/mm/proc-macros.S | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/file-item.c b/fs/btrfs/file-item.c
-index 717d82d51bb1..edd5f152e448 100644
---- a/fs/btrfs/file-item.c
-+++ b/fs/btrfs/file-item.c
-@@ -795,10 +795,12 @@ int btrfs_csum_file_blocks(struct btrfs_trans_handle *trans,
- 		nritems = btrfs_header_nritems(path->nodes[0]);
- 		if (!nritems || (path->slots[0] >= nritems - 1)) {
- 			ret = btrfs_next_leaf(root, path);
--			if (ret == 1)
-+			if (ret < 0) {
-+				goto out;
-+			} else if (ret > 0) {
- 				found_next = 1;
--			if (ret != 0)
- 				goto insert;
-+			}
- 			slot = path->slots[0];
- 		}
- 		btrfs_item_key_to_cpu(path->nodes[0], &found_key, slot);
+diff --git a/arch/arm/mm/proc-macros.S b/arch/arm/mm/proc-macros.S
+index 5461d589a1e2..60ac7c5999a9 100644
+--- a/arch/arm/mm/proc-macros.S
++++ b/arch/arm/mm/proc-macros.S
+@@ -5,6 +5,7 @@
+  *  VMA_VM_FLAGS
+  *  VM_EXEC
+  */
++#include <linux/const.h>
+ #include <asm/asm-offsets.h>
+ #include <asm/thread_info.h>
+ 
+@@ -30,7 +31,7 @@
+  * act_mm - get current->active_mm
+  */
+ 	.macro	act_mm, rd
+-	bic	\rd, sp, #8128
++	bic	\rd, sp, #(THREAD_SIZE - 1) & ~63
+ 	bic	\rd, \rd, #63
+ 	ldr	\rd, [\rd, #TI_TASK]
+ 	.if (TSK_ACTIVE_MM > IMM12_MASK)
 -- 
 2.25.1
 
