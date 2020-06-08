@@ -3,165 +3,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6914EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95B50C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4407220659
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:47:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72A6920659
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:48:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730088AbgFHOrR (ORCPT
+        id S1730100AbgFHOsW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 10:47:17 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39789 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729958AbgFHOrQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 10:47:16 -0400
-Received: by mail-ot1-f67.google.com with SMTP id g5so13825243otg.6;
-        Mon, 08 Jun 2020 07:47:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZNiDF0QbRkAC5PAOtg/PZzyEBv0aXwpLIdiYmMTWuTc=;
-        b=b+hF0HVggEGlmJeLVLQUigCTohD01p4PxOaneGxkPxViDAr3uzMNjwRcEoOkSd1WRt
-         UY5KU2J7WgcWTQqZCzFa20V2iUnspwT3vAlkcBIskKrJtszfAawtnSRJ1rq1A/S33x5B
-         MRUkC3NDA1h4QV7ZPyw0lCouQL0AUrBpaagNOagaB/IipBw+e8HNOHIYnQW+B19Uiuvf
-         ceIGbLU2cdjbFwo1puzAj4n4k6IwTJf1CLX3B8L6PgrPG8xI5aIuWstSzb0KrH4y4vQQ
-         iAYhnMXcYnFA2Mc/E5AjdO+t6K/pefcT+fSVtgxkX9Z+7GG/Lrf31Erp3mp4TgeIGJ+W
-         urww==
-X-Gm-Message-State: AOAM532emiWgISRNWtfzfyrWZ430nLUItyyvNBYtZNw/0ASwxKLX8+Zg
-        TRAB3EyEUhdw8qznc4wY3yz59W17t7gUha8WnZ8CfQ==
-X-Google-Smtp-Source: ABdhPJwFXW1J7g59xQQtXSD0pqJ6GWtqJJB8QVdlpiTxNufVuBC9KwHKN3UJS4dx7m96rMgujU5VUpDYNuVG2Kl16iU=
-X-Received: by 2002:a9d:62c2:: with SMTP id z2mr17492225otk.145.1591627635517;
- Mon, 08 Jun 2020 07:47:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <1591555267-21822-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1591555267-21822-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1591555267-21822-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 8 Jun 2020 16:47:03 +0200
-Message-ID: <CAMuHMdWKhq63yT9XbbV4Nmr0EJZcGQ396pVCqkrzMTmgunznaQ@mail.gmail.com>
-Subject: Re: [PATCH 03/11] arm64: dts: renesas: hihope-common: Separate out
- Rev.2.0 specific into hihope-common-rev2.dtsi file
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 8 Jun 2020 10:48:22 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:46438 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729958AbgFHOsV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 10:48:21 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C6CAA1A1074;
+        Mon,  8 Jun 2020 16:48:19 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 480001A1063;
+        Mon,  8 Jun 2020 16:48:15 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 5C6BE40297;
+        Mon,  8 Jun 2020 22:48:09 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
+        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
+        s.hauer@pengutronix.de, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V2 0/9] Support i.MX8 SoCs pinctrl drivers built as module
+Date:   Mon,  8 Jun 2020 22:37:27 +0800
+Message-Id: <1591627056-19022-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
+There are more and mroe requirements that SoC specific modules should be built
+as module in order to support generic kernel image, such as Android GKI concept.
 
-On Sun, Jun 7, 2020 at 8:41 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Separate out Rev.2.0 specific hardware changes into
-> hihope-common-rev2.dtsi file so that hihope-common.dtsi can be used
-> by all the variants for RZ/G2M[N] boards.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+This patch series supports i.MX8 SoCs pinctrl drivers to be built as module,
+including i.MX8MQ/MM/MN/MP/QXP/QM/DXL SoCs, and it also supports building i.MX
+common pinctrl driver and i.MX SCU common pinctrl driver as module.
 
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/renesas/hihope-common-rev2.dtsi
+Compared to V1, the changes are as below:
+	- Separate the i.MX and i.MX SCU common pinctrl driver to 2 patches;
+	- Support building i.MX and i.MX SCU common pinctrl driver as module too.
 
-Perhaps just hihope-rev2.dtsi, i.e. without the "common-"?
+Anson Huang (9):
+  pinctrl: imx: Support building SCU pinctrl driver as module
+  pinctrl: imx: Support building i.MX pinctrl driver as module
+  pinctrl: imx8mm: Support building as module
+  pinctrl: imx8mn: Support building as module
+  pinctrl: imx8mq: Support building as module
+  pinctrl: imx8mp: Support building as module
+  pinctrl: imx8qxp: Support building as module
+  pinctrl: imx8qm: Support building as module
+  pinctrl: imx8dxl: Support building as module
 
-> @@ -0,0 +1,101 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Device Tree Source for the HiHope RZ/G2[MN] main board Rev.2.0 common
-> + * parts
-> + *
-> + * Copyright (C) 2020 Renesas Electronics Corp.
-> + */
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +
-> +/ {
-> +       leds {
-> +               compatible = "gpio-leds";
-> +
-> +               bt_active_led {
-> +                       label = "blue:bt";
-> +                       gpios = <&gpio7  0 GPIO_ACTIVE_HIGH>;
-> +                       linux,default-trigger = "hci0-power";
-> +                       default-state = "off";
-> +               };
-> +
-> +               led0 {
-> +                       gpios = <&gpio6 11 GPIO_ACTIVE_HIGH>;
-> +               };
-> +
-> +               led1 {
-> +                       gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
-> +               };
-> +
-> +               led2 {
-> +                       gpios = <&gpio6 13 GPIO_ACTIVE_HIGH>;
-> +               };
-> +
-> +               led3 {
-> +                       gpios = <&gpio0  0 GPIO_ACTIVE_HIGH>;
-> +               };
-
-led1, led2, and led3 are present on both, so I'd keep them in
-hihope-common.dtsi.
-
-> +
-> +               wlan_active_led {
-> +                       label = "yellow:wlan";
-> +                       gpios = <&gpio7  1 GPIO_ACTIVE_HIGH>;
-> +                       linux,default-trigger = "phy0tx";
-> +                       default-state = "off";
-> +               };
-> +       };
-> +
-> +       wlan_en_reg: regulator-wlan_en {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "wlan-en-regulator";
-> +               regulator-min-microvolt = <1800000>;
-> +               regulator-max-microvolt = <1800000>;
-> +               startup-delay-us = <70000>;
-> +
-> +               gpio = <&gpio_expander 1 GPIO_ACTIVE_HIGH>;
-> +               enable-active-high;
-> +       };
-
-Same for the WLAN regulator, especially as it is referenced from
-hihope-common.dtsi.
-As the GPIO  line differs between the two variants, you just need
-to add the gpio property in the revision-specific file.
-
-> +};
-> +
-> +&hscif0 {
-> +       bluetooth {
-> +               compatible = "ti,wl1837-st";
-> +               enable-gpios = <&gpio_expander 2 GPIO_ACTIVE_HIGH>;
-> +       };
-> +};
-
-As node is small, and the GPIO line differs from the two variants,
-I think duplicating it in both revision-specific files is fine, though.
-
-Gr{oetje,eeting}s,
-
-                        Geert
+ drivers/pinctrl/freescale/Kconfig           | 18 +++++++++---------
+ drivers/pinctrl/freescale/pinctrl-imx.c     |  4 ++++
+ drivers/pinctrl/freescale/pinctrl-imx.h     |  2 +-
+ drivers/pinctrl/freescale/pinctrl-imx8dxl.c |  9 +++------
+ drivers/pinctrl/freescale/pinctrl-imx8mm.c  | 10 ++++------
+ drivers/pinctrl/freescale/pinctrl-imx8mn.c  | 10 ++++------
+ drivers/pinctrl/freescale/pinctrl-imx8mp.c  | 10 ++++------
+ drivers/pinctrl/freescale/pinctrl-imx8mq.c  |  9 ++++-----
+ drivers/pinctrl/freescale/pinctrl-imx8qm.c  |  9 +++------
+ drivers/pinctrl/freescale/pinctrl-imx8qxp.c |  9 +++------
+ drivers/pinctrl/freescale/pinctrl-scu.c     |  6 ++++++
+ 11 files changed, 45 insertions(+), 51 deletions(-)
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.7.4
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
