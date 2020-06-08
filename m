@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D1BC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6184C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A51B20760
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:54:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F79520760
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:54:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591664051;
-	bh=hX12khJAdZqJIox8b1e42ktmh3BYm/+28o1Cp2ygp9Y=;
+	s=default; t=1591664054;
+	bh=lo+IN4r4Bg9TSjj4yw/aqNpns9X/UoYTuCNNSVl6eSU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cYZWSCwlZi32MDbrQiFg/y6bNB6lUZA3ETNyIfSnTmCndqyohxnHH0fbW+Jsj96g6
-	 IfCczgVsBSBqg+zWgWIcitk/w7HTRRV53dKo6LevfQDQG85L5OaItbxefSLq7lM97g
-	 XCye/KR4Xwj2DC58KiabOiP4Ba3YMT3eZ3wkkmZY=
+	b=ythnwwM9hplV2Lw8UX9ZnqTK4plkQoI2qn3id1suk7BWdnjhLGP+FqHxoIziJN5aF
+	 AMwChh8vkmozWRLOFvs/b7rYAYAi3loyufOKETI9XEj2Zv6OhfemyrtzAk21fcuYeE
+	 r/MNSxhpHUIY+/45o6okJds56wQgGU/fOA2dz3mk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728449AbgFHXJg (ORCPT
+        id S1730725AbgFIAyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:09:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53702 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:54:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728186AbgFHXIc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:08:32 -0400
+        id S1726904AbgFHXJg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:09:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F041E20890;
-        Mon,  8 Jun 2020 23:08:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FFD3208B8;
+        Mon,  8 Jun 2020 23:09:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657712;
-        bh=hX12khJAdZqJIox8b1e42ktmh3BYm/+28o1Cp2ygp9Y=;
+        s=default; t=1591657775;
+        bh=lo+IN4r4Bg9TSjj4yw/aqNpns9X/UoYTuCNNSVl6eSU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ojWFZjvhPABLZzzWyx0ApvbRDOYPBWYVIqn+q/k15H4l83B+foHy0/33im2D42i9o
-         0F9Frsi8O1n9aahmt/0GgwpHmEE2ZppfSA6kCXJ1SPHGed8SHPZzDPn4d/fDKMbYkP
-         HYdEwEX5Gc+mNgyq5jDV6ExGtX1G1qBF6R0oqY0Q=
+        b=w0DptA3knK0uweaUxcJFmOXSek+JBokg3HeUXUOHpH5fUrn2EvjLo8v7PvJEPZsAx
+         Hc5bGn7wQem0CEy9Mr5sAOsywZEykcnz/3QI3Q5f3WwihxoUtUs1L+HMb3lrzksupO
+         vOe0+Qe73xeFCOzmAm8reN2zO5pV/534SiAuWotM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Sean Young <sean@mess.org>,
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 108/274] media: dvb: return -EREMOTEIO on i2c transfer failure.
-Date:   Mon,  8 Jun 2020 19:03:21 -0400
-Message-Id: <20200608230607.3361041-108-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 158/274] media: sun8i: Fix an error handling path in 'deinterlace_runtime_resume()'
+Date:   Mon,  8 Jun 2020 19:04:11 -0400
+Message-Id: <20200608230607.3361041-158-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -60,41 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 96f3a9392799dd0f6472648a7366622ffd0989f3 ]
+[ Upstream commit 62eedb356188376acd0368384a9b294d5180c00b ]
 
-Currently when i2c transfers fail the error return -EREMOTEIO
-is assigned to err but then later overwritten when the tuner
-attach call is made.  Fix this by returning early with the
-error return code -EREMOTEIO on i2c transfer failure errors.
+It is spurious to call 'clk_disable_unprepare()' when
+'clk_prepare_enable()' has not been called yet.
+Re-order the error handling path to avoid it.
 
-If the transfer fails, an uninitialized value will be read from b2.
-
-Addresses-Coverity: ("Unused value")
-
-Fixes: fbfee8684ff2 ("V4L/DVB (5651): Dibusb-mb: convert pll handling to properly use dvb-pll")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Sean Young <sean@mess.org>
+Fixes: a4260ea49547 ("media: sun4i: Add H3 deinterlace driver")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Acked-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+[hverkuil-cisco@xs4all.nl: err_exlusive_rate -> err_exclusive_rate]
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/dvb-usb/dibusb-mb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/platform/sunxi/sun8i-di/sun8i-di.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/usb/dvb-usb/dibusb-mb.c b/drivers/media/usb/dvb-usb/dibusb-mb.c
-index d4ea72bf09c5..5131c8d4c632 100644
---- a/drivers/media/usb/dvb-usb/dibusb-mb.c
-+++ b/drivers/media/usb/dvb-usb/dibusb-mb.c
-@@ -81,7 +81,7 @@ static int dibusb_tuner_probe_and_attach(struct dvb_usb_adapter *adap)
+diff --git a/drivers/media/platform/sunxi/sun8i-di/sun8i-di.c b/drivers/media/platform/sunxi/sun8i-di/sun8i-di.c
+index d78f6593ddd1..ba5d07886607 100644
+--- a/drivers/media/platform/sunxi/sun8i-di/sun8i-di.c
++++ b/drivers/media/platform/sunxi/sun8i-di/sun8i-di.c
+@@ -941,7 +941,7 @@ static int deinterlace_runtime_resume(struct device *device)
+ 	if (ret) {
+ 		dev_err(dev->dev, "Failed to enable bus clock\n");
  
- 	if (i2c_transfer(&adap->dev->i2c_adap, msg, 2) != 2) {
- 		err("tuner i2c write failed.");
--		ret = -EREMOTEIO;
-+		return -EREMOTEIO;
+-		goto err_exlusive_rate;
++		goto err_exclusive_rate;
  	}
  
- 	if (adap->fe_adap[0].fe->ops.i2c_gate_ctrl)
+ 	ret = clk_prepare_enable(dev->mod_clk);
+@@ -969,14 +969,14 @@ static int deinterlace_runtime_resume(struct device *device)
+ 
+ 	return 0;
+ 
+-err_exlusive_rate:
+-	clk_rate_exclusive_put(dev->mod_clk);
+ err_ram_clk:
+ 	clk_disable_unprepare(dev->ram_clk);
+ err_mod_clk:
+ 	clk_disable_unprepare(dev->mod_clk);
+ err_bus_clk:
+ 	clk_disable_unprepare(dev->bus_clk);
++err_exclusive_rate:
++	clk_rate_exclusive_put(dev->mod_clk);
+ 
+ 	return ret;
+ }
 -- 
 2.25.1
 
