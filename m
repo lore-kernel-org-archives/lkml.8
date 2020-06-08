@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E86FC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C296C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F30232068D
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:41:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB4162078D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:41:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591659682;
-	bh=gt02xV2gTXAGJGD8SHqqXs6e/DU/oGfgASH0Dlqg5Pw=;
+	s=default; t=1591659694;
+	bh=fPVshrlSNTS6fyDkB0RG43f2uaJhun3DjBAjXW6z2rU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eVn9xapgxU2EmusoAQ4rq/GyIo1kYoJat7Jdcr+NgGOuhjZATobR9V71cYuH0jx/P
-	 ZIqpM7uWNmzxiS/yZGTZpynv1celJohAoJ+wts8qHBoSilEEk4D7Pul6bohqhCgNh0
-	 mAkxxLtDXl6vm5/TbpzFxVq1XxtBUuVcEUwp3HWY=
+	b=2lduZYEE4XtOZPjjCyCsEqYDfAbV0XNMWZP30m+SCon1LGqEDFLGb+5x/24ttosnC
+	 lkezL1d38KyO0HIB52zUw0CHFt3SM6pjuG7tJx2wEtaqU0YqqzBhy3f3EY++2rgijh
+	 ZdWcVW7Uc8DrTGrhcTvvB9E1gclZWVfODQmqlkXQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731819AbgFHX1p (ORCPT
+        id S1731788AbgFHXlb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:27:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46774 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:41:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731278AbgFHXWQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:22:16 -0400
+        id S1731840AbgFHX1l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:27:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 550E82086A;
-        Mon,  8 Jun 2020 23:22:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06B2820775;
+        Mon,  8 Jun 2020 23:27:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658536;
-        bh=gt02xV2gTXAGJGD8SHqqXs6e/DU/oGfgASH0Dlqg5Pw=;
+        s=default; t=1591658860;
+        bh=fPVshrlSNTS6fyDkB0RG43f2uaJhun3DjBAjXW6z2rU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SI4CO99KM9tTVwppXyxMVQP2WbGiROlfX8qM4hcnVXoq2/jjlTfG36f45t3TGOryn
-         UKCth3N4g9rVam183u46sRVv/Vk4P8PwxkMRNpSe3moy+YIbdFvUnlWJFkHZweyBlz
-         6MCegIIYAHuK/RO08dd6jCXBgQVPmVeKozQvq+Hg=
+        b=CgDQ5j0GzTcdktmVqvZfHsQb2pMRgKA+UTjuC1oHi6hqwD9XNkH0Q5PUDY7ro74q/
+         itNXXr9W0Z7US0JXNfkkVJ9FIHIp5ClHp/rsebYtz/vo6YKPuZlowfoXfSxD0xzCIz
+         DmT1uUXHOKZWzLpwpX438ajs7bQhh0MAt79ZFJbI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sharon <sara.sharon@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 159/175] iwlwifi: mvm: fix aux station leak
-Date:   Mon,  8 Jun 2020 19:18:32 -0400
-Message-Id: <20200608231848.3366970-159-sashal@kernel.org>
+Cc:     Dave Chinner <david@fromorbit.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 44/50] xfs: gut error handling in xfs_trans_unreserve_and_mod_sb()
+Date:   Mon,  8 Jun 2020 19:26:34 -0400
+Message-Id: <20200608232640.3370262-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
-References: <20200608231848.3366970-1-sashal@kernel.org>
+In-Reply-To: <20200608232640.3370262-1-sashal@kernel.org>
+References: <20200608232640.3370262-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,112 +61,236 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sharon <sara.sharon@intel.com>
+From: Dave Chinner <david@fromorbit.com>
 
-[ Upstream commit f327236df2afc8c3c711e7e070f122c26974f4da ]
+[ Upstream commit dc3ffbb14060c943469d5e12900db3a60bc3fa64 ]
 
-When mvm is initialized we alloc aux station with aux queue.
-We later free the station memory when driver is stopped, but we
-never free the queue's memory, which casues a leak.
+xfs: gut error handling in xfs_trans_unreserve_and_mod_sb()
 
-Add a proper de-initialization of the station.
+From: Dave Chinner <dchinner@redhat.com>
 
-Signed-off-by: Sharon <sara.sharon@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Link: https://lore.kernel.org/r/iwlwifi.20200529092401.0121c5be55e9.Id7516fbb3482131d0c9dfb51ff20b226617ddb49@changeid
+The error handling in xfs_trans_unreserve_and_mod_sb() is largely
+incorrect - rolling back the changes in the transaction if only one
+counter underruns makes all the other counters incorrect. We still
+allow the change to proceed and committing the transaction, except
+now we have multiple incorrect counters instead of a single
+underflow.
+
+Further, we don't actually report the error to the caller, so this
+is completely silent except on debug kernels that will assert on
+failure before we even get to the rollback code.  Hence this error
+handling is broken, untested, and largely unnecessary complexity.
+
+Just remove it.
+
+Signed-off-by: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/wireless/intel/iwlwifi/mvm/mac80211.c  |  5 ++---
- drivers/net/wireless/intel/iwlwifi/mvm/sta.c   | 18 +++++++++++++-----
- drivers/net/wireless/intel/iwlwifi/mvm/sta.h   |  6 +++---
- 3 files changed, 18 insertions(+), 11 deletions(-)
+ fs/xfs/xfs_trans.c | 163 ++++++---------------------------------------
+ 1 file changed, 20 insertions(+), 143 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
-index 6ca087ffd163..ed92a8e8cd51 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
-@@ -1193,14 +1193,13 @@ void __iwl_mvm_mac_stop(struct iwl_mvm *mvm)
- 	 */
- 	flush_work(&mvm->roc_done_wk);
- 
-+	iwl_mvm_rm_aux_sta(mvm);
-+
- 	iwl_mvm_stop_device(mvm);
- 
- 	iwl_mvm_async_handlers_purge(mvm);
- 	/* async_handlers_list is empty and will stay empty: HW is stopped */
- 
--	/* the fw is stopped, the aux sta is dead: clean up driver state */
--	iwl_mvm_del_aux_sta(mvm);
--
- 	/*
- 	 * Clear IN_HW_RESTART and HW_RESTART_REQUESTED flag when stopping the
- 	 * hw (as restart_complete() won't be called in this case) and mac80211
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-index 71d339e90a9e..41f62793a57c 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-@@ -2080,16 +2080,24 @@ int iwl_mvm_rm_snif_sta(struct iwl_mvm *mvm, struct ieee80211_vif *vif)
- 	return ret;
+diff --git a/fs/xfs/xfs_trans.c b/fs/xfs/xfs_trans.c
+index a280e126491f..fb208944d77b 100644
+--- a/fs/xfs/xfs_trans.c
++++ b/fs/xfs/xfs_trans.c
+@@ -493,57 +493,9 @@ xfs_trans_apply_sb_deltas(
+ 				  sizeof(sbp->sb_frextents) - 1);
  }
  
--void iwl_mvm_dealloc_snif_sta(struct iwl_mvm *mvm)
-+int iwl_mvm_rm_aux_sta(struct iwl_mvm *mvm)
- {
--	iwl_mvm_dealloc_int_sta(mvm, &mvm->snif_sta);
--}
-+	int ret;
- 
--void iwl_mvm_del_aux_sta(struct iwl_mvm *mvm)
+-STATIC int
+-xfs_sb_mod8(
+-	uint8_t			*field,
+-	int8_t			delta)
 -{
- 	lockdep_assert_held(&mvm->mutex);
+-	int8_t			counter = *field;
+-
+-	counter += delta;
+-	if (counter < 0) {
+-		ASSERT(0);
+-		return -EINVAL;
+-	}
+-	*field = counter;
+-	return 0;
+-}
+-
+-STATIC int
+-xfs_sb_mod32(
+-	uint32_t		*field,
+-	int32_t			delta)
+-{
+-	int32_t			counter = *field;
+-
+-	counter += delta;
+-	if (counter < 0) {
+-		ASSERT(0);
+-		return -EINVAL;
+-	}
+-	*field = counter;
+-	return 0;
+-}
+-
+-STATIC int
+-xfs_sb_mod64(
+-	uint64_t		*field,
+-	int64_t			delta)
+-{
+-	int64_t			counter = *field;
+-
+-	counter += delta;
+-	if (counter < 0) {
+-		ASSERT(0);
+-		return -EINVAL;
+-	}
+-	*field = counter;
+-	return 0;
+-}
+-
+ /*
+- * xfs_trans_unreserve_and_mod_sb() is called to release unused reservations
+- * and apply superblock counter changes to the in-core superblock.  The
++ * xfs_trans_unreserve_and_mod_sb() is called to release unused reservations and
++ * apply superblock counter changes to the in-core superblock.  The
+  * t_res_fdblocks_delta and t_res_frextents_delta fields are explicitly NOT
+  * applied to the in-core superblock.  The idea is that that has already been
+  * done.
+@@ -588,20 +540,17 @@ xfs_trans_unreserve_and_mod_sb(
+ 	/* apply the per-cpu counters */
+ 	if (blkdelta) {
+ 		error = xfs_mod_fdblocks(mp, blkdelta, rsvd);
+-		if (error)
+-			goto out;
++		ASSERT(!error);
+ 	}
  
-+	iwl_mvm_disable_txq(mvm, NULL, mvm->aux_queue, IWL_MAX_TID_COUNT, 0);
-+	ret = iwl_mvm_rm_sta_common(mvm, mvm->aux_sta.sta_id);
-+	if (ret)
-+		IWL_WARN(mvm, "Failed sending remove station\n");
- 	iwl_mvm_dealloc_int_sta(mvm, &mvm->aux_sta);
-+
-+	return ret;
-+}
-+
-+void iwl_mvm_dealloc_snif_sta(struct iwl_mvm *mvm)
-+{
-+	iwl_mvm_dealloc_int_sta(mvm, &mvm->snif_sta);
+ 	if (idelta) {
+ 		error = xfs_mod_icount(mp, idelta);
+-		if (error)
+-			goto out_undo_fdblocks;
++		ASSERT(!error);
+ 	}
+ 
+ 	if (ifreedelta) {
+ 		error = xfs_mod_ifree(mp, ifreedelta);
+-		if (error)
+-			goto out_undo_icount;
++		ASSERT(!error);
+ 	}
+ 
+ 	if (rtxdelta == 0 && !(tp->t_flags & XFS_TRANS_SB_DIRTY))
+@@ -609,95 +558,23 @@ xfs_trans_unreserve_and_mod_sb(
+ 
+ 	/* apply remaining deltas */
+ 	spin_lock(&mp->m_sb_lock);
+-	if (rtxdelta) {
+-		error = xfs_sb_mod64(&mp->m_sb.sb_frextents, rtxdelta);
+-		if (error)
+-			goto out_undo_ifree;
+-	}
+-
+-	if (tp->t_dblocks_delta != 0) {
+-		error = xfs_sb_mod64(&mp->m_sb.sb_dblocks, tp->t_dblocks_delta);
+-		if (error)
+-			goto out_undo_frextents;
+-	}
+-	if (tp->t_agcount_delta != 0) {
+-		error = xfs_sb_mod32(&mp->m_sb.sb_agcount, tp->t_agcount_delta);
+-		if (error)
+-			goto out_undo_dblocks;
+-	}
+-	if (tp->t_imaxpct_delta != 0) {
+-		error = xfs_sb_mod8(&mp->m_sb.sb_imax_pct, tp->t_imaxpct_delta);
+-		if (error)
+-			goto out_undo_agcount;
+-	}
+-	if (tp->t_rextsize_delta != 0) {
+-		error = xfs_sb_mod32(&mp->m_sb.sb_rextsize,
+-				     tp->t_rextsize_delta);
+-		if (error)
+-			goto out_undo_imaxpct;
+-	}
+-	if (tp->t_rbmblocks_delta != 0) {
+-		error = xfs_sb_mod32(&mp->m_sb.sb_rbmblocks,
+-				     tp->t_rbmblocks_delta);
+-		if (error)
+-			goto out_undo_rextsize;
+-	}
+-	if (tp->t_rblocks_delta != 0) {
+-		error = xfs_sb_mod64(&mp->m_sb.sb_rblocks, tp->t_rblocks_delta);
+-		if (error)
+-			goto out_undo_rbmblocks;
+-	}
+-	if (tp->t_rextents_delta != 0) {
+-		error = xfs_sb_mod64(&mp->m_sb.sb_rextents,
+-				     tp->t_rextents_delta);
+-		if (error)
+-			goto out_undo_rblocks;
+-	}
+-	if (tp->t_rextslog_delta != 0) {
+-		error = xfs_sb_mod8(&mp->m_sb.sb_rextslog,
+-				     tp->t_rextslog_delta);
+-		if (error)
+-			goto out_undo_rextents;
+-	}
++	mp->m_sb.sb_frextents += rtxdelta;
++	mp->m_sb.sb_dblocks += tp->t_dblocks_delta;
++	mp->m_sb.sb_agcount += tp->t_agcount_delta;
++	mp->m_sb.sb_imax_pct += tp->t_imaxpct_delta;
++	mp->m_sb.sb_rextsize += tp->t_rextsize_delta;
++	mp->m_sb.sb_rbmblocks += tp->t_rbmblocks_delta;
++	mp->m_sb.sb_rblocks += tp->t_rblocks_delta;
++	mp->m_sb.sb_rextents += tp->t_rextents_delta;
++	mp->m_sb.sb_rextslog += tp->t_rextslog_delta;
+ 	spin_unlock(&mp->m_sb_lock);
+-	return;
+ 
+-out_undo_rextents:
+-	if (tp->t_rextents_delta)
+-		xfs_sb_mod64(&mp->m_sb.sb_rextents, -tp->t_rextents_delta);
+-out_undo_rblocks:
+-	if (tp->t_rblocks_delta)
+-		xfs_sb_mod64(&mp->m_sb.sb_rblocks, -tp->t_rblocks_delta);
+-out_undo_rbmblocks:
+-	if (tp->t_rbmblocks_delta)
+-		xfs_sb_mod32(&mp->m_sb.sb_rbmblocks, -tp->t_rbmblocks_delta);
+-out_undo_rextsize:
+-	if (tp->t_rextsize_delta)
+-		xfs_sb_mod32(&mp->m_sb.sb_rextsize, -tp->t_rextsize_delta);
+-out_undo_imaxpct:
+-	if (tp->t_rextsize_delta)
+-		xfs_sb_mod8(&mp->m_sb.sb_imax_pct, -tp->t_imaxpct_delta);
+-out_undo_agcount:
+-	if (tp->t_agcount_delta)
+-		xfs_sb_mod32(&mp->m_sb.sb_agcount, -tp->t_agcount_delta);
+-out_undo_dblocks:
+-	if (tp->t_dblocks_delta)
+-		xfs_sb_mod64(&mp->m_sb.sb_dblocks, -tp->t_dblocks_delta);
+-out_undo_frextents:
+-	if (rtxdelta)
+-		xfs_sb_mod64(&mp->m_sb.sb_frextents, -rtxdelta);
+-out_undo_ifree:
+-	spin_unlock(&mp->m_sb_lock);
+-	if (ifreedelta)
+-		xfs_mod_ifree(mp, -ifreedelta);
+-out_undo_icount:
+-	if (idelta)
+-		xfs_mod_icount(mp, -idelta);
+-out_undo_fdblocks:
+-	if (blkdelta)
+-		xfs_mod_fdblocks(mp, -blkdelta, rsvd);
+-out:
+-	ASSERT(error == 0);
++	/*
++	 * Debug checks outside of the spinlock so they don't lock up the
++	 * machine if they fail.
++	 */
++	ASSERT(mp->m_sb.sb_imax_pct >= 0);
++	ASSERT(mp->m_sb.sb_rextslog >= 0);
+ 	return;
  }
  
- /*
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/sta.h b/drivers/net/wireless/intel/iwlwifi/mvm/sta.h
-index 8d70093847cb..da2d1ac01229 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/sta.h
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/sta.h
-@@ -8,7 +8,7 @@
-  * Copyright(c) 2012 - 2014 Intel Corporation. All rights reserved.
-  * Copyright(c) 2013 - 2014 Intel Mobile Communications GmbH
-  * Copyright(c) 2015 - 2016 Intel Deutschland GmbH
-- * Copyright(c) 2018 - 2019 Intel Corporation
-+ * Copyright(c) 2018 - 2020 Intel Corporation
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of version 2 of the GNU General Public License as
-@@ -31,7 +31,7 @@
-  * Copyright(c) 2012 - 2014 Intel Corporation. All rights reserved.
-  * Copyright(c) 2013 - 2014 Intel Mobile Communications GmbH
-  * Copyright(c) 2015 - 2016 Intel Deutschland GmbH
-- * Copyright(c) 2018 - 2019 Intel Corporation
-+ * Copyright(c) 2018 - 2020 Intel Corporation
-  * All rights reserved.
-  *
-  * Redistribution and use in source and binary forms, with or without
-@@ -541,7 +541,7 @@ int iwl_mvm_sta_tx_agg(struct iwl_mvm *mvm, struct ieee80211_sta *sta,
- 		       int tid, u8 queue, bool start);
- 
- int iwl_mvm_add_aux_sta(struct iwl_mvm *mvm);
--void iwl_mvm_del_aux_sta(struct iwl_mvm *mvm);
-+int iwl_mvm_rm_aux_sta(struct iwl_mvm *mvm);
- 
- int iwl_mvm_alloc_bcast_sta(struct iwl_mvm *mvm, struct ieee80211_vif *vif);
- int iwl_mvm_send_add_bcast_sta(struct iwl_mvm *mvm, struct ieee80211_vif *vif);
 -- 
 2.25.1
 
