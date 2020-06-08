@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19137C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:33:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DACEDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:33:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E740020775
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:33:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B923C2100A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:33:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591659209;
-	bh=ediUWCKTE9Keu0UszHEr7WY/+KTNZLjtLSG9Uiq8E1k=;
+	s=default; t=1591659212;
+	bh=kcCuyZoiJ+pUggvJQfB4raYkD2sDjxEX9vIpKv3z4/Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dv139Bg+6kFRBEVT05u16ZHULffmtHFzbTZq1z9yAfwfJ9wAdTebZ7nJTGZPX1eyp
-	 t7htQG5i/0uPDi5qiMoqP859JBPRcsyBT+oDTRoJ8btsnPvfisAnoBwxxHP58Bqai2
-	 as1mSXCS5BHZXbsSAwUfnc4egVuNcFH6jQvikVIc=
+	b=Eg8Qmb6eSxUZRjn4iHegfbqjgh+qXce9V3aJPb7p4beK243qXo+CYnxfvyg0VHd0G
+	 gC9uJ8wydSVXx//fRZ2TeSFrrJwpSzus7e2P3Ffz1C8avC5EFQmOGICRdtOWQn0Evl
+	 fEiReuffpQno9F0STQ4MrGGHo46fSTdIPybc0fuo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732568AbgFHXd2 (ORCPT
+        id S1732574AbgFHXdb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:33:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55098 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:33:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730218AbgFHX1F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:27:05 -0400
+        id S1729356AbgFHX1L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:27:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 177062064C;
-        Mon,  8 Jun 2020 23:27:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C829920812;
+        Mon,  8 Jun 2020 23:27:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658823;
-        bh=ediUWCKTE9Keu0UszHEr7WY/+KTNZLjtLSG9Uiq8E1k=;
+        s=default; t=1591658830;
+        bh=kcCuyZoiJ+pUggvJQfB4raYkD2sDjxEX9vIpKv3z4/Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sWo8qQCB7tcQyw08bisv15vh3H/zRscDDv4tFo4Ih9mb1d/fXF7xnzBOOmtDD2/4Q
-         drv5lQtd5n1Eh9FMxHMJA6Lf2LoOmXr9Y+1DQAYrsJwO6f2JAAwwvFR09nf/JBZsy2
-         V9X0fP2FiNb1ZH+vLotn9G4K8C5BmiM4HyKaBcv0=
+        b=yYlmJKsYiQXkgfyfYEvqMZMcS0j2JP6PFhGufOAlaCToZw5hB7kmzxd/hezJp5qTH
+         uRLII+b5qV5qbwP6L1ORPJnbItczYdKsj1ba6Yr51oibGai7gEeIQGWOCc0dSnUVVy
+         5YhOhF+ZS0WG7o3VKudwB4ZWMmS98FuajnY2Xs9Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qiujun Huang <hqjagain@gmail.com>,
-        syzbot+5d338854440137ea0fef@syzkaller.appspotmail.com,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 16/50] ath9k: Fix use-after-free Read in ath9k_wmi_ctrl_rx
-Date:   Mon,  8 Jun 2020 19:26:06 -0400
-Message-Id: <20200608232640.3370262-16-sashal@kernel.org>
+Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 21/50] media: platform: fcp: Set appropriate DMA parameters
+Date:   Mon,  8 Jun 2020 19:26:11 -0400
+Message-Id: <20200608232640.3370262-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608232640.3370262-1-sashal@kernel.org>
 References: <20200608232640.3370262-1-sashal@kernel.org>
@@ -61,162 +62,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiujun Huang <hqjagain@gmail.com>
+From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 
-[ Upstream commit abeaa85054ff8cfe8b99aafc5c70ea067e5d0908 ]
+[ Upstream commit dd844fb8e50b12e65bbdc5746c9876c6735500df ]
 
-Free wmi later after cmd urb has been killed, as urb cb will access wmi.
+Enabling CONFIG_DMA_API_DEBUG=y and CONFIG_DMA_API_DEBUG_SG=y will
+enable extra validation on DMA operations ensuring that the size
+restraints are met.
 
-the case reported by syzbot:
-https://lore.kernel.org/linux-usb/0000000000000002fc05a1d61a68@google.com
-BUG: KASAN: use-after-free in ath9k_wmi_ctrl_rx+0x416/0x500
-drivers/net/wireless/ath/ath9k/wmi.c:215
-Read of size 1 at addr ffff8881cef1417c by task swapper/1/0
+When using the FCP in conjunction with the VSP1/DU, and display frames,
+the size of the DMA operations is larger than the default maximum
+segment size reported by the DMA core (64K). With the DMA debug enabled,
+this produces a warning such as the following:
 
-Call Trace:
-<IRQ>
-ath9k_wmi_ctrl_rx+0x416/0x500 drivers/net/wireless/ath/ath9k/wmi.c:215
-ath9k_htc_rx_msg+0x2da/0xaf0
-drivers/net/wireless/ath/ath9k/htc_hst.c:459
-ath9k_hif_usb_reg_in_cb+0x1ba/0x630
-drivers/net/wireless/ath/ath9k/hif_usb.c:718
-__usb_hcd_giveback_urb+0x29a/0x550 drivers/usb/core/hcd.c:1650
-usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1716
-dummy_timer+0x1258/0x32ae drivers/usb/gadget/udc/dummy_hcd.c:1966
-call_timer_fn+0x195/0x6f0 kernel/time/timer.c:1404
-expire_timers kernel/time/timer.c:1449 [inline]
-__run_timers kernel/time/timer.c:1773 [inline]
-__run_timers kernel/time/timer.c:1740 [inline]
-run_timer_softirq+0x5f9/0x1500 kernel/time/timer.c:1786
+"DMA-API: rcar-fcp fea27000.fcp: mapping sg segment longer than device
+claims to support [len=3145728] [max=65536]"
 
-Reported-and-tested-by: syzbot+5d338854440137ea0fef@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200404041838.10426-3-hqjagain@gmail.com
+We have no specific limitation on the segment size which isn't already
+handled by the VSP1/DU which actually handles the DMA allcoations and
+buffer management, so define a maximum segment size of up to 4GB (a 32
+bit mask).
+
+Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Fixes: 7b49235e83b2 ("[media] v4l: Add Renesas R-Car FCP driver")
+Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath9k/hif_usb.c      |  5 +++--
- drivers/net/wireless/ath/ath9k/hif_usb.h      |  1 +
- drivers/net/wireless/ath/ath9k/htc_drv_init.c | 10 +++++++---
- drivers/net/wireless/ath/ath9k/wmi.c          |  5 ++++-
- drivers/net/wireless/ath/ath9k/wmi.h          |  3 ++-
- 5 files changed, 17 insertions(+), 7 deletions(-)
+ drivers/media/platform/rcar-fcp.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/net/wireless/ath/ath9k/hif_usb.c b/drivers/net/wireless/ath/ath9k/hif_usb.c
-index baa632e3b7a2..84b5f8a144ff 100644
---- a/drivers/net/wireless/ath/ath9k/hif_usb.c
-+++ b/drivers/net/wireless/ath/ath9k/hif_usb.c
-@@ -976,7 +976,7 @@ static int ath9k_hif_usb_alloc_urbs(struct hif_device_usb *hif_dev)
- 	return -ENOMEM;
- }
+diff --git a/drivers/media/platform/rcar-fcp.c b/drivers/media/platform/rcar-fcp.c
+index f3a3f31cdfa9..8e9c3bd36d03 100644
+--- a/drivers/media/platform/rcar-fcp.c
++++ b/drivers/media/platform/rcar-fcp.c
+@@ -12,6 +12,7 @@
+  */
  
--static void ath9k_hif_usb_dealloc_urbs(struct hif_device_usb *hif_dev)
-+void ath9k_hif_usb_dealloc_urbs(struct hif_device_usb *hif_dev)
- {
- 	usb_kill_anchored_urbs(&hif_dev->regout_submitted);
- 	ath9k_hif_usb_dealloc_reg_in_urbs(hif_dev);
-@@ -1343,8 +1343,9 @@ static void ath9k_hif_usb_disconnect(struct usb_interface *interface)
- 
- 	if (hif_dev->flags & HIF_USB_READY) {
- 		ath9k_htc_hw_deinit(hif_dev->htc_handle, unplugged);
--		ath9k_htc_hw_free(hif_dev->htc_handle);
- 		ath9k_hif_usb_dev_deinit(hif_dev);
-+		ath9k_destoy_wmi(hif_dev->htc_handle->drv_priv);
-+		ath9k_htc_hw_free(hif_dev->htc_handle);
- 	}
- 
- 	usb_set_intfdata(interface, NULL);
-diff --git a/drivers/net/wireless/ath/ath9k/hif_usb.h b/drivers/net/wireless/ath/ath9k/hif_usb.h
-index 7c2ef7ecd98b..a95cdf562611 100644
---- a/drivers/net/wireless/ath/ath9k/hif_usb.h
-+++ b/drivers/net/wireless/ath/ath9k/hif_usb.h
-@@ -131,5 +131,6 @@ struct hif_device_usb {
- 
- int ath9k_hif_usb_init(void);
- void ath9k_hif_usb_exit(void);
-+void ath9k_hif_usb_dealloc_urbs(struct hif_device_usb *hif_dev);
- 
- #endif /* HTC_USB_H */
-diff --git a/drivers/net/wireless/ath/ath9k/htc_drv_init.c b/drivers/net/wireless/ath/ath9k/htc_drv_init.c
-index b65c1b661ade..15a0036dcc6e 100644
---- a/drivers/net/wireless/ath/ath9k/htc_drv_init.c
-+++ b/drivers/net/wireless/ath/ath9k/htc_drv_init.c
-@@ -931,8 +931,9 @@ static int ath9k_init_device(struct ath9k_htc_priv *priv,
- int ath9k_htc_probe_device(struct htc_target *htc_handle, struct device *dev,
- 			   u16 devid, char *product, u32 drv_info)
- {
--	struct ieee80211_hw *hw;
-+	struct hif_device_usb *hif_dev;
- 	struct ath9k_htc_priv *priv;
-+	struct ieee80211_hw *hw;
- 	int ret;
- 
- 	hw = ieee80211_alloc_hw(sizeof(struct ath9k_htc_priv), &ath9k_htc_ops);
-@@ -967,7 +968,10 @@ int ath9k_htc_probe_device(struct htc_target *htc_handle, struct device *dev,
- 	return 0;
- 
- err_init:
--	ath9k_deinit_wmi(priv);
-+	ath9k_stop_wmi(priv);
-+	hif_dev = (struct hif_device_usb *)htc_handle->hif_dev;
-+	ath9k_hif_usb_dealloc_urbs(hif_dev);
-+	ath9k_destoy_wmi(priv);
- err_free:
- 	ieee80211_free_hw(hw);
- 	return ret;
-@@ -982,7 +986,7 @@ void ath9k_htc_disconnect_device(struct htc_target *htc_handle, bool hotunplug)
- 			htc_handle->drv_priv->ah->ah_flags |= AH_UNPLUGGED;
- 
- 		ath9k_deinit_device(htc_handle->drv_priv);
--		ath9k_deinit_wmi(htc_handle->drv_priv);
-+		ath9k_stop_wmi(htc_handle->drv_priv);
- 		ieee80211_free_hw(htc_handle->drv_priv->hw);
- 	}
- }
-diff --git a/drivers/net/wireless/ath/ath9k/wmi.c b/drivers/net/wireless/ath/ath9k/wmi.c
-index 9c16e2a6d185..8f14897ae5a3 100644
---- a/drivers/net/wireless/ath/ath9k/wmi.c
-+++ b/drivers/net/wireless/ath/ath9k/wmi.c
-@@ -112,14 +112,17 @@ struct wmi *ath9k_init_wmi(struct ath9k_htc_priv *priv)
- 	return wmi;
- }
- 
--void ath9k_deinit_wmi(struct ath9k_htc_priv *priv)
-+void ath9k_stop_wmi(struct ath9k_htc_priv *priv)
- {
- 	struct wmi *wmi = priv->wmi;
- 
- 	mutex_lock(&wmi->op_mutex);
- 	wmi->stopped = true;
- 	mutex_unlock(&wmi->op_mutex);
-+}
- 
-+void ath9k_destoy_wmi(struct ath9k_htc_priv *priv)
-+{
- 	kfree(priv->wmi);
- }
- 
-diff --git a/drivers/net/wireless/ath/ath9k/wmi.h b/drivers/net/wireless/ath/ath9k/wmi.h
-index 380175d5ecd7..d8b912206232 100644
---- a/drivers/net/wireless/ath/ath9k/wmi.h
-+++ b/drivers/net/wireless/ath/ath9k/wmi.h
-@@ -179,7 +179,6 @@ struct wmi {
+ #include <linux/device.h>
++#include <linux/dma-mapping.h>
+ #include <linux/list.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+@@ -24,6 +25,7 @@
+ struct rcar_fcp_device {
+ 	struct list_head list;
+ 	struct device *dev;
++	struct device_dma_parameters dma_parms;
  };
  
- struct wmi *ath9k_init_wmi(struct ath9k_htc_priv *priv);
--void ath9k_deinit_wmi(struct ath9k_htc_priv *priv);
- int ath9k_wmi_connect(struct htc_target *htc, struct wmi *wmi,
- 		      enum htc_endpoint_id *wmi_ctrl_epid);
- int ath9k_wmi_cmd(struct wmi *wmi, enum wmi_cmd_id cmd_id,
-@@ -189,6 +188,8 @@ int ath9k_wmi_cmd(struct wmi *wmi, enum wmi_cmd_id cmd_id,
- void ath9k_wmi_event_tasklet(unsigned long data);
- void ath9k_fatal_work(struct work_struct *work);
- void ath9k_wmi_event_drain(struct ath9k_htc_priv *priv);
-+void ath9k_stop_wmi(struct ath9k_htc_priv *priv);
-+void ath9k_destoy_wmi(struct ath9k_htc_priv *priv);
+ static LIST_HEAD(fcp_devices);
+@@ -140,6 +142,9 @@ static int rcar_fcp_probe(struct platform_device *pdev)
  
- #define WMI_CMD(_wmi_cmd)						\
- 	do {								\
+ 	fcp->dev = &pdev->dev;
+ 
++	fcp->dev->dma_parms = &fcp->dma_parms;
++	dma_set_max_seg_size(fcp->dev, DMA_BIT_MASK(32));
++
+ 	pm_runtime_enable(&pdev->dev);
+ 
+ 	mutex_lock(&fcp_lock);
 -- 
 2.25.1
 
