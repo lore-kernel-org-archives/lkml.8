@@ -2,246 +2,139 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 832B9C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B27C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B2CC2072F
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:32:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B15FC2053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:34:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="lNzJXJgV"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IuwnBwur"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729948AbgFHOca (ORCPT
+        id S1730006AbgFHOep (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 10:32:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42780 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbgFHOc3 (ORCPT
+        Mon, 8 Jun 2020 10:34:45 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:54668 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729938AbgFHOeo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 10:32:29 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A28B7C08C5C2
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 07:32:27 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id c71so15526583wmd.5
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 07:32:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GKWIm0azDCxLSg6UcyWc7rSovYmDP72I/JD5+Yb/qNE=;
-        b=lNzJXJgV2fHm7TbizH361S90IASi17wyWUHqzcwW4u7tTxae6KXr+C0LjMAmLQqmKP
-         0D9QnO8zqY1Ku4ticsen8nhFZvrqes1Rh+D6z8U36MCINpOa3IdoSISvvKhbwOYPoog7
-         sEMZmDKY75gvwAZ5YCSvtqnBOKLBIgs9/jUtI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=GKWIm0azDCxLSg6UcyWc7rSovYmDP72I/JD5+Yb/qNE=;
-        b=d1sAHxLk5RO95T4h7dGo7OlnfdRunnumqJqvaznsojdiOavesyYZqShqW4D2SBXYu4
-         jZifFeC9rbh4fxj88lVtruS4LbQyoUSnn6GD0wcZ9bmdWHjtDOXTFRMlymgLZ43viBcQ
-         cJgg74R9pdPGEt61cml9NhBpvMSGxLNa/ePPWgQt/tIL7SQNCiczQR5M/w1QC9j0OqMb
-         O+MLKF1CdlJ2FZsceDezr3TSKOcLxwKGjoWELTfpNEouhGMCZ4VqDr6RDFXWvKnppcA4
-         l2Hg50Eor6UNom0+wsSwif9Ny8eKw9ertO1pajc+6vI18tzNRhXHGmflRsIg44oRsPnL
-         qqaw==
-X-Gm-Message-State: AOAM5328wq55XLJ3n3byFAXfn0t7uxqJZB/Ug0vcChzIOxNEeykkT7yi
-        xtUahM26N/f2uCkUr3KIg9g44Q==
-X-Google-Smtp-Source: ABdhPJwA0/mdaMZ0zUKmM6gSc0qDTmbylcrcm85b2VC63CraAyQvqNiDlv+Rnjc4q94SDWFNGXViSw==
-X-Received: by 2002:a1c:e389:: with SMTP id a131mr17386232wmh.46.1591626745819;
-        Mon, 08 Jun 2020 07:32:25 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id h188sm23593079wmh.2.2020.06.08.07.32.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 07:32:24 -0700 (PDT)
-Date:   Mon, 8 Jun 2020 16:32:21 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     "Ahmed S. Darwish" <a.darwish@linutronix.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org
-Subject: Re: [PATCH v2 06/18] dma-buf: Use sequence counter with associated
- wound/wait mutex
-Message-ID: <20200608143221.GW20149@phenom.ffwll.local>
-Mail-Followup-To: "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org
-References: <20200519214547.352050-1-a.darwish@linutronix.de>
- <20200608005729.1874024-1-a.darwish@linutronix.de>
- <20200608005729.1874024-7-a.darwish@linutronix.de>
+        Mon, 8 Jun 2020 10:34:44 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 058EYdI4052568;
+        Mon, 8 Jun 2020 09:34:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591626879;
+        bh=IvroNvkykC8zcJI+F1zuPF8QbKPd7StRndcYgZ65grA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=IuwnBwurWedFUz+osjjpcYVfPppVNah3HxmzdMBaf6znUGkgbkiiQvykLlLMdds2C
+         Izb00KhJJN3wYPHFpqiEtCYVNEAclTVrsquHlgoK4x+xy9nlS5ZL3asPGrQf7yXp1d
+         zyIS7uDOzvlBEmSBU3I67njqRnG2HsHFKt6vVn9A=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 058EYdFn115128
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 8 Jun 2020 09:34:39 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 8 Jun
+ 2020 09:34:39 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 8 Jun 2020 09:34:39 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 058EYcOV027551;
+        Mon, 8 Jun 2020 09:34:38 -0500
+Subject: Re: [PATCH v26 03/15] leds: multicolor: Introduce a multicolor class
+ definition
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>
+CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200604120504.32425-1-dmurphy@ti.com>
+ <20200604120504.32425-4-dmurphy@ti.com> <20200606155324.GA21130@amd>
+ <92d71058-a75b-fd3f-59b1-5133be1c21b5@ti.com>
+ <a8cb3d33-7a7d-82ee-e598-0f48368677cd@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <02cf192f-1948-74a5-f2ef-6c2146422ecb@ti.com>
+Date:   Mon, 8 Jun 2020 09:34:33 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200608005729.1874024-7-a.darwish@linutronix.de>
-X-Operating-System: Linux phenom 5.6.0-1-amd64 
+In-Reply-To: <a8cb3d33-7a7d-82ee-e598-0f48368677cd@gmail.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 02:57:17AM +0200, Ahmed S. Darwish wrote:
-> A sequence counter write side critical section must be protected by some
-> form of locking to serialize writers. If the serialization primitive is
-> not disabling preemption implicitly, preemption has to be explicitly
-> disabled before entering the sequence counter write side critical
-> section.
-> 
-> The dma-buf reservation subsystem uses plain sequence counters to manage
-> updates to reservations. Writer serialization is accomplished through a
-> wound/wait mutex.
-> 
-> Acquiring a wound/wait mutex does not disable preemption, so this needs
-> to be done manually before and after the write side critical section.
-> 
-> Use the newly-added seqcount_ww_mutex_t instead:
-> 
->   - It associates the ww_mutex with the sequence count, which enables
->     lockdep to validate that the write side critical section is properly
->     serialized.
-> 
->   - It removes the need to explicitly add preempt_disable/enable()
->     around the write side critical section because the write_begin/end()
->     functions for this new data type automatically do this.
-> 
-> If lockdep is disabled this ww_mutex lock association is compiled out
-> and has neither storage size nor runtime overhead.
-> 
-> Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
+Jacek
 
-I'm not seeing the patch that adds the seqcount ww_mutex glue and not
-quite motivated enough to grab it from lore, so someone else needs to
-check the details. Just
+On 6/6/20 2:59 PM, Jacek Anaszewski wrote:
+> Dan,
+>
+> On 6/6/20 6:39 PM, Dan Murphy wrote:
+>> Pavek
+>>
+>> Thanks for the review
+>>
+>> On 6/6/20 10:53 AM, Pavel Machek wrote:
+>>> Hi!
+>>>
+>>>> Introduce a multicolor class that groups colored LEDs
+>>>> within a LED node.
+>>>>
+>>>> The multi color class groups monochrome LEDs and allows controlling 
+>>>> two
+>>>> aspects of the final combined color: hue and lightness. The former is
+>>>> controlled via the intensity file and the latter is controlled
+>>>> via brightness file.
+>>>>
+>>>> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>>> diff --git a/Documentation/ABI/testing/sysfs-class-led-multicolor 
+>>>> b/Documentation/ABI/testing/sysfs-class-led-multicolor
+>>>> new file mode 100644
+> [...]
+>>>> --- a/MAINTAINERS
+>>>> +++ b/MAINTAINERS
+>>>> @@ -9533,6 +9533,14 @@ F: Documentation/devicetree/bindings/leds/
+>>>>   F:    drivers/leds/
+>>>>   F:    include/linux/leds.h
+>>>> +LED MULTICOLOR FRAMEWORK
+>>>> +M:    Dan Murphy <dmurphy@ti.com>
+>>>> +L:    linux-leds@vger.kernel.org
+>>> I'd like to be mentioned here, too. "M: Pavel Machek
+>>> <pavel@ucw.cz>". And I'm not sure if I should be taking MAINTAINER
+>>> file update through a LED tree. Should definitely go to separate
+>>> patch.
+>>
+>> Oh definitely.  I thought it was implied that you and Jacek are both 
+>> Maintainers as well.
+>>
+>> I will add you but will wait to see if Jacek wants to be added.
+>
+> Actually I don't think that we need to add this separate entry
+> for LED multicolor class. This is still under LED subsystem,
+> and I didn't add anything for LED class flash.
 
-Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+We only need this because I am not a maintainer of the LED flash class 
+or the LED class.
 
-for merging through whatever tree/branch makes sense from me.
--Daniel
+But since I authored the code it only made sense to add me as a 
+maintainer for this specific class.
 
-> ---
->  drivers/dma-buf/dma-resv.c                       | 8 +-------
->  drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c | 2 --
->  include/linux/dma-resv.h                         | 2 +-
->  3 files changed, 2 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/dma-buf/dma-resv.c b/drivers/dma-buf/dma-resv.c
-> index 590ce7ad60a0..3aba2b2bfc48 100644
-> --- a/drivers/dma-buf/dma-resv.c
-> +++ b/drivers/dma-buf/dma-resv.c
-> @@ -128,7 +128,7 @@ subsys_initcall(dma_resv_lockdep);
->  void dma_resv_init(struct dma_resv *obj)
->  {
->  	ww_mutex_init(&obj->lock, &reservation_ww_class);
-> -	seqcount_init(&obj->seq);
-> +	seqcount_ww_mutex_init(&obj->seq, &obj->lock);
->  
->  	RCU_INIT_POINTER(obj->fence, NULL);
->  	RCU_INIT_POINTER(obj->fence_excl, NULL);
-> @@ -259,7 +259,6 @@ void dma_resv_add_shared_fence(struct dma_resv *obj, struct dma_fence *fence)
->  	fobj = dma_resv_get_list(obj);
->  	count = fobj->shared_count;
->  
-> -	preempt_disable();
->  	write_seqcount_begin(&obj->seq);
->  
->  	for (i = 0; i < count; ++i) {
-> @@ -281,7 +280,6 @@ void dma_resv_add_shared_fence(struct dma_resv *obj, struct dma_fence *fence)
->  	smp_store_mb(fobj->shared_count, count);
->  
->  	write_seqcount_end(&obj->seq);
-> -	preempt_enable();
->  	dma_fence_put(old);
->  }
->  EXPORT_SYMBOL(dma_resv_add_shared_fence);
-> @@ -308,14 +306,12 @@ void dma_resv_add_excl_fence(struct dma_resv *obj, struct dma_fence *fence)
->  	if (fence)
->  		dma_fence_get(fence);
->  
-> -	preempt_disable();
->  	write_seqcount_begin(&obj->seq);
->  	/* write_seqcount_begin provides the necessary memory barrier */
->  	RCU_INIT_POINTER(obj->fence_excl, fence);
->  	if (old)
->  		old->shared_count = 0;
->  	write_seqcount_end(&obj->seq);
-> -	preempt_enable();
->  
->  	/* inplace update, no shared fences */
->  	while (i--)
-> @@ -393,13 +389,11 @@ int dma_resv_copy_fences(struct dma_resv *dst, struct dma_resv *src)
->  	src_list = dma_resv_get_list(dst);
->  	old = dma_resv_get_excl(dst);
->  
-> -	preempt_disable();
->  	write_seqcount_begin(&dst->seq);
->  	/* write_seqcount_begin provides the necessary memory barrier */
->  	RCU_INIT_POINTER(dst->fence_excl, new);
->  	RCU_INIT_POINTER(dst->fence, dst_list);
->  	write_seqcount_end(&dst->seq);
-> -	preempt_enable();
->  
->  	dma_resv_list_free(src_list);
->  	dma_fence_put(old);
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-> index 6a5b91d23fd9..c71c0bb6ce26 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-> @@ -258,11 +258,9 @@ static int amdgpu_amdkfd_remove_eviction_fence(struct amdgpu_bo *bo,
->  	new->shared_count = k;
->  
->  	/* Install the new fence list, seqcount provides the barriers */
-> -	preempt_disable();
->  	write_seqcount_begin(&resv->seq);
->  	RCU_INIT_POINTER(resv->fence, new);
->  	write_seqcount_end(&resv->seq);
-> -	preempt_enable();
->  
->  	/* Drop the references to the removed fences or move them to ef_list */
->  	for (i = j, k = 0; i < old->shared_count; ++i) {
-> diff --git a/include/linux/dma-resv.h b/include/linux/dma-resv.h
-> index a6538ae7d93f..d44a77e8a7e3 100644
-> --- a/include/linux/dma-resv.h
-> +++ b/include/linux/dma-resv.h
-> @@ -69,7 +69,7 @@ struct dma_resv_list {
->   */
->  struct dma_resv {
->  	struct ww_mutex lock;
-> -	seqcount_t seq;
-> +	seqcount_ww_mutex_t seq;
->  
->  	struct dma_fence __rcu *fence_excl;
->  	struct dma_resv_list __rcu *fence;
-> -- 
-> 2.20.1
-> 
+You are one of the maintainers of the LED subsystem and wrote the Flash 
+class so your maintainer ship is implied and you will be CC'd for all 
+patches.
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+This will not be the case for the multi color class
+
+Dan
+
