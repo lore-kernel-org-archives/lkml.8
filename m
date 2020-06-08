@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82048C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE100C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:23:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 544A72089D
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:23:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2F662086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:23:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658585;
-	bh=kMZ8z483ON/zTTVEyFoP7XJhnrafJFQO56c/L6OUIsY=;
+	s=default; t=1591658597;
+	bh=REob3D4KrzEOuSUejg/+T6cuJbK+qyQovHToXrnAMuw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tPA9TkBCwhpG22COLmzzFkNs/LYmOIGk2FjdPrXRQczOY9cvO4ea30G8OT8zkrZQi
-	 D7D9SnG9NUKdm1RtoBC6DVjaBZI+wEEAt3Xjx3I7FWkpKl1ZHTTT/MfhosjbCuNxgq
-	 av6npTkFFlFaKYtgXdWPRMxd5PZ/KEKxl3H6MPA0=
+	b=pJTK0hwSkSTEq2S+spz+IwTxks/22KKdeg6KtEtuopvSGqRR0DG8auOsjuvSywAG9
+	 TtS25dMvmU+DDiokkHRszs3f/OT9pLjExyzXUkht3prIEuyk7W40krROXqPMuGlSTY
+	 5HwvmdvEQslnjx3mfzZfNMLUEiU7mYEsx6HRt8Kw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731429AbgFHXXE (ORCPT
+        id S1731463AbgFHXXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:23:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40332 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:23:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729779AbgFHXSM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:18:12 -0400
+        id S1730615AbgFHXSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:18:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 120A220842;
-        Mon,  8 Jun 2020 23:18:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0181820884;
+        Mon,  8 Jun 2020 23:18:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658292;
-        bh=kMZ8z483ON/zTTVEyFoP7XJhnrafJFQO56c/L6OUIsY=;
+        s=default; t=1591658301;
+        bh=REob3D4KrzEOuSUejg/+T6cuJbK+qyQovHToXrnAMuw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nl/G01bTyM4JCF2WaJ9D8OyhMHa5IxOqoWiebSo/oipOmB89ypbamcbOZTy6gugPa
-         RpnOSNuR2tQK/O+olskoAUzvsIHxYSPSJsxE31rshKLfZa8YS+HRx3vYZyeHfP/6LT
-         Ex/nDPEwUpKtVSCkwQsLntWXZYnJU/vbWF9KX/HU=
+        b=FP7ylJb9IWoacBFuQgnoiL1KkJ80FJyx33uS8KixIh8OWf26tdp5BGJry1jM6j6gB
+         Z6uc7yIU1V418LtOBHHVnQamPhGflSE6aMjNA2Xr0hUIkW33jJ5CNqrPFLtPW7f1H2
+         YJR4FMCD2gHL83h1Dt/LW22a7XqPEUTMrcMwowPs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 296/606] Input: synaptics-rmi4 - fix error return code in rmi_driver_probe()
-Date:   Mon,  8 Jun 2020 19:07:01 -0400
-Message-Id: <20200608231211.3363633-296-sashal@kernel.org>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.6 304/606] gpu/drm: ingenic: Fix bogus crtc_atomic_check callback
+Date:   Mon,  8 Jun 2020 19:07:09 -0400
+Message-Id: <20200608231211.3363633-304-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -59,36 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Paul Cercueil <paul@crapouillou.net>
 
-[ Upstream commit 5caab2da63207d6d631007f592f5219459e3454d ]
+[ Upstream commit a53bcc19876498bdd3b4ef796c787295dcc498b4 ]
 
-Fix to return a negative error code from the input_register_device()
-error handling case instead of 0, as done elsewhere in this function.
+The code was comparing the SoC's maximum height with the mode's width,
+and vice-versa. D'oh.
 
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Link: https://lore.kernel.org/r/20200428134948.78343-1-weiyongjun1@huawei.com
-Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: stable@vger.kernel.org # v5.6
+Fixes: a7c909b7c037 ("gpu/drm: ingenic: Check for display size in CRTC atomic check")
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200516215057.392609-4-paul@crapouillou.net
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/rmi4/rmi_driver.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/ingenic/ingenic-drm.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/input/rmi4/rmi_driver.c b/drivers/input/rmi4/rmi_driver.c
-index c18e1a25bca6..258d5fe3d395 100644
---- a/drivers/input/rmi4/rmi_driver.c
-+++ b/drivers/input/rmi4/rmi_driver.c
-@@ -1210,7 +1210,8 @@ static int rmi_driver_probe(struct device *dev)
- 	if (data->input) {
- 		rmi_driver_set_input_name(rmi_dev, data->input);
- 		if (!rmi_dev->xport->input) {
--			if (input_register_device(data->input)) {
-+			retval = input_register_device(data->input);
-+			if (retval) {
- 				dev_err(dev, "%s: Failed to register input device.\n",
- 					__func__);
- 				goto err_destroy_functions;
+diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c b/drivers/gpu/drm/ingenic/ingenic-drm.c
+index bcba2f024842..8f5077370a52 100644
+--- a/drivers/gpu/drm/ingenic/ingenic-drm.c
++++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
+@@ -328,8 +328,8 @@ static int ingenic_drm_crtc_atomic_check(struct drm_crtc *crtc,
+ 	if (!drm_atomic_crtc_needs_modeset(state))
+ 		return 0;
+ 
+-	if (state->mode.hdisplay > priv->soc_info->max_height ||
+-	    state->mode.vdisplay > priv->soc_info->max_width)
++	if (state->mode.hdisplay > priv->soc_info->max_width ||
++	    state->mode.vdisplay > priv->soc_info->max_height)
+ 		return -EINVAL;
+ 
+ 	rate = clk_round_rate(priv->pix_clk,
 -- 
 2.25.1
 
