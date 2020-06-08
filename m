@@ -2,497 +2,250 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B197BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DC1C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83C542074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:11:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 524D72072F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:13:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jZXBlIsP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729589AbgFHLLc (ORCPT
+        id S1729536AbgFHLNn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 07:11:32 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2291 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729574AbgFHLLX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 07:11:23 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 917D36CC0B2C9AFC2738;
-        Mon,  8 Jun 2020 12:11:21 +0100 (IST)
-Received: from localhost (10.47.27.61) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 8 Jun 2020
- 12:11:21 +0100
-Date:   Mon, 8 Jun 2020 12:10:38 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Alexandru Ardelean <ardeleanalex@gmail.com>
-CC:     Jonathan Cameron <jic23@kernel.org>,
-        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
-        "johan@kernel.org" <johan@kernel.org>
-Subject: Re: [PATCH v2 0/6] iio: core: pass parent device as parameter
- during allocation
-Message-ID: <20200608121038.00004a71@Huawei.com>
-In-Reply-To: <CA+U=Dso8ijzXOKcbu5-tTxg7GR-nEGEugZU=SRo_qdB7AFdTKw@mail.gmail.com>
-References: <20200603114023.175102-1-alexandru.ardelean@analog.com>
-        <0049dcc6f543e41978bbb7c731b43ab20e6f647d.camel@analog.com>
-        <20200604183440.00003fb3@Huawei.com>
-        <20200606170246.4efc4fd7@archlinux>
-        <CA+U=Dso8ijzXOKcbu5-tTxg7GR-nEGEugZU=SRo_qdB7AFdTKw@mail.gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Mon, 8 Jun 2020 07:13:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40250 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729398AbgFHLNm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 07:13:42 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DEE6C08C5C2;
+        Mon,  8 Jun 2020 04:13:42 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id m7so6538718plt.5;
+        Mon, 08 Jun 2020 04:13:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DKXPhoY6HVJeNlOao56Nm2X+3XpuuTaKzxedeSCFrv0=;
+        b=jZXBlIsP62TU5pcs0aK7YgjsFwD5EJieJvYD3TknKQqsM8DXuutppMUuoF+oYjySRY
+         wnfwFS72fq9laUI4r9SgrU/THu8FhAbxcVDcy8tLI9n2cmRgGgTyOpf9TtuLaljwW9zl
+         MIvJ3qjiUy/Eqg9kl9wO3bI6ZQUsBii0CT90idIy6TqbKG8/0gXKTNUBU/cVw5VFTOmr
+         2iq92uFwol0vhIL1GPB6aDFpze7qUbR+ACE5i2WxxybYlM8hBjej7NphNUzNkSl0NPN1
+         kdp37kUxQ8qhbv5Sk1KkV4ziXYzYZwLDM9/AU96yr6DXN60aLoNfovrnHta+Pa43G/to
+         Cg6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DKXPhoY6HVJeNlOao56Nm2X+3XpuuTaKzxedeSCFrv0=;
+        b=nxKaWQGChmagGVt1jdCHzXQlr0TuQ0Z9KUhTcxzGt4yoBPI0hlPqfoSqZR2MtLsUmK
+         qQynKBVKHs1Ec3nVB0ElD/xnQ3NZq4oTH7GE51B9laSW7EY0tdvs7bUDo5+39G/FRDAg
+         j281Hp6uDKYn4JWiG6nxrTO0LRnSEmxycVpSJZG/9PFTQwapSntPXS9PNj/UlX/LHBco
+         Z0LZ19A3Jlk0S7cFldTtTO547jUrSit/Q/Si34NiiY25saOmeU09qXopwh2wnnvRdNS8
+         KaSllVTnNwyUUZem5JVV9IdjtjBWLjj3i+UDEBbqek7SEQ5DsNs8hYcSM+4TrXJ4gUHS
+         pPrA==
+X-Gm-Message-State: AOAM531m2kRV9v17RYT14lgJAUOWgI7Y7dOMdBlMtlupnXkB8JA/bYUx
+        vWpuVpjC686pXXpmcKCS+/9U0inyOSVQko+nR68=
+X-Google-Smtp-Source: ABdhPJwcOamXWVnHkSAxITqb9OzSjvYDeJXplnj5BKTotJxscWgbamqbstckEmW62K3N060UBzoCi5pQy5uoGNSsrJM=
+X-Received: by 2002:a17:90a:ac05:: with SMTP id o5mr16962010pjq.228.1591614821799;
+ Mon, 08 Jun 2020 04:13:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.27.61]
-X-ClientProxiedBy: lhreml745-chm.china.huawei.com (10.201.108.195) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+References: <20200324175719.62496-1-andriy.shevchenko@linux.intel.com>
+ <20200325032901.29551-1-saravanak@google.com> <20200325125120.GX1922688@smile.fi.intel.com>
+ <295d25de-f01e-26de-02d6-1ac0c149d828@arm.com> <20200326163110.GD1922688@smile.fi.intel.com>
+ <20200608091712.GA28093@pengutronix.de>
+In-Reply-To: <20200608091712.GA28093@pengutronix.de>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 8 Jun 2020 14:13:30 +0300
+Message-ID: <CAHp75VfQvT1VSXhNtfLMLzwYcN+4g=jVRkBHc=ZS0180BRzAJg@mail.gmail.com>
+Subject: Re: [PATCH v3] driver core: Break infinite loop when deferred probe
+ can't be satisfied
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Grant Likely <grant.likely@arm.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        artem.bityutskiy@linux.intel.com, Felipe Balbi <balbi@kernel.org>,
+        Mark Brown <broonie@kernel.org>, Ferry Toth <fntoth@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, kernel-team@android.com,
+        nd <nd@arm.com>, Sascha Hauer <kernel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 8 Jun 2020 09:37:48 +0300
-Alexandru Ardelean <ardeleanalex@gmail.com> wrote:
-
-> On Sat, Jun 6, 2020 at 7:03 PM Jonathan Cameron <jic23@kernel.org> wrote:
-> >
-> > On Thu, 4 Jun 2020 18:34:40 +0100
-> > Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
-> >  
-> > > On Wed, 3 Jun 2020 11:41:52 +0000
-> > > "Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
-> > >  
-> > > > On Wed, 2020-06-03 at 14:40 +0300, Alexandru Ardelean wrote:  
-> > > > > This patch updates the {devm_}iio_device_alloc() functions to automatically
-> > > > > assign the parent device on allocation.
-> > > > > For iio_device_alloc() this means a new parameter.
-> > > > > For devm_iio_device_alloc() this means a new behavior; the device object is
-> > > > > the parent. For this one, this is the common case for most drivers (except
-> > > > > one: 'lm3533-als').
+On Mon, Jun 8, 2020 at 12:20 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
+> On 20-03-26 18:31, Andy Shevchenko wrote:
+> > On Thu, Mar 26, 2020 at 03:01:22PM +0000, Grant Likely wrote:
+> > > On 25/03/2020 12:51, Andy Shevchenko wrote:
+> > > > On Tue, Mar 24, 2020 at 08:29:01PM -0700, Saravana Kannan wrote:
+> > > > > On Tue, Mar 24, 2020 at 5:38 AM Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+> > > > > > Consider the following scenario.
+> > > > > >
+> > > > > > The main driver of USB OTG controller (dwc3-pci), which has the following
+> > > > > > functional dependencies on certain platform:
+> > > > > > - ULPI (tusb1210)
+> > > > > > - extcon (tested with extcon-intel-mrfld)
+> > > > > >
+> > > > > > Note, that first driver, tusb1210, is available at the moment of
+> > > > > > dwc3-pci probing, while extcon-intel-mrfld is built as a module and
+> > > > > > won't appear till user space does something about it.
+> > > > > >
+> > > > > > This is depicted by kernel configuration excerpt:
+> > > > > >
+> > > > > >       CONFIG_PHY_TUSB1210=y
+> > > > > >       CONFIG_USB_DWC3=y
+> > > > > >       CONFIG_USB_DWC3_ULPI=y
+> > > > > >       CONFIG_USB_DWC3_DUAL_ROLE=y
+> > > > > >       CONFIG_USB_DWC3_PCI=y
+> > > > > >       CONFIG_EXTCON_INTEL_MRFLD=m
+> > > > > >
+> > > > > > In the Buildroot environment the modules are probed by alphabetical ordering
+> > > > > > of their modaliases. The latter comes to the case when USB OTG driver will be
+> > > > > > probed first followed by extcon one.
+> > > > > >
+> > > > > > So, if the platform anticipates extcon device to be appeared, in the above case
+> > > > > > we will get deferred probe of USB OTG, because of ordering.
+> > > > > >
+> > > > > > Since current implementation, done by the commit 58b116bce136 ("drivercore:
+> > > > > > deferral race condition fix") counts the amount of triggered deferred probe,
+> > > > > > we never advance the situation -- the change makes it to be an infinite loop.
 > > > > >
-> > > > > For the special cases an iio_device_set_parent() has been created to change
-> > > > > the parent betwee allocation & registration.
-> > > > > The purpose of this helper, is mostly to highlight the new behavior of
-> > > > > devm_iio_device_alloc().
+> > > > > Hi Andy,
 > > > > >
-> > > > > This patchset also removes explicit parent assignments from most IIO
-> > > > > drivers (except for lm3533-als).
-> > > > >
-> > > > > Using a semantic patch, about 303 drivers are updated, and some needed some
-> > > > > manual attention. This is probably due to some limitations of spatch. At
-> > > > > least in some cases the parent device is not the same variable as passed to
-> > > > > devm_iio_device_alloc(), OR the parent assignment is moved to a separate
-> > > > > function than where devm_iio_device_alloc() is called.
-> > > > >  
+> > > > > I'm trying to understand this sequence of steps. Sorry if the questions
+> > > > > are stupid -- I'm not very familiar with USB/PCI stuff.
 > > > >
-> > > > Forgot to explicitly CC Jonathan.
-> > > > But I'm hoping this shows up from the list.  
-> > >
-> > > No problem.  I filter anything going to the list into the same folder
-> > > whether or not I'm cc'd :) Well several folders on different machines via
-> > > different email addresses, but you get the idea...  
-> >
-> > Patch 3 doesn't seem to have made it to me or the list.
-> >  
-> 
-> hmm, that's weird;
-> i'll check my work email inbox and see if it got there;
-> i'm in a short vacation this week; and left everything at work [intentionally]
-> 
-> > I assumed no change from patch 2 in previous set and applied that.
-> >  
-> that looks like the spatch patch;
-> nothing changed there;
-> 
-> > After applying the rest of the series, there were left over cases in:
-> >
-> > vcnl3020 (new)
-> > ms5611 (hidden via an extra call)
-> > st_sensors_spi (hidden via an extra call)
-> > st_sensors_i2c (hidden via an extra call)
-> > cros_ec_sensors_core (hidden via an extra call)
-> >
-> > I've added them to patch 6 - with a note to say why.
-> > If you could do a quick sanity check that would be great.
-> >  
-> 
-> did you push the branch anywhere?
-> i can't seem to find the patches
-Ah. oops. May not have done.  Will do so a bit later today.
-
-Jonathan
-
-> 
-> > Thanks,
-> >
-> > Jonathan
-> >
-> >
-> > Thanks,
-> >
-> > Jonathan
-> >  
-> > >
-> > >  
-> > > >  
-> > > > > Changelog v1 -> v2:
-> > > > > * added iio_device_set_parent() helper (new commit)
-> > > > > * update commit for lm3533-als to use iio_device_set_parent()
+> > > > Thank you for looking into this. My answer below.
+> > > >
+> > > > As a first thing I would like to tell that there is another example of bad
+> > > > behaviour of deferred probe with no relation to USB. The proposed change also
+> > > > fixes that one (however, less possible to find in real life).
+> > > >
+> > > > > > ---8<---8<---
+> > > > > >
+> > > > > > [   22.187127] driver_deferred_probe_trigger <<< 1
+> > > > > >
+> > > > > > ...here is the late initcall triggers deferred probe...
+> > > > > >
+> > > > > > [   22.191725] platform dwc3.0.auto: deferred_probe_work_func in deferred list
+> > > > > >
+> > > > > > ...dwc3.0.auto is the only device in the deferred list...
 > > > > >
-> > > > > Alexandru Ardelean (6):
-> > > > >   iio: core: pass parent device as parameter during allocation
-> > > > >   iio: core: add iio_device_set_parent() helper
-> > > > >   iio: remove explicit IIO device parent assignment
-> > > > >   iio: remove left-over comments about parent assignment
-> > > > >   iio: light: lm3533-als: use iio_device_set_parent() to assign parent
-> > > > >   iio: remove left-over parent assignments
+> > > > > Ok, dwc3.0.auto is the only unprobed device at this point?
+> > > >
+> > > > Correct.
+> > > >
+> > > > > > [   22.198727] platform dwc3.0.auto: deferred_probe_work_func 1 <<< counter 1
+> > > > > >
+> > > > > > ...the counter before mutex is unlocked is kept the same...
+> > > > > >
+> > > > > > [   22.205663] platform dwc3.0.auto: Retrying from deferred list
+> > > > > >
+> > > > > > ...mutes has been unlocked, we try to re-probe the driver...
+> > > > > >
+> > > > > > [   22.211487] bus: 'platform': driver_probe_device: matched device dwc3.0.auto with driver dwc3
+> > > > > > [   22.220060] bus: 'platform': really_probe: probing driver dwc3 with device dwc3.0.auto
+> > > > > > [   22.238735] bus: 'ulpi': driver_probe_device: matched device dwc3.0.auto.ulpi with driver tusb1210
+> > > > > > [   22.247743] bus: 'ulpi': really_probe: probing driver tusb1210 with device dwc3.0.auto.ulpi
+> > > > > > [   22.256292] driver: 'tusb1210': driver_bound: bound to device 'dwc3.0.auto.ulpi'
+> > > > > > [   22.263723] driver_deferred_probe_trigger <<< 2
+> > > > > >
+> > > > > > ...the dwc3.0.auto probes ULPI, we got successful bound and bumped counter...
+> > > > > >
+> > > > > > [   22.268304] bus: 'ulpi': really_probe: bound device dwc3.0.auto.ulpi to driver tusb1210
 > > > > >
-> > > > >  drivers/counter/104-quad-8.c                  |  1 -
-> > > > >  drivers/counter/stm32-lptimer-cnt.c           |  1 -
-> > > > >  drivers/iio/accel/adis16201.c                 |  1 -
-> > > > >  drivers/iio/accel/adis16209.c                 |  1 -
-> > > > >  drivers/iio/accel/adxl345_core.c              |  1 -
-> > > > >  drivers/iio/accel/adxl372.c                   |  1 -
-> > > > >  drivers/iio/accel/bma180.c                    |  1 -
-> > > > >  drivers/iio/accel/bma220_spi.c                |  1 -
-> > > > >  drivers/iio/accel/bma400_core.c               |  1 -
-> > > > >  drivers/iio/accel/bmc150-accel-core.c         |  1 -
-> > > > >  drivers/iio/accel/da280.c                     |  1 -
-> > > > >  drivers/iio/accel/da311.c                     |  1 -
-> > > > >  drivers/iio/accel/dmard06.c                   |  1 -
-> > > > >  drivers/iio/accel/dmard09.c                   |  1 -
-> > > > >  drivers/iio/accel/dmard10.c                   |  1 -
-> > > > >  drivers/iio/accel/hid-sensor-accel-3d.c       |  1 -
-> > > > >  drivers/iio/accel/kxcjk-1013.c                |  1 -
-> > > > >  drivers/iio/accel/kxsd9.c                     |  1 -
-> > > > >  drivers/iio/accel/mc3230.c                    |  1 -
-> > > > >  drivers/iio/accel/mma7455_core.c              |  1 -
-> > > > >  drivers/iio/accel/mma7660.c                   |  1 -
-> > > > >  drivers/iio/accel/mma8452.c                   |  1 -
-> > > > >  drivers/iio/accel/mma9551.c                   |  1 -
-> > > > >  drivers/iio/accel/mma9553.c                   |  1 -
-> > > > >  drivers/iio/accel/mxc4005.c                   |  1 -
-> > > > >  drivers/iio/accel/mxc6255.c                   |  1 -
-> > > > >  drivers/iio/accel/sca3000.c                   |  1 -
-> > > > >  drivers/iio/accel/ssp_accel_sensor.c          |  1 -
-> > > > >  drivers/iio/accel/stk8312.c                   |  1 -
-> > > > >  drivers/iio/accel/stk8ba50.c                  |  1 -
-> > > > >  drivers/iio/adc/ab8500-gpadc.c                |  1 -
-> > > > >  drivers/iio/adc/ad7091r-base.c                |  1 -
-> > > > >  drivers/iio/adc/ad7124.c                      |  1 -
-> > > > >  drivers/iio/adc/ad7192.c                      |  1 -
-> > > > >  drivers/iio/adc/ad7266.c                      |  1 -
-> > > > >  drivers/iio/adc/ad7291.c                      |  1 -
-> > > > >  drivers/iio/adc/ad7292.c                      |  1 -
-> > > > >  drivers/iio/adc/ad7298.c                      |  1 -
-> > > > >  drivers/iio/adc/ad7476.c                      |  2 --
-> > > > >  drivers/iio/adc/ad7606.c                      |  1 -
-> > > > >  drivers/iio/adc/ad7766.c                      |  1 -
-> > > > >  drivers/iio/adc/ad7768-1.c                    |  1 -
-> > > > >  drivers/iio/adc/ad7780.c                      |  1 -
-> > > > >  drivers/iio/adc/ad7791.c                      |  1 -
-> > > > >  drivers/iio/adc/ad7793.c                      |  1 -
-> > > > >  drivers/iio/adc/ad7887.c                      |  2 --
-> > > > >  drivers/iio/adc/ad7923.c                      |  1 -
-> > > > >  drivers/iio/adc/ad7949.c                      |  1 -
-> > > > >  drivers/iio/adc/ad799x.c                      |  1 -
-> > > > >  drivers/iio/adc/adi-axi-adc.c                 |  1 -
-> > > > >  drivers/iio/adc/aspeed_adc.c                  |  1 -
-> > > > >  drivers/iio/adc/at91-sama5d2_adc.c            |  1 -
-> > > > >  drivers/iio/adc/at91_adc.c                    |  1 -
-> > > > >  drivers/iio/adc/axp20x_adc.c                  |  1 -
-> > > > >  drivers/iio/adc/axp288_adc.c                  |  1 -
-> > > > >  drivers/iio/adc/bcm_iproc_adc.c               |  1 -
-> > > > >  drivers/iio/adc/berlin2-adc.c                 |  1 -
-> > > > >  drivers/iio/adc/cc10001_adc.c                 |  1 -
-> > > > >  drivers/iio/adc/cpcap-adc.c                   |  1 -
-> > > > >  drivers/iio/adc/da9150-gpadc.c                |  1 -
-> > > > >  drivers/iio/adc/dln2-adc.c                    |  1 -
-> > > > >  drivers/iio/adc/envelope-detector.c           |  1 -
-> > > > >  drivers/iio/adc/ep93xx_adc.c                  |  1 -
-> > > > >  drivers/iio/adc/exynos_adc.c                  |  1 -
-> > > > >  drivers/iio/adc/fsl-imx25-gcq.c               |  1 -
-> > > > >  drivers/iio/adc/hi8435.c                      |  1 -
-> > > > >  drivers/iio/adc/hx711.c                       |  1 -
-> > > > >  drivers/iio/adc/imx7d_adc.c                   |  1 -
-> > > > >  drivers/iio/adc/ina2xx-adc.c                  |  1 -
-> > > > >  drivers/iio/adc/ingenic-adc.c                 |  1 -
-> > > > >  drivers/iio/adc/intel_mrfld_adc.c             |  1 -
-> > > > >  drivers/iio/adc/lp8788_adc.c                  |  1 -
-> > > > >  drivers/iio/adc/lpc18xx_adc.c                 |  1 -
-> > > > >  drivers/iio/adc/lpc32xx_adc.c                 |  1 -
-> > > > >  drivers/iio/adc/ltc2471.c                     |  1 -
-> > > > >  drivers/iio/adc/ltc2485.c                     |  1 -
-> > > > >  drivers/iio/adc/max1027.c                     |  1 -
-> > > > >  drivers/iio/adc/max11100.c                    |  1 -
-> > > > >  drivers/iio/adc/max1118.c                     |  1 -
-> > > > >  drivers/iio/adc/max1241.c                     |  1 -
-> > > > >  drivers/iio/adc/max1363.c                     |  2 --
-> > > > >  drivers/iio/adc/max9611.c                     |  1 -
-> > > > >  drivers/iio/adc/mcp320x.c                     |  1 -
-> > > > >  drivers/iio/adc/mcp3422.c                     |  1 -
-> > > > >  drivers/iio/adc/mcp3911.c                     |  1 -
-> > > > >  drivers/iio/adc/men_z188_adc.c                |  1 -
-> > > > >  drivers/iio/adc/meson_saradc.c                |  1 -
-> > > > >  drivers/iio/adc/mt6577_auxadc.c               |  1 -
-> > > > >  drivers/iio/adc/mxs-lradc-adc.c               |  1 -
-> > > > >  drivers/iio/adc/nau7802.c                     |  1 -
-> > > > >  drivers/iio/adc/npcm_adc.c                    |  1 -
-> > > > >  drivers/iio/adc/palmas_gpadc.c                |  1 -
-> > > > >  drivers/iio/adc/qcom-pm8xxx-xoadc.c           |  1 -
-> > > > >  drivers/iio/adc/qcom-spmi-adc5.c              |  1 -
-> > > > >  drivers/iio/adc/qcom-spmi-iadc.c              |  1 -
-> > > > >  drivers/iio/adc/qcom-spmi-vadc.c              |  1 -
-> > > > >  drivers/iio/adc/rcar-gyroadc.c                |  1 -
-> > > > >  drivers/iio/adc/rn5t618-adc.c                 |  1 -
-> > > > >  drivers/iio/adc/rockchip_saradc.c             |  1 -
-> > > > >  drivers/iio/adc/sc27xx_adc.c                  |  1 -
-> > > > >  drivers/iio/adc/sd_adc_modulator.c            |  1 -
-> > > > >  drivers/iio/adc/spear_adc.c                   |  1 -
-> > > > >  drivers/iio/adc/stm32-adc.c                   |  1 -
-> > > > >  drivers/iio/adc/stm32-dfsdm-adc.c             |  1 -
-> > > > >  drivers/iio/adc/stmpe-adc.c                   |  1 -
-> > > > >  drivers/iio/adc/stx104.c                      |  1 -
-> > > > >  drivers/iio/adc/sun4i-gpadc-iio.c             |  1 -
-> > > > >  drivers/iio/adc/ti-adc081c.c                  |  1 -
-> > > > >  drivers/iio/adc/ti-adc0832.c                  |  1 -
-> > > > >  drivers/iio/adc/ti-adc084s021.c               |  1 -
-> > > > >  drivers/iio/adc/ti-adc108s102.c               |  1 -
-> > > > >  drivers/iio/adc/ti-adc12138.c                 |  1 -
-> > > > >  drivers/iio/adc/ti-adc128s052.c               |  1 -
-> > > > >  drivers/iio/adc/ti-adc161s626.c               |  1 -
-> > > > >  drivers/iio/adc/ti-ads1015.c                  |  1 -
-> > > > >  drivers/iio/adc/ti-ads124s08.c                |  1 -
-> > > > >  drivers/iio/adc/ti-ads7950.c                  |  1 -
-> > > > >  drivers/iio/adc/ti-ads8344.c                  |  1 -
-> > > > >  drivers/iio/adc/ti-ads8688.c                  |  1 -
-> > > > >  drivers/iio/adc/ti-tlc4541.c                  |  1 -
-> > > > >  drivers/iio/adc/ti_am335x_adc.c               |  1 -
-> > > > >  drivers/iio/adc/twl4030-madc.c                |  1 -
-> > > > >  drivers/iio/adc/twl6030-gpadc.c               |  1 -
-> > > > >  drivers/iio/adc/vf610_adc.c                   |  1 -
-> > > > >  drivers/iio/adc/viperboard_adc.c              |  1 -
-> > > > >  drivers/iio/adc/xilinx-xadc-core.c            |  1 -
-> > > > >  drivers/iio/afe/iio-rescale.c                 |  1 -
-> > > > >  drivers/iio/amplifiers/ad8366.c               |  1 -
-> > > > >  drivers/iio/amplifiers/hmc425a.c              |  1 -
-> > > > >  drivers/iio/chemical/ams-iaq-core.c           |  1 -
-> > > > >  drivers/iio/chemical/atlas-sensor.c           |  1 -
-> > > > >  drivers/iio/chemical/bme680_core.c            |  1 -
-> > > > >  drivers/iio/chemical/ccs811.c                 |  1 -
-> > > > >  drivers/iio/chemical/pms7003.c                |  1 -
-> > > > >  drivers/iio/chemical/sgp30.c                  |  1 -
-> > > > >  drivers/iio/chemical/sps30.c                  |  1 -
-> > > > >  drivers/iio/chemical/vz89x.c                  |  1 -
-> > > > >  drivers/iio/dac/ad5064.c                      |  1 -
-> > > > >  drivers/iio/dac/ad5360.c                      |  1 -
-> > > > >  drivers/iio/dac/ad5380.c                      |  1 -
-> > > > >  drivers/iio/dac/ad5421.c                      |  1 -
-> > > > >  drivers/iio/dac/ad5446.c                      |  2 --
-> > > > >  drivers/iio/dac/ad5449.c                      |  1 -
-> > > > >  drivers/iio/dac/ad5504.c                      |  1 -
-> > > > >  drivers/iio/dac/ad5592r-base.c                |  1 -
-> > > > >  drivers/iio/dac/ad5624r_spi.c                 |  1 -
-> > > > >  drivers/iio/dac/ad5686.c                      |  1 -
-> > > > >  drivers/iio/dac/ad5755.c                      |  1 -
-> > > > >  drivers/iio/dac/ad5758.c                      |  1 -
-> > > > >  drivers/iio/dac/ad5761.c                      |  1 -
-> > > > >  drivers/iio/dac/ad5764.c                      |  1 -
-> > > > >  drivers/iio/dac/ad5770r.c                     |  1 -
-> > > > >  drivers/iio/dac/ad5791.c                      |  1 -
-> > > > >  drivers/iio/dac/ad7303.c                      |  1 -
-> > > > >  drivers/iio/dac/ad8801.c                      |  1 -
-> > > > >  drivers/iio/dac/cio-dac.c                     |  1 -
-> > > > >  drivers/iio/dac/dpot-dac.c                    |  1 -
-> > > > >  drivers/iio/dac/ds4424.c                      |  1 -
-> > > > >  drivers/iio/dac/lpc18xx_dac.c                 |  1 -
-> > > > >  drivers/iio/dac/ltc1660.c                     |  1 -
-> > > > >  drivers/iio/dac/ltc2632.c                     |  1 -
-> > > > >  drivers/iio/dac/m62332.c                      |  3 ---
-> > > > >  drivers/iio/dac/max517.c                      |  3 ---
-> > > > >  drivers/iio/dac/max5821.c                     |  1 -
-> > > > >  drivers/iio/dac/mcp4725.c                     |  1 -
-> > > > >  drivers/iio/dac/mcp4922.c                     |  1 -
-> > > > >  drivers/iio/dac/stm32-dac.c                   |  1 -
-> > > > >  drivers/iio/dac/ti-dac082s085.c               |  1 -
-> > > > >  drivers/iio/dac/ti-dac5571.c                  |  1 -
-> > > > >  drivers/iio/dac/ti-dac7311.c                  |  1 -
-> > > > >  drivers/iio/dac/ti-dac7612.c                  |  1 -
-> > > > >  drivers/iio/dac/vf610_dac.c                   |  1 -
-> > > > >  drivers/iio/dummy/iio_simple_dummy.c          | 14 ++++++-----
-> > > > >  drivers/iio/frequency/ad9523.c                |  1 -
-> > > > >  drivers/iio/frequency/adf4350.c               |  1 -
-> > > > >  drivers/iio/frequency/adf4371.c               |  1 -
-> > > > >  drivers/iio/gyro/adis16080.c                  |  1 -
-> > > > >  drivers/iio/gyro/adis16130.c                  |  1 -
-> > > > >  drivers/iio/gyro/adis16136.c                  |  1 -
-> > > > >  drivers/iio/gyro/adis16260.c                  |  1 -
-> > > > >  drivers/iio/gyro/adxrs450.c                   |  1 -
-> > > > >  drivers/iio/gyro/bmg160_core.c                |  1 -
-> > > > >  drivers/iio/gyro/fxas21002c_core.c            |  1 -
-> > > > >  drivers/iio/gyro/hid-sensor-gyro-3d.c         |  1 -
-> > > > >  drivers/iio/gyro/itg3200_core.c               |  1 -
-> > > > >  drivers/iio/gyro/mpu3050-core.c               |  1 -
-> > > > >  drivers/iio/gyro/ssp_gyro_sensor.c            |  1 -
-> > > > >  drivers/iio/health/afe4403.c                  |  1 -
-> > > > >  drivers/iio/health/afe4404.c                  |  1 -
-> > > > >  drivers/iio/health/max30100.c                 |  1 -
-> > > > >  drivers/iio/health/max30102.c                 |  1 -
-> > > > >  drivers/iio/humidity/am2315.c                 |  1 -
-> > > > >  drivers/iio/humidity/dht11.c                  |  1 -
-> > > > >  drivers/iio/humidity/hdc100x.c                |  1 -
-> > > > >  drivers/iio/humidity/hid-sensor-humidity.c    |  1 -
-> > > > >  drivers/iio/humidity/hts221_core.c            |  1 -
-> > > > >  drivers/iio/humidity/htu21.c                  |  1 -
-> > > > >  drivers/iio/humidity/si7005.c                 |  1 -
-> > > > >  drivers/iio/humidity/si7020.c                 |  1 -
-> > > > >  drivers/iio/imu/adis16400.c                   |  1 -
-> > > > >  drivers/iio/imu/adis16460.c                   |  1 -
-> > > > >  drivers/iio/imu/adis16475.c                   |  1 -
-> > > > >  drivers/iio/imu/adis16480.c                   |  1 -
-> > > > >  drivers/iio/imu/bmi160/bmi160_core.c          |  1 -
-> > > > >  drivers/iio/imu/fxos8700_core.c               |  1 -
-> > > > >  drivers/iio/imu/inv_mpu6050/inv_mpu_core.c    |  1 -
-> > > > >  drivers/iio/imu/kmx61.c                       |  1 -
-> > > > >  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c  |  1 -
-> > > > >  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c  |  1 -
-> > > > >  drivers/iio/industrialio-core.c               | 11 +++++----
-> > > > >  drivers/iio/light/acpi-als.c                  |  1 -
-> > > > >  drivers/iio/light/adjd_s311.c                 |  1 -
-> > > > >  drivers/iio/light/adux1020.c                  |  1 -
-> > > > >  drivers/iio/light/al3010.c                    |  1 -
-> > > > >  drivers/iio/light/al3320a.c                   |  1 -
-> > > > >  drivers/iio/light/apds9300.c                  |  1 -
-> > > > >  drivers/iio/light/apds9960.c                  |  1 -
-> > > > >  drivers/iio/light/bh1750.c                    |  1 -
-> > > > >  drivers/iio/light/bh1780.c                    |  1 -
-> > > > >  drivers/iio/light/cm32181.c                   |  1 -
-> > > > >  drivers/iio/light/cm3232.c                    |  1 -
-> > > > >  drivers/iio/light/cm3323.c                    |  1 -
-> > > > >  drivers/iio/light/cm3605.c                    |  1 -
-> > > > >  drivers/iio/light/cm36651.c                   |  1 -
-> > > > >  drivers/iio/light/gp2ap002.c                  |  1 -
-> > > > >  drivers/iio/light/gp2ap020a00f.c              |  1 -
-> > > > >  drivers/iio/light/hid-sensor-als.c            |  1 -
-> > > > >  drivers/iio/light/hid-sensor-prox.c           |  1 -
-> > > > >  drivers/iio/light/iqs621-als.c                |  1 -
-> > > > >  drivers/iio/light/isl29018.c                  |  1 -
-> > > > >  drivers/iio/light/isl29028.c                  |  1 -
-> > > > >  drivers/iio/light/isl29125.c                  |  1 -
-> > > > >  drivers/iio/light/jsa1212.c                   |  1 -
-> > > > >  drivers/iio/light/lm3533-als.c                |  2 +-
-> > > > >  drivers/iio/light/ltr501.c                    |  1 -
-> > > > >  drivers/iio/light/lv0104cs.c                  |  1 -
-> > > > >  drivers/iio/light/max44000.c                  |  1 -
-> > > > >  drivers/iio/light/max44009.c                  |  1 -
-> > > > >  drivers/iio/light/noa1305.c                   |  1 -
-> > > > >  drivers/iio/light/opt3001.c                   |  1 -
-> > > > >  drivers/iio/light/pa12203001.c                |  1 -
-> > > > >  drivers/iio/light/rpr0521.c                   |  1 -
-> > > > >  drivers/iio/light/si1133.c                    |  1 -
-> > > > >  drivers/iio/light/si1145.c                    |  1 -
-> > > > >  drivers/iio/light/st_uvis25_core.c            |  1 -
-> > > > >  drivers/iio/light/stk3310.c                   |  1 -
-> > > > >  drivers/iio/light/tcs3414.c                   |  1 -
-> > > > >  drivers/iio/light/tcs3472.c                   |  1 -
-> > > > >  drivers/iio/light/tsl2563.c                   |  1 -
-> > > > >  drivers/iio/light/tsl2583.c                   |  1 -
-> > > > >  drivers/iio/light/tsl2772.c                   |  1 -
-> > > > >  drivers/iio/light/tsl4531.c                   |  1 -
-> > > > >  drivers/iio/light/us5182d.c                   |  1 -
-> > > > >  drivers/iio/light/vcnl4000.c                  |  1 -
-> > > > >  drivers/iio/light/vcnl4035.c                  |  1 -
-> > > > >  drivers/iio/light/veml6030.c                  |  1 -
-> > > > >  drivers/iio/light/veml6070.c                  |  1 -
-> > > > >  drivers/iio/light/vl6180.c                    |  1 -
-> > > > >  drivers/iio/light/zopt2201.c                  |  1 -
-> > > > >  drivers/iio/magnetometer/ak8974.c             |  1 -
-> > > > >  drivers/iio/magnetometer/ak8975.c             |  1 -
-> > > > >  drivers/iio/magnetometer/bmc150_magn.c        |  1 -
-> > > > >  drivers/iio/magnetometer/hid-sensor-magn-3d.c |  1 -
-> > > > >  drivers/iio/magnetometer/hmc5843_core.c       |  1 -
-> > > > >  drivers/iio/magnetometer/mag3110.c            |  1 -
-> > > > >  drivers/iio/magnetometer/mmc35240.c           |  1 -
-> > > > >  drivers/iio/magnetometer/rm3100-core.c        |  1 -
-> > > > >  drivers/iio/multiplexer/iio-mux.c             |  1 -
-> > > > >  drivers/iio/orientation/hid-sensor-incl-3d.c  |  1 -
-> > > > >  drivers/iio/orientation/hid-sensor-rotation.c |  1 -
-> > > > >  drivers/iio/position/iqs624-pos.c             |  1 -
-> > > > >  drivers/iio/potentiometer/ad5272.c            |  1 -
-> > > > >  drivers/iio/potentiometer/ds1803.c            |  1 -
-> > > > >  drivers/iio/potentiometer/max5432.c           |  1 -
-> > > > >  drivers/iio/potentiometer/max5481.c           |  1 -
-> > > > >  drivers/iio/potentiometer/max5487.c           |  1 -
-> > > > >  drivers/iio/potentiometer/mcp4018.c           |  1 -
-> > > > >  drivers/iio/potentiometer/mcp41010.c          |  1 -
-> > > > >  drivers/iio/potentiometer/mcp4131.c           |  1 -
-> > > > >  drivers/iio/potentiometer/mcp4531.c           |  1 -
-> > > > >  drivers/iio/potentiometer/tpl0102.c           |  1 -
-> > > > >  drivers/iio/potentiostat/lmp91000.c           |  1 -
-> > > > >  drivers/iio/pressure/abp060mg.c               |  1 -
-> > > > >  drivers/iio/pressure/bmp280-core.c            |  1 -
-> > > > >  drivers/iio/pressure/dlhl60d.c                |  1 -
-> > > > >  drivers/iio/pressure/dps310.c                 |  1 -
-> > > > >  drivers/iio/pressure/hid-sensor-press.c       |  1 -
-> > > > >  drivers/iio/pressure/hp03.c                   |  1 -
-> > > > >  drivers/iio/pressure/hp206c.c                 |  1 -
-> > > > >  drivers/iio/pressure/icp10100.c               |  1 -
-> > > > >  drivers/iio/pressure/mpl115.c                 |  1 -
-> > > > >  drivers/iio/pressure/mpl3115.c                |  1 -
-> > > > >  drivers/iio/pressure/ms5637.c                 |  1 -
-> > > > >  drivers/iio/pressure/t5403.c                  |  1 -
-> > > > >  drivers/iio/pressure/zpa2326.c                |  1 -
-> > > > >  drivers/iio/proximity/as3935.c                |  1 -
-> > > > >  drivers/iio/proximity/isl29501.c              |  1 -
-> > > > >  drivers/iio/proximity/mb1232.c                |  1 -
-> > > > >  drivers/iio/proximity/ping.c                  |  1 -
-> > > > >  .../iio/proximity/pulsedlight-lidar-lite-v2.c |  1 -
-> > > > >  drivers/iio/proximity/rfd77402.c              |  1 -
-> > > > >  drivers/iio/proximity/srf04.c                 |  1 -
-> > > > >  drivers/iio/proximity/srf08.c                 |  1 -
-> > > > >  drivers/iio/proximity/sx9310.c                |  1 -
-> > > > >  drivers/iio/proximity/sx9500.c                |  1 -
-> > > > >  drivers/iio/proximity/vl53l0x-i2c.c           |  1 -
-> > > > >  drivers/iio/resolver/ad2s1200.c               |  1 -
-> > > > >  drivers/iio/resolver/ad2s90.c                 |  1 -
-> > > > >  .../iio/temperature/hid-sensor-temperature.c  |  1 -
-> > > > >  drivers/iio/temperature/iqs620at-temp.c       |  1 -
-> > > > >  drivers/iio/temperature/ltc2983.c             |  1 -
-> > > > >  drivers/iio/temperature/max31856.c            |  1 -
-> > > > >  drivers/iio/temperature/maxim_thermocouple.c  |  1 -
-> > > > >  drivers/iio/temperature/mlx90614.c            |  1 -
-> > > > >  drivers/iio/temperature/mlx90632.c            |  1 -
-> > > > >  drivers/iio/temperature/tmp006.c              |  1 -
-> > > > >  drivers/iio/temperature/tmp007.c              |  1 -
-> > > > >  drivers/iio/temperature/tsys01.c              |  1 -
-> > > > >  drivers/iio/temperature/tsys02d.c             |  1 -
-> > > > >  drivers/iio/trigger/stm32-timer-trigger.c     |  1 -
-> > > > >  drivers/input/touchscreen/tsc2007_iio.c       |  1 -
-> > > > >  drivers/platform/x86/toshiba_acpi.c           |  3 +--
-> > > > >  drivers/staging/iio/Documentation/device.txt  |  4 +---
-> > > > >  drivers/staging/iio/accel/adis16203.c         |  1 -
-> > > > >  drivers/staging/iio/accel/adis16240.c         |  1 -
-> > > > >  drivers/staging/iio/adc/ad7280a.c             |  1 -
-> > > > >  drivers/staging/iio/adc/ad7816.c              |  1 -
-> > > > >  drivers/staging/iio/addac/adt7316.c           |  1 -
-> > > > >  drivers/staging/iio/cdc/ad7150.c              |  2 --
-> > > > >  drivers/staging/iio/cdc/ad7746.c              |  2 --
-> > > > >  drivers/staging/iio/frequency/ad9832.c        |  1 -
-> > > > >  drivers/staging/iio/frequency/ad9834.c        |  1 -
-> > > > >  .../staging/iio/impedance-analyzer/ad5933.c   |  1 -
-> > > > >  drivers/staging/iio/resolver/ad2s1210.c       |  1 -
-> > > > >  include/linux/iio/iio.h                       | 24 +++++++++++++++++--
-> > > > >  335 files changed, 39 insertions(+), 358 deletions(-)
-> > > > >  
+> > > > > So where did this dwc3.0.auto.ulpi come from?
+> > > >
+> > > > > Looks like the device is created by dwc3_probe() through this call flow:
+> > > > > dwc3_probe() -> dwc3_core_init() -> dwc3_core_ulpi_init() ->
+> > > > > dwc3_ulpi_init() -> ulpi_register_interface() -> ulpi_register()
+> > > >
+> > > > Correct.
+> > > >
+> > > > > > [   22.276697] platform dwc3.0.auto: Driver dwc3 requests probe deferral
+> > > > >
+> > > > > Can you please point me to which code patch actually caused the probe
+> > > > > deferral?
+> > > >
+> > > > Sure, it's in drd.c.
+> > > >
+> > > > if (device_property_read_string(dev, "linux,extcon-name", &name) == 0) {
+> > > >    edev = extcon_get_extcon_dev(name);
+> > > >    if (!edev)
+> > > >      return ERR_PTR(-EPROBE_DEFER);
+> > > >    return edev;
+> > > > }
+> > > >
+> > > > > > ...but extcon driver is still missing...
+> > > > > >
+> > > > > > [   22.283174] platform dwc3.0.auto: Added to deferred list
+> > > > > > [   22.288513] platform dwc3.0.auto: driver_deferred_probe_add_trigger local counter: 1 new counter 2
+> > > > >
+> > > > > I'm not fully aware of all the USB implications, but if extcon is
+> > > > > needed, why can't that check be done before we add and probe the ulpi
+> > > > > device? That'll avoid this whole "fake" probing and avoid the counter
+> > > > > increase. And avoid the need for this patch that's touching the code
+> > > > > code that's already a bit delicate.
+> > > >
+> > > > > Also, with my limited experience with all the possible drivers in the
+> > > > > kernel, it's weird that the ulpi device is added and probed before we
+> > > > > make sure the parent device (dwc3.0.auto) can actually probe
+> > > > > successfully.
+> > > >
+> > > > As I said above the deferred probe trigger has flaw on its own.
+> > > > Even if we fix for USB case, there is (and probably will be) others.
 > > >
-> > >  
-> >  
+> > > Right here is the driver design bug. A driver's probe() hook should *not*
+> > > return -EPROBE_DEFER after already creating child devices which may have
+> > > already been probed.
+> >
+> > Any documentation statement for this requirement?
+> >
+> > By the way, I may imagine other mechanisms that probe the driver on other CPU
+> > at the same time (let's consider parallel modprobes). The current code has a
+> > flaw with that.
+>
+> Hi,
+>
+> sorry for picking this up again but I stumbled above the same issue
+> within the driver imx/drm driver which is using the component framework.
+> I end up in a infinity boot loop if I enabled the HDMI (which is the
+> DesignWare bridge device) and the LVDS support and the LVDS bind return
+> with EPROBE_DEFER. There are no words within the component framework docs
+> which says that this is forbidden. Of course we can work-around the
+> driver-core framework but IMHO this shouldn't be the way to go. I do not
+> say that we should revert the commit introducing the regression but we
+> should address this not only by extending the docs since the most
+> drm-drivers are using the component framework and can end up in the same
+> situation.
+>
+> > > It can be solved by refactoring the driver probe routine. If a resource is
+> > > required to be present, then check that it is available early; before
+> > > registering child devices.
+> >
+> > We fix one and leave others.
+>
+> E.g. the imx-drm and the sunxi driver...
 
+Just out of curiosity, does my patch fix an issue for you?
 
+> > > The proposed solution to modify driver core is fragile and susceptible to
+> > > side effects from other probe paths. I don't think it is the right approach.
+> >
+> > Have you tested it on your case? Does it fix the issue?
+
+-- 
+With Best Regards,
+Andy Shevchenko
