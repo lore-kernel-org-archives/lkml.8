@@ -2,123 +2,137 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52874C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:35:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39990C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3351E2074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:35:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1622C2074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:35:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591659337;
+	bh=3CaXAki9ormthkm7aWOGt25u/X87hCKqFQXmSQjyyFA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=uk6YCXPYhJSdMSzvWHkRowjkTJykprKnqUi8qtXYQrmFMlZKhI/xEZSjfr9sNF1KM
+	 J5zA2qcwI5mu74XogGUr/H3Ts5wpSWnV6tShHjDma48dDCL9Lwu2j2wcpf16lcZkAi
+	 Ec8+oavoooxMBZNtP/lAWknno3XkT7UZ/n834cKc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387882AbgFHXfV (ORCPT
+        id S1732635AbgFHXed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:35:21 -0400
-Received: from smtprelay0186.hostedemail.com ([216.40.44.186]:42428 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732537AbgFHXdK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:33:10 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 3E124485F;
-        Mon,  8 Jun 2020 23:33:09 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: women05_3c11e0026dbd
-X-Filterd-Recvd-Size: 3588
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf10.hostedemail.com (Postfix) with ESMTPA;
-        Mon,  8 Jun 2020 23:33:07 +0000 (UTC)
-Message-ID: <c25f5af83658ab9ef4ae8ef3825ea6540fe4e094.camel@perches.com>
-Subject: Re: Forest Bond <forest@alittletooquiet.net>,Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>,devel@driverdev.osuosl.org,linux-kernel@vger.kernel.org
-From:   Joe Perches <joe@perches.com>
-To:     Rodolfo C Villordo <rodolfovillordo@gmail.com>,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Date:   Mon, 08 Jun 2020 16:33:06 -0700
-In-Reply-To: <20200608225838.GA26559@ip-172-31-24-31.ec2.internal>
-References: <20200607224156.GA24090@ip-172-31-24-31.ec2.internal>
-         <20200608054614.GO23230@ZenIV.linux.org.uk>
-         <alpine.DEB.2.21.2006080758510.2430@hadrien>
-         <e3d7cc965eccec881bc35ae18d63f4bc23c33dfc.camel@perches.com>
-         <20200608225838.GA26559@ip-172-31-24-31.ec2.internal>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.2-0ubuntu1 
+        Mon, 8 Jun 2020 19:34:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56946 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731298AbgFHX2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:28:01 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E44452087E;
+        Mon,  8 Jun 2020 23:27:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591658880;
+        bh=3CaXAki9ormthkm7aWOGt25u/X87hCKqFQXmSQjyyFA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jRi2YRWnj5lXBSVmSxQBRFu8k+CM/SOehu+5MK3tajYMGEh+DcqdD1t+hrrWfnSlG
+         bOUlltbz3l/GTJkiGlJoJIrOeP5JqzDTK7XgMR1Kazn7kTLtKw2VnlxFa+pyJYyZjN
+         568tRbIhq9nK9GOzefefR4Qwlp2fPGK7pV5Ryb+U=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 07/37] clocksource: dw_apb_timer_of: Fix missing clockevent timers
+Date:   Mon,  8 Jun 2020 19:27:19 -0400
+Message-Id: <20200608232750.3370747-7-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200608232750.3370747-1-sashal@kernel.org>
+References: <20200608232750.3370747-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-06-08 at 22:58 +0000, Rodolfo C Villordo wrote:
-> On Mon, Jun 08, 2020 at 01:41:11AM -0700, Joe Perches wrote:
-> > On Mon, 2020-06-08 at 07:59 +0200, Julia Lawall wrote:
-> > > On Mon, 8 Jun 2020, Al Viro wrote:
-> > > 
-> > > > On Sun, Jun 07, 2020 at 10:41:56PM +0000, Rodolfo C. Villordo wrote:
-> > > > > Multiple line over 80 characters fixes by splitting in multiple lines.
-> > > > > Warning found by checkpatch.pl
-> > > > 
-> > > > I doubt that checkpatch.pl can catch the real problems there:
-> > > > 
-> > > > * Hungarian Notation Sucks.  Really.
-> > > > * so does CamelCase, especially for wonders like s_uGetRTSCTSRsvTime
-> 
-> Yes, I agree with that.
-> 
-> > > Rodolfo,
-> > > 
-> > > If you work hard with Coccinelle and python scripting, it can help with
-> > > the first two problems.
-> > 
-> > These VIA vt6655/vt6656 drivers have been in staging for more than
-> > a decade.  There are relatively few checkpatch coding style
-> > cleanups to do but there are many overall style issues to resolve.
-> > 
-> 
-> Yes, vt6655/rxtx.c needs lots of work. I was avoiding submit bigger changes
-> because this is my second patch submission.
-> 
-> Thank you all for the comments. I'm really sorry for the odd subject. 
-> 
-> How should I move forward with this?
-> 
-> 1 - Update this patch with the changes pointed by Dan Carpenter? 
+From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-Keep your changes small until you really know how this
-style of linux kernel staging changes is done.
+[ Upstream commit 6d2e16a3181bafb77b535095c39ad1c8b9558c8c ]
 
-> 2 - Do a more elaborated and bigger change, like suggested by Al Viro
-> and Joe Perches?
+Commit 100214889973 ("clocksource: dw_apb_timer_of: use
+clocksource_of_init") replaced a publicly available driver
+initialization method with one called by the timer_probe() method
+available after CLKSRC_OF. In current implementation it traverses
+all the timers available in the system and calls their initialization
+methods if corresponding devices were either in dtb or in acpi. But
+if before the commit any number of available timers would be installed
+as clockevent and clocksource devices, after that there would be at most
+two. The rest are just ignored since default case branch doesn't do
+anything. I don't see a reason of such behaviour, neither the commit
+message explains it. Moreover this might be wrong if on some platforms
+these timers might be used for different purpose, as virtually CPU-local
+clockevent timers and as an independent broadcast timer. So in order
+to keep the compatibility with the platforms where the order of the
+timers detection has some meaning, lets add the secondly discovered
+timer to be of clocksource/sched_clock type, while the very first and
+the others would provide the clockevents service.
 
-A patch series is much preferred to a single large change.
+Fixes: 100214889973 ("clocksource: dw_apb_timer_of: use clocksource_of_init")
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Alessandro Zummo <a.zummo@towertech.it>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-rtc@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/20200521204818.25436-7-Sergey.Semin@baikalelectronics.ru
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/clocksource/dw_apb_timer_of.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-If you decide to refactor various functions, please do that
-in separate, discrete patches.
-
-Adding a #define and doing a sed like:
-
-$ sed -i 's/(BY_AL2230_REG_LEN << 3) + IFREGCTL_REGW/AL2230_RLEN_CTL/' drivers/staging/vt6655/*.[ch]
-
-should be a single patch.
-
-And if you do that, another should be done for AL7230
-
-$ sed -i 's/(BY_AL7230_REG_LEN << 3) + IFREGCTL_REGW/AL7230_RLEN_CTL/' drivers/staging/vt6655/*.[ch]
-
-etc...
-
-Maybe the #define BY_AL2230_REG_LEN should be 0x17 so that
-the << 3 is more obviously constrained to the low byte
-
-Maybe the + uses in the macros should be bitwise |.
-
-Go wild after you figure out the process, just keep your
-patches to obvious, small and verifiable changes.
-
+diff --git a/drivers/clocksource/dw_apb_timer_of.c b/drivers/clocksource/dw_apb_timer_of.c
+index a19a3f619cc7..99e5fd59964b 100644
+--- a/drivers/clocksource/dw_apb_timer_of.c
++++ b/drivers/clocksource/dw_apb_timer_of.c
+@@ -134,16 +134,14 @@ static int num_called;
+ static void __init dw_apb_timer_init(struct device_node *timer)
+ {
+ 	switch (num_called) {
+-	case 0:
+-		pr_debug("%s: found clockevent timer\n", __func__);
+-		add_clockevent(timer);
+-		break;
+ 	case 1:
+ 		pr_debug("%s: found clocksource timer\n", __func__);
+ 		add_clocksource(timer);
+ 		init_sched_clock();
+ 		break;
+ 	default:
++		pr_debug("%s: found clockevent timer\n", __func__);
++		add_clockevent(timer);
+ 		break;
+ 	}
+ 
+-- 
+2.25.1
 
