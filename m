@@ -7,53 +7,55 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4625DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F5DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:14:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23F2B20884
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:14:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E03222078D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:14:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591661660;
-	bh=VTDinPnBrTtWYq9r2jdfYIPmKUtkIW3BFWKhAo5czcM=;
+	s=default; t=1591661663;
+	bh=+OpGqXvzZxY/hYzOBySZEbXhrLd9AA+Z4+FvPhEA0zg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QlMaybG3axWu6pktd14DAmg64RMc4DHrG6ZDonzOCqMVxIjYjQdMK4E7Dkqln/2Xn
-	 MsQVhFv08T736r/3n/8P1MbUlhfTmf8xKO7T16geUtyhy59RkkOWWa+C4484tWUSaB
-	 17LPBQRL6DGyjlocHNUbTXfXuXE/uSmE1QjiE5qA=
+	b=unBe+pyxqz6FvfLC9Jj7Ak9+0PInbs/Q+GNwhOfN+jLrV68GSpnWH7bB3QLpJ1AOd
+	 HDParm7Qx/qRpwiNmVj/NOt6FSKKJxBGoR6IdjfiFA8kSOFQSCoi7X3m11goRNYcwj
+	 c504lesX7C6AqXpBcLccTjaonsnrrT4ceSbPRPUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730765AbgFHXTQ (ORCPT
+        id S1731677AbgFIAOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:19:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36694 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:14:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728622AbgFHXPg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:15:36 -0400
+        id S1730401AbgFHXTQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:19:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 927EA2068D;
-        Mon,  8 Jun 2020 23:15:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAE8620884;
+        Mon,  8 Jun 2020 23:19:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658136;
-        bh=VTDinPnBrTtWYq9r2jdfYIPmKUtkIW3BFWKhAo5czcM=;
+        s=default; t=1591658355;
+        bh=+OpGqXvzZxY/hYzOBySZEbXhrLd9AA+Z4+FvPhEA0zg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aVcZRaokaH4XiXkR6gIRcOeyV4iiXskc6LDfjWcRgBghFemcnwgOzcmWaXyP1XFMa
-         hdJjAqhgStJ0RKry+IOdkgweXVwYsyFf7XmF+D3zwjxGASaDdq7MHQFTz4vuR4eWjR
-         t6I69BPyk09evXCC5ruIV7T1yKLza9zJLu4WtCeo=
+        b=zoj8hBIc3MlTBqPBQDekw8hbA2KvImm9eY6rYrxZtzNd3NO8p+w5T7Q/OhrPTkW9/
+         xlkHkBR/PPdfo9sFxhMwI2LN9dSZ6aVkkI9aieTNKBcwuYTZf8i8XFEPgZBCpXYAFN
+         9/8IoW/drF595Tju7r/4pOAU1x2y2/u4G9FAnMaQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
-        <jerome.pouiller@silabs.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 5.6 170/606] staging: wfx: unlock on error path
-Date:   Mon,  8 Jun 2020 19:04:55 -0400
-Message-Id: <20200608231211.3363633-170-sashal@kernel.org>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Fangrui Song <maskray@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-efi@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.4 022/175] efi/libstub/x86: Work around LLVM ELF quirk build regression
+Date:   Mon,  8 Jun 2020 19:16:15 -0400
+Message-Id: <20200608231848.3366970-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
-References: <20200608231211.3363633-1-sashal@kernel.org>
+In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
+References: <20200608231848.3366970-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,38 +64,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-commit f0b9d875faa4499afe3381404c3795e9da84bc00 upstream.
+[ Upstream commit f77767ed5f4d398b29119563155e4ece2dfeee13 ]
 
-We need to release the tx_lock on the error path before returning.
+When building the x86 EFI stub with Clang, the libstub Makefile rules
+that manipulate the ELF object files may throw an error like:
 
-Fixes: d1c015b4ef6f ("staging: wfx: rewrite wfx_hw_scan()")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: stable <stable@vger.kernel.org>
-Reviewed-by: Jérôme Pouiller <jerome.pouiller@silabs.com>
-Link: https://lore.kernel.org/r/20200512083656.GA251760@mwanda
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    STUBCPY drivers/firmware/efi/libstub/efi-stub-helper.stub.o
+  strip: drivers/firmware/efi/libstub/efi-stub-helper.stub.o: Failed to find link section for section 10
+  objcopy: drivers/firmware/efi/libstub/efi-stub-helper.stub.o: Failed to find link section for section 10
+
+This is the result of a LLVM feature [0] where symbol references are
+stored in a LLVM specific .llvm_addrsig section in a non-transparent way,
+causing generic ELF tools such as strip or objcopy to choke on them.
+
+So force the compiler not to emit these sections, by passing the
+appropriate command line option.
+
+[0] https://sourceware.org/bugzilla/show_bug.cgi?id=23817
+
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Peter Collingbourne <pcc@google.com>
+Cc: Sami Tolvanen <samitolvanen@google.com>
+Reported-by: Arnd Bergmann <arnd@arndb.de>
+Suggested-by: Fangrui Song <maskray@google.com>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/wfx/scan.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/firmware/efi/libstub/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/staging/wfx/scan.c b/drivers/staging/wfx/scan.c
-index 6e1e50048651..9aa14331affd 100644
---- a/drivers/staging/wfx/scan.c
-+++ b/drivers/staging/wfx/scan.c
-@@ -57,8 +57,10 @@ static int send_scan_req(struct wfx_vif *wvif,
- 	wvif->scan_abort = false;
- 	reinit_completion(&wvif->scan_complete);
- 	timeout = hif_scan(wvif, req, start_idx, i - start_idx);
--	if (timeout < 0)
-+	if (timeout < 0) {
-+		wfx_tx_unlock(wvif->wdev);
- 		return timeout;
-+	}
- 	ret = wait_for_completion_timeout(&wvif->scan_complete, timeout);
- 	if (req->channels[start_idx]->max_power != wvif->vif->bss_conf.txpower)
- 		hif_set_output_power(wvif, wvif->vif->bss_conf.txpower);
+diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
+index ee0661ddb25b..8c5b5529dbc0 100644
+--- a/drivers/firmware/efi/libstub/Makefile
++++ b/drivers/firmware/efi/libstub/Makefile
+@@ -28,6 +28,7 @@ KBUILD_CFLAGS			:= $(cflags-y) -DDISABLE_BRANCH_PROFILING \
+ 				   -D__NO_FORTIFY \
+ 				   $(call cc-option,-ffreestanding) \
+ 				   $(call cc-option,-fno-stack-protector) \
++				   $(call cc-option,-fno-addrsig) \
+ 				   -D__DISABLE_EXPORTS
+ 
+ GCOV_PROFILE			:= n
 -- 
 2.25.1
 
