@@ -2,193 +2,140 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11446C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38024C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E234A20659
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:55:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 108DC20659
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:55:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660518;
-	bh=jdEldZpfK4zYkAX2jFTC/ShU1g0BC6ZePRI0yc3ko1k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=g7/41NS50R/pygkN/skgf3AogiJRTvRn4clTuk/U5If1S36viwuiB8QWVZ6lJSCyZ
-	 fzn/KGfL4hRAfvnPWoQktb2k62HOXmdCfD4RpKwHCBfl/MM53Kn9g5dm5YvjY/eEUk
-	 LwVa5Uf+qC/k9T2Rnzhaul5CIlg52SpkldqssGUc=
+	s=default; t=1591660526;
+	bh=duFMSxH9LLHFznCxFrz5SCLi4Onawnsd+0BCsQHec3E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=sVMFw/nFizkmHDR3N6J9UE/LYyEDwGDh4k9GDh59HdhQS93r0riVSVcbLoZEqGYnF
+	 cGMctV1ZQ79Jyx9lOopPx4P/TGDqrcf4OVXlMlqdAerete4a+1M6joj5zHTw7B1xIf
+	 cdRbUoY4dVpzO7+kIoJdAJWI4MPpxHqbZJVpOBYg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731723AbgFHXzR (ORCPT
+        id S1732002AbgFHXzZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:55:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38726 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:55:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387857AbgFHXzL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:55:11 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1731566AbgFHXYD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:24:03 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 614FA20659;
-        Mon,  8 Jun 2020 23:55:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA8B820C56;
+        Mon,  8 Jun 2020 23:24:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591660510;
-        bh=jdEldZpfK4zYkAX2jFTC/ShU1g0BC6ZePRI0yc3ko1k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WGjg7Ef05QjYfKu1Y1MiIM4Ms8WXmngXEnv7nrWh62eQMh7h1OuqXscsVr4ywJb9B
-         Lupda/jVNKHz0qRtCeAEnvGCKLNsL+aKTo/fsSIAarVdSDLZcooPrNpjsdgG3sjaVs
-         Fc20bi9/UjjjuMC9b+rFKNmjmsaAlB4zLtTpnOBo=
-Received: by pali.im (Postfix)
-        id 8F10E263E; Tue,  9 Jun 2020 01:55:08 +0200 (CEST)
-Date:   Tue, 9 Jun 2020 01:55:08 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Y Paritcher <y.linux@paritcher.com>, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Mario.Limonciello@dell.com
-Subject: Re: [PATCH v2 3/3] platform/x86: dell-wmi: add new dmi keys to
- bios_to_linux_keycode
-Message-ID: <20200608235508.wthtgilgmifwfgz2@pali>
-References: <cover.1591584631.git.y.linux@paritcher.com>
- <cover.1591656154.git.y.linux@paritcher.com>
- <d585d2a0f01a6b9480352530b571dec2d1afd79f.1591656154.git.y.linux@paritcher.com>
- <8053252a-83ad-bcaa-2830-ccfbca1b4152@infradead.org>
+        s=default; t=1591658643;
+        bh=duFMSxH9LLHFznCxFrz5SCLi4Onawnsd+0BCsQHec3E=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gxA20iqZZSzF2aL35GZDyEPqmW+wbFRyrVqqQ4I7vfRYEUlf2i2IigjFvLlBwni2T
+         vgWMyGoX6XzSWRwA+gdwc8GdAbvtGenhk0JAF8Q8jm3iMfL6DZxlytvQugeSiY1arm
+         PIv+oSS9JBt3xLVOMlpVp7B51cGO7n4bXtYoOJbw=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 064/106] platform/x86: intel-vbtn: Split keymap into buttons and switches parts
+Date:   Mon,  8 Jun 2020 19:21:56 -0400
+Message-Id: <20200608232238.3368589-64-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200608232238.3368589-1-sashal@kernel.org>
+References: <20200608232238.3368589-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8053252a-83ad-bcaa-2830-ccfbca1b4152@infradead.org>
-User-Agent: NeoMutt/20180716
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+From: Hans de Goede <hdegoede@redhat.com>
 
-On Monday 08 June 2020 16:27:10 Randy Dunlap wrote:
-> Hi--
-> 
-> On 6/8/20 4:05 PM, Y Paritcher wrote:
-> > Increase length of bios_to_linux_keycode to 2 bytes (the true size of a
-> > keycode) to allow for a new keycode 0xffff, this silences the following
-> > messages being logged at startup on a Dell Inspiron 5593:
-> > 
-> >     dell_wmi: firmware scancode 0x48 maps to unrecognized keycode 0xffff
-> >     dell_wmi: firmware scancode 0x50 maps to unrecognized keycode 0xffff
+[ Upstream commit f6ba524970c4b73b234bf41ecd6628f5803b1559 ]
 
-Which keys generate these two scancodes? Or how have you been able to
-trigger these scancodes (in case they are not generated by key press)?
+Split the sparse keymap into 2 separate keymaps, a buttons and a switches
+keymap and combine the 2 to a single map again in intel_vbtn_input_setup().
 
-It is important to know for which key or event or feature we need to
-include this patch and therefore what feature is currently
-non-functional on that laptop.
+This is a preparation patch for not telling userspace that we have switches
+when we do not have them (and for doing the same for the buttons).
 
-> > as per this code comment:
-> > 
-> >    Log if we find an entry in the DMI table that we don't
-> >    understand.  If this happens, we should figure out what
-> >    the entry means and add it to bios_to_linux_keycode.
-> > 
-> > These are keycodes included in the 0xB2 DMI table, for which the
-> > corosponding keys are not known.
-> 
->   corresponding
-> 
-> > 
-> > Now when a user will encounter this key, a proper message wil be printed:
-> > 
-> >     dell_wmi: Unknown key with type 0xXXXX and code 0xXXXX pressed
-> > 
-> > This will then allow the key to be identified properly.
-> > 
-> > Signed-off-by: Y Paritcher <y.linux@paritcher.com>
-> > ---
-> >  drivers/platform/x86/dell-wmi.c | 8 +++-----
-> >  1 file changed, 3 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-> > index 6b510f8431a3..dae1db96b5a0 100644
-> > --- a/drivers/platform/x86/dell-wmi.c
-> > +++ b/drivers/platform/x86/dell-wmi.c
-> > @@ -196,7 +196,7 @@ struct dell_dmi_results {
-> >  };
-> >  
-> >  /* Uninitialized entries here are KEY_RESERVED == 0. */
-> > -static const u16 bios_to_linux_keycode[256] = {
-> > +static const u16 bios_to_linux_keycode[65536] = {
-> 
-> It surely seems odd to me to expand an array from 512 bytes to 128 Kbytes
-> just to handle one special case.  Can't it be handled in code as a
-> special case?
+Fixes: de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode switch on 2-in-1's")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/x86/intel-vbtn.c | 28 +++++++++++++++++++++++++---
+ 1 file changed, 25 insertions(+), 3 deletions(-)
 
-I already wrote that more developers would not be happy about this
-change. I would rather to see e.g. that Randy's suggestion with 0xffff
-check as increasing memory usage.
+diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+index 0bcfa20dd614..e42203776727 100644
+--- a/drivers/platform/x86/intel-vbtn.c
++++ b/drivers/platform/x86/intel-vbtn.c
+@@ -39,14 +39,20 @@ static const struct key_entry intel_vbtn_keymap[] = {
+ 	{ KE_IGNORE, 0xC7, { KEY_VOLUMEDOWN } },	/* volume-down key release */
+ 	{ KE_KEY,    0xC8, { KEY_ROTATE_LOCK_TOGGLE } },	/* rotate-lock key press */
+ 	{ KE_KEY,    0xC9, { KEY_ROTATE_LOCK_TOGGLE } },	/* rotate-lock key release */
++};
++
++static const struct key_entry intel_vbtn_switchmap[] = {
+ 	{ KE_SW,     0xCA, { .sw = { SW_DOCK, 1 } } },		/* Docked */
+ 	{ KE_SW,     0xCB, { .sw = { SW_DOCK, 0 } } },		/* Undocked */
+ 	{ KE_SW,     0xCC, { .sw = { SW_TABLET_MODE, 1 } } },	/* Tablet */
+ 	{ KE_SW,     0xCD, { .sw = { SW_TABLET_MODE, 0 } } },	/* Laptop */
+-	{ KE_END },
+ };
+ 
++#define KEYMAP_LEN \
++	(ARRAY_SIZE(intel_vbtn_keymap) + ARRAY_SIZE(intel_vbtn_switchmap) + 1)
++
+ struct intel_vbtn_priv {
++	struct key_entry keymap[KEYMAP_LEN];
+ 	struct input_dev *input_dev;
+ 	bool wakeup_mode;
+ };
+@@ -54,13 +60,29 @@ struct intel_vbtn_priv {
+ static int intel_vbtn_input_setup(struct platform_device *device)
+ {
+ 	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
+-	int ret;
++	int ret, keymap_len = 0;
++
++	if (true) {
++		memcpy(&priv->keymap[keymap_len], intel_vbtn_keymap,
++		       ARRAY_SIZE(intel_vbtn_keymap) *
++		       sizeof(struct key_entry));
++		keymap_len += ARRAY_SIZE(intel_vbtn_keymap);
++	}
++
++	if (true) {
++		memcpy(&priv->keymap[keymap_len], intel_vbtn_switchmap,
++		       ARRAY_SIZE(intel_vbtn_switchmap) *
++		       sizeof(struct key_entry));
++		keymap_len += ARRAY_SIZE(intel_vbtn_switchmap);
++	}
++
++	priv->keymap[keymap_len].type = KE_END;
+ 
+ 	priv->input_dev = devm_input_allocate_device(&device->dev);
+ 	if (!priv->input_dev)
+ 		return -ENOMEM;
+ 
+-	ret = sparse_keymap_setup(priv->input_dev, intel_vbtn_keymap, NULL);
++	ret = sparse_keymap_setup(priv->input_dev, priv->keymap, NULL);
+ 	if (ret)
+ 		return ret;
+ 
+-- 
+2.25.1
 
-> >  	[0]	= KEY_MEDIA,
-> >  	[1]	= KEY_NEXTSONG,
-> >  	[2]	= KEY_PLAYPAUSE,
-> > @@ -237,6 +237,7 @@ static const u16 bios_to_linux_keycode[256] = {
-> >  	[37]	= KEY_UNKNOWN,
-> >  	[38]	= KEY_MICMUTE,
-> >  	[255]	= KEY_PROG3,
-> > +	[65535]	= KEY_UNKNOWN,
-
-Looking at the last two lines... and for me it looks like that 0x00FF
-and 0xFFFF are just "placeholders" or special values for unknown /
-custom / unsupported / reserved / special / ... codes.
-
-It is really suspicious why first 38 values are defined, then there is
-gap, then one value 255 and then huge gap to 65535.
-
-Mario, this looks like some mapping table between internal Dell BIOS key
-code and standard Linux key code. Are you able to get access to some
-documentation which contains explanation of those Dell key numbers?
-It could really help us to understand these gaps and what is correct
-interpretation of these numbers.
-
-E.g. I remember that pressing Fn+Q or Fn+W on some Dell Latitude
-generates code 255, which could prove my thesis about "special codes"
-(which are probably not found in e.g. Windows or Linux mapping tables).
-
-> >  };
-> >  
-> >  /*
-> > @@ -503,10 +504,7 @@ static void handle_dmi_entry(const struct dmi_header *dm, void *opaque)
-> >  					&table->keymap[i];
-> >  
-> >  		/* Uninitialized entries are 0 aka KEY_RESERVED. */
-> > -		u16 keycode = (bios_entry->keycode <
-> > -			       ARRAY_SIZE(bios_to_linux_keycode)) ?
-> > -			bios_to_linux_keycode[bios_entry->keycode] :
-> > -			KEY_RESERVED;
-> > +		u16 keycode = bios_to_linux_keycode[bios_entry->keycode];
-> >  
-> >  		/*
-> >  		 * Log if we find an entry in the DMI table that we don't
-> > 
-> 
-> Something like:
-> 
-> 		u16 keycode;
-> 
-> 		keycode = bios_entry->keycode == 0xffff ? KEY_UNKNOWN :
-> 			(bios_entry->keycode <
-> 			       ARRAY_SIZE(bios_to_linux_keycode)) ?
-> 			bios_to_linux_keycode[bios_entry->keycode] :
-> 			KEY_RESERVED;
-> 
-> 
-> 
-> Also please fix this:
-> (no To-header on input) <>
-
-Hint: specifying git send-email with '--to' argument instead of '--cc'
-should help.
-
-> 
-> -- 
-> ~Randy
-> 
