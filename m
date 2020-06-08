@@ -2,367 +2,220 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA1B0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A46FC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:20:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C46E720775
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:17:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08257206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:20:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FvaaSm5t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726142AbgFHSRe (ORCPT
+        id S1726066AbgFHSU1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 14:17:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49340 "EHLO
+        Mon, 8 Jun 2020 14:20:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725797AbgFHSRe (ORCPT
+        with ESMTP id S1725967AbgFHSUX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 14:17:34 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C91CCC08C5C2;
-        Mon,  8 Jun 2020 11:17:33 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 7C751FD9C8;
-        Mon,  8 Jun 2020 18:17:28 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     Harry Wei <harryxiyou@gmail.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sven Van Asbroeck <TheSven73@gmail.com>,
+        Mon, 8 Jun 2020 14:20:23 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7305DC08C5C6
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 11:20:22 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id x6so18418604wrm.13
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 11:20:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=2CJM5g0VuqYFNIM+dUzodFUTj18WAdux3/u8z24zvRA=;
+        b=FvaaSm5tyr6RBgjbPNfvrJLlZcAn3DmzQGeyoQrQ5NJotNGMRI+S/WTL4cZGcvbeKQ
+         OeiYno6xBUEcQi5WgLfPg1nv7oOkxmoaBpZ6QtIPDVlQPQdk8Xg1KETQTvd/QbsmmRZg
+         rKCAizdiGMf2yjrMRJkrYUJTQ8RhPDKv4CF4YBH4XvdeaNYdcf0hTu/38GolQI/FykDN
+         4Wtn17IHKjfImnRlO7XuYIJCSylUrNpYSAcVJ0FF2ljUmpkm69oK59PmBzzl1uzp468r
+         sdFV0WqzFhOkNZXY3HflI0dAEsSOqMmu2UtExqdHiQfNrXygDGlFgbgtHXGR4oIhwsQF
+         uzWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=2CJM5g0VuqYFNIM+dUzodFUTj18WAdux3/u8z24zvRA=;
+        b=hqJtOpjtW+ymBv7KR1k53+m5srd1I0xWYTkZzeIK8RoWdi9Ht+e2ojFQRkJ4TNBP6+
+         IElVFzQsYdJEtesbPMjcXP1l2XPEdz6issiHzw1FETR3HM3ENa82YOz1bwKrSFoKunV/
+         ueHi9BJzOebziykJXHCwXekW05J3WDroPHMFNgw4TWxTSiGCrqVsfgsPkdFyiOqLAjHO
+         TL6qrdh6rmUedkh3wnUngIlZULItjJ1nFbg1sddaHazbMCpCsgrVcKNfEbylrDkn0bfy
+         po6dWWYVo1eYy2enx8MOxzJDmEG81KhDTwYM3mpRlcORcobKIQp5FNvLVwekUkIffR6y
+         r/8A==
+X-Gm-Message-State: AOAM532s5P9dH5K/tCoP/mM5r1jVrBlCXNIiS1SywW3ZgLJ1mxp4zR4O
+        TrKKe7sn5pI/ckgkfRDvoEPLdw==
+X-Google-Smtp-Source: ABdhPJxumzJA4nkmctYgB3lMSJVUnSMTyEhafMZJYxSm51uV/tmOYuDxGF7eIqOVSIVmr0U8Lef0xg==
+X-Received: by 2002:a05:6000:11cd:: with SMTP id i13mr86707wrx.141.1591640420821;
+        Mon, 08 Jun 2020 11:20:20 -0700 (PDT)
+Received: from dell ([95.147.198.92])
+        by smtp.gmail.com with ESMTPSA id a7sm358274wmh.14.2020.06.08.11.20.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jun 2020 11:20:20 -0700 (PDT)
+Date:   Mon, 8 Jun 2020 19:20:18 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        david.m.ertman@intel.com, shiraz.saleem@intel.com,
+        Michael Walle <michael@walle.cc>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Brown <broonie@kernel.org>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        David Miller <davem@davemloft.net>,
-        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jacob Huisman <jacobhuisman@kernelthusiast.com>,
-        "Srivatsa S. Bhat (VMware)" <srivatsa@csail.mit.edu>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] Replace HTTP links with HTTPS ones: Documentation/translations/zh_CN
-Date:   Mon,  8 Jun 2020 20:16:49 +0200
-Message-Id: <20200608181649.74883-1-grandmaster@al2klimov.de>
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld
+ management controller
+Message-ID: <20200608182018.GB4106@dell>
+References: <20200604211039.12689-1-michael@walle.cc>
+ <20200604211039.12689-3-michael@walle.cc>
+ <20200605065709.GD3714@dell>
+ <20200605105026.GC5413@sirena.org.uk>
+ <c5632bfab3956265e90fc2fb6c0b3cae@walle.cc>
+ <20200606114645.GB2055@sirena.org.uk>
+ <dc052a5c77171014ecc465b1da8b7ef8@walle.cc>
+ <20200608082827.GB3567@dell>
+ <CAHp75VdiH=J-ovCdh1RFJDW_bJM8=pbXRaHmB691GLb-5oBmYQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
-X-Spamd-Bar: /
+In-Reply-To: <CAHp75VdiH=J-ovCdh1RFJDW_bJM8=pbXRaHmB691GLb-5oBmYQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+On Mon, 08 Jun 2020, Andy Shevchenko wrote:
 
-Deterministic algorithm:
-For each file:
-  For each line:
-    If doesn't contain `\bxmlns\b`:
-      For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-        If both the HTTP and HTTPS versions
-        return 200 OK and serve the same content:
-          Replace HTTP with HTTPS.
+> +Cc: some Intel people WRT our internal discussion about similar
+> problem and solutions.
+> 
+> On Mon, Jun 8, 2020 at 11:30 AM Lee Jones <lee.jones@linaro.org> wrote:
+> > On Sat, 06 Jun 2020, Michael Walle wrote:
+> > > Am 2020-06-06 13:46, schrieb Mark Brown:
+> > > > On Fri, Jun 05, 2020 at 10:07:36PM +0200, Michael Walle wrote:
+> > > > > Am 2020-06-05 12:50, schrieb Mark Brown:
+> 
+> ...
+> 
+> > Right.  I'm suggesting a means to extrapolate complex shared and
+> > sometimes intertwined batches of register sets to be consumed by
+> > multiple (sub-)devices spanning different subsystems.
+> >
+> > Actually scrap that.  The most common case I see is a single Regmap
+> > covering all child-devices.
+> 
+> Yes, because often we need a synchronization across the entire address
+> space of the (parent) device in question.
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- .../translations/zh_CN/process/2.Process.rst   |  8 ++++----
- .../translations/zh_CN/process/4.Coding.rst    |  2 +-
- .../zh_CN/process/7.AdvancedTopics.rst         |  6 +++---
- .../zh_CN/process/8.Conclusion.rst             | 10 +++++-----
- .../zh_CN/process/coding-style.rst             |  2 +-
- .../translations/zh_CN/process/howto.rst       | 12 ++++++------
- .../zh_CN/process/submitting-drivers.rst       | 18 +++++++++---------
- .../zh_CN/process/submitting-patches.rst       |  4 ++--
- .../process/volatile-considered-harmful.rst    |  4 ++--
- 9 files changed, 33 insertions(+), 33 deletions(-)
+Exactly.
 
-diff --git a/Documentation/translations/zh_CN/process/2.Process.rst b/Documentation/translations/zh_CN/process/2.Process.rst
-index ceb733bb0294..ebe2e0254b3e 100644
---- a/Documentation/translations/zh_CN/process/2.Process.rst
-+++ b/Documentation/translations/zh_CN/process/2.Process.rst
-@@ -212,7 +212,7 @@ Next 树
- 
- 当前-mm 补丁可在“mmotm”（-mm of the moment）目录中找到，地址：
- 
--        http://www.ozlabs.org/~akpm/mmotm/
-+        https://www.ozlabs.org/~akpm/mmotm/
- 
- 然而，使用mmotm树可能是一种令人沮丧的体验；它甚至可能无法编译。
- 
-@@ -220,7 +220,7 @@ Next 树
- linux-next 是下一个合并窗口关闭后主线的快照。linux-next树在Linux-kernel 和
- Linux-next 邮件列表中发布，可从以下位置下载：
- 
--        http://www.kernel.org/pub/linux/kernel/next/
-+        https://www.kernel.org/pub/linux/kernel/next/
- 
- Linux-next 已经成为内核开发过程中不可或缺的一部分；在一个给定的合并窗口中合并
- 的所有补丁都应该在合并窗口打开之前的一段时间内找到进入Linux-next 的方法。
-@@ -260,7 +260,7 @@ staging驱动程序。因此，在成为一名合适的主线驱动的路上，s
- 
- 现在几乎所有的Linux发行版都打包了Git。主页位于：
- 
--        http://git-scm.com/
-+        https://git-scm.com/
- 
- 那个页面有指向文档和教程的指针。
- 
-@@ -272,7 +272,7 @@ Mercurial与Git共享许多特性，但它提供了一个界面，许多人觉
- 
- 另一个值得了解的工具是quilt:
- 
--        http://savannah.nongnu.org/projects/quilt
-+        https://savannah.nongnu.org/projects/quilt
- 
- Quilt 是一个补丁管理系统，而不是源代码管理系统。它不会随着时间的推移跟踪历史；
- 相反，它面向根据不断发展的代码库跟踪一组特定的更改。一些主要的子系统维护人员
-diff --git a/Documentation/translations/zh_CN/process/4.Coding.rst b/Documentation/translations/zh_CN/process/4.Coding.rst
-index b82b1dde3122..959a06ba025c 100644
---- a/Documentation/translations/zh_CN/process/4.Coding.rst
-+++ b/Documentation/translations/zh_CN/process/4.Coding.rst
-@@ -224,7 +224,7 @@ scripts/coccinelle目录下已经打包了相当多的内核“语义补丁”
- 或Blackfin开发板，您仍然可以执行编译步骤。可以在以下位置找到一组用于x86系统的
- 大型交叉编译器：
- 
--        http://www.kernel.org/pub/tools/crosstool/
-+        https://www.kernel.org/pub/tools/crosstool/
- 
- 花一些时间安装和使用这些编译器将有助于避免以后的尴尬。
- 
-diff --git a/Documentation/translations/zh_CN/process/7.AdvancedTopics.rst b/Documentation/translations/zh_CN/process/7.AdvancedTopics.rst
-index 956815edbd18..2f0ef750746f 100644
---- a/Documentation/translations/zh_CN/process/7.AdvancedTopics.rst
-+++ b/Documentation/translations/zh_CN/process/7.AdvancedTopics.rst
-@@ -25,9 +25,9 @@
- 将是Git如何特别适合内核开发过程。想要加快Git的开发人员可以在以下网站上找到
- 更多信息：
- 
--	http://git-scm.com/
-+	https://git-scm.com/
- 
--	http://www.kernel.org/pub/software/scm/git/docs/user-manual.html
-+	https://www.kernel.org/pub/software/scm/git/docs/user-manual.html
- 
- 在尝试使用它使补丁可供其他人使用之前，第一要务是阅读上述站点，对Git的工作
- 方式有一个扎实的了解。使用Git的开发人员应该能够获得主线存储库的副本，探索
-@@ -42,7 +42,7 @@
- 如果您有一个可以访问Internet的系统，那么使用git守护进程设置这样的服务器相
- 对简单。否则，免费的公共托管网站（例如github）开始出现在网络上。成熟的开发
- 人员可以在kernel.org上获得一个帐户，但这些帐户并不容易找到；有关更多信息，
--请参阅 http://kernel.org/faq/
-+请参阅 https://kernel.org/faq/
- 
- 正常的Git工作流程涉及到许多分支的使用。每一条开发线都可以分为单独的“主题
- 分支”，并独立维护。Git的分支机构很便宜，没有理由不免费使用它们。而且，在
-diff --git a/Documentation/translations/zh_CN/process/8.Conclusion.rst b/Documentation/translations/zh_CN/process/8.Conclusion.rst
-index 2bbd76161e10..90cec3de6106 100644
---- a/Documentation/translations/zh_CN/process/8.Conclusion.rst
-+++ b/Documentation/translations/zh_CN/process/8.Conclusion.rst
-@@ -17,16 +17,16 @@
- 记录的；“make htmldocs”或“make pdfdocs”可用于以HTML或PDF格式生成这些文档（
- 尽管某些发行版提供的tex版本会遇到内部限制，无法正确处理文档）。
- 
--不同的网站在各个细节层次上讨论内核开发。您的作者想谦虚地建议用 http://lwn.net/
-+不同的网站在各个细节层次上讨论内核开发。您的作者想谦虚地建议用 https://lwn.net/
- 作为来源；有关许多特定内核主题的信息可以通过以下网址的lwn内核索引找到：
- 
-         http://lwn.net/kernel/index/
- 
- 除此之外，内核开发人员的一个宝贵资源是：
- 
--        http://kernelnewbies.org/
-+        https://kernelnewbies.org/
- 
--当然，我们不应该忘记 http://kernel.org/ 这是内核发布信息的最终位置。
-+当然，我们不应该忘记 https://kernel.org/ 这是内核发布信息的最终位置。
- 
- 关于内核开发有很多书：
- 
-@@ -42,9 +42,9 @@
- 
- 有关git的文档，请访问：
- 
--        http://www.kernel.org/pub/software/scm/git/docs/
-+        https://www.kernel.org/pub/software/scm/git/docs/
- 
--        http://www.kernel.org/pub/software/scm/git/docs/user-manual.html
-+        https://www.kernel.org/pub/software/scm/git/docs/user-manual.html
- 
- 结论
- ====
-diff --git a/Documentation/translations/zh_CN/process/coding-style.rst b/Documentation/translations/zh_CN/process/coding-style.rst
-index eae10bc7f86f..406d43a02c02 100644
---- a/Documentation/translations/zh_CN/process/coding-style.rst
-+++ b/Documentation/translations/zh_CN/process/coding-style.rst
-@@ -946,7 +946,7 @@ Addison-Wesley, Inc., 1999.
- ISBN 0-201-61586-X.
- 
- GNU 手册 - 遵循 K&R 标准和此文本 - cpp, gcc, gcc internals and indent,
--都可以从 http://www.gnu.org/manual/ 找到
-+都可以从 https://www.gnu.org/manual/ 找到
- 
- WG14 是 C 语言的国际标准化工作组，URL: http://www.open-std.org/JTC1/SC22/WG14/
- 
-diff --git a/Documentation/translations/zh_CN/process/howto.rst b/Documentation/translations/zh_CN/process/howto.rst
-index a8e6ab818983..ee3dee476d57 100644
---- a/Documentation/translations/zh_CN/process/howto.rst
-+++ b/Documentation/translations/zh_CN/process/howto.rst
-@@ -69,7 +69,7 @@ Linux内核源代码都是在GPL（通用公共许可证）的保护下发布的
- 邮件组里的人并不是律师，不要期望他们的话有法律效力。
- 
- 对于GPL的常见问题和解答，请访问以下链接：
--	http://www.gnu.org/licenses/gpl-faq.html
-+	https://www.gnu.org/licenses/gpl-faq.html
- 
- 
- 文档
-@@ -109,7 +109,7 @@ Linux内核代码中包含有大量的文档。这些文档对于学习如何与
-     其他关于如何正确地生成补丁的优秀文档包括：
-     "The Perfect Patch"
- 
--        http://www.ozlabs.org/~akpm/stuff/tpp.txt
-+        https://www.ozlabs.org/~akpm/stuff/tpp.txt
- 
-     "Linux kernel patch submission format"
- 
-@@ -163,7 +163,7 @@ ReST格式的文档会生成在 Documentation/output. 目录中。
- ------------------
- 如果你对Linux内核开发一无所知，你应该访问“Linux内核新手”计划：
- 
--	http://kernelnewbies.org
-+	https://kernelnewbies.org
- 
- 它拥有一个可以问各种最基本的内核开发问题的邮件列表（在提问之前一定要记得
- 查找已往的邮件，确认是否有人已经回答过相同的问题）。它还拥有一个可以获得
-@@ -176,7 +176,7 @@ ReST格式的文档会生成在 Documentation/output. 目录中。
- 如果你想加入内核开发社区并协助完成一些任务，却找不到从哪里开始，可以访问
- “Linux内核房管员”计划：
- 
--	http://kernelnewbies.org/KernelJanitors
-+	https://kernelnewbies.org/KernelJanitors
- 
- 这是极佳的起点。它提供一个相对简单的任务列表，列出内核代码中需要被重新
- 整理或者改正的地方。通过和负责这个计划的开发者们一同工作，你会学到将补丁
-@@ -212,7 +212,7 @@ ReST格式的文档会生成在 Documentation/output. 目录中。
-   - 每当一个新版本的内核被发布，为期两周的集成窗口将被打开。在这段时间里
-     维护者可以向Linus提交大段的修改，通常这些修改已经被放到-mm内核中几个
-     星期了。提交大量修改的首选方式是使用git工具（内核的代码版本管理工具
--    ，更多的信息可以在 http://git-scm.com/ 获取），不过使用普通补丁也是
-+    ，更多的信息可以在 https://git-scm.com/ 获取），不过使用普通补丁也是
-     可以的。
-   - 两个星期以后-rc1版本内核发布。之后只有不包含可能影响整个内核稳定性的
-     新功能的补丁才可能被接受。请注意一个全新的驱动程序（或者文件系统）有
-@@ -472,7 +472,7 @@ Linux内核社区并不喜欢一下接收大段的代码。修改需要被恰当
- 
- 想了解它具体应该看起来像什么，请查阅以下文档中的“ChangeLog”章节：
-   “The Perfect Patch”
--  	 http://www.ozlabs.org/~akpm/stuff/tpp.txt
-+  	 https://www.ozlabs.org/~akpm/stuff/tpp.txt
- 
- 
- 这些事情有时候做起来很难。要在任何方面都做到完美可能需要好几年时间。这是
-diff --git a/Documentation/translations/zh_CN/process/submitting-drivers.rst b/Documentation/translations/zh_CN/process/submitting-drivers.rst
-index d99885c27aed..98341e7cd812 100644
---- a/Documentation/translations/zh_CN/process/submitting-drivers.rst
-+++ b/Documentation/translations/zh_CN/process/submitting-drivers.rst
-@@ -19,8 +19,8 @@
- =============================
- 
- 这篇文档将会解释如何向不同的内核源码树提交设备驱动程序。请注意，如果你感
--兴趣的是显卡驱动程序，你也许应该访问 XFree86 项目(http://www.xfree86.org/)
--和／或 X.org 项目 (http://x.org)。
-+兴趣的是显卡驱动程序，你也许应该访问 XFree86 项目(https://www.xfree86.org/)
-+和／或 X.org 项目 (https://x.org)。
- 
- 另请参阅 Documentation/translations/zh_CN/process/submitting-patches.rst 文档。
- 
-@@ -29,7 +29,7 @@
- ----------
- 
- 块设备和字符设备的主设备号与从设备号是由 Linux 命名编号分配权威 LANANA（
--现在是 Torben Mathiasen）负责分配。申请的网址是 http://www.lanana.org/。
-+现在是 Torben Mathiasen）负责分配。申请的网址是 https://www.lanana.org/。
- 即使不准备提交到主流内核的设备驱动也需要在这里分配设备号。有关详细信息，
- 请参阅 Documentation/admin-guide/devices.rst。
- 
-@@ -133,22 +133,22 @@ Linux 内核邮件列表：
- 	[可通过向majordomo@vger.kernel.org发邮件来订阅]
- 
- Linux 设备驱动程序，第三版（探讨 2.6.10 版内核）：
--	http://lwn.net/Kernel/LDD3/ （免费版）
-+	https://lwn.net/Kernel/LDD3/ （免费版）
- 
- LWN.net:
--	每周内核开发活动摘要 - http://lwn.net/
-+	每周内核开发活动摘要 - https://lwn.net/
- 
- 	2.6 版中 API 的变更：
- 
--		http://lwn.net/Articles/2.6-kernel-api/
-+		https://lwn.net/Articles/2.6-kernel-api/
- 
- 	将旧版内核的驱动程序移植到 2.6 版：
- 
--		http://lwn.net/Articles/driver-porting/
-+		https://lwn.net/Articles/driver-porting/
- 
- 内核新手(KernelNewbies):
- 	为新的内核开发者提供文档和帮助
--	http://kernelnewbies.org/
-+	https://kernelnewbies.org/
- 
- Linux USB项目：
- 	http://www.linux-usb.org/
-@@ -157,4 +157,4 @@ Linux USB项目：
- 	http://www.fenrus.org/how-to-not-write-a-device-driver-paper.pdf
- 
- 内核清洁工 (Kernel Janitor):
--	http://kernelnewbies.org/KernelJanitors
-+	https://kernelnewbies.org/KernelJanitors
-diff --git a/Documentation/translations/zh_CN/process/submitting-patches.rst b/Documentation/translations/zh_CN/process/submitting-patches.rst
-index 1bb4271ab420..2e7dbaad4028 100644
---- a/Documentation/translations/zh_CN/process/submitting-patches.rst
-+++ b/Documentation/translations/zh_CN/process/submitting-patches.rst
-@@ -91,7 +91,7 @@
- :ref:`cn_split_changes`
- 
- 如果你用 ``git`` , ``git rebase -i`` 可以帮助你这一点。如果你不用 ``git``,
--``quilt`` <http://savannah.nongnu.org/projects/quilt> 另外一个流行的选择。
-+``quilt`` <https://savannah.nongnu.org/projects/quilt> 另外一个流行的选择。
- 
- .. _cn_describe_changes:
- 
-@@ -649,7 +649,7 @@ pull 请求还应该包含一条整体消息，说明请求中将包含什么，
- --------
- 
- Andrew Morton, "The perfect patch" (tpp).
--  <http://www.ozlabs.org/~akpm/stuff/tpp.txt>
-+  <https://www.ozlabs.org/~akpm/stuff/tpp.txt>
- 
- Jeff Garzik, "Linux kernel patch submission format".
-   <https://web.archive.org/web/20180829112450/http://linux.yyz.us/patch-format.html>
-diff --git a/Documentation/translations/zh_CN/process/volatile-considered-harmful.rst b/Documentation/translations/zh_CN/process/volatile-considered-harmful.rst
-index 48b32ce58ef1..ded3b5d0c9a8 100644
---- a/Documentation/translations/zh_CN/process/volatile-considered-harmful.rst
-+++ b/Documentation/translations/zh_CN/process/volatile-considered-harmful.rst
-@@ -94,8 +94,8 @@ bug并且需要对这样的代码额外仔细检查。那些试图使用volatile
- 注释
- ----
- 
--[1] http://lwn.net/Articles/233481/
--[2] http://lwn.net/Articles/233482/
-+[1] https://lwn.net/Articles/233481/
-+[2] https://lwn.net/Articles/233482/
- 
- 致谢
- ----
+Because of the reasons in the paragraph above:
+
+ "complex shared and sometimes intertwined batches of register sets to
+  be consumed by multiple (sub-)devices spanning different subsystems"
+
+> >  It would be great if there was a way in
+> > which we could make an assumption that the entire register address
+> > space for a 'tagged' (MFD) device is to be shared (via Regmap) between
+> > each of the devices described by its child-nodes.  Probably by picking
+> > up on the 'simple-mfd' compatible string in the first instance.
+> >
+> > Rob, is the above something you would contemplate?
+> >
+> > Michael, do your register addresses overlap i.e. are they intermingled
+> > with one another?  Do multiple child devices need access to the same
+> > registers i.e. are they shared?
+> >
+> > > > > But, there is more in my driver:
+> > > > >  (1) there is a version check
+> >
+> > If we can rid the Regmap dependency, then creating an entire driver to
+> > conduct a version check is unjustifiable.  This could become an inline
+> > function which is called by each of the sub-devices instead, for
+> > example.
+> >
+> > > > >  (2) there is another function for which there is no suitable linux
+> > > > >      subsystem I'm aware of and thus which I'd like to us sysfs
+> > > > >      attributes for: This controller supports 16 non-volatile
+> > > > >      configuration bits. (this is still TBD)
+> >
+> > There is a place for everything in Linux.
+> >
+> > What do these bits configure?
+> >
+> > > > TBH I'd also say that the enumeration of the subdevices for this
+> > > > device should be in the device rather than the DT, they don't
+> > > > seem to be things that exist outside of this one device.
+> > >
+> > > We're going circles here, formerly they were enumerated in the MFD.
+> > > Yes, they are devices which aren't likely be used outside a
+> > > "sl28cpld", but there might there might be other versions of the
+> > > sl28cpld with other components on different base addresses. I
+> > > don't care if they are enumerated in DT or MFD, actually, I'd
+> > > prefer the latter. _But_ I would like to have the device tree
+> > > properties for its subdevices, e.g. the ones for the watchdog or
+> > > whatever components there might be in the future.
+> >
+> > [...]
+> >
+> > > MFD core can
+> > > match a device tree node today; but only one per unique compatible
+> > > string. So what should I use to differentiate the different
+> > > subdevices?
+> >
+> > Right.  I have been aware of this issue.  The only suitable solution
+> > to this would be to match on 'reg'.
+> >
+> > FYI: I plan to fix this.
+> >
+> > If your register map needs to change, then I suggest that this is
+> > either a new device or at least a different version of the device and
+> > would also have to be represented as different (sub-)mfd_cell.
+> >
+> > > Rob suggested the internal offset, which I did here.
+> >
+> > FWIW, I don't like this idea.  DTs should not have to be modified
+> > (either in the first instance or subsequently) or specifically
+> > designed to patch inadequacies in any given OS.
+> >
+> > > But then, there is less use in duplicating the offsets in the MFD
+> > > just to have the MFD enumerate the subdevices and then match
+> > > the device tree nodes against it. I can just use
+> > > of_platform_populate() to enumerate the children and I won't
+> > > have to duplicate the base addresses.
+> >
+> > Which is fine.  However this causes a different issue for you.  By
+> > stripping out the MFD code you render the MFD portion seemingly
+> > superfluous.  Another issue driver authors commonly contend with.
+> 
+
 -- 
-2.26.2
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
