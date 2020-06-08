@@ -2,115 +2,113 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93058C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC46AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61916207C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:10:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591665000;
-	bh=WEeDvDkZo6MB/KF4kzcZdE3zlcrJdIB/C1My+LZzDtE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=16fdNwBNRkGc1pEPmczX6A7rpULp7vaV21gRCAtQsGCtykwsPyfs1LaAQLsFtA5uo
-	 kBMnA2V6Blkusn5XjK3W5uD1ltZ7GQiRhZUoD5h2CvEQSsgnALCHAyaozrOptxOc5w
-	 oaYR2FanDIdLjR+eeO5f7izlFxpJD45k8BZIaBpc=
+	by mail.kernel.org (Postfix) with ESMTP id C4EA720842
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:10:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=paritcher.com header.i=@paritcher.com header.b="3y961/Qs";
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="rgRjV6WM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733122AbgFIBJ7 (ORCPT
+        id S2387591AbgFIBKH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 21:09:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49250 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726746AbgFHXGU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:06:20 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB0E820814;
-        Mon,  8 Jun 2020 23:06:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657579;
-        bh=WEeDvDkZo6MB/KF4kzcZdE3zlcrJdIB/C1My+LZzDtE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CXZCmrsSTCJi85B2OgtfU1M/ujDWeniRCjwh6inwVNIWEFSjQaLbhCW6/0rX3iFKZ
-         trWqocGeuLceRlwhWSNjz6rUPgu2zuZxKW7sNinVcAyKJvdxVdnJF1VXFrXDSh5p45
-         oyWonD8uIcc1wNBOIrErJZWtG9sCHcAz7hlLlNEc=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 009/274] crypto: ccp -- don't "select" CONFIG_DMADEVICES
-Date:   Mon,  8 Jun 2020 19:01:42 -0400
-Message-Id: <20200608230607.3361041-9-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
-References: <20200608230607.3361041-1-sashal@kernel.org>
+        Mon, 8 Jun 2020 21:10:07 -0400
+Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:46893 "EHLO
+        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726896AbgFHXGQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:06:16 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id 13AAB88D;
+        Mon,  8 Jun 2020 19:06:15 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Mon, 08 Jun 2020 19:06:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=paritcher.com;
+         h=from:to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm2; bh=NY39phx6m9tvz
+        RpZvc6G/x6My2ajZYgVoDhFetwnDNw=; b=3y961/Qs87Bf+KYKX4YxIgCvnfLuA
+        gWQq4q78O9mnFR0fs3FP636ZKlyPgKBcqpQxnTu3vcHWI2O0RQX42vZayYse+s3M
+        mpdf6YsyPnfutTOgwEyA8yJsh/k+kvFPp+cDMFLQFfUh123Q5YyLB9gKB1zi54g5
+        hRHjHqn2mzyhcX9kUBCJw7aB/IQ4I1dbZnAQ74sAqQvb9+V2JTaeALjA/46P+UCK
+        5SylFXuXZ7tjRYRdmK8PICBnzX1TF4bzoUcSFshkqjU77oFATefXqyAqLQ96zyWG
+        v8fxTCwRa0FvZ3pkr+SlUJO3Ni3zZMV/2g8dcKvYqFRvu3aAWfBCPUFgA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm3; bh=NY39phx6m9tvzRpZvc6G/x6My2ajZYgVoDhFetwnDNw=; b=rgRjV6WM
+        GiY3XgB6uQZ46DxNkZN8MlwksEf+9ajYuek1mFXCOjMttSn4kjogOYhKStestv1c
+        8LShT9kuedPTUazCVOejJtVsuwfqeXTchY6TwaIYgrySnhOM1+Lt4OwVgFYzUBx2
+        KZpCRhQxyGQDCGfFIPulucQxVOWOkakj52okFwZCfKKh3pyzy0upZAPrnDrug/m4
+        oGID/jHMx7hP9rTdqz81ZHUk8tyazj0PjUc8ah5k67nqcBD6XI1RRq1+TL+akE2X
+        /CZpM+77PQi934KroHNvbVwiLX3sPoRl+EYDh78NVZvm2qz0NP8fDrgdK1DMfO9Z
+        nQCIVRufK1lQTw==
+X-ME-Sender: <xms:ZcTeXoSENO1o_R4MAfcUrDXn3vCIhkf-ChQdEuW8mku_cgOzRtPb2g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudehfedgudekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    hmihhsshhinhhgucfvqfcufhhivghlugculdeftddmnecujfgurhephffvufffkffojghf
+    ggfgsedtkeertdertddtnecuhfhrohhmpegjucfrrghrihhttghhvghruceohidrlhhinh
+    hugiesphgrrhhithgthhgvrhdrtghomheqnecuggftrfgrthhtvghrnhepjeegfeetleeu
+    leevteejteetieffgffgfedvffffvddtvddvveevhffhtdehudeknecukfhppeeijedrke
+    egrdduleegrddujeehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
+    lhhfrhhomhephidrlhhinhhugiesphgrrhhithgthhgvrhdrtghomh
+X-ME-Proxy: <xmx:ZsTeXlwgERgB0y0DVejWGDRLlOBpquJAapvLicZ5PKw5pW5y_TwKuA>
+    <xmx:ZsTeXl3HjTb3bzw-yxQToKQ4IkaarUByft0p1dF2NH7-T3BiA3vdOA>
+    <xmx:ZsTeXsDcGlCawsHL-52KwG9yxIMc-X4AT_uh25DK2AqsV1nPVxyN-A>
+    <xmx:ZsTeXhbAqEUhkjlXGa2q7bvSXfAXjdWDsEHM0cZCA6btDBHin60bdQ>
+Received: from localhost.localdomain (ool-4354c2af.dyn.optonline.net [67.84.194.175])
+        by mail.messagingengine.com (Postfix) with ESMTPA id B9F2A3280066;
+        Mon,  8 Jun 2020 19:06:13 -0400 (EDT)
+From:   Y Paritcher <y.linux@paritcher.com>
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        Mario.Limonciello@dell.com
+Subject: [PATCH v2 0/3] platform/x86: dell-wmi: new keys
+Date:   Mon,  8 Jun 2020 19:05:27 -0400
+Message-Id: <cover.1591656154.git.y.linux@paritcher.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <cover.1591584631.git.y.linux@paritcher.com>
+References: <cover.1591584631.git.y.linux@paritcher.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+As per discussion backlight events are passed on as they are
+filtered by acpi-video.
 
-[ Upstream commit eebac678556d6927f09a992872f4464cf3aecc76 ]
+Events of type 0x0012 have extended data in the rest of the
+buffer, this data is currently ignored.
 
-DMADEVICES is the top-level option for the slave DMA
-subsystem, and should not be selected by device drivers,
-as this can cause circular dependencies such as:
+The Fn lock key currently is ignored. If userspace has a way
+to deal with this a function to pass on the extended data
+can be added.
 
-drivers/net/ethernet/freescale/Kconfig:6:error: recursive dependency detected!
-drivers/net/ethernet/freescale/Kconfig:6:	symbol NET_VENDOR_FREESCALE depends on PPC_BESTCOMM
-drivers/dma/bestcomm/Kconfig:6:	symbol PPC_BESTCOMM depends on DMADEVICES
-drivers/dma/Kconfig:6:	symbol DMADEVICES is selected by CRYPTO_DEV_SP_CCP
-drivers/crypto/ccp/Kconfig:10:	symbol CRYPTO_DEV_SP_CCP depends on CRYPTO
-crypto/Kconfig:16:	symbol CRYPTO is selected by LIBCRC32C
-lib/Kconfig:222:	symbol LIBCRC32C is selected by LIQUIDIO
-drivers/net/ethernet/cavium/Kconfig:65:	symbol LIQUIDIO depends on PTP_1588_CLOCK
-drivers/ptp/Kconfig:8:	symbol PTP_1588_CLOCK is implied by FEC
-drivers/net/ethernet/freescale/Kconfig:23:	symbol FEC depends on NET_VENDOR_FREESCALE
+messages of type:
+ 
+    firmware scancode 0xXX maps to unrecognized keycode 0xXXXX
 
-The LIQUIDIO driver causing this problem is addressed in a
-separate patch, but this change is needed to prevent it from
-happening again.
+are from unknown keycodes in the DMI table and should be added
+to bios_to_linux_keycode to allow them to be processed.
 
-Using "depends on DMADEVICES" is what we do for all other
-implementations of slave DMA controllers as well.
+Y Paritcher (3):
+  platform/x86: dell-wmi: add new backlight events
+  platform/x86: dell-wmi: add new keymap type 0x0012
+  platform/x86: dell-wmi: add new dmi keys to bios_to_linux_keycode
 
-Fixes: b3c2fee5d66b ("crypto: ccp - Ensure all dependencies are specified")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/crypto/ccp/Kconfig | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/platform/x86/dell-wmi.c | 32 ++++++++++++++++++++++++++------
+ 1 file changed, 26 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/crypto/ccp/Kconfig b/drivers/crypto/ccp/Kconfig
-index e0a8bd15aa74..32268e239bf1 100644
---- a/drivers/crypto/ccp/Kconfig
-+++ b/drivers/crypto/ccp/Kconfig
-@@ -10,10 +10,9 @@ config CRYPTO_DEV_CCP_DD
- config CRYPTO_DEV_SP_CCP
- 	bool "Cryptographic Coprocessor device"
- 	default y
--	depends on CRYPTO_DEV_CCP_DD
-+	depends on CRYPTO_DEV_CCP_DD && DMADEVICES
- 	select HW_RANDOM
- 	select DMA_ENGINE
--	select DMADEVICES
- 	select CRYPTO_SHA1
- 	select CRYPTO_SHA256
- 	help
 -- 
-2.25.1
+2.27.0
 
