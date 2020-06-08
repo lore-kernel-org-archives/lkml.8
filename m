@@ -2,132 +2,160 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F12C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 08:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30081C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 08:04:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85ED4206D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 08:02:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06FDB206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 08:04:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729087AbgFHICs (ORCPT
+        id S1729087AbgFHIEm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 04:02:48 -0400
-Received: from foss.arm.com ([217.140.110.172]:49430 "EHLO foss.arm.com"
+        Mon, 8 Jun 2020 04:04:42 -0400
+Received: from mga04.intel.com ([192.55.52.120]:47149 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729070AbgFHICs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 04:02:48 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 68D1F1F1;
-        Mon,  8 Jun 2020 01:02:47 -0700 (PDT)
-Received: from [192.168.1.84] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B17873F6CF;
-        Mon,  8 Jun 2020 01:02:44 -0700 (PDT)
-Subject: Re: [x86] 24256c140e:
- dmesg.UBSAN:array-index-out-of-bounds_in_arch/x86/mm/dump_pagetables.c
-To:     kernel test robot <rong.a.chen@intel.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Jan Beulich <jbeulich@suse.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
+        id S1727966AbgFHIEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 04:04:41 -0400
+IronPort-SDR: krh8tP65GcUuA9Nhzcoq3uazQ9un14SvNF5To2DCZK7c4ifrYg7HLjJbmlC8T3xPB9NFUSB4D0
+ bOwEoV/U5G7g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2020 01:04:41 -0700
+IronPort-SDR: wpnez4Os47MvksAfNNutsKSgONBghE1WGy9Ul6ckkIztx0M0swVHsn1BlBuhp/fNJ2HrBYl196
+ 62dd/GkLCjog==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,487,1583222400"; 
+   d="scan'208";a="305746769"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 08 Jun 2020 01:04:41 -0700
+Received: from [10.249.230.149] (abudanko-mobl.ccr.corp.intel.com [10.249.230.149])
+        by linux.intel.com (Postfix) with ESMTP id 2571D5805B5;
+        Mon,  8 Jun 2020 01:04:36 -0700 (PDT)
+Subject: Re: [PATCH v5 13/13] perf record: introduce --ctl-fd[-ack] options
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
-References: <20200607072749.GW12456@shao2-debian>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <2a7426e7-1331-4836-ddcc-5e117fe79b08@arm.com>
-Date:   Mon, 8 Jun 2020 09:02:43 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Ingo Molnar <mingo@redhat.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <e5cac8dd-7aa4-ec7c-671c-07756907acba@linux.intel.com>
+ <8ffc9f9f-af58-deea-428b-f8a69004e3cb@linux.intel.com>
+ <923c40c7-7c0b-9fad-314d-69e7acbee201@intel.com>
+ <937c8cc1-b4c2-8531-3fa4-d0ad9df6a65f@linux.intel.com>
+ <20200601233732.GA691017@tassilo.jf.intel.com>
+ <1bc7c72b-9d78-5184-a27c-8025beadaaf0@linux.intel.com>
+ <d7924d7c-e2e5-c067-b9e0-cfea919e7780@linux.intel.com>
+ <935187e8-6fc8-5f47-b88d-6e8c92a27286@intel.com>
+ <20200605105108.GB1404794@krava>
+ <3ac6d0b8-5fae-348f-8556-4bf7a66285f6@linux.intel.com>
+ <20200605135743.GD1404794@krava>
+ <c4f3fc64-0ea1-8a5a-ee9d-7d581510c70b@linux.intel.com>
+ <0d1d9c45-a880-9a5d-e35d-c80fb3b71eab@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <0a2695a1-06e4-678f-736c-1560222826de@linux.intel.com>
+Date:   Mon, 8 Jun 2020 11:04:36 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-In-Reply-To: <20200607072749.GW12456@shao2-debian>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-GB
+In-Reply-To: <0d1d9c45-a880-9a5d-e35d-c80fb3b71eab@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/06/2020 08:27, kernel test robot wrote:
-> Greeting,
-> 
-> FYI, we noticed the following commit (built with gcc-9):
-> 
-> commit: 24256c140e59c3431af4918fd4ec892102cbc2f3 ("x86: mm: ptdump: calculate effective permissions correctly")
-> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
 
-This was reported earlier[1] by Qian Cai and I posted a fix[2]. Linus' 
-tree has the fixed commit[3].
+On 05.06.2020 18:23, Alexey Budankov wrote:
+> 
+> On 05.06.2020 17:47, Alexey Budankov wrote:
+>>
+>> On 05.06.2020 16:57, Jiri Olsa wrote:
+>>> On Fri, Jun 05, 2020 at 04:15:52PM +0300, Alexey Budankov wrote:
+>>>>
+>>>> On 05.06.2020 13:51, Jiri Olsa wrote:
+>>>>> On Tue, Jun 02, 2020 at 04:43:58PM +0300, Adrian Hunter wrote:
+>>>>>> On 2/06/20 12:12 pm, Alexey Budankov wrote:
+>>>>>>>
+>>>>>>> On 02.06.2020 11:32, Alexey Budankov wrote:
+>>>>>>>>
+>>>>>>>> On 02.06.2020 2:37, Andi Kleen wrote:
+>>>>>>>>>>> or a pathname, or including also the event default of "disabled".
+>>>>>>>>>>
+>>>>>>>>>> For my cases conversion of pathnames into open fds belongs to external
+>>>>>>>>>> controlling process e.g. like in the examples provided in the patch set.
+>>>>>>>>>> Not sure about "event default of 'disabled'"
+>>>>>>>>>
+>>>>>>>>> It would be nicer for manual use cases if perf supported the path names
+>>>>>>>>> directly like in Adrian's example, not needing a complex wrapper script.
+>>>>>>>>
+>>>>>>>> fds interface is required for VTune integration since VTune wants control
+>>>>>>>> over files creation aside of Perf tool process. The script demonstrates
+>>>>>>>> just one possible use case.
+>>>>>>>>
+>>>>>>>> Control files could easily be implemented on top of fds making open operations
+>>>>>>>> for paths and then initializing fds. Interface below is vague and with explicit
+>>>>>>>> options like below it could be more explicit:
+>>>>>>>> --ctl-file /tmp/my-perf.fifo --ctl-file-ack /tmp/my-perf-ack.fifo
+>>>>>>>
+>>>>>>> Or even clearer:
+>>>>>>>
+>>>>>>> --ctl-fifo /tmp/my-perf --ctl-fifo-ack /tmp/my-perf-ack
+>>>>>>
+>>>>>> If people are OK with having so many options, then that is fine by me.
+>>>>>
+>>>>> the single option Adrian suggested seems better to me:
+>>>>>
+>>>>>  --control
+>>>>>  --control 11
+>>>>>  --control 11,15
+>>>>
+>>>> What if a user specifies fifos named like this above, not fds?
+>>>>
+>>>>>  --control 11,15,disabled
+>>>>>  --control 11,,disabled
+>>>>>  --control /tmp/my-perf.fifo
+>>>>>  --control /tmp/my-perf.fifo,/tmp/my-perf-ack.fifo
+>>>>
+>>>> What if a user wants not fifos but other type of comm channels?
+>>>>
+>>>>>  --control /tmp/my-perf.fifo,/tmp/my-perf-ack.fifo,disabled
+>>>>>  --control /tmp/my-perf.fifo,,disabled
+>>>>>
+>>>>> we already support this kind of options arguments, like for --call-graph
+>>>>>
+>>>>> jirka
+>>>>>
+>>>>
+>>>> IMHO,
+>>>> this interface, of course, looks more compact (in amount of options) however
+>>>> the other side it is less user friendly. One simple option for one simple
+>>>> purpose is more convenient as for users as for developers. Also complex
+>>>> option syntax tends to have limitations and there are probably more
+>>>> non-obvious ones.
+>>>>
+>>>> Please speak up. I might have missed something meaningful.
+>>>
+>>> how about specify the type like:
+>>>
+>>> --control fd:1,2,...
+>>
+>> What do these ... mean?
+> 
+> After all,
+> if you want it this way and it now also fits my needs I could convert
+> --ctl-fd[-ack] to --control fd:<ctl-fd>,<ack-fd> with use cases like
+> --control fd:<ctl-fd> and --control fd:<ctl-fd>,<ack-fd>. Accepted?
 
-Steve
+So, do we implement fds options like this?
 
-[1] 
-https://lore.kernel.org/lkml/20200522180741.GB1337@Qians-MacBook-Air.local/
-
-[2] 
-https://lore.kernel.org/linux-mm/430c8ab4-e7cd-6933-dde6-087fac6db872@arm.com/
-
-[3] 1494e0c38ee9 ("x86: mm: ptdump: calculate effective permissions 
-correctly")
-
-> 
-> in testcase: boot
-> 
-> on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 8G
-> 
-> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
-> 
-> 
-> 
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kernel test robot <rong.a.chen@intel.com>
-> 
-> 
-> [    8.785395] UBSAN: array-index-out-of-bounds in arch/x86/mm/dump_pagetables.c:285:27
-> [    8.787718] index -1 is out of range for type 'pgprotval_t [5]'
-> [    8.789278] CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.7.0-rc7-00027-g24256c140e59c #1
-> [    8.791350] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
-> [    8.793505] Call Trace:
-> [    8.794221]  dump_stack+0x6c/0x94
-> [    8.795140]  ubsan_epilogue+0x8/0x3e
-> [    8.796132]  __ubsan_handle_out_of_bounds+0x48/0x53
-> [    8.797362]  ? is_visible+0x2b/0x32
-> [    8.798231]  ? atomic_try_cmpxchg+0x4c/0x57
-> [    8.799203]  note_page+0x37/0x80b
-> [    8.800138]  ? __up_read+0x352/0x37b
-> [    8.801124]  ptdump_walk_pgd+0x57/0x60
-> [    8.802145]  ptdump_walk_pgd_level_core+0x72/0x9f
-> [    8.803369]  ? ptdump_walk_pgd_level_debugfs+0x18/0x18
-> [    8.804613]  ? ptdump_walk_pgd_level_core+0x9f/0x9f
-> [    8.805779]  ptdump_walk_pgd_level_checkwx+0x1d/0x21
-> [    8.806873]  mark_rodata_ro+0x9f/0xa6
-> [    8.807821]  ? rest_init+0x7f/0x164
-> [    8.808808]  kernel_init+0x44/0xf7
-> [    8.809735]  ? rest_init+0x164/0x164
-> [    8.810708]  ret_from_fork+0x19/0x24
-> 
-> 
-> To reproduce:
-> 
->          # build kernel
-> 	cd linux
-> 	cp config-5.7.0-rc7-00027-g24256c140e59c .config
-> 	make HOSTCC=gcc-9 CC=gcc-9 ARCH=i386 olddefconfig prepare modules_prepare bzImage
-> 
->          git clone https://github.com/intel/lkp-tests.git
->          cd lkp-tests
->          bin/lkp qemu -k <bzImage> job-script # job-script is attached in this email
-> 
-> 
-> 
-> Thanks,
-> Rong Chen
-> 
-
+~Alexey
