@@ -2,220 +2,255 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A46FC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A1BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08257206D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D0372076A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:21:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FvaaSm5t"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AJ6ZY+Jq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726066AbgFHSU1 (ORCPT
+        id S1726083AbgFHSV1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 14:20:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49782 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725967AbgFHSUX (ORCPT
+        Mon, 8 Jun 2020 14:21:27 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:53384 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725283AbgFHSV0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 14:20:23 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7305DC08C5C6
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 11:20:22 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id x6so18418604wrm.13
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 11:20:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=2CJM5g0VuqYFNIM+dUzodFUTj18WAdux3/u8z24zvRA=;
-        b=FvaaSm5tyr6RBgjbPNfvrJLlZcAn3DmzQGeyoQrQ5NJotNGMRI+S/WTL4cZGcvbeKQ
-         OeiYno6xBUEcQi5WgLfPg1nv7oOkxmoaBpZ6QtIPDVlQPQdk8Xg1KETQTvd/QbsmmRZg
-         rKCAizdiGMf2yjrMRJkrYUJTQ8RhPDKv4CF4YBH4XvdeaNYdcf0hTu/38GolQI/FykDN
-         4Wtn17IHKjfImnRlO7XuYIJCSylUrNpYSAcVJ0FF2ljUmpkm69oK59PmBzzl1uzp468r
-         sdFV0WqzFhOkNZXY3HflI0dAEsSOqMmu2UtExqdHiQfNrXygDGlFgbgtHXGR4oIhwsQF
-         uzWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=2CJM5g0VuqYFNIM+dUzodFUTj18WAdux3/u8z24zvRA=;
-        b=hqJtOpjtW+ymBv7KR1k53+m5srd1I0xWYTkZzeIK8RoWdi9Ht+e2ojFQRkJ4TNBP6+
-         IElVFzQsYdJEtesbPMjcXP1l2XPEdz6issiHzw1FETR3HM3ENa82YOz1bwKrSFoKunV/
-         ueHi9BJzOebziykJXHCwXekW05J3WDroPHMFNgw4TWxTSiGCrqVsfgsPkdFyiOqLAjHO
-         TL6qrdh6rmUedkh3wnUngIlZULItjJ1nFbg1sddaHazbMCpCsgrVcKNfEbylrDkn0bfy
-         po6dWWYVo1eYy2enx8MOxzJDmEG81KhDTwYM3mpRlcORcobKIQp5FNvLVwekUkIffR6y
-         r/8A==
-X-Gm-Message-State: AOAM532s5P9dH5K/tCoP/mM5r1jVrBlCXNIiS1SywW3ZgLJ1mxp4zR4O
-        TrKKe7sn5pI/ckgkfRDvoEPLdw==
-X-Google-Smtp-Source: ABdhPJxumzJA4nkmctYgB3lMSJVUnSMTyEhafMZJYxSm51uV/tmOYuDxGF7eIqOVSIVmr0U8Lef0xg==
-X-Received: by 2002:a05:6000:11cd:: with SMTP id i13mr86707wrx.141.1591640420821;
-        Mon, 08 Jun 2020 11:20:20 -0700 (PDT)
-Received: from dell ([95.147.198.92])
-        by smtp.gmail.com with ESMTPSA id a7sm358274wmh.14.2020.06.08.11.20.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 11:20:20 -0700 (PDT)
-Date:   Mon, 8 Jun 2020 19:20:18 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        david.m.ertman@intel.com, shiraz.saleem@intel.com,
-        Michael Walle <michael@walle.cc>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld
- management controller
-Message-ID: <20200608182018.GB4106@dell>
-References: <20200604211039.12689-1-michael@walle.cc>
- <20200604211039.12689-3-michael@walle.cc>
- <20200605065709.GD3714@dell>
- <20200605105026.GC5413@sirena.org.uk>
- <c5632bfab3956265e90fc2fb6c0b3cae@walle.cc>
- <20200606114645.GB2055@sirena.org.uk>
- <dc052a5c77171014ecc465b1da8b7ef8@walle.cc>
- <20200608082827.GB3567@dell>
- <CAHp75VdiH=J-ovCdh1RFJDW_bJM8=pbXRaHmB691GLb-5oBmYQ@mail.gmail.com>
+        Mon, 8 Jun 2020 14:21:26 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 058ILLDe113063;
+        Mon, 8 Jun 2020 13:21:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591640481;
+        bh=RMzJpRbyroFe0EgM/4U6tkWl0hgt8snFYObSCyB1dDg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=AJ6ZY+Jq269BjInNIectkbGFCfMveto2A1lnxnT1stnCaV4UC/KNZG2f9S3+tG25/
+         SVD3Us2sI8Y0Hsfp8zE475NFiHWfiUNhLKd/M13IGjd7v22vtjhBzYvUyguUV75hjG
+         3yOQv5ojFcj08MRAXE4JgVoARRAoX1eVI28EU3ws=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 058ILLdK130836
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 8 Jun 2020 13:21:21 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 8 Jun
+ 2020 13:21:20 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 8 Jun 2020 13:21:20 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 058ILKHq043463;
+        Mon, 8 Jun 2020 13:21:20 -0500
+Subject: Re: [PATCH v26 04/15] dt: bindings: lp50xx: Introduce the lp50xx
+ family of RGB drivers
+To:     Rob Herring <robh@kernel.org>
+CC:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
+        <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200604120504.32425-1-dmurphy@ti.com>
+ <20200604120504.32425-5-dmurphy@ti.com> <20200604225938.GA4175214@bogus>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <c893e648-ee1a-3720-8b83-4440d45fdbdc@ti.com>
+Date:   Mon, 8 Jun 2020 13:21:15 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75VdiH=J-ovCdh1RFJDW_bJM8=pbXRaHmB691GLb-5oBmYQ@mail.gmail.com>
+In-Reply-To: <20200604225938.GA4175214@bogus>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 08 Jun 2020, Andy Shevchenko wrote:
+Rob
 
-> +Cc: some Intel people WRT our internal discussion about similar
-> problem and solutions.
-> 
-> On Mon, Jun 8, 2020 at 11:30 AM Lee Jones <lee.jones@linaro.org> wrote:
-> > On Sat, 06 Jun 2020, Michael Walle wrote:
-> > > Am 2020-06-06 13:46, schrieb Mark Brown:
-> > > > On Fri, Jun 05, 2020 at 10:07:36PM +0200, Michael Walle wrote:
-> > > > > Am 2020-06-05 12:50, schrieb Mark Brown:
-> 
-> ...
-> 
-> > Right.  I'm suggesting a means to extrapolate complex shared and
-> > sometimes intertwined batches of register sets to be consumed by
-> > multiple (sub-)devices spanning different subsystems.
-> >
-> > Actually scrap that.  The most common case I see is a single Regmap
-> > covering all child-devices.
-> 
-> Yes, because often we need a synchronization across the entire address
-> space of the (parent) device in question.
+On 6/4/20 5:59 PM, Rob Herring wrote:
+> On Thu, Jun 04, 2020 at 07:04:53AM -0500, Dan Murphy wrote:
+>> Introduce the bindings for the Texas Instruments LP5036, LP5030, LP5024,
+>> LP5018, LP5012 and LP5009 RGB LED device driver.  The LP5036/30/24/18/12/9
+>> can control RGB LEDs individually or as part of a control bank group.
+>> These devices have the ability to adjust the mixing control for the RGB
+>> LEDs to obtain different colors independent of the overall brightness of
+>> the LED grouping.
+>>
+>> Datasheet:
+>> http://www.ti.com/lit/ds/symlink/lp5012.pdf
+>> http://www.ti.com/lit/ds/symlink/lp5024.pdf
+>> http://www.ti.com/lit/ds/symlink/lp5036.pdf
+>>
+>> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>   .../devicetree/bindings/leds/leds-lp50xx.yaml | 136 ++++++++++++++++++
+>>   1 file changed, 136 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml b/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
+>> new file mode 100644
+>> index 000000000000..02fcdc13262f
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
+>> @@ -0,0 +1,136 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/leds/leds-lp50xx.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: LED driver for LP50XX RGB LED from Texas Instruments.
+>> +
+>> +maintainers:
+>> +  - Dan Murphy <dmurphy@ti.com>
+>> +
+>> +description: |
+>> +  The LP50XX is multi-channel, I2C RGB LED Drivers that can group RGB LEDs into
+>> +  a LED group or control them individually.
+>> +
+>> +  The difference in these RGB LED drivers is the number of supported RGB
+>> +  modules.
+>> +
+>> +  For more product information please see the link below:
+>> +  http://www.ti.com/lit/ds/symlink/lp5012.pdf
+>> +  http://www.ti.com/lit/ds/symlink/lp5024.pdf
+>> +  http://www.ti.com/lit/ds/symlink/lp5036.pdf
+>> +
+>> +properties:
+>> +  #allOf:
+>> +    #- $ref: "common.yaml#"
+>> +    #- $ref: "leds-class-multicolor.yaml#"
+> These describe properties in the 'multi-led' nodes, so the $ref goes
+> there. And you only need the 2nd one because it already references the
+> 1st one (or it should once you fix patch 1).
+Got it
+>> +
+>> +  compatible:
+>> +    enum:
+>> +      - ti,lp5009
+>> +      - ti,lp5012
+>> +      - ti,lp5018
+>> +      - ti,lp5024
+>> +      - ti,lp5030
+>> +      - ti,lp5036
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +    description:
+>> +      I2C slave address
+>> +      lp5009/12 - 0x14, 0x15, 0x16, 0x17
+>> +      lp5018/24 - 0x28, 0x29, 0x2a, 0x2b
+>> +      lp5030/36 - 0x30, 0x31, 0x32, 0x33
+>> +
+>> +  enable-gpios:
+>> +    maxItems: 1
+>> +    description: GPIO pin to enable/disable the device.
+>> +
+>> +  vled-supply:
+>> +    description: LED supply.
+>> +
+>> +  child-node:
+> I guess you didn't understand what I said on this. What you need is:
+>
+> patternProperties:
+>    '^multi-led@[0-9]$':
+>      type: object
+>      $ref: leds-class-multicolor.yaml#
+>      properties:
+>        ...
+>
+>      patternProperties:
+>        '^led@[0-9]$':
+>          type: object
+>          $ref: common.yaml#
+>
+> Adjust '[0-9]' based on how many possible child addresses there can be.
+> It's hex if more than 10.
+>
+Most we can have are 12 modules
+>> +    properties:
+>> +      ti,led-bank:
+>> +        description:
+>> +          This property denotes the LED module numbers that will be controlled as
+>> +          a single RGB cluster.  Each LED module number will be controlled by a
+>> +          single LED class instance.
+>> +          There can only be one instance of the ti,led-bank
+>> +          property for each device node.  This is a required node if the LED
+>> +          modules are to be banked.
+>> +        $ref: /schemas/types.yaml#definitions/uint32-array
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+> additionalProperties: false
 
-Exactly.
+This causes a binding check failure for
 
-Because of the reasons in the paragraph above:
+leds/leds-lp50xx.example.dt.yaml: led-controller@14: '#address-cells', 
+'#size-cells' do not match any of the regexes: '^multi-led@[0-9a-f]$', 
+'pinctrl-[0-9]+'
 
- "complex shared and sometimes intertwined batches of register sets to
-  be consumed by multiple (sub-)devices spanning different subsystems"
+>> +
+>> +examples:
+>> +  - |
+>> +   #include <dt-bindings/gpio/gpio.h>
+>> +   #include <dt-bindings/leds/common.h>
+>> +
+>> +   i2c {
+>> +       #address-cells = <1>;
+>> +       #size-cells = <0>;
+>> +
+>> +       led-controller@14 {
+>> +           compatible = "ti,lp5009";
+>> +           reg = <0x14>;
+>> +           #address-cells = <1>;
+>> +           #size-cells = <0>;
+>> +           enable-gpios = <&gpio1 16>;
+>> +
+>> +           multi-led@1 {
+>> +               #address-cells = <1>;
+>> +               #size-cells = <0>;
+>> +               reg = <1>;
+>> +               color = <LED_COLOR_ID_MULTI>;
+>> +               function = LED_FUNCTION_CHARGING;
+>> +
+>> +               led@0 {
+>> +                   reg = <0>;
+>> +                   color = <LED_COLOR_ID_RED>;
+>> +               };
+>> +
+>> +               led@1 {
+>> +                   reg = <1>;
+>> +                   color = <LED_COLOR_ID_GREEN>;
+>> +               };
+>> +
+>> +               led@2 {
+>> +                   reg = <2>;
+>> +                   color = <LED_COLOR_ID_BLUE>;
+>> +               };
+>> +          };
+>> +
+>> +          multi-led@2 {
+>> +            #address-cells = <1>;
+>> +            #size-cells = <0>;
+>> +            reg = <2>;
+>> +            color = <LED_COLOR_ID_MULTI>;
+>> +            function = LED_FUNCTION_STANDBY;
+>> +            ti,led-bank = <2 3 5>;
+> I still don't understand why 'reg = <2 3 5>;' with the 1st entry being
+> the control bank. Is '2' in reg not the same thing as '2' here?
 
-> >  It would be great if there was a way in
-> > which we could make an assumption that the entire register address
-> > space for a 'tagged' (MFD) device is to be shared (via Regmap) between
-> > each of the devices described by its child-nodes.  Probably by picking
-> > up on the 'simple-mfd' compatible string in the first instance.
-> >
-> > Rob, is the above something you would contemplate?
-> >
-> > Michael, do your register addresses overlap i.e. are they intermingled
-> > with one another?  Do multiple child devices need access to the same
-> > registers i.e. are they shared?
-> >
-> > > > > But, there is more in my driver:
-> > > > >  (1) there is a version check
-> >
-> > If we can rid the Regmap dependency, then creating an entire driver to
-> > conduct a version check is unjustifiable.  This could become an inline
-> > function which is called by each of the sub-devices instead, for
-> > example.
-> >
-> > > > >  (2) there is another function for which there is no suitable linux
-> > > > >      subsystem I'm aware of and thus which I'd like to us sysfs
-> > > > >      attributes for: This controller supports 16 non-volatile
-> > > > >      configuration bits. (this is still TBD)
-> >
-> > There is a place for everything in Linux.
-> >
-> > What do these bits configure?
-> >
-> > > > TBH I'd also say that the enumeration of the subdevices for this
-> > > > device should be in the device rather than the DT, they don't
-> > > > seem to be things that exist outside of this one device.
-> > >
-> > > We're going circles here, formerly they were enumerated in the MFD.
-> > > Yes, they are devices which aren't likely be used outside a
-> > > "sl28cpld", but there might there might be other versions of the
-> > > sl28cpld with other components on different base addresses. I
-> > > don't care if they are enumerated in DT or MFD, actually, I'd
-> > > prefer the latter. _But_ I would like to have the device tree
-> > > properties for its subdevices, e.g. the ones for the watchdog or
-> > > whatever components there might be in the future.
-> >
-> > [...]
-> >
-> > > MFD core can
-> > > match a device tree node today; but only one per unique compatible
-> > > string. So what should I use to differentiate the different
-> > > subdevices?
-> >
-> > Right.  I have been aware of this issue.  The only suitable solution
-> > to this would be to match on 'reg'.
-> >
-> > FYI: I plan to fix this.
-> >
-> > If your register map needs to change, then I suggest that this is
-> > either a new device or at least a different version of the device and
-> > would also have to be represented as different (sub-)mfd_cell.
-> >
-> > > Rob suggested the internal offset, which I did here.
-> >
-> > FWIW, I don't like this idea.  DTs should not have to be modified
-> > (either in the first instance or subsequently) or specifically
-> > designed to patch inadequacies in any given OS.
-> >
-> > > But then, there is less use in duplicating the offsets in the MFD
-> > > just to have the MFD enumerate the subdevices and then match
-> > > the device tree nodes against it. I can just use
-> > > of_platform_populate() to enumerate the children and I won't
-> > > have to duplicate the base addresses.
-> >
-> > Which is fine.  However this causes a different issue for you.  By
-> > stripping out the MFD code you render the MFD portion seemingly
-> > superfluous.  Another issue driver authors commonly contend with.
-> 
+I changed this.
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Now reg is the module numbers that can either stand alone or be grouped.
+
+Dan
+
