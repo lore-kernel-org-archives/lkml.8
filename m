@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A5DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA57AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8753020823
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:33:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C3C120775
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:33:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591659188;
-	bh=LM/du8b8FjrYi1EUgb3XJShtRGgCq7C3Ef2V21ibtII=;
+	s=default; t=1591659191;
+	bh=Sy0U6npbpL4YrxpNb8BSlUzN3C5FuEgDLXmWVdd9Ia4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uo/OMDtyWWg2YZoP76PGS1kIFGuHVIjnmdB9zfS0E+12BHsN7frMYWwjT2QgEhbiI
-	 VeJmhyyFavHMrA4wxm6Qd5XurcSmYoaeFGRGR+oahKP7qZZZbpdVPHcO8y+rn6qxgX
-	 PHHw7MNdbfr2sNvwml1G4YIBlkuPyZujVsOsb63Y=
+	b=UJjp+rJXWu8HYTve7HDFouqexX0v36pX3A8KjgPIoAI8MYSf6gQ3e9DeyqiSXHkzJ
+	 RNuqjNCo5+CGkAUDLxF4AzEECpa2cmkTchU53XhGDD+KoTPXq880/FfkeNSpzKOkgY
+	 sPx4jTWpglDx9NZSa0QqZ7ThSUta67nlhhyNP1Sk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732532AbgFHXdH (ORCPT
+        id S1732266AbgFHXdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:33:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54622 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:33:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732028AbgFHX0q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:26:46 -0400
+        id S1732040AbgFHX0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:26:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7AFE20853;
-        Mon,  8 Jun 2020 23:26:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C0372074B;
+        Mon,  8 Jun 2020 23:26:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658805;
-        bh=LM/du8b8FjrYi1EUgb3XJShtRGgCq7C3Ef2V21ibtII=;
+        s=default; t=1591658806;
+        bh=Sy0U6npbpL4YrxpNb8BSlUzN3C5FuEgDLXmWVdd9Ia4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BG8sA0cQD/Oehjf530yPfidgcR08NEuIwSSyJfWzlnfdYpuI8A842RhKyJ4wJ+vPl
-         E4V7TqjntyOk9zwh4ypC3WiCe5bS/130Iwsrf/VHw4ZOvXJU12V9Ou7eCCZ0jyez1r
-         YItuW95OiDaJAWlAfSGRSffbm03KEFW5a1tfJkXw=
+        b=nTt2EiTUtukqSikbCoNn8LoBxThbrNZd7YKlh0uvL7us2F7303cOOoF2V//knb69i
+         KvNzRvkEaEOouIpq01P6QdFy6FC+oprlxiMfzFHO6iPTfv/AAc8fpAD5N81MJthujl
+         1II1lCGsg89Dwfq1W1Mo4Fv0YgoeA2scgYro9Tp4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julien Thierry <jthierry@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 04/50] objtool: Ignore empty alternatives
-Date:   Mon,  8 Jun 2020 19:25:54 -0400
-Message-Id: <20200608232640.3370262-4-sashal@kernel.org>
+Cc:     Arthur Kiyanovski <akiyano@amazon.com>,
+        Sameeh Jubran <sameehj@amazon.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 05/50] net: ena: fix error returning in ena_com_get_hash_function()
+Date:   Mon,  8 Jun 2020 19:25:55 -0400
+Message-Id: <20200608232640.3370262-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608232640.3370262-1-sashal@kernel.org>
 References: <20200608232640.3370262-1-sashal@kernel.org>
@@ -61,43 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julien Thierry <jthierry@redhat.com>
+From: Arthur Kiyanovski <akiyano@amazon.com>
 
-[ Upstream commit 7170cf47d16f1ba29eca07fd818870b7af0a93a5 ]
+[ Upstream commit e9a1de378dd46375f9abfd8de1e6f59ee114a793 ]
 
-The .alternatives section can contain entries with no original
-instructions. Objtool will currently crash when handling such an entry.
+In case the "func" parameter is NULL we now return "-EINVAL".
+This shouldn't happen in general, but when it does happen, this is the
+proper way to handle it.
 
-Just skip that entry, but still give a warning to discourage useless
-entries.
+We also check func for NULL in the beginning of the function, as there
+is no reason to do all the work and realize in the end of the function
+it was useless.
 
-Signed-off-by: Julien Thierry <jthierry@redhat.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
+Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/objtool/check.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/ethernet/amazon/ena/ena_com.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index b0b8ba9b800c..c7399d7f4bc7 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -778,6 +778,12 @@ static int add_special_section_alts(struct objtool_file *file)
- 		}
+diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
+index 905911f78693..e95f19e573a7 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_com.c
++++ b/drivers/net/ethernet/amazon/ena/ena_com.c
+@@ -2096,6 +2096,9 @@ int ena_com_get_hash_function(struct ena_com_dev *ena_dev,
+ 		rss->hash_key;
+ 	int rc;
  
- 		if (special_alt->group) {
-+			if (!special_alt->orig_len) {
-+				WARN_FUNC("empty alternative entry",
-+					  orig_insn->sec, orig_insn->offset);
-+				continue;
-+			}
++	if (unlikely(!func))
++		return -EINVAL;
 +
- 			ret = handle_group_alt(file, special_alt, orig_insn,
- 					       &new_insn);
- 			if (ret)
+ 	rc = ena_com_get_feature_ex(ena_dev, &get_resp,
+ 				    ENA_ADMIN_RSS_HASH_FUNCTION,
+ 				    rss->hash_key_dma_addr,
+@@ -2108,8 +2111,7 @@ int ena_com_get_hash_function(struct ena_com_dev *ena_dev,
+ 	if (rss->hash_func)
+ 		rss->hash_func--;
+ 
+-	if (func)
+-		*func = rss->hash_func;
++	*func = rss->hash_func;
+ 
+ 	if (key)
+ 		memcpy(key, hash_key->key, (size_t)(hash_key->keys_num) << 2);
 -- 
 2.25.1
 
