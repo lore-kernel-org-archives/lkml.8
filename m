@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B786C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 135C4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:14:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19EB920801
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:14:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D865720823
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:14:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591661674;
-	bh=yPsbkK0qr+RwkZBuWEd8rzdE4nDsnkDCH/EO/rZc4aY=;
+	s=default; t=1591661683;
+	bh=455i9YpdBs7gqDTT9okDLeK5g807fcJ/fdxIEM9G10w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oku7Xu0ZoAmneiyazFLZ0gBzlOhK+D8yZrDqrUQE1w9pIw5zFOwllC0+9mHC9Id86
-	 8DWl2xWhhwSagQykLXYJz73FxE4STi2qvRaTQItrXJgRWScI3oTezocfrvseEsdFn8
-	 GU3NLEbhSRnO42L7oLdXy+fMZm56WUUWtLqf5VeA=
+	b=O6O9DldGrdhCZVISBSTbTE4PW8IvpannBD0Vle5VS0CgRKZRNIcQvD8PmpHxKL+12
+	 CG33dy+Q6VAyBEneltlTmSs2yLzY69O4yjX7mR6ksJLeMZRmz+02m9WWhEnhToXlXI
+	 zWih3H4RIVk8AcxYfHuRRrywNr75z4BX3SlOPm6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731003AbgFIAOc (ORCPT
+        id S1732049AbgFIAOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:14:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41984 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:14:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730753AbgFHXTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:19:14 -0400
+        id S1730741AbgFHXTM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:19:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A968B20872;
-        Mon,  8 Jun 2020 23:19:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AEF02083E;
+        Mon,  8 Jun 2020 23:19:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658354;
-        bh=yPsbkK0qr+RwkZBuWEd8rzdE4nDsnkDCH/EO/rZc4aY=;
+        s=default; t=1591658352;
+        bh=455i9YpdBs7gqDTT9okDLeK5g807fcJ/fdxIEM9G10w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0OynDLcfMKTAUNdqLjLlAeJehEFp4DeiGOGVZ3BVhlxSlUjArSW54QOz4KhlIOXvE
-         Y6RfUsHBdN0MdCMUKsrjdCSVDWpWF/RGYQWL/SfoyDYrT84Go9OSUUDjcPnv4naV/e
-         yEIcHaj8558e2gfWR/f8sxULl+MljnnD0BH++PyU=
+        b=ec5ghmQnfqLQE3dWBNYaKEA+6sEWMYA2Oaqm/OHOI7BuxNxkIfRClAEVJLhHvg7zP
+         1KwINkn47C8uBYrRjdc6B0fL6GMZBcCnr7t/3meBtCCOzokH/AtdP07LllIwiGC5iU
+         s8Cirq0FoUy6l383FWGkKNsoOZE0NVntWuMw7bnw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arthur Kiyanovski <akiyano@amazon.com>,
-        Sameeh Jubran <sameehj@amazon.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 021/175] net: ena: fix error returning in ena_com_get_hash_function()
-Date:   Mon,  8 Jun 2020 19:16:14 -0400
-Message-Id: <20200608231848.3366970-21-sashal@kernel.org>
+Cc:     Huaixin Chang <changhuaixin@linux.alibaba.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ben Segall <bsegall@google.com>, Phil Auld <pauld@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 019/175] sched/fair: Refill bandwidth before scaling
+Date:   Mon,  8 Jun 2020 19:16:12 -0400
+Message-Id: <20200608231848.3366970-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
 References: <20200608231848.3366970-1-sashal@kernel.org>
@@ -60,50 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arthur Kiyanovski <akiyano@amazon.com>
+From: Huaixin Chang <changhuaixin@linux.alibaba.com>
 
-[ Upstream commit e9a1de378dd46375f9abfd8de1e6f59ee114a793 ]
+[ Upstream commit 5a6d6a6ccb5f48ca8cf7c6d64ff83fd9c7999390 ]
 
-In case the "func" parameter is NULL we now return "-EINVAL".
-This shouldn't happen in general, but when it does happen, this is the
-proper way to handle it.
+In order to prevent possible hardlockup of sched_cfs_period_timer()
+loop, loop count is introduced to denote whether to scale quota and
+period or not. However, scale is done between forwarding period timer
+and refilling cfs bandwidth runtime, which means that period timer is
+forwarded with old "period" while runtime is refilled with scaled
+"quota".
 
-We also check func for NULL in the beginning of the function, as there
-is no reason to do all the work and realize in the end of the function
-it was useless.
+Move do_sched_cfs_period_timer() before scaling to solve this.
 
-Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
-Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 2e8e19226398 ("sched/fair: Limit sched_cfs_period_timer() loop to avoid hard lockup")
+Signed-off-by: Huaixin Chang <changhuaixin@linux.alibaba.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Ben Segall <bsegall@google.com>
+Reviewed-by: Phil Auld <pauld@redhat.com>
+Link: https://lkml.kernel.org/r/20200420024421.22442-3-changhuaixin@linux.alibaba.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_com.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ kernel/sched/fair.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
-index 48de4bee209e..9225733f4fec 100644
---- a/drivers/net/ethernet/amazon/ena/ena_com.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_com.c
-@@ -2349,6 +2349,9 @@ int ena_com_get_hash_function(struct ena_com_dev *ena_dev,
- 		rss->hash_key;
- 	int rc;
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 193b6ab74d7f..3116734630c6 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -4942,6 +4942,8 @@ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
+ 		if (!overrun)
+ 			break;
  
-+	if (unlikely(!func))
-+		return -EINVAL;
++		idle = do_sched_cfs_period_timer(cfs_b, overrun, flags);
 +
- 	rc = ena_com_get_feature_ex(ena_dev, &get_resp,
- 				    ENA_ADMIN_RSS_HASH_FUNCTION,
- 				    rss->hash_key_dma_addr,
-@@ -2361,8 +2364,7 @@ int ena_com_get_hash_function(struct ena_com_dev *ena_dev,
- 	if (rss->hash_func)
- 		rss->hash_func--;
+ 		if (++count > 3) {
+ 			u64 new, old = ktime_to_ns(cfs_b->period);
  
--	if (func)
--		*func = rss->hash_func;
-+	*func = rss->hash_func;
- 
- 	if (key)
- 		memcpy(key, hash_key->key, (size_t)(hash_key->keys_num) << 2);
+@@ -4971,8 +4973,6 @@ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
+ 			/* reset count so we don't come right back in here */
+ 			count = 0;
+ 		}
+-
+-		idle = do_sched_cfs_period_timer(cfs_b, overrun, flags);
+ 	}
+ 	if (idle)
+ 		cfs_b->period_active = 0;
 -- 
 2.25.1
 
