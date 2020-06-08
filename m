@@ -2,135 +2,140 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35964C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC42C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E2D6206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:23:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="ndOHGLTa"
+	by mail.kernel.org (Postfix) with ESMTP id 2006F206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:23:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730498AbgFHQXB (ORCPT
+        id S1730516AbgFHQXO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 12:23:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59872 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730484AbgFHQW6 (ORCPT
+        Mon, 8 Jun 2020 12:23:14 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:39333 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730484AbgFHQXL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 12:22:58 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA854C08C5C5
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 09:22:56 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id x6so18021963wrm.13
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 09:22:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Hs1EELNtgkaMondyRtgQ/6Z9mw2fYYd1xiptMHkTtFA=;
-        b=ndOHGLTaByr9ofdCBK5UVRXpqyxBmcTEBUOqz/laTHtMlkelV5nMDGwIxHLn+n7LAx
-         6AG+1gPjhoqT0/eGqnxXkMs+4kwhXHbdLD51zfWNha64FIlC5WiZ3l/VfS2224OY1pP5
-         oqOnyaC2rND5M+dX4Nqp3MLtFrp1wWjZnDDbw=
+        Mon, 8 Jun 2020 12:23:11 -0400
+Received: by mail-lf1-f66.google.com with SMTP id z206so10601821lfc.6;
+        Mon, 08 Jun 2020 09:23:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Hs1EELNtgkaMondyRtgQ/6Z9mw2fYYd1xiptMHkTtFA=;
-        b=lcpB7lpByqmaUPhbMO5R7qwAdJGDE+vL2UZ2XUjVR1kd5oDYqNOWh+8uFAw75Gwz/f
-         Juiaf60zlPZARBELTGaeEXuUX4JO2UAyho22cWkGMrYJ8fbirzg6PsjjnjtUCE3ZFGkh
-         MBxWLxVvPtGNtk1ko3D3jtXmXl1LB9zt7ak8yRTjkBtiHBx3/H/FTpvsMG5gZfXH1XcR
-         dBtbboEqkuQFYHnIAZ/NTUReie1jUZwKOH/XIdbW28PBcl5rznxrxHr0gBxGfytE2auy
-         4qrtXb2au+7Tws/VJ/NL+uxLRRm8TQbhde3xFAPMHqnCbi6cEbf1OOLY2pkCyLt2pOr3
-         GHXQ==
-X-Gm-Message-State: AOAM533tsBq5lB6G91jfwl/G4UN3lnceMotMu6I9j9QCzB1XDxCrgrDx
-        +ZpAjELW4dOcwJNIUf7lL0cnDzwxxu9TmQ==
-X-Google-Smtp-Source: ABdhPJzP+Yico773WoQLz8PnS8XimH0eOsVTKoFbV8W6LsSuKSkEQnAXSFPDmG0XSmY2ceDAtZiaaA==
-X-Received: by 2002:adf:9c12:: with SMTP id f18mr26206857wrc.105.1591633375425;
-        Mon, 08 Jun 2020 09:22:55 -0700 (PDT)
-Received: from antares.lan (f.7.9.4.f.9.a.d.f.4.a.3.6.5.1.0.f.f.6.2.a.5.a.7.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:7a5a:26ff:156:3a4f:da9f:497f])
-        by smtp.gmail.com with ESMTPSA id w3sm50929wmg.44.2020.06.08.09.22.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 09:22:54 -0700 (PDT)
-From:   Lorenz Bauer <lmb@cloudflare.com>
-To:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Shuah Khan <shuah@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>, Roman Gushchin <guro@fb.com>
-Cc:     kernel-team@cloudflare.com, Lorenz Bauer <lmb@cloudflare.com>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: [PATCH bpf] bpf: cgroup: allow multi-attach program to replace itself
-Date:   Mon,  8 Jun 2020 17:22:01 +0100
-Message-Id: <20200608162202.94002-1-lmb@cloudflare.com>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:to:cc:references:from:autocrypt:subject
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=4FKxLCmb6vinJtRekTxBtAJ6CUZg8j5l9IUVAb7VJXc=;
+        b=RsBsZ94gzipjnfWlkRMZKPk/dqKoNt9mT4azfQatzbWUouHA7dtOVfgc3CsButJqzg
+         5cBwEXB52hYeWHi4GP88QraPYpepHViIJJfM6PLtHV9vcy753Owja8PhWJ1uGDwqZn32
+         0lekgIfbz3E4pJXuC3UqDKOWkr0BN8MaY2GWLGnK+V+Mz0VfXWjYH9GbI7oKRy8GKyKD
+         JO59OprFBE1up00n+yliesrZToJivhjfzLODo6UQjKq+CkS1PzdmIoIhlFSh+qXA+RIl
+         /k1UZel5IBQPvFpLP2yDJY1b4U3QP7VWqL2KdfSFWnksJb6EHA499Mrut3RqKzg5SqDU
+         kcxg==
+X-Gm-Message-State: AOAM5319+S+VNNIhQAFq/cGTruvsUAxDlCZKhHSxMP+8DDaQ8lX+wkhW
+        AHa5M1TjCe77/Ier/4zLWO87YPQAj/8=
+X-Google-Smtp-Source: ABdhPJxxG7ERqh217tlw52ShrjqoCylN5bBITcx3JwDsmwcWrnVVcMo6S8ghg+IqXxL4TdlZZ3yl4g==
+X-Received: by 2002:a05:6512:3139:: with SMTP id p25mr13040736lfd.214.1591633388234;
+        Mon, 08 Jun 2020 09:23:08 -0700 (PDT)
+Received: from [192.168.1.8] ([213.87.137.116])
+        by smtp.gmail.com with ESMTPSA id v126sm4471377lfa.50.2020.06.08.09.23.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Jun 2020 09:23:07 -0700 (PDT)
+To:     Adam Borowski <kilobyte@angband.pl>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+References: <CAK7LNASQamajjeV+VMq5G8fECfB6f9uKvZ32zGic72O0qp8Mtw@mail.gmail.com>
+ <20200608095944.140779-1-efremov@linux.com>
+ <20200608153646.GA25087@angband.pl>
+From:   Denis Efremov <efremov@linux.com>
+Autocrypt: addr=efremov@linux.com; keydata=
+ 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
+Subject: Re: [PATCH] kbuild: fix broken builds because of GZIP,BZIP2,LZOP
+ variables
+Message-ID: <ac518eac-aa9c-107b-3330-a18f219c89b5@linux.com>
+Date:   Mon, 8 Jun 2020 19:23:04 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
+In-Reply-To: <20200608153646.GA25087@angband.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When using BPF_PROG_ATTACH to attach a program to a cgroup in
-BPF_F_ALLOW_MULTI mode, it is not possible to replace a program
-with itself. This is because the check for duplicate programs
-doesn't take the replacement program into account.
 
-Replacing a program with itself might seem weird, but it has
-some uses: first, it allows resetting the associated cgroup storage.
-Second, it makes the API consistent with the non-ALLOW_MULTI usage,
-where it is possible to replace a program with itself. Third, it
-aligns BPF_PROG_ATTACH with bpf_link, where replacing itself is
-also supported.
 
-Sice this code has been refactored a few times this change will
-only apply to v5.7 and later. Adjustments could be made to
-commit 1020c1f24a94 ("bpf: Simplify __cgroup_bpf_attach") and
-commit d7bf2c10af05 ("bpf: allocate cgroup storage entries on attaching bpf programs")
-as well as commit 324bda9e6c5a ("bpf: multi program support for cgroup+bpf")
+On 6/8/20 6:36 PM, Adam Borowski wrote:
+> On Mon, Jun 08, 2020 at 12:59:44PM +0300, Denis Efremov wrote:
+>> Redefine GZIP, BZIP2, LZOP variables as KGZIP, KBZIP2, KLZOP resp.
+>> GZIP, BZIP2, LZOP env variables are reserved by the tools. The original
+>> attempt to redefine them internally doesn't work in makefiles/scripts
+>> intercall scenarios, e.g., "make GZIP=gzip bindeb-pkg" and results in
+>> broken builds. There can be other broken build commands because of this,
+>> so the universal solution is to use non-reserved env variables for the
+>> compression tools.
+>>
+>> Fixes: 8dfb61dcbace ("kbuild: add variables for compression tools")
+> 
+> Same said my bisect before I noticed your fix. :)
+> 
+>> Signed-off-by: Denis Efremov <efremov@linux.com>
+> 
+> However, I run just basic "make bindeb-pkg" without forcing any variables,
+> thus the commit message is wrong.
 
-Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
-Fixes: af6eea57437a ("bpf: Implement bpf_link-based cgroup BPF program attachment")
----
- kernel/bpf/cgroup.c                                        | 2 +-
- .../testing/selftests/bpf/prog_tests/cgroup_attach_multi.c | 7 +++++++
- 2 files changed, 8 insertions(+), 1 deletion(-)
+I would not say it's fully wrong. At least in my case "make bindeb-pkg" builds
+successfully (Fedora32/Debian10). I just added to the commit's message the
+command "make GZIP=gzip bindeb-pkg" as an example that I think will "reliably"
+break the build in any environment.
 
-diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
-index fdf7836750a3..4d76f16524cc 100644
---- a/kernel/bpf/cgroup.c
-+++ b/kernel/bpf/cgroup.c
-@@ -378,7 +378,7 @@ static struct bpf_prog_list *find_attach_entry(struct list_head *progs,
- 	}
- 
- 	list_for_each_entry(pl, progs, node) {
--		if (prog && pl->prog == prog)
-+		if (prog && pl->prog == prog && prog != replace_prog)
- 			/* disallow attaching the same prog twice */
- 			return ERR_PTR(-EINVAL);
- 		if (link && pl->link == link)
-diff --git a/tools/testing/selftests/bpf/prog_tests/cgroup_attach_multi.c b/tools/testing/selftests/bpf/prog_tests/cgroup_attach_multi.c
-index 139f8e82c7c6..b549fcfacc0b 100644
---- a/tools/testing/selftests/bpf/prog_tests/cgroup_attach_multi.c
-+++ b/tools/testing/selftests/bpf/prog_tests/cgroup_attach_multi.c
-@@ -230,6 +230,13 @@ void test_cgroup_attach_multi(void)
- 		  "prog_replace", "errno=%d\n", errno))
- 		goto err;
- 
-+	/* replace program with itself */
-+	attach_opts.replace_prog_fd = allow_prog[6];
-+	if (CHECK(bpf_prog_attach_xattr(allow_prog[6], cg1,
-+					BPF_CGROUP_INET_EGRESS, &attach_opts),
-+		  "prog_replace", "errno=%d\n", errno))
-+		goto err;
-+
- 	value = 0;
- 	CHECK_FAIL(bpf_map_update_elem(map_fd, &key, &value, 0));
- 	CHECK_FAIL(system(PING_CMD));
--- 
-2.25.1
-
+Thanks,
+Denis
