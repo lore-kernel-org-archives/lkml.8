@@ -2,108 +2,133 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD40C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 22:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C57DC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 22:37:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D12E2074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 22:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BB492074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 22:37:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="D25L8BuT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YoLH9s/K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726848AbgFHWgZ (ORCPT
+        id S1726877AbgFHWhD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 18:36:25 -0400
-Received: from mail.codeweavers.com ([50.203.203.244]:57396 "EHLO
-        mail.codeweavers.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726725AbgFHWgY (ORCPT
+        Mon, 8 Jun 2020 18:37:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33022 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726818AbgFHWhB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 18:36:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=codeweavers.com; s=6377696661; h=To:References:Message-Id:
-        Content-Transfer-Encoding:Cc:Date:In-Reply-To:From:Subject:Mime-Version:
-        Content-Type:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=IHsIUYf/EF7HX/+mLk/exZGdZj+pE5reZm8Wq5yQBdg=; b=D25L8BuTK+m3Z+sR9Okiw7K8l
-        JYfP55PrFCuiGZ/ocfrd/mWt9B3YPm9GK3UxtodtEDSjYcW4jYm5xsVlFHsv971UaLzbEqoqANeSw
-        IFS9deyjHDXQIfsUthBEeUNFAVXRIZpm8wSMwXlajUrdIU+G3vCKx9D4+IOQhLH4nZz5o=;
-Received: from cpe-107-184-2-226.socal.res.rr.com ([107.184.2.226] helo=[192.168.2.117])
-        by mail.codeweavers.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <bshanks@codeweavers.com>)
-        id 1jiQNQ-0004gi-EK; Mon, 08 Jun 2020 17:36:22 -0500
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.14\))
-Subject: Re: [PATCH v2] x86/umip: Add emulation/spoofing for SLDT and STR
- instructions
-From:   Brendan Shanks <bshanks@codeweavers.com>
-In-Reply-To: <20200608215315.GB23567@ranerica-svr.sc.intel.com>
-Date:   Mon, 8 Jun 2020 15:36:18 -0700
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Andreas Rammhold <andi@notmuch.email>,
-        "Moger, Babu" <Babu.Moger@amd.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <5256D924-9BFE-47EF-9A3A-2B5FB7B79946@codeweavers.com>
-References: <20200608181454.14210-1-bshanks@codeweavers.com>
- <20200608215315.GB23567@ranerica-svr.sc.intel.com>
-To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-X-Mailer: Apple Mail (2.3445.104.14)
+        Mon, 8 Jun 2020 18:37:01 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C97AC08C5C3
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 15:37:01 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id a3so4923149oid.4
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 15:37:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=K2/QowlQF5mc64F4D/RIrE7YecSYcNfpv5/vBazsU68=;
+        b=YoLH9s/K/Q9F2icLGQ4XsZ8yu34FpvCJWwojbzdGbDurrkiHcXCFSCy3FoJkWSiy3v
+         ttxN1tKlG+tKqtaDuusQXGxcoYxAqVReyLgBQl1PcyR1ZwZp0pBpPOPsPo71/MhepPX1
+         TAlNJPez35trLSgzDHzZEhmRB9+n4fqnr8UMqQoTNeTg6jg6EdOASp/qq4C7sepzG9Cd
+         dZJWCGvrEIyu5+XKoLiiqXIf6j+5wBS8cSdu1lwUmBNGajuww2Lml136v36elMFLLBlr
+         Ka/gIOFoy6ErsrRJZh6TEMEyVDIeFEF0Mg+ikohuWdsdh0ciUnmL46WhAoOe+rkmwelJ
+         +EiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=K2/QowlQF5mc64F4D/RIrE7YecSYcNfpv5/vBazsU68=;
+        b=JaCJTlsiDwt0NN04+hfh1tn+eYW/HdmJYmVPCKle7lYWtprm7CwdptfsBbcvnSM/M1
+         5uqO9Iemnw0cJ9fRvpwbNnRKOVsACeLhGfBlkOAzsI1ZE+vNTxiusvFBVhtlmFFx1Vxu
+         Q39e6ONRiJihFXVyMj395KwHzffik9zNY9bn1rUElLAthSxD8BPqDUlVO6ODg5zNYNLQ
+         YSBXb+OUC5eKLTyk3SatNVQzv+w5J58P+1NikSFe7MayJBRWHX37QSgvem9olOMCRhHs
+         0spV3aEx+SA79DhVRuRqe4cjaPHmGyPe6djxgjOUTp5YCflWLDF2umI8eG7MGuX+2DqQ
+         /oaw==
+X-Gm-Message-State: AOAM531P4l0o8Jm531g9EhrlSp1UQY8hdr0G+ikO0EFsdJoS4WJHuF3V
+        Pu7LEtfHmCHwCqd2RbgrLzPZAIs13vsGHVlq9f+6i4EX/e0=
+X-Google-Smtp-Source: ABdhPJxIVKuOn/EYkNbXNpa9saF5jSFauCOTybMaENNZXSr0SEt5psJ1bIFC5jcp72iD0nqj2OOCaxBHUwukVfcj1E4=
+X-Received: by 2002:aca:2108:: with SMTP id 8mr1330741oiz.10.1591655819262;
+ Mon, 08 Jun 2020 15:36:59 -0700 (PDT)
+MIME-Version: 1.0
+References: <1585044079-358-1-git-send-email-kalyan_t@codeaurora.org> <CALAqxLViRrga-XW2o1J1JutFdS1d-qmmgOrEP2beNygw3A7H4A@mail.gmail.com>
+In-Reply-To: <CALAqxLViRrga-XW2o1J1JutFdS1d-qmmgOrEP2beNygw3A7H4A@mail.gmail.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Mon, 8 Jun 2020 15:36:47 -0700
+Message-ID: <CALAqxLWbhioSH4pFyM348VrGWxRXHQV1s9bdz6HArYguLtAFcw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] drm/msm/dpu: add support for color processing blocks
+ in dpu driver
+To:     Kalyan Thota <kalyan_t@codeaurora.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno@lists.freedesktop.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, mkrishn@codeaurora.org,
+        travitej@codeaurora.org, Doug Anderson <dianders@chromium.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Sean Paul <seanpaul@chromium.org>, hoegsberg@chromium.org,
+        Rob Clark <robdclark@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Amit Pundir <amit.pundir@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 8, 2020 at 3:25 PM John Stultz <john.stultz@linaro.org> wrote:
+>
+> On Wed, Mar 25, 2020 at 1:17 AM Kalyan Thota <kalyan_t@codeaurora.org> wrote:
+> >
+> > This change adds support to configure dspp blocks in
+> > the dpu driver.
+> >
+> > Macro description of the changes coming in this patch.
+> > 1) Add dspp definitions in the hw catalog.
+> > 2) Add capability to reserve dspp blocks in the display data path.
+> > 3) Attach the reserved block to the encoder.
+> >
+> > Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
+>
+> Hey all,
+>   With this patch now merged upstream, I'm seeing a regression on
+> db845c that I bisected down to it.
+>
+> When I boot up I see:
+> [   40.976737] [drm:_dpu_rm_check_lm_and_get_connected_blks] [dpu
+> error]failed to get dspp on lm 0
+> [   40.985600] [drm:_dpu_rm_check_lm_and_get_connected_blks] [dpu
+> error]failed to get dspp on lm 0
+> [   40.994587] [drm:_dpu_rm_check_lm_and_get_connected_blks] [dpu
+> error]failed to get dspp on lm 0
+> [   41.003492] [drm:_dpu_rm_check_lm_and_get_connected_blks] [dpu
+> error]failed to get dspp on lm 0
+> [   41.012283] [drm:_dpu_rm_make_reservation] [dpu error]unable to
+> find appropriate mixers
+> [   41.020369] [drm:dpu_rm_reserve] [dpu error]failed to reserve hw
+> resources: -119
+>
+> Over and over, and the display doesn't start up.
+>
+> I suspect we're supposed to catch the following check before the failure:
+>
+> +       if (!reqs->topology.num_dspp)
+> +               return true;
+>
+> I suspect the issue is in dpu_encoder_get_topology() we don't fully
+> initialize the topology structure on the stack before returning it.
+>
+> Does that sound plausible or is there likely some other cause?
 
-> On Jun 8, 2020, at 2:53 PM, Ricardo Neri =
-<ricardo.neri-calderon@linux.intel.com> wrote:
->=20
-> On Mon, Jun 08, 2020 at 11:14:54AM -0700, Brendan Shanks wrote:
->> Add emulation/spoofing of SLDT and STR for both 32- and 64-bit
->> processes.
->>=20
->> Wine users have found a small number of Windows apps using SLDT that
->> were crashing when run on UMIP-enabled systems.
->>=20
->> Reported-by: Andreas Rammhold <andi@notmuch.email>
->> Originally-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
->> Signed-off-by: Brendan Shanks <bshanks@codeweavers.com>
->> ---
->>=20
->> v2: Return (GDT_ENTRY_LDT * 8) for SLDT when an LDT is set.
->>=20
->> arch/x86/kernel/umip.c | 34 +++++++++++++++++++++++++---------
->> 1 file changed, 25 insertions(+), 9 deletions(-)
->>=20
->> diff --git a/arch/x86/kernel/umip.c b/arch/x86/kernel/umip.c
->> index 8d5cbe1bbb3b..a85f0b0ec2b9 100644
->> --- a/arch/x86/kernel/umip.c
->> +++ b/arch/x86/kernel/umip.c
->> @@ -64,6 +64,8 @@
->> #define UMIP_DUMMY_GDT_BASE 0xfffffffffffe0000ULL
->> #define UMIP_DUMMY_IDT_BASE 0xffffffffffff0000ULL
->>=20
->> +#define UMIP_DUMMY_TASK_REGISTER_SELECTOR 0x40
->=20
-> One more thing. How was this value selected? Would it be possible to =
-use
-> GDT_ENTRY_TSS*8? Linux already uses this value.
+This guess is wrong. The topology.num_dspp is 2, but lm_cfg->dspp is
+coming back as zero.
 
-I used 0x40 because =E2=80=98sldt=E2=80=99 returned that value on every =
-system I tested. GDT_ENTRY_TSS*8 also equals 0x40 (for 64-bit capable =
-kernels), yes I can use that instead.
+I'll continue digging to see if I can understand better whats going wrong.
 
-
-Thank you,
-
-Brendan Shanks
-CodeWeavers=
+thanks
+-john
