@@ -2,107 +2,112 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87CAAC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3A7CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50C492072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:11:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591661484;
-	bh=9lHRliieVBRuhWpIfnInKTM3rDQgHHFvUgGFx4dSJ7U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UDOEzlYqGzSMhsNyX9LWWiGttEKEl80ThstkKDe3sz0Z8O1YxLTgYOxzRNUgvP+zL
-	 9VwWghLZ9bIJFyLozUlKICDroshvTmn4jUv/y759uNmZB1WOq2v/hlXHhnd9IUdmag
-	 oZkTHnX3ixamm8qA4w88FUqXTixfIWNQ8+ZcUKWw=
+	by mail.kernel.org (Postfix) with ESMTP id AF9382085B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:11:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731423AbgFIALX (ORCPT
+        id S2388021AbgFIAL0 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:11:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43128 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:11:26 -0400
+Received: from mga06.intel.com ([134.134.136.31]:54745 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730878AbgFHXTz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730876AbgFHXTz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 8 Jun 2020 19:19:55 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99C7D2085B;
-        Mon,  8 Jun 2020 23:19:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658395;
-        bh=9lHRliieVBRuhWpIfnInKTM3rDQgHHFvUgGFx4dSJ7U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G+MkOtyPr/YKKUX+Z1885QbipjQP5V8QdncXAb5RdF/a53x7ZPMjVfgFz/DnCpDus
-         r6biYXcqgcWlLar//kd2Ib0ABOaA7LFrOECSEZtB4wyLAoOoLjz0skYsy3gcPYGQoJ
-         jsKsYC5xnjI2TbcrMI2RZPq3ngIR/Hzumnz44vCo=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Surabhi Boob <surabhi.boob@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 052/175] ice: Fix memory leak
-Date:   Mon,  8 Jun 2020 19:16:45 -0400
-Message-Id: <20200608231848.3366970-52-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
-References: <20200608231848.3366970-1-sashal@kernel.org>
+IronPort-SDR: NDaaJ/Ny+sy/G2S0E2fRNB0+nhUGYr621BaExLu+k0l4+Pul4kzEmxMXI7MrJXpacf/0D5zwbE
+ U8lkscrUzbkA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2020 16:19:54 -0700
+IronPort-SDR: ENcRDvxUx7SzWNEGKKuiD3pr/Woir79+F7RleZPBqtMTkMpEdslW/os06eoMu3V3xFXJZd3mY1
+ Ey5a/Gi+Y+aQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,489,1583222400"; 
+   d="scan'208";a="314035243"
+Received: from orsmsx105.amr.corp.intel.com ([10.22.225.132])
+  by FMSMGA003.fm.intel.com with ESMTP; 08 Jun 2020 16:19:54 -0700
+Received: from orsmsx123.amr.corp.intel.com (10.22.240.116) by
+ ORSMSX105.amr.corp.intel.com (10.22.225.132) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 8 Jun 2020 16:19:53 -0700
+Received: from orsmsx112.amr.corp.intel.com ([169.254.3.61]) by
+ ORSMSX123.amr.corp.intel.com ([169.254.1.123]) with mapi id 14.03.0439.000;
+ Mon, 8 Jun 2020 16:19:53 -0700
+From:   "Kirsher, Jeffrey T" <jeffrey.t.kirsher@intel.com>
+To:     Jarod Wilson <jarod@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>
+Subject: RE: [PATCH net-next 2/4] ixgbe_ipsec: become aware of when running
+ as a bonding slave
+Thread-Topic: [PATCH net-next 2/4] ixgbe_ipsec: become aware of when running
+ as a bonding slave
+Thread-Index: AQHWPdf3oUXiI5zht0y9X20eYPVjDajPWp2w
+Date:   Mon, 8 Jun 2020 23:19:52 +0000
+Message-ID: <61CC2BC414934749BD9F5BF3D5D94044986EFB8B@ORSMSX112.amr.corp.intel.com>
+References: <20200608210058.37352-1-jarod@redhat.com>
+ <20200608210058.37352-3-jarod@redhat.com>
+In-Reply-To: <20200608210058.37352-3-jarod@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.140]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Surabhi Boob <surabhi.boob@intel.com>
+> -----Original Message-----
+> From: Jarod Wilson <jarod@redhat.com>
+> Sent: Monday, June 8, 2020 14:01
+> To: linux-kernel@vger.kernel.org
+> Cc: Jarod Wilson <jarod@redhat.com>; Jay Vosburgh
+> <j.vosburgh@gmail.com>; Veaceslav Falico <vfalico@gmail.com>; Andy
+> Gospodarek <andy@greyhouse.net>; David S. Miller <davem@davemloft.net>;
+> Kirsher, Jeffrey T <jeffrey.t.kirsher@intel.com>; Jakub Kicinski
+> <kuba@kernel.org>; Steffen Klassert <steffen.klassert@secunet.com>;
+> Herbert Xu <herbert@gondor.apana.org.au>; netdev@vger.kernel.org; intel-
+> wired-lan@lists.osuosl.org
+> Subject: [PATCH net-next 2/4] ixgbe_ipsec: become aware of when running as
+> a bonding slave
+> 
+> Slave devices in a bond doing hardware encryption also need to be aware that
+> they're slaves, so we operate on the slave instead of the bonding master to do
+> the actual hardware encryption offload bits.
+> 
+> CC: Jay Vosburgh <j.vosburgh@gmail.com>
+> CC: Veaceslav Falico <vfalico@gmail.com>
+> CC: Andy Gospodarek <andy@greyhouse.net>
+> CC: "David S. Miller" <davem@davemloft.net>
+> CC: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+> CC: Jakub Kicinski <kuba@kernel.org>
+> CC: Steffen Klassert <steffen.klassert@secunet.com>
+> CC: Herbert Xu <herbert@gondor.apana.org.au>
+> CC: netdev@vger.kernel.org
+> CC: intel-wired-lan@lists.osuosl.org
+> Signed-off-by: Jarod Wilson <jarod@redhat.com> 
 
-[ Upstream commit 1aaef2bc4e0a5ce9e4dd86359e6a0bf52c6aa64f ]
+Acked-by: Jeff Kirsher <Jeffrey.t.kirsher@intel.com>
 
-Handle memory leak on filter management initialization failure.
-
-Signed-off-by: Surabhi Boob <surabhi.boob@intel.com>
-Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/intel/ice/ice_common.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/intel/ice/ice_common.c b/drivers/net/ethernet/intel/ice/ice_common.c
-index 171f0b625407..d68b8aa31b19 100644
---- a/drivers/net/ethernet/intel/ice/ice_common.c
-+++ b/drivers/net/ethernet/intel/ice/ice_common.c
-@@ -436,6 +436,7 @@ static void ice_init_flex_flds(struct ice_hw *hw, enum ice_rxdid prof_id)
- static enum ice_status ice_init_fltr_mgmt_struct(struct ice_hw *hw)
- {
- 	struct ice_switch_info *sw;
-+	enum ice_status status;
- 
- 	hw->switch_info = devm_kzalloc(ice_hw_to_dev(hw),
- 				       sizeof(*hw->switch_info), GFP_KERNEL);
-@@ -446,7 +447,12 @@ static enum ice_status ice_init_fltr_mgmt_struct(struct ice_hw *hw)
- 
- 	INIT_LIST_HEAD(&sw->vsi_list_map_head);
- 
--	return ice_init_def_sw_recp(hw);
-+	status = ice_init_def_sw_recp(hw);
-+	if (status) {
-+		devm_kfree(ice_hw_to_dev(hw), hw->switch_info);
-+		return status;
-+	}
-+	return 0;
- }
- 
- /**
--- 
-2.25.1
-
+> ---
+>  .../net/ethernet/intel/ixgbe/ixgbe_ipsec.c    | 39 +++++++++++++++----
+>  1 file changed, 31 insertions(+), 8 deletions(-)
