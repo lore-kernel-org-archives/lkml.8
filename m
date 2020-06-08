@@ -2,110 +2,184 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC12C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9AEEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD3C7206D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:05:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3F542078D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:06:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730442AbgFHQF6 (ORCPT
+        id S1730453AbgFHQGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 12:05:58 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:63702 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730403AbgFHQFt (ORCPT
+        Mon, 8 Jun 2020 12:06:18 -0400
+Received: from outbound-smtp20.blacknight.com ([46.22.139.247]:41187 "EHLO
+        outbound-smtp20.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730409AbgFHQGR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 12:05:49 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 058G336T188781;
-        Mon, 8 Jun 2020 12:05:48 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31g7a1br9e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 08 Jun 2020 12:05:48 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 058G3ESm189706;
-        Mon, 8 Jun 2020 12:05:48 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31g7a1br91-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 08 Jun 2020 12:05:48 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 058FoHTJ017200;
-        Mon, 8 Jun 2020 16:05:47 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma04dal.us.ibm.com with ESMTP id 31g2s9fyr7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 08 Jun 2020 16:05:47 +0000
-Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 058G5i9e10879630
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 8 Jun 2020 16:05:44 GMT
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DD5BD6A047;
-        Mon,  8 Jun 2020 16:05:45 +0000 (GMT)
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 839976A04D;
-        Mon,  8 Jun 2020 16:05:45 +0000 (GMT)
-Received: from ghost4.ibm.com (unknown [9.211.140.245])
-        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon,  8 Jun 2020 16:05:45 +0000 (GMT)
-From:   Eddie James <eajames@linux.ibm.com>
-To:     linux-i2c@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, andy.shevchenko@gmail.com,
-        wsa@kernel.org, joel@jms.id.au, eajames@linux.ibm.com
-Subject: [PATCH 2/2] i2c: fsi: Prevent adding adapters for ports without dts nodes
-Date:   Mon,  8 Jun 2020 11:05:44 -0500
-Message-Id: <20200608160544.7134-3-eajames@linux.ibm.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200608160544.7134-1-eajames@linux.ibm.com>
-References: <20200608160544.7134-1-eajames@linux.ibm.com>
+        Mon, 8 Jun 2020 12:06:17 -0400
+Received: from mail.blacknight.com (pemlinmail03.blacknight.ie [81.17.254.16])
+        by outbound-smtp20.blacknight.com (Postfix) with ESMTPS id AFB701C33CE
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 17:06:15 +0100 (IST)
+Received: (qmail 1248 invoked from network); 8 Jun 2020 16:06:15 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 8 Jun 2020 16:06:15 -0000
+Date:   Mon, 8 Jun 2020 17:06:14 +0100
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Jan Kara <jack@suse.cz>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] fsnotify: Rearrange fast path to minimise overhead when
+ there is no watcher
+Message-ID: <20200608160614.GH3127@techsingularity.net>
+References: <20200608140557.GG3127@techsingularity.net>
+ <CAOQ4uxhb1p5_rO9VjNb6assCczwQRx3xdAOXZ9S=mOA1g-0JVg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-08_14:2020-06-08,2020-06-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=1 bulkscore=0
- adultscore=0 phishscore=0 mlxlogscore=999 spamscore=0 cotscore=-2147483648
- clxscore=1015 priorityscore=1501 lowpriorityscore=0 malwarescore=0
- impostorscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006080115
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <CAOQ4uxhb1p5_rO9VjNb6assCczwQRx3xdAOXZ9S=mOA1g-0JVg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ports should be defined in the devicetree if they are to be enabled on
-the system.
+On Mon, Jun 08, 2020 at 06:03:56PM +0300, Amir Goldstein wrote:
+> > @@ -315,17 +315,12 @@ int fsnotify(struct inode *to_tell, __u32 mask, const void *data, int data_is,
+> >         struct fsnotify_iter_info iter_info = {};
+> >         struct super_block *sb = to_tell->i_sb;
+> >         struct mount *mnt = NULL;
+> > -       __u32 mnt_or_sb_mask = sb->s_fsnotify_mask;
+> > +       __u32 mnt_or_sb_mask;
+> >         int ret = 0;
+> > -       __u32 test_mask = (mask & ALL_FSNOTIFY_EVENTS);
+> > +       __u32 test_mask;
+> >
+> > -       if (path) {
+> > +       if (path)
+> >                 mnt = real_mount(path->mnt);
+> > -               mnt_or_sb_mask |= mnt->mnt_fsnotify_mask;
+> > -       }
+> > -       /* An event "on child" is not intended for a mount/sb mark */
+> > -       if (mask & FS_EVENT_ON_CHILD)
+> > -               mnt_or_sb_mask = 0;
+> >
+> >         /*
+> >          * Optimization: srcu_read_lock() has a memory barrier which can
+> > @@ -337,11 +332,21 @@ int fsnotify(struct inode *to_tell, __u32 mask, const void *data, int data_is,
+> >         if (!to_tell->i_fsnotify_marks && !sb->s_fsnotify_marks &&
+> >             (!mnt || !mnt->mnt_fsnotify_marks))
+> >                 return 0;
+> > +
+> > +       /* An event "on child" is not intended for a mount/sb mark */
+> > +       mnt_or_sb_mask = 0;
+> > +       if (!(mask & FS_EVENT_ON_CHILD)) {
+> > +               mnt_or_sb_mask = sb->s_fsnotify_mask;
+> > +               if (path)
+> > +                       mnt_or_sb_mask |= mnt->mnt_fsnotify_mask;
+> > +       }
+> > +
+> 
+> Are you sure that loading ->_fsnotify_mask is so much more expensive
+> than only checking ->_fsnotify_marks? They are surely on the same cache line.
+> Isn't it possible that you just moved the penalty to ->_fsnotify_marks check
+> with this change?
 
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
----
- drivers/i2c/busses/i2c-fsi.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+The profile indicated that the cost was in this line
 
-diff --git a/drivers/i2c/busses/i2c-fsi.c b/drivers/i2c/busses/i2c-fsi.c
-index 977d6f524649..95b6b6bc1d78 100644
---- a/drivers/i2c/busses/i2c-fsi.c
-+++ b/drivers/i2c/busses/i2c-fsi.c
-@@ -703,7 +703,12 @@ static int fsi_i2c_probe(struct device *dev)
- 
- 	for (port_no = 0; port_no < ports; port_no++) {
- 		np = fsi_i2c_find_port_of_node(dev->of_node, port_no);
--		if (np && !of_device_is_available(np))
-+		/* Do not add port if it is not described in the device tree */
-+		if (!np)
-+			continue;
-+
-+		/* Do not add port if it is described as disabled */
-+		if (!of_device_is_available(np))
- 			continue;
- 
- 		port = kzalloc(sizeof(*port), GFP_KERNEL);
+	mnt_or_sb_mask |= mnt->mnt_fsnotify_mask;
+
+as opposed to the other checks. Hence, I deferred the calculation of
+mnt_or_sb_mask until it was definitely needed. However, it's perfectly
+possible that the line simply looked hot because the function entry was
+hot in general.
+
+> Did you test performance with just the fsnotify_parent() change alone?
+> 
+
+No, but I can. I looked at the profile of fsnotify() first before moving
+on to fsnotify_parent() but I didn't test them in isolation as deferring
+unnecessarily calculations in a fast path seemed reasonable.
+
+> In any case, this hunk seriously conflicts with a patch set I am working on,
+> so I would rather not merging this change as is.
+> 
+> If you provide me the feedback that testing ->_fsnotify_marks before loading
+> ->_fsnotify_mask is beneficial on its own, then I will work this change into
+> my series.
+> 
+
+Will do. If the fsnotify_parent() changes are useful on their own, I'll
+post a v2 of the patch with just that change.
+
+> >         /*
+> >          * if this is a modify event we may need to clear the ignored masks
+> >          * otherwise return if neither the inode nor the vfsmount/sb care about
+> >          * this type of event.
+> >          */
+> > +       test_mask = (mask & ALL_FSNOTIFY_EVENTS);
+> >         if (!(mask & FS_MODIFY) &&
+> >             !(test_mask & (to_tell->i_fsnotify_mask | mnt_or_sb_mask)))
+> >                 return 0;
+> > diff --git a/include/linux/fsnotify.h b/include/linux/fsnotify.h
+> > index 5ab28f6c7d26..508f6bb0b06b 100644
+> > --- a/include/linux/fsnotify.h
+> > +++ b/include/linux/fsnotify.h
+> > @@ -44,6 +44,16 @@ static inline void fsnotify_dirent(struct inode *dir, struct dentry *dentry,
+> >         fsnotify_name(dir, mask, d_inode(dentry), &dentry->d_name, 0);
+> >  }
+> >
+> > +/* Notify this dentry's parent about a child's events. */
+> > +static inline int fsnotify_parent(struct dentry *dentry, __u32 mask,
+> > +                                 const void *data, int data_type)
+> > +{
+> > +       if (!(dentry->d_flags & DCACHE_FSNOTIFY_PARENT_WATCHED))
+> > +               return 0;
+> > +
+> > +       return __fsnotify_parent(dentry, mask, data, data_type);
+> > +}
+> > +
+> 
+> This change looks good as is, but I'm afraid my series is going to
+> make it obsolete.
+> It may very well be that my series will introduce more performance
+> penalty to your workload.
+> 
+> It would be very much appreciated if you could run a test for me.
+> I will gladly work in some more optimizations into my series.
+> 
+> You can find the relevant part of my work at:
+> https://github.com/amir73il/linux/commits/fsnotify_name
+> 
+
+Sure.
+
+> What this work does essentially is two things:
+> 1. Call backend once instead of twice when both inode and parent are
+>     watching.
+> 2. Snapshot name and parent inode to pass to backend not only when
+>     parent is watching, but also when an sb/mnt mark exists which
+>     requests to get file names with events.
+> 
+> Compared to the existing implementation of fsnotify_parent(),
+> my code needs to also test bits in inode->i_fsnotify_mask,
+> inode->i_sb->s_fsnotify_mask and mnt->mnt_fsnotify_mask
+> before the fast path can be taken.
+> So its back to square one w.r.t your optimizations.
+> 
+
+Seems fair but it may be worth noting that the changes appear to be
+optimising the case where there are watchers. The case where there are
+no watchers at all is also interesting and probably a lot more common. I
+didn't look too closely at your series as I'm not familiar with fsnotify
+in general. However, at a glance it looks like fsnotify_parent() executes
+a substantial amount of code even if there are no watchers but I could
+be wrong.
+
 -- 
-2.24.0
-
+Mel Gorman
+SUSE Labs
