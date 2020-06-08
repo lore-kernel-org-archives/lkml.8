@@ -2,108 +2,156 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A8A6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 02:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1173C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 02:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BAD52075A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 02:54:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88BBF2075A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 02:54:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="lUwQr79n"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="izDTLbNF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728908AbgFHCyM (ORCPT
+        id S1728956AbgFHCyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 22:54:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47932 "EHLO
+        Sun, 7 Jun 2020 22:54:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728065AbgFHCyL (ORCPT
+        with ESMTP id S1728908AbgFHCyb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 22:54:11 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C003FC08C5C4
-        for <linux-kernel@vger.kernel.org>; Sun,  7 Jun 2020 19:54:10 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id c14so15912979qka.11
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Jun 2020 19:54:10 -0700 (PDT)
+        Sun, 7 Jun 2020 22:54:31 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 934A5C08C5C5
+        for <linux-kernel@vger.kernel.org>; Sun,  7 Jun 2020 19:54:30 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id k2so5139280pjs.2
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jun 2020 19:54:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yWLNoW8KwtbFLEoTy9JRXC4yS5h7+K+nZ8ogvjRFT10=;
-        b=lUwQr79nu0C3CUTx5rkUX1JM2BAtkwxCfNCE3s1x0fNiY1Ai8Oup/EwKIwZl7tFBk8
-         imyo6wV2crCPek4sz6POKBBuGTzfNEAnIioM82j5x4sKLb3jTEzrt8WisrFNH9ljoReg
-         sntjJM3Xr0qK2z6azZds/Oyt6hOeL0uCARX6/gmI+KgCo7d/BMeJYZjJj8JyyDWuQbw8
-         VPuDpLRZpKoNqW3h+sWnPEWNx0xnRrQ/2bkq6QHe+Y8d820PmLmcGuxc0/+H2JE3LkG5
-         zUYikng65h8Uj7adKCb3tyN4hs4V7MlP6HyJT9go5Tnx4My3H24EVbJIUHBq4oZlwfaP
-         byPA==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=TNiiby0GhibJHmG02ytGWtb3GrXv/h2IE3SFE6qK8wY=;
+        b=izDTLbNFapAPFawYa8bP5L1UpCxlkSTCCzx2ye/9STM1DqXymdysNnGkX12FV0/OIo
+         tKcjXEIEuxSNO572pWS545T9DoQqGqTM8DmMcj/pjObZb/s4KuucXPV8lxnGJsPOEWOP
+         creFxg4Q8lnO5UPN6FiY9AkscKdJteM1nKY+Qmci5RctGzZp1Lm8RhpxAeqkzQiUCQxI
+         Gn/htYffz0hnLWeWv7zjKwwzU0TiNbE2IVaAoUldJmQdAcEGN9qicP3+rskQKiUOfzQ9
+         T1+IF9bYkLx6QP/gZ6BWN651hoOpft0Cc6Lq2cjMJoEoVussc3m5Gv9e47HSM5NkG+Yl
+         PSSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yWLNoW8KwtbFLEoTy9JRXC4yS5h7+K+nZ8ogvjRFT10=;
-        b=ZVMeyvIKrusx/uCefD93LLMbFeXFg4ereazfcDwufGQdLtCGSvgBsxmhOFlc38AdNX
-         pbuxhaQv9RnDEG9BaE+u6USHT5fqAsqFaP82Tct4U+ic3PgU8prmZualhgK/bzaarCcx
-         jOPSAW5omEGV0Shr2x6wNN6hWqXt1Jmk3AHC9p457A7c3o1/XIawWKCXZJvazfKL4flQ
-         gW3Oei2UW0NaDWVjgR2Yb5Tktotem7ec1qtQnSZXYWBMAXOs74h8b29Xx7mU2RNQ83en
-         aA0uWwVtrOsZCW7BV7B38NBTgGXB0NUIXVhUwv11eE3ycns2cRBZOuxSklQKH/skjUtl
-         mZcw==
-X-Gm-Message-State: AOAM531NxyrtK3Q1OmTDEtn9N0B1bjipg0lfSSrYXBJ6CcQyI8rWPXbg
-        kmPuwytSPGF5j1n+YTM30pT2jA==
-X-Google-Smtp-Source: ABdhPJyGzJC7FOghKl0SH2kp3RlUIH1JilMo/46+zxMu50q5mqLmutt+XqNuAc3oTVPvFZkULek9Ag==
-X-Received: by 2002:a05:620a:1407:: with SMTP id d7mr19353966qkj.89.1591584849407;
-        Sun, 07 Jun 2020 19:54:09 -0700 (PDT)
-Received: from ovpn-112-81.phx2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id x13sm6095629qkj.36.2020.06.07.19.54.08
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 07 Jun 2020 19:54:08 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     laurent.pinchart@ideasonboard.com,
-        kieran.bingham+renesas@ideasonboard.com
-Cc:     airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH v2] drm/rcar-du: DRM_RCAR_WRITEBACK depends on DRM
-Date:   Sun,  7 Jun 2020 22:53:40 -0400
-Message-Id: <20200608025340.3050-1-cai@lca.pw>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=TNiiby0GhibJHmG02ytGWtb3GrXv/h2IE3SFE6qK8wY=;
+        b=cqBB1p5bYZoV8kfEdF31LXumnX6KcBj5D9vrP0wRPJxqGLmBw/rAGWREIV6mfxZdIK
+         pB0ur3nrwJ8dk6ahAanpWNKbmoV4tn9IoZWBgUEX3XSxpwSSTtRI9ATyeCVPc1jZK71e
+         F1B3QbSmgWqzZeFbzldrG2zoy6sD3lE6loWRwvFgOThQ+SaSeTXmS4tj1eLLxE6lbUsd
+         ZRq3gORzjqYS9JMlbB5dyhdjwVT3OzeNcBjk1J6obYAcgENA9ueQYAErrY1wFUqfhfgn
+         AdlGvCw7OnPhCko5pEHUsuLiIzpHXr+HPsVnkMlGHhSlJ5lARDIon8ZeCYdgDCD8k+6+
+         rvdQ==
+X-Gm-Message-State: AOAM531plsR7GVk+WpRG9qVBVPyDQzLk2eTHliMYZ7k1DL4cYx9OxDUo
+        4wXMWuzv9Pp2S0d3RCWNqYSpOw==
+X-Google-Smtp-Source: ABdhPJxkqD1zFPHkx/wch8a4hS4Dcd7qZB1Ug7k+ig+u/wKNnkcnbqH/JdvGWQP6MIHxl1bz+Ni7fQ==
+X-Received: by 2002:a17:90a:f3c4:: with SMTP id ha4mr15260604pjb.18.1591584870012;
+        Sun, 07 Jun 2020 19:54:30 -0700 (PDT)
+Received: from [10.80.2.98] ([45.135.186.73])
+        by smtp.gmail.com with ESMTPSA id t9sm9533489pjs.16.2020.06.07.19.54.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 07 Jun 2020 19:54:29 -0700 (PDT)
+Subject: Re: [PATCH 0/2] Introduce PCI_FIXUP_IOMMU
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        jean-philippe <jean-philippe@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
+References: <20200605231909.GA1155454@bjorn-Precision-5520>
+From:   Zhangfei Gao <zhangfei.gao@linaro.org>
+Message-ID: <be91b0f0-c685-789d-6868-1c8ebd62b770@linaro.org>
+Date:   Mon, 8 Jun 2020 10:54:15 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20200605231909.GA1155454@bjorn-Precision-5520>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no need to select DRM_RCAR_WRITEBACK if DRM=n which just make
-the generated .config a bit ugly.
+Hi, Bjorn
 
- # ARM devices
- #
- # end of ARM devices
+On 2020/6/6 上午7:19, Bjorn Helgaas wrote:
+> On Thu, Jun 04, 2020 at 09:33:07PM +0800, Zhangfei Gao wrote:
+>> On 2020/6/2 上午1:41, Bjorn Helgaas wrote:
+>>> On Thu, May 28, 2020 at 09:33:44AM +0200, Joerg Roedel wrote:
+>>>> On Wed, May 27, 2020 at 01:18:42PM -0500, Bjorn Helgaas wrote:
+>>>>> Is this slowdown significant?  We already iterate over every device
+>>>>> when applying PCI_FIXUP_FINAL quirks, so if we used the existing
+>>>>> PCI_FIXUP_FINAL, we wouldn't be adding a new loop.  We would only be
+>>>>> adding two more iterations to the loop in pci_do_fixups() that tries
+>>>>> to match quirks against the current device.  I doubt that would be a
+>>>>> measurable slowdown.
+>>>> I don't know how significant it is, but I remember people complaining
+>>>> about adding new PCI quirks because it takes too long for them to run
+>>>> them all. That was in the discussion about the quirk disabling ATS on
+>>>> AMD Stoney systems.
+>>>>
+>>>> So it probably depends on how many PCI devices are in the system whether
+>>>> it causes any measureable slowdown.
+>>> I found this [1] from Paul Menzel, which was a slowdown caused by
+>>> quirk_usb_early_handoff().  I think the real problem is individual
+>>> quirks that take a long time.
+>>>
+>>> The PCI_FIXUP_IOMMU things we're talking about should be fast, and of
+>>> course, they're only run for matching devices anyway.  So I'd rather
+>>> keep them as PCI_FIXUP_FINAL than add a whole new phase.
+>>>
+>> Thanks Bjorn for taking time for this.
+>> If so, it would be much simpler.
+>>
+>> +++ b/drivers/iommu/iommu.c
+>> @@ -2418,6 +2418,10 @@ int iommu_fwspec_init(struct device *dev, struct
+>> fwnode_handle *iommu_fwnode,
+>>          fwspec->iommu_fwnode = iommu_fwnode;
+>>          fwspec->ops = ops;
+>>          dev_iommu_fwspec_set(dev, fwspec);
+>> +
+>> +       if (dev_is_pci(dev))
+>> +               pci_fixup_device(pci_fixup_final, to_pci_dev(dev));
+>> +
+>>
+>> Then pci_fixup_final will be called twice, the first in pci_bus_add_device.
+>> Here in iommu_fwspec_init is the second time, specifically for iommu_fwspec.
+>> Will send this when 5.8-rc1 is open.
+> Wait, this whole fixup approach seems wrong to me.  No matter how you
+> do the fixup, it's still a fixup, which means it requires ongoing
+> maintenance.  Surely we don't want to have to add the Vendor/Device ID
+> for every new AMBA device that comes along, do we?
+>
+>
+Here the fake pci device has standard PCI cfg space, but physical 
+implementation is base on AMBA
+They can provide pasid feature.
+However,
+1, does not support tlp since they are not real pci devices.
+2. does not support pri, instead support stall (provided by smmu)
+And stall is not a pci feature, so it is not described in struct 
+pci_dev, but in struct iommu_fwspec.
+So we use this fixup to tell pci system that the devices can support 
+stall, and hereby support pasid.
 
- CONFIG_DRM_RCAR_WRITEBACK=y
-
- #
- # Frame buffer Devices
-
-Let DRM_RCAR_WRITEBACK depend on DRM_RCAR_DU instead.
-
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- drivers/gpu/drm/rcar-du/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/gpu/drm/rcar-du/Kconfig b/drivers/gpu/drm/rcar-du/Kconfig
-index 0919f1f159a4..3304b41f5611 100644
---- a/drivers/gpu/drm/rcar-du/Kconfig
-+++ b/drivers/gpu/drm/rcar-du/Kconfig
-@@ -48,3 +48,4 @@ config DRM_RCAR_VSP
- config DRM_RCAR_WRITEBACK
- 	bool
- 	default y if ARM64
-+	depends on DRM_RCAR_DU
--- 
-2.21.0 (Apple Git-122.2)
-
+Thanks
