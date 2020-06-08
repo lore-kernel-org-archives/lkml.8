@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D9ADC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A160CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2E5E2145D
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:29:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77F1F20775
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:29:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658977;
-	bh=HH+2Ue1hHzAGnSOteBzokmUmBX/varrvGqjlV79dhic=;
+	s=default; t=1591658981;
+	bh=oQoHniCdWbuIkY9elck1nIUM6K/E1dlJcbZqRgeQhHI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dBhktIlZYdB0yXkjj3TQf02t/69HH/VHoos5vZG2c1VwCTB7/+rrplKDChdDxUSEA
-	 QikBlFsR8KanPbmQuldrmpBV3R+z79y5ReymmZFxiLFGMQbT0wL+Y+ZoAz5ReKjChd
-	 BjHJ3bMXjc/NkJowX55HNjltU5ayndtK4NMbFuK8=
+	b=RaGZMIigolSNfVsfAL8j2rJS7CvfZ8BjiCYVqyuwcCB+5xL+IU+Lw/ZfIfEbZVG1O
+	 PfsjN4T3xaRx+yq7Df9uOhz5J9Qqyyy96SuQyYutCdKgbZIkcv61GzVjq1WvboDwEm
+	 1X0yPY6YMZTva9S3Czbwg9EUJqaoOQ76IHWaICzg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387766AbgFHX3f (ORCPT
+        id S1732313AbgFHX3k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:29:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49142 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:29:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387454AbgFHXXi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:23:38 -0400
+        id S1728498AbgFHXXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:23:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44FF2208B8;
-        Mon,  8 Jun 2020 23:23:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CD37208FE;
+        Mon,  8 Jun 2020 23:23:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658618;
-        bh=HH+2Ue1hHzAGnSOteBzokmUmBX/varrvGqjlV79dhic=;
+        s=default; t=1591658627;
+        bh=oQoHniCdWbuIkY9elck1nIUM6K/E1dlJcbZqRgeQhHI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z7wmu+arEjBADH/SkiMFlfRoxnqEk5sHpONsXpMXGK358DPMuhJYd3s3qF0Scp4Fm
-         I+jUYMNv+5W7hWPsI2jNUnPkKBt1pN7qQMvqbZZk5zaNVz6nhvrz8RanLdT1igA9eq
-         jFYP0onJEbe4GkuaKY0/13lE3k56S5RA1+WfqEI0=
+        b=eTuEG3Gf/GK3AB0KFNnHgLMxqIT7j+ckuEyT1fAsza52di3pcCIVNiZPK6xVgdmcZ
+         bRwLYQ8EmlKRn3sykckcP29uVuTskMm0TQZ/ryauBX+Vr38TOnPF7Z13fS9V4QlXI2
+         PWbcvBo/Ax9FkaYdVPYOtPR29SCyQPnmxfTPMACw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
+Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 043/106] netfilter: nft_nat: return EOPNOTSUPP if type or flags are not supported
-Date:   Mon,  8 Jun 2020 19:21:35 -0400
-Message-Id: <20200608232238.3368589-43-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 051/106] net: lpc-enet: fix error return code in lpc_mii_init()
+Date:   Mon,  8 Jun 2020 19:21:43 -0400
+Message-Id: <20200608232238.3368589-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608232238.3368589-1-sashal@kernel.org>
 References: <20200608232238.3368589-1-sashal@kernel.org>
@@ -60,41 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit 0d7c83463fdf7841350f37960a7abadd3e650b41 ]
+[ Upstream commit 88ec7cb22ddde725ed4ce15991f0bd9dd817fd85 ]
 
-Instead of EINVAL which should be used for malformed netlink messages.
+Fix to return a negative error code from the error handling
+case instead of 0, as done elsewhere in this function.
 
-Fixes: eb31628e37a0 ("netfilter: nf_tables: Add support for IPv6 NAT")
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: b7370112f519 ("lpc32xx: Added ethernet driver")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Acked-by: Vladimir Zapolskiy <vz@mleia.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_nat.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/nxp/lpc_eth.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/netfilter/nft_nat.c b/net/netfilter/nft_nat.c
-index c15807d10b91..3e82a7d0df2a 100644
---- a/net/netfilter/nft_nat.c
-+++ b/net/netfilter/nft_nat.c
-@@ -135,7 +135,7 @@ static int nft_nat_init(const struct nft_ctx *ctx, const struct nft_expr *expr,
- 		priv->type = NF_NAT_MANIP_DST;
- 		break;
- 	default:
--		return -EINVAL;
-+		return -EOPNOTSUPP;
- 	}
+diff --git a/drivers/net/ethernet/nxp/lpc_eth.c b/drivers/net/ethernet/nxp/lpc_eth.c
+index 41d30f55c946..6bd6c261f2ba 100644
+--- a/drivers/net/ethernet/nxp/lpc_eth.c
++++ b/drivers/net/ethernet/nxp/lpc_eth.c
+@@ -845,7 +845,8 @@ static int lpc_mii_init(struct netdata_local *pldat)
+ 	if (mdiobus_register(pldat->mii_bus))
+ 		goto err_out_unregister_bus;
  
- 	if (tb[NFTA_NAT_FAMILY] == NULL)
-@@ -202,7 +202,7 @@ static int nft_nat_init(const struct nft_ctx *ctx, const struct nft_expr *expr,
- 	if (tb[NFTA_NAT_FLAGS]) {
- 		priv->flags = ntohl(nla_get_be32(tb[NFTA_NAT_FLAGS]));
- 		if (priv->flags & ~NF_NAT_RANGE_MASK)
--			return -EINVAL;
-+			return -EOPNOTSUPP;
- 	}
+-	if (lpc_mii_probe(pldat->ndev) != 0)
++	err = lpc_mii_probe(pldat->ndev);
++	if (err)
+ 		goto err_out_unregister_bus;
  
- 	return nf_ct_netns_get(ctx->net, family);
+ 	return 0;
 -- 
 2.25.1
 
