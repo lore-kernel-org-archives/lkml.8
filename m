@@ -4,25 +4,26 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E046CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 19:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71728C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 19:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA19520775
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 19:27:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4762920760
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 19:28:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbgFHT14 (ORCPT
+        id S1726699AbgFHT2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 15:27:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39732 "EHLO mx2.suse.de"
+        Mon, 8 Jun 2020 15:28:14 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39702 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726628AbgFHT1m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 15:27:42 -0400
+        id S1726601AbgFHT1h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 15:27:37 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 86AA3AFFB;
-        Mon,  8 Jun 2020 19:27:43 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 5A9A2AE41;
+        Mon,  8 Jun 2020 19:27:39 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 To:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
         robh@kernel.org, mathias.nyman@linux.intel.com,
@@ -31,13 +32,14 @@ To:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
         linux-rpi-kernel@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-pci@vger.kernel.org, linux-usb@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>
 Cc:     linux-kernel@vger.kernel.org, tim.gover@raspberrypi.org,
-        helgaas@kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 9/9] Revert "PCI: brcmstb: Wait for Raspberry Pi's firmware when present"
-Date:   Mon,  8 Jun 2020 21:27:01 +0200
-Message-Id: <20200608192701.18355-10-nsaenzjulienne@suse.de>
+        helgaas@kernel.org, lorenzo.pieralisi@arm.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: [PATCH 5/9] usb: xhci-pci: Add support for reset controllers
+Date:   Mon,  8 Jun 2020 21:26:57 +0200
+Message-Id: <20200608192701.18355-6-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200608192701.18355-1-nsaenzjulienne@suse.de>
 References: <20200608192701.18355-1-nsaenzjulienne@suse.de>
@@ -48,57 +50,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 44331189f9082c7e659697bbac1747db3def73e7.
-
-Now that the VL805 init routine is run through a reset controller driver
-the dependencies are being taken care of by the device core. No need to
-do it manually here.
+Some atypical users of xhci-pci might need to manually reset their xHCI
+controller before starting the HCD setup. Check if a reset controller
+device is available to the PCI bus and trigger a reset.
 
 Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 ---
- drivers/pci/controller/pcie-brcmstb.c | 17 -----------------
- 1 file changed, 17 deletions(-)
+ drivers/usb/host/xhci-pci.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 7730ea845ff2..752f5b331579 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -28,8 +28,6 @@
- #include <linux/string.h>
- #include <linux/types.h>
+diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
+index ef513c2fb843..45f70facdfcd 100644
+--- a/drivers/usb/host/xhci-pci.c
++++ b/drivers/usb/host/xhci-pci.c
+@@ -12,6 +12,7 @@
+ #include <linux/slab.h>
+ #include <linux/module.h>
+ #include <linux/acpi.h>
++#include <linux/reset.h>
  
--#include <soc/bcm2835/raspberrypi-firmware.h>
--
- #include "../pci.h"
+ #include "xhci.h"
+ #include "xhci-trace.h"
+@@ -339,6 +340,7 @@ static int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ 	struct xhci_hcd *xhci;
+ 	struct usb_hcd *hcd;
+ 	struct xhci_driver_data *driver_data;
++	struct reset_control *reset;
  
- /* BRCM_PCIE_CAP_REGS - Offset for the mandatory capability config regs */
-@@ -931,26 +929,11 @@ static int brcm_pcie_probe(struct platform_device *pdev)
- {
- 	struct device_node *np = pdev->dev.of_node, *msi_np;
- 	struct pci_host_bridge *bridge;
--	struct device_node *fw_np;
- 	struct brcm_pcie *pcie;
- 	struct pci_bus *child;
- 	struct resource *res;
- 	int ret;
+ 	driver_data = (struct xhci_driver_data *)id->driver_data;
+ 	if (driver_data && driver_data->quirks & XHCI_RENESAS_FW_QUIRK) {
+@@ -347,6 +349,13 @@ static int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ 			return retval;
+ 	}
  
--	/*
--	 * We have to wait for Raspberry Pi's firmware interface to be up as a
--	 * PCI fixup, rpi_firmware_init_vl805(), depends on it. This driver's
--	 * probe can race with the firmware interface's (see
--	 * drivers/firmware/raspberrypi.c) and potentially break the PCI fixup.
--	 */
--	fw_np = of_find_compatible_node(NULL, NULL,
--					"raspberrypi,bcm2835-firmware");
--	if (fw_np && !rpi_firmware_get(fw_np)) {
--		of_node_put(fw_np);
--		return -EPROBE_DEFER;
--	}
--	of_node_put(fw_np);
--
- 	bridge = devm_pci_alloc_host_bridge(&pdev->dev, sizeof(*pcie));
- 	if (!bridge)
- 		return -ENOMEM;
++	reset = devm_reset_control_get(&dev->bus->dev, NULL);
++	if (IS_ERR(reset)) {
++		retval = PTR_ERR(reset);
++		return retval;
++	}
++	reset_control_reset(reset);
++
+ 	/* Prevent runtime suspending between USB-2 and USB-3 initialization */
+ 	pm_runtime_get_noresume(&dev->dev);
+ 
 -- 
 2.26.2
 
