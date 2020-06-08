@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F7E4C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A24F7C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF75320659
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:58:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F34C20737
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:58:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660693;
-	bh=kzpiE8BnnJAqi9y9l9F3C8tiBJxNS1qKQy7aQb0V88Y=;
+	s=default; t=1591660698;
+	bh=exD6mbl+JGxYrw7LGOAyCf+W7gxP+F9nwfW9/zBznho=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JY5NKza6uRzb3jUXs7WDuKF9kWTdmtscYchHrOASw9+r+fYzv7GajY6XkewRPNqLu
-	 yvK5W/AbtPqskd/2PFz84KpBsQKulaBgqHv44do5SLJ0WpguTeZ61H8Lic34ggx8mc
-	 2+1TKTfVwj1H18utMtVTgEAmgkfBdEkcrdO16Gn0=
+	b=SnRFzquLBCCFf8UbAZx4d/ELTkR5/ktkyLDL8fZwpoPmsaMZ4tbq0tdbWX/vkpTgq
+	 8Auc+vnfZZyzXyDbyOpn0hFJSLBrMfVn1hqj1A8H6bW20S9kt0znGZPl7hp4l114Mq
+	 8nm1od3RNlAFFqFa4l4x+GBiUlA87oDfzU95bzPo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731590AbgFHX6L (ORCPT
+        id S1731851AbgFHX6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:58:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48502 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:58:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731467AbgFHXXR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:23:17 -0400
+        id S1728181AbgFHXXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:23:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC348208B8;
-        Mon,  8 Jun 2020 23:23:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DB9620814;
+        Mon,  8 Jun 2020 23:23:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658597;
-        bh=kzpiE8BnnJAqi9y9l9F3C8tiBJxNS1qKQy7aQb0V88Y=;
+        s=default; t=1591658596;
+        bh=exD6mbl+JGxYrw7LGOAyCf+W7gxP+F9nwfW9/zBznho=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iiIdRL4RRtl8as3w+wQV2dQmPemyzKF8aGwpEvJVXFoNsJiUod1p3TgdSk9xskWX5
-         +A5ZLA0N/ofx7SPY+k7jV/1ncScWWW5jmY3hKQOGKMXUqNRGcD1JYzs76Ad1fcSvGL
-         0zcbDls+ug9XrSb36L/FydfoPk5KvHX/vtxIrfJg=
+        b=yy7984ASrKrLSeuCcm7r6DmTsuHHsFOEmL7fVzuI+2Td3HYBGz2Q2VK5fyWcEOKGQ
+         moA3PNghSJFOCY057Jua0l46L7w9V2cc+md9zRf/IvYEF60JVb2ffmhyiPqupYfqVm
+         7B6CVF2NI8UQqtmvFy9UCtVDiFkYJtinXFsW7aok=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 029/106] net: vmxnet3: fix possible buffer overflow caused by bad DMA value in vmxnet3_get_rss()
-Date:   Mon,  8 Jun 2020 19:21:21 -0400
-Message-Id: <20200608232238.3368589-29-sashal@kernel.org>
+Cc:     Jon Doron <arilou@gmail.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Roman Kagan <rvkagan@yandex-team.ru>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-doc@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 028/106] x86/kvm/hyper-v: Explicitly align hcall param for kvm_hyperv_exit
+Date:   Mon,  8 Jun 2020 19:21:20 -0400
+Message-Id: <20200608232238.3368589-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608232238.3368589-1-sashal@kernel.org>
 References: <20200608232238.3368589-1-sashal@kernel.org>
@@ -59,38 +62,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Jon Doron <arilou@gmail.com>
 
-[ Upstream commit 3e1c6846b9e108740ef8a37be80314053f5dd52a ]
+[ Upstream commit f7d31e65368aeef973fab788aa22c4f1d5a6af66 ]
 
-The value adapter->rss_conf is stored in DMA memory, and it is assigned
-to rssConf, so rssConf->indTableSize can be modified at anytime by
-malicious hardware. Because rssConf->indTableSize is assigned to n,
-buffer overflow may occur when the code "rssConf->indTable[n]" is
-executed.
+The problem the patch is trying to address is the fact that 'struct
+kvm_hyperv_exit' has different layout on when compiling in 32 and 64 bit
+modes.
 
-To fix this possible bug, n is checked after being used.
+In 64-bit mode the default alignment boundary is 64 bits thus
+forcing extra gaps after 'type' and 'msr' but in 32-bit mode the
+boundary is at 32 bits thus no extra gaps.
 
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This is an issue as even when the kernel is 64 bit, the userspace using
+the interface can be both 32 and 64 bit but the same 32 bit userspace has
+to work with 32 bit kernel.
+
+The issue is fixed by forcing the 64 bit layout, this leads to ABI
+change for 32 bit builds and while we are obviously breaking '32 bit
+userspace with 32 bit kernel' case, we're fixing the '32 bit userspace
+with 64 bit kernel' one.
+
+As the interface has no (known) users and 32 bit KVM is rather baroque
+nowadays, this seems like a reasonable decision.
+
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Jon Doron <arilou@gmail.com>
+Message-Id: <20200424113746.3473563-2-arilou@gmail.com>
+Reviewed-by: Roman Kagan <rvkagan@yandex-team.ru>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/vmxnet3/vmxnet3_ethtool.c | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/virtual/kvm/api.txt | 2 ++
+ include/uapi/linux/kvm.h          | 2 ++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/drivers/net/vmxnet3/vmxnet3_ethtool.c b/drivers/net/vmxnet3/vmxnet3_ethtool.c
-index 559db051a500..88d18ab83e54 100644
---- a/drivers/net/vmxnet3/vmxnet3_ethtool.c
-+++ b/drivers/net/vmxnet3/vmxnet3_ethtool.c
-@@ -692,6 +692,8 @@ vmxnet3_get_rss(struct net_device *netdev, u32 *p, u8 *key, u8 *hfunc)
- 		*hfunc = ETH_RSS_HASH_TOP;
- 	if (!p)
- 		return 0;
-+	if (n > UPT1_RSS_MAX_IND_TABLE_SIZE)
-+		return 0;
- 	while (n--)
- 		p[n] = rssConf->indTable[n];
- 	return 0;
+diff --git a/Documentation/virtual/kvm/api.txt b/Documentation/virtual/kvm/api.txt
+index 8e16017ff397..d2f265a9dc0d 100644
+--- a/Documentation/virtual/kvm/api.txt
++++ b/Documentation/virtual/kvm/api.txt
+@@ -3999,9 +3999,11 @@ EOI was received.
+ #define KVM_EXIT_HYPERV_SYNIC          1
+ #define KVM_EXIT_HYPERV_HCALL          2
+ 			__u32 type;
++			__u32 pad1;
+ 			union {
+ 				struct {
+ 					__u32 msr;
++					__u32 pad2;
+ 					__u64 control;
+ 					__u64 evt_page;
+ 					__u64 msg_page;
+diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+index 251be353f950..66ce6659ecb6 100644
+--- a/include/uapi/linux/kvm.h
++++ b/include/uapi/linux/kvm.h
+@@ -189,9 +189,11 @@ struct kvm_hyperv_exit {
+ #define KVM_EXIT_HYPERV_SYNIC          1
+ #define KVM_EXIT_HYPERV_HCALL          2
+ 	__u32 type;
++	__u32 pad1;
+ 	union {
+ 		struct {
+ 			__u32 msr;
++			__u32 pad2;
+ 			__u64 control;
+ 			__u64 evt_page;
+ 			__u64 msg_page;
 -- 
 2.25.1
 
