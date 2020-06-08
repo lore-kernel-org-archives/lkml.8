@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8966BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD32C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:52:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63E0320760
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:52:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 981BF20760
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:52:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663935;
-	bh=3fRy+M5MKsobW1DMkCE6aT8AuhzEA6KfX/ybdilXmPA=;
+	s=default; t=1591663941;
+	bh=gxk9MSh3P8MPirDz3R+VvLbXVPW8bi0sEi+cQ9ZIbSQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PD9ABMtW/U2w9VW4vU6csC9kzOCl9Pi9HjDNdd5Eb44aTNuR/r+7KOCHh4/HTPMTF
-	 VLkK8TMbrYhG/XQG60D8VGgZf7np1gHtQiXOz02xWMFWguWTHmdyFW6ZrvdiBsDEK1
-	 6odrgizqwayyhuWYmps81YiU4VeRkHYJaYfess48=
+	b=mKTyu4nPOPZhrS60oZIX1/tnQ8xpVzHab2cxM63Lbdmmwd4gFqKXYZyAQPMvJ5qly
+	 14EEZAbQvlMnW3PFQbbygLrB77dIpUAD7LceXWqFU5KVBIvcHw6atnuuSPl8+zYLpI
+	 Ddqn5pRtqyeMobfGx/phKr7wDouUgnww366UBhN0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731851AbgFIAwN (ORCPT
+        id S1728571AbgFHXKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:52:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56188 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:10:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728579AbgFHXKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:10:08 -0400
+        id S1728338AbgFHXJH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:09:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39D61208A9;
-        Mon,  8 Jun 2020 23:10:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAC5120897;
+        Mon,  8 Jun 2020 23:09:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657808;
-        bh=3fRy+M5MKsobW1DMkCE6aT8AuhzEA6KfX/ybdilXmPA=;
+        s=default; t=1591657746;
+        bh=gxk9MSh3P8MPirDz3R+VvLbXVPW8bi0sEi+cQ9ZIbSQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ELe17dI3Nfkg8sQQkaYKaDaxivhq3puSVAAy0Y2i1BQCqu8aXfj/wmVl/LOCrsMr3
-         LZIvjZj/zBxY+QJMOHxBctnUYJOJdAPIy3/GtR/zFPUE8atDgi9UvRzo5kYItfdqHG
-         j+AE9h6U3L/cwks5AnW0J9bFkJB4hJZTNQXSccoE=
+        b=lTxNbrXd+EOIMJt2pS99zyO2GfR0vIAOu4a+fGMlJwKVArStOjHwFJNWkQPh7/9bc
+         P8DDXjDBa1lrJAe6NRyVD4rNwoczRNN6Xwvg2lJ2Ria87y/i6a5lzSTZJVNc90SVGk
+         DE+a9f39QHE+UAU7aQ/ab9wHqtbOlUqYtJRzOkvA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rakesh Pillai <pillair@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 184/274] ath10k: Skip handling del_server during driver exit
-Date:   Mon,  8 Jun 2020 19:04:37 -0400
-Message-Id: <20200608230607.3361041-184-sashal@kernel.org>
+Cc:     Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Carlos Neira <cneirabustos@gmail.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 134/274] selftests/bpf: Fix bpf_link leak in ns_current_pid_tgid selftest
+Date:   Mon,  8 Jun 2020 19:03:47 -0400
+Message-Id: <20200608230607.3361041-134-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -60,94 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rakesh Pillai <pillair@codeaurora.org>
+From: Andrii Nakryiko <andriin@fb.com>
 
-[ Upstream commit 7c6d67b136ceb0aebc7a3153b300e925ed915daf ]
+[ Upstream commit 8d30e80a049ad699264e4a12911e349f93c7279a ]
 
-The qmi infrastructure sends the client a del_server
-event when the client releases its qmi handle. This
-is not the msg indicating the actual qmi server exiting.
-In such cases the del_server msg should not be processed,
-since the wifi firmware does not reset its qmi state.
+If condition is inverted, but it's also just not necessary.
 
-Hence skip the processing of del_server event when the
-driver is unloading.
-
-Tested HW: WCN3990
-Tested FW: WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1
-
-Fixes: ba94c753ccb4 ("ath10k: add QMI message handshake for wcn3990 client")
-Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/1588663061-12138-1-git-send-email-pillair@codeaurora.org
+Fixes: 1c1052e0140a ("tools/testing/selftests/bpf: Add self-tests for new helper bpf_get_ns_current_pid_tgid.")
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Cc: Carlos Neira <cneirabustos@gmail.com>
+Link: https://lore.kernel.org/bpf/20200429012111.277390-11-andriin@fb.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/qmi.c | 13 ++++++++++++-
- drivers/net/wireless/ath/ath10k/qmi.h |  6 ++++++
- 2 files changed, 18 insertions(+), 1 deletion(-)
+ tools/testing/selftests/bpf/prog_tests/ns_current_pid_tgid.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/qmi.c b/drivers/net/wireless/ath/ath10k/qmi.c
-index 85dce43c5439..7abdef8d6b9b 100644
---- a/drivers/net/wireless/ath/ath10k/qmi.c
-+++ b/drivers/net/wireless/ath/ath10k/qmi.c
-@@ -961,7 +961,16 @@ static void ath10k_qmi_del_server(struct qmi_handle *qmi_hdl,
- 		container_of(qmi_hdl, struct ath10k_qmi, qmi_hdl);
- 
- 	qmi->fw_ready = false;
--	ath10k_qmi_driver_event_post(qmi, ATH10K_QMI_EVENT_SERVER_EXIT, NULL);
-+
-+	/*
-+	 * The del_server event is to be processed only if coming from
-+	 * the qmi server. The qmi infrastructure sends del_server, when
-+	 * any client releases the qmi handle. In this case do not process
-+	 * this del_server event.
-+	 */
-+	if (qmi->state == ATH10K_QMI_STATE_INIT_DONE)
-+		ath10k_qmi_driver_event_post(qmi, ATH10K_QMI_EVENT_SERVER_EXIT,
-+					     NULL);
+diff --git a/tools/testing/selftests/bpf/prog_tests/ns_current_pid_tgid.c b/tools/testing/selftests/bpf/prog_tests/ns_current_pid_tgid.c
+index 542240e16564..e74dc501b27f 100644
+--- a/tools/testing/selftests/bpf/prog_tests/ns_current_pid_tgid.c
++++ b/tools/testing/selftests/bpf/prog_tests/ns_current_pid_tgid.c
+@@ -80,9 +80,6 @@ void test_ns_current_pid_tgid(void)
+ 		  "User pid/tgid %llu BPF pid/tgid %llu\n", id, bss.pid_tgid))
+ 		goto cleanup;
+ cleanup:
+-	if (!link) {
+-		bpf_link__destroy(link);
+-		link = NULL;
+-	}
++	bpf_link__destroy(link);
+ 	bpf_object__close(obj);
  }
- 
- static struct qmi_ops ath10k_qmi_ops = {
-@@ -1091,6 +1100,7 @@ int ath10k_qmi_init(struct ath10k *ar, u32 msa_size)
- 	if (ret)
- 		goto err_qmi_lookup;
- 
-+	qmi->state = ATH10K_QMI_STATE_INIT_DONE;
- 	return 0;
- 
- err_qmi_lookup:
-@@ -1109,6 +1119,7 @@ int ath10k_qmi_deinit(struct ath10k *ar)
- 	struct ath10k_snoc *ar_snoc = ath10k_snoc_priv(ar);
- 	struct ath10k_qmi *qmi = ar_snoc->qmi;
- 
-+	qmi->state = ATH10K_QMI_STATE_DEINIT;
- 	qmi_handle_release(&qmi->qmi_hdl);
- 	cancel_work_sync(&qmi->event_work);
- 	destroy_workqueue(qmi->event_wq);
-diff --git a/drivers/net/wireless/ath/ath10k/qmi.h b/drivers/net/wireless/ath/ath10k/qmi.h
-index dc257375f161..b59720524224 100644
---- a/drivers/net/wireless/ath/ath10k/qmi.h
-+++ b/drivers/net/wireless/ath/ath10k/qmi.h
-@@ -83,6 +83,11 @@ struct ath10k_qmi_driver_event {
- 	void *data;
- };
- 
-+enum ath10k_qmi_state {
-+	ATH10K_QMI_STATE_INIT_DONE,
-+	ATH10K_QMI_STATE_DEINIT,
-+};
-+
- struct ath10k_qmi {
- 	struct ath10k *ar;
- 	struct qmi_handle qmi_hdl;
-@@ -105,6 +110,7 @@ struct ath10k_qmi {
- 	char fw_build_timestamp[MAX_TIMESTAMP_LEN + 1];
- 	struct ath10k_qmi_cal_data cal_data[MAX_NUM_CAL_V01];
- 	bool msa_fixed_perm;
-+	enum ath10k_qmi_state state;
- };
- 
- int ath10k_qmi_wlan_enable(struct ath10k *ar,
 -- 
 2.25.1
 
