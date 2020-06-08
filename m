@@ -2,49 +2,53 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 562ECC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:20:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DEA4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34E252086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:20:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 303F520B80
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:20:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658413;
-	bh=c2Wu/NtLfKX+UwRJ27t5hZuq60xwZemUMXwA1lnPM/8=;
+	s=default; t=1591658427;
+	bh=Kz+SS6KZCYkKidBEtxWzTa9KnaNhfNGzMIsbwEJ6B4A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AxmLDwfaqyv8yHDnlpRaciw5X0Ldo5/IUdUqN+eD58FivsDLbSjx+isimKfZv4CJE
-	 d/uLNSGoPi4jIY5Lx4j8V6fYy+ipW1Y700it6iUVBqKhQ/yYhJOddMlyVfzYT8fy9V
-	 N9xyEcMzaA4XZmqGDXVqokZLPkJLQjUd2l3t/tSA=
+	b=1hX0QQWO1nsQCJhAoEdF/RZ1AXYWF/Gcd3uNPJU2pV17KUGy4dNpQWZ/QBmSeFKmw
+	 yk52v29kiZi/yyu0yPxNKCWqaa5Q5AV6qmSgYHsgt/jWYqItSV0jGGcjC9igZjZMjc
+	 +eq5I05bJRCMuu5YjMp4idbFj01z0XjU8HtW7x38=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730916AbgFHXUL (ORCPT
+        id S1730616AbgFHXUZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:20:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37706 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:20:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729594AbgFHXQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:16:21 -0400
+        id S1730227AbgFHXQ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:16:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C50B0214F1;
-        Mon,  8 Jun 2020 23:16:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 832E320820;
+        Mon,  8 Jun 2020 23:16:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658181;
-        bh=c2Wu/NtLfKX+UwRJ27t5hZuq60xwZemUMXwA1lnPM/8=;
+        s=default; t=1591658188;
+        bh=Kz+SS6KZCYkKidBEtxWzTa9KnaNhfNGzMIsbwEJ6B4A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X8Cig1K6y/HP3eiseywCiHCwvX0s5KchJh3JVxjl/VMhZvo4Pc+M091/j6MDRjKE2
-         7Niuma3vEUDRjl6ug+SuFofABaeBXCDWIzv2Gp3v/4gFpkz3WtUQjDK8Zts0/7xodV
-         orHg6fjUfZD3WMGj36IncwjkfDw3OzOx0fsNhRqA=
+        b=PX7qheSBumtJ3N3uuJyF3KckWXBbkaQz/ETRWrIZlOshp738azKceLoSYftPlYsYW
+         Q+Yle+DBehFT2CExGqJ2nSNhlw/rbTwSE4liPq7vfV9B+RtlXgaKN6Wx5VrAd38D6q
+         z9TRqBx+03hNJhPAVIzwYGGqBGIefAqvTMAMc6xU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kbuild@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 206/606] Linux 5.6.15
-Date:   Mon,  8 Jun 2020 19:05:31 -0400
-Message-Id: <20200608231211.3363633-206-sashal@kernel.org>
+Cc:     Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 210/606] felix: Fix initialization of ioremap resources
+Date:   Mon,  8 Jun 2020 19:05:35 -0400
+Message-Id: <20200608231211.3363633-210-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -57,25 +61,175 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Claudiu Manoil <claudiu.manoil@nxp.com>
 
+[ Upstream commit b4024c9e5c57902155d3b5e7de482e245f492bff ]
+
+The caller of devm_ioremap_resource(), either accidentally
+or by wrong assumption, is writing back derived resource data
+to global static resource initialization tables that should
+have been constant.  Meaning that after it computes the final
+physical start address it saves the address for no reason
+in the static tables.  This doesn't affect the first driver
+probing after reboot, but it breaks consecutive driver reloads
+(i.e. driver unbind & bind) because the initialization tables
+no longer have the correct initial values.  So the next probe()
+will map the device registers to wrong physical addresses,
+causing ARM SError async exceptions.
+This patch fixes all of the above.
+
+Fixes: 56051948773e ("net: dsa: ocelot: add driver for Felix switch family")
+Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
+Reviewed-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Tested-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/dsa/ocelot/felix.c         | 23 +++++++++++------------
+ drivers/net/dsa/ocelot/felix.h         |  6 +++---
+ drivers/net/dsa/ocelot/felix_vsc9959.c | 22 ++++++++++------------
+ 3 files changed, 24 insertions(+), 27 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index d00e14219e27..3eca0c523098 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- VERSION = 5
- PATCHLEVEL = 6
--SUBLEVEL = 14
-+SUBLEVEL = 15
- EXTRAVERSION =
- NAME = Kleptomaniac Octopus
+diff --git a/drivers/net/dsa/ocelot/felix.c b/drivers/net/dsa/ocelot/felix.c
+index a7780c06fa65..b74580e87be8 100644
+--- a/drivers/net/dsa/ocelot/felix.c
++++ b/drivers/net/dsa/ocelot/felix.c
+@@ -385,6 +385,7 @@ static int felix_init_structs(struct felix *felix, int num_phys_ports)
+ 	struct ocelot *ocelot = &felix->ocelot;
+ 	phy_interface_t *port_phy_modes;
+ 	resource_size_t switch_base;
++	struct resource res;
+ 	int port, i, err;
  
+ 	ocelot->num_phys_ports = num_phys_ports;
+@@ -416,17 +417,16 @@ static int felix_init_structs(struct felix *felix, int num_phys_ports)
+ 
+ 	for (i = 0; i < TARGET_MAX; i++) {
+ 		struct regmap *target;
+-		struct resource *res;
+ 
+ 		if (!felix->info->target_io_res[i].name)
+ 			continue;
+ 
+-		res = &felix->info->target_io_res[i];
+-		res->flags = IORESOURCE_MEM;
+-		res->start += switch_base;
+-		res->end += switch_base;
++		memcpy(&res, &felix->info->target_io_res[i], sizeof(res));
++		res.flags = IORESOURCE_MEM;
++		res.start += switch_base;
++		res.end += switch_base;
+ 
+-		target = ocelot_regmap_init(ocelot, res);
++		target = ocelot_regmap_init(ocelot, &res);
+ 		if (IS_ERR(target)) {
+ 			dev_err(ocelot->dev,
+ 				"Failed to map device memory space\n");
+@@ -447,7 +447,6 @@ static int felix_init_structs(struct felix *felix, int num_phys_ports)
+ 	for (port = 0; port < num_phys_ports; port++) {
+ 		struct ocelot_port *ocelot_port;
+ 		void __iomem *port_regs;
+-		struct resource *res;
+ 
+ 		ocelot_port = devm_kzalloc(ocelot->dev,
+ 					   sizeof(struct ocelot_port),
+@@ -459,12 +458,12 @@ static int felix_init_structs(struct felix *felix, int num_phys_ports)
+ 			return -ENOMEM;
+ 		}
+ 
+-		res = &felix->info->port_io_res[port];
+-		res->flags = IORESOURCE_MEM;
+-		res->start += switch_base;
+-		res->end += switch_base;
++		memcpy(&res, &felix->info->port_io_res[port], sizeof(res));
++		res.flags = IORESOURCE_MEM;
++		res.start += switch_base;
++		res.end += switch_base;
+ 
+-		port_regs = devm_ioremap_resource(ocelot->dev, res);
++		port_regs = devm_ioremap_resource(ocelot->dev, &res);
+ 		if (IS_ERR(port_regs)) {
+ 			dev_err(ocelot->dev,
+ 				"failed to map registers for port %d\n", port);
+diff --git a/drivers/net/dsa/ocelot/felix.h b/drivers/net/dsa/ocelot/felix.h
+index 8771d40324f1..2c024cc901d4 100644
+--- a/drivers/net/dsa/ocelot/felix.h
++++ b/drivers/net/dsa/ocelot/felix.h
+@@ -8,9 +8,9 @@
+ 
+ /* Platform-specific information */
+ struct felix_info {
+-	struct resource			*target_io_res;
+-	struct resource			*port_io_res;
+-	struct resource			*imdio_res;
++	const struct resource		*target_io_res;
++	const struct resource		*port_io_res;
++	const struct resource		*imdio_res;
+ 	const struct reg_field		*regfields;
+ 	const u32 *const		*map;
+ 	const struct ocelot_ops		*ops;
+diff --git a/drivers/net/dsa/ocelot/felix_vsc9959.c b/drivers/net/dsa/ocelot/felix_vsc9959.c
+index edc1a67c002b..50074da3a1a0 100644
+--- a/drivers/net/dsa/ocelot/felix_vsc9959.c
++++ b/drivers/net/dsa/ocelot/felix_vsc9959.c
+@@ -328,10 +328,8 @@ static const u32 *vsc9959_regmap[] = {
+ 	[GCB]	= vsc9959_gcb_regmap,
+ };
+ 
+-/* Addresses are relative to the PCI device's base address and
+- * will be fixed up at ioremap time.
+- */
+-static struct resource vsc9959_target_io_res[] = {
++/* Addresses are relative to the PCI device's base address */
++static const struct resource vsc9959_target_io_res[] = {
+ 	[ANA] = {
+ 		.start	= 0x0280000,
+ 		.end	= 0x028ffff,
+@@ -374,7 +372,7 @@ static struct resource vsc9959_target_io_res[] = {
+ 	},
+ };
+ 
+-static struct resource vsc9959_port_io_res[] = {
++static const struct resource vsc9959_port_io_res[] = {
+ 	{
+ 		.start	= 0x0100000,
+ 		.end	= 0x010ffff,
+@@ -410,7 +408,7 @@ static struct resource vsc9959_port_io_res[] = {
+ /* Port MAC 0 Internal MDIO bus through which the SerDes acting as an
+  * SGMII/QSGMII MAC PCS can be found.
+  */
+-static struct resource vsc9959_imdio_res = {
++static const struct resource vsc9959_imdio_res = {
+ 	.start		= 0x8030,
+ 	.end		= 0x8040,
+ 	.name		= "imdio",
+@@ -984,7 +982,7 @@ static int vsc9959_mdio_bus_alloc(struct ocelot *ocelot)
+ 	struct device *dev = ocelot->dev;
+ 	resource_size_t imdio_base;
+ 	void __iomem *imdio_regs;
+-	struct resource *res;
++	struct resource res;
+ 	struct enetc_hw *hw;
+ 	struct mii_bus *bus;
+ 	int port;
+@@ -1001,12 +999,12 @@ static int vsc9959_mdio_bus_alloc(struct ocelot *ocelot)
+ 	imdio_base = pci_resource_start(felix->pdev,
+ 					felix->info->imdio_pci_bar);
+ 
+-	res = felix->info->imdio_res;
+-	res->flags = IORESOURCE_MEM;
+-	res->start += imdio_base;
+-	res->end += imdio_base;
++	memcpy(&res, felix->info->imdio_res, sizeof(res));
++	res.flags = IORESOURCE_MEM;
++	res.start += imdio_base;
++	res.end += imdio_base;
+ 
+-	imdio_regs = devm_ioremap_resource(dev, res);
++	imdio_regs = devm_ioremap_resource(dev, &res);
+ 	if (IS_ERR(imdio_regs)) {
+ 		dev_err(dev, "failed to map internal MDIO registers\n");
+ 		return PTR_ERR(imdio_regs);
 -- 
 2.25.1
 
