@@ -2,70 +2,99 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0739C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9543DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 911592063A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:49:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 682D72063A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:49:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="auCQhru8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725885AbgFHSt2 (ORCPT
+        id S1726021AbgFHSty (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 14:49:28 -0400
-Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:31392 "EHLO
-        EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725280AbgFHSt1 (ORCPT
+        Mon, 8 Jun 2020 14:49:54 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:56210 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725280AbgFHStx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 14:49:27 -0400
-Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
- EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
- 15.0.1156.6; Mon, 8 Jun 2020 11:49:23 -0700
-Received: from localhost (unknown [10.188.145.109])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id BE76C4051D;
-        Mon,  8 Jun 2020 11:49:24 -0700 (PDT)
-Date:   Mon, 8 Jun 2020 11:49:24 -0700
-From:   Matt Helsley <mhelsley@vmware.com>
-To:     Julien Thierry <jthierry@redhat.com>
-CC:     <linux-kernel@vger.kernel.org>, <jpoimboe@redhat.com>,
-        <peterz@infradead.org>, <mbenes@suse.cz>
-Subject: Re: [PATCH v2 1/4] objtool: Move object file loading out of check
-Message-ID: <20200608184924.GA1284251@rlwimi.vmware.com>
-Mail-Followup-To: Matt Helsley <mhelsley@vmware.com>,
-        Julien Thierry <jthierry@redhat.com>, linux-kernel@vger.kernel.org,
-        jpoimboe@redhat.com, peterz@infradead.org, mbenes@suse.cz
-References: <20200608071203.4055-1-jthierry@redhat.com>
- <20200608071203.4055-2-jthierry@redhat.com>
+        Mon, 8 Jun 2020 14:49:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591642192;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=l0ksCxzpwudUbpK7GfsKkgrf4ml8ic3g8I5MdiUao/c=;
+        b=auCQhru8wpnyWfFJw3sdOYWlU9F6U5ba2LzDBJsM8TSxFG/lFoaAcELqkKiziNV8Bj2r94
+        BSjEbG6JP7N19u2TqmnXrZpQNHgYu6pyeZAhJF+9XBq0Lvdpk069/qllMe9TsL1NUmweBo
+        QC2pO363lXP4pjm3Nhd85cYWhF5hW3k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-61-btfcDdT-NnykoFjMxWfLlw-1; Mon, 08 Jun 2020 14:49:50 -0400
+X-MC-Unique: btfcDdT-NnykoFjMxWfLlw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 395CC835B42;
+        Mon,  8 Jun 2020 18:49:49 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-114-66.rdu2.redhat.com [10.10.114.66])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 09B54648DB;
+        Mon,  8 Jun 2020 18:49:47 +0000 (UTC)
+Subject: [PATCH net 0/2] rxrpc: Fix hang due to missing notification
+From:   David Howells <dhowells@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     Gerry Seidman <gerry@auristor.com>,
+        Marc Dionne <marc.dionne@auristor.com>, dhowells@redhat.com,
+        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Mon, 08 Jun 2020 19:49:47 +0100
+Message-ID: <159164218727.2758133.1046957228494479308.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.22
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200608071203.4055-2-jthierry@redhat.com>
-Received-SPF: None (EX13-EDG-OU-001.vmware.com: mhelsley@vmware.com does not
- designate permitted sender hosts)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 08:12:00AM +0100, Julien Thierry wrote:
-> Structure objtool_file can be used by different subcommands. In fact
-> it already is, by check and orc.
-> 
-> Provide a function that allows to initialize objtool_file, that builtin
-> can call, without relying on check to do the correct setup for them and
-> explicitly hand the objtool_file to them.
-> 
-> Signed-off-by: Julien Thierry <jthierry@redhat.com>
 
-Reviewed-by: Matt Helsley <mhelsley@vmware.com>
+Here's a fix for AF_RXRPC.  Occasionally calls hang because there are
+circumstances in which rxrpc generate a notification when a call is
+completed - primarily because initial packet transmission failed and the
+call was killed off and an error returned.  But the AFS filesystem driver
+doesn't check this under all circumstances, expecting failure to be
+delivered by asynchronous notification.
 
-> ---
->  tools/objtool/builtin-check.c |  7 ++++++-
->  tools/objtool/builtin-orc.c   |  8 +++++++-
->  tools/objtool/check.c         | 37 +++++++++++------------------------
->  tools/objtool/objtool.c       | 29 +++++++++++++++++++++++++++
->  tools/objtool/objtool.h       |  4 +++-
->  tools/objtool/weak.c          |  4 +---
->  6 files changed, 57 insertions(+), 32 deletions(-)
+There are two patches: the first moves the problematic bits out-of-line and
+the second contains the fix.
+
+The patches are tagged here:
+
+	git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git
+	rxrpc-fixes-20200605
+
+and can also be found on the following branch:
+
+	http://git.kernel.org/cgit/linux/kernel/git/dhowells/linux-fs.git/log/?h=rxrpc-fixes
+
+David
+---
+David Howells (1):
+      rxrpc: Fix missing notification
+
+
+ net/rxrpc/ar-internal.h | 119 ++++++++++--------------------------------------
+ net/rxrpc/call_event.c  |   1 -
+ net/rxrpc/conn_event.c  |   7 ++-
+ net/rxrpc/input.c       |   7 +--
+ net/rxrpc/peer_event.c  |   4 +-
+ net/rxrpc/recvmsg.c     |  79 ++++++++++++++++++++++++++++++++
+ net/rxrpc/sendmsg.c     |   4 +-
+ 7 files changed, 111 insertions(+), 110 deletions(-)
+
+
