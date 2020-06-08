@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D9DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5266BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A610220775
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:30:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AA8020775
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:30:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591659017;
-	bh=Te9F/yrPuD9RjkO3+zwkcMIepHyknzxLlgjxALhWRIc=;
+	s=default; t=1591659021;
+	bh=BrI+WuGkxm4WQ+ii/45L5i8ok4mIJVhc91mXai6/4ZQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SL0Ur7Uo+CtkbS7pymOYdSCsFSlE1jpE512tCGoOSYXaq+CEztVYJRBYn85ENtUKx
-	 dpC6aDbTbY+2a3K9ixZswhoIUEKdKP4yVa10Pjf/cFX19HoAkvyUiKwY/S7LeTy7fJ
-	 dsRFAUq3lsxpxkuqxdNJQc99e8niavK9IabY68iM=
+	b=mY5JodsiBdto0TdAYkbZPKzm30owDmXHNX7cKniYuD6HEuT54Z1GUNDcIysO5ry1E
+	 4YhEK1/d0aZwEAChih0K2pJ3Ky1uKyWa5ynoBi3++ShqMcZvnBORD13gTrZHKjitmm
+	 VWz6jTQxeu9mCtXAf4lOIKy6jo8qyD1nPStyOa74=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732354AbgFHXaQ (ORCPT
+        id S1732360AbgFHXaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:30:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50374 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:30:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729292AbgFHXYT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:24:19 -0400
+        id S1731623AbgFHXY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:24:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E6712089D;
-        Mon,  8 Jun 2020 23:24:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D12720872;
+        Mon,  8 Jun 2020 23:24:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658659;
-        bh=Te9F/yrPuD9RjkO3+zwkcMIepHyknzxLlgjxALhWRIc=;
+        s=default; t=1591658667;
+        bh=BrI+WuGkxm4WQ+ii/45L5i8ok4mIJVhc91mXai6/4ZQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w3xfyooWSQ2V0worS9/cdvnmvl+79vXG4+739rxs030gKvmI70CC+3fkoyhEeTNVk
-         JXeGbTPwTfRewvpWBbaNBdJrZIGmn8OWyOavSZmyS8t2FlmIv/hYdzs0AOsRLNhYx/
-         2XGB0kkDHXGu+BDk0tlYZza42pw+6vGBZMQf/LFw=
+        b=TaK7PXg4Xnk4i2cWW2W+W5coJiHzkpjfZg42kDc/BYp7JSLYEXe8ZXWlZiNdn1d9D
+         QP246c7c/buOZ2M/3EXqf2dzbt57dFW6QT09W0PvitWBFojpC8XJ+MpxsvJFM/Iy4o
+         JQdG75Fverczysx7lYIZlhUfZgCOMGEBBAMTSshc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 076/106] rtlwifi: Fix a double free in _rtl_usb_tx_urb_setup()
-Date:   Mon,  8 Jun 2020 19:22:08 -0400
-Message-Id: <20200608232238.3368589-76-sashal@kernel.org>
+Cc:     Nicolas Toromanoff <nicolas.toromanoff@st.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 082/106] crypto: stm32/crc32 - fix run-time self test issue.
+Date:   Mon,  8 Jun 2020 19:22:14 -0400
+Message-Id: <20200608232238.3368589-82-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608232238.3368589-1-sashal@kernel.org>
 References: <20200608232238.3368589-1-sashal@kernel.org>
@@ -60,60 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Nicolas Toromanoff <nicolas.toromanoff@st.com>
 
-[ Upstream commit beb12813bc75d4a23de43b85ad1c7cb28d27631e ]
+[ Upstream commit a8cc3128bf2c01c4d448fe17149e87132113b445 ]
 
-Seven years ago we tried to fix a leak but actually introduced a double
-free instead.  It was an understandable mistake because the code was a
-bit confusing and the free was done in the wrong place.  The "skb"
-pointer is freed in both _rtl_usb_tx_urb_setup() and _rtl_usb_transmit().
-The free belongs _rtl_usb_transmit() instead of _rtl_usb_tx_urb_setup()
-and I've cleaned the code up a bit to hopefully make it more clear.
+Fix wrong crc32 initialisation value:
+"alg: shash: stm32_crc32 test failed (wrong result) on test vector 0,
+cfg="init+update+final aligned buffer"
+cra_name="crc32c" expects an init value of 0XFFFFFFFF,
+cra_name="crc32" expects an init value of 0.
 
-Fixes: 36ef0b473fbf ("rtlwifi: usb: add missing freeing of skbuff")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200513093951.GD347693@mwanda
+Fixes: b51dbe90912a ("crypto: stm32 - Support for STM32 CRC32 crypto module")
+
+Signed-off-by: Nicolas Toromanoff <nicolas.toromanoff@st.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtlwifi/usb.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/crypto/stm32/stm32_crc32.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/usb.c b/drivers/net/wireless/realtek/rtlwifi/usb.c
-index 1181b725f503..1893640555c1 100644
---- a/drivers/net/wireless/realtek/rtlwifi/usb.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/usb.c
-@@ -910,10 +910,8 @@ static struct urb *_rtl_usb_tx_urb_setup(struct ieee80211_hw *hw,
+diff --git a/drivers/crypto/stm32/stm32_crc32.c b/drivers/crypto/stm32/stm32_crc32.c
+index 749b51762b18..c5ad83ad2f72 100644
+--- a/drivers/crypto/stm32/stm32_crc32.c
++++ b/drivers/crypto/stm32/stm32_crc32.c
+@@ -28,10 +28,10 @@
  
- 	WARN_ON(NULL == skb);
- 	_urb = usb_alloc_urb(0, GFP_ATOMIC);
--	if (!_urb) {
--		kfree_skb(skb);
-+	if (!_urb)
- 		return NULL;
--	}
- 	_rtl_install_trx_info(rtlusb, skb, ep_num);
- 	usb_fill_bulk_urb(_urb, rtlusb->udev, usb_sndbulkpipe(rtlusb->udev,
- 			  ep_num), skb->data, skb->len, _rtl_tx_complete, skb);
-@@ -927,7 +925,6 @@ static void _rtl_usb_transmit(struct ieee80211_hw *hw, struct sk_buff *skb,
- 	struct rtl_usb *rtlusb = rtl_usbdev(rtl_usbpriv(hw));
- 	u32 ep_num;
- 	struct urb *_urb = NULL;
--	struct sk_buff *_skb = NULL;
+ /* Registers values */
+ #define CRC_CR_RESET            BIT(0)
+-#define CRC_INIT_DEFAULT        0xFFFFFFFF
+ #define CRC_CR_REV_IN_WORD      (BIT(6) | BIT(5))
+ #define CRC_CR_REV_IN_BYTE      BIT(5)
+ #define CRC_CR_REV_OUT          BIT(7)
++#define CRC32C_INIT_DEFAULT     0xFFFFFFFF
  
- 	WARN_ON(NULL == rtlusb->usb_tx_aggregate_hdl);
- 	if (unlikely(IS_USB_STOP(rtlusb))) {
-@@ -936,8 +933,7 @@ static void _rtl_usb_transmit(struct ieee80211_hw *hw, struct sk_buff *skb,
- 		return;
- 	}
- 	ep_num = rtlusb->ep_map.ep_mapping[qnum];
--	_skb = skb;
--	_urb = _rtl_usb_tx_urb_setup(hw, _skb, ep_num);
-+	_urb = _rtl_usb_tx_urb_setup(hw, skb, ep_num);
- 	if (unlikely(!_urb)) {
- 		pr_err("Can't allocate urb. Drop skb!\n");
- 		kfree_skb(skb);
+ #define CRC_AUTOSUSPEND_DELAY	50
+ 
+@@ -65,7 +65,7 @@ static int stm32_crc32_cra_init(struct crypto_tfm *tfm)
+ {
+ 	struct stm32_crc_ctx *mctx = crypto_tfm_ctx(tfm);
+ 
+-	mctx->key = CRC_INIT_DEFAULT;
++	mctx->key = 0;
+ 	mctx->poly = CRC32_POLY_LE;
+ 	return 0;
+ }
+@@ -74,7 +74,7 @@ static int stm32_crc32c_cra_init(struct crypto_tfm *tfm)
+ {
+ 	struct stm32_crc_ctx *mctx = crypto_tfm_ctx(tfm);
+ 
+-	mctx->key = CRC_INIT_DEFAULT;
++	mctx->key = CRC32C_INIT_DEFAULT;
+ 	mctx->poly = CRC32C_POLY_LE;
+ 	return 0;
+ }
 -- 
 2.25.1
 
