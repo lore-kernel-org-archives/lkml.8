@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74304C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95CAEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:32:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5500C206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:32:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E639206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:32:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662738;
-	bh=Rpz6e0uR3d1cysrBltsKjY+NI12F8N4yh3/xCLaugV8=;
+	s=default; t=1591662740;
+	bh=szMzKWLLvKCRf1i4cCc+3mjcrWOYNZx5wYhk+zhoUZA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XQe2dXXh7O1Uc3NPsd2Hk5EWBUgk0mrwOjVGPy69DUfiR6xgTVyJrLHJ+nmkB6QpX
-	 fcvfqTBOAeIiMRT8ZPpKjj2+yvxK2vwY9XH/tHW6DbxAfHS9ZwjUr2hwjpPyaVQRNR
-	 q08M91mwJCNH3GTT1mwWocEBQUioCRaHwLxCWXE4=
+	b=mSd5agKAqZDf6aJBTCyWICLjw9E+Iib023a78Dler2gkCNkxuhGQhA8dkUH+ZSS3U
+	 Z8pVT4JpncT/xkeXzVib4gtENcuNDjjhoWQXP22DutfwKykX2ipFx+xwtxaU80kVLd
+	 CxXN9j5Nrg5G76yk1+TOZLkBBl+MKHk92g6O+EWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733137AbgFIAcR (ORCPT
+        id S1731150AbgFIAcT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:32:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36140 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:32:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727971AbgFHXPR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:15:17 -0400
+        id S1728800AbgFHXPP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:15:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3C3D2076A;
-        Mon,  8 Jun 2020 23:15:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9183B20659;
+        Mon,  8 Jun 2020 23:15:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658116;
-        bh=Rpz6e0uR3d1cysrBltsKjY+NI12F8N4yh3/xCLaugV8=;
+        s=default; t=1591658115;
+        bh=szMzKWLLvKCRf1i4cCc+3mjcrWOYNZx5wYhk+zhoUZA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2eMugxBLM55aadAy46sn4/aKlcG42P5EPC15nNPqCA3urxkrasblGVRzxOS0d7hvA
-         dnDtwLAv8TrHlAdALDQiYfyMPNVAfIY9bfo0rJ6Gi6msiHx7H+V3t18ht/o2z1BQkE
-         ewVYjaBxOdiT9z++zdqvhrPPuAnBa39dgAds4epI=
+        b=Lyvfb0boWRwzuj5n1djRN2YtCRfPhEmHu9xqraW8JTIBhGNAnp4uUtKzrOEnFjwRS
+         hnSGuH8AzzccYwWLQBNe1g9YJbGI3urjWLVKXiwJii/GJronLvDcYNbL0qWas5RIbA
+         sRCqyOzmnWaIPIvSUM9IlYNAIoQZS+7fOzHMUnCM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>,
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
         John Johansen <john.johansen@canonical.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-security-module@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 154/606] apparmor: fix potential label refcnt leak in aa_change_profile
-Date:   Mon,  8 Jun 2020 19:04:39 -0400
-Message-Id: <20200608231211.3363633-154-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 153/606] apparmor: Fix use-after-free in aa_audit_rule_init
+Date:   Mon,  8 Jun 2020 19:04:38 -0400
+Message-Id: <20200608231211.3363633-153-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -61,53 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-commit a0b845ffa0d91855532b50fc040aeb2d8338dca4 upstream.
+commit c54d481d71c6849e044690d3960aaebc730224cc upstream.
 
-aa_change_profile() invokes aa_get_current_label(), which returns
-a reference of the current task's label.
+In the implementation of aa_audit_rule_init(), when aa_label_parse()
+fails the allocated memory for rule is released using
+aa_audit_rule_free(). But after this release, the return statement
+tries to access the label field of the rule which results in
+use-after-free. Before releasing the rule, copy errNo and return it
+after release.
 
-According to the comment of aa_get_current_label(), the returned
-reference must be put with aa_put_label().
-However, when the original object pointed by "label" becomes
-unreachable because aa_change_profile() returns or a new object
-is assigned to "label", reference count increased by
-aa_get_current_label() is not decreased, causing a refcnt leak.
-
-Fix this by calling aa_put_label() before aa_change_profile() return
-and dropping unnecessary aa_get_current_label().
-
-Fixes: 9fcf78cca198 ("apparmor: update domain transitions that are subsets of confinement at nnp")
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Fixes: 52e8c38001d8 ("apparmor: Fix memory leak of rule on error exit path")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 Signed-off-by: John Johansen <john.johansen@canonical.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- security/apparmor/domain.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ security/apparmor/audit.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/security/apparmor/domain.c b/security/apparmor/domain.c
-index 6ceb74e0f789..a84ef030fbd7 100644
---- a/security/apparmor/domain.c
-+++ b/security/apparmor/domain.c
-@@ -1328,6 +1328,7 @@ int aa_change_profile(const char *fqname, int flags)
- 		ctx->nnp = aa_get_label(label);
- 
- 	if (!fqname || !*fqname) {
-+		aa_put_label(label);
- 		AA_DEBUG("no profile name");
- 		return -EINVAL;
- 	}
-@@ -1346,8 +1347,6 @@ int aa_change_profile(const char *fqname, int flags)
- 			op = OP_CHANGE_PROFILE;
+diff --git a/security/apparmor/audit.c b/security/apparmor/audit.c
+index 5a98661a8b46..597732503815 100644
+--- a/security/apparmor/audit.c
++++ b/security/apparmor/audit.c
+@@ -197,8 +197,9 @@ int aa_audit_rule_init(u32 field, u32 op, char *rulestr, void **vrule)
+ 	rule->label = aa_label_parse(&root_ns->unconfined->label, rulestr,
+ 				     GFP_KERNEL, true, false);
+ 	if (IS_ERR(rule->label)) {
++		int err = PTR_ERR(rule->label);
+ 		aa_audit_rule_free(rule);
+-		return PTR_ERR(rule->label);
++		return err;
  	}
  
--	label = aa_get_current_label();
--
- 	if (*fqname == '&') {
- 		stack = true;
- 		/* don't have label_parse() do stacking */
+ 	*vrule = rule;
 -- 
 2.25.1
 
