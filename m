@@ -2,112 +2,172 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B31BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 17:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D5AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 17:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14947206D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 17:49:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="nTm3P/4p"
+	by mail.kernel.org (Postfix) with ESMTP id 269F320774
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 17:49:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730312AbgFHRtN (ORCPT
+        id S1730361AbgFHRts (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 13:49:13 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:25909 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730247AbgFHRtK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 13:49:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1591638551; x=1623174551;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   mime-version;
-  bh=RrQlW9u3yz1uG+aS3Pnccyw7nqI12EiiyIfTXmHO7oM=;
-  b=nTm3P/4ps504evNoB8DVZZKQOTp2hRzMiPCpJO2dvcu9psop9Ie6wJZz
-   wC5eYjt1TNTdGOlEAUCnDPS0SyD/LBVXJVrEJXRsZlFN5UaRIMmoyN2jE
-   xTdPPqZ5XgVIzJhQUIE+sshMbp25D/XVbYCjTVp2qeQDvueSSon+LaVlv
-   Y=;
-IronPort-SDR: lk/06JDJfipnDKz23035oixRv1+ial6X9Qc7qbzrgzY6P+DMOZ19qBQ0XQsROk46d6svcb8e3l
- 0oqR1Y1oBd5w==
-X-IronPort-AV: E=Sophos;i="5.73,487,1583193600"; 
-   d="scan'208";a="42447105"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-55156cd4.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 08 Jun 2020 17:48:58 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-55156cd4.us-west-2.amazon.com (Postfix) with ESMTPS id 7F18FA18D2;
-        Mon,  8 Jun 2020 17:48:55 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 8 Jun 2020 17:48:55 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.65) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 8 Jun 2020 17:48:37 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     Christoph Hellwig <hch@infradead.org>
-CC:     David Hildenbrand <david@redhat.com>,
-        SeongJae Park <sjpark@amazon.com>, <akpm@linux-foundation.org>,
-        SeongJae Park <sjpark@amazon.de>,
-        <Jonathan.Cameron@huawei.com>, <aarcange@redhat.com>,
-        <acme@kernel.org>, <alexander.shishkin@linux.intel.com>,
-        <amit@kernel.org>, <benh@kernel.crashing.org>,
-        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
-        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
-        <dwmw@amazon.com>, <foersleo@amazon.de>, <irogers@google.com>,
-        <jolsa@redhat.com>, <kirill@shutemov.name>, <mark.rutland@arm.com>,
-        <mgorman@suse.de>, <minchan@kernel.org>, <mingo@redhat.com>,
-        <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
-        <rostedt@goodmis.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
-        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
-        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: Re: [PATCH v15 01/14] mm/page_ext: Export lookup_page_ext() to GPL modules
-Date:   Mon, 8 Jun 2020 19:48:16 +0200
-Message-ID: <20200608174816.19222-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200608154917.GA8408@infradead.org> (raw)
+        Mon, 8 Jun 2020 13:49:48 -0400
+Received: from mga04.intel.com ([192.55.52.120]:11150 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730247AbgFHRts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 13:49:48 -0400
+IronPort-SDR: v62WnqnW/CNcsjzCc9QHAvI9TpTWk+je1kVzaCUA47AuXms0bY1oJc1ghoBt0hiPKXapZXIYfU
+ Eew0dxRKRusg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2020 10:49:45 -0700
+IronPort-SDR: plH9hL/3uaiz4LrI869hiDPlJo9zwuQekZQbWDqHmJq3YVsL3tRjGOPHnyUBU1u01b1h6neVw0
+ 9hO14zg240mA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,487,1583222400"; 
+   d="scan'208";a="418133308"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
+  by orsmga004.jf.intel.com with ESMTP; 08 Jun 2020 10:49:45 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>
+Cc:     "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        Brad Campbell <lists2009@fnarfbargle.com>,
+        Liam Merwick <liam.merwick@oracle.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: [PATCH v2] x86/cpu: Reinitialize IA32_FEAT_CTL MSR on BSP during wakeup
+Date:   Mon,  8 Jun 2020 10:41:34 -0700
+Message-Id: <20200608174134.11157-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.65]
-X-ClientProxiedBy: EX13D31UWC001.ant.amazon.com (10.43.162.152) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 8 Jun 2020 08:49:17 -0700 Christoph Hellwig <hch@infradead.org> wrote:
+Reinitialize IA32_FEAT_CTL on the BSP during wakeup to handle the case
+where firmware doesn't initialize or save/restore across S3.  This fixes
+a bug where IA32_FEAT_CTL is left uninitialized and results in VMXON
+taking a #GP due to VMX not being fully enabled, i.e. breaks KVM.
 
-> On Mon, Jun 08, 2020 at 01:53:23PM +0200, David Hildenbrand wrote:
-> > > @@ -131,6 +131,7 @@ struct page_ext *lookup_page_ext(const struct page *page)
-> > >  					MAX_ORDER_NR_PAGES);
-> > >  	return get_entry(base, index);
-> > >  }
-> > > +EXPORT_SYMBOL_GPL(lookup_page_ext);
-> > >  
-> > >  static int __init alloc_node_page_ext(int nid)
-> > >  {
-> > > 
-> > 
-> > I've been told to always smuggle new EXPORTs into the patch that
-> > actually needs it (and cc relevant people on that patch instead).
-> 
-> A separate patch for anything remotely controversial really helps it
-> to stick out, so I think keeping it separate is a very good practice.
+Use init_ia32_feat_ctl() to "restore" IA32_FEAT_CTL as it already deals
+with the case where the MSR is locked, and because APs already redo
+init_ia32_feat_ctl() during suspend by virtue of the SMP boot flow being
+used to reinitialize APs upon wakeup.  Do the call in the early wakeup
+flow to avoid dependencies in the syscore_ops chain, e.g. simply adding
+a resume hook is not guaranteed to work, as KVM does VMXON in its own
+resume hook, kvm_resume(), when KVM has active guests.
 
-I have no strong preference here.  So if no further comments are given, in the
-next spin, I will keep this separate, but will mention exactly what future
-commit needs this change, so that it can be easily squashed later, if
-necessary.
+Reported-by: Brad Campbell <lists2009@fnarfbargle.com>
+Tested-by: Brad Campbell <lists2009@fnarfbargle.com>
+Reviewed-by: Liam Merwick <liam.merwick@oracle.com>
+Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org
+Cc: stable@vger.kernel.org # v5.6
+Fixes: 21bd3467a58e ("KVM: VMX: Drop initialization of IA32_FEAT_CTL MSR")
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
 
+v2:
+  - Collect Reviewed/Tested tags. [Brad, Liam, Maxim].
+  - Include asm/cpu.h to fix Zhaoxin and Centaur builds. [Brad, LKP]
+  - Add Cc to stable. [Liam]
 
-Thanks,
-SeongJae Park
+ arch/x86/include/asm/cpu.h    | 5 +++++
+ arch/x86/kernel/cpu/centaur.c | 1 +
+ arch/x86/kernel/cpu/cpu.h     | 4 ----
+ arch/x86/kernel/cpu/zhaoxin.c | 1 +
+ arch/x86/power/cpu.c          | 6 ++++++
+ 5 files changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
+index dd17c2da1af5..da78ccbd493b 100644
+--- a/arch/x86/include/asm/cpu.h
++++ b/arch/x86/include/asm/cpu.h
+@@ -58,4 +58,9 @@ static inline bool handle_guest_split_lock(unsigned long ip)
+ 	return false;
+ }
+ #endif
++#ifdef CONFIG_IA32_FEAT_CTL
++void init_ia32_feat_ctl(struct cpuinfo_x86 *c);
++#else
++static inline void init_ia32_feat_ctl(struct cpuinfo_x86 *c) {}
++#endif
+ #endif /* _ASM_X86_CPU_H */
+diff --git a/arch/x86/kernel/cpu/centaur.c b/arch/x86/kernel/cpu/centaur.c
+index 426792565d86..c5cf336e5077 100644
+--- a/arch/x86/kernel/cpu/centaur.c
++++ b/arch/x86/kernel/cpu/centaur.c
+@@ -3,6 +3,7 @@
+ #include <linux/sched.h>
+ #include <linux/sched/clock.h>
+ 
++#include <asm/cpu.h>
+ #include <asm/cpufeature.h>
+ #include <asm/e820/api.h>
+ #include <asm/mtrr.h>
+diff --git a/arch/x86/kernel/cpu/cpu.h b/arch/x86/kernel/cpu/cpu.h
+index 37fdefd14f28..38ab6e115eac 100644
+--- a/arch/x86/kernel/cpu/cpu.h
++++ b/arch/x86/kernel/cpu/cpu.h
+@@ -80,8 +80,4 @@ extern void x86_spec_ctrl_setup_ap(void);
+ 
+ extern u64 x86_read_arch_cap_msr(void);
+ 
+-#ifdef CONFIG_IA32_FEAT_CTL
+-void init_ia32_feat_ctl(struct cpuinfo_x86 *c);
+-#endif
+-
+ #endif /* ARCH_X86_CPU_H */
+diff --git a/arch/x86/kernel/cpu/zhaoxin.c b/arch/x86/kernel/cpu/zhaoxin.c
+index df1358ba622b..05fa4ef63490 100644
+--- a/arch/x86/kernel/cpu/zhaoxin.c
++++ b/arch/x86/kernel/cpu/zhaoxin.c
+@@ -2,6 +2,7 @@
+ #include <linux/sched.h>
+ #include <linux/sched/clock.h>
+ 
++#include <asm/cpu.h>
+ #include <asm/cpufeature.h>
+ 
+ #include "cpu.h"
+diff --git a/arch/x86/power/cpu.c b/arch/x86/power/cpu.c
+index aaff9ed7ff45..b0d3c5ca6d80 100644
+--- a/arch/x86/power/cpu.c
++++ b/arch/x86/power/cpu.c
+@@ -193,6 +193,8 @@ static void fix_processor_context(void)
+  */
+ static void notrace __restore_processor_state(struct saved_context *ctxt)
+ {
++	struct cpuinfo_x86 *c;
++
+ 	if (ctxt->misc_enable_saved)
+ 		wrmsrl(MSR_IA32_MISC_ENABLE, ctxt->misc_enable);
+ 	/*
+@@ -263,6 +265,10 @@ static void notrace __restore_processor_state(struct saved_context *ctxt)
+ 	mtrr_bp_restore();
+ 	perf_restore_debug_store();
+ 	msr_restore_context(ctxt);
++
++	c = &cpu_data(smp_processor_id());
++	if (cpu_has(c, X86_FEATURE_MSR_IA32_FEAT_CTL))
++		init_ia32_feat_ctl(c);
+ }
+ 
+ /* Needed by apm.c */
+-- 
+2.26.0
+
