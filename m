@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 305BCC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4307C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED7AD207C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:51:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97148207C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:51:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663900;
-	bh=+6kXrgQ4NVOvyd8KUFY2r+iOtJb5sRwbTKszCOGlshU=;
+	s=default; t=1591663908;
+	bh=xEbBIEsVZpgZRzeIw0W3nUmh8/Kv6ds/xYH3qeceVGo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zu551IW6irFWIxC9QuUdihMLP8uPY5ggnH//AD3PSq0GSp19MOudhLncsvGzRq/GO
-	 MWFtjlYevufk5qYrqKAvkb3zCV8CLpjkX9gaRwbtnbgAL/qTLXLOu4TWcAepNeRdsv
-	 GbJI4RZ3FjZDRHIdxyoseRWRwedkKakSQ3TVb/J8=
+	b=2NWkF4BpkwbKJqa8lXk9qABkIu6jywz+/EdwB8f013cf8tb6EEA50DAPp4pP94nBY
+	 wLsv9YhEUrDxLMnySt5wuE9Z/J5O+blQkRQGU8MXjrmH41WWd6MW+4FhQhpAQ8RIpa
+	 osmWJ3Rb1WrGFtCCXs9oNJyFgzBuEW5lgE12/qZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733289AbgFIAvi (ORCPT
+        id S1728603AbgFHXKR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:51:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56426 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728612AbgFHXKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 8 Jun 2020 19:10:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54846 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728362AbgFHXJL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:09:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71B1D20E65;
-        Mon,  8 Jun 2020 23:10:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F04D020897;
+        Mon,  8 Jun 2020 23:09:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657817;
-        bh=+6kXrgQ4NVOvyd8KUFY2r+iOtJb5sRwbTKszCOGlshU=;
+        s=default; t=1591657750;
+        bh=xEbBIEsVZpgZRzeIw0W3nUmh8/Kv6ds/xYH3qeceVGo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jwBSWwlHHwT1eOdvbDAzMiAS1zda14eYEEjhXFzOUnZIORcjTIHzvJz89PaBHtkab
-         hrF3YbjaR7v8uk6duvBlLrHAO/3tP2M3hPDKudu8v8EMFAUwXoNE88qQvGNAxRW2Zt
-         PUr69nkY0Sm3GgfOOF04c/QiN8Q497lYLP7iiU5Y=
+        b=tZSqn70Cp9zJuTCasokJJ+BSSY9QI8gvgaNvC7S71U+d0qyV9BfoNwYDTo5TodImG
+         cOpEHa6C5d9O/TXCHQnX4aSjQbHSIufjWQpVJnIQzUFKIXjkCu4OgVCCrTD9+LxkPO
+         pRQ4feRAlVy4tDEj8gHB2FxaKN8k8BS8/Y3qvS4w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lorenzo Bianconi <lorenzo@kernel.org>,
-        Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 191/274] mt76: mt7615: do not always reset the dfs state setting the channel
-Date:   Mon,  8 Jun 2020 19:04:44 -0400
-Message-Id: <20200608230607.3361041-191-sashal@kernel.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 137/274] ARM: 8969/1: decompressor: simplify libfdt builds
+Date:   Mon,  8 Jun 2020 19:03:50 -0400
+Message-Id: <20200608230607.3361041-137-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -61,62 +60,213 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenzo Bianconi <lorenzo@kernel.org>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit fdb786cce0ef3615dcbb30d8baf06a1d4cb7a344 ]
+[ Upstream commit 7ae4a78daacf240a8247cde73337dc4b26d253da ]
 
-mac80211/hostapd runs mt7615_set_channel with the same channel
-parameters sending multiple rdd commands overwriting the previous ones.
-This behaviour is causing tpt issues on dfs channels.
-Fix the issue checking new channel freq/width with the running one.
+Copying source files during the build time may not end up with
+as clean code as expected.
 
-Fixes: 5dabdf71e94e ("mt76: mt7615: add multiple wiphy support to the dfs support code")
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
+lib/fdt*.c simply wrap scripts/dtc/libfdt/fdt*.c, and it works
+nicely. Let's follow this approach for the arm decompressor, too.
+
+Add four wrappers, arch/arm/boot/compressed/fdt*.c and remove
+the Makefile messes. Another nice thing is we no longer need to
+maintain the own libfdt_env.h because the decompressor can include
+<linux/libfdt_env.h>.
+
+There is a subtle problem when generated files are turned into
+check-in files.
+
+When you are doing a rebuild of an existing object tree with O=
+option, there exists stale "shipped" copies that the old Makefile
+implementation created. The build system ends up with compiling the
+stale generated files because Make searches for prerequisites in the
+current directory, i.e. $(objtree) first, and then the directory
+listed in VPATH, i.e. $(srctree).
+
+To mend this issue, I added the following code:
+
+  ifdef building_out_of_srctree
+  $(shell rm -f $(addprefix $(obj)/, fdt_rw.c fdt_ro.c fdt_wip.c fdt.c))
+  endif
+
+This will need to stay for a while because "git bisect" crossing this
+commit, otherwise, would result in a build error.
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/wireless/mediatek/mt76/mt7615/main.c  | 21 ++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+ arch/arm/boot/compressed/.gitignore     |  9 ------
+ arch/arm/boot/compressed/Makefile       | 38 ++++++++++---------------
+ arch/arm/boot/compressed/atags_to_fdt.c |  1 +
+ arch/arm/boot/compressed/fdt.c          |  2 ++
+ arch/arm/boot/compressed/fdt_ro.c       |  2 ++
+ arch/arm/boot/compressed/fdt_rw.c       |  2 ++
+ arch/arm/boot/compressed/fdt_wip.c      |  2 ++
+ arch/arm/boot/compressed/libfdt_env.h   | 24 ----------------
+ 8 files changed, 24 insertions(+), 56 deletions(-)
+ create mode 100644 arch/arm/boot/compressed/fdt.c
+ create mode 100644 arch/arm/boot/compressed/fdt_ro.c
+ create mode 100644 arch/arm/boot/compressed/fdt_rw.c
+ create mode 100644 arch/arm/boot/compressed/fdt_wip.c
+ delete mode 100644 arch/arm/boot/compressed/libfdt_env.h
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/main.c b/drivers/net/wireless/mediatek/mt76/mt7615/main.c
-index 6586176c29af..f92ac9a916fc 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7615/main.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7615/main.c
-@@ -218,6 +218,25 @@ static void mt7615_remove_interface(struct ieee80211_hw *hw,
- 	spin_unlock_bh(&dev->sta_poll_lock);
- }
+diff --git a/arch/arm/boot/compressed/.gitignore b/arch/arm/boot/compressed/.gitignore
+index db05c6ef3e31..60606b0f378d 100644
+--- a/arch/arm/boot/compressed/.gitignore
++++ b/arch/arm/boot/compressed/.gitignore
+@@ -7,12 +7,3 @@ hyp-stub.S
+ piggy_data
+ vmlinux
+ vmlinux.lds
+-
+-# borrowed libfdt files
+-fdt.c
+-fdt.h
+-fdt_ro.c
+-fdt_rw.c
+-fdt_wip.c
+-libfdt.h
+-libfdt_internal.h
+diff --git a/arch/arm/boot/compressed/Makefile b/arch/arm/boot/compressed/Makefile
+index 9c11e7490292..00602a6fba04 100644
+--- a/arch/arm/boot/compressed/Makefile
++++ b/arch/arm/boot/compressed/Makefile
+@@ -76,29 +76,30 @@ compress-$(CONFIG_KERNEL_LZMA) = lzma
+ compress-$(CONFIG_KERNEL_XZ)   = xzkern
+ compress-$(CONFIG_KERNEL_LZ4)  = lz4
  
-+static void mt7615_init_dfs_state(struct mt7615_phy *phy)
-+{
-+	struct mt76_phy *mphy = phy->mt76;
-+	struct ieee80211_hw *hw = mphy->hw;
-+	struct cfg80211_chan_def *chandef = &hw->conf.chandef;
-+
-+	if (hw->conf.flags & IEEE80211_CONF_OFFCHANNEL)
-+		return;
-+
-+	if (!(chandef->chan->flags & IEEE80211_CHAN_RADAR))
-+		return;
-+
-+	if (mphy->chandef.chan->center_freq == chandef->chan->center_freq &&
-+	    mphy->chandef.width == chandef->width)
-+		return;
-+
-+	phy->dfs_state = -1;
-+}
-+
- static int mt7615_set_channel(struct mt7615_phy *phy)
- {
- 	struct mt7615_dev *dev = phy->dev;
-@@ -229,7 +248,7 @@ static int mt7615_set_channel(struct mt7615_phy *phy)
- 	mutex_lock(&dev->mt76.mutex);
- 	set_bit(MT76_RESET, &phy->mt76->state);
+-# Borrowed libfdt files for the ATAG compatibility mode
+-
+-libfdt		:= fdt_rw.c fdt_ro.c fdt_wip.c fdt.c
+-libfdt_hdrs	:= fdt.h libfdt.h libfdt_internal.h
+-
+-libfdt_objs	:= $(addsuffix .o, $(basename $(libfdt)))
+-
+-$(addprefix $(obj)/,$(libfdt) $(libfdt_hdrs)): $(obj)/%: $(srctree)/scripts/dtc/libfdt/%
+-	$(call cmd,shipped)
+-
+-$(addprefix $(obj)/,$(libfdt_objs) atags_to_fdt.o): \
+-	$(addprefix $(obj)/,$(libfdt_hdrs))
++libfdt_objs := fdt_rw.o fdt_ro.o fdt_wip.o fdt.o
  
--	phy->dfs_state = -1;
-+	mt7615_init_dfs_state(phy);
- 	mt76_set_channel(phy->mt76);
+ ifeq ($(CONFIG_ARM_ATAG_DTB_COMPAT),y)
+ OBJS	+= $(libfdt_objs) atags_to_fdt.o
+ endif
  
- 	ret = mt7615_mcu_set_chan_info(phy, MCU_EXT_CMD_CHANNEL_SWITCH);
++# -fstack-protector-strong triggers protection checks in this code,
++# but it is being used too early to link to meaningful stack_chk logic.
++nossp-flags-$(CONFIG_CC_HAS_STACKPROTECTOR_NONE) := -fno-stack-protector
++$(foreach o, $(libfdt_objs) atags_to_fdt.o, \
++	$(eval CFLAGS_$(o) := -I $(srctree)/scripts/dtc/libfdt $(nossp-flags-y)))
++
++# These were previously generated C files. When you are building the kernel
++# with O=, make sure to remove the stale files in the output tree. Otherwise,
++# the build system wrongly compiles the stale ones.
++ifdef building_out_of_srctree
++$(shell rm -f $(addprefix $(obj)/, fdt_rw.c fdt_ro.c fdt_wip.c fdt.c))
++endif
++
+ targets       := vmlinux vmlinux.lds piggy_data piggy.o \
+ 		 lib1funcs.o ashldi3.o bswapsdi2.o \
+ 		 head.o $(OBJS)
+ 
+-clean-files += piggy_data lib1funcs.S ashldi3.S bswapsdi2.S \
+-		$(libfdt) $(libfdt_hdrs) hyp-stub.S
++clean-files += piggy_data lib1funcs.S ashldi3.S bswapsdi2.S hyp-stub.S
+ 
+ KBUILD_CFLAGS += -DDISABLE_BRANCH_PROFILING
+ 
+@@ -107,15 +108,6 @@ ORIG_CFLAGS := $(KBUILD_CFLAGS)
+ KBUILD_CFLAGS = $(subst -pg, , $(ORIG_CFLAGS))
+ endif
+ 
+-# -fstack-protector-strong triggers protection checks in this code,
+-# but it is being used too early to link to meaningful stack_chk logic.
+-nossp-flags-$(CONFIG_CC_HAS_STACKPROTECTOR_NONE) := -fno-stack-protector
+-CFLAGS_atags_to_fdt.o := $(nossp-flags-y)
+-CFLAGS_fdt.o := $(nossp-flags-y)
+-CFLAGS_fdt_ro.o := $(nossp-flags-y)
+-CFLAGS_fdt_rw.o := $(nossp-flags-y)
+-CFLAGS_fdt_wip.o := $(nossp-flags-y)
+-
+ ccflags-y := -fpic $(call cc-option,-mno-single-pic-base,) -fno-builtin \
+ 	     -I$(obj) $(DISABLE_ARM_SSP_PER_TASK_PLUGIN)
+ asflags-y := -DZIMAGE
+diff --git a/arch/arm/boot/compressed/atags_to_fdt.c b/arch/arm/boot/compressed/atags_to_fdt.c
+index 64c49747f8a3..8452753efebe 100644
+--- a/arch/arm/boot/compressed/atags_to_fdt.c
++++ b/arch/arm/boot/compressed/atags_to_fdt.c
+@@ -1,4 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
++#include <linux/libfdt_env.h>
+ #include <asm/setup.h>
+ #include <libfdt.h>
+ 
+diff --git a/arch/arm/boot/compressed/fdt.c b/arch/arm/boot/compressed/fdt.c
+new file mode 100644
+index 000000000000..f8ea7a201ab1
+--- /dev/null
++++ b/arch/arm/boot/compressed/fdt.c
+@@ -0,0 +1,2 @@
++// SPDX-License-Identifier: GPL-2.0-only
++#include "../../../../lib/fdt.c"
+diff --git a/arch/arm/boot/compressed/fdt_ro.c b/arch/arm/boot/compressed/fdt_ro.c
+new file mode 100644
+index 000000000000..93970a4ad5ae
+--- /dev/null
++++ b/arch/arm/boot/compressed/fdt_ro.c
+@@ -0,0 +1,2 @@
++// SPDX-License-Identifier: GPL-2.0-only
++#include "../../../../lib/fdt_ro.c"
+diff --git a/arch/arm/boot/compressed/fdt_rw.c b/arch/arm/boot/compressed/fdt_rw.c
+new file mode 100644
+index 000000000000..f7c6b8b7e01c
+--- /dev/null
++++ b/arch/arm/boot/compressed/fdt_rw.c
+@@ -0,0 +1,2 @@
++// SPDX-License-Identifier: GPL-2.0-only
++#include "../../../../lib/fdt_rw.c"
+diff --git a/arch/arm/boot/compressed/fdt_wip.c b/arch/arm/boot/compressed/fdt_wip.c
+new file mode 100644
+index 000000000000..048d2c7a088d
+--- /dev/null
++++ b/arch/arm/boot/compressed/fdt_wip.c
+@@ -0,0 +1,2 @@
++// SPDX-License-Identifier: GPL-2.0-only
++#include "../../../../lib/fdt_wip.c"
+diff --git a/arch/arm/boot/compressed/libfdt_env.h b/arch/arm/boot/compressed/libfdt_env.h
+deleted file mode 100644
+index 6a0f1f524466..000000000000
+--- a/arch/arm/boot/compressed/libfdt_env.h
++++ /dev/null
+@@ -1,24 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef _ARM_LIBFDT_ENV_H
+-#define _ARM_LIBFDT_ENV_H
+-
+-#include <linux/limits.h>
+-#include <linux/types.h>
+-#include <linux/string.h>
+-#include <asm/byteorder.h>
+-
+-#define INT32_MAX	S32_MAX
+-#define UINT32_MAX	U32_MAX
+-
+-typedef __be16 fdt16_t;
+-typedef __be32 fdt32_t;
+-typedef __be64 fdt64_t;
+-
+-#define fdt16_to_cpu(x)		be16_to_cpu(x)
+-#define cpu_to_fdt16(x)		cpu_to_be16(x)
+-#define fdt32_to_cpu(x)		be32_to_cpu(x)
+-#define cpu_to_fdt32(x)		cpu_to_be32(x)
+-#define fdt64_to_cpu(x)		be64_to_cpu(x)
+-#define cpu_to_fdt64(x)		cpu_to_be64(x)
+-
+-#endif
 -- 
 2.25.1
 
