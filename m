@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 256C4C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F78DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0404A206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:30:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 580972072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:30:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662627;
-	bh=7j31ytWFpCdfw0FB5VRFDqkG3S0rIAW1hLa6rqGWXpc=;
+	s=default; t=1591662633;
+	bh=TyJAmAg2IxYVcbNEVfhBJ2zxbSBuEzLHuikDs16VLFI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w6pbtzMGl1eNNENzS+LgEEpAdFVAqxekDU1blzdIwZfAysuVZRHDY3ngQtDGxr70t
-	 fE4aBwVToTCBI5EMzRhfbqvl2ly7eeordpNjTB/WRo1Fd4zTxk4LZxyMtfQ5/uMspU
-	 ThDZek5qnD7LsNtiwWD20f3G2qFGtUIj49sWoZJI=
+	b=qfWiesM5vwKCj0fs4z2Sqe5s6k8EOLPBjBOtZt5CTT6zowD6QNwT7F2RX7OOO7CLw
+	 dNC03uCswxQMTC0VxOx8NuRlavaKbc34zm2BOlqHLzmYyxDpIC1pUGoCb9Q1NSgd4I
+	 xw5ivB90JnTEOESkEpN1DN33BsSSHsjzIKypE0tU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728349AbgFHXPv (ORCPT
+        id S1731262AbgFIAab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:15:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60934 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:30:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729222AbgFHXNF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:13:05 -0400
+        id S1730093AbgFHXPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:15:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47CF720B80;
-        Mon,  8 Jun 2020 23:13:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AA3120760;
+        Mon,  8 Jun 2020 23:15:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657985;
-        bh=7j31ytWFpCdfw0FB5VRFDqkG3S0rIAW1hLa6rqGWXpc=;
+        s=default; t=1591658145;
+        bh=TyJAmAg2IxYVcbNEVfhBJ2zxbSBuEzLHuikDs16VLFI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DeRUjI2rPln0Y4WqmO0OU++AmvA3uDLWqrfZXwjEXlRkmms9SDtz0Yu2v3HVAbUN+
-         C+cX0lKyQg+zl/Yx83d9qI+1SxCLGgfItiGtID8of/ZHQN73Iv2LC4AqG+zaKudaNn
-         qhfKql2smJFT+dwAzl1pPOVyNNzRcxaPq5qWzaMs=
+        b=PWezgcUWadk1gGcMiMIVs7Wl95tRVgVXHJGNliVWTIpyPDBnstsCSeWNsgTAZpTg+
+         M2KTkEKZQdik9AOjG7xus61XgdZm/6+bjdcDUT8HvlTYIQNhvWzxobIpn6IiHhW67M
+         jBtB3cZ/+N64UlF8u4qkgsG49I58NR4kMss+nOz8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Justin Swartz <justin.swartz@risingedge.co.za>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 045/606] clk: rockchip: fix incorrect configuration of rk3228 aclk_gpu* clocks
-Date:   Mon,  8 Jun 2020 19:02:50 -0400
-Message-Id: <20200608231211.3363633-45-sashal@kernel.org>
+Cc:     Saravana Kannan <saravanak@google.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH AUTOSEL 5.6 178/606] driver core: Fix SYNC_STATE_ONLY device link implementation
+Date:   Mon,  8 Jun 2020 19:05:03 -0400
+Message-Id: <20200608231211.3363633-178-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -61,79 +59,187 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Justin Swartz <justin.swartz@risingedge.co.za>
+From: Saravana Kannan <saravanak@google.com>
 
-commit cec9d101d70a3509da9bd2e601e0b242154ce616 upstream.
+commit 21c27f06587d2c18150d27ca2382a509ec55c482 upstream.
 
-The following changes prevent the unrecoverable freezes and rcu_sched
-stall warnings experienced in each of my attempts to take advantage of
-lima.
+When SYNC_STATE_ONLY support was added in commit 05ef983e0d65 ("driver
+core: Add device link support for SYNC_STATE_ONLY flag"),
+device_link_add() incorrectly skipped adding the new SYNC_STATE_ONLY
+device link to the supplier's and consumer's "device link" list.
 
-Replace the COMPOSITE_NOGATE definition of aclk_gpu_pre with a
-COMPOSITE that retains the selection of HDMIPHY as the PLL source, but
-instead makes uses of the aclk_gpu PLL source gate and parent names
-defined by mux_pll_src_4plls_p rather than mux_aclk_gpu_pre_p.
+This causes multiple issues:
+- The device link is lost forever from driver core if the caller
+  didn't keep track of it (caller typically isn't expected to). This is
+  a memory leak.
+- The device link is also never visible to any other code path after
+  device_link_add() returns.
 
-Remove the now unused mux_aclk_gpu_pre_p and the four named but also
-unused definitions (cpll_gpu, gpll_gpu, hdmiphy_gpu and usb480m_gpu)
-of the aclk_gpu PLL source gate.
+If we fix the "device link" list handling, that exposes a bunch of
+issues.
 
-Use the correct gate offset for aclk_gpu and aclk_gpu_noc.
+1. The device link "status" state management code rightfully doesn't
+handle the case where a DL_FLAG_MANAGED device link exists between a
+supplier and consumer, but the consumer manages to probe successfully
+before the supplier. The addition of DL_FLAG_SYNC_STATE_ONLY links break
+this assumption. This causes device_links_driver_bound() to throw a
+warning when this happens.
 
-Fixes: 307a2e9ac524 ("clk: rockchip: add clock controller for rk3228")
+Since DL_FLAG_SYNC_STATE_ONLY device links are mainly used for creating
+proxy device links for child device dependencies and aren't useful once
+the consumer device probes successfully, this patch just deletes
+DL_FLAG_SYNC_STATE_ONLY device links once its consumer device probes.
+This way, we avoid the warning, free up some memory and avoid
+complicating the device links "status" state management code.
+
+2. Creating a DL_FLAG_STATELESS device link between two devices that
+already have a DL_FLAG_SYNC_STATE_ONLY device link will result in the
+DL_FLAG_STATELESS flag not getting set correctly. This patch also fixes
+this.
+
+Lastly, this patch also fixes minor whitespace issues.
+
 Cc: stable@vger.kernel.org
-Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
-[double-checked against SoC manual and added fixes tag]
-Link: https://lore.kernel.org/r/20200114162503.7548-1-justin.swartz@risingedge.co.za
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Fixes: 05ef983e0d65 ("driver core: Add device link support for SYNC_STATE_ONLY flag")
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Link: https://lore.kernel.org/r/20200519063000.128819-1-saravanak@google.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/clk/rockchip/clk-rk3228.c | 17 ++++-------------
- 1 file changed, 4 insertions(+), 13 deletions(-)
+ drivers/base/core.c | 61 +++++++++++++++++++++++++++++----------------
+ 1 file changed, 39 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/clk/rockchip/clk-rk3228.c b/drivers/clk/rockchip/clk-rk3228.c
-index d17cfb7a3ff4..d7243c09cc84 100644
---- a/drivers/clk/rockchip/clk-rk3228.c
-+++ b/drivers/clk/rockchip/clk-rk3228.c
-@@ -156,8 +156,6 @@ PNAME(mux_i2s_out_p)		= { "i2s1_pre", "xin12m" };
- PNAME(mux_i2s2_p)		= { "i2s2_src", "i2s2_frac", "xin12m" };
- PNAME(mux_sclk_spdif_p)		= { "sclk_spdif_src", "spdif_frac", "xin12m" };
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index d32a3aefff32..7fb7ffdeb015 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -360,13 +360,12 @@ struct device_link *device_link_add(struct device *consumer,
  
--PNAME(mux_aclk_gpu_pre_p)	= { "cpll_gpu", "gpll_gpu", "hdmiphy_gpu", "usb480m_gpu" };
+ 		if (flags & DL_FLAG_STATELESS) {
+ 			kref_get(&link->kref);
++			link->flags |= DL_FLAG_STATELESS;
+ 			if (link->flags & DL_FLAG_SYNC_STATE_ONLY &&
+-			    !(link->flags & DL_FLAG_STATELESS)) {
+-				link->flags |= DL_FLAG_STATELESS;
++			    !(link->flags & DL_FLAG_STATELESS))
+ 				goto reorder;
+-			} else {
++			else
+ 				goto out;
+-			}
+ 		}
+ 
+ 		/*
+@@ -433,12 +432,16 @@ struct device_link *device_link_add(struct device *consumer,
+ 	    flags & DL_FLAG_PM_RUNTIME)
+ 		pm_runtime_resume(supplier);
+ 
++	list_add_tail_rcu(&link->s_node, &supplier->links.consumers);
++	list_add_tail_rcu(&link->c_node, &consumer->links.suppliers);
++
+ 	if (flags & DL_FLAG_SYNC_STATE_ONLY) {
+ 		dev_dbg(consumer,
+ 			"Linked as a sync state only consumer to %s\n",
+ 			dev_name(supplier));
+ 		goto out;
+ 	}
++
+ reorder:
+ 	/*
+ 	 * Move the consumer and all of the devices depending on it to the end
+@@ -449,12 +452,9 @@ struct device_link *device_link_add(struct device *consumer,
+ 	 */
+ 	device_reorder_to_tail(consumer, NULL);
+ 
+-	list_add_tail_rcu(&link->s_node, &supplier->links.consumers);
+-	list_add_tail_rcu(&link->c_node, &consumer->links.suppliers);
 -
- PNAME(mux_uart0_p)		= { "uart0_src", "uart0_frac", "xin24m" };
- PNAME(mux_uart1_p)		= { "uart1_src", "uart1_frac", "xin24m" };
- PNAME(mux_uart2_p)		= { "uart2_src", "uart2_frac", "xin24m" };
-@@ -468,16 +466,9 @@ static struct rockchip_clk_branch rk3228_clk_branches[] __initdata = {
- 			RK2928_CLKSEL_CON(24), 6, 10, DFLAGS,
- 			RK2928_CLKGATE_CON(2), 8, GFLAGS),
+ 	dev_dbg(consumer, "Linked as a consumer to %s\n", dev_name(supplier));
  
--	GATE(0, "cpll_gpu", "cpll", 0,
--			RK2928_CLKGATE_CON(3), 13, GFLAGS),
--	GATE(0, "gpll_gpu", "gpll", 0,
--			RK2928_CLKGATE_CON(3), 13, GFLAGS),
--	GATE(0, "hdmiphy_gpu", "hdmiphy", 0,
--			RK2928_CLKGATE_CON(3), 13, GFLAGS),
--	GATE(0, "usb480m_gpu", "usb480m", 0,
-+	COMPOSITE(0, "aclk_gpu_pre", mux_pll_src_4plls_p, 0,
-+			RK2928_CLKSEL_CON(34), 5, 2, MFLAGS, 0, 5, DFLAGS,
- 			RK2928_CLKGATE_CON(3), 13, GFLAGS),
--	COMPOSITE_NOGATE(0, "aclk_gpu_pre", mux_aclk_gpu_pre_p, 0,
--			RK2928_CLKSEL_CON(34), 5, 2, MFLAGS, 0, 5, DFLAGS),
+- out:
++out:
+ 	device_pm_unlock();
+ 	device_links_write_unlock();
  
- 	COMPOSITE(SCLK_SPI0, "sclk_spi0", mux_pll_src_2plls_p, 0,
- 			RK2928_CLKSEL_CON(25), 8, 1, MFLAGS, 0, 7, DFLAGS,
-@@ -582,8 +573,8 @@ static struct rockchip_clk_branch rk3228_clk_branches[] __initdata = {
- 	GATE(0, "pclk_peri_noc", "pclk_peri", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(12), 2, GFLAGS),
+@@ -829,6 +829,13 @@ static void __device_links_supplier_defer_sync(struct device *sup)
+ 		list_add_tail(&sup->links.defer_sync, &deferred_sync);
+ }
  
- 	/* PD_GPU */
--	GATE(ACLK_GPU, "aclk_gpu", "aclk_gpu_pre", 0, RK2928_CLKGATE_CON(13), 14, GFLAGS),
--	GATE(0, "aclk_gpu_noc", "aclk_gpu_pre", 0, RK2928_CLKGATE_CON(13), 15, GFLAGS),
-+	GATE(ACLK_GPU, "aclk_gpu", "aclk_gpu_pre", 0, RK2928_CLKGATE_CON(7), 14, GFLAGS),
-+	GATE(0, "aclk_gpu_noc", "aclk_gpu_pre", 0, RK2928_CLKGATE_CON(7), 15, GFLAGS),
++static void device_link_drop_managed(struct device_link *link)
++{
++	link->flags &= ~DL_FLAG_MANAGED;
++	WRITE_ONCE(link->status, DL_STATE_NONE);
++	kref_put(&link->kref, __device_link_del);
++}
++
+ /**
+  * device_links_driver_bound - Update device links after probing its driver.
+  * @dev: Device to update the links for.
+@@ -842,7 +849,7 @@ static void __device_links_supplier_defer_sync(struct device *sup)
+  */
+ void device_links_driver_bound(struct device *dev)
+ {
+-	struct device_link *link;
++	struct device_link *link, *ln;
+ 	LIST_HEAD(sync_list);
  
- 	/* PD_BUS */
- 	GATE(0, "sclk_initmem_mbist", "aclk_cpu", 0, RK2928_CLKGATE_CON(8), 1, GFLAGS),
+ 	/*
+@@ -882,18 +889,35 @@ void device_links_driver_bound(struct device *dev)
+ 	else
+ 		__device_links_queue_sync_state(dev, &sync_list);
+ 
+-	list_for_each_entry(link, &dev->links.suppliers, c_node) {
++	list_for_each_entry_safe(link, ln, &dev->links.suppliers, c_node) {
++		struct device *supplier;
++
+ 		if (!(link->flags & DL_FLAG_MANAGED))
+ 			continue;
+ 
+-		WARN_ON(link->status != DL_STATE_CONSUMER_PROBE);
+-		WRITE_ONCE(link->status, DL_STATE_ACTIVE);
++		supplier = link->supplier;
++		if (link->flags & DL_FLAG_SYNC_STATE_ONLY) {
++			/*
++			 * When DL_FLAG_SYNC_STATE_ONLY is set, it means no
++			 * other DL_MANAGED_LINK_FLAGS have been set. So, it's
++			 * save to drop the managed link completely.
++			 */
++			device_link_drop_managed(link);
++		} else {
++			WARN_ON(link->status != DL_STATE_CONSUMER_PROBE);
++			WRITE_ONCE(link->status, DL_STATE_ACTIVE);
++		}
+ 
++		/*
++		 * This needs to be done even for the deleted
++		 * DL_FLAG_SYNC_STATE_ONLY device link in case it was the last
++		 * device link that was preventing the supplier from getting a
++		 * sync_state() call.
++		 */
+ 		if (defer_sync_state_count)
+-			__device_links_supplier_defer_sync(link->supplier);
++			__device_links_supplier_defer_sync(supplier);
+ 		else
+-			__device_links_queue_sync_state(link->supplier,
+-							&sync_list);
++			__device_links_queue_sync_state(supplier, &sync_list);
+ 	}
+ 
+ 	dev->links.status = DL_DEV_DRIVER_BOUND;
+@@ -903,13 +927,6 @@ void device_links_driver_bound(struct device *dev)
+ 	device_links_flush_sync_list(&sync_list, dev);
+ }
+ 
+-static void device_link_drop_managed(struct device_link *link)
+-{
+-	link->flags &= ~DL_FLAG_MANAGED;
+-	WRITE_ONCE(link->status, DL_STATE_NONE);
+-	kref_put(&link->kref, __device_link_del);
+-}
+-
+ /**
+  * __device_links_no_driver - Update links of a device without a driver.
+  * @dev: Device without a drvier.
 -- 
 2.25.1
 
