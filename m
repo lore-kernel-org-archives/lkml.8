@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C0BDC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1FF5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:36:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D45D206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:36:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95B02207ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:36:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662997;
-	bh=khwqOgzIKy4HdyDJxlADdur1zwDQ2QxqGZxNDiHr2Sg=;
+	s=default; t=1591663002;
+	bh=ECHHm1tjjPiVV5BIUfnlAx1LvvWnDMygf0UXIqwcJhQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=shDmcUScCbpor1QYRJrDO+3kMbMjwpn51hi/AStkAGPAudMP2P5NR/IKdZUU9PP66
-	 ioKYwZ/5M2lVnV6UOEjnega4mD6b2vEI9JUKGvK+f6jeXyASl40P3EZRQr+PAq5TA0
-	 fZnOHPJUqm3q0mGZEHxvHX1RvudrcvRzVHU2qGy0=
+	b=v3prDSQE+VTaEi6BflPv4czxq85Rk57gWHbcAYBiUD7Y4cwebkNmiMcC1Oa16IFmc
+	 Z6YPGpb4mIY3JwOHjlQmgGPMYtDUfVNa6yawvlUWnc3T628HIVkanQmXK6EJJG0bhz
+	 Vq8JWAarqpiDWdeoGl98a7v7YhA9/IZljNM+rk1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728855AbgFHXOE (ORCPT
+        id S1731247AbgFIAgl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:14:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58584 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:36:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728931AbgFHXLh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:11:37 -0400
+        id S1729691AbgFHXOE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:14:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 402C72100A;
-        Mon,  8 Jun 2020 23:11:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7027621534;
+        Mon,  8 Jun 2020 23:14:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657897;
-        bh=khwqOgzIKy4HdyDJxlADdur1zwDQ2QxqGZxNDiHr2Sg=;
+        s=default; t=1591658044;
+        bh=ECHHm1tjjPiVV5BIUfnlAx1LvvWnDMygf0UXIqwcJhQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WZ7SEphqmAl7WwvXWSQVgN8OxL88Wm7Kutp7nfFP+ItfW4uZEtiQeYUcuUTc3U62h
-         nXU2EUFsg71kgoKCbxpAyL2h/KXpyymvrX/I1Bl7Z+S2YquT3ihZ74V5o8kSH1ZVHF
-         2mhfy61x7YgvcbVf6yTpXAfUvnBF/PPigqL16FRI=
+        b=kxiJfB+aOzmDkY22060RMIx+9bC5XSiqscH6AYhC8gbIWVsetw0Rao8qv1pXQKxW3
+         DmF6rzk+ov0KbIZUfvDgOEk/nG4/UwrozNxdo2wx0JIjrnAz6igRvhQ52UILenXsZb
+         Ue7ywNp4OtFqiIut8Lfi6Ut8KFiTUfSHv+3TfHs0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jacob Keller <jacob.e.keller@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 251/274] ice: fix potential double free in probe unrolling
-Date:   Mon,  8 Jun 2020 19:05:44 -0400
-Message-Id: <20200608230607.3361041-251-sashal@kernel.org>
+Cc:     Alexander Monakov <amonakov@ispras.ru>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 093/606] iommu/amd: Fix over-read of ACPI UID from IVRS table
+Date:   Mon,  8 Jun 2020 19:03:38 -0400
+Message-Id: <20200608231211.3363633-93-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
-References: <20200608230607.3361041-1-sashal@kernel.org>
+In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
+References: <20200608231211.3363633-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,47 +60,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacob Keller <jacob.e.keller@intel.com>
+From: Alexander Monakov <amonakov@ispras.ru>
 
-[ Upstream commit bc3a024101ca497bea4c69be4054c32a5c349f1d ]
+[ Upstream commit e461b8c991b9202b007ea2059d953e264240b0c9 ]
 
-If ice_init_interrupt_scheme fails, ice_probe will jump to clearing up
-the interrupts. This can lead to some static analysis tools such as the
-compiler sanitizers complaining about double free problems.
+IVRS parsing code always tries to read 255 bytes from memory when
+retrieving ACPI device path, and makes an assumption that firmware
+provides a zero-terminated string. Both of those are bugs: the entry
+is likely to be shorter than 255 bytes, and zero-termination is not
+guaranteed.
 
-Since ice_init_interrupt_scheme already unrolls internally on failure,
-there is no need to call ice_clear_interrupt_scheme when it fails. Add
-a new unroll label and use that instead.
+With Acer SF314-42 firmware these issues manifest visibly in dmesg:
 
-Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR0\xf0\xa5, rdevid:160
+AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR1\xf0\xa5, rdevid:160
+AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR2\xf0\xa5, rdevid:160
+AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR3>\x83e\x8d\x9a\xd1...
+
+The first three lines show how the code over-reads adjacent table
+entries into the UID, and in the last line it even reads garbage data
+beyond the end of the IVRS table itself.
+
+Since each entry has the length of the UID (uidl member of ivhd_entry
+struct), use that for memcpy, and manually add a zero terminator.
+
+Avoid zero-filling hid and uid arrays up front, and instead ensure
+the uid array is always zero-terminated. No change needed for the hid
+array, as it was already properly zero-terminated.
+
+Fixes: 2a0cb4e2d423c ("iommu/amd: Add new map for storing IVHD dev entry type HID")
+
+Signed-off-by: Alexander Monakov <amonakov@ispras.ru>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: iommu@lists.linux-foundation.org
+Link: https://lore.kernel.org/r/20200511102352.1831-1-amonakov@ispras.ru
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ice/ice_main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/iommu/amd_iommu_init.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
-index 545817dbff67..69e50331e08e 100644
---- a/drivers/net/ethernet/intel/ice/ice_main.c
-+++ b/drivers/net/ethernet/intel/ice/ice_main.c
-@@ -3298,7 +3298,7 @@ ice_probe(struct pci_dev *pdev, const struct pci_device_id __always_unused *ent)
- 	if (err) {
- 		dev_err(dev, "ice_init_interrupt_scheme failed: %d\n", err);
- 		err = -EIO;
--		goto err_init_interrupt_unroll;
-+		goto err_init_vsi_unroll;
- 	}
+diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
+index 2b9a67ecc6ac..5b81fd16f5fa 100644
+--- a/drivers/iommu/amd_iommu_init.c
++++ b/drivers/iommu/amd_iommu_init.c
+@@ -1329,8 +1329,8 @@ static int __init init_iommu_from_acpi(struct amd_iommu *iommu,
+ 		}
+ 		case IVHD_DEV_ACPI_HID: {
+ 			u16 devid;
+-			u8 hid[ACPIHID_HID_LEN] = {0};
+-			u8 uid[ACPIHID_UID_LEN] = {0};
++			u8 hid[ACPIHID_HID_LEN];
++			u8 uid[ACPIHID_UID_LEN];
+ 			int ret;
  
- 	/* Driver is mostly up */
-@@ -3387,6 +3387,7 @@ ice_probe(struct pci_dev *pdev, const struct pci_device_id __always_unused *ent)
- 	ice_free_irq_msix_misc(pf);
- err_init_interrupt_unroll:
- 	ice_clear_interrupt_scheme(pf);
-+err_init_vsi_unroll:
- 	devm_kfree(dev, pf->vsi);
- err_init_pf_unroll:
- 	ice_deinit_pf(pf);
+ 			if (h->type != 0x40) {
+@@ -1347,6 +1347,7 @@ static int __init init_iommu_from_acpi(struct amd_iommu *iommu,
+ 				break;
+ 			}
+ 
++			uid[0] = '\0';
+ 			switch (e->uidf) {
+ 			case UID_NOT_PRESENT:
+ 
+@@ -1361,8 +1362,8 @@ static int __init init_iommu_from_acpi(struct amd_iommu *iommu,
+ 				break;
+ 			case UID_IS_CHARACTER:
+ 
+-				memcpy(uid, (u8 *)(&e->uid), ACPIHID_UID_LEN - 1);
+-				uid[ACPIHID_UID_LEN - 1] = '\0';
++				memcpy(uid, &e->uid, e->uidl);
++				uid[e->uidl] = '\0';
+ 
+ 				break;
+ 			default:
 -- 
 2.25.1
 
