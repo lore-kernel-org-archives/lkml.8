@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EAC2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67FC7C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11BCF20775
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:34:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F3CA20775
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:34:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591659270;
-	bh=YOvx+5mj0Dgp9Ng7is8QTXRd5/0609AkYbrMTO5lq0o=;
+	s=default; t=1591659271;
+	bh=CW+S2I9j3FWtgNNgKAVdRFjVBnucE7ZH77BuXJM6opA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gvxZR1/uvYqnUIyTBJ9up80MeEkRCxpEHwUHMsM/YhEMFXXqnz9as4elsxm0NOcUm
-	 G2zXGwYghMRZe3lM7pz9vHbouZmNFlFYtUVAkFZkJzTyJ89YIUc09mxq6oTQ34DsqX
-	 c9m0C3LEMo7kMGJTopeD8IBI+kKX2Sk52l0WWba4=
+	b=RKTBi9MWVpkEHnUzqeo/vksb6Q1EtG04N2j8EAaDJSStA0VxCMzw+TWm0fR6ber2o
+	 77wvDHPnIrz/DTPNFXBItFQDwxpTe1f5dFH5JC1mYkQS/WsQ4HfUmjTspU+g7kXM9+
+	 GyfpvFMvxrkwDKDM8WIvcGt1N9BBvNTzPOkwu4Uw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732626AbgFHXeY (ORCPT
+        id S1729055AbgFHXea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:34:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56592 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:34:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732171AbgFHX1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:27:50 -0400
+        id S1732184AbgFHX1x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:27:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E0FA20801;
-        Mon,  8 Jun 2020 23:27:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FF892074B;
+        Mon,  8 Jun 2020 23:27:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658869;
-        bh=YOvx+5mj0Dgp9Ng7is8QTXRd5/0609AkYbrMTO5lq0o=;
+        s=default; t=1591658873;
+        bh=CW+S2I9j3FWtgNNgKAVdRFjVBnucE7ZH77BuXJM6opA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xQA6drIu2iTxyDeoHXgbVusq3oa+ht7aoknx7PHPIB22VYvXnw5ahbW1zogQjDVuU
-         iiUWbCbJiNrPHNQoBQWoSHOBCkxmvB/uhTDqe4w2DPyANyzqv31mFKR/W5UhIBbCom
-         PM3f+/IzHkJwPVXUbz+u3jUMM7hQNnFo754UXrfQ=
+        b=eLNzTG6vMkyOKPQjXeAdN0W+MIJzANEGu1hB3Qtr88vtLk0tI8pkpyLsR2zcZ8+3Y
+         IHxVX+x+BIGnSFf1IeqUaOgsXZ/cnTyygr05VesF4yVOxmKY4j6V1onkzsm1XBoqJT
+         693yoELMLsX4tl9Jmt4PBozt9Aj9x0NZpTP41yKg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ido Schimmel <idosch@mellanox.com>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 50/50] vxlan: Avoid infinite loop when suppressing NS messages with invalid options
-Date:   Mon,  8 Jun 2020 19:26:40 -0400
-Message-Id: <20200608232640.3370262-50-sashal@kernel.org>
+Cc:     Qiujun Huang <hqjagain@gmail.com>,
+        syzbot+b1c61e5f11be5782f192@syzkaller.appspotmail.com,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 02/37] ath9k: Fix use-after-free Write in ath9k_htc_rx_msg
+Date:   Mon,  8 Jun 2020 19:27:14 -0400
+Message-Id: <20200608232750.3370747-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608232640.3370262-1-sashal@kernel.org>
-References: <20200608232640.3370262-1-sashal@kernel.org>
+In-Reply-To: <20200608232750.3370747-1-sashal@kernel.org>
+References: <20200608232750.3370747-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,51 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Qiujun Huang <hqjagain@gmail.com>
 
-[ Upstream commit 8066e6b449e050675df48e7c4b16c29f00507ff0 ]
+[ Upstream commit e4ff08a4d727146bb6717a39a8d399d834654345 ]
 
-When proxy mode is enabled the vxlan device might reply to Neighbor
-Solicitation (NS) messages on behalf of remote hosts.
+Write out of slab bounds. We should check epid.
 
-In case the NS message includes the "Source link-layer address" option
-[1], the vxlan device will use the specified address as the link-layer
-destination address in its reply.
+The case reported by syzbot:
+https://lore.kernel.org/linux-usb/0000000000006ac55b05a1c05d72@google.com
+BUG: KASAN: use-after-free in htc_process_conn_rsp
+drivers/net/wireless/ath/ath9k/htc_hst.c:131 [inline]
+BUG: KASAN: use-after-free in ath9k_htc_rx_msg+0xa25/0xaf0
+drivers/net/wireless/ath/ath9k/htc_hst.c:443
+Write of size 2 at addr ffff8881cea291f0 by task swapper/1/0
 
-To avoid an infinite loop, break out of the options parsing loop when
-encountering an option with length zero and disregard the NS message.
+Call Trace:
+ htc_process_conn_rsp drivers/net/wireless/ath/ath9k/htc_hst.c:131
+[inline]
+ath9k_htc_rx_msg+0xa25/0xaf0
+drivers/net/wireless/ath/ath9k/htc_hst.c:443
+ath9k_hif_usb_reg_in_cb+0x1ba/0x630
+drivers/net/wireless/ath/ath9k/hif_usb.c:718
+__usb_hcd_giveback_urb+0x29a/0x550 drivers/usb/core/hcd.c:1650
+usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1716
+dummy_timer+0x1258/0x32ae drivers/usb/gadget/udc/dummy_hcd.c:1966
+call_timer_fn+0x195/0x6f0 kernel/time/timer.c:1404
+expire_timers kernel/time/timer.c:1449 [inline]
+__run_timers kernel/time/timer.c:1773 [inline]
+__run_timers kernel/time/timer.c:1740 [inline]
+run_timer_softirq+0x5f9/0x1500 kernel/time/timer.c:1786
 
-This is consistent with the IPv6 ndisc code and RFC 4886 which states
-that "Nodes MUST silently discard an ND packet that contains an option
-with length zero" [2].
-
-[1] https://tools.ietf.org/html/rfc4861#section-4.3
-[2] https://tools.ietf.org/html/rfc4861#section-4.6
-
-Fixes: 4b29dba9c085 ("vxlan: fix nonfunctional neigh_reduce()")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-and-tested-by: syzbot+b1c61e5f11be5782f192@syzkaller.appspotmail.com
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200404041838.10426-4-hqjagain@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/vxlan.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/wireless/ath/ath9k/htc_hst.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/vxlan.c b/drivers/net/vxlan.c
-index 58ddb6c90418..b1470d30d079 100644
---- a/drivers/net/vxlan.c
-+++ b/drivers/net/vxlan.c
-@@ -1521,6 +1521,10 @@ static struct sk_buff *vxlan_na_create(struct sk_buff *request,
- 	daddr = eth_hdr(request)->h_source;
- 	ns_olen = request->len - skb_transport_offset(request) - sizeof(*ns);
- 	for (i = 0; i < ns_olen-1; i += (ns->opt[i+1]<<3)) {
-+		if (!ns->opt[i + 1]) {
-+			kfree_skb(reply);
-+			return NULL;
-+		}
- 		if (ns->opt[i] == ND_OPT_SOURCE_LL_ADDR) {
- 			daddr = ns->opt + i + sizeof(struct nd_opt_hdr);
- 			break;
+diff --git a/drivers/net/wireless/ath/ath9k/htc_hst.c b/drivers/net/wireless/ath/ath9k/htc_hst.c
+index fd85f996c554..257b6ee51e54 100644
+--- a/drivers/net/wireless/ath/ath9k/htc_hst.c
++++ b/drivers/net/wireless/ath/ath9k/htc_hst.c
+@@ -114,6 +114,9 @@ static void htc_process_conn_rsp(struct htc_target *target,
+ 
+ 	if (svc_rspmsg->status == HTC_SERVICE_SUCCESS) {
+ 		epid = svc_rspmsg->endpoint_id;
++		if (epid < 0 || epid >= ENDPOINT_MAX)
++			return;
++
+ 		service_id = be16_to_cpu(svc_rspmsg->service_id);
+ 		max_msglen = be16_to_cpu(svc_rspmsg->max_msg_len);
+ 		endpoint = &target->endpoint[epid];
 -- 
 2.25.1
 
