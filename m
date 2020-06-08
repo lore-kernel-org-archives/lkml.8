@@ -2,188 +2,204 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85AFCC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 21:53:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C885BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 21:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63D6620814
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 21:53:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="VSpg9qrB"
+	by mail.kernel.org (Postfix) with ESMTP id 99D232074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 21:56:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgFHVxt (ORCPT
+        id S1726812AbgFHV4Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 17:53:49 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:41658 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726789AbgFHVxt (ORCPT
+        Mon, 8 Jun 2020 17:56:16 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:36447 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726725AbgFHV4Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 17:53:49 -0400
-Received: from localhost.localdomain (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 2885D20B717B;
-        Mon,  8 Jun 2020 14:53:48 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2885D20B717B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1591653228;
-        bh=xc2Cr5Aohy9MgGfLPpnVpGSQbatWni8qwfQ89wE0oIM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=VSpg9qrBKfCgAMHGahpi4/S7yxgM50HxOkFqUt8A36BBQXm2iuiMrWeiLqr0o0i/J
-         7a2voa1QrwWey/8Q7acuzusWc/dgJ1hvYbid5bOel0EibtPvnlDJ9xGDi40dZJPdDN
-         31tHWyOAcGAd4AeoUCwS/5qaR8Gwz0ulb2UdgNH0=
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-To:     zohar@linux.ibm.com, paul@paul-moore.com
-Cc:     linux-integrity@vger.kernel.org, linux-audit@redhat.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3] IMA: Add audit log for failure conditions
-Date:   Mon,  8 Jun 2020 14:53:43 -0700
-Message-Id: <20200608215343.4491-1-nramas@linux.microsoft.com>
-X-Mailer: git-send-email 2.27.0
+        Mon, 8 Jun 2020 17:56:16 -0400
+Received: by mail-il1-f198.google.com with SMTP id p11so12897107iln.3
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 14:56:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=4+X3ij/RhUTjj3zuUzC0A3I3PVEn21icaXaQpb3cVcM=;
+        b=rJu3sehMPI8YKSrMV52t8tsWIVSPSm83k/GNLAVx37mlWV09OfmCXX5jR0cC+jzGhP
+         NtIFR7Zq8fIfGmHxCbVf12mRpBwUyrk5ejqn6cMW5zvjezgk6xirS2JRAstd6q677V/W
+         HFfGWRC/m/Jf+9q+Ckb5Pbc9vb76b6uTnI2d50zKFGES/lA51d1d3gFGvT28Ww8+iJFZ
+         SZqj2SKx0fxRTEObhHRzKTCcqjcX5PSWVhmOvRcy+SOGpmQy1ate3OiXrhZqnTa++htJ
+         rW75y1Zx0YdI8WUnzPVyJZSrUGA9sEW5BjiXTKSEGCrVofR7VOsSn+6vLXtJ9azEh4tz
+         YYpw==
+X-Gm-Message-State: AOAM530p+BY8pSYjh6C4MjvK6trBkv7T6Mfd4OxAWPMhUh89GMOv3cdv
+        73tL2NQVgsIOE1k+kjPg/Qtz5QGfGLnyaN6jJHPVw/vVATtb
+X-Google-Smtp-Source: ABdhPJxD4W1SPvCytYKPN5LWWnCV/iFYYNo2JN4qamgKJJFL4q64n5rkWLGI3PmX9isbRfBRwNJfDFJCaOiiXbzuK7E0KB2dcuF/
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a92:d9c1:: with SMTP id n1mr23113253ilq.148.1591653374784;
+ Mon, 08 Jun 2020 14:56:14 -0700 (PDT)
+Date:   Mon, 08 Jun 2020 14:56:14 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000000279c705a799ae31@google.com>
+Subject: KASAN: use-after-free Read in smk_write_relabel_self
+From:   syzbot <syzbot+e6416dabb497a650da40@syzkaller.appspotmail.com>
+To:     casey@schaufler-ca.com, jmorris@namei.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, serge@hallyn.com,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The final log statement in process_buffer_measurement() for failure
-condition is at debug level. This does not log the message unless
-the system log level is raised which would significantly increase
-the messages in the system log. Change this log message to an audit
-message for better triaging failures in the function.
+Hello,
 
-ima_alloc_key_entry() does not log a message for failure condition.
-Add an audit message for failure condition in this function.
+syzbot found the following crash on:
 
-Sample audit messages:
+HEAD commit:    acf25aa6 Merge tag 'Smack-for-5.8' of git://github.com/csc..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=11cd3ea6100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3d66e6915128ae67
+dashboard link: https://syzkaller.appspot.com/bug?extid=e6416dabb497a650da40
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10654fd2100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=107beea6100000
 
-[    8.051937] audit: type=1804 audit(1591633422.365:8): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0 op=measuring_keys cause=hashing_error(-22) comm="systemd" name=".builtin_trusted_keys" res=0
+Bisection is inconclusive: the bug happens on the oldest tested release.
 
-[    8.063218] audit: type=1804 audit(1591633422.377:9): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0 op=measuring_kexec_cmdline cause=alloc_entry(-12) comm="systemd" name="kexec-cmdline" res=0
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=129e16fe100000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=119e16fe100000
+console output: https://syzkaller.appspot.com/x/log.txt?x=169e16fe100000
 
-Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+e6416dabb497a650da40@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: use-after-free in smk_destroy_label_list security/smack/smackfs.c:1975 [inline]
+BUG: KASAN: use-after-free in smk_write_relabel_self+0x2f6/0x480 security/smack/smackfs.c:2748
+Read of size 8 at addr ffff88809184bec0 by task syz-executor032/6852
+
+CPU: 0 PID: 6852 Comm: syz-executor032 Not tainted 5.7.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1e9/0x30e lib/dump_stack.c:118
+ print_address_description+0x66/0x5a0 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report+0x132/0x1d0 mm/kasan/report.c:530
+ smk_destroy_label_list security/smack/smackfs.c:1975 [inline]
+ smk_write_relabel_self+0x2f6/0x480 security/smack/smackfs.c:2748
+ __vfs_write+0x9c/0x6e0 fs/read_write.c:495
+ __kernel_write+0x120/0x350 fs/read_write.c:516
+ write_pipe_buf+0xf9/0x150 fs/splice.c:799
+ splice_from_pipe_feed fs/splice.c:502 [inline]
+ __splice_from_pipe+0x351/0x8b0 fs/splice.c:626
+ splice_from_pipe fs/splice.c:661 [inline]
+ default_file_splice_write fs/splice.c:811 [inline]
+ do_splice_from fs/splice.c:847 [inline]
+ direct_splice_actor+0x1eb/0x2a0 fs/splice.c:1016
+ splice_direct_to_actor+0x4a2/0xb60 fs/splice.c:971
+ do_splice_direct+0x201/0x340 fs/splice.c:1059
+ do_sendfile+0x809/0xfe0 fs/read_write.c:1521
+ __do_sys_sendfile64 fs/read_write.c:1582 [inline]
+ __se_sys_sendfile64 fs/read_write.c:1568 [inline]
+ __x64_sys_sendfile64+0x164/0x1a0 fs/read_write.c:1568
+ do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x446a29
+Code: e8 bc b4 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 ab 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f662054fdb8 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
+RAX: ffffffffffffffda RBX: 00000000006dbc88 RCX: 0000000000446a29
+RDX: 0000000000000000 RSI: 0000000000000005 RDI: 0000000000000006
+RBP: 00000000006dbc80 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000100000064 R11: 0000000000000246 R12: 00000000006dbc8c
+R13: 00007fffa294e1ef R14: 00007f66205509c0 R15: 0000000000000001
+
+Allocated by task 6850:
+ save_stack mm/kasan/common.c:48 [inline]
+ set_track mm/kasan/common.c:56 [inline]
+ __kasan_kmalloc+0x103/0x140 mm/kasan/common.c:494
+ kmem_cache_alloc_trace+0x234/0x300 mm/slab.c:3551
+ kmalloc include/linux/slab.h:555 [inline]
+ kzalloc include/linux/slab.h:669 [inline]
+ smk_parse_label_list+0xff/0x280 security/smack/smackfs.c:1955
+ smk_write_relabel_self+0x190/0x480 security/smack/smackfs.c:2744
+ __vfs_write+0x9c/0x6e0 fs/read_write.c:495
+ __kernel_write+0x120/0x350 fs/read_write.c:516
+ write_pipe_buf+0xf9/0x150 fs/splice.c:799
+ splice_from_pipe_feed fs/splice.c:502 [inline]
+ __splice_from_pipe+0x351/0x8b0 fs/splice.c:626
+ splice_from_pipe fs/splice.c:661 [inline]
+ default_file_splice_write fs/splice.c:811 [inline]
+ do_splice_from fs/splice.c:847 [inline]
+ direct_splice_actor+0x1eb/0x2a0 fs/splice.c:1016
+ splice_direct_to_actor+0x4a2/0xb60 fs/splice.c:971
+ do_splice_direct+0x201/0x340 fs/splice.c:1059
+ do_sendfile+0x809/0xfe0 fs/read_write.c:1521
+ __do_sys_sendfile64 fs/read_write.c:1582 [inline]
+ __se_sys_sendfile64 fs/read_write.c:1568 [inline]
+ __x64_sys_sendfile64+0x164/0x1a0 fs/read_write.c:1568
+ do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+
+Freed by task 6850:
+ save_stack mm/kasan/common.c:48 [inline]
+ set_track mm/kasan/common.c:56 [inline]
+ kasan_set_free_info mm/kasan/common.c:316 [inline]
+ __kasan_slab_free+0x114/0x170 mm/kasan/common.c:455
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x10a/0x220 mm/slab.c:3757
+ smk_destroy_label_list security/smack/smackfs.c:1976 [inline]
+ smk_write_relabel_self+0x302/0x480 security/smack/smackfs.c:2748
+ __vfs_write+0x9c/0x6e0 fs/read_write.c:495
+ __kernel_write+0x120/0x350 fs/read_write.c:516
+ write_pipe_buf+0xf9/0x150 fs/splice.c:799
+ splice_from_pipe_feed fs/splice.c:502 [inline]
+ __splice_from_pipe+0x351/0x8b0 fs/splice.c:626
+ splice_from_pipe fs/splice.c:661 [inline]
+ default_file_splice_write fs/splice.c:811 [inline]
+ do_splice_from fs/splice.c:847 [inline]
+ direct_splice_actor+0x1eb/0x2a0 fs/splice.c:1016
+ splice_direct_to_actor+0x4a2/0xb60 fs/splice.c:971
+ do_splice_direct+0x201/0x340 fs/splice.c:1059
+ do_sendfile+0x809/0xfe0 fs/read_write.c:1521
+ __do_sys_sendfile64 fs/read_write.c:1582 [inline]
+ __se_sys_sendfile64 fs/read_write.c:1568 [inline]
+ __x64_sys_sendfile64+0x164/0x1a0 fs/read_write.c:1568
+ do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+
+The buggy address belongs to the object at ffff88809184bec0
+ which belongs to the cache kmalloc-32 of size 32
+The buggy address is located 0 bytes inside of
+ 32-byte region [ffff88809184bec0, ffff88809184bee0)
+The buggy address belongs to the page:
+page:ffffea00024612c0 refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff88809184bfc1
+flags: 0xfffe0000000200(slab)
+raw: 00fffe0000000200 ffffea00029a8788 ffffea0002a351c8 ffff8880aa4001c0
+raw: ffff88809184bfc1 ffff88809184b000 000000010000003f 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff88809184bd80: 00 00 00 fc fc fc fc fc fb fb fb fb fc fc fc fc
+ ffff88809184be00: 00 fc fc fc fc fc fc fc fb fb fb fb fc fc fc fc
+>ffff88809184be80: fb fb fb fb fc fc fc fc fb fb fb fb fc fc fc fc
+                                           ^
+ ffff88809184bf00: fb fb fb fb fc fc fc fc 00 00 00 fc fc fc fc fc
+ ffff88809184bf80: fb fb fb fb fc fc fc fc fc fc fc fc fc fc fc fc
+==================================================================
+
+
 ---
- security/integrity/ima/ima.h            |  2 ++
- security/integrity/ima/ima_main.c       | 37 +++++++++++++++++++++----
- security/integrity/ima/ima_queue.c      |  2 --
- security/integrity/ima/ima_queue_keys.c |  4 +++
- 4 files changed, 37 insertions(+), 8 deletions(-)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index df93ac258e01..8a47249c6238 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -47,6 +47,8 @@ enum tpm_pcrs { TPM_PCR0 = 0, TPM_PCR8 = 8 };
- 
- #define NR_BANKS(chip) ((chip != NULL) ? chip->nr_allocated_banks : 0)
- 
-+#define AUDIT_CAUSE_LEN_MAX 32
-+
- /* current content of the policy */
- extern int ima_policy_flag;
- 
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index 800fb3bba418..b10f09bc7eca 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -739,6 +739,9 @@ void process_buffer_measurement(const void *buf, int size,
- 				int pcr, const char *keyring)
- {
- 	int ret = 0;
-+	const char *audit_cause = "ENOMEM";
-+	const char *op = "measuring_keys";
-+	char measurement_audit_cause[AUDIT_CAUSE_LEN_MAX];
- 	struct ima_template_entry *entry = NULL;
- 	struct integrity_iint_cache iint = {};
- 	struct ima_event_data event_data = {.iint = &iint,
-@@ -793,21 +796,43 @@ void process_buffer_measurement(const void *buf, int size,
- 	iint.ima_hash->length = hash_digest_size[ima_hash_algo];
- 
- 	ret = ima_calc_buffer_hash(buf, size, iint.ima_hash);
--	if (ret < 0)
-+	if (ret < 0) {
-+		audit_cause = "hashing_error";
- 		goto out;
-+	}
- 
- 	ret = ima_alloc_init_template(&event_data, &entry, template);
--	if (ret < 0)
-+	if (ret < 0) {
-+		audit_cause = "alloc_entry";
- 		goto out;
-+	}
- 
- 	ret = ima_store_template(entry, violation, NULL, buf, pcr);
--
--	if (ret < 0)
-+	if (ret < 0) {
-+		audit_cause = "store_entry";
- 		ima_free_template_entry(entry);
-+	}
- 
- out:
--	if (ret < 0)
--		pr_devel("%s: failed, result: %d\n", __func__, ret);
-+	if (ret < 0) {
-+		snprintf(measurement_audit_cause, AUDIT_CAUSE_LEN_MAX,
-+			 "%s(%d)", audit_cause, ret);
-+
-+		switch (func) {
-+		case KEXEC_CMDLINE:
-+			op = "measuring_kexec_cmdline";
-+			break;
-+		case KEY_CHECK:
-+			op = "measuring_keys";
-+			break;
-+		default:
-+			op = "measuring_blacklisted_hash";
-+			break;
-+		}
-+
-+		integrity_audit_msg(AUDIT_INTEGRITY_PCR, NULL, eventname,
-+				    op, measurement_audit_cause, ret, 0);
-+	}
- 
- 	return;
- }
-diff --git a/security/integrity/ima/ima_queue.c b/security/integrity/ima/ima_queue.c
-index fb4ec270f620..4a761d765c6c 100644
---- a/security/integrity/ima/ima_queue.c
-+++ b/security/integrity/ima/ima_queue.c
-@@ -19,8 +19,6 @@
- #include <linux/slab.h>
- #include "ima.h"
- 
--#define AUDIT_CAUSE_LEN_MAX 32
--
- /* pre-allocated array of tpm_digest structures to extend a PCR */
- static struct tpm_digest *digests;
- 
-diff --git a/security/integrity/ima/ima_queue_keys.c b/security/integrity/ima/ima_queue_keys.c
-index cb3e3f501593..4de31ff172aa 100644
---- a/security/integrity/ima/ima_queue_keys.c
-+++ b/security/integrity/ima/ima_queue_keys.c
-@@ -68,6 +68,7 @@ static struct ima_key_entry *ima_alloc_key_entry(struct key *keyring,
- 						 size_t payload_len)
- {
- 	int rc = 0;
-+	const char *audit_cause = "ENOMEM";
- 	struct ima_key_entry *entry;
- 
- 	entry = kzalloc(sizeof(*entry), GFP_KERNEL);
-@@ -88,6 +89,9 @@ static struct ima_key_entry *ima_alloc_key_entry(struct key *keyring,
- 
- out:
- 	if (rc) {
-+		integrity_audit_msg(AUDIT_INTEGRITY_PCR, NULL,
-+				    keyring->description, "measuring_keys",
-+				    audit_cause, rc, 0);
- 		ima_free_key_entry(entry);
- 		entry = NULL;
- 	}
--- 
-2.27.0
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
