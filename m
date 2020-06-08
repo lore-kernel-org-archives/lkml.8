@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B1DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C5BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF4F9207FB
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:46:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3053B20774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:46:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663586;
-	bh=87ai8exqIO0/5aKSt3LHjxMtckrsMxd+6M0b2LS5y40=;
+	s=default; t=1591663591;
+	bh=65ENYAQRWakhPRgaNzD0irL6QZnR+Xw7OGN49opy4QQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nZ8S1s3sJd6eHKjprN7uSGkddzOnmjE0s4nlvOfH+9yjmEzF6QElfXKBBM1mH1oKB
-	 xksnYG6tOTVu6fZptSbji8wStSqejZFuq3C7QS2coQf0QpoMu0X84zfsrFW6RPUc8D
-	 0nlGlCPPzlyuvDUyIV23cLXJNJxYa8qFO0oTclaY=
+	b=VIbFdCY4QKktO96mqPE5o6Sh1SrfhD97OfaUvDfx4Epg+EdcmJUIa3fgduKxQjbbb
+	 uBbJjJdTfMX1Z1P/sTeb06A36rWbERtgAEMKARu3/WdfGpdnOc0pp4/p51NHCvtyEM
+	 DbBrWLu2wVJq7MPN4j3n29Gn7mC0aPVY7WWmCdEo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733091AbgFIAqZ (ORCPT
+        id S1728934AbgFHXLi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:46:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58622 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728211AbgFHXLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 8 Jun 2020 19:11:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56088 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728563AbgFHXKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:10:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79A7020C56;
-        Mon,  8 Jun 2020 23:11:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CC7720897;
+        Mon,  8 Jun 2020 23:10:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657898;
-        bh=87ai8exqIO0/5aKSt3LHjxMtckrsMxd+6M0b2LS5y40=;
+        s=default; t=1591657804;
+        bh=65ENYAQRWakhPRgaNzD0irL6QZnR+Xw7OGN49opy4QQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S63siA8MQS1vxdJ0GdTCOGAMlr3z7X2ELwmEXC+h2T1l1iLMSfbiATBEO+m+azcDi
-         ZpRxJq5RrqfnsbQvz8oMi5bsbGC1Q5k2A5ExNOft0nrNsl/baAfbozAqahioNGf3uP
-         IbnQChboyretzCeg4Ap7ck8P3z61DAdio0r4cOcw=
+        b=03m8R1XDD8wN4ItpDJXJpe/KgYF2BVkPFbVhPoGg96Xf89uiJ+IMmrW6clsLNhHsQ
+         jONdHRIdcdgKWzmHTZha2Nub0COj/c6PgRpdB38cayAWxvUi0GJiR2LnXtuudfPsrw
+         q+2gkQLZ30kfS5MUUpmo3r7bcoTVnu3sq0Hb9QEA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xie XiuQi <xiexiuqi@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 252/274] ixgbe: fix signed-integer-overflow warning
-Date:   Mon,  8 Jun 2020 19:05:45 -0400
-Message-Id: <20200608230607.3361041-252-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 181/274] nvme-fc: avoid gcc-10 zero-length-bounds warning
+Date:   Mon,  8 Jun 2020 19:04:34 -0400
+Message-Id: <20200608230607.3361041-181-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -61,54 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xie XiuQi <xiexiuqi@huawei.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 3b70683fc4d68f5d915d9dc7e5ba72c732c7315c ]
+[ Upstream commit 3add1d93d9919b6de94aa47900d4904adffbc976 ]
 
-ubsan report this warning, fix it by adding a unsigned suffix.
+When CONFIG_ARCH_NO_SG_CHAIN is set, op->sgl[0] cannot be dereferenced,
+as gcc-10 now points out:
 
-UBSAN: signed-integer-overflow in
-drivers/net/ethernet/intel/ixgbe/ixgbe_common.c:2246:26
-65535 * 65537 cannot be represented in type 'int'
-CPU: 21 PID: 7 Comm: kworker/u256:0 Not tainted 5.7.0-rc3-debug+ #39
-Hardware name: Huawei TaiShan 2280 V2/BC82AMDC, BIOS 2280-V2 03/27/2020
-Workqueue: ixgbe ixgbe_service_task [ixgbe]
-Call trace:
- dump_backtrace+0x0/0x3f0
- show_stack+0x28/0x38
- dump_stack+0x154/0x1e4
- ubsan_epilogue+0x18/0x60
- handle_overflow+0xf8/0x148
- __ubsan_handle_mul_overflow+0x34/0x48
- ixgbe_fc_enable_generic+0x4d0/0x590 [ixgbe]
- ixgbe_service_task+0xc20/0x1f78 [ixgbe]
- process_one_work+0x8f0/0xf18
- worker_thread+0x430/0x6d0
- kthread+0x218/0x238
- ret_from_fork+0x10/0x18
+drivers/nvme/host/fc.c: In function 'nvme_fc_init_request':
+drivers/nvme/host/fc.c:1774:29: warning: array subscript 0 is outside the bounds of an interior zero-length array 'struct scatterlist[0]' [-Wzero-length-bounds]
+ 1774 |  op->op.fcp_req.first_sgl = &op->sgl[0];
+      |                             ^~~~~~~~~~~
+drivers/nvme/host/fc.c:98:21: note: while referencing 'sgl'
+   98 |  struct scatterlist sgl[NVME_INLINE_SG_CNT];
+      |                     ^~~
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Xie XiuQi <xiexiuqi@huawei.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+I don't know if this is a legitimate warning or a false-positive.
+If this is just a false alarm, the warning is easily suppressed
+by interpreting the array as a pointer.
+
+Fixes: b1ae1a238900 ("nvme-fc: Avoid preallocating big SGL for data")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_common.c | 2 +-
+ drivers/nvme/host/fc.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c
-index 0bd1294ba517..39c5e6fdb72c 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c
-@@ -2243,7 +2243,7 @@ s32 ixgbe_fc_enable_generic(struct ixgbe_hw *hw)
- 	}
- 
- 	/* Configure pause time (2 TCs per register) */
--	reg = hw->fc.pause_time * 0x00010001;
-+	reg = hw->fc.pause_time * 0x00010001U;
- 	for (i = 0; i < (MAX_TRAFFIC_CLASS / 2); i++)
- 		IXGBE_WRITE_REG(hw, IXGBE_FCTTV(i), reg);
- 
+diff --git a/drivers/nvme/host/fc.c b/drivers/nvme/host/fc.c
+index 7dfc4a2ecf1e..5ef4a84c442a 100644
+--- a/drivers/nvme/host/fc.c
++++ b/drivers/nvme/host/fc.c
+@@ -1771,7 +1771,7 @@ nvme_fc_init_request(struct blk_mq_tag_set *set, struct request *rq,
+ 	res = __nvme_fc_init_request(ctrl, queue, &op->op, rq, queue->rqcnt++);
+ 	if (res)
+ 		return res;
+-	op->op.fcp_req.first_sgl = &op->sgl[0];
++	op->op.fcp_req.first_sgl = op->sgl;
+ 	op->op.fcp_req.private = &op->priv[0];
+ 	nvme_req(rq)->ctrl = &ctrl->ctrl;
+ 	return res;
 -- 
 2.25.1
 
