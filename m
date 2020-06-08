@@ -2,148 +2,105 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19094C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 21:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF81C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 21:45:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEEE12063A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 21:45:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99FD220760
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 21:45:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="LOXuySGW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgFHVpQ (ORCPT
+        id S1726831AbgFHVpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 17:45:16 -0400
-Received: from mga18.intel.com ([134.134.136.126]:58551 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726612AbgFHVpN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 17:45:13 -0400
-IronPort-SDR: eWnxpI1wy5F3ZgweqQfYMQ4my83r2/Vipi3iSogV4ahgCl9j/ESUc6s4sAmDQeax2qD2Qe1KBd
- VwPRxpMUuQqw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2020 14:45:12 -0700
-IronPort-SDR: HlPk+2iKB1EmEjHx1fiuTRW8JD8I1xoE8JKNt85J7uD2Km3/s3FTpcyY6tQh4WvkwiEAC+ojtp
- Gz27U2T3mh6A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,489,1583222400"; 
-   d="scan'208";a="446893871"
-Received: from skarmaka-mobl2.amr.corp.intel.com (HELO [10.254.104.56]) ([10.254.104.56])
-  by orsmga005.jf.intel.com with ESMTP; 08 Jun 2020 14:45:12 -0700
-Subject: Re: [PATCH 2/5] soundwire: qcom: add support for mmio soundwire
- devices
-To:     Jonathan Marek <jonathan@marek.ca>, alsa-devel@alsa-project.org
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Sanyog Kale <sanyog.r.kale@intel.com>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200608204347.19685-1-jonathan@marek.ca>
- <20200608204347.19685-3-jonathan@marek.ca>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <90b08ff9-ab00-051f-1a96-15ee6401fe52@linux.intel.com>
-Date:   Mon, 8 Jun 2020 16:31:51 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 8 Jun 2020 17:45:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53322 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726803AbgFHVpT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 17:45:19 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86B07C08C5C2
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 14:45:17 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id mb16so20050254ejb.4
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 14:45:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Igh1IwPinYOHclngfiWXcdsSPSUfVMy900DjvDtZXdE=;
+        b=LOXuySGWu6oAFpGSLwRnURotT4T7GHHSY8T9C0/cwfQxalBA7tF1N8cu7f0k4Vd7je
+         2No1nZdIXfZBnRgD9v81wSb36UQ5bjRNEbUXERvVtplQxTrxs8dvo4A6Mtj+6t6MuDzi
+         ZPhVp9z/CE+pLdK4Zo5eEp5VKji/83r2UQmLRNH/pOJxDdHWL1lEtlYwDBnmwE22ei2e
+         VQq4KTiFCLaSadosS5Zvc+cH8vt4rjRvXGRHit6il9pQWF2iKmhaynrEo6pO8pp/HJ+s
+         B/pvew9eTKduP1472XSQBRUT6f8V9ztWio0h6GyyWcS+SWRPCE8iWR/zDxiCEZPGa39s
+         A/RQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Igh1IwPinYOHclngfiWXcdsSPSUfVMy900DjvDtZXdE=;
+        b=kbph+TCKL/75lGXbk0t66VfNLoEBpJKIKQhntmp21awzxlqj/q5+AaiDsH6EtclBhl
+         hxFZo0EpCUcKm1X7ax4Ya2kjjLH1o4Qbqrq7hFgPR3a7MxtBat7wpR8i71QNB7HHLloL
+         /aB0Z2M7DfvK8xth4QfaqpOhBcPi5Dydcwfioi3VwCScPbIdKDpNxgvOw5biCemNgABJ
+         YFQHtbT20Errx7eDxNaftcjn5kCoCdCvto6jgJbV+sb2JVkZhhnPuz5e5N3VkKJs9aUR
+         se7trHyMtV+fS0JgNTjruX7ueeqDXt4v+YJEhfmxXaBkNVN/e9GG7UoHlmZwgMPtLC2b
+         HcIA==
+X-Gm-Message-State: AOAM530V4w6gDodEfdV2/F5CuxoiZ9+PGVYDts+TIkYe9jtTGrBiWoBK
+        g84rH7tODm7S5g/uNI0As9kNAh8EcVjEt9Tq/WVG
+X-Google-Smtp-Source: ABdhPJzM1blhuSfAtHWQKHod1napq/wyiCDkQzMZK14COSUGFvoq3xTJ7+bH9cmWhMvSg5A2bYc3wf0KPT0tdU0HpE0=
+X-Received: by 2002:a17:906:2b81:: with SMTP id m1mr21816983ejg.488.1591652716065;
+ Mon, 08 Jun 2020 14:45:16 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200608204347.19685-3-jonathan@marek.ca>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200607221449.2837-1-nramas@linux.microsoft.com> <1591617171.4638.33.camel@linux.ibm.com>
+In-Reply-To: <1591617171.4638.33.camel@linux.ibm.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Mon, 8 Jun 2020 17:45:05 -0400
+Message-ID: <CAHC9VhQpK+Shy2b2tv+vrTS+a8+zZbsrRG=pjzoMK0LApJg1Sg@mail.gmail.com>
+Subject: Re: [PATCH v2] IMA: Add audit log for failure conditions
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        linux-integrity@vger.kernel.org, linux-audit@redhat.com,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 8, 2020 at 7:52 AM Mimi Zohar <zohar@linux.ibm.com> wrote:
+> Hi Lakshmi,
+>
+> On Sun, 2020-06-07 at 15:14 -0700, Lakshmi Ramasubramanian wrote:
+> > The final log statement in process_buffer_measurement() for failure
+> > condition is at debug level. This does not log the message unless
+> > the system log level is raised which would significantly increase
+> > the messages in the system log. Change this log message to an audit
+> > message for better triaging failures in the function.
+> >
+> > ima_alloc_key_entry() does not log a message for failure condition.
+> > Add an audit message for failure condition in this function.
+> >
+> > Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+>
+> Audit messages should be at a higher level.  For example,
+> "hashing_error", "collect_data", "invalid_pcr".  In the "invalid_pcr"
+> case, the audit log contains the reason - "ToMToU" or "open_writers" -
+> as to why the measurement list doesn't match the PCR.
+>
+> Here you would want "measuring_keys", "measuring_boot_cmdline" with
+> the reason it failed, not the function name
+> "process_buffer_measurement".
+>
+> Userspace needs to be aware of the new audit messages.  Maybe include
+> samples of them in the cover letter.
 
+Yes, examples of the audit record in the commit description (the cover
+letter isn't recorded in the git log), are encouraged.
 
-On 6/8/20 3:43 PM, Jonathan Marek wrote:
-> Adds support for qcom soundwire devices with memory mapped IO registers.
-
-'device' is an ambiguous term for SoundWire.
-
-Seems to me this is a SoundWire Master device directly accessed with 
-mmio registers instead of over a SLIMbus link?
-
-> 
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-> ---
->   drivers/soundwire/qcom.c | 25 +++++++++++++++++++++++--
->   1 file changed, 23 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/soundwire/qcom.c b/drivers/soundwire/qcom.c
-> index f38d1fd3679f..628747df1c75 100644
-> --- a/drivers/soundwire/qcom.c
-> +++ b/drivers/soundwire/qcom.c
-> @@ -90,6 +90,7 @@ struct qcom_swrm_ctrl {
->   	struct sdw_bus bus;
->   	struct device *dev;
->   	struct regmap *regmap;
-> +	void __iomem *mmio;
->   	struct completion *comp;
->   	struct work_struct slave_work;
->   	/* read/write lock */
-> @@ -154,6 +155,20 @@ static int qcom_swrm_ahb_reg_write(struct qcom_swrm_ctrl *ctrl,
->   	return SDW_CMD_OK;
->   }
->   
-> +static int qcom_swrm_cpu_reg_read(struct qcom_swrm_ctrl *ctrl, int reg,
-> +				  u32 *val)
-> +{
-> +	*val = readl(ctrl->mmio + reg);
-> +	return SDW_CMD_OK;
-> +}
-> +
-> +static int qcom_swrm_cpu_reg_write(struct qcom_swrm_ctrl *ctrl, int reg,
-> +				   int val)
-> +{
-> +	writel(val, ctrl->mmio + reg);
-> +	return SDW_CMD_OK;
-> +}
-> +
->   static int qcom_swrm_cmd_fifo_wr_cmd(struct qcom_swrm_ctrl *ctrl, u8 cmd_data,
->   				     u8 dev_addr, u16 reg_addr)
->   {
-> @@ -746,6 +761,7 @@ static int qcom_swrm_probe(struct platform_device *pdev)
->   	struct sdw_master_prop *prop;
->   	struct sdw_bus_params *params;
->   	struct qcom_swrm_ctrl *ctrl;
-> +	struct resource *res;
->   	int ret;
->   	u32 val;
->   
-> @@ -760,8 +776,13 @@ static int qcom_swrm_probe(struct platform_device *pdev)
->   		if (!ctrl->regmap)
->   			return -EINVAL;
->   	} else {
-> -		/* Only WCD based SoundWire controller is supported */
-> -		return -ENOTSUPP;
-
-I would move patch4 before this one, and add the functionality *after* 
-removing the SLIMbus dependency.
-
-> +		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +
-> +		ctrl->reg_read = qcom_swrm_cpu_reg_read;
-> +		ctrl->reg_write = qcom_swrm_cpu_reg_write;
-> +		ctrl->mmio = devm_ioremap_resource(dev, res);
-> +		if (IS_ERR(ctrl->mmio))
-> +			return PTR_ERR(ctrl->mmio);
-
-maybe deal with the resource checks before setting callbacks?
-
-There are quite a few drivers who do things this way:
-
-clk/qcom/common.c-      res = platform_get_resource(pdev, 
-IORESOURCE_MEM, 0);
-clk/qcom/common.c:      base = devm_ioremap_resource(dev, res);
---
-
-
->   	}
->   
->   	ctrl->irq = of_irq_get(dev->of_node, 0);
-> 
+-- 
+paul moore
+www.paul-moore.com
