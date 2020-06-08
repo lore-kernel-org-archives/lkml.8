@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F00C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B39E4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:48:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48F6520820
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:48:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85C0D204EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:48:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660119;
-	bh=JpyXvZPwGmhcDX7HBvEqn00iZ7V++vRJV0NKykGQJf4=;
+	s=default; t=1591660132;
+	bh=SqMZ8KY+FjtbFnYZ4eKhIAmYzpPAlUIp/YzvchYKZzg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oj1aBE6hLf8O2EO4Y6FQAEdqRV2eNfuWcXeMy8rb6M+81/eRvp40yLxkjhpKrd9va
-	 mWQu0T2Vwqw0ewrMttOHkmb7e8/FsHdgF+4ORgV9weqBqJ8xXouBPVs3hzPOGtisZQ
-	 ikfEz+VRlPuRw2STfAk2IxSpDQG6yrC8Ep+h0MZA=
+	b=2rD60DjJgYSvjqtZkj2V0BVXLDRkTODGz5LFImJV/Ar1lTwgIsh/VzVRcZ8XcxN9f
+	 5Q2TrBbwaZDN37nel10tQBFAPdcrbVDoCrHBPYgu7SiKp7UdIugZbBAQaf2ybi0fK1
+	 aJjionq3fvgYXzRGkcvs4DbOygXHRp+MLn3wFOMY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387706AbgFHXsi (ORCPT
+        id S1732552AbgFHXsu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:48:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52434 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:48:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731009AbgFHXZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:25:42 -0400
+        id S1731833AbgFHXZh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:25:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76A782068D;
-        Mon,  8 Jun 2020 23:25:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8F2B207C3;
+        Mon,  8 Jun 2020 23:25:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658741;
-        bh=JpyXvZPwGmhcDX7HBvEqn00iZ7V++vRJV0NKykGQJf4=;
+        s=default; t=1591658736;
+        bh=SqMZ8KY+FjtbFnYZ4eKhIAmYzpPAlUIp/YzvchYKZzg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LgDqXEugXZxBsJ3+mB+L37oN17ysmYnq1nFUbbqdvmTcS1H+Q7G93OK+3kuvtI9fG
-         ZTZ7vRXyZs8MT8znJHeL47jg0+6tRamcekmGX20PtqOkawlh+H2le3WJqj3BCp/ebh
-         tV0Bx2WAVh2g1D/pFo7qC8GYHHI1aDyeCWtWCMZk=
+        b=vlGkNWTjxE1v5YItC6y/LmMfNbCJIWk8lidNxOKY3QPWWZ8jWIyAy/A2pua9e6BFp
+         OfOx3WZE70lf27kUyjt5HuNVOKgLa1knxaQjOUhw+CdFhx6kMkJFla3+5YBMKyZNO5
+         xeqXyhLRkmHkdDVI34id5wLtce7ZF4G5b7VguNI8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jitao Shi <jitao.shi@mediatek.com>, Rob Herring <robh@kernel.org>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+Cc:     Jaehoon Chung <jh80.chung@samsung.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 28/72] dt-bindings: display: mediatek: control dpi pins mode to avoid leakage
-Date:   Mon,  8 Jun 2020 19:24:16 -0400
-Message-Id: <20200608232500.3369581-28-sashal@kernel.org>
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 25/72] brcmfmac: fix wrong location to get firmware feature
+Date:   Mon,  8 Jun 2020 19:24:13 -0400
+Message-Id: <20200608232500.3369581-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608232500.3369581-1-sashal@kernel.org>
 References: <20200608232500.3369581-1-sashal@kernel.org>
@@ -62,46 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jitao Shi <jitao.shi@mediatek.com>
+From: Jaehoon Chung <jh80.chung@samsung.com>
 
-[ Upstream commit b0ff9b590733079f7f9453e5976a9dd2630949e3 ]
+[ Upstream commit c57673852062428cdeabdd6501ac8b8e4c302067 ]
 
-Add property "pinctrl-names" to swap pin mode between gpio and dpi mode.
-Set the dpi pins to gpio mode and output-low to avoid leakage current
-when dpi disabled.
+sup_wpa feature is getting after setting feature_disable flag.
+If firmware is supported sup_wpa feature,  it's always enabled
+regardless of feature_disable flag.
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-Signed-off-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Fixes: b8a64f0e96c2 ("brcmfmac: support 4-way handshake offloading for WPA/WPA2-PSK")
+Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200330052528.10503-1-jh80.chung@samsung.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../devicetree/bindings/display/mediatek/mediatek,dpi.txt   | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-index b6a7e7397b8b..b944fe067188 100644
---- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-+++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-@@ -16,6 +16,9 @@ Required properties:
-   Documentation/devicetree/bindings/graph.txt. This port should be connected
-   to the input port of an attached HDMI or LVDS encoder chip.
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
+index 53ae30259989..473b2b3cb6f5 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
+@@ -192,13 +192,14 @@ void brcmf_feat_attach(struct brcmf_pub *drvr)
+ 	if (!err)
+ 		ifp->drvr->feat_flags |= BIT(BRCMF_FEAT_SCAN_RANDOM_MAC);
  
-+Optional properties:
-+- pinctrl-names: Contain "default" and "sleep".
++	brcmf_feat_iovar_int_get(ifp, BRCMF_FEAT_FWSUP, "sup_wpa");
 +
- Example:
+ 	if (drvr->settings->feature_disable) {
+ 		brcmf_dbg(INFO, "Features: 0x%02x, disable: 0x%02x\n",
+ 			  ifp->drvr->feat_flags,
+ 			  drvr->settings->feature_disable);
+ 		ifp->drvr->feat_flags &= ~drvr->settings->feature_disable;
+ 	}
+-	brcmf_feat_iovar_int_get(ifp, BRCMF_FEAT_FWSUP, "sup_wpa");
  
- dpi0: dpi@1401d000 {
-@@ -26,6 +29,9 @@ dpi0: dpi@1401d000 {
- 		 <&mmsys CLK_MM_DPI_ENGINE>,
- 		 <&apmixedsys CLK_APMIXED_TVDPLL>;
- 	clock-names = "pixel", "engine", "pll";
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&dpi_pin_func>;
-+	pinctrl-1 = <&dpi_pin_idle>;
- 
- 	port {
- 		dpi0_out: endpoint {
+ 	/* set chip related quirks */
+ 	switch (drvr->bus_if->chip) {
 -- 
 2.25.1
 
