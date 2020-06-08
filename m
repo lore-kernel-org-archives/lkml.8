@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF5BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B39CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5F4A20760
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:50:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43CF82087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:50:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663833;
-	bh=bPijKvbdkE4m5opaHN4/KMkGmc5AfHZ03wHvgv5RCjs=;
+	s=default; t=1591663838;
+	bh=lO4eUHWmNCZ+YKJkGjlVsdAeLu+g8LxUW8/i3uYUDzo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iG9D42klRfSt+6Uz2bc6U/wuK+/7pRJnxOC2v5pty/LNpZ9kwp2po61I+t52cZY2S
-	 Jz7pID5W9lLWKQlzUwZ7xbH73L96FtPaxJva6uR+KMRzgRDl9rTL1jxS/zTt1RlumF
-	 PYhPXg3LHR8LgsiWT9sdpX7gcJeOqlmtLHIdQfQE=
+	b=vbu2wgKR7q6jylBNsgy79bc+uSafVn6VLVBMMbB3TcjC9wRAZFVswRHxb2tksJ4/X
+	 RGu/E5EZMa8HPnHhf39op8le5buLcYf5FP8zRAoDuGbVqTyZEIpGlMqsgN+Dpz7BS4
+	 FydO8/zLsM2xyrFuPT4pH8cIK8NqI4FlpaSUeGus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728672AbgFHXKa (ORCPT
+        id S1732146AbgFIAuh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:10:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55008 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:50:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726939AbgFHXJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:09:18 -0400
+        id S1728668AbgFHXK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:10:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02FCD208A9;
-        Mon,  8 Jun 2020 23:09:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8345208C7;
+        Mon,  8 Jun 2020 23:10:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657757;
-        bh=bPijKvbdkE4m5opaHN4/KMkGmc5AfHZ03wHvgv5RCjs=;
+        s=default; t=1591657829;
+        bh=lO4eUHWmNCZ+YKJkGjlVsdAeLu+g8LxUW8/i3uYUDzo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=snT6sf2/woAJFpDwv6GJn72OEZpW9uXahpFrj65V7Kj5/a+25/B1OyivBe/ugwGZE
-         8fpnk+8H8XRGtecuKqWaMW1qGsnzG7wRq8L59LycqMEkmcgsOz7my+oLSN47j1DuGT
-         9Brq0ePrFRBZPmnIj/t6NVZ79bL8eJGWvx6uu21g=
+        b=Sc4XU9/i9dbnpqh8oxTjqd8TNeQ6Kf6pt3b0KC4Om6qWJxxqfvJ6W7NZ0MExAP3u8
+         5+pZkvjaMr2hOBcRnexOnJqdBR2p4qzjcPyZqnWTsji3zP19dVkHJlVsUe9hjAQR9z
+         dGTm5FB+YFVvuJE35nIOhvkAnqub5jCLfHBROG0c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Barret Rhoden <brho@google.com>,
-        syzbot+bb4935a5c09b5ff79940@syzkaller.appspotmail.com,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.7 143/274] perf: Add cond_resched() to task_function_call()
-Date:   Mon,  8 Jun 2020 19:03:56 -0400
-Message-Id: <20200608230607.3361041-143-sashal@kernel.org>
+Cc:     Coly Li <colyli@suse.de>, Michal Hocko <mhocko@suse.com>,
+        Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 200/274] raid5: remove gfp flags from scribble_alloc()
+Date:   Mon,  8 Jun 2020 19:04:53 -0400
+Message-Id: <20200608230607.3361041-200-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -60,70 +59,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Barret Rhoden <brho@google.com>
+From: Coly Li <colyli@suse.de>
 
-[ Upstream commit 2ed6edd33a214bca02bd2b45e3fc3038a059436b ]
+[ Upstream commit ba54d4d4d2844c234f1b4692bd8c9e0f833c8a54 ]
 
-Under rare circumstances, task_function_call() can repeatedly fail and
-cause a soft lockup.
+Using GFP_NOIO flag to call scribble_alloc() from resize_chunk() does
+not have the expected behavior. kvmalloc_array() inside scribble_alloc()
+which receives the GFP_NOIO flag will eventually call kmalloc_node() to
+allocate physically continuous pages.
 
-There is a slight race where the process is no longer running on the cpu
-we targeted by the time remote_function() runs.  The code will simply
-try again.  If we are very unlucky, this will continue to fail, until a
-watchdog fires.  This can happen in a heavily loaded, multi-core virtual
-machine.
+Now we have memalloc scope APIs in mddev_suspend()/mddev_resume() to
+prevent memory reclaim I/Os during raid array suspend context, calling
+to kvmalloc_array() with GFP_KERNEL flag may avoid deadlock of recursive
+I/O as expected.
 
-Reported-by: syzbot+bb4935a5c09b5ff79940@syzkaller.appspotmail.com
-Signed-off-by: Barret Rhoden <brho@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200414222920.121401-1-brho@google.com
+This patch removes the useless gfp flags from parameters list of
+scribble_alloc(), and call kvmalloc_array() with GFP_KERNEL flag. The
+incorrect GFP_NOIO flag does not exist anymore.
+
+Fixes: b330e6a49dc3 ("md: convert to kvmalloc")
+Suggested-by: Michal Hocko <mhocko@suse.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/events/core.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ drivers/md/raid5.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 633b4ae72ed5..1dd91f960839 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -95,11 +95,11 @@ static void remote_function(void *data)
-  * @info:	the function call argument
-  *
-  * Calls the function @func when the task is currently running. This might
-- * be on the current CPU, which just calls the function directly
-+ * be on the current CPU, which just calls the function directly.  This will
-+ * retry due to any failures in smp_call_function_single(), such as if the
-+ * task_cpu() goes offline concurrently.
-  *
-- * returns: @func return value, or
-- *	    -ESRCH  - when the process isn't running
-- *	    -EAGAIN - when the process moved away
-+ * returns @func return value or -ESRCH when the process isn't running
+diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+index ba00e9877f02..190dd70db514 100644
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -2228,14 +2228,19 @@ static int grow_stripes(struct r5conf *conf, int num)
+  * of the P and Q blocks.
   */
- static int
- task_function_call(struct task_struct *p, remote_function_f func, void *info)
-@@ -112,11 +112,16 @@ task_function_call(struct task_struct *p, remote_function_f func, void *info)
- 	};
- 	int ret;
+ static int scribble_alloc(struct raid5_percpu *percpu,
+-			  int num, int cnt, gfp_t flags)
++			  int num, int cnt)
+ {
+ 	size_t obj_size =
+ 		sizeof(struct page *) * (num+2) +
+ 		sizeof(addr_conv_t) * (num+2);
+ 	void *scribble;
  
--	do {
--		ret = smp_call_function_single(task_cpu(p), remote_function, &data, 1);
--		if (!ret)
--			ret = data.ret;
--	} while (ret == -EAGAIN);
-+	for (;;) {
-+		ret = smp_call_function_single(task_cpu(p), remote_function,
-+					       &data, 1);
-+		ret = !ret ? data.ret : -EAGAIN;
-+
-+		if (ret != -EAGAIN)
-+			break;
-+
-+		cond_resched();
-+	}
+-	scribble = kvmalloc_array(cnt, obj_size, flags);
++	/*
++	 * If here is in raid array suspend context, it is in memalloc noio
++	 * context as well, there is no potential recursive memory reclaim
++	 * I/Os with the GFP_KERNEL flag.
++	 */
++	scribble = kvmalloc_array(cnt, obj_size, GFP_KERNEL);
+ 	if (!scribble)
+ 		return -ENOMEM;
  
- 	return ret;
- }
+@@ -2267,8 +2272,7 @@ static int resize_chunks(struct r5conf *conf, int new_disks, int new_sectors)
+ 
+ 		percpu = per_cpu_ptr(conf->percpu, cpu);
+ 		err = scribble_alloc(percpu, new_disks,
+-				     new_sectors / STRIPE_SECTORS,
+-				     GFP_NOIO);
++				     new_sectors / STRIPE_SECTORS);
+ 		if (err)
+ 			break;
+ 	}
+@@ -6759,8 +6763,7 @@ static int alloc_scratch_buffer(struct r5conf *conf, struct raid5_percpu *percpu
+ 			       conf->previous_raid_disks),
+ 			   max(conf->chunk_sectors,
+ 			       conf->prev_chunk_sectors)
+-			   / STRIPE_SECTORS,
+-			   GFP_KERNEL)) {
++			   / STRIPE_SECTORS)) {
+ 		free_scratch_buffer(conf, percpu);
+ 		return -ENOMEM;
+ 	}
 -- 
 2.25.1
 
