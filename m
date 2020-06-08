@@ -2,97 +2,214 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCFF4C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7AF1C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:07:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFD9220885
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:07:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591657658;
-	bh=T1TFFnuOR8yP9KXZ3SI9ba8JrUEjNEAKKapF2hBhyM8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mvCasej6iNTsB9vtA3KwFoCX8aCrJXWmpMX35e04cOwiiPML6X/EEFgZFV4OAdIIK
-	 6qzmPhnqfKz/KKl01KIsaNhnfSKoYLgzlk3wdsfj7ZUo0x+mOGfTdQEytDqIWOmHKR
-	 07YgehIjXY9yR3c0HW1hVbbGF9RweeNndI+J0pI0=
+	by mail.kernel.org (Postfix) with ESMTP id A3C3120888
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:07:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Z619Lj0q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbgFHXHg (ORCPT
+        id S1727971AbgFHXHl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:07:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50712 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727784AbgFHXHE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:07:41 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:39276 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727782AbgFHXHE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 8 Jun 2020 19:07:04 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4E9B20801;
-        Mon,  8 Jun 2020 23:07:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657623;
-        bh=T1TFFnuOR8yP9KXZ3SI9ba8JrUEjNEAKKapF2hBhyM8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LNcUfdbAu+qPxo9Ufa+tE7TZQCgGYeUaoDOC6FDj1G8PdoARt/a1ytmvIDfpcvOCT
-         yrsnDjlQpErv7WeqJW2vz1u6XYXuE1HJtWiZuR8W9IeB0DY4hB/v0USCwEBMMXqKCO
-         h0269BWE4U5SAhNsytWzTllwocfxoCTMijUsSzFQ=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lorenzo Bianconi <lorenzo@kernel.org>,
-        Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 044/274] mt76: mt7615: fix aid configuration in mt7615_mcu_wtbl_generic_tlv
-Date:   Mon,  8 Jun 2020 19:02:17 -0400
-Message-Id: <20200608230607.3361041-44-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
-References: <20200608230607.3361041-1-sashal@kernel.org>
+Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 058N56AW019088
+        for <linux-kernel@vger.kernel.org>; Mon, 8 Jun 2020 16:07:03 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=facebook;
+ bh=obWZo+sT+nQL9zR0PwE2NJ5Bz0lbnYW9VW54il68KYQ=;
+ b=Z619Lj0qFjvtRhVQLnNT4yRX77G1sjofvjWnsFQU21de5Xdv3sAEfl5uIWwK2qh0Apc6
+ vA1IG3M9dEbDC9k84AyTPTBXejl9ph2fEbZd0feTrsuNf8AsR7NuemZhy4iDtj1BiOZb
+ 7GkhmEVRVXzzCKtjYJTeyTHUWJtzEKc437s= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 31gutgqh24-9
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 16:07:03 -0700
+Received: from intmgw001.41.prn1.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:83::7) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Mon, 8 Jun 2020 16:07:01 -0700
+Received: by devvm1291.vll0.facebook.com (Postfix, from userid 111017)
+        id 2658E1D8FE3C; Mon,  8 Jun 2020 16:07:00 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm1291.vll0.facebook.com
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>
+CC:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Shakeel Butt <shakeelb@google.com>, <linux-mm@kvack.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <kernel-team@fb.com>,
+        <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>
+Smtp-Origin-Cluster: vll0c01
+Subject: [PATCH v6 01/19] mm: memcg: factor out memcg- and lruvec-level changes out of __mod_lruvec_state()
+Date:   Mon, 8 Jun 2020 16:06:36 -0700
+Message-ID: <20200608230654.828134-2-guro@fb.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200608230654.828134-1-guro@fb.com>
+References: <20200608230654.828134-1-guro@fb.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-08_18:2020-06-08,2020-06-08 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 clxscore=1015
+ impostorscore=0 adultscore=0 spamscore=0 phishscore=0 malwarescore=0
+ suspectscore=0 priorityscore=1501 lowpriorityscore=0 mlxlogscore=942
+ mlxscore=0 bulkscore=0 cotscore=-2147483648 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006080160
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenzo Bianconi <lorenzo@kernel.org>
+To convert memcg and lruvec slab counters to bytes there must be
+a way to change these counters without touching node counters.
+Factor out __mod_memcg_lruvec_state() out of __mod_lruvec_state().
 
-[ Upstream commit fdf433121f82766ff508a6f06665d2aca3e258d5 ]
-
-If the vif is running in station mode the aid will be passed by mac80211
-using bss_conf.aid. Fix aid configuration in mt7615_mcu_wtbl_generic_tlv
-
-Fixes: 04b8e65922f6 ("mt76: add mac80211 driver for MT7615 PCIe-based chipsets")
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 ---
- drivers/net/wireless/mediatek/mt76/mt7615/mcu.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ include/linux/memcontrol.h | 17 +++++++++++++++
+ mm/memcontrol.c            | 43 +++++++++++++++++++++-----------------
+ 2 files changed, 41 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-index 610cfa918c7b..a19fb0cb7794 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-@@ -823,8 +823,11 @@ mt7615_mcu_wtbl_generic_tlv(struct sk_buff *skb, struct ieee80211_vif *vif,
- 	generic = (struct wtbl_generic *)tlv;
- 
- 	if (sta) {
-+		if (vif->type == NL80211_IFTYPE_STATION)
-+			generic->partial_aid = cpu_to_le16(vif->bss_conf.aid);
-+		else
-+			generic->partial_aid = cpu_to_le16(sta->aid);
- 		memcpy(generic->peer_addr, sta->addr, ETH_ALEN);
--		generic->partial_aid = cpu_to_le16(sta->aid);
- 		generic->muar_idx = mvif->omac_idx;
- 		generic->qos = sta->wme;
- 	} else {
--- 
-2.25.1
+diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+index bbf624a7f5a6..93dbc7f9d8b8 100644
+--- a/include/linux/memcontrol.h
++++ b/include/linux/memcontrol.h
+@@ -679,11 +679,23 @@ static inline unsigned long lruvec_page_state_local=
+(struct lruvec *lruvec,
+ 	return x;
+ }
+=20
++void __mod_memcg_lruvec_state(struct lruvec *lruvec, enum node_stat_item=
+ idx,
++			      int val);
+ void __mod_lruvec_state(struct lruvec *lruvec, enum node_stat_item idx,
+ 			int val);
+ void __mod_lruvec_slab_state(void *p, enum node_stat_item idx, int val);
+ void mod_memcg_obj_state(void *p, int idx, int val);
+=20
++static inline void mod_memcg_lruvec_state(struct lruvec *lruvec,
++					  enum node_stat_item idx, int val)
++{
++	unsigned long flags;
++
++	local_irq_save(flags);
++	__mod_memcg_lruvec_state(lruvec, idx, val);
++	local_irq_restore(flags);
++}
++
+ static inline void mod_lruvec_state(struct lruvec *lruvec,
+ 				    enum node_stat_item idx, int val)
+ {
+@@ -1057,6 +1069,11 @@ static inline unsigned long lruvec_page_state_loca=
+l(struct lruvec *lruvec,
+ 	return node_page_state(lruvec_pgdat(lruvec), idx);
+ }
+=20
++static inline void __mod_memcg_lruvec_state(struct lruvec *lruvec,
++					    enum node_stat_item idx, int val)
++{
++}
++
+ static inline void __mod_lruvec_state(struct lruvec *lruvec,
+ 				      enum node_stat_item idx, int val)
+ {
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index bbda19c13c19..e8a91e98556b 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -713,30 +713,13 @@ parent_nodeinfo(struct mem_cgroup_per_node *pn, int=
+ nid)
+ 	return mem_cgroup_nodeinfo(parent, nid);
+ }
+=20
+-/**
+- * __mod_lruvec_state - update lruvec memory statistics
+- * @lruvec: the lruvec
+- * @idx: the stat item
+- * @val: delta to add to the counter, can be negative
+- *
+- * The lruvec is the intersection of the NUMA node and a cgroup. This
+- * function updates the all three counters that are affected by a
+- * change of state at this level: per-node, per-cgroup, per-lruvec.
+- */
+-void __mod_lruvec_state(struct lruvec *lruvec, enum node_stat_item idx,
+-			int val)
++void __mod_memcg_lruvec_state(struct lruvec *lruvec, enum node_stat_item=
+ idx,
++			      int val)
+ {
+-	pg_data_t *pgdat =3D lruvec_pgdat(lruvec);
+ 	struct mem_cgroup_per_node *pn;
+ 	struct mem_cgroup *memcg;
+ 	long x;
+=20
+-	/* Update node */
+-	__mod_node_page_state(pgdat, idx, val);
+-
+-	if (mem_cgroup_disabled())
+-		return;
+-
+ 	pn =3D container_of(lruvec, struct mem_cgroup_per_node, lruvec);
+ 	memcg =3D pn->memcg;
+=20
+@@ -748,6 +731,7 @@ void __mod_lruvec_state(struct lruvec *lruvec, enum n=
+ode_stat_item idx,
+=20
+ 	x =3D val + __this_cpu_read(pn->lruvec_stat_cpu->count[idx]);
+ 	if (unlikely(abs(x) > MEMCG_CHARGE_BATCH)) {
++		pg_data_t *pgdat =3D lruvec_pgdat(lruvec);
+ 		struct mem_cgroup_per_node *pi;
+=20
+ 		for (pi =3D pn; pi; pi =3D parent_nodeinfo(pi, pgdat->node_id))
+@@ -757,6 +741,27 @@ void __mod_lruvec_state(struct lruvec *lruvec, enum =
+node_stat_item idx,
+ 	__this_cpu_write(pn->lruvec_stat_cpu->count[idx], x);
+ }
+=20
++/**
++ * __mod_lruvec_state - update lruvec memory statistics
++ * @lruvec: the lruvec
++ * @idx: the stat item
++ * @val: delta to add to the counter, can be negative
++ *
++ * The lruvec is the intersection of the NUMA node and a cgroup. This
++ * function updates the all three counters that are affected by a
++ * change of state at this level: per-node, per-cgroup, per-lruvec.
++ */
++void __mod_lruvec_state(struct lruvec *lruvec, enum node_stat_item idx,
++			int val)
++{
++	/* Update node */
++	__mod_node_page_state(lruvec_pgdat(lruvec), idx, val);
++
++	/* Update memcg and lruvec */
++	if (!mem_cgroup_disabled())
++		__mod_memcg_lruvec_state(lruvec, idx, val);
++}
++
+ void __mod_lruvec_slab_state(void *p, enum node_stat_item idx, int val)
+ {
+ 	pg_data_t *pgdat =3D page_pgdat(virt_to_page(p));
+--=20
+2.25.4
 
