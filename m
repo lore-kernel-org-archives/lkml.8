@@ -4,57 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B2CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE11C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:14:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71149216FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:14:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5625C21534
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:14:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658088;
-	bh=1APZRQmaZ94RwQ1cAvwgySx9/rkDQcEWWledK+r1HSI=;
+	s=default; t=1591658091;
+	bh=wA78+wDgqPPeAgh6JL2WuzSsbCrJifLPyOs3PsB36hw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z6ah1RN2If0SKahHeMPopKlVhNxsBlKwUSTWWwijQOl+BBeDUVNDufB9u7HQTgUEZ
-	 brGZrIxl1hEmQAa61GGLN7fQqTKfp6y8rSeG4Q9lOBoYf2IBUmBXxeWe01siJjkqTF
-	 NDa2f2S9KqWr+3uE/74kbisx6ddBdrh50brawzDs=
+	b=MzBJ2fFPCDdmktUJ7BiwVo6qpXuZDHgzfsHPMBI0uUwp/p286GpJVezHf6OD/p2gy
+	 SVzyjiNoTaBpzvbjBGpfQcL+iUZeS0vGXmuoYE21ZykDBA895+2nZhJdYah8zXKdlg
+	 7OE0oMxnhuxvFtq2e3TozhIfL+teVy0GmvJyEny0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728524AbgFHXOp (ORCPT
+        id S1729916AbgFHXOu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:14:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59864 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:14:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729085AbgFHXMY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:12:24 -0400
+        id S1729087AbgFHXMZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:12:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06A7C208C7;
-        Mon,  8 Jun 2020 23:12:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 804532100A;
+        Mon,  8 Jun 2020 23:12:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657944;
-        bh=1APZRQmaZ94RwQ1cAvwgySx9/rkDQcEWWledK+r1HSI=;
+        s=default; t=1591657945;
+        bh=wA78+wDgqPPeAgh6JL2WuzSsbCrJifLPyOs3PsB36hw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mRN5rnbmbKWlM10fJD3bnsquRGyu0uhXHh08+EFQrsZKyfrXfDo8DG0DY0IKRkjae
-         mYCAtfaf2dqljTKn6deWnbeWlv+zbHY4MpmKMqhyKAUrBlZnrNGJsww8pLt7PiYw8w
-         T+RzibRFuZny+tfiOFUeHRhtauFM6EVvOWYjDYYo=
+        b=yuaqQdSymuYjiBKQURzmbesRr8fAyQCGTHzZyALxQy2dnY+IEi+8R7DSwDnsjMQBV
+         jp9H+3Jptif94TyduKcdWOY4gaHl37+GG9a19Z1H2YyxkidOK5At+Mg309l4PcW72N
+         gkT1U1sujn2lFANcV+ThuhaL5/e5fSggmLTiPy/8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jason Gunthorpe <jgg@mellanox.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        rds-devel@oss.oracle.com
-Subject: [PATCH AUTOSEL 5.6 009/606] net/rds: Use ERR_PTR for rds_message_alloc_sgs()
-Date:   Mon,  8 Jun 2020 19:02:14 -0400
-Message-Id: <20200608231211.3363633-9-sashal@kernel.org>
+        linux-kbuild@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 010/606] Stop the ad-hoc games with -Wno-maybe-initialized
+Date:   Mon,  8 Jun 2020 19:02:15 -0400
+Message-Id: <20200608231211.3363633-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,150 +59,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-commit 7dba92037baf3fa00b4880a31fd532542264994c upstream.
+commit 78a5255ffb6a1af189a83e493d916ba1c54d8c75 upstream.
 
-Returning the error code via a 'int *ret' when the function returns a
-pointer is very un-kernely and causes gcc 10's static analysis to choke:
+We have some rather random rules about when we accept the
+"maybe-initialized" warnings, and when we don't.
 
-net/rds/message.c: In function ‘rds_message_map_pages’:
-net/rds/message.c:358:10: warning: ‘ret’ may be used uninitialized in this function [-Wmaybe-uninitialized]
-  358 |   return ERR_PTR(ret);
+For example, we consider it unreliable for gcc versions < 4.9, but also
+if -O3 is enabled, or if optimizing for size.  And then various kernel
+config options disabled it, because they know that they trigger that
+warning by confusing gcc sufficiently (ie PROFILE_ALL_BRANCHES).
 
-Use a typical ERR_PTR return instead.
+And now gcc-10 seems to be introducing a lot of those warnings too, so
+it falls under the same heading as 4.9 did.
 
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+At the same time, we have a very straightforward way to _enable_ that
+warning when wanted: use "W=2" to enable more warnings.
+
+So stop playing these ad-hoc games, and just disable that warning by
+default, with the known and straight-forward "if you want to work on the
+extra compiler warnings, use W=123".
+
+Would it be great to have code that is always so obvious that it never
+confuses the compiler whether a variable is used initialized or not?
+Yes, it would.  In a perfect world, the compilers would be smarter, and
+our source code would be simpler.
+
+That's currently not the world we live in, though.
+
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/rds/message.c | 19 ++++++-------------
- net/rds/rdma.c    | 12 ++++++++----
- net/rds/rds.h     |  3 +--
- net/rds/send.c    |  6 ++++--
- 4 files changed, 19 insertions(+), 21 deletions(-)
+ Makefile             |  7 +++----
+ init/Kconfig         | 18 ------------------
+ kernel/trace/Kconfig |  1 -
+ 3 files changed, 3 insertions(+), 23 deletions(-)
 
-diff --git a/net/rds/message.c b/net/rds/message.c
-index 50f13f1d4ae0..2d43e13d6dd5 100644
---- a/net/rds/message.c
-+++ b/net/rds/message.c
-@@ -308,26 +308,20 @@ struct rds_message *rds_message_alloc(unsigned int extra_len, gfp_t gfp)
- /*
-  * RDS ops use this to grab SG entries from the rm's sg pool.
-  */
--struct scatterlist *rds_message_alloc_sgs(struct rds_message *rm, int nents,
--					  int *ret)
-+struct scatterlist *rds_message_alloc_sgs(struct rds_message *rm, int nents)
- {
- 	struct scatterlist *sg_first = (struct scatterlist *) &rm[1];
- 	struct scatterlist *sg_ret;
+diff --git a/Makefile b/Makefile
+index d252219666fd..d4938ac6ebbf 100644
+--- a/Makefile
++++ b/Makefile
+@@ -708,10 +708,6 @@ else ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
+ KBUILD_CFLAGS += -Os
+ endif
  
--	if (WARN_ON(!ret))
--		return NULL;
+-ifdef CONFIG_CC_DISABLE_WARN_MAYBE_UNINITIALIZED
+-KBUILD_CFLAGS   += -Wno-maybe-uninitialized
+-endif
 -
- 	if (nents <= 0) {
- 		pr_warn("rds: alloc sgs failed! nents <= 0\n");
--		*ret = -EINVAL;
--		return NULL;
-+		return ERR_PTR(-EINVAL);
- 	}
+ # Tell gcc to never replace conditional load with a non-conditional one
+ KBUILD_CFLAGS	+= $(call cc-option,--param=allow-store-data-races=0)
  
- 	if (rm->m_used_sgs + nents > rm->m_total_sgs) {
- 		pr_warn("rds: alloc sgs failed! total %d used %d nents %d\n",
- 			rm->m_total_sgs, rm->m_used_sgs, nents);
--		*ret = -ENOMEM;
--		return NULL;
-+		return ERR_PTR(-ENOMEM);
- 	}
+@@ -861,6 +857,9 @@ KBUILD_CFLAGS += -Wno-pointer-sign
+ # disable stringop warnings in gcc 8+
+ KBUILD_CFLAGS += $(call cc-disable-warning, stringop-truncation)
  
- 	sg_ret = &sg_first[rm->m_used_sgs];
-@@ -343,7 +337,6 @@ struct rds_message *rds_message_map_pages(unsigned long *page_addrs, unsigned in
- 	unsigned int i;
- 	int num_sgs = DIV_ROUND_UP(total_len, PAGE_SIZE);
- 	int extra_bytes = num_sgs * sizeof(struct scatterlist);
--	int ret;
++# Enabled with W=2, disabled by default as noisy
++KBUILD_CFLAGS += $(call cc-disable-warning, maybe-uninitialized)
++
+ # disable invalid "can't wrap" optimizations for signed / pointers
+ KBUILD_CFLAGS	+= $(call cc-option,-fno-strict-overflow)
  
- 	rm = rds_message_alloc(extra_bytes, GFP_NOWAIT);
- 	if (!rm)
-@@ -352,10 +345,10 @@ struct rds_message *rds_message_map_pages(unsigned long *page_addrs, unsigned in
- 	set_bit(RDS_MSG_PAGEVEC, &rm->m_flags);
- 	rm->m_inc.i_hdr.h_len = cpu_to_be32(total_len);
- 	rm->data.op_nents = DIV_ROUND_UP(total_len, PAGE_SIZE);
--	rm->data.op_sg = rds_message_alloc_sgs(rm, num_sgs, &ret);
--	if (!rm->data.op_sg) {
-+	rm->data.op_sg = rds_message_alloc_sgs(rm, num_sgs);
-+	if (IS_ERR(rm->data.op_sg)) {
- 		rds_message_put(rm);
--		return ERR_PTR(ret);
-+		return ERR_CAST(rm->data.op_sg);
- 	}
+diff --git a/init/Kconfig b/init/Kconfig
+index 4f717bfdbfe2..ef59c5c36cdb 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -36,22 +36,6 @@ config TOOLS_SUPPORT_RELR
+ config CC_HAS_ASM_INLINE
+ 	def_bool $(success,echo 'void foo(void) { asm inline (""); }' | $(CC) -x c - -c -o /dev/null)
  
- 	for (i = 0; i < rm->data.op_nents; ++i) {
-diff --git a/net/rds/rdma.c b/net/rds/rdma.c
-index 585e6b3b69ce..554ea7f0277f 100644
---- a/net/rds/rdma.c
-+++ b/net/rds/rdma.c
-@@ -664,9 +664,11 @@ int rds_cmsg_rdma_args(struct rds_sock *rs, struct rds_message *rm,
- 	op->op_odp_mr = NULL;
+-config CC_HAS_WARN_MAYBE_UNINITIALIZED
+-	def_bool $(cc-option,-Wmaybe-uninitialized)
+-	help
+-	  GCC >= 4.7 supports this option.
+-
+-config CC_DISABLE_WARN_MAYBE_UNINITIALIZED
+-	bool
+-	depends on CC_HAS_WARN_MAYBE_UNINITIALIZED
+-	default CC_IS_GCC && GCC_VERSION < 40900  # unreliable for GCC < 4.9
+-	help
+-	  GCC's -Wmaybe-uninitialized is not reliable by definition.
+-	  Lots of false positive warnings are produced in some cases.
+-
+-	  If this option is enabled, -Wno-maybe-uninitialzed is passed
+-	  to the compiler to suppress maybe-uninitialized warnings.
+-
+ config CONSTRUCTORS
+ 	bool
+ 	depends on !UML
+@@ -1249,14 +1233,12 @@ config CC_OPTIMIZE_FOR_PERFORMANCE
+ config CC_OPTIMIZE_FOR_PERFORMANCE_O3
+ 	bool "Optimize more for performance (-O3)"
+ 	depends on ARC
+-	imply CC_DISABLE_WARN_MAYBE_UNINITIALIZED  # avoid false positives
+ 	help
+ 	  Choosing this option will pass "-O3" to your compiler to optimize
+ 	  the kernel yet more for performance.
  
- 	WARN_ON(!nr_pages);
--	op->op_sg = rds_message_alloc_sgs(rm, nr_pages, &ret);
--	if (!op->op_sg)
-+	op->op_sg = rds_message_alloc_sgs(rm, nr_pages);
-+	if (IS_ERR(op->op_sg)) {
-+		ret = PTR_ERR(op->op_sg);
- 		goto out_pages;
-+	}
- 
- 	if (op->op_notify || op->op_recverr) {
- 		/* We allocate an uninitialized notifier here, because
-@@ -905,9 +907,11 @@ int rds_cmsg_atomic(struct rds_sock *rs, struct rds_message *rm,
- 	rm->atomic.op_silent = !!(args->flags & RDS_RDMA_SILENT);
- 	rm->atomic.op_active = 1;
- 	rm->atomic.op_recverr = rs->rs_recverr;
--	rm->atomic.op_sg = rds_message_alloc_sgs(rm, 1, &ret);
--	if (!rm->atomic.op_sg)
-+	rm->atomic.op_sg = rds_message_alloc_sgs(rm, 1);
-+	if (IS_ERR(rm->atomic.op_sg)) {
-+		ret = PTR_ERR(rm->atomic.op_sg);
- 		goto err;
-+	}
- 
- 	/* verify 8 byte-aligned */
- 	if (args->local_addr & 0x7) {
-diff --git a/net/rds/rds.h b/net/rds/rds.h
-index e4a603523083..b8b7ad766046 100644
---- a/net/rds/rds.h
-+++ b/net/rds/rds.h
-@@ -852,8 +852,7 @@ rds_conn_connecting(struct rds_connection *conn)
- 
- /* message.c */
- struct rds_message *rds_message_alloc(unsigned int nents, gfp_t gfp);
--struct scatterlist *rds_message_alloc_sgs(struct rds_message *rm, int nents,
--					  int *ret);
-+struct scatterlist *rds_message_alloc_sgs(struct rds_message *rm, int nents);
- int rds_message_copy_from_user(struct rds_message *rm, struct iov_iter *from,
- 			       bool zcopy);
- struct rds_message *rds_message_map_pages(unsigned long *page_addrs, unsigned int total_len);
-diff --git a/net/rds/send.c b/net/rds/send.c
-index 82dcd8b84fe7..68e2bdb08fd0 100644
---- a/net/rds/send.c
-+++ b/net/rds/send.c
-@@ -1274,9 +1274,11 @@ int rds_sendmsg(struct socket *sock, struct msghdr *msg, size_t payload_len)
- 
- 	/* Attach data to the rm */
- 	if (payload_len) {
--		rm->data.op_sg = rds_message_alloc_sgs(rm, num_sgs, &ret);
--		if (!rm->data.op_sg)
-+		rm->data.op_sg = rds_message_alloc_sgs(rm, num_sgs);
-+		if (IS_ERR(rm->data.op_sg)) {
-+			ret = PTR_ERR(rm->data.op_sg);
- 			goto out;
-+		}
- 		ret = rds_message_copy_from_user(rm, &msg->msg_iter, zcopy);
- 		if (ret)
- 			goto out;
+ config CC_OPTIMIZE_FOR_SIZE
+ 	bool "Optimize for size (-Os)"
+-	imply CC_DISABLE_WARN_MAYBE_UNINITIALIZED  # avoid false positives
+ 	help
+ 	  Choosing this option will pass "-Os" to your compiler resulting
+ 	  in a smaller kernel.
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index 402eef84c859..743647005f64 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -466,7 +466,6 @@ config PROFILE_ANNOTATED_BRANCHES
+ config PROFILE_ALL_BRANCHES
+ 	bool "Profile all if conditionals" if !FORTIFY_SOURCE
+ 	select TRACE_BRANCH_PROFILING
+-	imply CC_DISABLE_WARN_MAYBE_UNINITIALIZED  # avoid false positives
+ 	help
+ 	  This tracer profiles all branch conditions. Every if ()
+ 	  taken in the kernel is recorded whether it hit or miss.
 -- 
 2.25.1
 
