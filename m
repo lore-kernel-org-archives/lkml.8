@@ -2,192 +2,298 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 354B0C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37660C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:43:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11314206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:41:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14969206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:43:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729089AbgFHHlV (ORCPT
+        id S1729015AbgFHHn4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 03:41:21 -0400
-Received: from mga07.intel.com ([134.134.136.100]:65231 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728974AbgFHHlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 03:41:20 -0400
-IronPort-SDR: CQmoUCxqpyVY144gDNcmQ9HjHsisomzOjrz0DHv1s9xO6t+B/HdceY015PPPcC2dzM/TJ79oZr
- xv9ySoJNkojQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2020 00:41:19 -0700
-IronPort-SDR: 2wrP6yDSENKSDdYN7WA/ndnPhqnAaLsVJevuZ3NP6eQqlIbc1xnCMLuG61+81uKX+Aw6+cDS0x
- jIFLB9JLqAVQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,487,1583222400"; 
-   d="scan'208";a="274134975"
-Received: from chenyu-office.sh.intel.com ([10.239.158.173])
-  by orsmga006.jf.intel.com with ESMTP; 08 Jun 2020 00:41:17 -0700
-From:   Chen Yu <yu.c.chen@intel.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michal Miroslaw <mirq-linux@rere.qmqm.pl>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chen Yu <yu.c.chen@intel.com>
-Subject: [PATCH 2/2][RFC v2] PM-runtime: change the tracepoints to cover all usage_count
-Date:   Mon,  8 Jun 2020 15:42:15 +0800
-Message-Id: <0a3ae7be4c467912327005995b1defb4fefd8101.1591600914.git.yu.c.chen@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1591600914.git.yu.c.chen@intel.com>
-References: <cover.1591600914.git.yu.c.chen@intel.com>
+        Mon, 8 Jun 2020 03:43:56 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:34662 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726009AbgFHHnz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 03:43:55 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 7DFC0F1326A8005345E4;
+        Mon,  8 Jun 2020 15:43:52 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 8 Jun 2020
+ 15:43:48 +0800
+Subject: Re: [f2fs-dev] [PATCH] f2fs: add F2FS_IOC_TRIM_FILE ioctl
+To:     Daeho Jeong <daeho43@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <kernel-team@android.com>, Daeho Jeong <daehojeong@google.com>
+References: <20200605042746.201180-1-daeho43@gmail.com>
+ <fd9bd76c-1864-2cfc-bf86-ef705c8a407d@huawei.com>
+ <CACOAw_yw+zczoWpNvYz_UHRYjr8BS+xKK=7_BKi0_0wEhp8Lvg@mail.gmail.com>
+ <36d3c98e-24bb-988c-57a3-82730cc75cbc@huawei.com>
+ <CACOAw_wVEw3+Kyz2HvvanhhP2_-xQy9wjfpDt5G0ahXM8o-V-Q@mail.gmail.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <3eade7bf-ce66-e502-24e7-e3a1e548dd77@huawei.com>
+Date:   Mon, 8 Jun 2020 15:43:46 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <CACOAw_wVEw3+Kyz2HvvanhhP2_-xQy9wjfpDt5G0ahXM8o-V-Q@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit d229290689ae ("PM-runtime: add tracepoints for usage_count changes")
-has added some tracepoints to monitor the change of runtime usage, and
-there is something to improve:
-1. There are some places that adjust the usage count have not
-   been traced yet. For example, pm_runtime_get_noresume() and
-   pm_runtime_put_noidle()
-2. The change of the usage count will not be tracked if decreased
-   from 1 to 0.
+On 2020/6/8 15:19, Daeho Jeong wrote:
+> Yes, I agree with you about each vendor has different implementation on discard.
+> So, we might be gonna use the combination of zeroing and send discards
+> for a more
+> secure solution. :)
 
-This patch intends to adjust the logic to be consistent with the
-change of usage_counter, that is to say, only after the counter has
-been possibly modified, we record it. Besides, all usage changes will
-be shown using rpm_usage even if included by other trace points.
-And these changes has helped track down the e1000e runtime issue.
+IIRC, current solution is:
 
-Signed-off-by: Chen Yu <yu.c.chen@intel.com>
----
-v2: According to Michal's suggestion, adjust the commit log
-    to better describe the meaning of this patch.
---
- drivers/base/power/runtime.c | 38 +++++++++++++++++++++++-------------
- 1 file changed, 24 insertions(+), 14 deletions(-)
+- pin file
+- get all block addresses of file
+- write zero to block addresses
+- issue discard
 
-diff --git a/drivers/base/power/runtime.c b/drivers/base/power/runtime.c
-index 85a248e196ca..5789d2624513 100644
---- a/drivers/base/power/runtime.c
-+++ b/drivers/base/power/runtime.c
-@@ -1004,10 +1004,11 @@ int __pm_runtime_idle(struct device *dev, int rpmflags)
- 	int retval;
- 
- 	if (rpmflags & RPM_GET_PUT) {
--		if (!atomic_dec_and_test(&dev->power.usage_count)) {
--			trace_rpm_usage_rcuidle(dev, rpmflags);
-+		bool non_zero = !atomic_dec_and_test(&dev->power.usage_count);
-+
-+		trace_rpm_usage_rcuidle(dev, rpmflags);
-+		if (non_zero)
- 			return 0;
--		}
- 	}
- 
- 	might_sleep_if(!(rpmflags & RPM_ASYNC) && !dev->power.irq_safe);
-@@ -1038,10 +1039,12 @@ int __pm_runtime_suspend(struct device *dev, int rpmflags)
- 	int retval;
- 
- 	if (rpmflags & RPM_GET_PUT) {
--		if (!atomic_dec_and_test(&dev->power.usage_count)) {
--			trace_rpm_usage_rcuidle(dev, rpmflags);
-+		bool non_zero = !atomic_dec_and_test(&dev->power.usage_count);
-+
-+		trace_rpm_usage_rcuidle(dev, rpmflags);
-+		if (non_zero)
- 			return 0;
--		}
-+
- 	}
- 
- 	might_sleep_if(!(rpmflags & RPM_ASYNC) && !dev->power.irq_safe);
-@@ -1073,8 +1076,10 @@ int __pm_runtime_resume(struct device *dev, int rpmflags)
- 	might_sleep_if(!(rpmflags & RPM_ASYNC) && !dev->power.irq_safe &&
- 			dev->power.runtime_status != RPM_ACTIVE);
- 
--	if (rpmflags & RPM_GET_PUT)
-+	if (rpmflags & RPM_GET_PUT) {
- 		atomic_inc(&dev->power.usage_count);
-+		trace_rpm_usage_rcuidle(dev, rpmflags);
-+	}
- 
- 	spin_lock_irqsave(&dev->power.lock, flags);
- 	retval = rpm_resume(dev, rpmflags);
-@@ -1433,6 +1438,7 @@ void pm_runtime_forbid(struct device *dev)
- 
- 	dev->power.runtime_auto = false;
- 	atomic_inc(&dev->power.usage_count);
-+	trace_rpm_usage_rcuidle(dev, 0);
- 	rpm_resume(dev, 0);
- 
-  out:
-@@ -1448,16 +1454,17 @@ EXPORT_SYMBOL_GPL(pm_runtime_forbid);
-  */
- void pm_runtime_allow(struct device *dev)
- {
-+	bool is_zero;
-+
- 	spin_lock_irq(&dev->power.lock);
- 	if (dev->power.runtime_auto)
- 		goto out;
- 
- 	dev->power.runtime_auto = true;
--	if (atomic_dec_and_test(&dev->power.usage_count))
-+	is_zero = atomic_dec_and_test(&dev->power.usage_count);
-+	trace_rpm_usage_rcuidle(dev, RPM_AUTO | RPM_ASYNC);
-+	if (is_zero)
- 		rpm_idle(dev, RPM_AUTO | RPM_ASYNC);
--	else
--		trace_rpm_usage_rcuidle(dev, RPM_AUTO | RPM_ASYNC);
--
-  out:
- 	spin_unlock_irq(&dev->power.lock);
- }
-@@ -1523,9 +1530,8 @@ static void update_autosuspend(struct device *dev, int old_delay, int old_use)
- 		/* If it used to be allowed then prevent it. */
- 		if (!old_use || old_delay >= 0) {
- 			atomic_inc(&dev->power.usage_count);
--			rpm_resume(dev, 0);
--		} else {
- 			trace_rpm_usage_rcuidle(dev, 0);
-+			rpm_resume(dev, 0);
- 		}
- 	}
- 
-@@ -1533,8 +1539,10 @@ static void update_autosuspend(struct device *dev, int old_delay, int old_use)
- 	else {
- 
- 		/* If it used to be prevented then allow it. */
--		if (old_use && old_delay < 0)
-+		if (old_use && old_delay < 0) {
- 			atomic_dec(&dev->power.usage_count);
-+			trace_rpm_usage_rcuidle(dev, 0);
-+		}
- 
- 		/* Maybe we can autosuspend now. */
- 		rpm_idle(dev, RPM_AUTO);
-@@ -1741,12 +1749,14 @@ void pm_runtime_drop_link(struct device *dev)
- void pm_runtime_get_noresume(struct device *dev)
- {
- 	atomic_inc(&dev->power.usage_count);
-+	trace_rpm_usage_rcuidle(dev, 0);
- }
- EXPORT_SYMBOL_GPL(pm_runtime_get_noresume);
- 
- void pm_runtime_put_noidle(struct device *dev)
- {
- 	atomic_add_unless(&dev->power.usage_count, -1, 0);
-+	trace_rpm_usage_rcuidle(dev, 0);
- }
- EXPORT_SYMBOL_GPL(pm_runtime_put_noidle);
- 
--- 
-2.17.1
+Is that correct?
 
+Could we handle those logic (zero out & discard) in new interface
+(may be named as {F2FS,EXT4}_IOC_SEC_TRIM_FILE)? then userspace logic
+could be quite simple later, and also memcpy could be avoid to make
+destruction process more efficient.
+
+Just raw proposal. :)
+
+Thanks,
+
+> I think we still need a discard interface to unmap from the mapping
+> table of the storage device side.
+> 
+> Thanks,
+> 
+> 2020년 6월 8일 (월) 오후 3:57, Chao Yu <yuchao0@huawei.com>님이 작성:
+>>
+>> On 2020/6/8 11:36, Daeho Jeong wrote:
+>>> Yes, this is for security key destruction.
+>>>
+>>> AFAIK, discard will unmap the data block and, after done it,
+>>> we can read either zero data or garbage data from that block depending
+>>> on eMMC/UFS.
+>>
+>> Since spec didn't restrict how vendor implement the erase interface, so
+>> in order to enhance performance of discard interface, vendor could implement
+>> it as an async one, which may not zero mapping entry(L1 table), instead, it
+>> could set related bitmap to invalid that mapping entry, than later if device
+>> allow user to access that invalid mapping entry, key info may be explosed,
+>>
+>> It's completely up to how vendor implement the interface, so I think there is
+>> still risk to use discard.
+>>
+>> Thanks,
+>>
+>>> In a view point of read data, it might be the same with zeroing the data block.
+>>> However, since we can even unmap that block, I believe discard is
+>>> safer than zeroing out.
+>>>
+>>> 2020년 6월 8일 (월) 오전 11:46, Chao Yu <yuchao0@huawei.com>님이 작성:
+>>>>
+>>>> On 2020/6/5 12:27, Daeho Jeong wrote:
+>>>>> From: Daeho Jeong <daehojeong@google.com>
+>>>>>
+>>>>> Added a new ioctl to send discard commands to whole data area of
+>>>>> a regular file for security reason.
+>>>>
+>>>> I guess this interface is introduced for security key destruction, if I'm
+>>>> right, however, IIRC, discard(erase) semantics in eMMC/UFS spec won't
+>>>> guarantee that data which was discard could be zeroed out, so after discard,
+>>>> the key still have risk of exposure. So instead, should we use sb_issue_zeroout()?
+>>>>
+>>>> Thanks,
+>>>>
+>>>>>
+>>>>> Signed-off-by: Daeho Jeong <daehojeong@google.com>
+>>>>> ---
+>>>>>  fs/f2fs/f2fs.h |   1 +
+>>>>>  fs/f2fs/file.c | 129 +++++++++++++++++++++++++++++++++++++++++++++++++
+>>>>>  2 files changed, 130 insertions(+)
+>>>>>
+>>>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+>>>>> index c812fb8e2d9c..9ae81d0fefa0 100644
+>>>>> --- a/fs/f2fs/f2fs.h
+>>>>> +++ b/fs/f2fs/f2fs.h
+>>>>> @@ -434,6 +434,7 @@ static inline bool __has_cursum_space(struct f2fs_journal *journal,
+>>>>>                                       _IOR(F2FS_IOCTL_MAGIC, 18, __u64)
+>>>>>  #define F2FS_IOC_RESERVE_COMPRESS_BLOCKS                             \
+>>>>>                                       _IOR(F2FS_IOCTL_MAGIC, 19, __u64)
+>>>>> +#define F2FS_IOC_TRIM_FILE           _IO(F2FS_IOCTL_MAGIC, 20)
+>>>>>
+>>>>>  #define F2FS_IOC_GET_VOLUME_NAME     FS_IOC_GETFSLABEL
+>>>>>  #define F2FS_IOC_SET_VOLUME_NAME     FS_IOC_SETFSLABEL
+>>>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+>>>>> index dfa1ac2d751a..58507bb5649c 100644
+>>>>> --- a/fs/f2fs/file.c
+>>>>> +++ b/fs/f2fs/file.c
+>>>>> @@ -3749,6 +3749,132 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
+>>>>>       return ret;
+>>>>>  }
+>>>>>
+>>>>> +static int f2fs_trim_file(struct file *filp)
+>>>>> +{
+>>>>> +     struct inode *inode = file_inode(filp);
+>>>>> +     struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+>>>>> +     struct address_space *mapping = inode->i_mapping;
+>>>>> +     struct bio *bio = NULL;
+>>>>> +     struct block_device *prev_bdev = NULL;
+>>>>> +     loff_t file_size;
+>>>>> +     pgoff_t index, pg_start = 0, pg_end;
+>>>>> +     block_t prev_block = 0, len = 0;
+>>>>> +     int ret = 0;
+>>>>> +
+>>>>> +     if (!f2fs_hw_support_discard(sbi))
+>>>>> +             return -EOPNOTSUPP;
+>>>>> +
+>>>>> +     if (!S_ISREG(inode->i_mode) || f2fs_is_atomic_file(inode) ||
+>>>>> +                     f2fs_compressed_file(inode))
+>>>>> +             return -EINVAL;
+>>>>> +
+>>>>> +     if (f2fs_readonly(sbi->sb))
+>>>>> +             return -EROFS;
+>>>>> +
+>>>>> +     ret = mnt_want_write_file(filp);
+>>>>> +     if (ret)
+>>>>> +             return ret;
+>>>>> +
+>>>>> +     inode_lock(inode);
+>>>>> +
+>>>>> +     file_size = i_size_read(inode);
+>>>>> +     if (!file_size)
+>>>>> +             goto err;
+>>>>> +     pg_end = (pgoff_t)round_up(file_size, PAGE_SIZE) >> PAGE_SHIFT;
+>>>>> +
+>>>>> +     ret = f2fs_convert_inline_inode(inode);
+>>>>> +     if (ret)
+>>>>> +             goto err;
+>>>>> +
+>>>>> +     down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+>>>>> +     down_write(&F2FS_I(inode)->i_mmap_sem);
+>>>>> +
+>>>>> +     ret = filemap_write_and_wait(mapping);
+>>>>> +     if (ret)
+>>>>> +             goto out;
+>>>>> +
+>>>>> +     truncate_inode_pages(mapping, 0);
+>>>>> +
+>>>>> +     for (index = pg_start; index < pg_end;) {
+>>>>> +             struct dnode_of_data dn;
+>>>>> +             unsigned int end_offset;
+>>>>> +
+>>>>> +             set_new_dnode(&dn, inode, NULL, NULL, 0);
+>>>>> +             ret = f2fs_get_dnode_of_data(&dn, index, LOOKUP_NODE);
+>>>>> +             if (ret)
+>>>>> +                     goto out;
+>>>>> +
+>>>>> +             end_offset = ADDRS_PER_PAGE(dn.node_page, inode);
+>>>>> +             if (pg_end < end_offset + index)
+>>>>> +                     end_offset = pg_end - index;
+>>>>> +
+>>>>> +             for (; dn.ofs_in_node < end_offset;
+>>>>> +                             dn.ofs_in_node++, index++) {
+>>>>> +                     struct block_device *cur_bdev;
+>>>>> +                     block_t blkaddr = f2fs_data_blkaddr(&dn);
+>>>>> +
+>>>>> +                     if (__is_valid_data_blkaddr(blkaddr)) {
+>>>>> +                             if (!f2fs_is_valid_blkaddr(F2FS_I_SB(inode),
+>>>>> +                                     blkaddr, DATA_GENERIC_ENHANCE)) {
+>>>>> +                                     ret = -EFSCORRUPTED;
+>>>>> +                                     goto out;
+>>>>> +                             }
+>>>>> +                     } else
+>>>>> +                             continue;
+>>>>> +
+>>>>> +                     cur_bdev = f2fs_target_device(sbi, blkaddr, NULL);
+>>>>> +                     if (f2fs_is_multi_device(sbi)) {
+>>>>> +                             int i = f2fs_target_device_index(sbi, blkaddr);
+>>>>> +
+>>>>> +                             blkaddr -= FDEV(i).start_blk;
+>>>>> +                     }
+>>>>> +
+>>>>> +                     if (len) {
+>>>>> +                             if (prev_bdev == cur_bdev &&
+>>>>> +                                     blkaddr == prev_block + len) {
+>>>>> +                                     len++;
+>>>>> +                             } else {
+>>>>> +                                     ret = __blkdev_issue_discard(prev_bdev,
+>>>>> +                                             SECTOR_FROM_BLOCK(prev_block),
+>>>>> +                                             SECTOR_FROM_BLOCK(len),
+>>>>> +                                             GFP_NOFS, 0, &bio);
+>>>>> +                                     if (ret)
+>>>>> +                                             goto out;
+>>>>> +> +                                  len = 0;
+>>>>> +                             }
+>>>>> +                     }
+>>>>> +
+>>>>> +                     if (!len) {
+>>>>> +                             prev_bdev = cur_bdev;
+>>>>> +                             prev_block = blkaddr;
+>>>>> +                             len = 1;
+>>>>> +                     }
+>>>>> +             }
+>>>>> +
+>>>>> +             f2fs_put_dnode(&dn);
+>>>>> +     }
+>>>>> +
+>>>>> +     if (len)
+>>>>> +             ret = __blkdev_issue_discard(prev_bdev,
+>>>>> +                                     SECTOR_FROM_BLOCK(prev_block),
+>>>>> +                                     SECTOR_FROM_BLOCK(len),
+>>>>> +                                     GFP_NOFS, 0, &bio);
+>>>>> +out:
+>>>>> +     if (bio) {
+>>>>> +             ret = submit_bio_wait(bio);
+>>>>> +             bio_put(bio);
+>>>>> +     }
+>>>>> +
+>>>>> +     up_write(&F2FS_I(inode)->i_mmap_sem);
+>>>>> +     up_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+>>>>> +err:
+>>>>> +     inode_unlock(inode);
+>>>>> +     mnt_drop_write_file(filp);
+>>>>> +
+>>>>> +     return ret;
+>>>>> +}
+>>>>> +
+>>>>>  long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+>>>>>  {
+>>>>>       if (unlikely(f2fs_cp_error(F2FS_I_SB(file_inode(filp)))))
+>>>>> @@ -3835,6 +3961,8 @@ long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+>>>>>               return f2fs_release_compress_blocks(filp, arg);
+>>>>>       case F2FS_IOC_RESERVE_COMPRESS_BLOCKS:
+>>>>>               return f2fs_reserve_compress_blocks(filp, arg);
+>>>>> +     case F2FS_IOC_TRIM_FILE:
+>>>>> +             return f2fs_trim_file(filp);
+>>>>>       default:
+>>>>>               return -ENOTTY;
+>>>>>       }
+>>>>> @@ -4004,6 +4132,7 @@ long f2fs_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+>>>>>       case F2FS_IOC_GET_COMPRESS_BLOCKS:
+>>>>>       case F2FS_IOC_RELEASE_COMPRESS_BLOCKS:
+>>>>>       case F2FS_IOC_RESERVE_COMPRESS_BLOCKS:
+>>>>> +     case F2FS_IOC_TRIM_FILE:
+>>>>>               break;
+>>>>>       default:
+>>>>>               return -ENOIOCTLCMD;
+>>>>>
+>>> .
+>>>
+> .
+> 
