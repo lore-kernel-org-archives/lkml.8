@@ -4,48 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44016C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7412FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E9F320737
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:58:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A2232076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:58:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591664283;
-	bh=1nqs4DqbgeZgMHpBxJQRypqiP9gwPyGbe6RIQZ4mk84=;
+	s=default; t=1591664286;
+	bh=QUtRJ3Y0Rx9RwRzwhCcyvIfmN4BCTK68Ylczwl/VO/A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R/ZigVNlAqylv30YSKQFaS18Y+1Stbpz44nKIFBz0dW9wJj2e3/URl6SRnqfU5rKF
-	 56BNQ712QbPjzopU55+sV2bB3JXTnNm9rcakA3zlEv9vKpC2FuDq9M6kazrxPcA75V
-	 TN2ehAWSNoqH/JoNsoxQgDRpRjjRboqiOLPtGMx0=
+	b=XhIavuTiotTUkZBh6NsVKEKILwCOOFWFUCvJZgMTIH/LTsyLb4JRGlaT6faPUyA/f
+	 N7yi4OKw2PE6/7AEsJgkBPTVEZ7P/+x7/xLyej6Ew0/YmG1eQidkJXz3IM0JObZvh3
+	 ZnjP/QU7X9+jjjH/J6nDt3ceCxOebIruvDtTTPFQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728587AbgFIA6C (ORCPT
+        id S1732663AbgFIA6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:58:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54314 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:58:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728254AbgFHXIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728248AbgFHXIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 8 Jun 2020 19:08:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E31642085B;
-        Mon,  8 Jun 2020 23:08:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 901FB208A7;
+        Mon,  8 Jun 2020 23:08:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657727;
-        bh=1nqs4DqbgeZgMHpBxJQRypqiP9gwPyGbe6RIQZ4mk84=;
+        s=default; t=1591657726;
+        bh=QUtRJ3Y0Rx9RwRzwhCcyvIfmN4BCTK68Ylczwl/VO/A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0BRn2WIjjQ03Ek9hdYmcEyS6PMaWSSzEayPDWM9pRaoeLG1ss2o4h9DQiXH+1f4fh
-         8Jz7gMlr6EDJD/dzVgyePWHA0qQ9nplP9cB1bjd9LVmLiigFgV6etgbqwbDURjgkmr
-         IxcPAAvo2SwBl8vfnNiPSKJ+NpA4weWL77JxbLFY=
+        b=ix3RRS7OgMD2gIKWruc1fzjR2Ionie4NHNz+0NQRYzWO43g9EQxKsHwaQTO07XWYt
+         dhUCRrMXCJcFkPPoJzDyqUZvSIFask1nw1t318CWNHZXs62PnuCuU7bz4zrFXNtovr
+         k2pIluOlt8DKr+WssDCUvOymwp2oSoUNtIEMB85I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ard Biesheuvel <ardb@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-efi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 119/274] efi/libstub/random: Align allocate size to EFI_ALLOC_ALIGN
-Date:   Mon,  8 Jun 2020 19:03:32 -0400
-Message-Id: <20200608230607.3361041-119-sashal@kernel.org>
+Cc:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-hyperv@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 118/274] Drivers: hv: vmbus: Always handle the VMBus messages on CPU0
+Date:   Mon,  8 Jun 2020 19:03:31 -0400
+Message-Id: <20200608230607.3361041-118-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -58,54 +62,164 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
 
-[ Upstream commit e1df73e2d18b3b7d66f2ec38d81d9566b3a7fb21 ]
+[ Upstream commit 8a857c55420f29da4fc131adc22b12d474c48f4c ]
 
-The EFI stub uses a per-architecture #define for the minimum base
-and size alignment of page allocations, which is set to 4 KB for
-all architecures except arm64, which uses 64 KB, to ensure that
-allocations can always be (un)mapped efficiently, regardless of
-the page size used by the kernel proper, which could be a kexec'ee
+A Linux guest have to pick a "connect CPU" to communicate with the
+Hyper-V host.  This CPU can not be taken offline because Hyper-V does
+not provide a way to change that CPU assignment.
 
-The API wrappers around page based allocations assume that this
-alignment is always taken into account, and so efi_free() will
-also round up its size argument to EFI_ALLOC_ALIGN.
+Current code sets the connect CPU to whatever CPU ends up running the
+function vmbus_negotiate_version(), and this will generate problems if
+that CPU is taken offine.
 
-Currently, efi_random_alloc() does not honour this alignment for
-the allocated size, and so freeing such an allocation may result
-in unrelated memory to be freed, potentially leading to issues
-after boot. So let's round up size in efi_random_alloc() as well.
+Establish CPU0 as the connect CPU, and add logics to prevents the
+connect CPU from being taken offline.   We could pick some other CPU,
+and we could pick that "other CPU" dynamically if there was a reason to
+do so at some point in the future.  But for now, #defining the connect
+CPU to 0 is the most straightforward and least complex solution.
 
-Fixes: 2ddbfc81eac84a29 ("efi: stub: add implementation of efi_random_alloc()")
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+While on this, add inline comments explaining "why" offer and rescind
+messages should not be handled by a same serialized work queue.
+
+Suggested-by: Dexuan Cui <decui@microsoft.com>
+Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Link: https://lore.kernel.org/r/20200406001514.19876-2-parri.andrea@gmail.com
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Signed-off-by: Wei Liu <wei.liu@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/efi/libstub/randomalloc.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/hv/connection.c   | 20 +-------------------
+ drivers/hv/hv.c           |  7 +++++++
+ drivers/hv/hyperv_vmbus.h | 11 ++++++-----
+ drivers/hv/vmbus_drv.c    | 20 +++++++++++++++++---
+ 4 files changed, 31 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/firmware/efi/libstub/randomalloc.c b/drivers/firmware/efi/libstub/randomalloc.c
-index 4578f59e160c..6200dfa650f5 100644
---- a/drivers/firmware/efi/libstub/randomalloc.c
-+++ b/drivers/firmware/efi/libstub/randomalloc.c
-@@ -74,6 +74,8 @@ efi_status_t efi_random_alloc(unsigned long size,
- 	if (align < EFI_ALLOC_ALIGN)
- 		align = EFI_ALLOC_ALIGN;
+diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
+index 74e77de89b4f..f4bd306d2cef 100644
+--- a/drivers/hv/connection.c
++++ b/drivers/hv/connection.c
+@@ -69,7 +69,6 @@ MODULE_PARM_DESC(max_version,
+ int vmbus_negotiate_version(struct vmbus_channel_msginfo *msginfo, u32 version)
+ {
+ 	int ret = 0;
+-	unsigned int cur_cpu;
+ 	struct vmbus_channel_initiate_contact *msg;
+ 	unsigned long flags;
  
-+	size = round_up(size, EFI_ALLOC_ALIGN);
+@@ -102,24 +101,7 @@ int vmbus_negotiate_version(struct vmbus_channel_msginfo *msginfo, u32 version)
+ 
+ 	msg->monitor_page1 = virt_to_phys(vmbus_connection.monitor_pages[0]);
+ 	msg->monitor_page2 = virt_to_phys(vmbus_connection.monitor_pages[1]);
+-	/*
+-	 * We want all channel messages to be delivered on CPU 0.
+-	 * This has been the behavior pre-win8. This is not
+-	 * perf issue and having all channel messages delivered on CPU 0
+-	 * would be ok.
+-	 * For post win8 hosts, we support receiving channel messagges on
+-	 * all the CPUs. This is needed for kexec to work correctly where
+-	 * the CPU attempting to connect may not be CPU 0.
+-	 */
+-	if (version >= VERSION_WIN8_1) {
+-		cur_cpu = get_cpu();
+-		msg->target_vcpu = hv_cpu_number_to_vp_number(cur_cpu);
+-		vmbus_connection.connect_cpu = cur_cpu;
+-		put_cpu();
+-	} else {
+-		msg->target_vcpu = 0;
+-		vmbus_connection.connect_cpu = 0;
+-	}
++	msg->target_vcpu = hv_cpu_number_to_vp_number(VMBUS_CONNECT_CPU);
+ 
+ 	/*
+ 	 * Add to list before we send the request since we may
+diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
+index 533c8b82b344..3a5648aa5599 100644
+--- a/drivers/hv/hv.c
++++ b/drivers/hv/hv.c
+@@ -245,6 +245,13 @@ int hv_synic_cleanup(unsigned int cpu)
+ 	bool channel_found = false;
+ 	unsigned long flags;
+ 
++	/*
++	 * Hyper-V does not provide a way to change the connect CPU once
++	 * it is set; we must prevent the connect CPU from going offline.
++	 */
++	if (cpu == VMBUS_CONNECT_CPU)
++		return -EBUSY;
 +
- 	/* count the suitable slots in each memory map entry */
- 	for (map_offset = 0; map_offset < map_size; map_offset += desc_size) {
- 		efi_memory_desc_t *md = (void *)memory_map + map_offset;
-@@ -109,7 +111,7 @@ efi_status_t efi_random_alloc(unsigned long size,
- 		}
+ 	/*
+ 	 * Search for channels which are bound to the CPU we're about to
+ 	 * cleanup. In case we find one and vmbus is still connected we need to
+diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
+index 70b30e223a57..67fb1edcbf52 100644
+--- a/drivers/hv/hyperv_vmbus.h
++++ b/drivers/hv/hyperv_vmbus.h
+@@ -212,12 +212,13 @@ enum vmbus_connect_state {
  
- 		target = round_up(md->phys_addr, align) + target_slot * align;
--		pages = round_up(size, EFI_PAGE_SIZE) / EFI_PAGE_SIZE;
-+		pages = size / EFI_PAGE_SIZE;
+ #define MAX_SIZE_CHANNEL_MESSAGE	HV_MESSAGE_PAYLOAD_BYTE_COUNT
  
- 		status = efi_bs_call(allocate_pages, EFI_ALLOCATE_ADDRESS,
- 				     EFI_LOADER_DATA, pages, &target);
+-struct vmbus_connection {
+-	/*
+-	 * CPU on which the initial host contact was made.
+-	 */
+-	int connect_cpu;
++/*
++ * The CPU that Hyper-V will interrupt for VMBUS messages, such as
++ * CHANNELMSG_OFFERCHANNEL and CHANNELMSG_RESCIND_CHANNELOFFER.
++ */
++#define VMBUS_CONNECT_CPU	0
+ 
++struct vmbus_connection {
+ 	u32 msg_conn_id;
+ 
+ 	atomic_t offer_in_progress;
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index e06c6b9555cf..ec173da45b42 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -1098,14 +1098,28 @@ void vmbus_on_msg_dpc(unsigned long data)
+ 			/*
+ 			 * If we are handling the rescind message;
+ 			 * schedule the work on the global work queue.
++			 *
++			 * The OFFER message and the RESCIND message should
++			 * not be handled by the same serialized work queue,
++			 * because the OFFER handler may call vmbus_open(),
++			 * which tries to open the channel by sending an
++			 * OPEN_CHANNEL message to the host and waits for
++			 * the host's response; however, if the host has
++			 * rescinded the channel before it receives the
++			 * OPEN_CHANNEL message, the host just silently
++			 * ignores the OPEN_CHANNEL message; as a result,
++			 * the guest's OFFER handler hangs for ever, if we
++			 * handle the RESCIND message in the same serialized
++			 * work queue: the RESCIND handler can not start to
++			 * run before the OFFER handler finishes.
+ 			 */
+-			schedule_work_on(vmbus_connection.connect_cpu,
++			schedule_work_on(VMBUS_CONNECT_CPU,
+ 					 &ctx->work);
+ 			break;
+ 
+ 		case CHANNELMSG_OFFERCHANNEL:
+ 			atomic_inc(&vmbus_connection.offer_in_progress);
+-			queue_work_on(vmbus_connection.connect_cpu,
++			queue_work_on(VMBUS_CONNECT_CPU,
+ 				      vmbus_connection.work_queue,
+ 				      &ctx->work);
+ 			break;
+@@ -1152,7 +1166,7 @@ static void vmbus_force_channel_rescinded(struct vmbus_channel *channel)
+ 
+ 	INIT_WORK(&ctx->work, vmbus_onmessage_work);
+ 
+-	queue_work_on(vmbus_connection.connect_cpu,
++	queue_work_on(VMBUS_CONNECT_CPU,
+ 		      vmbus_connection.work_queue,
+ 		      &ctx->work);
+ }
 -- 
 2.25.1
 
