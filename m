@@ -2,143 +2,224 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A06C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 19:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9885C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 19:28:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BC3B20760
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 19:28:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B00CE20760
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 19:28:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EhpM/xsx"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Pgtv+SSc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbgFHT2d (ORCPT
+        id S1726725AbgFHT2h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 15:28:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60348 "EHLO
+        Mon, 8 Jun 2020 15:28:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726410AbgFHT2c (ORCPT
+        with ESMTP id S1726410AbgFHT2e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 15:28:32 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92DEDC08C5C2
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 12:28:32 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id r7so18743874wro.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 12:28:32 -0700 (PDT)
+        Mon, 8 Jun 2020 15:28:34 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D92BC08C5C2
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 12:28:33 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id c14so18442762qka.11
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 12:28:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=lca.pw; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=nNfoDipJXnYq7VJ5hMTMW93JkoBjEN3XF2dENorzijs=;
-        b=EhpM/xsxL6PmflZhqLC1Kz1772OJH/9mtEZ9xvB5MG7h4Ta7W8GwdjMKzhPwwup78R
-         x3NA7CMImhUeJzDJe9tz2HDD/hiYzRWRRaKGwDP8i+/GAq80GTqev0yKjj1z05GzJxnI
-         XQzU5YBbvUTu+7LTSog2YHO4eGxNjwO0t4X5IugL9GgaXjArxsvt4eEncBh8F5yg753d
-         V2ViUW1FvckLJChRrKKE6sPjS9fQKVOTbxH7pszf+DYjMfBM+1Hc5KsGKFzXoRuMCHdq
-         qcIog949KsxfTcnLMEjp/n5ZzR92+H2nxE/UzteEtxPNVswUgdyHEkmFQJO9wL+foEcN
-         CXXg==
+         :content-disposition:in-reply-to;
+        bh=k9wukxxtlg/uismwI/UMnm3Bx/cnmFE7m1b5ib9kprU=;
+        b=Pgtv+SSciXljqnf+92jyUjHCiyePaXchSbLnisVnEOScpkJatv+yERrrZBYCZLd3ow
+         DuA7ZKiHaU0yDaZtzunN/nmNAjL3urizirZBy9BGfZ3CAPNb1YtSZhG/oUR3KfQ0p4vF
+         oX+BdvugIk5A8V/0bC69OJ24MW08RyoiXiP+6YepB1RI+98wRikGIXMAe1t3zKNr9m2h
+         32v+hPahc8twDVp+By9KbcG/Yg+BCvsfoGU6vITHJyXAxVBbQHP/320Hwu/2lXiKI9/+
+         Ui1mD/c9x52pYPBNSU6flJ7dOff61qwSDLOrrXISQ/8+ZSRr11LX8PATxqJWCZkZvh4M
+         bV5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=nNfoDipJXnYq7VJ5hMTMW93JkoBjEN3XF2dENorzijs=;
-        b=WE+3yfjheVU9X9UbC/uA7tftvLiQ+fEx9gk3k2p1FnSAup5ClknQRs2/J3zZOdyckg
-         7S7W3rGXNpHXr+Z17rIm+doAaLbCImAp5mn6c3F4weKVDByMSOrXr4lBSKIBfEgdFLel
-         hjnvv3XLz6s+/6qN9NOlIvhw+N3iEqEX4r23veJ+Ysubaj91NOYLBvoj5bLargoYJ1jc
-         PMdsV8eZ/W2NFQOCJ9yYoOL7d7z6qYS18JZvPao779yXnWIbIfHb8f9NA/+HkPBCTO/C
-         My+2P++ePuEgO9xFKMUrMQHtkvWXtUdNvU1+0zyktDDqIFiKWthjyLLwyREsK4xmJ8ni
-         zKaQ==
-X-Gm-Message-State: AOAM531LhaMIYN0IZiD6uyOltoosP8HQYOx4quRPCmsyAmSGs+4X+nTR
-        cOH4yrmpMQtzoPyAt7RlvVuxYA==
-X-Google-Smtp-Source: ABdhPJwFT/4AGR1g3XBLbVOb2Lb1zJ42emgmqdFC7+HcborRvYs9taXcrKFmaFuvTjXIcnZBJadnAA==
-X-Received: by 2002:adf:9d8e:: with SMTP id p14mr347943wre.236.1591644511323;
-        Mon, 08 Jun 2020 12:28:31 -0700 (PDT)
-Received: from dell ([95.147.198.92])
-        by smtp.gmail.com with ESMTPSA id c70sm473889wme.32.2020.06.08.12.28.30
+         :mime-version:content-disposition:in-reply-to;
+        bh=k9wukxxtlg/uismwI/UMnm3Bx/cnmFE7m1b5ib9kprU=;
+        b=Lzm0ET3+zm7d45lnas+fLTM44f9u8PeYX5KO9u0knwuHjCHbeoqSaHwSIG31MLhgvJ
+         r7bNMimtrytbkB8J6iTAIHJBc3t2VvwTV1Se9pbr7jGQHSgAkQrdnrbEGESzBEVnr1a1
+         3OuYpfr28ZKpNnrIBOiaXfA3997mdTThf8kihrfuHz+faA0QQiq2rgzGR9Gm2PZlzx5H
+         ITfo6cW5SIpKpB0yLrPKUyISLbUmwDRUmyCSFjGLbWV5rZ+S/GrmZR5n489BL0sluO29
+         EzhAsBCz+3TzvoFbL0iCNkfdLHc2YtKE4CIdam9vzS8Q2BnvbNlrQpAL750XH9TABIR2
+         jC/g==
+X-Gm-Message-State: AOAM5339/wMpvjR0uJvBC98Eq3dK/JcXUeP0nbNW77DVEEeD6qCuuy11
+        pYB7aEsG4pqgHCyo9xrpmcl9iA==
+X-Google-Smtp-Source: ABdhPJz+Arj7Rd047gQ/TSazKm79Nf89ldxGO7ovHCUa3TI33gR3dVoHNtdcrf9U3W0goX/uDHjWoQ==
+X-Received: by 2002:a37:9f0b:: with SMTP id i11mr23180985qke.481.1591644512610;
+        Mon, 08 Jun 2020 12:28:32 -0700 (PDT)
+Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id k10sm7475862qkh.47.2020.06.08.12.28.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 12:28:30 -0700 (PDT)
-Date:   Mon, 8 Jun 2020 20:28:29 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Gene Chen <gene.chen.richtek@gmail.com>
-Cc:     matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        gene_chen@richtek.com, Wilma.Wu@mediatek.com,
-        shufan_lee@richtek.com, cy_huang@richtek.com
-Subject: Re: [PATCH] mfd: mt6360: Fix register driver NULL pointer by add
- driver name
-Message-ID: <20200608192829.GG4106@dell>
-References: <1591609125-3761-1-git-send-email-gene.chen.richtek@gmail.com>
+        Mon, 08 Jun 2020 12:28:31 -0700 (PDT)
+Date:   Mon, 8 Jun 2020 15:28:28 -0400
+From:   Qian Cai <cai@lca.pw>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     kernel test robot <rong.a.chen@intel.com>,
+        clang-built-linux@googlegroups.com, LKP <lkp@lists.01.org>,
+        "Linus, Torvalds," <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: 0887a7ebc9 ("ubsan: add trap instrumentation option"): BUG:
+ kernel hang in early-boot stage, last printk: early console in setup code
+Message-ID: <20200608192828.GB987@lca.pw>
+References: <20200608060407.GX12456@shao2-debian>
+ <202006081144.933995E4@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1591609125-3761-1-git-send-email-gene.chen.richtek@gmail.com>
+In-Reply-To: <202006081144.933995E4@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 08 Jun 2020, Gene Chen wrote:
-
-> From: Gene Chen <gene_chen@richtek.com>
+On Mon, Jun 08, 2020 at 12:00:11PM -0700, Kees Cook wrote:
+> On Mon, Jun 08, 2020 at 02:04:08PM +0800, kernel test robot wrote:
+> > The issue seems due to the lack of "-fsanitize-undefined-trap-on-error" in clang.
 > 
-> accidentally remove driver name when
-> replace probe by probe_new in add mt6360 mfd driver patch v4
+> Hm? No, that's supported in Clang (at least as far back as Clang 9.)
 > 
-> [  121.243012] EAX: c2a8bc64 EBX: 00000000 ECX: 00000000 EDX: 00000000
-> [  121.243012] ESI: c2a8bc79 EDI: 00000000 EBP: e54bdea8 ESP: e54bdea0
-> [  121.243012] DS: 007b ES: 007b FS: 0000 GS: 0000 SS: 0068 EFLAGS: 00010286
-> [  121.243012] CR0: 80050033 CR2: 00000000 CR3: 02ec3000 CR4: 000006b0
-> [  121.243012] Call Trace:
-> [  121.243012]  kset_find_obj+0x3d/0xc0
-> [  121.243012]  driver_find+0x16/0x40
-> [  121.243012]  driver_register+0x49/0x100
-> [  121.243012]  ? i2c_for_each_dev+0x39/0x50
-> [  121.243012]  ? __process_new_adapter+0x20/0x20
-> [  121.243012]  ? cht_wc_driver_init+0x11/0x11
-> [  121.243012]  i2c_register_driver+0x30/0x80
-> [  121.243012]  ? intel_lpss_pci_driver_init+0x16/0x16
-> [  121.243012]  mt6360_pmu_driver_init+0xf/0x11
-> [  121.243012]  do_one_initcall+0x33/0x1a0
-> [  121.243012]  ? parse_args+0x1eb/0x3d0
-> [  121.243012]  ? __might_sleep+0x31/0x90
-> [  121.243012]  ? kernel_init_freeable+0x10a/0x17f
-> [  121.243012]  kernel_init_freeable+0x12c/0x17f
-> [  121.243012]  ? rest_init+0x110/0x110
-> [  121.243012]  kernel_init+0xb/0x100
-> [  121.243012]  ? schedule_tail_wrapper+0x9/0xc
-> [  121.243012]  ret_from_fork+0x19/0x24
-> [  121.243012] Modules linked in:
-> [  121.243012] CR2: 0000000000000000
-> [  121.243012] random: get_random_bytes called from init_oops_id+0x3a/0x40 with crng_init=0
-> [  121.243012] ---[ end trace 38a803400f1a2bee ]---
-> [  121.243012] EIP: strcmp+0x11/0x30
-
-How did this driver ever work for you?
-
-> Signed-off-by: Gene Chen <gene_chen@richtek.com>
-> ---
->  drivers/mfd/mt6360-core.c | 1 +
->  1 file changed, 1 insertion(+)
+> > Greetings,
+> > 
+> > 0day kernel testing robot got the below dmesg and the first bad commit is
+> > 
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> > 
+> > commit 0887a7ebc97770c7870abf3075a2e8cd502a7f52
+> > Author:     Kees Cook <keescook@chromium.org>
+> > AuthorDate: Mon Apr 6 20:12:27 2020 -0700
+> > Commit:     Linus Torvalds <torvalds@linux-foundation.org>
+> > CommitDate: Tue Apr 7 10:43:44 2020 -0700
+> > 
+> >     ubsan: add trap instrumentation option
 > 
-> diff --git a/drivers/mfd/mt6360-core.c b/drivers/mfd/mt6360-core.c
-> index db8cdf5..e9cacc2 100644
-> --- a/drivers/mfd/mt6360-core.c
-> +++ b/drivers/mfd/mt6360-core.c
-> @@ -412,6 +412,7 @@ MODULE_DEVICE_TABLE(of, mt6360_pmu_of_id);
->  
->  static struct i2c_driver mt6360_pmu_driver = {
->  	.driver = {
-> +		.name = "mt6360_pmu",
->  		.pm = &mt6360_pmu_pm_ops,
->  		.of_match_table = of_match_ptr(mt6360_pmu_of_id),
->  	},
+> In the randconfig, I see CONFIG_UBSAN_TRAP is enabled with lots of other
+> UBSAN options. If you're not expecting the results, it's very likely the
+> false positives in UBSAN are going to do bad things. :) This is "working
+> as expected", as noted in the commit log quoted below.
+> 
+> >     
+> >     Patch series "ubsan: Split out bounds checker", v5.
+> >     
+> >     This splits out the bounds checker so it can be individually used.  This
+> >     is enabled in Android and hopefully for syzbot.  Includes LKDTM tests for
+> >     behavioral corner-cases (beyond just the bounds checker), and adjusts
+> >     ubsan and kasan slightly for correct panic handling.
+> >     
+> >     This patch (of 6):
+> >     
+> >     The Undefined Behavior Sanitizer can operate in two modes: warning
+> >     reporting mode via lib/ubsan.c handler calls, or trap mode, which uses
+> >     __builtin_trap() as the handler.  Using lib/ubsan.c means the kernel image
+> >     is about 5% larger (due to all the debugging text and reporting structures
+> >     to capture details about the warning conditions).  Using the trap mode,
+> >     the image size changes are much smaller, though at the loss of the
+> >     "warning only" mode.
+> >     
+> >     In order to give greater flexibility to system builders that want minimal
+> >     changes to image size and are prepared to deal with kernel code being
+> >     aborted and potentially destabilizing the system, this introduces
+> >     CONFIG_UBSAN_TRAP.  The resulting image sizes comparison:
+> >     
+> >        text    data     bss       dec       hex     filename
+> >     19533663   6183037  18554956  44271656  2a38828 vmlinux.stock
+> >     19991849   7618513  18874448  46484810  2c54d4a vmlinux.ubsan
+> >     19712181   6284181  18366540  44362902  2a4ec96 vmlinux.ubsan-trap
+> >     
+> >     CONFIG_UBSAN=y:      image +4.8% (text +2.3%, data +18.9%)
+> >     CONFIG_UBSAN_TRAP=y: image +0.2% (text +0.9%, data +1.6%)
+> >     
+> >     Additionally adjusts the CONFIG_UBSAN Kconfig help for clarity and removes
+> >     the mention of non-existing boot param "ubsan_handle".
+> 
+> If you're trying to _boot_ a randconfig, I suspect there are going to be
+> a lot of surprises with UBSAN (in any mode) enabled. Right now, likely the
+> least noisy of them all is UBSAN_BOUNDS, which was split out for fuzzers.
+> 
+> FWIW, the dmesg appears to be catching a NULL pointer dereference
+> (enabled via CONFIG_UBSAN_MISC):
+> 
+> [    0.047646] UBSAN: Undefined behaviour in drivers/acpi/acpica/tbfadt.c:459:37
+> [    0.047650] member access within null pointer of type 'struct acpi_table_fadt'
+> [    0.047655] CPU: 0 PID: 0 Comm: swapper Not tainted 5.6.0-11597-g7baf219982281 #1
+> [    0.047659] Call Trace:
+> [    0.047676]  dump_stack+0x88/0xb9
+> [    0.047684]  ? ubsan_prologue+0x21/0x46
+> [    0.047689]  ? ubsan_type_mismatch_common+0x188/0x19e
+> [    0.047695]  ? __ubsan_handle_type_mismatch_v1+0x45/0x4a
+> [    0.047701]  ? acpi_tb_create_local_fadt+0xaa/0x435
+> [    0.047706]  ? acpi_tb_parse_fadt+0x54/0xd4
+> [    0.047712]  ? acpi_tb_parse_root_table+0x192/0x1bf
+> [    0.047717]  ? acpi_table_init+0x3b/0x56
+> [    0.047721]  ? acpi_boot_table_init+0xf/0x6e
+> [    0.047726]  ? setup_arch+0x459/0x520
+> [    0.047732]  ? start_kernel+0x5e/0x3ba
+> [    0.047737]  ? secondary_startup_64+0xa4/0xb0
+> 
+> I'm not sure how ACPI defines acpi_gbl_FADT though? There's no
+> dereference...
+> 
+> 459:         if (acpi_gbl_FADT.header.length <= ACPI_FADT_V2_SIZE) {
+> 
+> 
+> BTW, this report only contained 1 actual dmesg. There were two files with
+> dmesg file names, but one of them was the gzipped reproduction steps again.
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+No, it does not complain about a NULL pointer dereference but rather a
+member access within NULL pointer.
+
+# ./scripts/faddr2line vmlinux acpi_tb_create_local_fadt+0x104/0x6ec
+acpi_tb_create_local_fadt+0x104/0x6ec:
+acpi_tb_convert_fadt at drivers/acpi/acpica/tbfadt.c:459
+(inlined by) acpi_tb_create_local_fadt at drivers/acpi/acpica/tbfadt.c:388
+
+Clang would report several of those,
+
+https://lore.kernel.org/lkml/CA6078C3-3489-40E4-B756-A0AF6DB3A3A5@lca.pw/
+
+There are many examples how to "fix" those.
+
+$ git log  --oneline --grep='member access within null pointer'
+
+Anyway, this line,
+
+        if (acpi_gbl_FADT.header.length <= ACPI_FADT_V2_SIZE) {
+
+acpi_gbl_FADT was defined in,
+
+.//include/acpi/acpixf.h:266:ACPI_GLOBAL(struct acpi_table_fadt, acpi_gbl_FADT);
+
+#ifdef DEFINE_ACPI_GLOBALS
+#define ACPI_GLOBAL(type,name) \
+	extern type name; \
+	type name
+
+
+
+#define ACPI_INIT_GLOBAL(type,name,value) \
+	type name=value
+
+
+
+#else
+#ifndef ACPI_GLOBAL
+#define ACPI_GLOBAL(type,name) \
+	extern type name
+#endif
+
+
+
+#ifndef ACPI_INIT_GLOBAL
+#define ACPI_INIT_GLOBAL(type,name,value) \
+	extern type name
+#endif
+#endif
