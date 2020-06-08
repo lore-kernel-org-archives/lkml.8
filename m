@@ -2,126 +2,128 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B85CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 19:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9464C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 19:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09F74206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 19:19:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3AD82063A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 19:22:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="onJFTihw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbgFHTTA (ORCPT
+        id S1726446AbgFHTWK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 15:19:00 -0400
-Received: from mga02.intel.com ([134.134.136.20]:41852 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726409AbgFHTS7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 15:18:59 -0400
-IronPort-SDR: TX0auy171xg/88bbdvUy0RNU/eN06UqdDle9Lx8xatxU3JYUVM9CEqS8nogwL0wpdeNqXVMwn7
- xCntn4YniymQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2020 12:18:59 -0700
-IronPort-SDR: WIvzDvt6qXPnDtoGlEHqhyfaeHGmYNE6iID2/o8ODo6ZAgHRcxd0ILtw4JJz9RY545QtW3RS/V
- PzvkvaUlqvhw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,487,1583222400"; 
-   d="scan'208";a="446851097"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
-  by orsmga005.jf.intel.com with ESMTP; 08 Jun 2020 12:18:58 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>,
-        Oliver Upton <oupton@google.com>,
-        Krish Sadhukhan <krish.sadhukhan@oracle.com>,
-        Miaohe Lin <linmiaohe@huawei.com>
-Subject: [PATCH v2] KVM: nVMX: Consult only the "basic" exit reason when routing nested exit
-Date:   Mon,  8 Jun 2020 12:18:57 -0700
-Message-Id: <20200608191857.30319-1-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.26.0
+        Mon, 8 Jun 2020 15:22:10 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:5813 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726227AbgFHTWG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 15:22:06 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ede8f840000>; Mon, 08 Jun 2020 12:20:36 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 08 Jun 2020 12:22:06 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 08 Jun 2020 12:22:06 -0700
+Received: from [10.2.58.199] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 8 Jun
+ 2020 19:22:06 +0000
+Subject: Re: [PATCH] staging: kpc2000: kpc_dma: Convert get_user_pages() -->
+ pin_user_pages()
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+CC:     Souptick Joarder <jrdr.linux@gmail.com>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        Bharath Vedartham <linux.bhar@gmail.com>,
+        <harshjain32@gmail.com>, Greg KH <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Simon_Sandstr=c3=b6m?= <simon@nikanor.nu>,
+        <jane.pnx9@gmail.com>
+References: <1590947491-11194-1-git-send-email-jrdr.linux@gmail.com>
+ <7e725dd0-7423-b85b-ff56-9705419d13b9@nvidia.com>
+ <CAFqt6zbsNcHWF-0Na2xMKdJQs2kVkLHTCw=cytvdo+z-axx97Q@mail.gmail.com>
+ <5f0c68a0-2cc4-5724-d778-7e9d5fd7dfde@nvidia.com>
+ <20200608191635.GA30374@kadam>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <a71c2b68-fc70-a7bf-1d1c-500459639dae@nvidia.com>
+Date:   Mon, 8 Jun 2020 12:22:05 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200608191635.GA30374@kadam>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1591644036; bh=M9jnObSRB68t6gXIHyWay4/z8p+apr/yOzEEUHbukOk=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=onJFTihwkiDmWn0fwNOz6NHHGEtz06ewdg9TMRI3wvCU4/QHbSvASc0Mb6jADycOC
+         iyTPNU9tvDPIOJekaVGHbaNd929BZ9naGWsgTAAbsNPNhDZlSGm0IYBS0rdBRVFfFF
+         TUEnJ3Nf6FZwSjBb1V3UjFYBilTVmauZqCQBkwckfQge/0snTCUCxATNplKaPQ5+on
+         5WFO9WGGw939GfIa2coMNDismPpCbs3YmB+aB6213561VHYnSf3ENzTv1oaCtaBiGR
+         SVGOqHyAI1ECQdpBIr+Js5aGRyYqiSzf4Gg/C70/t9m3Ij0I8sbpY1C8sz72vXPSGg
+         4zl3Y1W7pr5NA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Consult only the basic exit reason, i.e. bits 15:0 of vmcs.EXIT_REASON,
-when determining whether a nested VM-Exit should be reflected into L1 or
-handled by KVM in L0.
+On 2020-06-08 12:16, Dan Carpenter wrote:
+> On Mon, Jun 08, 2020 at 12:05:57PM -0700, John Hubbard wrote:
+>> On 2020-06-08 12:01, Souptick Joarder wrote:
+>>> On Mon, Jun 1, 2020 at 7:15 AM John Hubbard <jhubbard@nvidia.com> wrote:
+>>>>
+>>>> On 2020-05-31 10:51, Souptick Joarder wrote:
+>>>>> In 2019, we introduced pin_user_pages*() and now we are converting
+>>>>> get_user_pages*() to the new API as appropriate. [1] & [2] could
+>>>>> be referred for more information.
+>>>>>
+>>>>> When pin_user_pages() returns numbers of partially mapped pages,
+>>>>> those pages were not unpinned as part of error handling. Fixed
+>>>>> it as part of this patch.
+>>>>>
+>>>>
+>>>> Hi Souptick,
+>>>>
+>>>> btw, Bharath (+cc) attempted to do the "put" side of this, last year.
+>>>> That got as far as a v4 patch [1], and then I asked him to let me put
+>>>> it into my tree. But then it didn't directly apply anymore after the
+>>>> whole design moved to pin+unpin, and so here we are now.
+>>>>
+>>>>
+>>>> If Bharath is still doing kernel work, you might offer him a Co-Developed-by:
+>>>> tag (see https://www.kernel.org/doc/html/v4.17/process/submitting-patches.html).
+>>>
+>>> Sure, will add him as *Co-Developed-by*
+>>>>
+>>
+>>
+>> Yes, but it's best to wait and see if he responds, before adding that tag, because
+>> it also required a Signed-off-by from him.
+> 
+> Souptick is porting patches from your tree?  It's not clear to me how
+> Bharath actually helped author this patch.
 
-For better or worse, the switch statements nested_vmx_l0_wants_exit()
-and nested_vmx_l1_wants_exit() default to reflecting the VM-Exit into L1
-for any nested VM-Exit without dedicated logic.  Because the case
-statements only contain the basic exit reason, any VM-Exit with modifier
-bits set will be reflected to L1, even if KVM intended to handle it in
-L0.
 
-Practically speaking, this only affects EXIT_REASON_MCE_DURING_VMENTRY,
-i.e. a #MC that occurs on nested VM-Enter would be incorrectly routed to
-L1, as "failed VM-Entry" is the only modifier that KVM can currently
-encounter.  The SMM modifiers will never be generated as KVM doesn't
-support/employ a SMI Transfer Monitor.  Ditto for "exit from enclave",
-as KVM doesn't yet support virtualizing SGX, i.e. it's impossible to
-enter an enclave in a KVM guest (L1 or L2).
+What happened is that Bharath wrote patches very similar to these, last year.
+And we spent some time on review and figuring out pre-existing issues in the code.
 
-Note, the original version of this fix[*] is functionally equivalent and
-far more suited to backporting as the affected code was refactored since
-the original patch was posted.
+Anyway, I suspect that he's not actually involved anymore, so I probably shouldn't
+have done any more than to just put him on Cc. Sorry for any confusion I created
+here.
 
-[*] https://lkml.kernel.org/r/20200227174430.26371-1-sean.j.christopherson@intel.com
-
-Fixes: 644d711aa0e1 ("KVM: nVMX: Deciding if L0 or L1 should handle an L2 exit")
-Cc: Jim Mattson <jmattson@google.com>
-Cc: Xiaoyao Li <xiaoyao.li@intel.com>
-Cc: stable@vger.kernel.org
-Cc: Oliver Upton <oupton@google.com>
-Cc: Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Cc: Miaohe Lin <linmiaohe@huawei.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
-
-Another wounded soldier. 
-
-Oliver, Krish, and Miaohe all provided reviews for v1, but I didn't feel
-comfortable adding the tags to v2 because this is far from a straight
-rebase.
-
-v2: Rebased to kvm/queue, commit fb7333dfd812 ("KVM: SVM: fix calls ...").
-
- arch/x86/kvm/vmx/nested.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index bcb50724be38..adb11b504d5c 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -5672,7 +5672,7 @@ static bool nested_vmx_l0_wants_exit(struct kvm_vcpu *vcpu, u32 exit_reason)
- {
- 	u32 intr_info;
- 
--	switch (exit_reason) {
-+	switch ((u16)exit_reason) {
- 	case EXIT_REASON_EXCEPTION_NMI:
- 		intr_info = vmx_get_intr_info(vcpu);
- 		if (is_nmi(intr_info))
-@@ -5733,7 +5733,7 @@ static bool nested_vmx_l1_wants_exit(struct kvm_vcpu *vcpu, u32 exit_reason)
- 	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
- 	u32 intr_info;
- 
--	switch (exit_reason) {
-+	switch ((u16)exit_reason) {
- 	case EXIT_REASON_EXCEPTION_NMI:
- 		intr_info = vmx_get_intr_info(vcpu);
- 		if (is_nmi(intr_info))
+thanks,
 -- 
-2.26.0
-
+John Hubbard
+NVIDIA
