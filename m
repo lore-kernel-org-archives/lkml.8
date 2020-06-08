@@ -2,91 +2,128 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55CAFC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 17:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB99C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 17:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2ABB2208A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 17:36:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591637815;
-	bh=DYngZGs8hXVYCLRG3E+VatlpANa4VIrxDG07fqZWnyA=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=FlrSDpsZO1ScRcENbfoJ3dpo2x0H/m4b/nUQZQfKJ+y7qJ4UfkIp7x5UFqossNmYX
-	 TorivG7O47ZOBTA+1eOG8XAkhANkTOWy4IMBwm4oG9otg8pdG3Cc2W7CWtFt1BTeVW
-	 R2UELQwWquTgpQeVI0hMusgciwjA/MTK3g8c4o2Y=
+	by mail.kernel.org (Postfix) with ESMTP id E559E20774
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 17:46:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oWxGYT8A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730028AbgFHRgy (ORCPT
+        id S1730055AbgFHRqJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 13:36:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37162 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726122AbgFHRgw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 13:36:52 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB3A6206D5;
-        Mon,  8 Jun 2020 17:36:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591637812;
-        bh=DYngZGs8hXVYCLRG3E+VatlpANa4VIrxDG07fqZWnyA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ezmGM/tmG507JIOrsLpR3Vbm/ehuVRZXeUlnd74ffWLdbRoTVOT4+FALWqEwxql0X
-         phHyCdcBX5lkJmoiO2ydoNCV2VLaBGj2otWmDeMrAiK7H248LcXqGerrOjpa+SLBkN
-         1IVYcm/C58rrbv4CgXzyeKpcG26fjuQTsMbV7+js=
-Date:   Mon, 8 Jun 2020 12:42:02 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Mark Salter <msalter@redhat.com>,
-        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     linux-c6x-dev@linux-c6x.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] c6x: traps: Mark expected switch fall-through
-Message-ID: <20200608174202.GA32421@embeddedor>
+        Mon, 8 Jun 2020 13:46:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44484 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726097AbgFHRqI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 13:46:08 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A5C9C08C5C2;
+        Mon,  8 Jun 2020 10:46:08 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id e11so12517551ilr.4;
+        Mon, 08 Jun 2020 10:46:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=flU8txg+glWIi8fulPUwPzIPdeohInHSXaY33/9ThCw=;
+        b=oWxGYT8A0b3THLWnp6+WNhUYr5lhxnC0iCsnVEWaHvL0MuzTTNd7uoI/JQzVbB1TSt
+         0ivolbkn3faqqGPZHyCRpx+F3rnZwRJKcGGzdPzP3B/dLRRfcGIeiE3yLVe4WWgS0f4x
+         Spv43/gjVHiZ7a2nLepfhlEJcDtFgUNOLiqDP84IjLvFhmBgO66qumLi3Rd0YLjC5Twt
+         aIp95j+zb6wLr5zmts6GLFSyb2dEoWOhdikR1Lx73R3x5VkxGG3ieVHoHC0HfqGV/+PL
+         /93E+q1WoTkfo4qyrUc8W3TDduY5TGBgEkDP5eZQSG785x9l3vlc7xFOlcWXUbZWS84K
+         O+vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=flU8txg+glWIi8fulPUwPzIPdeohInHSXaY33/9ThCw=;
+        b=byVjvYXHMSuNwz8TO7drOW7Pjkk/jn3ipWLfzO/x0Y+sPo8GTjF48H0y6UONlKmGFy
+         obTyMyg8v65BnlpQcjK+RA5HfKTfhnLjfVsStZC3Wbto3iOHaVh4Zhpyy4S1Bwlf+Onb
+         AJ4m4oNKM2JbrpsbwcB2Sk54DmQAvNhro12Db/WNAx9c/r7NEpyNTmWZgTIZCIgS338f
+         9dTP40Gs7iAN0AjUb4Pyaab3Rpz3Y37cq4QDi4vwryeDHXbhobJlNTnbvRZwo8/zDyQu
+         QYNYBu2sHgnJq6XK90oLWG2g5T1MqJgdQ2np8nMdrl3lsmEUy6qmt4DlHFRQYPPvqQvZ
+         bqnw==
+X-Gm-Message-State: AOAM533riWRsaMq9EftJuQMkr/bqH9qe9h7EQba+RYoyUlmPY2w7Kuxg
+        pWgXmhdNsBgpbL5mAQMJZSisokU/smPEryKtbjUtA8Gh
+X-Google-Smtp-Source: ABdhPJyfKtn7HoqtSpLNxQ7xQVqbp2EsASalnYA0qlI3rr8yKbjRc9BLAO+xaARmqQ/10tZ4f1u2dkSPjpVsx1Burgs=
+X-Received: by 2002:a92:1b86:: with SMTP id f6mr23607749ill.9.1591638367400;
+ Mon, 08 Jun 2020 10:46:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200608140557.GG3127@techsingularity.net> <20200608151943.GA861@quack2.suse.cz>
+ <20200608165040.GI3127@techsingularity.net>
+In-Reply-To: <20200608165040.GI3127@techsingularity.net>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Mon, 8 Jun 2020 20:45:56 +0300
+Message-ID: <CAOQ4uxg2BKuRCfn7BH4FYnvrp_2rsgfgJ05pjjGOarx4C3E9Mw@mail.gmail.com>
+Subject: Re: [PATCH] fsnotify: Rearrange fast path to minimise overhead when
+ there is no watcher
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Jan Kara <jack@suse.cz>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark switch cases where we are expecting to fall through.
+On Mon, Jun 8, 2020 at 7:50 PM Mel Gorman <mgorman@techsingularity.net> wrote:
+>
+> On Mon, Jun 08, 2020 at 05:19:43PM +0200, Jan Kara wrote:
+> > > This is showing that the latencies are improved by roughly 2-9%. The
+> > > variability is not shown but some of these results are within the noise
+> > > as this workload heavily overloads the machine. That said, the system CPU
+> > > usage is reduced by quite a bit so it makes sense to avoid the overhead
+> > > even if it is a bit tricky to detect at times. A perf profile of just 1
+> > > group of tasks showed that 5.14% of samples taken were in either fsnotify()
+> > > or fsnotify_parent(). With the patch, 2.8% of samples were in fsnotify,
+> > > mostly function entry and the initial check for watchers.  The check for
+> > > watchers is complicated enough that inlining it may be controversial.
+> > >
+> > > Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+> >
+> > Thanks for the patch! I have to tell I'm surprised this small reordering
+> > helps so much. For pipe inode we will bail on:
+> >
+> >        if (!to_tell->i_fsnotify_marks && !sb->s_fsnotify_marks &&
+> >            (!mnt || !mnt->mnt_fsnotify_marks))
+> >                return 0;
+> >
+> > So what we save with the reordering is sb->s_fsnotify_mask and
+> > mnt->mnt_fsnotify_mask fetch but that should be the same cacheline as
+> > sb->s_fsnotify_marks and mnt->mnt_fsnotify_marks, respectively.
+>
+> It is likely that the contribution of that change is marginal relative
+> to the fsnotify_parent() call. I'll know by tomorrow morning at the latest.
+>
+> > We also
+> > save a function call of fsnotify_parent() but I would think that is very
+> > cheap (compared to the whole write path) as well.
+> >
+>
+> To be fair, it is cheap but with this particular workload, we call
+> vfs_write() a *lot* and the path is not that long so it builds up to 5%
+> of samples overall. Given that these were anonymous pipes, it surprised
+> me to see fsnotify at all which is why I took a closer look.
+>
 
-Fix the following warning through the use of the new the new
-pseudo-keyword fallthrough;
+I should note that after:
+7c49b8616460 fs/notify: optimize inotify/fsnotify code for unwatched files
+Which speaks of a similar workload,
+the code looked quite similar to your optimization.
 
-arch/c6x/kernel/traps.c:335:11: warning: this statement may fall through [-Wimplicit-fallthrough=]
-  335 |    ie_num = 8;
-      |    ~~~~~~~^~~
-arch/c6x/kernel/traps.c:336:3: note: here
-  336 |   default:
-      |   ^~~~~~~
+It was:
+60f7ed8c7c4d fsnotify: send path type events to group with super block marks
 
-Reported-by: Christian Brauner <christian.brauner@ubuntu.com>
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- arch/c6x/kernel/traps.c | 1 +
- 1 file changed, 1 insertion(+)
+That started accessing ->x_fsnotify_mask before ->x_fsnotify_marks,
+although I still find it hard to believe that this makes a real difference.
 
-diff --git a/arch/c6x/kernel/traps.c b/arch/c6x/kernel/traps.c
-index 2b9121c755be1..bd0a477d3816d 100644
---- a/arch/c6x/kernel/traps.c
-+++ b/arch/c6x/kernel/traps.c
-@@ -333,6 +333,7 @@ asmlinkage int process_exception(struct pt_regs *regs)
- 
- 		case EXCEPT_TYPE_SXF:
- 			ie_num = 8;
-+			fallthrough;
- 		default:
- 			ack_exception(type_num);
- 			do_trap(&iexcept_table[ie_num], regs);
--- 
-2.27.0
-
+Thanks,
+Amir.
