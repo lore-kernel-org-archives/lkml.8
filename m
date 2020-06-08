@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F78DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 002E7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:30:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 580972072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:30:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1B89206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:30:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662633;
-	bh=TyJAmAg2IxYVcbNEVfhBJ2zxbSBuEzLHuikDs16VLFI=;
+	s=default; t=1591662640;
+	bh=NIvfnbAIw5QiLc2iBkfIAXHTrtRPZKfqnsnYAz9ZcoA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qfWiesM5vwKCj0fs4z2Sqe5s6k8EOLPBjBOtZt5CTT6zowD6QNwT7F2RX7OOO7CLw
-	 dNC03uCswxQMTC0VxOx8NuRlavaKbc34zm2BOlqHLzmYyxDpIC1pUGoCb9Q1NSgd4I
-	 xw5ivB90JnTEOESkEpN1DN33BsSSHsjzIKypE0tU=
+	b=a7Ot8QF/0Zs7+c89g30TbSNCvL3bjExJXgBGtdlMEPbkfqegW8Bpd0IC4Q0caZxjr
+	 mg7JXWu7ZgCspDXFjoBewSqDL57a0hQDZR0rxDGUJhNjfUOhP0y3yNPAKvauz8tnOa
+	 7QUHCWA9duF1jDyeqtAVslqqKQ9wA93o86wc/EMQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731262AbgFIAab (ORCPT
+        id S1729846AbgFIAai (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:30:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36860 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:30:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730093AbgFHXPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:15:46 -0400
+        id S1730089AbgFHXPo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:15:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AA3120760;
-        Mon,  8 Jun 2020 23:15:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3B9220659;
+        Mon,  8 Jun 2020 23:15:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658145;
-        bh=TyJAmAg2IxYVcbNEVfhBJ2zxbSBuEzLHuikDs16VLFI=;
+        s=default; t=1591658144;
+        bh=NIvfnbAIw5QiLc2iBkfIAXHTrtRPZKfqnsnYAz9ZcoA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PWezgcUWadk1gGcMiMIVs7Wl95tRVgVXHJGNliVWTIpyPDBnstsCSeWNsgTAZpTg+
-         M2KTkEKZQdik9AOjG7xus61XgdZm/6+bjdcDUT8HvlTYIQNhvWzxobIpn6IiHhW67M
-         jBtB3cZ/+N64UlF8u4qkgsG49I58NR4kMss+nOz8=
+        b=zAxxxOiPCejfHMqXscA2CSRKCvkRBq0/TkIGlgCdQbm4O9rOx60/9FHTj+D9Hcm/H
+         2MdfuaqIumRBfCjavvluZ2v6QX8VH+RV9sFfdZtlZfa8thuzxoObCsw+v85XT4zL0U
+         KhN36uMRH3HNZf0Hc9S6c52bnAxw6006N2JDdHWs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Saravana Kannan <saravanak@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH AUTOSEL 5.6 178/606] driver core: Fix SYNC_STATE_ONLY device link implementation
-Date:   Mon,  8 Jun 2020 19:05:03 -0400
-Message-Id: <20200608231211.3363633-178-sashal@kernel.org>
+Cc:     Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 177/606] iio: adc: ti-ads8344: Fix channel selection
+Date:   Mon,  8 Jun 2020 19:05:02 -0400
+Message-Id: <20200608231211.3363633-177-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -59,187 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Saravana Kannan <saravanak@google.com>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
 
-commit 21c27f06587d2c18150d27ca2382a509ec55c482 upstream.
+commit bcfa1e253d2e329e1ebab5c89f3c73f6dd17606c upstream.
 
-When SYNC_STATE_ONLY support was added in commit 05ef983e0d65 ("driver
-core: Add device link support for SYNC_STATE_ONLY flag"),
-device_link_add() incorrectly skipped adding the new SYNC_STATE_ONLY
-device link to the supplier's and consumer's "device link" list.
+During initial submission the selection of the channel was done using
+the scan_index member of the iio_chan_spec structure. It was an abuse
+because this member is supposed to be used with a buffer so it was
+removed.
 
-This causes multiple issues:
-- The device link is lost forever from driver core if the caller
-  didn't keep track of it (caller typically isn't expected to). This is
-  a memory leak.
-- The device link is also never visible to any other code path after
-  device_link_add() returns.
+However there was still the need to be able to known how to select a
+channel, the correct member to store this information is address.
 
-If we fix the "device link" list handling, that exposes a bunch of
-issues.
+Thanks to this it is possible to select any other channel than the
+channel 0.
 
-1. The device link "status" state management code rightfully doesn't
-handle the case where a DL_FLAG_MANAGED device link exists between a
-supplier and consumer, but the consumer manages to probe successfully
-before the supplier. The addition of DL_FLAG_SYNC_STATE_ONLY links break
-this assumption. This causes device_links_driver_bound() to throw a
-warning when this happens.
-
-Since DL_FLAG_SYNC_STATE_ONLY device links are mainly used for creating
-proxy device links for child device dependencies and aren't useful once
-the consumer device probes successfully, this patch just deletes
-DL_FLAG_SYNC_STATE_ONLY device links once its consumer device probes.
-This way, we avoid the warning, free up some memory and avoid
-complicating the device links "status" state management code.
-
-2. Creating a DL_FLAG_STATELESS device link between two devices that
-already have a DL_FLAG_SYNC_STATE_ONLY device link will result in the
-DL_FLAG_STATELESS flag not getting set correctly. This patch also fixes
-this.
-
-Lastly, this patch also fixes minor whitespace issues.
-
-Cc: stable@vger.kernel.org
-Fixes: 05ef983e0d65 ("driver core: Add device link support for SYNC_STATE_ONLY flag")
-Signed-off-by: Saravana Kannan <saravanak@google.com>
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Link: https://lore.kernel.org/r/20200519063000.128819-1-saravanak@google.com
+Fixes: 8dd2d7c0fed7 ("iio: adc: Add driver for the TI ADS8344 A/DC chips")
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/base/core.c | 61 +++++++++++++++++++++++++++++----------------
- 1 file changed, 39 insertions(+), 22 deletions(-)
+ drivers/iio/adc/ti-ads8344.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index d32a3aefff32..7fb7ffdeb015 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -360,13 +360,12 @@ struct device_link *device_link_add(struct device *consumer,
+diff --git a/drivers/iio/adc/ti-ads8344.c b/drivers/iio/adc/ti-ads8344.c
+index abe4b56c847c..8a8792010c20 100644
+--- a/drivers/iio/adc/ti-ads8344.c
++++ b/drivers/iio/adc/ti-ads8344.c
+@@ -32,16 +32,17 @@ struct ads8344 {
+ 	u8 rx_buf[3];
+ };
  
- 		if (flags & DL_FLAG_STATELESS) {
- 			kref_get(&link->kref);
-+			link->flags |= DL_FLAG_STATELESS;
- 			if (link->flags & DL_FLAG_SYNC_STATE_ONLY &&
--			    !(link->flags & DL_FLAG_STATELESS)) {
--				link->flags |= DL_FLAG_STATELESS;
-+			    !(link->flags & DL_FLAG_STATELESS))
- 				goto reorder;
--			} else {
-+			else
- 				goto out;
--			}
- 		}
- 
- 		/*
-@@ -433,12 +432,16 @@ struct device_link *device_link_add(struct device *consumer,
- 	    flags & DL_FLAG_PM_RUNTIME)
- 		pm_runtime_resume(supplier);
- 
-+	list_add_tail_rcu(&link->s_node, &supplier->links.consumers);
-+	list_add_tail_rcu(&link->c_node, &consumer->links.suppliers);
-+
- 	if (flags & DL_FLAG_SYNC_STATE_ONLY) {
- 		dev_dbg(consumer,
- 			"Linked as a sync state only consumer to %s\n",
- 			dev_name(supplier));
- 		goto out;
- 	}
-+
- reorder:
- 	/*
- 	 * Move the consumer and all of the devices depending on it to the end
-@@ -449,12 +452,9 @@ struct device_link *device_link_add(struct device *consumer,
- 	 */
- 	device_reorder_to_tail(consumer, NULL);
- 
--	list_add_tail_rcu(&link->s_node, &supplier->links.consumers);
--	list_add_tail_rcu(&link->c_node, &consumer->links.suppliers);
--
- 	dev_dbg(consumer, "Linked as a consumer to %s\n", dev_name(supplier));
- 
-- out:
-+out:
- 	device_pm_unlock();
- 	device_links_write_unlock();
- 
-@@ -829,6 +829,13 @@ static void __device_links_supplier_defer_sync(struct device *sup)
- 		list_add_tail(&sup->links.defer_sync, &deferred_sync);
- }
- 
-+static void device_link_drop_managed(struct device_link *link)
-+{
-+	link->flags &= ~DL_FLAG_MANAGED;
-+	WRITE_ONCE(link->status, DL_STATE_NONE);
-+	kref_put(&link->kref, __device_link_del);
-+}
-+
- /**
-  * device_links_driver_bound - Update device links after probing its driver.
-  * @dev: Device to update the links for.
-@@ -842,7 +849,7 @@ static void __device_links_supplier_defer_sync(struct device *sup)
-  */
- void device_links_driver_bound(struct device *dev)
- {
--	struct device_link *link;
-+	struct device_link *link, *ln;
- 	LIST_HEAD(sync_list);
- 
- 	/*
-@@ -882,18 +889,35 @@ void device_links_driver_bound(struct device *dev)
- 	else
- 		__device_links_queue_sync_state(dev, &sync_list);
- 
--	list_for_each_entry(link, &dev->links.suppliers, c_node) {
-+	list_for_each_entry_safe(link, ln, &dev->links.suppliers, c_node) {
-+		struct device *supplier;
-+
- 		if (!(link->flags & DL_FLAG_MANAGED))
- 			continue;
- 
--		WARN_ON(link->status != DL_STATE_CONSUMER_PROBE);
--		WRITE_ONCE(link->status, DL_STATE_ACTIVE);
-+		supplier = link->supplier;
-+		if (link->flags & DL_FLAG_SYNC_STATE_ONLY) {
-+			/*
-+			 * When DL_FLAG_SYNC_STATE_ONLY is set, it means no
-+			 * other DL_MANAGED_LINK_FLAGS have been set. So, it's
-+			 * save to drop the managed link completely.
-+			 */
-+			device_link_drop_managed(link);
-+		} else {
-+			WARN_ON(link->status != DL_STATE_CONSUMER_PROBE);
-+			WRITE_ONCE(link->status, DL_STATE_ACTIVE);
-+		}
- 
-+		/*
-+		 * This needs to be done even for the deleted
-+		 * DL_FLAG_SYNC_STATE_ONLY device link in case it was the last
-+		 * device link that was preventing the supplier from getting a
-+		 * sync_state() call.
-+		 */
- 		if (defer_sync_state_count)
--			__device_links_supplier_defer_sync(link->supplier);
-+			__device_links_supplier_defer_sync(supplier);
- 		else
--			__device_links_queue_sync_state(link->supplier,
--							&sync_list);
-+			__device_links_queue_sync_state(supplier, &sync_list);
+-#define ADS8344_VOLTAGE_CHANNEL(chan, si)				\
++#define ADS8344_VOLTAGE_CHANNEL(chan, addr)				\
+ 	{								\
+ 		.type = IIO_VOLTAGE,					\
+ 		.indexed = 1,						\
+ 		.channel = chan,					\
+ 		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
+ 		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
++		.address = addr,					\
  	}
  
- 	dev->links.status = DL_DEV_DRIVER_BOUND;
-@@ -903,13 +927,6 @@ void device_links_driver_bound(struct device *dev)
- 	device_links_flush_sync_list(&sync_list, dev);
- }
+-#define ADS8344_VOLTAGE_CHANNEL_DIFF(chan1, chan2, si)			\
++#define ADS8344_VOLTAGE_CHANNEL_DIFF(chan1, chan2, addr)		\
+ 	{								\
+ 		.type = IIO_VOLTAGE,					\
+ 		.indexed = 1,						\
+@@ -50,6 +51,7 @@ struct ads8344 {
+ 		.differential = 1,					\
+ 		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
+ 		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
++		.address = addr,					\
+ 	}
  
--static void device_link_drop_managed(struct device_link *link)
--{
--	link->flags &= ~DL_FLAG_MANAGED;
--	WRITE_ONCE(link->status, DL_STATE_NONE);
--	kref_put(&link->kref, __device_link_del);
--}
--
- /**
-  * __device_links_no_driver - Update links of a device without a driver.
-  * @dev: Device without a drvier.
+ static const struct iio_chan_spec ads8344_channels[] = {
+@@ -105,7 +107,7 @@ static int ads8344_read_raw(struct iio_dev *iio,
+ 	switch (mask) {
+ 	case IIO_CHAN_INFO_RAW:
+ 		mutex_lock(&adc->lock);
+-		*value = ads8344_adc_conversion(adc, channel->scan_index,
++		*value = ads8344_adc_conversion(adc, channel->address,
+ 						channel->differential);
+ 		mutex_unlock(&adc->lock);
+ 		if (*value < 0)
 -- 
 2.25.1
 
