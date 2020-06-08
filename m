@@ -2,145 +2,169 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 348C6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:24:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A460CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C58D2076A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:24:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83F112076A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:24:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CZfPL8w5"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PcdNDAnj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729938AbgFHOYW (ORCPT
+        id S1729980AbgFHOYc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 10:24:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41514 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729776AbgFHOYT (ORCPT
+        Mon, 8 Jun 2020 10:24:32 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56502 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729940AbgFHOY2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 10:24:19 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F1DFC08C5C2
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 07:24:18 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id y17so17597810wrn.11
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 07:24:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=fIhwy13PVaO5F8p6kg+GqvngU7Ke/x9Dg12+TRbhC9I=;
-        b=CZfPL8w5fOBsBIx+z/oomYpe+rnOnlu08HlfeLxZxWn4DvD8EV1jvidfa2G6obPNXw
-         wcLLWFtkhMqdqFwD6ucKN3p6mzAsg7HanEknR4Sla4G+4jcKzr/fpU1V57aBb/7AYoPw
-         a+qTL3H1zDbkTzdEZSwS+EOshh5JBGPjQ8vruPaNy4+5DBNBZZqQkTMEdK4IxTK5NACU
-         GGIM6BOSbSswTePVvH+wIByXOpNUEHdrrZU7+rCQFlWfiin1e/xF6lbhT4X8YtTuAVEZ
-         Fa5yd03P+4vcSrJt3xaJlQ1FH4O1ETJFfjANj9H1Awd+M9I8eobjJwDd948h9av12Eua
-         cTdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=fIhwy13PVaO5F8p6kg+GqvngU7Ke/x9Dg12+TRbhC9I=;
-        b=YBvFi0ECa4FNK4BymueCINFc8pl+yIR6gqA1S7z1iJ7eJlRyY556bwy7Qljq0vQoew
-         smtvv5DxoyLkQl9KtQKmNw7i+5Tb6q22PVfg3v1KfMChPpLEFRHyOdVT8i3pZoSjiDqJ
-         1aUJxRxDHvpjsSWqIU2ySqKvzzMYWZcxHFKBfwEbbZ1ZjpNL6jN5fGn5558RGOvmCxsw
-         wrQgqiLEMNrwyeKFFBEkaOdrdBg1vCEtQ4xMs3kuShc+4K0Dn9+nzmElVZsiIDcaIxR+
-         CojY/NSckTZtJ/VnaNLWWKT4rM9sc5WwZ2/LIoeFmObwBeP+1yPMGi2EL/8lyKdHC2Eo
-         guPQ==
-X-Gm-Message-State: AOAM530GKQ8Qaz7Wg6bMRp+RZIgrpp5jz367H88PC3KTIRHjFZtQ5r7E
-        piHC9n341pFBv4iWwMI8XYZs/g==
-X-Google-Smtp-Source: ABdhPJweehatGIr1BA4m4b/1jQsQ1TEclLtHNU4cdgilO6fq2rqBkF/6wa0DUib7fHXp5oiaj3ZdVg==
-X-Received: by 2002:adf:f208:: with SMTP id p8mr21462928wro.388.1591626257005;
-        Mon, 08 Jun 2020 07:24:17 -0700 (PDT)
-Received: from dell ([95.147.198.92])
-        by smtp.gmail.com with ESMTPSA id o15sm22497715wmm.31.2020.06.08.07.24.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 07:24:15 -0700 (PDT)
-Date:   Mon, 8 Jun 2020 15:24:13 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Mon, 8 Jun 2020 10:24:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591626267;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RvqpRgRgvNRWBq4GX41/PVrRgf4iheRb8T7cXZ3C5KA=;
+        b=PcdNDAnjjZTXUbVoSbAznyjlkeRjIZQi7FBXQEbBIjhvcOT/3clzSA5ty3NdxEI/7amfy7
+        Un+5+vUuRpxEXemBMVvY1pjG1hNkJrpER7JsIDD1gtPI8Tj2HxIwDZuTwubi6LSTX/azXU
+        5Yz1O9hTuj5SEwWiudS8k6HSzDQHV7I=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-185-35K7qlVcMs6UGdUd9djO3Q-1; Mon, 08 Jun 2020 10:24:23 -0400
+X-MC-Unique: 35K7qlVcMs6UGdUd9djO3Q-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 018EF8018A7;
+        Mon,  8 Jun 2020 14:24:21 +0000 (UTC)
+Received: from starship-rhel (unknown [10.35.206.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EE2538926C;
+        Mon,  8 Jun 2020 14:24:15 +0000 (UTC)
+Message-ID: <48581807ab540690d970d499c8c311f1735b3222.camel@redhat.com>
+Subject: Re: [PATCH] x86/cpu: Reinitialize IA32_FEAT_CTL MSR on BSP during
+ wakeup
+From:   mlevitsk <mlevitsk@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 03/16] mfd: mfd-core: match device tree node against
- reg property
-Message-ID: <20200608142413.GA4106@dell>
-References: <20200423174543.17161-1-michael@walle.cc>
- <20200423174543.17161-4-michael@walle.cc>
- <67e90dafd67c285158c2c6f67f92edb7@walle.cc>
- <20200515102848.GH271301@dell>
- <159e68b4ce53630ef906b2fcbca925bd@walle.cc>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <159e68b4ce53630ef906b2fcbca925bd@walle.cc>
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>
+Cc:     "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        Brad Campbell <lists2009@fnarfbargle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
+Date:   Mon, 08 Jun 2020 17:24:14 +0300
+In-Reply-To: <20200605200728.10145-1-sean.j.christopherson@intel.com>
+References: <20200605200728.10145-1-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 25 May 2020, Michael Walle wrote:
-> Am 2020-05-15 12:28, schrieb Lee Jones:
-> > On Thu, 30 Apr 2020, Michael Walle wrote:
-> > 
-> > > Hi Lee,
-> > > 
-> > > Am 2020-04-23 19:45, schrieb Michael Walle:
-> > > > There might be multiple children with the device tree compatible, for
-> > > > example if a MFD has multiple instances of the same function. In this
-> > > > case only the first is matched and the other children get a wrong
-> > > > of_node reference.
-> > > > Add a new option to match also against the unit address of the child
-> > > > node. Additonally, a new helper OF_MFD_CELL_REG is added.
-
-[...]
-
-> > > > diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
-> > > > index d01d1299e49d..c2c0ad6b14f3 100644
-> > > > --- a/include/linux/mfd/core.h
-> > > > +++ b/include/linux/mfd/core.h
-> > > > @@ -13,8 +13,11 @@
-> > > >  #include <linux/platform_device.h>
-> > > >
-> > > >  #define MFD_RES_SIZE(arr) (sizeof(arr) / sizeof(struct resource))
-> > > > +#define MFD_OF_REG_VALID	BIT(31)
-> > 
-> > What about 64bit platforms?
+On Fri, 2020-06-05 at 13:07 -0700, Sean Christopherson wrote:
+> Reinitialize IA32_FEAT_CTL on the BSP during wakeup to handle the
+> case
+> where firmware doesn't initialize or save/restore across S3.  This
+> fixes
+> a bug where IA32_FEAT_CTL is left uninitialized and results in VMXON
+> taking a #GP due to VMX not being fully enabled, i.e. breaks KVM.
 > 
-> The idea was to have this as a logical number. I.e. for now you may only
-> have one subdevice per unique compatible string. In fact, if you have a
-> look at the ab8500.c, there are multiple "stericsson,ab8500-pwm"
-> subdevices. But there is only one DT node for all three of it. I guess
-> this works as long as you don't use phandles to reference the pwm node
-> in the device tree. Or you don't want to use device tree properties
-> per subdevice (for example the "timeout-sec" of a watchdog device).
+> Use init_ia32_feat_ctl() to "restore" IA32_FEAT_CTL as it already
+> deals
+> with the case where the MSR is locked, and because APs already redo
+> init_ia32_feat_ctl() during suspend by virtue of the SMP boot flow
+> being
+> used to reinitialize APs upon wakeup.  Do the call in the early
+> wakeup
+> flow to avoid dependencies in the syscore_ops chain, e.g. simply
+> adding
+> a resume hook is not guaranteed to work, as KVM does VMXON in its own
+> resume hook, kvm_resume(), when KVM has active guests.
+> 
+> Reported-by: Brad Campbell <lists2009@fnarfbargle.com>
+> Cc: Maxim Levitsky <mlevitsk@redhat.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: kvm@vger.kernel.org
+> Fixes: 21bd3467a58e ("KVM: VMX: Drop initialization of IA32_FEAT_CTL
+> MSR")
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/include/asm/cpu.h | 5 +++++
+>  arch/x86/kernel/cpu/cpu.h  | 4 ----
+>  arch/x86/power/cpu.c       | 6 ++++++
+>  3 files changed, 11 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
+> index dd17c2da1af5..da78ccbd493b 100644
+> --- a/arch/x86/include/asm/cpu.h
+> +++ b/arch/x86/include/asm/cpu.h
+> @@ -58,4 +58,9 @@ static inline bool handle_guest_split_lock(unsigned
+> long ip)
+>  	return false;
+>  }
+>  #endif
+> +#ifdef CONFIG_IA32_FEAT_CTL
+> +void init_ia32_feat_ctl(struct cpuinfo_x86 *c);
+> +#else
+> +static inline void init_ia32_feat_ctl(struct cpuinfo_x86 *c) {}
+> +#endif
+>  #endif /* _ASM_X86_CPU_H */
+> diff --git a/arch/x86/kernel/cpu/cpu.h b/arch/x86/kernel/cpu/cpu.h
+> index 37fdefd14f28..38ab6e115eac 100644
+> --- a/arch/x86/kernel/cpu/cpu.h
+> +++ b/arch/x86/kernel/cpu/cpu.h
+> @@ -80,8 +80,4 @@ extern void x86_spec_ctrl_setup_ap(void);
+>  
+>  extern u64 x86_read_arch_cap_msr(void);
+>  
+> -#ifdef CONFIG_IA32_FEAT_CTL
+> -void init_ia32_feat_ctl(struct cpuinfo_x86 *c);
+> -#endif
+> -
+>  #endif /* ARCH_X86_CPU_H */
+> diff --git a/arch/x86/power/cpu.c b/arch/x86/power/cpu.c
+> index aaff9ed7ff45..b0d3c5ca6d80 100644
+> --- a/arch/x86/power/cpu.c
+> +++ b/arch/x86/power/cpu.c
+> @@ -193,6 +193,8 @@ static void fix_processor_context(void)
+>   */
+>  static void notrace __restore_processor_state(struct saved_context
+> *ctxt)
+>  {
+> +	struct cpuinfo_x86 *c;
+> +
+>  	if (ctxt->misc_enable_saved)
+>  		wrmsrl(MSR_IA32_MISC_ENABLE, ctxt->misc_enable);
+>  	/*
+> @@ -263,6 +265,10 @@ static void notrace
+> __restore_processor_state(struct saved_context *ctxt)
+>  	mtrr_bp_restore();
+>  	perf_restore_debug_store();
+>  	msr_restore_context(ctxt);
+> +
+> +	c = &cpu_data(smp_processor_id());
+> +	if (cpu_has(c, X86_FEATURE_MSR_IA32_FEAT_CTL))
+> +		init_ia32_feat_ctl(c);
+>  }
+>  
+>  /* Needed by apm.c */
 
-This is not a good example, as the "stericsson,ab8500-pwm" is
-legitimate.  Here we are registering 3 potential devices, but only
-instantiating 1 of them.
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+I don't have currently an active VMX system to test this on,
+but from the code and from my knowelege of this area this looks all
+right.
+
+Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
+
+Best regards,
+	Maxim Levitsky
+
