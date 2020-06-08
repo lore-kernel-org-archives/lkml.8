@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E34AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:30:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CDE3C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE493207FB
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:30:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D80F2078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:30:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662609;
-	bh=qhYCEQfSq1AIL7uUJiMFmb/JrY9ncCLZK+5BK5+eA/E=;
+	s=default; t=1591662613;
+	bh=4mLUq8oF0+XPpJ0iLZPuz7kue4ub17LRH+eWo4UMPF0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cPvHmLltEFGTzNCHgM/dSIg/CCP6+5L5E5/Ao6XtDc0B0TpTFX9EjdTuZkH6ONdOP
-	 b7sZOLBHbmvv574uZB3623yKRJcv35Urb70AGWYiEQxXZfqRe2BOsjD3mmVRaywBoy
-	 87h5yXL13/+myIvLtwDPiaZxvTycklHL9z7aMYfg=
+	b=QCuoPheFPNpxXTN18VQXweCOsONCiqwd/Z9Qr2zcAsyljxm3HfHcq6YjjrALLZOke
+	 TmjxoLt/BxbpGc2Aqcus9+uYgA7LkNK90vmi6hfb2j/I8ZZwGyPvcABDGC47YtYaHC
+	 sGBAFT2h2Zn4aPPOTGS7pTfG74A/Bb2o67BLdwGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731902AbgFIAaD (ORCPT
+        id S1730147AbgFHXQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:30:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37276 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:16:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730152AbgFHXQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:16:02 -0400
+        id S1728574AbgFHXNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:13:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5431220760;
-        Mon,  8 Jun 2020 23:16:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B999D20897;
+        Mon,  8 Jun 2020 23:13:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658162;
-        bh=qhYCEQfSq1AIL7uUJiMFmb/JrY9ncCLZK+5BK5+eA/E=;
+        s=default; t=1591657997;
+        bh=4mLUq8oF0+XPpJ0iLZPuz7kue4ub17LRH+eWo4UMPF0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xPMGQaK9hLE2ifWHlBeBy+BafvceQy12OMqkPdnZrI+m4z9ckl8ST05b1ikRboZNS
-         K+f7uPC95MRLyav+vzVdrjltmluej+WlU40Siy7gnG2MwMNjQifJnMivYRmllp4VPn
-         dIprpmNFyrM4bqohA77IUhgF2VvRG6P9Po/RW72k=
+        b=nKL/EiZUPH8/ebEd7MGVPP97hGF/Q0wzpJfMQT6bWNIxbyLy/4qcz3YhmkSEX/fxG
+         Vq8Yvv+Kg1n+Wa39vgBgHdC3CJ2W8kkBXIoViIU8Fu4QJXeNybJsVC3BBW2qIboZwH
+         Cpp1aosWhg+YNw2AEn86ZhgVaA1hMJeOVFND1G3o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mike Rapoport <rppt@linux.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Anatoly Pugachev <matorola@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+Cc:     Tero Kristo <t-kristo@ti.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        sparclinux@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 191/606] sparc32: fix page table traversal in srmmu_nocache_init()
-Date:   Mon,  8 Jun 2020 19:05:16 -0400
-Message-Id: <20200608231211.3363633-191-sashal@kernel.org>
+        linux-omap@vger.kernel.org, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 055/606] clk: ti: clkctrl: Fix Bad of_node_put within clkctrl_get_name
+Date:   Mon,  8 Jun 2020 19:03:00 -0400
+Message-Id: <20200608231211.3363633-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -62,46 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Rapoport <rppt@linux.ibm.com>
+From: Tero Kristo <t-kristo@ti.com>
 
-commit 0cfc8a8d70dcd51db783e8e87917e02149c71458 upstream.
+commit e1f9e0d28ff025564dfdb1001a7839b4af5db2e2 upstream.
 
-The srmmu_nocache_init() uses __nocache_fix() macro to add an offset to
-page table entry to access srmmu_nocache_pool.
+clkctrl_get_name incorrectly calls of_node_put when it is not really
+doing of_node_get. This causes a boot time warning later on:
 
-But since sparc32 has only three actual page table levels, pgd, p4d and
-pud are essentially the same thing and pgd_offset() and p4d_offset() are
-no-ops, the __nocache_fix() should be done only at PUD level.
+[    0.000000] OF: ERROR: Bad of_node_put() on /ocp/interconnect@4a000000/segmen
+t@0/target-module@5000/cm_core_aon@0/ipu-cm@500/ipu1-clkctrl@20
 
-Remove __nocache_fix() for p4d_offset() and pud_offset() and keep it
-only for PUD and lower levels.
+Fix by dropping the of_node_put from the function.
 
-Fixes: c2bc26f7ca1f ("sparc32: use PUD rather than PGD to get PMD in srmmu_nocache_init()")
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Anatoly Pugachev <matorola@gmail.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Fixes: 6c3090520554 ("clk: ti: clkctrl: Fix hidden dependency to node name")
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+Link: https://lkml.kernel.org/r/20200424124725.9895-1-t-kristo@ti.com
+Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/sparc/mm/srmmu.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/clk/ti/clkctrl.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/sparc/mm/srmmu.c b/arch/sparc/mm/srmmu.c
-index 083ba02c94e6..80061bc93bdc 100644
---- a/arch/sparc/mm/srmmu.c
-+++ b/arch/sparc/mm/srmmu.c
-@@ -331,8 +331,8 @@ static void __init srmmu_nocache_init(void)
+diff --git a/drivers/clk/ti/clkctrl.c b/drivers/clk/ti/clkctrl.c
+index 062266034d84..9019624e37bc 100644
+--- a/drivers/clk/ti/clkctrl.c
++++ b/drivers/clk/ti/clkctrl.c
+@@ -461,7 +461,6 @@ static char * __init clkctrl_get_name(struct device_node *np)
+ 			return name;
+ 		}
+ 	}
+-	of_node_put(np);
  
- 	while (vaddr < srmmu_nocache_end) {
- 		pgd = pgd_offset_k(vaddr);
--		p4d = p4d_offset(__nocache_fix(pgd), vaddr);
--		pud = pud_offset(__nocache_fix(p4d), vaddr);
-+		p4d = p4d_offset(pgd, vaddr);
-+		pud = pud_offset(p4d, vaddr);
- 		pmd = pmd_offset(__nocache_fix(pud), vaddr);
- 		pte = pte_offset_kernel(__nocache_fix(pmd), vaddr);
- 
+ 	return NULL;
+ }
 -- 
 2.25.1
 
