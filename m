@@ -2,248 +2,240 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D63C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B522C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:44:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 838AD2078C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:44:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paritcher.com header.i=@paritcher.com header.b="qy6MLXNW";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="pZ9T+kPr"
+	by mail.kernel.org (Postfix) with ESMTP id 1889420737
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:44:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591663473;
+	bh=Ji3Ox8FfuSJgnHkUYYxbKSP0jPzbzb+GuNsWy1ZFsTQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VzTkMdfeKkuM6xNFv6QZ1Bhox9mI6KesbyMmQaR6Im3Sv5vYr1DnzL6Px89dcIbwz
+	 phkosOeEhbhCzGbDlsXnXCOYWwzBnOz/qfN6GTWK7/HOplcSnciBnqpiiizuOy7eIW
+	 9QQ3sUyCEkpzgt5KcKvN1KQkgNEPvXesQXKYuc/I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730141AbgFIAoM (ORCPT
+        id S1731434AbgFIAoc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:44:12 -0400
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:33737 "EHLO
-        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733202AbgFIAnt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 20:43:49 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id 4B3C165B;
-        Mon,  8 Jun 2020 20:43:47 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Mon, 08 Jun 2020 20:43:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=paritcher.com;
-         h=subject:to:cc:references:from:message-id:date:mime-version
-        :in-reply-to:content-type:content-transfer-encoding; s=fm2; bh=f
-        LjvxKnzBlU2/AwYQDorUH1w/KM8Bzu09pNDDnCY9xQ=; b=qy6MLXNWTkwvtrKTV
-        qWmWFBeHUr5AFfev13ZwjUvlHXpm2yTFfSYdpyfcsJK/nM5e77NQWZ5vzsI6GVpP
-        QBlUHduMLQ2kLvl8wZwBVZEximq9cZpwu2eDULRGItfwF8voKVjTv+pEGXFgqxA/
-        KpUJwgyLVUGoy2Q20hxgm2zsjVdRnAjn3WQvth1UTpaSn7zpB6jIkmkawEY0/Z9W
-        JxL3RvbxfnRD945qVwyFfAgIAgjPyu3nZ8hEw54yolJnFatpW9gS2FEM8IfHJLpH
-        44d9r0eDU7uadx+ZIVIzFfKe90GSeZL+8l37k8WEi9Opt+CSAOKO3cjv5pdpY5qa
-        mvcQw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=fLjvxKnzBlU2/AwYQDorUH1w/KM8Bzu09pNDDnCY9
-        xQ=; b=pZ9T+kPrNHNqdJriTFuYA5HWAeQ3rSfAsvaDIEXiu6PC+k3k+1qCOWqUG
-        +DLDaC6SJVT5yjRaLEWiw/EwF9iPKqLwFPwVM26YrwSlNZxi5GSKiv0F7eEX7xV3
-        s0ssxxlEnZt86JWD6O8o5zbaZVCWKeIcbWPWETTYoqxib+BDS1fSojEyTSwHgyv5
-        Dts+44smXtgsNuK5bZS+lue1UZYVNHRUp5/I6IDaWGbTI/lr3EUK5+a5Nr7JYjzj
-        hZPVgZDFM3zxRCuKKUpKs3B/B5vyhC7PYPjsvNJXwBpKl/cmvopqbS239NUK2MLB
-        SCN+NJIEYktzQG0Tuc1dPGGGRBmWg==
-X-ME-Sender: <xms:QtveXthGl_svqHM36Txk7DSStUtSGZ7B5jYSm3Cq_BnFqidg9YH5pg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudehfedgfeekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepuffvfhfhkffffgggjggtgfesthekredttdefjeenucfhrhhomhepjgcurfgr
-    rhhithgthhgvrhcuoeihrdhlihhnuhigsehprghrihhttghhvghrrdgtohhmqeenucggtf
-    frrghtthgvrhhnpeduleethedtudeikefhkeeiieelfeekkedvhfdvffejjeekjefhudek
-    heejvdfgleenucfkphepieejrdekgedrudelgedrudejheenucevlhhushhtvghrufhiii
-    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpeihrdhlihhnuhigsehprghrihhttghh
-    vghrrdgtohhm
-X-ME-Proxy: <xmx:QtveXiBWJfBKfVYLIxKgiaG99O0-0fAeejUrshoaeuqwU-qUTcdHMw>
-    <xmx:QtveXtHDJuhq3eTdbdB5LH7N7yYsbsEx6gmrdU_5GD_1oqZ0L_c3Hw>
-    <xmx:QtveXiSS_rNTcfLV5tuFKPaJv6-sefclZkPaCxMGKsxjVonNyYQwTw>
-    <xmx:QtveXl_sixDGiwq2VZyuRI9xI7GMIG5zQ2T7N-HwkLTVZr4rzit6mQ>
-Received: from [192.168.0.106] (ool-4354c2af.dyn.optonline.net [67.84.194.175])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 6722B3061856;
-        Mon,  8 Jun 2020 20:43:46 -0400 (EDT)
-Subject: Re: [PATCH v2 3/3] platform/x86: dell-wmi: add new dmi keys to
- bios_to_linux_keycode
-To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Mario.Limonciello@dell.com
-References: <cover.1591584631.git.y.linux@paritcher.com>
- <cover.1591656154.git.y.linux@paritcher.com>
- <d585d2a0f01a6b9480352530b571dec2d1afd79f.1591656154.git.y.linux@paritcher.com>
- <8053252a-83ad-bcaa-2830-ccfbca1b4152@infradead.org>
- <20200608235508.wthtgilgmifwfgz2@pali>
-From:   Y Paritcher <y.linux@paritcher.com>
-Message-ID: <d48b54ab-09ad-381b-c130-c5f3cdb4da10@paritcher.com>
-Date:   Mon, 8 Jun 2020 20:43:45 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 8 Jun 2020 20:44:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59188 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729032AbgFHXMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:12:01 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FB86208C3;
+        Mon,  8 Jun 2020 23:12:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591657921;
+        bh=Ji3Ox8FfuSJgnHkUYYxbKSP0jPzbzb+GuNsWy1ZFsTQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=lF9uCPl4VZGcjcIUNMsQGPFj1GK7/bFfC9CJNRZsSc3bmrFb6CrsMoHkn/Ek9u3uN
+         U6/faWMX6ukpwWWmIf0t0m6HPYRCQlE3KKA8m0TJLDrCdKdfQ6b+suiC85jZcrGGNX
+         ips2/TnqJjEl1SLqKv37Uon8DwzcWP/mRlGTvo4Q=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Lorenz Bauer <lmb@cloudflare.com>,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 270/274] bpf: Fix up bpf_skb_adjust_room helper's skb csum setting
+Date:   Mon,  8 Jun 2020 19:06:03 -0400
+Message-Id: <20200608230607.3361041-270-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
+References: <20200608230607.3361041-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200608235508.wthtgilgmifwfgz2@pali>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/8/20 7:55 PM, Pali Rohár wrote:
-> Hello!
-> 
-> On Monday 08 June 2020 16:27:10 Randy Dunlap wrote:
->> Hi--
->>
->> On 6/8/20 4:05 PM, Y Paritcher wrote:
->>> Increase length of bios_to_linux_keycode to 2 bytes (the true size of a
->>> keycode) to allow for a new keycode 0xffff, this silences the following
->>> messages being logged at startup on a Dell Inspiron 5593:
->>>
->>>     dell_wmi: firmware scancode 0x48 maps to unrecognized keycode 0xffff
->>>     dell_wmi: firmware scancode 0x50 maps to unrecognized keycode 0xffff
-> 
-> Which keys generate these two scancodes? Or how have you been able to
-> trigger these scancodes (in case they are not generated by key press)?
-> 
-> It is important to know for which key or event or feature we need to
-> include this patch and therefore what feature is currently
-> non-functional on that laptop.
-> 
+From: Daniel Borkmann <daniel@iogearbox.net>
 
-As I said before:
-The DMI contains a table of firmware scancode to linux keycode mappings.
-this is parsed at boot and used together with the bios_to_linux_keycode
-entries & dell_wmi_keymap_type_ tables to create a keymap.
+[ Upstream commit 836e66c218f355ec01ba57671c85abf32961dcea ]
 
-If a DMI entry does not have a corresponding entry in bios_to_linux_keycode
-we log a message to allow adding the correct linux keycode if known.
-This is regardless of if the key actually exists on the device.
+Lorenz recently reported:
 
-To date, I have not been able to generate this keycode on my computer.
+  In our TC classifier cls_redirect [0], we use the following sequence of
+  helper calls to decapsulate a GUE (basically IP + UDP + custom header)
+  encapsulated packet:
 
->>> as per this code comment:
->>>
->>>    Log if we find an entry in the DMI table that we don't
->>>    understand.  If this happens, we should figure out what
->>>    the entry means and add it to bios_to_linux_keycode.
->>>
->>> These are keycodes included in the 0xB2 DMI table, for which the
->>> corosponding keys are not known.
->>
->>   corresponding
->>
->>>
->>> Now when a user will encounter this key, a proper message wil be printed:
->>>
->>>     dell_wmi: Unknown key with type 0xXXXX and code 0xXXXX pressed
->>>
->>> This will then allow the key to be identified properly.
->>>
->>> Signed-off-by: Y Paritcher <y.linux@paritcher.com>
->>> ---
->>>  drivers/platform/x86/dell-wmi.c | 8 +++-----
->>>  1 file changed, 3 insertions(+), 5 deletions(-)
->>>
->>> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
->>> index 6b510f8431a3..dae1db96b5a0 100644
->>> --- a/drivers/platform/x86/dell-wmi.c
->>> +++ b/drivers/platform/x86/dell-wmi.c
->>> @@ -196,7 +196,7 @@ struct dell_dmi_results {
->>>  };
->>>  
->>>  /* Uninitialized entries here are KEY_RESERVED == 0. */
->>> -static const u16 bios_to_linux_keycode[256] = {
->>> +static const u16 bios_to_linux_keycode[65536] = {
->>
->> It surely seems odd to me to expand an array from 512 bytes to 128 Kbytes
->> just to handle one special case.  Can't it be handled in code as a
->> special case?
-> 
-> I already wrote that more developers would not be happy about this
-> change. I would rather to see e.g. that Randy's suggestion with 0xffff
-> check as increasing memory usage.
-> 
+    bpf_skb_adjust_room(skb, -encap_len, BPF_ADJ_ROOM_MAC, BPF_F_ADJ_ROOM_FIXED_GSO)
+    bpf_redirect(skb->ifindex, BPF_F_INGRESS)
 
-Will change
+  It seems like some checksums of the inner headers are not validated in
+  this case. For example, a TCP SYN packet with invalid TCP checksum is
+  still accepted by the network stack and elicits a SYN ACK. [...]
 
->>>  	[0]	= KEY_MEDIA,
->>>  	[1]	= KEY_NEXTSONG,
->>>  	[2]	= KEY_PLAYPAUSE,
->>> @@ -237,6 +237,7 @@ static const u16 bios_to_linux_keycode[256] = {
->>>  	[37]	= KEY_UNKNOWN,
->>>  	[38]	= KEY_MICMUTE,
->>>  	[255]	= KEY_PROG3,
->>> +	[65535]	= KEY_UNKNOWN,
-> 
-> Looking at the last two lines... and for me it looks like that 0x00FF
-> and 0xFFFF are just "placeholders" or special values for unknown /
-> custom / unsupported / reserved / special / ... codes.
-> 
+  That is, we receive the following packet from the driver:
 
-Probably so, but i have no way of knowing.
+    | ETH | IP | UDP | GUE | IP | TCP |
+    skb->ip_summed == CHECKSUM_UNNECESSARY
 
-I just don't think there is a point spamming a users log with info that
-they can't do anything with. If this is turned into a debug print then
-i don't care to leave this as is, i had thought this might be helpful
-just to know that this keycode mapping appears in the wild.
+  ip_summed is CHECKSUM_UNNECESSARY because our NICs do rx checksum offloading.
+  On this packet we run skb_adjust_room_mac(-encap_len), and get the following:
 
-> It is really suspicious why first 38 values are defined, then there is
-> gap, then one value 255 and then huge gap to 65535.
-> 
-> Mario, this looks like some mapping table between internal Dell BIOS key
-> code and standard Linux key code. Are you able to get access to some
-> documentation which contains explanation of those Dell key numbers?
-> It could really help us to understand these gaps and what is correct
-> interpretation of these numbers.
-> 
-> E.g. I remember that pressing Fn+Q or Fn+W on some Dell Latitude
-> generates code 255, which could prove my thesis about "special codes"
-> (which are probably not found in e.g. Windows or Linux mapping tables).
-> 
->>>  };
->>>  
->>>  /*
->>> @@ -503,10 +504,7 @@ static void handle_dmi_entry(const struct dmi_header *dm, void *opaque)
->>>  					&table->keymap[i];
->>>  
->>>  		/* Uninitialized entries are 0 aka KEY_RESERVED. */
->>> -		u16 keycode = (bios_entry->keycode <
->>> -			       ARRAY_SIZE(bios_to_linux_keycode)) ?
->>> -			bios_to_linux_keycode[bios_entry->keycode] :
->>> -			KEY_RESERVED;
->>> +		u16 keycode = bios_to_linux_keycode[bios_entry->keycode];
->>>  
->>>  		/*
->>>  		 * Log if we find an entry in the DMI table that we don't
->>>
->>
->> Something like:
->>
->> 		u16 keycode;
->>
->> 		keycode = bios_entry->keycode == 0xffff ? KEY_UNKNOWN :
->> 			(bios_entry->keycode <
->> 			       ARRAY_SIZE(bios_to_linux_keycode)) ?
->> 			bios_to_linux_keycode[bios_entry->keycode] :
->> 			KEY_RESERVED;
->>
->>
->>
->> Also please fix this:
->> (no To-header on input) <>
-> 
-> Hint: specifying git send-email with '--to' argument instead of '--cc'
-> should help.
-> 
+    | ETH | IP | TCP |
+    skb->ip_summed == CHECKSUM_UNNECESSARY
 
-Sorry about that.
->>
->> -- 
->> ~Randy
->>
+  Note that ip_summed is still CHECKSUM_UNNECESSARY. After bpf_redirect()'ing
+  into the ingress, we end up in tcp_v4_rcv(). There, skb_checksum_init() is
+  turned into a no-op due to CHECKSUM_UNNECESSARY.
+
+The bpf_skb_adjust_room() helper is not aware of protocol specifics. Internally,
+it handles the CHECKSUM_COMPLETE case via skb_postpull_rcsum(), but that does
+not cover CHECKSUM_UNNECESSARY. In this case skb->csum_level of the original
+skb prior to bpf_skb_adjust_room() call was 0, that is, covering UDP. Right now
+there is no way to adjust the skb->csum_level. NICs that have checksum offload
+disabled (CHECKSUM_NONE) or that support CHECKSUM_COMPLETE are not affected.
+
+Use a safe default for CHECKSUM_UNNECESSARY by resetting to CHECKSUM_NONE and
+add a flag to the helper called BPF_F_ADJ_ROOM_NO_CSUM_RESET that allows users
+from opting out. Opting out is useful for the case where we don't remove/add
+full protocol headers, or for the case where a user wants to adjust the csum
+level manually e.g. through bpf_csum_level() helper that is added in subsequent
+patch.
+
+The bpf_skb_proto_{4_to_6,6_to_4}() for NAT64/46 translation from the BPF
+bpf_skb_change_proto() helper uses bpf_skb_net_hdr_{push,pop}() pair internally
+as well but doesn't change layers, only transitions between v4 to v6 and vice
+versa, therefore no adoption is required there.
+
+  [0] https://lore.kernel.org/bpf/20200424185556.7358-1-lmb@cloudflare.com/
+
+Fixes: 2be7e212d541 ("bpf: add bpf_skb_adjust_room helper")
+Reported-by: Lorenz Bauer <lmb@cloudflare.com>
+Reported-by: Alan Maguire <alan.maguire@oracle.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Reviewed-by: Alan Maguire <alan.maguire@oracle.com>
+Link: https://lore.kernel.org/bpf/CACAyw9-uU_52esMd1JjuA80fRPHJv5vsSg8GnfW3t_qDU4aVKQ@mail.gmail.com/
+Link: https://lore.kernel.org/bpf/11a90472e7cce83e76ddbfce81fdfce7bfc68808.1591108731.git.daniel@iogearbox.net
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/linux/skbuff.h         | 8 ++++++++
+ include/uapi/linux/bpf.h       | 8 ++++++++
+ net/core/filter.c              | 8 ++++++--
+ tools/include/uapi/linux/bpf.h | 8 ++++++++
+ 4 files changed, 30 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+index 3000c526f552..7e737a94bc63 100644
+--- a/include/linux/skbuff.h
++++ b/include/linux/skbuff.h
+@@ -3945,6 +3945,14 @@ static inline void __skb_incr_checksum_unnecessary(struct sk_buff *skb)
+ 	}
+ }
+ 
++static inline void __skb_reset_checksum_unnecessary(struct sk_buff *skb)
++{
++	if (skb->ip_summed == CHECKSUM_UNNECESSARY) {
++		skb->ip_summed = CHECKSUM_NONE;
++		skb->csum_level = 0;
++	}
++}
++
+ /* Check if we need to perform checksum complete validation.
+  *
+  * Returns true if checksum complete is needed, false otherwise
+diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+index f9b7fdd951e4..c01de7924e97 100644
+--- a/include/uapi/linux/bpf.h
++++ b/include/uapi/linux/bpf.h
+@@ -1589,6 +1589,13 @@ union bpf_attr {
+  * 		Grow or shrink the room for data in the packet associated to
+  * 		*skb* by *len_diff*, and according to the selected *mode*.
+  *
++ * 		By default, the helper will reset any offloaded checksum
++ * 		indicator of the skb to CHECKSUM_NONE. This can be avoided
++ * 		by the following flag:
++ *
++ * 		* **BPF_F_ADJ_ROOM_NO_CSUM_RESET**: Do not reset offloaded
++ * 		  checksum data of the skb to CHECKSUM_NONE.
++ *
+  *		There are two supported modes at this time:
+  *
+  *		* **BPF_ADJ_ROOM_MAC**: Adjust room at the mac layer
+@@ -3235,6 +3242,7 @@ enum {
+ 	BPF_F_ADJ_ROOM_ENCAP_L3_IPV6	= (1ULL << 2),
+ 	BPF_F_ADJ_ROOM_ENCAP_L4_GRE	= (1ULL << 3),
+ 	BPF_F_ADJ_ROOM_ENCAP_L4_UDP	= (1ULL << 4),
++	BPF_F_ADJ_ROOM_NO_CSUM_RESET	= (1ULL << 5),
+ };
+ 
+ enum {
+diff --git a/net/core/filter.c b/net/core/filter.c
+index 5cc9276f1023..11b97c31bca5 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -3124,7 +3124,8 @@ static int bpf_skb_net_shrink(struct sk_buff *skb, u32 off, u32 len_diff,
+ {
+ 	int ret;
+ 
+-	if (flags & ~BPF_F_ADJ_ROOM_FIXED_GSO)
++	if (unlikely(flags & ~(BPF_F_ADJ_ROOM_FIXED_GSO |
++			       BPF_F_ADJ_ROOM_NO_CSUM_RESET)))
+ 		return -EINVAL;
+ 
+ 	if (skb_is_gso(skb) && !skb_is_gso_tcp(skb)) {
+@@ -3174,7 +3175,8 @@ BPF_CALL_4(bpf_skb_adjust_room, struct sk_buff *, skb, s32, len_diff,
+ 	u32 off;
+ 	int ret;
+ 
+-	if (unlikely(flags & ~BPF_F_ADJ_ROOM_MASK))
++	if (unlikely(flags & ~(BPF_F_ADJ_ROOM_MASK |
++			       BPF_F_ADJ_ROOM_NO_CSUM_RESET)))
+ 		return -EINVAL;
+ 	if (unlikely(len_diff_abs > 0xfffU))
+ 		return -EFAULT;
+@@ -3202,6 +3204,8 @@ BPF_CALL_4(bpf_skb_adjust_room, struct sk_buff *, skb, s32, len_diff,
+ 
+ 	ret = shrink ? bpf_skb_net_shrink(skb, off, len_diff_abs, flags) :
+ 		       bpf_skb_net_grow(skb, off, len_diff_abs, flags);
++	if (!ret && !(flags & BPF_F_ADJ_ROOM_NO_CSUM_RESET))
++		__skb_reset_checksum_unnecessary(skb);
+ 
+ 	bpf_compute_data_pointers(skb);
+ 	return ret;
+diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
+index 7bbf1b65be10..ad77cf9bb37e 100644
+--- a/tools/include/uapi/linux/bpf.h
++++ b/tools/include/uapi/linux/bpf.h
+@@ -1589,6 +1589,13 @@ union bpf_attr {
+  * 		Grow or shrink the room for data in the packet associated to
+  * 		*skb* by *len_diff*, and according to the selected *mode*.
+  *
++ * 		By default, the helper will reset any offloaded checksum
++ * 		indicator of the skb to CHECKSUM_NONE. This can be avoided
++ * 		by the following flag:
++ *
++ * 		* **BPF_F_ADJ_ROOM_NO_CSUM_RESET**: Do not reset offloaded
++ * 		  checksum data of the skb to CHECKSUM_NONE.
++ *
+  *		There are two supported modes at this time:
+  *
+  *		* **BPF_ADJ_ROOM_MAC**: Adjust room at the mac layer
+@@ -3235,6 +3242,7 @@ enum {
+ 	BPF_F_ADJ_ROOM_ENCAP_L3_IPV6	= (1ULL << 2),
+ 	BPF_F_ADJ_ROOM_ENCAP_L4_GRE	= (1ULL << 3),
+ 	BPF_F_ADJ_ROOM_ENCAP_L4_UDP	= (1ULL << 4),
++	BPF_F_ADJ_ROOM_NO_CSUM_RESET	= (1ULL << 5),
+ };
+ 
+ enum {
+-- 
+2.25.1
+
