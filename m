@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2972AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54CFEC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 056972076C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:09:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2848B2076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:09:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591664943;
-	bh=ekLNBpf31GOaE6htK8WXnUBTXk1rra0US7N5JT8qH1o=;
+	s=default; t=1591664948;
+	bh=KtAe3ObSg25LYSidXIG8L8qyak2OFEVpw47b12Sn1UY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qfaqKy7scP9QHvoSD6Jr3zdDpZl7FRv7Nd3bz8KDmYWDNkyzpNVTC0/n+snPfPrsU
-	 ckpEawgQ0dvvS1YtKOujFWdxdg2doy/uaHUy4TqQnIgCnWl1n9RT+Hs9ZVIt0Kjw32
-	 FWRBqepdkUMKM/TMYca3sRKAm/nc1Ih5IeyaZzro=
+	b=lp0I3JIh4v69VPOHsEL75t6Q/6YCVTussQOqtlQr3iwO1sINkhYJSyXQE84q8Ag6g
+	 whHPy8x4nG8PjrRMF19yaltej5SJF1QexpS5BiSzwuQGxs2hmwjIlCq/i8xVhNrBL2
+	 2OHw9umfe+MdfXFt+79KCmr0YHWXqUPucDZ8zjyM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbgFHXGg (ORCPT
+        id S1730778AbgFIBJG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:06:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49352 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 21:09:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726933AbgFHXGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:06:22 -0400
+        id S1727031AbgFHXGh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:06:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 542A62076C;
-        Mon,  8 Jun 2020 23:06:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BE9F2088E;
+        Mon,  8 Jun 2020 23:06:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657582;
-        bh=ekLNBpf31GOaE6htK8WXnUBTXk1rra0US7N5JT8qH1o=;
+        s=default; t=1591657597;
+        bh=KtAe3ObSg25LYSidXIG8L8qyak2OFEVpw47b12Sn1UY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gWLB2XNor0QD5ecdltAZx7PD4+VcjUso70MyfMsYbGvpUPxuDZOzmPiBxGleCp6fA
-         mxgL1jeaclDhL/PqafVFNAQ4mQCKHKT45NxHEokuantZg8/y6Q9osDsgQjWwzercEg
-         E0qsnVQblnoArnFfEN+Lrf947e4HKKsTu96yf+Uo=
+        b=CDob7BstU3Fw6JHjJo6+nEU5zMwXbEQYLBfhk45mmmfmECguNkv9sqOq9C1Hgmj7R
+         3KzFFwyC6Inu8MDOSJDh3F9OScaIxc3aNamUo95UMDCK5Nm68Jb67hnH/YOQ4CLWQG
+         u4gR4F8xrROFoJ7Fjkcb3iQPSc2C7QJqZKFD36Zw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Sasha Levin <sashal@kernel.org>, linux-doc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 011/274] scripts: sphinx-pre-install: address some issues with Gentoo
-Date:   Mon,  8 Jun 2020 19:01:44 -0400
-Message-Id: <20200608230607.3361041-11-sashal@kernel.org>
+Cc:     Veronika Kabatova <vkabatov@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 023/274] selftests/bpf: Copy runqslower to OUTPUT directory
+Date:   Mon,  8 Jun 2020 19:01:56 -0400
+Message-Id: <20200608230607.3361041-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -59,48 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+From: Veronika Kabatova <vkabatov@redhat.com>
 
-[ Upstream commit e45a631742fadd7c9feb5a0049382102e5d43fe7 ]
+[ Upstream commit b26d1e2b60284dc9f66ffad9ccd5c5da1100bb4b ]
 
-There are some small misdetections with Gentoo. While they
-don't cause too much trouble, it keeps recomending to
-install things that are already there.
+$(OUTPUT)/runqslower makefile target doesn't actually create runqslower
+binary in the $(OUTPUT) directory. As lib.mk expects all
+TEST_GEN_PROGS_EXTENDED (which runqslower is a part of) to be present in
+the OUTPUT directory, this results in an error when running e.g. `make
+install`:
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Link: https://lore.kernel.org/r/7f631edce102b02ccbdbfb18be1376a86b41373d.1586883286.git.mchehab+huawei@kernel.org
-Signed-off-by: Jonathan Corbet <corbet@lwn.net>
+rsync: link_stat "tools/testing/selftests/bpf/runqslower" failed: No
+       such file or directory (2)
+
+Copy the binary into the OUTPUT directory after building it to fix the
+error.
+
+Fixes: 3a0d3092a4ed ("selftests/bpf: Build runqslower from selftests")
+Signed-off-by: Veronika Kabatova <vkabatov@redhat.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Link: https://lore.kernel.org/bpf/20200428173742.2988395-1-vkabatov@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/sphinx-pre-install | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ tools/testing/selftests/bpf/Makefile | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
-index fa3fb05cd54b..09b38ee38ce8 100755
---- a/scripts/sphinx-pre-install
-+++ b/scripts/sphinx-pre-install
-@@ -557,7 +557,8 @@ sub give_gentoo_hints()
- 			   "media-fonts/dejavu", 2) if ($pdf);
+diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
+index 7729892e0b04..4e654d41c7af 100644
+--- a/tools/testing/selftests/bpf/Makefile
++++ b/tools/testing/selftests/bpf/Makefile
+@@ -141,7 +141,8 @@ VMLINUX_BTF := $(abspath $(firstword $(wildcard $(VMLINUX_BTF_PATHS))))
+ $(OUTPUT)/runqslower: $(BPFOBJ)
+ 	$(Q)$(MAKE) $(submake_extras) -C $(TOOLSDIR)/bpf/runqslower	\
+ 		    OUTPUT=$(SCRATCH_DIR)/ VMLINUX_BTF=$(VMLINUX_BTF)   \
+-		    BPFOBJ=$(BPFOBJ) BPF_INCLUDE=$(INCLUDE_DIR)
++		    BPFOBJ=$(BPFOBJ) BPF_INCLUDE=$(INCLUDE_DIR) &&	\
++		    cp $(SCRATCH_DIR)/runqslower $@
  
- 	if ($pdf) {
--		check_missing_file(["/usr/share/fonts/noto-cjk/NotoSansCJKsc-Regular.otf"],
-+		check_missing_file(["/usr/share/fonts/noto-cjk/NotoSansCJKsc-Regular.otf",
-+				    "/usr/share/fonts/noto-cjk/NotoSerifCJK-Regular.ttc"],
- 				   "media-fonts/noto-cjk", 2);
- 	}
- 
-@@ -572,10 +573,10 @@ sub give_gentoo_hints()
- 	my $portage_imagemagick = "/etc/portage/package.use/imagemagick";
- 	my $portage_cairo = "/etc/portage/package.use/graphviz";
- 
--	if (qx(cat $portage_imagemagick) ne "$imagemagick\n") {
-+	if (qx(grep imagemagick $portage_imagemagick 2>/dev/null) eq "") {
- 		printf("\tsudo su -c 'echo \"$imagemagick\" > $portage_imagemagick'\n")
- 	}
--	if (qx(cat $portage_cairo) ne  "$cairo\n") {
-+	if (qx(grep graphviz $portage_cairo 2>/dev/null) eq  "") {
- 		printf("\tsudo su -c 'echo \"$cairo\" > $portage_cairo'\n");
- 	}
+ $(TEST_GEN_PROGS) $(TEST_GEN_PROGS_EXTENDED): $(OUTPUT)/test_stub.o $(BPFOBJ)
  
 -- 
 2.25.1
