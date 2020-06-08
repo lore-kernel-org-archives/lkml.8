@@ -6,44 +6,43 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91126C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 13:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 624DDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 13:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 769E4206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 13:43:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D1DB20774
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 13:43:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729883AbgFHNnS (ORCPT
+        id S1729892AbgFHNnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 09:43:18 -0400
-Received: from mga06.intel.com ([134.134.136.31]:2281 "EHLO mga06.intel.com"
+        Mon, 8 Jun 2020 09:43:23 -0400
+Received: from mga02.intel.com ([134.134.136.20]:9553 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729737AbgFHNnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729761AbgFHNnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 8 Jun 2020 09:43:06 -0400
-IronPort-SDR: GdvxRa0FANwHikpLVVpc0DgQcxjPORATnlrtSH/I0rap9OR5zqc2o1iaqSsLNvn5dZgDgsQ2gx
- PwjUwQkJsaNw==
+IronPort-SDR: FKBOsi3t6VzgCk1YuqD7g9u4FX0vPLHlGX2TKoWsHpVeKXY7GKJM7Rq8+UwKLvedTKS0G9mUM+
+ mXjpQ5IfuLaw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2020 06:43:05 -0700
-IronPort-SDR: h/PFo407aJk9EmuzuzJ6NoYruAzwMV2F6U/qEK6AomvC3IvWFbwJDLCTkwWryOuqkQaEBBWGuN
- jm6RXcguRyJg==
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2020 06:43:05 -0700
+IronPort-SDR: LabP5zzfHpvMu5B5Gwbe1V4+VQ5qBqJfN1/z3ptdv0sL11b7+acwfOnqWJDYLAbi5E1AeOrNH2
+ 4z/bMx62e1Ww==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,487,1583222400"; 
-   d="scan'208";a="288473531"
+   d="scan'208";a="472692070"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga002.jf.intel.com with ESMTP; 08 Jun 2020 06:43:03 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 08 Jun 2020 06:43:03 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id C9DE925A; Mon,  8 Jun 2020 16:43:02 +0300 (EEST)
+        id BA2E7111; Mon,  8 Jun 2020 16:43:02 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Serge Semin <fancer.lancer@gmail.com>, linux-gpio@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
-Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 3/6] mfd: core: Propagate software node group to the sub devices
-Date:   Mon,  8 Jun 2020 16:42:57 +0300
-Message-Id: <20200608134300.76091-4-andriy.shevchenko@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/6] gpio: dwapb: Replace irq_shared flag with fwnode type check
+Date:   Mon,  8 Jun 2020 16:42:55 +0300
+Message-Id: <20200608134300.76091-2-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.27.0.rc2
 In-Reply-To: <20200608134300.76091-1-andriy.shevchenko@linux.intel.com>
 References: <20200608134300.76091-1-andriy.shevchenko@linux.intel.com>
@@ -54,107 +53,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Shared IRQ is only enabled for ACPI platforms or pure platform drivers,
+there is no need to have a special flag for that, since we simple can test
+port fwnode to be type of OF.
 
-When ever device properties are supplied for a sub device, a software node
-(fwnode) is actually created and then associated with that device. By allowing
-the drivers to supply the complete software node group instead of just the
-properties in it, the drivers can take advantage of the other features the
-software nodes have on top of supplying the device properties.
+While at it, drop duplicate declaration of loop variable.
 
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/mfd/mfd-core.c   | 31 +++++++++++++++++++++++++++----
- include/linux/mfd/core.h |  3 +++
- 2 files changed, 30 insertions(+), 4 deletions(-)
+ drivers/gpio/gpio-dwapb.c                | 5 +----
+ drivers/mfd/intel_quark_i2c_gpio.c       | 1 -
+ include/linux/platform_data/gpio-dwapb.h | 1 -
+ 3 files changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-index f5a73af60dd4..1a256f64dc9d 100644
---- a/drivers/mfd/mfd-core.c
-+++ b/drivers/mfd/mfd-core.c
-@@ -173,7 +173,24 @@ static int mfd_add_device(struct device *parent, int id,
- 			goto fail_alias;
- 	}
+diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
+index 1d8d55bd63aa..a7ca72086511 100644
+--- a/drivers/gpio/gpio-dwapb.c
++++ b/drivers/gpio/gpio-dwapb.c
+@@ -418,9 +418,7 @@ static void dwapb_configure_irqs(struct dwapb_gpio *gpio,
+ 	irq_gc->chip_types[1].type = IRQ_TYPE_EDGE_BOTH;
+ 	irq_gc->chip_types[1].handler = handle_edge_irq;
  
--	if (cell->properties) {
-+	/* If software node group exists, use it, otherwise try properties */
-+	if (cell->node_group) {
-+		struct fwnode_handle *fwnode;
-+
-+		ret = software_node_register_node_group(cell->node_group);
-+		if (ret)
-+			goto fail_alias;
-+
-+		/*
-+		 * The very first software node in the group is related to
-+		 * the device itself. The rest can be device-less children to
-+		 * fulfill the case of sub nodes (LEDs, GPIO keys, etc).
-+		 */
-+		fwnode = software_node_fwnode(cell->node_group[0]);
-+
-+		/* Assign this firmware node as a secondary one of the device */
-+		set_secondary_fwnode(&pdev->dev, fwnode);
-+	} else if (cell->properties) {
- 		ret = platform_device_add_properties(pdev, cell->properties);
- 		if (ret)
- 			goto fail_alias;
-@@ -213,18 +230,18 @@ static int mfd_add_device(struct device *parent, int id,
- 			if (has_acpi_companion(&pdev->dev)) {
- 				ret = acpi_check_resource_conflict(&res[r]);
- 				if (ret)
--					goto fail_alias;
-+					goto fail_resources;
- 			}
+-	if (!pp->irq_shared) {
+-		int i;
+-
++	if (to_of_node(pp->fwnode)) {
+ 		for (i = 0; i < pp->ngpio; i++) {
+ 			if (pp->irq[i])
+ 				irq_set_chained_handler_and_data(pp->irq[i],
+@@ -601,7 +599,6 @@ static struct dwapb_platform_data *dwapb_gpio_get_pdata(struct device *dev)
+ 			pp->ngpio = 32;
  		}
- 	}
  
- 	ret = platform_device_add_resources(pdev, res, cell->num_resources);
- 	if (ret)
--		goto fail_alias;
-+		goto fail_resources;
+-		pp->irq_shared	= false;
+ 		pp->gpio_base	= -1;
  
- 	ret = platform_device_add(pdev);
- 	if (ret)
--		goto fail_alias;
-+		goto fail_resources;
+ 		/*
+diff --git a/drivers/mfd/intel_quark_i2c_gpio.c b/drivers/mfd/intel_quark_i2c_gpio.c
+index 84ca7902e1df..06b538dd124c 100644
+--- a/drivers/mfd/intel_quark_i2c_gpio.c
++++ b/drivers/mfd/intel_quark_i2c_gpio.c
+@@ -216,7 +216,6 @@ static int intel_quark_gpio_setup(struct pci_dev *pdev, struct mfd_cell *cell)
+ 	pdata->properties->ngpio	= INTEL_QUARK_MFD_NGPIO;
+ 	pdata->properties->gpio_base	= INTEL_QUARK_MFD_GPIO_BASE;
+ 	pdata->properties->irq[0]	= pdev->irq;
+-	pdata->properties->irq_shared	= true;
  
- 	if (cell->pm_runtime_no_callbacks)
- 		pm_runtime_no_callbacks(&pdev->dev);
-@@ -233,6 +250,9 @@ static int mfd_add_device(struct device *parent, int id,
+ 	cell->platform_data = pdata;
+ 	cell->pdata_size = sizeof(*pdata);
+diff --git a/include/linux/platform_data/gpio-dwapb.h b/include/linux/platform_data/gpio-dwapb.h
+index ff1be737bad6..a63010b6e898 100644
+--- a/include/linux/platform_data/gpio-dwapb.h
++++ b/include/linux/platform_data/gpio-dwapb.h
+@@ -12,7 +12,6 @@ struct dwapb_port_property {
+ 	unsigned int	ngpio;
+ 	unsigned int	gpio_base;
+ 	int		irq[32];
+-	bool		irq_shared;
+ };
  
- 	return 0;
- 
-+fail_resources:
-+	set_secondary_fwnode(&pdev->dev, NULL);
-+	software_node_unregister_node_group(cell->node_group);
- fail_alias:
- 	regulator_bulk_unregister_supply_alias(&pdev->dev,
- 					       cell->parent_supplies,
-@@ -294,6 +314,9 @@ static int mfd_remove_devices_fn(struct device *dev, void *data)
- 	pdev = to_platform_device(dev);
- 	cell = mfd_get_cell(pdev);
- 
-+	set_secondary_fwnode(&pdev->dev, NULL);
-+	software_node_unregister_node_group(cell->node_group);
-+
- 	regulator_bulk_unregister_supply_alias(dev, cell->parent_supplies,
- 					       cell->num_parent_supplies);
- 
-diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
-index d01d1299e49d..9a998568759f 100644
---- a/include/linux/mfd/core.h
-+++ b/include/linux/mfd/core.h
-@@ -72,6 +72,9 @@ struct mfd_cell {
- 	/* device properties passed to the sub devices drivers */
- 	struct property_entry *properties;
- 
-+	/* Software node group for the sub device */
-+	const struct software_node **node_group;
-+
- 	/*
- 	 * Device Tree compatible string
- 	 * See: Documentation/devicetree/usage-model.txt Chapter 2.2 for details
+ struct dwapb_platform_data {
 -- 
 2.27.0.rc2
 
