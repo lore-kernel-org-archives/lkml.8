@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28793C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AEB9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:23:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06CE1207F9
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:23:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB7D3207F9
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:23:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662194;
-	bh=fae/1+2fQ0E0/au9QIHFzmHrjMSKWGWvWLQsD47d/3o=;
+	s=default; t=1591662204;
+	bh=QjEB0Q4at39Hn1yjCnUiHIPirakk1sVSHcqnMKYyqHg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uMVf7wZ4RmH4YUJqbCKLU81X28CSNnoMxnzT+y+xB+nbBSYQzyD3Q9pd1k8PfFIgw
-	 6n10pxxDotnYqKo9H5trZN525dplef7hGHoa/OL6eqFhfpPiiYJ9ZKEZFaYrLMgk5n
-	 CafNPAIdlni5eeFiz30vhCzOntNpsRMJmGp00mlQ=
+	b=b9q8paofaabzyKlkFun1GN/hlVPtkF4vvoldBPaUgL/UonVMG4x0wSZYTYRuIopx3
+	 7VMWUjtkE2eN3dYS4a5rTpgqX0n971uuPjciEhfFn8jtFIen80AyUfb3oorB5EhmH0
+	 tV0aqeDvNr7P72Mceplqw7vYuW2mbrDKtmjqvIK8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731457AbgFIAXG (ORCPT
+        id S1733020AbgFIAXW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:23:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38824 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:23:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729203AbgFHXRT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:17:19 -0400
+        id S1730427AbgFHXRQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:17:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1ED532086A;
-        Mon,  8 Jun 2020 23:17:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAD2E2078D;
+        Mon,  8 Jun 2020 23:17:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658239;
-        bh=fae/1+2fQ0E0/au9QIHFzmHrjMSKWGWvWLQsD47d/3o=;
+        s=default; t=1591658236;
+        bh=QjEB0Q4at39Hn1yjCnUiHIPirakk1sVSHcqnMKYyqHg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S3BZAGjzpoN2HEzDaP0mj2w4XehDBUL3SkjKwjL1Wn0kX99Bqa+Nt6/sVKEkaN5Xy
-         S4WBxnjWiAZX4CyYP9uCrNGbJeu/9ipQ73qiIBUNV8lQGXxDqsvDOOWdLvGLG470Ie
-         JNiy1FnE/GSqV+LH4a0XUJikS9T/ohG1dDC4mKnc=
+        b=Z8ZCSSuGjLmxHqqtJPx8Ls3UVVcLtEc7JQqNquNAzTB7W6GV2Pvfik7fMYLVnZ1lp
+         H9FB4nclKZMFfOSPW0gGtcqogq/Sju/sdUUjuLtxycTUaRLD9spNtEtHxyQGc45ARJ
+         RZaHVnVy4UwZaLNdaYN8lDscj0rJJBxy7qzbUi0A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 250/606] arm64: dts: qcom: db820c: fix audio configuration
-Date:   Mon,  8 Jun 2020 19:06:15 -0400
-Message-Id: <20200608231211.3363633-250-sashal@kernel.org>
+Cc:     Jiri Pirko <jiri@mellanox.com>,
+        Danielle Ratson <danieller@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 248/606] mlxsw: spectrum: Fix use-after-free of split/unsplit/type_set in case reload fails
+Date:   Mon,  8 Jun 2020 19:06:13 -0400
+Message-Id: <20200608231211.3363633-248-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -61,73 +62,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Jiri Pirko <jiri@mellanox.com>
 
-[ Upstream commit 7710f80ecd9c74544a22557ab581cf603e713f51 ]
+commit 4340f42f207eacb81e7a6b6bb1e3b6afad9a2e26 upstream.
 
-After patch f864edff110d ("ASoC: qdsp6: q6routing: remove default routing")
-and 9b60441692d9 ("ASoC: qdsp6: q6asm-dai: only enable dais from device tree")
-asm dais and routing needs to be properly specified at device tree level.
+In case of reload fail, the mlxsw_sp->ports contains a pointer to a
+freed memory (either by reload_down() or reload_up() error path).
+Fix this by initializing the pointer to NULL and checking it before
+dereferencing in split/unsplit/type_set callpaths.
 
-This patch fixes this.
-
-Tested-by: Vinod Koul <vkoul@kernel.org>
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Link: https://lore.kernel.org/r/20200422101922.8894-1-srinivas.kandagatla@linaro.org
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 24cc68ad6c46 ("mlxsw: core: Add support for reload")
+Reported-by: Danielle Ratson <danieller@mellanox.com>
+Signed-off-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 19 ++++++++++++++++++-
- arch/arm64/boot/dts/qcom/msm8996.dtsi        |  2 ++
- 2 files changed, 20 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlxsw/spectrum.c | 14 ++++++++++++--
+ drivers/net/ethernet/mellanox/mlxsw/switchx2.c |  8 ++++++++
+ 2 files changed, 20 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-index a85b85d85a5f..3c7c9b52623c 100644
---- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-@@ -908,10 +908,27 @@ &sdhc2 {
- 	status = "okay";
- };
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
+index 7358b5bc7eb6..58ebabe99876 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
+@@ -4043,6 +4043,7 @@ static void mlxsw_sp_ports_remove(struct mlxsw_sp *mlxsw_sp)
+ 			mlxsw_sp_port_remove(mlxsw_sp, i);
+ 	mlxsw_sp_cpu_port_remove(mlxsw_sp);
+ 	kfree(mlxsw_sp->ports);
++	mlxsw_sp->ports = NULL;
+ }
  
-+&q6asmdai {
-+	dai@0 {
-+		reg = <0>;
-+	};
-+
-+	dai@1 {
-+		reg = <1>;
-+	};
-+
-+	dai@2 {
-+		reg = <2>;
-+	};
-+};
-+
- &sound {
- 	compatible = "qcom,apq8096-sndcard";
- 	model = "DB820c";
--	audio-routing =	"RX_BIAS", "MCLK";
-+	audio-routing =	"RX_BIAS", "MCLK",
-+		"MM_DL1",  "MultiMedia1 Playback",
-+		"MM_DL2",  "MultiMedia2 Playback",
-+		"MultiMedia3 Capture", "MM_UL3";
+ static int mlxsw_sp_ports_create(struct mlxsw_sp *mlxsw_sp)
+@@ -4079,6 +4080,7 @@ static int mlxsw_sp_ports_create(struct mlxsw_sp *mlxsw_sp)
+ 	mlxsw_sp_cpu_port_remove(mlxsw_sp);
+ err_cpu_port_create:
+ 	kfree(mlxsw_sp->ports);
++	mlxsw_sp->ports = NULL;
+ 	return err;
+ }
  
- 	mm1-dai-link {
- 		link-name = "MultiMedia1";
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 7ae082ea14ea..f925a6c7d293 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -2053,6 +2053,8 @@ q6asm: q6asm {
- 						reg = <APR_SVC_ASM>;
- 						q6asmdai: dais {
- 							compatible = "qcom,q6asm-dais";
-+							#address-cells = <1>;
-+							#size-cells = <0>;
- 							#sound-dai-cells = <1>;
- 							iommus = <&lpass_q6_smmu 1>;
- 						};
+@@ -4200,6 +4202,14 @@ static int mlxsw_sp_local_ports_offset(struct mlxsw_core *mlxsw_core,
+ 	return mlxsw_core_res_get(mlxsw_core, local_ports_in_x_res_id);
+ }
+ 
++static struct mlxsw_sp_port *
++mlxsw_sp_port_get_by_local_port(struct mlxsw_sp *mlxsw_sp, u8 local_port)
++{
++	if (mlxsw_sp->ports && mlxsw_sp->ports[local_port])
++		return mlxsw_sp->ports[local_port];
++	return NULL;
++}
++
+ static int mlxsw_sp_port_split(struct mlxsw_core *mlxsw_core, u8 local_port,
+ 			       unsigned int count,
+ 			       struct netlink_ext_ack *extack)
+@@ -4213,7 +4223,7 @@ static int mlxsw_sp_port_split(struct mlxsw_core *mlxsw_core, u8 local_port,
+ 	int i;
+ 	int err;
+ 
+-	mlxsw_sp_port = mlxsw_sp->ports[local_port];
++	mlxsw_sp_port = mlxsw_sp_port_get_by_local_port(mlxsw_sp, local_port);
+ 	if (!mlxsw_sp_port) {
+ 		dev_err(mlxsw_sp->bus_info->dev, "Port number \"%d\" does not exist\n",
+ 			local_port);
+@@ -4308,7 +4318,7 @@ static int mlxsw_sp_port_unsplit(struct mlxsw_core *mlxsw_core, u8 local_port,
+ 	int offset;
+ 	int i;
+ 
+-	mlxsw_sp_port = mlxsw_sp->ports[local_port];
++	mlxsw_sp_port = mlxsw_sp_port_get_by_local_port(mlxsw_sp, local_port);
+ 	if (!mlxsw_sp_port) {
+ 		dev_err(mlxsw_sp->bus_info->dev, "Port number \"%d\" does not exist\n",
+ 			local_port);
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/switchx2.c b/drivers/net/ethernet/mellanox/mlxsw/switchx2.c
+index f0e98ec8f1ee..c69232445ab7 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/switchx2.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/switchx2.c
+@@ -1259,6 +1259,7 @@ static void mlxsw_sx_ports_remove(struct mlxsw_sx *mlxsw_sx)
+ 		if (mlxsw_sx_port_created(mlxsw_sx, i))
+ 			mlxsw_sx_port_remove(mlxsw_sx, i);
+ 	kfree(mlxsw_sx->ports);
++	mlxsw_sx->ports = NULL;
+ }
+ 
+ static int mlxsw_sx_ports_create(struct mlxsw_sx *mlxsw_sx)
+@@ -1293,6 +1294,7 @@ static int mlxsw_sx_ports_create(struct mlxsw_sx *mlxsw_sx)
+ 		if (mlxsw_sx_port_created(mlxsw_sx, i))
+ 			mlxsw_sx_port_remove(mlxsw_sx, i);
+ 	kfree(mlxsw_sx->ports);
++	mlxsw_sx->ports = NULL;
+ 	return err;
+ }
+ 
+@@ -1376,6 +1378,12 @@ static int mlxsw_sx_port_type_set(struct mlxsw_core *mlxsw_core, u8 local_port,
+ 	u8 module, width;
+ 	int err;
+ 
++	if (!mlxsw_sx->ports || !mlxsw_sx->ports[local_port]) {
++		dev_err(mlxsw_sx->bus_info->dev, "Port number \"%d\" does not exist\n",
++			local_port);
++		return -EINVAL;
++	}
++
+ 	if (new_type == DEVLINK_PORT_TYPE_AUTO)
+ 		return -EOPNOTSUPP;
+ 
 -- 
 2.25.1
 
