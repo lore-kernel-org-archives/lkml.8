@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91554C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:26:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA10C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:26:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B64E207ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:26:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46267207ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:26:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662381;
-	bh=BSyonC01oOJYjmrWgRtX+/RL9lb+1Yqc92A7PwcFbRA=;
+	s=default; t=1591662389;
+	bh=OzO9K0KnNQjGQ//0XNCIDoj2357X829Yw3yx1jruEhY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WrEMcXpaluWgtjV3Dt1Ok7Uxka9XIz0q4UHky+gkkfsQce3ZkHLoCMwPKyNgAhSe3
-	 lLe07oE1+MKcZCVug0nCCOWPgRVjaQ6IkG2qFFkd2WzxN934akI9/TsLu3QN/Eoix3
-	 VvbBBaP4sVMjQEntU3R8zcZhwqtQkbPio5pHeAOo=
+	b=tMxq8GkWnpRh2moelEeiwNXiMmIBkAw3SfILS2ZZfWLGbphmayBPg4jyV32KYIXDl
+	 8B1I3l0tBrMU8qe+9YctW4uw2GSBFmeotQqym/bs1bSSlS7cuLBfejIHuUJ96In592
+	 QMwlzuNQ7wl8Ag4ZQkqNSmKoUE0oySkInJMXBTCw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733062AbgFIA0S (ORCPT
+        id S1733046AbgFIA0K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:26:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38202 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:26:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730343AbgFHXQr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:16:47 -0400
+        id S1728597AbgFHXQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:16:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 594F220775;
-        Mon,  8 Jun 2020 23:16:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44C8120872;
+        Mon,  8 Jun 2020 23:16:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658207;
-        bh=BSyonC01oOJYjmrWgRtX+/RL9lb+1Yqc92A7PwcFbRA=;
+        s=default; t=1591658211;
+        bh=OzO9K0KnNQjGQ//0XNCIDoj2357X829Yw3yx1jruEhY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FfsQ7hs4K9ReujV9aUh3DDpCwDbWYzpps63aDatXg4mQx8C28QgMo3FIMXCBHUKp1
-         zr56vJU/gej3f6FI9AkPCYZd9xY8ORKUS6xmPuMA3dNLOEf3Nzal67p/emd0tDJQU+
-         pB4kmK6DzjbEDVzAf44nNOBabfotNdbRyIGWguQQ=
+        b=K3XELJOTtmj9uJ7stsp5d1LvUvZa4Fqi13dscS/NrnjQwOcH07Mok+WWVjWeobman
+         Qp6NyR3j6amaU0M5nosI4jvWZatrVZ5ne8x+3wTxklBO7GOXtTAp5+OZZAOlxeZECc
+         J4SQBFNdGYDCbC/RSlGB82eEzMBryl9EGCVZTPAw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marc Payne <marc.payne@mdpsys.co.uk>,
+Cc:     Eric Dumazet <edumazet@google.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        Jon Maloy <jon.maloy@ericsson.com>,
+        syzbot <syzkaller@googlegroups.com>,
         "David S . Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 225/606] r8152: support additional Microsoft Surface Ethernet Adapter variant
-Date:   Mon,  8 Jun 2020 19:05:50 -0400
-Message-Id: <20200608231211.3363633-225-sashal@kernel.org>
+        netdev@vger.kernel.org, tipc-discussion@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.6 228/606] tipc: block BH before using dst_cache
+Date:   Mon,  8 Jun 2020 19:05:53 -0400
+Message-Id: <20200608231211.3363633-228-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -60,65 +63,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Payne <marc.payne@mdpsys.co.uk>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit c27a204383616efba5a4194075e90819961ff66a ]
+[ Upstream commit 1378817486d6860f6a927f573491afe65287abf1 ]
 
-Device id 0927 is the RTL8153B-based component of the 'Surface USB-C to
-Ethernet and USB Adapter' and may be used as a component of other devices
-in future. Tested and working with the r8152 driver.
+dst_cache_get() documents it must be used with BH disabled.
 
-Update the cdc_ether blacklist due to the RTL8153 'network jam on suspend'
-issue which this device will cause (personally confirmed).
+sysbot reported :
 
-Signed-off-by: Marc Payne <marc.payne@mdpsys.co.uk>
+BUG: using smp_processor_id() in preemptible [00000000] code: /21697
+caller is dst_cache_get+0x3a/0xb0 net/core/dst_cache.c:68
+CPU: 0 PID: 21697 Comm:  Not tainted 5.7.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ check_preemption_disabled lib/smp_processor_id.c:47 [inline]
+ debug_smp_processor_id.cold+0x88/0x9b lib/smp_processor_id.c:57
+ dst_cache_get+0x3a/0xb0 net/core/dst_cache.c:68
+ tipc_udp_xmit.isra.0+0xb9/0xad0 net/tipc/udp_media.c:164
+ tipc_udp_send_msg+0x3e6/0x490 net/tipc/udp_media.c:244
+ tipc_bearer_xmit_skb+0x1de/0x3f0 net/tipc/bearer.c:526
+ tipc_enable_bearer+0xb2f/0xd60 net/tipc/bearer.c:331
+ __tipc_nl_bearer_enable+0x2bf/0x390 net/tipc/bearer.c:995
+ tipc_nl_bearer_enable+0x1e/0x30 net/tipc/bearer.c:1003
+ genl_family_rcv_msg_doit net/netlink/genetlink.c:673 [inline]
+ genl_family_rcv_msg net/netlink/genetlink.c:718 [inline]
+ genl_rcv_msg+0x627/0xdf0 net/netlink/genetlink.c:735
+ netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2469
+ genl_rcv+0x24/0x40 net/netlink/genetlink.c:746
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6bf/0x7e0 net/socket.c:2362
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2416
+ __sys_sendmsg+0xec/0x1b0 net/socket.c:2449
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x45ca29
+
+Fixes: e9c1a793210f ("tipc: add dst_cache support for udp media")
+Cc: Xin Long <lucien.xin@gmail.com>
+Cc: Jon Maloy <jon.maloy@ericsson.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/cdc_ether.c | 11 +++++++++--
- drivers/net/usb/r8152.c     |  1 +
- 2 files changed, 10 insertions(+), 2 deletions(-)
+ net/tipc/udp_media.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/usb/cdc_ether.c b/drivers/net/usb/cdc_ether.c
-index 0cdb2ce47645..a657943c9f01 100644
---- a/drivers/net/usb/cdc_ether.c
-+++ b/drivers/net/usb/cdc_ether.c
-@@ -815,14 +815,21 @@ static const struct usb_device_id	products[] = {
- 	.driver_info = 0,
- },
- 
--/* Microsoft Surface 3 dock (based on Realtek RTL8153) */
-+/* Microsoft Surface Ethernet Adapter (based on Realtek RTL8153) */
+diff --git a/net/tipc/udp_media.c b/net/tipc/udp_media.c
+index d6620ad53546..28a283f26a8d 100644
+--- a/net/tipc/udp_media.c
++++ b/net/tipc/udp_media.c
+@@ -161,9 +161,11 @@ static int tipc_udp_xmit(struct net *net, struct sk_buff *skb,
+ 			 struct udp_bearer *ub, struct udp_media_addr *src,
+ 			 struct udp_media_addr *dst, struct dst_cache *cache)
  {
- 	USB_DEVICE_AND_INTERFACE_INFO(MICROSOFT_VENDOR_ID, 0x07c6, USB_CLASS_COMM,
- 			USB_CDC_SUBCLASS_ETHERNET, USB_CDC_PROTO_NONE),
- 	.driver_info = 0,
- },
+-	struct dst_entry *ndst = dst_cache_get(cache);
++	struct dst_entry *ndst;
+ 	int ttl, err = 0;
  
--	/* TP-LINK UE300 USB 3.0 Ethernet Adapters (based on Realtek RTL8153) */
-+/* Microsoft Surface Ethernet Adapter (based on Realtek RTL8153B) */
-+{
-+	USB_DEVICE_AND_INTERFACE_INFO(MICROSOFT_VENDOR_ID, 0x0927, USB_CLASS_COMM,
-+			USB_CDC_SUBCLASS_ETHERNET, USB_CDC_PROTO_NONE),
-+	.driver_info = 0,
-+},
-+
-+/* TP-LINK UE300 USB 3.0 Ethernet Adapters (based on Realtek RTL8153) */
- {
- 	USB_DEVICE_AND_INTERFACE_INFO(TPLINK_VENDOR_ID, 0x0601, USB_CLASS_COMM,
- 			USB_CDC_SUBCLASS_ETHERNET, USB_CDC_PROTO_NONE),
-diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-index 95b19ce96513..7c8c45984a5c 100644
---- a/drivers/net/usb/r8152.c
-+++ b/drivers/net/usb/r8152.c
-@@ -6901,6 +6901,7 @@ static const struct usb_device_id rtl8152_table[] = {
- 	{REALTEK_USB_DEVICE(VENDOR_ID_REALTEK, 0x8153)},
- 	{REALTEK_USB_DEVICE(VENDOR_ID_MICROSOFT, 0x07ab)},
- 	{REALTEK_USB_DEVICE(VENDOR_ID_MICROSOFT, 0x07c6)},
-+	{REALTEK_USB_DEVICE(VENDOR_ID_MICROSOFT, 0x0927)},
- 	{REALTEK_USB_DEVICE(VENDOR_ID_SAMSUNG, 0xa101)},
- 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x304f)},
- 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x3062)},
++	local_bh_disable();
++	ndst = dst_cache_get(cache);
+ 	if (dst->proto == htons(ETH_P_IP)) {
+ 		struct rtable *rt = (struct rtable *)ndst;
+ 
+@@ -210,9 +212,11 @@ static int tipc_udp_xmit(struct net *net, struct sk_buff *skb,
+ 					   src->port, dst->port, false);
+ #endif
+ 	}
++	local_bh_enable();
+ 	return err;
+ 
+ tx_error:
++	local_bh_enable();
+ 	kfree_skb(skb);
+ 	return err;
+ }
 -- 
 2.25.1
 
