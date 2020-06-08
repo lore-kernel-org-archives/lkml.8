@@ -2,232 +2,169 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D798C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A85C1C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2303D2072F
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:18:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U3ywOkUm"
+	by mail.kernel.org (Postfix) with ESMTP id 87B9F20760
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:24:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729393AbgFHKSg (ORCPT
+        id S1729326AbgFHKYX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 06:18:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60042 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729337AbgFHKSe (ORCPT
+        Mon, 8 Jun 2020 06:24:23 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:2220 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726660AbgFHKYW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 06:18:34 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3446C08C5C3;
-        Mon,  8 Jun 2020 03:18:32 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id c71so14756126wmd.5;
-        Mon, 08 Jun 2020 03:18:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8E3tUlnNWH0tzK24PYQO2JZkSdZVKVSOuDxhAs4jB0Q=;
-        b=U3ywOkUmYf3mWHDJ5irFC8gmotq0uHroech3SdtnZ2h1j//7yautxyU6AVnYtQKDDd
-         MLw1jO00ILaP9kybA31O0kfxOLcnCx0WSmIit7FKhJjM/+xIiOeX3PMeZ1xDHUQtjLc7
-         YRG1HiT8tWEh9ZzHbz4UQMAIuJWIxfBcLiujlcrE3PI4XQ6b+5S0X45sY9x5lYB6MZPb
-         fS1rMNdST7gM0V7CPm1ShXW0pTZ0s9Pb5mdzMEThvn2nrX9yRiLa17rbXDJLXW7piOiy
-         lwn1Jbbi+Mo4QVVHlF0t6sBmrNwa6LFTUCzZwrj0iKZPldI44bkj3/f5o6xU2WA6/rfc
-         CLrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8E3tUlnNWH0tzK24PYQO2JZkSdZVKVSOuDxhAs4jB0Q=;
-        b=DiRTR9E7/ap5ZSB2VaOFo5NVqhQH/sXdrRN/IsGgjne/cQJsDLf7J+dJJb4Fnbz6pz
-         d6hsD6s3Z/S73+SEGQZ3gPly56815rOuQmDgHEAO8vc+D2sHjfGVkO1/ZxfwC0y2orAh
-         NnjpgoXErgNpIcXGDn1EgiGImquTGZ9pokO7mktheuRa0RNHj5DBvtYUe/NfhMZ8J5Hs
-         STsYx/8+DZHhsNW1QXJe37PpQGGqJxye4Stv/VKPuOpcM5wnGsSDqZuXGFG6IjcOnCWE
-         AzdCIQTBLWbPF8t5BVJP2kYze5D0cz+ESs6UVDaMXBzHswv09FJqM62uoJMonOEoUkrL
-         Q77g==
-X-Gm-Message-State: AOAM533yClPM6kU4n3PVYdM8znM682EJElIRW5XxOCIKMA3QaUZbDNvm
-        MVRsarSOBi5v7kzx5lDZ+oc=
-X-Google-Smtp-Source: ABdhPJzEzWvF3GXeVLXaWIlhisc6qKBmVJ6I624X62ATg/sd/QOg5XVIOCaiAD+Pgto1msHjSemKuw==
-X-Received: by 2002:a1c:dd44:: with SMTP id u65mr16847352wmg.180.1591611511286;
-        Mon, 08 Jun 2020 03:18:31 -0700 (PDT)
-Received: from skynet.lan (28.red-83-49-61.dynamicip.rima-tde.net. [83.49.61.28])
-        by smtp.gmail.com with ESMTPSA id z2sm22378439wrs.87.2020.06.08.03.18.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 03:18:30 -0700 (PDT)
-From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-To:     tsbogend@alpha.franken.de, f.fainelli@gmail.com,
-        jonas.gorski@gmail.com, bcm-kernel-feedback-list@broadcom.com,
-        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-Subject: [PATCH] MIPS: BCM63xx: add endif comments
-Date:   Mon,  8 Jun 2020 12:18:28 +0200
-Message-Id: <20200608101828.3383942-1-noltari@gmail.com>
-X-Mailer: git-send-email 2.26.2
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Mon, 8 Jun 2020 06:24:22 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 058A2qJS184709;
+        Mon, 8 Jun 2020 06:24:00 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31g7n7rhbm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 08 Jun 2020 06:23:59 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 058A3F09187332;
+        Mon, 8 Jun 2020 06:23:59 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31g7n7rhas-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 08 Jun 2020 06:23:59 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 058AK6eM006411;
+        Mon, 8 Jun 2020 10:23:56 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma05fra.de.ibm.com with ESMTP id 31g2s7sgv3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 08 Jun 2020 10:23:56 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 058ANsgV57213166
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 8 Jun 2020 10:23:54 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 12942A4060;
+        Mon,  8 Jun 2020 10:23:54 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1E92FA405B;
+        Mon,  8 Jun 2020 10:23:53 +0000 (GMT)
+Received: from oc3871087118.ibm.com (unknown [9.145.56.93])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  8 Jun 2020 10:23:53 +0000 (GMT)
+From:   Alexander Gordeev <agordeev@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        stable@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+        Yury Norov <yury.norov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Amritha Nambiar <amritha.nambiar@intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        "Tobin C . Harding" <tobin@kernel.org>,
+        Vineet Gupta <vineet.gupta1@synopsys.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Willem de Bruijn <willemb@google.com>
+Subject: [PATCH RESEND2] lib: fix bitmap_parse() on 64-bit big endian archs
+Date:   Mon,  8 Jun 2020 12:23:49 +0200
+Message-Id: <1591611829-23071-1-git-send-email-agordeev@linux.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-08_07:2020-06-08,2020-06-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 bulkscore=0
+ priorityscore=1501 clxscore=1015 adultscore=0 lowpriorityscore=0
+ mlxscore=0 malwarescore=0 impostorscore=0 phishscore=0 mlxlogscore=999
+ suspectscore=1 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006080073
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are plenty of ifdefs in board_bcm963xx.c without endif comments.
-Let's make the code easier to follow by adding proper comments.
+Commit 2d6261583be0 ("lib: rework bitmap_parse()") does not
+take into account order of halfwords on 64-bit big endian
+architectures. As result (at least) Receive Packet Steering,
+IRQ affinity masks and runtime kernel test "test_bitmap" get
+broken on s390.
 
-Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+Fixes: 2d6261583be0 ("lib: rework bitmap_parse()")
+Cc: stable@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Yury Norov <yury.norov@gmail.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Amritha Nambiar <amritha.nambiar@intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Miklos Szeredi <mszeredi@redhat.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Steffen Klassert <steffen.klassert@secunet.com>
+Cc: "Tobin C . Harding" <tobin@kernel.org>
+Cc: Vineet Gupta <vineet.gupta1@synopsys.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Willem de Bruijn <willemb@google.com>
+Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
 ---
- arch/mips/bcm63xx/boards/board_bcm963xx.c | 33 +++++++++++------------
- 1 file changed, 15 insertions(+), 18 deletions(-)
+ lib/bitmap.c | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
-diff --git a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards/board_bcm963xx.c
-index 36ec3dc2c999..e8621074a8c2 100644
---- a/arch/mips/bcm63xx/boards/board_bcm963xx.c
-+++ b/arch/mips/bcm63xx/boards/board_bcm963xx.c
-@@ -67,7 +67,7 @@ static struct board_info __initdata board_cvg834g = {
- 	.ephy_reset_gpio		= 36,
- 	.ephy_reset_gpio_flags		= GPIOF_INIT_HIGH,
- };
--#endif
-+#endif /* CONFIG_BCM63XX_CPU_3368 */
- 
- /*
-  * known 6328 boards
-@@ -115,7 +115,7 @@ static struct board_info __initdata board_96328avng = {
- 		},
- 	},
- };
--#endif
-+#endif /* CONFIG_BCM63XX_CPU_6328 */
- 
- /*
-  * known 6338 boards
-@@ -204,7 +204,7 @@ static struct board_info __initdata board_96338w = {
- 		},
- 	},
- };
--#endif
-+#endif /* CONFIG_BCM63XX_CPU_6338 */
- 
- /*
-  * known 6345 boards
-@@ -216,7 +216,7 @@ static struct board_info __initdata board_96345gw2 = {
- 
- 	.has_uart0			= 1,
- };
--#endif
-+#endif /* CONFIG_BCM63XX_CPU_6345 */
- 
- /*
-  * known 6348 boards
-@@ -464,7 +464,6 @@ static struct board_info __initdata board_rta1025w_16 = {
- 	},
- };
- 
--
- static struct board_info __initdata board_DV201AMR = {
- 	.name				= "DV201AMR",
- 	.expected_cpu_id		= 0x6348,
-@@ -505,7 +504,7 @@ static struct board_info __initdata board_96348gw_a = {
- 
- 	.has_ohci0 = 1,
- };
--#endif
-+#endif /* CONFIG_BCM63XX_CPU_6348 */
- 
- /*
-  * known 6358 boards
-@@ -530,7 +529,6 @@ static struct board_info __initdata board_96358vw = {
- 		.force_duplex_full	= 1,
- 	},
- 
--
- 	.has_ohci0 = 1,
- 	.has_pccard = 1,
- 	.has_ehci0 = 1,
-@@ -654,7 +652,7 @@ static struct board_info __initdata board_DWVS0 = {
- 
- 	.has_ohci0			= 1,
- };
--#endif
-+#endif /* CONFIG_BCM63XX_CPU_6358 */
- 
- /*
-  * all boards
-@@ -662,17 +660,17 @@ static struct board_info __initdata board_DWVS0 = {
- static const struct board_info __initconst *bcm963xx_boards[] = {
- #ifdef CONFIG_BCM63XX_CPU_3368
- 	&board_cvg834g,
--#endif
-+#endif /* CONFIG_BCM63XX_CPU_3368 */
- #ifdef CONFIG_BCM63XX_CPU_6328
- 	&board_96328avng,
--#endif
-+#endif /* CONFIG_BCM63XX_CPU_6328 */
- #ifdef CONFIG_BCM63XX_CPU_6338
- 	&board_96338gw,
- 	&board_96338w,
--#endif
-+#endif /* CONFIG_BCM63XX_CPU_6338 */
- #ifdef CONFIG_BCM63XX_CPU_6345
- 	&board_96345gw2,
--#endif
-+#endif /* CONFIG_BCM63XX_CPU_6345 */
- #ifdef CONFIG_BCM63XX_CPU_6348
- 	&board_96348r,
- 	&board_96348gw,
-@@ -682,14 +680,13 @@ static const struct board_info __initconst *bcm963xx_boards[] = {
- 	&board_DV201AMR,
- 	&board_96348gw_a,
- 	&board_rta1025w_16,
--#endif
--
-+#endif /* CONFIG_BCM63XX_CPU_6348 */
- #ifdef CONFIG_BCM63XX_CPU_6358
- 	&board_96358vw,
- 	&board_96358vw2,
- 	&board_AGPFS0,
- 	&board_DWVS0,
--#endif
-+#endif /* CONFIG_BCM63XX_CPU_6358 */
- };
- 
- /*
-@@ -728,7 +725,7 @@ int bcm63xx_get_fallback_sprom(struct ssb_bus *bus, struct ssb_sprom *out)
- 		return -EINVAL;
- 	}
+diff --git a/lib/bitmap.c b/lib/bitmap.c
+index 89260aa342d6..a725e4612984 100644
+--- a/lib/bitmap.c
++++ b/lib/bitmap.c
+@@ -717,6 +717,19 @@ static const char *bitmap_get_x32_reverse(const char *start,
+ 	return end;
  }
--#endif
-+#endif /* CONFIG_SSB_PCIHOST */
  
- /*
-  * return board name for /proc/cpuinfo
-@@ -807,7 +804,7 @@ void __init board_prom_init(void)
- 		if (BCMCPU_IS_6348())
- 			val |= GPIO_MODE_6348_G2_PCI;
++#if defined(__BIG_ENDIAN) && defined(CONFIG_64BIT)
++static void save_x32_chunk(unsigned long *maskp, u32 chunk, int chunk_idx)
++{
++	maskp += (chunk_idx / 2);
++	((u32 *)maskp)[(chunk_idx & 1) ^ 1] = chunk;
++}
++#else
++static void save_x32_chunk(unsigned long *maskp, u32 chunk, int chunk_idx)
++{
++	((u32 *)maskp)[chunk_idx] = chunk;
++}
++#endif
++
+ /**
+  * bitmap_parse - convert an ASCII hex string into a bitmap.
+  * @start: pointer to buffer containing string.
+@@ -738,7 +751,8 @@ int bitmap_parse(const char *start, unsigned int buflen,
+ {
+ 	const char *end = strnchrnul(start, buflen, '\n') - 1;
+ 	int chunks = BITS_TO_U32(nmaskbits);
+-	u32 *bitmap = (u32 *)maskp;
++	int chunk_idx = 0;
++	u32 chunk;
+ 	int unset_bit;
+ 
+ 	while (1) {
+@@ -749,9 +763,11 @@ int bitmap_parse(const char *start, unsigned int buflen,
+ 		if (!chunks--)
+ 			return -EOVERFLOW;
+ 
+-		end = bitmap_get_x32_reverse(start, end, bitmap++);
++		end = bitmap_get_x32_reverse(start, end, &chunk);
+ 		if (IS_ERR(end))
+ 			return PTR_ERR(end);
++
++		save_x32_chunk(maskp, chunk, chunk_idx++);
  	}
--#endif
-+#endif /* CONFIG_PCI */
  
- 	if (board.has_pccard) {
- 		if (BCMCPU_IS_6348())
-@@ -892,7 +889,7 @@ int __init board_register_devices(void)
- 				&bcm63xx_get_fallback_sprom) < 0)
- 			pr_err("failed to register fallback SPROM\n");
- 	}
--#endif
-+#endif /* CONFIG_SSB_PCIHOST */
- 
- 	bcm63xx_spi_register();
- 
+ 	unset_bit = (BITS_TO_U32(nmaskbits) - chunks) * 32;
 -- 
-2.26.2
+2.23.0
 
