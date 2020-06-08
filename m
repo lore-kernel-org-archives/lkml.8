@@ -7,53 +7,73 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60DCFC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D62F1C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:09:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E5D9208C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:08:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7FE5208B6
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:09:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591657739;
-	bh=3WMrB6CIg3LMf536G7ZwY2EFfDrDAtqAJlC+4oM9Ndw=;
+	s=default; t=1591657747;
+	bh=mTiX6BVUQ3jkX0Jh2seMK/MdH4mnuw+Iqv/QKtJSdaw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tAR27gdz5OAmC3XuJuzj2ffeSc/fZEgZeS5HJLyqwf4QhK6f6iXPR6sJL1PmDIo+i
-	 15zzBF/2b/olf00/40JKLn9HPwlo5fzn6BOiPgk1zIZ1q01uKJzN/Xd+LtOnM17L8M
-	 NQv8++wnvL3/dOpv7L7s+r4PybD7OmyivojVGCO8=
+	b=Sstmbqi+ZBSE0kXnSg8yDIDV6OsaEVwuOO63M3efRGseC+HJmNqyMTZcj9ma70AxZ
+	 t0p8/9DVuOvwWrRgCGlPxfde4h479fvVsxYE6MFTOYL3pGsDbYjEGRqql/3JymbOgy
+	 MukcmgjfKAJy11VAr736WPeSIXR2iCetevFCfCuk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728304AbgFHXI6 (ORCPT
+        id S1728336AbgFHXJG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:08:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52576 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:09:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728027AbgFHXHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:07:52 -0400
+        id S1728088AbgFHXIE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:08:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C4C32087E;
-        Mon,  8 Jun 2020 23:07:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F5B62087E;
+        Mon,  8 Jun 2020 23:08:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657671;
-        bh=3WMrB6CIg3LMf536G7ZwY2EFfDrDAtqAJlC+4oM9Ndw=;
+        s=default; t=1591657684;
+        bh=mTiX6BVUQ3jkX0Jh2seMK/MdH4mnuw+Iqv/QKtJSdaw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SaRQmJijO2kztoniRC5VahQlY57ih1YxiDOWgKxT6tYnwdmM5oJEP5nn+ua+4K80a
-         bRVtOtL2mtVQEyYxrQCr1xKaNLAx/yjeYpBWiKtiLCrd3uPJwpCgDZ8rh7wdq7s3Kd
-         bqsUb4wxMfzUCToRZn1yD2wGL20LfDY0w0BNLKDw=
+        b=Q/RrEdZFoYdnbeV5uhaByT/rfltudEfsIryDIin6zJfhYKoVEcp9e0cZ2C328Bv4p
+         f7t7L9ZvTNgw/3B4uViJp2MkUgX0LWdUUs4OG54cP9O7VsCHo9aD3tSijRsV1pxaxF
+         wkUGMk6IpKpLHzogGluIDzELIjl+3k0RkRheaIhU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>, Feng Tang <feng.tang@intel.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 080/274] spi: dw: Fix Rx-only DMA transfers
-Date:   Mon,  8 Jun 2020 19:02:53 -0400
-Message-Id: <20200608230607.3361041-80-sashal@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        David Airlie <airlied@linux.ie>, Gao Xiang <xiang@kernel.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Wei Liu <wei.liu@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
+Subject: [PATCH AUTOSEL 5.7 087/274] staging: android: ion: use vmap instead of vm_map_ram
+Date:   Mon,  8 Jun 2020 19:03:00 -0400
+Message-Id: <20200608230607.3361041-87-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -66,51 +86,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit 46164fde6b7890e7a3982d54549947c8394c0192 ]
+[ Upstream commit 5bf9917452112694b2c774465ee4dbe441c84b77 ]
 
-Tx-only DMA transfers are working perfectly fine since in this case
-the code just ignores the Rx FIFO overflow interrupts. But it turns
-out the SPI Rx-only transfers are broken since nothing pushing any
-data to the shift registers, so the Rx FIFO is left empty and the
-SPI core subsystems just returns a timeout error. Since DW DMAC
-driver doesn't support something like cyclic write operations of
-a single byte to a device register, the only way to support the
-Rx-only SPI transfers is to fake it by using a dummy Tx-buffer.
-This is what we intend to fix in this commit by setting the
-SPI_CONTROLLER_MUST_TX flag for DMA-capable platform.
+vm_map_ram can keep mappings around after the vm_unmap_ram.  Using that
+with non-PAGE_KERNEL mappings can lead to all kinds of aliasing issues.
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Feng Tang <feng.tang@intel.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Link: https://lore.kernel.org/r/20200529131205.31838-9-Sergey.Semin@baikalelectronics.ru
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Gao Xiang <xiang@kernel.org>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Laura Abbott <labbott@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Michael Kelley <mikelley@microsoft.com>
+Cc: Minchan Kim <minchan@kernel.org>
+Cc: Nitin Gupta <ngupta@vflare.org>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>
+Cc: Wei Liu <wei.liu@kernel.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Paul Mackerras <paulus@ozlabs.org>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Will Deacon <will@kernel.org>
+Link: http://lkml.kernel.org/r/20200414131348.444715-4-hch@lst.de
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-dw.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/staging/android/ion/ion_heap.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
-index 31e3f866d11a..e8f275c850ce 100644
---- a/drivers/spi/spi-dw.c
-+++ b/drivers/spi/spi-dw.c
-@@ -523,6 +523,7 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
- 			dws->dma_inited = 0;
- 		} else {
- 			master->can_dma = dws->dma_ops->can_dma;
-+			master->flags |= SPI_CONTROLLER_MUST_TX;
- 		}
- 	}
+diff --git a/drivers/staging/android/ion/ion_heap.c b/drivers/staging/android/ion/ion_heap.c
+index 473b465724f1..0755b11348ed 100644
+--- a/drivers/staging/android/ion/ion_heap.c
++++ b/drivers/staging/android/ion/ion_heap.c
+@@ -99,12 +99,12 @@ int ion_heap_map_user(struct ion_heap *heap, struct ion_buffer *buffer,
  
+ static int ion_heap_clear_pages(struct page **pages, int num, pgprot_t pgprot)
+ {
+-	void *addr = vm_map_ram(pages, num, -1, pgprot);
++	void *addr = vmap(pages, num, VM_MAP, pgprot);
+ 
+ 	if (!addr)
+ 		return -ENOMEM;
+ 	memset(addr, 0, PAGE_SIZE * num);
+-	vm_unmap_ram(addr, num);
++	vunmap(addr);
+ 
+ 	return 0;
+ }
 -- 
 2.25.1
 
