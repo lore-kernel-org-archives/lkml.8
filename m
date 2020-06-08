@@ -2,142 +2,195 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3482C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B2D6C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:02:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0A5A206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:02:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E9DA206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:02:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="XRpiM6wx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="up0PRyxO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729327AbgFHKCK (ORCPT
+        id S1729344AbgFHKCg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 06:02:10 -0400
-Received: from mail-eopbgr10057.outbound.protection.outlook.com ([40.107.1.57]:30017
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728745AbgFHKCI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 06:02:08 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=U+mOKY7RHRQh+EwKjGn5xSqrZiMV9iLLWrtCnL5ACtiPhJGBjCG4uzmcv9cB0ZU18iA8CP7UZvHzfWKcpqP4Yukeqi7BCAvzI5//NZUQXS87J7PzJLpi8lXRSfg8tYghgfMxQckjAtIIBHN6w69Y8UDwO9N93MK1minsmaHmuD2/+Qp/EJEL1RtGYGtKMH5CzgnGVG2EOctskrziYLa9pOiNPVJOl11/zJ9v3yZJi1Ez0ReIaenNIwlcJH4QhFcuga8kfHww+j7A8VbrwxFMIJyByE2QZqcaZNfEhLAP5QERwj1b/CJ9L9PstOiQPhs8nJJHbtfAtXu4HeVLorNSHw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Hkd6vnUsumNq6K3u99+dkrfgPl8jgC2cd6DAh75q0hk=;
- b=BZnDCRZHgQYJIkwGZwQ7GF9joemCaOONtfridoPguJ+LQPgz34YhZVitE2ckvZXPPhJgdIQwRSwHvrQx0IP6xrzc/iTuIfNjWFuXhjWjdlkdsES067ihjTIvSRjn367a5SnyAwdGsItyaESCXyj1mIUYXDveKDU5MYLQxg69Sot+XOgUrmxjHykRvxTacEaslEB80xbLNCr3Uu++JJetmv5lBX+UxXuecm3Nk40buB2/AGw5eH+LlzKASkscH+aQVlaWDdjap7rENG7CeVas8ylZbaesqwbH+7NaYCN2vL7bjhoaQB+mCLoaXNJEyOq+lEHAbplmaQx+XmfFyayaTg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Hkd6vnUsumNq6K3u99+dkrfgPl8jgC2cd6DAh75q0hk=;
- b=XRpiM6wxySJ8f5vqlgYCiriW5SpibEENf+lHYc8IlM539oZEj97KwPsPxVqwlLCUQV0WpaXzMUmZpUUgsDLBU1yRm7sP1xYeb0+YEdbCZKpKWSf1w1FfANOz3a0s9roxKgZsY7+yC8OhBBgs0Fuyf7vbkMw/e9DYjfL1hh/PoyY=
-Received: from AM0PR0502MB3826.eurprd05.prod.outlook.com
- (2603:10a6:208:1b::25) by AM0PR0502MB4001.eurprd05.prod.outlook.com
- (2603:10a6:208:9::29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.22; Mon, 8 Jun
- 2020 10:02:04 +0000
-Received: from AM0PR0502MB3826.eurprd05.prod.outlook.com
- ([fe80::2dae:c2a2:c26a:f5b]) by AM0PR0502MB3826.eurprd05.prod.outlook.com
- ([fe80::2dae:c2a2:c26a:f5b%7]) with mapi id 15.20.3066.023; Mon, 8 Jun 2020
- 10:02:04 +0000
-From:   Amit Cohen <amitc@mellanox.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "corbet@lwn.net" <corbet@lwn.net>, Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "mkubecek@suse.cz" <mkubecek@suse.cz>,
-        "gustavo@embeddedor.com" <gustavo@embeddedor.com>,
-        "cforno12@linux.vnet.ibm.com" <cforno12@linux.vnet.ibm.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "linux@rempel-privat.de" <linux@rempel-privat.de>,
-        "alexandru.ardelean@analog.com" <alexandru.ardelean@analog.com>,
-        Aya Levin <ayal@mellanox.com>,
-        Petr Machata <petrm@mellanox.com>, mlxsw <mlxsw@mellanox.com>,
-        "liuhangbin@gmail.com" <liuhangbin@gmail.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
-Subject: RE: [RFC PATCH net-next 05/10] Documentation: networking:
- ethtool-netlink: Add link extended state
-Thread-Topic: [RFC PATCH net-next 05/10] Documentation: networking:
- ethtool-netlink: Add link extended state
-Thread-Index: AQHWPNxbhhHrLhnGg0iUndeLWzHeZKjNXRSAgAEfm4A=
-Date:   Mon, 8 Jun 2020 10:02:04 +0000
-Message-ID: <AM0PR0502MB382638933BF9B7BE0AB34E81D7850@AM0PR0502MB3826.eurprd05.prod.outlook.com>
-References: <20200607145945.30559-1-amitc@mellanox.com>
- <20200607145945.30559-6-amitc@mellanox.com>
- <20200607164759.GG1022955@lunn.ch>
-In-Reply-To: <20200607164759.GG1022955@lunn.ch>
-Accept-Language: he-IL, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: lunn.ch; dkim=none (message not signed)
- header.d=none;lunn.ch; dmarc=none action=none header.from=mellanox.com;
-x-originating-ip: [87.68.150.248]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 131d0a3b-fe8f-449c-d0a7-08d80b92ff3d
-x-ms-traffictypediagnostic: AM0PR0502MB4001:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR0502MB4001E7675DC972CCB8FD1C72D7850@AM0PR0502MB4001.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 042857DBB5
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 2Qp72XsMGwwy5zdWb+O4tkeendhLDhARFBG7CE/oUzM2iQyPWwffJQiVjUE4FAqb73jkR1LbpTpfTug7IY+Sys4H3NRYgAKIKkB6enD37pNtMoGF/GJ67nsirYkH7LQhoVRcgxlwDGfk63zdKkOi+2VIv8BHewSx23xs3vdtq/jrZm1GZp5RCIQN+dGGKdmRhccEoPzg/q5OZyFHGdJIPJRcFQ/A8FVxiKhggBm6gTpRTY7jdSy24ocUXgX+K/4y7KIQhSjlqppp1Xj+TV++41axU2cAz3Z5yrKY9qqOoMvBAG4bx01eEHYdPEnL7txVfTPMG00yAOXT3NVgLf1tFg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR0502MB3826.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(366004)(376002)(346002)(396003)(8676002)(7696005)(26005)(83380400001)(7416002)(6506007)(9686003)(2906002)(33656002)(66556008)(54906003)(66446008)(64756008)(66476007)(186003)(55016002)(6916009)(76116006)(4326008)(5660300002)(4744005)(86362001)(478600001)(52536014)(71200400001)(8936002)(66946007)(316002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: AWJmb1RItwBpYY1O6OLJ0eFw11wLeVYjzoNAjby7WvcyWl5XaL8PBTbYGpFLVRRkTLdFV46YA/zPlnkOBu6hCf316CsYtLAckFQkFHVBx72xiOfT56jF2jcduQ8Mep+hYf59J0qwzU6P0OZyaT3NPbO5T935zQs5Hy8tTdZAaPcNddwRqV15d+5NhX40yg+BU73NTitC93dgP3CmOtnGI+EjdtDgxRBjRHmK9lOU7VG9cdCb8eeKt5iRmbZS4+o3hNqgDdsCjfF+uMNe8eoS/d7Rd5m6QfN8HAky0Gh6YGKDmpTWS1uVrGL//kluRFdjsBsX1u5X59rKXd6BiX7EYTnTo9m+W3Bd5yLo09rw1Si3V1pIIQC+uAjWizj0aFA3gwPVjFyMhXJY/TBlEoAdGk9Fg8u+Se9C+Kn3XCBQd9BgLmRHOov80fgD1dWjK4gjDmsxpE3k0m+0NSLWtl5S+GiEySVLP4vRZ5B5hRoUU0n+Mhw6TihF4QbsXniELO8B
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 8 Jun 2020 06:02:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57560 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729240AbgFHKCe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 06:02:34 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF17DC08C5C3;
+        Mon,  8 Jun 2020 03:02:33 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id s10so8571438pgm.0;
+        Mon, 08 Jun 2020 03:02:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2zoo0ERaliX/JjKEGnYqTQZHfKutQDjXGBUR6MxE50E=;
+        b=up0PRyxOK9NsFIv2bsBl0byvSjs9TKlq7122/ilkRkEttg+3QL6Te0gWz3TYNBv0vi
+         IE21MrMkSmBoOM0mY4Ym6dD4h0fHd8PJqbmjpqRLAoD8EgiLZJlztmdayzlMxvl64uad
+         DTmDDiOoifJ+qZNcLaLd2QSV/HmYZnGjko8DYlFAtHLeNrU6eLEN23fhJDEXcZO9k6su
+         5btG1FU90NfVPGLZPU9H4xy++nNO22Mb48r9L7eryuGK6DS+fMUjxg5jPDGiU2+oNHCp
+         xKXJVPkjQbjd51oijoYnbZKVI1lUIdfoc2nsSSfQ/4wyGgwYugHqOswiCBWgOn9shtpA
+         CEbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2zoo0ERaliX/JjKEGnYqTQZHfKutQDjXGBUR6MxE50E=;
+        b=g+UrNPb+COB2G9HXzGNpVv8bK2+XNK7NVTe7ZrgsXB0MpkLh5baLopiGaSe05kLUc5
+         2oImWxAnKyh6dMEHOELibjZk6aDSEiBXCnN0ldjjmcZYoBnERto5hInNOpH24o0rwiX7
+         IdjzgubCAKzsLFb5JP4eTMpwAs+iNdVOZAixwelfZmbWXBzBJn0YlN/aPvbQCv0tXYLT
+         1zS2tEqhDOl4BgniqlnEbxDY13piiSSf8QO2jWWDdEYmuQBHv3Czyhw16QHGV06i5UOg
+         es1YTLlthzxaR2yJj3B3LiiUzbKmxUeSpWHk5Z83c6B2yY7urQj1y+vwZfApL+su+F4U
+         ez8g==
+X-Gm-Message-State: AOAM530UZqQ/k2LOEI+e4z8ksSnyG7jN5oQUlqwM2BxhETuCr4ymCLnY
+        HAOIxbzfL7A+fyLCchobg5qZgG7oeQrj9RbKgVI=
+X-Google-Smtp-Source: ABdhPJx86tPKDhVhcYy12URCDzcRNhNuX2MCH50rKMBNeLvTYoOCyhjdRnZsCXkMUtFO7r9gOz6BiOXhGjPZOdlfhLw=
+X-Received: by 2002:a63:ff52:: with SMTP id s18mr20149238pgk.203.1591610553061;
+ Mon, 08 Jun 2020 03:02:33 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 131d0a3b-fe8f-449c-d0a7-08d80b92ff3d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jun 2020 10:02:04.6847
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2lNVl+IqK7ULKcpMtNm+8I5kM152bA6F+VE29I4qm1RbYTwEnhPcP7/knjnUPPovLH3IwE5PCX44MUa+QucFrw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR0502MB4001
+References: <20200604211039.12689-1-michael@walle.cc> <20200604211039.12689-3-michael@walle.cc>
+ <20200605065709.GD3714@dell> <20200605105026.GC5413@sirena.org.uk>
+ <c5632bfab3956265e90fc2fb6c0b3cae@walle.cc> <20200606114645.GB2055@sirena.org.uk>
+ <dc052a5c77171014ecc465b1da8b7ef8@walle.cc> <20200608082827.GB3567@dell>
+In-Reply-To: <20200608082827.GB3567@dell>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 8 Jun 2020 13:02:21 +0300
+Message-ID: <CAHp75VdiH=J-ovCdh1RFJDW_bJM8=pbXRaHmB691GLb-5oBmYQ@mail.gmail.com>
+Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld management controller
+To:     Lee Jones <lee.jones@linaro.org>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        david.m.ertman@intel.com, shiraz.saleem@intel.com
+Cc:     Michael Walle <michael@walle.cc>, Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrew Lunn <andrew@lunn.ch> writes:
++Cc: some Intel people WRT our internal discussion about similar
+problem and solutions.
 
->> +Link extended states:
->> +
->> +  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D    =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D
->> +  ``Autoneg failure``             Failure during auto negotiation mecha=
-nism
->
->I think you need to define 'failure' here.
->
->Linux PHYs don't have this state. auto-neg is either ongoing, or has compl=
-eted. There is no time limit for auto-neg. If there is no link partner, aut=
-o-neg does not fail, it just continues until there is a link partner which =
-responds and negotiation completes.
->
->Looking at the state diagrams in 802.3 clause 28, what do you consider as =
-failure?
->
+On Mon, Jun 8, 2020 at 11:30 AM Lee Jones <lee.jones@linaro.org> wrote:
+> On Sat, 06 Jun 2020, Michael Walle wrote:
+> > Am 2020-06-06 13:46, schrieb Mark Brown:
+> > > On Fri, Jun 05, 2020 at 10:07:36PM +0200, Michael Walle wrote:
+> > > > Am 2020-06-05 12:50, schrieb Mark Brown:
 
-Ok, you're right. What about renaming this state to "Autoneg issue" and the=
-n as ext_substate you can use something like "Autoneg ongoing"?=20
+...
 
->	 Andrew
+> Right.  I'm suggesting a means to extrapolate complex shared and
+> sometimes intertwined batches of register sets to be consumed by
+> multiple (sub-)devices spanning different subsystems.
+>
+> Actually scrap that.  The most common case I see is a single Regmap
+> covering all child-devices.
 
+Yes, because often we need a synchronization across the entire address
+space of the (parent) device in question.
+
+>  It would be great if there was a way in
+> which we could make an assumption that the entire register address
+> space for a 'tagged' (MFD) device is to be shared (via Regmap) between
+> each of the devices described by its child-nodes.  Probably by picking
+> up on the 'simple-mfd' compatible string in the first instance.
+>
+> Rob, is the above something you would contemplate?
+>
+> Michael, do your register addresses overlap i.e. are they intermingled
+> with one another?  Do multiple child devices need access to the same
+> registers i.e. are they shared?
+>
+> > > > But, there is more in my driver:
+> > > >  (1) there is a version check
+>
+> If we can rid the Regmap dependency, then creating an entire driver to
+> conduct a version check is unjustifiable.  This could become an inline
+> function which is called by each of the sub-devices instead, for
+> example.
+>
+> > > >  (2) there is another function for which there is no suitable linux
+> > > >      subsystem I'm aware of and thus which I'd like to us sysfs
+> > > >      attributes for: This controller supports 16 non-volatile
+> > > >      configuration bits. (this is still TBD)
+>
+> There is a place for everything in Linux.
+>
+> What do these bits configure?
+>
+> > > TBH I'd also say that the enumeration of the subdevices for this
+> > > device should be in the device rather than the DT, they don't
+> > > seem to be things that exist outside of this one device.
+> >
+> > We're going circles here, formerly they were enumerated in the MFD.
+> > Yes, they are devices which aren't likely be used outside a
+> > "sl28cpld", but there might there might be other versions of the
+> > sl28cpld with other components on different base addresses. I
+> > don't care if they are enumerated in DT or MFD, actually, I'd
+> > prefer the latter. _But_ I would like to have the device tree
+> > properties for its subdevices, e.g. the ones for the watchdog or
+> > whatever components there might be in the future.
+>
+> [...]
+>
+> > MFD core can
+> > match a device tree node today; but only one per unique compatible
+> > string. So what should I use to differentiate the different
+> > subdevices?
+>
+> Right.  I have been aware of this issue.  The only suitable solution
+> to this would be to match on 'reg'.
+>
+> FYI: I plan to fix this.
+>
+> If your register map needs to change, then I suggest that this is
+> either a new device or at least a different version of the device and
+> would also have to be represented as different (sub-)mfd_cell.
+>
+> > Rob suggested the internal offset, which I did here.
+>
+> FWIW, I don't like this idea.  DTs should not have to be modified
+> (either in the first instance or subsequently) or specifically
+> designed to patch inadequacies in any given OS.
+>
+> > But then, there is less use in duplicating the offsets in the MFD
+> > just to have the MFD enumerate the subdevices and then match
+> > the device tree nodes against it. I can just use
+> > of_platform_populate() to enumerate the children and I won't
+> > have to duplicate the base addresses.
+>
+> Which is fine.  However this causes a different issue for you.  By
+> stripping out the MFD code you render the MFD portion seemingly
+> superfluous.  Another issue driver authors commonly contend with.
+
+-- 
+With Best Regards,
+Andy Shevchenko
