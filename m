@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B650C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44016C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EBCF20737
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:57:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E9F320737
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:58:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591664270;
-	bh=oFIdwIPcbSh6WjyfTNz2t9h1mlmA98OxWyFA46v78Jg=;
+	s=default; t=1591664283;
+	bh=1nqs4DqbgeZgMHpBxJQRypqiP9gwPyGbe6RIQZ4mk84=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OojwRi5w0Lku2qabVbZGKicwqmxlhbdEHiJhxeWfFbhS+1d6ZNSqeegdawoOk+0B9
-	 yWDrTqBenKWP5Amp05rO1jhUvbRjDOwFnhWuB2AyyF9xq0ATSgc2bBxutqzOvPTABk
-	 wndJ+vbCu0PE8bhFke7QLPjBTukM6nGSIlwoFxYY=
+	b=R/ZigVNlAqylv30YSKQFaS18Y+1Stbpz44nKIFBz0dW9wJj2e3/URl6SRnqfU5rKF
+	 56BNQ712QbPjzopU55+sV2bB3JXTnNm9rcakA3zlEv9vKpC2FuDq9M6kazrxPcA75V
+	 TN2ehAWSNoqH/JoNsoxQgDRpRjjRboqiOLPtGMx0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388059AbgFIA5g (ORCPT
+        id S1728587AbgFIA6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:57:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54406 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:58:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728265AbgFHXIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:08:51 -0400
+        id S1728254AbgFHXIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:08:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CF4E21475;
-        Mon,  8 Jun 2020 23:08:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E31642085B;
+        Mon,  8 Jun 2020 23:08:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657731;
-        bh=oFIdwIPcbSh6WjyfTNz2t9h1mlmA98OxWyFA46v78Jg=;
+        s=default; t=1591657727;
+        bh=1nqs4DqbgeZgMHpBxJQRypqiP9gwPyGbe6RIQZ4mk84=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AYe+7FSqRXpY6YsctQaifpSRtMogA1eMZzVPVqMl1GwL9W28tucxa26OlXgyLdM8G
-         7glcAxO5Ncom+3iuS1M5R+FTVqtoia1cG/FCLh9Grw/SqcRZk5FKJzi5VnluMT58jG
-         y21DT7En6uE8V6iGoyELbo1tAgnznFkbpbX+eg3c=
+        b=0BRn2WIjjQ03Ek9hdYmcEyS6PMaWSSzEayPDWM9pRaoeLG1ss2o4h9DQiXH+1f4fh
+         8Jz7gMlr6EDJD/dzVgyePWHA0qQ9nplP9cB1bjd9LVmLiigFgV6etgbqwbDURjgkmr
+         IxcPAAvo2SwBl8vfnNiPSKJ+NpA4weWL77JxbLFY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zou Wei <zou_wei@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 122/274] net/mlx4_core: Add missing iounmap() in error path
-Date:   Mon,  8 Jun 2020 19:03:35 -0400
-Message-Id: <20200608230607.3361041-122-sashal@kernel.org>
+Cc:     Ard Biesheuvel <ardb@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-efi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 119/274] efi/libstub/random: Align allocate size to EFI_ALLOC_ALIGN
+Date:   Mon,  8 Jun 2020 19:03:32 -0400
+Message-Id: <20200608230607.3361041-119-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -61,37 +58,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zou Wei <zou_wei@huawei.com>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-[ Upstream commit c90af587a9eee697e2d89683113707cada70116a ]
+[ Upstream commit e1df73e2d18b3b7d66f2ec38d81d9566b3a7fb21 ]
 
-This fixes the following coccicheck warning:
+The EFI stub uses a per-architecture #define for the minimum base
+and size alignment of page allocations, which is set to 4 KB for
+all architecures except arm64, which uses 64 KB, to ensure that
+allocations can always be (un)mapped efficiently, regardless of
+the page size used by the kernel proper, which could be a kexec'ee
 
-drivers/net/ethernet/mellanox/mlx4/crdump.c:200:2-8: ERROR: missing iounmap;
-ioremap on line 190 and execution via conditional on line 198
+The API wrappers around page based allocations assume that this
+alignment is always taken into account, and so efi_free() will
+also round up its size argument to EFI_ALLOC_ALIGN.
 
-Fixes: 7ef19d3b1d5e ("devlink: report error once U32_MAX snapshot ids have been used")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Zou Wei <zou_wei@huawei.com>
-Reviewed-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Currently, efi_random_alloc() does not honour this alignment for
+the allocated size, and so freeing such an allocation may result
+in unrelated memory to be freed, potentially leading to issues
+after boot. So let's round up size in efi_random_alloc() as well.
+
+Fixes: 2ddbfc81eac84a29 ("efi: stub: add implementation of efi_random_alloc()")
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx4/crdump.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/firmware/efi/libstub/randomalloc.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx4/crdump.c b/drivers/net/ethernet/mellanox/mlx4/crdump.c
-index 73eae80e1cb7..ac5468b77488 100644
---- a/drivers/net/ethernet/mellanox/mlx4/crdump.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/crdump.c
-@@ -197,6 +197,7 @@ int mlx4_crdump_collect(struct mlx4_dev *dev)
- 	err = devlink_region_snapshot_id_get(devlink, &id);
- 	if (err) {
- 		mlx4_err(dev, "crdump: devlink get snapshot id err %d\n", err);
-+		iounmap(cr_space);
- 		return err;
- 	}
+diff --git a/drivers/firmware/efi/libstub/randomalloc.c b/drivers/firmware/efi/libstub/randomalloc.c
+index 4578f59e160c..6200dfa650f5 100644
+--- a/drivers/firmware/efi/libstub/randomalloc.c
++++ b/drivers/firmware/efi/libstub/randomalloc.c
+@@ -74,6 +74,8 @@ efi_status_t efi_random_alloc(unsigned long size,
+ 	if (align < EFI_ALLOC_ALIGN)
+ 		align = EFI_ALLOC_ALIGN;
  
++	size = round_up(size, EFI_ALLOC_ALIGN);
++
+ 	/* count the suitable slots in each memory map entry */
+ 	for (map_offset = 0; map_offset < map_size; map_offset += desc_size) {
+ 		efi_memory_desc_t *md = (void *)memory_map + map_offset;
+@@ -109,7 +111,7 @@ efi_status_t efi_random_alloc(unsigned long size,
+ 		}
+ 
+ 		target = round_up(md->phys_addr, align) + target_slot * align;
+-		pages = round_up(size, EFI_PAGE_SIZE) / EFI_PAGE_SIZE;
++		pages = size / EFI_PAGE_SIZE;
+ 
+ 		status = efi_bs_call(allocate_pages, EFI_ALLOCATE_ADDRESS,
+ 				     EFI_LOADER_DATA, pages, &target);
 -- 
 2.25.1
 
