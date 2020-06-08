@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A509C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F35E4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CBDB20737
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:42:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEE7A20774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:42:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663340;
-	bh=0f6+8/gWP04A7gXm4h6LYSgsObNR/CCROKDlx9F8Tbc=;
+	s=default; t=1591663350;
+	bh=J0Cr1ClTzawFS2xo1kfwDnsGciGqVo6rmgk9gsoD7eU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ManBBXNfsR7SNETCHvskIbSi6FCvWFTMF2jtxI9XzoBb5t0xzDh+w49iNWBdES5FS
-	 xQT0d6em+dPPUCMwhrswT1jRpGezkNgpkfrnP71UKwqORpQm8dNDG8lMQiO7VVfggm
-	 BDM1WQSRB/3kdk6dvaSQLW8XUztfU8NOuVi/7CL8=
+	b=TqP6crpU97IuPwTXh3DFrdnvDbgt+bBPHXNgjwfWuHXAgq7fR7am4daXr+Ssy6wO8
+	 ZAFwSSa7aHWlo3QQUpxffZKYQStgSXHDQdKJVZMHZrH7tL0Q0BYb6CSbz9TQIeATf1
+	 DLN7Mk587LcNVGMUOh1Y0yzx0U+l0EL6fZ/Ji+bs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733175AbgFIAmT (ORCPT
+        id S1733227AbgFIAm0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:42:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60110 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:42:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729137AbgFHXMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:12:32 -0400
+        id S1729123AbgFHXMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:12:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81E4A208C3;
-        Mon,  8 Jun 2020 23:12:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7EEDD20B80;
+        Mon,  8 Jun 2020 23:12:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657952;
-        bh=0f6+8/gWP04A7gXm4h6LYSgsObNR/CCROKDlx9F8Tbc=;
+        s=default; t=1591657950;
+        bh=J0Cr1ClTzawFS2xo1kfwDnsGciGqVo6rmgk9gsoD7eU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VyLJbuPf++DX0toDS2huR7jnyUpXSb52GKzTsDsUx4mvgI7DgMz8Df/SnjX9P326q
-         9MbXSG0hFf5fzB0s75okBfNjWdT1ekCezOb9JSf+PtWUS1ZxVdzZofs6HEra+9PuXa
-         IoJ+MoF9OHDvNAR8jifAodV6BU4BlxtoXFzLVx+o=
+        b=cRNY/rGbOGBaK6xiMpny1S5Y4j8Vx08/IA+B5GRMB6wXBED/b0nAvHbnYSeJmmvzB
+         XJdv9tv+UXng2CVZJJvcmtrveaQfmFIHGZVrcwIbHJycaIWdQU9UlMt97ymdUcBrue
+         ylWCy4VNB80nyslWoDRDITEaCwvR5zcpe1rc8fo0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 017/606] gcc-10: avoid shadowing standard library 'free()' in crypto
-Date:   Mon,  8 Jun 2020 19:02:22 -0400
-Message-Id: <20200608231211.3363633-17-sashal@kernel.org>
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 015/606] gcc-10 warnings: fix low-hanging fruit
+Date:   Mon,  8 Jun 2020 19:02:20 -0400
+Message-Id: <20200608231211.3363633-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,86 +61,66 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Linus Torvalds <torvalds@linux-foundation.org>
 
-commit 1a263ae60b04de959d9ce9caea4889385eefcc7b upstream.
+commit 9d82973e032e246ff5663c9805fbb5407ae932e3 upstream.
 
-gcc-10 has started warning about conflicting types for a few new
-built-in functions, particularly 'free()'.
+Due to a bug-report that was compiler-dependent, I updated one of my
+machines to gcc-10.  That shows a lot of new warnings.  Happily they
+seem to be mostly the valid kind, but it's going to cause a round of
+churn for getting rid of them..
 
-This results in warnings like:
-
-   crypto/xts.c:325:13: warning: conflicting types for built-in function ‘free’; expected ‘void(void *)’ [-Wbuiltin-declaration-mismatch]
-
-because the crypto layer had its local freeing functions called
-'free()'.
-
-Gcc-10 is in the wrong here, since that function is marked 'static', and
-thus there is no chance of confusion with any standard library function
-namespace.
-
-But the simplest thing to do is to just use a different name here, and
-avoid this gcc mis-feature.
-
-[ Side note: gcc knowing about 'free()' is in itself not the
-  mis-feature: the semantics of 'free()' are special enough that a
-  compiler can validly do special things when seeing it.
-
-  So the mis-feature here is that gcc thinks that 'free()' is some
-  restricted name, and you can't shadow it as a local static function.
-
-  Making the special 'free()' semantics be a function attribute rather
-  than tied to the name would be the much better model ]
+This is the really low-hanging fruit of removing a couple of zero-sized
+arrays in some core code.  We have had a round of these patches before,
+and we'll have many more coming, and there is nothing special about
+these except that they were particularly trivial, and triggered more
+warnings than most.
 
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- crypto/lrw.c | 4 ++--
- crypto/xts.c | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ include/linux/fs.h  | 2 +-
+ include/linux/tty.h | 2 +-
+ scripts/kallsyms.c  | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/crypto/lrw.c b/crypto/lrw.c
-index 63c485c0d8a6..9b20fc4b2efb 100644
---- a/crypto/lrw.c
-+++ b/crypto/lrw.c
-@@ -287,7 +287,7 @@ static void exit_tfm(struct crypto_skcipher *tfm)
- 	crypto_free_skcipher(ctx->child);
- }
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index abedbffe2c9e..872ee2131589 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -978,7 +978,7 @@ struct file_handle {
+ 	__u32 handle_bytes;
+ 	int handle_type;
+ 	/* file identifier */
+-	unsigned char f_handle[0];
++	unsigned char f_handle[];
+ };
  
--static void free(struct skcipher_instance *inst)
-+static void free_inst(struct skcipher_instance *inst)
- {
- 	crypto_drop_skcipher(skcipher_instance_ctx(inst));
- 	kfree(inst);
-@@ -400,7 +400,7 @@ static int create(struct crypto_template *tmpl, struct rtattr **tb)
- 	inst->alg.encrypt = encrypt;
- 	inst->alg.decrypt = decrypt;
+ static inline struct file *get_file(struct file *f)
+diff --git a/include/linux/tty.h b/include/linux/tty.h
+index bd5fe0e907e8..a99e9b8e4e31 100644
+--- a/include/linux/tty.h
++++ b/include/linux/tty.h
+@@ -66,7 +66,7 @@ struct tty_buffer {
+ 	int read;
+ 	int flags;
+ 	/* Data points here */
+-	unsigned long data[0];
++	unsigned long data[];
+ };
  
--	inst->free = free;
-+	inst->free = free_inst;
+ /* Values for .flags field of tty_buffer */
+diff --git a/scripts/kallsyms.c b/scripts/kallsyms.c
+index 3e8dea6e0a95..6dc3078649fa 100644
+--- a/scripts/kallsyms.c
++++ b/scripts/kallsyms.c
+@@ -34,7 +34,7 @@ struct sym_entry {
+ 	unsigned int len;
+ 	unsigned int start_pos;
+ 	unsigned int percpu_absolute;
+-	unsigned char sym[0];
++	unsigned char sym[];
+ };
  
- 	err = skcipher_register_instance(tmpl, inst);
- 	if (err)
-diff --git a/crypto/xts.c b/crypto/xts.c
-index 29efa15f1495..983dae2bb2db 100644
---- a/crypto/xts.c
-+++ b/crypto/xts.c
-@@ -322,7 +322,7 @@ static void exit_tfm(struct crypto_skcipher *tfm)
- 	crypto_free_cipher(ctx->tweak);
- }
- 
--static void free(struct skcipher_instance *inst)
-+static void free_inst(struct skcipher_instance *inst)
- {
- 	crypto_drop_skcipher(skcipher_instance_ctx(inst));
- 	kfree(inst);
-@@ -434,7 +434,7 @@ static int create(struct crypto_template *tmpl, struct rtattr **tb)
- 	inst->alg.encrypt = encrypt;
- 	inst->alg.decrypt = decrypt;
- 
--	inst->free = free;
-+	inst->free = free_inst;
- 
- 	err = skcipher_register_instance(tmpl, inst);
- 	if (err)
+ struct addr_range {
 -- 
 2.25.1
 
