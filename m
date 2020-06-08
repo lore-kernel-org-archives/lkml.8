@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD836C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C34EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:07:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A11802078C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:07:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46B8020842
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:07:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591664826;
-	bh=y7lqrBx/D7jiTGIX4ToNnfEsGw9sMUvRFXEY8rjU3Xs=;
+	s=default; t=1591664838;
+	bh=Ye++hxdlWa+ti5cA5JE7quOuxtmeHQDjYv35mFH/6fs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f4W7DyOkQgiWSVMOFS42PCtC4qKzXKhO2eZYqa2+1UrixlcoQC7OWzpCgYHDPES4Q
-	 fZB0e0+2zseqUAtX6U8pPYQW10lYR7s3mKW6Wf/Eg5CoAGDenPf6tC/HQRPLQJ2tNM
-	 YNmiKZeN4bPLNRMBBehP4HYfw6v+AwIq4LQuIEIQ=
+	b=f9gmlK7/O5ppuyO3rljQQsn86qyohh2WoQvigez/zG9Ij4lWhp4BieZy6kv8ZBFLv
+	 dhBfWq7rtKDD68/7PRcTKpHARbJTyJHPp9dfTpUGifejv1EfrfknY/KKiUDYXPXaVd
+	 fRsPhydflk/Xj2eMHt2c1ollgy5aYrSF29ljlCbA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388184AbgFIBHF (ORCPT
+        id S1729075AbgFIBHQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 21:07:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50758 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 21:07:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727788AbgFHXHF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:07:05 -0400
+        id S1727773AbgFHXHC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:07:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D0F62089D;
-        Mon,  8 Jun 2020 23:07:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACE4B20820;
+        Mon,  8 Jun 2020 23:07:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657625;
-        bh=y7lqrBx/D7jiTGIX4ToNnfEsGw9sMUvRFXEY8rjU3Xs=;
+        s=default; t=1591657622;
+        bh=Ye++hxdlWa+ti5cA5JE7quOuxtmeHQDjYv35mFH/6fs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pc1+/Q9FKAGVZ85Rh1do+eVuQUk0X3EifDv3hkq+8TgwJKUZwlAa1Idg6pwFz5YCO
-         xWoLYi6WLoxtvfyZJ96vfaGDtL471eO5N++p3t0rHHdFvoa0DgSKjGK41eXrYRVJCs
-         1+iKFTTds88VqGsHIKqNtyc0v+1YT415lVUs21sQ=
+        b=vJcM0gWsbh/IilrRp8zLxTn1fhb8G6TK8fv18c/cI38d7I0SaZGIPaXfRJY/NtYpc
+         w4QG9+YgnOzvbQJWsQVpWK7To0iyNjGi7pvRbwUtu2jJff6mQqHD2lsf3O5YftX3c4
+         cxD7hjC2A5gKhOm4e7LSamjThk/tH8e4LKM23n/8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Weiping Zhang <zhangweiping@didiglobal.com>,
-        Bart van Assche <bvanassche@acm.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 045/274] block: reset mapping if failed to update hardware queue count
-Date:   Mon,  8 Jun 2020 19:02:18 -0400
-Message-Id: <20200608230607.3361041-45-sashal@kernel.org>
+Cc:     Mattia Dongili <malattia@linux.it>,
+        Dominik Mierzejewski <dominik@greysector.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 043/274] platform/x86: sony-laptop: Make resuming thermal profile safer
+Date:   Mon,  8 Jun 2020 19:02:16 -0400
+Message-Id: <20200608230607.3361041-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -60,68 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Weiping Zhang <zhangweiping@didiglobal.com>
+From: Mattia Dongili <malattia@linux.it>
 
-[ Upstream commit aa880ad690ab6d4c53934af85fb5a43e69ecb0f5 ]
+[ Upstream commit 476d60b1b4c8a2b14a53ef9b772058f35e604661 ]
 
-When we increase hardware queue count, blk_mq_update_queue_map will
-reset the mapping between cpu and hardware queue base on the hardware
-queue count(set->nr_hw_queues). The mapping cannot be reset if it
-encounters error in blk_mq_realloc_hw_ctxs, but the fallback flow will
-continue using it, then blk_mq_map_swqueue will touch a invalid memory,
-because the mapping points to a wrong hctx.
+The thermal handle object may fail initialization when the module is
+loaded in the first place. Avoid attempting to use it on resume then.
 
-blktest block/030:
-
-null_blk: module loaded
-Increasing nr_hw_queues to 8 fails, fallback to 1
-==================================================================
-BUG: KASAN: null-ptr-deref in blk_mq_map_swqueue+0x2f2/0x830
-Read of size 8 at addr 0000000000000128 by task nproc/8541
-
-CPU: 5 PID: 8541 Comm: nproc Not tainted 5.7.0-rc4-dbg+ #3
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-rel-1.13.0-0-gf21b5a4-rebuilt.opensuse.org 04/01/2014
-Call Trace:
-dump_stack+0xa5/0xe6
-__kasan_report.cold+0x65/0xbb
-kasan_report+0x45/0x60
-check_memory_region+0x15e/0x1c0
-__kasan_check_read+0x15/0x20
-blk_mq_map_swqueue+0x2f2/0x830
-__blk_mq_update_nr_hw_queues+0x3df/0x690
-blk_mq_update_nr_hw_queues+0x32/0x50
-nullb_device_submit_queues_store+0xde/0x160 [null_blk]
-configfs_write_file+0x1c4/0x250 [configfs]
-__vfs_write+0x4c/0x90
-vfs_write+0x14b/0x2d0
-ksys_write+0xdd/0x180
-__x64_sys_write+0x47/0x50
-do_syscall_64+0x6f/0x310
-entry_SYSCALL_64_after_hwframe+0x49/0xb3
-
-Signed-off-by: Weiping Zhang <zhangweiping@didiglobal.com>
-Tested-by: Bart van Assche <bvanassche@acm.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 6d232b29cfce ("ACPICA: Dispatcher: always generate buffer objects for ASL create_field() operator")
+Reported-by: Dominik Mierzejewski <dominik@greysector.net>
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207491
+Signed-off-by: Mattia Dongili <malattia@linux.it>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-mq.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/sony-laptop.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index b1772de26a74..98a702761e2c 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -3353,8 +3353,8 @@ static void __blk_mq_update_nr_hw_queues(struct blk_mq_tag_set *set,
+diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
+index 51309f7ceede..e4ef3dc3bc2f 100644
+--- a/drivers/platform/x86/sony-laptop.c
++++ b/drivers/platform/x86/sony-laptop.c
+@@ -2295,7 +2295,12 @@ static void sony_nc_thermal_cleanup(struct platform_device *pd)
+ #ifdef CONFIG_PM_SLEEP
+ static void sony_nc_thermal_resume(void)
+ {
+-	unsigned int status = sony_nc_thermal_mode_get();
++	int status;
++
++	if (!th_handle)
++		return;
++
++	status = sony_nc_thermal_mode_get();
  
- 	prev_nr_hw_queues = set->nr_hw_queues;
- 	set->nr_hw_queues = nr_hw_queues;
--	blk_mq_update_queue_map(set);
- fallback:
-+	blk_mq_update_queue_map(set);
- 	list_for_each_entry(q, &set->tag_list, tag_set_list) {
- 		blk_mq_realloc_hw_ctxs(set, q);
- 		if (q->nr_hw_queues != set->nr_hw_queues) {
+ 	if (status != th_handle->mode)
+ 		sony_nc_thermal_mode_set(th_handle->mode);
 -- 
 2.25.1
 
