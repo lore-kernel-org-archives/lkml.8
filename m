@@ -2,133 +2,93 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6301C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:01:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF36C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:02:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A13F52083E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:01:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B62D32083E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:02:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729990AbgFHSBg (ORCPT
+        id S1730055AbgFHSCV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 14:01:36 -0400
-Received: from outbound-smtp30.blacknight.com ([81.17.249.61]:51595 "EHLO
-        outbound-smtp30.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726097AbgFHSBe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 14:01:34 -0400
-Received: from mail.blacknight.com (pemlinmail03.blacknight.ie [81.17.254.16])
-        by outbound-smtp30.blacknight.com (Postfix) with ESMTPS id EEBFCBAC4B
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 19:01:31 +0100 (IST)
-Received: (qmail 19019 invoked from network); 8 Jun 2020 18:01:31 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 8 Jun 2020 18:01:31 -0000
-Date:   Mon, 8 Jun 2020 19:01:30 +0100
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Jan Kara <jack@suse.cz>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] fsnotify: Rearrange fast path to minimise overhead when
- there is no watcher
-Message-ID: <20200608180130.GJ3127@techsingularity.net>
-References: <20200608140557.GG3127@techsingularity.net>
- <CAOQ4uxhb1p5_rO9VjNb6assCczwQRx3xdAOXZ9S=mOA1g-0JVg@mail.gmail.com>
- <20200608160614.GH3127@techsingularity.net>
- <CAOQ4uxh=Z92ppBQbRJyQqC61k944_7qG1mYqZgGC2tU7YAH7Kw@mail.gmail.com>
+        Mon, 8 Jun 2020 14:02:21 -0400
+Received: from mga01.intel.com ([192.55.52.88]:63692 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726097AbgFHSCU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 14:02:20 -0400
+IronPort-SDR: BWsp7jq2/P+QY63eZe+zpDk52wUN52prRwfnxpkthowefhEU+Vg2JazxY9zHvJhe/01NRq0J/U
+ TNRud+cg5gdw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2020 11:02:19 -0700
+IronPort-SDR: CqJczIq6TqtAxKiVtFFGKyTnFMmMbjgc7uBzNNMGRdMFzfBQSdcjC9UbzbWaspO1jIh2GpMHJv
+ YbwDq50K1bAg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,487,1583222400"; 
+   d="scan'208";a="305910978"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
+  by fmsmga002.fm.intel.com with ESMTP; 08 Jun 2020 11:02:19 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] KVM: x86: Unexport x86_fpu_cache and make it static
+Date:   Mon,  8 Jun 2020 11:02:18 -0700
+Message-Id: <20200608180218.20946-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <CAOQ4uxh=Z92ppBQbRJyQqC61k944_7qG1mYqZgGC2tU7YAH7Kw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 07:26:10PM +0300, Amir Goldstein wrote:
-> > > What this work does essentially is two things:
-> > > 1. Call backend once instead of twice when both inode and parent are
-> > >     watching.
-> > > 2. Snapshot name and parent inode to pass to backend not only when
-> > >     parent is watching, but also when an sb/mnt mark exists which
-> > >     requests to get file names with events.
-> > >
-> > > Compared to the existing implementation of fsnotify_parent(),
-> > > my code needs to also test bits in inode->i_fsnotify_mask,
-> > > inode->i_sb->s_fsnotify_mask and mnt->mnt_fsnotify_mask
-> > > before the fast path can be taken.
-> > > So its back to square one w.r.t your optimizations.
-> > >
-> >
-> > Seems fair but it may be worth noting that the changes appear to be
-> > optimising the case where there are watchers. The case where there are
-> > no watchers at all is also interesting and probably a lot more common. I
-> 
-> My changes are not optimizations. They are for adding functionality.
-> Surely, that shouldn't come at a cost for the common case.
-> 
+Make x86_fpu_cache static now that FPU allocation and destruction is
+handled entirely by common x86 code.
 
-My bad. I interpreted the folding of fsnotify_parent calling fsnotify to
-be a potential optimisation particularly if it bailed earlier (which it
-doesn't do but maybe it could).
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
 
-> > didn't look too closely at your series as I'm not familiar with fsnotify
-> > in general. However, at a glance it looks like fsnotify_parent() executes
-> > a substantial amount of code even if there are no watchers but I could
-> > be wrong.
-> >
-> 
-> I don't about substantial, I would say it is on par with the amount of
-> code that you tries to optimize out of fsnotify().
-> 
-> Before bailing out with DCACHE_FSNOTIFY_PARENT_WATCHED
-> test, it also references d_inode->i_sb,  real_mount(path->mnt)
-> and fetches all their ->x_fsnotify_mask fields.
-> 
-> I changed the call pattern from open/modify/... hooks from:
-> fsnotify_parent(...);
-> fsnotify(...);
-> 
-> to:
-> fsnotify_parent(...); /* which calls fsnotify() */
-> 
-> So the NULL marks optimization could be done in beginning of
-> fsnotify_parent() and it will be just as effective as it is in fsnotify().
-> 
+v2: Rebased to kvm/queue, commit fb7333dfd812 ("KVM: SVM: fix calls ...").
 
-Something like that may be required because
+ arch/x86/include/asm/kvm_host.h | 1 -
+ arch/x86/kvm/x86.c              | 3 +--
+ 2 files changed, 1 insertion(+), 3 deletions(-)
 
-                              5.7.0                  5.7.0                  5.7.0                  5.7.0
-                            vanilla      fastfsnotify-v1r1      fastfsnotify-v2r1          amir-20200608
-Amean     1       0.4837 (   0.00%)      0.4630 *   4.27%*      0.4597 *   4.96%*      0.4967 *  -2.69%*
-Amean     3       1.5447 (   0.00%)      1.4557 (   5.76%)      1.5310 (   0.88%)      1.6587 *  -7.38%*
-Amean     5       2.6037 (   0.00%)      2.4363 (   6.43%)      2.4237 (   6.91%)      2.6400 (  -1.40%)
-Amean     7       3.5987 (   0.00%)      3.4757 (   3.42%)      3.6543 (  -1.55%)      3.9040 *  -8.48%*
-Amean     12      5.8267 (   0.00%)      5.6983 (   2.20%)      5.5903 (   4.06%)      6.2593 (  -7.43%)
-Amean     18      8.4400 (   0.00%)      8.1327 (   3.64%)      7.7150 *   8.59%*      8.9940 (  -6.56%)
-Amean     24     11.0187 (   0.00%)     10.0290 *   8.98%*      9.8977 *  10.17%*     11.7247 *  -6.41%*
-Amean     30     13.1013 (   0.00%)     12.8510 (   1.91%)     12.2087 *   6.81%*     14.0290 *  -7.08%*
-Amean     32     13.9190 (   0.00%)     13.2410 (   4.87%)     13.2900 (   4.52%)     14.7140 *  -5.71%*
-
-vanilla and fastnotify-v1r1 are the same. fastfsnotify-v2r1 is just the
-fsnotify_parent() change which is mostly worse and may indicate that the
-first patch was reasonable. amir-20200608 is your branch as of today and
-it appears to introduce a substantial regression albeit in an extreme case
-where fsnotify overhead is visible. The regressions are mostly larger
-than noise with the caveat it may be machine specific given that the
-machine is overloaded. I accept that adding extra functional to fsnotify
-may be desirable but ideally it would not hurt the case where there are
-no watchers at all.
-
-So what's the right way forward? The patch as-is even though the fsnotify()
-change itself may be marginal, a patch that just inlines the fast path
-of fsnotify_parent or wait for the additional functionality and try and
-address the overhead on top?
-
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 1da5858501ca..7030f2221259 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1306,7 +1306,6 @@ struct kvm_arch_async_pf {
+ extern u64 __read_mostly host_efer;
+ 
+ extern struct kvm_x86_ops kvm_x86_ops;
+-extern struct kmem_cache *x86_fpu_cache;
+ 
+ #define __KVM_HAVE_ARCH_VM_ALLOC
+ static inline struct kvm *kvm_arch_alloc_vm(void)
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index c26dd1363151..e19f7c486d64 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -239,8 +239,7 @@ u64 __read_mostly host_xcr0;
+ u64 __read_mostly supported_xcr0;
+ EXPORT_SYMBOL_GPL(supported_xcr0);
+ 
+-struct kmem_cache *x86_fpu_cache;
+-EXPORT_SYMBOL_GPL(x86_fpu_cache);
++static struct kmem_cache *x86_fpu_cache;
+ 
+ static struct kmem_cache *x86_emulator_cache;
+ 
 -- 
-Mel Gorman
-SUSE Labs
+2.26.0
+
