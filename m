@@ -2,98 +2,136 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE39C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B8CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 17:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C75652076A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:58:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 618372078C
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 17:01:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591635693;
+	bh=ezmY6GG7N7R5TA87zG71AETUtzEOHo2C5MHAftMq7+Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=DrdG4Jw3/PfiQ7cPSPEFgBYBnXIsPYWgiDTXtibeZBGlcChrgTyFyyX73F3UbKguc
+	 tyfjjXereANog5+YydQSebxM6k5EulO0hKIXtNUS4hPqPdT76t57LkqKV8/ut7Vo8i
+	 fUV06fMos7pZlWYBD1DoSnHImQoj+D4vEdleVq1o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730693AbgFHQ67 (ORCPT
+        id S1730711AbgFHRBc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 12:58:59 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52812 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730236AbgFHQ66 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 12:58:58 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 91F6DAAE8;
-        Mon,  8 Jun 2020 16:59:00 +0000 (UTC)
-Subject: Re: [RFC PATCH 1/5] mm, slub: extend slub_debug syntax for multiple
- blocks
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kernel-team@android.com,
-        vinmenon@codeaurora.org, Matthew Garrett <mjg59@google.com>,
-        Jann Horn <jannh@google.com>,
-        Vijayanand Jitta <vjitta@codeaurora.org>
-References: <20200602141519.7099-1-vbabka@suse.cz>
- <20200602141519.7099-2-vbabka@suse.cz> <202006051401.9AB3D2CAD@keescook>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <a9310f8b-ef99-089a-4932-e15cbf09def4@suse.cz>
-Date:   Mon, 8 Jun 2020 18:58:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Mon, 8 Jun 2020 13:01:32 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:54175 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730678AbgFHRBc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 13:01:32 -0400
+Received: by mail-pj1-f65.google.com with SMTP id i12so91506pju.3;
+        Mon, 08 Jun 2020 10:01:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ZlpRC/Mpz8aVWhkWOBV4KQndGPE3w8KEQwXgj5xVC8o=;
+        b=aff/EbkvWJkPS7DAFZmAJ5iblzVnr3aahxzDr2JgvOKco/vu9ZDAd1nd8fEfSrQ9GS
+         Jz7CNNnkkNjLM0eZMDDDjlOBcCB9oRipy0KgmNuPQ6CnowyXNRXdoLbiKyvsVl3FXhR0
+         OQh+Z4i1F18z+01GjsvV+dQkMHrzynbG9x4AAg8OBfImr71UTVAzJea1AzVTw1XLAVbp
+         Z4jOyqD/YjRDEOWtEDtqaaiGJpwOYsS45j/ypRAt8DELTI0HPyVsH8bxHZo5tPElK9Pk
+         iBugA1qKw2qqzGzAw5gV6j+U3r6y4gPImdMlss2BdMsEul/V0tKFQlLgd7jNwb6+SI+F
+         n1Cw==
+X-Gm-Message-State: AOAM5332KUbHnPLw/5aA6Ovc5evenJOJcyV5LZhNYvug3Ieaq31lKPXB
+        6jZdIkRkTU98PYDKJTs9KUTMD/Nu5Ac=
+X-Google-Smtp-Source: ABdhPJwNsBvs+w+3hNLWX1L/WRF8FImqilYKhRJVhUwJyH1Y0WnlC6Bcs7lRahJkSJraRMBfGhoc7w==
+X-Received: by 2002:a17:902:eb13:: with SMTP id l19mr20105245plb.213.1591635691008;
+        Mon, 08 Jun 2020 10:01:31 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id e124sm7619466pfh.140.2020.06.08.10.01.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jun 2020 10:01:28 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 217B640B6C; Mon,  8 Jun 2020 17:01:28 +0000 (UTC)
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
+        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
+        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
+        akpm@linux-foundation.org
+Cc:     mhocko@suse.com, yukuai3@huawei.com, martin.petersen@oracle.com,
+        jejb@linux.ibm.com, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: [PATCH v6 2/6] block: clarify context for refcount increment helpers
+Date:   Mon,  8 Jun 2020 17:01:22 +0000
+Message-Id: <20200608170127.20419-3-mcgrof@kernel.org>
+X-Mailer: git-send-email 2.23.0.rc1
+In-Reply-To: <20200608170127.20419-1-mcgrof@kernel.org>
+References: <20200608170127.20419-1-mcgrof@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <202006051401.9AB3D2CAD@keescook>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Let us clarify the context under which the helpers to increment the
+refcount for the gendisk and request_queue can be called under. We
+make this explicit on the places where we may sleep with might_sleep().
 
-On 6/5/20 11:06 PM, Kees Cook wrote:
->> @@ -83,6 +88,18 @@ in low memory situations or if there's high fragmentation of memory.  To
->>  
->>  	slub_debug=O
->>  
->> +You can apply different options to different list of slab names, using blocks
->> +of options. This will enable red zoning for dentry and user tracking for
->> +kmalloc. All other slabs will not get any debugging enabled::
->> +
->> +	slub_debug=Z,dentry;U,kmalloc-*
->> +
->> +You can also enable options (e.g. sanity checks and poisoning) for all caches
->> +except some that are deemed too performance critical and don't need to be
->> +debugged::
-> 
-> Just for more clarity, how about:
-> 
->  ... debugged by starting the list with "-" (to mean "all except the
-> following")::
+We don't address the decrement context yet, as that needs some extra
+work and fixes, but will be addressed in the next patch.
 
-Hmm, "-" is not exactly "all except the following", but "no debugging", as
-explained in the list of debug options earlier in the file.
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+---
+ block/blk-core.c | 2 ++
+ block/genhd.c    | 6 ++++++
+ 2 files changed, 8 insertions(+)
 
-So I'm updating it to this:
-
-You can also enable options (e.g. sanity checks and poisoning) for all caches
-except some that are deemed too performance critical and don't need to be
-debugged by specifying global debug options followed by a list of slab names
-with "-" as options::
-
-        slub_debug=FZ;-,zs_handle,zspage
-
-
->> +
->> +	slub_debug=FZ;-,zs_handle,zspage
->> +
->>  In case you forgot to enable debugging on the kernel command line: It is
->>  possible to enable debugging manually when the kernel is up. Look at the
->>  contents of::
-> 
-> Everything else looks great; very nice! :)
-> 
-> Reviewed-by: Kees Cook <keescook@chromium.org>
+diff --git a/block/blk-core.c b/block/blk-core.c
+index a0760aac110a..14c09daf55f3 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -610,6 +610,8 @@ EXPORT_SYMBOL(blk_alloc_queue);
+  * @q: the request_queue structure to increment the refcount for
+  *
+  * Increment the refcount of the request_queue kobject.
++ *
++ * Context: Any context.
+  */
+ bool blk_get_queue(struct request_queue *q)
+ {
+diff --git a/block/genhd.c b/block/genhd.c
+index f741613d731f..1be86b1f43ec 100644
+--- a/block/genhd.c
++++ b/block/genhd.c
+@@ -985,11 +985,15 @@ static ssize_t disk_badblocks_store(struct device *dev,
+  *
+  * This function gets the structure containing partitioning
+  * information for the given device @devt.
++ *
++ * Context: can sleep
+  */
+ struct gendisk *get_gendisk(dev_t devt, int *partno)
+ {
+ 	struct gendisk *disk = NULL;
  
-Thanks!
++	might_sleep();
++
+ 	if (MAJOR(devt) != BLOCK_EXT_MAJOR) {
+ 		struct kobject *kobj;
+ 
+@@ -1764,6 +1768,8 @@ EXPORT_SYMBOL(__alloc_disk_node);
+  *
+  * This increments the refcount for the struct gendisk, and the gendisk's
+  * fops module owner.
++ *
++ * Context: Any context.
+  */
+ struct kobject *get_disk_and_module(struct gendisk *disk)
+ {
+-- 
+2.26.2
+
