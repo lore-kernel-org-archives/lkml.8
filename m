@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 886ECC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:57:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A6A0C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6693D2078C
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:57:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E63F20659
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:57:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660638;
-	bh=FmZBpMkmKEa+BWw2RykpSg1I5MeKBmsg8bPHuXEZEK8=;
+	s=default; t=1591660648;
+	bh=JpyXvZPwGmhcDX7HBvEqn00iZ7V++vRJV0NKykGQJf4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sOxMb3cdQr8ODtZL+vpxqYXRQPV6XDoOLy8wCOzgxktYsMXwHxHVuUZJXMiJJSA9w
-	 Dn2Nd6SuOxfTvotnmJ1uhVU2v0WkOjg2FDOoeZmKsXe2ZiS6iGC/yN+5l+UJARzvE0
-	 FNIkC+szQN0KQ0fEybZytxGLl1HvdumOSlgH9IYc=
+	b=HpGytMmz8sR697muPD5x6FlxgLUTjrWh7bTsTflKETqiHDix7wDwWQMlgk92rV0VJ
+	 zlkOgvxNOA316JXr16Y12SiQZaddWTaN1+Buo/lIvTcnQkoKjAsi9GBPpZrWvJERqJ
+	 QxVXgelj41FAJ/3L+GsvAcTDIBhtN1ku3OFMZNWo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732281AbgFHX5R (ORCPT
+        id S1728684AbgFHX51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:57:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49006 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:57:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730029AbgFHXXd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:23:33 -0400
+        id S1731498AbgFHXXa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:23:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81616208FE;
-        Mon,  8 Jun 2020 23:23:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9DBB20842;
+        Mon,  8 Jun 2020 23:23:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658613;
-        bh=FmZBpMkmKEa+BWw2RykpSg1I5MeKBmsg8bPHuXEZEK8=;
+        s=default; t=1591658609;
+        bh=JpyXvZPwGmhcDX7HBvEqn00iZ7V++vRJV0NKykGQJf4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RQUH6Qc7fLbGL01ptX7LnkFLlc6A5CntVO6faGRc5xveLhmyqZIprobOPcbUlCGzN
-         vsjNdsTlWJVp7H9NMrWjcwdezoSWWdHshU2E9IQVmF1IY0pRnE2HApmnrymMG/puaJ
-         dBF1P96A18QdyeGIZuxC84pBaaEQGeCm5VF3mbwo=
+        b=bGZ3deS5CSi9ULJyTo2SuhMYTr2BSPG+XVsvahwyVs5Q+wzBDB2Hz5eBddSvQlApv
+         STtUv1vN7u9pOcBo6Rlb+Yk6jTF4PGaPRxebbFDPECnYP4rDJQffyDs7xQfw67HnyI
+         JquoYKifkO8O85ZkaGxPoSvwFv+clxtR4XRdtPSg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 039/106] media: platform: fcp: Set appropriate DMA parameters
-Date:   Mon,  8 Jun 2020 19:21:31 -0400
-Message-Id: <20200608232238.3368589-39-sashal@kernel.org>
+Cc:     Jitao Shi <jitao.shi@mediatek.com>, Rob Herring <robh@kernel.org>,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 036/106] dt-bindings: display: mediatek: control dpi pins mode to avoid leakage
+Date:   Mon,  8 Jun 2020 19:21:28 -0400
+Message-Id: <20200608232238.3368589-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608232238.3368589-1-sashal@kernel.org>
 References: <20200608232238.3368589-1-sashal@kernel.org>
@@ -62,69 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+From: Jitao Shi <jitao.shi@mediatek.com>
 
-[ Upstream commit dd844fb8e50b12e65bbdc5746c9876c6735500df ]
+[ Upstream commit b0ff9b590733079f7f9453e5976a9dd2630949e3 ]
 
-Enabling CONFIG_DMA_API_DEBUG=y and CONFIG_DMA_API_DEBUG_SG=y will
-enable extra validation on DMA operations ensuring that the size
-restraints are met.
+Add property "pinctrl-names" to swap pin mode between gpio and dpi mode.
+Set the dpi pins to gpio mode and output-low to avoid leakage current
+when dpi disabled.
 
-When using the FCP in conjunction with the VSP1/DU, and display frames,
-the size of the DMA operations is larger than the default maximum
-segment size reported by the DMA core (64K). With the DMA debug enabled,
-this produces a warning such as the following:
-
-"DMA-API: rcar-fcp fea27000.fcp: mapping sg segment longer than device
-claims to support [len=3145728] [max=65536]"
-
-We have no specific limitation on the segment size which isn't already
-handled by the VSP1/DU which actually handles the DMA allcoations and
-buffer management, so define a maximum segment size of up to 4GB (a 32
-bit mask).
-
-Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Fixes: 7b49235e83b2 ("[media] v4l: Add Renesas R-Car FCP driver")
-Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+Signed-off-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/rcar-fcp.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ .../devicetree/bindings/display/mediatek/mediatek,dpi.txt   | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/media/platform/rcar-fcp.c b/drivers/media/platform/rcar-fcp.c
-index 43c78620c9d8..5c6b00737fe7 100644
---- a/drivers/media/platform/rcar-fcp.c
-+++ b/drivers/media/platform/rcar-fcp.c
-@@ -8,6 +8,7 @@
-  */
+diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
+index b6a7e7397b8b..b944fe067188 100644
+--- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
++++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
+@@ -16,6 +16,9 @@ Required properties:
+   Documentation/devicetree/bindings/graph.txt. This port should be connected
+   to the input port of an attached HDMI or LVDS encoder chip.
  
- #include <linux/device.h>
-+#include <linux/dma-mapping.h>
- #include <linux/list.h>
- #include <linux/module.h>
- #include <linux/mod_devicetable.h>
-@@ -21,6 +22,7 @@
- struct rcar_fcp_device {
- 	struct list_head list;
- 	struct device *dev;
-+	struct device_dma_parameters dma_parms;
- };
- 
- static LIST_HEAD(fcp_devices);
-@@ -136,6 +138,9 @@ static int rcar_fcp_probe(struct platform_device *pdev)
- 
- 	fcp->dev = &pdev->dev;
- 
-+	fcp->dev->dma_parms = &fcp->dma_parms;
-+	dma_set_max_seg_size(fcp->dev, DMA_BIT_MASK(32));
++Optional properties:
++- pinctrl-names: Contain "default" and "sleep".
 +
- 	pm_runtime_enable(&pdev->dev);
+ Example:
  
- 	mutex_lock(&fcp_lock);
+ dpi0: dpi@1401d000 {
+@@ -26,6 +29,9 @@ dpi0: dpi@1401d000 {
+ 		 <&mmsys CLK_MM_DPI_ENGINE>,
+ 		 <&apmixedsys CLK_APMIXED_TVDPLL>;
+ 	clock-names = "pixel", "engine", "pll";
++	pinctrl-names = "default", "sleep";
++	pinctrl-0 = <&dpi_pin_func>;
++	pinctrl-1 = <&dpi_pin_idle>;
+ 
+ 	port {
+ 		dpi0_out: endpoint {
 -- 
 2.25.1
 
