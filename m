@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F61C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:09:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0AE8C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:09:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD1CA20897
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:09:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7064208E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:09:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591657787;
-	bh=0DE62OxpKPeTWcX/ynCTAsqhjaPry1kDxHTLBwogLd8=;
+	s=default; t=1591657791;
+	bh=TT+8tMvqgygFxoAAc7BZuKJHREEz6edhkE6V6E4qA9c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vZi0OXbIR/xyA+82S0rLWPjUDjm3nnFjyIpQoLNk53pmHIoJOygXSc8ETZ1/KAWxd
-	 3yl5dnMjaxnpDsVNlquXEyPb6uPvR92hGw2X7a2gaRPwVR87SwMg6Czo51QJFMMeTr
-	 9FIEqptQ202jdp7hDkxFYv5uFlxsQsZskfOaskt4=
+	b=b3w6mFOfVEggY3zT19YDiVoW3Kch4xyo6BHv5m2aUpzlj0R/6EuZfkLst4nU4BL2g
+	 wBya2+MiToSwjwY38YKyy7I8Bqi4TKTFfWH/sr0cOSV6aM/p5mtNmZrjIZZXh1T0zr
+	 rkYt6+AVqrQZpZwBEo5xJVh2c0FfFF4VPTcrhMC0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728507AbgFHXJp (ORCPT
+        id S1728519AbgFHXJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:09:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54072 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:09:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728207AbgFHXIj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:08:39 -0400
+        id S1726992AbgFHXIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:08:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6A8A2089D;
-        Mon,  8 Jun 2020 23:08:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13A8C2085B;
+        Mon,  8 Jun 2020 23:08:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657718;
-        bh=0DE62OxpKPeTWcX/ynCTAsqhjaPry1kDxHTLBwogLd8=;
+        s=default; t=1591657725;
+        bh=TT+8tMvqgygFxoAAc7BZuKJHREEz6edhkE6V6E4qA9c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X7XKNKCZ7Oc2FXmlbg1rhnV7Agk45EMGsFGGDJO519jx5eKu/wz0B+LEOFnBo/FxA
-         tMmN23c9NJRnEujLBFuN9ktCWvjCiuqKttj4iVdZi9vjnYY+TMnrBG6qIOTF08n1KV
-         BptiVVBv9DY05RGX6+76ACm032BMb2jP3fI/yUZo=
+        b=af7CblJ72Q4b5/8AjOe6ptfhTA2uhYvi5uJb841LlN4IvzfOkiIRs2LgTOWYYxAhX
+         QJW4lms//2dBFCVDEw3ktK1hCYaAGc2pjYIghk9LlbXqp1a+gbWU+e+aimRkmWGL3I
+         Fl2yHb0NU0HSPJvJXxZlwJgcRTkVsYCMyN4oNYkY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Juxin Gao <gaojuxin@loongson.cn>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Sasha Levin <sashal@kernel.org>, linux-mips@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 112/274] MIPS: Make sparse_init() using top-down allocation
-Date:   Mon,  8 Jun 2020 19:03:25 -0400
-Message-Id: <20200608230607.3361041-112-sashal@kernel.org>
+Cc:     Paul Hsieh <paul.hsieh@amd.com>, Eric Yang <eric.yang2@amd.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.7 117/274] drm/amd/display: dmcu wait loop calculation is incorrect in RV
+Date:   Mon,  8 Jun 2020 19:03:30 -0400
+Message-Id: <20200608230607.3361041-117-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -60,96 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
+From: Paul Hsieh <paul.hsieh@amd.com>
 
-[ Upstream commit 269b3a9ac538c4ae87f84be640b9fa89914a2489 ]
+[ Upstream commit 7fc5c319efceaed1a23b7ef35c333553ce39fecf ]
 
-In the current code, if CONFIG_SWIOTLB is set, when failed to get IO TLB
-memory from the low pages by plat_swiotlb_setup(), it may lead to the boot
-process failed with kernel panic.
+[Why]
+Driver already get display clock from SMU base on MHz, but driver read
+again and mutiple 1000 cause wait loop value is overflow.
 
-(1) On the Loongson and SiByte platform
-arch/mips/loongson64/dma.c
-arch/mips/sibyte/common/dma.c
-void __init plat_swiotlb_setup(void)
-{
-	swiotlb_init(1);
-}
+[How]
+remove coding error
 
-kernel/dma/swiotlb.c
-void  __init
-swiotlb_init(int verbose)
-{
-...
-	vstart = memblock_alloc_low(PAGE_ALIGN(bytes), PAGE_SIZE);
-	if (vstart && !swiotlb_init_with_tbl(vstart, io_tlb_nslabs, verbose))
-		return;
-...
-	pr_warn("Cannot allocate buffer");
-	no_iotlb_memory = true;
-}
-
-phys_addr_t swiotlb_tbl_map_single()
-{
-...
-	if (no_iotlb_memory)
-		panic("Can not allocate SWIOTLB buffer earlier ...");
-...
-}
-
-(2) On the Cavium OCTEON platform
-arch/mips/cavium-octeon/dma-octeon.c
-void __init plat_swiotlb_setup(void)
-{
-...
-	octeon_swiotlb = memblock_alloc_low(swiotlbsize, PAGE_SIZE);
-	if (!octeon_swiotlb)
-		panic("%s: Failed to allocate %zu bytes align=%lx\n",
-		      __func__, swiotlbsize, PAGE_SIZE);
-...
-}
-
-Because IO_TLB_DEFAULT_SIZE is 64M, if the rest size of low memory is less
-than 64M when call plat_swiotlb_setup(), we can easily reproduce the panic
-case.
-
-In order to reduce the possibility of kernel panic when failed to get IO
-TLB memory under CONFIG_SWIOTLB, it is better to allocate low memory as
-small as possible before plat_swiotlb_setup(), so make sparse_init() using
-top-down allocation.
-
-Reported-by: Juxin Gao <gaojuxin@loongson.cn>
-Co-developed-by: Juxin Gao <gaojuxin@loongson.cn>
-Signed-off-by: Juxin Gao <gaojuxin@loongson.cn>
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Signed-off-by: Paul Hsieh <paul.hsieh@amd.com>
+Reviewed-by: Eric Yang <eric.yang2@amd.com>
+Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/kernel/setup.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ .../drm/amd/display/dc/clk_mgr/dcn10/rv1_clk_mgr_vbios_smu.c   | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
-index 10bef8f78e7c..573509e0f2d4 100644
---- a/arch/mips/kernel/setup.c
-+++ b/arch/mips/kernel/setup.c
-@@ -702,7 +702,17 @@ static void __init arch_mem_init(char **cmdline_p)
- 		memblock_reserve(crashk_res.start, resource_size(&crashk_res));
- #endif
- 	device_tree_init();
-+
-+	/*
-+	 * In order to reduce the possibility of kernel panic when failed to
-+	 * get IO TLB memory under CONFIG_SWIOTLB, it is better to allocate
-+	 * low memory as small as possible before plat_swiotlb_setup(), so
-+	 * make sparse_init() using top-down allocation.
-+	 */
-+	memblock_set_bottom_up(false);
- 	sparse_init();
-+	memblock_set_bottom_up(true);
-+
- 	plat_swiotlb_setup();
+diff --git a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn10/rv1_clk_mgr_vbios_smu.c b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn10/rv1_clk_mgr_vbios_smu.c
+index 97b7f32294fd..c320b7af7d34 100644
+--- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn10/rv1_clk_mgr_vbios_smu.c
++++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn10/rv1_clk_mgr_vbios_smu.c
+@@ -97,9 +97,6 @@ int rv1_vbios_smu_set_dispclk(struct clk_mgr_internal *clk_mgr, int requested_di
+ 			VBIOSSMC_MSG_SetDispclkFreq,
+ 			requested_dispclk_khz / 1000);
  
- 	dma_contiguous_reserve(PFN_PHYS(max_low_pfn));
+-	/* Actual dispclk set is returned in the parameter register */
+-	actual_dispclk_set_mhz = REG_READ(MP1_SMN_C2PMSG_83) * 1000;
+-
+ 	if (!IS_FPGA_MAXIMUS_DC(dc->ctx->dce_environment)) {
+ 		if (dmcu && dmcu->funcs->is_dmcu_initialized(dmcu)) {
+ 			if (clk_mgr->dfs_bypass_disp_clk != actual_dispclk_set_mhz)
 -- 
 2.25.1
 
