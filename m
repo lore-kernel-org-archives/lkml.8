@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1FF5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C603C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:36:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95B02207ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:36:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F611206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:36:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663002;
-	bh=ECHHm1tjjPiVV5BIUfnlAx1LvvWnDMygf0UXIqwcJhQ=;
+	s=default; t=1591663006;
+	bh=J2LPRJU66y4X8KcWE0g+592NbySdoJsVXoYtZI00P5I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v3prDSQE+VTaEi6BflPv4czxq85Rk57gWHbcAYBiUD7Y4cwebkNmiMcC1Oa16IFmc
-	 Z6YPGpb4mIY3JwOHjlQmgGPMYtDUfVNa6yawvlUWnc3T628HIVkanQmXK6EJJG0bhz
-	 Vq8JWAarqpiDWdeoGl98a7v7YhA9/IZljNM+rk1c=
+	b=rJ/cfabpxkJSoCdbWIJVUegNbfl4fsjSqqzHcyeCg3tr9jo61o4XVjkoKWb0lo3OI
+	 jZxZ3WK9AEjbRStcfpS4SC6AyCvypnXEkg4gKhnjAf8FQWNsyRMsp4hUB+ooUyFfVR
+	 mKxXGm4JiyA75g7KiVcUia+FJgN3l22IpJZwSQDg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731247AbgFIAgl (ORCPT
+        id S1729669AbgFHXOB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:36:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34100 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:14:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729691AbgFHXOE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:14:04 -0400
+        id S1728162AbgFHXLe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:11:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7027621534;
-        Mon,  8 Jun 2020 23:14:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9DBD20897;
+        Mon,  8 Jun 2020 23:11:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658044;
-        bh=ECHHm1tjjPiVV5BIUfnlAx1LvvWnDMygf0UXIqwcJhQ=;
+        s=default; t=1591657893;
+        bh=J2LPRJU66y4X8KcWE0g+592NbySdoJsVXoYtZI00P5I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kxiJfB+aOzmDkY22060RMIx+9bC5XSiqscH6AYhC8gbIWVsetw0Rao8qv1pXQKxW3
-         DmF6rzk+ov0KbIZUfvDgOEk/nG4/UwrozNxdo2wx0JIjrnAz6igRvhQ52UILenXsZb
-         Ue7ywNp4OtFqiIut8Lfi6Ut8KFiTUfSHv+3TfHs0=
+        b=ROP1rxkHmSif6KNnYX1KxXVihi18D7znAeCVKrM4JfqmcpMAO2N5DGoWqSkR+DckI
+         9bG3th7dla5RoL0AlyciPDYvYRlw+AqeKhvBN1HOydba8dt8EPmEJ1Ce/4CEhdQaSA
+         +FZmqdizTHwRR7Bh7T/2UgUoC5LNoVvtimsm9Kl8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexander Monakov <amonakov@ispras.ru>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.6 093/606] iommu/amd: Fix over-read of ACPI UID from IVRS table
-Date:   Mon,  8 Jun 2020 19:03:38 -0400
-Message-Id: <20200608231211.3363633-93-sashal@kernel.org>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 248/274] mmc: owl-mmc: Respect the cmd->busy_timeout from the mmc core
+Date:   Mon,  8 Jun 2020 19:05:41 -0400
+Message-Id: <20200608230607.3361041-248-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
-References: <20200608231211.3363633-1-sashal@kernel.org>
+In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
+References: <20200608230607.3361041-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,80 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Monakov <amonakov@ispras.ru>
+From: Ulf Hansson <ulf.hansson@linaro.org>
 
-[ Upstream commit e461b8c991b9202b007ea2059d953e264240b0c9 ]
+[ Upstream commit f37ac1ae3ca93d0995553ad9604a25eadfe9406d ]
 
-IVRS parsing code always tries to read 255 bytes from memory when
-retrieving ACPI device path, and makes an assumption that firmware
-provides a zero-terminated string. Both of those are bugs: the entry
-is likely to be shorter than 255 bytes, and zero-termination is not
-guaranteed.
+For commands that doesn't involve to prepare a data transfer, owl-mmc is
+using a fixed 30s response timeout. This is a bit problematic.
 
-With Acer SF314-42 firmware these issues manifest visibly in dmesg:
+For some commands it means waiting longer than needed for the completion to
+expire, which may not a big issue, but still. For other commands, like for
+an erase (CMD38) that uses a R1B response, may require longer timeouts than
+30s. In these cases, we may end up treating the command as it failed, while
+it just needed some more time to complete successfully.
 
-AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR0\xf0\xa5, rdevid:160
-AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR1\xf0\xa5, rdevid:160
-AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR2\xf0\xa5, rdevid:160
-AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR3>\x83e\x8d\x9a\xd1...
+Fix the problem by respecting the cmd->busy_timeout, which is provided by
+the mmc core.
 
-The first three lines show how the code over-reads adjacent table
-entries into the UID, and in the last line it even reads garbage data
-beyond the end of the IVRS table itself.
-
-Since each entry has the length of the UID (uidl member of ivhd_entry
-struct), use that for memcpy, and manually add a zero terminator.
-
-Avoid zero-filling hid and uid arrays up front, and instead ensure
-the uid array is always zero-terminated. No change needed for the hid
-array, as it was already properly zero-terminated.
-
-Fixes: 2a0cb4e2d423c ("iommu/amd: Add new map for storing IVHD dev entry type HID")
-
-Signed-off-by: Alexander Monakov <amonakov@ispras.ru>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: iommu@lists.linux-foundation.org
-Link: https://lore.kernel.org/r/20200511102352.1831-1-amonakov@ispras.ru
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Link: https://lore.kernel.org/r/20200414161413.3036-8-ulf.hansson@linaro.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/amd_iommu_init.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/mmc/host/owl-mmc.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-index 2b9a67ecc6ac..5b81fd16f5fa 100644
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -1329,8 +1329,8 @@ static int __init init_iommu_from_acpi(struct amd_iommu *iommu,
- 		}
- 		case IVHD_DEV_ACPI_HID: {
- 			u16 devid;
--			u8 hid[ACPIHID_HID_LEN] = {0};
--			u8 uid[ACPIHID_UID_LEN] = {0};
-+			u8 hid[ACPIHID_HID_LEN];
-+			u8 uid[ACPIHID_UID_LEN];
- 			int ret;
+diff --git a/drivers/mmc/host/owl-mmc.c b/drivers/mmc/host/owl-mmc.c
+index 01ffe51f413d..5e20c099fe03 100644
+--- a/drivers/mmc/host/owl-mmc.c
++++ b/drivers/mmc/host/owl-mmc.c
+@@ -92,6 +92,8 @@
+ #define OWL_SD_STATE_RC16ER		BIT(1)
+ #define OWL_SD_STATE_CRC7ER		BIT(0)
  
- 			if (h->type != 0x40) {
-@@ -1347,6 +1347,7 @@ static int __init init_iommu_from_acpi(struct amd_iommu *iommu,
- 				break;
- 			}
++#define OWL_CMD_TIMEOUT_MS		30000
++
+ struct owl_mmc_host {
+ 	struct device *dev;
+ 	struct reset_control *reset;
+@@ -172,6 +174,7 @@ static void owl_mmc_send_cmd(struct owl_mmc_host *owl_host,
+ 			     struct mmc_command *cmd,
+ 			     struct mmc_data *data)
+ {
++	unsigned long timeout;
+ 	u32 mode, state, resp[2];
+ 	u32 cmd_rsp_mask = 0;
  
-+			uid[0] = '\0';
- 			switch (e->uidf) {
- 			case UID_NOT_PRESENT:
+@@ -239,7 +242,10 @@ static void owl_mmc_send_cmd(struct owl_mmc_host *owl_host,
+ 	if (data)
+ 		return;
  
-@@ -1361,8 +1362,8 @@ static int __init init_iommu_from_acpi(struct amd_iommu *iommu,
- 				break;
- 			case UID_IS_CHARACTER:
- 
--				memcpy(uid, (u8 *)(&e->uid), ACPIHID_UID_LEN - 1);
--				uid[ACPIHID_UID_LEN - 1] = '\0';
-+				memcpy(uid, &e->uid, e->uidl);
-+				uid[e->uidl] = '\0';
- 
- 				break;
- 			default:
+-	if (!wait_for_completion_timeout(&owl_host->sdc_complete, 30 * HZ)) {
++	timeout = msecs_to_jiffies(cmd->busy_timeout ? cmd->busy_timeout :
++		OWL_CMD_TIMEOUT_MS);
++
++	if (!wait_for_completion_timeout(&owl_host->sdc_complete, timeout)) {
+ 		dev_err(owl_host->dev, "CMD interrupt timeout\n");
+ 		cmd->error = -ETIMEDOUT;
+ 		return;
 -- 
 2.25.1
 
