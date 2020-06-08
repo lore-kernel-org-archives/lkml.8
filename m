@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5772C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7B4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6FDB2089D
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:31:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E8352078C
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:31:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591659100;
-	bh=asa8ONHvLvSLrkUv5RGqx9vJCcv05F7tTMtmQgGoEZs=;
+	s=default; t=1591659105;
+	bh=KZ7y1Ex25p0wM+XL4Imgv9FD0uTWknGiw0q6ffVnGQs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JLYeYg4Y7g2FeRADi0wdr7bPhz6HkmO/MpSjRYFGaXYg2SUFdgWr641owT+oeCKtz
-	 0EzDYppy4pEtij6gNyIIlbdHh3HrtEYB1gPA36xKQFLIzQDD2JKhdUPaUkTGcDpRxP
-	 DN0wIlkKblU5WvQYMJezhSbD4ZYUt4GouCsJk0eo=
+	b=x8UcQ7R5l90PYX90Q6/u0PcOY44GamFhz6Seg3JBi32QASBx5hQ5hh16NA3Bl3M8b
+	 NeXrIeUxLtmgsLocH/WVM2bAB36spXJ50JU2kAFses6QHxxA5g6tcYmypUOgpdl4OE
+	 cpuZNuc7dfsZ0lMl+LRzNw8tZCHQJauVZLuXC6Lg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732401AbgFHXbj (ORCPT
+        id S1731839AbgFHXbn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:31:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51938 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:31:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731459AbgFHXZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:25:25 -0400
+        id S1728461AbgFHXZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:25:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD7642064C;
-        Mon,  8 Jun 2020 23:25:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F1302078D;
+        Mon,  8 Jun 2020 23:25:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658724;
-        bh=asa8ONHvLvSLrkUv5RGqx9vJCcv05F7tTMtmQgGoEZs=;
+        s=default; t=1591658729;
+        bh=KZ7y1Ex25p0wM+XL4Imgv9FD0uTWknGiw0q6ffVnGQs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UkSVm8N3Q5YlsD+bmYLlQVZUGk/J9kC1My7oIUZE8+ijPrvdqY6M+GuQpGgU9knxH
-         OyF3ORkUqxm5Zv9+UdvRtujHYEfS2PenkVjSmrP2e/lvEY0GDKtM04O1J05RhitfZL
-         tccno7jjEyirQq74PYMw6gbaqGgqoNhHFF9b6sdU=
+        b=SAoAH/UF/0u9+/b+BbbfzDX3cPoF/Iss+74rh7fW5krUk3OQ92l8oUxw8iMAiYdBj
+         c/Y0gZ2M3eOwEpth6XgwR832+p8eNgl9qsHvMc40DnLzY11mS9LOTt4Ojtnml/8J5Y
+         XggVm4arXCtDmfwz6zBWwYsLB07bByV+HOcsJ8mU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 18/72] ARM: 8978/1: mm: make act_mm() respect THREAD_SIZE
-Date:   Mon,  8 Jun 2020 19:24:06 -0400
-Message-Id: <20200608232500.3369581-18-sashal@kernel.org>
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 21/72] net: vmxnet3: fix possible buffer overflow caused by bad DMA value in vmxnet3_get_rss()
+Date:   Mon,  8 Jun 2020 19:24:09 -0400
+Message-Id: <20200608232500.3369581-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608232500.3369581-1-sashal@kernel.org>
 References: <20200608232500.3369581-1-sashal@kernel.org>
@@ -62,63 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit e1de94380af588bdf6ad6f0cc1f75004c35bc096 ]
+[ Upstream commit 3e1c6846b9e108740ef8a37be80314053f5dd52a ]
 
-Recent work with KASan exposed the folling hard-coded bitmask
-in arch/arm/mm/proc-macros.S:
+The value adapter->rss_conf is stored in DMA memory, and it is assigned
+to rssConf, so rssConf->indTableSize can be modified at anytime by
+malicious hardware. Because rssConf->indTableSize is assigned to n,
+buffer overflow may occur when the code "rssConf->indTable[n]" is
+executed.
 
-  bic     rd, sp, #8128
-  bic     rd, rd, #63
+To fix this possible bug, n is checked after being used.
 
-This forms the bitmask 0x1FFF that is coinciding with
-(PAGE_SIZE << THREAD_SIZE_ORDER) - 1, this code was assuming
-that THREAD_SIZE is always 8K (8192).
-
-As KASan was increasing THREAD_SIZE_ORDER to 2, I ran into
-this bug.
-
-Fix it by this little oneline suggested by Ard:
-
-  bic     rd, sp, #(THREAD_SIZE - 1) & ~63
-
-Where THREAD_SIZE is defined using THREAD_SIZE_ORDER.
-
-We have to also include <linux/const.h> since the THREAD_SIZE
-expands to use the _AC() macro.
-
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Suggested-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mm/proc-macros.S | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/vmxnet3/vmxnet3_ethtool.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/mm/proc-macros.S b/arch/arm/mm/proc-macros.S
-index 5461d589a1e2..60ac7c5999a9 100644
---- a/arch/arm/mm/proc-macros.S
-+++ b/arch/arm/mm/proc-macros.S
-@@ -5,6 +5,7 @@
-  *  VMA_VM_FLAGS
-  *  VM_EXEC
-  */
-+#include <linux/const.h>
- #include <asm/asm-offsets.h>
- #include <asm/thread_info.h>
- 
-@@ -30,7 +31,7 @@
-  * act_mm - get current->active_mm
-  */
- 	.macro	act_mm, rd
--	bic	\rd, sp, #8128
-+	bic	\rd, sp, #(THREAD_SIZE - 1) & ~63
- 	bic	\rd, \rd, #63
- 	ldr	\rd, [\rd, #TI_TASK]
- 	.if (TSK_ACTIVE_MM > IMM12_MASK)
+diff --git a/drivers/net/vmxnet3/vmxnet3_ethtool.c b/drivers/net/vmxnet3/vmxnet3_ethtool.c
+index 2ff27314e047..66c6c07c7a16 100644
+--- a/drivers/net/vmxnet3/vmxnet3_ethtool.c
++++ b/drivers/net/vmxnet3/vmxnet3_ethtool.c
+@@ -692,6 +692,8 @@ vmxnet3_get_rss(struct net_device *netdev, u32 *p, u8 *key, u8 *hfunc)
+ 		*hfunc = ETH_RSS_HASH_TOP;
+ 	if (!p)
+ 		return 0;
++	if (n > UPT1_RSS_MAX_IND_TABLE_SIZE)
++		return 0;
+ 	while (n--)
+ 		p[n] = rssConf->indTable[n];
+ 	return 0;
 -- 
 2.25.1
 
