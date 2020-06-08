@@ -2,119 +2,228 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0127C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 21:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92243C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 21:59:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D8F02074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 21:57:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KtRvm0FM"
+	by mail.kernel.org (Postfix) with ESMTP id 6CB462074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 21:59:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbgFHV56 (ORCPT
+        id S1726841AbgFHV7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 17:57:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55252 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726723AbgFHV56 (ORCPT
+        Mon, 8 Jun 2020 17:59:54 -0400
+Received: from kernel.crashing.org ([76.164.61.194]:41252 "EHLO
+        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726723AbgFHV7x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 17:57:58 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C81D7C08C5C2
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 14:57:56 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id p21so9323293pgm.13
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 14:57:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SWZL+kux4yDhzDGbd5a35TWK1xHZ00dTohAmVgLX3eM=;
-        b=KtRvm0FMKtiPbVuxwAkIVonwCkmmc+hCJFa+v5OdiA9+Kd85RX7E7Dz4su1hEFMAfC
-         N0A+cMW+t6t/S1vbd1lbon+NR+2axYhEMd2KilR+OoBHlQQH6TGZAh4S69qP7stRdrmy
-         z+5F/p1OZ19QuZpRriO3Zf8y1YXiv8zZ27CUU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SWZL+kux4yDhzDGbd5a35TWK1xHZ00dTohAmVgLX3eM=;
-        b=B0sGCbiTaOdkgZnNMkblK+44CNeUFLTnQgR2DZOGfbEmS2ykTahcwKbuf+GHkM8pnx
-         fY2S49FabviV85WvTBdqkEMQU3gmiMqkqX8veH2RuukcvtDVyDbDpmNZPowsMJXlSXPS
-         EOiB6tCTFoihO5HYz8oYNSxJYNBF7DRJW66y/F/2ap+1VLU2QwcF4z/5/WMwuvAQUimP
-         Xs/yBpUvTC7piXJpPDLVamZtnvWqtOL5p6S175yFxtnvF+tEDxAm4MofpEFNxmld6ty3
-         xqWAUMCD5MQTg2mJIi/gorbD9m2zvh+dc4UWH2KhzlzlgLCrHCH222/VZD7KJMjjuLNP
-         6n/w==
-X-Gm-Message-State: AOAM531UpcCPKqEqiyQlPLXHXyu+p9Oy4MVX08qHaMlK1KC5LrwcB1SK
-        +wWCYu2gs4T1f0HpMLgz8FUrGQ==
-X-Google-Smtp-Source: ABdhPJw6qZECPnALxq8UhkvnYK5Ca+cc/l8hvamnwz7rk8VPhvUR8wajVlUTDW7w+FRS6bxZf8gmiQ==
-X-Received: by 2002:a62:154f:: with SMTP id 76mr23212427pfv.322.1591653476006;
-        Mon, 08 Jun 2020 14:57:56 -0700 (PDT)
-Received: from evgreen-glaptop.cheshire.ch ([2601:646:c780:1404:1c5a:73fa:6d5a:5a3c])
-        by smtp.gmail.com with ESMTPSA id p190sm8170178pfp.207.2020.06.08.14.57.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 08 Jun 2020 14:57:55 -0700 (PDT)
-From:   Evan Green <evgreen@chromium.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Markus Elfring <elfring@users.sourceforge.net>,
-        Evan Green <evgreen@chromium.org>,
-        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] soc: qcom: smp2p: Safely acquire spinlock without IRQs
-Date:   Mon,  8 Jun 2020 14:57:36 -0700
-Message-Id: <20200608145653.1.Ideabf6dcdfc577cf39ce3d95b0e4aa1ac8b38f0c@changeid>
-X-Mailer: git-send-email 2.24.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 8 Jun 2020 17:59:53 -0400
+Received: from localhost (gate.crashing.org [63.228.1.57])
+        (authenticated bits=0)
+        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 058LxGv3017657
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Mon, 8 Jun 2020 16:59:20 -0500
+Message-ID: <0940571f9daa9829f70616b3036a2b3b3f25953c.camel@kernel.crashing.org>
+Subject: Re: [PATCH] irqchip/gic-v3-its: Don't try to move a disabled irq
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "Saidi, Ali" <alisaidi@amazon.com>
+Cc:     "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "Zilberman, Zeev" <zeev@amazon.com>,
+        "Machulsky, Zorik" <zorik@amazon.com>
+Date:   Tue, 09 Jun 2020 07:59:15 +1000
+In-Reply-To: <87mu5dacs7.fsf@nanos.tec.linutronix.de>
+References: <AE04B507-C5E2-44D2-9190-41E9BE720F9D@amazon.com>
+         <622fb6be108e894ee365d6b213535c8b@kernel.org>
+         <f9e9d8c37eb92e4b9576bfcb4386ff6ef00eddce.camel@amazon.com>
+         <87mu5dacs7.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-smp2p_update_bits() should disable interrupts when it acquires its
-spinlock. This is important because without the _irqsave, a priority
-inversion can occur.
+On Mon, 2020-06-08 at 15:48 +0200, Thomas Gleixner wrote:
+> "Herrenschmidt, Benjamin" <benh@amazon.com> writes:
+> > On Wed, 2020-06-03 at 16:16 +0100, Marc Zyngier wrote:
+> > > > My original patch should certain check activated and not disabled.
+> > > > With that do you still have reservations Marc?
+> > > 
+> > > I'd still prefer it if we could do something in core code, rather
+> > > than spreading these checks in the individual drivers. If we can't,
+> > > fair enough. But it feels like the core set_affinity function could
+> > > just do the same thing in a single place (although the started vs
+> > > activated is yet another piece of the puzzle I didn't consider,
+> > > and the ITS doesn't need the "can_reserve" thing).
+> > 
+> > For the sake of fixing the problem in a timely and backportable way I
+> > would suggest first merging the fix, *then* fixing the core core.
+> 
+> The "fix" is just wrong
+> 
+> > 	if (cpu != its_dev->event_map.col_map[id]) {
+> > 		target_col = &its_dev->its->collections[cpu];
+> > -		its_send_movi(its_dev, target_col, id);
+> > +
+> > +		/* If the IRQ is disabled a discard was sent so don't move */
+> > +		if (!irqd_irq_disabled(d))
+> 
+> That check needs to be !irqd_is_activated() because enable_irq() does
+> not touch anything affinity related.
 
-This function is called both with interrupts enabled in
-qcom_q6v5_request_stop(), and with interrupts disabled in
-ipa_smp2p_panic_notifier(). IRQ handling of spinlocks should be
-consistent to avoid the panic notifier deadlocking because it's
-sitting on the thread that's already got the lock via _request_stop().
+Right. Note: other  drivers  (like arch/powerpc/sysdev/xive/common.c
+use irqd_is_started() ... this gets confusing :)
 
-Found via lockdep.
+> > +			its_send_movi(its_dev, target_col, id);
+> > +
+> > 		its_dev->event_map.col_map[id] = cpu;
+> > 		irq_data_update_effective_affinity(d, cpumask_of(cpu));
+> 
+> And then these associtations are disconnected from reality in any case.
 
-Fixes: 50e99641413e7 ("soc: qcom: smp2p: Qualcomm Shared Memory Point to Point")
-Signed-off-by: Evan Green <evgreen@chromium.org>
----
+Not sure what you mean here, that said...
 
- drivers/soc/qcom/smp2p.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+> Something like the completely untested patch below should work.
 
-diff --git a/drivers/soc/qcom/smp2p.c b/drivers/soc/qcom/smp2p.c
-index 07183d731d747..a9709aae54abb 100644
---- a/drivers/soc/qcom/smp2p.c
-+++ b/drivers/soc/qcom/smp2p.c
-@@ -318,15 +318,16 @@ static int qcom_smp2p_inbound_entry(struct qcom_smp2p *smp2p,
- static int smp2p_update_bits(void *data, u32 mask, u32 value)
- {
- 	struct smp2p_entry *entry = data;
-+	unsigned long flags;
- 	u32 orig;
- 	u32 val;
- 
--	spin_lock(&entry->lock);
-+	spin_lock_irqsave(&entry->lock, flags);
- 	val = orig = readl(entry->value);
- 	val &= ~mask;
- 	val |= value;
- 	writel(val, entry->value);
--	spin_unlock(&entry->lock);
-+	spin_unlock_irqrestore(&entry->lock, flags);
- 
- 	if (val != orig)
- 		qcom_smp2p_kick(entry->smp2p);
--- 
-2.24.1
+Ok. One possible issue though is before, the driver always had the
+opportunity to "vet" the affinity mask for whatever platform
+constraints may be there and change it before applying it. This is no
+longer the case on a deactivated interrupt with your patch as far as I
+can tell. I don't know if that is a problem and if drivers that do that
+have what it takes to "fixup" the affinity at startup time, the ones I
+wrote don't need that feature, but...
+
+Cheers,
+Ben.
+
+> Thanks,
+> 
+>         tglx
+> 
+> ---
+>  arch/x86/kernel/apic/vector.c |   21 +++------------------
+>  kernel/irq/manage.c           |   37 +++++++++++++++++++++++++++++++++++--
+>  2 files changed, 38 insertions(+), 20 deletions(-)
+> 
+> --- a/arch/x86/kernel/apic/vector.c
+> +++ b/arch/x86/kernel/apic/vector.c
+> @@ -446,12 +446,10 @@ static int x86_vector_activate(struct ir
+>  	trace_vector_activate(irqd->irq, apicd->is_managed,
+>  			      apicd->can_reserve, reserve);
+>  
+> -	/* Nothing to do for fixed assigned vectors */
+> -	if (!apicd->can_reserve && !apicd->is_managed)
+> -		return 0;
+> -
+>  	raw_spin_lock_irqsave(&vector_lock, flags);
+> -	if (reserve || irqd_is_managed_and_shutdown(irqd))
+> +	if (!apicd->can_reserve && !apicd->is_managed)
+> +		assign_irq_vector_any_locked(irqd);
+> +	else if (reserve || irqd_is_managed_and_shutdown(irqd))
+>  		vector_assign_managed_shutdown(irqd);
+>  	else if (apicd->is_managed)
+>  		ret = activate_managed(irqd);
+> @@ -775,21 +773,8 @@ void lapic_offline(void)
+>  static int apic_set_affinity(struct irq_data *irqd,
+>  			     const struct cpumask *dest, bool force)
+>  {
+> -	struct apic_chip_data *apicd = apic_chip_data(irqd);
+>  	int err;
+>  
+> -	/*
+> -	 * Core code can call here for inactive interrupts. For inactive
+> -	 * interrupts which use managed or reservation mode there is no
+> -	 * point in going through the vector assignment right now as the
+> -	 * activation will assign a vector which fits the destination
+> -	 * cpumask. Let the core code store the destination mask and be
+> -	 * done with it.
+> -	 */
+> -	if (!irqd_is_activated(irqd) &&
+> -	    (apicd->is_managed || apicd->can_reserve))
+> -		return IRQ_SET_MASK_OK;
+> -
+>  	raw_spin_lock(&vector_lock);
+>  	cpumask_and(vector_searchmask, dest, cpu_online_mask);
+>  	if (irqd_affinity_is_managed(irqd))
+> --- a/kernel/irq/manage.c
+> +++ b/kernel/irq/manage.c
+> @@ -195,9 +195,9 @@ void irq_set_thread_affinity(struct irq_
+>  			set_bit(IRQTF_AFFINITY, &action->thread_flags);
+>  }
+>  
+> +#ifdef CONFIG_GENERIC_IRQ_EFFECTIVE_AFF_MASK
+>  static void irq_validate_effective_affinity(struct irq_data *data)
+>  {
+> -#ifdef CONFIG_GENERIC_IRQ_EFFECTIVE_AFF_MASK
+>  	const struct cpumask *m = irq_data_get_effective_affinity_mask(data);
+>  	struct irq_chip *chip = irq_data_get_irq_chip(data);
+>  
+> @@ -205,9 +205,19 @@ static void irq_validate_effective_affin
+>  		return;
+>  	pr_warn_once("irq_chip %s did not update eff. affinity mask of irq %u\n",
+>  		     chip->name, data->irq);
+> -#endif
+>  }
+>  
+> +static inline void irq_init_effective_affinity(struct irq_data *data,
+> +					       const struct cpumask *mask)
+> +{
+> +	cpumask_copy(irq_data_get_effective_affinity_mask(data), mask);
+> +}
+> +#else
+> +static inline void irq_validate_effective_affinity(struct irq_data *data) { }
+> +static inline boot irq_init_effective_affinity(struct irq_data *data,
+> +					       const struct cpumask *mask) { }
+> +#endif
+> +
+>  int irq_do_set_affinity(struct irq_data *data, const struct cpumask *mask,
+>  			bool force)
+>  {
+> @@ -304,6 +314,26 @@ static int irq_try_set_affinity(struct i
+>  	return ret;
+>  }
+>  
+> +static bool irq_set_affinity_deactivated(struct irq_data *data,
+> +					 const struct cpumask *mask, bool force)
+> +{
+> +	struct irq_desc *desc = irq_data_to_desc(data);
+> +
+> +	/*
+> +	 * If the interrupt is not yet activated, just store the affinity
+> +	 * mask and do not call the chip driver at all. On activation the
+> +	 * driver has to make sure anyway that the interrupt is in a
+> +	 * useable state so startup works.
+> +	 */
+> +	if (!IS_ENABLED(CONFIG_IRQ_DOMAIN_HIERARCHY) || irqd_is_activated(data))
+> +		return false;
+> +
+> +	cpumask_copy(desc->irq_common_data.affinity, mask);
+> +	irq_init_effective_affinity(data, mask);
+> +	irqd_set(data, IRQD_AFFINITY_SET);
+> +	return true;
+> +}
+> +
+>  int irq_set_affinity_locked(struct irq_data *data, const struct cpumask *mask,
+>  			    bool force)
+>  {
+> @@ -314,6 +344,9 @@ int irq_set_affinity_locked(struct irq_d
+>  	if (!chip || !chip->irq_set_affinity)
+>  		return -EINVAL;
+>  
+> +	if (irq_set_affinity_deactivated(data, mask, force))
+> +		return 0;
+> +
+>  	if (irq_can_move_pcntxt(data) && !irqd_is_setaffinity_pending(data)) {
+>  		ret = irq_try_set_affinity(data, mask, force);
+>  	} else {
 
