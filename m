@@ -7,56 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8048C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 505C5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:57:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EF0A20659
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:57:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30BFB2078C
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:57:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660656;
-	bh=F6y+JKikiv0lny4EyV4nKnkV7zVKpmOK3oss+/+KtNg=;
+	s=default; t=1591660663;
+	bh=g9sba+yzpgOCEImmoDFkSzf4VSNXTjLj0CJFw4IJPQ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ntvmlNrFWZDoYZYH/OdTv+lmnwxVGu496ir9tC37wk1v5JUpEpoca0H58ZqzFEfAG
-	 Zu8N61pM5pDghNZLWX2Np/RXOSRUyR6z+mA97H5QC+7NYVZO00C2Am9ZpbhttWTzer
-	 tapzZ04r1wkVVExoz79Ltw3F6SPGGiSDyfG9Sqxs=
+	b=xB2EQWOlWrYQE7fa4u0HQhRT6EiiJajcHNFL1f4xvMTvtTTFuVpUAwSJZPl1u4Zcb
+	 lvLGPBF/MxL81ivKFaUBAv6Ei1q1XfQxpOfvYnc4UIQnTBaO1qHZGvdwG/Lnk3wS0H
+	 QXOZQkMKhhHHylMC3zRv0zSFe1FcmckVq+055Dr8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732603AbgFHX5e (ORCPT
+        id S1731490AbgFHX5l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:57:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48804 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:57:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731492AbgFHXX1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:23:27 -0400
+        id S1731483AbgFHXXZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:23:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81C67208A9;
-        Mon,  8 Jun 2020 23:23:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23DA12086A;
+        Mon,  8 Jun 2020 23:23:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658607;
-        bh=F6y+JKikiv0lny4EyV4nKnkV7zVKpmOK3oss+/+KtNg=;
+        s=default; t=1591658605;
+        bh=g9sba+yzpgOCEImmoDFkSzf4VSNXTjLj0CJFw4IJPQ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CoDJSfH/cQYSPxkSJb2wBqTeFYHqYvTy29vERqzZ+JZHxM8wGKRUJHgRnYyaQpSob
-         em26zAkvAgxyjWirOJftDN7UBEuXCTcERA7bXzAS345xvpbuHY21prRWSjLmDejUIK
-         oaJusqHcE9WdEbWrCWijfJX5pgdd6jUJFJtCsbQk=
+        b=ule2KxGFL350TuMRji+nKW25GhR5KHsrnbYRnF+CXPuWJh7Ax0LCIXtk0Hy14Bgms
+         99I5/QVJ/MHy5NYrzw7y4D/WwJUE/w4rPh0HF1VnT5+LNxRxOX7g9mRF58Ep95PubX
+         0NZpeHyEwDydO0Gwq0+ZlK9KYXSGqLLqSZ4EJ2Z8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andrey Zhizhikin <andrey.z@gmail.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 034/106] tools api fs: Make xxx__mountpoint() more scalable
-Date:   Mon,  8 Jun 2020 19:21:26 -0400
-Message-Id: <20200608232238.3368589-34-sashal@kernel.org>
+Cc:     Jaehoon Chung <jh80.chung@samsung.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 033/106] brcmfmac: fix wrong location to get firmware feature
+Date:   Mon,  8 Jun 2020 19:21:25 -0400
+Message-Id: <20200608232238.3368589-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608232238.3368589-1-sashal@kernel.org>
 References: <20200608232238.3368589-1-sashal@kernel.org>
@@ -69,180 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephane Eranian <eranian@google.com>
+From: Jaehoon Chung <jh80.chung@samsung.com>
 
-[ Upstream commit c6fddb28bad26e5472cb7acf7b04cd5126f1a4ab ]
+[ Upstream commit c57673852062428cdeabdd6501ac8b8e4c302067 ]
 
-The xxx_mountpoint() interface provided by fs.c finds mount points for
-common pseudo filesystems. The first time xxx_mountpoint() is invoked,
-it scans the mount table (/proc/mounts) looking for a match. If found,
-it is cached. The price to scan /proc/mounts is paid once if the mount
-is found.
+sup_wpa feature is getting after setting feature_disable flag.
+If firmware is supported sup_wpa feature,  it's always enabled
+regardless of feature_disable flag.
 
-When the mount point is not found, subsequent calls to xxx_mountpoint()
-scan /proc/mounts over and over again.  There is no caching.
-
-This causes a scaling issue in perf record with hugeltbfs__mountpoint().
-The function is called for each process found in
-synthesize__mmap_events().  If the machine has thousands of processes
-and if the /proc/mounts has many entries this could cause major overhead
-in perf record. We have observed multi-second slowdowns on some
-configurations.
-
-As an example on a laptop:
-
-Before:
-
-  $ sudo umount /dev/hugepages
-  $ strace -e trace=openat -o /tmp/tt perf record -a ls
-  $ fgrep mounts /tmp/tt
-  285
-
-After:
-
-  $ sudo umount /dev/hugepages
-  $ strace -e trace=openat -o /tmp/tt perf record -a ls
-  $ fgrep mounts /tmp/tt
-  1
-
-One could argue that the non-caching in case the moint point is not
-found is intentional. That way subsequent calls may discover a moint
-point if the sysadmin mounts the filesystem. But the same argument could
-be made against caching the mount point. It could be unmounted causing
-errors.  It all depends on the intent of the interface. This patch
-assumes it is expected to scan /proc/mounts once. The patch documents
-the caching behavior in the fs.h header file.
-
-An alternative would be to just fix perf record. But it would solve the
-problem with hugetlbs__mountpoint() but there could be similar issues
-(possibly down the line) with other xxx_mountpoint() calls in perf or
-other tools.
-
-Signed-off-by: Stephane Eranian <eranian@google.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andrey Zhizhikin <andrey.z@gmail.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lore.kernel.org/lkml/20200402154357.107873-3-irogers@google.com
-Signed-off-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: b8a64f0e96c2 ("brcmfmac: support 4-way handshake offloading for WPA/WPA2-PSK")
+Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200330052528.10503-1-jh80.chung@samsung.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/api/fs/fs.c | 17 +++++++++++++++++
- tools/lib/api/fs/fs.h | 12 ++++++++++++
- 2 files changed, 29 insertions(+)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/lib/api/fs/fs.c b/tools/lib/api/fs/fs.c
-index bd021a0eeef8..4cc69675c2a9 100644
---- a/tools/lib/api/fs/fs.c
-+++ b/tools/lib/api/fs/fs.c
-@@ -90,6 +90,7 @@ struct fs {
- 	const char * const	*mounts;
- 	char			 path[PATH_MAX];
- 	bool			 found;
-+	bool			 checked;
- 	long			 magic;
- };
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
+index 4c5a3995dc35..d7f41caa0b0b 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
+@@ -281,13 +281,14 @@ void brcmf_feat_attach(struct brcmf_pub *drvr)
+ 	if (!err)
+ 		ifp->drvr->feat_flags |= BIT(BRCMF_FEAT_SCAN_RANDOM_MAC);
  
-@@ -111,31 +112,37 @@ static struct fs fs__entries[] = {
- 		.name	= "sysfs",
- 		.mounts	= sysfs__fs_known_mountpoints,
- 		.magic	= SYSFS_MAGIC,
-+		.checked = false,
- 	},
- 	[FS__PROCFS] = {
- 		.name	= "proc",
- 		.mounts	= procfs__known_mountpoints,
- 		.magic	= PROC_SUPER_MAGIC,
-+		.checked = false,
- 	},
- 	[FS__DEBUGFS] = {
- 		.name	= "debugfs",
- 		.mounts	= debugfs__known_mountpoints,
- 		.magic	= DEBUGFS_MAGIC,
-+		.checked = false,
- 	},
- 	[FS__TRACEFS] = {
- 		.name	= "tracefs",
- 		.mounts	= tracefs__known_mountpoints,
- 		.magic	= TRACEFS_MAGIC,
-+		.checked = false,
- 	},
- 	[FS__HUGETLBFS] = {
- 		.name	= "hugetlbfs",
- 		.mounts = hugetlbfs__known_mountpoints,
- 		.magic	= HUGETLBFS_MAGIC,
-+		.checked = false,
- 	},
- 	[FS__BPF_FS] = {
- 		.name	= "bpf",
- 		.mounts = bpf_fs__known_mountpoints,
- 		.magic	= BPF_FS_MAGIC,
-+		.checked = false,
- 	},
- };
- 
-@@ -158,6 +165,7 @@ static bool fs__read_mounts(struct fs *fs)
- 	}
- 
- 	fclose(fp);
-+	fs->checked = true;
- 	return fs->found = found;
- }
- 
-@@ -220,6 +228,7 @@ static bool fs__env_override(struct fs *fs)
- 		return false;
- 
- 	fs->found = true;
-+	fs->checked = true;
- 	strncpy(fs->path, override_path, sizeof(fs->path) - 1);
- 	fs->path[sizeof(fs->path) - 1] = '\0';
- 	return true;
-@@ -246,6 +255,14 @@ static const char *fs__mountpoint(int idx)
- 	if (fs->found)
- 		return (const char *)fs->path;
- 
-+	/* the mount point was already checked for the mount point
-+	 * but and did not exist, so return NULL to avoid scanning again.
-+	 * This makes the found and not found paths cost equivalent
-+	 * in case of multiple calls.
-+	 */
-+	if (fs->checked)
-+		return NULL;
++	brcmf_feat_iovar_int_get(ifp, BRCMF_FEAT_FWSUP, "sup_wpa");
 +
- 	return fs__get_mountpoint(fs);
- }
+ 	if (drvr->settings->feature_disable) {
+ 		brcmf_dbg(INFO, "Features: 0x%02x, disable: 0x%02x\n",
+ 			  ifp->drvr->feat_flags,
+ 			  drvr->settings->feature_disable);
+ 		ifp->drvr->feat_flags &= ~drvr->settings->feature_disable;
+ 	}
+-	brcmf_feat_iovar_int_get(ifp, BRCMF_FEAT_FWSUP, "sup_wpa");
  
-diff --git a/tools/lib/api/fs/fs.h b/tools/lib/api/fs/fs.h
-index 92d03b8396b1..3b70003e7cfb 100644
---- a/tools/lib/api/fs/fs.h
-+++ b/tools/lib/api/fs/fs.h
-@@ -18,6 +18,18 @@
- 	const char *name##__mount(void);	\
- 	bool name##__configured(void);		\
+ 	brcmf_feat_firmware_overrides(drvr);
  
-+/*
-+ * The xxxx__mountpoint() entry points find the first match mount point for each
-+ * filesystems listed below, where xxxx is the filesystem type.
-+ *
-+ * The interface is as follows:
-+ *
-+ * - If a mount point is found on first call, it is cached and used for all
-+ *   subsequent calls.
-+ *
-+ * - If a mount point is not found, NULL is returned on first call and all
-+ *   subsequent calls.
-+ */
- FS(sysfs)
- FS(procfs)
- FS(debugfs)
 -- 
 2.25.1
 
