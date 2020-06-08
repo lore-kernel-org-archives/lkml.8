@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D236AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA22DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:52:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8E75204EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:51:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1332204EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:52:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660307;
-	bh=3KXmSPqFNpljjtZNykR4wyIuKD5oen8+kKGQceuU9tk=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=GPNBvx6VACPJekkWyTUROMbM79Oaec/0aLiJw7YzouMJyDHiNydubh/Qxoubtynqk
-	 AutJU//Kwy8aaOoP8OlXrSptrrw3wT1YCaNGP1cWMjpuxxQkxUnuMd7PvrX2hg/oHA
-	 xIWEN4kyVcQqeshyN7zsU9EWPwSDOuZcCOkaBSvY=
+	s=default; t=1591660321;
+	bh=E0SZMsJZ5fPOnwF6Lflu+D2Uif5yyqCVMNhKdwUo0/I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=i/9tp2OnF32ku+NzOsU0PB0iS22oooTeB/NP4QODyY56bVsLq413jxpHHKRs6RUKb
+	 6/X52veJ6m3FZSujKr9OcpTn7Yvss7wERpWRQFp/zUJQUOXh7ZWSYVTbzYfHYRIbUN
+	 ldUaWOLXAL1b4wY6iPvtM5Q4Nia/1ofLauRAhreA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730715AbgFHXvq (ORCPT
+        id S1731717AbgFHXY7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:51:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51414 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:24:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731731AbgFHXZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:25:03 -0400
+        id S1729561AbgFHXTw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:19:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AC3F2074B;
-        Mon,  8 Jun 2020 23:25:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECB9320842;
+        Mon,  8 Jun 2020 23:19:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658702;
-        bh=3KXmSPqFNpljjtZNykR4wyIuKD5oen8+kKGQceuU9tk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Nw5tP1Gs3dT48yM9q20iaiqW/Eumy+wSSUrPW+CseWzarBiFuwF84gA4PxZFzqcgQ
-         IRebaEQ+fXLYu1ti9fWfVdXJNfIJ2zyZybICq5WFRUo2MsuiIYzi+c0LVCvyzkQNow
-         ahqWNn7R1nu3kRmlUNcxmunSBdzD9PfRU/9ATm/M=
+        s=default; t=1591658391;
+        bh=E0SZMsJZ5fPOnwF6Lflu+D2Uif5yyqCVMNhKdwUo0/I=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=IvpnWajaisU84m/jIrSri7AkiFvT2GXEQ+UnIjCknXIXwYLz/1b/40zdRywvI9OMc
+         Wb/FutXE2MvLdXa0fHuOSn0GAFFH/Hq1EIb99F7gIFGQCKlFZUtUoETrf85gurEVmA
+         7IP3/tu9D41w/9ZRUypFYVV3OKNl1ZW62TiouWu0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qiujun Huang <hqjagain@gmail.com>,
-        syzbot+d403396d4df67ad0bd5f@syzkaller.appspotmail.com,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 01/72] ath9x: Fix stack-out-of-bounds Write in ath9k_hif_usb_rx_cb
-Date:   Mon,  8 Jun 2020 19:23:49 -0400
-Message-Id: <20200608232500.3369581-1-sashal@kernel.org>
+Cc:     Filipe Manana <fdmanana@suse.com>, David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 049/175] btrfs: do not ignore error from btrfs_next_leaf() when inserting checksums
+Date:   Mon,  8 Jun 2020 19:16:42 -0400
+Message-Id: <20200608231848.3366970-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
+References: <20200608231848.3366970-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,59 +58,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiujun Huang <hqjagain@gmail.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-[ Upstream commit 19d6c375d671ce9949a864fb9a03e19f5487b4d3 ]
+[ Upstream commit 7e4a3f7ed5d54926ec671bbb13e171cfe179cc50 ]
 
-Add barrier to accessing the stack array skb_pool.
+We are currently treating any non-zero return value from btrfs_next_leaf()
+the same way, by going to the code that inserts a new checksum item in the
+tree. However if btrfs_next_leaf() returns an error (a value < 0), we
+should just stop and return the error, and not behave as if nothing has
+happened, since in that case we do not have a way to know if there is a
+next leaf or we are currently at the last leaf already.
 
-The case reported by syzbot:
-https://lore.kernel.org/linux-usb/0000000000003d7c1505a2168418@google.com
-BUG: KASAN: stack-out-of-bounds in ath9k_hif_usb_rx_stream
-drivers/net/wireless/ath/ath9k/hif_usb.c:626 [inline]
-BUG: KASAN: stack-out-of-bounds in ath9k_hif_usb_rx_cb+0xdf6/0xf70
-drivers/net/wireless/ath/ath9k/hif_usb.c:666
-Write of size 8 at addr ffff8881db309a28 by task swapper/1/0
+So fix that by returning the error from btrfs_next_leaf().
 
-Call Trace:
-ath9k_hif_usb_rx_stream drivers/net/wireless/ath/ath9k/hif_usb.c:626
-[inline]
-ath9k_hif_usb_rx_cb+0xdf6/0xf70
-drivers/net/wireless/ath/ath9k/hif_usb.c:666
-__usb_hcd_giveback_urb+0x1f2/0x470 drivers/usb/core/hcd.c:1648
-usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1713
-dummy_timer+0x1258/0x32ae drivers/usb/gadget/udc/dummy_hcd.c:1966
-call_timer_fn+0x195/0x6f0 kernel/time/timer.c:1404
-expire_timers kernel/time/timer.c:1449 [inline]
-__run_timers kernel/time/timer.c:1773 [inline]
-__run_timers kernel/time/timer.c:1740 [inline]
-run_timer_softirq+0x5f9/0x1500 kernel/time/timer.c:1786
-
-Reported-and-tested-by: syzbot+d403396d4df67ad0bd5f@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200404041838.10426-5-hqjagain@gmail.com
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath9k/hif_usb.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ fs/btrfs/file-item.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath9k/hif_usb.c b/drivers/net/wireless/ath/ath9k/hif_usb.c
-index 6f669166c263..4399e1ebac15 100644
---- a/drivers/net/wireless/ath/ath9k/hif_usb.c
-+++ b/drivers/net/wireless/ath/ath9k/hif_usb.c
-@@ -610,6 +610,11 @@ static void ath9k_hif_usb_rx_stream(struct hif_device_usb *hif_dev,
- 			hif_dev->remain_skb = nskb;
- 			spin_unlock(&hif_dev->rx_lock);
- 		} else {
-+			if (pool_index == MAX_PKT_NUM_IN_TRANSFER) {
-+				dev_err(&hif_dev->udev->dev,
-+					"ath9k_htc: over RX MAX_PKT_NUM\n");
-+				goto err;
+diff --git a/fs/btrfs/file-item.c b/fs/btrfs/file-item.c
+index f62a179f85bb..2b8f29c07668 100644
+--- a/fs/btrfs/file-item.c
++++ b/fs/btrfs/file-item.c
+@@ -798,10 +798,12 @@ int btrfs_csum_file_blocks(struct btrfs_trans_handle *trans,
+ 		nritems = btrfs_header_nritems(path->nodes[0]);
+ 		if (!nritems || (path->slots[0] >= nritems - 1)) {
+ 			ret = btrfs_next_leaf(root, path);
+-			if (ret == 1)
++			if (ret < 0) {
++				goto out;
++			} else if (ret > 0) {
+ 				found_next = 1;
+-			if (ret != 0)
+ 				goto insert;
 +			}
- 			nskb = __dev_alloc_skb(pkt_len + 32, GFP_ATOMIC);
- 			if (!nskb) {
- 				dev_err(&hif_dev->udev->dev,
+ 			slot = path->slots[0];
+ 		}
+ 		btrfs_item_key_to_cpu(path->nodes[0], &found_key, slot);
 -- 
 2.25.1
 
