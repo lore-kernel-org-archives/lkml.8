@@ -2,114 +2,152 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B070DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D62C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:51:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 849542072F
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:50:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z47IlzAy"
+	by mail.kernel.org (Postfix) with ESMTP id 095E32076A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:51:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729415AbgFHKuJ (ORCPT
+        id S1729431AbgFHKvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 06:50:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36660 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729310AbgFHKuI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 06:50:08 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 609F2C08C5C3;
-        Mon,  8 Jun 2020 03:50:08 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id v24so6506231plo.6;
-        Mon, 08 Jun 2020 03:50:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=NUd8A6vcpiLm3Fha7fxltwZ2oWSxMEZrVjYYnaHST5Y=;
-        b=Z47IlzAy8zUjnEOmvVwz/YjfhEhWL91Yty/f2I8YlXBpa88Q9oEo+qUmfD2rOIyjHA
-         Ic8GrMABy2ZHgEDQYvbsuvhPAPSIxJhZl54mSgRNKDfyRl6JM6Q0CVlxj72AGkI/98e2
-         nyiCuGUoF/WzHuflKDJzqZvLo2voqVnPddWShFehzuozeoMQT469uSBfIBL1Z/qmBDq1
-         502TJt38bK04jHKBDXxxB1l/B9FJqNyWpgV3WRfnqCFkvQxxPlLMRNjz6WOiOHFBrfpi
-         XXk53WW/4tpodJ5V/HOUb3EK+A1Zogleq3HgkviRzNctMpQLzFpYdCj+muiZCYpAs1ib
-         OtBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=NUd8A6vcpiLm3Fha7fxltwZ2oWSxMEZrVjYYnaHST5Y=;
-        b=cXICLmUt+JS60xwZlOVvgcwqrnVAWNvS6dHSZdj18/K1LOHWq53CMrqmcKzmHmh16G
-         kZAn5azZaPfVON2Aj5IlEq7g0d+kz14ohm4I5SlPhKTiYzJb6t4qzP6N6g/9Xd7FLoUW
-         W/P/kR7T5RuBSZ3hds9hIAFAKtC1w+/V6NmkNi5v6u5SEV08a1PuPsowKLWsbkmHYcAh
-         8EK6s/bKPzUZLysJWGkaQ6GyhDBY2J5pCFAWoqUBisVrl588pm0XTKWoqglm0YI0sI9N
-         /diXRyqrzgfSad8T02HzmotnSjK4Yt0rKkXFZEae0RifIGXT55cEZGPrt44snNrcTyh2
-         LgOw==
-X-Gm-Message-State: AOAM531kgyxilpYluyoP7DZ5hXkl48xUhnhfJXe1HAYiXIwK1TVr4Gke
-        jd9Z/ziHO9dVGzK0J2X3H1A=
-X-Google-Smtp-Source: ABdhPJwH25TOm/mEYVKU6qSJi3ieHiz8AkVsZWZ9rifRyIACYvlgRiNZn2C0Ix/YWTzb6vK6cwW2LA==
-X-Received: by 2002:a17:90a:2686:: with SMTP id m6mr16696003pje.11.1591613407856;
-        Mon, 08 Jun 2020 03:50:07 -0700 (PDT)
-Received: from localhost ([43.224.245.180])
-        by smtp.gmail.com with ESMTPSA id 145sm7043277pfa.53.2020.06.08.03.50.06
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Jun 2020 03:50:06 -0700 (PDT)
-From:   Geliang Tang <geliangtang@gmail.com>
-To:     Mat Martineau <mathew.j.martineau@linux.intel.com>,
-        Matthieu Baerts <matthieu.baerts@tessares.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Peter Krystad <peter.krystad@linux.intel.com>
-Cc:     Geliang Tang <geliangtang@gmail.com>, netdev@vger.kernel.org,
-        mptcp@lists.01.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net v2] mptcp: bugfix for RM_ADDR option parsing
-Date:   Mon,  8 Jun 2020 18:47:54 +0800
-Message-Id: <5ec9759a19d4eba5f7f9006354da2cfeb39fa839.1591612830.git.geliangtang@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 8 Jun 2020 06:51:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37140 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729286AbgFHKvs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 06:51:48 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 76DDDAC37;
+        Mon,  8 Jun 2020 10:51:48 +0000 (UTC)
+Subject: Re: slub freelist issue / BUG: unable to handle page fault for
+ address: 000000003ffe0018
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Vegard Nossum <vegard.nossum@oracle.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Christoph Lameter <cl@linux.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Marco Elver <elver@google.com>,
+        Waiman Long <longman@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Roman Gushchin <guro@fb.com>
+References: <202006041054.874AA564@keescook>
+ <cb0cdaaa-7825-0b87-0384-db22329305bb@suse.cz>
+ <34455dce-6675-1fc2-8d61-45bf56f3f554@suse.cz>
+ <6b2b149e-c2bc-f87a-ea2c-3046c5e39bf9@oracle.com>
+ <faea2c18-edbe-f8b4-b171-6be866624856@oracle.com>
+ <CAJZ5v0jqmUmf7mv3wjniVM-YqPqhDSjxunU0E4VYCsUQqvrF_Q@mail.gmail.com>
+ <ce333dcb-2b2c-3e1f-2a7e-02a7819b1db4@suse.cz>
+ <894e8cee-33df-1f63-fb12-72dceb024ea7@oracle.com>
+ <202006050828.F85A75D13@keescook>
+ <92d994be-e4f5-b186-4ad7-21828de44967@suse.cz>
+ <202006051053.A61A42374C@keescook>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <228295be-2e40-3c91-68a0-2715e66486d1@suse.cz>
+Date:   Mon, 8 Jun 2020 12:51:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
+MIME-Version: 1.0
+In-Reply-To: <202006051053.A61A42374C@keescook>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In MPTCPOPT_RM_ADDR option parsing, the pointer "ptr" pointed to the
-"Subtype" octet, the pointer "ptr+1" pointed to the "Address ID" octet:
+On 6/5/20 8:46 PM, Kees Cook wrote:
+>> 
+>> Hmm I have a different idea. The whole cache_from_obj() was added because of
+>> kmemcg (commit b9ce5ef49f00d) where per-memcg cache can be different from the
+>> root one. And I just realized this usecase can go away with Roman's series [1].
+>> But cache_from_obj() also kept the original SLUB consistency check case, and you
+>> added the freelist hardening case. If kmemcg use case went away it would be nice
+>> to avoid the virt_to_cache() and check completely again, unless in debugging or
+>> hardened kernel.
+> 
+> Is it that expensive? (I'm fine with it staying behind debug/hardening,
+> but if we can make it on by default, that'd be safer.)
 
-  +-------+-------+---------------+
-  |Subtype|(resvd)|   Address ID  |
-  +-------+-------+---------------+
-  |               |
- ptr            ptr+1
+Well, it's fast path and e.g. networking guys did a lot of work to optimize
+SLUB. If we decide to stop trusting the supplied cache pointer completely, we
+can deprecate kmem_cache_free() and use kfree() everywhere (SLOB would need some
+adjustments to store size with each object like for kmalloc) but it would have
+to be a conscious decision.
 
-We should set mp_opt->rm_id to the value of "ptr+1", not "ptr". This patch
-will fix this bug.
+>> Furthermore, the original SLUB debugging case was an unconditional pr_err() plus
+>> WARN_ON_ONCE(1), which was kept by commit b9ce5ef49f00d.  With freelist
+>> hardening this all changed to WARN_ONCE. So the second and later cases are not
+>> reported at all for hardening and also not for explicitly enabled debugging like
+>> in this case, which is IMHO not ideal.
+> 
+> Oh, I have no problem with WARN vs WARN_ONCE -- there's no reason to
+> split this. And I'd love the hardening side to gain the tracking call
+> too, if it's available.
+> 
+> I had just used WARN_ONCE() since sometimes it can be very noisy to keep
+> warning for some condition that might not be correctable.
 
-Fixes: 3df523ab582c ("mptcp: Add ADD_ADDR handling")
-Signed-off-by: Geliang Tang <geliangtang@gmail.com>
----
- Changes in v2:
-  - Add "-net" subject and "Fixes" tag as Matt suggested.
----
- net/mptcp/options.c | 2 ++
- 1 file changed, 2 insertions(+)
+OK.
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 01f1f4cf4902..490b92534afc 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -273,6 +273,8 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- 		if (opsize != TCPOLEN_MPTCP_RM_ADDR_BASE)
- 			break;
- 
-+		ptr++;
-+
- 		mp_opt->rm_addr = 1;
- 		mp_opt->rm_id = *ptr++;
- 		pr_debug("RM_ADDR: id=%d", mp_opt->rm_id);
--- 
-2.17.1
+>> So I propose the following - the freelist hardening case keeps the WARN_ONCE,
+>> but also a one-line pr_err() for each case so they are not silent. The SLUB
+>> debugging case is always a full warning, and printing the tracking info if
+>> enabled and available. Pure kmemcg case does virt_to_cache() for now (until
+>> hopefully removed by Roman's series) but no checking at all. Would that work for
+>> everyone?
+>> [...]
+>> @@ -520,9 +528,18 @@ static inline struct kmem_cache *cache_from_obj(struct kmem_cache *s, void *x)
+>>  		return s;
+>>  
+>>  	cachep = virt_to_cache(x);
+>> -	WARN_ONCE(cachep && !slab_equal_or_root(cachep, s),
+>> -		  "%s: Wrong slab cache. %s but object is from %s\n",
+>> -		  __func__, s->name, cachep->name);
+>> +	if (unlikely(s->flags & SLAB_CONSISTENCY_CHECKS)) {
+>> +		if (WARN(cachep && !slab_equal_or_root(cachep, s),
+>> +			  "%s: Wrong slab cache. %s but object is from %s\n",
+>> +			  __func__, s->name, cachep->name))
+>> +			slab_print_tracking(cachep, x);
+>> +	} else if (IS_ENABLED(CONFIG_SLAB_FREELIST_HARDENED)) {
+>> +		if (unlikely(cachep && !slab_equal_or_root(cachep, s))) {
+>> +			pr_err("%s: Wrong slab cache. %s but object is from %s\n",
+>> +				  __func__, s->name, cachep->name);
+>> +			WARN_ON_ONCE(1);
+>> +		}
+>> +	}
+> 
+> How about just this (in addition to your slab_print_tracking() refactor):
+
+That could work, I will send a proper patch.
+
+> diff --git a/mm/slab.h b/mm/slab.h
+> index 207c83ef6e06..107b7f6db3c3 100644
+> --- a/mm/slab.h
+> +++ b/mm/slab.h
+> @@ -520,9 +520,10 @@ static inline struct kmem_cache *cache_from_obj(struct kmem_cache *s, void *x)
+>  		return s;
+>  
+>  	cachep = virt_to_cache(x);
+> -	WARN_ONCE(cachep && !slab_equal_or_root(cachep, s),
+> +	if (WARN(cachep && !slab_equal_or_root(cachep, s),
+>  		  "%s: Wrong slab cache. %s but object is from %s\n",
+> -		  __func__, s->name, cachep->name);
+> +		  __func__, s->name, cachep->name))
+> +		slab_print_tracking(cachep, x);
+>  	return cachep;
+>  }
+>  
+> 
 
