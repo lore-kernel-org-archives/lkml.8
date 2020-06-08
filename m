@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6905BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 17:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 608DCC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 17:49:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46BA72086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 17:49:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CF58206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 17:49:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZL/xMo+e"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="crI+dMdf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730239AbgFHRtJ (ORCPT
+        id S1730272AbgFHRtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 13:49:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44932 "EHLO
+        Mon, 8 Jun 2020 13:49:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730166AbgFHRtA (ORCPT
+        with ESMTP id S1730160AbgFHRtA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 8 Jun 2020 13:49:00 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76F8AC08C5C3
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 10:49:00 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id n2so6923945pld.13
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 10:49:00 -0700 (PDT)
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4B3EC08C5C2
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 10:48:59 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id b7so173095pju.0
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 10:48:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=YIwI7n7N4VQPufeFuOMvSL/7+RKCUZGC7cYkecAGvXw=;
-        b=ZL/xMo+emwIGJJDYKlUTWBSUaZLy53IDoh4ECTHldAYzsEhYULXTfHE17Ihg5yS9s/
-         GknxH8a1g7MMdbLIncWs0UnD5Gyu0da/rncun2hoJCW3QuwBCypNjBMBCWjKXEjxQnKY
-         1Ua9dWh3ALilAaZBwqBXOw+Ql0STZFO8QKaB0=
+        bh=o8YyCBCbGrw0DIZ0MXUQK0lVQu61p/lQcR9/ys0P7l8=;
+        b=crI+dMdfSYQau9vc9/yyK65ynELRvAs6mgoiidknTuRcDF9lKldNHf6Un61KThO6LE
+         aBqIOsMppcw3sgF5IxZmYi6Vi+hGCW50d4PqH5aPGGzmglwhzfJxe0d+KFX5WCCsMNDx
+         ofzFeFKmOIFr+i5FdRP+j44Jqmp71NbWE+Hv4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=YIwI7n7N4VQPufeFuOMvSL/7+RKCUZGC7cYkecAGvXw=;
-        b=J2ed5RFfZWlvmx5S1D0WDGEtIdD7ZA57YnMek8wnc5lWYySneC7qRvJsRFgVEbYryT
-         g+QxdlPKJHGKgvLjs0aaEcRZwJc6CDXdkvDodLiYZhGHzAKVy8Y1Byd3n9trCtHRyjlA
-         Xx3eikisue606JSiauCauLFf34V3Om4FpDdI+D/6oad0GaUsNHgZhLpL0vMLNNOFvaBj
-         HAbNSlTrVsumE2UUpZoO4QeUasfgr2hMoKywzPBFmQ/eN0r5Hi5AuYkwI4rpKvwgSMAH
-         JYfXxoEpkZZ4h9J9EFH2iFSD3/X89PMRam9ZBLA2RserT9JtfwZ1cirgQdW0WrSAsoyT
-         pCxw==
-X-Gm-Message-State: AOAM530Ynib2pedDXtCwaj53XMskjXapo+iPD1TsiTkgDkFIO13jQ0Tr
-        3OGCzA9mFCLOB+LGfYVcjrBv5A==
-X-Google-Smtp-Source: ABdhPJzg/YUFjJB0n58ZSRa8E0eiVaoklc/4+kOj1C57x3OTuyE0OCpKhKcw+Hm/Y+pNC49YSXIRyw==
-X-Received: by 2002:a17:90a:9f81:: with SMTP id o1mr431427pjp.139.1591638539924;
-        Mon, 08 Jun 2020 10:48:59 -0700 (PDT)
+        bh=o8YyCBCbGrw0DIZ0MXUQK0lVQu61p/lQcR9/ys0P7l8=;
+        b=nJNLP/d8r65kh+l+wSerAzeHmQtnvtvYp7nwkIZROd5QI0cj+yUSJVGElqxy0Bx7+h
+         sn+T5oL76ZwNymAvYKfoVlXIDnz9weX3dwUAezUDg8ZoHQTD8md+ah958qafPyzowpw5
+         6hHrNdrYP+GnhXJlWKpLSsz2HcHKRuirbz6FOskwkpaU6NItw1fGmj74nsWbLoWVhV6t
+         J+6fv0AdsAh3fHyP2osiZrKAhowdp1HB6IwIBYDnSwU/PoMvCPvuvodCPEqC/3CvsxcC
+         Kf6fWKJWQFSkAIKIIupPr6pW/m31rl3mZ/5D7R2B61vOovCJ4AVAtBhsZXHlzjvFG4br
+         Bdmw==
+X-Gm-Message-State: AOAM532DqLOzq9NydPM3jtJ76v9IjglSGesBTjq7mJD3YKiXfWBPRTch
+        6gX13uR/VHYBXR1Zu5IdO5KeI4HSPvvInw==
+X-Google-Smtp-Source: ABdhPJxDBcpzVSyypXwZzUR9uGeArOBaGnIrUgjorP9jdXDSPFLOIaEjQmAkCG5ko8oaACbKDzq5+Q==
+X-Received: by 2002:a17:90b:915:: with SMTP id bo21mr469617pjb.52.1591638538722;
+        Mon, 08 Jun 2020 10:48:58 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id n7sm162682pjq.22.2020.06.08.10.48.58
+        by smtp.gmail.com with ESMTPSA id n7sm162682pjq.22.2020.06.08.10.48.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 10:48:59 -0700 (PDT)
+        Mon, 08 Jun 2020 10:48:58 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     a.hajda@samsung.com, narmstrong@baylibre.com, sam@ravnborg.org
 Cc:     robdclark@chromium.org, bjorn.andersson@linaro.org,
@@ -66,11 +66,11 @@ Cc:     robdclark@chromium.org, bjorn.andersson@linaro.org,
         Jernej Skrabec <jernej.skrabec@siol.net>,
         Jonas Karlman <jonas@kwiboo.se>,
         Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Clark <robdclark@gmail.com>,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] drm/bridge: ti-sn65dsi86: Check the regmap return value when setting a GPIO
-Date:   Mon,  8 Jun 2020 10:48:35 -0700
-Message-Id: <20200608104832.4.Ia4376fd88cdc6e8f8b43c65548458305f82f1d61@changeid>
+Subject: [PATCH 3/4] drm/bridge: ti-sn65dsi86: Fix kernel-doc typo ln_polr => ln_polrs
+Date:   Mon,  8 Jun 2020 10:48:34 -0700
+Message-Id: <20200608104832.3.Ib616e311c48cc64b2cef11bd54d4a9cedc874bb1@changeid>
 X-Mailer: git-send-email 2.27.0.278.ge193c7cf3a9-goog
 In-Reply-To: <20200608104832.1.Ibe95d8f3daef01e5c57d4c8c398f04d6a839492c@changeid>
 References: <20200608104832.1.Ibe95d8f3daef01e5c57d4c8c398f04d6a839492c@changeid>
@@ -81,34 +81,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ti_sn_bridge_gpio_set() got the return value of
-regmap_update_bits() but didn't check it.  The function can't return
-an error value, but we should at least print a warning if it didn't
-work.
+This fixes a kernel doc warning due to a typo:
+  warning: Function parameter or member 'ln_polrs' not described in 'ti_sn_bridge'
 
-This fixes a compiler warning about setting "ret" but not using it.
-
-Fixes: 27ed2b3f22ed ("drm/bridge: ti-sn65dsi86: Export bridge GPIOs to Linux")
+Fixes: 5bebaeadb30e ("drm/bridge: ti-sn65dsi86: Implement lane reordering + polarity")
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
- drivers/gpu/drm/bridge/ti-sn65dsi86.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpu/drm/bridge/ti-sn65dsi86.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-index 1080e4f9df96..526add27dc03 100644
+index fca7c2a0bcf9..1080e4f9df96 100644
 --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
 +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-@@ -999,6 +999,9 @@ static void ti_sn_bridge_gpio_set(struct gpio_chip *chip, unsigned int offset,
- 	ret = regmap_update_bits(pdata->regmap, SN_GPIO_IO_REG,
- 				 BIT(SN_GPIO_OUTPUT_SHIFT + offset),
- 				 val << (SN_GPIO_OUTPUT_SHIFT + offset));
-+	if (ret)
-+		dev_warn(pdata->dev,
-+			 "Failed to set bridge GPIO %d: %d\n", offset, ret);
- }
- 
- static int ti_sn_bridge_gpio_direction_input(struct gpio_chip *chip,
+@@ -122,7 +122,7 @@
+  * @supplies:     Data for bulk enabling/disabling our regulators.
+  * @dp_lanes:     Count of dp_lanes we're using.
+  * @ln_assign:    Value to program to the LN_ASSIGN register.
+- * @ln_polr:      Value for the 4-bit LN_POLRS field of SN_ENH_FRAME_REG.
++ * @ln_polrs:     Value for the 4-bit LN_POLRS field of SN_ENH_FRAME_REG.
+  *
+  * @gchip:        If we expose our GPIOs, this is used.
+  * @gchip_output: A cache of whether we've set GPIOs to output.  This
 -- 
 2.27.0.278.ge193c7cf3a9-goog
 
