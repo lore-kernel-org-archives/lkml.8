@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB62DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:52:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB27C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B199320801
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:52:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CC71204EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:53:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660377;
-	bh=Cd4A4xpCZDxwn4mfvzji4tVJ+WRN4oGqKTFREH4zzhE=;
+	s=default; t=1591660381;
+	bh=FQzGguG+hmcl7cfXxLr3IInpG6jYeF8Ns+/5r+ngYpM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ydFTwK1Ee6xSE6kXz7k+AZWyzzdGrYpMj4R8AUDfnL29w76Tq92QuWqU9yWY8z1Kr
-	 dAsjRH1yeEKxIzfbH7LdRXe+/vPhXUDta0leS3+jWypjkTpqLgsW00SXFUzevkS9LX
-	 tUIk/8iV3ZelfCqMb1Fr1qTGwWuMJl5REHMMUY8M=
+	b=Jzk4cyR9HG68X3I15bIGD3AIBvRWBP5P5rNJFSzBQqTltTaMcpwe/hb+hUD7K2GrV
+	 SgJXqyTgAUU328M6DvV8B9FQHHporqXkiLl3by2pcD8RIG0GTdFfr8yV/U0gWf6VRB
+	 QRC1G2I2IB5wqLATVKxi3FzKHrwZeFjhR0KO0b0g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732535AbgFHXw4 (ORCPT
+        id S1731650AbgFHXYk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:52:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50880 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:24:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730909AbgFHXYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:24:43 -0400
+        id S1728826AbgFHXTW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:19:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC77C20C09;
-        Mon,  8 Jun 2020 23:24:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B519F2085B;
+        Mon,  8 Jun 2020 23:19:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658682;
-        bh=Cd4A4xpCZDxwn4mfvzji4tVJ+WRN4oGqKTFREH4zzhE=;
+        s=default; t=1591658362;
+        bh=FQzGguG+hmcl7cfXxLr3IInpG6jYeF8Ns+/5r+ngYpM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OXmJ+NSFhWY8/UnfRz3BI87CI3LTO7l/VEy02oC7V4L1utq/GPJFaFrQ3yaUR9WfW
-         UQXjaNpjCuR1kUhNHsIuZypSK6rLCqRcUM8Eu33hAnE3BHSONEbCldeGMIl0MKw8xc
-         1Go8D+pevRJ9N5MyymiYjWfRCPSHvH+CMvSrkQwY=
+        b=Uj2b/JqXuRZ09KycM+QbvX/M8Y7grECCLmmnU7D4rRoY6pwr3LUCoxdNUou4KInPa
+         I9HTWsWFoD6Iz7/qfot6V4Bg7MzJvFEudZ8cBnk4HNujgahITGdCNzcQhoqQFcWO/J
+         BuJOsUo7oR0CEYBmE6bGlE/WNk75VqhRdKDWdKRo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Brian Foster <bfoster@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 093/106] xfs: measure all contiguous previous extents for prealloc size
-Date:   Mon,  8 Jun 2020 19:22:25 -0400
-Message-Id: <20200608232238.3368589-93-sashal@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Feng Tang <feng.tang@intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 027/175] spi: dw: Zero DMA Tx and Rx configurations on stack
+Date:   Mon,  8 Jun 2020 19:16:20 -0400
+Message-Id: <20200608231848.3366970-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608232238.3368589-1-sashal@kernel.org>
-References: <20200608232238.3368589-1-sashal@kernel.org>
+In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
+References: <20200608231848.3366970-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,106 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Darrick J. Wong" <darrick.wong@oracle.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit f0322c7cc05eb23ef034775f9b39254cbd4f3678 ]
+[ Upstream commit 3cb97e223d277f84171cc4ccecab31e08b2ee7b5 ]
 
-When we're estimating a new speculative preallocation length for an
-extending write, we should walk backwards through the extent list to
-determine the number of number of blocks that are physically and
-logically contiguous with the write offset, and use that as an input to
-the preallocation size computation.
+Some DMA controller drivers do not tolerate non-zero values in
+the DMA configuration structures. Zero them to avoid issues with
+such DMA controller drivers. Even despite above this is a good
+practice per se.
 
-This way, preallocation length is truly measured by the effectiveness of
-the allocator in giving us contiguous allocations without being
-influenced by the state of a given extent.  This fixes both the problem
-where ZERO_RANGE within an EOF can reduce preallocation, and prevents
-the unnecessary shrinkage of preallocation when delalloc extents are
-turned into unwritten extents.
-
-This was found as a regression in xfs/014 after changing delalloc writes
-to create unwritten extents during writeback.
-
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Brian Foster <bfoster@redhat.com>
+Fixes: 7063c0d942a1 ("spi/dw_spi: add DMA support")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Feng Tang <feng.tang@intel.com>
+Cc: Feng Tang <feng.tang@intel.com>
+Link: https://lore.kernel.org/r/20200506153025.21441-1-andriy.shevchenko@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_iomap.c | 40 +++++++++++++++++++++++++++-------------
- 1 file changed, 27 insertions(+), 13 deletions(-)
+ drivers/spi/spi-dw-mid.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
-index 6320aca39f39..f8c238992672 100644
---- a/fs/xfs/xfs_iomap.c
-+++ b/fs/xfs/xfs_iomap.c
-@@ -372,15 +372,17 @@ xfs_iomap_prealloc_size(
- 	loff_t			count,
- 	struct xfs_iext_cursor	*icur)
- {
-+	struct xfs_iext_cursor	ncur = *icur;
-+	struct xfs_bmbt_irec	prev, got;
- 	struct xfs_mount	*mp = ip->i_mount;
- 	struct xfs_ifork	*ifp = XFS_IFORK_PTR(ip, XFS_DATA_FORK);
- 	xfs_fileoff_t		offset_fsb = XFS_B_TO_FSBT(mp, offset);
--	struct xfs_bmbt_irec	prev;
--	int			shift = 0;
- 	int64_t			freesp;
- 	xfs_fsblock_t		qblocks;
--	int			qshift = 0;
- 	xfs_fsblock_t		alloc_blocks = 0;
-+	xfs_extlen_t		plen;
-+	int			shift = 0;
-+	int			qshift = 0;
+diff --git a/drivers/spi/spi-dw-mid.c b/drivers/spi/spi-dw-mid.c
+index 2663bb12d9ce..242ac2768518 100644
+--- a/drivers/spi/spi-dw-mid.c
++++ b/drivers/spi/spi-dw-mid.c
+@@ -147,6 +147,7 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_tx(struct dw_spi *dws,
+ 	if (!xfer->tx_buf)
+ 		return NULL;
  
- 	if (offset + count <= XFS_ISIZE(ip))
- 		return 0;
-@@ -395,7 +397,7 @@ xfs_iomap_prealloc_size(
- 	 */
- 	if ((mp->m_flags & XFS_MOUNT_DFLT_IOSIZE) ||
- 	    XFS_ISIZE(ip) < XFS_FSB_TO_B(mp, mp->m_dalign) ||
--	    !xfs_iext_peek_prev_extent(ifp, icur, &prev) ||
-+	    !xfs_iext_prev_extent(ifp, &ncur, &prev) ||
- 	    prev.br_startoff + prev.br_blockcount < offset_fsb)
- 		return mp->m_writeio_blocks;
++	memset(&txconf, 0, sizeof(txconf));
+ 	txconf.direction = DMA_MEM_TO_DEV;
+ 	txconf.dst_addr = dws->dma_addr;
+ 	txconf.dst_maxburst = 16;
+@@ -193,6 +194,7 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_rx(struct dw_spi *dws,
+ 	if (!xfer->rx_buf)
+ 		return NULL;
  
-@@ -408,16 +410,28 @@ xfs_iomap_prealloc_size(
- 	 * preallocation size.
- 	 *
- 	 * If the extent is a hole, then preallocation is essentially disabled.
--	 * Otherwise we take the size of the preceding data extent as the basis
--	 * for the preallocation size. If the size of the extent is greater than
--	 * half the maximum extent length, then use the current offset as the
--	 * basis. This ensures that for large files the preallocation size
--	 * always extends to MAXEXTLEN rather than falling short due to things
--	 * like stripe unit/width alignment of real extents.
-+	 * Otherwise we take the size of the preceding data extents as the basis
-+	 * for the preallocation size. Note that we don't care if the previous
-+	 * extents are written or not.
-+	 *
-+	 * If the size of the extents is greater than half the maximum extent
-+	 * length, then use the current offset as the basis. This ensures that
-+	 * for large files the preallocation size always extends to MAXEXTLEN
-+	 * rather than falling short due to things like stripe unit/width
-+	 * alignment of real extents.
- 	 */
--	if (prev.br_blockcount <= (MAXEXTLEN >> 1))
--		alloc_blocks = prev.br_blockcount << 1;
--	else
-+	plen = prev.br_blockcount;
-+	while (xfs_iext_prev_extent(ifp, &ncur, &got)) {
-+		if (plen > MAXEXTLEN / 2 ||
-+		    isnullstartblock(got.br_startblock) ||
-+		    got.br_startoff + got.br_blockcount != prev.br_startoff ||
-+		    got.br_startblock + got.br_blockcount != prev.br_startblock)
-+			break;
-+		plen += got.br_blockcount;
-+		prev = got;
-+	}
-+	alloc_blocks = plen * 2;
-+	if (alloc_blocks > MAXEXTLEN)
- 		alloc_blocks = XFS_B_TO_FSB(mp, offset);
- 	if (!alloc_blocks)
- 		goto check_writeio;
++	memset(&rxconf, 0, sizeof(rxconf));
+ 	rxconf.direction = DMA_DEV_TO_MEM;
+ 	rxconf.src_addr = dws->dma_addr;
+ 	rxconf.src_maxburst = 16;
 -- 
 2.25.1
 
