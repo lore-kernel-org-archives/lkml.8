@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 717FCC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFEF7C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 467302078C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:08:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 986942076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:08:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591664894;
-	bh=KphcNiZ+eOvakmzLYKXPGmvws0QzDnSkfXg63EaWeFw=;
+	s=default; t=1591664891;
+	bh=VYWenzQ8i2lLQM7eSA2bTGMvfrUBJTLf4bOKdgHsOGE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JN+rRoJn59ofyJb+BPzMxjbbbY/1ud4rkNyKoQDrvZ4fZgtIFF5T7Yi+NBcO8OC/z
-	 50AsIzZhxQTyVOEei1DJslUlmUIP1pPmIhvu83cBIsA5GjIOLI734zGJwshGwK0PZm
-	 jfl/0aD1LmDTJVQQv0tV2t5X8aYEoLQZlf2jwE0Q=
+	b=YdkbwDUwnGGhBgI+jqLp6rafwCTeFnkmzGyiersQ1jAo3U09+AGzAlWfMSHvjxvsO
+	 DSA7qbXFIf4CeZXuKOkP7kOStJoqAovmCPxE23oulB/DI+T0T4KQT+/HAGlQUkWUhY
+	 tNsSrgV3uUC2RnmUpBXBHeRq7s03Lh25xDX6Ab/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388202AbgFIBHr (ORCPT
+        id S2388214AbgFIBH5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 21:07:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50252 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 21:07:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727091AbgFHXGy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:06:54 -0400
+        id S1727088AbgFHXGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:06:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00DEC20774;
-        Mon,  8 Jun 2020 23:06:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4AC920820;
+        Mon,  8 Jun 2020 23:06:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657613;
-        bh=KphcNiZ+eOvakmzLYKXPGmvws0QzDnSkfXg63EaWeFw=;
+        s=default; t=1591657612;
+        bh=VYWenzQ8i2lLQM7eSA2bTGMvfrUBJTLf4bOKdgHsOGE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pTRzkAetQB3kbZx1hUx7uAhbSJ/V8UCzZno2k7BLx99rMBZeG9bXd2bcJrzJcx4v1
-         2hmDL4OUG/Npyj1PMQhiySR4Ly/77bCEWUncHvR762ACeWTnaU1y/v/GeDqeif5Izs
-         7yuMFPEmKOh1EQPD7QdlEdiHpWGqX3YXIc6hKygc=
+        b=rgKodUlOOq6h5Df8UQp+9PzVQTaXFRpiKBgGZQk8K3tImYRDjRTvkI+eswaHW725y
+         pkcUXWWJtBFv22zLgVE2xrnXLN0TvpyCASV4JRFPdRIgLoOnYoqdDd2qD3CBArGbCx
+         zC9dLdztHN7UmPdkOR3Hsq4h6RwFi46LYy++hRQQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Feng Tang <feng.tang@intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 036/274] spi: dw: Zero DMA Tx and Rx configurations on stack
-Date:   Mon,  8 Jun 2020 19:02:09 -0400
-Message-Id: <20200608230607.3361041-36-sashal@kernel.org>
+Cc:     Dejin Zheng <zhengdejin5@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 035/274] rtw88: fix an issue about leak system resources
+Date:   Mon,  8 Jun 2020 19:02:08 -0400
+Message-Id: <20200608230607.3361041-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -60,46 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Dejin Zheng <zhengdejin5@gmail.com>
 
-[ Upstream commit 3cb97e223d277f84171cc4ccecab31e08b2ee7b5 ]
+[ Upstream commit 191f6b08bfef24e1a9641eaac96ed030a7be4599 ]
 
-Some DMA controller drivers do not tolerate non-zero values in
-the DMA configuration structures. Zero them to avoid issues with
-such DMA controller drivers. Even despite above this is a good
-practice per se.
+the related system resources were not released when pci_iomap() return
+error in the rtw_pci_io_mapping() function. add pci_release_regions() to
+fix it.
 
-Fixes: 7063c0d942a1 ("spi/dw_spi: add DMA support")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Feng Tang <feng.tang@intel.com>
-Cc: Feng Tang <feng.tang@intel.com>
-Link: https://lore.kernel.org/r/20200506153025.21441-1-andriy.shevchenko@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: e3037485c68ec1a ("rtw88: new Realtek 802.11ac driver")
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+Acked-by: Yan-Hsuan Chuang <yhchuang@realtek.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200504083442.3033-1-zhengdejin5@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-dw-mid.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/wireless/realtek/rtw88/pci.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/spi/spi-dw-mid.c b/drivers/spi/spi-dw-mid.c
-index 0d86c37e0aeb..1058b8a6c8a0 100644
---- a/drivers/spi/spi-dw-mid.c
-+++ b/drivers/spi/spi-dw-mid.c
-@@ -147,6 +147,7 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_tx(struct dw_spi *dws,
- 	if (!xfer->tx_buf)
- 		return NULL;
- 
-+	memset(&txconf, 0, sizeof(txconf));
- 	txconf.direction = DMA_MEM_TO_DEV;
- 	txconf.dst_addr = dws->dma_addr;
- 	txconf.dst_maxburst = 16;
-@@ -193,6 +194,7 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_rx(struct dw_spi *dws,
- 	if (!xfer->rx_buf)
- 		return NULL;
- 
-+	memset(&rxconf, 0, sizeof(rxconf));
- 	rxconf.direction = DMA_DEV_TO_MEM;
- 	rxconf.src_addr = dws->dma_addr;
- 	rxconf.src_maxburst = 16;
+diff --git a/drivers/net/wireless/realtek/rtw88/pci.c b/drivers/net/wireless/realtek/rtw88/pci.c
+index 1af87eb2e53a..d735f3127fe8 100644
+--- a/drivers/net/wireless/realtek/rtw88/pci.c
++++ b/drivers/net/wireless/realtek/rtw88/pci.c
+@@ -1091,6 +1091,7 @@ static int rtw_pci_io_mapping(struct rtw_dev *rtwdev,
+ 	len = pci_resource_len(pdev, bar_id);
+ 	rtwpci->mmap = pci_iomap(pdev, bar_id, len);
+ 	if (!rtwpci->mmap) {
++		pci_release_regions(pdev);
+ 		rtw_err(rtwdev, "failed to map pci memory\n");
+ 		return -ENOMEM;
+ 	}
 -- 
 2.25.1
 
