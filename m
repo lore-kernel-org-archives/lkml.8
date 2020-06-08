@@ -2,128 +2,104 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D598FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 06:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF88C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 06:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3BF9206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 06:52:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 433C1206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 06:53:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="np4HWYG8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728947AbgFHGwa (ORCPT
+        id S1728979AbgFHGxJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 02:52:30 -0400
-Received: from mga11.intel.com ([192.55.52.93]:17633 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726929AbgFHGw1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 02:52:27 -0400
-IronPort-SDR: cp9X9B84NAjPh0/jJ2V5rrR8AkAdWPa3wTMXeSCL97NiC6dw+IAMSQi5+4sdC0m9R2LxMQF3H0
- qpaRkDHn2OFg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2020 23:52:26 -0700
-IronPort-SDR: mTuTwaNs94YS1DXYh0D7RJaQ3aJ2l6U9lq8UJ0y4jWjDGsH6lBWYNmBD/nA6kW3Bn5pNrPCUYz
- SzRyVmF9zuog==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,487,1583222400"; 
-   d="scan'208";a="313797666"
-Received: from chenyu-office.sh.intel.com ([10.239.158.173])
-  by FMSMGA003.fm.intel.com with ESMTP; 07 Jun 2020 23:52:25 -0700
-Date:   Mon, 8 Jun 2020 14:53:24 +0800
-From:   Chen Yu <yu.c.chen@intel.com>
-To:     Michal Miroslaw <mirq-linux@rere.qmqm.pl>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2][RFC] PM-runtime: add tracepoints to cover all
- usage_count changes
-Message-ID: <20200608065324.GA9018@chenyu-office.sh.intel.com>
-References: <cover.1591380524.git.yu.c.chen@intel.com>
- <6ce5c2d21758363b7c9a31187eda1787bc4a6160.1591380524.git.yu.c.chen@intel.com>
- <20200605193311.GB9553@qmqm.qmqm.pl>
- <20200606071459.GA1298@chenyu-office.sh.intel.com>
- <20200607045535.GD12913@qmqm.qmqm.pl>
+        Mon, 8 Jun 2020 02:53:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56244 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726929AbgFHGxI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 02:53:08 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68147C08C5C3;
+        Sun,  7 Jun 2020 23:53:08 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id r2so17421086ioo.4;
+        Sun, 07 Jun 2020 23:53:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=J7n7SjeAB90BEcrzPElTv6I73DAXjp+Cu0iwgMAiPUc=;
+        b=np4HWYG8n3V0PTL0Ue1cxqRR3IU/8t/jEP3KTZ9OxJg0/MiBSoDZC8rmoZFHz/flGZ
+         cfbzuwOM/CTEcgA9FZF08IhGGt+eQ88VNSDuq0r8SoyxBUsMbGoMQAUEDcIxiS27UatR
+         UpFJvBOSIJ7ETgF+hhL3xAUPHhvK0sjQ5u5c6f7qAYtkofz87Kath5leAmzbYNKwPSyW
+         coP1fENs/B5gcTDA6GF2DScAlj5gZGO+Ygv6Co05Rc35D/OrFaiYzbQES7rpp2cSNPxb
+         d6wSF2VUDGHvXGH3wQejv7aEBjR8HWjCf91W2Bo/FRu494LsJYbha1z1199JmHoV23z8
+         IbaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=J7n7SjeAB90BEcrzPElTv6I73DAXjp+Cu0iwgMAiPUc=;
+        b=ktV6KmnhtHUFjRvASAxn1XiAFsFqYAD23q44vcGQOAvHSPndfJi8d97vxQFj/Pd5dd
+         8W8Ci7V2HhVi2zHfNY3ZZ16qZ9YYAHL5pyy0UmpBUqliY/DhcGEg4WAJwubzYgDAI44D
+         nWE8qvNmZcsZz32Zf7g4k83BCDjCMi40ZIcsWVU/VkVCt+5ozWanq4d89vJX8SrojT+1
+         AuO6zB8bl1ASbn/MvtYudjl9DzbsUzkCpxQcl6UrQ03CCksOiTGSgfqeJv6vXUE1yEA6
+         ARpZaoHz+za3gfl+z2DyVv5tm9OnI2zyzzaRw9aYtRryfcz1r4298AljXHsxiZGBer02
+         uWlA==
+X-Gm-Message-State: AOAM532q81nfbCYQwEvCQNcA8VCPUGXg+8p1QZVNmjdaA5BqF/sUZjs/
+        htfQPxYw8kyOJ4M5f14B397Ln/UIFUznHE/0jI4=
+X-Google-Smtp-Source: ABdhPJwq/zLR1ycs1e5A5/QIjkyALxZ9JXyMe/FGPYXRbctdQgtgnz5ByB0ebLrnhatIKDuy5ODhKnnAJfJKQ97P4QE=
+X-Received: by 2002:a05:6638:406:: with SMTP id q6mr20880697jap.125.1591599187633;
+ Sun, 07 Jun 2020 23:53:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200607045535.GD12913@qmqm.qmqm.pl>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200608020557.31668-1-yanaijie@huawei.com> <20200608061502.GB17366@lst.de>
+ <CA+icZUUks4oJGJLhiRLTJTzyNxfsT_TZQ12MMvBVLXSaR8t0zA@mail.gmail.com>
+In-Reply-To: <CA+icZUUks4oJGJLhiRLTJTzyNxfsT_TZQ12MMvBVLXSaR8t0zA@mail.gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Mon, 8 Jun 2020 08:52:56 +0200
+Message-ID: <CA+icZUXg2H7a4BVLpPXiw2D5Xzpy=Nxj8OJyw96giDvjNuBt+w@mail.gmail.com>
+Subject: Re: [PATCH v4] block: Fix use-after-free in blkdev_get()
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jason Yan <yanaijie@huawei.com>, viro@zeniv.linux.org.uk,
+        axboe@kernel.dk, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        Ming Lei <ming.lei@redhat.com>, Jan Kara <jack@suse.cz>,
+        Hulk Robot <hulkci@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 07, 2020 at 06:55:35AM +0200, Michal Miroslaw wrote:
-> On Sat, Jun 06, 2020 at 03:14:59PM +0800, Chen Yu wrote:
-> > Hi,
-> > On Fri, Jun 05, 2020 at 09:33:11PM +0200, Michal Miroslaw wrote:
-> > > On Sat, Jun 06, 2020 at 03:05:52AM +0800, Chen Yu wrote:
-> > > > Commit d229290689ae ("PM-runtime: add tracepoints for usage_count changes")
-> > > > has added some tracepoints to monitor the change of runtime usage, and
-> > > > there is something to improve:
-> > > > 1. There are some places that adjust the usage count have not
-> > > >    been traced yet. For example, pm_runtime_get_noresume() and
-> > > >    pm_runtime_put_noidle()
-> > > > 2. The change of the usage count will not be tracked if decreased
-> > > >    from 1 to 0.
-> > > [...]
-> > > > @@ -1448,16 +1453,17 @@ EXPORT_SYMBOL_GPL(pm_runtime_forbid);
-> > > >   */
-> > > >  void pm_runtime_allow(struct device *dev)
-> > > >  {
-> > > > +	bool is_zero;
-> > > > +
-> > > >  	spin_lock_irq(&dev->power.lock);
-> > > >  	if (dev->power.runtime_auto)
-> > > >  		goto out;
-> > > >  
-> > > >  	dev->power.runtime_auto = true;
-> > > > -	if (atomic_dec_and_test(&dev->power.usage_count))
-> > > > +	is_zero = atomic_dec_and_test(&dev->power.usage_count);
-> > > > +	trace_rpm_usage_rcuidle(dev, RPM_AUTO | RPM_ASYNC);
-> > > > +	if (is_zero)
-> > > >  		rpm_idle(dev, RPM_AUTO | RPM_ASYNC);
-> > > > -	else
-> > > > -		trace_rpm_usage_rcuidle(dev, RPM_AUTO | RPM_ASYNC);
-> > > > -
-> > > [...]
-> > > 
-> > > IIRC, rpm_idle() has a tracepoint already.
-> > > 
-> > Yes, this is what I concerned previously. If someone
-> > want to track the change of usage_count, then he might
-> > have to enable both trace rpm_usage and rpm_idle so
-> > as to track the moment when the counter drops from 1 to
-> > 0. It might be more consistent if we only enable
-> > trace rpm_usage to track the whole process.
-> > > > @@ -1523,9 +1529,8 @@ static void update_autosuspend(struct device *dev, int old_delay, int old_use)
-> > > >  		/* If it used to be allowed then prevent it. */
-> > > >  		if (!old_use || old_delay >= 0) {
-> > > >  			atomic_inc(&dev->power.usage_count);
-> > > > -			rpm_resume(dev, 0);
-> > > > -		} else {
-> > > >  			trace_rpm_usage_rcuidle(dev, 0);
-> > > > +			rpm_resume(dev, 0);
-> > > >  		}
-> > > >  	}
-> > > [...]
-> > > 
-> > > This actually changes logic, so it doesn't match the patch description.
-> > > 
-> > This patch intends to adjust the logic to be consistent with
-> > the change of usage_counter, that is to say, only after the
-> > counter has been possibly modified, we record it. In current
-> > logic above, it tracks the usage count where the latter does
-> > not change.
-> 
-> I see now what you intended. I think it would be nice to put the idea
-> (that all usage changes be shown using rpm_usage even if included in
-> other trace points) into the commit message. Otherwise, looks ok.
+On Mon, Jun 8, 2020 at 8:47 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
 >
-Okay, will do in next version, thanks!
+> On Mon, Jun 8, 2020 at 8:18 AM Christoph Hellwig <hch@lst.de> wrote:
+> >
+> > Looks good,
+> >
+> > Reviewed-by: Christoph Hellwig <hch@lst.de>
+> >
+> > Can you dig into the history for a proper fixes tag?
+>
+> [ CC Dan ]
+>
+> Dan gave the hint for the Fixes: tag in reply to the first patch:
+>
+> > The Fixes tag is a good idea though:
+> >
+> > Fixes: 89e524c04fa9 ("loop: Fix mount(2) failure due to race with LOOP_SET_FD")
+>
+> > It broke last July.  Before that, we used to check if __blkdev_get()
+> > failed before dereferencing "bdev".
+>
 
-Chenyu
+Here is the Link.
+
+https://www.spinics.net/lists/linux-block/msg54825.html
+
+- Sedat -
