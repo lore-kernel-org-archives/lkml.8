@@ -2,110 +2,98 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD131C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F4FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:41:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDCBE20825
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:41:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="PZ+Q6kTz"
+	by mail.kernel.org (Postfix) with ESMTP id 128CA2076C
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:41:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729649AbgFHLlw (ORCPT
+        id S1729661AbgFHLlz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 07:41:52 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:39518 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729625AbgFHLlu (ORCPT
+        Mon, 8 Jun 2020 07:41:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44602 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729648AbgFHLlw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 07:41:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1591616510; x=1623152510;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=tzqFpBqYuNYdmIDQaxDJFoQHYQ6t1Uuo0vpOOKcI5WQ=;
-  b=PZ+Q6kTz48zAJLfcUAknrNBX9LRF0L55y47fpDTuURW2Zitl4ecywJyt
-   F7DXiliZU2Gnm6qYvplErftcN2yYJCQxiDFc3vQohdTDUbTWFqzw+/egC
-   LNP8U2AlqfnibRD4BQdTk2euUtcW/p6fQv5d/KFdAaFNW92Pf1kAEQjwL
-   M=;
-IronPort-SDR: xiFxRJogapcywc7OPAgfZIpUsq0I4f+zVXHXCtEhGJzFk+jPZ7boVra1W8mQr7X0C0Annpw+UI
- ViZjLVWoc8Eg==
-X-IronPort-AV: E=Sophos;i="5.73,487,1583193600"; 
-   d="scan'208";a="50569453"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-8cc5d68b.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 08 Jun 2020 11:41:47 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2b-8cc5d68b.us-west-2.amazon.com (Postfix) with ESMTPS id 25316A1DDC;
-        Mon,  8 Jun 2020 11:41:45 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 8 Jun 2020 11:41:44 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.53) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 8 Jun 2020 11:41:27 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
-        <foersleo@amazon.de>, <irogers@google.com>, <jolsa@redhat.com>,
-        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
-        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
-        <peterz@infradead.org>, <rdunlap@infradead.org>,
-        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
-        <sblbir@amazon.com>, <shakeelb@google.com>, <shuah@kernel.org>,
-        <sj38.park@gmail.com>, <snu@amazon.de>, <vbabka@suse.cz>,
-        <vdavydov.dev@gmail.com>, <yang.shi@linux.alibaba.com>,
-        <ying.huang@intel.com>, <david@redhat.com>,
-        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v15 01/14] mm/page_ext: Export lookup_page_ext() to GPL modules
-Date:   Mon, 8 Jun 2020 13:40:34 +0200
-Message-ID: <20200608114047.26589-2-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200608114047.26589-1-sjpark@amazon.com>
-References: <20200608114047.26589-1-sjpark@amazon.com>
+        Mon, 8 Jun 2020 07:41:52 -0400
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f23e:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75210C08C5C2;
+        Mon,  8 Jun 2020 04:41:51 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 04F81100A8787;
+        Mon,  8 Jun 2020 13:41:49 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 99FFD43A8E1; Mon,  8 Jun 2020 13:41:48 +0200 (CEST)
+Date:   Mon, 8 Jun 2020 13:41:48 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Scott Branden <sbranden@broadcom.com>,
+        Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org,
+        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        Martin Sperl <kernel@martin.sperl.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: Re: [PATCH v2] spi: bcm2835: Enable shared interrupt support
+Message-ID: <20200608114148.4bau4mdcvwgf25ut@wunner.de>
+References: <20200604212819.715-1-f.fainelli@gmail.com>
+ <142d48ae-2725-1368-3e11-658449662371@arm.com>
+ <20200605132037.GF5413@sirena.org.uk>
+ <2e371a32-fb52-03a2-82e4-5733d9f139cc@arm.com>
+ <06342e88-e130-ad7a-9f97-94f09156f868@arm.com>
+ <d3fe8b56-83ef-8ef0-bb05-11c7cb2419f8@gmail.com>
+ <a6f158e3-af51-01d9-331c-4bc8b6847abb@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.162.53]
-X-ClientProxiedBy: EX13D46UWB004.ant.amazon.com (10.43.161.204) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a6f158e3-af51-01d9-331c-4bc8b6847abb@arm.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+On Mon, Jun 08, 2020 at 12:11:11PM +0100, Robin Murphy wrote:
+> And all in code that has at least one obvious inefficiency left on
+> the table either way.
 
-This commit exports 'lookup_page_ext()' to GPL modules.  This will be
-used by DAMON.
+Care to submit a patch to overcome that inefficiency?
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
-Reviewed-by: Leonard Foerster <foersleo@amazon.de>
----
- mm/page_ext.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/mm/page_ext.c b/mm/page_ext.c
-index a3616f7a0e9e..9d802d01fcb5 100644
---- a/mm/page_ext.c
-+++ b/mm/page_ext.c
-@@ -131,6 +131,7 @@ struct page_ext *lookup_page_ext(const struct page *page)
- 					MAX_ORDER_NR_PAGES);
- 	return get_entry(base, index);
- }
-+EXPORT_SYMBOL_GPL(lookup_page_ext);
- 
- static int __init alloc_node_page_ext(int nid)
- {
--- 
-2.17.1
+> This thread truly epitomises Knuth's "premature optimisation" quote... ;)
 
+The thread came about because it can be determined at compile time
+whether the interrupt is going to be shared:
+
+On the BCM2835 (Raspberry Pi 1), CONFIG_ARCH_MULTI_V6 is set and this
+SoC doesn't have multiple bcm2835-spi instances, so no shared interrupt.
+
+The question is how to discern BCM2836/BCM2837 (Raspberry Pi 2/3), which
+do not have multiple instances, and BCM2711 (Raspberry Pi 4) which does.
+
+The Raspberry Pi Foundation compiles BCM2711 kernels with CONFIG_ARM_LPAE=y,
+but Florian considered that kludgy as a discriminator and opted for
+runtime-detection via the compatible string instead.  If you've got
+a better idea please come forward.
+
+Is "optimize shared IRQ support away if IS_ENABLED(CONFIG_ARCH_MULTI_V6),
+else leave it in" the best we can do?
+
+Thanks,
+
+Lukas
