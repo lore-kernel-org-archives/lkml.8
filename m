@@ -2,86 +2,108 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EAE3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5714CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 858C6206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:50:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F9C02063A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:50:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DUE6CJCs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729124AbgFHHto (ORCPT
+        id S1729174AbgFHHu2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 03:49:44 -0400
-Received: from lucky1.263xmail.com ([211.157.147.134]:44948 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729084AbgFHHtn (ORCPT
+        Mon, 8 Jun 2020 03:50:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36948 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729015AbgFHHu1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 03:49:43 -0400
-Received: from localhost (unknown [192.168.167.16])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 086B9B9334;
-        Mon,  8 Jun 2020 15:49:41 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-ABS-CHECKED: 0
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P760T139944219621120S1591602577688290_;
-        Mon, 08 Jun 2020 15:49:42 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <8c0c25071f237d33768625deda5c51f0>
-X-RL-SENDER: sugar.zhang@rock-chips.com
-X-SENDER: zxg@rock-chips.com
-X-LOGIN-NAME: sugar.zhang@rock-chips.com
-X-FST-TO: vkoul@kernel.org
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-X-System-Flag: 0
-From:   Sugar Zhang <sugar.zhang@rock-chips.com>
-To:     Vinod Koul <vkoul@kernel.org>, Heiko Stuebner <heiko@sntech.de>
-Cc:     linux-rockchip@lists.infradead.org,
-        Sugar Zhang <sugar.zhang@rock-chips.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1 04/13] ARM: dts: rk3036: Add 'arm,pl330-periph-burst' for dmac
-Date:   Mon,  8 Jun 2020 15:49:18 +0800
-Message-Id: <1591602567-43788-5-git-send-email-sugar.zhang@rock-chips.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1591602567-43788-1-git-send-email-sugar.zhang@rock-chips.com>
-References: <1591602567-43788-1-git-send-email-sugar.zhang@rock-chips.com>
+        Mon, 8 Jun 2020 03:50:27 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E12BC08C5C3;
+        Mon,  8 Jun 2020 00:50:27 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id g12so6331498pll.10;
+        Mon, 08 Jun 2020 00:50:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=2SDRj47TIcQ+035B16btGw9JgX2PM2llyh7Bt5PSkAc=;
+        b=DUE6CJCsfV5lsZLqnhTbnZDKE9RBia8ts1BhzxXxhw+a1UkiUPXZLy19H2pR94RUcM
+         uG+MVQZLRf2EX32EG2f9SpPw1zV2ry00QqqBwZVgyOh0Bs7+yoXr5X2rMF29tVx5YcOT
+         qsMSkjdtQ8WlrtoUHesigIw1z0369tx3DAO926ePhki++fENTKzkoif4UGS8InZpGkOV
+         QyiiiXl+o/u64Te+wUdR3lAC4k2Bsqn5AXhjlaS9WyPwYWXrNl7Q8dlxOnlQESFU+6nE
+         1sxO8drQ2hArhsPukiRAAQyTXzyAZrhebRKvf2fNqGV0HgF1zD44/vpK3xE5BVwKXeB1
+         eHYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=2SDRj47TIcQ+035B16btGw9JgX2PM2llyh7Bt5PSkAc=;
+        b=dxvFtjJGHKB37wnaCVsxXXLtsVjfBM5a4WovFb+f0keND8GexsalAqR1V27CljnEm5
+         ol9Q1NXwfO0W60PHWXVXvLvjFDBKse/mLzaOSKWymUgqLrSDhn81srjtSbux2ysvgjPF
+         pqlOEcRw9wV0Puqx/lFDXeOZH/16bIqyy79IkVtqneB4xDsy1UGgfpKhT6cwNAED+Ca9
+         mHnyFo2PESsU67+AqFtjl6SmTnZ5eQnmbh5QmLo08H0yt9kIHbZiDUl61Q/PTIyKUQrn
+         GpUpqZVzCs+R0LxFKaLY9pPZGh35482aKYuL4n02FWVuZUS6RvEr6g4801LXUzM0uA19
+         h1xQ==
+X-Gm-Message-State: AOAM533poA8atKAvOEyY+hEt25xR7On6ngzlsZgSEnmFS6pKe4BohbcO
+        8hUYq2DxiCpkE51cuJMysjY=
+X-Google-Smtp-Source: ABdhPJytUiIPyg5kOU+0HRELBYRudcnNwniblNnTPkhtuxqfHCsX+FHVu0AiRGI0AYx7rp6tgJL8Tw==
+X-Received: by 2002:a17:902:7297:: with SMTP id d23mr2919873pll.35.1591602626706;
+        Mon, 08 Jun 2020 00:50:26 -0700 (PDT)
+Received: from localhost ([43.224.245.180])
+        by smtp.gmail.com with ESMTPSA id c9sm5698333pfr.72.2020.06.08.00.50.25
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Jun 2020 00:50:25 -0700 (PDT)
+From:   Geliang Tang <geliangtang@gmail.com>
+To:     Mat Martineau <mathew.j.martineau@linux.intel.com>,
+        Matthieu Baerts <matthieu.baerts@tessares.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Geliang Tang <geliangtang@gmail.com>, netdev@vger.kernel.org,
+        mptcp@lists.01.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] mptcp: bugfix for RM_ADDR option parsing
+Date:   Mon,  8 Jun 2020 15:48:10 +0800
+Message-Id: <904e4ae90b94d679d9877d3c48bd277cb9b39f5f.1591601587.git.geliangtang@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch Add the quirk to specify to use burst transfer
-for better compatible and higher performance.
+In MPTCPOPT_RM_ADDR option parsing, the pointer "ptr" pointed to the
+"Subtype" octet, the pointer "ptr+1" pointed to the "Address ID" octet:
 
-Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
+  +-------+-------+---------------+
+  |Subtype|(resvd)|   Address ID  |
+  +-------+-------+---------------+
+  |               |
+ ptr            ptr+1
+
+We should set mp_opt->rm_id to the value of "ptr+1", not "ptr". This patch
+will fix this bug.
+
+Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 ---
+ net/mptcp/options.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
- arch/arm/boot/dts/rk3036.dtsi | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
-index d9a0c9a2..cfec7d6 100644
---- a/arch/arm/boot/dts/rk3036.dtsi
-+++ b/arch/arm/boot/dts/rk3036.dtsi
-@@ -67,6 +67,7 @@
- 				     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
- 			#dma-cells = <1>;
- 			arm,pl330-broken-no-flushp;
-++			arm,pl330-periph-burst;
- 			clocks = <&cru ACLK_DMAC2>;
- 			clock-names = "apb_pclk";
- 		};
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 01f1f4cf4902..490b92534afc 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -273,6 +273,8 @@ static void mptcp_parse_option(const struct sk_buff *skb,
+ 		if (opsize != TCPOLEN_MPTCP_RM_ADDR_BASE)
+ 			break;
+ 
++		ptr++;
++
+ 		mp_opt->rm_addr = 1;
+ 		mp_opt->rm_id = *ptr++;
+ 		pr_debug("RM_ADDR: id=%d", mp_opt->rm_id);
 -- 
-2.7.4
-
-
+2.17.1
 
