@@ -2,89 +2,75 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F85C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 19:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA9FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 20:00:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 714B0206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 19:58:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 586C4206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 20:00:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i9lBX/+X"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="f7Ee9XLZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726615AbgFHT6S (ORCPT
+        id S1726616AbgFHUAN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 15:58:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36738 "EHLO
+        Mon, 8 Jun 2020 16:00:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbgFHT6R (ORCPT
+        with ESMTP id S1726431AbgFHUAM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 15:58:17 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2314BC08C5C2;
-        Mon,  8 Jun 2020 12:58:17 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id l26so719393wme.3;
-        Mon, 08 Jun 2020 12:58:17 -0700 (PDT)
+        Mon, 8 Jun 2020 16:00:12 -0400
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C64C9C08C5C3
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 13:00:12 -0700 (PDT)
+Received: by mail-pf1-x42e.google.com with SMTP id x22so9017013pfn.3
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 13:00:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hdQaIlY7CCtvVuS9ppbF0BzHnZFr+mv1ZVx/h1Baqkk=;
-        b=i9lBX/+XoJVZ4smkO6RXjNuKvBeBSn7Jezy6IKlbX1vzVqHheo10kSfSIHx8hKrfNy
-         al3momOoRbDC/qO/NExvm5ij8QaHZP+qxrY85+7iDCCflNQkQZg+GxGlU0OG/WBD6n9N
-         hMHlAd3B4WPZe3FxPBwOX92MBq5DQVlV0YZ/wUQEhiPh6ghBqmUBROnYhApUugkxP8X7
-         Nbgl6pWLBWOTMeVJs84+sXpXhkfmS7nbuXTKQSy0/27MxFqc39p3j8IXWS2PPuwwbNvu
-         C5MHFDJuEuh83QQmyJvuGP0MmyJ0pfpoVzwlcCaG3coppPYlXTCyCvHHVK+Ll7zPJ++f
-         kuWw==
+        bh=oOAfGaCLyEUmL6SML8rpJlmgZSVIZCkEfuNXlz3UUno=;
+        b=f7Ee9XLZ/qoZncV84bKI+UlSMiA38ED5NpPzvnN/+cYHOas1fDpre0f9sncyvxVCkY
+         YACG1gQ9hr6+aZYWwiQDRgkxzqpU6CPbTjnWXzdw4gSH84vVzB26LnbFzzBiUw7ppthP
+         uvqq/+ixcFLYX/lhoJH+mlMrMY6fYycyB9DwWVA20a5Kwy9WOXCGdyzkD7eH548c/oTd
+         qfyeb2eVASZ5IkbIeVzpCvd3L0kw0tc0wHdnfU5+ufhZ1XfoF1VJvwT69PcgkdUBu9Nc
+         TS+6OerPHLNHfL/OwdJbCgexeHB1DnY72mO6Zt9a2KpIe/GtSn1uVfmb0nTcH3aM0tOz
+         OcFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=hdQaIlY7CCtvVuS9ppbF0BzHnZFr+mv1ZVx/h1Baqkk=;
-        b=RJuIWwvaaV+yj9bTH9gU8zkgVTiqgnuaQPNZgp/j9JNPmpYJ5hMRH1YLX9+5FsMDOx
-         E+vBTS3abV6G+fZs4f1X6YE9MzN8jbe+AkbAmJWl+5gY7qpp/ahx5BhVYnvbrzujXO14
-         aGrw131iqno0ybv33kwD4ie3dsCPSjmEK2Zjf97BCQzNwCKxjF2HyJnZWh037gWyRDrB
-         miQx8B/YsYEhczC4SD65r/VVNv+yr1cg+ff8Ne8AHl8KskAIyo8OOHqa6uTDmPREXlok
-         OJc0+J50+wB06fb0vVR4L1+Ot+HwmO4EvdwHmz5obDtpXGGH1wC9Nc0nFdR130eOOA7w
-         ZIRw==
-X-Gm-Message-State: AOAM5321CrGzQG5WXTMIevGvuB6ZUbJz/LYfZEDzdiukmTcRyNdSfSnW
-        6AbCZ2t8wRt1IJeAR3yOx78=
-X-Google-Smtp-Source: ABdhPJypEeqfejRUltyYbz5n5bW5+Ans7YR1WBmQV7ByI2tOOKYM8eGJckH5rGeMzXQrm13AkAWBIw==
-X-Received: by 2002:a7b:cbd9:: with SMTP id n25mr349108wmi.30.1591646295437;
-        Mon, 08 Jun 2020 12:58:15 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id e10sm782956wrn.11.2020.06.08.12.58.11
+        bh=oOAfGaCLyEUmL6SML8rpJlmgZSVIZCkEfuNXlz3UUno=;
+        b=Nk/pfZ9BsqLbiB4gwYbq4aYKK+Y9Ep5Hqvkzi1dGn+9+QHkH4DIVMJx4iOagoETCFe
+         LYc963QoVqDIRLPMnGB8KQ6io+VVpMFpyCIONmUCSukRoTDBZzmxBOVEUcGSAHZAG9d7
+         cnQnZ41mVS3F7C/QQRGNEZSHJB8wPsZtmCASa5ri6F3h1Ea7AL0nGenEfFHNcRRDCkmn
+         8v0/es0VblJpEkLUWh0u3NXQNoDYBEFIcmo2MGphind7hCHput3FyeWdzg3avhrFz7gr
+         5wDW5HFx7BzzkvcmSubzJo2HnME4HDL6wY95Gqziv1giEwNMMWo3lCeucOFzRRc1AhLT
+         +WlQ==
+X-Gm-Message-State: AOAM5308cUGpYWXVXz/bE3iaYaiyfMOeImGvG2aO4Jv0Fl8tSQnIqnuT
+        omB5kz3YLZW5xZsshybAg+wLLQ==
+X-Google-Smtp-Source: ABdhPJzmO8ZaQECGWYliMy3c7Gp9GaQH545GdTTqpojLKX/I2fkL6+a3GH9HaonlYGo87d64G1nz3w==
+X-Received: by 2002:a63:c407:: with SMTP id h7mr21097365pgd.174.1591646412020;
+        Mon, 08 Jun 2020 13:00:12 -0700 (PDT)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id x1sm7675474pfn.76.2020.06.08.13.00.10
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Jun 2020 12:58:14 -0700 (PDT)
-Subject: Re: [PATCH 1/9] dt-bindings: reset: Add a binding for the RPi
- Firmware USB reset
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
-        robh@kernel.org, mathias.nyman@linux.intel.com,
-        Eric Anholt <eric@anholt.net>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-usb@vger.kernel.org,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>
-Cc:     linux-kernel@vger.kernel.org, tim.gover@raspberrypi.org,
-        helgaas@kernel.org, lorenzo.pieralisi@arm.com,
-        Rob Herring <robh+dt@kernel.org>
-References: <20200608192701.18355-1-nsaenzjulienne@suse.de>
- <20200608192701.18355-2-nsaenzjulienne@suse.de>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <ffc9ec9e-bd1c-a8dd-8a68-a15bf95c919b@gmail.com>
-Date:   Mon, 8 Jun 2020 12:58:09 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
+        Mon, 08 Jun 2020 13:00:11 -0700 (PDT)
+Subject: Re: [PATCH 0/4] remove work.func
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     xiaoguang.wang@linux.alibaba.com
+References: <cover.1591637070.git.asml.silence@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <8092bb08-a6ef-a1b1-31e9-5a545304460b@kernel.dk>
+Date:   Mon, 8 Jun 2020 14:00:09 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200608192701.18355-2-nsaenzjulienne@suse.de>
+In-Reply-To: <cover.1591637070.git.asml.silence@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -93,67 +79,19 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 6/8/2020 12:26 PM, Nicolas Saenz Julienne wrote:
-> The firmware running on the RPi VideoCore can be used to reset and
-> initialize the board's xHCI controller. The reset controller is passed
-> to the PCI device through the DT, hence this binding.
+On 6/8/20 12:08 PM, Pavel Begunkov wrote:
+> As discussed, removing ->func from io_wq_work and moving
+> it into io-wq.
 > 
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> ---
->  .../arm/bcm/raspberrypi,bcm2835-firmware.yaml | 21 +++++++++++++++++++
->  1 file changed, 21 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
-> index b48ed875eb8e..8f9d0986c28f 100644
-> --- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
-> +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
-> @@ -39,6 +39,22 @@ properties:
->        - compatible
->        - "#clock-cells"
->  
-> +  usb-reset:
-> +    type: object
-> +
-> +    properties:
-> +      compatible:
-> +        const: raspberrypi,firmware-usb-reset
+> Pavel Begunkov (4):
+>   io_uring: don't derive close state from ->func
+>   io_uring: remove custom ->func handlers
+>   io_uring: don't arm a timeout through work.func
+>   io_wq: add per-wq work handler instead of per work
 
-I would make this less USB centric, even if this is the only consumer of
-the reset controller for now, there could, in premise be other blocks
-that require a reset (e.g.: V3D) that would involve going to the VPU
-firmware because of various requirements (security, register blocking etc.).
-
-> +
-> +      "#clock-cells":
-
-Did not you mean #reset-cells here?
-
-
-> +        const: 0
-> +        description: >
-> +          There is only one reset line available, so no need for cell decoding.
-> +
-> +    required:
-> +      - compatible
-> +      - "#reset-cells"
-> +
->      additionalProperties: false
->  
->  required:
-> @@ -55,5 +71,10 @@ examples:
->              compatible = "raspberrypi,firmware-clocks";
->              #clock-cells = <1>;
->          };
-> +
-> +        usb_reset: usb-reset {
-> +            compatible = "raspberrypi,firmware-usb-reset";
-> +            #reset-cells = <0>;
-> +        };
->      };
->  ...
-> 
+Thanks, this looks good and also nicely enable us to build on it to
+eliminate that extra overhead. I have applied it for 5.8.
 
 -- 
-Florian
+Jens Axboe
+
