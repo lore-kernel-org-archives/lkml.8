@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B38FC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F61C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:09:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A983208FE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:09:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD1CA20897
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:09:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591657783;
-	bh=lpX2+wur1t1gEsxx2uAp+EdCAOVN3IOjp4QxKK+GMt4=;
+	s=default; t=1591657787;
+	bh=0DE62OxpKPeTWcX/ynCTAsqhjaPry1kDxHTLBwogLd8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nrhK1E+v56dNnrld5rWEqhHu23PBuRApmne7QI4YXFfVYylcEJDRicHRQ0kT2IcRe
-	 zdSAAl2Ra4ntKdEOF8P1kaXGX0BJZQN3649T+Llp2SE9NY+7tl8wrk0FuUx4sr41YZ
-	 4HTf1UfxBdNaNorW6Fc94wKRT8GciGPrsOSr0cNE=
+	b=vZi0OXbIR/xyA+82S0rLWPjUDjm3nnFjyIpQoLNk53pmHIoJOygXSc8ETZ1/KAWxd
+	 3yl5dnMjaxnpDsVNlquXEyPb6uPvR92hGw2X7a2gaRPwVR87SwMg6Czo51QJFMMeTr
+	 9FIEqptQ202jdp7hDkxFYv5uFlxsQsZskfOaskt4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728487AbgFHXJm (ORCPT
+        id S1728507AbgFHXJp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:09:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54010 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:09:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728197AbgFHXIg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:08:36 -0400
+        id S1728207AbgFHXIj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:08:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBD0920890;
-        Mon,  8 Jun 2020 23:08:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6A8A2089D;
+        Mon,  8 Jun 2020 23:08:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657715;
-        bh=lpX2+wur1t1gEsxx2uAp+EdCAOVN3IOjp4QxKK+GMt4=;
+        s=default; t=1591657718;
+        bh=0DE62OxpKPeTWcX/ynCTAsqhjaPry1kDxHTLBwogLd8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cMFxXh4XMeVV2ADCYMblsHnOVD8Tt3lmB7/dOPaAEoubIf5/QAG8P7TH4gBlAuOVR
-         ImrkkZGr3V6b35EcXo2MhJFigkhfeiuK9OTV/aE0ds89JaFxJmWkgQj4cgRSiA/Ywh
-         yW93W5prYv0rYMiDVEJuFAaQK80MR9APcY6q8IHQ=
+        b=X7XKNKCZ7Oc2FXmlbg1rhnV7Agk45EMGsFGGDJO519jx5eKu/wz0B+LEOFnBo/FxA
+         tMmN23c9NJRnEujLBFuN9ktCWvjCiuqKttj4iVdZi9vjnYY+TMnrBG6qIOTF08n1KV
+         BptiVVBv9DY05RGX6+76ACm032BMb2jP3fI/yUZo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 110/274] media: imx: utils: fix media bus format enumeration
-Date:   Mon,  8 Jun 2020 19:03:23 -0400
-Message-Id: <20200608230607.3361041-110-sashal@kernel.org>
+Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Juxin Gao <gaojuxin@loongson.cn>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Sasha Levin <sashal@kernel.org>, linux-mips@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 112/274] MIPS: Make sparse_init() using top-down allocation
+Date:   Mon,  8 Jun 2020 19:03:25 -0400
+Message-Id: <20200608230607.3361041-112-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -62,125 +60,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Philipp Zabel <p.zabel@pengutronix.de>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-[ Upstream commit 1df2148fdfc036c9350d41ae81b09b3f8897c9b6 ]
+[ Upstream commit 269b3a9ac538c4ae87f84be640b9fa89914a2489 ]
 
-Iterate over all media bus formats, not just over the first format in
-each imx_media_pixfmt entry.
+In the current code, if CONFIG_SWIOTLB is set, when failed to get IO TLB
+memory from the low pages by plat_swiotlb_setup(), it may lead to the boot
+process failed with kernel panic.
 
-Before:
+(1) On the Loongson and SiByte platform
+arch/mips/loongson64/dma.c
+arch/mips/sibyte/common/dma.c
+void __init plat_swiotlb_setup(void)
+{
+	swiotlb_init(1);
+}
 
-  $ v4l2-ctl -d $(media-ctl -e ipu1_csi0) --list-subdev-mbus-codes 0
-  ioctl: VIDIOC_SUBDEV_ENUM_MBUS_CODE (pad=0)
-	0x2006: MEDIA_BUS_FMT_UYVY8_2X8
-	0x2008: MEDIA_BUS_FMT_YUYV8_2X8
-	0x1008: MEDIA_BUS_FMT_RGB565_2X8_LE
-	0x100a: MEDIA_BUS_FMT_RGB888_1X24
-	0x100d: MEDIA_BUS_FMT_ARGB8888_1X32
-	0x3001: MEDIA_BUS_FMT_SBGGR8_1X8
-	0x3013: MEDIA_BUS_FMT_SGBRG8_1X8
-	0x3002: MEDIA_BUS_FMT_SGRBG8_1X8
-	0x3014: MEDIA_BUS_FMT_SRGGB8_1X8
-	0x3007: MEDIA_BUS_FMT_SBGGR10_1X10
-	0x300e: MEDIA_BUS_FMT_SGBRG10_1X10
-	0x300a: MEDIA_BUS_FMT_SGRBG10_1X10
-	0x300f: MEDIA_BUS_FMT_SRGGB10_1X10
-	0x2001: MEDIA_BUS_FMT_Y8_1X8
-	0x200a: MEDIA_BUS_FMT_Y10_1X10
+kernel/dma/swiotlb.c
+void  __init
+swiotlb_init(int verbose)
+{
+...
+	vstart = memblock_alloc_low(PAGE_ALIGN(bytes), PAGE_SIZE);
+	if (vstart && !swiotlb_init_with_tbl(vstart, io_tlb_nslabs, verbose))
+		return;
+...
+	pr_warn("Cannot allocate buffer");
+	no_iotlb_memory = true;
+}
 
-After:
+phys_addr_t swiotlb_tbl_map_single()
+{
+...
+	if (no_iotlb_memory)
+		panic("Can not allocate SWIOTLB buffer earlier ...");
+...
+}
 
-  $ v4l2-ctl -d $(media-ctl -e ipu1_csi0) --list-subdev-mbus-codes 0
-  ioctl: VIDIOC_SUBDEV_ENUM_MBUS_CODE (pad=0)
-	0x2006: MEDIA_BUS_FMT_UYVY8_2X8
-	0x200f: MEDIA_BUS_FMT_UYVY8_1X16
-	0x2008: MEDIA_BUS_FMT_YUYV8_2X8
-	0x2011: MEDIA_BUS_FMT_YUYV8_1X16
-	0x1008: MEDIA_BUS_FMT_RGB565_2X8_LE
-	0x100a: MEDIA_BUS_FMT_RGB888_1X24
-	0x100c: MEDIA_BUS_FMT_RGB888_2X12_LE
-	0x100d: MEDIA_BUS_FMT_ARGB8888_1X32
-	0x3001: MEDIA_BUS_FMT_SBGGR8_1X8
-	0x3013: MEDIA_BUS_FMT_SGBRG8_1X8
-	0x3002: MEDIA_BUS_FMT_SGRBG8_1X8
-	0x3014: MEDIA_BUS_FMT_SRGGB8_1X8
-	0x3007: MEDIA_BUS_FMT_SBGGR10_1X10
-	0x3008: MEDIA_BUS_FMT_SBGGR12_1X12
-	0x3019: MEDIA_BUS_FMT_SBGGR14_1X14
-	0x301d: MEDIA_BUS_FMT_SBGGR16_1X16
-	0x300e: MEDIA_BUS_FMT_SGBRG10_1X10
-	0x3010: MEDIA_BUS_FMT_SGBRG12_1X12
-	0x301a: MEDIA_BUS_FMT_SGBRG14_1X14
-	0x301e: MEDIA_BUS_FMT_SGBRG16_1X16
-	0x300a: MEDIA_BUS_FMT_SGRBG10_1X10
-	0x3011: MEDIA_BUS_FMT_SGRBG12_1X12
-	0x301b: MEDIA_BUS_FMT_SGRBG14_1X14
-	0x301f: MEDIA_BUS_FMT_SGRBG16_1X16
-	0x300f: MEDIA_BUS_FMT_SRGGB10_1X10
-	0x3012: MEDIA_BUS_FMT_SRGGB12_1X12
-	0x301c: MEDIA_BUS_FMT_SRGGB14_1X14
-	0x3020: MEDIA_BUS_FMT_SRGGB16_1X16
-	0x2001: MEDIA_BUS_FMT_Y8_1X8
-	0x200a: MEDIA_BUS_FMT_Y10_1X10
-	0x2013: MEDIA_BUS_FMT_Y12_1X12
+(2) On the Cavium OCTEON platform
+arch/mips/cavium-octeon/dma-octeon.c
+void __init plat_swiotlb_setup(void)
+{
+...
+	octeon_swiotlb = memblock_alloc_low(swiotlbsize, PAGE_SIZE);
+	if (!octeon_swiotlb)
+		panic("%s: Failed to allocate %zu bytes align=%lx\n",
+		      __func__, swiotlbsize, PAGE_SIZE);
+...
+}
 
-[laurent.pinchart@ideasonboard.com: Decrement index to replace loop counter k]
-[laurent.pinchart@ideasonboard.com: Return directly from within the loops]
+Because IO_TLB_DEFAULT_SIZE is 64M, if the rest size of low memory is less
+than 64M when call plat_swiotlb_setup(), we can easily reproduce the panic
+case.
 
-Fixes: e130291212df5 ("[media] media: Add i.MX media core driver")
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+In order to reduce the possibility of kernel panic when failed to get IO
+TLB memory under CONFIG_SWIOTLB, it is better to allocate low memory as
+small as possible before plat_swiotlb_setup(), so make sparse_init() using
+top-down allocation.
+
+Reported-by: Juxin Gao <gaojuxin@loongson.cn>
+Co-developed-by: Juxin Gao <gaojuxin@loongson.cn>
+Signed-off-by: Juxin Gao <gaojuxin@loongson.cn>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/media/imx/imx-media-utils.c | 22 +++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
+ arch/mips/kernel/setup.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/staging/media/imx/imx-media-utils.c b/drivers/staging/media/imx/imx-media-utils.c
-index 39469031e510..00a71f01786c 100644
---- a/drivers/staging/media/imx/imx-media-utils.c
-+++ b/drivers/staging/media/imx/imx-media-utils.c
-@@ -269,6 +269,7 @@ static int enum_format(u32 *fourcc, u32 *code, u32 index,
- 	for (i = 0; i < ARRAY_SIZE(pixel_formats); i++) {
- 		const struct imx_media_pixfmt *fmt = &pixel_formats[i];
- 		enum codespace_sel fmt_cs_sel;
-+		unsigned int j;
- 
- 		fmt_cs_sel = (fmt->cs == IPUV3_COLORSPACE_YUV) ?
- 			CS_SEL_YUV : CS_SEL_RGB;
-@@ -278,15 +279,24 @@ static int enum_format(u32 *fourcc, u32 *code, u32 index,
- 		    (!allow_bayer && fmt->bayer))
- 			continue;
- 
--		if (index == 0) {
--			if (fourcc)
--				*fourcc = fmt->fourcc;
--			if (code)
--				*code = fmt->codes[0];
-+		if (fourcc && index == 0) {
-+			*fourcc = fmt->fourcc;
- 			return 0;
- 		}
- 
--		index--;
-+		if (!code) {
-+			index--;
-+			continue;
-+		}
+diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
+index 10bef8f78e7c..573509e0f2d4 100644
+--- a/arch/mips/kernel/setup.c
++++ b/arch/mips/kernel/setup.c
+@@ -702,7 +702,17 @@ static void __init arch_mem_init(char **cmdline_p)
+ 		memblock_reserve(crashk_res.start, resource_size(&crashk_res));
+ #endif
+ 	device_tree_init();
 +
-+		for (j = 0; j < ARRAY_SIZE(fmt->codes) && fmt->codes[j]; j++) {
-+			if (index == 0) {
-+				*code = fmt->codes[j];
-+				return 0;
-+			}
++	/*
++	 * In order to reduce the possibility of kernel panic when failed to
++	 * get IO TLB memory under CONFIG_SWIOTLB, it is better to allocate
++	 * low memory as small as possible before plat_swiotlb_setup(), so
++	 * make sparse_init() using top-down allocation.
++	 */
++	memblock_set_bottom_up(false);
+ 	sparse_init();
++	memblock_set_bottom_up(true);
 +
-+			index--;
-+		}
- 	}
+ 	plat_swiotlb_setup();
  
- 	return -EINVAL;
+ 	dma_contiguous_reserve(PFN_PHYS(max_low_pfn));
 -- 
 2.25.1
 
