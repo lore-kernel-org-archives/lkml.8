@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12445C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A83BCC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:34:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6087206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:34:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F515206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:34:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662879;
-	bh=kvu8gkuaANniHdNAzUeEpmxkiBaA2Cxw0Kev4T4ncjk=;
+	s=default; t=1591662884;
+	bh=++VqZKrYqAQ5Dck8ZaiFp4nu/4KSfacu9BrCWRmdi6M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UvC/a2W0GwU62iCOHxjp2x6xgEWMF6oc/syjMRHLhT9jpD4VubqBsMOeQUN9cl8Zk
-	 kZPCBTcouZmUQBwkXtgCVg5hqdz3VeCX/Ri254wSPp8e88K2vNTVmqPJWRDisi2Umd
-	 4b+6Za3fCyKoWykWYchPzNMPU1BWeV+iZsyOkxh0=
+	b=BKgknDN4KkGsAYj/jKSmmRD3OhH2/aW9Cy25tPFWpA5JDSFFehQ7N9arFkgDBKv2/
+	 NjKe65EYHuUDHzYsHC47etlkg21MTSv8GqDFJlbn3XN1Ycaba6AvvczdXpAgFedwWB
+	 vOpN1wuwgKc1IBaVYx7bEqjKjCjB56WD5wK9Iwbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730847AbgFIAeh (ORCPT
+        id S1733138AbgFIAem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:34:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34902 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:34:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728984AbgFHXOf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:14:35 -0400
+        id S1729839AbgFHXOe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:14:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A404D21655;
-        Mon,  8 Jun 2020 23:14:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98EE321534;
+        Mon,  8 Jun 2020 23:14:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658075;
-        bh=kvu8gkuaANniHdNAzUeEpmxkiBaA2Cxw0Kev4T4ncjk=;
+        s=default; t=1591658074;
+        bh=++VqZKrYqAQ5Dck8ZaiFp4nu/4KSfacu9BrCWRmdi6M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yP5Q2lTu6d08bOsd/wg8xDK60Q9jMm160nRWRit0jfKjqGEijTCiIk5Q8Mb6mnwMB
-         Y6Y4LZe9iPsiFEFnjM6fgABHW6tngJJcx98nY+iFZNs7Pi+D2c7+PDmYJFpG5RtD28
-         gDRVUpgVcN7fqJu95AOxoqVoPDuZ5M0Po2RkJcew=
+        b=vQ9SZpZYHC5JbX9zkT9/3SEg+o4GJwK3KwdGJDKAZvHshXGZFEHHne6BC/9gUqcvL
+         zBTGNw7IDwmFBxI4qd+qJJb5WAP/cDgrBUnEoMF0ugJOmiwdv9CAV3ale7zSeaw8cp
+         IokuidQsgg+ayItUUlPFyHXeD/93xSLGQxfTbKmE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Leon Romanovsky <leon@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.6 120/606] x86/apic: Move TSC deadline timer debug printk
-Date:   Mon,  8 Jun 2020 19:04:05 -0400
-Message-Id: <20200608231211.3363633-120-sashal@kernel.org>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 119/606] selftests: fix kvm relocatable native/cross builds and installs
+Date:   Mon,  8 Jun 2020 19:04:04 -0400
+Message-Id: <20200608231211.3363633-119-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -59,130 +59,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Shuah Khan <skhan@linuxfoundation.org>
 
-[ Upstream commit c84cb3735fd53c91101ccdb191f2e3331a9262cb ]
+[ Upstream commit 66d69e081b526b6a6031f0d3ca8ddff71e5707a5 ]
 
-Leon reported that the printk_once() in __setup_APIC_LVTT() triggers a
-lockdep splat due to a lock order violation between hrtimer_base::lock and
-console_sem, when the 'once' condition is reset via
-/sys/kernel/debug/clear_warn_once after boot.
+kvm test Makefile doesn't fully support cross-builds and installs.
+UNAME_M = $(shell uname -m) variable is used to define the target
+programs and libraries to be built from arch specific sources in
+sub-directories.
 
-The initial printk cannot trigger this because that happens during boot
-when the local APIC timer is set up on the boot CPU.
+For cross-builds to work, UNAME_M has to map to ARCH and arch specific
+directories and targets in this Makefile.
 
-Prevent it by moving the printk to a place which is guaranteed to be only
-called once during boot.
+UNAME_M variable to used to run the compiles pointing to the right arch
+directories and build the right targets for these supported architectures.
 
-Mark the deadline timer check related functions and data __init while at
-it.
+TEST_GEN_PROGS and LIBKVM are set using UNAME_M variable.
+LINUX_TOOL_ARCH_INCLUDE is set using ARCH variable.
 
-Reported-by: Leon Romanovsky <leon@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/87y2qhoshi.fsf@nanos.tec.linutronix.de
+x86_64 targets are named to include x86_64 as a suffix and directories
+for includes are in x86_64 sub-directory. s390x and aarch64 follow the
+same convention. "uname -m" doesn't result in the correct mapping for
+s390x and aarch64. Fix it to set UNAME_M correctly for s390x and aarch64
+cross-builds.
+
+In addition, Makefile doesn't create arch sub-directories in the case of
+relocatable builds and test programs under s390x and x86_64 directories
+fail to build. This is a problem for native and cross-builds. Fix it to
+create all necessary directories keying off of TEST_GEN_PROGS.
+
+The following use-cases work with this change:
+
+Native x86_64:
+make O=/tmp/kselftest -C tools/testing/selftests TARGETS=kvm install \
+ INSTALL_PATH=$HOME/x86_64
+
+arm64 cross-build:
+make O=$HOME/arm64_build/ ARCH=arm64 HOSTCC=gcc \
+	CROSS_COMPILE=aarch64-linux-gnu- defconfig
+
+make O=$HOME/arm64_build/ ARCH=arm64 HOSTCC=gcc \
+	CROSS_COMPILE=aarch64-linux-gnu- all
+
+make kselftest-install TARGETS=kvm O=$HOME/arm64_build ARCH=arm64 \
+	HOSTCC=gcc CROSS_COMPILE=aarch64-linux-gnu-
+
+s390x cross-build:
+make O=$HOME/s390x_build/ ARCH=s390 HOSTCC=gcc \
+	CROSS_COMPILE=s390x-linux-gnu- defconfig
+
+make O=$HOME/s390x_build/ ARCH=s390 HOSTCC=gcc \
+	CROSS_COMPILE=s390x-linux-gnu- all
+
+make kselftest-install TARGETS=kvm O=$HOME/s390x_build/ ARCH=s390 \
+	HOSTCC=gcc CROSS_COMPILE=s390x-linux-gnu- all
+
+No regressions in the following use-cases:
+make -C tools/testing/selftests TARGETS=kvm
+make kselftest-all TARGETS=kvm
+
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/apic/apic.c | 27 ++++++++++++++-------------
- 1 file changed, 14 insertions(+), 13 deletions(-)
+ tools/testing/selftests/kvm/Makefile | 29 +++++++++++++++++++++++++++-
+ 1 file changed, 28 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index 5f973fed3c9f..e289722b04f6 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -352,8 +352,6 @@ static void __setup_APIC_LVTT(unsigned int clocks, int oneshot, int irqen)
- 		 * According to Intel, MFENCE can do the serialization here.
- 		 */
- 		asm volatile("mfence" : : : "memory");
--
--		printk_once(KERN_DEBUG "TSC deadline timer enabled\n");
- 		return;
- 	}
+diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
+index d91c53b726e6..75dec268787f 100644
+--- a/tools/testing/selftests/kvm/Makefile
++++ b/tools/testing/selftests/kvm/Makefile
+@@ -5,8 +5,34 @@ all:
  
-@@ -552,7 +550,7 @@ static DEFINE_PER_CPU(struct clock_event_device, lapic_events);
- #define DEADLINE_MODEL_MATCH_REV(model, rev)	\
- 	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, (unsigned long)rev }
+ top_srcdir = ../../../..
+ KSFT_KHDR_INSTALL := 1
++
++# For cross-builds to work, UNAME_M has to map to ARCH and arch specific
++# directories and targets in this Makefile. "uname -m" doesn't map to
++# arch specific sub-directory names.
++#
++# UNAME_M variable to used to run the compiles pointing to the right arch
++# directories and build the right targets for these supported architectures.
++#
++# TEST_GEN_PROGS and LIBKVM are set using UNAME_M variable.
++# LINUX_TOOL_ARCH_INCLUDE is set using ARCH variable.
++#
++# x86_64 targets are named to include x86_64 as a suffix and directories
++# for includes are in x86_64 sub-directory. s390x and aarch64 follow the
++# same convention. "uname -m" doesn't result in the correct mapping for
++# s390x and aarch64.
++#
++# No change necessary for x86_64
+ UNAME_M := $(shell uname -m)
  
--static u32 hsx_deadline_rev(void)
-+static __init u32 hsx_deadline_rev(void)
- {
- 	switch (boot_cpu_data.x86_stepping) {
- 	case 0x02: return 0x3a; /* EP */
-@@ -562,7 +560,7 @@ static u32 hsx_deadline_rev(void)
- 	return ~0U;
- }
++# Set UNAME_M for arm64 compile/install to work
++ifeq ($(ARCH),arm64)
++	UNAME_M := aarch64
++endif
++# Set UNAME_M s390x compile/install to work
++ifeq ($(ARCH),s390)
++	UNAME_M := s390x
++endif
++
+ LIBKVM = lib/assert.c lib/elf.c lib/io.c lib/kvm_util.c lib/sparsebit.c
+ LIBKVM_x86_64 = lib/x86_64/processor.c lib/x86_64/vmx.c lib/x86_64/svm.c lib/x86_64/ucall.c
+ LIBKVM_aarch64 = lib/aarch64/processor.c lib/aarch64/ucall.c
+@@ -47,7 +73,7 @@ LIBKVM += $(LIBKVM_$(UNAME_M))
+ INSTALL_HDR_PATH = $(top_srcdir)/usr
+ LINUX_HDR_PATH = $(INSTALL_HDR_PATH)/include/
+ LINUX_TOOL_INCLUDE = $(top_srcdir)/tools/include
+-LINUX_TOOL_ARCH_INCLUDE = $(top_srcdir)/tools/arch/x86/include
++LINUX_TOOL_ARCH_INCLUDE = $(top_srcdir)/tools/arch/$(ARCH)/include
+ CFLAGS += -Wall -Wstrict-prototypes -Wuninitialized -O2 -g -std=gnu99 \
+ 	-fno-stack-protector -fno-PIE -I$(LINUX_TOOL_INCLUDE) \
+ 	-I$(LINUX_TOOL_ARCH_INCLUDE) -I$(LINUX_HDR_PATH) -Iinclude \
+@@ -78,6 +104,7 @@ $(LIBKVM_OBJ): $(OUTPUT)/%.o: %.c
+ $(OUTPUT)/libkvm.a: $(LIBKVM_OBJ)
+ 	$(AR) crs $@ $^
  
--static u32 bdx_deadline_rev(void)
-+static __init u32 bdx_deadline_rev(void)
- {
- 	switch (boot_cpu_data.x86_stepping) {
- 	case 0x02: return 0x00000011;
-@@ -574,7 +572,7 @@ static u32 bdx_deadline_rev(void)
- 	return ~0U;
- }
++x := $(shell mkdir -p $(sort $(dir $(TEST_GEN_PROGS))))
+ all: $(STATIC_LIBS)
+ $(TEST_GEN_PROGS): $(STATIC_LIBS)
  
--static u32 skx_deadline_rev(void)
-+static __init u32 skx_deadline_rev(void)
- {
- 	switch (boot_cpu_data.x86_stepping) {
- 	case 0x03: return 0x01000136;
-@@ -587,7 +585,7 @@ static u32 skx_deadline_rev(void)
- 	return ~0U;
- }
- 
--static const struct x86_cpu_id deadline_match[] = {
-+static const struct x86_cpu_id deadline_match[] __initconst = {
- 	DEADLINE_MODEL_MATCH_FUNC( INTEL_FAM6_HASWELL_X,	hsx_deadline_rev),
- 	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_BROADWELL_X,	0x0b000020),
- 	DEADLINE_MODEL_MATCH_FUNC( INTEL_FAM6_BROADWELL_D,	bdx_deadline_rev),
-@@ -609,18 +607,19 @@ static const struct x86_cpu_id deadline_match[] = {
- 	{},
- };
- 
--static void apic_check_deadline_errata(void)
-+static __init bool apic_validate_deadline_timer(void)
- {
- 	const struct x86_cpu_id *m;
- 	u32 rev;
- 
--	if (!boot_cpu_has(X86_FEATURE_TSC_DEADLINE_TIMER) ||
--	    boot_cpu_has(X86_FEATURE_HYPERVISOR))
--		return;
-+	if (!boot_cpu_has(X86_FEATURE_TSC_DEADLINE_TIMER))
-+		return false;
-+	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
-+		return true;
- 
- 	m = x86_match_cpu(deadline_match);
- 	if (!m)
--		return;
-+		return true;
- 
- 	/*
- 	 * Function pointers will have the MSB set due to address layout,
-@@ -632,11 +631,12 @@ static void apic_check_deadline_errata(void)
- 		rev = (u32)m->driver_data;
- 
- 	if (boot_cpu_data.microcode >= rev)
--		return;
-+		return true;
- 
- 	setup_clear_cpu_cap(X86_FEATURE_TSC_DEADLINE_TIMER);
- 	pr_err(FW_BUG "TSC_DEADLINE disabled due to Errata; "
- 	       "please update microcode to version: 0x%x (or later)\n", rev);
-+	return false;
- }
- 
- /*
-@@ -2098,7 +2098,8 @@ void __init init_apic_mappings(void)
- {
- 	unsigned int new_apicid;
- 
--	apic_check_deadline_errata();
-+	if (apic_validate_deadline_timer())
-+		pr_debug("TSC deadline timer available\n");
- 
- 	if (x2apic_mode) {
- 		boot_cpu_physical_apicid = read_apic_id();
 -- 
 2.25.1
 
