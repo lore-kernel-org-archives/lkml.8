@@ -6,64 +6,77 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE019C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 20:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1DD9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 20:05:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3F6F20760
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 20:05:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 939CB206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 20:05:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591646734;
-	bh=qNznkMvTDeK9huF7Jpwu0P4DSnqTVtGEO2Gct3OTSUw=;
+	s=default; t=1591646738;
+	bh=aq3IuTPH0A+V/G+c+5zjiRNFi/+M1aSNJBD1yGrnDY4=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=kgmDxwpbGEFLV0nUFaRkOHZdzxTANNx2/afAOs4nXq3Nq3YEgVMsVK9NlluS9cmRq
-	 Q5ClRbXkNi4LE+pyoQ9IespmI7OEwWnZVIg4s6YmJDT/qKIBBSDnMKRRuqvwYARD3w
-	 22qjzQ7zwBUmKpV2dpl3eUGtXCKePL1Fl4ixzMso=
+	b=qJk9JPkmiSdtPxwh9Ig+zXHC2kz4eVY0cCze+ZGSZGpPRTKuD0ZD4TEDsoCa5WW7X
+	 N7jtfX7JKBS247iU8QDgh+hm0OcPHx83kxRiM9pJza+xhFTuIOKgPW8CSQDVsmhKqf
+	 +JMUnVm7Qkyfm9fuixU7bpwqAnL1BG61Afe1TKh8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbgFHUFb (ORCPT
+        id S1726785AbgFHUFg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 16:05:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60354 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 16:05:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726743AbgFHUFZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 16:05:25 -0400
-Subject: Re: [GIT PULL] rpmsg updates for v5.8
+        id S1726750AbgFHUF0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 16:05:26 -0400
+Subject: Re: [GIT PULL] remoteproc updates for v5.8
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591646725;
-        bh=qNznkMvTDeK9huF7Jpwu0P4DSnqTVtGEO2Gct3OTSUw=;
+        s=default; t=1591646726;
+        bh=aq3IuTPH0A+V/G+c+5zjiRNFi/+M1aSNJBD1yGrnDY4=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=qeu9pqCqmmWZn3e9UMovBndbh9CWFFi1bqgMo1k0t/w1guXOb1TDVSdj+pS1TRBWb
-         Kw8AiMNtGaKA7b3MRmmguU5ru06YgqBubfsZdZxkfyBRp3gpCBS1TLAJtvM+MxUw+6
-         D151YnnzHSl6WSiELYGaVxTSFPh3g0GhkpSTFUn8=
+        b=VMEyFv2md7PZH3F5WFni9PG5TD6N0PWLV+xgds6xU+nkyPRuMn41Y+cLxDdHBvld4
+         /7wx74XQJtH7D1fw5LOAGuVwbk1QR7wxaysc6pLvIqByB+Pl0zFIRpDBd80QpAdBt6
+         1/VpzDvZjnIW8iwkX059WRwZ1xQrAc/D8X97VxXo=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200608182856.2302518-1-bjorn.andersson@linaro.org>
-References: <20200608182856.2302518-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20200608183005.2302840-1-bjorn.andersson@linaro.org>
+References: <20200608183005.2302840-1-bjorn.andersson@linaro.org>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200608182856.2302518-1-bjorn.andersson@linaro.org>
+X-PR-Tracked-Message-Id: <20200608183005.2302840-1-bjorn.andersson@linaro.org>
 X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/andersson/remoteproc.git
- tags/rpmsg-v5.8
-X-PR-Tracked-Commit-Id: 4f05fc33bebdc7d69259c412dd21d09751827dbd
+ tags/rproc-v5.8
+X-PR-Tracked-Commit-Id: 7dcef3988eedbfb40e7e95a821966a029a5a465b
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: d26a42a9614083413e778832a6efbdf0038c3bff
-Message-Id: <159164672511.26583.12607767880488664875.pr-tracker-bot@kernel.org>
-Date:   Mon, 08 Jun 2020 20:05:25 +0000
+X-PR-Merge-Commit-Id: abfbb29297c27e3f101f348dc9e467b0fe70f919
+Message-Id: <159164672625.26583.11071908518468082884.pr-tracker-bot@kernel.org>
+Date:   Mon, 08 Jun 2020 20:05:26 +0000
 To:     Bjorn Andersson <bjorn.andersson@linaro.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         Ohad Ben-Cohen <ohad@wizery.com>,
         linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Clement Leger <cleger@kalray.eu>,
+        Siddharth Gupta <sidgup@codeaurora.org>,
+        Suman Anna <s-anna@ti.com>, Alex Elder <elder@linaro.org>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
         "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        Wang Wenhu <wenhu.wang@vivo.com>
+        Loic Pallardy <loic.pallardy@st.com>,
+        Rishabh Bhatnagar <rishabhb@codeaurora.org>,
+        Sivaprakash Murugesan <sivaprak@codeaurora.org>,
+        Tero Kristo <t-kristo@ti.com>,
+        Wei Yongjun <weiyongjun1@huawei.com>,
+        Yangtao Li <tiny.windzz@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon,  8 Jun 2020 11:28:56 -0700:
+The pull request you sent on Mon,  8 Jun 2020 11:30:05 -0700:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/andersson/remoteproc.git tags/rpmsg-v5.8
+> https://git.kernel.org/pub/scm/linux/kernel/git/andersson/remoteproc.git tags/rproc-v5.8
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/d26a42a9614083413e778832a6efbdf0038c3bff
+https://git.kernel.org/torvalds/c/abfbb29297c27e3f101f348dc9e467b0fe70f919
 
 Thank you!
 
