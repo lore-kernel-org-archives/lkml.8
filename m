@@ -2,137 +2,139 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=FAKE_REPLY_C,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22544C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 15:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F012C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 15:01:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03F60206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 15:01:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13A59206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 15:01:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730203AbgFHPB3 (ORCPT
+        id S1730193AbgFHPBY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 11:01:29 -0400
-Received: from mga14.intel.com ([192.55.52.115]:19233 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730113AbgFHPBU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 11:01:24 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:42159 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730161AbgFHPBU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 8 Jun 2020 11:01:20 -0400
-IronPort-SDR: QEWYMjpttx1VENSjcq+DFJEfd4pFq2g6cuv9uO3Akuzp///EGgWAL8dLJ8EjP+E8VJfzCRmLrm
- p2ZllQ/o4xbA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2020 08:01:17 -0700
-IronPort-SDR: qk19wMuB5NTP1uhyGuehwhAT0ySMHmi+z3MF99ChcbZ2MX6hiD8ivvEKHQyNffbsw5Uvs3gXmx
- MmWyMS0KOLAQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,487,1583222400"; 
-   d="scan'208";a="472714449"
-Received: from xsang-optiplex-9020.sh.intel.com (HELO xsang-OptiPlex-9020) ([10.239.159.140])
-  by fmsmga005.fm.intel.com with ESMTP; 08 Jun 2020 08:01:14 -0700
-Date:   Mon, 8 Jun 2020 23:12:47 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Michael Walle <michael@walle.cc>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     kbuild-all@lists.01.org, Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v4 03/11] irqchip: add sl28cpld interrupt controller
- support
-Message-ID: <20200608151247.GC31689@xsang-OptiPlex-9020>
+Received: by mail-lf1-f67.google.com with SMTP id x27so10399819lfg.9
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 08:01:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=i3uqReldNyB0HkYkJlYcEfBw/J6TVeoQE4OBnMgY2IY=;
+        b=pNLp5tQylCo58kUKazHE4J9sIJuhKaHjHh4r60BsioXGMA7Lh5Uz3F3FeBAM+Eg92N
+         hMz1cP8JX2u6YNdxuIF8rX9ABvkSN5nugZ04Ei9Zcc14IRd9B6QsAd69b1ZBsJsmEdBF
+         zTfCQK+ElHhZA44cnK6GkF7i44B190nbaTDSlJc55zwqC/1TTxkMXVK+vOlJwu2C3GD5
+         3s1fhuAXhmA8BZoBdJK5eMVQOE0aoE3uxMt+m4LA1/c/AVNbcX2bmO0C+4q5iPl0qYey
+         HBSmcwOqDtUAGDufUjTfg8bHVkte2RhoN/w59eZjr3IsqYfJT6p3+BzKkbTq+qOjNOou
+         azaw==
+X-Gm-Message-State: AOAM530VrV565CFOh92/ggQz5bOnW9CK306BS3psZaQ3hFKKfGINfl84
+        pIu5BmxZ66pjM87Qz3O/hN4=
+X-Google-Smtp-Source: ABdhPJyWHCy8/wE7hsGBSEHPGpnmsLlvNzzsjxBBdtrx0lMViIRDO2Nho7AT/kAF5ExIu70kR018cQ==
+X-Received: by 2002:a19:cb05:: with SMTP id b5mr12963374lfg.108.1591628478293;
+        Mon, 08 Jun 2020 08:01:18 -0700 (PDT)
+Received: from localhost.localdomain ([213.87.137.116])
+        by smtp.googlemail.com with ESMTPSA id r16sm279228ljn.106.2020.06.08.08.01.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jun 2020 08:01:17 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Julia Lawall <Julia.Lawall@lip6.fr>
+Cc:     Denis Efremov <efremov@linux.com>, linux-kernel@vger.kernel.org,
+        cocci@systeme.lip6.fr
+Subject: [PATCH v2 2/4] coccinelle: api: extend memdup_user rule with vmemdup_user()
+Date:   Mon,  8 Jun 2020 18:00:36 +0300
+Message-Id: <20200608150038.223747-3-efremov@linux.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200608150038.223747-1-efremov@linux.com>
+References: <20200608150038.223747-1-efremov@linux.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200604211039.12689-4-michael@walle.cc>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michael,
+Add vmemdup_user() transformations to the memdup_user.cocci rule.
+Commit 50fd2f298bef ("new primitive: vmemdup_user()") introduced
+vmemdup_user(). The function uses kvmalloc with GPF_USER flag.
 
-I love your patch! Perhaps something to improve:
-
-[auto build test WARNING on next-20200604]
-[cannot apply to gpio/for-next hwmon/hwmon-next ljones-mfd/for-mfd-next shawnguo/for-next v5.7 v5.7-rc7 v5.7-rc6 v5.7]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-
-url:    https://github.com/0day-ci/linux/commits/Michael-Walle/Add-support-for-Kontron-sl28cpld/20200605-051333
-base:    d4899e5542c15062cc55cac0ca99025bb64edc61
-:::::: branch date: 26 hours ago
-:::::: commit date: 26 hours ago
-compiler: gcc-9 (Debian 9.3.0-13) 9.3.0
-
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
-
-
-cppcheck warnings: (new ones prefixed by >>)
-
->> drivers/irqchip/irq-sl28cpld.c:56:10: warning: Checking if unsigned variable 'irq' is less than zero. [unsignedLessThanZero]
-    if (irq < 0)
-            ^
-
-# https://github.com/0day-ci/linux/commit/b13743c1f1a52746beaa071e5d008c84d59fbd7f
-git remote add linux-review https://github.com/0day-ci/linux
-git remote update linux-review
-git checkout b13743c1f1a52746beaa071e5d008c84d59fbd7f
-vim +/irq +56 drivers/irqchip/irq-sl28cpld.c
-
-b13743c1f1a527 Michael Walle 2020-06-04  35  
-b13743c1f1a527 Michael Walle 2020-06-04  36  static int sl28cpld_intc_probe(struct platform_device *pdev)
-b13743c1f1a527 Michael Walle 2020-06-04  37  {
-b13743c1f1a527 Michael Walle 2020-06-04  38  	struct device *dev = &pdev->dev;
-b13743c1f1a527 Michael Walle 2020-06-04  39  	struct sl28cpld_intc *irqchip;
-b13743c1f1a527 Michael Walle 2020-06-04  40  	unsigned int irq;
-b13743c1f1a527 Michael Walle 2020-06-04  41  	u32 base;
-b13743c1f1a527 Michael Walle 2020-06-04  42  	int ret;
-b13743c1f1a527 Michael Walle 2020-06-04  43  
-b13743c1f1a527 Michael Walle 2020-06-04  44  	if (!dev->parent)
-b13743c1f1a527 Michael Walle 2020-06-04  45  		return -ENODEV;
-b13743c1f1a527 Michael Walle 2020-06-04  46  
-b13743c1f1a527 Michael Walle 2020-06-04  47  	irqchip = devm_kzalloc(dev, sizeof(*irqchip), GFP_KERNEL);
-b13743c1f1a527 Michael Walle 2020-06-04  48  	if (!irqchip)
-b13743c1f1a527 Michael Walle 2020-06-04  49  		return -ENOMEM;
-b13743c1f1a527 Michael Walle 2020-06-04  50  
-b13743c1f1a527 Michael Walle 2020-06-04  51  	irqchip->regmap = dev_get_regmap(dev->parent, NULL);
-b13743c1f1a527 Michael Walle 2020-06-04  52  	if (!irqchip->regmap)
-b13743c1f1a527 Michael Walle 2020-06-04  53  		return -ENODEV;
-b13743c1f1a527 Michael Walle 2020-06-04  54  
-b13743c1f1a527 Michael Walle 2020-06-04  55  	irq = platform_get_irq(pdev, 0);
-b13743c1f1a527 Michael Walle 2020-06-04 @56  	if (irq < 0)
-b13743c1f1a527 Michael Walle 2020-06-04  57  		return irq;
-b13743c1f1a527 Michael Walle 2020-06-04  58  
-b13743c1f1a527 Michael Walle 2020-06-04  59  	ret = device_property_read_u32(&pdev->dev, "reg", &base);
-b13743c1f1a527 Michael Walle 2020-06-04  60  	if (ret)
-b13743c1f1a527 Michael Walle 2020-06-04  61  		return -EINVAL;
-b13743c1f1a527 Michael Walle 2020-06-04  62  
-b13743c1f1a527 Michael Walle 2020-06-04  63  	irqchip->chip.name = "sl28cpld-intc";
-b13743c1f1a527 Michael Walle 2020-06-04  64  	irqchip->chip.irqs = sl28cpld_irqs;
-b13743c1f1a527 Michael Walle 2020-06-04  65  	irqchip->chip.num_irqs = ARRAY_SIZE(sl28cpld_irqs);
-b13743c1f1a527 Michael Walle 2020-06-04  66  	irqchip->chip.num_regs = 1;
-b13743c1f1a527 Michael Walle 2020-06-04  67  	irqchip->chip.status_base = base + INTC_IP;
-b13743c1f1a527 Michael Walle 2020-06-04  68  	irqchip->chip.mask_base = base + INTC_IE;
-b13743c1f1a527 Michael Walle 2020-06-04  69  	irqchip->chip.mask_invert = true,
-b13743c1f1a527 Michael Walle 2020-06-04  70  	irqchip->chip.ack_base = base + INTC_IP;
-b13743c1f1a527 Michael Walle 2020-06-04  71  
-b13743c1f1a527 Michael Walle 2020-06-04  72  	return devm_regmap_add_irq_chip_np(&pdev->dev, dev->of_node,
-b13743c1f1a527 Michael Walle 2020-06-04  73  					   irqchip->regmap, irq,
-b13743c1f1a527 Michael Walle 2020-06-04  74  					   IRQF_SHARED | IRQF_ONESHOT, 0,
-b13743c1f1a527 Michael Walle 2020-06-04  75  					   &irqchip->chip, &irqchip->irq_data);
-b13743c1f1a527 Michael Walle 2020-06-04  76  }
-b13743c1f1a527 Michael Walle 2020-06-04  77  
-
+Signed-off-by: Denis Efremov <efremov@linux.com>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ scripts/coccinelle/api/memdup_user.cocci | 45 ++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+
+diff --git a/scripts/coccinelle/api/memdup_user.cocci b/scripts/coccinelle/api/memdup_user.cocci
+index cadcc2e87881..d15c061a34ab 100644
+--- a/scripts/coccinelle/api/memdup_user.cocci
++++ b/scripts/coccinelle/api/memdup_user.cocci
+@@ -39,6 +39,28 @@ identifier l1,l2;
+ -    ...+>
+ -  }
+ 
++@depends on patch@
++expression from,to,size;
++identifier l1,l2;
++@@
++
++-  to = \(kvmalloc\|kvzalloc\)(size,\(GFP_KERNEL\|GFP_USER\));
+++  to = vmemdup_user(from,size);
++   if (
++-      to==NULL
+++      IS_ERR(to)
++                 || ...) {
++   <+... when != goto l1;
++-  -ENOMEM
+++  PTR_ERR(to)
++   ...+>
++   }
++-  if (copy_from_user(to, from, size) != 0) {
++-    <+... when != goto l2;
++-    -EFAULT
++-    ...+>
++-  }
++
+ @r depends on !patch@
+ expression from,to,size;
+ position p;
+@@ -52,6 +74,17 @@ statement S1,S2;
+    if (copy_from_user(to, from, size) != 0)
+    S2
+ 
++@rv depends on !patch@
++expression from,to,size;
++position p;
++statement S1,S2;
++@@
++
++*  to = \(kvmalloc@p\|kvzalloc@p\)(size,\(GFP_KERNEL\|GFP_USER\));
++   if (to==NULL || ...) S1
++   if (copy_from_user(to, from, size) != 0)
++   S2
++
+ @script:python depends on org@
+ p << r.p;
+ @@
+@@ -63,3 +96,15 @@ p << r.p;
+ @@
+ 
+ coccilib.report.print_report(p[0], "WARNING opportunity for memdup_user")
++
++@script:python depends on org@
++p << rv.p;
++@@
++
++coccilib.org.print_todo(p[0], "WARNING opportunity for vmemdup_user")
++
++@script:python depends on report@
++p << rv.p;
++@@
++
++coccilib.report.print_report(p[0], "WARNING opportunity for vmemdup_user")
+-- 
+2.26.2
 
