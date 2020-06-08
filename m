@@ -2,151 +2,156 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A68CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 15:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB1C4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 15:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 783B0206D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 15:28:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B159206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 15:30:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KYYXVR0J"
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="Nph2Q8Mz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730322AbgFHP2m (ORCPT
+        id S1730253AbgFHPa6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 11:28:42 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56928 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729961AbgFHP2E (ORCPT
+        Mon, 8 Jun 2020 11:30:58 -0400
+Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:37816 "EHLO
+        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729580AbgFHPa5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 11:28:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591630083;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=e6ldx0MlwgMZ7eYGwNs6t50sH9muEKSQEPCznWlog1s=;
-        b=KYYXVR0JtUSaCCl5dgqidIDjaZ7i1oG1tZapHD+bjCalApsYDx9o47ka5cUR7GA3IP9TDG
-        mcSC+AmyihgWT1fQuXYHvVUEMc1koye9sfQMiljDD967TkxVtxWWfcI79JHaHLh5xe21UL
-        3kiUslCfRdd+J0opqsmVb/rm5ltv/vM=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-401-bYofDwdmN6epDt2XMB9yNQ-1; Mon, 08 Jun 2020 11:28:02 -0400
-X-MC-Unique: bYofDwdmN6epDt2XMB9yNQ-1
-Received: by mail-wr1-f72.google.com with SMTP id p10so7319635wrn.19
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 08:28:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=e6ldx0MlwgMZ7eYGwNs6t50sH9muEKSQEPCznWlog1s=;
-        b=h8F5O2+sUaw+w3Ay6VLMkd97x/VH6ZDb6XLIKExem97K92gNE+dCJkab8l+fHT+yAb
-         ekwyuy7/iwS+xUhF5wtlNDFYnKy7EZWax0hIpIloGbB4koj2d8HEBpGNawn5GsbPzcl9
-         xLiGzlO4M7DvLLqVsw07b8uZUhBL1S03gTwmI85aUNur42kPFDMqECu4qVbuEyze4YVU
-         C8n7b5i8Z0yfqivAAELvyIub3TGtas0MyhHJIDHSNmVLejMnJU27Td8o4yVCRHJUyM0m
-         lX38a2Cpux0YrOsw84f9VZR/sDArGxhBAblFLDjZB2r8DDtRzO4o4bvXiWejoxsHLYOc
-         aDEg==
-X-Gm-Message-State: AOAM533mLDmeGd1J1sMp3HlbRwunTuvnc184UYy1bltp1pdMFZYV0UOk
-        yDCsfveOMqwcZTOfO42x2cWS5jYi3otqt+Flu6Khvv0rSBjQNOZXtcJnqCZgZH7iPupsJhj1nle
-        zZCVTao/M8+tOBmKLtZp4gM4i
-X-Received: by 2002:a7b:c951:: with SMTP id i17mr16396580wml.44.1591630080541;
-        Mon, 08 Jun 2020 08:28:00 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxFp19h0hngiQNhLm87FFRipY8xehU63BYMW/ntBlxgoy/lT9Jx4TWE19125CnGnuxhQanGcA==
-X-Received: by 2002:a7b:c951:: with SMTP id i17mr16396567wml.44.1591630080316;
-        Mon, 08 Jun 2020 08:28:00 -0700 (PDT)
-Received: from redfedo.redhat.com ([2a01:cb14:499:3d00:cd47:f651:9d80:157a])
-        by smtp.gmail.com with ESMTPSA id u130sm23981707wmg.32.2020.06.08.08.27.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 08:27:59 -0700 (PDT)
-From:   Julien Thierry <jthierry@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     jpoimboe@redhat.com, peterz@infradead.org, mbenes@suse.cz,
-        raphael.gault@arm.com, Julien Thierry <jthierry@redhat.com>
-Subject: [PATCH 3/7] objtool: Move macros describing structures to arch-dependent code
-Date:   Mon,  8 Jun 2020 16:27:50 +0100
-Message-Id: <20200608152754.2483-4-jthierry@redhat.com>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200608152754.2483-1-jthierry@redhat.com>
-References: <20200608152754.2483-1-jthierry@redhat.com>
+        Mon, 8 Jun 2020 11:30:57 -0400
+Received: from pps.filterd (m0170395.ppops.net [127.0.0.1])
+        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 058FM2dt026415;
+        Mon, 8 Jun 2020 11:30:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=smtpout1;
+ bh=lone3dSt+jzXsyAA4Bd5m0BH6st0hcr9OGHaRGUvGlQ=;
+ b=Nph2Q8MzmSanbttb/XtCKlUxGHrxgCFD58YGfxvYhCVjGaBo66b3R1d/ZIXcRV7H8N3W
+ LX0BVUHUHAOueaqbhDUP4Mg8I6nftI8YREs/57KjqJZ2leOBb6fmbB1yQRTpGarjyDJN
+ QxqxqcSAsj6qFRCb6tsxup5DEMooH6IyGXzohRNA4IbF+peoW8Oy0sl94/e/auBgmzEW
+ TYOawiT9dM95sJUrhGMuTkKkT7x2LdMzlBZVdogLEq7QatVZ/+sBJIAHmWy+YIIIKAIw
+ 7L4I6QNf9ENCvK12ICpOOgWyGPJNeCB16oPqsM5fB96WlEUSg2iBBF8TjsaQJz+3UaC3 wQ== 
+Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
+        by mx0b-00154904.pphosted.com with ESMTP id 31gy5jk8eq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 08 Jun 2020 11:30:56 -0400
+Received: from pps.filterd (m0134746.ppops.net [127.0.0.1])
+        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 058FS9Xe173106;
+        Mon, 8 Jun 2020 11:30:55 -0400
+Received: from ausxipps310.us.dell.com (AUSXIPPS310.us.dell.com [143.166.148.211])
+        by mx0a-00154901.pphosted.com with ESMTP id 31g50q2h3x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 08 Jun 2020 11:30:55 -0400
+X-LoopCount0: from 10.166.132.129
+X-PREM-Routing: D-Outbound
+X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
+   d="scan'208";a="509388503"
+From:   <Mario.Limonciello@dell.com>
+To:     <pali@kernel.org>, <y.linux@paritcher.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>, <mjg59@srcf.ucam.org>
+Subject: RE: [PATCH 1/3] platform/x86: dell-wmi: add new backlight events
+Thread-Topic: [PATCH 1/3] platform/x86: dell-wmi: add new backlight events
+Thread-Index: AQHWPUx85gyioMYN202l2/4aacfOb6jOuKGAgAAgDRA=
+Date:   Mon, 8 Jun 2020 15:30:52 +0000
+Message-ID: <3e0d394545954ed79b8f883e1ac93338@AUSX13MPC105.AMER.DELL.COM>
+References: <cover.1591584631.git.y.linux@paritcher.com>
+ <7dbe4e9e5ed64e4704b1c4ae13ac84df644ccc13.1591584631.git.y.linux@paritcher.com>
+ <20200608083503.l5g5iq52ezxkobvv@pali>
+In-Reply-To: <20200608083503.l5g5iq52ezxkobvv@pali>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2020-06-08T15:30:50.0710000Z;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_ActionId=643673c9-6140-409c-bdf1-67b69fc156f3;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [143.166.24.60]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-08_13:2020-06-08,2020-06-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
+ priorityscore=1501 mlxscore=0 bulkscore=0 clxscore=1015 suspectscore=0
+ mlxlogscore=999 spamscore=0 impostorscore=0 lowpriorityscore=0
+ cotscore=-2147483648 malwarescore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006080114
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=999
+ spamscore=0 mlxscore=0 bulkscore=0 suspectscore=0 adultscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006080114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some macros are defined to describe the size and layout of structures
-exception_table_entry, jump_entry and alt_instr. These values can vary
-from one architecture to another.
+> -----Original Message-----
+> From: platform-driver-x86-owner@vger.kernel.org <platform-driver-x86-
+> owner@vger.kernel.org> On Behalf Of Pali Roh=E1r
+> Sent: Monday, June 8, 2020 3:35 AM
+> To: Y Paritcher
+> Cc: linux-kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org;
+> Matthew Garrett
+> Subject: Re: [PATCH 1/3] platform/x86: dell-wmi: add new backlight events
+>=20
+>=20
+> [EXTERNAL EMAIL]
+>=20
+> On Monday 08 June 2020 00:22:24 Y Paritcher wrote:
+> > Ignore events with a type of 0x0010 and a code of 0x57 / 0x58,
+> > this silences the following messages being logged on a
+> > Dell Inspiron 5593:
+> >
+> > dell_wmi: Unknown key with type 0x0010 and code 0x0057 pressed
+> > dell_wmi: Unknown key with type 0x0010 and code 0x0058 pressed
+> >
+> > Signed-off-by: Y Paritcher <y.linux@paritcher.com>
+> > ---
+> >  drivers/platform/x86/dell-wmi.c | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/del=
+l-
+> wmi.c
+> > index c25a4286d766..0b4f72f923cd 100644
+> > --- a/drivers/platform/x86/dell-wmi.c
+> > +++ b/drivers/platform/x86/dell-wmi.c
+> > @@ -252,6 +252,10 @@ static const struct key_entry
+> dell_wmi_keymap_type_0010[] =3D {
+> >  	/* Fn-lock switched to multimedia keys */
+> >  	{ KE_IGNORE, 0x1, { KEY_RESERVED } },
+> >
+> > +	/* Backlight brightness level */
+> > +	{ KE_KEY,    0x57, { KEY_BRIGHTNESSDOWN } },
+> > +	{ KE_KEY,    0x58, { KEY_BRIGHTNESSUP } },
+> > +
 
-Have the values be defined by arch specific code.
+For these particular events are they emitted by another interface as well i=
+n this
+platform?
 
-Suggested-by: Raphael Gault <raphael.gault@arm.com>
-Signed-off-by: Julien Thierry <jthierry@redhat.com>
----
- tools/objtool/arch/x86/include/arch_special.h | 20 +++++++++++++++++++
- tools/objtool/special.c                       | 16 +--------------
- 2 files changed, 21 insertions(+), 15 deletions(-)
- create mode 100644 tools/objtool/arch/x86/include/arch_special.h
+If so they should be KE_IGNORE so you don't end up with double notification=
+s to
+userspace.
 
-diff --git a/tools/objtool/arch/x86/include/arch_special.h b/tools/objtool/arch/x86/include/arch_special.h
-new file mode 100644
-index 000000000000..d818b2bffa02
---- /dev/null
-+++ b/tools/objtool/arch/x86/include/arch_special.h
-@@ -0,0 +1,20 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+#ifndef _X86_ARCH_SPECIAL_H
-+#define _X86_ARCH_SPECIAL_H
-+
-+#define EX_ENTRY_SIZE		12
-+#define EX_ORIG_OFFSET		0
-+#define EX_NEW_OFFSET		4
-+
-+#define JUMP_ENTRY_SIZE		16
-+#define JUMP_ORIG_OFFSET	0
-+#define JUMP_NEW_OFFSET		4
-+
-+#define ALT_ENTRY_SIZE		13
-+#define ALT_ORIG_OFFSET		0
-+#define ALT_NEW_OFFSET		4
-+#define ALT_FEATURE_OFFSET	8
-+#define ALT_ORIG_LEN_OFFSET	10
-+#define ALT_NEW_LEN_OFFSET	11
-+
-+#endif /* _X86_ARCH_SPECIAL_H */
-diff --git a/tools/objtool/special.c b/tools/objtool/special.c
-index e74e0189de22..2bd57db0881f 100644
---- a/tools/objtool/special.c
-+++ b/tools/objtool/special.c
-@@ -14,21 +14,7 @@
- #include "builtin.h"
- #include "special.h"
- #include "warn.h"
--
--#define EX_ENTRY_SIZE		12
--#define EX_ORIG_OFFSET		0
--#define EX_NEW_OFFSET		4
--
--#define JUMP_ENTRY_SIZE		16
--#define JUMP_ORIG_OFFSET	0
--#define JUMP_NEW_OFFSET		4
--
--#define ALT_ENTRY_SIZE		13
--#define ALT_ORIG_OFFSET		0
--#define ALT_NEW_OFFSET		4
--#define ALT_FEATURE_OFFSET	8
--#define ALT_ORIG_LEN_OFFSET	10
--#define ALT_NEW_LEN_OFFSET	11
-+#include "arch_special.h"
- 
- #define X86_FEATURE_POPCNT (4*32+23)
- #define X86_FEATURE_SMAP   (9*32+20)
--- 
-2.21.1
-
+> >  	/* Keyboard backlight change notification */
+> >  	{ KE_IGNORE, 0x3f, { KEY_RESERVED } },
+>=20
+> Please, keep codes sorted.
+>=20
+> >
+> > --
+> > 2.27.0
+> >
