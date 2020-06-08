@@ -2,57 +2,54 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7398CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F0C6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53BC6208C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:11:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10D0E20C09
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:11:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591657878;
-	bh=OnMZ5vdf2YOk5hWtwLFzh1/pxKKBakX8EVWv9pl+oRw=;
+	s=default; t=1591657885;
+	bh=kntZHaADtqmXEkROzUlLhxaIDHYMV/qGZ2kMk2G8Nlk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IXLAStdKZrr8uNnJcBoseg2i3vAYLPBwlqh0ErlcWCWrK4iGjotR1PQ2r6ZE2MimO
-	 vEWZbQWAz0LDZxLEQiC2TteQ8awetvFyxgG6wv2otePh9e5WIVXNnh9TUzqfmvfLSL
-	 5ziz2I1RCAWA2MGbx4YqTSav8LNVgSe1Cxro52P0=
+	b=aqPfkyqVVUkeho0chFWNnyyXYt86iG7NapCzYo83zmRPywqvgQAPv9ihuoZ12GY3v
+	 CpUGaYUSSLKnwbg6H10sFKCGrgE3DWHtqADNzkM9nnYXfg4OiSY04V2WRXNnGpncIW
+	 XLGAhXOHqPdXXKKqJoYSQ4NqCUAnp1rDvyl6hxEE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728871AbgFHXLP (ORCPT
+        id S1728044AbgFHXLW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:11:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55664 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:11:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728520AbgFHXJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:09:50 -0400
+        id S1728516AbgFHXJt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:09:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16B4520897;
-        Mon,  8 Jun 2020 23:09:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B89B020B80;
+        Mon,  8 Jun 2020 23:09:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657790;
-        bh=OnMZ5vdf2YOk5hWtwLFzh1/pxKKBakX8EVWv9pl+oRw=;
+        s=default; t=1591657788;
+        bh=kntZHaADtqmXEkROzUlLhxaIDHYMV/qGZ2kMk2G8Nlk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FTQkXcE6rcB88KkQ3/0g+kt1qp7YVZvaoVUE28beR4iNng8B9DormmSdT78khEeQy
-         gI/xsDTC3leqzNPw92UuUSxCgcKsoqRXFzVUd1So2WnI/5MZhqYS20cE86H6ywejtg
-         3kzpro3uQHzpC3OcKfsfOCNq8sGCwoGfkTMvOl6A=
+        b=Eli+0q8+23VI6xuqdkBZEVpE/REEAaazVpMc7EqhQ5oI98Y8jlA4l71ACC46kRyW2
+         uTSlTiRkgJTrC/h9OeQMg2q3WxbfTeJoAaKb3ulQ8LZDJSot0NO8Hyqa6DublVQDig
+         cwyyLWQE+ueArq82nz2Ept/0QKDo+ZgweM6XjpLU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Fangrui Song <maskray@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "Maciej W . Rozycki" <macro@linux-mips.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Sasha Levin <sashal@kernel.org>, linux-mips@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.7 170/274] MIPS: Truncate link address into 32bit for 32bit kernel
-Date:   Mon,  8 Jun 2020 19:04:23 -0400
-Message-Id: <20200608230607.3361041-170-sashal@kernel.org>
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
+        syzbot+e3372a2afe1e7ef04bc7@syzkaller.appspotmail.com,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.7 169/274] drm/vkms: Hold gem object while still in-use
+Date:   Mon,  8 Jun 2020 19:04:22 -0400
+Message-Id: <20200608230607.3361041-169-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -65,86 +62,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+From: Ezequiel Garcia <ezequiel@collabora.com>
 
-[ Upstream commit ff487d41036035376e47972c7c522490b839ab37 ]
+[ Upstream commit 0ea2ea42b31abc1141f2fd3911f952a97d401fcb ]
 
-LLD failed to link vmlinux with 64bit load address for 32bit ELF
-while bfd will strip 64bit address into 32bit silently.
-To fix LLD build, we should truncate load address provided by platform
-into 32bit for 32bit kernel.
+We need to keep the reference to the drm_gem_object
+until the last access by vkms_dumb_create.
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Link: https://github.com/ClangBuiltLinux/linux/issues/786
-Link: https://sourceware.org/bugzilla/show_bug.cgi?id=25784
-Reviewed-by: Fangrui Song <maskray@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
-Cc: Maciej W. Rozycki <macro@linux-mips.org>
-Tested-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Therefore, the put the object after it is used.
+
+This fixes a use-after-free issue reported by syzbot.
+
+While here, change vkms_gem_create() symbol to static.
+
+Reported-and-tested-by: syzbot+e3372a2afe1e7ef04bc7@syzkaller.appspotmail.com
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+Reviewed-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200427214405.13069-1-ezequiel@collabora.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/Makefile                 | 13 ++++++++++++-
- arch/mips/boot/compressed/Makefile |  2 +-
- arch/mips/kernel/vmlinux.lds.S     |  2 +-
- 3 files changed, 14 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/vkms/vkms_drv.h |  5 -----
+ drivers/gpu/drm/vkms/vkms_gem.c | 11 ++++++-----
+ 2 files changed, 6 insertions(+), 10 deletions(-)
 
-diff --git a/arch/mips/Makefile b/arch/mips/Makefile
-index e1c44aed8156..b6ee29e4565a 100644
---- a/arch/mips/Makefile
-+++ b/arch/mips/Makefile
-@@ -288,12 +288,23 @@ ifdef CONFIG_64BIT
-   endif
- endif
+diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
+index eda04ffba7b1..f4036bb0b9a8 100644
+--- a/drivers/gpu/drm/vkms/vkms_drv.h
++++ b/drivers/gpu/drm/vkms/vkms_drv.h
+@@ -117,11 +117,6 @@ struct drm_plane *vkms_plane_init(struct vkms_device *vkmsdev,
+ 				  enum drm_plane_type type, int index);
  
-+# When linking a 32-bit executable the LLVM linker cannot cope with a
-+# 32-bit load address that has been sign-extended to 64 bits.  Simply
-+# remove the upper 32 bits then, as it is safe to do so with other
-+# linkers.
-+ifdef CONFIG_64BIT
-+	load-ld			= $(load-y)
-+else
-+	load-ld			= $(subst 0xffffffff,0x,$(load-y))
-+endif
+ /* Gem stuff */
+-struct drm_gem_object *vkms_gem_create(struct drm_device *dev,
+-				       struct drm_file *file,
+-				       u32 *handle,
+-				       u64 size);
+-
+ vm_fault_t vkms_gem_fault(struct vm_fault *vmf);
+ 
+ int vkms_dumb_create(struct drm_file *file, struct drm_device *dev,
+diff --git a/drivers/gpu/drm/vkms/vkms_gem.c b/drivers/gpu/drm/vkms/vkms_gem.c
+index 2e01186fb943..c541fec57566 100644
+--- a/drivers/gpu/drm/vkms/vkms_gem.c
++++ b/drivers/gpu/drm/vkms/vkms_gem.c
+@@ -97,10 +97,10 @@ vm_fault_t vkms_gem_fault(struct vm_fault *vmf)
+ 	return ret;
+ }
+ 
+-struct drm_gem_object *vkms_gem_create(struct drm_device *dev,
+-				       struct drm_file *file,
+-				       u32 *handle,
+-				       u64 size)
++static struct drm_gem_object *vkms_gem_create(struct drm_device *dev,
++					      struct drm_file *file,
++					      u32 *handle,
++					      u64 size)
+ {
+ 	struct vkms_gem_object *obj;
+ 	int ret;
+@@ -113,7 +113,6 @@ struct drm_gem_object *vkms_gem_create(struct drm_device *dev,
+ 		return ERR_CAST(obj);
+ 
+ 	ret = drm_gem_handle_create(file, &obj->gem, handle);
+-	drm_gem_object_put_unlocked(&obj->gem);
+ 	if (ret)
+ 		return ERR_PTR(ret);
+ 
+@@ -142,6 +141,8 @@ int vkms_dumb_create(struct drm_file *file, struct drm_device *dev,
+ 	args->size = gem_obj->size;
+ 	args->pitch = pitch;
+ 
++	drm_gem_object_put_unlocked(gem_obj);
 +
- KBUILD_AFLAGS	+= $(cflags-y)
- KBUILD_CFLAGS	+= $(cflags-y)
--KBUILD_CPPFLAGS += -DVMLINUX_LOAD_ADDRESS=$(load-y)
-+KBUILD_CPPFLAGS += -DVMLINUX_LOAD_ADDRESS=$(load-y) -DLINKER_LOAD_ADDRESS=$(load-ld)
- KBUILD_CPPFLAGS += -DDATAOFFSET=$(if $(dataoffset-y),$(dataoffset-y),0)
+ 	DRM_DEBUG_DRIVER("Created object of size %lld\n", size);
  
- bootvars-y	= VMLINUX_LOAD_ADDRESS=$(load-y) \
-+		  LINKER_LOAD_ADDRESS=$(load-ld) \
- 		  VMLINUX_ENTRY_ADDRESS=$(entry-y) \
- 		  PLATFORM="$(platform-y)" \
- 		  ITS_INPUTS="$(its-y)"
-diff --git a/arch/mips/boot/compressed/Makefile b/arch/mips/boot/compressed/Makefile
-index 0df0ee8a298d..6e56caef69f0 100644
---- a/arch/mips/boot/compressed/Makefile
-+++ b/arch/mips/boot/compressed/Makefile
-@@ -90,7 +90,7 @@ ifneq ($(zload-y),)
- VMLINUZ_LOAD_ADDRESS := $(zload-y)
- else
- VMLINUZ_LOAD_ADDRESS = $(shell $(obj)/calc_vmlinuz_load_addr \
--		$(obj)/vmlinux.bin $(VMLINUX_LOAD_ADDRESS))
-+		$(obj)/vmlinux.bin $(LINKER_LOAD_ADDRESS))
- endif
- UIMAGE_LOADADDR = $(VMLINUZ_LOAD_ADDRESS)
- 
-diff --git a/arch/mips/kernel/vmlinux.lds.S b/arch/mips/kernel/vmlinux.lds.S
-index a5f00ec73ea6..f185a85a27c1 100644
---- a/arch/mips/kernel/vmlinux.lds.S
-+++ b/arch/mips/kernel/vmlinux.lds.S
-@@ -55,7 +55,7 @@ SECTIONS
- 	/* . = 0xa800000000300000; */
- 	. = 0xffffffff80300000;
- #endif
--	. = VMLINUX_LOAD_ADDRESS;
-+	. = LINKER_LOAD_ADDRESS;
- 	/* read-only */
- 	_text = .;	/* Text and read-only data */
- 	.text : {
+ 	return 0;
 -- 
 2.25.1
 
