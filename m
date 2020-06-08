@@ -2,242 +2,123 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43950C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 22:47:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F3FEC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 22:53:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 243302074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 22:47:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C0482076A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 22:53:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XHWkmWB3"
+	dkim=pass (2048-bit key) header.d=paritcher.com header.i=@paritcher.com header.b="rGNS6zOb";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="WzPLVroi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbgFHWra (ORCPT
+        id S1726844AbgFHWxj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 18:47:30 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:56096 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726734AbgFHWr3 (ORCPT
+        Mon, 8 Jun 2020 18:53:39 -0400
+Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:60967 "EHLO
+        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726741AbgFHWxj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 18:47:29 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 058MlPaE050473;
-        Mon, 8 Jun 2020 17:47:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1591656445;
-        bh=JTj7H+bWQ50L0w3gmhUU8lvfINHUiaK8WNziobU7SBE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=XHWkmWB3ttKSJ5CBrj2IIC5P/UmNkNWd7X/pVJsMdnUTF1aEKcrBrrkvDjr0lPTTs
-         7As8+dzP8NuP8mpBidza4PPUumj0PvfrDLdyH1oCCpcOxA/SopVkx/PHXuHBevNUd3
-         cttR9MGciO/S15CfieYNqT8cxZMcxC+64nb2m4V4=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 058MlPqP006026
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 8 Jun 2020 17:47:25 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 8 Jun
- 2020 17:47:25 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 8 Jun 2020 17:47:24 -0500
-Received: from [10.250.48.148] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 058MlOkE124381;
-        Mon, 8 Jun 2020 17:47:24 -0500
-Subject: Re: [PATCH v6 2/3] rpmsg: core: Add support to retrieve name
- extension
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>, <ohad@wizery.com>,
-        <bjorn.andersson@linaro.org>
-CC:     <arnaud.pouliquen@st.com>, <linux-remoteproc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200515205642.13529-1-mathieu.poirier@linaro.org>
- <20200515205642.13529-3-mathieu.poirier@linaro.org>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <632db4a1-74e0-edc4-78ca-53109f11ace8@ti.com>
-Date:   Mon, 8 Jun 2020 17:47:19 -0500
+        Mon, 8 Jun 2020 18:53:39 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id DA89239F;
+        Mon,  8 Jun 2020 18:53:37 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Mon, 08 Jun 2020 18:53:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=paritcher.com;
+         h=subject:to:cc:references:from:message-id:date:mime-version
+        :in-reply-to:content-type:content-transfer-encoding; s=fm2; bh=3
+        jh/hXqtwrVde4hwUMJcqaoBBkboOW+sBG60pKPoYUE=; b=rGNS6zOb0vRoTk7eH
+        xE8QhyjOMN2aqxxIkO4mZcml4MX1FGAReo10yTqpd9mImlgBTs7MdSBmZqdmVB4V
+        NUR3qX4rel1Vo4xm64RPzb5ywqeSGjXE8ddwsCY1ZLtq68p8HDQqrg6kKfGNIHtN
+        aTViHunKLH4JkhUA3D78FGEF1DFiVyOYOn5+Qo2vFrmck5stcbEWfGWjj6ZOzqa6
+        jIJ5AIBBFtuDg0d+h12aiwBRpLHxwA+0YbG2se0tK3bM+/XGodRvGZxB3cyRuliq
+        m/PQd+999yfEXmXUuFndnVPj9LN9oH2coiz2Fadbd8hu6YGijZtHGk+Aj9Reu3DR
+        SqgPg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=3jh/hXqtwrVde4hwUMJcqaoBBkboOW+sBG60pKPoY
+        UE=; b=WzPLVroiiKX2va7udeV3luWIulkly7vsRm07B0C5t959NPON9issoe7Ch
+        8j+B+kg/7KnycpbeGoa5HwXFonmxn8Cbz58vYWC46rZQIT1VuMuCwVPGFb2hJl5n
+        gzBz3ckZePFHoVvPnHBiVp9iqT+8zRRO0+DWQnFQQ2v7W75gw5SRSCOhAgqGEeXs
+        nXLPPEqIs0UnkrDsjInP8fAhCD38QT9zxWtE8PAEUEytdtYcIgX+F3RvpZqg9p2Y
+        nzeo7FcQ1DCoKvKJIX+FVg5Klg9YSXa7xedPGK+hXCXPxDugGfon4EZRAoUatYy3
+        9nUj2xBE1/3ULkwskOb073+MyFfqg==
+X-ME-Sender: <xms:cMHeXq9i42UWmqlFTFqO1T83GG3rd5SqvD1cbt8sDMqdgvumyFOLoA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudehfedgudehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefuvfhfhffkffgfgggjtgfgsehtje
+    ertddtfeejnecuhfhrohhmpegjucfrrghrihhttghhvghruceohidrlhhinhhugiesphgr
+    rhhithgthhgvrhdrtghomheqnecuggftrfgrthhtvghrnhepieettefgffetfefhfedtve
+    duffeltdeujeehveehteefheeludeijeegudekteeinecuffhomhgrihhnpehgihhthhhu
+    sgdrtghomhenucfkphepieejrdekgedrudelgedrudejheenucevlhhushhtvghrufhiii
+    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpeihrdhlihhnuhigsehprghrihhttghh
+    vghrrdgtohhm
+X-ME-Proxy: <xmx:cMHeXqtaxK_cgVAkOF6xOrKDsvikxb5iBcgaeg-J83o2LiyTfUbw6g>
+    <xmx:cMHeXgCVFBff5JLIZFLaYt10_WVwfiPXvb7fxLZ28jd5ItX_UM-Euw>
+    <xmx:cMHeXifdhPJkSY3a3UthGPclt6AgPp4rHeBKXF6vf2vFiuDYwC5Jzg>
+    <xmx:ccHeXobww17DDzAUpOaerii8XIHgRemH9NcbnWnBQ4jzSRoL7oH-ew>
+Received: from [192.168.0.106] (ool-4354c2af.dyn.optonline.net [67.84.194.175])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 52A69328005E;
+        Mon,  8 Jun 2020 18:53:36 -0400 (EDT)
+Subject: Re: [PATCH 2/3] platform/x86: dell-wmi: add new keymap type 0x0012
+To:     Mario.Limonciello@dell.com, hdegoede@redhat.com
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        mjg59@srcf.ucam.org, pali@kernel.org
+References: <cover.1591584631.git.y.linux@paritcher.com>
+ <0dc191a3d16f0e114f6a8976433e248018e10c43.1591584631.git.y.linux@paritcher.com>
+ <83fe431cacbc4708962767668ac8f06f@AUSX13MPC105.AMER.DELL.COM>
+ <79bd59ee-dd37-bdc5-f6b4-00f2c33fdcff@paritcher.com>
+ <7f9f0410696141cfabb0237d33b7b529@AUSX13MPC105.AMER.DELL.COM>
+ <01169d6e-1bb1-6fc5-0690-0e8f44941cce@paritcher.com>
+ <6cfba0ce42a74b39b5b80e9c621e2601@AUSX13MPC105.AMER.DELL.COM>
+From:   Y Paritcher <y.linux@paritcher.com>
+Message-ID: <53ad1d28-91d1-5dd0-3430-e2ee752df06f@paritcher.com>
+Date:   Mon, 8 Jun 2020 18:53:35 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200515205642.13529-3-mathieu.poirier@linaro.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <6cfba0ce42a74b39b5b80e9c621e2601@AUSX13MPC105.AMER.DELL.COM>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mathieu,
-
-On 5/15/20 3:56 PM, Mathieu Poirier wrote:
-> After adding support for rpmsg device name extension, this patch
-> provides a function that returns the extension portion of an rpmsg
-> device name.  That way users of the name extension functionality don't
-> have to write the same boiler plate code to extract the information.
+On 6/8/20 6:00 PM, Mario.Limonciello@dell.com wrote:
+>>
+>> this is the WMI event from pressing the Fn lock key.
+>> this indicates which mode it is switching to.
+>>
+>> this changes if the default for pressing the F[1-12] should be Function or
+>> media.
+>> the scancodes of the Fn keys are properly transmitted, this just inverts
+>> which
+>> ones are sent by default and which are sent when pressing the Fn+F[1-12]
+>>
+>> In other words, there are 24 scancode the only difference is which 12 are
+>> default
+>> and which 12 are when pressing with the Fn key
+>>>>
+>>>> Therefore i agree this should have it's own case in
 > 
-> Suggested-by: Suman Anna <s-anna@ti.com>;
-> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Acked-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-
-With the below minor nits fixed,
-
-Acked-by: Suman Anna <s-anna@ti.com>
-
-> ---
->   drivers/rpmsg/rpmsg_core.c | 95 ++++++++++++++++++++++++++++++++++++++
->   include/linux/rpmsg.h      | 13 ++++++
->   2 files changed, 108 insertions(+)
+> To me this sounds like it makes most sense to either be an evdev switch which indicates
+> which mode the fn key is set to when an event comes in.  You can populate the starting
+> mode by looking up from a token.
+> https://github.com/dell/libsmbios/blob/master/doc/token_list.csv#L987
 > 
-> diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
-> index 5e01e8dede6b..9583eb936607 100644
-> --- a/drivers/rpmsg/rpmsg_core.c
-> +++ b/drivers/rpmsg/rpmsg_core.c
-> @@ -439,6 +439,101 @@ static int rpmsg_dev_match(struct device *dev, struct device_driver *drv)
->   	return of_driver_match_device(dev, drv);
->   }
->   
-> +/**
-> + * rpmsg_device_get_name_extension() - get the name extension of a rpmsg device
-> + * @rpdev: the rpmsg device to work with
-> + * @skip: how many characters in the extension should be skipped over
-> + *
-> + * With function rpmsg_id_match() allowing for extension of the base driver name
-> + * in order to differentiate services, this function returns the extension part
-> + * of an rpmsg device name.  As such and with the following rpmsg driver device
-> + * id table and rpmsg device names:
-> + *
-> + * static struct rpmsg_device_id rpmsg_driver_sample_id_table[] = {
-> + *      { .name = "rpmsg-client-sample" },
-> + *      { },
-> + * }
-> + *
-> + * rpdev1->id.name == "rpmsg-client-sample";
-> + * rpdev2->id.name == "rpmsg-client-sample_instance0";
-> + *
-> + * Calling rpmsg_device_get_name_extension() will yields the following:
-> + *
-> + * rpmsg_device_get_name_extension(rpdev1, 0) == NULL;
-> + * rpmsg_device_get_name_extension(rpdev2, 0) == "_instance0";
-> + * rpmsg_device_get_name_extension(rpdev2, 1) == "instance0";
-> + *
-> + *
-
-can drop the additional blank line here,
-
-> + * Return: The name extension if found, NULL if the name of the RPMSG device
-> + *	   equals the name of the RPMSG driver and an error if no match is
-> + *	   found or a validation problem has occurred.
-> + */
-> +const char *rpmsg_device_get_name_extension(struct rpmsg_device *rpdev,
-> +					    unsigned int skip)
-> +{
-> +	const char *drv_name, *dev_name, *extension;
-> +	const struct rpmsg_device_id *ids;
-> +	struct device *dev = &rpdev->dev;
-> +	struct rpmsg_driver *rpdrv;
-> +	bool match = false;
-> +	unsigned int i;
-> +
-> +	if (!dev->driver)
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	rpdrv = to_rpmsg_driver(dev->driver);
-> +
-> +	/*
-> +	 * No point in going further if the device doesn't have name or
-> +	 * the driver doesn't have a table to work with.
-> +	 */
-> +	if (!rpdev->id.name[0] || !rpdrv->id_table)
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	ids = rpdrv->id_table;
-> +	dev_name = rpdev->id.name;
-> +
-> +	/*
-> +	 * See if any name in the driver's table match the beginning
-> +	 * of the rpmsg device's name.
-> +	 */
-> +	for (i = 0; ids[i].name[0]; i++) {
-> +		drv_name = ids[i].name;
-> +		if (strncmp(drv_name,
-> +			    dev_name, strlen(drv_name)) == 0) {
-
-This does fit on the same line, so no need to use multi-lines for this.
-
-regards
-Suman
-
-> +			match = true;
-> +			break;
-> +		}
-> +	}
-> +
-> +	/*
-> +	 * A match was not found, return an error to differentiate with cases
-> +	 * where a match was found but the name has no extension (see below).
-> +	 */
-> +	if (!match)
-> +		return ERR_PTR(-ENOENT);
-> +
-> +	 /* No name extension to return if device and driver are the same */
-> +	if (strlen(dev_name) == strlen(drv_name))
-> +		return NULL;
-> +
-> +	/*
-> +	 * Make sure we were not requested to skip past the end
-> +	 * of the device name.
-> +	 */
-> +	if (strlen(drv_name) + skip >= strlen(dev_name))
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	/*
-> +	 * Move past the base name published by the driver and
-> +	 * skip any extra characters if needed.
-> +	 */
-> +	extension = dev_name + strlen(drv_name) + skip;
-> +
-> +	return extension;
-> +}
-> +EXPORT_SYMBOL(rpmsg_device_get_name_extension);
-> +
->   static int rpmsg_uevent(struct device *dev, struct kobj_uevent_env *env)
->   {
->   	struct rpmsg_device *rpdev = to_rpmsg_device(dev);
-> diff --git a/include/linux/rpmsg.h b/include/linux/rpmsg.h
-> index 9fe156d1c018..9537b95ad30a 100644
-> --- a/include/linux/rpmsg.h
-> +++ b/include/linux/rpmsg.h
-> @@ -135,6 +135,9 @@ int rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src, u32 dst,
->   __poll_t rpmsg_poll(struct rpmsg_endpoint *ept, struct file *filp,
->   			poll_table *wait);
->   
-> +const char *rpmsg_device_get_name_extension(struct rpmsg_device *dev,
-> +					    unsigned int skip);
-> +
->   #else
->   
->   static inline int register_rpmsg_device(struct rpmsg_device *dev)
-> @@ -242,6 +245,16 @@ static inline __poll_t rpmsg_poll(struct rpmsg_endpoint *ept,
->   	return 0;
->   }
->   
-> +static inline
-> +const char *rpmsg_device_get_name_extension(struct rpmsg_device *dev,
-> +					    unsigned int skip)
-> +{
-> +	/* This shouldn't be possible */
-> +	WARN_ON(1);
-> +
-> +	return NULL;
-> +}
-> +
->   #endif /* IS_ENABLED(CONFIG_RPMSG) */
->   
->   /* use a macro to avoid include chaining to get THIS_MODULE */
+> Any other thoughts from others?
 > 
 
+beware that sometimes the key will do the unexpected.
+
+If the Fn lock is turned off in the bios pressing the Fn lock key
+will send an event with the current mode again, as switching is disallowed.
