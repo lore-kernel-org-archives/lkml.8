@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E540C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F260C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:22:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64B2720853
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:22:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F89920775
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:22:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662167;
-	bh=AWCLOTsOVYlks3c11ILR2yy+m7XFAsly4FIalG791BM=;
+	s=default; t=1591662173;
+	bh=L0QoRAgWtQseVlwB82qHXXUrftjn7bHptGI3PhND3X4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D2yHV4Bt/Xsg8t05+oEyVryfae0jtQnF/ZOc5o3hbivlkn/jeJSmPjMBfUQ46BMW7
-	 pMLp4TD6UBL5cuxGR7ZdeT6WAvCJ6lgxLTMPOW+oK9978i4OqHIYKdOV03piBXWFdn
-	 sbmed9QJrOtNCKpyAhdkO3vVFSu/iFJ+fZ1vRC+4=
+	b=NliXCGu4q5z2SAfS1B/YTXKoZFAbftkZ3sqGSNq68e7QHBJNqmfbpz4GdQr+r9y1C
+	 zJ1aIb5WG3BDDluBa4vLXW7FEnRo7jOZtKafeuS00drFxjUVqAMUCrdvRRl58VOsrV
+	 o5a3ZW4E2c5LJAvxH6eC/4T394LOsEvwVBHgyxkc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732639AbgFIAWp (ORCPT
+        id S1730435AbgFHXRV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:22:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38946 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:17:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727790AbgFHXRZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:17:25 -0400
+        id S1728162AbgFHXOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:14:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56C8E20872;
-        Mon,  8 Jun 2020 23:17:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 326AC208C3;
+        Mon,  8 Jun 2020 23:14:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658245;
-        bh=AWCLOTsOVYlks3c11ILR2yy+m7XFAsly4FIalG791BM=;
+        s=default; t=1591658041;
+        bh=L0QoRAgWtQseVlwB82qHXXUrftjn7bHptGI3PhND3X4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WPr1n6HQZtGSwh/hQP0I6CxN9ZJ3df6PZWJLSj5hXhQHVH0dW94iWDyLt39KnNA5B
-         X/VT0I3hI6BUvRl1s4jkkFfZA86dsV3SZmRNcVzOT5FT65X1YDCb2iDTX6l8oDxmU4
-         kbjr1tvIYxxU4AcOcbXtZLdsWjD2yRkcnkrjDS48=
+        b=iMR6LUf3s/UtJRp1qy7d/lXnDk/D7Xlwj52UjYKvNFupnqVPt/32pKnYph8JRXlCl
+         ekEb85ARQrwi7DapD+G/1M/BI4uhrbF12uZlITHqf3lv59LfU3TkSfDkvLm8aQJrTl
+         Vfc4nvBZ0mdIvTJYc91+31oG2ff7lIZ/6k7xRH5Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johan Jonker <jbx6244@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 255/606] ARM: dts: rockchip: swap clock-names of gpu nodes
-Date:   Mon,  8 Jun 2020 19:06:20 -0400
-Message-Id: <20200608231211.3363633-255-sashal@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Richard Weinberger <richard@nod.at>,
+        Sasha Levin <sashal@kernel.org>, linux-mtd@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 091/606] ubifs: remove broken lazytime support
+Date:   Mon,  8 Jun 2020 19:03:36 -0400
+Message-Id: <20200608231211.3363633-91-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -60,65 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Jonker <jbx6244@gmail.com>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit b14f3898d2c25a9b47a61fb879d0b1f3af92c59b ]
+[ Upstream commit ecf84096a526f2632ee85c32a3d05de3fa60ce80 ]
 
-Dts files with Rockchip 'gpu' nodes were manually verified.
-In order to automate this process arm,mali-utgard.txt
-has been converted to yaml. In the new setup dtbs_check with
-arm,mali-utgard.yaml expects clock-names values
-in the same order, so fix that.
+When "ubifs: introduce UBIFS_ATIME_SUPPORT to ubifs" introduced atime
+support to ubifs, it also added lazytime support.  As far as I can tell
+the lazytime support is terminally broken, as it causes
+mark_inode_dirty_sync to be called from __writeback_single_inode, which
+will then trigger the locking assert in ubifs_dirty_inode.  Just remove
+the broken lazytime support for now, it can be added back later,
+especially as some infrastructure changes should make that easier soon.
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-Link: https://lore.kernel.org/r/20200425192500.1808-1-jbx6244@gmail.com
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Fixes: 8c1c5f263833 ("ubifs: introduce UBIFS_ATIME_SUPPORT to ubifs")
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/rk3036.dtsi | 2 +-
- arch/arm/boot/dts/rk322x.dtsi | 2 +-
- arch/arm/boot/dts/rk3xxx.dtsi | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ fs/ubifs/file.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
-index cf36e25195b4..8c4b8f56c9e0 100644
---- a/arch/arm/boot/dts/rk3036.dtsi
-+++ b/arch/arm/boot/dts/rk3036.dtsi
-@@ -128,7 +128,7 @@ gpu: gpu@10090000 {
- 		assigned-clocks = <&cru SCLK_GPU>;
- 		assigned-clock-rates = <100000000>;
- 		clocks = <&cru SCLK_GPU>, <&cru SCLK_GPU>;
--		clock-names = "core", "bus";
-+		clock-names = "bus", "core";
- 		resets = <&cru SRST_GPU>;
- 		status = "disabled";
- 	};
-diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
-index 4e90efdc9630..729119952c68 100644
---- a/arch/arm/boot/dts/rk322x.dtsi
-+++ b/arch/arm/boot/dts/rk322x.dtsi
-@@ -561,7 +561,7 @@ gpu: gpu@20000000 {
- 				  "pp1",
- 				  "ppmmu1";
- 		clocks = <&cru ACLK_GPU>, <&cru ACLK_GPU>;
--		clock-names = "core", "bus";
-+		clock-names = "bus", "core";
- 		resets = <&cru SRST_GPU_A>;
- 		status = "disabled";
- 	};
-diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx.dtsi
-index 241f43e29c77..bb5ff10b9110 100644
---- a/arch/arm/boot/dts/rk3xxx.dtsi
-+++ b/arch/arm/boot/dts/rk3xxx.dtsi
-@@ -84,7 +84,7 @@ gpu: gpu@10090000 {
- 		compatible = "arm,mali-400";
- 		reg = <0x10090000 0x10000>;
- 		clocks = <&cru ACLK_GPU>, <&cru ACLK_GPU>;
--		clock-names = "core", "bus";
-+		clock-names = "bus", "core";
- 		assigned-clocks = <&cru ACLK_GPU>;
- 		assigned-clock-rates = <100000000>;
- 		resets = <&cru SRST_GPU>;
+diff --git a/fs/ubifs/file.c b/fs/ubifs/file.c
+index 743928efffc1..49fe062ce45e 100644
+--- a/fs/ubifs/file.c
++++ b/fs/ubifs/file.c
+@@ -1375,7 +1375,6 @@ int ubifs_update_time(struct inode *inode, struct timespec64 *time,
+ 	struct ubifs_info *c = inode->i_sb->s_fs_info;
+ 	struct ubifs_budget_req req = { .dirtied_ino = 1,
+ 			.dirtied_ino_d = ALIGN(ui->data_len, 8) };
+-	int iflags = I_DIRTY_TIME;
+ 	int err, release;
+ 
+ 	if (!IS_ENABLED(CONFIG_UBIFS_ATIME_SUPPORT))
+@@ -1393,11 +1392,8 @@ int ubifs_update_time(struct inode *inode, struct timespec64 *time,
+ 	if (flags & S_MTIME)
+ 		inode->i_mtime = *time;
+ 
+-	if (!(inode->i_sb->s_flags & SB_LAZYTIME))
+-		iflags |= I_DIRTY_SYNC;
+-
+ 	release = ui->dirty;
+-	__mark_inode_dirty(inode, iflags);
++	__mark_inode_dirty(inode, I_DIRTY_SYNC);
+ 	mutex_unlock(&ui->ui_mutex);
+ 	if (release)
+ 		ubifs_release_budget(c, &req);
 -- 
 2.25.1
 
