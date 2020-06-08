@@ -2,128 +2,118 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B132BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B9B0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:10:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B053206D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:08:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73CAC206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:10:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="P2GKu52W"
+	dkim=pass (2048-bit key) header.d=tessares-net.20150623.gappssmtp.com header.i=@tessares-net.20150623.gappssmtp.com header.b="XZrT7p9h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729393AbgFHKIb (ORCPT
+        id S1729349AbgFHKKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 06:08:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58490 "EHLO
+        Mon, 8 Jun 2020 06:10:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729378AbgFHKI3 (ORCPT
+        with ESMTP id S1729269AbgFHKK2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 06:08:29 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCFC2C08C5C4
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 03:08:28 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id l27so17634237ejc.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 03:08:28 -0700 (PDT)
+        Mon, 8 Jun 2020 06:10:28 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D176C08C5C4
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 03:10:27 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id d15so427308edm.10
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 03:10:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dxkh4Kxm2qSluY2udt9pCB1rYALSYeqASDMTt8TKeJI=;
-        b=P2GKu52WItZEgtpoUj18LxtU7AgqM5FVRJdGi3TUv/5Lg5xZFomT3eHPBzOMyvALk/
-         7GBsEJETXvfGLn1q9PletcojWdFGb/np1KH7hyORWeAS3kHqADvoXOqPq95AqxdRlUJA
-         GaFPC0TkTjGiwkE6mp/dO9Rsmt7YCy68d6pG8=
+        bh=FIHN9MZcZVs89vJj6qS2FPe1wOlI+KP3JEjnXkjgUIo=;
+        b=XZrT7p9hpwoQ1asrimWl4mEcrJFng4P/wINbcREbRIl9S0zPQr2ZqILftR75qdvKul
+         A40C4WgHf03Pxuk6un+J4HvV+TYa2ndpPV1wDxS+La6ce+buLRXoQ22CpPqdKHTIl10W
+         4g/2/0TPeoFpd+KaY2US54Yjx/YEwBkkdhub9G0XgoYW4OEIuXto41aqvb9neBiSBxqQ
+         Zk31fn1/vpMbPK1hs1ATveRuxmDFrSOG5/a1HsScmvLOsBl/hh4DBjccpL2hkaRHAKTn
+         PtbZ1v/O27+BmScm0wc/yXctHx7lh9g+9RZqAzlC/VK2PyFcxDfNC2QzHR9aCZqLoRgE
+         WPfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=dxkh4Kxm2qSluY2udt9pCB1rYALSYeqASDMTt8TKeJI=;
-        b=rZvNPqTgdUbguInu8ynoizpOlspTo6h8P/jtRFYD3h5mGFXNC1Pu30/8sN78id7GAu
-         kxXPbj8FmT3YWav8rpgI5cPfXbLqv1Ou2B2zrHtEXG9w/+341+EhhfbpbuW3WdGgC0UP
-         LOskS7p3lgi0x2sdhE2vDEXGp8JVEaaXrv0Vvo103ybdqipSatLXI0shz+ryq3+ugWk+
-         rDWpw8EGlfP/iYWBIDBog4fehd5xAxFkDHnvkTetJYbLclWWwwBdooogEVd8XtFJRm75
-         Sh9XLPtq3N2O2fJLCoL5ydB9AKbD5i0/7gK/Y7GpG3ArW6cl5LK2R7OfUyF4D3g+npmr
-         oB6Q==
-X-Gm-Message-State: AOAM532LGcMWK5Y9ULGtOJI1lTaCdWItbXJ4QkxbUKT8FE0z3794UEmS
-        6ONy5E5AlVOa3gGIngeR9ALp5ZgGrq0=
-X-Google-Smtp-Source: ABdhPJxAg8FdGBWitx0l/Pw7yBtDmw4KoAgFhWNXk8/GC/u/FjggasbaZA/r5dcLa09kW4fP8S4wiA==
-X-Received: by 2002:a17:906:945:: with SMTP id j5mr10235625ejd.52.1591610907139;
-        Mon, 08 Jun 2020 03:08:27 -0700 (PDT)
-Received: from [192.168.1.149] (ip-5-186-116-45.cgn.fibianet.dk. [5.186.116.45])
-        by smtp.gmail.com with ESMTPSA id d6sm12581189edn.75.2020.06.08.03.08.25
+        bh=FIHN9MZcZVs89vJj6qS2FPe1wOlI+KP3JEjnXkjgUIo=;
+        b=YQZokMXVa4+6/3fAupsuqR2ssXG1HEFIal1QWAXpbyqBXppj/BoL7rxOBBMkS2m7cd
+         jgruD2elE8flk21ya3Z3wPL/VRgCxsS4+gNryL/tPZvgwyuWY5jiw/gwTAw0jVUt8iAM
+         WP5KwrZNVUXnSgtfA5f22HVM9OXw5OAF0iagRp0efwCed8WTtkKijqLFCOSxQ94kym8I
+         wIaSfhMjxY28g51h7ratfX/GR35ZLSf/zl62TzO7DOQEwzeip9pkterWufITYrNRgoYU
+         bXNpUx+sFEWzLdkzL6rmdFcBBEg0ZikNJ8CcotF9/42V331gEDHRrG6YyxK4ajVgLTJa
+         k/qg==
+X-Gm-Message-State: AOAM531+RAVavEcfkT6/+ByarT+tC3e58RGjsXsRbG9H13BHH6Fiqhnp
+        lSgCHx5gMZmBOov+TqB7/cV6894fevk=
+X-Google-Smtp-Source: ABdhPJw0ngwli2qw4dkn4AewiyqmubBF/LRY4YnInqYpXOmLTtSzPm7V16Dxo0irGyb8jE8v5df7RA==
+X-Received: by 2002:aa7:df96:: with SMTP id b22mr21646067edy.348.1591611025407;
+        Mon, 08 Jun 2020 03:10:25 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net ([79.132.248.22])
+        by smtp.gmail.com with ESMTPSA id p15sm10371360ejm.88.2020.06.08.03.10.24
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Jun 2020 03:08:26 -0700 (PDT)
-Subject: Re: [PATCH resend] fs/namei.c: micro-optimize acl_permission_check
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200605142300.14591-1-linux@rasmusvillemoes.dk>
- <CAHk-=wgz68f2u7bFPZCWgbsbEJw+2HWTJFXSg_TguY+xJ8WrNw@mail.gmail.com>
- <dcd7516b-0a1f-320d-018d-f3990e771f37@rasmusvillemoes.dk>
- <CAHk-=wixdSUWFf6BoT7rJUVRmjUv+Lir_Rnh81xx7e2wnzgKbg@mail.gmail.com>
- <CAHk-=widT2tV+sVPzNQWijtUz4JA=CS=EaJRfC3_9ymuQXQS8Q@mail.gmail.com>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <934d7665-3358-576e-8434-82b16e3a1bf1@rasmusvillemoes.dk>
-Date:   Mon, 8 Jun 2020 12:08:25 +0200
+        Mon, 08 Jun 2020 03:10:24 -0700 (PDT)
+Subject: Re: [PATCH] mptcp: bugfix for RM_ADDR option parsing
+To:     Geliang Tang <geliangtang@gmail.com>
+Cc:     Mat Martineau <mathew.j.martineau@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        mptcp@lists.01.org, linux-kernel@vger.kernel.org
+References: <904e4ae90b94d679d9877d3c48bd277cb9b39f5f.1591601587.git.geliangtang@gmail.com>
+From:   Matthieu Baerts <matthieu.baerts@tessares.net>
+Message-ID: <41246875-febc-e88d-304b-2a6692f590ac@tessares.net>
+Date:   Mon, 8 Jun 2020 12:10:23 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=widT2tV+sVPzNQWijtUz4JA=CS=EaJRfC3_9ymuQXQS8Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <904e4ae90b94d679d9877d3c48bd277cb9b39f5f.1591601587.git.geliangtang@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/06/2020 21.48, Linus Torvalds wrote:
-> On Sun, Jun 7, 2020 at 9:37 AM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
->>
->>> That will kinda work, except you do that mask &= MAY_RWX before
->>> check_acl(), which cares about MAY_NOT_BLOCK and who knows what other bits.
->>
->> Good catch.
-> 
-> With the change to not clear the non-rwx bits in general, the owner
-> case now wants to do the masking, and then the "shift left by 6"
-> modification makes no sense since it only makes for a bigger constant
-> (the only reason to do the shift-right was so that the bitwise not of
-> the i_mode could be done in parallel with the shift, but with the
-> masking that instruction scheduling optimization becomes kind of
-> immaterial too). So I modified that patch to not bother, and add a
-> comment about MAY_NOT_BLOCK.
-> 
-> And since I was looking at the MAY_NOT_BLOCK logic, it was not only
-> not mentioned in comments, it also had some really confusing code
-> around it.
-> 
-> The posix_acl_permission() looked like it tried to conserve that bit,
-> which is completely wrong. It wasn't a bug only for the simple reason
-> that the only two call-sites had either explicitly cleared the bit
-> when calling, or had tested that the bit wasn't set in the first
-> place.
-> 
-> So as a result, I wrote a second patch to clear that confusion up.
-> 
-> Rasmus, say the word and I'll mark you for authorship on the first one.
+Hi Geliang,
 
-It might be a bit confusing with me mentioned in the third person and
-then also author, and it's really mostly your patch, so reported-by is
-fine with me. But it's up to you.
+On 08/06/2020 09:48, Geliang Tang wrote:
+> In MPTCPOPT_RM_ADDR option parsing, the pointer "ptr" pointed to the
+> "Subtype" octet, the pointer "ptr+1" pointed to the "Address ID" octet:
+> 
+>    +-------+-------+---------------+
+>    |Subtype|(resvd)|   Address ID  |
+>    +-------+-------+---------------+
+>    |               |
+>   ptr            ptr+1
+> 
+> We should set mp_opt->rm_id to the value of "ptr+1", not "ptr". This patch
+> will fix this bug.
 
-> Comments? Can you find something else wrong here, or some other fixup to do?
+Thank you for the patch, good catch!
+Indeed "ptr" should be incremented.
 
-No, I think it's ok. I took a look at the disassembly and it looks fine.
-There's an extra push/pop of %r14 [that's where gcc computes mode>>3,
-then CSE allows it to do cmovne %r14d,%ebx after in_group_p), so the
-owner case gets slightly penalized. I think/hope the savings from
-avoiding the in_group_p should compensate for that - any absolute path
-open() by non-root saves at least two in_group_p. YMMV.
+Because this is a bug-fix for net, may you clearly indicate that in the 
+subject to help -net maintainers please? [PATCH net v2]
 
-Rasmus
+Also, may you add a "Fixes" tag as well as it is for -net ? I guess it 
+should be:
+
+     Fixes: 3df523ab582c ("mptcp: Add ADD_ADDR handling")
+
+The rest is good!
+
+Cheers,
+Matt
+-- 
+Matthieu Baerts | R&D Engineer
+matthieu.baerts@tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
