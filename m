@@ -4,50 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C0CCC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A65AAC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E210C20737
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:01:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 812C520737
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:02:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591664514;
-	bh=V2+xHMTqohevdbiF822LvwMu8HBv9ms+KvauSS3xlIc=;
+	s=default; t=1591664524;
+	bh=LBMRf9JHo+eK6vmiBgsR6DL+jYRuMcEM+eXkqBtF1NY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zzESIDpd5ZAnvr4WVSNPKcciUaFEBVobajdLMvtdNjQOEVnhuUZi8JVae9JpFUNrf
-	 /ivQOXW1FT+3cDv/dYIC6XJOdWFPzFFNT7JUB2g9y7vMjnmoZffVRdNKfKcsYyJWHp
-	 lWTXIQesI9WsBoQD+QYa8PTtsFoYuE8LzjBzm/M8=
+	b=r1ok+/MpqDNCj+w5pBcVRbxNwSQGNf/OTQShyuuglkbq9V/d76G+e2U5ZtKMBofe4
+	 1Bj9uVSCGCpWo/MxkBfqKfPKREz1aIse4RfmTR6SmI47oLCefEKHh8s700hu4YspL/
+	 xzoF69lI/78xS38iIpM6TeofijNFSVL3CStGJYvM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728269AbgFIBBx (ORCPT
+        id S2388130AbgFIBCD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 21:01:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53164 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 21:02:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728100AbgFHXIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:08:07 -0400
+        id S1728077AbgFHXIB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:08:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AAD120774;
-        Mon,  8 Jun 2020 23:08:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E1FA20888;
+        Mon,  8 Jun 2020 23:07:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657687;
-        bh=V2+xHMTqohevdbiF822LvwMu8HBv9ms+KvauSS3xlIc=;
+        s=default; t=1591657681;
+        bh=LBMRf9JHo+eK6vmiBgsR6DL+jYRuMcEM+eXkqBtF1NY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ccUhWkvSmnGjfey3RYVsCxQpWSAEjkRTRbSq9EfMrNC6pPtZzii6T7muXQw/1csM2
-         dxTXMhcrNW+dFnKXHCNBtb6j67Ggzq2eVKpbNPphthyo9FatEeb6yjGkXhadLBWqTQ
-         ol5rLZF4QJ/id+Vs08kWZCw5AlzffB35EKwpJBkQ=
+        b=ANpeD0ZU/oc/2Y/uLSSmtprdEyrqI7MQdI6SOqcv6EFpmxMQMT7uyGHJl9vq5wYhN
+         o9MlXVMHFllE11ls6PUMx+lnGtboTAxaCuBDbnkaIbzom3W3WL94AP/OzqrOMbQvQm
+         MmnD/7YtEfYuKm+eRpHzsIvgw0XXe9odlNsHmcHM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, ath11k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 089/274] ath11k: fix error message to correctly report the command that failed
-Date:   Mon,  8 Jun 2020 19:03:02 -0400
-Message-Id: <20200608230607.3361041-89-sashal@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        David Airlie <airlied@linux.ie>, Gao Xiang <xiang@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Wei Liu <wei.liu@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 086/274] x86: fix vmap arguments in map_irq_stack
+Date:   Mon,  8 Jun 2020 19:02:59 -0400
+Message-Id: <20200608230607.3361041-86-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -60,36 +85,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit 9a8074e3bcd7956ec6b4f7c26360af1b0b0abe38 ]
+[ Upstream commit 0348801151b5aefbcf9d6e9b9e30aceb3a2a7b13 ]
 
-Currently the error message refers to the command WMI_TWT_DIeABLE_CMDID
-which looks like a cut-n-paste mangled typo. Fix the message to match
-the command WMI_BSS_COLOR_CHANGE_ENABLE_CMDID that failed.
+vmap does not take a gfp_t, the flags argument is for VM_* flags.
 
-Fixes: 5a032c8d1953 ("ath11k: add WMI calls required for handling BSS color")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200327192639.363354-1-colin.king@canonical.com
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Gao Xiang <xiang@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Laura Abbott <labbott@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Michael Kelley <mikelley@microsoft.com>
+Cc: Minchan Kim <minchan@kernel.org>
+Cc: Nitin Gupta <ngupta@vflare.org>
+Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>
+Cc: Wei Liu <wei.liu@kernel.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Paul Mackerras <paulus@ozlabs.org>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Will Deacon <will@kernel.org>
+Link: http://lkml.kernel.org/r/20200414131348.444715-3-hch@lst.de
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath11k/wmi.c | 2 +-
+ arch/x86/kernel/irq_64.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath11k/wmi.c b/drivers/net/wireless/ath/ath11k/wmi.c
-index e7ce36966d6a..6fec62846279 100644
---- a/drivers/net/wireless/ath/ath11k/wmi.c
-+++ b/drivers/net/wireless/ath/ath11k/wmi.c
-@@ -2779,7 +2779,7 @@ int ath11k_wmi_send_bss_color_change_enable_cmd(struct ath11k *ar, u32 vdev_id,
- 	ret = ath11k_wmi_cmd_send(wmi, skb,
- 				  WMI_BSS_COLOR_CHANGE_ENABLE_CMDID);
- 	if (ret) {
--		ath11k_warn(ab, "Failed to send WMI_TWT_DIeABLE_CMDID");
-+		ath11k_warn(ab, "Failed to send WMI_BSS_COLOR_CHANGE_ENABLE_CMDID");
- 		dev_kfree_skb(skb);
+diff --git a/arch/x86/kernel/irq_64.c b/arch/x86/kernel/irq_64.c
+index 12df3a4abfdd..6b32ab009c19 100644
+--- a/arch/x86/kernel/irq_64.c
++++ b/arch/x86/kernel/irq_64.c
+@@ -43,7 +43,7 @@ static int map_irq_stack(unsigned int cpu)
+ 		pages[i] = pfn_to_page(pa >> PAGE_SHIFT);
  	}
- 	return ret;
+ 
+-	va = vmap(pages, IRQ_STACK_SIZE / PAGE_SIZE, GFP_KERNEL, PAGE_KERNEL);
++	va = vmap(pages, IRQ_STACK_SIZE / PAGE_SIZE, VM_MAP, PAGE_KERNEL);
+ 	if (!va)
+ 		return -ENOMEM;
+ 
 -- 
 2.25.1
 
