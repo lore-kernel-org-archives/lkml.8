@@ -2,116 +2,196 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0381C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:52:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE389C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:53:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87D8520774
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:52:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591627921;
-	bh=1puOhgt4Uwf+poNYxoCheW9wNrOBAmiWsqq8Yg7kpT0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OXITjaett5AZtPsEDh+H31MLbxoymXaO5Yck3fYzWIZgwXVg1rJdnKKED672Vt+Fm
-	 +1DOwl67TZyRKeI5qO3Ft2Ot3Fatx2mQCmj9zeJNEqp1aINaisMfGY6KBuMvUBK/F5
-	 mcucUdHhVVxuLSy/Xfb5FUerLGUUxRfhLf6V+iV0=
+	by mail.kernel.org (Postfix) with ESMTP id 7F0FB2074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:53:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MVa74QmQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730145AbgFHOwA (ORCPT
+        id S1730115AbgFHOxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 10:52:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55018 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725975AbgFHOv5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 10:51:57 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 8 Jun 2020 10:53:24 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:51643 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729938AbgFHOxX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 10:53:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591628002;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=348O/stkX5rRAvU3hXLCDhwxnAdjbiqoKmblsaN//os=;
+        b=MVa74QmQVF0pS1X4og5Z2tcYa/8mQFrtSN9DhvTnWIqkPQ9f9hus7htclCHjZ2XFajloqZ
+        Ua/YF2ZmNzcao7OxewHPDNlgedDUdioA29UM5j0J3gFUqN0yxojkqkqSevLEBVxABEnob4
+        XLaQjSv8b5jioBIny73j7XUfun/nlgg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-193-0Kw7WqClMHKvPtuzdSvJmw-1; Mon, 08 Jun 2020 10:53:18 -0400
+X-MC-Unique: 0Kw7WqClMHKvPtuzdSvJmw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13A7F206C3;
-        Mon,  8 Jun 2020 14:51:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591627917;
-        bh=1puOhgt4Uwf+poNYxoCheW9wNrOBAmiWsqq8Yg7kpT0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=m1kfouFwxncpCcEUNSdwbfYPisRKvhk/SAz5yBJSKNX6jTYHy4QU21ppwYpPr5V7Q
-         HrEe8QaOQAhpPu78xdMKMQ4/xH32NzcJr496kd3wG0fJOyr/huuSLV/bX10UmZI42a
-         F8jFf2UKv1bK96myVv3ydxBmFRmlxTmMHY0GSYYA=
-Date:   Mon, 8 Jun 2020 15:51:50 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     "Kaneda, Erik" <erik.kaneda@intel.com>,
-        "Moore, Robert" <robert.moore@intel.com>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-        Len Brown <lenb@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-        "dvyukov@google.com" <dvyukov@google.com>,
-        "glider@google.com" <glider@google.com>,
-        "guohanjun@huawei.com" <guohanjun@huawei.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "pcc@google.com" <pcc@google.com>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "devel@acpica.org" <devel@acpica.org>
-Subject: Re: [PATCH] ACPICA: fix UBSAN warning using __builtin_offsetof
-Message-ID: <20200608145150.GA7418@willie-the-truck>
-References: <CAMj1kXErFuvOoG=DB6sz5HBvDuHDiKwWD8uOyLuxaX-u8-+dbA@mail.gmail.com>
- <20200601231805.207441-1-ndesaulniers@google.com>
- <BYAPR11MB30969737340044437013BF44F08B0@BYAPR11MB3096.namprd11.prod.outlook.com>
- <CAKwvOdmsCmPFiDOq7AYUyEx=60B=qo8u9yhnJDQ6nd6Ew7xDkQ@mail.gmail.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3A6F383DB78;
+        Mon,  8 Jun 2020 14:53:07 +0000 (UTC)
+Received: from lorien.usersys.redhat.com (ovpn-114-117.phx2.redhat.com [10.3.114.117])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9C6765D9E8;
+        Mon,  8 Jun 2020 14:53:06 +0000 (UTC)
+Date:   Mon, 8 Jun 2020 10:53:04 -0400
+From:   Phil Auld <pauld@redhat.com>
+To:     Tao Zhou <ouwen210@hotmail.com>
+Cc:     linux-kernel@vger.kernel.org, Josh Don <joshdon@google.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        x86 <x86@kernel.org>
+Subject: Re: [tip: sched/core] sched/fair: Remove distribute_running from CFS
+ bandwidth
+Message-ID: <20200608145304.GA24379@lorien.usersys.redhat.com>
+References: <20200410225208.109717-3-joshdon@google.com>
+ <158835733205.8414.9136130857443620621.tip-bot2@tip-bot2>
+ <BL0PR14MB3779C02BB87DC4426C4761639A840@BL0PR14MB3779.namprd14.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKwvOdmsCmPFiDOq7AYUyEx=60B=qo8u9yhnJDQ6nd6Ew7xDkQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <BL0PR14MB3779C02BB87DC4426C4761639A840@BL0PR14MB3779.namprd14.prod.outlook.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Nick,
-
-On Tue, Jun 02, 2020 at 11:46:31AM -0700, Nick Desaulniers wrote:
-> On Mon, Jun 1, 2020 at 5:03 PM Kaneda, Erik <erik.kaneda@intel.com> wrote:
-> > > Will reported UBSAN warnings:
-> > > UBSAN: null-ptr-deref in drivers/acpi/acpica/tbfadt.c:459:37
-> > > UBSAN: null-ptr-deref in arch/arm64/kernel/smp.c:596:6
-> > >
-> > > Looks like the emulated offsetof macro ACPI_OFFSET is causing these. We
-> > > can avoid this by using the compiler builtin, __builtin_offsetof.
-> >
-> > I'll take a look at this tomorrow
-> > >
-> > > The non-kernel runtime of UBSAN would print:
-> > > runtime error: member access within null pointer of type for this macro.
-> >
-> > actypes.h is owned by ACPICA so we typically do not allow compiler-specific
-> > extensions because the code is intended to be compiled using the C99 standard
-> > without compiler extensions. We could allow this sort of thing in a Linux-specific
-> > header file like include/acpi/platform/aclinux.h but I'll take a look at the error as well..
+On Sun, Jun 07, 2020 at 09:25:58AM +0800 Tao Zhou wrote:
+> Hi,
 > 
-> If I'm not allowed to touch that header, it looks like I can include
-> <linux/stddef.h> (rather than my host's <stddef.h>) to get a
-> definition of `offsetof` thats implemented in terms of
-> `__builtin_offsetof`.  I should be able to use that to replace uses of
-> ACPI_OFFSET.  Are any of these off limits?
+> On Fri, May 01, 2020 at 06:22:12PM -0000, tip-bot2 for Josh Don wrote:
+> > The following commit has been merged into the sched/core branch of tip:
+> > 
+> > Commit-ID:     ab93a4bc955b3980c699430bc0b633f0d8b607be
+> > Gitweb:        https://git.kernel.org/tip/ab93a4bc955b3980c699430bc0b633f0d8b607be
+> > Author:        Josh Don <joshdon@google.com>
+> > AuthorDate:    Fri, 10 Apr 2020 15:52:08 -07:00
+> > Committer:     Peter Zijlstra <peterz@infradead.org>
+> > CommitterDate: Thu, 30 Apr 2020 20:14:38 +02:00
+> > 
+> > sched/fair: Remove distribute_running from CFS bandwidth
+> > 
+> > This is mostly a revert of commit:
+> > 
+> >   baa9be4ffb55 ("sched/fair: Fix throttle_list starvation with low CFS quota")
+> > 
+> > The primary use of distribute_running was to determine whether to add
+> > throttled entities to the head or the tail of the throttled list. Now
+> > that we always add to the tail, we can remove this field.
+> > 
+> > The other use of distribute_running is in the slack_timer, so that we
+> > don't start a distribution while one is already running. However, even
+> > in the event that this race occurs, it is fine to have two distributions
+> > running (especially now that distribute grabs the cfs_b->lock to
+> > determine remaining quota before assigning).
+> > 
+> > Signed-off-by: Josh Don <joshdon@google.com>
+> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > Reviewed-by: Phil Auld <pauld@redhat.com>
+> > Tested-by: Phil Auld <pauld@redhat.com>
+> > Link: https://lkml.kernel.org/r/20200410225208.109717-3-joshdon@google.com
+> > ---
+> >  kernel/sched/fair.c  | 13 +------------
+> >  kernel/sched/sched.h |  1 -
+> >  2 files changed, 1 insertion(+), 13 deletions(-)
+> > 
+> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > index 0c13a41..3d6ce75 100644
+> > --- a/kernel/sched/fair.c
+> > +++ b/kernel/sched/fair.c
+> > @@ -4931,14 +4931,12 @@ static int do_sched_cfs_period_timer(struct cfs_bandwidth *cfs_b, int overrun, u
+> >  	/*
+> >  	 * This check is repeated as we release cfs_b->lock while we unthrottle.
+> >  	 */
+> > -	while (throttled && cfs_b->runtime > 0 && !cfs_b->distribute_running) {
+> > -		cfs_b->distribute_running = 1;
+> > +	while (throttled && cfs_b->runtime > 0) {
+> >  		raw_spin_unlock_irqrestore(&cfs_b->lock, flags);
+> >  		/* we can't nest cfs_b->lock while distributing bandwidth */
+> >  		distribute_cfs_runtime(cfs_b);
+> >  		raw_spin_lock_irqsave(&cfs_b->lock, flags);
+> >  
+> > -		cfs_b->distribute_running = 0;
+> >  		throttled = !list_empty(&cfs_b->throttled_cfs_rq);
+> >  	}
+> >  
+> > @@ -5052,10 +5050,6 @@ static void do_sched_cfs_slack_timer(struct cfs_bandwidth *cfs_b)
+> >  	/* confirm we're still not at a refresh boundary */
+> >  	raw_spin_lock_irqsave(&cfs_b->lock, flags);
+> >  	cfs_b->slack_started = false;
+> > -	if (cfs_b->distribute_running) {
+> > -		raw_spin_unlock_irqrestore(&cfs_b->lock, flags);
+> > -		return;
+> > -	}
+> >  
+> >  	if (runtime_refresh_within(cfs_b, min_bandwidth_expiration)) {
+> >  		raw_spin_unlock_irqrestore(&cfs_b->lock, flags);
+> > @@ -5065,9 +5059,6 @@ static void do_sched_cfs_slack_timer(struct cfs_bandwidth *cfs_b)
+> >  	if (cfs_b->quota != RUNTIME_INF && cfs_b->runtime > slice)
+> >  		runtime = cfs_b->runtime;
+> >  
+> > -	if (runtime)
+> > -		cfs_b->distribute_running = 1;
+> > -
+> >  	raw_spin_unlock_irqrestore(&cfs_b->lock, flags);
+> >  
+> >  	if (!runtime)
+> > @@ -5076,7 +5067,6 @@ static void do_sched_cfs_slack_timer(struct cfs_bandwidth *cfs_b)
+> >  	distribute_cfs_runtime(cfs_b);
+> >  
+> >  	raw_spin_lock_irqsave(&cfs_b->lock, flags);
+> > -	cfs_b->distribute_running = 0;
+> >  	raw_spin_unlock_irqrestore(&cfs_b->lock, flags);
+> >  }
+> 
+> When I read the tip code, I found nothing between above lock/unlock.
+> This commit removed distribute_running. Is there any reason to remain
+> that lock/unlock there ? I feel that it is not necessary now, no ?
+>
 
-It's not so much about not being allowed to touch the header, but rather
-that the kernel imports the code from a different project:
+Yeah, that looks pretty useless :)
 
-https://acpica.org/community
+Do you want to spin up a patch?
 
-> $ grep -rn ACPI_OFFSET
-> arch/arm64/include/asm/acpi.h:34:#define ACPI_MADT_GICC_MIN_LENGTH
-> ACPI_OFFSET(  \
-> arch/arm64/include/asm/acpi.h:41:#define ACPI_MADT_GICC_SPE
-> (ACPI_OFFSET(struct acpi_madt_generic_interrupt, \
 
-I'm happy to take patches to the stuff under arch/arm64/, fwiw.
+Cheers,
+Phil
 
-Will
+
+> Thanks
+> 
+> > @@ -5218,7 +5208,6 @@ void init_cfs_bandwidth(struct cfs_bandwidth *cfs_b)
+> >  	cfs_b->period_timer.function = sched_cfs_period_timer;
+> >  	hrtimer_init(&cfs_b->slack_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+> >  	cfs_b->slack_timer.function = sched_cfs_slack_timer;
+> > -	cfs_b->distribute_running = 0;
+> >  	cfs_b->slack_started = false;
+> >  }
+> >  
+> > diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> > index db3a576..7198683 100644
+> > --- a/kernel/sched/sched.h
+> > +++ b/kernel/sched/sched.h
+> > @@ -349,7 +349,6 @@ struct cfs_bandwidth {
+> >  
+> >  	u8			idle;
+> >  	u8			period_active;
+> > -	u8			distribute_running;
+> >  	u8			slack_started;
+> >  	struct hrtimer		period_timer;
+> >  	struct hrtimer		slack_timer;
+> 
+
+-- 
+
