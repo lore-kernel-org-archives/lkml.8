@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB583C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D489C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B99E720842
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:17:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D796D2083E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:17:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658264;
-	bh=0HjfYSIkLk0Y7awquE8hNPrliWoskkrQ8QBRYMPuFlY=;
+	s=default; t=1591658273;
+	bh=O0RPL3irJhWBZ5F2H3BdlvfzT93fhcXBDbqTToK9uYg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GQXJJWH1n95y0gregpXgzHIQ+9L+wXT7kJjInai1fLCnFwwUmEsMdSYsSuZ4/A85N
-	 YEAO1PuE8D4s6QgBX4VTWFQtQqJduO5yhJYPE28JKDuy8O+GoiZvRqsibVKrXakkqN
-	 tnMTaVruF8+e4f4+AlK7qnqA+CUhnYDajqjGXcks=
+	b=JtxVOtGY0Vs/4eqMwLROdfYXPdIDYW/1nFea8LuKqcvNgf0gHAUEUQdnuqeAR3JGy
+	 TdJjuj9dTADkT0+wWWxxAYnzHkRo+ZtaBzs95/zW1x4bbEb63lBW4FDvdoWa7rHAOp
+	 KNU2d1RKLoC3kjfoRIShnUlQTBU431S6Mw2QI8hY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730506AbgFHXRn (ORCPT
+        id S1730074AbgFHXRw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:17:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34376 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:17:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729750AbgFHXON (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:14:13 -0400
+        id S1729776AbgFHXOT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:14:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEE5620897;
-        Mon,  8 Jun 2020 23:14:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4C5F20C09;
+        Mon,  8 Jun 2020 23:14:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658052;
-        bh=0HjfYSIkLk0Y7awquE8hNPrliWoskkrQ8QBRYMPuFlY=;
+        s=default; t=1591658059;
+        bh=O0RPL3irJhWBZ5F2H3BdlvfzT93fhcXBDbqTToK9uYg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E94fj7PyyGCeFYEA1BYZT046bEiXrYqfsHje/CwoH/u6Du3xt9TO1FzVDDon3AA57
-         3f+wuvIAiN1aFPN+lQqA9rB/84P4JT2lH7jk4hxAEgI9dctYRdTB6fJahI4Gd/uy+B
-         WVjTRBugKktD7HrvuyDpq/3ec3YX8b4q+HE8rGhg=
+        b=kh/y/7P/GNdAo7Rziw3hWOXwLo4yINK+faVce32mUpDN+fXbaogvNE9PBlQKC9FHC
+         sDXJVvw0EdLbSNho0KKJj7TqgfS89m6ZAc387hH2QsxD0KbKOyHpzPzfvMG+EDZ/TG
+         IJECNOhX4vVB5mtPKwWPht7wX1v2gkxvOBmuElQ8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Joerg Roedel <jroedel@suse.de>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Tom Murphy <murphyt7@tcd.ie>, Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.6 100/606] iommu: Fix deferred domain attachment
-Date:   Mon,  8 Jun 2020 19:03:45 -0400
-Message-Id: <20200608231211.3363633-100-sashal@kernel.org>
+Cc:     Artem Borisov <dedsa2002@gmail.com>, Jiri Kosina <jkosina@suse.cz>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 106/606] HID: alps: Add AUI1657 device ID
+Date:   Mon,  8 Jun 2020 19:03:51 -0400
+Message-Id: <20200608231211.3363633-106-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -61,88 +58,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Artem Borisov <dedsa2002@gmail.com>
 
-[ Upstream commit bd421264ed307dd296eab036851221b225071a32 ]
+[ Upstream commit 640e403b1fd24e7f31ac6f29f0b6a21d285ed729 ]
 
-The IOMMU core code has support for deferring the attachment of a domain
-to a device. This is needed in kdump kernels where the new domain must
-not be attached to a device before the device driver takes it over.
+This device is used on Lenovo V130-15IKB variants and uses
+the same registers as U1.
 
-When the AMD IOMMU driver got converted to use the dma-iommu
-implementation, the deferred attaching got lost. The code in
-dma-iommu.c has support for deferred attaching, but it calls into
-iommu_attach_device() to actually do it. But iommu_attach_device()
-will check if the device should be deferred in it code-path and do
-nothing, breaking deferred attachment.
-
-Move the is_deferred_attach() check out of the attach_device path and
-into iommu_group_add_device() to make deferred attaching work from the
-dma-iommu code.
-
-Fixes: 795bbbb9b6f8 ("iommu/dma-iommu: Handle deferred devices")
-Reported-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Suggested-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Tested-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Cc: Jerry Snitselaar <jsnitsel@redhat.com>
-Cc: Tom Murphy <murphyt7@tcd.ie>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Link: https://lore.kernel.org/r/20200519130340.14564-1-joro@8bytes.org
+Signed-off-by: Artem Borisov <dedsa2002@gmail.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/iommu.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ drivers/hid/hid-alps.c | 1 +
+ drivers/hid/hid-ids.h  | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 8d2477941fd9..22b28076d48e 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -692,6 +692,15 @@ static int iommu_group_create_direct_mappings(struct iommu_group *group,
- 	return ret;
- }
+diff --git a/drivers/hid/hid-alps.c b/drivers/hid/hid-alps.c
+index fa704153cb00..c2a2bd528890 100644
+--- a/drivers/hid/hid-alps.c
++++ b/drivers/hid/hid-alps.c
+@@ -802,6 +802,7 @@ static int alps_probe(struct hid_device *hdev, const struct hid_device_id *id)
+ 		break;
+ 	case HID_DEVICE_ID_ALPS_U1_DUAL:
+ 	case HID_DEVICE_ID_ALPS_U1:
++	case HID_DEVICE_ID_ALPS_1657:
+ 		data->dev_type = U1;
+ 		break;
+ 	default:
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 40697af0ca35..7d769ca864a7 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -81,7 +81,7 @@
+ #define HID_DEVICE_ID_ALPS_U1		0x1215
+ #define HID_DEVICE_ID_ALPS_T4_BTNLESS	0x120C
+ #define HID_DEVICE_ID_ALPS_1222		0x1222
+-
++#define HID_DEVICE_ID_ALPS_1657         0x121E
  
-+static bool iommu_is_attach_deferred(struct iommu_domain *domain,
-+				     struct device *dev)
-+{
-+	if (domain->ops->is_attach_deferred)
-+		return domain->ops->is_attach_deferred(domain, dev);
-+
-+	return false;
-+}
-+
- /**
-  * iommu_group_add_device - add a device to an iommu group
-  * @group: the group into which to add the device (reference should be held)
-@@ -746,7 +755,7 @@ int iommu_group_add_device(struct iommu_group *group, struct device *dev)
- 
- 	mutex_lock(&group->mutex);
- 	list_add_tail(&device->list, &group->devices);
--	if (group->domain)
-+	if (group->domain  && !iommu_is_attach_deferred(group->domain, dev))
- 		ret = __iommu_attach_device(group->domain, dev);
- 	mutex_unlock(&group->mutex);
- 	if (ret)
-@@ -1652,9 +1661,6 @@ static int __iommu_attach_device(struct iommu_domain *domain,
- 				 struct device *dev)
- {
- 	int ret;
--	if ((domain->ops->is_attach_deferred != NULL) &&
--	    domain->ops->is_attach_deferred(domain, dev))
--		return 0;
- 
- 	if (unlikely(domain->ops->attach_dev == NULL))
- 		return -ENODEV;
-@@ -1726,8 +1732,7 @@ EXPORT_SYMBOL_GPL(iommu_sva_unbind_gpasid);
- static void __iommu_detach_device(struct iommu_domain *domain,
- 				  struct device *dev)
- {
--	if ((domain->ops->is_attach_deferred != NULL) &&
--	    domain->ops->is_attach_deferred(domain, dev))
-+	if (iommu_is_attach_deferred(domain, dev))
- 		return;
- 
- 	if (unlikely(domain->ops->detach_dev == NULL))
+ #define USB_VENDOR_ID_AMI		0x046b
+ #define USB_DEVICE_ID_AMI_VIRT_KEYBOARD_AND_MOUSE	0xff10
 -- 
 2.25.1
 
