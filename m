@@ -7,46 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D0CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:33:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF61C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78B45206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:33:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B749B20810
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:33:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662783;
-	bh=sQjkPKrlL5V6DRjrdXB0ZI0gV62k+bpSQLHdQ/3cqXg=;
+	s=default; t=1591662791;
+	bh=BXez2DSlSl51P+h9LqOJ6exEtf/VkbpZC0uv0fs2zX0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZQirjCeIuqIcC3dLVhWNa9VwNkgosOYaliEy+KxJjKDQHhwDhs2uD3V7pcg2sq7OJ
-	 u8rHf5qB3zzZovHayt1Ld9LFUU4yllw2KH6rsTokZq9R864vdBEHcV89CNxZ7ZRW2d
-	 ok3+ux/kH8dh6VIlA1y/Qw1LrI1JBBD57cNIV8sc=
+	b=rlQY5nnhXTXxib5K5suJF5vHw9nuNJGbpywt342fSCyDd5lHBaXZaa4ytCsYme9Hi
+	 /uCCeQojJ8J6MGnm6J0Pii8wHiYz+0KNxOFt0WtyzKPACl3c3H8YQnCayCbEaVcg/w
+	 GcQzmQvwebBsrc/+iyTrHE2BnTIJQRe501HD7eE4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733163AbgFIAdC (ORCPT
+        id S1729763AbgFIAdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:33:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35738 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:33:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729968AbgFHXPD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:15:03 -0400
+        id S1729966AbgFHXPB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:15:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D64521532;
-        Mon,  8 Jun 2020 23:15:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45A7D20B80;
+        Mon,  8 Jun 2020 23:14:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658103;
-        bh=sQjkPKrlL5V6DRjrdXB0ZI0gV62k+bpSQLHdQ/3cqXg=;
+        s=default; t=1591658100;
+        bh=BXez2DSlSl51P+h9LqOJ6exEtf/VkbpZC0uv0fs2zX0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HdalPhSvWtKyZq43qt3WTeXBnz/PflSmIamaw8Nfcv3DW2YMJTcbjeDpI+xsG8pKu
-         buUBOF9eZPvQSkH3KmerDzKcZtvZxge0qmcoQ1iuk2mBCCdm8VNH3NJ9LP+o1MCS/k
-         F2maAZrc00dGcMGZwaSZ3DG1hh64BuwXxbLow1To=
+        b=wKmF3dY24YsfQzYs898Q8NcD23SZH/Gu2jk4B8sUZo8Onxj4Z3nBLMidSnXjsFMjn
+         kjh8VpXDWUUMo1JqTHoXCBtfAZVP6LY/IXmTN0ZlHcCkqGzD0Se1C84YbUt3bkehjJ
+         3LKmOXOT8puKfvLic/vQpBo31+AQkjHEQuRRhRgM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Scott Bahling <sbahling@suse.com>, Takashi Iwai <tiwai@suse.de>,
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Christoph Hellwig <hch@lst.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.6 143/606] ALSA: iec1712: Initialize STDSP24 properly when using the model=staudio option
-Date:   Mon,  8 Jun 2020 19:04:28 -0400
-Message-Id: <20200608231211.3363633-143-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 141/606] bpf: Restrict bpf_probe_read{, str}() only to archs where they work
+Date:   Mon,  8 Jun 2020 19:04:26 -0400
+Message-Id: <20200608231211.3363633-141-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -59,40 +65,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Scott Bahling <sbahling@suse.com>
+From: Daniel Borkmann <daniel@iogearbox.net>
 
-commit b0cb099062b0c18246c3a20caaab4c0afc303255 upstream.
+commit 0ebeea8ca8a4d1d453ad299aef0507dab04f6e8d upstream.
 
-The ST Audio ADCIII is an STDSP24 card plus extension box. With commit
-e8a91ae18bdc ("ALSA: ice1712: Add support for STAudio ADCIII") we
-enabled the ADCIII ports using the model=staudio option but forgot
-this part to ensure the STDSP24 card is initialized properly.
+Given the legacy bpf_probe_read{,str}() BPF helpers are broken on archs
+with overlapping address ranges, we should really take the next step to
+disable them from BPF use there.
 
-Fixes: e8a91ae18bdc ("ALSA: ice1712: Add support for STAudio ADCIII")
-Signed-off-by: Scott Bahling <sbahling@suse.com>
-Cc: <stable@vger.kernel.org>
-BugLink: https://bugzilla.suse.com/show_bug.cgi?id=1048934
-Link: https://lore.kernel.org/r/20200518175728.28766-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+To generally fix the situation, we've recently added new helper variants
+bpf_probe_read_{user,kernel}() and bpf_probe_read_{user,kernel}_str().
+For details on them, see 6ae08ae3dea2 ("bpf: Add probe_read_{user, kernel}
+and probe_read_{user,kernel}_str helpers").
+
+Given bpf_probe_read{,str}() have been around for ~5 years by now, there
+are plenty of users at least on x86 still relying on them today, so we
+cannot remove them entirely w/o breaking the BPF tracing ecosystem.
+
+However, their use should be restricted to archs with non-overlapping
+address ranges where they are working in their current form. Therefore,
+move this behind a CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE and
+have x86, arm64, arm select it (other archs supporting it can follow-up
+on it as well).
+
+For the remaining archs, they can workaround easily by relying on the
+feature probe from bpftool which spills out defines that can be used out
+of BPF C code to implement the drop-in replacement for old/new kernels
+via: bpftool feature probe macro
+
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Brendan Gregg <brendan.d.gregg@gmail.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Link: https://lore.kernel.org/bpf/20200515101118.6508-2-daniel@iogearbox.net
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- sound/pci/ice1712/ice1712.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/Kconfig         | 1 +
+ arch/arm64/Kconfig       | 1 +
+ arch/x86/Kconfig         | 1 +
+ init/Kconfig             | 3 +++
+ kernel/trace/bpf_trace.c | 6 ++++--
+ 5 files changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/sound/pci/ice1712/ice1712.c b/sound/pci/ice1712/ice1712.c
-index 884d0cdec08c..73e1e5400506 100644
---- a/sound/pci/ice1712/ice1712.c
-+++ b/sound/pci/ice1712/ice1712.c
-@@ -2332,7 +2332,8 @@ static int snd_ice1712_chip_init(struct snd_ice1712 *ice)
- 	pci_write_config_byte(ice->pci, 0x61, ice->eeprom.data[ICE_EEP1_ACLINK]);
- 	pci_write_config_byte(ice->pci, 0x62, ice->eeprom.data[ICE_EEP1_I2SID]);
- 	pci_write_config_byte(ice->pci, 0x63, ice->eeprom.data[ICE_EEP1_SPDIF]);
--	if (ice->eeprom.subvendor != ICE1712_SUBDEVICE_STDSP24) {
-+	if (ice->eeprom.subvendor != ICE1712_SUBDEVICE_STDSP24 &&
-+	    ice->eeprom.subvendor != ICE1712_SUBDEVICE_STAUDIO_ADCIII) {
- 		ice->gpio.write_mask = ice->eeprom.gpiomask;
- 		ice->gpio.direction = ice->eeprom.gpiodir;
- 		snd_ice1712_write(ice, ICE1712_IREG_GPIO_WRITE_MASK,
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 97864aabc2a6..579f7eb6968a 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -13,6 +13,7 @@ config ARM
+ 	select ARCH_HAS_KEEPINITRD
+ 	select ARCH_HAS_KCOV
+ 	select ARCH_HAS_MEMBARRIER_SYNC_CORE
++	select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
+ 	select ARCH_HAS_PTE_SPECIAL if ARM_LPAE
+ 	select ARCH_HAS_PHYS_TO_DMA
+ 	select ARCH_HAS_SETUP_DMA_OPS
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 0b30e884e088..84e1f0a43cdb 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -21,6 +21,7 @@ config ARM64
+ 	select ARCH_HAS_KCOV
+ 	select ARCH_HAS_KEEPINITRD
+ 	select ARCH_HAS_MEMBARRIER_SYNC_CORE
++	select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
+ 	select ARCH_HAS_PTE_DEVMAP
+ 	select ARCH_HAS_PTE_SPECIAL
+ 	select ARCH_HAS_SETUP_DMA_OPS
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index beea77046f9b..0bc9a74468be 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -70,6 +70,7 @@ config X86
+ 	select ARCH_HAS_KCOV			if X86_64
+ 	select ARCH_HAS_MEM_ENCRYPT
+ 	select ARCH_HAS_MEMBARRIER_SYNC_CORE
++	select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
+ 	select ARCH_HAS_PMEM_API		if X86_64
+ 	select ARCH_HAS_PTE_DEVMAP		if X86_64
+ 	select ARCH_HAS_PTE_SPECIAL
+diff --git a/init/Kconfig b/init/Kconfig
+index ef59c5c36cdb..59908e87ece2 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -2223,6 +2223,9 @@ config ASN1
+ 
+ source "kernel/Kconfig.locks"
+ 
++config ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
++	bool
++
+ config ARCH_HAS_SYNC_CORE_BEFORE_USERMODE
+ 	bool
+ 
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index b899a2d7e900..158233a2ab6c 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -857,14 +857,16 @@ tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		return &bpf_probe_read_user_proto;
+ 	case BPF_FUNC_probe_read_kernel:
+ 		return &bpf_probe_read_kernel_proto;
+-	case BPF_FUNC_probe_read:
+-		return &bpf_probe_read_compat_proto;
+ 	case BPF_FUNC_probe_read_user_str:
+ 		return &bpf_probe_read_user_str_proto;
+ 	case BPF_FUNC_probe_read_kernel_str:
+ 		return &bpf_probe_read_kernel_str_proto;
++#ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
++	case BPF_FUNC_probe_read:
++		return &bpf_probe_read_compat_proto;
+ 	case BPF_FUNC_probe_read_str:
+ 		return &bpf_probe_read_compat_str_proto;
++#endif
+ #ifdef CONFIG_CGROUPS
+ 	case BPF_FUNC_get_current_cgroup_id:
+ 		return &bpf_get_current_cgroup_id_proto;
 -- 
 2.25.1
 
