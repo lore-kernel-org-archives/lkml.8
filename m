@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E5FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:55:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36145C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B208820853
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:55:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13F00207C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:55:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591664121;
-	bh=KO1X9m7NPmmKUMWAX5wnckaZR418zjtg/BYnrfIAY3Y=;
+	s=default; t=1591664127;
+	bh=7DFggtfaa27p7/NZef20x2yJCZHD8VK+NnqtcggjuAk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JJte60ORZOr4z8tq12BX4Sd9zzXLCXFCH9TDDH6LxViqoqDG59BEvrJikqkcfSJDR
-	 dnJQTpxpDqlLBFwUAJ4NGDubHF7i9nH3Kf9py8dWlPrr8Ti537W1TKSirBAJq3N8y3
-	 kivekNLeB45xJSUASE9y+G+AAuNzKfploWRPXFCA=
+	b=e3JSg68991KdFBBonYbMFWOUZ65gk26wnAIvuvjeQVO+CNx+HAsrA1P52KsRhX+H2
+	 UofzRwhYeRrGBvUBdzDbVcUqi67iHTD851Mm/M13uafjyGPsS6gqTAz5v8MylQZ/9b
+	 nUl4Glfv6bLcbVIM9a/lz5SW3m8XMJ6b0h6Zj7So=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387996AbgFIAzU (ORCPT
+        id S1728402AbgFHXJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:55:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55078 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:09:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728406AbgFHXJV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:09:21 -0400
+        id S1728125AbgFHXIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:08:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E61020890;
-        Mon,  8 Jun 2020 23:09:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADFD720774;
+        Mon,  8 Jun 2020 23:08:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657761;
-        bh=KO1X9m7NPmmKUMWAX5wnckaZR418zjtg/BYnrfIAY3Y=;
+        s=default; t=1591657696;
+        bh=7DFggtfaa27p7/NZef20x2yJCZHD8VK+NnqtcggjuAk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QqJSJyLYdeazMZgOuSNTXYwUYrKmWGWKaCrGRUbyA1EjimHD+sQxUJAUBVMj0D7kn
-         1l4d9OwSHu9nUNTeOVO44HQSkpgQS84oJPzFG2nfWtaDdRNxH/uL8Acs+Q0xAqrR3C
-         orVKFegMt+z0dieZWpMpcPIBxXxOsUqitUTiCdT4=
+        b=wJpeDJeqs1oyrCyu+OtANd99eAbpyp3QYTPTRpBQahsDENrUhC+7EtwjxJh/P1j6l
+         DNY0n8qBv6ZWzvsDagNv7O1w511Gqb/BilIDF7KBJtap1c0tv3Bett/OaRon/4QUmf
+         zBathXCbIShdWEqJti5OOf2B+OFkeqVu1xqasrD0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Voon Weifeng <weifeng.voon@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 146/274] stmmac: intel: Fix clock handling on error and remove paths
-Date:   Mon,  8 Jun 2020 19:03:59 -0400
-Message-Id: <20200608230607.3361041-146-sashal@kernel.org>
+Cc:     Bingbu Cao <bingbu.cao@intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rajmohan Mani <rajmohan.mani@intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 5.7 096/274] media: staging/intel-ipu3: Implement lock for stream on/off operations
+Date:   Mon,  8 Jun 2020 19:03:09 -0400
+Message-Id: <20200608230607.3361041-96-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -62,99 +63,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Bingbu Cao <bingbu.cao@intel.com>
 
-[ Upstream commit 09f012e64e4b8126ed6f02d0a85a57c3a0465cf9 ]
+[ Upstream commit 33e3c349b2bf1235be458df09fb8d237141486c4 ]
 
-clk_prepare_enable() might fail, we have to check its returned value.
-Besides that we have to call clk_disable_unprepare() on the error and
-remove paths. Do above in the dwmac-intel driver.
+Currently concurrent stream off operations on ImgU nodes are not
+synchronized, leading to use-after-free bugs (as reported by KASAN).
 
-While at it, remove leftover in stmmac_pci and remove unneeded condition
-for NULL-aware clk_unregister_fixed_rate() call.
+[  250.090724] BUG: KASAN: use-after-free in
+ipu3_dmamap_free+0xc5/0x116 [ipu3_imgu]
+[  250.090726] Read of size 8 at addr ffff888127b29bc0 by task
+yavta/18836
+[  250.090731] Hardware name: HP Soraka/Soraka, BIOS
+Google_Soraka.10431.17.0 03/22/2018
+[  250.090732] Call Trace:
+[  250.090735]  dump_stack+0x6a/0xb1
+[  250.090739]  print_address_description+0x8e/0x279
+[  250.090743]  ? ipu3_dmamap_free+0xc5/0x116 [ipu3_imgu]
+[  250.090746]  kasan_report+0x260/0x28a
+[  250.090750]  ipu3_dmamap_free+0xc5/0x116 [ipu3_imgu]
+[  250.090754]  ipu3_css_pool_cleanup+0x24/0x37 [ipu3_imgu]
+[  250.090759]  ipu3_css_pipeline_cleanup+0x61/0xb9 [ipu3_imgu]
+[  250.090763]  ipu3_css_stop_streaming+0x1f2/0x321 [ipu3_imgu]
+[  250.090768]  imgu_s_stream+0x94/0x443 [ipu3_imgu]
+[  250.090772]  ? ipu3_vb2_buf_queue+0x280/0x280 [ipu3_imgu]
+[  250.090775]  ? vb2_dma_sg_unmap_dmabuf+0x16/0x6f [videobuf2_dma_sg]
+[  250.090778]  ? vb2_buffer_in_use+0x36/0x58 [videobuf2_common]
+[  250.090782]  ipu3_vb2_stop_streaming+0xf9/0x135 [ipu3_imgu]
 
-Fixes: 58da0cfa6cf1 ("net: stmmac: create dwmac-intel.c to contain all Intel platform")
-Cc: Voon Weifeng <weifeng.voon@intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Implemented a lock to synchronize imgu stream on / off operations and
+the modification of streaming flag (in struct imgu_device), to prevent
+these issues.
+
+Reported-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Rajmohan Mani <rajmohan.mani@intel.com>
+Signed-off-by: Bingbu Cao <bingbu.cao@intel.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/stmicro/stmmac/dwmac-intel.c | 20 +++++++++++++++----
- .../net/ethernet/stmicro/stmmac/stmmac_pci.c  |  5 -----
- 2 files changed, 16 insertions(+), 9 deletions(-)
+ drivers/staging/media/ipu3/ipu3-v4l2.c | 10 ++++++++++
+ drivers/staging/media/ipu3/ipu3.c      |  3 +++
+ drivers/staging/media/ipu3/ipu3.h      |  4 ++++
+ 3 files changed, 17 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-index 2e4aaedb93f5..d163c4b43da0 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-@@ -252,6 +252,7 @@ static void common_default_data(struct plat_stmmacenet_data *plat)
- static int intel_mgbe_common_data(struct pci_dev *pdev,
- 				  struct plat_stmmacenet_data *plat)
- {
-+	int ret;
- 	int i;
+diff --git a/drivers/staging/media/ipu3/ipu3-v4l2.c b/drivers/staging/media/ipu3/ipu3-v4l2.c
+index 09c8ede1457c..db8b5d13631a 100644
+--- a/drivers/staging/media/ipu3/ipu3-v4l2.c
++++ b/drivers/staging/media/ipu3/ipu3-v4l2.c
+@@ -367,8 +367,10 @@ static void imgu_vb2_buf_queue(struct vb2_buffer *vb)
  
- 	plat->clk_csr = 5;
-@@ -324,7 +325,12 @@ static int intel_mgbe_common_data(struct pci_dev *pdev,
- 		dev_warn(&pdev->dev, "Fail to register stmmac-clk\n");
- 		plat->stmmac_clk = NULL;
+ 	vb2_set_plane_payload(vb, 0, need_bytes);
+ 
++	mutex_lock(&imgu->streaming_lock);
+ 	if (imgu->streaming)
+ 		imgu_queue_buffers(imgu, false, node->pipe);
++	mutex_unlock(&imgu->streaming_lock);
+ 
+ 	dev_dbg(&imgu->pci_dev->dev, "%s for pipe %u node %u", __func__,
+ 		node->pipe, node->id);
+@@ -468,10 +470,13 @@ static int imgu_vb2_start_streaming(struct vb2_queue *vq, unsigned int count)
+ 	dev_dbg(dev, "%s node name %s pipe %u id %u", __func__,
+ 		node->name, node->pipe, node->id);
+ 
++	mutex_lock(&imgu->streaming_lock);
+ 	if (imgu->streaming) {
+ 		r = -EBUSY;
++		mutex_unlock(&imgu->streaming_lock);
+ 		goto fail_return_bufs;
  	}
--	clk_prepare_enable(plat->stmmac_clk);
-+
-+	ret = clk_prepare_enable(plat->stmmac_clk);
-+	if (ret) {
-+		clk_unregister_fixed_rate(plat->stmmac_clk);
-+		return ret;
-+	}
++	mutex_unlock(&imgu->streaming_lock);
  
- 	/* Set default value for multicast hash bins */
- 	plat->multicast_filter_bins = HASH_TABLE_SIZE;
-@@ -657,7 +663,13 @@ static int intel_eth_pci_probe(struct pci_dev *pdev,
- 	res.wol_irq = pdev->irq;
- 	res.irq = pdev->irq;
+ 	if (!node->enabled) {
+ 		dev_err(dev, "IMGU node is not enabled");
+@@ -498,9 +503,11 @@ static int imgu_vb2_start_streaming(struct vb2_queue *vq, unsigned int count)
  
--	return stmmac_dvr_probe(&pdev->dev, plat, &res);
-+	ret = stmmac_dvr_probe(&pdev->dev, plat, &res);
-+	if (ret) {
-+		clk_disable_unprepare(plat->stmmac_clk);
-+		clk_unregister_fixed_rate(plat->stmmac_clk);
-+	}
+ 	/* Start streaming of the whole pipeline now */
+ 	dev_dbg(dev, "IMGU streaming is ready to start");
++	mutex_lock(&imgu->streaming_lock);
+ 	r = imgu_s_stream(imgu, true);
+ 	if (!r)
+ 		imgu->streaming = true;
++	mutex_unlock(&imgu->streaming_lock);
+ 
+ 	return 0;
+ 
+@@ -532,6 +539,7 @@ static void imgu_vb2_stop_streaming(struct vb2_queue *vq)
+ 		dev_err(&imgu->pci_dev->dev,
+ 			"failed to stop subdev streaming\n");
+ 
++	mutex_lock(&imgu->streaming_lock);
+ 	/* Was this the first node with streaming disabled? */
+ 	if (imgu->streaming && imgu_all_nodes_streaming(imgu, node)) {
+ 		/* Yes, really stop streaming now */
+@@ -542,6 +550,8 @@ static void imgu_vb2_stop_streaming(struct vb2_queue *vq)
+ 	}
+ 
+ 	imgu_return_all_buffers(imgu, node, VB2_BUF_STATE_ERROR);
++	mutex_unlock(&imgu->streaming_lock);
 +
-+	return ret;
+ 	media_pipeline_stop(&node->vdev.entity);
  }
  
- /**
-@@ -675,8 +687,8 @@ static void intel_eth_pci_remove(struct pci_dev *pdev)
+diff --git a/drivers/staging/media/ipu3/ipu3.c b/drivers/staging/media/ipu3/ipu3.c
+index 7a1d1881483b..ee1bba6bdcac 100644
+--- a/drivers/staging/media/ipu3/ipu3.c
++++ b/drivers/staging/media/ipu3/ipu3.c
+@@ -675,6 +675,7 @@ static int imgu_pci_probe(struct pci_dev *pci_dev,
+ 		return r;
  
- 	stmmac_dvr_remove(&pdev->dev);
+ 	mutex_init(&imgu->lock);
++	mutex_init(&imgu->streaming_lock);
+ 	atomic_set(&imgu->qbuf_barrier, 0);
+ 	init_waitqueue_head(&imgu->buf_drain_wq);
  
--	if (priv->plat->stmmac_clk)
--		clk_unregister_fixed_rate(priv->plat->stmmac_clk);
-+	clk_disable_unprepare(priv->plat->stmmac_clk);
-+	clk_unregister_fixed_rate(priv->plat->stmmac_clk);
+@@ -738,6 +739,7 @@ static int imgu_pci_probe(struct pci_dev *pci_dev,
+ out_css_powerdown:
+ 	imgu_css_set_powerdown(&pci_dev->dev, imgu->base);
+ out_mutex_destroy:
++	mutex_destroy(&imgu->streaming_lock);
+ 	mutex_destroy(&imgu->lock);
  
- 	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
- 		if (pci_resource_len(pdev, i) == 0)
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-index 3fb21f7ac9fb..272cb47af9f2 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-@@ -217,15 +217,10 @@ static int stmmac_pci_probe(struct pci_dev *pdev,
-  */
- static void stmmac_pci_remove(struct pci_dev *pdev)
- {
--	struct net_device *ndev = dev_get_drvdata(&pdev->dev);
--	struct stmmac_priv *priv = netdev_priv(ndev);
- 	int i;
+ 	return r;
+@@ -755,6 +757,7 @@ static void imgu_pci_remove(struct pci_dev *pci_dev)
+ 	imgu_css_set_powerdown(&pci_dev->dev, imgu->base);
+ 	imgu_dmamap_exit(imgu);
+ 	imgu_mmu_exit(imgu->mmu);
++	mutex_destroy(&imgu->streaming_lock);
+ 	mutex_destroy(&imgu->lock);
+ }
  
- 	stmmac_dvr_remove(&pdev->dev);
- 
--	if (priv->plat->stmmac_clk)
--		clk_unregister_fixed_rate(priv->plat->stmmac_clk);
--
- 	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
- 		if (pci_resource_len(pdev, i) == 0)
- 			continue;
+diff --git a/drivers/staging/media/ipu3/ipu3.h b/drivers/staging/media/ipu3/ipu3.h
+index 73b123b2b8a2..8cd6a0077d99 100644
+--- a/drivers/staging/media/ipu3/ipu3.h
++++ b/drivers/staging/media/ipu3/ipu3.h
+@@ -146,6 +146,10 @@ struct imgu_device {
+ 	 * vid_buf.list and css->queue
+ 	 */
+ 	struct mutex lock;
++
++	/* Lock to protect writes to streaming flag in this struct */
++	struct mutex streaming_lock;
++
+ 	/* Forbid streaming and buffer queuing during system suspend. */
+ 	atomic_t qbuf_barrier;
+ 	/* Indicate if system suspend take place while imgu is streaming. */
 -- 
 2.25.1
 
