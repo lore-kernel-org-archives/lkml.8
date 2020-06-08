@@ -7,52 +7,59 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C537FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:57:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8048C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A29920659
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:57:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EF0A20659
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:57:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660651;
-	bh=kHnwlx9BCRreA8gSpamAv5AUS0PWWZVe+8Pj/JLgOwo=;
+	s=default; t=1591660656;
+	bh=F6y+JKikiv0lny4EyV4nKnkV7zVKpmOK3oss+/+KtNg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ylesc4G2rGdzJztj8LLHhAQ/UhrLirohY35ch1BIOJZJK8oimVOK3FAKy0ZKZg4pq
-	 QIhxTIlXFrSDXT6zmt2KAJ9skMw1IT8pDiBley+eOdNa7zvSeCAlq16ehX7fRb40vh
-	 8KhGIc+zxc5ZxqzlFzMAN1tPTVcdrnqFSpA5aMwE=
+	b=ntvmlNrFWZDoYZYH/OdTv+lmnwxVGu496ir9tC37wk1v5JUpEpoca0H58ZqzFEfAG
+	 Zu8N61pM5pDghNZLWX2Np/RXOSRUyR6z+mA97H5QC+7NYVZO00C2Am9ZpbhttWTzer
+	 tapzZ04r1wkVVExoz79Ltw3F6SPGGiSDyfG9Sqxs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727979AbgFHXX2 (ORCPT
+        id S1732603AbgFHX5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:23:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40630 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:57:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729134AbgFHXS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:18:26 -0400
+        id S1731492AbgFHXX1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:23:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A21C02088E;
-        Mon,  8 Jun 2020 23:18:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81C67208A9;
+        Mon,  8 Jun 2020 23:23:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658305;
-        bh=kHnwlx9BCRreA8gSpamAv5AUS0PWWZVe+8Pj/JLgOwo=;
+        s=default; t=1591658607;
+        bh=F6y+JKikiv0lny4EyV4nKnkV7zVKpmOK3oss+/+KtNg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mr0MEHwvY1KKWj4DljtbQrNio5LtuHRBDWVbr8a0smgLDOuywmXaP78DCzIZcSsY2
-         KEIUjwsrBZn6AV+y9XdnSHw+0LptDfMNkPXhZoMCnvctA8h8zJv7QdK5dM4fNhYuPO
-         3DZlTTuUBZN5qFp6QjLMoovMrKlZxfNJnkgG9qu8=
+        b=CoDJSfH/cQYSPxkSJb2wBqTeFYHqYvTy29vERqzZ+JZHxM8wGKRUJHgRnYyaQpSob
+         em26zAkvAgxyjWirOJftDN7UBEuXCTcERA7bXzAS345xvpbuHY21prRWSjLmDejUIK
+         oaJusqHcE9WdEbWrCWijfJX5pgdd6jUJFJtCsbQk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robert Beckett <bob.beckett@collabora.com>,
-        Ian Ray <ian.ray@ge.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 307/606] ARM: dts/imx6q-bx50v3: Set display interface clock parents
-Date:   Mon,  8 Jun 2020 19:07:12 -0400
-Message-Id: <20200608231211.3363633-307-sashal@kernel.org>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andrey Zhizhikin <andrey.z@gmail.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 034/106] tools api fs: Make xxx__mountpoint() more scalable
+Date:   Mon,  8 Jun 2020 19:21:26 -0400
+Message-Id: <20200608232238.3368589-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
-References: <20200608231211.3363633-1-sashal@kernel.org>
+In-Reply-To: <20200608232238.3368589-1-sashal@kernel.org>
+References: <20200608232238.3368589-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,120 +69,180 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Beckett <bob.beckett@collabora.com>
+From: Stephane Eranian <eranian@google.com>
 
-[ Upstream commit 665e7c73a7724a393b4ec92d1ae1e029925ef2b7 ]
+[ Upstream commit c6fddb28bad26e5472cb7acf7b04cd5126f1a4ab ]
 
-Avoid LDB and IPU DI clocks both using the same parent. LDB requires
-pasthrough clock to avoid breaking timing while IPU DI does not.
+The xxx_mountpoint() interface provided by fs.c finds mount points for
+common pseudo filesystems. The first time xxx_mountpoint() is invoked,
+it scans the mount table (/proc/mounts) looking for a match. If found,
+it is cached. The price to scan /proc/mounts is paid once if the mount
+is found.
 
-Force IPU DI clocks to use IMX6QDL_CLK_PLL2_PFD0_352M as parent
-and LDB to use IMX6QDL_CLK_PLL5_VIDEO_DIV.
+When the mount point is not found, subsequent calls to xxx_mountpoint()
+scan /proc/mounts over and over again.  There is no caching.
 
-This fixes an issue where attempting atomic modeset while using
-HDMI and display port at the same time causes LDB clock programming
-to destroy the programming of HDMI that was done during the same
-modeset.
+This causes a scaling issue in perf record with hugeltbfs__mountpoint().
+The function is called for each process found in
+synthesize__mmap_events().  If the machine has thousands of processes
+and if the /proc/mounts has many entries this could cause major overhead
+in perf record. We have observed multi-second slowdowns on some
+configurations.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Robert Beckett <bob.beckett@collabora.com>
-[Use IMX6QDL_CLK_PLL2_PFD0_352M instead of IMX6QDL_CLK_PLL2_PFD2_396M
- originally chosen by Robert Beckett to avoid affecting eMMC clock
- by DRM atomic updates]
-Signed-off-by: Ian Ray <ian.ray@ge.com>
-[Squash Robert's and Ian's commits for bisectability, update patch
- description and add stable tag]
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+As an example on a laptop:
+
+Before:
+
+  $ sudo umount /dev/hugepages
+  $ strace -e trace=openat -o /tmp/tt perf record -a ls
+  $ fgrep mounts /tmp/tt
+  285
+
+After:
+
+  $ sudo umount /dev/hugepages
+  $ strace -e trace=openat -o /tmp/tt perf record -a ls
+  $ fgrep mounts /tmp/tt
+  1
+
+One could argue that the non-caching in case the moint point is not
+found is intentional. That way subsequent calls may discover a moint
+point if the sysadmin mounts the filesystem. But the same argument could
+be made against caching the mount point. It could be unmounted causing
+errors.  It all depends on the intent of the interface. This patch
+assumes it is expected to scan /proc/mounts once. The patch documents
+the caching behavior in the fs.h header file.
+
+An alternative would be to just fix perf record. But it would solve the
+problem with hugetlbs__mountpoint() but there could be similar issues
+(possibly down the line) with other xxx_mountpoint() calls in perf or
+other tools.
+
+Signed-off-by: Stephane Eranian <eranian@google.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andrey Zhizhikin <andrey.z@gmail.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lore.kernel.org/lkml/20200402154357.107873-3-irogers@google.com
+Signed-off-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6q-b450v3.dts  |  7 -------
- arch/arm/boot/dts/imx6q-b650v3.dts  |  7 -------
- arch/arm/boot/dts/imx6q-b850v3.dts  | 11 -----------
- arch/arm/boot/dts/imx6q-bx50v3.dtsi | 15 +++++++++++++++
- 4 files changed, 15 insertions(+), 25 deletions(-)
+ tools/lib/api/fs/fs.c | 17 +++++++++++++++++
+ tools/lib/api/fs/fs.h | 12 ++++++++++++
+ 2 files changed, 29 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6q-b450v3.dts b/arch/arm/boot/dts/imx6q-b450v3.dts
-index 95b8f2d71821..fb0980190aa0 100644
---- a/arch/arm/boot/dts/imx6q-b450v3.dts
-+++ b/arch/arm/boot/dts/imx6q-b450v3.dts
-@@ -65,13 +65,6 @@ panel_in_lvds0: endpoint {
- 	};
+diff --git a/tools/lib/api/fs/fs.c b/tools/lib/api/fs/fs.c
+index bd021a0eeef8..4cc69675c2a9 100644
+--- a/tools/lib/api/fs/fs.c
++++ b/tools/lib/api/fs/fs.c
+@@ -90,6 +90,7 @@ struct fs {
+ 	const char * const	*mounts;
+ 	char			 path[PATH_MAX];
+ 	bool			 found;
++	bool			 checked;
+ 	long			 magic;
  };
  
--&clks {
--	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
--			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>;
--	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL3_USB_OTG>,
--				 <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
--};
--
- &ldb {
- 	status = "okay";
- 
-diff --git a/arch/arm/boot/dts/imx6q-b650v3.dts b/arch/arm/boot/dts/imx6q-b650v3.dts
-index 611cb7ae7e55..8f762d9c5ae9 100644
---- a/arch/arm/boot/dts/imx6q-b650v3.dts
-+++ b/arch/arm/boot/dts/imx6q-b650v3.dts
-@@ -65,13 +65,6 @@ panel_in_lvds0: endpoint {
- 	};
+@@ -111,31 +112,37 @@ static struct fs fs__entries[] = {
+ 		.name	= "sysfs",
+ 		.mounts	= sysfs__fs_known_mountpoints,
+ 		.magic	= SYSFS_MAGIC,
++		.checked = false,
+ 	},
+ 	[FS__PROCFS] = {
+ 		.name	= "proc",
+ 		.mounts	= procfs__known_mountpoints,
+ 		.magic	= PROC_SUPER_MAGIC,
++		.checked = false,
+ 	},
+ 	[FS__DEBUGFS] = {
+ 		.name	= "debugfs",
+ 		.mounts	= debugfs__known_mountpoints,
+ 		.magic	= DEBUGFS_MAGIC,
++		.checked = false,
+ 	},
+ 	[FS__TRACEFS] = {
+ 		.name	= "tracefs",
+ 		.mounts	= tracefs__known_mountpoints,
+ 		.magic	= TRACEFS_MAGIC,
++		.checked = false,
+ 	},
+ 	[FS__HUGETLBFS] = {
+ 		.name	= "hugetlbfs",
+ 		.mounts = hugetlbfs__known_mountpoints,
+ 		.magic	= HUGETLBFS_MAGIC,
++		.checked = false,
+ 	},
+ 	[FS__BPF_FS] = {
+ 		.name	= "bpf",
+ 		.mounts = bpf_fs__known_mountpoints,
+ 		.magic	= BPF_FS_MAGIC,
++		.checked = false,
+ 	},
  };
  
--&clks {
--	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
--			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>;
--	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL3_USB_OTG>,
--				 <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
--};
--
- &ldb {
- 	status = "okay";
+@@ -158,6 +165,7 @@ static bool fs__read_mounts(struct fs *fs)
+ 	}
  
-diff --git a/arch/arm/boot/dts/imx6q-b850v3.dts b/arch/arm/boot/dts/imx6q-b850v3.dts
-index e4cb118f88c6..1ea64ecf4291 100644
---- a/arch/arm/boot/dts/imx6q-b850v3.dts
-+++ b/arch/arm/boot/dts/imx6q-b850v3.dts
-@@ -53,17 +53,6 @@ chosen {
- 	};
- };
+ 	fclose(fp);
++	fs->checked = true;
+ 	return fs->found = found;
+ }
  
--&clks {
--	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
--			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>,
--			  <&clks IMX6QDL_CLK_IPU1_DI0_PRE_SEL>,
--			  <&clks IMX6QDL_CLK_IPU2_DI0_PRE_SEL>;
--	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL5_VIDEO_DIV>,
--				 <&clks IMX6QDL_CLK_PLL5_VIDEO_DIV>,
--				 <&clks IMX6QDL_CLK_PLL2_PFD2_396M>,
--				 <&clks IMX6QDL_CLK_PLL2_PFD2_396M>;
--};
--
- &ldb {
- 	fsl,dual-channel;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6q-bx50v3.dtsi b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-index fa27dcdf06f1..1938b04199c4 100644
---- a/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-+++ b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-@@ -377,3 +377,18 @@ pci_root: root@0,0 {
- 		#interrupt-cells = <1>;
- 	};
- };
+@@ -220,6 +228,7 @@ static bool fs__env_override(struct fs *fs)
+ 		return false;
+ 
+ 	fs->found = true;
++	fs->checked = true;
+ 	strncpy(fs->path, override_path, sizeof(fs->path) - 1);
+ 	fs->path[sizeof(fs->path) - 1] = '\0';
+ 	return true;
+@@ -246,6 +255,14 @@ static const char *fs__mountpoint(int idx)
+ 	if (fs->found)
+ 		return (const char *)fs->path;
+ 
++	/* the mount point was already checked for the mount point
++	 * but and did not exist, so return NULL to avoid scanning again.
++	 * This makes the found and not found paths cost equivalent
++	 * in case of multiple calls.
++	 */
++	if (fs->checked)
++		return NULL;
 +
-+&clks {
-+	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
-+			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>,
-+			  <&clks IMX6QDL_CLK_IPU1_DI0_PRE_SEL>,
-+			  <&clks IMX6QDL_CLK_IPU1_DI1_PRE_SEL>,
-+			  <&clks IMX6QDL_CLK_IPU2_DI0_PRE_SEL>,
-+			  <&clks IMX6QDL_CLK_IPU2_DI1_PRE_SEL>;
-+	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL5_VIDEO_DIV>,
-+				 <&clks IMX6QDL_CLK_PLL5_VIDEO_DIV>,
-+				 <&clks IMX6QDL_CLK_PLL2_PFD0_352M>,
-+				 <&clks IMX6QDL_CLK_PLL2_PFD0_352M>,
-+				 <&clks IMX6QDL_CLK_PLL2_PFD0_352M>,
-+				 <&clks IMX6QDL_CLK_PLL2_PFD0_352M>;
-+};
+ 	return fs__get_mountpoint(fs);
+ }
+ 
+diff --git a/tools/lib/api/fs/fs.h b/tools/lib/api/fs/fs.h
+index 92d03b8396b1..3b70003e7cfb 100644
+--- a/tools/lib/api/fs/fs.h
++++ b/tools/lib/api/fs/fs.h
+@@ -18,6 +18,18 @@
+ 	const char *name##__mount(void);	\
+ 	bool name##__configured(void);		\
+ 
++/*
++ * The xxxx__mountpoint() entry points find the first match mount point for each
++ * filesystems listed below, where xxxx is the filesystem type.
++ *
++ * The interface is as follows:
++ *
++ * - If a mount point is found on first call, it is cached and used for all
++ *   subsequent calls.
++ *
++ * - If a mount point is not found, NULL is returned on first call and all
++ *   subsequent calls.
++ */
+ FS(sysfs)
+ FS(procfs)
+ FS(debugfs)
 -- 
 2.25.1
 
