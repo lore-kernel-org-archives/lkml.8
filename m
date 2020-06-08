@@ -2,99 +2,151 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B515C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8148EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0CD62076C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:42:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A5AF20737
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:42:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663372;
-	bh=V7sPRt5t1bPdgkFLTtlp3s+mAuZDhKkTlH4OAYkopVU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=S6x0OJtIZoSoip/tUk7uUvlRDy748WQE++2o7H/gVJBFgktoJkXOcG4QnvWfiy6Xa
-	 SF//sa3WF932YHROcUcrDvfY+Z008aD+qHbiqJJ/fitaa0Vlt3xkdwTHWeKJ0Dq7qS
-	 I5Xr5k1JtCfUKK7MhcLmgvTbF2aHiTuZJx3BFydw=
+	s=default; t=1591663378;
+	bh=sx950U3xZ9t+hw/7HTqPxHUVUG3GrSDSTAxqXTWA2Co=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Iab8y0CQws4QS/RTBFy2MM2drRpD6Oahaku/eciq2igLYrpmqnkzj1U/s7KP6d0cP
+	 EYcOrKPR0X0RCreZk4eDrgFb5Rduj4OPqhTHb6kyxgI++8uEffjDbotVqEfTbICJ3O
+	 yavTOZYOQmxDsnPMscrUHJ32j+nAjiWoaOvZ5lec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730677AbgFIAmv (ORCPT
+        id S1733180AbgFIAmz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:42:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53476 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:42:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728552AbgFIAmq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 20:42:46 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1729073AbgFHXMW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:12:22 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2502D20737;
-        Tue,  9 Jun 2020 00:42:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCFF921501;
+        Mon,  8 Jun 2020 23:12:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591663365;
-        bh=V7sPRt5t1bPdgkFLTtlp3s+mAuZDhKkTlH4OAYkopVU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NkQ6oQQy24UsfoH9EPwlmMoqOD65lnqnabQ6xuLoQSsTcCn01weXzK9IRCvy8mknt
-         mriLOEa+8G6FBI5ZgdT3iq8H8zFIXXDyBFzLf6Rj0N3RzruZiZ0OZKXX+5N3s8tIGA
-         ILRxZuIxO2SHLbrTmEQWPbDGXQwSPsTVcxm8ZQo8=
-Date:   Mon, 8 Jun 2020 19:47:56 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: [PATCH] overflow.h: Add flex_array_size() helper
-Message-ID: <20200609004756.GH10051@embeddedor>
-References: <20200608221723.GA23644@embeddedor>
- <05ab102b936ce922c4fae67bf5dd3e323aff0b93.camel@perches.com>
+        s=default; t=1591657942;
+        bh=sx950U3xZ9t+hw/7HTqPxHUVUG3GrSDSTAxqXTWA2Co=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=nAwr+93zC9PlHejH2p6doYEpwrOmBxmHtwCcfh0vnLMzEvHGfU8xwaDv2XcPoee+E
+         VrgITbSejkuM9zVIAUp6lf5IAvxx2pWKhsJKgmPIVDLxVHfMguwgAwei1aHkTNRg/A
+         Na0bDgDVRbgdgVa8Ju6i4kX1Y7zlaGGZ7x/OhixY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Jason Gunthorpe <jgg@mellanox.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-acpi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 008/606] pnp: Use list_for_each_entry() instead of open coding
+Date:   Mon,  8 Jun 2020 19:02:13 -0400
+Message-Id: <20200608231211.3363633-8-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
+References: <20200608231211.3363633-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <05ab102b936ce922c4fae67bf5dd3e323aff0b93.camel@perches.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 03:34:52PM -0700, Joe Perches wrote:
-> On Mon, 2020-06-08 at 17:17 -0500, Gustavo A. R. Silva wrote:
-> > Add flex_array_size() helper for the calculation of the size, in bytes,
-> > of a flexible array member contained within an enclosing structure.
-> > 
-> > Example of usage:
-> > foo
-> > struct something {
-> > 	size_t count;
-> > 	struct foo items[];
-> > };
-> > 
-> > struct something *instance;
-> []
-> > diff --git a/include/linux/overflow.h b/include/linux/overflow.h
-> []
-> > +/**
-> > + * flex_array_size() - Calculate size of a flexible array member within
-> > + * an enclosing structure.
-> 
-> These comment descriptions do not match
-> 
-> > + * Calculates size of memory needed for flexible array @member of @count
-> > + * elements within structure @p.
-> 
-> The first comment shows the size of an array member.
-> The second shows the size of an array member * count
-> 
-> Also the struct_size and flex_array_size definitions
-> are using two different forms:
-> 
-> 		sizeof(*(p)->member) + __must_be_array((p)->member),\
-> and
-> 		sizeof((p)->member[0]) + __must_be_array((p)->member))
-> 
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-Good catch.
+commit 01b2bafe57b19d9119413f138765ef57990921ce upstream.
 
-Thanks
---
-Gustavo
+Aside from good practice, this avoids a warning from gcc 10:
+
+./include/linux/kernel.h:997:3: warning: array subscript -31 is outside array bounds of ‘struct list_head[1]’ [-Warray-bounds]
+  997 |  ((type *)(__mptr - offsetof(type, member))); })
+      |  ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./include/linux/list.h:493:2: note: in expansion of macro ‘container_of’
+  493 |  container_of(ptr, type, member)
+      |  ^~~~~~~~~~~~
+./include/linux/pnp.h:275:30: note: in expansion of macro ‘list_entry’
+  275 | #define global_to_pnp_dev(n) list_entry(n, struct pnp_dev, global_list)
+      |                              ^~~~~~~~~~
+./include/linux/pnp.h:281:11: note: in expansion of macro ‘global_to_pnp_dev’
+  281 |  (dev) != global_to_pnp_dev(&pnp_global); \
+      |           ^~~~~~~~~~~~~~~~~
+arch/x86/kernel/rtc.c:189:2: note: in expansion of macro ‘pnp_for_each_dev’
+  189 |  pnp_for_each_dev(dev) {
+
+Because the common code doesn't cast the starting list_head to the
+containing struct.
+
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+[ rjw: Whitespace adjustments ]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ include/linux/pnp.h | 29 +++++++++--------------------
+ 1 file changed, 9 insertions(+), 20 deletions(-)
+
+diff --git a/include/linux/pnp.h b/include/linux/pnp.h
+index 3b12fd28af78..fc4df3ccefc9 100644
+--- a/include/linux/pnp.h
++++ b/include/linux/pnp.h
+@@ -220,10 +220,8 @@ struct pnp_card {
+ #define global_to_pnp_card(n) list_entry(n, struct pnp_card, global_list)
+ #define protocol_to_pnp_card(n) list_entry(n, struct pnp_card, protocol_list)
+ #define to_pnp_card(n) container_of(n, struct pnp_card, dev)
+-#define pnp_for_each_card(card) \
+-	for((card) = global_to_pnp_card(pnp_cards.next); \
+-	(card) != global_to_pnp_card(&pnp_cards); \
+-	(card) = global_to_pnp_card((card)->global_list.next))
++#define pnp_for_each_card(card)	\
++	list_for_each_entry(card, &pnp_cards, global_list)
+ 
+ struct pnp_card_link {
+ 	struct pnp_card *card;
+@@ -276,14 +274,9 @@ struct pnp_dev {
+ #define card_to_pnp_dev(n) list_entry(n, struct pnp_dev, card_list)
+ #define protocol_to_pnp_dev(n) list_entry(n, struct pnp_dev, protocol_list)
+ #define	to_pnp_dev(n) container_of(n, struct pnp_dev, dev)
+-#define pnp_for_each_dev(dev) \
+-	for((dev) = global_to_pnp_dev(pnp_global.next); \
+-	(dev) != global_to_pnp_dev(&pnp_global); \
+-	(dev) = global_to_pnp_dev((dev)->global_list.next))
+-#define card_for_each_dev(card,dev) \
+-	for((dev) = card_to_pnp_dev((card)->devices.next); \
+-	(dev) != card_to_pnp_dev(&(card)->devices); \
+-	(dev) = card_to_pnp_dev((dev)->card_list.next))
++#define pnp_for_each_dev(dev) list_for_each_entry(dev, &pnp_global, global_list)
++#define card_for_each_dev(card, dev)	\
++	list_for_each_entry(dev, &(card)->devices, card_list)
+ #define pnp_dev_name(dev) (dev)->name
+ 
+ static inline void *pnp_get_drvdata(struct pnp_dev *pdev)
+@@ -437,14 +430,10 @@ struct pnp_protocol {
+ };
+ 
+ #define to_pnp_protocol(n) list_entry(n, struct pnp_protocol, protocol_list)
+-#define protocol_for_each_card(protocol,card) \
+-	for((card) = protocol_to_pnp_card((protocol)->cards.next); \
+-	(card) != protocol_to_pnp_card(&(protocol)->cards); \
+-	(card) = protocol_to_pnp_card((card)->protocol_list.next))
+-#define protocol_for_each_dev(protocol,dev) \
+-	for((dev) = protocol_to_pnp_dev((protocol)->devices.next); \
+-	(dev) != protocol_to_pnp_dev(&(protocol)->devices); \
+-	(dev) = protocol_to_pnp_dev((dev)->protocol_list.next))
++#define protocol_for_each_card(protocol, card)	\
++	list_for_each_entry(card, &(protocol)->cards, protocol_list)
++#define protocol_for_each_dev(protocol, dev)	\
++	list_for_each_entry(dev, &(protocol)->devices, protocol_list)
+ 
+ extern struct bus_type pnp_bus_type;
+ 
+-- 
+2.25.1
+
