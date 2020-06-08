@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB2EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:41:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A5BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BBE320737
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:41:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9083420737
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:41:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663260;
-	bh=Yf6tijfTtkC0daEZSzoDMhzmrg/OWgETF9rfSQTSNGw=;
+	s=default; t=1591663268;
+	bh=InbbZyHlNhJSYEISo854k5UHc9Jio+d9wJTFioivsbo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wg0n8Ul1afZOfU0KFccIbefvYg6uj1Dn6WuMBJ1aMbBrj2E0e/apB1vVK1Mrx3X11
-	 e71vTORDjgcJaIcr6LuADJdBysaGd48keO1tUwX80So+TRqR/OlEOL0+0A0R7n+TRD
-	 oD6GbeNwMADLDrTpqfpJynx2JkggfI9hxpArlu9I=
+	b=To9p4fmzcGyR8wKoA5Uw/CxNWUyZYcZTGTTjvbpxMphl+lunoRK/ke1Dbz+HfD2fM
+	 aVvSu8IU0+EGEJwslKcmO6BGBJ5Olkb5sRAM7LviUtvATZnOv9O7nTEWNCOsPz+FYg
+	 zwNwCtfvB1Dkf294uGaoW3o0qL89jCEi/Z/QYyD0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729842AbgFIAk5 (ORCPT
+        id S1733259AbgFIAlH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:40:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60332 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:41:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728050AbgFHXMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:12:51 -0400
+        id S1728798AbgFHXMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:12:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA35920B80;
-        Mon,  8 Jun 2020 23:12:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29D172100A;
+        Mon,  8 Jun 2020 23:12:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657971;
-        bh=Yf6tijfTtkC0daEZSzoDMhzmrg/OWgETF9rfSQTSNGw=;
+        s=default; t=1591657968;
+        bh=InbbZyHlNhJSYEISo854k5UHc9Jio+d9wJTFioivsbo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J/nmDo6tmPGgBdJDjGiJKR5FYeQQxJIC6ss1nCQ099jMorsuL2M6lyxjNxW2BtUBM
-         NU7g61fvlN2XHm47aY7oxLIyjr/x/YIiCkKvOrCPbShWr65ls2lt3UDdBh3VyNkL6i
-         OUnz7pb8nEMrwozIY5+fn2K6b0ciQ9kTDZ2wRq9s=
+        b=tMpzpoAxFhcz1PCY0BtB7coGBL0RNKVM0EsCv8cBj97UzgLQh+wH4juXOsS8arkXH
+         DJgJ7lAUbDO8MO3hM+qde4SqBnRaahdhBgV7LP7dTZhXKS5Eb/XXECCI7hFgh6vzWq
+         rVaEABGRfh9X4DKNopIfP6IZBLC1HNTsvCwDE878=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>,
-        Shawn Guo <shawnguo@kernel.org>,
+Cc:     Peter Jones <pjones@redhat.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 034/606] ARM: dts: imx6dl-yapp4: Fix Ursa board Ethernet connection
-Date:   Mon,  8 Jun 2020 19:02:39 -0400
-Message-Id: <20200608231211.3363633-34-sashal@kernel.org>
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.6 031/606] Make the "Reducing compressed framebufer size" message be DRM_INFO_ONCE()
+Date:   Mon,  8 Jun 2020 19:02:36 -0400
+Message-Id: <20200608231211.3363633-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -61,38 +63,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Vokáč <michal.vokac@ysoft.com>
+From: Peter Jones <pjones@redhat.com>
 
-commit cbe63a8358310244e6007398bd2c7c70c7fd51cd upstream.
+commit 82152d424b6cb6fc1ede7d03d69c04e786688740 upstream.
 
-The Y Soft yapp4 platform supports up to two Ethernet ports.
-The Ursa board though has only one Ethernet port populated and that is
-the port@2. Since the introduction of this platform into mainline a wrong
-port was deleted and the Ethernet could never work. Fix this by deleting
-the correct port node.
+This was sort of annoying me:
 
-Fixes: 87489ec3a77f ("ARM: dts: imx: Add Y Soft IOTA Draco, Hydra and Ursa boards")
+random:~$ dmesg | tail -1
+[523884.039227] [drm] Reducing the compressed framebuffer size. This may lead to less power savings than a non-reduced-size. Try to increase stolen memory size if available in BIOS.
+random:~$ dmesg | grep -c "Reducing the compressed"
+47
+
+This patch makes it DRM_INFO_ONCE() just like the similar message
+farther down in that function is pr_info_once().
+
 Cc: stable@vger.kernel.org
-Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Peter Jones <pjones@redhat.com>
+Acked-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Closes: https://gitlab.freedesktop.org/drm/intel/-/issues/1745
+Link: https://patchwork.freedesktop.org/patch/msgid/20180706190424.29194-1-pjones@redhat.com
+[vsyrjala: Rebase due to per-device logging]
+Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+(cherry picked from commit 6b7fc6a3e6af4ff5773949d0fed70d8e7f68d5ce)
+[Rodrigo: port back to DRM_INFO_ONCE]
+Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm/boot/dts/imx6dl-yapp4-ursa.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/i915/display/intel_fbc.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6dl-yapp4-ursa.dts b/arch/arm/boot/dts/imx6dl-yapp4-ursa.dts
-index 0d594e4bd559..a1173bf5bff5 100644
---- a/arch/arm/boot/dts/imx6dl-yapp4-ursa.dts
-+++ b/arch/arm/boot/dts/imx6dl-yapp4-ursa.dts
-@@ -38,7 +38,7 @@ &reg_usb_h1_vbus {
- };
+diff --git a/drivers/gpu/drm/i915/display/intel_fbc.c b/drivers/gpu/drm/i915/display/intel_fbc.c
+index a1048ece541e..b6d5e7defa5b 100644
+--- a/drivers/gpu/drm/i915/display/intel_fbc.c
++++ b/drivers/gpu/drm/i915/display/intel_fbc.c
+@@ -478,8 +478,7 @@ static int intel_fbc_alloc_cfb(struct drm_i915_private *dev_priv,
+ 	if (!ret)
+ 		goto err_llb;
+ 	else if (ret > 1) {
+-		DRM_INFO("Reducing the compressed framebuffer size. This may lead to less power savings than a non-reduced-size. Try to increase stolen memory size if available in BIOS.\n");
+-
++		DRM_INFO_ONCE("Reducing the compressed framebuffer size. This may lead to less power savings than a non-reduced-size. Try to increase stolen memory size if available in BIOS.\n");
+ 	}
  
- &switch_ports {
--	/delete-node/ port@2;
-+	/delete-node/ port@3;
- };
- 
- &touchscreen {
+ 	fbc->threshold = ret;
 -- 
 2.25.1
 
