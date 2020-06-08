@@ -4,54 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 427F9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4625DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11A4320890
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:14:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23F2B20884
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:14:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591661648;
-	bh=q2rVo/aR3JTRBRIML0kZmbB8f0+fBsJ6fAx8XSXDfSQ=;
+	s=default; t=1591661660;
+	bh=VTDinPnBrTtWYq9r2jdfYIPmKUtkIW3BFWKhAo5czcM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CwXI8lcVRp2m2jqhw4sQ8waLDABRNOXZS2TNFoNPYZBdNi6FJNlRqfqDg2dZoE1zk
-	 DcwWpKMSrCcRI3d3B1LbmBM2reyB1RzpmeG8R3OsjkTJdBvHkEIX1KJfgMEqRT5esC
-	 5pVrmEa3VsrB+pxe0aKgSYGmUhe7M4lKFvytFKJw=
+	b=QlMaybG3axWu6pktd14DAmg64RMc4DHrG6ZDonzOCqMVxIjYjQdMK4E7Dkqln/2Xn
+	 MsQVhFv08T736r/3n/8P1MbUlhfTmf8xKO7T16geUtyhy59RkkOWWa+C4484tWUSaB
+	 17LPBQRL6DGyjlocHNUbTXfXuXE/uSmE1QjiE5qA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731074AbgFIAOF (ORCPT
+        id S1730765AbgFHXTQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:14:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42068 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:19:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730421AbgFHXTS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:19:18 -0400
+        id S1728622AbgFHXPg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:15:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B52C920842;
-        Mon,  8 Jun 2020 23:19:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 927EA2068D;
+        Mon,  8 Jun 2020 23:15:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658358;
-        bh=q2rVo/aR3JTRBRIML0kZmbB8f0+fBsJ6fAx8XSXDfSQ=;
+        s=default; t=1591658136;
+        bh=VTDinPnBrTtWYq9r2jdfYIPmKUtkIW3BFWKhAo5czcM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aa5n72AiMtnCQmsm8//nZX5NDE1rEY+xWIPfflU4XI+iKjlUoVk+HHL11solShQHx
-         c8f9VoLyljD5+7gKiVbc0w1y2l6kfXqshbUe8I8lO5NpBrUO+Bp3FiR22wcmnHI6c9
-         SSHR6wOtvy1W23NVE4iTnxoEZlI1shB50Wc4YYGY=
+        b=aVcZRaokaH4XiXkR6gIRcOeyV4iiXskc6LDfjWcRgBghFemcnwgOzcmWaXyP1XFMa
+         hdJjAqhgStJ0RKry+IOdkgweXVwYsyFf7XmF+D3zwjxGASaDdq7MHQFTz4vuR4eWjR
+         t6I69BPyk09evXCC5ruIV7T1yKLza9zJLu4WtCeo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 024/175] arm64: cacheflush: Fix KGDB trap detection
-Date:   Mon,  8 Jun 2020 19:16:17 -0400
-Message-Id: <20200608231848.3366970-24-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
+        <jerome.pouiller@silabs.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 5.6 170/606] staging: wfx: unlock on error path
+Date:   Mon,  8 Jun 2020 19:04:55 -0400
+Message-Id: <20200608231211.3363633-170-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
-References: <20200608231848.3366970-1-sashal@kernel.org>
+In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
+References: <20200608231211.3363633-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,62 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Thompson <daniel.thompson@linaro.org>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit ab8ad279ceac4fc78ae4dcf1a26326e05695e537 ]
+commit f0b9d875faa4499afe3381404c3795e9da84bc00 upstream.
 
-flush_icache_range() contains a bodge to avoid issuing IPIs when the kgdb
-trap handler is running because issuing IPIs is unsafe (and not needed)
-in this execution context. However the current test, based on
-kgdb_connected is flawed: it both over-matches and under-matches.
+We need to release the tx_lock on the error path before returning.
 
-The over match occurs because kgdb_connected is set when gdb attaches
-to the stub and remains set during normal running. This is relatively
-harmelss because in almost all cases irq_disabled() will be false.
-
-The under match is more serious. When kdb is used instead of kgdb to access
-the debugger then kgdb_connected is not set in all the places that the
-debug core updates sw breakpoints (and hence flushes the icache). This
-can lead to deadlock.
-
-Fix by replacing the ad-hoc check with the proper kgdb macro. This also
-allows us to drop the #ifdef wrapper.
-
-Fixes: 3b8c9f1cdfc5 ("arm64: IPI each CPU after invalidating the I-cache for kernel mappings")
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Link: https://lore.kernel.org/r/20200504170518.2959478-1-daniel.thompson@linaro.org
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: d1c015b4ef6f ("staging: wfx: rewrite wfx_hw_scan()")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: stable <stable@vger.kernel.org>
+Reviewed-by: Jérôme Pouiller <jerome.pouiller@silabs.com>
+Link: https://lore.kernel.org/r/20200512083656.GA251760@mwanda
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm64/include/asm/cacheflush.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/staging/wfx/scan.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/include/asm/cacheflush.h b/arch/arm64/include/asm/cacheflush.h
-index 665c78e0665a..3e7dda6f1ab1 100644
---- a/arch/arm64/include/asm/cacheflush.h
-+++ b/arch/arm64/include/asm/cacheflush.h
-@@ -79,7 +79,7 @@ static inline void flush_icache_range(unsigned long start, unsigned long end)
- 	 * IPI all online CPUs so that they undergo a context synchronization
- 	 * event and are forced to refetch the new instructions.
- 	 */
--#ifdef CONFIG_KGDB
-+
- 	/*
- 	 * KGDB performs cache maintenance with interrupts disabled, so we
- 	 * will deadlock trying to IPI the secondary CPUs. In theory, we can
-@@ -89,9 +89,9 @@ static inline void flush_icache_range(unsigned long start, unsigned long end)
- 	 * the patching operation, so we don't need extra IPIs here anyway.
- 	 * In which case, add a KGDB-specific bodge and return early.
- 	 */
--	if (kgdb_connected && irqs_disabled())
-+	if (in_dbg_master())
- 		return;
--#endif
-+
- 	kick_all_cpus_sync();
- }
- 
+diff --git a/drivers/staging/wfx/scan.c b/drivers/staging/wfx/scan.c
+index 6e1e50048651..9aa14331affd 100644
+--- a/drivers/staging/wfx/scan.c
++++ b/drivers/staging/wfx/scan.c
+@@ -57,8 +57,10 @@ static int send_scan_req(struct wfx_vif *wvif,
+ 	wvif->scan_abort = false;
+ 	reinit_completion(&wvif->scan_complete);
+ 	timeout = hif_scan(wvif, req, start_idx, i - start_idx);
+-	if (timeout < 0)
++	if (timeout < 0) {
++		wfx_tx_unlock(wvif->wdev);
+ 		return timeout;
++	}
+ 	ret = wait_for_completion_timeout(&wvif->scan_complete, timeout);
+ 	if (req->channels[start_idx]->max_power != wvif->vif->bss_conf.txpower)
+ 		hif_set_output_power(wvif, wvif->vif->bss_conf.txpower);
 -- 
 2.25.1
 
