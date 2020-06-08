@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF73C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:52:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE71C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19C1E204EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:52:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 966DE204EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:52:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660333;
-	bh=vBwDjxA+q7LJmH4F9nvnnZiKUu3A3Fy9GM7WTml4a98=;
+	s=default; t=1591660346;
+	bh=W3ZhRUwNiWudInO1qOqNzl8fJ3VzFMEDoRHUiQYNBKk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V7xurh+7mNIpJyfIMiPnNMV6VRe0/4z2TNfC3YbjkUlRn121ZaA5C07Iz/q47zk0y
-	 8C7FwL6aELOgEGAdf4kbnCi4zbBuvegJILC0DsAY8uo87yZQ5RbKtq9ISDU8M+Ykpy
-	 FE9ApNIL659RPpz9xtDzETWzQnmRW8OIfOjGctUI=
+	b=LBYH0GjumGDHvcs1t7jJiqND3pZIyeEqXksp6CqarJ0SrV3p65DHWSsfZsZsBtdcx
+	 Vy4YZezLrU/jEZzC/oBDHIUcGGsn6yL/eGxnNB/F7ps+KptqTHlLPFurwIDFq48Djn
+	 U0rrY8Btqaw9g+9BWcBlf3vIWj9uAxqerChJU1TM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732244AbgFHXwM (ORCPT
+        id S1732416AbgFHXwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:52:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51264 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:52:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731698AbgFHXY4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:24:56 -0400
+        id S1731689AbgFHXYy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:24:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A727421527;
-        Mon,  8 Jun 2020 23:24:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FF8A214F1;
+        Mon,  8 Jun 2020 23:24:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658696;
-        bh=vBwDjxA+q7LJmH4F9nvnnZiKUu3A3Fy9GM7WTml4a98=;
+        s=default; t=1591658694;
+        bh=W3ZhRUwNiWudInO1qOqNzl8fJ3VzFMEDoRHUiQYNBKk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0wZ1gFAUPHrE7EKgI9sjcfoBQ60DAtppiaHPRGYeh+OGuwpeq6yx8BgDz5Y2Pk1bX
-         4ZCLcZo8hHjuqOaOkQVQWm7cct+FZRUa0aB+VWLnJDQSzpGbQ8mKv4V/aaWnOpDaNx
-         QSj9xoDHkz6h8xvobWa1YdxCdcIKVFqsUlCRrpRQ=
+        b=jBc2W5NpD91m/WNtP1m/l/GGyWDP54l/egjaMwgiEeMSkeKFqQzzXZmJpItLsWvsd
+         XErWHQdh/poPTRGee8UYqEGKamHkHCSks03TKUue5jTkW42w9sHXaoY1iysBTtVAI7
+         M/+Ev0E+ecQrTa+dXNeZ154KhnO8am7U6i8KK2ys=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ido Schimmel <idosch@mellanox.com>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 104/106] vxlan: Avoid infinite loop when suppressing NS messages with invalid options
-Date:   Mon,  8 Jun 2020 19:22:36 -0400
-Message-Id: <20200608232238.3368589-104-sashal@kernel.org>
+Cc:     Nickolai Kozachenko <daemongloom@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 102/106] platform/x86: intel-hid: Add a quirk to support HP Spectre X2 (2015)
+Date:   Mon,  8 Jun 2020 19:22:34 -0400
+Message-Id: <20200608232238.3368589-102-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608232238.3368589-1-sashal@kernel.org>
 References: <20200608232238.3368589-1-sashal@kernel.org>
@@ -60,51 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Nickolai Kozachenko <daemongloom@gmail.com>
 
-[ Upstream commit 8066e6b449e050675df48e7c4b16c29f00507ff0 ]
+[ Upstream commit 8fe63eb757ac6e661a384cc760792080bdc738dc ]
 
-When proxy mode is enabled the vxlan device might reply to Neighbor
-Solicitation (NS) messages on behalf of remote hosts.
+HEBC method reports capabilities of 5 button array but HP Spectre X2 (2015)
+does not have this control method (the same was for Wacom MobileStudio Pro).
+Expand previous DMI quirk by Alex Hung to also enable 5 button array
+for this system.
 
-In case the NS message includes the "Source link-layer address" option
-[1], the vxlan device will use the specified address as the link-layer
-destination address in its reply.
-
-To avoid an infinite loop, break out of the options parsing loop when
-encountering an option with length zero and disregard the NS message.
-
-This is consistent with the IPv6 ndisc code and RFC 4886 which states
-that "Nodes MUST silently discard an ND packet that contains an option
-with length zero" [2].
-
-[1] https://tools.ietf.org/html/rfc4861#section-4.3
-[2] https://tools.ietf.org/html/rfc4861#section-4.6
-
-Fixes: 4b29dba9c085 ("vxlan: fix nonfunctional neigh_reduce()")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Nickolai Kozachenko <daemongloom@gmail.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/vxlan.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/platform/x86/intel-hid.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/net/vxlan.c b/drivers/net/vxlan.c
-index 7ee0bad18466..09f0b53b2b77 100644
---- a/drivers/net/vxlan.c
-+++ b/drivers/net/vxlan.c
-@@ -1611,6 +1611,10 @@ static struct sk_buff *vxlan_na_create(struct sk_buff *request,
- 	ns_olen = request->len - skb_network_offset(request) -
- 		sizeof(struct ipv6hdr) - sizeof(*ns);
- 	for (i = 0; i < ns_olen-1; i += (ns->opt[i+1]<<3)) {
-+		if (!ns->opt[i + 1]) {
-+			kfree_skb(reply);
-+			return NULL;
-+		}
- 		if (ns->opt[i] == ND_OPT_SOURCE_LL_ADDR) {
- 			daddr = ns->opt + i + sizeof(struct nd_opt_hdr);
- 			break;
+diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
+index 3201a83073b5..c514cb73bb50 100644
+--- a/drivers/platform/x86/intel-hid.c
++++ b/drivers/platform/x86/intel-hid.c
+@@ -87,6 +87,13 @@ static const struct dmi_system_id button_array_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "Wacom MobileStudio Pro 16"),
+ 		},
+ 	},
++	{
++		.ident = "HP Spectre x2 (2015)",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "HP"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "HP Spectre x2 Detachable"),
++		},
++	},
+ 	{ }
+ };
+ 
 -- 
 2.25.1
 
