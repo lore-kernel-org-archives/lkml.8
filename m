@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F0C6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:11:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF321C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10D0E20C09
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:11:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC3DC20B80
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:11:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591657885;
-	bh=kntZHaADtqmXEkROzUlLhxaIDHYMV/qGZ2kMk2G8Nlk=;
+	s=default; t=1591657890;
+	bh=3ojo2VBVuawBc4HDxLn8sIbL+mr/RC4gim2D8Fr8+Hs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aqPfkyqVVUkeho0chFWNnyyXYt86iG7NapCzYo83zmRPywqvgQAPv9ihuoZ12GY3v
-	 CpUGaYUSSLKnwbg6H10sFKCGrgE3DWHtqADNzkM9nnYXfg4OiSY04V2WRXNnGpncIW
-	 XLGAhXOHqPdXXKKqJoYSQ4NqCUAnp1rDvyl6hxEE=
+	b=fapGn7opM6Ae1TyDAjX2LiUhFYT4gP8K3txfpx+TC+GddYpJmtH55zc7I2Idhc6x/
+	 eyUBM32Y2mKr6oLSmqr7nP8ioZoGPSNmYYeWemTaFlZGvQrqmiH+4VZ2eHuCMomTLg
+	 Nr877756L4Qnzb5jCHqcwmZUD4PWAZXeIar9HTBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728044AbgFHXLW (ORCPT
+        id S1727809AbgFHXL2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:11:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55632 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:11:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728516AbgFHXJt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:09:49 -0400
+        id S1727865AbgFHXJ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:09:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B89B020B80;
-        Mon,  8 Jun 2020 23:09:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 661CB20897;
+        Mon,  8 Jun 2020 23:09:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657788;
-        bh=kntZHaADtqmXEkROzUlLhxaIDHYMV/qGZ2kMk2G8Nlk=;
+        s=default; t=1591657798;
+        bh=3ojo2VBVuawBc4HDxLn8sIbL+mr/RC4gim2D8Fr8+Hs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Eli+0q8+23VI6xuqdkBZEVpE/REEAaazVpMc7EqhQ5oI98Y8jlA4l71ACC46kRyW2
-         uTSlTiRkgJTrC/h9OeQMg2q3WxbfTeJoAaKb3ulQ8LZDJSot0NO8Hyqa6DublVQDig
-         cwyyLWQE+ueArq82nz2Ept/0QKDo+ZgweM6XjpLU=
+        b=tY22pXf9UTv5KXGUzRcd0zZY72CmCxzSjqKrE7L9qbMLS9A2CE90HUrF4nr74Eypo
+         HGXiRTg+U13s2OifWYRlEaNE8c5+LulAjFjzm21VFNmzU/k/GJ7pqevUsbR3s6TyIr
+         YhQG4EYEQTAiVeHIEcKOExFA9ubHLrS0XhtV9vW8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
-        syzbot+e3372a2afe1e7ef04bc7@syzkaller.appspotmail.com,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.7 169/274] drm/vkms: Hold gem object while still in-use
-Date:   Mon,  8 Jun 2020 19:04:22 -0400
-Message-Id: <20200608230607.3361041-169-sashal@kernel.org>
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 176/274] platform/x86: intel-vbtn: Split keymap into buttons and switches parts
+Date:   Mon,  8 Jun 2020 19:04:29 -0400
+Message-Id: <20200608230607.3361041-176-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -62,82 +60,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ezequiel Garcia <ezequiel@collabora.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 0ea2ea42b31abc1141f2fd3911f952a97d401fcb ]
+[ Upstream commit f6ba524970c4b73b234bf41ecd6628f5803b1559 ]
 
-We need to keep the reference to the drm_gem_object
-until the last access by vkms_dumb_create.
+Split the sparse keymap into 2 separate keymaps, a buttons and a switches
+keymap and combine the 2 to a single map again in intel_vbtn_input_setup().
 
-Therefore, the put the object after it is used.
+This is a preparation patch for not telling userspace that we have switches
+when we do not have them (and for doing the same for the buttons).
 
-This fixes a use-after-free issue reported by syzbot.
-
-While here, change vkms_gem_create() symbol to static.
-
-Reported-and-tested-by: syzbot+e3372a2afe1e7ef04bc7@syzkaller.appspotmail.com
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-Reviewed-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200427214405.13069-1-ezequiel@collabora.com
+Fixes: de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode switch on 2-in-1's")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/vkms/vkms_drv.h |  5 -----
- drivers/gpu/drm/vkms/vkms_gem.c | 11 ++++++-----
- 2 files changed, 6 insertions(+), 10 deletions(-)
+ drivers/platform/x86/intel-vbtn.c | 28 +++++++++++++++++++++++++---
+ 1 file changed, 25 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
-index eda04ffba7b1..f4036bb0b9a8 100644
---- a/drivers/gpu/drm/vkms/vkms_drv.h
-+++ b/drivers/gpu/drm/vkms/vkms_drv.h
-@@ -117,11 +117,6 @@ struct drm_plane *vkms_plane_init(struct vkms_device *vkmsdev,
- 				  enum drm_plane_type type, int index);
- 
- /* Gem stuff */
--struct drm_gem_object *vkms_gem_create(struct drm_device *dev,
--				       struct drm_file *file,
--				       u32 *handle,
--				       u64 size);
--
- vm_fault_t vkms_gem_fault(struct vm_fault *vmf);
- 
- int vkms_dumb_create(struct drm_file *file, struct drm_device *dev,
-diff --git a/drivers/gpu/drm/vkms/vkms_gem.c b/drivers/gpu/drm/vkms/vkms_gem.c
-index 2e01186fb943..c541fec57566 100644
---- a/drivers/gpu/drm/vkms/vkms_gem.c
-+++ b/drivers/gpu/drm/vkms/vkms_gem.c
-@@ -97,10 +97,10 @@ vm_fault_t vkms_gem_fault(struct vm_fault *vmf)
- 	return ret;
- }
- 
--struct drm_gem_object *vkms_gem_create(struct drm_device *dev,
--				       struct drm_file *file,
--				       u32 *handle,
--				       u64 size)
-+static struct drm_gem_object *vkms_gem_create(struct drm_device *dev,
-+					      struct drm_file *file,
-+					      u32 *handle,
-+					      u64 size)
- {
- 	struct vkms_gem_object *obj;
- 	int ret;
-@@ -113,7 +113,6 @@ struct drm_gem_object *vkms_gem_create(struct drm_device *dev,
- 		return ERR_CAST(obj);
- 
- 	ret = drm_gem_handle_create(file, &obj->gem, handle);
--	drm_gem_object_put_unlocked(&obj->gem);
- 	if (ret)
- 		return ERR_PTR(ret);
- 
-@@ -142,6 +141,8 @@ int vkms_dumb_create(struct drm_file *file, struct drm_device *dev,
- 	args->size = gem_obj->size;
- 	args->pitch = pitch;
- 
-+	drm_gem_object_put_unlocked(gem_obj);
+diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+index 191894d648bb..634096cef21a 100644
+--- a/drivers/platform/x86/intel-vbtn.c
++++ b/drivers/platform/x86/intel-vbtn.c
+@@ -40,14 +40,20 @@ static const struct key_entry intel_vbtn_keymap[] = {
+ 	{ KE_IGNORE, 0xC7, { KEY_VOLUMEDOWN } },	/* volume-down key release */
+ 	{ KE_KEY,    0xC8, { KEY_ROTATE_LOCK_TOGGLE } },	/* rotate-lock key press */
+ 	{ KE_KEY,    0xC9, { KEY_ROTATE_LOCK_TOGGLE } },	/* rotate-lock key release */
++};
 +
- 	DRM_DEBUG_DRIVER("Created object of size %lld\n", size);
++static const struct key_entry intel_vbtn_switchmap[] = {
+ 	{ KE_SW,     0xCA, { .sw = { SW_DOCK, 1 } } },		/* Docked */
+ 	{ KE_SW,     0xCB, { .sw = { SW_DOCK, 0 } } },		/* Undocked */
+ 	{ KE_SW,     0xCC, { .sw = { SW_TABLET_MODE, 1 } } },	/* Tablet */
+ 	{ KE_SW,     0xCD, { .sw = { SW_TABLET_MODE, 0 } } },	/* Laptop */
+-	{ KE_END },
+ };
  
- 	return 0;
++#define KEYMAP_LEN \
++	(ARRAY_SIZE(intel_vbtn_keymap) + ARRAY_SIZE(intel_vbtn_switchmap) + 1)
++
+ struct intel_vbtn_priv {
++	struct key_entry keymap[KEYMAP_LEN];
+ 	struct input_dev *input_dev;
+ 	bool wakeup_mode;
+ };
+@@ -55,13 +61,29 @@ struct intel_vbtn_priv {
+ static int intel_vbtn_input_setup(struct platform_device *device)
+ {
+ 	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
+-	int ret;
++	int ret, keymap_len = 0;
++
++	if (true) {
++		memcpy(&priv->keymap[keymap_len], intel_vbtn_keymap,
++		       ARRAY_SIZE(intel_vbtn_keymap) *
++		       sizeof(struct key_entry));
++		keymap_len += ARRAY_SIZE(intel_vbtn_keymap);
++	}
++
++	if (true) {
++		memcpy(&priv->keymap[keymap_len], intel_vbtn_switchmap,
++		       ARRAY_SIZE(intel_vbtn_switchmap) *
++		       sizeof(struct key_entry));
++		keymap_len += ARRAY_SIZE(intel_vbtn_switchmap);
++	}
++
++	priv->keymap[keymap_len].type = KE_END;
+ 
+ 	priv->input_dev = devm_input_allocate_device(&device->dev);
+ 	if (!priv->input_dev)
+ 		return -ENOMEM;
+ 
+-	ret = sparse_keymap_setup(priv->input_dev, intel_vbtn_keymap, NULL);
++	ret = sparse_keymap_setup(priv->input_dev, priv->keymap, NULL);
+ 	if (ret)
+ 		return ret;
+ 
 -- 
 2.25.1
 
