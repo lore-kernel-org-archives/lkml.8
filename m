@@ -2,101 +2,132 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 041B3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 08:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F12C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 08:02:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF49E20774
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 08:02:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85ED4206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 08:02:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729065AbgFHIC1 (ORCPT
+        id S1729087AbgFHICs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 04:02:27 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:53930 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725840AbgFHICZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 04:02:25 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id ED924634C87;
-        Mon,  8 Jun 2020 11:00:42 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1jiCi3-0004mZ-3R; Mon, 08 Jun 2020 11:00:43 +0300
-Date:   Mon, 8 Jun 2020 11:00:43 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Andrey Konovalov <andrey.konovalov@linaro.org>
-Cc:     mchehab@kernel.org, manivannan.sadhasivam@linaro.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
-Subject: Re: [PATCH v3 08/10] media: i2c: imx290: Add support to enumerate
- all frame sizes
-Message-ID: <20200608080043.GN9947@valkosipuli.retiisi.org.uk>
-References: <20200524192505.20682-1-andrey.konovalov@linaro.org>
- <20200524192505.20682-9-andrey.konovalov@linaro.org>
- <20200526091716.GJ8214@valkosipuli.retiisi.org.uk>
- <effee6cc-680f-3234-2e56-2f6b24d107cd@linaro.org>
+        Mon, 8 Jun 2020 04:02:48 -0400
+Received: from foss.arm.com ([217.140.110.172]:49430 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729070AbgFHICs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 04:02:48 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 68D1F1F1;
+        Mon,  8 Jun 2020 01:02:47 -0700 (PDT)
+Received: from [192.168.1.84] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B17873F6CF;
+        Mon,  8 Jun 2020 01:02:44 -0700 (PDT)
+Subject: Re: [x86] 24256c140e:
+ dmesg.UBSAN:array-index-out-of-bounds_in_arch/x86/mm/dump_pagetables.c
+To:     kernel test robot <rong.a.chen@intel.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Jan Beulich <jbeulich@suse.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
+References: <20200607072749.GW12456@shao2-debian>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <2a7426e7-1331-4836-ddcc-5e117fe79b08@arm.com>
+Date:   Mon, 8 Jun 2020 09:02:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <effee6cc-680f-3234-2e56-2f6b24d107cd@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200607072749.GW12456@shao2-debian>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 07, 2020 at 07:28:56PM +0300, Andrey Konovalov wrote:
-> Hi Sakari,
+On 07/06/2020 08:27, kernel test robot wrote:
+> Greeting,
 > 
-> Thank you for the review!
+> FYI, we noticed the following commit (built with gcc-9):
 > 
-> On 26.05.2020 12:17, Sakari Ailus wrote:
-> > Hi Andrey,
-> > 
-> > On Sun, May 24, 2020 at 10:25:03PM +0300, Andrey Konovalov wrote:
-> > > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > 
-> > > Add support to enumerate all frame sizes supported by IMX290. This is
-> > > required for using with userspace tools such as libcamera.
-> > > 
-> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
-> > > ---
-> > >   drivers/media/i2c/imx290.c | 20 ++++++++++++++++++++
-> > >   1 file changed, 20 insertions(+)
-> > > 
-> > > diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
-> > > index 6e70ff22bc5f..88850f3b1427 100644
-> > > --- a/drivers/media/i2c/imx290.c
-> > > +++ b/drivers/media/i2c/imx290.c
-> > > @@ -471,6 +471,25 @@ static int imx290_enum_mbus_code(struct v4l2_subdev *sd,
-> > >   	return 0;
-> > >   }
-> > > +static int imx290_enum_frame_size(struct v4l2_subdev *subdev,
-> > > +				  struct v4l2_subdev_pad_config *cfg,
-> > > +				  struct v4l2_subdev_frame_size_enum *fse)
-> > > +{
-> > > +	if ((fse->code != imx290_formats[0].code) &&
-> > > +	    (fse->code != imx290_formats[1].code))
-> > > +		return -EINVAL;
-> > 
-> > Please skip the modes that do not have the code specified by the user. They
-> > should not be enumerated here.
-> 
-> I've double checked this part of the code, and it doesn't seem to need changes.
-> The reason is that for the both codes the set of the modes and the frame sizes is
-> exactly the same. And the fse->code check above just guards against the codes not
-> supported by the driver at all.
+> commit: 24256c140e59c3431af4918fd4ec892102cbc2f3 ("x86: mm: ptdump: calculate effective permissions correctly")
+> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
 
-Indeed. Please then ignore the comment.
+This was reported earlier[1] by Qian Cai and I posted a fix[2]. Linus' 
+tree has the fixed commit[3].
 
--- 
-Sakari Ailus
+Steve
+
+[1] 
+https://lore.kernel.org/lkml/20200522180741.GB1337@Qians-MacBook-Air.local/
+
+[2] 
+https://lore.kernel.org/linux-mm/430c8ab4-e7cd-6933-dde6-087fac6db872@arm.com/
+
+[3] 1494e0c38ee9 ("x86: mm: ptdump: calculate effective permissions 
+correctly")
+
+> 
+> in testcase: boot
+> 
+> on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 8G
+> 
+> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
+> 
+> 
+> 
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kernel test robot <rong.a.chen@intel.com>
+> 
+> 
+> [    8.785395] UBSAN: array-index-out-of-bounds in arch/x86/mm/dump_pagetables.c:285:27
+> [    8.787718] index -1 is out of range for type 'pgprotval_t [5]'
+> [    8.789278] CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.7.0-rc7-00027-g24256c140e59c #1
+> [    8.791350] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+> [    8.793505] Call Trace:
+> [    8.794221]  dump_stack+0x6c/0x94
+> [    8.795140]  ubsan_epilogue+0x8/0x3e
+> [    8.796132]  __ubsan_handle_out_of_bounds+0x48/0x53
+> [    8.797362]  ? is_visible+0x2b/0x32
+> [    8.798231]  ? atomic_try_cmpxchg+0x4c/0x57
+> [    8.799203]  note_page+0x37/0x80b
+> [    8.800138]  ? __up_read+0x352/0x37b
+> [    8.801124]  ptdump_walk_pgd+0x57/0x60
+> [    8.802145]  ptdump_walk_pgd_level_core+0x72/0x9f
+> [    8.803369]  ? ptdump_walk_pgd_level_debugfs+0x18/0x18
+> [    8.804613]  ? ptdump_walk_pgd_level_core+0x9f/0x9f
+> [    8.805779]  ptdump_walk_pgd_level_checkwx+0x1d/0x21
+> [    8.806873]  mark_rodata_ro+0x9f/0xa6
+> [    8.807821]  ? rest_init+0x7f/0x164
+> [    8.808808]  kernel_init+0x44/0xf7
+> [    8.809735]  ? rest_init+0x164/0x164
+> [    8.810708]  ret_from_fork+0x19/0x24
+> 
+> 
+> To reproduce:
+> 
+>          # build kernel
+> 	cd linux
+> 	cp config-5.7.0-rc7-00027-g24256c140e59c .config
+> 	make HOSTCC=gcc-9 CC=gcc-9 ARCH=i386 olddefconfig prepare modules_prepare bzImage
+> 
+>          git clone https://github.com/intel/lkp-tests.git
+>          cd lkp-tests
+>          bin/lkp qemu -k <bzImage> job-script # job-script is attached in this email
+> 
+> 
+> 
+> Thanks,
+> Rong Chen
+> 
+
