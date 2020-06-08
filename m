@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40034C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F12CAC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20D0520825
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:21:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2AD4207ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:21:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662075;
-	bh=y+OpidB/SxRmVMvmFkNAKPuLpPMPNyxElUHB7xdoPvY=;
+	s=default; t=1591662081;
+	bh=X0wVzPGBBfCgruGOk9Ig/HOfpcycEG6Cjs2f9qVZl+I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ib2LRlJRM7AW5hjoVkTZn+fOW8qNgKafMwzGz47JET+2UnIDapcJnkahgsL92niFv
-	 J6V4MUwVPcA2z8v4gLMYWlsIbdAV7P7RGHj+rg1qodWLKKeO1wzNyz7HE9q4te09wE
-	 ha6WfIl5LpY4/BRT3ur2Ci9LkQLtobYlo2N/DBKA=
+	b=z0JzA028wwHPHgWHKTzCpX0BoKGYKdmo+ywGpPKz/B319Cx75JyCn6fHedZ/bUE6U
+	 KtwxbFTldghR+4t1hKv1TYMxJjutyT0TeBcycvyTQcTjBiKiV6cC3x77BPiTub3XbP
+	 WtThtQawUQn+ShPpm0Z1NEp8cR38+HmzH6K11gzc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732000AbgFIAVK (ORCPT
+        id S1730520AbgFHXRt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:21:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39930 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:17:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730544AbgFHXRy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:17:54 -0400
+        id S1729754AbgFHXOO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:14:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE29D20885;
-        Mon,  8 Jun 2020 23:17:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10DD421501;
+        Mon,  8 Jun 2020 23:14:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658274;
-        bh=y+OpidB/SxRmVMvmFkNAKPuLpPMPNyxElUHB7xdoPvY=;
+        s=default; t=1591658053;
+        bh=X0wVzPGBBfCgruGOk9Ig/HOfpcycEG6Cjs2f9qVZl+I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mCRo8umAMj+7VdQgyUQgLZNPswDMgiEKceqTbZRT+kau0/1UxAv2rAsLYQkVcxzcs
-         7gJ9NWKJPVf9VpZPkGu4azrgh8o29SMnpFOwY7xQ55vSjsi+OkCLlvkPE7y4LYnzVn
-         U2NOWyYu+a0SPnIdgAOtlbFIRwl1ommnVIFm6spM=
+        b=XbqhvL5I6EvTPaov0xgVo6GGMIn4ROYVKMrl2iAt1MWquY6+SEW/NfJgocBZVpx5X
+         xqevqiV3Dw88/CDytvl4mG+jcQ0AxsfE5xO28vtUSaMyuVzFDksrjJNtuqP+DuHsiM
+         X16vOI264rbM72oKBAw3OJ2vc7trxUphgAxTcd+c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mao Han <han_mao@linux.alibaba.com>,
-        Guo Ren <guoren@linux.alibaba.com>,
-        Sasha Levin <sashal@kernel.org>, linux-csky@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 280/606] csky: Fixup perf callchain unwind
-Date:   Mon,  8 Jun 2020 19:06:45 -0400
-Message-Id: <20200608231211.3363633-280-sashal@kernel.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-kbuild@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 101/606] kbuild: avoid concurrency issue in parallel building dtbs and dtbs_check
+Date:   Mon,  8 Jun 2020 19:03:46 -0400
+Message-Id: <20200608231211.3363633-101-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -59,91 +59,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mao Han <han_mao@linux.alibaba.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit 229a0ddee1108a3f82a873e6cbbe35c92c540444 ]
+[ Upstream commit b5154bf63e5577faaaca1d942df274f7de91dd2a ]
 
- [ 5221.974084] Unable to handle kernel paging request at virtual address 0xfffff000, pc: 0x8002c18e
- [ 5221.985929] Oops: 00000000
- [ 5221.989488]
- [ 5221.989488] CURRENT PROCESS:
- [ 5221.989488]
- [ 5221.992877] COMM=callchain_test PID=11962
- [ 5221.995213] TEXT=00008000-000087e0 DATA=00009f1c-0000a018 BSS=0000a018-0000b000
- [ 5221.999037] USER-STACK=7fc18e20  KERNEL-STACK=be204680
- [ 5221.999037]
- [ 5222.003292] PC: 0x8002c18e (perf_callchain_kernel+0x3e/0xd4)
- [ 5222.007957] LR: 0x8002c198 (perf_callchain_kernel+0x48/0xd4)
- [ 5222.074873] Call Trace:
- [ 5222.074873] [<800a248e>] get_perf_callchain+0x20a/0x29c
- [ 5222.074873] [<8009d964>] perf_callchain+0x64/0x80
- [ 5222.074873] [<8009dc1c>] perf_prepare_sample+0x29c/0x4b8
- [ 5222.074873] [<8009de6e>] perf_event_output_forward+0x36/0x98
- [ 5222.074873] [<800497e0>] search_exception_tables+0x20/0x44
- [ 5222.074873] [<8002cbb6>] do_page_fault+0x92/0x378
- [ 5222.074873] [<80098608>] __perf_event_overflow+0x54/0xdc
- [ 5222.074873] [<80098778>] perf_swevent_hrtimer+0xe8/0x164
- [ 5222.074873] [<8002ddd0>] update_mmu_cache+0x0/0xd8
- [ 5222.074873] [<8002c014>] user_backtrace+0x58/0xc4
- [ 5222.074873] [<8002c0b4>] perf_callchain_user+0x34/0xd0
- [ 5222.074873] [<800a2442>] get_perf_callchain+0x1be/0x29c
- [ 5222.074873] [<8009d964>] perf_callchain+0x64/0x80
- [ 5222.074873] [<8009d834>] perf_output_sample+0x78c/0x858
- [ 5222.074873] [<8009dc1c>] perf_prepare_sample+0x29c/0x4b8
- [ 5222.074873] [<8009de94>] perf_event_output_forward+0x5c/0x98
- [ 5222.097846]
- [ 5222.097846] [<800a0300>] perf_event_exit_task+0x58/0x43c
- [ 5222.097846] [<8006c874>] hrtimer_interrupt+0x104/0x2ec
- [ 5222.097846] [<800a0300>] perf_event_exit_task+0x58/0x43c
- [ 5222.097846] [<80437bb6>] dw_apb_clockevent_irq+0x2a/0x4c
- [ 5222.097846] [<8006c770>] hrtimer_interrupt+0x0/0x2ec
- [ 5222.097846] [<8005f2e4>] __handle_irq_event_percpu+0xac/0x19c
- [ 5222.097846] [<80437bb6>] dw_apb_clockevent_irq+0x2a/0x4c
- [ 5222.097846] [<8005f408>] handle_irq_event_percpu+0x34/0x88
- [ 5222.097846] [<8005f480>] handle_irq_event+0x24/0x64
- [ 5222.097846] [<8006218c>] handle_level_irq+0x68/0xdc
- [ 5222.097846] [<8005ec76>] __handle_domain_irq+0x56/0xa8
- [ 5222.097846] [<80450e90>] ck_irq_handler+0xac/0xe4
- [ 5222.097846] [<80029012>] csky_do_IRQ+0x12/0x24
- [ 5222.097846] [<8002a3a0>] csky_irq+0x70/0x80
- [ 5222.097846] [<800ca612>] alloc_set_pte+0xd2/0x238
- [ 5222.097846] [<8002ddd0>] update_mmu_cache+0x0/0xd8
- [ 5222.097846] [<800a0340>] perf_event_exit_task+0x98/0x43c
+'make dtbs_check' checks the shecma in addition to building *.dtb files,
+in other words, 'make dtbs_check' is a super-set of 'make dtbs'.
+So, you do not have to do 'make dtbs dtbs_check', but I want to keep
+the build system as robust as possible in any use.
 
-The original fp check doesn't base on the real kernal stack region.
-Invalid fp address may cause kernel panic.
+Currently, 'dtbs' and 'dtbs_check' are independent of each other.
+In parallel building, two threads descend into arch/*/boot/dts/,
+one for dtbs and the other for dtbs_check, then end up with building
+the same DTB simultaneously.
 
-Signed-off-by: Mao Han <han_mao@linux.alibaba.com>
-Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+This commit fixes the concurrency issue. Otherwise, I see build errors
+like follows:
+
+$ make ARCH=arm64 defconfig
+$ make -j16 ARCH=arm64 DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/psci.yaml dtbs dtbs_check
+  <snip>
+  DTC     arch/arm64/boot/dts/qcom/sdm845-cheza-r2.dtb
+  DTC     arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtb
+  DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dtb
+  DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dtb
+  DTC     arch/arm64/boot/dts/freescale/imx8mn-evk.dtb
+  DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dtb
+  DTC     arch/arm64/boot/dts/zte/zx296718-pcbox.dtb
+  DTC     arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dt.yaml
+  DTC     arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dtb
+  DTC     arch/arm64/boot/dts/xilinx/zynqmp-zc1254-revA.dtb
+  DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dtb
+  DTC     arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-inx.dtb
+  DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dtb
+  CHECK   arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dt.yaml
+fixdep: error opening file: arch/arm64/boot/dts/allwinner/.sun50i-h6-orangepi-lite2.dtb.d: No such file or directory
+make[2]: *** [scripts/Makefile.lib:296: arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dtb] Error 2
+make[2]: *** Deleting file 'arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dtb'
+make[2]: *** Waiting for unfinished jobs....
+  DTC     arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-kd.dtb
+  DTC     arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p231.dtb
+  DTC     arch/arm64/boot/dts/xilinx/zynqmp-zc1275-revA.dtb
+  DTC     arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dtb
+fixdep: parse error; no targets found
+make[2]: *** [scripts/Makefile.lib:296: arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dtb] Error 1
+make[2]: *** Deleting file 'arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dtb'
+make[1]: *** [scripts/Makefile.build:505: arch/arm64/boot/dts/allwinner] Error 2
+make[1]: *** Waiting for unfinished jobs....
+  DTC     arch/arm64/boot/dts/renesas/r8a77951-salvator-xs.dtb
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/csky/kernel/perf_callchain.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ Makefile | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/arch/csky/kernel/perf_callchain.c b/arch/csky/kernel/perf_callchain.c
-index e68ff375c8f8..ab55e98ee8f6 100644
---- a/arch/csky/kernel/perf_callchain.c
-+++ b/arch/csky/kernel/perf_callchain.c
-@@ -12,12 +12,17 @@ struct stackframe {
+diff --git a/Makefile b/Makefile
+index 713f93cceffe..d00e14219e27 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1248,11 +1248,15 @@ ifneq ($(dtstree),)
+ 	$(Q)$(MAKE) $(build)=$(dtstree) $(dtstree)/$@
  
- static int unwind_frame_kernel(struct stackframe *frame)
- {
--	if (kstack_end((void *)frame->fp))
-+	unsigned long low = (unsigned long)task_stack_page(current);
-+	unsigned long high = low + THREAD_SIZE;
-+
-+	if (unlikely(frame->fp < low || frame->fp > high))
- 		return -EPERM;
--	if (frame->fp & 0x3 || frame->fp < TASK_SIZE)
-+
-+	if (kstack_end((void *)frame->fp) || frame->fp & 0x3)
- 		return -EPERM;
+ PHONY += dtbs dtbs_install dtbs_check
+-dtbs dtbs_check: include/config/kernel.release scripts_dtc
++dtbs: include/config/kernel.release scripts_dtc
+ 	$(Q)$(MAKE) $(build)=$(dtstree)
  
- 	*frame = *(struct stackframe *)frame->fp;
++ifneq ($(filter dtbs_check, $(MAKECMDGOALS)),)
++dtbs: dt_binding_check
++endif
 +
- 	if (__kernel_text_address(frame->lr)) {
- 		int graph = 0;
+ dtbs_check: export CHECK_DTBS=1
+-dtbs_check: dt_binding_check
++dtbs_check: dtbs
  
+ dtbs_install:
+ 	$(Q)$(MAKE) $(dtbinst)=$(dtstree)
 -- 
 2.25.1
 
