@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67FC7C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16CCCC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F3CA20775
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D908420890
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:34:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591659271;
-	bh=CW+S2I9j3FWtgNNgKAVdRFjVBnucE7ZH77BuXJM6opA=;
+	s=default; t=1591659275;
+	bh=p4lLtA7D2vhEZpZAK00IfgXqI3bdZBdLz68+go6p4SI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RKTBi9MWVpkEHnUzqeo/vksb6Q1EtG04N2j8EAaDJSStA0VxCMzw+TWm0fR6ber2o
-	 77wvDHPnIrz/DTPNFXBItFQDwxpTe1f5dFH5JC1mYkQS/WsQ4HfUmjTspU+g7kXM9+
-	 GyfpvFMvxrkwDKDM8WIvcGt1N9BBvNTzPOkwu4Uw=
+	b=ybqiANHm07MuBMt8mc3pID853+1VrXjE5MLbnYjCg6To9FyweTDU1PvpowWDL6aup
+	 o/TeSVlp7Q+3m9TXFvpJJdVQfJdX8LFjXeNAsB5ow+arTLZLX+d1bOtII8dCQwCYUq
+	 18qXGv9ggyj9cPAyN3pygd7pEVJMWEm67Fhojk/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729055AbgFHXea (ORCPT
+        id S1732642AbgFHXef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:34:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56720 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:34:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732184AbgFHX1x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:27:53 -0400
+        id S1730916AbgFHX2C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:28:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FF892074B;
-        Mon,  8 Jun 2020 23:27:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA87B207C3;
+        Mon,  8 Jun 2020 23:28:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658873;
-        bh=CW+S2I9j3FWtgNNgKAVdRFjVBnucE7ZH77BuXJM6opA=;
+        s=default; t=1591658881;
+        bh=p4lLtA7D2vhEZpZAK00IfgXqI3bdZBdLz68+go6p4SI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eLNzTG6vMkyOKPQjXeAdN0W+MIJzANEGu1hB3Qtr88vtLk0tI8pkpyLsR2zcZ8+3Y
-         IHxVX+x+BIGnSFf1IeqUaOgsXZ/cnTyygr05VesF4yVOxmKY4j6V1onkzsm1XBoqJT
-         693yoELMLsX4tl9Jmt4PBozt9Aj9x0NZpTP41yKg=
+        b=aIQSqTmbKAWGDr7JvTz61WX8CPYseWlj14sPgqJqkkoIE+NuHWXcYprHCRm3c9zXG
+         1O1e5DdwmI1Zahatc5vVREINl7VD6M213q3pqKc7c52S4ulARQ6XhBY5COm3O+SiBu
+         TGyyYWPGIKHQ/lQeyZI/fthuLGJ8tBdNG06/76jo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qiujun Huang <hqjagain@gmail.com>,
-        syzbot+b1c61e5f11be5782f192@syzkaller.appspotmail.com,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 02/37] ath9k: Fix use-after-free Write in ath9k_htc_rx_msg
-Date:   Mon,  8 Jun 2020 19:27:14 -0400
-Message-Id: <20200608232750.3370747-2-sashal@kernel.org>
+Cc:     Filipe Manana <fdmanana@suse.com>, David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 08/37] btrfs: do not ignore error from btrfs_next_leaf() when inserting checksums
+Date:   Mon,  8 Jun 2020 19:27:20 -0400
+Message-Id: <20200608232750.3370747-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608232750.3370747-1-sashal@kernel.org>
 References: <20200608232750.3370747-1-sashal@kernel.org>
@@ -61,59 +58,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiujun Huang <hqjagain@gmail.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-[ Upstream commit e4ff08a4d727146bb6717a39a8d399d834654345 ]
+[ Upstream commit 7e4a3f7ed5d54926ec671bbb13e171cfe179cc50 ]
 
-Write out of slab bounds. We should check epid.
+We are currently treating any non-zero return value from btrfs_next_leaf()
+the same way, by going to the code that inserts a new checksum item in the
+tree. However if btrfs_next_leaf() returns an error (a value < 0), we
+should just stop and return the error, and not behave as if nothing has
+happened, since in that case we do not have a way to know if there is a
+next leaf or we are currently at the last leaf already.
 
-The case reported by syzbot:
-https://lore.kernel.org/linux-usb/0000000000006ac55b05a1c05d72@google.com
-BUG: KASAN: use-after-free in htc_process_conn_rsp
-drivers/net/wireless/ath/ath9k/htc_hst.c:131 [inline]
-BUG: KASAN: use-after-free in ath9k_htc_rx_msg+0xa25/0xaf0
-drivers/net/wireless/ath/ath9k/htc_hst.c:443
-Write of size 2 at addr ffff8881cea291f0 by task swapper/1/0
+So fix that by returning the error from btrfs_next_leaf().
 
-Call Trace:
- htc_process_conn_rsp drivers/net/wireless/ath/ath9k/htc_hst.c:131
-[inline]
-ath9k_htc_rx_msg+0xa25/0xaf0
-drivers/net/wireless/ath/ath9k/htc_hst.c:443
-ath9k_hif_usb_reg_in_cb+0x1ba/0x630
-drivers/net/wireless/ath/ath9k/hif_usb.c:718
-__usb_hcd_giveback_urb+0x29a/0x550 drivers/usb/core/hcd.c:1650
-usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1716
-dummy_timer+0x1258/0x32ae drivers/usb/gadget/udc/dummy_hcd.c:1966
-call_timer_fn+0x195/0x6f0 kernel/time/timer.c:1404
-expire_timers kernel/time/timer.c:1449 [inline]
-__run_timers kernel/time/timer.c:1773 [inline]
-__run_timers kernel/time/timer.c:1740 [inline]
-run_timer_softirq+0x5f9/0x1500 kernel/time/timer.c:1786
-
-Reported-and-tested-by: syzbot+b1c61e5f11be5782f192@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200404041838.10426-4-hqjagain@gmail.com
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath9k/htc_hst.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/btrfs/file-item.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath9k/htc_hst.c b/drivers/net/wireless/ath/ath9k/htc_hst.c
-index fd85f996c554..257b6ee51e54 100644
---- a/drivers/net/wireless/ath/ath9k/htc_hst.c
-+++ b/drivers/net/wireless/ath/ath9k/htc_hst.c
-@@ -114,6 +114,9 @@ static void htc_process_conn_rsp(struct htc_target *target,
- 
- 	if (svc_rspmsg->status == HTC_SERVICE_SUCCESS) {
- 		epid = svc_rspmsg->endpoint_id;
-+		if (epid < 0 || epid >= ENDPOINT_MAX)
-+			return;
-+
- 		service_id = be16_to_cpu(svc_rspmsg->service_id);
- 		max_msglen = be16_to_cpu(svc_rspmsg->max_msg_len);
- 		endpoint = &target->endpoint[epid];
+diff --git a/fs/btrfs/file-item.c b/fs/btrfs/file-item.c
+index 58ece6558430..fb5c97ea670f 100644
+--- a/fs/btrfs/file-item.c
++++ b/fs/btrfs/file-item.c
+@@ -742,10 +742,12 @@ int btrfs_csum_file_blocks(struct btrfs_trans_handle *trans,
+ 		nritems = btrfs_header_nritems(path->nodes[0]);
+ 		if (!nritems || (path->slots[0] >= nritems - 1)) {
+ 			ret = btrfs_next_leaf(root, path);
+-			if (ret == 1)
++			if (ret < 0) {
++				goto out;
++			} else if (ret > 0) {
+ 				found_next = 1;
+-			if (ret != 0)
+ 				goto insert;
++			}
+ 			slot = path->slots[0];
+ 		}
+ 		btrfs_item_key_to_cpu(path->nodes[0], &found_key, slot);
 -- 
 2.25.1
 
