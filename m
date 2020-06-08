@@ -2,168 +2,150 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF07C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 13:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0761C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 13:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 004F72076A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 13:16:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nZj6j2cp"
+	by mail.kernel.org (Postfix) with ESMTP id 9F9EC2081A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 13:17:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729452AbgFHNQi (ORCPT
+        id S1729565AbgFHNRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 09:16:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59260 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728955AbgFHNQh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 09:16:37 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46BCEC08C5C2;
-        Mon,  8 Jun 2020 06:16:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=7czmUlKXK2qDYbKTF+zj0HZydFzO+Z3y6gQHAGlxwDg=; b=nZj6j2cprHRqFfRFAHMs+zOdH+
-        LiSzUwyutAB5/H1tnPDdLuRcRUbfitVDkc2nCq88K6gaUaM1zcFk40vavg2dgAe0Sw+mmThN0pUtu
-        zFkfpM5Hwt35dx4xrwbZE5EWiE6vG2Jume0vNt1Ox0ZzXeiFBWQtvIBiQvHbZjtZ9tahTs7x84Pts
-        78j0U04/u2uVCoUWfwimsycH+MTgNNF3YjFFSSQ0njBkz66Yzk03GYYlW4cZeCpyzOxUPAk5Ud21d
-        ZeNnlcIO+jJZHriKxhujhqR443iKIjxeD1ozW3XDTgkyTau7CnNINcqDKqT+BWWn4PlRnf/CqoxhG
-        sfE03h5g==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jiHde-0006c5-HT; Mon, 08 Jun 2020 13:16:30 +0000
-Date:   Mon, 8 Jun 2020 06:16:30 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     Scott Branden <scott.branden@broadcom.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Wolfram Sang <wsa@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH v7 1/8] fs: introduce kernel_pread_file* support
-Message-ID: <20200608131630.GV19604@bombadil.infradead.org>
-References: <20200606050458.17281-1-scott.branden@broadcom.com>
- <20200606050458.17281-2-scott.branden@broadcom.com>
- <20200606155216.GP19604@bombadil.infradead.org>
- <1591621401.4638.59.camel@linux.ibm.com>
+        Mon, 8 Jun 2020 09:17:09 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5869 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728938AbgFHNRH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 09:17:07 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 48AF61A9D3AE874509E3;
+        Mon,  8 Jun 2020 21:17:02 +0800 (CST)
+Received: from [127.0.0.1] (10.166.213.10) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Mon, 8 Jun 2020
+ 21:16:55 +0800
+Subject: Re: [RESEND PATCH] sys_personality: Add optional arch hook
+ arch_check_personality
+To:     Catalin Marinas <catalin.marinas@arm.com>
+CC:     <huawei.libin@huawei.com>, <cj.chengjian@huawei.com>,
+        <xiexiuqi@huawei.com>, <mark.rutland@arm.com>, <hch@infradead.org>,
+        <wcohen@redhat.com>, <linux-kernel@vger.kernel.org>,
+        <mtk.manpages@gmail.com>, <wezhang@redhat.com>,
+        <gregkh@linuxfoundation.org>, Will Deacon <will@kernel.org>
+References: <20200608024925.42510-1-bobo.shaobowang@huawei.com>
+ <20200608094640.GA13596@gaia>
+From:   "Wangshaobo (bobo)" <bobo.shaobowang@huawei.com>
+Message-ID: <bc50de19-86db-5eed-2112-6772850a5cd5@huawei.com>
+Date:   Mon, 8 Jun 2020 21:16:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <20200608094640.GA13596@gaia>
+Content-Type: text/plain; charset="gbk"; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1591621401.4638.59.camel@linux.ibm.com>
+X-Originating-IP: [10.166.213.10]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 09:03:21AM -0400, Mimi Zohar wrote:
-> On Sat, 2020-06-06 at 08:52 -0700, Matthew Wilcox wrote:
-> > On Fri, Jun 05, 2020 at 10:04:51PM -0700, Scott Branden wrote:
-> > > -int kernel_read_file(struct file *file, void **buf, loff_t *size,
-> > > -		     loff_t max_size, enum kernel_read_file_id id)
-> > > -{
-> > > -	loff_t i_size, pos;
-> > > +int kernel_pread_file(struct file *file, void **buf, loff_t *size,
-> > > +		      loff_t pos, loff_t max_size,
-> > > +		      enum kernel_pread_opt opt,
-> > > +		      enum kernel_read_file_id id)
-> > > +{
-> > > +	loff_t alloc_size;
-> > > +	loff_t buf_pos;
-> > > +	loff_t read_end;
-> > > +	loff_t i_size;
-> > >  	ssize_t bytes = 0;
-> > >  	int ret;
-> > >  
-> > 
-> > Look, it's not your fault, but this is a great example of how we end
-> > up with atrocious interfaces.  Someone comes along and implements a
-> > simple DWIM interface that solves their problem.  Then somebody else
-> > adds a slight variant that solves their problem, and so on and so on,
-> > and we end up with this bonkers API where the arguments literally change
-> > meaning depending on other arguments.
-> > 
-> > > @@ -950,21 +955,31 @@ int kernel_read_file(struct file *file, void **buf, loff_t *size,
-> > >  		ret = -EINVAL;
-> > >  		goto out;
-> > >  	}
-> > > -	if (i_size > SIZE_MAX || (max_size > 0 && i_size > max_size)) {
-> > > +
-> > > +	/* Default read to end of file */
-> > > +	read_end = i_size;
-> > > +
-> > > +	/* Allow reading partial portion of file */
-> > > +	if ((opt == KERNEL_PREAD_PART) &&
-> > > +	    (i_size > (pos + max_size)))
-> > > +		read_end = pos + max_size;
-> > > +
-> > > +	alloc_size = read_end - pos;
-> > > +	if (i_size > SIZE_MAX || (max_size > 0 && alloc_size > max_size)) {
-> > >  		ret = -EFBIG;
-> > >  		goto out;
-> > 
-> > ... like that.
-> > 
-> > I think what we actually want is:
-> > 
-> > ssize_t vmap_file_range(struct file *, loff_t start, loff_t end, void **bufp);
-> > void vunmap_file_range(struct file *, void *buf);
-> > 
-> > If end > i_size, limit the allocation to i_size.  Returns the number
-> > of bytes allocated, or a negative errno.  Writes the pointer allocated
-> > to *bufp.  Internally, it should use the page cache to read in the pages
-> > (taking appropriate reference counts).  Then it maps them using vmap()
-> > instead of copying them to a private vmalloc() array.
-> > 
-> > kernel_read_file() can be converted to use this API.  The users will
-> > need to be changed to call kernel_read_end(struct file *file, void *buf)
-> > instead of vfree() so it can call allow_write_access() for them.
-> > 
-> > vmap_file_range() has a lot of potential uses.  I'm surprised we don't
-> > have it already, to be honest.
-> 
-> Prior to kernel_read_file() the same or verify similar code existed in
-> multiple places in the kernel.  The kernel_read_file() API
-> consolidated the existing code adding the pre and post security hooks.
-> 
-> With this new design of not using a private vmalloc, will the file
-> data be accessible prior to the post security hooks?  From an IMA
-> perspective, the hooks are used for measuring and/or verifying the
-> integrity of the file.
 
-File data is already accessible prior to the post security hooks.
-Look how kernel_read_file works:
+ÔÚ 2020/6/8 17:46, Catalin Marinas Ð´µÀ:
+> On Mon, Jun 08, 2020 at 10:49:25AM +0800, Wang ShaoBo wrote:
+>> Currently arm64 personality syscall uses wrapper __arm64_sys_personality
+>> to redirect to __arm64_sys_arm64_personality, it's easily confused,
+>> Whereas using an normal hook arch_check_personality() can reject
+>> additional settings like this for special case of different architectures.
+>>
+>> This makes code clean and easier for subsequent modification.
+> Do you plan to add more stuff here? Curious what triggered this patch.
+>
+>> diff --git a/arch/arm64/kernel/sys.c b/arch/arm64/kernel/sys.c
+>> index d5ffaaab31a7..5c01816d7a77 100644
+>> --- a/arch/arm64/kernel/sys.c
+>> +++ b/arch/arm64/kernel/sys.c
+>> @@ -28,12 +28,13 @@ SYSCALL_DEFINE6(mmap, unsigned long, addr, unsigned long, len,
+>>   	return ksys_mmap_pgoff(addr, len, prot, flags, fd, off >> PAGE_SHIFT);
+>>   }
+>>   
+>> -SYSCALL_DEFINE1(arm64_personality, unsigned int, personality)
+>> +int arch_check_personality(unsigned int personality)
+>>   {
+>>   	if (personality(personality) == PER_LINUX32 &&
+>>   		!system_supports_32bit_el0())
+>>   		return -EINVAL;
+>> -	return ksys_personality(personality);
+>> +
+>> +	return 0;
+>>   }
+> We use the ksys_* pattern in other places as well, so this wouldn't be
+> something new.
+>
+>> diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+>> index 1815065d52f3..3dbbad498027 100644
+>> --- a/include/linux/syscalls.h
+>> +++ b/include/linux/syscalls.h
+>> @@ -1393,16 +1393,6 @@ static inline long ksys_truncate(const char __user *pathname, loff_t length)
+>>   	return do_sys_truncate(pathname, length);
+>>   }
+>>   
+>> -static inline unsigned int ksys_personality(unsigned int personality)
+>> -{
+>> -	unsigned int old = current->personality;
+>> -
+>> -	if (personality != 0xffffffff)
+>> -		set_personality(personality);
+>> -
+>> -	return old;
+>> -}
+>> -
+>>   /* for __ARCH_WANT_SYS_IPC */
+>>   long ksys_semtimedop(int semid, struct sembuf __user *tsops,
+>>   		     unsigned int nsops,
+>> diff --git a/kernel/exec_domain.c b/kernel/exec_domain.c
+>> index 33f07c5f2515..f3682f4bf205 100644
+>> --- a/kernel/exec_domain.c
+>> +++ b/kernel/exec_domain.c
+>> @@ -35,9 +35,21 @@ static int __init proc_execdomains_init(void)
+>>   module_init(proc_execdomains_init);
+>>   #endif
+>>   
+>> +int __weak arch_check_personality(unsigned int personality)
+>> +{
+>> +	return 0;
+>> +}
+>> +
+>>   SYSCALL_DEFINE1(personality, unsigned int, personality)
+>>   {
+>> -	unsigned int old = current->personality;
+>> +	int err;
+>> +	unsigned int old;
+>> +
+>> +	err = arch_check_personality(personality);
+>> +	if (err)
+>> +		return err;
+>> +
+>> +	old = current->personality;
+> I'm surprised that the generic sys_personality() doesn't call
+> ksys_personality() directly but rather duplicates the code.
+>
+> Anyway, without knowing what else you plan to do with
+> arch_check_personality(), I don't think it's worth changing. Calling
+> ksys_personality() directly from sys_personality() would be a good
+> clean-up though.
 
-        ret = deny_write_access(file);
-        ret = security_kernel_read_file(file, id);
-                *buf = vmalloc(i_size);
-                bytes = kernel_read(file, *buf + pos, i_size - pos, &pos);
-        ret = security_kernel_post_read_file(file, *buf, i_size, id);
+Hi catalin,
 
-kernel_read() will read the data into the page cache and then copy it
-into the vmalloc'd buffer.  There's nothing here to prevent read accesses
-to the file.
+I have sent a version just calling ksys_personality() directly from 
+sys_personality() before:
+
+https://lore.kernel.org/patchwork/patch/1158872/
+
+thanks,
+
+Wang ShaoBo
+
+>
 
