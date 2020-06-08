@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41BF4C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EBD5C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14AF020C56
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:24:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A3BA208B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:24:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658656;
-	bh=Z16FR46Wfib9ObRljsI1+fcv3Z7krEYvl7iFsM+AQ1E=;
+	s=default; t=1591658659;
+	bh=KXSAq0Og5Tz6OtS3O4BGo0p1Xs/Cmyx2cDecbwU+sxo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P8Lm+HU1lT9ObBMkLqJxlYsMQ5iugp3kShHksMrGTE45Da4IMIh5JoQC/rjT95Laa
-	 EcjoJmiHDrV/9qe5KYV2oSMqxZDngnatfAZa1e5bLr0fWoANHFAOMZZuNagGEwktRN
-	 UkIPrCB+V+cQuT5on+FEimiCzUPmNILGBemD48O0=
+	b=e4+6KNbSX/XGsmAD/vG0CKj5qbh8mPqItRFF49eIcaAtLzyCaE7Hgu/oaCZlBvia2
+	 4iXYYYhYru7kUm1abdEOxXgvk3fETbqsAwlYsm9DFH5qhLM0eC3b5E7h6mH68lUApe
+	 izGW/LxdwiXkE9EAGkFedf8adL3FHhrRccw69mFE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731593AbgFHXYO (ORCPT
+        id S2387498AbgFHXYR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:24:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41534 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:24:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727045AbgFHXS6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:18:58 -0400
+        id S1729897AbgFHXTH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:19:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3A052083E;
-        Mon,  8 Jun 2020 23:18:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B140E20870;
+        Mon,  8 Jun 2020 23:19:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658337;
-        bh=Z16FR46Wfib9ObRljsI1+fcv3Z7krEYvl7iFsM+AQ1E=;
+        s=default; t=1591658347;
+        bh=KXSAq0Og5Tz6OtS3O4BGo0p1Xs/Cmyx2cDecbwU+sxo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PJRRCIJZnJZyCqWKOipkwMHBZMblHLBwvFMh0HtZ5qZnm7q+vb5V5bDWDRSf1xvBy
-         b8zRYTKfrJ8h4zVPHrO85nfZlyOBX1GXDqF/H97G4rK5BdYe2KEOZ18Hn+z8kQhIqr
-         800IX81HAhqB4Ywou/KARP5BvXE4Cmcb9sjR1yn8=
+        b=p1YsHucFMAMAIGsnBdO9YzPsIriH46Qa8liq5BdlyBJ1fHnfbkHII/kB7zjCp1P7t
+         yvLdIfBtvHg5eBKPsdrePC8SLj/H6aMI3HlxDiWKk0QAYUtP5zBnA4QViR59Ypoxgl
+         jmAWDay5e8hDYpE2caL7+o9+IAv99gpRON+3kS6Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bingbu Cao <bingbu.cao@intel.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 5.4 007/175] media: staging: imgu: do not hold spinlock during freeing mmu page table
-Date:   Mon,  8 Jun 2020 19:16:00 -0400
-Message-Id: <20200608231848.3366970-7-sashal@kernel.org>
+Cc:     Gavin Shan <gshan@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 015/175] arm64/kernel: Fix range on invalidating dcache for boot page tables
+Date:   Mon,  8 Jun 2020 19:16:08 -0400
+Message-Id: <20200608231848.3366970-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
 References: <20200608231848.3366970-1-sashal@kernel.org>
@@ -62,63 +59,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bingbu Cao <bingbu.cao@intel.com>
+From: Gavin Shan <gshan@redhat.com>
 
-[ Upstream commit e1ebe9f9c88e5a78fcc4670a9063c9b3cd87dda4 ]
+[ Upstream commit 9d2d75ede59bc1edd8561f2ee9d4702a5ea0ae30 ]
 
-ImgU need set the mmu page table in memory as uncached, and set back
-to write-back when free the page table by set_memory_wb(),
-set_memory_wb() can not do flushing without interrupt, so the spinlock
-should not be hold during ImgU page alloc and free, the interrupt
-should be enabled during memory cache flush.
+Prior to commit 8eb7e28d4c642c31 ("arm64/mm: move runtime pgds to
+rodata"), idmap_pgd_dir, tramp_pg_dir, reserved_ttbr0, swapper_pg_dir,
+and init_pg_dir were contiguous at the end of the kernel image. The
+maintenance at the end of __create_page_tables assumed these were
+contiguous, and affected everything from the start of idmap_pg_dir
+to the end of init_pg_dir.
 
-This patch release spinlock before freeing pages table.
+That commit moved all but init_pg_dir into the .rodata section, with
+other data placed between idmap_pg_dir and init_pg_dir, but did not
+update the maintenance. Hence the maintenance is performed on much
+more data than necessary (but as the bootloader previously made this
+clean to the PoC there is no functional problem).
 
-Signed-off-by: Bingbu Cao <bingbu.cao@intel.com>
-Reviewed-by: Tomasz Figa <tfiga@chromium.org>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+As we only alter idmap_pg_dir, and init_pg_dir, we only need to perform
+maintenance for these. As the other dirs are in .rodata, the bootloader
+will have initialised them as expected and cleaned them to the PoC. The
+kernel will initialize them as necessary after enabling the MMU.
+
+This patch reworks the maintenance to only cover the idmap_pg_dir and
+init_pg_dir to avoid this unnecessary work.
+
+Signed-off-by: Gavin Shan <gshan@redhat.com>
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Link: https://lore.kernel.org/r/20200427235700.112220-1-gshan@redhat.com
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/media/ipu3/ipu3-mmu.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ arch/arm64/include/asm/pgtable.h |  1 +
+ arch/arm64/kernel/head.S         | 12 +++++++++---
+ arch/arm64/kernel/vmlinux.lds.S  |  1 +
+ 3 files changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/staging/media/ipu3/ipu3-mmu.c b/drivers/staging/media/ipu3/ipu3-mmu.c
-index 3d969b0522ab..abcf1f3e5f63 100644
---- a/drivers/staging/media/ipu3/ipu3-mmu.c
-+++ b/drivers/staging/media/ipu3/ipu3-mmu.c
-@@ -174,8 +174,10 @@ static u32 *imgu_mmu_get_l2pt(struct imgu_mmu *mmu, u32 l1pt_idx)
- 	spin_lock_irqsave(&mmu->lock, flags);
+diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+index 13ebe2bad79f..41dd4b1f0ccb 100644
+--- a/arch/arm64/include/asm/pgtable.h
++++ b/arch/arm64/include/asm/pgtable.h
+@@ -456,6 +456,7 @@ extern pgd_t init_pg_dir[PTRS_PER_PGD];
+ extern pgd_t init_pg_end[];
+ extern pgd_t swapper_pg_dir[PTRS_PER_PGD];
+ extern pgd_t idmap_pg_dir[PTRS_PER_PGD];
++extern pgd_t idmap_pg_end[];
+ extern pgd_t tramp_pg_dir[PTRS_PER_PGD];
  
- 	l2pt = mmu->l2pts[l1pt_idx];
--	if (l2pt)
--		goto done;
-+	if (l2pt) {
-+		spin_unlock_irqrestore(&mmu->lock, flags);
-+		return l2pt;
-+	}
+ extern void set_swapper_pgd(pgd_t *pgdp, pgd_t pgd);
+diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
+index 989b1944cb71..bdb5ec341900 100644
+--- a/arch/arm64/kernel/head.S
++++ b/arch/arm64/kernel/head.S
+@@ -393,13 +393,19 @@ __create_page_tables:
  
- 	spin_unlock_irqrestore(&mmu->lock, flags);
+ 	/*
+ 	 * Since the page tables have been populated with non-cacheable
+-	 * accesses (MMU disabled), invalidate the idmap and swapper page
+-	 * tables again to remove any speculatively loaded cache lines.
++	 * accesses (MMU disabled), invalidate those tables again to
++	 * remove any speculatively loaded cache lines.
+ 	 */
++	dmb	sy
++
+ 	adrp	x0, idmap_pg_dir
++	adrp	x1, idmap_pg_end
++	sub	x1, x1, x0
++	bl	__inval_dcache_area
++
++	adrp	x0, init_pg_dir
+ 	adrp	x1, init_pg_end
+ 	sub	x1, x1, x0
+-	dmb	sy
+ 	bl	__inval_dcache_area
  
-@@ -190,8 +192,9 @@ static u32 *imgu_mmu_get_l2pt(struct imgu_mmu *mmu, u32 l1pt_idx)
+ 	ret	x28
+diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
+index aa76f7259668..e1af25dbc57e 100644
+--- a/arch/arm64/kernel/vmlinux.lds.S
++++ b/arch/arm64/kernel/vmlinux.lds.S
+@@ -142,6 +142,7 @@ SECTIONS
+ 	. = ALIGN(PAGE_SIZE);
+ 	idmap_pg_dir = .;
+ 	. += IDMAP_DIR_SIZE;
++	idmap_pg_end = .;
  
- 	l2pt = mmu->l2pts[l1pt_idx];
- 	if (l2pt) {
-+		spin_unlock_irqrestore(&mmu->lock, flags);
- 		imgu_mmu_free_page_table(new_l2pt);
--		goto done;
-+		return l2pt;
- 	}
- 
- 	l2pt = new_l2pt;
-@@ -200,7 +203,6 @@ static u32 *imgu_mmu_get_l2pt(struct imgu_mmu *mmu, u32 l1pt_idx)
- 	pteval = IPU3_ADDR2PTE(virt_to_phys(new_l2pt));
- 	mmu->l1pt[l1pt_idx] = pteval;
- 
--done:
- 	spin_unlock_irqrestore(&mmu->lock, flags);
- 	return l2pt;
- }
+ #ifdef CONFIG_UNMAP_KERNEL_AT_EL0
+ 	tramp_pg_dir = .;
 -- 
 2.25.1
 
