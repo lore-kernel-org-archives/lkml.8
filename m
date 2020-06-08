@@ -2,186 +2,94 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8938BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74094C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:47:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 555A5206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:47:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="DWGPIwN8"
+	by mail.kernel.org (Postfix) with ESMTP id 479C1206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:47:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729398AbgFHKrW (ORCPT
+        id S1729421AbgFHKrn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 06:47:22 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:28246 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729307AbgFHKrW (ORCPT
+        Mon, 8 Jun 2020 06:47:43 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:20691 "EHLO
+        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729337AbgFHKrl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 06:47:22 -0400
-X-UUID: c782088ae4b44a7cadfc541d45808d27-20200608
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=4U5wOyS9euUxaAz1UlU89Xtc0yNK/D1HajDxurFdoY0=;
-        b=DWGPIwN82FJCAt9fuuOj4oDFpYuNx1pA6XIEiyvrxiJaTsvd3LJBiUJpfI1NUEvEMsmvtqZciQlkhzOzYR7dXvjEoc/E5RSlkSWFqpxhtaiukvpD5VojrARQP0S8k1209t9jst11RBtS9ZCSE9Plp9YkYL4EjJYpamTdd5WEyBQ=;
-X-UUID: c782088ae4b44a7cadfc541d45808d27-20200608
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <tiffany.lin@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1850781260; Mon, 08 Jun 2020 18:47:16 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 8 Jun 2020 18:47:12 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 8 Jun 2020 18:47:12 +0800
-Message-ID: <1591613234.18435.8.camel@mtksdaap41>
-Subject: Re: [PATCH 02/10] media: mtk-vcodec: add SCP firmware ops
-From:   Tiffany Lin <tiffany.lin@mediatek.com>
-To:     Alexandre Courbot <acourbot@chromium.org>
-CC:     Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Rui Wang <gtk_ruiwang@mediatek.com>,
-        Yunfei Dong <yunfei.dong@mediatek.com>,
-        "Pi-Hsun Shih" <pihsun@chromium.org>,
-        Maoguang Meng <maoguang.meng@mediatek.com>,
-        <linux-media@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Date:   Mon, 8 Jun 2020 18:47:14 +0800
-In-Reply-To: <20200520082723.96136-3-acourbot@chromium.org>
-References: <20200520082723.96136-1-acourbot@chromium.org>
-         <20200520082723.96136-3-acourbot@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Mon, 8 Jun 2020 06:47:41 -0400
+Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 08 Jun 2020 03:47:40 -0700
+Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
+  by ironmsg-SD-alpha.qualcomm.com with ESMTP; 08 Jun 2020 03:47:38 -0700
+Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
+        id C4AA3217EC; Mon,  8 Jun 2020 16:17:35 +0530 (IST)
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+To:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        peter.ujfalusi@ti.com, linux-mtd@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Subject: [PATCH] mtd: raw: qcom_nand: Fix register write error
+Date:   Mon,  8 Jun 2020 16:17:34 +0530
+Message-Id: <1591613254-1065-1-git-send-email-sivaprak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA1LTIwIGF0IDE3OjI3ICswOTAwLCBBbGV4YW5kcmUgQ291cmJvdCB3cm90
-ZToNCj4gRnJvbTogWXVuZmVpIERvbmcgPHl1bmZlaS5kb25nQG1lZGlhdGVrLmNvbT4NCj4gDQo+
-IEFkZCBzdXBwb3J0IGZvciBjb21tdW5pY2F0aW5nIHdpdGggdGhlIFNDUCBmaXJtd2FyZSwgd2hp
-Y2ggd2lsbCBiZSB1c2VkDQo+IGJ5IE1UODE4My4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFl1bmZl
-aSBEb25nIDx5dW5mZWkuZG9uZ0BtZWRpYXRlay5jb20+DQo+IFthY291cmJvdDogcmVmYWN0b3Is
-IGNsZWFudXAgYW5kIHNwbGl0XQ0KPiBDby1kZXZlbG9wZWQtYnk6IEFsZXhhbmRyZSBDb3VyYm90
-IDxhY291cmJvdEBjaHJvbWl1bS5vcmc+DQo+IFNpZ25lZC1vZmYtYnk6IEFsZXhhbmRyZSBDb3Vy
-Ym90IDxhY291cmJvdEBjaHJvbWl1bS5vcmc+DQo+IC0tLQ0KPiAgZHJpdmVycy9tZWRpYS9wbGF0
-Zm9ybS9LY29uZmlnICAgICAgICAgICAgICAgIHwgIDIgKw0KPiAgLi4uL3BsYXRmb3JtL210ay12
-Y29kZWMvbXRrX3Zjb2RlY19kZWNfZHJ2LmMgIHwgIDMgKw0KPiAgLi4uL3BsYXRmb3JtL210ay12
-Y29kZWMvbXRrX3Zjb2RlY19lbmNfZHJ2LmMgIHwgIDMgKw0KPiAgLi4uL21lZGlhL3BsYXRmb3Jt
-L210ay12Y29kZWMvbXRrX3Zjb2RlY19mdy5jIHwgNTYgKysrKysrKysrKysrKysrKysrKw0KPiAg
-Li4uL21lZGlhL3BsYXRmb3JtL210ay12Y29kZWMvbXRrX3Zjb2RlY19mdy5oIHwgIDIgKw0KPiAg
-NSBmaWxlcyBjaGFuZ2VkLCA2NiBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9tZWRpYS9wbGF0Zm9ybS9LY29uZmlnIGIvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9LY29u
-ZmlnDQo+IGluZGV4IGM1N2VlNzhmYTk5ZC4uOWIxMWRkNmIxZWYzIDEwMDY0NA0KPiAtLS0gYS9k
-cml2ZXJzL21lZGlhL3BsYXRmb3JtL0tjb25maWcNCj4gKysrIGIvZHJpdmVycy9tZWRpYS9wbGF0
-Zm9ybS9LY29uZmlnDQo+IEBAIC0yNTYsNiArMjU2LDggQEAgY29uZmlnIFZJREVPX01FRElBVEVL
-X1ZDT0RFQw0KPiAgCXNlbGVjdCBWSURFT0JVRjJfRE1BX0NPTlRJRw0KPiAgCXNlbGVjdCBWNEwy
-X01FTTJNRU1fREVWDQo+ICAJc2VsZWN0IFZJREVPX01FRElBVEVLX1ZQVQ0KPiArCXNlbGVjdCBN
-VEtfU0NQDQo+ICsJZGVmYXVsdCBuDQo+ICAJaGVscA0KPiAgCSAgICBNZWRpYXRlayB2aWRlbyBj
-b2RlYyBkcml2ZXIgcHJvdmlkZXMgSFcgY2FwYWJpbGl0eSB0bw0KPiAgCSAgICBlbmNvZGUgYW5k
-IGRlY29kZSBpbiBhIHJhbmdlIG9mIHZpZGVvIGZvcm1hdHMNCj4gZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvbWVkaWEvcGxhdGZvcm0vbXRrLXZjb2RlYy9tdGtfdmNvZGVjX2RlY19kcnYuYyBiL2RyaXZl
-cnMvbWVkaWEvcGxhdGZvcm0vbXRrLXZjb2RlYy9tdGtfdmNvZGVjX2RlY19kcnYuYw0KPiBpbmRl
-eCA0ZjA3YTVmY2NlN2YuLjViNTc2NWI5OGU1NyAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9tZWRp
-YS9wbGF0Zm9ybS9tdGstdmNvZGVjL210a192Y29kZWNfZGVjX2Rydi5jDQo+ICsrKyBiL2RyaXZl
-cnMvbWVkaWEvcGxhdGZvcm0vbXRrLXZjb2RlYy9tdGtfdmNvZGVjX2RlY19kcnYuYw0KPiBAQCAt
-MjI1LDYgKzIyNSw5IEBAIHN0YXRpYyBpbnQgbXRrX3Zjb2RlY19wcm9iZShzdHJ1Y3QgcGxhdGZv
-cm1fZGV2aWNlICpwZGV2KQ0KPiAgCWlmICghb2ZfcHJvcGVydHlfcmVhZF91MzIocGRldi0+ZGV2
-Lm9mX25vZGUsICJtZWRpYXRlayx2cHUiLA0KPiAgCQkJCSAgJnJwcm9jX3BoYW5kbGUpKSB7DQo+
-ICAJCWZ3X3R5cGUgPSBWUFU7DQo+ICsJfSBlbHNlIGlmICghb2ZfcHJvcGVydHlfcmVhZF91MzIo
-cGRldi0+ZGV2Lm9mX25vZGUsICJtZWRpYXRlayxzY3AiLA0KPiArCQkJCQkgJnJwcm9jX3BoYW5k
-bGUpKSB7DQo+ICsJCWZ3X3R5cGUgPSBTQ1A7DQo+ICAJfSBlbHNlIHsNCj4gIAkJbXRrX3Y0bDJf
-ZXJyKCJDb3VsZCBub3QgZ2V0IHZkZWMgSVBJIGRldmljZSIpOw0KPiAgCQlyZXR1cm4gLUVOT0RF
-VjsNCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLXZjb2RlYy9tdGtf
-dmNvZGVjX2VuY19kcnYuYyBiL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLXZjb2RlYy9tdGtf
-dmNvZGVjX2VuY19kcnYuYw0KPiBpbmRleCA0MzQwZWExMGFmZDAuLjQyNTMwY2QwMWEzMCAxMDA2
-NDQNCj4gLS0tIGEvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstdmNvZGVjL210a192Y29kZWNf
-ZW5jX2Rydi5jDQo+ICsrKyBiL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLXZjb2RlYy9tdGtf
-dmNvZGVjX2VuY19kcnYuYw0KPiBAQCAtMjMzLDYgKzIzMyw5IEBAIHN0YXRpYyBpbnQgbXRrX3Zj
-b2RlY19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiAgCWlmICghb2ZfcHJv
-cGVydHlfcmVhZF91MzIocGRldi0+ZGV2Lm9mX25vZGUsICJtZWRpYXRlayx2cHUiLA0KPiAgCQkJ
-CSAgJnJwcm9jX3BoYW5kbGUpKSB7DQo+ICAJCWZ3X3R5cGUgPSBWUFU7DQo+ICsJfSBlbHNlIGlm
-ICghb2ZfcHJvcGVydHlfcmVhZF91MzIocGRldi0+ZGV2Lm9mX25vZGUsICJtZWRpYXRlayxzY3Ai
-LA0KPiArCQkJCQkgJnJwcm9jX3BoYW5kbGUpKSB7DQo+ICsJCWZ3X3R5cGUgPSBTQ1A7DQo+ICAJ
-fSBlbHNlIHsNCj4gIAkJbXRrX3Y0bDJfZXJyKCJDb3VsZCBub3QgZ2V0IHZlbmMgSVBJIGRldmlj
-ZSIpOw0KPiAgCQlyZXR1cm4gLUVOT0RFVjsNCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWVkaWEv
-cGxhdGZvcm0vbXRrLXZjb2RlYy9tdGtfdmNvZGVjX2Z3LmMgYi9kcml2ZXJzL21lZGlhL3BsYXRm
-b3JtL210ay12Y29kZWMvbXRrX3Zjb2RlY19mdy5jDQo+IGluZGV4IDk2N2JiMTAwYTk5MC4uZjJh
-NjJlYTYyZmM2IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay12Y29k
-ZWMvbXRrX3Zjb2RlY19mdy5jDQo+ICsrKyBiL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLXZj
-b2RlYy9tdGtfdmNvZGVjX2Z3LmMNCj4gQEAgLTE5LDYgKzE5LDcgQEAgc3RydWN0IG10a192Y29k
-ZWNfZncgew0KPiAgCWVudW0gbXRrX3Zjb2RlY19md190eXBlIHR5cGU7DQo+ICAJY29uc3Qgc3Ry
-dWN0IG10a192Y29kZWNfZndfb3BzICpvcHM7DQo+ICAJc3RydWN0IHBsYXRmb3JtX2RldmljZSAq
-cGRldjsNCj4gKwlzdHJ1Y3QgbXRrX3NjcCAqc2NwOw0KPiAgfTsNCj4gIA0KPiAgc3RhdGljIGlu
-dCBtdGtfdmNvZGVjX3ZwdV9sb2FkX2Zpcm13YXJlKHN0cnVjdCBtdGtfdmNvZGVjX2Z3ICpmdykN
-Cj4gQEAgLTcxLDYgKzcyLDQ4IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX3Zjb2RlY19md19v
-cHMgbXRrX3Zjb2RlY192cHVfbXNnID0gew0KPiAgCS5pcGlfc2VuZCA9IG10a192Y29kZWNfdnB1
-X2lwaV9zZW5kLA0KPiAgfTsNCj4gIA0KPiArc3RhdGljIGludCBtdGtfdmNvZGVjX3NjcF9sb2Fk
-X2Zpcm13YXJlKHN0cnVjdCBtdGtfdmNvZGVjX2Z3ICpmdykNCj4gK3sNCj4gKwlyZXR1cm4gcnBy
-b2NfYm9vdChzY3BfZ2V0X3Jwcm9jKGZ3LT5zY3ApKTsNCg0KDQpEb2VzIHJwcm9jX2Jvb3QgYW5k
-IHNjcF9nZXRfcnByb2MgZGVwZW5kIG9uIHRoZSBvdGhlciBrZXJuZWwgbW9kdWxlPw0Kd2hlcmUg
-YXJlIHRoZXkgZGVmaW5lZGVkPw0KDQo+ICt9DQo+ICsNCj4gK3N0YXRpYyB1bnNpZ25lZCBpbnQg
-bXRrX3Zjb2RlY19zY3BfZ2V0X3ZkZWNfY2FwYShzdHJ1Y3QgbXRrX3Zjb2RlY19mdyAqZncpDQo+
-ICt7DQo+ICsJcmV0dXJuIHNjcF9nZXRfdmRlY19od19jYXBhKGZ3LT5zY3ApOw0KPiArfQ0KPiAr
-DQo+ICtzdGF0aWMgdW5zaWduZWQgaW50IG10a192Y29kZWNfc2NwX2dldF92ZW5jX2NhcGEoc3Ry
-dWN0IG10a192Y29kZWNfZncgKmZ3KQ0KPiArew0KPiArCXJldHVybiBzY3BfZ2V0X3ZlbmNfaHdf
-Y2FwYShmdy0+c2NwKTsNCj4gK30NCj4gKw0KPiArc3RhdGljIHZvaWQgKm10a192Y29kZWNfdnB1
-X3NjcF9kbV9hZGRyKHN0cnVjdCBtdGtfdmNvZGVjX2Z3ICpmdywNCj4gKwkJCQkJdTMyIGR0Y21f
-ZG1lbV9hZGRyKQ0KPiArew0KPiArCXJldHVybiBzY3BfbWFwcGluZ19kbV9hZGRyKGZ3LT5zY3As
-IGR0Y21fZG1lbV9hZGRyKTsNCj4gK30NCj4gKw0KPiArc3RhdGljIGludCBtdGtfdmNvZGVjX3Nj
-cF9zZXRfaXBpX3JlZ2lzdGVyKHN0cnVjdCBtdGtfdmNvZGVjX2Z3ICpmdywgaW50IGlkLA0KPiAr
-CQltdGtfdmNvZGVjX2lwaV9oYW5kbGVyIGhhbmRsZXIsIGNvbnN0IGNoYXIgKm5hbWUsIHZvaWQg
-KnByaXYpDQo+ICt7DQo+ICsJcmV0dXJuIHNjcF9pcGlfcmVnaXN0ZXIoZnctPnNjcCwgaWQsIGhh
-bmRsZXIsIHByaXYpOw0KPiArfQ0KPiArDQo+ICtzdGF0aWMgaW50IG10a192Y29kZWNfc2NwX2lw
-aV9zZW5kKHN0cnVjdCBtdGtfdmNvZGVjX2Z3ICpmdywgaW50IGlkLCB2b2lkICpidWYsDQo+ICsJ
-CXVuc2lnbmVkIGludCBsZW4sIHVuc2lnbmVkIGludCB3YWl0KQ0KPiArew0KPiArCXJldHVybiBz
-Y3BfaXBpX3NlbmQoZnctPnNjcCwgaWQsIGJ1ZiwgbGVuLCB3YWl0KTsNCj4gK30NCj4gKw0KPiAr
-c3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfdmNvZGVjX2Z3X29wcyBtdGtfdmNvZGVjX3Jwcm9jX21z
-ZyA9IHsNCj4gKwkubG9hZF9maXJtd2FyZSA9IG10a192Y29kZWNfc2NwX2xvYWRfZmlybXdhcmUs
-DQo+ICsJLmdldF92ZGVjX2NhcGEgPSBtdGtfdmNvZGVjX3NjcF9nZXRfdmRlY19jYXBhLA0KPiAr
-CS5nZXRfdmVuY19jYXBhID0gbXRrX3Zjb2RlY19zY3BfZ2V0X3ZlbmNfY2FwYSwNCj4gKwkubWFw
-X2RtX2FkZHIgPSBtdGtfdmNvZGVjX3ZwdV9zY3BfZG1fYWRkciwNCj4gKwkuaXBpX3JlZ2lzdGVy
-ID0gbXRrX3Zjb2RlY19zY3Bfc2V0X2lwaV9yZWdpc3RlciwNCj4gKwkuaXBpX3NlbmQgPSBtdGtf
-dmNvZGVjX3NjcF9pcGlfc2VuZCwNCj4gK307DQo+ICsNCj4gIHN0YXRpYyB2b2lkIG10a192Y29k
-ZWNfcmVzZXRfaGFuZGxlcih2b2lkICpwcml2KQ0KPiAgew0KPiAgCXN0cnVjdCBtdGtfdmNvZGVj
-X2RldiAqZGV2ID0gcHJpdjsNCj4gQEAgLTk0LDYgKzEzNyw3IEBAIHN0cnVjdCBtdGtfdmNvZGVj
-X2Z3ICptdGtfdmNvZGVjX2Z3X3NlbGVjdChzdHJ1Y3QgbXRrX3Zjb2RlY19kZXYgKmRldiwNCj4g
-IAljb25zdCBzdHJ1Y3QgbXRrX3Zjb2RlY19md19vcHMgKm9wczsNCj4gIAlzdHJ1Y3QgbXRrX3Zj
-b2RlY19mdyAqZnc7DQo+ICAJc3RydWN0IHBsYXRmb3JtX2RldmljZSAqZndfcGRldiA9IE5VTEw7
-DQo+ICsJc3RydWN0IG10a19zY3AgKnNjcCA9IE5VTEw7DQo+ICANCj4gIAlzd2l0Y2ggKHR5cGUp
-IHsNCj4gIAljYXNlIFZQVToNCj4gQEAgLTEwNiw2ICsxNTAsMTQgQEAgc3RydWN0IG10a192Y29k
-ZWNfZncgKm10a192Y29kZWNfZndfc2VsZWN0KHN0cnVjdCBtdGtfdmNvZGVjX2RldiAqZGV2LA0K
-PiAgCQl2cHVfd2R0X3JlZ19oYW5kbGVyKGZ3X3BkZXYsIG10a192Y29kZWNfcmVzZXRfaGFuZGxl
-ciwNCj4gIAkJCQkgICAgZGV2LCByc3RfaWQpOw0KPiAgCQlicmVhazsNCj4gKwljYXNlIFNDUDoN
-Cj4gKwkJb3BzID0gJm10a192Y29kZWNfcnByb2NfbXNnOw0KPiArCQlzY3AgPSBzY3BfZ2V0KGRl
-di0+cGxhdF9kZXYpOw0KPiArCQlpZiAoIXNjcCkgew0KPiArCQkJbXRrX3Y0bDJfZXJyKCJjb3Vs
-ZCBub3QgZ2V0IHZkZWMgc2NwIGhhbmRsZSIpOw0KPiArCQkJcmV0dXJuIEVSUl9QVFIoLUVQUk9C
-RV9ERUZFUik7DQo+ICsJCX0NCj4gKwkJYnJlYWs7DQo+ICAJZGVmYXVsdDoNCj4gIAkJbXRrX3Y0
-bDJfZXJyKCJpbnZhbGlkIHZjb2RlYyBmdyB0eXBlIik7DQo+ICAJCXJldHVybiBFUlJfUFRSKC1F
-SU5WQUwpOw0KPiBAQCAtMTE4LDYgKzE3MCw3IEBAIHN0cnVjdCBtdGtfdmNvZGVjX2Z3ICptdGtf
-dmNvZGVjX2Z3X3NlbGVjdChzdHJ1Y3QgbXRrX3Zjb2RlY19kZXYgKmRldiwNCj4gIAlmdy0+dHlw
-ZSA9IHR5cGU7DQo+ICAJZnctPm9wcyA9IG9wczsNCj4gIAlmdy0+cGRldiA9IGZ3X3BkZXY7DQo+
-ICsJZnctPnNjcCA9IHNjcDsNCj4gIA0KPiAgCXJldHVybiBmdzsNCj4gIH0NCj4gQEAgLTEyOSw2
-ICsxODIsOSBAQCB2b2lkIG10a192Y29kZWNfZndfcmVsZWFzZShzdHJ1Y3QgbXRrX3Zjb2RlY19m
-dyAqZncpDQo+ICAJY2FzZSBWUFU6DQo+ICAJCXB1dF9kZXZpY2UoJmZ3LT5wZGV2LT5kZXYpOw0K
-PiAgCQlicmVhazsNCj4gKwljYXNlIFNDUDoNCj4gKwkJc2NwX3B1dChmdy0+c2NwKTsNCj4gKwkJ
-YnJlYWs7DQo+ICAJfQ0KPiAgfQ0KPiAgRVhQT1JUX1NZTUJPTF9HUEwobXRrX3Zjb2RlY19md19y
-ZWxlYXNlKTsNCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLXZjb2Rl
-Yy9tdGtfdmNvZGVjX2Z3LmggYi9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay12Y29kZWMvbXRr
-X3Zjb2RlY19mdy5oDQo+IGluZGV4IGZmMjViMGMxOWY3NC4uY2VkMWI2YTEwZTA3IDEwMDY0NA0K
-PiAtLS0gYS9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay12Y29kZWMvbXRrX3Zjb2RlY19mdy5o
-DQo+ICsrKyBiL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLXZjb2RlYy9tdGtfdmNvZGVjX2Z3
-LmgNCj4gQEAgLTQsNiArNCw3IEBADQo+ICAjZGVmaW5lIF9NVEtfVkNPREVDX0ZXX0hfDQo+ICAN
-Cj4gICNpbmNsdWRlIDxsaW51eC9yZW1vdGVwcm9jLmg+DQo+ICsjaW5jbHVkZSA8bGludXgvcmVt
-b3RlcHJvYy9tdGtfc2NwLmg+DQo+ICANCj4gICNpbmNsdWRlICIuLi9tdGstdnB1L210a192cHUu
-aCINCj4gIA0KPiBAQCAtMTEsNiArMTIsNyBAQCBzdHJ1Y3QgbXRrX3Zjb2RlY19kZXY7DQo+ICAN
-Cj4gIGVudW0gbXRrX3Zjb2RlY19md190eXBlIHsNCj4gIAlWUFUsDQo+ICsJU0NQLA0KPiAgfTsN
-Cj4gIA0KPiAgc3RydWN0IG10a192Y29kZWNfZnc7DQoNCg==
+1. SFLASHC_BURST_CFG register is not available on all ipq nand platforms,
+   it is available only on ipq8064 devices and the nand controller works
+   without configuring these registers in this platform, so register
+   write to this can be removed.
+
+2. Once BAM mode is enabled register writes to NAND_CTRL should be
+   performed through BAM command descriptors. The NAND BAM mode will
+   be enabled by bootloaders. Check if BAM mode is already enabled and
+   enable it only if not enabled already.
+
+Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+---
+ drivers/mtd/nand/raw/qcom_nandc.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/mtd/nand/raw/qcom_nandc.c b/drivers/mtd/nand/raw/qcom_nandc.c
+index 5b11c70..7bfd93a 100644
+--- a/drivers/mtd/nand/raw/qcom_nandc.c
++++ b/drivers/mtd/nand/raw/qcom_nandc.c
+@@ -36,7 +36,6 @@
+ #define	NAND_DEV_CMD1			0xa4
+ #define	NAND_DEV_CMD2			0xa8
+ #define	NAND_DEV_CMD_VLD		0xac
+-#define	SFLASHC_BURST_CFG		0xe0
+ #define	NAND_ERASED_CW_DETECT_CFG	0xe8
+ #define	NAND_ERASED_CW_DETECT_STATUS	0xec
+ #define	NAND_EBI2_ECC_BUF_CFG		0xf0
+@@ -2774,14 +2773,20 @@ static int qcom_nandc_setup(struct qcom_nand_controller *nandc)
+ 	u32 nand_ctrl;
+ 
+ 	/* kill onenand */
+-	nandc_write(nandc, SFLASHC_BURST_CFG, 0);
+ 	nandc_write(nandc, dev_cmd_reg_addr(nandc, NAND_DEV_CMD_VLD),
+ 		    NAND_DEV_CMD_VLD_VAL);
+ 
+ 	/* enable ADM or BAM DMA */
+ 	if (nandc->props->is_bam) {
+ 		nand_ctrl = nandc_read(nandc, NAND_CTRL);
+-		nandc_write(nandc, NAND_CTRL, nand_ctrl | BAM_MODE_EN);
++		/* Once BAM_MODE_EN bit is set, writes to the NAND_CTRL
++		 * should be done through BAM command descriptors.
++		 * in most cases bootloader enables the bam mode we
++		 * need to set the BAM mode only if it is not set by
++		 * bootloader
++		 */
++		if (!(nand_ctrl & BAM_MODE_EN))
++			nandc_write(nandc, NAND_CTRL, nand_ctrl | BAM_MODE_EN);
+ 	} else {
+ 		nandc_write(nandc, NAND_FLASH_CHIP_SELECT, DM_EN);
+ 	}
+-- 
+2.7.4
 
