@@ -4,61 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9128C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D516FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:44:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2A0D20659
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:44:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B510E20659
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:44:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591659887;
-	bh=jvgDU4OgHH6FPAhZagqdz9JWTDQuMLbTPZ0oS5ISs+c=;
+	s=default; t=1591659894;
+	bh=17kbZ1WrKBdQWj2NDXfl3kg9/sIviW/uMiZRiZRnHHk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bAJ0wKlY5cKUJSiaQfIda1DVMEEvo85ppp/1yzf70f3IcF9ecf9fOhMl+B4Rx1U+4
-	 4ncgmbYVUOLF2GoFuzRyqW8Q01N3piTCmU9fC+uiSKrxRX6HEo/7CiIoVvDG0MMDBt
-	 6xrWPRKluLyI7F9kjYbv4sAkJYjxIhypCwHTwzHY=
+	b=QRrpQIrq5Hzx14HH2KTF4Bzqbq1clO4fgWasPdoZDCDXI0TsYmAYPbFeUOvkuT/kv
+	 9j+eLTrX0qOLKs8lOUJvvHg5Elm3GVdEtwWcl5zixMZpRzbU+aZNO+McPUWRq7Gv3o
+	 4hH5vfakb5sAO1WoNhpDfdCOE239LmvNdGkGOh4Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387694AbgFHXor (ORCPT
+        id S1732050AbgFHX0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:44:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54802 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:26:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732065AbgFHX0x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:26:53 -0400
+        id S1731157AbgFHXVc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:21:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5EBA2078D;
-        Mon,  8 Jun 2020 23:26:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A272208B8;
+        Mon,  8 Jun 2020 23:21:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658812;
-        bh=jvgDU4OgHH6FPAhZagqdz9JWTDQuMLbTPZ0oS5ISs+c=;
+        s=default; t=1591658491;
+        bh=17kbZ1WrKBdQWj2NDXfl3kg9/sIviW/uMiZRiZRnHHk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IFI2ELU5uU6HUz5jYaQhqqdbhIP27HVcLXVfBvR0zNUZyjgTJLLGi7WxeC3lTNe5l
-         K368mvf2hsXIB0mIIuOCNhbJ5evHehmWo1l/6AIXVEq2B5BKgU1wVVqyK3D/dwhL3Z
-         OoZ8Yug8Tlx4FbppxoIQTT2jfyzPUxSqB9oiiFoE=
+        b=QggN4+cXg9hQ0HqFj0JlZxUOYZ/QwZ+06mEgMGaJTpwGjrVfpNGgUWrSJHxL91nnj
+         QjwZcNqcwMAi1ZIVFmjYf6w1MTwfSHwDLRoPaxlFgr85e7sLnw3rZixM2i9dfLgEWv
+         uauh4i2m/HwDXInlTPjR96N9zzjANgWMR7opEz8I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 09/50] spi: dw: Enable interrupts in accordance with DMA xfer mode
-Date:   Mon,  8 Jun 2020 19:25:59 -0400
-Message-Id: <20200608232640.3370262-9-sashal@kernel.org>
+Cc:     Vlad Buslov <vladbu@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 125/175] selftests: fix flower parent qdisc
+Date:   Mon,  8 Jun 2020 19:17:58 -0400
+Message-Id: <20200608231848.3366970-125-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608232640.3370262-1-sashal@kernel.org>
-References: <20200608232640.3370262-1-sashal@kernel.org>
+In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
+References: <20200608231848.3366970-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -68,67 +60,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+From: Vlad Buslov <vladbu@mellanox.com>
 
-[ Upstream commit 43dba9f3f98c2b184a19f856f06fe22817bfd9e0 ]
+[ Upstream commit 0531b0357ba37464e5c0033e1b7c69bbf5ecd8fb ]
 
-It's pointless to track the Tx overrun interrupts if Rx-only SPI
-transfer is issued. Similarly there is no need in handling the Rx
-overrun/underrun interrupts if Tx-only SPI transfer is executed.
-So lets unmask the interrupts only if corresponding SPI
-transactions are implied.
+Flower tests used to create ingress filter with specified parent qdisc
+"parent ffff:" but dump them on "ingress". With recent commit that fixed
+tcm_parent handling in dump those are not considered same parent anymore,
+which causes iproute2 tc to emit additional "parent ffff:" in first line of
+filter dump output. The change in output causes filter match in tests to
+fail.
 
-Co-developed-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-Signed-off-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Link: https://lore.kernel.org/r/20200522000806.7381-3-Sergey.Semin@baikalelectronics.ru
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Prevent parent qdisc output when dumping filters in flower tests by always
+correctly specifying "ingress" parent both when creating and dumping
+filters.
+
+Fixes: a7df4870d79b ("net_sched: fix tcm_parent in tc filter dump")
+Signed-off-by: Vlad Buslov <vladbu@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-dw-mid.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ .../selftests/tc-testing/tc-tests/filters/tests.json        | 6 +++---
+ tools/testing/selftests/tc-testing/tdc_batch.py             | 6 +++---
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/spi/spi-dw-mid.c b/drivers/spi/spi-dw-mid.c
-index f77d03b658ab..fe0ca3848d35 100644
---- a/drivers/spi/spi-dw-mid.c
-+++ b/drivers/spi/spi-dw-mid.c
-@@ -228,19 +228,23 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_rx(struct dw_spi *dws,
+diff --git a/tools/testing/selftests/tc-testing/tc-tests/filters/tests.json b/tools/testing/selftests/tc-testing/tc-tests/filters/tests.json
+index 0f89cd50a94b..152ffa45e857 100644
+--- a/tools/testing/selftests/tc-testing/tc-tests/filters/tests.json
++++ b/tools/testing/selftests/tc-testing/tc-tests/filters/tests.json
+@@ -54,7 +54,7 @@
+         "setup": [
+             "$TC qdisc add dev $DEV2 ingress"
+         ],
+-        "cmdUnderTest": "$TC filter add dev $DEV2 protocol ip pref 1 parent ffff: handle 0xffffffff flower action ok",
++        "cmdUnderTest": "$TC filter add dev $DEV2 protocol ip pref 1 ingress handle 0xffffffff flower action ok",
+         "expExitCode": "0",
+         "verifyCmd": "$TC filter show dev $DEV2 ingress",
+         "matchPattern": "filter protocol ip pref 1 flower.*handle 0xffffffff",
+@@ -99,9 +99,9 @@
+         },
+         "setup": [
+             "$TC qdisc add dev $DEV2 ingress",
+-            "$TC filter add dev $DEV2 protocol ip prio 1 parent ffff: flower dst_mac e4:11:22:11:4a:51 src_mac e4:11:22:11:4a:50 ip_proto tcp src_ip 1.1.1.1 dst_ip 2.2.2.2 action drop"
++            "$TC filter add dev $DEV2 protocol ip prio 1 ingress flower dst_mac e4:11:22:11:4a:51 src_mac e4:11:22:11:4a:50 ip_proto tcp src_ip 1.1.1.1 dst_ip 2.2.2.2 action drop"
+         ],
+-        "cmdUnderTest": "$TC filter add dev $DEV2 protocol ip prio 1 parent ffff: flower dst_mac e4:11:22:11:4a:51 src_mac e4:11:22:11:4a:50 ip_proto tcp src_ip 1.1.1.1 dst_ip 2.2.2.2 action drop",
++        "cmdUnderTest": "$TC filter add dev $DEV2 protocol ip prio 1 ingress flower dst_mac e4:11:22:11:4a:51 src_mac e4:11:22:11:4a:50 ip_proto tcp src_ip 1.1.1.1 dst_ip 2.2.2.2 action drop",
+         "expExitCode": "2",
+         "verifyCmd": "$TC -s filter show dev $DEV2 ingress",
+         "matchPattern": "filter protocol ip pref 1 flower chain 0 handle",
+diff --git a/tools/testing/selftests/tc-testing/tdc_batch.py b/tools/testing/selftests/tc-testing/tdc_batch.py
+index 6a2bd2cf528e..995f66ce43eb 100755
+--- a/tools/testing/selftests/tc-testing/tdc_batch.py
++++ b/tools/testing/selftests/tc-testing/tdc_batch.py
+@@ -72,21 +72,21 @@ mac_prefix = args.mac_prefix
  
- static int mid_spi_dma_setup(struct dw_spi *dws, struct spi_transfer *xfer)
- {
--	u16 dma_ctrl = 0;
-+	u16 imr = 0, dma_ctrl = 0;
+ def format_add_filter(device, prio, handle, skip, src_mac, dst_mac,
+                       share_action):
+-    return ("filter add dev {} {} protocol ip parent ffff: handle {} "
++    return ("filter add dev {} {} protocol ip ingress handle {} "
+             " flower {} src_mac {} dst_mac {} action drop {}".format(
+                 device, prio, handle, skip, src_mac, dst_mac, share_action))
  
- 	dw_writel(dws, DW_SPI_DMARDLR, 0xf);
- 	dw_writel(dws, DW_SPI_DMATDLR, 0x10);
  
--	if (xfer->tx_buf)
-+	if (xfer->tx_buf) {
- 		dma_ctrl |= SPI_DMA_TDMAE;
--	if (xfer->rx_buf)
-+		imr |= SPI_INT_TXOI;
-+	}
-+	if (xfer->rx_buf) {
- 		dma_ctrl |= SPI_DMA_RDMAE;
-+		imr |= SPI_INT_RXUI | SPI_INT_RXOI;
-+	}
- 	dw_writel(dws, DW_SPI_DMACR, dma_ctrl);
+ def format_rep_filter(device, prio, handle, skip, src_mac, dst_mac,
+                       share_action):
+-    return ("filter replace dev {} {} protocol ip parent ffff: handle {} "
++    return ("filter replace dev {} {} protocol ip ingress handle {} "
+             " flower {} src_mac {} dst_mac {} action drop {}".format(
+                 device, prio, handle, skip, src_mac, dst_mac, share_action))
  
- 	/* Set the interrupt mask */
--	spi_umask_intr(dws, SPI_INT_TXOI | SPI_INT_RXUI | SPI_INT_RXOI);
-+	spi_umask_intr(dws, imr);
  
- 	dws->transfer_handler = dma_transfer;
+ def format_del_filter(device, prio, handle, skip, src_mac, dst_mac,
+                       share_action):
+-    return ("filter del dev {} {} protocol ip parent ffff: handle {} "
++    return ("filter del dev {} {} protocol ip ingress handle {} "
+             "flower".format(device, prio, handle))
+ 
  
 -- 
 2.25.1
