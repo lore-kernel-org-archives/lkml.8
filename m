@@ -2,145 +2,88 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35897C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:03:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E14EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:03:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11D322072F
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:03:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hlaI/X2B"
+	by mail.kernel.org (Postfix) with ESMTP id EB2D62072F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:03:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729705AbgFHMDT (ORCPT
+        id S1729724AbgFHMDd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 08:03:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47906 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726202AbgFHMDS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 08:03:18 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A36BBC08C5C2;
-        Mon,  8 Jun 2020 05:03:18 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id t16so6573384plo.7;
-        Mon, 08 Jun 2020 05:03:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pM5X2YtapFWuSkDwXFYHOUc12hO3c2lItIisPiXHQGY=;
-        b=hlaI/X2BEdu5DgSxAm6kB07OPe7M25Gvh52cfold8MS6AFOumejiu9RPBd5jcVPDTg
-         2pt5Ihb8e+UJUm042qK+Wch8QmNHdF1RJQpe9lh6SVMe97OWd0QiduR/hXS+wWgyDOvP
-         AKOvCNve69T9GXxz2aMRXRIozw8kkWrtRSipFStp5SYG5lO4K0oT9qFXsl/2jkBVKaU7
-         OmOnFW/Pbaxgl/KZP1HzbQ4ArzR1YJLVihKRvjHD/SMJZNirBsrzJYMKCq13Eft5gsU/
-         HTZ0E2/sgsj1TJbmiE68ZnMteRg0odb/O0fYprG6bWydeoH5IM+LEJjIFnvjK/3SfP+3
-         y/AA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pM5X2YtapFWuSkDwXFYHOUc12hO3c2lItIisPiXHQGY=;
-        b=e/zjVNw3g86UhG+Jcxg5DfpDWLT2+FKTh6a35H+vaQslaIHZ1bg3cvOcbNbMbE3/kK
-         cPx3mpHETVj6utjl8GTaI/XP4Svwig64bU87+CBeBu94/WWdLHgz8tyV7v2Mu+GLRKhK
-         0dMCsgfaM+F+fYTGw7y3a3mA5gSGX6HS+WUYs/W5KF58xbP92pw3tgVbmCZYFBCNmmAo
-         h5MRIiej2GTZgGvakby505guTnbwyqI18zCYEeB15ct25mA769dEa0jGyCVyUDSuvj2T
-         iFHY4Q2/cHR0vNeXYA5XBFjFxWVndDWUEZ4miqgAWnnNnGVaCo6C7zqdh8827Kk4hwHn
-         RBTw==
-X-Gm-Message-State: AOAM530bhfy9t+tjBMKBsMsX1Y5Fc7NUSI4w1ENI9ImbNRQg7j3UVD8F
-        Ec03pLHym7X7qxvoFGWf144SLl7+3rmC49ogYJQ=
-X-Google-Smtp-Source: ABdhPJzy6nnYdAQTRPWCex6+8jSc+Wso/vIgnHDy7gsVnQJzj+ADZ8ojZnrCRPnZO2B9QhUqv5R1pbDzd9PTeN79vlc=
-X-Received: by 2002:a17:90a:ac05:: with SMTP id o5mr17147126pjq.228.1591617797903;
- Mon, 08 Jun 2020 05:03:17 -0700 (PDT)
+        Mon, 8 Jun 2020 08:03:33 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:35994 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726202AbgFHMDc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 08:03:32 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id CA372969A77F174BC765;
+        Mon,  8 Jun 2020 20:03:29 +0800 (CST)
+Received: from szvp000203569.huawei.com (10.120.216.130) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 8 Jun 2020 20:03:20 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH 2/2] f2fs: remove unused parameter of f2fs_put_rpages_mapping()
+Date:   Mon, 8 Jun 2020 20:03:17 +0800
+Message-ID: <20200608120317.6716-2-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
+In-Reply-To: <20200608120317.6716-1-yuchao0@huawei.com>
+References: <20200608120317.6716-1-yuchao0@huawei.com>
 MIME-Version: 1.0
-References: <1591611829-23071-1-git-send-email-agordeev@linux.ibm.com>
-In-Reply-To: <1591611829-23071-1-git-send-email-agordeev@linux.ibm.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 8 Jun 2020 15:03:05 +0300
-Message-ID: <CAHp75VcFdrvNMj0TL8ZHxShqqGDM31Hy8vitmn9HOPjZ6f9uYw@mail.gmail.com>
-Subject: Re: [PATCH RESEND2] lib: fix bitmap_parse() on 64-bit big endian archs
-To:     Alexander Gordeev <agordeev@linux.ibm.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-s390@vger.kernel.org, Stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Yury Norov <yury.norov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Amritha Nambiar <amritha.nambiar@intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        "Tobin C . Harding" <tobin@kernel.org>,
-        Vineet Gupta <vineet.gupta1@synopsys.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Willem de Bruijn <willemb@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 8, 2020 at 1:26 PM Alexander Gordeev <agordeev@linux.ibm.com> wrote:
->
-> Commit 2d6261583be0 ("lib: rework bitmap_parse()") does not
-> take into account order of halfwords on 64-bit big endian
-> architectures. As result (at least) Receive Packet Steering,
-> IRQ affinity masks and runtime kernel test "test_bitmap" get
-> broken on s390.
+Just cleanup, no logic change.
 
-...
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
+ fs/f2fs/compress.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-> +#if defined(__BIG_ENDIAN) && defined(CONFIG_64BIT)
-
-I think it's better to re-use existing patterns.
-
-ipc/sem.c:1682:#if defined(CONFIG_64BIT) && defined(__BIG_ENDIAN)
-
-> +static void save_x32_chunk(unsigned long *maskp, u32 chunk, int chunk_idx)
-> +{
-> +       maskp += (chunk_idx / 2);
-> +       ((u32 *)maskp)[(chunk_idx & 1) ^ 1] = chunk;
-> +}
-> +#else
-> +static void save_x32_chunk(unsigned long *maskp, u32 chunk, int chunk_idx)
-> +{
-> +       ((u32 *)maskp)[chunk_idx] = chunk;
-> +}
-> +#endif
-
-See below.
-
-...
-
-> -               end = bitmap_get_x32_reverse(start, end, bitmap++);
-> +               end = bitmap_get_x32_reverse(start, end, &chunk);
->                 if (IS_ERR(end))
->                         return PTR_ERR(end);
-> +
-> +               save_x32_chunk(maskp, chunk, chunk_idx++);
-
-Can't we simple do
-
-        int chunk_index = 0;
-        ...
-        do {
-#if defined(CONFIG_64BIT) && defined(__BIG_ENDIAN)
-               end = bitmap_get_x32_reverse(start, end,
-bitmap[chunk_index ^ 1]);
-#else
-               end = bitmap_get_x32_reverse(start, end, bitmap[chunk_index]);
-#endif
-        ...
-        } while (++chunk_index);
-
-?
-
+diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+index a53578a89211..1e02a8c106b0 100644
+--- a/fs/f2fs/compress.c
++++ b/fs/f2fs/compress.c
+@@ -89,8 +89,7 @@ static void f2fs_unlock_rpages(struct compress_ctx *cc, int len)
+ 	f2fs_drop_rpages(cc, len, true);
+ }
+ 
+-static void f2fs_put_rpages_mapping(struct compress_ctx *cc,
+-				struct address_space *mapping,
++static void f2fs_put_rpages_mapping(struct address_space *mapping,
+ 				pgoff_t start, int len)
+ {
+ 	int i;
+@@ -942,7 +941,7 @@ static int prepare_compress_overwrite(struct compress_ctx *cc,
+ 
+ 		if (!PageUptodate(page)) {
+ 			f2fs_unlock_rpages(cc, i + 1);
+-			f2fs_put_rpages_mapping(cc, mapping, start_idx,
++			f2fs_put_rpages_mapping(mapping, start_idx,
+ 					cc->cluster_size);
+ 			f2fs_destroy_compress_ctx(cc);
+ 			goto retry;
+@@ -977,7 +976,7 @@ static int prepare_compress_overwrite(struct compress_ctx *cc,
+ unlock_pages:
+ 	f2fs_unlock_rpages(cc, i);
+ release_pages:
+-	f2fs_put_rpages_mapping(cc, mapping, start_idx, i);
++	f2fs_put_rpages_mapping(mapping, start_idx, i);
+ 	f2fs_destroy_compress_ctx(cc);
+ 	return ret;
+ }
 -- 
-With Best Regards,
-Andy Shevchenko
+2.18.0.rc1
+
