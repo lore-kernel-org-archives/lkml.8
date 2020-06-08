@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33118C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 691BCC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EEAB2078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:29:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38B7E2078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:29:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662552;
-	bh=RfxFKmhgcRkNvGD3wM7B5OoR3tKuCY7MGRl46QgFn9o=;
+	s=default; t=1591662555;
+	bh=Oqu2yOvrwuOCvuThZiTy/2R+0TTTq6zMYRIblVN+r5c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xyMC6mgekSSRo/A6lq/WhdojlxiQyhLBcOugva3FNjb0Plo1SIuAuWc4G12LCbiby
-	 qEjEItxOBsmGUcN5Vucx/J2jw+OSjWJv2S/2bLkZBC01UV8B5Zugs4Q60uwuJVMprY
-	 EyRqUzhRXDoD7es51Ud2GNKtYZvee5+Sh0fhZeeY=
+	b=l6/oXNxU5CCZXDqiPs4UDpNZRQoQ36lkiAExHXBQhrbfqAe8EQdjyHUQxdWA+mvgD
+	 bVrpOcBfAdz4O10vs2mUTE4EWRHepq5EAKs+05QZptalTUajL8wUTxCdqotW77Ni0/
+	 cOnQO3MMiFs2Dat6thtjhlMq4DkPHROe+UOpXEog=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387726AbgFIA3K (ORCPT
+        id S1732248AbgFIA3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:29:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37514 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:29:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730191AbgFHXQN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:16:13 -0400
+        id S1730197AbgFHXQO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:16:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4139920823;
-        Mon,  8 Jun 2020 23:16:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A4CC2083E;
+        Mon,  8 Jun 2020 23:16:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658172;
-        bh=RfxFKmhgcRkNvGD3wM7B5OoR3tKuCY7MGRl46QgFn9o=;
+        s=default; t=1591658174;
+        bh=Oqu2yOvrwuOCvuThZiTy/2R+0TTTq6zMYRIblVN+r5c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IXp3jO3EmyvQiUhEoU2xKvj94o7fpn2tCLM3xnQzEF82EPAHnIZSCnZhENsyTBJ1s
-         bqJ46zEtT1sBH8kO/ze6iqR1ah/0iUBHxnnifbV9MA3H1H2wnBYcXsepT9YdsaLCiF
-         cbAt/CGTSDPcT1+r6oa/vGaN2FFIOQDGS4bn+DBs=
+        b=abzJ4hCoxwQ8n7kqHrKIm8u5GRMpHuoOwie1z+NtFFgq7bqrY0Brl3eIgETuAhF5M
+         tX+wNo5uv4G3+ivUFOH8pjFA6NZO/48ji3QbTXEvxZVBFTWign/6de06YPWTWMric3
+         q2K8rupVf+xQShkCLKHOMIieaO7d7fW6H36nJeVc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH AUTOSEL 5.6 199/606] x86/unwind/orc: Fix unwind_get_return_address_ptr() for inactive tasks
-Date:   Mon,  8 Jun 2020 19:05:24 -0400
-Message-Id: <20200608231211.3363633-199-sashal@kernel.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 200/606] rxrpc: Trace discarded ACKs
+Date:   Mon,  8 Jun 2020 19:05:25 -0400
+Message-Id: <20200608231211.3363633-200-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -60,72 +59,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: David Howells <dhowells@redhat.com>
 
-commit 187b96db5ca79423618dfa29a05c438c34f9e1f0 upstream.
+[ Upstream commit d1f129470e6cb79b8b97fecd12689f6eb49e27fe ]
 
-Normally, show_trace_log_lvl() scans the stack, looking for text
-addresses to print.  In parallel, it unwinds the stack with
-unwind_next_frame().  If the stack address matches the pointer returned
-by unwind_get_return_address_ptr() for the current frame, the text
-address is printed normally without a question mark.  Otherwise it's
-considered a breadcrumb (potentially from a previous call path) and it's
-printed with a question mark to indicate that the address is unreliable
-and typically can be ignored.
+Add a tracepoint to track received ACKs that are discarded due to being
+outside of the Tx window.
 
-Since the following commit:
-
-  f1d9a2abff66 ("x86/unwind/orc: Don't skip the first frame for inactive tasks")
-
-... for inactive tasks, show_trace_log_lvl() prints *only* unreliable
-addresses (prepended with '?').
-
-That happens because, for the first frame of an inactive task,
-unwind_get_return_address_ptr() returns the wrong return address
-pointer: one word *below* the task stack pointer.  show_trace_log_lvl()
-starts scanning at the stack pointer itself, so it never finds the first
-'reliable' address, causing only guesses to being printed.
-
-The first frame of an inactive task isn't a normal stack frame.  It's
-actually just an instance of 'struct inactive_task_frame' which is left
-behind by __switch_to_asm().  Now that this inactive frame is actually
-exposed to callers, fix unwind_get_return_address_ptr() to interpret it
-properly.
-
-Fixes: f1d9a2abff66 ("x86/unwind/orc: Don't skip the first frame for inactive tasks")
-Reported-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200522135435.vbxs7umku5pyrdbk@treble
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/unwind_orc.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ include/trace/events/rxrpc.h | 35 +++++++++++++++++++++++++++++++++++
+ net/rxrpc/input.c            | 12 ++++++++++--
+ 2 files changed, 45 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-index 9414f02a55ea..1a90abeca5f3 100644
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -314,12 +314,19 @@ EXPORT_SYMBOL_GPL(unwind_get_return_address);
+diff --git a/include/trace/events/rxrpc.h b/include/trace/events/rxrpc.h
+index ab75f261f04a..ba9efdc848f9 100644
+--- a/include/trace/events/rxrpc.h
++++ b/include/trace/events/rxrpc.h
+@@ -1541,6 +1541,41 @@ TRACE_EVENT(rxrpc_notify_socket,
+ 		      __entry->serial)
+ 	    );
  
- unsigned long *unwind_get_return_address_ptr(struct unwind_state *state)
- {
-+	struct task_struct *task = state->task;
++TRACE_EVENT(rxrpc_rx_discard_ack,
++	    TP_PROTO(unsigned int debug_id, rxrpc_serial_t serial,
++		     rxrpc_seq_t first_soft_ack, rxrpc_seq_t call_ackr_first,
++		     rxrpc_seq_t prev_pkt, rxrpc_seq_t call_ackr_prev),
 +
- 	if (unwind_done(state))
- 		return NULL;
++	    TP_ARGS(debug_id, serial, first_soft_ack, call_ackr_first,
++		    prev_pkt, call_ackr_prev),
++
++	    TP_STRUCT__entry(
++		    __field(unsigned int,	debug_id	)
++		    __field(rxrpc_serial_t,	serial		)
++		    __field(rxrpc_seq_t,	first_soft_ack)
++		    __field(rxrpc_seq_t,	call_ackr_first)
++		    __field(rxrpc_seq_t,	prev_pkt)
++		    __field(rxrpc_seq_t,	call_ackr_prev)
++			     ),
++
++	    TP_fast_assign(
++		    __entry->debug_id		= debug_id;
++		    __entry->serial		= serial;
++		    __entry->first_soft_ack	= first_soft_ack;
++		    __entry->call_ackr_first	= call_ackr_first;
++		    __entry->prev_pkt		= prev_pkt;
++		    __entry->call_ackr_prev	= call_ackr_prev;
++			   ),
++
++	    TP_printk("c=%08x r=%08x %08x<%08x %08x<%08x",
++		      __entry->debug_id,
++		      __entry->serial,
++		      __entry->first_soft_ack,
++		      __entry->call_ackr_first,
++		      __entry->prev_pkt,
++		      __entry->call_ackr_prev)
++	    );
++
+ #endif /* _TRACE_RXRPC_H */
  
- 	if (state->regs)
- 		return &state->regs->ip;
+ /* This part must be outside protection */
+diff --git a/net/rxrpc/input.c b/net/rxrpc/input.c
+index e438bfd3fdf5..2f22f082a66c 100644
+--- a/net/rxrpc/input.c
++++ b/net/rxrpc/input.c
+@@ -866,8 +866,12 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
  
-+	if (task != current && state->sp == task->thread.sp) {
-+		struct inactive_task_frame *frame = (void *)task->thread.sp;
-+		return &frame->ret_addr;
+ 	/* Discard any out-of-order or duplicate ACKs (outside lock). */
+ 	if (before(first_soft_ack, call->ackr_first_seq) ||
+-	    before(prev_pkt, call->ackr_prev_seq))
++	    before(prev_pkt, call->ackr_prev_seq)) {
++		trace_rxrpc_rx_discard_ack(call->debug_id, sp->hdr.serial,
++					   first_soft_ack, call->ackr_first_seq,
++					   prev_pkt, call->ackr_prev_seq);
+ 		return;
 +	}
-+
- 	if (state->sp)
- 		return (unsigned long *)state->sp - 1;
  
+ 	buf.info.rxMTU = 0;
+ 	ioffset = offset + nr_acks + 3;
+@@ -879,8 +883,12 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
+ 
+ 	/* Discard any out-of-order or duplicate ACKs (inside lock). */
+ 	if (before(first_soft_ack, call->ackr_first_seq) ||
+-	    before(prev_pkt, call->ackr_prev_seq))
++	    before(prev_pkt, call->ackr_prev_seq)) {
++		trace_rxrpc_rx_discard_ack(call->debug_id, sp->hdr.serial,
++					   first_soft_ack, call->ackr_first_seq,
++					   prev_pkt, call->ackr_prev_seq);
+ 		goto out;
++	}
+ 	call->acks_latest_ts = skb->tstamp;
+ 
+ 	call->ackr_first_seq = first_soft_ack;
 -- 
 2.25.1
 
