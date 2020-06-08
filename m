@@ -2,126 +2,95 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D71BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8649CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77A852072F
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:57:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="TqmdI0hN"
+	by mail.kernel.org (Postfix) with ESMTP id 636AC2076A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:57:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591617453;
+	bh=nAtsiXTcR+OAIznew/hWTw3IpqmB5O6uM3hw6iSU2Fo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kM1iL6qrCnBlA12QhQEeukd2WKqQnq6tWhzXCpqRscuoMBK3uQy0zmuXY8N1T9M1h
+	 K2BuCuAdTWmnKl77pE0mCIWg//eYU+RVRzM9GBdfCG04RxnzqCpaiPgAgEAXEoN2w1
+	 USVw8U2gexS3IhY75MPKhAuIi7H90VcjZ9pp02gs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729760AbgFHL5W (ORCPT
+        id S1729765AbgFHL5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 07:57:22 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:42055 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729694AbgFHL5U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 07:57:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1591617439; x=1623153439;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   mime-version;
-  bh=mBD4MaDFTceVZuqlL0CnW8gUjB4N3aqvEq6ol/w0Jn0=;
-  b=TqmdI0hNOSAePCnNrB3ecJOy+CXz/rAXqlevSnFu9CuWq6mCBc6OXlJ3
-   p7dgtVNruz3H1zNMojk0GLkT39fUyjfr3kg5mRj4PHxuB1FtTufsRsu9M
-   0K35imttfsAh3XNABj54LZ+i5BV22Utm1vda3kEii3vWBmWl9of+uw/1/
-   g=;
-IronPort-SDR: A3XJASAFNQDFfveEQirqPbP6OECZKDI7BAlYdK20yPhT7gVJf2f01dlJM9Gh1+LWubHDgU5YcZ
- x1dEsF5lPsTA==
-X-IronPort-AV: E=Sophos;i="5.73,487,1583193600"; 
-   d="scan'208";a="36358411"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 08 Jun 2020 11:57:19 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com (Postfix) with ESMTPS id D635FA1E21;
-        Mon,  8 Jun 2020 11:57:07 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 8 Jun 2020 11:57:07 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.26) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 8 Jun 2020 11:56:51 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     David Hildenbrand <david@redhat.com>
-CC:     SeongJae Park <sjpark@amazon.com>, <akpm@linux-foundation.org>,
-        "SeongJae Park" <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
-        <foersleo@amazon.de>, <irogers@google.com>, <jolsa@redhat.com>,
-        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
-        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
-        <peterz@infradead.org>, <rdunlap@infradead.org>,
-        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
-        <sblbir@amazon.com>, <shakeelb@google.com>, <shuah@kernel.org>,
-        <sj38.park@gmail.com>, <snu@amazon.de>, <vbabka@suse.cz>,
-        <vdavydov.dev@gmail.com>, <yang.shi@linux.alibaba.com>,
-        <ying.huang@intel.com>, <linux-damon@amazon.com>,
-        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: Re: [PATCH v15 01/14] mm/page_ext: Export lookup_page_ext() to GPL modules
-Date:   Mon, 8 Jun 2020 13:56:34 +0200
-Message-ID: <20200608115634.30778-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cf508f7e-925c-790c-7477-9a1d8150336d@redhat.com> (raw)
+        Mon, 8 Jun 2020 07:57:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47216 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729549AbgFHL5b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 07:57:31 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E2632072F;
+        Mon,  8 Jun 2020 11:57:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591617450;
+        bh=nAtsiXTcR+OAIznew/hWTw3IpqmB5O6uM3hw6iSU2Fo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TsEbl3mitixyjIOjM1w4hUKYXomkdL5t+OU2sRkL262ye+9PR8XJjj0hkwTzmqgn+
+         Vr54CwuaIDyBn0Dpkgi88bsn/Wuo22C1848vdbbCcvzqaf4q4xDP/eAarZWeOnzyZ9
+         L8VOzwy/UDGDFapO3M6kRTPBLJDvOphztk1rlTZ0=
+Date:   Mon, 8 Jun 2020 12:57:28 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     jbrunet@baylibre.com, lgirdwood@gmail.com, perex@perex.cz,
+        tiwai@suse.com, khilman@baylibre.com, alsa-devel@alsa-project.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        trivial@kernel.org
+Subject: Re: [PATCH] soc/meson: add missing free_irq() in error path
+Message-ID: <20200608115728.GF4593@sirena.org.uk>
+References: <20200606153103.GA17905@amd>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.26]
-X-ClientProxiedBy: EX13D43UWC001.ant.amazon.com (10.43.162.69) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="TeJTyD9hb8KJN2Jy"
+Content-Disposition: inline
+In-Reply-To: <20200606153103.GA17905@amd>
+X-Cookie: I'm rated PG-34!!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 8 Jun 2020 13:53:23 +0200 David Hildenbrand <david@redhat.com> wrote:
 
-> On 08.06.20 13:40, SeongJae Park wrote:
-> > From: SeongJae Park <sjpark@amazon.de>
-> > 
-> > This commit exports 'lookup_page_ext()' to GPL modules.  This will be
-> > used by DAMON.
-> > 
-> > Signed-off-by: SeongJae Park <sjpark@amazon.de>
-> > Reviewed-by: Leonard Foerster <foersleo@amazon.de>
-> > ---
-> >  mm/page_ext.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/mm/page_ext.c b/mm/page_ext.c
-> > index a3616f7a0e9e..9d802d01fcb5 100644
-> > --- a/mm/page_ext.c
-> > +++ b/mm/page_ext.c
-> > @@ -131,6 +131,7 @@ struct page_ext *lookup_page_ext(const struct page *page)
-> >  					MAX_ORDER_NR_PAGES);
-> >  	return get_entry(base, index);
-> >  }
-> > +EXPORT_SYMBOL_GPL(lookup_page_ext);
-> >  
-> >  static int __init alloc_node_page_ext(int nid)
-> >  {
-> > 
-> 
-> I've been told to always smuggle new EXPORTs into the patch that
-> actually needs it (and cc relevant people on that patch instead).
+--TeJTyD9hb8KJN2Jy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Sorry for didn't noticing that.  I will do so in the next spin.
+On Sat, Jun 06, 2020 at 05:31:03PM +0200, Pavel Machek wrote:
+> free_irq() is missing in case of error, fix that.
+>=20
+> Signed-off-by: Pavel Machek (CIP) <pavel@denx.de>
+>=20
+> diff --git a/sound/soc/meson/axg-fifo.c b/sound/soc/meson/axg-fifo.c
 
+In addition to the subject line issue your Signed-off-by does not match
+the From: in the e-mail and there's no From: in the body, please
+resubmit with these issues fixed.
 
-Thanks,
-SeongJae Park
+--TeJTyD9hb8KJN2Jy
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> 
-> -- 
-> Thanks,
-> 
-> David / dhildenb
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7eJ6cACgkQJNaLcl1U
+h9D/cQf+L7dper1ZvO7kYwre40pI8oRGB48niTj/ZkjOhATMnrDe60Nd5z4m792w
+YoAXr9IELC+RF9XqtLINNvFb90CrXIkpG947Gmz7HRAG/6RHgomLQDhpx0nvu3b3
+9CNRkiAx/cFTyI06laUaxVbUMVfqTZ1t6TQl5/Zj6ZBGqTkpRfF/D+z837DdhcAU
+DR3pZxR+d3K79tFmzhMbp1LoCCXnTYHW8jUMxZNe6X2sumd/WkinCAZZV/JyS+k1
+WTwS8Zumd/FdDu6p2ukRbQmo9jPw1t/vBCUm3l2il9Rlm0NgqkPigCZi3xNWUEBc
+rdhd4zkQxoQqUzquhAnsdDcXwm3zwA==
+=TJnD
+-----END PGP SIGNATURE-----
+
+--TeJTyD9hb8KJN2Jy--
