@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CDE3C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 280EFC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D80F2078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:30:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0315E20760
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:30:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662613;
-	bh=4mLUq8oF0+XPpJ0iLZPuz7kue4ub17LRH+eWo4UMPF0=;
+	s=default; t=1591662615;
+	bh=BNvDn/c37fRzH+yDqVcvmJifUx/6tklM+D/+BV8N+oI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QCuoPheFPNpxXTN18VQXweCOsONCiqwd/Z9Qr2zcAsyljxm3HfHcq6YjjrALLZOke
-	 TmjxoLt/BxbpGc2Aqcus9+uYgA7LkNK90vmi6hfb2j/I8ZZwGyPvcABDGC47YtYaHC
-	 sGBAFT2h2Zn4aPPOTGS7pTfG74A/Bb2o67BLdwGw=
+	b=rFKdA+hWsNanDOlNgqR202x+Jiq8wiB/RdRDf5OzPw6TPsAHBDGGS5r2AFKFT7sx8
+	 nYRMJcMVaLXJbRoadbXU+7vWRHxw4wY8cfniOiubvKFEmckOiC/jkEYUgNxUGud1HB
+	 +3Rm0AYCqTdtXS4w4z7rDfdWjYs2Aj8p+bY4yeao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730147AbgFHXQA (ORCPT
+        id S1730132AbgFHXP4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:16:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32990 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:15:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728574AbgFHXNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:13:18 -0400
+        id S1729271AbgFHXNT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:13:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B999D20897;
-        Mon,  8 Jun 2020 23:13:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 187A720C09;
+        Mon,  8 Jun 2020 23:13:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657997;
-        bh=4mLUq8oF0+XPpJ0iLZPuz7kue4ub17LRH+eWo4UMPF0=;
+        s=default; t=1591657998;
+        bh=BNvDn/c37fRzH+yDqVcvmJifUx/6tklM+D/+BV8N+oI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nKL/EiZUPH8/ebEd7MGVPP97hGF/Q0wzpJfMQT6bWNIxbyLy/4qcz3YhmkSEX/fxG
-         Vq8Yvv+Kg1n+Wa39vgBgHdC3CJ2W8kkBXIoViIU8Fu4QJXeNybJsVC3BBW2qIboZwH
-         Cpp1aosWhg+YNw2AEn86ZhgVaA1hMJeOVFND1G3o=
+        b=GBGF+ET8TEmr78EQWOvzLpVDFATDWpxx5Pfu9lg/TsZCVckbH+eYEq39mL2Og/Zzp
+         5OZnj7xI7kyL8LmU9K48KlRi+epLTw3AcxPIociRoYMP5Buzz63RX+82Jss+YA4VNd
+         IYaayO5viUf+dFGQP3bnP4M+0pRS8TVOj62DBeZY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tero Kristo <t-kristo@ti.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
+Cc:     Marc Zyngier <maz@kernel.org>, Guenter Roeck <linux@roeck-us.net>,
         Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-omap@vger.kernel.org, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 055/606] clk: ti: clkctrl: Fix Bad of_node_put within clkctrl_get_name
-Date:   Mon,  8 Jun 2020 19:03:00 -0400
-Message-Id: <20200608231211.3363633-55-sashal@kernel.org>
+        linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 056/606] clk: Unlink clock if failed to prepare or enable
+Date:   Mon,  8 Jun 2020 19:03:01 -0400
+Message-Id: <20200608231211.3363633-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -62,41 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tero Kristo <t-kristo@ti.com>
+From: Marc Zyngier <maz@kernel.org>
 
-commit e1f9e0d28ff025564dfdb1001a7839b4af5db2e2 upstream.
+commit 018d4671b9bbd4a5c55cf6eab3e1dbc70a50b66e upstream.
 
-clkctrl_get_name incorrectly calls of_node_put when it is not really
-doing of_node_get. This causes a boot time warning later on:
+On failing to prepare or enable a clock, remove the core structure
+from the list it has been inserted as it is about to be freed.
 
-[    0.000000] OF: ERROR: Bad of_node_put() on /ocp/interconnect@4a000000/segmen
-t@0/target-module@5000/cm_core_aon@0/ipu-cm@500/ipu1-clkctrl@20
+This otherwise leads to random crashes when subsequent clocks get
+registered, during which parsing of the clock tree becomes adventurous.
 
-Fix by dropping the of_node_put from the function.
+Observed with QEMU's RPi-3 emulation.
 
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Fixes: 6c3090520554 ("clk: ti: clkctrl: Fix hidden dependency to node name")
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Link: https://lkml.kernel.org/r/20200424124725.9895-1-t-kristo@ti.com
-Acked-by: Tony Lindgren <tony@atomide.com>
+Fixes: 12ead77432f2 ("clk: Don't try to enable critical clocks if prepare failed")
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>
+Link: https://lkml.kernel.org/r/20200505140953.409430-1-maz@kernel.org
 Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/clk/ti/clkctrl.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/clk/clk.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/clk/ti/clkctrl.c b/drivers/clk/ti/clkctrl.c
-index 062266034d84..9019624e37bc 100644
---- a/drivers/clk/ti/clkctrl.c
-+++ b/drivers/clk/ti/clkctrl.c
-@@ -461,7 +461,6 @@ static char * __init clkctrl_get_name(struct device_node *np)
- 			return name;
- 		}
- 	}
--	of_node_put(np);
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index 305544b68b8a..f22b7aed6e64 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -3512,6 +3512,9 @@ static int __clk_core_init(struct clk_core *core)
+ out:
+ 	clk_pm_runtime_put(core);
+ unlock:
++	if (ret)
++		hlist_del_init(&core->child_node);
++
+ 	clk_prepare_unlock();
  
- 	return NULL;
- }
+ 	if (!ret)
 -- 
 2.25.1
 
