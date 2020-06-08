@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13BAAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C8B1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2678206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:36:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01FA120774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:36:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662975;
-	bh=r/ZhJS3TFnJvUkfTEaJFVxbdWUpnvSUCDvWHnEm187c=;
+	s=default; t=1591662984;
+	bh=JkD+MiY/FPpyZmUTHCm6tsWL4xVIOLfpF+zm5aPlmO0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F4+9doX0DngcpDqWmfcKmCuj+/LipEQPkDBJ8tQ55H0pxpEVs9vNyw0qaCYaIPUuQ
-	 yYB0vIRpLrhhuFfQ9H+ZNncwXcqcGMA8y2Faoo+pdJap7ZFJzsF8awxXhaBZe7GDNI
-	 FHCU5ie7QzIsu8LwePRaKur8qcRXR/gX8k7maygM=
+	b=Dk0HK5Vq2zMHL7UAs29G7Xw1yh7q16oyxUnBptIR18znXq3POMz61d16ZLfx/KjU3
+	 HV0upke/Ar/OCBM8fKplfnDPzZ+T5e79BXEtfi5dXZshYMAqaJIzmBoxFxZEZwlAUx
+	 xzEjFxs0r/G67JfI9tyvpHGoArxzsmoAKqRgEzd8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733051AbgFIAgM (ORCPT
+        id S1730142AbgFIAgX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:36:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34424 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:36:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728901AbgFHXOP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:14:15 -0400
+        id S1729744AbgFHXOL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:14:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2495D212CC;
-        Mon,  8 Jun 2020 23:14:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A400F20C09;
+        Mon,  8 Jun 2020 23:14:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658054;
-        bh=r/ZhJS3TFnJvUkfTEaJFVxbdWUpnvSUCDvWHnEm187c=;
+        s=default; t=1591658051;
+        bh=JkD+MiY/FPpyZmUTHCm6tsWL4xVIOLfpF+zm5aPlmO0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=boo7EgIUVSUFiRTsHjcbIIArJhYnUZTk9C4L4XzferlIfQfGaEsLkptYueJGX9CBS
-         5k2LEVBRTuXjBczfOrXKZEQLMY6Wc/ZoygTmsyC0KCMNtmqR1+tarAo3su+w+TqXeX
-         vbNZECTn3TpXxwrAV07QcAIkoN2ki6NT/OEUbfzI=
+        b=evVcRwsUpGQgJBRFlw/B6/wxoKplWx71kOGcPFIDyQjm0sJUO+dTJOCKqsMx63VmS
+         TjYIodhGXOXwKQ2fDXlyEfyJEf13GcyDgRNt2Tc8muhkPH16gmXTY5Xy34TsQDVtrX
+         oWoSc00ZKRSbEucqlBaECyrRXjV/0RREjc49R9uY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 102/606] net: drop_monitor: use IS_REACHABLE() to guard net_dm_hw_report()
-Date:   Mon,  8 Jun 2020 19:03:47 -0400
-Message-Id: <20200608231211.3363633-102-sashal@kernel.org>
+Cc:     Ricardo Ribalda Delgado <ribalda@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Sasha Levin <sashal@kernel.org>, linux-mtd@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 099/606] mtd: Fix mtd not registered due to nvmem name collision
+Date:   Mon,  8 Jun 2020 19:03:44 -0400
+Message-Id: <20200608231211.3363633-99-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -60,41 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Ricardo Ribalda Delgado <ribalda@kernel.org>
 
-[ Upstream commit 1cd9b3abf5332102d4d967555e7ed861a75094bf ]
+[ Upstream commit 7b01b7239d0dc9832e0d0d23605c1ff047422a2c ]
 
-In net/Kconfig, NET_DEVLINK implies NET_DROP_MONITOR.
+When the nvmem framework is enabled, a nvmem device is created per mtd
+device/partition.
 
-The original behavior of the 'imply' keyword prevents NET_DROP_MONITOR
-from being 'm' when NET_DEVLINK=y.
+It is not uncommon that a device can have multiple mtd devices with
+partitions that have the same name. Eg, when there DT overlay is allowed
+and the same device with mtd is attached twice.
 
-With the planned Kconfig change that relaxes the 'imply', the
-combination of NET_DEVLINK=y and NET_DROP_MONITOR=m would be allowed.
+Under that circumstances, the mtd fails to register due to a name
+duplication on the nvmem framework.
 
-Use IS_REACHABLE() to avoid the vmlinux link error for this case.
+With this patch we use the mtdX name instead of the partition name,
+which is unique.
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
+[    8.948991] sysfs: cannot create duplicate filename '/bus/nvmem/devices/Production Data'
+[    8.948992] CPU: 7 PID: 246 Comm: systemd-udevd Not tainted 5.5.0-qtec-standard #13
+[    8.948993] Hardware name: AMD Dibbler/Dibbler, BIOS 05.22.04.0019 10/26/2019
+[    8.948994] Call Trace:
+[    8.948996]  dump_stack+0x50/0x70
+[    8.948998]  sysfs_warn_dup.cold+0x17/0x2d
+[    8.949000]  sysfs_do_create_link_sd.isra.0+0xc2/0xd0
+[    8.949002]  bus_add_device+0x74/0x140
+[    8.949004]  device_add+0x34b/0x850
+[    8.949006]  nvmem_register.part.0+0x1bf/0x640
+...
+[    8.948926] mtd mtd8: Failed to register NVMEM device
+
+Fixes: c4dfa25ab307 ("mtd: add support for reading MTD devices via the nvmem API")
+Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/drop_monitor.h | 2 +-
+ drivers/mtd/mtdcore.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/net/drop_monitor.h b/include/net/drop_monitor.h
-index 2ab668461463..f68bc373544a 100644
---- a/include/net/drop_monitor.h
-+++ b/include/net/drop_monitor.h
-@@ -19,7 +19,7 @@ struct net_dm_hw_metadata {
- 	struct net_device *input_dev;
- };
+diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
+index 5fac4355b9c2..559b6930b6f6 100644
+--- a/drivers/mtd/mtdcore.c
++++ b/drivers/mtd/mtdcore.c
+@@ -551,7 +551,7 @@ static int mtd_nvmem_add(struct mtd_info *mtd)
  
--#if IS_ENABLED(CONFIG_NET_DROP_MONITOR)
-+#if IS_REACHABLE(CONFIG_NET_DROP_MONITOR)
- void net_dm_hw_report(struct sk_buff *skb,
- 		      const struct net_dm_hw_metadata *hw_metadata);
- #else
+ 	config.id = -1;
+ 	config.dev = &mtd->dev;
+-	config.name = mtd->name;
++	config.name = dev_name(&mtd->dev);
+ 	config.owner = THIS_MODULE;
+ 	config.reg_read = mtd_nvmem_reg_read;
+ 	config.size = mtd->size;
 -- 
 2.25.1
 
