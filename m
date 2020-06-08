@@ -2,379 +2,103 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47323C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBDA7C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 173C72076A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:41:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAC542072F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:43:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TyCgMLOD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729060AbgFHMlm (ORCPT
+        id S1729087AbgFHMn0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 08:41:42 -0400
-Received: from mga12.intel.com ([192.55.52.136]:59122 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726660AbgFHMll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 08:41:41 -0400
-IronPort-SDR: QoPHL/UCW/y1lcgRqCUdBkuXsY9SPwJxnhGiYnGyEdU/1Io/ZwV9uefm3z2KQRNw5+y5n7kgpJ
- smUACbBsU8vA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2020 05:41:39 -0700
-IronPort-SDR: 6ISbsfWc68ici2FjbVcziGiNhEMER4MvFVWvAbGGbJd70zcUERPwBCbIuHL4d+c8EYQCLF9JOw
- FcCS36XDuoJw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,487,1583222400"; 
-   d="scan'208";a="472675240"
-Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.249.170.251]) ([10.249.170.251])
-  by fmsmga005.fm.intel.com with ESMTP; 08 Jun 2020 05:41:36 -0700
-Reply-To: like.xu@intel.com
-Subject: Re: [PATCH][v7] KVM: X86: support APERF/MPERF registers
-To:     Li RongQing <lirongqing@baidu.com>
-References: <1591608858-10935-1-git-send-email-lirongqing@baidu.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org, x86@kernel.org,
-        hpa@zytor.com, bp@alien8.de, mingo@redhat.com, tglx@linutronix.de,
-        jmattson@google.com, wanpengli@tencent.com, vkuznets@redhat.com,
-        sean.j.christopherson@intel.com, pbonzini@redhat.com,
-        xiaoyao.li@intel.com, wei.huang2@amd.com
-From:   "Xu, Like" <like.xu@intel.com>
-Organization: Intel OTC
-Message-ID: <65c3eeb3-0a7f-d025-9ed8-491a04796d47@intel.com>
-Date:   Mon, 8 Jun 2020 20:41:35 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 8 Jun 2020 08:43:26 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:59490 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728591AbgFHMnX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 08:43:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591620202;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=utvLOGjABWchDzVBBNcvjGgT0Uw4uVA8BCJYHrkDTYE=;
+        b=TyCgMLODxX0a9jzlp75v5jJdlB/ziQNUZGG1WFR4A1VSJIXaKZL0jHDPKPxvBk36zGfPGV
+        Wm68hG1vlF+FKx1KiRVln78MzBLMBXw9e1DoWFHgU0c44YVcA0QoVqCJ97sc0Dxg4+L062
+        DBCepTeUpfOWILkpU7co5aKxYyNROn8=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-79-ukr-xhMTN7ipi4Qz4t1SZQ-1; Mon, 08 Jun 2020 08:42:59 -0400
+X-MC-Unique: ukr-xhMTN7ipi4Qz4t1SZQ-1
+Received: by mail-wm1-f70.google.com with SMTP id b63so5340576wme.1
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 05:42:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=utvLOGjABWchDzVBBNcvjGgT0Uw4uVA8BCJYHrkDTYE=;
+        b=USdGEI9IX6PQ7XEt5HitSEYKhjMsgBR8rAhz7wBSSF+yixvrVGzHi5UycX1xBkBcpE
+         An/IfZNki02bWTC9GqhAJkXPLne0n7A62uuW9OKqblSbb7DzqAahm0gbxR0nSltYADGE
+         OX2wRec0+K57H0DwBqN/7kYpJNzUxlucXl8uvlAy5FGmy3ehT5k12yDP3u9GJSox1hfJ
+         YqE0TvpJqKlFaWmZolQC8+fbY9iy/0O/nLZP2wnUNxSk8twT4uymPIdE4OtffNZX+je+
+         C3ylRYc5CRl0kxuvF9yixHvk1Ac+Kp1CuSLlV2OIfHjk525QDhkUymZ88EPxpvMedGLG
+         3lfw==
+X-Gm-Message-State: AOAM533168bpJwKGfyL47tnKRWiyVTLlKOfEy7KvrdgVBJyME+kos1HU
+        nTvZSjg32QZmjEX0064Jmuou197JL96yeeyyyqYiXIO3ZLv9MA1X4CoUZrgRbt8rTrrRwlMK/Ae
+        Hos2EcoKS/kXix/r2uQShZgtG
+X-Received: by 2002:a1c:5411:: with SMTP id i17mr17027060wmb.137.1591620178248;
+        Mon, 08 Jun 2020 05:42:58 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxxHCDKaiMql4q+MgfnmT9afh3wFAhLtf//8SgAbDqi4VLnsVn3wc/xBGn3Rmk2vnzUyPWpJw==
+X-Received: by 2002:a1c:5411:: with SMTP id i17mr17027042wmb.137.1591620178029;
+        Mon, 08 Jun 2020 05:42:58 -0700 (PDT)
+Received: from redhat.com (bzq-109-64-41-91.red.bezeqint.net. [109.64.41.91])
+        by smtp.gmail.com with ESMTPSA id g82sm22458959wmf.1.2020.06.08.05.42.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jun 2020 05:42:57 -0700 (PDT)
+Date:   Mon, 8 Jun 2020 08:42:56 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Jason Wang <jasowang@redhat.com>,
+        Zhu Lingshan <lingshan.zhu@intel.com>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Subject: [PATCH] vhost/test: fix up after API change
+Message-ID: <20200608124254.727184-1-mst@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <1591608858-10935-1-git-send-email-lirongqing@baidu.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email 2.24.1.751.gd10ce2899c
+X-Mutt-Fcc: =sent
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi RongQing,
+Pass a flag to request kernel thread use.
 
-On 2020/6/8 17:34, Li RongQing wrote:
-> Guest kernel reports a fixed cpu frequency in /proc/cpuinfo,
-> this is confused to user when turbo is enable, and aperf/mperf
-> can be used to show current cpu frequency after 7d5905dc14a
-> "(x86 / CPU: Always show current CPU frequency in /proc/cpuinfo)"
-> so guest should support aperf/mperf capability
->
-> This patch implements aperf/mperf by three mode: none, software
-> emulation, and pass-through
->
-> None: default mode, guest does not support aperf/mperf
->
-> Software emulation: the period of aperf/mperf in guest mode are
-> accumulated as emulated value
->
-> Pass-though: it is only suitable for pinned vcpu
-I know the "pass-though" idea comes from PeterZ.
+Fixes: 01fcb1cbc88e ("vhost: allow device that does not depend on vhost worker")
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+---
+ drivers/vhost/test.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- From the guest point of view,
-it would be inaccurate if guest/host share the
-TSC Frequency clock counters in the pass-through mode
-due to the cost from KVM part even in the vcpu pinned mode.
-
-The "software emulation" mode should be enough for your case.
->
-> And a per-VM capability is added to configure aperfmperf mode
->
-> Signed-off-by: Li RongQing <lirongqing@baidu.com>
-> Signed-off-by: Chai Wen <chaiwen@baidu.com>
-> Signed-off-by: Jia Lina <jialina01@baidu.com>
-> ---
-> diff v6:
-> drop the unneed check from kvm_update_cpuid and __do_cpuid_func
-> add the validation check in kvm_vm_ioctl_enable_cap
-> thank for Jim Mattson,  Paolo Bonzini and Xiaoyao Li
->
-> diff v5:
-> return error if guest is configured with aperf/mperf, but host cpu has not
->
-> diff v4:
-> fix maybe-uninitialized warning
->
-> diff v3:
-> fix interception of MSR_IA32_APERF/MPERF in svm
-> thanks for wei.huang2
->
-> diff v2:
-> support aperfmperf pass though
-> move common codes to kvm_get_msr_common
-> thanks for Xiaoyao Li and Peter Zijlstra
->
-> diff v1:
-> 1. support AMD, but not test
-> 2. support per-vm capability to enable
-> Documentation/virt/kvm/api.rst  | 16 ++++++++++++
->   arch/x86/include/asm/kvm_host.h | 11 ++++++++
->   arch/x86/kvm/svm/svm.c          |  8 ++++++
->   arch/x86/kvm/vmx/vmx.c          |  6 +++++
->   arch/x86/kvm/x86.c              | 56 +++++++++++++++++++++++++++++++++++++++++
->   arch/x86/kvm/x86.h              | 15 +++++++++++
->   include/uapi/linux/kvm.h        |  1 +
->   7 files changed, 113 insertions(+)
->
-> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-> index 426f94582b7a..ae30ac02a771 100644
-> --- a/Documentation/virt/kvm/api.rst
-> +++ b/Documentation/virt/kvm/api.rst
-> @@ -6150,3 +6150,19 @@ KVM can therefore start protected VMs.
->   This capability governs the KVM_S390_PV_COMMAND ioctl and the
->   KVM_MP_STATE_LOAD MP_STATE. KVM_SET_MP_STATE can fail for protected
->   guests when the state change is invalid.
-> +
-> +8.23 KVM_CAP_APERFMPERF
-> +----------------------------
-> +
-> +:Architectures: x86
-> +:Parameters: args[0] is aperfmperf mode;
-> +             0 for not support, it is default mode
-> +             1 for software emulation
-> +             2 for pass-through which is only suitable for pinned vcpu
-> +:Returns: 0 on success, -EINVAL when args[0] contains invalid,
-> +           -EBUSY if vcpus has been created
-> +
-> +Enabling this capability on a VM provides guest with aperf/mperf
-> +register, which are used to get cpu running frequency currently
-> +
-> +Do not enable KVM_CAP_APERFMPERF if host does not support aperf/mperf
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 1da5858501ca..7d1d3668c4f1 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -829,6 +829,9 @@ struct kvm_vcpu_arch {
->   
->   	/* AMD MSRC001_0015 Hardware Configuration */
->   	u64 msr_hwcr;
-> +
-> +	u64 v_mperf;
-> +	u64 v_aperf;
->   };
->   
->   struct kvm_lpage_info {
-> @@ -907,6 +910,12 @@ enum kvm_irqchip_mode {
->   	KVM_IRQCHIP_SPLIT,        /* created with KVM_CAP_SPLIT_IRQCHIP */
->   };
->   
-> +enum kvm_aperfmperf_mode {
-> +	KVM_APERFMPERF_NONE,
-> +	KVM_APERFMPERF_SOFT,      /* software emulate aperfmperf */
-> +	KVM_APERFMPERF_PT,        /* pass-through aperfmperf to guest */
-> +};
-> +
->   #define APICV_INHIBIT_REASON_DISABLE    0
->   #define APICV_INHIBIT_REASON_HYPERV     1
->   #define APICV_INHIBIT_REASON_NESTED     2
-> @@ -1004,6 +1013,8 @@ struct kvm_arch {
->   
->   	struct kvm_pmu_event_filter *pmu_event_filter;
->   	struct task_struct *nx_lpage_recovery_thread;
-> +
-> +	enum kvm_aperfmperf_mode aperfmperf_mode;
->   };
->   
->   struct kvm_vm_stat {
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index 9e333b91ff78..0db7d866e09f 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -1198,6 +1198,14 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
->   	svm->msrpm = page_address(msrpm_pages);
->   	svm_vcpu_init_msrpm(svm->msrpm);
->   
-> +	if (guest_aperfmperf_soft(vcpu->kvm)) {
-> +		set_msr_interception(svm->msrpm, MSR_IA32_MPERF, 0, 0);
-> +		set_msr_interception(svm->msrpm, MSR_IA32_APERF, 0, 0);
-> +	} else if (guest_aperfmperf_pt(vcpu->kvm)) {
-> +		set_msr_interception(svm->msrpm, MSR_IA32_MPERF, 1, 0);
-> +		set_msr_interception(svm->msrpm, MSR_IA32_APERF, 1, 0);
-> +	}
-> +
->   	svm->nested.msrpm = page_address(nested_msrpm_pages);
->   	svm_vcpu_init_msrpm(svm->nested.msrpm);
->   
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 170cc76a581f..952e3728ca86 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -6914,6 +6914,12 @@ static int vmx_create_vcpu(struct kvm_vcpu *vcpu)
->   		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C6_RESIDENCY, MSR_TYPE_R);
->   		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C7_RESIDENCY, MSR_TYPE_R);
->   	}
-> +
-> +	if (guest_aperfmperf_pt(vcpu->kvm)) {
-> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_MPERF, MSR_TYPE_R);
-> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_APERF, MSR_TYPE_R);
-Both two registers are writable on the Intel platforms with the description 
-of "R/Write to clear",
-and you lost this part in the kvm_set_msr_common() for "software emulation" 
-mode.
-> +	}
-> +
->   	vmx->msr_bitmap_mode = 0;
->   
->   	vmx->loaded_vmcs = &vmx->vmcs01;
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 9e41b5135340..84884f4778cb 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -3324,6 +3324,12 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->   	case MSR_K7_HWCR:
->   		msr_info->data = vcpu->arch.msr_hwcr;
->   		break;
-> +	case MSR_IA32_MPERF:
-What if vcpu CPUID doesn't set CPUID.06H: ECX[0] ?
-> +		msr_info->data = vcpu->arch.v_mperf;
-> +		break;
-> +	case MSR_IA32_APERF:
-> +		msr_info->data = vcpu->arch.v_aperf;
-> +		break;
->   	default:
->   		if (kvm_pmu_is_valid_msr(vcpu, msr_info->index))
->   			return kvm_pmu_get_msr(vcpu, msr_info);
-> @@ -3534,6 +3540,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
->   	case KVM_CAP_HYPERV_ENLIGHTENED_VMCS:
->   		r = kvm_x86_ops.nested_ops->enable_evmcs != NULL;
->   		break;
-> +	case KVM_CAP_APERFMPERF:
-> +		r = boot_cpu_has(X86_FEATURE_APERFMPERF) ? 1 : 0;
-> +		break;
->   	default:
->   		break;
->   	}
-> @@ -4985,6 +4994,25 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
->   		kvm->arch.exception_payload_enabled = cap->args[0];
->   		r = 0;
->   		break;
-> +	case KVM_CAP_APERFMPERF:
-If the pass-through mode could be dropped,
-we may en/disable the APERF/MPERF via CPUID.06H: ECX[0].
-> +		r = 0;
-> +		mutex_lock(&kvm->lock);
-> +		if (kvm->created_vcpus)
-> +			r = -EBUSY;
-> +		if (r)
-> +			goto aperfmperf_unlock;
-> +
-> +		r = -EINVAL;
-> +		if (cap->args[0] > KVM_APERFMPERF_PT)
-> +			goto aperfmperf_unlock;
-> +		if (cap->args[0] != KVM_APERFMPERF_NONE
-> +				&& !boot_cpu_has(X86_FEATURE_APERFMPERF))
-> +			goto aperfmperf_unlock;
-> +		r = 0;
-> +		kvm->arch.aperfmperf_mode = cap->args[0];
-> +aperfmperf_unlock:
-> +		mutex_unlock(&kvm->lock);
-> +		break;
->   	default:
->   		r = -EINVAL;
->   		break;
-> @@ -8311,6 +8339,25 @@ void __kvm_request_immediate_exit(struct kvm_vcpu *vcpu)
->   }
->   EXPORT_SYMBOL_GPL(__kvm_request_immediate_exit);
->   
-> +
-> +static void guest_enter_aperfmperf(u64 *mperf, u64 *aperf)
-> +{
-It's called when the KVM_APERFMPERF_SOFT is enabled,
-so there may be a #GP if host doesn't support.
-
-Thanks,
-Like Xu
-> +	rdmsrl(MSR_IA32_MPERF, *mperf);
-> +	rdmsrl(MSR_IA32_APERF, *aperf);
-> +}
-> +
-> +static void guest_exit_aperfmperf(struct kvm_vcpu *vcpu,
-> +		u64 mperf, u64 aperf)
-> +{
-> +	u64 perf;
-> +
-> +	rdmsrl(MSR_IA32_MPERF, perf);
-> +	vcpu->arch.v_mperf += perf - mperf;
-> +
-> +	rdmsrl(MSR_IA32_APERF, perf);
-> +	vcpu->arch.v_aperf += perf - aperf;
-> +}
-> +
->   /*
->    * Returns 1 to let vcpu_run() continue the guest execution loop without
->    * exiting to the userspace.  Otherwise, the value will be returned to the
-> @@ -8324,6 +8371,8 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
->   		kvm_cpu_accept_dm_intr(vcpu);
->   	fastpath_t exit_fastpath;
->   
-> +	bool enable_aperfmperf = guest_aperfmperf_soft(vcpu->kvm);
-> +	u64 uninitialized_var(mperf), uninitialized_var(aperf);
->   	bool req_immediate_exit = false;
->   
->   	if (kvm_request_pending(vcpu)) {
-> @@ -8462,6 +8511,9 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
->   
->   	preempt_disable();
->   
-> +	if (unlikely(enable_aperfmperf))
-> +		guest_enter_aperfmperf(&mperf, &aperf);
-> +
->   	kvm_x86_ops.prepare_guest_switch(vcpu);
->   
->   	/*
-> @@ -8583,6 +8635,10 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
->   	}
->   
->   	local_irq_enable();
-> +
-> +	if (unlikely(enable_aperfmperf))
-> +		guest_exit_aperfmperf(vcpu, mperf, aperf);
-> +
->   	preempt_enable();
->   
->   	vcpu->srcu_idx = srcu_read_lock(&vcpu->kvm->srcu);
-> diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-> index 6eb62e97e59f..8216f697c53c 100644
-> --- a/arch/x86/kvm/x86.h
-> +++ b/arch/x86/kvm/x86.h
-> @@ -361,6 +361,21 @@ static inline bool kvm_dr7_valid(u64 data)
->   	return !(data >> 32);
->   }
->   
-> +static inline bool guest_has_aperfmperf(struct kvm *kvm)
-> +{
-> +	return kvm->arch.aperfmperf_mode != KVM_APERFMPERF_NONE;
-> +}
-> +
-> +static inline bool guest_aperfmperf_soft(struct kvm *kvm)
-> +{
-> +	return kvm->arch.aperfmperf_mode == KVM_APERFMPERF_SOFT;
-> +}
-> +
-> +static inline bool guest_aperfmperf_pt(struct kvm *kvm)
-> +{
-> +	return kvm->arch.aperfmperf_mode == KVM_APERFMPERF_PT;
-> +}
-> +
->   void kvm_load_guest_xsave_state(struct kvm_vcpu *vcpu);
->   void kvm_load_host_xsave_state(struct kvm_vcpu *vcpu);
->   u64 kvm_spec_ctrl_valid_bits(struct kvm_vcpu *vcpu);
-> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> index 4fdf30316582..c240941d7821 100644
-> --- a/include/uapi/linux/kvm.h
-> +++ b/include/uapi/linux/kvm.h
-> @@ -1031,6 +1031,7 @@ struct kvm_ppc_resize_hpt {
->   #define KVM_CAP_PPC_SECURE_GUEST 181
->   #define KVM_CAP_HALT_POLL 182
->   #define KVM_CAP_ASYNC_PF_INT 183
-> +#define KVM_CAP_APERFMPERF 184
->   
->   #ifdef KVM_CAP_IRQ_ROUTING
->   
+diff --git a/drivers/vhost/test.c b/drivers/vhost/test.c
+index f55cb584b84a..12304eb8da15 100644
+--- a/drivers/vhost/test.c
++++ b/drivers/vhost/test.c
+@@ -122,7 +122,7 @@ static int vhost_test_open(struct inode *inode, struct file *f)
+ 	vqs[VHOST_TEST_VQ] = &n->vqs[VHOST_TEST_VQ];
+ 	n->vqs[VHOST_TEST_VQ].handle_kick = handle_vq_kick;
+ 	vhost_dev_init(dev, vqs, VHOST_TEST_VQ_MAX, UIO_MAXIOV + 64,
+-		       VHOST_TEST_PKT_WEIGHT, VHOST_TEST_WEIGHT, NULL);
++		       VHOST_TEST_PKT_WEIGHT, VHOST_TEST_WEIGHT, true, NULL);
+ 
+ 	f->private_data = n;
+ 
+-- 
+MST
 
