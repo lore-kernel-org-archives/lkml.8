@@ -2,117 +2,125 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B78F5C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:28:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4090EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 940002076A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:28:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591615724;
-	bh=YYeYKTubuK8uMi7Ksz+Evqk5yKQweEpTz0M3eAYB77A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1Dw2dR+9dybpNDdpXrFif9xfItkILrsKZSD0+YyiWNqf4jFgBGevmX/DwAUV0XM3U
-	 jY0eAH07ulqK0Tsw4hioSLapQmWK7yCg+lJ/j1KeQ0Kvh0RN1abLHYE12roynJxVsC
-	 Vc3TxP2MpRVNKwQ++RTCO3mqpGNxWQDGC0namMF8=
+	by mail.kernel.org (Postfix) with ESMTP id 0E987206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:31:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KN1z/W/Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729602AbgFHL2n (ORCPT
+        id S1729556AbgFHLbQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 07:28:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38976 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729310AbgFHL2n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 07:28:43 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06725206C3;
-        Mon,  8 Jun 2020 11:28:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591615722;
-        bh=YYeYKTubuK8uMi7Ksz+Evqk5yKQweEpTz0M3eAYB77A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PSssz0ftDvak2V1jNm/rzjE+e3b8E5DOT4ArB6KH14YgxL9PCjBbkPYWE8eSyESxe
-         HepGmVKPZIJj9kL9YwUIaPoveXgvhY9UdwnMctjrGkzYwv/Tu1YFc+cPW2+jw9jniL
-         oEXhLw2diniklq+QavDjLkejFy7X/SGrDRlF51yI=
-Date:   Mon, 8 Jun 2020 12:28:40 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>, lukas@wunner.de,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Scott Branden <sbranden@broadcom.com>,
-        Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org,
-        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        Martin Sperl <kernel@martin.sperl.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: Re: [PATCH v2] spi: bcm2835: Enable shared interrupt support
-Message-ID: <20200608112840.GC4593@sirena.org.uk>
-References: <20200604212819.715-1-f.fainelli@gmail.com>
- <142d48ae-2725-1368-3e11-658449662371@arm.com>
- <20200605132037.GF5413@sirena.org.uk>
- <2e371a32-fb52-03a2-82e4-5733d9f139cc@arm.com>
- <06342e88-e130-ad7a-9f97-94f09156f868@arm.com>
- <d3fe8b56-83ef-8ef0-bb05-11c7cb2419f8@gmail.com>
- <a6f158e3-af51-01d9-331c-4bc8b6847abb@arm.com>
+        Mon, 8 Jun 2020 07:31:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42982 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729310AbgFHLbO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 07:31:14 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89BC6C08C5C2
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 04:31:14 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id h185so8424758pfg.2
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 04:31:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9/XB7kXQLS1xVYDySLVP5Kn15kvrdx0ZXmrSl6/6z94=;
+        b=KN1z/W/Ywx5Qd3mhA9Cl8XpFmYFnCTvyskPW4FRIrn+Yn+BZfB30wBzs78gsVnAZwn
+         XVitIU30H9dY21Dg5XlUUE3tPEgVpXjRN99wIZ4mQtElKFGdZ5VFJLzNdagmb6u1o0Ng
+         Hehj81EGCJy+3gmSBWg3S9SZB43VWSaOQNSMtVNtKZy0wDwYvIaYRhYc7ldB//e35kTu
+         odJhhsufZU2HQS0rsmbbsRMqNYnqRI7vgJuPgpXO4wkipdlyT3C5Z71aIoMzI7Z+X6Dw
+         11laijqRx6T8bBGu8YaG2xBjJyl/GR4RBlhBJxpjDwqTvp9qDHZgIhCOt56T13EaelaC
+         wQZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9/XB7kXQLS1xVYDySLVP5Kn15kvrdx0ZXmrSl6/6z94=;
+        b=nTcMoBBayOhXpu6KpFE4zHuLuFeVOP9BFP52m7YqrX3R91dj4Mzuxo8+3O0IK7N5tX
+         ge1afFil8u+fwhZyZAv3UugymY5ljhz0KGLdd/gxqSDF6h9UiOGpEUpaSH12WvukqZHv
+         8tlRluaYXCsWaFC3uacRGOi6yvbbkk1HthkGMaK1qftj2HIc0ZosbfeQ0AXsHgw3c7FE
+         iFHJD46jUx41xwv8+WKsvN9FQDa//gSxV8Yyvv4Beegw9WXRj0SXPBDoVRYjR8yDNx5p
+         GgxcirgjlbtokxwzihleB5PimiRquNHUdUwxenOyl959DVw9WQO9u9ZM8hiawsVUz8vB
+         QcIw==
+X-Gm-Message-State: AOAM53325IbrO3ku9sF0zgWQckn8SEqw5P2i3m6+0ksffM6NsgVW5Oae
+        B3sMl0ObxhCs92AaONTXSAN78xFNvWsEgsivdAIO9JfTQh8=
+X-Google-Smtp-Source: ABdhPJy5+ofbvJZACN8tT6jas5hqFxmFROlc2dGZrbOMVQCxop1vEXLWE5JrJv60E/y6n3IayYIRoMyu0CVGCY6buwI=
+X-Received: by 2002:a63:545a:: with SMTP id e26mr19504943pgm.4.1591615874015;
+ Mon, 08 Jun 2020 04:31:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="hYooF8G/hrfVAmum"
-Content-Disposition: inline
-In-Reply-To: <a6f158e3-af51-01d9-331c-4bc8b6847abb@arm.com>
-X-Cookie: I'm rated PG-34!!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1591606281.git.sbrivio@redhat.com> <3e3ab7a4756df2ecf8fb012f16c375d4cd714552.1591606281.git.sbrivio@redhat.com>
+ <20200608101214.GE2428291@smile.fi.intel.com> <20200608122702.034c8c80@redhat.com>
+In-Reply-To: <20200608122702.034c8c80@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 8 Jun 2020 14:31:02 +0300
+Message-ID: <CAHp75Vfvx6wKJUKfgDjyEcPthT9BicoZqfZmaS8eKMFwgvVphg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] lib: Add test for bitmap_cut()
+To:     Stefano Brivio <sbrivio@redhat.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 8, 2020 at 1:29 PM Stefano Brivio <sbrivio@redhat.com> wrote:
+> On Mon, 8 Jun 2020 13:12:14 +0300
+> Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+> > On Mon, Jun 08, 2020 at 11:13:29AM +0200, Stefano Brivio wrote:
+> > > Based on an original patch by Yury Norov: introduce a test for
+> > > bitmap_cut() that also makes sure functionality is as described for
+> > > partially overlapping src and dst.
+> >
+> > > Co-authored-by: Yury Norov <yury.norov@gmail.com>
+> >
+> > Co-developed-by (and it requires Yury's SoB as well).
+>
+> Oops, sorry, I didn't remember this part from submitting-patches.rst
+> correctly. Thanks for pointing this out.
+>
+> Yury, let me know if I should re-post with both Co-authored-by: and
 
---hYooF8G/hrfVAmum
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Co-developed-by: :-)
 
-On Mon, Jun 08, 2020 at 12:11:11PM +0100, Robin Murphy wrote:
+> Signed-off-by: you -- otherwise I'll repost without both.
 
-> Again, 2 cycles. The overhead of a static key alone is at least 50% of that.
-> And that's not even considering whether the change in code layout caused by
-> doubling up the IRQ handler might affect I-cache or branch predictor
-> behaviour, where a single miss stands to more than wipe out any perceived
-> saving. And all in code that has at least one obvious inefficiency left on
-> the table either way.
+...
 
-> This thread truly epitomises Knuth's "premature optimisation" quote... ;)
+> > > +           if (!bitmap_equal(out, t->expected, t->nbits)) {
+> > > +                   pr_err("bitmap_cut failed: expected %*pb, got %*pb\n",
+> > > +                          t->nbits, t->expected, t->nbits, out);
+> > > +           }
+> >
+> > Perhaps
+> >
+> >       if (bitmap_equal(...))
+> >               continue;
+> >
+> >       ...
+> >
+> > ?
+>
+> That's five lines instead of four (I can't get pr_err() on one line
+> anyway) and it looks less straightforward: "if it doesn't match we have
+> an error" vs. "if it matches go to next case. We have an error". Any
+> specific reason I'm missing?
 
-In fairness the main reason this driver is so heavily tuned already (and
-has lead to some really nice improvements in the core) is that there are
-a number of users hitting 100% CPU utilization driving SPI devices on
-some of the older RPi hardware, IIRC around IIO type applications
-mostly.  I do tend to agree that this particular optimization is a bit
-marginal but there has been a lot of effort put into this.
+Actually, please use one of suitable expect_eq_*() macro or add your
+own. Because above has an inconsistent format with the rest.
 
---hYooF8G/hrfVAmum
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7eIOcACgkQJNaLcl1U
-h9De6wf9HKTAjmkja1i1t3bz0jmsUYY8xaAjvc0kqwlkowJdSjfUHX/0ahbBtdkn
-2/kzIAPvx4B0oTHNyL3hNwMWo8hEGNhRQXwZeJjeR2MJREW6qqOXooWyFCDMJq/z
-R1W/rcSbLvGORXBiiFFhpBLEiY5rRRTZXNqw4An12tduk05ZOmpqVdKvCal0i48B
-UZ0u1AIdNOmauU8JnlhygidT3ErLH4EIFirK04AhVs8ZFVmKOvfTWzHR/zUXHzdD
-MWXKAFJcfcywFnWlqq4yeRpPFbu+c7/Ko4MJZNSpEViAzDUo7wy5SyDP4mXmC+tI
-BB0LR91M/J64eJtjSEN8MMW3rGEzwQ==
-=CMzm
------END PGP SIGNATURE-----
-
---hYooF8G/hrfVAmum--
+-- 
+With Best Regards,
+Andy Shevchenko
