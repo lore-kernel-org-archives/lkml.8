@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF26C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85053C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 791532076C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:02:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F9B120760
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:02:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591664561;
-	bh=CnVp9pwpDTm0m2p+hSbXaay1pQhH2Cr6uUvMrwh7L4Q=;
+	s=default; t=1591664567;
+	bh=fD1Mv3OSJzmSUoaS2M1EiI+nfFsRVHr4ttthDic856o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dKFLWDXCuQEMMrXjsTdzOxtX4mYe+tNZwoesax0nKgxsykpXXkRZNdh+ODHj5xQVS
-	 NUTUd7qWXRvul9PbJVsTgwDt/VzmXuUJdnraVXhZwHmWnbCe0FYlY33foEVnmtcJWX
-	 KIFNzoZx/raSOJ8X3ETfO8ZMAKadLOoFu4Luzvss=
+	b=JcygALO2iZE+WHeQgIjFHUj+1lb5kYxPUa3TEZgy7q0adTEYUJDojl25g7an2m9sN
+	 rP2me+C/P0YgW08GtxElNJaz7U66CpUDsXXt5+nGLZpiPDFOsQD93LEWLKO7O/aiXq
+	 MJ4wNAWGNO5DOu1f2BoNrN/+L08PPQvl2TgWkA3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728038AbgFHXHx (ORCPT
+        id S1728739AbgFIBCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:07:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51062 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 21:02:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727815AbgFHXHM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:07:12 -0400
+        id S1728034AbgFHXHx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:07:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E6E520888;
-        Mon,  8 Jun 2020 23:07:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B40D2089D;
+        Mon,  8 Jun 2020 23:07:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657631;
-        bh=CnVp9pwpDTm0m2p+hSbXaay1pQhH2Cr6uUvMrwh7L4Q=;
+        s=default; t=1591657672;
+        bh=fD1Mv3OSJzmSUoaS2M1EiI+nfFsRVHr4ttthDic856o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=asC0ZA2Kf7DQBdLkqrlomrj2p18prOf9rXA/3a50M2saW74UL/sxWig7wuYS/0Trk
-         cj2JzGb8u6WKcAG7IwLwbv2PwcYcx0IvfywyL4gfHw4gR4QyZBjxczCf1hE0GCw887
-         VIojbkv2t5sHzIVeHdN0ameH6FJGoZM2I96Njzbs=
+        b=yLcLmBS7FoL2qRPOE2hgzCre7I7T+KsLeat8v5PtKod9Z/buhtfotseDmmm/c30F0
+         YPtCBtvbLqFp/65XL8JfJyOPMmxCHkcjvaw8l7F/KFScY958AvQ1229gYgSodMtj6d
+         iYFBEGykAfkAXyC/6NwBJ+XWIf9eb8g24a+KmYrs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 050/274] cpuidle: psci: Fixup execution order when entering a domain idle state
-Date:   Mon,  8 Jun 2020 19:02:23 -0400
-Message-Id: <20200608230607.3361041-50-sashal@kernel.org>
+Cc:     Paul M Stillwell Jr <paul.m.stillwell.jr@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 081/274] ice: fix PCI device serial number to be lowercase values
+Date:   Mon,  8 Jun 2020 19:02:54 -0400
+Message-Id: <20200608230607.3361041-81-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -62,61 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ulf Hansson <ulf.hansson@linaro.org>
+From: Paul M Stillwell Jr <paul.m.stillwell.jr@intel.com>
 
-[ Upstream commit 8b7ce5e49049ca78c238f03d70569a73da049f32 ]
+[ Upstream commit 1a9c561aa35534a03c0aa51c7fb1485731202a7c ]
 
-Moving forward, platforms are going to need to execute specific "last-man"
-operations before a domain idle state can be entered. In one way or the
-other, these operations needs to be triggered while walking the
-hierarchical topology via runtime PM and genpd, as it's at that point the
-last-man becomes known.
+Commit ceb2f00707f9 ("ice: Use pci_get_dsn()") changed the code to
+use a new function to get the Device Serial Number. It also changed
+the case of the filename for loading a package on a specific NIC
+from lowercase to uppercase. Change the filename back to
+lowercase since that is what we specified.
 
-Moreover, executing last-man operations needs to be done after the CPU PM
-notifications are sent through cpu_pm_enter(), as otherwise it's likely
-that some notifications would fail. Therefore, let's re-order the sequence
-in psci_enter_domain_idle_state(), so cpu_pm_enter() gets called prior
-pm_runtime_put_sync().
-
-Fixes: ce85aef570df ("cpuidle: psci: Manage runtime PM in the idle path")
-Reported-by: Lina Iyer <ilina@codeaurora.org>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Acked-by: Sudeep Holla <sudeep.holla@arm.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: ceb2f00707f9 ("ice: Use pci_get_dsn()")
+Signed-off-by: Paul M Stillwell Jr <paul.m.stillwell.jr@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpuidle/cpuidle-psci.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/intel/ice/ice_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/cpuidle/cpuidle-psci.c b/drivers/cpuidle/cpuidle-psci.c
-index bae9140a65a5..d0fb585073c6 100644
---- a/drivers/cpuidle/cpuidle-psci.c
-+++ b/drivers/cpuidle/cpuidle-psci.c
-@@ -58,6 +58,10 @@ static int psci_enter_domain_idle_state(struct cpuidle_device *dev,
- 	u32 state;
- 	int ret;
+diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
+index 599dab844034..545817dbff67 100644
+--- a/drivers/net/ethernet/intel/ice/ice_main.c
++++ b/drivers/net/ethernet/intel/ice/ice_main.c
+@@ -3126,7 +3126,7 @@ static char *ice_get_opt_fw_name(struct ice_pf *pf)
+ 	if (!opt_fw_filename)
+ 		return NULL;
  
-+	ret = cpu_pm_enter();
-+	if (ret)
-+		return -1;
-+
- 	/* Do runtime PM to manage a hierarchical CPU toplogy. */
- 	pm_runtime_put_sync_suspend(pd_dev);
+-	snprintf(opt_fw_filename, NAME_MAX, "%sice-%016llX.pkg",
++	snprintf(opt_fw_filename, NAME_MAX, "%sice-%016llx.pkg",
+ 		 ICE_DDP_PKG_PATH, dsn);
  
-@@ -65,10 +69,12 @@ static int psci_enter_domain_idle_state(struct cpuidle_device *dev,
- 	if (!state)
- 		state = states[idx];
- 
--	ret = psci_enter_state(idx, state);
-+	ret = psci_cpu_suspend_enter(state) ? -1 : idx;
- 
- 	pm_runtime_get_sync(pd_dev);
- 
-+	cpu_pm_exit();
-+
- 	/* Clear the domain state to start fresh when back from idle. */
- 	psci_set_domain_state(0);
- 	return ret;
+ 	return opt_fw_filename;
 -- 
 2.25.1
 
