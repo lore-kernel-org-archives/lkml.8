@@ -4,55 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75EECC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE0FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49B3020760
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6C1320774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:53:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663986;
-	bh=8M0BVirU0WrdSQ2GntXLcUZw8QqQhLkv8Jmputer5H8=;
+	s=default; t=1591663995;
+	bh=jLox+8Gi6bC9/N3l0vacC+fK6yX3qEtgPqcMiIXdWZg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R0wGIjZtb0YBh1da7vPxnrT3PiFV1oRpOIgHcXmz3Dgs6tYfIyywxCHqqU0X1vDMj
-	 92xfAJUl9HLHD0lfEn+crYxLfTSNTpKiwb6L/ZXyyy2OmdqCTZ3CRsiroDvppIop0W
-	 d80e0DrrWVG9SXsoCnlyCCaiVHDSX30vgZ3M2W1c=
+	b=myNF3mf7Yc/4NFu4ICFeuAnI9g/vvFMmPpzSWZ7ay9KC73Gc+IYR7vFYqudEmXlpp
+	 BGugHMTCxh8hseTQjXaM/pRFq+qL+5nIk27Ap1YGPoYCIp67pDzXq8GaXmWhJpzel3
+	 s8D0lJWfZcW4klAbUfM4+iBWvqHeb/C7JvCiB81Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733297AbgFIAxF (ORCPT
+        id S1732065AbgFIAxP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:53:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55770 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:53:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727070AbgFHXJw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:09:52 -0400
+        id S1728509AbgFHXJs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:09:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6C3C208A9;
-        Mon,  8 Jun 2020 23:09:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F6B0208FE;
+        Mon,  8 Jun 2020 23:09:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657791;
-        bh=8M0BVirU0WrdSQ2GntXLcUZw8QqQhLkv8Jmputer5H8=;
+        s=default; t=1591657787;
+        bh=jLox+8Gi6bC9/N3l0vacC+fK6yX3qEtgPqcMiIXdWZg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2MPO/xMadygj3Oucc7Z/n43f5sfGEuxRZ5gQtpY5eOddO0RouDKD7LBQncH8/0R7A
-         TvmrUP2B3PpZBO5ks9WnBnRdJPpEoZTOJ/h2yQsSVdoiOwypztygig4o09g1XZhp11
-         KzR+fmnrGAsVod9KrDmIaSawTu4E2RD88ZbFardY=
+        b=nMRFeyMkQrhgT48q24DKEP0czU89K2T65O+/c8kW3xEnN9tuZMLJ0ZonwdymA2J7O
+         Eq4ZziMRzJUxcZdnZygO15OD4+6xdETi8YoEPCnXTZ7CLTXyNLY8wU8RcOTvAR6njx
+         mHd2Ip2E7+NzqHwl2MZVYWXRh36A1SDH2Jry03PE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
-        linux-mips@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 171/274] mips: cm: Fix an invalid error code of INTVN_*_ERR
-Date:   Mon,  8 Jun 2020 19:04:24 -0400
-Message-Id: <20200608230607.3361041-171-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 168/274] dsa: sja1105: dynamically allocate stats structure
+Date:   Mon,  8 Jun 2020 19:04:21 -0400
+Message-Id: <20200608230607.3361041-168-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -65,51 +59,196 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 8a0efb8b101665a843205eab3d67ab09cb2d9a8d ]
+[ Upstream commit ae1804de93f6f1626906567ae7deec8e0111259d ]
 
-Commit 3885c2b463f6 ("MIPS: CM: Add support for reporting CM cache
-errors") adds cm2_causes[] array with map of error type ID and
-pointers to the short description string. There is a mistake in
-the table, since according to MIPS32 manual CM2_ERROR_TYPE = {17,18}
-correspond to INTVN_WR_ERR and INTVN_RD_ERR, while the table
-claims they have {0x17,0x18} codes. This is obviously hex-dec
-copy-paste bug. Moreover codes {0x18 - 0x1a} indicate L2 ECC errors.
+The addition of sja1105_port_status_ether structure into the
+statistics causes the frame size to go over the warning limit:
 
-Fixes: 3885c2b463f6 ("MIPS: CM: Add support for reporting CM cache errors")
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-pm@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+drivers/net/dsa/sja1105/sja1105_ethtool.c:421:6: error: stack frame size of 1104 bytes in function 'sja1105_get_ethtool_stats' [-Werror,-Wframe-larger-than=]
+
+Use dynamic allocation to avoid this.
+
+Fixes: 336aa67bd027 ("net: dsa: sja1105: show more ethtool statistics counters for P/Q/R/S")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/kernel/mips-cm.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/dsa/sja1105/sja1105_ethtool.c | 144 +++++++++++-----------
+ 1 file changed, 74 insertions(+), 70 deletions(-)
 
-diff --git a/arch/mips/kernel/mips-cm.c b/arch/mips/kernel/mips-cm.c
-index cdb93ed91cde..361bfc91a0e6 100644
---- a/arch/mips/kernel/mips-cm.c
-+++ b/arch/mips/kernel/mips-cm.c
-@@ -119,9 +119,9 @@ static char *cm2_causes[32] = {
- 	"COH_RD_ERR", "MMIO_WR_ERR", "MMIO_RD_ERR", "0x07",
- 	"0x08", "0x09", "0x0a", "0x0b",
- 	"0x0c", "0x0d", "0x0e", "0x0f",
--	"0x10", "0x11", "0x12", "0x13",
--	"0x14", "0x15", "0x16", "INTVN_WR_ERR",
--	"INTVN_RD_ERR", "0x19", "0x1a", "0x1b",
-+	"0x10", "INTVN_WR_ERR", "INTVN_RD_ERR", "0x13",
-+	"0x14", "0x15", "0x16", "0x17",
-+	"0x18", "0x19", "0x1a", "0x1b",
- 	"0x1c", "0x1d", "0x1e", "0x1f"
- };
+diff --git a/drivers/net/dsa/sja1105/sja1105_ethtool.c b/drivers/net/dsa/sja1105/sja1105_ethtool.c
+index d742ffcbfce9..709f035055c5 100644
+--- a/drivers/net/dsa/sja1105/sja1105_ethtool.c
++++ b/drivers/net/dsa/sja1105/sja1105_ethtool.c
+@@ -421,92 +421,96 @@ static char sja1105pqrs_extra_port_stats[][ETH_GSTRING_LEN] = {
+ void sja1105_get_ethtool_stats(struct dsa_switch *ds, int port, u64 *data)
+ {
+ 	struct sja1105_private *priv = ds->priv;
+-	struct sja1105_port_status status;
++	struct sja1105_port_status *status;
+ 	int rc, i, k = 0;
  
+-	memset(&status, 0, sizeof(status));
++	status = kzalloc(sizeof(*status), GFP_KERNEL);
++	if (!status)
++		goto out;
+ 
+-	rc = sja1105_port_status_get(priv, &status, port);
++	rc = sja1105_port_status_get(priv, status, port);
+ 	if (rc < 0) {
+ 		dev_err(ds->dev, "Failed to read port %d counters: %d\n",
+ 			port, rc);
+-		return;
++		goto out;
+ 	}
+ 	memset(data, 0, ARRAY_SIZE(sja1105_port_stats) * sizeof(u64));
+-	data[k++] = status.mac.n_runt;
+-	data[k++] = status.mac.n_soferr;
+-	data[k++] = status.mac.n_alignerr;
+-	data[k++] = status.mac.n_miierr;
+-	data[k++] = status.mac.typeerr;
+-	data[k++] = status.mac.sizeerr;
+-	data[k++] = status.mac.tctimeout;
+-	data[k++] = status.mac.priorerr;
+-	data[k++] = status.mac.nomaster;
+-	data[k++] = status.mac.memov;
+-	data[k++] = status.mac.memerr;
+-	data[k++] = status.mac.invtyp;
+-	data[k++] = status.mac.intcyov;
+-	data[k++] = status.mac.domerr;
+-	data[k++] = status.mac.pcfbagdrop;
+-	data[k++] = status.mac.spcprior;
+-	data[k++] = status.mac.ageprior;
+-	data[k++] = status.mac.portdrop;
+-	data[k++] = status.mac.lendrop;
+-	data[k++] = status.mac.bagdrop;
+-	data[k++] = status.mac.policeerr;
+-	data[k++] = status.mac.drpnona664err;
+-	data[k++] = status.mac.spcerr;
+-	data[k++] = status.mac.agedrp;
+-	data[k++] = status.hl1.n_n664err;
+-	data[k++] = status.hl1.n_vlanerr;
+-	data[k++] = status.hl1.n_unreleased;
+-	data[k++] = status.hl1.n_sizeerr;
+-	data[k++] = status.hl1.n_crcerr;
+-	data[k++] = status.hl1.n_vlnotfound;
+-	data[k++] = status.hl1.n_ctpolerr;
+-	data[k++] = status.hl1.n_polerr;
+-	data[k++] = status.hl1.n_rxfrm;
+-	data[k++] = status.hl1.n_rxbyte;
+-	data[k++] = status.hl1.n_txfrm;
+-	data[k++] = status.hl1.n_txbyte;
+-	data[k++] = status.hl2.n_qfull;
+-	data[k++] = status.hl2.n_part_drop;
+-	data[k++] = status.hl2.n_egr_disabled;
+-	data[k++] = status.hl2.n_not_reach;
++	data[k++] = status->mac.n_runt;
++	data[k++] = status->mac.n_soferr;
++	data[k++] = status->mac.n_alignerr;
++	data[k++] = status->mac.n_miierr;
++	data[k++] = status->mac.typeerr;
++	data[k++] = status->mac.sizeerr;
++	data[k++] = status->mac.tctimeout;
++	data[k++] = status->mac.priorerr;
++	data[k++] = status->mac.nomaster;
++	data[k++] = status->mac.memov;
++	data[k++] = status->mac.memerr;
++	data[k++] = status->mac.invtyp;
++	data[k++] = status->mac.intcyov;
++	data[k++] = status->mac.domerr;
++	data[k++] = status->mac.pcfbagdrop;
++	data[k++] = status->mac.spcprior;
++	data[k++] = status->mac.ageprior;
++	data[k++] = status->mac.portdrop;
++	data[k++] = status->mac.lendrop;
++	data[k++] = status->mac.bagdrop;
++	data[k++] = status->mac.policeerr;
++	data[k++] = status->mac.drpnona664err;
++	data[k++] = status->mac.spcerr;
++	data[k++] = status->mac.agedrp;
++	data[k++] = status->hl1.n_n664err;
++	data[k++] = status->hl1.n_vlanerr;
++	data[k++] = status->hl1.n_unreleased;
++	data[k++] = status->hl1.n_sizeerr;
++	data[k++] = status->hl1.n_crcerr;
++	data[k++] = status->hl1.n_vlnotfound;
++	data[k++] = status->hl1.n_ctpolerr;
++	data[k++] = status->hl1.n_polerr;
++	data[k++] = status->hl1.n_rxfrm;
++	data[k++] = status->hl1.n_rxbyte;
++	data[k++] = status->hl1.n_txfrm;
++	data[k++] = status->hl1.n_txbyte;
++	data[k++] = status->hl2.n_qfull;
++	data[k++] = status->hl2.n_part_drop;
++	data[k++] = status->hl2.n_egr_disabled;
++	data[k++] = status->hl2.n_not_reach;
+ 
+ 	if (priv->info->device_id == SJA1105E_DEVICE_ID ||
+ 	    priv->info->device_id == SJA1105T_DEVICE_ID)
+-		return;
++		goto out;;
+ 
+ 	memset(data + k, 0, ARRAY_SIZE(sja1105pqrs_extra_port_stats) *
+ 			sizeof(u64));
+ 	for (i = 0; i < 8; i++) {
+-		data[k++] = status.hl2.qlevel_hwm[i];
+-		data[k++] = status.hl2.qlevel[i];
++		data[k++] = status->hl2.qlevel_hwm[i];
++		data[k++] = status->hl2.qlevel[i];
+ 	}
+-	data[k++] = status.ether.n_drops_nolearn;
+-	data[k++] = status.ether.n_drops_noroute;
+-	data[k++] = status.ether.n_drops_ill_dtag;
+-	data[k++] = status.ether.n_drops_dtag;
+-	data[k++] = status.ether.n_drops_sotag;
+-	data[k++] = status.ether.n_drops_sitag;
+-	data[k++] = status.ether.n_drops_utag;
+-	data[k++] = status.ether.n_tx_bytes_1024_2047;
+-	data[k++] = status.ether.n_tx_bytes_512_1023;
+-	data[k++] = status.ether.n_tx_bytes_256_511;
+-	data[k++] = status.ether.n_tx_bytes_128_255;
+-	data[k++] = status.ether.n_tx_bytes_65_127;
+-	data[k++] = status.ether.n_tx_bytes_64;
+-	data[k++] = status.ether.n_tx_mcast;
+-	data[k++] = status.ether.n_tx_bcast;
+-	data[k++] = status.ether.n_rx_bytes_1024_2047;
+-	data[k++] = status.ether.n_rx_bytes_512_1023;
+-	data[k++] = status.ether.n_rx_bytes_256_511;
+-	data[k++] = status.ether.n_rx_bytes_128_255;
+-	data[k++] = status.ether.n_rx_bytes_65_127;
+-	data[k++] = status.ether.n_rx_bytes_64;
+-	data[k++] = status.ether.n_rx_mcast;
+-	data[k++] = status.ether.n_rx_bcast;
++	data[k++] = status->ether.n_drops_nolearn;
++	data[k++] = status->ether.n_drops_noroute;
++	data[k++] = status->ether.n_drops_ill_dtag;
++	data[k++] = status->ether.n_drops_dtag;
++	data[k++] = status->ether.n_drops_sotag;
++	data[k++] = status->ether.n_drops_sitag;
++	data[k++] = status->ether.n_drops_utag;
++	data[k++] = status->ether.n_tx_bytes_1024_2047;
++	data[k++] = status->ether.n_tx_bytes_512_1023;
++	data[k++] = status->ether.n_tx_bytes_256_511;
++	data[k++] = status->ether.n_tx_bytes_128_255;
++	data[k++] = status->ether.n_tx_bytes_65_127;
++	data[k++] = status->ether.n_tx_bytes_64;
++	data[k++] = status->ether.n_tx_mcast;
++	data[k++] = status->ether.n_tx_bcast;
++	data[k++] = status->ether.n_rx_bytes_1024_2047;
++	data[k++] = status->ether.n_rx_bytes_512_1023;
++	data[k++] = status->ether.n_rx_bytes_256_511;
++	data[k++] = status->ether.n_rx_bytes_128_255;
++	data[k++] = status->ether.n_rx_bytes_65_127;
++	data[k++] = status->ether.n_rx_bytes_64;
++	data[k++] = status->ether.n_rx_mcast;
++	data[k++] = status->ether.n_rx_bcast;
++out:
++	kfree(status);
+ }
+ 
+ void sja1105_get_strings(struct dsa_switch *ds, int port,
 -- 
 2.25.1
 
