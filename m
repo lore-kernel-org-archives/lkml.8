@@ -7,45 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C6C4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C9F6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DDB52078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:33:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56D2B2072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:33:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662814;
-	bh=Ej8mWoOChq7PjXcObSOQxnaN6N39Bk2hipAMIBDrJSI=;
+	s=default; t=1591662821;
+	bh=REDsuEysCkGozpy/tAflcxRA3nXs5g++jF7F2KLZaHI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hHpfC1lNynHafevZKgfP2ifRtXoTH4PNlg5k900l+9wuXj+v8cGehFI0LXqERdaik
-	 PzOG9aczYanMDuSr0uQMwHlcb5lriT+oU7evuTDXHz6ajTtWzTp45gULT7NeDRV6Co
-	 HUCUak7cd51eT4Js/DJTdozH5p3q2ATbqIVb7gDM=
+	b=Y09daRhcY9SdZwquDGKc+xam2FRKiKBPSmGV2h1UV+PTVc9fwqHKxbLL/N3IBaK9X
+	 quWIf2i/Ps06YAmjmwbrMxXCmsBObOs26PyZqNyNXuo21xfAqP8JHVPTyBftVdtASG
+	 xvWeE90VKdG67xumi0vuMScXB0PT9cLGLcv9s0Bg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730321AbgFIAdd (ORCPT
+        id S1732805AbgFIAdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:33:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35534 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:33:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729922AbgFHXOz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:14:55 -0400
+        id S1729921AbgFHXOy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:14:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7811A21775;
-        Mon,  8 Jun 2020 23:14:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C11FA216FD;
+        Mon,  8 Jun 2020 23:14:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658093;
-        bh=Ej8mWoOChq7PjXcObSOQxnaN6N39Bk2hipAMIBDrJSI=;
+        s=default; t=1591658092;
+        bh=REDsuEysCkGozpy/tAflcxRA3nXs5g++jF7F2KLZaHI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XV6CuLDK3U+kNyRhajSHPeTkU9OM8M64DPGGQk1ZAekVPhzA4ndJlq0cmkxcCUe4n
-         D91NDw7PjBUl/4NaxZ/3/9TUk/gZQkT9EP5AbEF0YppAGFXUbeE1qjOBnb7vTMjm3N
-         9phGmybEIQy7xAlCZtoTrRo2g7iHaattevzop+qo=
+        b=eyB+LWtf2Wpc9hQKGLhZ9l6PSY/3eoHvzFsN+ZQgd0J8H5NGtbXLpPFUj7q3YKxD/
+         uLQYyx9Z6Mr6ElAm710/3J+zo1t9i2RX38LTRb5zzGYxvEwiM60Ijt+zGkNAKaR559
+         IDItDmr2HEFmB9DHVW/X9gDzMh+TwOHUVk2pAlyY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kailang Yang <kailang@realtek.com>, Takashi Iwai <tiwai@suse.de>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.6 135/606] ALSA: hda/realtek - Add supported new mute Led for HP
-Date:   Mon,  8 Jun 2020 19:04:20 -0400
-Message-Id: <20200608231211.3363633-135-sashal@kernel.org>
+Cc:     Aymeric Agon-Rambosson <aymeric.agon@yandex.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Kieran Bingham <kbingham@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Nikolay Borisov <n.borisov.lkml@gmail.com>,
+        Jackie Liu <liuyun01@kylinos.cn>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 134/606] scripts/gdb: repair rb_first() and rb_last()
+Date:   Mon,  8 Jun 2020 19:04:19 -0400
+Message-Id: <20200608231211.3363633-134-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -58,147 +67,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kailang Yang <kailang@realtek.com>
+From: Aymeric Agon-Rambosson <aymeric.agon@yandex.com>
 
-[ Upstream commit 431e76c3edd76d84a0ed1eb81a286b2ddecc5ee4 ]
+[ Upstream commit 50e36be1fb9572b2e4f2753340bdce3116bf2ce7 ]
 
-HP Note Book supported new mute Led.
-Hardware PIN was not enough to meet old LED rule.
-JD2 to control playback mute led.
-GPO3 to control capture mute led.
-(ALC285 didn't control GPO3 via verb command)
-This two PIN just could control by COEF registers.
+The current implementations of the rb_first() and rb_last() gdb
+functions have a variable that references itself in its instanciation,
+which causes the function to throw an error if a specific condition on
+the argument is met.  The original author rather intended to reference
+the argument and made a typo.  Referring the argument instead makes the
+function work as intended.
 
-[ corrected typos by tiwai ]
-
-Signed-off-by: Kailang Yang <kailang@realtek.com>
-Link: https://lore.kernel.org/r/6741211598ba499687362ff2aa30626b@realtek.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Aymeric Agon-Rambosson <aymeric.agon@yandex.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Cc: Jan Kiszka <jan.kiszka@siemens.com>
+Cc: Kieran Bingham <kbingham@kernel.org>
+Cc: Douglas Anderson <dianders@chromium.org>
+Cc: Nikolay Borisov <n.borisov.lkml@gmail.com>
+Cc: Jackie Liu <liuyun01@kylinos.cn>
+Cc: Jason Wessel <jason.wessel@windriver.com>
+Link: http://lkml.kernel.org/r/20200427051029.354840-1-aymeric.agon@yandex.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c | 81 +++++++++++++++++++++++++++++++++++
- 1 file changed, 81 insertions(+)
+ scripts/gdb/linux/rbtree.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index d73c814358bf..44fbd5d2d89c 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -86,6 +86,14 @@ struct alc_spec {
+diff --git a/scripts/gdb/linux/rbtree.py b/scripts/gdb/linux/rbtree.py
+index 39db889b874c..c4b991607917 100644
+--- a/scripts/gdb/linux/rbtree.py
++++ b/scripts/gdb/linux/rbtree.py
+@@ -12,7 +12,7 @@ rb_node_type = utils.CachedType("struct rb_node")
  
- 	unsigned int gpio_mute_led_mask;
- 	unsigned int gpio_mic_led_mask;
-+	unsigned int mute_led_coef_idx;
-+	unsigned int mute_led_coefbit_mask;
-+	unsigned int mute_led_coefbit_on;
-+	unsigned int mute_led_coefbit_off;
-+	unsigned int mic_led_coef_idx;
-+	unsigned int mic_led_coefbit_mask;
-+	unsigned int mic_led_coefbit_on;
-+	unsigned int mic_led_coefbit_off;
+ def rb_first(root):
+     if root.type == rb_root_type.get_type():
+-        node = node.address.cast(rb_root_type.get_type().pointer())
++        node = root.address.cast(rb_root_type.get_type().pointer())
+     elif root.type != rb_root_type.get_type().pointer():
+         raise gdb.GdbError("Must be struct rb_root not {}".format(root.type))
  
- 	hda_nid_t headset_mic_pin;
- 	hda_nid_t headphone_mic_pin;
-@@ -4182,6 +4190,73 @@ static void alc280_fixup_hp_gpio4(struct hda_codec *codec,
- 	}
- }
+@@ -28,7 +28,7 @@ def rb_first(root):
  
-+/* update mute-LED according to the speaker mute state via COEF bit */
-+static void alc_fixup_mute_led_coefbit_hook(void *private_data, int enabled)
-+{
-+	struct hda_codec *codec = private_data;
-+	struct alc_spec *spec = codec->spec;
-+
-+	if (spec->mute_led_polarity)
-+		enabled = !enabled;
-+
-+	/* temporarily power up/down for setting COEF bit */
-+	enabled ? alc_update_coef_idx(codec, spec->mute_led_coef_idx,
-+		spec->mute_led_coefbit_mask, spec->mute_led_coefbit_off) :
-+		  alc_update_coef_idx(codec, spec->mute_led_coef_idx,
-+		spec->mute_led_coefbit_mask, spec->mute_led_coefbit_on);
-+}
-+
-+static void alc285_fixup_hp_mute_led_coefbit(struct hda_codec *codec,
-+					  const struct hda_fixup *fix,
-+					  int action)
-+{
-+	struct alc_spec *spec = codec->spec;
-+
-+	if (action == HDA_FIXUP_ACT_PRE_PROBE) {
-+		spec->mute_led_polarity = 0;
-+		spec->mute_led_coef_idx = 0x0b;
-+		spec->mute_led_coefbit_mask = 1<<3;
-+		spec->mute_led_coefbit_on = 1<<3;
-+		spec->mute_led_coefbit_off = 0;
-+		spec->gen.vmaster_mute.hook = alc_fixup_mute_led_coefbit_hook;
-+		spec->gen.vmaster_mute_enum = 1;
-+	}
-+}
-+
-+/* turn on/off mic-mute LED per capture hook by coef bit */
-+static void alc_hp_cap_micmute_update(struct hda_codec *codec)
-+{
-+	struct alc_spec *spec = codec->spec;
-+
-+	if (spec->gen.micmute_led.led_value)
-+		alc_update_coef_idx(codec, spec->mic_led_coef_idx,
-+			spec->mic_led_coefbit_mask, spec->mic_led_coefbit_on);
-+	else
-+		alc_update_coef_idx(codec, spec->mic_led_coef_idx,
-+			spec->mic_led_coefbit_mask, spec->mic_led_coefbit_off);
-+}
-+
-+static void alc285_fixup_hp_coef_micmute_led(struct hda_codec *codec,
-+				const struct hda_fixup *fix, int action)
-+{
-+	struct alc_spec *spec = codec->spec;
-+
-+	if (action == HDA_FIXUP_ACT_PRE_PROBE) {
-+		spec->mic_led_coef_idx = 0x19;
-+		spec->mic_led_coefbit_mask = 1<<13;
-+		spec->mic_led_coefbit_on = 1<<13;
-+		spec->mic_led_coefbit_off = 0;
-+		snd_hda_gen_add_micmute_led(codec, alc_hp_cap_micmute_update);
-+	}
-+}
-+
-+static void alc285_fixup_hp_mute_led(struct hda_codec *codec,
-+				const struct hda_fixup *fix, int action)
-+{
-+	alc285_fixup_hp_mute_led_coefbit(codec, fix, action);
-+	alc285_fixup_hp_coef_micmute_led(codec, fix, action);
-+}
-+
- #if IS_REACHABLE(CONFIG_INPUT)
- static void gpio2_mic_hotkey_event(struct hda_codec *codec,
- 				   struct hda_jack_callback *event)
-@@ -5980,6 +6055,7 @@ enum {
- 	ALC294_FIXUP_ASUS_HPE,
- 	ALC294_FIXUP_ASUS_COEF_1B,
- 	ALC285_FIXUP_HP_GPIO_LED,
-+	ALC285_FIXUP_HP_MUTE_LED,
- };
+ def rb_last(root):
+     if root.type == rb_root_type.get_type():
+-        node = node.address.cast(rb_root_type.get_type().pointer())
++        node = root.address.cast(rb_root_type.get_type().pointer())
+     elif root.type != rb_root_type.get_type().pointer():
+         raise gdb.GdbError("Must be struct rb_root not {}".format(root.type))
  
- static const struct hda_fixup alc269_fixups[] = {
-@@ -7128,6 +7204,10 @@ static const struct hda_fixup alc269_fixups[] = {
- 		.type = HDA_FIXUP_FUNC,
- 		.v.func = alc285_fixup_hp_gpio_led,
- 	},
-+	[ALC285_FIXUP_HP_MUTE_LED] = {
-+		.type = HDA_FIXUP_FUNC,
-+		.v.func = alc285_fixup_hp_mute_led,
-+	},
- };
- 
- static const struct snd_pci_quirk alc269_fixup_tbl[] = {
-@@ -7273,6 +7353,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x103c, 0x8497, "HP Envy x360", ALC269_FIXUP_HP_MUTE_LED_MIC3),
- 	SND_PCI_QUIRK(0x103c, 0x84e7, "HP Pavilion 15", ALC269_FIXUP_HP_MUTE_LED_MIC3),
- 	SND_PCI_QUIRK(0x103c, 0x8736, "HP", ALC285_FIXUP_HP_GPIO_LED),
-+	SND_PCI_QUIRK(0x103c, 0x877a, "HP", ALC285_FIXUP_HP_MUTE_LED),
- 	SND_PCI_QUIRK(0x1043, 0x103e, "ASUS X540SA", ALC256_FIXUP_ASUS_MIC),
- 	SND_PCI_QUIRK(0x1043, 0x103f, "ASUS TX300", ALC282_FIXUP_ASUS_TX300),
- 	SND_PCI_QUIRK(0x1043, 0x106d, "Asus K53BE", ALC269_FIXUP_LIMIT_INT_MIC_BOOST),
 -- 
 2.25.1
 
