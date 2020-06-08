@@ -2,225 +2,173 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2040CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC46C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 19:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E37B12074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:59:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93DCA2074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 19:00:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="XKzY/dMo"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OQllnKXy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726409AbgFHS7h (ORCPT
+        id S1726424AbgFHTAR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 14:59:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55846 "EHLO
+        Mon, 8 Jun 2020 15:00:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbgFHS7f (ORCPT
+        with ESMTP id S1726197AbgFHTAP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 14:59:35 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E119EC08C5C2
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 11:59:34 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id z1so15614293qtn.2
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 11:59:34 -0700 (PDT)
+        Mon, 8 Jun 2020 15:00:15 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46D1EC08C5C2
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 12:00:14 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id ga6so230145pjb.1
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 12:00:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=1LNXy0gulshDF6Am2ORMrlABkF4RBeFdpjJ6l6ghlxc=;
-        b=XKzY/dMoRNR8g2sNEYdfjb4hTfUUulqOlT+yf47tp2KJzcr32jQMJqtK5NJop2cINl
-         9Ebd8hsMhE+MWHwkXW/PjQHzQNVi+QxoJYp5ggn+JZbE6bIhHzJaCbg54yeBdVYaKhiU
-         GLOT0fN/40VD6Gf5soYESTPoFMs5u410zhTCtMMxSiTNAF1IeqSGJW4F19rGX+ddm8Lh
-         2XsHczdkDeRkyYoLm+k6ElJtv/2AnJKWR7j2B8380LonwThSgmeNaioKv+cKsl8yX/fK
-         v69JfJPGaD79z/9nCqUM3LDP+XzmX2bnG5R8IMygXAh/DNaCOzAO7QTc8Jl1vn0W6Czd
-         fQRA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=o1g6czJz9uyGSzG+TlXDs+6TvCXn/pRZ6dFmlQhgI+4=;
+        b=OQllnKXyQLsac4e6sNpZivEZe2Tcqk3+0VTPyrpp3ygxsr1wjATZuEc5d3SGXI/hGW
+         BgpshDbinwQ1cukNWOYQgHhh7JhVERxD0JNu9OjaIfnKIc7zGkzb++vnCDtR+Ek8VJTe
+         3VBQPCpZg3O39NOdoKJP1jaegGhT+KYjlmHa0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=1LNXy0gulshDF6Am2ORMrlABkF4RBeFdpjJ6l6ghlxc=;
-        b=PV4w4V2LHgwfQeFYrhhzaBD7oXzhICAFF0+DXUOpDPwZPA/wzElh501yXkOV3R8joA
-         wuq2VGTqvhbQwhm64xj85eXmD4j4co1sfb8ad4eN6eGUkfQFcnpjpUeaalUU6+IUy2w3
-         UKeT6DcX7AscKtbOMmeOczmKe78e9FJolj2IlzzAv4rbTQNNiQrGqcOV1mTjqY7AP88B
-         XjirdFTRkbzrOgtdzugT1tYQNGJYsZq2nw77NJHQR/DP8GTQ+Hzdf3iGWg3rl2SsL5sY
-         zEXOwsK5rtOPp1E7OrJvoYVKjxVh7v3+VbSXi40XABsAoobnyNRdKFH3yka2VngE0VFB
-         1eQA==
-X-Gm-Message-State: AOAM533Qu0/8UaqwKc2tUlzUNho7rqhNGBgZUHxBqiwX8A3yXOYhIu7M
-        1toLpdDM7YmKc6A05LfgSQfSwg==
-X-Google-Smtp-Source: ABdhPJzsZQLMeKY0DCqtO/KRhmtkfC5lUzy0bMjqjQup+oWO9tomqEZelGqLBLNBAwZlmugb1j09Jg==
-X-Received: by 2002:ac8:7350:: with SMTP id q16mr24420939qtp.74.1591642773976;
-        Mon, 08 Jun 2020 11:59:33 -0700 (PDT)
-Received: from skullcanyon (marriott-chateau-champlain-montreal.sites.intello.com. [66.171.169.34])
-        by smtp.gmail.com with ESMTPSA id z194sm7357905qkb.73.2020.06.08.11.59.32
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=o1g6czJz9uyGSzG+TlXDs+6TvCXn/pRZ6dFmlQhgI+4=;
+        b=erYxInJCeb3je1lof9ke1cy7VZuzVC0ipuQxgueJEYlZlCkQ2SAkUGS1gUSeaqRTa5
+         tj3c2vtRe7KfN4SKA5dv+8CkyQKIY44BmIs/7yCCBmVD3AZf8KDyy1PlW073dJsJOSTj
+         jkP1qF1hbIfpGBWgLF149eRbrNuECLt21Gk8KXY64pf0X1BqWdHZz8ORBXKWVmEvsWEl
+         o1ofb3i8l2p0fqoKaME6EL1mW0LREQKDBjCUSOPScB7s2uH3D88VIPHy5eR8qnVgECZF
+         f2dDwHhBkViqXMg4DmrjV0XYD4ZfOqbNH6nZrHJ68xSamu5RyefBF6Iiyl5g3S/47+T2
+         2vOA==
+X-Gm-Message-State: AOAM532Urdsi/XUChfd17yLcf+RU7qkzipuT2/O8c0wRUfvDSEM7wS1v
+        2sco3hVJDq+IG61fTjOyHI9O7w==
+X-Google-Smtp-Source: ABdhPJx9ZLqxNSxTftGyNWQbg1w3mCMhfEnWOhyHRe0pYa4uOtSqzbxIToANYYs0JtYiBWVsUp42rQ==
+X-Received: by 2002:a17:90b:310e:: with SMTP id gc14mr690238pjb.35.1591642813749;
+        Mon, 08 Jun 2020 12:00:13 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id d2sm7874555pfc.7.2020.06.08.12.00.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 11:59:33 -0700 (PDT)
-Message-ID: <f6d35521b61da395528d6dd1164a9af6c3acd664.camel@ndufresne.ca>
-Subject: Re: [PATCH 1/5] media: videodev2: add Compressed Framebuffer pixel
- formats
-From:   Nicolas Dufresne <nicolas@ndufresne.ca>
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Cc:     linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Maxime Jourdan <mjourdan@baylibre.com>,
-        Tomasz Figa <tfiga@chromium.org>
-Date:   Mon, 08 Jun 2020 14:59:32 -0400
-In-Reply-To: <2a0db0a4-9d04-f20c-39d8-ff25e07e64b7@xs4all.nl>
-References: <20200604135317.9235-1-narmstrong@baylibre.com>
-         <20200604135317.9235-2-narmstrong@baylibre.com>
-         <02aa06fd8397b77c9a75d3a8399cb55d3b4d39c1.camel@ndufresne.ca>
-         <4d22ff40-11ac-c77a-564d-af9a678f23af@baylibre.com>
-         <a15dea55-3ca4-2a65-5c56-6c1edd2de405@xs4all.nl>
-         <a4c5ae79-1d4d-4c1e-1535-c6c8b02d4b6f@baylibre.com>
-         <2a0db0a4-9d04-f20c-39d8-ff25e07e64b7@xs4all.nl>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
+        Mon, 08 Jun 2020 12:00:12 -0700 (PDT)
+Date:   Mon, 8 Jun 2020 12:00:11 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     kernel test robot <rong.a.chen@intel.com>
+Cc:     clang-built-linux@googlegroups.com, LKP <lkp@lists.01.org>,
+        "Linus, Torvalds," <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: 0887a7ebc9 ("ubsan: add trap instrumentation option"): BUG:
+ kernel hang in early-boot stage, last printk: early console in setup code
+Message-ID: <202006081144.933995E4@keescook>
+References: <20200608060407.GX12456@shao2-debian>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200608060407.GX12456@shao2-debian>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le lundi 08 juin 2020 à 16:43 +0200, Hans Verkuil a écrit :
-> On 08/06/2020 16:14, Neil Armstrong wrote:
-> > On 08/06/2020 11:26, Hans Verkuil wrote:
-> > > On 08/06/2020 10:16, Neil Armstrong wrote:
-> > > > Hi Nicolas,
-> > > > 
-> > > > On 05/06/2020 17:35, Nicolas Dufresne wrote:
-> > > > > Le jeudi 04 juin 2020 à 15:53 +0200, Neil Armstrong a écrit :
-> > > > > > From: Maxime Jourdan <mjourdan@baylibre.com>
-> > > > > > 
-> > > > > > Add two generic Compressed Framebuffer pixel formats to be used
-> > > > > > with a modifier when imported back in another subsystem like DRM/KMS.
-> > > > > > 
-> > > > > > These pixel formats represents generic 8bits and 10bits compressed buffers
-> > > > > > with a vendor specific layout.
-> > > > > > 
-> > > > > > These are aligned with the DRM_FORMAT_YUV420_8BIT and DRM_FORMAT_YUV420_10BIT
-> > > > > > used to describe the underlying compressed buffers used for ARM Framebuffer
-> > > > > > Compression. In the Amlogic case, the compression is different but the
-> > > > > > underlying buffer components is the same.
-> > > > > > 
-> > > > > > Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
-> > > > > > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> > > > > > ---
-> > > > > >  drivers/media/v4l2-core/v4l2-ioctl.c | 2 ++
-> > > > > >  include/uapi/linux/videodev2.h       | 9 +++++++++
-> > > > > >  2 files changed, 11 insertions(+)
-> > > > > > 
-> > > > > > diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
-> > > > > > index 2322f08a98be..8f14adfd5bc5 100644
-> > > > > > --- a/drivers/media/v4l2-core/v4l2-ioctl.c
-> > > > > > +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-> > > > > > @@ -1447,6 +1447,8 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
-> > > > > >  		case V4L2_PIX_FMT_S5C_UYVY_JPG:	descr = "S5C73MX interleaved UYVY/JPEG"; break;
-> > > > > >  		case V4L2_PIX_FMT_MT21C:	descr = "Mediatek Compressed Format"; break;
-> > > > > >  		case V4L2_PIX_FMT_SUNXI_TILED_NV12: descr = "Sunxi Tiled NV12 Format"; break;
-> > > > > > +		case V4L2_PIX_FMT_YUV420_8BIT:	descr = "Compressed YUV 4:2:0 8-bit Format"; break;
-> > > > > > +		case V4L2_PIX_FMT_YUV420_10BIT:	descr = "Compressed YUV 4:2:0 10-bit Format"; break;
-> > 
-> > [..]
-> > 
-> > > > > I'll remind that the modifier implementation has great value and is
-> > > > > much more scalable then the current V4L2 approach. There has been some
-> > > > > early proposal for this, maybe it's time to prioritize because this
-> > > > > list will starts growing with hundred or even thousands or format,
-> > > > > which is clearly indicated by the increase of modifier generator macro
-> > > > > on the DRM side.
-> > > > 
-> > > > Yes, but until the migration of drm_fourcc and v4l2 fourcc into a common one
-> > > > is decided, I'm stuck and this is the only intermediate solution I found.
-> > > 
-> > > We can safely assume that drm fourcc and v4l2 fourcc won't be merged.
-> > > 
-> > > There is too much divergence and not enough interest in creating common
-> > > fourccs.
-> > > 
-> > > But we *do* want to share the modifiers.
-> > > 
-> > > > We have a working solution with Boris's patchset with ext_fmt passing the
-> > > > modifier to user-space.
-> > > > 
-> > > > but anyway, since the goal is to merge the fourcc between DRM & V4L2, these YUV420_*BIT
-> > > > will still be needed if we pass the modifier with an extended format struct.
-> > > 
-> > > We tried merging fourccs but that ran into resistance. Frankly, I wouldn't
-> > > bother with this, it is much easier to just create a conversion table in the
-> > > kernel docs.
-> > > 
-> > > So don't block on this, I would really prefer if the ext_fmt series is picked
-> > > up again and rebased and reposted and then worked on. The stateless codec support
-> > > is taking less time (it's shaping up well) so there is more time to work on this.
-> > 
-> > Ok, I already starting discussing with Helen Koike about the ext_fnt re-spin.
-> > 
-> > Should I re-introduce different v4l2 pixfmt for these DRM YUV420_*BIT or I can keep this
-> > patch along the new ext_fmt and shared modifiers ?
-> 
-> So to be clear the DRM_FORMAT_YUV420_8BIT/10BIT fourccs define that this is a
-> buffer containing compressed YUV420 in 8 or 10 bit and the modifier tells userspace
-> which compression is used, right?
-> 
-> And we would add V4L2_PIX_FMT_YUV420_8BIT/_10BIT that, I assume, use the same
-> fourcc values as the DRM variants?
-> 
-> Since these fourccs are basically useless without V4L2 modifier support it would
-> only make sense in combination with the ext_fmt series.
+On Mon, Jun 08, 2020 at 02:04:08PM +0800, kernel test robot wrote:
+> The issue seems due to the lack of "-fsanitize-undefined-trap-on-error" in clang.
 
-I personally still think that adding these fourcc will just create a
-source of confusion and that fourcc should not be tried to be matched
-at the cost of tripling the already duplicated pixel formats. Userspace
-already need to implement translation anyway.
+Hm? No, that's supported in Clang (at least as far back as Clang 9.)
 
-On DRM side, new fourcc was not create for NV12+modifier, I don't see
-why planar YUV420 has to be different, with or without ext_fmt.
+> Greetings,
+> 
+> 0day kernel testing robot got the below dmesg and the first bad commit is
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> 
+> commit 0887a7ebc97770c7870abf3075a2e8cd502a7f52
+> Author:     Kees Cook <keescook@chromium.org>
+> AuthorDate: Mon Apr 6 20:12:27 2020 -0700
+> Commit:     Linus Torvalds <torvalds@linux-foundation.org>
+> CommitDate: Tue Apr 7 10:43:44 2020 -0700
+> 
+>     ubsan: add trap instrumentation option
 
-Nicolas
- 
-> 
-> Regards,
-> 
-> 	Hans
-> 
-> > Neil
-> > 
-> > > I believe we really need this since v4l2_buffer and v4l2_format are a real mess.
-> > > 
-> > > Regards,
-> > > 
-> > > 	Hans
-> > > 
-> > > > > >  		default:
-> > > > > >  			if (fmt->description[0])
-> > > > > >  				return;
-> > > > > > diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-> > > > > > index c3a1cf1c507f..90b9949acb8a 100644
-> > > > > > --- a/include/uapi/linux/videodev2.h
-> > > > > > +++ b/include/uapi/linux/videodev2.h
-> > > > > > @@ -705,6 +705,15 @@ struct v4l2_pix_format {
-> > > > > >  #define V4L2_PIX_FMT_FWHT     v4l2_fourcc('F', 'W', 'H', 'T') /* Fast Walsh Hadamard Transform (vicodec) */
-> > > > > >  #define V4L2_PIX_FMT_FWHT_STATELESS     v4l2_fourcc('S', 'F', 'W', 'H') /* Stateless FWHT (vicodec) */
-> > > > > >  
-> > > > > > +/*
-> > > > > > + * Compressed Luminance+Chrominance meta-formats
-> > > > > > + * In these formats, the component ordering is specified (Y, followed by U
-> > > > > > + * then V), but the exact Linear layout is undefined.
-> > > > > > + * These formats can only be used with a non-Linear modifier.
-> > > > > > + */
-> > > > > > +#define V4L2_PIX_FMT_YUV420_8BIT	v4l2_fourcc('Y', 'U', '0', '8') /* 1-plane YUV 4:2:0 8-bit */
-> > > > > > +#define V4L2_PIX_FMT_YUV420_10BIT	v4l2_fourcc('Y', 'U', '1', '0') /* 1-plane YUV 4:2:0 10-bit */
-> > > > > > +
-> > > > > >  /*  Vendor-specific formats   */
-> > > > > >  #define V4L2_PIX_FMT_CPIA1    v4l2_fourcc('C', 'P', 'I', 'A') /* cpia1 YUV */
-> > > > > >  #define V4L2_PIX_FMT_WNVA     v4l2_fourcc('W', 'N', 'V', 'A') /* Winnov hw compress */
-> > > > 
-> > > > [1] https://patchwork.freedesktop.org/series/73722/#rev7
-> > > > 
+In the randconfig, I see CONFIG_UBSAN_TRAP is enabled with lots of other
+UBSAN options. If you're not expecting the results, it's very likely the
+false positives in UBSAN are going to do bad things. :) This is "working
+as expected", as noted in the commit log quoted below.
 
+>     
+>     Patch series "ubsan: Split out bounds checker", v5.
+>     
+>     This splits out the bounds checker so it can be individually used.  This
+>     is enabled in Android and hopefully for syzbot.  Includes LKDTM tests for
+>     behavioral corner-cases (beyond just the bounds checker), and adjusts
+>     ubsan and kasan slightly for correct panic handling.
+>     
+>     This patch (of 6):
+>     
+>     The Undefined Behavior Sanitizer can operate in two modes: warning
+>     reporting mode via lib/ubsan.c handler calls, or trap mode, which uses
+>     __builtin_trap() as the handler.  Using lib/ubsan.c means the kernel image
+>     is about 5% larger (due to all the debugging text and reporting structures
+>     to capture details about the warning conditions).  Using the trap mode,
+>     the image size changes are much smaller, though at the loss of the
+>     "warning only" mode.
+>     
+>     In order to give greater flexibility to system builders that want minimal
+>     changes to image size and are prepared to deal with kernel code being
+>     aborted and potentially destabilizing the system, this introduces
+>     CONFIG_UBSAN_TRAP.  The resulting image sizes comparison:
+>     
+>        text    data     bss       dec       hex     filename
+>     19533663   6183037  18554956  44271656  2a38828 vmlinux.stock
+>     19991849   7618513  18874448  46484810  2c54d4a vmlinux.ubsan
+>     19712181   6284181  18366540  44362902  2a4ec96 vmlinux.ubsan-trap
+>     
+>     CONFIG_UBSAN=y:      image +4.8% (text +2.3%, data +18.9%)
+>     CONFIG_UBSAN_TRAP=y: image +0.2% (text +0.9%, data +1.6%)
+>     
+>     Additionally adjusts the CONFIG_UBSAN Kconfig help for clarity and removes
+>     the mention of non-existing boot param "ubsan_handle".
+
+If you're trying to _boot_ a randconfig, I suspect there are going to be
+a lot of surprises with UBSAN (in any mode) enabled. Right now, likely the
+least noisy of them all is UBSAN_BOUNDS, which was split out for fuzzers.
+
+FWIW, the dmesg appears to be catching a NULL pointer dereference
+(enabled via CONFIG_UBSAN_MISC):
+
+[    0.047646] UBSAN: Undefined behaviour in drivers/acpi/acpica/tbfadt.c:459:37
+[    0.047650] member access within null pointer of type 'struct acpi_table_fadt'
+[    0.047655] CPU: 0 PID: 0 Comm: swapper Not tainted 5.6.0-11597-g7baf219982281 #1
+[    0.047659] Call Trace:
+[    0.047676]  dump_stack+0x88/0xb9
+[    0.047684]  ? ubsan_prologue+0x21/0x46
+[    0.047689]  ? ubsan_type_mismatch_common+0x188/0x19e
+[    0.047695]  ? __ubsan_handle_type_mismatch_v1+0x45/0x4a
+[    0.047701]  ? acpi_tb_create_local_fadt+0xaa/0x435
+[    0.047706]  ? acpi_tb_parse_fadt+0x54/0xd4
+[    0.047712]  ? acpi_tb_parse_root_table+0x192/0x1bf
+[    0.047717]  ? acpi_table_init+0x3b/0x56
+[    0.047721]  ? acpi_boot_table_init+0xf/0x6e
+[    0.047726]  ? setup_arch+0x459/0x520
+[    0.047732]  ? start_kernel+0x5e/0x3ba
+[    0.047737]  ? secondary_startup_64+0xa4/0xb0
+
+I'm not sure how ACPI defines acpi_gbl_FADT though? There's no
+dereference...
+
+459:         if (acpi_gbl_FADT.header.length <= ACPI_FADT_V2_SIZE) {
+
+
+BTW, this report only contained 1 actual dmesg. There were two files with
+dmesg file names, but one of them was the gzipped reproduction steps again.
+
+-Kees
+
+-- 
+Kees Cook
