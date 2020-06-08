@@ -4,55 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B62C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD9AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38886206D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:34:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADDE020C09
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:35:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591659298;
-	bh=6kMPdUFE150+BlX703K5Ki/VlX6lvcj6VOQhqc0pvzY=;
+	s=default; t=1591659304;
+	bh=0Vp2LJtlSoEL3sF9zwbuRjicAB8CUEe7ntKtbbih9qc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nQM4time8Tsjx7tGGiM5GrFWw2OyL22vGrMrCfZwCtE8nDniybXrBUfSnvybdzrwo
-	 H4k1OG+KAs3Z+zrQay8X1KPqsf5V5WwJXMGve8FriQbUkGoGAaJbdeWrDeZGvg7nxn
-	 WBR/xbzdGCryH/k6EHtHSgcxBq0Cyhn65QLTuROY=
+	b=rDbSziIr/WPSKQ2t65itHMde5Yyo74H3dVAji2BK/WcxangfLHWqKDDF+RTS0yNst
+	 BuvjBMj5/gYfHa1s7MDE85EP9Euuge4yOi0U9HyLQyo2CBTqZNocaTj5RHNjBTCaW4
+	 fQmz81erkLSpWk9PU6FF6AvzI7xJ5sB85QAhB8vM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387678AbgFHXe4 (ORCPT
+        id S2387797AbgFHXe7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:34:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57782 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:34:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732213AbgFHX2X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:28:23 -0400
+        id S1731949AbgFHX2Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:28:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47E0B20814;
-        Mon,  8 Jun 2020 23:28:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1892620853;
+        Mon,  8 Jun 2020 23:28:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658902;
-        bh=6kMPdUFE150+BlX703K5Ki/VlX6lvcj6VOQhqc0pvzY=;
+        s=default; t=1591658904;
+        bh=0Vp2LJtlSoEL3sF9zwbuRjicAB8CUEe7ntKtbbih9qc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dwkaB8kjN/lD7Jd7gfrifbwz6YVsWs/KAicFdkAkQJjsp620bjodJ4+qHZqlNkhMV
-         BpCdJnPpH2biQH5usHLU9PbLEAncoAIeFGHLXuWLdsQzdlAJVHIN9u/dkWEsFfFbG3
-         7Zke3lBvSEwWTbJhVCVsP9jYjsb/G/+zSbFdadRc=
+        b=Wq2JR/iR6/LE1IZDBd6TmLUxHTsK1XxmWLZI6HG0QLQstv7JvNpABQunWz91QTBK1
+         xBgHo3RWA6CdBqQXzLQPq2+Qze1Dt7E5GU2Gf+qVPAHnDjCq+PPuX/gk2X0RjuqlLW
+         ifCu4sURsAdMfWgeV/fAmXMrPBWGFggRlhLcqkTU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
-        linux-mips@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 23/37] mips: cm: Fix an invalid error code of INTVN_*_ERR
-Date:   Mon,  8 Jun 2020 19:27:35 -0400
-Message-Id: <20200608232750.3370747-23-sashal@kernel.org>
+Cc:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 25/37] md: don't flush workqueue unconditionally in md_open
+Date:   Mon,  8 Jun 2020 19:27:37 -0400
+Message-Id: <20200608232750.3370747-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608232750.3370747-1-sashal@kernel.org>
 References: <20200608232750.3370747-1-sashal@kernel.org>
@@ -65,51 +59,161 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+From: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 
-[ Upstream commit 8a0efb8b101665a843205eab3d67ab09cb2d9a8d ]
+[ Upstream commit f6766ff6afff70e2aaf39e1511e16d471de7c3ae ]
 
-Commit 3885c2b463f6 ("MIPS: CM: Add support for reporting CM cache
-errors") adds cm2_causes[] array with map of error type ID and
-pointers to the short description string. There is a mistake in
-the table, since according to MIPS32 manual CM2_ERROR_TYPE = {17,18}
-correspond to INTVN_WR_ERR and INTVN_RD_ERR, while the table
-claims they have {0x17,0x18} codes. This is obviously hex-dec
-copy-paste bug. Moreover codes {0x18 - 0x1a} indicate L2 ECC errors.
+We need to check mddev->del_work before flush workqueu since the purpose
+of flush is to ensure the previous md is disappeared. Otherwise the similar
+deadlock appeared if LOCKDEP is enabled, it is due to md_open holds the
+bdev->bd_mutex before flush workqueue.
 
-Fixes: 3885c2b463f6 ("MIPS: CM: Add support for reporting CM cache errors")
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-pm@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+kernel: [  154.522645] ======================================================
+kernel: [  154.522647] WARNING: possible circular locking dependency detected
+kernel: [  154.522650] 5.6.0-rc7-lp151.27-default #25 Tainted: G           O
+kernel: [  154.522651] ------------------------------------------------------
+kernel: [  154.522653] mdadm/2482 is trying to acquire lock:
+kernel: [  154.522655] ffff888078529128 ((wq_completion)md_misc){+.+.}, at: flush_workqueue+0x84/0x4b0
+kernel: [  154.522673]
+kernel: [  154.522673] but task is already holding lock:
+kernel: [  154.522675] ffff88804efa9338 (&bdev->bd_mutex){+.+.}, at: __blkdev_get+0x79/0x590
+kernel: [  154.522691]
+kernel: [  154.522691] which lock already depends on the new lock.
+kernel: [  154.522691]
+kernel: [  154.522694]
+kernel: [  154.522694] the existing dependency chain (in reverse order) is:
+kernel: [  154.522696]
+kernel: [  154.522696] -> #4 (&bdev->bd_mutex){+.+.}:
+kernel: [  154.522704]        __mutex_lock+0x87/0x950
+kernel: [  154.522706]        __blkdev_get+0x79/0x590
+kernel: [  154.522708]        blkdev_get+0x65/0x140
+kernel: [  154.522709]        blkdev_get_by_dev+0x2f/0x40
+kernel: [  154.522716]        lock_rdev+0x3d/0x90 [md_mod]
+kernel: [  154.522719]        md_import_device+0xd6/0x1b0 [md_mod]
+kernel: [  154.522723]        new_dev_store+0x15e/0x210 [md_mod]
+kernel: [  154.522728]        md_attr_store+0x7a/0xc0 [md_mod]
+kernel: [  154.522732]        kernfs_fop_write+0x117/0x1b0
+kernel: [  154.522735]        vfs_write+0xad/0x1a0
+kernel: [  154.522737]        ksys_write+0xa4/0xe0
+kernel: [  154.522745]        do_syscall_64+0x64/0x2b0
+kernel: [  154.522748]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+kernel: [  154.522749]
+kernel: [  154.522749] -> #3 (&mddev->reconfig_mutex){+.+.}:
+kernel: [  154.522752]        __mutex_lock+0x87/0x950
+kernel: [  154.522756]        new_dev_store+0xc9/0x210 [md_mod]
+kernel: [  154.522759]        md_attr_store+0x7a/0xc0 [md_mod]
+kernel: [  154.522761]        kernfs_fop_write+0x117/0x1b0
+kernel: [  154.522763]        vfs_write+0xad/0x1a0
+kernel: [  154.522765]        ksys_write+0xa4/0xe0
+kernel: [  154.522767]        do_syscall_64+0x64/0x2b0
+kernel: [  154.522769]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+kernel: [  154.522770]
+kernel: [  154.522770] -> #2 (kn->count#253){++++}:
+kernel: [  154.522775]        __kernfs_remove+0x253/0x2c0
+kernel: [  154.522778]        kernfs_remove+0x1f/0x30
+kernel: [  154.522780]        kobject_del+0x28/0x60
+kernel: [  154.522783]        mddev_delayed_delete+0x24/0x30 [md_mod]
+kernel: [  154.522786]        process_one_work+0x2a7/0x5f0
+kernel: [  154.522788]        worker_thread+0x2d/0x3d0
+kernel: [  154.522793]        kthread+0x117/0x130
+kernel: [  154.522795]        ret_from_fork+0x3a/0x50
+kernel: [  154.522796]
+kernel: [  154.522796] -> #1 ((work_completion)(&mddev->del_work)){+.+.}:
+kernel: [  154.522800]        process_one_work+0x27e/0x5f0
+kernel: [  154.522802]        worker_thread+0x2d/0x3d0
+kernel: [  154.522804]        kthread+0x117/0x130
+kernel: [  154.522806]        ret_from_fork+0x3a/0x50
+kernel: [  154.522807]
+kernel: [  154.522807] -> #0 ((wq_completion)md_misc){+.+.}:
+kernel: [  154.522813]        __lock_acquire+0x1392/0x1690
+kernel: [  154.522816]        lock_acquire+0xb4/0x1a0
+kernel: [  154.522818]        flush_workqueue+0xab/0x4b0
+kernel: [  154.522821]        md_open+0xb6/0xc0 [md_mod]
+kernel: [  154.522823]        __blkdev_get+0xea/0x590
+kernel: [  154.522825]        blkdev_get+0x65/0x140
+kernel: [  154.522828]        do_dentry_open+0x1d1/0x380
+kernel: [  154.522831]        path_openat+0x567/0xcc0
+kernel: [  154.522834]        do_filp_open+0x9b/0x110
+kernel: [  154.522836]        do_sys_openat2+0x201/0x2a0
+kernel: [  154.522838]        do_sys_open+0x57/0x80
+kernel: [  154.522840]        do_syscall_64+0x64/0x2b0
+kernel: [  154.522842]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+kernel: [  154.522844]
+kernel: [  154.522844] other info that might help us debug this:
+kernel: [  154.522844]
+kernel: [  154.522846] Chain exists of:
+kernel: [  154.522846]   (wq_completion)md_misc --> &mddev->reconfig_mutex --> &bdev->bd_mutex
+kernel: [  154.522846]
+kernel: [  154.522850]  Possible unsafe locking scenario:
+kernel: [  154.522850]
+kernel: [  154.522852]        CPU0                    CPU1
+kernel: [  154.522853]        ----                    ----
+kernel: [  154.522854]   lock(&bdev->bd_mutex);
+kernel: [  154.522856]                                lock(&mddev->reconfig_mutex);
+kernel: [  154.522858]                                lock(&bdev->bd_mutex);
+kernel: [  154.522860]   lock((wq_completion)md_misc);
+kernel: [  154.522861]
+kernel: [  154.522861]  *** DEADLOCK ***
+kernel: [  154.522861]
+kernel: [  154.522864] 1 lock held by mdadm/2482:
+kernel: [  154.522865]  #0: ffff88804efa9338 (&bdev->bd_mutex){+.+.}, at: __blkdev_get+0x79/0x590
+kernel: [  154.522868]
+kernel: [  154.522868] stack backtrace:
+kernel: [  154.522873] CPU: 1 PID: 2482 Comm: mdadm Tainted: G           O      5.6.0-rc7-lp151.27-default #25
+kernel: [  154.522875] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+kernel: [  154.522878] Call Trace:
+kernel: [  154.522881]  dump_stack+0x8f/0xcb
+kernel: [  154.522884]  check_noncircular+0x194/0x1b0
+kernel: [  154.522888]  ? __lock_acquire+0x1392/0x1690
+kernel: [  154.522890]  __lock_acquire+0x1392/0x1690
+kernel: [  154.522893]  lock_acquire+0xb4/0x1a0
+kernel: [  154.522895]  ? flush_workqueue+0x84/0x4b0
+kernel: [  154.522898]  flush_workqueue+0xab/0x4b0
+kernel: [  154.522900]  ? flush_workqueue+0x84/0x4b0
+kernel: [  154.522905]  ? md_open+0xb6/0xc0 [md_mod]
+kernel: [  154.522908]  md_open+0xb6/0xc0 [md_mod]
+kernel: [  154.522910]  __blkdev_get+0xea/0x590
+kernel: [  154.522912]  ? bd_acquire+0xc0/0xc0
+kernel: [  154.522914]  blkdev_get+0x65/0x140
+kernel: [  154.522916]  ? bd_acquire+0xc0/0xc0
+kernel: [  154.522918]  do_dentry_open+0x1d1/0x380
+kernel: [  154.522921]  path_openat+0x567/0xcc0
+kernel: [  154.522923]  ? __lock_acquire+0x380/0x1690
+kernel: [  154.522926]  do_filp_open+0x9b/0x110
+kernel: [  154.522929]  ? __alloc_fd+0xe5/0x1f0
+kernel: [  154.522935]  ? kmem_cache_alloc+0x28c/0x630
+kernel: [  154.522939]  ? do_sys_openat2+0x201/0x2a0
+kernel: [  154.522941]  do_sys_openat2+0x201/0x2a0
+kernel: [  154.522944]  do_sys_open+0x57/0x80
+kernel: [  154.522946]  do_syscall_64+0x64/0x2b0
+kernel: [  154.522948]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+kernel: [  154.522951] RIP: 0033:0x7f98d279d9ae
+
+And md_alloc also flushed the same workqueue, but the thing is different
+here. Because all the paths call md_alloc don't hold bdev->bd_mutex, and
+the flush is necessary to avoid race condition, so leave it as it is.
+
+Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/kernel/mips-cm.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/md/md.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/mips/kernel/mips-cm.c b/arch/mips/kernel/mips-cm.c
-index 76f18c56141c..3458d23d230c 100644
---- a/arch/mips/kernel/mips-cm.c
-+++ b/arch/mips/kernel/mips-cm.c
-@@ -123,9 +123,9 @@ static char *cm2_causes[32] = {
- 	"COH_RD_ERR", "MMIO_WR_ERR", "MMIO_RD_ERR", "0x07",
- 	"0x08", "0x09", "0x0a", "0x0b",
- 	"0x0c", "0x0d", "0x0e", "0x0f",
--	"0x10", "0x11", "0x12", "0x13",
--	"0x14", "0x15", "0x16", "INTVN_WR_ERR",
--	"INTVN_RD_ERR", "0x19", "0x1a", "0x1b",
-+	"0x10", "INTVN_WR_ERR", "INTVN_RD_ERR", "0x13",
-+	"0x14", "0x15", "0x16", "0x17",
-+	"0x18", "0x19", "0x1a", "0x1b",
- 	"0x1c", "0x1d", "0x1e", "0x1f"
- };
- 
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index d59d79b77fd6..60161690e226 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -7038,7 +7038,8 @@ static int md_open(struct block_device *bdev, fmode_t mode)
+ 		 */
+ 		mddev_put(mddev);
+ 		/* Wait until bdev->bd_disk is definitely gone */
+-		flush_workqueue(md_misc_wq);
++		if (work_pending(&mddev->del_work))
++			flush_workqueue(md_misc_wq);
+ 		/* Then retry the open from the top */
+ 		return -ERESTARTSYS;
+ 	}
 -- 
 2.25.1
 
