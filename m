@@ -2,214 +2,101 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B766EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 08:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF816C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 08:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 860712072F
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 08:28:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3261206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 08:30:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o7x0iQeS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YmELALbk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729107AbgFHI2e (ORCPT
+        id S1729105AbgFHIao (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 04:28:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42904 "EHLO
+        Mon, 8 Jun 2020 04:30:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729078AbgFHI2d (ORCPT
+        with ESMTP id S1728951AbgFHIan (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 04:28:33 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DB13C08C5C3
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 01:28:33 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id l10so16362065wrr.10
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 01:28:33 -0700 (PDT)
+        Mon, 8 Jun 2020 04:30:43 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0AFDC08C5C3;
+        Mon,  8 Jun 2020 01:30:43 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id m2so5698847pjv.2;
+        Mon, 08 Jun 2020 01:30:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Kba7qPUxHVUKOanqaaBgtcI9IxnJIhKLPI39GydfXUw=;
-        b=o7x0iQeSI/uwP7xJ7s/u2wJNQdANwPbv2ta24+Sx1h0vxNF5HxpC3+25MhA0PQ8Gjl
-         dKjm7vb2Ht1j7Gzu0kjzTdTBOdMnvlhGwosvxfPaDbiMq618LrkYB1ynOAiejE+KDUNt
-         i+5NbQDjhNNpiCSMFE6TklC8DDvCNHDn4SfaILmPmsRiPxYivhSSIYqkRzoa5427VdA6
-         lW+ze0WQ0JYHLZqvZB6IdbmgY6PPkzBJgypm9ki3yPY7YSf5EXjbhfVEjHE6wR+qbo6I
-         dvp+IK2TyP9Nzuiun7EUGStVXIWuMjnL7q5BMOz+/5eHr+0DeFgljiQZMgpG6R9pGRYw
-         12XQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=G7NT+IIMlEpev8mMIld6zg2khxnR9LKx4QWnMSa761g=;
+        b=YmELALbkitxP2ggbooUEURujMSINXmryqerQhxXRvVK6hlFggjqe6vjydN5E/hscIs
+         ew1S4hSJF0H5QNibJbvP5ZZQVzfbxfT6ZWE2VGHUwUZ/5r2MjtsMn4Wi9gD0v5zWBYjX
+         /BRG23DsNHZGYdn4ji4uba2IFP66yOE+UuP5whqQn3I5qHMBV5AUdtWXtQsXfBUl+DYw
+         myfg/t3rN2flP3HLisi5oI0ljM/WBOisQVl5L7VqbL8HJIEnnwrRlll0TC4R+avIrDOL
+         cP7JQa3ERxtbpid31OYGSdlRGxXXvm6sjzsquzBA1ywHqLWwcE4V8rPbMKBPITJ1gVN3
+         o6bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Kba7qPUxHVUKOanqaaBgtcI9IxnJIhKLPI39GydfXUw=;
-        b=FRcBCRX6O2Qi57eiHXHMYGxPYuNJPEzjt/rBmihhIUX7oZ8XAnucccv2C82/sq71CE
-         iY1Rk8aW3DRqozLUCoytPoWh4Q2JOGNR40OJCybBTeXj6RvUG7b1FbbebnixDhSqM5YT
-         2seO10I8KOpsi1fI/PLEPLZIr4ANtqltQ3J79pqvDaRraGRtWt8jckUZ6iwblZ7VWG2s
-         +ga++IokWLAKleURcmzY/DjvifKzQlWujlgAHAO0EYE2G76Enb22jmTwwoeaYZkadQQw
-         IA7s01eICliajMM+bnC7nubzucM0yUUEv8nA8touC4L2QS7Qe/36a8xnzgutBNw6AmEw
-         JlTQ==
-X-Gm-Message-State: AOAM532n82k3aeBwLaYjulm/LkjtJT1OTFeNBn3Wm0QsXCpxiK8dBTX9
-        ITUWxPhqr8PsqNBVqzSVLj0tvg==
-X-Google-Smtp-Source: ABdhPJwynnrOTei83pcLfW4D02VO6Er3aYpLlO//t7+3zbz9KWHvX2TYAeyuYi6k74iArY5EinOp8Q==
-X-Received: by 2002:a5d:6750:: with SMTP id l16mr22217026wrw.295.1591604910095;
-        Mon, 08 Jun 2020 01:28:30 -0700 (PDT)
-Received: from dell ([95.147.198.92])
-        by smtp.gmail.com with ESMTPSA id v27sm23608100wrv.81.2020.06.08.01.28.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 01:28:29 -0700 (PDT)
-Date:   Mon, 8 Jun 2020 09:28:27 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>, Rob Herring <robh+dt@kernel.org>
-Cc:     Mark Brown <broonie@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld
- management controller
-Message-ID: <20200608082827.GB3567@dell>
-References: <20200604211039.12689-1-michael@walle.cc>
- <20200604211039.12689-3-michael@walle.cc>
- <20200605065709.GD3714@dell>
- <20200605105026.GC5413@sirena.org.uk>
- <c5632bfab3956265e90fc2fb6c0b3cae@walle.cc>
- <20200606114645.GB2055@sirena.org.uk>
- <dc052a5c77171014ecc465b1da8b7ef8@walle.cc>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <dc052a5c77171014ecc465b1da8b7ef8@walle.cc>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=G7NT+IIMlEpev8mMIld6zg2khxnR9LKx4QWnMSa761g=;
+        b=gmb7a9J5jhbbGvOadTdv9zQWAu+RInSHZvOBaWxBhpnKObpkJNTP+Jh0Ebwa7+ej68
+         aNeM3TnspqOwVNQTbbr2gGB8JR2C5FBrKSsfR23+NxnhYtVpCf1MimmoVUYuCksEk/NP
+         NLTMMV5F/DiTY+LIxMxFKt3C0mfkcgDIqRODscnlGFEWVRQ4UO4sxVycabxDSfdoCllI
+         C504Fs7xGZXjMqxiUFtjdke8um2HLW3fn7/gRtcL654dYnPEwYD+b7T1P4HuQO3jQK3k
+         HpFVljWUAX/fI0CRz3TUAa05BH4SXnL1HyWW2Xl9aCfcSz75ocVsDUK7e3TerhdFBdNa
+         7mWg==
+X-Gm-Message-State: AOAM530RALdgHp0+KTrilrwAFQknFxQsfYKXKitfws4gjWCJIelQfIyv
+        TsXzXpuAFsEuEaeMualKm0w=
+X-Google-Smtp-Source: ABdhPJxObPDhvUNU2fgGSyXqPnus/jX1jjU6Fcb/mjYz/7uwefMtlM+VUAjOyTj6a7++QyGKeDXCqQ==
+X-Received: by 2002:a17:90a:886:: with SMTP id v6mr15165288pjc.161.1591605043466;
+        Mon, 08 Jun 2020 01:30:43 -0700 (PDT)
+Received: from fmin-OptiPlex-7060.nreal.work ([103.206.191.42])
+        by smtp.gmail.com with ESMTPSA id 27sm1210829pjg.19.2020.06.08.01.30.40
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Jun 2020 01:30:43 -0700 (PDT)
+From:   dillon.minfei@gmail.com
+To:     robh+dt@kernel.org, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, linux@armlinux.org.uk,
+        vladimir.murzin@arm.com, kstewart@linuxfoundation.org,
+        allison@lohutok.net, info@metux.net, tglx@linutronix.de
+Cc:     devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        dillon min <dillon.minfei@gmail.com>
+Subject: [PATCH 0/2] Use 'arm_nommu_dma_ops' to handle dma memroy if device offer consistent dma memory region
+Date:   Mon,  8 Jun 2020 16:30:36 +0800
+Message-Id: <1591605038-8682-1-git-send-email-dillon.minfei@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rob, something for you below.
+From: dillon min <dillon.minfei@gmail.com>
 
-On Sat, 06 Jun 2020, Michael Walle wrote:
-> Am 2020-06-06 13:46, schrieb Mark Brown:
-> > On Fri, Jun 05, 2020 at 10:07:36PM +0200, Michael Walle wrote:
-> > > Am 2020-06-05 12:50, schrieb Mark Brown:
-> > 
-> > > > I have no idea what you are thinking of when you say "simple-regmap" so
-> > > > it is difficult to comment.
-> > 
-> > > I guess, Lee is suggesting to be able to create a regmap instance via
-> > > device tree (and populate its child nodes?). Like
-> > >   compatible = "syscon", "simple-mfd";
-> > > but for any regmap, not just MMIO.
+when do mmap on /dev/fb0, we will get -6 error on cortex-m3/m4 or armv7m
+platform without cache support, this is caused by following reason:
 
-Bingo!
+on armv7m platform, if no cache support, we will use dma direct mapping,
+but, this is not support on !MMU hardware, just return '-ENXIO' error
 
-> > I don't understand why this would be anything separate to
-> > simple-mfd.
-> 
-> Don't just simple-mfd tells the of core, to probe the children this
-> node? Where does the regmap then come from?
+so, add use_reserved_mem() for these armv7m hardware but no-cache support.
+eg, stm32f429/stm32f469.
 
-Right.  I'm suggesting a means to extrapolate complex shared and
-sometimes intertwined batches of register sets to be consumed by
-multiple (sub-)devices spanning different subsystems.
+verified on stm32f469-disco board, mmap frambuffer to userspace.
 
-Actually scrap that.  The most common case I see is a single Regmap
-covering all child-devices.  It would be great if there was a way in
-which we could make an assumption that the entire register address
-space for a 'tagged' (MFD) device is to be shared (via Regmap) between
-each of the devices described by its child-nodes.  Probably by picking
-up on the 'simple-mfd' compatible string in the first instance.
+dillon min (2):
+  ARM: dts: stm32: Setup 4M bytes reserved memory for mmap
+  arm-nommu: Add use_reserved_mem() to check if device support reserved
+    memory
 
-Rob, is the above something you would contemplate?
-
-Michael, do your register addresses overlap i.e. are they intermingled
-with one another?  Do multiple child devices need access to the same
-registers i.e. are they shared?
-
-> > > But, there is more in my driver:
-> > >  (1) there is a version check
-
-If we can rid the Regmap dependency, then creating an entire driver to
-conduct a version check is unjustifiable.  This could become an inline
-function which is called by each of the sub-devices instead, for
-example.
-
-> > >  (2) there is another function for which there is no suitable linux
-> > >      subsystem I'm aware of and thus which I'd like to us sysfs
-> > >      attributes for: This controller supports 16 non-volatile
-> > >      configuration bits. (this is still TBD)
-
-There is a place for everything in Linux.
-
-What do these bits configure?
-
-> > TBH I'd also say that the enumeration of the subdevices for this
-> > device should be in the device rather than the DT, they don't
-> > seem to be things that exist outside of this one device.
-> 
-> We're going circles here, formerly they were enumerated in the MFD.
-> Yes, they are devices which aren't likely be used outside a
-> "sl28cpld", but there might there might be other versions of the
-> sl28cpld with other components on different base addresses. I
-> don't care if they are enumerated in DT or MFD, actually, I'd
-> prefer the latter. _But_ I would like to have the device tree
-> properties for its subdevices, e.g. the ones for the watchdog or
-> whatever components there might be in the future.
-
-[...]
-
-> MFD core can
-> match a device tree node today; but only one per unique compatible
-> string. So what should I use to differentiate the different
-> subdevices?
-
-Right.  I have been aware of this issue.  The only suitable solution
-to this would be to match on 'reg'.
-
-FYI: I plan to fix this.
-
-If your register map needs to change, then I suggest that this is
-either a new device or at least a different version of the device and
-would also have to be represented as different (sub-)mfd_cell.
-
-> Rob suggested the internal offset, which I did here.
-
-FWIW, I don't like this idea.  DTs should not have to be modified
-(either in the first instance or subsequently) or specifically
-designed to patch inadequacies in any given OS.
-
-> But then, there is less use in duplicating the offsets in the MFD
-> just to have the MFD enumerate the subdevices and then match
-> the device tree nodes against it. I can just use
-> of_platform_populate() to enumerate the children and I won't
-> have to duplicate the base addresses.
-
-Which is fine.  However this causes a different issue for you.  By
-stripping out the MFD code you render the MFD portion seemingly
-superfluous.  Another issue driver authors commonly contend with.
-
-> So here we are, any ideas appreciated.
-
-Working on it!
+ arch/arm/boot/dts/stm32f469-disco.dts | 14 ++++++++++++++
+ arch/arm/mm/dma-mapping-nommu.c       | 28 +++++++++++++++++++++++++++-
+ 2 files changed, 41 insertions(+), 1 deletion(-)
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.7.4
+
