@@ -2,58 +2,49 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE292C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 875ADC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D26022076C
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:46:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66D73206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:47:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729075AbgFHHq5 (ORCPT
+        id S1729086AbgFHHr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 03:46:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36386 "EHLO
+        Mon, 8 Jun 2020 03:47:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729047AbgFHHq5 (ORCPT
+        with ESMTP id S1729014AbgFHHrW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 03:46:57 -0400
+        Mon, 8 Jun 2020 03:47:22 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74FF1C08C5C4
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 00:46:57 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2D50C08C5C4
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 00:47:22 -0700 (PDT)
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1jiCUc-0006ou-Jk; Mon, 08 Jun 2020 09:46:50 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1jiCUb-000511-Lj; Mon, 08 Jun 2020 09:46:49 +0200
-Date:   Mon, 8 Jun 2020 09:46:49 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] media: tvp5150: Add missed media_entity_cleanup()
-Message-ID: <20200608074649.bppdrdoxn6xig6jy@pengutronix.de>
-References: <20200606143918.2869528-1-hslester96@gmail.com>
+        (envelope-from <sha@pengutronix.de>)
+        id 1jiCV4-0006sX-7w; Mon, 08 Jun 2020 09:47:18 +0200
+Received: from sha by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1jiCV3-0002be-PR; Mon, 08 Jun 2020 09:47:17 +0200
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        devicetree@vger.kernel.org, kernel@pengutronix.de,
+        Sascha Hauer <s.hauer@pengutronix.de>
+Subject: [PATCH] net: ethernet: mvneta: add support for 2.5G DRSGMII mode
+Date:   Mon,  8 Jun 2020 09:47:16 +0200
+Message-Id: <20200608074716.9975-1-s.hauer@pengutronix.de>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200606143918.2869528-1-hslester96@gmail.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 09:45:45 up 205 days, 23:04, 198 users,  load average: 0.11, 0.08,
- 0.02
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: sha@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
@@ -61,60 +52,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+The Marvell MVNETA Ethernet controller supports a 2.5 Gbps SGMII mode
+called DRSGMII.
 
-thanks for covering that. Appart of the fact that this function does
-nothing:
+This patch adds a corresponding phy-mode string 'drsgmii' and parses it
+from DT. The MVNETA then configures the SERDES protocol value
+accordingly.
 
-Reviewed-by: Marco Felsch <m.felsch@pengutronix.de>
+It was successfully tested on a MV78460 connected to a FPGA.
 
-On 20-06-06 22:39, Chuhong Yuan wrote:
-> This driver does not call media_entity_cleanup() in the error handler
-> of tvp5150_registered() and tvp5150_remove(), while it has called
-> media_entity_pads_init() at first.
-> Add the missed calls to fix it.
-> 
-> Fixes: 0556f1d580d4 ("media: tvp5150: add input source selection of_graph support")
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> ---
->  drivers/media/i2c/tvp5150.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
-> index eb39cf5ea089..9df575238952 100644
-> --- a/drivers/media/i2c/tvp5150.c
-> +++ b/drivers/media/i2c/tvp5150.c
-> @@ -1664,8 +1664,10 @@ static int tvp5150_registered(struct v4l2_subdev *sd)
->  	return 0;
->  
->  err:
-> -	for (i = 0; i < decoder->connectors_num; i++)
-> +	for (i = 0; i < decoder->connectors_num; i++) {
->  		media_device_unregister_entity(&decoder->connectors[i].ent);
-> +		media_entity_cleanup(&decoder->connectors[i].ent);
-> +	}
->  	return ret;
->  #endif
->  
-> @@ -2248,8 +2250,10 @@ static int tvp5150_remove(struct i2c_client *c)
->  
->  	for (i = 0; i < decoder->connectors_num; i++)
->  		v4l2_fwnode_connector_free(&decoder->connectors[i].base);
-> -	for (i = 0; i < decoder->connectors_num; i++)
-> +	for (i = 0; i < decoder->connectors_num; i++) {
->  		media_device_unregister_entity(&decoder->connectors[i].ent);
-> +		media_entity_cleanup(&decoder->connectors[i].ent);
-> +	}
->  	v4l2_async_unregister_subdev(sd);
->  	v4l2_ctrl_handler_free(&decoder->hdl);
->  	pm_runtime_disable(&c->dev);
-> -- 
-> 2.26.2
-> 
-> 
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+---
+ .../devicetree/bindings/net/ethernet-controller.yaml       | 1 +
+ drivers/net/ethernet/marvell/mvneta.c                      | 7 ++++++-
+ include/linux/phy.h                                        | 3 +++
+ 3 files changed, 10 insertions(+), 1 deletion(-)
 
+This patch has already been sent 3 years ago here:
+https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20170123142206.5390-1-jlu@pengutronix.de/
+Since then the driver has evolved a lot. 2.5Gbps is properly configured in the
+MAC now.
+
+diff --git a/Documentation/devicetree/bindings/net/ethernet-controller.yaml b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+index ac471b60ed6ae..4eead3c89bd3e 100644
+--- a/Documentation/devicetree/bindings/net/ethernet-controller.yaml
++++ b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+@@ -66,6 +66,7 @@ properties:
+       - gmii
+       - sgmii
+       - qsgmii
++      - drsgmii
+       - tbi
+       - rev-mii
+       - rmii
+diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
+index 51889770958d8..807c698576c74 100644
+--- a/drivers/net/ethernet/marvell/mvneta.c
++++ b/drivers/net/ethernet/marvell/mvneta.c
+@@ -109,6 +109,7 @@
+ #define MVNETA_SERDES_CFG			 0x24A0
+ #define      MVNETA_SGMII_SERDES_PROTO		 0x0cc7
+ #define      MVNETA_QSGMII_SERDES_PROTO		 0x0667
++#define      MVNETA_DRSGMII_SERDES_PROTO	 0x1107
+ #define MVNETA_TYPE_PRIO                         0x24bc
+ #define      MVNETA_FORCE_UNI                    BIT(21)
+ #define MVNETA_TXQ_CMD_1                         0x24e4
+@@ -3734,10 +3735,11 @@ static void mvneta_validate(struct phylink_config *config,
+ 	struct mvneta_port *pp = netdev_priv(ndev);
+ 	__ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = { 0, };
+ 
+-	/* We only support QSGMII, SGMII, 802.3z and RGMII modes */
++	/* We only support QSGMII, SGMII, DRSGMII, 802.3z and RGMII modes */
+ 	if (state->interface != PHY_INTERFACE_MODE_NA &&
+ 	    state->interface != PHY_INTERFACE_MODE_QSGMII &&
+ 	    state->interface != PHY_INTERFACE_MODE_SGMII &&
++	    state->interface != PHY_INTERFACE_MODE_DRSGMII &&
+ 	    !phy_interface_mode_is_8023z(state->interface) &&
+ 	    !phy_interface_mode_is_rgmii(state->interface)) {
+ 		bitmap_zero(supported, __ETHTOOL_LINK_MODE_MASK_NBITS);
+@@ -3851,6 +3853,7 @@ static void mvneta_mac_config(struct phylink_config *config, unsigned int mode,
+ 
+ 	if (state->interface == PHY_INTERFACE_MODE_QSGMII ||
+ 	    state->interface == PHY_INTERFACE_MODE_SGMII ||
++	    state->interface == PHY_INTERFACE_MODE_DRSGMII ||
+ 	    phy_interface_mode_is_8023z(state->interface))
+ 		new_ctrl2 |= MVNETA_GMAC2_PCS_ENABLE;
+ 
+@@ -4968,6 +4971,8 @@ static int mvneta_port_power_up(struct mvneta_port *pp, int phy_mode)
+ 	else if (phy_mode == PHY_INTERFACE_MODE_SGMII ||
+ 		 phy_interface_mode_is_8023z(phy_mode))
+ 		mvreg_write(pp, MVNETA_SERDES_CFG, MVNETA_SGMII_SERDES_PROTO);
++	else if (phy_mode == PHY_INTERFACE_MODE_DRSGMII)
++		mvreg_write(pp, MVNETA_SERDES_CFG, MVNETA_DRSGMII_SERDES_PROTO);
+ 	else if (!phy_interface_mode_is_rgmii(phy_mode))
+ 		return -EINVAL;
+ 
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index 2432ca463ddc0..bf3276b330f9e 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -109,6 +109,7 @@ typedef enum {
+ 	PHY_INTERFACE_MODE_USXGMII,
+ 	/* 10GBASE-KR - with Clause 73 AN */
+ 	PHY_INTERFACE_MODE_10GKR,
++	PHY_INTERFACE_MODE_DRSGMII,
+ 	PHY_INTERFACE_MODE_MAX,
+ } phy_interface_t;
+ 
+@@ -190,6 +191,8 @@ static inline const char *phy_modes(phy_interface_t interface)
+ 		return "usxgmii";
+ 	case PHY_INTERFACE_MODE_10GKR:
+ 		return "10gbase-kr";
++	case PHY_INTERFACE_MODE_DRSGMII:
++		return "drsgmii";
+ 	default:
+ 		return "unknown";
+ 	}
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.27.0
+
