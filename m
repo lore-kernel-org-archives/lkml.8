@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E583C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:03:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A92E5C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3994820737
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:03:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E1C020737
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:03:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591664611;
-	bh=xC2bBeky7vffdK3RQMQQEGb98eZ6RKA19Fgaji08iDE=;
+	s=default; t=1591664615;
+	bh=1S5Q9TpFA1WJBMNsZ9T26wr84UeMbZz/aKxvsdAw2F8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=odIRkBgu7KFsK+TPsyzDZgOi+AD5PngGui1Yu97NDGSGIuF5sp/8/va/s29n988Da
-	 P6KaajARldnhlN8oiQxiJefvyd6YwZoekD2XWysYPfNn+FjfWsbw/wj5yjBcfuts7w
-	 mYV6lN+WDWvEGxFO8Y53xbFUmFkWUjdY9Cw8WRUo=
+	b=XkMxUBpwY3sathEkPE4d8jdhEyyTAW/Xj58qM7bYRINeOic24k93E5UM4f3IUuSjh
+	 q/iG831CLc1i1ZEqzp3Avno76bnPhfhrZS/JKd3GZyE6vSnMUYAoeTc5a+sazdNxIl
+	 wbZA8L1W7QYxR6jA3mZ6JlmgSFQ8T0XcGTfWeDus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388157AbgFIBDa (ORCPT
+        id S1728727AbgFIBDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 21:03:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52180 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 21:03:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727966AbgFHXHl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:07:41 -0400
+        id S1727946AbgFHXHg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:07:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC8B420801;
-        Mon,  8 Jun 2020 23:07:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E56B2087E;
+        Mon,  8 Jun 2020 23:07:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657660;
-        bh=xC2bBeky7vffdK3RQMQQEGb98eZ6RKA19Fgaji08iDE=;
+        s=default; t=1591657656;
+        bh=1S5Q9TpFA1WJBMNsZ9T26wr84UeMbZz/aKxvsdAw2F8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rLeKwJohak/vqChoSw7YNZXvSMWiXHasgVsCe6cgQjzLCOQK6ebWWWGw1AU5ioqL3
-         WbZ2Vix0pT8juHCLDHYu7+oWPHThQROBu55hWCU+BtJvVTqkckJsbNvbvmhTfo4OTr
-         quEr1DWtDUn7JxGkg5IBXmLhovptMFRdfoI2+THs=
+        b=km9GvmngdZq79C+MzaGB8nqr2G2hUBnj764Y6Zvkg9+Zad9q6VXVq+tQZO+tGbLA6
+         0uGO41lNP0N3zDpyaSyAzmzRmYIu0dz/taCQ5p/XlEw9tGkXFwH3A2AZUj3Owmu4c5
+         VxKXWEhxvsY9Yu+UdwX4e49GE/6BuCMK+juDu/0E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dave Airlie <airlied@gmail.com>,
-        Brian Foster <bfoster@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 072/274] xfs: more lockdep whackamole with kmem_alloc*
-Date:   Mon,  8 Jun 2020 19:02:45 -0400
-Message-Id: <20200608230607.3361041-72-sashal@kernel.org>
+Cc:     Peter Rosin <peda@axentia.se>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 069/274] spi: mux: repair mux usage
+Date:   Mon,  8 Jun 2020 19:02:42 -0400
+Message-Id: <20200608230607.3361041-69-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -60,146 +58,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Darrick J. Wong" <darrick.wong@oracle.com>
+From: Peter Rosin <peda@axentia.se>
 
-[ Upstream commit 6dcde60efd946e38fac8d276a6ca47492103e856 ]
+[ Upstream commit a2b02e4623fb127fa65a13e4ac5aa56e4ae16291 ]
 
-Dave Airlie reported the following lockdep complaint:
+It is not valid to cache/short out selection of the mux.
 
->  ======================================================
->  WARNING: possible circular locking dependency detected
->  5.7.0-0.rc5.20200515git1ae7efb38854.1.fc33.x86_64 #1 Not tainted
->  ------------------------------------------------------
->  kswapd0/159 is trying to acquire lock:
->  ffff9b38d01a4470 (&xfs_nondir_ilock_class){++++}-{3:3},
->  at: xfs_ilock+0xde/0x2c0 [xfs]
->
->  but task is already holding lock:
->  ffffffffbbb8bd00 (fs_reclaim){+.+.}-{0:0}, at:
->  __fs_reclaim_acquire+0x5/0x30
->
->  which lock already depends on the new lock.
->
->
->  the existing dependency chain (in reverse order) is:
->
->  -> #1 (fs_reclaim){+.+.}-{0:0}:
->         fs_reclaim_acquire+0x34/0x40
->         __kmalloc+0x4f/0x270
->         kmem_alloc+0x93/0x1d0 [xfs]
->         kmem_alloc_large+0x4c/0x130 [xfs]
->         xfs_attr_copy_value+0x74/0xa0 [xfs]
->         xfs_attr_get+0x9d/0xc0 [xfs]
->         xfs_get_acl+0xb6/0x200 [xfs]
->         get_acl+0x81/0x160
->         posix_acl_xattr_get+0x3f/0xd0
->         vfs_getxattr+0x148/0x170
->         getxattr+0xa7/0x240
->         path_getxattr+0x52/0x80
->         do_syscall_64+0x5c/0xa0
->         entry_SYSCALL_64_after_hwframe+0x49/0xb3
->
->  -> #0 (&xfs_nondir_ilock_class){++++}-{3:3}:
->         __lock_acquire+0x1257/0x20d0
->         lock_acquire+0xb0/0x310
->         down_write_nested+0x49/0x120
->         xfs_ilock+0xde/0x2c0 [xfs]
->         xfs_reclaim_inode+0x3f/0x400 [xfs]
->         xfs_reclaim_inodes_ag+0x20b/0x410 [xfs]
->         xfs_reclaim_inodes_nr+0x31/0x40 [xfs]
->         super_cache_scan+0x190/0x1e0
->         do_shrink_slab+0x184/0x420
->         shrink_slab+0x182/0x290
->         shrink_node+0x174/0x680
->         balance_pgdat+0x2d0/0x5f0
->         kswapd+0x21f/0x510
->         kthread+0x131/0x150
->         ret_from_fork+0x3a/0x50
->
->  other info that might help us debug this:
->
->   Possible unsafe locking scenario:
->
->         CPU0                    CPU1
->         ----                    ----
->    lock(fs_reclaim);
->                                 lock(&xfs_nondir_ilock_class);
->                                 lock(fs_reclaim);
->    lock(&xfs_nondir_ilock_class);
->
->   *** DEADLOCK ***
->
->  4 locks held by kswapd0/159:
->   #0: ffffffffbbb8bd00 (fs_reclaim){+.+.}-{0:0}, at:
->  __fs_reclaim_acquire+0x5/0x30
->   #1: ffffffffbbb7cef8 (shrinker_rwsem){++++}-{3:3}, at:
->  shrink_slab+0x115/0x290
->   #2: ffff9b39f07a50e8
->  (&type->s_umount_key#56){++++}-{3:3}, at: super_cache_scan+0x38/0x1e0
->   #3: ffff9b39f077f258
->  (&pag->pag_ici_reclaim_lock){+.+.}-{3:3}, at:
->  xfs_reclaim_inodes_ag+0x82/0x410 [xfs]
+mux_control_select() only locks the mux until mux_control_deselect()
+is called. mux_control_deselect() may put the mux in some low power
+state or some other user of the mux might select it for other purposes.
+These things are probably not happening in the original setting where
+this driver was developed, but it is said to be a generic SPI mux.
 
-This is a known false positive because inodes cannot simultaneously be
-getting reclaimed and the target of a getxattr operation, but lockdep
-doesn't know that.  We can (selectively) shut up lockdep until either
-it gets smarter or we change inode reclaim not to require the ILOCK by
-applying a stupid GFP_NOLOCKDEP bandaid.
+Also, the mux framework will short out the actual low level muxing
+operation when/if that is possible.
 
-Reported-by: Dave Airlie <airlied@gmail.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Tested-by: Dave Airlie <airlied@gmail.com>
-Reviewed-by: Brian Foster <bfoster@redhat.com>
+Fixes: e9e40543ad5b ("spi: Add generic SPI multiplexer")
+Signed-off-by: Peter Rosin <peda@axentia.se>
+Link: https://lore.kernel.org/r/20200525104352.26807-1-peda@axentia.se
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/kmem.h                 | 6 +++++-
- fs/xfs/libxfs/xfs_attr_leaf.c | 2 +-
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ drivers/spi/spi-mux.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/fs/xfs/kmem.h b/fs/xfs/kmem.h
-index 6143117770e9..11623489b769 100644
---- a/fs/xfs/kmem.h
-+++ b/fs/xfs/kmem.h
-@@ -19,6 +19,7 @@ typedef unsigned __bitwise xfs_km_flags_t;
- #define KM_NOFS		((__force xfs_km_flags_t)0x0004u)
- #define KM_MAYFAIL	((__force xfs_km_flags_t)0x0008u)
- #define KM_ZERO		((__force xfs_km_flags_t)0x0010u)
-+#define KM_NOLOCKDEP	((__force xfs_km_flags_t)0x0020u)
+diff --git a/drivers/spi/spi-mux.c b/drivers/spi/spi-mux.c
+index 4f94c9127fc1..cc9ef371db14 100644
+--- a/drivers/spi/spi-mux.c
++++ b/drivers/spi/spi-mux.c
+@@ -51,6 +51,10 @@ static int spi_mux_select(struct spi_device *spi)
+ 	struct spi_mux_priv *priv = spi_controller_get_devdata(spi->controller);
+ 	int ret;
  
- /*
-  * We use a special process flag to avoid recursive callbacks into
-@@ -30,7 +31,7 @@ kmem_flags_convert(xfs_km_flags_t flags)
- {
- 	gfp_t	lflags;
- 
--	BUG_ON(flags & ~(KM_NOFS|KM_MAYFAIL|KM_ZERO));
-+	BUG_ON(flags & ~(KM_NOFS | KM_MAYFAIL | KM_ZERO | KM_NOLOCKDEP));
- 
- 	lflags = GFP_KERNEL | __GFP_NOWARN;
- 	if (flags & KM_NOFS)
-@@ -49,6 +50,9 @@ kmem_flags_convert(xfs_km_flags_t flags)
- 	if (flags & KM_ZERO)
- 		lflags |= __GFP_ZERO;
- 
-+	if (flags & KM_NOLOCKDEP)
-+		lflags |= __GFP_NOLOCKDEP;
++	ret = mux_control_select(priv->mux, spi->chip_select);
++	if (ret)
++		return ret;
 +
- 	return lflags;
- }
+ 	if (priv->current_cs == spi->chip_select)
+ 		return 0;
  
-diff --git a/fs/xfs/libxfs/xfs_attr_leaf.c b/fs/xfs/libxfs/xfs_attr_leaf.c
-index 863444e2dda7..1d67cc9f4209 100644
---- a/fs/xfs/libxfs/xfs_attr_leaf.c
-+++ b/fs/xfs/libxfs/xfs_attr_leaf.c
-@@ -489,7 +489,7 @@ xfs_attr_copy_value(
- 	}
+@@ -62,10 +66,6 @@ static int spi_mux_select(struct spi_device *spi)
+ 	priv->spi->mode = spi->mode;
+ 	priv->spi->bits_per_word = spi->bits_per_word;
  
- 	if (!args->value) {
--		args->value = kmem_alloc_large(valuelen, 0);
-+		args->value = kmem_alloc_large(valuelen, KM_NOLOCKDEP);
- 		if (!args->value)
- 			return -ENOMEM;
- 	}
+-	ret = mux_control_select(priv->mux, spi->chip_select);
+-	if (ret)
+-		return ret;
+-
+ 	priv->current_cs = spi->chip_select;
+ 
+ 	return 0;
 -- 
 2.25.1
 
