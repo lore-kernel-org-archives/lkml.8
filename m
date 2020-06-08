@@ -2,187 +2,101 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E16C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED518C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 851BF206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:36:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C360D2053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:36:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QVsWop8T"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Y8KMgJvg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730583AbgFHQg3 (ORCPT
+        id S1730606AbgFHQgj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 12:36:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33730 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730383AbgFHQg2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 12:36:28 -0400
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E08BCC08C5C2;
-        Mon,  8 Jun 2020 09:36:26 -0700 (PDT)
-Received: by mail-wr1-x431.google.com with SMTP id j10so18123067wrw.8;
-        Mon, 08 Jun 2020 09:36:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3stWFcqpZacdXnYKEcQBZXFbyXJauSreLLB+1339PuE=;
-        b=QVsWop8TvbeU+82QPebxlev1TVdNdtCPSmWxkC03+UP9maAAepadnsvPzIo5qatEkS
-         cbRVAKES/f+scM2Kbapn8dNUBq7HOMMI9NOPmdPtZw6cq70fqWwOdU5VueI82Qt80g76
-         E5vtg6O6d1Ovr2NhL0tPDN9xRiaER0fMQnbui4CCZW/0LFG+4EiX9hQ6an78c7ifU7L3
-         uItV5TAcskznFIMfyQur9MdKstNtVbyS/vtThgsn4eJQJUJ2m1E4ITecAPM/OFC/g4zt
-         F4WwhB7C8YprZFcd/OKMlMxXWxkagFlcrO3t8JpGrcSnLym9nOAalcpKT96eLUqhk2uT
-         B9FQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3stWFcqpZacdXnYKEcQBZXFbyXJauSreLLB+1339PuE=;
-        b=L5i0RXxAXVxtF8GigZHRifLmFYIRvob7GIOAAQuq/q5rsxTpEE4WkxmCEuky4t2SV0
-         0HuZHc7xaHwfqgL9vzLmXmsCAubyC7sJH4mN8l9YV5ZbwYOFdJsK5yJljlEff+zaAReH
-         tasz3DJbg/g1ErKgm7E5xiqY7q+H7wGwpLLraOOurChS6gCZRuUXbd8A81P//zBzGUX0
-         z1qh3LEAYXAMA/AKC7bFBkMPoI/5YTE6mHZwhIWKoc1WEVG+KndJI0KOj8Y4iyujInHk
-         zdCXeUfyiqXINfEkpXw+iGfscUOhOF6jmOedrpG2E5bsosg/gJVxoNNoqW6inw7GM03B
-         P/sA==
-X-Gm-Message-State: AOAM531nUP54geJKgPiyOOs0EMmD5XLb+lS34JXhB/8abLoZWH8BWAQl
-        ObZ/VK0criy9QbmtADTAMl96mMhXDpU=
-X-Google-Smtp-Source: ABdhPJz5v+//ef9firCDrVujLSIV8U1MSYCLUa7XmsEihy92XMWl4dCyIk+RbgCTn4vad+Do9wQDfQ==
-X-Received: by 2002:adf:fd4b:: with SMTP id h11mr23749652wrs.209.1591634185217;
-        Mon, 08 Jun 2020 09:36:25 -0700 (PDT)
-Received: from kwango.local (ip-94-112-129-237.net.upcbroadband.cz. [94.112.129.237])
-        by smtp.gmail.com with ESMTPSA id v19sm101069wml.26.2020.06.08.09.36.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 09:36:24 -0700 (PDT)
-From:   Ilya Dryomov <idryomov@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Ceph updates for 5.8-rc1
-Date:   Mon,  8 Jun 2020 18:36:26 +0200
-Message-Id: <20200608163626.7339-1-idryomov@gmail.com>
-X-Mailer: git-send-email 2.19.2
+        Mon, 8 Jun 2020 12:36:39 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:39716 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730432AbgFHQgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 12:36:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=88MeFKvCY6T0QrZdQ+i9CPgwNPj+1wwn8P8nThk+OnE=; b=Y8KMgJvgWNbSr18uYw2huKiS+P
+        stY5qeIzYxS6W/lg9xGTQ99h9AEJ7WyjSKLK4oX9MVCkvC1Q0OFQUCMZPOzpW8ZvEbjz0Infp2R1B
+        PbLNvn3peyY6lZMM5oEDZm3fS2VDbOgwM2SoxVFHilleCzrmykl3tw4xQ5Y0ROH6BFlQ=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jiKlB-004Pxy-4L; Mon, 08 Jun 2020 18:36:29 +0200
+Date:   Mon, 8 Jun 2020 18:36:29 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     davem@davemloft.net, kuba@kernel.org, robh+dt@kernel.org,
+        f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        christoph.muellner@theobroma-systems.com,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Subject: Re: [PATCH] net: phy: mscc: handle the clkout control on some phy
+ variants
+Message-ID: <20200608163629.GH1006885@lunn.ch>
+References: <20200608160207.1316052-1-heiko@sntech.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200608160207.1316052-1-heiko@sntech.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Mon, Jun 08, 2020 at 06:02:07PM +0200, Heiko Stuebner wrote:
+> +static int vsc8531_probe(struct phy_device *phydev)
+> +{
+> +	struct vsc8531_private *vsc8531;
+> +	int rate_magic;
+> +	u32 default_mode[2] = {VSC8531_LINK_1000_ACTIVITY,
+> +	   VSC8531_LINK_100_ACTIVITY};
+> +
+> +	rate_magic = vsc85xx_edge_rate_magic_get(phydev);
+> +	if (rate_magic < 0)
+> +		return rate_magic;
+> +
+> +	vsc8531 = devm_kzalloc(&phydev->mdio.dev, sizeof(*vsc8531), GFP_KERNEL);
+> +	if (!vsc8531)
+> +		return -ENOMEM;
+> +
+> +	phydev->priv = vsc8531;
+> +
+> +	vsc8531->rate_magic = rate_magic;
+> +	vsc8531->nleds = 2;
+> +	vsc8531->supp_led_modes = VSC85XX_SUPP_LED_MODES;
+> +	vsc8531->hw_stats = vsc85xx_hw_stats;
+> +	vsc8531->nstats = ARRAY_SIZE(vsc85xx_hw_stats);
+> +	vsc8531->stats = devm_kcalloc(&phydev->mdio.dev, vsc8531->nstats,
+> +				      sizeof(u64), GFP_KERNEL);
+> +	if (!vsc8531->stats)
+> +		return -ENOMEM;
+> +
+> +	vsc8531_dt_clkout_rate_get(phydev);
+> +
+> +	return vsc85xx_dt_led_modes_get(phydev, default_mode);
+> +}
 
-The following changes since commit 3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162:
+Hi Heiko
 
-  Linux 5.7 (2020-05-31 16:49:15 -0700)
+The clock change itself looks O.K. Maybe we want to standardize on the
+name of the DT property, since it could be shared across all PHYs
+which have a clock output?
 
-are available in the Git repository at:
+Could you add another patch first which refactors the _probe()
+functions. There is a lot of repeated code which could be put into a
+helper.
 
-  https://github.com/ceph/ceph-client.git tags/ceph-for-5.8-rc1
-
-for you to fetch changes up to dc1dad8e1a612650b1e786e992cb0c6e101e226a:
-
-  rbd: compression_hint option (2020-06-01 23:32:35 +0200)
-
-----------------------------------------------------------------
-The highlights are:
-
-- OSD/MDS latency and caps cache metrics infrastructure for the
-  filesytem (Xiubo Li).  Currently available through debugfs and
-  will be periodically sent to the MDS in the future.
-
-- support for replica reads (balanced and localized reads) for
-  rbd and the filesystem (myself).  The default remains to always
-  read from primary, users can opt-in with the new crush_location
-  and read_from_replica options.  Note that reading from replica
-  is safe for general use only since Octopus.
-
-- support for RADOS allocation hint flags (myself).  Currently
-  used by rbd to propagate the compressible/incompressible hint
-  given with the new compression_hint map option and ready for
-  passing on more advanced hints, e.g. based on fadvise() from
-  the filesystem.
-
-- support for efficient cross-quota-realm renames (Luis Henriques)
-
-- assorted cap handling improvements and cleanups, particularly
-  untangling some of the locking (Jeff Layton)
-
-----------------------------------------------------------------
-Gustavo A. R. Silva (1):
-      libceph, rbd: replace zero-length array with flexible-array
-
-Ilya Dryomov (7):
-      libceph: add non-asserting rbtree insertion helper
-      libceph: decode CRUSH device/bucket types and names
-      libceph: crush_location infrastructure
-      libceph: support for balanced and localized reads
-      libceph: read_from_replica option
-      libceph: support for alloc hint flags
-      rbd: compression_hint option
-
-Jeff Layton (11):
-      ceph: reorganize __send_cap for less spinlock abuse
-      ceph: split up __finish_cap_flush
-      ceph: add comments for handle_cap_flush_ack logic
-      ceph: don't release i_ceph_lock in handle_cap_trunc
-      ceph: don't take i_ceph_lock in handle_cap_import
-      ceph: document what protects i_dirty_item and i_flushing_item
-      ceph: fix potential race in ceph_check_caps
-      ceph: throw a warning if we destroy session with mutex still locked
-      ceph: convert mdsc->cap_dirty to a per-session list
-      ceph: request expedited service on session's last cap flush
-      ceph: ceph_kick_flushing_caps needs the s_mutex
-
-Luis Henriques (3):
-      ceph: normalize 'delta' parameter usage in check_quota_exceeded
-      ceph: allow rename operation under different quota realms
-      ceph: don't return -ESTALE if there's still an open file
-
-Xiubo Li (6):
-      ceph: add dentry lease metric support
-      ceph: add caps perf metric for each superblock
-      ceph: add read/write latency metric support
-      ceph: add metadata perf metric support
-      ceph: make sure mdsc->mutex is nested in s->s_mutex to fix dead lock
-      ceph: skip checking caps when session reconnecting and releasing reqs
-
-Yan, Zheng (1):
-      ceph: reset i_requested_max_size if file write is not wanted
-
- drivers/block/rbd.c             |  44 ++++-
- drivers/block/rbd_types.h       |   2 +-
- fs/ceph/Makefile                |   2 +-
- fs/ceph/acl.c                   |   2 +-
- fs/ceph/addr.c                  |  20 ++
- fs/ceph/caps.c                  | 425 ++++++++++++++++++++++++++--------------
- fs/ceph/debugfs.c               | 100 +++++++++-
- fs/ceph/dir.c                   |  26 ++-
- fs/ceph/export.c                |   9 +-
- fs/ceph/file.c                  |  30 +++
- fs/ceph/inode.c                 |   4 +-
- fs/ceph/mds_client.c            |  48 ++++-
- fs/ceph/mds_client.h            |  15 +-
- fs/ceph/metric.c                | 148 ++++++++++++++
- fs/ceph/metric.h                |  62 ++++++
- fs/ceph/quota.c                 |  62 +++++-
- fs/ceph/super.h                 |  34 +++-
- fs/ceph/xattr.c                 |   4 +-
- include/linux/ceph/libceph.h    |  13 +-
- include/linux/ceph/mon_client.h |   2 +-
- include/linux/ceph/osd_client.h |   8 +-
- include/linux/ceph/osdmap.h     |  19 +-
- include/linux/ceph/rados.h      |  14 ++
- include/linux/crush/crush.h     |  14 +-
- net/ceph/ceph_common.c          |  75 +++++++
- net/ceph/crush/crush.c          |   3 +-
- net/ceph/debugfs.c              |   6 +-
- net/ceph/osd_client.c           | 103 +++++++++-
- net/ceph/osdmap.c               | 363 +++++++++++++++++++++++++++++-----
- 29 files changed, 1405 insertions(+), 252 deletions(-)
- create mode 100644 fs/ceph/metric.c
- create mode 100644 fs/ceph/metric.h
+Thanks
+	Andrew
