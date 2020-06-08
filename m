@@ -2,161 +2,154 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBBA1C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 859E9C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:34:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3B17206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:32:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YTnOMmB4"
+	by mail.kernel.org (Postfix) with ESMTP id 685802076A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:34:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729615AbgFHLcK (ORCPT
+        id S1729593AbgFHLe2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 07:32:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43122 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729310AbgFHLcK (ORCPT
+        Mon, 8 Jun 2020 07:34:28 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:5402 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729310AbgFHLe2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 07:32:10 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00285C08C5C2;
-        Mon,  8 Jun 2020 04:32:09 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id q11so17017522wrp.3;
-        Mon, 08 Jun 2020 04:32:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=xSWNJpoj9Q+cfvAowlT8L7DGalgysWzhUfSm0eMm4Aw=;
-        b=YTnOMmB4tb7Dp7ULkcGrEQ2H44bPw8oI8UxeG8wLRrUOFOX9HKqGiFjpA/+2yyikWg
-         TYOAL5M7vN2hsz83LGl5LjLejxt2SDIQED5YjCaeZSRfy6ePf9Rg+2ToMG9xszGpujSr
-         7hX8fQU3sC74EfkKhAk1TEt+a17drdUeJLH3eYolZX5+1X9XUSgLbZG7quo+lVq4y8yH
-         zIP/6831snBBGt/NRhjDe28Nu28zeDxb4jDCoiML9lrYQAdf/4HgcuyMKjX4UxwTb2ba
-         HThTClKTaH1kCL2k02fzgWTmHn9nTrwDG2JUB1l30ZRmO6xk/G+S4UIwjOjaOdChobvR
-         sZPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=xSWNJpoj9Q+cfvAowlT8L7DGalgysWzhUfSm0eMm4Aw=;
-        b=ESAqD2R7b6GAqaGQ4nYZD9tdbFpltQ2ww6f5QhQuxzWZC/MshALOlA9kRd9vqdIAKt
-         9Yu1ep3DyxzyVx6XTDT+CP4oIAo7sFZ/beMZK5K+XlMS4aEcHvk5FxQHPQ9nI3WOTnDY
-         6qBM4v2hudodEkwRQtq8vitZ+ACKQOOeIagquqz4oTuiPZzxS2rUta6Y8li+Oob5ylP9
-         tWviA/K/1dPfXBLYMPEPxs9ML4sibpEaRRpGgrkFpTjcjRP6oC1xIgF5abZEbBGcgERd
-         zjCrEBlDkymZKbyMhdoTlEYFL4YrPMV33Ymj5/HWMfWtOaq3SwVEVzUykGI2CM3OM9vt
-         jL2g==
-X-Gm-Message-State: AOAM532JnmTveD2Suu+ei0kNOWsAjOwWZMxXE4C/Gwwe0c0+WEV31TS9
-        rzhTtbk5HA9tS6C3YwZF7C8D5LHIZec=
-X-Google-Smtp-Source: ABdhPJyWGnzhV7sCJMthf69WCiVGa54Q3A42fYSaonFUzQL96QhkraYk/+8MtD6KJiYecm6g6HARww==
-X-Received: by 2002:adf:ff82:: with SMTP id j2mr22242545wrr.375.1591615928639;
-        Mon, 08 Jun 2020 04:32:08 -0700 (PDT)
-Received: from [172.16.20.20] ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id d17sm25584732wrg.75.2020.06.08.04.32.05
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Jun 2020 04:32:08 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.14\))
-Subject: Re: [PATCH] soc: amlogic: meson-gx-socinfo: Fix S905X3 ID
-From:   Christian Hewitt <christianshewitt@gmail.com>
-In-Reply-To: <7d58e4db-2893-3675-eb93-ea14c3534b5b@baylibre.com>
-Date:   Mon, 8 Jun 2020 15:32:03 +0400
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <ACA41DA3-88A4-4141-AEAD-C056C9834B6B@gmail.com>
-References: <20200604044808.30995-1-christianshewitt@gmail.com>
- <7d58e4db-2893-3675-eb93-ea14c3534b5b@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-X-Mailer: Apple Mail (2.3445.104.14)
+        Mon, 8 Jun 2020 07:34:28 -0400
+X-IronPort-AV: E=Sophos;i="5.73,487,1583190000"; 
+   d="scan'208";a="453527699"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jun 2020 13:34:25 +0200
+Date:   Mon, 8 Jun 2020 13:34:25 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+cc:     Joe Perches <joe@perches.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        rjw@rjwysocki.net, pavel@ucw.cz, len.brown@intel.com,
+        Dan Carpenter <error27@gmail.com>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] kernel: power: swap: mark a function as __init to save
+ some memory
+In-Reply-To: <20200608112228.GW30374@kadam>
+Message-ID: <alpine.DEB.2.21.2006081329570.3136@hadrien>
+References: <20200531210059.647066-1-christophe.jaillet@wanadoo.fr> <effe3cde7b1f188427c42c476f5a96251d837416.camel@perches.com> <20200608112228.GW30374@kadam>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="8323329-1740847280-1591616066=:3136"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> On 8 Jun 2020, at 12:58 pm, Neil Armstrong <narmstrong@baylibre.com> =
-wrote:
->=20
->> The current value is taken from Amlogic's 4.9 bsp kernel which =
-appears
->> to use the wrong ID. For comparison, here's before/after:
->>=20
->> [    0.152237] soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:c =
-(10:2) Detected
->> [    0.152463] soc soc0: Amlogic Meson SM1 (S905X3) Revision 2b:c =
-(10:2) Detected
->=20
-> For SM1 we have weird values, here are the one we gen on KernelCI:
-> SEI610 (S905D3):
-> Amlogic Meson SM1 (Unknown) Revision 2b:c (50:2)
->=20
-> VIM3L (S905D3)
-> Amlogic Meson SM1 (Unknown) Revision 2b:c (4:2)
->=20
-> And you report now:
-> Odroid-C4 (S905X4)
-> Amlogic Meson SM1 (Unknown) Revision 2b:c (10:2)
->=20
-> And at the time you reported:
-> VIM3L (S905D3)
-> Amlogic Meson SM1 (S905D3) Revision 2b:c (b0:2)
->=20
-> So I'm quite lost here=E2=80=A6.
-
-In [1] you added the SM1 SoC ID and S905X3 ID { "S905X3", 0x2b, 0x5, 0xf =
-}
-which matches the BSP kernel source.
-
-In [2] I added a second S905X3 ID { "S905X3", 0x2b, 0xb0, 0xf2 } for =
-VIM3L, but
-this was a mistake (the chip is S905D3) so [3] corrected it to { =
-"S905D3", 0x2b,
-0xb0, 0xf0 } which matches my VIM3L board. If the VIM3L=E2=80=99s in =
-KernelCI now show
-"2b:c (4:2)=E2=80=9D it looks there has been a package change (silicon =
-fixes?) and we
-need to add another S905D3 package ID.
-
-In the last week I helped three different users install LE on S905X3 =
-Android
-box devices, all of which declare "2b:c (10:2)=E2=80=9D as the SoC ID, =
-which matches
-the only S905X3 device I own (Odroid C4). So I assumed the BSP is wrong =
-and
-sent this fix patch.
-
-If SEI610 is S905X3 (implied by the original SM1 submission from you) =
-KernelCI
-output shows the current ID is wrong (=E2=80=98Unknown=E2=80=99) so we =
-probably need to fix it
-with { "S905X3", 0x2b, 0x50, 0xf0 } then add new S905D3 (VIM3L) and =
-S905X3 (as
-per this patch) IDs.
-
-If SEI610 is S905D3 (as stated in this thread) the fix in this patch is =
-still
-correct, but we also need to send a second patch to add two new S905D3 =
-package
-IDs (SEI610 + VIM3L).
-
-I=E2=80=99ll ping you off-list to discuss.
-
-Christian
-
-[1] c9cc9bec36d0 ("soc: amlogic: meson-gx-socinfo: Add SM1 and S905X3 =
-ID=E2=80=9D)
-[2] 1d7c541b8a5b ("soc: amlogic: meson-gx-socinfo: Add S905X3 ID for =
-VIM3L=E2=80=9D)
-[3] fdfc6997bd08 ("soc: amlogic: meson-gx-socinfo: Fix S905D3 ID for =
-VIM3L=E2=80=9D)
+--8323329-1740847280-1591616066=:3136
+Content-Type: text/plain; charset=US-ASCII
 
 
+
+On Mon, 8 Jun 2020, Dan Carpenter wrote:
+
+> On Sun, May 31, 2020 at 03:11:27PM -0700, Joe Perches wrote:
+> > (adding Dan Carpenter)
+> >
+> > On Sun, 2020-05-31 at 23:00 +0200, Christophe JAILLET wrote:
+> > > 'swsusp_header_init()' is only called via 'core_initcall'.
+> > > It can be marked as __init to save a few bytes of memory.
+> >
+> > Hey Dan
+> >
+> > smatch has a full function calling tree right?
+> >
+> > Can smatch find unmarked functions called only by __init
+> > functions so those unmarked functions can be appropriately
+> > marked with __init like the below?
+> >
+>
+> It turns out it's complicated to do this in Smatch because Sparse
+> ignores the section attribute.  :/
+
+I wrote a script at one point for this for Coccinelle, and sent some
+patches.  It requires some effort, because you want to run it over and
+over - once function Y becomes init, some other functions might become
+init as well.  The iteration could be done automatically with Coccinelle,
+but I didn't take that option, because it semed safer to check the results
+along the way.  A version of the script is attached.
+
+julia
+--8323329-1740847280-1591616066=:3136
+Content-Type: text/plain; charset=US-ASCII; name=useful_inits3.cocci
+Content-Transfer-Encoding: BASE64
+Content-ID: <alpine.DEB.2.21.2006081334250.3136@hadrien>
+Content-Description: 
+Content-Disposition: attachment; filename=useful_inits3.cocci
+
+Ly8gTm8gaXRlcmF0aW9uLiAgRG8gaXQgYnkgaGFuZC4NCg0KQGluaXRpYWxp
+emU6b2NhbWxADQpAQA0KDQpsZXQgaXRibCA9IEhhc2h0YmwuY3JlYXRlIDEw
+MQ0KbGV0IGx0YmwgPSBIYXNodGJsLmNyZWF0ZSAxMDENCmxldCB0aGVmaWxl
+ID0gcmVmICIiDQoNCmxldCBoYXNoYWRkIHQgayA9DQogIGxldCBjZWxsID0N
+CiAgICB0cnkgSGFzaHRibC5maW5kIHQgaw0KICAgIHdpdGggTm90X2ZvdW5k
+IC0+DQogICAgICBsZXQgY2VsbCA9IHJlZiAwIGluDQogICAgICBIYXNodGJs
+LmFkZCB0IGsgY2VsbDsNCiAgICAgIGNlbGwgaW4NCiAgY2VsbCA6PSAhY2Vs
+bCArIDENCg0KbGV0IGhhc2hnZXQgdCBrID0gdHJ5ICEoSGFzaHRibC5maW5k
+IHQgaykgd2l0aCBOb3RfZm91bmQgLT4gMA0KDQpsZXQgc2VlbiAgPSByZWYg
+W10NCg0KQHNjcmlwdDpvY2FtbEANCkBADQoNCihsZXQgZmlsZSA9IExpc3Qu
+aGQgKENvY2NpbGliLmZpbGVzKCkpIGluDQp0aGVmaWxlIDo9IGZpbGU7DQps
+ZXQgZmlsZSA9DQogICAgdHJ5IExpc3QuaGQoTGlzdC50bCAoU3RyLnNwbGl0
+IChTdHIucmVnZXhwICIvbGludXgtbmV4dC8iKSBmaWxlKSkNCiAgICB3aXRo
+IF8gLT4gZmlsZSBpbg0KbGV0IG9maWxlID0gIi92YXIvanVsaWEvbGludXgt
+bmV4dC8iIF4NCiAgICAgIChGaWxlbmFtZS5jaG9wX2V4dGVuc2lvbiBmaWxl
+KSBeICIubyIgaW4NCmlmIG5vdChTeXMuZmlsZV9leGlzdHMgb2ZpbGUpDQp0
+aGVuIENvY2NpbGliLmV4aXQoKSk7DQoNCkhhc2h0YmwuY2xlYXIgaXRibDsN
+Ckhhc2h0YmwuY2xlYXIgbHRibDsNCnNlZW4gOj0gW10NCg0KQHJADQppZGVu
+dGlmaWVyIGY7DQpAQA0KDQpfX2luaXQgZiguLi4pIHsgLi4uIH0NCg0KQHNj
+cmlwdDpvY2FtbEANCmYgPDwgci5mOw0KQEANCg0KSGFzaHRibC5hZGQgaXRi
+bCBmICgpDQoNCkBzIGRpc2FibGUgb3B0aW9uYWxfYXR0cmlidXRlc0ANCmlk
+ZW50aWZpZXIgZjsNCkBADQoNCnN0YXRpYyBmKC4uLikgeyAuLi4gfQ0KDQpA
+c2NyaXB0Om9jYW1sQA0KZiA8PCBzLmY7DQpAQA0KDQpIYXNodGJsLmFkZCBs
+dGJsIGYgKCkNCg0KQHQgZXhpc3RzQA0KaWRlbnRpZmllciBmLGc7DQpwb3Np
+dGlvbiBwOw0KQEANCg0KX19pbml0IGYoLi4uKSB7IC4uLiB3aGVuIGFueQ0K
+ICAgZ0BwKC4uLikNCiAgIC4uLiB3aGVuIGFueQ0KIH0NCg0KQHNjcmlwdDpv
+Y2FtbEANCmcgPDwgdC5nOw0KX3AgPDwgdC5wOw0KQEANCg0KaWYgbm90IChI
+YXNodGJsLm1lbSBsdGJsIGcpIHx8IEhhc2h0YmwubWVtIGl0YmwgZw0KdGhl
+biBDb2NjaWxpYi5pbmNsdWRlX21hdGNoIGZhbHNlDQoNCkBvazEgZGlzYWJs
+ZSBvcHRpb25hbF9hdHRyaWJ1dGVzIGV4aXN0c0ANCmlkZW50aWZpZXIgZix0
+Lmc7DQpAQA0KDQpmKC4uLikgeyAuLi4gd2hlbiBhbnkNCiAgIGcNCiAgIC4u
+LiB3aGVuIGFueQ0KIH0NCg0KQG9rMiBkaXNhYmxlIG9wdGlvbmFsX2F0dHJp
+YnV0ZXMgZXhpc3RzQA0KaWRlbnRpZmllciBpLGosZmxkLHQuZzsNCkBADQoN
+CnN0cnVjdCBpIGogPSB7IC5mbGQgPSBnLCB9Ow0KDQpAb2szIGRpc2FibGUg
+b3B0aW9uYWxfYXR0cmlidXRlcyBleGlzdHNADQppZGVudGlmaWVyIHQuZzsN
+CmRlY2xhcmVyIGQ7DQpAQA0KDQpkKC4uLixnLC4uLik7DQoNCkBvazQgZGlz
+YWJsZSBvcHRpb25hbF9hdHRyaWJ1dGVzIGV4aXN0c0ANCmlkZW50aWZpZXIg
+dC5nOw0KZXhwcmVzc2lvbiBlOw0KQEANCg0KKA0KZSguLi4sZywuLi4pDQp8
+DQplKC4uLiwmZywuLi4pDQp8DQplID0gJmcNCnwNCmUgPSBnDQopDQoNCkBz
+Y3JpcHQ6b2NhbWwgZGVwZW5kcyBvbiAhb2sxICYmICFvazIgJiYgIW9rMyAm
+JiAhb2s0QA0KZyA8PCB0Lmc7DQpAQA0KDQpsZXQgZmlsZSA9ICF0aGVmaWxl
+IGluDQpsZXQgZmlsZSA9DQogICAgdHJ5IExpc3QuaGQoTGlzdC50bCAoU3Ry
+LnNwbGl0IChTdHIucmVnZXhwICIvbGludXgtbmV4dC8iKSBmaWxlKSkNCiAg
+ICB3aXRoIF8gLT4gZmlsZSBpbg0KaWYgbm90KExpc3QubWVtIChnLGZpbGUp
+ICFzZWVuKQ0KdGhlbg0KICBiZWdpbg0KICAgIHNlZW4gOj0gKGcsZmlsZSkg
+OjogIXNlZW47DQogICAgbGV0IG9maWxlID0gIi92YXIvanVsaWEvbGludXgt
+bmV4dC8iIF4NCiAgICAgIChGaWxlbmFtZS5jaG9wX2V4dGVuc2lvbiBmaWxl
+KSBeICIubyIgaW4NCiAgICBpZiBTeXMuZmlsZV9leGlzdHMgb2ZpbGUNCiAg
+ICB0aGVuDQogICAgICBsZXQgbCA9DQoJQ29tbW9uLmNtZF90b19saXN0DQoJ
+ICAoUHJpbnRmLnNwcmludGYNCgkgICAgICJvYmpkdW1wIC14ICVzIHwgZ3Jl
+cCAtdyAlcyB8IGdyZXAgLXcgRiB8IGdyZXAgLnRleHQudW5saWtlbHkiDQoJ
+ICAgICBvZmlsZSBnKSBpbg0KICAgICAgbWF0Y2ggbCB3aXRoDQoJW10gLT4g
+Q29jY2lsaWIuaW5jbHVkZV9tYXRjaCBmYWxzZQ0KICAgICAgfCBfIC0+DQoJ
+ICBQcmludGYucHJpbnRmICJJbmZvIGZvciAlcyAlc1xuIiBmaWxlIGc7DQoJ
+ICBMaXN0Lml0ZXINCgkgICAgKGZ1bmN0aW9uIGwgLT4gUHJpbnRmLnByaW50
+ZiAiJXNcbiIgbCkNCgkgICAgbDsNCgkgIFByaW50Zi5wcmludGYgIlxuIjsg
+Zmx1c2ggc3Rkb3V0DQogICAgZWxzZSBDb2NjaWxpYi5pbmNsdWRlX21hdGNo
+IGZhbHNlDQogIGVuZA0KZWxzZSBDb2NjaWxpYi5pbmNsdWRlX21hdGNoIGZh
+bHNlDQoNCkBkZXBlbmRzIG9uICFvazEgJiYgIW9rMiAmJiAhb2szICYmICFv
+azRADQppZGVudGlmaWVyIHQuZzsNCkBADQoNCi0gZw0KK19faW5pdCBnDQog
+KC4uLikgeyAuLi4gfQ0K
+
+--8323329-1740847280-1591616066=:3136--
