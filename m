@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E2E5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8919BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:45:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BE3F20737
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:45:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5141320737
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:45:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663535;
-	bh=0ipDXHuXsr5Qaoa9TOtSQq6ymopP/5G4FnF3eZVMeJM=;
+	s=default; t=1591663549;
+	bh=WoBvXvBT7w5MB1Ci7HGCPSvkE9k4I+qGx8ouhuGbpBE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s1/1CSvZUG2C1/skgbqbCOXGHgfwf06053itMk6BJA7W/utZUzxa9SWkMiRD7ZD0v
-	 uV2a057xKzCLsW6DrD9aRRdF+8xEBi1Gv024Au5B+Y7pKDBZeNbSK8AIG9rkp03XC6
-	 cfR109/l73Mvo+OfvSt9geeBl5Iwn25UvEHuRESs=
+	b=Tln0yFy1xIOiCCcLPBqHulRD46iRJwJ2uPefn+1qb64mM5VqtFIYW3ST7kg/PZ6df
+	 TJ9tWMcBWoy/OUxWArpEqs3+BsUpJg6R4t06KSPh5e1VnJHg4sWtUH+dWbBZB3p7MK
+	 ny+kJFiEm5JxHNTS1ZMUBluTCtZ/AQCkXB9Jp7F8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733281AbgFIApe (ORCPT
+        id S1729853AbgFIAps (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:45:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58812 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:45:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728980AbgFHXLr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:11:47 -0400
+        id S1728975AbgFHXLq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:11:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E39720897;
-        Mon,  8 Jun 2020 23:11:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 661652151B;
+        Mon,  8 Jun 2020 23:11:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657907;
-        bh=0ipDXHuXsr5Qaoa9TOtSQq6ymopP/5G4FnF3eZVMeJM=;
+        s=default; t=1591657906;
+        bh=WoBvXvBT7w5MB1Ci7HGCPSvkE9k4I+qGx8ouhuGbpBE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0oBRcgcs0ohMQ3MpCLGDKKA4oZC0aGcLW3N4mr9Yw6sKykb8Duz52c4JvhSgPdRCb
-         7CQSns8IjO+WsfTd6J8RC3MVuz1vQ4e6fXhFujdDm4LnoYrq5ZPrWr5sTWaNOcCASM
-         nuO8PNCUDXZ0bfou5xQWYL7vvueCG8ob/Y9dkqnI=
+        b=KADOENpzi4cxP4t4Fq7cuHlZ+5+7c1TbQP4G88ziw1qCEC+1L9sJp2GKhvxGgdMQ2
+         l4eA1wsaLnUV3WAsW4j5Cgcha+p0byqn6nqlFFaNd3Q6SH2HHJSuOmk5hNMC+a95ga
+         jKtfn/peoNXyE3+wmbjOHOwWjB2T35S+OQRVoqO4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 259/274] platform/x86: hp-wmi: Convert simple_strtoul() to kstrtou32()
-Date:   Mon,  8 Jun 2020 19:05:52 -0400
-Message-Id: <20200608230607.3361041-259-sashal@kernel.org>
+Cc:     Pavel Begunkov <asml.silence@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 258/274] io_uring: fix overflowed reqs cancellation
+Date:   Mon,  8 Jun 2020 19:05:51 -0400
+Message-Id: <20200608230607.3361041-258-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -59,42 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Pavel Begunkov <asml.silence@gmail.com>
 
-[ Upstream commit 5cdc45ed3948042f0d73c6fec5ee9b59e637d0d2 ]
+[ Upstream commit 7b53d59859bc932b37895d2d37388e7fa29af7a5 ]
 
-First of all, unsigned long can overflow u32 value on 64-bit machine.
-Second, simple_strtoul() doesn't check for overflow in the input.
+Overflowed requests in io_uring_cancel_files() should be shed only of
+inflight and overflowed refs. All other left references are owned by
+someone else.
 
-Convert simple_strtoul() to kstrtou32() to eliminate above issues.
+If refcount_sub_and_test() fails, it will go further and put put extra
+ref, don't do that. Also, don't need to do io_wq_cancel_work()
+for overflowed reqs, they will be let go shortly anyway.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/hp-wmi.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ fs/io_uring.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-index a881b709af25..a44a2ec33287 100644
---- a/drivers/platform/x86/hp-wmi.c
-+++ b/drivers/platform/x86/hp-wmi.c
-@@ -461,8 +461,14 @@ static ssize_t postcode_show(struct device *dev, struct device_attribute *attr,
- static ssize_t als_store(struct device *dev, struct device_attribute *attr,
- 			 const char *buf, size_t count)
- {
--	u32 tmp = simple_strtoul(buf, NULL, 10);
--	int ret = hp_wmi_perform_query(HPWMI_ALS_QUERY, HPWMI_WRITE, &tmp,
-+	u32 tmp;
-+	int ret;
-+
-+	ret = kstrtou32(buf, 10, &tmp);
-+	if (ret)
-+		return ret;
-+
-+	ret = hp_wmi_perform_query(HPWMI_ALS_QUERY, HPWMI_WRITE, &tmp,
- 				       sizeof(tmp), sizeof(tmp));
- 	if (ret)
- 		return ret < 0 ? ret : -EINVAL;
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index dd90c3fcd4f5..4038ed0a5c39 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -7467,10 +7467,11 @@ static void io_uring_cancel_files(struct io_ring_ctx *ctx,
+ 				finish_wait(&ctx->inflight_wait, &wait);
+ 				continue;
+ 			}
++		} else {
++			io_wq_cancel_work(ctx->io_wq, &cancel_req->work);
++			io_put_req(cancel_req);
+ 		}
+ 
+-		io_wq_cancel_work(ctx->io_wq, &cancel_req->work);
+-		io_put_req(cancel_req);
+ 		schedule();
+ 		finish_wait(&ctx->inflight_wait, &wait);
+ 	}
 -- 
 2.25.1
 
