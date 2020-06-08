@@ -4,54 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B70C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC814C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:13:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49D6720775
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:13:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9165D20775
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:13:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591661586;
-	bh=7AjkuNnUHAomKFcixfNAvXlLVD+ewVcKV2HKY7ByS1o=;
+	s=default; t=1591661588;
+	bh=Uj+5VCm0E7vgGIJLWRdExksoYdJsy3dE8hmad513uVo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zm8jOurFP+BuMO53MWy2mIw37vR51UL1WGyfk9ABDySf5oh5kveVraMhpH9V2/hM6
-	 +Yrqc8HZN3z3udry0NBGS/r8uFiY8y3kf+YNNOP/HGiAxgHEno8GbHnsLCtZzWLoU2
-	 N9FSrT/qio7CulPcWIhwU2HaRIjBSmUbUYTQ7E9E=
+	b=E5c3F8GDpNFPhIVICTWuAmVp/XVr7XFMDz12tmZQHejvUnshUlHVQhIpKkYek+FN6
+	 22x9h1WjzNxDAVuLcPZ48qJS4cU3wSwnCHUexOhZVtAOVaeeSg1LQIbTJCOuH9B/z2
+	 bY/uPtyD9S+jkTLhv90HHMTJ39xoHeUptdS129co=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730818AbgFHXTe (ORCPT
+        id S2388036AbgFIANG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:19:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36998 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:13:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729567AbgFHXPv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:15:51 -0400
+        id S1730817AbgFHXTf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:19:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2875120659;
-        Mon,  8 Jun 2020 23:15:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63F4620842;
+        Mon,  8 Jun 2020 23:19:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658150;
-        bh=7AjkuNnUHAomKFcixfNAvXlLVD+ewVcKV2HKY7ByS1o=;
+        s=default; t=1591658375;
+        bh=Uj+5VCm0E7vgGIJLWRdExksoYdJsy3dE8hmad513uVo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jKMcNHBgsRCgtBG13ql40VV2fpy2+AM2TisUf/F7kjV6AzrWNi7EhA7CKvZCUqEuU
-         7xC+mnHAbIsN6E9NYMAZZDwygU9UCeSxHpFbK+Zfr0G22cRBE/+mQ4PTAhveZVAPs1
-         pmFk19N8CeBMxI5moXkYHENgoVY6IDIppkhHxgM4=
+        b=BT7nqQpcGlykXS9Flb/mjNxe9hrVO/g9Wz5gO+xf+wXzbl4ZGTrap38I22dCGpry8
+         bEzuZTbkWlFBMWuACzWXW2i7MDGkytJse0PyTrdIU5Qcm5jD5Ro57hw478L1MrhHep
+         HdZcejPWCz8FDtVemCuIbKNO8ZuHwjO1Xo9Yg0Uk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Samuel Iglesias Gonsalvez <siglesias@igalia.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        industrypack-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.6 183/606] ipack: tpci200: fix error return code in tpci200_register()
-Date:   Mon,  8 Jun 2020 19:05:08 -0400
-Message-Id: <20200608231211.3363633-183-sashal@kernel.org>
+Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Sasha Levin <sashal@kernel.org>, linux-mips@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 037/175] MIPS: Loongson: Build ATI Radeon GPU driver as module
+Date:   Mon,  8 Jun 2020 19:16:30 -0400
+Message-Id: <20200608231848.3366970-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
-References: <20200608231211.3363633-1-sashal@kernel.org>
+In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
+References: <20200608231848.3366970-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,36 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-commit 133317479f0324f6faaf797c4f5f3e9b1b36ce35 upstream.
+[ Upstream commit a44de7497f91834df0b8b6d459e259788ba66794 ]
 
-Fix to return negative error code -ENOMEM from the ioremap() error handling
-case instead of 0, as done elsewhere in this function.
+When ATI Radeon GPU driver has been compiled directly into the kernel
+instead of as a module, we should make sure the firmware for the model
+(check available ones in /lib/firmware/radeon) is built-in to the kernel
+as well, otherwise there exists the following fatal error during GPU init,
+change CONFIG_DRM_RADEON=y to CONFIG_DRM_RADEON=m to fix it.
 
-Fixes: 43986798fd50 ("ipack: add error handling for ioremap_nocache")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Cc: stable <stable@vger.kernel.org>
-Acked-by: Samuel Iglesias Gonsalvez <siglesias@igalia.com>
-Link: https://lore.kernel.org/r/20200507094237.13599-1-weiyongjun1@huawei.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[    1.900997] [drm] Loading RS780 Microcode
+[    1.905077] radeon 0000:01:05.0: Direct firmware load for radeon/RS780_pfp.bin failed with error -2
+[    1.914140] r600_cp: Failed to load firmware "radeon/RS780_pfp.bin"
+[    1.920405] [drm:r600_init] *ERROR* Failed to load firmware!
+[    1.926069] radeon 0000:01:05.0: Fatal error during GPU init
+[    1.931729] [drm] radeon: finishing device.
+
+Fixes: 024e6a8b5bb1 ("MIPS: Loongson: Add a Loongson-3 default config file")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ipack/carriers/tpci200.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/mips/configs/loongson3_defconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/ipack/carriers/tpci200.c b/drivers/ipack/carriers/tpci200.c
-index 23445ebfda5c..ec71063fff76 100644
---- a/drivers/ipack/carriers/tpci200.c
-+++ b/drivers/ipack/carriers/tpci200.c
-@@ -306,6 +306,7 @@ static int tpci200_register(struct tpci200_board *tpci200)
- 			"(bn 0x%X, sn 0x%X) failed to map driver user space!",
- 			tpci200->info->pdev->bus->number,
- 			tpci200->info->pdev->devfn);
-+		res = -ENOMEM;
- 		goto out_release_mem8_space;
- 	}
- 
+diff --git a/arch/mips/configs/loongson3_defconfig b/arch/mips/configs/loongson3_defconfig
+index 90ee0084d786..e41f4841cb4d 100644
+--- a/arch/mips/configs/loongson3_defconfig
++++ b/arch/mips/configs/loongson3_defconfig
+@@ -231,7 +231,7 @@ CONFIG_MEDIA_CAMERA_SUPPORT=y
+ CONFIG_MEDIA_USB_SUPPORT=y
+ CONFIG_USB_VIDEO_CLASS=m
+ CONFIG_DRM=y
+-CONFIG_DRM_RADEON=y
++CONFIG_DRM_RADEON=m
+ CONFIG_FB_RADEON=y
+ CONFIG_LCD_CLASS_DEVICE=y
+ CONFIG_LCD_PLATFORM=m
 -- 
 2.25.1
 
