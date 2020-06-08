@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 719ABC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E5BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:19:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53F872085B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:19:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B14E2085B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:19:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658373;
-	bh=UC/hJa4X7QpfVijofanUa1kALbeXhRnw1dF4T3sBwyc=;
+	s=default; t=1591658380;
+	bh=T91HkriA4AVveN5p0X9Tth1A4tfYSz0CPkwXMfu++hQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YYzkCwd9j8A/Zbvs5K8OoKeSpsDVYHDF3TS+TdkNcADPJbqs/oTbGPqU1VXTXVAGF
-	 zX73BBMfJ06dJySPvUo7AaHuwoB+jLZRdMn1mCUf6RyJfN5ietqxCQANR9QFyhw57K
-	 z9HSb/MemimScG9CCWkOydjobfPYCyHRt7wPGxVA=
+	b=L78jAcCutuOgGggQa56KJtr/el0MJUfu39eLWgP468/jUAvc97BLskthsSjc6VxZ8
+	 OUDcU22s0IWtHBCvE1UVrIx2GbUW6VAlqdN27FPZPl970Q3cMyeABhV6E+rk/n4F7J
+	 e8eoJK7BCzMRvv8KT5iFKz0QmZABGi0LsvoasGpU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730801AbgFHXTb (ORCPT
+        id S1730832AbgFHXTi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:19:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36924 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:19:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729052AbgFHXPt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:15:49 -0400
+        id S1730103AbgFHXPv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:15:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D55612068D;
-        Mon,  8 Jun 2020 23:15:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1767220760;
+        Mon,  8 Jun 2020 23:15:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658148;
-        bh=UC/hJa4X7QpfVijofanUa1kALbeXhRnw1dF4T3sBwyc=;
+        s=default; t=1591658149;
+        bh=T91HkriA4AVveN5p0X9Tth1A4tfYSz0CPkwXMfu++hQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CDJ0ANxCBfx9sk1d3mSPj/eAFgpg/jj7QF+h0IaeL2aK3t3DYF9JTEy15q5w9tLks
-         RPfVebBfMXwPzWCGH8O1zvbc3yfM0IXwEEIcenzGs2Ka9slI+xHBatVvg6Q1bH9l3m
-         OQhAtwEvj4dQxZLsVYPL7zYh4xhV0QqG9sgXV7xc=
+        b=i5gly1zXRiK8L3Dx9iKRSudRrr5sELbF7AYVwWuhI732n5GAsrvYW/PLyh6IXX5TX
+         6Q1omBG3q5K15Xjs+/Ht8f7Aw+NDXCkgI4OLvCUGtd3KnQdZJAKOHt1OFjcx9r/teK
+         9DQlhh0cXZ64NpbR7srWM4RWNMtZgh1fqwTKMVCw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sagar Shrikant Kadam <sagar.kadam@sifive.com>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-serial@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 181/606] tty: serial: add missing spin_lock_init for SiFive serial console
-Date:   Mon,  8 Jun 2020 19:05:06 -0400
-Message-Id: <20200608231211.3363633-181-sashal@kernel.org>
+Cc:     Alexander Usyskin <alexander.usyskin@intel.com>,
+        =?UTF-8?q?=E4=BA=BF=E4=B8=80?= <teroincn@gmail.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH AUTOSEL 5.6 182/606] mei: release me_cl object reference
+Date:   Mon,  8 Jun 2020 19:05:07 -0400
+Message-Id: <20200608231211.3363633-182-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,41 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+From: Alexander Usyskin <alexander.usyskin@intel.com>
 
-commit 17b4efdf4e4867079012a48ca10d965fe9d68822 upstream.
+commit fc9c03ce30f79b71807961bfcb42be191af79873 upstream.
 
-An uninitialised spin lock for sifive serial console raises a bad
-magic spin_lock error as reported and discussed here [1].
-Initialising the spin lock resolves the issue.
+Allow me_cl object to be freed by releasing the reference
+that was acquired  by one of the search functions:
+__mei_me_cl_by_uuid_id() or __mei_me_cl_by_uuid()
 
-The fix is tested on HiFive Unleashed A00 board with Linux 5.7-rc4
-and OpenSBI v0.7
-
-[1] https://lore.kernel.org/linux-riscv/b9fe49483a903f404e7acc15a6efbef756db28ae.camel@wdc.com
-
-Fixes: 45c054d0815b ("tty: serial: add driver for the SiFive UART")
-Reported-by: Atish Patra <Atish.Patra@wdc.com>
-Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
-Acked-by: Palmer Dabbelt <palmerdabbelt@google.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/1589019852-21505-2-git-send-email-sagar.kadam@sifive.com
+Cc: <stable@vger.kernel.org>
+Reported-by: 亿一 <teroincn@gmail.com>
+Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+Link: https://lore.kernel.org/r/20200512223140.32186-1-tomas.winkler@intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/tty/serial/sifive.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/misc/mei/client.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/tty/serial/sifive.c b/drivers/tty/serial/sifive.c
-index d5f81b98e4d7..38133eba83a8 100644
---- a/drivers/tty/serial/sifive.c
-+++ b/drivers/tty/serial/sifive.c
-@@ -840,6 +840,7 @@ console_initcall(sifive_console_init);
+diff --git a/drivers/misc/mei/client.c b/drivers/misc/mei/client.c
+index 1e3edbbacb1e..c6b163060c76 100644
+--- a/drivers/misc/mei/client.c
++++ b/drivers/misc/mei/client.c
+@@ -266,6 +266,7 @@ void mei_me_cl_rm_by_uuid(struct mei_device *dev, const uuid_le *uuid)
+ 	down_write(&dev->me_clients_rwsem);
+ 	me_cl = __mei_me_cl_by_uuid(dev, uuid);
+ 	__mei_me_cl_del(dev, me_cl);
++	mei_me_cl_put(me_cl);
+ 	up_write(&dev->me_clients_rwsem);
+ }
  
- static void __ssp_add_console_port(struct sifive_serial_port *ssp)
- {
-+	spin_lock_init(&ssp->port.lock);
- 	sifive_serial_console_ports[ssp->port.line] = ssp;
+@@ -287,6 +288,7 @@ void mei_me_cl_rm_by_uuid_id(struct mei_device *dev, const uuid_le *uuid, u8 id)
+ 	down_write(&dev->me_clients_rwsem);
+ 	me_cl = __mei_me_cl_by_uuid_id(dev, uuid, id);
+ 	__mei_me_cl_del(dev, me_cl);
++	mei_me_cl_put(me_cl);
+ 	up_write(&dev->me_clients_rwsem);
  }
  
 -- 
