@@ -1,114 +1,264 @@
 Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: **
-X-Spam-Status: No, score=2.5 required=3.0 tests=CHARSET_FARAWAY_HEADER,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF06BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 06:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2EC1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 06:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A884206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 06:54:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=windriversystems.onmicrosoft.com header.i=@windriversystems.onmicrosoft.com header.b="kya0L573"
+	by mail.kernel.org (Postfix) with ESMTP id 90B69206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 06:57:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728992AbgFHGyj (ORCPT
+        id S1728943AbgFHG5J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 02:54:39 -0400
-Received: from mail-mw2nam10on2055.outbound.protection.outlook.com ([40.107.94.55]:22497
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        Mon, 8 Jun 2020 02:57:09 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:58694 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728159AbgFHGyi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 02:54:38 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=giNGmzJZQJxd3f5vssNH1YrMZHqmKEAGy9ZjFpZWp57jHW7yEKeqCipc5mnjEb7xdRWYZ9rEL5dpAOEpu2sz2zcoyDWzXutphYqJJw6us71jdhabdHuaOS2KaQwEqMKHghbU1KVWxCOUXZ6ihhuW41pbv7XBJANe0GhzPwcw9I0E4NjkU5/pjQCRmzy0RSI+FSoliANRJ1JyVgG3RHTAadCeA8zTRz9tAHoNZnihuYfbqsd+WkF2mgIMiWlTWggB1N3A69iXR9JhssOSgRieF888EzXMbE6BalA+8ST70I6pB4J7wVXvmSygtZ7O0NPe9ozwLJEArZ0MYjgD1pb5BQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=t4jPbrcjs/YFiTM/3A9d0iU2+aTecaiSv5EtzEgqU1M=;
- b=KB+FSG/315VChma9jfi7SDVlPRq+JXzVOpxrCgybFQlHHsYFAJHfFtw6/UW7cvlZJQqXt5njHDBW2h16hJ54lXd1ELADD9ePw+Hl3jByhg7GoTG9TAa021GJv28Sxe9pfOrNr8salE7mmV3vH1SACmNtwN8mSm1+aF0NzMoavHQHFnNIJ1ynvV+kdS90QYJvvN6dt7nkdsOWwuwJlpqbrhJCHcZrmJItfKt3oDzIphuj1ahkp9h1NOKRShbvvYakGtEl0VBGrnUi+8sjeLXkLtRU151SlvmQ+Ck5Mwm16JudiS5wWsa+P5aKjpKUtK9IOSwpDeDUpietPIaivbgRkw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=windriver.com; dmarc=pass action=none
- header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=windriversystems.onmicrosoft.com;
- s=selector2-windriversystems-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=t4jPbrcjs/YFiTM/3A9d0iU2+aTecaiSv5EtzEgqU1M=;
- b=kya0L573f5opjogRaFnQSzF3Ldj9N5/Q/b3R6AMHEZQj0WByWVXmgibAWvWx/E5gNZfyRLBz4PQ38bl9c7NpWZjlXXGCcGtkFrRY9JsiEux+RRPU/HnKeq67i+W9Y7Y0GiChnmgG0KU/IGzabMqjrVzwTStABqwUQGNbYUPyub0=
-Received: from DM5PR11MB2058.namprd11.prod.outlook.com (2603:10b6:3:12::23) by
- DM5PR11MB0073.namprd11.prod.outlook.com (2603:10b6:4:67::37) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3066.23; Mon, 8 Jun 2020 06:54:36 +0000
-Received: from DM5PR11MB2058.namprd11.prod.outlook.com
- ([fe80::38ae:4906:7fdb:3199]) by DM5PR11MB2058.namprd11.prod.outlook.com
- ([fe80::38ae:4906:7fdb:3199%7]) with mapi id 15.20.3066.023; Mon, 8 Jun 2020
- 06:54:36 +0000
-From:   "Zhang, Qiang" <Qiang.Zhang@windriver.com>
-To:     Markus Elfring <Markus.Elfring@web.de>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
-CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kyungtae Kim <kt0755@gmail.com>
-Subject: =?gb2312?B?u9i4tDogW1BBVENIXSB1c2I6IGdhZGdldDogZnVuY3Rpb246IHByaW50ZXI6?=
- =?gb2312?B?IEZpeCB1c2UtYWZ0ZXItZnJlZSBpbiBfX2xvY2tfYWNxdWlyZSgp?=
-Thread-Topic: [PATCH] usb: gadget: function: printer: Fix use-after-free in
- __lock_acquire()
-Thread-Index: AQHWOxd3pvSJzCcPhkuwExEvp5/TI6jOTEjR
-Date:   Mon, 8 Jun 2020 06:54:35 +0000
-Message-ID: <DM5PR11MB205835FB50BA296232BC3163FF850@DM5PR11MB2058.namprd11.prod.outlook.com>
-References: <5207d179-0a7d-b5ff-af34-102fb21028b5@web.de>
-In-Reply-To: <5207d179-0a7d-b5ff-af34-102fb21028b5@web.de>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: web.de; dkim=none (message not signed)
- header.d=none;web.de; dmarc=none action=none header.from=windriver.com;
-x-originating-ip: [60.247.85.82]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e4a628c1-cd69-4d6b-6a5f-08d80b78ce74
-x-ms-traffictypediagnostic: DM5PR11MB0073:
-x-microsoft-antispam-prvs: <DM5PR11MB007380024575F3714820B8A3FF850@DM5PR11MB0073.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:400;
-x-forefront-prvs: 042857DBB5
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Z3dPATE8LavtU7OYfDEcLUaRx74MBs6JsO/pyyamsH4EjtDzHkfgJmP09cd/v3wZq4wF8Aeomijf2Fqy9gSHpmF3ZIDh+SBVbsvdhNOFkJAQdE2enwd+9DLi8ZShm8aP0G82nEnq6MXIEqevre++pd50Am40WKpWmlJ+NRjkWbZp5ys4M8y2PMUOR/2JcRPAEmtx4ro9oCTroE7QbHAUh0Iacj/d8sDQLVm/Uknn1v+BeXpdJ0jbeb+k2ZKiJtz35ztTPPpeq5hTDJiHhdurl2tQvpFvcFo8TG0TSpTTrfwrT0WmX/gAm+5L5CyyAy4ulsv/la77th3OWH/4nFfV/g==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR11MB2058.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(376002)(396003)(136003)(366004)(39840400004)(8936002)(478600001)(9686003)(71200400001)(54906003)(4326008)(86362001)(7696005)(33656002)(55016002)(110136005)(4744005)(83380400001)(66446008)(66556008)(64756008)(5660300002)(52536014)(316002)(91956017)(2906002)(26005)(76116006)(66946007)(6506007)(224303003)(66476007)(186003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: mYV6bxxXDMqEsHqZsBX9RtoMuHWgRL3eVtADwr1T3M0TAdM0m8sF41tjIz6HUxXwCiPWOu1u8xNZZ0rsu4oRha7JGvXKiLpnoe9w3uSd0Xd+aaBrLNj5A3pgO34AmElfrqrpbudosKa/2kFkVBmRRVww/RbLqRVmhdIWorrX2khJH73HVnmO5mnqJnq9r3qIAX4CGR/+zeFahs0e1TJM1lerYdf3UrpVJb+8PeUDKb6DWWiMOJrzCFGA98iQlw3mZ18Ayerodv+0l6dngPjj5sxosjiM0HZmwj6+Ffejdlz3UVoPbS6cR3oQ5e/GdrHUhgfNLmpADxgJTEpkWh/HJkmFA9WYMNi9UDyLd3ZKpYbYyXl1hRHqNVKann+22eSWNCAZIJOlYfEHjf1NaINmCB/gBAwv8PHV89elb7Q6w+wRvcqIK/Z/bFQEBCiOD9rU7fnCFZqLPGgaYrQHb39391vNQbIqDprEuYvS8Ymub28=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        id S1726929AbgFHG5J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 02:57:09 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 7F698F52E69E3EF76E84;
+        Mon,  8 Jun 2020 14:57:06 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 8 Jun 2020
+ 14:57:04 +0800
+Subject: Re: [f2fs-dev] [PATCH] f2fs: add F2FS_IOC_TRIM_FILE ioctl
+To:     Daeho Jeong <daeho43@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <kernel-team@android.com>, Daeho Jeong <daehojeong@google.com>
+References: <20200605042746.201180-1-daeho43@gmail.com>
+ <fd9bd76c-1864-2cfc-bf86-ef705c8a407d@huawei.com>
+ <CACOAw_yw+zczoWpNvYz_UHRYjr8BS+xKK=7_BKi0_0wEhp8Lvg@mail.gmail.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <36d3c98e-24bb-988c-57a3-82730cc75cbc@huawei.com>
+Date:   Mon, 8 Jun 2020 14:57:02 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e4a628c1-cd69-4d6b-6a5f-08d80b78ce74
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jun 2020 06:54:35.8063
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yk42BQH+VTtTpveuCtncE915DvdMQs5yfsEGbxAw89FK10MoIdeZWYs5oH6o5Z+pkJ6rCilJs2eo9pWTt4Gx/vbe7ccQaNEHW+lx6He7BTI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB0073
+In-Reply-To: <CACOAw_yw+zczoWpNvYz_UHRYjr8BS+xKK=7_BKi0_0wEhp8Lvg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTWFya3VzLg0KSSBkb24ndCBuZWVkIHRvIGFkZCBGaXggdGFnIHRvIHZpZXcgdGhlIGNvZGUu
-DQoNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCreivP7IyzogTWFy
-a3VzIEVsZnJpbmcgPE1hcmt1cy5FbGZyaW5nQHdlYi5kZT4NCreiy83KsbzkOiAyMDIwxOo21MI1
-yNUgMTY6NTcNCsrVvP7IyzogWmhhbmcsIFFpYW5nOyBsaW51eC11c2JAdmdlci5rZXJuZWwub3Jn
-DQqzrcvNOiBrZXJuZWwtamFuaXRvcnNAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdl
-ci5rZXJuZWwub3JnOyBBbGFuIFN0ZXJuOyBGZWxpcGUgQmFsYmk7IEdyZWcgS3JvYWgtSGFydG1h
-bjsgS3l1bmd0YWUgS2ltDQrW98ziOiBSZTogW1BBVENIXSB1c2I6IGdhZGdldDogZnVuY3Rpb246
-IHByaW50ZXI6IEZpeCB1c2UtYWZ0ZXItZnJlZSBpbiBfX2xvY2tfYWNxdWlyZSgpDQoNCj4gRml4
-IHRoaXMgYnkgaW5jcmVhc2Ugb2JqZWN0IHJlZmVyZW5jZSBjb3VudC4NCg0KSSBmaW5kIHRoaXMg
-ZGVzY3JpcHRpb24gaW5jb21wbGV0ZSBhY2NvcmRpbmcgdG8gdGhlIHByb3Bvc2VkIGNoYW5nZXMu
-DQoNCldvdWxkIHlvdSBsaWtlIHRvIGFkZCB0aGUgdGFnIKGwRml4ZXOhsSB0byB0aGUgY29tbWl0
-IG1lc3NhZ2U/DQoNClJlZ2FyZHMsDQpNYXJrdXMNCg==
+On 2020/6/8 11:36, Daeho Jeong wrote:
+> Yes, this is for security key destruction.
+> 
+> AFAIK, discard will unmap the data block and, after done it,
+> we can read either zero data or garbage data from that block depending
+> on eMMC/UFS.
+
+Since spec didn't restrict how vendor implement the erase interface, so
+in order to enhance performance of discard interface, vendor could implement
+it as an async one, which may not zero mapping entry(L1 table), instead, it
+could set related bitmap to invalid that mapping entry, than later if device
+allow user to access that invalid mapping entry, key info may be explosed,
+
+It's completely up to how vendor implement the interface, so I think there is
+still risk to use discard.
+
+Thanks,
+
+> In a view point of read data, it might be the same with zeroing the data block.
+> However, since we can even unmap that block, I believe discard is
+> safer than zeroing out.
+> 
+> 2020년 6월 8일 (월) 오전 11:46, Chao Yu <yuchao0@huawei.com>님이 작성:
+>>
+>> On 2020/6/5 12:27, Daeho Jeong wrote:
+>>> From: Daeho Jeong <daehojeong@google.com>
+>>>
+>>> Added a new ioctl to send discard commands to whole data area of
+>>> a regular file for security reason.
+>>
+>> I guess this interface is introduced for security key destruction, if I'm
+>> right, however, IIRC, discard(erase) semantics in eMMC/UFS spec won't
+>> guarantee that data which was discard could be zeroed out, so after discard,
+>> the key still have risk of exposure. So instead, should we use sb_issue_zeroout()?
+>>
+>> Thanks,
+>>
+>>>
+>>> Signed-off-by: Daeho Jeong <daehojeong@google.com>
+>>> ---
+>>>  fs/f2fs/f2fs.h |   1 +
+>>>  fs/f2fs/file.c | 129 +++++++++++++++++++++++++++++++++++++++++++++++++
+>>>  2 files changed, 130 insertions(+)
+>>>
+>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+>>> index c812fb8e2d9c..9ae81d0fefa0 100644
+>>> --- a/fs/f2fs/f2fs.h
+>>> +++ b/fs/f2fs/f2fs.h
+>>> @@ -434,6 +434,7 @@ static inline bool __has_cursum_space(struct f2fs_journal *journal,
+>>>                                       _IOR(F2FS_IOCTL_MAGIC, 18, __u64)
+>>>  #define F2FS_IOC_RESERVE_COMPRESS_BLOCKS                             \
+>>>                                       _IOR(F2FS_IOCTL_MAGIC, 19, __u64)
+>>> +#define F2FS_IOC_TRIM_FILE           _IO(F2FS_IOCTL_MAGIC, 20)
+>>>
+>>>  #define F2FS_IOC_GET_VOLUME_NAME     FS_IOC_GETFSLABEL
+>>>  #define F2FS_IOC_SET_VOLUME_NAME     FS_IOC_SETFSLABEL
+>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+>>> index dfa1ac2d751a..58507bb5649c 100644
+>>> --- a/fs/f2fs/file.c
+>>> +++ b/fs/f2fs/file.c
+>>> @@ -3749,6 +3749,132 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
+>>>       return ret;
+>>>  }
+>>>
+>>> +static int f2fs_trim_file(struct file *filp)
+>>> +{
+>>> +     struct inode *inode = file_inode(filp);
+>>> +     struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+>>> +     struct address_space *mapping = inode->i_mapping;
+>>> +     struct bio *bio = NULL;
+>>> +     struct block_device *prev_bdev = NULL;
+>>> +     loff_t file_size;
+>>> +     pgoff_t index, pg_start = 0, pg_end;
+>>> +     block_t prev_block = 0, len = 0;
+>>> +     int ret = 0;
+>>> +
+>>> +     if (!f2fs_hw_support_discard(sbi))
+>>> +             return -EOPNOTSUPP;
+>>> +
+>>> +     if (!S_ISREG(inode->i_mode) || f2fs_is_atomic_file(inode) ||
+>>> +                     f2fs_compressed_file(inode))
+>>> +             return -EINVAL;
+>>> +
+>>> +     if (f2fs_readonly(sbi->sb))
+>>> +             return -EROFS;
+>>> +
+>>> +     ret = mnt_want_write_file(filp);
+>>> +     if (ret)
+>>> +             return ret;
+>>> +
+>>> +     inode_lock(inode);
+>>> +
+>>> +     file_size = i_size_read(inode);
+>>> +     if (!file_size)
+>>> +             goto err;
+>>> +     pg_end = (pgoff_t)round_up(file_size, PAGE_SIZE) >> PAGE_SHIFT;
+>>> +
+>>> +     ret = f2fs_convert_inline_inode(inode);
+>>> +     if (ret)
+>>> +             goto err;
+>>> +
+>>> +     down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+>>> +     down_write(&F2FS_I(inode)->i_mmap_sem);
+>>> +
+>>> +     ret = filemap_write_and_wait(mapping);
+>>> +     if (ret)
+>>> +             goto out;
+>>> +
+>>> +     truncate_inode_pages(mapping, 0);
+>>> +
+>>> +     for (index = pg_start; index < pg_end;) {
+>>> +             struct dnode_of_data dn;
+>>> +             unsigned int end_offset;
+>>> +
+>>> +             set_new_dnode(&dn, inode, NULL, NULL, 0);
+>>> +             ret = f2fs_get_dnode_of_data(&dn, index, LOOKUP_NODE);
+>>> +             if (ret)
+>>> +                     goto out;
+>>> +
+>>> +             end_offset = ADDRS_PER_PAGE(dn.node_page, inode);
+>>> +             if (pg_end < end_offset + index)
+>>> +                     end_offset = pg_end - index;
+>>> +
+>>> +             for (; dn.ofs_in_node < end_offset;
+>>> +                             dn.ofs_in_node++, index++) {
+>>> +                     struct block_device *cur_bdev;
+>>> +                     block_t blkaddr = f2fs_data_blkaddr(&dn);
+>>> +
+>>> +                     if (__is_valid_data_blkaddr(blkaddr)) {
+>>> +                             if (!f2fs_is_valid_blkaddr(F2FS_I_SB(inode),
+>>> +                                     blkaddr, DATA_GENERIC_ENHANCE)) {
+>>> +                                     ret = -EFSCORRUPTED;
+>>> +                                     goto out;
+>>> +                             }
+>>> +                     } else
+>>> +                             continue;
+>>> +
+>>> +                     cur_bdev = f2fs_target_device(sbi, blkaddr, NULL);
+>>> +                     if (f2fs_is_multi_device(sbi)) {
+>>> +                             int i = f2fs_target_device_index(sbi, blkaddr);
+>>> +
+>>> +                             blkaddr -= FDEV(i).start_blk;
+>>> +                     }
+>>> +
+>>> +                     if (len) {
+>>> +                             if (prev_bdev == cur_bdev &&
+>>> +                                     blkaddr == prev_block + len) {
+>>> +                                     len++;
+>>> +                             } else {
+>>> +                                     ret = __blkdev_issue_discard(prev_bdev,
+>>> +                                             SECTOR_FROM_BLOCK(prev_block),
+>>> +                                             SECTOR_FROM_BLOCK(len),
+>>> +                                             GFP_NOFS, 0, &bio);
+>>> +                                     if (ret)
+>>> +                                             goto out;
+>>> +> +                                  len = 0;
+>>> +                             }
+>>> +                     }
+>>> +
+>>> +                     if (!len) {
+>>> +                             prev_bdev = cur_bdev;
+>>> +                             prev_block = blkaddr;
+>>> +                             len = 1;
+>>> +                     }
+>>> +             }
+>>> +
+>>> +             f2fs_put_dnode(&dn);
+>>> +     }
+>>> +
+>>> +     if (len)
+>>> +             ret = __blkdev_issue_discard(prev_bdev,
+>>> +                                     SECTOR_FROM_BLOCK(prev_block),
+>>> +                                     SECTOR_FROM_BLOCK(len),
+>>> +                                     GFP_NOFS, 0, &bio);
+>>> +out:
+>>> +     if (bio) {
+>>> +             ret = submit_bio_wait(bio);
+>>> +             bio_put(bio);
+>>> +     }
+>>> +
+>>> +     up_write(&F2FS_I(inode)->i_mmap_sem);
+>>> +     up_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+>>> +err:
+>>> +     inode_unlock(inode);
+>>> +     mnt_drop_write_file(filp);
+>>> +
+>>> +     return ret;
+>>> +}
+>>> +
+>>>  long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+>>>  {
+>>>       if (unlikely(f2fs_cp_error(F2FS_I_SB(file_inode(filp)))))
+>>> @@ -3835,6 +3961,8 @@ long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+>>>               return f2fs_release_compress_blocks(filp, arg);
+>>>       case F2FS_IOC_RESERVE_COMPRESS_BLOCKS:
+>>>               return f2fs_reserve_compress_blocks(filp, arg);
+>>> +     case F2FS_IOC_TRIM_FILE:
+>>> +             return f2fs_trim_file(filp);
+>>>       default:
+>>>               return -ENOTTY;
+>>>       }
+>>> @@ -4004,6 +4132,7 @@ long f2fs_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+>>>       case F2FS_IOC_GET_COMPRESS_BLOCKS:
+>>>       case F2FS_IOC_RELEASE_COMPRESS_BLOCKS:
+>>>       case F2FS_IOC_RESERVE_COMPRESS_BLOCKS:
+>>> +     case F2FS_IOC_TRIM_FILE:
+>>>               break;
+>>>       default:
+>>>               return -ENOIOCTLCMD;
+>>>
+> .
+> 
