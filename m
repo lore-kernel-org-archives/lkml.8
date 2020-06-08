@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A84C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6947C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:39:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14B5E206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:39:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83D3D206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:39:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663176;
-	bh=iyzJrfIKvVs3kATF4wFc59OozNGRsscsxjNvpz3D/PQ=;
+	s=default; t=1591663184;
+	bh=MatvT71DNINJoflORw7IVwTHNc3bKAwQQ8ojtaV9jPQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nNHpQNsdzP1/RG7DJzFnJ2R9pfX1MuFJuB6sFjEvS2gd/4F5Cepqdii9/e08IS150
-	 zTZiDsHqldWVUiibxIj9LSlICJ+ONbq9E8mShoRZvqZ78yZo7WSSuZ/xPhE/5oWBEQ
-	 WaOHKItPPD5DziAYRXsjrVecvz1Dxj/A7rCj8ECQ=
+	b=KRzdNu/5oogwFPXc+AXpdTBKurX9YWJ9oX6uRLewvo5ipM0wONjlRg+VmgfuVwuXD
+	 PkTz7sIxqQR4LCOZ/LuDoNf/oi0/iQhGVshtogwPtWX/NaxhOevvnaN8BlwMgIvFeu
+	 W+toQl5b6GeXOrULOEOFXgnJ7UPowreOYKF1vofs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732969AbgFIAje (ORCPT
+        id S1733207AbgFIAjm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:39:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33052 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:39:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729286AbgFHXNU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:13:20 -0400
+        id S1728545AbgFHXNP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:13:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 559BD21532;
-        Mon,  8 Jun 2020 23:13:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63053214D8;
+        Mon,  8 Jun 2020 23:13:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658000;
-        bh=iyzJrfIKvVs3kATF4wFc59OozNGRsscsxjNvpz3D/PQ=;
+        s=default; t=1591657994;
+        bh=MatvT71DNINJoflORw7IVwTHNc3bKAwQQ8ojtaV9jPQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ifLpUV/BVtBhEIVpwWWxdX06rfnjPrWtv0Ae4kDdOtQ3hcRkGZYgw/akl4LcvfpI7
-         Fv+I451y1R9fZxBNZdu+M9t0PkWxfiVuo6VjUeomu2klnTElqlqPCl4uswZJdguoU/
-         5aEPKusiHQwAraeb69h7jk6GmEC2qpmpO5szFO98=
+        b=kehIeb7Eb9NNXbDlgt7BXXG6WEcsePeP0t0EXcHyBc/EwwxF8M9kRflGLF9jsgfMK
+         HOvwmaPoZiDhNGQXdJg9QCrpTNa4HtvQDuapvJ+1JYzQ+htkeOGRjnD7G7AZDKtWyd
+         pH/ozwCchPVMrXRPT8oAFvuMDhCIlSXq15sy4yGE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Christian Hewitt <christianshewitt@gmail.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
+Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
+        Hulk Robot <hulkci@huawei.com>,
+        Felipe Balbi <balbi@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 057/606] arm64: dts: meson-g12b-khadas-vim3: add missing frddr_a status property
-Date:   Mon,  8 Jun 2020 19:03:02 -0400
-Message-Id: <20200608231211.3363633-57-sashal@kernel.org>
+        linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 052/606] usb: gadget: legacy: fix error return code in gncm_bind()
+Date:   Mon,  8 Jun 2020 19:02:57 -0400
+Message-Id: <20200608231211.3363633-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -63,42 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-commit 5ac0869fb39b1c1ba84d4d75c550f82e0bf44c96 upstream.
+commit e27d4b30b71c66986196d8a1eb93cba9f602904a upstream.
 
-In the process of moving the VIM3 audio nodes to a G12B specific dtsi
-for enabling the SM1 based VIM3L, the frddr_a status = "okay" property
-got dropped.
-This re-enables the frddr_a node to fix audio support.
+If 'usb_otg_descriptor_alloc()' fails, we must return a
+negative error code -ENOMEM, not 0.
 
-Fixes: 4f26cc1c96c9 ("arm64: dts: khadas-vim3: move common nodes into meson-khadas-vim3.dtsi")
-Reported-by: Christian Hewitt <christianshewitt@gmail.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
-Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
-Tested-by: Jerome Brunet <jbrunet@baylibre.com>
-Link: https://lore.kernel.org/r/20191018140216.4257-1-narmstrong@baylibre.com
+Fixes: 1156e91dd7cc ("usb: gadget: ncm: allocate and init otg descriptor by otg capabilities")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/usb/gadget/legacy/ncm.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
-index 554863429aa6..e2094575f528 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
-@@ -152,6 +152,10 @@ &cpu103 {
- 	clock-latency = <50000>;
- };
+diff --git a/drivers/usb/gadget/legacy/ncm.c b/drivers/usb/gadget/legacy/ncm.c
+index c61e71ba7045..0f1b45e3abd1 100644
+--- a/drivers/usb/gadget/legacy/ncm.c
++++ b/drivers/usb/gadget/legacy/ncm.c
+@@ -156,8 +156,10 @@ static int gncm_bind(struct usb_composite_dev *cdev)
+ 		struct usb_descriptor_header *usb_desc;
  
-+&frddr_a {
-+	status = "okay";
-+};
-+
- &frddr_b {
- 	status = "okay";
- };
+ 		usb_desc = usb_otg_descriptor_alloc(gadget);
+-		if (!usb_desc)
++		if (!usb_desc) {
++			status = -ENOMEM;
+ 			goto fail;
++		}
+ 		usb_otg_descriptor_init(gadget, usb_desc);
+ 		otg_desc[0] = usb_desc;
+ 		otg_desc[1] = NULL;
 -- 
 2.25.1
 
