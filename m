@@ -2,105 +2,146 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A5CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53380C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:30:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D33120760
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:29:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32870206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:30:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gayhdD3W"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iPe+xoXG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726153AbgFHS3p (ORCPT
+        id S1726180AbgFHSaN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 14:29:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51214 "EHLO
+        Mon, 8 Jun 2020 14:30:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725797AbgFHS3n (ORCPT
+        with ESMTP id S1725797AbgFHSaM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 14:29:43 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F82DC08C5C2
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 11:29:43 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id o6so9147086pgh.2
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 11:29:43 -0700 (PDT)
+        Mon, 8 Jun 2020 14:30:12 -0400
+Received: from mail-oi1-x230.google.com (mail-oi1-x230.google.com [IPv6:2607:f8b0:4864:20::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 351E4C08C5C3
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 11:30:11 -0700 (PDT)
+Received: by mail-oi1-x230.google.com with SMTP id a21so16211829oic.8
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 11:30:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AtU95d/mLDsHX64dIamJL4aE1CnFpCmhkczXPqyifoI=;
-        b=gayhdD3WkYAf25JyFoJVQvX8QzkcwVV8CrhZ+egfs75qL6pM8D/rjtTUc4GhxDlADi
-         Xl6GEczeW62hr53fEoQgfnDTFLCmdhflbgPsKPKmd9Ro87RHZeb9p0MaK3LUXi9X/hdM
-         8lOC1MFwQnm8H11hBskwarSKUiQKfze1+Om2XuYZOcXDHMgbJu6Pw/N0M1TXNafuALD3
-         g1/Ce0BcIbOUZk6CshWMDvY6pPKQsyqQJMRnbVh5b3Z7P3Y4cLkTsqZCGTb6eQuXlY7d
-         7AH8ZFDzZNiVDcx+1DOY4bTzD/C6ON+ZVXxgwjgXJ1rVOLyeEMLMeKdT+2VTmXHRTuJQ
-         pYyg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ec3kpkZ5d35E7fLprwrWdXZo0aQlGC04OCG9zESdHSI=;
+        b=iPe+xoXGWEKnPvYzw5Yvncyh+AiZui29tQH+gTumP7xOkEDosj37E0i1CkrEduJZv/
+         KJ4Q2q91HqL4Lu3vDhrY/2bQsgHaZlIxkoGhqUCDBfWw7vC/+RZOQyAuagniiWYVlWxY
+         604YN3bEzJSa0z5ISy8b1QyceG/Z5GqfnOVDmb86ISuJMOJj+H6rkBy8OgFoHb96Jj7I
+         8nMwFYMGihxQDrDNA1F5Ye+suKeExuFGeeAeouZxK6nv4+/JVJ8hKPJgkHJcZ2RCOXmM
+         Rs/+NahJFZIpuWJBhW0C60p7UA4J2jFH5sOm+V8bKl9m/ZGqLTwCxu0SgVR4ZN9SkWhG
+         a+zA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AtU95d/mLDsHX64dIamJL4aE1CnFpCmhkczXPqyifoI=;
-        b=aTtOJB2a/VNfMezTz/vtHRDm0QXoDz9j+mx/MW4mxcd15fxY1eEVB+PJ4cuM4EJtl+
-         xZhoHiGXlU0tyG4OK7aHbKnf1Xbg/RMRoA23dzgKAeuMvxQly8Uf62ZQp0qZT+fty9zg
-         3Oh2y6bjxJrP0VKAhXDNI4k6b6fn8GiHr1+dN25osB9/dexm1Fd6yiXJYgLOHey300Xz
-         HGakgFNZsVwNAvkYSJoZZ2ELMBnWmhE92ojEC/VXi7aIUgnFqxKZLDVbzPvc1DkzJo1r
-         iKK371Zp8Kfjqm7J31Tx2XSG0eMMNn7qyCAOVkRa+JiYdUtR1EhHQwx/s700wxIxu4NF
-         6/RA==
-X-Gm-Message-State: AOAM531iKhggkmTKeM1EEeNVihBkH1LVKfppVuIxk1R7eOTjHPDfZmae
-        5iHO5YeAa/stv1eYRf0UBa3y9zQfivw=
-X-Google-Smtp-Source: ABdhPJxNIelEeuAtLp2kMOuBh5SJVOKzM6Fzo8ViNbw789dGdmNVHLTndBzXaX3rJw96B9BrEsnm2Q==
-X-Received: by 2002:a63:9d0e:: with SMTP id i14mr20486241pgd.55.1591640982858;
-        Mon, 08 Jun 2020 11:29:42 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id e12sm7932922pfj.137.2020.06.08.11.29.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 11:29:42 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        Wang Wenhu <wenhu.wang@vivo.com>
-Subject: [GIT PULL] rpmsg updates for v5.8
-Date:   Mon,  8 Jun 2020 11:28:56 -0700
-Message-Id: <20200608182856.2302518-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.26.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ec3kpkZ5d35E7fLprwrWdXZo0aQlGC04OCG9zESdHSI=;
+        b=IuayHCnrbmD2rwRN3pxjk8ah4KbrgvYYSffAwKOYPdbM0jJhr/n8whaOCuOW/x6fc6
+         50ocysSqpQa+7HKrQicL57y4GWFx3f/mbW1vKT+m4RdpUd+qyiAO8QxXLaHT98D8vTh4
+         pvzNyjAMIfo7gQGEv6r5+jos6Hrue/HBwiaoyVvms7ZOdAAX6zCqH0v72j5kakEE5BoD
+         D0oo/pcP3swPP8cm/HkTefwd0pXo5NjONNA3+u7iHrXdnIABJTL7HvW6YOMC3KM4vAau
+         i028Bw2VvBxd/uh4TW7VHmNicISAcmTPmvTOzdlUW97Nmj5GQf4g0CIzZmx/PsdSIcEf
+         gxBg==
+X-Gm-Message-State: AOAM531S4M4nLrIvdmvb3Lme1cD6nr6tCfetk0TfI/5H9z6XUFUSvfod
+        8JwFDCT2dohUNrwqDzDs7IzlqvXUHmfFQFWMI9mIMw==
+X-Google-Smtp-Source: ABdhPJzfv48oleE/RvoYCG2QJu70P4yky15Sexf+JJ0aqPG245tpZEqdVXE3LuODG8ysOiqybEroQS46mnWiHnp8LGc=
+X-Received: by 2002:aca:d6d3:: with SMTP id n202mr526173oig.132.1591641009822;
+ Mon, 08 Jun 2020 11:30:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200602050626.GA2174820@kroah.com> <CAA93t1puWzFx=1h0xkZEkpzPJJbBAF7ONL_wicSGxHjq7KL+WA@mail.gmail.com>
+ <20200603060751.GA465970@kroah.com> <CACK8Z6EXDf2vUuJbKm18R6HovwUZia4y_qUrTW8ZW+8LA2+RgA@mail.gmail.com>
+ <20200603121613.GA1488883@kroah.com> <CACK8Z6EOGduHX1m7eyhFgsGV7CYiVN0en4U0cM4BEWJwk2bmoA@mail.gmail.com>
+ <20200605080229.GC2209311@kroah.com> <CACK8Z6GR7-wseug=TtVyRarVZX_ao2geoLDNBwjtB+5Y7VWNEQ@mail.gmail.com>
+ <20200607113632.GA49147@kroah.com> <CAJmaN=m5cGc8019LocvHTo-1U6beA9-h=T-YZtQEYEb_ry=b+Q@mail.gmail.com>
+ <20200608175015.GA457685@kroah.com>
+In-Reply-To: <20200608175015.GA457685@kroah.com>
+From:   Jesse Barnes <jsbarnes@google.com>
+Date:   Mon, 8 Jun 2020 11:29:58 -0700
+Message-ID: <CAJmaN=mvnrLLkJC=6ddO_Rj+1FpRHoQzWFo9W3AZmsW_qS5CYQ@mail.gmail.com>
+Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
+ "whitelisted" drivers
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Rajat Jain <rajatja@google.com>, Rajat Jain <rajatxjain@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Zubin Mithra <zsm@google.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
+> > I think your suggestion to disable driver binding once the initial
+> > bus/slot devices have been bound will probably work for this
+> > situation.  I just wanted to be clear that without some auditing,
+> > fuzzing, and additional testing, we simply have to assume that drivers
+> > are *not* secure and avoid using them on untrusted devices until we're
+> > fairly confident they can handle them (whether just misbehaving or
+> > malicious), in combination with other approaches like IOMMUs of
+> > course.  And this isn't because we don't trust driver authors or
+> > kernel developers to dtrt, it's just that for many devices (maybe USB
+> > is an exception) I think driver authors haven't had to consider this
+> > case much, and so I think it's prudent to expect bugs in this area
+> > that we need to find & fix.
+>
+> For USB, yes, we have now had to deal with "untrusted devices" lieing
+> about their ids and sending us horrible data.  That's all due to the
+> fuzzing tools that have been written over the past few years, and now we
+> have some of those in the kernel tree itself to help with that testing.
+>
+> For PCI, heh, good luck, those assumptions about "devices sending valid
+> data" are everywhere, if our experience with USB is any indication.
+>
+> But, to take USB as an example, this is exactly what the USB
+> "authorized" flag is there for, it's a "trust" setting that userspace
+> has control over.  This came from the wireless USB spec, where it was
+> determined that you could not trust devices.  So just use that same
+> model here, move it to the driver core for all busses to use and you
+> should be fine.
+>
+> If that doesn't meet your needs, please let me know the specifics of
+> why, with patches :)
 
-  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
+Yeah will do for sure.  I don't want to carry a big infra for this on our own!
 
-are available in the Git repository at:
+> Now, as to you all getting some sort of "Hardware flag" to determine
+> "inside" vs. "outside" devices, hah, good luck!  It took us a long time
+> to get that for USB, and even then, BIOSes lie and get it wrong all the
+> time.  So you will have to also deal with that in some way, for your
+> userspace policy.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/andersson/remoteproc.git tags/rpmsg-v5.8
+I think that's inherently platform specific to some extent.  We can do
+it with our coreboot based firmware, but there's no guarantee other
+vendors will adopt the same approach.  But I think at least for the
+ChromeOS ecosystem we can come up with something that'll work, and
+allow us to dtrt in userspace wrt driver binding.
 
-for you to fetch changes up to 4f05fc33bebdc7d69259c412dd21d09751827dbd:
-
-  rpmsg: Replace zero-length array with flexible-array (2020-05-12 15:00:48 -0700)
-
-----------------------------------------------------------------
-rpmsg updates for v5.8
-
-This replaces a zero-length array with flexible-array and fixes a typo
-in a typo in the rpmsg core.
-
-----------------------------------------------------------------
-Gustavo A. R. Silva (1):
-      rpmsg: Replace zero-length array with flexible-array
-
-Wang Wenhu (1):
-      rpmsg: fix a comment typo for rpmsg_device_match()
-
- drivers/rpmsg/rpmsg_core.c       | 2 +-
- drivers/rpmsg/virtio_rpmsg_bus.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Thanks,
+Jesse
