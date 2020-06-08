@@ -2,161 +2,90 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B22FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 02:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC89C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 03:03:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B4EB2077D
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 02:58:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5111E2077D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 03:03:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728736AbgFHC6z (ORCPT
+        id S1728781AbgFHDDl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 22:58:55 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5862 "EHLO huawei.com"
+        Sun, 7 Jun 2020 23:03:41 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:17220 "EHLO zju.edu.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728065AbgFHC6z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 22:58:55 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id D4266A8D4C9B446D8409;
-        Mon,  8 Jun 2020 10:58:51 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.213) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 8 Jun 2020
- 10:58:49 +0800
-Subject: Re: [PATCH] f2fs: allow writeback on error status filesystem
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
-References: <20200605085453.45717-1-yuchao0@huawei.com>
- <20200607211748.GA26785@google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <025cde14-3b4e-b9db-d359-513a44e9c1a1@huawei.com>
-Date:   Mon, 8 Jun 2020 10:58:50 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1728065AbgFHDDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jun 2020 23:03:40 -0400
+Received: by ajax-webmail-mail-app4 (Coremail) ; Mon, 8 Jun 2020 11:03:26
+ +0800 (GMT+08:00)
+X-Originating-IP: [222.205.62.26]
+Date:   Mon, 8 Jun 2020 11:03:26 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   dinghao.liu@zju.edu.cn
+To:     "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>
+Cc:     kjlu@umn.edu,
+        "Kieran Bingham" <kieran.bingham+renesas@ideasonboard.com>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Re: [PATCH] media: vsp1: Fix runtime PM imbalance in vsp1_probe
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
+ Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
+In-Reply-To: <20200608015753.GK22208@pendragon.ideasonboard.com>
+References: <20200523115426.19285-1-dinghao.liu@zju.edu.cn>
+ <20200608015456.GJ22208@pendragon.ideasonboard.com>
+ <20200608015753.GK22208@pendragon.ideasonboard.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 MIME-Version: 1.0
-In-Reply-To: <20200607211748.GA26785@google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Message-ID: <7b79863f.f636d.17291e1ff94.Coremail.dinghao.liu@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: cS_KCgCXQQV+qt1eqQvVAA--.20695W
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAg0FBlZdtOhc5QABsj
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbGCS07vEb7Iv0x
+        C_Ar1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
+        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
+        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
+        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWlV2xY628EF7xvwVC2z280aVAFwI0_Gc
+        CE3s1lV2xY628EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wCS07vEe2I262IYc4CY6c8I
+        j28IcVAaY2xG8wCS07vE5I8CrVACY4xI64kE6c02F40Ex7xfMIAIbVAv7VC0I7IYx2IY67
+        AKxVWUJVWUGwCS07vEYx0Ex4A2jsIE14v26r1j6r4UMIAIbVAm72CE4IkC6x0Yz7v_Jr0_
+        Gr1lV2xY6x02cVAKzwCS07vEc2xSY4AK67AK6r48MIAIbVCY0x0Ix7I2Y4AK64vIr41lV2
+        xY6xAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCS07vE4x8a6x804xWlV2xY6xC20s026xCa
+        FVCjc4AY6r1j6r4UMIAIbVC20s026c02F40E14v26r1j6r18MIAIbVC20s026x8GjcxK67
+        AKxVWUGVWUWwCS07vEx4CE17CEb7AF67AKxVWUAVWUtwCS07vEIxAIcVC0I7IYx2IY67AK
+        xVWUJVWUCwCS07vEIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIAIbVCI42IY6xAIw2
+        0EY4v20xvaj40_WFyUJVCq3wCS07vEIxAIcVC2z280aVAFwI0_Jr0_Gr1lV2xY6IIF0xvE
+        x4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUU==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/6/8 5:17, Jaegeuk Kim wrote:
-> On 06/05, Chao Yu wrote:
->>     71.07%     0.01%  kworker/u256:1+  [kernel.kallsyms]  [k] wb_writeback
->>             |
->>              --71.06%--wb_writeback
->>                        |
->>                        |--68.96%--__writeback_inodes_wb
->>                        |          |
->>                        |           --68.95%--writeback_sb_inodes
->>                        |                     |
->>                        |                     |--65.08%--__writeback_single_inode
->>                        |                     |          |
->>                        |                     |           --64.35%--do_writepages
->>                        |                     |                     |
->>                        |                     |                     |--59.83%--f2fs_write_node_pages
->>                        |                     |                     |          |
->>                        |                     |                     |           --59.74%--f2fs_sync_node_pages
->>                        |                     |                     |                     |
->>                        |                     |                     |                     |--27.91%--pagevec_lookup_range_tag
->>                        |                     |                     |                     |          |
->>                        |                     |                     |                     |           --27.90%--find_get_pages_range_tag
->>
->> If filesystem was injected w/ checkpoint errror, before umount, kworker
->> will always hold one core in order to writeback a large number of node
->> pages, that looks not reasonable, to avoid that, we can allow data/node
->> write in such case, since we can force all data/node writes with OPU mode,
->> and clear recovery flag on node, and checkpoint is not allowed as well,
->> so we don't need to worry about writeback's effect on data/node in
->> previous checkpoint, then with this way, it can decrease memory footprint
->> cost by node/data pages and avoid looping into data/node writeback
->> process.
-> 
-> This patch breaks fault injection test with filesystem corruption. Please check.
-
-My bad, will check soon.
-
-Thanks,
-
-> 
->>
->> Signed-off-by: Chao Yu <yuchao0@huawei.com>
->> ---
->>  fs/f2fs/data.c | 19 ++++++++++++-------
->>  fs/f2fs/node.c |  7 +++++--
->>  2 files changed, 17 insertions(+), 9 deletions(-)
->>
->> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
->> index 9d40db50cd65..2b3c846181bb 100644
->> --- a/fs/f2fs/data.c
->> +++ b/fs/f2fs/data.c
->> @@ -2519,6 +2519,8 @@ bool f2fs_should_update_outplace(struct inode *inode, struct f2fs_io_info *fio)
->>  {
->>  	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
->>  
->> +	if (unlikely(f2fs_cp_error(sbi)))
->> +		return true;
->>  	if (f2fs_lfs_mode(sbi))
->>  		return true;
->>  	if (S_ISDIR(inode->i_mode))
->> @@ -2702,13 +2704,16 @@ int f2fs_write_single_data_page(struct page *page, int *submitted,
->>  	/* we should bypass data pages to proceed the kworkder jobs */
->>  	if (unlikely(f2fs_cp_error(sbi))) {
->>  		mapping_set_error(page->mapping, -EIO);
->> -		/*
->> -		 * don't drop any dirty dentry pages for keeping lastest
->> -		 * directory structure.
->> -		 */
->> -		if (S_ISDIR(inode->i_mode))
->> -			goto redirty_out;
->> -		goto out;
->> +
->> +		if (has_not_enough_free_secs(sbi, 0, 0)) {
->> +			/*
->> +			 * don't drop any dirty dentry pages for keeping lastest
->> +			 * directory structure.
->> +			 */
->> +			if (S_ISDIR(inode->i_mode))
->> +				goto redirty_out;
->> +			goto out;
->> +		}
->>  	}
->>  
->>  	if (unlikely(is_sbi_flag_set(sbi, SBI_POR_DOING)))
->> diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
->> index 03e24df1c84f..372c04efad38 100644
->> --- a/fs/f2fs/node.c
->> +++ b/fs/f2fs/node.c
->> @@ -1527,7 +1527,10 @@ static int __write_node_page(struct page *page, bool atomic, bool *submitted,
->>  			unlock_page(page);
->>  			return 0;
->>  		}
->> -		goto redirty_out;
->> +		if (has_not_enough_free_secs(sbi, 0, 0))
->> +			goto redirty_out;
->> +		set_fsync_mark(page, 0);
->> +		set_dentry_mark(page, 0);
->>  	}
->>  
->>  	if (unlikely(is_sbi_flag_set(sbi, SBI_POR_DOING)))
->> @@ -1568,7 +1571,7 @@ static int __write_node_page(struct page *page, bool atomic, bool *submitted,
->>  		goto redirty_out;
->>  	}
->>  
->> -	if (atomic && !test_opt(sbi, NOBARRIER))
->> +	if (atomic && !test_opt(sbi, NOBARRIER) && !f2fs_cp_error(sbi))
->>  		fio.op_flags |= REQ_PREFLUSH | REQ_FUA;
->>  
->>  	/* should add to global list before clearing PAGECACHE status */
->> -- 
->> 2.18.0.rc1
-> .
-> 
+SGkgTGF1cmVudCwKCj4gPiAKPiA+IEkgd29uZGVyIGhvdyBtYW55IGJ1Z3Mgd2UgaGF2ZSB0b2Rh
+eSwgYW5kIGhvdyBtYW55IGJ1Z3Mgd2lsbCBrZWVwCj4gPiBhcHBlYXJpbmcgaW4gdGhlIGZ1dHVy
+ZSwgZHVlIHRvIHRoaXMgaGlzdG9yaWNhbCBkZXNpZ24gbWlzdGFrZSA6LSggCj4gPiAKCkdvb2Qg
+cXVlc3Rpb24uIEl0J3MgaGFyZCB0byBzYXkgaWYgdGhpcyBpcyBhIGRlc2lnbiBtaXN0YWtlIChz
+b21lIHVzZQpvZiB0aGlzIEFQSSBkb2VzIG5vdCBjaGVjayBpdHMgcmV0dXJuIHZhbHVlIGFuZCBl
+eHBlY3RzIGl0IGFsd2F5cyB0bwppbmNyZW1lbnQgdGhlIHVzYWdlIGNvdW50ZXIpLiBCdXQgaXQg
+ZG9lcyBtYWtlIGRldmVsb3BlcnMgbWlzdXNlIGl0IGVhc2llci4KCj4gPiAKPiA+IFRoaXMgY2hh
+bmdlIGxvb2tzIGdvb2QgdG8gbWUsIGJ1dCB3ZSBhbHNvIG5lZWQgYSBzaW1pbGFyIGNoYW5nZSBp
+biB0aGUKPiA+IHZzcDFfZGV2aWNlX2dldCgpIGZ1bmN0aW9uIGlmIEknbSBub3QgbWlzdGFrZW4u
+IENvdWxkIHlvdSBjb21iaW5lIGJvdGgKPiA+IGluIHRoZSBzYW1lIHBhdGNoID8KPiAKClRoYW5r
+IHlvdSBmb3IgeW91ciBhZHZpY2UhIEkgdGhpbmsgeW91IGFyZSByaWdodCBhbmQgSSB3aWxsIGZp
+eCB0aGlzIGluIHRoZQpuZXh0IHZlcnNpb24gb2YgcGF0Y2guIAoKPiBBbmQgYWN0dWFsbHksIGFm
+dGVyIGZpeGluZyB2c3AxX2RldmljZV9nZXQoKSwgd2Ugc2hvdWxkIHJlcGxhY2UgdGhlCj4gcG1f
+cnVudGltZV9nZXRfc3luYygpIGNhbGwgaGVyZSB3aXRoIHZzcDFfZGV2aWNlX2dldCgpLCBhbmQg
+dGhlCj4gcG1fcnVudGltZV9wdXRfc3luYygpIGJlbG93IHdpdGggdnNwMV9kZXZpY2VfcHV0KCks
+IHNvIHRoZXJlIHdvdWxkIGJlIG5vCj4gbmVlZCB0byBjYWxsIHBtX3J1bnRpbWVfcHV0X3N5bmMo
+KSBtYW51YWxseSBpbiB0aGUgZXJyb3IgcGF0aCBoZXJlLgo+IAoKVGhlIHBhcmFtZXRlciB0eXBl
+IG9mIHZzcDFfZGV2aWNlX2dldCgpIGFuZCB2c3AxX2RldmljZV9wdXQoKSBpcyAic3RydWN0IAp2
+c3AxX2RldmljZSIuIElmIHdlIHdhbnQgdG8gdXNlIHRoZXNlIHR3byB3cmFwcGVycywgd2UgbmVl
+ZCB0byBhZGp1c3QgdGhlaXIgCnBhcmFtZXRlciB0eXBlIHRvICJzdHJ1Y3QgcGxhdGZvcm1fZGV2
+aWNlIiBvciAic3RydWN0IGRldmljZSIsIHdoaWNoIG1heSAKbGVhZCB0byBlcnJvcnMgaW4gb3Ro
+ZXIgY2FsbGVycy4gTWF5YmUgd2Ugc2hvdWxkIGxlYXZlIGl0IGFzIGl0IGlzLgoKUmVnYXJkcywK
+RGluZ2hhbwo=
