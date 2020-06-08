@@ -2,51 +2,52 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B383C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD12C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:48:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72CCE20774
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:48:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29FCE20774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:48:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663686;
-	bh=/747nDpUrA+HrhPyngwEof3PhSh74KiCISRw9/z8wE4=;
+	s=default; t=1591663690;
+	bh=b8sF3nzdbNYI7vM2opADzKQK1kEfaHKTQBe+5In3VHI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wBU7VLz3QfhGqjdO5beW7eIOLkFydb7Nt4XWmnbFpxlhrFcu/rGe5KnY17CuWO5sv
-	 VL37x0e9VrExvIBN2TvntFXlghfo7BN0P6i8uu5fgVnBMMAaFqzuppphffMOni9VvL
-	 YYP0JtglzXWPJrN6Rigdd9BubH1ClWSTbyBoVjns=
+	b=pQUj0WslhkLEjKE6RkOxFrSNnU/bvd8cCKpjgj0C0N6M8fiLjaG8TuVI+W60m60kY
+	 aWAtttpGZ7XhZH7VnxEAaZwP/PM9hoe3d0Ap7iFlV+FinJDk9RKtz7llXkHwtIi3zt
+	 XEDrHk1tY1SkKQgOJqz7eA4WMqOCGCz9pyyIlMNg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730907AbgFIAsE (ORCPT
+        id S1728841AbgFHXLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:48:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57858 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:11:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728850AbgFHXLJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:11:09 -0400
+        id S1728472AbgFHXJk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:09:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A53242100A;
-        Mon,  8 Jun 2020 23:11:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A180208FE;
+        Mon,  8 Jun 2020 23:09:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657869;
-        bh=/747nDpUrA+HrhPyngwEof3PhSh74KiCISRw9/z8wE4=;
+        s=default; t=1591657780;
+        bh=b8sF3nzdbNYI7vM2opADzKQK1kEfaHKTQBe+5In3VHI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qmF7AeJLJF5fHHJNCmoCNi9bwdDc4NcfuhjJxHP6u24Zef4lXnLnkoeGzGvjsaOZ+
-         N06r9YHSrqzHn2VRX7A0rist5bCRSUtzRy22iDDe9ZlW1rEFzgRiuHGUegPLck+9+g
-         uNn9UR2tGID2/9QwjAInEOIBozm+hptSC1wjfX+0=
+        b=JFTDTcU7Ygj5En4fIVpl2rsFlvk/UtkG6RAoa6Ql6oznxpzDHfCr9+sCeBzW9gZD6
+         JZ2cysQxKEM9AwGYkN728Zvg96MX/wJ6CUSaOTUDZv4fkfrcn5iQHuLBOUyA9sGz4z
+         tDyrS3bA7B5iBp+LtTCiDZ9Ots5SB8hpJqQvwGgc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kaige Li <likaige@loongson.cn>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Sasha Levin <sashal@kernel.org>, linux-mips@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 230/274] MIPS: tools: Fix resource leak in elf-entry.c
-Date:   Mon,  8 Jun 2020 19:05:23 -0400
-Message-Id: <20200608230607.3361041-230-sashal@kernel.org>
+Cc:     Tamizh Chelvam <tamizhr@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, ath11k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 162/274] ath11k: fix kernel panic by freeing the msdu received with invalid length
+Date:   Mon,  8 Jun 2020 19:04:15 -0400
+Message-Id: <20200608230607.3361041-162-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -59,66 +60,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kaige Li <likaige@loongson.cn>
+From: Tamizh Chelvam <tamizhr@codeaurora.org>
 
-[ Upstream commit f33a0b941017b9cb5a4e975af198b855b2f2b455 ]
+[ Upstream commit d7d43782d541edb8596d2f4fc7f41b0734948ec5 ]
 
-There is a file descriptor resource leak in elf-entry.c, fix this
-by adding fclose() before return and die.
+In certain scenario host receives the packets with invalid length
+which causes below kernel panic. Free up those msdus to avoid
+this kernel panic.
 
-Signed-off-by: Kaige Li <likaige@loongson.cn>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+ 2270.028121:   <6> task: ffffffc0008306d0 ti: ffffffc0008306d0 task.ti: ffffffc0008306d0
+ 2270.035247:   <2> PC is at skb_panic+0x40/0x44
+ 2270.042784:   <2> LR is at skb_panic+0x40/0x44
+ 2270.521775:   <2> [<ffffffc0004a06e0>] skb_panic+0x40/0x44
+ 2270.524039:   <2> [<ffffffc0004a1278>] skb_put+0x54/0x5c
+ 2270.529264:   <2> [<ffffffbffcc373a8>] ath11k_dp_process_rx_err+0x320/0x5b0 [ath11k]
+ 2270.533860:   <2> [<ffffffbffcc30b68>] ath11k_dp_service_srng+0x80/0x268 [ath11k]
+ 2270.541063:   <2> [<ffffffbffcc1d554>] ath11k_hal_rx_reo_ent_buf_paddr_get+0x200/0xb64 [ath11k]
+ 2270.547917:   <2> [<ffffffc0004b1f74>] net_rx_action+0xf8/0x274
+ 2270.556247:   <2> [<ffffffc000099df4>] __do_softirq+0x128/0x228
+ 2270.561625:   <2> [<ffffffc00009a130>] irq_exit+0x84/0xcc
+ 2270.567008:   <2> [<ffffffc0000cfb28>] __handle_domain_irq+0x8c/0xb0
+ 2270.571695:   <2> [<ffffffc000082484>] gic_handle_irq+0x6c/0xbc
+
+Signed-off-by: Tamizh Chelvam <tamizhr@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/1588611568-20791-1-git-send-email-tamizhr@codeaurora.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/tools/elf-entry.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath11k/dp_rx.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/arch/mips/tools/elf-entry.c b/arch/mips/tools/elf-entry.c
-index adde79ce7fc0..dbd14ff05b4c 100644
---- a/arch/mips/tools/elf-entry.c
-+++ b/arch/mips/tools/elf-entry.c
-@@ -51,11 +51,14 @@ int main(int argc, const char *argv[])
- 	nread = fread(&hdr, 1, sizeof(hdr), file);
- 	if (nread != sizeof(hdr)) {
- 		perror("Unable to read input file");
-+		fclose(file);
- 		return EXIT_FAILURE;
- 	}
+diff --git a/drivers/net/wireless/ath/ath11k/dp_rx.c b/drivers/net/wireless/ath/ath11k/dp_rx.c
+index 34b1e8e6a7fb..007bb73d6c61 100644
+--- a/drivers/net/wireless/ath/ath11k/dp_rx.c
++++ b/drivers/net/wireless/ath/ath11k/dp_rx.c
+@@ -2265,6 +2265,7 @@ static int ath11k_dp_rx_process_msdu(struct ath11k *ar,
+ 	struct ieee80211_hdr *hdr;
+ 	struct sk_buff *last_buf;
+ 	u8 l3_pad_bytes;
++	u8 *hdr_status;
+ 	u16 msdu_len;
+ 	int ret;
  
--	if (memcmp(hdr.ehdr32.e_ident, ELFMAG, SELFMAG))
-+	if (memcmp(hdr.ehdr32.e_ident, ELFMAG, SELFMAG)) {
-+		fclose(file);
- 		die("Input is not an ELF\n");
+@@ -2293,8 +2294,13 @@ static int ath11k_dp_rx_process_msdu(struct ath11k *ar,
+ 		skb_pull(msdu, HAL_RX_DESC_SIZE);
+ 	} else if (!rxcb->is_continuation) {
+ 		if ((msdu_len + HAL_RX_DESC_SIZE) > DP_RX_BUFFER_SIZE) {
++			hdr_status = ath11k_dp_rx_h_80211_hdr(rx_desc);
+ 			ret = -EINVAL;
+ 			ath11k_warn(ar->ab, "invalid msdu len %u\n", msdu_len);
++			ath11k_dbg_dump(ar->ab, ATH11K_DBG_DATA, NULL, "", hdr_status,
++					sizeof(struct ieee80211_hdr));
++			ath11k_dbg_dump(ar->ab, ATH11K_DBG_DATA, NULL, "", rx_desc,
++					sizeof(struct hal_rx_desc));
+ 			goto free_out;
+ 		}
+ 		skb_put(msdu, HAL_RX_DESC_SIZE + l3_pad_bytes + msdu_len);
+@@ -3389,6 +3395,7 @@ ath11k_dp_process_rx_err_buf(struct ath11k *ar, u32 *ring_desc, int buf_id, bool
+ 	struct sk_buff *msdu;
+ 	struct ath11k_skb_rxcb *rxcb;
+ 	struct hal_rx_desc *rx_desc;
++	u8 *hdr_status;
+ 	u16 msdu_len;
+ 
+ 	spin_lock_bh(&rx_ring->idr_lock);
+@@ -3426,6 +3433,17 @@ ath11k_dp_process_rx_err_buf(struct ath11k *ar, u32 *ring_desc, int buf_id, bool
+ 
+ 	rx_desc = (struct hal_rx_desc *)msdu->data;
+ 	msdu_len = ath11k_dp_rx_h_msdu_start_msdu_len(rx_desc);
++	if ((msdu_len + HAL_RX_DESC_SIZE) > DP_RX_BUFFER_SIZE) {
++		hdr_status = ath11k_dp_rx_h_80211_hdr(rx_desc);
++		ath11k_warn(ar->ab, "invalid msdu leng %u", msdu_len);
++		ath11k_dbg_dump(ar->ab, ATH11K_DBG_DATA, NULL, "", hdr_status,
++				sizeof(struct ieee80211_hdr));
++		ath11k_dbg_dump(ar->ab, ATH11K_DBG_DATA, NULL, "", rx_desc,
++				sizeof(struct hal_rx_desc));
++		dev_kfree_skb_any(msdu);
++		goto exit;
 +	}
++
+ 	skb_put(msdu, HAL_RX_DESC_SIZE + msdu_len);
  
- 	switch (hdr.ehdr32.e_ident[EI_CLASS]) {
- 	case ELFCLASS32:
-@@ -67,6 +70,7 @@ int main(int argc, const char *argv[])
- 			entry = be32toh(hdr.ehdr32.e_entry);
- 			break;
- 		default:
-+			fclose(file);
- 			die("Invalid ELF encoding\n");
- 		}
- 
-@@ -83,14 +87,17 @@ int main(int argc, const char *argv[])
- 			entry = be64toh(hdr.ehdr64.e_entry);
- 			break;
- 		default:
-+			fclose(file);
- 			die("Invalid ELF encoding\n");
- 		}
- 		break;
- 
- 	default:
-+		fclose(file);
- 		die("Invalid ELF class\n");
- 	}
- 
- 	printf("0x%016" PRIx64 "\n", entry);
-+	fclose(file);
- 	return EXIT_SUCCESS;
- }
+ 	if (ath11k_dp_rx_frag_h_mpdu(ar, msdu, ring_desc)) {
 -- 
 2.25.1
 
