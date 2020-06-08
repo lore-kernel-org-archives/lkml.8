@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD736C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28350C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADC4C2100A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:10:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF7AC20890
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:10:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591657820;
-	bh=sI8qGZ67vRCEu32jaQy/usE2cJJy7oZBz5RPrSs/cAY=;
+	s=default; t=1591657827;
+	bh=aOgu0g9xlZPhsRuxZF/YaPyGePnsKatsFp73rMdEAtg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HQ5iRRLmsd0TrP5VYvWJc6Zk0gEDAn90JbzRpeCHbH+d7fHSexGh9ayG53s/O9dJS
-	 OJokbHVDpbV6abKzOlSLJ91C9ABKL61IW9qWjBj+mLdzGQXL2Oe9ILbt8XwZKMBYpw
-	 07pc0LD0V3eaGxzeS5V+Z47qBUV7PImP9bxkZGrw=
+	b=eiRCLjtBb5rses6KG8Kxp9IpB+hQ6MCPURxYNXmbqAxY0+tyTcVV1kA1l6+WeEUxX
+	 2WYnYM2GX9J3uA9RFffhhl58WcLRZqOytMdjiGQqkCZComh0JNTblo8+GKoELDN858
+	 rxmpYNE2krmuyvleevJNYerqJkjz5n9hKXqex04w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728627AbgFHXKT (ORCPT
+        id S1728622AbgFHXKW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:10:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54914 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:10:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728371AbgFHXJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:09:13 -0400
+        id S1728378AbgFHXJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:09:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FF1A20E65;
-        Mon,  8 Jun 2020 23:09:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3189208B6;
+        Mon,  8 Jun 2020 23:09:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657753;
-        bh=sI8qGZ67vRCEu32jaQy/usE2cJJy7oZBz5RPrSs/cAY=;
+        s=default; t=1591657756;
+        bh=aOgu0g9xlZPhsRuxZF/YaPyGePnsKatsFp73rMdEAtg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2MRGUJyfMnV47DfEwgVcDd6yQCn+s+eZ6hFMRT4kU31qW2UaCBboCy9wd2Y0xaPj3
-         lTA5JMkhLb2Hybhsqr/QxV+jbviyJn2WpEHWghZhVzlDh34quij4RA2z2RigaZn9Fv
-         pq3HmAKy+TtmSN/s4Dbu2DDan3kXH/0/IzCwx3lk=
+        b=g5PfIN8kcJgLrcin0RNibw0ExNzjW2HIyBu5HtaqOGRf2KKHlOWAjn9GSeEADDtbC
+         m8iKo7mi2WPjDcdIu36fNPRcggVG7zHIIxNKZ+aMpYc6VXFPONxYpvW5nkJmycygFv
+         fhGf8IAzdGDp/i9cr9twxK3N2dyOX9yIQgcPvHGc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Doug Berger <opendmb@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 139/274] net: bcmgenet: set Rx mode before starting netif
-Date:   Mon,  8 Jun 2020 19:03:52 -0400
-Message-Id: <20200608230607.3361041-139-sashal@kernel.org>
+Cc:     Roi Dayan <roid@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 142/274] net/mlx5e: CT: Avoid false warning about rule may be used uninitialized
+Date:   Mon,  8 Jun 2020 19:03:55 -0400
+Message-Id: <20200608230607.3361041-142-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -61,49 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Doug Berger <opendmb@gmail.com>
+From: Roi Dayan <roid@mellanox.com>
 
-[ Upstream commit 72f96347628e73dbb61b307f18dd19293cc6792a ]
+[ Upstream commit 70a5698a5683cd504b03c6030ee622b1bec3f702 ]
 
-This commit explicitly calls the bcmgenet_set_rx_mode() function when
-the network interface is started. This function is normally called by
-ndo_set_rx_mode when the flags are changed, but apparently not when
-the driver is suspended and resumed.
+Avoid gcc warning by preset rule to invalid ptr.
 
-This change ensures that address filtering or promiscuous mode are
-properly restored by the driver after the MAC may have been reset.
-
-Fixes: b6e978e50444 ("net: bcmgenet: add suspend/resume callbacks")
-Signed-off-by: Doug Berger <opendmb@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 4c3844d9e97e ("net/mlx5e: CT: Introduce connection tracking")
+Signed-off-by: Roi Dayan <roid@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/genet/bcmgenet.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/ethernet/mellanox/mlx5/core/en/tc_ct.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index 79636c78127c..38bdfd4b46f0 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -70,6 +70,9 @@
- #define GENET_RDMA_REG_OFF	(priv->hw_params->rdma_offset + \
- 				TOTAL_DESC * DMA_DESC_SIZE)
- 
-+/* Forward declarations */
-+static void bcmgenet_set_rx_mode(struct net_device *dev);
-+
- static inline void bcmgenet_writel(u32 value, void __iomem *offset)
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/tc_ct.c b/drivers/net/ethernet/mellanox/mlx5/core/en/tc_ct.c
+index 4eb305af0106..1b22a0284fd9 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/tc_ct.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/tc_ct.c
+@@ -1132,7 +1132,7 @@ mlx5_tc_ct_flow_offload(struct mlx5e_priv *priv,
  {
- 	/* MIPS chips strapped for BE will automagically configure the
-@@ -2803,6 +2806,7 @@ static void bcmgenet_netif_start(struct net_device *dev)
- 	struct bcmgenet_priv *priv = netdev_priv(dev);
+ 	bool clear_action = attr->ct_attr.ct_action & TCA_CT_ACT_CLEAR;
+ 	struct mlx5_tc_ct_priv *ct_priv = mlx5_tc_ct_get_ct_priv(priv);
+-	struct mlx5_flow_handle *rule;
++	struct mlx5_flow_handle *rule = ERR_PTR(-EINVAL);
+ 	int err;
  
- 	/* Start the network engine */
-+	bcmgenet_set_rx_mode(dev);
- 	bcmgenet_enable_rx_napi(priv);
- 
- 	umac_enable_set(priv, CMD_TX_EN | CMD_RX_EN, true);
+ 	if (!ct_priv)
 -- 
 2.25.1
 
