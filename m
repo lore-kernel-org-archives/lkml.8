@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80897C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 579B6C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5699E20775
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:29:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B8E920812
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:29:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658983;
-	bh=J9279CXasCnyZUpVFd8SX1QmyrwQ2ZV1pxtMRnNHen8=;
+	s=default; t=1591658985;
+	bh=5nAVtwoFHCoPigIxGOY2qWRJl5r7Z7evVNEqTcc2Ow8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gTWSPfWIPXIsZ/2B0fo39eZ733+aKZWMaRncAJvhjirkNGKanEBII5czLX1OEXfcX
-	 8JWmakCFdo6fDB0n9pPH0qGCr8f3+V0qTIz4tcmEmAPPhXz238GEFZYGTCd+iIzYiC
-	 5eTpPV4380GreWe5LDvKr7pNzrBGv3aVHrwAbVP4=
+	b=2nBWp/MVzP5nLtOHmhbD/3Te7XPYje6UAO2IoHz2XFak5kpUv/yAAXq5/y0zr+l3W
+	 NgsymcuV332b6cMroK1YWTWeOwWO+t9d8CvGVBriruUYDgoX1l72QQbsMYyOVjL/vZ
+	 CoFKSxzF7lZ23vqYmJwIu+Dx/d/a9R5fgxyKEqg0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387772AbgFHX3m (ORCPT
+        id S2387782AbgFHX3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:29:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49640 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:29:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731549AbgFHXXx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:23:53 -0400
+        id S1731547AbgFHXXw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:23:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86A6C20842;
-        Mon,  8 Jun 2020 23:23:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D6CF208A9;
+        Mon,  8 Jun 2020 23:23:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658633;
-        bh=J9279CXasCnyZUpVFd8SX1QmyrwQ2ZV1pxtMRnNHen8=;
+        s=default; t=1591658632;
+        bh=5nAVtwoFHCoPigIxGOY2qWRJl5r7Z7evVNEqTcc2Ow8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XZFNQQtNrgZ+0Tw4piq6BtsGZoXLH2ACiDH1xHBE1riGcGBgOCcE4nTLogJjmGB7p
-         4fF4C4ZJG9qPGMmyLMq2qOUNbpuqXUrglCxVh6flrxs+qEb7/Vu9ZUOeG74PQbU8lO
-         V+mgXcfOQPzDvW+bMeOd/AjeFmxI1+AxKHcLU/p8=
+        b=Anwz8KRDnOBdu9nYCgQgnH/w3b6OnLEAyV1wOgxM0oQXQxt183bu7M49Fs56YjNUq
+         4iZ0LS4IG8wzMEgFar9yJN8OcfugUkZsyPqkNuGiWZsqSDb9fLseUxqJL4VOg7XsJv
+         vx4zWEl0vybFzvHC0ILZMSjqVsGpi+z2XVLEGuHM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 056/106] xfs: clean up the error handling in xfs_swap_extents
-Date:   Mon,  8 Jun 2020 19:21:48 -0400
-Message-Id: <20200608232238.3368589-56-sashal@kernel.org>
+Cc:     Masashi Honma <masashi.honma@gmail.com>,
+        Denis <pro.denis@protonmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 055/106] ath9k_htc: Silence undersized packet warnings
+Date:   Mon,  8 Jun 2020 19:21:47 -0400
+Message-Id: <20200608232238.3368589-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608232238.3368589-1-sashal@kernel.org>
 References: <20200608232238.3368589-1-sashal@kernel.org>
@@ -59,34 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Darrick J. Wong" <darrick.wong@oracle.com>
+From: Masashi Honma <masashi.honma@gmail.com>
 
-[ Upstream commit 8bc3b5e4b70d28f8edcafc3c9e4de515998eea9e ]
+[ Upstream commit 450edd2805982d14ed79733a82927d2857b27cac ]
 
-Make sure we release resources properly if we cannot clean out the COW
-extents in preparation for an extent swap.
+Some devices like TP-Link TL-WN722N produces this kind of messages
+frequently.
 
-Fixes: 96987eea537d6c ("xfs: cancel COW blocks before swapext")
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+kernel: ath: phy0: Short RX data len, dropping (dlen: 4)
+
+This warning is useful for developers to recognize that the device
+(Wi-Fi dongle or USB hub etc) is noisy but not for general users. So
+this patch make this warning to debug message.
+
+Reported-By: Denis <pro.denis@protonmail.com>
+Ref: https://bugzilla.kernel.org/show_bug.cgi?id=207539
+Fixes: cd486e627e67 ("ath9k_htc: Discard undersized packets")
+Signed-off-by: Masashi Honma <masashi.honma@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200504214443.4485-1-masashi.honma@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_bmap_util.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath9k/htc_drv_txrx.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
-index e638740f1681..3e1dd66bd676 100644
---- a/fs/xfs/xfs_bmap_util.c
-+++ b/fs/xfs/xfs_bmap_util.c
-@@ -1823,7 +1823,7 @@ xfs_swap_extents(
- 	if (xfs_inode_has_cow_data(tip)) {
- 		error = xfs_reflink_cancel_cow_range(tip, 0, NULLFILEOFF, true);
- 		if (error)
--			return error;
-+			goto out_unlock;
+diff --git a/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c b/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
+index b5d7ef4da17f..f19393e584dc 100644
+--- a/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
++++ b/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
+@@ -999,9 +999,9 @@ static bool ath9k_rx_prepare(struct ath9k_htc_priv *priv,
+ 	 * which are not PHY_ERROR (short radar pulses have a length of 3)
+ 	 */
+ 	if (unlikely(!rs_datalen || (rs_datalen < 10 && !is_phyerr))) {
+-		ath_warn(common,
+-			 "Short RX data len, dropping (dlen: %d)\n",
+-			 rs_datalen);
++		ath_dbg(common, ANY,
++			"Short RX data len, dropping (dlen: %d)\n",
++			rs_datalen);
+ 		goto rx_next;
  	}
  
- 	/*
 -- 
 2.25.1
 
