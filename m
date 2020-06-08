@@ -2,110 +2,107 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5624C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF74DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E0AD2076A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:52:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iiDQkzO5"
+	by mail.kernel.org (Postfix) with ESMTP id 8A8392063A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:54:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729039AbgFHHwj (ORCPT
+        id S1729047AbgFHHyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 03:52:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37280 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727966AbgFHHwh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 03:52:37 -0400
-Received: from mail-il1-x134.google.com (mail-il1-x134.google.com [IPv6:2607:f8b0:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8837C08C5C3
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 00:52:37 -0700 (PDT)
-Received: by mail-il1-x134.google.com with SMTP id z2so15816590ilq.0
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 00:52:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WV7BGV6+mEZwraMDjdp2nR5SYEH9cq5Koj6bSPDzdFg=;
-        b=iiDQkzO51Ud8doQx/Fvh2frErrXLmcQWVjwu4YrZ9CdsCem3uJBtlf0qS6ZgGxg6il
-         hpclaZv49UZ7Pmh1g/QoVFpBj1RwKms62u9Jam9CCMfYI4Ioo4T1qjzFYaTzuVuR3Kq3
-         2YQglGzdTR1gFim4n2GLGNuhF30EPKuTm7dD76Ner6RGMNYPfv0PaMhm6X0tN88Cn8RN
-         O1E8Jts4ICVCMSq86MRU942h2PwipxwDNA6tAwGs5y0243Z6YfSpavFKT/jOmeerlrEZ
-         DoxzTu25LqTY6rSjPuB66MA3GM5MdbaaMkK8xcUta4aBv89kNNnUgvugET8DbmzsImT0
-         QHBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WV7BGV6+mEZwraMDjdp2nR5SYEH9cq5Koj6bSPDzdFg=;
-        b=srQ86pJR+yKmeAuVFbubkDRDw+5CZ+64G5KVD9sHZTtEbAy8WtLlHe3OuXy+qhHYaL
-         rd0PJV2JECZckXJWe2YpE/aUzBDn3jUYub2f2YSk566lpcdzJzqTHX32YZG1kqXshbAI
-         VFTYw9Xkv/Bn2ozxfifBjp1vxsALOkyzvE6qQPfq0AyD8B39o4LOQYGoNGMm+1t1QILN
-         WE7ydvIILHTg3nNCXRC+Wn+NW29jtvEgQb7/wApTHltuPgAZW1zROk/7Acmg8zJurFb3
-         l1dvYHP9E57Evt0jn0VQ5Y5RTYaN+u1484O+Gw5QO2Irdfm/XcC7BgGaqiDWWgEy0ay+
-         1s/Q==
-X-Gm-Message-State: AOAM531xvo8i1B/kTW+9q+6CORWoC29KkWweZEtjgprk4D3nAlKGZoDz
-        oQmwW+jg3kLjmvO4fvglLKeW7OC5u1fDRlCrNHI=
-X-Google-Smtp-Source: ABdhPJz6HjW2AjMShnUHb5sUGouse+q5w4H3QF05k31/UU5NL88h0qkyrEVgMXxUvTa1t/7MDpYLI7cZU0Ra8tqVWrs=
-X-Received: by 2002:a92:af44:: with SMTP id n65mr19226418ili.61.1591602757110;
- Mon, 08 Jun 2020 00:52:37 -0700 (PDT)
+        Mon, 8 Jun 2020 03:54:15 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:60280 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727966AbgFHHyP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 03:54:15 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 6739D3DC3A0F43311A98;
+        Mon,  8 Jun 2020 15:54:09 +0800 (CST)
+Received: from localhost.localdomain (10.175.112.125) by
+ DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 8 Jun 2020 15:54:02 +0800
+From:   Kefeng Wang <wangkefeng.wang@huawei.com>
+To:     Divya Indi <divya.indi@oracle.com>, <linux-kernel@vger.kernel.org>
+CC:     Steven Rostedt <rostedt@goodmis.org>,
+        Aruna Ramakrishna <aruna.ramakrishna@oracle.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>
+Subject: [PATCH] sample-trace-array: Fix sleeping function called from invalid context
+Date:   Mon, 8 Jun 2020 07:54:37 +0000
+Message-ID: <20200608075437.1760242-1-wangkefeng.wang@huawei.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <CAOkhzLUrNYk6JKTbTQuFkfuGKxGvW9XVq6+p9igsBgX1-e9Cxg@mail.gmail.com>
- <CAKb7Uvg0W_1qUjf3G4JrCb2oJgkwz4G5T6PwkyeL-rZEp4UnTw@mail.gmail.com>
- <CAOkhzLV+suVNAoyiaHKOkbwP-KKgTLEa7S8kp8+GSTLm_-wWFw@mail.gmail.com>
- <CAKb7UvgWMsLSHCayzdY7UYMVTjN3OHbH2WhKd-BP46K=r4Ra8A@mail.gmail.com>
- <CAOkhzLXZVNdpgwV=iiO0TEvLp3Hx28Zk8iYzwy5BvJ1pWi4QxQ@mail.gmail.com> <CAKb7UviB22HxSJ6j4ts=fU=J24Hh69NCBw4uHC5vsi902Pp6bA@mail.gmail.com>
-In-Reply-To: <CAKb7UviB22HxSJ6j4ts=fU=J24Hh69NCBw4uHC5vsi902Pp6bA@mail.gmail.com>
-From:   Zeno Davatz <zdavatz@gmail.com>
-Date:   Mon, 8 Jun 2020 09:52:25 +0200
-Message-ID: <CAOkhzLUQXAB1-=2VasSeJC9-LDgsd0Sk-pJY2LBbHaLqpcBeLg@mail.gmail.com>
-Subject: xrandr: Failed to get size of gamma for output default
-To:     Ilia Mirkin <imirkin@alum.mit.edu>
-Cc:     nouveau <nouveau@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.112.125]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Ilia
+ BUG: sleeping function called from invalid context at kernel/locking/mutex.c:935
+ in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 0, name: swapper/5
+ 1 lock held by swapper/5/0:
+  #0: ffff80001002bd90 (samples/ftrace/sample-trace-array.c:38){+.-.}-{0:0}, at: call_timer_fn+0x8/0x3e0
+ CPU: 5 PID: 0 Comm: swapper/5 Not tainted 5.7.0+ #8
+ Hardware name: QEMU QEMU Virtual Machine, BIOS 0.0.0 02/06/2015
+ Call trace:
+  dump_backtrace+0x0/0x1a0
+  show_stack+0x20/0x30
+  dump_stack+0xe4/0x150
+  ___might_sleep+0x160/0x200
+  __might_sleep+0x58/0x90
+  __mutex_lock+0x64/0x948
+  mutex_lock_nested+0x3c/0x58
+  __ftrace_set_clr_event+0x44/0x88
+  trace_array_set_clr_event+0x24/0x38
+  mytimer_handler+0x34/0x40 [sample_trace_array]
 
-On Thu, Jun 4, 2020 at 6:13 PM Ilia Mirkin <imirkin@alum.mit.edu> wrote:
+mutex_lock() will be called in interrupt context, using workqueueu to fix it.
 
-> Not sure why you bother asking questions when you're just going to
-> dump nouveau anyways. This is the second time I've answered your
-> questions on this very topic, I think it'll be the last too.
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+---
+ samples/ftrace/sample-trace-array.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
-I tried again and removed the Nvidia-Drivers with
+diff --git a/samples/ftrace/sample-trace-array.c b/samples/ftrace/sample-trace-array.c
+index d523450d73eb..41684c7dbd7b 100644
+--- a/samples/ftrace/sample-trace-array.c
++++ b/samples/ftrace/sample-trace-array.c
+@@ -20,6 +20,16 @@ struct trace_array *tr;
+ static void mytimer_handler(struct timer_list *unused);
+ static struct task_struct *simple_tsk;
+ 
++static void trace_work_fn(struct work_struct *work)
++{
++	/*
++	 * Disable tracing for event "sample_event".
++	 */
++	trace_array_set_clr_event(tr, "sample-subsystem", "sample_event",
++			false);
++}
++static DECLARE_WORK(trace_work, trace_work_fn);
++
+ /*
+  * mytimer: Timer setup to disable tracing for event "sample_event". This
+  * timer is only for the purposes of the sample module to demonstrate access of
+@@ -29,11 +39,7 @@ static DEFINE_TIMER(mytimer, mytimer_handler);
+ 
+ static void mytimer_handler(struct timer_list *unused)
+ {
+-	/*
+-	 * Disable tracing for event "sample_event".
+-	 */
+-	trace_array_set_clr_event(tr, "sample-subsystem", "sample_event",
+-			false);
++	schedule_work(&trace_work);
+ }
+ 
+ static void simple_thread_func(int count)
+-- 
+2.27.0
 
-sudo emerge -C x11-drivers/nvidia-drivers
-
-and installed
-
-sudo emerge x11-drivers/xf86-video-nouveau
-
-this works with Kernel 5.7.0!
-
-~> inxi -G
-Graphics:  Device-1: NVIDIA GP107 driver: N/A
-           Display: server: X.Org 1.20.5 driver: nouveau,vesa
-unloaded: modesetting resolution: 1680x1050~N/A
-           OpenGL: renderer: Rasterizer v: 2.1 Mesa 19.1.4
-
-but now xrandr no longer works.
-
-~> xrandr -q
-
-Screen 0: minimum 1680 x 1050, current 1680 x 1050, maximum 1680 x 1050
-default connected 1680x1050+0+0 0mm x 0mm
-   1680x1050      0.00*
-
-Best
-Zeno
