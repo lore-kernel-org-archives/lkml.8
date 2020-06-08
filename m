@@ -7,54 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A32C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:37:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 229AFC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2760220890
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:37:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 050322068D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:37:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591659456;
-	bh=MdW3KQHJFjrbPO/7LWBN3FFilQj3utVGrULWCGVyXAU=;
+	s=default; t=1591659461;
+	bh=/YM9Qim2UEDqZy57Oom9XviW8SgEHAn+SAnkAOLb4D8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f5CGKEdP0RZ4VCYSyMkzF4mF1+zwzuvW7+m7ybEO5Csq9DEdSu8XmPry7vFmg2Guu
-	 V44J87yk80iOQvHqR1qv8AT5oCx1iL/cq3d7VYDPqVsTVCoAE5idVdZJsLcEdfnSsw
-	 mQs+bNID2gaprYJz8oMSojO2yUv6ieLREXB4DU3o=
+	b=y0yJYLSR0+RTZ/AnnX3BH7l5VqtsBlUZxNLPGwcld7c5bkJzzrszNsk0ijVXenF0Y
+	 OW19DPjeSbvtkgIW3iLsMym1ckcpndRW+d68O44cUtDT4ohnVrXPQa0QjAwjzEi4+D
+	 8RDrVDyrSIc6JUCrStknLNO5hLpq6OaQ5cTFXtHk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732257AbgFHX2n (ORCPT
+        id S1731103AbgFHXhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:28:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47740 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:37:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731382AbgFHXWv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:22:51 -0400
+        id S1732254AbgFHX2m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:28:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 129A2208C7;
-        Mon,  8 Jun 2020 23:22:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86537208A7;
+        Mon,  8 Jun 2020 23:28:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658571;
-        bh=MdW3KQHJFjrbPO/7LWBN3FFilQj3utVGrULWCGVyXAU=;
+        s=default; t=1591658922;
+        bh=/YM9Qim2UEDqZy57Oom9XviW8SgEHAn+SAnkAOLb4D8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aFzj5DtNBC9rdXAHAq8LBeOGPZJb01xahgIsUFoff3dVSenc1QXKeDd9UuGK7S3X8
-         1RSxH1T1LRlZYYpmDwy3Vy/1aqLyD5j/4wstvYxYL991DTdz+04ebQOkKDDiS8N6oF
-         hSQ62adPTBoe5k8dp8KGBEzYmIVAtp7qzL+Ik0H4=
+        b=tqLIC3G0y8tomj3AsuaAbfurjL+jMcLhOAVTj56NG4mO+kNfEVRTIXLocwKmhDexf
+         nxlMRVHcIJJ+yhTD6QFhbxbwF1KkGdq4an+xNdUzNx1SHSEhTRYgkc+PNL7y8/47gX
+         PDGeM+Mx9U0Iiz5iq3kZ/dNBxbm+gKP0YT6okN6k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Fangrui Song <maskray@google.com>,
-        Sasha Levin <sashal@kernel.org>, linux-efi@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 010/106] efi/libstub/x86: Work around LLVM ELF quirk build regression
-Date:   Mon,  8 Jun 2020 19:21:02 -0400
-Message-Id: <20200608232238.3368589-10-sashal@kernel.org>
+Cc:     Ido Schimmel <idosch@mellanox.com>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 37/37] vxlan: Avoid infinite loop when suppressing NS messages with invalid options
+Date:   Mon,  8 Jun 2020 19:27:49 -0400
+Message-Id: <20200608232750.3370747-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608232238.3368589-1-sashal@kernel.org>
-References: <20200608232238.3368589-1-sashal@kernel.org>
+In-Reply-To: <20200608232750.3370747-1-sashal@kernel.org>
+References: <20200608232750.3370747-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -64,49 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit f77767ed5f4d398b29119563155e4ece2dfeee13 ]
+[ Upstream commit 8066e6b449e050675df48e7c4b16c29f00507ff0 ]
 
-When building the x86 EFI stub with Clang, the libstub Makefile rules
-that manipulate the ELF object files may throw an error like:
+When proxy mode is enabled the vxlan device might reply to Neighbor
+Solicitation (NS) messages on behalf of remote hosts.
 
-    STUBCPY drivers/firmware/efi/libstub/efi-stub-helper.stub.o
-  strip: drivers/firmware/efi/libstub/efi-stub-helper.stub.o: Failed to find link section for section 10
-  objcopy: drivers/firmware/efi/libstub/efi-stub-helper.stub.o: Failed to find link section for section 10
+In case the NS message includes the "Source link-layer address" option
+[1], the vxlan device will use the specified address as the link-layer
+destination address in its reply.
 
-This is the result of a LLVM feature [0] where symbol references are
-stored in a LLVM specific .llvm_addrsig section in a non-transparent way,
-causing generic ELF tools such as strip or objcopy to choke on them.
+To avoid an infinite loop, break out of the options parsing loop when
+encountering an option with length zero and disregard the NS message.
 
-So force the compiler not to emit these sections, by passing the
-appropriate command line option.
+This is consistent with the IPv6 ndisc code and RFC 4886 which states
+that "Nodes MUST silently discard an ND packet that contains an option
+with length zero" [2].
 
-[0] https://sourceware.org/bugzilla/show_bug.cgi?id=23817
+[1] https://tools.ietf.org/html/rfc4861#section-4.3
+[2] https://tools.ietf.org/html/rfc4861#section-4.6
 
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Peter Collingbourne <pcc@google.com>
-Cc: Sami Tolvanen <samitolvanen@google.com>
-Reported-by: Arnd Bergmann <arnd@arndb.de>
-Suggested-by: Fangrui Song <maskray@google.com>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Fixes: 4b29dba9c085 ("vxlan: fix nonfunctional neigh_reduce()")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/efi/libstub/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/vxlan.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-index d9845099635e..d3777d754984 100644
---- a/drivers/firmware/efi/libstub/Makefile
-+++ b/drivers/firmware/efi/libstub/Makefile
-@@ -28,6 +28,7 @@ KBUILD_CFLAGS			:= $(cflags-y) -DDISABLE_BRANCH_PROFILING \
- 				   -D__NO_FORTIFY \
- 				   $(call cc-option,-ffreestanding) \
- 				   $(call cc-option,-fno-stack-protector) \
-+				   $(call cc-option,-fno-addrsig) \
- 				   -D__DISABLE_EXPORTS
- 
- GCOV_PROFILE			:= n
+diff --git a/drivers/net/vxlan.c b/drivers/net/vxlan.c
+index d6ae6d3c98ed..c12f2984d7ef 100644
+--- a/drivers/net/vxlan.c
++++ b/drivers/net/vxlan.c
+@@ -1476,6 +1476,10 @@ static struct sk_buff *vxlan_na_create(struct sk_buff *request,
+ 	daddr = eth_hdr(request)->h_source;
+ 	ns_olen = request->len - skb_transport_offset(request) - sizeof(*ns);
+ 	for (i = 0; i < ns_olen-1; i += (ns->opt[i+1]<<3)) {
++		if (!ns->opt[i + 1]) {
++			kfree_skb(reply);
++			return NULL;
++		}
+ 		if (ns->opt[i] == ND_OPT_SOURCE_LL_ADDR) {
+ 			daddr = ns->opt + i + sizeof(struct nd_opt_hdr);
+ 			break;
 -- 
 2.25.1
 
