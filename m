@@ -2,272 +2,158 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36577C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 03:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A408C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 03:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13D5E2081A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 03:39:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD38820774
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 03:48:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GPZbee1W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728973AbgFHDjQ (ORCPT
+        id S1728908AbgFHDsC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 23:39:16 -0400
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:35445 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728773AbgFHDjN (ORCPT
+        Sun, 7 Jun 2020 23:48:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56166 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728763AbgFHDsA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 23:39:13 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0U-sNP4Y_1591587544;
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0U-sNP4Y_1591587544)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 08 Jun 2020 11:39:05 +0800
-From:   Baolin Wang <baolin.wang@linux.alibaba.com>
-To:     joro@8bytes.org, will@kernel.org, robin.murphy@arm.com,
-        agross@kernel.org, bjorn.andersson@linaro.org,
-        matthias.bgg@gmail.com, robdclark@gmail.com, robh@kernel.org,
-        tomeu.vizoso@collabora.com, steven.price@arm.com,
-        alyssa.rosenzweig@collabora.com, airlied@linux.ie, daniel@ffwll.ch
-Cc:     baolin.wang@linux.alibaba.com,
-        linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, linux-arm-msm@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH 2/2] iommu: Add gfp parameter to io_pgtable_ops->map()
-Date:   Mon,  8 Jun 2020 11:38:41 +0800
-Message-Id: <837d7131e83b06ce222bda678fe2e8ac7ba095f2.1591587029.git.baolin.wang@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <cover.1591587029.git.baolin.wang@linux.alibaba.com>
-References: <cover.1591587029.git.baolin.wang@linux.alibaba.com>
-In-Reply-To: <cover.1591587029.git.baolin.wang@linux.alibaba.com>
-References: <cover.1591587029.git.baolin.wang@linux.alibaba.com>
+        Sun, 7 Jun 2020 23:48:00 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FE3CC08C5C3;
+        Sun,  7 Jun 2020 20:47:59 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id a13so15435334ilh.3;
+        Sun, 07 Jun 2020 20:47:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1BVaUAixWvTt5WtErptsO3tP6DKbMMPVMIbp5bkToTg=;
+        b=GPZbee1Wrp9z8b27aPeqkytHNsHLuyoMrLecMsczdjrjhHLmGzgX1gEcZU6x0wUW0Y
+         3dhCTyXptIlrdFwbuYyAtabHVwExW6Dc5T0E4xiCwPJ1SnaQb3xP7Yqe3CX4xqAK3bmK
+         B0So2hHw1CJyOObYlkRnt7LBoMLR5vMh6u34hXEBsKbpvdkbx8XDD0lGbOURLpWfsdXi
+         FiVv9/JWXxVfns8TAnRS5aVeAfDpsabNwngaVLuKc6CD+kF9uCwAVvlNwFXZ1XlbD7tj
+         SkDpMSVT2ZnQCiwNSydq0aA2lnvDRRKCDglzgO71TWp53dz+ozxYpeszI8bqNa99jg+f
+         cjlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1BVaUAixWvTt5WtErptsO3tP6DKbMMPVMIbp5bkToTg=;
+        b=T7DjojzD4oAc494xaYpUDHiF7Srjl3Ez1F4Z6YtIrU8WCpcQGKkeMPk7FXNLAHMnlU
+         HlL/JtQKlUoFUVi5welkmz7k/VG7Okpl7p4y3oBcdWVAdi5DP0csm/3mk+tOIezm6d/h
+         Pa5Irntg+aJqRMXOm3C+36R4xJBYlOsT5Jg2WI3KdZxNq9g6TMwvT0+lTCmrVRpNHyq8
+         41KS8VV8KOXX2R+TbYPZbiquLD2Sf6QLph7llnpZtxlYO9Q0A99LLrX3ONRB6UB56dHR
+         BCyefuBed96vkPnWsvG83uo+XRtaq48gtnqMY++g9qdzXIKlGi+Om6oJRqnhnwHRolgD
+         /srw==
+X-Gm-Message-State: AOAM532d2u4iH/QaDABWFWcO3XbKv2+lHFQvdaECfHbu5E0H35K2pac3
+        e8271Yl4gAZvhAwjRPOIRgjXe/Wx5ABW1wbAMUg=
+X-Google-Smtp-Source: ABdhPJykuldEnjkxysg7fzHCYSvtqif6Tsc2jA5532TVy0njbI9trWfbZiGLz9x25D5eNF5Is+vHlZx5gdwA797Gfz8=
+X-Received: by 2002:a05:6e02:4d:: with SMTP id i13mr21094586ilr.227.1591588078478;
+ Sun, 07 Jun 2020 20:47:58 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200605024445.35672-1-navid.emamdoost@gmail.com>
+ <20200606171153.6824a326@archlinux> <CAHp75VeRaS0JBRSyr+MeCbkVsscLyxkag00eY+pMPXZ6Jvb2zQ@mail.gmail.com>
+In-Reply-To: <CAHp75VeRaS0JBRSyr+MeCbkVsscLyxkag00eY+pMPXZ6Jvb2zQ@mail.gmail.com>
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Date:   Sun, 7 Jun 2020 22:47:47 -0500
+Message-ID: <CAEkB2ETaiZM9aQsH8_eeBSDPzTpjSLpWSeHV1S3mMxMjM+_TyA@mail.gmail.com>
+Subject: Re: [PATCH] io: pressure: zpa2326: handle pm_runtime_get_sync failure
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "emamd001@umn.edu" <emamd001@umn.edu>,
+        "wu000273@umn.edu" <wu000273@umn.edu>,
+        "kjlu@umn.edu" <kjlu@umn.edu>,
+        "smccaman@umn.edu" <smccaman@umn.edu>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now the ARM page tables are always allocated by GFP_ATOMIC parameter,
-but the iommu_ops->map() function has been added a gfp_t parameter by
-commit 781ca2de89ba ("iommu: Add gfp parameter to iommu_ops::map"),
-thus io_pgtable_ops->map() should use the gfp parameter passed from
-iommu_ops->map() to allocate page pages, which can avoid wasting the
-memory allocators atomic pools for some non-atomic contexts.
+On Sat, Jun 6, 2020 at 2:29 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+>
+>
+> On Saturday, June 6, 2020, Jonathan Cameron <jic23@kernel.org> wrote:
+>>
+>> On Thu,  4 Jun 2020 21:44:44 -0500
+>> Navid Emamdoost <navid.emamdoost@gmail.com> wrote:
+>>
+>> > Calling pm_runtime_get_sync increments the counter even in case of
+>> > failure, causing incorrect ref count. Call pm_runtime_put if
+>> > pm_runtime_get_sync fails.
+>> >
+>> > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+>>
+>> Hi Navid,
+>>
+>> This looks to be a fix, be it for a case that we are hopefully
+>> unlikely to ever hit.  Please could you add an appropriate
+>> Fixes tag so we can work out how far to backport it?
+>>
+>> Patch looks good to me so if you just reply with a suitable
+>> tag I can add it whilst applying.
 
-Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
----
- drivers/gpu/drm/panfrost/panfrost_mmu.c |  2 +-
- drivers/iommu/arm-smmu-v3.c             |  2 +-
- drivers/iommu/arm-smmu.c                |  2 +-
- drivers/iommu/io-pgtable-arm-v7s.c      | 10 +++++-----
- drivers/iommu/io-pgtable-arm.c          | 10 +++++-----
- drivers/iommu/ipmmu-vmsa.c              |  2 +-
- drivers/iommu/msm_iommu.c               |  2 +-
- drivers/iommu/mtk_iommu.c               |  2 +-
- drivers/iommu/qcom_iommu.c              |  2 +-
- include/linux/io-pgtable.h              |  2 +-
- 10 files changed, 18 insertions(+), 18 deletions(-)
+Hi Jonathan,
+Here is the fixes tag:
 
-diff --git a/drivers/gpu/drm/panfrost/panfrost_mmu.c b/drivers/gpu/drm/panfrost/panfrost_mmu.c
-index ed28aeb..5a39eee 100644
---- a/drivers/gpu/drm/panfrost/panfrost_mmu.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_mmu.c
-@@ -262,7 +262,7 @@ static int mmu_map_sg(struct panfrost_device *pfdev, struct panfrost_mmu *mmu,
- 		while (len) {
- 			size_t pgsize = get_pgsize(iova | paddr, len);
- 
--			ops->map(ops, iova, paddr, pgsize, prot);
-+			ops->map(ops, iova, paddr, pgsize, prot, GFP_KERNEL);
- 			iova += pgsize;
- 			paddr += pgsize;
- 			len -= pgsize;
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index 8250873..433b680 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -2845,7 +2845,7 @@ static int arm_smmu_map(struct iommu_domain *domain, unsigned long iova,
- 	if (!ops)
- 		return -ENODEV;
- 
--	return ops->map(ops, iova, paddr, size, prot);
-+	return ops->map(ops, iova, paddr, size, prot, gfp);
- }
- 
- static size_t arm_smmu_unmap(struct iommu_domain *domain, unsigned long iova,
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index a6a5796..bf640aa 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -1237,7 +1237,7 @@ static int arm_smmu_map(struct iommu_domain *domain, unsigned long iova,
- 		return -ENODEV;
- 
- 	arm_smmu_rpm_get(smmu);
--	ret = ops->map(ops, iova, paddr, size, prot);
-+	ret = ops->map(ops, iova, paddr, size, prot, gfp);
- 	arm_smmu_rpm_put(smmu);
- 
- 	return ret;
-diff --git a/drivers/iommu/io-pgtable-arm-v7s.c b/drivers/iommu/io-pgtable-arm-v7s.c
-index 4272fe4..ebbe2c5 100644
---- a/drivers/iommu/io-pgtable-arm-v7s.c
-+++ b/drivers/iommu/io-pgtable-arm-v7s.c
-@@ -470,7 +470,7 @@ static arm_v7s_iopte arm_v7s_install_table(arm_v7s_iopte *table,
- 
- static int __arm_v7s_map(struct arm_v7s_io_pgtable *data, unsigned long iova,
- 			 phys_addr_t paddr, size_t size, int prot,
--			 int lvl, arm_v7s_iopte *ptep)
-+			 int lvl, arm_v7s_iopte *ptep, gfp_t gfp)
- {
- 	struct io_pgtable_cfg *cfg = &data->iop.cfg;
- 	arm_v7s_iopte pte, *cptep;
-@@ -491,7 +491,7 @@ static int __arm_v7s_map(struct arm_v7s_io_pgtable *data, unsigned long iova,
- 	/* Grab a pointer to the next level */
- 	pte = READ_ONCE(*ptep);
- 	if (!pte) {
--		cptep = __arm_v7s_alloc_table(lvl + 1, GFP_ATOMIC, data);
-+		cptep = __arm_v7s_alloc_table(lvl + 1, gfp, data);
- 		if (!cptep)
- 			return -ENOMEM;
- 
-@@ -512,11 +512,11 @@ static int __arm_v7s_map(struct arm_v7s_io_pgtable *data, unsigned long iova,
- 	}
- 
- 	/* Rinse, repeat */
--	return __arm_v7s_map(data, iova, paddr, size, prot, lvl + 1, cptep);
-+	return __arm_v7s_map(data, iova, paddr, size, prot, lvl + 1, cptep, gfp);
- }
- 
- static int arm_v7s_map(struct io_pgtable_ops *ops, unsigned long iova,
--			phys_addr_t paddr, size_t size, int prot)
-+			phys_addr_t paddr, size_t size, int prot, gfp_t gfp)
- {
- 	struct arm_v7s_io_pgtable *data = io_pgtable_ops_to_data(ops);
- 	struct io_pgtable *iop = &data->iop;
-@@ -530,7 +530,7 @@ static int arm_v7s_map(struct io_pgtable_ops *ops, unsigned long iova,
- 		    paddr >= (1ULL << data->iop.cfg.oas)))
- 		return -ERANGE;
- 
--	ret = __arm_v7s_map(data, iova, paddr, size, prot, 1, data->pgd);
-+	ret = __arm_v7s_map(data, iova, paddr, size, prot, 1, data->pgd, gfp);
- 	/*
- 	 * Synchronise all PTE updates for the new mapping before there's
- 	 * a chance for anything to kick off a table walk for the new iova.
-diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
-index 04fbd4b..3ced132 100644
---- a/drivers/iommu/io-pgtable-arm.c
-+++ b/drivers/iommu/io-pgtable-arm.c
-@@ -355,7 +355,7 @@ static arm_lpae_iopte arm_lpae_install_table(arm_lpae_iopte *table,
- 
- static int __arm_lpae_map(struct arm_lpae_io_pgtable *data, unsigned long iova,
- 			  phys_addr_t paddr, size_t size, arm_lpae_iopte prot,
--			  int lvl, arm_lpae_iopte *ptep)
-+			  int lvl, arm_lpae_iopte *ptep, gfp_t gfp)
- {
- 	arm_lpae_iopte *cptep, pte;
- 	size_t block_size = ARM_LPAE_BLOCK_SIZE(lvl, data);
-@@ -376,7 +376,7 @@ static int __arm_lpae_map(struct arm_lpae_io_pgtable *data, unsigned long iova,
- 	/* Grab a pointer to the next level */
- 	pte = READ_ONCE(*ptep);
- 	if (!pte) {
--		cptep = __arm_lpae_alloc_pages(tblsz, GFP_ATOMIC, cfg);
-+		cptep = __arm_lpae_alloc_pages(tblsz, gfp, cfg);
- 		if (!cptep)
- 			return -ENOMEM;
- 
-@@ -396,7 +396,7 @@ static int __arm_lpae_map(struct arm_lpae_io_pgtable *data, unsigned long iova,
- 	}
- 
- 	/* Rinse, repeat */
--	return __arm_lpae_map(data, iova, paddr, size, prot, lvl + 1, cptep);
-+	return __arm_lpae_map(data, iova, paddr, size, prot, lvl + 1, cptep, gfp);
- }
- 
- static arm_lpae_iopte arm_lpae_prot_to_pte(struct arm_lpae_io_pgtable *data,
-@@ -461,7 +461,7 @@ static arm_lpae_iopte arm_lpae_prot_to_pte(struct arm_lpae_io_pgtable *data,
- }
- 
- static int arm_lpae_map(struct io_pgtable_ops *ops, unsigned long iova,
--			phys_addr_t paddr, size_t size, int iommu_prot)
-+			phys_addr_t paddr, size_t size, int iommu_prot, gfp_t gfp)
- {
- 	struct arm_lpae_io_pgtable *data = io_pgtable_ops_to_data(ops);
- 	struct io_pgtable_cfg *cfg = &data->iop.cfg;
-@@ -483,7 +483,7 @@ static int arm_lpae_map(struct io_pgtable_ops *ops, unsigned long iova,
- 		return -ERANGE;
- 
- 	prot = arm_lpae_prot_to_pte(data, iommu_prot);
--	ret = __arm_lpae_map(data, iova, paddr, size, prot, lvl, ptep);
-+	ret = __arm_lpae_map(data, iova, paddr, size, prot, lvl, ptep, gfp);
- 	/*
- 	 * Synchronise all PTE updates for the new mapping before there's
- 	 * a chance for anything to kick off a table walk for the new iova.
-diff --git a/drivers/iommu/ipmmu-vmsa.c b/drivers/iommu/ipmmu-vmsa.c
-index 310cf09..391d7f1 100644
---- a/drivers/iommu/ipmmu-vmsa.c
-+++ b/drivers/iommu/ipmmu-vmsa.c
-@@ -687,7 +687,7 @@ static int ipmmu_map(struct iommu_domain *io_domain, unsigned long iova,
- 	if (!domain)
- 		return -ENODEV;
- 
--	return domain->iop->map(domain->iop, iova, paddr, size, prot);
-+	return domain->iop->map(domain->iop, iova, paddr, size, prot, gfp);
- }
- 
- static size_t ipmmu_unmap(struct iommu_domain *io_domain, unsigned long iova,
-diff --git a/drivers/iommu/msm_iommu.c b/drivers/iommu/msm_iommu.c
-index 94a6df1..f3057f9 100644
---- a/drivers/iommu/msm_iommu.c
-+++ b/drivers/iommu/msm_iommu.c
-@@ -511,7 +511,7 @@ static int msm_iommu_map(struct iommu_domain *domain, unsigned long iova,
- 	int ret;
- 
- 	spin_lock_irqsave(&priv->pgtlock, flags);
--	ret = priv->iop->map(priv->iop, iova, pa, len, prot);
-+	ret = priv->iop->map(priv->iop, iova, pa, len, prot, GFP_ATOMIC);
- 	spin_unlock_irqrestore(&priv->pgtlock, flags);
- 
- 	return ret;
-diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-index 5f4d6df..1593801 100644
---- a/drivers/iommu/mtk_iommu.c
-+++ b/drivers/iommu/mtk_iommu.c
-@@ -397,7 +397,7 @@ static int mtk_iommu_map(struct iommu_domain *domain, unsigned long iova,
- 		paddr |= BIT_ULL(32);
- 
- 	/* Synchronize with the tlb_lock */
--	return dom->iop->map(dom->iop, iova, paddr, size, prot);
-+	return dom->iop->map(dom->iop, iova, paddr, size, prot, gfp);
- }
- 
- static size_t mtk_iommu_unmap(struct iommu_domain *domain,
-diff --git a/drivers/iommu/qcom_iommu.c b/drivers/iommu/qcom_iommu.c
-index 5b3b270..2c4c5d7 100644
---- a/drivers/iommu/qcom_iommu.c
-+++ b/drivers/iommu/qcom_iommu.c
-@@ -441,7 +441,7 @@ static int qcom_iommu_map(struct iommu_domain *domain, unsigned long iova,
- 		return -ENODEV;
- 
- 	spin_lock_irqsave(&qcom_domain->pgtbl_lock, flags);
--	ret = ops->map(ops, iova, paddr, size, prot);
-+	ret = ops->map(ops, iova, paddr, size, prot, GFP_ATOMIC);
- 	spin_unlock_irqrestore(&qcom_domain->pgtbl_lock, flags);
- 	return ret;
- }
-diff --git a/include/linux/io-pgtable.h b/include/linux/io-pgtable.h
-index 53d53c6..23285ba 100644
---- a/include/linux/io-pgtable.h
-+++ b/include/linux/io-pgtable.h
-@@ -155,7 +155,7 @@ struct io_pgtable_cfg {
-  */
- struct io_pgtable_ops {
- 	int (*map)(struct io_pgtable_ops *ops, unsigned long iova,
--		   phys_addr_t paddr, size_t size, int prot);
-+		   phys_addr_t paddr, size_t size, int prot, gfp_t gfp);
- 	size_t (*unmap)(struct io_pgtable_ops *ops, unsigned long iova,
- 			size_t size, struct iommu_iotlb_gather *gather);
- 	phys_addr_t (*iova_to_phys)(struct io_pgtable_ops *ops,
+Fixes: 03b262f2bbf4 ("iio:pressure: initial zpa2326 barometer support")
+
+>
+>
+>
+> Should not be "iio: ..." in the prefix?
+
+Yes! It should be "iio" in the patch name.
+
+
+>>
+>>
+>> Thanks,
+>>
+>> Jonathan
+>>
+>> > ---
+>> >  drivers/iio/pressure/zpa2326.c | 4 +++-
+>> >  1 file changed, 3 insertions(+), 1 deletion(-)
+>> >
+>> > diff --git a/drivers/iio/pressure/zpa2326.c b/drivers/iio/pressure/zpa2326.c
+>> > index 99dfe33ee402..245f2e2d412b 100644
+>> > --- a/drivers/iio/pressure/zpa2326.c
+>> > +++ b/drivers/iio/pressure/zpa2326.c
+>> > @@ -664,8 +664,10 @@ static int zpa2326_resume(const struct iio_dev *indio_dev)
+>> >       int err;
+>> >
+>> >       err = pm_runtime_get_sync(indio_dev->dev.parent);
+>> > -     if (err < 0)
+>> > +     if (err < 0) {
+>> > +             pm_runtime_put(indio_dev->dev.parent);
+>> >               return err;
+>> > +     }
+>> >
+>> >       if (err > 0) {
+>> >               /*
+>>
+>
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
+
+
 -- 
-1.8.3.1
-
+Navid.
