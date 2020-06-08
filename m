@@ -2,301 +2,418 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0211CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2002AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:04:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD4C020760
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:04:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591664672;
-	bh=do3HqzbvI/1L0hNQstTM2zMmm2vrO050KSEJ72g7qL0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=mVl4D5MYgvPh8jzqWAzY8T7UrzDnct/Sb5apFEt16Y/wZkgLzvUJqIUZV88iQhibE
-	 1PNEw3oFyW4aAYX7XzgdrEQf4hQTIuPkItOyI7HiwLgf0xSAq+TEXpFAR0XG4coVtx
-	 DM61HLoAI8pPSnPQZ8zNUVi7l/EMrsTVUItxA4vw=
+	by mail.kernel.org (Postfix) with ESMTP id E31542076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:04:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="XaZMGiSe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388166AbgFIBEc (ORCPT
+        id S2388172AbgFIBEi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 21:04:32 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:48384 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388164AbgFIBE1 (ORCPT
+        Mon, 8 Jun 2020 21:04:38 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:6032 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727065AbgFHXHY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 21:04:27 -0400
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id 05914AXG022712;
-        Tue, 9 Jun 2020 10:04:11 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 05914AXG022712
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1591664651;
-        bh=d8/fAyY9bun0QMjz+x0HFS6jGgClWqtQ+1IJuNPQaeg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=2YFDtk1vpl1xUeSN69Ni6HmkjmZ4muDN4gOa4XU38quEAozkFuuICjfbmYzIq7CZo
-         MR9V+6zrU0uASTNkSiqGIqDk/D/KxAaTW8kzA2h6GkDoUHdEIk+I3ojSk0FLh9PgAN
-         WiMvfjHLeSPxrX72jIkySCdSrWkgOZ0pPenjeDHKtCv24suK3ahGh5XyMc46mh9KV6
-         Px+oSGi1Pkqs50QBHQfQ9NED2xwriRtN4dleGXEZCdHY0tvoGl054jGW9FJ/ZWLFCg
-         E5Zqi2pJko1FDFoZ6mkjyqC170kzKgobmx6XN0wuk7J7ZwSdGITwz/bydiPfWn92bd
-         L8OuXylgIiqmQ==
-X-Nifty-SrcIP: [209.85.221.182]
-Received: by mail-vk1-f182.google.com with SMTP id m18so4454396vkk.9;
-        Mon, 08 Jun 2020 18:04:11 -0700 (PDT)
-X-Gm-Message-State: AOAM533c+pdKegBNmhY5vILDnS7RE39NMV9pxWWVblBG9cfwMcbxnhVB
-        WOXWFeWTXKEdvD4qskhk4+N1ejKsNAkVGak67T8=
-X-Google-Smtp-Source: ABdhPJyiPDgz9/Wetp7G+kwjzWCstW3GmxHHvisz8M/NJoIlQFCsT8LYaiAVeC5U0Z/P7Z3eWXZBkRKpYnyfpMG2sMM=
-X-Received: by 2002:a1f:a906:: with SMTP id s6mr894244vke.26.1591664650056;
- Mon, 08 Jun 2020 18:04:10 -0700 (PDT)
+        Mon, 8 Jun 2020 19:07:24 -0400
+Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 058N0rbS022442
+        for <linux-kernel@vger.kernel.org>; Mon, 8 Jun 2020 16:07:23 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=facebook;
+ bh=hTWYXDTsJ7KdMqPSsg2RfE2NF4Of9kUJAHCV5NnIln4=;
+ b=XaZMGiSeSBRqbKCo9+/dMAd0Kiv1E/jF/hDDuKBiBDAdBwD7ijxMiI/MgYMH8mGOIwjL
+ dyiUMdaAUUhf9oigfkyiJOV2ClN6rvPGEOqthCFiXUZkWoRVCPWe6vtZsTV11YE+mtOn
+ vtAj0LYfOCj5GlGfjI3DQwGyXLKqZKeMcDM= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 31gtucqn9v-16
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 16:07:23 -0700
+Received: from intmgw004.06.prn3.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:82::f) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Mon, 8 Jun 2020 16:07:14 -0700
+Received: by devvm1291.vll0.facebook.com (Postfix, from userid 111017)
+        id 4CC0A1D8FE4A; Mon,  8 Jun 2020 16:07:00 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm1291.vll0.facebook.com
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>
+CC:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Shakeel Butt <shakeelb@google.com>, <linux-mm@kvack.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <kernel-team@fb.com>,
+        <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>
+Smtp-Origin-Cluster: vll0c01
+Subject: [PATCH v6 08/19] mm: memcg/slab: save obj_cgroup for non-root slab objects
+Date:   Mon, 8 Jun 2020 16:06:43 -0700
+Message-ID: <20200608230654.828134-9-guro@fb.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200608230654.828134-1-guro@fb.com>
+References: <20200608230654.828134-1-guro@fb.com>
 MIME-Version: 1.0
-References: <CAK7LNASQamajjeV+VMq5G8fECfB6f9uKvZ32zGic72O0qp8Mtw@mail.gmail.com>
- <20200608095944.140779-1-efremov@linux.com>
-In-Reply-To: <20200608095944.140779-1-efremov@linux.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 9 Jun 2020 10:03:33 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATnZnZau0ZvRMuMhJyHOqu8AS8y6hKONdxFJVfi3xBBeQ@mail.gmail.com>
-Message-ID: <CAK7LNATnZnZau0ZvRMuMhJyHOqu8AS8y6hKONdxFJVfi3xBBeQ@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: fix broken builds because of GZIP,BZIP2,LZOP variables
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-08_18:2020-06-08,2020-06-08 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 suspectscore=2
+ bulkscore=0 priorityscore=1501 cotscore=-2147483648 spamscore=0
+ lowpriorityscore=0 adultscore=0 malwarescore=0 mlxlogscore=999
+ clxscore=1015 phishscore=0 mlxscore=0 impostorscore=0 classifier=spam
+ adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006080160
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 8, 2020 at 7:00 PM Denis Efremov <efremov@linux.com> wrote:
->
-> Redefine GZIP, BZIP2, LZOP variables as KGZIP, KBZIP2, KLZOP resp.
-> GZIP, BZIP2, LZOP env variables are reserved by the tools. The original
-> attempt to redefine them internally doesn't work in makefiles/scripts
-> intercall scenarios, e.g., "make GZIP=gzip bindeb-pkg" and results in
-> broken builds. There can be other broken build commands because of this,
-> so the universal solution is to use non-reserved env variables for the
-> compression tools.
->
-> Fixes: 8dfb61dcbace ("kbuild: add variables for compression tools")
-> Signed-off-by: Denis Efremov <efremov@linux.com>
-> ---
+Store the obj_cgroup pointer in the corresponding place of
+page->obj_cgroups for each allocated non-root slab object.
+Make sure that each allocated object holds a reference to obj_cgroup.
 
-Applied to linux-kbuild.
-Thanks.
+Objcg pointer is obtained from the memcg->objcg dereferencing
+in memcg_kmem_get_cache() and passed from pre_alloc_hook to
+post_alloc_hook. Then in case of successful allocation(s) it's
+getting stored in the page->obj_cgroups vector.
 
+The objcg obtaining part look a bit bulky now, but it will be simplified
+by next commits in the series.
 
->  Makefile                          | 24 +++++-------------------
->  arch/arm/boot/deflate_xip_data.sh |  2 +-
->  arch/ia64/Makefile                |  2 +-
->  arch/m68k/Makefile                |  8 ++++----
->  arch/parisc/Makefile              |  2 +-
->  scripts/Makefile.lib              |  6 +++---
->  scripts/Makefile.package          |  6 +++---
->  scripts/package/buildtar          |  4 ++--
->  8 files changed, 20 insertions(+), 34 deletions(-)
->
-> diff --git a/Makefile b/Makefile
-> index 839f9fee22cb..e43d193bb3b2 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -458,27 +458,13 @@ PYTHON            = python
->  PYTHON3                = python3
->  CHECK          = sparse
->  BASH           = bash
-> -GZIP           = gzip
-> -BZIP2          = bzip2
-> -LZOP           = lzop
-> +KGZIP          = gzip
-> +KBZIP2         = bzip2
-> +KLZOP          = lzop
->  LZMA           = lzma
->  LZ4            = lz4c
->  XZ             = xz
->
-> -# GZIP, BZIP2, LZOP env vars are used by the tools. Support them as the command
-> -# line interface, but use _GZIP, _BZIP2, _LZOP internally.
-> -_GZIP          := $(GZIP)
-> -_BZIP2         := $(BZIP2)
-> -_LZOP          := $(LZOP)
-> -
-> -# Reset GZIP, BZIP2, LZOP in this Makefile
-> -override GZIP=
-> -override BZIP2=
-> -override LZOP=
-> -
-> -# Reset GZIP, BZIP2, LZOP in recursive invocations
-> -MAKEOVERRIDES += GZIP= BZIP2= LZOP=
-> -
->  CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
->                   -Wbitwise -Wno-return-void -Wno-unknown-attribute $(CF)
->  NOSTDINC_FLAGS :=
-> @@ -526,7 +512,7 @@ CLANG_FLAGS :=
->  export ARCH SRCARCH CONFIG_SHELL BASH HOSTCC KBUILD_HOSTCFLAGS CROSS_COMPILE LD CC
->  export CPP AR NM STRIP OBJCOPY OBJDUMP OBJSIZE READELF PAHOLE LEX YACC AWK INSTALLKERNEL
->  export PERL PYTHON PYTHON3 CHECK CHECKFLAGS MAKE UTS_MACHINE HOSTCXX
-> -export _GZIP _BZIP2 _LZOP LZMA LZ4 XZ
-> +export KGZIP KBZIP2 KLZOP LZMA LZ4 XZ
->  export KBUILD_HOSTCXXFLAGS KBUILD_HOSTLDFLAGS KBUILD_HOSTLDLIBS LDFLAGS_MODULE
->
->  export KBUILD_CPPFLAGS NOSTDINC_FLAGS LINUXINCLUDE OBJCOPYFLAGS KBUILD_LDFLAGS
-> @@ -1047,7 +1033,7 @@ export mod_strip_cmd
->  mod_compress_cmd = true
->  ifdef CONFIG_MODULE_COMPRESS
->    ifdef CONFIG_MODULE_COMPRESS_GZIP
-> -    mod_compress_cmd = $(_GZIP) -n -f
-> +    mod_compress_cmd = $(KGZIP) -n -f
->    endif # CONFIG_MODULE_COMPRESS_GZIP
->    ifdef CONFIG_MODULE_COMPRESS_XZ
->      mod_compress_cmd = $(XZ) -f
-> diff --git a/arch/arm/boot/deflate_xip_data.sh b/arch/arm/boot/deflate_xip_data.sh
-> index 739f0464321e..304495c3c2c5 100755
-> --- a/arch/arm/boot/deflate_xip_data.sh
-> +++ b/arch/arm/boot/deflate_xip_data.sh
-> @@ -56,7 +56,7 @@ trap 'rm -f "$XIPIMAGE.tmp"; exit 1' 1 2 3
->  # substitute the data section by a compressed version
->  $DD if="$XIPIMAGE" count=$data_start iflag=count_bytes of="$XIPIMAGE.tmp"
->  $DD if="$XIPIMAGE"  skip=$data_start iflag=skip_bytes |
-> -$_GZIP -9 >> "$XIPIMAGE.tmp"
-> +$KGZIP -9 >> "$XIPIMAGE.tmp"
->
->  # replace kernel binary
->  mv -f "$XIPIMAGE.tmp" "$XIPIMAGE"
-> diff --git a/arch/ia64/Makefile b/arch/ia64/Makefile
-> index f817f3d5e758..2876a7df1b0a 100644
-> --- a/arch/ia64/Makefile
-> +++ b/arch/ia64/Makefile
-> @@ -40,7 +40,7 @@ $(error Sorry, you need a newer version of the assember, one that is built from
->  endif
->
->  quiet_cmd_gzip = GZIP    $@
-> -cmd_gzip = cat $(real-prereqs) | $(_GZIP) -n -f -9 > $@
-> +cmd_gzip = cat $(real-prereqs) | $(KGZIP) -n -f -9 > $@
->
->  quiet_cmd_objcopy = OBJCOPY $@
->  cmd_objcopy = $(OBJCOPY) $(OBJCOPYFLAGS) $(OBJCOPYFLAGS_$(@F)) $< $@
-> diff --git a/arch/m68k/Makefile b/arch/m68k/Makefile
-> index ce6db5e5a5a3..0415d28dbe4f 100644
-> --- a/arch/m68k/Makefile
-> +++ b/arch/m68k/Makefile
-> @@ -135,10 +135,10 @@ vmlinux.gz: vmlinux
->  ifndef CONFIG_KGDB
->         cp vmlinux vmlinux.tmp
->         $(STRIP) vmlinux.tmp
-> -       $(_GZIP) -9c vmlinux.tmp >vmlinux.gz
-> +       $(KGZIP) -9c vmlinux.tmp >vmlinux.gz
->         rm vmlinux.tmp
->  else
-> -       $(_GZIP) -9c vmlinux >vmlinux.gz
-> +       $(KGZIP) -9c vmlinux >vmlinux.gz
->  endif
->
->  bzImage: vmlinux.bz2
-> @@ -148,10 +148,10 @@ vmlinux.bz2: vmlinux
->  ifndef CONFIG_KGDB
->         cp vmlinux vmlinux.tmp
->         $(STRIP) vmlinux.tmp
-> -       $(_BZIP2) -1c vmlinux.tmp >vmlinux.bz2
-> +       $(KBZIP2) -1c vmlinux.tmp >vmlinux.bz2
->         rm vmlinux.tmp
->  else
-> -       $(_BZIP2) -1c vmlinux >vmlinux.bz2
-> +       $(KBZIP2) -1c vmlinux >vmlinux.bz2
->  endif
->
->  archclean:
-> diff --git a/arch/parisc/Makefile b/arch/parisc/Makefile
-> index 182a5bca3e2c..5140c602207f 100644
-> --- a/arch/parisc/Makefile
-> +++ b/arch/parisc/Makefile
-> @@ -162,7 +162,7 @@ vmlinuz: bzImage
->         $(OBJCOPY) $(boot)/bzImage $@
->  else
->  vmlinuz: vmlinux
-> -       @$(_GZIP) -cf -9 $< > $@
-> +       @$(KGZIP) -cf -9 $< > $@
->  endif
->
->  install:
-> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-> index 127f2a7e3ced..94eeddb2e599 100644
-> --- a/scripts/Makefile.lib
-> +++ b/scripts/Makefile.lib
-> @@ -244,7 +244,7 @@ cmd_objcopy = $(OBJCOPY) $(OBJCOPYFLAGS) $(OBJCOPYFLAGS_$(@F)) $< $@
->  # ---------------------------------------------------------------------------
->
->  quiet_cmd_gzip = GZIP    $@
-> -      cmd_gzip = cat $(real-prereqs) | $(_GZIP) -n -f -9 > $@
-> +      cmd_gzip = cat $(real-prereqs) | $(KGZIP) -n -f -9 > $@
->
->  # DTC
->  # ---------------------------------------------------------------------------
-> @@ -337,7 +337,7 @@ printf "%08x\n" $$dec_size |                                                \
->  )
->
->  quiet_cmd_bzip2 = BZIP2   $@
-> -      cmd_bzip2 = { cat $(real-prereqs) | $(_BZIP2) -9; $(size_append); } > $@
-> +      cmd_bzip2 = { cat $(real-prereqs) | $(KBZIP2) -9; $(size_append); } > $@
->
->  # Lzma
->  # ---------------------------------------------------------------------------
-> @@ -346,7 +346,7 @@ quiet_cmd_lzma = LZMA    $@
->        cmd_lzma = { cat $(real-prereqs) | $(LZMA) -9; $(size_append); } > $@
->
->  quiet_cmd_lzo = LZO     $@
-> -      cmd_lzo = { cat $(real-prereqs) | $(_LZOP) -9; $(size_append); } > $@
-> +      cmd_lzo = { cat $(real-prereqs) | $(KLZOP) -9; $(size_append); } > $@
->
->  quiet_cmd_lz4 = LZ4     $@
->        cmd_lz4 = { cat $(real-prereqs) | $(LZ4) -l -c1 stdin stdout; \
-> diff --git a/scripts/Makefile.package b/scripts/Makefile.package
-> index b2b6153af63a..f952fb64789d 100644
-> --- a/scripts/Makefile.package
-> +++ b/scripts/Makefile.package
-> @@ -45,7 +45,7 @@ if test "$(objtree)" != "$(srctree)"; then \
->         false; \
->  fi ; \
->  $(srctree)/scripts/setlocalversion --save-scmversion; \
-> -tar -I $(_GZIP) -c $(RCS_TAR_IGNORE) -f $(2).tar.gz \
-> +tar -I $(KGZIP) -c $(RCS_TAR_IGNORE) -f $(2).tar.gz \
->         --transform 's:^:$(2)/:S' $(TAR_CONTENT) $(3); \
->  rm -f $(objtree)/.scmversion
->
-> @@ -127,8 +127,8 @@ util/PERF-VERSION-GEN $(CURDIR)/$(perf-tar)/);              \
->  tar rf $(perf-tar).tar $(perf-tar)/HEAD $(perf-tar)/PERF-VERSION-FILE; \
->  rm -r $(perf-tar);                                                  \
->  $(if $(findstring tar-src,$@),,                                     \
-> -$(if $(findstring bz2,$@),$(_BZIP2),                                 \
-> -$(if $(findstring gz,$@),$(_GZIP),                                  \
-> +$(if $(findstring bz2,$@),$(KBZIP2),                                 \
-> +$(if $(findstring gz,$@),$(KGZIP),                                  \
->  $(if $(findstring xz,$@),$(XZ),                                     \
->  $(error unknown target $@))))                                       \
->         -f -9 $(perf-tar).tar)
-> diff --git a/scripts/package/buildtar b/scripts/package/buildtar
-> index ad62c6879622..fb1578e72ab9 100755
-> --- a/scripts/package/buildtar
-> +++ b/scripts/package/buildtar
-> @@ -28,11 +28,11 @@ case "${1}" in
->                 opts=
->                 ;;
->         targz-pkg)
-> -               opts="-I ${_GZIP}"
-> +               opts="-I ${KGZIP}"
->                 tarball=${tarball}.gz
->                 ;;
->         tarbz2-pkg)
-> -               opts="-I ${_BZIP2}"
-> +               opts="-I ${KBZIP2}"
->                 tarball=${tarball}.bz2
->                 ;;
->         tarxz-pkg)
-> --
-> 2.26.2
->
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+---
+ include/linux/memcontrol.h |  3 +-
+ mm/memcontrol.c            | 14 +++++++--
+ mm/slab.c                  | 18 +++++++-----
+ mm/slab.h                  | 60 ++++++++++++++++++++++++++++++++++----
+ mm/slub.c                  | 14 +++++----
+ 5 files changed, 88 insertions(+), 21 deletions(-)
 
+diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+index c69e66fe4f12..c63473fffdda 100644
+--- a/include/linux/memcontrol.h
++++ b/include/linux/memcontrol.h
+@@ -1404,7 +1404,8 @@ static inline void memcg_set_shrinker_bit(struct me=
+m_cgroup *memcg,
+ }
+ #endif
+=20
+-struct kmem_cache *memcg_kmem_get_cache(struct kmem_cache *cachep);
++struct kmem_cache *memcg_kmem_get_cache(struct kmem_cache *cachep,
++					struct obj_cgroup **objcgp);
+ void memcg_kmem_put_cache(struct kmem_cache *cachep);
+=20
+ #ifdef CONFIG_MEMCG_KMEM
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 2020c7542aa1..f0ea0ce6bea5 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -2971,7 +2971,8 @@ static inline bool memcg_kmem_bypass(void)
+  * done with it, memcg_kmem_put_cache() must be called to release the
+  * reference.
+  */
+-struct kmem_cache *memcg_kmem_get_cache(struct kmem_cache *cachep)
++struct kmem_cache *memcg_kmem_get_cache(struct kmem_cache *cachep,
++					struct obj_cgroup **objcgp)
+ {
+ 	struct mem_cgroup *memcg;
+ 	struct kmem_cache *memcg_cachep;
+@@ -3027,8 +3028,17 @@ struct kmem_cache *memcg_kmem_get_cache(struct kme=
+m_cache *cachep)
+ 	 */
+ 	if (unlikely(!memcg_cachep))
+ 		memcg_schedule_kmem_cache_create(memcg, cachep);
+-	else if (percpu_ref_tryget(&memcg_cachep->memcg_params.refcnt))
++	else if (percpu_ref_tryget(&memcg_cachep->memcg_params.refcnt)) {
++		struct obj_cgroup *objcg =3D rcu_dereference(memcg->objcg);
++
++		if (!objcg || !obj_cgroup_tryget(objcg)) {
++			percpu_ref_put(&memcg_cachep->memcg_params.refcnt);
++			goto out_unlock;
++		}
++
++		*objcgp =3D objcg;
+ 		cachep =3D memcg_cachep;
++	}
+ out_unlock:
+ 	rcu_read_unlock();
+ 	return cachep;
+diff --git a/mm/slab.c b/mm/slab.c
+index 9350062ffc1a..02b4363930c1 100644
+--- a/mm/slab.c
++++ b/mm/slab.c
+@@ -3222,9 +3222,10 @@ slab_alloc_node(struct kmem_cache *cachep, gfp_t f=
+lags, int nodeid,
+ 	unsigned long save_flags;
+ 	void *ptr;
+ 	int slab_node =3D numa_mem_id();
++	struct obj_cgroup *objcg =3D NULL;
+=20
+ 	flags &=3D gfp_allowed_mask;
+-	cachep =3D slab_pre_alloc_hook(cachep, flags);
++	cachep =3D slab_pre_alloc_hook(cachep, &objcg, 1, flags);
+ 	if (unlikely(!cachep))
+ 		return NULL;
+=20
+@@ -3260,7 +3261,7 @@ slab_alloc_node(struct kmem_cache *cachep, gfp_t fl=
+ags, int nodeid,
+ 	if (unlikely(slab_want_init_on_alloc(flags, cachep)) && ptr)
+ 		memset(ptr, 0, cachep->object_size);
+=20
+-	slab_post_alloc_hook(cachep, flags, 1, &ptr);
++	slab_post_alloc_hook(cachep, objcg, flags, 1, &ptr);
+ 	return ptr;
+ }
+=20
+@@ -3301,9 +3302,10 @@ slab_alloc(struct kmem_cache *cachep, gfp_t flags,=
+ unsigned long caller)
+ {
+ 	unsigned long save_flags;
+ 	void *objp;
++	struct obj_cgroup *objcg =3D NULL;
+=20
+ 	flags &=3D gfp_allowed_mask;
+-	cachep =3D slab_pre_alloc_hook(cachep, flags);
++	cachep =3D slab_pre_alloc_hook(cachep, &objcg, 1, flags);
+ 	if (unlikely(!cachep))
+ 		return NULL;
+=20
+@@ -3317,7 +3319,7 @@ slab_alloc(struct kmem_cache *cachep, gfp_t flags, =
+unsigned long caller)
+ 	if (unlikely(slab_want_init_on_alloc(flags, cachep)) && objp)
+ 		memset(objp, 0, cachep->object_size);
+=20
+-	slab_post_alloc_hook(cachep, flags, 1, &objp);
++	slab_post_alloc_hook(cachep, objcg, flags, 1, &objp);
+ 	return objp;
+ }
+=20
+@@ -3439,6 +3441,7 @@ void ___cache_free(struct kmem_cache *cachep, void =
+*objp,
+ 		memset(objp, 0, cachep->object_size);
+ 	kmemleak_free_recursive(objp, cachep->flags);
+ 	objp =3D cache_free_debugcheck(cachep, objp, caller);
++	memcg_slab_free_hook(cachep, virt_to_head_page(objp), objp);
+=20
+ 	/*
+ 	 * Skip calling cache_free_alien() when the platform is not numa.
+@@ -3504,8 +3507,9 @@ int kmem_cache_alloc_bulk(struct kmem_cache *s, gfp=
+_t flags, size_t size,
+ 			  void **p)
+ {
+ 	size_t i;
++	struct obj_cgroup *objcg =3D NULL;
+=20
+-	s =3D slab_pre_alloc_hook(s, flags);
++	s =3D slab_pre_alloc_hook(s, &objcg, size, flags);
+ 	if (!s)
+ 		return 0;
+=20
+@@ -3528,13 +3532,13 @@ int kmem_cache_alloc_bulk(struct kmem_cache *s, g=
+fp_t flags, size_t size,
+ 		for (i =3D 0; i < size; i++)
+ 			memset(p[i], 0, s->object_size);
+=20
+-	slab_post_alloc_hook(s, flags, size, p);
++	slab_post_alloc_hook(s, objcg, flags, size, p);
+ 	/* FIXME: Trace call missing. Christoph would like a bulk variant */
+ 	return size;
+ error:
+ 	local_irq_enable();
+ 	cache_alloc_debugcheck_after_bulk(s, flags, i, p, _RET_IP_);
+-	slab_post_alloc_hook(s, flags, i, p);
++	slab_post_alloc_hook(s, objcg, flags, i, p);
+ 	__kmem_cache_free_bulk(s, i, p);
+ 	return 0;
+ }
+diff --git a/mm/slab.h b/mm/slab.h
+index a1633ea15fbf..8bca0cb4b928 100644
+--- a/mm/slab.h
++++ b/mm/slab.h
+@@ -438,6 +438,41 @@ static inline void memcg_free_page_obj_cgroups(struc=
+t page *page)
+ 	page->obj_cgroups =3D NULL;
+ }
+=20
++static inline void memcg_slab_post_alloc_hook(struct kmem_cache *s,
++					      struct obj_cgroup *objcg,
++					      size_t size, void **p)
++{
++	struct page *page;
++	unsigned long off;
++	size_t i;
++
++	for (i =3D 0; i < size; i++) {
++		if (likely(p[i])) {
++			page =3D virt_to_head_page(p[i]);
++			off =3D obj_to_index(s, page, p[i]);
++			obj_cgroup_get(objcg);
++			page_obj_cgroups(page)[off] =3D objcg;
++		}
++	}
++	obj_cgroup_put(objcg);
++	memcg_kmem_put_cache(s);
++}
++
++static inline void memcg_slab_free_hook(struct kmem_cache *s, struct pag=
+e *page,
++					void *p)
++{
++	struct obj_cgroup *objcg;
++	unsigned int off;
++
++	if (!memcg_kmem_enabled() || is_root_cache(s))
++		return;
++
++	off =3D obj_to_index(s, page, p);
++	objcg =3D page_obj_cgroups(page)[off];
++	page_obj_cgroups(page)[off] =3D NULL;
++	obj_cgroup_put(objcg);
++}
++
+ extern void slab_init_memcg_params(struct kmem_cache *);
+ extern void memcg_link_cache(struct kmem_cache *s, struct mem_cgroup *me=
+mcg);
+=20
+@@ -497,6 +532,17 @@ static inline void memcg_free_page_obj_cgroups(struc=
+t page *page)
+ {
+ }
+=20
++static inline void memcg_slab_post_alloc_hook(struct kmem_cache *s,
++					      struct obj_cgroup *objcg,
++					      size_t size, void **p)
++{
++}
++
++static inline void memcg_slab_free_hook(struct kmem_cache *s, struct pag=
+e *page,
++					void *p)
++{
++}
++
+ static inline void slab_init_memcg_params(struct kmem_cache *s)
+ {
+ }
+@@ -605,7 +651,8 @@ static inline size_t slab_ksize(const struct kmem_cac=
+he *s)
+ }
+=20
+ static inline struct kmem_cache *slab_pre_alloc_hook(struct kmem_cache *=
+s,
+-						     gfp_t flags)
++						     struct obj_cgroup **objcgp,
++						     size_t size, gfp_t flags)
+ {
+ 	flags &=3D gfp_allowed_mask;
+=20
+@@ -619,13 +666,14 @@ static inline struct kmem_cache *slab_pre_alloc_hoo=
+k(struct kmem_cache *s,
+=20
+ 	if (memcg_kmem_enabled() &&
+ 	    ((flags & __GFP_ACCOUNT) || (s->flags & SLAB_ACCOUNT)))
+-		return memcg_kmem_get_cache(s);
++		return memcg_kmem_get_cache(s, objcgp);
+=20
+ 	return s;
+ }
+=20
+-static inline void slab_post_alloc_hook(struct kmem_cache *s, gfp_t flag=
+s,
+-					size_t size, void **p)
++static inline void slab_post_alloc_hook(struct kmem_cache *s,
++					struct obj_cgroup *objcg,
++					gfp_t flags, size_t size, void **p)
+ {
+ 	size_t i;
+=20
+@@ -637,8 +685,8 @@ static inline void slab_post_alloc_hook(struct kmem_c=
+ache *s, gfp_t flags,
+ 					 s->flags, flags);
+ 	}
+=20
+-	if (memcg_kmem_enabled())
+-		memcg_kmem_put_cache(s);
++	if (memcg_kmem_enabled() && !is_root_cache(s))
++		memcg_slab_post_alloc_hook(s, objcg, size, p);
+ }
+=20
+ #ifndef CONFIG_SLOB
+diff --git a/mm/slub.c b/mm/slub.c
+index 6007c38071f5..7007eceac4c4 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -2738,8 +2738,9 @@ static __always_inline void *slab_alloc_node(struct=
+ kmem_cache *s,
+ 	struct kmem_cache_cpu *c;
+ 	struct page *page;
+ 	unsigned long tid;
++	struct obj_cgroup *objcg =3D NULL;
+=20
+-	s =3D slab_pre_alloc_hook(s, gfpflags);
++	s =3D slab_pre_alloc_hook(s, &objcg, 1, gfpflags);
+ 	if (!s)
+ 		return NULL;
+ redo:
+@@ -2815,7 +2816,7 @@ static __always_inline void *slab_alloc_node(struct=
+ kmem_cache *s,
+ 	if (unlikely(slab_want_init_on_alloc(gfpflags, s)) && object)
+ 		memset(object, 0, s->object_size);
+=20
+-	slab_post_alloc_hook(s, gfpflags, 1, &object);
++	slab_post_alloc_hook(s, objcg, gfpflags, 1, &object);
+=20
+ 	return object;
+ }
+@@ -3020,6 +3021,8 @@ static __always_inline void do_slab_free(struct kme=
+m_cache *s,
+ 	void *tail_obj =3D tail ? : head;
+ 	struct kmem_cache_cpu *c;
+ 	unsigned long tid;
++
++	memcg_slab_free_hook(s, page, head);
+ redo:
+ 	/*
+ 	 * Determine the currently cpus per cpu slab.
+@@ -3199,9 +3202,10 @@ int kmem_cache_alloc_bulk(struct kmem_cache *s, gf=
+p_t flags, size_t size,
+ {
+ 	struct kmem_cache_cpu *c;
+ 	int i;
++	struct obj_cgroup *objcg =3D NULL;
+=20
+ 	/* memcg and kmem_cache debug support */
+-	s =3D slab_pre_alloc_hook(s, flags);
++	s =3D slab_pre_alloc_hook(s, &objcg, size, flags);
+ 	if (unlikely(!s))
+ 		return false;
+ 	/*
+@@ -3255,11 +3259,11 @@ int kmem_cache_alloc_bulk(struct kmem_cache *s, g=
+fp_t flags, size_t size,
+ 	}
+=20
+ 	/* memcg and kmem_cache debug support */
+-	slab_post_alloc_hook(s, flags, size, p);
++	slab_post_alloc_hook(s, objcg, flags, size, p);
+ 	return i;
+ error:
+ 	local_irq_enable();
+-	slab_post_alloc_hook(s, flags, i, p);
++	slab_post_alloc_hook(s, objcg, flags, i, p);
+ 	__kmem_cache_free_bulk(s, i, p);
+ 	return 0;
+ }
+--=20
+2.25.4
 
--- 
-Best Regards
-Masahiro Yamada
