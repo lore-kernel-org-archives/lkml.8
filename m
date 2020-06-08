@@ -2,364 +2,254 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8939FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B342C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 673DF2064C
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:29:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I1UkKGJ2"
+	by mail.kernel.org (Postfix) with ESMTP id F13E02064C
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:33:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591601591;
+	bh=wFMmWxTGGkAeoLsFZUBFz8S3YHAitudZjp1ZjGxZ2uA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IFbz5vgKcYhggpCa3BuQAx9yV1coV8oqmhWESQqdLlujJIROLoBldzM+Jeb+aSMHi
+	 NMQZ4j1/B4YnNj/TnAbi7Uvu+ba84bulo3lShZr2PuHUWITMFnFnMjWpzT6OWJStE3
+	 aNqYTa0fcBiSvExvHqwBNaCjnxoJy+fehBlj2BfM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729002AbgFHH3D (ORCPT
+        id S1729002AbgFHHdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 03:29:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33580 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728979AbgFHH3C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 03:29:02 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87B9FC08C5C5
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 00:29:02 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id t132so8916819vst.2
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 00:29:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FCmiNcLMNBnegLTsWZLMDUk4w4C6QmrCaW3YO/17GXY=;
-        b=I1UkKGJ2LVoDVTKZtN5Lnu5DqC0dpcAJu7JlbKE5S2l6r5Z+6xc7v03MOzHc5ZoRlK
-         msegtRJh2B1YKkWLyMKdhbQG+VnsbhfFEec8R0jj2ppIF3LdJpu94beYDQAyH88yKgHo
-         1WW0QzoEqGHQnPrrPmnVVIKq8fff5eOvuMznOfSYyprD7Wc+HJDOlfap2FbI5fxv5OE9
-         3seejNlz3y6jShHGMLfU0Pwd9UfZTxQyQuY/wli4AAKCYy7iCO7qMXS3mnekJ/QqhNr1
-         oMvKVMa4CH0etxVcRCF2KUmjp4fajJ6ajrO7aG8/G5elqUYIMv5CmSvf55w5FOo3IynM
-         2szA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FCmiNcLMNBnegLTsWZLMDUk4w4C6QmrCaW3YO/17GXY=;
-        b=Qk+0bdA+yvF9Osob0k/YY/QaF59oJLxSy5UXvHHYBowlY3X5ywf4vC6WpteqXesRWt
-         SHcoBmY0YJCwFu6sMnvMhYDseyEmM0mk9oLSZaIw7WdFK1sB/hM3e0Yu37lPWcikKxXF
-         exSlWmSujiJOAVLIGaTYjMlvdZ35dY9390Rj1OlKeYB8PxOQc0pjQ2VtBxAyfc/UNNWB
-         Ala4Jb9ZNsiedYYiZciD+U4LdCJENYEhzpczq2G7cQePuompMlWkLx//h5fpqD1nOnYY
-         tUjEHWDmI4elDpdub434pTcF5L7/REFh+7lgwfaTQ2JQojm77oCgPZhnVQjqZv42FzSK
-         VEfQ==
-X-Gm-Message-State: AOAM530DHqt7Utf6dC3OA51stEId3iMzaOMum0kHF99ihYUtvsua46ug
-        z7JRyU4xoT67jDGWKk9KX3xzsN8QEliekxFAFDqffQ==
-X-Google-Smtp-Source: ABdhPJydAV5F2km3PPtt844KawDCecTd9Z2vElrOVuRPYaTKIe3zLB54uwh1iKm0IcSFPVg9rfecEWzLQPm6GWdp2QU=
-X-Received: by 2002:a67:ee1b:: with SMTP id f27mr12334448vsp.34.1591601341180;
- Mon, 08 Jun 2020 00:29:01 -0700 (PDT)
+        Mon, 8 Jun 2020 03:33:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39514 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728753AbgFHHdJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 03:33:09 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D64B2064C;
+        Mon,  8 Jun 2020 07:33:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591601587;
+        bh=wFMmWxTGGkAeoLsFZUBFz8S3YHAitudZjp1ZjGxZ2uA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uuEwPeU43lltCh9+s9W2g68wa2chk70mLlA68A+HAirkTnbXy2z7BxzRb2RiNGqt4
+         Xk17MhZCCKfR/9fBSsLQshpVQbpdDFbs/7CcISqXwJNV9nVakCq+S9el90fspeZkhc
+         5qRLdKedeyeqBXG4qejTkHpl9ehqipem7XJ/TlZI=
+Date:   Mon, 8 Jun 2020 09:33:05 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     qiang.zhang@windriver.com
+Cc:     balbi@kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] usb: gadget: function: printer: fix use-after-free in
+ __lock_acquire
+Message-ID: <20200608073305.GA252221@kroah.com>
+References: <20200608071622.33081-1-qiang.zhang@windriver.com>
 MIME-Version: 1.0
-References: <1591277381-7734-1-git-send-email-vbadigan@codeaurora.org>
-In-Reply-To: <1591277381-7734-1-git-send-email-vbadigan@codeaurora.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 8 Jun 2020 09:28:25 +0200
-Message-ID: <CAPDyKFpO9afpONQEKgYBxwc2LtAn+31isoMGewOwR2Q8FnbCdA@mail.gmail.com>
-Subject: Re: [RFC V1] mmc: core: Add partial initialization support
-To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Maya Erez <merez@codeaurora.org>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Ludovic Barre <ludovic.barre@st.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bradley Bolen <bradleybolen@gmail.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200608071622.33081-1-qiang.zhang@windriver.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 4 Jun 2020 at 15:30, Veerabhadrarao Badiganti
-<vbadigan@codeaurora.org> wrote:
->
-> From: Maya Erez <merez@codeaurora.org>
->
-> This change adds the ability to partially initialize
-> the MMC card by using card Sleep/Awake sequence (CMD5).
-> Card will be sent to Sleep state during runtime/system suspend
-> and will be woken up during runtime/system resume.
-> By using this sequence the card doesn't need full initialization
-> which gives time reduction in system/runtime resume path.
-
-It would be nice if you could provide some more exact numbers of what
-the gain is for a couple of different eMMCs, as to justify the change
-a bit more.
-
-Kind regards
-Uffe
-
->
-> Signed-off-by: Maya Erez <merez@codeaurora.org>
-> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+On Mon, Jun 08, 2020 at 03:16:22PM +0800, qiang.zhang@windriver.com wrote:
+> From: Zqiang <qiang.zhang@windriver.com>
+> 
+> Increase the reference count of the printer dev through kref to avoid
+> being released by other tasks when in use.
+> 
+> BUG: KASAN: use-after-free in __lock_acquire+0x3fd4/0x4180
+> kernel/locking/lockdep.c:3831
+> Read of size 8 at addr ffff8880683b0018 by task syz-executor.0/3377
+> 
+> CPU: 1 PID: 3377 Comm: syz-executor.0 Not tainted 5.6.11 #1
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Bochs 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0xce/0x128 lib/dump_stack.c:118
+>  print_address_description.constprop.4+0x21/0x3c0 mm/kasan/report.c:374
+>  __kasan_report+0x131/0x1b0 mm/kasan/report.c:506
+>  kasan_report+0x12/0x20 mm/kasan/common.c:641
+>  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:135
+>  __lock_acquire+0x3fd4/0x4180 kernel/locking/lockdep.c:3831
+>  lock_acquire+0x127/0x350 kernel/locking/lockdep.c:4488
+>  __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+>  _raw_spin_lock_irqsave+0x35/0x50 kernel/locking/spinlock.c:159
+>  printer_ioctl+0x4a/0x110 drivers/usb/gadget/function/f_printer.c:723
+>  vfs_ioctl fs/ioctl.c:47 [inline]
+>  ksys_ioctl+0xfb/0x130 fs/ioctl.c:763
+>  __do_sys_ioctl fs/ioctl.c:772 [inline]
+>  __se_sys_ioctl fs/ioctl.c:770 [inline]
+>  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:770
+>  do_syscall_64+0x9e/0x510 arch/x86/entry/common.c:294
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x4531a9
+> Code: ed 60 fc ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48
+> 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d
+> 01 f0 ff ff 0f 83 bb 60 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007fd14ad72c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+> RAX: ffffffffffffffda RBX: 000000000073bfa8 RCX: 00000000004531a9
+> RDX: fffffffffffffff9 RSI: 000000000000009e RDI: 0000000000000003
+> RBP: 0000000000000003 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 00000000004bbd61
+> R13: 00000000004d0a98 R14: 00007fd14ad736d4 R15: 00000000ffffffff
+> 
+> Allocated by task 2393:
+>  save_stack+0x21/0x90 mm/kasan/common.c:72
+>  set_track mm/kasan/common.c:80 [inline]
+>  __kasan_kmalloc.constprop.3+0xa7/0xd0 mm/kasan/common.c:515
+>  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:529
+>  kmem_cache_alloc_trace+0xfa/0x2d0 mm/slub.c:2813
+>  kmalloc include/linux/slab.h:555 [inline]
+>  kzalloc include/linux/slab.h:669 [inline]
+>  gprinter_alloc+0xa1/0x870 drivers/usb/gadget/function/f_printer.c:1416
+>  usb_get_function+0x58/0xc0 drivers/usb/gadget/functions.c:61
+>  config_usb_cfg_link+0x1ed/0x3e0 drivers/usb/gadget/configfs.c:444
+>  configfs_symlink+0x527/0x11d0 fs/configfs/symlink.c:202
+>  vfs_symlink+0x33d/0x5b0 fs/namei.c:4201
+>  do_symlinkat+0x11b/0x1d0 fs/namei.c:4228
+>  __do_sys_symlinkat fs/namei.c:4242 [inline]
+>  __se_sys_symlinkat fs/namei.c:4239 [inline]
+>  __x64_sys_symlinkat+0x73/0xb0 fs/namei.c:4239
+>  do_syscall_64+0x9e/0x510 arch/x86/entry/common.c:294
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> Freed by task 3368:
+>  save_stack+0x21/0x90 mm/kasan/common.c:72
+>  set_track mm/kasan/common.c:80 [inline]
+>  kasan_set_free_info mm/kasan/common.c:337 [inline]
+>  __kasan_slab_free+0x135/0x190 mm/kasan/common.c:476
+>  kasan_slab_free+0xe/0x10 mm/kasan/common.c:485
+>  slab_free_hook mm/slub.c:1444 [inline]
+>  slab_free_freelist_hook mm/slub.c:1477 [inline]
+>  slab_free mm/slub.c:3034 [inline]
+>  kfree+0xf7/0x410 mm/slub.c:3995
+>  gprinter_free+0x49/0xd0 drivers/usb/gadget/function/f_printer.c:1353
+>  usb_put_function+0x38/0x50 drivers/usb/gadget/functions.c:87
+>  config_usb_cfg_unlink+0x2db/0x3b0 drivers/usb/gadget/configfs.c:485
+>  configfs_unlink+0x3b9/0x7f0 fs/configfs/symlink.c:250
+>  vfs_unlink+0x287/0x570 fs/namei.c:4073
+>  do_unlinkat+0x4f9/0x620 fs/namei.c:4137
+>  __do_sys_unlink fs/namei.c:4184 [inline]
+>  __se_sys_unlink fs/namei.c:4182 [inline]
+>  __x64_sys_unlink+0x42/0x50 fs/namei.c:4182
+>  do_syscall_64+0x9e/0x510 arch/x86/entry/common.c:294
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> The buggy address belongs to the object at ffff8880683b0000
+>  which belongs to the cache kmalloc-1k of size 1024
+> The buggy address is located 24 bytes inside of
+>  1024-byte region [ffff8880683b0000, ffff8880683b0400)
+> The buggy address belongs to the page:
+> page:ffffea0001a0ec00 refcount:1 mapcount:0 mapping:ffff88806c00e300
+> index:0xffff8880683b1800 compound_mapcount: 0
+> flags: 0x100000000010200(slab|head)
+> raw: 0100000000010200 0000000000000000 0000000600000001 ffff88806c00e300
+> raw: ffff8880683b1800 000000008010000a 00000001ffffffff 0000000000000000
+> page dumped because: kasan: bad access detected
+> 
+> Reported-by: Kyungtae Kim <kt0755@gmail.com>
+> Signed-off-by: Zqiang <qiang.zhang@windriver.com>
 > ---
->  drivers/mmc/core/mmc.c   | 146 ++++++++++++++++++++++++++++++++++++++++++++---
->  include/linux/mmc/card.h |   4 ++
->  include/linux/mmc/host.h |   2 +
->  3 files changed, 143 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
-> index de94fbe629bd..5c6444113c92 100644
-> --- a/drivers/mmc/core/mmc.c
-> +++ b/drivers/mmc/core/mmc.c
-> @@ -1892,7 +1892,13 @@ static int mmc_can_sleep(struct mmc_card *card)
->         return (card && card->ext_csd.rev >= 3);
->  }
->
-> -static int mmc_sleep(struct mmc_host *host)
-> +static int mmc_can_sleepawake(struct mmc_host *host)
+>  v1->v2:
+>   Commit information modification.
+> 
+>  drivers/usb/gadget/function/f_printer.c | 16 ++++++++++++++--
+>  1 file changed, 14 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/usb/gadget/function/f_printer.c b/drivers/usb/gadget/function/f_printer.c
+> index 9c7ed2539ff7..8ed1295d7e35 100644
+> --- a/drivers/usb/gadget/function/f_printer.c
+> +++ b/drivers/usb/gadget/function/f_printer.c
+> @@ -31,6 +31,7 @@
+>  #include <linux/types.h>
+>  #include <linux/ctype.h>
+>  #include <linux/cdev.h>
+> +#include <linux/kref.h>
+>  
+>  #include <asm/byteorder.h>
+>  #include <linux/io.h>
+> @@ -64,7 +65,7 @@ struct printer_dev {
+>  	struct usb_gadget	*gadget;
+>  	s8			interface;
+>  	struct usb_ep		*in_ep, *out_ep;
+> -
+> +	struct kref             kref;
+
+Now you have two referenced counted objects in the same exact structure.
+Which one is the "correct" reference count?
+
+You can't do this, that way lies madness and a sure set of nasty bugs
+that will haunt you for forever.
+
+Only use one reference count, either fix the existing one, or remove it
+and use this kref.
+
+But why not just use a struct device?  Putting a kref at the end of a
+device chain feels really really odd, don't you think?
+
+
+
+>  	struct list_head	rx_reqs;	/* List of free RX structs */
+>  	struct list_head	rx_reqs_active;	/* List of Active RX xfers */
+>  	struct list_head	rx_buffers;	/* List of completed xfers */
+> @@ -218,6 +219,13 @@ static inline struct usb_endpoint_descriptor *ep_desc(struct usb_gadget *gadget,
+>  
+>  /*-------------------------------------------------------------------------*/
+>  
+> +static void printer_dev_free(struct kref *kref)
 > +{
-> +       return host && (host->caps2 & MMC_CAP2_SLEEP_AWAKE) && host->card &&
-> +               (host->card->ext_csd.rev >= 3);
+> +	struct printer_dev *dev = container_of(kref, struct printer_dev, kref);
+> +
+> +	kfree(dev);
 > +}
 > +
-> +static int mmc_sleepawake(struct mmc_host *host, bool sleep)
+>  static struct usb_request *
+>  printer_req_alloc(struct usb_ep *ep, unsigned len, gfp_t gfp_flags)
 >  {
->         struct mmc_command cmd = {};
->         struct mmc_card *card = host->card;
-> @@ -1902,13 +1908,16 @@ static int mmc_sleep(struct mmc_host *host)
->         /* Re-tuning can't be done once the card is deselected */
->         mmc_retune_hold(host);
->
-> -       err = mmc_deselect_cards(host);
-> -       if (err)
-> -               goto out_release;
-> +       if (sleep) {
-> +               err = mmc_deselect_cards(host);
-> +               if (err)
-> +                       goto out_release;
-> +       }
->
->         cmd.opcode = MMC_SLEEP_AWAKE;
->         cmd.arg = card->rca << 16;
-> -       cmd.arg |= 1 << 15;
-> +       if (sleep)
-> +               cmd.arg |= 1 << 15;
->
->         /*
->          * If the max_busy_timeout of the host is specified, validate it against
-> @@ -1939,6 +1948,9 @@ static int mmc_sleep(struct mmc_host *host)
->         if (!cmd.busy_timeout || !(host->caps & MMC_CAP_WAIT_WHILE_BUSY))
->                 mmc_delay(timeout_ms);
->
-> +       if (!sleep)
-> +               err = mmc_select_card(card);
-> +
->  out_release:
->         mmc_retune_release(host);
->         return err;
-> @@ -2016,6 +2028,69 @@ static void mmc_detect(struct mmc_host *host)
->         }
+> @@ -348,6 +356,7 @@ printer_open(struct inode *inode, struct file *fd)
+>  
+>  	spin_unlock_irqrestore(&dev->lock, flags);
+>  
+> +	kref_get(&dev->kref);
+>  	DBG(dev, "printer_open returned %x\n", ret);
+>  	return ret;
 >  }
->
-> +static int mmc_cache_card_ext_csd(struct mmc_host *host)
-> +{
-> +       int err;
-> +       u8 *ext_csd;
-> +       struct mmc_card *card = host->card;
+> @@ -365,6 +374,7 @@ printer_close(struct inode *inode, struct file *fd)
+>  	dev->printer_status &= ~PRINTER_SELECTED;
+>  	spin_unlock_irqrestore(&dev->lock, flags);
+>  
+> +	kref_put(&dev->kref, printer_dev_free);
+>  	DBG(dev, "printer_close\n");
+>  
+>  	return 0;
+> @@ -1350,7 +1360,8 @@ static void gprinter_free(struct usb_function *f)
+>  	struct f_printer_opts *opts;
+>  
+>  	opts = container_of(f->fi, struct f_printer_opts, func_inst);
+> -	kfree(dev);
 > +
-> +       err = mmc_get_ext_csd(card, &ext_csd);
-> +       if (err || !ext_csd) {
-> +               pr_err("%s: %s: mmc_get_ext_csd failed (%d)\n",
-> +                       mmc_hostname(host), __func__, err);
-> +               return err;
-> +       }
-> +
-> +       /* only cache read/write fields that the sw changes */
-> +       card->ext_csd.raw_ext_csd_cmdq = ext_csd[EXT_CSD_CMDQ_MODE_EN];
-> +       card->ext_csd.raw_ext_csd_cache_ctrl = ext_csd[EXT_CSD_CACHE_CTRL];
-> +       card->ext_csd.raw_ext_csd_bus_width = ext_csd[EXT_CSD_BUS_WIDTH];
-> +       card->ext_csd.raw_ext_csd_hs_timing = ext_csd[EXT_CSD_HS_TIMING];
-> +
-> +       kfree(ext_csd);
-> +
-> +       return 0;
-> +}
-> +
-> +static int mmc_test_awake_ext_csd(struct mmc_host *host)
-> +{
-> +       int err;
-> +       u8 *ext_csd;
-> +       struct mmc_card *card = host->card;
-> +
-> +       err = mmc_get_ext_csd(card, &ext_csd);
-> +       if (err) {
-> +               pr_err("%s: %s: mmc_get_ext_csd failed (%d)\n",
-> +                       mmc_hostname(host), __func__, err);
-> +               return err;
-> +       }
-> +
-> +       /* only compare read/write fields that the sw changes */
-> +       pr_debug("%s: %s: type(cached:current) cmdq(%d:%d) cache_ctrl(%d:%d) bus_width (%d:%d) timing(%d:%d)\n",
-> +               mmc_hostname(host), __func__,
-> +               card->ext_csd.raw_ext_csd_cmdq,
-> +               ext_csd[EXT_CSD_CMDQ_MODE_EN],
-> +               card->ext_csd.raw_ext_csd_cache_ctrl,
-> +               ext_csd[EXT_CSD_CACHE_CTRL],
-> +               card->ext_csd.raw_ext_csd_bus_width,
-> +               ext_csd[EXT_CSD_BUS_WIDTH],
-> +               card->ext_csd.raw_ext_csd_hs_timing,
-> +               ext_csd[EXT_CSD_HS_TIMING]);
-> +
-> +       err = !((card->ext_csd.raw_ext_csd_cmdq ==
-> +                       ext_csd[EXT_CSD_CMDQ_MODE_EN]) &&
-> +               (card->ext_csd.raw_ext_csd_cache_ctrl ==
-> +                       ext_csd[EXT_CSD_CACHE_CTRL]) &&
-> +               (card->ext_csd.raw_ext_csd_bus_width ==
-> +                       ext_csd[EXT_CSD_BUS_WIDTH]) &&
-> +               (card->ext_csd.raw_ext_csd_hs_timing ==
-> +                       ext_csd[EXT_CSD_HS_TIMING]));
-> +
-> +       kfree(ext_csd);
-> +
-> +       return err;
-> +}
-> +
->  static int _mmc_suspend(struct mmc_host *host, bool is_suspend)
->  {
->         int err = 0;
-> @@ -2034,8 +2109,12 @@ static int _mmc_suspend(struct mmc_host *host, bool is_suspend)
->         if (mmc_can_poweroff_notify(host->card) &&
->                 ((host->caps2 & MMC_CAP2_FULL_PWR_CYCLE) || !is_suspend))
->                 err = mmc_poweroff_notify(host->card, notify_type);
-> -       else if (mmc_can_sleep(host->card))
-> -               err = mmc_sleep(host);
-> +       if (mmc_can_sleepawake(host)) {
-> +               memcpy(&host->cached_ios, &host->ios, sizeof(host->cached_ios));
-> +               mmc_cache_card_ext_csd(host);
-> +       }
-> +       if (mmc_can_sleep(host->card))
-> +               err = mmc_sleepawake(host, true);
->         else if (!mmc_host_is_spi(host))
->                 err = mmc_deselect_cards(host);
->
-> @@ -2048,6 +2127,43 @@ static int _mmc_suspend(struct mmc_host *host, bool is_suspend)
->         return err;
->  }
->
-> +static int mmc_partial_init(struct mmc_host *host)
-> +{
-> +       int err = 0;
-> +       struct mmc_card *card = host->card;
-> +
-> +       mmc_set_bus_width(host, host->cached_ios.bus_width);
-> +       mmc_set_timing(host, host->cached_ios.timing);
-> +       if (host->cached_ios.enhanced_strobe) {
-> +               host->ios.enhanced_strobe = true;
-> +               if (host->ops->hs400_enhanced_strobe)
-> +                       host->ops->hs400_enhanced_strobe(host, &host->ios);
-> +       }
-> +       mmc_set_clock(host, host->cached_ios.clock);
-> +       mmc_set_bus_mode(host, host->cached_ios.bus_mode);
-> +
-> +       if (!mmc_card_hs400es(card) &&
-> +                       (mmc_card_hs200(card) || mmc_card_hs400(card)))
-> +               err = mmc_execute_tuning(card);
-> +
-> +       /*
-> +        * The ext_csd is read to make sure the card did not went through
-> +        * Power-failure during sleep period.
-> +        * A subset of the W/E_P, W/C_P register will be tested. In case
-> +        * these registers values are different from the values that were
-> +        * cached during suspend, we will conclude that a Power-failure occurred
-> +        * and will do full initialization sequence.
-> +        */
-> +       err = mmc_test_awake_ext_csd(host);
-> +       if (err) {
-> +               pr_debug("%s: %s: fail on ext_csd read (%d)\n",
-> +                       mmc_hostname(host), __func__, err);
-> +               goto out;
-> +       }
-> +out:
-> +       return err;
-> +}
-> +
->  /*
->   * Suspend callback
->   */
-> @@ -2070,7 +2186,7 @@ static int mmc_suspend(struct mmc_host *host)
->   */
->  static int _mmc_resume(struct mmc_host *host)
->  {
-> -       int err = 0;
-> +       int err = -EINVAL;
->
->         mmc_claim_host(host);
->
-> @@ -2078,7 +2194,19 @@ static int _mmc_resume(struct mmc_host *host)
->                 goto out;
->
->         mmc_power_up(host, host->card->ocr);
-> -       err = mmc_init_card(host, host->card->ocr, host->card);
-> +
-> +       if (mmc_can_sleepawake(host)) {
-> +               err = mmc_sleepawake(host, false);
-> +               if (!err)
-> +                       err = mmc_partial_init(host);
-> +               else
-> +                       pr_err("%s: %s: awake failed (%d), fallback to full init\n",
-> +                               mmc_hostname(host), __func__, err);
-> +       }
-> +
-> +       if (err)
-> +               err = mmc_init_card(host, host->card->ocr, host->card);
-> +
->         mmc_card_clr_suspended(host->card);
->
->  out:
-> diff --git a/include/linux/mmc/card.h b/include/linux/mmc/card.h
-> index cf3780a6ccc4..2f4c8d3d5763 100644
-> --- a/include/linux/mmc/card.h
-> +++ b/include/linux/mmc/card.h
-> @@ -85,6 +85,8 @@ struct mmc_ext_csd {
->         unsigned int            data_tag_unit_size;     /* DATA TAG UNIT size */
->         unsigned int            boot_ro_lock;           /* ro lock support */
->         bool                    boot_ro_lockable;
-> +       u8                      raw_ext_csd_cmdq;       /* 15 */
-> +       u8                      raw_ext_csd_cache_ctrl; /* 33 */
->         bool                    ffu_capable;    /* Firmware upgrade support */
->         bool                    cmdq_en;        /* Command Queue enabled */
->         bool                    cmdq_support;   /* Command Queue supported */
-> @@ -95,7 +97,9 @@ struct mmc_ext_csd {
->         u8                      raw_partition_support;  /* 160 */
->         u8                      raw_rpmb_size_mult;     /* 168 */
->         u8                      raw_erased_mem_count;   /* 181 */
-> +       u8                      raw_ext_csd_bus_width;  /* 183 */
->         u8                      strobe_support;         /* 184 */
-> +       u8                      raw_ext_csd_hs_timing;  /* 185 */
->         u8                      raw_ext_csd_structure;  /* 194 */
->         u8                      raw_card_type;          /* 196 */
->         u8                      raw_driver_strength;    /* 197 */
-> diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
-> index d4a50e5dc111..a69abe9f032b 100644
-> --- a/include/linux/mmc/host.h
-> +++ b/include/linux/mmc/host.h
-> @@ -375,6 +375,7 @@ struct mmc_host {
->  #define MMC_CAP2_CQE_DCMD      (1 << 24)       /* CQE can issue a direct command */
->  #define MMC_CAP2_AVOID_3_3V    (1 << 25)       /* Host must negotiate down from 3.3V */
->  #define MMC_CAP2_MERGE_CAPABLE (1 << 26)       /* Host can merge a segment over the segment size */
-> +#define MMC_CAP2_SLEEP_AWAKE   (1 << 27)       /* Use Sleep/Awake (CMD5) */
->
->         int                     fixed_drv_type; /* fixed driver type for non-removable media */
->
-> @@ -393,6 +394,7 @@ struct mmc_host {
->         spinlock_t              lock;           /* lock for claim and bus ops */
->
->         struct mmc_ios          ios;            /* current io bus settings */
-> +       struct mmc_ios          cached_ios;
->
->         /* group bitfields together to minimize padding */
->         unsigned int            use_spi_crc:1;
-> --
-> Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
->
+> +	kref_put(&dev->kref, printer_dev_free);
+>  	mutex_lock(&opts->lock);
+>  	--opts->refcnt;
+>  	mutex_unlock(&opts->lock);
+> @@ -1419,6 +1430,7 @@ static struct usb_function *gprinter_alloc(struct usb_function_instance *fi)
+>  		return ERR_PTR(-ENOMEM);
+>  	}
+>  
+> +	kref_init(&dev->kref);
+>  	++opts->refcnt;
+>  	dev->minor = opts->minor;
+>  	dev->pnp_string = opts->pnp_string;
+
+All you are doing here is mirroring the existing cdev reference count,
+what does this really solve?  Are you sure it is correct?  If so, why?
+
+thanks,
+
+greg k-h
