@@ -2,95 +2,215 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E273EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 08:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D21C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 08:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B430B206D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 08:21:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591604516;
-	bh=ukk9VRIP+NjAOTVBv02xmYFvysWUmJ7wdix9Sz1YUBI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DgwyMcNELH2aUOES0uykBh/IUttjktLuSvyq5dSqtp8XFlysYhWSl3D5Fnz1HBRdF
-	 kWAjn6KIiga89bgEY+uc1Kk/T4sY9fQ7ejvTe9i5HrFxpf33IBiTnQWCpr8fYWgs0q
-	 tTkyQjDN42It8N1zOV/rBaUCneJXDcRd2W2YcYqY=
+	by mail.kernel.org (Postfix) with ESMTP id 72FCA2072F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 08:22:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a8dA+ZhQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729117AbgFHIV4 (ORCPT
+        id S1729121AbgFHIWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 04:21:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57442 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729060AbgFHIVz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 04:21:55 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29EB7206A4;
-        Mon,  8 Jun 2020 08:21:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591604515;
-        bh=ukk9VRIP+NjAOTVBv02xmYFvysWUmJ7wdix9Sz1YUBI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=przoaiwQeAzLSZk7wk1fXs7LbXR2q1ElpNm4y4G4hry5jp8BG3bmFL4W7pvFh+nMY
-         S+XH4vrnwcNbV7M5QamQrf/gsc1k0nNmXnlyWjlmU4/04j56h2zuZF3/+Kbks36fue
-         PI6l3TokD7x551whAvn2qViDrcSEepnoFN6GrnK4=
-Date:   Mon, 8 Jun 2020 09:21:51 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [Possible PATCH]arm64: ftrace: Change CONFIG_FTRACE_WITH_REGS to
- CONFIG_DYNAMIC_FTRACE_WITH_REGS
-Message-ID: <20200608082150.GB1542@willie-the-truck>
-References: <b9b27f2233bd1fa31d72ff937beefdae0e2104e5.camel@perches.com>
+        Mon, 8 Jun 2020 04:22:54 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:37960 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729060AbgFHIWx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 04:22:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591604571;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=NyMg6N0JWGe/FBViY6LX3oA9FUvdeC6zOGN/RVMyeP8=;
+        b=a8dA+ZhQBqHxSr3eFVOTv0aUGz387hTJ0EFMSZQFDZMm6sH9GJNc8RN8YeibkSLcgo61CO
+        v8HcW/N2AduHKR0w0mKhqW4vXME6JRfOz2nNjYRYTHOxTY359tR3rFWhuG5OdEVY0BRg9H
+        d9VAB4s4KxZz36JLl5JQ8XLDROrd0wM=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-181-0M-r6wdiMXCHSmdsUCAi6g-1; Mon, 08 Jun 2020 04:22:49 -0400
+X-MC-Unique: 0M-r6wdiMXCHSmdsUCAi6g-1
+Received: by mail-ed1-f71.google.com with SMTP id z8so573223edr.12
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 01:22:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=NyMg6N0JWGe/FBViY6LX3oA9FUvdeC6zOGN/RVMyeP8=;
+        b=HBH8uW/+LX/G1R64xz3xehWTYnO9Z19KxPfp+c08lrkdB4ggFVhE5HwcY5Ien4iE6S
+         M/hEndXTBSxr902KUsoRZY8Jprw/Os8tM8sHZI0ZUp65YgfG3xQxDycTYRj+gae5bG96
+         5a1FKA4LArBg9JoEFZ9bJlJK0wBdVLqMulowOhMh/ALel08vJhc4Bd5KXJfhMhiC4h9Z
+         w7v4KyZdzPnTLNU4FoNl+wgv7G+mrMiqbM8lQCKcGK+LHpXQ4jRP6/HclEVM3gqAdCHc
+         xQsGmeT7NaWnU184iwiJk6ZYDcEzvyr9qYQmSKo6eTZQMVrKIuulzg0VRFVLppNqqvHb
+         mfyQ==
+X-Gm-Message-State: AOAM5329YTTt1HcJXJfNOFOrzgcY9R7Iy986ri7L3l1rGY2nIvIR5DVf
+        /4I2Gepy/VrYTuZPZsLjPiGK0lpHtEsY0BzOrwHGsMyUO0l9uzevq8f4ALnqkchu9ZN0Q44iyXV
+        k0rB2p4baLsV2FMwYHO0bdyhq
+X-Received: by 2002:aa7:db47:: with SMTP id n7mr20758316edt.223.1591604568113;
+        Mon, 08 Jun 2020 01:22:48 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzkP7M6z3foOKnxN+p/Xf0dIo8XXvJ8w0HhHlFySzLpgRFiJ/XK6UxkPNR8QIFBYAvbJrrraQ==
+X-Received: by 2002:aa7:db47:: with SMTP id n7mr20758303edt.223.1591604567886;
+        Mon, 08 Jun 2020 01:22:47 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id fi13sm10311766ejb.34.2020.06.08.01.22.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jun 2020 01:22:47 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     syzbot+705f4401d5a93a59b87d@syzkaller.appspotmail.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH] KVM: let kvm_destroy_vm_debugfs clean up vCPU debugfs directories
+In-Reply-To: <20200605170633.16766-1-pbonzini@redhat.com>
+References: <20200605170633.16766-1-pbonzini@redhat.com>
+Date:   Mon, 08 Jun 2020 10:22:45 +0200
+Message-ID: <875zc2c6ga.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b9b27f2233bd1fa31d72ff937beefdae0e2104e5.camel@perches.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 06, 2020 at 12:25:50PM -0700, Joe Perches wrote:
-> CONFIG_FTRACE_WITH_REGS does not exist as a Kconfig symbol.
-> 
-> Signed-off-by: Joe Perches <joe@perches.com>
+Paolo Bonzini <pbonzini@redhat.com> writes:
+
+> After commit 63d0434 ("KVM: x86: move kvm_create_vcpu_debugfs after
+> last failure point") we are creating the pre-vCPU debugfs files
+> after the creation of the vCPU file descriptor.  This makes it
+> possible for userspace to reach kvm_vcpu_release before
+> kvm_create_vcpu_debugfs has finished.  The vcpu->debugfs_dentry
+> then does not have any associated inode anymore, and this causes
+> a NULL-pointer dereference in debugfs_create_file.
+>
+> The solution is simply to avoid removing the files; they are
+> cleaned up when the VM file descriptor is closed (and that must be
+> after KVM_CREATE_VCPU returns).  We can stop storing the dentry
+> in struct kvm_vcpu too, because it is not needed anywhere after
+> kvm_create_vcpu_debugfs returns.
+>
+> Reported-by: syzbot+705f4401d5a93a59b87d@syzkaller.appspotmail.com
+> Fixes: 63d04348371b ("KVM: x86: move kvm_create_vcpu_debugfs after last failure point")
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 > ---
-> 
-> I don't have the hardware, so I can't tell if this is a
-> correct change, but it is a logical one.
-> 
-> Found by a test script that looks for IS_ENABLED(FOO)
-> where FOO must also exist in Kconfig files.
-> 
->  arch/arm64/kernel/ftrace.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/kernel/ftrace.c b/arch/arm64/kernel/ftrace.c
-> index 8618faa82e6d..86a5cf9bc19a 100644
-> --- a/arch/arm64/kernel/ftrace.c
-> +++ b/arch/arm64/kernel/ftrace.c
-> @@ -69,7 +69,8 @@ static struct plt_entry *get_ftrace_plt(struct module *mod, unsigned long addr)
+>  arch/arm64/kvm/arm.c     |  5 -----
+>  arch/x86/kvm/debugfs.c   | 10 +++++-----
+>  include/linux/kvm_host.h |  3 +--
+>  virt/kvm/kvm_main.c      |  8 ++++----
+>  4 files changed, 10 insertions(+), 16 deletions(-)
+>
+> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
+> index 7a57381c05e8..45276ed50dd6 100644
+> --- a/arch/arm64/kvm/arm.c
+> +++ b/arch/arm64/kvm/arm.c
+> @@ -144,11 +144,6 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
+>  	return ret;
+>  }
 >  
->  	if (addr == FTRACE_ADDR)
->  		return &plt[FTRACE_PLT_IDX];
-> -	if (addr == FTRACE_REGS_ADDR && IS_ENABLED(CONFIG_FTRACE_WITH_REGS))
-> +	if (addr == FTRACE_REGS_ADDR &&
-> +	    IS_ENABLED(CONFIG_DYNAMIC_FTRACE_WITH_REGS))
->  		return &plt[FTRACE_REGS_PLT_IDX];
+> -int kvm_arch_create_vcpu_debugfs(struct kvm_vcpu *vcpu)
+> -{
+> -	return 0;
+> -}
+> -
+>  vm_fault_t kvm_arch_vcpu_fault(struct kvm_vcpu *vcpu, struct vm_fault *vmf)
+>  {
+>  	return VM_FAULT_SIGBUS;
+> diff --git a/arch/x86/kvm/debugfs.c b/arch/x86/kvm/debugfs.c
+> index 018aebce33ff..7e818d64bb4d 100644
+> --- a/arch/x86/kvm/debugfs.c
+> +++ b/arch/x86/kvm/debugfs.c
+> @@ -43,22 +43,22 @@ static int vcpu_get_tsc_scaling_frac_bits(void *data, u64 *val)
+>  
+>  DEFINE_SIMPLE_ATTRIBUTE(vcpu_tsc_scaling_frac_fops, vcpu_get_tsc_scaling_frac_bits, NULL, "%llu\n");
+>  
+> -void kvm_arch_create_vcpu_debugfs(struct kvm_vcpu *vcpu)
+> +void kvm_arch_create_vcpu_debugfs(struct kvm_vcpu *vcpu, struct dentry *debugfs_dentry)
+>  {
+> -	debugfs_create_file("tsc-offset", 0444, vcpu->debugfs_dentry, vcpu,
+> +	debugfs_create_file("tsc-offset", 0444, debugfs_dentry, vcpu,
+>  			    &vcpu_tsc_offset_fops);
+>  
+>  	if (lapic_in_kernel(vcpu))
+>  		debugfs_create_file("lapic_timer_advance_ns", 0444,
+> -				    vcpu->debugfs_dentry, vcpu,
+> +				    debugfs_dentry, vcpu,
+>  				    &vcpu_timer_advance_ns_fops);
+>  
+>  	if (kvm_has_tsc_control) {
+>  		debugfs_create_file("tsc-scaling-ratio", 0444,
+> -				    vcpu->debugfs_dentry, vcpu,
+> +				    debugfs_dentry, vcpu,
+>  				    &vcpu_tsc_scaling_fops);
+>  		debugfs_create_file("tsc-scaling-ratio-frac-bits", 0444,
+> -				    vcpu->debugfs_dentry, vcpu,
+> +				    debugfs_dentry, vcpu,
+>  				    &vcpu_tsc_scaling_frac_fops);
+>  	}
+>  }
+> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> index f43b59b1294c..d38d6b9c24be 100644
+> --- a/include/linux/kvm_host.h
+> +++ b/include/linux/kvm_host.h
+> @@ -318,7 +318,6 @@ struct kvm_vcpu {
+>  	bool preempted;
+>  	bool ready;
+>  	struct kvm_vcpu_arch arch;
+> -	struct dentry *debugfs_dentry;
+>  };
+>  
+>  static inline int kvm_vcpu_exiting_guest_mode(struct kvm_vcpu *vcpu)
+> @@ -888,7 +887,7 @@ void kvm_arch_vcpu_postcreate(struct kvm_vcpu *vcpu);
+>  void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu);
+>  
+>  #ifdef __KVM_HAVE_ARCH_VCPU_DEBUGFS
+> -void kvm_arch_create_vcpu_debugfs(struct kvm_vcpu *vcpu);
+> +void kvm_arch_create_vcpu_debugfs(struct kvm_vcpu *vcpu, struct dentry *debugfs_dentry);
+>  #endif
+>  
+>  int kvm_arch_hardware_enable(void);
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index 7fa1e38e1659..3577eb84eac0 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -2973,7 +2973,6 @@ static int kvm_vcpu_release(struct inode *inode, struct file *filp)
+>  {
+>  	struct kvm_vcpu *vcpu = filp->private_data;
+>  
+> -	debugfs_remove_recursive(vcpu->debugfs_dentry);
+>  	kvm_put_kvm(vcpu->kvm);
+>  	return 0;
+>  }
+> @@ -3000,16 +2999,17 @@ static int create_vcpu_fd(struct kvm_vcpu *vcpu)
+>  static void kvm_create_vcpu_debugfs(struct kvm_vcpu *vcpu)
+>  {
+>  #ifdef __KVM_HAVE_ARCH_VCPU_DEBUGFS
+> +	struct dentry *debugfs_dentry;
+>  	char dir_name[ITOA_MAX_LEN * 2];
+>  
+>  	if (!debugfs_initialized())
+>  		return;
+>  
+>  	snprintf(dir_name, sizeof(dir_name), "vcpu%d", vcpu->vcpu_id);
+> -	vcpu->debugfs_dentry = debugfs_create_dir(dir_name,
+> -						  vcpu->kvm->debugfs_dentry);
+> +	debugfs_dentry = debugfs_create_dir(dir_name,
+> +					    vcpu->kvm->debugfs_dentry);
+>  
+> -	kvm_arch_create_vcpu_debugfs(vcpu);
+> +	kvm_arch_create_vcpu_debugfs(vcpu, debugfs_dentry);
+>  #endif
+>  }
 
-Ha! So much for 100-char lines ;)
+FWIW,
 
-(fix looks good to me, I'll queue it for -rc1)
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-Will
+Thanks!
+
+-- 
+Vitaly
+
