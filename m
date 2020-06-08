@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41149C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27816C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0934020872
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:05:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB13A2076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:05:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="V88EkO1P"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="gH3aeJX7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733087AbgFIBFj (ORCPT
+        id S1730333AbgFIBFr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 21:05:39 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:23120 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727837AbgFHXHQ (ORCPT
+        Mon, 8 Jun 2020 21:05:47 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:57126 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727834AbgFHXHQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 8 Jun 2020 19:07:16 -0400
-Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 058N1leO022561
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 058N0Zgj022325
         for <linux-kernel@vger.kernel.org>; Mon, 8 Jun 2020 16:07:15 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding : content-type; s=facebook;
- bh=f0x24ikZ6lcvpisbrL6HrqddCNWyp8SDCCcYVIuNsvQ=;
- b=V88EkO1PB5jq733D72ruJKZN0ynyisRRyfI3Y11Nsbeybx2MPpFqT5WYXRc7Was9EtZh
- vs653e+dcl3wVdlsmSSP7mlDG72XQNZYZO572aGqPqmahSuugfh5Mrbzts4HdaSPjS7x
- ctw5sBnceCWf1XSqj0A9VuuEUtCF+srRSg0= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 31gu027j8d-3
+ bh=c0UeiR3c3qRtNHNW+AH+kziF1nAKRGkcQBYpmJo/3cI=;
+ b=gH3aeJX7QnG+VNkSWf+hNnFZGbAmha91XwUTOwpbh89TLo9efOtoxb/lhMcNwoYP3jhn
+ Oiikeznk6zimYMNCccbxWTr+3SqGF/4igRjQ4u3bMq02RNlYHuWYd7L9nEKRFz4+nwzO
+ U4t4aV4HnFXN6JoZRmg0lVBgsTrECHRg9LM= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 31g8nkt6v6-12
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 16:07:15 -0700
-Received: from intmgw002.06.prn3.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 16:07:14 -0700
+Received: from intmgw003.06.prn3.facebook.com (2620:10d:c085:208::f) by
+ mail.thefacebook.com (2620:10d:c085:11d::7) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 8 Jun 2020 16:07:13 -0700
+ 15.1.1979.3; Mon, 8 Jun 2020 16:07:08 -0700
 Received: by devvm1291.vll0.facebook.com (Postfix, from userid 111017)
-        id 42BE91D8FE46; Mon,  8 Jun 2020 16:07:00 -0700 (PDT)
+        id 7F4C01D8FE5E; Mon,  8 Jun 2020 16:07:00 -0700 (PDT)
 Smtp-Origin-Hostprefix: devvm
 From:   Roman Gushchin <guro@fb.com>
 Smtp-Origin-Hostname: devvm1291.vll0.facebook.com
@@ -54,9 +54,9 @@ CC:     Johannes Weiner <hannes@cmpxchg.org>,
         Vlastimil Babka <vbabka@suse.cz>, <kernel-team@fb.com>,
         <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>
 Smtp-Origin-Cluster: vll0c01
-Subject: [PATCH v6 06/19] mm: memcg/slab: obj_cgroup API
-Date:   Mon, 8 Jun 2020 16:06:41 -0700
-Message-ID: <20200608230654.828134-7-guro@fb.com>
+Subject: [PATCH v6 18/19] kselftests: cgroup: add kernel memory accounting tests
+Date:   Mon, 8 Jun 2020 16:06:53 -0700
+Message-ID: <20200608230654.828134-19-guro@fb.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200608230654.828134-1-guro@fb.com>
 References: <20200608230654.828134-1-guro@fb.com>
@@ -66,10 +66,10 @@ X-FB-Internal: Safe
 Content-Type: text/plain
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
  definitions=2020-06-08_18:2020-06-08,2020-06-08 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 malwarescore=0
- adultscore=0 lowpriorityscore=0 impostorscore=0 priorityscore=1501
- spamscore=0 bulkscore=0 clxscore=1015 cotscore=-2147483648 phishscore=0
- mlxlogscore=999 mlxscore=0 suspectscore=2 classifier=spam adjust=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 impostorscore=0
+ phishscore=0 clxscore=1015 mlxscore=0 priorityscore=1501 malwarescore=0
+ spamscore=0 mlxlogscore=999 suspectscore=2 cotscore=-2147483648
+ lowpriorityscore=0 adultscore=0 bulkscore=0 classifier=spam adjust=0
  reason=mlx scancount=1 engine=8.12.0-2004280000
  definitions=main-2006080160
 X-FB-Internal: deliver
@@ -78,532 +78,460 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Obj_cgroup API provides an ability to account sub-page sized kernel
-objects, which potentially outlive the original memory cgroup.
+Add some tests to cover the kernel memory accounting functionality.
+These are covering some issues (and changes) we had recently.
 
-The top-level API consists of the following functions:
-  bool obj_cgroup_tryget(struct obj_cgroup *objcg);
-  void obj_cgroup_get(struct obj_cgroup *objcg);
-  void obj_cgroup_put(struct obj_cgroup *objcg);
+1) A test which allocates a lot of negative dentries, checks memcg
+slab statistics, creates memory pressure by setting memory.max
+to some low value and checks that some number of slabs was reclaimed.
 
-  int obj_cgroup_charge(struct obj_cgroup *objcg, gfp_t gfp, size_t size)=
-;
-  void obj_cgroup_uncharge(struct obj_cgroup *objcg, size_t size);
+2) A test which covers side effects of memcg destruction: it creates
+and destroys a large number of sub-cgroups, each containing a
+multi-threaded workload which allocates and releases some kernel
+memory. Then it checks that the charge ans memory.stats do add up
+on the parent level.
 
-  struct mem_cgroup *obj_cgroup_memcg(struct obj_cgroup *objcg);
-  struct obj_cgroup *get_obj_cgroup_from_current(void);
+3) A test which reads /proc/kpagecgroup and implicitly checks that it
+doesn't crash the system.
 
-Object cgroup is basically a pointer to a memory cgroup with a per-cpu
-reference counter. It substitutes a memory cgroup in places where
-it's necessary to charge a custom amount of bytes instead of pages.
+4) A test which spawns a large number of threads and checks that
+the kernel stacks accounting works as expected.
 
-All charged memory rounded down to pages is charged to the
-corresponding memory cgroup using __memcg_kmem_charge().
+5) A test which checks that living charged slab objects are not
+preventing the memory cgroup from being released after being deleted
+by a user.
 
-It implements reparenting: on memcg offlining it's getting reattached
-to the parent memory cgroup. Each online memory cgroup has an
-associated active object cgroup to handle new allocations and the list
-of all attached object cgroups. On offlining of a cgroup this list is
-reparented and for each object cgroup in the list the memcg pointer is
-swapped to the parent memory cgroup. It prevents long-living objects
-from pinning the original memory cgroup in the memory.
-
-The implementation is based on byte-sized per-cpu stocks. A sub-page
-sized leftover is stored in an atomic field, which is a part of
-obj_cgroup object. So on cgroup offlining the leftover is automatically
-reparented.
-
-memcg->objcg is rcu protected.
-objcg->memcg is a raw pointer, which is always pointing at a memory
-cgroup, but can be atomically swapped to the parent memory cgroup. So
-the caller must ensure the lifetime of the cgroup, e.g. grab
-rcu_read_lock or css_set_lock.
-
-Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
 Signed-off-by: Roman Gushchin <guro@fb.com>
 ---
- include/linux/memcontrol.h |  51 +++++++
- mm/memcontrol.c            | 288 ++++++++++++++++++++++++++++++++++++-
- 2 files changed, 338 insertions(+), 1 deletion(-)
+ tools/testing/selftests/cgroup/.gitignore  |   1 +
+ tools/testing/selftests/cgroup/Makefile    |   2 +
+ tools/testing/selftests/cgroup/test_kmem.c | 382 +++++++++++++++++++++
+ 3 files changed, 385 insertions(+)
+ create mode 100644 tools/testing/selftests/cgroup/test_kmem.c
 
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index 93dbc7f9d8b8..c69e66fe4f12 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -23,6 +23,7 @@
- #include <linux/page-flags.h>
+diff --git a/tools/testing/selftests/cgroup/.gitignore b/tools/testing/se=
+lftests/cgroup/.gitignore
+index aa6de65b0838..84cfcabea838 100644
+--- a/tools/testing/selftests/cgroup/.gitignore
++++ b/tools/testing/selftests/cgroup/.gitignore
+@@ -2,3 +2,4 @@
+ test_memcontrol
+ test_core
+ test_freezer
++test_kmem
+\ No newline at end of file
+diff --git a/tools/testing/selftests/cgroup/Makefile b/tools/testing/self=
+tests/cgroup/Makefile
+index 967f268fde74..f027d933595b 100644
+--- a/tools/testing/selftests/cgroup/Makefile
++++ b/tools/testing/selftests/cgroup/Makefile
+@@ -6,11 +6,13 @@ all:
+ TEST_FILES     :=3D with_stress.sh
+ TEST_PROGS     :=3D test_stress.sh
+ TEST_GEN_PROGS =3D test_memcontrol
++TEST_GEN_PROGS +=3D test_kmem
+ TEST_GEN_PROGS +=3D test_core
+ TEST_GEN_PROGS +=3D test_freezer
 =20
- struct mem_cgroup;
-+struct obj_cgroup;
- struct page;
- struct mm_struct;
- struct kmem_cache;
-@@ -192,6 +193,22 @@ struct memcg_cgwb_frn {
- 	struct wb_completion done;	/* tracks in-flight foreign writebacks */
- };
+ include ../lib.mk
 =20
-+/*
-+ * Bucket for arbitrarily byte-sized objects charged to a memory
-+ * cgroup. The bucket can be reparented in one piece when the cgroup
-+ * is destroyed, without having to round up the individual references
-+ * of all live memory objects in the wild.
-+ */
-+struct obj_cgroup {
-+	struct percpu_ref refcnt;
-+	struct mem_cgroup *memcg;
-+	atomic_t nr_charged_bytes;
-+	union {
-+		struct list_head list;
-+		struct rcu_head rcu;
-+	};
-+};
+ $(OUTPUT)/test_memcontrol: cgroup_util.c ../clone3/clone3_selftests.h
++$(OUTPUT)/test_kmem: cgroup_util.c ../clone3/clone3_selftests.h
+ $(OUTPUT)/test_core: cgroup_util.c ../clone3/clone3_selftests.h
+ $(OUTPUT)/test_freezer: cgroup_util.c ../clone3/clone3_selftests.h
+diff --git a/tools/testing/selftests/cgroup/test_kmem.c b/tools/testing/s=
+elftests/cgroup/test_kmem.c
+new file mode 100644
+index 000000000000..5224dae216e5
+--- /dev/null
++++ b/tools/testing/selftests/cgroup/test_kmem.c
+@@ -0,0 +1,382 @@
++// SPDX-License-Identifier: GPL-2.0
++#define _GNU_SOURCE
 +
- /*
-  * The memory controller data structure. The memory controller controls =
-both
-  * page cache and RSS per cgroup. We would eventually like to provide
-@@ -301,6 +318,8 @@ struct mem_cgroup {
- 	int kmemcg_id;
- 	enum memcg_kmem_state kmem_state;
- 	struct list_head kmem_caches;
-+	struct obj_cgroup __rcu *objcg;
-+	struct list_head objcg_list;
- #endif
-=20
- #ifdef CONFIG_CGROUP_WRITEBACK
-@@ -416,6 +435,33 @@ struct mem_cgroup *mem_cgroup_from_css(struct cgroup=
-_subsys_state *css){
- 	return css ? container_of(css, struct mem_cgroup, css) : NULL;
- }
-=20
-+static inline bool obj_cgroup_tryget(struct obj_cgroup *objcg)
++#include <linux/limits.h>
++#include <fcntl.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <sys/stat.h>
++#include <sys/types.h>
++#include <unistd.h>
++#include <sys/wait.h>
++#include <errno.h>
++#include <sys/sysinfo.h>
++#include <pthread.h>
++
++#include "../kselftest.h"
++#include "cgroup_util.h"
++
++
++static int alloc_dcache(const char *cgroup, void *arg)
 +{
-+	return percpu_ref_tryget(&objcg->refcnt);
-+}
++	unsigned long i;
++	struct stat st;
++	char buf[128];
 +
-+static inline void obj_cgroup_get(struct obj_cgroup *objcg)
-+{
-+	percpu_ref_get(&objcg->refcnt);
-+}
-+
-+static inline void obj_cgroup_put(struct obj_cgroup *objcg)
-+{
-+	percpu_ref_put(&objcg->refcnt);
-+}
-+
-+/*
-+ * After the initialization objcg->memcg is always pointing at
-+ * a valid memcg, but can be atomically swapped to the parent memcg.
-+ *
-+ * The caller must ensure that the returned memcg won't be released:
-+ * e.g. acquire the rcu_read_lock or css_set_lock.
-+ */
-+static inline struct mem_cgroup *obj_cgroup_memcg(struct obj_cgroup *obj=
-cg)
-+{
-+	return READ_ONCE(objcg->memcg);
-+}
-+
- static inline void mem_cgroup_put(struct mem_cgroup *memcg)
- {
- 	if (memcg)
-@@ -1368,6 +1414,11 @@ void __memcg_kmem_uncharge(struct mem_cgroup *memc=
-g, unsigned int nr_pages);
- int __memcg_kmem_charge_page(struct page *page, gfp_t gfp, int order);
- void __memcg_kmem_uncharge_page(struct page *page, int order);
-=20
-+struct obj_cgroup *get_obj_cgroup_from_current(void);
-+
-+int obj_cgroup_charge(struct obj_cgroup *objcg, gfp_t gfp, size_t size);
-+void obj_cgroup_uncharge(struct obj_cgroup *objcg, size_t size);
-+
- extern struct static_key_false memcg_kmem_enabled_key;
- extern struct workqueue_struct *memcg_kmem_cache_wq;
-=20
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 80282b2e8b7f..7ff66275966c 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -257,6 +257,98 @@ struct cgroup_subsys_state *vmpressure_to_css(struct=
- vmpressure *vmpr)
- }
-=20
- #ifdef CONFIG_MEMCG_KMEM
-+extern spinlock_t css_set_lock;
-+
-+static void obj_cgroup_release(struct percpu_ref *ref)
-+{
-+	struct obj_cgroup *objcg =3D container_of(ref, struct obj_cgroup, refcn=
-t);
-+	struct mem_cgroup *memcg;
-+	unsigned int nr_bytes;
-+	unsigned int nr_pages;
-+	unsigned long flags;
-+
-+	/*
-+	 * At this point all allocated objects are freed, and
-+	 * objcg->nr_charged_bytes can't have an arbitrary byte value.
-+	 * However, it can be PAGE_SIZE or (x * PAGE_SIZE).
-+	 *
-+	 * The following sequence can lead to it:
-+	 * 1) CPU0: objcg =3D=3D stock->cached_objcg
-+	 * 2) CPU1: we do a small allocation (e.g. 92 bytes),
-+	 *          PAGE_SIZE bytes are charged
-+	 * 3) CPU1: a process from another memcg is allocating something,
-+	 *          the stock if flushed,
-+	 *          objcg->nr_charged_bytes =3D PAGE_SIZE - 92
-+	 * 5) CPU0: we do release this object,
-+	 *          92 bytes are added to stock->nr_bytes
-+	 * 6) CPU0: stock is flushed,
-+	 *          92 bytes are added to objcg->nr_charged_bytes
-+	 *
-+	 * In the result, nr_charged_bytes =3D=3D PAGE_SIZE.
-+	 * This page will be uncharged in obj_cgroup_release().
-+	 */
-+	nr_bytes =3D atomic_read(&objcg->nr_charged_bytes);
-+	WARN_ON_ONCE(nr_bytes & (PAGE_SIZE - 1));
-+	nr_pages =3D nr_bytes >> PAGE_SHIFT;
-+
-+	spin_lock_irqsave(&css_set_lock, flags);
-+	memcg =3D obj_cgroup_memcg(objcg);
-+	if (nr_pages)
-+		__memcg_kmem_uncharge(memcg, nr_pages);
-+	list_del(&objcg->list);
-+	mem_cgroup_put(memcg);
-+	spin_unlock_irqrestore(&css_set_lock, flags);
-+
-+	percpu_ref_exit(ref);
-+	kfree_rcu(objcg, rcu);
-+}
-+
-+static struct obj_cgroup *obj_cgroup_alloc(void)
-+{
-+	struct obj_cgroup *objcg;
-+	int ret;
-+
-+	objcg =3D kzalloc(sizeof(struct obj_cgroup), GFP_KERNEL);
-+	if (!objcg)
-+		return NULL;
-+
-+	ret =3D percpu_ref_init(&objcg->refcnt, obj_cgroup_release, 0,
-+			      GFP_KERNEL);
-+	if (ret) {
-+		kfree(objcg);
-+		return NULL;
++	for (i =3D 0; i < (unsigned long)arg; i++) {
++		snprintf(buf, sizeof(buf),
++			"/something-non-existent-with-a-long-name-%64lu-%d",
++			 i, getpid());
++		stat(buf, &st);
 +	}
-+	INIT_LIST_HEAD(&objcg->list);
-+	return objcg;
++
++	return 0;
 +}
 +
-+static void memcg_reparent_objcgs(struct mem_cgroup *memcg,
-+				  struct mem_cgroup *parent)
++/*
++ * This test allocates 100000 of negative dentries with long names.
++ * Then it checks that "slab" in memory.stat is larger than 1M.
++ * Then it sets memory.high to 1M and checks that at least 1/2
++ * of slab memory has been reclaimed.
++ */
++static int test_kmem_basic(const char *root)
 +{
-+	struct obj_cgroup *objcg, *iter;
++	int ret =3D KSFT_FAIL;
++	char *cg =3D NULL;
++	long slab0, slab1, current;
 +
-+	objcg =3D rcu_replace_pointer(memcg->objcg, NULL, true);
++	cg =3D cg_name(root, "kmem_basic_test");
++	if (!cg)
++		goto cleanup;
 +
-+	spin_lock_irq(&css_set_lock);
++	if (cg_create(cg))
++		goto cleanup;
 +
-+	/* Move active objcg to the parent's list */
-+	xchg(&objcg->memcg, parent);
-+	css_get(&parent->css);
-+	list_add(&objcg->list, &parent->objcg_list);
++	if (cg_run(cg, alloc_dcache, (void *)100000))
++		goto cleanup;
 +
-+	/* Move already reparented objcgs to the parent's list */
-+	list_for_each_entry(iter, &memcg->objcg_list, list) {
-+		css_get(&parent->css);
-+		xchg(&iter->memcg, parent);
-+		css_put(&memcg->css);
++	slab0 =3D cg_read_key_long(cg, "memory.stat", "slab ");
++	if (slab0 < (1 << 20))
++		goto cleanup;
++
++	cg_write(cg, "memory.high", "1M");
++	slab1 =3D cg_read_key_long(cg, "memory.stat", "slab ");
++	if (slab1 <=3D 0)
++		goto cleanup;
++
++	current =3D cg_read_long(cg, "memory.current");
++	if (current <=3D 0)
++		goto cleanup;
++
++	if (slab1 < slab0 / 2 && current < slab0 / 2)
++		ret =3D KSFT_PASS;
++cleanup:
++	cg_destroy(cg);
++	free(cg);
++
++	return ret;
++}
++
++static void *alloc_kmem_fn(void *arg)
++{
++	alloc_dcache(NULL, (void *)100);
++	return NULL;
++}
++
++static int alloc_kmem_smp(const char *cgroup, void *arg)
++{
++	int nr_threads =3D 2 * get_nprocs();
++	pthread_t *tinfo;
++	unsigned long i;
++	int ret =3D -1;
++
++	tinfo =3D calloc(nr_threads, sizeof(pthread_t));
++	if (tinfo =3D=3D NULL)
++		return -1;
++
++	for (i =3D 0; i < nr_threads; i++) {
++		if (pthread_create(&tinfo[i], NULL, &alloc_kmem_fn,
++				   (void *)i)) {
++			free(tinfo);
++			return -1;
++		}
 +	}
-+	list_splice(&memcg->objcg_list, &parent->objcg_list);
 +
-+	spin_unlock_irq(&css_set_lock);
-+
-+	percpu_ref_kill(&objcg->refcnt);
-+}
-+
- /*
-  * This will be the memcg's index in each cache's ->memcg_params.memcg_c=
-aches.
-  * The main reason for not using cgroup id for this:
-@@ -2047,6 +2139,12 @@ EXPORT_SYMBOL(unlock_page_memcg);
- struct memcg_stock_pcp {
- 	struct mem_cgroup *cached; /* this never be root cgroup */
- 	unsigned int nr_pages;
-+
-+#ifdef CONFIG_MEMCG_KMEM
-+	struct obj_cgroup *cached_objcg;
-+	unsigned int nr_bytes;
-+#endif
-+
- 	struct work_struct work;
- 	unsigned long flags;
- #define FLUSHING_CACHED_CHARGE	0
-@@ -2054,6 +2152,22 @@ struct memcg_stock_pcp {
- static DEFINE_PER_CPU(struct memcg_stock_pcp, memcg_stock);
- static DEFINE_MUTEX(percpu_charge_mutex);
-=20
-+#ifdef CONFIG_MEMCG_KMEM
-+static void drain_obj_stock(struct memcg_stock_pcp *stock);
-+static bool obj_stock_flush_required(struct memcg_stock_pcp *stock,
-+				     struct mem_cgroup *root_memcg);
-+
-+#else
-+static inline void drain_obj_stock(struct memcg_stock_pcp *stock)
-+{
-+}
-+static bool obj_stock_flush_required(struct memcg_stock_pcp *stock,
-+				     struct mem_cgroup *root_memcg)
-+{
-+	return false;
-+}
-+#endif
-+
- /**
-  * consume_stock: Try to consume stocked charge on this cpu.
-  * @memcg: memcg to consume from.
-@@ -2120,6 +2234,7 @@ static void drain_local_stock(struct work_struct *d=
-ummy)
- 	local_irq_save(flags);
-=20
- 	stock =3D this_cpu_ptr(&memcg_stock);
-+	drain_obj_stock(stock);
- 	drain_stock(stock);
- 	clear_bit(FLUSHING_CACHED_CHARGE, &stock->flags);
-=20
-@@ -2179,6 +2294,8 @@ static void drain_all_stock(struct mem_cgroup *root=
-_memcg)
- 		if (memcg && stock->nr_pages &&
- 		    mem_cgroup_is_descendant(memcg, root_memcg))
- 			flush =3D true;
-+		if (obj_stock_flush_required(stock, root_memcg))
-+			flush =3D true;
- 		rcu_read_unlock();
-=20
- 		if (flush &&
-@@ -2705,6 +2822,30 @@ struct mem_cgroup *mem_cgroup_from_obj(void *p)
- 	return page->mem_cgroup;
- }
-=20
-+__always_inline struct obj_cgroup *get_obj_cgroup_from_current(void)
-+{
-+	struct obj_cgroup *objcg =3D NULL;
-+	struct mem_cgroup *memcg;
-+
-+	if (unlikely(!current->mm))
-+		return NULL;
-+
-+	rcu_read_lock();
-+	if (unlikely(current->active_memcg))
-+		memcg =3D rcu_dereference(current->active_memcg);
-+	else
-+		memcg =3D mem_cgroup_from_task(current);
-+
-+	for (; memcg !=3D root_mem_cgroup; memcg =3D parent_mem_cgroup(memcg)) =
-{
-+		objcg =3D rcu_dereference(memcg->objcg);
-+		if (objcg && obj_cgroup_tryget(objcg))
++	for (i =3D 0; i < nr_threads; i++) {
++		ret =3D pthread_join(tinfo[i], NULL);
++		if (ret)
 +			break;
 +	}
-+	rcu_read_unlock();
 +
-+	return objcg;
-+}
-+
- static int memcg_alloc_cache_id(void)
- {
- 	int id, size;
-@@ -2994,6 +3135,140 @@ void __memcg_kmem_uncharge_page(struct page *page=
-, int order)
- 	if (PageKmemcg(page))
- 		__ClearPageKmemcg(page);
- }
-+
-+static bool consume_obj_stock(struct obj_cgroup *objcg, unsigned int nr_=
-bytes)
-+{
-+	struct memcg_stock_pcp *stock;
-+	unsigned long flags;
-+	bool ret =3D false;
-+
-+	local_irq_save(flags);
-+
-+	stock =3D this_cpu_ptr(&memcg_stock);
-+	if (objcg =3D=3D stock->cached_objcg && stock->nr_bytes >=3D nr_bytes) =
-{
-+		stock->nr_bytes -=3D nr_bytes;
-+		ret =3D true;
-+	}
-+
-+	local_irq_restore(flags);
-+
++	free(tinfo);
 +	return ret;
 +}
 +
-+static void drain_obj_stock(struct memcg_stock_pcp *stock)
++static int cg_run_in_subcgroups(const char *parent,
++				int (*fn)(const char *cgroup, void *arg),
++				void *arg, int times)
 +{
-+	struct obj_cgroup *old =3D stock->cached_objcg;
++	char *child;
++	int i;
 +
-+	if (!old)
-+		return;
++	for (i =3D 0; i < times; i++) {
++		child =3D cg_name_indexed(parent, "child", i);
++		if (!child)
++			return -1;
 +
-+	if (stock->nr_bytes) {
-+		unsigned int nr_pages =3D stock->nr_bytes >> PAGE_SHIFT;
-+		unsigned int nr_bytes =3D stock->nr_bytes & (PAGE_SIZE - 1);
-+
-+		if (nr_pages) {
-+			rcu_read_lock();
-+			__memcg_kmem_uncharge(obj_cgroup_memcg(old), nr_pages);
-+			rcu_read_unlock();
++		if (cg_create(child)) {
++			cg_destroy(child);
++			free(child);
++			return -1;
 +		}
 +
-+		/*
-+		 * The leftover is flushed to the centralized per-memcg value.
-+		 * On the next attempt to refill obj stock it will be moved
-+		 * to a per-cpu stock (probably, on an other CPU), see
-+		 * refill_obj_stock().
-+		 *
-+		 * How often it's flushed is a trade-off between the memory
-+		 * limit enforcement accuracy and potential CPU contention,
-+		 * so it might be changed in the future.
-+		 */
-+		atomic_add(nr_bytes, &old->nr_charged_bytes);
-+		stock->nr_bytes =3D 0;
++		if (cg_run(child, fn, NULL)) {
++			cg_destroy(child);
++			free(child);
++			return -1;
++		}
++
++		cg_destroy(child);
++		free(child);
 +	}
 +
-+	obj_cgroup_put(old);
-+	stock->cached_objcg =3D NULL;
++	return 0;
 +}
 +
-+static bool obj_stock_flush_required(struct memcg_stock_pcp *stock,
-+				     struct mem_cgroup *root_memcg)
++/*
++ * The test creates and destroys a large number of cgroups. In each cgro=
+up it
++ * allocates some slab memory (mostly negative dentries) using 2 * NR_CP=
+US
++ * threads. Then it checks the sanity of numbers on the parent level:
++ * the total size of the cgroups should be roughly equal to
++ * anon + file + slab + kernel_stack.
++ */
++static int test_kmem_memcg_deletion(const char *root)
 +{
-+	struct mem_cgroup *memcg;
++	long current, slab, anon, file, kernel_stack, sum;
++	int ret =3D KSFT_FAIL;
++	char *parent;
 +
-+	if (stock->cached_objcg) {
-+		memcg =3D obj_cgroup_memcg(stock->cached_objcg);
-+		if (memcg && mem_cgroup_is_descendant(memcg, root_memcg))
-+			return true;
++	parent =3D cg_name(root, "kmem_memcg_deletion_test");
++	if (!parent)
++		goto cleanup;
++
++	if (cg_create(parent))
++		goto cleanup;
++
++	if (cg_write(parent, "cgroup.subtree_control", "+memory"))
++		goto cleanup;
++
++	if (cg_run_in_subcgroups(parent, alloc_kmem_smp, NULL, 100))
++		goto cleanup;
++
++	current =3D cg_read_long(parent, "memory.current");
++	slab =3D cg_read_key_long(parent, "memory.stat", "slab ");
++	anon =3D cg_read_key_long(parent, "memory.stat", "anon ");
++	file =3D cg_read_key_long(parent, "memory.stat", "file ");
++	kernel_stack =3D cg_read_key_long(parent, "memory.stat", "kernel_stack =
+");
++	if (current < 0 || slab < 0 || anon < 0 || file < 0 ||
++	    kernel_stack < 0)
++		goto cleanup;
++
++	sum =3D slab + anon + file + kernel_stack;
++	if (abs(sum - current) < 4096 * 32 * 2 * get_nprocs()) {
++		ret =3D KSFT_PASS;
++	} else {
++		printf("memory.current =3D %ld\n", current);
++		printf("slab + anon + file + kernel_stack =3D %ld\n", sum);
++		printf("slab =3D %ld\n", slab);
++		printf("anon =3D %ld\n", anon);
++		printf("file =3D %ld\n", file);
++		printf("kernel_stack =3D %ld\n", kernel_stack);
 +	}
 +
-+	return false;
-+}
++cleanup:
++	cg_destroy(parent);
++	free(parent);
 +
-+static void refill_obj_stock(struct obj_cgroup *objcg, unsigned int nr_b=
-ytes)
-+{
-+	struct memcg_stock_pcp *stock;
-+	unsigned long flags;
-+
-+	local_irq_save(flags);
-+
-+	stock =3D this_cpu_ptr(&memcg_stock);
-+	if (stock->cached_objcg !=3D objcg) { /* reset if necessary */
-+		drain_obj_stock(stock);
-+		obj_cgroup_get(objcg);
-+		stock->cached_objcg =3D objcg;
-+		stock->nr_bytes =3D atomic_xchg(&objcg->nr_charged_bytes, 0);
-+	}
-+	stock->nr_bytes +=3D nr_bytes;
-+
-+	if (stock->nr_bytes > PAGE_SIZE)
-+		drain_obj_stock(stock);
-+
-+	local_irq_restore(flags);
-+}
-+
-+int obj_cgroup_charge(struct obj_cgroup *objcg, gfp_t gfp, size_t size)
-+{
-+	struct mem_cgroup *memcg;
-+	unsigned int nr_pages, nr_bytes;
-+	int ret;
-+
-+	if (consume_obj_stock(objcg, size))
-+		return 0;
-+
-+	/*
-+	 * In theory, memcg->nr_charged_bytes can have enough
-+	 * pre-charged bytes to satisfy the allocation. However,
-+	 * flushing memcg->nr_charged_bytes requires two atomic
-+	 * operations, and memcg->nr_charged_bytes can't be big,
-+	 * so it's better to ignore it and try grab some new pages.
-+	 * memcg->nr_charged_bytes will be flushed in
-+	 * refill_obj_stock(), called from this function or
-+	 * independently later.
-+	 */
-+	rcu_read_lock();
-+	memcg =3D obj_cgroup_memcg(objcg);
-+	css_get(&memcg->css);
-+	rcu_read_unlock();
-+
-+	nr_pages =3D size >> PAGE_SHIFT;
-+	nr_bytes =3D size & (PAGE_SIZE - 1);
-+
-+	if (nr_bytes)
-+		nr_pages +=3D 1;
-+
-+	ret =3D __memcg_kmem_charge(memcg, gfp, nr_pages);
-+	if (!ret && nr_bytes)
-+		refill_obj_stock(objcg, PAGE_SIZE - nr_bytes);
-+
-+	css_put(&memcg->css);
 +	return ret;
 +}
 +
-+void obj_cgroup_uncharge(struct obj_cgroup *objcg, size_t size)
++/*
++ * The test reads the entire /proc/kpagecgroup. If the operation went
++ * successfully (and the kernel didn't panic), the test is treated as pa=
+ssed.
++ */
++static int test_kmem_proc_kpagecgroup(const char *root)
 +{
-+	refill_obj_stock(objcg, size);
++	unsigned long buf[128];
++	int ret =3D KSFT_FAIL;
++	ssize_t len;
++	int fd;
++
++	fd =3D open("/proc/kpagecgroup", O_RDONLY);
++	if (fd < 0)
++		return ret;
++
++	do {
++		len =3D read(fd, buf, sizeof(buf));
++	} while (len > 0);
++
++	if (len =3D=3D 0)
++		ret =3D KSFT_PASS;
++
++	close(fd);
++	return ret;
 +}
 +
- #endif /* CONFIG_MEMCG_KMEM */
-=20
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-@@ -3414,6 +3689,7 @@ static void memcg_flush_percpu_vmevents(struct mem_=
-cgroup *memcg)
- #ifdef CONFIG_MEMCG_KMEM
- static int memcg_online_kmem(struct mem_cgroup *memcg)
- {
-+	struct obj_cgroup *objcg;
- 	int memcg_id;
-=20
- 	if (cgroup_memory_nokmem)
-@@ -3426,6 +3702,14 @@ static int memcg_online_kmem(struct mem_cgroup *me=
-mcg)
- 	if (memcg_id < 0)
- 		return memcg_id;
-=20
-+	objcg =3D obj_cgroup_alloc();
-+	if (!objcg) {
-+		memcg_free_cache_id(memcg_id);
-+		return -ENOMEM;
-+	}
-+	objcg->memcg =3D memcg;
-+	rcu_assign_pointer(memcg->objcg, objcg);
++static void *pthread_wait_fn(void *arg)
++{
++	sleep(100);
++	return NULL;
++}
 +
- 	static_branch_inc(&memcg_kmem_enabled_key);
- 	/*
- 	 * A memory cgroup is considered kmem-online as soon as it gets
-@@ -3461,9 +3745,10 @@ static void memcg_offline_kmem(struct mem_cgroup *=
-memcg)
- 		parent =3D root_mem_cgroup;
-=20
- 	/*
--	 * Deactivate and reparent kmem_caches.
-+	 * Deactivate and reparent kmem_caches and objcgs.
- 	 */
- 	memcg_deactivate_kmem_caches(memcg, parent);
-+	memcg_reparent_objcgs(memcg, parent);
-=20
- 	kmemcg_id =3D memcg->kmemcg_id;
- 	BUG_ON(kmemcg_id < 0);
-@@ -5032,6 +5317,7 @@ static struct mem_cgroup *mem_cgroup_alloc(void)
- 	memcg->socket_pressure =3D jiffies;
- #ifdef CONFIG_MEMCG_KMEM
- 	memcg->kmemcg_id =3D -1;
-+	INIT_LIST_HEAD(&memcg->objcg_list);
- #endif
- #ifdef CONFIG_CGROUP_WRITEBACK
- 	INIT_LIST_HEAD(&memcg->cgwb_list);
++static int spawn_1000_threads(const char *cgroup, void *arg)
++{
++	int nr_threads =3D 1000;
++	pthread_t *tinfo;
++	unsigned long i;
++	long stack;
++	int ret =3D -1;
++
++	tinfo =3D calloc(nr_threads, sizeof(pthread_t));
++	if (tinfo =3D=3D NULL)
++		return -1;
++
++	for (i =3D 0; i < nr_threads; i++) {
++		if (pthread_create(&tinfo[i], NULL, &pthread_wait_fn,
++				   (void *)i)) {
++			free(tinfo);
++			return(-1);
++		}
++	}
++
++	stack =3D cg_read_key_long(cgroup, "memory.stat", "kernel_stack ");
++	if (stack >=3D 4096 * 1000)
++		ret =3D 0;
++
++	free(tinfo);
++	return ret;
++}
++
++/*
++ * The test spawns a process, which spawns 1000 threads. Then it checks
++ * that memory.stat's kernel_stack is at least 1000 pages large.
++ */
++static int test_kmem_kernel_stacks(const char *root)
++{
++	int ret =3D KSFT_FAIL;
++	char *cg =3D NULL;
++
++	cg =3D cg_name(root, "kmem_kernel_stacks_test");
++	if (!cg)
++		goto cleanup;
++
++	if (cg_create(cg))
++		goto cleanup;
++
++	if (cg_run(cg, spawn_1000_threads, NULL))
++		goto cleanup;
++
++	ret =3D KSFT_PASS;
++cleanup:
++	cg_destroy(cg);
++	free(cg);
++
++	return ret;
++}
++
++/*
++ * This test sequentionally creates 30 child cgroups, allocates some
++ * kernel memory in each of them, and deletes them. Then it checks
++ * that the number of dying cgroups on the parent level is 0.
++ */
++static int test_kmem_dead_cgroups(const char *root)
++{
++	int ret =3D KSFT_FAIL;
++	char *parent;
++	long dead;
++	int i;
++
++	parent =3D cg_name(root, "kmem_dead_cgroups_test");
++	if (!parent)
++		goto cleanup;
++
++	if (cg_create(parent))
++		goto cleanup;
++
++	if (cg_write(parent, "cgroup.subtree_control", "+memory"))
++		goto cleanup;
++
++	if (cg_run_in_subcgroups(parent, alloc_dcache, (void *)100, 30))
++		goto cleanup;
++
++	for (i =3D 0; i < 5; i++) {
++		dead =3D cg_read_key_long(parent, "cgroup.stat",
++					"nr_dying_descendants ");
++		if (dead =3D=3D 0) {
++			ret =3D KSFT_PASS;
++			break;
++		}
++		/*
++		 * Reclaiming cgroups might take some time,
++		 * let's wait a bit and repeat.
++		 */
++		sleep(1);
++	}
++
++cleanup:
++	cg_destroy(parent);
++	free(parent);
++
++	return ret;
++}
++
++#define T(x) { x, #x }
++struct kmem_test {
++	int (*fn)(const char *root);
++	const char *name;
++} tests[] =3D {
++	T(test_kmem_basic),
++	T(test_kmem_memcg_deletion),
++	T(test_kmem_proc_kpagecgroup),
++	T(test_kmem_kernel_stacks),
++	T(test_kmem_dead_cgroups),
++};
++#undef T
++
++int main(int argc, char **argv)
++{
++	char root[PATH_MAX];
++	int i, ret =3D EXIT_SUCCESS;
++
++	if (cg_find_unified_root(root, sizeof(root)))
++		ksft_exit_skip("cgroup v2 isn't mounted\n");
++
++	/*
++	 * Check that memory controller is available:
++	 * memory is listed in cgroup.controllers
++	 */
++	if (cg_read_strstr(root, "cgroup.controllers", "memory"))
++		ksft_exit_skip("memory controller isn't available\n");
++
++	if (cg_read_strstr(root, "cgroup.subtree_control", "memory"))
++		if (cg_write(root, "cgroup.subtree_control", "+memory"))
++			ksft_exit_skip("Failed to set memory controller\n");
++
++	for (i =3D 0; i < ARRAY_SIZE(tests); i++) {
++		switch (tests[i].fn(root)) {
++		case KSFT_PASS:
++			ksft_test_result_pass("%s\n", tests[i].name);
++			break;
++		case KSFT_SKIP:
++			ksft_test_result_skip("%s\n", tests[i].name);
++			break;
++		default:
++			ret =3D EXIT_FAILURE;
++			ksft_test_result_fail("%s\n", tests[i].name);
++			break;
++		}
++	}
++
++	return ret;
++}
 --=20
 2.25.4
 
