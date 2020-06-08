@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F185C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5883C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60CF520872
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:18:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 956E320842
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:18:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658332;
-	bh=wF1HNEupuWtrXwQN1wgfUpV+1kvAETiHj3R/MgHdlxI=;
+	s=default; t=1591658335;
+	bh=jFe9aXoR6voETZO9HbVJP9RbbHAyfbsp/G1r2RlBApo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TgA3UiiKXxbHEyJYtOIZilpJ/oo8J/B3aAkFGt2UvTTYPL3ffyL7RzArRYFtmqsHJ
-	 PJT3f9TxA1hdNh3Pdbov+mYHGU5VGwmgBixtbKzqvnlT/gnaa8ZafVzd1VliCghMP8
-	 WNrWqZ/DaqkO88Q3w+XtA91pXk1/eOyuDFzVbIYQ=
+	b=k0J9i0bTdbmPztdwlZRin92xb74eniEvLyWPCKOlgcq2Ktg1s1BbD1u2lqHCEMk/p
+	 pcHKLQeGnkCI2mJ8DFib744x2k9U3eVbGicfztjzwjJ/sTB8bppx1xcloXGRH1nQM5
+	 iQjR4rNtd9SEFmSQymhgIXM6woCD1Ww7eBblwuYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729213AbgFHXSv (ORCPT
+        id S1730715AbgFHXSy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:18:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35956 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:18:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730004AbgFHXPL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:15:11 -0400
+        id S1730010AbgFHXPN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:15:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7DBB21527;
-        Mon,  8 Jun 2020 23:15:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1FF3214F1;
+        Mon,  8 Jun 2020 23:15:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658111;
-        bh=wF1HNEupuWtrXwQN1wgfUpV+1kvAETiHj3R/MgHdlxI=;
+        s=default; t=1591658112;
+        bh=jFe9aXoR6voETZO9HbVJP9RbbHAyfbsp/G1r2RlBApo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=grTUcXeMwBXo0E5KnM0hjnAc1P6ONQ9VS56DxOdysbubs/lyMxdV8Wo16lWvxuyz3
-         OhvFaaFpTdCj6szIGyV0wskGE14BY7hRH29k//aamracbqEnTYLPD1+5lsX6kmMf/C
-         X5O+Z28pYP55u7NaxMSl4E2Myn3J+4aehCVnf8qs=
+        b=lH5feIjSWoZ847i4PNz78tvfG2mz8RukMWqtpR2Vb8NfwG/KcZyHeU/PHlps/Coiw
+         S4uN6c273Ct2XDCXomRyp9W3Tq06Cwy1n5L0BP4ervMFDcocc8AWxGPl/PHvFqVwLs
+         5XON9B+VaaN5xZM5WQLtSnVVDK5ojBvJVKYuSMXs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+Cc:     Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Lucas Stach <l.stach@pengutronix.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.6 150/606] powerpc/64s: Disable STRICT_KERNEL_RWX
-Date:   Mon,  8 Jun 2020 19:04:35 -0400
-Message-Id: <20200608231211.3363633-150-sashal@kernel.org>
+        etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.6 151/606] drm/etnaviv: fix perfmon domain interation
+Date:   Mon,  8 Jun 2020 19:04:36 -0400
+Message-Id: <20200608231211.3363633-151-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -59,48 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Christian Gmeiner <christian.gmeiner@gmail.com>
 
-commit 8659a0e0efdd975c73355dbc033f79ba3b31e82c upstream.
+commit 40b697e256ccdb88aaff424b44b4d300eb8460e8 upstream.
 
-Several strange crashes have been eventually traced back to
-STRICT_KERNEL_RWX and its interaction with code patching.
+The GC860 has one GPU device which has a 2d and 3d core. In this case
+we want to expose perfmon information for both cores.
 
-Various paths in our ftrace, kprobes and other patching code need to
-be hardened against patching failures, otherwise we can end up running
-with partially/incorrectly patched ftrace paths, kprobes or jump
-labels, which can then cause strange crashes.
+The driver has one array which contains all possible perfmon domains
+with some meta data - doms_meta. Here we can see that for the GC860
+two elements of that array are relevant:
 
-Although fixes for those are in development, they're not -rc material.
+  doms_3d: is at index 0 in the doms_meta array with 8 perfmon domains
+  doms_2d: is at index 1 in the doms_meta array with 1 perfmon domain
 
-There also seem to be problems with the underlying strict RWX logic,
-which needs further debugging.
+The userspace driver wants to get a list of all perfmon domains and
+their perfmon signals. This is done by iterating over all domains and
+their signals. If the userspace driver wants to access the domain with
+id 8 the kernel driver fails and returns invalid data from doms_3d with
+and invalid offset.
 
-So for now disable STRICT_KERNEL_RWX on 64-bit to prevent people from
-enabling the option and tripping over the bugs.
+This results in:
+  Unable to handle kernel paging request at virtual address 00000000
 
-Fixes: 1e0fc9d1eb2b ("powerpc/Kconfig: Enable STRICT_KERNEL_RWX for some configs")
-Cc: stable@vger.kernel.org # v4.13+
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200520133605.972649-1-mpe@ellerman.id.au
+On such a device it is not possible to use the userspace driver at all.
+
+The fix for this off-by-one error is quite simple.
+
+Reported-by: Paul Cercueil <paul@crapouillou.net>
+Tested-by: Paul Cercueil <paul@crapouillou.net>
+Fixes: ed1dd899baa3 ("drm/etnaviv: rework perfmon query infrastructure")
+Cc: stable@vger.kernel.org
+Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/powerpc/Kconfig | 2 +-
+ drivers/gpu/drm/etnaviv/etnaviv_perfmon.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 497b7d0b2d7e..b0fb42b0bf4b 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -129,7 +129,7 @@ config PPC
- 	select ARCH_HAS_PTE_SPECIAL
- 	select ARCH_HAS_MEMBARRIER_CALLBACKS
- 	select ARCH_HAS_SCALED_CPUTIME		if VIRT_CPU_ACCOUNTING_NATIVE && PPC_BOOK3S_64
--	select ARCH_HAS_STRICT_KERNEL_RWX	if ((PPC_BOOK3S_64 || PPC32) && !HIBERNATION)
-+	select ARCH_HAS_STRICT_KERNEL_RWX	if (PPC32 && !HIBERNATION)
- 	select ARCH_HAS_TICK_BROADCAST		if GENERIC_CLOCKEVENTS_BROADCAST
- 	select ARCH_HAS_UACCESS_FLUSHCACHE
- 	select ARCH_HAS_UACCESS_MCSAFE		if PPC64
+diff --git a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
+index e6795bafcbb9..75f9db8f7bec 100644
+--- a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
++++ b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
+@@ -453,7 +453,7 @@ static const struct etnaviv_pm_domain *pm_domain(const struct etnaviv_gpu *gpu,
+ 		if (!(gpu->identity.features & meta->feature))
+ 			continue;
+ 
+-		if (meta->nr_domains < (index - offset)) {
++		if (index - offset >= meta->nr_domains) {
+ 			offset += meta->nr_domains;
+ 			continue;
+ 		}
 -- 
 2.25.1
 
