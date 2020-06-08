@@ -2,92 +2,246 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF60EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 832B9C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AED742053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:28:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B2CC2072F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:32:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="lNzJXJgV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730015AbgFHO2g (ORCPT
+        id S1729948AbgFHOca (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 10:28:36 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18964 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726074AbgFHO2g (ORCPT
+        Mon, 8 Jun 2020 10:32:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42780 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726074AbgFHOc3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 10:28:36 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 058EM3Dr028140;
-        Mon, 8 Jun 2020 10:26:26 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31g41dvbs7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 08 Jun 2020 10:26:23 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 058EPDg2017538;
-        Mon, 8 Jun 2020 14:26:01 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma03ams.nl.ibm.com with ESMTP id 31g2s7v50c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 08 Jun 2020 14:26:01 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 058EPwXY23855244
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 8 Jun 2020 14:25:58 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C889F4C05A;
-        Mon,  8 Jun 2020 14:25:57 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8DE9E4C059;
-        Mon,  8 Jun 2020 14:25:57 +0000 (GMT)
-Received: from osiris (unknown [9.171.20.146])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon,  8 Jun 2020 14:25:57 +0000 (GMT)
-Date:   Mon, 8 Jun 2020 16:25:56 +0200
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     Chen Zhou <chenzhou10@huawei.com>
-Cc:     gor@linux.ibm.com, borntraeger@de.ibm.com,
-        linux-s390@vger.kernel.or, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next 0/3] s390: use scnprintf() in show() methods
-Message-ID: <20200608142556.GA7478@osiris>
-References: <20200509085608.41061-1-chenzhou10@huawei.com>
+        Mon, 8 Jun 2020 10:32:29 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A28B7C08C5C2
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 07:32:27 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id c71so15526583wmd.5
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 07:32:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=GKWIm0azDCxLSg6UcyWc7rSovYmDP72I/JD5+Yb/qNE=;
+        b=lNzJXJgV2fHm7TbizH361S90IASi17wyWUHqzcwW4u7tTxae6KXr+C0LjMAmLQqmKP
+         0D9QnO8zqY1Ku4ticsen8nhFZvrqes1Rh+D6z8U36MCINpOa3IdoSISvvKhbwOYPoog7
+         sEMZmDKY75gvwAZ5YCSvtqnBOKLBIgs9/jUtI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=GKWIm0azDCxLSg6UcyWc7rSovYmDP72I/JD5+Yb/qNE=;
+        b=d1sAHxLk5RO95T4h7dGo7OlnfdRunnumqJqvaznsojdiOavesyYZqShqW4D2SBXYu4
+         jZifFeC9rbh4fxj88lVtruS4LbQyoUSnn6GD0wcZ9bmdWHjtDOXTFRMlymgLZ43viBcQ
+         cJgg74R9pdPGEt61cml9NhBpvMSGxLNa/ePPWgQt/tIL7SQNCiczQR5M/w1QC9j0OqMb
+         O+MLKF1CdlJ2FZsceDezr3TSKOcLxwKGjoWELTfpNEouhGMCZ4VqDr6RDFXWvKnppcA4
+         l2Hg50Eor6UNom0+wsSwif9Ny8eKw9ertO1pajc+6vI18tzNRhXHGmflRsIg44oRsPnL
+         qqaw==
+X-Gm-Message-State: AOAM5328wq55XLJ3n3byFAXfn0t7uxqJZB/Ug0vcChzIOxNEeykkT7yi
+        xtUahM26N/f2uCkUr3KIg9g44Q==
+X-Google-Smtp-Source: ABdhPJwA0/mdaMZ0zUKmM6gSc0qDTmbylcrcm85b2VC63CraAyQvqNiDlv+Rnjc4q94SDWFNGXViSw==
+X-Received: by 2002:a1c:e389:: with SMTP id a131mr17386232wmh.46.1591626745819;
+        Mon, 08 Jun 2020 07:32:25 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id h188sm23593079wmh.2.2020.06.08.07.32.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jun 2020 07:32:24 -0700 (PDT)
+Date:   Mon, 8 Jun 2020 16:32:21 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     "Ahmed S. Darwish" <a.darwish@linutronix.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org
+Subject: Re: [PATCH v2 06/18] dma-buf: Use sequence counter with associated
+ wound/wait mutex
+Message-ID: <20200608143221.GW20149@phenom.ffwll.local>
+Mail-Followup-To: "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org
+References: <20200519214547.352050-1-a.darwish@linutronix.de>
+ <20200608005729.1874024-1-a.darwish@linutronix.de>
+ <20200608005729.1874024-7-a.darwish@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200509085608.41061-1-chenzhou10@huawei.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-08_13:2020-06-08,2020-06-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
- adultscore=0 malwarescore=0 impostorscore=0 clxscore=1011 mlxlogscore=839
- bulkscore=0 suspectscore=1 cotscore=-2147483648 priorityscore=1501
- spamscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006080104
+In-Reply-To: <20200608005729.1874024-7-a.darwish@linutronix.de>
+X-Operating-System: Linux phenom 5.6.0-1-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 09, 2020 at 04:56:05PM +0800, Chen Zhou wrote:
-> snprintf() returns the number of bytes that would be written,
-> which may be greater than the the actual length to be written.
-> 	    
-> show() methods should return the number of bytes printed into the
-> buffer. This is the return value of scnprintf().
+On Mon, Jun 08, 2020 at 02:57:17AM +0200, Ahmed S. Darwish wrote:
+> A sequence counter write side critical section must be protected by some
+> form of locking to serialize writers. If the serialization primitive is
+> not disabling preemption implicitly, preemption has to be explicitly
+> disabled before entering the sequence counter write side critical
+> section.
 > 
-> Chen Zhou (3):
->   s390/crypto: use scnprintf() instead of snprintf()
->   s390: use scnprintf() in sys_##_prefix##_##_name##_show
->   s390/protvirt: use scnprintf() instead of snprintf()
+> The dma-buf reservation subsystem uses plain sequence counters to manage
+> updates to reservations. Writer serialization is accomplished through a
+> wound/wait mutex.
 > 
->  arch/s390/crypto/prng.c | 14 +++++++-------
->  arch/s390/kernel/ipl.c  |  2 +-
->  arch/s390/kernel/uv.c   |  8 ++++----
->  3 files changed, 12 insertions(+), 12 deletions(-)
+> Acquiring a wound/wait mutex does not disable preemption, so this needs
+> to be done manually before and after the write side critical section.
+> 
+> Use the newly-added seqcount_ww_mutex_t instead:
+> 
+>   - It associates the ww_mutex with the sequence count, which enables
+>     lockdep to validate that the write side critical section is properly
+>     serialized.
+> 
+>   - It removes the need to explicitly add preempt_disable/enable()
+>     around the write side critical section because the write_begin/end()
+>     functions for this new data type automatically do this.
+> 
+> If lockdep is disabled this ww_mutex lock association is compiled out
+> and has neither storage size nor runtime overhead.
+> 
+> Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
 
-All applied, even though the buffer has a size of 4k in all cases.
-So this doesn't fix anything; but it doesn't hurt as well.
+I'm not seeing the patch that adds the seqcount ww_mutex glue and not
+quite motivated enough to grab it from lore, so someone else needs to
+check the details. Just
+
+Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+
+for merging through whatever tree/branch makes sense from me.
+-Daniel
+
+> ---
+>  drivers/dma-buf/dma-resv.c                       | 8 +-------
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c | 2 --
+>  include/linux/dma-resv.h                         | 2 +-
+>  3 files changed, 2 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/dma-buf/dma-resv.c b/drivers/dma-buf/dma-resv.c
+> index 590ce7ad60a0..3aba2b2bfc48 100644
+> --- a/drivers/dma-buf/dma-resv.c
+> +++ b/drivers/dma-buf/dma-resv.c
+> @@ -128,7 +128,7 @@ subsys_initcall(dma_resv_lockdep);
+>  void dma_resv_init(struct dma_resv *obj)
+>  {
+>  	ww_mutex_init(&obj->lock, &reservation_ww_class);
+> -	seqcount_init(&obj->seq);
+> +	seqcount_ww_mutex_init(&obj->seq, &obj->lock);
+>  
+>  	RCU_INIT_POINTER(obj->fence, NULL);
+>  	RCU_INIT_POINTER(obj->fence_excl, NULL);
+> @@ -259,7 +259,6 @@ void dma_resv_add_shared_fence(struct dma_resv *obj, struct dma_fence *fence)
+>  	fobj = dma_resv_get_list(obj);
+>  	count = fobj->shared_count;
+>  
+> -	preempt_disable();
+>  	write_seqcount_begin(&obj->seq);
+>  
+>  	for (i = 0; i < count; ++i) {
+> @@ -281,7 +280,6 @@ void dma_resv_add_shared_fence(struct dma_resv *obj, struct dma_fence *fence)
+>  	smp_store_mb(fobj->shared_count, count);
+>  
+>  	write_seqcount_end(&obj->seq);
+> -	preempt_enable();
+>  	dma_fence_put(old);
+>  }
+>  EXPORT_SYMBOL(dma_resv_add_shared_fence);
+> @@ -308,14 +306,12 @@ void dma_resv_add_excl_fence(struct dma_resv *obj, struct dma_fence *fence)
+>  	if (fence)
+>  		dma_fence_get(fence);
+>  
+> -	preempt_disable();
+>  	write_seqcount_begin(&obj->seq);
+>  	/* write_seqcount_begin provides the necessary memory barrier */
+>  	RCU_INIT_POINTER(obj->fence_excl, fence);
+>  	if (old)
+>  		old->shared_count = 0;
+>  	write_seqcount_end(&obj->seq);
+> -	preempt_enable();
+>  
+>  	/* inplace update, no shared fences */
+>  	while (i--)
+> @@ -393,13 +389,11 @@ int dma_resv_copy_fences(struct dma_resv *dst, struct dma_resv *src)
+>  	src_list = dma_resv_get_list(dst);
+>  	old = dma_resv_get_excl(dst);
+>  
+> -	preempt_disable();
+>  	write_seqcount_begin(&dst->seq);
+>  	/* write_seqcount_begin provides the necessary memory barrier */
+>  	RCU_INIT_POINTER(dst->fence_excl, new);
+>  	RCU_INIT_POINTER(dst->fence, dst_list);
+>  	write_seqcount_end(&dst->seq);
+> -	preempt_enable();
+>  
+>  	dma_resv_list_free(src_list);
+>  	dma_fence_put(old);
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
+> index 6a5b91d23fd9..c71c0bb6ce26 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
+> @@ -258,11 +258,9 @@ static int amdgpu_amdkfd_remove_eviction_fence(struct amdgpu_bo *bo,
+>  	new->shared_count = k;
+>  
+>  	/* Install the new fence list, seqcount provides the barriers */
+> -	preempt_disable();
+>  	write_seqcount_begin(&resv->seq);
+>  	RCU_INIT_POINTER(resv->fence, new);
+>  	write_seqcount_end(&resv->seq);
+> -	preempt_enable();
+>  
+>  	/* Drop the references to the removed fences or move them to ef_list */
+>  	for (i = j, k = 0; i < old->shared_count; ++i) {
+> diff --git a/include/linux/dma-resv.h b/include/linux/dma-resv.h
+> index a6538ae7d93f..d44a77e8a7e3 100644
+> --- a/include/linux/dma-resv.h
+> +++ b/include/linux/dma-resv.h
+> @@ -69,7 +69,7 @@ struct dma_resv_list {
+>   */
+>  struct dma_resv {
+>  	struct ww_mutex lock;
+> -	seqcount_t seq;
+> +	seqcount_ww_mutex_t seq;
+>  
+>  	struct dma_fence __rcu *fence_excl;
+>  	struct dma_resv_list __rcu *fence;
+> -- 
+> 2.20.1
+> 
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
