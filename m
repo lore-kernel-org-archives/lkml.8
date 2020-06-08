@@ -2,112 +2,147 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F44C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0814FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 115AA206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:57:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE4FD206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:58:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RdlctmTt"
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="nbuRRuQM";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ssUoMqNF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729326AbgFHJ5Z (ORCPT
+        id S1729293AbgFHJ6u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 05:57:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56722 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728745AbgFHJ5V (ORCPT
+        Mon, 8 Jun 2020 05:58:50 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:45535 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728745AbgFHJ6t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 05:57:21 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 010BCC08C5C3;
-        Mon,  8 Jun 2020 02:57:21 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id f185so15855628wmf.3;
-        Mon, 08 Jun 2020 02:57:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ut3XaYVr0/pdTUeXNMqLLOtxnewlvYwLTTD1iBm+7XQ=;
-        b=RdlctmTtfBbd8Uko+DYTxuhK1HAbvp3LGhsev90w5XdLn4pFR6m2lTBek1+49DwYdk
-         VmL5CGX4YMjrmhpUY/1+uw8UpfPgX8eiMWhn2Xlz1mS0lEw6w05bjC1i9IBKsFrZP1LH
-         UerrHxTT5ZilPw+4+FiDPQOWEbWRfwVIN1HBObUPF7eUVE/U0wVHR73pK1TWWAFtmLRv
-         k3mwFrDKgtG+ZjPKZOlHaPSlXScavyU/xrJlJcIcE8RL9KfvqwfXbPyz13ezM8tfNQaj
-         jlPIMXjUL+I1zT2WcMv9onrW4KpD5djfRWEFACtNrqvnkm8TRRLl2hDp6Bba/HgHa+Ju
-         wirA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ut3XaYVr0/pdTUeXNMqLLOtxnewlvYwLTTD1iBm+7XQ=;
-        b=rz1rY6pOzgFS7SkpGVrRB0LadpDPBysUazLI4g4/jzA3EzOF58IibH7pnaMijeHIkQ
-         ODNH8LZqw7yXm01xImymoMbRHnRPRtLt0pU/brK/5gRt5k4gdGvODN/Uyh8QXZoOIe2s
-         cVHra/8ekZb6KdMm8MuAFR6l2Bg9c+uYwsztD4LZ1lmL5vtrlndc9WtgoDQ8gKS7qI0J
-         R8A+e8i1IxNQton41t9TmnjTM1qCD7/A34SkerDTwZRlyVewMJHMhxNZi2rFH74nO67m
-         0iVSBctfQUTHNLgTqbgYAFjKpvc5aIALC/rMJGEeyQ1QJgZt8qXvvcJIgVgZRrtkXfbd
-         S1YA==
-X-Gm-Message-State: AOAM530F+ggPIYG4ELoQdBVkJyShJmHWpDxO2qxysKDcawxsMKXNReOR
-        HwdH7tYlD+Tq2/R+M2QB5FQ=
-X-Google-Smtp-Source: ABdhPJxJZHspLs3/DHVKLx71a8WqmLy9gtnH+/lgVFgY/SGOtd7nkirOgTZxJcOMxzfUjQ7R8JH09w==
-X-Received: by 2002:a7b:c385:: with SMTP id s5mr16591261wmj.121.1591610239597;
-        Mon, 08 Jun 2020 02:57:19 -0700 (PDT)
-Received: from localhost ([51.15.41.238])
-        by smtp.gmail.com with ESMTPSA id d24sm21246990wmb.45.2020.06.08.02.57.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 02:57:18 -0700 (PDT)
-Date:   Mon, 8 Jun 2020 10:57:16 +0100
-From:   Stefan Hajnoczi <stefanha@gmail.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        eperezma@redhat.com, Stefan Hajnoczi <stefanha@redhat.com>
-Subject: Re: [PATCH RFC v5 12/13] vhost/vsock: switch to the buf API
-Message-ID: <20200608095716.GE83191@stefanha-x1.localdomain>
-References: <20200607141057.704085-1-mst@redhat.com>
- <20200607141057.704085-13-mst@redhat.com>
+        Mon, 8 Jun 2020 05:58:49 -0400
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailout.nyi.internal (Postfix) with ESMTP id 503415C00E7;
+        Mon,  8 Jun 2020 05:58:48 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute2.internal (MEProxy); Mon, 08 Jun 2020 05:58:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
+        dHXvjsVk7QKN9xSmxFZliOkWW0vYwmyFZklqwFJxZx0=; b=nbuRRuQMMotal5S8
+        pTkvN+cmjfx8FXtAQCeuwybBH7S6VVW0ds1kT1qKG/FvjVQYv1yuRNB3eez27HfC
+        pFmvpUz9+o3NY2whoy/ZynFDzKKpX5CcbpGCMoUqqNpnjO5zKetMk2SDHB1T9qd9
+        /h3Ah3sakw4x1Jx7umnwljUFBfDSnAz1NunymMh2tg9mV8dO2pvf8PPR8WQFWxsd
+        bp/Y2GnpF08+DJljBEOGCSwgRNxxoePPv4/zUWhCAw6sr6o6La8GDgh360TW/KW+
+        MQZjM/QJoTNciAnM8uXjGYhdK8CppxGSAycOS1JISb1TMuskSNPKFHoROkGpO9Db
+        Pp/0SA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=dHXvjsVk7QKN9xSmxFZliOkWW0vYwmyFZklqwFJxZ
+        x0=; b=ssUoMqNFeqO0sPk0K4AU8jQTyVoHyYwOSKTCca9oiggMmH3ruvzqarQG2
+        h0/gmIktox7m6oRVShAo3y0OPfd4rPhzHnUrqwaXupLnII4r29+jyvhafzjilfHW
+        tRXAsy3lXN5C13RN2utfyGsdNQxIEG2/cw8rHBgIQGWWa2SJdLlV4bwlZzZARpdy
+        aRyfdeBocNubsbdUl+2oHqMD2LQVkOwJLNFBKXHysFDNGRHsoa1vq5fanLTlobqL
+        S5+sJV9upS05bTcN9qwF4ehETAFdkNGUkORQEiHBjZLSuY3D1waiWiMw3LwriWGX
+        1W8YPQbJmcOaUPlqjiHl2i5iDo6uA==
+X-ME-Sender: <xms:1wveXlbewY_jy9ezRxmkWMcR87fu-vrQ4CjlxOXZxRIi39HgJZe0YA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudehuddgvdegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepkffuhffvffgjfhgtfggggfesthejredttderjeenucfhrhhomhepkfgrnhcu
+    mfgvnhhtuceorhgrvhgvnhesthhhvghmrgifrdhnvghtqeenucggtffrrghtthgvrhhnpe
+    effeettedvgeduvdevfeevfeettdffudduheeuiefhueevgfevheffledugefgjeenucfk
+    phepheekrdejrddvvddtrdegjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
+X-ME-Proxy: <xmx:1wveXsYKizYNVLq2lZTLheMgS5o9B3B1EKyz7f4ORP5MBkWo-fkKVg>
+    <xmx:1wveXn_Syb7GHMQLazflaIlzOS4KTuTq_3txw1SoYiGsaI0qyxUDqg>
+    <xmx:1wveXjomBAOCSmjMy1qCAZXrA6_L0IZibgcjNabBz7Ms_7k129GUOw>
+    <xmx:2AveXlDiIflgmGfYQdGT-ls72uCwU2CvI7FiNYXvahMnw8ky_V-m_w>
+Received: from mickey.themaw.net (58-7-220-47.dyn.iinet.net.au [58.7.220.47])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 8F41D328005E;
+        Mon,  8 Jun 2020 05:58:43 -0400 (EDT)
+Message-ID: <6e408041ae9bedb2269cf607d7313a414c7cead3.camel@themaw.net>
+Subject: Re: [PATCH 1/4] kernfs: switch kernfs to use an rwsem
+From:   Ian Kent <raven@themaw.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        l Viro <viro@ZenIV.linux.org.uk>, Tejun Heo <tj@kernel.org>,
+        Rick Lindsley <ricklind@linux.vnet.ibm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        David Howells <dhowells@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Mon, 08 Jun 2020 17:58:39 +0800
+In-Reply-To: <36e2d782d1aea1cfbe17f3bfee35f723f2f89c0d.camel@themaw.net>
+References: <159038508228.276051.14042452586133971255.stgit@mickey.themaw.net>
+         <159038562460.276051.5267555021380171295.stgit@mickey.themaw.net>
+         <36e2d782d1aea1cfbe17f3bfee35f723f2f89c0d.camel@themaw.net>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="GxcwvYAGnODwn7V8"
-Content-Disposition: inline
-In-Reply-To: <20200607141057.704085-13-mst@redhat.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, 2020-06-07 at 16:40 +0800, Ian Kent wrote:
+> Hi Greg,
+> 
+> On Mon, 2020-05-25 at 13:47 +0800, Ian Kent wrote:
+> > @@ -189,9 +189,9 @@ int kernfs_iop_getattr(const struct path *path,
+> > struct kstat *stat,
+> >  	struct inode *inode = d_inode(path->dentry);
+> >  	struct kernfs_node *kn = inode->i_private;
+> >  
+> > -	mutex_lock(&kernfs_mutex);
+> > +	down_read(&kernfs_rwsem);
+> >  	kernfs_refresh_inode(kn, inode);
+> > -	mutex_unlock(&kernfs_mutex);
+> > +	up_read(&kernfs_rwsem);
+> >  
+> >  	generic_fillattr(inode, stat);
+> >  	return 0;
+> > @@ -281,9 +281,9 @@ int kernfs_iop_permission(struct inode *inode,
+> > int mask)
+> >  
+> >  	kn = inode->i_private;
+> >  
+> > -	mutex_lock(&kernfs_mutex);
+> > +	down_read(&kernfs_rwsem);
+> >  	kernfs_refresh_inode(kn, inode);
+> > -	mutex_unlock(&kernfs_mutex);
+> > +	up_read(&kernfs_rwsem);
+> >  
+> >  	return generic_permission(inode, mask);
+> >  }
+> 
+> I changed these from a write lock to a read lock late in the
+> development.
+> 
+> But kernfs_refresh_inode() modifies the inode so I think I should
+> have taken the inode lock as well as taking the read lock.
+> 
+> I'll look again but a second opinion (anyone) would be welcome.
 
---GxcwvYAGnODwn7V8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I had a look at this today and came up with a couple of patches
+to fix it, I don't particularly like to have to do what I did
+but I don't think there's any other choice. That's because the
+rb tree locking is under significant contention and changing
+this back to use the write lock will adversely affect that.
 
-On Sun, Jun 07, 2020 at 10:11:49AM -0400, Michael S. Tsirkin wrote:
-> A straight-forward conversion.
->=20
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> ---
->  drivers/vhost/vsock.c | 30 ++++++++++++++++++------------
->  1 file changed, 18 insertions(+), 12 deletions(-)
+But unless I can find out more about the anomalous kernel test
+robot result I can't do anything!
 
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+Providing a job.yaml to reproduce it with the hardware specification
+of the lkp machine it was run on and no guidelines on what that test
+does and what the test needs so it can actually be reproduced isn't
+that useful.
 
---GxcwvYAGnODwn7V8
-Content-Type: application/pgp-signature; name="signature.asc"
+Ian
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl7eC3wACgkQnKSrs4Gr
-c8jwtAf+JgEio09QmwBTCC4RhAS9zTZxiNWAHCdPtESgu4E+VLcxHjEEpkF7w+Cm
-pQiZHcW0mG7Y2PKAg8VkP2GvXH0gbiNSQ/7ZTOFsExePWay5vLQdYg/u21hleZae
-zQ4oI905vhOEb6L92iAvzuFr0hTpIwZ1kvc+1bUAHQwLIycKalMkym1jgoyUaD2/
-eFPwvzPIPZfEuorb3mmhEq98yKTDxH5U5glFjBaZWD3E3Mg9RZN3g0Iqps80abIS
-Z47zkqMzxw8heuyjScbbz26hhKj6ziP1mcs3crmThZk3H1EpPqaVIcNHUTs6AE0P
-pRlUbV4l4np3xvL9u4DDOb2FGjgDlA==
-=6gku
------END PGP SIGNATURE-----
-
---GxcwvYAGnODwn7V8--
