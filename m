@@ -2,96 +2,84 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3F2C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06145C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:52:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA1F120760
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:50:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6E512053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:52:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S+9xfNqN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730652AbgFHQup (ORCPT
+        id S1730669AbgFHQwS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 12:50:45 -0400
-Received: from outbound-smtp02.blacknight.com ([81.17.249.8]:35207 "EHLO
-        outbound-smtp02.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730629AbgFHQuo (ORCPT
+        Mon, 8 Jun 2020 12:52:18 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36300 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730637AbgFHQwR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 12:50:44 -0400
-Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
-        by outbound-smtp02.blacknight.com (Postfix) with ESMTPS id 0A7C9BAB35
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 17:50:42 +0100 (IST)
-Received: (qmail 26177 invoked from network); 8 Jun 2020 16:50:41 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 8 Jun 2020 16:50:41 -0000
-Date:   Mon, 8 Jun 2020 17:50:40 +0100
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Amir Goldstein <amir73il@gmail.com>, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fsnotify: Rearrange fast path to minimise overhead when
- there is no watcher
-Message-ID: <20200608165040.GI3127@techsingularity.net>
-References: <20200608140557.GG3127@techsingularity.net>
- <20200608151943.GA861@quack2.suse.cz>
+        Mon, 8 Jun 2020 12:52:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591635136;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=CPoX45gxmjOqLoIv20XcIEcYRq/YssF2EgI5KSAc3xY=;
+        b=S+9xfNqN5EnFMcA5DYY9SpPWlHudUByG/QWwg+oGIaNbTmDWAPJCRTZHxJlKeHrHXG7WHY
+        h5STjA26XJSzXKCoLYnP8XxszSVjn7dMqiViS0d/IY5XxspQJADJ7tv7tjA1fRIGKcoOX+
+        k6vpEmWChOo2qKgi805jQAkIEz4z8/A=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-282-svhNfv0uPqysAzmo1_b8Nw-1; Mon, 08 Jun 2020 12:52:10 -0400
+X-MC-Unique: svhNfv0uPqysAzmo1_b8Nw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9F4EB8014D4;
+        Mon,  8 Jun 2020 16:52:08 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-114-66.rdu2.redhat.com [10.10.114.66])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 11E88648DB;
+        Mon,  8 Jun 2020 16:52:06 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <87ftb6x7em.fsf@intel.com>
+References: <87ftb6x7em.fsf@intel.com> <2136072.1591491984@warthog.procyon.org.uk> <87o8puxak1.fsf@intel.com> <4ff2445aff8d44c5961a6d194a8f4663@intel.com>
+To:     Jani Nikula <jani.nikula@linux.intel.com>
+Cc:     dhowells@redhat.com, "Saarinen\, Jani" <jani.saarinen@intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        "Vivi\, Rodrigo" <rodrigo.vivi@intel.com>,
+        "intel-gfx\@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel\@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "airlied\@redhat.com" <airlied@redhat.com>
+Subject: Re: [Intel-gfx] A panic and a hang in the i915 drm driver
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <20200608151943.GA861@quack2.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2715544.1591635126.1@warthog.procyon.org.uk>
+Date:   Mon, 08 Jun 2020 17:52:06 +0100
+Message-ID: <2715545.1591635126@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 05:19:43PM +0200, Jan Kara wrote:
-> > This is showing that the latencies are improved by roughly 2-9%. The
-> > variability is not shown but some of these results are within the noise
-> > as this workload heavily overloads the machine. That said, the system CPU
-> > usage is reduced by quite a bit so it makes sense to avoid the overhead
-> > even if it is a bit tricky to detect at times. A perf profile of just 1
-> > group of tasks showed that 5.14% of samples taken were in either fsnotify()
-> > or fsnotify_parent(). With the patch, 2.8% of samples were in fsnotify,
-> > mostly function entry and the initial check for watchers.  The check for
-> > watchers is complicated enough that inlining it may be controversial.
-> > 
-> > Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
-> 
-> Thanks for the patch! I have to tell I'm surprised this small reordering
-> helps so much. For pipe inode we will bail on:
-> 
->        if (!to_tell->i_fsnotify_marks && !sb->s_fsnotify_marks &&
->            (!mnt || !mnt->mnt_fsnotify_marks))
->                return 0;
-> 
-> So what we save with the reordering is sb->s_fsnotify_mask and
-> mnt->mnt_fsnotify_mask fetch but that should be the same cacheline as
-> sb->s_fsnotify_marks and mnt->mnt_fsnotify_marks, respectively.
+Jani Nikula <jani.nikula@linux.intel.com> wrote:
 
-It is likely that the contribution of that change is marginal relative
-to the fsnotify_parent() call. I'll know by tomorrow morning at the latest.
+> David, please try [1].
 
-> We also
-> save a function call of fsnotify_parent() but I would think that is very
-> cheap (compared to the whole write path) as well.
-> 
+Assuming you mean this:
 
-To be fair, it is cheap but with this particular workload, we call
-vfs_write() a *lot* and the path is not that long so it builds up to 5%
-of samples overall. Given that these were anonymous pipes, it surprised
-me to see fsnotify at all which is why I took a closer look.
+    https://patchwork.freedesktop.org/patch/366958/?series=77635&rev=1
 
-> The patch is simple enough so I have no problem merging it but I'm just
-> surprised by the results... Hum, maybe the structure randomization is used
-> in the builds and so e.g. sb->s_fsnotify_mask and sb->s_fsnotify_marks
-> don't end up in the same cacheline? But I don't think we enable that in
-> SUSE builds?
-> 
+yes, that works.
 
-Correct, GCC_PLUGIN_RANDSTRUCT was not set.
+Tested-by: David Howells <dhowells@redhat.com>
 
--- 
-Mel Gorman
-SUSE Labs
