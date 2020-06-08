@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD43C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FCE9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CDEA20774
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:45:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A94B20774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:45:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663502;
-	bh=NxAJsTGELpCsWIQyrpwGz1O0iqdSozOGgaX3qe3alLg=;
+	s=default; t=1591663512;
+	bh=0/VpquqGThU+KfpxxkED6oTZqf2JATgh3/hxpS1TVyE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n+yZqHAb6FgKcad6Vn7XZtMxAEyjyTrcddraEpv19+oCTiYOcNFqOtQGdRiBce90S
-	 aXBkrKSe64kRYUIc3nf4/gu6Lu9deyp+UnUlJH1kVPMMrC9ZOAYW9lSGX6ws+f4AwT
-	 RVKiOwwDzhzb/XSXz3Z71zjKamo2Cqb/+4VCJsg4=
+	b=hQKESOuWLUmQm+g1p/zWh5OEMRNY/YGUVP7u/WskwuqiGe/0aDrldLAvf1R3u4mdF
+	 zrYZmA1ezWY1qJf4XYUzlJR6B8+arMm1HPbHIMnTMfMvVHLCAj2S1piYdupfcTKFIJ
+	 7HLH4UWgi+n6Coe/O9ziabifCA9ocGS1Jv4Hgzsk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733272AbgFIApB (ORCPT
+        id S1733251AbgFIApL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:45:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58994 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:45:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729008AbgFHXLy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:11:54 -0400
+        id S1729003AbgFHXLx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:11:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79EE820C56;
-        Mon,  8 Jun 2020 23:11:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5708C208C3;
+        Mon,  8 Jun 2020 23:11:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657914;
-        bh=NxAJsTGELpCsWIQyrpwGz1O0iqdSozOGgaX3qe3alLg=;
+        s=default; t=1591657913;
+        bh=0/VpquqGThU+KfpxxkED6oTZqf2JATgh3/hxpS1TVyE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jy1vcd0Eo6Lc4swo5/oWRIvdhu98ZjZbANPilov7WG8NEyRhL4u1YtWTe8BsnhkvQ
-         1fgNx9jdTNfJwLygc0CgQCL2nyhCSL56PhNqynmsAiO8mIvdWyuRZDOzq0haWociCx
-         a3eBn/I6zOzV6hhm5u+sqksuM2PE92VK3pMo/Lfw=
+        b=jRQGwD58BEAw8R0E4R4L65iggviXK+ZaO/blXSasPZBnXPveiEVbQf57hRJ/piE7D
+         iIqp4XxHe05xzxibZc6I3T1zut85P2S0DkyA33kQw/+TgoSkj9R/SbzuIbBm7SYA95
+         KPtvrPpzqMbvRt1f9FeiSIK6a+XJihDdBF41GPhc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eelco Chaudron <echaudro@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 265/274] libbpf: Fix perf_buffer__free() API for sparse allocs
-Date:   Mon,  8 Jun 2020 19:05:58 -0400
-Message-Id: <20200608230607.3361041-265-sashal@kernel.org>
+Cc:     Ido Schimmel <idosch@mellanox.com>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 264/274] vxlan: Avoid infinite loop when suppressing NS messages with invalid options
+Date:   Mon,  8 Jun 2020 19:05:57 -0400
+Message-Id: <20200608230607.3361041-264-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -62,42 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eelco Chaudron <echaudro@redhat.com>
+From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit 601b05ca6edb0422bf6ce313fbfd55ec7bbbc0fd ]
+[ Upstream commit 8066e6b449e050675df48e7c4b16c29f00507ff0 ]
 
-In case the cpu_bufs are sparsely allocated they are not all
-free'ed. These changes will fix this.
+When proxy mode is enabled the vxlan device might reply to Neighbor
+Solicitation (NS) messages on behalf of remote hosts.
 
-Fixes: fb84b8224655 ("libbpf: add perf buffer API")
-Signed-off-by: Eelco Chaudron <echaudro@redhat.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Link: https://lore.kernel.org/bpf/159056888305.330763.9684536967379110349.stgit@ebuild
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+In case the NS message includes the "Source link-layer address" option
+[1], the vxlan device will use the specified address as the link-layer
+destination address in its reply.
+
+To avoid an infinite loop, break out of the options parsing loop when
+encountering an option with length zero and disregard the NS message.
+
+This is consistent with the IPv6 ndisc code and RFC 4886 which states
+that "Nodes MUST silently discard an ND packet that contains an option
+with length zero" [2].
+
+[1] https://tools.ietf.org/html/rfc4861#section-4.3
+[2] https://tools.ietf.org/html/rfc4861#section-4.6
+
+Fixes: 4b29dba9c085 ("vxlan: fix nonfunctional neigh_reduce()")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/bpf/libbpf.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/net/vxlan.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index cd53204d33f0..0c5b4fb553fb 100644
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -7809,9 +7809,12 @@ void perf_buffer__free(struct perf_buffer *pb)
- 	if (!pb)
- 		return;
- 	if (pb->cpu_bufs) {
--		for (i = 0; i < pb->cpu_cnt && pb->cpu_bufs[i]; i++) {
-+		for (i = 0; i < pb->cpu_cnt; i++) {
- 			struct perf_cpu_buf *cpu_buf = pb->cpu_bufs[i];
- 
-+			if (!cpu_buf)
-+				continue;
-+
- 			bpf_map_delete_elem(pb->map_fd, &cpu_buf->map_key);
- 			perf_buffer__free_cpu_buf(pb, cpu_buf);
- 		}
+diff --git a/drivers/net/vxlan.c b/drivers/net/vxlan.c
+index a5b415fed11e..779e56c43d27 100644
+--- a/drivers/net/vxlan.c
++++ b/drivers/net/vxlan.c
+@@ -1924,6 +1924,10 @@ static struct sk_buff *vxlan_na_create(struct sk_buff *request,
+ 	ns_olen = request->len - skb_network_offset(request) -
+ 		sizeof(struct ipv6hdr) - sizeof(*ns);
+ 	for (i = 0; i < ns_olen-1; i += (ns->opt[i+1]<<3)) {
++		if (!ns->opt[i + 1]) {
++			kfree_skb(reply);
++			return NULL;
++		}
+ 		if (ns->opt[i] == ND_OPT_SOURCE_LL_ADDR) {
+ 			daddr = ns->opt + i + sizeof(struct nd_opt_hdr);
+ 			break;
 -- 
 2.25.1
 
