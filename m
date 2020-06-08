@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C603C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7606BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:36:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F611206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:36:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53CB4206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:36:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663006;
-	bh=J2LPRJU66y4X8KcWE0g+592NbySdoJsVXoYtZI00P5I=;
+	s=default; t=1591663010;
+	bh=iN4uu/SZtCI23lgelTAMXjz+AGc7s2h6+bTtogWffiQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rJ/cfabpxkJSoCdbWIJVUegNbfl4fsjSqqzHcyeCg3tr9jo61o4XVjkoKWb0lo3OI
-	 jZxZ3WK9AEjbRStcfpS4SC6AyCvypnXEkg4gKhnjAf8FQWNsyRMsp4hUB+ooUyFfVR
-	 mKxXGm4JiyA75g7KiVcUia+FJgN3l22IpJZwSQDg=
+	b=2jDuRQVmAY3GjGZUr3aId0KlFFcwYa6Ypj2CAlLF6AMYkxx3t7490z6spzfHazTP0
+	 hE6RqedTMpEtsYiQ3j4MXkdOMSF/8qKgkL90XFX9g+69eGbaGQbPdmPoA/fksQcZP1
+	 UWrRfEKftgCg6/MriYyybUv0ttobkwJunFfuI+KM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729669AbgFHXOB (ORCPT
+        id S1727989AbgFHXN6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:14:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58496 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:13:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728162AbgFHXLe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:11:34 -0400
+        id S1728916AbgFHXLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:11:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9DBD20897;
-        Mon,  8 Jun 2020 23:11:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CA7520B80;
+        Mon,  8 Jun 2020 23:11:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657893;
-        bh=J2LPRJU66y4X8KcWE0g+592NbySdoJsVXoYtZI00P5I=;
+        s=default; t=1591657892;
+        bh=iN4uu/SZtCI23lgelTAMXjz+AGc7s2h6+bTtogWffiQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ROP1rxkHmSif6KNnYX1KxXVihi18D7znAeCVKrM4JfqmcpMAO2N5DGoWqSkR+DckI
-         9bG3th7dla5RoL0AlyciPDYvYRlw+AqeKhvBN1HOydba8dt8EPmEJ1Ce/4CEhdQaSA
-         +FZmqdizTHwRR7Bh7T/2UgUoC5LNoVvtimsm9Kl8=
+        b=jWWYwh4UuThnu1ZfiBHM4XKxI4kOzGsbl1UmdZ9Yc5TvwB8h9zE9Ah1lVTs0DTPmU
+         iZqCeKnYq7l5qNBGFGI5LxnqcmZxESzY0kMXpda1SXzyaQniJmNUTWSs/Qt5+esSKO
+         35tDIsE5MBlFmOH4rsIkmQzfzdqUy1gsV08unFB4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 248/274] mmc: owl-mmc: Respect the cmd->busy_timeout from the mmc core
-Date:   Mon,  8 Jun 2020 19:05:41 -0400
-Message-Id: <20200608230607.3361041-248-sashal@kernel.org>
+        Rui Miguel Silva <rmfrfs@gmail.com>,
+        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        greybus-dev@lists.linaro.org, Sasha Levin <sashal@kernel.org>,
+        devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 5.7 247/274] staging: greybus: sdio: Respect the cmd->busy_timeout from the mmc core
+Date:   Mon,  8 Jun 2020 19:05:40 -0400
+Message-Id: <20200608230607.3361041-247-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -62,61 +64,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ulf Hansson <ulf.hansson@linaro.org>
 
-[ Upstream commit f37ac1ae3ca93d0995553ad9604a25eadfe9406d ]
+[ Upstream commit a389087ee9f195fcf2f31cd771e9ec5f02c16650 ]
 
-For commands that doesn't involve to prepare a data transfer, owl-mmc is
-using a fixed 30s response timeout. This is a bit problematic.
+Using a fixed 1s timeout for all commands is a bit problematic.
 
-For some commands it means waiting longer than needed for the completion to
+For some commands it means waiting longer than needed for the timeout to
 expire, which may not a big issue, but still. For other commands, like for
 an erase (CMD38) that uses a R1B response, may require longer timeouts than
-30s. In these cases, we may end up treating the command as it failed, while
+1s. In these cases, we may end up treating the command as it failed, while
 it just needed some more time to complete successfully.
 
 Fix the problem by respecting the cmd->busy_timeout, which is provided by
 the mmc core.
 
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Rui Miguel Silva <rmfrfs@gmail.com>
+Cc: Johan Hovold <johan@kernel.org>
+Cc: Alex Elder <elder@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: greybus-dev@lists.linaro.org
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Link: https://lore.kernel.org/r/20200414161413.3036-8-ulf.hansson@linaro.org
+Acked-by: Rui Miguel Silva <rmfrfs@gmail.com>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lore.kernel.org/r/20200414161413.3036-20-ulf.hansson@linaro.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/owl-mmc.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/staging/greybus/sdio.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/mmc/host/owl-mmc.c b/drivers/mmc/host/owl-mmc.c
-index 01ffe51f413d..5e20c099fe03 100644
---- a/drivers/mmc/host/owl-mmc.c
-+++ b/drivers/mmc/host/owl-mmc.c
-@@ -92,6 +92,8 @@
- #define OWL_SD_STATE_RC16ER		BIT(1)
- #define OWL_SD_STATE_CRC7ER		BIT(0)
+diff --git a/drivers/staging/greybus/sdio.c b/drivers/staging/greybus/sdio.c
+index 68c5718be827..c4b16bb5c1a4 100644
+--- a/drivers/staging/greybus/sdio.c
++++ b/drivers/staging/greybus/sdio.c
+@@ -411,6 +411,7 @@ static int gb_sdio_command(struct gb_sdio_host *host, struct mmc_command *cmd)
+ 	struct gb_sdio_command_request request = {0};
+ 	struct gb_sdio_command_response response;
+ 	struct mmc_data *data = host->mrq->data;
++	unsigned int timeout_ms;
+ 	u8 cmd_flags;
+ 	u8 cmd_type;
+ 	int i;
+@@ -469,9 +470,12 @@ static int gb_sdio_command(struct gb_sdio_host *host, struct mmc_command *cmd)
+ 		request.data_blksz = cpu_to_le16(data->blksz);
+ 	}
  
-+#define OWL_CMD_TIMEOUT_MS		30000
+-	ret = gb_operation_sync(host->connection, GB_SDIO_TYPE_COMMAND,
+-				&request, sizeof(request), &response,
+-				sizeof(response));
++	timeout_ms = cmd->busy_timeout ? cmd->busy_timeout :
++		GB_OPERATION_TIMEOUT_DEFAULT;
 +
- struct owl_mmc_host {
- 	struct device *dev;
- 	struct reset_control *reset;
-@@ -172,6 +174,7 @@ static void owl_mmc_send_cmd(struct owl_mmc_host *owl_host,
- 			     struct mmc_command *cmd,
- 			     struct mmc_data *data)
- {
-+	unsigned long timeout;
- 	u32 mode, state, resp[2];
- 	u32 cmd_rsp_mask = 0;
++	ret = gb_operation_sync_timeout(host->connection, GB_SDIO_TYPE_COMMAND,
++					&request, sizeof(request), &response,
++					sizeof(response), timeout_ms);
+ 	if (ret < 0)
+ 		goto out;
  
-@@ -239,7 +242,10 @@ static void owl_mmc_send_cmd(struct owl_mmc_host *owl_host,
- 	if (data)
- 		return;
- 
--	if (!wait_for_completion_timeout(&owl_host->sdc_complete, 30 * HZ)) {
-+	timeout = msecs_to_jiffies(cmd->busy_timeout ? cmd->busy_timeout :
-+		OWL_CMD_TIMEOUT_MS);
-+
-+	if (!wait_for_completion_timeout(&owl_host->sdc_complete, timeout)) {
- 		dev_err(owl_host->dev, "CMD interrupt timeout\n");
- 		cmd->error = -ETIMEDOUT;
- 		return;
 -- 
 2.25.1
 
