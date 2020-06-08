@@ -7,51 +7,55 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8415FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E8CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6489B20897
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:12:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F0D4208C7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:12:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591657938;
-	bh=XzVd0lZiloehEKPbTGLt3ZQh1nAHtnKqZP4nBXUXmCk=;
+	s=default; t=1591657942;
+	bh=9hnYe63g3vNUWbLOB/FO/gxg7KJj1oQxrmXrsSdDF5k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xuYbibWK3D1Rnr3gymzIqDjGSiouaZCpLWlzMm40b53m6SJDHrY3MELt+hSIOMllU
-	 mT0+IuIr3o+8Bkmaol5ZvaOV5NlztpXLa33KxMFWgVGFanKkKI1DDJcDwlioLM2SCH
-	 xLlHq20YuBuXwjcaiTxpc0xQYMUlvJZfh98Q2yTI=
+	b=R5m6A9IV2whnpIhko1O/jejbhr0MhHQqNLG5tAYMSBJifi1O85o3ngrX6peuzRIBs
+	 JhTL7x3DxLa392SocyGa52hNv1/ZN00E4Lo3/fi1a4708UI4A9lnFyR13lwSFZ6lpJ
+	 ovgfP1nWhiW6yX37G/CGbAOo3/cmTT2GHEmNXoVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbgFHXMR (ORCPT
+        id S1729070AbgFHXMU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:12:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56688 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:12:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728691AbgFHXKd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:10:33 -0400
+        id S1728696AbgFHXKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:10:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B157A208C7;
-        Mon,  8 Jun 2020 23:10:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7371208FE;
+        Mon,  8 Jun 2020 23:10:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657833;
-        bh=XzVd0lZiloehEKPbTGLt3ZQh1nAHtnKqZP4nBXUXmCk=;
+        s=default; t=1591657834;
+        bh=9hnYe63g3vNUWbLOB/FO/gxg7KJj1oQxrmXrsSdDF5k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=obkwcwzbpIbWtaeuj3uZqhjNZKUyVz44iNhHIHkj+DqV3nn32cMLZrpqauoctFwGE
-         /Mjp6ugZhc93HLt1aAfzqTyz4DjZkp57qbikKyhxqVoZAcu0BXFnBXTUUX4ecsenGh
-         ZOwc/pCSHZIag9Ng1l6vTv8VJVoZDIIeZZdLN1Ho=
+        b=Nd4imnCKWfhHkte7E86OzU32THw1VLSAHe4+4z0gubmwsTCcexzr9zIZlJpy5uCfH
+         Wx02XvTPQeUJXTEfH9sYyX+PhnVsQ29lDmqR2H4QUaydpxbQuM9xFNl7MBrIKC5zCD
+         4kXCD/MPwAoajyN9smXavItof4IsIhQWFns4I8JI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vlad Buslov <vladbu@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 203/274] selftests: fix flower parent qdisc
-Date:   Mon,  8 Jun 2020 19:04:56 -0400
-Message-Id: <20200608230607.3361041-203-sashal@kernel.org>
+Cc:     Jesper Dangaard Brouer <brouer@redhat.com>,
+        Mao Wenan <maowenan@huawei.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Toshiaki Makita <toshiaki.makita1@gmail.com>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 204/274] veth: Adjust hard_start offset on redirect XDP frames
+Date:   Mon,  8 Jun 2020 19:04:57 -0400
+Message-Id: <20200608230607.3361041-204-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,84 +64,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vlad Buslov <vladbu@mellanox.com>
+From: Jesper Dangaard Brouer <brouer@redhat.com>
 
-[ Upstream commit 0531b0357ba37464e5c0033e1b7c69bbf5ecd8fb ]
+[ Upstream commit 5c8572251fabc5bb49fd623c064e95a9daf6a3e3 ]
 
-Flower tests used to create ingress filter with specified parent qdisc
-"parent ffff:" but dump them on "ingress". With recent commit that fixed
-tcm_parent handling in dump those are not considered same parent anymore,
-which causes iproute2 tc to emit additional "parent ffff:" in first line of
-filter dump output. The change in output causes filter match in tests to
-fail.
+When native XDP redirect into a veth device, the frame arrives in the
+xdp_frame structure. It is then processed in veth_xdp_rcv_one(),
+which can run a new XDP bpf_prog on the packet. Doing so requires
+converting xdp_frame to xdp_buff, but the tricky part is that
+xdp_frame memory area is located in the top (data_hard_start) memory
+area that xdp_buff will point into.
 
-Prevent parent qdisc output when dumping filters in flower tests by always
-correctly specifying "ingress" parent both when creating and dumping
-filters.
+The current code tried to protect the xdp_frame area, by assigning
+xdp_buff.data_hard_start past this memory. This results in 32 bytes
+less headroom to expand into via BPF-helper bpf_xdp_adjust_head().
 
-Fixes: a7df4870d79b ("net_sched: fix tcm_parent in tc filter dump")
-Signed-off-by: Vlad Buslov <vladbu@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This protect step is actually not needed, because BPF-helper
+bpf_xdp_adjust_head() already reserve this area, and don't allow
+BPF-prog to expand into it. Thus, it is safe to point data_hard_start
+directly at xdp_frame memory area.
+
+Fixes: 9fc8d518d9d5 ("veth: Handle xdp_frames in xdp napi ring")
+Reported-by: Mao Wenan <maowenan@huawei.com>
+Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Toshiaki Makita <toshiaki.makita1@gmail.com>
+Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Link: https://lore.kernel.org/bpf/158945338331.97035.5923525383710752178.stgit@firesoul
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../selftests/tc-testing/tc-tests/filters/tests.json        | 6 +++---
- tools/testing/selftests/tc-testing/tdc_batch.py             | 6 +++---
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/net/veth.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/tools/testing/selftests/tc-testing/tc-tests/filters/tests.json b/tools/testing/selftests/tc-testing/tc-tests/filters/tests.json
-index 8877f7b2b809..12aa4bc1f6a0 100644
---- a/tools/testing/selftests/tc-testing/tc-tests/filters/tests.json
-+++ b/tools/testing/selftests/tc-testing/tc-tests/filters/tests.json
-@@ -32,7 +32,7 @@
-         "setup": [
-             "$TC qdisc add dev $DEV2 ingress"
-         ],
--        "cmdUnderTest": "$TC filter add dev $DEV2 protocol ip pref 1 parent ffff: handle 0xffffffff flower action ok",
-+        "cmdUnderTest": "$TC filter add dev $DEV2 protocol ip pref 1 ingress handle 0xffffffff flower action ok",
-         "expExitCode": "0",
-         "verifyCmd": "$TC filter show dev $DEV2 ingress",
-         "matchPattern": "filter protocol ip pref 1 flower.*handle 0xffffffff",
-@@ -77,9 +77,9 @@
-         },
-         "setup": [
-             "$TC qdisc add dev $DEV2 ingress",
--            "$TC filter add dev $DEV2 protocol ip prio 1 parent ffff: flower dst_mac e4:11:22:11:4a:51 src_mac e4:11:22:11:4a:50 ip_proto tcp src_ip 1.1.1.1 dst_ip 2.2.2.2 action drop"
-+            "$TC filter add dev $DEV2 protocol ip prio 1 ingress flower dst_mac e4:11:22:11:4a:51 src_mac e4:11:22:11:4a:50 ip_proto tcp src_ip 1.1.1.1 dst_ip 2.2.2.2 action drop"
-         ],
--        "cmdUnderTest": "$TC filter add dev $DEV2 protocol ip prio 1 parent ffff: flower dst_mac e4:11:22:11:4a:51 src_mac e4:11:22:11:4a:50 ip_proto tcp src_ip 1.1.1.1 dst_ip 2.2.2.2 action drop",
-+        "cmdUnderTest": "$TC filter add dev $DEV2 protocol ip prio 1 ingress flower dst_mac e4:11:22:11:4a:51 src_mac e4:11:22:11:4a:50 ip_proto tcp src_ip 1.1.1.1 dst_ip 2.2.2.2 action drop",
-         "expExitCode": "2",
-         "verifyCmd": "$TC -s filter show dev $DEV2 ingress",
-         "matchPattern": "filter protocol ip pref 1 flower chain 0 handle",
-diff --git a/tools/testing/selftests/tc-testing/tdc_batch.py b/tools/testing/selftests/tc-testing/tdc_batch.py
-index 6a2bd2cf528e..995f66ce43eb 100755
---- a/tools/testing/selftests/tc-testing/tdc_batch.py
-+++ b/tools/testing/selftests/tc-testing/tdc_batch.py
-@@ -72,21 +72,21 @@ mac_prefix = args.mac_prefix
+diff --git a/drivers/net/veth.c b/drivers/net/veth.c
+index aece0e5eec8c..d5691bb84448 100644
+--- a/drivers/net/veth.c
++++ b/drivers/net/veth.c
+@@ -564,13 +564,15 @@ static struct sk_buff *veth_xdp_rcv_one(struct veth_rq *rq,
+ 					struct veth_stats *stats)
+ {
+ 	void *hard_start = frame->data - frame->headroom;
+-	void *head = hard_start - sizeof(struct xdp_frame);
+ 	int len = frame->len, delta = 0;
+ 	struct xdp_frame orig_frame;
+ 	struct bpf_prog *xdp_prog;
+ 	unsigned int headroom;
+ 	struct sk_buff *skb;
  
- def format_add_filter(device, prio, handle, skip, src_mac, dst_mac,
-                       share_action):
--    return ("filter add dev {} {} protocol ip parent ffff: handle {} "
-+    return ("filter add dev {} {} protocol ip ingress handle {} "
-             " flower {} src_mac {} dst_mac {} action drop {}".format(
-                 device, prio, handle, skip, src_mac, dst_mac, share_action))
++	/* bpf_xdp_adjust_head() assures BPF cannot access xdp_frame area */
++	hard_start -= sizeof(struct xdp_frame);
++
+ 	rcu_read_lock();
+ 	xdp_prog = rcu_dereference(rq->xdp_prog);
+ 	if (likely(xdp_prog)) {
+@@ -592,7 +594,6 @@ static struct sk_buff *veth_xdp_rcv_one(struct veth_rq *rq,
+ 			break;
+ 		case XDP_TX:
+ 			orig_frame = *frame;
+-			xdp.data_hard_start = head;
+ 			xdp.rxq->mem = frame->mem;
+ 			if (unlikely(veth_xdp_tx(rq, &xdp, bq) < 0)) {
+ 				trace_xdp_exception(rq->dev, xdp_prog, act);
+@@ -605,7 +606,6 @@ static struct sk_buff *veth_xdp_rcv_one(struct veth_rq *rq,
+ 			goto xdp_xmit;
+ 		case XDP_REDIRECT:
+ 			orig_frame = *frame;
+-			xdp.data_hard_start = head;
+ 			xdp.rxq->mem = frame->mem;
+ 			if (xdp_do_redirect(rq->dev, &xdp, xdp_prog)) {
+ 				frame = &orig_frame;
+@@ -629,7 +629,7 @@ static struct sk_buff *veth_xdp_rcv_one(struct veth_rq *rq,
+ 	rcu_read_unlock();
  
- 
- def format_rep_filter(device, prio, handle, skip, src_mac, dst_mac,
-                       share_action):
--    return ("filter replace dev {} {} protocol ip parent ffff: handle {} "
-+    return ("filter replace dev {} {} protocol ip ingress handle {} "
-             " flower {} src_mac {} dst_mac {} action drop {}".format(
-                 device, prio, handle, skip, src_mac, dst_mac, share_action))
- 
- 
- def format_del_filter(device, prio, handle, skip, src_mac, dst_mac,
-                       share_action):
--    return ("filter del dev {} {} protocol ip parent ffff: handle {} "
-+    return ("filter del dev {} {} protocol ip ingress handle {} "
-             "flower".format(device, prio, handle))
- 
- 
+ 	headroom = sizeof(struct xdp_frame) + frame->headroom - delta;
+-	skb = veth_build_skb(head, headroom, len, 0);
++	skb = veth_build_skb(hard_start, headroom, len, 0);
+ 	if (!skb) {
+ 		xdp_return_frame(frame);
+ 		stats->rx_drops++;
 -- 
 2.25.1
 
