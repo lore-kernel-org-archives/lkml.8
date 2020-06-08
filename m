@@ -2,193 +2,125 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D21B4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 17:15:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B1BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 17:16:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B42AF206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 17:15:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 623542076A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 17:16:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387417AbgFHRPz (ORCPT
+        id S2387520AbgFHRQd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 13:15:55 -0400
-Received: from mga07.intel.com ([134.134.136.100]:48861 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730697AbgFHRPy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 13:15:54 -0400
-IronPort-SDR: gAWpLZ+I4q30Dsls0kB+1m3LzFXASCITW2b/7PqijOm+ApWv89s3rZBRmazD13KMx72sHnhxw2
- P34cDpKZaibw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2020 10:15:53 -0700
-IronPort-SDR: Z91BEZn8DNHF2So1W//NF7BVGaXUboKhiOB0zOH9S8UympcfdNTpKT1fc9e+CYetBwb428DVGy
- eOxpYbQfqgJA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,487,1583222400"; 
-   d="scan'208";a="472670632"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by fmsmga006.fm.intel.com with ESMTP; 08 Jun 2020 10:15:52 -0700
-Date:   Mon, 8 Jun 2020 10:15:52 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Prarit Bhargava <prarit@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Tony Luck <tony.luck@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: Re: [PATCH v2] x86/split_lock: Sanitize userspace and guest error
- output
-Message-ID: <20200608171552.GB8223@linux.intel.com>
-References: <20200608122114.13043-1-prarit@redhat.com>
+        Mon, 8 Jun 2020 13:16:33 -0400
+Received: from smtprelay0125.hostedemail.com ([216.40.44.125]:58222 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730697AbgFHRQd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 13:16:33 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 68DFC808BEAF;
+        Mon,  8 Jun 2020 17:16:31 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: fish07_050374426dbb
+X-Filterd-Recvd-Size: 4141
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf04.hostedemail.com (Postfix) with ESMTPA;
+        Mon,  8 Jun 2020 17:16:29 +0000 (UTC)
+Message-ID: <dcce7f702c674999c31fd358c3970d5fee1a6725.camel@perches.com>
+Subject: Re: [PATCH] drm/amd/display: Fix indenting in
+ dcn30_set_output_transfer_func()
+From:   Joe Perches <joe@perches.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Harry Wentland <harry.wentland@amd.com>
+Cc:     Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Date:   Mon, 08 Jun 2020 10:16:27 -0700
+In-Reply-To: <20200608141657.GB1912173@mwanda>
+References: <20200608141657.GB1912173@mwanda>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200608122114.13043-1-prarit@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 08:21:14AM -0400, Prarit Bhargava wrote:
-> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-> index 166d7c355896..e02ec81fe1eb 100644
-> --- a/arch/x86/kernel/cpu/intel.c
-> +++ b/arch/x86/kernel/cpu/intel.c
-> @@ -1074,10 +1074,17 @@ static void split_lock_init(void)
->  	split_lock_verify_msr(sld_state != sld_off);
->  }
->  
-> -static void split_lock_warn(unsigned long ip)
-> +static bool split_lock_warn(unsigned long ip, int fatal_no_warn)
->  {
-> -	pr_warn_ratelimited("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
-> -			    current->comm, current->pid, ip);
-> +	if (fatal_no_warn)
-> +		return false;
-
-This misses the point Xiaoyao was making.  If EFLAGS.AC=1 then the #AC is a
-legacy alignment check fault and should not be treated as a split-lock #AC.
-The basic premise of the patch makes sense, but the end result is confusing
-because incorporating "fatal" and the EFLAGS.AC state into split_lock_warn()
-bastardizes both the "split_lock" and "warn" aspects of the function.
-
-E.g. something like this yields the same net effect, it's just organized
-differently.  If so desired, the "bogus" message could be dropped via
-Xiaoyao's prep patch[*] so that this change would only affect the sld_fatal
-messages.
-
-[*] https://lkml.kernel.org/r/20200509110542.8159-3-xiaoyao.li@intel.com
-
-
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index 23fd5f319908..1aad0b8e394c 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -1071,11 +1071,14 @@ static void split_lock_init(void)
-        split_lock_verify_msr(sld_state != sld_off);
- }
-
--static void split_lock_warn(unsigned long ip)
-+static bool handle_split_lock(unsigned long ip)
- {
-        pr_warn_ratelimited("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
-                            current->comm, current->pid, ip);
-
-+       if (sld_state != sld_warn)
-+               return false;
-+
-        /*
-         * Disable the split lock detection for this task so it can make
-         * progress and set TIF_SLD so the detection is re-enabled via
-@@ -1083,18 +1086,13 @@ static void split_lock_warn(unsigned long ip)
-         */
-        sld_update_msr(false);
-        set_tsk_thread_flag(current, TIF_SLD);
-+       return true;
- }
-
- bool handle_guest_split_lock(unsigned long ip)
- {
--       if (sld_state == sld_warn) {
--               split_lock_warn(ip);
-+       if (handle_split_lock(ip))
-                return true;
--       }
--
--       pr_warn_once("#AC: %s/%d %s split_lock trap at address: 0x%lx\n",
--                    current->comm, current->pid,
--                    sld_state == sld_fatal ? "fatal" : "bogus", ip);
-
-        current->thread.error_code = 0;
-        current->thread.trap_nr = X86_TRAP_AC;
-@@ -1105,10 +1103,10 @@ EXPORT_SYMBOL_GPL(handle_guest_split_lock);
-
- bool handle_user_split_lock(struct pt_regs *regs, long error_code)
- {
--       if ((regs->flags & X86_EFLAGS_AC) || sld_state == sld_fatal)
-+       if (regs->flags & X86_EFLAGS_AC)
-                return false;
--       split_lock_warn(regs->ip);
--       return true;
-+
-+       return handle_split_lock(regs->ip);
- }
-
- /*
-
-
-> +
-> +	pr_warn_ratelimited("#AC: %s/%d %ssplit_lock trap at address: 0x%lx\n",
-> +			    current->comm, current->pid,
-> +			    sld_state == sld_fatal ? "fatal " : "", ip);
-> +
-> +	if (sld_state == sld_fatal)
-> +		return false;
->  
->  	/*
->  	 * Disable the split lock detection for this task so it can make
-> @@ -1086,18 +1093,13 @@ static void split_lock_warn(unsigned long ip)
->  	 */
->  	sld_update_msr(false);
->  	set_tsk_thread_flag(current, TIF_SLD);
-> +	return true;
->  }
->  
->  bool handle_guest_split_lock(unsigned long ip)
->  {
-> -	if (sld_state == sld_warn) {
-> -		split_lock_warn(ip);
-> +	if (split_lock_warn(ip, 0))
->  		return true;
-> -	}
-> -
-> -	pr_warn_once("#AC: %s/%d %s split_lock trap at address: 0x%lx\n",
-> -		     current->comm, current->pid,
-> -		     sld_state == sld_fatal ? "fatal" : "bogus", ip);
->  
->  	current->thread.error_code = 0;
->  	current->thread.trap_nr = X86_TRAP_AC;
-> @@ -1108,10 +1110,7 @@ EXPORT_SYMBOL_GPL(handle_guest_split_lock);
->  
->  bool handle_user_split_lock(struct pt_regs *regs, long error_code)
->  {
-> -	if ((regs->flags & X86_EFLAGS_AC) || sld_state == sld_fatal)
-> -		return false;
-> -	split_lock_warn(regs->ip);
-> -	return true;
-> +	return split_lock_warn(regs->ip, regs->flags & X86_EFLAGS_AC);
->  }
->  
->  /*
-> -- 
-> 2.21.3
+On Mon, 2020-06-08 at 17:16 +0300, Dan Carpenter wrote:
+> These lines are a part of the if statement and they are supposed to
+> be indented one more tab.
 > 
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> ---
+>  drivers/gpu/drm/amd/display/dc/dcn30/dcn30_hwseq.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/amd/display/dc/dcn30/dcn30_hwseq.c b/drivers/gpu/drm/amd/display/dc/dcn30/dcn30_hwseq.c
+> index ab20320ebc994..37c310dbb3665 100644
+> --- a/drivers/gpu/drm/amd/display/dc/dcn30/dcn30_hwseq.c
+> +++ b/drivers/gpu/drm/amd/display/dc/dcn30/dcn30_hwseq.c
+> @@ -203,9 +203,9 @@ bool dcn30_set_output_transfer_func(struct dc *dc,
+>  					stream->out_transfer_func,
+>  					&mpc->blender_params, false))
+>  				params = &mpc->blender_params;
+> -		 /* there are no ROM LUTs in OUTGAM */
+> -		if (stream->out_transfer_func->type == TF_TYPE_PREDEFINED)
+> -			BREAK_TO_DEBUGGER();
+> +			 /* there are no ROM LUTs in OUTGAM */
+> +			if (stream->out_transfer_func->type == TF_TYPE_PREDEFINED)
+> +				BREAK_TO_DEBUGGER();
+>  		}
+>  	}
+>  
+
+Maybe the if is at the right indentation but the
+close brace below the if is misplaced instead?
+
+Also, because this code uses very long identifiers,
+it would read better using wider columns as the
+logic in the code itself isn't complicated but the
+80 column wrapping makes it seem so.
+
+Wrapping could be something like:
+---
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn30/dcn30_hwseq.c b/drivers/gpu/drm/amd/display/dc/dcn30/dcn30_hwseq.c
+index ab20320ebc99..56e91a73610f 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn30/dcn30_hwseq.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn30/dcn30_hwseq.c
+@@ -190,18 +190,16 @@ bool dcn30_set_output_transfer_func(struct dc *dc,
+ 	struct pwl_params *params = NULL;
+ 	bool ret = false;
+ 
+-	/* program OGAM or 3DLUT only for the top pipe*/
++	/* program OGAM or 3DLUT only for the top pipe */
+ 	if (pipe_ctx->top_pipe == NULL) {
+-		/*program rmu shaper and 3dlut in MPC*/
++		/* program rmu shaper and 3dlut in MPC */
+ 		ret = dcn30_set_mpc_shaper_3dlut(pipe_ctx, stream);
+-		if (ret == false && mpc->funcs->set_output_gamma && stream->out_transfer_func) {
++		if (!ret && mpc->funcs->set_output_gamma && stream->out_transfer_func) {
+ 			if (stream->out_transfer_func->type == TF_TYPE_HWPWL)
+ 				params = &stream->out_transfer_func->pwl;
+-			else if (pipe_ctx->stream->out_transfer_func->type ==
+-					TF_TYPE_DISTRIBUTED_POINTS &&
+-					cm3_helper_translate_curve_to_hw_format(
+-					stream->out_transfer_func,
+-					&mpc->blender_params, false))
++			else if (pipe_ctx->stream->out_transfer_func->type == TF_TYPE_DISTRIBUTED_POINTS &&
++				 cm3_helper_translate_curve_to_hw_format(stream->out_transfer_func,
++									 &mpc->blender_params, false))
+ 				params = &mpc->blender_params;
+ 		 /* there are no ROM LUTs in OUTGAM */
+ 		if (stream->out_transfer_func->type == TF_TYPE_PREDEFINED)
+
+
