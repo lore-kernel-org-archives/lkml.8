@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A24F7C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:58:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D1AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F34C20737
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:58:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F40920737
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:58:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660698;
-	bh=exD6mbl+JGxYrw7LGOAyCf+W7gxP+F9nwfW9/zBznho=;
+	s=default; t=1591660706;
+	bh=jYmhetrVkNgZTNo37SbeiWGjdac6A+k42aQczdxV2LA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SnRFzquLBCCFf8UbAZx4d/ELTkR5/ktkyLDL8fZwpoPmsaMZ4tbq0tdbWX/vkpTgq
-	 8Auc+vnfZZyzXyDbyOpn0hFJSLBrMfVn1hqj1A8H6bW20S9kt0znGZPl7hp4l114Mq
-	 8nm1od3RNlAFFqFa4l4x+GBiUlA87oDfzU95bzPo=
+	b=rE3Bv0+XjRR4bBG8ICFZQ92plaNMzljZxyBFaQKPHLXu2+7TlBdi6uRJ2INofC6eq
+	 ZWzha7Ut1rDdU7c34Y7hVw3LltJBE8xy5RzrWZMFueAhM8ch8JF5MyZKvoYRMuKkGW
+	 cpV9bM2Kct6/7GtiVbk1OisxrhEyxnt7C/s0dQ2I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731851AbgFHX6Q (ORCPT
+        id S1732017AbgFHX6W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:58:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48462 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:58:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728181AbgFHXXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:23:16 -0400
+        id S2387431AbgFHXXN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:23:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DB9620814;
-        Mon,  8 Jun 2020 23:23:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 011672086A;
+        Mon,  8 Jun 2020 23:23:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658596;
-        bh=exD6mbl+JGxYrw7LGOAyCf+W7gxP+F9nwfW9/zBznho=;
+        s=default; t=1591658592;
+        bh=jYmhetrVkNgZTNo37SbeiWGjdac6A+k42aQczdxV2LA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yy7984ASrKrLSeuCcm7r6DmTsuHHsFOEmL7fVzuI+2Td3HYBGz2Q2VK5fyWcEOKGQ
-         moA3PNghSJFOCY057Jua0l46L7w9V2cc+md9zRf/IvYEF60JVb2ffmhyiPqupYfqVm
-         7B6CVF2NI8UQqtmvFy9UCtVDiFkYJtinXFsW7aok=
+        b=0uVi0YoBaICQEV3bJq6ljwtnIoJJJBQNH9ElzS7exHaM+6izANrsQQdPZuAYcavKW
+         ceF48tZnlvA7G14p2td8m7+zoMNnXTnijBlOmcuYY2d/Sjg30fF/tEVkCXsmwAnQqQ
+         QHQFKYw6Sae7BEkSXgqyH0mmNZ7uvQ1VHnMgUA7c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jon Doron <arilou@gmail.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Roman Kagan <rvkagan@yandex-team.ru>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-doc@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 028/106] x86/kvm/hyper-v: Explicitly align hcall param for kvm_hyperv_exit
-Date:   Mon,  8 Jun 2020 19:21:20 -0400
-Message-Id: <20200608232238.3368589-28-sashal@kernel.org>
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Tobias Baumann <017623705678@o2online.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 026/106] mmc: meson-mx-sdio: trigger a soft reset after a timeout or CRC error
+Date:   Mon,  8 Jun 2020 19:21:18 -0400
+Message-Id: <20200608232238.3368589-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608232238.3368589-1-sashal@kernel.org>
 References: <20200608232238.3368589-1-sashal@kernel.org>
@@ -62,73 +62,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Doron <arilou@gmail.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-[ Upstream commit f7d31e65368aeef973fab788aa22c4f1d5a6af66 ]
+[ Upstream commit 91995b904ec2e44b5c159ac6a5d3f154345a4de7 ]
 
-The problem the patch is trying to address is the fact that 'struct
-kvm_hyperv_exit' has different layout on when compiling in 32 and 64 bit
-modes.
+The vendor driver (from the 3.10 kernel) triggers a soft reset every
+time before starting a new command. While this fixes a problem where
+SDIO cards are not detected at all (because all commands simply
+timed out) this hurts SD card read performance a bit (in my tests
+between 10% to 20%).
 
-In 64-bit mode the default alignment boundary is 64 bits thus
-forcing extra gaps after 'type' and 'msr' but in 32-bit mode the
-boundary is at 32 bits thus no extra gaps.
+Trigger a soft reset after we got a CRC error or if the previous command
+timed out (just like the vendor driver from the same 3.10 kernel for the
+newer SDHC controller IP does). This fixes detection of SDIO cards and
+doesn't hurt SD card read performance at the same time.
 
-This is an issue as even when the kernel is 64 bit, the userspace using
-the interface can be both 32 and 64 bit but the same 32 bit userspace has
-to work with 32 bit kernel.
+With this patch the initialization of an RTL8723BS SDIO card looks like
+this:
+  req done (CMD52): -110: 00000000 00000000 00000000 00000000
+  clock 400000Hz busmode 2 powermode 2 cs 1 Vdd 21 width 1 timing 0
+  starting CMD0 arg 00000000 flags 000000c0
+  req done (CMD0): 0: 00000000 00000000 00000000 00000000
+  clock 400000Hz busmode 2 powermode 2 cs 0 Vdd 21 width 1 timing 0
+  starting CMD8 arg 000001aa flags 000002f5
+  req done (CMD8): -110: 00000000 00000000 00000000 00000000
+  starting CMD5 arg 00000000 flags 000002e1
+  req done (CMD5): 0: 90ff0000 00000000 00000000 00000000
+  starting CMD5 arg 00200000 flags 000002e1
+  req done (CMD5): 0: 90ff0000 00000000 00000000 00000000
+  starting CMD3 arg 00000000 flags 00000075
+  req done (CMD3): 0: 00010000 00000000 00000000 00000000
+  starting CMD7 arg 00010000 flags 00000015
+  req done (CMD7): 0: 00001e00 00000000 00000000 00000000
+  starting CMD52 arg 00000000 flags 00000195
+  req done (CMD52): 0: 00001032 00000000 00000000 00000000
+  [... more CMD52 omitted ...]
+  clock 400000Hz busmode 2 powermode 2 cs 0 Vdd 21 width 1 timing 2
+  clock 50000000Hz busmode 2 powermode 2 cs 0 Vdd 21 width 1 timing 2
+  starting CMD52 arg 00000e00 flags 00000195
+  req done (CMD52): 0: 00001000 00000000 00000000 00000000
+  starting CMD52 arg 80000e02 flags 00000195
+  req done (CMD52): 0: 00001002 00000000 00000000 00000000
+  clock 50000000Hz busmode 2 powermode 2 cs 0 Vdd 21 width 4 timing 2
+  starting CMD52 arg 00020000 flags 00000195
+  req done (CMD52): 0: 00001007 00000000 00000000 00000000
+  [... more CMD52 omitted ...]
+  new high speed SDIO card at address 0001
 
-The issue is fixed by forcing the 64 bit layout, this leads to ABI
-change for 32 bit builds and while we are obviously breaking '32 bit
-userspace with 32 bit kernel' case, we're fixing the '32 bit userspace
-with 64 bit kernel' one.
-
-As the interface has no (known) users and 32 bit KVM is rather baroque
-nowadays, this seems like a reasonable decision.
-
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Jon Doron <arilou@gmail.com>
-Message-Id: <20200424113746.3473563-2-arilou@gmail.com>
-Reviewed-by: Roman Kagan <rvkagan@yandex-team.ru>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Fixes: ed80a13bb4c4c9 ("mmc: meson-mx-sdio: Add a driver for the Amlogic Meson8 and Meson8b SoCs")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Link: https://lore.kernel.org/r/20200503222805.2668941-1-martin.blumenstingl@googlemail.com
+Tested-by: Tobias Baumann <017623705678@o2online.de>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/virtual/kvm/api.txt | 2 ++
- include/uapi/linux/kvm.h          | 2 ++
- 2 files changed, 4 insertions(+)
+ drivers/mmc/host/meson-mx-sdio.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/virtual/kvm/api.txt b/Documentation/virtual/kvm/api.txt
-index 8e16017ff397..d2f265a9dc0d 100644
---- a/Documentation/virtual/kvm/api.txt
-+++ b/Documentation/virtual/kvm/api.txt
-@@ -3999,9 +3999,11 @@ EOI was received.
- #define KVM_EXIT_HYPERV_SYNIC          1
- #define KVM_EXIT_HYPERV_HCALL          2
- 			__u32 type;
-+			__u32 pad1;
- 			union {
- 				struct {
- 					__u32 msr;
-+					__u32 pad2;
- 					__u64 control;
- 					__u64 evt_page;
- 					__u64 msg_page;
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index 251be353f950..66ce6659ecb6 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -189,9 +189,11 @@ struct kvm_hyperv_exit {
- #define KVM_EXIT_HYPERV_SYNIC          1
- #define KVM_EXIT_HYPERV_HCALL          2
- 	__u32 type;
-+	__u32 pad1;
- 	union {
- 		struct {
- 			__u32 msr;
-+			__u32 pad2;
- 			__u64 control;
- 			__u64 evt_page;
- 			__u64 msg_page;
+diff --git a/drivers/mmc/host/meson-mx-sdio.c b/drivers/mmc/host/meson-mx-sdio.c
+index 1c062473b1c2..27837a794e7b 100644
+--- a/drivers/mmc/host/meson-mx-sdio.c
++++ b/drivers/mmc/host/meson-mx-sdio.c
+@@ -249,6 +249,9 @@ static void meson_mx_mmc_request_done(struct meson_mx_mmc_host *host)
+ 
+ 	mrq = host->mrq;
+ 
++	if (host->cmd->error)
++		meson_mx_mmc_soft_reset(host);
++
+ 	host->mrq = NULL;
+ 	host->cmd = NULL;
+ 
 -- 
 2.25.1
 
