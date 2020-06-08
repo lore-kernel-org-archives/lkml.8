@@ -2,213 +2,82 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4037BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 13:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D487EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 13:49:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 216C0206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 13:49:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF704207ED
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 13:49:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729869AbgFHNtG (ORCPT
+        id S1729887AbgFHNtl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 09:49:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36060 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729051AbgFHNtF (ORCPT
+        Mon, 8 Jun 2020 09:49:41 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:33334 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729051AbgFHNtk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 09:49:05 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E311C08C5C2
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 06:49:05 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jiI93-0007jq-0X; Mon, 08 Jun 2020 15:48:57 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 6DC97100F9F; Mon,  8 Jun 2020 15:48:56 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     "Herrenschmidt\, Benjamin" <benh@amazon.com>,
-        "maz\@kernel.org" <maz@kernel.org>,
-        "Saidi\, Ali" <alisaidi@amazon.com>
-Cc:     "jason\@lakedaemon.net" <jason@lakedaemon.net>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel\@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "Woodhouse\, David" <dwmw@amazon.co.uk>,
-        "Zilberman\, Zeev" <zeev@amazon.com>,
-        "Machulsky\, Zorik" <zorik@amazon.com>
-Subject: Re: [PATCH] irqchip/gic-v3-its: Don't try to move a disabled irq
-In-Reply-To: <f9e9d8c37eb92e4b9576bfcb4386ff6ef00eddce.camel@amazon.com>
-References: <AE04B507-C5E2-44D2-9190-41E9BE720F9D@amazon.com> <622fb6be108e894ee365d6b213535c8b@kernel.org> <f9e9d8c37eb92e4b9576bfcb4386ff6ef00eddce.camel@amazon.com>
-Date:   Mon, 08 Jun 2020 15:48:56 +0200
-Message-ID: <87mu5dacs7.fsf@nanos.tec.linutronix.de>
+        Mon, 8 Jun 2020 09:49:40 -0400
+Received: by mail-ot1-f68.google.com with SMTP id n6so4319296otl.0;
+        Mon, 08 Jun 2020 06:49:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vE39FsAHEzS4nlgN+9+kwQFUunfNcIp+asj1pK6LsSA=;
+        b=UDvq0ADbA9s1c1QDythwQEyISVMLMrl8PpO8mVoL/rLRhB7w9RQZ7HdGc5XjPw44V0
+         MX9x8S7NTA8rP09KAdBeGP9IXekXFxVN01TzD/SBajfrKzXwC4SFrkutt/nimdAvTLHU
+         berPo/9OjOr3mslDiZjG1nSftFDhUF9fzhk7f9Sb8Zm5oLqTO4wCp0AzKxG9+CQc/gJk
+         oUonLhPm8+YvvcSc0B6l/qVGhaUsQFlpvTi6YmFvTPBEhsG2xPXUxA7uJFWUi0JRe0zM
+         6Ov8AwoZdyzcZshlqn5LrJplcEGLLChsOBJ+VmklKVAJ6V705ZiCMX98zukfccbQHjN+
+         mBQA==
+X-Gm-Message-State: AOAM532WNfWRKm+8T60+bmXHdKCCJv4bjxv/u1DBLRLFEgFIFbIArkz9
+        ZgvGTzII4SjE3Um4UQjWp6mnuHdCANXX+0qDSC+R8A==
+X-Google-Smtp-Source: ABdhPJzrpsaHVulgjeel/2KAtDHbnuBIT+dYk9JWN0/9nspbGEIkFKUO/9zqOstvoXxWfyptUtPaaXqLx8mot6VJEVE=
+X-Received: by 2002:a9d:62c2:: with SMTP id z2mr17279541otk.145.1591624178388;
+ Mon, 08 Jun 2020 06:49:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <1591555267-21822-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1591555267-21822-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 8 Jun 2020 15:49:26 +0200
+Message-ID: <CAMuHMdVgL6VOU3oxjtpCc=oQTfpsz3LXxm6cHK-V5N-46HMrVQ@mail.gmail.com>
+Subject: Re: [PATCH 01/11] arm64: dts: renesas: r8a774a1-hihope-rzg2m[-ex/-ex-idk-1110wr]:
+ Rename HiHope RZ/G2M boards
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Herrenschmidt, Benjamin" <benh@amazon.com> writes:
-> On Wed, 2020-06-03 at 16:16 +0100, Marc Zyngier wrote:
->> > My original patch should certain check activated and not disabled.
->> > With that do you still have reservations Marc?
->> 
->> I'd still prefer it if we could do something in core code, rather
->> than spreading these checks in the individual drivers. If we can't,
->> fair enough. But it feels like the core set_affinity function could
->> just do the same thing in a single place (although the started vs
->> activated is yet another piece of the puzzle I didn't consider,
->> and the ITS doesn't need the "can_reserve" thing).
+On Sun, Jun 7, 2020 at 8:41 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> The existing DTS files for HiHope RZ/G2M boards are for Rev.2.0 version
+> so reflect the same for the DTS file names so that the existing naming
+> convention can be used for Rev.3.0/4.0 boards.
 >
-> For the sake of fixing the problem in a timely and backportable way I
-> would suggest first merging the fix, *then* fixing the core core.
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-The "fix" is just wrong
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-> 	if (cpu != its_dev->event_map.col_map[id]) {
-> 		target_col = &its_dev->its->collections[cpu];
-> -		its_send_movi(its_dev, target_col, id);
-> +
-> +		/* If the IRQ is disabled a discard was sent so don't move */
-> +		if (!irqd_irq_disabled(d))
+Gr{oetje,eeting}s,
 
-That check needs to be !irqd_is_activated() because enable_irq() does
-not touch anything affinity related.
+                        Geert
 
-> +			its_send_movi(its_dev, target_col, id);
-> +
-> 		its_dev->event_map.col_map[id] = cpu;
-> 		irq_data_update_effective_affinity(d, cpumask_of(cpu));
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-And then these associtations are disconnected from reality in any case.
-
-Something like the completely untested patch below should work.
-
-Thanks,
-
-        tglx
-
----
- arch/x86/kernel/apic/vector.c |   21 +++------------------
- kernel/irq/manage.c           |   37 +++++++++++++++++++++++++++++++++++--
- 2 files changed, 38 insertions(+), 20 deletions(-)
-
---- a/arch/x86/kernel/apic/vector.c
-+++ b/arch/x86/kernel/apic/vector.c
-@@ -446,12 +446,10 @@ static int x86_vector_activate(struct ir
- 	trace_vector_activate(irqd->irq, apicd->is_managed,
- 			      apicd->can_reserve, reserve);
- 
--	/* Nothing to do for fixed assigned vectors */
--	if (!apicd->can_reserve && !apicd->is_managed)
--		return 0;
--
- 	raw_spin_lock_irqsave(&vector_lock, flags);
--	if (reserve || irqd_is_managed_and_shutdown(irqd))
-+	if (!apicd->can_reserve && !apicd->is_managed)
-+		assign_irq_vector_any_locked(irqd);
-+	else if (reserve || irqd_is_managed_and_shutdown(irqd))
- 		vector_assign_managed_shutdown(irqd);
- 	else if (apicd->is_managed)
- 		ret = activate_managed(irqd);
-@@ -775,21 +773,8 @@ void lapic_offline(void)
- static int apic_set_affinity(struct irq_data *irqd,
- 			     const struct cpumask *dest, bool force)
- {
--	struct apic_chip_data *apicd = apic_chip_data(irqd);
- 	int err;
- 
--	/*
--	 * Core code can call here for inactive interrupts. For inactive
--	 * interrupts which use managed or reservation mode there is no
--	 * point in going through the vector assignment right now as the
--	 * activation will assign a vector which fits the destination
--	 * cpumask. Let the core code store the destination mask and be
--	 * done with it.
--	 */
--	if (!irqd_is_activated(irqd) &&
--	    (apicd->is_managed || apicd->can_reserve))
--		return IRQ_SET_MASK_OK;
--
- 	raw_spin_lock(&vector_lock);
- 	cpumask_and(vector_searchmask, dest, cpu_online_mask);
- 	if (irqd_affinity_is_managed(irqd))
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -195,9 +195,9 @@ void irq_set_thread_affinity(struct irq_
- 			set_bit(IRQTF_AFFINITY, &action->thread_flags);
- }
- 
-+#ifdef CONFIG_GENERIC_IRQ_EFFECTIVE_AFF_MASK
- static void irq_validate_effective_affinity(struct irq_data *data)
- {
--#ifdef CONFIG_GENERIC_IRQ_EFFECTIVE_AFF_MASK
- 	const struct cpumask *m = irq_data_get_effective_affinity_mask(data);
- 	struct irq_chip *chip = irq_data_get_irq_chip(data);
- 
-@@ -205,9 +205,19 @@ static void irq_validate_effective_affin
- 		return;
- 	pr_warn_once("irq_chip %s did not update eff. affinity mask of irq %u\n",
- 		     chip->name, data->irq);
--#endif
- }
- 
-+static inline void irq_init_effective_affinity(struct irq_data *data,
-+					       const struct cpumask *mask)
-+{
-+	cpumask_copy(irq_data_get_effective_affinity_mask(data), mask);
-+}
-+#else
-+static inline void irq_validate_effective_affinity(struct irq_data *data) { }
-+static inline boot irq_init_effective_affinity(struct irq_data *data,
-+					       const struct cpumask *mask) { }
-+#endif
-+
- int irq_do_set_affinity(struct irq_data *data, const struct cpumask *mask,
- 			bool force)
- {
-@@ -304,6 +314,26 @@ static int irq_try_set_affinity(struct i
- 	return ret;
- }
- 
-+static bool irq_set_affinity_deactivated(struct irq_data *data,
-+					 const struct cpumask *mask, bool force)
-+{
-+	struct irq_desc *desc = irq_data_to_desc(data);
-+
-+	/*
-+	 * If the interrupt is not yet activated, just store the affinity
-+	 * mask and do not call the chip driver at all. On activation the
-+	 * driver has to make sure anyway that the interrupt is in a
-+	 * useable state so startup works.
-+	 */
-+	if (!IS_ENABLED(CONFIG_IRQ_DOMAIN_HIERARCHY) || irqd_is_activated(data))
-+		return false;
-+
-+	cpumask_copy(desc->irq_common_data.affinity, mask);
-+	irq_init_effective_affinity(data, mask);
-+	irqd_set(data, IRQD_AFFINITY_SET);
-+	return true;
-+}
-+
- int irq_set_affinity_locked(struct irq_data *data, const struct cpumask *mask,
- 			    bool force)
- {
-@@ -314,6 +344,9 @@ int irq_set_affinity_locked(struct irq_d
- 	if (!chip || !chip->irq_set_affinity)
- 		return -EINVAL;
- 
-+	if (irq_set_affinity_deactivated(data, mask, force))
-+		return 0;
-+
- 	if (irq_can_move_pcntxt(data) && !irqd_is_setaffinity_pending(data)) {
- 		ret = irq_try_set_affinity(data, mask, force);
- 	} else {
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
