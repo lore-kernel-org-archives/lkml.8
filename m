@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B4DCC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:10:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4375BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:10:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F08D22078D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:10:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26A242072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:10:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591661442;
-	bh=kx3TrV2JbUKa+5KdldsNkanjDhdA6+qB50fP9MVXPMs=;
+	s=default; t=1591661450;
+	bh=78lqsqfhV2hRIt6jjvP7FgkuhLowVJqsLOtYp1/tuMI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bxs6FJe+op1/594JU9aewkr1lt4bfmPXm7I2vbTHfwhKm3vIUl0XUKv2ve0IB+vl7
-	 1RbYq93o8F0vs+eDPahUkdDwXUB5DorAYeB4bPpoSMXgAx91cj9isNn6Gjn13+ZgnK
-	 k5pt0ibYNtwYX2L1KOu3UY656lljDMvjx18Rulzw=
+	b=0qmHwXhbMYOopr59u2Klfgw8558W3r0kg8a+PvzMyx+4jWemdblzGnJxXxh/ABJuX
+	 anyv3h1YsRd8jMfxGj1RCmSJiCdV3RtqgMXoxEEGZ0NH4pKBh77+tqPcjK1lqWhgub
+	 F8+fCoJxVTi4Uon/RN/2KRVpjFlXKyE0QUD3/+ZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730907AbgFHXUH (ORCPT
+        id S1732166AbgFIAKr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:20:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37660 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:10:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729612AbgFHXQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:16:20 -0400
+        id S1728025AbgFHXUF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:20:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A17E520775;
-        Mon,  8 Jun 2020 23:16:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EA4420870;
+        Mon,  8 Jun 2020 23:20:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658180;
-        bh=kx3TrV2JbUKa+5KdldsNkanjDhdA6+qB50fP9MVXPMs=;
+        s=default; t=1591658405;
+        bh=78lqsqfhV2hRIt6jjvP7FgkuhLowVJqsLOtYp1/tuMI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vOCgadq7YszEENxvdyYBClhq69kGPeAT9zfgo3j6B3voo/+C/MykClxAIcEARiARN
-         f4RTcWLglraPJ2HrBBxPiLBbxz0oeZ7viggbzUCzPQHNSVPuGxG5QKPmcuoMhcdX1H
-         WglQDm5eP43+PxeLSE2EEC9C4/kmuMGb1SfRNWwk=
+        b=vr9MXdZX2UlRkeFpn3CPS5Ju5JgrZTqtmm1Vj36DEH/0uqzVaoi+5zreJbeqWr6iw
+         QS/HkVXZFUb93gn9DRqeMB/gzIxQHKJ7QRSGQNVJquAcU+Xc0sieurydNxINZr0B+m
+         jdzb4upqHjP4c9Jot/BNCBJL8LlP3nqhg45pWAyU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Phil Auld <pauld@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.6 205/606] sched/fair: Fix enqueue_task_fair() warning some more
-Date:   Mon,  8 Jun 2020 19:05:30 -0400
-Message-Id: <20200608231211.3363633-205-sashal@kernel.org>
+Cc:     Willem de Bruijn <willemb@google.com>,
+        Petar Penkov <ppenkov@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 059/175] tun: correct header offsets in napi frags mode
+Date:   Mon,  8 Jun 2020 19:16:52 -0400
+Message-Id: <20200608231848.3366970-59-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
-References: <20200608231211.3363633-1-sashal@kernel.org>
+In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
+References: <20200608231848.3366970-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,55 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Phil Auld <pauld@redhat.com>
+From: Willem de Bruijn <willemb@google.com>
 
-[ Upstream commit b34cb07dde7c2346dec73d053ce926aeaa087303 ]
+[ Upstream commit 96aa1b22bd6bb9fccf62f6261f390ed6f3e7967f ]
 
-sched/fair: Fix enqueue_task_fair warning some more
+Tun in IFF_NAPI_FRAGS mode calls napi_gro_frags. Unlike netif_rx and
+netif_gro_receive, this expects skb->data to point to the mac layer.
 
-The recent patch, fe61468b2cb (sched/fair: Fix enqueue_task_fair warning)
-did not fully resolve the issues with the rq->tmp_alone_branch !=
-&rq->leaf_cfs_rq_list warning in enqueue_task_fair. There is a case where
-the first for_each_sched_entity loop exits due to on_rq, having incompletely
-updated the list.  In this case the second for_each_sched_entity loop can
-further modify se. The later code to fix up the list management fails to do
-what is needed because se does not point to the sched_entity which broke out
-of the first loop. The list is not fixed up because the throttled parent was
-already added back to the list by a task enqueue in a parallel child hierarchy.
+But skb_probe_transport_header, __skb_get_hash_symmetric, and
+xdp_do_generic in tun_get_user need skb->data to point to the network
+header. Flow dissection also needs skb->protocol set, so
+eth_type_trans has to be called.
 
-Address this by calling list_add_leaf_cfs_rq if there are throttled parents
-while doing the second for_each_sched_entity loop.
+Ensure the link layer header lies in linear as eth_type_trans pulls
+ETH_HLEN. Then take the same code paths for frags as for not frags.
+Push the link layer header back just before calling napi_gro_frags.
 
-Fixes: fe61468b2cb ("sched/fair: Fix enqueue_task_fair warning")
-Suggested-by: Vincent Guittot <vincent.guittot@linaro.org>
-Signed-off-by: Phil Auld <pauld@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
-Link: https://lkml.kernel.org/r/20200512135222.GC2201@lorien.usersys.redhat.com
+By pulling up to ETH_HLEN from frag0 into linear, this disables the
+frag0 optimization in the special case when IFF_NAPI_FRAGS is used
+with zero length iov[0] (and thus empty skb->linear).
+
+Fixes: 90e33d459407 ("tun: enable napi_gro_frags() for TUN/TAP driver")
+Signed-off-by: Willem de Bruijn <willemb@google.com>
+Acked-by: Petar Penkov <ppenkov@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/fair.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/net/tun.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 7cd86641b44b..603d3d3cbf77 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5298,6 +5298,13 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- 		/* end evaluation on encountering a throttled cfs_rq */
- 		if (cfs_rq_throttled(cfs_rq))
- 			goto enqueue_throttle;
-+
-+               /*
-+                * One parent has been throttled and cfs_rq removed from the
-+                * list. Add it back to not break the leaf list.
-+                */
-+               if (throttled_hierarchy(cfs_rq))
-+                       list_add_leaf_cfs_rq(cfs_rq);
+diff --git a/drivers/net/tun.c b/drivers/net/tun.c
+index 6e9a59e3d822..46bdd0df2eb8 100644
+--- a/drivers/net/tun.c
++++ b/drivers/net/tun.c
+@@ -1908,8 +1908,11 @@ static ssize_t tun_get_user(struct tun_struct *tun, struct tun_file *tfile,
+ 		skb->dev = tun->dev;
+ 		break;
+ 	case IFF_TAP:
+-		if (!frags)
+-			skb->protocol = eth_type_trans(skb, tun->dev);
++		if (frags && !pskb_may_pull(skb, ETH_HLEN)) {
++			err = -ENOMEM;
++			goto drop;
++		}
++		skb->protocol = eth_type_trans(skb, tun->dev);
+ 		break;
  	}
  
- enqueue_throttle:
+@@ -1966,9 +1969,12 @@ static ssize_t tun_get_user(struct tun_struct *tun, struct tun_file *tfile,
+ 	}
+ 
+ 	if (frags) {
++		u32 headlen;
++
+ 		/* Exercise flow dissector code path. */
+-		u32 headlen = eth_get_headlen(tun->dev, skb->data,
+-					      skb_headlen(skb));
++		skb_push(skb, ETH_HLEN);
++		headlen = eth_get_headlen(tun->dev, skb->data,
++					  skb_headlen(skb));
+ 
+ 		if (unlikely(headlen > skb_headlen(skb))) {
+ 			this_cpu_inc(tun->pcpu_stats->rx_dropped);
 -- 
 2.25.1
 
