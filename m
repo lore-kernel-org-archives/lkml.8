@@ -2,162 +2,198 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B72D9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 13:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A775C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 13:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 851D3206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 13:51:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B9AA20774
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 13:52:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="fwhDLsvF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tbni9kmW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729963AbgFHNvT (ORCPT
+        id S1729882AbgFHNwR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 09:51:19 -0400
-Received: from mail-bn8nam11on2075.outbound.protection.outlook.com ([40.107.236.75]:22437
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729040AbgFHNvS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 09:51:18 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZGYOx3yQ508GbTOScCvT62Rn1EofdMTkEipRnO3OiROOc46Ouhh72h9hwCIk/XZW6BCIAQdGIx5J6mgtYBp5TmzNhQJxWMOyeHqEmdr6VuZQKRi/ofKaDr+LZOiN5crd3tg0xvEZCIEYG7nEzDJcjgXJbZu3w+DbZ6pC2zRRWjuQxCTP+VGgHedqyRcHFFVI13Z9QQ2Xtsfrn8WvLuyA/kAi6RSYjOkUK2XVK0SMm0LPcfD77cweo96zbtaxyqrVy9LoKu9PAwsz9m4Aq+CH1h3ZY3IQocZqJzcwD7ch70mk0WcZw63OZ/LuZC8J7fTlKBMFvojivAr00UL3jDbVhw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5jRfcpo2uzXqv9Ncr8Z6hQ9H9U/Xc3fkNqZj8OKK2Vs=;
- b=Zf13AiuZ0+3v9SJS4N38w2LGAR6YDVBjmtkke4WpYuLpUI7czcy3U+zGLb9mqKn7ibduh2Nzx8SqxS77nHuc8fVTtbBuATljgeU8Sf+zKr/js+6u14LQXKAj1GQ9m1m5+Pui/LElQCsdpLbFF1YxnJNZM5puyNcrm6Zm7sNgHiNjLbdFdWM7jlYfFANvVPBLXRVPSR6My/+d38zPJ8MCmp493h93PPwl4+fdVL0sIYJxm5TrY5hMxa6uYDIgXjAfRENGgGqJUBTYCUvKsayxS3Et3v+X5dIUX2GUWSwTlqrpTXotc0pSebGV/LYRcTwqAWjAQnWUVbHeg7u69qGSpg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
- dkim=pass header.d=silabs.com; arc=none
+        Mon, 8 Jun 2020 09:52:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36560 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729040AbgFHNwO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 09:52:14 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66A1CC08C5C2;
+        Mon,  8 Jun 2020 06:52:14 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id x207so8580931pfc.5;
+        Mon, 08 Jun 2020 06:52:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5jRfcpo2uzXqv9Ncr8Z6hQ9H9U/Xc3fkNqZj8OKK2Vs=;
- b=fwhDLsvFtz39jZfCT6D7qoMb4QS+4hPeTEacysKGzdxmxbrd9S6Rub+WKjvIJBRvcTHDz1VsNOTqMBL19itEoCcRg471+HXh7F5rqV24zxrZrrY9XRh7R8dfpH8ajfB88VL/puiq2Q9dl8hNtzj+pDxz83QpITIstZgYd+JNSek=
-Authentication-Results: intel.com; dkim=none (message not signed)
- header.d=none;intel.com; dmarc=none action=none header.from=silabs.com;
-Received: from SN6PR11MB2718.namprd11.prod.outlook.com (2603:10b6:805:63::18)
- by SN6PR11MB3086.namprd11.prod.outlook.com (2603:10b6:805:d6::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Mon, 8 Jun
- 2020 13:51:16 +0000
-Received: from SN6PR11MB2718.namprd11.prod.outlook.com
- ([fe80::c504:2d66:a8f7:2336]) by SN6PR11MB2718.namprd11.prod.outlook.com
- ([fe80::c504:2d66:a8f7:2336%7]) with mapi id 15.20.3066.023; Mon, 8 Jun 2020
- 13:51:16 +0000
-From:   =?ISO-8859-1?Q?J=E9r=F4me?= Pouiller <jerome.pouiller@silabs.com>
-To:     kernel test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: drivers/staging/wfx/main.c:47:14-21: ERROR: PTR_ERR applied after initialization to constant on line 42
-Date:   Mon, 08 Jun 2020 15:51:11 +0200
-Message-ID: <3809731.WTu3NreGyd@pc-42>
-Organization: Silicon Labs
-In-Reply-To: <202006082104.YV2sJc5i%lkp@intel.com>
-References: <202006082104.YV2sJc5i%lkp@intel.com>
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
-X-ClientProxiedBy: SN6PR05CA0002.namprd05.prod.outlook.com
- (2603:10b6:805:de::15) To SN6PR11MB2718.namprd11.prod.outlook.com
- (2603:10b6:805:63::18)
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5yTduhn4RewZ8tIc8IvJNzhBbfAtUwR3nIVu+3qxoT4=;
+        b=Tbni9kmWSTwvrtCasTNAYV5o1p3CRTaB4SWtyL1rfN7Fqg6RTVjnweDJIYgRxm5TMD
+         CmQqgcVrK1hdxcC9sjKK0jpzd+GhFUK6x0wOGNX/2wHHyDXbTU7F8vFdz0TG39u7Mt8D
+         3npLFDW3fon4IQpDKG/cU5gI7NSeK6aUdeSQI/Tq9U3kh/FUVOjVadl6y6KXp88/Ed04
+         UkD0wuOCsWdl3ufncdFMtHjKb/FOlZtxrspWQzWtIv86UILWjCKIl4ObnootkpdNWtMU
+         sl5r24xGiVMqz77J1VSCuAI5Quhv4ZJQsc5T5m31AvpOYNmktQdB5vR17U/DezN7bUy3
+         PPQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=5yTduhn4RewZ8tIc8IvJNzhBbfAtUwR3nIVu+3qxoT4=;
+        b=YM6ZOjwuuIM5TFrcyiK5AK0rlLPCEDGIRRiSvY1iXmRNgkWANCqIYEoryJm445lm51
+         XKKSEerMP/H33W4a6F+fHnjuZ6f5ErTFKP1sIxPQi8WaofbsxiMZWjPavfF4j0QolzJq
+         vk0BcrklxCmv28vSSrbGIYK/9ZMqU2gr9bBhFL2NfkIMdFlTYM79oYmY8WYaxBZTvjlv
+         utmpO0VAIUHFzNQIts3K0RvEtrolA307owh9fdtPmTw4C7UFmMxjTPDVM5sMT/F4VNkU
+         mNec+fcnJk5O2oASpOuPxHyWd4fqzj+9cyDbnmpNH5rp7CUiXtJ6FwxmGGu+Wl7FX690
+         2QfQ==
+X-Gm-Message-State: AOAM532Zz7NREsKFGyK2Wtm4jw2HuCGir9BF7kAo4SePrYUybhTjyAc0
+        Mt791cBx/6+AirVkULI0FQtpwO5W
+X-Google-Smtp-Source: ABdhPJw6jz3nyzqd7Rl9wd4xkSs1HBl4i9znxSakuduOAykn9ydcQdgNMkdbPfPJQmmir6e6W7HjsQ==
+X-Received: by 2002:a63:7d4e:: with SMTP id m14mr20888256pgn.391.1591624333611;
+        Mon, 08 Jun 2020 06:52:13 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id y10sm6280468pgi.54.2020.06.08.06.52.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Jun 2020 06:52:12 -0700 (PDT)
+Subject: Re: [PATCH v5] kbuild: add variables for compression tools
+To:     Denis Efremov <efremov@linux.com>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200514131234.380097-1-efremov@linux.com>
+ <20200605073955.6384-1-efremov@linux.com>
+ <20200608013012.GA216607@roeck-us.net>
+ <CAK7LNASQamajjeV+VMq5G8fECfB6f9uKvZ32zGic72O0qp8Mtw@mail.gmail.com>
+ <d7e4a235-35eb-1c13-09dc-19a523cbf4ea@linux.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ xsFNBE6H1WcBEACu6jIcw5kZ5dGeJ7E7B2uweQR/4FGxH10/H1O1+ApmcQ9i87XdZQiB9cpN
+ RYHA7RCEK2dh6dDccykQk3bC90xXMPg+O3R+C/SkwcnUak1UZaeK/SwQbq/t0tkMzYDRxfJ7
+ nyFiKxUehbNF3r9qlJgPqONwX5vJy4/GvDHdddSCxV41P/ejsZ8PykxyJs98UWhF54tGRWFl
+ 7i1xvaDB9lN5WTLRKSO7wICuLiSz5WZHXMkyF4d+/O5ll7yz/o/JxK5vO/sduYDIlFTvBZDh
+ gzaEtNf5tQjsjG4io8E0Yq0ViobLkS2RTNZT8ICq/Jmvl0SpbHRvYwa2DhNsK0YjHFQBB0FX
+ IdhdUEzNefcNcYvqigJpdICoP2e4yJSyflHFO4dr0OrdnGLe1Zi/8Xo/2+M1dSSEt196rXaC
+ kwu2KgIgmkRBb3cp2vIBBIIowU8W3qC1+w+RdMUrZxKGWJ3juwcgveJlzMpMZNyM1jobSXZ0
+ VHGMNJ3MwXlrEFPXaYJgibcg6brM6wGfX/LBvc/haWw4yO24lT5eitm4UBdIy9pKkKmHHh7s
+ jfZJkB5fWKVdoCv/omy6UyH6ykLOPFugl+hVL2Prf8xrXuZe1CMS7ID9Lc8FaL1ROIN/W8Vk
+ BIsJMaWOhks//7d92Uf3EArDlDShwR2+D+AMon8NULuLBHiEUQARAQABzTJHdWVudGVyIFJv
+ ZWNrIChMaW51eCBhY2NvdW50KSA8bGludXhAcm9lY2stdXMubmV0PsLBgQQTAQIAKwIbAwYL
+ CQgHAwIGFQgCCQoLBBYCAwECHgECF4ACGQEFAlVcphcFCRmg06EACgkQyx8mb86fmYFg0RAA
+ nzXJzuPkLJaOmSIzPAqqnutACchT/meCOgMEpS5oLf6xn5ySZkl23OxuhpMZTVX+49c9pvBx
+ hpvl5bCWFu5qC1jC2eWRYU+aZZE4sxMaAGeWenQJsiG9lP8wkfCJP3ockNu0ZXXAXwIbY1O1
+ c+l11zQkZw89zNgWgKobKzrDMBFOYtAh0pAInZ9TSn7oA4Ctejouo5wUugmk8MrDtUVXmEA9
+ 7f9fgKYSwl/H7dfKKsS1bDOpyJlqhEAH94BHJdK/b1tzwJCFAXFhMlmlbYEk8kWjcxQgDWMu
+ GAthQzSuAyhqyZwFcOlMCNbAcTSQawSo3B9yM9mHJne5RrAbVz4TWLnEaX8gA5xK3uCNCeyI
+ sqYuzA4OzcMwnnTASvzsGZoYHTFP3DQwf2nzxD6yBGCfwNGIYfS0i8YN8XcBgEcDFMWpOQhT
+ Pu3HeztMnF3HXrc0t7e5rDW9zCh3k2PA6D2NV4fews9KDFhLlTfCVzf0PS1dRVVWM+4jVl6l
+ HRIAgWp+2/f8dx5vPc4Ycp4IsZN0l1h9uT7qm1KTwz+sSl1zOqKD/BpfGNZfLRRxrXthvvY8
+ BltcuZ4+PGFTcRkMytUbMDFMF9Cjd2W9dXD35PEtvj8wnEyzIos8bbgtLrGTv/SYhmPpahJA
+ l8hPhYvmAvpOmusUUyB30StsHIU2LLccUPPOwU0ETofVZwEQALlLbQeBDTDbwQYrj0gbx3bq
+ 7kpKABxN2MqeuqGr02DpS9883d/t7ontxasXoEz2GTioevvRmllJlPQERVxM8gQoNg22twF7
+ pB/zsrIjxkE9heE4wYfN1AyzT+AxgYN6f8hVQ7Nrc9XgZZe+8IkuW/Nf64KzNJXnSH4u6nJM
+ J2+Dt274YoFcXR1nG76Q259mKwzbCukKbd6piL+VsT/qBrLhZe9Ivbjq5WMdkQKnP7gYKCAi
+ pNVJC4enWfivZsYupMd9qn7Uv/oCZDYoBTdMSBUblaLMwlcjnPpOYK5rfHvC4opxl+P/Vzyz
+ 6WC2TLkPtKvYvXmdsI6rnEI4Uucg0Au/Ulg7aqqKhzGPIbVaL+U0Wk82nz6hz+WP2ggTrY1w
+ ZlPlRt8WM9w6WfLf2j+PuGklj37m+KvaOEfLsF1v464dSpy1tQVHhhp8LFTxh/6RWkRIR2uF
+ I4v3Xu/k5D0LhaZHpQ4C+xKsQxpTGuYh2tnRaRL14YMW1dlI3HfeB2gj7Yc8XdHh9vkpPyuT
+ nY/ZsFbnvBtiw7GchKKri2gDhRb2QNNDyBnQn5mRFw7CyuFclAksOdV/sdpQnYlYcRQWOUGY
+ HhQ5eqTRZjm9z+qQe/T0HQpmiPTqQcIaG/edgKVTUjITfA7AJMKLQHgp04Vylb+G6jocnQQX
+ JqvvP09whbqrABEBAAHCwWUEGAECAA8CGwwFAlVcpi8FCRmg08MACgkQyx8mb86fmYHNRQ/+
+ J0OZsBYP4leJvQF8lx9zif+v4ZY/6C9tTcUv/KNAE5leyrD4IKbnV4PnbrVhjq861it/zRQW
+ cFpWQszZyWRwNPWUUz7ejmm9lAwPbr8xWT4qMSA43VKQ7ZCeTQJ4TC8kjqtcbw41SjkjrcTG
+ wF52zFO4bOWyovVAPncvV9eGA/vtnd3xEZXQiSt91kBSqK28yjxAqK/c3G6i7IX2rg6pzgqh
+ hiH3/1qM2M/LSuqAv0Rwrt/k+pZXE+B4Ud42hwmMr0TfhNxG+X7YKvjKC+SjPjqp0CaztQ0H
+ nsDLSLElVROxCd9m8CAUuHplgmR3seYCOrT4jriMFBtKNPtj2EE4DNV4s7k0Zy+6iRQ8G8ng
+ QjsSqYJx8iAR8JRB7Gm2rQOMv8lSRdjva++GT0VLXtHULdlzg8VjDnFZ3lfz5PWEOeIMk7Rj
+ trjv82EZtrhLuLjHRCaG50OOm0hwPSk1J64R8O3HjSLdertmw7eyAYOo4RuWJguYMg5DRnBk
+ WkRwrSuCn7UG+qVWZeKEsFKFOkynOs3pVbcbq1pxbhk3TRWCGRU5JolI4ohy/7JV1TVbjiDI
+ HP/aVnm6NC8of26P40Pg8EdAhajZnHHjA7FrJXsy3cyIGqvg9os4rNkUWmrCfLLsZDHD8FnU
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <adafe608-7502-fae2-9ff4-deefaec4783f@roeck-us.net>
+Date:   Mon, 8 Jun 2020 06:52:11 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from pc-42.localnet (2a01:e35:2435:66a0:544b:f17b:7ae8:fb7) by SN6PR05CA0002.namprd05.prod.outlook.com (2603:10b6:805:de::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.9 via Frontend Transport; Mon, 8 Jun 2020 13:51:15 +0000
-X-Originating-IP: [2a01:e35:2435:66a0:544b:f17b:7ae8:fb7]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 89c7f165-e90e-4d0b-9355-08d80bb30372
-X-MS-TrafficTypeDiagnostic: SN6PR11MB3086:
-X-Microsoft-Antispam-PRVS: <SN6PR11MB3086408DE9E7C20DCF19787B93850@SN6PR11MB3086.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:64;
-X-Forefront-PRVS: 042857DBB5
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: iI724tyXtptwi/DPa2MYr5bMnMNbtlWPgWDxCCBZ6rAF8DxvEQNEikQOejMi0F4TBVoT/KURxaL0KKqZtXZ1h11hZ8Dk9yRI36M5RYrxoJx9oZ4QhzkUZTaQ+DHDV29xFzVC2ERHZ8E3RT/QKiaHSK2Ynt1Wx4Aty6t9oDKUgaJC3mnpZranTeZ17c2P6liE0pPcSSog1s1fZ+F77yGp8PYiRa6/vP9VtxDvxBj33YoQZ7qw9abmccA+pIvz4L49e/Moz2eoEIRYFypYoERih/4Zf+rPmpoNORbIm/HNzYcUDJGBjBrszQovyKsKuPp08vqqZ+df7yI4H4wOArGTw1+gRInh0S5DFiudoJCLj4lXb6WU7moO2lShLqzx8kgpoYufvaOR+Qz4zY3PicOJViCemmmJfqHu5LDYe9DmMO7eQ3njDVi7yVLFieak+nnnt2H08YoPJrJ+a0cNLxJpEg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB2718.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(39850400004)(396003)(346002)(366004)(376002)(83380400001)(33716001)(66574014)(8936002)(6486002)(316002)(5660300002)(2906002)(6512007)(9686003)(8676002)(4326008)(66946007)(6666004)(86362001)(6506007)(6916009)(52116002)(66476007)(36916002)(16526019)(186003)(478600001)(966005)(66556008)(39026012);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: SsM8RCWkAE3ibepw8dKESXwbDMKNUZryBSB04NxhnC9+YAW0muR9MLUGRgPN8Ao9YleHURRJygpnDJ2XAFm2EIzL0z8kr3DrTpbuKbC+6j9CqRRpBV9kaUekJmGKDmTzjISccmjzzQUaRyERwd+tl62XJPb5eQzPhwBodjAQDMgzxIXclq5n8bLwRuqISjS99PIyZeEbfGqtVf9QIxmMjgiACKEoFQku+d1+zZbK1hJerXPQGmWDOYb5yD0LnTHm5HytTXgbm0sMdhsjw/7OnAioPuMznbB6zuQ2x6LqksGyyrzBfIz+1FA9ODucXSHB6LQ6fE5BBEWhUq4Lwf3DFYojBbEc2yPtIy5YKmMG0NBht7S0lVv3NrdOygQpP2QBtAUKXVk9z1aIL/Yc2lalC9FUWEUA2wtVSBsUsvIYun0pz+puofZrMgnhI/NB8AugehpfKVQp374V6BIxsQW0hj2QimHRIAGuH56CLZe3YjQwZ2jyTmFuAm1AurXcBH18T7vzEDQvfcAzjadcCdRlijMg3mgQP9AhTrBIFwZIXag=
-X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 89c7f165-e90e-4d0b-9355-08d80bb30372
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jun 2020 13:51:16.0475
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 54dbd822-5231-4b20-944d-6f4abcd541fb
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YEkmv5PP3m7+Z+fw66tonUv/w/+4SB07LvaWPzqYTrp6tlCHq6r9YX+EkJlZS9w+bSZR7QsDbWxeInzIDaoZTw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB3086
+In-Reply-To: <d7e4a235-35eb-1c13-09dc-19a523cbf4ea@linux.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday 8 June 2020 15:31:36 CEST kernel test robot wrote:
->=20
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.gi=
-t master
-> head:   af7b4801030c07637840191c69eb666917e4135d
-> commit: 0096214a59a72b3c3c943e27bd03307324d3ce0f staging: wfx: add suppor=
-t for I/O access
-> date:   8 months ago
-> config: i386-randconfig-c024-20200607 (attached as .config)
-> compiler: gcc-9 (Debian 9.3.0-13) 9.3.0
->=20
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
->=20
->=20
-> coccinelle warnings: (new ones prefixed by >>)
->=20
-> >> drivers/staging/wfx/main.c:47:14-21: ERROR: PTR_ERR applied after init=
-ialization to constant on line 42
->=20
-> vim +47 drivers/staging/wfx/main.c
->=20
->     30
->     31  struct gpio_desc *wfx_get_gpio(struct device *dev, int override, =
-const char *label)
->     32  {
->     33          struct gpio_desc *ret;
->     34          char label_buf[256];
->     35
->     36          if (override >=3D 0) {
->     37                  snprintf(label_buf, sizeof(label_buf), "wfx_%s", =
-label);
->     38                  ret =3D ERR_PTR(devm_gpio_request_one(dev, overri=
-de, GPIOF_OUT_INIT_LOW, label_buf));
->     39                  if (!ret)
->     40                          ret =3D gpio_to_desc(override);
->     41          } else if (override =3D=3D -1) {
->   > 42                  ret =3D NULL;
->     43          } else {
->     44                  ret =3D devm_gpiod_get(dev, label, GPIOD_OUT_LOW)=
-;
->     45          }
->     46          if (IS_ERR(ret) || !ret) {
->   > 47                  if (!ret || PTR_ERR(ret) =3D=3D -ENOENT)
->     48                          dev_warn(dev, "gpio %s is not defined\n",=
- label);
->     49                  else
->     50                          dev_warn(dev, "error while requesting gpi=
-o %s\n", label);
->     51                  ret =3D NULL;
->     52          } else {
->     53                  dev_dbg(dev, "using gpio %d for %s\n", desc_to_gp=
-io(ret), label);
->     54          }
->     55          return ret;
->     56  }
->     57
-Hello,
+On 6/8/20 3:28 AM, Denis Efremov wrote:
+> 
+> 
+> On 6/8/20 7:59 AM, Masahiro Yamada wrote:
+>> On Mon, Jun 8, 2020 at 10:30 AM Guenter Roeck <linux@roeck-us.net> wrote:
+>>>
+>>> Hi,
+>>>
+>>> On Fri, Jun 05, 2020 at 10:39:55AM +0300, Denis Efremov wrote:
+>>>> Allow user to use alternative implementations of compression tools,
+>>>> such as pigz, pbzip2, pxz. For example, multi-threaded tools to
+>>>> speed up the build:
+>>>> $ make GZIP=pigz BZIP2=pbzip2
+>>>>
+>>>> Variables _GZIP, _BZIP2, _LZOP are used internally because original env
+>>>> vars are reserved by the tools. The use of GZIP in gzip tool is obsolete
+>>>> since 2015. However, alternative implementations (e.g., pigz) still rely
+>>>> on it. BZIP2, BZIP, LZOP vars are not obsolescent.
+>>>>
+>>>
+>>> When building mips:defconfig, this patch results in:
+>>>
+>>> Building mips:defconfig ... failed
+>>> --------------
+>>> Error log:
+>>> /bin/sh: -n: command not found
+>>> make[3]: *** [kernel/config_data.gz] Error 127
+>>> make[3]: *** Deleting file 'kernel/config_data.gz'
+>>> make[3]: *** Waiting for unfinished jobs....
+>>> make[2]: *** [kernel] Error 2
+>>> make[2]: *** Waiting for unfinished jobs....
+>>> make[1]: *** [autoksyms_recursive] Error 2
+>>> make: *** [__sub-make] Error 2
+>>>
+>>> Reverting this patch fixes the problem. Bisect log is attached.
+>>>
+>>> Guenter
+>>
+> 
+> I tried to reproduce it with cross-compilation on Fedora32.
+> $ export ARCH=mips
+> $ export CROSS_COMPILE=mips64-linux-gnu-
+> $ make defconfig
+> $ make -j12
+> 
+> And the kernel builds successfully. Could you please provide details about your
+> compilation steps and environment, esp. what "env | grep ZIP" shows,
+> "gzip --version", "sh --version", "bash --version"? This will be very helpful.
+> 
+> Additionally:
+> $ make GZIP=gzip -j12 # works
+> $ make GZIP=pigz -j12 # works
+> $ make GZIP=nosuchcommand -j12 # fails, as expected
+>  
 
-This warning seems to be a false positive (the variable "ret" is affected i=
-n
-all branches of the if/else).
+I use
 
+make -j30 ARCH=mips CROSS_COMPILE=mips64-linux- ...
 
---=20
-J=E9r=F4me Pouiller
+ie I don't use environment variables. Using environment variables indeed makes
+the problem "disappear". Also, it is important to run "make mrproper" first
+to ensure that the generated file does not already exist.
 
+make -j30 ARCH=mips CROSS_COMPILE=mips64-linux- GZIP=gzip ...
 
+does not work for me.
+
+Guenter
