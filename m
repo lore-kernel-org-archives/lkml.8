@@ -2,160 +2,164 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30081C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 08:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A21C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 08:06:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06FDB206D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 08:04:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38D9220656
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 08:06:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NaHAImHd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729087AbgFHIEm (ORCPT
+        id S1729081AbgFHIGE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 04:04:42 -0400
-Received: from mga04.intel.com ([192.55.52.120]:47149 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727966AbgFHIEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 04:04:41 -0400
-IronPort-SDR: krh8tP65GcUuA9Nhzcoq3uazQ9un14SvNF5To2DCZK7c4ifrYg7HLjJbmlC8T3xPB9NFUSB4D0
- bOwEoV/U5G7g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2020 01:04:41 -0700
-IronPort-SDR: wpnez4Os47MvksAfNNutsKSgONBghE1WGy9Ul6ckkIztx0M0swVHsn1BlBuhp/fNJ2HrBYl196
- 62dd/GkLCjog==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,487,1583222400"; 
-   d="scan'208";a="305746769"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 08 Jun 2020 01:04:41 -0700
-Received: from [10.249.230.149] (abudanko-mobl.ccr.corp.intel.com [10.249.230.149])
-        by linux.intel.com (Postfix) with ESMTP id 2571D5805B5;
-        Mon,  8 Jun 2020 01:04:36 -0700 (PDT)
-Subject: Re: [PATCH v5 13/13] perf record: introduce --ctl-fd[-ack] options
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <e5cac8dd-7aa4-ec7c-671c-07756907acba@linux.intel.com>
- <8ffc9f9f-af58-deea-428b-f8a69004e3cb@linux.intel.com>
- <923c40c7-7c0b-9fad-314d-69e7acbee201@intel.com>
- <937c8cc1-b4c2-8531-3fa4-d0ad9df6a65f@linux.intel.com>
- <20200601233732.GA691017@tassilo.jf.intel.com>
- <1bc7c72b-9d78-5184-a27c-8025beadaaf0@linux.intel.com>
- <d7924d7c-e2e5-c067-b9e0-cfea919e7780@linux.intel.com>
- <935187e8-6fc8-5f47-b88d-6e8c92a27286@intel.com>
- <20200605105108.GB1404794@krava>
- <3ac6d0b8-5fae-348f-8556-4bf7a66285f6@linux.intel.com>
- <20200605135743.GD1404794@krava>
- <c4f3fc64-0ea1-8a5a-ee9d-7d581510c70b@linux.intel.com>
- <0d1d9c45-a880-9a5d-e35d-c80fb3b71eab@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <0a2695a1-06e4-678f-736c-1560222826de@linux.intel.com>
-Date:   Mon, 8 Jun 2020 11:04:36 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Mon, 8 Jun 2020 04:06:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39338 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725840AbgFHIGD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 04:06:03 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F743C08C5C3
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 01:06:03 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id dp10so7892798qvb.10
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 01:06:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+RnGTVOb3Nv5WNDCecfKqTEw95jHmOkYyQ+RTpehLbU=;
+        b=NaHAImHdNtabQd/Qvuo5QWbyCOQaSX99q/se5lAqVYF1L/IQrBrIsy4r96m340g0m3
+         f3LRrEKq8AhFSgHO7HI+7Tw5vig1YThiVK/46nBP6dq2vWA2kVKGzsyTUnGZwmLRbU93
+         9CwYnC17IIWOTXfrErZNo57EirJ9WOUMVojW6ChQtdszAv2f0sRWehdW1etUu4ShBuL6
+         q6B0rFAcQSKlg6h6Qm49XlGAT7sXlgwEliId4BROQRrtEwo69Nbr9+Bvf3J7Au9kvniV
+         QjuVa7DnIL2IunKl7+DTXqEzUuTywOz9CJGiFDostVXPsqTupKZR+3AfbgkE5Pr5Iigx
+         0lLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+RnGTVOb3Nv5WNDCecfKqTEw95jHmOkYyQ+RTpehLbU=;
+        b=RdCngCpzpxQmvmazQoA4qPHn6CMOgQUSWTgiS1KpakjOLcx1Mlq/8/WMGYixtHSvQR
+         YIWhmSg2T98lf/CSj2b3yqiSw89AyhNZ0UM+isxnC6ud854JfJUZF9x9Q0AyZzCbT8Lo
+         QRRpoEIO3HwmWmO8D42h7eKKRpt68Yca2Lhtk+5dS1G4hr5xaRi01v6rUubG8bNVhwxw
+         D7xSMtOddjCKr4EY9qMkOmiKwC0ABWCqht11jcEgFAdHOSNmJ6LG7+hXDzRp+R0pUrfV
+         OGacV6vC09QKxq7zADNXLqqVvxmDDiDFW0eDj79MpU0Kr8O+vWKrcFT/J3A5jhe3Ie0c
+         SPkQ==
+X-Gm-Message-State: AOAM533l0XTmDzDQWKXtu13Q1ONdBfr5tINJHUJx4PRElSgpRhFCUGnk
+        uiLEZrZ85mNQ2YEn/DADUXicGotpU10YvF9QugRt8Q==
+X-Google-Smtp-Source: ABdhPJxrWoXgyJwjBSwHr1fg7cg0NgpXasMqFwVhili2G5JI6X5WxIAOtYt8k8yKUP5aFc8S70CFmGNqbCnsgiUNM3g=
+X-Received: by 2002:a0c:910c:: with SMTP id q12mr20293465qvq.22.1591603561321;
+ Mon, 08 Jun 2020 01:06:01 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <0d1d9c45-a880-9a5d-e35d-c80fb3b71eab@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <fcd1cd16eac1d2c01a66befd8ea4afc6f8d09833.1591576806.git.andreyknvl@google.com>
+In-Reply-To: <fcd1cd16eac1d2c01a66befd8ea4afc6f8d09833.1591576806.git.andreyknvl@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Mon, 8 Jun 2020 10:05:50 +0200
+Message-ID: <CACT4Y+ZWaSWWhxv3fw_bN0y_MKSG8L+Q_eFvWDwLgyWcTC0aSQ@mail.gmail.com>
+Subject: Re: [PATCH] kcov: check kcov_softirq in kcov_remote_stop()
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 8, 2020 at 2:42 AM Andrey Konovalov <andreyknvl@google.com> wrote:
+>
+> kcov_remote_stop() should check that the corresponding kcov_remote_start()
+> actually found the specified remote handle and started collecting
+> coverage. This is done by checking the per thread kcov_softirq flag.
+>
+> A particular failure scenario where this was observed involved a softirq
+> with a remote coverage collection section coming between check_kcov_mode()
+> and the access to t->kcov_area in __sanitizer_cov_trace_pc(). In that
+> softirq kcov_remote_start() bailed out after kcov_remote_find() check, but
+> the matching kcov_remote_stop() didn't check if kcov_remote_start()
+> succeeded, and overwrote per thread kcov parameters with invalid (zero)
+> values.
+>
+> Fixes: 5ff3b30ab57d ("kcov: collect coverage from interrupts")
+> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 
-On 05.06.2020 18:23, Alexey Budankov wrote:
-> 
-> On 05.06.2020 17:47, Alexey Budankov wrote:
->>
->> On 05.06.2020 16:57, Jiri Olsa wrote:
->>> On Fri, Jun 05, 2020 at 04:15:52PM +0300, Alexey Budankov wrote:
->>>>
->>>> On 05.06.2020 13:51, Jiri Olsa wrote:
->>>>> On Tue, Jun 02, 2020 at 04:43:58PM +0300, Adrian Hunter wrote:
->>>>>> On 2/06/20 12:12 pm, Alexey Budankov wrote:
->>>>>>>
->>>>>>> On 02.06.2020 11:32, Alexey Budankov wrote:
->>>>>>>>
->>>>>>>> On 02.06.2020 2:37, Andi Kleen wrote:
->>>>>>>>>>> or a pathname, or including also the event default of "disabled".
->>>>>>>>>>
->>>>>>>>>> For my cases conversion of pathnames into open fds belongs to external
->>>>>>>>>> controlling process e.g. like in the examples provided in the patch set.
->>>>>>>>>> Not sure about "event default of 'disabled'"
->>>>>>>>>
->>>>>>>>> It would be nicer for manual use cases if perf supported the path names
->>>>>>>>> directly like in Adrian's example, not needing a complex wrapper script.
->>>>>>>>
->>>>>>>> fds interface is required for VTune integration since VTune wants control
->>>>>>>> over files creation aside of Perf tool process. The script demonstrates
->>>>>>>> just one possible use case.
->>>>>>>>
->>>>>>>> Control files could easily be implemented on top of fds making open operations
->>>>>>>> for paths and then initializing fds. Interface below is vague and with explicit
->>>>>>>> options like below it could be more explicit:
->>>>>>>> --ctl-file /tmp/my-perf.fifo --ctl-file-ack /tmp/my-perf-ack.fifo
->>>>>>>
->>>>>>> Or even clearer:
->>>>>>>
->>>>>>> --ctl-fifo /tmp/my-perf --ctl-fifo-ack /tmp/my-perf-ack
->>>>>>
->>>>>> If people are OK with having so many options, then that is fine by me.
->>>>>
->>>>> the single option Adrian suggested seems better to me:
->>>>>
->>>>>  --control
->>>>>  --control 11
->>>>>  --control 11,15
->>>>
->>>> What if a user specifies fifos named like this above, not fds?
->>>>
->>>>>  --control 11,15,disabled
->>>>>  --control 11,,disabled
->>>>>  --control /tmp/my-perf.fifo
->>>>>  --control /tmp/my-perf.fifo,/tmp/my-perf-ack.fifo
->>>>
->>>> What if a user wants not fifos but other type of comm channels?
->>>>
->>>>>  --control /tmp/my-perf.fifo,/tmp/my-perf-ack.fifo,disabled
->>>>>  --control /tmp/my-perf.fifo,,disabled
->>>>>
->>>>> we already support this kind of options arguments, like for --call-graph
->>>>>
->>>>> jirka
->>>>>
->>>>
->>>> IMHO,
->>>> this interface, of course, looks more compact (in amount of options) however
->>>> the other side it is less user friendly. One simple option for one simple
->>>> purpose is more convenient as for users as for developers. Also complex
->>>> option syntax tends to have limitations and there are probably more
->>>> non-obvious ones.
->>>>
->>>> Please speak up. I might have missed something meaningful.
->>>
->>> how about specify the type like:
->>>
->>> --control fd:1,2,...
->>
->> What do these ... mean?
-> 
-> After all,
-> if you want it this way and it now also fits my needs I could convert
-> --ctl-fd[-ack] to --control fd:<ctl-fd>,<ack-fd> with use cases like
-> --control fd:<ctl-fd> and --control fd:<ctl-fd>,<ack-fd>. Accepted?
+Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
 
-So, do we implement fds options like this?
-
-~Alexey
+> ---
+>  kernel/kcov.c | 26 ++++++++++++++++++--------
+>  1 file changed, 18 insertions(+), 8 deletions(-)
+>
+> diff --git a/kernel/kcov.c b/kernel/kcov.c
+> index 55c5d883a93e..6afae0bcbac4 100644
+> --- a/kernel/kcov.c
+> +++ b/kernel/kcov.c
+> @@ -427,7 +427,8 @@ void kcov_task_exit(struct task_struct *t)
+>          *        WARN_ON(!kcov->remote && kcov->t != t);
+>          *
+>          * For KCOV_REMOTE_ENABLE devices, the exiting task is either:
+> -        * 2. A remote task between kcov_remote_start() and kcov_remote_stop().
+> +        *
+> +        * 1. A remote task between kcov_remote_start() and kcov_remote_stop().
+>          *    In this case we should print a warning right away, since a task
+>          *    shouldn't be exiting when it's in a kcov coverage collection
+>          *    section. Here t points to the task that is collecting remote
+> @@ -437,7 +438,7 @@ void kcov_task_exit(struct task_struct *t)
+>          *        WARN_ON(kcov->remote && kcov->t != t);
+>          *
+>          * 2. The task that created kcov exiting without calling KCOV_DISABLE,
+> -        *    and then again we can make sure that t->kcov->t == t:
+> +        *    and then again we make sure that t->kcov->t == t:
+>          *        WARN_ON(kcov->remote && kcov->t != t);
+>          *
+>          * By combining all three checks into one we get:
+> @@ -764,7 +765,7 @@ static const struct file_operations kcov_fops = {
+>   * Internally, kcov_remote_start() looks up the kcov device associated with the
+>   * provided handle, allocates an area for coverage collection, and saves the
+>   * pointers to kcov and area into the current task_struct to allow coverage to
+> - * be collected via __sanitizer_cov_trace_pc()
+> + * be collected via __sanitizer_cov_trace_pc().
+>   * In turns kcov_remote_stop() clears those pointers from task_struct to stop
+>   * collecting coverage and copies all collected coverage into the kcov area.
+>   */
+> @@ -972,16 +973,25 @@ void kcov_remote_stop(void)
+>                 local_irq_restore(flags);
+>                 return;
+>         }
+> -       kcov = t->kcov;
+> -       area = t->kcov_area;
+> -       size = t->kcov_size;
+> -       sequence = t->kcov_sequence;
+> -
+> +       /*
+> +        * When in softirq, check if the corresponding kcov_remote_start()
+> +        * actually found the remote handle and started collecting coverage.
+> +        */
+> +       if (in_serving_softirq() && !t->kcov_softirq) {
+> +               local_irq_restore(flags);
+> +               return;
+> +       }
+> +       /* Make sure that kcov_softirq is only set when in softirq. */
+>         if (WARN_ON(!in_serving_softirq() && t->kcov_softirq)) {
+>                 local_irq_restore(flags);
+>                 return;
+>         }
+>
+> +       kcov = t->kcov;
+> +       area = t->kcov_area;
+> +       size = t->kcov_size;
+> +       sequence = t->kcov_sequence;
+> +
+>         kcov_stop(t);
+>         if (in_serving_softirq()) {
+>                 t->kcov_softirq = 0;
+> --
+> 2.27.0.278.ge193c7cf3a9-goog
+>
