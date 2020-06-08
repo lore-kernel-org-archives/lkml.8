@@ -2,123 +2,149 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE644C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AEA2C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:06:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5DE820812
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:06:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591657586;
-	bh=EKcNGXPVsXSo798RYkf9ibs72j1OBs1xifDbNicZdtQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kHrBk0kHAcKxQf7uiCiiKFMsOdRqDCLeebKDNN0/OU4nP9+DNtLBfCSWw8si+h1u2
-	 8SaKOv6wKBPt44LzJsFTSwim/FgHn1bFt8sQWOyCgsOatYnrro9LxlTgbuZCryXIZl
-	 x6EaGiyfuZ5DXehIw7V1Xfmjjkf1mFLvhflbOfw8=
+	by mail.kernel.org (Postfix) with ESMTP id 08FF72078C
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:06:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=paritcher.com header.i=@paritcher.com header.b="65qAa+8M";
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="oaC2b8pD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbgFHXG0 (ORCPT
+        id S1726996AbgFHXG3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:06:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49054 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726921AbgFHXGR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:06:17 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D02F20812;
-        Mon,  8 Jun 2020 23:06:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657577;
-        bh=EKcNGXPVsXSo798RYkf9ibs72j1OBs1xifDbNicZdtQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jhnVAD6CsmlWxXOjH/NTd2dB+dcBM+KF5x478dLyosgMmjGuSHZ/GE6/aSLCOj8Fd
-         raGXBcjYZkN5/7CWHnatcOBrNZ1R753eyeSkr6Z06ycFYx5RArMnYm2GQK7tFny5cu
-         ZXatgC74TS/k4CMyuo9yr9FDje03ZKU6Mqw+TrC0=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bingbu Cao <bingbu.cao@intel.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 5.7 007/274] media: staging: imgu: do not hold spinlock during freeing mmu page table
-Date:   Mon,  8 Jun 2020 19:01:40 -0400
-Message-Id: <20200608230607.3361041-7-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
-References: <20200608230607.3361041-1-sashal@kernel.org>
+        Mon, 8 Jun 2020 19:06:29 -0400
+Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:38535 "EHLO
+        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726907AbgFHXGQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:06:16 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id 28EC2893;
+        Mon,  8 Jun 2020 19:06:15 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Mon, 08 Jun 2020 19:06:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=paritcher.com;
+         h=from:to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm2; bh=AELJZh/EU6f2U
+        BkhqjDLJhUQN+SlucJC+NrGqLu0VFs=; b=65qAa+8MeEhDmsyRiCwqcDCn3Bf5K
+        TnIgcDpoMvBtgO4yDTzKjPEz63HXTYXVi1E5n1xuMkOID6z4vQZ4Amh5iY8Daa0O
+        hO1BbHs8CmwmeakQQ8h9wZ5bdG5G6PhrsEI7V1QEwc6qrX7vkXFOclsH5XvEE0pr
+        1lTYmRT8NhN2T3SJPiMwfqak9J4puMqikW+t96K9vcfRBu2bjyegitMdXTC6LfV4
+        L40/SS9aQp1jPdYocmMg3L6AgIafaGXZGMjS43Fz/RfynSKXyhjNfNqLm7XFw5Rr
+        RGgjvNl8XYpYXkS6/QZo2BAWPDCPvZCDTGOsgjVpCur3tNizGtJ/eK+OQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm3; bh=AELJZh/EU6f2UBkhqjDLJhUQN+SlucJC+NrGqLu0VFs=; b=oaC2b8pD
+        DRlTHxDh2MUF0qyEtVV+RcyQbZQSi/SIefyj+c0DQWqvvaIOORGWA33J4OZBKXzW
+        zLedE6RfKtI0SCkt/c1q7SWYWddu2Ww0MS5onv/DOpvGaAv4ElR2GYIUU9zXQH3m
+        YTKnuGM3IW9bX5gNDuQHFZqY1jHwPGUr5ud152+xqsLuP3QqWNrYQ0kZpS0o2q+D
+        YZAbhBQ6tY5AZRAtweC0toWHobDn2VNyNIMzgcy16kvA3xDDGbwdL6WdIhoowAwW
+        +yRcU8yiuD4+m/l8zN67q6+sKInFfdAvinAt9MmiucY15w3Y5DPXkvrOUUV1cd1u
+        ebOuReachZCMUg==
+X-ME-Sender: <xms:ZsTeXu8x8hax-ueDR5QLYaxVfICNQl7tlar1pQ5eknaYqKs46giknw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudehfedgudekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    hmihhsshhinhhgucfvqfcufhhivghlugculdeftddmnecujfgurhephffvufffkffojghf
+    ggfgsedtkeertdertddtnecuhfhrohhmpegjucfrrghrihhttghhvghruceohidrlhhinh
+    hugiesphgrrhhithgthhgvrhdrtghomheqnecuggftrfgrthhtvghrnhepjeegfeetleeu
+    leevteejteetieffgffgfedvffffvddtvddvveevhffhtdehudeknecukfhppeeijedrke
+    egrdduleegrddujeehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
+    lhhfrhhomhephidrlhhinhhugiesphgrrhhithgthhgvrhdrtghomh
+X-ME-Proxy: <xmx:ZsTeXusYRvCijjCSKpryjIOlHcGrOOZ9ndqpu7VWUXZ5lYYbvTb5qQ>
+    <xmx:ZsTeXkAWQALsQ0XFyC1lw9qaFh-qllNDqKQkZCcFTVReMnT6HIBMKg>
+    <xmx:ZsTeXmdlKtFODnVp3bEdW1QOJKub3owGpMDeyqhGwRT2jzYqxqdZzQ>
+    <xmx:ZsTeXp0WrAc438IOMW8p1bk-gQ0_EQ2_MZOXh-5v6vKLtG0nxOHCsA>
+Received: from localhost.localdomain (ool-4354c2af.dyn.optonline.net [67.84.194.175])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 69755328006B;
+        Mon,  8 Jun 2020 19:06:14 -0400 (EDT)
+From:   Y Paritcher <y.linux@paritcher.com>
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        Mario.Limonciello@dell.com
+Subject: [PATCH v2 3/3] platform/x86: dell-wmi: add new dmi keys to bios_to_linux_keycode
+Date:   Mon,  8 Jun 2020 19:05:30 -0400
+Message-Id: <d585d2a0f01a6b9480352530b571dec2d1afd79f.1591656154.git.y.linux@paritcher.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <cover.1591656154.git.y.linux@paritcher.com>
+References: <cover.1591584631.git.y.linux@paritcher.com> <cover.1591656154.git.y.linux@paritcher.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bingbu Cao <bingbu.cao@intel.com>
+Increase length of bios_to_linux_keycode to 2 bytes (the true size of a
+keycode) to allow for a new keycode 0xffff, this silences the following
+messages being logged at startup on a Dell Inspiron 5593:
 
-[ Upstream commit e1ebe9f9c88e5a78fcc4670a9063c9b3cd87dda4 ]
+    dell_wmi: firmware scancode 0x48 maps to unrecognized keycode 0xffff
+    dell_wmi: firmware scancode 0x50 maps to unrecognized keycode 0xffff
 
-ImgU need set the mmu page table in memory as uncached, and set back
-to write-back when free the page table by set_memory_wb(),
-set_memory_wb() can not do flushing without interrupt, so the spinlock
-should not be hold during ImgU page alloc and free, the interrupt
-should be enabled during memory cache flush.
+as per this code comment:
 
-This patch release spinlock before freeing pages table.
+   Log if we find an entry in the DMI table that we don't
+   understand.  If this happens, we should figure out what
+   the entry means and add it to bios_to_linux_keycode.
 
-Signed-off-by: Bingbu Cao <bingbu.cao@intel.com>
-Reviewed-by: Tomasz Figa <tfiga@chromium.org>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+These are keycodes included in the 0xB2 DMI table, for which the
+corosponding keys are not known.
+
+Now when a user will encounter this key, a proper message wil be printed:
+
+    dell_wmi: Unknown key with type 0xXXXX and code 0xXXXX pressed
+
+This will then allow the key to be identified properly.
+
+Signed-off-by: Y Paritcher <y.linux@paritcher.com>
 ---
- drivers/staging/media/ipu3/ipu3-mmu.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/platform/x86/dell-wmi.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/staging/media/ipu3/ipu3-mmu.c b/drivers/staging/media/ipu3/ipu3-mmu.c
-index 5f3ff964f3e7..cb9bf5fb29a5 100644
---- a/drivers/staging/media/ipu3/ipu3-mmu.c
-+++ b/drivers/staging/media/ipu3/ipu3-mmu.c
-@@ -174,8 +174,10 @@ static u32 *imgu_mmu_get_l2pt(struct imgu_mmu *mmu, u32 l1pt_idx)
- 	spin_lock_irqsave(&mmu->lock, flags);
+diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
+index 6b510f8431a3..dae1db96b5a0 100644
+--- a/drivers/platform/x86/dell-wmi.c
++++ b/drivers/platform/x86/dell-wmi.c
+@@ -196,7 +196,7 @@ struct dell_dmi_results {
+ };
  
- 	l2pt = mmu->l2pts[l1pt_idx];
--	if (l2pt)
--		goto done;
-+	if (l2pt) {
-+		spin_unlock_irqrestore(&mmu->lock, flags);
-+		return l2pt;
-+	}
+ /* Uninitialized entries here are KEY_RESERVED == 0. */
+-static const u16 bios_to_linux_keycode[256] = {
++static const u16 bios_to_linux_keycode[65536] = {
+ 	[0]	= KEY_MEDIA,
+ 	[1]	= KEY_NEXTSONG,
+ 	[2]	= KEY_PLAYPAUSE,
+@@ -237,6 +237,7 @@ static const u16 bios_to_linux_keycode[256] = {
+ 	[37]	= KEY_UNKNOWN,
+ 	[38]	= KEY_MICMUTE,
+ 	[255]	= KEY_PROG3,
++	[65535]	= KEY_UNKNOWN,
+ };
  
- 	spin_unlock_irqrestore(&mmu->lock, flags);
+ /*
+@@ -503,10 +504,7 @@ static void handle_dmi_entry(const struct dmi_header *dm, void *opaque)
+ 					&table->keymap[i];
  
-@@ -190,8 +192,9 @@ static u32 *imgu_mmu_get_l2pt(struct imgu_mmu *mmu, u32 l1pt_idx)
+ 		/* Uninitialized entries are 0 aka KEY_RESERVED. */
+-		u16 keycode = (bios_entry->keycode <
+-			       ARRAY_SIZE(bios_to_linux_keycode)) ?
+-			bios_to_linux_keycode[bios_entry->keycode] :
+-			KEY_RESERVED;
++		u16 keycode = bios_to_linux_keycode[bios_entry->keycode];
  
- 	l2pt = mmu->l2pts[l1pt_idx];
- 	if (l2pt) {
-+		spin_unlock_irqrestore(&mmu->lock, flags);
- 		imgu_mmu_free_page_table(new_l2pt);
--		goto done;
-+		return l2pt;
- 	}
- 
- 	l2pt = new_l2pt;
-@@ -200,7 +203,6 @@ static u32 *imgu_mmu_get_l2pt(struct imgu_mmu *mmu, u32 l1pt_idx)
- 	pteval = IPU3_ADDR2PTE(virt_to_phys(new_l2pt));
- 	mmu->l1pt[l1pt_idx] = pteval;
- 
--done:
- 	spin_unlock_irqrestore(&mmu->lock, flags);
- 	return l2pt;
- }
+ 		/*
+ 		 * Log if we find an entry in the DMI table that we don't
 -- 
-2.25.1
+2.27.0
 
