@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3815C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DDEFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE3DC20760
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:31:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0649C206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:31:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662660;
-	bh=cXeMnDqdkahj2EjCcRUHHlnMagG9C2OAzyC6JFHrO/I=;
+	s=default; t=1591662662;
+	bh=k0fASL0Pv0bHmJ68PchARdT65FgmTMuBEqKx09B/Gs4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UZDq173zWzQ1EJVhyQV5r71+6YB57FEDh79tCwWVJT6jWllGhEvdS9C12iJ0CgeSu
-	 qtxvsiswDu1QuuZOvC+CNKJt1xMFs38h2SJUq5vfvbjFrjQE8u+rMzmsMuYOKSA1PX
-	 E1/kRWKTXQg29KGI/H4GFbwc+PPboTGv4WqFAfhc=
+	b=ZLmEaiIcistBzbcNS7Wn4M3kxEYWVHG9z+6Pyh0n1JqHGz1npQIft0McxvMKmyW/c
+	 z/sJH+GdXOeM+Yz5CH4t2yObsyCSxKk9c3NahCVdFuupyvVj3QbIdhLmLHTy/ZNCFb
+	 hU5ycltt37rziNXzjZKXFl0WPO1Z/8/3ONNVJBDk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732648AbgFIAa5 (ORCPT
+        id S2387631AbgFIAas (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:30:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36754 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:30:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730057AbgFHXPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:15:40 -0400
+        id S1729046AbgFHXPm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:15:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC3B120659;
-        Mon,  8 Jun 2020 23:15:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A4C32076A;
+        Mon,  8 Jun 2020 23:15:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658139;
-        bh=cXeMnDqdkahj2EjCcRUHHlnMagG9C2OAzyC6JFHrO/I=;
+        s=default; t=1591658142;
+        bh=k0fASL0Pv0bHmJ68PchARdT65FgmTMuBEqKx09B/Gs4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qw9lwp7/R5uIuoYOckfRej+T8W47wJqDh+Dqu4AvBfm6LO0CbpFzEEu1SlspM2K7E
-         VGVLeJWg0zeoUHtwtWDQ3pOi/Su6DhBdBQAMq2N5Jir3nYxTX4wyWyOZVQkswYD8cy
-         B1p4ijuMB1fW/3P9gvBcn9x+iyfSwdnDyHLGPHms=
+        b=fjGc/qoK44jiff90+WGJFQnIaxXDmR1AZdVsvnBrgCd8RQmPVNeFIaVu554Mqa4Su
+         QSaDjkdb+lf31f0ik1ekgsP/sWzd3R3Y24HYKxdUALtuz7c4TAMaN6bMdvvDw3CWkV
+         wbppzrI7DVcziN9b6V1tnlj3sH1tiQ4M2PyOJgdY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fabrice Gasnier <fabrice.gasnier@st.com>, Stable@vger.kernel.org,
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Stable@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-iio@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 173/606] iio: adc: stm32-adc: fix device used to request dma
-Date:   Mon,  8 Jun 2020 19:04:58 -0400
-Message-Id: <20200608231211.3363633-173-sashal@kernel.org>
+        linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 175/606] iio: sca3000: Remove an erroneous 'get_device()'
+Date:   Mon,  8 Jun 2020 19:05:00 -0400
+Message-Id: <20200608231211.3363633-175-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -62,65 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-commit 52cd91c27f3908b88e8b25aed4a4d20660abcc45 upstream.
+commit 928edefbc18cd8433f7df235c6e09a9306e7d580 upstream.
 
-DMA channel request should use device struct from platform device struct.
-Currently it's using iio device struct. But at this stage when probing,
-device struct isn't yet registered (e.g. device_register is done in
-iio_device_register). Since commit 71723a96b8b1 ("dmaengine: Create
-symlinks between DMA channels and slaves"), a warning message is printed
-as the links in sysfs can't be created, due to device isn't yet registered:
-- Cannot create DMA slave symlink
-- Cannot create DMA dma:rx symlink
+This looks really unusual to have a 'get_device()' hidden in a 'dev_err()'
+call.
+Remove it.
 
-Fix this by using device struct from platform device to request dma chan.
+While at it add a missing \n at the end of the message.
 
-Fixes: 2763ea0585c99 ("iio: adc: stm32: add optional dma support")
-
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Fixes: 574fb258d636 ("Staging: IIO: VTI sca3000 series accelerometer driver (spi)")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 Cc: <Stable@vger.kernel.org>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/iio/adc/stm32-adc.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/iio/accel/sca3000.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
-index ae622ee6d08c..dfc3a306c667 100644
---- a/drivers/iio/adc/stm32-adc.c
-+++ b/drivers/iio/adc/stm32-adc.c
-@@ -1812,18 +1812,18 @@ static int stm32_adc_chan_of_init(struct iio_dev *indio_dev)
- 	return 0;
- }
- 
--static int stm32_adc_dma_request(struct iio_dev *indio_dev)
-+static int stm32_adc_dma_request(struct device *dev, struct iio_dev *indio_dev)
- {
- 	struct stm32_adc *adc = iio_priv(indio_dev);
- 	struct dma_slave_config config;
- 	int ret;
- 
--	adc->dma_chan = dma_request_chan(&indio_dev->dev, "rx");
-+	adc->dma_chan = dma_request_chan(dev, "rx");
- 	if (IS_ERR(adc->dma_chan)) {
- 		ret = PTR_ERR(adc->dma_chan);
- 		if (ret != -ENODEV) {
- 			if (ret != -EPROBE_DEFER)
--				dev_err(&indio_dev->dev,
-+				dev_err(dev,
- 					"DMA channel request failed with %d\n",
- 					ret);
- 			return ret;
-@@ -1930,7 +1930,7 @@ static int stm32_adc_probe(struct platform_device *pdev)
- 	if (ret < 0)
+diff --git a/drivers/iio/accel/sca3000.c b/drivers/iio/accel/sca3000.c
+index 66d768d971e1..6e429072e44a 100644
+--- a/drivers/iio/accel/sca3000.c
++++ b/drivers/iio/accel/sca3000.c
+@@ -980,7 +980,7 @@ static int sca3000_read_data(struct sca3000_state *st,
+ 	st->tx[0] = SCA3000_READ_REG(reg_address_high);
+ 	ret = spi_sync_transfer(st->us, xfer, ARRAY_SIZE(xfer));
+ 	if (ret) {
+-		dev_err(get_device(&st->us->dev), "problem reading register");
++		dev_err(&st->us->dev, "problem reading register\n");
  		return ret;
- 
--	ret = stm32_adc_dma_request(indio_dev);
-+	ret = stm32_adc_dma_request(dev, indio_dev);
- 	if (ret < 0)
- 		return ret;
+ 	}
  
 -- 
 2.25.1
