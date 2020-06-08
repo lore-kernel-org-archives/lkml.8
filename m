@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB5F5C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47390C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC62A20737
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:57:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A85F20737
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:57:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591664232;
-	bh=84y+gW41dURSJi/gdvoDOb2sY4x5qag2jIQ+OeQgv8s=;
+	s=default; t=1591664245;
+	bh=LqIvZdy0rZViN+9Rw5CFoFIo9NiAxYZqFGNN6r9tn/o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GlpOQJ9Q+qPeUTqnADitZpJ2PDKQMQix4aeXnXDr1hIMPLCAmEezsFNNnEbyY9Khp
-	 nkf4vYGUGl1qdh6zuF7WBEwX1Dr9jh65kKLyrgsSkWuJ3vqhhxEA67i8gEcRUxQ0BW
-	 MHEOVI2gitxR5uSXw8IfZoNc6ZY82SQXiyeBUpoQ=
+	b=Gb2ygByBk/d73K7yX/9ERXYHbIAotsWvpJTD9pIQU7+qBmJxGcQ9+d8iAOuUAEE7T
+	 2SQaWAHMjVl+w/wAFTaSvWkb0wIGDSV9ijpRNO1OKFbyO6lUFRG3nvbc8f2FmgRkAX
+	 Ni2qo1sH/W/LS5skB2y308sC1GQW/qxytM91wQDg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731523AbgFIA5M (ORCPT
+        id S1733301AbgFIA5Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:57:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54508 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:57:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728291AbgFHXI4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:08:56 -0400
+        id S1728273AbgFHXIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:08:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 735CF2085B;
-        Mon,  8 Jun 2020 23:08:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1BC820890;
+        Mon,  8 Jun 2020 23:08:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657736;
-        bh=84y+gW41dURSJi/gdvoDOb2sY4x5qag2jIQ+OeQgv8s=;
+        s=default; t=1591657733;
+        bh=LqIvZdy0rZViN+9Rw5CFoFIo9NiAxYZqFGNN6r9tn/o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XUynSZ2HWhsPfzIukzg3R68sZn+l+CpO6f/KVYplWfYLX+HvtqvDPJchna2c8D125
-         2QzU8i0zpw7EdHEeSmqSl0S5VDjyoGw/3y6dsTRPgEVV9EABFlGKJ2iOAhtNgBsewA
-         ewJbc848PauumTH1KwhGMPyC5b7rwxkkBt5qhQrI=
+        b=n1mK95cfqwdhOTBa4rQ1ZwJxhYxOzm2hG0j28XhtUnwFZhCX/XVy+RrmIlqnVbi0Y
+         MqxzqiPQizq7FQFZ38DqiT3EqJWuevboRGMvgnkJEfPz3o1TnPcN/80ohKLRhjRZbF
+         uCOO2nYMwH1pgiQW0O1OdHr/ruHCngA6/SunVm5c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alain Michaud <alainm@chromium.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 126/274] Bluetooth: Adding driver and quirk defs for multi-role LE
-Date:   Mon,  8 Jun 2020 19:03:39 -0400
-Message-Id: <20200608230607.3361041-126-sashal@kernel.org>
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 124/274] netfilter: nft_nat: return EOPNOTSUPP if type or flags are not supported
+Date:   Mon,  8 Jun 2020 19:03:37 -0400
+Message-Id: <20200608230607.3361041-124-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -60,63 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alain Michaud <alainm@chromium.org>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit 220915857e29795ae5ba4222806268b4a99c19c1 ]
+[ Upstream commit 0d7c83463fdf7841350f37960a7abadd3e650b41 ]
 
-This change adds the relevant driver and quirk to allow drivers to
-report the le_states as being trustworthy.
+Instead of EINVAL which should be used for malformed netlink messages.
 
-This has historically been disabled as controllers did not reliably
-support this. In particular, this will be used to relax this condition
-for controllers that have been well tested and reliable.
-
-	/* Most controller will fail if we try to create new connections
-	 * while we have an existing one in slave role.
-	 */
-	if (hdev->conn_hash.le_num_slave > 0)
-		return NULL;
-
-Signed-off-by: Alain Michaud <alainm@chromium.org>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Fixes: eb31628e37a0 ("netfilter: nf_tables: Add support for IPv6 NAT")
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/btusb.c   | 1 +
- include/net/bluetooth/hci.h | 9 +++++++++
- 2 files changed, 10 insertions(+)
+ net/netfilter/nft_nat.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index 3bdec42c9612..3d9313c746f3 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -58,6 +58,7 @@ static struct usb_driver btusb_driver;
- #define BTUSB_CW6622		0x100000
- #define BTUSB_MEDIATEK		0x200000
- #define BTUSB_WIDEBAND_SPEECH	0x400000
-+#define BTUSB_VALID_LE_STATES   0x800000
+diff --git a/net/netfilter/nft_nat.c b/net/netfilter/nft_nat.c
+index 8b44a4de5329..bb49a217635e 100644
+--- a/net/netfilter/nft_nat.c
++++ b/net/netfilter/nft_nat.c
+@@ -129,7 +129,7 @@ static int nft_nat_init(const struct nft_ctx *ctx, const struct nft_expr *expr,
+ 		priv->type = NF_NAT_MANIP_DST;
+ 		break;
+ 	default:
+-		return -EINVAL;
++		return -EOPNOTSUPP;
+ 	}
  
- static const struct usb_device_id btusb_table[] = {
- 	/* Generic Bluetooth USB device */
-diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
-index 5f60e135aeb6..25c2e5ee81dc 100644
---- a/include/net/bluetooth/hci.h
-+++ b/include/net/bluetooth/hci.h
-@@ -214,6 +214,15 @@ enum {
- 	 * This quirk must be set before hci_register_dev is called.
- 	 */
- 	HCI_QUIRK_WIDEBAND_SPEECH_SUPPORTED,
-+
-+	/* When this quirk is set, the controller has validated that
-+	 * LE states reported through the HCI_LE_READ_SUPPORTED_STATES are
-+	 * valid.  This mechanism is necessary as many controllers have
-+	 * been seen has having trouble initiating a connectable
-+	 * advertisement despite the state combination being reported as
-+	 * supported.
-+	 */
-+	HCI_QUIRK_VALID_LE_STATES,
- };
+ 	if (tb[NFTA_NAT_FAMILY] == NULL)
+@@ -196,7 +196,7 @@ static int nft_nat_init(const struct nft_ctx *ctx, const struct nft_expr *expr,
+ 	if (tb[NFTA_NAT_FLAGS]) {
+ 		priv->flags = ntohl(nla_get_be32(tb[NFTA_NAT_FLAGS]));
+ 		if (priv->flags & ~NF_NAT_RANGE_MASK)
+-			return -EINVAL;
++			return -EOPNOTSUPP;
+ 	}
  
- /* HCI device flags */
+ 	return nf_ct_netns_get(ctx->net, family);
 -- 
 2.25.1
 
