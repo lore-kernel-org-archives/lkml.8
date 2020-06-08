@@ -2,112 +2,157 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13073C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:09:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FA39C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:10:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCE472076A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:09:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VS2lrjRY"
+	by mail.kernel.org (Postfix) with ESMTP id 38EA42076C
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:10:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729030AbgFHHJz (ORCPT
+        id S1729049AbgFHHKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 03:09:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58830 "EHLO
+        Mon, 8 Jun 2020 03:10:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727966AbgFHHJx (ORCPT
+        with ESMTP id S1728953AbgFHHKy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 03:09:53 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6AD3C08C5C3;
-        Mon,  8 Jun 2020 00:09:52 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id a13so15740078ilh.3;
-        Mon, 08 Jun 2020 00:09:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=nf9dHqg6+XQwKpI8ou9xSgbseHLRO6vjwPKJ056sGMw=;
-        b=VS2lrjRYg1vBSVU3Lym8CjazMJrZEuwL3D8SPYJNftC0tECW7uS4NmwyHmJjskGcme
-         W2iSbSaI5Icy9RRBVFAbtvAguBG3LSJTWQsMZw9DSilcCgjumwYXEtMi3rfm4GvfAJ7l
-         Lg9kfOqGlbDMqBJHUxWLiKIerNSfmHjQe5NQ9EJkXLHHGSuTE0h0CC77RNEjHhJO3qgM
-         fDVv6mEYZfvlV13g0f/c+sBMPAjdJ5Jo7z8LMo1OxFNzabbd4Zr0geiR9y40ryRQ+cw5
-         Ks+tsPaRQopanhM5Zkg0dRy19oR+fuM4WyFlniLnQ39Dh0nbDZjfvnTxXSLbqGOh9QfB
-         JUrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=nf9dHqg6+XQwKpI8ou9xSgbseHLRO6vjwPKJ056sGMw=;
-        b=Dn4dfcgRap3NqOrRVvBZb9SNWhSGckFy+KyaUR96VIJS5b6eTgDuMKmFlNyMZZQJlz
-         Xk1MhAKMuCoM9nvgukhGtvLAco4XDvETNd8gBabP+6NDZl6MriRUAGbeVu4xCDcnV3Hn
-         r5i5avVijhwBkCHwDWeQ+2E+EB8BUWVqGpN78bULXS0bugEtPg/QCk0vtxjzBzsFsZVN
-         GnnOju32StYFdrwjhL5cSMdVgmZ2WoHWXC2hR8SLfK9HQin3M89wravZZo7ZZVyYi1S2
-         sqYv9jd0nHy3ZYhX4FR0RsWjvU/14OW/GUtEs0cpkhag6WcLn1ltGz0NxKr9oWXg5qbV
-         R4ZA==
-X-Gm-Message-State: AOAM532MTow0BVXE86PrsMmIeWEqHdoyd14QQUM6ztsbZMh34iNhp4wu
-        18nQLOKgHVu7iEuVHBGNbvbK1gGT5n6uPSIk4lg=
-X-Google-Smtp-Source: ABdhPJwi5Bw+CdttQXg1msL1Y4l1HLgGn2IsguTqKPOLJfTGo37VbE9laPCTQYH5xzzCfqY1Cfwy242nwDJ549M6nDU=
-X-Received: by 2002:a92:7311:: with SMTP id o17mr21691800ilc.176.1591600192183;
- Mon, 08 Jun 2020 00:09:52 -0700 (PDT)
+        Mon, 8 Jun 2020 03:10:54 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD08CC08C5C3;
+        Mon,  8 Jun 2020 00:10:54 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: dafna)
+        with ESMTPSA id 4664B2A01BB
+Subject: Re: [RFC PATCH] vimc: Add colors' order over test image
+To:     Kaaira Gupta <kgupta@es.iitr.ac.in>, linux-media@vger.kernel.org,
+        Helen Koike <helen.koike@collabora.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-kernel@vger.kernel.org, kieran.bingham@ideasonboard.com,
+        laurent.pinchart@ideasonboard.com
+References: <20200607135325.GA16838@kaaira-HP-Pavilion-Notebook>
+From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Message-ID: <5866f6c9-36c7-ffe3-41b3-94f184cd9e5d@collabora.com>
+Date:   Mon, 8 Jun 2020 09:10:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200608020557.31668-1-yanaijie@huawei.com> <20200608061502.GB17366@lst.de>
- <CA+icZUUks4oJGJLhiRLTJTzyNxfsT_TZQ12MMvBVLXSaR8t0zA@mail.gmail.com> <CA+icZUXg2H7a4BVLpPXiw2D5Xzpy=Nxj8OJyw96giDvjNuBt+w@mail.gmail.com>
-In-Reply-To: <CA+icZUXg2H7a4BVLpPXiw2D5Xzpy=Nxj8OJyw96giDvjNuBt+w@mail.gmail.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Mon, 8 Jun 2020 09:09:40 +0200
-Message-ID: <CA+icZUWYJ70W9E=Y-Cx92Ywd=pVgj9RAf2KsdapiVsXQwLDAnw@mail.gmail.com>
-Subject: Re: [PATCH v4] block: Fix use-after-free in blkdev_get()
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jason Yan <yanaijie@huawei.com>, viro@zeniv.linux.org.uk,
-        axboe@kernel.dk, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        Ming Lei <ming.lei@redhat.com>, Jan Kara <jack@suse.cz>,
-        Hulk Robot <hulkci@huawei.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200607135325.GA16838@kaaira-HP-Pavilion-Notebook>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 8, 2020 at 8:52 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
->
-> On Mon, Jun 8, 2020 at 8:47 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
-> >
-> > On Mon, Jun 8, 2020 at 8:18 AM Christoph Hellwig <hch@lst.de> wrote:
-> > >
-> > > Looks good,
-> > >
-> > > Reviewed-by: Christoph Hellwig <hch@lst.de>
-> > >
-> > > Can you dig into the history for a proper fixes tag?
-> >
-> > [ CC Dan ]
-> >
-> > Dan gave the hint for the Fixes: tag in reply to the first patch:
-> >
-> > > The Fixes tag is a good idea though:
-> > >
-> > > Fixes: 89e524c04fa9 ("loop: Fix mount(2) failure due to race with LOOP_SET_FD")
-> >
-> > > It broke last July.  Before that, we used to check if __blkdev_get()
-> > > failed before dereferencing "bdev".
-> >
->
-> Here is the Link.
->
-> https://www.spinics.net/lists/linux-block/msg54825.html
->
+Hi,
 
-Really CC Dan in 3rd attempt.
+On 07.06.20 15:53, Kaaira Gupta wrote:
+> Currently there is no method to know if the test image generated by vimc
+> is correct (except for comparing it with a known 'correct' image). Add
+> text over the test image, representing the correct order of colors.
+> 
+> I have sent it as an RFC because we can add the text as an optional
+> control, and maybe we can print some other useful information as well
+> (like vivid does).
 
-OMG, I need a coffee - urgently.
+Yes, it seems like a good idea to add it as a control of the sensor.
 
-- Sedat -
+> 
+> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
+> --->   drivers/media/test-drivers/vimc/Kconfig       | 2 ++
+>   drivers/media/test-drivers/vimc/vimc-core.c   | 9 +++++++++
+>   drivers/media/test-drivers/vimc/vimc-sensor.c | 8 ++++++++
+>   3 files changed, 19 insertions(+)
+> 
+> diff --git a/drivers/media/test-drivers/vimc/Kconfig b/drivers/media/test-drivers/vimc/Kconfig
+> index 4068a67585f9..da4b2ad6e40c 100644
+> --- a/drivers/media/test-drivers/vimc/Kconfig
+> +++ b/drivers/media/test-drivers/vimc/Kconfig
+> @@ -2,6 +2,8 @@
+>   config VIDEO_VIMC
+>   	tristate "Virtual Media Controller Driver (VIMC)"
+>   	depends on VIDEO_DEV && VIDEO_V4L2
+> +	select FONT_SUPPORT
+> +	select FONT_8x16
+>   	select MEDIA_CONTROLLER
+>   	select VIDEO_V4L2_SUBDEV_API
+>   	select VIDEOBUF2_VMALLOC
+> diff --git a/drivers/media/test-drivers/vimc/vimc-core.c b/drivers/media/test-drivers/vimc/vimc-core.c
+> index 11210aaa2551..8142bfbcbd49 100644
+> --- a/drivers/media/test-drivers/vimc/vimc-core.c
+> +++ b/drivers/media/test-drivers/vimc/vimc-core.c
+> @@ -5,10 +5,12 @@
+>    * Copyright (C) 2015-2017 Helen Koike <helen.fornazier@gmail.com>
+>    */
+>   
+> +#include <linux/font.h>
+>   #include <linux/init.h>
+>   #include <linux/module.h>
+>   #include <linux/platform_device.h>
+>   #include <media/media-device.h>
+> +#include <media/tpg/v4l2-tpg.h>
+>   #include <media/v4l2-device.h>
+>   
+>   #include "vimc-common.h"
+> @@ -265,7 +267,14 @@ static int vimc_probe(struct platform_device *pdev)
+>   {
+>   	struct vimc_device *vimc;
+>   	int ret;
+> +	const struct font_desc *font = find_font("VGA8x16");
+>   
+> +	if (font == NULL) {
+> +		pr_err("vimc: could not find font\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	tpg_set_font(font->data);
+
+I think the code that set the format should move to the
+code that registers the sensor in vimc-sensor.c
+
+>   	dev_dbg(&pdev->dev, "probe");
+>   
+>   	vimc = kzalloc(sizeof(*vimc), GFP_KERNEL);
+> diff --git a/drivers/media/test-drivers/vimc/vimc-sensor.c b/drivers/media/test-drivers/vimc/vimc-sensor.c
+> index a2f09ac9a360..4b13955c502a 100644
+> --- a/drivers/media/test-drivers/vimc/vimc-sensor.c
+> +++ b/drivers/media/test-drivers/vimc/vimc-sensor.c
+> @@ -185,10 +185,18 @@ static const struct v4l2_subdev_pad_ops vimc_sen_pad_ops = {
+>   static void *vimc_sen_process_frame(struct vimc_ent_device *ved,
+>   				    const void *sink_frame)
+>   {
+> +	u8 *basep[TPG_MAX_PLANES][2];
+> +	char str[100];
+>   	struct vimc_sen_device *vsen = container_of(ved, struct vimc_sen_device,
+>   						    ved);
+>   
+> +	tpg_calc_text_basep(&vsen->tpg, basep, 0, vsen->frame);
+>   	tpg_fill_plane_buffer(&vsen->tpg, 0, 0, vsen->frame);
+> +
+> +	snprintf(str, sizeof(str),
+> +		 "Order: white, yellow, cyan, green, magenta, red, blue, black");
+The colors are generated by the tpg, so I think it should be a feature of the tpg to print the colors.
+
+For example, a function in v4l2-tpg-core.c that get the pattern as an argument and return
+this string, or maybe returns a const pointer to the array of colors, or something like that.
+Then maybe we can add a control in vivid for the same tpg feature.
+
+Note also that the sensor has a control to change the pattern: vimc_sen_ctrl_test_pattern
+So the string depends on that pattern.
+
+Thanks,
+Dafna
+
+
+> +	tpg_gen_text(&vsen->tpg, basep, 1, 1, str);
+> +
+>   	return vsen->frame;
+>   }
+>   
+> 
