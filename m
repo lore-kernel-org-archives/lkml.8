@@ -2,282 +2,360 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B90EFC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B97C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:05:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9073C2076C
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:02:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A035B2063A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:05:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730417AbgFHQC1 (ORCPT
+        id S1730359AbgFHQFN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 12:02:27 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:57392 "EHLO gloria.sntech.de"
+        Mon, 8 Jun 2020 12:05:13 -0400
+Received: from 8bytes.org ([81.169.241.247]:46666 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730231AbgFHQC1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 12:02:27 -0400
-Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=phil.lan)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1jiKE0-0004S9-Ux; Mon, 08 Jun 2020 18:02:13 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     davem@davemloft.net, kuba@kernel.org
-Cc:     robh+dt@kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, linux@armlinux.org.uk,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, heiko@sntech.de,
-        christoph.muellner@theobroma-systems.com,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Subject: [PATCH] net: phy: mscc: handle the clkout control on some phy variants
-Date:   Mon,  8 Jun 2020 18:02:07 +0200
-Message-Id: <20200608160207.1316052-1-heiko@sntech.de>
-X-Mailer: git-send-email 2.26.2
+        id S1730333AbgFHQFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 12:05:12 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 3BC213D5; Mon,  8 Jun 2020 18:05:09 +0200 (CEST)
+Date:   Mon, 8 Jun 2020 18:05:07 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+Subject: [git pull] IOMMU Updates for Linux v5.8
+Message-ID: <20200608160502.GA4491@8bytes.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="G4iJoqBmSsgzjUCe"
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 
-At least VSC8530/8531/8540/8541 contain a clock output that can emit
-a predefined rate of 25, 50 or 125MHz.
+--G4iJoqBmSsgzjUCe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This may then feed back into the network interface as source clock.
-So follow the example the at803x already set and introduce a
-vsc8531,clk-out-frequency property to set that output.
+Hi Linus,
 
-Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
----
- .../bindings/net/mscc-phy-vsc8531.txt         |  3 +
- drivers/net/phy/mscc/mscc.h                   |  9 ++
- drivers/net/phy/mscc/mscc_main.c              | 93 +++++++++++++++++--
- 3 files changed, 98 insertions(+), 7 deletions(-)
+The following changes since commit 3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162:
 
-diff --git a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
-index 5ff37c68c941..4a1f50ae48e1 100644
---- a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
-+++ b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
-@@ -1,6 +1,8 @@
- * Microsemi - vsc8531 Giga bit ethernet phy
- 
- Optional properties:
-+- vsc8531,clk-out-frequency: Clock output frequency in Hertz.
-+			  Should be one of 25000000, 50000000, 125000000
- - vsc8531,vddmac	: The vddmac in mV. Allowed values is listed
- 			  in the first row of Table 1 (below).
- 			  This property is only used in combination
-@@ -63,6 +65,7 @@ Example:
- 
-         vsc8531_0: ethernet-phy@0 {
-                 compatible = "ethernet-phy-id0007.0570";
-+                vsc8531,clk-out-frequency = <125000000>;
-                 vsc8531,vddmac		= <3300>;
-                 vsc8531,edge-slowdown	= <7>;
-                 vsc8531,led-0-mode	= <LINK_1000_ACTIVITY>;
-diff --git a/drivers/net/phy/mscc/mscc.h b/drivers/net/phy/mscc/mscc.h
-index 414e3b31bb1f..c8c395a041c2 100644
---- a/drivers/net/phy/mscc/mscc.h
-+++ b/drivers/net/phy/mscc/mscc.h
-@@ -218,6 +218,13 @@ enum rgmii_clock_delay {
- #define INT_MEM_DATA_M			  0x00ff
- #define INT_MEM_DATA(x)			  (INT_MEM_DATA_M & (x))
- 
-+#define MSCC_CLKOUT_CNTL		  13
-+#define CLKOUT_ENABLE			  BIT(15)
-+#define CLKOUT_FREQ_MASK		  GENMASK(14, 13)
-+#define CLKOUT_FREQ_25M			  (0x0 << 13)
-+#define CLKOUT_FREQ_50M			  (0x1 << 13)
-+#define CLKOUT_FREQ_125M		  (0x2 << 13)
-+
- #define MSCC_PHY_PROC_CMD		  18
- #define PROC_CMD_NCOMPLETED		  0x8000
- #define PROC_CMD_FAILED			  0x4000
-@@ -361,6 +368,8 @@ struct vsc8531_private {
- 	 */
- 	unsigned int base_addr;
- 
-+	u32 clkout_rate;
-+
- #if IS_ENABLED(CONFIG_MACSEC)
- 	/* MACsec fields:
- 	 * - One SecY per device (enforced at the s/w implementation level)
-diff --git a/drivers/net/phy/mscc/mscc_main.c b/drivers/net/phy/mscc/mscc_main.c
-index c8aa6d905d8e..8e63af3628cd 100644
---- a/drivers/net/phy/mscc/mscc_main.c
-+++ b/drivers/net/phy/mscc/mscc_main.c
-@@ -432,6 +432,18 @@ static int vsc85xx_dt_led_mode_get(struct phy_device *phydev,
- 	return led_mode;
- }
- 
-+static void vsc8531_dt_clkout_rate_get(struct phy_device *phydev)
-+{
-+	struct vsc8531_private *priv = phydev->priv;
-+	struct device *dev = &phydev->mdio.dev;
-+	struct device_node *of_node = dev->of_node;
-+
-+	if (!of_node)
-+		return;
-+
-+	of_property_read_u32(of_node, "vsc8531,clk-out-frequency",
-+			     &priv->clkout_rate);
-+}
- #else
- static int vsc85xx_edge_rate_magic_get(struct phy_device *phydev)
- {
-@@ -444,6 +456,10 @@ static int vsc85xx_dt_led_mode_get(struct phy_device *phydev,
- {
- 	return default_mode;
- }
-+
-+static void vsc8531_dt_clkout_rate_get(struct phy_device *phydev)
-+{
-+}
- #endif /* CONFIG_OF_MDIO */
- 
- static int vsc85xx_dt_led_modes_get(struct phy_device *phydev,
-@@ -1540,6 +1556,37 @@ static int vsc85xx_config_init(struct phy_device *phydev)
- 	return 0;
- }
- 
-+static int vsc8531_config_init(struct phy_device *phydev)
-+{
-+	struct vsc8531_private *vsc8531 = phydev->priv;
-+	u16 val;
-+	int rc;
-+
-+	rc = vsc85xx_config_init(phydev);
-+	if (rc)
-+		return rc;
-+
-+	switch (vsc8531->clkout_rate) {
-+	case 0:
-+		val = 0;
-+		break;
-+	case 25000000:
-+		val = CLKOUT_FREQ_25M | CLKOUT_ENABLE;
-+		break;
-+	case 50000000:
-+		val = CLKOUT_FREQ_50M | CLKOUT_ENABLE;
-+		break;
-+	case 125000000:
-+		val = CLKOUT_FREQ_125M | CLKOUT_ENABLE;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return phy_write_paged(phydev, MSCC_PHY_PAGE_EXTENDED_GPIO,
-+			       MSCC_CLKOUT_CNTL, val);
-+}
-+
- static int vsc8584_did_interrupt(struct phy_device *phydev)
- {
- 	int rc = 0;
-@@ -2008,6 +2055,38 @@ static int vsc8514_probe(struct phy_device *phydev)
- 	return vsc85xx_dt_led_modes_get(phydev, default_mode);
- }
- 
-+static int vsc8531_probe(struct phy_device *phydev)
-+{
-+	struct vsc8531_private *vsc8531;
-+	int rate_magic;
-+	u32 default_mode[2] = {VSC8531_LINK_1000_ACTIVITY,
-+	   VSC8531_LINK_100_ACTIVITY};
-+
-+	rate_magic = vsc85xx_edge_rate_magic_get(phydev);
-+	if (rate_magic < 0)
-+		return rate_magic;
-+
-+	vsc8531 = devm_kzalloc(&phydev->mdio.dev, sizeof(*vsc8531), GFP_KERNEL);
-+	if (!vsc8531)
-+		return -ENOMEM;
-+
-+	phydev->priv = vsc8531;
-+
-+	vsc8531->rate_magic = rate_magic;
-+	vsc8531->nleds = 2;
-+	vsc8531->supp_led_modes = VSC85XX_SUPP_LED_MODES;
-+	vsc8531->hw_stats = vsc85xx_hw_stats;
-+	vsc8531->nstats = ARRAY_SIZE(vsc85xx_hw_stats);
-+	vsc8531->stats = devm_kcalloc(&phydev->mdio.dev, vsc8531->nstats,
-+				      sizeof(u64), GFP_KERNEL);
-+	if (!vsc8531->stats)
-+		return -ENOMEM;
-+
-+	vsc8531_dt_clkout_rate_get(phydev);
-+
-+	return vsc85xx_dt_led_modes_get(phydev, default_mode);
-+}
-+
- static int vsc8574_probe(struct phy_device *phydev)
- {
- 	struct vsc8531_private *vsc8531;
-@@ -2174,14 +2253,14 @@ static struct phy_driver vsc85xx_driver[] = {
- 	.phy_id_mask	= 0xfffffff0,
- 	/* PHY_BASIC_FEATURES */
- 	.soft_reset	= &genphy_soft_reset,
--	.config_init	= &vsc85xx_config_init,
-+	.config_init	= &vsc8531_config_init,
- 	.config_aneg    = &vsc85xx_config_aneg,
- 	.read_status	= &vsc85xx_read_status,
- 	.ack_interrupt	= &vsc85xx_ack_interrupt,
- 	.config_intr	= &vsc85xx_config_intr,
- 	.suspend	= &genphy_suspend,
- 	.resume		= &genphy_resume,
--	.probe		= &vsc85xx_probe,
-+	.probe		= &vsc8531_probe,
- 	.set_wol	= &vsc85xx_wol_set,
- 	.get_wol	= &vsc85xx_wol_get,
- 	.get_tunable	= &vsc85xx_get_tunable,
-@@ -2198,14 +2277,14 @@ static struct phy_driver vsc85xx_driver[] = {
- 	.phy_id_mask    = 0xfffffff0,
- 	/* PHY_GBIT_FEATURES */
- 	.soft_reset	= &genphy_soft_reset,
--	.config_init    = &vsc85xx_config_init,
-+	.config_init    = &vsc8531_config_init,
- 	.config_aneg    = &vsc85xx_config_aneg,
- 	.read_status	= &vsc85xx_read_status,
- 	.ack_interrupt  = &vsc85xx_ack_interrupt,
- 	.config_intr    = &vsc85xx_config_intr,
- 	.suspend	= &genphy_suspend,
- 	.resume		= &genphy_resume,
--	.probe		= &vsc85xx_probe,
-+	.probe		= &vsc8531_probe,
- 	.set_wol	= &vsc85xx_wol_set,
- 	.get_wol	= &vsc85xx_wol_get,
- 	.get_tunable	= &vsc85xx_get_tunable,
-@@ -2222,14 +2301,14 @@ static struct phy_driver vsc85xx_driver[] = {
- 	.phy_id_mask	= 0xfffffff0,
- 	/* PHY_BASIC_FEATURES */
- 	.soft_reset	= &genphy_soft_reset,
--	.config_init	= &vsc85xx_config_init,
-+	.config_init	= &vsc8531_config_init,
- 	.config_aneg	= &vsc85xx_config_aneg,
- 	.read_status	= &vsc85xx_read_status,
- 	.ack_interrupt	= &vsc85xx_ack_interrupt,
- 	.config_intr	= &vsc85xx_config_intr,
- 	.suspend	= &genphy_suspend,
- 	.resume		= &genphy_resume,
--	.probe		= &vsc85xx_probe,
-+	.probe		= &vsc8531_probe,
- 	.set_wol	= &vsc85xx_wol_set,
- 	.get_wol	= &vsc85xx_wol_get,
- 	.get_tunable	= &vsc85xx_get_tunable,
-@@ -2246,7 +2325,7 @@ static struct phy_driver vsc85xx_driver[] = {
- 	.phy_id_mask    = 0xfffffff0,
- 	/* PHY_GBIT_FEATURES */
- 	.soft_reset	= &genphy_soft_reset,
--	.config_init    = &vsc85xx_config_init,
-+	.config_init    = &vsc8531_config_init,
- 	.config_aneg    = &vsc85xx_config_aneg,
- 	.read_status	= &vsc85xx_read_status,
- 	.ack_interrupt  = &vsc85xx_ack_interrupt,
--- 
-2.26.2
+  Linux 5.7 (2020-05-31 16:49:15 -0700)
 
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git tags/iommu-updates-v5.8
+
+for you to fetch changes up to 431275afdc7155415254aef4bd3816a1b8a2ead0:
+
+  iommu: Check for deferred attach in iommu_group_do_dma_attach() (2020-06-04 11:38:17 +0200)
+
+----------------------------------------------------------------
+IOMMU Updates for Linux v5.8
+
+Including:
+
+	- A big part of this is a change in how devices get connected to
+	  IOMMUs in the core code. It contains the change from the old
+	  add_device()/remove_device() to the new
+	  probe_device()/release_device() call-backs. As a result
+	  functionality that was previously in the IOMMU drivers has
+	  been moved to the IOMMU core code, including IOMMU group
+	  allocation for each device.
+	  The reason for this change was to get more robust allocation
+	  of default domains for the iommu groups.
+	  A couple of fixes were necessary after this was merged into
+	  the IOMMU tree, but there are no known bugs left. The last fix
+	  is applied on-top of the merge commit for the topic branches.
+
+	- Removal of the driver private domain handling in the Intel
+	  VT-d driver. This was fragile code and I am glad it is gone
+	  now.
+
+	- More Intel VT-d updates from Lu Baolu:
+
+		- Nested Shared Virtual Addressing (SVA) support to the
+		  Intel VT-d driver
+
+		- Replacement of the Intel SVM interfaces to the common
+		  IOMMU SVA API
+
+		- SVA Page Request draining support
+
+	- ARM-SMMU Updates from Will:
+
+		- Avoid mapping reserved MMIO space on SMMUv3, so that
+		  it can be claimed by the PMU driver
+
+		- Use xarray to manage ASIDs on SMMUv3
+
+		- Reword confusing shutdown message
+
+		- DT compatible string updates
+
+		- Allow implementations to override the default domain
+		  type
+
+	- A new IOMMU driver for the Allwinner Sun50i platform
+
+	- Support for ATS gets disabled for untrusted devices (like
+	  Thunderbolt devices). This includes a PCI patch, acked by
+	  Bjorn.
+
+	- Some cleanups to the AMD IOMMU driver to make more use of
+	  IOMMU core features.
+
+	- Unification of some printk formats in the Intel and AMD IOMMU
+	  drivers and in the IOVA code.
+
+	- Updates for DT bindings
+
+	- A number of smaller fixes and cleanups.
+
+----------------------------------------------------------------
+Andre Przywara (1):
+      dt-bindings: arm-smmu: Allow mmu-400, smmu-v1 compatible
+
+Andy Shevchenko (3):
+      iommu/iova: Unify format of the printed messages
+      iommu/vt-d: Unify format of the printed messages
+      iommu/amd: Unify format of the printed messages
+
+Arnd Bergmann (1):
+      iommu/renesas: Fix unused-function warning
+
+Chen Zhou (1):
+      iommu/arm-smmu-v3: remove set but not used variable 'smmu'
+
+Jacob Pan (10):
+      iommu/vt-d: Move domain helper to header
+      iommu/vt-d: Use a helper function to skip agaw for SL
+      iommu/vt-d: Add nested translation helper function
+      iommu/vt-d: Add bind guest PASID support
+      iommu/vt-d: Support flushing more translation cache types
+      iommu/vt-d: Add svm/sva invalidate function
+      iommu/vt-d: Add custom allocator for IOASID
+      iommu/vt-d: Report SVA feature with generic flag
+      iommu/vt-d: Replace intel SVM APIs with generic SVA APIs
+      iommu/vt-d: Fix compile warning
+
+Jean-Philippe Brucker (8):
+      iommu/arm-smmu-v3: Don't reserve implementation defined register space
+      iommu/arm-smmu-v3: Manage ASIDs with xarray
+      PCI/ATS: Only enable ATS for trusted devices
+      iommu/amd: Use pci_ats_supported()
+      iommu/arm-smmu-v3: Use pci_ats_supported()
+      iommu/vt-d: Use pci_ats_supported()
+      uacce: Remove mm_exit() op
+      iommu: Remove iommu_sva_ops::mm_exit()
+
+Joerg Roedel (50):
+      iommu: Move default domain allocation to separate function
+      iommu/amd: Implement iommu_ops->def_domain_type call-back
+      iommu/vt-d: Wire up iommu_ops->def_domain_type
+      iommu/amd: Remove dma_mask check from check_device()
+      iommu/amd: Return -ENODEV in add_device when device is not handled by IOMMU
+      iommu: Add probe_device() and release_device() call-backs
+      iommu: Move default domain allocation to iommu_probe_device()
+      iommu: Keep a list of allocated groups in __iommu_probe_device()
+      iommu: Move new probe_device path to separate function
+      iommu: Split off default domain allocation from group assignment
+      iommu: Move iommu_group_create_direct_mappings() out of iommu_group_add_device()
+      iommu: Export bus_iommu_probe() and make is safe for re-probing
+      iommu/amd: Remove dev_data->passthrough
+      iommu/amd: Convert to probe/release_device() call-backs
+      iommu/vt-d: Convert to probe/release_device() call-backs
+      iommu/arm-smmu: Convert to probe/release_device() call-backs
+      iommu/pamu: Convert to probe/release_device() call-backs
+      iommu/s390: Convert to probe/release_device() call-backs
+      iommu/virtio: Convert to probe/release_device() call-backs
+      iommu/msm: Convert to probe/release_device() call-backs
+      iommu/mediatek: Convert to probe/release_device() call-backs
+      iommu/mediatek-v1 Convert to probe/release_device() call-backs
+      iommu/qcom: Convert to probe/release_device() call-backs
+      iommu/rockchip: Convert to probe/release_device() call-backs
+      iommu/tegra: Convert to probe/release_device() call-backs
+      iommu/renesas: Convert to probe/release_device() call-backs
+      iommu/omap: Remove orphan_dev tracking
+      iommu/omap: Convert to probe/release_device() call-backs
+      iommu/exynos: Use first SYSMMU in controllers list for IOMMU core
+      iommu/exynos: Convert to probe/release_device() call-backs
+      iommu: Remove add_device()/remove_device() code-paths
+      iommu: Move more initialization to __iommu_probe_device()
+      iommu: Unexport iommu_group_get_for_dev()
+      Merge tag 'v5.7-rc4' into core
+      iommu/sun50i: Fix compile warnings
+      iommu/sun50i: Use __GFP_ZERO instead of memset()
+      iommu: Don't call .probe_finalize() under group->mutex
+      iommu: Don't take group reference in iommu_alloc_default_domain()
+      Merge tag 'v5.7-rc7' into x86/amd
+      iommu/amd: Unexport get_dev_data()
+      iommu/amd: Let free_pagetable() not rely on domain->pt_root
+      iommu/amd: Allocate page-table in protection_domain_init()
+      iommu/amd: Free page-table in protection_domain_free()
+      iommu/amd: Consolidate domain allocation/freeing
+      iommu/amd: Remove PD_DMA_OPS_MASK
+      iommu/amd: Merge private header files
+      iommu/amd: Store dev_data as device iommu private data
+      iommu/amd: Remove redundant devid checks
+      Merge branches 'arm/msm', 'arm/allwinner', 'arm/smmu', 'x86/vt-d', 'hyper-v', 'core' and 'x86/amd' into next
+      iommu: Check for deferred attach in iommu_group_do_dma_attach()
+
+Jon Derrick (3):
+      iommu/vt-d: Only clear real DMA device's context entries
+      iommu/vt-d: Allocate domain info for real DMA sub-devices
+      iommu/vt-d: Remove real DMA lookup in find_domain
+
+Jordan Crouse (1):
+      iommu/arm-smmu: Allow client devices to select direct mapping
+
+Lu Baolu (12):
+      iommu/vt-d: Allow 32bit devices to uses DMA domain
+      iommu/vt-d: Allow PCI sub-hierarchy to use DMA domain
+      iommu/vt-d: Apply per-device dma_ops
+      iommu/vt-d: Enlightened PASID allocation
+      iommu/vt-d: Add get_domain_info() helper
+      iommu/vt-d: Multiple descriptors per qi_submit_sync()
+      iommu/vt-d: debugfs: Add support to show inv queue internals
+      iommu/vt-d: Disable non-recoverable fault processing before unbind
+      iommu/vt-d: Add page request draining support
+      iommu/vt-d: Remove redundant IOTLB flush
+      iommu/vt-d: Remove duplicated check in intel_svm_bind_mm()
+      iommu/vt-d: Fix pointer cast warnings on 32 bit
+
+Maxime Ripard (2):
+      dt-bindings: iommu: Add Allwinner H6 IOMMU bindings
+      iommu: Add Allwinner H6 IOMMU driver
+
+Qian Cai (2):
+      iommu/amd: Fix variable "iommu" set but not used
+      iommu/vt-d: fix a GCC warning
+
+Rikard Falkeborn (2):
+      iommu/hyper-v: Constify hyperv_ir_domain_ops
+      iommu/sun50i: Constify sun50i_iommu_ops
+
+Sai Prakash Ranjan (3):
+      iommu/arm-smmu: Make remove callback message more informative
+      iommu: arm-smmu-impl: Convert to a generic reset implementation
+      iommu/arm-smmu: Implement iommu_ops->def_domain_type call-back
+
+Sai Praneeth Prakhya (2):
+      iommu: Add def_domain_type() callback in iommu_ops
+      iommu: Remove functions that support private domain
+
+Samuel Zou (1):
+      iommu/msm: Make msm_iommu_lock static
+
+Sibi Sankar (3):
+      dt-bindings: remoteproc: qcom: Add iommus property
+      arm64: dts: qcom: sdm845-cheza: Add iommus property
+      iommu/arm-smmu-qcom: Request direct mapping for modem device
+
+Tero Kristo via iommu (2):
+      iommu/omap: Add check for iommu group when no IOMMU in use
+      iommu/omap: Add registration for DT fwnode pointer
+
+Thierry Reding (1):
+      iommu: Do not probe devices on IOMMU-less busses
+
+Tom Murphy (1):
+      iommu/vt-d: Remove IOVA handling code from the non-dma_ops path
+
+Wei Yongjun (1):
+      iommu/sun50i: Fix return value check in sun50i_iommu_probe()
+
+Yong Wu (2):
+      iommu/mediatek-v1: Add def_domain_type
+      iommu/mediatek-v1: Fix a build warning for a unused variable 'data'
+
+ .../bindings/iommu/allwinner,sun50i-h6-iommu.yaml  |   61 ++
+ .../devicetree/bindings/iommu/arm,smmu.yaml        |    4 +-
+ .../devicetree/bindings/remoteproc/qcom,q6v5.txt   |    3 +
+ arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi         |    5 +
+ drivers/iommu/Kconfig                              |    9 +
+ drivers/iommu/Makefile                             |    1 +
+ drivers/iommu/amd_iommu.c                          |  369 +++----
+ drivers/iommu/amd_iommu.h                          |   96 +-
+ drivers/iommu/amd_iommu_debugfs.c                  |    5 +-
+ drivers/iommu/amd_iommu_init.c                     |    4 +-
+ drivers/iommu/amd_iommu_proto.h                    |   96 --
+ drivers/iommu/amd_iommu_types.h                    |    9 +-
+ drivers/iommu/amd_iommu_v2.c                       |   14 +-
+ drivers/iommu/arm-smmu-impl.c                      |    8 +-
+ drivers/iommu/arm-smmu-qcom.c                      |   37 +-
+ drivers/iommu/arm-smmu-v3.c                        |  122 +--
+ drivers/iommu/arm-smmu.c                           |   53 +-
+ drivers/iommu/arm-smmu.h                           |    1 +
+ drivers/iommu/dmar.c                               |   99 +-
+ drivers/iommu/exynos-iommu.c                       |   24 +-
+ drivers/iommu/fsl_pamu_domain.c                    |   22 +-
+ drivers/iommu/hyperv-iommu.c                       |    2 +-
+ drivers/iommu/intel-iommu-debugfs.c                |   62 ++
+ drivers/iommu/intel-iommu.c                        |  952 ++++++++----------
+ drivers/iommu/intel-pasid.c                        |  309 +++++-
+ drivers/iommu/intel-pasid.h                        |   27 +-
+ drivers/iommu/intel-svm.c                          |  448 +++++++--
+ drivers/iommu/intel_irq_remapping.c                |    2 +-
+ drivers/iommu/iommu.c                              |  470 ++++++---
+ drivers/iommu/iova.c                               |    6 +-
+ drivers/iommu/ipmmu-vmsa.c                         |   59 +-
+ drivers/iommu/msm_iommu.c                          |   36 +-
+ drivers/iommu/mtk_iommu.c                          |   24 +-
+ drivers/iommu/mtk_iommu_v1.c                       |   68 +-
+ drivers/iommu/omap-iommu.c                         |  103 +-
+ drivers/iommu/qcom_iommu.c                         |   24 +-
+ drivers/iommu/rockchip-iommu.c                     |   26 +-
+ drivers/iommu/s390-iommu.c                         |   22 +-
+ drivers/iommu/sun50i-iommu.c                       | 1023 ++++++++++++++++++++
+ drivers/iommu/tegra-gart.c                         |   24 +-
+ drivers/iommu/tegra-smmu.c                         |   31 +-
+ drivers/iommu/virtio-iommu.c                       |   41 +-
+ drivers/misc/uacce/uacce.c                         |  172 +---
+ drivers/pci/ats.c                                  |   18 +-
+ include/linux/intel-iommu.h                        |   82 +-
+ include/linux/intel-svm.h                          |   94 +-
+ include/linux/iommu.h                              |   63 +-
+ include/linux/pci-ats.h                            |    3 +
+ include/linux/uacce.h                              |   34 +-
+ include/uapi/linux/iommu.h                         |    5 +
+ 50 files changed, 3345 insertions(+), 1927 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iommu/allwinner,sun50i-h6-iommu.yaml
+ delete mode 100644 drivers/iommu/amd_iommu_proto.h
+ create mode 100644 drivers/iommu/sun50i-iommu.c
+
+Please pull.
+
+Thanks,
+
+	Joerg
+
+--G4iJoqBmSsgzjUCe
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEr9jSbILcajRFYWYyK/BELZcBGuMFAl7eYa4ACgkQK/BELZcB
+GuMJ3BAAq64NLMM+Q/arBlmr/L/EjGywMiX2etocW/bhapS22do+lctsXDfUqTxc
+BKcFXJrBzaobZN3On55YSrmIpG3wCdRdXS2XP0oRYbvqMqrTJI2XTUo70GtMgrIg
+jOmi+TTpE+OEfY2hwSPAlFLd5lG4CguLHch/08x65HoV/j1whekGTjpt66o55XxQ
+4JAApE0IrwFGTNmjri0zYFGVK3JX6p6pzgzTM18uZ4mueDZVfEN7pbwg6UalXoFd
+SbQiGUfEKm4zR2WYLUCMaF4kMyg/CXUeu5rSS14kuLkzJLbPCnCW3VEbxVXVlRjN
+oQlVOiNrohr3ViLDm1+XNoMLQyu7TOrZj9XkxwtvlLaG4cMmOejSAbXJ84sNWcv2
+fV/cBy4cl1hqOjHdtiBQIsTZEuuhbDFjcKBN0p963f1m8I2yuGrKUx1M1ynNOn8C
+mYiZgohMzE4oPdb2xI+U6XHgHQikCqM61jPOLHyOsOSNHrPbhTmBnY9tW/3FoiiH
+u7CbTBfMJfB8ZPMs+8DWnMiPxkNcbmdvUXDX/u40Z4xzvwfrPQiSJHvhn8Ci5Wbu
+QqeCd2E9RtjWKyx0FA4TDhDADgO//jex4IcON8BuZzb14pXHWsjTXhXl6i09TW5B
+fT+MLONx1arbgn7BU/U4IYl5LyND48qQed1hXLR6oae+QE7++DM=
+=GyJw
+-----END PGP SIGNATURE-----
+
+--G4iJoqBmSsgzjUCe--
