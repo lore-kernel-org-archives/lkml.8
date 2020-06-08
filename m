@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9433C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD89C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91E9B20774
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:55:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E735020760
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:55:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591664109;
-	bh=hS28z6xSWw2sPqJgW7kXj7XRamTjmuW8YLgw81pClG0=;
+	s=default; t=1591664118;
+	bh=A2+BCgXzsTy6M9FbSpUV6W6SaqFDrv7zQvC2USjwbbg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tm8DZkVxnAphkapuFPmc1ywg6p9mDRpkg55B+QbFvyWc2Qlbhgpa9twCKxRmp5dwy
-	 XZ/mNdol9lUDV7a0+8H0cgT222D93iBL6J4b2QNjsC3y7ERI0ERrF4L70RCNawAXHf
-	 ybL6aN7EMaZBiWOMgJr248tqwQ8+OLK32OX4F2MU=
+	b=Vdmi3V4IcpBPwhEtdqEmSxiXcHImh8WI+bwuk7NRk5t1581ptqE7j/+Qpl0+DLJyY
+	 kft7GRMJDccc1oJ0q7H4+Mq8hfbxD/cDV9j/EUBRQlisf0auW++hWs4LAfcGch8QoT
+	 7cPytpLRFcWFjHomsPDaUyjDyijtWZVzlzzgNJgY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387920AbgFIAzE (ORCPT
+        id S2387982AbgFIAzQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:55:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55152 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:55:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728412AbgFHXJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:09:26 -0400
+        id S1727081AbgFHXJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:09:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3915B208C9;
-        Mon,  8 Jun 2020 23:09:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 233D6208A9;
+        Mon,  8 Jun 2020 23:09:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657765;
-        bh=hS28z6xSWw2sPqJgW7kXj7XRamTjmuW8YLgw81pClG0=;
+        s=default; t=1591657763;
+        bh=A2+BCgXzsTy6M9FbSpUV6W6SaqFDrv7zQvC2USjwbbg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SY3QElyJXncNMHxNSHQWhxnXzkSdOjg9mWPVJzZUyVu1DdElHRwzNtSWZ32ejlS2p
-         NM2285EHTgyTtqlaBbexvQo7DsCbWyoN7doKd+Iga6B5eEcRk/6mXJpa0x16sB5De4
-         ztx17+VbVPXm5hOme3hd0wCd/CxHp/tsiAlXFS5E=
+        b=aTvnaLujwKGMYuUeZ/+qt3ooPIBq3yGNhgTPY2vCqyW+h+hOV5SQbYWIoRhatx0Xk
+         xFgdYnsC3WHkBcAXLiA4BDAom5UAudO1LhnYc97CHvO317YZld8m29YWGc0faNgBsy
+         8EDStr0jrNtlwYPkJ83LdaWedUsuTWA6Gt/BDRL4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 150/274] octeontx2-pf: Fix error return code in otx2_probe()
-Date:   Mon,  8 Jun 2020 19:04:03 -0400
-Message-Id: <20200608230607.3361041-150-sashal@kernel.org>
+Cc:     Shaokun Zhang <zhangshaokun@hisilicon.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 148/274] drivers/perf: hisi: Fix typo in events attribute array
+Date:   Mon,  8 Jun 2020 19:04:01 -0400
+Message-Id: <20200608230607.3361041-148-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -59,45 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Shaokun Zhang <zhangshaokun@hisilicon.com>
 
-[ Upstream commit 654cad8b6a17dcb00077070b27bc65873951a568 ]
+[ Upstream commit 88562f06ebf56587788783e5420f25fde3ca36c8 ]
 
-Fix to return negative error code -ENOMEM from the error handling
-case instead of 0, as done elsewhere in this function.
+Fix up one typo: wr_dr_64b -> wr_ddr_64b.
 
-Fixes: 5a6d7c9daef3 ("octeontx2-pf: Mailbox communication with AF")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 2bab3cf9104c ("perf: hisi: Add support for HiSilicon SoC HHA PMU driver")
+Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Link: https://lore.kernel.org/r/1587643530-34357-1-git-send-email-zhangshaokun@hisilicon.com
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/perf/hisilicon/hisi_uncore_hha_pmu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
-index 411e5ea1031e..64786568af0d 100644
---- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
-@@ -1856,13 +1856,17 @@ static int otx2_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	num_vec = pci_msix_vec_count(pdev);
- 	hw->irq_name = devm_kmalloc_array(&hw->pdev->dev, num_vec, NAME_SIZE,
- 					  GFP_KERNEL);
--	if (!hw->irq_name)
-+	if (!hw->irq_name) {
-+		err = -ENOMEM;
- 		goto err_free_netdev;
-+	}
- 
- 	hw->affinity_mask = devm_kcalloc(&hw->pdev->dev, num_vec,
- 					 sizeof(cpumask_var_t), GFP_KERNEL);
--	if (!hw->affinity_mask)
-+	if (!hw->affinity_mask) {
-+		err = -ENOMEM;
- 		goto err_free_netdev;
-+	}
- 
- 	/* Map CSRs */
- 	pf->reg_base = pcim_iomap(pdev, PCI_CFG_REG_BAR_NUM, 0);
+diff --git a/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c b/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
+index 6a1dd72d8abb..e5af9d7e6e14 100644
+--- a/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
++++ b/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
+@@ -283,7 +283,7 @@ static struct attribute *hisi_hha_pmu_events_attr[] = {
+ 	HISI_PMU_EVENT_ATTR(rx_wbip,		0x05),
+ 	HISI_PMU_EVENT_ATTR(rx_wtistash,	0x11),
+ 	HISI_PMU_EVENT_ATTR(rd_ddr_64b,		0x1c),
+-	HISI_PMU_EVENT_ATTR(wr_dr_64b,		0x1d),
++	HISI_PMU_EVENT_ATTR(wr_ddr_64b,		0x1d),
+ 	HISI_PMU_EVENT_ATTR(rd_ddr_128b,	0x1e),
+ 	HISI_PMU_EVENT_ATTR(wr_ddr_128b,	0x1f),
+ 	HISI_PMU_EVENT_ATTR(spill_num,		0x20),
 -- 
 2.25.1
 
