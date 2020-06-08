@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16CCCC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 046D4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D908420890
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:34:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAA3720775
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:34:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591659275;
-	bh=p4lLtA7D2vhEZpZAK00IfgXqI3bdZBdLz68+go6p4SI=;
+	s=default; t=1591659279;
+	bh=o23A9+aPsDsblHRk7bpNwsM+EWR1GnGWmRJdBz1zUDM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ybqiANHm07MuBMt8mc3pID853+1VrXjE5MLbnYjCg6To9FyweTDU1PvpowWDL6aup
-	 o/TeSVlp7Q+3m9TXFvpJJdVQfJdX8LFjXeNAsB5ow+arTLZLX+d1bOtII8dCQwCYUq
-	 18qXGv9ggyj9cPAyN3pygd7pEVJMWEm67Fhojk/0=
+	b=Vj3tH1QpDVCRsgGBZWMTPSLhH7FjvtZC/0wOiOz1+nK3fxPrvrkVIuALbFc1J8YdM
+	 T/vv30Y/tWJpM4YnWVMNUvVep2LTIrX8vbG56XfrmL1yla7CwcfmkuneZx743DWQrG
+	 /8EJ3AlTITC5yWj/ERFxC+PkCaVDabJx0WGdMgbI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732642AbgFHXef (ORCPT
+        id S1730970AbgFHXej (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:34:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56844 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:34:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730916AbgFHX2C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:28:02 -0400
+        id S2387678AbgFHX2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:28:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA87B207C3;
-        Mon,  8 Jun 2020 23:28:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2748820897;
+        Mon,  8 Jun 2020 23:28:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658881;
-        bh=p4lLtA7D2vhEZpZAK00IfgXqI3bdZBdLz68+go6p4SI=;
+        s=default; t=1591658883;
+        bh=o23A9+aPsDsblHRk7bpNwsM+EWR1GnGWmRJdBz1zUDM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aIQSqTmbKAWGDr7JvTz61WX8CPYseWlj14sPgqJqkkoIE+NuHWXcYprHCRm3c9zXG
-         1O1e5DdwmI1Zahatc5vVREINl7VD6M213q3pqKc7c52S4ulARQ6XhBY5COm3O+SiBu
-         TGyyYWPGIKHQ/lQeyZI/fthuLGJ8tBdNG06/76jo=
+        b=Snqcl8CWm2avaUKnzghsaQYpKHRZWF7LJezLpZrtTc9VWXPCMgryUBKUbvtg1LCIB
+         nmpeYNfKDlQd0Fs8VDn/TMjhl1DUxLGOlB/doTFMJ6EF3L6ydxG+/DuORmPVLui8AL
+         cryV68I8L+LwNVD3hKFcrjvvEYeQmIPPKohsTI9U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Filipe Manana <fdmanana@suse.com>, David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 08/37] btrfs: do not ignore error from btrfs_next_leaf() when inserting checksums
-Date:   Mon,  8 Jun 2020 19:27:20 -0400
-Message-Id: <20200608232750.3370747-8-sashal@kernel.org>
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 10/37] net: vmxnet3: fix possible buffer overflow caused by bad DMA value in vmxnet3_get_rss()
+Date:   Mon,  8 Jun 2020 19:27:22 -0400
+Message-Id: <20200608232750.3370747-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608232750.3370747-1-sashal@kernel.org>
 References: <20200608232750.3370747-1-sashal@kernel.org>
@@ -58,46 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 7e4a3f7ed5d54926ec671bbb13e171cfe179cc50 ]
+[ Upstream commit 3e1c6846b9e108740ef8a37be80314053f5dd52a ]
 
-We are currently treating any non-zero return value from btrfs_next_leaf()
-the same way, by going to the code that inserts a new checksum item in the
-tree. However if btrfs_next_leaf() returns an error (a value < 0), we
-should just stop and return the error, and not behave as if nothing has
-happened, since in that case we do not have a way to know if there is a
-next leaf or we are currently at the last leaf already.
+The value adapter->rss_conf is stored in DMA memory, and it is assigned
+to rssConf, so rssConf->indTableSize can be modified at anytime by
+malicious hardware. Because rssConf->indTableSize is assigned to n,
+buffer overflow may occur when the code "rssConf->indTable[n]" is
+executed.
 
-So fix that by returning the error from btrfs_next_leaf().
+To fix this possible bug, n is checked after being used.
 
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/file-item.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/vmxnet3/vmxnet3_ethtool.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/btrfs/file-item.c b/fs/btrfs/file-item.c
-index 58ece6558430..fb5c97ea670f 100644
---- a/fs/btrfs/file-item.c
-+++ b/fs/btrfs/file-item.c
-@@ -742,10 +742,12 @@ int btrfs_csum_file_blocks(struct btrfs_trans_handle *trans,
- 		nritems = btrfs_header_nritems(path->nodes[0]);
- 		if (!nritems || (path->slots[0] >= nritems - 1)) {
- 			ret = btrfs_next_leaf(root, path);
--			if (ret == 1)
-+			if (ret < 0) {
-+				goto out;
-+			} else if (ret > 0) {
- 				found_next = 1;
--			if (ret != 0)
- 				goto insert;
-+			}
- 			slot = path->slots[0];
- 		}
- 		btrfs_item_key_to_cpu(path->nodes[0], &found_key, slot);
+diff --git a/drivers/net/vmxnet3/vmxnet3_ethtool.c b/drivers/net/vmxnet3/vmxnet3_ethtool.c
+index 9ba11d737753..f35597c44e3c 100644
+--- a/drivers/net/vmxnet3/vmxnet3_ethtool.c
++++ b/drivers/net/vmxnet3/vmxnet3_ethtool.c
+@@ -664,6 +664,8 @@ vmxnet3_get_rss(struct net_device *netdev, u32 *p, u8 *key, u8 *hfunc)
+ 		*hfunc = ETH_RSS_HASH_TOP;
+ 	if (!p)
+ 		return 0;
++	if (n > UPT1_RSS_MAX_IND_TABLE_SIZE)
++		return 0;
+ 	while (n--)
+ 		p[n] = rssConf->indTable[n];
+ 	return 0;
 -- 
 2.25.1
 
