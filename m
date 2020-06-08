@@ -2,83 +2,96 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 111B6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 13:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36131C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 13:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5BBD206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 13:43:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CD432076A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 13:47:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="TOjirWLk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729932AbgFHNno (ORCPT
+        id S1729860AbgFHNrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 09:43:44 -0400
-Received: from mga12.intel.com ([192.55.52.136]:64831 "EHLO mga12.intel.com"
+        Mon, 8 Jun 2020 09:47:35 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:39528 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729771AbgFHNnH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 09:43:07 -0400
-IronPort-SDR: t0vfmladt18rNYMXJo3mFqiApKHpuoSA3hWqDDWIvUkm74j0/H/VvWiRVzC+hnbVa/adWS+reX
- 0BoGVa/aD3Ig==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2020 06:43:05 -0700
-IronPort-SDR: WPzLS4OGCEoAHXiAfcZlqvNbpEe5Stdk9xmOLHVDQ9jp67ZJJjUYoV5DHk9hwEde+OpbFouzZ5
- snfGgo71QgRA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,487,1583222400"; 
-   d="scan'208";a="379426397"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 08 Jun 2020 06:43:03 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id ADADC180; Mon,  8 Jun 2020 16:43:02 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <fancer.lancer@gmail.com>, linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 0/6] mfd: Make use of software nodes
-Date:   Mon,  8 Jun 2020 16:42:54 +0300
-Message-Id: <20200608134300.76091-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.27.0.rc2
+        id S1729302AbgFHNre (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 09:47:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=HzzbNliZ9TvYoUDJFmNkzkIkNb1vhWYSQ9c76IBE4Zg=; b=TOjirWLkJ/naxIFRzOerVtQxXu
+        eWLNrFajyLzjfuO51ELz4+tjzf3gz0NL1DlMCCD5HlSsDH4xiGfh7wwpUkIzpDsoQOfDlGZGGGmcE
+        K7YlYc7KSYklnA9Gj2Ql65RpXWnAPU09ReroCx/7qw3gxa0Us58l8HEmSVDYB5UD2Hik=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jiI7L-004PHE-MY; Mon, 08 Jun 2020 15:47:11 +0200
+Date:   Mon, 8 Jun 2020 15:47:11 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Amit Cohen <amitc@mellanox.com>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "corbet@lwn.net" <corbet@lwn.net>, Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "mkubecek@suse.cz" <mkubecek@suse.cz>,
+        "gustavo@embeddedor.com" <gustavo@embeddedor.com>,
+        "cforno12@linux.vnet.ibm.com" <cforno12@linux.vnet.ibm.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "linux@rempel-privat.de" <linux@rempel-privat.de>,
+        "alexandru.ardelean@analog.com" <alexandru.ardelean@analog.com>,
+        Aya Levin <ayal@mellanox.com>,
+        Petr Machata <petrm@mellanox.com>, mlxsw <mlxsw@mellanox.com>,
+        "liuhangbin@gmail.com" <liuhangbin@gmail.com>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
+Subject: Re: [RFC PATCH net-next 05/10] Documentation: networking:
+ ethtool-netlink: Add link extended state
+Message-ID: <20200608134711.GC1006885@lunn.ch>
+References: <20200607145945.30559-1-amitc@mellanox.com>
+ <20200607145945.30559-6-amitc@mellanox.com>
+ <20200607164759.GG1022955@lunn.ch>
+ <AM0PR0502MB382638933BF9B7BE0AB34E81D7850@AM0PR0502MB3826.eurprd05.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM0PR0502MB382638933BF9B7BE0AB34E81D7850@AM0PR0502MB3826.eurprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some devices would need to have a hierarchy of properties and
-child nodes passed to the child or children of MFD. For such case
-we may utilize software nodes, which is superior on device properties.
+On Mon, Jun 08, 2020 at 10:02:04AM +0000, Amit Cohen wrote:
+> Andrew Lunn <andrew@lunn.ch> writes:
+> 
+> >> +Link extended states:
+> >> +
+> >> +  ============================    =============================================
+> >> +  ``Autoneg failure``             Failure during auto negotiation mechanism
+> >
+> >I think you need to define 'failure' here.
+> >
+> >Linux PHYs don't have this state. auto-neg is either ongoing, or has completed. There is no time limit for auto-neg. If there is no link partner, auto-neg does not fail, it just continues until there is a link partner which responds and negotiation completes.
+> >
+> >Looking at the state diagrams in 802.3 clause 28, what do you consider as failure?
+> >
+> 
+> Ok, you're right. What about renaming this state to "Autoneg issue" and then as ext_substate you can use something like "Autoneg ongoing"? 
 
-Add support of software nodes to MFD core and convert one driver
-to show how it looks like. This allows to get rid of legacy platform
-data.
+Hi Amit
 
-The change has been tested on Intel Galileo Gen 2.
+I'm not sure 'issue' is correct here. Just because it has not
+completed does not mean there is an issue. It takes around 1.5 seconds
+anyway, best case. And if there is no link partner, it is not supposed
+to complete. So i would suggest just ``Autoneg``.
 
-Andy Shevchenko (5):
-  gpio: dwapb: Replace irq_shared flag with fwnode type check
-  gpio: dwapb: Read GPIO base from snps,gpio-base property
-  mfd: intel_quark_i2c_gpio: Convert to use software nodes
-  gpio: dwapb: Get rid of legacy platform data
-  gpio: dwapb: Define magic number for IRQ and GPIO lines
-
-Heikki Krogerus (1):
-  mfd: core: Propagate software node group to the sub devices
-
- drivers/gpio/gpio-dwapb.c                | 44 +++++++++-------
- drivers/mfd/intel_quark_i2c_gpio.c       | 64 +++++++++++-------------
- drivers/mfd/mfd-core.c                   | 31 ++++++++++--
- include/linux/mfd/core.h                 |  3 ++
- include/linux/platform_data/gpio-dwapb.h | 23 ---------
- 5 files changed, 85 insertions(+), 80 deletions(-)
- delete mode 100644 include/linux/platform_data/gpio-dwapb.h
-
--- 
-2.27.0.rc2
-
+	  Andrew
