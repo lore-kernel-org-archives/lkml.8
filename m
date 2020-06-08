@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9039FC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:37:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C987C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64D032068D
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:37:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 667A82068D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:37:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591659475;
-	bh=BbxdWGnvVlDQStaBtcIGrsZkW4bEhkfCkN1SYoePdjU=;
+	s=default; t=1591659478;
+	bh=tIYI5t2J+LB5N5VtFiv4WB/Ab2by5Kx8c+vAdBocG20=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UZnGa670y0PAp4mCsN9WTH4Va536e9m/72pzExbL7yLOsbBvzcxl60wKJj018aBEn
-	 BLZ7Tu+M6ZdtV1wm+xmSoOmv8qCxs68WLD+RuCglMx1SGrwlgoPBdZ8WeVr4nNT54v
-	 bMWlkiPfMUuuj3kw5DFadJ+xo5tVAoI+wrOHg2Fk=
+	b=fMlDsY53/8Epwej7jlgpAU7LWMJaia6DvoIIYu0bXVj7d2tzrT30LlUBMutXc/6LF
+	 BlQEH3xVC35ZWNxNzjOFT008LTyZHu9PGhXG8TjOXzRw/AdVpeDg7JOXe6lBfrDm+Z
+	 EBnHeu8p2v78YYXNTyKCTLRBy45zEmlFDmHcIJsc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732221AbgFHX2g (ORCPT
+        id S1731406AbgFHXh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:28:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47656 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:37:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731369AbgFHXWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:22:48 -0400
+        id S1732228AbgFHX2g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:28:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5E7F20872;
-        Mon,  8 Jun 2020 23:22:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7A60208A7;
+        Mon,  8 Jun 2020 23:28:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658568;
-        bh=BbxdWGnvVlDQStaBtcIGrsZkW4bEhkfCkN1SYoePdjU=;
+        s=default; t=1591658915;
+        bh=tIYI5t2J+LB5N5VtFiv4WB/Ab2by5Kx8c+vAdBocG20=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AB+ZO2bdd6QxE8zSZApCgDq7xa3i99poCVQBZxZYQ0PVwVmX5xo5gaTWeM/j0f0zf
-         qdbXEyMiEsXeItUtcY3fiUPhFhyqxDQVMqHL4eTahQu8+658oT6Fs6XfeJHEjppImj
-         jWmBU6u9FQn7qoI9y8skFgJ3ibGOqmKQJYqYVils=
+        b=thUFIwxAr+kdUa60SnSKx7mwPATUumv/zXpV3hdJjEJuC1FF+LtMYZM1NfwWGY5Xk
+         bBKc3aKxiMK/ssnsoWouRRLDIGFLZNAlMCBQDWka8f5m+GsQJw04+Eokpx2aw8tFEt
+         NdB+N2zSddvrOxIQUD3ZRU7F87niwU7Du1K7pmf8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mark Starovoytov <mstarovoitov@marvell.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 008/106] net: atlantic: make hw_get_regs optional
-Date:   Mon,  8 Jun 2020 19:21:00 -0400
-Message-Id: <20200608232238.3368589-8-sashal@kernel.org>
+Cc:     YuanJunQing <yuanjunqing66@163.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Sasha Levin <sashal@kernel.org>, linux-mips@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 32/37] MIPS: Fix IRQ tracing when call handle_fpe() and handle_msa_fpe()
+Date:   Mon,  8 Jun 2020 19:27:44 -0400
+Message-Id: <20200608232750.3370747-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608232238.3368589-1-sashal@kernel.org>
-References: <20200608232238.3368589-1-sashal@kernel.org>
+In-Reply-To: <20200608232750.3370747-1-sashal@kernel.org>
+References: <20200608232750.3370747-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,43 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Starovoytov <mstarovoitov@marvell.com>
+From: YuanJunQing <yuanjunqing66@163.com>
 
-[ Upstream commit d0f23741c202c685447050713907f3be39a985ee ]
+[ Upstream commit 31e1b3efa802f97a17628dde280006c4cee4ce5e ]
 
-This patch fixes potential crash in case if hw_get_regs is NULL.
+Register "a1" is unsaved in this function,
+ when CONFIG_TRACE_IRQFLAGS is enabled,
+ the TRACE_IRQS_OFF macro will call trace_hardirqs_off(),
+ and this may change register "a1".
+ The changed register "a1" as argument will be send
+ to do_fpe() and do_msa_fpe().
 
-Signed-off-by: Mark Starovoytov <mstarovoitov@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: YuanJunQing <yuanjunqing66@163.com>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/aquantia/atlantic/aq_nic.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/mips/kernel/genex.S | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-index 15dcfb6704e5..adac5df0d6b4 100644
---- a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-@@ -620,6 +620,9 @@ int aq_nic_get_regs(struct aq_nic_s *self, struct ethtool_regs *regs, void *p)
- 	u32 *regs_buff = p;
- 	int err = 0;
+diff --git a/arch/mips/kernel/genex.S b/arch/mips/kernel/genex.S
+index bb72f3ce7e29..7ffd158de76e 100644
+--- a/arch/mips/kernel/genex.S
++++ b/arch/mips/kernel/genex.S
+@@ -430,20 +430,20 @@ NESTED(nmi_handler, PT_SIZE, sp)
+ 	.endm
  
-+	if (unlikely(!self->aq_hw_ops->hw_get_regs))
-+		return -EOPNOTSUPP;
-+
- 	regs->version = 1;
+ 	.macro	__build_clear_fpe
++	CLI
++	TRACE_IRQS_OFF
+ 	.set	push
+ 	/* gas fails to assemble cfc1 for some archs (octeon).*/ \
+ 	.set	mips1
+ 	SET_HARDFLOAT
+ 	cfc1	a1, fcr31
+ 	.set	pop
+-	CLI
+-	TRACE_IRQS_OFF
+ 	.endm
  
- 	err = self->aq_hw_ops->hw_get_regs(self->aq_hw,
-@@ -634,6 +637,9 @@ int aq_nic_get_regs(struct aq_nic_s *self, struct ethtool_regs *regs, void *p)
+ 	.macro	__build_clear_msa_fpe
+-	_cfcmsa	a1, MSA_CSR
+ 	CLI
+ 	TRACE_IRQS_OFF
++	_cfcmsa	a1, MSA_CSR
+ 	.endm
  
- int aq_nic_get_regs_count(struct aq_nic_s *self)
- {
-+	if (unlikely(!self->aq_hw_ops->hw_get_regs))
-+		return 0;
-+
- 	return self->aq_nic_cfg.aq_hw_caps->mac_regs_count;
- }
- 
+ 	.macro	__build_clear_ade
 -- 
 2.25.1
 
