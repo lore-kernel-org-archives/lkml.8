@@ -2,121 +2,77 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09496C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 03:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F21AAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 03:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDB2A20724
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 03:32:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a7QmUOMu"
+	by mail.kernel.org (Postfix) with ESMTP id CF74520724
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 03:33:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728855AbgFHDcx (ORCPT
+        id S1728952AbgFHDdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 23:32:53 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:57112 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728065AbgFHDcw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 23:32:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591587171;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QTHYGJT484CysjTvnzyVCM1DqyJ9Sy2/Nw9/zbDo/eE=;
-        b=a7QmUOMuysUVdak9lsmJeGzrtQIWtTqOJyiOVzhN1TognrWAuPIBqWZr4/9HGQBpTh1poQ
-        XFoUPUQvC6jOkstaO8cx24isPtmi6FBrlrZ8onFb8xoWFHCWw3XtAXhJXlknvwv6YgRF5W
-        BMzccmV8IDPseEcckS9OXLEmPN9TIQA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-62-gw20i6ilPV-_ApCgzBqQgw-1; Sun, 07 Jun 2020 23:32:49 -0400
-X-MC-Unique: gw20i6ilPV-_ApCgzBqQgw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 23B8E100CCC0;
-        Mon,  8 Jun 2020 03:32:47 +0000 (UTC)
-Received: from [10.72.13.71] (ovpn-13-71.pek2.redhat.com [10.72.13.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C8F111A933;
-        Mon,  8 Jun 2020 03:32:37 +0000 (UTC)
-Subject: Re: [PATCH 5/6] vdpa: introduce virtio pci driver
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rob.miller@broadcom.com, lingshan.zhu@intel.com,
-        eperezma@redhat.com, lulu@redhat.com, shahafs@mellanox.com,
-        hanand@xilinx.com, mhabets@solarflare.com, gdawar@xilinx.com,
-        saugatm@xilinx.com, vmireyno@marvell.com,
-        zhangweining@ruijie.com.cn, eli@mellanox.com
-References: <20200529080303.15449-1-jasowang@redhat.com>
- <20200529080303.15449-6-jasowang@redhat.com>
- <20200602010332-mutt-send-email-mst@kernel.org>
- <5dbb0386-beeb-5bf4-d12e-fb5427486bb8@redhat.com>
- <6b1d1ef3-d65e-08c2-5b65-32969bb5ecbc@redhat.com>
- <20200607095012-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <9b1abd2b-232c-aa0f-d8bb-03e65fd47de2@redhat.com>
-Date:   Mon, 8 Jun 2020 11:32:31 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Sun, 7 Jun 2020 23:33:46 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:21694 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728065AbgFHDdq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jun 2020 23:33:46 -0400
+Received: by ajax-webmail-mail-app4 (Coremail) ; Mon, 8 Jun 2020 11:33:34
+ +0800 (GMT+08:00)
+X-Originating-IP: [222.205.62.26]
+Date:   Mon, 8 Jun 2020 11:33:34 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   dinghao.liu@zju.edu.cn
+To:     "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>
+Cc:     kjlu@umn.edu,
+        "Kieran Bingham" <kieran.bingham+renesas@ideasonboard.com>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Re: Re: [PATCH] media: vsp1: Fix runtime PM imbalance in
+ vsp1_probe
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
+ Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
+In-Reply-To: <20200608031134.GO22208@pendragon.ideasonboard.com>
+References: <20200523115426.19285-1-dinghao.liu@zju.edu.cn>
+ <20200608015456.GJ22208@pendragon.ideasonboard.com>
+ <20200608015753.GK22208@pendragon.ideasonboard.com>
+ <7b79863f.f636d.17291e1ff94.Coremail.dinghao.liu@zju.edu.cn>
+ <20200608031134.GO22208@pendragon.ideasonboard.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 MIME-Version: 1.0
-In-Reply-To: <20200607095012-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Message-ID: <769e1fbf.f668c.17291fd9673.Coremail.dinghao.liu@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: cS_KCgC3WeSOsd1ewnfVAA--.20728W
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgYFBlZdtOhd1AACsb
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbX0S07vEb7Iv0x
+        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
+        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
+        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
+        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW0oVCq3wCS07vE84ACjcxK6I8E87Iv67AKxVW0oV
+        Cq3wCS07vE84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DMIAIbVAS0I0E0xvYzxvE52x0
+        82IY62kv0487MIAIbVAqx4xG64xvF2IEw4CE5I8CrVC2j2WlV2xY6cIj6xIIjxv20xvE14
+        v26r1j6r18MIAIbVAv7VC2z280aVAFwI0_Jr0_Gr1lV2xY6cvjeVCFs4IE7xkEbVWUJVW8
+        JwCS07vE7I0Y64k_MIAIbVCY02Avz4vE14v_Gr4lV2xY6xkI7II2jI8vz4vEwIxGrwCS07
+        vE42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMIAIbVCF72vE77IF4wCS07vE4I8I3I0E4IkC
+        6x0Yz7v_Jr0_Gr1lV2xY6I8I3I0E5I8CrVAFwI0_Jr0_Jr4lV2xY6I8I3I0E7480Y4vE14
+        v26r106r1rMIAIbVC2zVAF1VAY17CE14v26r126r1DMIAIbVCI42IY6xIIjxv20xvE14v2
+        6r1j6r1xMIAIbVCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lV2xY6IIF0xvE42xK8V
+        AvwI8IcIk0rVWrJr0_WFyUJwCS07vEIxAIcVC2z280aVAFwI0_Jr0_Gr1lV2xY6IIF0xvE
+        x4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2020/6/7 下午9:51, Michael S. Tsirkin wrote:
-> On Fri, Jun 05, 2020 at 04:54:17PM +0800, Jason Wang wrote:
->> On 2020/6/2 下午3:08, Jason Wang wrote:
->>>>> +static const struct pci_device_id vp_vdpa_id_table[] = {
->>>>> +    { PCI_DEVICE(PCI_VENDOR_ID_REDHAT_QUMRANET, PCI_ANY_ID) },
->>>>> +    { 0 }
->>>>> +};
->>>> This looks like it'll create a mess with either virtio pci
->>>> or vdpa being loaded at random. Maybe just don't specify
->>>> any IDs for now. Down the road we could get a
->>>> distinct vendor ID or a range of device IDs for this.
->>>
->>> Right, will do.
->>>
->>> Thanks
->>
->> Rethink about this. If we don't specify any ID, the binding won't work.
-> We can bind manually. It's not really for production anyway, so
-> not a big deal imho.
-
-
-I think you mean doing it via "new_id", right.
-
-
->
->> How about using a dedicated subsystem vendor id for this?
->>
->> Thanks
-> If virtio vendor id is used then standard driver is expected
-> to bind, right? Maybe use a dedicated vendor id?
-
-
-I meant something like:
-
-static const struct pci_device_id vp_vdpa_id_table[] = {
-     { PCI_DEVICE_SUB(PCI_VENDOR_ID_REDHAT_QUMRANET, PCI_ANY_ID, 
-VP_TEST_VENDOR_ID, VP_TEST_DEVICE_ID) },
-     { 0 }
-};
-
-Thanks
-
-
+Cj4gCj4gVGhlIHZzcDFfcHJvYmUoKSBmdW5jdGlvbiBoYXMgYSBzdHJ1Y3QgdnNwMV9kZXZpY2Ug
+d2hvc2UgZGV2IGZpZWxkIGlzCj4gcG9wdWxhdGVkIGJ5IHRoZSB0aW1lIGl0IG5lZWRzIHRvIGNh
+bGwgcG1fcnVudGltZV9nZXRfc3luYygpIGFuZAo+IHBtX3J1bnRpbWVfZ2V0X3B1dCgpLCBzbyBJ
+IHRoaW5rIHlvdSBjYW4gdXNlIHZzcDFfZGV2aWNlX2dldCgpIGFuZAo+IHZzcDFfZGV2aWNlX3B1
+dCgpIGFzIGRyb3AtaW4gcmVwbGFjZW1lbnRzIHdpdGhvdXQgY2hhbmdpbmcgdGhlCj4gcGFyYW1l
+dGVycyB0byB0aGVzZSB0d28gZnVuY3Rpb25zLgo+IAoKSXQncyBjbGVhciB0byBtZSwgdGhhbmtz
+IQoKUmVnYXJkcywKRGluZ2hhbwo=
