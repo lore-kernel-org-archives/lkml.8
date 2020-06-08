@@ -2,128 +2,144 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E64C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 22:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA61C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 22:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3E172074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 22:12:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591654334;
-	bh=MdIzGLv9I80UNxTGOqTFO0/YhkX9e3Wi16ba3p9F01A=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=wgQzHN8HmYmgGSqE1UT6hkg7zUNS+/+/hBhwLv+bVcXgOaJGt2lhuXWw3vz2tLSE+
-	 +bG4NEmOhbk3B385ZiPwjlhvB8WsNPmae38vMz4QDj+Q7DQVBJCN+7AGfg+TJpElAi
-	 ZdKpK/xy0GaUVQT6OTbQ+GSBHoGIumPGdFNhDcL8=
+	by mail.kernel.org (Postfix) with ESMTP id 13628206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 22:18:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="beUSOy2E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbgFHWMN (ORCPT
+        id S1726782AbgFHWSb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 18:12:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37714 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726598AbgFHWMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 18:12:13 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49E60206D5;
-        Mon,  8 Jun 2020 22:12:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591654332;
-        bh=MdIzGLv9I80UNxTGOqTFO0/YhkX9e3Wi16ba3p9F01A=;
-        h=Date:From:To:Cc:Subject:From;
-        b=2ljm5wis4+a4ngtn74BBfgckBP6UFZHWcQLN/WpclaXMFk98SpoM0JOM2KAPXwhrO
-         8Ld36qLno58XrSujIpJfGn5f/FIHWGphw+QWbTsDPC2s7C6Edrei3rfrN+SwQPwYIA
-         e07OCuBDZ793txLsukmAMbyAD5FDD2feJr4ozFOY=
-Date:   Mon, 8 Jun 2020 17:17:23 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] overflow.h: Add flex_array_size() helper
-Message-ID: <20200608221723.GA23644@embeddedor>
+        Mon, 8 Jun 2020 18:18:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58400 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726723AbgFHWSb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 18:18:31 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 589B8C08C5C2;
+        Mon,  8 Jun 2020 15:18:30 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id h188so11225759lfd.7;
+        Mon, 08 Jun 2020 15:18:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=2hQkPROiISnXWALhr4YLCxsy0Vsz4rv9nG/scMPpoOI=;
+        b=beUSOy2EhmTM9u/jVy9bfblUr19Lyu33DmAThiud5RSpYafm9+FT7bMYfNBm47IfUe
+         tYC6OL4/VUqAAEpnu0jUde6sBLcrATzvGC64bNOf/+ep0+8N6bUatieNlGQ8G9x+75f+
+         Pxh9TH77sY4dAap0RDkcrHPh4moQ9iIOizy+6myV2oO88TDu4pG63KbZavjK9lRKe8ef
+         BtbQtrSMi8DMyFJZ7eb/zTRYNJrLuDzOjPS38jLLGYgVpw6+Ey1E8/D/wz8jkPpju0w+
+         JmMWoqiQy7t6NRxNvT0xubl0XEDl6CmsrXIxPLpdxEkyWPZg4Y9iZ++x4sKFHFt3HB3+
+         pE4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=2hQkPROiISnXWALhr4YLCxsy0Vsz4rv9nG/scMPpoOI=;
+        b=cy66omiuNwzk1Q2CX7Iby7RabWanNtl4nz/s8nY+Ys7WkTH6LXvRm23MVokesmPAlE
+         K5RzGLw3KhRykGeRTL9xxRnxM9k6l85TUFtEAqqqTf3BHcn33GFUOOCNHGtem2nJEAbu
+         qgUFEba+BNLNmENl2Pf7o7xRZ4uj4McJPIEDRUAODuGqu8itVCn2nmReCC/OIpo/Hp0q
+         G+rwgthDjPU6hblTopC4AudX9dT3DGi9GXOJRLD+pyBVHUS4GOOEIvNw4Bd1EypxL59q
+         Yr17WgMId9bv2qP7yWus91xpEDRRbV5lJD9Z1l8FUlKgVSe6Qm/vzSibC0L/am/5lhfw
+         /+Qg==
+X-Gm-Message-State: AOAM533L+Kb3z2+1/W1VAoTgNR7nyhOCSP1K1e5rLBMwQzNmCMdVHgtj
+        +BLEQRzvsZF538tR1n9jhMA=
+X-Google-Smtp-Source: ABdhPJwpKkUOMrWqo8P4ydPPvvIh9mpB3LIFOiikbjbunKK88RL3x6FOksf37Lt9t2xQNHJMcCa8wA==
+X-Received: by 2002:a05:6512:3e7:: with SMTP id n7mr13795896lfq.118.1591654708559;
+        Mon, 08 Jun 2020 15:18:28 -0700 (PDT)
+Received: from localhost.localdomain (h-82-196-111-136.NA.cust.bahnhof.se. [82.196.111.136])
+        by smtp.gmail.com with ESMTPSA id n1sm3966237ljg.131.2020.06.08.15.18.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jun 2020 15:18:27 -0700 (PDT)
+From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
+To:     rikard.falkeborn@gmail.com
+Cc:     akpm@linux-foundation.org, andy.shevchenko@gmail.com,
+        arnd@arndb.de, emil.l.velikov@gmail.com, geert@linux-m68k.org,
+        keescook@chromium.org, linus.walleij@linaro.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lkp@intel.com, syednwaris@gmail.com, vilhelm.gray@gmail.com,
+        yamada.masahiro@socionext.com
+Subject: [PATCH v3 1/2] linux/bits.h: fix unsigned less than zero warnings
+Date:   Tue,  9 Jun 2020 00:18:22 +0200
+Message-Id: <20200608221823.35799-1-rikard.falkeborn@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200608184222.GA899@rikard>
+References: <20200608184222.GA899@rikard>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add flex_array_size() helper for the calculation of the size, in bytes,
-of a flexible array member contained within an enclosing structure.
+When calling the GENMASK and GENMASK_ULL macros with zero lower bit and
+an unsigned unknown high bit, some gcc versions warn due to the
+comparisons of the high and low bit in GENMASK_INPUT_CHECK.
 
-Example of usage:
+To silence the warnings, only perform the check if both inputs are
+known. This does not trigger any warnings, from the Wtype-limits help:
 
-struct something {
-	size_t count;
-	struct foo items[];
-};
+	Warn if a comparison is always true or always false due to the
+	limited range of the data type, but do not warn for constant
+	expressions.
 
-struct something *instance;
+As an example of the warning, kindly reported by the kbuild test robot:
 
-instance = kmalloc(struct_size(instance, items, count), GFP_KERNEL);
-instance->count = count;
+from drivers/mfd/atmel-smc.c:11:
+drivers/mfd/atmel-smc.c: In function 'atmel_smc_cs_encode_ncycles':
+include/linux/bits.h:26:28: warning: comparison of unsigned expression < 0 is always false [-Wtype-limits]
+26 |   __builtin_constant_p((l) > (h)), (l) > (h), 0)))
+|                            ^
+include/linux/build_bug.h:16:62: note: in definition of macro 'BUILD_BUG_ON_ZERO'
+16 | #define BUILD_BUG_ON_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
+|                                                              ^
+include/linux/bits.h:39:3: note: in expansion of macro 'GENMASK_INPUT_CHECK'
+39 |  (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+|   ^~~~~~~~~~~~~~~~~~~
+>> drivers/mfd/atmel-smc.c:49:25: note: in expansion of macro 'GENMASK'
+49 |  unsigned int lsbmask = GENMASK(msbpos - 1, 0);
+|                         ^~~~~~~
 
-memcpy(instance->items, source, flex_array_size(instance, items, instance->count));
-
-The helper returns SIZE_MAX on overflow instead of wrapping around.
-
-(Additionally replace parameter n with count in struct_size() for
-homogeneity).
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Fixes: 295bcca84916 ("linux/bits.h: add compile time sanity check of GENMASK inputs")
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Emil Velikov <emil.l.velikov@gmail.com>
+Reported-by: Syed Nayyar Waris <syednwaris@gmail.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
 ---
- include/linux/overflow.h | 25 +++++++++++++++++++++----
- 1 file changed, 21 insertions(+), 4 deletions(-)
+v2-v3
+Added Andys Reviewed-by.
 
-diff --git a/include/linux/overflow.h b/include/linux/overflow.h
-index 659045046468f..473af79f11ccf 100644
---- a/include/linux/overflow.h
-+++ b/include/linux/overflow.h
-@@ -304,16 +304,33 @@ static inline __must_check size_t __ab_c_size(size_t a, size_t b, size_t c)
-  * struct_size() - Calculate size of structure with trailing array.
-  * @p: Pointer to the structure.
-  * @member: Name of the array member.
-- * @n: Number of elements in the array.
-+ * @count: Number of elements in the array.
-  *
-  * Calculates size of memory needed for structure @p followed by an
-- * array of @n @member elements.
-+ * array of @count @member elements.
-  *
-  * Return: number of bytes needed or SIZE_MAX on overflow.
-  */
--#define struct_size(p, member, n)					\
--	__ab_c_size(n,							\
-+#define struct_size(p, member, count)					\
-+	__ab_c_size(count,							\
- 		    sizeof(*(p)->member) + __must_be_array((p)->member),\
- 		    sizeof(*(p)))
- 
-+/**
-+ * flex_array_size() - Calculate size of a flexible array member within
-+ * an enclosing structure.
-+ *
-+ * @p: Pointer to the structure.
-+ * @member: Name of the flexible array member.
-+ * @count: Number of elements in the array.
-+ *
-+ * Calculates size of memory needed for flexible array @member of @count
-+ * elements within structure @p.
-+ *
-+ * Return: number of bytes needed or SIZE_MAX on overflow.
-+ */
-+#define flex_array_size(p, member, count)					\
-+	array_size(count,							\
-+		    sizeof((p)->member[0]) + __must_be_array((p)->member))
-+
- #endif /* __LINUX_OVERFLOW_H */
+v1->v2
+Change to require both high and low bit to be constant expressions
+instead of introducing somewhat arbitrary casts
+
+ include/linux/bits.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/bits.h b/include/linux/bits.h
+index 4671fbf28842..35ca3f5d11a0 100644
+--- a/include/linux/bits.h
++++ b/include/linux/bits.h
+@@ -23,7 +23,8 @@
+ #include <linux/build_bug.h>
+ #define GENMASK_INPUT_CHECK(h, l) \
+ 	(BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
+-		__builtin_constant_p((l) > (h)), (l) > (h), 0)))
++		__builtin_constant_p(l) && __builtin_constant_p(h), \
++		(l) > (h), 0)))
+ #else
+ /*
+  * BUILD_BUG_ON_ZERO is not available in h files included from asm files,
 -- 
 2.27.0
 
