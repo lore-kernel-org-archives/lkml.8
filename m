@@ -2,200 +2,76 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A0BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA89DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 15:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86C6820774
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:59:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rbQi1FYi"
+	by mail.kernel.org (Postfix) with ESMTP id 8252B206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 15:01:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730147AbgFHO7j (ORCPT
+        id S1730160AbgFHPBO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 10:59:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46992 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725965AbgFHO7j (ORCPT
+        Mon, 8 Jun 2020 11:01:14 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42366 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729612AbgFHPBN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 10:59:39 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E70DEC08C5C2;
-        Mon,  8 Jun 2020 07:59:38 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id s21so15538379oic.9;
-        Mon, 08 Jun 2020 07:59:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sakwAE9UDvgXpfLA/IMovHDdgj7kYeDNiG6uvdI8YnE=;
-        b=rbQi1FYi5A1FxRR3KxNata4g2VukcskcoNJv5Qe6GITqlJm9i5g/03+xRsa3AR0dBV
-         sDzBrJISTgokP0089gBn849qmwZ7h0J8Fq1fwlLMRgzLpmpflfD13KBKimhz7LJxZbDg
-         nC7y6sg6e2oetrDBTfx+8x9s51LwHIWDQbTEcPlErG6xqhUpfQe/UcyZVP5Be/oM/roe
-         TrC76QRbzmJAA1DyxJ4J+FlIGYy/5DixXGS85dc0MLHjhT3crGx8paNRDme7fH5+k2+b
-         1QAWja5dHWRBWtfhbj0jLlH6fnk9FCJBNQ6bvbMPo0+VbEmBdVAuG9Sd2bQoMJRjjl4j
-         vo/A==
+        Mon, 8 Jun 2020 11:01:13 -0400
+Received: by mail-lj1-f194.google.com with SMTP id y11so19252268ljm.9
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 08:01:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sakwAE9UDvgXpfLA/IMovHDdgj7kYeDNiG6uvdI8YnE=;
-        b=i0A5NwtCabgO8/E+h6X5dQYCiR3/kfTg98SFRy1O3QOPB97Bz196YuQYJ4wwlXjGlT
-         lmKPhGH/BkRK2M6JiJNkWLFFsYlOT1ReB4/NHYLK8UhRKsSnxWxwm4oHtzbpNnn32pcJ
-         ud9hY2sO5XYMEZuKIheqFJgXeqC0dfk7gvTvLAEI6vUjcRaqlSoatctpfkj7c/NWzWM9
-         6F2RnDTJBpOUchfxgZYMweIwa6dCqP+vaKuZtVrOYdwzbqXEzrFTscvBuLv1hPgrCXn+
-         EGsCrn/1xkFF3z5mpp2CgBOuGgS6OIWn6D6o7wVcfk6BUZ3aZITbkdMzFqvBhNuAlylj
-         3bVA==
-X-Gm-Message-State: AOAM530wTcipqlq53xpbmDdrTfi/UK3wJ9P3npqRL5qH8l+5Y1mM9Pa/
-        a+d712L+vfqNLiOva9mQUB3Ak9sBe9DLXKSxcOWWZXw8PH4duA==
-X-Google-Smtp-Source: ABdhPJzbekWad6Gkbqv1f+EDYUA1WR2SWjZmQ8HEVGb3/zsnKNal+9yg73fNP7qK7BqGWigQWcEbKKuYfYQcF5z+v9w=
-X-Received: by 2002:aca:ea44:: with SMTP id i65mr10535404oih.142.1591628378380;
- Mon, 08 Jun 2020 07:59:38 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=exJpUcD9iTuoeD+RQrF+EIXmGMlhgaTXtJncvvlvAk0=;
+        b=uGir2OpahHpWGpoS5PSjlkZF7HzYFUSaPJVrp0jn88LMmfKkVYjxvKbnOCfO8KoB+d
+         ba+ymAr61Xum4HkmzpNz6CF5L83I9WNiZsqoEWKPe2Llo54/tMo4yJU3aLJNdDcRHF/W
+         TPsagiqLWjVWmmbGXTyHAQaPAxJ3rIIU4e91Ozy4AvlajrDftywAYpLk3CTTo05GojVv
+         O2+uImLDAd6S/BnE272YF6+GRuK1KLMIbJbdZ0DR5DFGz4cToZ7XikbDUD6r1NDS6TWm
+         8mqn/y3QSfG2KWcYyQAy6WZezF8Y7xSwBr4rwAzeMDU46Fb5oAtRrXO5nfZwjUW6Gra+
+         uQZw==
+X-Gm-Message-State: AOAM530TEwzWYjeWIxIRJyNikQUeL/ATkVWQanMU0Lz1oYj5ThaMwlbm
+        m1ZZhrYHcVuOilfLOYbgobXtLc2lFHE=
+X-Google-Smtp-Source: ABdhPJyDFsvVJzzCo2+DwICPtXyXHTVNh5CKDd4tolo+GuOiJuRevDylwfPjtNkxuYiwEjHyeiUkXA==
+X-Received: by 2002:a2e:9855:: with SMTP id e21mr11002311ljj.214.1591628470929;
+        Mon, 08 Jun 2020 08:01:10 -0700 (PDT)
+Received: from localhost.localdomain ([213.87.137.116])
+        by smtp.googlemail.com with ESMTPSA id r16sm279228ljn.106.2020.06.08.08.01.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jun 2020 08:01:10 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Julia Lawall <Julia.Lawall@lip6.fr>
+Cc:     Denis Efremov <efremov@linux.com>, linux-kernel@vger.kernel.org,
+        cocci@systeme.lip6.fr
+Subject: [PATCH v2 0/4] Update memdup_user.cocci
+Date:   Mon,  8 Jun 2020 18:00:34 +0300
+Message-Id: <20200608150038.223747-1-efremov@linux.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <1591555267-21822-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1591555267-21822-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdWKhq63yT9XbbV4Nmr0EJZcGQ396pVCqkrzMTmgunznaQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdWKhq63yT9XbbV4Nmr0EJZcGQ396pVCqkrzMTmgunznaQ@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Mon, 8 Jun 2020 15:59:11 +0100
-Message-ID: <CA+V-a8ueb-3VD-=Bcg6dJqZhLRoCBxu-Zo+key_oEFchNc_APA@mail.gmail.com>
-Subject: Re: [PATCH 03/11] arm64: dts: renesas: hihope-common: Separate out
- Rev.2.0 specific into hihope-common-rev2.dtsi file
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+Add GFP_USER to the allocation flags and handle vmemdup_user().
+The third patch supresses memdup_user(), vmemdup_user() functions
+detection. Last patch is a proof of concept for the rule selfchecking.
+Gives the ability to detect that an open-coded pattern in a function
+definition that we search for in the kernel sources changed.
 
-On Mon, Jun 8, 2020 at 3:47 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Sun, Jun 7, 2020 at 8:41 PM Lad Prabhakar
-> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > Separate out Rev.2.0 specific hardware changes into
-> > hihope-common-rev2.dtsi file so that hihope-common.dtsi can be used
-> > by all the variants for RZ/G2M[N] boards.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
->
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/renesas/hihope-common-rev2.dtsi
->
-> Perhaps just hihope-rev2.dtsi, i.e. without the "common-"?
->
-Yes makes sense.
+Denis Efremov (4):
+  coccinelle: api: extend memdup_user transformation with GFP_USER
+  coccinelle: api: extend memdup_user rule with vmemdup_user()
+  coccinelle: api: filter out memdup_user definitions
+  coccinelle: api: add selfcheck for memdup_user rule
 
-> > @@ -0,0 +1,101 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Device Tree Source for the HiHope RZ/G2[MN] main board Rev.2.0 common
-> > + * parts
-> > + *
-> > + * Copyright (C) 2020 Renesas Electronics Corp.
-> > + */
-> > +
-> > +#include <dt-bindings/gpio/gpio.h>
-> > +
-> > +/ {
-> > +       leds {
-> > +               compatible = "gpio-leds";
-> > +
-> > +               bt_active_led {
-> > +                       label = "blue:bt";
-> > +                       gpios = <&gpio7  0 GPIO_ACTIVE_HIGH>;
-> > +                       linux,default-trigger = "hci0-power";
-> > +                       default-state = "off";
-> > +               };
-> > +
-> > +               led0 {
-> > +                       gpios = <&gpio6 11 GPIO_ACTIVE_HIGH>;
-> > +               };
-> > +
-> > +               led1 {
-> > +                       gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
-> > +               };
-> > +
-> > +               led2 {
-> > +                       gpios = <&gpio6 13 GPIO_ACTIVE_HIGH>;
-> > +               };
-> > +
-> > +               led3 {
-> > +                       gpios = <&gpio0  0 GPIO_ACTIVE_HIGH>;
-> > +               };
->
-> led1, led2, and led3 are present on both, so I'd keep them in
-> hihope-common.dtsi.
->
-The leds defined in hihope-common-rev4.dtsi are as per the label names
-on the schematics/board so that it's easier to identify the LED's by
-name.
+ scripts/coccinelle/api/memdup_user.cocci | 106 ++++++++++++++++++++++-
+ 1 file changed, 103 insertions(+), 3 deletions(-)
 
-> > +
-> > +               wlan_active_led {
-> > +                       label = "yellow:wlan";
-> > +                       gpios = <&gpio7  1 GPIO_ACTIVE_HIGH>;
-> > +                       linux,default-trigger = "phy0tx";
-> > +                       default-state = "off";
-> > +               };
-> > +       };
-> > +
-> > +       wlan_en_reg: regulator-wlan_en {
-> > +               compatible = "regulator-fixed";
-> > +               regulator-name = "wlan-en-regulator";
-> > +               regulator-min-microvolt = <1800000>;
-> > +               regulator-max-microvolt = <1800000>;
-> > +               startup-delay-us = <70000>;
-> > +
-> > +               gpio = <&gpio_expander 1 GPIO_ACTIVE_HIGH>;
-> > +               enable-active-high;
-> > +       };
->
-> Same for the WLAN regulator, especially as it is referenced from
-> hihope-common.dtsi.
-> As the GPIO  line differs between the two variants, you just need
-> to add the gpio property in the revision-specific file.
->
-Agreed will move this to common.
+-- 
+2.26.2
 
-> > +};
-> > +
-> > +&hscif0 {
-> > +       bluetooth {
-> > +               compatible = "ti,wl1837-st";
-> > +               enable-gpios = <&gpio_expander 2 GPIO_ACTIVE_HIGH>;
-> > +       };
-> > +};
->
-> As node is small, and the GPIO line differs from the two variants,
-> I think duplicating it in both revision-specific files is fine, though.
->
-Agreed.
-
-Cheers,
---Prabhakar
-
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
