@@ -2,53 +2,54 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2566BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D75C9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F08F5208B6
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:07:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF69420885
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:07:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591657645;
-	bh=l4UrxZfPytW7PlaB2VeAq30RXCOzD1wa7DQI7P+EKhQ=;
+	s=default; t=1591657646;
+	bh=0dgaXx1o/v3uoLpNkiitvqOB3bdGazxh/NQXbfODV44=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fT93BYoXhp7ULB6mW7P6TmoQCtzcj4//3ZiHkBx273p1pTtbhXtS/VEMNUPf21c9k
-	 PApPLQ5tn0qP9JqwUpalDBxc23ATj3uDxZHFd0Fq2XlFQAg7onM73w2IW9ULJGvo8b
-	 tQfIBPJY43kWyro6OS7Ml90DVIOweo6FatGuDXm8=
+	b=p08vaC3DKwVXWkhAncsBDknqGqP0cf41kJmwJPJRjDIPthCU3TqUT7l2deWKZ36ib
+	 cU/KgfycDd1w9wdQKWJ+fSTOE/GG/+TCAaDtHi6bHLPosEWLRV6h2SKRfQnn3I5vn3
+	 FHCYyIckelLMksuobFST4diVcOPVjHuF9vM7/69Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbgFHXHX (ORCPT
+        id S1727896AbgFHXH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:07:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50458 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:07:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727105AbgFHXG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:06:56 -0400
+        id S1727114AbgFHXG6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:06:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40E6720842;
-        Mon,  8 Jun 2020 23:06:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 779F92087E;
+        Mon,  8 Jun 2020 23:06:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657616;
-        bh=l4UrxZfPytW7PlaB2VeAq30RXCOzD1wa7DQI7P+EKhQ=;
+        s=default; t=1591657617;
+        bh=0dgaXx1o/v3uoLpNkiitvqOB3bdGazxh/NQXbfODV44=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qw225oKv1tBngdkVT2YvDqZlHfZBpcNREI7ipI6UPfl9PXNVki0m6kAhUmTywou3O
-         UQj5JgYkHpOzJ8VOPgcD07vEdRB2IZkQi2+qJL6Ib68fY2K5RNDdDvt/PZXbtzuE7w
-         90vxWZFDKQqb0CvzhsnwxVQ5NAmC7ykz8dZPDuHA=
+        b=gSQKOebe+UQW6KnFs/9KkHhzb39jkvAOvuN5a/gGqGpMzLmP0XUHDehzOJLmyI07f
+         zFotgcRjYoI9WNDr7sgrl7kjBsHt0DSjPqoeDaJRWxdvMEWd1r37DmQg10Ts478tAJ
+         NrGU3sQFhN9WLPhCmg4dLVdlqu/MoXBLsS6MqDkY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 038/274] soc: fsl: dpio: properly compute the consumer index
-Date:   Mon,  8 Jun 2020 19:02:11 -0400
-Message-Id: <20200608230607.3361041-38-sashal@kernel.org>
+Cc:     Erik Kaneda <erik.kaneda@intel.com>,
+        Kurt Kennett <kurt_kennett@hotmail.com>,
+        Bob Moore <robert.moore@intel.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org,
+        devel@acpica.org
+Subject: [PATCH AUTOSEL 5.7 039/274] ACPICA: Dispatcher: add status checks
+Date:   Mon,  8 Jun 2020 19:02:12 -0400
+Message-Id: <20200608230607.3361041-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -61,35 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ioana Ciornei <ioana.ciornei@nxp.com>
+From: Erik Kaneda <erik.kaneda@intel.com>
 
-[ Upstream commit 7596ac9d19a9df25707ecaac0675881f62dd8c18 ]
+[ Upstream commit 6bfe5344b2956d0bee116f1c640aef05e5cddd76 ]
 
-Mask the consumer index before using it. Without this, we would be
-writing frame descriptors beyond the ring size supported by the QBMAN
-block.
+ACPICA commit 3244c1eeba9f9fb9ccedb875f7923a3d85e0c6aa
 
-Fixes: 3b2abda7d28c ("soc: fsl: dpio: Replace QMAN array mode with ring mode enqueue")
-Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
-Acked-by: Li Yang <leoyang.li@nxp.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The status chekcs are used to to avoid NULL pointer dereference on
+field objects
+
+Link: https://github.com/acpica/acpica/commit/3244c1ee
+Reported-by: Kurt Kennett <kurt_kennett@hotmail.com>
+Signed-off-by: Erik Kaneda <erik.kaneda@intel.com>
+Signed-off-by: Bob Moore <robert.moore@intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/fsl/dpio/qbman-portal.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/acpi/acpica/dsfield.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/soc/fsl/dpio/qbman-portal.c b/drivers/soc/fsl/dpio/qbman-portal.c
-index 804b8ba9bf5c..23a1377971f4 100644
---- a/drivers/soc/fsl/dpio/qbman-portal.c
-+++ b/drivers/soc/fsl/dpio/qbman-portal.c
-@@ -669,6 +669,7 @@ int qbman_swp_enqueue_multiple_direct(struct qbman_swp *s,
- 		eqcr_ci = s->eqcr.ci;
- 		p = s->addr_cena + QBMAN_CENA_SWP_EQCR_CI;
- 		s->eqcr.ci = qbman_read_register(s, QBMAN_CINH_SWP_EQCR_CI);
-+		s->eqcr.ci &= full_mask;
+diff --git a/drivers/acpi/acpica/dsfield.c b/drivers/acpi/acpica/dsfield.c
+index c901f5aec739..5725baec60f3 100644
+--- a/drivers/acpi/acpica/dsfield.c
++++ b/drivers/acpi/acpica/dsfield.c
+@@ -514,13 +514,20 @@ acpi_ds_create_field(union acpi_parse_object *op,
+ 	info.region_node = region_node;
  
- 		s->eqcr.available = qm_cyc_diff(s->eqcr.pi_ring_size,
- 					eqcr_ci, s->eqcr.ci);
+ 	status = acpi_ds_get_field_names(&info, walk_state, arg->common.next);
++	if (ACPI_FAILURE(status)) {
++		return_ACPI_STATUS(status);
++	}
++
+ 	if (info.region_node->object->region.space_id ==
+-	    ACPI_ADR_SPACE_PLATFORM_COMM
+-	    && !(region_node->object->field.internal_pcc_buffer =
+-		 ACPI_ALLOCATE_ZEROED(info.region_node->object->region.
+-				      length))) {
+-		return_ACPI_STATUS(AE_NO_MEMORY);
++	    ACPI_ADR_SPACE_PLATFORM_COMM) {
++		region_node->object->field.internal_pcc_buffer =
++		    ACPI_ALLOCATE_ZEROED(info.region_node->object->region.
++					 length);
++		if (!region_node->object->field.internal_pcc_buffer) {
++			return_ACPI_STATUS(AE_NO_MEMORY);
++		}
+ 	}
++
+ 	return_ACPI_STATUS(status);
+ }
+ 
 -- 
 2.25.1
 
