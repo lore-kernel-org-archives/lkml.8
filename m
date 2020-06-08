@@ -2,112 +2,153 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71BC0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B85DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BA482076C
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:06:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591632392;
-	bh=dm6VccpRTR1gI7kUqPERR2PbR74WR6VaKZUAB+c2esQ=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=MWIFF5bVz5w4tOceOZ49mscBuAnTwKoPipyZiEjg/Alhib84wP9XnnOTFRHgHyCAw
-	 znZ+PLG3fYgF/v7qpUvh+BJ9/EVi2vphK0kvWi+2b3hk/q184ZLSFQvdfwjPhYlU2b
-	 kgCJdGHQ8PrHVO1uKH/Is4YJpAZ3osFDxDWRSvW8=
+	by mail.kernel.org (Postfix) with ESMTP id 4A1DE2063A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:07:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZLSxxQtA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730462AbgFHQGb (ORCPT
+        id S1730474AbgFHQHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 12:06:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32776 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730388AbgFHQGa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 12:06:30 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6271E2063A;
-        Mon,  8 Jun 2020 16:06:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591632389;
-        bh=dm6VccpRTR1gI7kUqPERR2PbR74WR6VaKZUAB+c2esQ=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=V1bojjCySPFLPUNHBAblR1JQV1Yd0V08M3uj4/5cam+MdvjROUmJG8sxOqOF7hiq8
-         GmDVvSYFfe/V13gMKTu+cWriFJo2Fdk8yvLoMpnzpFg6I88+hJjr6Bn191LxzFBHo7
-         cYHCN0NOHCRGvl/EPaM+NIN1DTA7GVEJZ0ScLn1s=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 451BD3522A6D; Mon,  8 Jun 2020 09:06:29 -0700 (PDT)
-Date:   Mon, 8 Jun 2020 09:06:29 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        kernel test robot <lkp@intel.com>,
-        Ingo Molnar <mingo@kernel.org>, kbuild-all@lists.01.org,
-        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org
-Subject: Re: [rcu:dev.2020.06.02a 67/90] kernel/rcu/rcuperf.c:727:38:
- warning: format specifies type 'size_t' (aka 'unsigned int') but the
- argument has type 'unsigned long'
-Message-ID: <20200608160629.GJ4455@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <202006060704.dM7SxfSK%lkp@intel.com>
- <20200606001914.GE4455@paulmck-ThinkPad-P72>
- <20200607190057.GA19362@paulmck-ThinkPad-P72>
- <f6df7c3e-4c43-47eb-4c4f-a5e9de0d332f@huawei.com>
- <20200608032632.GA2618368@ubuntu-n2-xlarge-x86>
+        Mon, 8 Jun 2020 12:07:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57398 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730378AbgFHQHA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 12:07:00 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51DB0C08C5C2;
+        Mon,  8 Jun 2020 09:07:00 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id g10so56633wmh.4;
+        Mon, 08 Jun 2020 09:07:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=xSm/ixCMsXrBbAVZMWIWVyDBFHz6cDKWQtZCmAnN0nA=;
+        b=ZLSxxQtAqk9VJDhuTPL/QytUa2FIBQopJdBHKih5e4AAFXp7fINT9N+ePLJodzE/tU
+         MIo4bnGqf6TwcM2yJnT8F3mNUgmp+iiR7KVcEf0MRbb/a/WciLworDKVhxZ4gXx6Shts
+         HMV0P81Yb2gscczPSxyxyT6ukEYSwfakd0VCuBT7SJriDcBqMux5KKV6paMbOPPS9Ud9
+         XRvv63vkPM7+tmGskVRlRvyeSWZZFi+ulGYCSujm6IW2JWESuFocQua+OIV3YkJciJFg
+         HRbtsT0RpycizikAmUr1ILfJsTt/0ebbdX3R89RLKixL+YdeRFBH3h6OODLDz9Ucvi9b
+         ylXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=xSm/ixCMsXrBbAVZMWIWVyDBFHz6cDKWQtZCmAnN0nA=;
+        b=OE+YtbCMd+cXQXQjLPW4YTg12Zs1vwv4EGir2dfgVEm4EdyoLImtAKOUXq+JxStD75
+         1MvxH3isC93GycVVqjh1W2iwoKNQ7Gk7es5oMu5W0Rrb2bm276l0xx57xrG6PaT3EuGE
+         CII4Di19yfsist4ksgybL7T7RQfU2KBr6gHFssPHvX4UTUDyMYOQvKtutJpqp9UhBp9N
+         PaJVP9d+pzf4rIAeR5mFNbwsm/rYB6bVixqVqTJzsceq0Ck4R83aawDXvK+O6SvsPgZt
+         ESJXD4kWky4uE96Nxbf2D1aE0cRVCaAvaQ7XpkdAv1PnUiPZENWUEOiutGOqzkPs5OtQ
+         OrPQ==
+X-Gm-Message-State: AOAM531jfpNMASEPBJ6b+pJPCyQGeGX9/LRkNwwAMTSDgiStwuWJlR5T
+        DURUcQGSKZ7RDVN9y0eEQdg=
+X-Google-Smtp-Source: ABdhPJzlh/xf/IFViONY5iqBfTW9IBvJzeWdZjU4s6WE0zKa+QDIy95NBnZc/nabW15BofK0+Fz87w==
+X-Received: by 2002:a1c:24c6:: with SMTP id k189mr72594wmk.9.1591632418158;
+        Mon, 08 Jun 2020 09:06:58 -0700 (PDT)
+Received: from skynet.lan (28.red-83-49-61.dynamicip.rima-tde.net. [83.49.61.28])
+        by smtp.gmail.com with ESMTPSA id b187sm32275wmd.26.2020.06.08.09.06.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jun 2020 09:06:57 -0700 (PDT)
+From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+To:     tsbogend@alpha.franken.de, f.fainelli@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, miquel.raynal@bootlin.com,
+        richard@nod.at, vigneshr@ti.com, jonas.gorski@gmail.com,
+        linus.walleij@linaro.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org
+Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+Subject: [PATCH v2] mtd: parsers: bcm63xx: simplify CFE detection
+Date:   Mon,  8 Jun 2020 18:06:49 +0200
+Message-Id: <20200608160649.3717152-1-noltari@gmail.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200608094053.3381512-1-noltari@gmail.com>
+References: <20200608094053.3381512-1-noltari@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200608032632.GA2618368@ubuntu-n2-xlarge-x86>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 07, 2020 at 08:26:32PM -0700, Nathan Chancellor wrote:
-> On Mon, Jun 08, 2020 at 09:56:16AM +0800, Kefeng Wang wrote:
-> > 
-> > On 2020/6/8 3:00, Paul E. McKenney wrote:
-> > > On Fri, Jun 05, 2020 at 05:19:14PM -0700, Paul E. McKenney wrote:
-> > > > On Sat, Jun 06, 2020 at 07:07:10AM +0800, kernel test robot wrote:
-> > > > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2020.06.02a
-> > > > > head:   5216948905dd07a84cef8a7dc72c2ec076802efd
-> > > > > commit: 7d16add62717136b1839f0b3d7ea4cbb98f38c2a [67/90] rcuperf: Fix kfree_mult to match printk() format
-> > > > > config: arm-randconfig-r004-20200605 (attached as .config)
-> > > > > compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project 6dd738e2f0609f7d3313b574a1d471263d2d3ba1)
-> > > > > reproduce (this is a W=1 build):
-> > > > >          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> > > > >          chmod +x ~/bin/make.cross
-> > > > >          # install arm cross compiling tool for clang build
-> > > > >          # apt-get install binutils-arm-linux-gnueabi
-> > > > >          git checkout 7d16add62717136b1839f0b3d7ea4cbb98f38c2a
-> > > > >          # save the attached .config to linux build tree
-> > > > >          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross ARCH=arm
-> > > > > 
-> > > > > If you fix the issue, kindly add following tag as appropriate
-> > > > > Reported-by: kernel test robot <lkp@intel.com>
-> > > > Adding Kefeng on CC.  Kefeng, thoughts?
-> > > Like this, perhaps?
-> > 
-> > Hi Paul，I check https://lkml.org/lkml/2020/6/2/286 and <https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git/log/?h=dev.2020.06.02a>
-> > 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git/log/?h=dev.2020.06.02a
-> > 
-> > There are two different ways to fix the same issue
-> > 
-> > patch 1:  rcuperf: Fix printk format warning urgent-for-mingo
-> > 
-> > patch 2:  'rcuperf: Fix kfree_mult to match printk() format' from Ingo 
-> > after my patch
-> > 
-> > since patch1 already merged,  patch2 is not needed, so skip patch2?
+Instead of trying to parse CFE version string, which is customized by some
+vendors, let's just check that "CFE1" was passed on argument 3.
 
-Good point, done, and thank you both!
+Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
+---
+ v2: use CFE_EPTSEAL definition and avoid using an additional funtion.
 
-							Thanx, Paul
+ drivers/mtd/parsers/bcm63xxpart.c | 29 ++++-------------------------
+ 1 file changed, 4 insertions(+), 25 deletions(-)
+
+diff --git a/drivers/mtd/parsers/bcm63xxpart.c b/drivers/mtd/parsers/bcm63xxpart.c
+index 78f90c6c18fd..493a75b2f266 100644
+--- a/drivers/mtd/parsers/bcm63xxpart.c
++++ b/drivers/mtd/parsers/bcm63xxpart.c
+@@ -22,6 +22,9 @@
+ #include <linux/mtd/partitions.h>
+ #include <linux/of.h>
+ 
++#include <asm/bootinfo.h>
++#include <asm/fw/cfe/cfe_api.h>
++
+ #define BCM963XX_CFE_BLOCK_SIZE		SZ_64K	/* always at least 64KiB */
+ 
+ #define BCM963XX_CFE_MAGIC_OFFSET	0x4e0
+@@ -32,30 +35,6 @@
+ #define STR_NULL_TERMINATE(x) \
+ 	do { char *_str = (x); _str[sizeof(x) - 1] = 0; } while (0)
+ 
+-static int bcm63xx_detect_cfe(struct mtd_info *master)
+-{
+-	char buf[9];
+-	int ret;
+-	size_t retlen;
+-
+-	ret = mtd_read(master, BCM963XX_CFE_VERSION_OFFSET, 5, &retlen,
+-		       (void *)buf);
+-	buf[retlen] = 0;
+-
+-	if (ret)
+-		return ret;
+-
+-	if (strncmp("cfe-v", buf, 5) == 0)
+-		return 0;
+-
+-	/* very old CFE's do not have the cfe-v string, so check for magic */
+-	ret = mtd_read(master, BCM963XX_CFE_MAGIC_OFFSET, 8, &retlen,
+-		       (void *)buf);
+-	buf[retlen] = 0;
+-
+-	return strncmp("CFE1CFE1", buf, 8);
+-}
+-
+ static int bcm63xx_read_nvram(struct mtd_info *master,
+ 	struct bcm963xx_nvram *nvram)
+ {
+@@ -138,7 +117,7 @@ static int bcm63xx_parse_cfe_partitions(struct mtd_info *master,
+ 	struct bcm963xx_nvram *nvram = NULL;
+ 	int ret;
+ 
+-	if (bcm63xx_detect_cfe(master))
++	if (fw_arg3 != CFE_EPTSEAL)
+ 		return -EINVAL;
+ 
+ 	nvram = vzalloc(sizeof(*nvram));
+-- 
+2.26.2
+
