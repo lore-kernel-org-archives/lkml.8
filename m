@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EEB3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A204BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01F082086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:22:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7747E2145D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:22:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658539;
-	bh=wCEJW245dxBO726etQLlIpRtTbaTWQv+YPDCCDn2mbo=;
+	s=default; t=1591658552;
+	bh=6N2uRjlh/wR1nNEdVNdwFs6zFXOV8xD1YmT4D8/8yAo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CBDO2rpRt4V3KCe7DSd79N7MUEhfuxOnBsZun4Z8CrKd8OLGkYR9XzZ5c8FqhrtyJ
-	 2GDlNKTCvykYiSOqbZh7DDM/P4TM3GnJC/k8P00vE8fD3TzRiSD7iluC1kE12ubnyM
-	 XqwfmfxwM6ta50lGi8h88XmeYmjAKtJdxyHOFJvc=
+	b=D6u/NiKlh6vADoUtbijbtx5TGVeTrePFp/nm3migrfunR1Jst0nSY4Ed/96G8xCQw
+	 clK7uZPZJGmJ8g/1o8ZlKVAQnqlVYvR2XPTzW6yg9GZFUsFsmF+HVMHfRcJAZ4JTD0
+	 bbpJgu312wO5Gad1X5BoU9G8G6FHc5R+C7X6SvuU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731283AbgFHXWR (ORCPT
+        id S1731324AbgFHXWa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:22:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39344 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:22:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729715AbgFHXRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:17:41 -0400
+        id S1730528AbgFHXRv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:17:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8F1D20842;
-        Mon,  8 Jun 2020 23:17:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24CB8208B3;
+        Mon,  8 Jun 2020 23:17:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658261;
-        bh=wCEJW245dxBO726etQLlIpRtTbaTWQv+YPDCCDn2mbo=;
+        s=default; t=1591658270;
+        bh=6N2uRjlh/wR1nNEdVNdwFs6zFXOV8xD1YmT4D8/8yAo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1UkBcXG8ArJ+9s86p4YuzC3qm2pn9aholPVhj4mxd0OxHMgUwyI4NQjaMBeK+U9G9
-         J6cguCDuRH500cWK65jQgiImCqr9fbr0y6wm8TbK1G5/GukK3g9wRUaixus4pQLf7f
-         nggxuzhB8nvO83QCuUGoACOSVBBupd1mXl7RUaAU=
+        b=PRFvQrP15fNWw2hQONRjTx33+HM3NYkUeOERdRBuwYg/gJiA9WFqc6ysMS5Akgp44
+         btz0aobii1fQ7DltuZPH2UClLzQe5t7we0NZ4Qc4h61PFaVpM38deD+cART8t/tzJy
+         e1S56TmmM37P+ZZf63k3LQdow7VkVWH59UuNmaFA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 269/606] usb: dwc3: pci: Enable extcon driver for Intel Merrifield
-Date:   Mon,  8 Jun 2020 19:06:34 -0400
-Message-Id: <20200608231211.3363633-269-sashal@kernel.org>
+Cc:     Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Hulk Robot <hulkci@huawei.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-riscv@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 277/606] riscv: Add pgprot_writecombine/device and PAGE_SHARED defination if NOMMU
+Date:   Mon,  8 Jun 2020 19:06:42 -0400
+Message-Id: <20200608231211.3363633-277-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -59,34 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
 
-[ Upstream commit 066c09593454e89bc605ffdff1c9810061f9b1e1 ]
+[ Upstream commit fa8174aa225fe3d53b37552e5066e6f0301dbabd ]
 
-Intel Merrifield provides a DR support via PMIC which has its own
-extcon driver.
+Some drivers use PAGE_SHARED, pgprot_writecombine()/pgprot_device(),
+add the defination to fix build error if NOMMU.
 
-Add a property string to link to that driver.
-
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc3/dwc3-pci.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/riscv/include/asm/mmio.h    | 2 ++
+ arch/riscv/include/asm/pgtable.h | 1 +
+ 2 files changed, 3 insertions(+)
 
-diff --git a/drivers/usb/dwc3/dwc3-pci.c b/drivers/usb/dwc3/dwc3-pci.c
-index 7051611229c9..b67372737dc9 100644
---- a/drivers/usb/dwc3/dwc3-pci.c
-+++ b/drivers/usb/dwc3/dwc3-pci.c
-@@ -114,6 +114,7 @@ static const struct property_entry dwc3_pci_intel_properties[] = {
+diff --git a/arch/riscv/include/asm/mmio.h b/arch/riscv/include/asm/mmio.h
+index a2c809df2733..56053c9838b2 100644
+--- a/arch/riscv/include/asm/mmio.h
++++ b/arch/riscv/include/asm/mmio.h
+@@ -16,6 +16,8 @@
  
- static const struct property_entry dwc3_pci_mrfld_properties[] = {
- 	PROPERTY_ENTRY_STRING("dr_mode", "otg"),
-+	PROPERTY_ENTRY_STRING("linux,extcon-name", "mrfld_bcove_pwrsrc"),
- 	PROPERTY_ENTRY_BOOL("linux,sysdev_is_parent"),
- 	{}
- };
+ #ifndef CONFIG_MMU
+ #define pgprot_noncached(x)	(x)
++#define pgprot_writecombine(x)	(x)
++#define pgprot_device(x)	(x)
+ #endif /* CONFIG_MMU */
+ 
+ /* Generic IO read/write.  These perform native-endian accesses. */
+diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+index 393f2014dfee..05b92987f500 100644
+--- a/arch/riscv/include/asm/pgtable.h
++++ b/arch/riscv/include/asm/pgtable.h
+@@ -460,6 +460,7 @@ static inline int ptep_clear_flush_young(struct vm_area_struct *vma,
+ 
+ #else /* CONFIG_MMU */
+ 
++#define PAGE_SHARED		__pgprot(0)
+ #define PAGE_KERNEL		__pgprot(0)
+ #define swapper_pg_dir		NULL
+ #define VMALLOC_START		0
 -- 
 2.25.1
 
