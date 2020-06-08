@@ -2,119 +2,129 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 712A5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E2CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:51:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 459142072F
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6C8B2072F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:51:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="hZewMMC6"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VDKUeP5n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729708AbgFHLuq (ORCPT
+        id S1729684AbgFHLvd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 07:50:46 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:49733 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729659AbgFHLuo (ORCPT
+        Mon, 8 Jun 2020 07:51:33 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:57561 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729568AbgFHLvb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 07:50:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1591617043; x=1623153043;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=pVcOoTXfEhP95n40P2tq5dup7mBPSiPPU6Yt3e8a7DQ=;
-  b=hZewMMC6Bf4/MiwUtEEGpotTvG+CRVyUArCTYBzSq4B/r+ypXLYuyzwr
-   GFj8zhnlhDN1xNyPc2KcMuN9b40fUuAff0+o51hxU5IspdAs5/Xbwp3RL
-   1diYlW5/mx4Wxfu7CaD1rpZiokBXHn1IZWUZhrMKIjVbOB88e32VDj36/
-   8=;
-IronPort-SDR: lxXOud6c3zGhtMXRlCIOz3XSiEHvBJS3Nw4sXRFyoLH4wtIUaS3IH6J5ZAzxaG+Bg0fZkBZavv
- HcnFWF+G4erA==
-X-IronPort-AV: E=Sophos;i="5.73,487,1583193600"; 
-   d="scan'208";a="35029270"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1d-9ec21598.us-east-1.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 08 Jun 2020 11:50:43 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-9ec21598.us-east-1.amazon.com (Postfix) with ESMTPS id 73440A1F8E;
-        Mon,  8 Jun 2020 11:50:32 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 8 Jun 2020 11:50:31 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.53) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 8 Jun 2020 11:50:15 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
-        <foersleo@amazon.de>, <irogers@google.com>, <jolsa@redhat.com>,
-        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
-        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
-        <peterz@infradead.org>, <rdunlap@infradead.org>,
-        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
-        <sblbir@amazon.com>, <shakeelb@google.com>, <shuah@kernel.org>,
-        <sj38.park@gmail.com>, <snu@amazon.de>, <vbabka@suse.cz>,
-        <vdavydov.dev@gmail.com>, <yang.shi@linux.alibaba.com>,
-        <ying.huang@intel.com>, <david@redhat.com>,
-        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v15 14/14] MAINTAINERS: Update for DAMON
-Date:   Mon, 8 Jun 2020 13:40:47 +0200
-Message-ID: <20200608114047.26589-15-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200608114047.26589-1-sjpark@amazon.com>
-References: <20200608114047.26589-1-sjpark@amazon.com>
+        Mon, 8 Jun 2020 07:51:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591617089;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fnLQOqCm9fYymeAqY+q40GtLrdA7AapZIlufFwxKbYQ=;
+        b=VDKUeP5nqNIsA+/hE+IKj27HN0yLPsTVyh8a1wyp2ctZ0Lqx+nKYXu+qprhtEppVpL9+H6
+        emefCeUbWDGdJltYy9q6thIaSBnvDIenXVB6gO3gEgqg9LNgMcBNYATkdKW6mbKWHbcso0
+        sW3TyawGtrI8MXtuE3B+ocRau5E4+po=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-467-rEMiqG34PUu2h8InmVOLCQ-1; Mon, 08 Jun 2020 07:51:26 -0400
+X-MC-Unique: rEMiqG34PUu2h8InmVOLCQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 93900107ACCD;
+        Mon,  8 Jun 2020 11:51:24 +0000 (UTC)
+Received: from elisabeth (unknown [10.36.110.72])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D3E6B5C1C5;
+        Mon,  8 Jun 2020 11:51:21 +0000 (UTC)
+Date:   Mon, 8 Jun 2020 13:51:14 +0200
+From:   Stefano Brivio <sbrivio@redhat.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] lib: Add test for bitmap_cut()
+Message-ID: <20200608135114.44ae7962@elisabeth>
+In-Reply-To: <CAHp75Vfvx6wKJUKfgDjyEcPthT9BicoZqfZmaS8eKMFwgvVphg@mail.gmail.com>
+References: <cover.1591606281.git.sbrivio@redhat.com>
+        <3e3ab7a4756df2ecf8fb012f16c375d4cd714552.1591606281.git.sbrivio@redhat.com>
+        <20200608101214.GE2428291@smile.fi.intel.com>
+        <20200608122702.034c8c80@redhat.com>
+        <CAHp75Vfvx6wKJUKfgDjyEcPthT9BicoZqfZmaS8eKMFwgvVphg@mail.gmail.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.162.53]
-X-ClientProxiedBy: EX13D46UWB004.ant.amazon.com (10.43.161.204) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+On Mon, 8 Jun 2020 14:31:02 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-This commit updates MAINTAINERS file for DAMON related files.
+> On Mon, Jun 8, 2020 at 1:29 PM Stefano Brivio <sbrivio@redhat.com> wrote:
+> > On Mon, 8 Jun 2020 13:12:14 +0300
+> > Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:  
+> > > On Mon, Jun 08, 2020 at 11:13:29AM +0200, Stefano Brivio wrote:  
+> > > > Based on an original patch by Yury Norov: introduce a test for
+> > > > bitmap_cut() that also makes sure functionality is as described for
+> > > > partially overlapping src and dst.  
+> > >  
+> > > > Co-authored-by: Yury Norov <yury.norov@gmail.com>  
+> > >
+> > > Co-developed-by (and it requires Yury's SoB as well).  
+> >
+> > Oops, sorry, I didn't remember this part from submitting-patches.rst
+> > correctly. Thanks for pointing this out.
+> >
+> > Yury, let me know if I should re-post with both Co-authored-by: and  
+> 
+> Co-developed-by: :-)
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- MAINTAINERS | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Grrr. That! :)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 50659d76976b..2396a9098715 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4686,6 +4686,18 @@ F:	net/ax25/ax25_out.c
- F:	net/ax25/ax25_timer.c
- F:	net/ax25/sysctl_net_ax25.c
- 
-+DATA ACCESS MONITOR
-+M:	SeongJae Park <sjpark@amazon.de>
-+L:	linux-mm@kvack.org
-+S:	Maintained
-+F:	Documentation/admin-guide/mm/damon/*
-+F:	include/linux/damon.h
-+F:	include/trace/events/damon.h
-+F:	mm/damon-test.h
-+F:	mm/damon.c
-+F:	tools/damon/*
-+F:	tools/testing/selftests/damon/*
-+
- DAVICOM FAST ETHERNET (DMFE) NETWORK DRIVER
- L:	netdev@vger.kernel.org
- S:	Orphan
+> > Signed-off-by: you -- otherwise I'll repost without both.  
+> 
+> ...
+> 
+> > > > +           if (!bitmap_equal(out, t->expected, t->nbits)) {
+> > > > +                   pr_err("bitmap_cut failed: expected %*pb, got %*pb\n",
+> > > > +                          t->nbits, t->expected, t->nbits, out);
+> > > > +           }  
+> > >
+> > > Perhaps
+> > >
+> > >       if (bitmap_equal(...))
+> > >               continue;
+> > >
+> > >       ...
+> > >
+> > > ?  
+> >
+> > That's five lines instead of four (I can't get pr_err() on one line
+> > anyway) and it looks less straightforward: "if it doesn't match we have
+> > an error" vs. "if it matches go to next case. We have an error". Any
+> > specific reason I'm missing?  
+> 
+> Actually, please use one of suitable expect_eq_*() macro or add your
+> own. Because above has an inconsistent format with the rest.
+
+Whoops, I see now. Yes, expect_eq_bitmap() will do, I'll change this in
+v2.
+
 -- 
-2.17.1
+Stefano
 
