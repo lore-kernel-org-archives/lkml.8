@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 522F5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31443C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:56:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2496C20774
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:56:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A51020737
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:56:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591664200;
-	bh=WKJng0jJUUQ4uEiNq23wqnHnxSWZqDkR0bpKIrh4DBU=;
+	s=default; t=1591664208;
+	bh=TZrUG0c+bqLjBayBmaG07PdziZ3fDMuG7ttxZs3ZcfA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kWxG4ITL3RgV4v8uTTHNP+NywPjOrK0b13Pt0qe/se8Z6tbT7uBVgLR+Mp0vC9mSG
-	 3Zydqk0r8KmFiPndyCltx+Vi518c0+3qRA3S6aIEUsKxSUYeH4TQ2H1qaZlQ8BJzOA
-	 7S120a/z6sockeKSkoJXRYqMhP5bqHAh01JPxBPs=
+	b=wq9cFQPUUQlMMQkoPz14UHVb5e3Po2TkQyMj6Ch8aazwy41YUB6sL5KtjCjCpxYeb
+	 CFs3SALqO0497cUHnlXKbT30/cC3gFK22IfAQbsok730iSWJMSIBAzYh6Jbd2cxOFV
+	 QvpDKN3tpDJ1bkGsKSfbrOWwyCpyI2ugTBd9HzkA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388044AbgFIA4j (ORCPT
+        id S2388002AbgFIA4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:56:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54616 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:56:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728311AbgFHXJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:09:00 -0400
+        id S1728315AbgFHXJE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:09:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EBAB208C3;
-        Mon,  8 Jun 2020 23:08:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48858208C9;
+        Mon,  8 Jun 2020 23:09:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657740;
-        bh=WKJng0jJUUQ4uEiNq23wqnHnxSWZqDkR0bpKIrh4DBU=;
+        s=default; t=1591657744;
+        bh=TZrUG0c+bqLjBayBmaG07PdziZ3fDMuG7ttxZs3ZcfA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1PdaeVUasUdu8sql2wZyOacsg/RHRkRxYLyeO8jvzcRKlkTxKcpvQBxluw+elr4FP
-         GlKJpQgSzItDJLoN5/sOPT5gyo5EiXNu6EuLZRwKicvgc2RPPmldCOMgeiYMK/Lu49
-         N+eIU5Ll3gjvqELFGnyeivdrao0RwWHOvLqKGSB0=
+        b=WiO8QZiOI3Ynh2+DZ4bUY5Ztma6D67bJ8l6uGYfHfxU0x4762+TSZ6giP2AYjbOOr
+         IM9bhDI6rWoRBpVdxapEJgmFj9jdG6d+aMJtetVvp/jhcxqA+CWjma/YHjB/k65S0i
+         lY4rOEYn6EhaVNhVxSWQ7so43sIQpQHAaq0d6yfo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Andrii Nakryiko <andriin@fb.com>,
@@ -46,9 +46,9 @@ Cc:     Andrii Nakryiko <andriin@fb.com>,
         Sasha Levin <sashal@kernel.org>,
         linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
         bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 129/274] selftests/bpf: Ensure test flavors use correct skeletons
-Date:   Mon,  8 Jun 2020 19:03:42 -0400
-Message-Id: <20200608230607.3361041-129-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 132/274] selftests/bpf: Fix invalid memory reads in core_relo selftest
+Date:   Mon,  8 Jun 2020 19:03:45 -0400
+Message-Id: <20200608230607.3361041-132-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -63,38 +63,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andrii Nakryiko <andriin@fb.com>
 
-[ Upstream commit 76148faa161e7cfb2d7719f35b37d7db4f3f8596 ]
+[ Upstream commit 13c908495e5d51718a6da84ae925fa2aac056380 ]
 
-Ensure that test runner flavors include their own skeletons from <flavor>/
-directory. Previously, skeletons generated for no-flavor test_progs were used.
-Apart from fixing correctness, this also makes it possible to compile only
-flavors individually:
+Another one found by AddressSanitizer. input_len is bigger than actually
+initialized data size.
 
-  $ make clean && make test_progs-no_alu32
-  ... now succeeds ...
-
-Fixes: 74b5a5968fe8 ("selftests/bpf: Replace test_progs and test_maps w/ general rule")
+Fixes: c7566a69695c ("selftests/bpf: Add field existence CO-RE relocs tests")
 Signed-off-by: Andrii Nakryiko <andriin@fb.com>
 Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Link: https://lore.kernel.org/bpf/20200429012111.277390-2-andriin@fb.com
+Link: https://lore.kernel.org/bpf/20200429012111.277390-8-andriin@fb.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/Makefile | 2 +-
+ tools/testing/selftests/bpf/prog_tests/core_reloc.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
-index 4e654d41c7af..01c95f8278c7 100644
---- a/tools/testing/selftests/bpf/Makefile
-+++ b/tools/testing/selftests/bpf/Makefile
-@@ -324,7 +324,7 @@ $(TRUNNER_TEST_OBJS): $(TRUNNER_OUTPUT)/%.test.o:			\
- 		      $(TRUNNER_BPF_SKELS)				\
- 		      $$(BPFOBJ) | $(TRUNNER_OUTPUT)
- 	$$(call msg,TEST-OBJ,$(TRUNNER_BINARY),$$@)
--	cd $$(@D) && $$(CC) $$(CFLAGS) -c $(CURDIR)/$$< $$(LDLIBS) -o $$(@F)
-+	cd $$(@D) && $$(CC) -I. $$(CFLAGS) -c $(CURDIR)/$$< $$(LDLIBS) -o $$(@F)
- 
- $(TRUNNER_EXTRA_OBJS): $(TRUNNER_OUTPUT)/%.o:				\
- 		       %.c						\
+diff --git a/tools/testing/selftests/bpf/prog_tests/core_reloc.c b/tools/testing/selftests/bpf/prog_tests/core_reloc.c
+index 31e177adbdf1..084ed26a7d78 100644
+--- a/tools/testing/selftests/bpf/prog_tests/core_reloc.c
++++ b/tools/testing/selftests/bpf/prog_tests/core_reloc.c
+@@ -392,7 +392,7 @@ static struct core_reloc_test_case test_cases[] = {
+ 		.input = STRUCT_TO_CHAR_PTR(core_reloc_existence___minimal) {
+ 			.a = 42,
+ 		},
+-		.input_len = sizeof(struct core_reloc_existence),
++		.input_len = sizeof(struct core_reloc_existence___minimal),
+ 		.output = STRUCT_TO_CHAR_PTR(core_reloc_existence_output) {
+ 			.a_exists = 1,
+ 			.b_exists = 0,
 -- 
 2.25.1
 
