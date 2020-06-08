@@ -2,139 +2,116 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99452C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0381C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:52:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 781F92078D
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:51:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KxOcWy9p"
+	by mail.kernel.org (Postfix) with ESMTP id 87D8520774
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:52:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591627921;
+	bh=1puOhgt4Uwf+poNYxoCheW9wNrOBAmiWsqq8Yg7kpT0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OXITjaett5AZtPsEDh+H31MLbxoymXaO5Yck3fYzWIZgwXVg1rJdnKKED672Vt+Fm
+	 +1DOwl67TZyRKeI5qO3Ft2Ot3Fatx2mQCmj9zeJNEqp1aINaisMfGY6KBuMvUBK/F5
+	 mcucUdHhVVxuLSy/Xfb5FUerLGUUxRfhLf6V+iV0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730121AbgFHOvZ (ORCPT
+        id S1730145AbgFHOwA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 10:51:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45726 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730050AbgFHOvY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 10:51:24 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A56F1C08C5C2;
-        Mon,  8 Jun 2020 07:51:23 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id p70so15494793oic.12;
-        Mon, 08 Jun 2020 07:51:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=g3MBGN2/qgTthG7Bacadsg6LtdGnLpRJHzYte56MVk0=;
-        b=KxOcWy9pwItkMt83neB0L38db9zig/d8b2mnHE4kHmdjkewZojJOAriIxN40VsBkFI
-         i+ipccwbysvUQNgYvzucBL2u7OhHBuGqAiTgkyw6fHuV0cpgVo1mFiCcusXgOyMb9cBR
-         RZl6eQJd1+0PBzew2+MOoIsc7QB/S8MqsO8WcAKCN38SL2f2FwXQelEX9k1VUzutbVHM
-         VRP8kXZn4M1vvc5YHsStL3Awt6BhvX0adPBHMspwzRi9tFSkrsbTT6ktZn8leh8/q1m/
-         nWF1bp9pp7fl/stliiVtyHtGqvJiTwxVImQL7QbZWHVqadD/SqOgfST6NM9V5QbZcceo
-         b+bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=g3MBGN2/qgTthG7Bacadsg6LtdGnLpRJHzYte56MVk0=;
-        b=AG+15wEPT1t18Kw6b1TZ7xt9HrUu/vs0ogYvmMow3lbSZtxvohlcTXkb1a/ZAKJYyc
-         sqvlg89TnDfTlfP8exMY5DxD1pPQAofHKcDIEbSIYNSLfaqtBus8/zvwoTXDQCFCrrgF
-         fO73hw6kkDxFw3/Pp5EQAL81sXWhcl9j0gwzVkb8v1KpMDFuhUTqwJZFeHM42mXhJjmL
-         ApvfQjJYzyQqGqekp438v9sAGAojexghAKh9k0xKZKlrC/eo66/TIl0MMzjjevuvfJof
-         D0MUm74pCQxllHghzjwMbpX5FjDwcEmFUoxuPvS3gAQyYhv4lUFXgkmHBrcdhKjf0093
-         Endw==
-X-Gm-Message-State: AOAM532MiJfh32yX/5x2awXtpCAR6FAMAEHtFSqscMyIvK7W44MQEteD
-        OVhpeWli2aZs993DnWQg2wu7OBXaR9sy3dN9kHM=
-X-Google-Smtp-Source: ABdhPJw4lJWKcqGnl1NRTWwU003loPTNSBnIDpBym8xuClC9RdPx9fW7bWemVW/+2NhhZD5TJBhfXuNpIyhwv7XsPrs=
-X-Received: by 2002:aca:d68f:: with SMTP id n137mr10914828oig.62.1591627882881;
- Mon, 08 Jun 2020 07:51:22 -0700 (PDT)
+        Mon, 8 Jun 2020 10:52:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55018 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725975AbgFHOv5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 10:51:57 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13A7F206C3;
+        Mon,  8 Jun 2020 14:51:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591627917;
+        bh=1puOhgt4Uwf+poNYxoCheW9wNrOBAmiWsqq8Yg7kpT0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=m1kfouFwxncpCcEUNSdwbfYPisRKvhk/SAz5yBJSKNX6jTYHy4QU21ppwYpPr5V7Q
+         HrEe8QaOQAhpPu78xdMKMQ4/xH32NzcJr496kd3wG0fJOyr/huuSLV/bX10UmZI42a
+         F8jFf2UKv1bK96myVv3ydxBmFRmlxTmMHY0GSYYA=
+Date:   Mon, 8 Jun 2020 15:51:50 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     "Kaneda, Erik" <erik.kaneda@intel.com>,
+        "Moore, Robert" <robert.moore@intel.com>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        Len Brown <lenb@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+        "dvyukov@google.com" <dvyukov@google.com>,
+        "glider@google.com" <glider@google.com>,
+        "guohanjun@huawei.com" <guohanjun@huawei.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "pcc@google.com" <pcc@google.com>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "devel@acpica.org" <devel@acpica.org>
+Subject: Re: [PATCH] ACPICA: fix UBSAN warning using __builtin_offsetof
+Message-ID: <20200608145150.GA7418@willie-the-truck>
+References: <CAMj1kXErFuvOoG=DB6sz5HBvDuHDiKwWD8uOyLuxaX-u8-+dbA@mail.gmail.com>
+ <20200601231805.207441-1-ndesaulniers@google.com>
+ <BYAPR11MB30969737340044437013BF44F08B0@BYAPR11MB3096.namprd11.prod.outlook.com>
+ <CAKwvOdmsCmPFiDOq7AYUyEx=60B=qo8u9yhnJDQ6nd6Ew7xDkQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <1591555267-21822-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1591555267-21822-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdU35fvy2TM+u=Zu3-4aVnzOC1Sxophu8WaExS7unVH1fg@mail.gmail.com>
-In-Reply-To: <CAMuHMdU35fvy2TM+u=Zu3-4aVnzOC1Sxophu8WaExS7unVH1fg@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Mon, 8 Jun 2020 15:50:56 +0100
-Message-ID: <CA+V-a8vOErQGkSYtiQ=8QLg+0WRyDZ1dHWfuxm6P2E-gAiirzA@mail.gmail.com>
-Subject: Re: [PATCH 03/11] arm64: dts: renesas: hihope-common: Separate out
- Rev.2.0 specific into hihope-common-rev2.dtsi file
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKwvOdmsCmPFiDOq7AYUyEx=60B=qo8u9yhnJDQ6nd6Ew7xDkQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+Hey Nick,
 
-Thank you for the review.
-
-On Mon, Jun 8, 2020 at 3:27 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Prabhakar,
->
-> Thanks for your patch!
->
-> On Sun, Jun 7, 2020 at 8:41 PM Lad Prabhakar
-> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > Separate out Rev.2.0 specific hardware changes into
-> > hihope-common-rev2.dtsi file so that hihope-common.dtsi can be used
-> > by all the variants for RZ/G2M[N] boards.
+On Tue, Jun 02, 2020 at 11:46:31AM -0700, Nick Desaulniers wrote:
+> On Mon, Jun 1, 2020 at 5:03 PM Kaneda, Erik <erik.kaneda@intel.com> wrote:
+> > > Will reported UBSAN warnings:
+> > > UBSAN: null-ptr-deref in drivers/acpi/acpica/tbfadt.c:459:37
+> > > UBSAN: null-ptr-deref in arch/arm64/kernel/smp.c:596:6
+> > >
+> > > Looks like the emulated offsetof macro ACPI_OFFSET is causing these. We
+> > > can avoid this by using the compiler builtin, __builtin_offsetof.
 > >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
->
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/renesas/hihope-common-rev2.dtsi
-> > @@ -0,0 +1,101 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Device Tree Source for the HiHope RZ/G2[MN] main board Rev.2.0 common
-> > + * parts
-> > + *
-> > + * Copyright (C) 2020 Renesas Electronics Corp.
-> > + */
-> > +
-> > +#include <dt-bindings/gpio/gpio.h>
->
-> What about adding
->
->     #include "hihope-common.dtsi"
->
-> here?
-> Then the *rev2.dts files have to include only "hihope-common-rev2.dtsi",
-> and get "hihope-common.dtsi" for free?
->
-> The same is true for the rev4.dtsi and the rev4.dts files.
->
-Agreed.
+> > I'll take a look at this tomorrow
+> > >
+> > > The non-kernel runtime of UBSAN would print:
+> > > runtime error: member access within null pointer of type for this macro.
+> >
+> > actypes.h is owned by ACPICA so we typically do not allow compiler-specific
+> > extensions because the code is intended to be compiled using the C99 standard
+> > without compiler extensions. We could allow this sort of thing in a Linux-specific
+> > header file like include/acpi/platform/aclinux.h but I'll take a look at the error as well..
+> 
+> If I'm not allowed to touch that header, it looks like I can include
+> <linux/stddef.h> (rather than my host's <stddef.h>) to get a
+> definition of `offsetof` thats implemented in terms of
+> `__builtin_offsetof`.  I should be able to use that to replace uses of
+> ACPI_OFFSET.  Are any of these off limits?
 
-Cheers,
---Prabhakar
+It's not so much about not being allowed to touch the header, but rather
+that the kernel imports the code from a different project:
 
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+https://acpica.org/community
+
+> $ grep -rn ACPI_OFFSET
+> arch/arm64/include/asm/acpi.h:34:#define ACPI_MADT_GICC_MIN_LENGTH
+> ACPI_OFFSET(  \
+> arch/arm64/include/asm/acpi.h:41:#define ACPI_MADT_GICC_SPE
+> (ACPI_OFFSET(struct acpi_madt_generic_interrupt, \
+
+I'm happy to take patches to the stuff under arch/arm64/, fwiw.
+
+Will
