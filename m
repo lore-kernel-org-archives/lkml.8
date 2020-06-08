@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 974B4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54454C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6848C20825
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:22:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 243A420812
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:22:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662143;
-	bh=7bdL3LfbgQTpB6p9+mW/YgtWkBdHWnz5N5/nrRUeYB0=;
+	s=default; t=1591662150;
+	bh=JOvf7Z0unFZPa0R3IIQFYG1Wc1kvGB+pDnGn35Q+6iY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DnxYCzfn7jK3iw3h2nfa329KIt3pPrOCKYHNU03+WQygCYeSrdJ5vMvpoScezkfli
-	 UNW3w9eNj3cxc/GllmqcuQzz6rw3ZHQsek2krVzCX/oz+4e01wBF6WG5zFBTEgNyug
-	 9+tzl9yxKYLmB83tc9Okaco8FczZ3PAtF/OI3coU=
+	b=mT9ykMDzc+leqUts65+5X02eYsb1ezAi0DWqybL8q4lgZrp+YSkv14Pmviz2PgIT8
+	 YXTLSTs4/QVtemI4aTSImoVmo32M27O2byiutlrNG8Pd3qo/mam8gbPmr6AVnhNves
+	 Cp3vLWLkamlxA6fbMQz1Vkl4jT9LJadE6STXonlE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732158AbgFIAWV (ORCPT
+        id S1732046AbgFIAW3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:22:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39284 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:22:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729812AbgFHXRf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:17:35 -0400
+        id S1728931AbgFHXRc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:17:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E936920884;
-        Mon,  8 Jun 2020 23:17:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 412FC20853;
+        Mon,  8 Jun 2020 23:17:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658255;
-        bh=7bdL3LfbgQTpB6p9+mW/YgtWkBdHWnz5N5/nrRUeYB0=;
+        s=default; t=1591658251;
+        bh=JOvf7Z0unFZPa0R3IIQFYG1Wc1kvGB+pDnGn35Q+6iY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ah3zpBFn7+Wy7moVnddJCgKY5jWI96oduPPOEeyepoWWwnmRixfB0V5EGBC5HB33q
-         wT7TIMw40YNrv6/oBw74MoyRiqcP+8LRzalaI07w2PVYtA9cdEOc5c9BpDNYrStkUF
-         UWLmiJaeHx0l0yKOgwMqeons2JtX6pqZUq8Y0MTE=
+        b=jpMlPrhhsOTiB99fAleMHvofvKOoS4WIxbtg7WdH6+yyj0Lb5HZmdltvzi3/9B2s8
+         dKRBeFQqf3CBOLClEzF3fSq8n/eKvyqgQVI9woqUAbCzZtbtlzIxWHBgqQS2tzkJxH
+         9nA1XbU52q/b6NpTsQiU0fzIsksydYC/NJvsM59w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
-        Bob Peterson <rpeterso@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
-Subject: [PATCH AUTOSEL 5.6 264/606] gfs2: Grab glock reference sooner in gfs2_add_revoke
-Date:   Mon,  8 Jun 2020 19:06:29 -0400
-Message-Id: <20200608231211.3363633-264-sashal@kernel.org>
+Cc:     Chuhong Yuan <hslester96@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 261/606] net: microchip: encx24j600: add missed kthread_stop
+Date:   Mon,  8 Jun 2020 19:06:26 -0400
+Message-Id: <20200608231211.3363633-261-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -59,42 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Gruenbacher <agruenba@redhat.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit f4e2f5e1a527ce58fc9f85145b03704779a3123e ]
+[ Upstream commit ff8ce319e9c25e920d994cc35236f0bb32dfc8f3 ]
 
-This patch rearranges gfs2_add_revoke so that the extra glock
-reference is added earlier on in the function to avoid races in which
-the glock is freed before the new reference is taken.
+This driver calls kthread_run() in probe, but forgets to call
+kthread_stop() in probe failure and remove.
+Add the missed kthread_stop() to fix it.
 
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/log.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/microchip/encx24j600.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/fs/gfs2/log.c b/fs/gfs2/log.c
-index 60d911e293e6..2674feda1d7a 100644
---- a/fs/gfs2/log.c
-+++ b/fs/gfs2/log.c
-@@ -603,13 +603,13 @@ void gfs2_add_revoke(struct gfs2_sbd *sdp, struct gfs2_bufdata *bd)
- 	struct buffer_head *bh = bd->bd_bh;
- 	struct gfs2_glock *gl = bd->bd_gl;
+diff --git a/drivers/net/ethernet/microchip/encx24j600.c b/drivers/net/ethernet/microchip/encx24j600.c
+index 39925e4bf2ec..b25a13da900a 100644
+--- a/drivers/net/ethernet/microchip/encx24j600.c
++++ b/drivers/net/ethernet/microchip/encx24j600.c
+@@ -1070,7 +1070,7 @@ static int encx24j600_spi_probe(struct spi_device *spi)
+ 	if (unlikely(ret)) {
+ 		netif_err(priv, probe, ndev, "Error %d initializing card encx24j600 card\n",
+ 			  ret);
+-		goto out_free;
++		goto out_stop;
+ 	}
  
-+	sdp->sd_log_num_revoke++;
-+	if (atomic_inc_return(&gl->gl_revokes) == 1)
-+		gfs2_glock_hold(gl);
- 	bh->b_private = NULL;
- 	bd->bd_blkno = bh->b_blocknr;
- 	gfs2_remove_from_ail(bd); /* drops ref on bh */
- 	bd->bd_bh = NULL;
--	sdp->sd_log_num_revoke++;
--	if (atomic_inc_return(&gl->gl_revokes) == 1)
--		gfs2_glock_hold(gl);
- 	set_bit(GLF_LFLUSH, &gl->gl_flags);
- 	list_add(&bd->bd_list, &sdp->sd_log_revokes);
- }
+ 	eidled = encx24j600_read_reg(priv, EIDLED);
+@@ -1088,6 +1088,8 @@ static int encx24j600_spi_probe(struct spi_device *spi)
+ 
+ out_unregister:
+ 	unregister_netdev(priv->ndev);
++out_stop:
++	kthread_stop(priv->kworker_task);
+ out_free:
+ 	free_netdev(ndev);
+ 
+@@ -1100,6 +1102,7 @@ static int encx24j600_spi_remove(struct spi_device *spi)
+ 	struct encx24j600_priv *priv = dev_get_drvdata(&spi->dev);
+ 
+ 	unregister_netdev(priv->ndev);
++	kthread_stop(priv->kworker_task);
+ 
+ 	free_netdev(priv->ndev);
+ 
 -- 
 2.25.1
 
