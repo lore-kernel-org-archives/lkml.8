@@ -2,91 +2,95 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94939C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:35:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0795BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 640522078B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:35:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rJuzjWrS"
+	by mail.kernel.org (Postfix) with ESMTP id CF58D2063A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:36:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725944AbgFHSfq (ORCPT
+        id S1725968AbgFHSge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 14:35:46 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:49950 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725468AbgFHSfp (ORCPT
+        Mon, 8 Jun 2020 14:36:34 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:61224 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725280AbgFHSge (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 14:35:45 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 058IZf9U084540;
-        Mon, 8 Jun 2020 13:35:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1591641341;
-        bh=eHHa7AodQrze13nOKG82sHxSg589G5pCOP+wqJ1onsw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=rJuzjWrSienjycKqqtYMN0mQ5AbpdBviACGKVh63TpexqCnNNmMT2SBtubDV70H2s
-         FsRjKMcYMrbQXi3PfI7c/WZY/slk80RQKdCNezcLuAOF6S43gIFMLyw2ZEEALnOrGD
-         lMPLPappRbuaQxCVqSqE8Z4Doa9jP2+BOcbjvqQg=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 058IZfPX019793
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 8 Jun 2020 13:35:41 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 8 Jun
- 2020 13:35:41 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 8 Jun 2020 13:35:41 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 058IZf1b069557;
-        Mon, 8 Jun 2020 13:35:41 -0500
-Subject: Re: [PATCH v26 00/15] Multicolor Framework v26
-To:     Pavel Machek <pavel@ucw.cz>
-CC:     <jacek.anaszewski@gmail.com>, <devicetree@vger.kernel.org>,
-        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200604120504.32425-1-dmurphy@ti.com>
- <20200606155747.GB21130@amd>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <e7b26b67-cbb9-d139-a105-6a02bd45179f@ti.com>
-Date:   Mon, 8 Jun 2020 13:35:41 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 8 Jun 2020 14:36:34 -0400
+X-IronPort-AV: E=Sophos;i="5.73,487,1583190000"; 
+   d="scan'208";a="453622896"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jun 2020 20:36:32 +0200
+Date:   Mon, 8 Jun 2020 20:36:31 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Markus Elfring <Markus.Elfring@web.de>
+cc:     Denis Efremov <efremov@linux.com>,
+        Coccinelle <cocci@systeme.lip6.fr>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] coccinelle: api: extend memdup_user rule with
+ vmemdup_user()
+In-Reply-To: <6c9c6a4c-c305-ddab-8a1b-e4dc448d643f@web.de>
+Message-ID: <alpine.DEB.2.21.2006082035580.3136@hadrien>
+References: <6c9c6a4c-c305-ddab-8a1b-e4dc448d643f@web.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20200606155747.GB21130@amd>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/mixed; boundary="8323329-1412814973-1591641392=:3136"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pavel
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On 6/6/20 10:57 AM, Pavel Machek wrote:
-> Hi!
+--8323329-1412814973-1591641392=:3136
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+
+
+
+On Mon, 8 Jun 2020, Markus Elfring wrote:
+
+> …
+> +++ b/scripts/coccinelle/api/memdup_user.cocci
+> @@ -39,6 +39,28 @@ …
+> …
+> > +@depends on patch@
+> > +expression from,to,size;
+> > +identifier l1,l2;
+> > +@@
+> > +
+> > +-  to = \(kvmalloc\|kvzalloc\)(size,\(GFP_KERNEL\|GFP_USER\));
+> > ++  to = vmemdup_user(from,size);
 >
->> This is the multi color LED framework.   This framework presents clustered
->> colored LEDs into an array and allows the user space to adjust the brightness
->> of the cluster using a single file write.  The individual colored LEDs
->> intensities are controlled via a single file that is an array of LEDs
-> Can you re-order the patches so that stuff that can be applied now
-> goes first? Bugfixes, cleanups, devm conversion, yaml conversions that
-> are already acked...
+> I suggest to combine the desired adjustment with the previous SmPL rule
+> by using another disjunction.
+>
+>
+> > +@rv depends on !patch@
+> > +expression from,to,size;
+> > +position p;
+> > +statement S1,S2;
+> > +@@
+> > +
+> > +*  to = \(kvmalloc@p\|kvzalloc@p\)(size,\(GFP_KERNEL\|GFP_USER\));
+> > +   if (to==NULL || ...) S1
+> > +   if (copy_from_user(to, from, size) != 0)
+> > +   S2
+>
+> How does the SmPL asterisk functionality fit to the operation
+> modes “org” and “report”?
 
-This series should be close to being applied. I am almost done making 
-v26 changes.
+Make coccicheck uses --no-show-diff for org and report modes, so the * has
+no effect in those cases.
 
-I don't want to re-order this series.
-
-Dan
-
+julia
+--8323329-1412814973-1591641392=:3136--
