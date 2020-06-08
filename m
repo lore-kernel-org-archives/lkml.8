@@ -2,67 +2,149 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21977C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 13:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB77C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 13:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 055692074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 13:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EB2020825
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 13:06:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729721AbgFHNFI (ORCPT
+        id S1729402AbgFHNG0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 09:05:08 -0400
-Received: from verein.lst.de ([213.95.11.211]:37113 "EHLO verein.lst.de"
+        Mon, 8 Jun 2020 09:06:26 -0400
+Received: from foss.arm.com ([217.140.110.172]:52618 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728245AbgFHNFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 09:05:07 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 3058D68AFE; Mon,  8 Jun 2020 15:05:04 +0200 (CEST)
-Date:   Mon, 8 Jun 2020 15:05:03 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Vegard Nossum <vegard.nossum@oracle.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Kees Cook <keescook@chromium.org>,
+        id S1728245AbgFHNGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 09:06:24 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5A9C231B;
+        Mon,  8 Jun 2020 06:06:23 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A25B73F52E;
+        Mon,  8 Jun 2020 06:06:20 -0700 (PDT)
+References: <20200528132327.GB706460@hirez.programming.kicks-ass.net> <20200528155800.yjrmx3hj72xreryh@e107158-lin.cambridge.arm.com> <20200528161112.GI2483@worktop.programming.kicks-ass.net> <20200529100806.GA3070@suse.de> <edd80c0d-b7c8-4314-74da-08590170e6f5@arm.com> <87v9k84knx.derkling@matbug.net> <20200603101022.GG3070@suse.de> <CAKfTPtAvMvPk5Ea2kaxXE8GzQ+Nc_PS+EKB1jAa03iJwQORSqA@mail.gmail.com> <20200603165200.v2ypeagziht7kxdw@e107158-lin.cambridge.arm.com> <CAKfTPtC6TvUL83VdWuGfbKm0CkXB85YQ5qkagK9aiDB8Hqrn_Q@mail.gmail.com> <20200608123102.6sdhdhit7lac5cfl@e107158-lin.cambridge.arm.com>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
         Iurii Zaikin <yzaikin@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        linux-kernel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        bpf@vger.kernel.org, Andrey Ignatov <rdna@fb.com>
-Subject: Re: WARNING: CPU: 1 PID: 52 at mm/page_alloc.c:4826
- __alloc_pages_nodemask (Re: [PATCH 5/5] sysctl: pass kernel
- pointers to ->proc_handler)
-Message-ID: <20200608130503.GA22898@lst.de>
-References: <20200424064338.538313-1-hch@lst.de> <20200424064338.538313-6-hch@lst.de> <1fc7ce08-26a7-59ff-e580-4e6c22554752@oracle.com> <20200608065120.GA17859@lst.de> <c0f216d1-edc1-68e6-7f3e-c00e33452707@oracle.com>
+        Quentin Perret <qperret@google.com>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        linux-doc@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-fs <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default boost value
+In-reply-to: <20200608123102.6sdhdhit7lac5cfl@e107158-lin.cambridge.arm.com>
+Date:   Mon, 08 Jun 2020 14:06:13 +0100
+Message-ID: <jhjzh9d3dx6.mognet@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c0f216d1-edc1-68e6-7f3e-c00e33452707@oracle.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 09:45:49AM +0200, Vegard Nossum wrote:
-> Just a test case.
->
-> Allowing the kernel to allocate an unbounded amount of memory on behalf
-> of userspace is an easy DOS.
->
-> All the length checks were already in there, e.g.
->
->  static int cmm_timeout_handler(struct ctl_table *ctl, int write,
->                               void __user *buffer, size_t *lenp, loff_t 
-> *ppos)
->  {
->         char buf[64], *p;
-> [...]
->                 len = min(*lenp, sizeof(buf));
->                 if (copy_from_user(buf, buffer, len))
->                         return -EFAULT;
 
-Doesn't help if we don't know the exact limit yet.  But we can put
-some arbitrary but reasonable limit like KMALLOC_MAX_SIZE on the
-sysctls and see if this sticks.
+On 08/06/20 13:31, Qais Yousef wrote:
+> With uclamp enabled but no fair group I get
+>
+> *** uclamp enabled/fair group disabled ***
+>
+>       # Executed 50000 pipe operations between two threads
+>            Total time: 0.856 [sec]
+>
+>            17.125740 usecs/op
+>                58391 ops/sec
+>
+> The drop is 5.5% in ops/sec. Or 1 usecs/op.
+>
+> I don't know what's the expectation here. 1 us could be a lot, but I don't
+> think we expect the new code to take more than few 100s of ns anyway. If you
+> add potential caching effects, reaching 1 us wouldn't be that hard.
+>
+
+I don't think it's fair to look at the absolute delta. This being a very
+hot path, cumulative overhead gets scary real quick. A drop of 5.5% work
+done is a big hour lost over a full processing day.
+
+> Note that in my runs I chose performance governor and use `taskset 0x2` to
+> force running on a big core to make sure the runs are repeatable.
+>
+> On Juno-r2 I managed to scrap most of the 1 us with the below patch. It seems
+> there was weird branching behavior that affects the I$ in my case. It'd be good
+> to try it out to see if it makes a difference for you.
+>
+> The I$ effect is my best educated guess. Perf doesn't catch this path and
+> I couldn't convince it to look at cache and branch misses between 2 specific
+> points.
+>
+> Other subtle code shuffling did have weird effect on the result too. One worthy
+> one is making uclamp_rq_dec() noinline gains back ~400 ns. Making
+> uclamp_rq_inc() noinline *too* cancels this gain out :-/
+>
+>
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 0464569f26a7..0835ee20a3c7 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -1071,13 +1071,11 @@ static inline void uclamp_rq_dec_id(struct rq *rq, struct task_struct *p,
+>
+>  static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
+>  {
+> -	enum uclamp_id clamp_id;
+> -
+>       if (unlikely(!p->sched_class->uclamp_enabled))
+>               return;
+>
+> -	for_each_clamp_id(clamp_id)
+> -		uclamp_rq_inc_id(rq, p, clamp_id);
+> +	uclamp_rq_inc_id(rq, p, UCLAMP_MIN);
+> +	uclamp_rq_inc_id(rq, p, UCLAMP_MAX);
+>
+>       /* Reset clamp idle holding when there is one RUNNABLE task */
+>       if (rq->uclamp_flags & UCLAMP_FLAG_IDLE)
+> @@ -1086,13 +1084,11 @@ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
+>
+>  static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p)
+>  {
+> -	enum uclamp_id clamp_id;
+> -
+>       if (unlikely(!p->sched_class->uclamp_enabled))
+>               return;
+>
+> -	for_each_clamp_id(clamp_id)
+> -		uclamp_rq_dec_id(rq, p, clamp_id);
+> +	uclamp_rq_dec_id(rq, p, UCLAMP_MIN);
+> +	uclamp_rq_dec_id(rq, p, UCLAMP_MAX);
+>  }
+>
+
+That's... Surprising. Did you look at the difference in generated code?
+
+>  static inline void
+>
+>
+> FWIW I fail to see activate/deactivate_task in perf record. They don't show up
+> on the list which means this micro benchmark doesn't stress them as Mel's test
+> does.
+>
+
+You're not going to see it them perf on the Juno. They're in IRQ
+disabled sections, so AFAICT it won't get sampled as you don't have
+NMIs. You can turn on ARM64_PSEUDO_NMI, but you'll need a GICv3 (Ampere
+eMAG, Cavium ThunderX2).
