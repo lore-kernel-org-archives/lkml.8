@@ -2,55 +2,60 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3602C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:47:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7591C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:47:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE880204EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:47:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E0B820659
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:47:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660050;
-	bh=bOJZp4MY8yMotHM7SIxa+gP+l7ndwy2nMGpeBaSHfwA=;
+	s=default; t=1591660060;
+	bh=VBKWQ5iLv1fYJthBSpg/mc/0FfYgJ1CTvw8ww/USsgc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xCbeDDiGqmZb7ez4F26i0JmfNiceLmvSX6GHTvTVUKyxgZiKnzk9/VR4A0ychd0nY
-	 EaurQLJpLe51YHPxNBr1GgURDxrYXIlbjWy36MSkzpFMkhilRlktCc7rhTBH3HXPwm
-	 hPnBMvcz4eKsrirSMMLINiPerLVes7Vy2uq8DGbI=
+	b=f18vLjkfRINSE+icjvnMyGakXV02C5ltT3i1kdi7YxRPjycXketic7tX5UV0mHA/v
+	 bpB4jL0c8SO9RGo5+XKAqH7JO42tAY12hZlHsGSaWXPZSC/UfPWa6Cp4SYTMrnD4+m
+	 8OXTwm1p36kZQAvxqa/MMZjW96uouvAX9/MoYIvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731933AbgFHX0J (ORCPT
+        id S2387993AbgFHXri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:26:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44780 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:47:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731060AbgFHXUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:20:54 -0400
+        id S1731910AbgFHX0C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:26:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A246820842;
-        Mon,  8 Jun 2020 23:20:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C833820812;
+        Mon,  8 Jun 2020 23:26:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658454;
-        bh=bOJZp4MY8yMotHM7SIxa+gP+l7ndwy2nMGpeBaSHfwA=;
+        s=default; t=1591658762;
+        bh=VBKWQ5iLv1fYJthBSpg/mc/0FfYgJ1CTvw8ww/USsgc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ytYpVZ4G+H6NBbuVGo8CEU3Q40+TNAwnO+70/xB1RjmaEsXmRYj4B+LfHL39UVkft
-         KC5Wft1vDSitWkj4Hq6noAX69pMheZ8WvnnM7bPe/U5lthxeKrZdnR7Q0SWJjsQ/im
-         NH4IFCkI/2LW4RUVmprVtGPuObGFco/NERDlWe8A=
+        b=DDvCcc243dK4VR4pUUfaJkujDEygfpycmvqc027JfPClzgMi2LCWrDKNJ7mBP+stB
+         FGe1F43mWDiBnp+HaUWue6jO8XlSn+JIULbovCJ9iJDV+dQIOx6IPZtyC5fK8CNtBX
+         L3QEUx/D3p8kzqIrQG7vy01mSm6ywJ6W7A7sFZfk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 095/175] media: cec: silence shift wrapping warning in __cec_s_log_addrs()
-Date:   Mon,  8 Jun 2020 19:17:28 -0400
-Message-Id: <20200608231848.3366970-95-sashal@kernel.org>
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Fangrui Song <maskray@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        "Maciej W . Rozycki" <macro@linux-mips.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Sasha Levin <sashal@kernel.org>, linux-mips@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.14 45/72] MIPS: Truncate link address into 32bit for 32bit kernel
+Date:   Mon,  8 Jun 2020 19:24:33 -0400
+Message-Id: <20200608232500.3369581-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
-References: <20200608231848.3366970-1-sashal@kernel.org>
+In-Reply-To: <20200608232500.3369581-1-sashal@kernel.org>
+References: <20200608232500.3369581-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,54 +65,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
 
-[ Upstream commit 3b5af3171e2d5a73ae6f04965ed653d039904eb6 ]
+[ Upstream commit ff487d41036035376e47972c7c522490b839ab37 ]
 
-The log_addrs->log_addr_type[i] value is a u8 which is controlled by
-the user and comes from the ioctl.  If it's over 31 then that results in
-undefined behavior (shift wrapping) and that leads to a Smatch static
-checker warning.  We already cap the value later so we can silence the
-warning just by re-ordering the existing checks.
+LLD failed to link vmlinux with 64bit load address for 32bit ELF
+while bfd will strip 64bit address into 32bit silently.
+To fix LLD build, we should truncate load address provided by platform
+into 32bit for 32bit kernel.
 
-I think the UBSan checker will also catch this bug at runtime and
-generate a warning.  But otherwise the bug is harmless.
-
-Fixes: 9881fe0ca187 ("[media] cec: add HDMI CEC framework (adapter)")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Link: https://github.com/ClangBuiltLinux/linux/issues/786
+Link: https://sourceware.org/bugzilla/show_bug.cgi?id=25784
+Reviewed-by: Fangrui Song <maskray@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+Cc: Maciej W. Rozycki <macro@linux-mips.org>
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/cec/cec-adap.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/mips/Makefile                 | 13 ++++++++++++-
+ arch/mips/boot/compressed/Makefile |  2 +-
+ arch/mips/kernel/vmlinux.lds.S     |  2 +-
+ 3 files changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/cec/cec-adap.c b/drivers/media/cec/cec-adap.c
-index b14c09cd9593..06383b26712b 100644
---- a/drivers/media/cec/cec-adap.c
-+++ b/drivers/media/cec/cec-adap.c
-@@ -1732,6 +1732,10 @@ int __cec_s_log_addrs(struct cec_adapter *adap,
- 		unsigned j;
+diff --git a/arch/mips/Makefile b/arch/mips/Makefile
+index 5977884b008e..a4a06d173858 100644
+--- a/arch/mips/Makefile
++++ b/arch/mips/Makefile
+@@ -279,12 +279,23 @@ ifdef CONFIG_64BIT
+   endif
+ endif
  
- 		log_addrs->log_addr[i] = CEC_LOG_ADDR_INVALID;
-+		if (log_addrs->log_addr_type[i] > CEC_LOG_ADDR_TYPE_UNREGISTERED) {
-+			dprintk(1, "unknown logical address type\n");
-+			return -EINVAL;
-+		}
- 		if (type_mask & (1 << log_addrs->log_addr_type[i])) {
- 			dprintk(1, "duplicate logical address type\n");
- 			return -EINVAL;
-@@ -1752,10 +1756,6 @@ int __cec_s_log_addrs(struct cec_adapter *adap,
- 			dprintk(1, "invalid primary device type\n");
- 			return -EINVAL;
- 		}
--		if (log_addrs->log_addr_type[i] > CEC_LOG_ADDR_TYPE_UNREGISTERED) {
--			dprintk(1, "unknown logical address type\n");
--			return -EINVAL;
--		}
- 		for (j = 0; j < feature_sz; j++) {
- 			if ((features[j] & 0x80) == 0) {
- 				if (op_is_dev_features)
++# When linking a 32-bit executable the LLVM linker cannot cope with a
++# 32-bit load address that has been sign-extended to 64 bits.  Simply
++# remove the upper 32 bits then, as it is safe to do so with other
++# linkers.
++ifdef CONFIG_64BIT
++	load-ld			= $(load-y)
++else
++	load-ld			= $(subst 0xffffffff,0x,$(load-y))
++endif
++
+ KBUILD_AFLAGS	+= $(cflags-y)
+ KBUILD_CFLAGS	+= $(cflags-y)
+-KBUILD_CPPFLAGS += -DVMLINUX_LOAD_ADDRESS=$(load-y)
++KBUILD_CPPFLAGS += -DVMLINUX_LOAD_ADDRESS=$(load-y) -DLINKER_LOAD_ADDRESS=$(load-ld)
+ KBUILD_CPPFLAGS += -DDATAOFFSET=$(if $(dataoffset-y),$(dataoffset-y),0)
+ 
+ bootvars-y	= VMLINUX_LOAD_ADDRESS=$(load-y) \
++		  LINKER_LOAD_ADDRESS=$(load-ld) \
+ 		  VMLINUX_ENTRY_ADDRESS=$(entry-y) \
+ 		  PLATFORM="$(platform-y)" \
+ 		  ITS_INPUTS="$(its-y)"
+diff --git a/arch/mips/boot/compressed/Makefile b/arch/mips/boot/compressed/Makefile
+index baa34e4deb78..516e593a8ee9 100644
+--- a/arch/mips/boot/compressed/Makefile
++++ b/arch/mips/boot/compressed/Makefile
+@@ -87,7 +87,7 @@ ifneq ($(zload-y),)
+ VMLINUZ_LOAD_ADDRESS := $(zload-y)
+ else
+ VMLINUZ_LOAD_ADDRESS = $(shell $(obj)/calc_vmlinuz_load_addr \
+-		$(obj)/vmlinux.bin $(VMLINUX_LOAD_ADDRESS))
++		$(obj)/vmlinux.bin $(LINKER_LOAD_ADDRESS))
+ endif
+ UIMAGE_LOADADDR = $(VMLINUZ_LOAD_ADDRESS)
+ 
+diff --git a/arch/mips/kernel/vmlinux.lds.S b/arch/mips/kernel/vmlinux.lds.S
+index 36f2e860ba3e..be63fff95b2a 100644
+--- a/arch/mips/kernel/vmlinux.lds.S
++++ b/arch/mips/kernel/vmlinux.lds.S
+@@ -50,7 +50,7 @@ SECTIONS
+ 	/* . = 0xa800000000300000; */
+ 	. = 0xffffffff80300000;
+ #endif
+-	. = VMLINUX_LOAD_ADDRESS;
++	. = LINKER_LOAD_ADDRESS;
+ 	/* read-only */
+ 	_text = .;	/* Text and read-only data */
+ 	.text : {
 -- 
 2.25.1
 
