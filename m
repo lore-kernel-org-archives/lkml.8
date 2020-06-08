@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3717EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD4C3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06DE0207C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:48:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B958A204EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:48:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660099;
-	bh=rCItgz97uH/w6p0rQznSJvlK8/pyJWrkWMPE1BU7KS0=;
+	s=default; t=1591660107;
+	bh=2qLyoYM5uT2rMeb6vdKw9v73BZGzqv06q+5YAIglqCc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hzeUjauCeh97meyuFjwUKtm5MlBhkFSIF6bKtfEjpEfvcYjktPN1h2wRvLAxPmZYE
-	 x7mT1rsHYFYI/8qSJnUKDC9ovjhUsanQDXLjK1IuErXZHuvwQa1zn+K6ThypLkDjbD
-	 tnkJ7Rbyvi/x7DJtbXq7WqTlUwL5kbv0wFx4ub5o=
+	b=E12QsiuoELUDWFPkL+jU5bB0VXzkr5LQZBCipvh6TyJAd/ROQwMcLvSu5Pspbn+GA
+	 q1d48zCAEUQVaww6+iOaKveK+uzkZKkSnuhe1+D48UHrep5yEf7sTW7JDpbkHp4cPt
+	 3nKu8Pu2PbXXKrM+35vW7kxDWQeVyLemmY2Hr18M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732489AbgFHXsR (ORCPT
+        id S1732506AbgFHXs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:48:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52654 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:48:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731475AbgFHXZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:25:48 -0400
+        id S1731851AbgFHXZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:25:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E11FA2072F;
-        Mon,  8 Jun 2020 23:25:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86CA22068D;
+        Mon,  8 Jun 2020 23:25:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658748;
-        bh=rCItgz97uH/w6p0rQznSJvlK8/pyJWrkWMPE1BU7KS0=;
+        s=default; t=1591658746;
+        bh=2qLyoYM5uT2rMeb6vdKw9v73BZGzqv06q+5YAIglqCc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ILXEWsEkiQkLdguSPk7KCZdgrDJLyVGI9CXA63AI1F2JWDZVpRz8TOFKHV7EEqYY7
-         Dw6Q4SvhRCgm3bCCiRgEUDGEYeaAjzXN+lk8sv5PIxL9fAV+5yabDkhNM4unXySIKo
-         2QYzsvukluga66Z8HKdELq5j+g878byUxhpC06LI=
+        b=kUGKKoA0uKeb49hOEdk5MkM+APjPBudSBpJZKeC8SZAjOMbxyjeeow7DMmG8JdrtM
+         0cSMAa5jJZZu0HHIXMEoadVKXuUWyN/rycntl+l2U5+0YC5lYSr/sDzI+QAGCZ5Zbo
+         46XrI5fLpV1jSpWELXAbebkKEktz9nMCQzhRcBFI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 34/72] netfilter: nft_nat: return EOPNOTSUPP if type or flags are not supported
-Date:   Mon,  8 Jun 2020 19:24:22 -0400
-Message-Id: <20200608232500.3369581-34-sashal@kernel.org>
+Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Juxin Gao <gaojuxin@loongson.cn>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Sasha Levin <sashal@kernel.org>, linux-mips@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 32/72] MIPS: Make sparse_init() using top-down allocation
+Date:   Mon,  8 Jun 2020 19:24:20 -0400
+Message-Id: <20200608232500.3369581-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608232500.3369581-1-sashal@kernel.org>
 References: <20200608232500.3369581-1-sashal@kernel.org>
@@ -60,41 +60,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-[ Upstream commit 0d7c83463fdf7841350f37960a7abadd3e650b41 ]
+[ Upstream commit 269b3a9ac538c4ae87f84be640b9fa89914a2489 ]
 
-Instead of EINVAL which should be used for malformed netlink messages.
+In the current code, if CONFIG_SWIOTLB is set, when failed to get IO TLB
+memory from the low pages by plat_swiotlb_setup(), it may lead to the boot
+process failed with kernel panic.
 
-Fixes: eb31628e37a0 ("netfilter: nf_tables: Add support for IPv6 NAT")
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+(1) On the Loongson and SiByte platform
+arch/mips/loongson64/dma.c
+arch/mips/sibyte/common/dma.c
+void __init plat_swiotlb_setup(void)
+{
+	swiotlb_init(1);
+}
+
+kernel/dma/swiotlb.c
+void  __init
+swiotlb_init(int verbose)
+{
+...
+	vstart = memblock_alloc_low(PAGE_ALIGN(bytes), PAGE_SIZE);
+	if (vstart && !swiotlb_init_with_tbl(vstart, io_tlb_nslabs, verbose))
+		return;
+...
+	pr_warn("Cannot allocate buffer");
+	no_iotlb_memory = true;
+}
+
+phys_addr_t swiotlb_tbl_map_single()
+{
+...
+	if (no_iotlb_memory)
+		panic("Can not allocate SWIOTLB buffer earlier ...");
+...
+}
+
+(2) On the Cavium OCTEON platform
+arch/mips/cavium-octeon/dma-octeon.c
+void __init plat_swiotlb_setup(void)
+{
+...
+	octeon_swiotlb = memblock_alloc_low(swiotlbsize, PAGE_SIZE);
+	if (!octeon_swiotlb)
+		panic("%s: Failed to allocate %zu bytes align=%lx\n",
+		      __func__, swiotlbsize, PAGE_SIZE);
+...
+}
+
+Because IO_TLB_DEFAULT_SIZE is 64M, if the rest size of low memory is less
+than 64M when call plat_swiotlb_setup(), we can easily reproduce the panic
+case.
+
+In order to reduce the possibility of kernel panic when failed to get IO
+TLB memory under CONFIG_SWIOTLB, it is better to allocate low memory as
+small as possible before plat_swiotlb_setup(), so make sparse_init() using
+top-down allocation.
+
+Reported-by: Juxin Gao <gaojuxin@loongson.cn>
+Co-developed-by: Juxin Gao <gaojuxin@loongson.cn>
+Signed-off-by: Juxin Gao <gaojuxin@loongson.cn>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_nat.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/mips/kernel/setup.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/net/netfilter/nft_nat.c b/net/netfilter/nft_nat.c
-index ed548d06b6dd..a18cceecef88 100644
---- a/net/netfilter/nft_nat.c
-+++ b/net/netfilter/nft_nat.c
-@@ -135,7 +135,7 @@ static int nft_nat_init(const struct nft_ctx *ctx, const struct nft_expr *expr,
- 		priv->type = NF_NAT_MANIP_DST;
- 		break;
- 	default:
--		return -EINVAL;
-+		return -EOPNOTSUPP;
- 	}
+diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
+index 05ed4ed411c7..abd7ee9e90ab 100644
+--- a/arch/mips/kernel/setup.c
++++ b/arch/mips/kernel/setup.c
+@@ -911,7 +911,17 @@ static void __init arch_mem_init(char **cmdline_p)
+ 				BOOTMEM_DEFAULT);
+ #endif
+ 	device_tree_init();
++
++	/*
++	 * In order to reduce the possibility of kernel panic when failed to
++	 * get IO TLB memory under CONFIG_SWIOTLB, it is better to allocate
++	 * low memory as small as possible before plat_swiotlb_setup(), so
++	 * make sparse_init() using top-down allocation.
++	 */
++	memblock_set_bottom_up(false);
+ 	sparse_init();
++	memblock_set_bottom_up(true);
++
+ 	plat_swiotlb_setup();
  
- 	if (tb[NFTA_NAT_FAMILY] == NULL)
-@@ -202,7 +202,7 @@ static int nft_nat_init(const struct nft_ctx *ctx, const struct nft_expr *expr,
- 	if (tb[NFTA_NAT_FLAGS]) {
- 		priv->flags = ntohl(nla_get_be32(tb[NFTA_NAT_FLAGS]));
- 		if (priv->flags & ~NF_NAT_RANGE_MASK)
--			return -EINVAL;
-+			return -EOPNOTSUPP;
- 	}
- 
- 	return nf_ct_netns_get(ctx->net, family);
+ 	dma_contiguous_reserve(PFN_PHYS(max_low_pfn));
 -- 
 2.25.1
 
