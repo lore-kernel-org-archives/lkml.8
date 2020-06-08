@@ -2,95 +2,102 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D6DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 02:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E91C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 02:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B62FF2067B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 02:02:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37F8520774
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 02:03:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="WirakFtd"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IxgYn4mb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728677AbgFHCCd (ORCPT
+        id S1728799AbgFHCDA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 22:02:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40012 "EHLO
+        Sun, 7 Jun 2020 22:03:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727972AbgFHCCc (ORCPT
+        with ESMTP id S1728684AbgFHCC7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 22:02:32 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CFF8C08C5C3;
-        Sun,  7 Jun 2020 19:02:32 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1C23D50E;
-        Mon,  8 Jun 2020 04:02:27 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1591581749;
-        bh=i1AmAGyM1Zj7pRO9Jd3l5vQMRbYrocwi6kzrZnDqAuI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WirakFtdzE9ijjcmNr56wAKu+9v5XXpAX6UQl84sa6ca884vfIBDMyIUbrEvwKLxv
-         ayFeIaQI5/ipbHhNHxtjZc4rFrca5XJzxn/cIAC5KYcNQDSzUd/QT3Zvo1mWZ6CE+u
-         JWX7OkvNg2JXfVcVmP1Mi5nR51kQNp1tLH9ogrLk=
-Date:   Mon, 8 Jun 2020 05:02:07 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     kieran.bingham+renesas@ideasonboard.com, airlied@linux.ie,
-        daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/rcar-du: DRM_RCAR_WRITEBACK depends on DRM
-Message-ID: <20200608020207.GL22208@pendragon.ideasonboard.com>
-References: <20200608014818.2814-1-cai@lca.pw>
+        Sun, 7 Jun 2020 22:02:59 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F1FCC08C5C3;
+        Sun,  7 Jun 2020 19:02:59 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id q24so5334768pjd.1;
+        Sun, 07 Jun 2020 19:02:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Mfx3Sj9FRZgAlKkU0LzGyYtv3vZ3jXxU4QX6vPSwotg=;
+        b=IxgYn4mbhc2Vf8FRFIdJSbwmU25ArLjINBY8TBskXSLat97ACPvXWS0SKINAt4CaoW
+         nyX+Gl3bJ5FHby9ApeiQfU33sdZTC1k42aDMgLj1597DADpUw5iFm+KYmCwAvJNLdpAK
+         57ErAZuWqF7yp2lh6E1GrT48T9yPfCQU3ATtYqS87MGh1zSzEzh0EqATPAqC3P66Esud
+         QuiN1xBGfFafr7O5HpevEvKJ1pAvB0Bg4mHh2yVBftuRq+FIgwgloz3jGQq/aSZ31GQV
+         smDLe9Phelu8Km3zCfi/0iFPcx8kojUSuWc1qOuA/c/FptpXRDJY1vka/9TpVkmAOv3N
+         fbHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Mfx3Sj9FRZgAlKkU0LzGyYtv3vZ3jXxU4QX6vPSwotg=;
+        b=d5ykE8AwD1VJk4O/YxQGO0BTdZVinVycVXYdcR/1DbxSwY8zIdWOWWFkImdjRqqoll
+         BgpbuwhX9q54qdUxSjuBUpmoSxNqFXKLD/gNGo+PIJf2lAyez970ObVfRG04N7ELi1I5
+         VdKiwR3349vhtc08LLSX8fVnk7VrUZDDVeQqvdCyaVALgglVZLmM0mTnuCrV8U9rpsRw
+         wqLkn5VActpgztFmN5h4rQUhzwnJzP5/XgBcrbltJvx/6or8xFcCNZCbxgTu3krytoGK
+         /fTWqAS8BsBgp0XhhR7jjqfbHkY//H4GOtiiILaj8q8O5+/vsX7rhIdYE9OZxcCy+U3y
+         Y5/g==
+X-Gm-Message-State: AOAM532xVD1ruYNhqsW7Tsy4FyeK2hNj8otfSStgoP/5ep7yIp4apYT2
+        LORIAwNHXtlDvxxx8W9lxaM=
+X-Google-Smtp-Source: ABdhPJz5Hw6n77EW+y5qbhGjqDx6DdppXlDgnOcBMJ+4oJCDmD81ehMUbDIJ++zS6FMiYvZqXIy9ag==
+X-Received: by 2002:a17:902:6906:: with SMTP id j6mr19601835plk.261.1591581778370;
+        Sun, 07 Jun 2020 19:02:58 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id e127sm5405462pfe.45.2020.06.07.19.02.57
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 07 Jun 2020 19:02:57 -0700 (PDT)
+Date:   Sun, 7 Jun 2020 19:02:56 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-kbuild@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Lucas De Marchi <lucas.demarchi@intel.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kbuild: make module name conflict fatal error
+Message-ID: <20200608020256.GA256950@roeck-us.net>
+References: <20200511042149.1712876-1-masahiroy@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200608014818.2814-1-cai@lca.pw>
+In-Reply-To: <20200511042149.1712876-1-masahiroy@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Qian,
+Hi,
 
-Thank you for the patch.
+On Mon, May 11, 2020 at 01:21:49PM +0900, Masahiro Yamada wrote:
+> I think all the warnings have been fixed by now. Make it a fatal error.
+> 
 
-On Sun, Jun 07, 2020 at 09:48:18PM -0400, Qian Cai wrote:
-> There is no need to select DRM_RCAR_WRITEBACK if DRM=n which just make
-> the generated .config a bit ugly.
-> 
->  # ARM devices
->  #
->  # end of ARM devices
-> 
->  CONFIG_DRM_RCAR_WRITEBACK=y
-> 
->  #
->  # Frame buffer Devices
-> 
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> ---
->  drivers/gpu/drm/rcar-du/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/gpu/drm/rcar-du/Kconfig b/drivers/gpu/drm/rcar-du/Kconfig
-> index 0919f1f159a4..d80696455d3e 100644
-> --- a/drivers/gpu/drm/rcar-du/Kconfig
-> +++ b/drivers/gpu/drm/rcar-du/Kconfig
-> @@ -48,3 +48,4 @@ config DRM_RCAR_VSP
->  config DRM_RCAR_WRITEBACK
->  	bool
->  	default y if ARM64
-> +	depends on DRM
+Not entirely. With this patch in the tree, I get:
 
-How about depending on DRM_RCAR_DU instead, as DRM_RCAR_WRITEBACK is
-used to select compilation of rcar_du_writeback.c that is part of the
-rcar-du driver ?
+Building sparc64:allmodconfig ... failed
+--------------
+Error log:
+error: the following would cause module name conflict:
+  drivers/char/adi.ko
+  drivers/input/joystick/adi.ko
+make[1]: *** [modules_check] Error 1
+make[1]: *** Waiting for unfinished jobs....
+make: *** [__sub-make] Error 2
 
--- 
-Regards,
+Reverting this patch fixes the problem.
 
-Laurent Pinchart
+Guenter
