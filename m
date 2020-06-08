@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FDE8C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1168EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:45:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E6B220659
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:45:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB52A2068D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:45:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591659902;
-	bh=AAfkLpT9edLdmgMXYbLCzCEGj//XvIHuRpSFFzXZ2xg=;
+	s=default; t=1591659908;
+	bh=CarzX7jrFj2dLReUZB4e6YJK8BhpEudbGb6UOINdud4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gMi4rLloZvWin5oZicFgCXYuyQAhllIlHGsW5D0hz1zn9nQz0yGu5813rroZ9QJ3P
-	 mC1qiluAFaygEmLrkB7fuNkXKebH9QZDASsYW3nkGGxaLOaegCN6hHsDcBlg3mK4TZ
-	 ACc9sVZNGJDA8tBAP75JL5wld2XBNjq8enX8GoSc=
+	b=jY6rTl+mWhrpCR0T/XvVmaaqxRQmhtayqCRlCcUY6IGO4pn7DLUjIcPrjBIXsV2Xo
+	 OeozobZl6AC+adeEqHllOE4HcA103F8jmcpgur+ibaV3bUznPPgrLqbobhCyCTblCa
+	 2oIWHYu4VY4L1zA2CH3SgSDuj+FTh/YjE9i0JclE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732441AbgFHXpA (ORCPT
+        id S1732030AbgFHX0q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:45:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54702 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:26:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732046AbgFHX0s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:26:48 -0400
+        id S1730049AbgFHXVW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:21:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5437620775;
-        Mon,  8 Jun 2020 23:26:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE014208C9;
+        Mon,  8 Jun 2020 23:21:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658808;
-        bh=AAfkLpT9edLdmgMXYbLCzCEGj//XvIHuRpSFFzXZ2xg=;
+        s=default; t=1591658481;
+        bh=CarzX7jrFj2dLReUZB4e6YJK8BhpEudbGb6UOINdud4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RKncHkAkbrbqUaYVuLagAnpuVY/iaTFmLcVdgy60ddklLqS1v2A6CutDfhAfeZzXl
-         rP7vfSNMfIZwdkf9jmab7UI2Ior4G5eEwcoLLVGzjbPa9xOW0O1PJEU6Q60N9OHJNE
-         vpcdEBV/F65j6TNAo8YcaV7IZ15/lN/vnXR3Rq/Q=
+        b=ulmOF4UpHUzAUjgoU1B0h1CkNqmzHZFvLxYVi+2f54LlxC5FOcRB/1mAK5aU0J0qp
+         hNESV/gyvUQLPmgkzIRYB8Zvzch3QDv6/1/Y+C11nmp+UHFu256FjpCG8xoZM9wm92
+         vaCNizWZJx1MHzwVolxUp2tInYZn3RUctvXiEQuY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Feng Tang <feng.tang@intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 06/50] spi: dw: Zero DMA Tx and Rx configurations on stack
-Date:   Mon,  8 Jun 2020 19:25:56 -0400
-Message-Id: <20200608232640.3370262-6-sashal@kernel.org>
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, wcn36xx@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 117/175] wcn36xx: Fix error handling path in 'wcn36xx_probe()'
+Date:   Mon,  8 Jun 2020 19:17:50 -0400
+Message-Id: <20200608231848.3366970-117-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608232640.3370262-1-sashal@kernel.org>
-References: <20200608232640.3370262-1-sashal@kernel.org>
+In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
+References: <20200608231848.3366970-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,46 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 3cb97e223d277f84171cc4ccecab31e08b2ee7b5 ]
+[ Upstream commit a86308fc534edeceaf64670c691e17485436a4f4 ]
 
-Some DMA controller drivers do not tolerate non-zero values in
-the DMA configuration structures. Zero them to avoid issues with
-such DMA controller drivers. Even despite above this is a good
-practice per se.
+In case of error, 'qcom_wcnss_open_channel()' must be undone by a call to
+'rpmsg_destroy_ept()', as already done in the remove function.
 
-Fixes: 7063c0d942a1 ("spi/dw_spi: add DMA support")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Feng Tang <feng.tang@intel.com>
-Cc: Feng Tang <feng.tang@intel.com>
-Link: https://lore.kernel.org/r/20200506153025.21441-1-andriy.shevchenko@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 5052de8deff5 ("soc: qcom: smd: Transition client drivers from smd to rpmsg")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200507043619.200051-1-christophe.jaillet@wanadoo.fr
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-dw-mid.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/wireless/ath/wcn36xx/main.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-dw-mid.c b/drivers/spi/spi-dw-mid.c
-index e31971f91475..f77d03b658ab 100644
---- a/drivers/spi/spi-dw-mid.c
-+++ b/drivers/spi/spi-dw-mid.c
-@@ -155,6 +155,7 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_tx(struct dw_spi *dws,
- 	if (!xfer->tx_buf)
- 		return NULL;
+diff --git a/drivers/net/wireless/ath/wcn36xx/main.c b/drivers/net/wireless/ath/wcn36xx/main.c
+index 79998a3ddb7a..ad051f34e65b 100644
+--- a/drivers/net/wireless/ath/wcn36xx/main.c
++++ b/drivers/net/wireless/ath/wcn36xx/main.c
+@@ -1341,7 +1341,7 @@ static int wcn36xx_probe(struct platform_device *pdev)
+ 	if (addr && ret != ETH_ALEN) {
+ 		wcn36xx_err("invalid local-mac-address\n");
+ 		ret = -EINVAL;
+-		goto out_wq;
++		goto out_destroy_ept;
+ 	} else if (addr) {
+ 		wcn36xx_info("mac address: %pM\n", addr);
+ 		SET_IEEE80211_PERM_ADDR(wcn->hw, addr);
+@@ -1349,7 +1349,7 @@ static int wcn36xx_probe(struct platform_device *pdev)
  
-+	memset(&txconf, 0, sizeof(txconf));
- 	txconf.direction = DMA_MEM_TO_DEV;
- 	txconf.dst_addr = dws->dma_addr;
- 	txconf.dst_maxburst = 16;
-@@ -201,6 +202,7 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_rx(struct dw_spi *dws,
- 	if (!xfer->rx_buf)
- 		return NULL;
+ 	ret = wcn36xx_platform_get_resources(wcn, pdev);
+ 	if (ret)
+-		goto out_wq;
++		goto out_destroy_ept;
  
-+	memset(&rxconf, 0, sizeof(rxconf));
- 	rxconf.direction = DMA_DEV_TO_MEM;
- 	rxconf.src_addr = dws->dma_addr;
- 	rxconf.src_maxburst = 16;
+ 	wcn36xx_init_ieee80211(wcn);
+ 	ret = ieee80211_register_hw(wcn->hw);
+@@ -1361,6 +1361,8 @@ static int wcn36xx_probe(struct platform_device *pdev)
+ out_unmap:
+ 	iounmap(wcn->ccu_base);
+ 	iounmap(wcn->dxe_base);
++out_destroy_ept:
++	rpmsg_destroy_ept(wcn->smd_channel);
+ out_wq:
+ 	ieee80211_free_hw(hw);
+ out_err:
 -- 
 2.25.1
 
