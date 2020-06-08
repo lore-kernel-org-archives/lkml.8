@@ -2,128 +2,164 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD7EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFDE4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:47:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBDB420774
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:46:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="Fq2WqHVe"
+	by mail.kernel.org (Postfix) with ESMTP id 9CACA2087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:47:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591663624;
+	bh=c6jaHtTdzzzvmrih3uxZ8mvKcgiUbE+snM8tDjzWFGE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=CvxTYlEsskGYQyq1jq1qFd//HC1+yCsl4JvW3EXnDYFwMzcm1n7JJBxAQlxocIhi4
+	 1dycvpxagAsIDyP4LgeZjpcQfGLbq1DxOkMMCdY1J6uS5ZRdcwSAvX0uxBbIB53UJv
+	 JVXIgY7fFlGt94PcbpolWTNfRKBwATTIJYEiqr1M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732931AbgFIAq7 (ORCPT
+        id S1730974AbgFIArD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:46:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52958 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729018AbgFIAqy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 20:46:54 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70BAEC03E969
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 17:46:54 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id l1so14932944ede.11
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 17:46:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6zCH4n2iYndxCImQUVO1t9gw8KAnucClc8TKaXcz6VE=;
-        b=Fq2WqHVeE81Nk6/Y0DGUX0PV2/hDVPJDGUYPIo3pxtCcQjIa6R//iPZadETarfnAzT
-         tlwhSjrEN/2Mjan9gz24mXSQu9dOYhzwWdqc2Q0xT715EekdH3eg0fxIvFgM3eRLWgLN
-         78TZPoqHOfMK62A9ZJhEzlwmtqtbesyOCnOYd4H/O4Ti5pd09CcSkCIUY1/sj0tPY8Xc
-         3Wc13HH5AEC14rFecdON9Rt3tBXKBzr9b6or5LhepX6BXw5CLcEfmLZAwLOtuGpiRW//
-         YK+q6h65xUPqiwCvAKne4a3em0MZjfum74LdoxdMkfCZkPYVK/UwQyfbfpME0PiWBIdQ
-         h2ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6zCH4n2iYndxCImQUVO1t9gw8KAnucClc8TKaXcz6VE=;
-        b=Nc85V2GA8Fr67aF1XZnwRGbUJPk1RFV0Ot22oFfxzlnO/cBvLVofGMlkbv/G+JugwS
-         B5PK5O9s3yOQCKHiU1PrKSqNAf0JNK10h/jJRzwgOcHE7FYka/dqKS7RaHh4JWgOFreF
-         DQ091TictiqqE8SRnDNHbgbcg2IEZ+wvBKuy4cGgPubu9lzeGVE+CJuxC1Jpbtzs9EG+
-         lIv36El8TVl7xRJTkWXJdX8YrBe3nek1OFjGZDPb5dwWUF7KWdvfOjPcKbAUuxYwMr86
-         GJkjNzMZa4CGVFKMeijbm8KdAbKhl0yaQtqxn8xm/dn2C1ZM4rJRAm55fDo+V2NRIssp
-         Bx/w==
-X-Gm-Message-State: AOAM5318h1/WIlnzx0z6A9sHxLZUrNaKUTx240+RmcQPFF/jlc5W2IzB
-        0Kg+0OY7GCy13oTjTahfRODEt8Ry5DOoK505KDS7vA==
-X-Google-Smtp-Source: ABdhPJyPiL73dzr0k16R7WSQX3Z3pfrFMXEsfHYxl183PZK4kpvT14ODaxWMSzzuq7exBiIPN3x17ifOOa1H+rWsmBY=
-X-Received: by 2002:a50:eb0c:: with SMTP id y12mr23805262edp.165.1591663613143;
- Mon, 08 Jun 2020 17:46:53 -0700 (PDT)
+        Mon, 8 Jun 2020 20:47:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58342 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728903AbgFHXL1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:11:27 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACE9E20C09;
+        Mon,  8 Jun 2020 23:11:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591657887;
+        bh=c6jaHtTdzzzvmrih3uxZ8mvKcgiUbE+snM8tDjzWFGE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=szzMRUmN7qqizXeutbjU1wnnQKV3/zf8jtmoY18NQSQqvct5KajZDjqSME88lpzOe
+         PJvuX82qrVbMInBiX1476umxe6Cp3w04Q40K9c8du4Fr7coSYaSJyQ1Wzfg/k8rhDh
+         wJ+Fx56NACda9mGTYJ6BoDXdd0YOq6hH7noZ4nEU=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Brian Foster <bfoster@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 243/274] xfs: measure all contiguous previous extents for prealloc size
+Date:   Mon,  8 Jun 2020 19:05:36 -0400
+Message-Id: <20200608230607.3361041-243-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
+References: <20200608230607.3361041-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20200607131339.476036-6-vaibhav@linux.ibm.com> <202006090059.o4CE5D9b%lkp@intel.com>
-In-Reply-To: <202006090059.o4CE5D9b%lkp@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 8 Jun 2020 17:46:42 -0700
-Message-ID: <CAPcyv4iQo_xgRGPx_j+RPzgWGZaigGRbc_kRzKEFePfVHenx5g@mail.gmail.com>
-Subject: Re: [PATCH v11 5/6] ndctl/papr_scm,uapi: Add support for PAPR nvdimm
- specific methods
-To:     kernel test robot <lkp@intel.com>
-Cc:     Vaibhav Jain <vaibhav@linux.ibm.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kbuild-all@lists.01.org,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Santosh Sivaraj <santosh@fossix.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 8, 2020 at 5:16 PM kernel test robot <lkp@intel.com> wrote:
->
-> Hi Vaibhav,
->
-> Thank you for the patch! Perhaps something to improve:
->
-> [auto build test WARNING on powerpc/next]
-> [also build test WARNING on linus/master v5.7 next-20200605]
-> [cannot apply to linux-nvdimm/libnvdimm-for-next scottwood/next]
-> [if your patch is applied to the wrong git tree, please drop us a note to help
-> improve the system. BTW, we also suggest to use '--base' option to specify the
-> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
->
-> url:    https://github.com/0day-ci/linux/commits/Vaibhav-Jain/powerpc-papr_scm-Add-support-for-reporting-nvdimm-health/20200607-211653
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git next
-> config: powerpc-randconfig-r016-20200607 (attached as .config)
-> compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project e429cffd4f228f70c1d9df0e5d77c08590dd9766)
-> reproduce (this is a W=1 build):
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # install powerpc cross compiling tool for clang build
->         # apt-get install binutils-powerpc-linux-gnu
->         # save the attached .config to linux build tree
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross ARCH=powerpc
->
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
->
-> All warnings (new ones prefixed by >>, old ones prefixed by <<):
->
-> In file included from <built-in>:1:
-> >> ./usr/include/asm/papr_pdsm.h:69:20: warning: field 'hdr' with variable sized type 'struct nd_cmd_pkg' not at the end of a struct or class is a GNU extension [-Wgnu-variable-sized-type-not-at-end]
-> struct nd_cmd_pkg hdr;  /* Package header containing sub-cmd */
+From: "Darrick J. Wong" <darrick.wong@oracle.com>
 
-Hi Vaibhav,
+[ Upstream commit f0322c7cc05eb23ef034775f9b39254cbd4f3678 ]
 
-This looks like it's going to need another round to get this fixed. I
-don't think 'struct nd_pdsm_cmd_pkg' should embed a definition of
-'struct nd_cmd_pkg'. An instance of 'struct nd_cmd_pkg' carries a
-payload that is the 'pdsm' specifics. As the code has it now it's
-defined as a superset of 'struct nd_cmd_pkg' and the compiler warning
-is pointing out a real 'struct' organization problem.
+When we're estimating a new speculative preallocation length for an
+extending write, we should walk backwards through the extent list to
+determine the number of number of blocks that are physically and
+logically contiguous with the write offset, and use that as an input to
+the preallocation size computation.
 
-Given the soak time needed in -next after the code is finalized this
-there's no time to do another round of updates and still make the v5.8
-merge window.
+This way, preallocation length is truly measured by the effectiveness of
+the allocator in giving us contiguous allocations without being
+influenced by the state of a given extent.  This fixes both the problem
+where ZERO_RANGE within an EOF can reduce preallocation, and prevents
+the unnecessary shrinkage of preallocation when delalloc extents are
+turned into unwritten extents.
+
+This was found as a regression in xfs/014 after changing delalloc writes
+to create unwritten extents during writeback.
+
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Brian Foster <bfoster@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/xfs/xfs_iomap.c | 40 +++++++++++++++++++++++++++-------------
+ 1 file changed, 27 insertions(+), 13 deletions(-)
+
+diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
+index bb590a267a7f..e3ca124a99e4 100644
+--- a/fs/xfs/xfs_iomap.c
++++ b/fs/xfs/xfs_iomap.c
+@@ -377,15 +377,17 @@ xfs_iomap_prealloc_size(
+ 	loff_t			count,
+ 	struct xfs_iext_cursor	*icur)
+ {
++	struct xfs_iext_cursor	ncur = *icur;
++	struct xfs_bmbt_irec	prev, got;
+ 	struct xfs_mount	*mp = ip->i_mount;
+ 	struct xfs_ifork	*ifp = XFS_IFORK_PTR(ip, whichfork);
+ 	xfs_fileoff_t		offset_fsb = XFS_B_TO_FSBT(mp, offset);
+-	struct xfs_bmbt_irec	prev;
+-	int			shift = 0;
+ 	int64_t			freesp;
+ 	xfs_fsblock_t		qblocks;
+-	int			qshift = 0;
+ 	xfs_fsblock_t		alloc_blocks = 0;
++	xfs_extlen_t		plen;
++	int			shift = 0;
++	int			qshift = 0;
+ 
+ 	if (offset + count <= XFS_ISIZE(ip))
+ 		return 0;
+@@ -400,7 +402,7 @@ xfs_iomap_prealloc_size(
+ 	 */
+ 	if ((mp->m_flags & XFS_MOUNT_ALLOCSIZE) ||
+ 	    XFS_ISIZE(ip) < XFS_FSB_TO_B(mp, mp->m_dalign) ||
+-	    !xfs_iext_peek_prev_extent(ifp, icur, &prev) ||
++	    !xfs_iext_prev_extent(ifp, &ncur, &prev) ||
+ 	    prev.br_startoff + prev.br_blockcount < offset_fsb)
+ 		return mp->m_allocsize_blocks;
+ 
+@@ -413,16 +415,28 @@ xfs_iomap_prealloc_size(
+ 	 * preallocation size.
+ 	 *
+ 	 * If the extent is a hole, then preallocation is essentially disabled.
+-	 * Otherwise we take the size of the preceding data extent as the basis
+-	 * for the preallocation size. If the size of the extent is greater than
+-	 * half the maximum extent length, then use the current offset as the
+-	 * basis. This ensures that for large files the preallocation size
+-	 * always extends to MAXEXTLEN rather than falling short due to things
+-	 * like stripe unit/width alignment of real extents.
++	 * Otherwise we take the size of the preceding data extents as the basis
++	 * for the preallocation size. Note that we don't care if the previous
++	 * extents are written or not.
++	 *
++	 * If the size of the extents is greater than half the maximum extent
++	 * length, then use the current offset as the basis. This ensures that
++	 * for large files the preallocation size always extends to MAXEXTLEN
++	 * rather than falling short due to things like stripe unit/width
++	 * alignment of real extents.
+ 	 */
+-	if (prev.br_blockcount <= (MAXEXTLEN >> 1))
+-		alloc_blocks = prev.br_blockcount << 1;
+-	else
++	plen = prev.br_blockcount;
++	while (xfs_iext_prev_extent(ifp, &ncur, &got)) {
++		if (plen > MAXEXTLEN / 2 ||
++		    isnullstartblock(got.br_startblock) ||
++		    got.br_startoff + got.br_blockcount != prev.br_startoff ||
++		    got.br_startblock + got.br_blockcount != prev.br_startblock)
++			break;
++		plen += got.br_blockcount;
++		prev = got;
++	}
++	alloc_blocks = plen * 2;
++	if (alloc_blocks > MAXEXTLEN)
+ 		alloc_blocks = XFS_B_TO_FSB(mp, offset);
+ 	if (!alloc_blocks)
+ 		goto check_writeio;
+-- 
+2.25.1
+
