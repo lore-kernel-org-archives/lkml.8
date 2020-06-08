@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 002DCC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:26:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C05EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:27:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D45F620775
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:26:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68B4F2078D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:27:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658803;
-	bh=04xDDYmF3tfwCnDYyMSKeMQzlCv1zmNKzYkpvL64Kog=;
+	s=default; t=1591658823;
+	bh=xJDsdbdyq7liIv4sqCE7RI5+x+OictqjM4VIOWGkLNU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wFx3WO4CW2VkkFtUugYGPDABiQbp3fB214XfZfug2nu1Rs+ixyc1ZL3phjyvpefNB
-	 iJPe/n4h45NzfcOOWPOheqHBOsZIkAX9UksqB4PazVdNLsxIXfglZjWzz/QLGuW3T9
-	 VycKJJIXORN1JLvuSB+1lirBkabvR77sJQa1TuHs=
+	b=k37BGBnCriyUrADhKrsIWRhDmeE85mGxdK1+rQHN8E26Lptzn540A9PN/urgsIzHy
+	 2/ASH/CRqpuaA4dGA0VADldmeL1q8Nztirt9a1S8N7bpWJ2qhySFyPxYcpsNmCC/rA
+	 C6ZCm+0FFFW4aOWfQDG3qiAidwnBHsYRPIIhECYI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732014AbgFHX0m (ORCPT
+        id S1732090AbgFHX1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:26:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45516 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:27:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728533AbgFHXVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:21:20 -0400
+        id S1731193AbgFHXVj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:21:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A58CB208B3;
-        Mon,  8 Jun 2020 23:21:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C4A92072F;
+        Mon,  8 Jun 2020 23:21:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658480;
-        bh=04xDDYmF3tfwCnDYyMSKeMQzlCv1zmNKzYkpvL64Kog=;
+        s=default; t=1591658499;
+        bh=xJDsdbdyq7liIv4sqCE7RI5+x+OictqjM4VIOWGkLNU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zjSnnfEXj3VGLFHB5v5gmYLr+FuW7hSt4BK6NI1iK877iZ2afLz+nav13SOb50xg5
-         chaKtehRT++OLRMxqN9LFGlelHv6ZuKlS9GUqJS57DD9MRPUSdkSeq8ZJEMRqqyrvq
-         T1hFSOI39YeEwFMT1D5EpLy73wSjdUnxcUw5MBZQ=
+        b=daQILlnQCPHNw8hbf0aT8x5FAYGWx+nTclPrT8zI3TvNmOC2x4djmJjjoHWAfDFv7
+         HEyWd/K3MbOICsu5He+29Zq+W5ev6kYWlkvevcHsfR9Z4TW+cuBmrZ0nmf3DG3ex4L
+         YBsEYmRVhqkUi0maB8kz5H6waddA3n1U4LN0TxTA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rakesh Pillai <pillair@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 116/175] ath10k: Remove msdu from idr when management pkt send fails
-Date:   Mon,  8 Jun 2020 19:17:49 -0400
-Message-Id: <20200608231848.3366970-116-sashal@kernel.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 131/175] x86/boot: Correct relocation destination on old linkers
+Date:   Mon,  8 Jun 2020 19:18:04 -0400
+Message-Id: <20200608231848.3366970-131-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
 References: <20200608231848.3366970-1-sashal@kernel.org>
@@ -60,120 +58,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rakesh Pillai <pillair@codeaurora.org>
+From: Arvind Sankar <nivedita@alum.mit.edu>
 
-[ Upstream commit c730c477176ad4af86d9aae4d360a7ad840b073a ]
+[ Upstream commit 5214028dd89e49ba27007c3ee475279e584261f0 ]
 
-Currently when the sending of any management pkt
-via wmi command fails, the packet is being unmapped
-freed in the error handling. But the idr entry added,
-which is used to track these packet is not getting removed.
+For the 32-bit kernel, as described in
 
-Hence, during unload, in wmi cleanup, all the entries
-in IDR are removed and the corresponding buffer is
-attempted to be freed. This can cause a situation where
-one packet is attempted to be freed twice.
+  6d92bc9d483a ("x86/build: Build compressed x86 kernels as PIE"),
 
-Fix this error by rmeoving the msdu from the idr
-list when the sending of a management packet over
-wmi fails.
+pre-2.26 binutils generates R_386_32 relocations in PIE mode. Since the
+startup code does not perform relocation, any reloc entry with R_386_32
+will remain as 0 in the executing code.
 
-Tested HW: WCN3990
-Tested FW: WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1
+Commit
 
-Fixes: 1807da49733e ("ath10k: wmi: add management tx by reference support over wmi")
-Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/1588667015-25490-1-git-send-email-pillair@codeaurora.org
+  974f221c84b0 ("x86/boot: Move compressed kernel to the end of the
+                 decompression buffer")
+
+added a new symbol _end but did not mark it hidden, which doesn't give
+the correct offset on older linkers. This causes the compressed kernel
+to be copied beyond the end of the decompression buffer, rather than
+flush against it. This region of memory may be reserved or already
+allocated for other purposes by the bootloader.
+
+Mark _end as hidden to fix. This changes the relocation from R_386_32 to
+R_386_RELATIVE even on the pre-2.26 binutils.
+
+For 64-bit, this is not strictly necessary, as the 64-bit kernel is only
+built as PIE if the linker supports -z noreloc-overflow, which implies
+binutils-2.27+, but for consistency, mark _end as hidden here too.
+
+The below illustrates the before/after impact of the patch using
+binutils-2.25 and gcc-4.6.4 (locally compiled from source) and QEMU.
+
+  Disassembly before patch:
+    48:   8b 86 60 02 00 00       mov    0x260(%esi),%eax
+    4e:   2d 00 00 00 00          sub    $0x0,%eax
+                          4f: R_386_32    _end
+  Disassembly after patch:
+    48:   8b 86 60 02 00 00       mov    0x260(%esi),%eax
+    4e:   2d 00 f0 76 00          sub    $0x76f000,%eax
+                          4f: R_386_RELATIVE      *ABS*
+
+Dump from extract_kernel before patch:
+	early console in extract_kernel
+	input_data: 0x0207c098 <--- this is at output + init_size
+	input_len: 0x0074fef1
+	output: 0x01000000
+	output_len: 0x00fa63d0
+	kernel_total_size: 0x0107c000
+	needed_size: 0x0107c000
+
+Dump from extract_kernel after patch:
+	early console in extract_kernel
+	input_data: 0x0190d098 <--- this is at output + init_size - _end
+	input_len: 0x0074fef1
+	output: 0x01000000
+	output_len: 0x00fa63d0
+	kernel_total_size: 0x0107c000
+	needed_size: 0x0107c000
+
+Fixes: 974f221c84b0 ("x86/boot: Move compressed kernel to the end of the decompression buffer")
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200207214926.3564079-1-nivedita@alum.mit.edu
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/mac.c     |  3 +++
- drivers/net/wireless/ath/ath10k/wmi-ops.h | 10 ++++++++++
- drivers/net/wireless/ath/ath10k/wmi-tlv.c | 15 +++++++++++++++
- 3 files changed, 28 insertions(+)
+ arch/x86/boot/compressed/head_32.S | 5 +++--
+ arch/x86/boot/compressed/head_64.S | 1 +
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
-index c6ab1fcde84d..d373602a8014 100644
---- a/drivers/net/wireless/ath/ath10k/mac.c
-+++ b/drivers/net/wireless/ath/ath10k/mac.c
-@@ -3911,6 +3911,9 @@ void ath10k_mgmt_over_wmi_tx_work(struct work_struct *work)
- 			if (ret) {
- 				ath10k_warn(ar, "failed to transmit management frame by ref via WMI: %d\n",
- 					    ret);
-+				/* remove this msdu from idr tracking */
-+				ath10k_wmi_cleanup_mgmt_tx_send(ar, skb);
-+
- 				dma_unmap_single(ar->dev, paddr, skb->len,
- 						 DMA_TO_DEVICE);
- 				ieee80211_free_txskb(ar->hw, skb);
-diff --git a/drivers/net/wireless/ath/ath10k/wmi-ops.h b/drivers/net/wireless/ath/ath10k/wmi-ops.h
-index 1491c25518bb..edccabc667e8 100644
---- a/drivers/net/wireless/ath/ath10k/wmi-ops.h
-+++ b/drivers/net/wireless/ath/ath10k/wmi-ops.h
-@@ -133,6 +133,7 @@ struct wmi_ops {
- 	struct sk_buff *(*gen_mgmt_tx_send)(struct ath10k *ar,
- 					    struct sk_buff *skb,
- 					    dma_addr_t paddr);
-+	int (*cleanup_mgmt_tx_send)(struct ath10k *ar, struct sk_buff *msdu);
- 	struct sk_buff *(*gen_dbglog_cfg)(struct ath10k *ar, u64 module_enable,
- 					  u32 log_level);
- 	struct sk_buff *(*gen_pktlog_enable)(struct ath10k *ar, u32 filter);
-@@ -441,6 +442,15 @@ ath10k_wmi_get_txbf_conf_scheme(struct ath10k *ar)
- 	return ar->wmi.ops->get_txbf_conf_scheme(ar);
- }
+diff --git a/arch/x86/boot/compressed/head_32.S b/arch/x86/boot/compressed/head_32.S
+index 70ffce98c568..d7c0fcc1dbf9 100644
+--- a/arch/x86/boot/compressed/head_32.S
++++ b/arch/x86/boot/compressed/head_32.S
+@@ -49,16 +49,17 @@
+  * Position Independent Executable (PIE) so that linker won't optimize
+  * R_386_GOT32X relocation to its fixed symbol address.  Older
+  * linkers generate R_386_32 relocations against locally defined symbols,
+- * _bss, _ebss, _got and _egot, in PIE.  It isn't wrong, just less
++ * _bss, _ebss, _got, _egot and _end, in PIE.  It isn't wrong, just less
+  * optimal than R_386_RELATIVE.  But the x86 kernel fails to properly handle
+  * R_386_32 relocations when relocating the kernel.  To generate
+- * R_386_RELATIVE relocations, we mark _bss, _ebss, _got and _egot as
++ * R_386_RELATIVE relocations, we mark _bss, _ebss, _got, _egot and _end as
+  * hidden:
+  */
+ 	.hidden _bss
+ 	.hidden _ebss
+ 	.hidden _got
+ 	.hidden _egot
++	.hidden _end
  
-+static inline int
-+ath10k_wmi_cleanup_mgmt_tx_send(struct ath10k *ar, struct sk_buff *msdu)
-+{
-+	if (!ar->wmi.ops->cleanup_mgmt_tx_send)
-+		return -EOPNOTSUPP;
-+
-+	return ar->wmi.ops->cleanup_mgmt_tx_send(ar, msdu);
-+}
-+
- static inline int
- ath10k_wmi_mgmt_tx_send(struct ath10k *ar, struct sk_buff *msdu,
- 			dma_addr_t paddr)
-diff --git a/drivers/net/wireless/ath/ath10k/wmi-tlv.c b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
-index eb0c963d9fd5..9d5b9df29c35 100644
---- a/drivers/net/wireless/ath/ath10k/wmi-tlv.c
-+++ b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
-@@ -2837,6 +2837,18 @@ ath10k_wmi_tlv_op_gen_request_stats(struct ath10k *ar, u32 stats_mask)
- 	return skb;
- }
+ 	__HEAD
+ ENTRY(startup_32)
+diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
+index 07d2002da642..50c9eeb36f0d 100644
+--- a/arch/x86/boot/compressed/head_64.S
++++ b/arch/x86/boot/compressed/head_64.S
+@@ -42,6 +42,7 @@
+ 	.hidden _ebss
+ 	.hidden _got
+ 	.hidden _egot
++	.hidden _end
  
-+static int
-+ath10k_wmi_tlv_op_cleanup_mgmt_tx_send(struct ath10k *ar,
-+				       struct sk_buff *msdu)
-+{
-+	struct ath10k_skb_cb *cb = ATH10K_SKB_CB(msdu);
-+	struct ath10k_wmi *wmi = &ar->wmi;
-+
-+	idr_remove(&wmi->mgmt_pending_tx, cb->msdu_id);
-+
-+	return 0;
-+}
-+
- static int
- ath10k_wmi_mgmt_tx_alloc_msdu_id(struct ath10k *ar, struct sk_buff *skb,
- 				 dma_addr_t paddr)
-@@ -2911,6 +2923,8 @@ ath10k_wmi_tlv_op_gen_mgmt_tx_send(struct ath10k *ar, struct sk_buff *msdu,
- 	if (desc_id < 0)
- 		goto err_free_skb;
- 
-+	cb->msdu_id = desc_id;
-+
- 	ptr = (void *)skb->data;
- 	tlv = ptr;
- 	tlv->tag = __cpu_to_le16(WMI_TLV_TAG_STRUCT_MGMT_TX_CMD);
-@@ -4339,6 +4353,7 @@ static const struct wmi_ops wmi_tlv_ops = {
- 	.gen_force_fw_hang = ath10k_wmi_tlv_op_gen_force_fw_hang,
- 	/* .gen_mgmt_tx = not implemented; HTT is used */
- 	.gen_mgmt_tx_send = ath10k_wmi_tlv_op_gen_mgmt_tx_send,
-+	.cleanup_mgmt_tx_send = ath10k_wmi_tlv_op_cleanup_mgmt_tx_send,
- 	.gen_dbglog_cfg = ath10k_wmi_tlv_op_gen_dbglog_cfg,
- 	.gen_pktlog_enable = ath10k_wmi_tlv_op_gen_pktlog_enable,
- 	.gen_pktlog_disable = ath10k_wmi_tlv_op_gen_pktlog_disable,
+ 	__HEAD
+ 	.code32
 -- 
 2.25.1
 
