@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F548C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B7E5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9B23206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:31:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79C8E206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:31:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662671;
-	bh=t8vOL3Aq72gto865Kj5owwFGecqLiL7Bqf7dMNF16rI=;
+	s=default; t=1591662674;
+	bh=576Ow5ZT61zgY2FffwPpL3/kpHTlNTB4V+Udpiiiqq0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0KUZavzXHyRBaO9cnqP/4A1UwalYgj5nrb7P5A4+UXAo8LIcWpSItjEQJCanteoPT
-	 ntnym557ipPyow13mNyVXvbSsM6FUrWJTyW3GDXO9bdU+E+HWjr5Rnpfne6U2aNciz
-	 FwFvDm8pkoLCAlETNbtKWsYB2SV4HJyvtqDX7tDs=
+	b=GWlYeSiYLSsgzdhZCDn/3NNtZfMxn9dCoZf5OKvFDfdbR6Z0inZxcga0UfjIyNipv
+	 raPThAJBL/Q55SB8YKf4JCGl/TiH9fMHPZ1mnEa+2fGAZGBqjCnt+spHXvA2ZkH2ZF
+	 7SZU5fiGDWWOklmLyVjchPrhSibXyojeQstG5S2c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731203AbgFIAbK (ORCPT
+        id S1730066AbgFHXPh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:31:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36740 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:15:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730077AbgFHXPi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:15:38 -0400
+        id S1729198AbgFHXNB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:13:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B48FF2068D;
-        Mon,  8 Jun 2020 23:15:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7222421501;
+        Mon,  8 Jun 2020 23:12:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658138;
-        bh=t8vOL3Aq72gto865Kj5owwFGecqLiL7Bqf7dMNF16rI=;
+        s=default; t=1591657980;
+        bh=576Ow5ZT61zgY2FffwPpL3/kpHTlNTB4V+Udpiiiqq0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=msnsXpxrIpeRsIg5xTgfVw+Yb9SipGD4mqBbz5NceKy/AerLP/MdsnMzXqwOosPNO
-         L4TOi4km4lBV0EBIZZ4ZArxN0gvB9Jd6JEGk5O5r8t2kSEWx21OumH9usSCliUDI2b
-         DszYjfI4d6xMQ+GhzGx7/k1/ORG1dle8T7bYWtRc=
+        b=Kl9DaJ8Jud5+lA0O8Cw647Q1Yq4UG5neNJiSX5xdCu/aMCKfFl/e0BL/DUvlpqwvO
+         T6u1ORcsg3Mx60qdG+UbF7pS5dcpSCTczakDVDWuQ/P75ihIf62PYItsm4Lrwmn5hp
+         XNN416SO1EuIDkAVQU5ls+SsSf59w1fTECXG8dJI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oscar Carter <oscar.carter@gmx.com>,
+Cc:     Babu Moger <babu.moger@amd.com>, Jim Mattson <jmattson@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        greybus-dev@lists.linaro.org, devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 5.6 172/606] staging: greybus: Fix uninitialized scalar variable
-Date:   Mon,  8 Jun 2020 19:04:57 -0400
-Message-Id: <20200608231211.3363633-172-sashal@kernel.org>
+        kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 041/606] KVM: x86: Fix pkru save/restore when guest CR4.PKE=0, move it to x86.c
+Date:   Mon,  8 Jun 2020 19:02:46 -0400
+Message-Id: <20200608231211.3363633-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -59,44 +60,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oscar Carter <oscar.carter@gmx.com>
+From: Babu Moger <babu.moger@amd.com>
 
-commit 34625c1931f8204c234c532b446b9f53c69f4b68 upstream.
+commit 37486135d3a7b03acc7755b63627a130437f066a upstream.
 
-In the "gb_tty_set_termios" function the "newline" variable is declared
-but not initialized. So the "flow_control" member is not initialized and
-the OR / AND operations with itself results in an undefined value in
-this member.
+Though rdpkru and wrpkru are contingent upon CR4.PKE, the PKRU
+resource isn't. It can be read with XSAVE and written with XRSTOR.
+So, if we don't set the guest PKRU value here(kvm_load_guest_xsave_state),
+the guest can read the host value.
 
-The purpose of the code is to set the flow control type, so remove the
-OR / AND self operator and set the value directly.
+In case of kvm_load_host_xsave_state, guest with CR4.PKE clear could
+potentially use XRSTOR to change the host PKRU value.
 
-Addresses-Coverity-ID: 1374016 ("Uninitialized scalar variable")
-Fixes: e55c25206d5c9 ("greybus: uart: Handle CRTSCTS flag in termios")
-Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200510101426.23631-1-oscar.carter@gmx.com
+While at it, move pkru state save/restore to common code and the
+host_pkru field to kvm_vcpu_arch.  This will let SVM support protection keys.
+
+Cc: stable@vger.kernel.org
+Reported-by: Jim Mattson <jmattson@google.com>
+Signed-off-by: Babu Moger <babu.moger@amd.com>
+Message-Id: <158932794619.44260.14508381096663848853.stgit@naples-babu.amd.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/staging/greybus/uart.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/kvm_host.h |  1 +
+ arch/x86/kvm/vmx/vmx.c          | 18 ------------------
+ arch/x86/kvm/x86.c              | 17 +++++++++++++++++
+ 3 files changed, 18 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/staging/greybus/uart.c b/drivers/staging/greybus/uart.c
-index 55c51143bb09..4ffb334cd5cd 100644
---- a/drivers/staging/greybus/uart.c
-+++ b/drivers/staging/greybus/uart.c
-@@ -537,9 +537,9 @@ static void gb_tty_set_termios(struct tty_struct *tty,
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 7ba99c0759cf..c121b8f24597 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -574,6 +574,7 @@ struct kvm_vcpu_arch {
+ 	unsigned long cr4;
+ 	unsigned long cr4_guest_owned_bits;
+ 	unsigned long cr8;
++	u32 host_pkru;
+ 	u32 pkru;
+ 	u32 hflags;
+ 	u64 efer;
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index c1ffe7d24f83..a83c94a971ee 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -1380,7 +1380,6 @@ void vmx_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+ 
+ 	vmx_vcpu_pi_load(vcpu, cpu);
+ 
+-	vmx->host_pkru = read_pkru();
+ 	vmx->host_debugctlmsr = get_debugctlmsr();
+ }
+ 
+@@ -6538,11 +6537,6 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
+ 
+ 	kvm_load_guest_xsave_state(vcpu);
+ 
+-	if (static_cpu_has(X86_FEATURE_PKU) &&
+-	    kvm_read_cr4_bits(vcpu, X86_CR4_PKE) &&
+-	    vcpu->arch.pkru != vmx->host_pkru)
+-		__write_pkru(vcpu->arch.pkru);
+-
+ 	pt_guest_enter(vmx);
+ 
+ 	atomic_switch_perf_msrs(vmx);
+@@ -6631,18 +6625,6 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
+ 
+ 	pt_guest_exit(vmx);
+ 
+-	/*
+-	 * eager fpu is enabled if PKEY is supported and CR4 is switched
+-	 * back on host, so it is safe to read guest PKRU from current
+-	 * XSAVE.
+-	 */
+-	if (static_cpu_has(X86_FEATURE_PKU) &&
+-	    kvm_read_cr4_bits(vcpu, X86_CR4_PKE)) {
+-		vcpu->arch.pkru = rdpkru();
+-		if (vcpu->arch.pkru != vmx->host_pkru)
+-			__write_pkru(vmx->host_pkru);
+-	}
+-
+ 	kvm_load_host_xsave_state(vcpu);
+ 
+ 	vmx->nested.nested_run_pending = 0;
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 17650bda4331..56a21dd7c1a0 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -809,11 +809,25 @@ void kvm_load_guest_xsave_state(struct kvm_vcpu *vcpu)
+ 		    vcpu->arch.ia32_xss != host_xss)
+ 			wrmsrl(MSR_IA32_XSS, vcpu->arch.ia32_xss);
  	}
++
++	if (static_cpu_has(X86_FEATURE_PKU) &&
++	    (kvm_read_cr4_bits(vcpu, X86_CR4_PKE) ||
++	     (vcpu->arch.xcr0 & XFEATURE_MASK_PKRU)) &&
++	    vcpu->arch.pkru != vcpu->arch.host_pkru)
++		__write_pkru(vcpu->arch.pkru);
+ }
+ EXPORT_SYMBOL_GPL(kvm_load_guest_xsave_state);
  
- 	if (C_CRTSCTS(tty) && C_BAUD(tty) != B0)
--		newline.flow_control |= GB_SERIAL_AUTO_RTSCTS_EN;
-+		newline.flow_control = GB_SERIAL_AUTO_RTSCTS_EN;
- 	else
--		newline.flow_control &= ~GB_SERIAL_AUTO_RTSCTS_EN;
-+		newline.flow_control = 0;
+ void kvm_load_host_xsave_state(struct kvm_vcpu *vcpu)
+ {
++	if (static_cpu_has(X86_FEATURE_PKU) &&
++	    (kvm_read_cr4_bits(vcpu, X86_CR4_PKE) ||
++	     (vcpu->arch.xcr0 & XFEATURE_MASK_PKRU))) {
++		vcpu->arch.pkru = rdpkru();
++		if (vcpu->arch.pkru != vcpu->arch.host_pkru)
++			__write_pkru(vcpu->arch.host_pkru);
++	}
++
+ 	if (kvm_read_cr4_bits(vcpu, X86_CR4_OSXSAVE)) {
  
- 	if (memcmp(&gb_tty->line_coding, &newline, sizeof(newline))) {
- 		memcpy(&gb_tty->line_coding, &newline, sizeof(newline));
+ 		if (vcpu->arch.xcr0 != host_xcr0)
+@@ -3529,6 +3543,9 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+ 
+ 	kvm_x86_ops->vcpu_load(vcpu, cpu);
+ 
++	/* Save host pkru register if supported */
++	vcpu->arch.host_pkru = read_pkru();
++
+ 	/* Apply any externally detected TSC adjustments (due to suspend) */
+ 	if (unlikely(vcpu->arch.tsc_offset_adjustment)) {
+ 		adjust_tsc_offset_host(vcpu, vcpu->arch.tsc_offset_adjustment);
 -- 
 2.25.1
 
