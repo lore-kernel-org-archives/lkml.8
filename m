@@ -2,255 +2,148 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A1BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:21:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F82C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:27:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D0372076A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:21:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B653C206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:27:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AJ6ZY+Jq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rnj2cuZy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726083AbgFHSV1 (ORCPT
+        id S1726021AbgFHS1F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 14:21:27 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:53384 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbgFHSV0 (ORCPT
+        Mon, 8 Jun 2020 14:27:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50794 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725797AbgFHS1D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 14:21:26 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 058ILLDe113063;
-        Mon, 8 Jun 2020 13:21:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1591640481;
-        bh=RMzJpRbyroFe0EgM/4U6tkWl0hgt8snFYObSCyB1dDg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=AJ6ZY+Jq269BjInNIectkbGFCfMveto2A1lnxnT1stnCaV4UC/KNZG2f9S3+tG25/
-         SVD3Us2sI8Y0Hsfp8zE475NFiHWfiUNhLKd/M13IGjd7v22vtjhBzYvUyguUV75hjG
-         3yOQv5ojFcj08MRAXE4JgVoARRAoX1eVI28EU3ws=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 058ILLdK130836
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 8 Jun 2020 13:21:21 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 8 Jun
- 2020 13:21:20 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 8 Jun 2020 13:21:20 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 058ILKHq043463;
-        Mon, 8 Jun 2020 13:21:20 -0500
-Subject: Re: [PATCH v26 04/15] dt: bindings: lp50xx: Introduce the lp50xx
- family of RGB drivers
-To:     Rob Herring <robh@kernel.org>
-CC:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
-        <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200604120504.32425-1-dmurphy@ti.com>
- <20200604120504.32425-5-dmurphy@ti.com> <20200604225938.GA4175214@bogus>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <c893e648-ee1a-3720-8b83-4440d45fdbdc@ti.com>
-Date:   Mon, 8 Jun 2020 13:21:15 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 8 Jun 2020 14:27:03 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1FC7C08C5C2;
+        Mon,  8 Jun 2020 11:27:02 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id d128so542405wmc.1;
+        Mon, 08 Jun 2020 11:27:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hvRrHd8bC9uCfGjyL3GOLoak3bX7Ko8cQb8L4zQ0GAc=;
+        b=rnj2cuZyjxkdPSYoKcDyj6QKNuE7eMXvAbCFvWrs7/fSbL9S0OyUe5TArZ58/alBsa
+         s7N0DyLN3wDq1pbuxD9SQOkq42mLZTfZi9JzT87baAgVcrJNyJH2x0VccOufMg9DcNFw
+         Ij3xC9wNS6CXmRpLhzBxHu9h+VAJ33tTkEm268FOQCe/LtAfWpFGwR8dbI0OzHG7h7ea
+         aPKHKkqGkuDN9MhvebkOSdtooabA8lyjf9oQOL7wqKhH/UyCIFRKR8fCk2A4yhYRmBsU
+         +i8Brg/deaAYttupqYiPldC6Bzi+oZ3kxX9LM9Cl2sxUsVqeMsJxr+lapC6/G6AjrodR
+         pNFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hvRrHd8bC9uCfGjyL3GOLoak3bX7Ko8cQb8L4zQ0GAc=;
+        b=NnjuEhnUnccQ6bBlx2VSsSPnjOx82z3pcpxX6xlw99NMONAefL+2BsOzcNx9Pqhpgz
+         htc/DeM5Y/SwkZEYXZ31RIbZ7VwZjN9oRKz9QcdcdtyZSbv4esm+RM+tR5wDOvvCjnLB
+         QunkIRXc9Vb2M8PHDO0AYCYHAMt49EIEtrxLqyT3nshjaR/eBgGOAyaUv6mNJnI3JofJ
+         S4oV6yb92wT1+ciTX4CiVHGzAP9/RlXTcXgCXaalXyOAdK6yLbVJf8BVOQOSfRew28nW
+         OE9WAgZsmLdlTnu1ZcSEMB5AX6VDdmPCEooljIsHCBGvF8zN+0oKkiIvTM/KuuzbCWID
+         zFsw==
+X-Gm-Message-State: AOAM531B0ZsZqruNW6AW7IWeof69nEmpuEp65nzNPcm8eUdSf5rNXFS1
+        lCwiaobyhW5W42XyOtkOTtp6OWCwAzR8kg==
+X-Google-Smtp-Source: ABdhPJxYH6qX5MxKcQYcT4dhKEoWjVLVUIiLEg3kUDbhj5qn4paWnxcT4VYvH9RoLRtTVAIYoDKNqQ==
+X-Received: by 2002:a1c:6243:: with SMTP id w64mr35589wmb.162.1591640821653;
+        Mon, 08 Jun 2020 11:27:01 -0700 (PDT)
+Received: from localhost ([213.191.183.145])
+        by smtp.gmail.com with ESMTPSA id h27sm663689wrb.18.2020.06.08.11.26.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Jun 2020 11:27:00 -0700 (PDT)
+From:   Iskren Chernev <iskren.chernev@gmail.com>
+To:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        Iskren Chernev <iskren.chernev@gmail.com>
+Subject: [PATCH 1/2] dt-bindints: power: supply: Document max17040 extensions
+Date:   Mon,  8 Jun 2020 21:26:41 +0300
+Message-Id: <20200608182642.592848-1-iskren.chernev@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <20200604225938.GA4175214@bogus>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rob
+Maxim max17040 is a fuel gauge from a larger family utilising the Model
+Gauge thechnology. Document all different compatible strings that the
+max17040 driver recognizes.
 
-On 6/4/20 5:59 PM, Rob Herring wrote:
-> On Thu, Jun 04, 2020 at 07:04:53AM -0500, Dan Murphy wrote:
->> Introduce the bindings for the Texas Instruments LP5036, LP5030, LP5024,
->> LP5018, LP5012 and LP5009 RGB LED device driver.  The LP5036/30/24/18/12/9
->> can control RGB LEDs individually or as part of a control bank group.
->> These devices have the ability to adjust the mixing control for the RGB
->> LEDs to obtain different colors independent of the overall brightness of
->> the LED grouping.
->>
->> Datasheet:
->> http://www.ti.com/lit/ds/symlink/lp5012.pdf
->> http://www.ti.com/lit/ds/symlink/lp5024.pdf
->> http://www.ti.com/lit/ds/symlink/lp5036.pdf
->>
->> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>   .../devicetree/bindings/leds/leds-lp50xx.yaml | 136 ++++++++++++++++++
->>   1 file changed, 136 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml b/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
->> new file mode 100644
->> index 000000000000..02fcdc13262f
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
->> @@ -0,0 +1,136 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/leds/leds-lp50xx.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: LED driver for LP50XX RGB LED from Texas Instruments.
->> +
->> +maintainers:
->> +  - Dan Murphy <dmurphy@ti.com>
->> +
->> +description: |
->> +  The LP50XX is multi-channel, I2C RGB LED Drivers that can group RGB LEDs into
->> +  a LED group or control them individually.
->> +
->> +  The difference in these RGB LED drivers is the number of supported RGB
->> +  modules.
->> +
->> +  For more product information please see the link below:
->> +  http://www.ti.com/lit/ds/symlink/lp5012.pdf
->> +  http://www.ti.com/lit/ds/symlink/lp5024.pdf
->> +  http://www.ti.com/lit/ds/symlink/lp5036.pdf
->> +
->> +properties:
->> +  #allOf:
->> +    #- $ref: "common.yaml#"
->> +    #- $ref: "leds-class-multicolor.yaml#"
-> These describe properties in the 'multi-led' nodes, so the $ref goes
-> there. And you only need the 2nd one because it already references the
-> 1st one (or it should once you fix patch 1).
-Got it
->> +
->> +  compatible:
->> +    enum:
->> +      - ti,lp5009
->> +      - ti,lp5012
->> +      - ti,lp5018
->> +      - ti,lp5024
->> +      - ti,lp5030
->> +      - ti,lp5036
->> +
->> +  reg:
->> +    maxItems: 1
->> +    description:
->> +      I2C slave address
->> +      lp5009/12 - 0x14, 0x15, 0x16, 0x17
->> +      lp5018/24 - 0x28, 0x29, 0x2a, 0x2b
->> +      lp5030/36 - 0x30, 0x31, 0x32, 0x33
->> +
->> +  enable-gpios:
->> +    maxItems: 1
->> +    description: GPIO pin to enable/disable the device.
->> +
->> +  vled-supply:
->> +    description: LED supply.
->> +
->> +  child-node:
-> I guess you didn't understand what I said on this. What you need is:
->
-> patternProperties:
->    '^multi-led@[0-9]$':
->      type: object
->      $ref: leds-class-multicolor.yaml#
->      properties:
->        ...
->
->      patternProperties:
->        '^led@[0-9]$':
->          type: object
->          $ref: common.yaml#
->
-> Adjust '[0-9]' based on how many possible child addresses there can be.
-> It's hex if more than 10.
->
-Most we can have are 12 modules
->> +    properties:
->> +      ti,led-bank:
->> +        description:
->> +          This property denotes the LED module numbers that will be controlled as
->> +          a single RGB cluster.  Each LED module number will be controlled by a
->> +          single LED class instance.
->> +          There can only be one instance of the ti,led-bank
->> +          property for each device node.  This is a required node if the LED
->> +          modules are to be banked.
->> +        $ref: /schemas/types.yaml#definitions/uint32-array
->> +
->> +required:
->> +  - compatible
->> +  - reg
-> additionalProperties: false
+Some devices in the wild report double the capacity. The
+maxim,double-soc (from State-Of-Charge) property fixes that.
 
-This causes a binding check failure for
+To compensate for the battery chemistry and operating conditions the
+chips support a compensation value. Specify one or two byte compensation
+via the maxim,rcomp byte array.
 
-leds/leds-lp50xx.example.dt.yaml: led-controller@14: '#address-cells', 
-'#size-cells' do not match any of the regexes: '^multi-led@[0-9a-f]$', 
-'pinctrl-[0-9]+'
+Signed-off-by: Iskren Chernev <iskren.chernev@gmail.com>
+---
+ .../power/supply/max17040_battery.txt         | 22 ++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
 
->> +
->> +examples:
->> +  - |
->> +   #include <dt-bindings/gpio/gpio.h>
->> +   #include <dt-bindings/leds/common.h>
->> +
->> +   i2c {
->> +       #address-cells = <1>;
->> +       #size-cells = <0>;
->> +
->> +       led-controller@14 {
->> +           compatible = "ti,lp5009";
->> +           reg = <0x14>;
->> +           #address-cells = <1>;
->> +           #size-cells = <0>;
->> +           enable-gpios = <&gpio1 16>;
->> +
->> +           multi-led@1 {
->> +               #address-cells = <1>;
->> +               #size-cells = <0>;
->> +               reg = <1>;
->> +               color = <LED_COLOR_ID_MULTI>;
->> +               function = LED_FUNCTION_CHARGING;
->> +
->> +               led@0 {
->> +                   reg = <0>;
->> +                   color = <LED_COLOR_ID_RED>;
->> +               };
->> +
->> +               led@1 {
->> +                   reg = <1>;
->> +                   color = <LED_COLOR_ID_GREEN>;
->> +               };
->> +
->> +               led@2 {
->> +                   reg = <2>;
->> +                   color = <LED_COLOR_ID_BLUE>;
->> +               };
->> +          };
->> +
->> +          multi-led@2 {
->> +            #address-cells = <1>;
->> +            #size-cells = <0>;
->> +            reg = <2>;
->> +            color = <LED_COLOR_ID_MULTI>;
->> +            function = LED_FUNCTION_STANDBY;
->> +            ti,led-bank = <2 3 5>;
-> I still don't understand why 'reg = <2 3 5>;' with the 1st entry being
-> the control bank. Is '2' in reg not the same thing as '2' here?
+diff --git a/Documentation/devicetree/bindings/power/supply/max17040_battery.txt b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+index 4e0186b8380fa..be11cab4530b9 100644
+--- a/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
++++ b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+@@ -2,7 +2,9 @@ max17040_battery
+ ~~~~~~~~~~~~~~~~
+ 
+ Required properties :
+- - compatible : "maxim,max17040" or "maxim,max77836-battery"
++ - compatible : "maxim,max17040", "maxim,max17041", "maxim,max17043",
++ 		"maxim,max17044", "maxim,max17048", "maxim,max17049",
++		"maxim,max17058", "maxim,max17059" or "maxim,max77836-battery"
+  - reg: i2c slave address
+ 
+ Optional properties :
+@@ -11,6 +13,15 @@ Optional properties :
+ 				generated. Can be configured from 1 up to 32
+ 				(%). If skipped the power up default value of
+ 				4 (%) will be used.
++- maxim,double-soc : 		Certain devices return double the capacity.
++				Specify this boolean property to divide the
++				reported value in 2 and thus normalize it.
++				SOC == State of Charge == Capacity.
++- maxim,rcomp :			A value to compensate readings for various
++				battery chemistries and operating temperatures.
++				max17040,41 have 2 byte rcomp, default to
++				0x97 0x00. All other devices have one byte
++				rcomp, default to 0x97.
+ - interrupts : 			Interrupt line see Documentation/devicetree/
+ 				bindings/interrupt-controller/interrupts.txt
+ - wakeup-source :		This device has wakeup capabilities. Use this
+@@ -27,7 +38,16 @@ Example:
+ 		compatible = "maxim,max77836-battery";
+ 		reg = <0x36>;
+ 		maxim,alert-low-soc-level = <10>;
++		maxim,rcomp = /bits/ 8 <0x97 0x00>;
+ 		interrupt-parent = <&gpio7>;
+ 		interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
+ 		wakeup-source;
+ 	};
++
++	battery-fuel-gauge@36 {
++		compatible = "maxim,max17048";
++		reg = <0x36>;
++		maxim,rcomp = /bits/ 8 <0x97>;
++		maxim,alert-low-soc-level = <10>;
++		maxim,double-soc;
++	};
 
-I changed this.
-
-Now reg is the module numbers that can either stand alone or be grouped.
-
-Dan
+base-commit: 1713116fa907cc7290020f0d8632ec646d2936f8
+-- 
+2.27.0
 
