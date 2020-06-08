@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B819BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F75C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EF802074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:05:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD5FB20775
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:05:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591661101;
-	bh=qqEFLn5pGN9vcJ9ZgV8blx1BICeewC5tq02PzU36f6k=;
+	s=default; t=1591661112;
+	bh=IlCy+/PA9cG/OOuLd1GmNkRJfPDP1bUeB3weSGCHfdo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xgTW1QkJdQA0UiKg5qDTDjZRNftdrCygqMtPeA3pKG5RRujCxDL0lvWnoBZjewo0E
-	 +ufdMDdCQ4tpMiyP4jeaNhGvhy1Bb112luS6goLJ+6KRZmBc7GMNjMsu0EmjrIIEdg
-	 p0hxzuxbbr0dveoazGMcielMwXLmNL4JS3HNVjAE=
+	b=ip0e3mRPc+AGITqHymO1SEDyfgfP2HylYxJdPpXgwWNZW7cxAtpA2/mVJKFDvsu2a
+	 GlKMaByLS2W7XsUHuwQa+pInJeP1+8+z6UlKzc/KvJp2SLFPAeJ3aIV9x4uyducK4Q
+	 IJ/dxixubHhwZLbfQJb4xe1wfVIF4alPdcmSM40k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731788AbgFIAE7 (ORCPT
+        id S1732836AbgFIAFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:04:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45760 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:05:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731169AbgFHXVa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:21:30 -0400
+        id S1731156AbgFHXV2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:21:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D066720897;
-        Mon,  8 Jun 2020 23:21:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54920208FE;
+        Mon,  8 Jun 2020 23:21:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658490;
-        bh=qqEFLn5pGN9vcJ9ZgV8blx1BICeewC5tq02PzU36f6k=;
+        s=default; t=1591658488;
+        bh=IlCy+/PA9cG/OOuLd1GmNkRJfPDP1bUeB3weSGCHfdo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rEZWgUpLlfcW875nOMGE2lPa6hWcxNmCJTm0ghiyet9Alg1/uRkHLIiMh0yb5BxpK
-         ldPvkn3voh9EPGWvOgebmLrKTJVFSCgWbWUNmKl7WmDygOrIoR1z5nyDJLSbYBMVwn
-         /lE5EWTyjhWM/QM7MXu/hwpkUEdEjFkneoKSwEVw=
+        b=YEKH1mVmk/P2snFmc2Ixc5A0ouqadKRtuECElT6n5XBUZHWlGciWYDeUATVMQKrX7
+         63SSvhbrrFHnPMhPzC2b+UHl994vS0CdkIPUVGo+4ebgzTTsgj2HkjC0XuC/BN8ChC
+         r4zuLieDw+BZ1feZddbpPIkTCoDbgraW3ley6eAs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tejun Heo <tj@kernel.org>, Andy Newell <newella@fb.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 124/175] iocost: don't let vrate run wild while there's no saturation signal
-Date:   Mon,  8 Jun 2020 19:17:57 -0400
-Message-Id: <20200608231848.3366970-124-sashal@kernel.org>
+Cc:     Coly Li <colyli@suse.de>, Michal Hocko <mhocko@suse.com>,
+        Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 122/175] raid5: remove gfp flags from scribble_alloc()
+Date:   Mon,  8 Jun 2020 19:17:55 -0400
+Message-Id: <20200608231848.3366970-122-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
 References: <20200608231848.3366970-1-sashal@kernel.org>
@@ -59,101 +59,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejun Heo <tj@kernel.org>
+From: Coly Li <colyli@suse.de>
 
-[ Upstream commit 81ca627a933063fa63a6d4c66425de822a2ab7f5 ]
+[ Upstream commit ba54d4d4d2844c234f1b4692bd8c9e0f833c8a54 ]
 
-When the QoS targets are met and nothing is being throttled, there's
-no way to tell how saturated the underlying device is - it could be
-almost entirely idle, at the cusp of saturation or anywhere inbetween.
-Given that there's no information, it's best to keep vrate as-is in
-this state.  Before 7cd806a9a953 ("iocost: improve nr_lagging
-handling"), this was the case - if the device isn't missing QoS
-targets and nothing is being throttled, busy_level was reset to zero.
+Using GFP_NOIO flag to call scribble_alloc() from resize_chunk() does
+not have the expected behavior. kvmalloc_array() inside scribble_alloc()
+which receives the GFP_NOIO flag will eventually call kmalloc_node() to
+allocate physically continuous pages.
 
-While fixing nr_lagging handling, 7cd806a9a953 ("iocost: improve
-nr_lagging handling") broke this.  Now, while the device is hitting
-QoS targets and nothing is being throttled, vrate keeps getting
-adjusted according to the existing busy_level.
+Now we have memalloc scope APIs in mddev_suspend()/mddev_resume() to
+prevent memory reclaim I/Os during raid array suspend context, calling
+to kvmalloc_array() with GFP_KERNEL flag may avoid deadlock of recursive
+I/O as expected.
 
-This led to vrate keeping climing till it hits max when there's an IO
-issuer with limited request concurrency if the vrate started low.
-vrate starts getting adjusted upwards until the issuer can issue IOs
-w/o being throttled.  From then on, QoS targets keeps getting met and
-nothing on the system needs throttling and vrate keeps getting
-increased due to the existing busy_level.
+This patch removes the useless gfp flags from parameters list of
+scribble_alloc(), and call kvmalloc_array() with GFP_KERNEL flag. The
+incorrect GFP_NOIO flag does not exist anymore.
 
-This patch makes the following changes to the busy_level logic.
-
-* Reset busy_level if nr_shortages is zero to avoid the above
-  scenario.
-
-* Make non-zero nr_lagging block lowering nr_level but still clear
-  positive busy_level if there's clear non-saturation signal - QoS
-  targets are met and nr_shortages is non-zero.  nr_lagging's role is
-  preventing adjusting vrate upwards while there are long-running
-  commands and it shouldn't keep busy_level positive while there's
-  clear non-saturation signal.
-
-* Restructure code for clarity and add comments.
-
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Reported-by: Andy Newell <newella@fb.com>
-Fixes: 7cd806a9a953 ("iocost: improve nr_lagging handling")
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: b330e6a49dc3 ("md: convert to kvmalloc")
+Suggested-by: Michal Hocko <mhocko@suse.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-iocost.c | 28 ++++++++++++++++++++++++----
- 1 file changed, 24 insertions(+), 4 deletions(-)
+ drivers/md/raid5.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/block/blk-iocost.c b/block/blk-iocost.c
-index d083f7704082..4d2bda812d9b 100644
---- a/block/blk-iocost.c
-+++ b/block/blk-iocost.c
-@@ -1546,19 +1546,39 @@ static void ioc_timer_fn(struct timer_list *timer)
- 	if (rq_wait_pct > RQ_WAIT_BUSY_PCT ||
- 	    missed_ppm[READ] > ppm_rthr ||
- 	    missed_ppm[WRITE] > ppm_wthr) {
-+		/* clearly missing QoS targets, slow down vrate */
- 		ioc->busy_level = max(ioc->busy_level, 0);
- 		ioc->busy_level++;
- 	} else if (rq_wait_pct <= RQ_WAIT_BUSY_PCT * UNBUSY_THR_PCT / 100 &&
- 		   missed_ppm[READ] <= ppm_rthr * UNBUSY_THR_PCT / 100 &&
- 		   missed_ppm[WRITE] <= ppm_wthr * UNBUSY_THR_PCT / 100) {
--		/* take action iff there is contention */
--		if (nr_shortages && !nr_lagging) {
-+		/* QoS targets are being met with >25% margin */
-+		if (nr_shortages) {
-+			/*
-+			 * We're throttling while the device has spare
-+			 * capacity.  If vrate was being slowed down, stop.
-+			 */
- 			ioc->busy_level = min(ioc->busy_level, 0);
--			/* redistribute surpluses first */
--			if (!nr_surpluses)
-+
-+			/*
-+			 * If there are IOs spanning multiple periods, wait
-+			 * them out before pushing the device harder.  If
-+			 * there are surpluses, let redistribution work it
-+			 * out first.
-+			 */
-+			if (!nr_lagging && !nr_surpluses)
- 				ioc->busy_level--;
-+		} else {
-+			/*
-+			 * Nobody is being throttled and the users aren't
-+			 * issuing enough IOs to saturate the device.  We
-+			 * simply don't know how close the device is to
-+			 * saturation.  Coast.
-+			 */
-+			ioc->busy_level = 0;
- 		}
- 	} else {
-+		/* inside the hysterisis margin, we're good */
- 		ioc->busy_level = 0;
- 	}
+diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+index 36cd7c2fbf40..a3cbc9f4fec1 100644
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -2228,14 +2228,19 @@ static int grow_stripes(struct r5conf *conf, int num)
+  * of the P and Q blocks.
+  */
+ static int scribble_alloc(struct raid5_percpu *percpu,
+-			  int num, int cnt, gfp_t flags)
++			  int num, int cnt)
+ {
+ 	size_t obj_size =
+ 		sizeof(struct page *) * (num+2) +
+ 		sizeof(addr_conv_t) * (num+2);
+ 	void *scribble;
  
+-	scribble = kvmalloc_array(cnt, obj_size, flags);
++	/*
++	 * If here is in raid array suspend context, it is in memalloc noio
++	 * context as well, there is no potential recursive memory reclaim
++	 * I/Os with the GFP_KERNEL flag.
++	 */
++	scribble = kvmalloc_array(cnt, obj_size, GFP_KERNEL);
+ 	if (!scribble)
+ 		return -ENOMEM;
+ 
+@@ -2267,8 +2272,7 @@ static int resize_chunks(struct r5conf *conf, int new_disks, int new_sectors)
+ 
+ 		percpu = per_cpu_ptr(conf->percpu, cpu);
+ 		err = scribble_alloc(percpu, new_disks,
+-				     new_sectors / STRIPE_SECTORS,
+-				     GFP_NOIO);
++				     new_sectors / STRIPE_SECTORS);
+ 		if (err)
+ 			break;
+ 	}
+@@ -6765,8 +6769,7 @@ static int alloc_scratch_buffer(struct r5conf *conf, struct raid5_percpu *percpu
+ 			       conf->previous_raid_disks),
+ 			   max(conf->chunk_sectors,
+ 			       conf->prev_chunk_sectors)
+-			   / STRIPE_SECTORS,
+-			   GFP_KERNEL)) {
++			   / STRIPE_SECTORS)) {
+ 		free_scratch_buffer(conf, percpu);
+ 		return -ENOMEM;
+ 	}
 -- 
 2.25.1
 
