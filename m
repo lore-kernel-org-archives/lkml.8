@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63202C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF08C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:39:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 384AF2068D
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:39:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 143BD2068D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:39:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591659551;
-	bh=iGDstssJZNRPmYGflzsJwE0HzniypEW0XvpWSC3yA2I=;
+	s=default; t=1591659556;
+	bh=E/5UJz2BshS2E+sqIdC3MSbzqLf/j0KyC3ZSbqD3Vyk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=henZhZ57Qrx91VEq3tazlpUYYf1FGtFJOqgyM83RYR9euXg3P4231rmkVstZ/b/ug
-	 0z8/nk3SjcFxgKFKcwRbR+pYJ9J5IHgWSP36X8Aw196ioavezvIV7jC8fdMN7S40c2
-	 8Of3+FBxxoQwIBTiLxCaCLW1RINNwvhKq8Cu3UJw=
+	b=L4M6te71gq7kmD2wD0mopCLR+eRHFWHNtCFmGMfv8L86g2XLKnrm47oAEDuW31IF1
+	 G71NlMGlS+eVx/Ik+FZuGAiaumBI15InB5UWvKMNDwLB1OqSRDolhB6nWjqIuOQV+G
+	 +LK3Zfd40jZ3l/pFAxj1WC437qAUDswt0737i1AY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387727AbgFHX2U (ORCPT
+        id S1732200AbgFHX2R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:28:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47198 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:28:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731329AbgFHXWd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:22:33 -0400
+        id S1730966AbgFHXWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:22:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6BCD20842;
-        Mon,  8 Jun 2020 23:22:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1415020842;
+        Mon,  8 Jun 2020 23:22:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658552;
-        bh=iGDstssJZNRPmYGflzsJwE0HzniypEW0XvpWSC3yA2I=;
+        s=default; t=1591658550;
+        bh=E/5UJz2BshS2E+sqIdC3MSbzqLf/j0KyC3ZSbqD3Vyk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=quIj+6HEDqQdkv08blxJ0QTVvaUzbIxT94q6Ia+/fyiqOgrCN7DdeTg+J6p4WVl05
-         r48Gz4iSGqsGf9Qxe7sddLsWkBbcBcQ8V6SBUHQzKzgZ+/cwfbFC8d1+nnTb9FWI9F
-         cnsGO8FD5LDhrcti8dZz1xmnRMODBl2FtJW99wGw=
+        b=mmgs4+hTJbILiZ++6ZLcSBUznPStQ5ijQfMTDStiklFOzWXO0TQz9hL+ZNoXQp/V8
+         4J9EOENsrpAguZVBB/XNF83KVicB8sAG7kYtOVP1YqhXFkudVA1v3dgi6++mfkjfuV
+         I6sc3WzmBMreN5nmJ3Jtd8Kini7OomvEXTzrQlPU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jakub Sitnicki <jakub@cloudflare.com>,
+Cc:     John Fastabend <john.fastabend@gmail.com>,
         Alexei Starovoitov <ast@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
         bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 172/175] selftests/bpf, flow_dissector: Close TAP device FD after the test
-Date:   Mon,  8 Jun 2020 19:18:45 -0400
-Message-Id: <20200608231848.3366970-172-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 170/175] bpf: Refactor sockmap redirect code so its easy to reuse
+Date:   Mon,  8 Jun 2020 19:18:43 -0400
+Message-Id: <20200608231848.3366970-170-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
 References: <20200608231848.3366970-1-sashal@kernel.org>
@@ -61,35 +62,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Sitnicki <jakub@cloudflare.com>
+From: John Fastabend <john.fastabend@gmail.com>
 
-[ Upstream commit b8215dce7dfd817ca38807f55165bf502146cd68 ]
+[ Upstream commit ca2f5f21dbbd5e3a00cd3e97f728aa2ca0b2e011 ]
 
-test_flow_dissector leaves a TAP device after it's finished, potentially
-interfering with other tests that will run after it. Fix it by closing the
-TAP descriptor on cleanup.
+We will need this block of code called from tls context shortly
+lets refactor the redirect logic so its easy to use. This also
+cleans up the switch stmt so we have fewer fallthrough cases.
 
-Fixes: 0905beec9f52 ("selftests/bpf: run flow dissector tests in skb-less mode")
-Signed-off-by: Jakub Sitnicki <jakub@cloudflare.com>
+No logic changes are intended.
+
+Fixes: d829e9c4112b5 ("tls: convert to generic sk_msg interface")
+Signed-off-by: John Fastabend <john.fastabend@gmail.com>
 Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Link: https://lore.kernel.org/bpf/20200531082846.2117903-11-jakub@cloudflare.com
+Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
+Acked-by: Song Liu <songliubraving@fb.com>
+Link: https://lore.kernel.org/bpf/159079360110.5745.7024009076049029819.stgit@john-Precision-5820-Tower
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/prog_tests/flow_dissector.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/core/skmsg.c | 55 ++++++++++++++++++++++++++++++------------------
+ 1 file changed, 34 insertions(+), 21 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/flow_dissector.c b/tools/testing/selftests/bpf/prog_tests/flow_dissector.c
-index 92563898867c..9f3634c9971d 100644
---- a/tools/testing/selftests/bpf/prog_tests/flow_dissector.c
-+++ b/tools/testing/selftests/bpf/prog_tests/flow_dissector.c
-@@ -523,6 +523,7 @@ void test_flow_dissector(void)
- 		CHECK_ATTR(err, tests[i].name, "bpf_map_delete_elem %d\n", err);
- 	}
- 
-+	close(tap_fd);
- 	bpf_prog_detach(prog_fd, BPF_FLOW_DISSECTOR);
- 	bpf_object__close(obj);
+diff --git a/net/core/skmsg.c b/net/core/skmsg.c
+index ded2d5227678..8e538a28fe0d 100644
+--- a/net/core/skmsg.c
++++ b/net/core/skmsg.c
+@@ -686,13 +686,43 @@ static struct sk_psock *sk_psock_from_strp(struct strparser *strp)
+ 	return container_of(parser, struct sk_psock, parser);
  }
+ 
+-static void sk_psock_verdict_apply(struct sk_psock *psock,
+-				   struct sk_buff *skb, int verdict)
++static void sk_psock_skb_redirect(struct sk_psock *psock, struct sk_buff *skb)
+ {
+ 	struct sk_psock *psock_other;
+ 	struct sock *sk_other;
+ 	bool ingress;
+ 
++	sk_other = tcp_skb_bpf_redirect_fetch(skb);
++	if (unlikely(!sk_other)) {
++		kfree_skb(skb);
++		return;
++	}
++	psock_other = sk_psock(sk_other);
++	if (!psock_other || sock_flag(sk_other, SOCK_DEAD) ||
++	    !sk_psock_test_state(psock_other, SK_PSOCK_TX_ENABLED)) {
++		kfree_skb(skb);
++		return;
++	}
++
++	ingress = tcp_skb_bpf_ingress(skb);
++	if ((!ingress && sock_writeable(sk_other)) ||
++	    (ingress &&
++	     atomic_read(&sk_other->sk_rmem_alloc) <=
++	     sk_other->sk_rcvbuf)) {
++		if (!ingress)
++			skb_set_owner_w(skb, sk_other);
++		skb_queue_tail(&psock_other->ingress_skb, skb);
++		schedule_work(&psock_other->work);
++	} else {
++		kfree_skb(skb);
++	}
++}
++
++static void sk_psock_verdict_apply(struct sk_psock *psock,
++				   struct sk_buff *skb, int verdict)
++{
++	struct sock *sk_other;
++
+ 	switch (verdict) {
+ 	case __SK_PASS:
+ 		sk_other = psock->sk;
+@@ -711,25 +741,8 @@ static void sk_psock_verdict_apply(struct sk_psock *psock,
+ 		}
+ 		goto out_free;
+ 	case __SK_REDIRECT:
+-		sk_other = tcp_skb_bpf_redirect_fetch(skb);
+-		if (unlikely(!sk_other))
+-			goto out_free;
+-		psock_other = sk_psock(sk_other);
+-		if (!psock_other || sock_flag(sk_other, SOCK_DEAD) ||
+-		    !sk_psock_test_state(psock_other, SK_PSOCK_TX_ENABLED))
+-			goto out_free;
+-		ingress = tcp_skb_bpf_ingress(skb);
+-		if ((!ingress && sock_writeable(sk_other)) ||
+-		    (ingress &&
+-		     atomic_read(&sk_other->sk_rmem_alloc) <=
+-		     sk_other->sk_rcvbuf)) {
+-			if (!ingress)
+-				skb_set_owner_w(skb, sk_other);
+-			skb_queue_tail(&psock_other->ingress_skb, skb);
+-			schedule_work(&psock_other->work);
+-			break;
+-		}
+-		/* fall-through */
++		sk_psock_skb_redirect(psock, skb);
++		break;
+ 	case __SK_DROP:
+ 		/* fall-through */
+ 	default:
 -- 
 2.25.1
 
