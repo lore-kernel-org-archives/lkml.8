@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F12CAC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD67C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:21:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2AD4207ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:21:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B332920814
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:21:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662081;
-	bh=X0wVzPGBBfCgruGOk9Ig/HOfpcycEG6Cjs2f9qVZl+I=;
+	s=default; t=1591662084;
+	bh=SSr626oosF3ax4S4mvuIs1Z3CkLSI8JeRhlwsAREDNo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z0JzA028wwHPHgWHKTzCpX0BoKGYKdmo+ywGpPKz/B319Cx75JyCn6fHedZ/bUE6U
-	 KtwxbFTldghR+4t1hKv1TYMxJjutyT0TeBcycvyTQcTjBiKiV6cC3x77BPiTub3XbP
-	 WtThtQawUQn+ShPpm0Z1NEp8cR38+HmzH6K11gzc=
+	b=n6tT9fMqmIX39YolmO2zRzrDoYCu5/klTu0kqP/e0IR5clPgxFJJXIkAm6PEmB0Ma
+	 exrJRgKfTuHa4owX9VIvqZDvGRw8Bn6a1FABVUUn9ovYhw06VUwTm1t+UAp7AhWsss
+	 aPUXscci5PHwxJDuagnIb8vFz5pKFPu0XtlBMfcc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730520AbgFHXRt (ORCPT
+        id S2387437AbgFIAVX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:17:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34402 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:21:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729754AbgFHXOO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:14:14 -0400
+        id S1729754AbgFHXRt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:17:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10DD421501;
-        Mon,  8 Jun 2020 23:14:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF10F2089D;
+        Mon,  8 Jun 2020 23:17:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658053;
-        bh=X0wVzPGBBfCgruGOk9Ig/HOfpcycEG6Cjs2f9qVZl+I=;
+        s=default; t=1591658269;
+        bh=SSr626oosF3ax4S4mvuIs1Z3CkLSI8JeRhlwsAREDNo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XbqhvL5I6EvTPaov0xgVo6GGMIn4ROYVKMrl2iAt1MWquY6+SEW/NfJgocBZVpx5X
-         xqevqiV3Dw88/CDytvl4mG+jcQ0AxsfE5xO28vtUSaMyuVzFDksrjJNtuqP+DuHsiM
-         X16vOI264rbM72oKBAw3OJ2vc7trxUphgAxTcd+c=
+        b=zp8Q7U5+G4d9AlbCfqsWmhHE4lFxv1n92EMnZCGILl1XF13Lh55s79ipvIfuGd/kI
+         WjlLlki/VrEj429Nh1ugHrTtYFdIlcumdK2dvx1jwAG4i8H+sBYNKa1WJZcQ87F7Zr
+         a4Gnnk6pm1JpM7OeroZfGhI6ifLJ8+1QyKP5W064=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-kbuild@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 101/606] kbuild: avoid concurrency issue in parallel building dtbs and dtbs_check
-Date:   Mon,  8 Jun 2020 19:03:46 -0400
-Message-Id: <20200608231211.3363633-101-sashal@kernel.org>
+Cc:     Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Hulk Robot <hulkci@huawei.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-riscv@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 276/606] riscv: stacktrace: Fix undefined reference to `walk_stackframe'
+Date:   Mon,  8 Jun 2020 19:06:41 -0400
+Message-Id: <20200608231211.3363633-276-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -59,84 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
 
-[ Upstream commit b5154bf63e5577faaaca1d942df274f7de91dd2a ]
+[ Upstream commit 0502bee37cdef755d63eee60236562e5605e2480 ]
 
-'make dtbs_check' checks the shecma in addition to building *.dtb files,
-in other words, 'make dtbs_check' is a super-set of 'make dtbs'.
-So, you do not have to do 'make dtbs dtbs_check', but I want to keep
-the build system as robust as possible in any use.
+Drop static declaration to fix following build error if FRAME_POINTER disabled,
+  riscv64-linux-ld: arch/riscv/kernel/perf_callchain.o: in function `.L0':
+  perf_callchain.c:(.text+0x2b8): undefined reference to `walk_stackframe'
 
-Currently, 'dtbs' and 'dtbs_check' are independent of each other.
-In parallel building, two threads descend into arch/*/boot/dts/,
-one for dtbs and the other for dtbs_check, then end up with building
-the same DTB simultaneously.
-
-This commit fixes the concurrency issue. Otherwise, I see build errors
-like follows:
-
-$ make ARCH=arm64 defconfig
-$ make -j16 ARCH=arm64 DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/psci.yaml dtbs dtbs_check
-  <snip>
-  DTC     arch/arm64/boot/dts/qcom/sdm845-cheza-r2.dtb
-  DTC     arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtb
-  DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dtb
-  DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dtb
-  DTC     arch/arm64/boot/dts/freescale/imx8mn-evk.dtb
-  DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dtb
-  DTC     arch/arm64/boot/dts/zte/zx296718-pcbox.dtb
-  DTC     arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dt.yaml
-  DTC     arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dtb
-  DTC     arch/arm64/boot/dts/xilinx/zynqmp-zc1254-revA.dtb
-  DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dtb
-  DTC     arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-inx.dtb
-  DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dtb
-  CHECK   arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dt.yaml
-fixdep: error opening file: arch/arm64/boot/dts/allwinner/.sun50i-h6-orangepi-lite2.dtb.d: No such file or directory
-make[2]: *** [scripts/Makefile.lib:296: arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dtb] Error 2
-make[2]: *** Deleting file 'arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dtb'
-make[2]: *** Waiting for unfinished jobs....
-  DTC     arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-kd.dtb
-  DTC     arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p231.dtb
-  DTC     arch/arm64/boot/dts/xilinx/zynqmp-zc1275-revA.dtb
-  DTC     arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dtb
-fixdep: parse error; no targets found
-make[2]: *** [scripts/Makefile.lib:296: arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dtb] Error 1
-make[2]: *** Deleting file 'arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dtb'
-make[1]: *** [scripts/Makefile.build:505: arch/arm64/boot/dts/allwinner] Error 2
-make[1]: *** Waiting for unfinished jobs....
-  DTC     arch/arm64/boot/dts/renesas/r8a77951-salvator-xs.dtb
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Makefile | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/riscv/kernel/stacktrace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Makefile b/Makefile
-index 713f93cceffe..d00e14219e27 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1248,11 +1248,15 @@ ifneq ($(dtstree),)
- 	$(Q)$(MAKE) $(build)=$(dtstree) $(dtstree)/$@
+diff --git a/arch/riscv/kernel/stacktrace.c b/arch/riscv/kernel/stacktrace.c
+index 0940681d2f68..19e46f4160cc 100644
+--- a/arch/riscv/kernel/stacktrace.c
++++ b/arch/riscv/kernel/stacktrace.c
+@@ -63,7 +63,7 @@ void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
  
- PHONY += dtbs dtbs_install dtbs_check
--dtbs dtbs_check: include/config/kernel.release scripts_dtc
-+dtbs: include/config/kernel.release scripts_dtc
- 	$(Q)$(MAKE) $(build)=$(dtstree)
+ #else /* !CONFIG_FRAME_POINTER */
  
-+ifneq ($(filter dtbs_check, $(MAKECMDGOALS)),)
-+dtbs: dt_binding_check
-+endif
-+
- dtbs_check: export CHECK_DTBS=1
--dtbs_check: dt_binding_check
-+dtbs_check: dtbs
- 
- dtbs_install:
- 	$(Q)$(MAKE) $(dtbinst)=$(dtstree)
+-static void notrace walk_stackframe(struct task_struct *task,
++void notrace walk_stackframe(struct task_struct *task,
+ 	struct pt_regs *regs, bool (*fn)(unsigned long, void *), void *arg)
+ {
+ 	unsigned long sp, pc;
 -- 
 2.25.1
 
