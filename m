@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA9DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A03C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92FF8206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:33:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E375D206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:33:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662835;
-	bh=vXYk7JUvoeakSGmPKmqeDoVsAFE/QUqU1NhtnvOHL0I=;
+	s=default; t=1591662839;
+	bh=mRhGw7qR37r16r1P8tKnMThQNVCj3v9b08mSdxj9QVw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YQauJxkv03vPGL0nO+72UsiH2ISOjyoWUO+e1PI4+o0L4297R8Q0Z9TT2CvHVYfXl
-	 AH9Tk+hGdZITFCoGkxXUqJYeYrpFbPWX76wFA2OD5kPBqP+6Klv17BxNkpvZl87zAn
-	 vzjemrrD2VKpYyBcP2d7Eh4I8La5IGZPkFIRwUgU=
+	b=T2/oe8bakQ/NPtM0m3l96RwN4zEzSMWQntgbjdRZlgQaSQ1GpCkvq/g1DmwJyX3aB
+	 pq7HlhXDM86f+vXy8QNFev5iuKRgXX9ApbBRu1/vw4QsOW18GVaKufsHx79eeJSnAm
+	 pyxm9vmvAQYxofMhXMH5kvKVs+kBzQbUQ1HEW4CU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733090AbgFIAdw (ORCPT
+        id S1733186AbgFIAd5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:33:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35316 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:33:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729906AbgFHXOs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:14:48 -0400
+        id S1729903AbgFHXOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:14:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 598ED20C09;
-        Mon,  8 Jun 2020 23:14:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC51B2158C;
+        Mon,  8 Jun 2020 23:14:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658088;
-        bh=vXYk7JUvoeakSGmPKmqeDoVsAFE/QUqU1NhtnvOHL0I=;
+        s=default; t=1591658085;
+        bh=mRhGw7qR37r16r1P8tKnMThQNVCj3v9b08mSdxj9QVw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ObgWlcolMem3z4ya4QgbYf9Qx81nUplV6n4vlh+yGDLQna7yO0r9AkK0GJIB4sIYm
-         KADzNxwf+24NasCvo+qvT8XmV9nWQ9T+cqGV9MBut09UZnlvpeKBL6WkCMKnNTvdu5
-         SxzOOnGXDkY5lPIwNoGVrvglxBSgXhy13kVMQGnw=
+        b=G5Ur+A9Ck0zyRNmmAIThPUlLHiLun/te3bWu0SqKiUbeabmqLs8vdyOoeC6VRGFFf
+         0dhwjViWWQEkw8V+ar+tPDpDysLHz38mmJX0BbQziHkHU2PSE1yVOCUkaOpWsOYG1y
+         XEiT7+crIzhA4ahm5GlMWA7NHa0gUkHkXEoAcIBU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Xu <peterx@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 131/606] KVM: selftests: Fix build for evmcs.h
-Date:   Mon,  8 Jun 2020 19:04:16 -0400
-Message-Id: <20200608231211.3363633-131-sashal@kernel.org>
+Cc:     Roman Li <roman.li@amd.com>, Zhan Liu <Zhan.Liu@amd.com>,
+        Aurabindo Pillai <aurabindo.pillai@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.6 129/606] drm/amd/display: fix counter in wait_for_no_pipes_pending
+Date:   Mon,  8 Jun 2020 19:04:14 -0400
+Message-Id: <20200608231211.3363633-129-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -61,58 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Xu <peterx@redhat.com>
+From: Roman Li <roman.li@amd.com>
 
-[ Upstream commit 8ffdaf9155ebe517cdec5edbcca19ba6e7ee9c3c ]
+[ Upstream commit 80797dd6f1a525d1160c463d6a9f9d29af182cbb ]
 
-I got this error when building kvm selftests:
+[Why]
+Wait counter is not being reset for each pipe.
 
-/usr/bin/ld: /home/xz/git/linux/tools/testing/selftests/kvm/libkvm.a(vmx.o):/home/xz/git/linux/tools/testing/selftests/kvm/include/evmcs.h:222: multiple definition of `current_evmcs'; /tmp/cco1G48P.o:/home/xz/git/linux/tools/testing/selftests/kvm/include/evmcs.h:222: first defined here
-/usr/bin/ld: /home/xz/git/linux/tools/testing/selftests/kvm/libkvm.a(vmx.o):/home/xz/git/linux/tools/testing/selftests/kvm/include/evmcs.h:223: multiple definition of `current_vp_assist'; /tmp/cco1G48P.o:/home/xz/git/linux/tools/testing/selftests/kvm/include/evmcs.h:223: first defined here
+[How]
+Move counter reset into pipe loop scope.
 
-I think it's because evmcs.h is included both in a test file and a lib file so
-the structs have multiple declarations when linking.  After all it's not a good
-habit to declare structs in the header files.
-
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Peter Xu <peterx@redhat.com>
-Message-Id: <20200504220607.99627-1-peterx@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Roman Li <roman.li@amd.com>
+Reviewed-by: Zhan Liu <Zhan.Liu@amd.com>
+Acked-by: Aurabindo Pillai <aurabindo.pillai@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/kvm/include/evmcs.h  | 4 ++--
- tools/testing/selftests/kvm/lib/x86_64/vmx.c | 3 +++
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/display/dc/core/dc.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/include/evmcs.h b/tools/testing/selftests/kvm/include/evmcs.h
-index 4912d23844bc..e31ac9c5ead0 100644
---- a/tools/testing/selftests/kvm/include/evmcs.h
-+++ b/tools/testing/selftests/kvm/include/evmcs.h
-@@ -217,8 +217,8 @@ struct hv_enlightened_vmcs {
- #define HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_MASK	\
- 		(~((1ull << HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_SHIFT) - 1))
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
+index 188e51600070..b3987124183a 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
+@@ -803,11 +803,10 @@ static void disable_dangling_plane(struct dc *dc, struct dc_state *context)
+ static void wait_for_no_pipes_pending(struct dc *dc, struct dc_state *context)
+ {
+ 	int i;
+-	int count = 0;
+-	struct pipe_ctx *pipe;
+ 	PERF_TRACE();
+ 	for (i = 0; i < MAX_PIPES; i++) {
+-		pipe = &context->res_ctx.pipe_ctx[i];
++		int count = 0;
++		struct pipe_ctx *pipe = &context->res_ctx.pipe_ctx[i];
  
--struct hv_enlightened_vmcs *current_evmcs;
--struct hv_vp_assist_page *current_vp_assist;
-+extern struct hv_enlightened_vmcs *current_evmcs;
-+extern struct hv_vp_assist_page *current_vp_assist;
- 
- int vcpu_enable_evmcs(struct kvm_vm *vm, int vcpu_id);
- 
-diff --git a/tools/testing/selftests/kvm/lib/x86_64/vmx.c b/tools/testing/selftests/kvm/lib/x86_64/vmx.c
-index 7aaa99ca4dbc..ce528f3cf093 100644
---- a/tools/testing/selftests/kvm/lib/x86_64/vmx.c
-+++ b/tools/testing/selftests/kvm/lib/x86_64/vmx.c
-@@ -17,6 +17,9 @@
- 
- bool enable_evmcs;
- 
-+struct hv_enlightened_vmcs *current_evmcs;
-+struct hv_vp_assist_page *current_vp_assist;
-+
- struct eptPageTableEntry {
- 	uint64_t readable:1;
- 	uint64_t writable:1;
+ 		if (!pipe->plane_state)
+ 			continue;
 -- 
 2.25.1
 
