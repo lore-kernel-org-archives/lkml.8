@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B9B7C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA13C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E748206D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:35:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E53A8206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:35:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591659307;
-	bh=4YRfAq+rtQuqty9LNpNsgrzO7Qs0uRzEQHvkDNNxyrs=;
+	s=default; t=1591659311;
+	bh=eqFjqFU3qXiE3XO3dLPjq9Xs//ztRq5SoN7u/f5nz7w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UK32Ya2LkQWL1u7Tu0FIEgOLvViD3q2mQgSi1J8BFyePt8oeaB8LyfWClt6stlaZw
-	 Mdza2ZSCOibXfAkV9A99F6ZkYd9tGjpWb52baUGQTFOBRKeFdzQYZ3tUF2HQgaOYPi
-	 xrXjgDiPKIcPqfJotkUchDWcHtHJCx4cgmJDR5hM=
+	b=UbbvPDp/OaY0BR+Xk+a2KHMmY0mCTMg+yAufPVy7gvBtzbawjy8f5oqAq3bGFNDa7
+	 GNxKle2xsgwacg0au9GQp5q9z7ralSgBh7/UVs9zB5l+owaNtN5dzRlFOi/bBgW5w0
+	 y8m5xL8dVE/sHuByYTkPttC2wwqpqAti0tR9efgY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387818AbgFHXfG (ORCPT
+        id S2387857AbgFHXfJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:35:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58346 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:35:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732230AbgFHX2h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:28:37 -0400
+        id S1732237AbgFHX2j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:28:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECD3D20775;
-        Mon,  8 Jun 2020 23:28:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C58420897;
+        Mon,  8 Jun 2020 23:28:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658916;
-        bh=4YRfAq+rtQuqty9LNpNsgrzO7Qs0uRzEQHvkDNNxyrs=;
+        s=default; t=1591658918;
+        bh=eqFjqFU3qXiE3XO3dLPjq9Xs//ztRq5SoN7u/f5nz7w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u3AdsEh6G35CzhK3YAAE0tPW4A3INhcpixjPqHa96CWPQ7S74kl/1rxIlkZmSLd8O
-         t9K7/IGqqp2ToDHdutc4KhCnF3/dd4WLFmBkJMc+8RSs4taxlk6O45652YPsIXfqSd
-         QRXbxbMPZjLSl77agMo60gHlVro/2DaFhEvfePDQ=
+        b=BjfRFuqj3ELI4wLucLnj8Fp310sVKBwFY59REBg1HKlyyqKMIv3rYBsztOJvPgzjN
+         +0dQeTDRw27QKfI6L4FL9utJy8FCZNtnmQI34Hy8371AQfIYIYOQRLwCAD+vNTkumy
+         GeYfb/TIungKJPde9B/tOi2q1GgVwC76KXwGg3Ds=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dave Chinner <david@fromorbit.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 33/37] xfs: gut error handling in xfs_trans_unreserve_and_mod_sb()
-Date:   Mon,  8 Jun 2020 19:27:45 -0400
-Message-Id: <20200608232750.3370747-33-sashal@kernel.org>
+Cc:     Xie XiuQi <xiexiuqi@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 34/37] ixgbe: fix signed-integer-overflow warning
+Date:   Mon,  8 Jun 2020 19:27:46 -0400
+Message-Id: <20200608232750.3370747-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608232750.3370747-1-sashal@kernel.org>
 References: <20200608232750.3370747-1-sashal@kernel.org>
@@ -61,235 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Chinner <david@fromorbit.com>
+From: Xie XiuQi <xiexiuqi@huawei.com>
 
-[ Upstream commit dc3ffbb14060c943469d5e12900db3a60bc3fa64 ]
+[ Upstream commit 3b70683fc4d68f5d915d9dc7e5ba72c732c7315c ]
 
-xfs: gut error handling in xfs_trans_unreserve_and_mod_sb()
+ubsan report this warning, fix it by adding a unsigned suffix.
 
-From: Dave Chinner <dchinner@redhat.com>
+UBSAN: signed-integer-overflow in
+drivers/net/ethernet/intel/ixgbe/ixgbe_common.c:2246:26
+65535 * 65537 cannot be represented in type 'int'
+CPU: 21 PID: 7 Comm: kworker/u256:0 Not tainted 5.7.0-rc3-debug+ #39
+Hardware name: Huawei TaiShan 2280 V2/BC82AMDC, BIOS 2280-V2 03/27/2020
+Workqueue: ixgbe ixgbe_service_task [ixgbe]
+Call trace:
+ dump_backtrace+0x0/0x3f0
+ show_stack+0x28/0x38
+ dump_stack+0x154/0x1e4
+ ubsan_epilogue+0x18/0x60
+ handle_overflow+0xf8/0x148
+ __ubsan_handle_mul_overflow+0x34/0x48
+ ixgbe_fc_enable_generic+0x4d0/0x590 [ixgbe]
+ ixgbe_service_task+0xc20/0x1f78 [ixgbe]
+ process_one_work+0x8f0/0xf18
+ worker_thread+0x430/0x6d0
+ kthread+0x218/0x238
+ ret_from_fork+0x10/0x18
 
-The error handling in xfs_trans_unreserve_and_mod_sb() is largely
-incorrect - rolling back the changes in the transaction if only one
-counter underruns makes all the other counters incorrect. We still
-allow the change to proceed and committing the transaction, except
-now we have multiple incorrect counters instead of a single
-underflow.
-
-Further, we don't actually report the error to the caller, so this
-is completely silent except on debug kernels that will assert on
-failure before we even get to the rollback code.  Hence this error
-handling is broken, untested, and largely unnecessary complexity.
-
-Just remove it.
-
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Xie XiuQi <xiexiuqi@huawei.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_trans.c | 163 ++++++---------------------------------------
- 1 file changed, 20 insertions(+), 143 deletions(-)
+ drivers/net/ethernet/intel/ixgbe/ixgbe_common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/xfs/xfs_trans.c b/fs/xfs/xfs_trans.c
-index 748b16aff45a..921fd09d019d 100644
---- a/fs/xfs/xfs_trans.c
-+++ b/fs/xfs/xfs_trans.c
-@@ -478,57 +478,9 @@ xfs_trans_apply_sb_deltas(
- 				  sizeof(sbp->sb_frextents) - 1);
- }
- 
--STATIC int
--xfs_sb_mod8(
--	uint8_t			*field,
--	int8_t			delta)
--{
--	int8_t			counter = *field;
--
--	counter += delta;
--	if (counter < 0) {
--		ASSERT(0);
--		return -EINVAL;
--	}
--	*field = counter;
--	return 0;
--}
--
--STATIC int
--xfs_sb_mod32(
--	uint32_t		*field,
--	int32_t			delta)
--{
--	int32_t			counter = *field;
--
--	counter += delta;
--	if (counter < 0) {
--		ASSERT(0);
--		return -EINVAL;
--	}
--	*field = counter;
--	return 0;
--}
--
--STATIC int
--xfs_sb_mod64(
--	uint64_t		*field,
--	int64_t			delta)
--{
--	int64_t			counter = *field;
--
--	counter += delta;
--	if (counter < 0) {
--		ASSERT(0);
--		return -EINVAL;
--	}
--	*field = counter;
--	return 0;
--}
--
- /*
-- * xfs_trans_unreserve_and_mod_sb() is called to release unused reservations
-- * and apply superblock counter changes to the in-core superblock.  The
-+ * xfs_trans_unreserve_and_mod_sb() is called to release unused reservations and
-+ * apply superblock counter changes to the in-core superblock.  The
-  * t_res_fdblocks_delta and t_res_frextents_delta fields are explicitly NOT
-  * applied to the in-core superblock.  The idea is that that has already been
-  * done.
-@@ -573,20 +525,17 @@ xfs_trans_unreserve_and_mod_sb(
- 	/* apply the per-cpu counters */
- 	if (blkdelta) {
- 		error = xfs_mod_fdblocks(mp, blkdelta, rsvd);
--		if (error)
--			goto out;
-+		ASSERT(!error);
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c
+index cd2afe92f1da..e10808b3d118 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c
+@@ -2185,7 +2185,7 @@ s32 ixgbe_fc_enable_generic(struct ixgbe_hw *hw)
  	}
  
- 	if (idelta) {
- 		error = xfs_mod_icount(mp, idelta);
--		if (error)
--			goto out_undo_fdblocks;
-+		ASSERT(!error);
- 	}
- 
- 	if (ifreedelta) {
- 		error = xfs_mod_ifree(mp, ifreedelta);
--		if (error)
--			goto out_undo_icount;
-+		ASSERT(!error);
- 	}
- 
- 	if (rtxdelta == 0 && !(tp->t_flags & XFS_TRANS_SB_DIRTY))
-@@ -594,95 +543,23 @@ xfs_trans_unreserve_and_mod_sb(
- 
- 	/* apply remaining deltas */
- 	spin_lock(&mp->m_sb_lock);
--	if (rtxdelta) {
--		error = xfs_sb_mod64(&mp->m_sb.sb_frextents, rtxdelta);
--		if (error)
--			goto out_undo_ifree;
--	}
--
--	if (tp->t_dblocks_delta != 0) {
--		error = xfs_sb_mod64(&mp->m_sb.sb_dblocks, tp->t_dblocks_delta);
--		if (error)
--			goto out_undo_frextents;
--	}
--	if (tp->t_agcount_delta != 0) {
--		error = xfs_sb_mod32(&mp->m_sb.sb_agcount, tp->t_agcount_delta);
--		if (error)
--			goto out_undo_dblocks;
--	}
--	if (tp->t_imaxpct_delta != 0) {
--		error = xfs_sb_mod8(&mp->m_sb.sb_imax_pct, tp->t_imaxpct_delta);
--		if (error)
--			goto out_undo_agcount;
--	}
--	if (tp->t_rextsize_delta != 0) {
--		error = xfs_sb_mod32(&mp->m_sb.sb_rextsize,
--				     tp->t_rextsize_delta);
--		if (error)
--			goto out_undo_imaxpct;
--	}
--	if (tp->t_rbmblocks_delta != 0) {
--		error = xfs_sb_mod32(&mp->m_sb.sb_rbmblocks,
--				     tp->t_rbmblocks_delta);
--		if (error)
--			goto out_undo_rextsize;
--	}
--	if (tp->t_rblocks_delta != 0) {
--		error = xfs_sb_mod64(&mp->m_sb.sb_rblocks, tp->t_rblocks_delta);
--		if (error)
--			goto out_undo_rbmblocks;
--	}
--	if (tp->t_rextents_delta != 0) {
--		error = xfs_sb_mod64(&mp->m_sb.sb_rextents,
--				     tp->t_rextents_delta);
--		if (error)
--			goto out_undo_rblocks;
--	}
--	if (tp->t_rextslog_delta != 0) {
--		error = xfs_sb_mod8(&mp->m_sb.sb_rextslog,
--				     tp->t_rextslog_delta);
--		if (error)
--			goto out_undo_rextents;
--	}
-+	mp->m_sb.sb_frextents += rtxdelta;
-+	mp->m_sb.sb_dblocks += tp->t_dblocks_delta;
-+	mp->m_sb.sb_agcount += tp->t_agcount_delta;
-+	mp->m_sb.sb_imax_pct += tp->t_imaxpct_delta;
-+	mp->m_sb.sb_rextsize += tp->t_rextsize_delta;
-+	mp->m_sb.sb_rbmblocks += tp->t_rbmblocks_delta;
-+	mp->m_sb.sb_rblocks += tp->t_rblocks_delta;
-+	mp->m_sb.sb_rextents += tp->t_rextents_delta;
-+	mp->m_sb.sb_rextslog += tp->t_rextslog_delta;
- 	spin_unlock(&mp->m_sb_lock);
--	return;
- 
--out_undo_rextents:
--	if (tp->t_rextents_delta)
--		xfs_sb_mod64(&mp->m_sb.sb_rextents, -tp->t_rextents_delta);
--out_undo_rblocks:
--	if (tp->t_rblocks_delta)
--		xfs_sb_mod64(&mp->m_sb.sb_rblocks, -tp->t_rblocks_delta);
--out_undo_rbmblocks:
--	if (tp->t_rbmblocks_delta)
--		xfs_sb_mod32(&mp->m_sb.sb_rbmblocks, -tp->t_rbmblocks_delta);
--out_undo_rextsize:
--	if (tp->t_rextsize_delta)
--		xfs_sb_mod32(&mp->m_sb.sb_rextsize, -tp->t_rextsize_delta);
--out_undo_imaxpct:
--	if (tp->t_rextsize_delta)
--		xfs_sb_mod8(&mp->m_sb.sb_imax_pct, -tp->t_imaxpct_delta);
--out_undo_agcount:
--	if (tp->t_agcount_delta)
--		xfs_sb_mod32(&mp->m_sb.sb_agcount, -tp->t_agcount_delta);
--out_undo_dblocks:
--	if (tp->t_dblocks_delta)
--		xfs_sb_mod64(&mp->m_sb.sb_dblocks, -tp->t_dblocks_delta);
--out_undo_frextents:
--	if (rtxdelta)
--		xfs_sb_mod64(&mp->m_sb.sb_frextents, -rtxdelta);
--out_undo_ifree:
--	spin_unlock(&mp->m_sb_lock);
--	if (ifreedelta)
--		xfs_mod_ifree(mp, -ifreedelta);
--out_undo_icount:
--	if (idelta)
--		xfs_mod_icount(mp, -idelta);
--out_undo_fdblocks:
--	if (blkdelta)
--		xfs_mod_fdblocks(mp, -blkdelta, rsvd);
--out:
--	ASSERT(error == 0);
-+	/*
-+	 * Debug checks outside of the spinlock so they don't lock up the
-+	 * machine if they fail.
-+	 */
-+	ASSERT(mp->m_sb.sb_imax_pct >= 0);
-+	ASSERT(mp->m_sb.sb_rextslog >= 0);
- 	return;
- }
+ 	/* Configure pause time (2 TCs per register) */
+-	reg = hw->fc.pause_time * 0x00010001;
++	reg = hw->fc.pause_time * 0x00010001U;
+ 	for (i = 0; i < (MAX_TRAFFIC_CLASS / 2); i++)
+ 		IXGBE_WRITE_REG(hw, IXGBE_FCTTV(i), reg);
  
 -- 
 2.25.1
