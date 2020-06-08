@@ -2,148 +2,133 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 611B6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A2D7C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47E29206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:41:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4684820774
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:41:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591634517;
+	bh=9+wSpwKeMW/wdGvPemQJqQQABIsLkQPW2K8a1nmcHm0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=uz+mpO/DSYrFQsHk+GDRFlNRuurzbp6rJRNpgBnG9IrGl4LsQheNCVfi6lOmUyGwk
+	 eFQ8o1yocT23K9A8tC6aIX9XYWxMsjSDozF6jKQkulYnuWJ/PKzFWtMnNdS35s7el0
+	 CbRXtXTvlA5wy5LJrJ4g9vvGzzZ4rlPMIJIE0mQc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387407AbgFHQln (ORCPT
+        id S2387422AbgFHQl4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 12:41:43 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:14124 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730571AbgFHQln (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 12:41:43 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 058GXntX134362;
-        Mon, 8 Jun 2020 12:41:21 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31g7p4cdmx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 08 Jun 2020 12:41:21 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 058GYor0144497;
-        Mon, 8 Jun 2020 12:41:20 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31g7p4cdkw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 08 Jun 2020 12:41:20 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 058GeJ9p010781;
-        Mon, 8 Jun 2020 16:41:17 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma03fra.de.ibm.com with ESMTP id 31g2s81rea-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 08 Jun 2020 16:41:17 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 058GfFq226083364
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 8 Jun 2020 16:41:15 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E521E5204E;
-        Mon,  8 Jun 2020 16:41:14 +0000 (GMT)
-Received: from oc3871087118.ibm.com (unknown [9.145.56.93])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 0A02F52050;
-        Mon,  8 Jun 2020 16:41:14 +0000 (GMT)
-From:   Alexander Gordeev <agordeev@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        stable@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-        Yury Norov <yury.norov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Amritha Nambiar <amritha.nambiar@intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        "Tobin C . Harding" <tobin@kernel.org>,
-        Vineet Gupta <vineet.gupta1@synopsys.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Willem de Bruijn <willemb@google.com>
-Subject: [PATCH v2] lib: fix bitmap_parse() on 64-bit big endian archs
-Date:   Mon,  8 Jun 2020 18:41:11 +0200
-Message-Id: <1591634471-17647-1-git-send-email-agordeev@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-08_14:2020-06-08,2020-06-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1011
- malwarescore=0 spamscore=0 bulkscore=0 priorityscore=1501 adultscore=0
- mlxlogscore=999 impostorscore=0 suspectscore=1 cotscore=-2147483648
- lowpriorityscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006080117
+        Mon, 8 Jun 2020 12:41:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46908 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730571AbgFHQl4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 12:41:56 -0400
+Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94E0D206A4;
+        Mon,  8 Jun 2020 16:41:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591634515;
+        bh=9+wSpwKeMW/wdGvPemQJqQQABIsLkQPW2K8a1nmcHm0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=vcbz31UJVkE9u265rOeW3ymi3j4Td/cEnamY/yY9ERI7XDF6hwJNBbYLuVspo03w5
+         +nCy5Z6r28j/PRn+D0ikGuvRbXbN8X1Cx89vEnnUVpdAtfUfJ5pVag/p6J2pakmzHc
+         k/V+AhP42zscGFN8csMJ506cA5x/mPmtM2EEkY74=
+Date:   Mon, 8 Jun 2020 11:41:48 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Zhangfei Gao <zhangfei.gao@linaro.org>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        jean-philippe <jean-philippe@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 0/2] Introduce PCI_FIXUP_IOMMU
+Message-ID: <20200608164148.GA1394249@bjorn-Precision-5520>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <be91b0f0-c685-789d-6868-1c8ebd62b770@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 2d6261583be0 ("lib: rework bitmap_parse()") does not
-take into account order of halfwords on 64-bit big endian
-architectures. As result (at least) Receive Packet Steering,
-IRQ affinity masks and runtime kernel test "test_bitmap" get
-broken on s390.
+On Mon, Jun 08, 2020 at 10:54:15AM +0800, Zhangfei Gao wrote:
+> On 2020/6/6 上午7:19, Bjorn Helgaas wrote:
+> > On Thu, Jun 04, 2020 at 09:33:07PM +0800, Zhangfei Gao wrote:
+> > > On 2020/6/2 上午1:41, Bjorn Helgaas wrote:
+> > > > On Thu, May 28, 2020 at 09:33:44AM +0200, Joerg Roedel wrote:
+> > > > > On Wed, May 27, 2020 at 01:18:42PM -0500, Bjorn Helgaas wrote:
+> > > > > > Is this slowdown significant?  We already iterate over every device
+> > > > > > when applying PCI_FIXUP_FINAL quirks, so if we used the existing
+> > > > > > PCI_FIXUP_FINAL, we wouldn't be adding a new loop.  We would only be
+> > > > > > adding two more iterations to the loop in pci_do_fixups() that tries
+> > > > > > to match quirks against the current device.  I doubt that would be a
+> > > > > > measurable slowdown.
+> > > > > I don't know how significant it is, but I remember people complaining
+> > > > > about adding new PCI quirks because it takes too long for them to run
+> > > > > them all. That was in the discussion about the quirk disabling ATS on
+> > > > > AMD Stoney systems.
+> > > > > 
+> > > > > So it probably depends on how many PCI devices are in the system whether
+> > > > > it causes any measureable slowdown.
+> > > > I found this [1] from Paul Menzel, which was a slowdown caused by
+> > > > quirk_usb_early_handoff().  I think the real problem is individual
+> > > > quirks that take a long time.
+> > > > 
+> > > > The PCI_FIXUP_IOMMU things we're talking about should be fast, and of
+> > > > course, they're only run for matching devices anyway.  So I'd rather
+> > > > keep them as PCI_FIXUP_FINAL than add a whole new phase.
+> > > > 
+> > > Thanks Bjorn for taking time for this.
+> > > If so, it would be much simpler.
+> > > 
+> > > +++ b/drivers/iommu/iommu.c
+> > > @@ -2418,6 +2418,10 @@ int iommu_fwspec_init(struct device *dev, struct
+> > > fwnode_handle *iommu_fwnode,
+> > >          fwspec->iommu_fwnode = iommu_fwnode;
+> > >          fwspec->ops = ops;
+> > >          dev_iommu_fwspec_set(dev, fwspec);
+> > > +
+> > > +       if (dev_is_pci(dev))
+> > > +               pci_fixup_device(pci_fixup_final, to_pci_dev(dev));
+> > > +
+> > > 
+> > > Then pci_fixup_final will be called twice, the first in pci_bus_add_device.
+> > > Here in iommu_fwspec_init is the second time, specifically for iommu_fwspec.
+> > > Will send this when 5.8-rc1 is open.
+> >
+> > Wait, this whole fixup approach seems wrong to me.  No matter how you
+> > do the fixup, it's still a fixup, which means it requires ongoing
+> > maintenance.  Surely we don't want to have to add the Vendor/Device ID
+> > for every new AMBA device that comes along, do we?
+> > 
+> Here the fake pci device has standard PCI cfg space, but physical
+> implementation is base on AMBA
+> They can provide pasid feature.
+> However,
+> 1, does not support tlp since they are not real pci devices.
+> 2. does not support pri, instead support stall (provided by smmu)
+> And stall is not a pci feature, so it is not described in struct pci_dev,
+> but in struct iommu_fwspec.
+> So we use this fixup to tell pci system that the devices can support stall,
+> and hereby support pasid.
 
-Fixes: 2d6261583be0 ("lib: rework bitmap_parse()")
-Cc: stable@vger.kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Yury Norov <yury.norov@gmail.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Amritha Nambiar <amritha.nambiar@intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Miklos Szeredi <mszeredi@redhat.com>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Steffen Klassert <steffen.klassert@secunet.com>
-Cc: "Tobin C . Harding" <tobin@kernel.org>
-Cc: Vineet Gupta <vineet.gupta1@synopsys.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Willem de Bruijn <willemb@google.com>
-Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
----
- lib/bitmap.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/lib/bitmap.c b/lib/bitmap.c
-index 89260aa342d6..80d26b183248 100644
---- a/lib/bitmap.c
-+++ b/lib/bitmap.c
-@@ -739,6 +739,7 @@ int bitmap_parse(const char *start, unsigned int buflen,
- 	const char *end = strnchrnul(start, buflen, '\n') - 1;
- 	int chunks = BITS_TO_U32(nmaskbits);
- 	u32 *bitmap = (u32 *)maskp;
-+	int chunk = 0;
- 	int unset_bit;
- 
- 	while (1) {
-@@ -749,9 +750,14 @@ int bitmap_parse(const char *start, unsigned int buflen,
- 		if (!chunks--)
- 			return -EOVERFLOW;
- 
--		end = bitmap_get_x32_reverse(start, end, bitmap++);
-+#if defined(CONFIG_64BIT) && defined(__BIG_ENDIAN)
-+		end = bitmap_get_x32_reverse(start, end, &bitmap[chunk ^ 1]);
-+#else
-+		end = bitmap_get_x32_reverse(start, end, &bitmap[chunk]);
-+#endif
- 		if (IS_ERR(end))
- 			return PTR_ERR(end);
-+		chunk++;
- 	}
- 
- 	unset_bit = (BITS_TO_U32(nmaskbits) - chunks) * 32;
--- 
-2.23.0
-
+This did not answer my question.  Are you proposing that we update a
+quirk every time a new AMBA device is released?  I don't think that
+would be a good model.
