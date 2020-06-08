@@ -2,226 +2,201 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43356C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 03:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF85C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 03:34:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F88B2076A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 03:34:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 700E820774
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 03:34:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SyfrtGrw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=adit-jv.com header.i=@adit-jv.com header.b="4Luth47s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728962AbgFHDeE (ORCPT
+        id S1728984AbgFHDeb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 23:34:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54040 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728065AbgFHDeD (ORCPT
+        Sun, 7 Jun 2020 23:34:31 -0400
+Received: from ma-dnext03.denso.co.jp ([133.192.181.78]:54988 "EHLO
+        ma-dnext03.denso.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728065AbgFHDea (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 23:34:03 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E596C08C5C3
-        for <linux-kernel@vger.kernel.org>; Sun,  7 Jun 2020 20:34:03 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id l27so16637474ejc.1
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Jun 2020 20:34:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=6XfW1mKwb87eK226dwnXsOAnQgHyjQ9PE5+w0JxGQpA=;
-        b=SyfrtGrwB7bcudUCp6NbYRGFd9aZTNDDpreoldBoCMmCMOFMRKUVTodPccBCLiUX1l
-         DT6GU/fqWSPQusG8Wz/tpfit1blUICkxFFAcjjX2kAhKEcYsCu23HQaiCUuGjxTOVU1q
-         GYMyPDcNW26y/PvznJajjiiQ0vgxjZzrlFdcaNeYqpr0M2obacp5ctVOXi+n/++JicYi
-         qw3xd444rfLPf/6EW7cBPUB65f+KJTWPI2BdgjVUEYX3zUvU9+/2I3DtWwgde3YyvdZF
-         NGJf4YhdvDgOZo87AUn0dI4RJOWITBWOkqnrLRpZeB9nwFf0HZ8+M0VbvBjhB1P3TyJn
-         q0mQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=6XfW1mKwb87eK226dwnXsOAnQgHyjQ9PE5+w0JxGQpA=;
-        b=MNHKwbleBudzuYN2JTuqvpU2sT3qHFmjHNl8C5AHCgyDnx96AWdZ8rmjRoAfd+4NMz
-         sp4BAIicvRMVG6nYCTO6bdWJm0O18lKEvZJ7VU0fA0bPpOinfasbP/KM+d5NY2nJvH8Z
-         eqkwUMLehrCCq2DhagfmpAT5fid+a1AUa+l0lD3oFEdaJ6LAeUl2DTSNF4zLZ5CnbEZ9
-         UmsVCueAHpLT8WJ2ylulDgP6FqP61gb4f0jfisTjkuHYNV/oUPMQ17qeDz+W97nPojk5
-         icCWYoT3Ms83AQTnltjSN6yKdVzDB0iKBqemk0JrF7qp0BE2K8G7y6JmE9l4TTyytUzv
-         g13w==
-X-Gm-Message-State: AOAM532oDb54U3MlKlJajeEHacUCouwMf/YzyVa8v4zJ7vt6dDqmocVp
-        qeU51qfttux7ikNP2WuCHlpTl/JuM7ZDg8gr2t0=
-X-Google-Smtp-Source: ABdhPJwHaUyCkXTiuvSsDZ79w04+Gy5pyHGgzmC5p1mDbrhKXCrP+dqa5JXA0hjHPgANBJE/C1JgmHGwIwlYWohrnK0=
-X-Received: by 2002:a17:906:2507:: with SMTP id i7mr11425190ejb.419.1591587242023;
- Sun, 07 Jun 2020 20:34:02 -0700 (PDT)
+        Sun, 7 Jun 2020 23:34:30 -0400
+X-Greylist: delayed 555 seconds by postgrey-1.27 at vger.kernel.org; Sun, 07 Jun 2020 23:34:29 EDT
+Received: from grdma01h.denso.co.jp (unknown [133.192.24.24])
+        by ma-dnext03.denso.co.jp (Postfix) with ESMTP id D5B7E5D011C;
+        Mon,  8 Jun 2020 12:25:12 +0900 (JST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=adit-jv.com;
+        s=jpadit-jvmail2011; t=1591586712;
+        bh=holotR25MoQcrX0pBCrpZj4TxKa2LtqzjI7kvv+9c3A=;
+        h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+         MIME-Version:Content-Type;
+        b=4Luth47sSIPifry+JR5PvbuLwOPeDbnJIupuG0UKhqGOi7og2FsQG6DVbrYyxyMY3
+         KHz5SR3swOo06IuYLb5YDm7qv8ikaINN4poiD0Zz7Gn0EbfBZ+wC95tq1XtE65ZNBe
+         wId2eDwv2MWI9SOM/NUSKAvZ9oA9mc7MWysVNkC8TjQ+mRHuIYeNnIzejhpY8VE01A
+         lMZ8SnoCEEwmqyFs+ZSole+Fs5drbUh7TE2pL9gfBUOYuh4N9flTKpl2/jGbSrRryo
+         xDN76+ZQn3KWGShatk12K4Ke5Y8ei0NzO0TnN60mCs35dG3AibDTp6t+rrWdqwap9L
+         iT2aQPqkSv57Q==
+Received: by grdma01h.denso.co.jp (Postfix, from userid 0)
+        id CC4D6C04E02; Mon,  8 Jun 2020 12:25:12 +0900 (JST)
+Received: from smtp0.denso.co.jp [133.192.24.87] 
+         by grdma01h. with ESMTP id NAA09474;
+         Mon, 8 Jun 2020 12:25:12 +0900
+Received: from ky0exch01.adit-jv.com ([10.71.113.8])
+        by smtp00.denso.co.jp (MOS 4.4.7-GA)
+        with ESMTP id FZQ69071;
+        Mon, 8 Jun 2020 12:25:12 +0900
+Received: from jp-u0004.adit-jv.com (10.71.112.120) by ky0exch01.adit-jv.com
+ (10.71.113.8) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 8 Jun 2020
+ 12:25:11 +0900
+From:   Suresh Udipi <sudipi@jp.adit-jv.com>
+To:     <mrodin@de.adit-jv.com>
+CC:     <efriedrich@de.adit-jv.com>, <erosca@de.adit-jv.com>,
+        <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>, <mchehab@kernel.org>,
+        <michael@rodin.online>, <niklas.soderlund@ragnatech.se>,
+        <sudipi@jp.adit-jv.com>, <securitycheck@denso.co.jp>,
+        Kazuyoshi Akiyama <akiyama@nds-osk.co.jp>
+Subject: [PATCH v6] media: rcar-csi2: Correct the selection of hsfreqrange
+Date:   Mon, 8 Jun 2020 12:25:03 +0900
+Message-ID: <1591586703-32246-1-git-send-email-sudipi@jp.adit-jv.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <20200605184426.GA5206@vmlxhi-121.adit-jv.com>
+References: <20200605184426.GA5206@vmlxhi-121.adit-jv.com>
 MIME-Version: 1.0
-From:   Dave Airlie <airlied@gmail.com>
-Date:   Mon, 8 Jun 2020 13:33:51 +1000
-Message-ID: <CAPM=9two=B8nCSP9+9x3oGM9HUm0dDk3aY=ePUuVeh6530v94Q@mail.gmail.com>
-Subject: [git pull] drm msm next for 5.8-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Rob Clark <robdclark@gmail.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.71.112.120]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+hsfreqrange should be chosen based on the calculated mbps which
+is closer to the default bit rate  and within the range as per
+table[1]. But current calculation always selects first value which
+is greater than or equal to the calculated mbps which may lead
+to chosing a wrong range in some cases.
 
-This should be the final feature pull for drm for rc1. This tree has
-been in next for a couple of weeks, but Rob missed an arm32 build
-issue, so I was awaiting the tree with a patch reverted. The tree was
-also based on an 5.7-rc5 tree so I didn't want to futz around with
-backmerging just for this, so I'm sending it from a topic branch based
-on v5.7.
+For example for 360 mbps for H3/M3N
+Existing logic selects
+Calculated value 360Mbps : Default 400Mbps Range [368.125 -433.125 mbps]
 
-Dave.
+This hsfreqrange is out of range.
 
-drm-next-msm-5.8-2020-06-08:
-drm msm next for 5.8-rc1
+The logic is changed to get the default value which is closest to the
+calculated value [1]
 
-* new gpu support: a405, a640, a650
-* dpu: color processing support
-* mdp5: support for msm8x36 (the thing with a405)
-* some prep work for per-context pagetables (ie the part that
-  does not depend on in-flight iommu patches)
-* last but not least, UABI update for submit ioctl to support
-  syncobj (from Bas)
-The following changes since commit 3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162:
+Calculated value 360Mbps : Default 350Mbps  Range [320.625 -380.625 mpbs]
 
-  Linux 5.7 (2020-05-31 16:49:15 -0700)
+[1] specs r19uh0105ej0200-r-car-3rd-generation.pdf [Table 25.9]
 
-are available in the Git repository at:
+Please note that According to Renesas in Table 25.9 the range for
+220 default value is corrected as below
 
-  git://anongit.freedesktop.org/drm/drm tags/drm-next-msm-5.8-2020-06-08
+ |Range (Mbps)     |  Default  Bit rate (Mbps) |
+ -----------------------------------------------
+ | 197.125-244.125 |     220                   |
+ -----------------------------------------------
 
-for you to fetch changes up to efe792f39ddbc6396b9142afff97855ee357b492:
+Fixes: 769afd212b16 ("media: rcar-csi2: add Renesas R-Car MIPI CSI-2 receiver driver")
 
-  Merge https://gitlab.freedesktop.org/drm/msm into drm-next-msm-5.8
-(2020-06-08 13:22:57 +1000)
+Signed-off-by: Suresh Udipi <sudipi@jp.adit-jv.com>
+Signed-off-by: Kazuyoshi Akiyama <akiyama@nds-osk.co.jp>
+Signed-off-by: Michael Rodin <mrodin@de.adit-jv.com>
+---
+ Changes in v2:
+  - Added the boundary check for the maximum bit rate.
 
-----------------------------------------------------------------
-drm msm next for 5.8-rc1
+  - Simplified the logic by remmoving range check
+    as only the closest default value covers most
+    of the use cases.
 
-* new gpu support: a405, a640, a650
-* dpu: color processing support
-* mdp5: support for msm8x36 (the thing with a405)
-* some prep work for per-context pagetables (ie the part that
-  does not depend on in-flight iommu patches)
-* last but not least, UABI update for submit ioctl to support
-  syncobj (from Bas)
+  - Aligning the commit message based on the above change
 
-----------------------------------------------------------------
-Bas Nieuwenhuizen (1):
-      drm/msm: Add syncobj support.
 
-Bjorn Andersson (1):
-      drm/msm: Fix undefined "rd_full" link error
+ Changes in v3:
+    - Added max member from struct rcsi2_mbps_reg.
+      mbps varialbe cannot be removed from rcsi2_mbps_reg,
+      since this structure is reused for
+      phtw_mbps_h3_v3h_m3n/phtw_mbps_v3m_e3 where mbps is
+      used.
 
-Christophe JAILLET (2):
-      drm/msm/a6xx: Fix a typo in an error message
-      drm/msm: Fix typo
 
-Dave Airlie (1):
-      Merge https://gitlab.freedesktop.org/drm/msm into drm-next-msm-5.8
+   -  Update the walk of the array in rcsi2_set_phypll() so that it finds
+      the first entry where the calculated bit rate is less than the max.
 
-Hongbo Yao (1):
-      drm/msm/dpu: Fix compile warnings
+   - Support lower bit rates less than 80Mbps like 48Mbps
+     (Raspberry pi camera 640x480 connected to Kingfisher)
+     can also be supported by selecting the lowest default bit rate 80Mbps
+     as done before this fix
 
-Jonathan Marek (10):
-      drm/msm: add msm_gem_get_and_pin_iova_range
-      drm/msm: add internal MSM_BO_MAP_PRIV flag
-      drm/msm/a6xx: use msm_gem for GMU memory objects
-      drm/msm/a6xx: add A640/A650 to gpulist
-      drm/msm/a6xx: HFI v2 for A640 and A650
-      drm/msm/a6xx: A640/A650 GMU firmware path
-      drm/msm/a6xx: update pdc/rscc GMU registers for A640/A650
-      drm/msm/a6xx: enable GMU log
-      drm/msm/a6xx: update a6xx_hw_init for A640 and A650
-      drm/msm/a6xx: skip HFI set freq if GMU is powered down
+   - Alignement of the commit message based on above changes.
 
-Jordan Crouse (4):
-      drm/msm: Check for powered down HW in the devfreq callbacks
-      drm/msm: Attach the IOMMU device during initialization
-      drm/msm: Refactor address space initialization
-      drm/msm: Update the MMU helper function APIs
+ Changes in v4:
+  -  Remove unncessary braces.
 
-Kalyan Thota (3):
-      drm/msm/dpu: add support for color processing blocks in dpu driver
-      drm/msm/dpu: add support for pcc color block in dpu driver
-      drm/msm/dpu: add support for clk and bw scaling for display
+ Changes in v5:
+   - Removed mbps variable in rcsi2_mbps_reg and aligned all 
+     tables accordingly
+	 
+ Changes in v6
+   - Renesas correct the range of default value 220Mbps. Now
+     if we select the nearest value to the default value all
+	 the values are in range. So reverting back to original patch
+	 
+   - Added warning for values less than Minimum 80Mbps
 
-Konrad Dybcio (1):
-      drm/msm/mdp5: Add MDP5 configuration for MSM8x36.
 
-Krishna Manikandan (1):
-      drm/msm/dpu: update bandwidth threshold check
+ drivers/media/platform/rcar-vin/rcar-csi2.c | 23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
 
-Rob Clark (1):
-      Revert "drm/msm/dpu: add support for clk and bw scaling for display"
+diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c b/drivers/media/platform/rcar-vin/rcar-csi2.c
+index 151e6a9..8c502b7 100644
+--- a/drivers/media/platform/rcar-vin/rcar-csi2.c
++++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
+@@ -199,6 +199,8 @@ static const struct rcsi2_mbps_reg phtw_mbps_v3m_e3[] = {
+ /* PHY Frequency Control */
+ #define PHYPLL_REG			0x68
+ #define PHYPLL_HSFREQRANGE(n)		((n) << 16)
++#define PHYPLL_HSFREQRANGE_MAX		1500
++#define PHYPLL_HSFREQRANGE_MIN		  80
+ 
+ static const struct rcsi2_mbps_reg hsfreqrange_h3_v3h_m3n[] = {
+ 	{ .mbps =   80, .reg = 0x00 },
+@@ -431,16 +433,27 @@ static int rcsi2_wait_phy_start(struct rcar_csi2 *priv)
+ static int rcsi2_set_phypll(struct rcar_csi2 *priv, unsigned int mbps)
+ {
+ 	const struct rcsi2_mbps_reg *hsfreq;
++	const struct rcsi2_mbps_reg *hsfreq_prev = NULL;
+ 
+-	for (hsfreq = priv->info->hsfreqrange; hsfreq->mbps != 0; hsfreq++)
+-		if (hsfreq->mbps >= mbps)
+-			break;
+-
+-	if (!hsfreq->mbps) {
++	if (mbps > PHYPLL_HSFREQRANGE_MAX) {
+ 		dev_err(priv->dev, "Unsupported PHY speed (%u Mbps)", mbps);
+ 		return -ERANGE;
+ 	}
+ 
++	if (mbps < PHYPLL_HSFREQRANGE_MIN)
++		dev_warn(priv->dev, "PHY speed (%u Mbps) less \
++			 than Min 80Mbps\n", mbps);
++
++	for (hsfreq = priv->info->hsfreqrange; hsfreq->mbps != 0; hsfreq++) {
++		if (hsfreq->mbps >= mbps)
++			break;
++		hsfreq_prev = hsfreq;
++	}
++
++	if (hsfreq_prev &&
++	    ((mbps - hsfreq_prev->mbps) <= (hsfreq->mbps - mbps)))
++		hsfreq = hsfreq_prev;
++
+ 	rcsi2_write(priv, PHYPLL_REG, PHYPLL_HSFREQRANGE(hsfreq->reg));
+ 
+ 	return 0;
+-- 
+2.7.4
 
-Roy Spliet (1):
-      drm/msm/mdp5: Fix mdp5_init error path for failed mdp5_kms allocation
-
-Shawn Guo (2):
-      drm/msm/a4xx: add adreno a405 support
-      drm/msm/a4xx: add a405_registers for a405 device
-
-kbuild test robot (2):
-      drm/msm/a6xx: a6xx_hfi_send_start() can be static
-      drm/msm/dpu: dpu_setup_dspp_pcc() can be static
-
- drivers/gpu/drm/msm/Makefile                   |   1 +
- drivers/gpu/drm/msm/adreno/a2xx_gpu.c          |  16 +
- drivers/gpu/drm/msm/adreno/a3xx_gpu.c          |   1 +
- drivers/gpu/drm/msm/adreno/a4xx_gpu.c          |  83 ++++-
- drivers/gpu/drm/msm/adreno/a5xx_gpu.c          |   7 +
- drivers/gpu/drm/msm/adreno/a6xx.xml.h          |  14 +
- drivers/gpu/drm/msm/adreno/a6xx_gmu.c          | 418 +++++++++++++++++++------
- drivers/gpu/drm/msm/adreno/a6xx_gmu.h          |  37 ++-
- drivers/gpu/drm/msm/adreno/a6xx_gmu.xml.h      |  48 +--
- drivers/gpu/drm/msm/adreno/a6xx_gpu.c          |  70 ++++-
- drivers/gpu/drm/msm/adreno/a6xx_hfi.c          | 123 +++++++-
- drivers/gpu/drm/msm/adreno/a6xx_hfi.h          |  50 ++-
- drivers/gpu/drm/msm/adreno/adreno_device.c     |  35 +++
- drivers/gpu/drm/msm/adreno/adreno_gpu.c        |  27 +-
- drivers/gpu/drm/msm/adreno/adreno_gpu.h        |  23 ++
- drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c  |  23 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c       |  95 ++++--
- drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h       |   2 +
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c    |  12 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c |  48 ++-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h |  39 +++
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c     |  26 ++
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.h     |   3 +
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dspp.c    | 129 ++++++++
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dspp.h    | 100 ++++++
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h    |   2 +
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c        |  18 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h        |   1 +
- drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c         |  58 +++-
- drivers/gpu/drm/msm/disp/dpu1/dpu_rm.h         |   2 +
- drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c       |  18 +-
- drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c       |  80 ++++-
- drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c      |   4 +-
- drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c       |  21 +-
- drivers/gpu/drm/msm/msm_drv.c                  |   6 +-
- drivers/gpu/drm/msm/msm_drv.h                  |  15 +-
- drivers/gpu/drm/msm/msm_gem.c                  |  31 +-
- drivers/gpu/drm/msm/msm_gem.h                  |   1 +
- drivers/gpu/drm/msm/msm_gem_submit.c           | 232 +++++++++++++-
- drivers/gpu/drm/msm/msm_gem_vma.c              |  42 +--
- drivers/gpu/drm/msm/msm_gpu.c                  |  49 +--
- drivers/gpu/drm/msm/msm_gpu.h                  |   4 +-
- drivers/gpu/drm/msm/msm_gpummu.c               |  10 +-
- drivers/gpu/drm/msm/msm_iommu.c                |  22 +-
- drivers/gpu/drm/msm/msm_mmu.h                  |   5 +-
- drivers/gpu/drm/msm/msm_rd.c                   |   4 +-
- include/uapi/drm/msm_drm.h                     |  24 +-
- 47 files changed, 1697 insertions(+), 382 deletions(-)
- create mode 100644 drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dspp.c
- create mode 100644 drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dspp.h
