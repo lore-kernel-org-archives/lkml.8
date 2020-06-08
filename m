@@ -4,57 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 445B2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF73C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:52:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1205B204EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:52:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19C1E204EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:52:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660328;
-	bh=Aay7g+6QoqcAa867zA6NxerJV2IzWmFYYUuikQsOEp4=;
+	s=default; t=1591660333;
+	bh=vBwDjxA+q7LJmH4F9nvnnZiKUu3A3Fy9GM7WTml4a98=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rrpyo1/TPdX4tJWDKijiEdbVsd6VsD1L2yPvBbRr+ZM0sByf2jjuWUFzpcWl/Ghfc
-	 BRoeVMGmIRf7k7yRYJBmPxldRESMiQD+nOKddhi0autaATGiGLAuTcGRCeV/8+Wfin
-	 okbf4pcNbZaUaoMGBJepJf/qQqxKn6xux4zzW1Ag=
+	b=V7xurh+7mNIpJyfIMiPnNMV6VRe0/4z2TNfC3YbjkUlRn121ZaA5C07Iz/q47zk0y
+	 8C7FwL6aELOgEGAdf4kbnCi4zbBuvegJILC0DsAY8uo87yZQ5RbKtq9ISDU8M+Ykpy
+	 FE9ApNIL659RPpz9xtDzETWzQnmRW8OIfOjGctUI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731701AbgFHXY4 (ORCPT
+        id S1732244AbgFHXwM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:24:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42458 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:52:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730807AbgFHXTe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:19:34 -0400
+        id S1731698AbgFHXY4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:24:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2ACE821556;
-        Mon,  8 Jun 2020 23:19:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A727421527;
+        Mon,  8 Jun 2020 23:24:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658374;
-        bh=Aay7g+6QoqcAa867zA6NxerJV2IzWmFYYUuikQsOEp4=;
+        s=default; t=1591658696;
+        bh=vBwDjxA+q7LJmH4F9nvnnZiKUu3A3Fy9GM7WTml4a98=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UitV0NYQIiE2TkALyDzAj3bVuMrEoWi1WOmpMHKcVE8iBlpiYkOq9oVtRYioP5FnE
-         xbYBr35bOUfTIyHK7vMSu2F0JFfm7OG8ryeEJKvY1n4+WkVn6pWPYE5fgay4SipCw4
-         mSB94S3H25yKLbZ6gU3m4OlLJoTB+fgWFaqFpELo=
+        b=0wZ1gFAUPHrE7EKgI9sjcfoBQ60DAtppiaHPRGYeh+OGuwpeq6yx8BgDz5Y2Pk1bX
+         4ZCLcZo8hHjuqOaOkQVQWm7cct+FZRUa0aB+VWLnJDQSzpGbQ8mKv4V/aaWnOpDaNx
+         QSj9xoDHkz6h8xvobWa1YdxCdcIKVFqsUlCRrpRQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Koba Ko <koba.ko@canonical.com>,
-        Mario Limonciello <Mario.limonciello@dell.com>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 036/175] platform/x86: dell-laptop: don't register micmute LED if there is no token
-Date:   Mon,  8 Jun 2020 19:16:29 -0400
-Message-Id: <20200608231848.3366970-36-sashal@kernel.org>
+Cc:     Ido Schimmel <idosch@mellanox.com>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 104/106] vxlan: Avoid infinite loop when suppressing NS messages with invalid options
+Date:   Mon,  8 Jun 2020 19:22:36 -0400
+Message-Id: <20200608232238.3368589-104-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
-References: <20200608231848.3366970-1-sashal@kernel.org>
+In-Reply-To: <20200608232238.3368589-1-sashal@kernel.org>
+References: <20200608232238.3368589-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,52 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Koba Ko <koba.ko@canonical.com>
+From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit 257e03a334ccb96e657bf5f6ab3b5693a22c2aa4 ]
+[ Upstream commit 8066e6b449e050675df48e7c4b16c29f00507ff0 ]
 
-On Dell G3-3590, error message is issued during boot up,
-"platform::micmute: Setting an LED's brightness failed (-19)",
-but there's no micmute led on the machine.
+When proxy mode is enabled the vxlan device might reply to Neighbor
+Solicitation (NS) messages on behalf of remote hosts.
 
-Get the related tokens of SMBIOS, GLOBAL_MIC_MUTE_DISABLE/ENABLE.
-If one of two tokens doesn't exist,
-don't call led_classdev_register() for platform::micmute.
-After that, you wouldn't see the platform::micmute in /sys/class/leds/,
-and the error message wouldn't see in dmesg.
+In case the NS message includes the "Source link-layer address" option
+[1], the vxlan device will use the specified address as the link-layer
+destination address in its reply.
 
-Fixes: d00fa46e0a2c6 ("platform/x86: dell-laptop: Add micmute LED trigger support")
-Signed-off-by: Koba Ko <koba.ko@canonical.com>
-Reviewed-by: Mario Limonciello <Mario.limonciello@dell.com>
-Reviewed-by: Pali Rohár <pali@kernel.org>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To avoid an infinite loop, break out of the options parsing loop when
+encountering an option with length zero and disregard the NS message.
+
+This is consistent with the IPv6 ndisc code and RFC 4886 which states
+that "Nodes MUST silently discard an ND packet that contains an option
+with length zero" [2].
+
+[1] https://tools.ietf.org/html/rfc4861#section-4.3
+[2] https://tools.ietf.org/html/rfc4861#section-4.6
+
+Fixes: 4b29dba9c085 ("vxlan: fix nonfunctional neigh_reduce()")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/dell-laptop.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/net/vxlan.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
-index 74e988f839e8..4c1dd1d4e60b 100644
---- a/drivers/platform/x86/dell-laptop.c
-+++ b/drivers/platform/x86/dell-laptop.c
-@@ -2204,10 +2204,13 @@ static int __init dell_init(void)
- 
- 	dell_laptop_register_notifier(&dell_laptop_notifier);
- 
--	micmute_led_cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
--	ret = led_classdev_register(&platform_device->dev, &micmute_led_cdev);
--	if (ret < 0)
--		goto fail_led;
-+	if (dell_smbios_find_token(GLOBAL_MIC_MUTE_DISABLE) &&
-+	    dell_smbios_find_token(GLOBAL_MIC_MUTE_ENABLE)) {
-+		micmute_led_cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
-+		ret = led_classdev_register(&platform_device->dev, &micmute_led_cdev);
-+		if (ret < 0)
-+			goto fail_led;
-+	}
- 
- 	if (acpi_video_get_backlight_type() != acpi_backlight_vendor)
- 		return 0;
+diff --git a/drivers/net/vxlan.c b/drivers/net/vxlan.c
+index 7ee0bad18466..09f0b53b2b77 100644
+--- a/drivers/net/vxlan.c
++++ b/drivers/net/vxlan.c
+@@ -1611,6 +1611,10 @@ static struct sk_buff *vxlan_na_create(struct sk_buff *request,
+ 	ns_olen = request->len - skb_network_offset(request) -
+ 		sizeof(struct ipv6hdr) - sizeof(*ns);
+ 	for (i = 0; i < ns_olen-1; i += (ns->opt[i+1]<<3)) {
++		if (!ns->opt[i + 1]) {
++			kfree_skb(reply);
++			return NULL;
++		}
+ 		if (ns->opt[i] == ND_OPT_SOURCE_LL_ADDR) {
+ 			daddr = ns->opt + i + sizeof(struct nd_opt_hdr);
+ 			break;
 -- 
 2.25.1
 
