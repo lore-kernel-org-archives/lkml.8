@@ -4,57 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C450C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:25:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD9CAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:25:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6574F2078D
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:25:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C97E2068D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:25:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658727;
-	bh=nuRbWw5Kchm3ShfLDintiliZPeou6jAUSjOoxaq8Y2A=;
+	s=default; t=1591658733;
+	bh=DbPi6ubGFiDaGJ0+RYNkMqNi08+FYLBtOLdfRIUJRlc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wx/aXBHB8WdbxARh56bOfw1EDrKxp8udbgCl+4IHXDQ0Ncw54vqBvrKoN2PYKjxbE
-	 MFwa+4Xdu/3VR+fgUvrAJwo9euIFEhFg1GkhTvFs3BHs8frIN+D6kJ53onEWPWicXF
-	 R3tiMUP/czg3YO0zfdrLPxIIaQ11dqgk/I6VS+4c=
+	b=mUePIGSL3QduQrzhOE3Iw4DcLvjxuXHgG0nm+idKI0zAsfMfidfFFPwItyRRgPLrX
+	 6YnaEZKVczWsMyv80y1ZXPH25VeeZka4zENmprKanHNpGReD5HzunZRIkftInzcETv
+	 GLsx1+claEAzrgExYojnY5oAtlUf20as5np3HElg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731146AbgFHXZ0 (ORCPT
+        id S1731816AbgFHXZc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:25:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43988 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:25:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730959AbgFHXUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:20:25 -0400
+        id S1729227AbgFHXUg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:20:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F9042089D;
-        Mon,  8 Jun 2020 23:20:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A090B2074B;
+        Mon,  8 Jun 2020 23:20:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658424;
-        bh=nuRbWw5Kchm3ShfLDintiliZPeou6jAUSjOoxaq8Y2A=;
+        s=default; t=1591658434;
+        bh=DbPi6ubGFiDaGJ0+RYNkMqNi08+FYLBtOLdfRIUJRlc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CDftZJXTZfP1ikd9xCSdQpu0ZlcO1SJ1fsuPDjGBgas9mwk6PPIGAFsMqnPzTd02g
-         LJrh8a+ie2ixaCgbZOuu0JXf7xsl4lqSFALzTNBxKKZ4ymqfmv8JKBq7hpO9qi+L4z
-         qPVg+YedNpqyRH9JRt+MDU445oKqlsYU/0IGPqf0=
+        b=TzTpV7RIf8nI3+hpjKzVRdA85y0gZyxufQvjpnu+mA8PuJLGs3d7yhvF5ryyqJN3j
+         kzCNxiuTIUghsfrYh+V7B/joAQWuZz8Voc023U8b3fAV1pMYxGi48fbwHAOOZq9yXJ
+         /15gMTUT9d2rNSSJXH0JcqPRC+yapNBp9CJxoHa8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.4 070/175] e1000: Distribute switch variables for initialization
-Date:   Mon,  8 Jun 2020 19:17:03 -0400
-Message-Id: <20200608231848.3366970-70-sashal@kernel.org>
+        linux-bluetooth@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 078/175] Bluetooth: btbcm: Add 2 missing models to subver tables
+Date:   Mon,  8 Jun 2020 19:17:11 -0400
+Message-Id: <20200608231848.3366970-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
 References: <20200608231848.3366970-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,62 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit a34c7f5156654ebaf7eaace102938be7ff7036cb ]
+[ Upstream commit c03ee9af4e07112bd3fc688daca9e654f41eca93 ]
 
-Variables declared in a switch statement before any case statements
-cannot be automatically initialized with compiler instrumentation (as
-they are not part of any execution flow). With GCC's proposed automatic
-stack variable initialization feature, this triggers a warning (and they
-don't get initialized). Clang's automatic stack variable initialization
-(via CONFIG_INIT_STACK_ALL=y) doesn't throw a warning, but it also
-doesn't initialize such variables[1]. Note that these warnings (or silent
-skipping) happen before the dead-store elimination optimization phase,
-so even when the automatic initializations are later elided in favor of
-direct initializations, the warnings remain.
+Currently the bcm_uart_subver_ and bcm_usb_subver_table-s lack entries
+for the BCM4324B5 and BCM20703A1 chipsets. This makes the code use just
+"BCM" as prefix for the filename to pass to request-firmware, making it
+harder for users to figure out which firmware they need. This especially
+is problematic with the UART attached BCM4324B5 where this leads to the
+filename being just "BCM.hcd".
 
-To avoid these problems, move such variables into the "case" where
-they're used or lift them up into the main function body.
+Add the 2 missing devices to subver tables. This has been tested on:
 
-drivers/net/ethernet/intel/e1000/e1000_main.c: In function ‘e1000_xmit_frame’:
-drivers/net/ethernet/intel/e1000/e1000_main.c:3143:18: warning: statement will never be executed [-Wswitch-unreachable]
- 3143 |     unsigned int pull_size;
-      |                  ^~~~~~~~~
+1. A Dell XPS15 9550 where this makes btbcm.c try to load
+"BCM20703A1-0a5c-6410.hcd" before it tries to load "BCM-0a5c-6410.hcd".
 
-[1] https://bugs.llvm.org/show_bug.cgi?id=44916
+2. A Thinkpad 8 where this makes btbcm.c try to load
+"BCM4324B5.hcd" before it tries to load "BCM.hcd"
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/e1000/e1000_main.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/bluetooth/btbcm.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/e1000/e1000_main.c b/drivers/net/ethernet/intel/e1000/e1000_main.c
-index 86493fea56e4..f93ed70709c6 100644
---- a/drivers/net/ethernet/intel/e1000/e1000_main.c
-+++ b/drivers/net/ethernet/intel/e1000/e1000_main.c
-@@ -3140,8 +3140,9 @@ static netdev_tx_t e1000_xmit_frame(struct sk_buff *skb,
- 		hdr_len = skb_transport_offset(skb) + tcp_hdrlen(skb);
- 		if (skb->data_len && hdr_len == len) {
- 			switch (hw->mac_type) {
-+			case e1000_82544: {
- 				unsigned int pull_size;
--			case e1000_82544:
-+
- 				/* Make sure we have room to chop off 4 bytes,
- 				 * and that the end alignment will work out to
- 				 * this hardware's requirements
-@@ -3162,6 +3163,7 @@ static netdev_tx_t e1000_xmit_frame(struct sk_buff *skb,
- 				}
- 				len = skb_headlen(skb);
- 				break;
-+			}
- 			default:
- 				/* do nothing */
- 				break;
+diff --git a/drivers/bluetooth/btbcm.c b/drivers/bluetooth/btbcm.c
+index f02a4bdc0ca7..dd29d687cd38 100644
+--- a/drivers/bluetooth/btbcm.c
++++ b/drivers/bluetooth/btbcm.c
+@@ -329,6 +329,7 @@ static const struct bcm_subver_table bcm_uart_subver_table[] = {
+ 	{ 0x410e, "BCM43341B0"	},	/* 002.001.014 */
+ 	{ 0x4204, "BCM2076B1"	},	/* 002.002.004 */
+ 	{ 0x4406, "BCM4324B3"	},	/* 002.004.006 */
++	{ 0x4606, "BCM4324B5"	},	/* 002.006.006 */
+ 	{ 0x6109, "BCM4335C0"	},	/* 003.001.009 */
+ 	{ 0x610c, "BCM4354"	},	/* 003.001.012 */
+ 	{ 0x2122, "BCM4343A0"	},	/* 001.001.034 */
+@@ -343,6 +344,7 @@ static const struct bcm_subver_table bcm_uart_subver_table[] = {
+ };
+ 
+ static const struct bcm_subver_table bcm_usb_subver_table[] = {
++	{ 0x2105, "BCM20703A1"	},	/* 001.001.005 */
+ 	{ 0x210b, "BCM43142A0"	},	/* 001.001.011 */
+ 	{ 0x2112, "BCM4314A0"	},	/* 001.001.018 */
+ 	{ 0x2118, "BCM20702A0"	},	/* 001.001.024 */
 -- 
 2.25.1
 
