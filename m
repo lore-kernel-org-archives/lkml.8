@@ -2,208 +2,128 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35416C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7DA1C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A2B5206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:54:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BABA2076A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:55:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d/12E/PT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729280AbgFHJyk (ORCPT
+        id S1729292AbgFHJzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 05:54:40 -0400
-Received: from mga09.intel.com ([134.134.136.24]:62656 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729166AbgFHJyj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 05:54:39 -0400
-IronPort-SDR: YL67fm1fiCOnacuAhbYMxQgFCQJmBGO0gcyxk1dxjCkaad1d3r7h1rzqpSsE0r7tfF/4yDglAm
- 27gn/qnyMebA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2020 02:54:37 -0700
-IronPort-SDR: 9Foius5sJbXsVDgbWFtSdweaOHnchmnvTUjjdHVbDE/wRbGlq/J37h6nqZUdz74P8GF8iRZfNg
- UZmKIYDPJLYw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,487,1583222400"; 
-   d="scan'208";a="472636009"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 08 Jun 2020 02:54:37 -0700
-Received: from [10.249.230.149] (abudanko-mobl.ccr.corp.intel.com [10.249.230.149])
-        by linux.intel.com (Postfix) with ESMTP id 2DE09580675;
-        Mon,  8 Jun 2020 02:54:32 -0700 (PDT)
-Subject: Re: [PATCH v7 01/13] tools/libperf: introduce notion of static polled
- file descriptors
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <5de4b954-24f0-1e8d-5a0d-7b12783b8218@linux.intel.com>
- <3c92a0ad-d7d3-4e78-f0b8-1d3a7122c69e@linux.intel.com>
- <20200605105051.GA1404794@krava> <20200605113834.GC1404794@krava>
- <be40edeb-0cb9-5e11-2a22-8392316cdced@linux.intel.com>
- <49eca46e-4d0e-2ae5-d7d9-e37a4d680270@linux.intel.com>
- <20200608084344.GA1520715@krava>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <2d80a43a-54cf-3d12-92fd-066217c95d76@linux.intel.com>
-Date:   Mon, 8 Jun 2020 12:54:31 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Mon, 8 Jun 2020 05:55:09 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23718 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729222AbgFHJzH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 05:55:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591610106;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=zwRQYwEhlzI9fhHIuV2ZDsHSs0DHTOaRaWRbv3sTP+c=;
+        b=d/12E/PTZZOS/m71x9FcAvx0JclAsrIKYJnZ3jHZtixotEEjN547/6UBhSSmi41G0KUuPB
+        pqZqIjVfdUC7xacohLVbGSNhF9IjRUTWyr5NnKCVoACZ6rqu96iLbqaQpntQFBXeKK0npj
+        wXTsg66DIgitT1UHYMUPnFhY9jeC4gI=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-30-kdXq02FKNxeAz68aTvtPSQ-1; Mon, 08 Jun 2020 05:55:04 -0400
+X-MC-Unique: kdXq02FKNxeAz68aTvtPSQ-1
+Received: by mail-wm1-f72.google.com with SMTP id h25so5200036wmb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 02:55:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=zwRQYwEhlzI9fhHIuV2ZDsHSs0DHTOaRaWRbv3sTP+c=;
+        b=tu9D5HxqBgjC8GAq2RYWXYvaZXQcfW7KQWSQZ8VC+IctDbRMKPAXl89vNoRiByz3Xt
+         d7mzvkQQL6lVbu03S7cB4BJ6/K5Wf5xIG4m0RlOkfOtakOeaEz9vjgj62+PPMQPQ0N+R
+         e3OFLnbqrHAPYQG0ubHEMuHXlkOwwsstZHBfynD0SDEExyB9zqNe4Zo0ut/cGbD5eK+A
+         FQ7sI0mWEfO058Oe4a01DE9QwuEdvw4dCeLwLmiDnIBa/rxr5kPgjbNPDa9cBDVMLPYz
+         bJnZjy3vwIEVD9UsXEA9XjJIZ3iO2dgLfH3dCWtK8crtbBxZcULe1TzpC8WVIaJQmity
+         d9oQ==
+X-Gm-Message-State: AOAM531kP4lcUTZhklitkSwc52phR4nxiDjGWdZGmajoTLa0VB1ouC2b
+        cPDe97CGdwGNuL5O9I8Lx5ns3vwK8/rKOCSb/VrbhLnuixIq2AcFEpiXy3pLuy05qrXOez7eR5i
+        UKjdNhH0Fbr0LRKM5SgLUeNRd
+X-Received: by 2002:a7b:cf06:: with SMTP id l6mr15633399wmg.63.1591610103133;
+        Mon, 08 Jun 2020 02:55:03 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyikeAcTqFLpMRWXI7wepdD3aO0/ujjV4fOTEz+k46ZIFoeVHzdsv1BhrAhul2cvz6zw90caQ==
+X-Received: by 2002:a7b:cf06:: with SMTP id l6mr15633384wmg.63.1591610102957;
+        Mon, 08 Jun 2020 02:55:02 -0700 (PDT)
+Received: from redhat.com (bzq-109-64-41-91.red.bezeqint.net. [109.64.41.91])
+        by smtp.gmail.com with ESMTPSA id o15sm23160537wrv.48.2020.06.08.02.55.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jun 2020 02:55:02 -0700 (PDT)
+Date:   Mon, 8 Jun 2020 05:54:59 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rob.miller@broadcom.com, lingshan.zhu@intel.com,
+        eperezma@redhat.com, lulu@redhat.com, shahafs@mellanox.com,
+        hanand@xilinx.com, mhabets@solarflare.com, gdawar@xilinx.com,
+        saugatm@xilinx.com, vmireyno@marvell.com,
+        zhangweining@ruijie.com.cn, eli@mellanox.com
+Subject: Re: [PATCH 5/6] vdpa: introduce virtio pci driver
+Message-ID: <20200608055331-mutt-send-email-mst@kernel.org>
+References: <5dbb0386-beeb-5bf4-d12e-fb5427486bb8@redhat.com>
+ <6b1d1ef3-d65e-08c2-5b65-32969bb5ecbc@redhat.com>
+ <20200607095012-mutt-send-email-mst@kernel.org>
+ <9b1abd2b-232c-aa0f-d8bb-03e65fd47de2@redhat.com>
+ <20200608021438-mutt-send-email-mst@kernel.org>
+ <a1b1b7fb-b097-17b7-2e3a-0da07d2e48ae@redhat.com>
+ <20200608052041-mutt-send-email-mst@kernel.org>
+ <9d2571b6-0b95-53b3-6989-b4d801eeb623@redhat.com>
+ <20200608054453-mutt-send-email-mst@kernel.org>
+ <bc27064c-2309-acf3-ccd8-6182bfa2a4cd@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200608084344.GA1520715@krava>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <bc27064c-2309-acf3-ccd8-6182bfa2a4cd@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 08.06.2020 11:43, Jiri Olsa wrote:
-> On Mon, Jun 08, 2020 at 11:08:56AM +0300, Alexey Budankov wrote:
->>
->> On 05.06.2020 19:15, Alexey Budankov wrote:
->>>
->>> On 05.06.2020 14:38, Jiri Olsa wrote:
->>>> On Fri, Jun 05, 2020 at 12:50:54PM +0200, Jiri Olsa wrote:
->>>>> On Wed, Jun 03, 2020 at 06:52:59PM +0300, Alexey Budankov wrote:
->>>>>>
->>>>>> Implement adding of file descriptors by fdarray__add_stat() to
->>>>>> fix-sized (currently 1) stat_entries array located at struct fdarray.
->>>>>> Append added file descriptors to the array used by poll() syscall
->>>>>> during fdarray__poll() call. Copy poll() result of the added
->>>>>> descriptors from the array back to the storage for analysis.
->>>>>>
->>>>>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
->>>>>> ---
->>>>>>  tools/lib/api/fd/array.c                 | 42 +++++++++++++++++++++++-
->>>>>>  tools/lib/api/fd/array.h                 |  7 ++++
->>>>>>  tools/lib/perf/evlist.c                  | 11 +++++++
->>>>>>  tools/lib/perf/include/internal/evlist.h |  2 ++
->>>>>>  4 files changed, 61 insertions(+), 1 deletion(-)
->>>>>>
->>>>>> diff --git a/tools/lib/api/fd/array.c b/tools/lib/api/fd/array.c
->>>>>> index 58d44d5eee31..b0027f2169c7 100644
->>>>>> --- a/tools/lib/api/fd/array.c
->>>>>> +++ b/tools/lib/api/fd/array.c
->>>>>> @@ -11,10 +11,16 @@
->>>>>>  
->>>>>>  void fdarray__init(struct fdarray *fda, int nr_autogrow)
->>>>>>  {
->>>>>> +	int i;
->>>>>> +
->>>>>>  	fda->entries	 = NULL;
->>>>>>  	fda->priv	 = NULL;
->>>>>>  	fda->nr		 = fda->nr_alloc = 0;
->>>>>>  	fda->nr_autogrow = nr_autogrow;
->>>>>> +
->>>>>> +	fda->nr_stat = 0;
->>>>>> +	for (i = 0; i < FDARRAY__STAT_ENTRIES_MAX; i++)
->>>>>> +		fda->stat_entries[i].fd = -1;
->>>>>>  }
->>>>>>  
->>>>>>  int fdarray__grow(struct fdarray *fda, int nr)
->>>>>> @@ -83,6 +89,20 @@ int fdarray__add(struct fdarray *fda, int fd, short revents)
->>>>>>  	return pos;
->>>>>>  }
->>>>>>  
->>>>>> +int fdarray__add_stat(struct fdarray *fda, int fd, short revents)
->>>>>> +{
->>>>>> +	int pos = fda->nr_stat;
->>>>>> +
->>>>>> +	if (pos >= FDARRAY__STAT_ENTRIES_MAX)
->>>>>> +		return -1;
->>>>>> +
->>>>>> +	fda->stat_entries[pos].fd = fd;
->>>>>> +	fda->stat_entries[pos].events = revents;
->>>>>> +	fda->nr_stat++;
->>>>>> +
->>>>>> +	return pos;
->>>>>> +}
->>>>>> +
->>>>>>  int fdarray__filter(struct fdarray *fda, short revents,
->>>>>>  		    void (*entry_destructor)(struct fdarray *fda, int fd, void *arg),
->>>>>>  		    void *arg)
->>>>>> @@ -113,7 +133,27 @@ int fdarray__filter(struct fdarray *fda, short revents,
->>>>>>  
->>>>>>  int fdarray__poll(struct fdarray *fda, int timeout)
->>>>>>  {
->>>>>> -	return poll(fda->entries, fda->nr, timeout);
->>>>>> +	int nr, i, pos, res;
->>>>>> +
->>>>>> +	nr = fda->nr;
->>>>>> +
->>>>>> +	for (i = 0; i < fda->nr_stat; i++) {
->>>>>> +		if (fda->stat_entries[i].fd != -1) {
->>>>>> +			pos = fdarray__add(fda, fda->stat_entries[i].fd,
->>>>>> +					   fda->stat_entries[i].events);
->>>>>
->>>>> so every call to fdarray__poll will add whatever is
->>>>> in stat_entries to entries? how is it removed?
->>>>>
->>>>> I think you should either follow what Adrian said
->>>>> and put 'static' descriptors early and check for
->>>>> filter number to match it as an 'quick fix'
->>>>>
->>>>> or we should fix it for real and make it generic
->>>>>
->>>>> so currently the interface is like this:
->>>>>
->>>>>   pos1 = fdarray__add(a, fd1 ... );
->>>>>   pos2 = fdarray__add(a, fd2 ... );
->>>>>   pos3 = fdarray__add(a, fd2 ... );
->>>>>
->>>>>   fdarray__poll(a);
->>>>>
->>>>>   num = fdarray__filter(a, revents, destructor, arg);
->>>>>
->>>>> when fdarray__filter removes some of the fds the 'pos1,pos2,pos3'
->>>>> indexes are not relevant anymore
->>>
->>> and that is why the return value of fdarray__add() should be converted
->>> to bool (added/not added). Currently the return value is used as bool
->>> only allover the calling code.
->>>
->>> fdarray__add_fixed() brings the notion of fd with fixed pos which is
->>> valid after fdarray__add_fixed() call so the pos could be used to access
->>> pos fd poll status after poll() call.
->>>
->>> pos = fdarray__add_fixed(array, fd);
->>> fdarray_poll(array);
->>> revents = fdarray_fixed_revents(array, pos);
->>> fdarray__del(array, pos);
->>
->> So how is it about just adding _revents() and _del() for fixed fds with
->> correction of retval to bool for fdarray__add()?
+On Mon, Jun 08, 2020 at 05:46:52PM +0800, Jason Wang wrote:
 > 
-> I don't like the separation for fixed and non-fixed fds,
-> why can't we make generic?
+> On 2020/6/8 下午5:45, Michael S. Tsirkin wrote:
+> > On Mon, Jun 08, 2020 at 05:43:58PM +0800, Jason Wang wrote:
+> > > > > Looking at
+> > > > > pci_match_one_device() it checks both subvendor and subdevice there.
+> > > > > 
+> > > > > Thanks
+> > > > But IIUC there is no guarantee that driver with a specific subvendor
+> > > > matches in presence of a generic one.
+> > > > So either IFC or virtio pci can win, whichever binds first.
+> > > 
+> > > I'm not sure I get there. But I try manually bind IFCVF to qemu's
+> > > virtio-net-pci, and it fails.
+> > > 
+> > > Thanks
+> > Right but the reverse can happen: virtio-net can bind to IFCVF first.
+> 
+> 
+> That's kind of expected. The PF is expected to be bound to virtio-pci to
+> create VF via sysfs.
+> 
+> Thanks
+> 
+> 
+> 
 
-Usage models are different but they want still to be parts of the same class
-for atomic poll(). The distinction is filterable vs. not filterable.
-The distinction should be somehow provided in API. Options are:
-1. expose separate API calls like __add_nonfilterable(), __del_nonfilterable();
-   use nonfilterable quality in __filter() and __poll() and, perhaps, other internals;
-2. extend fdarray__add(, nonfilterable) with the nonfilterable quality
-   use the type in __filter() and __poll() and, perhaps, other internals;
-   expose less API calls in comparison with option 1
+Once VFs are created, don't we want IFCVF to bind rather than
+virtio-pci?
 
-Exposure of pos for filterable fds should be converted to bool since currently
-the returned pos can become stale and there is no way in API to check its state.
-So it could look like this:
+-- 
+MST
 
-fdkey = fdarray__add(array, fd, events, type)
-type: filterable, nonfilterable, somthing else
-revents = fdarray__get_revents(fdkey);
-fdarray__del(array, fdkey);
-
-~Alexey
