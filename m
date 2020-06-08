@@ -2,131 +2,115 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C47C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 06:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B55C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 06:41:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0DE02076A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 06:39:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=diehl.com header.i=@diehl.com header.b="pnsh1c1H"
+	by mail.kernel.org (Postfix) with ESMTP id 61CAB2076A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 06:41:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591598475;
+	bh=BQCBgwFsMXSNTIHxvc5pCdzZe+VJ7aLilK0Z+i0lOhU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=M8eJmBUG+rnJWgihT6zcNeOGaUP6oUT93hVKZbdBEhxvaNngHJgLRj7+FewqoiXzP
+	 ESSmSqzs/m7PwqO8reWfPt8/kiq3XUBTEfb9zT34S7t0Uh725vVIE/Ogcjh6SLr927
+	 o4DV4k8cA6HVnj1arcHk1vzwEAmIy34pU+pw8TZo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728988AbgFHGjb (ORCPT
+        id S1728994AbgFHGlO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 02:39:31 -0400
-Received: from enterprise01.smtp.diehl.com ([193.201.238.219]:58930 "EHLO
-        enterprise01.smtp.diehl.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726929AbgFHGja (ORCPT
+        Mon, 8 Jun 2020 02:41:14 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:45992 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728906AbgFHGlN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 02:39:30 -0400
-X-Greylist: delayed 430 seconds by postgrey-1.27 at vger.kernel.org; Mon, 08 Jun 2020 02:39:28 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=diehl.com; i=@diehl.com; q=dns/txt; s=default;
-  t=1591598369; x=1623134369;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=U5aWbGgfeLqvVdcOkQcSA+UTkQNRY5DfGB4faJBfE4Y=;
-  b=pnsh1c1H03eMJPN7kyWzywdsf8agw/zqZ3o6X0+stXhi290Trb0vw4RE
-   R9N0JFUI7EgiqbxEnMYktc6NzXDQcCPeJSwk+MpHIlKiHIQVGF9qFtzDd
-   jWbrPCz8/QSxQu3dpXEe+hbiVMsrT6Qz9tvWl8KX3doymc86lztb9/nEV
-   TGNS4MmKhp0ZckLFgh8FLkMOIQQW2jK9Iu8pmfRjrIIOXk3Rl6SxE0zxa
-   wJ+r2clPpie0DuSY8mnRlr2THtcZNOf+hIgarVabDN3QBkMtaa634yVOx
-   WY+ubZ0I0TBbecNSzzMN/hfyET/NSPFEHrFuCDuSsmLW1b0Px+JH+S1zL
-   w==;
-IronPort-SDR: zLZG1io8aNx3EVCTdX7Dgsr//Wk1KtXN2Dd8zpm1nBDtSjtk45PWiYP9wdkqNpSb5hM5FN+/99
- M3Wlod9c9r3Q==
-X-IronPort-AV: E=Sophos;i="5.73,487,1583190000"; 
-   d="scan'208";a="37682390"
-From:   Denis Osterland-Heim <denis.osterland@diehl.com>
-To:     "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>, "pavel@ucw.cz" <pavel@ucw.cz>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>
-Subject: Re: [PATCH v3 2/3] leds: pwm: add support for default-state device
- property
-Thread-Topic: [PATCH v3 2/3] leds: pwm: add support for default-state device
- property
-Thread-Index: AQHV+5H21uxgWjW9wEe6B/TzHpI386hLe6EAgAAeVQCAAZexgICBcsYA
-Date:   Mon, 8 Jun 2020 06:32:14 +0000
-Message-ID: <278a6d81562d4642631fa003c59c4e4876050f54.camel@diehl.com>
-References: <20200316124851.6303-1-Denis.Osterland@diehl.com>
-         <20200316124851.6303-3-Denis.Osterland@diehl.com>
-         <bee4d31f-1f00-c621-f93c-f49207e406d6@gmail.com>
-         <e2835f58aead3ca85ad47e9769b393addcd19f2a.camel@diehl.com>
-         <13d593fb-053e-c6de-3237-ec3b6d1c82c5@gmail.com>
-In-Reply-To: <13d593fb-053e-c6de-3237-ec3b6d1c82c5@gmail.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-x-ms-exchange-messagesentrepresentingtype: 1
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C81CD59B97894247A79E3BF08DCD8F04@diehl.internal>
-Content-Transfer-Encoding: base64
+        Mon, 8 Jun 2020 02:41:13 -0400
+Received: by mail-lj1-f194.google.com with SMTP id i27so8049651ljb.12;
+        Sun, 07 Jun 2020 23:41:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Z4UQh0Us0hQtEs1TDFqY5o6aN1qVDkFutQCZsE8JqaU=;
+        b=csQWcLndzxeF1KrldccUUCgN7uzZmNEptynzFIjfAjykqXPq0K25A1eJPkrBtnq2Xo
+         8LuQ5cvNIrTsEFXj8mfV0PVlbYL8PM0bX/oQTKgDZfq7YgnyRmZjKQvNH0Qcl1iQyhrl
+         XzifwteGq2Ukke6BV+PaPrECf+x9h0S+AVVGr0Wj3f1dfAzVqJ5dkhyN0it2VAsnLpM2
+         sMhwrM/q3algyoJEwqmltogYOxkgy7EOLwe8SNhNYizjmtu0qRoth1lpV7c0HbKs3GRp
+         YsZHRI5TyIAkr0Q1LRiZV0csdWn20+YZu0fsjXovAWb4T/oox0+6763EQdrQfxBtIOea
+         lTmg==
+X-Gm-Message-State: AOAM532DGYSVhK83OR1UL9HwTJ0z6cjd+60ljzawBnNMObWxCPswL3Aj
+        ugDYlW/uAEhxT5DumuOit34=
+X-Google-Smtp-Source: ABdhPJw7i0D0egd72cvg61t4dDEMZ5Zoy6Geiu+vS8eBA4Z7uYi/XVCKJRKsmx3xMFnlXhqh8YnFKw==
+X-Received: by 2002:a2e:8e27:: with SMTP id r7mr10196151ljk.382.1591598471669;
+        Sun, 07 Jun 2020 23:41:11 -0700 (PDT)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id t26sm4169562lfk.61.2020.06.07.23.41.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 07 Jun 2020 23:41:11 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.93.0.4)
+        (envelope-from <johan@kernel.org>)
+        id 1jiBSz-0003mQ-EB; Mon, 08 Jun 2020 08:41:05 +0200
+Date:   Mon, 8 Jun 2020 08:41:05 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-serial@vger.kernel.org
+Subject: Re: [PATCH] tty: serial: cpm_uart: Fix behaviour for non existing
+ GPIOs
+Message-ID: <20200608064105.GL19480@localhost>
+References: <bafd8df9e743c433196c727293c5015620fae2b8.1591428452.git.christophe.leroy@csgroup.eu>
 MIME-Version: 1.0
-X-TrailerSkip: 1
-X-GBS-PROC: byQFdw3ukCM+zy1/poiPc0t/f4F++sVEcJNEqmL6fJTpDG/iNVDZbUM0X2Br5ZWu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bafd8df9e743c433196c727293c5015620fae2b8.1591428452.git.christophe.leroy@csgroup.eu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgSmFjZWssDQoNCmlzIHlvdXIgYWNrIHN0aWxsIHZhbGlkIGZvciB0aGUgbmV3IHZlcnNp
-b25zIG9mIHRoZSBwYXRjaC1zZXQ/DQpEdWUgdG8gdGhlIGNoYW5nZXMgSSBtYWRlLCBJIGFt
-IG5vdCBzdXJlLg0KDQpSZWdhcmRzLCBEZW5pcw0KDQpBbSBEaWVuc3RhZywgZGVuIDE3LjAz
-LjIwMjAsIDIxOjQzICswMTAwIHNjaHJpZWIgSmFjZWsgQW5hc3pld3NraToNCj4gSGkgRGVu
-aXMsDQo+IA0KPiBPbiAzLzE2LzIwIDk6MjQgUE0sIERlbmlzIE9zdGVybGFuZC1IZWltIHdy
-b3RlOg0KPiA+IEhpIEphY2VrLA0KPiA+IA0KPiA+IEFtIE1vbnRhZywgZGVuIDE2LjAzLjIw
-MjAsIDE5OjM2ICswMTAwIHNjaHJpZWIgSmFjZWsgQW5hc3pld3NraToNCj4gPiA+IEhpIERl
-bmlzLA0KPiA+ID4gDQo+ID4gPiBPbiAzLzE2LzIwIDE6NTMgUE0sIERlbmlzIE9zdGVybGFu
-ZC1IZWltIHdyb3RlOg0KPiA+IA0KPiA+IC4uLg0KPiA+ID4gPiAgDQo+ID4gPiA+IEBAIC05
-MiwxMyArOTYsMjcgQEAgc3RhdGljIGludCBsZWRfcHdtX2FkZChzdHJ1Y3QgZGV2aWNlICpk
-ZXYsIHN0cnVjdCBsZWRfcHdtX3ByaXYgKnByaXYsDQo+ID4gPiA+ICANCj4gPiA+ID4gIAlw
-d21faW5pdF9zdGF0ZShsZWRfZGF0YS0+cHdtLCAmbGVkX2RhdGEtPnB3bXN0YXRlKTsNCj4g
-PiA+ID4gIA0KPiA+ID4gPiArCWlmIChsZWQtPmRlZmF1bHRfc3RhdGUgPT0gTEVEU19QV01f
-REVGU1RBVEVfT04pDQo+ID4gPiA+ICsJCWxlZF9kYXRhLT5jZGV2LmJyaWdodG5lc3MgPSBs
-ZWQtPm1heF9icmlnaHRuZXNzOw0KPiA+ID4gPiArCWVsc2UgaWYgKGxlZC0+ZGVmYXVsdF9z
-dGF0ZSA9PSBMRURTX1BXTV9ERUZTVEFURV9LRUVQKSB7DQo+ID4gPiA+ICsJCXVpbnQ2NF90
-IGJyaWdodG5lc3M7DQo+ID4gPiA+ICsNCj4gPiA+ID4gKwkJcHdtX2dldF9zdGF0ZShsZWRf
-ZGF0YS0+cHdtLCAmbGVkX2RhdGEtPnB3bXN0YXRlKTsNCj4gPiA+IA0KPiA+ID4gVGhpcyBz
-ZWVtcyB0byBub3QgYmUgcmVhZGluZyB0aGUgZGV2aWNlIHN0YXRlLCBpLmUuIHdoYXQgeW91
-IHRyaWVkDQo+ID4gPiB0byBhZGRyZXNzIGJ5IGRpcmVjdCBjYWxsIHRvIHB3bS0+Y2hpcC0+
-b3BzLT5nZXRfc3RhdGUoKSBiZWZvcmUuDQo+ID4gPiANCj4gPiA+IEFtIEkgbWlzc2luZyBz
-b21ldGhpbmc/DQo+ID4gPiANCj4gPiANCj4gPiB3ZWxsLCBub3QgeW91LCBidXQgSSBtaXNz
-ZWQgY2ZjNGMxODliYzcwYjFhY2MxN2U2ZjFhYmYxZGMxYzBhZTg5MGJkOC4NCj4gPiBTaW5j
-ZSB0aGlzIGNvbW1pdCBwd21fZ2V0X3N0YXRlKCkgaXMgc3VmZmljaWVudC4NCj4gDQo+IEkg
-YXNzdW1lIHlvdSB0ZXN0ZWQgaXQ/DQo+IA0KPiBXaXRoIHRoYXQsIGZvciB0aGUgd2hvbGUg
-c2V0Og0KPiANCj4gQWNrZWQtYnk6IEphY2VrIEFuYXN6ZXdza2kgPGphY2VrLmFuYXN6ZXdz
-a2lAZ21haWwuY29tPg0KPiANCg0KDQpEaWVobCBDb25uZWN0aXZpdHkgU29sdXRpb25zIEdt
-YkgNCkdlc2Now6RmdHNmw7xocnVuZzogSG9yc3QgTGVvbmJlcmdlcg0KU2l0eiBkZXIgR2Vz
-ZWxsc2NoYWZ0OiBOw7xybmJlcmcgLSBSZWdpc3RlcmdlcmljaHQ6IEFtdHNnZXJpY2h0DQpO
-w7xybmJlcmc6IEhSQiAzMjMxNQ0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fDQoNCkRlciBJbmhhbHQgZGVyIHZvcnN0ZWhlbmRlbiBFLU1haWwgaXN0
-IG5pY2h0IHJlY2h0bGljaCBiaW5kZW5kLiBEaWVzZSBFLU1haWwgZW50aGFlbHQgdmVydHJh
-dWxpY2hlIHVuZC9vZGVyIHJlY2h0bGljaCBnZXNjaHVldHp0ZSBJbmZvcm1hdGlvbmVuLg0K
-SW5mb3JtaWVyZW4gU2llIHVucyBiaXR0ZSwgd2VubiBTaWUgZGllc2UgRS1NYWlsIGZhZWxz
-Y2hsaWNoZXJ3ZWlzZSBlcmhhbHRlbiBoYWJlbi4gQml0dGUgbG9lc2NoZW4gU2llIGluIGRp
-ZXNlbSBGYWxsIGRpZSBOYWNocmljaHQuDQpKZWRlIHVuZXJsYXVidGUgRm9ybSBkZXIgUmVw
-cm9kdWt0aW9uLCBCZWthbm50Z2FiZSwgQWVuZGVydW5nLCBWZXJ0ZWlsdW5nIHVuZC9vZGVy
-IFB1Ymxpa2F0aW9uIGRpZXNlciBFLU1haWwgaXN0IHN0cmVuZ3N0ZW5zIHVudGVyc2FndC4N
-Ci0gSW5mb3JtYXRpb25lbiB6dW0gRGF0ZW5zY2h1dHosIGluc2Jlc29uZGVyZSB6dSBJaHJl
-biBSZWNodGVuLCBlcmhhbHRlbiBTaWUgdW50ZXIgaHR0cHM6Ly93d3cuZGllaGwuY29tL2dy
-b3VwL2RlL3RyYW5zcGFyZW56LXVuZC1pbmZvcm1hdGlvbnNwZmxpY2h0ZW4vDQoNClRoZSBj
-b250ZW50cyBvZiB0aGUgYWJvdmUgbWVudGlvbmVkIGUtbWFpbCBpcyBub3QgbGVnYWxseSBi
-aW5kaW5nLiBUaGlzIGUtbWFpbCBjb250YWlucyBjb25maWRlbnRpYWwgYW5kL29yIGxlZ2Fs
-bHkgcHJvdGVjdGVkIGluZm9ybWF0aW9uLiBQbGVhc2UgaW5mb3JtIHVzIGlmIHlvdSBoYXZl
-IHJlY2VpdmVkIHRoaXMgZS1tYWlsIGJ5DQptaXN0YWtlIGFuZCBkZWxldGUgaXQgaW4gc3Vj
-aCBhIGNhc2UuIEVhY2ggdW5hdXRob3JpemVkIHJlcHJvZHVjdGlvbiwgZGlzY2xvc3VyZSwg
-YWx0ZXJhdGlvbiwgZGlzdHJpYnV0aW9uIGFuZC9vciBwdWJsaWNhdGlvbiBvZiB0aGlzIGUt
-bWFpbCBpcyBzdHJpY3RseSBwcm9oaWJpdGVkLiANCi0gRm9yIGdlbmVyYWwgaW5mb3JtYXRp
-b24gb24gZGF0YSBwcm90ZWN0aW9uIGFuZCB5b3VyIHJlc3BlY3RpdmUgcmlnaHRzIHBsZWFz
-ZSB2aXNpdCBodHRwczovL3d3dy5kaWVobC5jb20vZ3JvdXAvZW4vdHJhbnNwYXJlbmN5LWFu
-ZC1pbmZvcm1hdGlvbi1vYmxpZ2F0aW9ucy8NCg==
+On Sat, Jun 06, 2020 at 07:30:21AM +0000, Christophe Leroy wrote:
+> devm_gpiod_get_index() doesn't return NULL but -ENOENT when the
+> requested GPIO doesn't exist,  leading to the following messages:
+> 
+> [    2.742468] gpiod_direction_input: invalid GPIO (errorpointer)
+> [    2.748147] can't set direction for gpio #2: -2
+> [    2.753081] gpiod_direction_input: invalid GPIO (errorpointer)
+> [    2.758724] can't set direction for gpio #3: -2
+> [    2.763666] gpiod_direction_output: invalid GPIO (errorpointer)
+> [    2.769394] can't set direction for gpio #4: -2
+> [    2.774341] gpiod_direction_input: invalid GPIO (errorpointer)
+> [    2.779981] can't set direction for gpio #5: -2
+> [    2.784545] ff000a20.serial: ttyCPM1 at MMIO 0xfff00a20 (irq = 39, base_baud = 8250000) is a CPM UART
+> 
+> Use IS_ERR_OR_NULL() to properly check gpiod validity.
+
+Why check for NULL at all?
+
+> Fixes: 97cbaf2c829b ("tty: serial: cpm_uart: Convert to use GPIO descriptors")
+> Cc: stable@vger.kernel.org
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> ---
+>  drivers/tty/serial/cpm_uart/cpm_uart_core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/tty/serial/cpm_uart/cpm_uart_core.c b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
+> index a04f74d2e854..3cbe24802296 100644
+> --- a/drivers/tty/serial/cpm_uart/cpm_uart_core.c
+> +++ b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
+> @@ -1217,7 +1217,7 @@ static int cpm_uart_init_port(struct device_node *np,
+>  
+>  		gpiod = devm_gpiod_get_index(dev, NULL, i, GPIOD_ASIS);
+>  
+> -		if (gpiod) {
+> +		if (!IS_ERR_OR_NULL(gpiod)) {
+>  			if (i == GPIO_RTS || i == GPIO_DTR)
+>  				ret = gpiod_direction_output(gpiod, 0);
+>  			else
+
+Johan
