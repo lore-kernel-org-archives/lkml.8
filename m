@@ -2,52 +2,57 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E5AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7398CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B8EA20E65
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:11:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53BC6208C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:11:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591657872;
-	bh=yZWkXOfP2kad7R2XBI+KQjjxoy8Pk3WC5roLHhgPHOo=;
+	s=default; t=1591657878;
+	bh=OnMZ5vdf2YOk5hWtwLFzh1/pxKKBakX8EVWv9pl+oRw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SMPhjLZ7eiR0VtpK/s64j0m7OE3D/ilieBXiag5W3XzQ5HtSICLLYLUweHH77vqrW
-	 BMsd3RKuFUQRhFEzT+yZ/kThv7cVZCS/EMzKO24Jw70GQjpgUStyQ4T8VXNPGppjLv
-	 iJu6ieule7IfMw9f6f9mAitQy9r+DjT4Q1Ft90Xs=
+	b=IXLAStdKZrr8uNnJcBoseg2i3vAYLPBwlqh0ErlcWCWrK4iGjotR1PQ2r6ZE2MimO
+	 vEWZbQWAz0LDZxLEQiC2TteQ8awetvFyxgG6wv2otePh9e5WIVXNnh9TUzqfmvfLSL
+	 5ziz2I1RCAWA2MGbx4YqTSav8LNVgSe1Cxro52P0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728047AbgFHXLL (ORCPT
+        id S1728871AbgFHXLP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:11:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55582 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:11:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728505AbgFHXJp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:09:45 -0400
+        id S1728520AbgFHXJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:09:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57F7C208E4;
-        Mon,  8 Jun 2020 23:09:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16B4520897;
+        Mon,  8 Jun 2020 23:09:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657785;
-        bh=yZWkXOfP2kad7R2XBI+KQjjxoy8Pk3WC5roLHhgPHOo=;
+        s=default; t=1591657790;
+        bh=OnMZ5vdf2YOk5hWtwLFzh1/pxKKBakX8EVWv9pl+oRw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NIyxaxaV4IoJYtGq0y6Rafp1RHn9pEn2rt0I8JTg5d2vhg1RQaAN4MkVk+iHXX1Ak
-         Te4/EQosFmojntURVFlAczUjQPuTqBwfHv+ap2HtnO4/6BRxXAXzAkRhCM67izIOcd
-         uCy2VupxIzdjT0+6RGihuXxXs2I3xP8/hXBiY/6c=
+        b=FTQkXcE6rcB88KkQ3/0g+kt1qp7YVZvaoVUE28beR4iNng8B9DormmSdT78khEeQy
+         gI/xsDTC3leqzNPw92UuUSxCgcKsoqRXFzVUd1So2WnI/5MZhqYS20cE86H6ywejtg
+         3kzpro3uQHzpC3OcKfsfOCNq8sGCwoGfkTMvOl6A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Devulapally Shiva Krishna <shiva@chelsio.com>,
-        Ayush Sawal <ayush.sawal@chelsio.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 166/274] Crypto/chcr: fix ctr, cbc, xts and rfc3686-ctr failed tests
-Date:   Mon,  8 Jun 2020 19:04:19 -0400
-Message-Id: <20200608230607.3361041-166-sashal@kernel.org>
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Fangrui Song <maskray@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        "Maciej W . Rozycki" <macro@linux-mips.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Sasha Levin <sashal@kernel.org>, linux-mips@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.7 170/274] MIPS: Truncate link address into 32bit for 32bit kernel
+Date:   Mon,  8 Jun 2020 19:04:23 -0400
+Message-Id: <20200608230607.3361041-170-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -60,177 +65,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Devulapally Shiva Krishna <shiva@chelsio.com>
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
 
-[ Upstream commit 6b363a286cd01961423f5dcd648b265088ec56d0 ]
+[ Upstream commit ff487d41036035376e47972c7c522490b839ab37 ]
 
-This solves the following issues observed during self test when
-CONFIG_CRYPTO_MANAGER_EXTRA_TESTS is enabled.
+LLD failed to link vmlinux with 64bit load address for 32bit ELF
+while bfd will strip 64bit address into 32bit silently.
+To fix LLD build, we should truncate load address provided by platform
+into 32bit for 32bit kernel.
 
-1. Added fallback for cbc, ctr and rfc3686 if req->nbytes is zero
-and for xts added a fallback case if req->nbytes is not multiple of 16.
-
-2. In case of cbc-aes, solved wrong iv update. When
-chcr_cipher_fallback() is called, used req->info pointer instead of
-reqctx->iv.
-
-3. In cbc-aes decryption there was a wrong result. This occurs when
-chcr_cipher_fallback() is called from chcr_handle_cipher_resp().
-In the fallback function iv(req->info) used is wrongly updated.
-So use the initial iv for this case.
-
-4)In case of ctr-aes encryption observed wrong result. In adjust_ctr_overflow()
-there is condition which checks if ((bytes / AES_BLOCK_SIZE) > c),
-where c is the number of blocks which can be processed without iv overflow,
-but for the above bytes (req->nbytes < 32 , not a multiple of 16) this
-condition fails and the 2nd block is corrupted as it requires the rollover iv.
-So added a '=' condition in this to take care of this.
-
-5)In rfc3686-ctr there was wrong result observed. This occurs when
-chcr_cipher_fallback() is called from chcr_handle_cipher_resp().
-Here also copying initial_iv in init_iv pointer for handling the fallback
-case correctly.
-
-Signed-off-by: Ayush Sawal <ayush.sawal@chelsio.com>
-Signed-off-by: Devulapally Shiva Krishna <shiva@chelsio.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Link: https://github.com/ClangBuiltLinux/linux/issues/786
+Link: https://sourceware.org/bugzilla/show_bug.cgi?id=25784
+Reviewed-by: Fangrui Song <maskray@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+Cc: Maciej W. Rozycki <macro@linux-mips.org>
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/chelsio/chcr_algo.c   | 42 ++++++++++++++++++----------
- drivers/crypto/chelsio/chcr_crypto.h |  1 +
- 2 files changed, 29 insertions(+), 14 deletions(-)
+ arch/mips/Makefile                 | 13 ++++++++++++-
+ arch/mips/boot/compressed/Makefile |  2 +-
+ arch/mips/kernel/vmlinux.lds.S     |  2 +-
+ 3 files changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/crypto/chelsio/chcr_algo.c b/drivers/crypto/chelsio/chcr_algo.c
-index 5a2d9ee9348d..446fb896ee6d 100644
---- a/drivers/crypto/chelsio/chcr_algo.c
-+++ b/drivers/crypto/chelsio/chcr_algo.c
-@@ -1054,8 +1054,8 @@ static unsigned int adjust_ctr_overflow(u8 *iv, u32 bytes)
- 	u32 temp = be32_to_cpu(*--b);
+diff --git a/arch/mips/Makefile b/arch/mips/Makefile
+index e1c44aed8156..b6ee29e4565a 100644
+--- a/arch/mips/Makefile
++++ b/arch/mips/Makefile
+@@ -288,12 +288,23 @@ ifdef CONFIG_64BIT
+   endif
+ endif
  
- 	temp = ~temp;
--	c = (u64)temp +  1; // No of block can processed withou overflow
--	if ((bytes / AES_BLOCK_SIZE) > c)
-+	c = (u64)temp +  1; // No of block can processed without overflow
-+	if ((bytes / AES_BLOCK_SIZE) >= c)
- 		bytes = c * AES_BLOCK_SIZE;
- 	return bytes;
- }
-@@ -1158,15 +1158,16 @@ static int chcr_final_cipher_iv(struct skcipher_request *req,
- static int chcr_handle_cipher_resp(struct skcipher_request *req,
- 				   unsigned char *input, int err)
- {
-+	struct chcr_skcipher_req_ctx *reqctx = skcipher_request_ctx(req);
- 	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(req);
--	struct chcr_context *ctx = c_ctx(tfm);
--	struct uld_ctx *u_ctx = ULD_CTX(c_ctx(tfm));
--	struct ablk_ctx *ablkctx = ABLK_CTX(c_ctx(tfm));
--	struct sk_buff *skb;
- 	struct cpl_fw6_pld *fw6_pld = (struct cpl_fw6_pld *)input;
--	struct chcr_skcipher_req_ctx *reqctx = skcipher_request_ctx(req);
--	struct cipher_wr_param wrparam;
-+	struct ablk_ctx *ablkctx = ABLK_CTX(c_ctx(tfm));
-+	struct uld_ctx *u_ctx = ULD_CTX(c_ctx(tfm));
- 	struct chcr_dev *dev = c_ctx(tfm)->dev;
-+	struct chcr_context *ctx = c_ctx(tfm);
-+	struct adapter *adap = padap(ctx->dev);
-+	struct cipher_wr_param wrparam;
-+	struct sk_buff *skb;
- 	int bytes;
++# When linking a 32-bit executable the LLVM linker cannot cope with a
++# 32-bit load address that has been sign-extended to 64 bits.  Simply
++# remove the upper 32 bits then, as it is safe to do so with other
++# linkers.
++ifdef CONFIG_64BIT
++	load-ld			= $(load-y)
++else
++	load-ld			= $(subst 0xffffffff,0x,$(load-y))
++endif
++
+ KBUILD_AFLAGS	+= $(cflags-y)
+ KBUILD_CFLAGS	+= $(cflags-y)
+-KBUILD_CPPFLAGS += -DVMLINUX_LOAD_ADDRESS=$(load-y)
++KBUILD_CPPFLAGS += -DVMLINUX_LOAD_ADDRESS=$(load-y) -DLINKER_LOAD_ADDRESS=$(load-ld)
+ KBUILD_CPPFLAGS += -DDATAOFFSET=$(if $(dataoffset-y),$(dataoffset-y),0)
  
- 	if (err)
-@@ -1197,6 +1198,8 @@ static int chcr_handle_cipher_resp(struct skcipher_request *req,
- 	if (unlikely(bytes == 0)) {
- 		chcr_cipher_dma_unmap(&ULD_CTX(c_ctx(tfm))->lldi.pdev->dev,
- 				      req);
-+		memcpy(req->iv, reqctx->init_iv, IV);
-+		atomic_inc(&adap->chcr_stats.fallback);
- 		err = chcr_cipher_fallback(ablkctx->sw_cipher,
- 				     req->base.flags,
- 				     req->src,
-@@ -1248,20 +1251,28 @@ static int process_cipher(struct skcipher_request *req,
- 				  struct sk_buff **skb,
- 				  unsigned short op_type)
- {
-+	struct chcr_skcipher_req_ctx *reqctx = skcipher_request_ctx(req);
- 	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(req);
- 	unsigned int ivsize = crypto_skcipher_ivsize(tfm);
--	struct chcr_skcipher_req_ctx *reqctx = skcipher_request_ctx(req);
- 	struct ablk_ctx *ablkctx = ABLK_CTX(c_ctx(tfm));
-+	struct adapter *adap = padap(c_ctx(tfm)->dev);
- 	struct	cipher_wr_param wrparam;
- 	int bytes, err = -EINVAL;
-+	int subtype;
+ bootvars-y	= VMLINUX_LOAD_ADDRESS=$(load-y) \
++		  LINKER_LOAD_ADDRESS=$(load-ld) \
+ 		  VMLINUX_ENTRY_ADDRESS=$(entry-y) \
+ 		  PLATFORM="$(platform-y)" \
+ 		  ITS_INPUTS="$(its-y)"
+diff --git a/arch/mips/boot/compressed/Makefile b/arch/mips/boot/compressed/Makefile
+index 0df0ee8a298d..6e56caef69f0 100644
+--- a/arch/mips/boot/compressed/Makefile
++++ b/arch/mips/boot/compressed/Makefile
+@@ -90,7 +90,7 @@ ifneq ($(zload-y),)
+ VMLINUZ_LOAD_ADDRESS := $(zload-y)
+ else
+ VMLINUZ_LOAD_ADDRESS = $(shell $(obj)/calc_vmlinuz_load_addr \
+-		$(obj)/vmlinux.bin $(VMLINUX_LOAD_ADDRESS))
++		$(obj)/vmlinux.bin $(LINKER_LOAD_ADDRESS))
+ endif
+ UIMAGE_LOADADDR = $(VMLINUZ_LOAD_ADDRESS)
  
- 	reqctx->processed = 0;
- 	reqctx->partial_req = 0;
- 	if (!req->iv)
- 		goto error;
-+	subtype = get_cryptoalg_subtype(tfm);
- 	if ((ablkctx->enckey_len == 0) || (ivsize > AES_BLOCK_SIZE) ||
- 	    (req->cryptlen == 0) ||
- 	    (req->cryptlen % crypto_skcipher_blocksize(tfm))) {
-+		if (req->cryptlen == 0 && subtype != CRYPTO_ALG_SUB_TYPE_XTS)
-+			goto fallback;
-+		else if (req->cryptlen % crypto_skcipher_blocksize(tfm) &&
-+			 subtype == CRYPTO_ALG_SUB_TYPE_XTS)
-+			goto fallback;
- 		pr_err("AES: Invalid value of Key Len %d nbytes %d IV Len %d\n",
- 		       ablkctx->enckey_len, req->cryptlen, ivsize);
- 		goto error;
-@@ -1302,12 +1313,10 @@ static int process_cipher(struct skcipher_request *req,
- 	} else {
- 		bytes = req->cryptlen;
- 	}
--	if (get_cryptoalg_subtype(tfm) ==
--	    CRYPTO_ALG_SUB_TYPE_CTR) {
-+	if (subtype == CRYPTO_ALG_SUB_TYPE_CTR) {
- 		bytes = adjust_ctr_overflow(req->iv, bytes);
- 	}
--	if (get_cryptoalg_subtype(tfm) ==
--	    CRYPTO_ALG_SUB_TYPE_CTR_RFC3686) {
-+	if (subtype == CRYPTO_ALG_SUB_TYPE_CTR_RFC3686) {
- 		memcpy(reqctx->iv, ablkctx->nonce, CTR_RFC3686_NONCE_SIZE);
- 		memcpy(reqctx->iv + CTR_RFC3686_NONCE_SIZE, req->iv,
- 				CTR_RFC3686_IV_SIZE);
-@@ -1315,20 +1324,25 @@ static int process_cipher(struct skcipher_request *req,
- 		/* initialize counter portion of counter block */
- 		*(__be32 *)(reqctx->iv + CTR_RFC3686_NONCE_SIZE +
- 			CTR_RFC3686_IV_SIZE) = cpu_to_be32(1);
-+		memcpy(reqctx->init_iv, reqctx->iv, IV);
- 
- 	} else {
- 
- 		memcpy(reqctx->iv, req->iv, IV);
-+		memcpy(reqctx->init_iv, req->iv, IV);
- 	}
- 	if (unlikely(bytes == 0)) {
- 		chcr_cipher_dma_unmap(&ULD_CTX(c_ctx(tfm))->lldi.pdev->dev,
- 				      req);
-+fallback:       atomic_inc(&adap->chcr_stats.fallback);
- 		err = chcr_cipher_fallback(ablkctx->sw_cipher,
- 					   req->base.flags,
- 					   req->src,
- 					   req->dst,
- 					   req->cryptlen,
--					   reqctx->iv,
-+					   subtype ==
-+					   CRYPTO_ALG_SUB_TYPE_CTR_RFC3686 ?
-+					   reqctx->iv : req->iv,
- 					   op_type);
- 		goto error;
- 	}
-diff --git a/drivers/crypto/chelsio/chcr_crypto.h b/drivers/crypto/chelsio/chcr_crypto.h
-index 542bebae001f..b3fdbdc25acb 100644
---- a/drivers/crypto/chelsio/chcr_crypto.h
-+++ b/drivers/crypto/chelsio/chcr_crypto.h
-@@ -302,6 +302,7 @@ struct chcr_skcipher_req_ctx {
- 	unsigned int op;
- 	u16 imm;
- 	u8 iv[CHCR_MAX_CRYPTO_IV_LEN];
-+	u8 init_iv[CHCR_MAX_CRYPTO_IV_LEN];
- 	u16 txqidx;
- 	u16 rxqidx;
- };
+diff --git a/arch/mips/kernel/vmlinux.lds.S b/arch/mips/kernel/vmlinux.lds.S
+index a5f00ec73ea6..f185a85a27c1 100644
+--- a/arch/mips/kernel/vmlinux.lds.S
++++ b/arch/mips/kernel/vmlinux.lds.S
+@@ -55,7 +55,7 @@ SECTIONS
+ 	/* . = 0xa800000000300000; */
+ 	. = 0xffffffff80300000;
+ #endif
+-	. = VMLINUX_LOAD_ADDRESS;
++	. = LINKER_LOAD_ADDRESS;
+ 	/* read-only */
+ 	_text = .;	/* Text and read-only data */
+ 	.text : {
 -- 
 2.25.1
 
