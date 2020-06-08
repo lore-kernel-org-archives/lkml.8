@@ -2,119 +2,364 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18643C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8939FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:29:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E22882064C
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:28:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 673DF2064C
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:29:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YmNcypAZ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I1UkKGJ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728974AbgFHH2k (ORCPT
+        id S1729002AbgFHH3D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 03:28:40 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:43916 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727977AbgFHH2i (ORCPT
+        Mon, 8 Jun 2020 03:29:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33580 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728979AbgFHH3C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 03:28:38 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0587SGFU006604;
-        Mon, 8 Jun 2020 07:28:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=iFFUWrJmQAMs+azOlyv2mkVbVKIPtj2LzUbOvvjmz4o=;
- b=YmNcypAZfmglnw+NsFR4ekBO8PSvVbRjinKDt5afAhHX+AYpUMbmqOKMblkXMhJ0r0D3
- o1XR1Agx+pG1e4AZki5CDt0ycPZi8VjBrkACy2kez6/6oXlmwMU8xErjcPBo8zg6ishE
- wOMV6n+bXcCIB+oLorEvbW6i+KQkkCifPUkAXVnJmEjV93JsQS+6EtyGnO3BJyAtQBew
- iPAkAXOuUciE7vV9vkLsgqb45+FqxGmzW9wzOM9gH0MNpV93k6WFaTPkE3VJpMQISQi5
- iXT035CD16vJy7jb68gEZTXHQw0rKHFfWzlAJSOLqcWjvbY0NtfMIN2VKfj2mU2RMogd qA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 31g2jqwa4w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 08 Jun 2020 07:28:33 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0587LjiN010869;
-        Mon, 8 Jun 2020 07:26:33 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 31gmwpj6sj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 08 Jun 2020 07:26:33 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0587QWeV000572;
-        Mon, 8 Jun 2020 07:26:32 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 08 Jun 2020 00:26:31 -0700
-Date:   Mon, 8 Jun 2020 10:26:25 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     "Rodolfo C. Villordo" <rodolfovillordo@gmail.com>
-Cc:     Forest Bond <forest@alittletooquiet.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Forest Bond <forest@alittletooquiet.net>,Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>,devel@driverdev.osuosl.org,linux-kernel@vger.kernel.org
-Message-ID: <20200608072625.GV30374@kadam>
-References: <20200607224156.GA24090@ip-172-31-24-31.ec2.internal>
+        Mon, 8 Jun 2020 03:29:02 -0400
+Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87B9FC08C5C5
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 00:29:02 -0700 (PDT)
+Received: by mail-vs1-xe42.google.com with SMTP id t132so8916819vst.2
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 00:29:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FCmiNcLMNBnegLTsWZLMDUk4w4C6QmrCaW3YO/17GXY=;
+        b=I1UkKGJ2LVoDVTKZtN5Lnu5DqC0dpcAJu7JlbKE5S2l6r5Z+6xc7v03MOzHc5ZoRlK
+         msegtRJh2B1YKkWLyMKdhbQG+VnsbhfFEec8R0jj2ppIF3LdJpu94beYDQAyH88yKgHo
+         1WW0QzoEqGHQnPrrPmnVVIKq8fff5eOvuMznOfSYyprD7Wc+HJDOlfap2FbI5fxv5OE9
+         3seejNlz3y6jShHGMLfU0Pwd9UfZTxQyQuY/wli4AAKCYy7iCO7qMXS3mnekJ/QqhNr1
+         oMvKVMa4CH0etxVcRCF2KUmjp4fajJ6ajrO7aG8/G5elqUYIMv5CmSvf55w5FOo3IynM
+         2szA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FCmiNcLMNBnegLTsWZLMDUk4w4C6QmrCaW3YO/17GXY=;
+        b=Qk+0bdA+yvF9Osob0k/YY/QaF59oJLxSy5UXvHHYBowlY3X5ywf4vC6WpteqXesRWt
+         SHcoBmY0YJCwFu6sMnvMhYDseyEmM0mk9oLSZaIw7WdFK1sB/hM3e0Yu37lPWcikKxXF
+         exSlWmSujiJOAVLIGaTYjMlvdZ35dY9390Rj1OlKeYB8PxOQc0pjQ2VtBxAyfc/UNNWB
+         Ala4Jb9ZNsiedYYiZciD+U4LdCJENYEhzpczq2G7cQePuompMlWkLx//h5fpqD1nOnYY
+         tUjEHWDmI4elDpdub434pTcF5L7/REFh+7lgwfaTQ2JQojm77oCgPZhnVQjqZv42FzSK
+         VEfQ==
+X-Gm-Message-State: AOAM530DHqt7Utf6dC3OA51stEId3iMzaOMum0kHF99ihYUtvsua46ug
+        z7JRyU4xoT67jDGWKk9KX3xzsN8QEliekxFAFDqffQ==
+X-Google-Smtp-Source: ABdhPJydAV5F2km3PPtt844KawDCecTd9Z2vElrOVuRPYaTKIe3zLB54uwh1iKm0IcSFPVg9rfecEWzLQPm6GWdp2QU=
+X-Received: by 2002:a67:ee1b:: with SMTP id f27mr12334448vsp.34.1591601341180;
+ Mon, 08 Jun 2020 00:29:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200607224156.GA24090@ip-172-31-24-31.ec2.internal>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9645 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0 adultscore=0
- mlxscore=0 mlxlogscore=999 bulkscore=0 malwarescore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006080055
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9645 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 impostorscore=0
- cotscore=-2147483648 priorityscore=1501 spamscore=0 suspectscore=0
- lowpriorityscore=0 bulkscore=0 mlxlogscore=999 malwarescore=0 mlxscore=0
- phishscore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006080056
+References: <1591277381-7734-1-git-send-email-vbadigan@codeaurora.org>
+In-Reply-To: <1591277381-7734-1-git-send-email-vbadigan@codeaurora.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Mon, 8 Jun 2020 09:28:25 +0200
+Message-ID: <CAPDyKFpO9afpONQEKgYBxwc2LtAn+31isoMGewOwR2Q8FnbCdA@mail.gmail.com>
+Subject: Re: [RFC V1] mmc: core: Add partial initialization support
+To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Maya Erez <merez@codeaurora.org>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Ludovic Barre <ludovic.barre@st.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bradley Bolen <bradleybolen@gmail.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 07, 2020 at 10:41:56PM +0000, Rodolfo C. Villordo wrote:
->  	/* RTSRrvTime */
-> -	uRrvTime = uRTSTime + uCTSTime + uAckTime + uDataTime + 3 * pDevice->uSIFS;
-> +	uRrvTime = uRTSTime + uCTSTime + uAckTime + uDataTime
-> +			+ 3 * pDevice->uSIFS;
+On Thu, 4 Jun 2020 at 15:30, Veerabhadrarao Badiganti
+<vbadigan@codeaurora.org> wrote:
+>
+> From: Maya Erez <merez@codeaurora.org>
+>
+> This change adds the ability to partially initialize
+> the MMC card by using card Sleep/Awake sequence (CMD5).
+> Card will be sent to Sleep state during runtime/system suspend
+> and will be woken up during runtime/system resume.
+> By using this sequence the card doesn't need full initialization
+> which gives time reduction in system/runtime resume path.
 
-The + character should go on the first line:
+It would be nice if you could provide some more exact numbers of what
+the gain is for a couple of different eMMCs, as to justify the change
+a bit more.
 
-	uRrvTime = uRTSTime + uCTSTime + uAckTime + uDataTime +
-		   3 * pDevice->uSIFS;
+Kind regards
+Uffe
 
-The second line should be indented with:
-
-[tab][tab][space][space][space]3 * pDevice->uSIFS;
-
-Same rules apply everywhere.  I'm not going to comment on every line.
-
->  	case RTSDUR_BA_F0: /* RTSDuration_ba_f0 */
-> -		uCTSTime = bb_get_frame_time(pDevice->byPreambleType, byPktType, 14, pDevice->byTopCCKBasicRate);
-> -		if ((byFBOption == AUTO_FB_0) && (wRate >= RATE_18M) && (wRate <= RATE_54M))
-> +		uCTSTime = bb_get_frame_time(pDevice->byPreambleType, byPktType,
-> +					     14, pDevice->byTopCCKBasicRate);
-> +		if ((byFBOption == AUTO_FB_0) && (wRate >= RATE_18M) &&
-> +		    (wRate <= RATE_54M))
-
-
-Here it's awkward to break the two wRate conditions across multiple
-lines.  It's better to write:
-
-		if ((byFBOption == AUTO_FB_0) &&
-	            (wRate >= RATE_18M) && (wRate <= RATE_54M))
-
-regards,
-dan carpenter
-
+>
+> Signed-off-by: Maya Erez <merez@codeaurora.org>
+> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+> ---
+>  drivers/mmc/core/mmc.c   | 146 ++++++++++++++++++++++++++++++++++++++++++++---
+>  include/linux/mmc/card.h |   4 ++
+>  include/linux/mmc/host.h |   2 +
+>  3 files changed, 143 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
+> index de94fbe629bd..5c6444113c92 100644
+> --- a/drivers/mmc/core/mmc.c
+> +++ b/drivers/mmc/core/mmc.c
+> @@ -1892,7 +1892,13 @@ static int mmc_can_sleep(struct mmc_card *card)
+>         return (card && card->ext_csd.rev >= 3);
+>  }
+>
+> -static int mmc_sleep(struct mmc_host *host)
+> +static int mmc_can_sleepawake(struct mmc_host *host)
+> +{
+> +       return host && (host->caps2 & MMC_CAP2_SLEEP_AWAKE) && host->card &&
+> +               (host->card->ext_csd.rev >= 3);
+> +}
+> +
+> +static int mmc_sleepawake(struct mmc_host *host, bool sleep)
+>  {
+>         struct mmc_command cmd = {};
+>         struct mmc_card *card = host->card;
+> @@ -1902,13 +1908,16 @@ static int mmc_sleep(struct mmc_host *host)
+>         /* Re-tuning can't be done once the card is deselected */
+>         mmc_retune_hold(host);
+>
+> -       err = mmc_deselect_cards(host);
+> -       if (err)
+> -               goto out_release;
+> +       if (sleep) {
+> +               err = mmc_deselect_cards(host);
+> +               if (err)
+> +                       goto out_release;
+> +       }
+>
+>         cmd.opcode = MMC_SLEEP_AWAKE;
+>         cmd.arg = card->rca << 16;
+> -       cmd.arg |= 1 << 15;
+> +       if (sleep)
+> +               cmd.arg |= 1 << 15;
+>
+>         /*
+>          * If the max_busy_timeout of the host is specified, validate it against
+> @@ -1939,6 +1948,9 @@ static int mmc_sleep(struct mmc_host *host)
+>         if (!cmd.busy_timeout || !(host->caps & MMC_CAP_WAIT_WHILE_BUSY))
+>                 mmc_delay(timeout_ms);
+>
+> +       if (!sleep)
+> +               err = mmc_select_card(card);
+> +
+>  out_release:
+>         mmc_retune_release(host);
+>         return err;
+> @@ -2016,6 +2028,69 @@ static void mmc_detect(struct mmc_host *host)
+>         }
+>  }
+>
+> +static int mmc_cache_card_ext_csd(struct mmc_host *host)
+> +{
+> +       int err;
+> +       u8 *ext_csd;
+> +       struct mmc_card *card = host->card;
+> +
+> +       err = mmc_get_ext_csd(card, &ext_csd);
+> +       if (err || !ext_csd) {
+> +               pr_err("%s: %s: mmc_get_ext_csd failed (%d)\n",
+> +                       mmc_hostname(host), __func__, err);
+> +               return err;
+> +       }
+> +
+> +       /* only cache read/write fields that the sw changes */
+> +       card->ext_csd.raw_ext_csd_cmdq = ext_csd[EXT_CSD_CMDQ_MODE_EN];
+> +       card->ext_csd.raw_ext_csd_cache_ctrl = ext_csd[EXT_CSD_CACHE_CTRL];
+> +       card->ext_csd.raw_ext_csd_bus_width = ext_csd[EXT_CSD_BUS_WIDTH];
+> +       card->ext_csd.raw_ext_csd_hs_timing = ext_csd[EXT_CSD_HS_TIMING];
+> +
+> +       kfree(ext_csd);
+> +
+> +       return 0;
+> +}
+> +
+> +static int mmc_test_awake_ext_csd(struct mmc_host *host)
+> +{
+> +       int err;
+> +       u8 *ext_csd;
+> +       struct mmc_card *card = host->card;
+> +
+> +       err = mmc_get_ext_csd(card, &ext_csd);
+> +       if (err) {
+> +               pr_err("%s: %s: mmc_get_ext_csd failed (%d)\n",
+> +                       mmc_hostname(host), __func__, err);
+> +               return err;
+> +       }
+> +
+> +       /* only compare read/write fields that the sw changes */
+> +       pr_debug("%s: %s: type(cached:current) cmdq(%d:%d) cache_ctrl(%d:%d) bus_width (%d:%d) timing(%d:%d)\n",
+> +               mmc_hostname(host), __func__,
+> +               card->ext_csd.raw_ext_csd_cmdq,
+> +               ext_csd[EXT_CSD_CMDQ_MODE_EN],
+> +               card->ext_csd.raw_ext_csd_cache_ctrl,
+> +               ext_csd[EXT_CSD_CACHE_CTRL],
+> +               card->ext_csd.raw_ext_csd_bus_width,
+> +               ext_csd[EXT_CSD_BUS_WIDTH],
+> +               card->ext_csd.raw_ext_csd_hs_timing,
+> +               ext_csd[EXT_CSD_HS_TIMING]);
+> +
+> +       err = !((card->ext_csd.raw_ext_csd_cmdq ==
+> +                       ext_csd[EXT_CSD_CMDQ_MODE_EN]) &&
+> +               (card->ext_csd.raw_ext_csd_cache_ctrl ==
+> +                       ext_csd[EXT_CSD_CACHE_CTRL]) &&
+> +               (card->ext_csd.raw_ext_csd_bus_width ==
+> +                       ext_csd[EXT_CSD_BUS_WIDTH]) &&
+> +               (card->ext_csd.raw_ext_csd_hs_timing ==
+> +                       ext_csd[EXT_CSD_HS_TIMING]));
+> +
+> +       kfree(ext_csd);
+> +
+> +       return err;
+> +}
+> +
+>  static int _mmc_suspend(struct mmc_host *host, bool is_suspend)
+>  {
+>         int err = 0;
+> @@ -2034,8 +2109,12 @@ static int _mmc_suspend(struct mmc_host *host, bool is_suspend)
+>         if (mmc_can_poweroff_notify(host->card) &&
+>                 ((host->caps2 & MMC_CAP2_FULL_PWR_CYCLE) || !is_suspend))
+>                 err = mmc_poweroff_notify(host->card, notify_type);
+> -       else if (mmc_can_sleep(host->card))
+> -               err = mmc_sleep(host);
+> +       if (mmc_can_sleepawake(host)) {
+> +               memcpy(&host->cached_ios, &host->ios, sizeof(host->cached_ios));
+> +               mmc_cache_card_ext_csd(host);
+> +       }
+> +       if (mmc_can_sleep(host->card))
+> +               err = mmc_sleepawake(host, true);
+>         else if (!mmc_host_is_spi(host))
+>                 err = mmc_deselect_cards(host);
+>
+> @@ -2048,6 +2127,43 @@ static int _mmc_suspend(struct mmc_host *host, bool is_suspend)
+>         return err;
+>  }
+>
+> +static int mmc_partial_init(struct mmc_host *host)
+> +{
+> +       int err = 0;
+> +       struct mmc_card *card = host->card;
+> +
+> +       mmc_set_bus_width(host, host->cached_ios.bus_width);
+> +       mmc_set_timing(host, host->cached_ios.timing);
+> +       if (host->cached_ios.enhanced_strobe) {
+> +               host->ios.enhanced_strobe = true;
+> +               if (host->ops->hs400_enhanced_strobe)
+> +                       host->ops->hs400_enhanced_strobe(host, &host->ios);
+> +       }
+> +       mmc_set_clock(host, host->cached_ios.clock);
+> +       mmc_set_bus_mode(host, host->cached_ios.bus_mode);
+> +
+> +       if (!mmc_card_hs400es(card) &&
+> +                       (mmc_card_hs200(card) || mmc_card_hs400(card)))
+> +               err = mmc_execute_tuning(card);
+> +
+> +       /*
+> +        * The ext_csd is read to make sure the card did not went through
+> +        * Power-failure during sleep period.
+> +        * A subset of the W/E_P, W/C_P register will be tested. In case
+> +        * these registers values are different from the values that were
+> +        * cached during suspend, we will conclude that a Power-failure occurred
+> +        * and will do full initialization sequence.
+> +        */
+> +       err = mmc_test_awake_ext_csd(host);
+> +       if (err) {
+> +               pr_debug("%s: %s: fail on ext_csd read (%d)\n",
+> +                       mmc_hostname(host), __func__, err);
+> +               goto out;
+> +       }
+> +out:
+> +       return err;
+> +}
+> +
+>  /*
+>   * Suspend callback
+>   */
+> @@ -2070,7 +2186,7 @@ static int mmc_suspend(struct mmc_host *host)
+>   */
+>  static int _mmc_resume(struct mmc_host *host)
+>  {
+> -       int err = 0;
+> +       int err = -EINVAL;
+>
+>         mmc_claim_host(host);
+>
+> @@ -2078,7 +2194,19 @@ static int _mmc_resume(struct mmc_host *host)
+>                 goto out;
+>
+>         mmc_power_up(host, host->card->ocr);
+> -       err = mmc_init_card(host, host->card->ocr, host->card);
+> +
+> +       if (mmc_can_sleepawake(host)) {
+> +               err = mmc_sleepawake(host, false);
+> +               if (!err)
+> +                       err = mmc_partial_init(host);
+> +               else
+> +                       pr_err("%s: %s: awake failed (%d), fallback to full init\n",
+> +                               mmc_hostname(host), __func__, err);
+> +       }
+> +
+> +       if (err)
+> +               err = mmc_init_card(host, host->card->ocr, host->card);
+> +
+>         mmc_card_clr_suspended(host->card);
+>
+>  out:
+> diff --git a/include/linux/mmc/card.h b/include/linux/mmc/card.h
+> index cf3780a6ccc4..2f4c8d3d5763 100644
+> --- a/include/linux/mmc/card.h
+> +++ b/include/linux/mmc/card.h
+> @@ -85,6 +85,8 @@ struct mmc_ext_csd {
+>         unsigned int            data_tag_unit_size;     /* DATA TAG UNIT size */
+>         unsigned int            boot_ro_lock;           /* ro lock support */
+>         bool                    boot_ro_lockable;
+> +       u8                      raw_ext_csd_cmdq;       /* 15 */
+> +       u8                      raw_ext_csd_cache_ctrl; /* 33 */
+>         bool                    ffu_capable;    /* Firmware upgrade support */
+>         bool                    cmdq_en;        /* Command Queue enabled */
+>         bool                    cmdq_support;   /* Command Queue supported */
+> @@ -95,7 +97,9 @@ struct mmc_ext_csd {
+>         u8                      raw_partition_support;  /* 160 */
+>         u8                      raw_rpmb_size_mult;     /* 168 */
+>         u8                      raw_erased_mem_count;   /* 181 */
+> +       u8                      raw_ext_csd_bus_width;  /* 183 */
+>         u8                      strobe_support;         /* 184 */
+> +       u8                      raw_ext_csd_hs_timing;  /* 185 */
+>         u8                      raw_ext_csd_structure;  /* 194 */
+>         u8                      raw_card_type;          /* 196 */
+>         u8                      raw_driver_strength;    /* 197 */
+> diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
+> index d4a50e5dc111..a69abe9f032b 100644
+> --- a/include/linux/mmc/host.h
+> +++ b/include/linux/mmc/host.h
+> @@ -375,6 +375,7 @@ struct mmc_host {
+>  #define MMC_CAP2_CQE_DCMD      (1 << 24)       /* CQE can issue a direct command */
+>  #define MMC_CAP2_AVOID_3_3V    (1 << 25)       /* Host must negotiate down from 3.3V */
+>  #define MMC_CAP2_MERGE_CAPABLE (1 << 26)       /* Host can merge a segment over the segment size */
+> +#define MMC_CAP2_SLEEP_AWAKE   (1 << 27)       /* Use Sleep/Awake (CMD5) */
+>
+>         int                     fixed_drv_type; /* fixed driver type for non-removable media */
+>
+> @@ -393,6 +394,7 @@ struct mmc_host {
+>         spinlock_t              lock;           /* lock for claim and bus ops */
+>
+>         struct mmc_ios          ios;            /* current io bus settings */
+> +       struct mmc_ios          cached_ios;
+>
+>         /* group bitfields together to minimize padding */
+>         unsigned int            use_spi_crc:1;
+> --
+> Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+>
