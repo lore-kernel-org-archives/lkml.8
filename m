@@ -2,157 +2,115 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A14CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 21:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D59DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 21:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E54C52074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 21:12:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76A492074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 21:12:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H45ROcx2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbgFHVMr (ORCPT
+        id S1726895AbgFHVMu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 17:12:47 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39866 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726855AbgFHVMn (ORCPT
+        Mon, 8 Jun 2020 17:12:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48306 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726881AbgFHVMr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 17:12:43 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 058L3qj9025611;
-        Mon, 8 Jun 2020 17:11:49 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31grrhe9yk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 08 Jun 2020 17:11:49 -0400
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 058L4YCk034022;
-        Mon, 8 Jun 2020 17:11:48 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31grrhe9y0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 08 Jun 2020 17:11:48 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 058LBFuD001059;
-        Mon, 8 Jun 2020 21:11:47 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma03ams.nl.ibm.com with ESMTP id 31g2s7vp3u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 08 Jun 2020 21:11:46 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 058LBiZB9437520
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 8 Jun 2020 21:11:44 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1E464A404D;
-        Mon,  8 Jun 2020 21:11:44 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EC440A4040;
-        Mon,  8 Jun 2020 21:11:38 +0000 (GMT)
-Received: from vajain21-in-ibm-com (unknown [9.85.74.153])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Mon,  8 Jun 2020 21:11:38 +0000 (GMT)
-Received: by vajain21-in-ibm-com (sSMTP sendmail emulation); Tue, 09 Jun 2020 02:41:37 +0530
-From:   Vaibhav Jain <vaibhav@linux.ibm.com>
-To:     linuxppc-dev@lists.ozlabs.org, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org
-Cc:     Vaibhav Jain <vaibhav@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Santosh Sivaraj <santosh@fossix.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Piotr Maziarz <piotrx.maziarz@linux.intel.com>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Borislav Petkov <bp@alien8.de>
-Subject: [PATCH v12 2/6] seq_buf: Export seq_buf_printf
-Date:   Tue,  9 Jun 2020 02:40:22 +0530
-Message-Id: <20200608211026.67573-3-vaibhav@linux.ibm.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200608211026.67573-1-vaibhav@linux.ibm.com>
-References: <20200608211026.67573-1-vaibhav@linux.ibm.com>
+        Mon, 8 Jun 2020 17:12:47 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF36BC08C5C2
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 14:12:44 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id z64so9108198pfb.1
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 14:12:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eUU1SNwTPMMpa+RiYbTG49wUfrDQJr1PB29vhwz2Q0g=;
+        b=H45ROcx2m8/Fp4W2R3H8CIendmXyLm8cS/6T+sQw/P/YNETxMiiAvCFWNlRqwVZ4+Q
+         gzf4Mwg3YTqUOlezjkTaUXtCYAwc5hdEfpnqU5aRiGfIY2vu6GX1r4zKbjQFzu5FKa26
+         lmzshDU4bynf0GqHI4qooZAhD6tx6hpM9oCtY+KjUK4/w8Yz9jg/sm+oMJ5cZ+RkUAQJ
+         ek047CYsvcPG81V4QmREqxriPgJeFRtSbXcDFzxZAK/qmsqB0b3rGC+ZNC2iROHOMFDs
+         PSuAx5mLfkztC+3KtBmalm/mzXSMbPkRjrx7/X0RWn2EhGSZy8KiEx8z639T8YFapwZW
+         84yw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eUU1SNwTPMMpa+RiYbTG49wUfrDQJr1PB29vhwz2Q0g=;
+        b=gDMi6OUwyUabL15Ni1r6Zd+aA8UOdv6B04BO+XUA79K/Wb2W2PqNsSl0TarxBDZyKo
+         L3jGyWelRgaGC3xW2h9B7yKqDxEmJhW1i4LWgOnpfZkNMUYJVdf2xlRpEQOwYZy6DsvK
+         KdrTLB/iy6t9eg7epgf2jWyrb8BR0CiTEi+/KJTvzaXuaroXiuyc2yRRu/CLWMFvX/3T
+         zCI/wG1uG1ajvK5BX3dTS5hnsKYpqq29XfPhSg2JaDlUCsao2SK39ZYjspyhOwZ3YSd3
+         aykOABZYPgeUkWx9I1gtS3MqgM4y6MbtdKCDjshvgYuQWBsk5aEry7wSm1l4EuRgbsBB
+         ZQGA==
+X-Gm-Message-State: AOAM532Jwzb3Scw+PDgk/+DFCNV2CNPuFB7PdjsmEAvRtKuBgUtZn9mv
+        5ognnk9QSySjkDb8Xhv2fpFE0JNthqYwxsK/SF8EKA==
+X-Google-Smtp-Source: ABdhPJzXkPo7LVG6P6GKNCGpQ0VxokdYjnH+v8Q6ff9g6ywx31UWDA/+Zqy0uxaup++lTsFaF3uxl3nfyOiW9SU9DNg=
+X-Received: by 2002:a63:4f09:: with SMTP id d9mr21260207pgb.10.1591650763873;
+ Mon, 08 Jun 2020 14:12:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-08_18:2020-06-08,2020-06-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- lowpriorityscore=0 phishscore=0 impostorscore=0 priorityscore=1501
- cotscore=-2147483648 malwarescore=0 mlxlogscore=999 bulkscore=0
- spamscore=0 mlxscore=0 adultscore=0 clxscore=1015 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006080147
+References: <20200527135352.1198078-1-arnd@arndb.de>
+In-Reply-To: <20200527135352.1198078-1-arnd@arndb.de>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 8 Jun 2020 14:12:32 -0700
+Message-ID: <CAKwvOdk=zO-VyYaQCjmgJK9MOGy=7Qv85RPr=qRYetOjWjU4Mg@mail.gmail.com>
+Subject: Re: [PATCH] x86: math-emu: fix up 'cmp' insn for clang ias
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Bill Metzenthen <billm@melbpc.org.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jiri Slaby <jslaby@suse.cz>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'seq_buf' provides a very useful abstraction for writing to a string
-buffer without needing to worry about it over-flowing. However even
-though the API has been stable for couple of years now its still not
-exported to kernel loadable modules limiting its usage.
+On Wed, May 27, 2020 at 6:53 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> The clang integrated assembler requires the 'cmp' instruction to
+> have a length prefix here:
+>
+> arch/x86/math-emu/wm_sqrt.S:212:2: error: ambiguous instructions require an explicit suffix (could be 'cmpb', 'cmpw', or 'cmpl')
+>  cmp $0xffffffff,-24(%ebp)
+>  ^
+>
+> Make this a 32-bit comparison, which it was clearly meant to be.
+>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Hence this patch proposes update to 'seq_buf.c' to mark
-seq_buf_printf() which is part of the seq_buf API to be exported to
-kernel loadable GPL modules. This symbol will be used in later parts
-of this patch-set to simplify content creation for a sysfs attribute.
+Thanks for the patch.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-Cc: Piotr Maziarz <piotrx.maziarz@linux.intel.com>
-Cc: Cezary Rojewski <cezary.rojewski@intel.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
----
-Changelog:
+> ---
+>  arch/x86/math-emu/wm_sqrt.S | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/math-emu/wm_sqrt.S b/arch/x86/math-emu/wm_sqrt.S
+> index 3b2b58164ec1..40526dd85137 100644
+> --- a/arch/x86/math-emu/wm_sqrt.S
+> +++ b/arch/x86/math-emu/wm_sqrt.S
+> @@ -209,7 +209,7 @@ sqrt_stage_2_finish:
+>
+>  #ifdef PARANOID
+>  /* It should be possible to get here only if the arg is ffff....ffff */
+> -       cmp     $0xffffffff,FPU_fsqrt_arg_1
+> +       cmpl    $0xffffffff,FPU_fsqrt_arg_1
+>         jnz     sqrt_stage_2_error
+>  #endif /* PARANOID */
+>
+> --
 
-v11..v12:
-* None
-
-v10..v11:
-* None
-
-v9..v10:
-* None
-
-Resend:
-* Added ack from Steven Rostedt
-
-v8..v9:
-* None
-
-v7..v8:
-* Updated the patch title [ Christoph Hellwig ]
-* Updated patch description to replace confusing term 'external kernel
-  modules' to 'kernel lodable modules'.
-
-Resend:
-* Added ack from Steven Rostedt
-
-v6..v7:
-* New patch in the series
----
- lib/seq_buf.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/lib/seq_buf.c b/lib/seq_buf.c
-index 4e865d42ab03..707453f5d58e 100644
---- a/lib/seq_buf.c
-+++ b/lib/seq_buf.c
-@@ -91,6 +91,7 @@ int seq_buf_printf(struct seq_buf *s, const char *fmt, ...)
- 
- 	return ret;
- }
-+EXPORT_SYMBOL_GPL(seq_buf_printf);
- 
- #ifdef CONFIG_BINARY_PRINTF
- /**
 -- 
-2.26.2
-
+Thanks,
+~Nick Desaulniers
