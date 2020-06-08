@@ -4,48 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FCABC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E401CC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7140820812
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:08:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDF8F20774
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:08:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591657680;
-	bh=k4MFnelTjmAk2L09uBdFWuoRP2HDkQ+mXFg2HOps2v0=;
+	s=default; t=1591657683;
+	bh=3YAXEK4s/GPg8WqzWmTln3TcNkCmuYxwrw8nQ+1yss8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JQfSUCe5lEd0Pqdsv/EUI9N7JN3SoeXOXziOJvDeBuS3jOyuHTze7voVMoPPW+ZAW
-	 091ifA+5fdUkGF96dhnE8wysHT8E5wC3Wl215w44Ik6BWKfIm/UqDofcFgK3bQvQif
-	 lj0chba0W6ywVYeHJF80oZ4jf87PtUhgf6XvkKoY=
+	b=D6VIP1F6HFfWt7O/RooQr7rl3aS/gaGWmKOBoiib+gMrOZVc2SCGcMUC/xD5yza/o
+	 nBISFf5nNGSAUg3jOnMuo46DE4f8Iu8C3B8FM+qmAqq1D4QbrjPpq3R3GOfiGwueYh
+	 +FJ6P3TcvCoDceyB8/dp0egpxeV5vj1uRyoJhsRk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728070AbgFHXH7 (ORCPT
+        id S1728082AbgFHXID (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:07:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51154 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:08:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727833AbgFHXHO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:07:14 -0400
+        id S1727836AbgFHXHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:07:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 087F020890;
-        Mon,  8 Jun 2020 23:07:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A7592087E;
+        Mon,  8 Jun 2020 23:07:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657633;
-        bh=k4MFnelTjmAk2L09uBdFWuoRP2HDkQ+mXFg2HOps2v0=;
+        s=default; t=1591657635;
+        bh=3YAXEK4s/GPg8WqzWmTln3TcNkCmuYxwrw8nQ+1yss8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZVX7vW6v8iqJHZXuGpNHWmisgS+lZK+pE0vkw0bdXQFEHRcqupt2uddSCKdrVPyW/
-         ex+aQmT6zIWtND/cBUF59+mu/AdVuYOMGmI3l6h9E191O4GHMOuUvNlYgftvvUrRiX
-         DsGnaG1rT8mAbjquRTrnbbKfUo29RvWD9Ky7Oyrc=
+        b=0M7iczwC3xP1ohFOKS+sb3j8fD4sIcxZe3gd9Y0jx0Xa/0+azREVde1sB8M/mlA5z
+         /p5x8Fx26+my98Oqq4qyXLMJd5Esr9UaN7jJ9/ewkted4U/0+ADDFULD6vnZBXxfM5
+         Fa+IjrL/49VPuJND3+ksyeXiGTV4WkQl6oX+b4OE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 052/274] io_uring: cleanup io_poll_remove_one() logic
-Date:   Mon,  8 Jun 2020 19:02:25 -0400
-Message-Id: <20200608230607.3361041-52-sashal@kernel.org>
+Cc:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
+        Helen Koike <helen.koike@collabora.com>,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 053/274] media: i2c: imx219: Fix a bug in imx219_enum_frame_size
+Date:   Mon,  8 Jun 2020 19:02:26 -0400
+Message-Id: <20200608230607.3361041-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -58,71 +63,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
 
-[ Upstream commit 3bfa5bcb26f0b52d7ae8416aa0618fff21aceaaf ]
+[ Upstream commit b2bbf1aac61186ef904fd28079e847d3feadb89e ]
 
-We only need apoll in the one section, do the juggling with the work
-restoration there. This removes a special case further down as well.
+When enumerating the frame sizes, the value sent to
+imx219_get_format_code should be fse->code
+(the code from the ioctl) and not imx219->fmt.code
+which is the code set currently in the driver.
 
-No functional changes in this patch.
-
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 22da1d56e982 ("media: i2c: imx219: Add support for RAW8 bit bayer format")
+Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Reviewed-by: Helen Koike <helen.koike@collabora.com>
+Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/io_uring.c | 27 +++++++++++++--------------
- 1 file changed, 13 insertions(+), 14 deletions(-)
+ drivers/media/i2c/imx219.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index bb25e3997d41..03147b6694fd 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -4344,32 +4344,31 @@ static bool __io_poll_remove_one(struct io_kiocb *req,
- 		do_complete = true;
- 	}
- 	spin_unlock(&poll->head->lock);
-+	hash_del(&req->hash_node);
- 	return do_complete;
- }
+diff --git a/drivers/media/i2c/imx219.c b/drivers/media/i2c/imx219.c
+index cb03bdec1f9c..86e0564bfb4f 100644
+--- a/drivers/media/i2c/imx219.c
++++ b/drivers/media/i2c/imx219.c
+@@ -781,7 +781,7 @@ static int imx219_enum_frame_size(struct v4l2_subdev *sd,
+ 	if (fse->index >= ARRAY_SIZE(supported_modes))
+ 		return -EINVAL;
  
- static bool io_poll_remove_one(struct io_kiocb *req)
- {
--	struct async_poll *apoll = NULL;
- 	bool do_complete;
+-	if (fse->code != imx219_get_format_code(imx219, imx219->fmt.code))
++	if (fse->code != imx219_get_format_code(imx219, fse->code))
+ 		return -EINVAL;
  
- 	if (req->opcode == IORING_OP_POLL_ADD) {
- 		do_complete = __io_poll_remove_one(req, &req->poll);
- 	} else {
--		apoll = req->apoll;
-+		struct async_poll *apoll = req->apoll;
-+
- 		/* non-poll requests have submit ref still */
--		do_complete = __io_poll_remove_one(req, &req->apoll->poll);
--		if (do_complete)
-+		do_complete = __io_poll_remove_one(req, &apoll->poll);
-+		if (do_complete) {
- 			io_put_req(req);
--	}
--
--	hash_del(&req->hash_node);
--
--	if (do_complete && apoll) {
--		/*
--		 * restore ->work because we need to call io_req_work_drop_env.
--		 */
--		memcpy(&req->work, &apoll->work, sizeof(req->work));
--		kfree(apoll);
-+			/*
-+			 * restore ->work because we will call
-+			 * io_req_work_drop_env below when dropping the
-+			 * final reference.
-+			 */
-+			memcpy(&req->work, &apoll->work, sizeof(req->work));
-+			kfree(apoll);
-+		}
- 	}
- 
- 	if (do_complete) {
+ 	fse->min_width = supported_modes[fse->index].width;
 -- 
 2.25.1
 
