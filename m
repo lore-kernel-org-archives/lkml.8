@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DC49C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 299BEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4137120801
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:18:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07BCE2078D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:18:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591661904;
-	bh=JnivCYcVOZ73WwbFWkQucbsHSKqUdGvKU95EX62tYBQ=;
+	s=default; t=1591661911;
+	bh=74mmgenOw4MmKp1UIPKTZunpiAwuag71URypgKevze8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wxoZ+bsBAsXEnwSzC6H3U/7beCQa8l8KTPbQJEmrxIjlP2npAOG6QzvOBNvSjew+k
-	 3pC8vhujRpRi2GYRqp80N6aagJoV6+SjTq1bnxSXBKpoRzSexvyCepgBRkxY4EQt3M
-	 tJpuorv8Xa/uhuv+xn9fVpL301hAsMOqah65idas=
+	b=W23V35jbnEeA08fvfgfERH8WaOeOzrin1i2RnZpJnTueO8FhZ4BXXl6JkfC1EWnlm
+	 382GUqy6ouvmCPnXrLMl3KrHhvc72ICnE6mFIvPfW19hYwgzkvAZefSdAHvQZ9NEls
+	 9V/TjySegwyHVSyNaO12eTxbXkoyloziSv11053g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730666AbgFHXSh (ORCPT
+        id S1732605AbgFIAS3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:18:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35586 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:18:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729951AbgFHXO5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:14:57 -0400
+        id S1730660AbgFHXSh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:18:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2FFA21534;
-        Mon,  8 Jun 2020 23:14:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69FD620814;
+        Mon,  8 Jun 2020 23:18:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658097;
-        bh=JnivCYcVOZ73WwbFWkQucbsHSKqUdGvKU95EX62tYBQ=;
+        s=default; t=1591658317;
+        bh=74mmgenOw4MmKp1UIPKTZunpiAwuag71URypgKevze8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pfy2QRSJUgcTMqjQr0g11kIETH6v3yyxrywI0DE1WWMoAg4uSq6Jbk+uqo1m6eXWD
-         yrMknGtYka4FruzoNuSn/ViLokkCa2s5uAfaOFRV+rrWPR0naqMcymp7QGlgX25FQ/
-         hMqMrJqkctGZ3cuPTKslUTZpRxB01pU+vv164T1k=
+        b=pnY/RZ2WIfZCpi/pGnF1he024wuY7odGsZbVcgIfxHE2fz2J8PY4YP915SBjQaMcu
+         YqXaWo3QdY1y/Qfd7nNO/lIwiNsox9+w0WjAeHcQLZt+CwUTRyXgmh+Q9+kLG0aFFb
+         Aw36ESfwkc4bHPuBA6rA0RmgJK1AxjexY1DOnUok=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jian-Hong Pan <jian-hong@endlessm.com>,
-        Daniel Drake <drake@endlessm.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.6 139/606] ALSA: hda/realtek - Enable headset mic of ASUS UX550GE with ALC295
-Date:   Mon,  8 Jun 2020 19:04:24 -0400
-Message-Id: <20200608231211.3363633-139-sashal@kernel.org>
+Cc:     Qiushi Wu <wu000273@umn.edu>, Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 317/606] RDMA/pvrdma: Fix missing pci disable in pvrdma_pci_probe()
+Date:   Mon,  8 Jun 2020 19:07:22 -0400
+Message-Id: <20200608231211.3363633-317-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,37 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian-Hong Pan <jian-hong@endlessm.com>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit ad97d667854c2fbce05a004e107f358ef4b04cf6 ]
+[ Upstream commit db857e6ae548f0f4f4a0f63fffeeedf3cca21f9d ]
 
-The ASUS laptop UX550GE with ALC295 can't detect the headset microphone
-until ALC295_FIXUP_ASUS_MIC_NO_PRESENCE quirk applied.
+In function pvrdma_pci_probe(), pdev was not disabled in one error
+path. Thus replace the jump target “err_free_device” by
+"err_disable_pdev".
 
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-Signed-off-by: Daniel Drake <drake@endlessm.com>
-Link: https://lore.kernel.org/r/20200512061525.133985-2-jian-hong@endlessm.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 29c8d9eba550 ("IB: Add vmw_pvrdma driver")
+Link: https://lore.kernel.org/r/20200523030457.16160-1-wu000273@umn.edu
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index f92cd420e98d..ece762d0c714 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -8050,6 +8050,10 @@ static const struct snd_hda_pin_quirk alc269_pin_fixup_tbl[] = {
- 		{0x12, 0x90a60130},
- 		{0x17, 0x90170110},
- 		{0x21, 0x03211020}),
-+	SND_HDA_PIN_QUIRK(0x10ec0295, 0x1043, "ASUS", ALC295_FIXUP_ASUS_MIC_NO_PRESENCE,
-+		{0x12, 0x90a60120},
-+		{0x17, 0x90170110},
-+		{0x21, 0x04211030}),
- 	SND_HDA_PIN_QUIRK(0x10ec0295, 0x1043, "ASUS", ALC295_FIXUP_ASUS_MIC_NO_PRESENCE,
- 		{0x12, 0x90a60130},
- 		{0x17, 0x90170110},
+diff --git a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c
+index e580ae9cc55a..780fd2dfc07e 100644
+--- a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c
++++ b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c
+@@ -829,7 +829,7 @@ static int pvrdma_pci_probe(struct pci_dev *pdev,
+ 	    !(pci_resource_flags(pdev, 1) & IORESOURCE_MEM)) {
+ 		dev_err(&pdev->dev, "PCI BAR region not MMIO\n");
+ 		ret = -ENOMEM;
+-		goto err_free_device;
++		goto err_disable_pdev;
+ 	}
+ 
+ 	ret = pci_request_regions(pdev, DRV_NAME);
 -- 
 2.25.1
 
