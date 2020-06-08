@@ -2,147 +2,106 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D22C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 05:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F94DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 05:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D679204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 05:37:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF3F420656
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 05:45:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DITjcqep"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a9xcP4Iz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728702AbgFHFho (ORCPT
+        id S1728343AbgFHFpd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 01:37:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44698 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726929AbgFHFhm (ORCPT
+        Mon, 8 Jun 2020 01:45:33 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:22125 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727836AbgFHFpc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 01:37:42 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15A55C08C5C3;
-        Sun,  7 Jun 2020 22:37:42 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id ne5so2810589pjb.5;
-        Sun, 07 Jun 2020 22:37:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=RTapcU6gK7wVagdpIBy1syxYRT4o5dx2x3mb/55IfwQ=;
-        b=DITjcqepAg/aiVMxe1Gh2awTCmo91vVu3S9mlVdU3hgfcPrStCTsiH/eLXmFFx4VRn
-         o+ChFk5Yofnb659Ehd5fQWdqZmVijpUVnFuGNuFhMOE72kvC1E3+mfpKEr/ZswrbVsJy
-         sipQ8XyZUaVEwcIfHzLeHoRReoDiJt10fqtwJ3c4BO29KFNyabOsxQSftZ67b+4X3i7i
-         XR9li74InWK9fBIdE0y17Jbyz8DsjgWa/+fMyP1yne5aCzj4UJD1nLwMXWmxvqe9Spvq
-         wc9P1vraN5a+3iQ96WNuaUdHrp7GU+r2Ij6WnopwS0BjnouSD1RBVYKA1uSNqvSLb6Py
-         s/Sg==
+        Mon, 8 Jun 2020 01:45:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591595128;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=ez7Dws5UfJEZt/nF/P3hd8sxkPeP7mYHFdp1Ir5GgJQ=;
+        b=a9xcP4Izln8WgM23nZ/fwh4x9nwMB9bS9o8qKoFhTw2OpCElW4NU5HhTWlUhM8tZ4RPvij
+        noJAvjdFHcxyOZuZFYkoJmAdIQzBlJgVgunbdxQ54aLo2kmXfdMMpKVTXzyHSQX+zCu9T5
+        0Of8ulm/9pCakwCD9NQiuKebMOERwjI=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-225-KG8ryGUHPxC-KRTfOv0myg-1; Mon, 08 Jun 2020 01:45:27 -0400
+X-MC-Unique: KG8ryGUHPxC-KRTfOv0myg-1
+Received: by mail-wr1-f69.google.com with SMTP id i6so5093412wrr.23
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jun 2020 22:45:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RTapcU6gK7wVagdpIBy1syxYRT4o5dx2x3mb/55IfwQ=;
-        b=mGHQBi0X0VUkABufhg1+Ev4KMP42P+k50fcovQFKnSKOF2ea/BrHawmIGd4egpI30r
-         a7juQPETJ3JbxVxWf7pdRiwVx52iHAiY39QupBk6wn3W/c2dspeFWGBc6v1knh7hYdAY
-         T4XewmmbvKlPz70DTG/zvpsnGxLtJoaKMXCMqiCyBiKHz1c+s6DcbS12cIJmv+Ngt9wq
-         Ci5vK26b7dreo4sMMpLKLt2qOMdwQZ9v+lwWlHHkOK8/7IdnA4dsVpgXGcg6x89IDxsM
-         IE7wg1o5PsYpKn/u7ULuF8Hqjap+oQweW7b0lf2/IZajDIjhEjcAEMaNJZXxjwnv6rV3
-         wnYg==
-X-Gm-Message-State: AOAM532mYJAlZHifT2eiitCzUn7x4pVBDH9g7t06sP0lLO7H4JzQxcyc
-        YgCQKVM09me4iG/znjO9RhU=
-X-Google-Smtp-Source: ABdhPJzN5CaIdVRcGxuqJwlU7nQJooHDxxicu9iq+KnTRKt689A3cjTNxnb8ofRVOYLQTpNcwc0RwQ==
-X-Received: by 2002:a17:90a:c283:: with SMTP id f3mr14534964pjt.166.1591594661380;
-        Sun, 07 Jun 2020 22:37:41 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id k14sm4926474pgn.94.2020.06.07.22.37.39
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=ez7Dws5UfJEZt/nF/P3hd8sxkPeP7mYHFdp1Ir5GgJQ=;
+        b=HtpEOHeAfO+i6P2kePdC3kj+AuXW7ykFJqMr3ilm5RHPsKtUSovlfPHLBcnegnpo6h
+         GzvydOIzqc3hdUqGMmIBSMd/EEWDgU3b3vj/LdjpaJJZWC20FNylT+VbvxagPSSqPqB7
+         uaTrjSVsN76qD8aTrP2jBsgR3+dnQjtusr7iU30UvfwJe7RlDgnfyYNIp8X2+FxGl7+Z
+         5Sd7YfPMST2FexGIT4exNX5Z9T2nHDW0HGj++cRNxx7svAKGck3Ex0uyWzqFnQ3B69dN
+         uVH8o6elugyx/+IUI3iknWl/c2GMsI9MpunkAYWciBuQXa4GCacBO1gSw+FZOHNgVKeH
+         SWLQ==
+X-Gm-Message-State: AOAM531OTzfMwc8wvxRP169RLBG/CWxE33o+bO5FzDRD4REqUnbwwc6Z
+        6jArvGmUd2oJyzRDSLhkdboB5pWOQ/vaDN0jNp/+P45QS4lc85sg3prN5mQDv/aPbfb4BK+lbrx
+        LR7yTYlmBc16ZdgbAduMV4b/6
+X-Received: by 2002:a1c:7215:: with SMTP id n21mr13172740wmc.10.1591595126086;
+        Sun, 07 Jun 2020 22:45:26 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwEIxwo/TLPKQznbdhpqOhXK0+Kt5d6VZ/+K6/mxUvM5HR7j5GwB8GO7qmXBD6gO6AIzOG84Q==
+X-Received: by 2002:a1c:7215:: with SMTP id n21mr13172711wmc.10.1591595125755;
+        Sun, 07 Jun 2020 22:45:25 -0700 (PDT)
+Received: from redhat.com (bzq-109-64-41-91.red.bezeqint.net. [109.64.41.91])
+        by smtp.gmail.com with ESMTPSA id l17sm22316198wrq.17.2020.06.07.22.45.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jun 2020 22:37:40 -0700 (PDT)
-Date:   Sun, 7 Jun 2020 22:37:37 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-tegra@vger.kernel.org, patches@opensource.cirrus.com,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Barry Song <baohua@kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Nick Dyer <nick@shmanahar.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Ferruh Yigit <fery@cypress.com>,
-        Sangwon Jee <jeesw@melfas.com>,
-        Peter Hutterer <peter.hutterer@redhat.com>,
-        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
-        kernel@collabora.com
-Subject: Re: [PATCH v3 0/7] Support inhibiting input devices
-Message-ID: <20200608053737.GS89269@dtor-ws>
-References: <20200604072853.GP89269@dtor-ws>
- <20200605173335.13753-1-andrzej.p@collabora.com>
- <20200607202414.GB13138@amd>
+        Sun, 07 Jun 2020 22:45:25 -0700 (PDT)
+Date:   Mon, 8 Jun 2020 01:45:22 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     kernel test robot <lkp@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH] virtio-mem: drop unnecessary initialization
+Message-ID: <20200608054517.708167-1-mst@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200607202414.GB13138@amd>
+X-Mailer: git-send-email 2.24.1.751.gd10ce2899c
+X-Mutt-Fcc: =sent
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 07, 2020 at 10:24:14PM +0200, Pavel Machek wrote:
-> On Fri 2020-06-05 19:33:28, Andrzej Pietrasiewicz wrote:
-> > Userspace might want to implement a policy to temporarily disregard input
-> > from certain devices.
-> 
-> Wow, you certainly cc a lot of lists.
-> 
-> > An example use case is a convertible laptop, whose keyboard can be folded
-> > under the screen to create tablet-like experience. The user then must hold
-> > the laptop in such a way that it is difficult to avoid pressing the keyboard
-> > keys. It is therefore desirable to temporarily disregard input from the
-> > keyboard, until it is folded back. This obviously is a policy which should
-> > be kept out of the kernel, but the kernel must provide suitable means to
-> > implement such a policy.
-> > 
-> > Due to interactions with suspend/resume, a helper has been added for drivers
-> > to decide if the device is being used or not (PATCH 1/7) and it has been
-> > applied to relevant drivers (PATCH 2,4,5,6/7).
-> 
-> But is that a right way to implement it?
-> 
-> We want this for cellphones, too -- touchscreen should be disabled
-> while the device is locked in the pocket -- but we really want the
-> touchscreen hardware to be powered down in that case (because it keeps
-> SoC busy and eats a _lot_ of electricity).
-> 
-> But simplistic "receive an event and then drop it if device is
-> inhibited" does not allow that...
+rc is initialized to -ENIVAL but that's never used. Drop it.
 
-I do not think you read the entirety of this patch series...
+Fixes: 5f1f79bbc9e2 ("virtio-mem: Paravirtualized memory hotplug")
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+---
+ drivers/virtio/virtio_mem.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks.
-
+diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
+index f658fe9149be..2f357142ea5e 100644
+--- a/drivers/virtio/virtio_mem.c
++++ b/drivers/virtio/virtio_mem.c
+@@ -1768,7 +1768,7 @@ static void virtio_mem_delete_resource(struct virtio_mem *vm)
+ static int virtio_mem_probe(struct virtio_device *vdev)
+ {
+ 	struct virtio_mem *vm;
+-	int rc = -EINVAL;
++	int rc;
+ 
+ 	BUILD_BUG_ON(sizeof(struct virtio_mem_req) != 24);
+ 	BUILD_BUG_ON(sizeof(struct virtio_mem_resp) != 10);
 -- 
-Dmitry
+MST
+
