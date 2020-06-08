@@ -2,136 +2,200 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63286C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A0BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 411212074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:59:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86C6820774
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:59:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rbQi1FYi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730129AbgFHO67 (ORCPT
+        id S1730147AbgFHO7j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 10:58:59 -0400
-Received: from isilmar-4.linta.de ([136.243.71.142]:42582 "EHLO
-        isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730101AbgFHO67 (ORCPT
+        Mon, 8 Jun 2020 10:59:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46992 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725965AbgFHO7j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 10:58:59 -0400
-Received: from light.dominikbrodowski.net (brodo.linta [10.1.0.102])
-        by isilmar-4.linta.de (Postfix) with ESMTPSA id 9942F2004D0;
-        Mon,  8 Jun 2020 14:58:57 +0000 (UTC)
-Received: by light.dominikbrodowski.net (Postfix, from userid 1000)
-        id 44D6C201F7; Mon,  8 Jun 2020 16:58:42 +0200 (CEST)
-Date:   Mon, 8 Jun 2020 16:58:42 +0200
-From:   Dominik Brodowski <linux@dominikbrodowski.net>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Wang ShaoBo <bobo.shaobowang@huawei.com>, huawei.libin@huawei.com,
-        cj.chengjian@huawei.com, xiexiuqi@huawei.com, mark.rutland@arm.com,
-        hch@infradead.org, wcohen@redhat.com, linux-kernel@vger.kernel.org,
-        mtk.manpages@gmail.com, wezhang@redhat.com,
-        gregkh@linuxfoundation.org, Will Deacon <will@kernel.org>
-Subject: Re: [RESEND PATCH] sys_personality: Add optional arch hook
- arch_check_personality
-Message-ID: <20200608145842.GA716055@light.dominikbrodowski.net>
-References: <20200608024925.42510-1-bobo.shaobowang@huawei.com>
- <20200608094640.GA13596@gaia>
+        Mon, 8 Jun 2020 10:59:39 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E70DEC08C5C2;
+        Mon,  8 Jun 2020 07:59:38 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id s21so15538379oic.9;
+        Mon, 08 Jun 2020 07:59:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sakwAE9UDvgXpfLA/IMovHDdgj7kYeDNiG6uvdI8YnE=;
+        b=rbQi1FYi5A1FxRR3KxNata4g2VukcskcoNJv5Qe6GITqlJm9i5g/03+xRsa3AR0dBV
+         sDzBrJISTgokP0089gBn849qmwZ7h0J8Fq1fwlLMRgzLpmpflfD13KBKimhz7LJxZbDg
+         nC7y6sg6e2oetrDBTfx+8x9s51LwHIWDQbTEcPlErG6xqhUpfQe/UcyZVP5Be/oM/roe
+         TrC76QRbzmJAA1DyxJ4J+FlIGYy/5DixXGS85dc0MLHjhT3crGx8paNRDme7fH5+k2+b
+         1QAWja5dHWRBWtfhbj0jLlH6fnk9FCJBNQ6bvbMPo0+VbEmBdVAuG9Sd2bQoMJRjjl4j
+         vo/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sakwAE9UDvgXpfLA/IMovHDdgj7kYeDNiG6uvdI8YnE=;
+        b=i0A5NwtCabgO8/E+h6X5dQYCiR3/kfTg98SFRy1O3QOPB97Bz196YuQYJ4wwlXjGlT
+         lmKPhGH/BkRK2M6JiJNkWLFFsYlOT1ReB4/NHYLK8UhRKsSnxWxwm4oHtzbpNnn32pcJ
+         ud9hY2sO5XYMEZuKIheqFJgXeqC0dfk7gvTvLAEI6vUjcRaqlSoatctpfkj7c/NWzWM9
+         6F2RnDTJBpOUchfxgZYMweIwa6dCqP+vaKuZtVrOYdwzbqXEzrFTscvBuLv1hPgrCXn+
+         EGsCrn/1xkFF3z5mpp2CgBOuGgS6OIWn6D6o7wVcfk6BUZ3aZITbkdMzFqvBhNuAlylj
+         3bVA==
+X-Gm-Message-State: AOAM530wTcipqlq53xpbmDdrTfi/UK3wJ9P3npqRL5qH8l+5Y1mM9Pa/
+        a+d712L+vfqNLiOva9mQUB3Ak9sBe9DLXKSxcOWWZXw8PH4duA==
+X-Google-Smtp-Source: ABdhPJzbekWad6Gkbqv1f+EDYUA1WR2SWjZmQ8HEVGb3/zsnKNal+9yg73fNP7qK7BqGWigQWcEbKKuYfYQcF5z+v9w=
+X-Received: by 2002:aca:ea44:: with SMTP id i65mr10535404oih.142.1591628378380;
+ Mon, 08 Jun 2020 07:59:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200608094640.GA13596@gaia>
+References: <1591555267-21822-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1591555267-21822-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdWKhq63yT9XbbV4Nmr0EJZcGQ396pVCqkrzMTmgunznaQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdWKhq63yT9XbbV4Nmr0EJZcGQ396pVCqkrzMTmgunznaQ@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Mon, 8 Jun 2020 15:59:11 +0100
+Message-ID: <CA+V-a8ueb-3VD-=Bcg6dJqZhLRoCBxu-Zo+key_oEFchNc_APA@mail.gmail.com>
+Subject: Re: [PATCH 03/11] arm64: dts: renesas: hihope-common: Separate out
+ Rev.2.0 specific into hihope-common-rev2.dtsi file
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 10:46:41AM +0100, Catalin Marinas wrote:
-> On Mon, Jun 08, 2020 at 10:49:25AM +0800, Wang ShaoBo wrote:
-> > Currently arm64 personality syscall uses wrapper __arm64_sys_personality
-> > to redirect to __arm64_sys_arm64_personality, it's easily confused,
-> > Whereas using an normal hook arch_check_personality() can reject
-> > additional settings like this for special case of different architectures.
-> > 
-> > This makes code clean and easier for subsequent modification.
-> 
-> Do you plan to add more stuff here? Curious what triggered this patch.
-> 
-> > diff --git a/arch/arm64/kernel/sys.c b/arch/arm64/kernel/sys.c
-> > index d5ffaaab31a7..5c01816d7a77 100644
-> > --- a/arch/arm64/kernel/sys.c
-> > +++ b/arch/arm64/kernel/sys.c
-> > @@ -28,12 +28,13 @@ SYSCALL_DEFINE6(mmap, unsigned long, addr, unsigned long, len,
-> >  	return ksys_mmap_pgoff(addr, len, prot, flags, fd, off >> PAGE_SHIFT);
-> >  }
-> >  
-> > -SYSCALL_DEFINE1(arm64_personality, unsigned int, personality)
-> > +int arch_check_personality(unsigned int personality)
-> >  {
-> >  	if (personality(personality) == PER_LINUX32 &&
-> >  		!system_supports_32bit_el0())
-> >  		return -EINVAL;
-> > -	return ksys_personality(personality);
-> > +
-> > +	return 0;
-> >  }
-> 
-> We use the ksys_* pattern in other places as well, so this wouldn't be
-> something new.
-> 
-> > diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-> > index 1815065d52f3..3dbbad498027 100644
-> > --- a/include/linux/syscalls.h
-> > +++ b/include/linux/syscalls.h
-> > @@ -1393,16 +1393,6 @@ static inline long ksys_truncate(const char __user *pathname, loff_t length)
-> >  	return do_sys_truncate(pathname, length);
-> >  }
-> >  
-> > -static inline unsigned int ksys_personality(unsigned int personality)
-> > -{
-> > -	unsigned int old = current->personality;
-> > -
-> > -	if (personality != 0xffffffff)
-> > -		set_personality(personality);
-> > -
-> > -	return old;
-> > -}
-> > -
-> >  /* for __ARCH_WANT_SYS_IPC */
-> >  long ksys_semtimedop(int semid, struct sembuf __user *tsops,
-> >  		     unsigned int nsops,
-> > diff --git a/kernel/exec_domain.c b/kernel/exec_domain.c
-> > index 33f07c5f2515..f3682f4bf205 100644
-> > --- a/kernel/exec_domain.c
-> > +++ b/kernel/exec_domain.c
-> > @@ -35,9 +35,21 @@ static int __init proc_execdomains_init(void)
-> >  module_init(proc_execdomains_init);
-> >  #endif
-> >  
-> > +int __weak arch_check_personality(unsigned int personality)
-> > +{
-> > +	return 0;
-> > +}
-> > +
-> >  SYSCALL_DEFINE1(personality, unsigned int, personality)
-> >  {
-> > -	unsigned int old = current->personality;
-> > +	int err;
-> > +	unsigned int old;
-> > +
-> > +	err = arch_check_personality(personality);
-> > +	if (err)
-> > +		return err;
-> > +
-> > +	old = current->personality;
-> 
-> I'm surprised that the generic sys_personality() doesn't call
-> ksys_personality() directly but rather duplicates the code.
+Hi Geert,
 
-It was the other way round, and the duplication is based on a
-suggestion by Christoph Hellwig IIRC,
-	https://lore.kernel.org/lkml/20180514120756.GA11638@infradead.org/
+On Mon, Jun 8, 2020 at 3:47 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Sun, Jun 7, 2020 at 8:41 PM Lad Prabhakar
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > Separate out Rev.2.0 specific hardware changes into
+> > hihope-common-rev2.dtsi file so that hihope-common.dtsi can be used
+> > by all the variants for RZ/G2M[N] boards.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+>
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/renesas/hihope-common-rev2.dtsi
+>
+> Perhaps just hihope-rev2.dtsi, i.e. without the "common-"?
+>
+Yes makes sense.
 
-Thanks,
-	Dominik
+> > @@ -0,0 +1,101 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Device Tree Source for the HiHope RZ/G2[MN] main board Rev.2.0 common
+> > + * parts
+> > + *
+> > + * Copyright (C) 2020 Renesas Electronics Corp.
+> > + */
+> > +
+> > +#include <dt-bindings/gpio/gpio.h>
+> > +
+> > +/ {
+> > +       leds {
+> > +               compatible = "gpio-leds";
+> > +
+> > +               bt_active_led {
+> > +                       label = "blue:bt";
+> > +                       gpios = <&gpio7  0 GPIO_ACTIVE_HIGH>;
+> > +                       linux,default-trigger = "hci0-power";
+> > +                       default-state = "off";
+> > +               };
+> > +
+> > +               led0 {
+> > +                       gpios = <&gpio6 11 GPIO_ACTIVE_HIGH>;
+> > +               };
+> > +
+> > +               led1 {
+> > +                       gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
+> > +               };
+> > +
+> > +               led2 {
+> > +                       gpios = <&gpio6 13 GPIO_ACTIVE_HIGH>;
+> > +               };
+> > +
+> > +               led3 {
+> > +                       gpios = <&gpio0  0 GPIO_ACTIVE_HIGH>;
+> > +               };
+>
+> led1, led2, and led3 are present on both, so I'd keep them in
+> hihope-common.dtsi.
+>
+The leds defined in hihope-common-rev4.dtsi are as per the label names
+on the schematics/board so that it's easier to identify the LED's by
+name.
+
+> > +
+> > +               wlan_active_led {
+> > +                       label = "yellow:wlan";
+> > +                       gpios = <&gpio7  1 GPIO_ACTIVE_HIGH>;
+> > +                       linux,default-trigger = "phy0tx";
+> > +                       default-state = "off";
+> > +               };
+> > +       };
+> > +
+> > +       wlan_en_reg: regulator-wlan_en {
+> > +               compatible = "regulator-fixed";
+> > +               regulator-name = "wlan-en-regulator";
+> > +               regulator-min-microvolt = <1800000>;
+> > +               regulator-max-microvolt = <1800000>;
+> > +               startup-delay-us = <70000>;
+> > +
+> > +               gpio = <&gpio_expander 1 GPIO_ACTIVE_HIGH>;
+> > +               enable-active-high;
+> > +       };
+>
+> Same for the WLAN regulator, especially as it is referenced from
+> hihope-common.dtsi.
+> As the GPIO  line differs between the two variants, you just need
+> to add the gpio property in the revision-specific file.
+>
+Agreed will move this to common.
+
+> > +};
+> > +
+> > +&hscif0 {
+> > +       bluetooth {
+> > +               compatible = "ti,wl1837-st";
+> > +               enable-gpios = <&gpio_expander 2 GPIO_ACTIVE_HIGH>;
+> > +       };
+> > +};
+>
+> As node is small, and the GPIO line differs from the two variants,
+> I think duplicating it in both revision-specific files is fine, though.
+>
+Agreed.
+
+Cheers,
+--Prabhakar
+
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
