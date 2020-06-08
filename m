@@ -7,47 +7,56 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03996C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:09:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31978C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:09:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3264208C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:09:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AEB8208C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:09:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591657758;
-	bh=UgH8czb3Zqf99cuf6/cq5xSM1xd308oDJ5vXdkILL9g=;
+	s=default; t=1591657768;
+	bh=ulgzXYC0umJqLr8UKHgIViy/K3yWrij/YDsys4Du2PI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EBItEE8riSewvieO7ljLt37k4QzAWSWl7lULkcP8MaIXKZ/deJPxLoYkjeCUG+mdp
-	 uRx8e5HhIaV2C16PdzDAyfRO9LubssInRwlTqgZ6QKUvw5mWwF5SLnlU6MszT6kvmt
-	 mre3R0YR0XPG9mGwteGuUfpKqvXbam2eIu61gm24=
+	b=xFVUj3SjFkz5QDUrkghD4eTcdcxOibzZw7H1ZRy6eQQWaWheHemtQyQYeF+1Uxge3
+	 62hkpTpjqi9iPrdGlcPkDYC9FfB+f8wxkctA7exN2jp2l2SPVuWFWCA0dbiJrIC7M8
+	 4euwY6nu2UupBSve0ABJ/Uz3pNKuGMf8SECHXEZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728028AbgFHXJR (ORCPT
+        id S1728414AbgFHXJ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:09:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53292 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:09:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728107AbgFHXIL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:08:11 -0400
+        id S1728127AbgFHXIY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:08:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3832B20842;
-        Mon,  8 Jun 2020 23:08:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 097FA2085B;
+        Mon,  8 Jun 2020 23:08:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657691;
-        bh=UgH8czb3Zqf99cuf6/cq5xSM1xd308oDJ5vXdkILL9g=;
+        s=default; t=1591657703;
+        bh=ulgzXYC0umJqLr8UKHgIViy/K3yWrij/YDsys4Du2PI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NImMvxuqEixileN0cKasTp1aFKdtMLCwg1iIfjFyF9fv37jbF6iU7Ct6dEOMmIxa7
-         LLgNlo/97uYHUknNhQvR+Di4AMmidwrMVeXXL/99neosQJYELI35TL23LxOfpeiRwS
-         8NbV7BOq/QM++pzixWzH2Y1W+cGAvdILbkhsrDc8=
+        b=fnUR+2mRT4CJmeSQyuvD+ETxomCONtNToZ6fJWU7XP09If04OsGz4pgJv0iMjH2dK
+         G1iFvDzt1SrJc0UG4f+pP7d+Mg75hZ1vVcVU4Bk19dH5TuN4mslZ3EfXAUklW6vPyo
+         zQJXvTvkka0LRwL4IEpkqNiN1U5DXqcDl8NcgG44=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Venkateswara Naralasetty <vnaralas@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 092/274] ath10k: fix kernel null pointer dereference
-Date:   Mon,  8 Jun 2020 19:03:05 -0400
-Message-Id: <20200608230607.3361041-92-sashal@kernel.org>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andrey Zhizhikin <andrey.z@gmail.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 101/274] tools api fs: Make xxx__mountpoint() more scalable
+Date:   Mon,  8 Jun 2020 19:03:14 -0400
+Message-Id: <20200608230607.3361041-101-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -60,66 +69,180 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Venkateswara Naralasetty <vnaralas@codeaurora.org>
+From: Stephane Eranian <eranian@google.com>
 
-[ Upstream commit acb31476adc9ff271140cdd4d3c707ff0c97f5a4 ]
+[ Upstream commit c6fddb28bad26e5472cb7acf7b04cd5126f1a4ab ]
 
-Currently sta airtime is updated without any lock in case of
-host based airtime calculation. Which may result in accessing the
-invalid sta pointer in case of continuous station connect/disconnect.
+The xxx_mountpoint() interface provided by fs.c finds mount points for
+common pseudo filesystems. The first time xxx_mountpoint() is invoked,
+it scans the mount table (/proc/mounts) looking for a match. If found,
+it is cached. The price to scan /proc/mounts is paid once if the mount
+is found.
 
-This patch fix the kernel null pointer dereference by updating the
-station airtime with proper RCU lock in case of host based airtime
-calculation.
+When the mount point is not found, subsequent calls to xxx_mountpoint()
+scan /proc/mounts over and over again.  There is no caching.
 
-Proceeding with the analysis of "ARM Kernel Panic".
-The APSS crash happened due to OOPS on CPU 0.
-Crash Signature : Unable to handle kernel NULL pointer dereference
-at virtual address 00000300
-During the crash,
-PC points to "ieee80211_sta_register_airtime+0x1c/0x448 [mac80211]"
-LR points to "ath10k_txrx_tx_unref+0x17c/0x364 [ath10k_core]".
-The Backtrace obtained is as follows:
-[<bf880238>] (ieee80211_sta_register_airtime [mac80211]) from
-[<bf945a38>] (ath10k_txrx_tx_unref+0x17c/0x364 [ath10k_core])
-[<bf945a38>] (ath10k_txrx_tx_unref [ath10k_core]) from
-[<bf9428e4>] (ath10k_htt_txrx_compl_task+0xa50/0xfc0 [ath10k_core])
-[<bf9428e4>] (ath10k_htt_txrx_compl_task [ath10k_core]) from
-[<bf9b9bc8>] (ath10k_pci_napi_poll+0x50/0xf8 [ath10k_pci])
-[<bf9b9bc8>] (ath10k_pci_napi_poll [ath10k_pci]) from
-[<c059e3b0>] (net_rx_action+0xac/0x160)
-[<c059e3b0>] (net_rx_action) from [<c02329a4>] (__do_softirq+0x104/0x294)
-[<c02329a4>] (__do_softirq) from [<c0232b64>] (run_ksoftirqd+0x30/0x90)
-[<c0232b64>] (run_ksoftirqd) from [<c024e358>] (smpboot_thread_fn+0x25c/0x274)
-[<c024e358>] (smpboot_thread_fn) from [<c02482fc>] (kthread+0xd8/0xec)
+This causes a scaling issue in perf record with hugeltbfs__mountpoint().
+The function is called for each process found in
+synthesize__mmap_events().  If the machine has thousands of processes
+and if the /proc/mounts has many entries this could cause major overhead
+in perf record. We have observed multi-second slowdowns on some
+configurations.
 
-Tested HW: QCA9888
-Tested FW: 10.4-3.10-00047
+As an example on a laptop:
 
-Signed-off-by: Venkateswara Naralasetty <vnaralas@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/1585736290-17661-1-git-send-email-vnaralas@codeaurora.org
+Before:
+
+  $ sudo umount /dev/hugepages
+  $ strace -e trace=openat -o /tmp/tt perf record -a ls
+  $ fgrep mounts /tmp/tt
+  285
+
+After:
+
+  $ sudo umount /dev/hugepages
+  $ strace -e trace=openat -o /tmp/tt perf record -a ls
+  $ fgrep mounts /tmp/tt
+  1
+
+One could argue that the non-caching in case the moint point is not
+found is intentional. That way subsequent calls may discover a moint
+point if the sysadmin mounts the filesystem. But the same argument could
+be made against caching the mount point. It could be unmounted causing
+errors.  It all depends on the intent of the interface. This patch
+assumes it is expected to scan /proc/mounts once. The patch documents
+the caching behavior in the fs.h header file.
+
+An alternative would be to just fix perf record. But it would solve the
+problem with hugetlbs__mountpoint() but there could be similar issues
+(possibly down the line) with other xxx_mountpoint() calls in perf or
+other tools.
+
+Signed-off-by: Stephane Eranian <eranian@google.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andrey Zhizhikin <andrey.z@gmail.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lore.kernel.org/lkml/20200402154357.107873-3-irogers@google.com
+Signed-off-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/txrx.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/lib/api/fs/fs.c | 17 +++++++++++++++++
+ tools/lib/api/fs/fs.h | 12 ++++++++++++
+ 2 files changed, 29 insertions(+)
 
-diff --git a/drivers/net/wireless/ath/ath10k/txrx.c b/drivers/net/wireless/ath/ath10k/txrx.c
-index 39abf8b12903..f46b9083bbf1 100644
---- a/drivers/net/wireless/ath/ath10k/txrx.c
-+++ b/drivers/net/wireless/ath/ath10k/txrx.c
-@@ -84,9 +84,11 @@ int ath10k_txrx_tx_unref(struct ath10k_htt *htt,
- 		wake_up(&htt->empty_tx_wq);
- 	spin_unlock_bh(&htt->tx_lock);
+diff --git a/tools/lib/api/fs/fs.c b/tools/lib/api/fs/fs.c
+index 027b18f7ed8c..82f53d81a7a7 100644
+--- a/tools/lib/api/fs/fs.c
++++ b/tools/lib/api/fs/fs.c
+@@ -90,6 +90,7 @@ struct fs {
+ 	const char * const	*mounts;
+ 	char			 path[PATH_MAX];
+ 	bool			 found;
++	bool			 checked;
+ 	long			 magic;
+ };
  
-+	rcu_read_lock();
- 	if (txq && txq->sta && skb_cb->airtime_est)
- 		ieee80211_sta_register_airtime(txq->sta, txq->tid,
- 					       skb_cb->airtime_est, 0);
-+	rcu_read_unlock();
+@@ -111,31 +112,37 @@ static struct fs fs__entries[] = {
+ 		.name	= "sysfs",
+ 		.mounts	= sysfs__fs_known_mountpoints,
+ 		.magic	= SYSFS_MAGIC,
++		.checked = false,
+ 	},
+ 	[FS__PROCFS] = {
+ 		.name	= "proc",
+ 		.mounts	= procfs__known_mountpoints,
+ 		.magic	= PROC_SUPER_MAGIC,
++		.checked = false,
+ 	},
+ 	[FS__DEBUGFS] = {
+ 		.name	= "debugfs",
+ 		.mounts	= debugfs__known_mountpoints,
+ 		.magic	= DEBUGFS_MAGIC,
++		.checked = false,
+ 	},
+ 	[FS__TRACEFS] = {
+ 		.name	= "tracefs",
+ 		.mounts	= tracefs__known_mountpoints,
+ 		.magic	= TRACEFS_MAGIC,
++		.checked = false,
+ 	},
+ 	[FS__HUGETLBFS] = {
+ 		.name	= "hugetlbfs",
+ 		.mounts = hugetlbfs__known_mountpoints,
+ 		.magic	= HUGETLBFS_MAGIC,
++		.checked = false,
+ 	},
+ 	[FS__BPF_FS] = {
+ 		.name	= "bpf",
+ 		.mounts = bpf_fs__known_mountpoints,
+ 		.magic	= BPF_FS_MAGIC,
++		.checked = false,
+ 	},
+ };
  
- 	if (ar->bus_param.dev_type != ATH10K_DEV_TYPE_HL)
- 		dma_unmap_single(dev, skb_cb->paddr, msdu->len, DMA_TO_DEVICE);
+@@ -158,6 +165,7 @@ static bool fs__read_mounts(struct fs *fs)
+ 	}
+ 
+ 	fclose(fp);
++	fs->checked = true;
+ 	return fs->found = found;
+ }
+ 
+@@ -220,6 +228,7 @@ static bool fs__env_override(struct fs *fs)
+ 		return false;
+ 
+ 	fs->found = true;
++	fs->checked = true;
+ 	strncpy(fs->path, override_path, sizeof(fs->path) - 1);
+ 	fs->path[sizeof(fs->path) - 1] = '\0';
+ 	return true;
+@@ -246,6 +255,14 @@ static const char *fs__mountpoint(int idx)
+ 	if (fs->found)
+ 		return (const char *)fs->path;
+ 
++	/* the mount point was already checked for the mount point
++	 * but and did not exist, so return NULL to avoid scanning again.
++	 * This makes the found and not found paths cost equivalent
++	 * in case of multiple calls.
++	 */
++	if (fs->checked)
++		return NULL;
++
+ 	return fs__get_mountpoint(fs);
+ }
+ 
+diff --git a/tools/lib/api/fs/fs.h b/tools/lib/api/fs/fs.h
+index 936edb95e1f3..aa222ca30311 100644
+--- a/tools/lib/api/fs/fs.h
++++ b/tools/lib/api/fs/fs.h
+@@ -18,6 +18,18 @@
+ 	const char *name##__mount(void);	\
+ 	bool name##__configured(void);		\
+ 
++/*
++ * The xxxx__mountpoint() entry points find the first match mount point for each
++ * filesystems listed below, where xxxx is the filesystem type.
++ *
++ * The interface is as follows:
++ *
++ * - If a mount point is found on first call, it is cached and used for all
++ *   subsequent calls.
++ *
++ * - If a mount point is not found, NULL is returned on first call and all
++ *   subsequent calls.
++ */
+ FS(sysfs)
+ FS(procfs)
+ FS(debugfs)
 -- 
 2.25.1
 
