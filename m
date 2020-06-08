@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3AD7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7029EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:05:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A75C22078C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4974820835
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:05:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591664710;
-	bh=HvvRqZwkh6QFAxuP2/osGSKcmwJD2DscUKII0BRZplw=;
+	s=default; t=1591664716;
+	bh=KeY6RO9Q9yvF6MpjhhdIDXm5QTdCoMZ8/UAisDVoSoY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s77qp3FSn39IuaicDmK5sm69zCbXM7MU/r+ZTv34wCEasr9AxEA29IQ0ommdWFGkJ
-	 TPZS4AYl2XzHkGxCUZm6KyLcBTnLN4UiXRBr9leSdChB4PDnvR0YbU/nudVcD1z34a
-	 lRDDtFuijeC40J4cODaTUPZ/h3qsNsnyK35UblbA=
+	b=0KV/KTWPVQmIHcIaeyVPgLzYZ09mbN3ygu7ticr65XRaijI9Knk58SixYWa6YhcwY
+	 Mse//tMIxziLulgADOz1cCCs2fVQxtWtKLOCCHgq1TDVaFQxePO/OKF1Hq8vmFvSF2
+	 vJw6puDwROY9jt3nh0EtQBxj5c+k3srnxorayTkE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727855AbgFHXHU (ORCPT
+        id S1730666AbgFIBFP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:07:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50044 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 21:05:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726993AbgFHXGm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:06:42 -0400
+        id S1727799AbgFHXHT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:07:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D46420853;
-        Mon,  8 Jun 2020 23:06:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFD862087E;
+        Mon,  8 Jun 2020 23:07:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657601;
-        bh=HvvRqZwkh6QFAxuP2/osGSKcmwJD2DscUKII0BRZplw=;
+        s=default; t=1591657639;
+        bh=KeY6RO9Q9yvF6MpjhhdIDXm5QTdCoMZ8/UAisDVoSoY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=swwSbdITupFVkO66bA/IrlyzbWeKGZFDEQTNEShqwzkAfRTrR/gE+PiczdQZ15tlb
-         wtfPUv+fJ+2hpfPnXCIFYhHm7L1mh2rFISJ9Woti9x1IUt7edM6d+Y/Pir2PmpQzzI
-         JvZPIrQgyCm+J82hK5sNb3iX/xrVgiDm7LDnwBpM=
+        b=WbgJ/i4sg4h8Y0wZ+arhDFkzAolxdi//qOflGTRZ87/9CJ3TkxA8Ju4nsTs9fdgVr
+         gHnLOTex3yxdm4kvm8LAgfAfDWfZXImVluJFfr/w9BqxBGUvjN2ZDP0ljGyCFnNfr0
+         HOhCHwuhvUJY+okaxINPSgaTw6feoTQ8DwVLLIeI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Huaixin Chang <changhuaixin@linux.alibaba.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ben Segall <bsegall@google.com>, Phil Auld <pauld@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.7 027/274] sched/fair: Refill bandwidth before scaling
-Date:   Mon,  8 Jun 2020 19:02:00 -0400
-Message-Id: <20200608230607.3361041-27-sashal@kernel.org>
+Cc:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 057/274] pmu/smmuv3: Clear IRQ affinity hint on device removal
+Date:   Mon,  8 Jun 2020 19:02:30 -0400
+Message-Id: <20200608230607.3361041-57-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -60,52 +59,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huaixin Chang <changhuaixin@linux.alibaba.com>
+From: Jean-Philippe Brucker <jean-philippe@linaro.org>
 
-[ Upstream commit 5a6d6a6ccb5f48ca8cf7c6d64ff83fd9c7999390 ]
+[ Upstream commit 10f6cd2af21bb44faab31a50ec3361d7649e5a39 ]
 
-In order to prevent possible hardlockup of sched_cfs_period_timer()
-loop, loop count is introduced to denote whether to scale quota and
-period or not. However, scale is done between forwarding period timer
-and refilling cfs bandwidth runtime, which means that period timer is
-forwarded with old "period" while runtime is refilled with scaled
-"quota".
+Currently when trying to remove the SMMUv3 PMU module we get a
+WARN_ON_ONCE from free_irq(), because the affinity hint set during probe
+hasn't been properly cleared.
 
-Move do_sched_cfs_period_timer() before scaling to solve this.
+[  238.878383] WARNING: CPU: 0 PID: 175 at kernel/irq/manage.c:1744 free_irq+0x324/0x358
+...
+[  238.897263] Call trace:
+[  238.897998]  free_irq+0x324/0x358
+[  238.898792]  devm_irq_release+0x18/0x28
+[  238.899189]  release_nodes+0x1b0/0x228
+[  238.899984]  devres_release_all+0x38/0x60
+[  238.900779]  device_release_driver_internal+0x10c/0x1d0
+[  238.901574]  driver_detach+0x50/0xe0
+[  238.902368]  bus_remove_driver+0x5c/0xd8
+[  238.903448]  driver_unregister+0x30/0x60
+[  238.903958]  platform_driver_unregister+0x14/0x20
+[  238.905075]  arm_smmu_pmu_exit+0x1c/0xecc [arm_smmuv3_pmu]
+[  238.905547]  __arm64_sys_delete_module+0x14c/0x260
+[  238.906342]  el0_svc_common.constprop.0+0x74/0x178
+[  238.907355]  do_el0_svc+0x24/0x90
+[  238.907932]  el0_sync_handler+0x11c/0x198
+[  238.908979]  el0_sync+0x158/0x180
 
-Fixes: 2e8e19226398 ("sched/fair: Limit sched_cfs_period_timer() loop to avoid hard lockup")
-Signed-off-by: Huaixin Chang <changhuaixin@linux.alibaba.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Ben Segall <bsegall@google.com>
-Reviewed-by: Phil Auld <pauld@redhat.com>
-Link: https://lkml.kernel.org/r/20200420024421.22442-3-changhuaixin@linux.alibaba.com
+Just like the other perf drivers, clear the affinity hint before
+releasing the device.
+
+Fixes: 7d839b4b9e00 ("perf/smmuv3: Add arm64 smmuv3 pmu driver")
+Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Link: https://lore.kernel.org/r/20200422084805.237738-1-jean-philippe@linaro.org
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/fair.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/perf/arm_smmuv3_pmu.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index da3e5b54715b..2ae7e30ccb33 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5170,6 +5170,8 @@ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
- 		if (!overrun)
- 			break;
- 
-+		idle = do_sched_cfs_period_timer(cfs_b, overrun, flags);
-+
- 		if (++count > 3) {
- 			u64 new, old = ktime_to_ns(cfs_b->period);
- 
-@@ -5199,8 +5201,6 @@ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
- 			/* reset count so we don't come right back in here */
- 			count = 0;
- 		}
--
--		idle = do_sched_cfs_period_timer(cfs_b, overrun, flags);
+diff --git a/drivers/perf/arm_smmuv3_pmu.c b/drivers/perf/arm_smmuv3_pmu.c
+index f01a57e5a5f3..48e28ef93a70 100644
+--- a/drivers/perf/arm_smmuv3_pmu.c
++++ b/drivers/perf/arm_smmuv3_pmu.c
+@@ -814,7 +814,7 @@ static int smmu_pmu_probe(struct platform_device *pdev)
+ 	if (err) {
+ 		dev_err(dev, "Error %d registering hotplug, PMU @%pa\n",
+ 			err, &res_0->start);
+-		return err;
++		goto out_clear_affinity;
  	}
- 	if (idle)
- 		cfs_b->period_active = 0;
+ 
+ 	err = perf_pmu_register(&smmu_pmu->pmu, name, -1);
+@@ -833,6 +833,8 @@ static int smmu_pmu_probe(struct platform_device *pdev)
+ 
+ out_unregister:
+ 	cpuhp_state_remove_instance_nocalls(cpuhp_state_num, &smmu_pmu->node);
++out_clear_affinity:
++	irq_set_affinity_hint(smmu_pmu->irq, NULL);
+ 	return err;
+ }
+ 
+@@ -842,6 +844,7 @@ static int smmu_pmu_remove(struct platform_device *pdev)
+ 
+ 	perf_pmu_unregister(&smmu_pmu->pmu);
+ 	cpuhp_state_remove_instance_nocalls(cpuhp_state_num, &smmu_pmu->node);
++	irq_set_affinity_hint(smmu_pmu->irq, NULL);
+ 
+ 	return 0;
+ }
 -- 
 2.25.1
 
