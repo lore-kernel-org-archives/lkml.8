@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD74BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B42EAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:17:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F71A2086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:17:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E3BF2089D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:17:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658236;
-	bh=LT8LrH50b5S9Ylv0GfXkR5aMNPboBN/KdvdNtqstb+c=;
+	s=default; t=1591658248;
+	bh=ZEhSSl1cG6zZR1BIQ9zMUFW/bSq6ytLJgq3m5lTArCg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N2AhCTB0emtgogd7bMJ5arkyOtrAh7xcoOThbPsKKZ+TfPHqB2NMAwP5S2zXlMdfX
-	 73oxznwwBPrFBY1szHkhbabO4Qp6uY2zvBaHxMJbJFEThafGS1H3jtSjm6e9FZuU1x
-	 es7dbaCMGyRogL+4JpdnP92OdJBw7aZEvlpjIIgM=
+	b=QkfLng/S/p51WNvjso0XSE+kaT9XCVorC3PmCLF48W0mCX2ZydTG16ImIWCtYhe9+
+	 yO1QLJEvdQkV9INTtlViQyZMNOJImL1GUmzEoEqoKaz0drtBvwBdFpeMJ1k4pAueat
+	 wn1C8/NBO7dsxz21OuJRTC0SDQiwAzU3vZdU5TeQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730424AbgFHXRO (ORCPT
+        id S1730436AbgFHXR0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:17:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34032 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:17:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729666AbgFHXOB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:14:01 -0400
+        id S1729680AbgFHXOD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:14:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AD9B214D8;
-        Mon,  8 Jun 2020 23:13:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B05120C09;
+        Mon,  8 Jun 2020 23:14:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658040;
-        bh=LT8LrH50b5S9Ylv0GfXkR5aMNPboBN/KdvdNtqstb+c=;
+        s=default; t=1591658043;
+        bh=ZEhSSl1cG6zZR1BIQ9zMUFW/bSq6ytLJgq3m5lTArCg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OlJmF3zvTv+7o/V9tNjFIJWFdr6y+BBxmQX1i1CvNbUlOKXjmcYpBUuJCiV+jAf13
-         QwmuSre11gDswMPTJKqGyi7UUreZ41kgf5EW0wGb8dkykQnsF+nKtvg9nJx3PJLBgI
-         YezOudo1Mx8tPlJRCZijvH9TJSwY5lzd81iiWvyQ=
+        b=VsMnxDwHbg0Q6sGPApPqbn0V8f2+J/2V60M6J/JSmLRkZopuEnSL5k4MOntei1WHF
+         OM1h1L8UpzXyFmu79bd2AK6Y7ZdbK/FwjBRI/OJTAQeVyAYNi46KzTjuXVbnxPZeRU
+         tzacullZEYwZk7KZjKlasS14Mp5B2/v8sA+YzvOk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        syzbot+b48daca8639150bc5e73@syzkaller.appspotmail.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 090/606] pipe: Fix pipe_full() test in opipe_prep().
-Date:   Mon,  8 Jun 2020 19:03:35 -0400
-Message-Id: <20200608231211.3363633-90-sashal@kernel.org>
+Cc:     Alain Volmat <alain.volmat@st.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-i2c@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 092/606] i2c: fix missing pm_runtime_put_sync in i2c_device_probe
+Date:   Mon,  8 Jun 2020 19:03:37 -0400
+Message-Id: <20200608231211.3363633-92-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -60,57 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+From: Alain Volmat <alain.volmat@st.com>
 
-[ Upstream commit 566d136289dc57816ac290de87a9a0f7d9bd3cbb ]
+[ Upstream commit 3c3dd56f760da056e821ac177e3ad0de4209a435 ]
 
-syzbot is reporting that splice()ing from non-empty read side to
-already-full write side causes unkillable task, for opipe_prep() is by
-error not inverting pipe_full() test.
+In case of the I2C client exposes the flag I2C_CLIENT_HOST_NOTIFY,
+pm_runtime_get_sync is called in order to always keep active the
+adapter. However later on, pm_runtime_put_sync is never called
+within the function in case of an error. This commit add this
+error handling.
 
-  CPU: 0 PID: 9460 Comm: syz-executor.5 Not tainted 5.6.0-rc3-next-20200228-syzkaller #0
-  Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-  RIP: 0010:rol32 include/linux/bitops.h:105 [inline]
-  RIP: 0010:iterate_chain_key kernel/locking/lockdep.c:369 [inline]
-  RIP: 0010:__lock_acquire+0x6a3/0x5270 kernel/locking/lockdep.c:4178
-  Call Trace:
-     lock_acquire+0x197/0x420 kernel/locking/lockdep.c:4720
-     __mutex_lock_common kernel/locking/mutex.c:956 [inline]
-     __mutex_lock+0x156/0x13c0 kernel/locking/mutex.c:1103
-     pipe_lock_nested fs/pipe.c:66 [inline]
-     pipe_double_lock+0x1a0/0x1e0 fs/pipe.c:104
-     splice_pipe_to_pipe fs/splice.c:1562 [inline]
-     do_splice+0x35f/0x1520 fs/splice.c:1141
-     __do_sys_splice fs/splice.c:1447 [inline]
-     __se_sys_splice fs/splice.c:1427 [inline]
-     __x64_sys_splice+0x2b5/0x320 fs/splice.c:1427
-     do_syscall_64+0xf6/0x790 arch/x86/entry/common.c:295
-     entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Reported-by: syzbot+b48daca8639150bc5e73@syzkaller.appspotmail.com
-Link: https://syzkaller.appspot.com/bug?id=9386d051e11e09973d5a4cf79af5e8cedf79386d
-Fixes: 8cefc107ca54c8b0 ("pipe: Use head and tail pointers for the ring, not cursor and length")
-Cc: stable@vger.kernel.org # 5.5+
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 72bfcee11cf8 ("i2c: Prevent runtime suspend of adapter when Host Notify is required")
+Signed-off-by: Alain Volmat <alain.volmat@st.com>
+Reviewed-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/splice.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/i2c/i2c-core-base.c | 22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
 
-diff --git a/fs/splice.c b/fs/splice.c
-index d671936d0aad..39b11a9a6b98 100644
---- a/fs/splice.c
-+++ b/fs/splice.c
-@@ -1503,7 +1503,7 @@ static int opipe_prep(struct pipe_inode_info *pipe, unsigned int flags)
- 	 * Check pipe occupancy without the inode lock first. This function
- 	 * is speculative anyways, so missing one is ok.
- 	 */
--	if (pipe_full(pipe->head, pipe->tail, pipe->max_usage))
-+	if (!pipe_full(pipe->head, pipe->tail, pipe->max_usage))
- 		return 0;
+diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+index cefad0881942..fd3199782b6e 100644
+--- a/drivers/i2c/i2c-core-base.c
++++ b/drivers/i2c/i2c-core-base.c
+@@ -338,8 +338,10 @@ static int i2c_device_probe(struct device *dev)
+ 		} else if (ACPI_COMPANION(dev)) {
+ 			irq = i2c_acpi_get_irq(client);
+ 		}
+-		if (irq == -EPROBE_DEFER)
+-			return irq;
++		if (irq == -EPROBE_DEFER) {
++			status = irq;
++			goto put_sync_adapter;
++		}
  
- 	ret = 0;
+ 		if (irq < 0)
+ 			irq = 0;
+@@ -353,15 +355,19 @@ static int i2c_device_probe(struct device *dev)
+ 	 */
+ 	if (!driver->id_table &&
+ 	    !i2c_acpi_match_device(dev->driver->acpi_match_table, client) &&
+-	    !i2c_of_match_device(dev->driver->of_match_table, client))
+-		return -ENODEV;
++	    !i2c_of_match_device(dev->driver->of_match_table, client)) {
++		status = -ENODEV;
++		goto put_sync_adapter;
++	}
+ 
+ 	if (client->flags & I2C_CLIENT_WAKE) {
+ 		int wakeirq;
+ 
+ 		wakeirq = of_irq_get_byname(dev->of_node, "wakeup");
+-		if (wakeirq == -EPROBE_DEFER)
+-			return wakeirq;
++		if (wakeirq == -EPROBE_DEFER) {
++			status = wakeirq;
++			goto put_sync_adapter;
++		}
+ 
+ 		device_init_wakeup(&client->dev, true);
+ 
+@@ -408,6 +414,10 @@ static int i2c_device_probe(struct device *dev)
+ err_clear_wakeup_irq:
+ 	dev_pm_clear_wake_irq(&client->dev);
+ 	device_init_wakeup(&client->dev, false);
++put_sync_adapter:
++	if (client->flags & I2C_CLIENT_HOST_NOTIFY)
++		pm_runtime_put_sync(&client->adapter->dev);
++
+ 	return status;
+ }
+ 
 -- 
 2.25.1
 
