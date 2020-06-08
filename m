@@ -2,112 +2,160 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DCAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DED38C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FAD32074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:35:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBA7C206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:35:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591659314;
-	bh=ePq/fBYgkru+4gDc00SaMaz/zDT+26mobWEOghmA9Bc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ky9co2tlmeLOFduG+WUO3TIfdlFoozXl8mktMfF5LIZTlhbw5QyDyBjCwAv1nW9x/
-	 k1rB9W2Q0EhMPSZ7TIx/ONEDOsOhS1KDXzqQ0FLEsXLwiHQnoQpaaEW42xY3LG7MFv
-	 6a5s+e/94uNr4hS6pS27cfhbyoa2OlulBC7fm83Y=
+	s=default; t=1591659318;
+	bh=Nc5stfIq+5Ul/qSW+NDkOVlTjnYsPCUFGkbd6YbkUNU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WC7s8doM3VWgQXWFjEvUFh25vimDsHScToYDzK3BG+BYi6DzV5e1Z3nCUa2u0PfNr
+	 vDGEkeJp/DYOtJi5jVxmf4UtyxoKGM+b4Hcz2VIRXss1OX+uOgwjBGHlt+WwCNRQ7c
+	 0ye9MxqcKy3IOxggY0d5za96mq8cvoPQ01FRESxc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387866AbgFHXfM (ORCPT
+        id S2387873AbgFHXfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:35:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58508 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:35:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732249AbgFHX2l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:28:41 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1732531AbgFHXdG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:33:06 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78C8920899;
-        Mon,  8 Jun 2020 23:28:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7A4520775;
+        Mon,  8 Jun 2020 23:33:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658921;
-        bh=ePq/fBYgkru+4gDc00SaMaz/zDT+26mobWEOghmA9Bc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JYCi5rym9Xx/5mTDImY7pqjWG7V+iRzrZNP0lGES7HdYa1NgwQImesQypFlBQf54O
-         kcfRQWbnx7B3WF9a4qFTppy/RBpo8qIHYY1iIndCR6LnYpiN+MRpq77pN1UU9xi403
-         J/YcLWkXJWHCbD1pDPlrFkfem/C/zcGnqaJsi7OI=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qiushi Wu <wu000273@umn.edu>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 36/37] cpuidle: Fix three reference count leaks
-Date:   Mon,  8 Jun 2020 19:27:48 -0400
-Message-Id: <20200608232750.3370747-36-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608232750.3370747-1-sashal@kernel.org>
-References: <20200608232750.3370747-1-sashal@kernel.org>
+        s=default; t=1591659185;
+        bh=Nc5stfIq+5Ul/qSW+NDkOVlTjnYsPCUFGkbd6YbkUNU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=B4BMUo/bVaKtHjl2PToR1B5kt8/Rr+jEEnQpMXggmdOa5BpBPO34i9fSA6J3AUIL6
+         XwIIXK7khGexVLw/l5JPhukVCx6nKBpRFKKg4A0z8GQwWQIuHket9JMmHd8QWrMuqv
+         ZCiVC9F5kSbMbQpcMCyPJcLnPuC5j36LhNHj2aZQ=
+Received: by pali.im (Postfix)
+        id 225E1263E; Tue,  9 Jun 2020 01:33:03 +0200 (CEST)
+Date:   Tue, 9 Jun 2020 01:33:03 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Y Paritcher <y.linux@paritcher.com>
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Mario.Limonciello@dell.com
+Subject: Re: [PATCH v2 2/3] platform/x86: dell-wmi: add new keymap type 0x0012
+Message-ID: <20200608233303.57ubv4rxo4tnaaxa@pali>
+References: <cover.1591584631.git.y.linux@paritcher.com>
+ <cover.1591656154.git.y.linux@paritcher.com>
+ <74fdb288757cf5970a558f920f531b3bd1c51b47.1591656154.git.y.linux@paritcher.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <74fdb288757cf5970a558f920f531b3bd1c51b47.1591656154.git.y.linux@paritcher.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+On Monday 08 June 2020 19:05:29 Y Paritcher wrote:
+> These are events with extended data. The extended data is
+> currently ignored as userspace does not have a way to deal
+> it.
+> 
+> Ignore event with a type of 0x0012 and a code of 0xe035, as
+> the keyboard controller takes care of Fn lock events by itself.
 
-[ Upstream commit c343bf1ba5efcbf2266a1fe3baefec9cc82f867f ]
+Nice! This is information which is really important and need to have it
+documented.
 
-kobject_init_and_add() takes reference even when it fails.
-If this function returns an error, kobject_put() must be called to
-properly clean up the memory associated with the object.
+> This silences the following messages being logged when
+> pressing the Fn-lock key on a Dell Inspiron 5593:
+> 
+> dell_wmi: Unknown WMI event type 0x12
+> dell_wmi: Unknown key with type 0x0012 and code 0xe035 pressed
+> 
+> This is consistent with the behavior for the Fn-lock key
+> elsewhere in this file.
+> 
+> Signed-off-by: Y Paritcher <y.linux@paritcher.com>
 
-Previous commit "b8eb718348b8" fixed a similar problem.
+I'm fine with this patch now.
 
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-[ rjw: Subject ]
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/cpuidle/sysfs.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Reviewed-by: Pali Rohár <pali@kernel.org>
 
-diff --git a/drivers/cpuidle/sysfs.c b/drivers/cpuidle/sysfs.c
-index 9e98a5fbbc1d..e7e92ed34f0c 100644
---- a/drivers/cpuidle/sysfs.c
-+++ b/drivers/cpuidle/sysfs.c
-@@ -412,7 +412,7 @@ static int cpuidle_add_state_sysfs(struct cpuidle_device *device)
- 		ret = kobject_init_and_add(&kobj->kobj, &ktype_state_cpuidle,
- 					   &kdev->kobj, "state%d", i);
- 		if (ret) {
--			kfree(kobj);
-+			kobject_put(&kobj->kobj);
- 			goto error_state;
- 		}
- 		kobject_uevent(&kobj->kobj, KOBJ_ADD);
-@@ -542,7 +542,7 @@ static int cpuidle_add_driver_sysfs(struct cpuidle_device *dev)
- 	ret = kobject_init_and_add(&kdrv->kobj, &ktype_driver_cpuidle,
- 				   &kdev->kobj, "driver");
- 	if (ret) {
--		kfree(kdrv);
-+		kobject_put(&kdrv->kobj);
- 		return ret;
- 	}
- 
-@@ -636,7 +636,7 @@ int cpuidle_add_sysfs(struct cpuidle_device *dev)
- 	error = kobject_init_and_add(&kdev->kobj, &ktype_cpuidle, &cpu_dev->kobj,
- 				   "cpuidle");
- 	if (error) {
--		kfree(kdev);
-+		kobject_put(&kdev->kobj);
- 		return error;
- 	}
- 
--- 
-2.25.1
+> ---
+>  drivers/platform/x86/dell-wmi.c | 20 +++++++++++++++++++-
+>  1 file changed, 19 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
+> index 0b2edfe2767d..6b510f8431a3 100644
+> --- a/drivers/platform/x86/dell-wmi.c
+> +++ b/drivers/platform/x86/dell-wmi.c
+> @@ -334,6 +334,15 @@ static const struct key_entry dell_wmi_keymap_type_0011[] = {
+>  	{ KE_IGNORE, KBD_LED_AUTO_100_TOKEN, { KEY_RESERVED } },
+>  };
+>  
+> +/*
+> + * Keymap for WMI events of type 0x0012
+> + * They are events with extended data
+> + */
+> +static const struct key_entry dell_wmi_keymap_type_0012[] = {
+> +	/* Fn-lock button pressed */
+> +	{ KE_IGNORE, 0xe035, { KEY_RESERVED } },
+> +};
+> +
+>  static void dell_wmi_process_key(struct wmi_device *wdev, int type, int code)
+>  {
+>  	struct dell_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
+> @@ -418,10 +427,11 @@ static void dell_wmi_notify(struct wmi_device *wdev,
+>  
+>  		switch (buffer_entry[1]) {
+>  		case 0x0000: /* One key pressed or event occurred */
+> +		case 0x0012: /* Event with extended data occurred */
 
+Mario, are you able to get some official documentation for these 0x0012
+event types? I think it could be really useful for community so they can
+understand and add easily new type of code and events. Because currently
+we are just guessing what it could be. (It is sequence? Or single event?
+Or single event with extended data? It is generic event? Or it is real
+keypress? etc...)
+
+>  			if (len > 2)
+>  				dell_wmi_process_key(wdev, 0x0000,
+>  						     buffer_entry[2]);
+> -			/* Other entries could contain additional information */
+> +			/* Extended data is currently ignored */
+>  			break;
+>  		case 0x0010: /* Sequence of keys pressed */
+>  		case 0x0011: /* Sequence of events occurred */
+> @@ -556,6 +566,7 @@ static int dell_wmi_input_setup(struct wmi_device *wdev)
+>  			 ARRAY_SIZE(dell_wmi_keymap_type_0000) +
+>  			 ARRAY_SIZE(dell_wmi_keymap_type_0010) +
+>  			 ARRAY_SIZE(dell_wmi_keymap_type_0011) +
+> +			 ARRAY_SIZE(dell_wmi_keymap_type_0012) +
+>  			 1,
+>  			 sizeof(struct key_entry), GFP_KERNEL);
+>  	if (!keymap) {
+> @@ -600,6 +611,13 @@ static int dell_wmi_input_setup(struct wmi_device *wdev)
+>  		pos++;
+>  	}
+>  
+> +	/* Append table with events of type 0x0012 */
+> +	for (i = 0; i < ARRAY_SIZE(dell_wmi_keymap_type_0012); i++) {
+> +		keymap[pos] = dell_wmi_keymap_type_0012[i];
+> +		keymap[pos].code |= (0x0012 << 16);
+> +		pos++;
+> +	}
+> +
+>  	/*
+>  	 * Now append also table with "legacy" events of type 0x0000. Some of
+>  	 * them are reported also on laptops which have scancodes in DMI.
+> -- 
+> 2.27.0
+> 
