@@ -2,281 +2,219 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DDF9C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBFD2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:01:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E1A6206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:00:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E0AA206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:01:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ltp8V3MZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729334AbgFHKAN (ORCPT
+        id S1729267AbgFHKBz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 06:00:13 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:44485 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729294AbgFHKAG (ORCPT
+        Mon, 8 Jun 2020 06:01:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57458 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728745AbgFHKBy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 06:00:06 -0400
-Received: by mail-lj1-f193.google.com with SMTP id c17so19643468lji.11;
-        Mon, 08 Jun 2020 03:00:04 -0700 (PDT)
+        Mon, 8 Jun 2020 06:01:54 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 074BAC08C5C3
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 03:01:54 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id c3so16677041wru.12
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 03:01:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=tfoZcTB/rns0s7mq7n3JxCfpjHzUnkxUEnaoUGd4KXE=;
+        b=ltp8V3MZN9j4czwE8uWybnZdbtSGKJPIxtjowNXPGiDepr261suoBLOTRy1Bl3zcMz
+         fDSbtdexarlhdNLiXMnYLduK3dk1h872AsQajuKBXnXEupXSSGgqerpVWJXks9msh0TG
+         4e2Lusg8uGlVqXPvmGIwHTbJ4xKAOqNAZCmbUyeyGz2zo940xiKBcQpTMB6HxSBDVLZM
+         e/AQ5W+ITHE3q/C3PVeNSbTE21dHsPLiiQ2l7Wi+G7aVVhD+YWPpaVxj3yuCy/e2eOKs
+         0q/fRgNpf51MM/7rUK8mDjUPS2b1/olshQm3arx/l9AFx8k/KY8a8isuLizExYDxRsNT
+         FRiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=GDL+9v6/r8rDz1rWGwzjuZhMoepSVICM/XC9cVTvMJs=;
-        b=IDxfRe+iXK/w0pbYKOdf+gOq3ApHB6PCGrNsUjc5Qx59BCOF3w4tXHnAKfVrpfY0vz
-         prfaa+6YQ6Ivm4xK/fNwWyJ/WoBTQrygEhjwQfBj1lXxjeJSejPVuCvmvIPVWyFX27mU
-         22yfa1MRY0xXTt1UOozs/zq7tOzOiyOpqK2XzBHw7hXHVKk8paOG58RJ++C02UlVzcyd
-         bLlLuYE+YTijz8QYxrGxebiHgl+WBOLkBpChUjQ8JT41hMr9ZxFnVAj5f/JcsWxXzsnr
-         YmPKouqcoOlql+gsyzqrPXsr15qzqYaNndCiOtBgzfAJ0F3fdKqBKRBdtR+lkb5GokrV
-         g72g==
-X-Gm-Message-State: AOAM533ZAIviwR7AwHdK6vB5aYbcXyRSc93YRLP2lIkcJ6TpaYCNqSDP
-        OQlEjLlwHbSLxmfZObYX8to=
-X-Google-Smtp-Source: ABdhPJyXubhGjsSL+f7GiF9bXvnf/0U/blKX2JaiCYxoqGnrG1tUFeu8tEmJ+MeDsJnKUP4+WdWzRQ==
-X-Received: by 2002:a2e:890d:: with SMTP id d13mr11005089lji.75.1591610403818;
-        Mon, 08 Jun 2020 03:00:03 -0700 (PDT)
-Received: from localhost.localdomain ([213.87.137.116])
-        by smtp.googlemail.com with ESMTPSA id c20sm4274102lfb.33.2020.06.08.03.00.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 03:00:03 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     Denis Efremov <efremov@linux.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Subject: [PATCH] kbuild: fix broken builds because of GZIP,BZIP2,LZOP variables
-Date:   Mon,  8 Jun 2020 12:59:44 +0300
-Message-Id: <20200608095944.140779-1-efremov@linux.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <CAK7LNASQamajjeV+VMq5G8fECfB6f9uKvZ32zGic72O0qp8Mtw@mail.gmail.com>
-References: <CAK7LNASQamajjeV+VMq5G8fECfB6f9uKvZ32zGic72O0qp8Mtw@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=tfoZcTB/rns0s7mq7n3JxCfpjHzUnkxUEnaoUGd4KXE=;
+        b=lRd2J3L/Tz6CN1aWWC1Sr2I2LNF4AVG2aPGQEfL1qY264XEdjkBpin2PrEerdyUHr2
+         WO4RsRt9+gtIIEEU0q301ONAL2wWkkI6RLEnzq4lHc8zdYtEmN5dGyhufs9arEwOdvVn
+         GRrQQN/0F357hi9BIuHQPrneKKY2TaTlJOPRswfPqUKyLDBKdc8ftUxwUOvFQ7eCBLwl
+         i6+OL/tXLv5zru6OQBT39HcLxcbAfDt5/wLZicOBzidoD0lqX3PhttjIQiyhIWPOjkoG
+         0IMgw73l24S/I+WSJ3aM8HwlzVLvOQsqRxUVFIDJ+WsJLicoi8Bb1POxXgOpmSKY0adK
+         NyCA==
+X-Gm-Message-State: AOAM532MqfiZZ1qZu4OQr1ipE3IlVQ7GFfD4qMqtVzFMck+NEDKC6BSK
+        KzkkiT4HUKtlbDCzu4C0pnk=
+X-Google-Smtp-Source: ABdhPJysQLEWjZ1oMqrwEGoQM7pzQsU5HJrAXSeFZ0ViWHmfG83V+NxYPSrtV7GTzPURKbIgI+VSEw==
+X-Received: by 2002:adf:fecc:: with SMTP id q12mr23297945wrs.135.1591610512676;
+        Mon, 08 Jun 2020 03:01:52 -0700 (PDT)
+Received: from ziggy.stardust ([213.195.114.138])
+        by smtp.gmail.com with ESMTPSA id o6sm1601669wmc.39.2020.06.08.03.01.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Jun 2020 03:01:52 -0700 (PDT)
+Subject: Re: [PATCH] mfd: mt6360: Fix register driver NULL pointer by add
+ driver name
+To:     Gene Chen <gene.chen.richtek@gmail.com>, lee.jones@linaro.org
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        gene_chen@richtek.com, Wilma.Wu@mediatek.com,
+        shufan_lee@richtek.com, cy_huang@richtek.com
+References: <1591609125-3761-1-git-send-email-gene.chen.richtek@gmail.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <f3904a83-862d-8f34-6925-f0618bfbd0d9@gmail.com>
+Date:   Mon, 8 Jun 2020 12:01:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1591609125-3761-1-git-send-email-gene.chen.richtek@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Redefine GZIP, BZIP2, LZOP variables as KGZIP, KBZIP2, KLZOP resp.
-GZIP, BZIP2, LZOP env variables are reserved by the tools. The original
-attempt to redefine them internally doesn't work in makefiles/scripts
-intercall scenarios, e.g., "make GZIP=gzip bindeb-pkg" and results in
-broken builds. There can be other broken build commands because of this,
-so the universal solution is to use non-reserved env variables for the
-compression tools.
 
-Fixes: 8dfb61dcbace ("kbuild: add variables for compression tools")
-Signed-off-by: Denis Efremov <efremov@linux.com>
----
- Makefile                          | 24 +++++-------------------
- arch/arm/boot/deflate_xip_data.sh |  2 +-
- arch/ia64/Makefile                |  2 +-
- arch/m68k/Makefile                |  8 ++++----
- arch/parisc/Makefile              |  2 +-
- scripts/Makefile.lib              |  6 +++---
- scripts/Makefile.package          |  6 +++---
- scripts/package/buildtar          |  4 ++--
- 8 files changed, 20 insertions(+), 34 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index 839f9fee22cb..e43d193bb3b2 100644
---- a/Makefile
-+++ b/Makefile
-@@ -458,27 +458,13 @@ PYTHON		= python
- PYTHON3		= python3
- CHECK		= sparse
- BASH		= bash
--GZIP		= gzip
--BZIP2		= bzip2
--LZOP		= lzop
-+KGZIP		= gzip
-+KBZIP2		= bzip2
-+KLZOP		= lzop
- LZMA		= lzma
- LZ4		= lz4c
- XZ		= xz
- 
--# GZIP, BZIP2, LZOP env vars are used by the tools. Support them as the command
--# line interface, but use _GZIP, _BZIP2, _LZOP internally.
--_GZIP          := $(GZIP)
--_BZIP2         := $(BZIP2)
--_LZOP          := $(LZOP)
--
--# Reset GZIP, BZIP2, LZOP in this Makefile
--override GZIP=
--override BZIP2=
--override LZOP=
--
--# Reset GZIP, BZIP2, LZOP in recursive invocations
--MAKEOVERRIDES += GZIP= BZIP2= LZOP=
--
- CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
- 		  -Wbitwise -Wno-return-void -Wno-unknown-attribute $(CF)
- NOSTDINC_FLAGS :=
-@@ -526,7 +512,7 @@ CLANG_FLAGS :=
- export ARCH SRCARCH CONFIG_SHELL BASH HOSTCC KBUILD_HOSTCFLAGS CROSS_COMPILE LD CC
- export CPP AR NM STRIP OBJCOPY OBJDUMP OBJSIZE READELF PAHOLE LEX YACC AWK INSTALLKERNEL
- export PERL PYTHON PYTHON3 CHECK CHECKFLAGS MAKE UTS_MACHINE HOSTCXX
--export _GZIP _BZIP2 _LZOP LZMA LZ4 XZ
-+export KGZIP KBZIP2 KLZOP LZMA LZ4 XZ
- export KBUILD_HOSTCXXFLAGS KBUILD_HOSTLDFLAGS KBUILD_HOSTLDLIBS LDFLAGS_MODULE
- 
- export KBUILD_CPPFLAGS NOSTDINC_FLAGS LINUXINCLUDE OBJCOPYFLAGS KBUILD_LDFLAGS
-@@ -1047,7 +1033,7 @@ export mod_strip_cmd
- mod_compress_cmd = true
- ifdef CONFIG_MODULE_COMPRESS
-   ifdef CONFIG_MODULE_COMPRESS_GZIP
--    mod_compress_cmd = $(_GZIP) -n -f
-+    mod_compress_cmd = $(KGZIP) -n -f
-   endif # CONFIG_MODULE_COMPRESS_GZIP
-   ifdef CONFIG_MODULE_COMPRESS_XZ
-     mod_compress_cmd = $(XZ) -f
-diff --git a/arch/arm/boot/deflate_xip_data.sh b/arch/arm/boot/deflate_xip_data.sh
-index 739f0464321e..304495c3c2c5 100755
---- a/arch/arm/boot/deflate_xip_data.sh
-+++ b/arch/arm/boot/deflate_xip_data.sh
-@@ -56,7 +56,7 @@ trap 'rm -f "$XIPIMAGE.tmp"; exit 1' 1 2 3
- # substitute the data section by a compressed version
- $DD if="$XIPIMAGE" count=$data_start iflag=count_bytes of="$XIPIMAGE.tmp"
- $DD if="$XIPIMAGE"  skip=$data_start iflag=skip_bytes |
--$_GZIP -9 >> "$XIPIMAGE.tmp"
-+$KGZIP -9 >> "$XIPIMAGE.tmp"
- 
- # replace kernel binary
- mv -f "$XIPIMAGE.tmp" "$XIPIMAGE"
-diff --git a/arch/ia64/Makefile b/arch/ia64/Makefile
-index f817f3d5e758..2876a7df1b0a 100644
---- a/arch/ia64/Makefile
-+++ b/arch/ia64/Makefile
-@@ -40,7 +40,7 @@ $(error Sorry, you need a newer version of the assember, one that is built from
- endif
- 
- quiet_cmd_gzip = GZIP    $@
--cmd_gzip = cat $(real-prereqs) | $(_GZIP) -n -f -9 > $@
-+cmd_gzip = cat $(real-prereqs) | $(KGZIP) -n -f -9 > $@
- 
- quiet_cmd_objcopy = OBJCOPY $@
- cmd_objcopy = $(OBJCOPY) $(OBJCOPYFLAGS) $(OBJCOPYFLAGS_$(@F)) $< $@
-diff --git a/arch/m68k/Makefile b/arch/m68k/Makefile
-index ce6db5e5a5a3..0415d28dbe4f 100644
---- a/arch/m68k/Makefile
-+++ b/arch/m68k/Makefile
-@@ -135,10 +135,10 @@ vmlinux.gz: vmlinux
- ifndef CONFIG_KGDB
- 	cp vmlinux vmlinux.tmp
- 	$(STRIP) vmlinux.tmp
--	$(_GZIP) -9c vmlinux.tmp >vmlinux.gz
-+	$(KGZIP) -9c vmlinux.tmp >vmlinux.gz
- 	rm vmlinux.tmp
- else
--	$(_GZIP) -9c vmlinux >vmlinux.gz
-+	$(KGZIP) -9c vmlinux >vmlinux.gz
- endif
- 
- bzImage: vmlinux.bz2
-@@ -148,10 +148,10 @@ vmlinux.bz2: vmlinux
- ifndef CONFIG_KGDB
- 	cp vmlinux vmlinux.tmp
- 	$(STRIP) vmlinux.tmp
--	$(_BZIP2) -1c vmlinux.tmp >vmlinux.bz2
-+	$(KBZIP2) -1c vmlinux.tmp >vmlinux.bz2
- 	rm vmlinux.tmp
- else
--	$(_BZIP2) -1c vmlinux >vmlinux.bz2
-+	$(KBZIP2) -1c vmlinux >vmlinux.bz2
- endif
- 
- archclean:
-diff --git a/arch/parisc/Makefile b/arch/parisc/Makefile
-index 182a5bca3e2c..5140c602207f 100644
---- a/arch/parisc/Makefile
-+++ b/arch/parisc/Makefile
-@@ -162,7 +162,7 @@ vmlinuz: bzImage
- 	$(OBJCOPY) $(boot)/bzImage $@
- else
- vmlinuz: vmlinux
--	@$(_GZIP) -cf -9 $< > $@
-+	@$(KGZIP) -cf -9 $< > $@
- endif
- 
- install:
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 127f2a7e3ced..94eeddb2e599 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -244,7 +244,7 @@ cmd_objcopy = $(OBJCOPY) $(OBJCOPYFLAGS) $(OBJCOPYFLAGS_$(@F)) $< $@
- # ---------------------------------------------------------------------------
- 
- quiet_cmd_gzip = GZIP    $@
--      cmd_gzip = cat $(real-prereqs) | $(_GZIP) -n -f -9 > $@
-+      cmd_gzip = cat $(real-prereqs) | $(KGZIP) -n -f -9 > $@
- 
- # DTC
- # ---------------------------------------------------------------------------
-@@ -337,7 +337,7 @@ printf "%08x\n" $$dec_size |						\
- )
- 
- quiet_cmd_bzip2 = BZIP2   $@
--      cmd_bzip2 = { cat $(real-prereqs) | $(_BZIP2) -9; $(size_append); } > $@
-+      cmd_bzip2 = { cat $(real-prereqs) | $(KBZIP2) -9; $(size_append); } > $@
- 
- # Lzma
- # ---------------------------------------------------------------------------
-@@ -346,7 +346,7 @@ quiet_cmd_lzma = LZMA    $@
-       cmd_lzma = { cat $(real-prereqs) | $(LZMA) -9; $(size_append); } > $@
- 
- quiet_cmd_lzo = LZO     $@
--      cmd_lzo = { cat $(real-prereqs) | $(_LZOP) -9; $(size_append); } > $@
-+      cmd_lzo = { cat $(real-prereqs) | $(KLZOP) -9; $(size_append); } > $@
- 
- quiet_cmd_lz4 = LZ4     $@
-       cmd_lz4 = { cat $(real-prereqs) | $(LZ4) -l -c1 stdin stdout; \
-diff --git a/scripts/Makefile.package b/scripts/Makefile.package
-index b2b6153af63a..f952fb64789d 100644
---- a/scripts/Makefile.package
-+++ b/scripts/Makefile.package
-@@ -45,7 +45,7 @@ if test "$(objtree)" != "$(srctree)"; then \
- 	false; \
- fi ; \
- $(srctree)/scripts/setlocalversion --save-scmversion; \
--tar -I $(_GZIP) -c $(RCS_TAR_IGNORE) -f $(2).tar.gz \
-+tar -I $(KGZIP) -c $(RCS_TAR_IGNORE) -f $(2).tar.gz \
- 	--transform 's:^:$(2)/:S' $(TAR_CONTENT) $(3); \
- rm -f $(objtree)/.scmversion
- 
-@@ -127,8 +127,8 @@ util/PERF-VERSION-GEN $(CURDIR)/$(perf-tar)/);              \
- tar rf $(perf-tar).tar $(perf-tar)/HEAD $(perf-tar)/PERF-VERSION-FILE; \
- rm -r $(perf-tar);                                                  \
- $(if $(findstring tar-src,$@),,                                     \
--$(if $(findstring bz2,$@),$(_BZIP2),                                 \
--$(if $(findstring gz,$@),$(_GZIP),                                  \
-+$(if $(findstring bz2,$@),$(KBZIP2),                                 \
-+$(if $(findstring gz,$@),$(KGZIP),                                  \
- $(if $(findstring xz,$@),$(XZ),                                     \
- $(error unknown target $@))))                                       \
- 	-f -9 $(perf-tar).tar)
-diff --git a/scripts/package/buildtar b/scripts/package/buildtar
-index ad62c6879622..fb1578e72ab9 100755
---- a/scripts/package/buildtar
-+++ b/scripts/package/buildtar
-@@ -28,11 +28,11 @@ case "${1}" in
- 		opts=
- 		;;
- 	targz-pkg)
--		opts="-I ${_GZIP}"
-+		opts="-I ${KGZIP}"
- 		tarball=${tarball}.gz
- 		;;
- 	tarbz2-pkg)
--		opts="-I ${_BZIP2}"
-+		opts="-I ${KBZIP2}"
- 		tarball=${tarball}.bz2
- 		;;
- 	tarxz-pkg)
--- 
-2.26.2
+On 08/06/2020 11:38, Gene Chen wrote:
+> From: Gene Chen <gene_chen@richtek.com>
+> 
+> accidentally remove driver name when
+> replace probe by probe_new in add mt6360 mfd driver patch v4
+> 
+> [  121.243012] EAX: c2a8bc64 EBX: 00000000 ECX: 00000000 EDX: 00000000
+> [  121.243012] ESI: c2a8bc79 EDI: 00000000 EBP: e54bdea8 ESP: e54bdea0
+> [  121.243012] DS: 007b ES: 007b FS: 0000 GS: 0000 SS: 0068 EFLAGS: 00010286
+> [  121.243012] CR0: 80050033 CR2: 00000000 CR3: 02ec3000 CR4: 000006b0
+> [  121.243012] Call Trace:
+> [  121.243012]  kset_find_obj+0x3d/0xc0
+> [  121.243012]  driver_find+0x16/0x40
+> [  121.243012]  driver_register+0x49/0x100
+> [  121.243012]  ? i2c_for_each_dev+0x39/0x50
+> [  121.243012]  ? __process_new_adapter+0x20/0x20
+> [  121.243012]  ? cht_wc_driver_init+0x11/0x11
+> [  121.243012]  i2c_register_driver+0x30/0x80
+> [  121.243012]  ? intel_lpss_pci_driver_init+0x16/0x16
+> [  121.243012]  mt6360_pmu_driver_init+0xf/0x11
+> [  121.243012]  do_one_initcall+0x33/0x1a0
+> [  121.243012]  ? parse_args+0x1eb/0x3d0
+> [  121.243012]  ? __might_sleep+0x31/0x90
+> [  121.243012]  ? kernel_init_freeable+0x10a/0x17f
+> [  121.243012]  kernel_init_freeable+0x12c/0x17f
+> [  121.243012]  ? rest_init+0x110/0x110
+> [  121.243012]  kernel_init+0xb/0x100
+> [  121.243012]  ? schedule_tail_wrapper+0x9/0xc
+> [  121.243012]  ret_from_fork+0x19/0x24
+> [  121.243012] Modules linked in:
+> [  121.243012] CR2: 0000000000000000
+> [  121.243012] random: get_random_bytes called from init_oops_id+0x3a/0x40 with crng_init=0
+> [  121.243012] ---[ end trace 38a803400f1a2bee ]---
+> [  121.243012] EIP: strcmp+0x11/0x30
+> 
+> Signed-off-by: Gene Chen <gene_chen@richtek.com>
+> ---
+>  drivers/mfd/mt6360-core.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/mfd/mt6360-core.c b/drivers/mfd/mt6360-core.c
+> index db8cdf5..e9cacc2 100644
+> --- a/drivers/mfd/mt6360-core.c
+> +++ b/drivers/mfd/mt6360-core.c
+> @@ -412,6 +412,7 @@ MODULE_DEVICE_TABLE(of, mt6360_pmu_of_id);
+>  
+>  static struct i2c_driver mt6360_pmu_driver = {
+>  	.driver = {
+> +		.name = "mt6360_pmu",
 
+seems we doubled the work, anyway:
+Reviewed-by: Matthias Brugger <matthias.bgg@kernel.org>
+
+
+>  		.pm = &mt6360_pmu_pm_ops,
+>  		.of_match_table = of_match_ptr(mt6360_pmu_of_id),
+>  	},
+> 
