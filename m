@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C09C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 00:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9279EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 00:59:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 699732076A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 00:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ADBB2082F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 00:59:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729078AbgFHA7F (ORCPT
+        id S1729089AbgFHA7J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 20:59:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58482 "EHLO
+        Sun, 7 Jun 2020 20:59:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729042AbgFHA66 (ORCPT
+        with ESMTP id S1729055AbgFHA7A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 20:58:58 -0400
+        Sun, 7 Jun 2020 20:59:00 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C826AC08C5C3;
-        Sun,  7 Jun 2020 17:58:57 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07CC4C08C5C3;
+        Sun,  7 Jun 2020 17:59:00 -0700 (PDT)
 Received: from [5.158.153.53] (helo=debian-buster-darwi.lab.linutronix.de.)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
         (Exim 4.80)
         (envelope-from <a.darwish@linutronix.de>)
-        id 1ji67l-0000zt-5s; Mon, 08 Jun 2020 02:58:49 +0200
+        id 1ji67q-00010f-1y; Mon, 08 Jun 2020 02:58:54 +0200
 From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
@@ -37,11 +37,10 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Steven Rostedt <rostedt@goodmis.org>,
         LKML <linux-kernel@vger.kernel.org>,
         "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH v2 16/18] userfaultfd: Use sequence counter with associated spinlock
-Date:   Mon,  8 Jun 2020 02:57:27 +0200
-Message-Id: <20200608005729.1874024-17-a.darwish@linutronix.de>
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
+Subject: [PATCH v2 17/18] kvm/eventfd: Use sequence counter with associated spinlock
+Date:   Mon,  8 Jun 2020 02:57:28 +0200
+Message-Id: <20200608005729.1874024-18-a.darwish@linutronix.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200608005729.1874024-1-a.darwish@linutronix.de>
 References: <20200519214547.352050-1-a.darwish@linutronix.de>
@@ -71,31 +70,36 @@ neither storage size nor runtime overhead.
 
 Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
 ---
- fs/userfaultfd.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/kvm_irqfd.h | 2 +-
+ virt/kvm/eventfd.c        | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-index e39fdec8a0b0..dd3aab31c50f 100644
---- a/fs/userfaultfd.c
-+++ b/fs/userfaultfd.c
-@@ -61,7 +61,7 @@ struct userfaultfd_ctx {
- 	/* waitqueue head for events */
- 	wait_queue_head_t event_wqh;
- 	/* a refile sequence protected by fault_pending_wqh lock */
--	struct seqcount refile_seq;
-+	seqcount_spinlock_t refile_seq;
- 	/* pseudo fd refcounting */
- 	refcount_t refcount;
- 	/* userfaultfd syscall flags */
-@@ -1998,7 +1998,7 @@ static void init_once_userfaultfd_ctx(void *mem)
- 	init_waitqueue_head(&ctx->fault_wqh);
- 	init_waitqueue_head(&ctx->event_wqh);
- 	init_waitqueue_head(&ctx->fd_wqh);
--	seqcount_init(&ctx->refile_seq);
-+	seqcount_spinlock_init(&ctx->refile_seq, &ctx->fault_pending_wqh.lock);
- }
+diff --git a/include/linux/kvm_irqfd.h b/include/linux/kvm_irqfd.h
+index dc1da020305b..dac047abdba7 100644
+--- a/include/linux/kvm_irqfd.h
++++ b/include/linux/kvm_irqfd.h
+@@ -42,7 +42,7 @@ struct kvm_kernel_irqfd {
+ 	wait_queue_entry_t wait;
+ 	/* Update side is protected by irqfds.lock */
+ 	struct kvm_kernel_irq_routing_entry irq_entry;
+-	seqcount_t irq_entry_sc;
++	seqcount_spinlock_t irq_entry_sc;
+ 	/* Used for level IRQ fast-path */
+ 	int gsi;
+ 	struct work_struct inject;
+diff --git a/virt/kvm/eventfd.c b/virt/kvm/eventfd.c
+index 67b6fc153e9c..8694a2920ea9 100644
+--- a/virt/kvm/eventfd.c
++++ b/virt/kvm/eventfd.c
+@@ -303,7 +303,7 @@ kvm_irqfd_assign(struct kvm *kvm, struct kvm_irqfd *args)
+ 	INIT_LIST_HEAD(&irqfd->list);
+ 	INIT_WORK(&irqfd->inject, irqfd_inject);
+ 	INIT_WORK(&irqfd->shutdown, irqfd_shutdown);
+-	seqcount_init(&irqfd->irq_entry_sc);
++	seqcount_spinlock_init(&irqfd->irq_entry_sc, &kvm->irqfds.lock);
  
- SYSCALL_DEFINE1(userfaultfd, int, flags)
+ 	f = fdget(args->fd);
+ 	if (!f.file) {
 -- 
 2.20.1
 
