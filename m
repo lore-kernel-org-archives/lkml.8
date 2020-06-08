@@ -2,90 +2,130 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7DDBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6DA1C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:01:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 804122076C
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:01:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591614099;
-	bh=x49fyr0xuV1XEupCgRZKXrj5qYCz0FvfqLfcYZx0Mwc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oB8++vTPxOmO3/SjWPxMiaZaTinmfQ/f75FZ+vmLETS5HKzE3AG+iF1ShoPEht9eK
-	 184qMqbrSIiMDpc+MJ+JMr+NURAL+ASqT+lHP+bztng0v7fq5v/3Lf3WlNROXv73rL
-	 gFH6oipyGNJJSx9lid2oiEWXzDSwxYNQ23UwE8vE=
+	by mail.kernel.org (Postfix) with ESMTP id AFB112083E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:01:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sHYjPvNZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729538AbgFHLBj (ORCPT
+        id S1729553AbgFHLBs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 07:01:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53700 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729398AbgFHLBi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 07:01:38 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7EF082076A;
-        Mon,  8 Jun 2020 11:01:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591614098;
-        bh=x49fyr0xuV1XEupCgRZKXrj5qYCz0FvfqLfcYZx0Mwc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1erz/OSTvA+nNa+hbzuS12qIiYPDOK/A7oX19gP0yaHEuSzY4YNDA58qfi9cxY67L
-         td1KwKMqD9dQCq0hqorYhfjSgvoqswcApfuvbhjXIKA+Zb3ywA6XYtLAfup/xd+D+C
-         6w5WDm1Z8sOlFpFuTSXxBN1R/eR8qj8131HhLEGc=
-Date:   Mon, 8 Jun 2020 13:01:32 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Markus Elfring <Markus.Elfring@web.de>,
-        Qiang Zhang <Qiang.Zhang@windriver.com>
-Cc:     linux-usb@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Felipe Balbi <balbi@kernel.org>,
-        Kyungtae Kim <kt0755@gmail.com>
-Subject: Re: usb: gadget: function: printer: Fix use-after-free in
- __lock_acquire()
-Message-ID: <20200608110132.GA296162@kroah.com>
-References: <5207d179-0a7d-b5ff-af34-102fb21028b5@web.de>
- <DM5PR11MB205835FB50BA296232BC3163FF850@DM5PR11MB2058.namprd11.prod.outlook.com>
- <ae59cac9-d770-36bd-ccb2-e5e442bd5e0a@web.de>
+        Mon, 8 Jun 2020 07:01:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38434 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729425AbgFHLBp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 07:01:45 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19FE7C08C5C2;
+        Mon,  8 Jun 2020 04:01:45 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id o8so8580939pgm.7;
+        Mon, 08 Jun 2020 04:01:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=l1OyezJKsfAVEn8ZVy6btGksNrrO6qZZSqmY/a2YBUc=;
+        b=sHYjPvNZ05Y/2voOPYUDydKiKVm3AEujp2Am7yigeXijOCK3nHmkUB9ETSi50Frpze
+         /1NIcSkfY4GZn01Aj1nlxUBBiGS4yaAaR8VcYZXt90tqadFm7EfQV294OlKIBjNfKwNY
+         PAncwq0xfIcsWUJh2PaFx6Jzcgk9SI8DHFg9gltk/Qg2hHQ1Db8uRlbc95AVyFK6APst
+         ZXWrfeW3F3QqZE0/kN0Wqu4wwTDcaGe4pYbQ9EidQ2J6H6NEfxZmbUH5DZKhZ6lDl0oa
+         wH7xpxM2LE/lDFILbY600U9PCCjyfNb4ZOPDSltM2sEify+sLdNG18pZxLxBvJ7Bm6Rv
+         CClQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=l1OyezJKsfAVEn8ZVy6btGksNrrO6qZZSqmY/a2YBUc=;
+        b=C0yg4oeiuN8qa1yHOCnDTZJoo8zG13CKqmnewrcL6LJNbihyBJUJmeCqBCFbfnOTCp
+         tBH/8o145DC0pULINVkz+zokywcgEF2fT57gTBKYpUiZLc4t6yX05bZXb4OxyRr0K4RQ
+         uKA1NDHPoPFqInWVmQsynuirhjbC0DXMNvABR6KAJsQiPUlce6oBTGYxcuO026DUKuAm
+         ZteswtVI9jSFNm6FRGYspYClCUjwUBfkAOuuPT/6xAZlQ6DO/yXnx2PSWNhCB12njKmi
+         caFOl5qP8MppHm+9l1htr0RgDgsf0wz4TXKpLdN7v5n/gg+VRdhTalS7p6A0MIq4sBep
+         lsVw==
+X-Gm-Message-State: AOAM533dzhJZXRnsAi0Dpj6shZHSyUaSqUrmGyvcfZKa4N5TFDHvUbse
+        uQLCzd95JxktxeU9cQ3ePgE=
+X-Google-Smtp-Source: ABdhPJxCYt/AwRjjLIaHsFCJMLRDxuD9W2rADpDuuZ96/9B4/FmnLmax2ISPRgxvEnwAR0LixiqoCw==
+X-Received: by 2002:a63:1312:: with SMTP id i18mr20063902pgl.142.1591614104413;
+        Mon, 08 Jun 2020 04:01:44 -0700 (PDT)
+Received: from localhost ([43.224.245.180])
+        by smtp.gmail.com with ESMTPSA id m9sm6957125pfo.200.2020.06.08.04.01.42
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Jun 2020 04:01:43 -0700 (PDT)
+Date:   Mon, 8 Jun 2020 18:59:29 +0800
+From:   Geliang Tang <geliangtang@gmail.com>
+To:     Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc:     Mat Martineau <mathew.j.martineau@linux.intel.com>,
+        Matthieu Baerts <matthieu.baerts@tessares.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Peter Krystad <peter.krystad@linux.intel.com>,
+        netdev@vger.kernel.org, mptcp@lists.01.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mptcp: bugfix for RM_ADDR option parsing
+Message-ID: <20200608105929.GA24487@OptiPlex>
+References: <904e4ae90b94d679d9877d3c48bd277cb9b39f5f.1591601587.git.geliangtang@gmail.com>
+ <41246875-febc-e88d-304b-2a6692f590ac@tessares.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ae59cac9-d770-36bd-ccb2-e5e442bd5e0a@web.de>
+In-Reply-To: <41246875-febc-e88d-304b-2a6692f590ac@tessares.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 12:55:13PM +0200, Markus Elfring wrote:
-> > I don't need to add Fix tag to view the code.
+On Mon, Jun 08, 2020 at 12:10:23PM +0200, Matthieu Baerts wrote:
+> Hi Geliang,
 > 
-> I have got understanding difficulties for this kind of feedback.
-> How much do you care for corresponding patch review concerns?
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=af7b4801030c07637840191c69eb666917e4135d#n183
+> On 08/06/2020 09:48, Geliang Tang wrote:
+> > In MPTCPOPT_RM_ADDR option parsing, the pointer "ptr" pointed to the
+> > "Subtype" octet, the pointer "ptr+1" pointed to the "Address ID" octet:
+> > 
+> >    +-------+-------+---------------+
+> >    |Subtype|(resvd)|   Address ID  |
+> >    +-------+-------+---------------+
+> >    |               |
+> >   ptr            ptr+1
+> > 
+> > We should set mp_opt->rm_id to the value of "ptr+1", not "ptr". This patch
+> > will fix this bug.
+> 
+> Thank you for the patch, good catch!
+> Indeed "ptr" should be incremented.
+> 
+> Because this is a bug-fix for net, may you clearly indicate that in the
+> subject to help -net maintainers please? [PATCH net v2]
+> 
+> Also, may you add a "Fixes" tag as well as it is for -net ? I guess it
+> should be:
+> 
+>     Fixes: 3df523ab582c ("mptcp: Add ADD_ADDR handling")
+> 
+> The rest is good!
+> 
+> Cheers,
+> Matt
+> -- 
+> Matthieu Baerts | R&D Engineer
+> matthieu.baerts@tessares.net
+> Tessares SA | Hybrid Access Solutions
+> www.tessares.net
+> 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
-Hi,
+Hi Matt,
 
-This is the semi-friendly patch-bot of Greg Kroah-Hartman.
+Thanks for your reply.
 
-Markus, you seem to have sent a nonsensical or otherwise pointless review
-comment to a patch submission on a Linux kernel developer mailing list.
-I strongly suggest that you not do this anymore.  Please do not bother
-developers who are actively working to produce patches and features with
-comments that, in the end, are a waste of time.
+I have already resend patch v2 to you.
 
-Patch submitter, please ignore Markus's suggestion; you do not needed
-to follow it at all.  The person/bot/AI that sent it is being ignored by
-almost all Linux kernel maintainers for having a persistent pattern of
-behavior of producing distracting and pointless commentary, and inability
-to adapt to feedback.  Please feel free to also ignore emails from them.
-
-thanks,
-
-greg k-h's patch email bot
+-Geliang
