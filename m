@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB7EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 00:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E49AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 00:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42DEB2075A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 00:59:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB37B2075A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 00:59:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729099AbgFHA7M (ORCPT
+        id S1729067AbgFHA7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 20:59:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58500 "EHLO
+        Sun, 7 Jun 2020 20:59:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729074AbgFHA7D (ORCPT
+        with ESMTP id S1728969AbgFHA6z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 20:59:03 -0400
+        Sun, 7 Jun 2020 20:58:55 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97276C08C5C3
-        for <linux-kernel@vger.kernel.org>; Sun,  7 Jun 2020 17:59:03 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CA91C08C5C3;
+        Sun,  7 Jun 2020 17:58:55 -0700 (PDT)
 Received: from [5.158.153.53] (helo=debian-buster-darwi.lab.linutronix.de.)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
         (Exim 4.80)
         (envelope-from <a.darwish@linutronix.de>)
-        id 1ji67u-00011Q-Pp; Mon, 08 Jun 2020 02:58:58 +0200
+        id 1ji67g-0000y6-9U; Mon, 08 Jun 2020 02:58:44 +0200
 From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
@@ -36,10 +36,13 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         "Sebastian A. Siewior" <bigeasy@linutronix.de>,
         Steven Rostedt <rostedt@goodmis.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        "Ahmed S. Darwish" <a.darwish@linutronix.de>
-Subject: [PATCH v2 18/18] hrtimer: Use sequence counter with associated raw spinlock
-Date:   Mon,  8 Jun 2020 02:57:29 +0200
-Message-Id: <20200608005729.1874024-19-a.darwish@linutronix.de>
+        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org
+Subject: [PATCH v2 15/18] NFSv4: Use sequence counter with associated spinlock
+Date:   Mon,  8 Jun 2020 02:57:26 +0200
+Message-Id: <20200608005729.1874024-16-a.darwish@linutronix.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200608005729.1874024-1-a.darwish@linutronix.de>
 References: <20200519214547.352050-1-a.darwish@linutronix.de>
@@ -59,64 +62,46 @@ form of locking to serialize writers. A plain seqcount_t does not
 contain the information of which lock must be held when entering a write
 side critical section.
 
-Use the new seqcount_raw_spinlock_t data type, which allows to associate
-a raw spinlock with the sequence counter. This enables lockdep to verify
-that the raw spinlock used for writer serialization is held when the
-write side critical section is entered.
+Use the new seqcount_spinlock_t data type, which allows to associate a
+spinlock with the sequence counter. This enables lockdep to verify that
+the spinlock used for writer serialization is held when the write side
+critical section is entered.
 
 If lockdep is disabled this lock association is compiled out and has
 neither storage size nor runtime overhead.
 
 Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
 ---
- include/linux/hrtimer.h |  2 +-
- kernel/time/hrtimer.c   | 13 ++++++++++---
- 2 files changed, 11 insertions(+), 4 deletions(-)
+ fs/nfs/nfs4_fs.h   | 2 +-
+ fs/nfs/nfs4state.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/hrtimer.h b/include/linux/hrtimer.h
-index 15c8ac313678..25993b86ac5c 100644
---- a/include/linux/hrtimer.h
-+++ b/include/linux/hrtimer.h
-@@ -159,7 +159,7 @@ struct hrtimer_clock_base {
- 	struct hrtimer_cpu_base	*cpu_base;
- 	unsigned int		index;
- 	clockid_t		clockid;
--	seqcount_t		seq;
-+	seqcount_raw_spinlock_t	seq;
- 	struct hrtimer		*running;
- 	struct timerqueue_head	active;
- 	ktime_t			(*get_time)(void);
-diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
-index d89da1c7e005..c4038511d5c9 100644
---- a/kernel/time/hrtimer.c
-+++ b/kernel/time/hrtimer.c
-@@ -135,7 +135,11 @@ static const int hrtimer_clock_to_base_table[MAX_CLOCKS] = {
-  * timer->base->cpu_base
-  */
- static struct hrtimer_cpu_base migration_cpu_base = {
--	.clock_base = { { .cpu_base = &migration_cpu_base, }, },
-+	.clock_base = { {
-+		.cpu_base = &migration_cpu_base,
-+		.seq      = SEQCNT_RAW_SPINLOCK_ZERO(migration_cpu_base.seq,
-+						     &migration_cpu_base.lock),
-+	}, },
+diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
+index 2b7f6dcd2eb8..210e590e1f71 100644
+--- a/fs/nfs/nfs4_fs.h
++++ b/fs/nfs/nfs4_fs.h
+@@ -117,7 +117,7 @@ struct nfs4_state_owner {
+ 	unsigned long	     so_flags;
+ 	struct list_head     so_states;
+ 	struct nfs_seqid_counter so_seqid;
+-	seqcount_t	     so_reclaim_seqcount;
++	seqcount_spinlock_t  so_reclaim_seqcount;
+ 	struct mutex	     so_delegreturn_mutex;
  };
  
- #define migration_base	migration_cpu_base.clock_base[0]
-@@ -1998,8 +2002,11 @@ int hrtimers_prepare_cpu(unsigned int cpu)
- 	int i;
- 
- 	for (i = 0; i < HRTIMER_MAX_CLOCK_BASES; i++) {
--		cpu_base->clock_base[i].cpu_base = cpu_base;
--		timerqueue_init_head(&cpu_base->clock_base[i].active);
-+		struct hrtimer_clock_base *clock_b = &cpu_base->clock_base[i];
-+
-+		clock_b->cpu_base = cpu_base;
-+		seqcount_raw_spinlock_init(&clock_b->seq, &cpu_base->lock);
-+		timerqueue_init_head(&clock_b->active);
- 	}
- 
- 	cpu_base->cpu = cpu;
+diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+index a8dc25ce48bb..b1dba24918f8 100644
+--- a/fs/nfs/nfs4state.c
++++ b/fs/nfs/nfs4state.c
+@@ -509,7 +509,7 @@ nfs4_alloc_state_owner(struct nfs_server *server,
+ 	nfs4_init_seqid_counter(&sp->so_seqid);
+ 	atomic_set(&sp->so_count, 1);
+ 	INIT_LIST_HEAD(&sp->so_lru);
+-	seqcount_init(&sp->so_reclaim_seqcount);
++	seqcount_spinlock_init(&sp->so_reclaim_seqcount, &sp->so_lock);
+ 	mutex_init(&sp->so_delegreturn_mutex);
+ 	return sp;
+ }
 -- 
 2.20.1
 
