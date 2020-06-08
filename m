@@ -2,296 +2,184 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF61AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:30:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C107C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:32:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A223C206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:30:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 023342072F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:32:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NEXT3lPG"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rm4mAtbl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729217AbgFHJav (ORCPT
+        id S1728956AbgFHJb7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 05:30:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52638 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729111AbgFHJau (ORCPT
+        Mon, 8 Jun 2020 05:31:59 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:57930 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729166AbgFHJb4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 05:30:50 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1776C08C5C4
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 02:30:49 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id b27so16528817qka.4
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 02:30:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FiS6FXFBbYvuiObSkizJLnD188Qx4xGnrdqq/91Kjfk=;
-        b=NEXT3lPGN24I0sCOBTtQEvemeXK7AIoCm4xsEx7f/5gzIYXUaBO9zxrTfMz9ZfRISR
-         Jl6eVUxNku//cyjm+Tw/uA4gHILbvSoE+nAVgmdzo4MsHQPHsdukrtHYssDG7fdbbo2i
-         LwXJlLaAgy++e/qqaZCajIcQtTBDCAzq6DF8M=
+        Mon, 8 Jun 2020 05:31:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591608714;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=LNvKSHGcNFpoKloJv9CTa41fupcZYOPp955NFOVf5iE=;
+        b=Rm4mAtblHdS2vpn3+SlI4ZBv1MTosFJA0Xt8CuhESAitfj2fWvgEP7Z5Fhp/5RGJF29biY
+        HTn3waWu9LqVk6erOlZtckaJUFsyQ/zsIPnQmtIDgWRxenfR42T30wXELQylSFYjXiSOjF
+        kzNeHaKgV5xAcsAy5w5lnJfAOXsQi14=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-480-c6aRKFnNPnq2g-70Mim3-g-1; Mon, 08 Jun 2020 05:31:53 -0400
+X-MC-Unique: c6aRKFnNPnq2g-70Mim3-g-1
+Received: by mail-wr1-f72.google.com with SMTP id c14so6874296wrw.11
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 02:31:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FiS6FXFBbYvuiObSkizJLnD188Qx4xGnrdqq/91Kjfk=;
-        b=O1XabdUuXK04d37Uk+6rxIJlqVsu5peDCXrUBAo68q+jfw3vqiP6tP5mBXY4YV+fRu
-         4Klm+t/6F4yLPWOWzOK1WLsHnE/0GQ8A1PVt0mtCrrTqrJKcnHFD/PqXcfGcWm/e2GbP
-         y1e/v08lQAWcN/TZ84eI6f6T/b4uV+i7MoTVeK5ZjD5Rit7/kGLXhlaDj+cKvwQ66v5i
-         spCflyVQm70fThP6beQDssX8VP+R6z7WrConCkGW1CPQj1r4u3xy2wgYFrYFdYKt/JE9
-         49QDj5syxjnozhsbS6IOTvrbcPAwChQDBf37A0O0eobKTkt4H7eWjHNyPqCOvOlxVE5w
-         of6Q==
-X-Gm-Message-State: AOAM532xmwNcK0RiELsRdKAmnZwuRH7VfbnnGH3LqVpcMtVX9YMw9D9l
-        kcJwrHLI4TfmlN0d6YNAZXzanKrT6AZyBgd6uW80MA==
-X-Google-Smtp-Source: ABdhPJyCyqnNzUwYp03xeP6dKWsEdLt6bxdABQu7k/v5O3JAPPStYqQlKixO/2KpuUK5xAlAx3uTUFYsTfWQRTxcyh4=
-X-Received: by 2002:a37:48cc:: with SMTP id v195mr4863659qka.232.1591608648827;
- Mon, 08 Jun 2020 02:30:48 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=LNvKSHGcNFpoKloJv9CTa41fupcZYOPp955NFOVf5iE=;
+        b=Hc5m8EtY6xgdh+6SXCVaCzwJIWiJ47h+hSgeYzrAhhLdp7cNrWHdTtT6YHk8BtL979
+         W25IUbaaQr2ymYMX9FPxeE0v5kZcO0wndInFzOHijeL4AMYvEcgo/Vj2qqrlpGYfHmyc
+         r4Bdj7ycmTqVPK0NOQM8X8/bG9z2V4MY/1SfIc/G9PJ/RaqKNYnsQk7MYocPP7zvfMO2
+         KQq3ucvwTa5vTeRPs3FWZ+Q22buPubXZGdOtYdjSs6pNQEOJNxl1W62HCmCZPrRFztJr
+         +DtrD88X7mnqWUFdEDk/Jg05wrVC3DIoEJTK4dpvcucmVY1FFZmCRWeEqhmeTB1U2Zjy
+         KHFg==
+X-Gm-Message-State: AOAM532JAlpkdxyW8ACy+OlJpyxNmTzxZbhWR4a7n19EMvKFVtGIM7pb
+        pBkd/529kfnLckMrZ2EJ5kry5j1mRiilg/DfEfkyoSWQvXdQDSokhYqCpdD6+r0ZIU7iE6/LA+A
+        cEaetpt20RflLCbJt7CFUfB4z
+X-Received: by 2002:a1c:2d4b:: with SMTP id t72mr10264724wmt.105.1591608712039;
+        Mon, 08 Jun 2020 02:31:52 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwrW5kFnoqZJwp6PoFmC2wBk4W6FEbW+539vCJi8Cp1MLsFQDk07bfCq2UDoydOIUKxhQvvGw==
+X-Received: by 2002:a1c:2d4b:: with SMTP id t72mr10264699wmt.105.1591608711808;
+        Mon, 08 Jun 2020 02:31:51 -0700 (PDT)
+Received: from redhat.com (bzq-109-64-41-91.red.bezeqint.net. [109.64.41.91])
+        by smtp.gmail.com with ESMTPSA id c65sm22564342wme.8.2020.06.08.02.31.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jun 2020 02:31:51 -0700 (PDT)
+Date:   Mon, 8 Jun 2020 05:31:48 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rob.miller@broadcom.com, lingshan.zhu@intel.com,
+        eperezma@redhat.com, lulu@redhat.com, shahafs@mellanox.com,
+        hanand@xilinx.com, mhabets@solarflare.com, gdawar@xilinx.com,
+        saugatm@xilinx.com, vmireyno@marvell.com,
+        zhangweining@ruijie.com.cn, eli@mellanox.com
+Subject: Re: [PATCH 5/6] vdpa: introduce virtio pci driver
+Message-ID: <20200608052041-mutt-send-email-mst@kernel.org>
+References: <20200529080303.15449-1-jasowang@redhat.com>
+ <20200529080303.15449-6-jasowang@redhat.com>
+ <20200602010332-mutt-send-email-mst@kernel.org>
+ <5dbb0386-beeb-5bf4-d12e-fb5427486bb8@redhat.com>
+ <6b1d1ef3-d65e-08c2-5b65-32969bb5ecbc@redhat.com>
+ <20200607095012-mutt-send-email-mst@kernel.org>
+ <9b1abd2b-232c-aa0f-d8bb-03e65fd47de2@redhat.com>
+ <20200608021438-mutt-send-email-mst@kernel.org>
+ <a1b1b7fb-b097-17b7-2e3a-0da07d2e48ae@redhat.com>
 MIME-Version: 1.0
-References: <20200526105811.30784-1-stevensd@chromium.org> <20200526105811.30784-2-stevensd@chromium.org>
- <20200604145620-mutt-send-email-mst@kernel.org> <CAD=HUj74mKs5AfcViD3CBva86E0Hvg_pmYChAJe3ny8jtnZ8Tw@mail.gmail.com>
- <20200606160155-mutt-send-email-mst@kernel.org> <CAD=HUj5Jn+grQVfxmPSSnERdGwnu8RceDsdpWpoxXH+WL4k+qw@mail.gmail.com>
- <20200608015728-mutt-send-email-mst@kernel.org> <CAD=HUj68NfNK+0go7Z-XeZ2ckWJpYsym3G+-DfJyoUm+dJDznQ@mail.gmail.com>
- <20200608045721-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20200608045721-mutt-send-email-mst@kernel.org>
-From:   David Stevens <stevensd@chromium.org>
-Date:   Mon, 8 Jun 2020 18:30:37 +0900
-Message-ID: <CAD=HUj5q7V74V41ijHEa5QPgQVHZ0D1guj9cvxzhzfQUotWUBA@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] virtio: add dma-buf support for exported objects
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Gerd Hoffmann <kraxel@redhat.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Jason Wang <jasowang@redhat.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        open list <linux-kernel@vger.kernel.org>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        "open list:VIRTIO GPU DRIVER" 
-        <virtualization@lists.linux-foundation.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>, virtio-dev@lists.oasis-open.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a1b1b7fb-b097-17b7-2e3a-0da07d2e48ae@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 8, 2020 at 6:05 PM Michael S. Tsirkin <mst@redhat.com> wrote:
->
-> On Mon, Jun 08, 2020 at 05:32:26PM +0900, David Stevens wrote:
-> > On Mon, Jun 8, 2020 at 3:00 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> > >
-> > > On Mon, Jun 08, 2020 at 10:33:09AM +0900, David Stevens wrote:
-> > > > On Sun, Jun 7, 2020 at 5:04 AM Michael S. Tsirkin <mst@redhat.com> wrote:
-> > > > >
-> > > > > On Fri, Jun 05, 2020 at 10:28:42AM +0900, David Stevens wrote:
-> > > > > > On Fri, Jun 5, 2020 at 4:05 AM Michael S. Tsirkin <mst@redhat.com> wrote:
-> > > > > > >
-> > > > > > > On Tue, May 26, 2020 at 07:58:09PM +0900, David Stevens wrote:
-> > > > > > > > This change adds a new flavor of dma-bufs that can be used by virtio
-> > > > > > > > drivers to share exported objects. A virtio dma-buf can be queried by
-> > > > > > > > virtio drivers to obtain the UUID which identifies the underlying
-> > > > > > > > exported object.
-> > > > > > > >
-> > > > > > > > Signed-off-by: David Stevens <stevensd@chromium.org>
-> > > > > > >
-> > > > > > > Is this just for graphics? If yes I'd rather we put it in the graphics
-> > > > > > > driver. We can always move it later ...
-> > > > > >
-> > > > > > As stated in the cover letter, this will be used by virtio-video.
-> > > > > >
-> > > > > > The proposed virtio-video patches: https://markmail.org/thread/p5d3k566srtdtute
-> > > > > > The patch which imports these dma-bufs (slightly out of data, uses v3
-> > > > > > of this patch set): https://markmail.org/thread/j4xlqaaim266qpks
-> > > > > >
-> > > > > > > > ---
-> > > > > > > >  drivers/virtio/Makefile         |  2 +-
-> > > > > > > >  drivers/virtio/virtio.c         |  6 +++
-> > > > > > > >  drivers/virtio/virtio_dma_buf.c | 89 +++++++++++++++++++++++++++++++++
-> > > > > > > >  include/linux/virtio.h          |  1 +
-> > > > > > > >  include/linux/virtio_dma_buf.h  | 58 +++++++++++++++++++++
-> > > > > > > >  5 files changed, 155 insertions(+), 1 deletion(-)
-> > > > > > > >  create mode 100644 drivers/virtio/virtio_dma_buf.c
-> > > > > > > >  create mode 100644 include/linux/virtio_dma_buf.h
-> > > > > > > >
-> > > > > > > > diff --git a/drivers/virtio/Makefile b/drivers/virtio/Makefile
-> > > > > > > > index 29a1386ecc03..ecdae5b596de 100644
-> > > > > > > > --- a/drivers/virtio/Makefile
-> > > > > > > > +++ b/drivers/virtio/Makefile
-> > > > > > > > @@ -1,5 +1,5 @@
-> > > > > > > >  # SPDX-License-Identifier: GPL-2.0
-> > > > > > > > -obj-$(CONFIG_VIRTIO) += virtio.o virtio_ring.o
-> > > > > > > > +obj-$(CONFIG_VIRTIO) += virtio.o virtio_ring.o virtio_dma_buf.o
-> > > > > > > >  obj-$(CONFIG_VIRTIO_MMIO) += virtio_mmio.o
-> > > > > > > >  obj-$(CONFIG_VIRTIO_PCI) += virtio_pci.o
-> > > > > > > >  virtio_pci-y := virtio_pci_modern.o virtio_pci_common.o
-> > > > > > > > diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
-> > > > > > > > index a977e32a88f2..5d46f0ded92d 100644
-> > > > > > > > --- a/drivers/virtio/virtio.c
-> > > > > > > > +++ b/drivers/virtio/virtio.c
-> > > > > > > > @@ -357,6 +357,12 @@ int register_virtio_device(struct virtio_device *dev)
-> > > > > > > >  }
-> > > > > > > >  EXPORT_SYMBOL_GPL(register_virtio_device);
-> > > > > > > >
-> > > > > > > > +bool is_virtio_device(struct device *dev)
-> > > > > > > > +{
-> > > > > > > > +     return dev->bus == &virtio_bus;
-> > > > > > > > +}
-> > > > > > > > +EXPORT_SYMBOL_GPL(is_virtio_device);
-> > > > > > > > +
-> > > > > > > >  void unregister_virtio_device(struct virtio_device *dev)
-> > > > > > > >  {
-> > > > > > > >       int index = dev->index; /* save for after device release */
-> > > > > > > > diff --git a/drivers/virtio/virtio_dma_buf.c b/drivers/virtio/virtio_dma_buf.c
-> > > > > > > > new file mode 100644
-> > > > > > > > index 000000000000..23e3399b11ed
-> > > > > > > > --- /dev/null
-> > > > > > > > +++ b/drivers/virtio/virtio_dma_buf.c
-> > > > > > > > @@ -0,0 +1,89 @@
-> > > > > > > > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > > > > > > > +/*
-> > > > > > > > + * dma-bufs for virtio exported objects
-> > > > > > > > + *
-> > > > > > > > + * Copyright (C) 2020 Google, Inc.
-> > > > > > > > + */
-> > > > > > > > +
-> > > > > > > > +#include <linux/virtio_dma_buf.h>
-> > > > > > > > +
-> > > > > > > > +/**
-> > > > > > > > + * virtio_dma_buf_export - Creates a new dma-buf for a virtio exported object
-> > > > > > > > + *
-> > > > > > > > + * This wraps dma_buf_export() to allow virtio drivers to create a dma-buf
-> > > > > > > > + * for an virtio exported object that can be queried by other virtio drivers
-> > > > > > > > + * for the object's UUID.
-> > > > > > > > + */
-> > > > > > > > +struct dma_buf *virtio_dma_buf_export(
-> > > > > > > > +             const struct virtio_dma_buf_export_info *virtio_exp_info)
-> > > > > > > > +{
-> > > > > > > > +     struct dma_buf_export_info exp_info;
-> > > > > > > > +
-> > > > > > > > +     if (!virtio_exp_info->ops
-> > > > > > > > +             || virtio_exp_info->ops->ops.attach != &virtio_dma_buf_attach
-> > > > > > > > +             || !virtio_exp_info->ops->get_uuid) {
-> > > > > > > > +             return ERR_PTR(-EINVAL);
-> > > > > > > > +     }
-> > > > > > > > +
-> > > > > > > > +     exp_info.exp_name = virtio_exp_info->exp_name;
-> > > > > > > > +     exp_info.owner = virtio_exp_info->owner;
-> > > > > > > > +     exp_info.ops = &virtio_exp_info->ops->ops;
-> > > > > > > > +     exp_info.size = virtio_exp_info->size;
-> > > > > > > > +     exp_info.flags = virtio_exp_info->flags;
-> > > > > > > > +     exp_info.resv = virtio_exp_info->resv;
-> > > > > > > > +     exp_info.priv = virtio_exp_info->priv;
-> > > > > > > > +     BUILD_BUG_ON(sizeof(struct virtio_dma_buf_export_info)
-> > > > > > > > +                  != sizeof(struct dma_buf_export_info));
-> > > > > > >
-> > > > > > > This is the only part that gives me pause. Why do we need this hack?
-> > > > > > > What's wrong with just using dma_buf_export_info directly,
-> > > > > > > and if you want the virtio ops, just using container_off?
-> > > > > >
-> > > > > > This approach provides a more explicit type signature and a little
-> > > > > > more type safety, I think. If others don't think it's a worthwhile
-> > > > > > tradeoff, I can remove it.
-> > > > > >
-> > > > > > -David
-> > > > >
-> > > > > The cost is that if dma_buf_export_info changes even slightly, we get
-> > > > > weird crashes.
-> > > >
-> > > > I'm not sure I understand what types of changes you're referring to.
-> > > > As this is written, virtio-dma-buf is just another client of the
-> > > > dma-buf API. If this were rewritten to use dma-buf directly, then
-> > > > whatever code calls virtio_dma_buf_export would become a client of the
-> > > > dma-buf API. If the semantics of existing fields in the dma-buf API
-> > > > were changed and virtio-dma-buf wasn't updated, then yes, you could
-> > > > get weird crashes from virtio-dma-buf.
-> > > > However, the same problem would
-> > > > exist if virtio_dma_buf_export used dma-buf directly - changes to
-> > > > dma-buf's semantics could cause weird crashes if the caller of
-> > > > virtio_dma_buf_export wasn't updated properly. The only potential
-> > > > source of problems I see is if virtio_dma_buf_export_info wasn't
-> > > > updated properly, but virtio_dma_buf_export_info is dead simple, so I
-> > > > don't know if that's really a problem.
-> > > >
-> > > > -David
-> > >
-> > > I think you can get weird crashes if fields in dma buf are reordered, or
-> > > if a field size changes.  You have a build bug catching overall struct
-> > > size changes but that can remain the same due do compiler padding or
-> > > such.
-> >
-> > Since it's manually copying the fields instead of trying something
-> > clever like memcpy, I don't see how reordering the fields or changing
-> > the size of the fields would cause problems. Right now,
-> > virtio_dma_buf_export is just a regular client of dma_buf_export, no
-> > different than any of the other call sites in the kernel.
-> >
-> > Overall, I don't really think that this is a problem. If someone makes
-> > breaking changes to the semantics of dma-buf, then they will need to
-> > update this call site, just like they will need to update all of the
-> > other call sites in the kernel. If someone adds new functionality to
-> > dma-buf and adds another field to dma_buf_export_info, the build bug
-> > is a reminder to add it to virtio_dma_buf_export_info. However, if the
-> > struct padding happens to work out such that the build bug doesn't
-> > trigger, that doesn't really matter - it just means that the new
-> > dma-buf feature won't be exposed by virito-dma-buf until someone needs
-> > it and notices that the new field is missing.
-> >
-> > -David
->
-> Think about the reasons for the BUILD_BUG_ON being there, checking
-> struct sizes like this is a clear sign of something strange going on.
+On Mon, Jun 08, 2020 at 05:18:44PM +0800, Jason Wang wrote:
+> 
+> On 2020/6/8 下午2:32, Michael S. Tsirkin wrote:
+> > On Mon, Jun 08, 2020 at 11:32:31AM +0800, Jason Wang wrote:
+> > > On 2020/6/7 下午9:51, Michael S. Tsirkin wrote:
+> > > > On Fri, Jun 05, 2020 at 04:54:17PM +0800, Jason Wang wrote:
+> > > > > On 2020/6/2 下午3:08, Jason Wang wrote:
+> > > > > > > > +static const struct pci_device_id vp_vdpa_id_table[] = {
+> > > > > > > > +    { PCI_DEVICE(PCI_VENDOR_ID_REDHAT_QUMRANET, PCI_ANY_ID) },
+> > > > > > > > +    { 0 }
+> > > > > > > > +};
+> > > > > > > This looks like it'll create a mess with either virtio pci
+> > > > > > > or vdpa being loaded at random. Maybe just don't specify
+> > > > > > > any IDs for now. Down the road we could get a
+> > > > > > > distinct vendor ID or a range of device IDs for this.
+> > > > > > Right, will do.
+> > > > > > 
+> > > > > > Thanks
+> > > > > Rethink about this. If we don't specify any ID, the binding won't work.
+> > > > We can bind manually. It's not really for production anyway, so
+> > > > not a big deal imho.
+> > > 
+> > > I think you mean doing it via "new_id", right.
+> > I really meant driver_override. This is what people have been using
+> > with pci-stub for years now.
+> 
+> 
+> Do you want me to implement "driver_overrid" in this series, or a NULL
+> id_table is sufficient?
 
-Like I said, it's there as a reminder to update the virtio-dma-buf API
-if the dma-buf API gets updated. Perhaps you could say it's a misuse
-of BUILD_BUG_ON, since not updating virtio-dma-buf in such a situation
-isn't a bug per se. If the BUILD_BUG_ON actually caught a real bug,
-there would be a much more fundamental issue going on. The code is
-doing nothing strange, nothing fundamentally different from any other
-call such as in drm_gem_prime_export or udmabuf_create - it's just
-setting fields in the dma_buf_export_info struct to values.
 
-> But really this is just unnecessary complexity anyway.
->
-> The only difference with dma_buf is get_uuid and device_attacj, isn't it?
->
-> And they are called like this:
->
->
->
-> + */
-> +int virtio_dma_buf_get_uuid(struct dma_buf *dma_buf,
-> +                           uuid_t *uuid)
-> +{
-> +       const struct virtio_dma_buf_ops *ops = container_of(
-> +                       dma_buf->ops, const struct virtio_dma_buf_ops, ops);
-> +
-> +       if (!is_virtio_dma_buf(dma_buf))
-> +               return -EINVAL;
-> +
-> +       return ops->get_uuid(dma_buf, uuid);
-> +}
->
->
-> So you are doing the container_of trick anyway, the extra structure
-> did not give us any type safety.
+Doesn't the pci subsystem create driver_override for all devices
+on the pci bus?
 
-Lack of type safety in one situation doesn't mean that type safety in
-another situation isn't worthwhile. If that were the case, then why
-does C have typedef? Why does Linux bother with types at all, since
-you can cast anything to anything with strict aliasing disabled? We
-can still make the virtio_dma_buf_export function more type-safe and
-readable while still having some unavoidable casting.
+> 
+> > 
+> > > > > How about using a dedicated subsystem vendor id for this?
+> > > > > 
+> > > > > Thanks
+> > > > If virtio vendor id is used then standard driver is expected
+> > > > to bind, right? Maybe use a dedicated vendor id?
+> > > 
+> > > I meant something like:
+> > > 
+> > > static const struct pci_device_id vp_vdpa_id_table[] = {
+> > >      { PCI_DEVICE_SUB(PCI_VENDOR_ID_REDHAT_QUMRANET, PCI_ANY_ID,
+> > > VP_TEST_VENDOR_ID, VP_TEST_DEVICE_ID) },
+> > >      { 0 }
+> > > };
+> > > 
+> > > Thanks
+> > > 
+> > Then regular virtio will still bind to it. It has
+> > 
+> > drivers/virtio/virtio_pci_common.c:     { PCI_DEVICE(PCI_VENDOR_ID_REDHAT_QUMRANET, PCI_ANY_ID) },
+> > 
+> > 
+> 
+> IFCVF use this to avoid the binding to regular virtio device.
 
-But that being said, it's not worth further bikeshedding. I'll send
-out an updated patch set.
 
--David
+Ow. Indeed:
+
+#define IFCVF_VENDOR_ID         0x1AF4
+
+Which is of course not an IFCVF vendor id, it's the Red Hat vendor ID.
+
+I missed that.
+
+Does it actually work if you bind a virtio driver to it?
+I'm guessing no otherwise they wouldn't need IFC driver, right?
+
+
+
+
+> Looking at
+> pci_match_one_device() it checks both subvendor and subdevice there.
+> 
+> Thanks
+
+
+But IIUC there is no guarantee that driver with a specific subvendor
+matches in presence of a generic one.
+So either IFC or virtio pci can win, whichever binds first.
+
+I guess we need to blacklist IFC in virtio pci probe code. Ugh.
+
+-- 
+MST
+
