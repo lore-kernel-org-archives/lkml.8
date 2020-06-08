@@ -2,126 +2,108 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63203C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:16:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E797C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:17:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C92A2078B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:16:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L4tNUQw3"
+	by mail.kernel.org (Postfix) with ESMTP id 406BB2078B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:17:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726053AbgFHSQ2 (ORCPT
+        id S1726116AbgFHSQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 14:16:28 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58760 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725797AbgFHSQ2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 14:16:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591640186;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=oIo80SnB/PSIWlFE9jQ3/SK9wb3PpgcPr98lQXyYwj4=;
-        b=L4tNUQw3uGDtfyy7foSVer/tEXKWNRmJuYSsNaN6hs5boUfN8eEghtqkXW8TBA3jl0dBLj
-        VEE3s7ESIxHJyM2rjmVi0yhI8cZMJZ4uKtUOi2p5yNLVvuwI1e8iVWum5LhgurofksT860
-        9zAxBEHqpghEPYJpch4v4mBq5pX5d5Q=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-311-_NqeFH-KO-GlhwrTIN2a7w-1; Mon, 08 Jun 2020 14:15:54 -0400
-X-MC-Unique: _NqeFH-KO-GlhwrTIN2a7w-1
-Received: by mail-ej1-f70.google.com with SMTP id t4so6346636ejj.12
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 11:15:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=oIo80SnB/PSIWlFE9jQ3/SK9wb3PpgcPr98lQXyYwj4=;
-        b=kX3G3HsvD7OOG8yMpOtbphXKmdpcXJVGiT0+KaZ08INURG+FnbE1oICeloyPfrEwQW
-         UnR23naVkkCkPcqQNk4+FlQBxQcLWzXcZzamezDO96hgMLzC5UCqo5XxPWYdRjU+XB2M
-         5XRv4N+Ta69RC+eBs2ldbE6SMmqgD/f32uNW9bcdpezAts3XMQVuGynXL0oJSSVltE6K
-         pRlmEJrH/NJdLkoMaClL6il4MtZK1XwtdRpM+bQvfBVw6KTn365q8D2gwyBzuP8ZzsOc
-         m2C/l7076lUQCiXfTA0klwZMBNuV6M7MM9aYdXNDyxu+midHyHUsX+yAUCpR99Z+qqln
-         4WoA==
-X-Gm-Message-State: AOAM530ZqX3i34mOFOHuIHP9H/jUyFKDoQmjGRINIVvSZTKhKwxufeWo
-        MZB1L2fYM9q0ToK4Yi+UGvlbLt9xslDfrV8Q/xs35XpPmG4ZiWEXECwv12guVCBPtDrUKFfrwFs
-        90ihT5cWeCyh+PzzL5PXb3gdd
-X-Received: by 2002:a50:ac84:: with SMTP id x4mr23961537edc.124.1591640153199;
-        Mon, 08 Jun 2020 11:15:53 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwFuIoKxqy0jjsfx01sqRkTEypgRvXwuITW6/q5hDponWWttStC6KsdShp0bZjj0Gw9JwhjrQ==
-X-Received: by 2002:a50:ac84:: with SMTP id x4mr23961498edc.124.1591640152969;
-        Mon, 08 Jun 2020 11:15:52 -0700 (PDT)
-Received: from [192.168.3.122] (p5b0c659c.dip0.t-ipconnect.de. [91.12.101.156])
-        by smtp.gmail.com with ESMTPSA id k3sm13152866edi.60.2020.06.08.11.15.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Jun 2020 11:15:52 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   David Hildenbrand <david@redhat.com>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v15 01/14] mm/page_ext: Export lookup_page_ext() to GPL modules
-Date:   Mon, 8 Jun 2020 20:15:50 +0200
-Message-Id: <320E495A-1A3E-423B-A3E7-088004771E45@redhat.com>
-References: <20200608154917.GA8408@infradead.org>
-Cc:     David Hildenbrand <david@redhat.com>,
-        SeongJae Park <sjpark@amazon.com>, akpm@linux-foundation.org,
-        SeongJae Park <sjpark@amazon.de>, jonathan.cameron@huawei.com,
-        aarcange@redhat.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, amit@kernel.org,
-        benh@kernel.crashing.org, brendan.d.gregg@gmail.com,
-        brendanhiggins@google.com, cai@lca.pw, colin.king@canonical.com,
-        corbet@lwn.net, dwmw@amazon.com, foersleo@amazon.de,
-        irogers@google.com, jolsa@redhat.com, kirill@shutemov.name,
-        mark.rutland@arm.com, mgorman@suse.de, minchan@kernel.org,
-        mingo@redhat.com, namhyung@kernel.org, peterz@infradead.org,
-        rdunlap@infradead.org, riel@surriel.com, rientjes@google.com,
-        rostedt@goodmis.org, sblbir@amazon.com, shakeelb@google.com,
-        shuah@kernel.org, sj38.park@gmail.com, snu@amazon.de,
-        vbabka@suse.cz, vdavydov.dev@gmail.com, yang.shi@linux.alibaba.com,
-        ying.huang@intel.com, linux-damon@amazon.com, linux-mm@kvack.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20200608154917.GA8408@infradead.org>
-To:     Christoph Hellwig <hch@infradead.org>
-X-Mailer: iPhone Mail (17E262)
+        Mon, 8 Jun 2020 14:16:59 -0400
+Received: from mga02.intel.com ([134.134.136.20]:36448 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725797AbgFHSQ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 14:16:59 -0400
+IronPort-SDR: yD0xONdVeymzeYRomamJp7gXcrO7gP0w2s+E90CISte0kX6EiR8hvjEp+xIG/CR29v2VTOGHTD
+ IGlAqEPvUTUA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2020 11:16:58 -0700
+IronPort-SDR: emiEpVOSD6jJLw0cunF6upXR3LRNLEH3u0eMcn8k3RwEz6GZM/twKRsAGvD/2VY3Ddl9zagfBt
+ 2NKanvi6MC2g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,487,1583222400"; 
+   d="scan'208";a="349253637"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga001.jf.intel.com with ESMTP; 08 Jun 2020 11:16:58 -0700
+Date:   Mon, 8 Jun 2020 11:16:58 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sergio Perez Gonzalez <sergio.perez.gonzalez@intel.com>,
+        Adriana Cervantes Jimenez <adriana.cervantes.jimenez@intel.com>,
+        Peter Xu <peterx@redhat.com>
+Subject: Re: [PATCH] KVM: selftests: Ignore KVM 5-level paging support for
+ VM_MODE_PXXV48_4K
+Message-ID: <20200608181658.GD8223@linux.intel.com>
+References: <20200528021530.28091-1-sean.j.christopherson@intel.com>
+ <ed65de29-a07a-f424-937e-38576e740de7@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ed65de29-a07a-f424-937e-38576e740de7@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, May 28, 2020 at 01:55:44PM +0200, Paolo Bonzini wrote:
+> On 28/05/20 04:15, Sean Christopherson wrote:
+> > Explicitly set the VA width to 48 bits for the x86_64-only PXXV48_4K VM
+> > mode instead of asserting the guest VA width is 48 bits.  The fact that
+> > KVM supports 5-level paging is irrelevant unless the selftests opt-in to
+> > 5-level paging by setting CR4.LA57 for the guest.  The overzealous
+> > assert prevents running the selftests on a kernel with 5-level paging
+> > enabled.
+> > 
+> > Incorporate LA57 into the assert instead of removing the assert entirely
+> > as a sanity check of KVM's CPUID output.
+> > 
+> > Fixes: 567a9f1e9deb ("KVM: selftests: Introduce VM_MODE_PXXV48_4K")
+> > Reported-by: Sergio Perez Gonzalez <sergio.perez.gonzalez@intel.com>
+> > Cc: Adriana Cervantes Jimenez <adriana.cervantes.jimenez@intel.com>
+> > Cc: Peter Xu <peterx@redhat.com>
+> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > ---
+> >  tools/testing/selftests/kvm/lib/kvm_util.c | 11 +++++++++--
+> >  1 file changed, 9 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
+> > index c9cede5c7d0de..74776ee228f2d 100644
+> > --- a/tools/testing/selftests/kvm/lib/kvm_util.c
+> > +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
+> > @@ -195,11 +195,18 @@ struct kvm_vm *_vm_create(enum vm_guest_mode mode, uint64_t phy_pages, int perm)
+> >  	case VM_MODE_PXXV48_4K:
+> >  #ifdef __x86_64__
+> >  		kvm_get_cpu_address_width(&vm->pa_bits, &vm->va_bits);
+> > -		TEST_ASSERT(vm->va_bits == 48, "Linear address width "
+> > -			    "(%d bits) not supported", vm->va_bits);
+> > +		/*
+> > +		 * Ignore KVM support for 5-level paging (vm->va_bits == 57),
+> > +		 * it doesn't take effect unless a CR4.LA57 is set, which it
+> > +		 * isn't for this VM_MODE.
+> > +		 */
+> > +		TEST_ASSERT(vm->va_bits == 48 || vm->va_bits == 57,
+> > +			    "Linear address width (%d bits) not supported",
+> > +			    vm->va_bits);
+> >  		pr_debug("Guest physical address width detected: %d\n",
+> >  			 vm->pa_bits);
+> >  		vm->pgtable_levels = 4;
+> > +		vm->va_bits = 48;
+> >  #else
+> >  		TEST_FAIL("VM_MODE_PXXV48_4K not supported on non-x86 platforms");
+> >  #endif
+> > 
+> 
+> Queued, thnaks.
+> 
+> Paolo
 
-
-> Am 08.06.2020 um 18:11 schrieb Christoph Hellwig <hch@infradead.org>:
->=20
-> =EF=BB=BFOn Mon, Jun 08, 2020 at 01:53:23PM +0200, David Hildenbrand wrote=
-:
->>> @@ -131,6 +131,7 @@ struct page_ext *lookup_page_ext(const struct page *=
-page)
->>>                    MAX_ORDER_NR_PAGES);
->>>    return get_entry(base, index);
->>> }
->>> +EXPORT_SYMBOL_GPL(lookup_page_ext);
->>>=20
->>> static int __init alloc_node_page_ext(int nid)
->>> {
->>>=20
->>=20
->> I've been told to always smuggle new EXPORTs into the patch that
->> actually needs it (and cc relevant people on that patch instead).
->=20
-> A separate patch for anything remotely controversial really helps it
-> to stick out, so I think keeping it separate is a very good practice.
->=20
-
-That used to be my approach until Michal told me to do it differently. And t=
-here is a good point for it: Reviewers actually understand in which context i=
-t is used and if it is really required.
-
-Having that said, I don=E2=80=98t have a strong opinion on this.=
-
+Looks like this one also got lost in the 5.7 -> 5.8 transition.
