@@ -4,54 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8BCEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D5D3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E60220884
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3337F20801
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:12:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591661550;
-	bh=iG3LVivJ8uCX8kUqM0xz71pkACuHrcE3caW6mKU03yI=;
+	s=default; t=1591661562;
+	bh=eVIpr8/ofo5takKWsPqMw/Pep/g6XXz7jFfvgEA1vCQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MUSnLEISOJJVrnFDHbaFYCgbXwdCrR/d2t/6XToMK8/K/NdlnCCKGFRKbH9bnOFCR
-	 FUujJCL4pZEf/NuYHS9er7NHCxzqrIoqUqUh97HxcHiSeH53BLOGP5qUsrDr6yXFld
-	 xL7XWnyAtZ4Hd05scN01i9AyB2zH+nwrshG7jjzY=
+	b=W0S2RzUGXUZuM9Uah0Fg84I21EFO8bW1TvxHHwcwfSbMlum4iWv4dz45QqH4zXc57
+	 l9aBp7tJUba8dTl26UZT2F617X+6qc8jljBuGoHKZ19fPzDYnSDuoFjniGxmqdbV+4
+	 ZycB4I05MncxvbJJp9rqkgpxArFMm+ovD+Jok9GQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731571AbgFIAM3 (ORCPT
+        id S1730491AbgFIAMl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:12:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42714 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:12:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730040AbgFHXTm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:19:42 -0400
+        id S1730103AbgFHXTj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:19:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2865D20872;
-        Mon,  8 Jun 2020 23:19:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C327B20814;
+        Mon,  8 Jun 2020 23:19:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658382;
-        bh=iG3LVivJ8uCX8kUqM0xz71pkACuHrcE3caW6mKU03yI=;
+        s=default; t=1591658379;
+        bh=eVIpr8/ofo5takKWsPqMw/Pep/g6XXz7jFfvgEA1vCQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vyBYlcl/MLVqcLamAv+r2hBmRHtPZximk7oKhXyUbYgsrKsr3NnLa85JZkoByqH7V
-         rnEuKoFiuS2f9ucymMWswaOGAg+DpROrs+M8jdXXbRzxQeGaBHC9OfirxvdutCyWHt
-         GddaV2LMDbNlfFCZKtmuXzCNqmndB6KYrws/oxXQ=
+        b=MXO6zPlrjp4O3jDi/ibgXtprthp4fj9qT5rByDQdbFbe0Jsrdq9MHh5Fw+iBV16pj
+         SRKMM1HkgKb8H9uz4F/kzzvprWnrAl1O6cwKWkY3aPBJkoN26AWlHuka/1aOR0gVJc
+         tU4tgLYYVGqd22I1vATNYJrqKqEg/LLNBPF0QfUo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>, linux-mips@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 043/175] mips: Fix cpu_has_mips64r1/2 activation for MIPS32 CPUs
-Date:   Mon,  8 Jun 2020 19:16:36 -0400
-Message-Id: <20200608231848.3366970-43-sashal@kernel.org>
+Cc:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 041/175] pmu/smmuv3: Clear IRQ affinity hint on device removal
+Date:   Mon,  8 Jun 2020 19:16:34 -0400
+Message-Id: <20200608231848.3366970-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
 References: <20200608231848.3366970-1-sashal@kernel.org>
@@ -64,59 +59,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+From: Jean-Philippe Brucker <jean-philippe@linaro.org>
 
-[ Upstream commit a2ac81c6ef4018ea49c034ce165bb9ea1cf99f3e ]
+[ Upstream commit 10f6cd2af21bb44faab31a50ec3361d7649e5a39 ]
 
-Commit 1aeba347b3a9 ("MIPS: Hardcode cpu_has_mips* where target ISA
-allows") updated the cpu_has_mips* macro to be replaced with a constant
-expression where it's possible. By mistake it wasn't done correctly
-for cpu_has_mips64r1/cpu_has_mips64r2 macro. They are defined to
-be replaced with conditional expression __isa_range_or_flag(), which
-means either ISA revision being within the range or the corresponding
-CPU options flag was set at the probe stage or both being true at the
-same time. But the ISA level value doesn't indicate whether the ISA is
-MIPS32 or MIPS64. Due to this if we select MIPS32r1 - MIPS32r5
-architectures the __isa_range() macro will activate the
-cpu_has_mips64rX flags, which is incorrect. In order to fix the
-problem we make sure the 64bits CPU support is enabled by means of
-checking the flag cpu_has_64bits aside with proper ISA range and specific
-Revision flag being set.
+Currently when trying to remove the SMMUv3 PMU module we get a
+WARN_ON_ONCE from free_irq(), because the affinity hint set during probe
+hasn't been properly cleared.
 
-Fixes: 1aeba347b3a9 ("MIPS: Hardcode cpu_has_mips* where target ISA allows")
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+[  238.878383] WARNING: CPU: 0 PID: 175 at kernel/irq/manage.c:1744 free_irq+0x324/0x358
+...
+[  238.897263] Call trace:
+[  238.897998]  free_irq+0x324/0x358
+[  238.898792]  devm_irq_release+0x18/0x28
+[  238.899189]  release_nodes+0x1b0/0x228
+[  238.899984]  devres_release_all+0x38/0x60
+[  238.900779]  device_release_driver_internal+0x10c/0x1d0
+[  238.901574]  driver_detach+0x50/0xe0
+[  238.902368]  bus_remove_driver+0x5c/0xd8
+[  238.903448]  driver_unregister+0x30/0x60
+[  238.903958]  platform_driver_unregister+0x14/0x20
+[  238.905075]  arm_smmu_pmu_exit+0x1c/0xecc [arm_smmuv3_pmu]
+[  238.905547]  __arm64_sys_delete_module+0x14c/0x260
+[  238.906342]  el0_svc_common.constprop.0+0x74/0x178
+[  238.907355]  do_el0_svc+0x24/0x90
+[  238.907932]  el0_sync_handler+0x11c/0x198
+[  238.908979]  el0_sync+0x158/0x180
+
+Just like the other perf drivers, clear the affinity hint before
+releasing the device.
+
+Fixes: 7d839b4b9e00 ("perf/smmuv3: Add arm64 smmuv3 pmu driver")
+Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Link: https://lore.kernel.org/r/20200422084805.237738-1-jean-philippe@linaro.org
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/include/asm/cpu-features.h | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/perf/arm_smmuv3_pmu.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/mips/include/asm/cpu-features.h b/arch/mips/include/asm/cpu-features.h
-index 983a6a7f43a1..3e26b0c7391b 100644
---- a/arch/mips/include/asm/cpu-features.h
-+++ b/arch/mips/include/asm/cpu-features.h
-@@ -288,10 +288,12 @@
- # define cpu_has_mips32r6	__isa_ge_or_flag(6, MIPS_CPU_ISA_M32R6)
- #endif
- #ifndef cpu_has_mips64r1
--# define cpu_has_mips64r1	__isa_range_or_flag(1, 6, MIPS_CPU_ISA_M64R1)
-+# define cpu_has_mips64r1	(cpu_has_64bits && \
-+				 __isa_range_or_flag(1, 6, MIPS_CPU_ISA_M64R1))
- #endif
- #ifndef cpu_has_mips64r2
--# define cpu_has_mips64r2	__isa_range_or_flag(2, 6, MIPS_CPU_ISA_M64R2)
-+# define cpu_has_mips64r2	(cpu_has_64bits && \
-+				 __isa_range_or_flag(2, 6, MIPS_CPU_ISA_M64R2))
- #endif
- #ifndef cpu_has_mips64r6
- # define cpu_has_mips64r6	__isa_ge_and_flag(6, MIPS_CPU_ISA_M64R6)
+diff --git a/drivers/perf/arm_smmuv3_pmu.c b/drivers/perf/arm_smmuv3_pmu.c
+index 2f8787276d9b..3269232ff570 100644
+--- a/drivers/perf/arm_smmuv3_pmu.c
++++ b/drivers/perf/arm_smmuv3_pmu.c
+@@ -815,7 +815,7 @@ static int smmu_pmu_probe(struct platform_device *pdev)
+ 	if (err) {
+ 		dev_err(dev, "Error %d registering hotplug, PMU @%pa\n",
+ 			err, &res_0->start);
+-		return err;
++		goto out_clear_affinity;
+ 	}
+ 
+ 	err = perf_pmu_register(&smmu_pmu->pmu, name, -1);
+@@ -834,6 +834,8 @@ static int smmu_pmu_probe(struct platform_device *pdev)
+ 
+ out_unregister:
+ 	cpuhp_state_remove_instance_nocalls(cpuhp_state_num, &smmu_pmu->node);
++out_clear_affinity:
++	irq_set_affinity_hint(smmu_pmu->irq, NULL);
+ 	return err;
+ }
+ 
+@@ -843,6 +845,7 @@ static int smmu_pmu_remove(struct platform_device *pdev)
+ 
+ 	perf_pmu_unregister(&smmu_pmu->pmu);
+ 	cpuhp_state_remove_instance_nocalls(cpuhp_state_num, &smmu_pmu->node);
++	irq_set_affinity_hint(smmu_pmu->irq, NULL);
+ 
+ 	return 0;
+ }
 -- 
 2.25.1
 
