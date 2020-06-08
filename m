@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25693C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 409F2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E448C20737
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:00:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D13120737
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:00:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591664445;
-	bh=qMBN6ywlGZR40UxUS7UN9pzv36EbDklsZp2ZsKOoD8U=;
+	s=default; t=1591664456;
+	bh=h1T8WN4lKVZU17Fkg6U+9UkbB+FzXtXp0Ckcu6/lPss=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C15EOAQCO4jIUGST5lvZ9yzO8amu8a2XoNQhKMsAGKhGfHJux4AIHYscXyVoh4usq
-	 RbaMDFLGLmTKr+tczqAV1+KjWGTyA6XI8BVnVeiFtV50utMSnxpjHxAq0vUNiAL83g
-	 /77yNTe3U+0ZYZSrlyAOJkV09o61YIZ5t/DL43N0=
+	b=R4+bsWsQB9zpRq6YULwM1YG6Qk8nF4el0BRbvFL4X9oxZbWIsHwA3NksSVDmNsebf
+	 0I0pkgGsgV37pEL4IV1OHNsi7Qv8jQljFPwisuL0AbLRAwAHgDvEv+/kQgEJJlo2FK
+	 VzJWw1gduEvVGlmKI1pe6PdM1RlujFO8wgIYon0c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388100AbgFIBAm (ORCPT
+        id S1729271AbgFIBAz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 21:00:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53402 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 21:00:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727884AbgFHXIS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:08:18 -0400
+        id S1728122AbgFHXIP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:08:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E5DA208A7;
-        Mon,  8 Jun 2020 23:08:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4717F20842;
+        Mon,  8 Jun 2020 23:08:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657697;
-        bh=qMBN6ywlGZR40UxUS7UN9pzv36EbDklsZp2ZsKOoD8U=;
+        s=default; t=1591657695;
+        bh=h1T8WN4lKVZU17Fkg6U+9UkbB+FzXtXp0Ckcu6/lPss=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sjp1N+VLvRFx2jsRegJPWFxkfXKDJjLb+/4GhWxsL7nu8bu/wEWImgKznLe3gStm6
-         mvcmTNcAB8ROGVIOF7NAgDJhD45CgUnvvBTHCXhdj8ltSIoZBXud3KU5WZfW/i0CNj
-         TAHUPGQBsOhMx7XmYJU0Rcd2inwFNy0ivcCtAf1A=
+        b=AR8Bew5NPRB8LiSO6uflaDp8v5HK9mp+G9wE1TNxF+FKHg1qQoZFff36/ibycqFGU
+         qgXAaL8JfP9U/ZtDTVLSYjLVxuGQ+dEnjNP4EnH3kJk4dSf/jdc5vXhKAZjdITmihW
+         05xV3lJ4GCgjw8D6uDhNmBeE1UB59raSj5qoVfbU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mansur Alisha Shaik <mansur@codeaurora.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 097/274] media: venus: core: remove CNOC voting while device suspend
-Date:   Mon,  8 Jun 2020 19:03:10 -0400
-Message-Id: <20200608230607.3361041-97-sashal@kernel.org>
+Cc:     Alvin Lee <alvin.lee2@amd.com>,
+        Yongqiang Sun <yongqiang.sun@amd.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.7 095/274] drm/amd/display: Revert to old formula in set_vtg_params
+Date:   Mon,  8 Jun 2020 19:03:08 -0400
+Message-Id: <20200608230607.3361041-95-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -61,62 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mansur Alisha Shaik <mansur@codeaurora.org>
+From: Alvin Lee <alvin.lee2@amd.com>
 
-[ Upstream commit 07f8f22a33a9e3e9955e24a84e2f856dcc8c31c4 ]
+[ Upstream commit a1a0e61f3c43c610f0a3c109348c14ce930c1977 ]
 
-The Venus driver is voting Configuration NoC during .probe but not clear
-voting in .suspend. Because of this NoC is up during shutdown also. As a
-consequence the whole device could leak energy while in .suspend.
+[Why]
+New formula + cursor change causing underflow
+on certain configs
 
-So correct this by moving voting in .resume and unvoting
-in .suspend
+[How]
+Rever to old formula
 
-Signed-off-by: Mansur Alisha Shaik <mansur@codeaurora.org>
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Alvin Lee <alvin.lee2@amd.com>
+Reviewed-by: Yongqiang Sun <yongqiang.sun@amd.com>
+Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/qcom/venus/core.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/amd/display/dc/dcn10/dcn10_optc.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
-index 194b10b98767..13fa5076314c 100644
---- a/drivers/media/platform/qcom/venus/core.c
-+++ b/drivers/media/platform/qcom/venus/core.c
-@@ -242,10 +242,6 @@ static int venus_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_optc.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_optc.c
+index 17d96ec6acd8..ec0ab42becba 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_optc.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_optc.c
+@@ -299,6 +299,7 @@ void optc1_set_vtg_params(struct timing_generator *optc,
+ 	uint32_t asic_blank_end;
+ 	uint32_t v_init;
+ 	uint32_t v_fp2 = 0;
++	int32_t vertical_line_start;
  
--	ret = icc_set_bw(core->cpucfg_path, 0, kbps_to_icc(1000));
--	if (ret)
--		return ret;
--
- 	ret = hfi_create(core, &venus_core_ops);
- 	if (ret)
- 		return ret;
-@@ -350,6 +346,10 @@ static __maybe_unused int venus_runtime_suspend(struct device *dev)
- 	if (ret)
- 		return ret;
+ 	struct optc *optc1 = DCN10TG_FROM_TG(optc);
  
-+	ret = icc_set_bw(core->cpucfg_path, 0, 0);
-+	if (ret)
-+		return ret;
-+
- 	if (pm_ops->core_power)
- 		ret = pm_ops->core_power(dev, POWER_OFF);
+@@ -315,8 +316,9 @@ void optc1_set_vtg_params(struct timing_generator *optc,
+ 			patched_crtc_timing.v_border_top;
  
-@@ -368,6 +368,10 @@ static __maybe_unused int venus_runtime_resume(struct device *dev)
- 			return ret;
- 	}
+ 	/* if VSTARTUP is before VSYNC, FP2 is the offset, otherwise 0 */
+-	if (optc1->vstartup_start > asic_blank_end)
+-		v_fp2 = optc1->vstartup_start - asic_blank_end;
++	vertical_line_start = asic_blank_end - optc1->vstartup_start + 1;
++	if (vertical_line_start < 0)
++		v_fp2 = -vertical_line_start;
  
-+	ret = icc_set_bw(core->cpucfg_path, 0, kbps_to_icc(1000));
-+	if (ret)
-+		return ret;
-+
- 	return hfi_core_resume(core, false);
- }
- 
+ 	/* Interlace */
+ 	if (REG(OTG_INTERLACE_CONTROL)) {
 -- 
 2.25.1
 
