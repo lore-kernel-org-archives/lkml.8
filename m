@@ -2,127 +2,129 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA6FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 21:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB9EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 21:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7733A20760
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 21:27:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7975F206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 21:30:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gbwauFtk"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Swx/mncb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgFHV1G (ORCPT
+        id S1726803AbgFHVaD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 17:27:06 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:56358 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726705AbgFHV1F (ORCPT
+        Mon, 8 Jun 2020 17:30:03 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:46176 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726705AbgFHVaC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 17:27:05 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 058LGMcw044154;
-        Mon, 8 Jun 2020 21:26:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2020-01-29; bh=gq92GnkfEK6oGnpL0v/HMBD4QG3kwY7CAH1UUE9eQwA=;
- b=gbwauFtkftQo4WPp+JpwpP6vjKXot2jldVowtqqWifA6iDQwwLfOexTajAFj/1ATtWvA
- 84mvZx+7faLebbrqRazxKQ1LUJUvV+oWCeizq9KfWT5wQcvi54xbXCEquWGb/yPX4xWM
- v7YT/Qbz7vBivqVl+EgF5tFRmudEBesmLCvE9RfjHFKxCqHausVPUjlKRNt9lWAfluV6
- 4FVFmmFsEOkClLin3WJFNWykY0QJ6bj8XUP/sAyLxQGB4oOZ+GMuciTfCmvS6lGu8Bh6
- eKeq9Wsd4Iyz9MvlC60KEiD3fhtlqrkuVy6ca+F8K97p6EyTjszGOy0VcixPRenGc+9H NA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 31g3sms2d7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 08 Jun 2020 21:26:57 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 058LDdW2096260;
-        Mon, 8 Jun 2020 21:26:57 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 31gn2vrdft-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 08 Jun 2020 21:26:57 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 058LQuli001801;
-        Mon, 8 Jun 2020 21:26:56 GMT
-Received: from parnassus.us.oracle.com (/10.39.236.86)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 08 Jun 2020 14:26:55 -0700
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Daniel Jordan <daniel.m.jordan@oracle.com>
-Subject: [PATCH] padata: upgrade smp_mb__after_atomic to smp_mb in padata_do_serial
-Date:   Mon,  8 Jun 2020 17:26:52 -0400
-Message-Id: <20200608212652.3469814-1-daniel.m.jordan@oracle.com>
-X-Mailer: git-send-email 2.26.2
+        Mon, 8 Jun 2020 17:30:02 -0400
+Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id BC9B62C9;
+        Mon,  8 Jun 2020 23:29:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1591651800;
+        bh=5648b7zLWqMKR5MbS2MpnHHlZD+5zBO3a0GztfnN9s0=;
+        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Swx/mncbCCeCY3s9gmp/Kg9vFqKn3uGXqIwzumYd/BGYjbpKLdGkl5YTVs0Lf9JMU
+         b70JvRt5/kHzCorFR6BeVE8xagLHUM5dHDx0pjQz5S9H6kze3uszPUFU9tEoNsiueP
+         8utZUFXIdQLA1izbWrsYXb4P0yT+BkBgaFvhPA4k=
+Reply-To: kieran.bingham+renesas@ideasonboard.com
+Subject: Re: [PATCH] [v2] media: vsp1: Fix runtime PM imbalance on error
+To:     Dinghao Liu <dinghao.liu@zju.edu.cn>, kjlu@umn.edu
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200608052919.4984-1-dinghao.liu@zju.edu.cn>
+From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Organization: Ideas on Board
+Message-ID: <dad95caa-0cbc-7df2-8187-af5f38dee1da@ideasonboard.com>
+Date:   Mon, 8 Jun 2020 22:29:56 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9646 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 malwarescore=0
- bulkscore=0 adultscore=0 mlxlogscore=999 spamscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006080148
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9646 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
- lowpriorityscore=0 impostorscore=0 cotscore=-2147483648 suspectscore=0
- spamscore=0 bulkscore=0 malwarescore=0 phishscore=0 mlxscore=0
- mlxlogscore=999 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006080148
+In-Reply-To: <20200608052919.4984-1-dinghao.liu@zju.edu.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A 5.7 kernel hangs during a tcrypt test of padata that waits for an AEAD
-request to finish.  This is only seen on large machines running many
-concurrent requests.
+Hi Dinghao,
 
-The issue is that padata never serializes the request.  The removal of
-the reorder_objects atomic missed that the memory barrier in
-padata_do_serial() depends on it.
+On 08/06/2020 06:29, Dinghao Liu wrote:
+> pm_runtime_get_sync() increments the runtime PM usage counter even
+> when it returns an error code. Thus a pairing decrement is needed on
+> the error handling path to keep the counter balanced.
+> 
 
-Upgrade the barrier from smp_mb__after_atomic to smp_mb to get correct
-ordering again.
+Looks good to me:
 
-Fixes: 3facced7aeed1 ("padata: remove reorder_objects")
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Steffen Klassert <steffen.klassert@secunet.com>
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- kernel/padata.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 
-diff --git a/kernel/padata.c b/kernel/padata.c
-index a6afa12fb75ee..7b701bc3e7922 100644
---- a/kernel/padata.c
-+++ b/kernel/padata.c
-@@ -260,7 +260,7 @@ static void padata_reorder(struct parallel_data *pd)
- 	 *
- 	 * Ensure reorder queue is read after pd->lock is dropped so we see
- 	 * new objects from another task in padata_do_serial.  Pairs with
--	 * smp_mb__after_atomic in padata_do_serial.
-+	 * smp_mb in padata_do_serial.
- 	 */
- 	smp_mb();
- 
-@@ -342,7 +342,7 @@ void padata_do_serial(struct padata_priv *padata)
- 	 * with the trylock of pd->lock in padata_reorder.  Pairs with smp_mb
- 	 * in padata_reorder.
- 	 */
--	smp_mb__after_atomic();
-+	smp_mb();
- 
- 	padata_reorder(pd);
- }
+> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+> ---
+> 
+> Changelog:
+> 
+> v2: - Fix the imbalance in vsp1_device_get().
+>       Use vsp1_device_get() and vsp1_device_put()
+>       to replace pm_runtime_get_sync() and
+>       pm_runtime_put_sync() in vsp1_probe().
 
-base-commit: 3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162
--- 
-2.26.2
+That looks like a helpful addition!
+
+> ---
+>  drivers/media/platform/vsp1/vsp1_drv.c | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/media/platform/vsp1/vsp1_drv.c b/drivers/media/platform/vsp1/vsp1_drv.c
+> index c650e45bb0ad..dc62533cf32c 100644
+> --- a/drivers/media/platform/vsp1/vsp1_drv.c
+> +++ b/drivers/media/platform/vsp1/vsp1_drv.c
+> @@ -562,7 +562,12 @@ int vsp1_device_get(struct vsp1_device *vsp1)
+>  	int ret;
+>  
+>  	ret = pm_runtime_get_sync(vsp1->dev);
+> -	return ret < 0 ? ret : 0;
+> +	if (ret < 0) {
+> +		pm_runtime_put_noidle(vsp1->dev);
+
+Hrm... I was going to query the _noidle here, as I presume the device is
+likely already idle ... but actually this looks like it simply adds
+protection against decrementing the refcnt below zero, so it is likely
+useful.
+
+
+
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+>  }
+>  
+>  /*
+> @@ -845,12 +850,12 @@ static int vsp1_probe(struct platform_device *pdev)
+>  	/* Configure device parameters based on the version register. */
+>  	pm_runtime_enable(&pdev->dev);
+>  
+> -	ret = pm_runtime_get_sync(&pdev->dev);
+> +	ret = vsp1_device_get(vsp1);
+>  	if (ret < 0)
+>  		goto done;
+>  
+>  	vsp1->version = vsp1_read(vsp1, VI6_IP_VERSION);
+> -	pm_runtime_put_sync(&pdev->dev);
+> +	vsp1_device_put(vsp1);
+>  
+>  	for (i = 0; i < ARRAY_SIZE(vsp1_device_infos); ++i) {
+>  		if ((vsp1->version & VI6_IP_VERSION_MODEL_MASK) ==
+> 
 
