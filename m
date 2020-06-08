@@ -2,53 +2,53 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FDEAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BFE1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:39:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76FF72074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:39:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FBBE2068D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:39:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591659562;
-	bh=fcHWUoUlDAz5hZK8Ob+/8uvKjpjlxWU7J8rM9pzqcR0=;
+	s=default; t=1591659573;
+	bh=Oe+ZdXhi98kSzbDOcm8/UbNuNAzaBhb9xZaekVWJw1A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FG2QoeL0sFbA62ltXEHqdkmNPu0MqMDL99WeWRYIVPVIAArv2YmjuY3TAaVPM5vjW
-	 6HmK49Sojr/B3D/x4pJVxySQdcwHFJF72ot/mE8y7dITFgBDroNaHuqkkfrDFjAh2M
-	 RKkJiuERCBDoJDTelPrUlzhGaDFovazbvQRO2ToI=
+	b=wBrTX/krLgjiIcAFf5+kYAyK5CKdm8dkIaEps4anlyJZiXfzTXySunEwoPIMsmove
+	 4x5qLfyDzHhTRzb8LU1oFfVMRaVL/JFPqj96IUxDP1M5EEajFDMc+z/to29zGKzyoL
+	 QBY1N1DzGP57keRW7wGPfiCrwXloy15iAAhHfeb0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732382AbgFHXjU (ORCPT
+        id S1731075AbgFHXjc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:39:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57496 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:39:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732195AbgFHX2R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:28:17 -0400
+        id S1731929AbgFHX2Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:28:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6124E208A9;
-        Mon,  8 Jun 2020 23:28:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 421D220872;
+        Mon,  8 Jun 2020 23:28:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658897;
-        bh=fcHWUoUlDAz5hZK8Ob+/8uvKjpjlxWU7J8rM9pzqcR0=;
+        s=default; t=1591658896;
+        bh=Oe+ZdXhi98kSzbDOcm8/UbNuNAzaBhb9xZaekVWJw1A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VSKeoD6eXfamaJqBf+5yD+XsUUwgA8EdehwNwRTdru0dRE0uMUuwhuCGwNeMseVCI
-         qCOkn7683UflRIall5HTq++1gEAYxwDZtOqKdkr5d2H4f8TR1iZhztRE1LwYukuFHy
-         +c/2xJ7Dt2djr9f9+dMq1fZLX83v2ceDgs0mch+I=
+        b=ehcm3mU6J6F07M5aLMfDNLvVRNOkJ5Wu/bPSGXFl4qLoNKuLJqN7MIb+gLbJ6BaAt
+         ARbueVu49vz1GOEGdBHVNsxZojGIiQ/q5/aOtcPG+sX0xY/uVHqvEyaplLLYRQfwxB
+         D8XGnWEfyvxFJ3gkapAyPq2S0YWVRylOrxkH6eXw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Dmitry Golovin <dima@golovin.in>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 19/37] net: lpc-enet: fix error return code in lpc_mii_init()
-Date:   Mon,  8 Jun 2020 19:27:31 -0400
-Message-Id: <20200608232750.3370747-19-sashal@kernel.org>
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.4 18/37] lib/mpi: Fix 64-bit MIPS build with Clang
+Date:   Mon,  8 Jun 2020 19:27:30 -0400
+Message-Id: <20200608232750.3370747-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608232750.3370747-1-sashal@kernel.org>
 References: <20200608232750.3370747-1-sashal@kernel.org>
@@ -61,36 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 88ec7cb22ddde725ed4ce15991f0bd9dd817fd85 ]
+[ Upstream commit 18f1ca46858eac22437819937ae44aa9a8f9f2fa ]
 
-Fix to return a negative error code from the error handling
-case instead of 0, as done elsewhere in this function.
+When building 64r6_defconfig with CONFIG_MIPS32_O32 disabled and
+CONFIG_CRYPTO_RSA enabled:
 
-Fixes: b7370112f519 ("lpc32xx: Added ethernet driver")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Acked-by: Vladimir Zapolskiy <vz@mleia.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+lib/mpi/generic_mpih-mul1.c:37:24: error: invalid use of a cast in a
+inline asm context requiring an l-value: remove the cast
+or build with -fheinous-gnu-extensions
+                umul_ppmm(prod_high, prod_low, s1_ptr[j], s2_limb);
+                ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+lib/mpi/longlong.h:664:22: note: expanded from macro 'umul_ppmm'
+                 : "=d" ((UDItype)(w0))
+                         ~~~~~~~~~~^~~
+lib/mpi/generic_mpih-mul1.c:37:13: error: invalid use of a cast in a
+inline asm context requiring an l-value: remove the cast
+or build with -fheinous-gnu-extensions
+                umul_ppmm(prod_high, prod_low, s1_ptr[j], s2_limb);
+                ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+lib/mpi/longlong.h:668:22: note: expanded from macro 'umul_ppmm'
+                 : "=d" ((UDItype)(w1))
+                         ~~~~~~~~~~^~~
+2 errors generated.
+
+This special case for umul_ppmm for MIPS64r6 was added in
+commit bbc25bee37d2b ("lib/mpi: Fix umul_ppmm() for MIPS64r6"), due to
+GCC being inefficient and emitting a __multi3 intrinsic.
+
+There is no such issue with clang; with this patch applied, I can build
+this configuration without any problems and there are no link errors
+like mentioned in the commit above (which I can still reproduce with
+GCC 9.3.0 when that commit is reverted). Only use this definition when
+GCC is being used.
+
+This really should have been caught by commit b0c091ae04f67 ("lib/mpi:
+Eliminate unused umul_ppmm definitions for MIPS") when I was messing
+around in this area but I was not testing 64-bit MIPS at the time.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/885
+Reported-by: Dmitry Golovin <dima@golovin.in>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/nxp/lpc_eth.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ lib/mpi/longlong.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/nxp/lpc_eth.c b/drivers/net/ethernet/nxp/lpc_eth.c
-index ba14bad81a21..14b5a0dbf40b 100644
---- a/drivers/net/ethernet/nxp/lpc_eth.c
-+++ b/drivers/net/ethernet/nxp/lpc_eth.c
-@@ -865,7 +865,8 @@ static int lpc_mii_init(struct netdata_local *pldat)
- 	if (mdiobus_register(pldat->mii_bus))
- 		goto err_out_free_mdio_irq;
- 
--	if (lpc_mii_probe(pldat->ndev) != 0)
-+	err = lpc_mii_probe(pldat->ndev);
-+	if (err)
- 		goto err_out_unregister_bus;
- 
- 	return 0;
+diff --git a/lib/mpi/longlong.h b/lib/mpi/longlong.h
+index f1f31c754b3e..70f5cf8deab3 100644
+--- a/lib/mpi/longlong.h
++++ b/lib/mpi/longlong.h
+@@ -671,7 +671,7 @@ do {						\
+ 	**************  MIPS/64  **************
+ 	***************************************/
+ #if (defined(__mips) && __mips >= 3) && W_TYPE_SIZE == 64
+-#if defined(__mips_isa_rev) && __mips_isa_rev >= 6
++#if defined(__mips_isa_rev) && __mips_isa_rev >= 6 && defined(CONFIG_CC_IS_GCC)
+ /*
+  * GCC ends up emitting a __multi3 intrinsic call for MIPS64r6 with the plain C
+  * code below, so we special case MIPS64r6 until the compiler can do better.
 -- 
 2.25.1
 
