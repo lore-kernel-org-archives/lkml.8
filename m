@@ -2,172 +2,157 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D5AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 17:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1103C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 17:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 269F320774
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 17:49:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 898F6207F9
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 17:50:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UuEoKDxN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730361AbgFHRts (ORCPT
+        id S1730419AbgFHRuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 13:49:48 -0400
-Received: from mga04.intel.com ([192.55.52.120]:11150 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730247AbgFHRts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 13:49:48 -0400
-IronPort-SDR: v62WnqnW/CNcsjzCc9QHAvI9TpTWk+je1kVzaCUA47AuXms0bY1oJc1ghoBt0hiPKXapZXIYfU
- Eew0dxRKRusg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2020 10:49:45 -0700
-IronPort-SDR: plH9hL/3uaiz4LrI869hiDPlJo9zwuQekZQbWDqHmJq3YVsL3tRjGOPHnyUBU1u01b1h6neVw0
- 9hO14zg240mA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,487,1583222400"; 
-   d="scan'208";a="418133308"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
-  by orsmga004.jf.intel.com with ESMTP; 08 Jun 2020 10:49:45 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>
-Cc:     "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Brad Campbell <lists2009@fnarfbargle.com>,
-        Liam Merwick <liam.merwick@oracle.com>,
-        Maxim Levitsky <mlevitsk@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH v2] x86/cpu: Reinitialize IA32_FEAT_CTL MSR on BSP during wakeup
-Date:   Mon,  8 Jun 2020 10:41:34 -0700
-Message-Id: <20200608174134.11157-1-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.26.0
+        Mon, 8 Jun 2020 13:50:09 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:60936 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730379AbgFHRuI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 13:50:08 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 058HkRqb105840;
+        Mon, 8 Jun 2020 17:49:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=ncmODzgoWtkudobrbPyNbaCQiNZTBtUZcMm2aBJK4rY=;
+ b=UuEoKDxNP+ztqskyqBSLAZeRHX/MII4zJX50QQxw3OyFF98b2mzRdMAAggZoRfdhkbIG
+ 60xQ2pzWRJGwmq87x+AKYqJ5froms2rt9AWRDvsx373OhEpOzjEERAqZJWnxrO6Ypnty
+ 9xUgiGaE0XO+IeV9dA8cD/BTCfuG57i+kJpDihEriQhiMGhB70xrMvBZm2xqBWDoSa31
+ w0/E5DCFhCJRq+RmZG/yE8MHACizqquEyAOy+at+nJfi/x4/WZ/eRVwGL7eoFh1N/XLK
+ 5VegiooZX6qTk8h5AZkpjWJmBdasjFcTO8VyA6A9ptmQpjTb1M+Hg3oSDoI6Ac2dRRJR sg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 31g3smr3t6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 08 Jun 2020 17:49:59 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 058HmJeL135601;
+        Mon, 8 Jun 2020 17:49:59 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 31gn23fgd4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 08 Jun 2020 17:49:59 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 058HnqxD022415;
+        Mon, 8 Jun 2020 17:49:53 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 08 Jun 2020 10:49:51 -0700
+Date:   Mon, 8 Jun 2020 20:49:43 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] drm/amd/display: Fix indenting in
+ dcn30_set_output_transfer_func()
+Message-ID: <20200608174943.GU22511@kadam>
+References: <20200608141657.GB1912173@mwanda>
+ <dcce7f702c674999c31fd358c3970d5fee1a6725.camel@perches.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dcce7f702c674999c31fd358c3970d5fee1a6725.camel@perches.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9646 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0 mlxscore=0
+ phishscore=0 adultscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006080126
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9646 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 impostorscore=0 cotscore=-2147483648 suspectscore=0
+ spamscore=0 bulkscore=0 malwarescore=0 phishscore=0 mlxscore=0
+ mlxlogscore=999 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006080126
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reinitialize IA32_FEAT_CTL on the BSP during wakeup to handle the case
-where firmware doesn't initialize or save/restore across S3.  This fixes
-a bug where IA32_FEAT_CTL is left uninitialized and results in VMXON
-taking a #GP due to VMX not being fully enabled, i.e. breaks KVM.
+On Mon, Jun 08, 2020 at 10:16:27AM -0700, Joe Perches wrote:
+> On Mon, 2020-06-08 at 17:16 +0300, Dan Carpenter wrote:
+> > These lines are a part of the if statement and they are supposed to
+> > be indented one more tab.
+> > 
+> > Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > ---
+> >  drivers/gpu/drm/amd/display/dc/dcn30/dcn30_hwseq.c | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/amd/display/dc/dcn30/dcn30_hwseq.c b/drivers/gpu/drm/amd/display/dc/dcn30/dcn30_hwseq.c
+> > index ab20320ebc994..37c310dbb3665 100644
+> > --- a/drivers/gpu/drm/amd/display/dc/dcn30/dcn30_hwseq.c
+> > +++ b/drivers/gpu/drm/amd/display/dc/dcn30/dcn30_hwseq.c
+> > @@ -203,9 +203,9 @@ bool dcn30_set_output_transfer_func(struct dc *dc,
+> >  					stream->out_transfer_func,
+> >  					&mpc->blender_params, false))
+> >  				params = &mpc->blender_params;
+> > -		 /* there are no ROM LUTs in OUTGAM */
+> > -		if (stream->out_transfer_func->type == TF_TYPE_PREDEFINED)
+> > -			BREAK_TO_DEBUGGER();
+> > +			 /* there are no ROM LUTs in OUTGAM */
+> > +			if (stream->out_transfer_func->type == TF_TYPE_PREDEFINED)
+> > +				BREAK_TO_DEBUGGER();
+> >  		}
+> >  	}
+> >  
+> 
+> Maybe the if is at the right indentation but the
+> close brace below the if is misplaced instead?
+> 
 
-Use init_ia32_feat_ctl() to "restore" IA32_FEAT_CTL as it already deals
-with the case where the MSR is locked, and because APs already redo
-init_ia32_feat_ctl() during suspend by virtue of the SMP boot flow being
-used to reinitialize APs upon wakeup.  Do the call in the early wakeup
-flow to avoid dependencies in the syscore_ops chain, e.g. simply adding
-a resume hook is not guaranteed to work, as KVM does VMXON in its own
-resume hook, kvm_resume(), when KVM has active guests.
+Yeah.  I considered that, but the code is correct, it's just the
+indenting is wrong.  I normally leave drm/amd/ code alone but this
+indenting was so confusing that I though it was worth fixing.
 
-Reported-by: Brad Campbell <lists2009@fnarfbargle.com>
-Tested-by: Brad Campbell <lists2009@fnarfbargle.com>
-Reviewed-by: Liam Merwick <liam.merwick@oracle.com>
-Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org
-Cc: stable@vger.kernel.org # v5.6
-Fixes: 21bd3467a58e ("KVM: VMX: Drop initialization of IA32_FEAT_CTL MSR")
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
+There are lots of ugly stuff which is not confusing like this:  (The
+line numbers are from next-20200605).
 
-v2:
-  - Collect Reviewed/Tested tags. [Brad, Liam, Maxim].
-  - Include asm/cpu.h to fix Zhaoxin and Centaur builds. [Brad, LKP]
-  - Add Cc to stable. [Liam]
+drivers/gpu/drm/amd/amdgpu/../powerplay/amd_powerplay.c:1530 pp_asic_reset_mode_2() warn: inconsistent indenting
+drivers/gpu/drm/amd/amdgpu/../display/dc/calcs/dce_calcs.c:3387 bw_calcs() warn: inconsistent indenting
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn20/dcn20_dwb.c:104 dwb2_enable() warn: inconsistent indenting
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn20/dcn20_dpp_cm.c:450 dpp20_get_blndgam_current() warn: inconsistent indenting
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn20/dcn20_dpp_cm.c:543 dpp20_get_shaper_current() warn: inconsistent indenting
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn20/dcn20_mpc.c:306 mpc20_get_ogam_current() warn: inconsistent indenting
+drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_link_dp.c:1519 dc_link_dp_perform_link_training() warn: inconsistent indenting
+drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_link.c:3137 core_link_enable_stream() warn: inconsistent indenting
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn30/dcn30_hwseq.c:207 dcn30_set_output_transfer_func() warn: inconsistent indenting
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn30/dcn30_dpp.c:650 dpp3_get_blndgam_current() warn: inconsistent indenting
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn30/dcn30_dpp.c:747 dpp3_get_shaper_current() warn: inconsistent indenting
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn30/dcn30_dpp_cm.c:67 dpp30_get_gamcor_current() warn: inconsistent indenting
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn30/dcn30_mpc.c:116 mpc3_get_ogam_current() warn: inconsistent indenting
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn30/dcn30_mpc.c:432 mpc3_get_shaper_current() warn: inconsistent indenting
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn30/dcn30_resource.c:2351 dcn30_update_bw_bounding_box() warn: inconsistent indenting
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn30/dcn30_optc.c:178 optc3_set_dsc_config() warn: inconsistent indenting
+drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn20/display_mode_vba_20.c:2704 dml20_DISPCLKDPPCLKDCFCLKDeepSleepPrefetchParametersWatermarksAndPerformanceCalculation() warn: inconsistent indenting
+drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn20/display_mode_vba_20v2.c:2777 dml20v2_DISPCLKDPPCLKDCFCLKDeepSleepPrefetchParametersWatermarksAndPerformanceCalculation() warn: inconsistent indenting
+drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn21/display_mode_vba_21.c:2633 DISPCLKDPPCLKDCFCLKDeepSleepPrefetchParametersWatermarksAndPerformanceCalculation() warn: inconsistent indenting
+drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn21/display_mode_vba_21.c:5031 dml21_ModeSupportAndSystemConfigurationFull() warn: inconsistent indenting
+drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn21/display_mode_vba_21.c:5036 dml21_ModeSupportAndSystemConfigurationFull() warn: inconsistent indenting
+drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn21/display_mode_vba_21.c:5056 dml21_ModeSupportAndSystemConfigurationFull() warn: inconsistent indenting
+drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:731 dmcu_load_iram() warn: inconsistent indenting
+drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c:5062 gfx_v8_0_pre_soft_reset() warn: inconsistent indenting
 
- arch/x86/include/asm/cpu.h    | 5 +++++
- arch/x86/kernel/cpu/centaur.c | 1 +
- arch/x86/kernel/cpu/cpu.h     | 4 ----
- arch/x86/kernel/cpu/zhaoxin.c | 1 +
- arch/x86/power/cpu.c          | 6 ++++++
- 5 files changed, 13 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
-index dd17c2da1af5..da78ccbd493b 100644
---- a/arch/x86/include/asm/cpu.h
-+++ b/arch/x86/include/asm/cpu.h
-@@ -58,4 +58,9 @@ static inline bool handle_guest_split_lock(unsigned long ip)
- 	return false;
- }
- #endif
-+#ifdef CONFIG_IA32_FEAT_CTL
-+void init_ia32_feat_ctl(struct cpuinfo_x86 *c);
-+#else
-+static inline void init_ia32_feat_ctl(struct cpuinfo_x86 *c) {}
-+#endif
- #endif /* _ASM_X86_CPU_H */
-diff --git a/arch/x86/kernel/cpu/centaur.c b/arch/x86/kernel/cpu/centaur.c
-index 426792565d86..c5cf336e5077 100644
---- a/arch/x86/kernel/cpu/centaur.c
-+++ b/arch/x86/kernel/cpu/centaur.c
-@@ -3,6 +3,7 @@
- #include <linux/sched.h>
- #include <linux/sched/clock.h>
- 
-+#include <asm/cpu.h>
- #include <asm/cpufeature.h>
- #include <asm/e820/api.h>
- #include <asm/mtrr.h>
-diff --git a/arch/x86/kernel/cpu/cpu.h b/arch/x86/kernel/cpu/cpu.h
-index 37fdefd14f28..38ab6e115eac 100644
---- a/arch/x86/kernel/cpu/cpu.h
-+++ b/arch/x86/kernel/cpu/cpu.h
-@@ -80,8 +80,4 @@ extern void x86_spec_ctrl_setup_ap(void);
- 
- extern u64 x86_read_arch_cap_msr(void);
- 
--#ifdef CONFIG_IA32_FEAT_CTL
--void init_ia32_feat_ctl(struct cpuinfo_x86 *c);
--#endif
--
- #endif /* ARCH_X86_CPU_H */
-diff --git a/arch/x86/kernel/cpu/zhaoxin.c b/arch/x86/kernel/cpu/zhaoxin.c
-index df1358ba622b..05fa4ef63490 100644
---- a/arch/x86/kernel/cpu/zhaoxin.c
-+++ b/arch/x86/kernel/cpu/zhaoxin.c
-@@ -2,6 +2,7 @@
- #include <linux/sched.h>
- #include <linux/sched/clock.h>
- 
-+#include <asm/cpu.h>
- #include <asm/cpufeature.h>
- 
- #include "cpu.h"
-diff --git a/arch/x86/power/cpu.c b/arch/x86/power/cpu.c
-index aaff9ed7ff45..b0d3c5ca6d80 100644
---- a/arch/x86/power/cpu.c
-+++ b/arch/x86/power/cpu.c
-@@ -193,6 +193,8 @@ static void fix_processor_context(void)
-  */
- static void notrace __restore_processor_state(struct saved_context *ctxt)
- {
-+	struct cpuinfo_x86 *c;
-+
- 	if (ctxt->misc_enable_saved)
- 		wrmsrl(MSR_IA32_MISC_ENABLE, ctxt->misc_enable);
- 	/*
-@@ -263,6 +265,10 @@ static void notrace __restore_processor_state(struct saved_context *ctxt)
- 	mtrr_bp_restore();
- 	perf_restore_debug_store();
- 	msr_restore_context(ctxt);
-+
-+	c = &cpu_data(smp_processor_id());
-+	if (cpu_has(c, X86_FEATURE_MSR_IA32_FEAT_CTL))
-+		init_ia32_feat_ctl(c);
- }
- 
- /* Needed by apm.c */
--- 
-2.26.0
-
+regards,
+dan carpenter 
