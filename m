@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5301FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCCFC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E3D420775
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:31:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0FB320899
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:31:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591659116;
-	bh=gjWB6Wm+gjzlR3sgV9XSY6YPrMUSAdPxC4TlpxE3dkg=;
+	s=default; t=1591659118;
+	bh=pYNQcSSA8JE5e7nUhFvhxl8tYDixqAuawiEefCQhtHk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cckKkNuEV+6MEb4SEdgD/A3yJkAAtG+OlcQuHThHM2RFHYbKEgr0veHFEIeb6CYOF
-	 Fqs4U+ig/j7qHyLKYqoKp+IGyY2X/oLt87RDoU0hfXjgfPVTWsY4ubnDPp3bGdBr4o
-	 yt7b90ibWgiMu9e/axoRdw2iaSpfiWQva9BChZnE=
+	b=mc5BL+3KJHXMbcuNYzHnK8/y7WjZFEJ1i+2XwiYEHjGPoLZ2TQwTr4befdfIneT3U
+	 Zv/jchZa0hWBjFF45tp8TPQlrnBMjJ+F5jxGJ74oeLiYVARW12ZMsuRb5E3m77QWMB
+	 60dOo0tZ6dPYN7XsvQ8HUhf5e/R9SejVdXVlD0o0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732421AbgFHXbz (ORCPT
+        id S1730570AbgFHXb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:31:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52594 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:31:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731860AbgFHXZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:25:48 -0400
+        id S1731869AbgFHXZu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:25:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB641207C3;
-        Mon,  8 Jun 2020 23:25:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1218F2068D;
+        Mon,  8 Jun 2020 23:25:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658747;
-        bh=gjWB6Wm+gjzlR3sgV9XSY6YPrMUSAdPxC4TlpxE3dkg=;
+        s=default; t=1591658749;
+        bh=pYNQcSSA8JE5e7nUhFvhxl8tYDixqAuawiEefCQhtHk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1SJJ7DYjRyOeJcw8ioykTGEaE3dPwkR7R2QFT8mF3np9FFzd4n5pQ2zgryK8kazQK
-         FS+zEiuAtNAacSjpAZNS0g8C00R0S2lhIFXa5woFTNsO9MCyzFP096+6E3Tq9qMkLh
-         rs0fGMjbpXunIgtu+b54hCQyEwlFDzqFGKRnd0SA=
+        b=CrJ7F4FGDmjgA8mL/J0GLgH1UmkOX+EZ5cji858pl+YJhZhbLMUiCo4NK/Q8ehRZg
+         qpL0/j9JZbCRTFx7cDhlHYqBNIK0Kn0jonuDtU052/Y7+qwBtfGr3IMHyBMU2FVQM3
+         E1PJARUXd8m/MhoDKkWMIGhj+cx3/nprDpk/3upY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paul Moore <paul@paul-moore.com>, teroincn@gmail.com,
-        Richard Guy Briggs <rgb@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-audit@redhat.com
-Subject: [PATCH AUTOSEL 4.14 33/72] audit: fix a net reference leak in audit_list_rules_send()
-Date:   Mon,  8 Jun 2020 19:24:21 -0400
-Message-Id: <20200608232500.3369581-33-sashal@kernel.org>
+Cc:     Doug Berger <opendmb@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 35/72] net: bcmgenet: set Rx mode before starting netif
+Date:   Mon,  8 Jun 2020 19:24:23 -0400
+Message-Id: <20200608232500.3369581-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608232500.3369581-1-sashal@kernel.org>
 References: <20200608232500.3369581-1-sashal@kernel.org>
@@ -59,101 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Moore <paul@paul-moore.com>
+From: Doug Berger <opendmb@gmail.com>
 
-[ Upstream commit 3054d06719079388a543de6adb812638675ad8f5 ]
+[ Upstream commit 72f96347628e73dbb61b307f18dd19293cc6792a ]
 
-If audit_list_rules_send() fails when trying to create a new thread
-to send the rules it also fails to cleanup properly, leaking a
-reference to a net structure.  This patch fixes the error patch and
-renames audit_send_list() to audit_send_list_thread() to better
-match its cousin, audit_send_reply_thread().
+This commit explicitly calls the bcmgenet_set_rx_mode() function when
+the network interface is started. This function is normally called by
+ndo_set_rx_mode when the flags are changed, but apparently not when
+the driver is suspended and resumed.
 
-Reported-by: teroincn@gmail.com
-Reviewed-by: Richard Guy Briggs <rgb@redhat.com>
-Signed-off-by: Paul Moore <paul@paul-moore.com>
+This change ensures that address filtering or promiscuous mode are
+properly restored by the driver after the MAC may have been reset.
+
+Fixes: b6e978e50444 ("net: bcmgenet: add suspend/resume callbacks")
+Signed-off-by: Doug Berger <opendmb@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/audit.c       |  2 +-
- kernel/audit.h       |  2 +-
- kernel/auditfilter.c | 16 +++++++---------
- 3 files changed, 9 insertions(+), 11 deletions(-)
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/kernel/audit.c b/kernel/audit.c
-index 53224f399038..6faaa908544a 100644
---- a/kernel/audit.c
-+++ b/kernel/audit.c
-@@ -853,7 +853,7 @@ static int kauditd_thread(void *dummy)
- 	return 0;
- }
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+index 38391230ca86..7d3cbbd88a00 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+@@ -72,6 +72,9 @@
+ #define GENET_RDMA_REG_OFF	(priv->hw_params->rdma_offset + \
+ 				TOTAL_DESC * DMA_DESC_SIZE)
  
--int audit_send_list(void *_dest)
-+int audit_send_list_thread(void *_dest)
++/* Forward declarations */
++static void bcmgenet_set_rx_mode(struct net_device *dev);
++
+ static inline void bcmgenet_writel(u32 value, void __iomem *offset)
  {
- 	struct audit_netlink_list *dest = _dest;
- 	struct sk_buff *skb;
-diff --git a/kernel/audit.h b/kernel/audit.h
-index 9b110ae17ee3..1007773b0b81 100644
---- a/kernel/audit.h
-+++ b/kernel/audit.h
-@@ -248,7 +248,7 @@ struct audit_netlink_list {
- 	struct sk_buff_head q;
- };
+ 	/* MIPS chips strapped for BE will automagically configure the
+@@ -2858,6 +2861,7 @@ static void bcmgenet_netif_start(struct net_device *dev)
+ 	struct bcmgenet_priv *priv = netdev_priv(dev);
  
--int audit_send_list(void *_dest);
-+int audit_send_list_thread(void *_dest);
+ 	/* Start the network engine */
++	bcmgenet_set_rx_mode(dev);
+ 	bcmgenet_enable_rx_napi(priv);
+ 	bcmgenet_enable_tx_napi(priv);
  
- extern int selinux_audit_rule_update(void);
- 
-diff --git a/kernel/auditfilter.c b/kernel/auditfilter.c
-index 16cf396ea738..f26f4cb5d08d 100644
---- a/kernel/auditfilter.c
-+++ b/kernel/auditfilter.c
-@@ -1137,11 +1137,8 @@ int audit_rule_change(int type, int seq, void *data, size_t datasz)
-  */
- int audit_list_rules_send(struct sk_buff *request_skb, int seq)
- {
--	u32 portid = NETLINK_CB(request_skb).portid;
--	struct net *net = sock_net(NETLINK_CB(request_skb).sk);
- 	struct task_struct *tsk;
- 	struct audit_netlink_list *dest;
--	int err = 0;
- 
- 	/* We can't just spew out the rules here because we might fill
- 	 * the available socket buffer space and deadlock waiting for
-@@ -1149,25 +1146,26 @@ int audit_list_rules_send(struct sk_buff *request_skb, int seq)
- 	 * happen if we're actually running in the context of auditctl
- 	 * trying to _send_ the stuff */
- 
--	dest = kmalloc(sizeof(struct audit_netlink_list), GFP_KERNEL);
-+	dest = kmalloc(sizeof(*dest), GFP_KERNEL);
- 	if (!dest)
- 		return -ENOMEM;
--	dest->net = get_net(net);
--	dest->portid = portid;
-+	dest->net = get_net(sock_net(NETLINK_CB(request_skb).sk));
-+	dest->portid = NETLINK_CB(request_skb).portid;
- 	skb_queue_head_init(&dest->q);
- 
- 	mutex_lock(&audit_filter_mutex);
- 	audit_list_rules(seq, &dest->q);
- 	mutex_unlock(&audit_filter_mutex);
- 
--	tsk = kthread_run(audit_send_list, dest, "audit_send_list");
-+	tsk = kthread_run(audit_send_list_thread, dest, "audit_send_list");
- 	if (IS_ERR(tsk)) {
- 		skb_queue_purge(&dest->q);
-+		put_net(dest->net);
- 		kfree(dest);
--		err = PTR_ERR(tsk);
-+		return PTR_ERR(tsk);
- 	}
- 
--	return err;
-+	return 0;
- }
- 
- int audit_comparator(u32 left, u32 op, u32 right)
 -- 
 2.25.1
 
