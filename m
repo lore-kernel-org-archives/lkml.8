@@ -2,240 +2,223 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 525E0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 00:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF9CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 00:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25A612067B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 00:18:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FC3D206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 00:21:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728094AbgFHASs (ORCPT
+        id S1728176AbgFHAVq convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 20:18:48 -0400
-Received: from mga02.intel.com ([134.134.136.20]:9049 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727919AbgFHASr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 20:18:47 -0400
-IronPort-SDR: YmAiCcYEuXCBy3Q8vLCsR7f+S/IT6+Msb1WEbuzs3jnCHPyGqm1gG4gaONGuSBFH8ei1++FObS
- 4ri8T0Z8moVw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2020 17:18:46 -0700
-IronPort-SDR: x3aPsUnL2STgoJJJ/BGconMjaQJJop8EggoijkPNjxTe6/FRr8QQPRw2rIc6kP/1MXcoeRaNkI
- F1mLEXxEoWFw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,486,1583222400"; 
-   d="scan'208";a="288304803"
-Received: from lkp-server01.sh.intel.com (HELO 3b764b36c89c) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 07 Jun 2020 17:18:45 -0700
-Received: from kbuild by 3b764b36c89c with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1ji5Uy-0000VT-PR; Mon, 08 Jun 2020 00:18:44 +0000
-Date:   Mon, 08 Jun 2020 08:18:03 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:master] BUILD SUCCESS
- 22a1c800c96c83b7f4e3e02fad767502b70124fa
-Message-ID: <5edd83bb.9bzZwhQj3zN4SCkt%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+        Sun, 7 Jun 2020 20:21:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52730 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727919AbgFHAVp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jun 2020 20:21:45 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 242E8C08C5C3;
+        Sun,  7 Jun 2020 17:21:45 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 748AE12744E9B;
+        Sun,  7 Jun 2020 17:21:44 -0700 (PDT)
+Date:   Sun, 07 Jun 2020 17:21:43 -0700 (PDT)
+Message-Id: <20200607.172143.1367434746586532493.davem@davemloft.net>
+To:     torvalds@linux-foundation.org
+CC:     akpm@linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [GIT] Networking
+From:   David Miller <davem@davemloft.net>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=iso-8859-2
+Content-Transfer-Encoding: 8BIT
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 07 Jun 2020 17:21:44 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
-branch HEAD: 22a1c800c96c83b7f4e3e02fad767502b70124fa  Merge branch 'WIP.core/headers'
 
-elapsed time: 480m
+I still haven't received from Johannes Berg a fix for the wireless
+shutdown issues you reported, but I will send that to you as soon
+as I have it.  Meanwhile:
 
-configs tested: 173
-configs skipped: 12
+1) Fix the build with certain Kconfig combinations for the Chelsio
+   inline TLS device, from Rohit Maheshwar and Vinay Kumar Yadavi.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+2) Fix leak in genetlink, from Cong Lang.
 
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-powerpc                      ep88xc_defconfig
-sh                ecovec24-romimage_defconfig
-sparc64                          allmodconfig
-arm                          prima2_defconfig
-arm                           h3600_defconfig
-powerpc                    mvme5100_defconfig
-openrisc                 simple_smp_defconfig
-sh                           se7705_defconfig
-mips                     decstation_defconfig
-csky                             allyesconfig
-arm                              zx_defconfig
-mips                        nlm_xlr_defconfig
-sh                             shx3_defconfig
-c6x                        evmc6678_defconfig
-arc                 nsimosci_hs_smp_defconfig
-arm                        mvebu_v5_defconfig
-arm                          iop32x_defconfig
-arm                            mps2_defconfig
-openrisc                         allyesconfig
-sh                      rts7751r2d1_defconfig
-m68k                       m5249evb_defconfig
-powerpc                      pmac32_defconfig
-sh                  sh7785lcr_32bit_defconfig
-arm                          collie_defconfig
-sh                 kfr2r09-romimage_defconfig
-arm                          moxart_defconfig
-arc                         haps_hs_defconfig
-m68k                            mac_defconfig
-c6x                               allnoconfig
-arm                        oxnas_v6_defconfig
-arm                           corgi_defconfig
-mips                           ip27_defconfig
-arc                      axs103_smp_defconfig
-sparc64                          alldefconfig
-mips                          ath25_defconfig
-arm                    vt8500_v6_v7_defconfig
-mips                         tb0219_defconfig
-m68k                        mvme16x_defconfig
-mips                          malta_defconfig
-powerpc                       maple_defconfig
-xtensa                         virt_defconfig
-arm                           u8500_defconfig
-arm                          pxa168_defconfig
-arc                        nsim_700_defconfig
-i386                              allnoconfig
-microblaze                    nommu_defconfig
-powerpc                    amigaone_defconfig
-arm                          exynos_defconfig
-um                                allnoconfig
-arc                            hsdk_defconfig
-m68k                          sun3x_defconfig
-m68k                        m5272c3_defconfig
-m68k                        stmark2_defconfig
-powerpc                    gamecube_defconfig
-arm                          pxa910_defconfig
-arm                     davinci_all_defconfig
-mips                  maltasmvp_eva_defconfig
-arm                            xcep_defconfig
-arm                         mv78xx0_defconfig
-sh                     magicpanelr2_defconfig
-c6x                        evmc6457_defconfig
-s390                             allmodconfig
-ia64                      gensparse_defconfig
-arm                            zeus_defconfig
-sh                           se7206_defconfig
-sh                          rsk7203_defconfig
-sh                          polaris_defconfig
-arm                       imx_v6_v7_defconfig
-mips                        jmr3927_defconfig
-arm                       netwinder_defconfig
-arm                         s5pv210_defconfig
-mips                          ath79_defconfig
-mips                        bcm63xx_defconfig
-powerpc                 mpc8272_ads_defconfig
-c6x                                 defconfig
-mips                         cobalt_defconfig
-mips                        nlm_xlp_defconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-x86_64               randconfig-a002-20200607
-x86_64               randconfig-a001-20200607
-x86_64               randconfig-a006-20200607
-x86_64               randconfig-a003-20200607
-x86_64               randconfig-a004-20200607
-x86_64               randconfig-a005-20200607
-i386                 randconfig-a001-20200607
-i386                 randconfig-a006-20200607
-i386                 randconfig-a002-20200607
-i386                 randconfig-a005-20200607
-i386                 randconfig-a004-20200607
-i386                 randconfig-a003-20200607
-i386                 randconfig-a014-20200607
-i386                 randconfig-a015-20200607
-i386                 randconfig-a011-20200607
-i386                 randconfig-a016-20200607
-i386                 randconfig-a012-20200607
-i386                 randconfig-a013-20200607
-i386                 randconfig-a014-20200608
-i386                 randconfig-a011-20200608
-i386                 randconfig-a015-20200608
-i386                 randconfig-a016-20200608
-i386                 randconfig-a012-20200608
-i386                 randconfig-a013-20200608
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-um                               allmodconfig
-um                                  defconfig
-um                               allyesconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
+3) Fix out of bounds packet header accesses in seg6, from Ahmed
+   Abdelsalam.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+4) Two XDP fixes in the ENA driver, from Sameeh Jubran
+
+5) Use rwsem in device rename instead of a seqcount because this code
+   can sleep, from Ahmed S. Darwish.
+
+6) Fix WoL regressions in r8169, from Heiner Kallweit.
+
+7) Fix qed crashes in kdump mode, from Alok Prasad.
+
+8) Fix the callbacks used for certain thermal zones in mlxsw, from
+   Vadim Pasternak.
+
+Please pull, thanks a lot!
+
+The following changes since commit cb8e59cc87201af93dfbb6c3dccc8fcad72a09c2:
+
+  Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next (2020-06-03 16:27:18 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net 
+
+for you to fetch changes up to 4d3da2d8d91f66988a829a18a0ce59945e8ae4fb:
+
+  net: dsa: lantiq_gswip: fix and improve the unsupported interface error (2020-06-07 17:09:46 -0700)
+
+----------------------------------------------------------------
+Ahmed Abdelsalam (1):
+      seg6: fix seg6_validate_srh() to avoid slab-out-of-bounds
+
+Ahmed S. Darwish (4):
+      net: core: device_rename: Use rwsem instead of a seqcount
+      net: phy: fixed_phy: Remove unused seqcount
+      u64_stats: Document writer non-preemptibility requirement
+      net: mdiobus: Disable preemption upon u64_stats update
+
+Alexander Lobakin (1):
+      net: ethernet: mvneta: fix MVNETA_SKB_HEADROOM alignment
+
+Alok Prasad (1):
+      net: qed: fixes crash while running driver in kdump kernel
+
+Antoine Tenart (1):
+      net: phy: mscc: fix Serdes configuration in vsc8584_config_init
+
+Cong Wang (1):
+      genetlink: fix memory leaks in genl_family_rcv_msg_dumpit()
+
+Dan Carpenter (2):
+      net: ethernet: dwmac: Fix an error code in imx_dwmac_probe()
+      ethtool: linkinfo: remove an unnecessary NULL check
+
+Dan Murphy (5):
+      net: dp83869: Fix OF_MDIO config check
+      net: dp83867: Fix OF_MDIO config check
+      net: marvell: Fix OF_MDIO config check
+      net: mscc: Fix OF_MDIO config check
+      net: dp83869: Reset return variable if PHY strap is read
+
+David S. Miller (2):
+      Merge branch 'ena-xdp-fixes'
+      Merge branch 'Fixes-for-OF_MDIO-flag'
+
+Denis Efremov (1):
+      cxgb4: Use kfree() instead kvfree() where appropriate
+
+Heiner Kallweit (1):
+      r8169: fix failing WoL
+
+Herbert Xu (1):
+      rhashtable: Drop raw RCU deref in nested_table_free
+
+Jiri Benc (1):
+      geneve: change from tx_error to tx_dropped on missing metadata
+
+Kees Cook (1):
+      net: ethtool: Fix comment mentioning typo in IS_ENABLED()
+
+Martin Blumenstingl (1):
+      net: dsa: lantiq_gswip: fix and improve the unsupported interface error
+
+Michal Vok·Ë (1):
+      net: dsa: qca8k: Fix "Unexpected gfp" kernel exception
+
+Paolo Abeni (1):
+      inet_connection_sock: clear inet_num out of destroy helper
+
+Pavel Machek (1):
+      net/xdp: use shift instead of 64 bit division
+
+Roelof Berg (1):
+      lan743x: Use correct MAC_CR configuration for 1 GBit speed
+
+Rohit Maheshwari (1):
+      crypto/chcr: error seen if CONFIG_CHELSIO_TLS_DEVICE isn't set
+
+Sameeh Jubran (2):
+      net: ena: xdp: XDP_TX: fix memory leak
+      net: ena: xdp: update napi budget for DROP and ABORTED
+
+Stefano Garzarella (1):
+      vsock/vmci: make vmci_vsock_transport_cb() static
+
+Tuong Lien (1):
+      tipc: fix NULL pointer dereference in streaming
+
+Vadim Pasternak (1):
+      mlxsw: core: Use different get_trend() callbacks for different thermal zones
+
+Valentin Longchamp (1):
+      net: ethernet: freescale: remove unneeded include for ucc_geth
+
+Vinay Kumar Yadav (1):
+      crypto/chtls:Fix compile error when CONFIG_IPV6 is disabled
+
+Wang Hai (1):
+      yam: fix possible memory leak in yam_init_driver
+
+ drivers/crypto/chelsio/chcr_algo.h                 |  4 ----
+ drivers/crypto/chelsio/chtls/chtls_cm.c            | 46 ++++++++++++++++++++++++++++-----------
+ drivers/crypto/chelsio/chtls/chtls_main.c          |  2 ++
+ drivers/net/dsa/lantiq_gswip.c                     |  3 ++-
+ drivers/net/dsa/qca8k.c                            |  3 +--
+ drivers/net/ethernet/amazon/ena/ena_netdev.c       | 10 ++++-----
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c |  6 +++---
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_uld.c     |  2 +-
+ drivers/net/ethernet/freescale/ucc_geth.c          |  1 -
+ drivers/net/ethernet/marvell/mvneta.c              |  2 +-
+ drivers/net/ethernet/mellanox/mlxsw/core_thermal.c | 23 ++++++++++++++++----
+ drivers/net/ethernet/microchip/lan743x_main.c      |  2 +-
+ drivers/net/ethernet/qlogic/qed/qed_sriov.c        |  4 ++++
+ drivers/net/ethernet/qlogic/qed/qed_sriov.h        | 10 +++------
+ drivers/net/ethernet/qlogic/qede/qede_main.c       |  2 +-
+ drivers/net/ethernet/realtek/r8169_main.c          | 13 +++++------
+ drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c    |  2 +-
+ drivers/net/geneve.c                               |  7 +++---
+ drivers/net/hamradio/yam.c                         |  1 +
+ drivers/net/phy/dp83867.c                          |  2 +-
+ drivers/net/phy/dp83869.c                          |  5 ++++-
+ drivers/net/phy/fixed_phy.c                        | 28 ++++++++++--------------
+ drivers/net/phy/marvell.c                          |  2 +-
+ drivers/net/phy/mdio_bus.c                         |  2 ++
+ drivers/net/phy/mscc/mscc.h                        |  2 +-
+ drivers/net/phy/mscc/mscc_main.c                   |  8 +++----
+ include/linux/ethtool_netlink.h                    |  2 +-
+ include/linux/u64_stats_sync.h                     | 43 ++++++++++++++++++++-----------------
+ include/net/inet_connection_sock.h                 |  1 -
+ include/net/seg6.h                                 |  2 +-
+ lib/rhashtable.c                                   | 17 +++++++++++----
+ net/core/dev.c                                     | 40 ++++++++++++++++------------------
+ net/core/filter.c                                  |  2 +-
+ net/ethtool/linkinfo.c                             |  3 +--
+ net/ipv4/inet_connection_sock.c                    |  1 +
+ net/ipv6/ipv6_sockglue.c                           |  2 +-
+ net/ipv6/seg6.c                                    | 16 ++++++++------
+ net/ipv6/seg6_iptunnel.c                           |  2 +-
+ net/ipv6/seg6_local.c                              |  6 +++---
+ net/netlink/genetlink.c                            | 94 +++++++++++++++++++++++++++++++++++++++++++++++++-------------------------------
+ net/tipc/msg.c                                     |  4 ++--
+ net/vmw_vsock/vmci_transport.c                     |  2 +-
+ net/xdp/xdp_umem.c                                 |  2 +-
+ 43 files changed, 250 insertions(+), 181 deletions(-)
