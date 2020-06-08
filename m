@@ -2,94 +2,167 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D288C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EB5C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA4DE208B3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:08:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591657692;
-	bh=NwARTSH7XyqllZL+B+8gV7JlC9yF8Y14manG+jnxrHk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LW1qMhEJ3vcUPraHAEgJMSoGPOa+2LIObnLaxWhKDPSko67rpO2NUGOLWGJuWBuRn
-	 QbyMHb1oXHV4eHDZDcm0BXz0+u5fnxicI8OSA/NfvVjjYbE9eIrV0IRbf5nkFKvMKh
-	 Ikalc/JNSX76vEjbTxN1xANeO0p8YBlGzzgClo1U=
+	by mail.kernel.org (Postfix) with ESMTP id 66FC3208C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:08:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="KGw6yqBf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728110AbgFHXIL (ORCPT
+        id S1728134AbgFHXIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:08:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51520 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727880AbgFHXHX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:07:23 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 956FC20774;
-        Mon,  8 Jun 2020 23:07:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657643;
-        bh=NwARTSH7XyqllZL+B+8gV7JlC9yF8Y14manG+jnxrHk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zeeQbzI+C7l6AJdOTDXWL/+QJdfblQMBYzt6X9JCalFpjpTKCJzMEspEgYrYQPbzX
-         PZ5+tAb9uSSyUxBBtQRoG67XA+ZovteIOPUeJ65Tj9CgkAucA/wkOG0nsTVX59+fNG
-         pLDkCIYuZuIg8OwXnrzax6siDf1p3FWoIXO8S99g=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mark Pearson <mpearson.lenovo@gmail.com>, jendrina@lenovo.com,
-        Mark Pearson <mpearson@gmail.com>,
-        Lyude Paul <lyude@redhat.com>, Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.7 060/274] drm/dp: Lenovo X13 Yoga OLED panel brightness fix
-Date:   Mon,  8 Jun 2020 19:02:33 -0400
-Message-Id: <20200608230607.3361041-60-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
-References: <20200608230607.3361041-1-sashal@kernel.org>
+        Mon, 8 Jun 2020 19:08:17 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:12904 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727884AbgFHXHY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:07:24 -0400
+Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 058N0rbV022442
+        for <linux-kernel@vger.kernel.org>; Mon, 8 Jun 2020 16:07:24 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=facebook;
+ bh=mDshP9vuVcQyuQIdvx0q+egyIEOc0Ox5M3EkLldRRoI=;
+ b=KGw6yqBfAlPFSD99oHqjBrASe4wy71dVZvKAE7YxQJoIrqRikVABZYaGWdy/ec9/i4k1
+ vqdjmDb0PQ07L+6o7WC6KTIFalada67K2BW2WeReNzTnM1bEFXK9GjnqguRd1Jg4JWpc
+ HUZVvbrQaeeZTdFl19mC7Akk2D49doTSnaY= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 31gtucqn9v-19
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 16:07:24 -0700
+Received: from intmgw004.06.prn3.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:82::f) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Mon, 8 Jun 2020 16:07:14 -0700
+Received: by devvm1291.vll0.facebook.com (Postfix, from userid 111017)
+        id 56B0E1D8FE4E; Mon,  8 Jun 2020 16:07:00 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm1291.vll0.facebook.com
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>
+CC:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Shakeel Butt <shakeelb@google.com>, <linux-mm@kvack.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <kernel-team@fb.com>,
+        <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>
+Smtp-Origin-Cluster: vll0c01
+Subject: [PATCH v6 10/19] mm: memcg/slab: deprecate memory.kmem.slabinfo
+Date:   Mon, 8 Jun 2020 16:06:45 -0700
+Message-ID: <20200608230654.828134-11-guro@fb.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200608230654.828134-1-guro@fb.com>
+References: <20200608230654.828134-1-guro@fb.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-08_18:2020-06-08,2020-06-08 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 suspectscore=0
+ bulkscore=0 priorityscore=1501 cotscore=-2147483648 spamscore=0
+ lowpriorityscore=0 adultscore=0 malwarescore=0 mlxlogscore=724
+ clxscore=1015 phishscore=0 mlxscore=0 impostorscore=0 classifier=spam
+ adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006080160
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Pearson <mpearson.lenovo@gmail.com>
+Deprecate memory.kmem.slabinfo.
 
-[ Upstream commit 0df3ff451287d71c620384eb7bb2cd3a8106412c ]
+An empty file will be presented if corresponding config options are
+enabled.
 
-Add another panel that needs the edid quirk to the list so that
-brightness control works correctly. Fixes issue seen on Lenovo X13 Yoga
-with OLED panel
+The interface is implementation dependent, isn't present in cgroup v2,
+and is generally useful only for core mm debugging purposes. In other
+words, it doesn't provide any value for the absolute majority of users.
 
-Co-developed-by: jendrina@lenovo.com
-Signed-off-by: Mark Pearson <mpearson@gmail.com>
-[fixed commit message, sobs]
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200519025635.22846-1-mpearson@lenovo.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+A drgn-based replacement can be found in tools/cgroup/slabinfo.py .
+It does support cgroup v1 and v2, mimics memory.kmem.slabinfo output
+and also allows to get any additional information without a need
+to recompile the kernel.
+
+If a drgn-based solution is too slow for a task, a bpf-based tracing
+tool can be used, which can easily keep track of all slab allocations
+belonging to a memory cgroup.
+
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 ---
- drivers/gpu/drm/drm_dp_helper.c | 1 +
- 1 file changed, 1 insertion(+)
+ mm/memcontrol.c  |  3 ---
+ mm/slab_common.c | 31 ++++---------------------------
+ 2 files changed, 4 insertions(+), 30 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_dp_helper.c b/drivers/gpu/drm/drm_dp_helper.c
-index c6fbe6e6bc9d..41f0e797ce8c 100644
---- a/drivers/gpu/drm/drm_dp_helper.c
-+++ b/drivers/gpu/drm/drm_dp_helper.c
-@@ -1313,6 +1313,7 @@ static const struct edid_quirk edid_quirk_list[] = {
- 	{ MFG(0x06, 0xaf), PROD_ID(0xeb, 0x41), BIT(DP_QUIRK_FORCE_DPCD_BACKLIGHT) },
- 	{ MFG(0x4d, 0x10), PROD_ID(0xc7, 0x14), BIT(DP_QUIRK_FORCE_DPCD_BACKLIGHT) },
- 	{ MFG(0x4d, 0x10), PROD_ID(0xe6, 0x14), BIT(DP_QUIRK_FORCE_DPCD_BACKLIGHT) },
-+	{ MFG(0x4c, 0x83), PROD_ID(0x47, 0x41), BIT(DP_QUIRK_FORCE_DPCD_BACKLIGHT) },
- };
- 
- #undef MFG
--- 
-2.25.1
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index f0ea0ce6bea5..004a31941a88 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -5116,9 +5116,6 @@ static struct cftype mem_cgroup_legacy_files[] =3D =
+{
+ 	(defined(CONFIG_SLAB) || defined(CONFIG_SLUB_DEBUG))
+ 	{
+ 		.name =3D "kmem.slabinfo",
+-		.seq_start =3D memcg_slab_start,
+-		.seq_next =3D memcg_slab_next,
+-		.seq_stop =3D memcg_slab_stop,
+ 		.seq_show =3D memcg_slab_show,
+ 	},
+ #endif
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index b578ae29c743..3c89c2adc930 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -1523,35 +1523,12 @@ void dump_unreclaimable_slab(void)
+ }
+=20
+ #if defined(CONFIG_MEMCG_KMEM)
+-void *memcg_slab_start(struct seq_file *m, loff_t *pos)
+-{
+-	struct mem_cgroup *memcg =3D mem_cgroup_from_seq(m);
+-
+-	mutex_lock(&slab_mutex);
+-	return seq_list_start(&memcg->kmem_caches, *pos);
+-}
+-
+-void *memcg_slab_next(struct seq_file *m, void *p, loff_t *pos)
+-{
+-	struct mem_cgroup *memcg =3D mem_cgroup_from_seq(m);
+-
+-	return seq_list_next(p, &memcg->kmem_caches, pos);
+-}
+-
+-void memcg_slab_stop(struct seq_file *m, void *p)
+-{
+-	mutex_unlock(&slab_mutex);
+-}
+-
+ int memcg_slab_show(struct seq_file *m, void *p)
+ {
+-	struct kmem_cache *s =3D list_entry(p, struct kmem_cache,
+-					  memcg_params.kmem_caches_node);
+-	struct mem_cgroup *memcg =3D mem_cgroup_from_seq(m);
+-
+-	if (p =3D=3D memcg->kmem_caches.next)
+-		print_slabinfo_header(m);
+-	cache_show(s, m);
++	/*
++	 * Deprecated.
++	 * Please, take a look at tools/cgroup/slabinfo.py .
++	 */
+ 	return 0;
+ }
+ #endif
+--=20
+2.25.4
 
