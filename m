@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71958C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02062C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AFA620659
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:52:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBD3E204EF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:52:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660349;
-	bh=qwUWf6gPEAo0RWe2h0rpmiMF6XJTd6r4hEWaMEbOJBU=;
+	s=default; t=1591660352;
+	bh=4aSMtzqJJndbwSqCLBktDy6vMXgnT+YthzhW1XOHtAk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2A9PCSF6PstqaLAXmI+fehnqae8Lzh5AaEf86Ae/OB9dnPr2rjIwgL6ggCJmSN7f5
-	 RMO4DqHz5DxJjwNbzf715sHj/2lVqg4a6X+SeloSHaJy2FdrP6V2bLo4r4zCuw6fZB
-	 +AyqdxnC29BenKLoqRWV6TZs9b0SWPRjhkb95Pig=
+	b=qyI3YPFwgPfnqlaQvgEgahF4MUCa9vWeD8+Ztg4vDBHppNb8bIlMmcXdCvKmX1mRy
+	 QQ1AmEDLO3IcDpcssTl+/sMEtvELLGvrkL/xqXkM81MiGlPglUizUMHleRzKMQt1U/
+	 oz6dY40mjOS8r6hV8Xuf2i0BA5pDxQG+x7sbpaNI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732508AbgFHXw1 (ORCPT
+        id S1731677AbgFHXYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:52:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51178 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:24:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731688AbgFHXYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:24:53 -0400
+        id S1730800AbgFHXTb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:19:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DF89208B8;
-        Mon,  8 Jun 2020 23:24:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB8D52088E;
+        Mon,  8 Jun 2020 23:19:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658692;
-        bh=qwUWf6gPEAo0RWe2h0rpmiMF6XJTd6r4hEWaMEbOJBU=;
+        s=default; t=1591658371;
+        bh=4aSMtzqJJndbwSqCLBktDy6vMXgnT+YthzhW1XOHtAk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BMPSVKoXLwKarwkxpVLtDNtEgPkD9cCm4sPxb6Sx/9lAXI0veC2DtJ3P6ClS7Y4bY
-         8SY10aC0WTkLz1MWMCntZs4U5J9T29EWNyGSuCxgtNyAvTzvcsATeou0QJTZdjEa9P
-         n2EdlAjL8a+6PM/ESS8Fj9gNCwFptX/B5iH2+j9s=
+        b=rDXOks5iCiKgsBsQQAQTmciFG73psRbr0nEEXftelW8QGpW8u1ycUscw/q2X5eUXs
+         RgZCmtSevobMK3qppy3fyM/ZIWM93m23IruNfAaHybcsXPsCflXNKr82KWt82tgQje
+         3Fa0N4/eJM1H0VQuJttDuvMP++KSsPPFuz4SPaE4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+Cc:     Jeremy Cline <jcline@redhat.com>,
+        "Frank Ch . Eigler" <fche@redhat.com>,
+        James Morris <jmorris@namei.org>,
         Sasha Levin <sashal@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 101/106] platform/x86: hp-wmi: Convert simple_strtoul() to kstrtou32()
-Date:   Mon,  8 Jun 2020 19:22:33 -0400
-Message-Id: <20200608232238.3368589-101-sashal@kernel.org>
+        linux-security-module@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 034/175] lockdown: Allow unprivileged users to see lockdown status
+Date:   Mon,  8 Jun 2020 19:16:27 -0400
+Message-Id: <20200608231848.3366970-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608232238.3368589-1-sashal@kernel.org>
-References: <20200608232238.3368589-1-sashal@kernel.org>
+In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
+References: <20200608231848.3366970-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,42 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Jeremy Cline <jcline@redhat.com>
 
-[ Upstream commit 5cdc45ed3948042f0d73c6fec5ee9b59e637d0d2 ]
+[ Upstream commit 60cf7c5ed5f7087c4de87a7676b8c82d96fd166c ]
 
-First of all, unsigned long can overflow u32 value on 64-bit machine.
-Second, simple_strtoul() doesn't check for overflow in the input.
+A number of userspace tools, such as systemtap, need a way to see the
+current lockdown state so they can gracefully deal with the kernel being
+locked down. The state is already exposed in
+/sys/kernel/security/lockdown, but is only readable by root. Adjust the
+permissions so unprivileged users can read the state.
 
-Convert simple_strtoul() to kstrtou32() to eliminate above issues.
-
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fixes: 000d388ed3bb ("security: Add a static lockdown policy LSM")
+Cc: Frank Ch. Eigler <fche@redhat.com>
+Signed-off-by: Jeremy Cline <jcline@redhat.com>
+Signed-off-by: James Morris <jmorris@namei.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/hp-wmi.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ security/lockdown/lockdown.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-index 06a3c1ef8eee..952544ca0d84 100644
---- a/drivers/platform/x86/hp-wmi.c
-+++ b/drivers/platform/x86/hp-wmi.c
-@@ -474,8 +474,14 @@ static ssize_t postcode_show(struct device *dev, struct device_attribute *attr,
- static ssize_t als_store(struct device *dev, struct device_attribute *attr,
- 			 const char *buf, size_t count)
+diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
+index 40b790536def..ae594c0a127f 100644
+--- a/security/lockdown/lockdown.c
++++ b/security/lockdown/lockdown.c
+@@ -175,7 +175,7 @@ static int __init lockdown_secfs_init(void)
  {
--	u32 tmp = simple_strtoul(buf, NULL, 10);
--	int ret = hp_wmi_perform_query(HPWMI_ALS_QUERY, HPWMI_WRITE, &tmp,
-+	u32 tmp;
-+	int ret;
-+
-+	ret = kstrtou32(buf, 10, &tmp);
-+	if (ret)
-+		return ret;
-+
-+	ret = hp_wmi_perform_query(HPWMI_ALS_QUERY, HPWMI_WRITE, &tmp,
- 				       sizeof(tmp), sizeof(tmp));
- 	if (ret)
- 		return ret < 0 ? ret : -EINVAL;
+ 	struct dentry *dentry;
+ 
+-	dentry = securityfs_create_file("lockdown", 0600, NULL, NULL,
++	dentry = securityfs_create_file("lockdown", 0644, NULL, NULL,
+ 					&lockdown_ops);
+ 	return PTR_ERR_OR_ZERO(dentry);
+ }
 -- 
 2.25.1
 
