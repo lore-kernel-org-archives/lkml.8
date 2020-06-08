@@ -2,192 +2,232 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F473C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D798C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BA7B207BC
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:18:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2303D2072F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:18:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cBv8BeBn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U3ywOkUm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729380AbgFHKSA (ORCPT
+        id S1729393AbgFHKSg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 06:18:00 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35284 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729172AbgFHKR4 (ORCPT
+        Mon, 8 Jun 2020 06:18:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60042 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729337AbgFHKSe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 06:17:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591611475;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=8qWrXG5uSNE9Dzp6V1sYS5ofw86anDpXXrPKXmMCdEo=;
-        b=cBv8BeBn9eK9q7YCOOGLrghlshosq6eJq4gT5YGVCQRS1h34C6K/D5lmGxfDCLkdaAYJM9
-        902+A7njENZM5uvFdwwWp51eiIX4Tm0EkPJ6hEjicHOqzokUtMVk9LE8fJuLe4vCVCveEV
-        dkyx1WQpquTVEUyGEIDlVVwizMK+ZIE=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-29-1oGKYR1HOUGApazEuTfmKg-1; Mon, 08 Jun 2020 06:17:50 -0400
-X-MC-Unique: 1oGKYR1HOUGApazEuTfmKg-1
-Received: by mail-wm1-f71.google.com with SMTP id g84so5078239wmf.4
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 03:17:50 -0700 (PDT)
+        Mon, 8 Jun 2020 06:18:34 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3446C08C5C3;
+        Mon,  8 Jun 2020 03:18:32 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id c71so14756126wmd.5;
+        Mon, 08 Jun 2020 03:18:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8E3tUlnNWH0tzK24PYQO2JZkSdZVKVSOuDxhAs4jB0Q=;
+        b=U3ywOkUmYf3mWHDJ5irFC8gmotq0uHroech3SdtnZ2h1j//7yautxyU6AVnYtQKDDd
+         MLw1jO00ILaP9kybA31O0kfxOLcnCx0WSmIit7FKhJjM/+xIiOeX3PMeZ1xDHUQtjLc7
+         YRG1HiT8tWEh9ZzHbz4UQMAIuJWIxfBcLiujlcrE3PI4XQ6b+5S0X45sY9x5lYB6MZPb
+         fS1rMNdST7gM0V7CPm1ShXW0pTZ0s9Pb5mdzMEThvn2nrX9yRiLa17rbXDJLXW7piOiy
+         lwn1Jbbi+Mo4QVVHlF0t6sBmrNwa6LFTUCzZwrj0iKZPldI44bkj3/f5o6xU2WA6/rfc
+         CLrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8qWrXG5uSNE9Dzp6V1sYS5ofw86anDpXXrPKXmMCdEo=;
-        b=If6iXgEmEjWtd8yi6ZfvHFwxyj8LK53k6UyMxEUqkyhUN5hWFnglP2W0qPhTGBx9r/
-         9BZLOBnN0Ywt2pfWYfVc+hmo30hrFie2jIXvgdyJTJrmsYRKBUiNt/hBrqc8bctUXPvL
-         h1PYl0aFtbx7eU1YFBI/jgILow5XJb08NCQZ/bClETapUjZW2jOLvV/qQD45PfurZHDD
-         XVW2/KRif+CLcvHWm7ZyUp6b7wQI7Ls/J3n1JsYnukh2m6BQF1cnL5vwPyon53zZCKGx
-         QZibOuwazIe2RBwaMDOOyU/jsJc0Ia4HaL8+RM927PJTBY5YYopFSAnrKcG8ULjEQo+9
-         5bTw==
-X-Gm-Message-State: AOAM532VOCQkAO6p0RH1+6m59jKFfkwyngFUsRKyLROfG/kSn53xgKOI
-        vr9C8F1KwXeaDCoDP+9TyMXOzs2gN9PD+9Eb5YCYXzP6ABflxt97InTfyjqYouQjCzyd6mZO7fw
-        r0PKQUYrKccGJJSInizyx3g5W
-X-Received: by 2002:a1c:4105:: with SMTP id o5mr15395855wma.168.1591611469370;
-        Mon, 08 Jun 2020 03:17:49 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw01MpQfAn3zflPb7GVdN7FLLZh1HetB9oB+KWr4r5voKTa+SLtxH/AzT7wvjwZnQiGg0J+Pw==
-X-Received: by 2002:a1c:4105:: with SMTP id o5mr15395824wma.168.1591611469097;
-        Mon, 08 Jun 2020 03:17:49 -0700 (PDT)
-Received: from steredhat ([79.49.207.108])
-        by smtp.gmail.com with ESMTPSA id a3sm22199003wrp.91.2020.06.08.03.17.47
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8E3tUlnNWH0tzK24PYQO2JZkSdZVKVSOuDxhAs4jB0Q=;
+        b=DiRTR9E7/ap5ZSB2VaOFo5NVqhQH/sXdrRN/IsGgjne/cQJsDLf7J+dJJb4Fnbz6pz
+         d6hsD6s3Z/S73+SEGQZ3gPly56815rOuQmDgHEAO8vc+D2sHjfGVkO1/ZxfwC0y2orAh
+         NnjpgoXErgNpIcXGDn1EgiGImquTGZ9pokO7mktheuRa0RNHj5DBvtYUe/NfhMZ8J5Hs
+         STsYx/8+DZHhsNW1QXJe37PpQGGqJxye4Stv/VKPuOpcM5wnGsSDqZuXGFG6IjcOnCWE
+         AzdCIQTBLWbPF8t5BVJP2kYze5D0cz+ESs6UVDaMXBzHswv09FJqM62uoJMonOEoUkrL
+         Q77g==
+X-Gm-Message-State: AOAM533yClPM6kU4n3PVYdM8znM682EJElIRW5XxOCIKMA3QaUZbDNvm
+        MVRsarSOBi5v7kzx5lDZ+oc=
+X-Google-Smtp-Source: ABdhPJzEzWvF3GXeVLXaWIlhisc6qKBmVJ6I624X62ATg/sd/QOg5XVIOCaiAD+Pgto1msHjSemKuw==
+X-Received: by 2002:a1c:dd44:: with SMTP id u65mr16847352wmg.180.1591611511286;
+        Mon, 08 Jun 2020 03:18:31 -0700 (PDT)
+Received: from skynet.lan (28.red-83-49-61.dynamicip.rima-tde.net. [83.49.61.28])
+        by smtp.gmail.com with ESMTPSA id z2sm22378439wrs.87.2020.06.08.03.18.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 03:17:48 -0700 (PDT)
-Date:   Mon, 8 Jun 2020 12:17:46 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        Jason Wang <jasowang@redhat.com>, eperezma@redhat.com,
-        Stefan Hajnoczi <stefanha@redhat.com>
-Subject: Re: [PATCH RFC v5 12/13] vhost/vsock: switch to the buf API
-Message-ID: <20200608101746.xnxtwwygolsk7yol@steredhat>
-References: <20200607141057.704085-1-mst@redhat.com>
- <20200607141057.704085-13-mst@redhat.com>
+        Mon, 08 Jun 2020 03:18:30 -0700 (PDT)
+From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+To:     tsbogend@alpha.franken.de, f.fainelli@gmail.com,
+        jonas.gorski@gmail.com, bcm-kernel-feedback-list@broadcom.com,
+        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+Subject: [PATCH] MIPS: BCM63xx: add endif comments
+Date:   Mon,  8 Jun 2020 12:18:28 +0200
+Message-Id: <20200608101828.3383942-1-noltari@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200607141057.704085-13-mst@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 07, 2020 at 10:11:49AM -0400, Michael S. Tsirkin wrote:
-> A straight-forward conversion.
-> 
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> ---
->  drivers/vhost/vsock.c | 30 ++++++++++++++++++------------
->  1 file changed, 18 insertions(+), 12 deletions(-)
+There are plenty of ifdefs in board_bcm963xx.c without endif comments.
+Let's make the code easier to follow by adding proper comments.
 
-The changes for vsock part LGTM:
+Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+---
+ arch/mips/bcm63xx/boards/board_bcm963xx.c | 33 +++++++++++------------
+ 1 file changed, 15 insertions(+), 18 deletions(-)
 
-Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
-
-
-I also did some tests with vhost-vsock (tools/testing/vsock/vsock_test
-and iperf-vsock), so for vsock:
-
-Tested-by: Stefano Garzarella <sgarzare@redhat.com>
-
-Thanks,
-Stefano
-
-> 
-> diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
-> index a483cec31d5c..61c6d3dd2ae3 100644
-> --- a/drivers/vhost/vsock.c
-> +++ b/drivers/vhost/vsock.c
-> @@ -103,7 +103,8 @@ vhost_transport_do_send_pkt(struct vhost_vsock *vsock,
->  		unsigned out, in;
->  		size_t nbytes;
->  		size_t iov_len, payload_len;
-> -		int head;
-> +		struct vhost_buf buf;
-> +		int ret;
->  
->  		spin_lock_bh(&vsock->send_pkt_list_lock);
->  		if (list_empty(&vsock->send_pkt_list)) {
-> @@ -117,16 +118,17 @@ vhost_transport_do_send_pkt(struct vhost_vsock *vsock,
->  		list_del_init(&pkt->list);
->  		spin_unlock_bh(&vsock->send_pkt_list_lock);
->  
-> -		head = vhost_get_vq_desc(vq, vq->iov, ARRAY_SIZE(vq->iov),
-> -					 &out, &in, NULL, NULL);
-> -		if (head < 0) {
-> +		ret = vhost_get_avail_buf(vq, &buf,
-> +					  vq->iov, ARRAY_SIZE(vq->iov),
-> +					  &out, &in, NULL, NULL);
-> +		if (ret < 0) {
->  			spin_lock_bh(&vsock->send_pkt_list_lock);
->  			list_add(&pkt->list, &vsock->send_pkt_list);
->  			spin_unlock_bh(&vsock->send_pkt_list_lock);
->  			break;
->  		}
->  
-> -		if (head == vq->num) {
-> +		if (!ret) {
->  			spin_lock_bh(&vsock->send_pkt_list_lock);
->  			list_add(&pkt->list, &vsock->send_pkt_list);
->  			spin_unlock_bh(&vsock->send_pkt_list_lock);
-> @@ -186,7 +188,8 @@ vhost_transport_do_send_pkt(struct vhost_vsock *vsock,
->  		 */
->  		virtio_transport_deliver_tap_pkt(pkt);
->  
-> -		vhost_add_used(vq, head, sizeof(pkt->hdr) + payload_len);
-> +		buf.in_len = sizeof(pkt->hdr) + payload_len;
-> +		vhost_put_used_buf(vq, &buf);
->  		added = true;
->  
->  		pkt->off += payload_len;
-> @@ -440,7 +443,8 @@ static void vhost_vsock_handle_tx_kick(struct vhost_work *work)
->  	struct vhost_vsock *vsock = container_of(vq->dev, struct vhost_vsock,
->  						 dev);
->  	struct virtio_vsock_pkt *pkt;
-> -	int head, pkts = 0, total_len = 0;
-> +	int ret, pkts = 0, total_len = 0;
-> +	struct vhost_buf buf;
->  	unsigned int out, in;
->  	bool added = false;
->  
-> @@ -461,12 +465,13 @@ static void vhost_vsock_handle_tx_kick(struct vhost_work *work)
->  			goto no_more_replies;
->  		}
->  
-> -		head = vhost_get_vq_desc(vq, vq->iov, ARRAY_SIZE(vq->iov),
-> -					 &out, &in, NULL, NULL);
-> -		if (head < 0)
-> +		ret = vhost_get_avail_buf(vq, &buf,
-> +					  vq->iov, ARRAY_SIZE(vq->iov),
-> +					  &out, &in, NULL, NULL);
-> +		if (ret < 0)
->  			break;
->  
-> -		if (head == vq->num) {
-> +		if (!ret) {
->  			if (unlikely(vhost_enable_notify(&vsock->dev, vq))) {
->  				vhost_disable_notify(&vsock->dev, vq);
->  				continue;
-> @@ -494,7 +499,8 @@ static void vhost_vsock_handle_tx_kick(struct vhost_work *work)
->  			virtio_transport_free_pkt(pkt);
->  
->  		len += sizeof(pkt->hdr);
-> -		vhost_add_used(vq, head, len);
-> +		buf.in_len = len;
-> +		vhost_put_used_buf(vq, &buf);
->  		total_len += len;
->  		added = true;
->  	} while(likely(!vhost_exceeds_weight(vq, ++pkts, total_len)));
-> -- 
-> MST
-> 
+diff --git a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards/board_bcm963xx.c
+index 36ec3dc2c999..e8621074a8c2 100644
+--- a/arch/mips/bcm63xx/boards/board_bcm963xx.c
++++ b/arch/mips/bcm63xx/boards/board_bcm963xx.c
+@@ -67,7 +67,7 @@ static struct board_info __initdata board_cvg834g = {
+ 	.ephy_reset_gpio		= 36,
+ 	.ephy_reset_gpio_flags		= GPIOF_INIT_HIGH,
+ };
+-#endif
++#endif /* CONFIG_BCM63XX_CPU_3368 */
+ 
+ /*
+  * known 6328 boards
+@@ -115,7 +115,7 @@ static struct board_info __initdata board_96328avng = {
+ 		},
+ 	},
+ };
+-#endif
++#endif /* CONFIG_BCM63XX_CPU_6328 */
+ 
+ /*
+  * known 6338 boards
+@@ -204,7 +204,7 @@ static struct board_info __initdata board_96338w = {
+ 		},
+ 	},
+ };
+-#endif
++#endif /* CONFIG_BCM63XX_CPU_6338 */
+ 
+ /*
+  * known 6345 boards
+@@ -216,7 +216,7 @@ static struct board_info __initdata board_96345gw2 = {
+ 
+ 	.has_uart0			= 1,
+ };
+-#endif
++#endif /* CONFIG_BCM63XX_CPU_6345 */
+ 
+ /*
+  * known 6348 boards
+@@ -464,7 +464,6 @@ static struct board_info __initdata board_rta1025w_16 = {
+ 	},
+ };
+ 
+-
+ static struct board_info __initdata board_DV201AMR = {
+ 	.name				= "DV201AMR",
+ 	.expected_cpu_id		= 0x6348,
+@@ -505,7 +504,7 @@ static struct board_info __initdata board_96348gw_a = {
+ 
+ 	.has_ohci0 = 1,
+ };
+-#endif
++#endif /* CONFIG_BCM63XX_CPU_6348 */
+ 
+ /*
+  * known 6358 boards
+@@ -530,7 +529,6 @@ static struct board_info __initdata board_96358vw = {
+ 		.force_duplex_full	= 1,
+ 	},
+ 
+-
+ 	.has_ohci0 = 1,
+ 	.has_pccard = 1,
+ 	.has_ehci0 = 1,
+@@ -654,7 +652,7 @@ static struct board_info __initdata board_DWVS0 = {
+ 
+ 	.has_ohci0			= 1,
+ };
+-#endif
++#endif /* CONFIG_BCM63XX_CPU_6358 */
+ 
+ /*
+  * all boards
+@@ -662,17 +660,17 @@ static struct board_info __initdata board_DWVS0 = {
+ static const struct board_info __initconst *bcm963xx_boards[] = {
+ #ifdef CONFIG_BCM63XX_CPU_3368
+ 	&board_cvg834g,
+-#endif
++#endif /* CONFIG_BCM63XX_CPU_3368 */
+ #ifdef CONFIG_BCM63XX_CPU_6328
+ 	&board_96328avng,
+-#endif
++#endif /* CONFIG_BCM63XX_CPU_6328 */
+ #ifdef CONFIG_BCM63XX_CPU_6338
+ 	&board_96338gw,
+ 	&board_96338w,
+-#endif
++#endif /* CONFIG_BCM63XX_CPU_6338 */
+ #ifdef CONFIG_BCM63XX_CPU_6345
+ 	&board_96345gw2,
+-#endif
++#endif /* CONFIG_BCM63XX_CPU_6345 */
+ #ifdef CONFIG_BCM63XX_CPU_6348
+ 	&board_96348r,
+ 	&board_96348gw,
+@@ -682,14 +680,13 @@ static const struct board_info __initconst *bcm963xx_boards[] = {
+ 	&board_DV201AMR,
+ 	&board_96348gw_a,
+ 	&board_rta1025w_16,
+-#endif
+-
++#endif /* CONFIG_BCM63XX_CPU_6348 */
+ #ifdef CONFIG_BCM63XX_CPU_6358
+ 	&board_96358vw,
+ 	&board_96358vw2,
+ 	&board_AGPFS0,
+ 	&board_DWVS0,
+-#endif
++#endif /* CONFIG_BCM63XX_CPU_6358 */
+ };
+ 
+ /*
+@@ -728,7 +725,7 @@ int bcm63xx_get_fallback_sprom(struct ssb_bus *bus, struct ssb_sprom *out)
+ 		return -EINVAL;
+ 	}
+ }
+-#endif
++#endif /* CONFIG_SSB_PCIHOST */
+ 
+ /*
+  * return board name for /proc/cpuinfo
+@@ -807,7 +804,7 @@ void __init board_prom_init(void)
+ 		if (BCMCPU_IS_6348())
+ 			val |= GPIO_MODE_6348_G2_PCI;
+ 	}
+-#endif
++#endif /* CONFIG_PCI */
+ 
+ 	if (board.has_pccard) {
+ 		if (BCMCPU_IS_6348())
+@@ -892,7 +889,7 @@ int __init board_register_devices(void)
+ 				&bcm63xx_get_fallback_sprom) < 0)
+ 			pr_err("failed to register fallback SPROM\n");
+ 	}
+-#endif
++#endif /* CONFIG_SSB_PCIHOST */
+ 
+ 	bcm63xx_spi_register();
+ 
+-- 
+2.26.2
 
