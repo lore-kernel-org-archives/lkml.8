@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B42EAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B841EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:17:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E3BF2089D
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:17:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84A622087E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:17:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658248;
-	bh=ZEhSSl1cG6zZR1BIQ9zMUFW/bSq6ytLJgq3m5lTArCg=;
+	s=default; t=1591658253;
+	bh=ZrjVoD4ZwV/tZz4fxl1W6b/CNXJM9Tqt8/6U32PtV6w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QkfLng/S/p51WNvjso0XSE+kaT9XCVorC3PmCLF48W0mCX2ZydTG16ImIWCtYhe9+
-	 yO1QLJEvdQkV9INTtlViQyZMNOJImL1GUmzEoEqoKaz0drtBvwBdFpeMJ1k4pAueat
-	 wn1C8/NBO7dsxz21OuJRTC0SDQiwAzU3vZdU5TeQ=
+	b=Pi6bFtj8OtjFWm2Uu1GsT0La6QjavqLtKQ7BmVQ7h790bp2xiLFHnirnd8ViwFkGi
+	 ZU6YIR2VXwsNpvcbUJZoCEOexHSbDqo3iz+aHS5cHSo7nkutSuLYyCcDMANdSoQSfF
+	 M1MMAGoE5/ObhgemU+rsoL65NwiGpqholCc9kplI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730436AbgFHXR0 (ORCPT
+        id S1730465AbgFHXRa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:17:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34082 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:17:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729680AbgFHXOD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:14:03 -0400
+        id S1728931AbgFHXOF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:14:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B05120C09;
-        Mon,  8 Jun 2020 23:14:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9654B214D8;
+        Mon,  8 Jun 2020 23:14:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658043;
-        bh=ZEhSSl1cG6zZR1BIQ9zMUFW/bSq6ytLJgq3m5lTArCg=;
+        s=default; t=1591658045;
+        bh=ZrjVoD4ZwV/tZz4fxl1W6b/CNXJM9Tqt8/6U32PtV6w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VsMnxDwHbg0Q6sGPApPqbn0V8f2+J/2V60M6J/JSmLRkZopuEnSL5k4MOntei1WHF
-         OM1h1L8UpzXyFmu79bd2AK6Y7ZdbK/FwjBRI/OJTAQeVyAYNi46KzTjuXVbnxPZeRU
-         tzacullZEYwZk7KZjKlasS14Mp5B2/v8sA+YzvOk=
+        b=WY0w7yHgumIB0bS3ic4RHKt5Gk/F9PJed0ZovmG55p7A68QsCLChOMOqH5HqgeGYf
+         0sxdG2eUWQwV255H8oJsheiNN2/QzuUTs6b7dpcMEchIuXM0qO9kbixPExVq8k7Kq0
+         6r0TeYpTCyMA1sUyNKiuUzQKF29wmurhG2ckcjgk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alain Volmat <alain.volmat@st.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 092/606] i2c: fix missing pm_runtime_put_sync in i2c_device_probe
-Date:   Mon,  8 Jun 2020 19:03:37 -0400
-Message-Id: <20200608231211.3363633-92-sashal@kernel.org>
+Cc:     Raul E Rangel <rrangel@chromium.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 5.6 094/606] iommu/amd: Fix get_acpihid_device_id()
+Date:   Mon,  8 Jun 2020 19:03:39 -0400
+Message-Id: <20200608231211.3363633-94-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -60,77 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alain Volmat <alain.volmat@st.com>
+From: Raul E Rangel <rrangel@chromium.org>
 
-[ Upstream commit 3c3dd56f760da056e821ac177e3ad0de4209a435 ]
+[ Upstream commit ea90228c7b2ae6646bb6381385229aabb6f14cd2 ]
 
-In case of the I2C client exposes the flag I2C_CLIENT_HOST_NOTIFY,
-pm_runtime_get_sync is called in order to always keep active the
-adapter. However later on, pm_runtime_put_sync is never called
-within the function in case of an error. This commit add this
-error handling.
+acpi_dev_hid_uid_match() expects a null pointer for UID if it doesn't
+exist. The acpihid_map_entry contains a char buffer for holding the
+UID. If no UID was provided in the IVRS table, this buffer will be
+zeroed. If we pass in a null string, acpi_dev_hid_uid_match() will
+return false because it will try and match an empty string to the ACPI
+UID of the device.
 
-Fixes: 72bfcee11cf8 ("i2c: Prevent runtime suspend of adapter when Host Notify is required")
-Signed-off-by: Alain Volmat <alain.volmat@st.com>
-Reviewed-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
+Fixes: ae5e6c6439c3 ("iommu/amd: Switch to use acpi_dev_hid_uid_match()")
+Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Raul E Rangel <rrangel@chromium.org>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Link: https://lore.kernel.org/r/20200511103229.v2.1.I6f1b6f973ee6c8af1348611370c73a0ec0ea53f1@changeid
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/i2c-core-base.c | 22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
+ drivers/iommu/amd_iommu.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-index cefad0881942..fd3199782b6e 100644
---- a/drivers/i2c/i2c-core-base.c
-+++ b/drivers/i2c/i2c-core-base.c
-@@ -338,8 +338,10 @@ static int i2c_device_probe(struct device *dev)
- 		} else if (ACPI_COMPANION(dev)) {
- 			irq = i2c_acpi_get_irq(client);
- 		}
--		if (irq == -EPROBE_DEFER)
--			return irq;
-+		if (irq == -EPROBE_DEFER) {
-+			status = irq;
-+			goto put_sync_adapter;
-+		}
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index 500d0a8c966f..1d8634250afc 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -127,7 +127,8 @@ static inline int get_acpihid_device_id(struct device *dev,
+ 		return -ENODEV;
  
- 		if (irq < 0)
- 			irq = 0;
-@@ -353,15 +355,19 @@ static int i2c_device_probe(struct device *dev)
- 	 */
- 	if (!driver->id_table &&
- 	    !i2c_acpi_match_device(dev->driver->acpi_match_table, client) &&
--	    !i2c_of_match_device(dev->driver->of_match_table, client))
--		return -ENODEV;
-+	    !i2c_of_match_device(dev->driver->of_match_table, client)) {
-+		status = -ENODEV;
-+		goto put_sync_adapter;
-+	}
- 
- 	if (client->flags & I2C_CLIENT_WAKE) {
- 		int wakeirq;
- 
- 		wakeirq = of_irq_get_byname(dev->of_node, "wakeup");
--		if (wakeirq == -EPROBE_DEFER)
--			return wakeirq;
-+		if (wakeirq == -EPROBE_DEFER) {
-+			status = wakeirq;
-+			goto put_sync_adapter;
-+		}
- 
- 		device_init_wakeup(&client->dev, true);
- 
-@@ -408,6 +414,10 @@ static int i2c_device_probe(struct device *dev)
- err_clear_wakeup_irq:
- 	dev_pm_clear_wake_irq(&client->dev);
- 	device_init_wakeup(&client->dev, false);
-+put_sync_adapter:
-+	if (client->flags & I2C_CLIENT_HOST_NOTIFY)
-+		pm_runtime_put_sync(&client->adapter->dev);
-+
- 	return status;
- }
- 
+ 	list_for_each_entry(p, &acpihid_map, list) {
+-		if (acpi_dev_hid_uid_match(adev, p->hid, p->uid)) {
++		if (acpi_dev_hid_uid_match(adev, p->hid,
++					   p->uid[0] ? p->uid : NULL)) {
+ 			if (entry)
+ 				*entry = p;
+ 			return p->devid;
 -- 
 2.25.1
 
