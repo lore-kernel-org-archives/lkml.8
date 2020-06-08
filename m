@@ -5,70 +5,71 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A288C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2468C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:53:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0980C2076A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:53:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCF85206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:53:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KCrjBrfL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BYvmr1UQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729621AbgFHMxN (ORCPT
+        id S1729680AbgFHMxf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 08:53:13 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:53202 "EHLO
+        Mon, 8 Jun 2020 08:53:35 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:55493 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729315AbgFHMxG (ORCPT
+        by vger.kernel.org with ESMTP id S1729565AbgFHMxU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 08:53:06 -0400
+        Mon, 8 Jun 2020 08:53:20 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591620784;
+        s=mimecast20190719; t=1591620797;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=YC9C1bg85UqEARLoLzVVH0wVxPzUMhgdZVeMnCOVW8I=;
-        b=KCrjBrfLVNFyNFezKDnDkNlxulhi047ODlNDYk3hoAhno1+yytKWqCvVWob51+RzPc9zyq
-        t8x/s5HATbM1TmuKZSNzson8lFZq4BwyPsogvLGJKOCnUsD8bndSeVtHlusxBG2Y0l2spQ
-        7ctfkpKPkXS6V9XB7u8xFXPFhQyj/YM=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-483-QsDDDPbyOvGiw2YlXDrFRA-1; Mon, 08 Jun 2020 08:53:03 -0400
-X-MC-Unique: QsDDDPbyOvGiw2YlXDrFRA-1
-Received: by mail-wm1-f72.google.com with SMTP id y15so913669wmi.0
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 05:53:03 -0700 (PDT)
+        bh=dyvL3TJdoghmFE7taHXWfXC0TleKg1Dbjs9VDE83TZ8=;
+        b=BYvmr1UQHFs06SSSmg1gsc0PmwtfGWrLpg88SoV5YPqB95RPfjApgFxfK5PAXtUmFndvvc
+        fOnRmmHZofbqm4voWNi8GDGBUOoroMzPyqRpddj5tlEFNJPCIPLLJlCmOCICGGPjRxWyln
+        KmmptyKz81LkrBC72Z0SSd5xpitIUbg=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-499-FcFJW9-NO4GnbS9BENxsWw-1; Mon, 08 Jun 2020 08:53:14 -0400
+X-MC-Unique: FcFJW9-NO4GnbS9BENxsWw-1
+Received: by mail-wr1-f70.google.com with SMTP id i6so5516974wrr.23
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 05:53:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=YC9C1bg85UqEARLoLzVVH0wVxPzUMhgdZVeMnCOVW8I=;
-        b=K8FVkij+DA/eix06ph77xRDHhSTwmeEmFtb97EAItE3rarn335kmZSQZiQpInnsnHX
-         7BitXdp70jqhD1pAuS7vuEyEcjysrUQLdSEWIZg6ZsbLXPqSXN9TCRyoee8pbTwifQpo
-         2vd7rK+zt7fsnye6SJXHaF1TPmrPZ8XmfIMCHVdtC7TCqO584FR4FVyszx2pbqWRj9H0
-         x8nPH0yvOwMN828t5EbE2x+6OTfcIsljz+WJr4Gbs5tecHVuEAnlsoV6s/AqY+HUMvu5
-         phjjAO4TzNCeVtI7kiEIYi37XmFLXwE6H/2SdEkhfaxjE6N8pxSc9Q9WXlGVZcMP580P
-         Y7aA==
-X-Gm-Message-State: AOAM530riRguz+ljKEHzRY4a5lOGJ6R5cTzmW+xSFfqUrDYknWT44yM9
-        H5EXkew/XX7J7/azo4rX7Bb27/EEq0rLMmftER+FtkX3JBmG11SpZLwlIV8ThA1VbHBMC8wE/kR
-        s/ym3ELRmjmq3h4MjPGEU531w
-X-Received: by 2002:a1c:59c7:: with SMTP id n190mr15634968wmb.61.1591620782175;
-        Mon, 08 Jun 2020 05:53:02 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJycvWcSZ9pgrB8OOPKZQyruJy8vStQkFo1WrrMhroFInHbRmdrcF8cq2oRf/qnvmhPPXJjLnQ==
-X-Received: by 2002:a1c:59c7:: with SMTP id n190mr15634952wmb.61.1591620781966;
-        Mon, 08 Jun 2020 05:53:01 -0700 (PDT)
+        bh=dyvL3TJdoghmFE7taHXWfXC0TleKg1Dbjs9VDE83TZ8=;
+        b=h8HTMdVT7ASbFarZM12rs9GGlR+QkoUGqBygRk6u2dYMQcE78f4DP89bcIe5Wx6p1C
+         eitcSCs+0KWQHQG/f4nIcHXJNuBi/MM+/Qeqpx/XSm/JyLs8E6ONKPwcVgc2z7wd7yVr
+         bMH+9SZJHTQHbNJTbkCd3TlcujUI5Pt5Cea2NoMHD/exV3OEs+E4eShuu0VhsTCQapxf
+         zGWfjmY/C2SZ6/hO2tVQbj+b/4Pmq1kiSK6RmEd8IIaWV+zM55t95e5XlP4kOfBGrhMP
+         W2zjJjtszs7ABSvbOaHy9zvXqUeo1EErsZpWro1FHRiSBVBfZcUOJvPIYnkOi45apvgX
+         tkgQ==
+X-Gm-Message-State: AOAM5337wuCVgE0fqSjMhhs1IKqlx1ff498qBAzfr/HzJeLO8uZLqs6k
+        aOHTbSAeaTLdVKNeBJL7CljjXtq++zsL0/gY/QRkPWAc0gaLEcZ9JQrRrro1CN2a2Gg4uLcsH8z
+        G2YlKAF8gv5JY6i0udD7jXEWs
+X-Received: by 2002:a1c:e057:: with SMTP id x84mr11558975wmg.160.1591620793224;
+        Mon, 08 Jun 2020 05:53:13 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwqwMNkCKTETN7JGC4nwscfaMZU/pGcpvDzTqjt0cctLuLGHFIzQ7M89IPA0fnMBjuzyXlRPQ==
+X-Received: by 2002:a1c:e057:: with SMTP id x84mr11558941wmg.160.1591620792903;
+        Mon, 08 Jun 2020 05:53:12 -0700 (PDT)
 Received: from redhat.com (bzq-109-64-41-91.red.bezeqint.net. [109.64.41.91])
-        by smtp.gmail.com with ESMTPSA id r12sm23319300wrc.22.2020.06.08.05.53.00
+        by smtp.gmail.com with ESMTPSA id o6sm2030284wmc.39.2020.06.08.05.53.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 05:53:01 -0700 (PDT)
-Date:   Mon, 8 Jun 2020 08:53:00 -0400
+        Mon, 08 Jun 2020 05:53:12 -0700 (PDT)
+Date:   Mon, 8 Jun 2020 08:53:10 -0400
 From:   "Michael S. Tsirkin" <mst@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
         netdev@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
-        eperezma@redhat.com
-Subject: [PATCH RFC v6 04/11] vhost: reorder functions
-Message-ID: <20200608125238.728563-5-mst@redhat.com>
+        eperezma@redhat.com, Paolo Bonzini <pbonzini@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>
+Subject: [PATCH RFC v6 09/11] vhost/scsi: switch to buf APIs
+Message-ID: <20200608125238.728563-10-mst@redhat.com>
 References: <20200608125238.728563-1-mst@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -81,59 +82,210 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reorder functions in the file to not rely on forward
-declarations, in preparation to making them static
-down the road.
+Switch to buf APIs. Doing this exposes a spec violation in vhost scsi:
+all used bufs are marked with length 0.
+Fix that is left for another day.
 
 Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 ---
- drivers/vhost/vhost.c | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+ drivers/vhost/scsi.c | 73 ++++++++++++++++++++++++++------------------
+ 1 file changed, 44 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-index 41d6b132c234..334529ebecab 100644
---- a/drivers/vhost/vhost.c
-+++ b/drivers/vhost/vhost.c
-@@ -2429,19 +2429,6 @@ void vhost_discard_vq_desc(struct vhost_virtqueue *vq, int n)
- }
- EXPORT_SYMBOL_GPL(vhost_discard_vq_desc);
+diff --git a/drivers/vhost/scsi.c b/drivers/vhost/scsi.c
+index 0cbaa0b3893d..a5cdd4c01a3a 100644
+--- a/drivers/vhost/scsi.c
++++ b/drivers/vhost/scsi.c
+@@ -71,8 +71,8 @@ struct vhost_scsi_inflight {
+ };
  
--/* After we've used one of their buffers, we tell them about it.  We'll then
-- * want to notify the guest, using eventfd. */
--int vhost_add_used(struct vhost_virtqueue *vq, unsigned int head, int len)
--{
--	struct vring_used_elem heads = {
--		cpu_to_vhost32(vq, head),
--		cpu_to_vhost32(vq, len)
--	};
--
--	return vhost_add_used_n(vq, &heads, 1);
--}
--EXPORT_SYMBOL_GPL(vhost_add_used);
--
- static int __vhost_add_used_n(struct vhost_virtqueue *vq,
- 			    struct vring_used_elem *heads,
- 			    unsigned count)
-@@ -2511,6 +2498,19 @@ int vhost_add_used_n(struct vhost_virtqueue *vq, struct vring_used_elem *heads,
+ struct vhost_scsi_cmd {
+-	/* Descriptor from vhost_get_vq_desc() for virt_queue segment */
+-	int tvc_vq_desc;
++	/* Descriptor from vhost_get_avail_buf() for virt_queue segment */
++	struct vhost_buf tvc_vq_desc;
+ 	/* virtio-scsi initiator task attribute */
+ 	int tvc_task_attr;
+ 	/* virtio-scsi response incoming iovecs */
+@@ -213,7 +213,7 @@ struct vhost_scsi {
+  * Context for processing request and control queue operations.
+  */
+ struct vhost_scsi_ctx {
+-	int head;
++	struct vhost_buf buf;
+ 	unsigned int out, in;
+ 	size_t req_size, rsp_size;
+ 	size_t out_size, in_size;
+@@ -443,6 +443,20 @@ static int vhost_scsi_check_stop_free(struct se_cmd *se_cmd)
+ 	return target_put_sess_cmd(se_cmd);
  }
- EXPORT_SYMBOL_GPL(vhost_add_used_n);
  
-+/* After we've used one of their buffers, we tell them about it.  We'll then
-+ * want to notify the guest, using eventfd. */
-+int vhost_add_used(struct vhost_virtqueue *vq, unsigned int head, int len)
++/* Signal to guest that request finished with no input buffer. */
++/* TODO calling this when writing into buffer and most likely a bug */
++static void vhost_scsi_signal_noinput(struct vhost_dev *vdev,
++				      struct vhost_virtqueue *vq,
++				      struct vhost_buf *bufp)
 +{
-+	struct vring_used_elem heads = {
-+		cpu_to_vhost32(vq, head),
-+		cpu_to_vhost32(vq, len)
-+	};
++	struct vhost_buf buf = *bufp;
 +
-+	return vhost_add_used_n(vq, &heads, 1);
++	buf.in_len = 0;
++	vhost_put_used_buf(vq, &buf);
++	vhost_signal(vdev, vq);
 +}
-+EXPORT_SYMBOL_GPL(vhost_add_used);
 +
- static bool vhost_notify(struct vhost_dev *dev, struct vhost_virtqueue *vq)
++
+ static void
+ vhost_scsi_do_evt_work(struct vhost_scsi *vs, struct vhost_scsi_evt *evt)
  {
- 	__u16 old, new;
+@@ -450,7 +464,8 @@ vhost_scsi_do_evt_work(struct vhost_scsi *vs, struct vhost_scsi_evt *evt)
+ 	struct virtio_scsi_event *event = &evt->event;
+ 	struct virtio_scsi_event __user *eventp;
+ 	unsigned out, in;
+-	int head, ret;
++	struct vhost_buf buf;
++	int ret;
+ 
+ 	if (!vhost_vq_get_backend(vq)) {
+ 		vs->vs_events_missed = true;
+@@ -459,14 +474,14 @@ vhost_scsi_do_evt_work(struct vhost_scsi *vs, struct vhost_scsi_evt *evt)
+ 
+ again:
+ 	vhost_disable_notify(&vs->dev, vq);
+-	head = vhost_get_vq_desc(vq, vq->iov,
+-			ARRAY_SIZE(vq->iov), &out, &in,
+-			NULL, NULL);
+-	if (head < 0) {
++	ret = vhost_get_avail_buf(vq, &buf,
++				  vq->iov, ARRAY_SIZE(vq->iov), &out, &in,
++				  NULL, NULL);
++	if (ret < 0) {
+ 		vs->vs_events_missed = true;
+ 		return;
+ 	}
+-	if (head == vq->num) {
++	if (!ret) {
+ 		if (vhost_enable_notify(&vs->dev, vq))
+ 			goto again;
+ 		vs->vs_events_missed = true;
+@@ -488,7 +503,7 @@ vhost_scsi_do_evt_work(struct vhost_scsi *vs, struct vhost_scsi_evt *evt)
+ 	eventp = vq->iov[out].iov_base;
+ 	ret = __copy_to_user(eventp, event, sizeof(*event));
+ 	if (!ret)
+-		vhost_add_used_and_signal(&vs->dev, vq, head, 0);
++		vhost_scsi_signal_noinput(&vs->dev, vq, &buf);
+ 	else
+ 		vq_err(vq, "Faulted on vhost_scsi_send_event\n");
+ }
+@@ -549,7 +564,7 @@ static void vhost_scsi_complete_cmd_work(struct vhost_work *work)
+ 		ret = copy_to_iter(&v_rsp, sizeof(v_rsp), &iov_iter);
+ 		if (likely(ret == sizeof(v_rsp))) {
+ 			struct vhost_scsi_virtqueue *q;
+-			vhost_add_used(cmd->tvc_vq, cmd->tvc_vq_desc, 0);
++			vhost_put_used_buf(cmd->tvc_vq, &cmd->tvc_vq_desc);
+ 			q = container_of(cmd->tvc_vq, struct vhost_scsi_virtqueue, vq);
+ 			vq = q - vs->vqs;
+ 			__set_bit(vq, signal);
+@@ -793,7 +808,7 @@ static void vhost_scsi_submission_work(struct work_struct *work)
+ static void
+ vhost_scsi_send_bad_target(struct vhost_scsi *vs,
+ 			   struct vhost_virtqueue *vq,
+-			   int head, unsigned out)
++			   struct vhost_buf *buf, unsigned out)
+ {
+ 	struct virtio_scsi_cmd_resp __user *resp;
+ 	struct virtio_scsi_cmd_resp rsp;
+@@ -804,7 +819,7 @@ vhost_scsi_send_bad_target(struct vhost_scsi *vs,
+ 	resp = vq->iov[out].iov_base;
+ 	ret = __copy_to_user(resp, &rsp, sizeof(rsp));
+ 	if (!ret)
+-		vhost_add_used_and_signal(&vs->dev, vq, head, 0);
++		vhost_scsi_signal_noinput(&vs->dev, vq, buf);
+ 	else
+ 		pr_err("Faulted on virtio_scsi_cmd_resp\n");
+ }
+@@ -813,21 +828,21 @@ static int
+ vhost_scsi_get_desc(struct vhost_scsi *vs, struct vhost_virtqueue *vq,
+ 		    struct vhost_scsi_ctx *vc)
+ {
+-	int ret = -ENXIO;
++	int r, ret = -ENXIO;
+ 
+-	vc->head = vhost_get_vq_desc(vq, vq->iov,
+-				     ARRAY_SIZE(vq->iov), &vc->out, &vc->in,
+-				     NULL, NULL);
++	r = vhost_get_avail_buf(vq, &vc->buf,
++				vq->iov, ARRAY_SIZE(vq->iov), &vc->out, &vc->in,
++				NULL, NULL);
+ 
+-	pr_debug("vhost_get_vq_desc: head: %d, out: %u in: %u\n",
+-		 vc->head, vc->out, vc->in);
++	pr_debug("vhost_get_avail_buf: buf: %d, out: %u in: %u\n",
++		 vc->buf.id, vc->out, vc->in);
+ 
+ 	/* On error, stop handling until the next kick. */
+-	if (unlikely(vc->head < 0))
++	if (unlikely(r < 0))
+ 		goto done;
+ 
+ 	/* Nothing new?  Wait for eventfd to tell us they refilled. */
+-	if (vc->head == vq->num) {
++	if (!r) {
+ 		if (unlikely(vhost_enable_notify(&vs->dev, vq))) {
+ 			vhost_disable_notify(&vs->dev, vq);
+ 			ret = -EAGAIN;
+@@ -1093,11 +1108,11 @@ vhost_scsi_handle_vq(struct vhost_scsi *vs, struct vhost_virtqueue *vq)
+ 			}
+ 		}
+ 		/*
+-		 * Save the descriptor from vhost_get_vq_desc() to be used to
++		 * Save the descriptor from vhost_get_avail_buf() to be used to
+ 		 * complete the virtio-scsi request in TCM callback context via
+ 		 * vhost_scsi_queue_data_in() and vhost_scsi_queue_status()
+ 		 */
+-		cmd->tvc_vq_desc = vc.head;
++		cmd->tvc_vq_desc = vc.buf;
+ 		/*
+ 		 * Dispatch cmd descriptor for cmwq execution in process
+ 		 * context provided by vhost_scsi_workqueue.  This also ensures
+@@ -1117,7 +1132,7 @@ vhost_scsi_handle_vq(struct vhost_scsi *vs, struct vhost_virtqueue *vq)
+ 		if (ret == -ENXIO)
+ 			break;
+ 		else if (ret == -EIO)
+-			vhost_scsi_send_bad_target(vs, vq, vc.head, vc.out);
++			vhost_scsi_send_bad_target(vs, vq, &vc.buf, vc.out);
+ 	} while (likely(!vhost_exceeds_weight(vq, ++c, 0)));
+ out:
+ 	mutex_unlock(&vq->mutex);
+@@ -1139,9 +1154,9 @@ vhost_scsi_send_tmf_reject(struct vhost_scsi *vs,
+ 	iov_iter_init(&iov_iter, READ, &vq->iov[vc->out], vc->in, sizeof(rsp));
+ 
+ 	ret = copy_to_iter(&rsp, sizeof(rsp), &iov_iter);
+-	if (likely(ret == sizeof(rsp)))
+-		vhost_add_used_and_signal(&vs->dev, vq, vc->head, 0);
+-	else
++	if (likely(ret == sizeof(rsp))) {
++		vhost_scsi_signal_noinput(&vs->dev, vq, &vc->buf);
++	} else
+ 		pr_err("Faulted on virtio_scsi_ctrl_tmf_resp\n");
+ }
+ 
+@@ -1162,7 +1177,7 @@ vhost_scsi_send_an_resp(struct vhost_scsi *vs,
+ 
+ 	ret = copy_to_iter(&rsp, sizeof(rsp), &iov_iter);
+ 	if (likely(ret == sizeof(rsp)))
+-		vhost_add_used_and_signal(&vs->dev, vq, vc->head, 0);
++		vhost_scsi_signal_noinput(&vs->dev, vq, &vc->buf);
+ 	else
+ 		pr_err("Faulted on virtio_scsi_ctrl_an_resp\n");
+ }
+@@ -1269,7 +1284,7 @@ vhost_scsi_ctl_handle_vq(struct vhost_scsi *vs, struct vhost_virtqueue *vq)
+ 		if (ret == -ENXIO)
+ 			break;
+ 		else if (ret == -EIO)
+-			vhost_scsi_send_bad_target(vs, vq, vc.head, vc.out);
++			vhost_scsi_send_bad_target(vs, vq, &vc.buf, vc.out);
+ 	} while (likely(!vhost_exceeds_weight(vq, ++c, 0)));
+ out:
+ 	mutex_unlock(&vq->mutex);
 -- 
 MST
 
