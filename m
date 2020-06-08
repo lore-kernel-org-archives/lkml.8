@@ -2,116 +2,178 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C57C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC66C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:13:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF256206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:12:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBD90206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:13:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DfM0dsqO"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ijmXl/xy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729713AbgFHMMf (ORCPT
+        id S1729728AbgFHMNA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 08:12:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49340 "EHLO
+        Mon, 8 Jun 2020 08:13:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729691AbgFHMMd (ORCPT
+        with ESMTP id S1729644AbgFHMM7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 08:12:33 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 706C6C08C5C2
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 05:12:31 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id e125so10063602lfd.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 05:12:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TBN6LwR1xQ7giOqILnPE//JlJlIgyTPuIyOhAD+Fs0g=;
-        b=DfM0dsqO0f/Qnck/+Ah62rrhJWnxesv6sNiGtGlrUMkIZe0uxoX3qyYJ/QidMJamvz
-         L6Bnwt3S8/SXA6KWjuV0bzahAGv1Sl1x5CS5ZEehyidgKzWz4cs/2fohftpz4t03IhmP
-         CIv70QYr+yH0TB6vG8xKqYy3fw6Phyc4Ob7FxTujExXWYnwYzNFN5dt5DjZOB2jtHVyi
-         pScpc+vtrc/434ZaGx0d5mEXfZ/lyQGuLIT9J5uRdtiXT2AiODcOPqwI9F21ZHqEftmT
-         +8AxS85z10y6qTHVnRXGdeaO6dgqPm/WflvEoPVFPCoCi/JhDSoY89tbNu6R2JazK7tp
-         A7tQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TBN6LwR1xQ7giOqILnPE//JlJlIgyTPuIyOhAD+Fs0g=;
-        b=R05cNj28hxzllEU+Arf60KEaJsHjcfDWetY6kUcH5OiriqZtHdEyEyoClG/pr9/5Q1
-         zOQYuVu29wP6dr+jcZiXV6j5m2KrJXJnfonb7FHn0Ve0mSy22eyySFSdEDRR3Pqc1P/8
-         1O9/zuUc5lK2GIfpbNppEWuva72pgGvaRYTlynPoxwbz/1UIrqEax3DajzNJHwR4FTaw
-         1vbx4MEZx99lOqzdvBFgFdEKUl4hycPtBY4QRkAKbtLtWj5rqgjCnk4bQeG/XILUhiw+
-         WBTUNnNFzHZ7344UKlqYUBz3zOgzNT21QJOp1QfFDfzibjJlvdntNuLqdKnRT6DmpoDx
-         vpkQ==
-X-Gm-Message-State: AOAM532gBDkIbiEhOir7HO8G9X4HcRCP/GF1nqabvJc6HdWFPEts6mmO
-        1gdUAoAxnNrdpEZu1pbTigH1iFvapAb5nOAU6daiYg==
-X-Google-Smtp-Source: ABdhPJxmk7CcERIdwxefncHfN7iBpWg2VOzmqMraSrfW9OEJJz2SzxogXSAbo+g1hJ04P05NhatbtFCl4F1ofn3LcNs=
-X-Received: by 2002:a19:c8cb:: with SMTP id y194mr12833236lff.89.1591618349925;
- Mon, 08 Jun 2020 05:12:29 -0700 (PDT)
+        Mon, 8 Jun 2020 08:12:59 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45350C08C5C2;
+        Mon,  8 Jun 2020 05:12:59 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id AD32D2C9;
+        Mon,  8 Jun 2020 14:12:57 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1591618377;
+        bh=v6RTJWuXMkECLHzVE4fQZJvBLgBCPytLELdCgrurFP8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ijmXl/xy6GwWhq1m+5PG+qpIYp/wvWZpxKPyBCCs74wPMLPnwedA/UUlRWWyB+tYi
+         M/IcF3oSFqLXhuZvSVvqsViokYbSuTkYGAxqb5G8KAP1YpNG3Y/UI13XnQ0HjpE4VX
+         S7UNILCTCqdh0XZwZ8htghB2apaGTHQWVhMabWUQ=
+Date:   Mon, 8 Jun 2020 15:12:38 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
+        Kaaira Gupta <kgupta@es.iitr.ac.in>,
+        linux-media@vger.kernel.org,
+        Helen Koike <helen.koike@collabora.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-kernel@vger.kernel.org, kieran.bingham@ideasonboard.com
+Subject: Re: [RFC PATCH] vimc: Add colors' order over test image
+Message-ID: <20200608121238.GB5896@pendragon.ideasonboard.com>
+References: <20200607135325.GA16838@kaaira-HP-Pavilion-Notebook>
+ <5866f6c9-36c7-ffe3-41b3-94f184cd9e5d@collabora.com>
+ <38db03a4-6b22-c341-103c-ed0d4dcce856@xs4all.nl>
 MIME-Version: 1.0
-References: <20200526104717.3181-1-dinghao.liu@zju.edu.cn> <CACRpkdZi=UaGES_bupj_fQB+sPj5zOvONdCn7_Rs_j9mcukAAQ@mail.gmail.com>
- <20200531150000.20d1ec61@archlinux>
-In-Reply-To: <20200531150000.20d1ec61@archlinux>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 8 Jun 2020 14:12:18 +0200
-Message-ID: <CACRpkdZy0Pip1ii0g+PYpnkO21e6=J0ZXzudEgvEycCbmWYJxA@mail.gmail.com>
-Subject: Re: [PATCH] [v2] iio: magnetometer: ak8974: Fix runtime PM imbalance
- on error
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Dinghao Liu <dinghao.liu@zju.edu.cn>, Kangjie Lu <kjlu@umn.edu>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <38db03a4-6b22-c341-103c-ed0d4dcce856@xs4all.nl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonathan,
+Hello,
 
-sorry for missing this :(
+On Mon, Jun 08, 2020 at 11:33:21AM +0200, Hans Verkuil wrote:
+> On 08/06/2020 09:10, Dafna Hirschfeld wrote:
+> > On 07.06.20 15:53, Kaaira Gupta wrote:
+> >> Currently there is no method to know if the test image generated by vimc
+> >> is correct (except for comparing it with a known 'correct' image). Add
+> >> text over the test image, representing the correct order of colors.
+> >>
+> >> I have sent it as an RFC because we can add the text as an optional
+> >> control, and maybe we can print some other useful information as well
+> >> (like vivid does).
+> > 
+> > Yes, it seems like a good idea to add it as a control of the sensor.
+> > 
+> >> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
+> >> --->   drivers/media/test-drivers/vimc/Kconfig       | 2 ++
+> >>   drivers/media/test-drivers/vimc/vimc-core.c   | 9 +++++++++
+> >>   drivers/media/test-drivers/vimc/vimc-sensor.c | 8 ++++++++
+> >>   3 files changed, 19 insertions(+)
+> >>
+> >> diff --git a/drivers/media/test-drivers/vimc/Kconfig b/drivers/media/test-drivers/vimc/Kconfig
+> >> index 4068a67585f9..da4b2ad6e40c 100644
+> >> --- a/drivers/media/test-drivers/vimc/Kconfig
+> >> +++ b/drivers/media/test-drivers/vimc/Kconfig
+> >> @@ -2,6 +2,8 @@
+> >>   config VIDEO_VIMC
+> >>   	tristate "Virtual Media Controller Driver (VIMC)"
+> >>   	depends on VIDEO_DEV && VIDEO_V4L2
+> >> +	select FONT_SUPPORT
+> >> +	select FONT_8x16
+> >>   	select MEDIA_CONTROLLER
+> >>   	select VIDEO_V4L2_SUBDEV_API
+> >>   	select VIDEOBUF2_VMALLOC
+> >> diff --git a/drivers/media/test-drivers/vimc/vimc-core.c b/drivers/media/test-drivers/vimc/vimc-core.c
+> >> index 11210aaa2551..8142bfbcbd49 100644
+> >> --- a/drivers/media/test-drivers/vimc/vimc-core.c
+> >> +++ b/drivers/media/test-drivers/vimc/vimc-core.c
+> >> @@ -5,10 +5,12 @@
+> >>    * Copyright (C) 2015-2017 Helen Koike <helen.fornazier@gmail.com>
+> >>    */
+> >>   
+> >> +#include <linux/font.h>
+> >>   #include <linux/init.h>
+> >>   #include <linux/module.h>
+> >>   #include <linux/platform_device.h>
+> >>   #include <media/media-device.h>
+> >> +#include <media/tpg/v4l2-tpg.h>
+> >>   #include <media/v4l2-device.h>
+> >>   
+> >>   #include "vimc-common.h"
+> >> @@ -265,7 +267,14 @@ static int vimc_probe(struct platform_device *pdev)
+> >>   {
+> >>   	struct vimc_device *vimc;
+> >>   	int ret;
+> >> +	const struct font_desc *font = find_font("VGA8x16");
+> >>   
+> >> +	if (font == NULL) {
+> >> +		pr_err("vimc: could not find font\n");
+> >> +		return -ENODEV;
+> >> +	}
+> >> +
+> >> +	tpg_set_font(font->data);
+> > 
+> > I think the code that set the format should move to the
+> > code that registers the sensor in vimc-sensor.c
+> > 
+> >>   	dev_dbg(&pdev->dev, "probe");
+> >>   
+> >>   	vimc = kzalloc(sizeof(*vimc), GFP_KERNEL);
+> >> diff --git a/drivers/media/test-drivers/vimc/vimc-sensor.c b/drivers/media/test-drivers/vimc/vimc-sensor.c
+> >> index a2f09ac9a360..4b13955c502a 100644
+> >> --- a/drivers/media/test-drivers/vimc/vimc-sensor.c
+> >> +++ b/drivers/media/test-drivers/vimc/vimc-sensor.c
+> >> @@ -185,10 +185,18 @@ static const struct v4l2_subdev_pad_ops vimc_sen_pad_ops = {
+> >>   static void *vimc_sen_process_frame(struct vimc_ent_device *ved,
+> >>   				    const void *sink_frame)
+> >>   {
+> >> +	u8 *basep[TPG_MAX_PLANES][2];
+> >> +	char str[100];
+> >>   	struct vimc_sen_device *vsen = container_of(ved, struct vimc_sen_device,
+> >>   						    ved);
+> >>   
+> >> +	tpg_calc_text_basep(&vsen->tpg, basep, 0, vsen->frame);
+> >>   	tpg_fill_plane_buffer(&vsen->tpg, 0, 0, vsen->frame);
+> >> +
+> >> +	snprintf(str, sizeof(str),
+> >> +		 "Order: white, yellow, cyan, green, magenta, red, blue, black");
+> > The colors are generated by the tpg, so I think it should be a feature of the tpg to print the colors.
+> 
+> I agree. The tpg knows where each color is and based on the width and height it can
+> print the text. A tpg_gen_pattern_text() function that does the work would be very
+> nice.
 
-On Sun, May 31, 2020 at 4:00 PM Jonathan Cameron <jic23@kernel.org> wrote:
-> On Tue, 26 May 2020 13:13:56 +0200
-> Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> > On Tue, May 26, 2020 at 12:47 PM Dinghao Liu <dinghao.liu@zju.edu.cn> wrote:
-> >
-> > > When devm_regmap_init_i2c() returns an error code, a pairing
-> > > runtime PM usage counter decrement is needed to keep the
-> > > counter balanced. For error paths after ak8974_set_power(),
-> > > ak8974_detect() and ak8974_reset(), things are the same.
-> > >
-> > > However, When iio_triggered_buffer_setup() returns an error
-> > > code, there will be two PM usgae counter decrements.
-> > >
-> > > Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-> > > ---
-> > >
-> > > Changelog:
-> > >
-> > > v2: - Change 3 goto targets from "power_off" to
-> > >       "disabel_pm". Remove unused lable "power_off".
-> > >       Move 3 PM runtime related calls to the end of
-> > >       the function.
-> >
-> > Thanks for fixing this Dinghao!
-> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->
-> Could I have a fixes tag for this one?
+Could we go one step further, and print the colour name on each colour
+bar ?
 
-It's been  there since the beginning so:
-Fixes: 7c94a8b2ee8c ("iio: magn: add a driver for AK8974")
+> It also doesn't make sense for all patterns, so this is really a nice feature to
+> incorporate into the TPG itself and enable it via a vivid and vimc control.
+> 
+> > For example, a function in v4l2-tpg-core.c that get the pattern as an argument and return
+> > this string, or maybe returns a const pointer to the array of colors, or something like that.
+> > Then maybe we can add a control in vivid for the same tpg feature.
+> > 
+> > Note also that the sensor has a control to change the pattern: vimc_sen_ctrl_test_pattern
+> > So the string depends on that pattern.
+> > 
+> >> +	tpg_gen_text(&vsen->tpg, basep, 1, 1, str);
+> >> +
+> >>   	return vsen->frame;
+> >>   }
+> >>   
 
-Yours,
-Linus Walleij
+-- 
+Regards,
+
+Laurent Pinchart
