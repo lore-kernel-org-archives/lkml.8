@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA91C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 719ABC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:19:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C5512085B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:19:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53F872085B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:19:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658365;
-	bh=9ypWvacEgRLRkAV2bi+phq1m4tvvc4shRDpMJxiW5eQ=;
+	s=default; t=1591658373;
+	bh=UC/hJa4X7QpfVijofanUa1kALbeXhRnw1dF4T3sBwyc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RrovSzqWf1OO+SrplCwlTrCiR9mjyrSbDclmYNOXQypAvLgSn94ZvDIZYbaZn99Z6
-	 +qmFtmaN2kLhc1i1GyYDV6kHsROob6ZK568znu+TSumpCtMeG5YMInhaFNT480VLvt
-	 oghOWp0/ttY8Pn1qIx6B++jms46eN1TMoZw7VOz8=
+	b=YYzkCwd9j8A/Zbvs5K8OoKeSpsDVYHDF3TS+TdkNcADPJbqs/oTbGPqU1VXTXVAGF
+	 zX73BBMfJ06dJySPvUo7AaHuwoB+jLZRdMn1mCUf6RyJfN5ietqxCQANR9QFyhw57K
+	 z9HSb/MemimScG9CCWkOydjobfPYCyHRt7wPGxVA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730780AbgFHXTY (ORCPT
+        id S1730801AbgFHXTb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:19:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36824 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:19:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728687AbgFHXPr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:15:47 -0400
+        id S1729052AbgFHXPt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:15:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEFBE20774;
-        Mon,  8 Jun 2020 23:15:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D55612068D;
+        Mon,  8 Jun 2020 23:15:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658147;
-        bh=9ypWvacEgRLRkAV2bi+phq1m4tvvc4shRDpMJxiW5eQ=;
+        s=default; t=1591658148;
+        bh=UC/hJa4X7QpfVijofanUa1kALbeXhRnw1dF4T3sBwyc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=us0yvymqlIcad4rxXyKZeb4wugvJoJD4B5PuSEuX+QZv19qTDNzAO59odbBodwPI7
-         MX1nZ4hL9czKSXTp9XVmaV+7A9RjWZpKKEocto5T7esVPyMm2y4MRi3EA4CDXSIECG
-         2n0lkpsdtR+HOgFzNcqXDqNz9MmSTCLXOtjj5nlU=
+        b=CDJ0ANxCBfx9sk1d3mSPj/eAFgpg/jj7QF+h0IaeL2aK3t3DYF9JTEy15q5w9tLks
+         RPfVebBfMXwPzWCGH8O1zvbc3yfM0IXwEEIcenzGs2Ka9slI+xHBatVvg6Q1bH9l3m
+         OQhAtwEvj4dQxZLsVYPL7zYh4xhV0QqG9sgXV7xc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Klaus Doth <kdlnx@doth.eu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH AUTOSEL 5.6 180/606] misc: rtsx: Add short delay after exit from ASPM
-Date:   Mon,  8 Jun 2020 19:05:05 -0400
-Message-Id: <20200608231211.3363633-180-sashal@kernel.org>
+Cc:     Sagar Shrikant Kadam <sagar.kadam@sifive.com>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-serial@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 181/606] tty: serial: add missing spin_lock_init for SiFive serial console
+Date:   Mon,  8 Jun 2020 19:05:06 -0400
+Message-Id: <20200608231211.3363633-181-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -58,43 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Klaus Doth <kdlnx@doth.eu>
+From: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
 
-commit 7a839dbab1be59f5ed3b3b046de29e166784c9b4 upstream.
+commit 17b4efdf4e4867079012a48ca10d965fe9d68822 upstream.
 
-DMA transfers to and from the SD card stall for 10 seconds and run into
-timeout on RTS5260 card readers after ASPM was enabled.
+An uninitialised spin lock for sifive serial console raises a bad
+magic spin_lock error as reported and discussed here [1].
+Initialising the spin lock resolves the issue.
 
-Adding a short msleep after disabling ASPM fixes the issue on several
-Dell Precision 7530/7540 systems I tested.
+The fix is tested on HiFive Unleashed A00 board with Linux 5.7-rc4
+and OpenSBI v0.7
 
-This function is only called when waking up after the chip went into
-power-save after not transferring data for a few seconds. The added
-msleep does therefore not change anything in data transfer speed or
-induce any excessive waiting while data transfers are running, or the
-chip is sleeping. Only the transition from sleep to active is affected.
+[1] https://lore.kernel.org/linux-riscv/b9fe49483a903f404e7acc15a6efbef756db28ae.camel@wdc.com
 
-Signed-off-by: Klaus Doth <kdlnx@doth.eu>
+Fixes: 45c054d0815b ("tty: serial: add driver for the SiFive UART")
+Reported-by: Atish Patra <Atish.Patra@wdc.com>
+Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Acked-by: Palmer Dabbelt <palmerdabbelt@google.com>
 Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/4434eaa7-2ee3-a560-faee-6cee63ebd6d4@doth.eu
+Link: https://lore.kernel.org/r/1589019852-21505-2-git-send-email-sagar.kadam@sifive.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/misc/cardreader/rtsx_pcr.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/tty/serial/sifive.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/misc/cardreader/rtsx_pcr.c b/drivers/misc/cardreader/rtsx_pcr.c
-index 06038b325b02..55da6428ceb0 100644
---- a/drivers/misc/cardreader/rtsx_pcr.c
-+++ b/drivers/misc/cardreader/rtsx_pcr.c
-@@ -142,6 +142,9 @@ static void rtsx_comm_pm_full_on(struct rtsx_pcr *pcr)
+diff --git a/drivers/tty/serial/sifive.c b/drivers/tty/serial/sifive.c
+index d5f81b98e4d7..38133eba83a8 100644
+--- a/drivers/tty/serial/sifive.c
++++ b/drivers/tty/serial/sifive.c
+@@ -840,6 +840,7 @@ console_initcall(sifive_console_init);
  
- 	rtsx_disable_aspm(pcr);
- 
-+	/* Fixes DMA transfer timout issue after disabling ASPM on RTS5260 */
-+	msleep(1);
-+
- 	if (option->ltr_enabled)
- 		rtsx_set_ltr_latency(pcr, option->ltr_active_latency);
+ static void __ssp_add_console_port(struct sifive_serial_port *ssp)
+ {
++	spin_lock_init(&ssp->port.lock);
+ 	sifive_serial_console_ports[ssp->port.line] = ssp;
+ }
  
 -- 
 2.25.1
