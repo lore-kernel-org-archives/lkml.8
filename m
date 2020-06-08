@@ -2,179 +2,116 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE83BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03395C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD4A0206D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF3212076C
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:43:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="mx5PE7c9"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gbwZExKE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729252AbgFHJn3 (ORCPT
+        id S1729276AbgFHJnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 05:43:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54584 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728745AbgFHJn2 (ORCPT
+        Mon, 8 Jun 2020 05:43:37 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59648 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728745AbgFHJnf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 05:43:28 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E4FBC08C5C3
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 02:43:28 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id n70so636490ota.5
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 02:43:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TYEy+8z/tFUxcc58fN1UDywpoBpG6q97Kp55SPoLlFQ=;
-        b=mx5PE7c9S7yIQQey9oDYYV9HhPDwCCObLL9zMXO5gI1cq1fvp8xBoTeX/bB9/tcr94
-         xvd46Fe5pNQ0KZgTlZt6KqIbH4Ba8t0gt616S9V9UoeG3GZaL5Nqv1clWU+GCJ6/hUK6
-         6kgZhSKtE5KQo498/9wTDNy3FdRqcBrQVdMmaj2ktDgYvHLq7vNmGMZCukXeqxXlk0tQ
-         cs02Wh3rUj0F0kdy17AJyVtg2hgl6N++aPUkgwKJTAGCq4nhtk4+O+j0c+bnhSas4ZvO
-         sfmJvEaew56pHY9q+yfgTM7xGRCkr1OrTzu4+T4NRW/5r8Yq7jx7vWvjBaas3JsWWyP0
-         7nIg==
+        Mon, 8 Jun 2020 05:43:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591609413;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=U5U6dQ9lCe7itmDsGxNs3cBdub7pl5VNIW2XNh4JFS0=;
+        b=gbwZExKEyBWI2JSJdcxn0UBh1+iK9moq+tAJySJd5owC8U5r5sETBzzrHyWZdCLYLZQWWN
+        1LRWMqZHH0ZdY9422EGqJH/3mtASHcnNDta4mHgNJ3mMqf45Ij48fsQo3FIqlH+jODYaCd
+        DBWKz9rXZLie12bs7DIyfk3VlBGUJvk=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-351-yiegwLabOKWkn_kv8RuloQ-1; Mon, 08 Jun 2020 05:43:32 -0400
+X-MC-Unique: yiegwLabOKWkn_kv8RuloQ-1
+Received: by mail-wm1-f72.google.com with SMTP id j128so5025028wmj.6
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 02:43:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TYEy+8z/tFUxcc58fN1UDywpoBpG6q97Kp55SPoLlFQ=;
-        b=UmQrIKGjp/J6oV+hUKpCnGpEH26OiARzjIui3NDFxYGB2MJxEaok4I7huTapxH+wZn
-         oSatuNU0wmkj82SK3qIBEuaK33B4dXvAZ/+1nI6O5styvPUC7yUmnEQlApQvxFgWRTED
-         hSMWz0Z9M9To2NVXIBZ5vVEn3LjGwKlXRAkkpFXTM2/DnmZ7gV8C7U9/Dl0gGgOahAfO
-         zw3rDF+UkZ5hqVz8ikxr3Z648mdWtzhCXAhzatH0nRFqC9GbBhA6qrSTD87FyJTh45J/
-         xCqzpLSurl7d+IkB/OfqzW7h3t3CQpi+ZMeNAkTmUVfkXKwU6BbCq7HmhDXBXKRejlhg
-         SODQ==
-X-Gm-Message-State: AOAM533ubYvo0jLxk296L70ouHdLjjMmdKgXT487EN1/Gdy8490VnX6n
-        qsRnXHuRC74Lx2LoPjkzQH9XJdNJ4a3295iWqeqyBQ==
-X-Google-Smtp-Source: ABdhPJzch/7ONQ8ZPK1KBOpA7Dst9zDuZ3FJ4djIcjndSpwGsnxcucHOb/OqZROcfPYD8G+gcU9sU93ZNxGx5tHguyQ=
-X-Received: by 2002:a05:6830:60d:: with SMTP id w13mr16894582oti.243.1591609407458;
- Mon, 08 Jun 2020 02:43:27 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=U5U6dQ9lCe7itmDsGxNs3cBdub7pl5VNIW2XNh4JFS0=;
+        b=iniO0BZr+xZGjl7NK4tQ6vNFw3K3lOnYZzu/Exs5djsIqepLpG4uUSsm565+jQ3kEE
+         0T0NROVtR/UqJWDD1U67IkjSiSwQGYsZXI3yU7QguMqaVFtmDmh8ATLnDOj7uGwgeUQG
+         EWm7HafKbDotrUDzyErGRy4yyFi0xN6Kib022Iv3ZHy2SwKarXW3QTxudg1uA2MUZzgy
+         aUtYBBq1nxXVWUMpXmmgF3EO2SEnRnh7IowrPog64RDMiPxsOV4qkBmrlRZCPob7CxOm
+         3HJwAET0/SE9XL2pn5ijKqdJzKeH1Knu5IKCv6OXArm+K29LHTPVx0dCGAUow8hJBSwi
+         DRJA==
+X-Gm-Message-State: AOAM532tJohCwokkIvjnNeEVbpzMkgxADqem4kUxKG0dvKWlQorA82WQ
+        uZcZpLDQ/BDnKK7QFM5CcICAtECaWXQLDd/Ju5pc2q8ITnp/eFzUyWyXFTp+Af/Q2l57fOrfk45
+        qRog4ZMgnKKwaS8aB3CBiNAgo
+X-Received: by 2002:a1c:7c0e:: with SMTP id x14mr15017563wmc.1.1591609411311;
+        Mon, 08 Jun 2020 02:43:31 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx9ub5wP+xupLuBkOQ4No1b88FQ9dkWFcatrNsLpDTfEgifdZsj9YIaaEa0/E6d/CL6f3lWtw==
+X-Received: by 2002:a1c:7c0e:: with SMTP id x14mr15017554wmc.1.1591609411160;
+        Mon, 08 Jun 2020 02:43:31 -0700 (PDT)
+Received: from redhat.com (bzq-109-64-41-91.red.bezeqint.net. [109.64.41.91])
+        by smtp.gmail.com with ESMTPSA id u9sm18951734wme.16.2020.06.08.02.43.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jun 2020 02:43:30 -0700 (PDT)
+Date:   Mon, 8 Jun 2020 05:43:27 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     David Stevens <stevensd@chromium.org>
+Cc:     Gerd Hoffmann <kraxel@redhat.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jason Wang <jasowang@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        open list <linux-kernel@vger.kernel.org>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>,
+        "open list:VIRTIO GPU DRIVER" 
+        <virtualization@lists.linux-foundation.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>, virtio-dev@lists.oasis-open.org
+Subject: Re: [PATCH v3 4/4] drm/virtio: Support virtgpu exported resources
+Message-ID: <20200608054234-mutt-send-email-mst@kernel.org>
+References: <20200311112004.47138-1-stevensd@chromium.org>
+ <20200311112004.47138-5-stevensd@chromium.org>
+ <20200513123326-mutt-send-email-mst@kernel.org>
+ <CAD=HUj5qcMLw__LfJizR6nzCR9Qmu21Sjk3i0j_8+=rxt1Hk=w@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200604120905.1344074-1-robert.marko@sartura.hr>
- <202006050445.tiQi7ZvY%lkp@intel.com> <CA+HBbNFpHugbM6LDGAtJHj4ZAz-K5ojkovaVZ04V3QJS-hytUw@mail.gmail.com>
- <20200608090705.GA1597633@ubuntu-n2-xlarge-x86>
-In-Reply-To: <20200608090705.GA1597633@ubuntu-n2-xlarge-x86>
-From:   Robert Marko <robert.marko@sartura.hr>
-Date:   Mon, 8 Jun 2020 11:43:16 +0200
-Message-ID: <CA+HBbNFPtHK3AJBnY3TOG67tciW01rEoYaaAu+A7GP0pdcTsvw@mail.gmail.com>
-Subject: Re: [PATCH] clk: qcom: ipq4019: fix apss cpu overclocking
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     kernel test robot <lkp@intel.com>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>, sboyd@kernel.org,
-        Abhishek Sahu <absahu@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kbuild-all@lists.01.org, clang-built-linux@googlegroups.com,
-        Christian Lamparter <chunkeey@gmail.com>,
-        John Crispin <john@phrozen.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAD=HUj5qcMLw__LfJizR6nzCR9Qmu21Sjk3i0j_8+=rxt1Hk=w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 8, 2020 at 11:07 AM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> On Mon, Jun 08, 2020 at 10:54:34AM +0200, Robert Marko wrote:
-> > On Thu, Jun 4, 2020 at 10:25 PM kernel test robot <lkp@intel.com> wrote:
-> > >
-> > > Hi Robert,
-> > >
-> > > I love your patch! Perhaps something to improve:
-> > >
-> > > [auto build test WARNING on clk/clk-next]
-> > > [also build test WARNING on v5.7 next-20200604]
-> > > [if your patch is applied to the wrong git tree, please drop us a note to help
-> > > improve the system. BTW, we also suggest to use '--base' option to specify the
-> > > base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-> > >
-> > > url:    https://github.com/0day-ci/linux/commits/Robert-Marko/clk-qcom-ipq4019-fix-apss-cpu-overclocking/20200605-002859
-> > > base:   https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git clk-next
-> > > config: x86_64-allyesconfig (attached as .config)
-> > > compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project ac47588bc4ff5927a01ed6fcd269ce86aba52a7c)
-> > > reproduce (this is a W=1 build):
-> > >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> > >         chmod +x ~/bin/make.cross
-> > >         # install x86_64 cross compiling tool for clang build
-> > >         # apt-get install binutils-x86-64-linux-gnu
-> > >         # save the attached .config to linux build tree
-> > >         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross ARCH=x86_64
-> > >
-> > > If you fix the issue, kindly add following tag as appropriate
-> > > Reported-by: kernel test robot <lkp@intel.com>
-> > >
-> > > All warnings (new ones prefixed by >>, old ones prefixed by <<):
-> > >
-> > > >> drivers/clk/qcom/gcc-ipq4019.c:1247:24: warning: no previous prototype for function 'qcom_find_freq_close' [-Wmissing-prototypes]
-> > > const struct freq_tbl *qcom_find_freq_close(const struct freq_tbl *f,
-> > > ^
-> > > drivers/clk/qcom/gcc-ipq4019.c:1247:7: note: declare 'static' if the function is not intended to be used outside of this translation unit
-> > > const struct freq_tbl *qcom_find_freq_close(const struct freq_tbl *f,
-> > > ^
-> > > static
-> > > 1 warning generated.
-> > >
-> > > vim +/qcom_find_freq_close +1247 drivers/clk/qcom/gcc-ipq4019.c
-> > >
-> > >   1245
-> > >   1246
-> > > > 1247  const struct freq_tbl *qcom_find_freq_close(const struct freq_tbl *f,
-> > >   1248                                               unsigned long rate)
-> > >   1249  {
-> > >   1250          const struct freq_tbl *last = NULL;
-> > >   1251
-> > >   1252          for ( ; f->freq; f++) {
-> > >   1253                  if (rate == f->freq)
-> > >   1254                          return f;
-> > >   1255
-> > >   1256                  if (f->freq > rate) {
-> > >   1257                          if (!last ||
-> > >   1258                             (f->freq - rate) < (rate - last->freq))
-> > >   1259                                  return f;
-> > >   1260                          else
-> > >   1261                                  return last;
-> > >   1262                  }
-> > >   1263                  last = f;
-> > >   1264          }
-> > >   1265
-> > >   1266          return last;
-> > >   1267  }
-> > >   1268
-> > >
-> > > ---
-> > > 0-DAY CI Kernel Test Service, Intel Corporation
-> > > https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+On Fri, May 15, 2020 at 04:26:15PM +0900, David Stevens wrote:
+> > > +     if (virtio_has_feature(vgdev->vdev, VIRTIO_GPU_F_RESOURCE_UUID)) {
+> > > +             vgdev->has_resource_assign_uuid = true;
+> > > +     }
 > >
->
-> <moved post to the bottom>
->
-> > Sorry for asking, but are these warnings relevant?
-> > GCC9.3 does not throw them
 > >
-> > Regards
-> > Robert
-> >
->
-> It should if you are using make W=1, this is not a clang specific
-> warning (it just happens that clang was the compiler for this report).
+> > Just a question: this relies on DMA bufs so I assume it is
+> > not really assumed to work when DMA API is bypassed, right?
+> > Rather than worry what does it mean, how about just
+> > disabling  this feature without PLATFORM_DMA for now?
+> 
+> By PLATFORM_DMA, do you mean CONFIG_DMA_SHARED_BUFFER?
 
-Thanks, W=1 does indeed show the warning along with a not evaluated return.
->
-> It looks like qcom_find_freq_close is only used in
-> drivers/clk/qcom/gcc-ipq4019.c, in which case it should be marked
-> static.
-Thanks, it does indeed solve the warning.
-I will send a v2 today.
+Sorry, no. I mean VIRTIO_F_IOMMU_PLATFORM which in the
+future will be renamed to VIRTIO_F_PLATFORM_ACCESS.
 
-Regards,
-Robert
->
-> Cheers,
-> Nathan
+
+> Virtio-gpu
+> depends on DRM, which selects that feature. So I think DMA bufs should
+> always be available when virtio-gpu is present.
+> 
+> -David
+
