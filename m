@@ -4,51 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60424C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C0BDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:36:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 353B02078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:36:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D45D206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:36:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662992;
-	bh=Pw2Vbi4OSwCTDDtI1X6+6VAi+zxZ98OQuJyY5qQLVK4=;
+	s=default; t=1591662997;
+	bh=khwqOgzIKy4HdyDJxlADdur1zwDQ2QxqGZxNDiHr2Sg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xCdhHwK3bfmZirxtwjpUzW4bWI0vLT0aJdajgTV955PTKh5h6uMbIc46D6rOAXeqB
-	 VQiEWYjL4wnmMWmHpkrfxPlZEDGEULRxTNbsgs0PgANAVdFdQqAukTzdiQ5z96f7yN
-	 735S7i4Afo+DZyT6sEFmaOGTXaxA8sakhM+iIlOM=
+	b=shDmcUScCbpor1QYRJrDO+3kMbMjwpn51hi/AStkAGPAudMP2P5NR/IKdZUU9PP66
+	 ioKYwZ/5M2lVnV6UOEjnega4mD6b2vEI9JUKGvK+f6jeXyASl40P3EZRQr+PAq5TA0
+	 fZnOHPJUqm3q0mGZEHxvHX1RvudrcvRzVHU2qGy0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbgFIAgb (ORCPT
+        id S1728855AbgFHXOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:36:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34222 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:14:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729722AbgFHXOJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:14:09 -0400
+        id S1728931AbgFHXLh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:11:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 451492158C;
-        Mon,  8 Jun 2020 23:14:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 402C72100A;
+        Mon,  8 Jun 2020 23:11:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658048;
-        bh=Pw2Vbi4OSwCTDDtI1X6+6VAi+zxZ98OQuJyY5qQLVK4=;
+        s=default; t=1591657897;
+        bh=khwqOgzIKy4HdyDJxlADdur1zwDQ2QxqGZxNDiHr2Sg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=snpK2LffGJhJJ5lGy1V0vE7uMiD4Wr3OwKTojraSBIhS16bgQGiLaq9zJInjX1Y0f
-         CGQA/0fMAQW8MKMqFv9qJ55V53yLx5a++Cb1Xrc3pljQ2aOQVkhBiqBkEVcDN2mYV1
-         D2KUOvE0WDAiINy8xSyoL4T4UL5BibAsWc6wRegY=
+        b=WZ7SEphqmAl7WwvXWSQVgN8OxL88Wm7Kutp7nfFP+ItfW4uZEtiQeYUcuUTc3U62h
+         nXU2EUFsg71kgoKCbxpAyL2h/KXpyymvrX/I1Bl7Z+S2YquT3ihZ74V5o8kSH1ZVHF
+         2mhfy61x7YgvcbVf6yTpXAfUvnBF/PPigqL16FRI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Richard Weinberger <richard@nod.at>,
-        Sasha Levin <sashal@kernel.org>, linux-mtd@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 097/606] ubi: Fix seq_file usage in detailed_erase_block_info debugfs file
-Date:   Mon,  8 Jun 2020 19:03:42 -0400
-Message-Id: <20200608231211.3363633-97-sashal@kernel.org>
+Cc:     Jacob Keller <jacob.e.keller@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 251/274] ice: fix potential double free in probe unrolling
+Date:   Mon,  8 Jun 2020 19:05:44 -0400
+Message-Id: <20200608230607.3361041-251-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
-References: <20200608231211.3363633-1-sashal@kernel.org>
+In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
+References: <20200608230607.3361041-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,58 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Richard Weinberger <richard@nod.at>
+From: Jacob Keller <jacob.e.keller@intel.com>
 
-[ Upstream commit 0e7572cffe442290c347e779bf8bd4306bb0aa7c ]
+[ Upstream commit bc3a024101ca497bea4c69be4054c32a5c349f1d ]
 
-3bfa7e141b0b ("fs/seq_file.c: seq_read(): add info message about buggy .next functions")
-showed that we don't use seq_file correctly.
-So make sure that our ->next function always updates the position.
+If ice_init_interrupt_scheme fails, ice_probe will jump to clearing up
+the interrupts. This can lead to some static analysis tools such as the
+compiler sanitizers complaining about double free problems.
 
-Fixes: 7bccd12d27b7 ("ubi: Add debugfs file for tracking PEB state")
-Signed-off-by: Richard Weinberger <richard@nod.at>
+Since ice_init_interrupt_scheme already unrolls internally on failure,
+there is no need to call ice_clear_interrupt_scheme when it fails. Add
+a new unroll label and use that instead.
+
+Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/ubi/debug.c | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+ drivers/net/ethernet/intel/ice/ice_main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mtd/ubi/debug.c b/drivers/mtd/ubi/debug.c
-index 54646c2c2744..ac2bdba8bb1a 100644
---- a/drivers/mtd/ubi/debug.c
-+++ b/drivers/mtd/ubi/debug.c
-@@ -393,9 +393,6 @@ static void *eraseblk_count_seq_start(struct seq_file *s, loff_t *pos)
- {
- 	struct ubi_device *ubi = s->private;
+diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
+index 545817dbff67..69e50331e08e 100644
+--- a/drivers/net/ethernet/intel/ice/ice_main.c
++++ b/drivers/net/ethernet/intel/ice/ice_main.c
+@@ -3298,7 +3298,7 @@ ice_probe(struct pci_dev *pdev, const struct pci_device_id __always_unused *ent)
+ 	if (err) {
+ 		dev_err(dev, "ice_init_interrupt_scheme failed: %d\n", err);
+ 		err = -EIO;
+-		goto err_init_interrupt_unroll;
++		goto err_init_vsi_unroll;
+ 	}
  
--	if (*pos == 0)
--		return SEQ_START_TOKEN;
--
- 	if (*pos < ubi->peb_count)
- 		return pos;
- 
-@@ -409,8 +406,6 @@ static void *eraseblk_count_seq_next(struct seq_file *s, void *v, loff_t *pos)
- {
- 	struct ubi_device *ubi = s->private;
- 
--	if (v == SEQ_START_TOKEN)
--		return pos;
- 	(*pos)++;
- 
- 	if (*pos < ubi->peb_count)
-@@ -432,11 +427,8 @@ static int eraseblk_count_seq_show(struct seq_file *s, void *iter)
- 	int err;
- 
- 	/* If this is the start, print a header */
--	if (iter == SEQ_START_TOKEN) {
--		seq_puts(s,
--			 "physical_block_number\terase_count\tblock_status\tread_status\n");
--		return 0;
--	}
-+	if (*block_number == 0)
-+		seq_puts(s, "physical_block_number\terase_count\n");
- 
- 	err = ubi_io_is_bad(ubi, *block_number);
- 	if (err)
+ 	/* Driver is mostly up */
+@@ -3387,6 +3387,7 @@ ice_probe(struct pci_dev *pdev, const struct pci_device_id __always_unused *ent)
+ 	ice_free_irq_msix_misc(pf);
+ err_init_interrupt_unroll:
+ 	ice_clear_interrupt_scheme(pf);
++err_init_vsi_unroll:
+ 	devm_kfree(dev, pf->vsi);
+ err_init_pf_unroll:
+ 	ice_deinit_pf(pf);
 -- 
 2.25.1
 
