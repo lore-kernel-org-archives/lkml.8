@@ -6,62 +6,61 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F6FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 20:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E4FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 20:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBD53206D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 20:05:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC1EB2078D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 20:05:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591646724;
-	bh=efWRjTOAaFr25W4sPZh6CyHKYTvH5LKPp8YZPlw6ppE=;
+	s=default; t=1591646728;
+	bh=jnK08mAfkMWGL456sL7IcuTGBY0+8FtULzjMebbboYQ=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=VQf1RgfyWvf+wQQs7pPYWw/dEOnUp7swCyh6u6dglUnBq5pv+30AW1MUH4lfpXe/y
-	 d4eoHWTZXU8pJGRYuI9dlzPXnS6LPLNCwAT2/irshIaPEe9PesaFJZLL3VdHU+G3e+
-	 wKpir0WV31VbWyPU+Yqz5gt+leb9q6v6Qa0VND7Q=
+	b=k5Uo+eBG1bXV5UYSrN4mcFzo7ONkPTe+ogawKApYxN6IXyMofIFp8fVnFlAYSNipp
+	 QBKAAE7x2WsjHwcgxS6RR7YRqV4xWJSSf7+g8QmOEQ4tQYyyr1rORShWXwNX7dclMi
+	 TYvgNkvhBMgpf07ioUCjcFjn3iZkBT9oWYaMwXpk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbgFHUFY (ORCPT
+        id S1726753AbgFHUF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 16:05:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60254 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 16:05:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726714AbgFHUFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 16:05:23 -0400
-Subject: Re: [GIT PULL] GFS2 changes for 5.8
+        id S1726714AbgFHUFY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 16:05:24 -0400
+Subject: Re: [GIT PULL] Ceph updates for 5.8-rc1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591646722;
-        bh=efWRjTOAaFr25W4sPZh6CyHKYTvH5LKPp8YZPlw6ppE=;
+        s=default; t=1591646724;
+        bh=jnK08mAfkMWGL456sL7IcuTGBY0+8FtULzjMebbboYQ=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=y66fX7Uj4XZmWr/pAYASwB0zqxiu3y44Ue56vPPmm4sXgpUeCqr3G9dQYyIX/R8zv
-         VXgQWFYa5wS9+1/pLHg8DFlplIpHa9C+wclXXTLK5XPZmPva+n3iEuLq6oi1BHc2xD
-         GVjQHU+QObH640ukROXll6P7zMnBkX/DMHmNm5hA=
+        b=e9Mfu/Bj3SXPXezp7h5IUcZDwy6fB+tMh46zY0g9Pqj07qI/slefiXm6hfhdks1gT
+         eKnz/fmkHsgANagf9ra93KAnW68YfP3jmBBC5Mwcse96DxMzobZA8Bg3c2lI2Zab1+
+         YaVctQqB4l8KE1f4NhlMgFamiUBgPdBiUcixVdpo=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200608163250.550547-1-agruenba@redhat.com>
-References: <20200608163250.550547-1-agruenba@redhat.com>
+In-Reply-To: <20200608163626.7339-1-idryomov@gmail.com>
+References: <20200608163626.7339-1-idryomov@gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200608163250.550547-1-agruenba@redhat.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gfs2/linux-gfs2.git
- tags/gfs2-for-5.8
-X-PR-Tracked-Commit-Id: 300e549b6e53025ea69550f009451f7a13bfc3eb
+X-PR-Tracked-Message-Id: <20200608163626.7339-1-idryomov@gmail.com>
+X-PR-Tracked-Remote: https://github.com/ceph/ceph-client.git
+ tags/ceph-for-5.8-rc1
+X-PR-Tracked-Commit-Id: dc1dad8e1a612650b1e786e992cb0c6e101e226a
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ca687877e05ad1bf5b4cefd9cdd091044626deac
-Message-Id: <159164672284.26583.13414931699565927085.pr-tracker-bot@kernel.org>
-Date:   Mon, 08 Jun 2020 20:05:22 +0000
-To:     Andreas Gruenbacher <agruenba@redhat.com>
+X-PR-Merge-Commit-Id: 95288a9b3beee8dd69d73b7691e36f2f231b7903
+Message-Id: <159164672399.26583.16571782263097298968.pr-tracker-bot@kernel.org>
+Date:   Mon, 08 Jun 2020 20:05:23 +0000
+To:     Ilya Dryomov <idryomov@gmail.com>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        cluster-devel@redhat.com, linux-kernel@vger.kernel.org
+        ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon,  8 Jun 2020 18:32:50 +0200:
+The pull request you sent on Mon,  8 Jun 2020 18:36:26 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/gfs2/linux-gfs2.git tags/gfs2-for-5.8
+> https://github.com/ceph/ceph-client.git tags/ceph-for-5.8-rc1
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ca687877e05ad1bf5b4cefd9cdd091044626deac
+https://git.kernel.org/torvalds/c/95288a9b3beee8dd69d73b7691e36f2f231b7903
 
 Thank you!
 
