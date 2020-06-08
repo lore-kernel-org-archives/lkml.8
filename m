@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD52C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC4AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:15:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AECC220760
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:15:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AD822068D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:15:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658125;
-	bh=erJVN+buUEYGqmBw7CVqdYyn2GDrJqQBxNNiVescaz8=;
+	s=default; t=1591658129;
+	bh=jpDTO98NTAQXW0vDddw9K2FDKrrPkVG//C7RQILuNx0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V+1oX7Wr8scYpzFe96n+4ttUncO7J9QmKnkZrgnVijhfBAfnIcWEanfX+2OI57naF
-	 ATpM6jKgMsOgPwSQsMPDpHm4/5dQoUC3Ax21h/BmGup3DAR9OppirEx0HzHabb7rEx
-	 m8wDIfggKvBM408bEls0KF/y3XcVB65+PT99x5OU=
+	b=r7P1p+Bxpav0z7JyLcXsQ/wiJ3CScj4+K3jjB6x1r/HbAoXca2E6uzDoO2KkIi2p1
+	 JU9g9psPg4wG4RzuT6/6ix5u7w6NUP60c2KsF0A/Wf9b+JdOn78t51Z+U2qekFibob
+	 2RoyokDZmsqQdcvhN9Yrjo5JrsrCs75yAaTf+J7c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728187AbgFHXPY (ORCPT
+        id S1728439AbgFHXP1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:15:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60630 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:15:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728804AbgFHXMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:12:54 -0400
+        id S1728231AbgFHXM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:12:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7EC4D208C7;
-        Mon,  8 Jun 2020 23:12:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1697D208C7;
+        Mon,  8 Jun 2020 23:12:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657974;
-        bh=erJVN+buUEYGqmBw7CVqdYyn2GDrJqQBxNNiVescaz8=;
+        s=default; t=1591657977;
+        bh=jpDTO98NTAQXW0vDddw9K2FDKrrPkVG//C7RQILuNx0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=03zL/u3mfrjudm9vI8T9qIa8RA2TsVpLdhXxWh/nnCpwU8K1DAUFqbBq+lEXXclls
-         XdCRB+q6mVHj1Nml3gM1pypubPZX+HLZ706g0G78gR7nxLJcNo0DKisY7kY7V20ZLt
-         9+HzWoQaXRUho5MIEaeqKHmMEDoeMt7GwYvrY/7E=
+        b=rvDz3DiQklk9Udj2lX9/vBUrPmBdNgkGuZdmJY2RxtssrOVhZiKMj/VK3K+YbAXzk
+         e5yGNyd4VyMF0MdlnlSbNpmazDq1O3KIqFBBP9GJRaXrzkOb0amGfPgRccjP4/TqH4
+         eYSV+FteXGxjvxTOex5wU23qJkn5jAjCKP36rlOQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tom St Denis <tom.stdenis@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.6 036/606] drm/amd/amdgpu: add raven1 part to the gfxoff quirk list
-Date:   Mon,  8 Jun 2020 19:02:41 -0400
-Message-Id: <20200608231211.3363633-36-sashal@kernel.org>
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.6 039/606] powerpc/32s: Fix build failure with CONFIG_PPC_KUAP_DEBUG
+Date:   Mon,  8 Jun 2020 19:02:44 -0400
+Message-Id: <20200608231211.3363633-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -60,37 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom St Denis <tom.stdenis@amd.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit 975f543e7522e17b8a4bf34d7daeac44819aee5a upstream.
+commit 4833ce06e6855d526234618b746ffb71d6612c9a upstream.
 
-On my raven1 system (rev c6) with VBIOS 113-RAVEN-114 GFXOFF is
-not stable (resulting in large block tiling noise in some applications).
+gpr2 is not a parametre of kuap_check(), it doesn't exist.
 
-Disabling GFXOFF via the quirk list fixes the problems for me.
+Use gpr instead.
 
-Signed-off-by: Tom St Denis <tom.stdenis@amd.com>
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: a68c31fc01ef ("powerpc/32s: Implement Kernel Userspace Access Protection")
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/ea599546f2a7771bde551393889e44e6b2632332.1587368807.git.christophe.leroy@c-s.fr
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/powerpc/include/asm/book3s/32/kup.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-index 73337e658aff..906648fca9ef 100644
---- a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-@@ -1177,6 +1177,8 @@ static const struct amdgpu_gfxoff_quirk amdgpu_gfxoff_quirk_list[] = {
- 	{ 0x1002, 0x15dd, 0x1002, 0x15dd, 0xc8 },
- 	/* https://bugzilla.kernel.org/show_bug.cgi?id=207171 */
- 	{ 0x1002, 0x15dd, 0x103c, 0x83e7, 0xd3 },
-+	/* GFXOFF is unstable on C6 parts with a VBIOS 113-RAVEN-114 */
-+	{ 0x1002, 0x15dd, 0x1002, 0x15dd, 0xc6 },
- 	{ 0, 0, 0, 0, 0 },
- };
+diff --git a/arch/powerpc/include/asm/book3s/32/kup.h b/arch/powerpc/include/asm/book3s/32/kup.h
+index 3c0ba22dc360..db0a1c281587 100644
+--- a/arch/powerpc/include/asm/book3s/32/kup.h
++++ b/arch/powerpc/include/asm/book3s/32/kup.h
+@@ -75,7 +75,7 @@
  
+ .macro kuap_check	current, gpr
+ #ifdef CONFIG_PPC_KUAP_DEBUG
+-	lwz	\gpr2, KUAP(thread)
++	lwz	\gpr, KUAP(thread)
+ 999:	twnei	\gpr, 0
+ 	EMIT_BUG_ENTRY 999b, __FILE__, __LINE__, (BUGFLAG_WARNING | BUGFLAG_ONCE)
+ #endif
 -- 
 2.25.1
 
