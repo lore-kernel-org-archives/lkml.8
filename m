@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F61CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 526E1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06C6220774
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:46:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 265542087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:46:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663607;
-	bh=328IPl57uqoaTxlo/TjMr4hOM4xvcNmtfCE2JqOZE+E=;
+	s=default; t=1591663616;
+	bh=ccKiDK3evDF3ELMAGfBKIcswpEkX5T9uPmZmUMJvvZo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FAOgxUpyG3dbtMq8b1h9Q8dE7k51LnG9fmruR8c3tgy34Mk6FMwdSAn0XxcIl03Ge
-	 FHhAogt6o5+enHC6RaOdl4aCAFt9D8E+QnPZtDPT9necyYsIOc+k8z2CDl+VBaWZcV
-	 MacUIZhjU82bsq0PAzGkG0xQa2wBNiC4At0gYs3c=
+	b=IIdwRUxHhgsUIZTz/tgIsz1U3jzW8YQoyF8f6qvPxUrJ0vGQbameQDULzvEhnD6Kh
+	 +/RUnu8aLxihLzOy++IIFKJGBeuebgh3/OSO9ftsar6nK4H0vAMUDIpMLt5EPuiPj+
+	 SxwIB53jZJtfUJPYdKypHN6uDibxUzfFTcU3XZwY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728913AbgFHXLb (ORCPT
+        id S1730658AbgFIAqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:11:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55944 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:46:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728538AbgFHXJ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:09:57 -0400
+        id S1727865AbgFHXL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:11:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47CF020890;
-        Mon,  8 Jun 2020 23:09:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D12D120E65;
+        Mon,  8 Jun 2020 23:11:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657796;
-        bh=328IPl57uqoaTxlo/TjMr4hOM4xvcNmtfCE2JqOZE+E=;
+        s=default; t=1591657888;
+        bh=ccKiDK3evDF3ELMAGfBKIcswpEkX5T9uPmZmUMJvvZo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zOTv3K+FSm+p9+o2kM6zaryVbykf4kxOTWbcrdNOiKOQeLlwu0xZXcgM4YwiznkhO
-         BPYcmgrf2vzY0451xhrXyfqS7ik5daMGwdLO3nyiEpjwyq+xtRIwegj+lqFDApcg3r
-         MUANMwg9GPpvXSeMS+O5saKgT6GTcl9H3TVO6BuM=
+        b=lDxyYuoobH/7VMXroh5HSlWA6BzBLsKRsdrnzBzgft+m6is/QX8VtaF8WvyYVgW09
+         vlfrp02zTtgf3SUfj8QQQjLwg2Z18mqT0QkTW7YViI1wKeJQmY9nC0/WO89N6dhC6x
+         rtuTOlgyIA2YxQk9IGCFtvs6+pDy0K4XDqHMS+bM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 175/274] platform/x86: intel-vbtn: Use acpi_evaluate_integer()
-Date:   Mon,  8 Jun 2020 19:04:28 -0400
-Message-Id: <20200608230607.3361041-175-sashal@kernel.org>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Brian Foster <bfoster@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 244/274] xfs: force writes to delalloc regions to unwritten
+Date:   Mon,  8 Jun 2020 19:05:37 -0400
+Message-Id: <20200608230607.3361041-244-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -60,62 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: "Darrick J. Wong" <darrick.wong@oracle.com>
 
-[ Upstream commit 18937875a231d831c309716d6d8fc358f8381881 ]
+[ Upstream commit a5949d3faedf492fa7863b914da408047ab46eb0 ]
 
-Use acpi_evaluate_integer() instead of open-coding it.
+When writing to a delalloc region in the data fork, commit the new
+allocations (of the da reservation) as unwritten so that the mappings
+are only marked written once writeback completes successfully.  This
+fixes the problem of stale data exposure if the system goes down during
+targeted writeback of a specific region of a file, as tested by
+generic/042.
 
-This is a preparation patch for adding a intel_vbtn_has_switches()
-helper function.
-
-Fixes: de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode switch on 2-in-1's")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Brian Foster <bfoster@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel-vbtn.c | 19 ++++++-------------
- 1 file changed, 6 insertions(+), 13 deletions(-)
+ fs/xfs/libxfs/xfs_bmap.c | 29 +++++++++++++++++------------
+ 1 file changed, 17 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-index b5880936d785..191894d648bb 100644
---- a/drivers/platform/x86/intel-vbtn.c
-+++ b/drivers/platform/x86/intel-vbtn.c
-@@ -119,28 +119,21 @@ static void detect_tablet_mode(struct platform_device *device)
- 	const char *chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
- 	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
- 	acpi_handle handle = ACPI_HANDLE(&device->dev);
--	struct acpi_buffer vgbs_output = { ACPI_ALLOCATE_BUFFER, NULL };
--	union acpi_object *obj;
-+	unsigned long long vgbs;
- 	acpi_status status;
- 	int m;
+diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
+index fda13cd7add0..f8fe83c9348d 100644
+--- a/fs/xfs/libxfs/xfs_bmap.c
++++ b/fs/xfs/libxfs/xfs_bmap.c
+@@ -4193,17 +4193,7 @@ xfs_bmapi_allocate(
+ 	bma->got.br_blockcount = bma->length;
+ 	bma->got.br_state = XFS_EXT_NORM;
  
- 	if (!(chassis_type && strcmp(chassis_type, "31") == 0))
--		goto out;
-+		return;
+-	/*
+-	 * In the data fork, a wasdelay extent has been initialized, so
+-	 * shouldn't be flagged as unwritten.
+-	 *
+-	 * For the cow fork, however, we convert delalloc reservations
+-	 * (extents allocated for speculative preallocation) to
+-	 * allocated unwritten extents, and only convert the unwritten
+-	 * extents to real extents when we're about to write the data.
+-	 */
+-	if ((!bma->wasdel || (bma->flags & XFS_BMAPI_COWFORK)) &&
+-	    (bma->flags & XFS_BMAPI_PREALLOC))
++	if (bma->flags & XFS_BMAPI_PREALLOC)
+ 		bma->got.br_state = XFS_EXT_UNWRITTEN;
  
--	status = acpi_evaluate_object(handle, "VGBS", NULL, &vgbs_output);
-+	status = acpi_evaluate_integer(handle, "VGBS", NULL, &vgbs);
- 	if (ACPI_FAILURE(status))
--		goto out;
--
--	obj = vgbs_output.pointer;
--	if (!(obj && obj->type == ACPI_TYPE_INTEGER))
--		goto out;
-+		return;
+ 	if (bma->wasdel)
+@@ -4611,8 +4601,23 @@ xfs_bmapi_convert_delalloc(
+ 	bma.offset = bma.got.br_startoff;
+ 	bma.length = max_t(xfs_filblks_t, bma.got.br_blockcount, MAXEXTLEN);
+ 	bma.minleft = xfs_bmapi_minleft(tp, ip, whichfork);
++
++	/*
++	 * When we're converting the delalloc reservations backing dirty pages
++	 * in the page cache, we must be careful about how we create the new
++	 * extents:
++	 *
++	 * New CoW fork extents are created unwritten, turned into real extents
++	 * when we're about to write the data to disk, and mapped into the data
++	 * fork after the write finishes.  End of story.
++	 *
++	 * New data fork extents must be mapped in as unwritten and converted
++	 * to real extents after the write succeeds to avoid exposing stale
++	 * disk contents if we crash.
++	 */
++	bma.flags = XFS_BMAPI_PREALLOC;
+ 	if (whichfork == XFS_COW_FORK)
+-		bma.flags = XFS_BMAPI_COWFORK | XFS_BMAPI_PREALLOC;
++		bma.flags |= XFS_BMAPI_COWFORK;
  
--	m = !(obj->integer.value & TABLET_MODE_FLAG);
-+	m = !(vgbs & TABLET_MODE_FLAG);
- 	input_report_switch(priv->input_dev, SW_TABLET_MODE, m);
--	m = (obj->integer.value & DOCK_MODE_FLAG) ? 1 : 0;
-+	m = (vgbs & DOCK_MODE_FLAG) ? 1 : 0;
- 	input_report_switch(priv->input_dev, SW_DOCK, m);
--out:
--	kfree(vgbs_output.pointer);
- }
- 
- static int intel_vbtn_probe(struct platform_device *device)
+ 	if (!xfs_iext_peek_prev_extent(ifp, &bma.icur, &bma.prev))
+ 		bma.prev.br_startoff = NULLFILEOFF;
 -- 
 2.25.1
 
