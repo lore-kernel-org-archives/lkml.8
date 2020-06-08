@@ -2,161 +2,140 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74CC0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BCB0C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50DED20823
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:12:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5701E2078D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:12:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hGbti0/L"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="guKLt+4G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726089AbgFHSMf (ORCPT
+        id S1726109AbgFHSM6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 14:12:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48552 "EHLO
+        Mon, 8 Jun 2020 14:12:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725797AbgFHSMb (ORCPT
+        with ESMTP id S1726095AbgFHSM4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 14:12:31 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B15CC08C5C3;
-        Mon,  8 Jun 2020 11:12:30 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id w1so18209109qkw.5;
-        Mon, 08 Jun 2020 11:12:30 -0700 (PDT)
+        Mon, 8 Jun 2020 14:12:56 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24D22C08C5C2;
+        Mon,  8 Jun 2020 11:12:56 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id m81so19787133ioa.1;
+        Mon, 08 Jun 2020 11:12:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:user-agent:in-reply-to:references:mime-version
-         :content-transfer-encoding:subject:to:cc:from:message-id;
-        bh=z154RMOSTrXqb2CRDUiw56xx556gz0WSpn0WRRUM9uc=;
-        b=hGbti0/L5HXU/Ps4jKVXu3Zx4uuYL3OuZ0gXWUlGL+hAIZPW3f0SdkkNzi2pu7S35M
-         8W8aeo0w4u7CoN9mfBLv4vjKgYxY/VkVy0SqzzsAIG/fg4L7hewJyE7nCY9kXdBXuIX/
-         N6lGCtklb00LTSHYYuMwIqKSD6oa2DvOZ/I2EtNgvWD1X4R8NSGmAtaPRwmlwgf5zF8N
-         fuQPZ9Azv0h/KFe9pTsJO/na0kUaMDf55+Iopc0v6u7d/hUUA8aKR9+z0ne0CSYmuyyB
-         mHBV1qujGVEINjeqWBV1YiDj0sWpXk7gHNO2LZXeH8nwTPCwf5DIxylH9p2W1J6LoCij
-         go1w==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XlO2Jp1TPTSBU7+2pbpxONWxU/1Y2iYTcE+gmCznmfM=;
+        b=guKLt+4Go1+EqK9TWEekJ13AgMzLpYBRahTIoeW50FTHDNR8bhFYOJgc+3ui6r1iYz
+         XHxfM/PFp0xysTn4yfwnY/BPgcxwFr/npkz0SrBL6SiVIzDahMdj58oH8WWyjJS+PnZr
+         mcTB+WgYdysxWH/A4BnnCqIYL/OoDgC6apW7rkRgWCfwkCwi5nLZxtiIMfgDX3RQJQAF
+         Pe4JZb7moBRLO5lrx2KlPangpg8G7NEcxFFcTg2glhWRunnFmTmM20u/wZI2t1+EKj8C
+         MGznmHS3eYJMKhnAtFNPUL70BvUQN65ergBeeYf3poISMh/7Th36iIMzY4ivMPvCwcfH
+         ABIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:user-agent:in-reply-to:references
-         :mime-version:content-transfer-encoding:subject:to:cc:from
-         :message-id;
-        bh=z154RMOSTrXqb2CRDUiw56xx556gz0WSpn0WRRUM9uc=;
-        b=kk1YNLXgCVPhsJ448uuCxhC8+YDEAX1riVyIBty39GClKcy2w5MRX8pck1Zw3DyDzM
-         OkPE9jz/6d5nehLaI+MJxM9gzZnjubhPD+Y+9K5w4wd4wQQHH3ftkBjXsDMUchCfjlDy
-         pLDQPZQsyGihQkiSXSe9Z47ZrvXIe4aI15smaqjUz52Dy5fMfvKzkyKEKiTAUKPrHfxt
-         t4t23Ga5MtH7MwTwBlQzWGy78MBQGI+l+I05pb33qX1RyNdFkfQtL7V/D9ea6tCb97Mt
-         42fVYMryZo+5uaFeRpr/9VNPL+zshJ3EpokmogFphMFz04pTKnr398Uj+bmh+kZqpKMU
-         LmhA==
-X-Gm-Message-State: AOAM532rz/Qrk3kUv7Zd4IS6ez1gxSYzEDoeZzdv13ZeKjkvkIZnJpYN
-        8kSv6ZZKR5KBKBq8xP7wd94=
-X-Google-Smtp-Source: ABdhPJy1OkcL9UjkEis9IyIjboP1KXpSxXx+e8nNZ7FzbXjUwl2rKoEdJnUXhq68pqRXmUbX0+lJyw==
-X-Received: by 2002:a37:a8c4:: with SMTP id r187mr23415214qke.69.1591639949626;
-        Mon, 08 Jun 2020 11:12:29 -0700 (PDT)
-Received: from [192.168.86.185] ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id m126sm6791923qke.99.2020.06.08.11.12.28
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Jun 2020 11:12:29 -0700 (PDT)
-Date:   Mon, 08 Jun 2020 15:12:03 -0300
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAEf4BzbEcV6YaezP4yY8J=kYSBhh0cRHCvgCUe9xvB12mF08qg@mail.gmail.com>
-References: <20200608161150.GA3073@kernel.org> <CAEf4BzbEcV6YaezP4yY8J=kYSBhh0cRHCvgCUe9xvB12mF08qg@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XlO2Jp1TPTSBU7+2pbpxONWxU/1Y2iYTcE+gmCznmfM=;
+        b=AZ7VUcedJfJ8Or//tvDuOGtndoxUc+0vDEuq0H97k1fBKk2QAshNLB+6MVQZBnqrzh
+         hOx04kOaNufIyDRV04vaCviMd6Z+4tzvFhB3gw//Z9lDJ0KZNNAxTC6QGpoc69otOx6d
+         FSQBjz+XG6SeHhE68PwyGEoo3Z6Q90BJoIhw9WXdcEulM6LwfklDyT49wH8BxVuQ/2+b
+         cFRoZqQm+6E2lnejVB45izt+fNDZkjHdMKyRqMukchuvcF7jwR7yXAJDyq4KltRJEU1J
+         jaeEysni8QrKki76MjIKtLFhnR6ohTCMHI91pbOP9S2Th0RzFtZbt4wQ3M89IkHtRfA2
+         7AlQ==
+X-Gm-Message-State: AOAM533UwnukhOFLN+VWOlwjE8BHzc5vyADlICvcu1tGUA+b0V7uQrRm
+        HA1+dYhorpuj3ARzRCbl3x7ydnENqtfSu3B+7Uc=
+X-Google-Smtp-Source: ABdhPJyK+2k2T/dZY7QHsgu2rnN8x/f1LvznrwoHG3Ooa0SlXFalW2d0d9K2iLazveqVzw4+piB6oz01n6dSJacp1X8=
+X-Received: by 2002:a05:6602:2437:: with SMTP id g23mr23223556iob.5.1591639975461;
+ Mon, 08 Jun 2020 11:12:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: libbpf's hashmap use of __WORDSIZE
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-CC:     Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Ian Rogers <irogers@google.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Pekka Enberg <penberg@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Irina Tirdea <irina.tirdea@intel.com>,
-        bpf <bpf@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Message-ID: <1BB90A3B-1372-487E-9E96-193AAAEBC095@gmail.com>
+References: <20200608140557.GG3127@techsingularity.net> <CAOQ4uxhb1p5_rO9VjNb6assCczwQRx3xdAOXZ9S=mOA1g-0JVg@mail.gmail.com>
+ <20200608160614.GH3127@techsingularity.net> <CAOQ4uxh=Z92ppBQbRJyQqC61k944_7qG1mYqZgGC2tU7YAH7Kw@mail.gmail.com>
+ <20200608180130.GJ3127@techsingularity.net>
+In-Reply-To: <20200608180130.GJ3127@techsingularity.net>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Mon, 8 Jun 2020 21:12:44 +0300
+Message-ID: <CAOQ4uxgcUHuqiXFPO5mX=rvDwP-DOoTZrXvpVNphwEMFYHtyCw@mail.gmail.com>
+Subject: Re: [PATCH] fsnotify: Rearrange fast path to minimise overhead when
+ there is no watcher
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Jan Kara <jack@suse.cz>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mi
-
-On June 8, 2020 2:32:16 PM GMT-03:00, Andrii Nakryiko <andrii=2Enakryiko@g=
-mail=2Ecom> wrote:
->On Mon, Jun 8, 2020 at 9:11 AM Arnaldo Carvalho de Melo
-><arnaldo=2Emelo@gmail=2Ecom> wrote:
->>
->> Hi Andrii,
->>
->>         We've got that hashmap=2E[ch] copy from libbpf so that we can
->> build perf in systems where libbpf isn't available, and to make it
->build
->> in all the containers I regularly test build perf I had to add the
->patch
->> below, I test build with many versions of both gcc and clang and
->> multiple libcs=2E
->>
->>   https://gcc=2Egnu=2Eorg/onlinedocs/cpp/Common-Predefined-Macros=2Ehtm=
-l
->>
->> The way that tools/include/linux/bitops=2Eh has been doing since 2012
->is
->> explained in:
->>
->>   http://git=2Ekernel=2Eorg/torvalds/c/3f34f6c0233ae055b5
->>
->> Please take a look and see if you find it acceptable,
->>
->> Thanks,
->>
->> - Arnaldo
->>
->>   Warning: Kernel ABI header at 'tools/perf/util/hashmap=2Eh' differs
->from latest version at 'tools/lib/bpf/hashmap=2Eh'
->>   diff -u tools/perf/util/hashmap=2Eh tools/lib/bpf/hashmap=2Eh
->>
->> $ diff -u tools/lib/bpf/hashmap=2Eh tools/perf/util/hashmap=2Eh
->> --- tools/lib/bpf/hashmap=2Eh     2020-06-05 13:25:27=2E822079838 -0300
->> +++ tools/perf/util/hashmap=2Eh   2020-06-05 13:25:27=2E838079794 -0300
->> @@ -10,10 +10,9 @@
->>
->>  #include <stdbool=2Eh>
->>  #include <stddef=2Eh>
->> -#ifdef __GLIBC__
->> -#include <bits/wordsize=2Eh>
->> -#else
->> -#include <bits/reg=2Eh>
->> +#include <limits=2Eh>
->> +#ifndef __WORDSIZE
->> +#define __WORDSIZE (__SIZEOF_LONG__ * 8)
->>  #endif
+> > > didn't look too closely at your series as I'm not familiar with fsnotify
+> > > in general. However, at a glance it looks like fsnotify_parent() executes
+> > > a substantial amount of code even if there are no watchers but I could
+> > > be wrong.
+> > >
+> >
+> > I don't about substantial, I would say it is on par with the amount of
+> > code that you tries to optimize out of fsnotify().
+> >
+> > Before bailing out with DCACHE_FSNOTIFY_PARENT_WATCHED
+> > test, it also references d_inode->i_sb,  real_mount(path->mnt)
+> > and fetches all their ->x_fsnotify_mask fields.
+> >
+> > I changed the call pattern from open/modify/... hooks from:
+> > fsnotify_parent(...);
+> > fsnotify(...);
+> >
+> > to:
+> > fsnotify_parent(...); /* which calls fsnotify() */
+> >
+> > So the NULL marks optimization could be done in beginning of
+> > fsnotify_parent() and it will be just as effective as it is in fsnotify().
+> >
 >
->This looks fine, I also build-tested it in Travis CI, so all good=2E
->There is actually __SIZEOF_SIZE_T__, which is more directly what
->hash_bits work with, but I don't think it matters for any reasonable
->system in use :)
+> Something like that may be required because
 >
->So yeah,
+>                               5.7.0                  5.7.0                  5.7.0                  5.7.0
+>                             vanilla      fastfsnotify-v1r1      fastfsnotify-v2r1          amir-20200608
+> Amean     1       0.4837 (   0.00%)      0.4630 *   4.27%*      0.4597 *   4.96%*      0.4967 *  -2.69%*
+> Amean     3       1.5447 (   0.00%)      1.4557 (   5.76%)      1.5310 (   0.88%)      1.6587 *  -7.38%*
+> Amean     5       2.6037 (   0.00%)      2.4363 (   6.43%)      2.4237 (   6.91%)      2.6400 (  -1.40%)
+> Amean     7       3.5987 (   0.00%)      3.4757 (   3.42%)      3.6543 (  -1.55%)      3.9040 *  -8.48%*
+> Amean     12      5.8267 (   0.00%)      5.6983 (   2.20%)      5.5903 (   4.06%)      6.2593 (  -7.43%)
+> Amean     18      8.4400 (   0.00%)      8.1327 (   3.64%)      7.7150 *   8.59%*      8.9940 (  -6.56%)
+> Amean     24     11.0187 (   0.00%)     10.0290 *   8.98%*      9.8977 *  10.17%*     11.7247 *  -6.41%*
+> Amean     30     13.1013 (   0.00%)     12.8510 (   1.91%)     12.2087 *   6.81%*     14.0290 *  -7.08%*
+> Amean     32     13.9190 (   0.00%)     13.2410 (   4.87%)     13.2900 (   4.52%)     14.7140 *  -5.71%*
 >
->Acked-by: Andrii Nakryiko <andriin@fb=2Ecom>
+> vanilla and fastnotify-v1r1 are the same. fastfsnotify-v2r1 is just the
+> fsnotify_parent() change which is mostly worse and may indicate that the
+> first patch was reasonable. amir-20200608 is your branch as of today and
+> it appears to introduce a substantial regression albeit in an extreme case
+> where fsnotify overhead is visible. The regressions are mostly larger
+> than noise with the caveat it may be machine specific given that the
+> machine is overloaded. I accept that adding extra functional to fsnotify
+> may be desirable but ideally it would not hurt the case where there are
+> no watchers at all.
 >
->Are you going to do this change for libbpf's variant, or should I
->submit a separate patch?
 
-I'll send the patch later,
+Of course.
+And thanks for catching this regression even before I posted the patches :-)
 
-Thanks for checking,
-
-- Arnaldo
+> So what's the right way forward? The patch as-is even though the fsnotify()
+> change itself may be marginal, a patch that just inlines the fast path
+> of fsnotify_parent or wait for the additional functionality and try and
+> address the overhead on top?
 >
->>
->>  static inline size_t hash_bits(size_t h, int bits)
+>
 
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+Let me add your optimizations on top of my branch with the needed
+adaptations and send you a branch for testing.
+
+Thanks,
+Amir.
