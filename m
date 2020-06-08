@@ -2,103 +2,197 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD07C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12614C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 457062076A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:28:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WAGe9Efg"
+	by mail.kernel.org (Postfix) with ESMTP id DA3482076C
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:28:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729371AbgFHK2F (ORCPT
+        id S1729389AbgFHK2R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 06:28:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33254 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726202AbgFHK2C (ORCPT
+        Mon, 8 Jun 2020 06:28:17 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:45227 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729294AbgFHK2P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 06:28:02 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D63CC08C5C3
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 03:28:01 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id n9so6505225plk.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 03:28:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=39m+2LLbv6DmBKnk5P51Aj/s0CDKaXKRY6RVZpmO47k=;
-        b=WAGe9EfgYRXcs6oNuDgg+A5B5DLZKzh4sjoqPNRbHSPYUsD654Ef1u0NL1YTyBQJbH
-         3AAQHDRAFqZYQHcRUlc7swh6QESQXgVdWti12n2MKx0W1qMmCYiJOf3wVNg3llo5qVzU
-         jeLX7I4WOEoskkTxzZilOnuhERrqKx2CArW9Ay9eBSsErMEDyjfiinrbF1tbnOIfRVKT
-         zYqOwFTR6JxFVjVfjYdV1Ozd+PV88T94fYPeucXCSGHFqpmfTc6v3FhZUeqIRJwyqwLC
-         6pGwNOxhVFiddns9nUl45WEcBbvoHqPVAC2h8E95E+7t447c4eMegnPjx9xnAmolpzvJ
-         4j4g==
+        Mon, 8 Jun 2020 06:28:15 -0400
+Received: by mail-lj1-f193.google.com with SMTP id i27so8833358ljb.12;
+        Mon, 08 Jun 2020 03:28:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=39m+2LLbv6DmBKnk5P51Aj/s0CDKaXKRY6RVZpmO47k=;
-        b=JPorqSVQatEAA4eBf4TTj9Rayxp59ctHgfOiLwZFzUxHCp5eJoU+FZ8eHPljz0ErPV
-         BdhkngMWontKtljvokVlFhjV/n4myoerHlIKu5OTHowrcZNaU6VgntF9ukvUHNp5ex6f
-         9gTLE9S+rCYYchhVE4MhbkQqtKZblxbvgdyPV8c4UfLOPYrGCs6ccNmcu8KCnBzAFPmx
-         +0L1iYV0pG4yVUaVQvQ1sspgFPPXjwnDHFn0izEQGGf8lDnOetjqrR1q5ZO9z+bBnL2k
-         UwVF5MXhvTHBEKbtzU9b+Y1BJqHb0aVphuGoe6ofkj8J+EHFZS7JquIGwrQp2J+Ioz/b
-         2zkA==
-X-Gm-Message-State: AOAM531JJmqf5aCMahoSZ8WwKHEVjN9GoHQj021ZUJXFj1OxGVLgIdLI
-        b2JHuVQcmzzp8JW8yHijmVVeAw==
-X-Google-Smtp-Source: ABdhPJy7tUDmw7E2+N2dP4+jFgxDi565u5EZbJy/npJ1/aTQhfV9kSuAXl9CPg0tBQD4hXT6yfe9gg==
-X-Received: by 2002:a17:902:6bc8:: with SMTP id m8mr20467004plt.138.1591612080996;
-        Mon, 08 Jun 2020 03:28:00 -0700 (PDT)
-Received: from localhost ([122.172.62.209])
-        by smtp.gmail.com with ESMTPSA id n24sm14806270pjt.47.2020.06.08.03.27.59
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Jun 2020 03:28:00 -0700 (PDT)
-Date:   Mon, 8 Jun 2020 15:57:58 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     sboyd@kernel.org, georgi.djakov@linaro.org, saravanak@google.com,
-        mka@chromium.org, nm@ti.com, bjorn.andersson@linaro.org,
-        agross@kernel.org, rjw@rjwysocki.net,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dianders@chromium.org,
-        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
-        lukasz.luba@arm.com, sudeep.holla@arm.com, smasetty@codeaurora.org
-Subject: Re: [PATCH v6 0/5] DDR/L3 Scaling support on SDM845 and SC7180 SoCs
-Message-ID: <20200608102758.54vdswjievx3cc7l@vireshk-i7>
-References: <20200605213332.609-1-sibis@codeaurora.org>
+        h=x-gm-message-state:to:cc:references:from:autocrypt:subject
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=BXETQxJC01f+VTpTkoSBCDRmpaJ0OpSOkPcyqXqxA1Y=;
+        b=XNYLPwD6F+5sh92m85zg6yoVFZEq+ZGYmBmSNhFqcWMCiu2FwR7qeTZEUBT4xkcdw2
+         pVknksWSDI0Fgrz9NSSpFsHVhrK8eZfsB+YPXnpRbZLH8jWfsOuUMPts5mV03qffvqRS
+         Kd/kgub46iaQzmBmcBhYY+5JMiiLNBIOWmy+wMqUHNoOx7AcB/p7PXcYNH0BAxg1TJzj
+         DqzmwZyHwdQFSqzsYlxEsEgdEOTmjCMg8s7J0547f5jWrWuBlBriS2zAJPBuayw6A6/w
+         ru+N8dea0lVJagXcw16TxldLamHdmmgu1tcqIjeNd0Egtxv2BcqaDlb55deppONHSmct
+         /V4Q==
+X-Gm-Message-State: AOAM530T0aFOJRWgD5Nk53JCMiArEnVbGF0EsX/i/iZCitazkmKfM3RE
+        9gKKDYBDOuQ3CL35qpEObZT5v7LRy84=
+X-Google-Smtp-Source: ABdhPJxPvhxjF/vIQVS6Aa0jb9zklpqRmmOXejQY4cdCD4/JCt9NdxOp0ZS5uHCA9JsX3VU1KRJFSg==
+X-Received: by 2002:a2e:8991:: with SMTP id c17mr9568883lji.421.1591612090483;
+        Mon, 08 Jun 2020 03:28:10 -0700 (PDT)
+Received: from [192.168.1.8] ([213.87.137.116])
+        by smtp.gmail.com with ESMTPSA id k29sm3614445ljc.136.2020.06.08.03.28.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Jun 2020 03:28:09 -0700 (PDT)
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200514131234.380097-1-efremov@linux.com>
+ <20200605073955.6384-1-efremov@linux.com>
+ <20200608013012.GA216607@roeck-us.net>
+ <CAK7LNASQamajjeV+VMq5G8fECfB6f9uKvZ32zGic72O0qp8Mtw@mail.gmail.com>
+From:   Denis Efremov <efremov@linux.com>
+Autocrypt: addr=efremov@linux.com; keydata=
+ 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
+Subject: Re: [PATCH v5] kbuild: add variables for compression tools
+Message-ID: <d7e4a235-35eb-1c13-09dc-19a523cbf4ea@linux.com>
+Date:   Mon, 8 Jun 2020 13:28:07 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200605213332.609-1-sibis@codeaurora.org>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <CAK7LNASQamajjeV+VMq5G8fECfB6f9uKvZ32zGic72O0qp8Mtw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06-06-20, 03:03, Sibi Sankar wrote:
-> This patch series aims to extend cpu based scaling support to L3/DDR on
-> SDM845 and SC7180 SoCs.
-> 
-> Patches [1-2] - Blacklist SDM845 and SC7180 in cpufreq-dt-platdev
-> Patches [3-5] - Update bw levels based on cpu frequency change
-> 
-> Based on Viresh's opp-next:
-> https://git.kernel.org/pub/scm/linux/kernel/git/vireshk/pm.git/log/?h=opp/linux-next
-> 
-> V6:
->  * Add global flag to distinguish between voltage update and opp add.
->    Use the same flag before trying to scale ddr/l3 bw [Viresh]
->  * Use dev_pm_opp_find_freq_ceil to grab all opps [Viresh] 
->  * Move dev_pm_opp_of_find_icc_paths into probe [Viresh]
 
-Picked for 5.9, will push to my branch after rc1 is out.
 
--- 
-viresh
+On 6/8/20 7:59 AM, Masahiro Yamada wrote:
+> On Mon, Jun 8, 2020 at 10:30 AM Guenter Roeck <linux@roeck-us.net> wrote:
+>>
+>> Hi,
+>>
+>> On Fri, Jun 05, 2020 at 10:39:55AM +0300, Denis Efremov wrote:
+>>> Allow user to use alternative implementations of compression tools,
+>>> such as pigz, pbzip2, pxz. For example, multi-threaded tools to
+>>> speed up the build:
+>>> $ make GZIP=pigz BZIP2=pbzip2
+>>>
+>>> Variables _GZIP, _BZIP2, _LZOP are used internally because original env
+>>> vars are reserved by the tools. The use of GZIP in gzip tool is obsolete
+>>> since 2015. However, alternative implementations (e.g., pigz) still rely
+>>> on it. BZIP2, BZIP, LZOP vars are not obsolescent.
+>>>
+>>
+>> When building mips:defconfig, this patch results in:
+>>
+>> Building mips:defconfig ... failed
+>> --------------
+>> Error log:
+>> /bin/sh: -n: command not found
+>> make[3]: *** [kernel/config_data.gz] Error 127
+>> make[3]: *** Deleting file 'kernel/config_data.gz'
+>> make[3]: *** Waiting for unfinished jobs....
+>> make[2]: *** [kernel] Error 2
+>> make[2]: *** Waiting for unfinished jobs....
+>> make[1]: *** [autoksyms_recursive] Error 2
+>> make: *** [__sub-make] Error 2
+>>
+>> Reverting this patch fixes the problem. Bisect log is attached.
+>>
+>> Guenter
+>
+
+I tried to reproduce it with cross-compilation on Fedora32.
+$ export ARCH=mips
+$ export CROSS_COMPILE=mips64-linux-gnu-
+$ make defconfig
+$ make -j12
+
+And the kernel builds successfully. Could you please provide details about your
+compilation steps and environment, esp. what "env | grep ZIP" shows,
+"gzip --version", "sh --version", "bash --version"? This will be very helpful.
+
+Additionally:
+$ make GZIP=gzip -j12 # works
+$ make GZIP=pigz -j12 # works
+$ make GZIP=nosuchcommand -j12 # fails, as expected
+ 
+> 
+> Agh, this is because of CONFIG_TRIM_UNUSED_KSYMS.
+> 
+
+Hmm, it somehow works on my machine. But yes, this call looks like a problem
+for these env vars:
+
+autoksyms_recursive: descend modules.order                                       
+        $(Q)$(CONFIG_SHELL) $(srctree)/scripts/adjust_autoksyms.sh \             
+          "$(MAKE) -f $(srctree)/Makefile vmlinux" 
+
+> Also, the distro package builds are broken
+> e.g.  make GZIP=gzip bindeb-pkg
+> 
+
+Yes, thanks.
+
+> Denis,
+> 
+> I think we should go back to the original
+> KGZIP, KBZIP2, KLZOP.
+> 
+
+Given that the original patch is already in the Linus tree,
+I've sent a hotfix. Commit message is not perfect, because I
+didn't have enough time to deeply debug it. I just hope that
+the original patch didn't broke too many builds. Maybe later
+I will try to prepare a patch with GZIP again when I will fully
+debug these corner cases.
+
+Thanks,
+Denis
