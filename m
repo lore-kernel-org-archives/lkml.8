@@ -2,309 +2,510 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35CFBC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 441CCC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C3032078D
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:10:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IUZGbhKp"
+	by mail.kernel.org (Postfix) with ESMTP id 188C02076A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:11:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726053AbgFHSKK (ORCPT
+        id S1726078AbgFHSLq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 14:10:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48146 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725885AbgFHSJy (ORCPT
+        Mon, 8 Jun 2020 14:11:46 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18856 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725885AbgFHSLo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 14:09:54 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A71D5C08C5C2;
-        Mon,  8 Jun 2020 11:09:52 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id c35so14235477edf.5;
-        Mon, 08 Jun 2020 11:09:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=YJH9XD/gsRGFvQ9dtgxug8Jz0MJvZsMvr2AlDxZ+XHw=;
-        b=IUZGbhKpaPQ/80Mr01mqApaZYwenc+Mhe3VLCWVH7NabzzgZjUFt+1OCVZarmn2KW0
-         OFMq2QPblC0XOkhFs3siTyKFEVMmeA1M0OAp3zdp0Tx5xdJcYlppq/6vQ+AELsP30peV
-         6DEJLfStbyqYkYnMapv++/f9JjMycjfAsWh8dolz4+c6LzuGEFIc5lzrOpexobesIukD
-         aeVSKSmuE0dczcSNNCU/2aEf7gd7D7PfMf2Nj6/sQ6rHnnKSPSKy6nZ5vCSNMkOv3+uD
-         b608X0jz9GSersE+iD6cVrBsQ+rTybOBr7GBXfTBbclt5XbjrVi+lykaRSx38Q+YlktV
-         iBhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=YJH9XD/gsRGFvQ9dtgxug8Jz0MJvZsMvr2AlDxZ+XHw=;
-        b=gB5b0IpvVjYcGOJHXshaP/rB6BpaPnf989Tf3h+yK4Mgbp32X4On50zRXYhzyWDdO6
-         Hs/KuXy9Au7v3BGWV4o52TpekNTicowiTF+VK2bIE/ONstTSfk1DHZ1IIHvToK99bWU2
-         tOrdQErEjk6DP3iYfWr7c4HSH9gIbJwbH0dMG+grhWYTfrUNVqSjn3FT3jZ5RtOPj3Ba
-         Tclhzf1CUVSkMor9eOb1SpQHHgU4U89K5RuRF7hk8ml2N0/YztuKUyUYNYoEoqadpWsy
-         vtMilWO/XNtIR7+Mu2QPGddRh9MpWC0B5GnY2iTpDPKFyIx4hfDXzl47458wWRlgOaAG
-         65IA==
-X-Gm-Message-State: AOAM532+OxzIitdAv6F/inKW9/nYyVUnKmPdP3htn+baiRc0k1nP5mvW
-        ZLZ4wepGkTDtug+Q/kxTVuYbQEOJ
-X-Google-Smtp-Source: ABdhPJxkKl7hmC8elYh0V7IlxH5KJML7VdNO3fULWJoz1PQcWhLvbr7awRDb1t7FAuQKQ1+s/uTJHA==
-X-Received: by 2002:a50:eacb:: with SMTP id u11mr22800624edp.162.1591639791001;
-        Mon, 08 Jun 2020 11:09:51 -0700 (PDT)
-Received: from localhost.localdomain ([5.100.193.151])
-        by smtp.gmail.com with ESMTPSA id ok21sm10515029ejb.82.2020.06.08.11.09.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 11:09:50 -0700 (PDT)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Jens Axboe <axboe@kernel.dk>, xiaoguang.wang@linux.alibaba.com
-Subject: [PATCH 2/4] io_uring: remove custom ->func handlers
-Date:   Mon,  8 Jun 2020 21:08:18 +0300
-Message-Id: <ad646a5dd1ab59a87a10b8c7a3091dc711497f5a.1591637070.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1591637070.git.asml.silence@gmail.com>
-References: <cover.1591637070.git.asml.silence@gmail.com>
+        Mon, 8 Jun 2020 14:11:44 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 058I2XS6162765;
+        Mon, 8 Jun 2020 14:11:08 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31g7n8668f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 08 Jun 2020 14:10:25 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 058IAJ27011112;
+        Mon, 8 Jun 2020 14:10:19 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31g7n8667t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 08 Jun 2020 14:10:19 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 058I65EO015331;
+        Mon, 8 Jun 2020 18:10:17 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma04fra.de.ibm.com with ESMTP id 31g2s7st65-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 08 Jun 2020 18:10:16 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 058IAEvO65143216
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 8 Jun 2020 18:10:14 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 77D794203F;
+        Mon,  8 Jun 2020 18:10:14 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C239742041;
+        Mon,  8 Jun 2020 18:10:10 +0000 (GMT)
+Received: from vajain21-in-ibm-com (unknown [9.85.74.153])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Mon,  8 Jun 2020 18:10:10 +0000 (GMT)
+Received: by vajain21-in-ibm-com (sSMTP sendmail emulation); Mon, 08 Jun 2020 23:40:09 +0530
+From:   Vaibhav Jain <vaibhav@linux.ibm.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Santosh Sivaraj <santosh@fossix.org>, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v11 5/6] ndctl/papr_scm, uapi: Add support for PAPR nvdimm specific methods
+In-Reply-To: <20200608162443.GB2936401@iweiny-DESK2.sc.intel.com>
+References: <20200607131339.476036-1-vaibhav@linux.ibm.com> <20200607131339.476036-6-vaibhav@linux.ibm.com> <20200608162443.GB2936401@iweiny-DESK2.sc.intel.com>
+Date:   Mon, 08 Jun 2020 23:40:09 +0530
+Message-ID: <87r1upwhry.fsf@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-08_17:2020-06-08,2020-06-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 bulkscore=0
+ priorityscore=1501 clxscore=1015 adultscore=0 lowpriorityscore=0
+ mlxscore=0 malwarescore=0 impostorscore=0 phishscore=0 mlxlogscore=999
+ suspectscore=2 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006080124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation of getting rid of work.func, this removes almost all
-custom instances of it, leaving only io_wq_submit_work() and
-io_link_work_cb(). And the last one will be dealt later.
 
-Nothing fancy, just routinely remove *_finish() function and inline
-what's left. E.g. remove io_fsync_finish() + inline __io_fsync() into
-io_fsync().
+Ira Weiny <ira.weiny@intel.com> writes:
 
-As no users of io_req_cancelled() are left, delete it as well. The patch
-adds extra switch lookup on cold-ish path, but that's overweighted by
-nice diffstat and other benefits of the following patches.
+> On Sun, Jun 07, 2020 at 06:43:38PM +0530, Vaibhav Jain wrote:
+>> Introduce support for PAPR NVDIMM Specific Methods (PDSM) in papr_scm
+>> module and add the command family NVDIMM_FAMILY_PAPR to the white list
+>> of NVDIMM command sets. Also advertise support for ND_CMD_CALL for the
+>> nvdimm command mask and implement necessary scaffolding in the module
+>> to handle ND_CMD_CALL ioctl and PDSM requests that we receive.
+>> 
+>> The layout of the PDSM request as we expect from libnvdimm/libndctl is
+>> described in newly introduced uapi header 'papr_pdsm.h' which
+>> defines a new 'struct nd_pdsm_cmd_pkg' header. This header is used
+>> to communicate the PDSM request via member
+>> 'nd_cmd_pkg.nd_command' and size of payload that need to be
+>> sent/received for servicing the PDSM.
+>> 
+>> A new function is_cmd_valid() is implemented that reads the args to
+>> papr_scm_ndctl() and performs sanity tests on them. A new function
+>> papr_scm_service_pdsm() is introduced and is called from
+>> papr_scm_ndctl() in case of a PDSM request is received via ND_CMD_CALL
+>> command from libnvdimm.
+>> 
+>> Cc: "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
+>> Cc: Dan Williams <dan.j.williams@intel.com>
+>> Cc: Michael Ellerman <mpe@ellerman.id.au>
+>> Cc: Ira Weiny <ira.weiny@intel.com>
+>> Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
+>> ---
+>> Changelog:
+>> 
+>> v10..v11:
+>> * Moved in-lines 'nd_pdsm_cmd_pkg()' and 'pdsm_cmd_to_payload()' from
+>>   'papr_pdsm.h' header to 'papr_scm.c'. The avoids a potential license
+>>   incompatibility issue with non-GPL-2.0 user-space code trying to
+>>   include the header in its code. [ Ira ]
+>> * Verified papr_pdsm.h with UAPI_HEADER_TEST config.
+>> * Moved the is_cmd_valid() check in papr_scm_ndctl() before check for
+>>   cmd_rc == NULL. This prevents cmd_rc to be updated in case the
+>>   nd-cmd is invalid or unknown.
+>> 
+>> v9..v10:
+>> * Simplified 'struct nd_pdsm_cmd_pkg' by removing the
+>>   'payload_version' field.
+>> * Removed the corrosponding documentation on versioning and backward
+>>   compatibility from 'papr_pdsm.h'
+>> * Reduced the size of reserved fields to 4-bytes making 'struct
+>>   nd_pdsm_cmd_pkg' 64 + 8 bytes long.
+>> * Updated is_cmd_valid() to enforce validation checks on pdsm
+>>   commands. [ Dan Williams ]
+>> * Added check for reserved fields being set to '0' in is_cmd_valid()
+>>   [ Ira ]
+>> * Moved changes for checking cmd_rc == NULL and logging improvements
+>>   to a separate prelim patch [ Ira ].
+>> * Moved  pdsm package validation checks from papr_scm_service_pdsm()
+>>   to is_cmd_valid().
+>> * Marked papr_scm_service_pdsm() return type as 'void' since errors
+>>   are reported in nd_pdsm_cmd_pkg.cmd_status field.
+>> 
+>> Resend:
+>> * Added ack from Aneesh.
+>> 
+>> v8..v9:
+>> * Reduced the usage of term SCM replacing it with appropriate
+>>   replacement [ Dan Williams, Aneesh ]
+>> * Renamed 'papr_scm_pdsm.h' to 'papr_pdsm.h'
+>> * s/PAPR_SCM_PDSM_*/PAPR_PDSM_*/g
+>> * s/NVDIMM_FAMILY_PAPR_SCM/NVDIMM_FAMILY_PAPR/g
+>> * Minor updates to 'papr_psdm.h' to replace usage of term 'SCM'.
+>> * Minor update to patch description.
+>> 
+>> v7..v8:
+>> * Removed the 'payload_offset' field from 'struct
+>>   nd_pdsm_cmd_pkg'. Instead command payload is always assumed to start
+>>   at 'nd_pdsm_cmd_pkg.payload'. [ Aneesh ]
+>> * To enable introducing new fields to 'struct nd_pdsm_cmd_pkg',
+>>   'reserved' field of 10-bytes is introduced. [ Aneesh ]
+>> * Fixed a typo in "Backward Compatibility" section of papr_scm_pdsm.h
+>>   [ Ira ]
+>> 
+>> Resend:
+>> * None
+>> 
+>> v6..v7 :
+>> * Removed the re-definitions of __packed macro from papr_scm_pdsm.h
+>>   [Mpe].
+>> * Removed the usage of __KERNEL__ macros in papr_scm_pdsm.h [Mpe].
+>> * Removed macros that were unused in papr_scm.c from papr_scm_pdsm.h
+>>   [Mpe].
+>> * Made functions defined in papr_scm_pdsm.h as static inline. [Mpe]
+>> 
+>> v5..v6 :
+>> * Changed the usage of the term DSM to PDSM to distinguish it from the
+>>   ACPI term [ Dan Williams ]
+>> * Renamed papr_scm_dsm.h to papr_scm_pdsm.h and updated various struct
+>>   to reflect the new terminology.
+>> * Updated the patch description and title to reflect the new terminology.
+>> * Squashed patch to introduce new command family in 'ndctl.h' with
+>>   this patch [ Dan Williams ]
+>> * Updated the papr_scm_pdsm method starting index from 0x10000 to 0x0
+>>   [ Dan Williams ]
+>> * Removed redundant license text from the papr_scm_psdm.h file.
+>>   [ Dan Williams ]
+>> * s/envelop/envelope/ at various places [ Dan Williams ]
+>> * Added '__packed' attribute to command package header to gaurd
+>>   against different compiler adding paddings between the fields.
+>>   [ Dan Williams]
+>> * Converted various pr_debug to dev_debug [ Dan Williams ]
+>> 
+>> v4..v5 :
+>> * None
+>> 
+>> v3..v4 :
+>> * None
+>> 
+>> v2..v3 :
+>> * Updated the patch prefix to 'ndctl/uapi' [Aneesh]
+>> 
+>> v1..v2 :
+>> * None
+>> ---
+>>  arch/powerpc/include/uapi/asm/papr_pdsm.h |  84 +++++++++++++++
+>>  arch/powerpc/platforms/pseries/papr_scm.c | 126 +++++++++++++++++++++-
+>>  include/uapi/linux/ndctl.h                |   1 +
+>>  3 files changed, 207 insertions(+), 4 deletions(-)
+>>  create mode 100644 arch/powerpc/include/uapi/asm/papr_pdsm.h
+>> 
+>> diff --git a/arch/powerpc/include/uapi/asm/papr_pdsm.h b/arch/powerpc/include/uapi/asm/papr_pdsm.h
+>> new file mode 100644
+>> index 000000000000..df2447455cfe
+>> --- /dev/null
+>> +++ b/arch/powerpc/include/uapi/asm/papr_pdsm.h
+>> @@ -0,0 +1,84 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+>> +/*
+>> + * PAPR nvDimm Specific Methods (PDSM) and structs for libndctl
+>> + *
+>> + * (C) Copyright IBM 2020
+>> + *
+>> + * Author: Vaibhav Jain <vaibhav at linux.ibm.com>
+>> + */
+>> +
+>> +#ifndef _UAPI_ASM_POWERPC_PAPR_PDSM_H_
+>> +#define _UAPI_ASM_POWERPC_PAPR_PDSM_H_
+>> +
+>> +#include <linux/types.h>
+>> +#include <linux/ndctl.h>
+>> +
+>> +/*
+>> + * PDSM Envelope:
+>> + *
+>> + * The ioctl ND_CMD_CALL transfers data between user-space and kernel via
+>> + * envelope which consists of a header and user-defined payload sections.
+>> + * The header is described by 'struct nd_pdsm_cmd_pkg' which expects a
+>> + * payload following it and accessible via 'nd_pdsm_cmd_pkg.payload' field.
+>> + * There is reserved field that can used to introduce new fields to the
+>> + * structure in future. It also tries to ensure that 'nd_pdsm_cmd_pkg.payload'
+>> + * lies at a 8-byte boundary.
+>> + *
+>> + *  +-------------+---------------------+---------------------------+
+>> + *  |   64-Bytes  |       8-Bytes       |       Max 184-Bytes       |
+>> + *  +-------------+---------------------+---------------------------+
+>> + *  |               nd_pdsm_cmd_pkg     |                           |
+>> + *  |-------------+                     |                           |
+>> + *  |  nd_cmd_pkg |                     |                           |
+>> + *  +-------------+---------------------+---------------------------+
+>> + *  | nd_family   |                     |                           |
+>> + *  | nd_size_out | cmd_status          |                           |
+>> + *  | nd_size_in  | reserved            |     payload               |
+>> + *  | nd_command  |                     |                           |
+>> + *  | nd_fw_size  |                     |                           |
+>> + *  +-------------+---------------------+---------------------------+
+>> + *
+>> + * PDSM Header:
+>> + *
+>> + * The header is defined as 'struct nd_pdsm_cmd_pkg' which embeds a
+>> + * 'struct nd_cmd_pkg' instance. The PDSM command is assigned to member
+>> + * 'nd_cmd_pkg.nd_command'. Apart from size information of the envelope which is
+>> + * contained in 'struct nd_cmd_pkg', the header also has members following
+>> + * members:
+>> + *
+>> + * 'cmd_status'		: (Out) Errors if any encountered while servicing PDSM.
+>> + * 'reserved'		: Not used, reserved for future and should be set to 0.
+>> + *
+>> + * PDSM Payload:
+>> + *
+>> + * The layout of the PDSM Payload is defined by various structs shared between
+>> + * papr_scm and libndctl so that contents of payload can be interpreted. During
+>> + * servicing of a PDSM the papr_scm module will read input args from the payload
+>> + * field by casting its contents to an appropriate struct pointer based on the
+>> + * PDSM command. Similarly the output of servicing the PDSM command will be
+>> + * copied to the payload field using the same struct.
+[.]
+>> + *
+>> + * 'libnvdimm' enforces a hard limit of 256 bytes on the envelope size, which
+>> + * leaves around 184 bytes for the envelope payload
+>
+> 'around'?
+>
+>> (ignoring any padding that
+>> + * the compiler may silently introduce).
+>
+> When building user interfaces like this you have to be more exact.  I think the
+> code is fine but you can't have the compiler silently moving things around or
+> have different compilers move things differently between the user app and the
+> kernel.  So these statements are not correct.
+>
+Sure, will update these comment block to better express the '__packed' gcc
+attribute semantics for struct nd_pdsm_cmd_pkg.
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- fs/io_uring.c | 139 ++++++++++----------------------------------------
- 1 file changed, 27 insertions(+), 112 deletions(-)
+~ Vaibhav
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 9acd695cc473..ce7f815658a3 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -2940,23 +2940,15 @@ static int io_prep_fsync(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- 	return 0;
- }
- 
--static bool io_req_cancelled(struct io_kiocb *req)
--{
--	if (req->work.flags & IO_WQ_WORK_CANCEL) {
--		req_set_fail_links(req);
--		io_cqring_add_event(req, -ECANCELED);
--		io_put_req(req);
--		return true;
--	}
--
--	return false;
--}
--
--static void __io_fsync(struct io_kiocb *req)
-+static int io_fsync(struct io_kiocb *req, bool force_nonblock)
- {
- 	loff_t end = req->sync.off + req->sync.len;
- 	int ret;
- 
-+	/* fsync always requires a blocking context */
-+	if (force_nonblock)
-+		return -EAGAIN;
-+
- 	ret = vfs_fsync_range(req->file, req->sync.off,
- 				end > 0 ? end : LLONG_MAX,
- 				req->sync.flags & IORING_FSYNC_DATASYNC);
-@@ -2964,53 +2956,9 @@ static void __io_fsync(struct io_kiocb *req)
- 		req_set_fail_links(req);
- 	io_cqring_add_event(req, ret);
- 	io_put_req(req);
--}
--
--static void io_fsync_finish(struct io_wq_work **workptr)
--{
--	struct io_kiocb *req = container_of(*workptr, struct io_kiocb, work);
--
--	if (io_req_cancelled(req))
--		return;
--	__io_fsync(req);
--	io_steal_work(req, workptr);
--}
--
--static int io_fsync(struct io_kiocb *req, bool force_nonblock)
--{
--	/* fsync always requires a blocking context */
--	if (force_nonblock) {
--		req->work.func = io_fsync_finish;
--		return -EAGAIN;
--	}
--	__io_fsync(req);
- 	return 0;
- }
- 
--static void __io_fallocate(struct io_kiocb *req)
--{
--	int ret;
--
--	current->signal->rlim[RLIMIT_FSIZE].rlim_cur = req->fsize;
--	ret = vfs_fallocate(req->file, req->sync.mode, req->sync.off,
--				req->sync.len);
--	current->signal->rlim[RLIMIT_FSIZE].rlim_cur = RLIM_INFINITY;
--	if (ret < 0)
--		req_set_fail_links(req);
--	io_cqring_add_event(req, ret);
--	io_put_req(req);
--}
--
--static void io_fallocate_finish(struct io_wq_work **workptr)
--{
--	struct io_kiocb *req = container_of(*workptr, struct io_kiocb, work);
--
--	if (io_req_cancelled(req))
--		return;
--	__io_fallocate(req);
--	io_steal_work(req, workptr);
--}
--
- static int io_fallocate_prep(struct io_kiocb *req,
- 			     const struct io_uring_sqe *sqe)
- {
-@@ -3028,13 +2976,20 @@ static int io_fallocate_prep(struct io_kiocb *req,
- 
- static int io_fallocate(struct io_kiocb *req, bool force_nonblock)
- {
-+	int ret;
-+
- 	/* fallocate always requiring blocking context */
--	if (force_nonblock) {
--		req->work.func = io_fallocate_finish;
-+	if (force_nonblock)
- 		return -EAGAIN;
--	}
- 
--	__io_fallocate(req);
-+	current->signal->rlim[RLIMIT_FSIZE].rlim_cur = req->fsize;
-+	ret = vfs_fallocate(req->file, req->sync.mode, req->sync.off,
-+				req->sync.len);
-+	current->signal->rlim[RLIMIT_FSIZE].rlim_cur = RLIM_INFINITY;
-+	if (ret < 0)
-+		req_set_fail_links(req);
-+	io_cqring_add_event(req, ret);
-+	io_put_req(req);
- 	return 0;
- }
- 
-@@ -3531,38 +3486,20 @@ static int io_prep_sfr(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- 	return 0;
- }
- 
--static void __io_sync_file_range(struct io_kiocb *req)
-+static int io_sync_file_range(struct io_kiocb *req, bool force_nonblock)
- {
- 	int ret;
- 
-+	/* sync_file_range always requires a blocking context */
-+	if (force_nonblock)
-+		return -EAGAIN;
-+
- 	ret = sync_file_range(req->file, req->sync.off, req->sync.len,
- 				req->sync.flags);
- 	if (ret < 0)
- 		req_set_fail_links(req);
- 	io_cqring_add_event(req, ret);
- 	io_put_req(req);
--}
--
--
--static void io_sync_file_range_finish(struct io_wq_work **workptr)
--{
--	struct io_kiocb *req = container_of(*workptr, struct io_kiocb, work);
--
--	if (io_req_cancelled(req))
--		return;
--	__io_sync_file_range(req);
--	io_steal_work(req, workptr);
--}
--
--static int io_sync_file_range(struct io_kiocb *req, bool force_nonblock)
--{
--	/* sync_file_range always requires a blocking context */
--	if (force_nonblock) {
--		req->work.func = io_sync_file_range_finish;
--		return -EAGAIN;
--	}
--
--	__io_sync_file_range(req);
- 	return 0;
- }
- 
-@@ -3984,49 +3921,27 @@ static int io_accept_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- 	return 0;
- }
- 
--static int __io_accept(struct io_kiocb *req, bool force_nonblock)
-+static int io_accept(struct io_kiocb *req, bool force_nonblock)
- {
- 	struct io_accept *accept = &req->accept;
--	unsigned file_flags;
-+	unsigned int file_flags = force_nonblock ? O_NONBLOCK : 0;
- 	int ret;
- 
--	file_flags = force_nonblock ? O_NONBLOCK : 0;
- 	ret = __sys_accept4_file(req->file, file_flags, accept->addr,
- 					accept->addr_len, accept->flags,
- 					accept->nofile);
- 	if (ret == -EAGAIN && force_nonblock)
- 		return -EAGAIN;
--	if (ret == -ERESTARTSYS)
--		ret = -EINTR;
--	if (ret < 0)
-+	if (ret < 0) {
-+		if (ret == -ERESTARTSYS)
-+			ret = -EINTR;
- 		req_set_fail_links(req);
-+	}
- 	io_cqring_add_event(req, ret);
- 	io_put_req(req);
- 	return 0;
- }
- 
--static void io_accept_finish(struct io_wq_work **workptr)
--{
--	struct io_kiocb *req = container_of(*workptr, struct io_kiocb, work);
--
--	if (io_req_cancelled(req))
--		return;
--	__io_accept(req, false);
--	io_steal_work(req, workptr);
--}
--
--static int io_accept(struct io_kiocb *req, bool force_nonblock)
--{
--	int ret;
--
--	ret = __io_accept(req, force_nonblock);
--	if (ret == -EAGAIN && force_nonblock) {
--		req->work.func = io_accept_finish;
--		return -EAGAIN;
--	}
--	return 0;
--}
--
- static int io_connect_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- {
- 	struct io_connect *conn = &req->connect;
+> Ira
+>
+>> + *
+>> + */
+>> +
+>> +/* PDSM-header + payload expected with ND_CMD_CALL ioctl from libnvdimm */
+>> +struct nd_pdsm_cmd_pkg {
+>> +	struct nd_cmd_pkg hdr;	/* Package header containing sub-cmd */
+>> +	__s32 cmd_status;	/* Out: Sub-cmd status returned back */
+>> +	__u16 reserved[2];	/* Ignored and to be used in future */
+>> +	__u8 payload[];		/* In/Out: Sub-cmd data buffer */
+>> +} __packed;
+>> +
+>> +/*
+>> + * Methods to be embedded in ND_CMD_CALL request. These are sent to the kernel
+>> + * via 'nd_pdsm_cmd_pkg.hdr.nd_command' member of the ioctl struct
+>> + */
+>> +enum papr_pdsm {
+>> +	PAPR_PDSM_MIN = 0x0,
+>> +	PAPR_PDSM_MAX,
+>> +};
+>> +
+>> +#endif /* _UAPI_ASM_POWERPC_PAPR_PDSM_H_ */
+>> diff --git a/arch/powerpc/platforms/pseries/papr_scm.c b/arch/powerpc/platforms/pseries/papr_scm.c
+>> index 692ad3d79826..167fcf0e249d 100644
+>> --- a/arch/powerpc/platforms/pseries/papr_scm.c
+>> +++ b/arch/powerpc/platforms/pseries/papr_scm.c
+>> @@ -15,13 +15,15 @@
+>>  #include <linux/seq_buf.h>
+>>  
+>>  #include <asm/plpar_wrappers.h>
+>> +#include <asm/papr_pdsm.h>
+>>  
+>>  #define BIND_ANY_ADDR (~0ul)
+>>  
+>>  #define PAPR_SCM_DIMM_CMD_MASK \
+>>  	((1ul << ND_CMD_GET_CONFIG_SIZE) | \
+>>  	 (1ul << ND_CMD_GET_CONFIG_DATA) | \
+>> -	 (1ul << ND_CMD_SET_CONFIG_DATA))
+>> +	 (1ul << ND_CMD_SET_CONFIG_DATA) | \
+>> +	 (1ul << ND_CMD_CALL))
+>>  
+>>  /* DIMM health bitmap bitmap indicators */
+>>  /* SCM device is unable to persist memory contents */
+>> @@ -89,6 +91,21 @@ struct papr_scm_priv {
+>>  	u64 health_bitmap;
+>>  };
+>>  
+>> +/* Convert a libnvdimm nd_cmd_pkg to pdsm specific pkg */
+>> +static inline struct nd_pdsm_cmd_pkg *nd_to_pdsm_cmd_pkg(struct nd_cmd_pkg *cmd)
+>> +{
+>> +	return (struct nd_pdsm_cmd_pkg *)cmd;
+>> +}
+>> +
+>> +/* Return the payload pointer for a given pcmd */
+>> +static inline void *pdsm_cmd_to_payload(struct nd_pdsm_cmd_pkg *pcmd)
+>> +{
+>> +	if (pcmd->hdr.nd_size_in == 0 && pcmd->hdr.nd_size_out == 0)
+>> +		return NULL;
+>> +	else
+>> +		return (void *)(pcmd->payload);
+>> +}
+>> +
+>>  static int drc_pmem_bind(struct papr_scm_priv *p)
+>>  {
+>>  	unsigned long ret[PLPAR_HCALL_BUFSIZE];
+>> @@ -349,17 +366,113 @@ static int papr_scm_meta_set(struct papr_scm_priv *p,
+>>  	return 0;
+>>  }
+>>  
+>> +/*
+>> + * Do a sanity checks on the inputs args to dimm-control function and return
+>> + * '0' if valid. This also does validation on ND_CMD_CALL sub-command packages.
+>> + */
+>> +static int is_cmd_valid(struct nvdimm *nvdimm, unsigned int cmd, void *buf,
+>> +			unsigned int buf_len)
+>> +{
+>> +	unsigned long cmd_mask = PAPR_SCM_DIMM_CMD_MASK;
+>> +	struct nd_pdsm_cmd_pkg *pkg;
+>> +	struct nd_cmd_pkg *nd_cmd;
+>> +	struct papr_scm_priv *p;
+>> +	enum papr_pdsm pdsm;
+>> +
+>> +	/* Only dimm-specific calls are supported atm */
+>> +	if (!nvdimm)
+>> +		return -EINVAL;
+>> +
+>> +	/* get the provider data from struct nvdimm */
+>> +	p = nvdimm_provider_data(nvdimm);
+>> +
+>> +	if (!test_bit(cmd, &cmd_mask)) {
+>> +		dev_dbg(&p->pdev->dev, "Unsupported cmd=%u\n", cmd);
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	/* For CMD_CALL verify pdsm request */
+>> +	if (cmd == ND_CMD_CALL) {
+>> +		/* Verify the envelope package */
+>> +		if (!buf || buf_len < sizeof(struct nd_pdsm_cmd_pkg)) {
+>> +			dev_dbg(&p->pdev->dev, "Invalid pkg size=%u\n",
+>> +				buf_len);
+>> +			return -EINVAL;
+>> +		}
+>> +
+>> +		/* Verify that the nd_cmd_pkg.nd_family is correct */
+>> +		nd_cmd = (struct nd_cmd_pkg *)buf;
+>> +		if (nd_cmd->nd_family != NVDIMM_FAMILY_PAPR) {
+>> +			dev_dbg(&p->pdev->dev, "Invalid pkg family=0x%llx\n",
+>> +				nd_cmd->nd_family);
+>> +			return -EINVAL;
+>> +		}
+>> +
+>> +		/* Get the pdsm request package and the command */
+>> +		pkg = nd_to_pdsm_cmd_pkg(nd_cmd);
+>> +		pdsm = pkg->hdr.nd_command;
+>> +
+>> +		/* Verify if the psdm command is valid */
+>> +		if (pdsm <= PAPR_PDSM_MIN || pdsm >= PAPR_PDSM_MAX) {
+>> +			dev_dbg(&p->pdev->dev, "PDSM[0x%x]: Invalid PDSM\n", pdsm);
+>> +			return -EINVAL;
+>> +		}
+>> +
+>> +		/* We except a payload with all PDSM commands */
+>> +		if (!pdsm_cmd_to_payload(pkg)) {
+>> +			dev_dbg(&p->pdev->dev, "PDSM[0x%x]: Empty payload\n", pdsm);
+>> +			return -EINVAL;
+>> +		}
+>> +
+>> +		/* Ensure reserved fields of the pdsm header are set to 0 */
+>> +		if (pkg->reserved[0] || pkg->reserved[1]) {
+>> +			dev_dbg(&p->pdev->dev,
+>> +				"PDSM[0x%x]: Invalid reserved field usage\n", pdsm);
+>> +			return -EINVAL;
+>> +		}
+>> +	}
+>> +
+>> +	/* Let the command be further processed */
+>> +	return 0;
+>> +}
+>> +
+>> +/*
+>> + * For a given pdsm request call an appropriate service function.
+>> + * Returns errors if any while handling the pdsm command package.
+>> + */
+>> +static int papr_scm_service_pdsm(struct papr_scm_priv *p,
+>> +				 struct nd_pdsm_cmd_pkg *pkg)
+>> +{
+>> +	const enum papr_pdsm pdsm = pkg->hdr.nd_command;
+>> +
+>> +	dev_dbg(&p->pdev->dev, "PDSM[0x%x]: Servicing..\n", pdsm);
+>> +
+>> +	/* Call pdsm service function */
+>> +	switch (pdsm) {
+>> +	default:
+>> +		dev_dbg(&p->pdev->dev, "PDSM[0x%x]: Unsupported PDSM request\n",
+>> +			pdsm);
+>> +		pkg->cmd_status = -ENOENT;
+>> +		break;
+>> +	}
+>> +
+>> +	return pkg->cmd_status;
+>> +}
+>> +
+>>  static int papr_scm_ndctl(struct nvdimm_bus_descriptor *nd_desc,
+>>  			  struct nvdimm *nvdimm, unsigned int cmd, void *buf,
+>>  			  unsigned int buf_len, int *cmd_rc)
+>>  {
+>>  	struct nd_cmd_get_config_size *get_size_hdr;
+>> +	struct nd_pdsm_cmd_pkg *call_pkg = NULL;
+>>  	struct papr_scm_priv *p;
+>>  	int rc;
+>>  
+>> -	/* Only dimm-specific calls are supported atm */
+>> -	if (!nvdimm)
+>> -		return -EINVAL;
+>> +	rc = is_cmd_valid(nvdimm, cmd, buf, buf_len);
+>> +	if (rc) {
+>> +		pr_debug("Invalid cmd=0x%x. Err=%d\n", cmd, rc);
+>> +		return rc;
+>> +	}
+>>  
+>>  	/* Use a local variable in case cmd_rc pointer is NULL */
+>>  	if (!cmd_rc)
+>> @@ -385,6 +498,11 @@ static int papr_scm_ndctl(struct nvdimm_bus_descriptor *nd_desc,
+>>  		*cmd_rc = papr_scm_meta_set(p, buf);
+>>  		break;
+>>  
+>> +	case ND_CMD_CALL:
+>> +		call_pkg = nd_to_pdsm_cmd_pkg(buf);
+>> +		*cmd_rc = papr_scm_service_pdsm(p, call_pkg);
+>> +		break;
+>> +
+>>  	default:
+>>  		dev_dbg(&p->pdev->dev, "Unknown command = %d\n", cmd);
+>>  		return -EINVAL;
+>> diff --git a/include/uapi/linux/ndctl.h b/include/uapi/linux/ndctl.h
+>> index de5d90212409..0e09dc5cec19 100644
+>> --- a/include/uapi/linux/ndctl.h
+>> +++ b/include/uapi/linux/ndctl.h
+>> @@ -244,6 +244,7 @@ struct nd_cmd_pkg {
+>>  #define NVDIMM_FAMILY_HPE2 2
+>>  #define NVDIMM_FAMILY_MSFT 3
+>>  #define NVDIMM_FAMILY_HYPERV 4
+>> +#define NVDIMM_FAMILY_PAPR 5
+>>  
+>>  #define ND_IOCTL_CALL			_IOWR(ND_IOCTL, ND_CMD_CALL,\
+>>  					struct nd_cmd_pkg)
+>> -- 
+>> 2.26.2
+>> 
+
 -- 
-2.24.0
-
+Cheers
+~ Vaibhav
