@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C915AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:06:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7629C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:06:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8BA02078C
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:06:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8190720823
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:06:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591657602;
-	bh=UCFZxBdhCTtSOkMISHI4v+UNZnsH2SbHB6zuHhVW3k0=;
+	s=default; t=1591657609;
+	bh=3oEk9mUz7kFZ8N7UDTVPNCIcRQV9ynzwPxO6yqrMMG8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DeDJesCVjLnjdii5o9b/tOVgsGM0K/PmVD0pq4wVn03Gdzhq0oJXJkv+PwW860D1c
-	 IYV4iyZQ1LVxBZQ1C6XuDjzpfhtjg4j171FdIYzBjpAmshHUx35QMfzCgDkS7IEc99
-	 hPk8ja+FBbWJ+CJ8ZnggcbWXcc092mHD9EuB3r2k=
+	b=Pa4JjMqo2paL6YHahZU+k8IgD7I5/gTj/rvdpsEH8zX84U0lb1ZcQxVJCNrcdiTw3
+	 TG4l9UZzietuDuBtgMDKmY0E5VPWk6rVa3b33JIffHFUMHthwZsgcpVuMPc9mbGTDc
+	 EfXtoV2hv/cIvbBJTP+QGyiohLOzpRtynKJ0A4Jg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbgFHXGl (ORCPT
+        id S1727080AbgFHXGs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:06:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49576 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:06:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726993AbgFHXG2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:06:28 -0400
+        id S1726907AbgFHXG3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:06:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 166602078C;
-        Mon,  8 Jun 2020 23:06:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63C72207C3;
+        Mon,  8 Jun 2020 23:06:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657588;
-        bh=UCFZxBdhCTtSOkMISHI4v+UNZnsH2SbHB6zuHhVW3k0=;
+        s=default; t=1591657589;
+        bh=3oEk9mUz7kFZ8N7UDTVPNCIcRQV9ynzwPxO6yqrMMG8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mtAsqnwwW8w0PJZJ/QPy3ydNyMHWR1vbtLSzpCWvTPMBbM6HBKCBxN1rzRJYONT29
-         uGirI0Op+8T0D7FmcXXRpm7lWiF4Kt++dWwROywi1XhxwdMxMERe+6CwYWc4IKeCdz
-         ogNNw9aTGkaoY+StqgtprTwNJ+CAN09Hp326017k=
+        b=O1G6T/3h0cD1CgsrG2CMDTkYYVJVjhUACx6N789p9wA671H2++M7S+HTvfCazI2kF
+         Zovdjvb7GLvVnULP/uoaJB/w4Wu1lEaMotGRGHz4EfviOp+jUWaX4mJVJgdW997M5O
+         GfsYCKdEb4X/BH6sIZIiaqmTIcBAV594Ln4ayxgU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Joshua Aberback <joshua.aberback@amd.com>,
-        Jun Lei <Jun.Lei@amd.com>,
+Cc:     Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
+        Eric Bernstein <Eric.Bernstein@amd.com>,
         Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.7 016/274] drm/amd/display: Force watermark value propagation
-Date:   Mon,  8 Jun 2020 19:01:49 -0400
-Message-Id: <20200608230607.3361041-16-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 017/274] drm/amd/display: fix virtual signal dsc setup
+Date:   Mon,  8 Jun 2020 19:01:50 -0400
+Message-Id: <20200608230607.3361041-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -62,61 +62,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joshua Aberback <joshua.aberback@amd.com>
+From: Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>
 
-[ Upstream commit 868149c9a072cbdc22a73ce25a487f9fbfa171ef ]
+[ Upstream commit d5bef51f084fccafa984b114ff74a01a64a0e2e3 ]
 
-[Why]
-The HUBBUB watermark registers are in an area that cannot be power
-gated, but the HUBP copies of the watermark values are in areas that can
-be power gated. When we power on a pipe, it will not automatically take
-the HUBBUB values, we need to force propagation by writing to a
-watermark register.
+This prevents dpcd access on virtual links.
 
-[How]
- - new HUBBUB function to re-write current value in a WM register
- - touch WM register after enabling the plane in program_pipe
-
-Signed-off-by: Joshua Aberback <joshua.aberback@amd.com>
-Reviewed-by: Jun Lei <Jun.Lei@amd.com>
+Signed-off-by: Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>
+Reviewed-by: Eric Bernstein <Eric.Bernstein@amd.com>
 Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c | 5 ++++-
- drivers/gpu/drm/amd/display/dc/inc/hw/dchubbub.h   | 2 ++
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/display/dc/core/dc_link_hwss.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
-index a023a4d59f41..c4fa13e4eaf9 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
-@@ -1478,8 +1478,11 @@ static void dcn20_program_pipe(
- 	if (pipe_ctx->update_flags.bits.odm)
- 		hws->funcs.update_odm(dc, context, pipe_ctx);
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_hwss.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_hwss.c
+index 51e0ee6e7695..6590f51caefa 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_link_hwss.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_hwss.c
+@@ -400,7 +400,7 @@ static bool dp_set_dsc_on_rx(struct pipe_ctx *pipe_ctx, bool enable)
+ 	struct dc_stream_state *stream = pipe_ctx->stream;
+ 	bool result = false;
  
--	if (pipe_ctx->update_flags.bits.enable)
-+	if (pipe_ctx->update_flags.bits.enable) {
- 		dcn20_enable_plane(dc, pipe_ctx, context);
-+		if (dc->res_pool->hubbub->funcs->force_wm_propagate_to_pipes)
-+			dc->res_pool->hubbub->funcs->force_wm_propagate_to_pipes(dc->res_pool->hubbub);
-+	}
- 
- 	if (pipe_ctx->update_flags.raw || pipe_ctx->plane_state->update_flags.raw || pipe_ctx->stream->update_flags.raw)
- 		dcn20_update_dchubp_dpp(dc, pipe_ctx, context);
-diff --git a/drivers/gpu/drm/amd/display/dc/inc/hw/dchubbub.h b/drivers/gpu/drm/amd/display/dc/inc/hw/dchubbub.h
-index f5dd0cc73c63..47a566d82d6e 100644
---- a/drivers/gpu/drm/amd/display/dc/inc/hw/dchubbub.h
-+++ b/drivers/gpu/drm/amd/display/dc/inc/hw/dchubbub.h
-@@ -144,6 +144,8 @@ struct hubbub_funcs {
- 	void (*allow_self_refresh_control)(struct hubbub *hubbub, bool allow);
- 
- 	void (*apply_DEDCN21_147_wa)(struct hubbub *hubbub);
-+
-+	void (*force_wm_propagate_to_pipes)(struct hubbub *hubbub);
- };
- 
- struct hubbub {
+-	if (IS_FPGA_MAXIMUS_DC(dc->ctx->dce_environment))
++	if (dc_is_virtual_signal(stream->signal) || IS_FPGA_MAXIMUS_DC(dc->ctx->dce_environment))
+ 		result = true;
+ 	else
+ 		result = dm_helpers_dp_write_dsc_enable(dc->ctx, stream, enable);
 -- 
 2.25.1
 
