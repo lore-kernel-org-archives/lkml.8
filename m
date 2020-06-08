@@ -2,94 +2,114 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74094C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B070DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 479C1206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:47:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 849542072F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:50:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z47IlzAy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729421AbgFHKrn (ORCPT
+        id S1729415AbgFHKuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 06:47:43 -0400
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:20691 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729337AbgFHKrl (ORCPT
+        Mon, 8 Jun 2020 06:50:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36660 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729310AbgFHKuI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 06:47:41 -0400
-Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 08 Jun 2020 03:47:40 -0700
-Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
-  by ironmsg-SD-alpha.qualcomm.com with ESMTP; 08 Jun 2020 03:47:38 -0700
-Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
-        id C4AA3217EC; Mon,  8 Jun 2020 16:17:35 +0530 (IST)
-From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
-To:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        peter.ujfalusi@ti.com, linux-mtd@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Subject: [PATCH] mtd: raw: qcom_nand: Fix register write error
-Date:   Mon,  8 Jun 2020 16:17:34 +0530
-Message-Id: <1591613254-1065-1-git-send-email-sivaprak@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Mon, 8 Jun 2020 06:50:08 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 609F2C08C5C3;
+        Mon,  8 Jun 2020 03:50:08 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id v24so6506231plo.6;
+        Mon, 08 Jun 2020 03:50:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=NUd8A6vcpiLm3Fha7fxltwZ2oWSxMEZrVjYYnaHST5Y=;
+        b=Z47IlzAy8zUjnEOmvVwz/YjfhEhWL91Yty/f2I8YlXBpa88Q9oEo+qUmfD2rOIyjHA
+         Ic8GrMABy2ZHgEDQYvbsuvhPAPSIxJhZl54mSgRNKDfyRl6JM6Q0CVlxj72AGkI/98e2
+         nyiCuGUoF/WzHuflKDJzqZvLo2voqVnPddWShFehzuozeoMQT469uSBfIBL1Z/qmBDq1
+         502TJt38bK04jHKBDXxxB1l/B9FJqNyWpgV3WRfnqCFkvQxxPlLMRNjz6WOiOHFBrfpi
+         XXk53WW/4tpodJ5V/HOUb3EK+A1Zogleq3HgkviRzNctMpQLzFpYdCj+muiZCYpAs1ib
+         OtBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=NUd8A6vcpiLm3Fha7fxltwZ2oWSxMEZrVjYYnaHST5Y=;
+        b=cXICLmUt+JS60xwZlOVvgcwqrnVAWNvS6dHSZdj18/K1LOHWq53CMrqmcKzmHmh16G
+         kZAn5azZaPfVON2Aj5IlEq7g0d+kz14ohm4I5SlPhKTiYzJb6t4qzP6N6g/9Xd7FLoUW
+         W/P/kR7T5RuBSZ3hds9hIAFAKtC1w+/V6NmkNi5v6u5SEV08a1PuPsowKLWsbkmHYcAh
+         8EK6s/bKPzUZLysJWGkaQ6GyhDBY2J5pCFAWoqUBisVrl588pm0XTKWoqglm0YI0sI9N
+         /diXRyqrzgfSad8T02HzmotnSjK4Yt0rKkXFZEae0RifIGXT55cEZGPrt44snNrcTyh2
+         LgOw==
+X-Gm-Message-State: AOAM531kgyxilpYluyoP7DZ5hXkl48xUhnhfJXe1HAYiXIwK1TVr4Gke
+        jd9Z/ziHO9dVGzK0J2X3H1A=
+X-Google-Smtp-Source: ABdhPJwH25TOm/mEYVKU6qSJi3ieHiz8AkVsZWZ9rifRyIACYvlgRiNZn2C0Ix/YWTzb6vK6cwW2LA==
+X-Received: by 2002:a17:90a:2686:: with SMTP id m6mr16696003pje.11.1591613407856;
+        Mon, 08 Jun 2020 03:50:07 -0700 (PDT)
+Received: from localhost ([43.224.245.180])
+        by smtp.gmail.com with ESMTPSA id 145sm7043277pfa.53.2020.06.08.03.50.06
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Jun 2020 03:50:06 -0700 (PDT)
+From:   Geliang Tang <geliangtang@gmail.com>
+To:     Mat Martineau <mathew.j.martineau@linux.intel.com>,
+        Matthieu Baerts <matthieu.baerts@tessares.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Peter Krystad <peter.krystad@linux.intel.com>
+Cc:     Geliang Tang <geliangtang@gmail.com>, netdev@vger.kernel.org,
+        mptcp@lists.01.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net v2] mptcp: bugfix for RM_ADDR option parsing
+Date:   Mon,  8 Jun 2020 18:47:54 +0800
+Message-Id: <5ec9759a19d4eba5f7f9006354da2cfeb39fa839.1591612830.git.geliangtang@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1. SFLASHC_BURST_CFG register is not available on all ipq nand platforms,
-   it is available only on ipq8064 devices and the nand controller works
-   without configuring these registers in this platform, so register
-   write to this can be removed.
+In MPTCPOPT_RM_ADDR option parsing, the pointer "ptr" pointed to the
+"Subtype" octet, the pointer "ptr+1" pointed to the "Address ID" octet:
 
-2. Once BAM mode is enabled register writes to NAND_CTRL should be
-   performed through BAM command descriptors. The NAND BAM mode will
-   be enabled by bootloaders. Check if BAM mode is already enabled and
-   enable it only if not enabled already.
+  +-------+-------+---------------+
+  |Subtype|(resvd)|   Address ID  |
+  +-------+-------+---------------+
+  |               |
+ ptr            ptr+1
 
-Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+We should set mp_opt->rm_id to the value of "ptr+1", not "ptr". This patch
+will fix this bug.
+
+Fixes: 3df523ab582c ("mptcp: Add ADD_ADDR handling")
+Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 ---
- drivers/mtd/nand/raw/qcom_nandc.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ Changes in v2:
+  - Add "-net" subject and "Fixes" tag as Matt suggested.
+---
+ net/mptcp/options.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/mtd/nand/raw/qcom_nandc.c b/drivers/mtd/nand/raw/qcom_nandc.c
-index 5b11c70..7bfd93a 100644
---- a/drivers/mtd/nand/raw/qcom_nandc.c
-+++ b/drivers/mtd/nand/raw/qcom_nandc.c
-@@ -36,7 +36,6 @@
- #define	NAND_DEV_CMD1			0xa4
- #define	NAND_DEV_CMD2			0xa8
- #define	NAND_DEV_CMD_VLD		0xac
--#define	SFLASHC_BURST_CFG		0xe0
- #define	NAND_ERASED_CW_DETECT_CFG	0xe8
- #define	NAND_ERASED_CW_DETECT_STATUS	0xec
- #define	NAND_EBI2_ECC_BUF_CFG		0xf0
-@@ -2774,14 +2773,20 @@ static int qcom_nandc_setup(struct qcom_nand_controller *nandc)
- 	u32 nand_ctrl;
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 01f1f4cf4902..490b92534afc 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -273,6 +273,8 @@ static void mptcp_parse_option(const struct sk_buff *skb,
+ 		if (opsize != TCPOLEN_MPTCP_RM_ADDR_BASE)
+ 			break;
  
- 	/* kill onenand */
--	nandc_write(nandc, SFLASHC_BURST_CFG, 0);
- 	nandc_write(nandc, dev_cmd_reg_addr(nandc, NAND_DEV_CMD_VLD),
- 		    NAND_DEV_CMD_VLD_VAL);
- 
- 	/* enable ADM or BAM DMA */
- 	if (nandc->props->is_bam) {
- 		nand_ctrl = nandc_read(nandc, NAND_CTRL);
--		nandc_write(nandc, NAND_CTRL, nand_ctrl | BAM_MODE_EN);
-+		/* Once BAM_MODE_EN bit is set, writes to the NAND_CTRL
-+		 * should be done through BAM command descriptors.
-+		 * in most cases bootloader enables the bam mode we
-+		 * need to set the BAM mode only if it is not set by
-+		 * bootloader
-+		 */
-+		if (!(nand_ctrl & BAM_MODE_EN))
-+			nandc_write(nandc, NAND_CTRL, nand_ctrl | BAM_MODE_EN);
- 	} else {
- 		nandc_write(nandc, NAND_FLASH_CHIP_SELECT, DM_EN);
- 	}
++		ptr++;
++
+ 		mp_opt->rm_addr = 1;
+ 		mp_opt->rm_id = *ptr++;
+ 		pr_debug("RM_ADDR: id=%d", mp_opt->rm_id);
 -- 
-2.7.4
+2.17.1
 
