@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C553C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA084C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:31:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 091AE20872
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:31:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFD51206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:31:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662687;
-	bh=0KMVBazzO/udkctSIz3PZmnLDrZNTnpCBWpljnxyuvQ=;
+	s=default; t=1591662693;
+	bh=ROkDuAVEAX5iprg27/OAqxRmFR4g+xJwM9tn3TX5o7U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HBgJ5VX9lR1OF51NuwU/Sij8uwN/96+Ip0g6Ov7uaNbuNud2Wf4MTf317Otj9D48h
-	 1206wSZ4JGJeLOF5rJ7Hh+bFIUZlwdT2UIKsdrkNzhbN3MnDwlFFcJB3hnVBT2xiWE
-	 9cUjnqiDErpJOtFip4s6h0gmyfxtdLIVFzr8cN24=
+	b=0a0YRyFOKdYgJsastR6HOQ1X+A/8XvWACrOFkSu7mwyhGP5wrF8jbjcpHvFWdd6xd
+	 hXkCkNhTGttNyT0RWgPpmJa50jM8BmXh+MhjPMTfOZU5WZLoCXTMpTNgzBnqgvx5y7
+	 k1QqSyVQccTFFIp5axi5l9Kg/tLhvBn2qFjdHAfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730256AbgFIAbZ (ORCPT
+        id S1733072AbgFIAbc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:31:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36670 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:31:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730058AbgFHXPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:15:35 -0400
+        id S1728582AbgFHXPb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:15:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42C9720820;
-        Mon,  8 Jun 2020 23:15:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74CE620872;
+        Mon,  8 Jun 2020 23:15:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658135;
-        bh=0KMVBazzO/udkctSIz3PZmnLDrZNTnpCBWpljnxyuvQ=;
+        s=default; t=1591658131;
+        bh=ROkDuAVEAX5iprg27/OAqxRmFR4g+xJwM9tn3TX5o7U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SMX8nJQG/UPU/DcZg1lSJPJKBrtM0m6RsAA7KbgWTG1h4DAIB31X3Xeca0sMgbFnt
-         EB8qmVU2BAsxeCdTSgl/UJcHB8ki5R+fWDbaVjE7G3M3+aauf4bT7WL4JNzRsT4rX2
-         RbMauJXHl87sEhcuGgmkLbH3IWVBgDNyBk9/g7UY=
+        b=Md1E2cuGJA1uRpi9TJDRoRad33v4fq0h8wEt8zF/IKac2OYjcJYdYybCojuvIToFi
+         iJmv2K7yLQoL4WjQdGcfjP1aKOe2Z6P04anJZ1IgiOIXIgVj1cHsxXun3jB05o1eQq
+         zskhFM2EdiQerSberAgHlkr2pyMzUtkEWykXUnMM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dragos Bogdan <dragos.bogdan@analog.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 5.6 169/606] staging: iio: ad2s1210: Fix SPI reading
-Date:   Mon,  8 Jun 2020 19:04:54 -0400
-Message-Id: <20200608231211.3363633-169-sashal@kernel.org>
+Cc:     Sasha Levin <sashal@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Christoph Hellwig <hch@lst.de>,
+        Ludovic Barre <ludovic.barre@st.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH AUTOSEL 5.6 166/606] Revert "driver core: platform: Initialize dma_parms for platform devices"
+Date:   Mon,  8 Jun 2020 19:04:51 -0400
+Message-Id: <20200608231211.3363633-166-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -62,64 +64,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dragos Bogdan <dragos.bogdan@analog.com>
+[ Upstream commit 1d2a14649ef5b5eb64ea5ce276d7df502bac4dbe ]
 
-commit 5e4f99a6b788047b0b8a7496c2e0c8f372f6edf2 upstream.
+[ Upstream commit 885a64715fd81e6af6d94a038556e0b2e6deb19c ]
 
-If the serial interface is used, the 8-bit address should be latched using
-the rising edge of the WR/FSYNC signal.
+This reverts commit 7c8978c0837d40c302f5e90d24c298d9ca9fc097, a new
+version will come in the next release cycle.
 
-This basically means that a CS change is required between the first byte
-sent, and the second one.
-This change splits the single-transfer transfer of 2 bytes into 2 transfers
-with a single byte, and CS change in-between.
-
-Note fixes tag is not accurate, but reflects a point beyond which there
-are too many refactors to make backporting straight forward.
-
-Fixes: b19e9ad5e2cb ("staging:iio:resolver:ad2s1210 general driver cleanup.")
-Signed-off-by: Dragos Bogdan <dragos.bogdan@analog.com>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: <stable@vger.kernel.org>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Ludovic Barre <ludovic.barre@st.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/iio/resolver/ad2s1210.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ drivers/base/platform.c         | 2 --
+ include/linux/platform_device.h | 1 -
+ 2 files changed, 3 deletions(-)
 
-diff --git a/drivers/staging/iio/resolver/ad2s1210.c b/drivers/staging/iio/resolver/ad2s1210.c
-index 4b25a3a314ed..ed404355ea4c 100644
---- a/drivers/staging/iio/resolver/ad2s1210.c
-+++ b/drivers/staging/iio/resolver/ad2s1210.c
-@@ -130,17 +130,24 @@ static int ad2s1210_config_write(struct ad2s1210_state *st, u8 data)
- static int ad2s1210_config_read(struct ad2s1210_state *st,
- 				unsigned char address)
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index c81b68d5d66d..b5ce7b085795 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -361,8 +361,6 @@ struct platform_object {
+  */
+ static void setup_pdev_dma_masks(struct platform_device *pdev)
  {
--	struct spi_transfer xfer = {
--		.len = 2,
--		.rx_buf = st->rx,
--		.tx_buf = st->tx,
-+	struct spi_transfer xfers[] = {
-+		{
-+			.len = 1,
-+			.rx_buf = &st->rx[0],
-+			.tx_buf = &st->tx[0],
-+			.cs_change = 1,
-+		}, {
-+			.len = 1,
-+			.rx_buf = &st->rx[1],
-+			.tx_buf = &st->tx[1],
-+		},
- 	};
- 	int ret = 0;
- 
- 	ad2s1210_set_mode(MOD_CONFIG, st);
- 	st->tx[0] = address | AD2S1210_MSB_IS_HIGH;
- 	st->tx[1] = AD2S1210_REG_FAULT;
--	ret = spi_sync_transfer(st->sdev, &xfer, 1);
-+	ret = spi_sync_transfer(st->sdev, xfers, 2);
- 	if (ret < 0)
- 		return ret;
+-	pdev->dev.dma_parms = &pdev->dma_parms;
+-
+ 	if (!pdev->dev.coherent_dma_mask)
+ 		pdev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
+ 	if (!pdev->dev.dma_mask) {
+diff --git a/include/linux/platform_device.h b/include/linux/platform_device.h
+index 81900b3cbe37..041bfa412aa0 100644
+--- a/include/linux/platform_device.h
++++ b/include/linux/platform_device.h
+@@ -25,7 +25,6 @@ struct platform_device {
+ 	bool		id_auto;
+ 	struct device	dev;
+ 	u64		platform_dma_mask;
+-	struct device_dma_parameters dma_parms;
+ 	u32		num_resources;
+ 	struct resource	*resource;
  
 -- 
 2.25.1
