@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E486CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4414FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9076206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:34:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16BA9206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:34:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662894;
-	bh=U+JU3pulcrPnDSUFMUHuppeZgdml6VTYsuEf4BfNm28=;
+	s=default; t=1591662898;
+	bh=DJ+RkNvt0Js/EBh4v/QVhJIKEDFFoh4tGKhMbLz5ypE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sSLvwJJspsnWtY+6h5DWPNowy0R6nuO1MimEwDcumCKGpzHK4APXn02HHCick9yGT
-	 huX5LGtUkEPR4PfcpBEbffAXm0dqgQBMTEJBtu4v2d/XRkETuH8nA7fe4QhcTvsQGw
-	 U6n8YXEumeKnfp9vsqFMcmW0w61VfpG9b1dHfDUQ=
+	b=zrcVRnjd0ws2G+7tVZOCSvecVf4juy0Db1xJelUJT2/iLFkqtt14OjNkbY/4EYCFo
+	 k8CVMbpc1C5dMcrb2EWnbDw8pyKU0N+MC0wLvTKvEbZvtqFXmW4Kuzb+WSPKLnGzpi
+	 IT5VHKxaDl3d2Ahoab2BrttbrIMS+dofATx89K0g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729837AbgFHXOd (ORCPT
+        id S1733205AbgFIAe5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:14:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59044 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:34:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729013AbgFHXL4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:11:56 -0400
+        id S1729828AbgFHXOc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:14:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF45A2145D;
-        Mon,  8 Jun 2020 23:11:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39DCE20B80;
+        Mon,  8 Jun 2020 23:14:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657915;
-        bh=U+JU3pulcrPnDSUFMUHuppeZgdml6VTYsuEf4BfNm28=;
+        s=default; t=1591658072;
+        bh=DJ+RkNvt0Js/EBh4v/QVhJIKEDFFoh4tGKhMbLz5ypE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X0ltNQV0ghGRev4g5tC1lTwAVT+9MUdObSE7WIZnMHBqM4s+P6iOnezrhsGHM6MMX
-         2LIzPLXswrryB6FL3U2cRhf8l4W3eviauEXh+dtxsxNwSu06oi122K/aigQoG7unlq
-         JZCUG7XR4gFBpuIC8qZuOIBaakQ3nZLtXEtQdH1U=
+        b=ewDKCuJ5QjO7hK2FdB7TuMuyGR/AIPLJ1tWP2XMAAqrMptrS5CqLrReR8yXtv6jd7
+         mVhSmDkxNQXgzOyjT7tvywvrRwd5yatIktevs6FB4hgx+e0uBfVvUgU77RDkTHXx7U
+         HRifO8cQvM/qDKeCLPZHhQfx6UMZvi0G/U9a2rfc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anton Protopopov <a.s.protopopov@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 266/274] bpf: Fix map permissions check
-Date:   Mon,  8 Jun 2020 19:05:59 -0400
-Message-Id: <20200608230607.3361041-266-sashal@kernel.org>
+Cc:     Juliet Kim <julietk@linux.vnet.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 117/606] ibmvnic: Skip fatal error reset after passive init
+Date:   Mon,  8 Jun 2020 19:04:02 -0400
+Message-Id: <20200608231211.3363633-117-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
-References: <20200608230607.3361041-1-sashal@kernel.org>
+In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
+References: <20200608231211.3363633-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,37 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anton Protopopov <a.s.protopopov@gmail.com>
+From: Juliet Kim <julietk@linux.vnet.ibm.com>
 
-[ Upstream commit 1ea0f9120c8ce105ca181b070561df5cbd6bc049 ]
+[ Upstream commit f9c6cea0b38518741c8dcf26ac056d26ee2fd61d ]
 
-The map_lookup_and_delete_elem() function should check for both FMODE_CAN_WRITE
-and FMODE_CAN_READ permissions because it returns a map element to user space.
+During MTU change, the following events may happen.
+Client-driven CRQ initialization fails due to partner’s CRQ closed,
+causing client to enqueue a reset task for FATAL_ERROR. Then passive
+(server-driven) CRQ initialization succeeds, causing client to
+release CRQ and enqueue a reset task for failover. If the passive
+CRQ initialization occurs before the FATAL reset task is processed,
+the FATAL error reset task would try to access a CRQ message queue
+that was freed, causing an oops. The problem may be most likely to
+occur during DLPAR add vNIC with a non-default MTU, because the DLPAR
+process will automatically issue a change MTU request.
 
-Fixes: bd513cd08f10 ("bpf: add MAP_LOOKUP_AND_DELETE_ELEM syscall")
-Signed-off-by: Anton Protopopov <a.s.protopopov@gmail.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Link: https://lore.kernel.org/bpf/20200527185700.14658-5-a.s.protopopov@gmail.com
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Fix this by not processing fatal error reset if CRQ is passively
+initialized after client-driven CRQ initialization fails.
+
+Signed-off-by: Juliet Kim <julietk@linux.vnet.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/syscall.c | 3 ++-
+ drivers/net/ethernet/ibm/ibmvnic.c | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index 4e6dee19a668..5e52765161f9 100644
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -1468,7 +1468,8 @@ static int map_lookup_and_delete_elem(union bpf_attr *attr)
- 	map = __bpf_map_get(f);
- 	if (IS_ERR(map))
- 		return PTR_ERR(map);
--	if (!(map_get_sys_perms(map, f) & FMODE_CAN_WRITE)) {
-+	if (!(map_get_sys_perms(map, f) & FMODE_CAN_READ) ||
-+	    !(map_get_sys_perms(map, f) & FMODE_CAN_WRITE)) {
- 		err = -EPERM;
- 		goto err_put;
- 	}
+diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
+index 4bd33245bad6..3de549c6c693 100644
+--- a/drivers/net/ethernet/ibm/ibmvnic.c
++++ b/drivers/net/ethernet/ibm/ibmvnic.c
+@@ -2189,7 +2189,8 @@ static void __ibmvnic_reset(struct work_struct *work)
+ 				rc = do_hard_reset(adapter, rwi, reset_state);
+ 				rtnl_unlock();
+ 			}
+-		} else {
++		} else if (!(rwi->reset_reason == VNIC_RESET_FATAL &&
++				adapter->from_passive_init)) {
+ 			rc = do_reset(adapter, rwi, reset_state);
+ 		}
+ 		kfree(rwi);
 -- 
 2.25.1
 
