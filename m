@@ -2,120 +2,104 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA53C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 445A3C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3DD8206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:40:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2483C2053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:40:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RG+Z387O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730578AbgFHQkG (ORCPT
+        id S1730619AbgFHQkc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 12:40:06 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:47042 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730333AbgFHQkF (ORCPT
+        Mon, 8 Jun 2020 12:40:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34358 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730523AbgFHQkb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 12:40:05 -0400
-Received: by mail-ot1-f67.google.com with SMTP id g7so13084971oti.13
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 09:40:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DoIk7M+/dfkd1qsEjTLJ/qJxq8wwgYvyA9updsNoufY=;
-        b=glChjZY7wYCodDDola73n/Pe7woFyACC1rdtowOSD7+/wNKYr+uPnlMja7s0pPUbX0
-         Jt1ViZcj+vySe4vKU5KxzldfGjnt8yEX5gWA6Q1DMO6h8BAF49suOvBJ+ZujMRyTngYG
-         655mFGHv+TEla/kOTvj7MkvkAJY56ddoAcVCX4MHo0vZq0llxKaIcy2c3cWaHDzyOyP7
-         cloXH1pW5rUHW8vEJKljKHZkHDiu8DiYdDnZ9+gFJZL+wd3RiiM9L+XahK5jqY+NSRoH
-         B6P3cSSl9T0u1y+FAl52LruU343iax9vs/AfnKMMJi0+ydLPsmdbWRdA5O6q1/ggWr5v
-         5oLg==
-X-Gm-Message-State: AOAM532sGUlVD20P4XHFHwno0KUtsVsUawJ+SiKdvh71/2Bh7Q9ycYFv
-        ubyFe7KEajqR9EzVvJzI0exK/NVz0Xnfpu0vwTk=
-X-Google-Smtp-Source: ABdhPJwpAOtHYCQlGPkYngs01Go5RWpOkkicySbl5mgtKtQPMEl0xr+Ij/5M9xtKtgFgG9RDyq2RJu3F8l8v9kjNI98=
-X-Received: by 2002:a9d:c29:: with SMTP id 38mr17145170otr.107.1591634404626;
- Mon, 08 Jun 2020 09:40:04 -0700 (PDT)
+        Mon, 8 Jun 2020 12:40:31 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5518FC08C5C3;
+        Mon,  8 Jun 2020 09:40:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=UYRjFEuiAFWDIq0QYKRYnGAKY3ToCP8PMJR7D9hMUs8=; b=RG+Z387OY2XbLPQjIZMDfFwj78
+        8fTzy56dbLHTODMSCbt7VMDh4tQfZO1slCPJUzXghc/fhWE4QloX+aRkGuRSNkJxPjpZy/Hh4tAFs
+        Nfi3SHKacf3pMJrhuyWa5mdq5cIJMDQJS1fi6piLVUFh5fanbpMdW2L1gFG9YJbqePDX5yDjwVjsD
+        XumKPOEh5n55n2viS2o7PVCPYaki1ozfA7GoAmLTJ19DT2vwGrdiJiaaxsW+YwlqsGrnUtaTm9dTW
+        jOtFZqsT6y9IYFY+xhavCvaZUQo/wc6L4e2eR/yLFiQeJ6fT9CIXZHzK6bayp6UJdYZH88rJMfQxq
+        6ZX6PBeg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jiKom-0000wG-FC; Mon, 08 Jun 2020 16:40:12 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C60A03019CE;
+        Mon,  8 Jun 2020 18:40:09 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id AF5A82B3CE923; Mon,  8 Jun 2020 18:40:09 +0200 (CEST)
+Date:   Mon, 8 Jun 2020 18:40:09 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, frederic@kernel.org,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
+Subject: Re: blk-softirq vs smp_call_function_single_async()
+Message-ID: <20200608164009.GD2531@hirez.programming.kicks-ass.net>
+References: <20200608115800.GA2531@hirez.programming.kicks-ass.net>
+ <20200608154557.GA26611@infradead.org>
+ <20200608155833.GC2531@hirez.programming.kicks-ass.net>
+ <20200608163342.GA5155@infradead.org>
 MIME-Version: 1.0
-References: <e3b30905-4497-29b4-4636-a313283dbc56@i-love.sakura.ne.jp> <20200528065603.3596-1-penguin-kernel@I-love.SAKURA.ne.jp>
-In-Reply-To: <20200528065603.3596-1-penguin-kernel@I-love.SAKURA.ne.jp>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 8 Jun 2020 18:39:53 +0200
-Message-ID: <CAMuHMdWOjCtV9W7GtHrhKCJwJ6wNSpd_RQTBaoG7sVrb4oYSDA@mail.gmail.com>
-Subject: Re: [PATCH v2] twist: allow converting pr_devel()/pr_debug() into snprintf()
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Ondrej Mosnacek <omosnace@redhat.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200608163342.GA5155@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tetsuo,
+On Mon, Jun 08, 2020 at 09:33:42AM -0700, Christoph Hellwig wrote:
+> On Mon, Jun 08, 2020 at 05:58:33PM +0200, Peter Zijlstra wrote:
+> > > A request can only be completed once.
+> > 
+> > Sure, but that doesn't help.
+> > 
+> > CPU0				CPU1
+> > 
+> >  raise_blk_irq()		BLOCK_SOFTIRQ
+> >    IPI -> CPU1
+> > 
+> > 				// picks up thing from CPU0
+> > 				req->complete(req);
+> > 
+> > 
+> > 	<big hole where CSD is active and request completed>
+> > 
+> > 				<IPI>
+> > 				  trigger_softirq()
+> > 
+> > 
+> > What happens to a struct request after completion, is it free()d
+> > or reused? If reused, how do we guarantee CSD completion before
+> > free()ing?
+> 
+> The request is freed in the block layer sense by __blk_mq_free_request
+> (which doesn't actually free the memory, so it eventually gets reused).
+> 
+> __blk_mq_free_request is called from blk_mq_end_request which
+> is called from the drivers ->complete_rq method, which is called
+> from the block softirq.
+> 
+> What is the method to guaranteed CSD completion?
 
-On Thu, May 28, 2020 at 8:57 AM Tetsuo Handa
-<penguin-kernel@i-love.sakura.ne.jp> wrote:
-> syzbot found a NULL pointer dereference bug inside mptcp_recvmsg() due to
-> ssock == NULL, but this bug manifested inside selinux_socket_recvmsg()
-> because pr_debug() was no-op [1].
->
->   pr_debug("fallback-read subflow=%p",
->            mptcp_subflow_ctx(ssock->sk));
->   copied = sock_recvmsg(ssock, msg, flags);
->
-> Thus, let's allow fuzzers to always evaluate pr_devel()/pr_debug()
-> messages, by redirecting no-op pr_devel()/pr_debug() calls to snprintf().
->
-> [1] https://syzkaller.appspot.com/bug?id=12be9aa373be9d8727cdd172f190de39528a413a
->
-> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+There isn't one, it was meant to be used with static allocations.
 
-Thanks for your patch!
-
-> --- a/lib/Kconfig.twist
-> +++ b/lib/Kconfig.twist
-> @@ -12,10 +12,22 @@ if TWIST_KERNEL_BEHAVIOR
->
->  config TWIST_FOR_SYZKALLER_TESTING
->         bool "Select all twist options suitable for syzkaller testing"
-> +       select TWIST_ALWAYS_EVALUATE_PRINTK_ARGUMENTS
->         select TWIST_DISABLE_KBD_K_SPEC_HANDLER
->         help
->          Say N unless you are building kernels for syzkaller's testing.
->
-> +config TWIST_ALWAYS_EVALUATE_PRINTK_ARGUMENTS
-> +       bool "Always evaluate printk() arguments"
-> +       help
-> +        Currently, only format string of printk() arguments is checked
-> +        by compiler if pr_devel()/pr_debug() are disabled. Therefore,
-> +        fuzz testing cannot catch runtime bugs (e.g. NULL pointer
-> +        dereference, use-after-free/out-of-bounds/uninitialized read)
-> +        in disabled printk() calls. This option redirects disabled
-> +        printk(...) to snprintf(NULL, 0, ...) in order to evaluate
-> +        arguments without printing.
-> +
->  config TWIST_DISABLE_KBD_K_SPEC_HANDLER
->         bool "Disable k_spec() function in drivers/tty/vt/keyboard.c"
->         help
-
-Can't you just enable CONFIG_DYNAMIC_DEBUG in your fuzzer
-config instead?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Frederic proposed changing all these to irq_work, and I think I'll go do
+that. First dinner though.
