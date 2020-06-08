@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 807A1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:41:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD53C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DFBA20737
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:41:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3052F20774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:41:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663280;
-	bh=48qnSUMvAgXFcboFXXCk/yFfLm1NqUTMU6M6I9i+qZo=;
+	s=default; t=1591663290;
+	bh=1Ikt2s4fDTnxI7w86xDYzie2Q7sfM+7MjF9rgt9ESeo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bUpwDG7vVFi4ZLaVYEo8SKdqNXobgacOus5Y/IIk+5oZhEwFS+idyfAVRn978ZHoL
-	 ax6TfC+a+Jn8JATGChLCzQLGETz89HlCoZOwGgkCMiyAkxyvXJTONMBXGo28DucJh8
-	 CSD0uAL7Fd4xCnHTEmKEdqejOzl6j4xD14emRULI=
+	b=LWGvRAv3EYBOxmaC4Tvj6fPKhA2lszmCTMBR4J0puSK3bV+LcQ9NIlMofdL60MmaJ
+	 2dZBruGdsX+2w/mZup0Bqv5UMCsP9N8NGGBYbxTbjXmwEqZbqrAmHqalArQ34QXXXT
+	 Zpr4L0pUfVZ7DvlwQF/44+SraYnyWDou0wr3d1tQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733255AbgFIAlF (ORCPT
+        id S1729439AbgFIAl2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:41:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60504 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:41:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728336AbgFHXMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:12:49 -0400
+        id S1729171AbgFHXMo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:12:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67AAA212CC;
-        Mon,  8 Jun 2020 23:12:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADE05208C7;
+        Mon,  8 Jun 2020 23:12:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657969;
-        bh=48qnSUMvAgXFcboFXXCk/yFfLm1NqUTMU6M6I9i+qZo=;
+        s=default; t=1591657963;
+        bh=1Ikt2s4fDTnxI7w86xDYzie2Q7sfM+7MjF9rgt9ESeo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cbS24Kgd+8thAY+pjsjvUWqBShwCbZjDYTmI3d+YRwpUIYp+zQ94rqdi+0f91oGYo
-         5x4lQcvdtLRHaLV5xZ3T663b3ZbfhJgsYPx4KpnLj3uY5cpLvPiJDrcprmXfX4Gao+
-         bM3t879eFRR2zsKStDIxytTc8peZgw0AaombTM20=
+        b=CtFPlK00C5wmuSDzuw2MuXdYl4VS2TPwrF/dQQaSWgh+Gg+jQNhO9r6D5HWA8Kyue
+         /MRWJalxguLyAefTscGEgj+2lSoAhW1ECPYEuzbnUYdN/sA9LbbW+CLHg20nxo8RrW
+         c3Y53YlcNPGX8cTsnVKdfl4bxKHIVFt92eMPsliE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>, stable@kernel.org,
-        Tony Lindgren <tony@atomide.com>,
+Cc:     Li Jun <jun.li@nxp.com>, Baolin Wang <baolin.wang@linaro.org>,
+        Peter Chen <peter.chen@nxp.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 032/606] ARM: dts: dra7: Fix bus_dma_limit for PCIe
-Date:   Mon,  8 Jun 2020 19:02:37 -0400
-Message-Id: <20200608231211.3363633-32-sashal@kernel.org>
+        linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 027/606] usb: host: xhci-plat: keep runtime active when removing host
+Date:   Mon,  8 Jun 2020 19:02:32 -0400
+Message-Id: <20200608231211.3363633-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -60,61 +61,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kishon Vijay Abraham I <kishon@ti.com>
+From: Li Jun <jun.li@nxp.com>
 
-commit 90d4d3f4ea45370d482fa609dbae4d2281b4074f upstream.
+commit 1449cb2c2253d37d998c3714aa9b95416d16d379 upstream.
 
-Even though commit cfb5d65f2595 ("ARM: dts: dra7: Add bus_dma_limit
-for L3 bus") added bus_dma_limit for L3 bus, the PCIe controller
-gets incorrect value of bus_dma_limit.
+While removing the host (e.g. for USB role switch from host to device),
+if runtime pm is enabled by user, below oops occurs on dwc3 and cdns3
+platforms.
+Keeping the xhci-plat device active during host removal, and disabling
+runtime pm before calling pm_runtime_set_suspended() fixes them.
 
-Fix it by adding empty dma-ranges property to axi@0 and axi@1
-(parent device tree node of PCIe controller).
+oops1:
+Unable to handle kernel NULL pointer dereference at virtual address
+0000000000000240
+Internal error: Oops: 96000004 [#1] PREEMPT SMP
+Modules linked in:
+CPU: 0 PID: 5 Comm: kworker/0:0 Not tainted 5.4.3-00107-g64d454a-dirty
+Hardware name: FSL i.MX8MP EVK (DT)
+Workqueue: pm pm_runtime_work
+pstate: 60000005 (nZCv daif -PAN -UAO)
+pc : xhci_suspend+0x34/0x698
+lr : xhci_plat_runtime_suspend+0x2c/0x38
+sp : ffff800011ddbbc0
+Call trace:
+ xhci_suspend+0x34/0x698
+ xhci_plat_runtime_suspend+0x2c/0x38
+ pm_generic_runtime_suspend+0x28/0x40
+ __rpm_callback+0xd8/0x138
+ rpm_callback+0x24/0x98
+ rpm_suspend+0xe0/0x448
+ rpm_idle+0x124/0x140
+ pm_runtime_work+0xa0/0xf8
+ process_one_work+0x1dc/0x370
+ worker_thread+0x48/0x468
+ kthread+0xf0/0x120
+ ret_from_fork+0x10/0x1c
 
-Cc: stable@kernel.org
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+oops2:
+usb 2-1: USB disconnect, device number 2
+xhci-hcd xhci-hcd.1.auto: remove, state 4
+usb usb2: USB disconnect, device number 1
+xhci-hcd xhci-hcd.1.auto: USB bus 2 deregistered
+xhci-hcd xhci-hcd.1.auto: remove, state 4
+usb usb1: USB disconnect, device number 1
+Unable to handle kernel NULL pointer dereference at virtual address
+0000000000000138
+Internal error: Oops: 96000004 [#1] PREEMPT SMP
+Modules linked in:
+CPU: 2 PID: 7 Comm: kworker/u8:0 Not tainted 5.6.0-rc4-next-20200304-03578
+Hardware name: Freescale i.MX8QXP MEK (DT)
+Workqueue: 1-0050 tcpm_state_machine_work
+pstate: 20000005 (nzCv daif -PAN -UAO)
+pc : xhci_free_dev+0x214/0x270
+lr : xhci_plat_runtime_resume+0x78/0x88
+sp : ffff80001006b5b0
+Call trace:
+ xhci_free_dev+0x214/0x270
+ xhci_plat_runtime_resume+0x78/0x88
+ pm_generic_runtime_resume+0x30/0x48
+ __rpm_callback+0x90/0x148
+ rpm_callback+0x28/0x88
+ rpm_resume+0x568/0x758
+ rpm_resume+0x260/0x758
+ rpm_resume+0x260/0x758
+ __pm_runtime_resume+0x40/0x88
+ device_release_driver_internal+0xa0/0x1c8
+ device_release_driver+0x1c/0x28
+ bus_remove_device+0xd4/0x158
+ device_del+0x15c/0x3a0
+ usb_disable_device+0xb0/0x268
+ usb_disconnect+0xcc/0x300
+ usb_remove_hcd+0xf4/0x1dc
+ xhci_plat_remove+0x78/0xe0
+ platform_drv_remove+0x30/0x50
+ device_release_driver_internal+0xfc/0x1c8
+ device_release_driver+0x1c/0x28
+ bus_remove_device+0xd4/0x158
+ device_del+0x15c/0x3a0
+ platform_device_del.part.0+0x20/0x90
+ platform_device_unregister+0x28/0x40
+ cdns3_host_exit+0x20/0x40
+ cdns3_role_stop+0x60/0x90
+ cdns3_role_set+0x64/0xd8
+ usb_role_switch_set_role.part.0+0x3c/0x68
+ usb_role_switch_set_role+0x20/0x30
+ tcpm_mux_set+0x60/0xf8
+ tcpm_reset_port+0xa4/0xf0
+ tcpm_detach.part.0+0x28/0x50
+ tcpm_state_machine_work+0x12ac/0x2360
+ process_one_work+0x1c8/0x470
+ worker_thread+0x50/0x428
+ kthread+0xfc/0x128
+ ret_from_fork+0x10/0x18
+Code: c8037c02 35ffffa3 17ffe7c3 f9800011 (c85f7c01)
+---[ end trace 45b1a173d2679e44 ]---
+
+[minor commit message cleanup  -Mathias]
+Cc: Baolin Wang <baolin.wang@linaro.org>
+Cc: <stable@vger.kernel.org>
+Fixes: b0c69b4bace3 ("usb: host: plat: Enable xHCI plat runtime PM")
+Reviewed-by: Peter Chen <peter.chen@nxp.com>
+Tested-by: Peter Chen <peter.chen@nxp.com>
+Signed-off-by: Li Jun <jun.li@nxp.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20200514110432.25564-3-mathias.nyman@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm/boot/dts/dra7.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/host/xhci-plat.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index 5f5ee16f07a3..a341511f014c 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -172,6 +172,7 @@ axi@0 {
- 			#address-cells = <1>;
- 			ranges = <0x51000000 0x51000000 0x3000
- 				  0x0	     0x20000000 0x10000000>;
-+			dma-ranges;
- 			/**
- 			 * To enable PCI endpoint mode, disable the pcie1_rc
- 			 * node and enable pcie1_ep mode.
-@@ -185,7 +186,6 @@ pcie1_rc: pcie@51000000 {
- 				device_type = "pci";
- 				ranges = <0x81000000 0 0          0x03000 0 0x00010000
- 					  0x82000000 0 0x20013000 0x13000 0 0xffed000>;
--				dma-ranges = <0x02000000 0x0 0x00000000 0x00000000 0x1 0x00000000>;
- 				bus-range = <0x00 0xff>;
- 				#interrupt-cells = <1>;
- 				num-lanes = <1>;
-@@ -230,6 +230,7 @@ axi@1 {
- 			#address-cells = <1>;
- 			ranges = <0x51800000 0x51800000 0x3000
- 				  0x0	     0x30000000 0x10000000>;
-+			dma-ranges;
- 			status = "disabled";
- 			pcie2_rc: pcie@51800000 {
- 				reg = <0x51800000 0x2000>, <0x51802000 0x14c>, <0x1000 0x2000>;
-@@ -240,7 +241,6 @@ pcie2_rc: pcie@51800000 {
- 				device_type = "pci";
- 				ranges = <0x81000000 0 0          0x03000 0 0x00010000
- 					  0x82000000 0 0x30013000 0x13000 0 0xffed000>;
--				dma-ranges = <0x02000000 0x0 0x00000000 0x00000000 0x1 0x00000000>;
- 				bus-range = <0x00 0xff>;
- 				#interrupt-cells = <1>;
- 				num-lanes = <1>;
+diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+index 315b4552693c..52c625c02341 100644
+--- a/drivers/usb/host/xhci-plat.c
++++ b/drivers/usb/host/xhci-plat.c
+@@ -363,6 +363,7 @@ static int xhci_plat_remove(struct platform_device *dev)
+ 	struct clk *reg_clk = xhci->reg_clk;
+ 	struct usb_hcd *shared_hcd = xhci->shared_hcd;
+ 
++	pm_runtime_get_sync(&dev->dev);
+ 	xhci->xhc_state |= XHCI_STATE_REMOVING;
+ 
+ 	usb_remove_hcd(shared_hcd);
+@@ -376,8 +377,9 @@ static int xhci_plat_remove(struct platform_device *dev)
+ 	clk_disable_unprepare(reg_clk);
+ 	usb_put_hcd(hcd);
+ 
+-	pm_runtime_set_suspended(&dev->dev);
+ 	pm_runtime_disable(&dev->dev);
++	pm_runtime_put_noidle(&dev->dev);
++	pm_runtime_set_suspended(&dev->dev);
+ 
+ 	return 0;
+ }
 -- 
 2.25.1
 
