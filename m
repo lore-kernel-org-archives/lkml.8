@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E1D8C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB480C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 023DC207C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:32:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6E6D206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:32:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662776;
-	bh=/FtmSA/ghE/J10oWvCHUZzoYJTnDNGFfpHIAFLpEmy4=;
+	s=default; t=1591662779;
+	bh=ht8J4MKA9ie5UsO0kJgPE0k/HNLasbq4/TqN7ewjmWU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lQi0dGsyzk4YTa62XhCZhEF00q78W4prjDs7SX6CekZBbtEsu97wdMVMFJQasMZOS
-	 ivQFtxnlf9uLJRN0pCAofhcZ7YvxXzwLdZg5OU98EDVPTmXisyO0Vd0ydCjOm1eBiu
-	 xOJtHos9PeDaLsNfh6gnQUmWzlh9nfEsMA7WNo+k=
+	b=RPshYrUN3UfH+VYXJpNCykp9lI+5fvLzeeId4d+kPRWl/md85Dm0zSSVBMUrGygm4
+	 f10UNJtHeDkmdoL0wp8MA9hJ99eFggMqHI0NdlvOIa9UzAKIkFCay+Qz+nKdo6fg/M
+	 /bxkCM7zc0GHwJehfYtOcn5AYpdKJ0xdJo/s9sNE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733152AbgFIAcy (ORCPT
+        id S1733158AbgFIAc6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:32:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35796 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:32:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728658AbgFHXPF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:15:05 -0400
+        id S1729969AbgFHXPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:15:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A170421501;
-        Mon,  8 Jun 2020 23:15:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C54C217A0;
+        Mon,  8 Jun 2020 23:15:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658105;
-        bh=/FtmSA/ghE/J10oWvCHUZzoYJTnDNGFfpHIAFLpEmy4=;
+        s=default; t=1591658104;
+        bh=ht8J4MKA9ie5UsO0kJgPE0k/HNLasbq4/TqN7ewjmWU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CNmXSKKRP57cq1a9fHA4krWTBlWHGeLMvnvPqm545iPm7PlNnVetYene/dlv59cW7
-         EeONBbjckE2deSzgmrWSCqtLkJCygf08iz/zLSxn66Fvj/l6PJTywqK2tyh3HHudXg
-         roJ+UjhUZm3ljiGubwWi6mDqn4iSL2Gmdkm8pS4c=
+        b=ynS49tf0bglpWhV6UNOkD6E9WBw2mZlP4S9ZVZfaO1GUSYV4J55LIEbtnSvOTV7sP
+         N3QMBHWT87gopggzXheX1fKUZHbvedvuhqSrYlVJOfbHgoYRWVoPjXm31nnV+6UUMA
+         C7QLxrtX7WeSgTLIYPqUJ+l1njlkBNsC1QXx8NWw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christian Lachner <gladiac@gmail.com>,
+Cc:     Brent Lu <brent.lu@intel.com>, Jaroslav Kysela <perex@perex.cz>,
         Takashi Iwai <tiwai@suse.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.6 145/606] ALSA: hda/realtek - Fix silent output on Gigabyte X570 Aorus Xtreme
-Date:   Mon,  8 Jun 2020 19:04:30 -0400
-Message-Id: <20200608231211.3363633-145-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 144/606] ALSA: pcm: fix incorrect hw_base increase
+Date:   Mon,  8 Jun 2020 19:04:29 -0400
+Message-Id: <20200608231211.3363633-144-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -60,36 +60,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Lachner <gladiac@gmail.com>
+From: Brent Lu <brent.lu@intel.com>
 
-commit d9e8fe0cffbfdd18de96fa68ee2a8b667a0b046e upstream.
+commit e7513c5786f8b33f0c107b3759e433bc6cbb2efa upstream.
 
-The Gigabyte X570 Aorus Xtreme motherboard with ALC1220 codec
-requires a similar workaround for Clevo laptops to enforce the
-DAC/mixer connection path. Set up a quirk entry for that.
+There is a corner case that ALSA keeps increasing the hw_ptr but DMA
+already stop working/updating the position for a long time.
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=205275
-Signed-off-by: Christian Lachner <gladiac@gmail.com>
+In following log we can see the position returned from DMA driver does
+not move at all but the hw_ptr got increased at some point of time so
+snd_pcm_avail() will return a large number which seems to be a buffer
+underrun event from user space program point of view. The program
+thinks there is space in the buffer and fill more data.
+
+[  418.510086] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 4096 avail 12368
+[  418.510149] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 6910 avail 9554
+...
+[  418.681052] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 15102 avail 1362
+[  418.681130] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 16464 avail 0
+[  418.726515] sound pcmC0D5p: pos 96 hw_ptr 16464 appl_ptr 16464 avail 16368
+
+This is because the hw_base will be increased by runtime->buffer_size
+frames unconditionally if the hw_ptr is not updated for over half of
+buffer time. As the hw_base increases, so does the hw_ptr increased
+by the same number.
+
+The avail value returned from snd_pcm_avail() could exceed the limit
+(buffer_size) easily becase the hw_ptr itself got increased by same
+buffer_size samples when the corner case happens. In following log,
+the buffer_size is 16368 samples but the avail is 21810 samples so
+CRAS server complains about it.
+
+[  418.851755] sound pcmC0D5p: pos 96 hw_ptr 16464 appl_ptr 27390 avail 5442
+[  418.926491] sound pcmC0D5p: pos 96 hw_ptr 32832 appl_ptr 27390 avail 21810
+
+cras_server[1907]: pcm_avail returned frames larger than buf_size:
+sof-glkda7219max: :0,5: 21810 > 16368
+
+By updating runtime->hw_ptr_jiffies each time the HWSYNC is called,
+the hw_base will keep the same when buffer stall happens at long as
+the interval between each HWSYNC call is shorter than half of buffer
+time.
+
+Following is a log captured by a patched kernel. The hw_base/hw_ptr
+value is fixed in this corner case and user space program should be
+aware of the buffer stall and handle it.
+
+[  293.525543] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 4096 avail 12368
+[  293.525606] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 6880 avail 9584
+[  293.525975] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 10976 avail 5488
+[  293.611178] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 15072 avail 1392
+[  293.696429] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 16464 avail 0
+...
+[  381.139517] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 16464 avail 0
+
+Signed-off-by: Brent Lu <brent.lu@intel.com>
+Reviewed-by: Jaroslav Kysela <perex@perex.cz>
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200518053844.42743-2-gladiac@gmail.com
+Link: https://lore.kernel.org/r/1589776238-23877-1-git-send-email-brent.lu@intel.com
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- sound/pci/hda/patch_realtek.c | 1 +
+ sound/core/pcm_lib.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index dc2302171a71..23315b69ac38 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -2457,6 +2457,7 @@ static const struct snd_pci_quirk alc882_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x1458, 0xa002, "Gigabyte EP45-DS3/Z87X-UD3H", ALC889_FIXUP_FRONT_HP_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1458, 0xa0b8, "Gigabyte AZ370-Gaming", ALC1220_FIXUP_GB_DUAL_CODECS),
- 	SND_PCI_QUIRK(0x1458, 0xa0cd, "Gigabyte X570 Aorus Master", ALC1220_FIXUP_CLEVO_P950),
-+	SND_PCI_QUIRK(0x1458, 0xa0ce, "Gigabyte X570 Aorus Xtreme", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1462, 0x1228, "MSI-GP63", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1462, 0x1275, "MSI-GL63", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1462, 0x1276, "MSI-GL73", ALC1220_FIXUP_CLEVO_P950),
+diff --git a/sound/core/pcm_lib.c b/sound/core/pcm_lib.c
+index 872a852de75c..d531e1bc2b81 100644
+--- a/sound/core/pcm_lib.c
++++ b/sound/core/pcm_lib.c
+@@ -433,6 +433,7 @@ static int snd_pcm_update_hw_ptr0(struct snd_pcm_substream *substream,
+ 
+  no_delta_check:
+ 	if (runtime->status->hw_ptr == new_hw_ptr) {
++		runtime->hw_ptr_jiffies = curr_jiffies;
+ 		update_audio_tstamp(substream, &curr_tstamp, &audio_tstamp);
+ 		return 0;
+ 	}
 -- 
 2.25.1
 
