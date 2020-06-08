@@ -4,58 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE0CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81454C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:29:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0322C2078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:29:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B09120890
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:29:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662562;
-	bh=W95y8Ods8sBIE/1aomkly//9j4RKagtzuwSQZQnUEfE=;
+	s=default; t=1591662567;
+	bh=GYCIRJadqCjtngCxpF39DU3VLAgOV9p5ZuU8EFPmBRQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rKmVD7ySHQJytWRh4+TjdiSbr3LKv9dIo+s+7U6KHaHPKupR06ZH2lvW4JTlfTOBP
-	 HH11j41KxFCPm8wjLsBT+YfHkNsF8kIU3spXFxQROUpao2ygLyXUzK49piJrLjOEn3
-	 xzyl7NPEraw8dCVeLQVeSiOoZPK7o7wlaLjGL0ro=
+	b=aVna2TWCP5tDuIYU+++qAG672VyeY8ta/KfQWTFAknne9BsmWzQ2+CCuCuhkBYo+j
+	 rprXxfxWz4XG30VOhzCloY4bUaMsI257r5x5Ck55e4JGb6XfBGbMxWtgOq9F+5ipJv
+	 /wHGu2+yggonWptPK5OhxcU3r0cF5EMDA3rUUZ6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733080AbgFIA3T (ORCPT
+        id S1732861AbgFIA3Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:29:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37426 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:29:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729081AbgFHXQK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:16:10 -0400
+        id S1730188AbgFHXQM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:16:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F53D20760;
-        Mon,  8 Jun 2020 23:16:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 081222076C;
+        Mon,  8 Jun 2020 23:16:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658169;
-        bh=W95y8Ods8sBIE/1aomkly//9j4RKagtzuwSQZQnUEfE=;
+        s=default; t=1591658171;
+        bh=GYCIRJadqCjtngCxpF39DU3VLAgOV9p5ZuU8EFPmBRQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sMxOHJSnoi+DuKBemmiut5G19m9h6gPrxzC3F5CV4HIF+4mRJwY9S9WfgtPIjfCbc
-         m0PQVB4N1AhkL8rPMpHVUnIXeqX3WpLrMY8bZdBpZCCNNlMpmHCVHJjTbMCSUiXs98
-         0cuLlo3Dha9X+uSwkLasM9BNuKpFSjYatt8K2d1w=
+        b=f+6EALdU7eNA1mZXNXw3+u3DH0+tJl9DOMsWtGMxBx5EmWhgZmoAfeCB2glw4+vbq
+         aJO2U8a1RPl/a3yF0hr8Ab1lmUzhJNoF5kF2pFo5ttE2r/2pCoCa6Xs54PpEDeVkLP
+         yD+38i2PwbGv9Lst42OrRXiv09IBXopQQzuU1psY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Lo=C3=AFc=20Yhuel?= <loic.yhuel@gmail.com>,
-        Javier Martinez Canillas <javierm@redhat.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
+Cc:     Jakub Sitnicki <jakub@cloudflare.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-efi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 196/606] tpm: check event log version before reading final events
-Date:   Mon,  8 Jun 2020 19:05:21 -0400
-Message-Id: <20200608231211.3363633-196-sashal@kernel.org>
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 198/606] flow_dissector: Drop BPF flow dissector prog ref on netns cleanup
+Date:   Mon,  8 Jun 2020 19:05:23 -0400
+Message-Id: <20200608231211.3363633-198-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -64,80 +61,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Loïc Yhuel <loic.yhuel@gmail.com>
+From: Jakub Sitnicki <jakub@cloudflare.com>
 
-commit b4f1874c62168159fdb419ced4afc77c1b51c475 upstream.
+commit 5cf65922bb15279402e1e19b5ee8c51d618fa51f upstream.
 
-This fixes the boot issues since 5.3 on several Dell models when the TPM
-is enabled. Depending on the exact grub binary, booting the kernel would
-freeze early, or just report an error parsing the final events log.
+When attaching a flow dissector program to a network namespace with
+bpf(BPF_PROG_ATTACH, ...) we grab a reference to bpf_prog.
 
-We get an event log in the SHA-1 format, which doesn't have a
-tcg_efi_specid_event_head in the first event, and there is a final events
-table which doesn't match the crypto agile format.
-__calc_tpm2_event_size reads bad "count" and "efispecid->num_algs", and
-either fails, or loops long enough for the machine to be appear frozen.
+If netns gets destroyed while a flow dissector is still attached, and there
+are no other references to the prog, we leak the reference and the program
+remains loaded.
 
-So we now only parse the final events table, which is per the spec always
-supposed to be in the crypto agile format, when we got a event log in this
-format.
+Leak can be reproduced by running flow dissector tests from selftests/bpf:
 
-Fixes: c46f3405692de ("tpm: Reserve the TPM final events table")
-Fixes: 166a2809d65b2 ("tpm: Don't duplicate events from the final event log in the TCG2 log")
-Bugzilla: https://bugzilla.redhat.com/show_bug.cgi?id=1779611
-Signed-off-by: Loïc Yhuel <loic.yhuel@gmail.com>
-Link: https://lore.kernel.org/r/20200512040113.277768-1-loic.yhuel@gmail.com
-Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
-Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Reviewed-by: Matthew Garrett <mjg59@google.com>
-[ardb: warn when final events table is missing or in the wrong format]
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+  # bpftool prog list
+  # ./test_flow_dissector.sh
+  ...
+  selftests: test_flow_dissector [PASS]
+  # bpftool prog list
+  4: flow_dissector  name _dissect  tag e314084d332a5338  gpl
+          loaded_at 2020-05-20T18:50:53+0200  uid 0
+          xlated 552B  jited 355B  memlock 4096B  map_ids 3,4
+          btf_id 4
+  #
+
+Fix it by detaching the flow dissector program when netns is going away.
+
+Fixes: d58e468b1112 ("flow_dissector: implements flow dissector BPF hook")
+Signed-off-by: Jakub Sitnicki <jakub@cloudflare.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Reviewed-by: Stanislav Fomichev <sdf@google.com>
+Link: https://lore.kernel.org/bpf/20200521083435.560256-1-jakub@cloudflare.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/firmware/efi/libstub/tpm.c | 5 +++--
- drivers/firmware/efi/tpm.c         | 5 ++++-
- 2 files changed, 7 insertions(+), 3 deletions(-)
+ net/core/flow_dissector.c | 26 +++++++++++++++++++++-----
+ 1 file changed, 21 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/firmware/efi/libstub/tpm.c b/drivers/firmware/efi/libstub/tpm.c
-index 1d59e103a2e3..e9a684637b70 100644
---- a/drivers/firmware/efi/libstub/tpm.c
-+++ b/drivers/firmware/efi/libstub/tpm.c
-@@ -54,7 +54,7 @@ void efi_retrieve_tpm2_eventlog(void)
- 	efi_status_t status;
- 	efi_physical_addr_t log_location = 0, log_last_entry = 0;
- 	struct linux_efi_tpm_eventlog *log_tbl = NULL;
--	struct efi_tcg2_final_events_table *final_events_table;
-+	struct efi_tcg2_final_events_table *final_events_table = NULL;
- 	unsigned long first_entry_addr, last_entry_addr;
- 	size_t log_size, last_entry_size;
- 	efi_bool_t truncated;
-@@ -127,7 +127,8 @@ void efi_retrieve_tpm2_eventlog(void)
- 	 * Figure out whether any events have already been logged to the
- 	 * final events structure, and if so how much space they take up
- 	 */
--	final_events_table = get_efi_config_table(LINUX_EFI_TPM_FINAL_LOG_GUID);
-+	if (version == EFI_TCG2_EVENT_LOG_FORMAT_TCG_2)
-+		final_events_table = get_efi_config_table(LINUX_EFI_TPM_FINAL_LOG_GUID);
- 	if (final_events_table && final_events_table->nr_events) {
- 		struct tcg_pcr_event2_head *header;
- 		int offset;
-diff --git a/drivers/firmware/efi/tpm.c b/drivers/firmware/efi/tpm.c
-index 55b031d2c989..c1955d320fec 100644
---- a/drivers/firmware/efi/tpm.c
-+++ b/drivers/firmware/efi/tpm.c
-@@ -62,8 +62,11 @@ int __init efi_tpm_eventlog_init(void)
- 	tbl_size = sizeof(*log_tbl) + log_tbl->size;
- 	memblock_reserve(efi.tpm_log, tbl_size);
+diff --git a/net/core/flow_dissector.c b/net/core/flow_dissector.c
+index a1670dff0629..0e5012d7b7b5 100644
+--- a/net/core/flow_dissector.c
++++ b/net/core/flow_dissector.c
+@@ -160,12 +160,10 @@ int skb_flow_dissector_bpf_prog_attach(const union bpf_attr *attr,
+ 	return ret;
+ }
  
--	if (efi.tpm_final_log == EFI_INVALID_TABLE_ADDR)
-+	if (efi.tpm_final_log == EFI_INVALID_TABLE_ADDR ||
-+	    log_tbl->version != EFI_TCG2_EVENT_LOG_FORMAT_TCG_2) {
-+		pr_warn(FW_BUG "TPM Final Events table missing or invalid\n");
- 		goto out;
-+	}
+-int skb_flow_dissector_bpf_prog_detach(const union bpf_attr *attr)
++static int flow_dissector_bpf_prog_detach(struct net *net)
+ {
+ 	struct bpf_prog *attached;
+-	struct net *net;
  
- 	final_tbl = early_memremap(efi.tpm_final_log, sizeof(*final_tbl));
+-	net = current->nsproxy->net_ns;
+ 	mutex_lock(&flow_dissector_mutex);
+ 	attached = rcu_dereference_protected(net->flow_dissector_prog,
+ 					     lockdep_is_held(&flow_dissector_mutex));
+@@ -179,6 +177,24 @@ int skb_flow_dissector_bpf_prog_detach(const union bpf_attr *attr)
+ 	return 0;
+ }
  
++int skb_flow_dissector_bpf_prog_detach(const union bpf_attr *attr)
++{
++	return flow_dissector_bpf_prog_detach(current->nsproxy->net_ns);
++}
++
++static void __net_exit flow_dissector_pernet_pre_exit(struct net *net)
++{
++	/* We're not racing with attach/detach because there are no
++	 * references to netns left when pre_exit gets called.
++	 */
++	if (rcu_access_pointer(net->flow_dissector_prog))
++		flow_dissector_bpf_prog_detach(net);
++}
++
++static struct pernet_operations flow_dissector_pernet_ops __net_initdata = {
++	.pre_exit = flow_dissector_pernet_pre_exit,
++};
++
+ /**
+  * __skb_flow_get_ports - extract the upper layer ports and return them
+  * @skb: sk_buff to extract the ports from
+@@ -1838,7 +1854,7 @@ static int __init init_default_flow_dissectors(void)
+ 	skb_flow_dissector_init(&flow_keys_basic_dissector,
+ 				flow_keys_basic_dissector_keys,
+ 				ARRAY_SIZE(flow_keys_basic_dissector_keys));
+-	return 0;
+-}
+ 
++	return register_pernet_subsys(&flow_dissector_pernet_ops);
++}
+ core_initcall(init_default_flow_dissectors);
 -- 
 2.25.1
 
