@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58572C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5540C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:40:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A6E52072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:40:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 870DF2072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:40:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663201;
-	bh=39vqlRfsBoNdJeuI4mEYkQrLbavGQuPFoJIQ8ZIkAzQ=;
+	s=default; t=1591663214;
+	bh=3aQn8lWSx0gzufLB59ZzKTddB/fgb3P21/cKvHsdEB4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BgN3uf+8UslhEvLduGKOslUFofEgG/FYnOKXCuGb5ovuKume62kUG/ugNWHxp0NFZ
-	 t+Tq0+PTrfBwZ8WYGL5c3YXgldbM6Cz5Bt8k4KUsxMOx1XVokbx5NaVNKcruJvYCFJ
-	 BbSIEw5plPnjhtUR9uf0EHGdsL06QyAY2JfWRAGw=
+	b=cKmU+aHG5nCOPo3rt3DGLxRrcR3v06dC516YdORbFPT6HZlzcnRMi9gKiu1DYoFDL
+	 HUYFy/vmovLK7SUuCAoOB6WHJHgugUVfntrQSGki4puBdwt0o9vEkBkg70ynD5knaZ
+	 bTKg9Q2IzqRaB3XKviDLymynlBr7wDQKBCbgK1gg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731180AbgFIAj7 (ORCPT
+        id S1731836AbgFIAkM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:39:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32866 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:40:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729245AbgFHXNL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:13:11 -0400
+        id S1729239AbgFHXNK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:13:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D48A4208C3;
-        Mon,  8 Jun 2020 23:13:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D05220E65;
+        Mon,  8 Jun 2020 23:13:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657990;
-        bh=39vqlRfsBoNdJeuI4mEYkQrLbavGQuPFoJIQ8ZIkAzQ=;
+        s=default; t=1591657988;
+        bh=3aQn8lWSx0gzufLB59ZzKTddB/fgb3P21/cKvHsdEB4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WAaKUN4WzHRmZ/D2SLtDdWHbpOTC7oR9EhMeBaUHWpvcmj55xVi/E0Me2Qy21ERK5
-         qqNKkAlQEy5N0xk5M8sKaDKMX/4Iyq491goQQlmoLuddS6b6vFPR1jDDUj5EGv+/st
-         uCfFvxnHwv8ou2SmT3VxQfns4qOg6C6MRMRnXQqc=
+        b=AJqski512j80Kt6Ev10f430j2yptYiNXnC0B2RmJWwe3aAL260DzXP7loNO4AK3kw
+         02NbTWfzSBfIZDHE4hVM7GdvDh+T60B7Ir73m6+giF9iU5tq/4VyFoyNw76J5zXRlg
+         QhRVg+Qjp51PpVj/9XRhSM9B08vMrCNN1BBD9uTk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thierry Reding <treding@nvidia.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Felipe Balbi <balbi@kernel.org>,
+Cc:     Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.cz>,
+        Rachel Sibley <rasibley@redhat.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 049/606] usb: gadget: tegra-xudc: Fix idle suspend/resume
-Date:   Mon,  8 Jun 2020 19:02:54 -0400
-Message-Id: <20200608231211.3363633-49-sashal@kernel.org>
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 047/606] fanotify: fix merging marks masks with FAN_ONDIR
+Date:   Mon,  8 Jun 2020 19:02:52 -0400
+Message-Id: <20200608231211.3363633-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -61,46 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+From: Amir Goldstein <amir73il@gmail.com>
 
-commit 0534d40160cb9505073b0ecf5e7210daee319a66 upstream.
+commit 55bf882c7f13dda8bbe624040c6d5b4fbb812d16 upstream.
 
-When the XUDC device is idle (i.e. powergated), care must be taken not
-to access any registers because that would lead to a crash.
+Change the logic of FAN_ONDIR in two ways that are similar to the logic
+of FAN_EVENT_ON_CHILD, that was fixed in commit 54a307ba8d3c ("fanotify:
+fix logic of events on child"):
 
-Move the call to tegra_xudc_device_mode_off() into the same conditional
-as the tegra_xudc_powergate() call to make sure we only force device
-mode off if the XUDC is actually powered up.
+1. The flag is meaningless in ignore mask
+2. The flag refers only to events in the mask of the mark where it is set
 
-Fixes: 49db427232fe ("usb: gadget: Add UDC driver for tegra XUSB device mode controller")
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+This is what the fanotify_mark.2 man page says about FAN_ONDIR:
+"Without this flag, only events for files are created."  It doesn't
+say anything about setting this flag in ignore mask to stop getting
+events on directories nor can I think of any setup where this capability
+would be useful.
+
+Currently, when marks masks are merged, the FAN_ONDIR flag set in one
+mark affects the events that are set in another mark's mask and this
+behavior causes unexpected results.  For example, a user adds a mark on a
+directory with mask FAN_ATTRIB | FAN_ONDIR and a mount mark with mask
+FAN_OPEN (without FAN_ONDIR).  An opendir() of that directory (which is
+inside that mount) generates a FAN_OPEN event even though neither of the
+marks requested to get open events on directories.
+
+Link: https://lore.kernel.org/r/20200319151022.31456-10-amir73il@gmail.com
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Cc: Rachel Sibley <rasibley@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/usb/gadget/udc/tegra-xudc.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ fs/notify/fanotify/fanotify.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/tegra-xudc.c b/drivers/usb/gadget/udc/tegra-xudc.c
-index 634c2c19a176..a22d190d00a0 100644
---- a/drivers/usb/gadget/udc/tegra-xudc.c
-+++ b/drivers/usb/gadget/udc/tegra-xudc.c
-@@ -3740,11 +3740,11 @@ static int __maybe_unused tegra_xudc_suspend(struct device *dev)
+diff --git a/fs/notify/fanotify/fanotify.c b/fs/notify/fanotify/fanotify.c
+index f5d30573f4a9..deb13f0a0f7d 100644
+--- a/fs/notify/fanotify/fanotify.c
++++ b/fs/notify/fanotify/fanotify.c
+@@ -171,6 +171,13 @@ static u32 fanotify_group_event_mask(struct fsnotify_group *group,
+ 		if (!fsnotify_iter_should_report_type(iter_info, type))
+ 			continue;
+ 		mark = iter_info->marks[type];
++		/*
++		 * If the event is on dir and this mark doesn't care about
++		 * events on dir, don't send it!
++		 */
++		if (event_mask & FS_ISDIR && !(mark->mask & FS_ISDIR))
++			continue;
++
+ 		/*
+ 		 * If the event is for a child and this mark doesn't care about
+ 		 * events on a child, don't send it!
+@@ -203,10 +210,6 @@ static u32 fanotify_group_event_mask(struct fsnotify_group *group,
+ 		user_mask &= ~FAN_ONDIR;
+ 	}
  
- 	flush_work(&xudc->usb_role_sw_work);
- 
--	/* Forcibly disconnect before powergating. */
--	tegra_xudc_device_mode_off(xudc);
+-	if (event_mask & FS_ISDIR &&
+-	    !(marks_mask & FS_ISDIR & ~marks_ignored_mask))
+-		return 0;
 -
--	if (!pm_runtime_status_suspended(dev))
-+	if (!pm_runtime_status_suspended(dev)) {
-+		/* Forcibly disconnect before powergating. */
-+		tegra_xudc_device_mode_off(xudc);
- 		tegra_xudc_powergate(xudc);
-+	}
- 
- 	pm_runtime_disable(dev);
+ 	return test_mask & user_mask;
+ }
  
 -- 
 2.25.1
