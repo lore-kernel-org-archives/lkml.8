@@ -7,91 +7,88 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10418C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EAABC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E13A5206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:39:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CF99206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:39:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663142;
-	bh=tTxSMJjSKwUpSWdVe0PFf9Jn4K5iUxQRrxzPPBLucjM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=hbPeeZrgKM88Y9aSB6dNmsQH5XkX+naq1xwU/DNzLxjNsidtdl3apVaYpGofL7Opr
-	 +2tOIkHEKyJnNzgVvK1I6RBsGdVbMg57n7Q0SJxkXndt8oQQvD3SfcZJklkjM8bjl1
-	 Ec5J6AL1K8TDJeM6W5p9B2An/9kaB7+IKPTF50IA=
+	s=default; t=1591663145;
+	bh=z/VmohNmkdvkGAeptphUD4iQVkdn9sw5EBbjAsBiMks=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Of7TwfTVTfP24Vy09NA56sWM2a35tVGBYSYsvJCGZ9qRUcNz/1M4Z6OyR98kS6x/0
+	 qIbLILt7z80SjvCv7HrtlnTeOqpA3Ay2Q7bj4XZVtkNuvHa9j0mj49RIw1JjU4OWGj
+	 f9dCFLWu2AUy2E0aYBYokqCDWDkCJphE9J9TZNjY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732748AbgFIAjA (ORCPT
+        id S1729771AbgFIAjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:39:00 -0400
-Received: from conuserg-12.nifty.com ([210.131.2.79]:43625 "EHLO
-        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731026AbgFIAip (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 20:38:45 -0400
-Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id 0590bt3n014953;
-        Tue, 9 Jun 2020 09:37:55 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 0590bt3n014953
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1591663076;
-        bh=es92rbvBvwsGCQZx+NtzHSCTWeSTG28c6gpO7Y/gfDo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=wuqnzO70qMLXDauU1Xpg6OXmPp2rtl0BfVr1rKTSmG+VSveRsXm5+QQc3R5iyIxeH
-         gnnNDlFrATKNVd7wbX3dLxR9XgOUb2PIZVj2eVQBpo8C/9HIWx9+C95NFssfeyRRCc
-         GxLky0c3f2m+7TrrD6vpWYkff2ZlqePr/nult3EzmrTIzJBVPPs+/u/HGI/xIQt3La
-         LYBvQz86a+qTtVfvKxEFV933RlsDBebPRCHzIxlr0GgaYaEfddx5kIDOj4bx/9G8u0
-         FEEoc1cQ1gjYRVhsTlXfZ/MmBM6m3URO/QV2IyGyYhCefaejYb2NOslhr5wJQL9ZCY
-         3LHENzgJKJ/zQ==
-X-Nifty-SrcIP: [126.90.202.47]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] kbuild: make module name conflict a warning again
-Date:   Tue,  9 Jun 2020 09:37:52 +0900
-Message-Id: <20200609003752.428817-1-masahiroy@kernel.org>
+        Mon, 8 Jun 2020 20:39:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33210 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729364AbgFHXN0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:13:26 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5ED420B80;
+        Mon,  8 Jun 2020 23:13:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591658006;
+        bh=z/VmohNmkdvkGAeptphUD4iQVkdn9sw5EBbjAsBiMks=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=pg7v13Z/fSFemXm5XNFAVdYPRKeC4gb4dg0rY9ty034yRejEgJQ3QAufiFqv4d72r
+         dvoCz6/PHe00BZtEWogzOYpW5xFhB+Sz32jgPz5kMoPqIin1aEjl52kCotbeKQ2AXo
+         06DZaLCI84EggVADPmwgzorxLdBJr12MMj/Ereeo=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Adam Ford <aford173@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 062/606] arm64: dts: imx8mn: Change SDMA1 ahb clock for imx8mn
+Date:   Mon,  8 Jun 2020 19:03:07 -0400
+Message-Id: <20200608231211.3363633-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
+References: <20200608231211.3363633-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The module name conflict is still remaining.
+From: Adam Ford <aford173@gmail.com>
 
-  error: the following would cause module name conflict:
-    drivers/char/adi.ko
-    drivers/input/joystick/adi.ko
+commit 15ddc3e17aec0de4c69d595b873e184432b9791d upstream.
 
-Make it a warning again to build sparc64 allmodconfig successfully.
+Using SDMA1 with UART1 is causing a "Timeout waiting for CH0" error.
+This patch changes to ahb clock from SDMA1_ROOT to AHB which fixes the
+timeout error.
 
-Fixes: 8451791d1ff0 ("kbuild: make module name conflict fatal error")
-Reported-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Fixes: 6c3debcbae47 ("arm64: dts: freescale: Add i.MX8MN dtsi support")
+
+Signed-off-by: Adam Ford <aford173@gmail.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
+ arch/arm64/boot/dts/freescale/imx8mn.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- scripts/modules-check.sh | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/scripts/modules-check.sh b/scripts/modules-check.sh
-index 43de226071ae..8b1785863c64 100755
---- a/scripts/modules-check.sh
-+++ b/scripts/modules-check.sh
-@@ -15,9 +15,10 @@ check_same_name_modules()
- {
- 	for m in $(sed 's:.*/::' $1 | sort | uniq -d)
- 	do
--		echo "error: the following would cause module name conflict:" >&2
-+		echo "warning: the following would cause module name conflict:" >&2
- 		sed -n "/\/$m/s:^:  :p" modules.order >&2
--		exit_code=1
-+		# TODO: turn this into an error after fixing all warnings
-+		#exit_code=1
- 	done
- }
- 
+diff --git a/arch/arm64/boot/dts/freescale/imx8mn.dtsi b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
+index a44b5438e842..882e913436ca 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mn.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
+@@ -661,7 +661,7 @@ sdma1: dma-controller@30bd0000 {
+ 				reg = <0x30bd0000 0x10000>;
+ 				interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clk IMX8MN_CLK_SDMA1_ROOT>,
+-					 <&clk IMX8MN_CLK_SDMA1_ROOT>;
++					 <&clk IMX8MN_CLK_AHB>;
+ 				clock-names = "ipg", "ahb";
+ 				#dma-cells = <3>;
+ 				fsl,sdma-ram-script-name = "imx/sdma/sdma-imx7d.bin";
 -- 
 2.25.1
 
