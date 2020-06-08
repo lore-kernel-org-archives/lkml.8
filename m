@@ -2,278 +2,106 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A77C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:06:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CBE9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5A25207ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:06:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Gr3mBTes"
+	by mail.kernel.org (Postfix) with ESMTP id 7A85620774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:06:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591664793;
+	bh=r2ZD/z74CHUpWNLziOf1yJLE0NiqYpuEhktxmoHnFwk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=LA6s4K5pt98Vagd2Witf4FBD+opM3q2QSdaqWG2Ol7zsAJk0voZpwT+4UJJeR3ScF
+	 3TDPhW9DjIGULB3CzqUl4gISgttYIrpe6/Zw2MImDJWEUM5o+4dnnZoC7wajFX9hrc
+	 cqdRkW1od+YmeRIwShbVJC+WObzgSmg/eKkAjIKc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388148AbgFIBGZ (ORCPT
+        id S2388193AbgFIBGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 21:06:25 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:62140 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727804AbgFHXHI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:07:08 -0400
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 058N3nqZ007127
-        for <linux-kernel@vger.kernel.org>; Mon, 8 Jun 2020 16:07:07 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=facebook;
- bh=zE6GB00O3a+9z12G3F/lOoTf9V/KC51FrG6OBn5lSMo=;
- b=Gr3mBTesMgflo/5RPJ6C5ljmL2NHeWWdx2PHNubL4R/hUVHA6zK8Ylkl4vLMGu4ooT0M
- kARAASIioF9DwmvMoXetQKWQJG2yv+6AU8g6gGJ6AHQZU8ueC2H+aetdxs+G0DOQNUSE
- 1Fh/pMdCmHCgWMLEHnt6y+beHNQPogpypPY= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by m0001303.ppops.net with ESMTP id 31g6tkjf3k-6
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 16:07:06 -0700
-Received: from intmgw003.06.prn3.facebook.com (2620:10d:c085:108::8) by
- mail.thefacebook.com (2620:10d:c085:11d::5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 8 Jun 2020 16:07:04 -0700
-Received: by devvm1291.vll0.facebook.com (Postfix, from userid 111017)
-        id 47E8F1D8FE48; Mon,  8 Jun 2020 16:07:00 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Roman Gushchin <guro@fb.com>
-Smtp-Origin-Hostname: devvm1291.vll0.facebook.com
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>
-CC:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Shakeel Butt <shakeelb@google.com>, <linux-mm@kvack.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <kernel-team@fb.com>,
-        <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>
-Smtp-Origin-Cluster: vll0c01
-Subject: [PATCH v6 07/19] mm: memcg/slab: allocate obj_cgroups for non-root slab pages
-Date:   Mon, 8 Jun 2020 16:06:42 -0700
-Message-ID: <20200608230654.828134-8-guro@fb.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200608230654.828134-1-guro@fb.com>
-References: <20200608230654.828134-1-guro@fb.com>
+        Mon, 8 Jun 2020 21:06:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50942 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727811AbgFHXHJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:07:09 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 150E620823;
+        Mon,  8 Jun 2020 23:07:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591657629;
+        bh=r2ZD/z74CHUpWNLziOf1yJLE0NiqYpuEhktxmoHnFwk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=atsd5W3fOooIvGAn7Ii+ey0UKWoK/4lMyzkazsdqqTUV7NxofNf2QRzjhqu6MQ5ea
+         yppIJV5DEG9yd2R5dQE2ojqX0eGi2AqgLjXd45dx8VmLNF5re61l9R2lRBVny26TeC
+         gFI0y2zFjAG87yNfwgQx0j6WV/pBUIflUsFN/k3k=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Jesper Dangaard Brouer <brouer@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 048/274] ixgbe: Fix XDP redirect on archs with PAGE_SIZE above 4K
+Date:   Mon,  8 Jun 2020 19:02:21 -0400
+Message-Id: <20200608230607.3361041-48-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
+References: <20200608230607.3361041-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-08_18:2020-06-08,2020-06-08 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 malwarescore=0
- phishscore=0 spamscore=0 priorityscore=1501 mlxlogscore=911
- impostorscore=0 bulkscore=0 clxscore=1015 cotscore=-2147483648
- adultscore=0 lowpriorityscore=0 suspectscore=2 mlxscore=0 classifier=spam
- adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006080160
-X-FB-Internal: deliver
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allocate and release memory to store obj_cgroup pointers for each
-non-root slab page. Reuse page->mem_cgroup pointer to store a pointer
-to the allocated space.
+From: Jesper Dangaard Brouer <brouer@redhat.com>
 
-To distinguish between obj_cgroups and memcg pointers in case
-when it's not obvious which one is used (as in page_cgroup_ino()),
-let's always set the lowest bit in the obj_cgroup case.
+[ Upstream commit 88eb0ee17b2ece64fcf6689a4557a5c2e7a89c4b ]
 
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+The ixgbe driver have another memory model when compiled on archs with
+PAGE_SIZE above 4096 bytes. In this mode it doesn't split the page in
+two halves, but instead increment rx_buffer->page_offset by truesize of
+packet (which include headroom and tailroom for skb_shared_info).
+
+This is done correctly in ixgbe_build_skb(), but in ixgbe_rx_buffer_flip
+which is currently only called on XDP_TX and XDP_REDIRECT, it forgets
+to add the tailroom for skb_shared_info. This breaks XDP_REDIRECT, for
+veth and cpumap.  Fix by adding size of skb_shared_info tailroom.
+
+Maintainers notice: This fix have been queued to Jeff.
+
+Fixes: 6453073987ba ("ixgbe: add initial support for xdp redirect")
+Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Cc: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Link: https://lore.kernel.org/bpf/158945344946.97035.17031588499266605743.stgit@firesoul
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/mm_types.h |  5 +++-
- include/linux/slab_def.h |  6 +++++
- include/linux/slub_def.h |  5 ++++
- mm/memcontrol.c          | 17 +++++++++++---
- mm/slab.h                | 49 ++++++++++++++++++++++++++++++++++++++++
- 5 files changed, 78 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 64ede5f150dc..0277fbab7c93 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -198,7 +198,10 @@ struct page {
- 	atomic_t _refcount;
-=20
- #ifdef CONFIG_MEMCG
--	struct mem_cgroup *mem_cgroup;
-+	union {
-+		struct mem_cgroup *mem_cgroup;
-+		struct obj_cgroup **obj_cgroups;
-+	};
- #endif
-=20
- 	/*
-diff --git a/include/linux/slab_def.h b/include/linux/slab_def.h
-index abc7de77b988..ccda7b9669a5 100644
---- a/include/linux/slab_def.h
-+++ b/include/linux/slab_def.h
-@@ -114,4 +114,10 @@ static inline unsigned int obj_to_index(const struct=
- kmem_cache *cache,
- 	return reciprocal_divide(offset, cache->reciprocal_buffer_size);
- }
-=20
-+static inline int objs_per_slab_page(const struct kmem_cache *cache,
-+				     const struct page *page)
-+{
-+	return cache->num;
-+}
-+
- #endif	/* _LINUX_SLAB_DEF_H */
-diff --git a/include/linux/slub_def.h b/include/linux/slub_def.h
-index 30e91c83d401..f87302dcfe8c 100644
---- a/include/linux/slub_def.h
-+++ b/include/linux/slub_def.h
-@@ -198,4 +198,9 @@ static inline unsigned int obj_to_index(const struct =
-kmem_cache *cache,
- 	return __obj_to_index(cache, page_address(page), obj);
- }
-=20
-+static inline int objs_per_slab_page(const struct kmem_cache *cache,
-+				     const struct page *page)
-+{
-+	return page->objects;
-+}
- #endif /* _LINUX_SLUB_DEF_H */
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 7ff66275966c..2020c7542aa1 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -569,10 +569,21 @@ ino_t page_cgroup_ino(struct page *page)
- 	unsigned long ino =3D 0;
-=20
- 	rcu_read_lock();
--	if (PageSlab(page) && !PageTail(page))
-+	if (PageSlab(page) && !PageTail(page)) {
- 		memcg =3D memcg_from_slab_page(page);
--	else
--		memcg =3D READ_ONCE(page->mem_cgroup);
-+	} else {
-+		memcg =3D page->mem_cgroup;
-+
-+		/*
-+		 * The lowest bit set means that memcg isn't a valid
-+		 * memcg pointer, but a obj_cgroups pointer.
-+		 * In this case the page is shared and doesn't belong
-+		 * to any specific memory cgroup.
-+		 */
-+		if ((unsigned long) memcg & 0x1UL)
-+			memcg =3D NULL;
-+	}
-+
- 	while (memcg && !(memcg->css.flags & CSS_ONLINE))
- 		memcg =3D parent_mem_cgroup(memcg);
- 	if (memcg)
-diff --git a/mm/slab.h b/mm/slab.h
-index 8a574d9361c1..a1633ea15fbf 100644
---- a/mm/slab.h
-+++ b/mm/slab.h
-@@ -319,6 +319,18 @@ static inline struct kmem_cache *memcg_root_cache(st=
-ruct kmem_cache *s)
- 	return s->memcg_params.root_cache;
- }
-=20
-+static inline struct obj_cgroup **page_obj_cgroups(struct page *page)
-+{
-+	/*
-+	 * page->mem_cgroup and page->obj_cgroups are sharing the same
-+	 * space. To distinguish between them in case we don't know for sure
-+	 * that the page is a slab page (e.g. page_cgroup_ino()), let's
-+	 * always set the lowest bit of obj_cgroups.
-+	 */
-+	return (struct obj_cgroup **)
-+		((unsigned long)page->obj_cgroups & ~0x1UL);
-+}
-+
- /*
-  * Expects a pointer to a slab page. Please note, that PageSlab() check
-  * isn't sufficient, as it returns true also for tail compound slab page=
-s,
-@@ -406,6 +418,26 @@ static __always_inline void memcg_uncharge_slab(stru=
-ct page *page, int order,
- 	percpu_ref_put_many(&s->memcg_params.refcnt, nr_pages);
- }
-=20
-+static inline int memcg_alloc_page_obj_cgroups(struct page *page,
-+					       struct kmem_cache *s, gfp_t gfp)
-+{
-+	unsigned int objects =3D objs_per_slab_page(s, page);
-+	void *vec;
-+
-+	vec =3D kcalloc(objects, sizeof(struct obj_cgroup *), gfp);
-+	if (!vec)
-+		return -ENOMEM;
-+
-+	page->obj_cgroups =3D (struct obj_cgroup **) ((unsigned long)vec | 0x1U=
-L);
-+	return 0;
-+}
-+
-+static inline void memcg_free_page_obj_cgroups(struct page *page)
-+{
-+	kfree(page_obj_cgroups(page));
-+	page->obj_cgroups =3D NULL;
-+}
-+
- extern void slab_init_memcg_params(struct kmem_cache *);
- extern void memcg_link_cache(struct kmem_cache *s, struct mem_cgroup *me=
-mcg);
-=20
-@@ -455,6 +487,16 @@ static inline void memcg_uncharge_slab(struct page *=
-page, int order,
- {
- }
-=20
-+static inline int memcg_alloc_page_obj_cgroups(struct page *page,
-+					       struct kmem_cache *s, gfp_t gfp)
-+{
-+	return 0;
-+}
-+
-+static inline void memcg_free_page_obj_cgroups(struct page *page)
-+{
-+}
-+
- static inline void slab_init_memcg_params(struct kmem_cache *s)
- {
- }
-@@ -481,12 +523,18 @@ static __always_inline int charge_slab_page(struct =
-page *page,
- 					    gfp_t gfp, int order,
- 					    struct kmem_cache *s)
- {
-+	int ret;
-+
- 	if (is_root_cache(s)) {
- 		mod_node_page_state(page_pgdat(page), cache_vmstat_idx(s),
- 				    PAGE_SIZE << order);
- 		return 0;
- 	}
-=20
-+	ret =3D memcg_alloc_page_obj_cgroups(page, s, gfp);
-+	if (ret)
-+		return ret;
-+
- 	return memcg_charge_slab(page, gfp, order, s);
- }
-=20
-@@ -499,6 +547,7 @@ static __always_inline void uncharge_slab_page(struct=
- page *page, int order,
- 		return;
- 	}
-=20
-+	memcg_free_page_obj_cgroups(page);
- 	memcg_uncharge_slab(page, order, s);
- }
-=20
---=20
-2.25.4
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+index 718931d951bc..ea6834bae04c 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+@@ -2254,7 +2254,8 @@ static void ixgbe_rx_buffer_flip(struct ixgbe_ring *rx_ring,
+ 	rx_buffer->page_offset ^= truesize;
+ #else
+ 	unsigned int truesize = ring_uses_build_skb(rx_ring) ?
+-				SKB_DATA_ALIGN(IXGBE_SKB_PAD + size) :
++				SKB_DATA_ALIGN(IXGBE_SKB_PAD + size) +
++				SKB_DATA_ALIGN(sizeof(struct skb_shared_info)) :
+ 				SKB_DATA_ALIGN(size);
+ 
+ 	rx_buffer->page_offset += truesize;
+-- 
+2.25.1
 
