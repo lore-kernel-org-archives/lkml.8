@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D489C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D074EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D796D2083E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:17:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F23120842
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:18:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658273;
-	bh=O0RPL3irJhWBZ5F2H3BdlvfzT93fhcXBDbqTToK9uYg=;
+	s=default; t=1591658290;
+	bh=Ioq5oSR0MIiJstNPITP02CH7m7AaNYznuEU4MG1tsrQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JtxVOtGY0Vs/4eqMwLROdfYXPdIDYW/1nFea8LuKqcvNgf0gHAUEUQdnuqeAR3JGy
-	 TdJjuj9dTADkT0+wWWxxAYnzHkRo+ZtaBzs95/zW1x4bbEb63lBW4FDvdoWa7rHAOp
-	 KNU2d1RKLoC3kjfoRIShnUlQTBU431S6Mw2QI8hY=
+	b=eFuIRrM7loRso7t6Hjph2PJpUNCqyIBBWtjRHHGQx8f++OFelgUk8csDTyZ8WcJtE
+	 KxOUlEYTKPceR4hIxptvbiuoncVoCVXmUP8BSAh6bnGs8dpxUorYqHnmjhZlFAdadH
+	 7AoTrG39+O35LCh+Zp4PnuebKmMDFJpgBPjTFZJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730074AbgFHXRw (ORCPT
+        id S1729069AbgFHXSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:17:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34534 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:18:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729776AbgFHXOT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:14:19 -0400
+        id S1729001AbgFHXO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:14:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4C5F20C09;
-        Mon,  8 Jun 2020 23:14:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A222121527;
+        Mon,  8 Jun 2020 23:14:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658059;
-        bh=O0RPL3irJhWBZ5F2H3BdlvfzT93fhcXBDbqTToK9uYg=;
+        s=default; t=1591658066;
+        bh=Ioq5oSR0MIiJstNPITP02CH7m7AaNYznuEU4MG1tsrQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kh/y/7P/GNdAo7Rziw3hWOXwLo4yINK+faVce32mUpDN+fXbaogvNE9PBlQKC9FHC
-         sDXJVvw0EdLbSNho0KKJj7TqgfS89m6ZAc387hH2QsxD0KbKOyHpzPzfvMG+EDZ/TG
-         IJECNOhX4vVB5mtPKwWPht7wX1v2gkxvOBmuElQ8=
+        b=QtWZzuCrWIxFM6F2AS0aFR9CYL08qNssv69lgoJ+YOakF+kGB2ibMeU4sp3fnGCt/
+         7bQkOzh0rydVPTUNwnl0EtHxyeFKH1YDTWYNxXdyNrPRq7S4byucCajNlahU0U6H6D
+         LqCfYFTUT38NEu6TVscLOTfEhlyrBG/So932TDys=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Artem Borisov <dedsa2002@gmail.com>, Jiri Kosina <jkosina@suse.cz>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 106/606] HID: alps: Add AUI1657 device ID
-Date:   Mon,  8 Jun 2020 19:03:51 -0400
-Message-Id: <20200608231211.3363633-106-sashal@kernel.org>
+Cc:     Richard Clark <richard.xnu.clark@gmail.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 112/606] aquantia: Fix the media type of AQC100 ethernet controller in the driver
+Date:   Mon,  8 Jun 2020 19:03:57 -0400
+Message-Id: <20200608231211.3363633-112-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -58,46 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Artem Borisov <dedsa2002@gmail.com>
+From: Richard Clark <richard.xnu.clark@gmail.com>
 
-[ Upstream commit 640e403b1fd24e7f31ac6f29f0b6a21d285ed729 ]
+[ Upstream commit 6de556c31061e3b9c36546ffaaac5fdb679a2f14 ]
 
-This device is used on Lenovo V130-15IKB variants and uses
-the same registers as U1.
+The Aquantia AQC100 controller enables a SFP+ port, so the driver should
+configure the media type as '_TYPE_FIBRE' instead of '_TYPE_TP'.
 
-Signed-off-by: Artem Borisov <dedsa2002@gmail.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Richard Clark <richard.xnu.clark@gmail.com>
+Cc: Igor Russkikh <irusskikh@marvell.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Acked-by: Igor Russkikh <irusskikh@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-alps.c | 1 +
- drivers/hid/hid-ids.h  | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-alps.c b/drivers/hid/hid-alps.c
-index fa704153cb00..c2a2bd528890 100644
---- a/drivers/hid/hid-alps.c
-+++ b/drivers/hid/hid-alps.c
-@@ -802,6 +802,7 @@ static int alps_probe(struct hid_device *hdev, const struct hid_device_id *id)
- 		break;
- 	case HID_DEVICE_ID_ALPS_U1_DUAL:
- 	case HID_DEVICE_ID_ALPS_U1:
-+	case HID_DEVICE_ID_ALPS_1657:
- 		data->dev_type = U1;
- 		break;
- 	default:
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 40697af0ca35..7d769ca864a7 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -81,7 +81,7 @@
- #define HID_DEVICE_ID_ALPS_U1		0x1215
- #define HID_DEVICE_ID_ALPS_T4_BTNLESS	0x120C
- #define HID_DEVICE_ID_ALPS_1222		0x1222
--
-+#define HID_DEVICE_ID_ALPS_1657         0x121E
+diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c b/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c
+index 78b6f3248756..e0625c67eed3 100644
+--- a/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c
++++ b/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c
+@@ -56,7 +56,7 @@ static const struct aq_board_revision_s hw_atl_boards[] = {
+ 	{ AQ_DEVICE_ID_D108,	AQ_HWREV_2,	&hw_atl_ops_b0, &hw_atl_b0_caps_aqc108, },
+ 	{ AQ_DEVICE_ID_D109,	AQ_HWREV_2,	&hw_atl_ops_b0, &hw_atl_b0_caps_aqc109, },
  
- #define USB_VENDOR_ID_AMI		0x046b
- #define USB_DEVICE_ID_AMI_VIRT_KEYBOARD_AND_MOUSE	0xff10
+-	{ AQ_DEVICE_ID_AQC100,	AQ_HWREV_ANY,	&hw_atl_ops_b1, &hw_atl_b0_caps_aqc107, },
++	{ AQ_DEVICE_ID_AQC100,	AQ_HWREV_ANY,	&hw_atl_ops_b1, &hw_atl_b0_caps_aqc100, },
+ 	{ AQ_DEVICE_ID_AQC107,	AQ_HWREV_ANY,	&hw_atl_ops_b1, &hw_atl_b0_caps_aqc107, },
+ 	{ AQ_DEVICE_ID_AQC108,	AQ_HWREV_ANY,	&hw_atl_ops_b1, &hw_atl_b0_caps_aqc108, },
+ 	{ AQ_DEVICE_ID_AQC109,	AQ_HWREV_ANY,	&hw_atl_ops_b1, &hw_atl_b0_caps_aqc109, },
 -- 
 2.25.1
 
