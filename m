@@ -2,205 +2,141 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDFA6C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59FABC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:07:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C886B2072F
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:06:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34B252076A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:07:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rrKet/Q2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729718AbgFHOGC (ORCPT
+        id S1729775AbgFHOHv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 10:06:02 -0400
-Received: from outbound-smtp19.blacknight.com ([46.22.139.246]:39209 "EHLO
-        outbound-smtp19.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729214AbgFHOGB (ORCPT
+        Mon, 8 Jun 2020 10:07:51 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:24196 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726097AbgFHOHv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 10:06:01 -0400
-Received: from mail.blacknight.com (pemlinmail03.blacknight.ie [81.17.254.16])
-        by outbound-smtp19.blacknight.com (Postfix) with ESMTPS id 529DD1C33B2
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 15:05:59 +0100 (IST)
-Received: (qmail 3392 invoked from network); 8 Jun 2020 14:05:59 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 8 Jun 2020 14:05:59 -0000
-Date:   Mon, 8 Jun 2020 15:05:57 +0100
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Amir Goldstein <amir73il@gmail.com>, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] fsnotify: Rearrange fast path to minimise overhead when
- there is no watcher
-Message-ID: <20200608140557.GG3127@techsingularity.net>
+        Mon, 8 Jun 2020 10:07:51 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591625270; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=2lAq2rIQvCTa/HMObWUZHG77iDOvmKG/k0U9on+s/5c=;
+ b=rrKet/Q227AueU46F8vw3V/Cx8hemq9TLIuXOguA9XoGqXHuSg7k6qJn4+1eV7JPW+lZ/NU8
+ SUNCHzSWv9FGj/0G0rCHEOk7V1WlcTE8QM9Zu/omR1VaIM1my/6F3LegDJ+0X75ivCWch+3L
+ dsZETmt49h5O4YnCXl6xqbcYsyE=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
+ 5ede4631ceb4684f60fcf631 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 08 Jun 2020 14:07:45
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 99298C433AF; Mon,  8 Jun 2020 14:07:44 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 05A65C433C6;
+        Mon,  8 Jun 2020 14:07:44 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 08 Jun 2020 19:37:43 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm@vger.kernel.org,
+        Coresight ML <coresight@lists.linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH 2/2] coresight: tmc: Add shutdown callback for TMC ETR/ETF
+In-Reply-To: <da1fdf765ea29cfe7a44145b17431721@codeaurora.org>
+References: <cover.1590947174.git.saiprakash.ranjan@codeaurora.org>
+ <28123d1e19f235f97555ee36a5ed8b52d20cbdea.1590947174.git.saiprakash.ranjan@codeaurora.org>
+ <20200601212858.GB24287@xps15>
+ <6d759cc28628ea72767c1304883630eb@codeaurora.org>
+ <CAJ9a7VhMbdqVBHxEXGYxFkgPnnQqNnDAz=wkHP3s7Ntw0iLmKA@mail.gmail.com>
+ <f0357072de96970b641bbd0da98c1d61@codeaurora.org>
+ <CAJ9a7Vj9STJw4jBxWU_9wHftj4Q7+k8o1nTc8tr21KjYi0RkpQ@mail.gmail.com>
+ <4a09cd2e054836d85f2e024ca4435e91@codeaurora.org>
+ <CAJ9a7VgCFeHNbY_9Gwvu6uT9MFBeY=_GCaN4N1dwmm+iNpfJOw@mail.gmail.com>
+ <1a5a6a6d-b86d-df45-cf91-7081e70d88a3@arm.com>
+ <20200603174426.GA23165@xps15>
+ <da1fdf765ea29cfe7a44145b17431721@codeaurora.org>
+Message-ID: <dfa6aa626f075f49d9ba1ae8ffa3d384@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The fsnotify paths are trivial to hit even when there are no watchers and
-they are surprisingly expensive. For example, every successful vfs_write()
-hits fsnotify_modify which calls both fsnotify_parent and fsnotify unless
-FMODE_NONOTIFY is set which is an internal flag invisible to userspace.
-As it stands, fsnotify_parent is a guaranteed functional call even if there
-are no watchers and fsnotify() does a substantial amount of unnecessary
-work before it checks if there are any watchers. A perf profile showed
-that applying mnt->mnt_fsnotify_mask in fnotify() was almost half of the
-total samples taken in that function during a test. This patch rearranges
-the fast paths to reduce the amount of work done when there are no watchers.
+Hi Mathieu, Mike
 
-The test motivating this was "perf bench sched messaging --pipe". Despite
-the fact the pipes are anonymous, fsnotify is still called a lot and
-the overhead is noticable even though it's completely pointless. It's
-likely the overhead is negligible for real IO so this is an extreme
-example. This is a comparison of hackbench using processes and pipes on
-a 1-socket machine with 8 CPU threads without fanotify watchers.
+On 2020-06-04 12:57, Sai Prakash Ranjan wrote:
+> 
 
-                              5.7.0                  5.7.0
-                            vanilla      fastfsnotify-v1r1
-Amean     1       0.4837 (   0.00%)      0.4630 *   4.27%*
-Amean     3       1.5447 (   0.00%)      1.4557 (   5.76%)
-Amean     5       2.6037 (   0.00%)      2.4363 (   6.43%)
-Amean     7       3.5987 (   0.00%)      3.4757 (   3.42%)
-Amean     12      5.8267 (   0.00%)      5.6983 (   2.20%)
-Amean     18      8.4400 (   0.00%)      8.1327 (   3.64%)
-Amean     24     11.0187 (   0.00%)     10.0290 *   8.98%*
-Amean     30     13.1013 (   0.00%)     12.8510 (   1.91%)
-Amean     32     13.9190 (   0.00%)     13.2410 (   4.87%)
+[...]
 
-                       5.7.0       5.7.0
-                     vanilla fastfsnotify-v1r1
-Duration User         157.05      152.79
-Duration System      1279.98     1219.32
-Duration Elapsed      182.81      174.52
+>> 
+>> Robin has a point - user space is long gone at this time.  As such the 
+>> first
+>> question to ask is what kind of CS session was running at the time the 
+>> system
+>> was shutting down.  Was it a perf session of a sysfs session?
+>> 
+>> I'm guessing it was a sysfs session because user space has been blown 
+>> away a
+>> while back and part of that process should have killed all perf 
+>> sessions.
+> 
+> I was enabling trace via sysfs.
+> 
+>> 
+>> If I am correct then simply switching off the ETR HW in the shutdown() 
+>> amba bus
+>> callback should be fine - otherwise Mike's approach is mandatory.  
+>> There is
+>> also the exchange between Robin and Sai about removing the SMMU 
+>> shutdown
+>> callback, but that thread is still incomplete.
+>> 
+> 
+> If Robin is hinting at removing SMMU shutdown callback, then I think 
+> adding
+> all these shutdown callbacks to all clients of SMMU can be avoided. Git 
+> blaming
+> the thing shows it was added to avoid some kexec memory corruption.
+> 
 
-This is showing that the latencies are improved by roughly 2-9%. The
-variability is not shown but some of these results are within the noise
-as this workload heavily overloads the machine. That said, the system CPU
-usage is reduced by quite a bit so it makes sense to avoid the overhead
-even if it is a bit tricky to detect at times. A perf profile of just 1
-group of tasks showed that 5.14% of samples taken were in either fsnotify()
-or fsnotify_parent(). With the patch, 2.8% of samples were in fsnotify,
-mostly function entry and the initial check for watchers.  The check for
-watchers is complicated enough that inlining it may be controversial.
+I think I misread the cryptic hint from Robin and it is not right to 
+remove
+SMMU shutdown callback. For more details on why that was a bad idea and 
+would
+break kexec, please refer to [1].
 
-Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
----
- fs/notify/fsnotify.c             | 25 +++++++++++++++----------
- include/linux/fsnotify.h         | 10 ++++++++++
- include/linux/fsnotify_backend.h |  4 ++--
- 3 files changed, 27 insertions(+), 12 deletions(-)
+As for the coresight, can I disable the ETR only in the tmc shutdown 
+callback
+or are we still concerned about the userspace coming into picture?
 
-diff --git a/fs/notify/fsnotify.c b/fs/notify/fsnotify.c
-index 72d332ce8e12..de7bbfd973c0 100644
---- a/fs/notify/fsnotify.c
-+++ b/fs/notify/fsnotify.c
-@@ -143,7 +143,7 @@ void __fsnotify_update_child_dentry_flags(struct inode *inode)
- }
- 
- /* Notify this dentry's parent about a child's events. */
--int fsnotify_parent(struct dentry *dentry, __u32 mask, const void *data,
-+int __fsnotify_parent(struct dentry *dentry, __u32 mask, const void *data,
- 		    int data_type)
- {
- 	struct dentry *parent;
-@@ -174,7 +174,7 @@ int fsnotify_parent(struct dentry *dentry, __u32 mask, const void *data,
- 
- 	return ret;
- }
--EXPORT_SYMBOL_GPL(fsnotify_parent);
-+EXPORT_SYMBOL_GPL(__fsnotify_parent);
- 
- static int send_to_group(struct inode *to_tell,
- 			 __u32 mask, const void *data,
-@@ -315,17 +315,12 @@ int fsnotify(struct inode *to_tell, __u32 mask, const void *data, int data_is,
- 	struct fsnotify_iter_info iter_info = {};
- 	struct super_block *sb = to_tell->i_sb;
- 	struct mount *mnt = NULL;
--	__u32 mnt_or_sb_mask = sb->s_fsnotify_mask;
-+	__u32 mnt_or_sb_mask;
- 	int ret = 0;
--	__u32 test_mask = (mask & ALL_FSNOTIFY_EVENTS);
-+	__u32 test_mask;
- 
--	if (path) {
-+	if (path)
- 		mnt = real_mount(path->mnt);
--		mnt_or_sb_mask |= mnt->mnt_fsnotify_mask;
--	}
--	/* An event "on child" is not intended for a mount/sb mark */
--	if (mask & FS_EVENT_ON_CHILD)
--		mnt_or_sb_mask = 0;
- 
- 	/*
- 	 * Optimization: srcu_read_lock() has a memory barrier which can
-@@ -337,11 +332,21 @@ int fsnotify(struct inode *to_tell, __u32 mask, const void *data, int data_is,
- 	if (!to_tell->i_fsnotify_marks && !sb->s_fsnotify_marks &&
- 	    (!mnt || !mnt->mnt_fsnotify_marks))
- 		return 0;
-+
-+	/* An event "on child" is not intended for a mount/sb mark */
-+	mnt_or_sb_mask = 0;
-+	if (!(mask & FS_EVENT_ON_CHILD)) {
-+		mnt_or_sb_mask = sb->s_fsnotify_mask;
-+		if (path)
-+			mnt_or_sb_mask |= mnt->mnt_fsnotify_mask;
-+	}
-+
- 	/*
- 	 * if this is a modify event we may need to clear the ignored masks
- 	 * otherwise return if neither the inode nor the vfsmount/sb care about
- 	 * this type of event.
- 	 */
-+	test_mask = (mask & ALL_FSNOTIFY_EVENTS);
- 	if (!(mask & FS_MODIFY) &&
- 	    !(test_mask & (to_tell->i_fsnotify_mask | mnt_or_sb_mask)))
- 		return 0;
-diff --git a/include/linux/fsnotify.h b/include/linux/fsnotify.h
-index 5ab28f6c7d26..508f6bb0b06b 100644
---- a/include/linux/fsnotify.h
-+++ b/include/linux/fsnotify.h
-@@ -44,6 +44,16 @@ static inline void fsnotify_dirent(struct inode *dir, struct dentry *dentry,
- 	fsnotify_name(dir, mask, d_inode(dentry), &dentry->d_name, 0);
- }
- 
-+/* Notify this dentry's parent about a child's events. */
-+static inline int fsnotify_parent(struct dentry *dentry, __u32 mask,
-+				  const void *data, int data_type)
-+{
-+	if (!(dentry->d_flags & DCACHE_FSNOTIFY_PARENT_WATCHED))
-+		return 0;
-+
-+	return __fsnotify_parent(dentry, mask, data, data_type);
-+}
-+
- /*
-  * Simple wrappers to consolidate calls fsnotify_parent()/fsnotify() when
-  * an event is on a file/dentry.
-diff --git a/include/linux/fsnotify_backend.h b/include/linux/fsnotify_backend.h
-index f0c506405b54..1626fa7d10ff 100644
---- a/include/linux/fsnotify_backend.h
-+++ b/include/linux/fsnotify_backend.h
-@@ -379,7 +379,7 @@ struct fsnotify_mark {
- /* main fsnotify call to send events */
- extern int fsnotify(struct inode *to_tell, __u32 mask, const void *data,
- 		    int data_type, const struct qstr *name, u32 cookie);
--extern int fsnotify_parent(struct dentry *dentry, __u32 mask, const void *data,
-+extern int __fsnotify_parent(struct dentry *dentry, __u32 mask, const void *data,
- 			   int data_type);
- extern void __fsnotify_inode_delete(struct inode *inode);
- extern void __fsnotify_vfsmount_delete(struct vfsmount *mnt);
-@@ -541,7 +541,7 @@ static inline int fsnotify(struct inode *to_tell, __u32 mask, const void *data,
- 	return 0;
- }
- 
--static inline int fsnotify_parent(struct dentry *dentry, __u32 mask,
-+static inline int __fsnotify_parent(struct dentry *dentry, __u32 mask,
- 				  const void *data, int data_type)
- {
- 	return 0;
+[1] https://lore.kernel.org/patchwork/patch/1253131/
+
+Thanks,
+Sai
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
