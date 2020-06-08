@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A29ACC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A84C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7716F20872
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:16:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E49DD20775
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:16:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658208;
-	bh=OSIyjFeWmXecL53OVI8UGmOLm+YGOusPJaisg9IFerw=;
+	s=default; t=1591658214;
+	bh=TjVIzJCh0CEfsQLND/3pcn51jPC8iMMpkKt8EVaLwEw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZuW7pqHKoS2lUnMth47wS17lrDiKIHBl9WXQ7JGZrR/b0/2t/WJnLogoypDz1T+Wb
-	 EqEFrgw2BvNeqq54vW2KQQheb8+aIiAf2P5KoH4YC/6c5T/emlUI9Qn0J5KjZckv4C
-	 iKHCGc19hodsbLDBa2amveP4kuXeFw1Y0J79VllA=
+	b=NrSOKPri8DVJNq/v0pAROLnHEnRr8+cILUwzYCHuwtgInp1Z7RjrU8iGCAfDlxnQ4
+	 ciT+0MNgJQ/Qu+BpLq6qI82rkh9q0WOrgvQRdA6idX4GpmKG8PcTv/zSLJjTosC6mW
+	 2tj04n9GR4pzrdYjdwayPQX/nl9xVtL+i7NEyh4I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730342AbgFHXQp (ORCPT
+        id S1730349AbgFHXQw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:16:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33884 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:16:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728799AbgFHXNz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:13:55 -0400
+        id S1728025AbgFHXNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:13:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EC9621508;
-        Mon,  8 Jun 2020 23:13:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D205F20897;
+        Mon,  8 Jun 2020 23:13:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658034;
-        bh=OSIyjFeWmXecL53OVI8UGmOLm+YGOusPJaisg9IFerw=;
+        s=default; t=1591658033;
+        bh=TjVIzJCh0CEfsQLND/3pcn51jPC8iMMpkKt8EVaLwEw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r0CyB6Wv9ntcJb8uRrEkdQr9q8g9TvE+LCOqaWDLE/Dz+vE6SphJ1Akncw7qM+Sbg
-         ln2S7i/onmE9dx++yzsnrHi1P+w0daRC4jzmW/PgWRXpLXt33Ff/PvU64ZO5MhEd+z
-         qdtiHkYBxJIxxktceAHg3TeTOzuOGRO69vlTvC2o=
+        b=g173U1sG/Klnqgg20gUX7d5aGQt7/lbKnm6Lk4cpGPxw1aAxTmA8f4rCFUIg53Eh/
+         VhjtG8XT3q+FabBd4S/HqE/xNUPweUppEb5J1TFwn8qb0PivxS7/PLUPxrJocWdlem
+         19xfl4a4JXtUCoV6dbS4adbTeKxgXh2JC7Veng/s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-unionfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 085/606] ovl: potential crash in ovl_fid_to_fh()
-Date:   Mon,  8 Jun 2020 19:03:30 -0400
-Message-Id: <20200608231211.3363633-85-sashal@kernel.org>
+Cc:     Roberto Sassu <roberto.sassu@huawei.com>,
+        Krzysztof Struczynski <krzysztof.struczynski@huawei.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 084/606] ima: Fix return value of ima_write_policy()
+Date:   Mon,  8 Jun 2020 19:03:29 -0400
+Message-Id: <20200608231211.3363633-84-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -60,53 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Roberto Sassu <roberto.sassu@huawei.com>
 
-[ Upstream commit 9aafc1b0187322fa4fd4eb905d0903172237206c ]
+[ Upstream commit 2e3a34e9f409ebe83d1af7cd2f49fca7af97dfac ]
 
-The "buflen" value comes from the user and there is a potential that it
-could be zero.  In do_handle_to_path() we know that "handle->handle_bytes"
-is non-zero and we do:
+This patch fixes the return value of ima_write_policy() when a new policy
+is directly passed to IMA and the current policy requires appraisal of the
+file containing the policy. Currently, if appraisal is not in ENFORCE mode,
+ima_write_policy() returns 0 and leads user space applications to an
+endless loop. Fix this issue by denying the operation regardless of the
+appraisal mode.
 
-	handle_dwords = handle->handle_bytes >> 2;
-
-So values 1-3 become zero.  Then in ovl_fh_to_dentry() we do:
-
-	int len = fh_len << 2;
-
-So now len is in the "0,4-128" range and a multiple of 4.  But if
-"buflen" is zero it will try to copy negative bytes when we do the
-memcpy in ovl_fid_to_fh().
-
-	memcpy(&fh->fb, fid, buflen - OVL_FH_WIRE_OFFSET);
-
-And that will lead to a crash.  Thanks to Amir Goldstein for his help
-with this patch.
-
-Fixes: cbe7fba8edfc ("ovl: make sure that real fid is 32bit aligned in memory")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Amir Goldstein <amir73il@gmail.com>
-Cc: <stable@vger.kernel.org> # v5.5
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Cc: stable@vger.kernel.org # 4.10.x
+Fixes: 19f8a84713edc ("ima: measure and appraise the IMA policy itself")
+Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+Reviewed-by: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/overlayfs/export.c | 3 +++
- 1 file changed, 3 insertions(+)
+ security/integrity/ima/ima_fs.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/fs/overlayfs/export.c b/fs/overlayfs/export.c
-index 6f54d70cef27..e605017031ee 100644
---- a/fs/overlayfs/export.c
-+++ b/fs/overlayfs/export.c
-@@ -777,6 +777,9 @@ static struct ovl_fh *ovl_fid_to_fh(struct fid *fid, int buflen, int fh_type)
- 	if (fh_type != OVL_FILEID_V0)
- 		return ERR_PTR(-EINVAL);
- 
-+	if (buflen <= OVL_FH_WIRE_OFFSET)
-+		return ERR_PTR(-EINVAL);
-+
- 	fh = kzalloc(buflen, GFP_KERNEL);
- 	if (!fh)
- 		return ERR_PTR(-ENOMEM);
+diff --git a/security/integrity/ima/ima_fs.c b/security/integrity/ima/ima_fs.c
+index 2000e8df0301..68571c40d61f 100644
+--- a/security/integrity/ima/ima_fs.c
++++ b/security/integrity/ima/ima_fs.c
+@@ -340,8 +340,7 @@ static ssize_t ima_write_policy(struct file *file, const char __user *buf,
+ 		integrity_audit_msg(AUDIT_INTEGRITY_STATUS, NULL, NULL,
+ 				    "policy_update", "signed policy required",
+ 				    1, 0);
+-		if (ima_appraise & IMA_APPRAISE_ENFORCE)
+-			result = -EACCES;
++		result = -EACCES;
+ 	} else {
+ 		result = ima_parse_add_rule(data);
+ 	}
 -- 
 2.25.1
 
