@@ -2,116 +2,106 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=DATE_IN_PAST_03_06,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE2D7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E31C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B39762078D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:16:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DF782078D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:16:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591661791;
+	bh=rLezE8NsCF/SWUhFZP9ajNb9owim1p5P7rTXMYsZY3c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Pyp448Kc4V9cxJEO/6Aj/c31KEeB6RocT2+AlpvEEHuewLO9JHaR1fiiFuPyw/H3F
+	 9Bbauo8GL8xGHsRcB232p70aXlFf4P7IX0ougpaiV2+Gf2FQlLrk16OUJFEn6GGHLj
+	 KlN/D8a90y10i9Eh6NvBAhT1Ko8dK5xSw+drq9vA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732657AbgFIAQO (ORCPT
+        id S1732675AbgFIAPP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:16:14 -0400
-Received: from mga07.intel.com ([134.134.136.100]:19508 "EHLO mga07.intel.com"
+        Mon, 8 Jun 2020 20:15:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732892AbgFIAPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 20:15:22 -0400
-IronPort-SDR: Z2XkLtwfSAslRmJZ3d7rk5/cuWRpnInUN2YW9JdmQAnTlxopkWLsYG7782hdQ2ihYXF0fr7ldQ
- ha3w3KEol9iA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2020 17:15:22 -0700
-IronPort-SDR: qbPVQki+36XgabtS5oHGJy8ZtNY2h1ErJWojOu92iiJpE6H/FNYnEEV0Zuwe6ir3rSdGZ7lwNE
- vQhFwRYuYNtQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,489,1583222400"; 
-   d="scan'208";a="418227405"
-Received: from lkp-server01.sh.intel.com (HELO 12d5c0ac8e64) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 08 Jun 2020 17:15:20 -0700
-Received: from kbuild by 12d5c0ac8e64 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jiRvD-00001V-Fz; Tue, 09 Jun 2020 00:15:19 +0000
-Date:   Tue, 9 Jun 2020 04:18:56 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>,
-        linux-iio@vger.kernel.org
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org, jic23@kernel.org,
-        andy.shevchenko@gmail.com, pmeerw@pmeerw.net,
-        Tomasz Duszynski <tomasz.duszynski@octakon.com>
-Subject: Re: [PATCH v5 1/4] iio: chemical: scd30: add core driver
-Message-ID: <202006090426.ENCJHJ1n%lkp@intel.com>
-References: <20200607175812.95777-2-tomasz.duszynski@octakon.com>
+        id S1729984AbgFHXTF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:19:05 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5831C2085B;
+        Mon,  8 Jun 2020 23:19:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591658345;
+        bh=rLezE8NsCF/SWUhFZP9ajNb9owim1p5P7rTXMYsZY3c=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Bm7x3wEwf8XpBxMxc574hnF6BL1RJWEoIihlRsj8SEQ+bkNHnhxnV26WedZ1/sjqW
+         s7YgYHTDe7NnNBpGQMqovFkuI8e5uvBXWlegBy1aCcUFdpnj7debQniX3htCYK/PEe
+         SFxD9OJ5uU353CSuymxXzwuYXo9AAxmjfuvjD66A=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 013/175] spi: spi-mem: Fix Dual/Quad modes on Octal-capable devices
+Date:   Mon,  8 Jun 2020 19:16:06 -0400
+Message-Id: <20200608231848.3366970-13-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
+References: <20200608231848.3366970-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200607175812.95777-2-tomasz.duszynski@octakon.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tomasz,
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-I love your patch! Perhaps something to improve:
+[ Upstream commit 80300a7d5f2d7178335652f41d2e55ba898b4ec1 ]
 
-[auto build test WARNING on iio/togreg]
-[also build test WARNING on robh/for-next linux/master v5.7]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+Currently buswidths 2 and 4 are rejected for a device that advertises
+Octal capabilities.  Allow these buswidths, just like is done for
+buswidth 2 and Quad-capable devices.
 
-url:    https://github.com/0day-ci/linux/commits/Tomasz-Duszynski/Add-support-for-SCD30-sensor/20200608-020304
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
-compiler: gcc-9 (Debian 9.3.0-13) 9.3.0
-
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
-
-
-cppcheck warnings: (new ones prefixed by >>)
-
->> drivers/iio/chemical/scd30_core.c:93:31: warning: Clarify calculation precedence for '&' and '?'. [clarifyCalculation]
-        sign = float32 & BIT(31) ? -1 : 1,
-                                 ^
-
-vim +93 drivers/iio/chemical/scd30_core.c
-
-    87	
-    88	/* simplified float to fixed point conversion with a scaling factor of 0.01 */
-    89	static int scd30_float_to_fp(int float32)
-    90	{
-    91		int fraction, shift,
-    92		    mantissa = float32 & GENMASK(22, 0),
-  > 93		    sign = float32 & BIT(31) ? -1 : 1,
-    94		    exp = (float32 & ~BIT(31)) >> 23;
-    95	
-    96		/* special case 0 */
-    97		if (!exp && !mantissa)
-    98			return 0;
-    99	
-   100		exp -= 127;
-   101		if (exp < 0) {
-   102			exp = -exp;
-   103			/* return values ranging from 1 to 99 */
-   104			return sign * ((((BIT(23) + mantissa) * 100) >> 23) >> exp);
-   105		}
-   106	
-   107		/* return values starting at 100 */
-   108		shift = 23 - exp;
-   109		float32 = BIT(exp) + (mantissa >> shift);
-   110		fraction = mantissa & GENMASK(shift - 1, 0);
-   111	
-   112		return sign * (float32 * 100 + ((fraction * 100) >> shift));
-   113	}
-   114	
-
+Fixes: b12a084c8729ef42 ("spi: spi-mem: add support for octal mode I/O data transfer")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20200416101418.14379-1-geert+renesas@glider.be
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ drivers/spi/spi-mem.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/spi/spi-mem.c b/drivers/spi/spi-mem.c
+index 9f0fa9f3116d..de0ba3e5449f 100644
+--- a/drivers/spi/spi-mem.c
++++ b/drivers/spi/spi-mem.c
+@@ -108,15 +108,17 @@ static int spi_check_buswidth_req(struct spi_mem *mem, u8 buswidth, bool tx)
+ 		return 0;
+ 
+ 	case 2:
+-		if ((tx && (mode & (SPI_TX_DUAL | SPI_TX_QUAD))) ||
+-		    (!tx && (mode & (SPI_RX_DUAL | SPI_RX_QUAD))))
++		if ((tx &&
++		     (mode & (SPI_TX_DUAL | SPI_TX_QUAD | SPI_TX_OCTAL))) ||
++		    (!tx &&
++		     (mode & (SPI_RX_DUAL | SPI_RX_QUAD | SPI_RX_OCTAL))))
+ 			return 0;
+ 
+ 		break;
+ 
+ 	case 4:
+-		if ((tx && (mode & SPI_TX_QUAD)) ||
+-		    (!tx && (mode & SPI_RX_QUAD)))
++		if ((tx && (mode & (SPI_TX_QUAD | SPI_TX_OCTAL))) ||
++		    (!tx && (mode & (SPI_RX_QUAD | SPI_RX_OCTAL))))
+ 			return 0;
+ 
+ 		break;
+-- 
+2.25.1
+
