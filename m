@@ -2,158 +2,89 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75824C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:12:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E120DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:12:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56AFB204EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:12:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0FF12076C
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:12:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qKLVusHb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729071AbgFHHMX convert rfc822-to-8bit (ORCPT
+        id S1729081AbgFHHM1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 03:12:23 -0400
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:58283 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728948AbgFHHMU (ORCPT
+        Mon, 8 Jun 2020 03:12:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59238 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728948AbgFHHMY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 03:12:20 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=teawaterz@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0U-vT7af_1591600330;
-Received: from 127.0.0.1(mailfrom:teawaterz@linux.alibaba.com fp:SMTPD_---0U-vT7af_1591600330)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 08 Jun 2020 15:12:13 +0800
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH] virtio_mem: prevent overflow with subblock size
-From:   teawater <teawaterz@linux.alibaba.com>
-In-Reply-To: <0930c9d0-0708-c079-29bd-b80d4e3ce446@redhat.com>
-Date:   Mon, 8 Jun 2020 15:12:09 +0800
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jason Wang <jasowang@redhat.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        virtualization@lists.linux-foundation.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <2D9A07BA-6FDC-48FF-9A1F-62272695B3EF@linux.alibaba.com>
-References: <20200608061406.709211-1-mst@redhat.com>
- <0930c9d0-0708-c079-29bd-b80d4e3ce446@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Mon, 8 Jun 2020 03:12:24 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6D00C08C5C3
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 00:12:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=emLpIRFKODtAY8nraJqoNKwCIZphU+FBPDM0NtY/3Cg=; b=qKLVusHbJYznuKqC4wYTwNYxiq
+        Xb6vUmAIBx0gFjK3PxshUq4aOfkih9+uu++SCVrvyUUF5llRcys6YJGKrp517NSaA1JJZ7bNS+09r
+        tXPPUoOVLkozSIBGBOEzhUFUoCkjs9Hg8EpdQGxOKEi4WxCluYOlXDbEJSOUbc6v0ItEHJ/I3jaBs
+        Dv89DRKpkXZiuuiTOZHep+TxL8cYs4ex18Xqp94Rx+vbQJpwXr/VaHpkErBL23hnksk3bs5mByiAh
+        SgBM5UQujchw6Unrh83lvTzP8E86P7LrQhjrwnpE3ZZd1kHV2+IssHu6Jh2EeGhfooWhxvL/aTlgc
+        WenzY0Ng==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jiBxF-0006OS-9X; Mon, 08 Jun 2020 07:12:21 +0000
+Date:   Mon, 8 Jun 2020 00:12:21 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Stefano Stabellini <sstabellini@kernel.org>
+Cc:     jgross@suse.com, boris.ostrovsky@oracle.com,
+        konrad.wilk@oracle.com, xen-devel@lists.xenproject.org,
+        linux-kernel@vger.kernel.org, tamas@tklengyel.com,
+        roman@zededa.com,
+        Stefano Stabellini <stefano.stabellini@xilinx.com>
+Subject: Re: [PATCH v2 10/11] xen/arm: introduce phys/dma translations in
+ xen_dma_sync_for_*
+Message-ID: <20200608071221.GF15742@infradead.org>
+References: <alpine.DEB.2.21.2006031506590.6774@sstabellini-ThinkPad-T480s>
+ <20200603222247.11681-10-sstabellini@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200603222247.11681-10-sstabellini@kernel.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 03, 2020 at 03:22:46PM -0700, Stefano Stabellini wrote:
+> From: Stefano Stabellini <stefano.stabellini@xilinx.com>
+> 
+> xen_dma_sync_for_cpu, xen_dma_sync_for_device, xen_arch_need_swiotlb are
+> getting called passing dma addresses. On some platforms dma addresses
+> could be different from physical addresses. Before doing any operations
+> on these addresses we need to convert them back to physical addresses
+> using dma_to_phys.
+> 
+> Add dma_to_phys calls to xen_dma_sync_for_cpu, xen_dma_sync_for_device,
+> and xen_arch_need_swiotlb.
+> 
+> dma_cache_maint is fixed by the next patch.
 
-
-> 2020年6月8日 14:58，David Hildenbrand <david@redhat.com> 写道：
-> 
-> On 08.06.20 08:14, Michael S. Tsirkin wrote:
->> If subblock size is large (e.g. 1G) 32 bit math involving it
->> can overflow. Rather than try to catch all instances of that,
->> let's tweak block size to 64 bit.
-> 
-> I fail to see where we could actually trigger an overflow. The reported
-> warning looked like a false positive to me.
-> 
->> 
->> It ripples through UAPI which is an ABI change, but it's not too late to
->> make it, and it will allow supporting >4Gbyte blocks while might
->> become necessary down the road.
->> 
-> 
-> This might break cloud-hypervisor, who's already implementing this
-> protocol upstream (ccing Hui).
-> https://github.com/cloud-hypervisor/cloud-hypervisor/blob/master/vm-virtio/src/mem.rs
-> 
-> (blocks in the gigabyte range were never the original intention of
-> virtio-mem, but I am not completely opposed to that)
-
-If you think virtio_mem need this patch, I think cloud-hypervisor should follow this update (I will post PR for it).
-
-Best,
-Hui
+The calling conventions because really weird now because
+xen_dma_sync_for_{device,cpu} already get both a phys_addr_t and
+a dma_addr_t.  
 
 > 
->> Fixes: 5f1f79bbc9e26 ("virtio-mem: Paravirtualized memory hotplug")
->> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
->> ---
->> drivers/virtio/virtio_mem.c     | 14 +++++++-------
->> include/uapi/linux/virtio_mem.h |  4 ++--
->> 2 files changed, 9 insertions(+), 9 deletions(-)
->> 
->> diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
->> index 2f357142ea5e..7b1bece8a331 100644
->> --- a/drivers/virtio/virtio_mem.c
->> +++ b/drivers/virtio/virtio_mem.c
->> @@ -77,7 +77,7 @@ struct virtio_mem {
->> 	uint64_t requested_size;
->> 
->> 	/* The device block size (for communicating with the device). */
->> -	uint32_t device_block_size;
->> +	uint64_t device_block_size;
->> 	/* The translated node id. NUMA_NO_NODE in case not specified. */
->> 	int nid;
->> 	/* Physical start address of the memory region. */
->> @@ -86,7 +86,7 @@ struct virtio_mem {
->> 	uint64_t region_size;
->> 
->> 	/* The subblock size. */
->> -	uint32_t subblock_size;
->> +	uint64_t subblock_size;
->> 	/* The number of subblocks per memory block. */
->> 	uint32_t nb_sb_per_mb;
->> 
->> @@ -1698,9 +1698,9 @@ static int virtio_mem_init(struct virtio_mem *vm)
->> 	 * - At least the device block size.
->> 	 * In the worst case, a single subblock per memory block.
->> 	 */
->> -	vm->subblock_size = PAGE_SIZE * 1u << max_t(uint32_t, MAX_ORDER - 1,
->> -						    pageblock_order);
->> -	vm->subblock_size = max_t(uint32_t, vm->device_block_size,
->> +	vm->subblock_size = PAGE_SIZE * 1ul << max_t(uint32_t, MAX_ORDER - 1,
->> +						     pageblock_order);
->> +	vm->subblock_size = max_t(uint64_t, vm->device_block_size,
->> 				  vm->subblock_size);
->> 	vm->nb_sb_per_mb = memory_block_size_bytes() / vm->subblock_size;
->> 
->> @@ -1713,8 +1713,8 @@ static int virtio_mem_init(struct virtio_mem *vm)
->> 
->> 	dev_info(&vm->vdev->dev, "start address: 0x%llx", vm->addr);
->> 	dev_info(&vm->vdev->dev, "region size: 0x%llx", vm->region_size);
->> -	dev_info(&vm->vdev->dev, "device block size: 0x%x",
->> -		 vm->device_block_size);
->> +	dev_info(&vm->vdev->dev, "device block size: 0x%llx",
->> +		 (unsigned long long)vm->device_block_size);
->> 	dev_info(&vm->vdev->dev, "memory block size: 0x%lx",
->> 		 memory_block_size_bytes());
->> 	dev_info(&vm->vdev->dev, "subblock size: 0x%x",
->> diff --git a/include/uapi/linux/virtio_mem.h b/include/uapi/linux/virtio_mem.h
->> index a455c488a995..a9ffe041843c 100644
->> --- a/include/uapi/linux/virtio_mem.h
->> +++ b/include/uapi/linux/virtio_mem.h
->> @@ -185,10 +185,10 @@ struct virtio_mem_resp {
->> 
->> struct virtio_mem_config {
->> 	/* Block size and alignment. Cannot change. */
->> -	__u32 block_size;
->> +	__u64 block_size;
->> 	/* Valid with VIRTIO_MEM_F_ACPI_PXM. Cannot change. */
->> 	__u16 node_id;
->> -	__u16 padding;
->> +	__u8 padding[6];
->> 	/* Start address of the memory region. Cannot change. */
->> 	__u64 addr;
->> 	/* Region size (maximum). Cannot change. */
->> 
-> 
-> 
-> -- 
-> Thanks,
-> 
-> David / dhildenb
+> -	if (pfn_valid(PFN_DOWN(handle)))
+> +	if (pfn_valid(PFN_DOWN(dma_to_phys(dev, handle))))
 
+But here we translate the dma address to a phys addr
+
+>  		arch_sync_dma_for_cpu(paddr, size, dir);
+
+While this still uses the passed in paddr.  I think the uses of
+addresses in this code really needs a major rethink.
