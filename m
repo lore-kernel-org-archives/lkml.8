@@ -2,225 +2,260 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F63DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 22:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F4FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 22:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC2D42068D
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 22:29:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86A042068D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 22:31:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="YsGDe0Js"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uTKfedOE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726855AbgFHW3m (ORCPT
+        id S1726867AbgFHWbQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 18:29:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60130 "EHLO
+        Mon, 8 Jun 2020 18:31:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbgFHW3j (ORCPT
+        with ESMTP id S1726746AbgFHWbP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 18:29:39 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E3D5C08C5C6
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 15:29:39 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id t16so7212255plo.7
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 15:29:39 -0700 (PDT)
+        Mon, 8 Jun 2020 18:31:15 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B04AEC08C5C2
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 15:31:14 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id a25so20159088ejg.5
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 15:31:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=Ivfzr79vmJM2ezUGqOHZFSzxnQToj12hwiva2AjxDYk=;
-        b=YsGDe0JsHjrhCdZfhLSt+zXND+h5/vcEmVjSaGonV8inAFYY2m6YDRobjI4HRJ16kW
-         LxARXowlzaNoerKwRoTiT7xgryv5CVO4/qugFUasKxbLS7jXkvbjS9gkuSalDnBUvniq
-         ixYgSQ7tGlOF8FSM/PVKb4CbMYUkHpy8rntWk=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=V3feTmS496TJlimJvnm9RZmYbWgAPgqFZZ3GzAzheVo=;
+        b=uTKfedOEoLu7ocU5Vu2DLSVViuUV/z8DaTpxsHuxcBQv+m13Fgwo78M4sHh6TVl5Er
+         J8Wb6G/atd23J7bpEjLPk0D/MySM+FrJER6iowZYU0Rcon0qTH9znAw2ebUpUhvwRcTi
+         MZasFSslwynfFjx3PYLWPEOuIvKQmizyWJPFD1LYJ/8Hxt5Q3si/L9cEIv62dfQrLlTT
+         GKOJJy7RXw9UJnAuHHWt91Afq3zRYGljwQWg/nH1l8Whst/if0OYvn60YRsMk1sS9v3t
+         1cyLQoBn+Y+4sngchzgwCGaT/X406qJOG3xTmW5t7ryGXhWHFGooFGnmLOGONz0p2MQg
+         watw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=Ivfzr79vmJM2ezUGqOHZFSzxnQToj12hwiva2AjxDYk=;
-        b=VnW1nRe3lF056/Y4BLx0NyfjjMMWSamruiDimekUA2O2ufBuk7oNRqGu/6pmw5WjSV
-         k5y9GPSgtFP6ZNjzYSmt4FGhPJ+WKa/VErDgV+1Jz5OgYWjEIFtnmtKTPctw9eUL2nML
-         bb7pdm2atbhlyBw0+/oHtgDJSzeGiKJnEHxBCKF7j92vGsDHtrHPMKb5XLXTzcxVy9Cf
-         mM626k1z0lkkxCiLqomhBfsvIsgvCYMwGA/PcjRqu6quvt9/HNaJYqVdeWXgX6idesFr
-         EspGyE2VF3XBapFXmQSajOmvZIhi4dfgEDTjnCee068aCqikp79qjw14CEclAk0LvmIT
-         VnEw==
-X-Gm-Message-State: AOAM533kGA3rGPKz1seSAzU55QvMdfdBhWFavPk1f+4b5PRaPpPQY6DI
-        4E1ypBxgYKFBVN3kxBsRmAq6mg==
-X-Google-Smtp-Source: ABdhPJwKi2BxlrETO2znZc4aO5UDzp8kr5PBqQNwoJ+QnwSe4jXBo2gq9ETf+gqzDgFASjIn4X+7Ow==
-X-Received: by 2002:a17:902:7c8f:: with SMTP id y15mr739497pll.95.1591655378632;
-        Mon, 08 Jun 2020 15:29:38 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id a14sm7807017pfc.133.2020.06.08.15.29.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Jun 2020 15:29:37 -0700 (PDT)
-Subject: Re: [PATCH v7 1/8] fs: introduce kernel_pread_file* support
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Wolfram Sang <wsa@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Christoph Hellwig <hch@infradead.org>
-References: <20200606050458.17281-1-scott.branden@broadcom.com>
- <20200606050458.17281-2-scott.branden@broadcom.com>
- <20200606155216.GP19604@bombadil.infradead.org>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <ea16c19e-bd60-82ec-4825-05e233667f9f@broadcom.com>
-Date:   Mon, 8 Jun 2020 15:29:22 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=V3feTmS496TJlimJvnm9RZmYbWgAPgqFZZ3GzAzheVo=;
+        b=bY54k5I0892pzcaUGNq8d1NUzteh9jwOqlqMiKc4aA1wFVdg+cGrwL0fZIXM1N+yVQ
+         hDIs9cSPNni/K12zzkGP3o6Y3xEeJMNJSRSSis7B9AgeRvbGzO0iJwMOjZYOId8LmKmA
+         LqFNfhRKt9PTDyMO3vOHiP8ua9c/0ts2mUYxIt5PpuVd+Q/FnvtDCiRfpCcNez5cQYaq
+         wGiwC2IuaOsMarqq2yhBA/FA+GSUUb8FY77QW1GCAOapzzhzalusndHJKLecZ4FrPB9d
+         xGT1GTy0UrelnuNLGJxwBG37ZCX1Ioti2gaGPSBbIz6niIOZUvp9j4t6byHOxBT1WTCp
+         h1dw==
+X-Gm-Message-State: AOAM533QNJcBDvSP7I9zC5zd3R2SyKcFQB3kFv6cvZnoTFTNX/t6HmXE
+        DTwDS6HiX4D0ftTNdOtsgUN9KKxL
+X-Google-Smtp-Source: ABdhPJwUUToXpCHDRzJLjMUDrWcVnNFI9pI39Jq/BTqTcUvcFjX/ExLzrZDk3NhlzptzPxsjSJDOrw==
+X-Received: by 2002:a17:906:509:: with SMTP id j9mr21868795eja.341.1591655473406;
+        Mon, 08 Jun 2020 15:31:13 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id ce25sm6873946edb.45.2020.06.08.15.31.12
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 08 Jun 2020 15:31:12 -0700 (PDT)
+Date:   Mon, 8 Jun 2020 22:31:12 +0000
+From:   Wei Yang <richard.weiyang@gmail.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Wei Yang <richard.weiyang@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [Patch v2] lib: test get_count_order/long in test_bitops.c
+Message-ID: <20200608223112.ftncszh7hfnmqj3m@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20200602223728.32722-1-richard.weiyang@gmail.com>
+ <CAMuHMdUfnmm4bXVRvFOmG5DFYR+LtcZ1UviDszr9bByiN=DO+Q@mail.gmail.com>
+ <20200604122805.d2ndjmkmti6wl3nz@master>
+ <CAMuHMdXnLUS8F4nWJBqDjoKhBmF2_ihfwe4jTGxuZ1e_WKRNPQ@mail.gmail.com>
+ <20200605230610.bizp2j23ivyma5rn@master>
+ <20200605171629.d931068c1a4d720d8faa2704@linux-foundation.org>
 MIME-Version: 1.0
-In-Reply-To: <20200606155216.GP19604@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200605171629.d931068c1a4d720d8faa2704@linux-foundation.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthew,
-
-I am requesting the experts in the filesystem subsystem to come to a 
-consensus here.
-This is not my area of expertise at all but every time I have addressed 
-all of the
-outstanding concerns someone else comes along and raises another one.
-
-Please see me comments below.
-
-On 2020-06-06 8:52 a.m., Matthew Wilcox wrote:
-> On Fri, Jun 05, 2020 at 10:04:51PM -0700, Scott Branden wrote:
->> -int kernel_read_file(struct file *file, void **buf, loff_t *size,
->> -		     loff_t max_size, enum kernel_read_file_id id)
->> -{
->> -	loff_t i_size, pos;
-Please note that how checkpatch generated the diff here.  The code 
-modifications
-below are for a new function kernel_pread_file, they do not modify the 
-existing API
-kernel_read_file.  kernel_read_file requests the ENTIRE file is read.  
-So we need to be
-able to differentiate whether it is ok to read just a portion of the 
-file or not.
->> +int kernel_pread_file(struct file *file, void **buf, loff_t *size,
->> +		      loff_t pos, loff_t max_size,
->> +		      enum kernel_pread_opt opt,
->> +		      enum kernel_read_file_id id)
-So, to share common code a new kernel_pread_opt needed to be added in 
-order to specify whether
-it was ok to read a partial file or not, and provide an offset into the 
-file where to begin reading.
-The meaning of parameters doesn't change in the bonkers API. max_size 
-still means max size, etc.
-These options are needed so common code can be shared with 
-kernel_read_file api.
-
-The partial read option is then needed further in the depths of the 
-kernel read for IMA operation as IMA does
-things differently for optimization of whether it is OK to do a partial 
-read of the file or not.
->> +{
->> +	loff_t alloc_size;
->> +	loff_t buf_pos;
->> +	loff_t read_end;
->> +	loff_t i_size;
->>   	ssize_t bytes = 0;
->>   	int ret;
->>   
-> Look, it's not your fault, but this is a great example of how we end
-> up with atrocious interfaces.  Someone comes along and implements a
-> simple DWIM interface that solves their problem.  Then somebody else
-> adds a slight variant that solves their problem, and so on and so on,
-> and we end up with this bonkers API where the arguments literally change
-> meaning depending on other arguments.
-I don't see what arguments are changing meaning.  Please explain what is 
-changing meaning.
-The diff below is for kernel_pread_file, not kernel_read_file. Perhaps 
-that is where your confusion is.
+On Fri, Jun 05, 2020 at 05:16:29PM -0700, Andrew Morton wrote:
+>On Fri, 5 Jun 2020 23:06:10 +0000 Wei Yang <richard.weiyang@gmail.com> wrote:
 >
->> @@ -950,21 +955,31 @@ int kernel_read_file(struct file *file, void **buf, loff_t *size,
->>   		ret = -EINVAL;
->>   		goto out;
->>   	}
->> -	if (i_size > SIZE_MAX || (max_size > 0 && i_size > max_size)) {
->> +
->> +	/* Default read to end of file */
->> +	read_end = i_size;
->> +
->> +	/* Allow reading partial portion of file */
->> +	if ((opt == KERNEL_PREAD_PART) &&
->> +	    (i_size > (pos + max_size)))
->> +		read_end = pos + max_size;
->> +
->> +	alloc_size = read_end - pos;
->> +	if (i_size > SIZE_MAX || (max_size > 0 && alloc_size > max_size)) {
->>   		ret = -EFBIG;
->>   		goto out;
-> ... like that.
-like what?  We need to determine how much of the file to read based on 
-size of file, position in file, and max size we can read.
+>> On Thu, Jun 04, 2020 at 02:51:40PM +0200, Geert Uytterhoeven wrote:
+>> >Hi Wei,
+>> >
+>> >On Thu, Jun 4, 2020 at 2:28 PM Wei Yang <richard.weiyang@gmail.com> wrote:
+>> [...]
+>> >>
+>> >> You mean
+>> >>
+>> >>        {0x0000000000000003,  2},
+>> >>        {0x0000000000000004,  2},
+>> >>        {0x0000000000001fff, 13},
+>> >>        {0x0000000000002000, 13},
+>> >>        {0x0000000050000000, 31},
+>> >>        {0x0000000080000000, 31},
+>> >>        {0x0000000080003000, 32},
+>> >
+>> >Yes, those values.  And those should work with get_count_order_long()
+>> >on both 32-bit and 64-bit.
 >
-> I think what we actually want is:
+>Geert meant "no, the values in order_comb[]" :)
 >
-> ssize_t vmap_file_range(struct file *, loff_t start, loff_t end, void **bufp);
-> void vunmap_file_range(struct file *, void *buf);
+>We have a table of numbers in order_comb[] so we may as well feed them
+>into get_count_order_long() (as well as get_count_order()) just for a
+>bit more testing.
 >
-> If end > i_size, limit the allocation to i_size.  Returns the number
-> of bytes allocated, or a negative errno.  Writes the pointer allocated
-> to *bufp.  Internally, it should use the page cache to read in the pages
-> (taking appropriate reference counts).  Then it maps them using vmap()
-> instead of copying them to a private vmalloc() array.
-> kernel_read_file() can be converted to use this API.  The users will
-> need to be changed to call kernel_read_end(struct file *file, void *buf)
-> instead of vfree() so it can call allow_write_access() for them.
+>So how about the below?  order_comb_long[] just can't be used on 32-bit
+>machines because their longs are 32-bit.  If we had a
+>get_count_order_u64() then we could use it.
 >
-> vmap_file_range() has a lot of potential uses.  I'm surprised we don't
-> have it already, to be honest.
-Such a change sounds like it could be done in a later patch series.
-It's an incomplete solution.  It would work for some of the needed 
-operations but not others.
-For kernel_read_file, I don't see how in your new API it indicates if 
-the end of the file was reached or not.
-Also, please note that buffers may be preallocated  and shouldn't be 
-freed by the kernel in some cases and
-allocated and freed by the kernel in others.
+>I haven't runtime tested this - could you please do so?
+>
+>
+>static unsigned int order_comb[][2] = {
+>	{0x00000003,  2},
+>	{0x00000004,  2},
+>	{0x00001fff, 13},
+>	{0x00002000, 13},
+>	{0x50000000, 31},
+>	{0x80000000, 31},
+>	{0x80003000, 32},
+>};
+>
+>#ifdef CONFIG_64BIT
+>static unsigned long order_comb_long[][2] = {
+>	{0x0000000300000000, 34},
+>	{0x0000000400000000, 34},
+>	{0x00001fff00000000, 45},
+>	{0x0000200000000000, 45},
+>	{0x5000000000000000, 63},
+>	{0x8000000000000000, 63},
+>	{0x8000300000000000, 64},
+>};
+>#endif
+>
+>static int __init test_bitops_startup(void)
+>{
+>	int i;
+>
+>	pr_warn("Loaded test module\n");
+>	set_bit(BITOPS_4, g_bitmap);
+>	set_bit(BITOPS_7, g_bitmap);
+>	set_bit(BITOPS_11, g_bitmap);
+>	set_bit(BITOPS_31, g_bitmap);
+>	set_bit(BITOPS_88, g_bitmap);
+>
+>	for (i = 0; i < ARRAY_SIZE(order_comb); i++) {
+>		if (order_comb[i][1] != get_count_order(order_comb[i][0]))
+>			pr_warn("get_count_order wrong for %x\n",
+>				       order_comb[i][0]);
+>	}
+>
+>	for (i = 0; i < ARRAY_SIZE(order_comb); i++) {
+>		if (order_comb[i][1] != get_count_order_long(order_comb[i][0]))
+>			pr_warn("get_count_order_long wrong for %x\n",
+>				       order_comb[i][0]);
+>	}
+>
+>#ifdef CONFIG_64BIT
+>	for (i = 0; i < ARRAY_SIZE(order_comb); i++) {
+>		if (order_comb_long[i][1] !=
+>			       get_count_order_long(order_comb_long[i][0]))
+>			pr_warn("get_count_order_long wrong for %lx\n",
+>				       order_comb_long[i][0]);
+>	}
+>#endif
+>	return 0;
+>}
+>
+>
+>From: Andrew Morton <akpm@linux-foundation.org>
+>Subject: lib-test-get_count_order-long-in-test_bitopsc-fix
+>
+>Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>Cc: Christian Brauner <christian.brauner@ubuntu.com>
+>Cc: Wei Yang <richard.weiyang@gmail.com>
+>Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+>---
+>
+> lib/test_bitops.c |   23 +++++++++++++++++------
+> 1 file changed, 17 insertions(+), 6 deletions(-)
+>
+>--- a/lib/test_bitops.c~lib-test-get_count_order-long-in-test_bitopsc-fix
+>+++ a/lib/test_bitops.c
+>@@ -28,7 +28,7 @@ enum bitops_fun {
+> 
+> static DECLARE_BITMAP(g_bitmap, BITOPS_LENGTH);
+> 
+>-unsigned int order_comb[][2] = {
+>+static unsigned int order_comb[][2] = {
+> 	{0x00000003,  2},
+> 	{0x00000004,  2},
+> 	{0x00001fff, 13},
+>@@ -38,7 +38,8 @@ unsigned int order_comb[][2] = {
+> 	{0x80003000, 32},
+> };
+> 
+>-unsigned long order_comb_long[][2] = {
+>+#ifdef CONFIG_64BIT
+>+static unsigned long order_comb_long[][2] = {
+> 	{0x0000000300000000, 34},
+> 	{0x0000000400000000, 34},
+> 	{0x00001fff00000000, 45},
+>@@ -47,6 +48,7 @@ unsigned long order_comb_long[][2] = {
+> 	{0x8000000000000000, 63},
+> 	{0x8000300000000000, 64},
+> };
+>+#endif
+> 
+> static int __init test_bitops_startup(void)
+> {
+>@@ -62,14 +64,23 @@ static int __init test_bitops_startup(vo
+> 	for (i = 0; i < ARRAY_SIZE(order_comb); i++) {
+> 		if (order_comb[i][1] != get_count_order(order_comb[i][0]))
+> 			pr_warn("get_count_order wrong for %x\n",
+>-				       order_comb[i][0]); }
+>+				       order_comb[i][0]);
+>+	}
+> 
+>-	for (i = 0; i < ARRAY_SIZE(order_comb_long); i++) {
+>+	for (i = 0; i < ARRAY_SIZE(order_comb); i++) {
+>+		if (order_comb[i][1] != get_count_order_long(order_comb[i][0]))
+>+			pr_warn("get_count_order_long wrong for %x\n",
+>+				       order_comb[i][0]);
+>+	}
+>+
+>+#ifdef CONFIG_64BIT
+>+	for (i = 0; i < ARRAY_SIZE(order_comb); i++) {
+                                   ^
+I am afraid this one should be order_comb_long?
 
-Your proposed change doesn't exist and is not simple as it sounds or 
-meet all the needs of the existing kernel_read_file
-function, IMA, and new partial kernel_pread_file?
+The test on 64bit machine pass. Since I don't have a 32bit machine by hand, 
+Geert, would you mind have a try on 32bit machine? 
 
-Patch v7 does not break existing functions or rearchitect things in a 
-dramatic way.  They fit into existing code,
-will not break the existing codepaths (which some didn't even have a 
-test case until I added one), and can
-be improved upon as need with your vmap_file_range or others once those 
-have been developed, tested, and
-proven by someone.
+> 		if (order_comb_long[i][1] !=
+> 			       get_count_order_long(order_comb_long[i][0]))
+> 			pr_warn("get_count_order_long wrong for %lx\n",
+>-				       order_comb_long[i][0]); }
+>-
+>+				       order_comb_long[i][0]);
+>+	}
+>+#endif
+> 	return 0;
+> }
+> 
+>_
 
-I would like the experts here to decide on what needs to be done so we 
-can move forward
-and get kernel_pread_file support added soon.
-Thanks,
-Scott
+-- 
+Wei Yang
+Help you, Help me
