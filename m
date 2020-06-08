@@ -7,54 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C9F6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC46CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:33:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56D2B2072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:33:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C90DB2072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:33:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662821;
-	bh=REDsuEysCkGozpy/tAflcxRA3nXs5g++jF7F2KLZaHI=;
+	s=default; t=1591662824;
+	bh=tp/HQEMAxy6eE4ZBdZZxf6X4ju8GZ6SIyB/TvQ0Vugc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y09daRhcY9SdZwquDGKc+xam2FRKiKBPSmGV2h1UV+PTVc9fwqHKxbLL/N3IBaK9X
-	 quWIf2i/Ps06YAmjmwbrMxXCmsBObOs26PyZqNyNXuo21xfAqP8JHVPTyBftVdtASG
-	 xvWeE90VKdG67xumi0vuMScXB0PT9cLGLcv9s0Bg=
+	b=v6+JCOLumFmc4MeJXaWc2zOTpDMUxL+iOry/SCUKdBGTaxgBFFcB4is6M0/gKIRRx
+	 K9+nUmcMEoCsNLDNvMbiXLHa42otE8UaYb5Ngr+I12PebJHXpLJX0jK1WK44MAGooC
+	 im1NIiPt7Baw5LeJMbNbpWP2ys1GiKLgG1cQ02HU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732805AbgFIAdj (ORCPT
+        id S1731984AbgFIAdn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:33:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35536 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:33:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729921AbgFHXOy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:14:54 -0400
+        id S1729912AbgFHXOt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:14:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C11FA216FD;
-        Mon,  8 Jun 2020 23:14:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98C0321556;
+        Mon,  8 Jun 2020 23:14:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658092;
-        bh=REDsuEysCkGozpy/tAflcxRA3nXs5g++jF7F2KLZaHI=;
+        s=default; t=1591658089;
+        bh=tp/HQEMAxy6eE4ZBdZZxf6X4ju8GZ6SIyB/TvQ0Vugc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eyB+LWtf2Wpc9hQKGLhZ9l6PSY/3eoHvzFsN+ZQgd0J8H5NGtbXLpPFUj7q3YKxD/
-         uLQYyx9Z6Mr6ElAm710/3J+zo1t9i2RX38LTRb5zzGYxvEwiM60Ijt+zGkNAKaR559
-         IDItDmr2HEFmB9DHVW/X9gDzMh+TwOHUVk2pAlyY=
+        b=P99xro6GVJ6VAA5+vO4W2kfCs/a+xHLwkdPjRmHMRmhq341RoIuRYYhclvV5SwMXm
+         DKiz25EQDhe94NpjL9o/0LSoxhwrUofKaaAvgTf/qvB/mLRxICngFlUpaz8K+wWg0P
+         ELV9NIHeUcTFSpDj53fyEkisIy6rEvz7gopzl/TM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aymeric Agon-Rambosson <aymeric.agon@yandex.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Kieran Bingham <kbingham@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Nikolay Borisov <n.borisov.lkml@gmail.com>,
-        Jackie Liu <liuyun01@kylinos.cn>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.6 134/606] scripts/gdb: repair rb_first() and rb_last()
-Date:   Mon,  8 Jun 2020 19:04:19 -0400
-Message-Id: <20200608231211.3363633-134-sashal@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 132/606] ARM: futex: Address build warning
+Date:   Mon,  8 Jun 2020 19:04:17 -0400
+Message-Id: <20200608231211.3363633-132-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -67,55 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aymeric Agon-Rambosson <aymeric.agon@yandex.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit 50e36be1fb9572b2e4f2753340bdce3116bf2ce7 ]
+[ Upstream commit 8101b5a1531f3390b3a69fa7934c70a8fd6566ad ]
 
-The current implementations of the rb_first() and rb_last() gdb
-functions have a variable that references itself in its instanciation,
-which causes the function to throw an error if a specific condition on
-the argument is met.  The original author rather intended to reference
-the argument and made a typo.  Referring the argument instead makes the
-function work as intended.
+Stephen reported the following build warning on a ARM multi_v7_defconfig
+build with GCC 9.2.1:
 
-Signed-off-by: Aymeric Agon-Rambosson <aymeric.agon@yandex.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Cc: Jan Kiszka <jan.kiszka@siemens.com>
-Cc: Kieran Bingham <kbingham@kernel.org>
-Cc: Douglas Anderson <dianders@chromium.org>
-Cc: Nikolay Borisov <n.borisov.lkml@gmail.com>
-Cc: Jackie Liu <liuyun01@kylinos.cn>
-Cc: Jason Wessel <jason.wessel@windriver.com>
-Link: http://lkml.kernel.org/r/20200427051029.354840-1-aymeric.agon@yandex.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+kernel/futex.c: In function 'do_futex':
+kernel/futex.c:1676:17: warning: 'oldval' may be used uninitialized in this function [-Wmaybe-uninitialized]
+ 1676 |   return oldval == cmparg;
+      |          ~~~~~~~^~~~~~~~~
+kernel/futex.c:1652:6: note: 'oldval' was declared here
+ 1652 |  int oldval, ret;
+      |      ^~~~~~
+
+introduced by commit a08971e9488d ("futex: arch_futex_atomic_op_inuser()
+calling conventions change").
+
+While that change should not make any difference it confuses GCC which
+fails to work out that oldval is not referenced when the return value is
+not zero.
+
+GCC fails to properly analyze arch_futex_atomic_op_inuser(). It's not the
+early return, the issue is with the assembly macros. GCC fails to detect
+that those either set 'ret' to 0 and set oldval or set 'ret' to -EFAULT
+which makes oldval uninteresting. The store to the callsite supplied oldval
+pointer is conditional on ret == 0.
+
+The straight forward way to solve this is to make the store unconditional.
+
+Aside of addressing the build warning this makes sense anyway because it
+removes the conditional from the fastpath. In the error case the stored
+value is uninteresting and the extra store does not matter at all.
+
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/87pncao2ph.fsf@nanos.tec.linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/gdb/linux/rbtree.py | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/include/asm/futex.h | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/scripts/gdb/linux/rbtree.py b/scripts/gdb/linux/rbtree.py
-index 39db889b874c..c4b991607917 100644
---- a/scripts/gdb/linux/rbtree.py
-+++ b/scripts/gdb/linux/rbtree.py
-@@ -12,7 +12,7 @@ rb_node_type = utils.CachedType("struct rb_node")
+diff --git a/arch/arm/include/asm/futex.h b/arch/arm/include/asm/futex.h
+index 83c391b597d4..fdc4ae3e7378 100644
+--- a/arch/arm/include/asm/futex.h
++++ b/arch/arm/include/asm/futex.h
+@@ -164,8 +164,13 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
+ 	preempt_enable();
+ #endif
  
- def rb_first(root):
-     if root.type == rb_root_type.get_type():
--        node = node.address.cast(rb_root_type.get_type().pointer())
-+        node = root.address.cast(rb_root_type.get_type().pointer())
-     elif root.type != rb_root_type.get_type().pointer():
-         raise gdb.GdbError("Must be struct rb_root not {}".format(root.type))
+-	if (!ret)
+-		*oval = oldval;
++	/*
++	 * Store unconditionally. If ret != 0 the extra store is the least
++	 * of the worries but GCC cannot figure out that __futex_atomic_op()
++	 * is either setting ret to -EFAULT or storing the old value in
++	 * oldval which results in a uninitialized warning at the call site.
++	 */
++	*oval = oldval;
  
-@@ -28,7 +28,7 @@ def rb_first(root):
- 
- def rb_last(root):
-     if root.type == rb_root_type.get_type():
--        node = node.address.cast(rb_root_type.get_type().pointer())
-+        node = root.address.cast(rb_root_type.get_type().pointer())
-     elif root.type != rb_root_type.get_type().pointer():
-         raise gdb.GdbError("Must be struct rb_root not {}".format(root.type))
- 
+ 	return ret;
+ }
 -- 
 2.25.1
 
