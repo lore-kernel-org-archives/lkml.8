@@ -2,185 +2,201 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D1AFC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98195C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:44:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C7A4206D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:44:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D5dYpCpC"
+	by mail.kernel.org (Postfix) with ESMTP id 782EF206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:44:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729298AbgFHJo3 (ORCPT
+        id S1729312AbgFHJou (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 05:44:29 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:52683 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729267AbgFHJo1 (ORCPT
+        Mon, 8 Jun 2020 05:44:50 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:59102 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729245AbgFHJor (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 05:44:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591609465;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/UosqSxCh5JuCf83w6SVNyttSVeqWDozCD9jkpIiB4s=;
-        b=D5dYpCpCgX0V9rzCQGH7WCd+iiU/zNy3bMD7Dpbhe5aJ7x/EMe+tplvVx2DsgG7rl5M6gC
-        91HGbYny9395GzR0J1q5os0hu6t0uhM9ZX165KFyh0wOCOi62haCKlsCXyMq2VUO8tedsA
-        dasWTjQLrkQYfLgnKTRCBwDM7OTPWRo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-196-C0fOS73UNGSerR78MqhKCw-1; Mon, 08 Jun 2020 05:44:21 -0400
-X-MC-Unique: C0fOS73UNGSerR78MqhKCw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 8 Jun 2020 05:44:47 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id F11B43C057C;
+        Mon,  8 Jun 2020 11:44:42 +0200 (CEST)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id GxN9Ro1gAF_T; Mon,  8 Jun 2020 11:44:37 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1D37A107ACF3;
-        Mon,  8 Jun 2020 09:44:19 +0000 (UTC)
-Received: from [10.72.13.71] (ovpn-13-71.pek2.redhat.com [10.72.13.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 456F21084436;
-        Mon,  8 Jun 2020 09:44:02 +0000 (UTC)
-Subject: Re: [PATCH 5/6] vdpa: introduce virtio pci driver
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rob.miller@broadcom.com, lingshan.zhu@intel.com,
-        eperezma@redhat.com, lulu@redhat.com, shahafs@mellanox.com,
-        hanand@xilinx.com, mhabets@solarflare.com, gdawar@xilinx.com,
-        saugatm@xilinx.com, vmireyno@marvell.com,
-        zhangweining@ruijie.com.cn, eli@mellanox.com
-References: <20200529080303.15449-1-jasowang@redhat.com>
- <20200529080303.15449-6-jasowang@redhat.com>
- <20200602010332-mutt-send-email-mst@kernel.org>
- <5dbb0386-beeb-5bf4-d12e-fb5427486bb8@redhat.com>
- <6b1d1ef3-d65e-08c2-5b65-32969bb5ecbc@redhat.com>
- <20200607095012-mutt-send-email-mst@kernel.org>
- <9b1abd2b-232c-aa0f-d8bb-03e65fd47de2@redhat.com>
- <20200608021438-mutt-send-email-mst@kernel.org>
- <a1b1b7fb-b097-17b7-2e3a-0da07d2e48ae@redhat.com>
- <20200608052041-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <9d2571b6-0b95-53b3-6989-b4d801eeb623@redhat.com>
-Date:   Mon, 8 Jun 2020 17:43:58 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id DDF413C00BB;
+        Mon,  8 Jun 2020 11:44:37 +0200 (CEST)
+Received: from lxhi-065.adit-jv.com (10.72.94.48) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 8 Jun 2020
+ 11:44:37 +0200
+Date:   Mon, 8 Jun 2020 11:44:32 +0200
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jacopo Mondi <jacopo@jmondi.org>
+CC:     <hien.dang.eb@renesas.com>, <michael.klein@renesas.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        <kieran.bingham+renesas@ideasonboard.com>, <geert@linux-m68k.org>,
+        <horms@verge.net.au>, <uli+renesas@fpond.eu>,
+        <VenkataRajesh.Kalakodima@in.bosch.com>, <airlied@linux.ie>,
+        <daniel@ffwll.ch>, <koji.matsuoka.xm@renesas.com>,
+        <muroya@ksk.co.jp>, <Harsha.ManjulaMallikarjun@in.bosch.com>,
+        <ezequiel@collabora.com>, <seanpaul@chromium.org>,
+        <linux-renesas-soc@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <michael.dege@renesas.com>, <gotthard.voellmeke@renesas.com>,
+        <efriedrich@de.adit-jv.com>, <mrodin@de.adit-jv.com>,
+        <ChaitanyaKumar.Borah@in.bosch.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [PATCH v5 0/8] drm: rcar-du: Add Color Management Module (CMM)
+Message-ID: <20200608094432.GA27063@lxhi-065.adit-jv.com>
+References: <20191015104621.62514-1-jacopo+renesas@jmondi.org>
+ <20200527071555.GA23912@lxhi-065.adit-jv.com>
+ <20200605132900.on527xcggg6f6pil@uno.localdomain>
+ <20200605134124.GA28734@lxhi-065.adit-jv.com>
+ <20200605135315.xlph44pl7kvmt23a@uno.localdomain>
+ <20200607024158.GD7339@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-In-Reply-To: <20200608052041-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200607024158.GD7339@pendragon.ideasonboard.com>
+X-Originating-IP: [10.72.94.48]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
-On 2020/6/8 下午5:31, Michael S. Tsirkin wrote:
-> On Mon, Jun 08, 2020 at 05:18:44PM +0800, Jason Wang wrote:
->> On 2020/6/8 下午2:32, Michael S. Tsirkin wrote:
->>> On Mon, Jun 08, 2020 at 11:32:31AM +0800, Jason Wang wrote:
->>>> On 2020/6/7 下午9:51, Michael S. Tsirkin wrote:
->>>>> On Fri, Jun 05, 2020 at 04:54:17PM +0800, Jason Wang wrote:
->>>>>> On 2020/6/2 下午3:08, Jason Wang wrote:
->>>>>>>>> +static const struct pci_device_id vp_vdpa_id_table[] = {
->>>>>>>>> +    { PCI_DEVICE(PCI_VENDOR_ID_REDHAT_QUMRANET, PCI_ANY_ID) },
->>>>>>>>> +    { 0 }
->>>>>>>>> +};
->>>>>>>> This looks like it'll create a mess with either virtio pci
->>>>>>>> or vdpa being loaded at random. Maybe just don't specify
->>>>>>>> any IDs for now. Down the road we could get a
->>>>>>>> distinct vendor ID or a range of device IDs for this.
->>>>>>> Right, will do.
->>>>>>>
->>>>>>> Thanks
->>>>>> Rethink about this. If we don't specify any ID, the binding won't work.
->>>>> We can bind manually. It's not really for production anyway, so
->>>>> not a big deal imho.
->>>> I think you mean doing it via "new_id", right.
->>> I really meant driver_override. This is what people have been using
->>> with pci-stub for years now.
->>
->> Do you want me to implement "driver_overrid" in this series, or a NULL
->> id_table is sufficient?
->
-> Doesn't the pci subsystem create driver_override for all devices
-> on the pci bus?
+Many thanks for your comments and involvement.
 
+On Sun, Jun 07, 2020 at 05:41:58AM +0300, Laurent Pinchart wrote:
+> On Fri, Jun 05, 2020 at 03:53:15PM +0200, Jacopo Mondi wrote:
+> > On Fri, Jun 05, 2020 at 03:41:24PM +0200, Eugeniu Rosca wrote:
+> > > On Fri, Jun 05, 2020 at 03:29:00PM +0200, Jacopo Mondi wrote:
+> > >> On Wed, May 27, 2020 at 09:15:55AM +0200, Eugeniu Rosca wrote:
+> > >>> Could you kindly share the cross compilation steps for your kmsxx fork?
+> > >>
+> > >> I usually build it on the target :)
+> > >
+> > > Interesting approach. With ARM getting more and more potent, why not? :)
+> > 
+> > For 'small' utilities like kmsxx it's doable
+> > 
+> > >>> Just out of curiosity, have you ever tried to pull the display's HDMI
+> > >>> cable while reading from CM2_LUT_TBL?
+> > >>
+> > >> Ahem, not really :) Did I get you right, you mean disconnecting the
+> > >> HDMI cable from the board ?
+> > >
+> > > Right.
+> > 
+> > So, no, I have not tried. Do you see any intersting failure with the
+> > mainline version ?
+> 
+> Jacopo, would you be able to give this a try ?
 
-Yes, I miss this.
+FWIW, I seem to hit pre-existing issues in vanilla rcar-du,
+while unplugging HDMI cable during a cyclic suspend-resume:
 
+HW: H3 ES2.0 Salvator-X
+SW: renesas-drivers-2020-06-02-v5.7
+.config: renesas_defconfig +CONFIG_PM_DEBUG +CONFIG_PM_ADVANCED_DEBUG
+Use-case:
 
->>>>>> How about using a dedicated subsystem vendor id for this?
->>>>>>
->>>>>> Thanks
->>>>> If virtio vendor id is used then standard driver is expected
->>>>> to bind, right? Maybe use a dedicated vendor id?
->>>> I meant something like:
->>>>
->>>> static const struct pci_device_id vp_vdpa_id_table[] = {
->>>>       { PCI_DEVICE_SUB(PCI_VENDOR_ID_REDHAT_QUMRANET, PCI_ANY_ID,
->>>> VP_TEST_VENDOR_ID, VP_TEST_DEVICE_ID) },
->>>>       { 0 }
->>>> };
->>>>
->>>> Thanks
->>>>
->>> Then regular virtio will still bind to it. It has
->>>
->>> drivers/virtio/virtio_pci_common.c:     { PCI_DEVICE(PCI_VENDOR_ID_REDHAT_QUMRANET, PCI_ANY_ID) },
->>>
->>>
->> IFCVF use this to avoid the binding to regular virtio device.
->
-> Ow. Indeed:
->
-> #define IFCVF_VENDOR_ID         0x1AF4
->
-> Which is of course not an IFCVF vendor id, it's the Red Hat vendor ID.
->
-> I missed that.
->
-> Does it actually work if you bind a virtio driver to it?
+  --------8<---------
+$ cat s2ram.sh
+modprobe i2c-dev
+echo 9 > /proc/sys/kernel/printk
+i2cset -f -y 7 0x30 0x20 0x0F
+echo 0 > /sys/module/suspend/parameters/pm_test_delay
+echo core  > /sys/power/pm_test
+echo deep > /sys/power/mem_sleep
+echo 1 > /sys/power/pm_debug_messages
+echo 0 > /sys/power/pm_print_times
+echo mem > /sys/power/state
 
+$ while true; do sh s2ram.sh ; done
+$ # unplug HDMI cable several times
 
-It works.
+[   55.568051] PM: noirq resume of devices complete after 3.862 msecs
+[   55.583253] PM: early resume of devices complete after 8.496 msecs
+[   65.757023] [drm:drm_atomic_helper_wait_for_flip_done] *ERROR* [CRTC:74:crtc-1] flip_done timed out
+[   75.996123] [drm:drm_atomic_helper_wait_for_flip_done] *ERROR* [CRTC:74:crtc-1] flip_done timed out
+[   86.236112] [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CRTC:74:crtc-1] flip_done timed out
+[   96.476111] [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CONNECTOR:80:HDMI-A-1] flip_done timed out
+[  106.716109] [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [PLANE:45:plane-5] flip_done timed out
+[  116.956111] [drm:drm_atomic_helper_wait_for_flip_done] *ERROR* [CRTC:74:crtc-1] flip_done timed out
+[  127.196112] [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CRTC:74:crtc-1] flip_done timed out
+[  137.436116] [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CONNECTOR:80:HDMI-A-1] flip_done timed out
+[  147.676111] [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [PLANE:45:plane-5] flip_done timed out
+[  157.916110] [drm:drm_atomic_helper_wait_for_flip_done] *ERROR* [CRTC:74:crtc-1] flip_done timed out
+  --------8<---------
 
+This looks to be unrelated to the CMM lockup I initially reported.
 
-> I'm guessing no otherwise they wouldn't need IFC driver, right?
->
+JYI, graphics pipelines in production R-Car3 targets are significantly
+more complex (involving binding/unbinding serializer ICs at runtime
+during non-trivial shutdown/suspend/resume sequences), as opposed
+to the relatively straightforward VGA/HDMI outputs present on the
+reference targets. So, my hope is that Renesas community can take
+HDMI hot plugging seriously and make it a regular test-case during
+rcar-du patch review, since this is a precondition for the R-Car3
+platform and products to succeed as a whole.
 
-Looking at the driver, they used a dedicated bar for dealing with 
-virtqueue state save/restore. It
+BTW, if you happen to know an affordable programmable HDMI switcher
+which can do the hot-plugging job in an automated test environment,
+please let me know.
 
+> 
+> > >>> At least with the out-of-tree CMM implementation [*], this sends the
+> > >>> R-Car3 reference targets into an unrecoverable freeze, with no lockup
+> > >>> reported by the kernel (i.e. looks like an serious HW issue).
+> > >>>
+> > >>>> CMM functionalities are retained between suspend/resume cycles (tested with
+> > >>>> suspend-to-idle) without requiring a re-programming of the LUT tables.
+> > >>>
+> > >>> Hmm. Is this backed up by any statement in the HW User's manual?
+> > >>> This comes in contrast with the original Renesas CMM implementation [**]
+> > >>> which does make use of suspend (where the freeze actually happens).
+> > >>>
+> > >>> Can we infer, based on your statement, that we could also get rid of
+> > >>> the suspend callback in [**]?
+> > >>
+> > >> As Geert (thanks) explained what I've tested with is suspend-to-idle,
+> > >> which retains the state of the LUT tables (and I assume other
+> > >> not-yet-implemented CMM features, like CLU). I recall the out-of-tree
+> > >> driver has suspend/resume routines but I never really tested that.
+> > >
+> > > I see. JFYI, there is a flaw in the suspend handling in the out-of-tree
+> > > CMM patch [*], which renders the SoC unresponsive on HDMI hotplug. The
+> > > fix is currently under review. Hopefully it will make its way to [*]
+> > > in the nearest future. Just to keep in mind for the moment when CMM
+> > > s2ram will become a mainline feature.
+> > 
+> > Thanks, let's keep this in mind. Next week I'll run a few tests again
+> > with s2ram and will get back to you.
+> 
+> Note that the CMM driver is controlled by the DU driver. As the DU
+> driver will reenable the display during resume, it will call
+> rcar_du_cmm_setup() at resume time, which will reprogram the CMM. There
+> should thus be no need for manual suspend/resume handling in the CMM as
+> far as I can tell, but we need to ensure that the CMM is suspended
+> before and resumed after the DU. I believe this could be implemented
+> using device links.
 
->
->
->> Looking at
->> pci_match_one_device() it checks both subvendor and subdevice there.
->>
->> Thanks
->
-> But IIUC there is no guarantee that driver with a specific subvendor
-> matches in presence of a generic one.
-> So either IFC or virtio pci can win, whichever binds first.
+Does this apply to vanilla rcar-du only (where CMM support differs
+from [*]) or would also be relevant for rcar.9.6 kernel?
 
+> 
+> > >>> [*] https://github.com/renesas-rcar/du_cmm
+> > >>> [**] https://github.com/renesas-rcar/du_cmm/blob/c393ed49834bdbc/meta-rcar-gen3/recipes-kernel/linux/linux-renesas/0001-drm-rcar-du-Add-DU-CMM-support.patch#L1912
 
-I'm not sure I get there. But I try manually bind IFCVF to qemu's 
-virtio-net-pci, and it fails.
-
-Thanks
-
-
->
-> I guess we need to blacklist IFC in virtio pci probe code. Ugh.
-
-
-
->
-
+-- 
+Best regards,
+Eugeniu Rosca
