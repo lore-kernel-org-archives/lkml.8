@@ -2,110 +2,100 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C833EC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 13:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE3EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 13:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A64742072F
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 13:32:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA3292072F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 13:33:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="a5taWeGU"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="gP9L0s7Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729873AbgFHNcy (ORCPT
+        id S1729874AbgFHNdb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 09:32:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33560 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729179AbgFHNcx (ORCPT
+        Mon, 8 Jun 2020 09:33:31 -0400
+Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:33845 "EHLO
+        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729179AbgFHNda (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 09:32:53 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF981C08C5C2;
-        Mon,  8 Jun 2020 06:32:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=ObZ22oOgYNGbVd4Cp8pB6DVUyibIVTQNw5PapcI68nk=; b=a5taWeGUX4HtnKc/RAOz5WhgUz
-        q6JBnbH3JTiA0cXFU9kiCQWCXW/ILe82YRWyyJCFX/BccSHPnnjG1RJ6fzG56MfIi0KikIvn0P9nf
-        mSUvR/7yJhmJEjL6YHLbAviatSAnH4qTUW0bZBTaepq+d1h02hdnqQwrHGin2OYMxi/uH2q6I2CFE
-        Bmf2dgwgtuy4ue+pK94M55DxD5NmhDOJiqDCKv4agDJrK2TlRU50paxHDYtrUgdGEJVwJptb7wL36
-        BMBtG7PyeI/lJRa1zCDx0cj4FHW1VWU83+4CkoMg/YVIb/7CHlo624nM17uJ2flQPUeEY+5R/1ZIc
-        7xPFI5/w==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jiHtR-0001E9-NY; Mon, 08 Jun 2020 13:32:49 +0000
-Date:   Mon, 8 Jun 2020 06:32:49 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     Scott Branden <scott.branden@broadcom.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Wolfram Sang <wsa@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH v7 1/8] fs: introduce kernel_pread_file* support
-Message-ID: <20200608133249.GW19604@bombadil.infradead.org>
-References: <20200606050458.17281-1-scott.branden@broadcom.com>
- <20200606050458.17281-2-scott.branden@broadcom.com>
- <20200606155216.GP19604@bombadil.infradead.org>
- <1591621401.4638.59.camel@linux.ibm.com>
- <20200608131630.GV19604@bombadil.infradead.org>
- <1591622526.4638.71.camel@linux.ibm.com>
+        Mon, 8 Jun 2020 09:33:30 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id iHu1jRSdCCKzeiHu4jmU3N; Mon, 08 Jun 2020 15:33:28 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1591623208; bh=5H+JcZQ+j0L/vRy7m5zEivWFD9SEuLtRzpP2UWOMfL0=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=gP9L0s7YbcffMFxsWH+tTVbYch5x52O+hBL4JPu7NCl6+0+vxphSASyWVRTFxD77u
+         2FaQ1Dc3zLt81hPUXAtysbVXARu8RevayB9Z1RkRVWG7HgZ7ZkJ9Wyv9lDKttOA6vY
+         YDD3GBW5nkwxDq/93Foad7YOWlH+zt09LcfjSVTCPkNpWpxBU8HP+o4Q6lccB4N7Te
+         iwDEQkUhpG0CfO07aShZioQgJuCIXXO6lxAli67OMF0FxQQVAzs0TmBJkg++2xz/7V
+         SjiqRvTwJThJeI9hY8im+T1PaGUjrqOtROoSw7bG0jw0bl88DTpDwNSvltcTbQ6PuP
+         p3FX31vzKzwPQ==
+Subject: Re: [PATCH] media: bdisp: Fix runtime PM imbalance on error
+To:     Dinghao Liu <dinghao.liu@zju.edu.cn>, kjlu@umn.edu
+Cc:     Fabien Dessenne <fabien.dessenne@st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200521100021.12461-1-dinghao.liu@zju.edu.cn>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <f4378f72-8348-33f8-48a3-aa361bbac5db@xs4all.nl>
+Date:   Mon, 8 Jun 2020 15:33:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1591622526.4638.71.camel@linux.ibm.com>
+In-Reply-To: <20200521100021.12461-1-dinghao.liu@zju.edu.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfD+dVag/E7LFdQq452Ror8YsKG7cG7GdSLNJNiThytUQp8kGjGWAI93N0OL+Wg69Hjwwyd/2WvE9VZ9yFK6Jpu+6PHtujnNOYpbpk4hZg5jvB5MYDbzu
+ sENajk/q3oRW7zfcYCPejq9aO3SqFpLZH7Km5AHeI3akj829H8v/uFQK1qxcYDASl4IjTL8ZkVbKvlIP1Xctf+V9H+Dp7uzdUyxcVk910tJsdw2TMRVkLCNp
+ LfMISknUXsG4XLTB2xenSH5+EVbsORRFkQ3/Ux5jxAgTR5oJEwi4BsXqShHh2h0sMTbWWssMNTlr7Zrxq0eBSJtp0pF1+Ml89yf1HbxrWL8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 09:22:06AM -0400, Mimi Zohar wrote:
-> On Mon, 2020-06-08 at 06:16 -0700, Matthew Wilcox wrote:
-> > On Mon, Jun 08, 2020 at 09:03:21AM -0400, Mimi Zohar wrote:
-> > > With this new design of not using a private vmalloc, will the file
-> > > data be accessible prior to the post security hooks?  From an IMA
-> > > perspective, the hooks are used for measuring and/or verifying the
-> > > integrity of the file.
-> > 
-> > File data is already accessible prior to the post security hooks.
-> > Look how kernel_read_file works:
-> > 
-> >         ret = deny_write_access(file);
-> >         ret = security_kernel_read_file(file, id);
-> >                 *buf = vmalloc(i_size);
-> >                 bytes = kernel_read(file, *buf + pos, i_size - pos, &pos);
-> >         ret = security_kernel_post_read_file(file, *buf, i_size, id);
-> > 
-> > kernel_read() will read the data into the page cache and then copy it
-> > into the vmalloc'd buffer.  There's nothing here to prevent read accesses
-> > to the file.
+On 21/05/2020 12:00, Dinghao Liu wrote:
+> pm_runtime_get_sync() increments the runtime PM usage counter even
+> when it returns an error code. Thus a pairing decrement is needed on
+> the error handling path to keep the counter balanced.
 > 
-> The post security hook needs to access to the file data in order to
-> calculate the file hash.  The question is whether prior to returning
-> from kernel_read_file() the caller can access the file data.
+> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+> ---
+>  drivers/media/platform/sti/bdisp/bdisp-v4l2.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/platform/sti/bdisp/bdisp-v4l2.c b/drivers/media/platform/sti/bdisp/bdisp-v4l2.c
+> index af2d5eb782ce..e1d150584bdc 100644
+> --- a/drivers/media/platform/sti/bdisp/bdisp-v4l2.c
+> +++ b/drivers/media/platform/sti/bdisp/bdisp-v4l2.c
+> @@ -1371,7 +1371,7 @@ static int bdisp_probe(struct platform_device *pdev)
+>  	ret = pm_runtime_get_sync(dev);
+>  	if (ret < 0) {
+>  		dev_err(dev, "failed to set PM\n");
+> -		goto err_dbg;
+> +		goto err_pm;
+>  	}
+>  
+>  	/* Filters */
+> @@ -1399,7 +1399,6 @@ static int bdisp_probe(struct platform_device *pdev)
+>  	bdisp_hw_free_filters(bdisp->dev);
+>  err_pm:
+>  	pm_runtime_put(dev);
 
-Whether you copy the data (as today) or map it (as I'm proposing),
-the data goes into the page cache.  It's up to the security system to
-block access to the page cache until it's been verified.
+pm_runtime_put_sync()?
+
+> -err_dbg:
+>  	bdisp_debugfs_remove(bdisp);
+>  err_v4l2:
+>  	v4l2_device_unregister(&bdisp->v4l2_dev);
+> 
+
+Regards,
+
+	Hans
