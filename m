@@ -2,108 +2,120 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39231C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52233C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:36:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1266F20760
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:36:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591659386;
-	bh=saLN3d1KPLnQ2+/04KMRkgHFhsJjNTOGFsAj3gFbmXQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yw/hSQ2fizbpOrOFQtBQts//Vv3a1I3m2mp/mXc3jINS375JIl9bk4TqEin44yhB6
-	 8jElkyPpNrQwmW8Ee9Slgk4VQDkZr/jZUFLEVw5T8s/SVFsYVYadd5XdPsg18XT6Ij
-	 wQU6Kn1R0ld/L/7JtIkPxSFumjbwnS/OoXwSaztU=
+	by mail.kernel.org (Postfix) with ESMTP id 33A6C20890
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:36:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732248AbgFHXb1 (ORCPT
+        id S1731141AbgFHXgk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:31:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51612 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731765AbgFHXZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:25:11 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18AB5208A7;
-        Mon,  8 Jun 2020 23:25:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658710;
-        bh=saLN3d1KPLnQ2+/04KMRkgHFhsJjNTOGFsAj3gFbmXQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dSU7307pFlURZdck+57UCQkwbNPjiuUMa1PCCpHonsAi6pcjnVTBtbFDRQfsujQ41
-         c8kwOiUvVxC5DQQ91qXa5WNekvnW5GZoilxMiGCMJpb/wnAUK2uGNfI9naXITWqndT
-         QBorWlPSbB6saPY/wXt9O3hzO9DbJNYwsq1sld8A=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arthur Kiyanovski <akiyano@amazon.com>,
-        Sameeh Jubran <sameehj@amazon.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 08/72] net: ena: fix error returning in ena_com_get_hash_function()
-Date:   Mon,  8 Jun 2020 19:23:56 -0400
-Message-Id: <20200608232500.3369581-8-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608232500.3369581-1-sashal@kernel.org>
-References: <20200608232500.3369581-1-sashal@kernel.org>
+        Mon, 8 Jun 2020 19:36:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42130 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728175AbgFHXge (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:36:34 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F1CBC08C5C2
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 16:36:34 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jiRJY-0002nN-Ul; Tue, 09 Jun 2020 01:36:25 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 65786101181; Tue,  9 Jun 2020 01:36:24 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        "maz\@kernel.org" <maz@kernel.org>,
+        "Saidi\, Ali" <alisaidi@amazon.com>
+Cc:     "jason\@lakedaemon.net" <jason@lakedaemon.net>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel\@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "Woodhouse\, David" <dwmw@amazon.co.uk>,
+        "Zilberman\, Zeev" <zeev@amazon.com>,
+        "Machulsky\, Zorik" <zorik@amazon.com>
+Subject: Re: [PATCH] irqchip/gic-v3-its: Don't try to move a disabled irq
+In-Reply-To: <0940571f9daa9829f70616b3036a2b3b3f25953c.camel@kernel.crashing.org>
+References: <AE04B507-C5E2-44D2-9190-41E9BE720F9D@amazon.com> <622fb6be108e894ee365d6b213535c8b@kernel.org> <f9e9d8c37eb92e4b9576bfcb4386ff6ef00eddce.camel@amazon.com> <87mu5dacs7.fsf@nanos.tec.linutronix.de> <0940571f9daa9829f70616b3036a2b3b3f25953c.camel@kernel.crashing.org>
+Date:   Tue, 09 Jun 2020 01:36:24 +0200
+Message-ID: <873675870n.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arthur Kiyanovski <akiyano@amazon.com>
+Ben,
 
-[ Upstream commit e9a1de378dd46375f9abfd8de1e6f59ee114a793 ]
+Benjamin Herrenschmidt <benh@kernel.crashing.org> writes:
+> On Mon, 2020-06-08 at 15:48 +0200, Thomas Gleixner wrote:
+>> > 	if (cpu != its_dev->event_map.col_map[id]) {
+>> > 		target_col = &its_dev->its->collections[cpu];
+>> > -		its_send_movi(its_dev, target_col, id);
+>> > +
+>> > +		/* If the IRQ is disabled a discard was sent so don't move */
+>> > +		if (!irqd_irq_disabled(d))
+>> 
+>> That check needs to be !irqd_is_activated() because enable_irq() does
+>> not touch anything affinity related.
+>
+> Right. Note: other  drivers  (like arch/powerpc/sysdev/xive/common.c
+> use irqd_is_started() ... this gets confusing :)
 
-In case the "func" parameter is NULL we now return "-EINVAL".
-This shouldn't happen in general, but when it does happen, this is the
-proper way to handle it.
+Blast from the past ...
 
-We also check func for NULL in the beginning of the function, as there
-is no reason to do all the work and realize in the end of the function
-it was useless.
+arch/powerpc does not use hierarchical irq domains, so the activated
+state does not matter there.
 
-Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
-Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/amazon/ena/ena_com.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
-index dc9149a32f41..bb1710ff910a 100644
---- a/drivers/net/ethernet/amazon/ena/ena_com.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_com.c
-@@ -2131,6 +2131,9 @@ int ena_com_get_hash_function(struct ena_com_dev *ena_dev,
- 		rss->hash_key;
- 	int rc;
- 
-+	if (unlikely(!func))
-+		return -EINVAL;
-+
- 	rc = ena_com_get_feature_ex(ena_dev, &get_resp,
- 				    ENA_ADMIN_RSS_HASH_FUNCTION,
- 				    rss->hash_key_dma_addr,
-@@ -2143,8 +2146,7 @@ int ena_com_get_hash_function(struct ena_com_dev *ena_dev,
- 	if (rss->hash_func)
- 		rss->hash_func--;
- 
--	if (func)
--		*func = rss->hash_func;
-+	*func = rss->hash_func;
- 
- 	if (key)
- 		memcpy(key, hash_key->key, (size_t)(hash_key->keys_num) << 2);
--- 
-2.25.1
+>> > +			its_send_movi(its_dev, target_col, id);
+>> > +
+>> > 		its_dev->event_map.col_map[id] = cpu;
+>> > 		irq_data_update_effective_affinity(d, cpumask_of(cpu));
+>> 
+>> And then these associtations are disconnected from reality in any case.
+>
+> Not sure what you mean here, that said...
 
+You skip the setup and then you set that state to look like it really
+happened. How is that NOT disconnected from reality and a proper source
+for undecodable failure later on beause something else subtly depends on
+that state?
+
+>> Something like the completely untested patch below should work.
+>
+> Ok. One possible issue though is before, the driver always had the
+> opportunity to "vet" the affinity mask for whatever platform
+> constraints may be there and change it before applying it. This is no
+> longer the case on a deactivated interrupt with your patch as far as I
+> can tell. I don't know if that is a problem and if drivers that do that
+> have what it takes to "fixup" the affinity at startup time, the ones I
+> wrote don't need that feature, but...
+
+The driver still has the opportunity to do so when the interrupt is
+acticated. And if you look at the conditions of that patch it carefully
+applies this only to architectures which actually use hiearachical irq
+domains. Everything else including good old PPC won't notice at all.
+
+>> Thanks,
+>> 
+>>         tglx
+
+<SNIP 60+ lines of useless information ....>
+
+Can you please trim your replies?
+
+Thanks,
+
+        tglx
