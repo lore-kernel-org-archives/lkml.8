@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 289DFC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43064C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFFB620760
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09D97207C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:52:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663915;
-	bh=3BabQJM6BN1aJZwxaMkpymzATSEqgRe2H4GvW+yQVss=;
+	s=default; t=1591663925;
+	bh=x/hwxkdbdu7u6AazMGFK0CvTxvW1mE8KvYKMVZZL0Dk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WQ4N2k/g0b5fz9a5WnrgZrYz5zzN41c9W98vP1Lxpfge2E50tjvbuJsm7OhrNmMdo
-	 a+984/xFBaiaYFhA6mQwfvs0bbljS8oQXcVQ8RjciQmUbFrQL5YxDhqk9kNndtZ2p5
-	 FrcR69e3fse0DuR03cd7CROmQ+P18FV90kNLtvXk=
+	b=P6e6nlTifVVNh1T7ylcCohwv5XaDDttu5IqJqa5RG+Dqnijj3oZ373cjU2EReEWM9
+	 FY86Xw1D6vLthRHY2aXKcUnyW8UivXHc2ELaQxweOkiw++5hx72kxaAkb9FrOUZKTY
+	 o+HwwMUDiKCxxJSWbRA9abtXh8DKzhjiUzYSrr64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729144AbgFIAvx (ORCPT
+        id S1731778AbgFIAwC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:51:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56324 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:52:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728591AbgFHXKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:10:13 -0400
+        id S1726907AbgFHXKL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:10:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7B09208C7;
-        Mon,  8 Jun 2020 23:10:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D606F212CC;
+        Mon,  8 Jun 2020 23:10:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657813;
-        bh=3BabQJM6BN1aJZwxaMkpymzATSEqgRe2H4GvW+yQVss=;
+        s=default; t=1591657810;
+        bh=x/hwxkdbdu7u6AazMGFK0CvTxvW1mE8KvYKMVZZL0Dk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vJ3AvlcE2HUrn+CuknAcK54VNNwCssa9QazWO3UXivaDzRpyX8HyzW+r/nzN19TpP
-         oHkA+XaIl3oA+eLZh7EBssgIHi4LZYNuNvWOYOUwY+GxvpyngPlIBSvLtfMYSEVhmz
-         M7AMDcmyJvwqmvfNKQj6AUHB7rClE4W9suVRXXZo=
+        b=m32/6Wi/6okH5IZyKqQGHump6D6bBohhmYDxRFoQGzIkkwGWPupHta7f6dqzPvRUy
+         rBlE/YMk0KH6gwz0c1UrjUpWRsAkFbZ7/qU2HyrL0LvLFdIV9TGjs2SrSGF+KOyWDI
+         7aBIehQRLSNTTeV+Z0n2usHRbc7YQukK+aEidUsU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.7 188/274] drm/mcde: dsi: Fix return value check in mcde_dsi_bind()
-Date:   Mon,  8 Jun 2020 19:04:41 -0400
-Message-Id: <20200608230607.3361041-188-sashal@kernel.org>
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, wcn36xx@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 186/274] wcn36xx: Fix error handling path in 'wcn36xx_probe()'
+Date:   Mon,  8 Jun 2020 19:04:39 -0400
+Message-Id: <20200608230607.3361041-186-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -60,40 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 761e9f4f80a21a4b845097027030bef863001636 ]
+[ Upstream commit a86308fc534edeceaf64670c691e17485436a4f4 ]
 
-The of_drm_find_bridge() function returns NULL on error, it doesn't return
-error pointers so this check doesn't work.
+In case of error, 'qcom_wcnss_open_channel()' must be undone by a call to
+'rpmsg_destroy_ept()', as already done in the remove function.
 
-Fixes: 5fc537bfd000 ("drm/mcde: Add new driver for ST-Ericsson MCDE")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200430073145.52321-1-weiyongjun1@huawei.com
+Fixes: 5052de8deff5 ("soc: qcom: smd: Transition client drivers from smd to rpmsg")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200507043619.200051-1-christophe.jaillet@wanadoo.fr
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/mcde/mcde_dsi.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/net/wireless/ath/wcn36xx/main.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/mcde/mcde_dsi.c b/drivers/gpu/drm/mcde/mcde_dsi.c
-index 7af5ebb0c436..e705afc08c4e 100644
---- a/drivers/gpu/drm/mcde/mcde_dsi.c
-+++ b/drivers/gpu/drm/mcde/mcde_dsi.c
-@@ -1073,10 +1073,9 @@ static int mcde_dsi_bind(struct device *dev, struct device *master,
- 			panel = NULL;
+diff --git a/drivers/net/wireless/ath/wcn36xx/main.c b/drivers/net/wireless/ath/wcn36xx/main.c
+index e49c306e0eef..702b689c06df 100644
+--- a/drivers/net/wireless/ath/wcn36xx/main.c
++++ b/drivers/net/wireless/ath/wcn36xx/main.c
+@@ -1339,7 +1339,7 @@ static int wcn36xx_probe(struct platform_device *pdev)
+ 	if (addr && ret != ETH_ALEN) {
+ 		wcn36xx_err("invalid local-mac-address\n");
+ 		ret = -EINVAL;
+-		goto out_wq;
++		goto out_destroy_ept;
+ 	} else if (addr) {
+ 		wcn36xx_info("mac address: %pM\n", addr);
+ 		SET_IEEE80211_PERM_ADDR(wcn->hw, addr);
+@@ -1347,7 +1347,7 @@ static int wcn36xx_probe(struct platform_device *pdev)
  
- 			bridge = of_drm_find_bridge(child);
--			if (IS_ERR(bridge)) {
--				dev_err(dev, "failed to find bridge (%ld)\n",
--					PTR_ERR(bridge));
--				return PTR_ERR(bridge);
-+			if (!bridge) {
-+				dev_err(dev, "failed to find bridge\n");
-+				return -EINVAL;
- 			}
- 		}
- 	}
+ 	ret = wcn36xx_platform_get_resources(wcn, pdev);
+ 	if (ret)
+-		goto out_wq;
++		goto out_destroy_ept;
+ 
+ 	wcn36xx_init_ieee80211(wcn);
+ 	ret = ieee80211_register_hw(wcn->hw);
+@@ -1359,6 +1359,8 @@ static int wcn36xx_probe(struct platform_device *pdev)
+ out_unmap:
+ 	iounmap(wcn->ccu_base);
+ 	iounmap(wcn->dxe_base);
++out_destroy_ept:
++	rpmsg_destroy_ept(wcn->smd_channel);
+ out_wq:
+ 	ieee80211_free_hw(hw);
+ out_err:
 -- 
 2.25.1
 
