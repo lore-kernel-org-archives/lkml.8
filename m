@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B554C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8342BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:54:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 302F820760
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:54:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FF492087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:54:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591664091;
-	bh=gIPMWsm4ABPCize5QULWOmfap6esL9krjFHVmOk7eLw=;
+	s=default; t=1591664092;
+	bh=Ua04pMjpye9PITZFvdpeHXmH7tJJFLNH+IV3ssmzsA0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E2AA3Fbj0CibTO+TMjOl20vQZy/PtZt08BtteYOJyyfjHwOGNbaVqH+h1C90Zo2PZ
-	 Y8FNODioIrPJWvneY6QXMw4Fy82cw8JtyKrHyMnOw5kEmj89O9EZa4Gxx44S1gizaD
-	 aRIYq67aO8OgGn+NDwihQNqae+Wbbg8D5fqyEmzU=
+	b=Psxxg7+Bd55B6EQDdISBKi88HTCTo0mFirfrpsZhXHRSmlwkzeEWNDNrhHPDt1DLJ
+	 jTkupldVV3PkaxBlzdQZLtIF13jHOTcWB/rY5zCkpfG0WIq+QxTlH0gGX4G7+kMaeU
+	 J6zpOSt1ncktjch/LKOfgJFotl1HWOWAfze+IkRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387919AbgFIAyu (ORCPT
+        id S1730562AbgFIAyr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:54:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55164 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:54:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728415AbgFHXJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:09:27 -0400
+        id S1726970AbgFHXJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:09:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 483BC208B8;
-        Mon,  8 Jun 2020 23:09:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAA94208B8;
+        Mon,  8 Jun 2020 23:09:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657767;
-        bh=gIPMWsm4ABPCize5QULWOmfap6esL9krjFHVmOk7eLw=;
+        s=default; t=1591657770;
+        bh=Ua04pMjpye9PITZFvdpeHXmH7tJJFLNH+IV3ssmzsA0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jb97ttQrecBOA4dUUzSc+83oiF7UcGx3ZHKsIsaqpptNpzD5XMGrZkf+pst+Xt6ro
-         6i5TvtUjwkNmVVh6wy1blMQ88xD1IosG+09xAise72ejAk/h7u9fsI62akxWQZJFft
-         H9oMwVQS0mEKCPIADQ73yGdUyvZwGGFgyEh1SP4Q=
+        b=KTzcm84WpsKqitHrQ1vBbGILl8PTvX4kQcMz+3k+pDP3uoFHoZY22S6+lbsJmyW7n
+         emu+57FMPgthyLKNwdU1kzc09QhmUkuChu+6+pvNObsVXSPEux9WHa/luFMch/BRCf
+         o8b3jU/48/GEpEzSP0LF6/iObKQ0dppmthzuzO/k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 151/274] ice: Fix error return code in ice_add_prof()
-Date:   Mon,  8 Jun 2020 19:04:04 -0400
-Message-Id: <20200608230607.3361041-151-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 154/274] drivers: net: davinci_mdio: fix potential NULL dereference in davinci_mdio_probe()
+Date:   Mon,  8 Jun 2020 19:04:07 -0400
+Message-Id: <20200608230607.3361041-154-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -62,35 +63,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit f8d530ac29fe9248f5e58ca5bcf4c368f8393ccf ]
+[ Upstream commit e00edb4efbbc07425441a3be2aa87abaf5800d96 ]
 
-Fix to return a error code from the error handling case
-instead of 0, as done elsewhere in this function.
+platform_get_resource() may fail and return NULL, so we should
+better check it's return value to avoid a NULL pointer dereference
+since devm_ioremap() does not check input parameters for null.
 
-Fixes: 31ad4e4ee1e4 ("ice: Allocate flow profile")
+This is detected by Coccinelle semantic patch.
+
+@@
+expression pdev, res, n, t, e, e1, e2;
+@@
+
+res = \(platform_get_resource\|platform_get_resource_byname\)(pdev, t, n);
++ if (!res)
++   return -EINVAL;
+... when != res == NULL
+e = devm_ioremap(e1, res->start, e2);
+
+Fixes: 03f66f067560 ("net: ethernet: ti: davinci_mdio: use devm_ioremap()")
 Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ice/ice_flex_pipe.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/ti/davinci_mdio.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_flex_pipe.c b/drivers/net/ethernet/intel/ice/ice_flex_pipe.c
-index 42bac3ec5526..e7a2671222d2 100644
---- a/drivers/net/ethernet/intel/ice/ice_flex_pipe.c
-+++ b/drivers/net/ethernet/intel/ice/ice_flex_pipe.c
-@@ -2962,8 +2962,10 @@ ice_add_prof(struct ice_hw *hw, enum ice_block blk, u64 id, u8 ptypes[],
+diff --git a/drivers/net/ethernet/ti/davinci_mdio.c b/drivers/net/ethernet/ti/davinci_mdio.c
+index 38b7f6d35759..702fdc393da0 100644
+--- a/drivers/net/ethernet/ti/davinci_mdio.c
++++ b/drivers/net/ethernet/ti/davinci_mdio.c
+@@ -397,6 +397,8 @@ static int davinci_mdio_probe(struct platform_device *pdev)
+ 	data->dev = dev;
  
- 	/* add profile info */
- 	prof = devm_kzalloc(ice_hw_to_dev(hw), sizeof(*prof), GFP_KERNEL);
--	if (!prof)
-+	if (!prof) {
-+		status = ICE_ERR_NO_MEMORY;
- 		goto err_ice_add_prof;
-+	}
- 
- 	prof->profile_cookie = id;
- 	prof->prof_id = prof_id;
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!res)
++		return -EINVAL;
+ 	data->regs = devm_ioremap(dev, res->start, resource_size(res));
+ 	if (!data->regs)
+ 		return -ENOMEM;
 -- 
 2.25.1
 
