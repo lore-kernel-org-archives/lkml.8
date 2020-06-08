@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95076C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:18:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D566AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7038E2078D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:18:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADB772078D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:18:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591661880;
-	bh=jAO10dhZ0/bvgXRJ5ALw6c+WQy6MKBhxPTMd0JqViQU=;
+	s=default; t=1591661891;
+	bh=Y/PQsvmcP7ojJNDQ/LzfHMFXOeqcGVLKs741dczTlTk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xuRkR9aGu7y5laLSroE8TG5ESNB8qqGXYXaVQ7y6GjbGJ+VSDhyRN4VAFfbnIPMGk
-	 KTuotiU//YHsJXUjNgA9FzIGXD58Pqu9J6t/vQ73L5XrGE8/ojmlEdre7v3WI82b9T
-	 Zr1W0GoOuaOBoShrbl6OdWr6cLmBR2L3xkAXMjwY=
+	b=TrTmQPEm9KhwsLrA9yh3di7mm+ZDSFhYrFzDlT3TQ1jlfHyfcl8eGYj8RC8QSVSAs
+	 A0pPFa9aNleHJ2EA1KU/5QCbwwqz52Lbxz2P72OxqekOmK2NS57/iQk1tv4lxNOIll
+	 XvWSYs8KUAcuztKth7uLJHlqsQtaWQlm1o4ETaq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730701AbgFHXSs (ORCPT
+        id S1731601AbgFIASK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:18:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35934 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:18:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728719AbgFHXPK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:15:10 -0400
+        id S1729622AbgFHXSm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:18:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 921F121501;
-        Mon,  8 Jun 2020 23:15:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E0082086A;
+        Mon,  8 Jun 2020 23:18:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658110;
-        bh=jAO10dhZ0/bvgXRJ5ALw6c+WQy6MKBhxPTMd0JqViQU=;
+        s=default; t=1591658322;
+        bh=Y/PQsvmcP7ojJNDQ/LzfHMFXOeqcGVLKs741dczTlTk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yp0wg583cF/EJPOSbFpdN9IqDseS+8SjiNe+I6RNd5lKW+bWA7Sg7dxHXYpvHm0oJ
-         Gfa7aIoiLnNdXok2JCtEkj8WOuCcRik8BW7c5JwB/bgqLCUFXFyBE7/2mT9cDNm7nC
-         lai9bI4IGeA7KA8S0NjsuY0CxyU/sYX4FnL+EWak=
+        b=rHnuhcwXPMaAVD6F19ef99kkKlo6ZR2PrYSn80TFtIzNiHuFdedahGDtBViPuyO8n
+         V6Jh2XebFagKnbye70NlIOUab69VkRGpLd83Qv38BLpihj4152qXQA/DSWWTo+7t0Q
+         Zy02KdjPmZ4zhV0HQ1+KhD0NwFnOi/k2SM4NqRNs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Keno Fischer <keno@juliacomputing.com>,
-        Will Deacon <will@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>, Bin Lu <Bin.Lu@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 149/606] arm64: Fix PTRACE_SYSEMU semantics
-Date:   Mon,  8 Jun 2020 19:04:34 -0400
-Message-Id: <20200608231211.3363633-149-sashal@kernel.org>
+Cc:     Vinod Koul <vkoul@kernel.org>, Jonathan Marek <jonathan@marek.ca>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 322/606] clk: qcom: gcc: Fix parent for gpll0_out_even
+Date:   Mon,  8 Jun 2020 19:07:27 -0400
+Message-Id: <20200608231211.3363633-322-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -62,60 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Keno Fischer <keno@juliacomputing.com>
+From: Vinod Koul <vkoul@kernel.org>
 
-commit 1cf6022bd9161081215028203919c33fcfa6debb upstream.
+[ Upstream commit a76f274182f054481182c81cd62bb8794a5450a6 ]
 
-Quoth the man page:
-```
-       If the tracee was restarted by PTRACE_SYSCALL or PTRACE_SYSEMU, the
-       tracee enters syscall-enter-stop just prior to entering any system
-       call (which will not be executed if the restart was using
-       PTRACE_SYSEMU, regardless of any change made to registers at this
-       point or how the tracee is restarted after this stop).
-```
+Documentation says that gpll0 is parent of gpll0_out_even, somehow
+driver coded that as bi_tcxo, so fix it
 
-The parenthetical comment is currently true on x86 and powerpc,
-but not currently true on arm64. arm64 re-checks the _TIF_SYSCALL_EMU
-flag after the syscall entry ptrace stop. However, at this point,
-it reflects which method was used to re-start the syscall
-at the entry stop, rather than the method that was used to reach it.
-Fix that by recording the original flag before performing the ptrace
-stop, bringing the behavior in line with documentation and x86/powerpc.
-
-Fixes: f086f67485c5 ("arm64: ptrace: add support for syscall emulation")
-Cc: <stable@vger.kernel.org> # 5.3.x-
-Signed-off-by: Keno Fischer <keno@juliacomputing.com>
-Acked-by: Will Deacon <will@kernel.org>
-Tested-by: Sudeep Holla <sudeep.holla@arm.com>
-Tested-by: Bin Lu <Bin.Lu@arm.com>
-[catalin.marinas@arm.com: moved 'flags' bit masking]
-[catalin.marinas@arm.com: changed 'flags' type to unsigned long]
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 2a1d7eb854bb ("clk: qcom: gcc: Add global clock controller driver for SM8150")
+Reported-by: Jonathan Marek <jonathan@marek.ca>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Link: https://lkml.kernel.org/r/20200521052728.2141377-1-vkoul@kernel.org
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/ptrace.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/clk/qcom/gcc-sm8150.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
-index cd6e5fa48b9c..c30f77bd875f 100644
---- a/arch/arm64/kernel/ptrace.c
-+++ b/arch/arm64/kernel/ptrace.c
-@@ -1829,10 +1829,11 @@ static void tracehook_report_syscall(struct pt_regs *regs,
- 
- int syscall_trace_enter(struct pt_regs *regs)
- {
--	if (test_thread_flag(TIF_SYSCALL_TRACE) ||
--		test_thread_flag(TIF_SYSCALL_EMU)) {
-+	unsigned long flags = READ_ONCE(current_thread_info()->flags);
-+
-+	if (flags & (_TIF_SYSCALL_EMU | _TIF_SYSCALL_TRACE)) {
- 		tracehook_report_syscall(regs, PTRACE_SYSCALL_ENTER);
--		if (!in_syscall(regs) || test_thread_flag(TIF_SYSCALL_EMU))
-+		if (!in_syscall(regs) || (flags & _TIF_SYSCALL_EMU))
- 			return -1;
- 	}
- 
+diff --git a/drivers/clk/qcom/gcc-sm8150.c b/drivers/clk/qcom/gcc-sm8150.c
+index 20877214acff..e3959ff5cb55 100644
+--- a/drivers/clk/qcom/gcc-sm8150.c
++++ b/drivers/clk/qcom/gcc-sm8150.c
+@@ -75,8 +75,7 @@ static struct clk_alpha_pll_postdiv gpll0_out_even = {
+ 	.clkr.hw.init = &(struct clk_init_data){
+ 		.name = "gpll0_out_even",
+ 		.parent_data = &(const struct clk_parent_data){
+-			.fw_name = "bi_tcxo",
+-			.name = "bi_tcxo",
++			.hw = &gpll0.clkr.hw,
+ 		},
+ 		.num_parents = 1,
+ 		.ops = &clk_trion_pll_postdiv_ops,
 -- 
 2.25.1
 
