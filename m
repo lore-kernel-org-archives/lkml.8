@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42511C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93EE0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:04:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EE0120760
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:04:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D79820737
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:04:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591664663;
-	bh=a7t4fStzPG3m+Up+iFgKY9RcL2ZlUDwF9z2e11dlUNg=;
+	s=default; t=1591664669;
+	bh=dUkrinHv1Rv4amfGn74MI+e2YKhyXCrB1nrhBwjAXsU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K3qeB1ST0y3/+1sP5ldRUgVcWx6hM8Dh0yxqQNpphw5ymN4PcfjT17u+vnOss4YC6
-	 gulgxtv9b8gvfu6L4s6iHKZyCv3uR4asP+nOKRoF9JQOiFoj2s094jzWBBn5MHPMcD
-	 AGSYh7sM6ROuFvgWmjOmCoSmrVflUn+II693tLCE=
+	b=MUtaZOCmgod3hs366EVWR2+Q2/PscjUJazGUP767t2fOzFJq/7rShMOCN7MqLNk1g
+	 ZKrlDGwS188MZS6UKHQ+QEpTd+KjaPoul3R2DWGbdIftARw6aduEelyHt2TylwAgev
+	 73p3eYbVfJL4shuqrG6rgO7LDHVuSUrTNbUb5b3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388137AbgFIBEV (ORCPT
+        id S2388163AbgFIBE0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 21:04:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51738 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 21:04:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727907AbgFHXH2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:07:28 -0400
+        id S1727891AbgFHXHZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:07:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 763BC20885;
-        Mon,  8 Jun 2020 23:07:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D025320812;
+        Mon,  8 Jun 2020 23:07:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657648;
-        bh=a7t4fStzPG3m+Up+iFgKY9RcL2ZlUDwF9z2e11dlUNg=;
+        s=default; t=1591657645;
+        bh=dUkrinHv1Rv4amfGn74MI+e2YKhyXCrB1nrhBwjAXsU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=abR3F+p/nCT5iEkISgY0CdHMVwKunteYVFPFRaktVNFedWObq8KkwlUltMEqBTfOO
-         Iljwlp+56tWPbbKKIDJQTHYQjUAffYWzMMCWYy0wbkcsAwFB0Kif7DSAMxKptNdaia
-         I8tABKf7RNUG36YnE91pVcqtFO731x9DA5RHw7rE=
+        b=hRTpDfTaL3Gp0YHHVF/pVVfqBW/0xr2ASUfARjvkAgdOl3D6bKs1z6lxdLEI4sAqn
+         H97X82m9CAPc9AxV3Kif1DCa9aRuJgNGOL4Ked6AWOzKOTbWI/KaqHy/ApcIvCfNSh
+         k43dXp/cHWS/QF/MmerUTICdHqLjCYrF30XdypnM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Saravana Kannan <saravanak@google.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 063/274] clocksource/drivers/timer-versatile: Clear OF_POPULATED flag
-Date:   Mon,  8 Jun 2020 19:02:36 -0400
-Message-Id: <20200608230607.3361041-63-sashal@kernel.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>, linux-mips@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 061/274] mips: Fix cpu_has_mips64r1/2 activation for MIPS32 CPUs
+Date:   Mon,  8 Jun 2020 19:02:34 -0400
+Message-Id: <20200608230607.3361041-61-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -60,52 +64,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Saravana Kannan <saravanak@google.com>
+From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-[ Upstream commit 7a3768c206a006525afc090f92d4d618d8356b92 ]
+[ Upstream commit a2ac81c6ef4018ea49c034ce165bb9ea1cf99f3e ]
 
-The commit 4f41fe386a94 ("clocksource/drivers/timer-probe: Avoid
-creating dead devices") broke the handling of arm,vexpress-sysreg [1].
+Commit 1aeba347b3a9 ("MIPS: Hardcode cpu_has_mips* where target ISA
+allows") updated the cpu_has_mips* macro to be replaced with a constant
+expression where it's possible. By mistake it wasn't done correctly
+for cpu_has_mips64r1/cpu_has_mips64r2 macro. They are defined to
+be replaced with conditional expression __isa_range_or_flag(), which
+means either ISA revision being within the range or the corresponding
+CPU options flag was set at the probe stage or both being true at the
+same time. But the ISA level value doesn't indicate whether the ISA is
+MIPS32 or MIPS64. Due to this if we select MIPS32r1 - MIPS32r5
+architectures the __isa_range() macro will activate the
+cpu_has_mips64rX flags, which is incorrect. In order to fix the
+problem we make sure the 64bits CPU support is enabled by means of
+checking the flag cpu_has_64bits aside with proper ISA range and specific
+Revision flag being set.
 
-The arm,vexpress-sysreg device is handled by both timer-versatile.c and
-drivers/mfd/vexpress-sysreg.c. While the timer driver doesn't use the
-device, the mfd driver still needs a device to probe.
-
-So, this patch clears the OF_POPULATED flag to continue creating the
-device.
-
-[1] - https://lore.kernel.org/lkml/20200324175955.GA16972@arm.com/
-
-Fixes: 4f41fe386a94 ("clocksource/drivers/timer-probe: Avoid creating dead devices")
-Signed-off-by: Saravana Kannan <saravanak@google.com>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200324195302.203115-1-saravanak@google.com
+Fixes: 1aeba347b3a9 ("MIPS: Hardcode cpu_has_mips* where target ISA allows")
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clocksource/timer-versatile.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/mips/include/asm/cpu-features.h | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clocksource/timer-versatile.c b/drivers/clocksource/timer-versatile.c
-index e4ebb656d005..f5d017b31afa 100644
---- a/drivers/clocksource/timer-versatile.c
-+++ b/drivers/clocksource/timer-versatile.c
-@@ -6,6 +6,7 @@
- 
- #include <linux/clocksource.h>
- #include <linux/io.h>
-+#include <linux/of.h>
- #include <linux/of_address.h>
- #include <linux/sched_clock.h>
- 
-@@ -22,6 +23,8 @@ static int __init versatile_sched_clock_init(struct device_node *node)
- {
- 	void __iomem *base = of_iomap(node, 0);
- 
-+	of_node_clear_flag(node, OF_POPULATED);
-+
- 	if (!base)
- 		return -ENXIO;
- 
+diff --git a/arch/mips/include/asm/cpu-features.h b/arch/mips/include/asm/cpu-features.h
+index de44c92b1c1f..d4e120464d41 100644
+--- a/arch/mips/include/asm/cpu-features.h
++++ b/arch/mips/include/asm/cpu-features.h
+@@ -288,10 +288,12 @@
+ # define cpu_has_mips32r6	__isa_ge_or_flag(6, MIPS_CPU_ISA_M32R6)
+ #endif
+ #ifndef cpu_has_mips64r1
+-# define cpu_has_mips64r1	__isa_range_or_flag(1, 6, MIPS_CPU_ISA_M64R1)
++# define cpu_has_mips64r1	(cpu_has_64bits && \
++				 __isa_range_or_flag(1, 6, MIPS_CPU_ISA_M64R1))
+ #endif
+ #ifndef cpu_has_mips64r2
+-# define cpu_has_mips64r2	__isa_range_or_flag(2, 6, MIPS_CPU_ISA_M64R2)
++# define cpu_has_mips64r2	(cpu_has_64bits && \
++				 __isa_range_or_flag(2, 6, MIPS_CPU_ISA_M64R2))
+ #endif
+ #ifndef cpu_has_mips64r6
+ # define cpu_has_mips64r6	__isa_ge_and_flag(6, MIPS_CPU_ISA_M64R6)
 -- 
 2.25.1
 
