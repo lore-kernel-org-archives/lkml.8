@@ -2,118 +2,128 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5477C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B132BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 834642072F
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:08:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B053206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:08:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H3NGIDBP"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="P2GKu52W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729374AbgFHKIF (ORCPT
+        id S1729393AbgFHKIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 06:08:05 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42480 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729356AbgFHKIE (ORCPT
+        Mon, 8 Jun 2020 06:08:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58490 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729378AbgFHKI3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 06:08:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591610883;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=J8KdBsIeUG7CqXgAwlXgq2ronkJRHUa9z02ZSl84hDE=;
-        b=H3NGIDBPoAQe+Aa4VT1C4SgYx3BZfIuT/2hRfb+Ihu8kQRt7U5UODbrQsZgTI58n4TXeyX
-        EhYYWpx3EQ8Q+gkYydPc/PtjFnyopvoZjbb/ePVC6r8I2pKSA00NV4/e6q6QiP3OEEI6pP
-        DTP05RvkryoTUNt0nhi1VP3+g9Ycdhc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-165-RuHe18uhO4ac4yGJwcfsCw-1; Mon, 08 Jun 2020 06:07:58 -0400
-X-MC-Unique: RuHe18uhO4ac4yGJwcfsCw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C584D8018AD;
-        Mon,  8 Jun 2020 10:07:56 +0000 (UTC)
-Received: from [10.72.13.71] (ovpn-13-71.pek2.redhat.com [10.72.13.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C69136FF1B;
-        Mon,  8 Jun 2020 10:07:40 +0000 (UTC)
-Subject: Re: [PATCH 5/6] vdpa: introduce virtio pci driver
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rob.miller@broadcom.com, lingshan.zhu@intel.com,
-        eperezma@redhat.com, lulu@redhat.com, shahafs@mellanox.com,
-        hanand@xilinx.com, mhabets@solarflare.com, gdawar@xilinx.com,
-        saugatm@xilinx.com, vmireyno@marvell.com,
-        zhangweining@ruijie.com.cn, eli@mellanox.com
-References: <5dbb0386-beeb-5bf4-d12e-fb5427486bb8@redhat.com>
- <6b1d1ef3-d65e-08c2-5b65-32969bb5ecbc@redhat.com>
- <20200607095012-mutt-send-email-mst@kernel.org>
- <9b1abd2b-232c-aa0f-d8bb-03e65fd47de2@redhat.com>
- <20200608021438-mutt-send-email-mst@kernel.org>
- <a1b1b7fb-b097-17b7-2e3a-0da07d2e48ae@redhat.com>
- <20200608052041-mutt-send-email-mst@kernel.org>
- <9d2571b6-0b95-53b3-6989-b4d801eeb623@redhat.com>
- <20200608054453-mutt-send-email-mst@kernel.org>
- <bc27064c-2309-acf3-ccd8-6182bfa2a4cd@redhat.com>
- <20200608055331-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <61117e6a-2568-d0f4-8713-d831af32814d@redhat.com>
-Date:   Mon, 8 Jun 2020 18:07:36 +0800
+        Mon, 8 Jun 2020 06:08:29 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCFC2C08C5C4
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 03:08:28 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id l27so17634237ejc.1
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 03:08:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dxkh4Kxm2qSluY2udt9pCB1rYALSYeqASDMTt8TKeJI=;
+        b=P2GKu52WItZEgtpoUj18LxtU7AgqM5FVRJdGi3TUv/5Lg5xZFomT3eHPBzOMyvALk/
+         7GBsEJETXvfGLn1q9PletcojWdFGb/np1KH7hyORWeAS3kHqADvoXOqPq95AqxdRlUJA
+         GaFPC0TkTjGiwkE6mp/dO9Rsmt7YCy68d6pG8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dxkh4Kxm2qSluY2udt9pCB1rYALSYeqASDMTt8TKeJI=;
+        b=rZvNPqTgdUbguInu8ynoizpOlspTo6h8P/jtRFYD3h5mGFXNC1Pu30/8sN78id7GAu
+         kxXPbj8FmT3YWav8rpgI5cPfXbLqv1Ou2B2zrHtEXG9w/+341+EhhfbpbuW3WdGgC0UP
+         LOskS7p3lgi0x2sdhE2vDEXGp8JVEaaXrv0Vvo103ybdqipSatLXI0shz+ryq3+ugWk+
+         rDWpw8EGlfP/iYWBIDBog4fehd5xAxFkDHnvkTetJYbLclWWwwBdooogEVd8XtFJRm75
+         Sh9XLPtq3N2O2fJLCoL5ydB9AKbD5i0/7gK/Y7GpG3ArW6cl5LK2R7OfUyF4D3g+npmr
+         oB6Q==
+X-Gm-Message-State: AOAM532LGcMWK5Y9ULGtOJI1lTaCdWItbXJ4QkxbUKT8FE0z3794UEmS
+        6ONy5E5AlVOa3gGIngeR9ALp5ZgGrq0=
+X-Google-Smtp-Source: ABdhPJxAg8FdGBWitx0l/Pw7yBtDmw4KoAgFhWNXk8/GC/u/FjggasbaZA/r5dcLa09kW4fP8S4wiA==
+X-Received: by 2002:a17:906:945:: with SMTP id j5mr10235625ejd.52.1591610907139;
+        Mon, 08 Jun 2020 03:08:27 -0700 (PDT)
+Received: from [192.168.1.149] (ip-5-186-116-45.cgn.fibianet.dk. [5.186.116.45])
+        by smtp.gmail.com with ESMTPSA id d6sm12581189edn.75.2020.06.08.03.08.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Jun 2020 03:08:26 -0700 (PDT)
+Subject: Re: [PATCH resend] fs/namei.c: micro-optimize acl_permission_check
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200605142300.14591-1-linux@rasmusvillemoes.dk>
+ <CAHk-=wgz68f2u7bFPZCWgbsbEJw+2HWTJFXSg_TguY+xJ8WrNw@mail.gmail.com>
+ <dcd7516b-0a1f-320d-018d-f3990e771f37@rasmusvillemoes.dk>
+ <CAHk-=wixdSUWFf6BoT7rJUVRmjUv+Lir_Rnh81xx7e2wnzgKbg@mail.gmail.com>
+ <CAHk-=widT2tV+sVPzNQWijtUz4JA=CS=EaJRfC3_9ymuQXQS8Q@mail.gmail.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <934d7665-3358-576e-8434-82b16e3a1bf1@rasmusvillemoes.dk>
+Date:   Mon, 8 Jun 2020 12:08:25 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200608055331-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHk-=widT2tV+sVPzNQWijtUz4JA=CS=EaJRfC3_9ymuQXQS8Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2020/6/8 下午5:54, Michael S. Tsirkin wrote:
-> On Mon, Jun 08, 2020 at 05:46:52PM +0800, Jason Wang wrote:
->> On 2020/6/8 下午5:45, Michael S. Tsirkin wrote:
->>> On Mon, Jun 08, 2020 at 05:43:58PM +0800, Jason Wang wrote:
->>>>>> Looking at
->>>>>> pci_match_one_device() it checks both subvendor and subdevice there.
->>>>>>
->>>>>> Thanks
->>>>> But IIUC there is no guarantee that driver with a specific subvendor
->>>>> matches in presence of a generic one.
->>>>> So either IFC or virtio pci can win, whichever binds first.
->>>> I'm not sure I get there. But I try manually bind IFCVF to qemu's
->>>> virtio-net-pci, and it fails.
->>>>
->>>> Thanks
->>> Right but the reverse can happen: virtio-net can bind to IFCVF first.
+On 07/06/2020 21.48, Linus Torvalds wrote:
+> On Sun, Jun 7, 2020 at 9:37 AM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
 >>
->> That's kind of expected. The PF is expected to be bound to virtio-pci to
->> create VF via sysfs.
+>>> That will kinda work, except you do that mask &= MAY_RWX before
+>>> check_acl(), which cares about MAY_NOT_BLOCK and who knows what other bits.
 >>
->> Thanks
->>
->>
->>
-> Once VFs are created, don't we want IFCVF to bind rather than
-> virtio-pci?
+>> Good catch.
+> 
+> With the change to not clear the non-rwx bits in general, the owner
+> case now wants to do the masking, and then the "shift left by 6"
+> modification makes no sense since it only makes for a bigger constant
+> (the only reason to do the shift-right was so that the bitwise not of
+> the i_mode could be done in parallel with the shift, but with the
+> masking that instruction scheduling optimization becomes kind of
+> immaterial too). So I modified that patch to not bother, and add a
+> comment about MAY_NOT_BLOCK.
+> 
+> And since I was looking at the MAY_NOT_BLOCK logic, it was not only
+> not mentioned in comments, it also had some really confusing code
+> around it.
+> 
+> The posix_acl_permission() looked like it tried to conserve that bit,
+> which is completely wrong. It wasn't a bug only for the simple reason
+> that the only two call-sites had either explicitly cleared the bit
+> when calling, or had tested that the bit wasn't set in the first
+> place.
+> 
+> So as a result, I wrote a second patch to clear that confusion up.
+> 
+> Rasmus, say the word and I'll mark you for authorship on the first one.
 
+It might be a bit confusing with me mentioned in the third person and
+then also author, and it's really mostly your patch, so reported-by is
+fine with me. But it's up to you.
 
-Yes, but for PF we need virtio-pci.
+> Comments? Can you find something else wrong here, or some other fixup to do?
 
-Thanks
+No, I think it's ok. I took a look at the disassembly and it looks fine.
+There's an extra push/pop of %r14 [that's where gcc computes mode>>3,
+then CSE allows it to do cmovne %r14d,%ebx after in_group_p), so the
+owner case gets slightly penalized. I think/hope the savings from
+avoiding the in_group_p should compensate for that - any absolute path
+open() by non-root saves at least two in_group_p. YMMV.
 
-
->
-
+Rasmus
