@@ -4,55 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6791C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:53:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA86C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:53:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9623E20737
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:53:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 785F020659
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:53:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660417;
-	bh=ye9M/0tVTCzeqMpqUDp2Qo4XygW2XkTFYGKE45wRBAY=;
+	s=default; t=1591660421;
+	bh=rCFqFPN/S5hYmSyfe+QjOdpNml/We5jXqm0Wk0oj8e8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jd3QbfcwnDSgM9sflK66yoTK+vJZ6tWS+bwtfzgG+nKzFRrPni6dvPfX3fVa5dkJM
-	 ftJPczpByCPG01N+Or+ukh8uQkdVcbqWHT+U9hoI3GxcDV1fYkBsdbUJppTWWEMbsL
-	 pVr/IakddgVGVQ3vr+CUvR2zPRPa/fuqs7jkaKxo=
+	b=hR8XL3tFgcEqIc9i0CpEs5U5YXZnwEOm7xM70l4nkWiJx7E4HWBWQ22HG+ZhzWW3N
+	 MqPrORc7me6aHdtoSJILalYhoVRhoPvedrvX1b/Ay/jhzbPAliRIB9wSFeG8Uy5RE0
+	 PRYaW6aWuiQxBvubKlj0Pd0nu6IALgxJZzkHd0P4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729464AbgFHXYY (ORCPT
+        id S1732678AbgFHXxj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:24:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41864 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:53:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729935AbgFHXTK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:19:10 -0400
+        id S1729935AbgFHXYZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:24:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 170032085B;
-        Mon,  8 Jun 2020 23:19:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9859120CC7;
+        Mon,  8 Jun 2020 23:24:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658350;
-        bh=ye9M/0tVTCzeqMpqUDp2Qo4XygW2XkTFYGKE45wRBAY=;
+        s=default; t=1591658664;
+        bh=rCFqFPN/S5hYmSyfe+QjOdpNml/We5jXqm0Wk0oj8e8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GrHs514Bjx9wOKPP0Gtk+Sd51/wpNA9isSKbeTQlPwZKulqFPsdDuyPBC20dSLsV1
-         fko+Tl083xYr118iRkebxbDpKd7sRxtKliPZYrfrXz/CBhyWa/X1pF0CBNg15oTx6z
-         lQ3eQBwrS97A07b5ZJWPg7JpuSNTyQByEFpCr9Dc=
+        b=DmEsOlH11NRPEXAnGxujjcGfsUWtpA5MyacxSf+yi6FV6zM6+5cY94AAZO+bPy5YV
+         reQ7xwSaR9/gP+lWxH5pwxBnwLrurmClsA2ce6xq39L4dZDvFPDjI8pkNeT91OtKXJ
+         Di+62KKPiIW3QGi+UR+ge9RRZswI+RsEW1Tk3GZQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Evan Green <evgreen@chromium.org>,
-        Shobhit Srivastava <shobhit.srivastava@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 017/175] spi: pxa2xx: Apply CS clk quirk to BXT
-Date:   Mon,  8 Jun 2020 19:16:10 -0400
-Message-Id: <20200608231848.3366970-17-sashal@kernel.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>, linux-mips@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 080/106] mips: Add udelay lpj numbers adjustment
+Date:   Mon,  8 Jun 2020 19:22:12 -0400
+Message-Id: <20200608232238.3368589-80-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
-References: <20200608231848.3366970-1-sashal@kernel.org>
+In-Reply-To: <20200608232238.3368589-1-sashal@kernel.org>
+References: <20200608232238.3368589-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,42 +65,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evan Green <evgreen@chromium.org>
+From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-[ Upstream commit 6eefaee4f2d366a389da0eb95e524ba82bf358c4 ]
+[ Upstream commit ed26aacfb5f71eecb20a51c4467da440cb719d66 ]
 
-With a couple allies at Intel, and much badgering, I got confirmation
-from Intel that at least BXT suffers from the same SPI chip-select
-issue as Cannonlake (and beyond). The issue being that after going
-through runtime suspend/resume, toggling the chip-select line without
-also sending data does nothing.
+Loops-per-jiffies is a special number which represents a number of
+noop-loop cycles per CPU-scheduler quantum - jiffies. As you
+understand aside from CPU-specific implementation it depends on
+the CPU frequency. So when a platform has the CPU frequency fixed,
+we have no problem and the current udelay interface will work
+just fine. But as soon as CPU-freq driver is enabled and the cores
+frequency changes, we'll end up with distorted udelay's. In order
+to fix this we have to accordinly adjust the per-CPU udelay_val
+(the same as the global loops_per_jiffy) number. This can be done
+in the CPU-freq transition event handler. We subscribe to that event
+in the MIPS arch time-inititalization method.
 
-Add the quirk to BXT to briefly toggle dynamic clock gating off and
-on, forcing the fabric to wake up enough to notice the CS register
-change.
-
-Signed-off-by: Evan Green <evgreen@chromium.org>
-Cc: Shobhit Srivastava <shobhit.srivastava@intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Link: https://lore.kernel.org/r/20200427163238.1.Ib1faaabe236e37ea73be9b8dcc6aa034cb3c8804@changeid
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Co-developed-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-pxa2xx.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/mips/kernel/time.c | 70 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 70 insertions(+)
 
-diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
-index 723145673206..36b837fc7e4b 100644
---- a/drivers/spi/spi-pxa2xx.c
-+++ b/drivers/spi/spi-pxa2xx.c
-@@ -148,6 +148,7 @@ static const struct lpss_config lpss_platforms[] = {
- 		.tx_threshold_hi = 48,
- 		.cs_sel_shift = 8,
- 		.cs_sel_mask = 3 << 8,
-+		.cs_clk_stays_gated = true,
- 	},
- 	{	/* LPSS_CNL_SSP */
- 		.offset = 0x200,
+diff --git a/arch/mips/kernel/time.c b/arch/mips/kernel/time.c
+index bfe02ded25d1..1e631a484ddf 100644
+--- a/arch/mips/kernel/time.c
++++ b/arch/mips/kernel/time.c
+@@ -22,12 +22,82 @@
+ #include <linux/smp.h>
+ #include <linux/spinlock.h>
+ #include <linux/export.h>
++#include <linux/cpufreq.h>
++#include <linux/delay.h>
+ 
+ #include <asm/cpu-features.h>
+ #include <asm/cpu-type.h>
+ #include <asm/div64.h>
+ #include <asm/time.h>
+ 
++#ifdef CONFIG_CPU_FREQ
++
++static DEFINE_PER_CPU(unsigned long, pcp_lpj_ref);
++static DEFINE_PER_CPU(unsigned long, pcp_lpj_ref_freq);
++static unsigned long glb_lpj_ref;
++static unsigned long glb_lpj_ref_freq;
++
++static int cpufreq_callback(struct notifier_block *nb,
++			    unsigned long val, void *data)
++{
++	struct cpufreq_freqs *freq = data;
++	struct cpumask *cpus = freq->policy->cpus;
++	unsigned long lpj;
++	int cpu;
++
++	/*
++	 * Skip lpj numbers adjustment if the CPU-freq transition is safe for
++	 * the loops delay. (Is this possible?)
++	 */
++	if (freq->flags & CPUFREQ_CONST_LOOPS)
++		return NOTIFY_OK;
++
++	/* Save the initial values of the lpjes for future scaling. */
++	if (!glb_lpj_ref) {
++		glb_lpj_ref = boot_cpu_data.udelay_val;
++		glb_lpj_ref_freq = freq->old;
++
++		for_each_online_cpu(cpu) {
++			per_cpu(pcp_lpj_ref, cpu) =
++				cpu_data[cpu].udelay_val;
++			per_cpu(pcp_lpj_ref_freq, cpu) = freq->old;
++		}
++	}
++
++	/*
++	 * Adjust global lpj variable and per-CPU udelay_val number in
++	 * accordance with the new CPU frequency.
++	 */
++	if ((val == CPUFREQ_PRECHANGE  && freq->old < freq->new) ||
++	    (val == CPUFREQ_POSTCHANGE && freq->old > freq->new)) {
++		loops_per_jiffy = cpufreq_scale(glb_lpj_ref,
++						glb_lpj_ref_freq,
++						freq->new);
++
++		for_each_cpu(cpu, cpus) {
++			lpj = cpufreq_scale(per_cpu(pcp_lpj_ref, cpu),
++					    per_cpu(pcp_lpj_ref_freq, cpu),
++					    freq->new);
++			cpu_data[cpu].udelay_val = (unsigned int)lpj;
++		}
++	}
++
++	return NOTIFY_OK;
++}
++
++static struct notifier_block cpufreq_notifier = {
++	.notifier_call  = cpufreq_callback,
++};
++
++static int __init register_cpufreq_notifier(void)
++{
++	return cpufreq_register_notifier(&cpufreq_notifier,
++					 CPUFREQ_TRANSITION_NOTIFIER);
++}
++core_initcall(register_cpufreq_notifier);
++
++#endif /* CONFIG_CPU_FREQ */
++
+ /*
+  * forward reference
+  */
 -- 
 2.25.1
 
