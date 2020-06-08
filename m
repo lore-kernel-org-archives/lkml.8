@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28726C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:10:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BC9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 009E3214F1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:10:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9915B212CC
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:10:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591657846;
-	bh=wnNS99cHA6dlfP6h9le3Lc48er4P4aLxFt0UGZFEX7Y=;
+	s=default; t=1591657858;
+	bh=0kTjp2ybDUM0ctaeDR3fOgYBPE7QHYAKia5yuuniklk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VHqap64/FimeOigSNFEmVPpk5AMcT74fUWmDkx19iBUKoIHbKeSfEkd7hC8hnsbJo
-	 PGcfZlrmsEeHpj9N5nuTJmqob6cyl3atm+dnfGifzsWhmOMzJZTrfZDTt9/9n8WBnM
-	 aKo4ErQFntRe0g67ehRG4S19N2QGLSqsacZiea7A=
+	b=RSYOM5epCUqGtLRLSBwFHBxKEP2ikDzyJtynOahXECr56/euFYP8pOUoTUirlgOKy
+	 RwZnTQt8rKUU8WDBRDDF6eXaPxskw2Tuoub+gvlFCokAUDU75zzRqc9D9cU9+vPzT5
+	 4DF0vOE+EaVvO2ZnBjLyi4RgHqgr+R9tLOmdjB90=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727975AbgFHXKm (ORCPT
+        id S1728790AbgFHXKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:10:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55222 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:10:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728421AbgFHXJ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:09:29 -0400
+        id S1728158AbgFHXJe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:09:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC49B208A9;
-        Mon,  8 Jun 2020 23:09:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 613BF208A9;
+        Mon,  8 Jun 2020 23:09:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657769;
-        bh=wnNS99cHA6dlfP6h9le3Lc48er4P4aLxFt0UGZFEX7Y=;
+        s=default; t=1591657774;
+        bh=0kTjp2ybDUM0ctaeDR3fOgYBPE7QHYAKia5yuuniklk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L+te/j4eix78M0Yz5kAzOIhxQ/BsMHFavd2fOE01/TvDGTyCvtfim8MAwgSIWLoOQ
-         0ca3BBXGEBZwxGOgT4jy03ZmENPbtL2PL8rlBSblKwW3qFUzjGdftlGIElLsgHe/ri
-         wJp9Wg//CIwXjJ1VkMhG8qhPt66cBTsfgxrmi33A=
+        b=qaCIio5yiI8x6cdUsoS2EKA9TBu/7diQy425MnvghBzAaymzwJ9qDsKF4s0KA19S6
+         6c4MflzThtnDIZWVTGaatFToMIJoXaBJFpvYT2j3VmJwaTgJrVH4WhqHNzA1UbkkJe
+         pXADBhIcgKvLEl8RcFXG0SX361g611OVssyPwqlM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Sasha Levin <sashal@kernel.org>, selinux@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 153/274] selinux: fix error return code in policydb_read()
-Date:   Mon,  8 Jun 2020 19:04:06 -0400
-Message-Id: <20200608230607.3361041-153-sashal@kernel.org>
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, ath11k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 157/274] ath11k: fix error return code in ath11k_dp_alloc()
+Date:   Mon,  8 Jun 2020 19:04:10 -0400
+Message-Id: <20200608230607.3361041-157-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -61,31 +62,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit 4c09f8b6913a779ca0c70ea8058bf21537eebb3b ]
+[ Upstream commit f76f750aeea47fd98b6502eb6d37f84ca33662bf ]
 
-Fix to return negative error code -ENOMEM from the kvcalloc() error
-handling case instead of 0, as done elsewhere in this function.
+Fix to return negative error code -ENOMEM from the error handling
+case instead of 0, as done elsewhere in this function.
 
-Fixes: acdf52d97f82 ("selinux: convert to kvmalloc")
+Fixes: d0998eb84ed3 ("ath11k: optimise ath11k_dp_tx_completion_handler")
 Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Signed-off-by: Paul Moore <paul@paul-moore.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200427104621.23752-1-weiyongjun1@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/selinux/ss/policydb.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/wireless/ath/ath11k/dp.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/security/selinux/ss/policydb.c b/security/selinux/ss/policydb.c
-index c21b922e5ebe..1a4f74e7a267 100644
---- a/security/selinux/ss/policydb.c
-+++ b/security/selinux/ss/policydb.c
-@@ -2504,6 +2504,7 @@ int policydb_read(struct policydb *p, void *fp)
- 	if (rc)
- 		goto bad;
+diff --git a/drivers/net/wireless/ath/ath11k/dp.c b/drivers/net/wireless/ath/ath11k/dp.c
+index 50350f77b309..2f35d325f7a5 100644
+--- a/drivers/net/wireless/ath/ath11k/dp.c
++++ b/drivers/net/wireless/ath/ath11k/dp.c
+@@ -909,8 +909,10 @@ int ath11k_dp_alloc(struct ath11k_base *ab)
+ 		dp->tx_ring[i].tx_status_head = 0;
+ 		dp->tx_ring[i].tx_status_tail = DP_TX_COMP_RING_SIZE - 1;
+ 		dp->tx_ring[i].tx_status = kmalloc(size, GFP_KERNEL);
+-		if (!dp->tx_ring[i].tx_status)
++		if (!dp->tx_ring[i].tx_status) {
++			ret = -ENOMEM;
+ 			goto fail_cmn_srng_cleanup;
++		}
+ 	}
  
-+	rc = -ENOMEM;
- 	p->type_attr_map_array = kvcalloc(p->p_types.nprim,
- 					  sizeof(*p->type_attr_map_array),
- 					  GFP_KERNEL);
+ 	for (i = 0; i < HAL_DSCP_TID_MAP_TBL_NUM_ENTRIES_MAX; i++)
 -- 
 2.25.1
 
