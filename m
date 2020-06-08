@@ -2,150 +2,243 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED2EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 08:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E3ADC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 08:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EA1D206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 08:30:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72F82206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 08:32:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="moptvi0D"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Vj1M3E7p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729133AbgFHIax (ORCPT
+        id S1729138AbgFHIcj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 04:30:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43270 "EHLO
+        Mon, 8 Jun 2020 04:32:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728951AbgFHIav (ORCPT
+        with ESMTP id S1725927AbgFHIcj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 04:30:51 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7DFEC08C5C3;
-        Mon,  8 Jun 2020 01:30:50 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id h95so5703890pje.4;
-        Mon, 08 Jun 2020 01:30:50 -0700 (PDT)
+        Mon, 8 Jun 2020 04:32:39 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0954FC08C5C3
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 01:32:39 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id w1so16438674qkw.5
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 01:32:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Sr4O+in7E3S8yGpfVSAumnolrH/mtR4MAGw7n2lSUi4=;
-        b=moptvi0DYUIGze0sxGapOFQzHdn34hE207jfRTpbHONsJVGMYclaW933o/av3oG8CG
-         Vuv/KoVfx1AI8AGmzrW5DacLpYSDCCa9nfxWdTJwyxWjNDMDYdnICwZh5brGMM8r1ZiT
-         OAA9MmaR4rVNiQXY9uRhwIOejfHm/uYYEGMUMgw3dT+TwileefpJNWtOdCYsC45kFOLa
-         +DdgPWAS2I6SbIwUspfrAqofBTLRIzBZ2JSR4vR9FnTaCKrDiB0a5aLiuiXW1FhyfV3s
-         pIksOg51djhWhTBVsnrpqMjoUtQFLHvgFgzCkrqu48gxnjaStKkSDhCPxHkBhKTk8KyV
-         HoWA==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PkfMEWlNgP90ibnqQv2yIrVhs/aB8dQaB0QBolj6lX8=;
+        b=Vj1M3E7piAR8EdJ/2WukrZENcXk8IwxoiTbVha0RqsbMjV7r2TKfbezAWNZATmQBH6
+         R3tvyTf3j8YnCWM2B1CtRsLYCQFrBZD9aVxoIYa4Y53VEoUWU9W4ZEAHG5tb/S0P7Plf
+         Ahb+ccoluv11TQLpbde4PJhwTBXMEPPMsNoDM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Sr4O+in7E3S8yGpfVSAumnolrH/mtR4MAGw7n2lSUi4=;
-        b=FgSV7+SI9RZBR30+2NkkJ4j4MDuLqdjRVnla3BUKj3KijUYs8EvKw4aVCfS9j2h/Oh
-         5ViNJQUJ395/HbmcB4bp9wd2VUCo3+X93OTjoYGmZZnBYxZoWdXk9vT71NhBPOOeY1Hh
-         cj8NisUXjawBICGxERXSpxmtAG/N0pZLzIXzmPr9izAU3BHG7LeDh6z7mRWKUy0eyUZ8
-         wdK0dcmjwtLrmQncCi457gDuZ5y9Bx3MK7RiuN2NM5sWLJ59l2ejH0+MmUBawkuRvgjd
-         cupCNtskmcB79FQfi9ymS1sfPc7HomxS9mtrwCAFPQ6+nY1oeFSg+62526PFzqJZhzcj
-         Y8Mw==
-X-Gm-Message-State: AOAM5320FtajFDXIAeBgolqjzvEN3424ywaiPFxAd1M8dx3dwk3BaEYy
-        tBM4Z/EWq2jfZZQ2wvqAWM8=
-X-Google-Smtp-Source: ABdhPJwWeNEIRHE87XqxZWvoMrcDW/ma0+wwzJWzdrh9mEH1xMwsnwgl+Nww/37mNzaxFJbgWrKhDw==
-X-Received: by 2002:a17:90a:cc5:: with SMTP id 5mr15552855pjt.112.1591605050563;
-        Mon, 08 Jun 2020 01:30:50 -0700 (PDT)
-Received: from fmin-OptiPlex-7060.nreal.work ([103.206.191.42])
-        by smtp.gmail.com with ESMTPSA id 27sm1210829pjg.19.2020.06.08.01.30.47
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Jun 2020 01:30:50 -0700 (PDT)
-From:   dillon.minfei@gmail.com
-To:     robh+dt@kernel.org, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, linux@armlinux.org.uk,
-        vladimir.murzin@arm.com, kstewart@linuxfoundation.org,
-        allison@lohutok.net, info@metux.net, tglx@linutronix.de
-Cc:     devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dillon min <dillon.minfei@gmail.com>
-Subject: [PATCH 2/2] arm-nommu: Add use_reserved_mem() to check if device support reserved memory
-Date:   Mon,  8 Jun 2020 16:30:38 +0800
-Message-Id: <1591605038-8682-3-git-send-email-dillon.minfei@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1591605038-8682-1-git-send-email-dillon.minfei@gmail.com>
-References: <1591605038-8682-1-git-send-email-dillon.minfei@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PkfMEWlNgP90ibnqQv2yIrVhs/aB8dQaB0QBolj6lX8=;
+        b=BcjOSzDyZqLFq4TF3pYfeTneomF2B6paIv4R3iZCkhHMQo020Wtm1ptaxdwH20D1yC
+         +eRvb/7zzIwwxksT9i66RF6AuIm5NHdiZp2mYno8iHYvw72H2fAl2s2jA7+4U6SmcXnu
+         2ZOSmLFs34a0kt63mVmjlSqF87h7tpG2YH8LhF6wM4LYlckj9CY/hBWDenPKfR4YF947
+         wI1FZuzuIfHLNuzKLvQgAuXJ34TAsW16xhJvof0dmNx/wEpPMT94F9XjD1XdpJFIYMrl
+         PCWKhxkU588RY/6E2irS0P8hyjQKFAnk5HMqxJ8wv3rvhE9LudeeOHIP1JLmyEz8fZIt
+         CDTg==
+X-Gm-Message-State: AOAM5338LwWInvWmh2y5NZkOHUkOSo3y3BjIId2MDZoTpaU9Y8nKb2vA
+        c3YNbzHc9OjMLriGvb5oHdwXUsuF9yQcAUP2lPoWDA==
+X-Google-Smtp-Source: ABdhPJwzNNR1KQE/DLKBgKo5vCFDKV9ETdj3TA7gn/orQ9aPIf72pnxU2G5F2nV4vlaOlcDCPQr1nAoQiw8TDjF+gqI=
+X-Received: by 2002:a05:620a:21cc:: with SMTP id h12mr21201387qka.194.1591605158027;
+ Mon, 08 Jun 2020 01:32:38 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200526105811.30784-1-stevensd@chromium.org> <20200526105811.30784-2-stevensd@chromium.org>
+ <20200604145620-mutt-send-email-mst@kernel.org> <CAD=HUj74mKs5AfcViD3CBva86E0Hvg_pmYChAJe3ny8jtnZ8Tw@mail.gmail.com>
+ <20200606160155-mutt-send-email-mst@kernel.org> <CAD=HUj5Jn+grQVfxmPSSnERdGwnu8RceDsdpWpoxXH+WL4k+qw@mail.gmail.com>
+ <20200608015728-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20200608015728-mutt-send-email-mst@kernel.org>
+From:   David Stevens <stevensd@chromium.org>
+Date:   Mon, 8 Jun 2020 17:32:26 +0900
+Message-ID: <CAD=HUj68NfNK+0go7Z-XeZ2ckWJpYsym3G+-DfJyoUm+dJDznQ@mail.gmail.com>
+Subject: Re: [PATCH v4 1/3] virtio: add dma-buf support for exported objects
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Gerd Hoffmann <kraxel@redhat.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Jason Wang <jasowang@redhat.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        open list <linux-kernel@vger.kernel.org>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>,
+        "open list:VIRTIO GPU DRIVER" 
+        <virtualization@lists.linux-foundation.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>, virtio-dev@lists.oasis-open.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: dillon min <dillon.minfei@gmail.com>
+On Mon, Jun 8, 2020 at 3:00 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+>
+> On Mon, Jun 08, 2020 at 10:33:09AM +0900, David Stevens wrote:
+> > On Sun, Jun 7, 2020 at 5:04 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+> > >
+> > > On Fri, Jun 05, 2020 at 10:28:42AM +0900, David Stevens wrote:
+> > > > On Fri, Jun 5, 2020 at 4:05 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+> > > > >
+> > > > > On Tue, May 26, 2020 at 07:58:09PM +0900, David Stevens wrote:
+> > > > > > This change adds a new flavor of dma-bufs that can be used by virtio
+> > > > > > drivers to share exported objects. A virtio dma-buf can be queried by
+> > > > > > virtio drivers to obtain the UUID which identifies the underlying
+> > > > > > exported object.
+> > > > > >
+> > > > > > Signed-off-by: David Stevens <stevensd@chromium.org>
+> > > > >
+> > > > > Is this just for graphics? If yes I'd rather we put it in the graphics
+> > > > > driver. We can always move it later ...
+> > > >
+> > > > As stated in the cover letter, this will be used by virtio-video.
+> > > >
+> > > > The proposed virtio-video patches: https://markmail.org/thread/p5d3k566srtdtute
+> > > > The patch which imports these dma-bufs (slightly out of data, uses v3
+> > > > of this patch set): https://markmail.org/thread/j4xlqaaim266qpks
+> > > >
+> > > > > > ---
+> > > > > >  drivers/virtio/Makefile         |  2 +-
+> > > > > >  drivers/virtio/virtio.c         |  6 +++
+> > > > > >  drivers/virtio/virtio_dma_buf.c | 89 +++++++++++++++++++++++++++++++++
+> > > > > >  include/linux/virtio.h          |  1 +
+> > > > > >  include/linux/virtio_dma_buf.h  | 58 +++++++++++++++++++++
+> > > > > >  5 files changed, 155 insertions(+), 1 deletion(-)
+> > > > > >  create mode 100644 drivers/virtio/virtio_dma_buf.c
+> > > > > >  create mode 100644 include/linux/virtio_dma_buf.h
+> > > > > >
+> > > > > > diff --git a/drivers/virtio/Makefile b/drivers/virtio/Makefile
+> > > > > > index 29a1386ecc03..ecdae5b596de 100644
+> > > > > > --- a/drivers/virtio/Makefile
+> > > > > > +++ b/drivers/virtio/Makefile
+> > > > > > @@ -1,5 +1,5 @@
+> > > > > >  # SPDX-License-Identifier: GPL-2.0
+> > > > > > -obj-$(CONFIG_VIRTIO) += virtio.o virtio_ring.o
+> > > > > > +obj-$(CONFIG_VIRTIO) += virtio.o virtio_ring.o virtio_dma_buf.o
+> > > > > >  obj-$(CONFIG_VIRTIO_MMIO) += virtio_mmio.o
+> > > > > >  obj-$(CONFIG_VIRTIO_PCI) += virtio_pci.o
+> > > > > >  virtio_pci-y := virtio_pci_modern.o virtio_pci_common.o
+> > > > > > diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
+> > > > > > index a977e32a88f2..5d46f0ded92d 100644
+> > > > > > --- a/drivers/virtio/virtio.c
+> > > > > > +++ b/drivers/virtio/virtio.c
+> > > > > > @@ -357,6 +357,12 @@ int register_virtio_device(struct virtio_device *dev)
+> > > > > >  }
+> > > > > >  EXPORT_SYMBOL_GPL(register_virtio_device);
+> > > > > >
+> > > > > > +bool is_virtio_device(struct device *dev)
+> > > > > > +{
+> > > > > > +     return dev->bus == &virtio_bus;
+> > > > > > +}
+> > > > > > +EXPORT_SYMBOL_GPL(is_virtio_device);
+> > > > > > +
+> > > > > >  void unregister_virtio_device(struct virtio_device *dev)
+> > > > > >  {
+> > > > > >       int index = dev->index; /* save for after device release */
+> > > > > > diff --git a/drivers/virtio/virtio_dma_buf.c b/drivers/virtio/virtio_dma_buf.c
+> > > > > > new file mode 100644
+> > > > > > index 000000000000..23e3399b11ed
+> > > > > > --- /dev/null
+> > > > > > +++ b/drivers/virtio/virtio_dma_buf.c
+> > > > > > @@ -0,0 +1,89 @@
+> > > > > > +// SPDX-License-Identifier: GPL-2.0-or-later
+> > > > > > +/*
+> > > > > > + * dma-bufs for virtio exported objects
+> > > > > > + *
+> > > > > > + * Copyright (C) 2020 Google, Inc.
+> > > > > > + */
+> > > > > > +
+> > > > > > +#include <linux/virtio_dma_buf.h>
+> > > > > > +
+> > > > > > +/**
+> > > > > > + * virtio_dma_buf_export - Creates a new dma-buf for a virtio exported object
+> > > > > > + *
+> > > > > > + * This wraps dma_buf_export() to allow virtio drivers to create a dma-buf
+> > > > > > + * for an virtio exported object that can be queried by other virtio drivers
+> > > > > > + * for the object's UUID.
+> > > > > > + */
+> > > > > > +struct dma_buf *virtio_dma_buf_export(
+> > > > > > +             const struct virtio_dma_buf_export_info *virtio_exp_info)
+> > > > > > +{
+> > > > > > +     struct dma_buf_export_info exp_info;
+> > > > > > +
+> > > > > > +     if (!virtio_exp_info->ops
+> > > > > > +             || virtio_exp_info->ops->ops.attach != &virtio_dma_buf_attach
+> > > > > > +             || !virtio_exp_info->ops->get_uuid) {
+> > > > > > +             return ERR_PTR(-EINVAL);
+> > > > > > +     }
+> > > > > > +
+> > > > > > +     exp_info.exp_name = virtio_exp_info->exp_name;
+> > > > > > +     exp_info.owner = virtio_exp_info->owner;
+> > > > > > +     exp_info.ops = &virtio_exp_info->ops->ops;
+> > > > > > +     exp_info.size = virtio_exp_info->size;
+> > > > > > +     exp_info.flags = virtio_exp_info->flags;
+> > > > > > +     exp_info.resv = virtio_exp_info->resv;
+> > > > > > +     exp_info.priv = virtio_exp_info->priv;
+> > > > > > +     BUILD_BUG_ON(sizeof(struct virtio_dma_buf_export_info)
+> > > > > > +                  != sizeof(struct dma_buf_export_info));
+> > > > >
+> > > > > This is the only part that gives me pause. Why do we need this hack?
+> > > > > What's wrong with just using dma_buf_export_info directly,
+> > > > > and if you want the virtio ops, just using container_off?
+> > > >
+> > > > This approach provides a more explicit type signature and a little
+> > > > more type safety, I think. If others don't think it's a worthwhile
+> > > > tradeoff, I can remove it.
+> > > >
+> > > > -David
+> > >
+> > > The cost is that if dma_buf_export_info changes even slightly, we get
+> > > weird crashes.
+> >
+> > I'm not sure I understand what types of changes you're referring to.
+> > As this is written, virtio-dma-buf is just another client of the
+> > dma-buf API. If this were rewritten to use dma-buf directly, then
+> > whatever code calls virtio_dma_buf_export would become a client of the
+> > dma-buf API. If the semantics of existing fields in the dma-buf API
+> > were changed and virtio-dma-buf wasn't updated, then yes, you could
+> > get weird crashes from virtio-dma-buf.
+> > However, the same problem would
+> > exist if virtio_dma_buf_export used dma-buf directly - changes to
+> > dma-buf's semantics could cause weird crashes if the caller of
+> > virtio_dma_buf_export wasn't updated properly. The only potential
+> > source of problems I see is if virtio_dma_buf_export_info wasn't
+> > updated properly, but virtio_dma_buf_export_info is dead simple, so I
+> > don't know if that's really a problem.
+> >
+> > -David
+>
+> I think you can get weird crashes if fields in dma buf are reordered, or
+> if a field size changes.  You have a build bug catching overall struct
+> size changes but that can remain the same due do compiler padding or
+> such.
 
-Currently, we use dma direct to request coherent memory for driver on armv7m
-platform if 'cacheid' is zero, but dma_direct_can_mmap() is return false,
-dma_direct_mmap() return -ENXIO for CONFIG_MMU undefined platform.
+Since it's manually copying the fields instead of trying something
+clever like memcpy, I don't see how reordering the fields or changing
+the size of the fields would cause problems. Right now,
+virtio_dma_buf_export is just a regular client of dma_buf_export, no
+different than any of the other call sites in the kernel.
 
-so we have to back to use 'arm_nommu_dma_ops', add use_reserved_mem() to check
-if device support global or device corherent memory. if yes, then call
-set_dma_ops()
+Overall, I don't really think that this is a problem. If someone makes
+breaking changes to the semantics of dma-buf, then they will need to
+update this call site, just like they will need to update all of the
+other call sites in the kernel. If someone adds new functionality to
+dma-buf and adds another field to dma_buf_export_info, the build bug
+is a reminder to add it to virtio_dma_buf_export_info. However, if the
+struct padding happens to work out such that the build bug doesn't
+trigger, that doesn't really matter - it just means that the new
+dma-buf feature won't be exposed by virito-dma-buf until someone needs
+it and notices that the new field is missing.
 
-Signed-off-by: dillon min <dillon.minfei@gmail.com>
----
- arch/arm/mm/dma-mapping-nommu.c | 28 +++++++++++++++++++++++++++-
- 1 file changed, 27 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/mm/dma-mapping-nommu.c b/arch/arm/mm/dma-mapping-nommu.c
-index 287ef898a55e..e1c213fec152 100644
---- a/arch/arm/mm/dma-mapping-nommu.c
-+++ b/arch/arm/mm/dma-mapping-nommu.c
-@@ -14,6 +14,7 @@
- #include <asm/cacheflush.h>
- #include <asm/outercache.h>
- #include <asm/cp15.h>
-+#include <linux/of.h>
- 
- #include "dma.h"
- 
-@@ -188,6 +189,31 @@ const struct dma_map_ops arm_nommu_dma_ops = {
- };
- EXPORT_SYMBOL(arm_nommu_dma_ops);
- 
-+static bool use_reserved_mem(struct device *dev)
-+{
-+	struct device_node *np;
-+
-+	np = of_find_node_by_path("/reserved-memory/linux,dma");
-+
-+	if (np &&
-+		of_device_is_compatible(np, "shared-dma-pool") &&
-+		of_property_read_bool(np, "no-map") &&
-+		of_property_read_bool(np, "linux,dma-default")) {
-+		/* has global corherent mem support */
-+		of_node_put(np);
-+		return true;
-+	}
-+
-+	np = of_parse_phandle(dev->of_node, "memory-region", 0);
-+	if (np) {
-+		/* has dev corherent mem support */
-+		of_node_put(np);
-+		return true;
-+	}
-+
-+	return false;
-+}
-+
- void arch_setup_dma_ops(struct device *dev, u64 dma_base, u64 size,
- 			const struct iommu_ops *iommu, bool coherent)
- {
-@@ -206,6 +232,6 @@ void arch_setup_dma_ops(struct device *dev, u64 dma_base, u64 size,
- 		dev->archdata.dma_coherent = (get_cr() & CR_M) ? coherent : true;
- 	}
- 
--	if (!dev->archdata.dma_coherent)
-+	if (!dev->archdata.dma_coherent || use_reserved_mem(dev))
- 		set_dma_ops(dev, &arm_nommu_dma_ops);
- }
--- 
-2.7.4
-
+-David
