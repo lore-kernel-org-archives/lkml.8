@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA10C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:26:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77079C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:26:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46267207ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:26:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51F132078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:26:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662389;
-	bh=OzO9K0KnNQjGQ//0XNCIDoj2357X829Yw3yx1jruEhY=;
+	s=default; t=1591662404;
+	bh=MVThK5mzwM7YugYFqJzWqWBOiJWJ8ND2HSXm7t4z34I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tMxq8GkWnpRh2moelEeiwNXiMmIBkAw3SfILS2ZZfWLGbphmayBPg4jyV32KYIXDl
-	 8B1I3l0tBrMU8qe+9YctW4uw2GSBFmeotQqym/bs1bSSlS7cuLBfejIHuUJ96In592
-	 QMwlzuNQ7wl8Ag4ZQkqNSmKoUE0oySkInJMXBTCw=
+	b=kcy4Z06Qw1SZ/D7K9+kKknPWjI1Ygdt5tuPlEJjY21YwIPe4fpuRKD25+8AH7oAmF
+	 zRE8yrFRLwP/bw4DWHElq8Hy8IQJ15c2UXlWEg333RwbbzpK5hCuaqoUqSThUQXvqU
+	 cHFlQPWZsqvbKk4oTBwlA3m0CMFbFF5Eii3YUDPQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733046AbgFIA0K (ORCPT
+        id S1732798AbgFIA0m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:26:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38290 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:26:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728597AbgFHXQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:16:51 -0400
+        id S1730337AbgFHXQp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:16:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44C8120872;
-        Mon,  8 Jun 2020 23:16:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1170E20842;
+        Mon,  8 Jun 2020 23:16:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658211;
-        bh=OzO9K0KnNQjGQ//0XNCIDoj2357X829Yw3yx1jruEhY=;
+        s=default; t=1591658204;
+        bh=MVThK5mzwM7YugYFqJzWqWBOiJWJ8ND2HSXm7t4z34I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K3XELJOTtmj9uJ7stsp5d1LvUvZa4Fqi13dscS/NrnjQwOcH07Mok+WWVjWeobman
-         Qp6NyR3j6amaU0M5nosI4jvWZatrVZ5ne8x+3wTxklBO7GOXtTAp5+OZZAOlxeZECc
-         J4SQBFNdGYDCbC/RSlGB82eEzMBryl9EGCVZTPAw=
+        b=A61Ll73tUSSVhS1Wi53PFTF16aJUOiLg1tMUdkeZaUHh9pqSkf24n+XQbVTFJnbIq
+         M96LL68rj8g8z4xsF+MjJn//3Dh2cZan6Ty5H0hzqePzGr3iuShFllsPbQMJR90D1t
+         cv8JKoTDSrg69gUtN/S9RSBMC9wgSmGvzaAPX9RQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Dumazet <edumazet@google.com>,
-        Xin Long <lucien.xin@gmail.com>,
-        Jon Maloy <jon.maloy@ericsson.com>,
-        syzbot <syzkaller@googlegroups.com>,
+Cc:     Vinay Kumar Yadav <vinay.yadav@chelsio.com>,
+        Jakub Kicinski <kuba@kernel.org>,
         "David S . Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        netdev@vger.kernel.org, tipc-discussion@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.6 228/606] tipc: block BH before using dst_cache
-Date:   Mon,  8 Jun 2020 19:05:53 -0400
-Message-Id: <20200608231211.3363633-228-sashal@kernel.org>
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 223/606] net/tls: fix race condition causing kernel panic
+Date:   Mon,  8 Jun 2020 19:05:48 -0400
+Message-Id: <20200608231211.3363633-223-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -63,87 +61,187 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Vinay Kumar Yadav <vinay.yadav@chelsio.com>
 
-[ Upstream commit 1378817486d6860f6a927f573491afe65287abf1 ]
+[ Upstream commit 0cada33241d9de205522e3858b18e506ca5cce2c ]
 
-dst_cache_get() documents it must be used with BH disabled.
+tls_sw_recvmsg() and tls_decrypt_done() can be run concurrently.
+// tls_sw_recvmsg()
+	if (atomic_read(&ctx->decrypt_pending))
+		crypto_wait_req(-EINPROGRESS, &ctx->async_wait);
+	else
+		reinit_completion(&ctx->async_wait.completion);
 
-sysbot reported :
+//tls_decrypt_done()
+  	pending = atomic_dec_return(&ctx->decrypt_pending);
 
-BUG: using smp_processor_id() in preemptible [00000000] code: /21697
-caller is dst_cache_get+0x3a/0xb0 net/core/dst_cache.c:68
-CPU: 0 PID: 21697 Comm:  Not tainted 5.7.0-rc6-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- check_preemption_disabled lib/smp_processor_id.c:47 [inline]
- debug_smp_processor_id.cold+0x88/0x9b lib/smp_processor_id.c:57
- dst_cache_get+0x3a/0xb0 net/core/dst_cache.c:68
- tipc_udp_xmit.isra.0+0xb9/0xad0 net/tipc/udp_media.c:164
- tipc_udp_send_msg+0x3e6/0x490 net/tipc/udp_media.c:244
- tipc_bearer_xmit_skb+0x1de/0x3f0 net/tipc/bearer.c:526
- tipc_enable_bearer+0xb2f/0xd60 net/tipc/bearer.c:331
- __tipc_nl_bearer_enable+0x2bf/0x390 net/tipc/bearer.c:995
- tipc_nl_bearer_enable+0x1e/0x30 net/tipc/bearer.c:1003
- genl_family_rcv_msg_doit net/netlink/genetlink.c:673 [inline]
- genl_family_rcv_msg net/netlink/genetlink.c:718 [inline]
- genl_rcv_msg+0x627/0xdf0 net/netlink/genetlink.c:735
- netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2469
- genl_rcv+0x24/0x40 net/netlink/genetlink.c:746
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6bf/0x7e0 net/socket.c:2362
- ___sys_sendmsg+0x100/0x170 net/socket.c:2416
- __sys_sendmsg+0xec/0x1b0 net/socket.c:2449
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x45ca29
+  	if (!pending && READ_ONCE(ctx->async_notify))
+  		complete(&ctx->async_wait.completion);
 
-Fixes: e9c1a793210f ("tipc: add dst_cache support for udp media")
-Cc: Xin Long <lucien.xin@gmail.com>
-Cc: Jon Maloy <jon.maloy@ericsson.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
+Consider the scenario tls_decrypt_done() is about to run complete()
+
+	if (!pending && READ_ONCE(ctx->async_notify))
+
+and tls_sw_recvmsg() reads decrypt_pending == 0, does reinit_completion(),
+then tls_decrypt_done() runs complete(). This sequence of execution
+results in wrong completion. Consequently, for next decrypt request,
+it will not wait for completion, eventually on connection close, crypto
+resources freed, there is no way to handle pending decrypt response.
+
+This race condition can be avoided by having atomic_read() mutually
+exclusive with atomic_dec_return(),complete().Intoduced spin lock to
+ensure the mutual exclution.
+
+Addressed similar problem in tx direction.
+
+v1->v2:
+- More readable commit message.
+- Corrected the lock to fix new race scenario.
+- Removed barrier which is not needed now.
+
+Fixes: a42055e8d2c3 ("net/tls: Add support for async encryption of records for performance")
+Signed-off-by: Vinay Kumar Yadav <vinay.yadav@chelsio.com>
+Reviewed-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/tipc/udp_media.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ include/net/tls.h |  4 ++++
+ net/tls/tls_sw.c  | 33 +++++++++++++++++++++++++++------
+ 2 files changed, 31 insertions(+), 6 deletions(-)
 
-diff --git a/net/tipc/udp_media.c b/net/tipc/udp_media.c
-index d6620ad53546..28a283f26a8d 100644
---- a/net/tipc/udp_media.c
-+++ b/net/tipc/udp_media.c
-@@ -161,9 +161,11 @@ static int tipc_udp_xmit(struct net *net, struct sk_buff *skb,
- 			 struct udp_bearer *ub, struct udp_media_addr *src,
- 			 struct udp_media_addr *dst, struct dst_cache *cache)
- {
--	struct dst_entry *ndst = dst_cache_get(cache);
-+	struct dst_entry *ndst;
- 	int ttl, err = 0;
+diff --git a/include/net/tls.h b/include/net/tls.h
+index bf9eb4823933..18cd4f418464 100644
+--- a/include/net/tls.h
++++ b/include/net/tls.h
+@@ -135,6 +135,8 @@ struct tls_sw_context_tx {
+ 	struct tls_rec *open_rec;
+ 	struct list_head tx_list;
+ 	atomic_t encrypt_pending;
++	/* protect crypto_wait with encrypt_pending */
++	spinlock_t encrypt_compl_lock;
+ 	int async_notify;
+ 	u8 async_capable:1;
  
-+	local_bh_disable();
-+	ndst = dst_cache_get(cache);
- 	if (dst->proto == htons(ETH_P_IP)) {
- 		struct rtable *rt = (struct rtable *)ndst;
+@@ -155,6 +157,8 @@ struct tls_sw_context_rx {
+ 	u8 async_capable:1;
+ 	u8 decrypted:1;
+ 	atomic_t decrypt_pending;
++	/* protect crypto_wait with decrypt_pending*/
++	spinlock_t decrypt_compl_lock;
+ 	bool async_notify;
+ };
  
-@@ -210,9 +212,11 @@ static int tipc_udp_xmit(struct net *net, struct sk_buff *skb,
- 					   src->port, dst->port, false);
- #endif
- 	}
-+	local_bh_enable();
- 	return err;
+diff --git a/net/tls/tls_sw.c b/net/tls/tls_sw.c
+index e23f94a5549b..ffa3cbc5449d 100644
+--- a/net/tls/tls_sw.c
++++ b/net/tls/tls_sw.c
+@@ -206,10 +206,12 @@ static void tls_decrypt_done(struct crypto_async_request *req, int err)
  
- tx_error:
-+	local_bh_enable();
- 	kfree_skb(skb);
- 	return err;
+ 	kfree(aead_req);
+ 
++	spin_lock_bh(&ctx->decrypt_compl_lock);
+ 	pending = atomic_dec_return(&ctx->decrypt_pending);
+ 
+-	if (!pending && READ_ONCE(ctx->async_notify))
++	if (!pending && ctx->async_notify)
+ 		complete(&ctx->async_wait.completion);
++	spin_unlock_bh(&ctx->decrypt_compl_lock);
  }
+ 
+ static int tls_do_decryption(struct sock *sk,
+@@ -467,10 +469,12 @@ static void tls_encrypt_done(struct crypto_async_request *req, int err)
+ 			ready = true;
+ 	}
+ 
++	spin_lock_bh(&ctx->encrypt_compl_lock);
+ 	pending = atomic_dec_return(&ctx->encrypt_pending);
+ 
+-	if (!pending && READ_ONCE(ctx->async_notify))
++	if (!pending && ctx->async_notify)
+ 		complete(&ctx->async_wait.completion);
++	spin_unlock_bh(&ctx->encrypt_compl_lock);
+ 
+ 	if (!ready)
+ 		return;
+@@ -926,6 +930,7 @@ int tls_sw_sendmsg(struct sock *sk, struct msghdr *msg, size_t size)
+ 	int num_zc = 0;
+ 	int orig_size;
+ 	int ret = 0;
++	int pending;
+ 
+ 	if (msg->msg_flags & ~(MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL))
+ 		return -EOPNOTSUPP;
+@@ -1092,13 +1097,19 @@ int tls_sw_sendmsg(struct sock *sk, struct msghdr *msg, size_t size)
+ 		goto send_end;
+ 	} else if (num_zc) {
+ 		/* Wait for pending encryptions to get completed */
+-		smp_store_mb(ctx->async_notify, true);
++		spin_lock_bh(&ctx->encrypt_compl_lock);
++		ctx->async_notify = true;
+ 
+-		if (atomic_read(&ctx->encrypt_pending))
++		pending = atomic_read(&ctx->encrypt_pending);
++		spin_unlock_bh(&ctx->encrypt_compl_lock);
++		if (pending)
+ 			crypto_wait_req(-EINPROGRESS, &ctx->async_wait);
+ 		else
+ 			reinit_completion(&ctx->async_wait.completion);
+ 
++		/* There can be no concurrent accesses, since we have no
++		 * pending encrypt operations
++		 */
+ 		WRITE_ONCE(ctx->async_notify, false);
+ 
+ 		if (ctx->async_wait.err) {
+@@ -1729,6 +1740,7 @@ int tls_sw_recvmsg(struct sock *sk,
+ 	bool is_kvec = iov_iter_is_kvec(&msg->msg_iter);
+ 	bool is_peek = flags & MSG_PEEK;
+ 	int num_async = 0;
++	int pending;
+ 
+ 	flags |= nonblock;
+ 
+@@ -1891,8 +1903,11 @@ int tls_sw_recvmsg(struct sock *sk,
+ recv_end:
+ 	if (num_async) {
+ 		/* Wait for all previously submitted records to be decrypted */
+-		smp_store_mb(ctx->async_notify, true);
+-		if (atomic_read(&ctx->decrypt_pending)) {
++		spin_lock_bh(&ctx->decrypt_compl_lock);
++		ctx->async_notify = true;
++		pending = atomic_read(&ctx->decrypt_pending);
++		spin_unlock_bh(&ctx->decrypt_compl_lock);
++		if (pending) {
+ 			err = crypto_wait_req(-EINPROGRESS, &ctx->async_wait);
+ 			if (err) {
+ 				/* one of async decrypt failed */
+@@ -1904,6 +1919,10 @@ int tls_sw_recvmsg(struct sock *sk,
+ 		} else {
+ 			reinit_completion(&ctx->async_wait.completion);
+ 		}
++
++		/* There can be no concurrent accesses, since we have no
++		 * pending decrypt operations
++		 */
+ 		WRITE_ONCE(ctx->async_notify, false);
+ 
+ 		/* Drain records from the rx_list & copy if required */
+@@ -2290,6 +2309,7 @@ int tls_set_sw_offload(struct sock *sk, struct tls_context *ctx, int tx)
+ 
+ 	if (tx) {
+ 		crypto_init_wait(&sw_ctx_tx->async_wait);
++		spin_lock_init(&sw_ctx_tx->encrypt_compl_lock);
+ 		crypto_info = &ctx->crypto_send.info;
+ 		cctx = &ctx->tx;
+ 		aead = &sw_ctx_tx->aead_send;
+@@ -2298,6 +2318,7 @@ int tls_set_sw_offload(struct sock *sk, struct tls_context *ctx, int tx)
+ 		sw_ctx_tx->tx_work.sk = sk;
+ 	} else {
+ 		crypto_init_wait(&sw_ctx_rx->async_wait);
++		spin_lock_init(&sw_ctx_rx->decrypt_compl_lock);
+ 		crypto_info = &ctx->crypto_recv.info;
+ 		cctx = &ctx->rx;
+ 		skb_queue_head_init(&sw_ctx_rx->rx_list);
 -- 
 2.25.1
 
