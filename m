@@ -2,101 +2,120 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED518C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA53C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C360D2053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:36:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Y8KMgJvg"
+	by mail.kernel.org (Postfix) with ESMTP id E3DD8206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:40:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730606AbgFHQgj (ORCPT
+        id S1730578AbgFHQkG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 12:36:39 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:39716 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730432AbgFHQgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 12:36:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=88MeFKvCY6T0QrZdQ+i9CPgwNPj+1wwn8P8nThk+OnE=; b=Y8KMgJvgWNbSr18uYw2huKiS+P
-        stY5qeIzYxS6W/lg9xGTQ99h9AEJ7WyjSKLK4oX9MVCkvC1Q0OFQUCMZPOzpW8ZvEbjz0Infp2R1B
-        PbLNvn3peyY6lZMM5oEDZm3fS2VDbOgwM2SoxVFHilleCzrmykl3tw4xQ5Y0ROH6BFlQ=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jiKlB-004Pxy-4L; Mon, 08 Jun 2020 18:36:29 +0200
-Date:   Mon, 8 Jun 2020 18:36:29 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     davem@davemloft.net, kuba@kernel.org, robh+dt@kernel.org,
-        f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        christoph.muellner@theobroma-systems.com,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Subject: Re: [PATCH] net: phy: mscc: handle the clkout control on some phy
- variants
-Message-ID: <20200608163629.GH1006885@lunn.ch>
-References: <20200608160207.1316052-1-heiko@sntech.de>
+        Mon, 8 Jun 2020 12:40:06 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:47042 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730333AbgFHQkF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 12:40:05 -0400
+Received: by mail-ot1-f67.google.com with SMTP id g7so13084971oti.13
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 09:40:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DoIk7M+/dfkd1qsEjTLJ/qJxq8wwgYvyA9updsNoufY=;
+        b=glChjZY7wYCodDDola73n/Pe7woFyACC1rdtowOSD7+/wNKYr+uPnlMja7s0pPUbX0
+         Jt1ViZcj+vySe4vKU5KxzldfGjnt8yEX5gWA6Q1DMO6h8BAF49suOvBJ+ZujMRyTngYG
+         655mFGHv+TEla/kOTvj7MkvkAJY56ddoAcVCX4MHo0vZq0llxKaIcy2c3cWaHDzyOyP7
+         cloXH1pW5rUHW8vEJKljKHZkHDiu8DiYdDnZ9+gFJZL+wd3RiiM9L+XahK5jqY+NSRoH
+         B6P3cSSl9T0u1y+FAl52LruU343iax9vs/AfnKMMJi0+ydLPsmdbWRdA5O6q1/ggWr5v
+         5oLg==
+X-Gm-Message-State: AOAM532sGUlVD20P4XHFHwno0KUtsVsUawJ+SiKdvh71/2Bh7Q9ycYFv
+        ubyFe7KEajqR9EzVvJzI0exK/NVz0Xnfpu0vwTk=
+X-Google-Smtp-Source: ABdhPJwpAOtHYCQlGPkYngs01Go5RWpOkkicySbl5mgtKtQPMEl0xr+Ij/5M9xtKtgFgG9RDyq2RJu3F8l8v9kjNI98=
+X-Received: by 2002:a9d:c29:: with SMTP id 38mr17145170otr.107.1591634404626;
+ Mon, 08 Jun 2020 09:40:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200608160207.1316052-1-heiko@sntech.de>
+References: <e3b30905-4497-29b4-4636-a313283dbc56@i-love.sakura.ne.jp> <20200528065603.3596-1-penguin-kernel@I-love.SAKURA.ne.jp>
+In-Reply-To: <20200528065603.3596-1-penguin-kernel@I-love.SAKURA.ne.jp>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 8 Jun 2020 18:39:53 +0200
+Message-ID: <CAMuHMdWOjCtV9W7GtHrhKCJwJ6wNSpd_RQTBaoG7sVrb4oYSDA@mail.gmail.com>
+Subject: Re: [PATCH v2] twist: allow converting pr_devel()/pr_debug() into snprintf()
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 06:02:07PM +0200, Heiko Stuebner wrote:
-> +static int vsc8531_probe(struct phy_device *phydev)
-> +{
-> +	struct vsc8531_private *vsc8531;
-> +	int rate_magic;
-> +	u32 default_mode[2] = {VSC8531_LINK_1000_ACTIVITY,
-> +	   VSC8531_LINK_100_ACTIVITY};
-> +
-> +	rate_magic = vsc85xx_edge_rate_magic_get(phydev);
-> +	if (rate_magic < 0)
-> +		return rate_magic;
-> +
-> +	vsc8531 = devm_kzalloc(&phydev->mdio.dev, sizeof(*vsc8531), GFP_KERNEL);
-> +	if (!vsc8531)
-> +		return -ENOMEM;
-> +
-> +	phydev->priv = vsc8531;
-> +
-> +	vsc8531->rate_magic = rate_magic;
-> +	vsc8531->nleds = 2;
-> +	vsc8531->supp_led_modes = VSC85XX_SUPP_LED_MODES;
-> +	vsc8531->hw_stats = vsc85xx_hw_stats;
-> +	vsc8531->nstats = ARRAY_SIZE(vsc85xx_hw_stats);
-> +	vsc8531->stats = devm_kcalloc(&phydev->mdio.dev, vsc8531->nstats,
-> +				      sizeof(u64), GFP_KERNEL);
-> +	if (!vsc8531->stats)
-> +		return -ENOMEM;
-> +
-> +	vsc8531_dt_clkout_rate_get(phydev);
-> +
-> +	return vsc85xx_dt_led_modes_get(phydev, default_mode);
-> +}
+Hi Tetsuo,
 
-Hi Heiko
+On Thu, May 28, 2020 at 8:57 AM Tetsuo Handa
+<penguin-kernel@i-love.sakura.ne.jp> wrote:
+> syzbot found a NULL pointer dereference bug inside mptcp_recvmsg() due to
+> ssock == NULL, but this bug manifested inside selinux_socket_recvmsg()
+> because pr_debug() was no-op [1].
+>
+>   pr_debug("fallback-read subflow=%p",
+>            mptcp_subflow_ctx(ssock->sk));
+>   copied = sock_recvmsg(ssock, msg, flags);
+>
+> Thus, let's allow fuzzers to always evaluate pr_devel()/pr_debug()
+> messages, by redirecting no-op pr_devel()/pr_debug() calls to snprintf().
+>
+> [1] https://syzkaller.appspot.com/bug?id=12be9aa373be9d8727cdd172f190de39528a413a
+>
+> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-The clock change itself looks O.K. Maybe we want to standardize on the
-name of the DT property, since it could be shared across all PHYs
-which have a clock output?
+Thanks for your patch!
 
-Could you add another patch first which refactors the _probe()
-functions. There is a lot of repeated code which could be put into a
-helper.
+> --- a/lib/Kconfig.twist
+> +++ b/lib/Kconfig.twist
+> @@ -12,10 +12,22 @@ if TWIST_KERNEL_BEHAVIOR
+>
+>  config TWIST_FOR_SYZKALLER_TESTING
+>         bool "Select all twist options suitable for syzkaller testing"
+> +       select TWIST_ALWAYS_EVALUATE_PRINTK_ARGUMENTS
+>         select TWIST_DISABLE_KBD_K_SPEC_HANDLER
+>         help
+>          Say N unless you are building kernels for syzkaller's testing.
+>
+> +config TWIST_ALWAYS_EVALUATE_PRINTK_ARGUMENTS
+> +       bool "Always evaluate printk() arguments"
+> +       help
+> +        Currently, only format string of printk() arguments is checked
+> +        by compiler if pr_devel()/pr_debug() are disabled. Therefore,
+> +        fuzz testing cannot catch runtime bugs (e.g. NULL pointer
+> +        dereference, use-after-free/out-of-bounds/uninitialized read)
+> +        in disabled printk() calls. This option redirects disabled
+> +        printk(...) to snprintf(NULL, 0, ...) in order to evaluate
+> +        arguments without printing.
+> +
+>  config TWIST_DISABLE_KBD_K_SPEC_HANDLER
+>         bool "Disable k_spec() function in drivers/tty/vt/keyboard.c"
+>         help
 
-Thanks
-	Andrew
+Can't you just enable CONFIG_DYNAMIC_DEBUG in your fuzzer
+config instead?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
