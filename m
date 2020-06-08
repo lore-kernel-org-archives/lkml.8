@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC198C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA201C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9F8E2087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:09:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83A372087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:09:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591661395;
-	bh=aabELFPpLNSTh/+hI9W6tY2XbTcKlJNwu4snZepzc7Q=;
+	s=default; t=1591661399;
+	bh=Tzw3Gzlm+3BA/nlhX9g2BWNAa7mep+kD4+xGWxixxX4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y/O8XVLXrh7z2b3NYRG/My03VEpRzAY16sW/X4AZH6y/Td7yiRDf2Jq0Lhaa8Vgb3
-	 NtHZlITzgx1a5H6kABsnr8ecTYWlInqfgwSJCG9coJSJnd2g/S3KKL+FuPEes+xEFV
-	 Go/em0m1TcPNjvVcEk08ce9LOiNYFo5SBfsXd60A=
+	b=dOrsN//ryjruWXRNRnEdth8KLlPeAFoqi57bNY4J0zzzc4ggXWakzMmySyUo+5A9+
+	 EltiNK5Sq7saDbdNtORJZcn/w7IGGAU4A1za51zK0i2xGNpmAKgyN3WLWJ097MrLyQ
+	 vvQc42dcdph1PqdiDLq+lpVLtUgT+e1Bo3FxrClY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388020AbgFIAJw (ORCPT
+        id S1732807AbgFIAJ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:09:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43866 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:09:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729578AbgFHXUV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:20:21 -0400
+        id S1730953AbgFHXUU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:20:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77C0620842;
-        Mon,  8 Jun 2020 23:20:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BC062074B;
+        Mon,  8 Jun 2020 23:20:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658421;
-        bh=aabELFPpLNSTh/+hI9W6tY2XbTcKlJNwu4snZepzc7Q=;
+        s=default; t=1591658420;
+        bh=Tzw3Gzlm+3BA/nlhX9g2BWNAa7mep+kD4+xGWxixxX4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SHLetaPTwpEiWu1MEvNrs2mps8EN5TeRHZVxKSWqar+hA/Pu8P4QdEGxISoQ9jf88
-         IWoQaeUoa5lbcjJ9h42xXMdY0x7CaogTubP5zsUSFxO9SZjvFYZxIV1T5zZDUrSHil
-         l9FeFKIEQt+c0Ahg0IKXs9GYqI1JK7TM6ZQsPUG0=
+        b=YQQR6V5o88+gj2b+3x1TR+eGiSUCRbsLTxBrwGQIXzuw1VCWWslsyiBC1X4xDnbLp
+         FGZOUkQe0O1HFqJHXrfau9jfKyBh7jyl8BEaDiUY7ajUYqLsWB4T6Hpvs7x4EunmTX
+         slJm6eV0PluPP9kxc+F4+8aZfPUgE4vxkqoBvtwA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 068/175] regulator: qcom-rpmh: Fix typos in pm8150 and pm8150l
-Date:   Mon,  8 Jun 2020 19:17:01 -0400
-Message-Id: <20200608231848.3366970-68-sashal@kernel.org>
+Cc:     Jaehoon Chung <jh80.chung@samsung.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 067/175] brcmfmac: fix wrong location to get firmware feature
+Date:   Mon,  8 Jun 2020 19:17:00 -0400
+Message-Id: <20200608231848.3366970-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
 References: <20200608231848.3366970-1-sashal@kernel.org>
@@ -59,51 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
+From: Jaehoon Chung <jh80.chung@samsung.com>
 
-[ Upstream commit 906746ba26d0b45688f4c3b730c35f765dc958ba ]
+[ Upstream commit c57673852062428cdeabdd6501ac8b8e4c302067 ]
 
-Fix typos in pm8150 l13/l16/l17 and pm8150l ldo8 supplies.
+sup_wpa feature is getting after setting feature_disable flag.
+If firmware is supported sup_wpa feature,  it's always enabled
+regardless of feature_disable flag.
 
-Fixes: 06369bcc15a1 ("regulator: qcom-rpmh: Add support for SM8150")
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Tested-by: Vinod Koul <vkoul@kernel.org>
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
-Link: https://lore.kernel.org/r/20200415053708.717623-1-bjorn.andersson@linaro.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: b8a64f0e96c2 ("brcmfmac: support 4-way handshake offloading for WPA/WPA2-PSK")
+Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200330052528.10503-1-jh80.chung@samsung.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/qcom-rpmh-regulator.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/qcom-rpmh-regulator.c b/drivers/regulator/qcom-rpmh-regulator.c
-index 0246b6f99fb5..f11e4bfbc91b 100644
---- a/drivers/regulator/qcom-rpmh-regulator.c
-+++ b/drivers/regulator/qcom-rpmh-regulator.c
-@@ -832,11 +832,11 @@ static const struct rpmh_vreg_init_data pm8150_vreg_data[] = {
- 	RPMH_VREG("ldo10",  "ldo%s10", &pmic5_pldo,      "vdd-l2-l10"),
- 	RPMH_VREG("ldo11",  "ldo%s11", &pmic5_nldo,      "vdd-l1-l8-l11"),
- 	RPMH_VREG("ldo12",  "ldo%s12", &pmic5_pldo_lv,   "vdd-l7-l12-l14-l15"),
--	RPMH_VREG("ldo13",  "ldo%s13", &pmic5_pldo,      "vdd-l13-l6-l17"),
-+	RPMH_VREG("ldo13",  "ldo%s13", &pmic5_pldo,      "vdd-l13-l16-l17"),
- 	RPMH_VREG("ldo14",  "ldo%s14", &pmic5_pldo_lv,   "vdd-l7-l12-l14-l15"),
- 	RPMH_VREG("ldo15",  "ldo%s15", &pmic5_pldo_lv,   "vdd-l7-l12-l14-l15"),
--	RPMH_VREG("ldo16",  "ldo%s16", &pmic5_pldo,      "vdd-l13-l6-l17"),
--	RPMH_VREG("ldo17",  "ldo%s17", &pmic5_pldo,      "vdd-l13-l6-l17"),
-+	RPMH_VREG("ldo16",  "ldo%s16", &pmic5_pldo,      "vdd-l13-l16-l17"),
-+	RPMH_VREG("ldo17",  "ldo%s17", &pmic5_pldo,      "vdd-l13-l16-l17"),
- 	RPMH_VREG("ldo18",  "ldo%s18", &pmic5_nldo,      "vdd-l3-l4-l5-l18"),
- 	{},
- };
-@@ -857,7 +857,7 @@ static const struct rpmh_vreg_init_data pm8150l_vreg_data[] = {
- 	RPMH_VREG("ldo5",   "ldo%s5",  &pmic5_pldo,      "vdd-l4-l5-l6"),
- 	RPMH_VREG("ldo6",   "ldo%s6",  &pmic5_pldo,      "vdd-l4-l5-l6"),
- 	RPMH_VREG("ldo7",   "ldo%s7",  &pmic5_pldo,      "vdd-l7-l11"),
--	RPMH_VREG("ldo8",   "ldo%s8",  &pmic5_pldo_lv,   "vdd-l1-l8-l11"),
-+	RPMH_VREG("ldo8",   "ldo%s8",  &pmic5_pldo_lv,   "vdd-l1-l8"),
- 	RPMH_VREG("ldo9",   "ldo%s9",  &pmic5_pldo,      "vdd-l9-l10"),
- 	RPMH_VREG("ldo10",  "ldo%s10", &pmic5_pldo,      "vdd-l9-l10"),
- 	RPMH_VREG("ldo11",  "ldo%s11", &pmic5_pldo,      "vdd-l7-l11"),
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
+index 2c3526aeca6f..545015610cf8 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
+@@ -283,13 +283,14 @@ void brcmf_feat_attach(struct brcmf_pub *drvr)
+ 	if (!err)
+ 		ifp->drvr->feat_flags |= BIT(BRCMF_FEAT_SCAN_RANDOM_MAC);
+ 
++	brcmf_feat_iovar_int_get(ifp, BRCMF_FEAT_FWSUP, "sup_wpa");
++
+ 	if (drvr->settings->feature_disable) {
+ 		brcmf_dbg(INFO, "Features: 0x%02x, disable: 0x%02x\n",
+ 			  ifp->drvr->feat_flags,
+ 			  drvr->settings->feature_disable);
+ 		ifp->drvr->feat_flags &= ~drvr->settings->feature_disable;
+ 	}
+-	brcmf_feat_iovar_int_get(ifp, BRCMF_FEAT_FWSUP, "sup_wpa");
+ 
+ 	brcmf_feat_firmware_overrides(drvr);
+ 
 -- 
 2.25.1
 
