@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD6DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3815C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:31:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 527ED206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:30:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE3DC20760
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:31:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662654;
-	bh=akfoKOdXJ3nxOOg0mrjcJjFqNX/LMUB2tLMlgEKl0Ik=;
+	s=default; t=1591662660;
+	bh=cXeMnDqdkahj2EjCcRUHHlnMagG9C2OAzyC6JFHrO/I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C7RtyPI3yhjF37rl/RDNks9H8iwEpHuU/ZMEqpadqc+4+7EQOQ6wgk67WRXTepCrH
-	 h/TEPcajMZBJCqHyg+yOjEPOKEXQAY+J8QbnuSL5XwZZi4szfAM2P3rfLfDn8SAUYd
-	 9CBlwJa7l4fxWCfQic7FJKIodEIamDaEy8bTk5uA=
+	b=UZDq173zWzQ1EJVhyQV5r71+6YB57FEDh79tCwWVJT6jWllGhEvdS9C12iJ0CgeSu
+	 qtxvsiswDu1QuuZOvC+CNKJt1xMFs38h2SJUq5vfvbjFrjQE8u+rMzmsMuYOKSA1PX
+	 E1/kRWKTXQg29KGI/H4GFbwc+PPboTGv4WqFAfhc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387792AbgFIAau (ORCPT
+        id S1732648AbgFIAa5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:30:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36772 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:30:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728689AbgFHXPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:15:41 -0400
+        id S1730057AbgFHXPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:15:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38AF920774;
-        Mon,  8 Jun 2020 23:15:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC3B120659;
+        Mon,  8 Jun 2020 23:15:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658141;
-        bh=akfoKOdXJ3nxOOg0mrjcJjFqNX/LMUB2tLMlgEKl0Ik=;
+        s=default; t=1591658139;
+        bh=cXeMnDqdkahj2EjCcRUHHlnMagG9C2OAzyC6JFHrO/I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yHYX2tjLt64JrKpstAgIYB3y2WKt+EoK+gr5w43MnY5l3NzXaT7KsTfzOt1Jq4vc5
-         ngIpXJdKbUnjIKDVi75n/FvuXjeg2mnnBb7lAV6P2NDAW/9HyXbeSckUmTcC7QymeD
-         8UAxJhKdOx+IBqfZoFp1ECxDk3LNSE/dMqpx4x40=
+        b=Qw9lwp7/R5uIuoYOckfRej+T8W47wJqDh+Dqu4AvBfm6LO0CbpFzEEu1SlspM2K7E
+         VGVLeJWg0zeoUHtwtWDQ3pOi/Su6DhBdBQAMq2N5Jir3nYxTX4wyWyOZVQkswYD8cy
+         B1p4ijuMB1fW/3P9gvBcn9x+iyfSwdnDyHLGPHms=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Fabrice Gasnier <fabrice.gasnier@st.com>, Stable@vger.kernel.org,
@@ -47,9 +47,9 @@ Cc:     Fabrice Gasnier <fabrice.gasnier@st.com>, Stable@vger.kernel.org,
         linux-iio@vger.kernel.org,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 174/606] iio: adc: stm32-dfsdm: fix device used to request dma
-Date:   Mon,  8 Jun 2020 19:04:59 -0400
-Message-Id: <20200608231211.3363633-174-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 173/606] iio: adc: stm32-adc: fix device used to request dma
+Date:   Mon,  8 Jun 2020 19:04:58 -0400
+Message-Id: <20200608231211.3363633-173-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -64,7 +64,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Fabrice Gasnier <fabrice.gasnier@st.com>
 
-commit b455d06e6fb3c035711e8aab1ca18082ccb15d87 upstream.
+commit 52cd91c27f3908b88e8b25aed4a4d20660abcc45 upstream.
 
 DMA channel request should use device struct from platform device struct.
 Currently it's using iio device struct. But at this stage when probing,
@@ -77,73 +77,35 @@ as the links in sysfs can't be created, due to device isn't yet registered:
 
 Fix this by using device struct from platform device to request dma chan.
 
-Fixes: eca949800d2d ("IIO: ADC: add stm32 DFSDM support for PDM microphone")
+Fixes: 2763ea0585c99 ("iio: adc: stm32: add optional dma support")
 
 Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 Cc: <Stable@vger.kernel.org>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/iio/adc/stm32-dfsdm-adc.c | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ drivers/iio/adc/stm32-adc.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
-index 76a60d93fe23..506bf519f64c 100644
---- a/drivers/iio/adc/stm32-dfsdm-adc.c
-+++ b/drivers/iio/adc/stm32-dfsdm-adc.c
-@@ -62,7 +62,7 @@ enum sd_converter_type {
- 
- struct stm32_dfsdm_dev_data {
- 	int type;
--	int (*init)(struct iio_dev *indio_dev);
-+	int (*init)(struct device *dev, struct iio_dev *indio_dev);
- 	unsigned int num_channels;
- 	const struct regmap_config *regmap_cfg;
- };
-@@ -1365,11 +1365,12 @@ static void stm32_dfsdm_dma_release(struct iio_dev *indio_dev)
- 	}
+diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
+index ae622ee6d08c..dfc3a306c667 100644
+--- a/drivers/iio/adc/stm32-adc.c
++++ b/drivers/iio/adc/stm32-adc.c
+@@ -1812,18 +1812,18 @@ static int stm32_adc_chan_of_init(struct iio_dev *indio_dev)
+ 	return 0;
  }
  
--static int stm32_dfsdm_dma_request(struct iio_dev *indio_dev)
-+static int stm32_dfsdm_dma_request(struct device *dev,
-+				   struct iio_dev *indio_dev)
+-static int stm32_adc_dma_request(struct iio_dev *indio_dev)
++static int stm32_adc_dma_request(struct device *dev, struct iio_dev *indio_dev)
  {
- 	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
+ 	struct stm32_adc *adc = iio_priv(indio_dev);
+ 	struct dma_slave_config config;
+ 	int ret;
  
 -	adc->dma_chan = dma_request_chan(&indio_dev->dev, "rx");
 +	adc->dma_chan = dma_request_chan(dev, "rx");
  	if (IS_ERR(adc->dma_chan)) {
- 		int ret = PTR_ERR(adc->dma_chan);
- 
-@@ -1425,7 +1426,7 @@ static int stm32_dfsdm_adc_chan_init_one(struct iio_dev *indio_dev,
- 					  &adc->dfsdm->ch_list[ch->channel]);
- }
- 
--static int stm32_dfsdm_audio_init(struct iio_dev *indio_dev)
-+static int stm32_dfsdm_audio_init(struct device *dev, struct iio_dev *indio_dev)
- {
- 	struct iio_chan_spec *ch;
- 	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
-@@ -1452,10 +1453,10 @@ static int stm32_dfsdm_audio_init(struct iio_dev *indio_dev)
- 	indio_dev->num_channels = 1;
- 	indio_dev->channels = ch;
- 
--	return stm32_dfsdm_dma_request(indio_dev);
-+	return stm32_dfsdm_dma_request(dev, indio_dev);
- }
- 
--static int stm32_dfsdm_adc_init(struct iio_dev *indio_dev)
-+static int stm32_dfsdm_adc_init(struct device *dev, struct iio_dev *indio_dev)
- {
- 	struct iio_chan_spec *ch;
- 	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
-@@ -1499,17 +1500,17 @@ static int stm32_dfsdm_adc_init(struct iio_dev *indio_dev)
- 	init_completion(&adc->completion);
- 
- 	/* Optionally request DMA */
--	ret = stm32_dfsdm_dma_request(indio_dev);
-+	ret = stm32_dfsdm_dma_request(dev, indio_dev);
- 	if (ret) {
+ 		ret = PTR_ERR(adc->dma_chan);
  		if (ret != -ENODEV) {
  			if (ret != -EPROBE_DEFER)
 -				dev_err(&indio_dev->dev,
@@ -151,19 +113,12 @@ index 76a60d93fe23..506bf519f64c 100644
  					"DMA channel request failed with %d\n",
  					ret);
  			return ret;
- 		}
+@@ -1930,7 +1930,7 @@ static int stm32_adc_probe(struct platform_device *pdev)
+ 	if (ret < 0)
+ 		return ret;
  
--		dev_dbg(&indio_dev->dev, "No DMA support\n");
-+		dev_dbg(dev, "No DMA support\n");
- 		return 0;
- 	}
- 
-@@ -1622,7 +1623,7 @@ static int stm32_dfsdm_adc_probe(struct platform_device *pdev)
- 		adc->dfsdm->fl_list[adc->fl_id].sync_mode = val;
- 
- 	adc->dev_data = dev_data;
--	ret = dev_data->init(iio);
-+	ret = dev_data->init(dev, iio);
+-	ret = stm32_adc_dma_request(indio_dev);
++	ret = stm32_adc_dma_request(dev, indio_dev);
  	if (ret < 0)
  		return ret;
  
