@@ -5,57 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C11C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C9AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E00D2063A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:50:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 601172074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:50:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q85BsSk3"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WVjSOj3T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726078AbgFHSuC (ORCPT
+        id S1726144AbgFHSuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 14:50:02 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50853 "EHLO
+        Mon, 8 Jun 2020 14:50:12 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:51067 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725280AbgFHSuB (ORCPT
+        with ESMTP id S1726105AbgFHSuL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 14:50:01 -0400
+        Mon, 8 Jun 2020 14:50:11 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591642199;
+        s=mimecast20190719; t=1591642209;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=dkjrEf8Yt71FwL283bqD2ueNl/sna0+6OZ0XINyDznM=;
-        b=Q85BsSk39DHc4uC53v29wOlAvfSejAYoeD6Hk+GumEfJ0t1sTs1GZz8EkZcHC5HwHqAGtU
-        BF13mF0VY5/sE7mPUrLOkDHBX9HMGFLWlM0pxzCstjZyhAoj12uiLX3Ki0Nk/Jy3NtX43c
-        KZ68RzbJvmWp8eKy1lWgPXpbQ4mULEg=
+        bh=rH8MpXGVAV4nFViikxVNGQ6cewnlNkwGUrQ6pwHt3dQ=;
+        b=WVjSOj3TKnRC7rVEABT61Ru3aAc/kG7f8tn3wwiPBRbo7xYbK4jitttLOMRC/DGzkl9UzH
+        l7tmCc0tW4beK78m7d9Q3+IJ5uNo0A720ERhCTy8cb3gKE/Daktmmf9OdMIAVg3d3xSK0d
+        2pCgp3CrW0HJe5CGuVhJsbL3Fr6NZn8=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-26-N6U05wR3N72vA-qL8DLqdA-1; Mon, 08 Jun 2020 14:49:57 -0400
-X-MC-Unique: N6U05wR3N72vA-qL8DLqdA-1
+ us-mta-442-y9DUsuAwMhaWWEpFPB7X8g-1; Mon, 08 Jun 2020 14:50:05 -0400
+X-MC-Unique: y9DUsuAwMhaWWEpFPB7X8g-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3D26018A8225;
-        Mon,  8 Jun 2020 18:49:56 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AEC4B1005512;
+        Mon,  8 Jun 2020 18:50:03 +0000 (UTC)
 Received: from warthog.procyon.org.uk (ovpn-114-66.rdu2.redhat.com [10.10.114.66])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3570A10013D4;
-        Mon,  8 Jun 2020 18:49:55 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5BB8C100239B;
+        Mon,  8 Jun 2020 18:50:02 +0000 (UTC)
 Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
         Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
         Kingdom.
         Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH net 1/2] rxrpc: Move the call completion handling out of line
+Subject: [PATCH net 2/2] rxrpc: Fix missing notification
 From:   David Howells <dhowells@redhat.com>
 To:     netdev@vger.kernel.org
-Cc:     Marc Dionne <marc.dionne@auristor.com>, dhowells@redhat.com,
+Cc:     Gerry Seidman <gerry@auristor.com>,
+        Marc Dionne <marc.dionne@auristor.com>, dhowells@redhat.com,
         linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org
-Date:   Mon, 08 Jun 2020 19:49:54 +0100
-Message-ID: <159164219444.2758133.4300247600455553049.stgit@warthog.procyon.org.uk>
+Date:   Mon, 08 Jun 2020 19:50:01 +0100
+Message-ID: <159164220145.2758133.3370434050398146640.stgit@warthog.procyon.org.uk>
 In-Reply-To: <159164218727.2758133.1046957228494479308.stgit@warthog.procyon.org.uk>
 References: <159164218727.2758133.1046957228494479308.stgit@warthog.procyon.org.uk>
 User-Agent: StGit/0.22
@@ -68,258 +69,195 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the handling of call completion out of line so that the next patch can
-add more code in that area.
+Under some circumstances, rxrpc will fail a transmit a packet through the
+underlying UDP socket (ie. UDP sendmsg returns an error).  This may result
+in a call getting stuck.
 
+In the instance being seen, where AFS tries to send a probe to the Volume
+Location server, tracepoints show the UDP Tx failure (in this case returing
+error 99 EADDRNOTAVAIL) and then nothing more:
+
+ afs_make_vl_call: c=0000015d VL.GetCapabilities
+ rxrpc_call: c=0000015d NWc u=1 sp=rxrpc_kernel_begin_call+0x106/0x170 [rxrpc] a=00000000dd89ee8a
+ rxrpc_call: c=0000015d Gus u=2 sp=rxrpc_new_client_call+0x14f/0x580 [rxrpc] a=00000000e20e4b08
+ rxrpc_call: c=0000015d SEE u=2 sp=rxrpc_activate_one_channel+0x7b/0x1c0 [rxrpc] a=00000000e20e4b08
+ rxrpc_call: c=0000015d CON u=2 sp=rxrpc_kernel_begin_call+0x106/0x170 [rxrpc] a=00000000e20e4b08
+ rxrpc_tx_fail: c=0000015d r=1 ret=-99 CallDataNofrag
+
+The problem is that if the initial packet fails and the retransmission
+timer hasn't been started, the call is set to completed and an error is
+returned from rxrpc_send_data_packet() to rxrpc_queue_packet().  Though
+rxrpc_instant_resend() is called, this does nothing because the call is
+marked completed.
+
+So rxrpc_notify_socket() isn't called and the error is passed back up to
+rxrpc_send_data(), rxrpc_kernel_send_data() and thence to afs_make_call()
+and afs_vl_get_capabilities() where it is simply ignored because it is
+assumed that the result of a probe will be collected asynchronously.
+
+Fileserver probing is similarly affected via afs_fs_get_capabilities().
+
+Fix this by always issuing a notification in __rxrpc_set_call_completion()
+if it shifts a call to the completed state, even if an error is also
+returned to the caller through the function return value.
+
+Also put in a little bit of optimisation to avoid taking the call
+state_lock and disabling softirqs if the call is already in the completed
+state and remove some now redundant rxrpc_notify_socket() calls.
+
+Fixes: f5c17aaeb2ae ("rxrpc: Calls should only have one terminal state")
+Reported-by: Gerry Seidman <gerry@auristor.com>
 Signed-off-by: David Howells <dhowells@redhat.com>
 Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
 ---
 
- net/rxrpc/ar-internal.h |  119 ++++++++++-------------------------------------
- net/rxrpc/recvmsg.c     |   74 +++++++++++++++++++++++++++++
- net/rxrpc/sendmsg.c     |    8 ++-
- 3 files changed, 103 insertions(+), 98 deletions(-)
+ net/rxrpc/call_event.c |    1 -
+ net/rxrpc/conn_event.c |    7 +++----
+ net/rxrpc/input.c      |    7 ++-----
+ net/rxrpc/peer_event.c |    4 +---
+ net/rxrpc/recvmsg.c    |   21 +++++++++++++--------
+ net/rxrpc/sendmsg.c    |    6 ++----
+ 6 files changed, 21 insertions(+), 25 deletions(-)
 
-diff --git a/net/rxrpc/ar-internal.h b/net/rxrpc/ar-internal.h
-index 9fe264bec70c..9a2139ebd67d 100644
---- a/net/rxrpc/ar-internal.h
-+++ b/net/rxrpc/ar-internal.h
-@@ -809,100 +809,6 @@ static inline bool rxrpc_is_client_call(const struct rxrpc_call *call)
- 	return !rxrpc_is_service_call(call);
+diff --git a/net/rxrpc/call_event.c b/net/rxrpc/call_event.c
+index 2a65ac41055f..61a51c251e1b 100644
+--- a/net/rxrpc/call_event.c
++++ b/net/rxrpc/call_event.c
+@@ -320,7 +320,6 @@ void rxrpc_process_call(struct work_struct *work)
+ 
+ 	if (call->state == RXRPC_CALL_COMPLETE) {
+ 		del_timer_sync(&call->timer);
+-		rxrpc_notify_socket(call);
+ 		goto out_put;
+ 	}
+ 
+diff --git a/net/rxrpc/conn_event.c b/net/rxrpc/conn_event.c
+index 06fcff2ebbba..447f55ca6886 100644
+--- a/net/rxrpc/conn_event.c
++++ b/net/rxrpc/conn_event.c
+@@ -173,10 +173,9 @@ static void rxrpc_abort_calls(struct rxrpc_connection *conn,
+ 			else
+ 				trace_rxrpc_rx_abort(call, serial,
+ 						     conn->abort_code);
+-			if (rxrpc_set_call_completion(call, compl,
+-						      conn->abort_code,
+-						      conn->error))
+-				rxrpc_notify_socket(call);
++			rxrpc_set_call_completion(call, compl,
++						  conn->abort_code,
++						  conn->error);
+ 		}
+ 	}
+ 
+diff --git a/net/rxrpc/input.c b/net/rxrpc/input.c
+index 3be4177baf70..299ac98e9754 100644
+--- a/net/rxrpc/input.c
++++ b/net/rxrpc/input.c
+@@ -275,7 +275,6 @@ static bool rxrpc_end_tx_phase(struct rxrpc_call *call, bool reply_begun,
+ 
+ 	case RXRPC_CALL_SERVER_AWAIT_ACK:
+ 		__rxrpc_call_completed(call);
+-		rxrpc_notify_socket(call);
+ 		state = call->state;
+ 		break;
+ 
+@@ -1013,9 +1012,8 @@ static void rxrpc_input_abort(struct rxrpc_call *call, struct sk_buff *skb)
+ 
+ 	_proto("Rx ABORT %%%u { %x }", sp->hdr.serial, abort_code);
+ 
+-	if (rxrpc_set_call_completion(call, RXRPC_CALL_REMOTELY_ABORTED,
+-				      abort_code, -ECONNABORTED))
+-		rxrpc_notify_socket(call);
++	rxrpc_set_call_completion(call, RXRPC_CALL_REMOTELY_ABORTED,
++				  abort_code, -ECONNABORTED);
  }
  
--/*
-- * Transition a call to the complete state.
-- */
--static inline bool __rxrpc_set_call_completion(struct rxrpc_call *call,
--					       enum rxrpc_call_completion compl,
--					       u32 abort_code,
--					       int error)
--{
--	if (call->state < RXRPC_CALL_COMPLETE) {
--		call->abort_code = abort_code;
--		call->error = error;
--		call->completion = compl,
--		call->state = RXRPC_CALL_COMPLETE;
--		trace_rxrpc_call_complete(call);
--		wake_up(&call->waitq);
--		return true;
--	}
--	return false;
--}
--
--static inline bool rxrpc_set_call_completion(struct rxrpc_call *call,
--					     enum rxrpc_call_completion compl,
--					     u32 abort_code,
--					     int error)
--{
+ /*
+@@ -1102,7 +1100,6 @@ static void rxrpc_input_implicit_end_call(struct rxrpc_sock *rx,
+ 	spin_lock(&rx->incoming_lock);
+ 	__rxrpc_disconnect_call(conn, call);
+ 	spin_unlock(&rx->incoming_lock);
+-	rxrpc_notify_socket(call);
+ }
+ 
+ /*
+diff --git a/net/rxrpc/peer_event.c b/net/rxrpc/peer_event.c
+index b1449d971883..4704a8dceced 100644
+--- a/net/rxrpc/peer_event.c
++++ b/net/rxrpc/peer_event.c
+@@ -289,9 +289,7 @@ static void rxrpc_distribute_error(struct rxrpc_peer *peer, int error,
+ 
+ 	hlist_for_each_entry_rcu(call, &peer->error_targets, error_link) {
+ 		rxrpc_see_call(call);
+-		if (call->state < RXRPC_CALL_COMPLETE &&
+-		    rxrpc_set_call_completion(call, compl, 0, -error))
+-			rxrpc_notify_socket(call);
++		rxrpc_set_call_completion(call, compl, 0, -error);
+ 	}
+ }
+ 
+diff --git a/net/rxrpc/recvmsg.c b/net/rxrpc/recvmsg.c
+index 6c4ba4224ddc..2989742a4aa1 100644
+--- a/net/rxrpc/recvmsg.c
++++ b/net/rxrpc/recvmsg.c
+@@ -73,6 +73,7 @@ bool __rxrpc_set_call_completion(struct rxrpc_call *call,
+ 		call->state = RXRPC_CALL_COMPLETE;
+ 		trace_rxrpc_call_complete(call);
+ 		wake_up(&call->waitq);
++		rxrpc_notify_socket(call);
+ 		return true;
+ 	}
+ 	return false;
+@@ -83,11 +84,13 @@ bool rxrpc_set_call_completion(struct rxrpc_call *call,
+ 			       u32 abort_code,
+ 			       int error)
+ {
 -	bool ret;
--
++	bool ret = false;
+ 
 -	write_lock_bh(&call->state_lock);
 -	ret = __rxrpc_set_call_completion(call, compl, abort_code, error);
 -	write_unlock_bh(&call->state_lock);
--	return ret;
--}
--
--/*
-- * Record that a call successfully completed.
-- */
--static inline bool __rxrpc_call_completed(struct rxrpc_call *call)
--{
--	return __rxrpc_set_call_completion(call, RXRPC_CALL_SUCCEEDED, 0, 0);
--}
--
--static inline bool rxrpc_call_completed(struct rxrpc_call *call)
--{
++	if (call->state < RXRPC_CALL_COMPLETE) {
++		write_lock_bh(&call->state_lock);
++		ret = __rxrpc_set_call_completion(call, compl, abort_code, error);
++		write_unlock_bh(&call->state_lock);
++	}
+ 	return ret;
+ }
+ 
+@@ -101,11 +104,13 @@ bool __rxrpc_call_completed(struct rxrpc_call *call)
+ 
+ bool rxrpc_call_completed(struct rxrpc_call *call)
+ {
 -	bool ret;
--
++	bool ret = false;
+ 
 -	write_lock_bh(&call->state_lock);
 -	ret = __rxrpc_call_completed(call);
 -	write_unlock_bh(&call->state_lock);
--	return ret;
--}
--
--/*
-- * Record that a call is locally aborted.
-- */
--static inline bool __rxrpc_abort_call(const char *why, struct rxrpc_call *call,
--				      rxrpc_seq_t seq,
--				      u32 abort_code, int error)
--{
--	trace_rxrpc_abort(call->debug_id, why, call->cid, call->call_id, seq,
--			  abort_code, error);
--	return __rxrpc_set_call_completion(call, RXRPC_CALL_LOCALLY_ABORTED,
--					   abort_code, error);
--}
--
--static inline bool rxrpc_abort_call(const char *why, struct rxrpc_call *call,
--				    rxrpc_seq_t seq, u32 abort_code, int error)
--{
--	bool ret;
--
--	write_lock_bh(&call->state_lock);
--	ret = __rxrpc_abort_call(why, call, seq, abort_code, error);
--	write_unlock_bh(&call->state_lock);
--	return ret;
--}
--
--/*
-- * Abort a call due to a protocol error.
-- */
--static inline bool __rxrpc_abort_eproto(struct rxrpc_call *call,
--					struct sk_buff *skb,
--					const char *eproto_why,
--					const char *why,
--					u32 abort_code)
--{
--	struct rxrpc_skb_priv *sp = rxrpc_skb(skb);
--
--	trace_rxrpc_rx_eproto(call, sp->hdr.serial, eproto_why);
--	return rxrpc_abort_call(why, call, sp->hdr.seq, abort_code, -EPROTO);
--}
--
--#define rxrpc_abort_eproto(call, skb, eproto_why, abort_why, abort_code) \
--	__rxrpc_abort_eproto((call), (skb), tracepoint_string(eproto_why), \
--			     (abort_why), (abort_code))
--
- /*
-  * conn_client.c
-  */
-@@ -1101,8 +1007,33 @@ extern const struct seq_operations rxrpc_peer_seq_ops;
-  * recvmsg.c
-  */
- void rxrpc_notify_socket(struct rxrpc_call *);
-+bool __rxrpc_set_call_completion(struct rxrpc_call *, enum rxrpc_call_completion, u32, int);
-+bool rxrpc_set_call_completion(struct rxrpc_call *, enum rxrpc_call_completion, u32, int);
-+bool __rxrpc_call_completed(struct rxrpc_call *);
-+bool rxrpc_call_completed(struct rxrpc_call *);
-+bool __rxrpc_abort_call(const char *, struct rxrpc_call *, rxrpc_seq_t, u32, int);
-+bool rxrpc_abort_call(const char *, struct rxrpc_call *, rxrpc_seq_t, u32, int);
- int rxrpc_recvmsg(struct socket *, struct msghdr *, size_t, int);
- 
-+/*
-+ * Abort a call due to a protocol error.
-+ */
-+static inline bool __rxrpc_abort_eproto(struct rxrpc_call *call,
-+					struct sk_buff *skb,
-+					const char *eproto_why,
-+					const char *why,
-+					u32 abort_code)
-+{
-+	struct rxrpc_skb_priv *sp = rxrpc_skb(skb);
-+
-+	trace_rxrpc_rx_eproto(call, sp->hdr.serial, eproto_why);
-+	return rxrpc_abort_call(why, call, sp->hdr.seq, abort_code, -EPROTO);
-+}
-+
-+#define rxrpc_abort_eproto(call, skb, eproto_why, abort_why, abort_code) \
-+	__rxrpc_abort_eproto((call), (skb), tracepoint_string(eproto_why), \
-+			     (abort_why), (abort_code))
-+
- /*
-  * rtt.c
-  */
-diff --git a/net/rxrpc/recvmsg.c b/net/rxrpc/recvmsg.c
-index 8578c39ec839..6c4ba4224ddc 100644
---- a/net/rxrpc/recvmsg.c
-+++ b/net/rxrpc/recvmsg.c
-@@ -58,6 +58,80 @@ void rxrpc_notify_socket(struct rxrpc_call *call)
- 	_leave("");
++	if (call->state < RXRPC_CALL_COMPLETE) {
++		write_lock_bh(&call->state_lock);
++		ret = __rxrpc_call_completed(call);
++		write_unlock_bh(&call->state_lock);
++	}
+ 	return ret;
  }
  
-+/*
-+ * Transition a call to the complete state.
-+ */
-+bool __rxrpc_set_call_completion(struct rxrpc_call *call,
-+				 enum rxrpc_call_completion compl,
-+				 u32 abort_code,
-+				 int error)
-+{
-+	if (call->state < RXRPC_CALL_COMPLETE) {
-+		call->abort_code = abort_code;
-+		call->error = error;
-+		call->completion = compl,
-+		call->state = RXRPC_CALL_COMPLETE;
-+		trace_rxrpc_call_complete(call);
-+		wake_up(&call->waitq);
-+		return true;
-+	}
-+	return false;
-+}
-+
-+bool rxrpc_set_call_completion(struct rxrpc_call *call,
-+			       enum rxrpc_call_completion compl,
-+			       u32 abort_code,
-+			       int error)
-+{
-+	bool ret;
-+
-+	write_lock_bh(&call->state_lock);
-+	ret = __rxrpc_set_call_completion(call, compl, abort_code, error);
-+	write_unlock_bh(&call->state_lock);
-+	return ret;
-+}
-+
-+/*
-+ * Record that a call successfully completed.
-+ */
-+bool __rxrpc_call_completed(struct rxrpc_call *call)
-+{
-+	return __rxrpc_set_call_completion(call, RXRPC_CALL_SUCCEEDED, 0, 0);
-+}
-+
-+bool rxrpc_call_completed(struct rxrpc_call *call)
-+{
-+	bool ret;
-+
-+	write_lock_bh(&call->state_lock);
-+	ret = __rxrpc_call_completed(call);
-+	write_unlock_bh(&call->state_lock);
-+	return ret;
-+}
-+
-+/*
-+ * Record that a call is locally aborted.
-+ */
-+bool __rxrpc_abort_call(const char *why, struct rxrpc_call *call,
-+			rxrpc_seq_t seq, u32 abort_code, int error)
-+{
-+	trace_rxrpc_abort(call->debug_id, why, call->cid, call->call_id, seq,
-+			  abort_code, error);
-+	return __rxrpc_set_call_completion(call, RXRPC_CALL_LOCALLY_ABORTED,
-+					   abort_code, error);
-+}
-+
-+bool rxrpc_abort_call(const char *why, struct rxrpc_call *call,
-+		      rxrpc_seq_t seq, u32 abort_code, int error)
-+{
-+	bool ret;
-+
-+	write_lock_bh(&call->state_lock);
-+	ret = __rxrpc_abort_call(why, call, seq, abort_code, error);
-+	write_unlock_bh(&call->state_lock);
-+	return ret;
-+}
-+
- /*
-  * Pass a call terminating message to userspace.
-  */
 diff --git a/net/rxrpc/sendmsg.c b/net/rxrpc/sendmsg.c
-index 5e9c43d4a314..5dd9ba000c00 100644
+index 5dd9ba000c00..1304b8608f56 100644
 --- a/net/rxrpc/sendmsg.c
 +++ b/net/rxrpc/sendmsg.c
-@@ -261,10 +261,10 @@ static int rxrpc_queue_packet(struct rxrpc_sock *rx, struct rxrpc_call *call,
+@@ -261,10 +261,8 @@ static int rxrpc_queue_packet(struct rxrpc_sock *rx, struct rxrpc_call *call,
  		case -ENETUNREACH:
  		case -EHOSTUNREACH:
  		case -ECONNREFUSED:
--			rxrpc_set_call_completion(call,
--						  RXRPC_CALL_LOCAL_ERROR,
--						  0, ret);
--			rxrpc_notify_socket(call);
-+			if (rxrpc_set_call_completion(call,
-+						      RXRPC_CALL_LOCAL_ERROR,
-+						      0, ret))
-+				rxrpc_notify_socket(call);
+-			if (rxrpc_set_call_completion(call,
+-						      RXRPC_CALL_LOCAL_ERROR,
+-						      0, ret))
+-				rxrpc_notify_socket(call);
++			rxrpc_set_call_completion(call, RXRPC_CALL_LOCAL_ERROR,
++						  0, ret);
  			goto out;
  		}
  		_debug("need instant resend %d", ret);
