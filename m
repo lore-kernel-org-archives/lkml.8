@@ -2,183 +2,148 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B1CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E337C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C7012074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:28:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 117A92074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:30:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EN76A0in"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="g1OhfxSf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729781AbgFHM2V (ORCPT
+        id S1729736AbgFHMas (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 08:28:21 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:53347 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729752AbgFHM2R (ORCPT
+        Mon, 8 Jun 2020 08:30:48 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:63712 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729628AbgFHMaq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 08:28:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591619295;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=t1ZQ22N4GS1aOVvRJb6q+OxNNqR941WJ3Ue4dl0p7rw=;
-        b=EN76A0inAykuDp23x6YBDSsYdfL/xL+BT37DKnQjv4iuJfkaNrEmosWfL8BSh0ipY/dYLs
-        POX3qubeC2xCfUDTQO4zfQwc3GaUr/fbY54BMahKG6KWgsT+SUBZq7aX+6hkTzJDiGUKT4
-        MULJtMqLu1yNPFo4ZtHg7bVMyjy0sSo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-286-fonlKfq2PLiCRa6Xci7Qkg-1; Mon, 08 Jun 2020 08:28:04 -0400
-X-MC-Unique: fonlKfq2PLiCRa6Xci7Qkg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 51AC6108BD0A;
-        Mon,  8 Jun 2020 12:28:03 +0000 (UTC)
-Received: from virtlab710.virt.lab.eng.bos.redhat.com (virtlab710.virt.lab.eng.bos.redhat.com [10.19.152.252])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A4822768BB;
-        Mon,  8 Jun 2020 12:28:02 +0000 (UTC)
-From:   Cathy Avery <cavery@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        pbonzini@redhat.com
-Subject: [PATCH kvm-unit-tests 1/2] svm: Add ability to execute test via test_run on a vcpu other than vcpu 0
-Date:   Mon,  8 Jun 2020 08:27:59 -0400
-Message-Id: <20200608122800.6315-2-cavery@redhat.com>
-In-Reply-To: <20200608122800.6315-1-cavery@redhat.com>
-References: <20200608122800.6315-1-cavery@redhat.com>
+        Mon, 8 Jun 2020 08:30:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1591619445; x=1623155445;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=DqVy/lhHPIGLZ2gVhB+SkFZeyg+IWDog1e2aJcvmuys=;
+  b=g1OhfxSf5bNH9eAHqIYKROqAvUjUVp3nWW1gh82kObKtTEJMjCi7u/kS
+   4ODNpg64G444b0cON5Z98FKcDZJxRryfUoQp5JUbkJbaY5vcof0mGC2uR
+   mDOsuMwTePtyywqvq9jXo5OQtwkitq3T7TkxHY82KN3Hp+Isv+rS/MNT+
+   quRkeYQtfAbgrnEfwFQAPvX8i9zOY6rYLgdByMmmbL/FYkLIR8qYNIdbf
+   hDvjxvcmE4T7sxpZ+6kkqbNZr86UY0JchhZZGgWzfclw541hESHCi6XwM
+   /xOewbTChL9GP8OJcSK1o5UpnC6YD4LfVX++c3CTp8TjZ5snElnh4rw/L
+   g==;
+IronPort-SDR: BrcHFuJ/CQnl0R+wYshXSuibM0g4Hv44Xsj9CFkUwDVQh+f3qllEPIsWKCCnWEPOVK4fTqlzS/
+ VBQv+MUopWl4M1on8o/VU19//2S0q5NG2ttiUNiROeXy3A4knhTuk4NcA2Z5a3RkZLwDLViwDU
+ AtXaPMkH7UNmQ3VjPPe5lCx/QJXeWml2xlcbSSjA26dPupO4VfYZhxJ3I5ZY+4Q/armI/ZOGO8
+ oOBz5R0WgFHfQIGZmg6r4QS+dJX8D6/zuXhzEdaudAeOR5AA77oTieC9Ov0R6soxulLTqMOyDC
+ 4+c=
+X-IronPort-AV: E=Sophos;i="5.73,487,1583218800"; 
+   d="scan'208";a="79311433"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 08 Jun 2020 05:30:44 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Mon, 8 Jun 2020 05:30:44 -0700
+Received: from soft-dev15.microsemi.net (10.10.115.15) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Mon, 8 Jun 2020 05:30:39 -0700
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+List-Id: <soc.lore.kernel.org>
+To:     SoC Team <soc@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Olof Johansson <olof@lixom.net>,
+        "Michael Turquette" <mturquette@baylibre.com>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH v2 00/10] Adding support for Microchip Sparx5 SoC
+Date:   Mon, 8 Jun 2020 14:30:14 +0200
+Message-ID: <20200608123024.5330-1-lars.povlsen@microchip.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When running tests that can result in a vcpu being left in an
-indeterminate state it is useful to be able to run the test on
-a vcpu other than 0. This patch allows test_run to be executed
-on any vcpu indicated by the on_vcpu member of the svm_test struct.
-The initialized state of the vcpu0 registers used to populate the
-vmcb is carried forward to the other vcpus.
+This patch series adds support for Microchip Sparx5 SoC, the CPU
+system of a advanced, TSN capable gigabit switch. The CPU is an armv8
+x 2 CPU core (A53).
 
-Signed-off-by: Cathy Avery <cavery@redhat.com>
----
- x86/svm.c | 49 ++++++++++++++++++++++++++++++++++++++++++++++++-
- x86/svm.h | 13 +++++++++++++
- 2 files changed, 61 insertions(+), 1 deletion(-)
+Although this is an ARM core, it shares some peripherals with the
+Microsemi Ocelot SoC.
 
-diff --git a/x86/svm.c b/x86/svm.c
-index 41685bf..9f7ae7e 100644
---- a/x86/svm.c
-+++ b/x86/svm.c
-@@ -367,6 +367,45 @@ test_wanted(const char *name, char *filters[], int filter_count)
-         }
- }
- 
-+static void set_additional_vpcu_regs(struct extra_vcpu_info *info)
-+{
-+    wrmsr(MSR_VM_HSAVE_PA, info->hsave);
-+    wrmsr(MSR_EFER, rdmsr(MSR_EFER) | EFER_SVME);
-+    wrmsr(MSR_EFER, rdmsr(MSR_EFER) | EFER_NX);
-+    write_cr3(info->cr3);
-+    write_cr4(info->cr4);
-+    write_cr0(info->cr0);
-+    write_dr6(info->dr6);
-+    write_dr7(info->dr7);
-+    write_cr2(info->cr2);
-+    wrmsr(MSR_IA32_CR_PAT, info->g_pat);
-+    wrmsr(MSR_IA32_DEBUGCTLMSR, info->dbgctl);
-+}
-+
-+static void get_additional_vcpu_regs(struct extra_vcpu_info *info)
-+{
-+    info->hsave = rdmsr(MSR_VM_HSAVE_PA);
-+    info->cr3 = read_cr3();
-+    info->cr4 = read_cr4();
-+    info->cr0 = read_cr0();
-+    info->dr7 = read_dr7();
-+    info->dr6 = read_dr6();
-+    info->cr2 = read_cr2();
-+    info->g_pat = rdmsr(MSR_IA32_CR_PAT);
-+    info->dbgctl = rdmsr(MSR_IA32_DEBUGCTLMSR);
-+}
-+
-+static void init_additional_vcpu_regs(void)
-+{
-+    int i;
-+    struct extra_vcpu_info info;
-+
-+    get_additional_vcpu_regs(&info);
-+
-+    for (i = 1; i < cpu_count(); i++)
-+        on_cpu(i, (void *)set_additional_vpcu_regs, &info);
-+}
-+
- int main(int ac, char **av)
- {
- 	int i = 0;
-@@ -384,6 +423,8 @@ int main(int ac, char **av)
- 
- 	setup_svm();
- 
-+        init_additional_vcpu_regs();
-+
- 	vmcb = alloc_page();
- 
- 	for (; svm_tests[i].name != NULL; i++) {
-@@ -392,7 +433,13 @@ int main(int ac, char **av)
- 		if (svm_tests[i].supported && !svm_tests[i].supported())
- 			continue;
- 		if (svm_tests[i].v2 == NULL) {
--			test_run(&svm_tests[i]);
-+			if (svm_tests[i].on_vcpu) {
-+				if (cpu_count() <= svm_tests[i].on_vcpu)
-+					continue;
-+				on_cpu(svm_tests[i].on_vcpu, (void *)test_run, &svm_tests[i]);
-+			}
-+			else
-+				test_run(&svm_tests[i]);
- 		} else {
- 			vmcb_ident(vmcb);
- 			v2_test = &(svm_tests[i]);
-diff --git a/x86/svm.h b/x86/svm.h
-index 645deb7..d023a32 100644
---- a/x86/svm.h
-+++ b/x86/svm.h
-@@ -338,6 +338,7 @@ struct svm_test {
- 	ulong scratch;
- 	/* Alternative test interface. */
- 	void (*v2)(void);
-+	int on_vcpu;
- };
- 
- struct regs {
-@@ -360,6 +361,18 @@ struct regs {
- 	u64 rflags;
- };
- 
-+struct extra_vcpu_info {
-+	u64 hsave;
-+	u64 cr3;
-+	u64 cr4;
-+	u64 cr0;
-+	u64 dr7;
-+	u64 dr6;
-+	u64 cr2;
-+	u64 g_pat;
-+	u64 dbgctl;
-+};
-+
- typedef void (*test_guest_func)(struct svm_test *);
- 
- u64 *npt_get_pte(u64 address);
--- 
-2.20.1
+Changes in v2:
+- Misc fixes to bindings/arm/microchip,sparx5.yaml
+- Changed clock driver to platform driver, among other fixes
+- arch/arm64/boot/dts/microchip/sparx5.dtsi:
+ - Added pmu and psci node, using PSCI
+ - Updates to GICv3 register spaces (GICV/GICH)
+ - Updated timer interrupt specifiers
+- pinctrl: ocelot: Fixed symbol clashes from powerpc
+- pinctrl: ocelot: Patches already in next-20200605 have been removed
+    from this series.
 
+Lars Povlsen (10):
+  dt-bindings: arm: sparx5: Add documentation for Microchip Sparx5 SoC
+  arm64: sparx5: Add support for Microchip 2xA53 SoC
+  arm64: dts: sparx5: Add basic cpu support
+  arm64: dts: sparx5: Add pinctrl support
+  pinctrl: ocelot: Add Sparx5 SoC support
+  dt-bindings: clock: sparx5: Add Sparx5 SoC DPLL clock
+  dt-bindings: clock: sparx5: Add bindings include file
+  clk: sparx5: Add Sparx5 SoC DPLL clock driver
+  arm64: dts: sparx5: Add Sparx5 SoC DPLL clock
+  arm64: dts: sparx5: Add i2c devices, i2c muxes
+
+ .../bindings/arm/microchip,sparx5.yaml        |  65 +++
+ .../bindings/clock/microchip,sparx5-dpll.yaml |  52 +++
+ .../devicetree/bindings/mfd/syscon.yaml       |   1 +
+ MAINTAINERS                                   |   9 +
+ arch/arm64/Kconfig.platforms                  |  14 +
+ arch/arm64/boot/dts/Makefile                  |   1 +
+ arch/arm64/boot/dts/microchip/Makefile        |   4 +
+ arch/arm64/boot/dts/microchip/sparx5.dtsi     | 213 +++++++++
+ .../boot/dts/microchip/sparx5_pcb125.dts      |  21 +
+ .../boot/dts/microchip/sparx5_pcb134.dts      |  17 +
+ .../dts/microchip/sparx5_pcb134_board.dtsi    | 252 ++++++++++
+ .../boot/dts/microchip/sparx5_pcb134_emmc.dts |  17 +
+ .../boot/dts/microchip/sparx5_pcb135.dts      |  17 +
+ .../dts/microchip/sparx5_pcb135_board.dtsi    |  92 ++++
+ .../boot/dts/microchip/sparx5_pcb135_emmc.dts |  17 +
+ .../boot/dts/microchip/sparx5_pcb_common.dtsi |  19 +
+ drivers/clk/Makefile                          |   1 +
+ drivers/clk/clk-sparx5.c                      | 312 +++++++++++++
+ drivers/pinctrl/pinctrl-ocelot.c              | 431 +++++++++++++++++-
+ include/dt-bindings/clock/microchip,sparx5.h  |  23 +
+ 20 files changed, 1577 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/microchip,sparx5.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/microchip,sparx5-dpll.yaml
+ create mode 100644 arch/arm64/boot/dts/microchip/Makefile
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5.dtsi
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb134.dts
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb134_emmc.dts
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb135.dts
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb135_emmc.dts
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb_common.dtsi
+ create mode 100644 drivers/clk/clk-sparx5.c
+ create mode 100644 include/dt-bindings/clock/microchip,sparx5.h
+
+--
+2.27.0
