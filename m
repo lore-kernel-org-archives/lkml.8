@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7494CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D20E5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FF952076C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:09:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A243E2076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:09:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591664966;
-	bh=BL5eAXPRlC1IBRiuQcN180O4CGnUQWKkqqkqjGc2e78=;
+	s=default; t=1591664972;
+	bh=QvvVCvpXuafBpUcquVWzRQSZlm/2kfM6wsz5kMmPuOY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=06jNcYwEjlCC/PhmfStfk8aNA4e4WvADOfm9LY9nfOYYXyTXcbrcMt1G0NfE6kN7g
-	 Emn1/LvoABhZ8DkkzSvpEunfCG8WmOBHzvUGCJAKG/IufzasnKarbYSFGB82DZ9mlA
-	 6xVzgKnIZy/+8X74dbJ6CrOvHP7E0BKhAeFNW6NM=
+	b=ZEjxbyUdfVerWi67Atwdoa+0dIFz3ssEYBu+dMgnA3LK7+J/RdPKBRLQtW2JOLMq2
+	 ebJLE3BbEbylHGojUSFCpT3wb+7Qck7xbHtnL1wO10e6AyrT2PAwlKVkzVfWvTfoxi
+	 Ud5UEBOER0JtXrko0cOA0oXyFigvPRAvqu4ZBnwo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbgFHXGd (ORCPT
+        id S1731014AbgFIBJb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:06:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49296 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 21:09:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726952AbgFHXGV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:06:21 -0400
+        id S1726987AbgFHXG1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:06:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1628E2076A;
-        Mon,  8 Jun 2020 23:06:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C30892078B;
+        Mon,  8 Jun 2020 23:06:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657580;
-        bh=BL5eAXPRlC1IBRiuQcN180O4CGnUQWKkqqkqjGc2e78=;
+        s=default; t=1591657586;
+        bh=QvvVCvpXuafBpUcquVWzRQSZlm/2kfM6wsz5kMmPuOY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QrQ/jl+8BmC9KzK7tx4QXEj5RT5haS7ZFaWIQOW+fhDuVBZHPdvVV2Pnq2R6TEGp9
-         P1KR8DCyQvxqsL1URqbFQ9UHLDGfoonRr1pUmEnegW0acXxnCpEPzMYy+KaTftL5JH
-         jzJ2s+FMQVTREHOOEZWZa01BnSEFD4q0sq29ZLeY=
+        b=VlX2/C5tn7WpAQ3rnSVSb0eQFLlTpTjQPiwpTLt19c7sFwXwPljqmg4ZA+hhz6RCo
+         vuxPdWJOYNrElV9pLeixR4IezgltNqwkB6KlFdQ7HAZQRe7/gfteQH0oNcOcLDYoeV
+         hk6hHBDk75V/3ZVarK2z/VC7nwCzDvsJAIx3anhw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andre Guedes <andre.guedes@intel.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 010/274] igc: Fix default MAC address filter override
-Date:   Mon,  8 Jun 2020 19:01:43 -0400
-Message-Id: <20200608230607.3361041-10-sashal@kernel.org>
+Cc:     Julien Thierry <jthierry@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 015/274] objtool: Ignore empty alternatives
+Date:   Mon,  8 Jun 2020 19:01:48 -0400
+Message-Id: <20200608230607.3361041-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -61,44 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andre Guedes <andre.guedes@intel.com>
+From: Julien Thierry <jthierry@redhat.com>
 
-[ Upstream commit ac9156b27564a089ec52f526bfcb59f61c34e7c6 ]
+[ Upstream commit 7170cf47d16f1ba29eca07fd818870b7af0a93a5 ]
 
-This patch fixes a bug when the user adds the first MAC address filter
-via ethtool NFC mechanism.
+The .alternatives section can contain entries with no original
+instructions. Objtool will currently crash when handling such an entry.
 
-When the first MAC address filter is added, it overwrites the default
-MAC address filter configured at RAL[0] and RAH[0]. As consequence,
-frames addressed to the interface MAC address are not sent to host
-anymore.
+Just skip that entry, but still give a warning to discourage useless
+entries.
 
-This patch fixes the bug by calling igc_set_default_mac_filter() during
-adapter init so the position 0 of adapter->mac_table[] is assigned to
-the default MAC address.
-
-Signed-off-by: Andre Guedes <andre.guedes@intel.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Julien Thierry <jthierry@redhat.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/igc/igc_main.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/objtool/check.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/intel/igc/igc_main.c
-index 69fa1ce1f927..c7020ff2f490 100644
---- a/drivers/net/ethernet/intel/igc/igc_main.c
-+++ b/drivers/net/ethernet/intel/igc/igc_main.c
-@@ -2325,7 +2325,9 @@ static void igc_configure(struct igc_adapter *adapter)
- 	igc_setup_mrqc(adapter);
- 	igc_setup_rctl(adapter);
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 3c6da70e6084..5a867a469ba5 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -916,6 +916,12 @@ static int add_special_section_alts(struct objtool_file *file)
+ 		}
  
-+	igc_set_default_mac_filter(adapter);
- 	igc_nfc_filter_restore(adapter);
+ 		if (special_alt->group) {
++			if (!special_alt->orig_len) {
++				WARN_FUNC("empty alternative entry",
++					  orig_insn->sec, orig_insn->offset);
++				continue;
++			}
 +
- 	igc_configure_tx(adapter);
- 	igc_configure_rx(adapter);
- 
+ 			ret = handle_group_alt(file, special_alt, orig_insn,
+ 					       &new_insn);
+ 			if (ret)
 -- 
 2.25.1
 
