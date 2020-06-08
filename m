@@ -2,214 +2,177 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC79DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8022AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C502F208B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EFD7208B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:04:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D9fTI1IW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tU9QNdGO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730175AbgFHSEC (ORCPT
+        id S1730247AbgFHSEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 14:04:02 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53053 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729843AbgFHSEB (ORCPT
+        Mon, 8 Jun 2020 14:04:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47284 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729979AbgFHSEY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 14:04:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591639439;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=uw5NjJ0WopWX8Tckd6/nHTcQhEVOsQbonk1220jJm6A=;
-        b=D9fTI1IW3bvq2obozeWrpvNTqCyeK7j7sa1GVbd3Vl4DH0ZkXpG1d9SEM18UrJotlvSisA
-        4W6Yjblw3JzQOaEVZSPMx4F3JI7tl6NLgbeKu9HGydcpwW7ucnyoEeAg2xw3djxfsrBdhp
-        CFEE0kZnlETzWYzAGQX38wCmqzSuf+k=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-170-mA0IjPaLOdWDFywZFnhrIg-1; Mon, 08 Jun 2020 14:03:52 -0400
-X-MC-Unique: mA0IjPaLOdWDFywZFnhrIg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6FAD91005510;
-        Mon,  8 Jun 2020 18:03:49 +0000 (UTC)
-Received: from madcap2.tricolour.ca (unknown [10.10.110.54])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9756760BF3;
-        Mon,  8 Jun 2020 18:03:33 +0000 (UTC)
-Date:   Mon, 8 Jun 2020 14:03:30 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>, nhorman@tuxdriver.com,
-        linux-api@vger.kernel.org, containers@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
-        linux-audit@redhat.com, netfilter-devel@vger.kernel.org,
-        simo@redhat.com, netdev@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
-        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
-Subject: Re: [PATCH ghak90 V8 07/16] audit: add contid support for signalling
- the audit daemon
-Message-ID: <20200608180330.z23hohfa2nclhxf5@madcap2.tricolour.ca>
-References: <20200330134705.jlrkoiqpgjh3rvoh@madcap2.tricolour.ca>
- <CAHC9VhQTsEMcYAF1CSHrrVn07DR450W9j6sFVfKAQZ0VpheOfw@mail.gmail.com>
- <20200330162156.mzh2tsnovngudlx2@madcap2.tricolour.ca>
- <CAHC9VhTRzZXJ6yUFL+xZWHNWZFTyiizBK12ntrcSwmgmySbkWw@mail.gmail.com>
- <20200330174937.xalrsiev7q3yxsx2@madcap2.tricolour.ca>
- <CAHC9VhR_bKSHDn2WAUgkquu+COwZUanc0RV3GRjMDvpoJ5krjQ@mail.gmail.com>
- <871ronf9x2.fsf@x220.int.ebiederm.org>
- <CAHC9VhR3gbmj5+5MY-whLtStKqDEHgvMRigU9hW0X1kpxF91ag@mail.gmail.com>
- <871rol7nw3.fsf@x220.int.ebiederm.org>
- <CAHC9VhQvhja=vUEbT3uJgQqpj-480HZzWV7b5oc2GWtzFN1qJw@mail.gmail.com>
+        Mon, 8 Jun 2020 14:04:24 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A09D1C08C5C2;
+        Mon,  8 Jun 2020 11:04:23 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id a127so8857720pfa.12;
+        Mon, 08 Jun 2020 11:04:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=vy3WmLcTN1C9TwpCZlVK/k2jmSpqqmElcRpgtxdIswQ=;
+        b=tU9QNdGOX7EhRI4izEZnPMk+dIet667Sn1H49wXjBsahqedcLrR2Ed9Was0NtItz+Q
+         OhHZ1HOon0qszB+DS3pVonGWlCDyobR3+iECtEpUJk5ZatPVX3iGI8Mki8CjkwmfHODf
+         xYqDGnmJrEAqKjbOY/ADn1YcTT5qZAwrm/JBiY8Z8jZ0MTBM6FaCvdfh/vdoZwAUDLjY
+         aBN46WtCVW27QpkV0HgeQThk37WSKoWsxNBKUdWj2kSt4rVH12iVTChoCpoUDLuKAnix
+         m+yUngrG8K4fHjLs+MPCa+EbDd/tvEwMHpFCAVHAtQ6mCMDVD5V5KCmkE7Es4E/tk2Tc
+         353Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=vy3WmLcTN1C9TwpCZlVK/k2jmSpqqmElcRpgtxdIswQ=;
+        b=ZTPHlXiY7bnWin53cH+PyIFi9O5P+jzyLnW0o4m/08BS/F/4CKeNIveyuFl5UQK26y
+         32QDqCss6nHiyAkSmC5eZP4stagLhmW/cNrfQdQJyKDe4D3FnUMm+2JL97wEslEZiQXU
+         D7+UBe+7hXwL+AowPRAWuEENKFsNP6YntYLIQ0dJV0cXGuKSR7kQRQZ9ZaZN6MZQACFj
+         0W89Aipf0N9yz9ywiSrmMCDTTofUPrEzMGIDgn3rW5lMQ5bn17Mp/hjteq76DA+xEZxE
+         Yd4gJmaNmbGw4v7Vo9YDjuIcUzB+O6MZLE/5k4IptniAe1A/wB9cu3z5SxPHYNz/7Ibb
+         HiZw==
+X-Gm-Message-State: AOAM531YyRSNTv+seNb7p5DKs94d2jrurBxxZmgSUUUBNFkGVu+jh0LO
+        OnkHrfHyIIhDigAf8cnIFb0=
+X-Google-Smtp-Source: ABdhPJwSZFtCX0X/ChGUh2y2uaj7qYI5ZishucIyaSmU2a8St4wozy1oqywQxQ/Wmi+91DEp4j/RsA==
+X-Received: by 2002:a62:a510:: with SMTP id v16mr4640795pfm.154.1591639463137;
+        Mon, 08 Jun 2020 11:04:23 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id a27sm6615481pgn.62.2020.06.08.11.04.22
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 08 Jun 2020 11:04:22 -0700 (PDT)
+Date:   Mon, 8 Jun 2020 11:04:21 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     X86 ML <x86@kernel.org>, Huang Rui <ray.huang@amd.com>,
+        linux-hwmon@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] x86/msr: Lift AMD family 0x15 power-specific MSRs
+Message-ID: <20200608180421.GA32167@roeck-us.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHC9VhQvhja=vUEbT3uJgQqpj-480HZzWV7b5oc2GWtzFN1qJw@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-22 13:24, Paul Moore wrote:
-> On Fri, Apr 17, 2020 at 6:26 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
-> > Paul Moore <paul@paul-moore.com> writes:
-> > > On Thu, Apr 16, 2020 at 4:36 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
-> > >> Paul Moore <paul@paul-moore.com> writes:
-> > >> > On Mon, Mar 30, 2020 at 1:49 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > >> >> On 2020-03-30 13:34, Paul Moore wrote:
-> > >> >> > On Mon, Mar 30, 2020 at 12:22 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > >> >> > > On 2020-03-30 10:26, Paul Moore wrote:
-> > >> >> > > > On Mon, Mar 30, 2020 at 9:47 AM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > >> >> > > > > On 2020-03-28 23:11, Paul Moore wrote:
-> > >> >> > > > > > On Tue, Mar 24, 2020 at 5:02 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > >> >> > > > > > > On 2020-03-23 20:16, Paul Moore wrote:
-> > >> >> > > > > > > > On Thu, Mar 19, 2020 at 6:03 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > >> >> > > > > > > > > On 2020-03-18 18:06, Paul Moore wrote:
-> > >> >
-> > >> > ...
-> > >> >
-> > >> >> > > Well, every time a record gets generated, *any* record gets generated,
-> > >> >> > > we'll need to check for which audit daemons this record is in scope and
-> > >> >> > > generate a different one for each depending on the content and whether
-> > >> >> > > or not the content is influenced by the scope.
-> > >> >> >
-> > >> >> > That's the problem right there - we don't want to have to generate a
-> > >> >> > unique record for *each* auditd on *every* record.  That is a recipe
-> > >> >> > for disaster.
-> > >> >> >
-> > >> >> > Solving this for all of the known audit records is not something we
-> > >> >> > need to worry about in depth at the moment (although giving it some
-> > >> >> > casual thought is not a bad thing), but solving this for the audit
-> > >> >> > container ID information *is* something we need to worry about right
-> > >> >> > now.
-> > >> >>
-> > >> >> If you think that a different nested contid value string per daemon is
-> > >> >> not acceptable, then we are back to issuing a record that has only *one*
-> > >> >> contid listed without any nesting information.  This brings us back to
-> > >> >> the original problem of keeping *all* audit log history since the boot
-> > >> >> of the machine to be able to track the nesting of any particular contid.
-> > >> >
-> > >> > I'm not ruling anything out, except for the "let's just completely
-> > >> > regenerate every record for each auditd instance".
-> > >>
-> > >> Paul I am a bit confused about what you are referring to when you say
-> > >> regenerate every record.
-> > >>
-> > >> Are you saying that you don't want to repeat the sequence:
-> > >>         audit_log_start(...);
-> > >>         audit_log_format(...);
-> > >>         audit_log_end(...);
-> > >> for every nested audit daemon?
-> > >
-> > > If it can be avoided yes.  Audit performance is already not-awesome,
-> > > this would make it even worse.
-> >
-> > As far as I can see not repeating sequences like that is fundamental
-> > for making this work at all.  Just because only the audit subsystem
-> > should know about one or multiple audit daemons.  Nothing else should
-> > care.
+On Mon, Jun 08, 2020 at 06:48:47PM +0200, Borislav Petkov wrote:
+> From: Borislav Petkov <bp@suse.de>
 > 
-> Yes, exactly, this has been mentioned in the past.  Both the
-> performance hit and the code complication in the caller are things we
-> must avoid.
+> ... into the global msr-index.h header because they're used in multiple
+> compilation units. Sort the MSR list a bit. Update the msr-index.h copy
+> in tools.
 > 
-> > >> Or are you saying that you would like to literraly want to send the same
-> > >> skb to each of the nested audit daemons?
-> > >
-> > > Ideally we would reuse the generated audit messages as much as
-> > > possible.  Less work is better.  That's really my main concern here,
-> > > let's make sure we aren't going to totally tank performance when we
-> > > have a bunch of nested audit daemons.
-> >
-> > So I think there are two parts of this answer.  Assuming we are talking
-> > about nesting audit daemons in containers we will have different
-> > rulesets and I expect most of the events for a nested audit daemon won't
-> > be of interest to the outer audit daemon.
+> No functional changes.
 > 
-> Yes, this is another thing that Richard and I have discussed in the
-> past.  We will basically need to create per-daemon queues, rules,
-> tracking state, etc.; that is easy enough.  What will be slightly more
-> tricky is the part where we apply the filters to the individual
-> records and decide if that record is valid/desired for a given daemon.
-> I think it can be done without too much pain, and any changes to the
-> callers, but it will require a bit of work to make sure it is done
-> well and that records are needlessly duplicated in the kernel.
+> Signed-off-by: Borislav Petkov <bp@suse.de>
+
+Acked-by: Guenter Roeck <linux@roeck-us.net>
+
+> ---
+>  arch/x86/events/amd/power.c            | 4 ----
+>  arch/x86/include/asm/msr-index.h       | 5 ++++-
+>  drivers/hwmon/fam15h_power.c           | 4 ----
+>  tools/arch/x86/include/asm/msr-index.h | 5 ++++-
+>  4 files changed, 8 insertions(+), 10 deletions(-)
 > 
-> > Beyond that it should be very straight forward to keep a pointer and
-> > leave the buffer as a scatter gather list until audit_log_end
-> > and translate pids, and rewrite ACIDs attributes in audit_log_end
-> > when we build the final packet.  Either through collaboration with
-> > audit_log_format or a special audit_log command that carefully sets
-> > up the handful of things that need that information.
+> diff --git a/arch/x86/events/amd/power.c b/arch/x86/events/amd/power.c
+> index 43b09e9c93a2..16a2369c586e 100644
+> --- a/arch/x86/events/amd/power.c
+> +++ b/arch/x86/events/amd/power.c
+> @@ -13,10 +13,6 @@
+>  #include <asm/cpu_device_id.h>
+>  #include "../perf_event.h"
+>  
+> -#define MSR_F15H_CU_PWR_ACCUMULATOR     0xc001007a
+> -#define MSR_F15H_CU_MAX_PWR_ACCUMULATOR 0xc001007b
+> -#define MSR_F15H_PTSC			0xc0010280
+> -
+>  /* Event code: LSB 8 bits, passed in attr->config any other bit is reserved. */
+>  #define AMD_POWER_EVENT_MASK		0xFFULL
+>  
+> diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+> index ef452b817f44..7dfd45bb6cdb 100644
+> --- a/arch/x86/include/asm/msr-index.h
+> +++ b/arch/x86/include/asm/msr-index.h
+> @@ -414,15 +414,18 @@
+>  #define MSR_AMD64_PATCH_LEVEL		0x0000008b
+>  #define MSR_AMD64_TSC_RATIO		0xc0000104
+>  #define MSR_AMD64_NB_CFG		0xc001001f
+> -#define MSR_AMD64_CPUID_FN_1		0xc0011004
+>  #define MSR_AMD64_PATCH_LOADER		0xc0010020
+>  #define MSR_AMD_PERF_CTL		0xc0010062
+>  #define MSR_AMD_PERF_STATUS		0xc0010063
+>  #define MSR_AMD_PSTATE_DEF_BASE		0xc0010064
+> +#define MSR_F15H_CU_PWR_ACCUMULATOR     0xc001007a
+> +#define MSR_F15H_CU_MAX_PWR_ACCUMULATOR 0xc001007b
+>  #define MSR_AMD64_OSVW_ID_LENGTH	0xc0010140
+>  #define MSR_AMD64_OSVW_STATUS		0xc0010141
+> +#define MSR_F15H_PTSC			0xc0010280
+>  #define MSR_AMD_PPIN_CTL		0xc00102f0
+>  #define MSR_AMD_PPIN			0xc00102f1
+> +#define MSR_AMD64_CPUID_FN_1		0xc0011004
+>  #define MSR_AMD64_LS_CFG		0xc0011020
+>  #define MSR_AMD64_DC_CFG		0xc0011022
+>  #define MSR_AMD64_BU_CFG2		0xc001102a
+> diff --git a/drivers/hwmon/fam15h_power.c b/drivers/hwmon/fam15h_power.c
+> index 267eac00a3fb..29f5fed28c2a 100644
+> --- a/drivers/hwmon/fam15h_power.c
+> +++ b/drivers/hwmon/fam15h_power.c
+> @@ -41,10 +41,6 @@ MODULE_LICENSE("GPL");
+>  /* set maximum interval as 1 second */
+>  #define MAX_INTERVAL			1000
+>  
+> -#define MSR_F15H_CU_PWR_ACCUMULATOR	0xc001007a
+> -#define MSR_F15H_CU_MAX_PWR_ACCUMULATOR	0xc001007b
+> -#define MSR_F15H_PTSC			0xc0010280
+> -
+>  #define PCI_DEVICE_ID_AMD_15H_M70H_NB_F4 0x15b4
+>  
+>  struct fam15h_power_data {
+> diff --git a/tools/arch/x86/include/asm/msr-index.h b/tools/arch/x86/include/asm/msr-index.h
+> index ef452b817f44..7dfd45bb6cdb 100644
+> --- a/tools/arch/x86/include/asm/msr-index.h
+> +++ b/tools/arch/x86/include/asm/msr-index.h
+> @@ -414,15 +414,18 @@
+>  #define MSR_AMD64_PATCH_LEVEL		0x0000008b
+>  #define MSR_AMD64_TSC_RATIO		0xc0000104
+>  #define MSR_AMD64_NB_CFG		0xc001001f
+> -#define MSR_AMD64_CPUID_FN_1		0xc0011004
+>  #define MSR_AMD64_PATCH_LOADER		0xc0010020
+>  #define MSR_AMD_PERF_CTL		0xc0010062
+>  #define MSR_AMD_PERF_STATUS		0xc0010063
+>  #define MSR_AMD_PSTATE_DEF_BASE		0xc0010064
+> +#define MSR_F15H_CU_PWR_ACCUMULATOR     0xc001007a
+> +#define MSR_F15H_CU_MAX_PWR_ACCUMULATOR 0xc001007b
+>  #define MSR_AMD64_OSVW_ID_LENGTH	0xc0010140
+>  #define MSR_AMD64_OSVW_STATUS		0xc0010141
+> +#define MSR_F15H_PTSC			0xc0010280
+>  #define MSR_AMD_PPIN_CTL		0xc00102f0
+>  #define MSR_AMD_PPIN			0xc00102f1
+> +#define MSR_AMD64_CPUID_FN_1		0xc0011004
+>  #define MSR_AMD64_LS_CFG		0xc0011020
+>  #define MSR_AMD64_DC_CFG		0xc0011022
+>  #define MSR_AMD64_BU_CFG2		0xc001102a
+> -- 
+> 2.21.0
 > 
-> In order to maximize record re-use I think we will want to hold off on
-> assembling the final packet until it is sent to the daemons in the
-> kauditd thread.  We'll also likely need to create special
-> audit_log_XXX functions to capture fields which we know will need
-> translation, e.g. ACID information.  (the reason for the new
-> audit_log_XXX functions would be to mark the new sg element and ensure
-> the buffer is handled correctly)
-> 
-> Regardless of the details, I think the scatter gather approach is the
-> key here - that seems like the best design idea I've seen thus far.
-> It enables us to replace portions of the record as needed ... and
-> possibly use the existing skb cow stuff ... it has been a while, but
-> does the skb cow functions handle scatter gather skbs or do they need
-> to be linear?
-
-How does the selection of this data management technique affect our
-choice of field format?  Does this lock the field value to a fixed
-length?  Does the use of scatter/gather techniques or structures allow
-the use of different lengths of data for each destination (auditd)?  I
-could see different target audit daemons triggering or switching to a
-different chunk of data and length.  This does raise a concern related
-to the previous sig_info2 discussion that the struct contobj that exists
-at the time of audit_log_exit called could have been reaped by the time
-the buffer is pulled from the queue for transmission to auditd, but we
-could hold a reference to it as is done for sig_info2.
-
-Looking through the kernel scatter/gather possibilities, I see struct
-iovec which is used by the readv/writev/preadv/pwritev syscalls, but I'm
-understanding that this is a kernel implementation that will be not
-visible to user space.  So would the struct scatterlist be the right
-choice?
-
-> paul moore
-
-- RGB
-
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
-
