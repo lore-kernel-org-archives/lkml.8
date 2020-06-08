@@ -2,116 +2,100 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D08B5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 00:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C09C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 00:59:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADCC82076A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 00:58:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="HkcNyvwb"
+	by mail.kernel.org (Postfix) with ESMTP id 699732076A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 00:59:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729053AbgFHA66 (ORCPT
+        id S1729078AbgFHA7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Sun, 7 Jun 2020 20:59:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58482 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729042AbgFHA66 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 7 Jun 2020 20:58:58 -0400
-Received: from mout.gmx.net ([212.227.15.19]:58795 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729019AbgFHA6y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 20:58:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1591577918;
-        bh=MuS8uek9XC84kDSjvlmb2pFbspDYI7yaLOzH753AIqA=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=HkcNyvwbQer0H6h7SltND/pSmq7S1BwbMhMK3C+vUXGxf6wwg6WhzVNngU/HCgrLq
-         mOq4NqDn54/KCBfY06k93aIfkitG46eCJel3ZRwfogB+kUqzwN2lotz6ge1lmUDdUc
-         znCd69wUWicC7SAGIVAdr57M5UAT52elfPNUyAJU=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from LT02.fritz.box ([88.152.145.75]) by mail.gmx.com (mrgmx004
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1N33Il-1iwThb0ggP-013M9f; Mon, 08
- Jun 2020 02:58:38 +0200
-From:   Heinrich Schuchardt <xypron.glpk@gmx.de>
-To:     Vishal Kulkarni <vishal@chelsio.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>
-Subject: [PATCH 1/1] cxgb4: fix cxgb4_uld_in_use() not used error
-Date:   Mon,  8 Jun 2020 02:58:23 +0200
-Message-Id: <20200608005823.911290-1-xypron.glpk@gmx.de>
-X-Mailer: git-send-email 2.26.2
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C826AC08C5C3;
+        Sun,  7 Jun 2020 17:58:57 -0700 (PDT)
+Received: from [5.158.153.53] (helo=debian-buster-darwi.lab.linutronix.de.)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.80)
+        (envelope-from <a.darwish@linutronix.de>)
+        id 1ji67l-0000zt-5s; Mon, 08 Jun 2020 02:58:49 +0200
+From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH v2 16/18] userfaultfd: Use sequence counter with associated spinlock
+Date:   Mon,  8 Jun 2020 02:57:27 +0200
+Message-Id: <20200608005729.1874024-17-a.darwish@linutronix.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200608005729.1874024-1-a.darwish@linutronix.de>
+References: <20200519214547.352050-1-a.darwish@linutronix.de>
+ <20200608005729.1874024-1-a.darwish@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:AKk9fwKJB810n5qOHCpvFi7CA2srjaobrfmnlcdouwAnjFU+Ykf
- xiKvZh9ul573o9cl+RcQT3Cv0e7t52bF+yOzYdY3waIKtZWYRK7RAnG+57tH9BdFAdvSygP
- 1YlGm+msycsLJtHUn4I/K/5MdngWzchmIrk6ROmRl+QkqD4YfIYzoU35wkAAqkWi18F+mfY
- Rics72LoeBimza0VzSuAA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:fIA9CwzOi6Y=:L8t+SXJSj1BYp5AnGanTQj
- Px6207eUhyDjeODrHVcVkdViutWuk+c2nTfPaFbQXmbdais2jyjTPCGEeSJ9mZbPOXcxKhQ5U
- FPt3yEwKXyUTeUvE77Q5F7ossvHbeRnPj+OS58lYjAE6GNV4rZrmwgbznyk5qAwDcNOnggDQS
- nCJaccSf6UTBR5jYGTUnh25RtE8Vmz3exOytdNJ7HGrCRFF9cH66qBWeXoOYB1WdWPkwzyP7I
- UPBmcEbZ9bHEUvwm+M6Y5tGIdK41ugVbOgpo6yZRq6v6A6n679uaL1VPU9gSiHaRKzTMiFZuI
- bpFrHEt+AF4MEpwaOtbG7R8LWGLZT74QlkMPJlqKqPBI09KpK4va8M9pfSQWv+rTiQUy/h7yz
- zpGx6hMlO3yeSSAWtxLbKtxRd6u4zRyfebQRfeey42rfvyp+pwIMdzNLpZeRIHQLQ/dtHc33z
- btA0b6yUQW1AdNBfDNKvA/1SVBmW6Cnx5Bp+DeuFymJ7ocT+vxQ2QAdPoqXG38hw9+ZqLcJ9d
- i2tIbmcDAX2a/yMmYtc/b4y2KtgyKR2fEovMigREL7y6Gbub2Alwl6cSHutvfwE+nIGXBQG0L
- qi5fl92lXx782X9C3Jv4MzAGl0MyumreZcVDvIW7EQCpjJ1VJ5r+vbxzVgleOyWsP9bKMb7+1
- nprOg8kbfAROJy55fYMSIWTQ3lRw9GwEGXPd7LXCsxgTbo5gn1jxK+1gf3ujAwzvf2zLToRug
- ya9K3yDngyAJqvkAe7+HRGDI9Yk2QIiS6co4e3uTXChlvHsWOnXWB/jtBledrpQb3igG+uoDc
- xMllzVe2DGpT1eZSe4VSsR+O+1KrwJ7mixGX9aLNDqZ2+P4z4knl8cp0x15Uuyna9uVgNur8e
- JkONAQEdQjFG8cRpRdqEHBRfApFMyQy+lFfl2/eYsNlOtm/3PwoQy/JfLWPL+kRcnoZk0ZSuG
- r4uD9AhTQLkjOiNw8eXGL9lVyhW9fO/edhjHU6S8kfVfGnknBc0/U1KP5zMZCH1kJqFIIQPeV
- /iDcgWqg5uPsMAPA3cKMzNRkDD8kfMiJFeijXKrv1cMBFBBdIi9b/dFo+QcJ3RvRdSPPC9gWs
- UQvnFhRZKBc41uoJorpeZcRhrpBeneUXFGOu+HnoivCy577HECNaIDr0dpJcovh3i6VtNHXO5
- Uyr5ABi7cBGEIxMlQ7thxA4iRb9HI5OYMkFizpFx3qWbsUZ60nI4u8HkbEsRtVbFV/Esbx16q
- RMICc17mFpqrda+mA
+Content-Transfer-Encoding: 8bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building without CONFIG_CHELSIO_TLS_DEVICE a build error occurs:
+A sequence counter write side critical section must be protected by some
+form of locking to serialize writers. A plain seqcount_t does not
+contain the information of which lock must be held when entering a write
+side critical section.
 
-drivers/net/ethernet/chelsio/cxgb4/cxgb4_uld.c:666:13: error:
-=E2=80=98cxgb4_uld_in_use=E2=80=99 defined but not used [-Werror=3Dunused-=
-function]
-  666 | static bool cxgb4_uld_in_use(struct adapter *adap)
-      |             ^~~~~~~~~~~~~~~~
+Use the new seqcount_spinlock_t data type, which allows to associate a
+spinlock with the sequence counter. This enables lockdep to verify that
+the spinlock used for writer serialization is held when the write side
+critical section is entered.
 
-Guard cxgb4_uld_in_use() with #ifdef CONFIG_CHELSIO_TLS_DEVICE.
+If lockdep is disabled this lock association is compiled out and has
+neither storage size nor runtime overhead.
 
-Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
-=2D--
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_uld.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
+---
+ fs/userfaultfd.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_uld.c b/drivers/net/=
-ethernet/chelsio/cxgb4/cxgb4_uld.c
-index 0307e9c69a47..f08f860b4983 100644
-=2D-- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_uld.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_uld.c
-@@ -663,6 +663,8 @@ static int uld_attach(struct adapter *adap, unsigned i=
-nt uld)
- 	return 0;
+diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+index e39fdec8a0b0..dd3aab31c50f 100644
+--- a/fs/userfaultfd.c
++++ b/fs/userfaultfd.c
+@@ -61,7 +61,7 @@ struct userfaultfd_ctx {
+ 	/* waitqueue head for events */
+ 	wait_queue_head_t event_wqh;
+ 	/* a refile sequence protected by fault_pending_wqh lock */
+-	struct seqcount refile_seq;
++	seqcount_spinlock_t refile_seq;
+ 	/* pseudo fd refcounting */
+ 	refcount_t refcount;
+ 	/* userfaultfd syscall flags */
+@@ -1998,7 +1998,7 @@ static void init_once_userfaultfd_ctx(void *mem)
+ 	init_waitqueue_head(&ctx->fault_wqh);
+ 	init_waitqueue_head(&ctx->event_wqh);
+ 	init_waitqueue_head(&ctx->fd_wqh);
+-	seqcount_init(&ctx->refile_seq);
++	seqcount_spinlock_init(&ctx->refile_seq, &ctx->fault_pending_wqh.lock);
  }
-
-+#ifdef CONFIG_CHELSIO_TLS_DEVICE
-+
- static bool cxgb4_uld_in_use(struct adapter *adap)
- {
- 	const struct tid_info *t =3D &adap->tids;
-@@ -670,7 +672,6 @@ static bool cxgb4_uld_in_use(struct adapter *adap)
- 	return (atomic_read(&t->conns_in_use) || t->stids_in_use);
- }
-
--#ifdef CONFIG_CHELSIO_TLS_DEVICE
- /* cxgb4_set_ktls_feature: request FW to enable/disable ktls settings.
-  * @adap: adapter info
-  * @enable: 1 to enable / 0 to disable ktls settings.
-=2D-
-2.26.2
+ 
+ SYSCALL_DEFINE1(userfaultfd, int, flags)
+-- 
+2.20.1
 
