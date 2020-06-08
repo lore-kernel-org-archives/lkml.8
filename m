@@ -2,96 +2,213 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36131C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 13:47:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4037BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 13:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CD432076A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 13:47:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="TOjirWLk"
+	by mail.kernel.org (Postfix) with ESMTP id 216C0206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 13:49:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729860AbgFHNrf (ORCPT
+        id S1729869AbgFHNtG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 09:47:35 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:39528 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729302AbgFHNre (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 09:47:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=HzzbNliZ9TvYoUDJFmNkzkIkNb1vhWYSQ9c76IBE4Zg=; b=TOjirWLkJ/naxIFRzOerVtQxXu
-        eWLNrFajyLzjfuO51ELz4+tjzf3gz0NL1DlMCCD5HlSsDH4xiGfh7wwpUkIzpDsoQOfDlGZGGGmcE
-        K7YlYc7KSYklnA9Gj2Ql65RpXWnAPU09ReroCx/7qw3gxa0Us58l8HEmSVDYB5UD2Hik=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jiI7L-004PHE-MY; Mon, 08 Jun 2020 15:47:11 +0200
-Date:   Mon, 8 Jun 2020 15:47:11 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Amit Cohen <amitc@mellanox.com>
-Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "corbet@lwn.net" <corbet@lwn.net>, Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "mkubecek@suse.cz" <mkubecek@suse.cz>,
-        "gustavo@embeddedor.com" <gustavo@embeddedor.com>,
-        "cforno12@linux.vnet.ibm.com" <cforno12@linux.vnet.ibm.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "linux@rempel-privat.de" <linux@rempel-privat.de>,
-        "alexandru.ardelean@analog.com" <alexandru.ardelean@analog.com>,
-        Aya Levin <ayal@mellanox.com>,
-        Petr Machata <petrm@mellanox.com>, mlxsw <mlxsw@mellanox.com>,
-        "liuhangbin@gmail.com" <liuhangbin@gmail.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
-Subject: Re: [RFC PATCH net-next 05/10] Documentation: networking:
- ethtool-netlink: Add link extended state
-Message-ID: <20200608134711.GC1006885@lunn.ch>
-References: <20200607145945.30559-1-amitc@mellanox.com>
- <20200607145945.30559-6-amitc@mellanox.com>
- <20200607164759.GG1022955@lunn.ch>
- <AM0PR0502MB382638933BF9B7BE0AB34E81D7850@AM0PR0502MB3826.eurprd05.prod.outlook.com>
+        Mon, 8 Jun 2020 09:49:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36060 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729051AbgFHNtF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 09:49:05 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E311C08C5C2
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 06:49:05 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jiI93-0007jq-0X; Mon, 08 Jun 2020 15:48:57 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 6DC97100F9F; Mon,  8 Jun 2020 15:48:56 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     "Herrenschmidt\, Benjamin" <benh@amazon.com>,
+        "maz\@kernel.org" <maz@kernel.org>,
+        "Saidi\, Ali" <alisaidi@amazon.com>
+Cc:     "jason\@lakedaemon.net" <jason@lakedaemon.net>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel\@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "Woodhouse\, David" <dwmw@amazon.co.uk>,
+        "Zilberman\, Zeev" <zeev@amazon.com>,
+        "Machulsky\, Zorik" <zorik@amazon.com>
+Subject: Re: [PATCH] irqchip/gic-v3-its: Don't try to move a disabled irq
+In-Reply-To: <f9e9d8c37eb92e4b9576bfcb4386ff6ef00eddce.camel@amazon.com>
+References: <AE04B507-C5E2-44D2-9190-41E9BE720F9D@amazon.com> <622fb6be108e894ee365d6b213535c8b@kernel.org> <f9e9d8c37eb92e4b9576bfcb4386ff6ef00eddce.camel@amazon.com>
+Date:   Mon, 08 Jun 2020 15:48:56 +0200
+Message-ID: <87mu5dacs7.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM0PR0502MB382638933BF9B7BE0AB34E81D7850@AM0PR0502MB3826.eurprd05.prod.outlook.com>
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 10:02:04AM +0000, Amit Cohen wrote:
-> Andrew Lunn <andrew@lunn.ch> writes:
-> 
-> >> +Link extended states:
-> >> +
-> >> +  ============================    =============================================
-> >> +  ``Autoneg failure``             Failure during auto negotiation mechanism
-> >
-> >I think you need to define 'failure' here.
-> >
-> >Linux PHYs don't have this state. auto-neg is either ongoing, or has completed. There is no time limit for auto-neg. If there is no link partner, auto-neg does not fail, it just continues until there is a link partner which responds and negotiation completes.
-> >
-> >Looking at the state diagrams in 802.3 clause 28, what do you consider as failure?
-> >
-> 
-> Ok, you're right. What about renaming this state to "Autoneg issue" and then as ext_substate you can use something like "Autoneg ongoing"? 
+"Herrenschmidt, Benjamin" <benh@amazon.com> writes:
+> On Wed, 2020-06-03 at 16:16 +0100, Marc Zyngier wrote:
+>> > My original patch should certain check activated and not disabled.
+>> > With that do you still have reservations Marc?
+>> 
+>> I'd still prefer it if we could do something in core code, rather
+>> than spreading these checks in the individual drivers. If we can't,
+>> fair enough. But it feels like the core set_affinity function could
+>> just do the same thing in a single place (although the started vs
+>> activated is yet another piece of the puzzle I didn't consider,
+>> and the ITS doesn't need the "can_reserve" thing).
+>
+> For the sake of fixing the problem in a timely and backportable way I
+> would suggest first merging the fix, *then* fixing the core core.
 
-Hi Amit
+The "fix" is just wrong
 
-I'm not sure 'issue' is correct here. Just because it has not
-completed does not mean there is an issue. It takes around 1.5 seconds
-anyway, best case. And if there is no link partner, it is not supposed
-to complete. So i would suggest just ``Autoneg``.
+> 	if (cpu != its_dev->event_map.col_map[id]) {
+> 		target_col = &its_dev->its->collections[cpu];
+> -		its_send_movi(its_dev, target_col, id);
+> +
+> +		/* If the IRQ is disabled a discard was sent so don't move */
+> +		if (!irqd_irq_disabled(d))
 
-	  Andrew
+That check needs to be !irqd_is_activated() because enable_irq() does
+not touch anything affinity related.
+
+> +			its_send_movi(its_dev, target_col, id);
+> +
+> 		its_dev->event_map.col_map[id] = cpu;
+> 		irq_data_update_effective_affinity(d, cpumask_of(cpu));
+
+And then these associtations are disconnected from reality in any case.
+
+Something like the completely untested patch below should work.
+
+Thanks,
+
+        tglx
+
+---
+ arch/x86/kernel/apic/vector.c |   21 +++------------------
+ kernel/irq/manage.c           |   37 +++++++++++++++++++++++++++++++++++--
+ 2 files changed, 38 insertions(+), 20 deletions(-)
+
+--- a/arch/x86/kernel/apic/vector.c
++++ b/arch/x86/kernel/apic/vector.c
+@@ -446,12 +446,10 @@ static int x86_vector_activate(struct ir
+ 	trace_vector_activate(irqd->irq, apicd->is_managed,
+ 			      apicd->can_reserve, reserve);
+ 
+-	/* Nothing to do for fixed assigned vectors */
+-	if (!apicd->can_reserve && !apicd->is_managed)
+-		return 0;
+-
+ 	raw_spin_lock_irqsave(&vector_lock, flags);
+-	if (reserve || irqd_is_managed_and_shutdown(irqd))
++	if (!apicd->can_reserve && !apicd->is_managed)
++		assign_irq_vector_any_locked(irqd);
++	else if (reserve || irqd_is_managed_and_shutdown(irqd))
+ 		vector_assign_managed_shutdown(irqd);
+ 	else if (apicd->is_managed)
+ 		ret = activate_managed(irqd);
+@@ -775,21 +773,8 @@ void lapic_offline(void)
+ static int apic_set_affinity(struct irq_data *irqd,
+ 			     const struct cpumask *dest, bool force)
+ {
+-	struct apic_chip_data *apicd = apic_chip_data(irqd);
+ 	int err;
+ 
+-	/*
+-	 * Core code can call here for inactive interrupts. For inactive
+-	 * interrupts which use managed or reservation mode there is no
+-	 * point in going through the vector assignment right now as the
+-	 * activation will assign a vector which fits the destination
+-	 * cpumask. Let the core code store the destination mask and be
+-	 * done with it.
+-	 */
+-	if (!irqd_is_activated(irqd) &&
+-	    (apicd->is_managed || apicd->can_reserve))
+-		return IRQ_SET_MASK_OK;
+-
+ 	raw_spin_lock(&vector_lock);
+ 	cpumask_and(vector_searchmask, dest, cpu_online_mask);
+ 	if (irqd_affinity_is_managed(irqd))
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -195,9 +195,9 @@ void irq_set_thread_affinity(struct irq_
+ 			set_bit(IRQTF_AFFINITY, &action->thread_flags);
+ }
+ 
++#ifdef CONFIG_GENERIC_IRQ_EFFECTIVE_AFF_MASK
+ static void irq_validate_effective_affinity(struct irq_data *data)
+ {
+-#ifdef CONFIG_GENERIC_IRQ_EFFECTIVE_AFF_MASK
+ 	const struct cpumask *m = irq_data_get_effective_affinity_mask(data);
+ 	struct irq_chip *chip = irq_data_get_irq_chip(data);
+ 
+@@ -205,9 +205,19 @@ static void irq_validate_effective_affin
+ 		return;
+ 	pr_warn_once("irq_chip %s did not update eff. affinity mask of irq %u\n",
+ 		     chip->name, data->irq);
+-#endif
+ }
+ 
++static inline void irq_init_effective_affinity(struct irq_data *data,
++					       const struct cpumask *mask)
++{
++	cpumask_copy(irq_data_get_effective_affinity_mask(data), mask);
++}
++#else
++static inline void irq_validate_effective_affinity(struct irq_data *data) { }
++static inline boot irq_init_effective_affinity(struct irq_data *data,
++					       const struct cpumask *mask) { }
++#endif
++
+ int irq_do_set_affinity(struct irq_data *data, const struct cpumask *mask,
+ 			bool force)
+ {
+@@ -304,6 +314,26 @@ static int irq_try_set_affinity(struct i
+ 	return ret;
+ }
+ 
++static bool irq_set_affinity_deactivated(struct irq_data *data,
++					 const struct cpumask *mask, bool force)
++{
++	struct irq_desc *desc = irq_data_to_desc(data);
++
++	/*
++	 * If the interrupt is not yet activated, just store the affinity
++	 * mask and do not call the chip driver at all. On activation the
++	 * driver has to make sure anyway that the interrupt is in a
++	 * useable state so startup works.
++	 */
++	if (!IS_ENABLED(CONFIG_IRQ_DOMAIN_HIERARCHY) || irqd_is_activated(data))
++		return false;
++
++	cpumask_copy(desc->irq_common_data.affinity, mask);
++	irq_init_effective_affinity(data, mask);
++	irqd_set(data, IRQD_AFFINITY_SET);
++	return true;
++}
++
+ int irq_set_affinity_locked(struct irq_data *data, const struct cpumask *mask,
+ 			    bool force)
+ {
+@@ -314,6 +344,9 @@ int irq_set_affinity_locked(struct irq_d
+ 	if (!chip || !chip->irq_set_affinity)
+ 		return -EINVAL;
+ 
++	if (irq_set_affinity_deactivated(data, mask, force))
++		return 0;
++
+ 	if (irq_can_move_pcntxt(data) && !irqd_is_setaffinity_pending(data)) {
+ 		ret = irq_try_set_affinity(data, mask, force);
+ 	} else {
