@@ -2,165 +2,133 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0443FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 02:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD9FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 02:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C459E207C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 02:37:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I9F+MzX3"
+	by mail.kernel.org (Postfix) with ESMTP id 4716A2078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 02:44:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591670684;
+	bh=b+ff4+/UEVwTp+sk9ip5GZLPbGrKFsoDd4CSCh2SFIk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=zWkmJN9aDW7QhtJe+ZZqtFXZ1AVXMryCM4yYvAPk8MJzwEmZ0Znfpg9sNNG/lLeXR
+	 0BhpUYn6uLzBT33YpY7LxDlDJXqwuj1y9l2cmG6gaSy0vzHf6z3e2RcVByS+Lcu8UK
+	 tcoKUwOoh6XZVd9JvRbaav5KqpViMbryg+wl6jdU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726966AbgFIChp (ORCPT
+        id S1726970AbgFICon (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 22:37:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41864 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726909AbgFICho (ORCPT
+        Mon, 8 Jun 2020 22:44:43 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:55753 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726909AbgFICom (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 22:37:44 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 136D8C03E97C
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 19:37:43 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id g5so15414626otg.6
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 19:37:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gIREOCncp+kCLejh9A1JytrjVRseDJ9dDmzpsV7xNws=;
-        b=I9F+MzX3keiz7H+vq67DtBb3j76mL76MQZ+r9HgbdfDur2wVNf7HxaK0JjLFewpHIl
-         JEhC5yhS5eeZK9YbS3L3jGKgKUclvO6bqli/E4ozAVwZVdJgis0MsPi2Hgadsfexdkyc
-         GQTSjl2rMRA+2wxu7vGskuJxaXnulBsJwF/CHu4/mdeUno+caXYvieZFZA1/QyVtcSTt
-         ba+bxnnpUhC9mBSo7ZJyb9pprv1xeGOatgMlVbhKrztR3z14T4p1ND3KzH1BDo0e0g2K
-         M1AheK59avMkAVhIcd1aAvO6N3Spb+jYpTbN1OYYTIMGLhhtvRmDgj209cPg9F7OO+9B
-         IZZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gIREOCncp+kCLejh9A1JytrjVRseDJ9dDmzpsV7xNws=;
-        b=UNdKJviOqAMNZC3GdkM9kJf09n2jLXoI164Nn4opDKjhd4tBSfjFxB+siyuCqlXQeW
-         ZLRfbUJIr+Zvf5UZVCBw3MQBvd7YTop+DKY5ybN0qtDNKY7Kxu3cXlT3S6ZaUc9cBOSW
-         mwixSgcCkuGuCd9qNjUMzmVJUz1GnLUPc5/yARbZg680XAnPaLZoacaP9DIZmO1hlSq/
-         tvYw6oizT3kvqHaEGAK480jF3vV7nNcNYjD5bXU542rKyPDhbzBX7z3DkBRX5CeTMW8G
-         PO2+RcpKS5mBkx9hxRmMeUDWnYuT5IVO33y+AEzZXsFryUMqzM+N1dSs3hYto3+tAaLd
-         KX3g==
-X-Gm-Message-State: AOAM5327wMVmvS1wyM2XtfXf+GECWSHHC4dLOutuQEoK+tI7urJUPiPW
-        E6oiVZp/k87Ru8mR3qleHTvjwHWUOByCgpVmgriLWQ==
-X-Google-Smtp-Source: ABdhPJyNcC5SuTdnFrtUT/J1vHIVd1tebb9cmCY1PZhbEnXealjVBrgi7u4Qxgwn4MSraDU9LrRx5Xm6eUPmfkqlABk=
-X-Received: by 2002:a9d:6048:: with SMTP id v8mr14796461otj.231.1591670262910;
- Mon, 08 Jun 2020 19:37:42 -0700 (PDT)
+        Mon, 8 Jun 2020 22:44:42 -0400
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id 0592iJs1021460;
+        Tue, 9 Jun 2020 11:44:20 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 0592iJs1021460
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1591670660;
+        bh=9Z3DzEK10aRjC8fbazjgQsxHhsn2ISmMWoHXi0qgJqg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=sphoyTxG1xGPXA5wcykTu7JE6ILkSgEeEOHQthDCTEl7Zh8+3m6uLaRkJd2G6EZ2V
+         iSGeyZKStdT0BWDXdvGrKtUzuHwgofCYV+6cfq/gJhVRdOgtcOjDy7kPr3PWKj4KhC
+         ahWQb38D8ZchCVP4mgZWNlEp8/Pc5tL8ccK0vAMNYh/bV/nmj0e1A+NtGy+yxyeuvk
+         Vo8Xj/v/v/DMqgHjVtv67zQY6sZEHmGLFfrG1aljpK8ySfw8Z5DJfaGBVG7OLMgHcI
+         X9uH8031VWkjaln4DbF0sLXCXYBSAwrFgyWmcsIMs+yoe/L5T3BhylZnmnvVQ+/tAh
+         5mlTitIr84lAg==
+X-Nifty-SrcIP: [209.85.222.54]
+Received: by mail-ua1-f54.google.com with SMTP id r9so6611781ual.1;
+        Mon, 08 Jun 2020 19:44:20 -0700 (PDT)
+X-Gm-Message-State: AOAM533379L+sbNM1t8fpHaAtrOIlWownj81ZSIzCT0eHwOiElwLjjx1
+        cdiUuzTh/7b579mR7q09ITQZW6+7HujFD1HMKoo=
+X-Google-Smtp-Source: ABdhPJzJiCejPYqLxwGCRkB/z/opOuBrLPXtGw6XfuSPDCR+hLFVsJ59sHKnhk2TF1vhYBTWVIghvjgFOnGuul0M8LI=
+X-Received: by 2002:ab0:3ae:: with SMTP id 43mr1162600uau.25.1591670659082;
+ Mon, 08 Jun 2020 19:44:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <CGME20200605063729eucas1p288dd9d3acdb62cc86745cb6af5c31fc6@eucas1p2.samsung.com>
- <20200605063724.9030-1-m.szyprowski@samsung.com> <20200605102018.GA5413@sirena.org.uk>
- <2f0e021d-387a-4693-882d-aba66e20dd2b@samsung.com> <20200605155903.GI5413@sirena.org.uk>
-In-Reply-To: <20200605155903.GI5413@sirena.org.uk>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Mon, 8 Jun 2020 19:37:07 -0700
-Message-ID: <CAGETcx8asyFRz5LmU4LSMJuPWvcWdvi1GHAhQ85AWdd6jcmdiA@mail.gmail.com>
-Subject: Re: [PATCH] regulator: do not balance 'boot-on' coupled regulators
- without constraints
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>, peron.clem@gmail.com,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        Linux Samsung SOC <linux-samsung-soc@vger.kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Android Kernel Team <kernel-team@android.com>
+References: <20200608084117.4563-1-jiping.ma2@windriver.com>
+ <CAL_JsqKLfSE5tPEPi1=erqBzCF9fceKKDe4qBkywB4O_JhbjGg@mail.gmail.com> <acfc88fc-2a7e-19fe-3dc4-37a03ddabcf9@windriver.com>
+In-Reply-To: <acfc88fc-2a7e-19fe-3dc4-37a03ddabcf9@windriver.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Tue, 9 Jun 2020 11:43:42 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQd29g1p4PG=LS-f33R2WUA5DNjKYjoEoWhJ+71CWw72w@mail.gmail.com>
+Message-ID: <CAK7LNAQd29g1p4PG=LS-f33R2WUA5DNjKYjoEoWhJ+71CWw72w@mail.gmail.com>
+Subject: Re: [PATCH] dtc: also check <yaml.h> for libyaml
+To:     Jiping Ma <Jiping.Ma2@windriver.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 5, 2020 at 8:59 AM Mark Brown <broonie@kernel.org> wrote:
+On Tue, Jun 9, 2020 at 10:01 AM Jiping Ma <Jiping.Ma2@windriver.com> wrote:
 >
-> On Fri, Jun 05, 2020 at 03:37:32PM +0200, Marek Szyprowski wrote:
-> > On 05.06.2020 12:20, Mark Brown wrote:
 >
-> > > No, this is not what boot-on means at all.  It is there for cases where
-> > > we can't read the enable status from the hardware.  Trying to infer
-> > > *anything* about the runtime behaviour from it being present or absent
-> > > is very badly broken.
 >
-> > Okay, what about the 'always-on' property? I don't think that we need
-> > another property for annotating this behavior, as in my opinion this is
+> On 06/09/2020 03:09 AM, Rob Herring wrote:
+> > On Mon, Jun 8, 2020 at 2:42 AM Jiping Ma <jiping.ma2@windriver.com> wrote:
+> >> yamltree.c includes <yaml.h>, If /usr/include/yaml.h does not exist,
+> >> it fails to build.
+> > Does this patch fix your issue?:
+> >
+> > https://lore.kernel.org/linux-devicetree/20200505100319.741454-1-masahiroy@kernel.org/
+> No, it did not fix the issue.
 >
-> No, that's just as disconnected from the need - we may as well do it
-> based on the regulator name being an odd number of characters.
+> $ pkg-config --cflags yaml-0.1
 >
-> > just an implementation issue on the Linux kernel and regulator
-> > framework. Alternatively I can drop the property check, but then it
-> > won't be possible to have a regulator without a consumer, which follows
-> > the other one (although we still don't have a real use case for it).
->
-> > If you don't like this idea at all, I will try to move this logic to the
-> > custom coupler again, although it would mean some code copying.
->
-> I think that's better TBH.
->
-> > > Saravana (CCed) was working on some patches which tried to deal with
-> > > some stuff around this for enables using the sync_state() callback.
-> > > Unfortunately there's quite a few problems with the current approach
-> > > (the biggest one from my point of view being that it's implemented so
-> > > that it requires every single consumer of every device on the PMIC to
-> > > come up but there's others at more of an implementation level).
->
-> > I'm not sure if we really need such complex solution for this...
->
-> So I think that the specific approach there is overly heavyweight and
-> restrictive but I do see the general use case here for something per
-> regulator providing we can avoid breaking anything that does actually
-> need to change the regulator state (eg, raising the voltage for
-> cpufreq).
 
-The changes I propose won't prevent anything from asking for more
-power/energy (will always allow turning on stuff, increasing voltage,
-increasing current, etc). It'll only prevent reducing power lower than
-what was provided when the bootloader left stuff on. This shouldn't
-break most boards -- because any other consumer could be setting
-similar limits and things don't break then. But even if that's a
-concern, we can still default to a timeout behavior and then give
-folks the choice of disabling the timeout if they know all their
-devices will probe.
 
-Btw, the patch series I sent fixes a lot of subtle use cases even with
-the timeout enabled. For example, in one hardware platform, a LDO is
-shared between camera, display, UFS and USB. The camera driver would
-probe first, enable the regulator, poll its HW and then disable the
-regulator. This causes the regulator to be disabled before display,
-UFS, and USB could probe and this caused hardware faults for those.
+Then, this is a problem on your system.
 
-> Previously to the past week I'd only really heard about it
-> causing problems in the context of displays left on by the bootloader
-> glitching during boot but this is a concrete
 
-Ah, finally! I have examples of pretty much the same issue in some
-downstream kernels -- the CPU and memory shares rails with other
-hardware blocks and things fail if this isn't taken care of. Glad that
-someone else found an example for me in the upstream kernel.
 
-> use case and we already
-> have the infrastructure to track dependencies at the device model level
-> if we use it well.
 
-I'll send out a v3 series in a couple of days to address Mark's
-earlier comments and also add the voltage support to address Marek's
-case. We can take it from there.
 
--Saravana
+
+> $ pkg-config yaml-0.1 --libs
+> -L/buildarea/jma1/wr-19-0518/19.45/sysroots/aarch64-wrs-linux/usr/lib64
+> -lyaml
+>
+> >
+> >
+> >> Signed-off-by: Jiping Ma <jiping.ma2@windriver.com>
+> >> ---
+> >>   scripts/dtc/Makefile | 4 ++++
+> >>   1 file changed, 4 insertions(+)
+> >>
+> >> diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
+> >> index b5a5b1c..b49dfea 100644
+> >> --- a/scripts/dtc/Makefile
+> >> +++ b/scripts/dtc/Makefile
+> >> @@ -18,9 +18,13 @@ $(error dtc needs libyaml for DT schema validation support. \
+> >>   endif
+> >>   HOST_EXTRACFLAGS += -DNO_YAML
+> >>   else
+> >> +ifeq ($(wildcard /usr/include/yaml.h),)
+> >> +HOST_EXTRACFLAGS += -DNO_YAML
+> >> +else
+> >>   dtc-objs       += yamltree.o
+> >>   HOSTLDLIBS_dtc := $(shell pkg-config yaml-0.1 --libs)
+> >>   endif
+> >> +endif
+> >>
+> >>   # Generated files need one more search path to include headers in source tree
+> >>   HOSTCFLAGS_dtc-lexer.lex.o := -I $(srctree)/$(src)
+> >> --
+> >> 1.9.1
+> >>
+>
+
+
+--
+Best Regards
+Masahiro Yamada
