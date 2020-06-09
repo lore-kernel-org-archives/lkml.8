@@ -2,221 +2,139 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D688AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A55C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:28:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD369207ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:27:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="DKFFVbx8"
+	by mail.kernel.org (Postfix) with ESMTP id D229E207ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:28:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728247AbgFIK1x (ORCPT
+        id S1728782AbgFIK2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 06:27:53 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:9342 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbgFIK1u (ORCPT
+        Tue, 9 Jun 2020 06:28:14 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:37480 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726116AbgFIK2M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 06:27:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1591698469; x=1623234469;
-  h=references:from:to:cc:subject:in-reply-to:date:
-   message-id:mime-version;
-  bh=PFE08cVYhQUpY5zaFOQ/GJEuFcqAMgONaAxufYheBDA=;
-  b=DKFFVbx8/uSfMBNZ8zf2+vjclxh3upRqHBM2gVZBJHgbaDIvziTHtNiH
-   LEI9EwKPU2dTr6tszSNQOrNOADhWT7QVAuggFNiq1qcWH6Jcpz4EP3d1K
-   aYuUsT2uy/k1duGr4wHfactdCoXIQICnWgIt6ZzumkcBnI10/3P7reAAz
-   pvfi+8iFMDYFTn8YL+waDyqEbf/gkm8q9CYjEiVTVENEBpjA0bjA1PPyG
-   ZPLetN+59kbt2k6fRwk5wWmwrClAReGVrXmZnTdJWZ3SsQatH6rOFxf//
-   8WCXPbiUwD+mB5Fr7DoecVFt53eEHzfQN+rRxrsXYK0KSSl9KL5Ki2NPU
-   Q==;
-IronPort-SDR: DvBSgCKDbJXDL0IpdE3lYQtMLoRVAuznXxSpGbvfLg8x6HIPEduN5SM1VV00Ua71tASeuVdMLA
- revxWCd3KL115Zfb0tHJwI1qVdIb5VAxn2zPdFvbOQfwyyItP+MJuGObwaiwXAZqA5xbO/YEMq
- kW20geL10MMNERGdm15KCxtrfFKMYYxba2pKsYohZSKIgfqRIIClQS3oHqHfExPwyt6tuTAqvr
- qO+a2MQpDv0dzAIfRNQpc5tUDVomRdNALzMDo0PYrwfsFFOIoCMQ/yUdGuSbtGBn/cUKA9nu1w
- 8SU=
-X-IronPort-AV: E=Sophos;i="5.73,491,1583218800"; 
-   d="scan'208";a="82797722"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Jun 2020 03:27:48 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Tue, 9 Jun 2020 03:27:48 -0700
-Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Tue, 9 Jun 2020 03:27:45 -0700
-References: <20200513140031.25633-1-lars.povlsen@microchip.com> <20200513140031.25633-5-lars.povlsen@microchip.com> <20200602194925.qbevttzz3ghvmd2d@mobilestation>
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-List-Id: <soc.lore.kernel.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Mark Brown <broonie@kernel.org>, SoC Team <soc@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 04/10] dt-bindings: spi: Add bindings for spi-dw-mchp
-In-Reply-To: <20200602194925.qbevttzz3ghvmd2d@mobilestation>
-Date:   Tue, 9 Jun 2020 12:27:44 +0200
-Message-ID: <87img0ilen.fsf@soft-dev15.microsemi.net>
+        Tue, 9 Jun 2020 06:28:12 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jibU9-0001xw-M9; Tue, 09 Jun 2020 10:28:01 +0000
+Date:   Tue, 9 Jun 2020 12:28:01 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Weilong Chen <chenweilong@huawei.com>
+Cc:     akpm@linux-foundation.org, tglx@linutronix.de, lizefan@huawei.com,
+        linux-kernel@vger.kernel.org, dvyukov@google.com
+Subject: Re: [PATCH linux-next] kernel/fork.c: annotate data races for
+ copy_process
+Message-ID: <20200609102801.q2dum323zw7ltlw3@wittgenstein>
+References: <20200609030801.272704-1-chenweilong@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200609030801.272704-1-chenweilong@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jun 09, 2020 at 11:08:01AM +0800, Weilong Chen wrote:
+> The check is only there to stop root fork bombs.
+> 
+> BUG: KCSAN: data-race in copy_process / copy_process
+> 
+> write to 0xffffffff86f87d20 of 4 bytes by task 7121 on cpu 5:
+>  copy_process+0x2e1a/0x3af0 kernel/fork.c:2285
+>  _do_fork+0xf7/0x790 kernel/fork.c:2430
+>  __do_sys_clone+0xf9/0x130 kernel/fork.c:2585
+>  __se_sys_clone kernel/fork.c:2566 [inline]
+>  __x64_sys_clone+0x6c/0x80 kernel/fork.c:2566
+>  do_syscall_64+0xc7/0x3b0 arch/x86/entry/common.c:295
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
+> read to 0xffffffff86f87d20 of 4 bytes by task 7125 on cpu 3:
+>  copy_process+0x9eb/0x3af0 kernel/fork.c:1967
+>  _do_fork+0xf7/0x790 kernel/fork.c:2430
+>  __do_sys_clone+0xf9/0x130 kernel/fork.c:2585
+>  __se_sys_clone kernel/fork.c:2566 [inline]
+>  __x64_sys_clone+0x6c/0x80 kernel/fork.c:2566
+>  do_syscall_64+0xc7/0x3b0 arch/x86/entry/common.c:295
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
+> Signed-off-by: Weilong Chen <chenweilong@huawei.com>
 
-Serge Semin writes:
+Plumbing data_race() in there just to taper over this seems ugly.
+Before we do that we should probably simply make nr_threads atomic_t.
+Also, where's the link to the syzbot/kcsan report? Or did you get this
+report from somewhere else?
 
-> On Wed, May 13, 2020 at 04:00:25PM +0200, Lars Povlsen wrote:
->> This add DT bindings for the Microsemi/Microchip SPI controller used
->> in various SoC's. It describes the "mscc,ocelot-spi" and
->> "mscc,jaguar2-spi" bindings.
->
-> As I see it, there is no need in this patch at all. Current DT binding file
-> describes the MSCC version of the DW APB SSI IP pretty well. You can add an
-> example to the DT schema though with "mscc,ocelot-spi" or "mscc,jaguar2-spi"
-> compatible string and additional registers range.
->
+diff --git a/kernel/exit.c b/kernel/exit.c
+index c300253a7b8e..42e1cf640b20 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -71,7 +71,7 @@
 
-Fine by me. I just had the understanding that a YAML binding had to be
-given for a new driver.
+ static void __unhash_process(struct task_struct *p, bool group_dead)
+ {
+-       nr_threads--;
++       atomic_dec(&nr_threads);
+        detach_pid(p, PIDTYPE_PID);
+        if (group_dead) {
+                detach_pid(p, PIDTYPE_TGID);
+diff --git a/kernel/fork.c b/kernel/fork.c
+index cefe8745c46e..c8355448d7c6 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -122,7 +122,7 @@
+  * Protected counters by write_lock_irq(&tasklist_lock)
+  */
+ unsigned long total_forks;     /* Handle normal Linux uptimes. */
+-int nr_threads;                        /* The idle threads do not count.. */
++atomic_t nr_threads;           /* The idle threads do not count.. */
 
-I will add the bindings to the existing YAML with proper guards.
+ static int max_threads;                /* tunable limit on nr_threads */
 
----Lars
+@@ -1978,7 +1978,7 @@ static __latent_entropy struct task_struct *copy_process(
+         * to stop root fork bombs.
+         */
+        retval = -EAGAIN;
+-       if (nr_threads >= max_threads)
++       if (atomic_read(&nr_threads) >= max_threads)
+                goto bad_fork_cleanup_count;
 
-> -Sergey
->
->>
->> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
->> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
->> ---
->>  .../bindings/spi/mscc,ocelot-spi.yaml         | 60 +++++++++++++++++++
->>  .../bindings/spi/snps,dw-apb-ssi.txt          |  7 +--
->>  MAINTAINERS                                   |  1 +
->>  3 files changed, 63 insertions(+), 5 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml b/Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml
->> new file mode 100644
->> index 0000000000000..a3ac0fa576553
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml
->> @@ -0,0 +1,60 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: "http://devicetree.org/schemas/spi/mscc,ocelot-spi.yaml#"
->> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +title: Microsemi Vcore-III SPI Communication Controller
->> +
->> +maintainers:
->> +  - Alexandre Belloni <alexandre.belloni@bootlin.com>
->> +  - Lars Povlsen <lars.povlsen@microchip.com>
->> +
->> +allOf:
->> +  - $ref: "spi-controller.yaml#"
->> +
->> +description: |
->> +  The Microsemi Vcore-III SPI controller is a general purpose SPI
->> +  controller based upon the Designware SPI controller. It uses an 8
->> +  byte rx/tx fifo.
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - mscc,ocelot-spi
->> +      - mscc,jaguar2-spi
->> +
->> +  interrupts:
->> +    maxItems: 1
->> +
->> +  reg:
->> +    minItems: 2
->> +    items:
->> +      - description: Designware SPI registers
->> +      - description: CS override registers
->> +
->> +  clocks:
->> +    maxItems: 1
->> +
->> +  reg-io-width:
->> +    description: |
->> +      The I/O register width (in bytes) implemented by this device.
->> +    items:
->> +       enum: [ 2, 4 ]
->> +    maxItems: 1
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - clocks
->> +
->> +examples:
->> +  - |
->> +    spi0: spi@101000 {
->> +      compatible = "mscc,ocelot-spi";
->> +      #address-cells = <1>;
->> +      #size-cells = <0>;
->> +      reg = <0x101000 0x100>, <0x3c 0x18>;
->> +      interrupts = <9>;
->> +      clocks = <&ahb_clk>;
->> +    };
->> diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
->> index 3ed08ee9feba4..5e1849be7bae5 100644
->> --- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
->> +++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
->> @@ -1,10 +1,8 @@
->>  Synopsys DesignWare AMBA 2.0 Synchronous Serial Interface.
->>
->>  Required properties:
->> -- compatible : "snps,dw-apb-ssi" or "mscc,<soc>-spi", where soc is "ocelot" or
->> -  "jaguar2", or "amazon,alpine-dw-apb-ssi"
->> -- reg : The register base for the controller. For "mscc,<soc>-spi", a second
->> -  register set is required (named ICPU_CFG:SPI_MST)
->> +- compatible : "snps,dw-apb-ssi" or "amazon,alpine-dw-apb-ssi"
->> +- reg : The register base for the controller.
->>  - interrupts : One interrupt, used by the controller.
->>  - #address-cells : <1>, as required by generic SPI binding.
->>  - #size-cells : <0>, also as required by generic SPI binding.
->> @@ -38,4 +36,3 @@ Example:
->>               cs-gpios = <&gpio0 13 0>,
->>                          <&gpio0 14 0>;
->>       };
->> -
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 1db598723a1d8..6472240b8391b 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -11231,6 +11231,7 @@ L:    linux-mips@vger.kernel.org
->>  S:   Supported
->>  F:   Documentation/devicetree/bindings/mips/mscc.txt
->>  F:   Documentation/devicetree/bindings/power/reset/ocelot-reset.txt
->> +F:   Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml
->>  F:   arch/mips/boot/dts/mscc/
->>  F:   arch/mips/configs/generic/board-ocelot.config
->>  F:   arch/mips/generic/board-ocelot.c
->> --
->> 2.26.2
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+        delayacct_tsk_init(p);  /* Must remain after dup_task_struct() */
+@@ -2296,7 +2296,7 @@ static __latent_entropy struct task_struct *copy_process(
+                                          &p->signal->thread_head);
+                }
+                attach_pid(p, PIDTYPE_PID);
+-               nr_threads++;
++               atomic_inc(&nr_threads);
+        }
+        total_forks++;
+        hlist_del_init(&delayed.node);
 
--- 
-Lars Povlsen,
-Microchip
+> ---
+>  kernel/fork.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/fork.c b/kernel/fork.c
+> index 142b23645d82..efc5493203ae 100644
+> --- a/kernel/fork.c
+> +++ b/kernel/fork.c
+> @@ -1977,7 +1977,7 @@ static __latent_entropy struct task_struct *copy_process(
+>  	 * to stop root fork bombs.
+>  	 */
+>  	retval = -EAGAIN;
+> -	if (nr_threads >= max_threads)
+> +	if (data_race(nr_threads >= max_threads))
+>  		goto bad_fork_cleanup_count;
+>  
+>  	delayacct_tsk_init(p);	/* Must remain after dup_task_struct() */
+> -- 
+> 2.17.1
+> 
