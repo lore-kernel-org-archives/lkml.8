@@ -2,88 +2,112 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8485C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:03:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C91AC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:04:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A99672072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:03:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3767F2072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:04:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cO3c2Jp4"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ticQN8WI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731224AbgFIQDs (ORCPT
+        id S1731233AbgFIQEK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 12:03:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53188 "EHLO
+        Tue, 9 Jun 2020 12:04:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731060AbgFIQDo (ORCPT
+        with ESMTP id S1731052AbgFIQEK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 12:03:44 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CB3FC05BD1E;
-        Tue,  9 Jun 2020 09:03:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=EbgramDsClABbRh6SAXFCh3bxBrc0kj7IkVo3KuqmtM=; b=cO3c2Jp4wSWBSIYCVjEGfETKzB
-        4MHEl3u1W+06LuzU/RiQYyNfWUdfKzFf+nCoV7IeleFAke6LnGCTwuJTCXkaXvbmtz3YJs6YjjkNb
-        +CENmEnwphZ/uA3zSIpXHyhbSlOE4t2OK9oaLPsXeetUZPBXY1FqbofhwGy3ZEJi2lc7+X9oF1S9t
-        u1A3Xc1S3aATO+IvvejggzFh1mhDM3IL1b3MgxgQNcevdtGZVJcg8ZyTqr7O1kwAg9zkGGB7S8irq
-        xq++b5wewuMW2HpxmZ3e0CMJOt8qzDnyA2IZQaUtBigSEV7HiEldcvXSPDWqlxAd7zy2HxXG/vpSt
-        wCdAlmPg==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jigiz-0001ZX-OG; Tue, 09 Jun 2020 16:03:41 +0000
-Subject: Re: [PATCH v3 0/7] Venus dynamic debug
-To:     Matthew Wilcox <willy@infradead.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-acpi@vger.kernel.org,
-        netdev@vger.kernel.org, Joe Perches <joe@perches.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jason Baron <jbaron@akamai.com>
-References: <20200609104604.1594-1-stanimir.varbanov@linaro.org>
- <20200609111323.GA19604@bombadil.infradead.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <c239d5df-e069-2091-589e-30f341c2cbd3@infradead.org>
-Date:   Tue, 9 Jun 2020 09:03:39 -0700
+        Tue, 9 Jun 2020 12:04:10 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4352C05BD1E;
+        Tue,  9 Jun 2020 09:04:09 -0700 (PDT)
+Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 66A8E291;
+        Tue,  9 Jun 2020 18:04:05 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1591718646;
+        bh=YiIP5a5/hJGYDmwjgLKGoPBcEsEiQuHwdo3Xcf8Mei0=;
+        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ticQN8WIsqg4uaeU/viMuhpJi6Qmb36BGBAmdRNTrngIhGfRdtjxuOa4t8xvFB8Jh
+         Y86KQ0il8Ym0FPjwN0xTKGtGJpJx3hdoWdEO8z8r+pNKKwNwuwV29xNBVJi6875jH1
+         9P3d1q4Bp3kgyOoVzEt6d/uLWPTvOgzmNkz2x5hw=
+Reply-To: kieran.bingham+renesas@ideasonboard.com
+Subject: Re: [PATCH 11/17] drivers: infiniband: Fix trivial spelling
+To:     Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>
+Cc:     linux-renesas-soc@vger.kernel.org,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jiri Kosina <trivial@kernel.org>,
+        "open list:HFI1 DRIVER" <linux-rdma@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200609124610.3445662-1-kieran.bingham+renesas@ideasonboard.com>
+ <20200609124610.3445662-12-kieran.bingham+renesas@ideasonboard.com>
+ <80843bf3-25a3-37b0-f687-9a5e01546c72@intel.com>
+From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Organization: Ideas on Board
+Message-ID: <40b92c85-4108-dabe-a6a4-481c0336e45a@ideasonboard.com>
+Date:   Tue, 9 Jun 2020 17:04:02 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200609111323.GA19604@bombadil.infradead.org>
+In-Reply-To: <80843bf3-25a3-37b0-f687-9a5e01546c72@intel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/9/20 4:13 AM, Matthew Wilcox wrote:
-> On Tue, Jun 09, 2020 at 01:45:57PM +0300, Stanimir Varbanov wrote:
->> Here is the third version of dynamic debug improvements in Venus
->> driver.  As has been suggested on previous version by Joe [1] I've
->> made the relevant changes in dynamic debug core to handle leveling
->> as more generic way and not open-code/workaround it in the driver.
+Ooops,
+
+Looks like that should have been part of patch 2/17.
+
+Must have got split during the rebase I made or something, not sure.
+
+On 09/06/2020 16:54, Dennis Dalessandro wrote:
+> On 6/9/2020 8:46 AM, Kieran Bingham wrote:
+>> The word 'descriptor' is misspelled throughout the tree.
 >>
->> About changes:
->>  - added change in the dynamic_debug and in documentation
->>  - added respective pr_debug_level and dev_dbg_level
+>> Fix it up accordingly:
+>>      decriptors -> descriptors
+>>
+>> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+>> ---
+>>   drivers/infiniband/hw/hfi1/ipoib_tx.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/infiniband/hw/hfi1/ipoib_tx.c
+>> b/drivers/infiniband/hw/hfi1/ipoib_tx.c
+>> index 883cb9d48022..175290c56db9 100644
+>> --- a/drivers/infiniband/hw/hfi1/ipoib_tx.c
+>> +++ b/drivers/infiniband/hw/hfi1/ipoib_tx.c
+>> @@ -364,7 +364,7 @@ static struct ipoib_txreq
+>> *hfi1_ipoib_send_dma_common(struct net_device *dev,
+>>       if (unlikely(!tx))
+>>           return ERR_PTR(-ENOMEM);
+>>   -    /* so that we can test if the sdma decriptors are there */
+>> +    /* so that we can test if the sdma descriptors are there */
+>>       tx->txreq.num_desc = 0;
+>>       tx->priv = priv;
+>>       tx->txq = txp->txq;
+>>
 > 
-> Honestly, this seems like you want to use tracepoints, not dynamic debug.
+> Thanks
 > 
+> Acked-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
 
-Also see this patch series:
-https://lore.kernel.org/lkml/20200605162645.289174-1-jim.cromie@gmail.com/
-[PATCH 00/16] dynamic_debug: cleanups, 2 features
+Thanks.
 
-It adds/expands dynamic debug flags quite a bit.
+Kieran
 
--- 
-~Randy
+
+
 
