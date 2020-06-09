@@ -2,75 +2,86 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A106C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF51C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEA9F20774
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3BBE20812
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:49:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591717784;
+	bh=cftoxf7eTWLgxLNNfMKJScg7CB9uhYQT3PXokWq0xF4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QK9TLED7hDs57SzzSxAIuLKnRXymPg7B+f/OeRb3CdZU62N13wxO2s/VWkfARyAub
+	 ctJDGE68bb2U8Tjkr99prTNtfFQ9Vaa3WNL9/dycVi25ZFng+bLniv9bfMaiUMFcMh
+	 y0vtT1ZRPR7pTbhO90yPONuoaX5+y+s1wQz6CLjY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730937AbgFIPth (ORCPT
+        id S1730960AbgFIPtl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 11:49:37 -0400
-Received: from smtp.asem.it ([151.1.184.197]:50795 "EHLO smtp.asem.it"
+        Tue, 9 Jun 2020 11:49:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729538AbgFIPtg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 11:49:36 -0400
-Received: from webmail.asem.it
-        by asem.it (smtp.asem.it)
-        (SecurityGateway 6.5.2)
-        with ESMTP id SG000307031.MSG 
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 17:49:32 +0200S
-Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
- (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 9 Jun
- 2020 17:49:30 +0200
-Received: from flavio-x.asem.intra (172.16.17.208) by ASAS044.asem.intra
- (172.16.16.44) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
- Transport; Tue, 9 Jun 2020 17:49:30 +0200
-From:   Flavio Suligoi <f.suligoi@asem.it>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Flavio Suligoi <f.suligoi@asem.it>
-Subject: [PATCH 1/1] leds: fix spelling mistake
-Date:   Tue, 9 Jun 2020 17:49:29 +0200
-Message-ID: <20200609154929.30248-1-f.suligoi@asem.it>
-X-Mailer: git-send-email 2.17.1
+        id S1730944AbgFIPtk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 11:49:40 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54EAA206A4;
+        Tue,  9 Jun 2020 15:49:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591717780;
+        bh=cftoxf7eTWLgxLNNfMKJScg7CB9uhYQT3PXokWq0xF4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EWjWRScXWtcnYf++U7silmPJbFplH3TnwReqlvYhihZ78m+YCyBoQJJZ5VgqvcFOH
+         xMocALkjR79pqM6W8j7ddzFDiLQDpEVxcJ16cn2+lKzGIy4XSD9Rm83ZElDKjpwHCv
+         6kr9n4O7m6sAOmUeMd6+RhHLg9sN91aerE50WA/g=
+Received: by pali.im (Postfix)
+        id 5893BFB6; Tue,  9 Jun 2020 17:49:38 +0200 (CEST)
+Date:   Tue, 9 Jun 2020 17:49:38 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Mario.Limonciello@dell.com, Sebastian Reichel <sre@kernel.org>
+Cc:     y.linux@paritcher.com, hdegoede@redhat.com,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-pm@vger.kernel.org, mjg59@srcf.ucam.org
+Subject: Re: [PATCH 2/3] platform/x86: dell-wmi: add new keymap type 0x0012
+Message-ID: <20200609154938.udo7mn7ka7z7pr6c@pali>
+References: <cover.1591584631.git.y.linux@paritcher.com>
+ <0dc191a3d16f0e114f6a8976433e248018e10c43.1591584631.git.y.linux@paritcher.com>
+ <83fe431cacbc4708962767668ac8f06f@AUSX13MPC105.AMER.DELL.COM>
+ <79bd59ee-dd37-bdc5-f6b4-00f2c33fdcff@paritcher.com>
+ <7f9f0410696141cfabb0237d33b7b529@AUSX13MPC105.AMER.DELL.COM>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
-X-SGSPF-Result: none (smtp.asem.it)
-X-SGOP-RefID: str=0001.0A090210.5EDFAF8B.002A,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7f9f0410696141cfabb0237d33b7b529@AUSX13MPC105.AMER.DELL.COM>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix typo: "Tigger" --> "Trigger"
+On Monday 08 June 2020 20:36:58 Mario.Limonciello@dell.com wrote:
+> Can you please comment here how you would like to see events like this should come
+> through to userspace?
+> 
+> * Wrong power adapter (you have X and should have Y)
+> * You have plugged a dock into the wrong port
+> * Fn-lock mode
 
-Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
----
- drivers/leds/led-triggers.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+In my opinion, Fn-lock mode is related to input subsystem and should be
+probably reported via input device. For a user, fn-lock is similar like
+caps-lock, scroll-lock or num-lock. Also fn-lock is provided by other
+laptops and therefore I would expect that kernel provide fn-lock state
+for all laptops (thinkpad / latitude / ...) via same interface. And not
+via dell-specific interface or general-vendor-message interface.
 
-diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
-index 79e30d2cb7a5..0836bf7631ea 100644
---- a/drivers/leds/led-triggers.c
-+++ b/drivers/leds/led-triggers.c
-@@ -358,7 +358,7 @@ int devm_led_trigger_register(struct device *dev,
- }
- EXPORT_SYMBOL_GPL(devm_led_trigger_register);
- 
--/* Simple LED Tigger Interface */
-+/* Simple LED Trigger Interface */
- 
- void led_trigger_event(struct led_trigger *trig,
- 			enum led_brightness brightness)
--- 
-2.17.1
+Wrong power adapter sounds like something related to power subsystem.
+Adding Sebastian to the loop, maybe he can provide some useful ideas
+about it.
 
+And plugged dock into wrong port. This is probably dell-specific event
+and some interface for "vendor" messages from kernel to userspace would
+be needed to deliver such things.
