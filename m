@@ -6,64 +6,64 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B63A0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDC17C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:45:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94B842068D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:45:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FC4C206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:45:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591735516;
-	bh=RSuipI8ccFhupS8paxcrC8x3jfSLQR5eHEjMopWyIZ8=;
+	s=default; t=1591735533;
+	bh=xyTkY/EBZzRsQjdeEb1UxNmZY3VqTXj97G3wNIG2tco=;
 	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=jWsvRhOvYNYmygCvmG1ckWPX5arxD5qj32Fwre6MJVnLq9TnP3bQoX3UkvvBfoVVn
-	 DQ20fhZZyyWKvttcCaZFMg+4xZWbbrsaCZKcFjBkCeOnm9xSgIDr4Ci+8oaeny/nyS
-	 hE9/TrzOn+oDbJ96Vh3l07P0vTyiyhe80CE46i84=
+	b=E0LSHvO+MyaI39QLRZAeQ8+KbKr5tfSjaljdkRCP8Gh/PfbOzvoBuzlPMFmhGquSs
+	 yUyfYbzPcHuoIOUPBAGsLi9T7HI7ixo3PIx4NKAF6p/uusqPmsp+acufHIRMoEq0xf
+	 HvHC5ewQOEm9cBbQkgNDBGyneMUZ21Tr2oDtMBZ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728143AbgFIUpO (ORCPT
+        id S1728391AbgFIUpc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 16:45:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49702 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 16:45:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727005AbgFIUpN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 16:45:13 -0400
+        id S1726912AbgFIUpb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 16:45:31 -0400
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52C09207C3;
-        Tue,  9 Jun 2020 20:45:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9097D2068D;
+        Tue,  9 Jun 2020 20:45:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591735513;
-        bh=RSuipI8ccFhupS8paxcrC8x3jfSLQR5eHEjMopWyIZ8=;
+        s=default; t=1591735531;
+        bh=xyTkY/EBZzRsQjdeEb1UxNmZY3VqTXj97G3wNIG2tco=;
         h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=q5FDQdcoI0uoFZsasvuO7pKZNkFvuUuO/a28X6QWt0jlJWtoGKuMVg6zRH+lJYbpD
-         UYsWUlWYIaNR/lu9CoOMFoIsAvPjSeCz8X+ZDNLZJ5nTGaa5x+6TXUCyH8QphvwYOJ
-         7DnaVjxtilm2C3+veT4TPYCoWrUKAZQuNwzn0r7s=
+        b=lZQ5WvDCeE/NPYvTNjpmObCymatYCoM0opAOEkSsIY2kHXwlMcCPDQWzGuXqF7l9r
+         O+InKLz3T0GCeSuux9OEsuz7qvxhUTNjSlKBntTvueTjJlrW2oJXV6KDUSFnL4MO82
+         UPpE+jYCJ233kvXCUOgXSsevsvPWcrzJ6T5kNMq0=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200605065258.567858-1-lkundrak@v3.sk>
-References: <20200605065258.567858-1-lkundrak@v3.sk>
-Subject: Re: [PATCH] dt-bindings: clock: Add a missing include to MMP Audio Clock binding
+In-Reply-To: <20200602121030.39132-1-colin.king@canonical.com>
+References: <20200602121030.39132-1-colin.king@canonical.com>
+Subject: Re: [PATCH][next] clk: baikal-t1: fix spelling mistake "Uncompatible" -> "Incompatible"
 From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lubomir Rintel <lkundrak@v3.sk>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Date:   Tue, 09 Jun 2020 13:45:12 -0700
-Message-ID: <159173551263.242598.12514933024861447567@swboyd.mtv.corp.google.com>
+Cc:     kernel-janitors@vger.kernel.org
+To:     Colin King <colin.king@canonical.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 09 Jun 2020 13:45:30 -0700
+Message-ID: <159173553087.242598.11888201445358111435@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Lubomir Rintel (2020-06-04 23:52:58)
-> The include file for input clock in the example was missing, breaking the
-> validation.
+Quoting Colin King (2020-06-02 05:10:30)
+> From: Colin Ian King <colin.king@canonical.com>
 >=20
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> Reported-by: Rob Herring <robh+dt@kernel.org>
+> There is a spelling mistake in a pr_err error message. Fix it.
+>=20
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 > ---
 
 Applied to clk-next
