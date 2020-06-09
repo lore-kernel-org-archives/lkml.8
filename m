@@ -2,110 +2,107 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B21C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 05:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D154BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 05:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AB34207F9
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 05:56:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NOzzyijA"
+	by mail.kernel.org (Postfix) with ESMTP id 9C26A207F9
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 05:57:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591682229;
+	bh=l6ipBhA5f8rK4KSDgULx6FzzquE+2+fxxHeCVYrSBu0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iiLluVBq9SjXPtr5wGB4LVeXyGMKSA+fTY4v48DcKcJkkTXRc/Sf3C50mMPDGcYru
+	 VSqedgSfhUNrjusjjZqCfjjY7v2TFwr7A1XN5ma/6qbFBUHYQbIBWdHDnQ8u6ICmVg
+	 770g4Haq5J1iduJaBPd6Xc3HL4Zjs92Icw7k/d8c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727866AbgFIF4o (ORCPT
+        id S1727898AbgFIF5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 01:56:44 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47667 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726918AbgFIF4o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 01:56:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591682203;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=VMPdQG03WTh1A9nxuWQDwAq/IcZQ1gIyc3Bod/f+MHs=;
-        b=NOzzyijA34CVqjaYUeT0CmrPurxcWCo3XqJ2IKpN7ZMoRkD4yp6/7nAC8ZrmWcRl6wIwz8
-        2luG9W2o40+xw0cGvdvxU3xRWRiSW+vausfwpL8LXosu5Kd570mCvZGWjom6P534m/dh2G
-        l6TS1dmTYul/UBNM/1V0p11yq0zxjK0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-335-L_KUJZZbOdmRFowIgXr-4A-1; Tue, 09 Jun 2020 01:56:41 -0400
-X-MC-Unique: L_KUJZZbOdmRFowIgXr-4A-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 9 Jun 2020 01:57:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38504 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727122AbgFIF5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 01:57:05 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B720819200C0;
-        Tue,  9 Jun 2020 05:56:39 +0000 (UTC)
-Received: from [10.72.12.252] (ovpn-12-252.pek2.redhat.com [10.72.12.252])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C4C9C60BF3;
-        Tue,  9 Jun 2020 05:56:31 +0000 (UTC)
-Subject: Re: [PATCH] vhost/test: fix up after API change
-From:   Jason Wang <jasowang@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     Zhu Lingshan <lingshan.zhu@intel.com>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-References: <20200608124254.727184-1-mst@redhat.com>
- <e747a953-3135-fef9-b098-fca11755d6e4@redhat.com>
-Message-ID: <8ca24e37-d319-fbf7-0114-ddf7eb110781@redhat.com>
-Date:   Tue, 9 Jun 2020 13:56:26 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CD37207F9;
+        Tue,  9 Jun 2020 05:57:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591682224;
+        bh=l6ipBhA5f8rK4KSDgULx6FzzquE+2+fxxHeCVYrSBu0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=M9adgHhT8SWWIYkFtoCSNXvqZzHrk6SOVJQiT5pfWbSeJKYwmIC8A5rT7OdSYT2vn
+         KIddEWjzGL4Vaf8Jfr7QXltgcPIJo2amSuloXTLkzl8pJWdQGaA5AQp4E59UdZk9mF
+         bFBpt50gWgbwlk6F2AqEaCxz6sw45MgXj7p40Afc=
+Date:   Tue, 9 Jun 2020 07:57:02 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jesse Barnes <jsbarnes@google.com>
+Cc:     Rajat Jain <rajatja@google.com>, Rajat Jain <rajatxjain@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Zubin Mithra <zsm@google.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
+ "whitelisted" drivers
+Message-ID: <20200609055702.GB497287@kroah.com>
+References: <20200603060751.GA465970@kroah.com>
+ <CACK8Z6EXDf2vUuJbKm18R6HovwUZia4y_qUrTW8ZW+8LA2+RgA@mail.gmail.com>
+ <20200603121613.GA1488883@kroah.com>
+ <CACK8Z6EOGduHX1m7eyhFgsGV7CYiVN0en4U0cM4BEWJwk2bmoA@mail.gmail.com>
+ <20200605080229.GC2209311@kroah.com>
+ <CACK8Z6GR7-wseug=TtVyRarVZX_ao2geoLDNBwjtB+5Y7VWNEQ@mail.gmail.com>
+ <20200607113632.GA49147@kroah.com>
+ <CAJmaN=m5cGc8019LocvHTo-1U6beA9-h=T-YZtQEYEb_ry=b+Q@mail.gmail.com>
+ <20200608175015.GA457685@kroah.com>
+ <CAJmaN=mvnrLLkJC=6ddO_Rj+1FpRHoQzWFo9W3AZmsW_qS5CYQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <e747a953-3135-fef9-b098-fca11755d6e4@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJmaN=mvnrLLkJC=6ddO_Rj+1FpRHoQzWFo9W3AZmsW_qS5CYQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 08, 2020 at 11:29:58AM -0700, Jesse Barnes wrote:
+> > Now, as to you all getting some sort of "Hardware flag" to determine
+> > "inside" vs. "outside" devices, hah, good luck!  It took us a long time
+> > to get that for USB, and even then, BIOSes lie and get it wrong all the
+> > time.  So you will have to also deal with that in some way, for your
+> > userspace policy.
+> 
+> I think that's inherently platform specific to some extent.  We can do
+> it with our coreboot based firmware, but there's no guarantee other
+> vendors will adopt the same approach.  But I think at least for the
+> ChromeOS ecosystem we can come up with something that'll work, and
+> allow us to dtrt in userspace wrt driver binding.
 
-On 2020/6/9 下午1:53, Jason Wang wrote:
->
-> On 2020/6/8 下午8:42, Michael S. Tsirkin wrote:
->> Pass a flag to request kernel thread use.
->>
->> Fixes: 01fcb1cbc88e ("vhost: allow device that does not depend on 
->> vhost worker")
->> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
->> ---
->>   drivers/vhost/test.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/vhost/test.c b/drivers/vhost/test.c
->> index f55cb584b84a..12304eb8da15 100644
->> --- a/drivers/vhost/test.c
->> +++ b/drivers/vhost/test.c
->> @@ -122,7 +122,7 @@ static int vhost_test_open(struct inode *inode, 
->> struct file *f)
->>       vqs[VHOST_TEST_VQ] = &n->vqs[VHOST_TEST_VQ];
->>       n->vqs[VHOST_TEST_VQ].handle_kick = handle_vq_kick;
->>       vhost_dev_init(dev, vqs, VHOST_TEST_VQ_MAX, UIO_MAXIOV + 64,
->> -               VHOST_TEST_PKT_WEIGHT, VHOST_TEST_WEIGHT, NULL);
->> +               VHOST_TEST_PKT_WEIGHT, VHOST_TEST_WEIGHT, true, NULL);
->>         f->private_data = n;
->
->
-> Acked-by: Jason Wang <jasowang@redhat.com>
->
-> Just to confirm, have you queued the doorbell mapping patches already? 
-> Or you expect I squash this into v2 of doorbell mapping series?
+Why not work with the UEFI group to add this to their spec so that it
+will work for all future firmware releases, not just your
+vendor-specific one?  :)
 
+thanks,
 
-Ok, I saw the patches in your linux-next branch.
-
-Thanks
-
-
->
-> Thanks
->
-
+greg k-h
