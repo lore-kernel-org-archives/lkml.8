@@ -2,91 +2,206 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3657DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C362C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13CBE20737
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:53:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Sfs/r+nz"
+	by mail.kernel.org (Postfix) with ESMTP id 47FF22078D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:54:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591721649;
+	bh=rAONHGowIT3bJrN+nBCPMc9n0hSPyAkiuQv9Uiw3SQU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=n8eKNAw5wlvekw/jygInTeYp5MZdBDnm1kJdDhJqaWVB3rRRdcnXp/Td8VLTh5WzJ
+	 Q4hTozBKpn6kJ9LK8uQTgJiW/KKnM+MFyh/cFff66saPT16Y9VC+9sBks4f86a/pmF
+	 rjHksgGOn2dlPaeyawITShraLn2ZZRjVk9y2YYO8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731285AbgFIQx4 (ORCPT
+        id S1731301AbgFIQyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 12:53:56 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42208 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731206AbgFIQx4 (ORCPT
+        Tue, 9 Jun 2020 12:54:07 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:42406 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731206AbgFIQyF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 12:53:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591721635;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7xf0loN+bSKyI/1nYgCdJKSwWA5mvzJln10ufn+lIn0=;
-        b=Sfs/r+nzeNtMj71cpAIM55xrI5EEcT+ZYDuFnsJiC0zPp23IkHvES+57OpDgz/UEf4F0Mt
-        UT/ZUCfo9dOKcWtSMe5B4WOaHqTG68YG3CJcqaoKZU+Kqv7D8M5aEe39wL1ZFVOv48rLv1
-        C+aPxOAIMy2H9ZBOitxa3kNzn255NJE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-111-slUI-swWNp-k---nybQIDg-1; Tue, 09 Jun 2020 12:53:53 -0400
-X-MC-Unique: slUI-swWNp-k---nybQIDg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B3E4D873014;
-        Tue,  9 Jun 2020 16:53:51 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-117-140.rdu2.redhat.com [10.10.117.140])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1DABF768DA;
-        Tue,  9 Jun 2020 16:53:51 +0000 (UTC)
-Subject: Re: lockdep issues with overlayfs
-To:     Miklos Szeredi <miklos@szeredi.hu>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-unionfs@vger.kernel.org
-References: <20200609150756.GA6171@miu.piliscsaba.redhat.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <fff3ed1b-e470-a184-a4ef-de84f47879ab@redhat.com>
-Date:   Tue, 9 Jun 2020 12:53:50 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 9 Jun 2020 12:54:05 -0400
+Received: by mail-il1-f196.google.com with SMTP id 18so20976294iln.9;
+        Tue, 09 Jun 2020 09:54:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=KmkTV1fA8j8tDa2ByE5bz4rItMAJ7USXbj2L8eg6OQc=;
+        b=ZLXGQTvAdS7kh6hVktmlNQQ8A/Oz+58OjsBXnGRozRq6AYwJeIyfQBTICC01ms4QCf
+         dB6tY6JjarD9qglL/Oe+tK+8mZJQxxI/16Z0TDjqUP80MeRnuBZuLefPz+Irv+9uh55u
+         PN1ja47tVOu/O3FUe7J9FZry90RhHeOBbJCxYVipB+1a/H5XhDdvB2mZ8ZIWD/mHNMYg
+         KvPfwjbVO/xkZ7ngF/JTRkKDY3HaqJPVmykNdZy7HljPmNvLUY/3kHSzgq9y0ugu8gID
+         xyr6h0Arl7L0jeZxz+2VlCjOYw0K8+FMr7sn+ergfZGxNGx626U+NxBckcIHxBIpZker
+         xW0Q==
+X-Gm-Message-State: AOAM531o7HbeR2p0yLYpJ+Eypkyu2Sh4NISOA5lNNW7KGx4XdJn2eC3S
+        tWRqrl18ApGPSu9n/pAnTA==
+X-Google-Smtp-Source: ABdhPJyxG7y3K+cLyUuJIAZTdZr/u/4CxX3l41yFs/vx7KzsnZpaQg3XY4fT7PITdO9rXJOWTk7gAA==
+X-Received: by 2002:a05:6e02:972:: with SMTP id q18mr25848913ilt.60.1591721643763;
+        Tue, 09 Jun 2020 09:54:03 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id t72sm2432957ilk.23.2020.06.09.09.54.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2020 09:54:03 -0700 (PDT)
+Received: (nullmailer pid 1059999 invoked by uid 1000);
+        Tue, 09 Jun 2020 16:54:01 -0000
+Date:   Tue, 9 Jun 2020 10:54:01 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Michael Walle <michael@walle.cc>, Mark Brown <broonie@kernel.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld
+ management controller
+Message-ID: <20200609165401.GB1019634@bogus>
+References: <20200604211039.12689-1-michael@walle.cc>
+ <20200604211039.12689-3-michael@walle.cc>
+ <20200605065709.GD3714@dell>
+ <20200605105026.GC5413@sirena.org.uk>
+ <c5632bfab3956265e90fc2fb6c0b3cae@walle.cc>
+ <20200606114645.GB2055@sirena.org.uk>
+ <dc052a5c77171014ecc465b1da8b7ef8@walle.cc>
+ <20200608082827.GB3567@dell>
 MIME-Version: 1.0
-In-Reply-To: <20200609150756.GA6171@miu.piliscsaba.redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200608082827.GB3567@dell>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/9/20 11:07 AM, Miklos Szeredi wrote:
-> While running xfstests[1] on overlayfs I get the following:
->
-> BUG: MAX_LOCKDEP_CHAIN_HLOCKS too low!
-> turning off the locking correctness validator.
+On Mon, Jun 08, 2020 at 09:28:27AM +0100, Lee Jones wrote:
+> Rob, something for you below.
+> 
+> On Sat, 06 Jun 2020, Michael Walle wrote:
+> > Am 2020-06-06 13:46, schrieb Mark Brown:
+> > > On Fri, Jun 05, 2020 at 10:07:36PM +0200, Michael Walle wrote:
+> > > > Am 2020-06-05 12:50, schrieb Mark Brown:
+> > > 
+> > > > > I have no idea what you are thinking of when you say "simple-regmap" so
+> > > > > it is difficult to comment.
+> > > 
+> > > > I guess, Lee is suggesting to be able to create a regmap instance via
+> > > > device tree (and populate its child nodes?). Like
+> > > >   compatible = "syscon", "simple-mfd";
+> > > > but for any regmap, not just MMIO.
+> 
+> Bingo!
+> 
+> > > I don't understand why this would be anything separate to
+> > > simple-mfd.
+> > 
+> > Don't just simple-mfd tells the of core, to probe the children this
+> > node? Where does the regmap then come from?
+> 
+> Right.  I'm suggesting a means to extrapolate complex shared and
+> sometimes intertwined batches of register sets to be consumed by
+> multiple (sub-)devices spanning different subsystems.
+> 
+> Actually scrap that.  The most common case I see is a single Regmap
+> covering all child-devices.  It would be great if there was a way in
+> which we could make an assumption that the entire register address
+> space for a 'tagged' (MFD) device is to be shared (via Regmap) between
+> each of the devices described by its child-nodes.  Probably by picking
+> up on the 'simple-mfd' compatible string in the first instance.
+> 
+> Rob, is the above something you would contemplate?
+
+No. I'd like to just kill off syscon and simple-mfd really. Those are 
+just hints meaning a specific compatible is still needed, but I see them 
+all the time alone (or combined like above). 'syscon' just serves to 
+create a regmap. This could be accomplished just with a list of 
+compatibles to register a regmap for. That might be a longish list, but 
+wanting a regmap is really a kernel implementation detail and decision.
+
+> Michael, do your register addresses overlap i.e. are they intermingled
+> with one another?  Do multiple child devices need access to the same
+> registers i.e. are they shared?
+> 
+> > > > But, there is more in my driver:
+> > > >  (1) there is a version check
+> 
+> If we can rid the Regmap dependency, then creating an entire driver to
+> conduct a version check is unjustifiable.  This could become an inline
+> function which is called by each of the sub-devices instead, for
+> example.
+> 
+> > > >  (2) there is another function for which there is no suitable linux
+> > > >      subsystem I'm aware of and thus which I'd like to us sysfs
+> > > >      attributes for: This controller supports 16 non-volatile
+> > > >      configuration bits. (this is still TBD)
+> 
+> There is a place for everything in Linux.
+> 
+> What do these bits configure?
+> 
+> > > TBH I'd also say that the enumeration of the subdevices for this
+> > > device should be in the device rather than the DT, they don't
+> > > seem to be things that exist outside of this one device.
+> > 
+> > We're going circles here, formerly they were enumerated in the MFD.
+> > Yes, they are devices which aren't likely be used outside a
+> > "sl28cpld", but there might there might be other versions of the
+> > sl28cpld with other components on different base addresses. I
+> > don't care if they are enumerated in DT or MFD, actually, I'd
+> > prefer the latter. _But_ I would like to have the device tree
+> > properties for its subdevices, e.g. the ones for the watchdog or
+> > whatever components there might be in the future.
+> 
 > [...]
->
-> Then when doing cat /proc/lockdep_chains I get this Oops:
->
-> BUG: unable to handle page fault for address: ffffffff83b36da8
-> #PF: supervisor read access in kernel mode
-> #PF: error_code(0x0000) - not-present page
-> PGD 2262067 P4D 2262067 PUD 2263063 PMD 0
+> 
+> > MFD core can
+> > match a device tree node today; but only one per unique compatible
+> > string. So what should I use to differentiate the different
+> > subdevices?
+> 
+> Right.  I have been aware of this issue.  The only suitable solution
+> to this would be to match on 'reg'.
+> 
+> FYI: I plan to fix this.
+> 
+> If your register map needs to change, then I suggest that this is
+> either a new device or at least a different version of the device and
+> would also have to be represented as different (sub-)mfd_cell.
 
-Thanks for the information. There are some corruption in the lock chain 
-data some garbage shows up in your lockdep_chains. I will try to 
-reproduce the error to in order to figure out where the bug is.
+The same register set at a different offset is the same (sub)device.
 
-Thanks,
-Longman
+> 
+> > Rob suggested the internal offset, which I did here.
+> 
+> FWIW, I don't like this idea.  DTs should not have to be modified
+> (either in the first instance or subsequently) or specifically
+> designed to patch inadequacies in any given OS.
 
+My understanding is there can be differing combinations or number of 
+instances of sub devices for this device. That's when having DT sub 
+devices makes sense. If the h/w changes, then the DT should change.
 
+Multiple instances of devices require an address to identify them and we 
+don't make up numbering if we can avoid it. The earlier revisions just 
+had made up indices for addresses.
+
+Rob
