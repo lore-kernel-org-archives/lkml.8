@@ -2,32 +2,32 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F8FBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66387C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:09:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4765720737
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:09:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E8DF20737
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:09:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388471AbgFISJU (ORCPT
+        id S2388464AbgFISJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:09:20 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:41446 "EHLO
+        Tue, 9 Jun 2020 14:09:17 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:41412 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388179AbgFISF7 (ORCPT
+        by vger.kernel.org with ESMTP id S2388172AbgFISF7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 9 Jun 2020 14:05:59 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jiidG-0001p1-2Y; Tue, 09 Jun 2020 19:05:54 +0100
+        id 1jiidF-0001oP-0S; Tue, 09 Jun 2020 19:05:53 +0100
 Received: from ben by deadeye with local (Exim 4.94)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jiidF-006Vwm-Sh; Tue, 09 Jun 2020 19:05:53 +0100
+        id 1jiidE-006Vus-Bt; Tue, 09 Jun 2020 19:05:52 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "stable" <stable@vger.kernel.org>,
-        "Felipe Balbi" <balbi@kernel.org>,
-        "Kyungtae Kim" <kt0755@gmail.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Date:   Tue, 09 Jun 2020 19:04:38 +0100
-Message-ID: <lsq.1591725832.783671228@decadent.org.uk>
+        "Tetsuo Handa" <penguin-kernel@I-love.SAKURA.ne.jp>,
+        "Lukas Bulwahn" <lukas.bulwahn@gmail.com>,
+        "David Miller" <davem@davemloft.net>,
+        "Hulk Robot" <hulkci@huawei.com>,
+        "Jouni Hogander" <jouni.hogander@unikie.com>
+Date:   Tue, 09 Jun 2020 19:04:00 +0100
+Message-ID: <lsq.1591725832.92989072@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 47/61] USB: gadget: fix illegal array access in
- binding with UDC
+Subject: [PATCH 3.16 09/61] net-sysfs: Call dev_hold always in
+ netdev_queue_add_kobject
 In-Reply-To: <lsq.1591725831.850867383@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,74 +59,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Kyungtae Kim <kt0755@gmail.com>
+From: Jouni Hogander <jouni.hogander@unikie.com>
 
-commit 15753588bcd4bbffae1cca33c8ced5722477fe1f upstream.
+commit e0b60903b434a7ee21ba8d8659f207ed84101e89 upstream.
 
-FuzzUSB (a variant of syzkaller) found an illegal array access
-using an incorrect index while binding a gadget with UDC.
+Dev_hold has to be called always in netdev_queue_add_kobject.
+Otherwise usage count drops below 0 in case of failure in
+kobject_init_and_add.
 
-Reference: https://www.spinics.net/lists/linux-usb/msg194331.html
-
-This bug occurs when a size variable used for a buffer
-is misused to access its strcpy-ed buffer.
-Given a buffer along with its size variable (taken from user input),
-from which, a new buffer is created using kstrdup().
-Due to the original buffer containing 0 value in the middle,
-the size of the kstrdup-ed buffer becomes smaller than that of the original.
-So accessing the kstrdup-ed buffer with the same size variable
-triggers memory access violation.
-
-The fix makes sure no zero value in the buffer,
-by comparing the strlen() of the orignal buffer with the size variable,
-so that the access to the kstrdup-ed buffer is safe.
-
-BUG: KASAN: slab-out-of-bounds in gadget_dev_desc_UDC_store+0x1ba/0x200
-drivers/usb/gadget/configfs.c:266
-Read of size 1 at addr ffff88806a55dd7e by task syz-executor.0/17208
-
-CPU: 2 PID: 17208 Comm: syz-executor.0 Not tainted 5.6.8 #1
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Bochs 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xce/0x128 lib/dump_stack.c:118
- print_address_description.constprop.4+0x21/0x3c0 mm/kasan/report.c:374
- __kasan_report+0x131/0x1b0 mm/kasan/report.c:506
- kasan_report+0x12/0x20 mm/kasan/common.c:641
- __asan_report_load1_noabort+0x14/0x20 mm/kasan/generic_report.c:132
- gadget_dev_desc_UDC_store+0x1ba/0x200 drivers/usb/gadget/configfs.c:266
- flush_write_buffer fs/configfs/file.c:251 [inline]
- configfs_write_file+0x2f1/0x4c0 fs/configfs/file.c:283
- __vfs_write+0x85/0x110 fs/read_write.c:494
- vfs_write+0x1cd/0x510 fs/read_write.c:558
- ksys_write+0x18a/0x220 fs/read_write.c:611
- __do_sys_write fs/read_write.c:623 [inline]
- __se_sys_write fs/read_write.c:620 [inline]
- __x64_sys_write+0x73/0xb0 fs/read_write.c:620
- do_syscall_64+0x9e/0x510 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Signed-off-by: Kyungtae Kim <kt0755@gmail.com>
-Reported-and-tested-by: Kyungtae Kim <kt0755@gmail.com>
-Cc: Felipe Balbi <balbi@kernel.org>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200510054326.GA19198@pizza01
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: b8eb718348b8 ("net-sysfs: Fix reference count leak in rx|netdev_queue_add_kobject")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: David Miller <davem@davemloft.net>
+Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/gadget/configfs.c | 3 +++
- 1 file changed, 3 insertions(+)
+ net/core/net-sysfs.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/gadget/configfs.c
-+++ b/drivers/usb/gadget/configfs.c
-@@ -254,6 +254,9 @@ static ssize_t gadget_dev_desc_UDC_store
- 	char *name;
- 	int ret;
+--- a/net/core/net-sysfs.c
++++ b/net/core/net-sysfs.c
+@@ -1143,14 +1143,17 @@ static int netdev_queue_add_kobject(stru
+ 	struct kobject *kobj = &queue->kobj;
+ 	int error = 0;
  
-+	if (strlen(page) < len)
-+		return -EOVERFLOW;
++	/* Kobject_put later will trigger netdev_queue_release call
++	 * which decreases dev refcount: Take that reference here
++	 */
++	dev_hold(queue->dev);
 +
- 	name = kstrdup(page, GFP_KERNEL);
- 	if (!name)
- 		return -ENOMEM;
+ 	kobj->kset = net->queues_kset;
+ 	error = kobject_init_and_add(kobj, &netdev_queue_ktype, NULL,
+ 	    "tx-%u", index);
+ 	if (error)
+ 		goto err;
+ 
+-	dev_hold(queue->dev);
+-
+ #ifdef CONFIG_BQL
+ 	error = sysfs_create_group(kobj, &dql_group);
+ 	if (error)
 
