@@ -2,119 +2,116 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A714C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD09C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:25:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 623C72078C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:23:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70F302078C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:25:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WKD2WtuM"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="rO+v0VTW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729208AbgFIMXb (ORCPT
+        id S1729236AbgFIMZd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 08:23:31 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29766 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727113AbgFIMXa (ORCPT
+        Tue, 9 Jun 2020 08:25:33 -0400
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:22150 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726903AbgFIMZc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 08:23:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591705409;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=d3aWiXtS8cF+u5/TS5j+n1u7AbVcRqeRZ4SH9J+GaOc=;
-        b=WKD2WtuM0+nuv4bAR+O/tj8YcKzXGUTExm+N/3gaq2OLApaTBGDsKbSUkxD9705Q9m8UJa
-        s2kUvPyVQOLdpZqdTDTGL8WOkcNbvcMeffAeLioRhJ8pWe8dUzekRQFuK8PrYD6Z8y1nAI
-        lpXErSd+tq78tZFcH3Vbkrt5UcGorXM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-252-mSCxeT0HPrWtom8qduK5cQ-1; Tue, 09 Jun 2020 08:23:26 -0400
-X-MC-Unique: mSCxeT0HPrWtom8qduK5cQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3CEF2107B266;
-        Tue,  9 Jun 2020 12:23:24 +0000 (UTC)
-Received: from carbon (unknown [10.40.208.9])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C715F5D9C9;
-        Tue,  9 Jun 2020 12:23:19 +0000 (UTC)
-Date:   Tue, 9 Jun 2020 14:23:15 +0200
-From:   Jesper Dangaard Brouer <jbrouer@redhat.com>
-To:     Gaurav Singh <gaurav1086@gmail.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        KP Singh <kpsingh@chromium.org>,
-        netdev@vger.kernel.org (open list:XDP (eXpress Data Path)),
-        bpf@vger.kernel.org (open list:XDP (eXpress Data Path)),
-        linux-kernel@vger.kernel.org (open list)
-Subject: Re: [PATCH] bpf: alloc_record_per_cpu Add null check after malloc
-Message-ID: <20200609142315.4d131599@carbon>
-In-Reply-To: <20200609120804.10569-1-gaurav1086@gmail.com>
-References: <20200609120804.10569-1-gaurav1086@gmail.com>
-Organization: Red Hat Inc.
+        Tue, 9 Jun 2020 08:25:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1591705532; x=1623241532;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=7X8FiA3me7TPMvFE9ad5LnLwzdMbCB+eU+xJvgSdv5A=;
+  b=rO+v0VTW3xwLeR0VLV/s9Bqq7bmQMuG1n0nLJhV3NWotsTaYudTqED/Y
+   cMopDycT93CHU9bgJIXdMwKksOXB4sGp5jXpMh6EKdHnBIUFSuCPFYMA2
+   LYJribd6kZHXCNp4QGW7kyhpvjayv4wVh70JGzKhQuEKTOiqiKMjVFtxn
+   g=;
+IronPort-SDR: wtuvN4RmzP2Vo+OSj4dmxNhETKKTUVaabPG9qE5jtrAaS7bNLrO0od8oq18iN3XC546NdVSIh9
+ vmJcjErtV5XA==
+X-IronPort-AV: E=Sophos;i="5.73,492,1583193600"; 
+   d="scan'208";a="35175724"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-57e1d233.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 09 Jun 2020 12:25:30 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-57e1d233.us-east-1.amazon.com (Postfix) with ESMTPS id B40AE140225;
+        Tue,  9 Jun 2020 12:25:28 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 9 Jun 2020 12:25:27 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.53) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 9 Jun 2020 12:25:23 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     SeongJae Park <sjpark@amazon.com>
+CC:     <akpm@linux-foundation.org>, <colin.king@canonical.com>,
+        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
+        SeongJae Park <sjpark@amazon.de>
+Subject: Re: [PATCH] scripts/spelling: Recommend blocklist/allowlist instead of blacklist/whitelist
+Date:   Tue, 9 Jun 2020 14:24:50 +0200
+Message-ID: <20200609122450.25842-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200609121843.24147-1-sjpark@amazon.com> (raw)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.53]
+X-ClientProxiedBy: EX13D40UWC002.ant.amazon.com (10.43.162.191) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  9 Jun 2020 08:08:03 -0400
-Gaurav Singh <gaurav1086@gmail.com> wrote:
+On Tue, 9 Jun 2020 14:18:43 +0200 SeongJae Park <sjpark@amazon.com> wrote:
 
-> The memset call is made right after malloc call. To fix this, add the null check right after malloc and then do memset.
+> From: SeongJae Park <sjpark@amazon.de>
 > 
+> This commit recommends the patches to replace 'blacklist' and
+> 'whitelist' with the 'blocklist' and 'allowlist', because the new
+> suggestions are incontrovertible, doesn't make people hurt, and more
+> self-explanatory.
+> 
+> Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> 
+> cr https://code.amazon.com/reviews/CR-27247203
 
-Did you read the section about how long lines should be in desc?
+Oops, sorry for leaving this unnecessary text.  Will post the 2nd version soon,
+please ignore this patch.
 
 
-> Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
+Thanks,
+SeongJae Park
+
 > ---
->  samples/bpf/xdp_rxq_info_user.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  scripts/spelling.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/samples/bpf/xdp_rxq_info_user.c b/samples/bpf/xdp_rxq_info_user.c
-> index 4fe47502ebed..490b07b7df78 100644
-> --- a/samples/bpf/xdp_rxq_info_user.c
-> +++ b/samples/bpf/xdp_rxq_info_user.c
-> @@ -202,11 +202,11 @@ static struct datarec *alloc_record_per_cpu(void)
->  
->  	size = sizeof(struct datarec) * nr_cpus;
->  	array = malloc(size);
-> -	memset(array, 0, size);
->  	if (!array) {
->  		fprintf(stderr, "Mem alloc error (nr_cpus:%u)\n", nr_cpus);
->  		exit(EXIT_FAIL_MEM);
->  	}
-> +	memset(array, 0, size);
->  	return array;
->  }
-
-Looking at code, this bug happen in more places. Please fix up all locations.
-
-I think this fix should go through the "bpf" tree.
-Please read:
- https://github.com/torvalds/linux/blob/master/Documentation/bpf/bpf_devel_QA.rst
-
--- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
-
+> diff --git a/scripts/spelling.txt b/scripts/spelling.txt
+> index d9cd24cf0d40..ea785568d8b8 100644
+> --- a/scripts/spelling.txt
+> +++ b/scripts/spelling.txt
+> @@ -230,6 +230,7 @@ beter||better
+>  betweeen||between
+>  bianries||binaries
+>  bitmast||bitmask
+> +blacklist||blocklist
+>  boardcast||broadcast
+>  borad||board
+>  boundry||boundary
+> @@ -1495,6 +1496,7 @@ whcih||which
+>  whenver||whenever
+>  wheter||whether
+>  whe||when
+> +whitelist||allowlist
+>  wierd||weird
+>  wiil||will
+>  wirte||write
+> -- 
+> 2.17.1
+> 
