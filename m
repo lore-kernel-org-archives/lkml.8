@@ -4,59 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C761C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39BE0C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:23:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 763D12067B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:23:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C1492067B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:23:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591726993;
-	bh=gz4yzpENGTwtO6BvLL61gS3WMm5cksSG2EmPaENhZtw=;
+	s=default; t=1591726997;
+	bh=uxgkLmEM+qRpdRQoAjDFTn3eJyZ9H2fvH5ojL6T9T60=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZVhn2V8Zlec70/356qJk3WgXkn4kaY3y8zBHtjli2um1bOxSIf9ApscSil4Co8pog
-	 h7jPnZ7NR96Al26phKsQ9gMytY1Cb2nX7T1+GUFhPNJlJP0x5/i33Svpaa+k8QXJM0
-	 mxC9hnTfISBkHpLtmMuldg7jZ4mFoUfYGpBJYTuw=
+	b=yXDGhLABHCfqtNXZIq4EKiNQkT22nNMZRiSs2GKnmhYiupw1yg4JN4UmGTDWK+0lc
+	 ka3YDU4XZGX7Wbxc/yHgID9mn8zFSqUorzrlhziVAvhfWc5ZfY8xRaHQSH704xjhFn
+	 R9VvzF5XejzKsXC9bwEx/q+OZ28riYRlhfqbG1Ng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389065AbgFISXM (ORCPT
+        id S1732110AbgFIRrb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:23:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58914 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:47:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732119AbgFIRrg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:47:36 -0400
+        id S1732061AbgFIRrU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:47:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5EE520801;
-        Tue,  9 Jun 2020 17:47:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E0D6207F9;
+        Tue,  9 Jun 2020 17:47:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591724856;
-        bh=gz4yzpENGTwtO6BvLL61gS3WMm5cksSG2EmPaENhZtw=;
+        s=default; t=1591724840;
+        bh=uxgkLmEM+qRpdRQoAjDFTn3eJyZ9H2fvH5ojL6T9T60=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XoINWjCIWFHmRqoBdb55MjPhIUdGRPRwMm8BFlSk7XUQAzDNdOku9iH1NJw/76FRc
-         q1ZnJeQwJjVwIQLhXYpwDVgoF433aaKLulR2dVH6goZiu0Fux/dmRh7fCAVG3OyzNV
-         6cGjyD43pGXM0OqSG0RNR2Ty9AFlCJubS+3ll69k=
+        b=CMesLuVscIlxMrGCM4cUiH3H70+KmQIqJ6g019syGzvn+MkygQ5FxRQJa7tuQxb3O
+         SFqs0Z9hbAT0p8tQTtVSX2DN5FcVfLtn/VIFMPLNKzbA1a7bRqWiRP9vxa5zRnLAqI
+         vwwjDHIoH8b5MjIlyB4MsyHMl/8BC7RR4JlSXaN4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hannes Reinecke <hare@suse.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Bart Van Assche <bart.vanassche@wdc.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.9 01/42] scsi: scsi_devinfo: fixup string compare
-Date:   Tue,  9 Jun 2020 19:44:07 +0200
-Message-Id: <20200609174015.533553608@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?David=20Bala=C5=BEic?= <xerces9@gmail.com>,
+        Guillaume Nault <gnault@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 14/36] pppoe: only process PADT targeted at local interfaces
+Date:   Tue,  9 Jun 2020 19:44:14 +0200
+Message-Id: <20200609173934.094297589@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200609174015.379493548@linuxfoundation.org>
-References: <20200609174015.379493548@linuxfoundation.org>
+In-Reply-To: <20200609173933.288044334@linuxfoundation.org>
+References: <20200609173933.288044334@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -65,83 +61,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hannes Reinecke <hare@suse.de>
+From: Guillaume Nault <gnault@redhat.com>
 
-commit b8018b973c7cefa5eb386540130fa47315b8e337 upstream.
+We don't want to disconnect a session because of a stray PADT arriving
+while the interface is in promiscuous mode.
+Furthermore, multicast and broadcast packets make no sense here, so
+only PACKET_HOST is accepted.
 
-When checking the model and vendor string we need to use the minimum
-value of either string, otherwise we'll miss out on wildcard matches.
-
-And we should take care when matching with zero size strings; results
-might be unpredictable.  With this patch the rules for matching devinfo
-strings are as follows:
-
-- Vendor strings must match exactly
-- Empty Model strings will only match if the devinfo model
-  is also empty
-- Model strings shorter than the devinfo model string will
-  not match
-
-Fixes: 5e7ff2c ("SCSI: fix new bug in scsi_dev_info_list string matching")
-Signed-off-by: Hannes Reinecke <hare@suse.com>
-Reviewed-by: Alan Stern <stern@rowland.harvard.edu>
-Reviewed-by: Bart Van Assche <bart.vanassche@wdc.com>
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reported-by: David Balažic <xerces9@gmail.com>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Guillaume Nault <gnault@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 ---
- drivers/scsi/scsi_devinfo.c |   23 +++++++++++++----------
- 1 file changed, 13 insertions(+), 10 deletions(-)
+ drivers/net/ppp/pppoe.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/scsi/scsi_devinfo.c
-+++ b/drivers/scsi/scsi_devinfo.c
-@@ -394,8 +394,8 @@ EXPORT_SYMBOL(scsi_dev_info_list_add_key
+--- a/drivers/net/ppp/pppoe.c
++++ b/drivers/net/ppp/pppoe.c
+@@ -494,6 +494,9 @@ static int pppoe_disc_rcv(struct sk_buff
+ 	if (!skb)
+ 		goto out;
  
- /**
-  * scsi_dev_info_list_find - find a matching dev_info list entry.
-- * @vendor:	vendor string
-- * @model:	model (product) string
-+ * @vendor:	full vendor string
-+ * @model:	full model (product) string
-  * @key:	specify list to use
-  *
-  * Description:
-@@ -410,7 +410,7 @@ static struct scsi_dev_info_list *scsi_d
- 	struct scsi_dev_info_list *devinfo;
- 	struct scsi_dev_info_list_table *devinfo_table =
- 		scsi_devinfo_lookup_by_key(key);
--	size_t vmax, mmax;
-+	size_t vmax, mmax, mlen;
- 	const char *vskip, *mskip;
- 
- 	if (IS_ERR(devinfo_table))
-@@ -449,15 +449,18 @@ static struct scsi_dev_info_list *scsi_d
- 			    dev_info_list) {
- 		if (devinfo->compatible) {
- 			/*
--			 * Behave like the older version of get_device_flags.
-+			 * vendor strings must be an exact match
- 			 */
--			if (memcmp(devinfo->vendor, vskip, vmax) ||
--					(vmax < sizeof(devinfo->vendor) &&
--						devinfo->vendor[vmax]))
-+			if (vmax != strlen(devinfo->vendor) ||
-+			    memcmp(devinfo->vendor, vskip, vmax))
- 				continue;
--			if (memcmp(devinfo->model, mskip, mmax) ||
--					(mmax < sizeof(devinfo->model) &&
--						devinfo->model[mmax]))
++	if (skb->pkt_type != PACKET_HOST)
++		goto abort;
 +
-+			/*
-+			 * @model specifies the full string, and
-+			 * must be larger or equal to devinfo->model
-+			 */
-+			mlen = strlen(devinfo->model);
-+			if (mmax < mlen || memcmp(devinfo->model, mskip, mlen))
- 				continue;
- 			return devinfo;
- 		} else {
+ 	if (!pskb_may_pull(skb, sizeof(struct pppoe_hdr)))
+ 		goto abort;
+ 
 
 
