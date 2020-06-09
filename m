@@ -2,158 +2,234 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3885C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 08:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4879C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 08:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A165A2078D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 08:30:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Bdny4aO1"
+	by mail.kernel.org (Postfix) with ESMTP id B9DC9207ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 08:35:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591691754;
+	bh=JAspZs5Ru9i8zsF1Luz8OtOT1JFIDt+vTMcdcHBI0I4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YN8gsTtGp9BalV/864v/Qp+U8SCewqPUWgD/qoRkHvvou0CZgsKwc3JCjq+x5Qfos
+	 G0AmE9YCIS8QVpmhMpXPp7rJsYpCx7iGnBlnbW5uC04aK7FQ6hR/kVxJCbU5TkrkFd
+	 E2IZ9r00MFaiN3LnKf5iCbvL3CUfO1IBKbzpvIgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbgFIIam (ORCPT
+        id S1728098AbgFIIfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 04:30:42 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:15829 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728126AbgFIIam (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 04:30:42 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591691441; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=VohXKRDS9Puk813cVYWgC6ku1tCISrnzQ9+U/f81FYA=;
- b=Bdny4aO1Ew/DQCOiRQT51QU7XpeTgbD6BRIqmQ4p/cKcT4Zrr+z0FOv5xYslHVb5YYnhZHaG
- qQPYIjh5qhyYo6Q6UacB+kuLqy8UH21PBIZMkMc5iN0fxWw5++RNStu/JX3HCwtr4kT/nOqW
- t/BsEgPL2rbDzgBuBBugHN9+NXI=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 5edf4898badb0d4bcf0b63ea (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 09 Jun 2020 08:30:16
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 01B40C4339C; Tue,  9 Jun 2020 08:30:14 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Tue, 9 Jun 2020 04:35:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33632 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726463AbgFIIfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 04:35:40 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: ppvk)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 38F70C433CA;
-        Tue,  9 Jun 2020 08:30:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B59B20737;
+        Tue,  9 Jun 2020 08:35:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591691738;
+        bh=JAspZs5Ru9i8zsF1Luz8OtOT1JFIDt+vTMcdcHBI0I4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KqvCpCz/b13WSCGzKw9vbrGW5Yu6oykakpg1pqzo5OcgLxrhKUsukm5ua19vlzmgF
+         feRVXjGmkU6DjTz/68hoDRau2WHgCTFkPblLzAzk6//ZR5E9strqoMF3vipHVQssaV
+         W+9uaDsvHPFhOfR5c5C4sJqT9KTenPJOC/cAGNNs=
+Received: by pali.im (Postfix)
+        id D1EA8884; Tue,  9 Jun 2020 10:35:36 +0200 (CEST)
+Date:   Tue, 9 Jun 2020 10:35:36 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Y Paritcher <y.linux@paritcher.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Mario.Limonciello@dell.com
+Subject: Re: [PATCH v2 3/3] platform/x86: dell-wmi: add new dmi keys to
+ bios_to_linux_keycode
+Message-ID: <20200609083536.y4xhdrkydfwam4mk@pali>
+References: <cover.1591584631.git.y.linux@paritcher.com>
+ <cover.1591656154.git.y.linux@paritcher.com>
+ <d585d2a0f01a6b9480352530b571dec2d1afd79f.1591656154.git.y.linux@paritcher.com>
+ <8053252a-83ad-bcaa-2830-ccfbca1b4152@infradead.org>
+ <20200608235508.wthtgilgmifwfgz2@pali>
+ <d48b54ab-09ad-381b-c130-c5f3cdb4da10@paritcher.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 09 Jun 2020 14:00:14 +0530
-From:   ppvk@codeaurora.org
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     bjorn.andersson@linaro.org, adrian.hunter@intel.com,
-        robh+dt@kernel.org, ulf.hansson@linaro.org,
-        vbadigan@codeaurora.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, mka@chromium.org,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mmc-owner@vger.kernel.org, rnayak@codeaurora.org,
-        matthias@chromium.org, linux-arm-msm-owner@vger.kernel.org
-Subject: =?UTF-8?Q?Re=3A_=5BPATCH=C2=A0V3_1/2=5D_mmc=3A_sdhci-msm=3A_Add_?=
- =?UTF-8?Q?interconnect_bandwidth_scaling_support?=
-In-Reply-To: <8b2808215a09871bfccccb72cfa01e60@codeaurora.org>
-References: <1591269283-24084-1-git-send-email-ppvk@codeaurora.org>
- <1591349427-27004-1-git-send-email-ppvk@codeaurora.org>
- <1591349427-27004-2-git-send-email-ppvk@codeaurora.org>
- <8b2808215a09871bfccccb72cfa01e60@codeaurora.org>
-Message-ID: <f23dc598cbdbd59df22f29c2b77bd14c@codeaurora.org>
-X-Sender: ppvk@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d48b54ab-09ad-381b-c130-c5f3cdb4da10@paritcher.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sibi,
+On Monday 08 June 2020 20:43:45 Y Paritcher wrote:
+> On 6/8/20 7:55 PM, Pali Rohár wrote:
+> > Hello!
+> > 
+> > On Monday 08 June 2020 16:27:10 Randy Dunlap wrote:
+> >> Hi--
+> >>
+> >> On 6/8/20 4:05 PM, Y Paritcher wrote:
+> >>> Increase length of bios_to_linux_keycode to 2 bytes (the true size of a
+> >>> keycode) to allow for a new keycode 0xffff, this silences the following
+> >>> messages being logged at startup on a Dell Inspiron 5593:
+> >>>
+> >>>     dell_wmi: firmware scancode 0x48 maps to unrecognized keycode 0xffff
+> >>>     dell_wmi: firmware scancode 0x50 maps to unrecognized keycode 0xffff
+> > 
+> > Which keys generate these two scancodes? Or how have you been able to
+> > trigger these scancodes (in case they are not generated by key press)?
+> > 
+> > It is important to know for which key or event or feature we need to
+> > include this patch and therefore what feature is currently
+> > non-functional on that laptop.
+> > 
+> 
+> As I said before:
+> The DMI contains a table of firmware scancode to linux keycode mappings.
+> this is parsed at boot and used together with the bios_to_linux_keycode
+> entries & dell_wmi_keymap_type_ tables to create a keymap.
+> 
+> If a DMI entry does not have a corresponding entry in bios_to_linux_keycode
+> we log a message to allow adding the correct linux keycode if known.
+> This is regardless of if the key actually exists on the device.
+> 
+> To date, I have not been able to generate this keycode on my computer.
 
-Thanks for the review.
+Ok, so you have just these bios scan codes in your DMI table, but you do
+not know what they means nor if you can trigger them somehow.
 
-On 2020-06-05 17:10, Sibi Sankar wrote:
-> Hey Pradeep,
-> Thanks for the patch.
-> 
-> On 2020-06-05 15:00, Pradeep P V K wrote:
->> Interconnect bandwidth scaling support is now added as a
->> part of OPP [1]. So, make sure interconnect driver is ready
-> 
-> can you please replace driver with paths
-> instead?
-> 
-ok. I will address this in my next patch set.
+You should include this information into commit message.
 
->> before handling interconnect scaling.
->> 
->> This change is based on
->> [1] [Patch v8] Introduce OPP bandwidth bindings
->> (https://lkml.org/lkml/2020/5/12/493)
->> 
->> [2] [Patch v3] mmc: sdhci-msm: Fix error handling
->> for dev_pm_opp_of_add_table()
->> (https://lkml.org/lkml/2020/5/5/491)
-> 
-> sry didn't notice ^^ earlier
-> you might want to place these
-> comments and dependencies similar
-> to the following patch.
-> https://patchwork.kernel.org/patch/11573903/
-> 
-ok. will modify in my next patch.
+It is possible that your particular laptop model does not have
+physically keys which can trigger these codes... (Just guessing)
 
->> 
->> Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
->> ---
->>  drivers/mmc/host/sdhci-msm.c | 8 ++++++++
->>  1 file changed, 8 insertions(+)
->> 
->> diff --git a/drivers/mmc/host/sdhci-msm.c 
->> b/drivers/mmc/host/sdhci-msm.c
->> index b277dd7..a945e84 100644
->> --- a/drivers/mmc/host/sdhci-msm.c
->> +++ b/drivers/mmc/host/sdhci-msm.c
->> @@ -14,6 +14,7 @@
->>  #include <linux/slab.h>
->>  #include <linux/iopoll.h>
->>  #include <linux/regulator/consumer.h>
->> +#include <linux/interconnect.h>
->> 
->>  #include "sdhci-pltfm.h"
->>  #include "cqhci.h"
->> @@ -2070,6 +2071,13 @@ static int sdhci_msm_probe(struct 
->> platform_device *pdev)
->>  	}
->>  	msm_host->bulk_clks[0].clk = clk;
->> 
->> +	/* Make sure that ICC driver is ready for interconnect bandwdith
+> >>> as per this code comment:
+> >>>
+> >>>    Log if we find an entry in the DMI table that we don't
+> >>>    understand.  If this happens, we should figure out what
+> >>>    the entry means and add it to bios_to_linux_keycode.
+> >>>
+> >>> These are keycodes included in the 0xB2 DMI table, for which the
+> >>> corosponding keys are not known.
+> >>
+> >>   corresponding
+> >>
+> >>>
+> >>> Now when a user will encounter this key, a proper message wil be printed:
+> >>>
+> >>>     dell_wmi: Unknown key with type 0xXXXX and code 0xXXXX pressed
+> >>>
+> >>> This will then allow the key to be identified properly.
+> >>>
+> >>> Signed-off-by: Y Paritcher <y.linux@paritcher.com>
+> >>> ---
+> >>>  drivers/platform/x86/dell-wmi.c | 8 +++-----
+> >>>  1 file changed, 3 insertions(+), 5 deletions(-)
+> >>>
+> >>> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
+> >>> index 6b510f8431a3..dae1db96b5a0 100644
+> >>> --- a/drivers/platform/x86/dell-wmi.c
+> >>> +++ b/drivers/platform/x86/dell-wmi.c
+> >>> @@ -196,7 +196,7 @@ struct dell_dmi_results {
+> >>>  };
+> >>>  
+> >>>  /* Uninitialized entries here are KEY_RESERVED == 0. */
+> >>> -static const u16 bios_to_linux_keycode[256] = {
+> >>> +static const u16 bios_to_linux_keycode[65536] = {
+> >>
+> >> It surely seems odd to me to expand an array from 512 bytes to 128 Kbytes
+> >> just to handle one special case.  Can't it be handled in code as a
+> >> special case?
+> > 
+> > I already wrote that more developers would not be happy about this
+> > change. I would rather to see e.g. that Randy's suggestion with 0xffff
+> > check as increasing memory usage.
+> > 
 > 
-> typo /s/bandwdith/bandwidth
+> Will change
 > 
->> +	 * scaling before registering the device for OPP.
->> +	 */
+> >>>  	[0]	= KEY_MEDIA,
+> >>>  	[1]	= KEY_NEXTSONG,
+> >>>  	[2]	= KEY_PLAYPAUSE,
+> >>> @@ -237,6 +237,7 @@ static const u16 bios_to_linux_keycode[256] = {
+> >>>  	[37]	= KEY_UNKNOWN,
+> >>>  	[38]	= KEY_MICMUTE,
+> >>>  	[255]	= KEY_PROG3,
+> >>> +	[65535]	= KEY_UNKNOWN,
+> > 
+> > Looking at the last two lines... and for me it looks like that 0x00FF
+> > and 0xFFFF are just "placeholders" or special values for unknown /
+> > custom / unsupported / reserved / special / ... codes.
+> > 
 > 
-> /* Check for optional interconnect paths */
-> Maybe using ^^ would suffice since
-> that's what we are actually doing
-> 
-sure. i will re-modify the comments as suggested ^^ in my next patch.
+> Probably so, but i have no way of knowing.
 
-> Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
+This was question for Mario as he is probably the only person who can
+bring some light to this area.
+
+> I just don't think there is a point spamming a users log with info that
+> they can't do anything with. If this is turned into a debug print then
+> i don't care to leave this as is, i had thought this might be helpful
+> just to know that this keycode mapping appears in the wild.
 > 
->> +	ret = dev_pm_opp_of_find_icc_paths(&pdev->dev, NULL);
->> +	if (ret)
->> +		goto bus_clk_disable;
->> +
->>  	msm_host->opp_table = dev_pm_opp_set_clkname(&pdev->dev, "core");
->>  	if (IS_ERR(msm_host->opp_table)) {
->>  		ret = PTR_ERR(msm_host->opp_table);
+> > It is really suspicious why first 38 values are defined, then there is
+> > gap, then one value 255 and then huge gap to 65535.
+> > 
+> > Mario, this looks like some mapping table between internal Dell BIOS key
+> > code and standard Linux key code. Are you able to get access to some
+> > documentation which contains explanation of those Dell key numbers?
+> > It could really help us to understand these gaps and what is correct
+> > interpretation of these numbers.
+> > 
+> > E.g. I remember that pressing Fn+Q or Fn+W on some Dell Latitude
+> > generates code 255, which could prove my thesis about "special codes"
+> > (which are probably not found in e.g. Windows or Linux mapping tables).
+> > 
+> >>>  };
+> >>>  
+> >>>  /*
+> >>> @@ -503,10 +504,7 @@ static void handle_dmi_entry(const struct dmi_header *dm, void *opaque)
+> >>>  					&table->keymap[i];
+> >>>  
+> >>>  		/* Uninitialized entries are 0 aka KEY_RESERVED. */
+> >>> -		u16 keycode = (bios_entry->keycode <
+> >>> -			       ARRAY_SIZE(bios_to_linux_keycode)) ?
+> >>> -			bios_to_linux_keycode[bios_entry->keycode] :
+> >>> -			KEY_RESERVED;
+> >>> +		u16 keycode = bios_to_linux_keycode[bios_entry->keycode];
+> >>>  
+> >>>  		/*
+> >>>  		 * Log if we find an entry in the DMI table that we don't
+> >>>
+> >>
+> >> Something like:
+> >>
+> >> 		u16 keycode;
+> >>
+> >> 		keycode = bios_entry->keycode == 0xffff ? KEY_UNKNOWN :
+> >> 			(bios_entry->keycode <
+> >> 			       ARRAY_SIZE(bios_to_linux_keycode)) ?
+> >> 			bios_to_linux_keycode[bios_entry->keycode] :
+> >> 			KEY_RESERVED;
+> >>
+> >>
+> >>
+> >> Also please fix this:
+> >> (no To-header on input) <>
+> > 
+> > Hint: specifying git send-email with '--to' argument instead of '--cc'
+> > should help.
+> > 
+> 
+> Sorry about that.
+> >>
+> >> -- 
+> >> ~Randy
+> >>
