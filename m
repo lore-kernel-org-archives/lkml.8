@@ -2,52 +2,85 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B98D6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2106CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F2952078C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE11E206A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:05:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729199AbgFIMEl (ORCPT
+        id S1729223AbgFIMFa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 08:04:41 -0400
-Received: from verein.lst.de ([213.95.11.211]:42135 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727903AbgFIMEk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 08:04:40 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 6E0DE68AFE; Tue,  9 Jun 2020 14:04:37 +0200 (CEST)
-Date:   Tue, 9 Jun 2020 14:04:37 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     brking@us.ibm.com, Christoph Hellwig <hch@lst.de>,
-        Jens Axboe <axboe@kernel.dk>, linux-scsi@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-block@vger.kernel.org,
-        linux-ide@vger.kernel.org
-Subject: Re: ipr crashes due to NULL dma_need_drain since cc97923a5bcc
- ("block: move dma drain handling to scsi")
-Message-ID: <20200609120437.GB2140@lst.de>
-References: <87zh9cftj0.fsf@mpe.ellerman.id.au>
+        Tue, 9 Jun 2020 08:05:30 -0400
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:42521 "EHLO
+        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728051AbgFIMF0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 08:05:26 -0400
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 09 Jun 2020 17:35:23 +0530
+Received: from harigovi-linux.qualcomm.com ([10.204.66.157])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 09 Jun 2020 17:35:01 +0530
+Received: by harigovi-linux.qualcomm.com (Postfix, from userid 2332695)
+        id 3D1C82055; Tue,  9 Jun 2020 17:35:01 +0530 (IST)
+From:   Harigovindan P <harigovi@codeaurora.org>
+To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     Harigovindan P <harigovi@codeaurora.org>,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        kalyan_t@codeaurora.org, nganji@codeaurora.org, sam@ravnborg.org
+Subject: [v3] drm/bridge: ti-sn65dsi86: ensure bridge suspend happens during PM sleep
+Date:   Tue,  9 Jun 2020 17:34:55 +0530
+Message-Id: <20200609120455.20458-1-harigovi@codeaurora.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87zh9cftj0.fsf@mpe.ellerman.id.au>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 08:00:35PM +1000, Michael Ellerman wrote:
-> Hi all,
-> 
-> I'm seeing crashes on powerpc with the ipr driver, which I'm fairly sure
-> are due to dma_need_drain being NULL.
+ti-sn65dsi86 bridge is enumerated as a runtime device. When
+suspend is triggered, PM core adds a refcount on all the
+devices and calls device suspend, since usage count is
+already incremented, runtime suspend will not be called
+and it kept the bridge regulators and gpios ON which resulted
+in platform not entering into XO shutdown.
 
-Ooops, my changes completely forgot about SAS attached ATAPI devices.
-I'll cook up a fix in a bit.
+Add changes to force suspend on the runtime device during pm sleep.
+
+Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+---
+
+Changes in v2:
+	- Include bridge name in the commit message and 
+	remove dependent patchwork link from the commit
+	text as bridge is independent of OEM(Stephen Boyd)
+
+Changes in v3:
+	- Updating changelog to explain the need for patch
+
+ drivers/gpu/drm/bridge/ti-sn65dsi86.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+index 6ad688b320ae..2eef755b2917 100644
+--- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
++++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+@@ -159,6 +159,8 @@ static int __maybe_unused ti_sn_bridge_suspend(struct device *dev)
+ 
+ static const struct dev_pm_ops ti_sn_bridge_pm_ops = {
+ 	SET_RUNTIME_PM_OPS(ti_sn_bridge_suspend, ti_sn_bridge_resume, NULL)
++	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
++				pm_runtime_force_resume)
+ };
+ 
+ static int status_show(struct seq_file *s, void *data)
+-- 
+2.27.0
+
