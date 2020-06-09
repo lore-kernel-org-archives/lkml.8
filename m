@@ -2,156 +2,360 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A61C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC47C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:02:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B59C2078C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:00:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HbbZVpX8"
+	by mail.kernel.org (Postfix) with ESMTP id 9837D2072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:02:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591718522;
+	bh=x9XnVqO3xzQBj6iIZG51MoTCRzkI+avhlJDOv1dW4A8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=asZlbgX84ntPIiUggaYpaew0BAZmWP9SYABxoXWcapB8h8ZYPCRJBj2P/ihWK856K
+	 blv8p74yq+rmZUJaHyJZLiMp2r2NfcHh7mwygXidZiMLu9S2YPRbycEgoNSuj7gGmF
+	 WAg1lSMedbsX24QBROxhkawPRC0xCOnHQ8eBmBkY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731057AbgFIQAn (ORCPT
+        id S1731066AbgFIQCB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 12:00:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52712 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730640AbgFIQAm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 12:00:42 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66121C05BD1E
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 09:00:42 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id l10so9663606vsr.10
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 09:00:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FVbKhA/NezMaX3sdFKjoaZBxdKpUb0BC4Yh1wEUX1i8=;
-        b=HbbZVpX8lEl1/PAJKl/LIFIScwEcEtm8iQCb2cSgM4H01kZLkY0m1q6Dfu/nQhkJ2u
-         BidyYYPVASIl2b1khHkuTADsCtKHzx57+fTgXQXWkl3/FFk33PEvEbHzPQfs5P7eDRdG
-         4Tohzxve7vwXPz/S9P4Dwv5Vky64S84P7KzKs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FVbKhA/NezMaX3sdFKjoaZBxdKpUb0BC4Yh1wEUX1i8=;
-        b=jrZW7R1XuCEkIaM3AYzJkmejZE5wizsbLDVIYyDcLeF00kfBVunSZXVQ0c9mECuvVi
-         lz9l3s29lup6yrgFzecJRl/EnydZo59xbi2LeXazHaBz2qE3twJGeR7W9TcGGvEI2Kmt
-         Fv10SxR5UqQQh4lFiNBQX64c1BuhuC7Df11CRkLEvfHfuxaipYx21fMRPML5HUPwzj91
-         lX7oaRh14Rd/+Ztj2Dgu/ZzEcVUPUQjt0mw5WJnocscFl6574XRD/bVuKSMqlQGB2piT
-         OvCKtMUGaTLshZgfdANjoNUwuNtl00x6wqiISof27KooEqzHpVUc6QzfEQolKG1fk70u
-         rQqg==
-X-Gm-Message-State: AOAM5337dgtzwwUuNcneIs9/RySfzPCIZyEL7g/b5nk3whgTUPPkkhW9
-        xw9juoDy+/813274t9xHSwH3huyfJc283+yuQDQT3g==
-X-Google-Smtp-Source: ABdhPJx1Ay9r98Ol06bQfHruUDmVmqjfK/8k9ZGDrj+ekPNXTbJRyHNheNoU9kuUloYfvosgpr2CQOweMDeGNH8gWeI=
-X-Received: by 2002:a67:6a01:: with SMTP id f1mr4034591vsc.86.1591718441472;
- Tue, 09 Jun 2020 09:00:41 -0700 (PDT)
+        Tue, 9 Jun 2020 12:02:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35632 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730640AbgFIQCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 12:02:01 -0400
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4473720737;
+        Tue,  9 Jun 2020 16:01:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591718519;
+        bh=x9XnVqO3xzQBj6iIZG51MoTCRzkI+avhlJDOv1dW4A8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=apmbS8jhTSKRwyxpcAwAJ9YrmcalaKgkXVrW81HNwC3Q6pj0k6T60LHoFvvYIgErD
+         ynU7vSPR/6La4+GXlVu4pzaqqLjObBlhbdg56wBbME1cowdRWnAyxeKNei849YF3VJ
+         VsQibWle5h7TatZeMO8tUELXgC+S4FHfeYX0y3QY=
+Received: by mail-ej1-f43.google.com with SMTP id k11so23003752ejr.9;
+        Tue, 09 Jun 2020 09:01:59 -0700 (PDT)
+X-Gm-Message-State: AOAM531T9fdKhr6GFct/Hz32nyxJ/gamTqlqF3fvcs9cke6K0MoyDeQw
+        T0s2SG5PNYfGkFHg9xQXvbtJ4zAttkqQhFQIMA==
+X-Google-Smtp-Source: ABdhPJxKIl5SnYjgH7ywBQFvWrLorFiA1CakhpBe+UztqF4izapVMvaOZ1tYqCzy7V5MsEVltTQulE0V8mcD91jBlRg=
+X-Received: by 2002:a17:906:d105:: with SMTP id b5mr11030541ejz.375.1591718516695;
+ Tue, 09 Jun 2020 09:01:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <1591718228-18819-1-git-send-email-gubbaven@codeaurora.org>
-In-Reply-To: <1591718228-18819-1-git-send-email-gubbaven@codeaurora.org>
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Date:   Tue, 9 Jun 2020 09:00:29 -0700
-Message-ID: <CANFp7mUT68Y9vGbSXdCTZE8JzWxYv47f2RZK8+V_4Bn=FVnypw@mail.gmail.com>
-Subject: Re: [PATCH v2] Bluetooth: hci_qca: Bug fix during SSR timeout
-To:     Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
-        hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
-        Rocky Liao <rjliao@codeaurora.org>, hbandi@codeaurora.org
+References: <1591698261-22639-1-git-send-email-neal.liu@mediatek.com> <1591698261-22639-3-git-send-email-neal.liu@mediatek.com>
+In-Reply-To: <1591698261-22639-3-git-send-email-neal.liu@mediatek.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Wed, 10 Jun 2020 00:01:44 +0800
+X-Gmail-Original-Message-ID: <CAAOTY__g3Fnwsoqx=x_tgdMii5K_L9TmF_9048XbAOSJwb-Cxg@mail.gmail.com>
+Message-ID: <CAAOTY__g3Fnwsoqx=x_tgdMii5K_L9TmF_9048XbAOSJwb-Cxg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] soc: mediatek: devapc: add devapc-mt6873 driver
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        devicetree@vger.kernel.org, wsd_upstream@mediatek.com,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good to me.
+Hi, Neal:
 
-Reviewed-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-
-On Tue, Jun 9, 2020 at 8:57 AM Venkata Lakshmi Narayana Gubba
-<gubbaven@codeaurora.org> wrote:
+Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B46=E6=9C=889=E6=97=
+=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=886:25=E5=AF=AB=E9=81=93=EF=BC=9A
 >
-> Due to race conditions between qca_hw_error and qca_controller_memdump
-> during SSR timeout,the same pointer is freed twice. This results in a
-> double free. Now a lock is acquired before checking the stauts of SSR
-> state.
+> MT6873 bus frabric provides TrustZone security support and data
+> protection to prevent slaves from being accessed by unexpected
+> masters.
+> The security violations are logged and sent to the processor for
+> further analysis or countermeasures.
 >
-> Fixes: d841502c79e3 ("Bluetooth: hci_qca: Collect controller memory dump during SSR")
-> Signed-off-by: Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
+> Any occurrence of security violation would raise an interrupt, and
+> it will be handled by devapc-mt6873 driver. The violation
+> information is printed in order to find the murderer.
+>
+> Signed-off-by: Neal Liu <neal.liu@mediatek.com>
 > ---
->  drivers/bluetooth/hci_qca.c | 29 +++++++++++++++++------------
->  1 file changed, 17 insertions(+), 12 deletions(-)
+>  drivers/soc/mediatek/Kconfig                      |    6 +
+>  drivers/soc/mediatek/Makefile                     |    1 +
+>  drivers/soc/mediatek/devapc/Kconfig               |   25 +
+>  drivers/soc/mediatek/devapc/Makefile              |   13 +
+>  drivers/soc/mediatek/devapc/devapc-mt6873.c       | 1733 +++++++++++++++=
+++++++
+>  drivers/soc/mediatek/devapc/devapc-mt6873.h       |  130 ++
+>  drivers/soc/mediatek/devapc/devapc-mtk-multi-ao.c | 1019 ++++++++++++
+>  drivers/soc/mediatek/devapc/devapc-mtk-multi-ao.h |  183 +++
+>  include/linux/soc/mediatek/devapc_public.h        |   41 +
+>  9 files changed, 3151 insertions(+)
+>  create mode 100644 drivers/soc/mediatek/devapc/Kconfig
+>  create mode 100644 drivers/soc/mediatek/devapc/Makefile
+>  create mode 100644 drivers/soc/mediatek/devapc/devapc-mt6873.c
+>  create mode 100644 drivers/soc/mediatek/devapc/devapc-mt6873.h
+>  create mode 100644 drivers/soc/mediatek/devapc/devapc-mtk-multi-ao.c
+>  create mode 100644 drivers/soc/mediatek/devapc/devapc-mtk-multi-ao.h
+>  create mode 100644 include/linux/soc/mediatek/devapc_public.h
 >
-> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-> index 28c34a1..f3fde99 100644
-> --- a/drivers/bluetooth/hci_qca.c
-> +++ b/drivers/bluetooth/hci_qca.c
-> @@ -981,8 +981,11 @@ static void qca_controller_memdump(struct work_struct *work)
->         while ((skb = skb_dequeue(&qca->rx_memdump_q))) {
+> diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
+> index 2114b56..cc46f50 100644
+> --- a/drivers/soc/mediatek/Kconfig
+> +++ b/drivers/soc/mediatek/Kconfig
+> @@ -44,4 +44,10 @@ config MTK_SCPSYS
+>           Say yes here to add support for the MediaTek SCPSYS power domai=
+n
+>           driver.
 >
->                 mutex_lock(&qca->hci_memdump_lock);
-> -               /* Skip processing the received packets if timeout detected. */
-> -               if (qca->memdump_state == QCA_MEMDUMP_TIMEOUT) {
-> +               /* Skip processing the received packets if timeout detected
-> +                * or memdump collection completed.
-> +                */
-> +               if (qca->memdump_state == QCA_MEMDUMP_TIMEOUT ||
-> +                   qca->memdump_state == QCA_MEMDUMP_COLLECTED) {
->                         mutex_unlock(&qca->hci_memdump_lock);
->                         return;
->                 }
-> @@ -1483,8 +1486,6 @@ static void qca_hw_error(struct hci_dev *hdev, u8 code)
->  {
->         struct hci_uart *hu = hci_get_drvdata(hdev);
->         struct qca_data *qca = hu->priv;
-> -       struct qca_memdump_data *qca_memdump = qca->qca_memdump;
-> -       char *memdump_buf = NULL;
->
->         set_bit(QCA_HW_ERROR_EVENT, &qca->flags);
->         bt_dev_info(hdev, "mem_dump_status: %d", qca->memdump_state);
-> @@ -1507,19 +1508,23 @@ static void qca_hw_error(struct hci_dev *hdev, u8 code)
->                 qca_wait_for_dump_collection(hdev);
->         }
->
-> +       mutex_lock(&qca->hci_memdump_lock);
->         if (qca->memdump_state != QCA_MEMDUMP_COLLECTED) {
->                 bt_dev_err(hu->hdev, "clearing allocated memory due to memdump timeout");
-> -               mutex_lock(&qca->hci_memdump_lock);
-> -               if (qca_memdump)
-> -                       memdump_buf = qca_memdump->memdump_buf_head;
-> -               vfree(memdump_buf);
-> -               kfree(qca_memdump);
-> -               qca->qca_memdump = NULL;
-> +               if (qca->qca_memdump) {
-> +                       vfree(qca->qca_memdump->memdump_buf_head);
-> +                       kfree(qca->qca_memdump);
-> +                       qca->qca_memdump = NULL;
-> +               }
->                 qca->memdump_state = QCA_MEMDUMP_TIMEOUT;
->                 cancel_delayed_work(&qca->ctrl_memdump_timeout);
-> -               skb_queue_purge(&qca->rx_memdump_q);
-> -               mutex_unlock(&qca->hci_memdump_lock);
-> +       }
-> +       mutex_unlock(&qca->hci_memdump_lock);
+> +menu "Security"
 > +
-> +       if (qca->memdump_state == QCA_MEMDUMP_TIMEOUT ||
-> +           qca->memdump_state == QCA_MEMDUMP_COLLECTED) {
->                 cancel_work_sync(&qca->ctrl_memdump_evt);
-> +               skb_queue_purge(&qca->rx_memdump_q);
->         }
->
->         clear_bit(QCA_HW_ERROR_EVENT, &qca->flags);
+> +source "drivers/soc/mediatek/devapc/Kconfig"
+> +
+> +endmenu # Security
+> +
+>  endmenu
+> diff --git a/drivers/soc/mediatek/Makefile b/drivers/soc/mediatek/Makefil=
+e
+> index b017330..7154a2a 100644
+> --- a/drivers/soc/mediatek/Makefile
+> +++ b/drivers/soc/mediatek/Makefile
+> @@ -3,3 +3,4 @@ obj-$(CONFIG_MTK_CMDQ) +=3D mtk-cmdq-helper.o
+>  obj-$(CONFIG_MTK_INFRACFG) +=3D mtk-infracfg.o
+>  obj-$(CONFIG_MTK_PMIC_WRAP) +=3D mtk-pmic-wrap.o
+>  obj-$(CONFIG_MTK_SCPSYS) +=3D mtk-scpsys.o
+> +obj-$(CONFIG_MTK_DEVAPC) +=3D devapc/
+
+alphabetic order.
+
+> diff --git a/drivers/soc/mediatek/devapc/Kconfig b/drivers/soc/mediatek/d=
+evapc/Kconfig
+> new file mode 100644
+> index 0000000..9428360
+> --- /dev/null
+> +++ b/drivers/soc/mediatek/devapc/Kconfig
+> @@ -0,0 +1,25 @@
+> +config MTK_DEVAPC
+> +       tristate "Mediatek Device APC Support"
+> +       help
+> +         Device APC is a kernel driver controlling internal device secur=
+ity.
+> +         If someone tries to access a device, which is not allowed by th=
+e
+> +         device, it cannot access the device and will get a violation
+> +         interrupt. Device APC prevents malicious access to internal dev=
+ices.
+> +
+> +config DEVAPC_ARCH_MULTI
+> +       tristate "Mediatek Device APC driver architecture multi"
+> +       help
+> +         Say yes here to enable support Mediatek
+> +         Device APC driver which is based on Infra
+> +         architecture.
+> +         This architecture supports multiple Infra AO.
+> +
+> +config DEVAPC_MT6873
+> +       tristate "Mediatek MT6873 Device APC driver"
+> +       select MTK_DEVAPC
+> +       select DEVAPC_ARCH_MULTI
+> +       help
+> +         Say yes here to enable support Mediatek MT6873
+> +         Device APC driver.
+> +         This driver is combined with DEVAPC_ARCH_MULTI for
+> +         common handle flow.
+
+[snip]
+
+> +static struct mtk_devapc_context {
+> + struct clk *devapc_infra_clk;
+> + u32 devapc_irq;
+> +
+> + /* HW reg mapped addr */
+> + void __iomem *devapc_pd_base[4];
+> + void __iomem *infracfg_base;
+> +
+> + struct mtk_devapc_soc *soc;
+> +} mtk_devapc_ctx[1];
+> +
+> +static LIST_HEAD(viocb_list);
+> +static DEFINE_SPINLOCK(devapc_lock);
+
+Move global variable into struct mtk_devapc_context .
+
+> +
+> +/*
+> + * mtk_devapc_pd_get - get devapc pd_types of register address.
+> + *
+> + * Returns the value of reg addr
+> + */
+> +static void __iomem *mtk_devapc_pd_get(int slave_type,
+> +                                      enum DEVAPC_PD_REG_TYPE pd_reg_typ=
+e,
+> +                                      u32 index)
+> +{
+> +       struct mtk_devapc_vio_info *vio_info =3D mtk_devapc_ctx->soc->vio=
+_info;
+> +       u32 slave_type_num =3D mtk_devapc_ctx->soc->slave_type_num;
+> +       const u32 *devapc_pds =3D mtk_devapc_ctx->soc->devapc_pds;
+> +       void __iomem *reg;
+> +
+> +       if (!devapc_pds)
+> +               return NULL;
+> +
+> +       if ((slave_type < slave_type_num &&
+> +            index < vio_info->vio_mask_sta_num[slave_type]) &&
+> +           pd_reg_type < PD_REG_TYPE_NUM) {
+> +               reg =3D mtk_devapc_ctx->devapc_pd_base[slave_type] +
+> +                       devapc_pds[pd_reg_type];
+> +
+> +               if (pd_reg_type =3D=3D VIO_MASK || pd_reg_type =3D=3D VIO=
+_STA)
+> +                       reg +=3D 0x4 * index;
+> +
+> +       } else {
+> +               pr_err(PFX "%s:0x%x or %s:0x%x or %s:0x%x is out of bound=
+ary\n",
+> +                      "slave_type", slave_type,
+
+Move "slave_type" into format string.
+
+> +                      "pd_reg_type", pd_reg_type,
+> +                      "index", index);
+> +               return NULL;
+> +       }
+> +
+> +       return reg;
+> +}
+> +
+
+[snip]
+
+> +
+> +/*
+> + * devapc_violation_irq - the devapc Interrupt Service Routine (ISR) wil=
+l dump
+> + *                       violation information including which master vi=
+olates
+> + *                       access slave.
+> + */
+> +static irqreturn_t devapc_violation_irq(int irq_number, void *dev_id)
+> +{
+> +       u32 slave_type_num =3D mtk_devapc_ctx->soc->slave_type_num;
+> +       const struct mtk_device_info **device_info;
+> +       struct mtk_devapc_vio_info *vio_info;
+> +       int slave_type, vio_idx, index;
+> +       const char *vio_master;
+> +       unsigned long flags;
+> +       bool normal;
+> +       u8 perm;
+> +
+> +       spin_lock_irqsave(&devapc_lock, flags);
+> +
+> +       device_info =3D mtk_devapc_ctx->soc->device_info;
+> +       vio_info =3D mtk_devapc_ctx->soc->vio_info;
+> +       normal =3D false;
+> +       vio_idx =3D -1;
+> +       index =3D -1;
+> +
+> +       /* There are multiple DEVAPC_PD */
+> +       for (slave_type =3D 0; slave_type < slave_type_num; slave_type++)=
+ {
+> +               if (!check_type2_vio_status(slave_type, &vio_idx, &index)=
+)
+> +                       if (!mtk_devapc_dump_vio_dbg(slave_type, &vio_idx=
+,
+> +                                                    &index))
+> +                               continue;
+> +
+> +               /* Ensure that violation info are written before
+> +                * further operations
+> +                */
+> +               smp_mb();
+> +               normal =3D true;
+> +
+> +               mask_module_irq(slave_type, vio_idx, true);
+> +
+> +               if (clear_vio_status(slave_type, vio_idx))
+> +                       pr_warn(PFX "%s, %s:0x%x, %s:0x%x\n",
+> +                               "clear vio status failed",
+> +                               "slave_type", slave_type,
+> +                               "vio_index", vio_idx);
+> +
+> +               perm =3D get_permission(slave_type, index, vio_info->doma=
+in_id);
+> +
+> +               vio_master =3D mtk_devapc_ctx->soc->master_get
+> +                       (vio_info->master_id,
+> +                        vio_info->vio_addr,
+> +                        slave_type,
+> +                        vio_info->shift_sta_bit,
+> +                        vio_info->domain_id);
+
+Call mt6873_bus_id_to_master() directly. For first patch, make things
+as simple as possible.
+
+> +
+> +               if (!vio_master) {
+> +                       pr_warn(PFX "master_get failed\n");
+> +                       vio_master =3D "UNKNOWN_MASTER";
+> +               }
+> +
+> +               pr_info(PFX "%s - %s:0x%x, %s:0x%x, %s:0x%x, %s:0x%x\n",
+> +                       "Violation", "slave_type", slave_type,
+> +                       "sys_index",
+> +                       device_info[slave_type][index].sys_index,
+> +                       "ctrl_index",
+> +                       device_info[slave_type][index].ctrl_index,
+> +                       "vio_index",
+> +                       device_info[slave_type][index].vio_index);
+> +
+> +               pr_info(PFX "%s %s %s %s\n",
+> +                       "Violation - master:", vio_master,
+> +                       "access violation slave:",
+> +                       device_info[slave_type][index].device);
+> +
+> +               devapc_vio_reason(perm);
+> +
+> +               devapc_extra_handler(slave_type, vio_master, vio_idx,
+> +                                    vio_info->vio_addr);
+> +
+> +               mask_module_irq(slave_type, vio_idx, false);
+> +       }
+> +
+> +       if (normal) {
+> +               spin_unlock_irqrestore(&devapc_lock, flags);
+> +               return IRQ_HANDLED;
+> +       }
+> +
+> +       spin_unlock_irqrestore(&devapc_lock, flags);
+> +       return IRQ_HANDLED;
+> +}
+> +
+
+[snip]
+
+> +uint32_t devapc_vio_check(void);
+> +void dump_dbg_info(void);
+> +void register_devapc_vio_callback(struct devapc_vio_callbacks *viocb);
+> +void devapc_catch_illegal_range(phys_addr_t phys_addr, size_t size);
+
+devapc_catch_illegal_range() is useless, so remove it.
+
+Regards,
+Chun-Kuang.
+
+> +
+> +#endif  /* __DEVAPC_PUBLIC_H__ */
+> +
 > --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
->
+> 1.7.9.5
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
