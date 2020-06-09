@@ -2,77 +2,175 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D3EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F934C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6923F204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:35:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07C87204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:37:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="nXo4e1lL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728451AbgFIUfN (ORCPT
+        id S1728589AbgFIUh2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 16:35:13 -0400
-Received: from foss.arm.com ([217.140.110.172]:48678 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726903AbgFIUfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 16:35:11 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 821121F1;
-        Tue,  9 Jun 2020 13:35:07 -0700 (PDT)
-Received: from gaia (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9C8163F73D;
-        Tue,  9 Jun 2020 13:35:05 -0700 (PDT)
-Date:   Tue, 9 Jun 2020 21:35:03 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Will Deacon <will@kernel.org>, Stephen Boyd <swboyd@google.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Luis Lozano <llozano@google.com>,
-        Manoj Gupta <manojgupta@google.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH v2] arm64: vdso32: add CONFIG_THUMB2_COMPAT_VDSO
-Message-ID: <20200609203502.GA21214@gaia>
-References: <20200528072031.GA22156@willie-the-truck>
- <20200608205711.109418-1-ndesaulniers@google.com>
+        Tue, 9 Jun 2020 16:37:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39164 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726903AbgFIUhW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 16:37:22 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CEE8C05BD1E
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 13:37:22 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id f7so73163ejq.6
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 13:37:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=7ZVlejTC0YuKPGpcteISk746OUPvuY4hgSWC1f7OLtQ=;
+        b=nXo4e1lLm4NTrTzkokAa+id+fdgD1MXyvH4cDPWBQT70BhQJfREqivfXZvDNiAiWWp
+         c2ZgYsbA7T54ZHViJGcdK9qb7pLw/TvBE50mRCbzGyvTHRb6i4uKOatrKuK4p4dbglQ5
+         gHYpv3YUmO16neCN6MlZVyzyaKpZp13cG71oE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=7ZVlejTC0YuKPGpcteISk746OUPvuY4hgSWC1f7OLtQ=;
+        b=C4UixhRxXZa0DSmRL+XL9Txjho9JRDSc8OLKwFBIGtPzdTZrkTuHKl1LgKRaIErvEi
+         yXy6xboPxOwQPwckk6QOPLUlOlLPk+UyxUMSEtdEVFQB5KLuSnNPa8hiMFs782xsNAp3
+         dhfauX95ZE4fDQKS+Nva/n3Al0NQ1zuGLNAAX1a3QmkxiBHeitP3vq76fGlYS6L7x9rS
+         XtvXYABR+tqj0ts53SPLGYf1Cx/0qg/1E75mfj/rjgZy+McU0QExUAIdSbFgxDpA4916
+         mgGZFE8lLzwa6+8OIAuUDxVba4NgBFqtV4rR5fIIUWeSdUTcQj4+fMDueZYUL2MQCb7u
+         kxFQ==
+X-Gm-Message-State: AOAM532ntCCnecmEf9x80FCnWLXW+arM8h/Qjmmqtl425yzBrJvJf8Q+
+        WjUD9m5oaHtHOSy2ZfrbF9Elsg==
+X-Google-Smtp-Source: ABdhPJxpLOFautN81ZbcwIflxRmD4RRnfFtwTTRy8WEhlMS3Jc+pUiOH22RYN5xOgRBrM91Xj7MOhw==
+X-Received: by 2002:a17:906:6156:: with SMTP id p22mr152434ejl.329.1591735041107;
+        Tue, 09 Jun 2020 13:37:21 -0700 (PDT)
+Received: from miu.piliscsaba.redhat.com (catv-212-96-48-140.catv.broadband.hu. [212.96.48.140])
+        by smtp.gmail.com with ESMTPSA id v12sm16508347eda.39.2020.06.09.13.37.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2020 13:37:20 -0700 (PDT)
+Date:   Tue, 9 Jun 2020 22:37:18 +0200
+From:   Miklos Szeredi <miklos@szeredi.hu>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-unionfs@vger.kernel.org
+Subject: [GIT PULL] overlayfs update for 5.8
+Message-ID: <20200609203718.GB6171@miu.piliscsaba.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200608205711.109418-1-ndesaulniers@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 01:57:08PM -0700, Nick Desaulniers wrote:
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 7f9d38444d6d..fe9e6b231cac 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -1299,6 +1299,14 @@ config COMPAT_VDSO
->  	  You must have a 32-bit build of glibc 2.22 or later for programs
->  	  to seamlessly take advantage of this.
->  
-> +config THUMB2_COMPAT_VDSO
-> +	bool "Compile the vDSO in THUMB2 mode"
-> +	depends on COMPAT_VDSO
-> +	default y
-> +	help
-> +	  Compile the compat vDSO with -mthumb -fomit-frame-pointer if y, otherwise
-> +	  as -marm.
+Hi Linus,
 
-Now that we understood the issue (I think), do we actually need this
-choice? Why not going for -mthumb -fomit-frame-pointer always for the
-compat vdso?
+Please pull from:
 
--- 
-Catalin
+  git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/vfs.git tags/ovl-update-5.8
+
+There are some changes outside of the overlayfs tree; clone_private_mount()
+was reviewed by Al, the rest are trivial.  No other filesystems are
+affected by these.
+
+Fixes:
+
+ - Resolve mount option conflicts consistently.
+
+ - Sync before remount R/O.
+
+ - Fix file handle encoding corner cases.
+
+ - Fix metacopy related issues.
+
+ - Fix an unintialized return value.
+
+ - Add missing permission checks for underlying layers.
+
+Optimizations:
+
+ - Allow multipe whiteouts to share an inode.
+
+ - Optimize small writes by inheriting SB_NOSEC from upper layer.
+
+ - Do not call ->syncfs() multiple times for sync(2).
+
+ - Do not cache negative lookups on upper layer.
+
+ - Make private internal mounts longterm.
+
+Thanks,
+Miklos
+
+---
+Amir Goldstein (5):
+      ovl: resolve more conflicting mount options
+      ovl: cleanup non-empty directories in ovl_indexdir_cleanup()
+      ovl: prepare to copy up without workdir
+      ovl: index dir act as work dir
+      ovl: fix out of bounds access warning in ovl_check_fb_len()
+
+Chengguang Xu (3):
+      ovl: whiteout inode sharing
+      ovl: sync dirty data when remounting to ro mode
+      ovl: drop negative dentry in upper layer
+
+Jeffle Xu (1):
+      ovl: inherit SB_NOSEC flag from upperdir
+
+Konstantin Khlebnikov (1):
+      ovl: skip overlayfs superblocks at global sync
+
+Lubos Dolezel (1):
+      ovl: return required buffer size for file handles
+
+Miklos Szeredi (10):
+      ovl: pass correct flags for opening real directory
+      ovl: switch to mounter creds in readdir
+      ovl: verify permissions in ovl_path_open()
+      ovl: call secutiry hook in ovl_real_ioctl()
+      ovl: check permission to open real file
+      ovl: add accessor for ofs->upper_mnt
+      ovl: get rid of redundant members in struct ovl_fs
+      ovl: make private mounts longterm
+      ovl: only pass ->ki_flags to ovl_iocb_to_rwf()
+      ovl: make oip->index bool
+
+Vivek Goyal (4):
+      ovl: simplify setting of origin for index lookup
+      ovl: use only uppermetacopy state in ovl_lookup()
+      ovl: initialize OVL_UPPERDATA in ovl_lookup()
+      ovl: fix redirect traversal on metacopy dentries
+
+Yuxuan Shui (1):
+      ovl: initialize error in ovl_copy_xattr
+
+youngjun (1):
+      ovl: remove unnecessary lock check
+
+---
+ Documentation/filesystems/overlayfs.rst |   7 +-
+ Documentation/filesystems/porting.rst   |   7 +
+ fs/namespace.c                          |  16 +++
+ fs/overlayfs/copy_up.c                  |   9 +-
+ fs/overlayfs/dir.c                      |  51 +++++--
+ fs/overlayfs/export.c                   |  24 ++--
+ fs/overlayfs/file.c                     |  28 +++-
+ fs/overlayfs/inode.c                    |  17 +--
+ fs/overlayfs/namei.c                    | 138 ++++++++++--------
+ fs/overlayfs/overlayfs.h                |  11 +-
+ fs/overlayfs/ovl_entry.h                |  10 +-
+ fs/overlayfs/readdir.c                  |  57 ++++++--
+ fs/overlayfs/super.c                    | 243 +++++++++++++++++++++-----------
+ fs/overlayfs/util.c                     |  36 ++++-
+ fs/sync.c                               |   3 +-
+ include/linux/fs.h                      |   2 +
+ include/linux/mount.h                   |   2 +
+ security/security.c                     |   1 +
+ 18 files changed, 440 insertions(+), 222 deletions(-)
