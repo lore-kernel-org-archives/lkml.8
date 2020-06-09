@@ -2,254 +2,178 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06CC5C433E0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8BC2C433DF
 	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E009F20691
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:12:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB329206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:12:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591726362;
+	bh=qbdyCf58m8+ORdca2KSYY9BjsjLeAO/ctzG3MgN7rTo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=DqERkXrdUdvg0zwSdjaq2fhmTMVdU5NuY//FlF1yu2l0/rHCdLPY4Bz3rCSJYnSGd
+	 FCbhBhpPpT6ZnqreER1Jg0DiCv1wrcBiRlpg8O7GGOYOjM6373+IpLUrfKXG2zScMT
+	 /thuWoQr7qzEwSi/gAL2x52O41iSKX3B9J4h2fts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388723AbgFISMi (ORCPT
+        id S1731574AbgFIRvT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:12:38 -0400
-Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:2277 "EHLO
-        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731293AbgFISMd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 14:12:33 -0400
-Received: from sc9-mailhost2.vmware.com (10.113.161.72) by
- EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
- 15.0.1156.6; Tue, 9 Jun 2020 11:12:30 -0700
-Received: from localhost (unknown [10.166.65.245])
-        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id 3F6ABB273C;
-        Tue,  9 Jun 2020 14:12:32 -0400 (EDT)
-Date:   Tue, 9 Jun 2020 11:12:31 -0700
-From:   Matt Helsley <mhelsley@vmware.com>
-To:     Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Julien Thierry <jthierry@redhat.com>
-Subject: Re: [RFC][PATCH v4 27/32] objtool: mcount: Generic location and
- relocation table types
-Message-ID: <20200609181231.GD1284251@rlwimi.vmware.com>
-Mail-Followup-To: Matt Helsley <mhelsley@vmware.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Julien Thierry <jthierry@redhat.com>
-References: <cover.1591125127.git.mhelsley@vmware.com>
- <311ccd169cec877d0c1993772818f0e5cdf11dc4.1591125127.git.mhelsley@vmware.com>
- <79552506-b994-63ce-d3d9-8053dcbc02db@linux.vnet.ibm.com>
+        Tue, 9 Jun 2020 13:51:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38030 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732678AbgFIRua (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:50:30 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B79862074B;
+        Tue,  9 Jun 2020 17:50:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591725029;
+        bh=qbdyCf58m8+ORdca2KSYY9BjsjLeAO/ctzG3MgN7rTo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=0XTpYkFmAWYQ5NJcpROsHBPFKjH+7lvgX6tYRl8i1NLUuyjlVjCHO/VpQ5r4hMmNs
+         nTCcV6zjOSfmQmMKLipg8TfwSd4XcY1R8FpCfA+NELukeka5JNqjABEeuKBLqEXhAe
+         iX3lmv0HRFqETCk99bu3G1hl7DXQeQIF+6zBeh+M=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Mark Gross <mgross@linux.intel.com>,
+        Borislav Petkov <bp@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: [PATCH 4.14 40/46] x86/cpu: Add a steppings field to struct x86_cpu_id
+Date:   Tue,  9 Jun 2020 19:44:56 +0200
+Message-Id: <20200609174030.416433946@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200609174022.938987501@linuxfoundation.org>
+References: <20200609174022.938987501@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <79552506-b994-63ce-d3d9-8053dcbc02db@linux.vnet.ibm.com>
-Received-SPF: None (EX13-EDG-OU-002.vmware.com: mhelsley@vmware.com does not
- designate permitted sender hosts)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 12:11:55PM +0530, Kamalesh Babulal wrote:
-> On 6/3/20 1:20 AM, Matt Helsley wrote:
-> > Rather than building the exact ELF section data we need and
-> > avoiding libelf's conversion step, use more GElf types
-> > and then libelf's elfxx_xlatetof() functions to convert
-> > the mcount locations (GElf_Addr) and associated relocations.
-> > 
-> > This converts sift_rel_mcount() so that it doesn't use the
-> > recordmcount wrapper. The next patch will move it out of the
-> > wrapper.
-> > 
-> > Signed-off-by: Matt Helsley <mhelsley@vmware.com>
-> > ---
-> >  tools/objtool/recordmcount.c |  44 +++----------
-> >  tools/objtool/recordmcount.h | 120 ++++++++++++++---------------------
-> >  2 files changed, 59 insertions(+), 105 deletions(-)
-> > 
-> > diff --git a/tools/objtool/recordmcount.c b/tools/objtool/recordmcount.c
-> > index 06a8f8ddefa7..ef3c360a3db9 100644
-> > --- a/tools/objtool/recordmcount.c
-> > +++ b/tools/objtool/recordmcount.c
-> 
-> [...]
-> 
-> > -static uint_t *sift_rel_mcount(uint_t *mlocp,
-> > -			       unsigned const offbase,
-> > -			       Elf_Rel **const mrelpp,
-> > +static void sift_rel_mcount(GElf_Addr **mlocpp,
-> > +			       GElf_Sxword *r_offsetp,
-> > +			       void **const mrelpp,
-> >  			       const struct section * const rels,
-> >  			       unsigned const recsym_index,
-> >  			       unsigned long const recval,
-> > -			       unsigned const reltype)
-> > +			       unsigned const reltype,
-> > +			       bool is_rela)
-> >  {
-> > -	uint_t *const mloc0 = mlocp;
-> > -	Elf_Rel *mrelp = *mrelpp;
-> > -	unsigned int rel_entsize = rels->sh.sh_entsize;
-> > -	unsigned mcountsym = 0;
-> > +	GElf_Rel *mrelp = *mrelpp;
-> > +	GElf_Rela *mrelap = *mrelpp;
-> > +	unsigned int mcount_sym_info = 0;
-> >  	struct reloc *reloc;
-> > 
-> >  	list_for_each_entry(reloc, &rels->reloc_list, list) {
-> > -		if (!mcountsym)
-> > -			mcountsym = get_mcountsym(reloc);
-> > -
-> > -		if (mcountsym == GELF_R_INFO(reloc->sym->idx, reloc->type) && !is_fake_mcount(reloc)) {
-> > -			uint_t const addend =
-> > -				_w(reloc->offset - recval + mcount_adjust);
-> > -			mrelp->r_offset = _w(offbase
-> > -				+ ((void *)mlocp - (void *)mloc0));
-> > -			Elf_r_info(mrelp, recsym_index, reltype);
-> > -			if (rel_entsize == sizeof(Elf_Rela)) {
-> > -				((Elf_Rela *)mrelp)->r_addend = addend;
-> > -				*mlocp++ = 0;
-> > -			} else
-> > -				*mlocp++ = addend;
-> > -
-> > -			mrelp = (Elf_Rel *)(rel_entsize + (void *)mrelp);
-> > +		unsigned long addend;
-> > +
-> > +		if (!mcount_sym_info)
-> > +			mcount_sym_info = get_mcount_sym_info(reloc);
-> > +
-> > +		if (mcount_sym_info != GELF_R_INFO(reloc->sym->idx, reloc->type) || is_fake_mcount(reloc))
-> > +			continue;
-> 
-> Hi Matt,
-> 
-> I was trying out the patch series on ppc64le and found that __mcount_loc
-> and .rela__mcount_loc section pairs do not get generated. 
-> 
-> # readelf -S fs/proc/cmdline.o|grep mcount
-> #
-> 
-> Debugged the cause to get_mcountsym()'s return type.  It returns reloc
-> type from GELF_R_INFO() and expects Elf64_Xword a.k.a unsigned long
-> to be the return type but get_mcountsym() returns unsigned int on 64-bit.
-> 
-> On power the _mcount is of relocation type R_PPC64_REL24 (info 0x170000000a),
-> using unsigned int truncates the value to 0xa and fails the above check.
-> Using below fix, that converts mcount_sym_info to use unsigned long, generates
-> the __mcount_loc section pairs.
-> 
-> --- a/tools/objtool/mcount.c
-> +++ b/tools/objtool/mcount.c
-> @@ -163,7 +163,7 @@ static int is_mcounted_section_name(char const *const txtname)
->                 strcmp(".cpuidle.text", txtname) == 0;
->  }
->  
-> -static unsigned int get_mcount_sym_info(struct reloc *reloc)
-> +static unsigned long get_mcount_sym_info(struct reloc *reloc)
->  {
->         struct symbol *sym = reloc->sym;
->         char const *symname = sym->name;
-> @@ -274,7 +274,7 @@ static int nop_mcount(struct section * const rels,
->  {
->         struct reloc *reloc;
->         struct section *txts = find_section_by_index(lf, rels->sh.sh_info);
-> -       unsigned int mcount_sym_info = 0;
-> +       unsigned long mcount_sym_info = 0;
->         int once = 0;
->  
->         list_for_each_entry(reloc, &rels->reloc_list, list) {
-> @@ -363,7 +363,7 @@ static void sift_rel_mcount(GElf_Addr **mlocpp,
->  {
->         GElf_Rel *mrelp = *mrelpp;
->         GElf_Rela *mrelap = *mrelpp;
-> -       unsigned int mcount_sym_info = 0;
-> +       unsigned long mcount_sym_info = 0;
->         struct reloc *reloc;
->  
->         list_for_each_entry(reloc, &rels->reloc_list, list) {
-> 
-> # readelf -S fs/proc/cmdline.o|grep mcount
->   [31] __mcount_loc      PROGBITS         0000000000000000  00022f10
->   [32] .rela__mcount_loc RELA             0000000000000000  00022f20
+From: Mark Gross <mgross@linux.intel.com>
 
-Fixed for next posting.
+commit e9d7144597b10ff13ff2264c059f7d4a7fbc89ac upstream
 
-I've essentially added this as another patch before it moves into
-recordmcount.c, gets renamed to get_mcount_sym_info(), etc. I did it
-this way because it only becomes necessary to change the type before
-moving the function (and eventually its callers) out of the wrapper.
+Intel uses the same family/model for several CPUs. Sometimes the
+stepping must be checked to tell them apart.
 
-I feel I should credit you as author or at least co-author of the added
-patch since it's basically a "backported" version of the changes you
-suggested. I reviewed the process in submitting-patches.rst and propose
-the commit message:
-	
-	objtool: mcount: Extend mcountsym size
-	    
-	Before we can move this function out of the wrapper and into
-	wordsize-independent code we need to explicitly size the
-	type returned from get_mcountsym() to preserve the symbol info.
+On x86 there can be at most 16 steppings. Add a steppings bitmask to
+x86_cpu_id and a X86_MATCH_VENDOR_FAMILY_MODEL_STEPPING_FEATURE macro
+and support for matching against family/model/stepping.
 
-	Reported-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-	Signed-off-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-	Signed-off-by: Matt Helsley <mhelsley@vmware.com>
+ [ bp: Massage.
+   tglx: Lightweight variant for backporting ]
 
-Is that OK with you or do you have another preference?
+Signed-off-by: Mark Gross <mgross@linux.intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ arch/x86/include/asm/cpu_device_id.h |   27 +++++++++++++++++++++++++++
+ arch/x86/kernel/cpu/match.c          |    7 ++++++-
+ include/linux/mod_devicetable.h      |    6 ++++++
+ 3 files changed, 39 insertions(+), 1 deletion(-)
 
-> 
-> 
-> > +
-> > +		addend = reloc->offset - recval + mcount_adjust;
-> > +		if (is_rela) {
-> > +			mrelap->r_offset = *r_offsetp;
-> > +			mrelap->r_info = GELF_R_INFO(recsym_index, reltype);
-> > +			mrelap->r_addend = addend;
-> > +			mrelap++;
-> > +			**mlocpp = 0;
-> > +		} else {
-> > +			mrelp->r_offset = *r_offsetp;
-> > +			mrelp->r_info = GELF_R_INFO(recsym_index, reltype);
-> > +			mrelp++;
-> > +			**mlocpp = addend;
-> >  		}
-> > +		(*mlocpp)++;
-> > +		r_offsetp += loc_size;
-> 
-> the offsets generated for rela__mcount_loc section are incorrect:
-> 
-> # readelf -rW fs/proc/meminfo.o
-> [...]
-> Relocation section '.rela__mcount_loc' at offset 0x59a48 contains 4 entries:
->     Offset             Info             Type               Symbol's Value  Symbol's Name + Addend
-> 0000000000000000  0000000200000026 R_PPC64_ADDR64         0000000000000000 .text + c
-> 00000a059c401f38  0000000200000026 R_PPC64_ADDR64         0000000000000000 .text + 64
-> 0000000000000000  0000000200000026 R_PPC64_ADDR64         0000000000000000 .text + 7c
-> 0000000000000000  0000000600000026 R_PPC64_ADDR64         0000000000000000 .init.text + c
-> 
-> changing the above line to *r_offsetp += loc_size and initializing
-> r_offset=0 in do_mcount() generates the correct offset:
-> 
-> # readelf -rW fs/proc/meminfo.o
-> [...]
-> Relocation section '.rela__mcount_loc' at offset 0x59a48 contains 4 entries:
->     Offset             Info             Type               Symbol's Value  Symbol's Name + Addend
-> 0000000000000000  0000000200000026 R_PPC64_ADDR64         0000000000000000 .text + c
-> 0000000000000008  0000000200000026 R_PPC64_ADDR64         0000000000000000 .text + 64
-> 0000000000000010  0000000200000026 R_PPC64_ADDR64         0000000000000000 .text + 7c
-> 0000000000000018  0000000600000026 R_PPC64_ADDR64         0000000000000000 .init.text + c
+--- a/arch/x86/include/asm/cpu_device_id.h
++++ b/arch/x86/include/asm/cpu_device_id.h
+@@ -9,6 +9,33 @@
+ 
+ #include <linux/mod_devicetable.h>
+ 
++#define X86_STEPPINGS(mins, maxs)    GENMASK(maxs, mins)
++
++/**
++ * X86_MATCH_VENDOR_FAM_MODEL_STEPPINGS_FEATURE - Base macro for CPU matching
++ * @_vendor:	The vendor name, e.g. INTEL, AMD, HYGON, ..., ANY
++ *		The name is expanded to X86_VENDOR_@_vendor
++ * @_family:	The family number or X86_FAMILY_ANY
++ * @_model:	The model number, model constant or X86_MODEL_ANY
++ * @_steppings:	Bitmask for steppings, stepping constant or X86_STEPPING_ANY
++ * @_feature:	A X86_FEATURE bit or X86_FEATURE_ANY
++ * @_data:	Driver specific data or NULL. The internal storage
++ *		format is unsigned long. The supplied value, pointer
++ *		etc. is casted to unsigned long internally.
++ *
++ * Backport version to keep the SRBDS pile consistant. No shorter variants
++ * required for this.
++ */
++#define X86_MATCH_VENDOR_FAM_MODEL_STEPPINGS_FEATURE(_vendor, _family, _model, \
++						    _steppings, _feature, _data) { \
++	.vendor		= X86_VENDOR_##_vendor,				\
++	.family		= _family,					\
++	.model		= _model,					\
++	.steppings	= _steppings,					\
++	.feature	= _feature,					\
++	.driver_data	= (unsigned long) _data				\
++}
++
+ extern const struct x86_cpu_id *x86_match_cpu(const struct x86_cpu_id *match);
+ 
+ #endif
+--- a/arch/x86/kernel/cpu/match.c
++++ b/arch/x86/kernel/cpu/match.c
+@@ -34,13 +34,18 @@ const struct x86_cpu_id *x86_match_cpu(c
+ 	const struct x86_cpu_id *m;
+ 	struct cpuinfo_x86 *c = &boot_cpu_data;
+ 
+-	for (m = match; m->vendor | m->family | m->model | m->feature; m++) {
++	for (m = match;
++	     m->vendor | m->family | m->model | m->steppings | m->feature;
++	     m++) {
+ 		if (m->vendor != X86_VENDOR_ANY && c->x86_vendor != m->vendor)
+ 			continue;
+ 		if (m->family != X86_FAMILY_ANY && c->x86 != m->family)
+ 			continue;
+ 		if (m->model != X86_MODEL_ANY && c->x86_model != m->model)
+ 			continue;
++		if (m->steppings != X86_STEPPING_ANY &&
++		    !(BIT(c->x86_stepping) & m->steppings))
++			continue;
+ 		if (m->feature != X86_FEATURE_ANY && !cpu_has(c, m->feature))
+ 			continue;
+ 		return m;
+--- a/include/linux/mod_devicetable.h
++++ b/include/linux/mod_devicetable.h
+@@ -589,6 +589,10 @@ struct mips_cdmm_device_id {
+ /*
+  * MODULE_DEVICE_TABLE expects this struct to be called x86cpu_device_id.
+  * Although gcc seems to ignore this error, clang fails without this define.
++ *
++ * Note: The ordering of the struct is different from upstream because the
++ * static initializers in kernels < 5.7 still use C89 style while upstream
++ * has been converted to proper C99 initializers.
+  */
+ #define x86cpu_device_id x86_cpu_id
+ struct x86_cpu_id {
+@@ -597,6 +601,7 @@ struct x86_cpu_id {
+ 	__u16 model;
+ 	__u16 feature;	/* bit index */
+ 	kernel_ulong_t driver_data;
++	__u16 steppings;
+ };
+ 
+ #define X86_FEATURE_MATCH(x) \
+@@ -605,6 +610,7 @@ struct x86_cpu_id {
+ #define X86_VENDOR_ANY 0xffff
+ #define X86_FAMILY_ANY 0
+ #define X86_MODEL_ANY  0
++#define X86_STEPPING_ANY 0
+ #define X86_FEATURE_ANY 0	/* Same as FPU, you can't test for that */
+ 
+ /*
 
-Fixed for next posting.
 
-Thank you for testing these out and the fixes!
-
-Cheers,
-	-Matt Helsley
