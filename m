@@ -2,144 +2,116 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24DFDC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE4E2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:59:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 030A3206D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:59:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9974206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:59:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725541;
-	bh=cVDViZWwgHNsufUmT2I+Hp2X1qg/QoZVvKpHAG/7+i8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DKg1PLXo0rdByV00Lrt9AadHxKoD2kMEG7lJmSx/8E/lbx6io7rxwxqhlJ2zxCfDk
-	 KL3l8dV7yfdMB7dpWlV3hQAXRI8Vzo8SvS0Ndnzax0Q6bd28YSBnhEqm6LAPmfXxfy
-	 s8UVxNQESAZt0kUAjrKVoCg0m7+qZFdTyVnT5MV0=
+	s=default; t=1591725546;
+	bh=J8tlTkffI9vT+ZtetPjpRh4/bBL9Hh7emd0zTozTyXI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RqexkgC14b87B/EZZNj9WG5BsCoqFuXQW9nVGBoZD2PH0ooGeURfl+5f/58m9cZ24
+	 jByd5NK/IuMdqawxoeSlbw3t+E+aVuu9W0iKy5PhYuGLnIOlm00FzJ/D8mh63R0a19
+	 CoLpDJ5M1Hnz+cUtXzyRgRbbOL7HsicwJb9KkdsY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387699AbgFIR67 (ORCPT
+        id S1731661AbgFIR7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:58:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47268 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:59:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731767AbgFIRzK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:55:10 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1731651AbgFIR6z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:58:55 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D29B2074B;
-        Tue,  9 Jun 2020 17:55:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 777A720801;
+        Tue,  9 Jun 2020 17:58:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725309;
-        bh=cVDViZWwgHNsufUmT2I+Hp2X1qg/QoZVvKpHAG/7+i8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KVtOLlluydHzVB+fCKe0efHXGOsIFf+rclLy0uyuNMIs8VRhVTmrPzv8jT94wb05X
-         ebgQbT1AeqbAt1wJTWsD1VRNBxU21ui0OcVdfIIJoCsMJNTL3ltfPoWdN9PVXr4Inw
-         VSbnXu8XAflgsQrqHwEkRPfl25dfT1CaCSAR49Y0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Hanselmann <public@hansmi.ch>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.7 05/24] USB: serial: ch341: fix lockup of devices with limited prescaler
-Date:   Tue,  9 Jun 2020 19:45:36 +0200
-Message-Id: <20200609174149.750150881@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200609174149.255223112@linuxfoundation.org>
-References: <20200609174149.255223112@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1591725535;
+        bh=J8tlTkffI9vT+ZtetPjpRh4/bBL9Hh7emd0zTozTyXI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qF1dpbq4r6LixfMDbilCvEkZ/h6ZYJ1hJewkW/W1R/P4ihpjzb1aQ6Vqyu57/RnlE
+         1SXfvJeSswwlhZftcwITa7SGOlKrsZaPDX+PAwZ0JDQDw7COQCJH0tNaPuFmyJDIZ2
+         y1et7/fTJBDLN5J5sfQf0qMqwE6qExDOFqlvAYFs=
+Date:   Tue, 9 Jun 2020 18:58:52 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        robh@kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [RFC PATCH 1/2] dt-bindings: tas2562: Add firmware support for
+ tas2563
+Message-ID: <20200609175852.GQ4583@sirena.org.uk>
+References: <20200609172841.22541-1-dmurphy@ti.com>
+ <20200609172841.22541-2-dmurphy@ti.com>
+ <20200609173143.GN4583@sirena.org.uk>
+ <bb7cff87-f814-1b37-c9eb-e68919e3c077@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="JaBjgNvtdKe5H086"
+Content-Disposition: inline
+In-Reply-To: <bb7cff87-f814-1b37-c9eb-e68919e3c077@ti.com>
+X-Cookie: Be careful!  Is it classified?
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
 
-commit c432df155919582a3cefa35a8f86256c830fa9a4 upstream.
+--JaBjgNvtdKe5H086
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Michael Hanselmann reports that
+On Tue, Jun 09, 2020 at 12:35:50PM -0500, Dan Murphy wrote:
+> On 6/9/20 12:31 PM, Mark Brown wrote:
 
-	[a] subset of all CH341 devices stop responding to bulk
-	transfers, usually after the third byte, when the highest
-	prescaler bit (0b100) is set. There is one exception, namely a
-	prescaler of exactly 0b111 (fact=1, ps=3).
+> > Why not just use a standard name for the firmware?  If the firmwares
+> > vary per-board then building it using the machine compatible (or DMI
+> > info) could handle that, with a fallback to a standard name for a
+> > default setup.
 
-Fix this by forcing a lower base clock (fact = 0) whenever needed.
+> The number of firmwares can vary per IC on the board itself.=A0 So you may
+> have X number of firmware files all with different names all targets for
+> different TAS2563 ICs.
 
-This specifically makes the standard rates 110, 134 and 200 bps work
-again with these devices.
+> Also TI will not be providing the individual binaries to the customer.=A0
+> There is a customer tool that the user uses to create the binaries.
 
-Fixes: 35714565089e ("USB: serial: ch341: reimplement line-speed handling")
-Cc: stable <stable@vger.kernel.org>	# 5.5
-Reported-by: Michael Hanselmann <public@hansmi.ch>
-Link: https://lore.kernel.org/r/20200514141743.GE25962@localhost
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> So the output names are arbitrary.
 
----
- drivers/usb/serial/ch341.c |   15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+> I was going to mention this in the cover letter but did not think mention=
+ing
+> the user tool had any value
 
---- a/drivers/usb/serial/ch341.c
-+++ b/drivers/usb/serial/ch341.c
-@@ -73,6 +73,8 @@
- #define CH341_LCR_CS6          0x01
- #define CH341_LCR_CS5          0x00
- 
-+#define CH341_QUIRK_LIMITED_PRESCALER	BIT(0)
-+
- static const struct usb_device_id id_table[] = {
- 	{ USB_DEVICE(0x4348, 0x5523) },
- 	{ USB_DEVICE(0x1a86, 0x7523) },
-@@ -160,9 +162,11 @@ static const speed_t ch341_min_rates[] =
-  *		2 <= div <= 256 if fact = 0, or
-  *		9 <= div <= 256 if fact = 1
-  */
--static int ch341_get_divisor(speed_t speed)
-+static int ch341_get_divisor(struct ch341_private *priv)
- {
- 	unsigned int fact, div, clk_div;
-+	speed_t speed = priv->baud_rate;
-+	bool force_fact0 = false;
- 	int ps;
- 
- 	/*
-@@ -188,8 +192,12 @@ static int ch341_get_divisor(speed_t spe
- 	clk_div = CH341_CLK_DIV(ps, fact);
- 	div = CH341_CLKRATE / (clk_div * speed);
- 
-+	/* Some devices require a lower base clock if ps < 3. */
-+	if (ps < 3 && (priv->quirks & CH341_QUIRK_LIMITED_PRESCALER))
-+		force_fact0 = true;
-+
- 	/* Halve base clock (fact = 0) if required. */
--	if (div < 9 || div > 255) {
-+	if (div < 9 || div > 255 || force_fact0) {
- 		div /= 2;
- 		clk_div *= 2;
- 		fact = 0;
-@@ -228,7 +236,7 @@ static int ch341_set_baudrate_lcr(struct
- 	if (!priv->baud_rate)
- 		return -EINVAL;
- 
--	val = ch341_get_divisor(priv->baud_rate);
-+	val = ch341_get_divisor(priv);
- 	if (val < 0)
- 		return -EINVAL;
- 
-@@ -333,6 +341,7 @@ static int ch341_detect_quirks(struct us
- 			    CH341_REG_BREAK, 0, buffer, size, DEFAULT_TIMEOUT);
- 	if (r == -EPIPE) {
- 		dev_dbg(&port->dev, "break control not supported\n");
-+		quirks = CH341_QUIRK_LIMITED_PRESCALER;
- 		r = 0;
- 		goto out;
- 	}
+That's all fairly standard for this sort of device.  You could still
+cope with this by including the I2C address in the default name
+requested - do something like tas2562/myboard-addr.fw or whatever.  The
+concern here is that someone shouldn't have to replace their DT if they
+decide they want to start using the DSP, and someone making a distro
+shouldn't be stuck dealing with what happens if multiple vendors decide
+to just reuse the same name (eg, just calling everything tas2562
+regardless of plastics).
 
+--JaBjgNvtdKe5H086
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7fzdsACgkQJNaLcl1U
+h9BKVQgAhwdvHDREJ2LZnjNuwAcY2lCGKrqH/sZ5zCuez+GTC3OioTnr1/2fRJP3
+oeO4H/IRo6/PsE6dhcl48e+/CVM8p9IBC4J7eLYtvwC3iOd5qZGUXq1HqoYQaYYp
+cJ22lWuYmG6EXPtcTM7eflfBIEdgbluyeksxIc1WSTccPFpEOkc8tElhlNN4eowI
+34B18qXdsfvX3eOghVWTAD/IoyTPmyvWLzOkrRSpk+oPKsiqJnx0g7wEAg95sBKg
+luhCZTAe1gaTpMC44kBIMN1ZVd22wZIGCJqXKY434H4xiVImRvv2/uqxbm0GsQQy
+4Wqt+BFO7MwvkNsDYTTFA/Uj8xQ++A==
+=re6H
+-----END PGP SIGNATURE-----
+
+--JaBjgNvtdKe5H086--
