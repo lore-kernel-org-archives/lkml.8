@@ -2,58 +2,64 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 830E9C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3333AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4ABF020801
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:46:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00AA120812
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:46:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591724799;
-	bh=HtOKJ+6AhzRcJp42rN8vMCosQZR/IW/NBwTb7UtPEfQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kxfzO7Qj6Q2uLVzHrn+UGcXhomuJ+5xHWjAGQddUIsRqWNebFbpZFucxyKkTC7srA
-	 EfI5tTC8jcBSN2TGV7vigcQQ61DfQJJKE7vR4RLdbaNW1F3Et7Le93zUd/hTll/DSd
-	 Im/RR8yTGHVsdlHaogOVvCaCksNSYl6oBimjGvQs=
+	s=default; t=1591724803;
+	bh=1sTCsUX8B6QQqFriqNkoSiWZqSgn+coudwsY6JKpdfU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=ZtRzixClzTL1KE7LirQcrU13lU8A8lvrl7JU8cEv4HJrRIdmoApydhBvKDWWTrswv
+	 Z20ag3tQ02522PmmZ4I1Sj82Z0kvG3lKsLWAl390sWIZePXEVvnZBReWaNBz32fQin
+	 Kb+cqstHiS1JHxyI8TVeowA/6U7o1xxaJ/G0R/xw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731983AbgFIRqh (ORCPT
+        id S1731998AbgFIRqk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:46:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56408 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:46:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731928AbgFIRq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:46:26 -0400
+        id S1731946AbgFIRqc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:46:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59A972081A;
-        Tue,  9 Jun 2020 17:46:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DC95207F9;
+        Tue,  9 Jun 2020 17:46:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591724784;
-        bh=HtOKJ+6AhzRcJp42rN8vMCosQZR/IW/NBwTb7UtPEfQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rclGf4Y3iN4zmI1W7O73mS+Rzjzby9epkvo98b0keK2AR+dzeHRJ9I0hsufxswY0j
-         OuuPFl6Xo/eKHiRFdR3a5x0i0ic9CkvLlShc0yDhC2ZZ68Uf2BspiS1MCv9njNROEv
-         cOCXDZ9n15rdULmdQ7lHk0xieLRjNqVi4ude1Usg=
+        s=default; t=1591724791;
+        bh=1sTCsUX8B6QQqFriqNkoSiWZqSgn+coudwsY6JKpdfU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ZaK5LwahCavanFNUg4DTqFmj6ZNRBiBFsSH9I75/XjZrqH6+bOTIWqAgkpvbXoOP8
+         v/LI3UxfkfQuFcRC2rnXKbBAGAbaGQcUJHOWaJQNn0dp4akb0fUPbc84K3a8DNJ8Od
+         FTJoIdY96N/wfyIdg7z3LYKserNP7CT0NBoMovPg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, fengsheng <fengsheng5@huawei.com>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 07/36] spi: dw: use "smp_mb()" to avoid sending spi data error
-Date:   Tue,  9 Jun 2020 19:44:07 +0200
-Message-Id: <20200609173933.708823642@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.4 00/36] 4.4.227-rc1 review
+Date:   Tue,  9 Jun 2020 19:44:00 +0200
+Message-Id: <20200609173933.288044334@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200609173933.288044334@linuxfoundation.org>
-References: <20200609173933.288044334@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.227-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.4.227-rc1
+X-KernelTest-Deadline: 2020-06-11T17:39+00:00
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -61,48 +67,219 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xinwei Kong <kong.kongxinwei@hisilicon.com>
+This is the start of the stable review cycle for the 4.4.227 release.
+There are 36 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-[ Upstream commit bfda044533b213985bc62bd7ca96f2b984d21b80 ]
+Responses should be made by Thu, 11 Jun 2020 17:39:17 +0000.
+Anything received after that time might be too late.
 
-Because of out-of-order execution about some CPU architecture,
-In this debug stage we find Completing spi interrupt enable ->
-prodrucing TXEI interrupt -> running "interrupt_transfer" function
-will prior to set "dw->rx and dws->rx_end" data, so this patch add
-memory barrier to enable dw->rx and dw->rx_end to be visible and
-solve to send SPI data error.
-eg:
-it will fix to this following low possibility error in testing environment
-which using SPI control to connect TPM Modules
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.227-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
+and the diffstat can be found below.
 
-kernel: tpm tpm0: Operation Timed out
-kernel: tpm tpm0: tpm_relinquish_locality: : error -1
+thanks,
 
-Signed-off-by: fengsheng <fengsheng5@huawei.com>
-Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com>
-Link: https://lore.kernel.org/r/1578019930-55858-1-git-send-email-kong.kongxinwei@hisilicon.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/spi/spi-dw.c | 3 +++
- 1 file changed, 3 insertions(+)
+greg k-h
 
-diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
-index 4edd38d03b93..5688591e9cd3 100644
---- a/drivers/spi/spi-dw.c
-+++ b/drivers/spi/spi-dw.c
-@@ -306,6 +306,9 @@ static int dw_spi_transfer_one(struct spi_master *master,
- 	dws->len = transfer->len;
- 	spin_unlock_irqrestore(&dws->buf_lock, flags);
- 
-+	/* Ensure dw->rx and dw->rx_end are visible */
-+	smp_mb();
-+
- 	spi_enable_chip(dws, 0);
- 
- 	/* Handle per transfer options for bpw and speed */
--- 
-2.25.1
+-------------
+Pseudo-Shortlog of commits:
 
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.4.227-rc1
+
+Oleg Nesterov <oleg@redhat.com>
+    uprobes: ensure that uprobe->offset and ->ref_ctr_offset are properly aligned
+
+Mathieu Othacehe <m.othacehe@gmail.com>
+    iio: vcnl4000: Fix i2c swapped word reading.
+
+Josh Poimboeuf <jpoimboe@redhat.com>
+    x86/speculation: Add Ivy Bridge to affected list
+
+Mark Gross <mgross@linux.intel.com>
+    x86/speculation: Add SRBDS vulnerability and mitigation documentation
+
+Mark Gross <mgross@linux.intel.com>
+    x86/speculation: Add Special Register Buffer Data Sampling (SRBDS) mitigation
+
+Mark Gross <mgross@linux.intel.com>
+    x86/cpu: Add 'table' argument to cpu_matches()
+
+Mark Gross <mgross@linux.intel.com>
+    x86/cpu: Add a steppings field to struct x86_cpu_id
+
+Jia Zhang <qianyue.zj@alibaba-inc.com>
+    x86/cpu: Rename cpu_data.x86_mask to cpu_data.x86_stepping
+
+Pascal Terjan <pterjan@google.com>
+    staging: rtl8712: Fix IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK
+
+Dmitry Torokhov <dmitry.torokhov@gmail.com>
+    vt: keyboard: avoid signed integer overflow in k_ascii
+
+Daniele Palmas <dnlplm@gmail.com>
+    USB: serial: option: add Telit LE910C1-EUX compositions
+
+Bin Liu <b-liu@ti.com>
+    USB: serial: usb_wwan: do not resubmit rx urb on fatal errors
+
+Matt Jolly <Kangie@footclan.ninja>
+    USB: serial: qcserial: add DW5816e QDL support
+
+Eric Dumazet <edumazet@google.com>
+    l2tp: do not use inet_hash()/inet_unhash()
+
+Eric Dumazet <edumazet@google.com>
+    l2tp: add sk_family checks to l2tp_validate_socket
+
+Stefano Garzarella <sgarzare@redhat.com>
+    vsock: fix timeout in vsock_accept()
+
+Chuhong Yuan <hslester96@gmail.com>
+    NFC: st21nfca: add missed kfree_skb() in an error path
+
+Yang Yingliang <yangyingliang@huawei.com>
+    devinet: fix memleak in inetdev_init()
+
+Can Guo <cang@codeaurora.org>
+    scsi: ufs: Release clock if DMA map fails
+
+yangerkun <yangerkun@huawei.com>
+    slip: not call free_netdev before rtnl_unlock in slip_open
+
+Ben Hutchings <ben@decadent.org.uk>
+    slcan: Fix double-free on slcan_open() error path
+
+Jérôme Pouiller <jerome.pouiller@silabs.com>
+    mmc: fix compilation of user API
+
+Guillaume Nault <gnault@redhat.com>
+    pppoe: only process PADT targeted at local interfaces
+
+Jonathan McDowell <noodles@earth.li>
+    net: ethernet: stmmac: Enable interface clocks on probe for IPQ806x
+
+Valentin Longchamp <valentin@longchamp.me>
+    net/ethernet/freescale: rework quiesce/activate for ucc_geth
+
+Jeremy Kerr <jk@ozlabs.org>
+    net: bmac: Fix read of MAC address from ROM
+
+Nathan Chancellor <natechancellor@gmail.com>
+    x86/mmiotrace: Use cpumask_available() for cpumask_var_t variables
+
+Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+    ARC: Fix ICCM & DCCM runtime size checks
+
+Vasily Gorbik <gor@linux.ibm.com>
+    s390/ftrace: save traced function caller
+
+Xinwei Kong <kong.kongxinwei@hisilicon.com>
+    spi: dw: use "smp_mb()" to avoid sending spi data error
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: hda - No loopback on ALC299 codec
+
+Christophe Jaillet <christophe.jaillet@wanadoo.fr>
+    IB/mlx4: Fix an error handling path in 'mlx4_ib_rereg_user_mr()'
+
+Zhen Lei <thunder.leizhen@huawei.com>
+    esp6: fix memleak on error path in esp6_input
+
+Lee, Chun-Yi <joeyli.kernel@gmail.com>
+    platform/x86: acer-wmi: setup accelerometer when ACPI device was found
+
+Eugeniu Rosca <erosca@de.adit-jv.com>
+    usb: gadget: f_uac2: fix error handling in afunc_bind (again)
+
+Hannes Reinecke <hare@suse.de>
+    scsi: scsi_devinfo: fixup string compare
+
+
+-------------
+
+Diffstat:
+
+ Documentation/ABI/testing/sysfs-devices-system-cpu |   1 +
+ .../special-register-buffer-data-sampling.rst      | 149 +++++++++++++++++++++
+ Documentation/kernel-parameters.txt                |  20 +++
+ Makefile                                           |   4 +-
+ arch/arc/kernel/setup.c                            |   5 +-
+ arch/s390/kernel/mcount.S                          |   1 +
+ arch/x86/include/asm/acpi.h                        |   2 +-
+ arch/x86/include/asm/cpu_device_id.h               |  27 ++++
+ arch/x86/include/asm/cpufeatures.h                 |   2 +
+ arch/x86/include/asm/msr-index.h                   |   4 +
+ arch/x86/include/asm/processor.h                   |   2 +-
+ arch/x86/kernel/amd_nb.c                           |   2 +-
+ arch/x86/kernel/asm-offsets_32.c                   |   2 +-
+ arch/x86/kernel/cpu/amd.c                          |  26 ++--
+ arch/x86/kernel/cpu/bugs.c                         | 106 +++++++++++++++
+ arch/x86/kernel/cpu/centaur.c                      |   4 +-
+ arch/x86/kernel/cpu/common.c                       |  62 +++++++--
+ arch/x86/kernel/cpu/cpu.h                          |   1 +
+ arch/x86/kernel/cpu/cyrix.c                        |   2 +-
+ arch/x86/kernel/cpu/intel.c                        |  20 +--
+ arch/x86/kernel/cpu/match.c                        |   7 +-
+ arch/x86/kernel/cpu/microcode/intel.c              |   4 +-
+ arch/x86/kernel/cpu/mtrr/generic.c                 |   2 +-
+ arch/x86/kernel/cpu/mtrr/main.c                    |   4 +-
+ arch/x86/kernel/cpu/perf_event_intel.c             |   2 +-
+ arch/x86/kernel/cpu/perf_event_intel_lbr.c         |   2 +-
+ arch/x86/kernel/cpu/perf_event_p6.c                |   2 +-
+ arch/x86/kernel/cpu/proc.c                         |   4 +-
+ arch/x86/kernel/head_32.S                          |   4 +-
+ arch/x86/kernel/mpparse.c                          |   2 +-
+ arch/x86/mm/mmio-mod.c                             |   4 +-
+ drivers/base/cpu.c                                 |   8 ++
+ drivers/char/hw_random/via-rng.c                   |   2 +-
+ drivers/cpufreq/acpi-cpufreq.c                     |   2 +-
+ drivers/cpufreq/longhaul.c                         |   6 +-
+ drivers/cpufreq/p4-clockmod.c                      |   2 +-
+ drivers/cpufreq/powernow-k7.c                      |   2 +-
+ drivers/cpufreq/speedstep-centrino.c               |   4 +-
+ drivers/cpufreq/speedstep-lib.c                    |   6 +-
+ drivers/crypto/padlock-aes.c                       |   2 +-
+ drivers/edac/amd64_edac.c                          |   2 +-
+ drivers/edac/mce_amd.c                             |   2 +-
+ drivers/hwmon/coretemp.c                           |   6 +-
+ drivers/hwmon/hwmon-vid.c                          |   2 +-
+ drivers/hwmon/k10temp.c                            |   2 +-
+ drivers/hwmon/k8temp.c                             |   2 +-
+ drivers/iio/light/vcnl4000.c                       |   6 +-
+ drivers/infiniband/hw/mlx4/mr.c                    |   7 +-
+ drivers/net/can/slcan.c                            |   3 +-
+ drivers/net/ethernet/apple/bmac.c                  |   2 +-
+ drivers/net/ethernet/freescale/ucc_geth.c          |  13 +-
+ .../net/ethernet/stmicro/stmmac/dwmac-ipq806x.c    |  13 ++
+ drivers/net/ppp/pppoe.c                            |   3 +
+ drivers/net/slip/slip.c                            |   3 +
+ drivers/nfc/st21nfca/dep.c                         |   4 +-
+ drivers/platform/x86/acer-wmi.c                    |   9 +-
+ drivers/scsi/scsi_devinfo.c                        |  23 ++--
+ drivers/scsi/ufs/ufshcd.c                          |   1 +
+ drivers/spi/spi-dw.c                               |   3 +
+ drivers/staging/rtl8712/wifi.h                     |   9 +-
+ drivers/tty/vt/keyboard.c                          |  26 ++--
+ drivers/usb/gadget/function/f_uac2.c               |   4 +-
+ drivers/usb/serial/option.c                        |   4 +
+ drivers/usb/serial/qcserial.c                      |   1 +
+ drivers/usb/serial/usb_wwan.c                      |   4 +
+ drivers/video/fbdev/geode/video_gx.c               |   2 +-
+ include/linux/mod_devicetable.h                    |   6 +
+ include/uapi/linux/mmc/ioctl.h                     |   1 +
+ kernel/events/uprobes.c                            |  16 ++-
+ net/ipv4/devinet.c                                 |   1 +
+ net/ipv6/esp6.c                                    |   4 +-
+ net/l2tp/l2tp_core.c                               |   2 +
+ net/l2tp/l2tp_ip.c                                 |  28 +++-
+ net/l2tp/l2tp_ip6.c                                |  28 +++-
+ net/vmw_vsock/af_vsock.c                           |   2 +-
+ sound/pci/hda/patch_realtek.c                      |   3 +
+ 76 files changed, 603 insertions(+), 157 deletions(-)
 
 
