@@ -2,319 +2,198 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14692C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 799BFC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D204C2078D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:06:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="CwDv6h59"
+	by mail.kernel.org (Postfix) with ESMTP id 51EEC2078D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:07:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728608AbgFIKGo (ORCPT
+        id S1728627AbgFIKHE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 06:06:44 -0400
-Received: from mout.gmx.net ([212.227.17.21]:57469 "EHLO mout.gmx.net"
+        Tue, 9 Jun 2020 06:07:04 -0400
+Received: from gofer.mess.org ([88.97.38.141]:50381 "EHLO gofer.mess.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726286AbgFIKGm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 06:06:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1591697185;
-        bh=EwhaBQOdiYCidrgctpcsX9zltiUK0MBAkp11JEpMwRA=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:References:Date:In-Reply-To;
-        b=CwDv6h59gjgVzAyFCdQh0i7CcLh5IyOyNBj+iXGEI9bL72Bg7uKuBHqVN6E/lI+ht
-         wPw5lB9OCm4TxFYpgMfqFf4VW+3LwTlxPomGdncj9ndA9Lypw2QP2kLUgzITYJcSzN
-         lGm4hYVEGmsfyT5rea1JFe6mfSfjPwokmmZNP35Y=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from strobe-jhalfs ([188.109.195.90]) by mail.gmx.com (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1McpNy-1j8zDP16A6-00ZyJt; Tue, 09
- Jun 2020 12:06:25 +0200
-From:   Stephen Berman <stephen.berman@gmx.net>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: power-off delay/hang due to commit 6d25be57 (mainline)
-References: <87bln7ves7.fsf@gmx.net>
-        <20200506215713.qoo4enq32ckcjmz7@linutronix.de>
-        <87v9l65d2y.fsf@gmx.net>
-        <20200513220428.4nksinis2qs5dtmh@linutronix.de>
-        <87mu6aurfn.fsf@gmx.net>
-        <20200522164012.ynyvrjompv42jtmx@linutronix.de>
-Date:   Tue, 09 Jun 2020 12:06:23 +0200
-In-Reply-To: <20200522164012.ynyvrjompv42jtmx@linutronix.de> (Sebastian
-        Andrzej Siewior's message of "Fri, 22 May 2020 18:40:12 +0200")
-Message-ID: <87y2owwo2o.fsf@rub.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
+        id S1726286AbgFIKHE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 06:07:04 -0400
+Received: by gofer.mess.org (Postfix, from userid 1000)
+        id 35A62C643B; Tue,  9 Jun 2020 11:07:02 +0100 (BST)
+Date:   Tue, 9 Jun 2020 11:07:02 +0100
+From:   Sean Young <sean@mess.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Brad Love <brad@nextdimension.cc>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.7 066/274] media: dvbdev: Fix tuner->demod
+ media controller link
+Message-ID: <20200609100702.GA24792@gofer.mess.org>
+References: <20200608230607.3361041-1-sashal@kernel.org>
+ <20200608230607.3361041-66-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="=-=-="
-X-Provags-ID: V03:K1:AoGTmDMi7SD8YKO7yIKagDuTPkqG56ExDo+yh5lYXRXSjyl57CH
- oUaDTVVi83Kl8owY2OQKXS1tphc2JyvPfhn5hmV4NkoW3BqIVKI0f5nLPTCwlyqfJLAUY7K
- 6yQHCvT2V9550e/K/Zz+cOszpYGNkDe0hPiPH9aBXgcjkr+OGaBKGpxOE/GpJ25vXaRsiUO
- tMWrkjpIwT2sG15t/iEMg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:k3a0DdMkZmA=:0+ZltzJJZJX5j0sqVCunfY
- /CVoXL/w9IhFm/+1cToXPIfj2qYMrEPJlENEY/Njmbj8mHid0R9Q7818ap5+33fg1DL57NvPL
- GfXN8fyw7EjPCe7YER3pYMcbi+NPcYXOMnfbntkXNDs65+ZjTmf953HnCf8r9TgS4Nj5JNiX+
- SeWt5H+HlvTnx5V3Z6YwDOTKT0ltxyB867Io45gFw/ChUd8TUA1uWZy1GHxzrNyYnQi7KzlZy
- jNz/r3Kpyt8f2ZscPHp0Akh2IuNBm0wq3sQVd4QIP4xQL04k6I0253fAuuZTHwanowfFmvBdq
- i+AvanzLLefCgXl8FdmoD7qAMjEF5JFe9khdub8tbaqDWRn5JBtI7+VSC191Tst5dl8cCZcG7
- An53T9mDxaVT2jGPbs1mQrPzDjaxc9vQB9PW3TZ8xJrOU9uwpKG7nMCzyimLL+CPSNRU13x71
- PdY/EU4PzAStxwfxiC+w4Z4je6bmq4SAhOo3F1Qjsd8vFoJv0ta4Y2H8la2pV05/uyF6hcUnj
- LBcWlVPTP/a6FK8CLL4cMYXhJuJEiUjA4BoItoUAA8+J1gY6qpO0gpsCQXg7fJeusnTbQO3JC
- TpUM3mHJ1SOUSRd1b7h7t5wqc1Ixw1S4zeChX5BbLIPTrKtz64KwDAlkKqarFMwxc4H2WnbIH
- 6gDcAHTm59g6Urr0I5qKwnLy4mVPknAzq4kkPnTVSLts6IDMrKguazhY4P6mLywyAA5aAa09J
- 2pL2h5dmx410VT1X1K7Hk82vN366SAbsF/weUgLBSIZ+LNEDfT9QmJ2pozeL9MFYrE204ilpc
- jcfxIKs0UkI396X3VUIzeoTXK81HHzDZzZgvy9MWqSS8XKrt2lUPCDJP6vB0tDdBwsC371ibM
- 2jC6LzIRF1UZTpUzOxIGdrMkLl/87npFnu5Kwm5xVyvKL19odcC0oaMISShP8lzj6Jb5177zJ
- Pt2GxvxI3C5Cuoi+HKcgYlHtgL11wT06+o3Rcs/SsGr/0e//xC0xA59cv+d0DZCqMCmq/5Gf6
- eUa3jM8O8zG6RgtzsaQu90vF2I/VIAyOvdR2cSOliEodtMmfHWkobasf2lxivDZNv7gqZX8SD
- 1jNMEUMNfKu/q4BRn4fn7XXiSapNf9ko57w2Qn1jDlJpdGXEiPBl9CgnZkFfsn7Ss8Voc5C6V
- gVMMTIIsl7fi9Q3TN4g5J0IUsI4vJxCERZl1fXhgr5bRh17cW0VWdW5ing+bcYC9NNmkubcGP
- 382aYtL2Cl/qO1O4Q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200608230607.3361041-66-sashal@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On Mon, Jun 08, 2020 at 07:02:39PM -0400, Sasha Levin wrote:
+> From: Brad Love <brad@nextdimension.cc>
+> 
+> [ Upstream commit 9f984cacf4f4d53fd8a3f44d7f13528b81c1f6a8 ]
 
-On Fri, 22 May 2020 18:40:12 +0200 Sebastian Andrzej Siewior <bigeasy@linu=
-tronix.de> wrote:
+This commit is already merged into 5.7 stable.
 
-> Sorry for the late reply.
+Thanks
 
-No problem, since as it turned out, I didn't have to time till now to
-follow up on your latest suggestions.  Details below.
+Sean
 
-> On 2020-05-14 23:39:40 [+0200], Stephen Berman wrote:
->> >> How will I know if that happens, is there a specific message in the =
-tty?
->> >
->> > On the tty console where you see the "timing out command, waited"
->> > message, there should be something starting with
->> > |BUG: workqueue lockup - pool
->> >
->> > following with the pool information that got stuck. That code checks =
-the
->> > workqueues every 30secs by default. So if you waited >=3D 60secs then
->> > system is not detecting a stall.
->>
->> As you can see in the photo, there was no message about a workqueue
->> lockup, only "task halt:5320 blocked for more than <XXX> seconds" every
->> two minutes.  I suppose that comes from one of the other options I
->> enabled.  Does it reveal anything about the problem?
->
->>From the picture, you are on your way to level 0, which would issue the
-> final shutdown command, but you are not quite there yet.
->
-> If you add a printk() to the reboot syscall, then I wouldn't expect you
-> to see it. (something like that):
->
-> diff --git a/kernel/reboot.c b/kernel/reboot.c
-> index c4d472b7f1b42..19bc35bc0cda0 100644
-> --- a/kernel/reboot.c
-> +++ b/kernel/reboot.c
-> @@ -314,6 +314,7 @@ SYSCALL_DEFINE4(reboot, int, magic1, int, magic2, un=
-signed int, cmd,
->  	char buffer[256];
->  	int ret =3D 0;
->
-> +	pr_err("%s(%d)CMD: %lx\n", __func__, __LINE__, cmd);
->  	/* We only trust the superuser with rebooting the system. */
->  	if (!ns_capable(pid_ns->user_ns, CAP_SYS_BOOT))
->  		return -EPERM;
->
-> If you add "ignore_loglevel initcall_debug" to the command line then you
-> should see the init callbacks of each driver. But there will be nothing
-> on your shutdown (as I expect it).
->
-> The "task X blocked for more than 120 secs" is part of the hung task
-> detector. With the "ignore_loglevel" above you should be able to see the
-> callchain of the task. I suspect that the task poked the cd-drive which
-> isn't answering. So from detector's point of view, the task issued a
-> system call which appears to hang an makes no progress.
->
->> > Could
->> > you please check if the stall-dector says something?
->>
->> Is that the message I repeated above or do you mean the workqueue?
->
-> The hung message is not workqueue related. It is the task `halt' that
-> makes no progress. There is not stall of the workqueue as far as the
-> system can tell.
-> The two boot options, I suggested above, may reveal additional
-> information that are printed but suppressed due to the loglevel.
->
-> My guess now is that maybe shutting down wifi also paused the AHCI
-> controller which makes no progress now. So booting without cdrom/disk
-> should not cause any problems.
->
-> Could you please:
-> - try booting with "ignore_loglevel initcall_debug" and see if
->   additional information is printed on the console.
->
-> - Remove cd / ATA-disk to check if anything else causes a stall. As by
->   your report you only mentioned those two (and if I see it correctly,
->   you rootFS is on nvme so removing the disk might be doable).
->
-> - Could you remove the Wifi (just the driver, no the physical hw) to see
->   if it makes any difference?
-
-I recompiled kernel 5.6.4 with the printk() call you suggested, then
-booted the kernel with "ignore_loglevel initcall_debug" (but leaving the
-CDROM and wifi intact for now).  After working as I normally do, I
-called `shutdown -h now', again as usual.  After the "Bringing down the
-loopback interface" message there were these two messages:
-
-reboot: __do_sys_reboot(317)CMD: 89abcdef
-reboot: __do_sys_reboot(317)CMD: 4321fedc
-
-Then nothing more for two minutes, then, as previously:
-
-sr 5:0:0:0: tag#10 timing out command, waited 120 seconds.
-
-Then I did a hard reboot.
-
-This morning I detached the cables to the CDROM (but left the disk in
-the box) and again booted 5.6.4 with "ignore_loglevel initcall_debug".
-After working for a bit, I called `shutdown -h now', and now there were
-quite a few more messages, but again the machine did not power off.
-Here is the ouput, which I transcribed carefully, hopefully without
-error (I omitted the fractional parts of the timestamps and some of the
-usb1-portX messages):
-
-
---=-=-=
-Content-Type: application/text/plain
-Content-Disposition: attachment; filename=no-cdrom-shutdown-5.6.4
-Content-Transfer-Encoding: quoted-printable
-
-Sending all processes the TERM signal...
-[1123.***] elogind-daemon[4318]: Received signal 15 [TERM]
-Sending all processes the KILL signal...
-Deactivating all swap files/partitions...
-Unmounting all other currently mounted file systems...
-[1123.***] EXT4-fs (nvme0n1p5):re-mounted. Opts: (null)
- *   Bringing down the loopback interface...
-[1123.***] reboot: __do_sys_reboot(317)CMD: 89abcdef
-[1123.***] reboot: __do_sys_reboot(317)CMD: 4321fedc
-[1124.***] snd_hda_codec_generic hdaudioC0D2: shutdown
-[1124.***] snd_hda_codec_realtek hdaudioC0D0: shutdown
-[1124.***] snd_hda_intel 0000:00:1f.3: shutdown
-[1124.***] sd 4:0:0:0: shutdown
-[1124.***] sd 4:0:0:0: shutdown [sda] Synchronizing SCSI cache
-[1124.***] sd 4:0:0:0: shutdown [sda] Stopping disk
-[1125.***] i2c i2c-4: shutdown
-[1125.***] alarmtimer alarmtimer.0.auto: shutdown
-[1125.***] usb usb2-port10: shutdown
-[1125.***] usb usb2-port9: shutdown
-[1125.***] usb usb2-port8: shutdown
-[1125.***] usb usb2-port7: shutdown
-[1125.***] usb usb2-port6: shutdown
-[1125.***] usb usb2-port5: shutdown
-[1125.***] usb usb2-port4: shutdown
-[1125.***] usb usb2-port3: shutdown
-[1125.***] usb usb2-port2: shutdown
-[1125.***] usb usb2-port1: shutdown
-[1125.***] usb usb1-port16: shutdown
-[1125.***] ...
-[1125.***] usb usb1-port1: shutdown
-[1125.***] i2c i2c-3: shutdown
-[1125.***] i2c i2c-2: shutdown
-[1125.***] i2c i2c-1: shutdown
-[1125.***] i2c i2c-0: shutdown
-[1125.***] serial8250 serial8250: shutdown
-[1125.***] aer 0000:00:1b.4:pcie002: shutdown
-[1125.***] aer 0000:00:1b.2:pcie002: shutdown
-[1125.***] efi-framebuffer efi-framebuffer.0: shutdown
-[1125.***] pcspkr pcspkr: shutdown
-[1125.***] system 00:08: shutdown
-[1125.***] system 00:07: shutdown
-[1125.***] system 00:06: shutdown
-[1125.***] system 00:05: shutdown
-[1125.***] system 00:04: shutdown
-[1125.***] rtc_cmos 00:03: shutdown
-[1125.***] system 00:02: shutdown
-[1125.***] serial 00:01: shutdown
-[1125.***] system 00:00: shutdown
-[1125.***] acpi-fan PNP0C0B:04: shutdown
-[1125.***] acpi-fan PNP0C0B:03: shutdown
-[1125.***] acpi-fan PNP0C0B:02: shutdown
-[1125.***] acpi-fan PNP0C0B:01: shutdown
-[1125.***] acpi-fan PNP0C0B:00: shutdown
-[1125.***] nvme 0000:03:00.0: shutdown
-[1125.***] iwlwifi 0000:02:00.0: shutdown
-[1125.***] e1000e 0000:00:1f.0: shutdown
-[1125.***] e1000e EEE TX LPI TIMER: 00000011
-[1125.***] pci 0000:00:1f.5: shutdown
-[1125.***] i801_smbus 0000:00:1f.4: shutdown
-[1125.***] pcieport 0000:00:1d.0: shutdown
-[1125.***] pcieport 0000:00:1c.0: shutdown
-[1125.***] pcieport 0000:00:1b.4: shutdown
-[1125.***] pcieport 0000:00:1b.2: shutdown
-[1125.***] pcieport 0000:00:1b.0: shutdown
-[1125.***] ahci 0000:00:17.0: shutdown
-[1125.***] pci 0000:00:16.0: shutdown
-[1125.***] pci 0000:00:14.2: shutdown
-[1125.***] xhci_hcd 0000:00:14.0: shutdown
-[1125.***] pci 0000:00:12.0: shutdown
-[1125.***] i915 0000:00:02.0: shutdown
-[1125.***] skl_uncore 0000:00:00.0: shutdown
-[1125.***] ACPI: Preparing to enter system sleep state S5
-[1352.***] INFO: task halt:5187 blocked for more than 122 seconds.
-[1352.***]                  Not tainted 5.6.4 #4
-[1352.***] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this=
- message
-[1352.***] halt            D13856  5187   5186 0x00004000
-[1352.***] Call Trace:
-[1352.***]  ? __schedule+0x272/0x5b0
-[1352.***]  schedule+0x45/0xb0
-[1352.***]  schedule_timeout+0x204/0x2f0
-[1352.***]  ? acpi_os_release_object+0x5/0x10
-[1352.***]  ? acpi_ut_update_object_reference+0x14e/0x1d2
-[1352.***]  wait_for_completion+0xa3/0x100
-[1352.***]  ? wake_up_q+0x90/0x90
-[1352.***]  flush_workqueue+0x130/0x420
-[1352.***]  kernel_power_off+0x3d/0x70
-[1352.***]  __do_sys_reboot+0x140/0x220
-[1352.***]  ? do_send_sig_info+0x58/0x90
-[1352.***]  ? kill_pid_info+0x34/0x60
-[1352.***]  ? kill_something_info+0x133/0x160
-[1352.***]  ? __x64_sys_kill+0x9a/0xc0
-[1352.***]  do_syscall_64+0x43/0x130
-[1352.***]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[1352.***] RIP: 0033:0x7f95dd6992c3
-[1352.***] Code: Bad RIP value.
-[1352.***] RSP: 002b:00007ffc4a3e4b88 EFLAGS: 00000202 ORIG_RAX: 0000000000=
-0000a9
-[1352.***] RAX: ffffffffffffffda RBX: 00007ffc4a3e4cd8 RCX: 00007f95dd6992c3
-[1352.***] RDX: 000000004321fedc RSI: 0000000028121969 RDI: 00000000fee1dead
-[1352.***] RBP: 0000000000000005 R08: 0000000000000000 R09: 0000000000000000
-[1352.***] R10: 0000000000400968 R11: 0000000000000282 R12: 0000000000000000
-[1352.***] R13: 0000000000000000 R14: 00000000ffffffff R15: 0000000000000000
-[1475.***] INFO: task halt:5187 blocked for more than 245 seconds.
-...
-
---=-=-=
-Content-Type: text/plain
-
-
-After the last message here, the "echo", Call Trace, RIP and register
-messages were repeated exactly as above.  At this point I did a hard
-reboot.  A web search found something similar to the above output
-("System hangs (bad RIP value) when disk used in pool is removed"), but
-didn't otherwise seem to be related to the problem I'm having.
-
-Do you still want me to check whether removing the iwlwifi driver makes
-a differece?  And with the CDROM still detached, or does that not
-matter?
-
-Steve Berman
-
---=-=-=--
+> 
+> Fixes bug exposed by:
+> 
+> [a3fbc2e6bb0: media: mc-entity.c: use WARN_ON, validate link pads]
+> 
+> The dvbdev incorrectly requests a tuner sink pad to connect to a demux
+> sink pad. The media controller failure percolates back and the dvb device
+> creation fails. Fix this by requesting a tuner source pad. Instead of
+> forcing that pad to be index zero, check if a negative integer error
+> is returned. A note is added that first source pad found is chosen.
+> 
+> Affected bridges cx231xx and em28xx printed the below warning[s]
+> when a variety of media controller dvb enabled devices were connected.
+> The warning returns an error causing all affected devices to fail DVB
+> device creation.
+> 
+> [  253.138332] ------------[ cut here ]------------
+> [  253.138339] WARNING: CPU: 0 PID: 1550 at drivers/media/mc/mc-entity.c:669 media_create_pad_link+0x1e0/0x200 [mc]
+> [  253.138339] Modules linked in: si2168 em28xx_dvb(+) em28xx si2157 lgdt3306a cx231xx_dvb dvb_core cx231xx_alsa cx25840 cx231xx tveeprom cx2341x i2c_mux videobuf2_vmalloc videobuf2_memops videobuf2_v4l2 videobuf2_common videodev mc ir_rc5_decoder rc_hauppauge mceusb rc_core eda
+> c_mce_amd kvm nls_iso8859_1 crct10dif_pclmul crc32_pclmul ghash_clmulni_intel aesni_intel crypto_simd cryptd glue_helper efi_pstore wmi_bmof k10temp asix usbnet mii nouveau snd_hda_codec_realtek snd_hda_codec_generic input_leds ledtrig_audio snd_hda_codec_hdmi mxm_wmi snd_hda_in
+> tel video snd_intel_dspcfg ttm snd_hda_codec drm_kms_helper snd_hda_core drm snd_hwdep snd_seq_midi snd_seq_midi_event i2c_algo_bit snd_pcm snd_rawmidi fb_sys_fops snd_seq syscopyarea sysfillrect snd_seq_device sysimgblt snd_timer snd soundcore ccp mac_hid sch_fq_codel parport_p
+> c ppdev lp parport ip_tables x_tables autofs4 vfio_pci irqbypass vfio_virqfd vfio_iommu_type1 vfio hid_generic usbhid hid i2c_piix4 ahci libahci wmi gpio_amdpt
+> [  253.138370]  gpio_generic
+> [  253.138372] CPU: 0 PID: 1550 Comm: modprobe Tainted: G        W         5.7.0-rc2+ #181
+> [  253.138373] Hardware name: MSI MS-7A39/B350M GAMING PRO (MS-7A39), BIOS 2.G0 04/27/2018
+> [  253.138376] RIP: 0010:media_create_pad_link+0x1e0/0x200 [mc]
+> [  253.138378] Code: 26 fd ff ff 44 8b 4d d0 eb d9 0f 0b 41 b9 ea ff ff ff 44 89 c8 c3 0f 0b 41 b9 ea ff ff ff eb f2 0f 0b 41 b9 ea ff ff ff eb e8 <0f> 0b 41 b9 ea ff ff ff eb af 0f 0b 41 b9 ea ff ff ff eb a5 66 90
+> [  253.138379] RSP: 0018:ffffb9ecc0ee7a78 EFLAGS: 00010246
+> [  253.138380] RAX: ffff943f706c99d8 RBX: 0000000000000000 RCX: 0000000000000000
+> [  253.138381] RDX: ffff943f613e0180 RSI: 0000000000000000 RDI: ffff943f706c9958
+> [  253.138381] RBP: ffffb9ecc0ee7ab0 R08: 0000000000000001 R09: ffff943f613e0180
+> [  253.138382] R10: ffff943f613e0180 R11: ffff943f706c9400 R12: 0000000000000000
+> [  253.138383] R13: 0000000000000001 R14: ffff943f706c9958 R15: 0000000000000001
+> [  253.138384] FS:  00007f3cd29ba540(0000) GS:ffff943f8ec00000(0000) knlGS:0000000000000000
+> [  253.138385] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  253.138385] CR2: 000055f7de0ca830 CR3: 00000003dd208000 CR4: 00000000003406f0
+> [  253.138386] Call Trace:
+> [  253.138392]  media_create_pad_links+0x104/0x1b0 [mc]
+> [  253.138397]  dvb_create_media_graph+0x350/0x5f0 [dvb_core]
+> [  253.138402]  em28xx_dvb_init+0x5ea/0x2600 [em28xx_dvb]
+> [  253.138408]  em28xx_register_extension+0x63/0xc0 [em28xx]
+> [  253.138410]  ? 0xffffffffc039c000
+> [  253.138412]  em28xx_dvb_register+0x15/0x1000 [em28xx_dvb]
+> [  253.138416]  do_one_initcall+0x71/0x250
+> [  253.138418]  ? do_init_module+0x27/0x22e
+> [  253.138421]  ? _cond_resched+0x1a/0x50
+> [  253.138423]  ? kmem_cache_alloc_trace+0x1ec/0x270
+> [  253.138425]  ? __vunmap+0x1e3/0x240
+> [  253.138427]  do_init_module+0x5f/0x22e
+> [  253.138430]  load_module+0x2525/0x2d40
+> [  253.138436]  __do_sys_finit_module+0xe5/0x120
+> [  253.138438]  ? __do_sys_finit_module+0xe5/0x120
+> [  253.138442]  __x64_sys_finit_module+0x1a/0x20
+> [  253.138443]  do_syscall_64+0x57/0x1b0
+> [  253.138445]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> [  253.138446] RIP: 0033:0x7f3cd24dc839
+> [  253.138448] Code: 00 f3 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 1f f6 2c 00 f7 d8 64 89 01 48
+> [  253.138449] RSP: 002b:00007ffe4fc514d8 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+> [  253.138450] RAX: ffffffffffffffda RBX: 000055a9237f63f0 RCX: 00007f3cd24dc839
+> [  253.138451] RDX: 0000000000000000 RSI: 000055a922c3ad2e RDI: 0000000000000000
+> [  253.138451] RBP: 000055a922c3ad2e R08: 0000000000000000 R09: 0000000000000000
+> [  253.138452] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+> [  253.138453] R13: 000055a9237f5550 R14: 0000000000040000 R15: 000055a9237f63f0
+> [  253.138456] ---[ end trace a60f19c54aa96ec4 ]---
+> 
+> [  234.915628] ------------[ cut here ]------------
+> [  234.915640] WARNING: CPU: 0 PID: 1502 at drivers/media/mc/mc-entity.c:669 media_create_pad_link+0x1e0/0x200 [mc]
+> [  234.915641] Modules linked in: si2157 lgdt3306a cx231xx_dvb(+) dvb_core cx231xx_alsa cx25840 cx231xx tveeprom cx2341x i2c_mux videobuf2_vmalloc videobuf2_memops videobuf2_v4l2 videobuf2_common videodev mc ir_rc5_decoder rc_hauppauge mceusb rc_core edac_mce_amd kvm nls_iso8859
+> _1 crct10dif_pclmul crc32_pclmul ghash_clmulni_intel aesni_intel crypto_simd cryptd glue_helper efi_pstore wmi_bmof k10temp asix usbnet mii nouveau snd_hda_codec_realtek snd_hda_codec_generic input_leds ledtrig_audio snd_hda_codec_hdmi mxm_wmi snd_hda_intel video snd_intel_dspcf
+> g ttm snd_hda_codec drm_kms_helper snd_hda_core drm snd_hwdep snd_seq_midi snd_seq_midi_event i2c_algo_bit snd_pcm snd_rawmidi fb_sys_fops snd_seq syscopyarea sysfillrect snd_seq_device sysimgblt snd_timer snd soundcore ccp mac_hid sch_fq_codel parport_pc ppdev lp parport ip_tab
+> les x_tables autofs4 vfio_pci irqbypass vfio_virqfd vfio_iommu_type1 vfio hid_generic usbhid hid i2c_piix4 ahci libahci wmi gpio_amdpt gpio_generic
+> [  234.915700] CPU: 0 PID: 1502 Comm: modprobe Not tainted 5.7.0-rc2+ #181
+> [  234.915702] Hardware name: MSI MS-7A39/B350M GAMING PRO (MS-7A39), BIOS 2.G0 04/27/2018
+> [  234.915709] RIP: 0010:media_create_pad_link+0x1e0/0x200 [mc]
+> [  234.915712] Code: 26 fd ff ff 44 8b 4d d0 eb d9 0f 0b 41 b9 ea ff ff ff 44 89 c8 c3 0f 0b 41 b9 ea ff ff ff eb f2 0f 0b 41 b9 ea ff ff ff eb e8 <0f> 0b 41 b9 ea ff ff ff eb af 0f 0b 41 b9 ea ff ff ff eb a5 66 90
+> [  234.915714] RSP: 0018:ffffb9ecc1b6fa50 EFLAGS: 00010246
+> [  234.915717] RAX: ffff943f8c94a9d8 RBX: 0000000000000000 RCX: 0000000000000000
+> [  234.915719] RDX: ffff943f613e0900 RSI: 0000000000000000 RDI: ffff943f8c94a958
+> [  234.915721] RBP: ffffb9ecc1b6fa88 R08: 0000000000000001 R09: ffff943f613e0900
+> [  234.915723] R10: ffff943f613e0900 R11: ffff943f6b590c00 R12: 0000000000000000
+> [  234.915724] R13: 0000000000000001 R14: ffff943f8c94a958 R15: 0000000000000001
+> [  234.915727] FS:  00007f4ca3646540(0000) GS:ffff943f8ec00000(0000) knlGS:0000000000000000
+> [  234.915729] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  234.915731] CR2: 00007fff7a53ba18 CR3: 00000003da614000 CR4: 00000000003406f0
+> [  234.915733] Call Trace:
+> [  234.915745]  media_create_pad_links+0x104/0x1b0 [mc]
+> [  234.915756]  dvb_create_media_graph+0x350/0x5f0 [dvb_core]
+> [  234.915766]  dvb_init.part.4+0x691/0x1360 [cx231xx_dvb]
+> [  234.915780]  dvb_init+0x1a/0x20 [cx231xx_dvb]
+> [  234.915787]  cx231xx_register_extension+0x71/0xa0 [cx231xx]
+> [  234.915791]  ? 0xffffffffc042f000
+> [  234.915796]  cx231xx_dvb_register+0x15/0x1000 [cx231xx_dvb]
+> [  234.915802]  do_one_initcall+0x71/0x250
+> [  234.915807]  ? do_init_module+0x27/0x22e
+> [  234.915811]  ? _cond_resched+0x1a/0x50
+> [  234.915816]  ? kmem_cache_alloc_trace+0x1ec/0x270
+> [  234.915820]  ? __vunmap+0x1e3/0x240
+> [  234.915826]  do_init_module+0x5f/0x22e
+> [  234.915831]  load_module+0x2525/0x2d40
+> [  234.915848]  __do_sys_finit_module+0xe5/0x120
+> [  234.915850]  ? __do_sys_finit_module+0xe5/0x120
+> [  234.915862]  __x64_sys_finit_module+0x1a/0x20
+> [  234.915865]  do_syscall_64+0x57/0x1b0
+> [  234.915870]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> [  234.915872] RIP: 0033:0x7f4ca3168839
+> [  234.915876] Code: 00 f3 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 1f f6 2c 00 f7 d8 64 89 01 48
+> [  234.915878] RSP: 002b:00007ffcea3db3b8 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+> [  234.915881] RAX: ffffffffffffffda RBX: 000055af22c29340 RCX: 00007f4ca3168839
+> [  234.915882] RDX: 0000000000000000 RSI: 000055af22c38390 RDI: 0000000000000001
+> [  234.915884] RBP: 000055af22c38390 R08: 0000000000000000 R09: 0000000000000000
+> [  234.915885] R10: 0000000000000001 R11: 0000000000000246 R12: 0000000000000000
+> [  234.915887] R13: 000055af22c29060 R14: 0000000000040000 R15: 0000000000000000
+> [  234.915896] ---[ end trace a60f19c54aa96ec3 ]---
+> 
+> Signed-off-by: Brad Love <brad@nextdimension.cc>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Signed-off-by: Sean Young <sean@mess.org>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/media/dvb-core/dvbdev.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/dvb-core/dvbdev.c b/drivers/media/dvb-core/dvbdev.c
+> index 80b6a71aa33e..959fa2820259 100644
+> --- a/drivers/media/dvb-core/dvbdev.c
+> +++ b/drivers/media/dvb-core/dvbdev.c
+> @@ -707,9 +707,10 @@ int dvb_create_media_graph(struct dvb_adapter *adap,
+>  	}
+>  
+>  	if (ntuner && ndemod) {
+> -		pad_source = media_get_pad_index(tuner, true,
+> +		/* NOTE: first found tuner source pad presumed correct */
+> +		pad_source = media_get_pad_index(tuner, false,
+>  						 PAD_SIGNAL_ANALOG);
+> -		if (pad_source)
+> +		if (pad_source < 0)
+>  			return -EINVAL;
+>  		ret = media_create_pad_links(mdev,
+>  					     MEDIA_ENT_F_TUNER,
+> -- 
+> 2.25.1
