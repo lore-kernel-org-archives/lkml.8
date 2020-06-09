@@ -2,213 +2,145 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E814CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 19:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B9FFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 19:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2B1D206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 19:42:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0521B206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 19:42:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="gx5cb55v"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="P1LYPNvM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389373AbgFITmK (ORCPT
+        id S2389400AbgFITmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 15:42:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58524 "EHLO
+        Tue, 9 Jun 2020 15:42:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728328AbgFITki (ORCPT
+        with ESMTP id S1729680AbgFITmN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 15:40:38 -0400
+        Tue, 9 Jun 2020 15:42:13 -0400
 Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF08AC08C5C6
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 12:40:37 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id w3so22042887qkb.6
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 12:40:37 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 512A9C08C5C2
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 12:42:13 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id w3so22048018qkb.6
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 12:42:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Y/sac6ctBvw3WfcduAEIFRDP2awvJiB1QH+ESuGkwsM=;
-        b=gx5cb55v+/w5yIn64UAhEjcONp8eemLuU1dmTA+jQpuIQVRpYGE7LR0U2pzXzYupyH
-         epV7DOsQj22Tm68Ycau+OqfaeAu67cuGmbEHs9oWVP4JD/pGitbjhEybuZpX/qlKG8fC
-         XW87hO+lfFuYeps1qy3Lle2hW9uXLw3+pbgETPBG0HdiqVqdIya+SmPz40bL7shijEy4
-         dgqMknktlCm7+4FQXiK9gi0qvJ86JGiwlCHEZ8qmq7GncpnoCWilprXUZ4Iuouhez0xe
-         apXykXSV6EnjDnul8OrVDiggGR+6K8YT6Jo9KxJbVgiu6W5195LRK4D1uWT1l33h/4UJ
-         gPag==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=PmkfgBREBTZO6Lp2UGSsh4z5MxUsd0nbvKVP/iz3AwU=;
+        b=P1LYPNvMyUWuYnFLslmoaME7fOIbzZ7vLQgZlSN/neUPoucaQ2KOFsChMogb02y8Rd
+         x2gk6UBDLM5J2sRw69zj5ucSIj/r106vHu4lLlzEoAjMD6P2Mdd1isbdnY0u7SgIQmZ1
+         apI0LHIQaBz0M/l5twAWI6FfFEPVLUgRIst+8ImG8Tw4D5ecJOsKg/k/Xs4p7iyo6PM5
+         8z7kIGK2CrX82YlG3xBRdVHUOaj6+Sz1DaY+uilNJmkAy7ijLn8TAAXUO7ND4YI33N4C
+         1O1s/wmoTIvbxBXXN5NFOZlQyACVcrcNbiQ2eg/ZoONzNUCTFPa6j3mzkkjlz0EpJAMr
+         dCpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Y/sac6ctBvw3WfcduAEIFRDP2awvJiB1QH+ESuGkwsM=;
-        b=mY+unGa4L0YN1b3TW4mikytbaVLgUrMHsT7FjiACcZjpoN5kw3CnbaiyeIv1Rwwt8P
-         kdw5kWyGsDe6ubDJZIEh5Cjbv2WVGzytQbSMbW0In0hqSK7VnqXFcTj3s1h3RARpCyqv
-         2PrQnjWaJHDy6HP7+L55yH+rda9cK4DzUFd8pk2Jn2EBxt8N4crfQ/1e/6GlKBBpL4DV
-         /nhDsOVy8dFWpzQCOC9Zp9It7DgoCv70NMVNBKNUBiSG1kVfEV+2EcAWNKWxKbSI+SmZ
-         13+q88Pp9RXAGLo7zMB67iuQyQQftvdy7ySHfAJvvYx4J3lmnkt0KQs6DrnwBWk3VYLe
-         OueA==
-X-Gm-Message-State: AOAM533lIaZeyEHWm+umlDvzWTBsZ8uFT0XGw6OHPGauyBNzg6qxVn2s
-        OEanvRBz/xAhyQFscEpR5hdbyg==
-X-Google-Smtp-Source: ABdhPJwxQNtPcYFkhmiQ71J4CYqd8qvzOaOoy8RPyNhzZ9S8EIkd8R1RkX79SAHqiii+kGVoMsfpRQ==
-X-Received: by 2002:a37:4c6:: with SMTP id 189mr27651576qke.301.1591731637056;
-        Tue, 09 Jun 2020 12:40:37 -0700 (PDT)
-Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id v8sm10513181qto.21.2020.06.09.12.40.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 12:40:36 -0700 (PDT)
-From:   Jonathan Marek <jonathan@marek.ca>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=PmkfgBREBTZO6Lp2UGSsh4z5MxUsd0nbvKVP/iz3AwU=;
+        b=RySR3DW/chJLB0fycittDPvnZdtnTI01wdKmbPgA2qRaSN1VaO5g5yBNzA0LKm6ARP
+         OEzpf7asjrOT5W7VwPEo3QO0mu+Kw7KDylublhZhFE6T/uuW6rWE2mTetHisU29QnU2u
+         I4k2WRFheatj+9OlraySCort/SC3YqpGEsTKiSIJDLeMmy0BktWUjgRm6zqXaG7LS0TW
+         qgpA4nuaIjiSb7FEU5YfOnt4ou9GmJa2zJPMzd2q6sFRtSvBbRjO7eUVC/bjToWRzRju
+         Xr5omq6UlpCGWko1zp7RP73TtaEPzBYVyXw2sllTUH3x67W/Lod7M9NgJSak8d+IItLH
+         0iUw==
+X-Gm-Message-State: AOAM5304dQtpkVqD1O1aOidiYljLHt2ZbdIFs0HRozvgBxH85tzMdayH
+        KaBrZvX/4vEziJx2ObAo/xZsr1ugv7YLeA==
+X-Google-Smtp-Source: ABdhPJxPoZa5i7cw6g6j5jFto1S52GzTF6MdnrhHijhBh8WO+6es4ey0iqaL1gWN1g5RBgbK55I9nw==
+X-Received: by 2002:a05:620a:200a:: with SMTP id c10mr28557256qka.218.1591731732437;
+        Tue, 09 Jun 2020 12:42:12 -0700 (PDT)
+Received: from [192.168.0.189] ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id o66sm10662743qka.60.2020.06.09.12.42.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jun 2020 12:42:12 -0700 (PDT)
+Subject: Re: [PATCH 6/6] arm64: dts: qcom: add sm8250 hdk dts
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 3/8] arm64: dts: qcom: sm8150: add apps_smmu node
-Date:   Tue,  9 Jun 2020 15:40:21 -0400
-Message-Id: <20200609194030.17756-4-jonathan@marek.ca>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200609194030.17756-1-jonathan@marek.ca>
-References: <20200609194030.17756-1-jonathan@marek.ca>
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200524023815.21789-1-jonathan@marek.ca>
+ <20200524023815.21789-7-jonathan@marek.ca>
+ <20200529030322.GX279327@builder.lan>
+From:   Jonathan Marek <jonathan@marek.ca>
+Message-ID: <9076c2c0-853f-62f9-4e34-a78e865a552e@marek.ca>
+Date:   Tue, 9 Jun 2020 15:42:33 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200529030322.GX279327@builder.lan>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the apps_smmu node for sm8150.
+On 5/28/20 11:03 PM, Bjorn Andersson wrote:
+> On Sat 23 May 19:38 PDT 2020, Jonathan Marek wrote:
+> 
+>> Add initial HDK865 dts, based on sm8250-mtp, with a few changes.
+>> Notably, regulator configs are changed a bit.
+>>
+>> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+>> ---
+>>   arch/arm64/boot/dts/qcom/Makefile       |   1 +
+>>   arch/arm64/boot/dts/qcom/sm8250-hdk.dts | 454 ++++++++++++++++++++++++
+>>   2 files changed, 455 insertions(+)
+>>   create mode 100644 arch/arm64/boot/dts/qcom/sm8250-hdk.dts
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+>> index e5dbd8b63951..4649e8bc5034 100644
+>> --- a/arch/arm64/boot/dts/qcom/Makefile
+>> +++ b/arch/arm64/boot/dts/qcom/Makefile
+>> @@ -24,6 +24,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
+>>   dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-lenovo-yoga-c630.dtb
+>>   dtb-$(CONFIG_ARCH_QCOM)	+= sm8150-hdk.dtb
+>>   dtb-$(CONFIG_ARCH_QCOM)	+= sm8150-mtp.dtb
+>> +dtb-$(CONFIG_ARCH_QCOM)	+= sm8250-hdk.dtb
+>>   dtb-$(CONFIG_ARCH_QCOM)	+= sm8250-mtp.dtb
+>>   dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
+>>   dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-4000.dtb
+>> diff --git a/arch/arm64/boot/dts/qcom/sm8250-hdk.dts b/arch/arm64/boot/dts/qcom/sm8250-hdk.dts
+>> new file mode 100644
+>> index 000000000000..d35014bf4f81
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/qcom/sm8250-hdk.dts
+>> @@ -0,0 +1,454 @@
+>> +// SPDX-License-Identifier: BSD-3-Clause
+>> +/*
+>> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
+>> + */
+>> +
+>> +/dts-v1/;
+>> +
+>> +#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+>> +#include <dt-bindings/gpio/gpio.h>
+>> +#include "sm8250.dtsi"
+>> +#include "pm8150.dtsi"
+>> +#include "pm8150b.dtsi"
+>> +#include "pm8150l.dtsi"
+>> +
+>> +/ {
+>> +	model = "Qualcomm Technologies, Inc. SM8250 HDK";
+>> +	compatible = "qcom,sm8250-hdk";
+> 
+> 	compatible = "qcom,sm8250-hdk", "qcom,sm8250";
+> 
+> Apart from that this looks good!
+> 
 
-For UFS, now that the kernel initializes the iommu, the stream mappings
-set by the bootloader are cleared. Adding the iommus property is required
-so that new mappings are created for UFS.
+Made this change for both HDK dts, but FYI the mtp dts do not have this.
 
-Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-Reviewed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sm8150.dtsi | 91 ++++++++++++++++++++++++++++
- 1 file changed, 91 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-index a36512d1f6a1..5b48dbaee2d8 100644
---- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-@@ -442,6 +442,8 @@ ufs_mem_hc: ufshc@1d84000 {
- 			resets = <&gcc GCC_UFS_PHY_BCR>;
- 			reset-names = "rst";
- 
-+			iommus = <&apps_smmu 0x300 0>;
-+
- 			clock-names =
- 				"core_clk",
- 				"bus_aggr_clk",
-@@ -706,6 +708,7 @@ usb_1_dwc3: dwc3@a600000 {
- 				compatible = "snps,dwc3";
- 				reg = <0 0x0a600000 0 0xcd00>;
- 				interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
-+				iommus = <&apps_smmu 0x140 0>;
- 				snps,dis_u2_susphy_quirk;
- 				snps,dis_enblslpm_quirk;
- 				phys = <&usb_1_hsphy>, <&usb_1_ssphy>;
-@@ -742,6 +745,94 @@ spmi_bus: spmi@c440000 {
- 			cell-index = <0>;
- 		};
- 
-+		apps_smmu: iommu@15000000 {
-+			compatible = "qcom,sm8150-smmu-500", "arm,mmu-500";
-+			reg = <0 0x15000000 0 0x100000>;
-+			#iommu-cells = <2>;
-+			#global-interrupts = <1>;
-+			interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 181 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 182 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 185 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 186 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 187 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 315 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 316 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 317 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 318 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 319 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 320 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 321 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 322 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 323 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 324 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 325 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 326 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 327 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 328 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 329 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 330 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 331 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 333 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 334 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 336 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 337 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 338 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 339 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 340 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 341 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 342 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 343 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 344 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 345 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 395 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 396 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 397 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 398 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 399 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 400 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 401 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 402 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 403 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 404 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 405 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 406 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 407 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 408 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 409 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
- 		remoteproc_adsp: remoteproc@17300000 {
- 			compatible = "qcom,sm8150-adsp-pas";
- 			reg = <0x0 0x17300000 0x0 0x4040>;
--- 
-2.26.1
-
+> Thanks,
+> Bjorn
+> 
