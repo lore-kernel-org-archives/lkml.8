@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6AC3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:03:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 078A0C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:03:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F6BD20734
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:03:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8A0220734
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:03:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725819;
-	bh=BezFaNOoQeB/h0/SXH8z6R7uWaYaqCX+rDTRwXq5E+8=;
+	s=default; t=1591725822;
+	bh=mlChgyTv5SQLeyzNVZm89cxyxj49nT+0TF3uaH4MMaI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZvewA/KfurXzSoCiiRJmMD+wPu41EKacJT7C4svY9Pl1z2xCWKP8J0Wwi856r3+Sd
-	 lF4Mi77kcnnKjjIr0bZ8y3Tm6aOFZDAsHL8MlVl0ettiRb3sUItlhgc43mwc0qIQEc
-	 3DYrHeI1NdvfEMMHlZFfVduv9omI/ul/gMY0RB9o=
+	b=igv63E178ZwXVv10suW+5tN/D2g3BOvFzc+efMeZsk+kjZptfn4K+5uCWiodS9fQ7
+	 ADNHWis72I2dwYJhidxmFfD28dZA/PKkYsYYy5Y1evh+65/go2OqMrMXU/z51O1F6h
+	 WlzQz65+oOK+3yRl0K0WQtNI9/7j59kRPleeKyv8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387924AbgFISDd (ORCPT
+        id S2387948AbgFISDl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:03:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43252 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 14:03:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731803AbgFIRwq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:52:46 -0400
+        id S1732922AbgFIRwl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:52:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E26CA207C3;
-        Tue,  9 Jun 2020 17:52:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72603207F9;
+        Tue,  9 Jun 2020 17:52:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725165;
-        bh=BezFaNOoQeB/h0/SXH8z6R7uWaYaqCX+rDTRwXq5E+8=;
+        s=default; t=1591725160;
+        bh=mlChgyTv5SQLeyzNVZm89cxyxj49nT+0TF3uaH4MMaI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RB3tA27ThmMxSEd0GpCaX6ROmGashufHwX2p+iHgGY4fsQV5BomBj9XfYzFESXW3u
-         sUAmKanIkjLP9s+zUobT45FSj9XaHbrC41pCdQD4EloxNYCKpwCEM8xSIBg0kFKlai
-         uSkJq261P6Ja5Mp95YVyuKNoVFEX2pgP9vSbZ4zo=
+        b=GavMI/mRc+WajWXLqaPhQxH5t7oLAx/qRwoQ5nOfH3LKYBOZJBhf0AZNkaRQchwZ6
+         AKlgmvnQyqlKmBAqMUYv+37YQ9jNqV3LyppgtFKBtDVIUBE1iGHO82GYQLPRv8Knbp
+         hcwPWiRBIiEz0dakRjdL1ut921HqfEzUBJ2ZBs8Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Gross <mgross@linux.intel.com>,
-        Borislav Petkov <bp@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: [PATCH 5.4 28/34] x86/cpu: Add a steppings field to struct x86_cpu_id
-Date:   Tue,  9 Jun 2020 19:45:24 +0200
-Message-Id: <20200609174056.966002267@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH 5.4 26/34] nvmem: qfprom: remove incorrect write support
+Date:   Tue,  9 Jun 2020 19:45:22 +0200
+Message-Id: <20200609174056.359919958@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174052.628006868@linuxfoundation.org>
 References: <20200609174052.628006868@linuxfoundation.org>
@@ -62,121 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Gross <mgross@linux.intel.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-commit e9d7144597b10ff13ff2264c059f7d4a7fbc89ac upstream
+commit 8d9eb0d6d59a5d7028c80a30831143d3e75515a7 upstream.
 
-Intel uses the same family/model for several CPUs. Sometimes the
-stepping must be checked to tell them apart.
+qfprom has different address spaces for read and write. Reads are
+always done from corrected address space, where as writes are done
+on raw address space.
+Writing to corrected address space is invalid and ignored, so it
+does not make sense to have this support in the driver which only
+supports corrected address space regions at the moment.
 
-On x86 there can be at most 16 steppings. Add a steppings bitmask to
-x86_cpu_id and a X86_MATCH_VENDOR_FAMILY_MODEL_STEPPING_FEATURE macro
-and support for matching against family/model/stepping.
-
- [ bp: Massage.
-   tglx: Lightweight variant for backporting ]
-
-Signed-off-by: Mark Gross <mgross@linux.intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Fixes: 4ab11996b489 ("nvmem: qfprom: Add Qualcomm QFPROM support.")
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200522113341.7728-1-srinivas.kandagatla@linaro.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/x86/include/asm/cpu_device_id.h |   30 ++++++++++++++++++++++++++++++
- arch/x86/kernel/cpu/match.c          |    7 ++++++-
- include/linux/mod_devicetable.h      |    6 ++++++
- 3 files changed, 42 insertions(+), 1 deletion(-)
 
---- a/arch/x86/include/asm/cpu_device_id.h
-+++ b/arch/x86/include/asm/cpu_device_id.h
-@@ -9,6 +9,36 @@
+---
+ drivers/nvmem/qfprom.c |   14 --------------
+ 1 file changed, 14 deletions(-)
+
+--- a/drivers/nvmem/qfprom.c
++++ b/drivers/nvmem/qfprom.c
+@@ -27,25 +27,11 @@ static int qfprom_reg_read(void *context
+ 	return 0;
+ }
  
- #include <linux/mod_devicetable.h>
- 
-+#define X86_CENTAUR_FAM6_C7_D		0xd
-+#define X86_CENTAUR_FAM6_NANO		0xf
-+
-+#define X86_STEPPINGS(mins, maxs)    GENMASK(maxs, mins)
-+
-+/**
-+ * X86_MATCH_VENDOR_FAM_MODEL_STEPPINGS_FEATURE - Base macro for CPU matching
-+ * @_vendor:	The vendor name, e.g. INTEL, AMD, HYGON, ..., ANY
-+ *		The name is expanded to X86_VENDOR_@_vendor
-+ * @_family:	The family number or X86_FAMILY_ANY
-+ * @_model:	The model number, model constant or X86_MODEL_ANY
-+ * @_steppings:	Bitmask for steppings, stepping constant or X86_STEPPING_ANY
-+ * @_feature:	A X86_FEATURE bit or X86_FEATURE_ANY
-+ * @_data:	Driver specific data or NULL. The internal storage
-+ *		format is unsigned long. The supplied value, pointer
-+ *		etc. is casted to unsigned long internally.
-+ *
-+ * Backport version to keep the SRBDS pile consistant. No shorter variants
-+ * required for this.
-+ */
-+#define X86_MATCH_VENDOR_FAM_MODEL_STEPPINGS_FEATURE(_vendor, _family, _model, \
-+						    _steppings, _feature, _data) { \
-+	.vendor		= X86_VENDOR_##_vendor,				\
-+	.family		= _family,					\
-+	.model		= _model,					\
-+	.steppings	= _steppings,					\
-+	.feature	= _feature,					\
-+	.driver_data	= (unsigned long) _data				\
-+}
-+
- /*
-  * Match specific microcode revisions.
-  *
---- a/arch/x86/kernel/cpu/match.c
-+++ b/arch/x86/kernel/cpu/match.c
-@@ -34,13 +34,18 @@ const struct x86_cpu_id *x86_match_cpu(c
- 	const struct x86_cpu_id *m;
- 	struct cpuinfo_x86 *c = &boot_cpu_data;
- 
--	for (m = match; m->vendor | m->family | m->model | m->feature; m++) {
-+	for (m = match;
-+	     m->vendor | m->family | m->model | m->steppings | m->feature;
-+	     m++) {
- 		if (m->vendor != X86_VENDOR_ANY && c->x86_vendor != m->vendor)
- 			continue;
- 		if (m->family != X86_FAMILY_ANY && c->x86 != m->family)
- 			continue;
- 		if (m->model != X86_MODEL_ANY && c->x86_model != m->model)
- 			continue;
-+		if (m->steppings != X86_STEPPING_ANY &&
-+		    !(BIT(c->x86_stepping) & m->steppings))
-+			continue;
- 		if (m->feature != X86_FEATURE_ANY && !cpu_has(c, m->feature))
- 			continue;
- 		return m;
---- a/include/linux/mod_devicetable.h
-+++ b/include/linux/mod_devicetable.h
-@@ -657,6 +657,10 @@ struct mips_cdmm_device_id {
- /*
-  * MODULE_DEVICE_TABLE expects this struct to be called x86cpu_device_id.
-  * Although gcc seems to ignore this error, clang fails without this define.
-+ *
-+ * Note: The ordering of the struct is different from upstream because the
-+ * static initializers in kernels < 5.7 still use C89 style while upstream
-+ * has been converted to proper C99 initializers.
-  */
- #define x86cpu_device_id x86_cpu_id
- struct x86_cpu_id {
-@@ -665,6 +669,7 @@ struct x86_cpu_id {
- 	__u16 model;
- 	__u16 feature;	/* bit index */
- 	kernel_ulong_t driver_data;
-+	__u16 steppings;
+-static int qfprom_reg_write(void *context,
+-			 unsigned int reg, void *_val, size_t bytes)
+-{
+-	struct qfprom_priv *priv = context;
+-	u8 *val = _val;
+-	int i = 0, words = bytes;
+-
+-	while (words--)
+-		writeb(*val++, priv->base + reg + i++);
+-
+-	return 0;
+-}
+-
+ static struct nvmem_config econfig = {
+ 	.name = "qfprom",
+ 	.stride = 1,
+ 	.word_size = 1,
+ 	.reg_read = qfprom_reg_read,
+-	.reg_write = qfprom_reg_write,
  };
  
- #define X86_FEATURE_MATCH(x) \
-@@ -673,6 +678,7 @@ struct x86_cpu_id {
- #define X86_VENDOR_ANY 0xffff
- #define X86_FAMILY_ANY 0
- #define X86_MODEL_ANY  0
-+#define X86_STEPPING_ANY 0
- #define X86_FEATURE_ANY 0	/* Same as FPU, you can't test for that */
- 
- /*
+ static int qfprom_probe(struct platform_device *pdev)
 
 
