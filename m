@@ -2,115 +2,103 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF87C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D793C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:14:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CAE42068D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:14:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591726491;
-	bh=I8e9rXkiQJBJOMniruow/r9QenuLuPUf8wI/t2e2w7I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xRPT/o5DXcs1N0Pf0g/nMvMfblejz5CFAJTVIfDb2/a95PfQS5FVkfp/9SO1Mr+jY
-	 VvH1IIE8qzU1mmaOK9FHYSiSNQdXwdZn/y9kY7eyjKea9QSiC1BvQGf6tft+UoQsZm
-	 Jbll0q1WTbBMZwcmwwiTmV31pM4/GvJB7FHsAfio=
+	by mail.kernel.org (Postfix) with ESMTP id 4D01A2068D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:14:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ofzyfTDc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388767AbgFISOq (ORCPT
+        id S2388771AbgFISOz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:14:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38496 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732716AbgFIRul (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:50:41 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F02920774;
-        Tue,  9 Jun 2020 17:50:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725040;
-        bh=I8e9rXkiQJBJOMniruow/r9QenuLuPUf8wI/t2e2w7I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G+sOFN/Oa9Rro/TmMo1gNXIZHZ6fDw7duo+UHO8ky+hw/Wm/lFjT1M9htzFQuZoXk
-         Hj3+xwDByc+4Mh1fpuDgmwmzGreQuoaL6uVW/7P6gOImr6MPmMh21U5Iq3W85j7Fes
-         wZRDT7/hWlmEC/pZxyn4xpSLOFqolWcjjuABX6Xc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mathieu Othacehe <m.othacehe@gmail.com>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 45/46] iio: vcnl4000: Fix i2c swapped word reading.
-Date:   Tue,  9 Jun 2020 19:45:01 +0200
-Message-Id: <20200609174031.043249048@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200609174022.938987501@linuxfoundation.org>
-References: <20200609174022.938987501@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 9 Jun 2020 14:14:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45218 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732716AbgFISOs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 14:14:48 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9BEBC05BD1E;
+        Tue,  9 Jun 2020 11:14:48 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id b16so10400660pfi.13;
+        Tue, 09 Jun 2020 11:14:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=AS/XdckXtD5JdzBhAwpc/WtJW1ZnWelaj/7RjUzTTTY=;
+        b=ofzyfTDcbSR0iVmnOlwQrNgiLJk688yu4yKaniy1FmZvGhVlPmR+qx/S/V2J7M31i7
+         sBnfLijv4zGVBlM8tTHwV2tNvqMN+eDLy/8nYxIzkQtZvE6Q8X8CS9bzGYaRwW1CAcrc
+         Qrcz9dMBcwoiAizOECxolgNx0k32d1nYqZuCe9ln3pCAjSHZrgAmF4lyMxqvNMX3Z+aC
+         J6LVha9AtTt8375Pm2xUf/D/tE+irK0XKxAOAJsLCfkXGjeey0Wl3ZvgxB+IXUjmGal8
+         XZPVk9P3DPqQ8/qQzNUA6OI0QqTJQIJe7v/gRidSRM89xL/wXCYAIBPFoRdFNRIToIs9
+         eeBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=AS/XdckXtD5JdzBhAwpc/WtJW1ZnWelaj/7RjUzTTTY=;
+        b=adnKtZ/gvJ/HFaR4upUFiO93CY9SyzVPg5+H0XiMG6RpHlQKvcjYkCJZI6dnXhII/v
+         h6VpnI0+Zo4yP130dbSiq+24Au3LS5A2CE8Y2/fdsa2CpYd3oUPboxOr/IxZ//uef5Zp
+         qVEfS3NbGFp+z6TTDKOltUoDbm0HbOZt6OCIPl7M+5zC02QZ+oIUWE4ujqJXIn/aLba8
+         Lx6lePCk3NoBcW1vei0etulBx72Up6m98goQdJpoRvNs/kg4cLAJuY9O54XBHluZ3hJ8
+         QMZHri7NN/zfueplGLk2JD+nMofdJrG5xJfFdNC9Id+WD+ICWq9ZyYL7iZeYaKv3WKeK
+         51hw==
+X-Gm-Message-State: AOAM532iOUZlIK5AZrttVY8rex8/CbT0frUj033Nm5Akxi+nW5FAkjtX
+        PuW0U0BgW5Zl5+2Qccnd4D0=
+X-Google-Smtp-Source: ABdhPJx2SlXa0n42ZaJT1vZCe4xrRMIjnru6dBSBFP7GNH70CVg7MYDKbKWTswiYGotNLgBCKvVhAA==
+X-Received: by 2002:a63:eb42:: with SMTP id b2mr25756419pgk.105.1591726488350;
+        Tue, 09 Jun 2020 11:14:48 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id w12sm9688715pfn.68.2020.06.09.11.14.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jun 2020 11:14:47 -0700 (PDT)
+Subject: Re: [PATCH v2 6/9] Revert "USB: pci-quirks: Add Raspberry Pi 4 quirk"
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
+        p.zabel@pengutronix.de, linux-kernel@vger.kernel.org,
+        Mathias Nyman <mathias.nyman@intel.com>
+Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
+        linux-pci@vger.kernel.org, helgaas@kernel.org,
+        andy.shevchenko@gmail.com, mathias.nyman@linux.intel.com,
+        lorenzo.pieralisi@arm.com
+References: <20200609175003.19793-1-nsaenzjulienne@suse.de>
+ <20200609175003.19793-7-nsaenzjulienne@suse.de>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <59accf8f-c947-4efb-f8fc-1df821b35c3d@gmail.com>
+Date:   Tue, 9 Jun 2020 11:14:44 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200609175003.19793-7-nsaenzjulienne@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathieu Othacehe <m.othacehe@gmail.com>
 
-[ Upstream commit 18dfb5326370991c81a6d1ed6d1aeee055cb8c05 ]
 
-The bytes returned by the i2c reading need to be swapped
-unconditionally. Otherwise, on be16 platforms, an incorrect value will be
-returned.
-
-Taking the slow path via next merge window as its been around a while
-and we have a patch set dependent on this which would be held up.
-
-Fixes: 62a1efb9f868 ("iio: add vcnl4000 combined ALS and proximity sensor")
-Signed-off-by: Mathieu Othacehe <m.othacehe@gmail.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/iio/light/vcnl4000.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/iio/light/vcnl4000.c b/drivers/iio/light/vcnl4000.c
-index 360b6e98137a..5a3a532937ba 100644
---- a/drivers/iio/light/vcnl4000.c
-+++ b/drivers/iio/light/vcnl4000.c
-@@ -61,7 +61,6 @@ static int vcnl4000_measure(struct vcnl4000_data *data, u8 req_mask,
- 				u8 rdy_mask, u8 data_reg, int *val)
- {
- 	int tries = 20;
--	__be16 buf;
- 	int ret;
- 
- 	mutex_lock(&data->lock);
-@@ -88,13 +87,12 @@ static int vcnl4000_measure(struct vcnl4000_data *data, u8 req_mask,
- 		goto fail;
- 	}
- 
--	ret = i2c_smbus_read_i2c_block_data(data->client,
--		data_reg, sizeof(buf), (u8 *) &buf);
-+	ret = i2c_smbus_read_word_swapped(data->client, data_reg);
- 	if (ret < 0)
- 		goto fail;
- 
- 	mutex_unlock(&data->lock);
--	*val = be16_to_cpu(buf);
-+	*val = ret;
- 
- 	return 0;
- 
+On 6/9/2020 10:49 AM, Nicolas Saenz Julienne wrote:
+> This reverts commit c65822fef4adc0ba40c37a47337376ce75f7a7bc.
+> 
+> The initialization of Raspberry Pi 4's USB chip is now handled through a
+> reset controller. No need to directly call the firmware routine trough a
+> pci quirk.
+> 
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-2.25.1
-
-
-
+Florian
