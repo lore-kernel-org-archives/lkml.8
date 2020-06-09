@@ -2,151 +2,236 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69CCFC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C852AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:17:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C3DD2067B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:17:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591726662;
-	bh=8su1/yDtzEiYTbiR3qLGi+y6W6cRci67Qbj9Nl2n2BQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=euda1h9RjGCuAEiymR+KYQW8wcuzzTNBZJtCdVfK15y780Oof0cflPNLkxU+Y5Wgz
-	 rpHemIgHS2s473uh5RPCwleSu3v3CG1sW+QHUiU3obijDy/UdAFTnUkoSyHTyjTGez
-	 tZkexvSoph2lVrApz7A7nxMvSQyJ34/tZXXJDc/I=
+	by mail.kernel.org (Postfix) with ESMTP id AFAE02068D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:17:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730902AbgFIRuT (ORCPT
+        id S1732768AbgFISRu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:50:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36548 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 14:17:50 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36714 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730956AbgFIRtx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:49:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA212208B6;
-        Tue,  9 Jun 2020 17:49:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591724992;
-        bh=8su1/yDtzEiYTbiR3qLGi+y6W6cRci67Qbj9Nl2n2BQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C775qNLb4y3lR9pr3ja8SfxNqmBqjnBHuFIWdjDCo+JcCEeV2mi6MhiIbGFDlsrzk
-         d1FaWvuO7uAlqTfDy5hSVTBTAN+5WdEp/OP4UHm942Ixm+ks/eOicfIIHVOdBYAeKR
-         XwJ4s+k81kilb8zihS6HRR7c+YrW6m9ZqVxQ3OBo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Atsushi Nemoto <atsushi.nemoto@sord.co.jp>,
-        Thor Thayer <thor.thayer@linux.intel.com>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 09/46] i2c: altera: Fix race between xfer_msg and isr thread
-Date:   Tue,  9 Jun 2020 19:44:25 +0200
-Message-Id: <20200609174023.715903677@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200609174022.938987501@linuxfoundation.org>
-References: <20200609174022.938987501@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1732635AbgFIRuU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:50:20 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 8481BB17C;
+        Tue,  9 Jun 2020 17:50:22 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
+        p.zabel@pengutronix.de, linux-kernel@vger.kernel.org
+Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
+        linux-pci@vger.kernel.org, helgaas@kernel.org,
+        andy.shevchenko@gmail.com, mathias.nyman@linux.intel.com,
+        lorenzo.pieralisi@arm.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: [PATCH v2 2/9] reset: Add Raspberry Pi 4 firmware reset controller
+Date:   Tue,  9 Jun 2020 19:49:55 +0200
+Message-Id: <20200609175003.19793-3-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200609175003.19793-1-nsaenzjulienne@suse.de>
+References: <20200609175003.19793-1-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
+Raspberry Pi 4's co-processor controls some of the board's HW
+initialization process, but it's up to Linux to trigger it when
+relevant. Introduce a reset controller capable of interfacing with
+RPi4's co-processor that models these firmware initialization routines as
+reset lines.
 
-[ Upstream commit 5d4c7977499a736f3f80826bdc9744344ad55589 ]
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-Use a mutex to protect access to idev->msg_len, idev->buf, etc. which
-are modified by both altr_i2c_xfer_msg() and altr_i2c_isr().
-
-This is the minimal fix for easy backporting. A cleanup to remove the
-spinlock will be added later.
-
-Signed-off-by: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
-Acked-by: Thor Thayer <thor.thayer@linux.intel.com>
-[wsa: updated commit message]
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-altera.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/i2c-altera.c b/drivers/i2c/busses/i2c-altera.c
-index 8915ee30a5b4..1d59eede537b 100644
---- a/drivers/i2c/busses/i2c-altera.c
-+++ b/drivers/i2c/busses/i2c-altera.c
-@@ -81,6 +81,7 @@
-  * @isr_mask: cached copy of local ISR enables.
-  * @isr_status: cached copy of local ISR status.
-  * @lock: spinlock for IRQ synchronization.
-+ * @isr_mutex: mutex for IRQ thread.
-  */
- struct altr_i2c_dev {
- 	void __iomem *base;
-@@ -97,6 +98,7 @@ struct altr_i2c_dev {
- 	u32 isr_mask;
- 	u32 isr_status;
- 	spinlock_t lock;	/* IRQ synchronization */
-+	struct mutex isr_mutex;
- };
+Changes since v1:
+  - Make the whole driver less USB centric as per Florian's comments
+
+ drivers/reset/Kconfig             |  11 +++
+ drivers/reset/Makefile            |   1 +
+ drivers/reset/reset-raspberrypi.c | 126 ++++++++++++++++++++++++++++++
+ 3 files changed, 138 insertions(+)
+ create mode 100644 drivers/reset/reset-raspberrypi.c
+
+diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+index d9efbfd29646..97e848740e13 100644
+--- a/drivers/reset/Kconfig
++++ b/drivers/reset/Kconfig
+@@ -140,6 +140,17 @@ config RESET_QCOM_PDC
+ 	  to control reset signals provided by PDC for Modem, Compute,
+ 	  Display, GPU, Debug, AOP, Sensors, Audio, SP and APPS.
  
- static void
-@@ -256,10 +258,11 @@ static irqreturn_t altr_i2c_isr(int irq, void *_dev)
- 	struct altr_i2c_dev *idev = _dev;
- 	u32 status = idev->isr_status;
- 
-+	mutex_lock(&idev->isr_mutex);
- 	if (!idev->msg) {
- 		dev_warn(idev->dev, "unexpected interrupt\n");
- 		altr_i2c_int_clear(idev, ALTR_I2C_ALL_IRQ);
--		return IRQ_HANDLED;
-+		goto out;
- 	}
- 	read = (idev->msg->flags & I2C_M_RD) != 0;
- 
-@@ -312,6 +315,8 @@ static irqreturn_t altr_i2c_isr(int irq, void *_dev)
- 		complete(&idev->msg_complete);
- 		dev_dbg(idev->dev, "Message Complete\n");
- 	}
-+out:
-+	mutex_unlock(&idev->isr_mutex);
- 
- 	return IRQ_HANDLED;
- }
-@@ -323,6 +328,7 @@ static int altr_i2c_xfer_msg(struct altr_i2c_dev *idev, struct i2c_msg *msg)
- 	u32 value;
- 	u8 addr = i2c_8bit_addr_from_msg(msg);
- 
-+	mutex_lock(&idev->isr_mutex);
- 	idev->msg = msg;
- 	idev->msg_len = msg->len;
- 	idev->buf = msg->buf;
-@@ -347,6 +353,7 @@ static int altr_i2c_xfer_msg(struct altr_i2c_dev *idev, struct i2c_msg *msg)
- 		altr_i2c_int_enable(idev, imask, true);
- 		altr_i2c_fill_tx_fifo(idev);
- 	}
-+	mutex_unlock(&idev->isr_mutex);
- 
- 	time_left = wait_for_completion_timeout(&idev->msg_complete,
- 						ALTR_I2C_XFER_TIMEOUT);
-@@ -420,6 +427,7 @@ static int altr_i2c_probe(struct platform_device *pdev)
- 	idev->dev = &pdev->dev;
- 	init_completion(&idev->msg_complete);
- 	spin_lock_init(&idev->lock);
-+	mutex_init(&idev->isr_mutex);
- 
- 	ret = device_property_read_u32(idev->dev, "fifo-size",
- 				       &idev->fifo_size);
++config RESET_RASPBERRYPI
++	tristate "Raspberry Pi 4 Firmware Reset Driver"
++	depends on RASPBERRYPI_FIRMWARE || (RASPBERRYPI_FIRMWARE=n && COMPILE_TEST)
++	default USB_XHCI_PCI
++	help
++	  Raspberry Pi 4's co-processor controls some of the board's HW
++	  initialization process, but it's up to Linux to trigger it when
++	  relevant. This driver provides a reset controller capable of
++	  interfacing with RPi4's co-processor and model these firmware
++	  initialization routines as reset lines.
++
+ config RESET_SCMI
+ 	tristate "Reset driver controlled via ARM SCMI interface"
+ 	depends on ARM_SCMI_PROTOCOL || COMPILE_TEST
+diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+index 249ed357c997..16947610cc3b 100644
+--- a/drivers/reset/Makefile
++++ b/drivers/reset/Makefile
+@@ -21,6 +21,7 @@ obj-$(CONFIG_RESET_OXNAS) += reset-oxnas.o
+ obj-$(CONFIG_RESET_PISTACHIO) += reset-pistachio.o
+ obj-$(CONFIG_RESET_QCOM_AOSS) += reset-qcom-aoss.o
+ obj-$(CONFIG_RESET_QCOM_PDC) += reset-qcom-pdc.o
++obj-$(CONFIG_RESET_RASPBERRYPI) += reset-raspberrypi.o
+ obj-$(CONFIG_RESET_SCMI) += reset-scmi.o
+ obj-$(CONFIG_RESET_SIMPLE) += reset-simple.o
+ obj-$(CONFIG_RESET_STM32MP157) += reset-stm32mp1.o
+diff --git a/drivers/reset/reset-raspberrypi.c b/drivers/reset/reset-raspberrypi.c
+new file mode 100644
+index 000000000000..5fc8c6319a20
+--- /dev/null
++++ b/drivers/reset/reset-raspberrypi.c
+@@ -0,0 +1,126 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Raspberry Pi 4 firmware reset driver
++ *
++ * Copyright (C) 2020 Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
++ */
++#include <linux/delay.h>
++#include <linux/device.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/reset-controller.h>
++#include <soc/bcm2835/raspberrypi-firmware.h>
++
++struct rpi_reset {
++	struct reset_controller_dev rcdev;
++	struct rpi_firmware *fw;
++};
++
++enum rpi_reset_ids {
++	RASPBERRYPI_FIRMWARE_RESET_ID_USB,
++	RASPBERRYPI_FIRMWARE_RESET_NUM_IDS
++};
++
++static inline struct rpi_reset *to_rpi(struct reset_controller_dev *rcdev)
++{
++	return container_of(rcdev, struct rpi_reset, rcdev);
++}
++
++static int rpi_reset_reset(struct reset_controller_dev *rcdev, unsigned long id)
++{
++	struct rpi_reset *priv = to_rpi(rcdev);
++	u32 dev_addr;
++	int ret;
++
++	switch (id) {
++	case RASPBERRYPI_FIRMWARE_RESET_ID_USB:
++		/*
++		 * The Raspberry Pi 4 gets its USB functionality from VL805, a
++		 * PCIe chip that implements xHCI. After a PCI reset, VL805's
++		 * firmware may either be loaded directly from an EEPROM or, if
++		 * not present, by the SoC's co-processor, VideoCore. rpi's
++		 * VideoCore OS contains both the non public firmware load
++		 * logic and the VL805 firmware blob. This triggers the
++		 * aforementioned process.
++		 *
++		 * The pci device address is expected is expected by the
++		 * firmware encoded like this:
++		 *
++		 *	PCI_BUS << 20 | PCI_SLOT << 15 | PCI_FUNC << 12
++		 *
++		 * But since rpi's PCIe is hardwired, we know the address in
++		 * advance.
++		 */
++		dev_addr = 0x100000;
++		ret = rpi_firmware_property(priv->fw, RPI_FIRMWARE_NOTIFY_XHCI_RESET,
++					    &dev_addr, sizeof(dev_addr));
++		if (ret)
++			return ret;
++
++		/* Wait for vl805 to startup */
++		usleep_range(200, 1000);
++		break;
++
++	default:
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static const struct reset_control_ops rpi_reset_ops = {
++	.reset	= rpi_reset_reset,
++};
++
++static int rpi_reset_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device_node *fw_node;
++	struct rpi_firmware *fw;
++	struct rpi_reset *priv;
++
++	fw_node = of_get_parent(dev->of_node);
++	if (!fw_node) {
++		dev_err(dev, "Missing firmware node\n");
++		return -ENOENT;
++	}
++
++	fw = rpi_firmware_get(fw_node);
++	of_node_put(fw_node);
++	if (!fw)
++		return -EPROBE_DEFER;
++
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	dev_set_drvdata(dev, priv);
++
++	priv->fw = fw;
++	priv->rcdev.owner = THIS_MODULE;
++	priv->rcdev.nr_resets = RASPBERRYPI_FIRMWARE_RESET_NUM_IDS;
++	priv->rcdev.ops = &rpi_reset_ops;
++	priv->rcdev.of_node = dev->of_node;
++
++	return devm_reset_controller_register(dev, &priv->rcdev);
++}
++
++static const struct of_device_id rpi_reset_of_match[] = {
++	{ .compatible = "raspberrypi,firmware-reset" },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, rpi_reset_of_match);
++
++static struct platform_driver rpi_reset_driver = {
++	.probe	= rpi_reset_probe,
++	.driver	= {
++		.name = "raspberrypi-reset",
++		.of_match_table = rpi_reset_of_match,
++	},
++};
++module_platform_driver(rpi_reset_driver);
++
++MODULE_AUTHOR("Nicolas Saenz Julienne <nsaenzjulienne@suse.de>");
++MODULE_DESCRIPTION("Raspberry Pi 4 firmware reset driver");
++MODULE_LICENSE("GPL");
 -- 
-2.25.1
-
-
+2.26.2
 
