@@ -2,82 +2,76 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A5FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 463CDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:17:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10991207ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:17:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E01B207ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:17:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728383AbgFIJRS (ORCPT
+        id S1728394AbgFIJRb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 05:17:18 -0400
-Received: from mga09.intel.com ([134.134.136.24]:23588 "EHLO mga09.intel.com"
+        Tue, 9 Jun 2020 05:17:31 -0400
+Received: from verein.lst.de ([213.95.11.211]:41449 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727941AbgFIJRQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 05:17:16 -0400
-IronPort-SDR: LAP8rWwxODkyBVO1UwgnqQALfAmrg8NIop5MpltPduc56x4qCAtgNcQhCricP0Cp5CVZQ4/ntG
- 44hWOPLEkbXQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 02:17:16 -0700
-IronPort-SDR: 7cluu1AJqmlLsVdBgUdaomWUS4wfBrnR/7XQqSWOrWqQqGI3r3Sp5GIcqS7x7Ojdke7kdoxDtD
- hE5DknQ8/NaQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,491,1583222400"; 
-   d="scan'208";a="306123608"
-Received: from gklab-125-110.igk.intel.com ([10.91.125.110])
-  by fmsmga002.fm.intel.com with ESMTP; 09 Jun 2020 02:17:13 -0700
-From:   Piotr Stankiewicz <piotr.stankiewicz@intel.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Cc:     Piotr Stankiewicz <piotr.stankiewicz@intel.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Prabhakar Kushwaha <pkushwaha@marvell.com>,
-        Hanna Hawa <hhhawa@amazon.com>, linux-ide@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 04/15] ahci: Use PCI_IRQ_MSI_TYPES where appropriate
-Date:   Tue,  9 Jun 2020 11:17:09 +0200
-Message-Id: <20200609091711.892-1-piotr.stankiewicz@intel.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20200609091148.32749-1-piotr.stankiewicz@intel.com>
-References: <20200609091148.32749-1-piotr.stankiewicz@intel.com>
+        id S1728247AbgFIJRb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 05:17:31 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 09DBF68AFE; Tue,  9 Jun 2020 11:17:28 +0200 (CEST)
+Date:   Tue, 9 Jun 2020 11:17:27 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        David Rientjes <rientjes@google.com>,
+        "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>,
+        alsa-devel@alsa-project.org, bp@alien8.de, hch@infradead.org,
+        hpa@zytor.com, linux-kernel@vger.kernel.org, mingo@redhat.com,
+        Pavel Machek <pavel@ucw.cz>, perex@perex.cz,
+        tglx@linutronix.de, tiwai@suse.com, x86@kernel.org
+Subject: Re: next-0519 on thinkpad x60: sound related? window manager crash
+Message-ID: <20200609091727.GA23814@lst.de>
+References: <20200520111136.GA3802@amd> <1591545088.74ii116nf2.none@localhost> <20200608061950.GA17476@lst.de> <1591624340.z01ejtod28.none@localhost> <alpine.DEB.2.22.394.2006081928070.148886@chino.kir.corp.google.com> <20200609054306.GA9606@lst.de> <s5hsgf4irzt.wl-tiwai@suse.de> <20200609084305.GA21671@lst.de> <s5hlfkwip1h.wl-tiwai@suse.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <s5hlfkwip1h.wl-tiwai@suse.de>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Seeing as there is shorthand available to use when asking for any type
-of interrupt, or any type of message signalled interrupt, leverage it.
+On Tue, Jun 09, 2020 at 11:09:14AM +0200, Takashi Iwai wrote:
+> On Tue, 09 Jun 2020 10:43:05 +0200,
+> Christoph Hellwig wrote:
+> > 
+> > On Tue, Jun 09, 2020 at 10:05:26AM +0200, Takashi Iwai wrote:
+> > > > >From the disassembly it seems like a vmalloc allocation is NULL, which
+> > > > seems really weird as this patch shouldn't make a difference for them,
+> > > > and I also only see a single places that allocates the field, and that
+> > > > checks for an allocation failure.  But the sound code is a little
+> > > > hard to unwind sometimes.
+> > > 
+> > > It's not clear which sound device being affected, but if it's
+> > > HD-audio on x86, runtime->dma_area points to a vmapped buffer from
+> > > SG-pages allocated by dma_alloc_coherent().
+> > > 
+> > > OTOH, if it's a USB-audio, runtime->dma_area is a buffer by
+> > > vmalloc().
+> > 
+> > Err, you can't just vmap a buffer returned from dma_alloc_coherent,
+> > dma_alloc_coherent returns values are opaque and can't be used
+> > for virt_to_page.  Whatever that code did has already been broken
+> > per the DMA API contract and on many architectures and just happend
+> > to work on x86 by accident.
+> 
+> Hmm, that's bad.
+> 
+> How would be a proper way to get the virtually mapped SG-buffer pages
+> with coherent memory?  (Also allowing user-space mmap, too)
 
-Signed-off-by: Piotr Stankiewicz <piotr.stankiewicz@intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
----
- drivers/ata/ahci.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/ata/ahci.c b/drivers/ata/ahci.c
-index 0c0a736eb861..ca1bf4ef0f17 100644
---- a/drivers/ata/ahci.c
-+++ b/drivers/ata/ahci.c
-@@ -1556,7 +1556,7 @@ static int ahci_init_msi(struct pci_dev *pdev, unsigned int n_ports,
- 	 */
- 	if (n_ports > 1) {
- 		nvec = pci_alloc_irq_vectors(pdev, n_ports, INT_MAX,
--				PCI_IRQ_MSIX | PCI_IRQ_MSI);
-+				PCI_IRQ_MSI_TYPES);
- 		if (nvec > 0) {
- 			if (!(readl(hpriv->mmio + HOST_CTL) & HOST_MRSM)) {
- 				hpriv->get_irq_vector = ahci_get_irq_vector;
--- 
-2.17.2
-
+dma_mmap_coherent / dma_mmap_attrs for userspace.  We don't really
+have a good way for kernel space mappings.
