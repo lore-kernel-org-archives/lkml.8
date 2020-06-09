@@ -2,286 +2,133 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17131C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 04:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1975C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 04:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E214D206D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 04:08:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8D7120775
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 04:28:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=netflix.com header.i=@netflix.com header.b="VA2fALAh"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="H1O/0E9m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbgFIEID (ORCPT
+        id S1726890AbgFIE2P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 00:08:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55680 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726976AbgFIEH4 (ORCPT
+        Tue, 9 Jun 2020 00:28:15 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:39230 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725770AbgFIE2O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 00:07:56 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBD72C03E97C
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 21:07:56 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id n70so3076014ota.5
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 21:07:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netflix.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=NMg2il5dniGzMXIHwihjljl4tLmzag0BAtIr3O3mqAQ=;
-        b=VA2fALAh42LUAhCCSTv58KpD6aOh3+xBzPG/+HNE6VsS9HCewFOJxOndV2wxZFvhMJ
-         oTrF3TyopvWJPk5jW0GIIsCDSDlRfJ05B/0UI/B/3wIRD0GsBve1kCAYWH64ihxFB2kT
-         7RbpqbgC2YF3BwjNMEoV8/C0Xk8Mr/99aQ/sQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=NMg2il5dniGzMXIHwihjljl4tLmzag0BAtIr3O3mqAQ=;
-        b=qhquewfI5/IU/JET50isWMhjTPvG0lbCaTM45Yk4hQFbgQFTdMJkLLUB7PTVdnXM9m
-         Zj2d2Sgh/YAAqRl8PcZeQvk4EfZGgFNHEbT8lJkdRiylydgzTVEeSleiPd36t4knt0Pe
-         g2yyK9rsL9WjhUtZkTtNNSbTWrOMN2ciEumWAm6q5FKF1FZ5aHStzAcd28lFUQn1d29k
-         5KEekI1NB4D+WoptPHfEyF3kFWFllsYrTAaKmIYii9GBik9hffERL6qlo7w6Fi0zB2k3
-         KlEU3zJOGPDmzeL8pymVdtxEz3aglE6oYmqAxEsxGsl0Z7Ee+zhPiGZL+C2gJ9Gagve6
-         EJEA==
-X-Gm-Message-State: AOAM531vTPr1P8Rx6jRDW6YC5c4kgFuSuChoXzNvF2c1H4cVSLJPDA72
-        h2jB+t3Zid2NFt7+1YgvOxhppQ==
-X-Google-Smtp-Source: ABdhPJyMRt4Jx9GfhTFpeOBe+1dzdOpcXxEWOzfCRGyKoVegXldX32pMvuAZeGa2GSvdcZ8CPMbo3Q==
-X-Received: by 2002:a9d:67ce:: with SMTP id c14mr18286246otn.337.1591675676002;
-        Mon, 08 Jun 2020 21:07:56 -0700 (PDT)
-Received: from mezcal.netflix.com ([2600:1700:3ec3:2450:25ca:3996:acb2:84a6])
-        by smtp.gmail.com with ESMTPSA id b3sm2846415ooq.36.2020.06.08.21.07.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 21:07:54 -0700 (PDT)
-From:   Josh Snyder <joshs@netflix.com>
-To:     Jens Axboe <axboe@kernel.dk>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Josh Snyder <josh@code406.com>, Josh Snyder <joshs@netflix.com>
-Subject: [RFC 2/2] Track io_ticks at microsecond granularity.
-Date:   Mon,  8 Jun 2020 21:07:24 -0700
-Message-Id: <20200609040724.448519-3-joshs@netflix.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200609040724.448519-1-joshs@netflix.com>
-References: <20200609040724.448519-1-joshs@netflix.com>
+        Tue, 9 Jun 2020 00:28:14 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0594QkpE168999;
+        Tue, 9 Jun 2020 04:28:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=Jt2kiv390E1D+m0oPc+Qsbk4ZBhT+v1fnFnvl4GqKxQ=;
+ b=H1O/0E9mi9Fs7ul0NstbE9S6I5duvQclMeEkZjuCm+M+u4KO4cjBVJs7Eks1sWHRW+eB
+ p0/Xl8fHi2moN2zCczqy3mgHjRN2NOtqsiP8zYHQ9wQttnxFIvMxvrDwbSSIHEHFQwHa
+ Qittgy3dIECCZhRLpcNHzvcgHcB3EdNj4yQxZVkBYMha32ZwFlDr7THBLEFRu7KfcrnZ
+ PQOooJRgnd3QuHIoKTeJyfP0pSO+Uq5kIyHn6uc3Cxyb6YmbCU0sn83EubmkKW19SGeW
+ vE4n1OZMoxJP7Yhm9qRbyn8veNf1F5xkwK38aU01J1Dg1J3Sib/Ewm7BZlVTJ09AP4SU 3Q== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 31g33m2c56-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 09 Jun 2020 04:28:07 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0594OJMY194136;
+        Tue, 9 Jun 2020 04:28:06 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 31gn24qvce-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 09 Jun 2020 04:28:06 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0594S0JL026608;
+        Tue, 9 Jun 2020 04:28:00 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 08 Jun 2020 21:27:59 -0700
+Date:   Mon, 8 Jun 2020 21:27:58 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        Brian Foster <bfoster@redhat.com>, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.7 244/274] xfs: force writes to delalloc
+ regions to unwritten
+Message-ID: <20200609042758.GQ1334206@magnolia>
+References: <20200608230607.3361041-1-sashal@kernel.org>
+ <20200608230607.3361041-244-sashal@kernel.org>
+ <20200609010727.GN1334206@magnolia>
+ <20200609021021.GU1407771@sasha-vm>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200609021021.GU1407771@sasha-vm>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9646 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=1 mlxscore=0
+ phishscore=0 adultscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006090032
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9646 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 adultscore=0 spamscore=0
+ cotscore=-2147483648 malwarescore=0 phishscore=0 mlxscore=0 clxscore=1031
+ lowpriorityscore=0 impostorscore=0 priorityscore=1501 mlxlogscore=999
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006090033
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Previously, we performed truncation of I/O issue/completion times during
-calculation of io_ticks, counting only I/Os which cross a jiffy
-boundary. The effect is a sampling of I/Os: at every boundary between
-jiffies we ask "is there an outstanding I/O" and increment a counter if
-the answer is yes. This produces results that are accurate (they don't
-systematically over- or under-count), but not precise (there is high
-variance associated with only taking 100 samples per second).
+On Mon, Jun 08, 2020 at 10:10:21PM -0400, Sasha Levin wrote:
+> On Mon, Jun 08, 2020 at 06:07:27PM -0700, Darrick J. Wong wrote:
+> > On Mon, Jun 08, 2020 at 07:05:37PM -0400, Sasha Levin wrote:
+> > > From: "Darrick J. Wong" <darrick.wong@oracle.com>
+> > > 
+> > > [ Upstream commit a5949d3faedf492fa7863b914da408047ab46eb0 ]
+> > > 
+> > > When writing to a delalloc region in the data fork, commit the new
+> > > allocations (of the da reservation) as unwritten so that the mappings
+> > > are only marked written once writeback completes successfully.  This
+> > > fixes the problem of stale data exposure if the system goes down during
+> > > targeted writeback of a specific region of a file, as tested by
+> > > generic/042.
+> > > 
+> > > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> > > Reviewed-by: Christoph Hellwig <hch@lst.de>
+> > > Reviewed-by: Brian Foster <bfoster@redhat.com>
+> > > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> > 
+> > Err, this doesn't have a Fixes: tag attached to it.  Does it pass
+> > fstests?  Because it doesn't look like you've pulled in "xfs: don't fail
+> > unwritten extent conversion on writeback due to edquot", which is needed
+> > to avoid regressing fstests...
+> > 
+> > ...waitaminute, that whole series lacks Fixes: tags because it wasn't
+> > considered a good enough candidate for automatic backport.
+> 
+> AUTOSEL doesn't look just at the Fixes tag :)
+> 
+> > Ummm, does the autosel fstests driver turn on quotas? ;)
+> 
+> Uh, apparently not :/ Is it okay to just enable it across all tests?
 
-This change modifies the sampling rate from 100Hz to 976562.5Hz (1
-sample per 1024 nanoseconds). I chose this sampling rate by simulating a
-workload in which I/Os are issued randomly (by a Poisson process), and
-processed in constant time: an M/D/∞ system (Kendall's notation). My
-goal was to produce a sampled utilization fraction which was correct to
-one part-per-thousand given one second of samples.
+It should be at this point.
 
-The tradeoff of the higher sampling rate is increased synchronization
-overhead caused by more frequent compare-and-swap operations. The
-technique of commit 5b18b5a73760 ("block: delete part_round_stats and
-switch to less precise counting") is to allow multiple I/Os to complete
-while performing only one synchronized operation. As we are increasing
-the sample rate by a factor of 10000, we will less frequently be able to
-exercise the synchronization-free code path.
+> While I go fix that up, would you rather drop the series, or pick up
+> 1edd2c055dff ("xfs: don't fail unwritten extent conversion on writeback
+> due to edquot")?`
 
-Included below is the Python script I used to perform the simulation. It
-estimates the correct (calculated without sampling) value of %util, and
-then reports the root-mean-squared error of the as-sampled estimates.
-The parameters `io_rate`, `sample_rates`, and `avgqu_sz` are meant to be
-tweaked to fit characteristics of a given workload. I have chosen to
-simulate against a difficult workload: 1000 I/Os per second with an
-average queue size of 0.01, implying that each I/O takes 10
-microseconds. This I/O latency is on par with some of the fastest
-production block devices available today, and an order of magnitude
-faster than a typical datacenter-grade SSD. With this change, an
-estimate of disk %util will not fluctuate as displayed by iostat with
-four decimal places, at a refresh rate of 1 Hz.
+Let's drop it for now, please.  There might be a few more tweaks needed
+to get that bit just right.
 
-    #!/usr/bin/env python3
-    from math import log
-    from math import sqrt
-    from random import random
+--D
 
-    GIGA = 1_000_000_000
-    SECOND = GIGA
-
-    def times(interval, avgqu_sz, sample_rates):
-        time = 0
-        correct = 0
-
-        est_counters = [0] * len(sample_rates)
-
-        while time < SECOND:
-            gap = -log(random()) * interval
-            busy = svctm if gap > svctm else gap
-            finish_time = time + busy
-
-            correct += busy
-            for i, rate in enumerate(sample_rates):
-                est_counters[i] += (
-                    float(int(finish_time * rate)) - int(time * rate)
-                )
-
-            time += gap
-
-        return correct, [
-            correct - (counter / rate)
-            for counter, rate in zip(est_counters, sample_rates)
-        ]
-
-    # How many I/Os per second?
-    io_rate = 1000
-    # How frequently are we sampling? (GHz)
-    sample_rates = [
-        100 / GIGA,  #      100 Hz
-        1000 / GIGA, #     1000 Hz
-        1 / 65536,   #    15259 Hz
-        1 / 16384,   #    61035 Hz
-        1 / 1024,    #   976563 Hz
-        1 / 64,      # 15625000 Hz
-    ]
-    avgqu_sz = 0.01
-
-    interval = SECOND / io_rate
-    svctm = interval * avgqu_sz
-    total = 0
-    total_errors = [0] * len(sample_rates)
-    count = 0
-    while True:
-        correct, errors = times(interval, svctm, sample_rates)
-        for i, error in enumerate(errors):
-            total_errors[i] += error * error
-        total += correct / SECOND
-        count += 1
-
-        # prints [{RMS error} for rate in sample_rates]
-        to_print = [
-           "{:05.2f}".format(100 * sqrt(error / count) / SECOND)
-            for error in total_errors
-        ]
-        print(' '.join(to_print))
-
-Signed-off-by: Josh Snyder <joshs@netflix.com>
-Fixes: 5b18b5a73760 ("block: delete part_round_stats and switch to less precise counting")
----
- block/blk-core.c          | 16 +++++++++++-----
- block/genhd.c             |  4 ++--
- include/linux/genhd.h     |  2 +-
- include/linux/part_stat.h |  2 +-
- 4 files changed, 15 insertions(+), 9 deletions(-)
-
-diff --git a/block/blk-core.c b/block/blk-core.c
-index a0bbd9e099b9..2749c52d649c 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -62,6 +62,8 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(block_unplug);
- 
- DEFINE_IDA(blk_queue_ida);
- 
-+#define IO_TICKS_COARSENESS 10
-+
- /*
-  * For queue allocation
-  */
-@@ -1396,10 +1398,14 @@ unsigned int blk_rq_err_bytes(const struct request *rq)
- }
- EXPORT_SYMBOL_GPL(blk_rq_err_bytes);
- 
--static void update_io_ticks(struct hd_struct *part, unsigned long now, unsigned long start)
-+static void update_io_ticks(struct hd_struct *part, u64 now, u64 start)
- {
--	unsigned long stamp;
--	unsigned long elapsed;
-+	u64 stamp;
-+	u64 elapsed;
-+
-+	start &= ~((1<<IO_TICKS_COARSENESS) - 1);
-+	now &= ~((1<<IO_TICKS_COARSENESS) - 1);
-+
- again:
- 	stamp = READ_ONCE(part->stamp);
- 	if (unlikely(stamp != now)) {
-@@ -1447,7 +1453,7 @@ void blk_account_io_done(struct request *req, u64 now)
- 		part_stat_lock();
- 		part = req->part;
- 
--		update_io_ticks(part, jiffies, nsecs_to_jiffies(req->start_time_ns));
-+		update_io_ticks(part, now, req->start_time_ns);
- 		part_stat_inc(part, ios[sgrp]);
- 		part_stat_add(part, nsecs[sgrp], now - req->start_time_ns);
- 		part_stat_unlock();
-@@ -1493,7 +1499,7 @@ void disk_end_io_acct(struct gendisk *disk, unsigned int op,
- 	unsigned long duration = now - start_time;
- 
- 	part_stat_lock();
--	update_io_ticks(part, now, start_time);
-+	update_io_ticks(part, jiffies_to_nsecs(now), jiffies_to_nsecs(start_time));
- 	part_stat_add(part, nsecs[sgrp], jiffies_to_nsecs(duration));
- 	part_stat_local_dec(part, in_flight[op_is_write(op)]);
- 	part_stat_unlock();
-diff --git a/block/genhd.c b/block/genhd.c
-index 1a7659327664..045cc9cd7a2c 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -1296,7 +1296,7 @@ ssize_t part_stat_show(struct device *dev,
- 		(unsigned long long)stat.sectors[STAT_WRITE],
- 		(unsigned int)div_u64(stat.nsecs[STAT_WRITE], NSEC_PER_MSEC),
- 		inflight,
--		jiffies_to_msecs(stat.io_ticks),
-+		(unsigned int)div_u64(stat.io_ticks, NSEC_PER_MSEC),
- 		(unsigned int)div_u64(stat.nsecs[STAT_READ] +
- 				      stat.nsecs[STAT_WRITE] +
- 				      stat.nsecs[STAT_DISCARD] +
-@@ -1601,7 +1601,7 @@ static int diskstats_show(struct seq_file *seqf, void *v)
- 			   (unsigned int)div_u64(stat.nsecs[STAT_WRITE],
- 							NSEC_PER_MSEC),
- 			   inflight,
--			   jiffies_to_msecs(stat.io_ticks),
-+			   (unsigned int)div_u64(stat.io_ticks, NSEC_PER_MSEC),
- 			   (unsigned int)div_u64(stat.nsecs[STAT_READ] +
- 						 stat.nsecs[STAT_WRITE] +
- 						 stat.nsecs[STAT_DISCARD] +
-diff --git a/include/linux/genhd.h b/include/linux/genhd.h
-index 392aad5e29a2..ce13f47a4674 100644
---- a/include/linux/genhd.h
-+++ b/include/linux/genhd.h
-@@ -62,7 +62,7 @@ struct hd_struct {
- #if BITS_PER_LONG==32 && defined(CONFIG_SMP)
- 	seqcount_t nr_sects_seq;
- #endif
--	unsigned long stamp;
-+	u64 stamp;
- 	struct disk_stats __percpu *dkstats;
- 	struct percpu_ref ref;
- 
-diff --git a/include/linux/part_stat.h b/include/linux/part_stat.h
-index 24125778ef3e..208904b2447d 100644
---- a/include/linux/part_stat.h
-+++ b/include/linux/part_stat.h
-@@ -9,7 +9,7 @@ struct disk_stats {
- 	unsigned long sectors[NR_STAT_GROUPS];
- 	unsigned long ios[NR_STAT_GROUPS];
- 	unsigned long merges[NR_STAT_GROUPS];
--	unsigned long io_ticks;
-+	u64 io_ticks;
- 	local_t in_flight[2];
- };
- 
--- 
-2.25.1
-
+> -- 
+> Thanks,
+> Sasha
