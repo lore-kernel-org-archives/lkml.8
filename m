@@ -2,83 +2,85 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59FD6C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:18:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07498C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34E2F20737
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:18:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EeNW4Ujv"
+	by mail.kernel.org (Postfix) with ESMTP id D793720734
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:20:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591734001;
+	bh=65JcJKhbjV4tbjmJzeO86yumaW6h+255azn5CWWN3HU=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=VjgJuIdUUIvc30zJpM9ZTbNJ3YCK9KpGqnp7m89eQNft5iAKxHEdDk3F7ULUL1gPB
+	 Ize5Dvk8/WKfIwbtg0fkVT0AWr+bElnaS6FOKbpp7SYdZro3RyGPnXg2Bdo8yS4eyp
+	 hXENKx+RUzjm7sS0PwqcrWyGs+fWPVIcbx0/S5ko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387601AbgFIUSW (ORCPT
+        id S2387494AbgFIUUA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 16:18:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36178 "EHLO
+        Tue, 9 Jun 2020 16:20:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729875AbgFIUSU (ORCPT
+        with ESMTP id S1729875AbgFIUT7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 16:18:20 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8324C05BD1E;
-        Tue,  9 Jun 2020 13:18:18 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id q19so10914eja.7;
-        Tue, 09 Jun 2020 13:18:18 -0700 (PDT)
+        Tue, 9 Jun 2020 16:19:59 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC68EC05BD1E
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 13:19:57 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id 25so19081447oiy.13
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 13:19:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=KC+Q83VPZzMlqolXBXEKcpuJ9FScuGWzx6JhmUmNyNc=;
-        b=EeNW4UjvW+6S95WUz7HfGxgUJn1gTCj9PL6zjddRXbKFlkdYb0qnzEyUpYMLYEBiAG
-         5Rk84vvPjS3gHPAYgklMyLmwQ5uNOFj89xf6Yon8QKt9Q8pdrWfMXS97H/Ihba6ITkc+
-         WclOMXtoecZUjQB8R98r2/NXbXX7JvmvqBCMKumx/43z/WX1pANRxrDhuSrRgIYlCeXx
-         2aL4nUYA/1uv+6qkZKxmqJ34ZlRvI5H2zb5c3g+vhEzR4kpKQoY7sUWwv0DrS80AAuTs
-         gxqySTzEuew1YaXOkua01d7GqKwBOhsDiJUAvxgZMF1xtZEV0IAiCwSak0YQlO6KSJHd
-         rJag==
+        bh=cl0NnKl1Uu8CMgdsMDawpvRIt5rueRAfYk/i656FKFw=;
+        b=JO2PjvGy+YBy9tQEFnNzo2FxTRkuDoEHmZxIBOFP3mGgQ3ChWX4Lt50Y/KGWF3I8U8
+         aAFBwzaFoAy2FYXaj6z87QRyFx+gkG4JUnEgDhJ3xXlxNGf6kkDIQnw4+00ewJbvWlCr
+         JluzzTJRkngp5vNoIFSwar2TtGeJQH7dhXzKo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=KC+Q83VPZzMlqolXBXEKcpuJ9FScuGWzx6JhmUmNyNc=;
-        b=KYgKIvsXFyiwKxbqL58dE7kErlLP4ACQY1g4mZU2yRI06SY9OHAka8nZwst41gPwSH
-         mSnW/ZmITF6d9hrVkXh0n2ApptOKxEt03gmuz0mKZeqdxFVm0Ltz8VZlzzWlRA+gFsUt
-         2grpKiRBQ70ITC2xbDros7bBMZuAw73MMg/xD7Jn7to1P8Oj4wZdR22oqYrxjvWoyrea
-         CAXll3Ln3FCKd00fHseZZigxlwrtgEN0xljVnLz+KHB0V9padZ25mGpocR2/aJTPA/Qe
-         p9UZXzaVHyhhBOrZmyfyLAZncpmh28KIM1iev5VvK7PljmJiPHYNMjP/oyadei/cfTG0
-         E/1A==
-X-Gm-Message-State: AOAM531ycMws1D1+Nu148Hq8z7nxI71+xLO/kp7xc46EajCR8n441HGL
-        OwefyQx7RG1AtN0cn8WWYXA=
-X-Google-Smtp-Source: ABdhPJxfFjAQ2iFrXqTiotmLGJ0K4tuq7uoLusv+WJ6CJh25HXZ7mplpOTW07mjA7oajhYRrItzAWw==
-X-Received: by 2002:a17:906:799:: with SMTP id l25mr135009ejc.234.1591733897541;
-        Tue, 09 Jun 2020 13:18:17 -0700 (PDT)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id y12sm13986179ejr.77.2020.06.09.13.18.16
+        bh=cl0NnKl1Uu8CMgdsMDawpvRIt5rueRAfYk/i656FKFw=;
+        b=EKXouyAZUWiIKVQiyqawHYl7ajs3W36Ai5ocnruzv5UIcxJ7iKWNjF2tASQ70oYnEC
+         fMdpzJU75VhzkvjpBi/e8Q5q4Ce7a9zp5ACsfbAjiuRVFTCkiaSCBMmsde4ODSyrHWlm
+         qTDW2CmyYOXMRXX8OZ04Of3VQgJFajJqanlGdDSwDELTvdxrp3V442pIcZ/l6L1btIjy
+         nHanzbaDXn8OqdjQCx1Kg3PJ/ZwrgGGF7n2YniUdciybCUU7OvgxDtbp5pW2yyHcRJkI
+         heM0ZAlS58j1XRxH+0aM2yvp7rCCcn6yPScG+1dICtGJsdwkjJVMr0JNFZ++pQQ9UrjK
+         bNOQ==
+X-Gm-Message-State: AOAM530MFdFWzm/+v0BEtG0y8W0bQkZzUh6vI5H/f5EE1y4eTU5JxsMi
+        ASVYUGZNAWHomkCVIUO8pjqwEQ==
+X-Google-Smtp-Source: ABdhPJwhddyCgs9ccZnm4capkBQtpxKyclfrvX0Man0cg/kL58CfpwgV9+UV3sZ8jLTQuwguVRSm/g==
+X-Received: by 2002:aca:54d8:: with SMTP id i207mr10057oib.127.1591733997212;
+        Tue, 09 Jun 2020 13:19:57 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id f109sm2406819otf.39.2020.06.09.13.19.55
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Jun 2020 13:18:17 -0700 (PDT)
-Subject: Re: [PATCH v6 2/8] mtd: rawnand: rockchip: NFC drivers for RK3308,
- RK2928 and others
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     Yifeng Zhao <yifeng.zhao@rock-chips.com>,
-        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        robh+dt@kernel.org
-Cc:     devicetree@vger.kernel.org, heiko@sntech.de,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org
-References: <20200609074020.23860-1-yifeng.zhao@rock-chips.com>
- <20200609074020.23860-3-yifeng.zhao@rock-chips.com>
- <7eb89126-9d4b-9cdf-0f77-3242df36e090@gmail.com>
-Message-ID: <0b83ca45-3218-aaff-1462-7e08ae1e3afd@gmail.com>
-Date:   Tue, 9 Jun 2020 22:18:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+        Tue, 09 Jun 2020 13:19:56 -0700 (PDT)
+Subject: Re: [PATCH v8 1/5] Add KUnit Struct to Current Task
+To:     David Gow <davidgow@google.com>, trishalfonso@google.com,
+        brendanhiggins@google.com, aryabinin@virtuozzo.com,
+        dvyukov@google.com, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        andreyknvl@google.com, shuah@kernel.org
+Cc:     linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+        kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <20200606040349.246780-1-davidgow@google.com>
+ <20200606040349.246780-2-davidgow@google.com>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <9a0cc68d-a7e5-a72c-7e47-3357a64f5aca@linuxfoundation.org>
+Date:   Tue, 9 Jun 2020 14:19:55 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <7eb89126-9d4b-9cdf-0f77-3242df36e090@gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200606040349.246780-2-davidgow@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -86,157 +88,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/9/20 6:10 PM, Johan Jonker wrote:
-
-> On 6/9/20 9:40 AM, Yifeng Zhao wrote:
-
-[..]
-
->> +static int rk_nfc_write_page(struct mtd_info *mtd, struct nand_chip *chip,
->> +			     const u8 *buf, int page, int raw)
->> +{
->> +	struct rk_nfc *nfc = nand_get_controller_data(chip);
->> +	struct rk_nfc_nand_chip *rk_nand = to_rk_nand(chip);
->> +	struct nand_ecc_ctrl *ecc = &chip->ecc;
->> +	int oob_step = (ecc->bytes > 60) ? NFC_MAX_OOB_PER_STEP :
->> +			NFC_MIN_OOB_PER_STEP;
->> +	int pages_per_blk = mtd->erasesize / mtd->writesize;
->> +	int ret = 0, i, boot_rom_mode = 0;
->> +	dma_addr_t dma_data, dma_oob;
->> +	u32 reg;
->> +	u8 *oob;
->> +
->> +	nand_prog_page_begin_op(chip, page, 0, NULL, 0);
->> +
->> +	if (!raw) {
->> +		memcpy(nfc->page_buf, buf, mtd->writesize);
->> +		memset(nfc->oob_buf, 0xff, oob_step * ecc->steps);
->> +
+On 6/5/20 10:03 PM, David Gow wrote:
+> From: Patricia Alfonso <trishalfonso@google.com>
 > 
->> +		/*
->> +		 * The first 8(some devices are 4 or 16) blocks in use by
+> In order to integrate debugging tools like KASAN into the KUnit
+> framework, add KUnit struct to the current task to keep track of the
+> current KUnit test.
 > 
-> are in use by
+> Signed-off-by: Patricia Alfonso <trishalfonso@google.com>
+> Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+> Signed-off-by: David Gow <davidgow@google.com>
+> ---
+>   include/linux/sched.h | 4 ++++
+>   1 file changed, 4 insertions(+)
 > 
->> +		 * the boot ROM and the first 32 bits of oob need to link
->> +		 * to the next page address in the same block.
->> +		 * Config the ECC algorithm supported by the boot ROM.
->> +		 */
->> +		if (page < pages_per_blk * rk_nand->boot_blks &&
->> +		    chip->options & NAND_IS_BOOT_MEDIUM) {
->> +			boot_rom_mode = 1;
->> +			if (rk_nand->boot_ecc != ecc->strength)
->> +				rk_nfc_hw_ecc_setup(chip, ecc,
->> +						    rk_nand->boot_ecc);
->> +		}
-> 
-> Helper?
-> 
->> +
->> +		/*
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index 4418f5cb8324..e50c568a8dc7 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -1188,6 +1188,10 @@ struct task_struct {
+>   	unsigned int			kasan_depth;
+>   #endif
+>   
+> +#if IS_ENABLED(CONFIG_KUNIT)
+> +	struct kunit			*kunit_test;
+> +#endif
+> +
+>   #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+>   	/* Index of current stored address in ret_stack: */
+>   	int				curr_ret_stack;
 > 
 
+Peter, Ingo, Juri,
 
->> +		 * Swap the first oob with the seventh oob and bad block
-> 
-> 
-> Swap the first oob byte with the seventh oob byte.
-> 
->> +		 * mask is saved at the seventh oob.
-> 
-> The bad block mask is stored at the seventh oob byte.
+Okay for this patch to go through Kselftest tree?
 
-Just wondering bit or byte?
-seventh or eight?
 
-> 
->> +		 */
->> +		swap(chip->oob_poi[0], chip->oob_poi[7]);
-
-uint8_t *oob_poi;
-
-1: oob_poi points to a byte I think?
-
-What was the swap puspose? A bit or a byte?
-There's 4 bytes oob per step.
-Could you explain?
-
-2: oob_poi[7] counting starts at [0] #1, [7] is then #8 ?
-Is that correct?
-
->> +
->> +		for (i = 0; i < ecc->steps; i++) {
->> +			oob = chip->oob_poi + i * NFC_SYS_DATA_SIZE;
->> +			reg = oob[0] | oob[1] << 8 | oob[2] << 16 |
->> +			      oob[3] << 24;
->> +			if (!i && boot_rom_mode)
->> +				reg = (page & (pages_per_blk - 1)) * 4;
->> +
->> +			if (nfc->cfg->type == NFC_V6 ||
->> +			    nfc->cfg->type == NFC_V8)
->> +				nfc->oob_buf[i * oob_step / 4] = reg;
->> +			else
->> +				nfc->oob_buf[i] = reg;
->> +		}
->> +
->> +		dma_data = dma_map_single(nfc->dev, (void *)nfc->page_buf,
->> +					  mtd->writesize, DMA_TO_DEVICE);
->> +		dma_oob = dma_map_single(nfc->dev, nfc->oob_buf,
->> +					 ecc->steps * oob_step,
->> +					 DMA_TO_DEVICE);
->> +
->> +		reinit_completion(&nfc->done);
->> +		writel(INT_DMA, nfc->regs + nfc->cfg->int_en_off);
->> +
->> +		rk_nfc_xfer_start(nfc, NFC_WRITE, ecc->steps, dma_data,
->> +				  dma_oob);
->> +		ret = wait_for_completion_timeout(&nfc->done,
->> +						  msecs_to_jiffies(100));
->> +		if (!ret)
->> +			dev_warn(nfc->dev, "write: wait dma done timeout.\n");
->> +		/*
->> +		 * Whether the DMA transfer is completed or not. The driver
->> +		 * needs to check the NFC`s status register to see if the data
->> +		 * transfer was completed.
->> +		 */
->> +		ret = rk_nfc_wait_for_xfer_done(nfc);
->> +
->> +		dma_unmap_single(nfc->dev, dma_data, mtd->writesize,
->> +				 DMA_TO_DEVICE);
->> +		dma_unmap_single(nfc->dev, dma_oob, ecc->steps * oob_step,
->> +				 DMA_TO_DEVICE);
->> +
-> 
->> +		if (boot_rom_mode && rk_nand->boot_ecc != ecc->strength)
->> +			rk_nfc_hw_ecc_setup(chip, ecc, ecc->strength);
-> 
-> Helper?
-> 
->> +
->> +		if (ret) {
->> +			ret = -EIO;
-> 
->> +			dev_err(nfc->dev,
->> +				 "write: wait transfer done timeout.\n");
-> 
-> align
-> 
->> +		}
->> +	} else {
-
->> +		rk_nfc_write_buf(chip, buf, mtd->writesize + + mtd->oobsize);
-
-Too many +++ here?                                         ^ ^
-
->> +	}
->> +
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = nand_prog_page_end_op(chip);
->> +
->> +	/* Deselect the currently selected target. */
->> +	rk_nfc_select_chip(chip, -1);
->> +
->> +	return ret;
->> +}
+thanks,
+-- Shuah
