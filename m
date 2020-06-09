@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E48EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C11C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1917E2067B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:23:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9594D2067B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:23:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591727003;
-	bh=3VhzeYCfyFo9o7fz5Vi6e9lrLzkvJTjzxHdMTZtg2QA=;
+	s=default; t=1591727009;
+	bh=UEtBzpPRnMXXcvZPch0gwKgleya4B+tA/veCfsBObmg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wH5QXBltI8Z130ctb3BP3TlxLxBRPK/p+3aHmLB94qeJbEtpU4Fl831fEWt50aTAa
-	 8qT0qVKngjRhoYaK3mSdzbCPc9ha8ML5m6PfApMkG/7Gc1uMukkj9IliwHftLr+uKu
-	 Xeo4BHn8PynjWHM1atoHEQxMwLfbADfsT51hZ8O4=
+	b=snIkk3JRQcpQKJpAh/WQEbwed0jPuP/wJppI+5Sm5fg+XMfLrF0SwpPjf5SQuYR85
+	 SJOxCa3ADEQMcFHE0XETLmpnGuhEqc4GyckVyAUnbl/esLeuzje4S3P24etkcoOiOH
+	 Yny7HNH+rz9JJ796Jfta9ZkJK7zEQYoLk2U1mzRI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389071AbgFISXV (ORCPT
+        id S2388904AbgFISX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:23:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58824 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 14:23:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732114AbgFIRrb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:47:31 -0400
+        id S1732105AbgFIRr3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:47:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F06E20801;
-        Tue,  9 Jun 2020 17:47:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0D7B207F9;
+        Tue,  9 Jun 2020 17:47:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591724851;
-        bh=3VhzeYCfyFo9o7fz5Vi6e9lrLzkvJTjzxHdMTZtg2QA=;
+        s=default; t=1591724849;
+        bh=UEtBzpPRnMXXcvZPch0gwKgleya4B+tA/veCfsBObmg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S3GmkNPTd+gnGSqCmuOWuorZ8jdXF2xeiO+G7TM3dOsaJZZZRHF0wyXCKQDC4qbH3
-         XuaNXQckFB1k1MEMeVzQJrJTceJ9qBjIdFfXktZNDNQc0CTqsPQwn5hGgtvhKdV5BN
-         HIMQmvn4j2rslKgnzZ1ekVGSitQIPYORbuF0KmOY=
+        b=Cg/wCYhBtWcK/0xuA6lTAjssqmzLsue+TgOh4bSFXvBBXaMO4jZ+Kl2DVMFTrnhcO
+         75NLkAfBzYaPs9gAx/s23lEoAzJ1fO9YG6vTXbO4tKseQxDj/i4V/ABgho54/Cgerk
+         H/bTKGq5TxGAzzm4gh1go9z+251K8fNv4Xsfffdw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yang Yingliang <yangyingliang@huawei.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 19/36] devinet: fix memleak in inetdev_init()
-Date:   Tue,  9 Jun 2020 19:44:19 +0200
-Message-Id: <20200609173934.396492898@linuxfoundation.org>
+        stable@vger.kernel.org, Bean Huo <beanhuo@micron.com>,
+        Can Guo <cang@codeaurora.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Eric Biggers <ebiggers@google.com>
+Subject: [PATCH 4.4 18/36] scsi: ufs: Release clock if DMA map fails
+Date:   Tue,  9 Jun 2020 19:44:18 +0200
+Message-Id: <20200609173934.332037261@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609173933.288044334@linuxfoundation.org>
 References: <20200609173933.288044334@linuxfoundation.org>
@@ -60,31 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Yingliang <yangyingliang@huawei.com>
+From: Can Guo <cang@codeaurora.org>
 
-[ Upstream commit 1b49cd71b52403822731dc9f283185d1da355f97 ]
+commit 17c7d35f141ef6158076adf3338f115f64fcf760 upstream.
 
-When devinet_sysctl_register() failed, the memory allocated
-in neigh_parms_alloc() should be freed.
+In queuecommand path, if DMA map fails, it bails out with clock held.  In
+this case, release the clock to keep its usage paired.
 
-Fixes: 20e61da7ffcf ("ipv4: fail early when creating netdev named all or default")
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
-Acked-by: Cong Wang <xiyou.wangcong@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+[mkp: applied by hand]
+
+Link: https://lore.kernel.org/r/0101016ed3d66395-1b7e7fce-b74d-42ca-a88a-4db78b795d3b-000000@us-west-2.amazonses.com
+Reviewed-by: Bean Huo <beanhuo@micron.com>
+Signed-off-by: Can Guo <cang@codeaurora.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+[EB: resolved cherry-pick conflict caused by newer kernels not having
+ the clear_bit_unlock() line]
+Signed-off-by: Eric Biggers <ebiggers@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/devinet.c |    1 +
+ drivers/scsi/ufs/ufshcd.c |    1 +
  1 file changed, 1 insertion(+)
 
---- a/net/ipv4/devinet.c
-+++ b/net/ipv4/devinet.c
-@@ -262,6 +262,7 @@ static struct in_device *inetdev_init(st
- 	err = devinet_sysctl_register(in_dev);
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -1374,6 +1374,7 @@ static int ufshcd_queuecommand(struct Sc
+ 	ufshcd_compose_upiu(hba, lrbp);
+ 	err = ufshcd_map_sg(lrbp);
  	if (err) {
- 		in_dev->dead = 1;
-+		neigh_parms_release(&arp_tbl, in_dev->arp_parms);
- 		in_dev_put(in_dev);
- 		in_dev = NULL;
++		ufshcd_release(hba);
+ 		lrbp->cmd = NULL;
+ 		clear_bit_unlock(tag, &hba->lrb_in_use);
  		goto out;
 
 
