@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 397CAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:07:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E13ABC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D99620734
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:07:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8A6B20734
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:07:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388339AbgFISHc (ORCPT
+        id S2388344AbgFISHg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:07:32 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:41510 "EHLO
+        Tue, 9 Jun 2020 14:07:36 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:41524 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388194AbgFISF7 (ORCPT
+        by vger.kernel.org with ESMTP id S2388196AbgFISF7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 9 Jun 2020 14:05:59 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jiidG-0001pb-Hv; Tue, 09 Jun 2020 19:05:54 +0100
+        id 1jiidH-0001qA-P3; Tue, 09 Jun 2020 19:05:55 +0100
 Received: from ben by deadeye with local (Exim 4.94)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jiidF-006VwL-J4; Tue, 09 Jun 2020 19:05:53 +0100
+        id 1jiidG-006VyG-FR; Tue, 09 Jun 2020 19:05:54 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,18 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Christoph Hellwig" <hch@lst.de>,
-        "Johannes Thumshirn" <jthumshirn@suse.de>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
         "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Sasha Levin" <alexander.levin@microsoft.com>,
-        "Hannes Reinecke" <hare@suse.com>, "Hannes Reinecke" <hare@suse.de>
-Date:   Tue, 09 Jun 2020 19:04:29 +0100
-Message-ID: <lsq.1591725832.372855628@decadent.org.uk>
+        "Theodore Ts'o" <tytso@mit.edu>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Tue, 09 Jun 2020 19:04:51 +0100
+Message-ID: <lsq.1591725832.911166893@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 38/61] scsi: sg: close race condition in
- sg_remove_sfp_usercontext()
+Subject: [PATCH 3.16 60/61] random: always use batched entropy for
+ get_random_u{32,64}
 In-Reply-To: <lsq.1591725831.850867383@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -60,93 +57,70 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Hannes Reinecke <hare@suse.de>
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
 
-commit 97d27b0dd015e980ade63fda111fd1353276e28b upstream.
+commit 69efea712f5b0489e67d07565aad5c94e09a3e52 upstream.
 
-sg_remove_sfp_usercontext() is clearing any sg requests, but needs to
-take 'rq_list_lock' when modifying the list.
+It turns out that RDRAND is pretty slow. Comparing these two
+constructions:
 
-Reported-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Hannes Reinecke <hare@suse.com>
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Tested-by: Johannes Thumshirn <jthumshirn@suse.de>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
+  for (i = 0; i < CHACHA_BLOCK_SIZE; i += sizeof(ret))
+    arch_get_random_long(&ret);
+
+and
+
+  long buf[CHACHA_BLOCK_SIZE / sizeof(long)];
+  extract_crng((u8 *)buf);
+
+it amortizes out to 352 cycles per long for the top one and 107 cycles
+per long for the bottom one, on Coffee Lake Refresh, Intel Core i9-9880H.
+
+And importantly, the top one has the drawback of not benefiting from the
+real rng, whereas the bottom one has all the nice benefits of using our
+own chacha rng. As get_random_u{32,64} gets used in more places (perhaps
+beyond what it was originally intended for when it was introduced as
+get_random_{int,long} back in the md5 monstrosity era), it seems like it
+might be a good thing to strengthen its posture a tiny bit. Doing this
+should only be stronger and not any weaker because that pool is already
+initialized with a bunch of rdrand data (when available). This way, we
+get the benefits of the hardware rng as well as our own rng.
+
+Another benefit of this is that we no longer hit pitfalls of the recent
+stream of AMD bugs in RDRAND. One often used code pattern for various
+things is:
+
+  do {
+  	val = get_random_u32();
+  } while (hash_table_contains_key(val));
+
+That recent AMD bug rendered that pattern useless, whereas we're really
+very certain that chacha20 output will give pretty distributed numbers,
+no matter what.
+
+So, this simplification seems better both from a security perspective
+and from a performance perspective.
+
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lore.kernel.org/r/20200221201037.30231-1-Jason@zx2c4.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[bwh: Backported to 3.16: Only get_random_int() exists here]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/scsi/sg.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/char/random.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
---- a/drivers/scsi/sg.c
-+++ b/drivers/scsi/sg.c
-@@ -561,6 +561,7 @@ sg_read(struct file *filp, char __user *
- 	} else
- 		count = (old_hdr->result == 0) ? 0 : -EIO;
- 	sg_finish_rem_req(srp);
-+	sg_remove_request(sfp, srp);
- 	retval = count;
- free_old_hdr:
- 	kfree(old_hdr);
-@@ -601,6 +602,7 @@ sg_new_read(Sg_fd * sfp, char __user *bu
- 	}
- err_out:
- 	err2 = sg_finish_rem_req(srp);
-+	sg_remove_request(sfp, srp);
- 	return err ? : err2 ? : count;
- }
+--- a/drivers/char/random.c
++++ b/drivers/char/random.c
+@@ -1700,9 +1700,6 @@ unsigned int get_random_int(void)
+ 	__u32 *hash;
+ 	unsigned int ret;
  
-@@ -835,6 +837,7 @@ sg_common_write(Sg_fd * sfp, Sg_request
- 	if (k) {
- 		SCSI_LOG_TIMEOUT(1, printk("sg_common_write: start_req err=%d\n", k));
- 		sg_finish_rem_req(srp);
-+		sg_remove_request(sfp, srp);
- 		return k;	/* probably out of space --> ENOMEM */
- 	}
- 	if (atomic_read(&sdp->detaching)) {
-@@ -844,6 +847,7 @@ sg_common_write(Sg_fd * sfp, Sg_request
- 		}
- 
- 		sg_finish_rem_req(srp);
-+		sg_remove_request(sfp, srp);
- 		return -ENODEV;
- 	}
- 
-@@ -1367,6 +1371,7 @@ sg_rq_end_io_usercontext(struct work_str
- 	struct sg_fd *sfp = srp->parentfp;
- 
- 	sg_finish_rem_req(srp);
-+	sg_remove_request(sfp, srp);
- 	kref_put(&sfp->f_ref, sg_remove_sfp);
- }
- 
-@@ -1876,8 +1881,6 @@ sg_finish_rem_req(Sg_request *srp)
- 	else
- 		sg_remove_scat(req_schp);
- 
--	sg_remove_request(sfp, srp);
+-	if (arch_get_random_int(&ret))
+-		return ret;
 -
- 	return ret;
- }
+ 	hash = get_cpu_var(get_random_int_hash);
  
-@@ -2211,12 +2214,17 @@ sg_remove_sfp_usercontext(struct work_st
- 	struct sg_fd *sfp = container_of(work, struct sg_fd, ew.work);
- 	struct sg_device *sdp = sfp->parentdp;
- 	Sg_request *srp;
-+	unsigned long iflags;
- 
- 	/* Cleanup any responses which were never read(). */
-+	write_lock_irqsave(&sfp->rq_list_lock, iflags);
- 	while (!list_empty(&sfp->rq_list)) {
- 		srp = list_first_entry(&sfp->rq_list, Sg_request, entry);
- 		sg_finish_rem_req(srp);
-+		list_del(&srp->entry);
-+		srp->parentfp = NULL;
- 	}
-+	write_unlock_irqrestore(&sfp->rq_list_lock, iflags);
- 
- 	if (sfp->reserve.bufflen > 0) {
- 		SCSI_LOG_TIMEOUT(6,
+ 	hash[0] += current->pid + jiffies + random_get_entropy();
 
