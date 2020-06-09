@@ -2,127 +2,99 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33AA8C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41AD1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:10:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B94620734
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1375620734
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:10:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="Nvyzw1f2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728371AbgFINIK (ORCPT
+        id S1727906AbgFINKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 09:08:10 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42134 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726937AbgFINIJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 09:08:09 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id A221CAA6F;
-        Tue,  9 Jun 2020 13:08:10 +0000 (UTC)
-Message-ID: <5c55790c31603aed48fcd6e84ccbc4a6d8c6d1fd.camel@suse.de>
-Subject: Re: [PATCH 5/9] usb: xhci-pci: Add support for reset controllers
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        gregkh@linuxfoundation.org, wahrenst@gmx.net, robh@kernel.org,
-        mathias.nyman@linux.intel.com, Eric Anholt <eric@anholt.net>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-usb@vger.kernel.org,
-        Mathias Nyman <mathias.nyman@intel.com>
-Cc:     lorenzo.pieralisi@arm.com, tim.gover@raspberrypi.org,
-        helgaas@kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 09 Jun 2020 15:08:04 +0200
-In-Reply-To: <73fdeca7b651252f7907635e97f9f9b31e702868.camel@pengutronix.de>
-References: <20200608192701.18355-1-nsaenzjulienne@suse.de>
-         <20200608192701.18355-6-nsaenzjulienne@suse.de>
-         <5d3200cc-17cc-026f-1dfe-c10ec949f9ad@gmail.com>
-         <382b81937757de570a83ba4ff9276221c0bba547.camel@suse.de>
-         <73fdeca7b651252f7907635e97f9f9b31e702868.camel@pengutronix.de>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-aPyaZQX6Bi+lXKb2F+qi"
-User-Agent: Evolution 3.36.2 
+        Tue, 9 Jun 2020 09:10:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54568 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbgFINK3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 09:10:29 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C167FC05BD1E
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 06:10:28 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id n24so22310909ejd.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 06:10:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WTT7IKjpcsE5Mp5edVXpMG+kNpU/LPg9ObpL4+ooCUI=;
+        b=Nvyzw1f2MKdAhdIkiS5X8YSaMyO2WhkjwA8TWvObxQ0WRdRvsw3Q4pEJztanXrmWN3
+         VQobsCiOYWm/7HgQr2De0iXxmRcr6tuvD5LhUpRN+7fJ5HE+HW5UbZ7L8hPcbG6rRlRB
+         ThmJ58n71EDlVsqmXb8E18t4blmgb6CpF8P+o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WTT7IKjpcsE5Mp5edVXpMG+kNpU/LPg9ObpL4+ooCUI=;
+        b=GCci2LvHFrObGr37hgiJa95+3x4n3ELkqA5zU1Jj1naAqd+tardpOfRGkYr9HCtMn/
+         IU2i44I7Tw6u+w9lVJPt4+cgFxXG6ai94pAGoTwcRlJ5clXZcjGaDMYRfjhHUr/B15eJ
+         QexUqQ3H63ny3yrHshTRNjj/42Gj6gB4l7eyeyUQaIyW3LckcsVzhWIr0YNotzrfUTaj
+         KpcGz4n3OxXrhFwFAzgkef46zNHWXKJATIHFVo6OkAsG4QcF04KmRxPxqU1c1vxtJqzt
+         gW3C7R6jDxkfW3wJK4FfManNjVg5tBzXvRVBoXpqasJGf5QqFA4EHlIYZFx3b0f5tvqd
+         Hf0w==
+X-Gm-Message-State: AOAM533gPRiiF+QExBxYKDDnLyoDuz2hAeT7GeymfCB7PG13NF9rv9nP
+        /eO+5I8MHiktI/q8zdZMJX0FYvAHai4w85/2EcjvjY9VWCt4mw==
+X-Google-Smtp-Source: ABdhPJzolqp64VJFj8WV1rL0fsdfm30ZHAXUsoX2GUGlYVaIFV6P3q54p95W6c8+qtWTBNfOWBCxtH52fAxNUllUqPg=
+X-Received: by 2002:a17:906:4310:: with SMTP id j16mr24334724ejm.511.1591708226713;
+ Tue, 09 Jun 2020 06:10:26 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200606215114.380723277@linutronix.de>
+In-Reply-To: <20200606215114.380723277@linutronix.de>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Tue, 9 Jun 2020 15:10:15 +0200
+Message-ID: <CAJfpegtgQZvjjapsgQsG6AGGmNsHoGaczVc9=nw941a4-atmGw@mail.gmail.com>
+Subject: Re: [patch 0/3] vdso: Unbreak VDSO with PV and HyperV clocksources
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Jun 7, 2020 at 11:36 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Miklos reported [1] that the recent VDSO changes broke paravirt clocksource
+> based VDSO in the case that the clocksource is invalidated by the
+> hypervisor which happens after a suspend/resume cycle of the host.
+>
+> The result is a stale clocksource which is about 2200 seconds ahead of the
+> actual time and jumps forward by 2200 seconds once 2200 seconds have
+> elapsed.
+>
+> The reason for this is the core code change which optimized the VDSO
+> clocksource validation by checking for the clocksource mode instead of
+> using the rather subtle check for the clocksource read return value whether
+> it has bit 63 set.
+>
+> For some reason my brain blanked when doing that change, even if I should
+> have known better.
+>
+> The following series restores the previous behaviour but preserves the
+> initially intended optimization for architectures which don't need that PV
+> handling.
 
---=-aPyaZQX6Bi+lXKb2F+qi
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Thanks for fixing.
 
-On Tue, 2020-06-09 at 13:59 +0200, Philipp Zabel wrote:
-> Hi Nicolas,
->=20
->=20
->=20
-> On Tue, 2020-06-09 at 13:18 +0200, Nicolas Saenz Julienne wrote:
->=20
-> > Hi Florian, thanks for the reviews!
-> > On Mon, 2020-06-08 at 12:43 -0700, Florian Fainelli wrote:
-> > > On 6/8/2020 12:26 PM, Nicolas Saenz Julienne wrote:
-> > > > Some atypical users of xhci-pci might need to manually reset their =
-xHCI
-> > > > controller before starting the HCD setup. Check if a reset controll=
-er
-> > > > device is available to the PCI bus and trigger a reset.
-> > > > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > > > ---
-> > > >   drivers/usb/host/xhci-pci.c | 9 +++++++++
-> > > >   1 file changed, 9 insertions(+)
-> > > > diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pc=
-i.c
-> > > > index ef513c2fb843..45f70facdfcd 100644
-> > > > --- a/drivers/usb/host/xhci-pci.c
-> > > > +++ b/drivers/usb/host/xhci-pci.c
->=20
-> [...]
->=20
-> > > > @@ -347,6 +349,13 @@ static int xhci_pci_probe(struct pci_dev *dev,
-> > > > const
-> > > > struct pci_device_id *id)
-> > > >                    return retval;
-> > > >    }
-> > > >  =20
-> > > > + reset =3D devm_reset_control_get(&dev->bus->dev, NULL);
-> > > Should not this be devm_reset_control_get_optional()?
-> > Yes, you're right.
->=20
->=20
-> Please use devm_reset_control_get_optional_exclusive() while you're at
->=20
-> it.
->=20
+Tested-by: Miklos Szeredi <mszeredi@redhat.com>
 
-Will do!
-
-Regards,
-Nicolas
-
-
---=-aPyaZQX6Bi+lXKb2F+qi
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7fibQACgkQlfZmHno8
-x/4nCQf+Pu7jCPf9/NoIlTfRB7FZ4OANYt5inVdJyL5rJD2651r40FKjtZOBZzVA
-WZF5fC3mPhzBuwiOY0BhQNmGczuZW7F3xzfWtitDo1ee7xMbBO6Sb+ppOQ3HD3qa
-dDIcoWpQkUBSy4nF2HegV8Mk3lk1wNp5qWKhlOP9RdpI3TaMPQ6LYdjlHKXGnHfK
-tW56rMzKdearm5rY/UuChAfqZgZnlTDugkE/U0PPUToNmd3HVw4I46wNgCPwxFKV
-99FgNnbLiEAqYzOD32uSd8o8N+v7smGdeG8IgNMxji+01vqUH+ygdqUJt/9V3nfK
-jYUgqXTX6cLyPVX9Km25skKw8UAcMw==
-=bQPH
------END PGP SIGNATURE-----
-
---=-aPyaZQX6Bi+lXKb2F+qi--
-
+Miklos
