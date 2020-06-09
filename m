@@ -2,102 +2,86 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE0DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58933C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA3F62067B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:26:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B3392067B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:31:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gMJRP2Ex"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="gvDExwgF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389078AbgFIS0z (ORCPT
+        id S1732095AbgFISa7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:26:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47078 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731916AbgFIS0w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 14:26:52 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF464C05BD1E
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 11:26:51 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id k8so17156612edq.4
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 11:26:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=ygqvsD0x+BbV1wuNC2xCZ5dHDCQ7gpdLfW+BMG8uWyI=;
-        b=gMJRP2ExsJ50SFbC9ybxykye/BOmpO0Mmk5xjtQXAFd+RDLthcueyJef3K6tveVy7c
-         aetriQfEKsh+SXOFQEa3VE7ejZ9PlNXv6K3VZn4Z5u2qzJ4UKn0OTV+TFlzfvWnrHXCI
-         vg4WbFh0pcCBwayx445MqT7dVJiY3hklyjXOA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=ygqvsD0x+BbV1wuNC2xCZ5dHDCQ7gpdLfW+BMG8uWyI=;
-        b=Y0EykXFhK6B54ZsLVTnCmtrGc8U7abXT6hpaRstOMn2w0BH1hfnDjmylElW01LWSdQ
-         y7tr+LuxniOnPm/phFDf3wPgUZjWYJ00By5Xn/NVNTHRWFxJz7ShGcrq8/jJe44Kw413
-         i0hBCoH1XRYla1Jqbx+5yP0S0P2Mm1V80CmwXAB+Znn3TSm12dOzTOiOSmGuu4LlWtP8
-         27sueyCIaOZYvmi7QVJXUZqPlxbpnRHMv16M6hZLOeiSbmDn6NNv3ii9HOrS/WDU0taD
-         l4hFAQ+QM3LbFJra3btz9ogp/kEX149x6L/NdK5rE4fc4Ku95qfl4a6SObXXpKL/3a6I
-         2xIA==
-X-Gm-Message-State: AOAM533Ymb6AhzxE/HReB3Asvl/e2Zper0IsYlFkKpCJ7Ohd3PNcD8YQ
-        01nSjerDAWDJAumiQ0TP9xo9HWjYtEH35GQR9f39+apiV2s=
-X-Google-Smtp-Source: ABdhPJwNvYT9kZwhYb2THprAReSfSna7/wbiV65MZjhc8iQ1NpqjhjP5P+5xWG4F0cGxS+pnggLKOr9rp3axT3iKbb4=
-X-Received: by 2002:aa7:cb53:: with SMTP id w19mr26953081edt.328.1591727210443;
- Tue, 09 Jun 2020 11:26:50 -0700 (PDT)
+        Tue, 9 Jun 2020 14:30:59 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:42070 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730658AbgFISa4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 14:30:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=EhV/TVKgV99na7u/JLTSBppnhlsRTgnR+BNUpCAIBHI=; b=gvDExwgFmo/5fyena05I3UXVhT
+        im/tmmJZfA4cjS084NK/cIRcpxB+AgBxfN3ZPhkkaxHKqOJGHunR0wGMEEUdtymItcGqSq4XvaZ7/
+        ia1J3WS5uUbeB+79FSP17qXtlxKzdqdooczP0XABmtdyckwx+xvMfjGmeZJ3CKfyHXM8=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jij18-004XY1-Ca; Tue, 09 Jun 2020 20:30:34 +0200
+Date:   Tue, 9 Jun 2020 20:30:34 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Stephen Hemminger <stephen@networkplumber.org>
+Cc:     David Miller <davem@davemloft.net>, o.rempel@pengutronix.de,
+        f.fainelli@gmail.com, hkallweit1@gmail.com, kuba@kernel.org,
+        corbet@lwn.net, mkubecek@suse.cz, linville@tuxdriver.com,
+        david@protonic.nl, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux@armlinux.org.uk, mkl@pengutronix.de, marex@denx.de,
+        christian.herber@nxp.com, amitc@mellanox.com, petrm@mellanox.com
+Subject: Re: [PATCH ethtool v1] netlink: add master/slave configuration
+ support
+Message-ID: <20200609183034.GC1056844@lunn.ch>
+References: <20200526091025.25243-1-o.rempel@pengutronix.de>
+ <20200607153019.3c8d6650@hermes.lan>
+ <20200607.164532.964293508393444353.davem@davemloft.net>
+ <20200609101935.5716b3bd@hermes.lan>
 MIME-Version: 1.0
-From:   Micah Morton <mortonm@chromium.org>
-Date:   Tue, 9 Jun 2020 11:26:39 -0700
-Message-ID: <CAJ-EccOy4qDpbfrP5=KH40LSOx1F4-ciY2=hFv_c+goUHLJ6PQ@mail.gmail.com>
-Subject: [GIT PULL] SafeSetID LSM changes for v5.8
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200609101935.5716b3bd@hermes.lan>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162:
+Hi Stephen
 
-  Linux 5.7 (2020-05-31 16:49:15 -0700)
+> A common example is that master/slave is unclear and would be clearer
+> as primary/secondary or active/backup or controller/worker.
 
-are available in the Git repository at:
+802.3, cause 32.1.2, 2015 version:
 
-  https://github.com/micah-morton/linux.git tags/LSM-add-setgid-hook-5.8
+   A 100BASE-T2 PHY can be configured either as a master PHY or as a
+   slave PHY. The master-slave relationship between two stations
+   sharing a link segment is established during Auto-Negotiation (see
+   Clause 28, 32.5, Annex 28C, and 32.5.2). The master PHY uses an
+   external clock to determine the timing of transmitter and receiver
+   operations. The slave PHY recovers the clock from the received
+   signal and uses it to determine the timing of transmitter
+   operations, i.e., it performs loop timing, as illustrated in Figure
+   32–2.
 
-for you to fetch changes up to 04d244bcf92f525011e3df34b21fc39b0591ba93:
+In this case, i would say master/slave is very clearly defined.
 
-  security: Add LSM hooks to set*gid syscalls (2020-06-09 10:22:13 -0700)
+Given these definitions, would you like to propose alternatives?
 
-----------------------------------------------------------------
-Add additional LSM hooks for SafeSetID
+Do you have any insights has to how the IEEE 802.3 standard will be
+changed?
 
-SafeSetID is capable of making allow/deny decisions for set*uid calls
-on a system, and we want to add similar functionality for set*gid
-calls. The work to do that is not yet complete, so probably won't make
-it in for v5.8, but we are looking to get this simple patch in for
-v5.8 since we have it ready. We are planning on the rest of the work
-for extending the SafeSetID LSM being merged during the v5.9 merge
-window.
-
-This patch was sent to the security mailing list and there were no objections.
-
-Signed-off-by: Micah Morton <mortonm@chromium.org>
-
-----------------------------------------------------------------
-Micah Morton (1):
-      security: Add LSM hooks to set*gid syscalls
-
- include/linux/lsm_hook_defs.h |  2 ++
- include/linux/lsm_hooks.h     |  9 +++++++++
- include/linux/security.h      |  9 +++++++++
- kernel/sys.c                  | 15 ++++++++++++++-
- security/security.c           |  6 ++++++
- 5 files changed, 40 insertions(+), 1 deletion(-)
+      Andrew
