@@ -2,139 +2,197 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 523A7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30120C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D3A72072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:40:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07BC22078C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:42:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591713730;
+	bh=DBeZHLEQGulEBu3IQlBvivbxuD7CpCjdJ39fxG4UDBw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ffJsNLR+gJpkrkiJL+upJVwq7tN9AslvqsA0jpOz6403+lZ8UwgVcPVXDLcRuW2Qn
+	 VXhshtuIIJNMAaep1jWDQpWhF//Z31VEYfBMxpTX7Hejxr28UByT15A+YWt4zwgjvJ
+	 dGFoz1opLBIg+my6I5LRX4h64qQgr6jnrQr87S+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730609AbgFIOkm (ORCPT
+        id S1730403AbgFIOmF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 10:40:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40326 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730569AbgFIOke (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 10:40:34 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 414B0C05BD1E;
-        Tue,  9 Jun 2020 07:40:31 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jifQO-0002o6-Dq; Tue, 09 Jun 2020 16:40:24 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D80CD1C007F;
-        Tue,  9 Jun 2020 16:40:23 +0200 (CEST)
-Date:   Tue, 09 Jun 2020 14:40:23 -0000
-From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/vdso: Unbreak paravirt VDSO clocks
-Cc:     Miklos Szeredi <miklos@szeredi.hu>,
+        Tue, 9 Jun 2020 10:42:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38856 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728601AbgFIOmE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 10:42:04 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1442D2072F;
+        Tue,  9 Jun 2020 14:42:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591713723;
+        bh=DBeZHLEQGulEBu3IQlBvivbxuD7CpCjdJ39fxG4UDBw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Khl7WXZjz0yf6NrpGSUGwKvt+9K9Oxrk2SI7klUKYjRZn787104XzLQeBOo1pQ6XD
+         8P3ZXbXVKjAzZIirxNhWJodow3QE8tArvfWVwI7OmyATVf1vglnnzFlbQgsUhrX9os
+         sLU/nPY7O2QDkwwpcjPSl5w/ov2O5k6TSsc7WPf0=
+Date:   Tue, 9 Jun 2020 15:42:01 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        david.m.ertman@intel.com, shiraz.saleem@intel.com,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Miklos Szeredi <mszeredi@redhat.com>, stable@vger.kernel.org,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200606221532.080560273@linutronix.de>
-References: <20200606221532.080560273@linutronix.de>
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld
+ management controller
+Message-ID: <20200609144201.GK4583@sirena.org.uk>
+References: <c5632bfab3956265e90fc2fb6c0b3cae@walle.cc>
+ <20200606114645.GB2055@sirena.org.uk>
+ <dc052a5c77171014ecc465b1da8b7ef8@walle.cc>
+ <20200608082827.GB3567@dell>
+ <CAHp75VdiH=J-ovCdh1RFJDW_bJM8=pbXRaHmB691GLb-5oBmYQ@mail.gmail.com>
+ <7d7feb374cbf5a587dc1ce65fc3ad672@walle.cc>
+ <20200608185651.GD4106@dell>
+ <32231f26f7028d62aeda8fdb3364faf1@walle.cc>
+ <20200609064735.GH4106@dell>
+ <32287ac0488f7cbd5a7d1259c284e554@walle.cc>
 MIME-Version: 1.0
-Message-ID: <159171362368.17951.5578339673051850079.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="0FM4RQAc0jwHekq5"
+Content-Disposition: inline
+In-Reply-To: <32287ac0488f7cbd5a7d1259c284e554@walle.cc>
+X-Cookie: Be careful!  Is it classified?
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
 
-Commit-ID:     7778d8417b74aded842eeb372961cfc460417fa0
-Gitweb:        https://git.kernel.org/tip/7778d8417b74aded842eeb372961cfc460417fa0
-Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Sat, 06 Jun 2020 23:51:17 +02:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 09 Jun 2020 16:36:49 +02:00
+--0FM4RQAc0jwHekq5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-x86/vdso: Unbreak paravirt VDSO clocks
+On Tue, Jun 09, 2020 at 04:38:31PM +0200, Michael Walle wrote:
 
-The conversion of x86 VDSO to the generic clock mode storage broke the
-paravirt and hyperv clocksource logic. These clock sources have their own
-internal sequence counter to validate the clocksource at the point of
-reading it. This is necessary because the hypervisor can invalidate the
-clocksource asynchronously so a check during the VDSO data update is not
-sufficient. If the internal check during read invalidates the clocksource
-the read return U64_MAX. The original code checked this efficiently by
-testing whether the result (casted to signed) is negative, i.e. bit 63 is
-set. This was done that way because an extra indicator for the validity had
-more overhead.
+>   mfd-device@10 {
+>     compatible =3D "simple-regmap", "simple-mfd";
+>     reg =3D <10>;
+>     regmap,reg-bits =3D <8>;
+>     regmap,val-bits =3D <8>;
+>     sub-device@0 {
+>       compatible =3D "vendor,sub-device0";
+>       reg =3D <0>;
+>     };
 
-The conversion broke this check because the check was replaced by a check
-for a valid VDSO clock mode.
+A DT binding like this is not a good idea, encoding the details of the
+register map into the DT binding makes it an ABI which is begging for
+trouble.  I'd also suggest that any device using a generic driver like
+this should have a specific compatible string for the device so we can
+go back and add quirks later if we need them.
 
-The wreckage manifests itself when the paravirt clock is installed as a
-valid VDSO clock and during runtime invalidated by the hypervisor,
-e.g. after a host suspend/resume cycle. After the invalidation the read
-function returns U64_MAX which is used as cycles and makes the clock jump
-by ~2200 seconds, and become stale until the 2200 seconds have elapsed
-where it starts to jump again. The period of this effect depends on the
-shift/mult pair of the clocksource and the jumps and staleness are an
-artifact of undefined but reproducible behaviour of math overflow.
+>     ...
+> };
+>=20
+> Or if you just want the regmap:
+>=20
+> &soc {
+>   regmap: regmap@fff0000 {
+>     compatible =3D "simple-regmap";
+>     reg =3D <0xfff0000>;
+>     regmap,reg-bits =3D <16>;
+>     regmap,val-bits =3D <32>;
+>   };
+>=20
+>   enet-which-needs-syscon-too@1000000 {
+>     vendor,ctrl-regmap =3D <&regmap>;
+>   };
+> };
+>=20
+> Similar to the current syscon (which is MMIO only..).
+>=20
+> -michael
+>=20
+> >=20
+> > I can't think of any reasons why not, off the top of my head.
+> >=20
+> > Does Regmap only deal with shared accesses from multiple devices
+> > accessing a single register map, or can it also handle multiple
+> > devices communicating over a single I2C channel?
+> >=20
+> > One for Mark perhaps.
+> >=20
+> > > > The issues I wish to resolve using 'simple-mfd' are when sub-devices
+> > > > register maps overlap and intertwine.
+> >=20
+> > [...]
+> >=20
+> > > > > > > What do these bits configure?
+> > > > >
+> > > > > - hardware strappings which have to be there before the board pow=
+ers
+> > > > > up,
+> > > > >   like clocking mode for different SerDes settings
+> > > > > - "keep-in-reset" bits for onboard peripherals if you want to save
+> > > > > power
+> > > > > - disable watchdog bits (there is a watchdog which is active right
+> > > > > from
+> > > > >   the start and supervises the bootloader start and switches to
+> > > > > failsafe
+> > > > >   mode if it wasn't successfully started)
+> > > > > - special boot modes, like eMMC, etc.
+> > > > >
+> > > > > Think of it as a 16bit configuration word.
+> > > >
+> > > > And you wish for users to be able to view these at run-time?
+> > >=20
+> > > And esp. change them.
+> > >=20
+> > > > Can they adapt any of them on-the-fly or will the be RO?
+> > >=20
+> > > They are R/W but only will only affect the board behavior after a
+> > > reset.
+> >=20
+> > I see.  Makes sense.  This is board controller territory.  Perhaps
+> > suitable for inclusion into drivers/soc or drivers/platform.
 
-Implement an x86 version of the new vdso_cycles_ok() inline which adds this
-check back and a variant of vdso_clocksource_ok() which lets the compiler
-optimize it out to avoid the extra conditional. That's suboptimal when the
-system does not have a VDSO capable clocksource, but that's not the case
-which is optimized for.
+--0FM4RQAc0jwHekq5
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Fixes: 5d51bee725cc ("clocksource: Add common vdso clock mode storage")
-Reported-by: Miklos Szeredi <miklos@szeredi.hu>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Miklos Szeredi <mszeredi@redhat.com>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20200606221532.080560273@linutronix.de
+-----BEGIN PGP SIGNATURE-----
 
----
- arch/x86/include/asm/vdso/gettimeofday.h | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7fn7gACgkQJNaLcl1U
+h9AhrQf/dpQW8gsPG9Ua7FU/Ae75V1zwG5NKx2ioZcYzal7CqZg3Q0+ciOedLwFs
+WELrgzSE7WB9V18aaNAg8CpMIKlBhqU+2I4JxSAZQWfuaFQgrP550jA5iij1L69d
+RIxP1xrQClXSvmJa33MBpD95uFdGEPWxMOiSB72lLy4E7jr65KwJ55P6tcOlXo7L
+Ma/qDeZ0tjrcZOtH5h3dPsJhEojskfrxWJq6CJ1UjXifZxvy+O/khY6E7TTetw3+
+0b8ttqNSXE4Yk9Z7TKhYlonnqWphaX3XdoDvTlbgxmBldVUrr63UJCTbiCm5pKJ1
+HYxxN5ha9XcJcvRtIDLWzkq7wpRCQg==
+=rwO1
+-----END PGP SIGNATURE-----
 
-diff --git a/arch/x86/include/asm/vdso/gettimeofday.h b/arch/x86/include/asm/vdso/gettimeofday.h
-index 9a6dc9b..fb81fea 100644
---- a/arch/x86/include/asm/vdso/gettimeofday.h
-+++ b/arch/x86/include/asm/vdso/gettimeofday.h
-@@ -271,6 +271,24 @@ static __always_inline const struct vdso_data *__arch_get_vdso_data(void)
- 	return __vdso_data;
- }
- 
-+static inline bool arch_vdso_clocksource_ok(const struct vdso_data *vd)
-+{
-+	return true;
-+}
-+#define vdso_clocksource_ok arch_vdso_clocksource_ok
-+
-+/*
-+ * Clocksource read value validation to handle PV and HyperV clocksources
-+ * which can be invalidated asynchronously and indicate invalidation by
-+ * returning U64_MAX, which can be effectively tested by checking for a
-+ * negative value after casting it to s64.
-+ */
-+static inline bool arch_vdso_cycles_ok(u64 cycles)
-+{
-+	return (s64)cycles >= 0;
-+}
-+#define vdso_cycles_ok arch_vdso_cycles_ok
-+
- /*
-  * x86 specific delta calculation.
-  *
+--0FM4RQAc0jwHekq5--
