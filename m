@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC313C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56C9FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5AB2206D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:55:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 223B72081A
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:55:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725327;
-	bh=ViZa30ypR7/xokQKb3odmSsdv+h/Zb0AyqQm1aaQY/s=;
+	s=default; t=1591725334;
+	bh=/G8p906UvT/4yhB83bWJPraTnQwHIrfXDNQJwOdqdxg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iFqdRZsAuwFuw2TThCKJmfYr5JjgR7G/zsHoUcZH9kmfnsvgKEHkoHAd8fh46ZqxL
-	 CjrlhXyquKBDV/sGg3gcw6H0Jz8KUW7a9GbgzbPMtCUnwzwo+kn/zHUasZrPe/ShxY
-	 exGO1wvNvL0cehtqgMzJBi0/a4MwgK64dMTvziS0=
+	b=xuKXM2R6Ai9j2XLg3CV8CkQ1qQHO3hT25ZzqEMfpa5nSvLTnTpKpMBCfZCArcsKkO
+	 fFqtN50ZV0H+3hgrHlOKZGX4x7HruK+S06Dez73Q0xRcMYXRcqdVqnFBi1cAk09P3W
+	 LrlTVNy/LZzpRBc1it3w0SzjI9X5tbjo51XOC/Dw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733241AbgFIRzZ (ORCPT
+        id S1733249AbgFIRza (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:55:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44632 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:55:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729780AbgFIRxc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:53:32 -0400
+        id S1733040AbgFIRxj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:53:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E315D207C3;
-        Tue,  9 Jun 2020 17:53:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B80020774;
+        Tue,  9 Jun 2020 17:53:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725212;
-        bh=ViZa30ypR7/xokQKb3odmSsdv+h/Zb0AyqQm1aaQY/s=;
+        s=default; t=1591725219;
+        bh=/G8p906UvT/4yhB83bWJPraTnQwHIrfXDNQJwOdqdxg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mwnljX3Q1iclmZQz29HZTBLKgU+Xn933AFtQeFUXy7EbzL0W5MTN2jqufNQNXYNKr
-         I2ex/UI07/IP+xdGx904kAFkX4EsUWoMhlzjsaEL0EWCUkPZ2HdX8EXeqIqhNGcS0A
-         cs0wsi8DoFSEltqSpT4bYzOLmsaAfKycgSWrsJuY=
+        b=u48a+2gTKVPtO7qkdpbzSBR7ah85qlzRV/3eZ6ydF9YqajAfG7pE0AtRtt3BwPqV8
+         EHXuct7ed7it+FR/1ZOahIklNuthiw7eIg/SlDStkkl6QPtyaBdpFg4zfaHBIakvTF
+         BmfiEXQ0bFIyYCx0JUjCyRpoB2ONBdEX+SSQ8Id0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fugang Duan <fugang.duan@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 06/41] net: stmmac: enable timestamp snapshot for required PTP packets in dwmac v5.10a
-Date:   Tue,  9 Jun 2020 19:45:08 +0200
-Message-Id: <20200609174112.719785772@linuxfoundation.org>
+        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.6 17/41] net/mlx5e: replace EINVAL in mlx5e_flower_parse_meta()
+Date:   Tue,  9 Jun 2020 19:45:19 +0200
+Message-Id: <20200609174113.782291512@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174112.129412236@linuxfoundation.org>
 References: <20200609174112.129412236@linuxfoundation.org>
@@ -59,55 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fugang Duan <fugang.duan@nxp.com>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit f2fb6b6275eba9d312957ca44c487bd780da6169 ]
+[ Upstream commit a683012a8e77675a1947cc8f11f97cdc1d5bb769 ]
 
-For rx filter 'HWTSTAMP_FILTER_PTP_V2_EVENT', it should be
-PTP v2/802.AS1, any layer, any kind of event packet, but HW only
-take timestamp snapshot for below PTP message: sync, Pdelay_req,
-Pdelay_resp.
+The drivers reports EINVAL to userspace through netlink on invalid meta
+match. This is confusing since EINVAL is usually reserved for malformed
+netlink messages. Replace it by more meaningful codes.
 
-Then it causes below issue when test E2E case:
-ptp4l[2479.534]: port 1: received DELAY_REQ without timestamp
-ptp4l[2481.423]: port 1: received DELAY_REQ without timestamp
-ptp4l[2481.758]: port 1: received DELAY_REQ without timestamp
-ptp4l[2483.524]: port 1: received DELAY_REQ without timestamp
-ptp4l[2484.233]: port 1: received DELAY_REQ without timestamp
-ptp4l[2485.750]: port 1: received DELAY_REQ without timestamp
-ptp4l[2486.888]: port 1: received DELAY_REQ without timestamp
-ptp4l[2487.265]: port 1: received DELAY_REQ without timestamp
-ptp4l[2487.316]: port 1: received DELAY_REQ without timestamp
-
-Timestamp snapshot dependency on register bits in received path:
-SNAPTYPSEL TSMSTRENA TSEVNTENA 	PTP_Messages
-01         x         0          SYNC, Follow_Up, Delay_Req,
-                                Delay_Resp, Pdelay_Req, Pdelay_Resp,
-                                Pdelay_Resp_Follow_Up
-01         0         1          SYNC, Pdelay_Req, Pdelay_Resp
-
-For dwmac v5.10a, enabling all events by setting register
-DWC_EQOS_TIME_STAMPING[SNAPTYPSEL] to 2’b01, clearing bit [TSEVNTENA]
-to 0’b0, which can support all required events.
-
-Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 6d65bc64e232 ("net/mlx5e: Add mlx5e_flower_parse_meta support")
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_tc.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -630,7 +630,8 @@ static int stmmac_hwtstamp_set(struct ne
- 			config.rx_filter = HWTSTAMP_FILTER_PTP_V2_EVENT;
- 			ptp_v2 = PTP_TCR_TSVER2ENA;
- 			snap_type_sel = PTP_TCR_SNAPTYPSEL_1;
--			ts_event_en = PTP_TCR_TSEVNTENA;
-+			if (priv->synopsys_id != DWMAC_CORE_5_10)
-+				ts_event_en = PTP_TCR_TSEVNTENA;
- 			ptp_over_ipv4_udp = PTP_TCR_TSIPV4ENA;
- 			ptp_over_ipv6_udp = PTP_TCR_TSIPV6ENA;
- 			ptp_over_ethernet = PTP_TCR_TSIPENA;
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
+@@ -1824,7 +1824,7 @@ static int mlx5e_flower_parse_meta(struc
+ 	flow_rule_match_meta(rule, &match);
+ 	if (match.mask->ingress_ifindex != 0xFFFFFFFF) {
+ 		NL_SET_ERR_MSG_MOD(extack, "Unsupported ingress ifindex mask");
+-		return -EINVAL;
++		return -EOPNOTSUPP;
+ 	}
+ 
+ 	ingress_dev = __dev_get_by_index(dev_net(filter_dev),
+@@ -1832,13 +1832,13 @@ static int mlx5e_flower_parse_meta(struc
+ 	if (!ingress_dev) {
+ 		NL_SET_ERR_MSG_MOD(extack,
+ 				   "Can't find the ingress port to match on");
+-		return -EINVAL;
++		return -ENOENT;
+ 	}
+ 
+ 	if (ingress_dev != filter_dev) {
+ 		NL_SET_ERR_MSG_MOD(extack,
+ 				   "Can't match on the ingress filter port");
+-		return -EINVAL;
++		return -EOPNOTSUPP;
+ 	}
+ 
+ 	return 0;
 
 
