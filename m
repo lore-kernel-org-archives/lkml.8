@@ -2,177 +2,165 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C34C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 02:33:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0443FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 02:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02A7D2078C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 02:33:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C459E207C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 02:37:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="AZabPOjD"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I9F+MzX3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbgFICdK (ORCPT
+        id S1726966AbgFIChp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 22:33:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41164 "EHLO
+        Mon, 8 Jun 2020 22:37:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbgFICdJ (ORCPT
+        with ESMTP id S1726909AbgFICho (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 22:33:09 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D71E6C03E969
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 19:33:07 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id dp10so9380448qvb.10
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 19:33:07 -0700 (PDT)
+        Mon, 8 Jun 2020 22:37:44 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 136D8C03E97C
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 19:37:43 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id g5so15414626otg.6
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 19:37:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=V6xaafWbMFLTJj9bTOgiL3M3d7/4Zw00NSSLyQeqs0s=;
-        b=AZabPOjDFT57PLxFfg30BrUeYac6gtueUY2vxZTuxzHOv1M5JpRixiQawBLeo7Hc8F
-         2gZkNLEDbHFkvrn4irjtoIRJezvv92xSGcA1k/jO1iPrNjJecWqkV0RMixkxt5wu6JwF
-         mHCCN50GwcYYwReHhYvuCpkqZknHJoxa8U4J7CrOtYKWvU+8Xfw1lrVnMXSBVLK1CU0h
-         CZcOeFO63qYTlvcEsrpCJy9uJEC+4Oe5n5I/fubUIFaid+z9UsqtQ1tk/X9EkRbvs2p3
-         IXQJ9sxZq6cqlgvqai3vpb6zUmRcR9+iMZKnqVzDhMbSIOhvDHSU/qfIILCMl+wsR1ez
-         ffMQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gIREOCncp+kCLejh9A1JytrjVRseDJ9dDmzpsV7xNws=;
+        b=I9F+MzX3keiz7H+vq67DtBb3j76mL76MQZ+r9HgbdfDur2wVNf7HxaK0JjLFewpHIl
+         JEhC5yhS5eeZK9YbS3L3jGKgKUclvO6bqli/E4ozAVwZVdJgis0MsPi2Hgadsfexdkyc
+         GQTSjl2rMRA+2wxu7vGskuJxaXnulBsJwF/CHu4/mdeUno+caXYvieZFZA1/QyVtcSTt
+         ba+bxnnpUhC9mBSo7ZJyb9pprv1xeGOatgMlVbhKrztR3z14T4p1ND3KzH1BDo0e0g2K
+         M1AheK59avMkAVhIcd1aAvO6N3Spb+jYpTbN1OYYTIMGLhhtvRmDgj209cPg9F7OO+9B
+         IZZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=V6xaafWbMFLTJj9bTOgiL3M3d7/4Zw00NSSLyQeqs0s=;
-        b=Qsw0NkCA5FKERwZJAWb4EWuDg9p0bRFzJGix8GKsFle5lL5IxeaTQu6/884A67ZlxH
-         KEf36mhAQv5qEsTtmY2eJ07bfVsCeYALkbS0GJe0ZSBzXCbrlBLm18HilAjr4bNbva6r
-         v1jQIHjYlj4gutEo+MYEmTcbbxAd0vNUZrtT5qYbBGpJajFPrizCdP2eKW4YVLQjADoZ
-         rV7w7nyM2r1PsaOH813qbp/D4OP1aO7hPQRq91fKfacu2BHyjhx25kLsBpOT5xc0VDpY
-         I8yktBnE8gDTqC+SmRwnovt7eR6Sp4UyAT4lk6Cstgkx75olN76E5bcBJKs3v+EvECmu
-         W8ag==
-X-Gm-Message-State: AOAM530OMOZq6Mq9E8BCVlUhQh6zrEHeRQbu4Il3cofFiXDosuWnjAOZ
-        D2+ajtlbjkDNwz+NZRTtyWTr0A==
-X-Google-Smtp-Source: ABdhPJxZBF3gb7PvZSegWXiI4FRXzZfPdqTPFZm8/EBj8k+YhyK6JjwS7IEpPmwVftYqWKgFuM4kYA==
-X-Received: by 2002:a0c:e5c1:: with SMTP id u1mr1705953qvm.140.1591669987043;
-        Mon, 08 Jun 2020 19:33:07 -0700 (PDT)
-Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id 79sm8304108qkf.48.2020.06.08.19.33.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 19:33:06 -0700 (PDT)
-Date:   Mon, 8 Jun 2020 22:32:59 -0400
-From:   Qian Cai <cai@lca.pw>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        Alexander Potapenko <glider@google.com>
-Subject: Re: [patch V9 10/39] x86/entry: Provide helpers for execute on
- irqstack
-Message-ID: <20200609023259.GA3579@lca.pw>
-References: <20200521200513.656533920@linutronix.de>
- <20200521202117.763775313@linutronix.de>
- <20200605171816.GA4259@lca.pw>
- <20200605173622.GL3976@hirez.programming.kicks-ass.net>
- <20200608160144.GA987@lca.pw>
- <87pna98ajt.fsf@nanos.tec.linutronix.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gIREOCncp+kCLejh9A1JytrjVRseDJ9dDmzpsV7xNws=;
+        b=UNdKJviOqAMNZC3GdkM9kJf09n2jLXoI164Nn4opDKjhd4tBSfjFxB+siyuCqlXQeW
+         ZLRfbUJIr+Zvf5UZVCBw3MQBvd7YTop+DKY5ybN0qtDNKY7Kxu3cXlT3S6ZaUc9cBOSW
+         mwixSgcCkuGuCd9qNjUMzmVJUz1GnLUPc5/yARbZg680XAnPaLZoacaP9DIZmO1hlSq/
+         tvYw6oizT3kvqHaEGAK480jF3vV7nNcNYjD5bXU542rKyPDhbzBX7z3DkBRX5CeTMW8G
+         PO2+RcpKS5mBkx9hxRmMeUDWnYuT5IVO33y+AEzZXsFryUMqzM+N1dSs3hYto3+tAaLd
+         KX3g==
+X-Gm-Message-State: AOAM5327wMVmvS1wyM2XtfXf+GECWSHHC4dLOutuQEoK+tI7urJUPiPW
+        E6oiVZp/k87Ru8mR3qleHTvjwHWUOByCgpVmgriLWQ==
+X-Google-Smtp-Source: ABdhPJyNcC5SuTdnFrtUT/J1vHIVd1tebb9cmCY1PZhbEnXealjVBrgi7u4Qxgwn4MSraDU9LrRx5Xm6eUPmfkqlABk=
+X-Received: by 2002:a9d:6048:: with SMTP id v8mr14796461otj.231.1591670262910;
+ Mon, 08 Jun 2020 19:37:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87pna98ajt.fsf@nanos.tec.linutronix.de>
+References: <CGME20200605063729eucas1p288dd9d3acdb62cc86745cb6af5c31fc6@eucas1p2.samsung.com>
+ <20200605063724.9030-1-m.szyprowski@samsung.com> <20200605102018.GA5413@sirena.org.uk>
+ <2f0e021d-387a-4693-882d-aba66e20dd2b@samsung.com> <20200605155903.GI5413@sirena.org.uk>
+In-Reply-To: <20200605155903.GI5413@sirena.org.uk>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Mon, 8 Jun 2020 19:37:07 -0700
+Message-ID: <CAGETcx8asyFRz5LmU4LSMJuPWvcWdvi1GHAhQ85AWdd6jcmdiA@mail.gmail.com>
+Subject: Re: [PATCH] regulator: do not balance 'boot-on' coupled regulators
+ without constraints
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>, peron.clem@gmail.com,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        Linux Samsung SOC <linux-samsung-soc@vger.kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 12:20:06AM +0200, Thomas Gleixner wrote:
-> Qian,
-> 
-> can you please ensure that people who got cc'ed because the problem
-> affects their subsystem are included on your replies even if you are
-> replying to a different subthread?
-> 
-> I explicitely did:
-> 
->      Cc:+ Alexander
-> 
-> at the very beginning of my reply:
-> 
->    https://lore.kernel.org/r/87v9k3jdc6.fsf@nanos.tec.linutronix.de
-> 
-> to make you aware of that.
-> 
-> Yes, email sucks, but it sucks even more when people are careless.
+On Fri, Jun 5, 2020 at 8:59 AM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Fri, Jun 05, 2020 at 03:37:32PM +0200, Marek Szyprowski wrote:
+> > On 05.06.2020 12:20, Mark Brown wrote:
+>
+> > > No, this is not what boot-on means at all.  It is there for cases where
+> > > we can't read the enable status from the hardware.  Trying to infer
+> > > *anything* about the runtime behaviour from it being present or absent
+> > > is very badly broken.
+>
+> > Okay, what about the 'always-on' property? I don't think that we need
+> > another property for annotating this behavior, as in my opinion this is
+>
+> No, that's just as disconnected from the need - we may as well do it
+> based on the regulator name being an odd number of characters.
+>
+> > just an implementation issue on the Linux kernel and regulator
+> > framework. Alternatively I can drop the property check, but then it
+> > won't be possible to have a regulator without a consumer, which follows
+> > the other one (although we still don't have a real use case for it).
+>
+> > If you don't like this idea at all, I will try to move this logic to the
+> > custom coupler again, although it would mean some code copying.
+>
+> I think that's better TBH.
+>
+> > > Saravana (CCed) was working on some patches which tried to deal with
+> > > some stuff around this for enables using the sync_state() callback.
+> > > Unfortunately there's quite a few problems with the current approach
+> > > (the biggest one from my point of view being that it's implemented so
+> > > that it requires every single consumer of every device on the PMIC to
+> > > come up but there's others at more of an implementation level).
+>
+> > I'm not sure if we really need such complex solution for this...
+>
+> So I think that the specific approach there is overly heavyweight and
+> restrictive but I do see the general use case here for something per
+> regulator providing we can avoid breaking anything that does actually
+> need to change the regulator state (eg, raising the voltage for
+> cpufreq).
 
-Sorry, I will remeber that next time.
+The changes I propose won't prevent anything from asking for more
+power/energy (will always allow turning on stuff, increasing voltage,
+increasing current, etc). It'll only prevent reducing power lower than
+what was provided when the bootloader left stuff on. This shouldn't
+break most boards -- because any other consumer could be setting
+similar limits and things don't break then. But even if that's a
+concern, we can still default to a timeout behavior and then give
+folks the choice of disabling the timeout if they know all their
+devices will probe.
 
-[]
-> To get facts instead of useless loop theories, can you please apply the
-> patch below, enable DEBUGFS and provide the output of
-> 
->        /sys/kernel/debug/stackdepot/info
-> 
-> for a kernel before that change and after? Please read out that file at
-> periodically roughly the same amounts of time after starting your test
-> scenario.
-> 
-> Note, that I doubled the size of the stack depot so that we get real
-> numbers and not the cutoff by the size limit. IOW, the warning should
-> not trigger anymore. If it triggers nevertheless then the numbers will
-> still tell us an interesting story.
+Btw, the patch series I sent fixes a lot of subtle use cases even with
+the timeout enabled. For example, in one hardware platform, a LDO is
+shared between camera, display, UFS and USB. The camera driver would
+probe first, enable the regulator, poll its HW and then disable the
+regulator. This causes the regulator to be disabled before display,
+UFS, and USB could probe and this caused hardware faults for those.
 
-Instead of running the whole testsuite, I just picked this single LTP
-oom02 test which seems usually trigger it within the testsuite. Let me
-know if this is insufficient (which indeed tell the big difference in
-"Unique stacks"), and I am happy to run the whole things.
+> Previously to the past week I'd only really heard about it
+> causing problems in the context of displays left on by the bootloader
+> glitching during boot but this is a concrete
 
-BAD: next-20200608
-GOOD: next-20200528 (which does not include this series)
+Ah, finally! I have examples of pretty much the same issue in some
+downstream kernels -- the CPU and memory shares rails with other
+hardware blocks and things fail if this isn't taken care of. Glad that
+someone else found an example for me in the upstream kernel.
 
-BAD (after boot)
-# cat /sys/kernel/debug/stackdepot/info
-Unique stacks: 33547
-Depot index:   359
-Depot offset:  6752
+> use case and we already
+> have the infrastructure to track dependencies at the device model level
+> if we use it well.
 
-BAD (after oom02)
-# cat /sys/kernel/debug/stackdepot/info
-Unique stacks: 140476
-Depot index:   2555
-Depot offset:  9168
+I'll send out a v3 series in a couple of days to address Mark's
+earlier comments and also add the voltage support to address Marek's
+case. We can take it from there.
 
-GOOD (after boot)
-# cat /sys/kernel/debug/stackdepot/info
-Unique stacks: 31112
-Depot index:   317
-Depot offset:  14384
-
-GOOD (after oom02)
-# cat /sys/kernel/debug/stackdepot/info
-Unique stacks: 34176
-Depot index:   354
-Depot offset:  4032
-
-BTW, I am happy to run another one using next-20200608 with just this
-series reverted if you suspect there is something else going on between
-those two trees.
+-Saravana
