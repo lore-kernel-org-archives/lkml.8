@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C51C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7409BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:54:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C503A207ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:54:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50B2C2074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:54:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725282;
-	bh=JBF1QBhhLgT43+0O28fNaRCb8qfuY9Ah9BnHcGY+DlA=;
+	s=default; t=1591725297;
+	bh=Nchi5rPksxeSgTW7vOly43VUU3E5jE2NOk7Oj9wAaIA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C0AMlgU0MxopdMlkJK9ZRX45k5pHjS3bFgl66UiTd7r64oQewz2QbHhgx0Iq7Wj8O
-	 BZK3XfaCqkyqvhjLbbZhBrLW06miuQf6EzLpu7hSYzF4gobcb9LXGuV7Taqnp3NEcu
-	 MVryLrDN4MOmGE+LMMDrmxxYgK8Hjx82kXMI7Hnc=
+	b=WYyEuyM52vQsBrXpE/Vw3umS+1S8eO8N9E3n013JrBJPvWAFszriocilHFuM8kEtl
+	 lB8Gba12vgEjGG6gMUz1z9pFIYUG8eQlpkj3Ly6ij8YnexiRVCO5d3cbMxNj+pdKxx
+	 wJGw79lTipZEvpJiLvKPYRwiTStQJShUizBiXxPM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728862AbgFIRyl (ORCPT
+        id S1731748AbgFIRyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:54:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43860 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:54:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732997AbgFIRxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:53:06 -0400
+        id S1731271AbgFIRxM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:53:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07F7A20801;
-        Tue,  9 Jun 2020 17:53:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE9E5207ED;
+        Tue,  9 Jun 2020 17:53:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725185;
-        bh=JBF1QBhhLgT43+0O28fNaRCb8qfuY9Ah9BnHcGY+DlA=;
+        s=default; t=1591725192;
+        bh=Nchi5rPksxeSgTW7vOly43VUU3E5jE2NOk7Oj9wAaIA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GK6FugCHj1FpDkI3S6xxPPUjLOhYPLKI128/tL+zyEIktfbCwSmhFQa2O1yDaGHry
-         xTM+48+nT7r6VWpWwKLO3lQeF5fCWhWU6klL9KP4E/p2Cm1qQwfzo+71LvVVSSkOnF
-         AYTIaTfWmZEJHec4Y7h8uGZBME1P+StPaCMQrBXA=
+        b=Pi6HYUGHaJUre7dDHSRlzSHwHeCO1ZmPAOECnq8ZJwvLN7KnX2PJN6WHCNCV62wGm
+         xn2FvaL6Lhx1+gL/rWpbxzFuFvc2iIfj33q9ce3zeQq8nARTFcLB10tqH8I4HP9kcm
+         +u3hrJOGjmWYeMgiVaEOIL1KTII1Y9KXeJdXFOsg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.4 19/34] iio: adc: stm32-adc: fix a wrong error message when probing interrupts
-Date:   Tue,  9 Jun 2020 19:45:15 +0200
-Message-Id: <20200609174055.029698781@linuxfoundation.org>
+        stable@vger.kernel.org, Kyungtae Kim <kt0755@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 5.4 22/34] vt: keyboard: avoid signed integer overflow in k_ascii
+Date:   Tue,  9 Jun 2020 19:45:18 +0200
+Message-Id: <20200609174055.402355346@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174052.628006868@linuxfoundation.org>
 References: <20200609174052.628006868@linuxfoundation.org>
@@ -60,124 +59,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-commit 10134ec3f8cefa6a40fe84987f1795e9e0da9715 upstream.
+commit b86dab054059b970111b5516ae548efaae5b3aae upstream.
 
-A wrong error message is printed out currently, like on STM32MP15:
-- stm32-adc-core 48003000.adc: IRQ index 2 not found.
+When k_ascii is invoked several times in a row there is a potential for
+signed integer overflow:
 
-This is seen since commit 7723f4c5ecdb ("driver core: platform: Add an
-error message to platform_get_irq*()").
-The STM32 ADC core driver wrongly requests up to 3 interrupt lines. It
-should request only the necessary IRQs, based on the compatible:
-- stm32f4/h7 ADCs share a common interrupt
-- stm32mp1, has one interrupt line per ADC.
-So add the number of required interrupts to the compatible data.
+UBSAN: Undefined behaviour in drivers/tty/vt/keyboard.c:888:19 signed integer overflow:
+10 * 1111111111 cannot be represented in type 'int'
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.6.11 #1
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Bochs 01/01/2011
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xce/0x128 lib/dump_stack.c:118
+ ubsan_epilogue+0xe/0x30 lib/ubsan.c:154
+ handle_overflow+0xdc/0xf0 lib/ubsan.c:184
+ __ubsan_handle_mul_overflow+0x2a/0x40 lib/ubsan.c:205
+ k_ascii+0xbf/0xd0 drivers/tty/vt/keyboard.c:888
+ kbd_keycode drivers/tty/vt/keyboard.c:1477 [inline]
+ kbd_event+0x888/0x3be0 drivers/tty/vt/keyboard.c:1495
 
-Fixes: d58c67d1d851 ("iio: adc: stm32-adc: add support for STM32MP1")
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+While it can be worked around by using check_mul_overflow()/
+check_add_overflow(), it is better to introduce a separate flag to
+signal that number pad is being used to compose a symbol, and
+change type of the accumulator from signed to unsigned, thus
+avoiding undefined behavior when it overflows.
+
+Reported-by: Kyungtae Kim <kt0755@gmail.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200525232740.GA262061@dtor-ws
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/adc/stm32-adc-core.c |   34 ++++++++++++++--------------------
- 1 file changed, 14 insertions(+), 20 deletions(-)
+ drivers/tty/vt/keyboard.c |   26 ++++++++++++++++----------
+ 1 file changed, 16 insertions(+), 10 deletions(-)
 
---- a/drivers/iio/adc/stm32-adc-core.c
-+++ b/drivers/iio/adc/stm32-adc-core.c
-@@ -65,12 +65,14 @@ struct stm32_adc_priv;
-  * @clk_sel:	clock selection routine
-  * @max_clk_rate_hz: maximum analog clock rate (Hz, from datasheet)
-  * @has_syscfg: SYSCFG capability flags
-+ * @num_irqs:	number of interrupt lines
-  */
- struct stm32_adc_priv_cfg {
- 	const struct stm32_adc_common_regs *regs;
- 	int (*clk_sel)(struct platform_device *, struct stm32_adc_priv *);
- 	u32 max_clk_rate_hz;
- 	unsigned int has_syscfg;
-+	unsigned int num_irqs;
- };
+--- a/drivers/tty/vt/keyboard.c
++++ b/drivers/tty/vt/keyboard.c
+@@ -127,7 +127,11 @@ static DEFINE_SPINLOCK(func_buf_lock); /
+ static unsigned long key_down[BITS_TO_LONGS(KEY_CNT)];	/* keyboard key bitmap */
+ static unsigned char shift_down[NR_SHIFT];		/* shift state counters.. */
+ static bool dead_key_next;
+-static int npadch = -1;					/* -1 or number assembled on pad */
++
++/* Handles a number being assembled on the number pad */
++static bool npadch_active;
++static unsigned int npadch_value;
++
+ static unsigned int diacr;
+ static char rep;					/* flag telling character repeat */
  
- /**
-@@ -372,21 +374,15 @@ static int stm32_adc_irq_probe(struct pl
- 	struct device_node *np = pdev->dev.of_node;
- 	unsigned int i;
+@@ -845,12 +849,12 @@ static void k_shift(struct vc_data *vc,
+ 		shift_state &= ~(1 << value);
  
--	for (i = 0; i < STM32_ADC_MAX_ADCS; i++) {
-+	/*
-+	 * Interrupt(s) must be provided, depending on the compatible:
-+	 * - stm32f4/h7 shares a common interrupt line.
-+	 * - stm32mp1, has one line per ADC
-+	 */
-+	for (i = 0; i < priv->cfg->num_irqs; i++) {
- 		priv->irq[i] = platform_get_irq(pdev, i);
--		if (priv->irq[i] < 0) {
--			/*
--			 * At least one interrupt must be provided, make others
--			 * optional:
--			 * - stm32f4/h7 shares a common interrupt.
--			 * - stm32mp1, has one line per ADC (either for ADC1,
--			 *   ADC2 or both).
--			 */
--			if (i && priv->irq[i] == -ENXIO)
--				continue;
--
-+		if (priv->irq[i] < 0)
- 			return priv->irq[i];
--		}
+ 	/* kludge */
+-	if (up_flag && shift_state != old_state && npadch != -1) {
++	if (up_flag && shift_state != old_state && npadch_active) {
+ 		if (kbd->kbdmode == VC_UNICODE)
+-			to_utf8(vc, npadch);
++			to_utf8(vc, npadch_value);
+ 		else
+-			put_queue(vc, npadch & 0xff);
+-		npadch = -1;
++			put_queue(vc, npadch_value & 0xff);
++		npadch_active = false;
  	}
- 
- 	priv->domain = irq_domain_add_simple(np, STM32_ADC_MAX_ADCS, 0,
-@@ -397,9 +393,7 @@ static int stm32_adc_irq_probe(struct pl
- 		return -ENOMEM;
- 	}
- 
--	for (i = 0; i < STM32_ADC_MAX_ADCS; i++) {
--		if (priv->irq[i] < 0)
--			continue;
-+	for (i = 0; i < priv->cfg->num_irqs; i++) {
- 		irq_set_chained_handler(priv->irq[i], stm32_adc_irq_handler);
- 		irq_set_handler_data(priv->irq[i], priv);
- 	}
-@@ -417,11 +411,8 @@ static void stm32_adc_irq_remove(struct
- 		irq_dispose_mapping(irq_find_mapping(priv->domain, hwirq));
- 	irq_domain_remove(priv->domain);
- 
--	for (i = 0; i < STM32_ADC_MAX_ADCS; i++) {
--		if (priv->irq[i] < 0)
--			continue;
-+	for (i = 0; i < priv->cfg->num_irqs; i++)
- 		irq_set_chained_handler(priv->irq[i], NULL);
--	}
  }
  
- static int stm32_adc_core_switches_supply_en(struct stm32_adc_priv *priv,
-@@ -803,6 +794,7 @@ static const struct stm32_adc_priv_cfg s
- 	.regs = &stm32f4_adc_common_regs,
- 	.clk_sel = stm32f4_adc_clk_sel,
- 	.max_clk_rate_hz = 36000000,
-+	.num_irqs = 1,
- };
+@@ -868,7 +872,7 @@ static void k_meta(struct vc_data *vc, u
  
- static const struct stm32_adc_priv_cfg stm32h7_adc_priv_cfg = {
-@@ -810,6 +802,7 @@ static const struct stm32_adc_priv_cfg s
- 	.clk_sel = stm32h7_adc_clk_sel,
- 	.max_clk_rate_hz = 36000000,
- 	.has_syscfg = HAS_VBOOSTER,
-+	.num_irqs = 1,
- };
+ static void k_ascii(struct vc_data *vc, unsigned char value, char up_flag)
+ {
+-	int base;
++	unsigned int base;
  
- static const struct stm32_adc_priv_cfg stm32mp1_adc_priv_cfg = {
-@@ -817,6 +810,7 @@ static const struct stm32_adc_priv_cfg s
- 	.clk_sel = stm32h7_adc_clk_sel,
- 	.max_clk_rate_hz = 40000000,
- 	.has_syscfg = HAS_VBOOSTER | HAS_ANASWVDD,
-+	.num_irqs = 2,
- };
+ 	if (up_flag)
+ 		return;
+@@ -882,10 +886,12 @@ static void k_ascii(struct vc_data *vc,
+ 		base = 16;
+ 	}
  
- static const struct of_device_id stm32_adc_of_match[] = {
+-	if (npadch == -1)
+-		npadch = value;
+-	else
+-		npadch = npadch * base + value;
++	if (!npadch_active) {
++		npadch_value = 0;
++		npadch_active = true;
++	}
++
++	npadch_value = npadch_value * base + value;
+ }
+ 
+ static void k_lock(struct vc_data *vc, unsigned char value, char up_flag)
 
 
