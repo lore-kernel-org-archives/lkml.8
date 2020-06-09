@@ -2,111 +2,184 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7237FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:58:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1456EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 579F020774
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:58:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D72D720774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:01:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="euAsn1+1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730697AbgFIO6U (ORCPT
+        id S1730619AbgFIPB0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 10:58:20 -0400
-Received: from mga09.intel.com ([134.134.136.24]:54057 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726903AbgFIO6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 10:58:20 -0400
-IronPort-SDR: G63DDs6OgpbkV7WJuUu7Z1+a274vXCw76G8h2uI3Qf/XUZMJ3TvcEFT7lMsv5ZfAl9HsdDZBUt
- C8eDWEsePDnw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 07:58:09 -0700
-IronPort-SDR: tMSN7Nuone8GvvVNmU8W6rqQ5cg9e7QBFaHz1xtf3c0cIhx/GpbXcOVAif3LeSrMB9PI4/7t/W
- dIIUVVJDTIrQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,492,1583222400"; 
-   d="scan'208";a="314219612"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
-  by FMSMGA003.fm.intel.com with SMTP; 09 Jun 2020 07:58:06 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Tue, 09 Jun 2020 17:57:45 +0300
-Date:   Tue, 9 Jun 2020 17:57:45 +0300
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Cyrus Lien <cyrus.lien@canonical.com>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/edid: add support for min horizontal rate equal to
- max horizontal rate
-Message-ID: <20200609145745.GO6112@intel.com>
-References: <20200608195704.29841-1-cyrus.lien@canonical.com>
+        Tue, 9 Jun 2020 11:01:26 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:41115 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbgFIPBX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 11:01:23 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id ECD3222F2D;
+        Tue,  9 Jun 2020 17:01:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1591714878;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=aMjIHhTy6QW0P3MAj5LndzKCaO3yMkaVaezROboWYDQ=;
+        b=euAsn1+18dDVaj3N75vATYwEPsegHDppC2VkD83JeqzT2R996iBd9IREmPEKKWtU3l6Y87
+        FIevxYAgjKLBLJOEfvarLgLrdMoq2oGSqGMdyVuvbdXSk4KVSd+kZBW/cn+mGMxySwB626
+        jCO4U5VjZWc1OyJMGDZeHKyJ7fca1Ik=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200608195704.29841-1-cyrus.lien@canonical.com>
-X-Patchwork-Hint: comment
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 09 Jun 2020 17:01:17 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        david.m.ertman@intel.com, shiraz.saleem@intel.com,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K?= =?UTF-8?Q?=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld management
+ controller
+In-Reply-To: <20200609144201.GK4583@sirena.org.uk>
+References: <c5632bfab3956265e90fc2fb6c0b3cae@walle.cc>
+ <20200606114645.GB2055@sirena.org.uk>
+ <dc052a5c77171014ecc465b1da8b7ef8@walle.cc> <20200608082827.GB3567@dell>
+ <CAHp75VdiH=J-ovCdh1RFJDW_bJM8=pbXRaHmB691GLb-5oBmYQ@mail.gmail.com>
+ <7d7feb374cbf5a587dc1ce65fc3ad672@walle.cc> <20200608185651.GD4106@dell>
+ <32231f26f7028d62aeda8fdb3364faf1@walle.cc> <20200609064735.GH4106@dell>
+ <32287ac0488f7cbd5a7d1259c284e554@walle.cc>
+ <20200609144201.GK4583@sirena.org.uk>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <a2bae71634fe288f067d5e92090b7561@walle.cc>
+X-Sender: michael@walle.cc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 03:57:04AM +0800, Cyrus Lien wrote:
-> According to EDID spec, table 3.26, byte #6 and #8, which said "Minimum
-> rate value shall be less than or equal to maximum rate value". The minimum
-> horizontal/vertical rate value is able to be equal to maximum horizontal/
-> veritcal rate value.
+Am 2020-06-09 16:42, schrieb Mark Brown:
+> On Tue, Jun 09, 2020 at 04:38:31PM +0200, Michael Walle wrote:
+> 
+>>   mfd-device@10 {
+>>     compatible = "simple-regmap", "simple-mfd";
+>>     reg = <10>;
+>>     regmap,reg-bits = <8>;
+>>     regmap,val-bits = <8>;
+>>     sub-device@0 {
+>>       compatible = "vendor,sub-device0";
+>>       reg = <0>;
+>>     };
+> 
+> A DT binding like this is not a good idea, encoding the details of the
+> register map into the DT binding makes it an ABI which is begging for
+> trouble.  I'd also suggest that any device using a generic driver like
+> this should have a specific compatible string for the device so we can
+> go back and add quirks later if we need them.
 
-How does that justifiy ignoring the min value?
+Like in the spidev case, yes. But OTOH if I _just_ encode the parameters
+for the regmap a MFD, Lee don't agree because its just a shim. So either
+way I seem to be stuck here.
+
+Where should I put the code to create an i2c driver, init a regmap and
+populate its childen?
+
+-michael
 
 > 
-> This change check if h/v-sync excess maximum horizontal/vertical rate if
-> hmin equal to hmax or vmin equal to vmax.
-> 
-> Signed-off-by: Cyrus Lien <cyrus.lien@canonical.com>
-> ---
->  drivers/gpu/drm/drm_edid.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
-> index fed653f13c26..23878320eabd 100644
-> --- a/drivers/gpu/drm/drm_edid.c
-> +++ b/drivers/gpu/drm/drm_edid.c
-> @@ -2674,6 +2674,9 @@ mode_in_hsync_range(const struct drm_display_mode *mode,
->  	    hmax += ((t[4] & 0x08) ? 255 : 0);
->  	hsync = drm_mode_hsync(mode);
->  
-> +	if (hmax == hmin)
-> +		return (hsync <= hmax);
-> +
->  	return (hsync <= hmax && hsync >= hmin);
->  }
->  
-> @@ -2691,6 +2694,9 @@ mode_in_vsync_range(const struct drm_display_mode *mode,
->  	    vmax += ((t[4] & 0x02) ? 255 : 0);
->  	vsync = drm_mode_vrefresh(mode);
->  
-> +	if (vmax == vmin)
-> +		return (vsync <= vmax);
-> +
->  	return (vsync <= vmax && vsync >= vmin);
->  }
->  
-> -- 
-> 2.25.1
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>>     ...
+>> };
+>> 
+>> Or if you just want the regmap:
+>> 
+>> &soc {
+>>   regmap: regmap@fff0000 {
+>>     compatible = "simple-regmap";
+>>     reg = <0xfff0000>;
+>>     regmap,reg-bits = <16>;
+>>     regmap,val-bits = <32>;
+>>   };
+>> 
+>>   enet-which-needs-syscon-too@1000000 {
+>>     vendor,ctrl-regmap = <&regmap>;
+>>   };
+>> };
+>> 
+>> Similar to the current syscon (which is MMIO only..).
+>> 
+>> -michael
+>> 
+>> >
+>> > I can't think of any reasons why not, off the top of my head.
+>> >
+>> > Does Regmap only deal with shared accesses from multiple devices
+>> > accessing a single register map, or can it also handle multiple
+>> > devices communicating over a single I2C channel?
+>> >
+>> > One for Mark perhaps.
+>> >
+>> > > > The issues I wish to resolve using 'simple-mfd' are when sub-devices
+>> > > > register maps overlap and intertwine.
+>> >
+>> > [...]
+>> >
+>> > > > > > > What do these bits configure?
+>> > > > >
+>> > > > > - hardware strappings which have to be there before the board powers
+>> > > > > up,
+>> > > > >   like clocking mode for different SerDes settings
+>> > > > > - "keep-in-reset" bits for onboard peripherals if you want to save
+>> > > > > power
+>> > > > > - disable watchdog bits (there is a watchdog which is active right
+>> > > > > from
+>> > > > >   the start and supervises the bootloader start and switches to
+>> > > > > failsafe
+>> > > > >   mode if it wasn't successfully started)
+>> > > > > - special boot modes, like eMMC, etc.
+>> > > > >
+>> > > > > Think of it as a 16bit configuration word.
+>> > > >
+>> > > > And you wish for users to be able to view these at run-time?
+>> > >
+>> > > And esp. change them.
+>> > >
+>> > > > Can they adapt any of them on-the-fly or will the be RO?
+>> > >
+>> > > They are R/W but only will only affect the board behavior after a
+>> > > reset.
+>> >
+>> > I see.  Makes sense.  This is board controller territory.  Perhaps
+>> > suitable for inclusion into drivers/soc or drivers/platform.
 
 -- 
-Ville Syrjälä
-Intel
+-michael
