@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E090C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E469EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F03262074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:52:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA60520774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:52:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725138;
-	bh=6YPxQIpnHA4tJL9vOwIld7dOcuszsw2Lm6F7R0UTo0s=;
+	s=default; t=1591725142;
+	bh=kHbF7dQB4zmuZlfQj/yZ2VSfYpejGVU5Sw80Gp28Tec=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bg5VgBtrm3YB9O4jWFqI6ojQa2RU3mFWLpUB4EocH/NLom9aYlTnH5sU6iz2cta5X
-	 wDWI1gH9XiCVjGF9rvxCl+WBC10s/u3+7gsS+W5YKHYpWLiF8eDat972quB18FSX1D
-	 agqLXV1ergPDhES0VrRm1CT1KgJ0JpDHyEFCqpiM=
+	b=ClIXDVQO0uKm7fjpUWKns/yigoze0oYUaXJ5bPLi8OnEy+rPjknypSJQ+37FVZoGX
+	 B9W5ziX7hp1UNNQtEQEUdhHfglnOS8XmvjC47hidsWcakPgU7UWJmx802GJte8Mivv
+	 RWOokK4Nzm+PuXRd+pTvFblaT5g1qbRChUQuO9Uc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731668AbgFIRwQ (ORCPT
+        id S1729810AbgFIRwU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:52:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39880 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:52:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732789AbgFIRvN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:51:13 -0400
+        id S1732806AbgFIRvW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:51:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E7A4207C3;
-        Tue,  9 Jun 2020 17:51:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B593F20734;
+        Tue,  9 Jun 2020 17:51:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725073;
-        bh=6YPxQIpnHA4tJL9vOwIld7dOcuszsw2Lm6F7R0UTo0s=;
+        s=default; t=1591725082;
+        bh=kHbF7dQB4zmuZlfQj/yZ2VSfYpejGVU5Sw80Gp28Tec=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jGX2DcSGemlCopwGc/VfTR+0IMqKdun+zYXky0nvZPZtETAFvHil+/s950Ov9AjUV
-         ta0b6FnQLSIj+MluINlmpLi9+TN9FVeKAZqwI9R3DdK3Bnj7sXR7hbbjGbPhwMpjhy
-         dClGlK/pphMfPizo/VBnjJqLNEIqNMIIkdV6eNR0=
+        b=zXrBZ3w5LBWbNArhzQ9bBo5yEc5qnDOgKBK7tC/Ps4bPXer+P/xpCCA2edYuR1Bbl
+         JZLYcfSJ47gA7u2DUgsvT6VZT+QhJ6F2CStRWJLU2NwJnptqHMpBHXD/rJFKZao2Mz
+         Bz6HTxBA7AfKBYR1sk1F5t5QONGG1MOjVz9tyDAM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        Bin Liu <b-liu@ti.com>
-Subject: [PATCH 4.19 13/25] usb: musb: Fix runtime PM imbalance on error
-Date:   Tue,  9 Jun 2020 19:45:03 +0200
-Message-Id: <20200609174050.120581172@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        Jean Rene Dawin <jdawin@math.uni-bielefeld.de>
+Subject: [PATCH 4.19 17/25] CDC-ACM: heed quirk also in error handling
+Date:   Tue,  9 Jun 2020 19:45:07 +0200
+Message-Id: <20200609174050.594824583@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174048.576094775@linuxfoundation.org>
 References: <20200609174048.576094775@linuxfoundation.org>
@@ -59,54 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dinghao Liu <dinghao.liu@zju.edu.cn>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit e4befc121df03dc8ed2ac1031c98f9538e244bae upstream.
+commit 97fe809934dd2b0b37dfef3a2fc70417f485d7af upstream.
 
-When copy_from_user() returns an error code, there
-is a runtime PM usage counter imbalance.
+If buffers are iterated over in the error case, the lower limits
+for quirky devices must be heeded.
 
-Fix this by moving copy_from_user() to the beginning
-of this function.
-
-Fixes: 7b6c1b4c0e1e ("usb: musb: fix runtime PM in debugfs")
-
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-Cc: stable@vger.kernel.org
-Signed-off-by: Bin Liu <b-liu@ti.com>
-Link: https://lore.kernel.org/r/20200525025049.3400-7-b-liu@ti.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Reported-by: Jean Rene Dawin <jdawin@math.uni-bielefeld.de>
+Fixes: a4e7279cd1d19 ("cdc-acm: introduce a cool down")
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200526124420.22160-1-oneukum@suse.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/musb/musb_debugfs.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/usb/class/cdc-acm.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/musb/musb_debugfs.c
-+++ b/drivers/usb/musb/musb_debugfs.c
-@@ -168,6 +168,11 @@ static ssize_t musb_test_mode_write(stru
- 	u8			test;
- 	char			buf[24];
- 
-+	memset(buf, 0x00, sizeof(buf));
-+
-+	if (copy_from_user(buf, ubuf, min_t(size_t, sizeof(buf) - 1, count)))
-+		return -EFAULT;
-+
- 	pm_runtime_get_sync(musb->controller);
- 	test = musb_readb(musb->mregs, MUSB_TESTMODE);
- 	if (test) {
-@@ -176,11 +181,6 @@ static ssize_t musb_test_mode_write(stru
- 		goto ret;
+--- a/drivers/usb/class/cdc-acm.c
++++ b/drivers/usb/class/cdc-acm.c
+@@ -590,7 +590,7 @@ static void acm_softint(struct work_stru
  	}
  
--	memset(buf, 0x00, sizeof(buf));
--
--	if (copy_from_user(buf, ubuf, min_t(size_t, sizeof(buf) - 1, count)))
--		return -EFAULT;
--
- 	if (strstarts(buf, "force host full-speed"))
- 		test = MUSB_TEST_FORCE_HOST | MUSB_TEST_FORCE_FS;
- 
+ 	if (test_and_clear_bit(ACM_ERROR_DELAY, &acm->flags)) {
+-		for (i = 0; i < ACM_NR; i++)
++		for (i = 0; i < acm->rx_buflimit; i++)
+ 			if (test_and_clear_bit(i, &acm->urbs_in_error_delay))
+ 					acm_submit_read_urb(acm, i, GFP_NOIO);
+ 	}
 
 
