@@ -2,333 +2,120 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 005F3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFEA0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:15:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C85B52076C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:15:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B41E02076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:15:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbgFIBPW (ORCPT
+        id S1728280AbgFIBP1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 21:15:22 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:36666 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726992AbgFIBPR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 21:15:17 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id CAE76348F1A7BD9A912C;
-        Tue,  9 Jun 2020 09:15:13 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.214) with Microsoft SMTP Server (TLS) id 14.3.487.0; Tue, 9 Jun 2020
- 09:15:12 +0800
-Subject: Re: [f2fs-dev] [PATCH] f2fs: add F2FS_IOC_TRIM_FILE ioctl
-To:     Daeho Jeong <daeho43@gmail.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        <kernel-team@android.com>, Daeho Jeong <daehojeong@google.com>
-References: <20200605042746.201180-1-daeho43@gmail.com>
- <fd9bd76c-1864-2cfc-bf86-ef705c8a407d@huawei.com>
- <CACOAw_yw+zczoWpNvYz_UHRYjr8BS+xKK=7_BKi0_0wEhp8Lvg@mail.gmail.com>
- <36d3c98e-24bb-988c-57a3-82730cc75cbc@huawei.com>
- <CACOAw_wVEw3+Kyz2HvvanhhP2_-xQy9wjfpDt5G0ahXM8o-V-Q@mail.gmail.com>
- <3eade7bf-ce66-e502-24e7-e3a1e548dd77@huawei.com>
- <CACOAw_wmbVZwaWwgeL7xZ8xEGS6Nui22=3bqbaeWSSEBg6-cjQ@mail.gmail.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <84a912e4-7063-0d9c-dc41-dadbf3807982@huawei.com>
-Date:   Tue, 9 Jun 2020 09:15:11 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 8 Jun 2020 21:15:27 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:39638 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727930AbgFIBPS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 21:15:18 -0400
+Received: by mail-pj1-f67.google.com with SMTP id h95so626221pje.4;
+        Mon, 08 Jun 2020 18:15:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=VJx+ai5rJx6AVd1EhExoPYJWsUcdY4VOIKvvMPbs6xQ=;
+        b=Ly03LunStsL5+TLmuQrlqDlzpULngjZdo/ppfvlptKaBNsAi3Q2cNUnkWqBHQI+VtE
+         zKV1PrMMa0PEnw7dPOqcy3DmJla+lEP1dg9xFYCsMEaC4ADqnbtZjOsTYzRb/68yLVeo
+         TeUrI37f6Uj4o0QTBDteE0SqmopKvgWktBPo5hQctSSXuF9SD2Fbn9Nb3m0EW5pYuhgo
+         N2jLNaCn3C4ilpc5nKv4Dhl453jHnqwlNaW8cBkEVWClrLTjyJ6sxGtiD+gGbrQr/hSE
+         oVEECfbLD5PLqbnsPDanLL2xKMXG2KvLK3vDg1JM3s3ug2mZkrOssrNr8M26kb8hJork
+         8Uxg==
+X-Gm-Message-State: AOAM530ShUSFWl6rmFQ4WH3FwM4Et3jBe+EKOmV6N2ofxC807EW1446E
+        gyJh8YcjHys1GF8Zf3I+bC0=
+X-Google-Smtp-Source: ABdhPJw5AgerJKnBy/yDFJwpbj2ST94fB9icYYME+5O2bN6M0Kca4s01Y2ISkgE5ynmbqScBSMAQuw==
+X-Received: by 2002:a17:90a:3608:: with SMTP id s8mr1907958pjb.167.1591665317520;
+        Mon, 08 Jun 2020 18:15:17 -0700 (PDT)
+Received: from [192.168.50.147] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
+        by smtp.gmail.com with ESMTPSA id np5sm649345pjb.43.2020.06.08.18.15.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Jun 2020 18:15:16 -0700 (PDT)
+Subject: Re: [RFC PATCH 4/5] scsi: ufs: L2P map management for HPB read
+To:     Avri Altman <Avri.Altman@wdc.com>,
+        "daejun7.park@samsung.com" <daejun7.park@samsung.com>,
+        ALIM AKHTAR <alim.akhtar@samsung.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>
+Cc:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>
+References: <231786897.01591322101492.JavaMail.epsvc@epcpadp1>
+ <336371513.41591320902369.JavaMail.epsvc@epcpadp1>
+ <963815509.21591320301642.JavaMail.epsvc@epcpadp1>
+ <231786897.01591320001492.JavaMail.epsvc@epcpadp1>
+ <CGME20200605011604epcms2p8bec8ef6682583d7248dc7d9dc1bfc882@epcms2p2>
+ <963815509.21591323002276.JavaMail.epsvc@epcpadp1>
+ <SN6PR04MB46409E16CCF95A0AA9FFE944FC870@SN6PR04MB4640.namprd04.prod.outlook.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <03c44832-57e2-d4c4-ece2-06b59bec550f@acm.org>
+Date:   Mon, 8 Jun 2020 18:15:15 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-In-Reply-To: <CACOAw_wmbVZwaWwgeL7xZ8xEGS6Nui22=3bqbaeWSSEBg6-cjQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <SN6PR04MB46409E16CCF95A0AA9FFE944FC870@SN6PR04MB4640.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/6/8 20:44, Daeho Jeong wrote:
->>>> Since spec didn't restrict how vendor implement the erase interface, so
->>>> in order to enhance performance of discard interface, vendor could implement
->>>> it as an async one, which may not zero mapping entry(L1 table), instead, it
->>>> could set related bitmap to invalid that mapping entry, than later if device
->>>> allow user to access that invalid mapping entry, key info may be explosed,
-> 
-> Is it possible to access the old data of the block which has been
-> discarded already?
+On 2020-06-06 11:26, Avri Altman wrote:
+>> +       data_seg_len = be32_to_cpu(lrbp->ucd_rsp_ptr->header.dword_2)
+>> +               & MASK_RSP_UPIU_DATA_SEG_LEN;
+> get_unaligned instead of be32_to_cpu ?
 
-It's due to implementation of FTL, I guess it can in theoretically.
-
-> Since FTL already sets the related bitmap to invalid even in the async
-> way, I thought
-> there is no way to access old data using the same logical address.
-> It's already invalidated.
-
-In worse case, even it's invalid in bitmap, FTL can still load obsolete
-mapping entry, and access old page which contains key info.
-
-> Have you seen any storage vendor allowing this? It's awful.
-
-Not yet, since there is no restriction on any spec/doc, I prefer to choose
-to not trust vendors. :P
+Since sparse checks that the argument of be32_to_cpu() has type __be32
+and since no such check is performed for get_unaligned_*(), please keep
+the be32_to_cpu().
 
 Thanks,
 
-> 
-> 
-> 2020년 6월 8일 (월) 오후 4:43, Chao Yu <yuchao0@huawei.com>님이 작성:
->>
->> On 2020/6/8 15:19, Daeho Jeong wrote:
->>> Yes, I agree with you about each vendor has different implementation on discard.
->>> So, we might be gonna use the combination of zeroing and send discards
->>> for a more
->>> secure solution. :)
->>
->> IIRC, current solution is:
->>
->> - pin file
->> - get all block addresses of file
->> - write zero to block addresses
->> - issue discard
->>
->> Is that correct?
->>
->> Could we handle those logic (zero out & discard) in new interface
->> (may be named as {F2FS,EXT4}_IOC_SEC_TRIM_FILE)? then userspace logic
->> could be quite simple later, and also memcpy could be avoid to make
->> destruction process more efficient.
->>
->> Just raw proposal. :)
->>
->> Thanks,
->>
->>> I think we still need a discard interface to unmap from the mapping
->>> table of the storage device side.
->>>
->>> Thanks,
->>>
->>> 2020년 6월 8일 (월) 오후 3:57, Chao Yu <yuchao0@huawei.com>님이 작성:
->>>>
->>>> On 2020/6/8 11:36, Daeho Jeong wrote:
->>>>> Yes, this is for security key destruction.
->>>>>
->>>>> AFAIK, discard will unmap the data block and, after done it,
->>>>> we can read either zero data or garbage data from that block depending
->>>>> on eMMC/UFS.
->>>>
->>>> Since spec didn't restrict how vendor implement the erase interface, so
->>>> in order to enhance performance of discard interface, vendor could implement
->>>> it as an async one, which may not zero mapping entry(L1 table), instead, it
->>>> could set related bitmap to invalid that mapping entry, than later if device
->>>> allow user to access that invalid mapping entry, key info may be explosed,
->>>>
->>>> It's completely up to how vendor implement the interface, so I think there is
->>>> still risk to use discard.
->>>>
->>>> Thanks,
->>>>
->>>>> In a view point of read data, it might be the same with zeroing the data block.
->>>>> However, since we can even unmap that block, I believe discard is
->>>>> safer than zeroing out.
->>>>>
->>>>> 2020년 6월 8일 (월) 오전 11:46, Chao Yu <yuchao0@huawei.com>님이 작성:
->>>>>>
->>>>>> On 2020/6/5 12:27, Daeho Jeong wrote:
->>>>>>> From: Daeho Jeong <daehojeong@google.com>
->>>>>>>
->>>>>>> Added a new ioctl to send discard commands to whole data area of
->>>>>>> a regular file for security reason.
->>>>>>
->>>>>> I guess this interface is introduced for security key destruction, if I'm
->>>>>> right, however, IIRC, discard(erase) semantics in eMMC/UFS spec won't
->>>>>> guarantee that data which was discard could be zeroed out, so after discard,
->>>>>> the key still have risk of exposure. So instead, should we use sb_issue_zeroout()?
->>>>>>
->>>>>> Thanks,
->>>>>>
->>>>>>>
->>>>>>> Signed-off-by: Daeho Jeong <daehojeong@google.com>
->>>>>>> ---
->>>>>>>  fs/f2fs/f2fs.h |   1 +
->>>>>>>  fs/f2fs/file.c | 129 +++++++++++++++++++++++++++++++++++++++++++++++++
->>>>>>>  2 files changed, 130 insertions(+)
->>>>>>>
->>>>>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
->>>>>>> index c812fb8e2d9c..9ae81d0fefa0 100644
->>>>>>> --- a/fs/f2fs/f2fs.h
->>>>>>> +++ b/fs/f2fs/f2fs.h
->>>>>>> @@ -434,6 +434,7 @@ static inline bool __has_cursum_space(struct f2fs_journal *journal,
->>>>>>>                                       _IOR(F2FS_IOCTL_MAGIC, 18, __u64)
->>>>>>>  #define F2FS_IOC_RESERVE_COMPRESS_BLOCKS                             \
->>>>>>>                                       _IOR(F2FS_IOCTL_MAGIC, 19, __u64)
->>>>>>> +#define F2FS_IOC_TRIM_FILE           _IO(F2FS_IOCTL_MAGIC, 20)
->>>>>>>
->>>>>>>  #define F2FS_IOC_GET_VOLUME_NAME     FS_IOC_GETFSLABEL
->>>>>>>  #define F2FS_IOC_SET_VOLUME_NAME     FS_IOC_SETFSLABEL
->>>>>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
->>>>>>> index dfa1ac2d751a..58507bb5649c 100644
->>>>>>> --- a/fs/f2fs/file.c
->>>>>>> +++ b/fs/f2fs/file.c
->>>>>>> @@ -3749,6 +3749,132 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
->>>>>>>       return ret;
->>>>>>>  }
->>>>>>>
->>>>>>> +static int f2fs_trim_file(struct file *filp)
->>>>>>> +{
->>>>>>> +     struct inode *inode = file_inode(filp);
->>>>>>> +     struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
->>>>>>> +     struct address_space *mapping = inode->i_mapping;
->>>>>>> +     struct bio *bio = NULL;
->>>>>>> +     struct block_device *prev_bdev = NULL;
->>>>>>> +     loff_t file_size;
->>>>>>> +     pgoff_t index, pg_start = 0, pg_end;
->>>>>>> +     block_t prev_block = 0, len = 0;
->>>>>>> +     int ret = 0;
->>>>>>> +
->>>>>>> +     if (!f2fs_hw_support_discard(sbi))
->>>>>>> +             return -EOPNOTSUPP;
->>>>>>> +
->>>>>>> +     if (!S_ISREG(inode->i_mode) || f2fs_is_atomic_file(inode) ||
->>>>>>> +                     f2fs_compressed_file(inode))
->>>>>>> +             return -EINVAL;
->>>>>>> +
->>>>>>> +     if (f2fs_readonly(sbi->sb))
->>>>>>> +             return -EROFS;
->>>>>>> +
->>>>>>> +     ret = mnt_want_write_file(filp);
->>>>>>> +     if (ret)
->>>>>>> +             return ret;
->>>>>>> +
->>>>>>> +     inode_lock(inode);
->>>>>>> +
->>>>>>> +     file_size = i_size_read(inode);
->>>>>>> +     if (!file_size)
->>>>>>> +             goto err;
->>>>>>> +     pg_end = (pgoff_t)round_up(file_size, PAGE_SIZE) >> PAGE_SHIFT;
->>>>>>> +
->>>>>>> +     ret = f2fs_convert_inline_inode(inode);
->>>>>>> +     if (ret)
->>>>>>> +             goto err;
->>>>>>> +
->>>>>>> +     down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
->>>>>>> +     down_write(&F2FS_I(inode)->i_mmap_sem);
->>>>>>> +
->>>>>>> +     ret = filemap_write_and_wait(mapping);
->>>>>>> +     if (ret)
->>>>>>> +             goto out;
->>>>>>> +
->>>>>>> +     truncate_inode_pages(mapping, 0);
->>>>>>> +
->>>>>>> +     for (index = pg_start; index < pg_end;) {
->>>>>>> +             struct dnode_of_data dn;
->>>>>>> +             unsigned int end_offset;
->>>>>>> +
->>>>>>> +             set_new_dnode(&dn, inode, NULL, NULL, 0);
->>>>>>> +             ret = f2fs_get_dnode_of_data(&dn, index, LOOKUP_NODE);
->>>>>>> +             if (ret)
->>>>>>> +                     goto out;
->>>>>>> +
->>>>>>> +             end_offset = ADDRS_PER_PAGE(dn.node_page, inode);
->>>>>>> +             if (pg_end < end_offset + index)
->>>>>>> +                     end_offset = pg_end - index;
->>>>>>> +
->>>>>>> +             for (; dn.ofs_in_node < end_offset;
->>>>>>> +                             dn.ofs_in_node++, index++) {
->>>>>>> +                     struct block_device *cur_bdev;
->>>>>>> +                     block_t blkaddr = f2fs_data_blkaddr(&dn);
->>>>>>> +
->>>>>>> +                     if (__is_valid_data_blkaddr(blkaddr)) {
->>>>>>> +                             if (!f2fs_is_valid_blkaddr(F2FS_I_SB(inode),
->>>>>>> +                                     blkaddr, DATA_GENERIC_ENHANCE)) {
->>>>>>> +                                     ret = -EFSCORRUPTED;
->>>>>>> +                                     goto out;
->>>>>>> +                             }
->>>>>>> +                     } else
->>>>>>> +                             continue;
->>>>>>> +
->>>>>>> +                     cur_bdev = f2fs_target_device(sbi, blkaddr, NULL);
->>>>>>> +                     if (f2fs_is_multi_device(sbi)) {
->>>>>>> +                             int i = f2fs_target_device_index(sbi, blkaddr);
->>>>>>> +
->>>>>>> +                             blkaddr -= FDEV(i).start_blk;
->>>>>>> +                     }
->>>>>>> +
->>>>>>> +                     if (len) {
->>>>>>> +                             if (prev_bdev == cur_bdev &&
->>>>>>> +                                     blkaddr == prev_block + len) {
->>>>>>> +                                     len++;
->>>>>>> +                             } else {
->>>>>>> +                                     ret = __blkdev_issue_discard(prev_bdev,
->>>>>>> +                                             SECTOR_FROM_BLOCK(prev_block),
->>>>>>> +                                             SECTOR_FROM_BLOCK(len),
->>>>>>> +                                             GFP_NOFS, 0, &bio);
->>>>>>> +                                     if (ret)
->>>>>>> +                                             goto out;
->>>>>>> +> +                                  len = 0;
->>>>>>> +                             }
->>>>>>> +                     }
->>>>>>> +
->>>>>>> +                     if (!len) {
->>>>>>> +                             prev_bdev = cur_bdev;
->>>>>>> +                             prev_block = blkaddr;
->>>>>>> +                             len = 1;
->>>>>>> +                     }
->>>>>>> +             }
->>>>>>> +
->>>>>>> +             f2fs_put_dnode(&dn);
->>>>>>> +     }
->>>>>>> +
->>>>>>> +     if (len)
->>>>>>> +             ret = __blkdev_issue_discard(prev_bdev,
->>>>>>> +                                     SECTOR_FROM_BLOCK(prev_block),
->>>>>>> +                                     SECTOR_FROM_BLOCK(len),
->>>>>>> +                                     GFP_NOFS, 0, &bio);
->>>>>>> +out:
->>>>>>> +     if (bio) {
->>>>>>> +             ret = submit_bio_wait(bio);
->>>>>>> +             bio_put(bio);
->>>>>>> +     }
->>>>>>> +
->>>>>>> +     up_write(&F2FS_I(inode)->i_mmap_sem);
->>>>>>> +     up_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
->>>>>>> +err:
->>>>>>> +     inode_unlock(inode);
->>>>>>> +     mnt_drop_write_file(filp);
->>>>>>> +
->>>>>>> +     return ret;
->>>>>>> +}
->>>>>>> +
->>>>>>>  long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
->>>>>>>  {
->>>>>>>       if (unlikely(f2fs_cp_error(F2FS_I_SB(file_inode(filp)))))
->>>>>>> @@ -3835,6 +3961,8 @@ long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
->>>>>>>               return f2fs_release_compress_blocks(filp, arg);
->>>>>>>       case F2FS_IOC_RESERVE_COMPRESS_BLOCKS:
->>>>>>>               return f2fs_reserve_compress_blocks(filp, arg);
->>>>>>> +     case F2FS_IOC_TRIM_FILE:
->>>>>>> +             return f2fs_trim_file(filp);
->>>>>>>       default:
->>>>>>>               return -ENOTTY;
->>>>>>>       }
->>>>>>> @@ -4004,6 +4132,7 @@ long f2fs_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
->>>>>>>       case F2FS_IOC_GET_COMPRESS_BLOCKS:
->>>>>>>       case F2FS_IOC_RELEASE_COMPRESS_BLOCKS:
->>>>>>>       case F2FS_IOC_RESERVE_COMPRESS_BLOCKS:
->>>>>>> +     case F2FS_IOC_TRIM_FILE:
->>>>>>>               break;
->>>>>>>       default:
->>>>>>>               return -ENOIOCTLCMD;
->>>>>>>
->>>>> .
->>>>>
->>> .
->>>
-> .
-> 
+Bart.
