@@ -2,44 +2,43 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E031EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7922C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6D2520774
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:58:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F8F220760
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:58:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Ht4H7zAt"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="lUQuojRA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730898AbgFIA61 (ORCPT
+        id S2388080AbgFIA6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:58:27 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:25238 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387598AbgFIA6I (ORCPT
+        Mon, 8 Jun 2020 20:58:31 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:41473 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731457AbgFIA6G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 20:58:08 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200609005804epoutp044e5625424694f038c3053dc2ee57d795~Wuju-Hjj52152621526epoutp04d
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 00:58:04 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200609005804epoutp044e5625424694f038c3053dc2ee57d795~Wuju-Hjj52152621526epoutp04d
+        Mon, 8 Jun 2020 20:58:06 -0400
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200609005803epoutp03118cd5747593e8521b95bb84e2605d9d~Wujumotjq0060500605epoutp03H
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 00:58:03 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200609005803epoutp03118cd5747593e8521b95bb84e2605d9d~Wujumotjq0060500605epoutp03H
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1591664284;
-        bh=AdItsk5QedulWFP4OWDofYoftQEDP1ebFB4Udoioxoo=;
+        s=mail20170921; t=1591664283;
+        bh=2ZdGa0WusYMlSIsrK40ujqb//hV2zjpeCw+1vy1+wno=;
         h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=Ht4H7zAtFJ+jnv7GvsTu4dnrlNBSvzvF7c3ZR2+AhWP3qo0j66xjXl55mLXjVuAcL
-         RKep6JYzWkTwrNF/cu+2nP2krXoJUTpEiZUHV8l+VI6D/7mt7NDaE9gKzV5YTJM7nj
-         qZ8KA9mjIxNbklJMlbqGGEHW9eznh+yYO8U/EiQ8=
+        b=lUQuojRAhoL4rHeXG7n0bTdESy12gPbTkpXQjPnrESB2AD6/5bvHQZlPj89yA8mui
+         TdVv2+62cYbaj99d1BbhIuUB0N+pruN8a8D+fby8t1BLVrpd+n4VY5ORGN33247iNY
+         jx9xxEigqC9M1s4DJxym+C8suWhafIz4h0Oj9Ncw=
 Received: from epcpadp2 (unknown [182.195.40.12]) by epcas1p3.samsung.com
         (KnoxPortal) with ESMTP id
-        20200609005803epcas1p3f955fd4d0fe852a91d52a42e2d062518~WujuQPSoy1119911199epcas1p3d;
+        20200609005803epcas1p3a8278aac6a6ccf493793ac8f95954dd0~WujuEQ_8W1119911199epcas1p3b;
         Tue,  9 Jun 2020 00:58:03 +0000 (GMT)
 Mime-Version: 1.0
-Subject: RE: [RFC PATCH 4/5] scsi: ufs: L2P map management for HPB read
+Subject: RE: [RFC PATCH 3/5] scsi: ufs: Introduce HPB module
 Reply-To: daejun7.park@samsung.com
 From:   Daejun Park <daejun7.park@samsung.com>
 To:     Avri Altman <Avri.Altman@wdc.com>,
@@ -63,150 +62,133 @@ CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
         BoRam Shin <boram.shin@samsung.com>
 X-Priority: 3
 X-Content-Kind-Code: NORMAL
-In-Reply-To: <SN6PR04MB46409E16CCF95A0AA9FFE944FC870@SN6PR04MB4640.namprd04.prod.outlook.com>
+In-Reply-To: <SN6PR04MB46404CA953E4006BDCC61A65FC870@SN6PR04MB4640.namprd04.prod.outlook.com>
 X-CPGS-Detection: blocking_info_exchange
 X-Drm-Type: N,general
 X-Msg-Generator: Mail
 X-Msg-Type: PERSONAL
 X-Reply-Demand: N
-Message-ID: <1776409896.101591664283293.JavaMail.epsvc@epcpadp2>
-Date:   Tue, 09 Jun 2020 09:52:56 +0900
-X-CMS-MailID: 20200609005256epcms2p4b00fc4d4f6e4d11b1e082366ee195846
-Content-Transfer-Encoding: 7bit
+Message-ID: <1431530910.81591664283090.JavaMail.epsvc@epcpadp2>
+Date:   Tue, 09 Jun 2020 09:52:01 +0900
+X-CMS-MailID: 20200609005201epcms2p82af5353727f989c2cf3da468f756bd2e
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: AUTO_CONFIDENTIAL
 X-CPGSPASS: Y
 X-CPGSPASS: Y
 X-Hop-Count: 3
 X-CMS-RootMailID: 20200605011604epcms2p8bec8ef6682583d7248dc7d9dc1bfc882
-References: <SN6PR04MB46409E16CCF95A0AA9FFE944FC870@SN6PR04MB4640.namprd04.prod.outlook.com>
-        <231786897.01591322101492.JavaMail.epsvc@epcpadp1>
+References: <SN6PR04MB46404CA953E4006BDCC61A65FC870@SN6PR04MB4640.namprd04.prod.outlook.com>
         <336371513.41591320902369.JavaMail.epsvc@epcpadp1>
         <963815509.21591320301642.JavaMail.epsvc@epcpadp1>
         <231786897.01591320001492.JavaMail.epsvc@epcpadp1>
-        <963815509.21591323002276.JavaMail.epsvc@epcpadp1>
-        <CGME20200605011604epcms2p8bec8ef6682583d7248dc7d9dc1bfc882@epcms2p4>
+        <231786897.01591322101492.JavaMail.epsvc@epcpadp1>
+        <CGME20200605011604epcms2p8bec8ef6682583d7248dc7d9dc1bfc882@epcms2p8>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > The data structure for map data request and L2P map uses mempool API,
-> > minimizing allocation overhead while avoiding static allocation.
-> Maybe one or two more sentences to explain the L2P framework:
-> Each hpb lun maintains 2 "to-do" lists: 
->  - hpb->lh_inact_rgn - regions to be inactivated, and 
->  - hpb->lh_act_srgn - subregions to be activated
-> Those lists are being checked on every resume and completion interrupt.
-OK, I will add more description of L2P framework.
+> Why not just allow for max-active-regions per the device's configuration?
+> The platform vendor can provision it per its need.
+The max-active-region is configured as device config. The module parameter =
+which you mentioned is just minimum value of the memory pool.
 
-> > 
-> > Signed-off-by: Daejun Park <daejun7.park@samsung.com>
-> > ---
-> > +       for (i = 0; i < hpb->pages_per_srgn; i++) {
-> > +               mctx->m_page[i] = mempool_alloc(ufshpb_drv.ufshpb_page_pool,
-> > +                                               GFP_KERNEL);
-> > +               memset(page_address(mctx->m_page[i]), 0, PAGE_SIZE);
-> Better move this memset after if (!mctx->m_page[i]).
-> And maybe use clear_page instead?
-OK, I will change the code.
+> > +
+> > +       total_srgn_cnt =3D hpb->srgns_per_lu;
+> > +       for (rgn_idx =3D 0, srgn_cnt =3D 0; rgn_idx < hpb->rgns_per_lu;
+> > +            rgn_idx++, total_srgn_cnt -=3D srgn_cnt) {
+> Maybe simplify and improve readability by moving the srgn_cnt into the fo=
+r clause:
+> =09int srgn_cnt =3D hpb->srgns_per_rgn;
+OK, I will apply this for patch v2.
 
-> > +               if (!mctx->m_page[i]) {
-> > +                       for (j = 0; j < i; j++)
-> > +                               mempool_free(mctx->m_page[j],
-> > +                                            ufshpb_drv.ufshpb_page_pool);
-> > +                       goto release_ppn_dirty;
+> > +
+> > +static void ufshpb_destroy_region_tbl(struct ufshpb_lu *hpb)
+> > +{
+> > +       int rgn_idx;
+> > +
+> > +       for (rgn_idx =3D 0; rgn_idx < hpb->rgns_per_lu; rgn_idx++) {
+> > +               struct ufshpb_region *rgn;
+> > +
+> > +               rgn =3D hpb->rgn_tbl + rgn_idx;
+> > +               if (rgn->rgn_state !=3D HPB_RGN_INACTIVE) {
+> > +                       rgn->rgn_state =3D HPB_RGN_INACTIVE;
+> > +
+> > +                       ufshpb_destroy_subregion_tbl(hpb, rgn);
 > > +               }
-> > +static inline int ufshpb_add_region(struct ufshpb_lu *hpb,
-> > +                                   struct ufshpb_region *rgn)
-> > +{
-> Maybe better describe what this function does - ufshpb_get_rgn_map_ctx ?
-Yes, I think "ufshpb_get_rgn_map_ctx" is better name.
+> > +
+> > +               kvfree(rgn->srgn_tbl);
+> This looks like it belongs to ufshpb_destroy_subregion_tbl?
+Yes, it will be changed.
 
-> > +       if (!list_empty(&rgn->list_lru_rgn)) {
-> > +               if (ufshpb_check_issue_state_srgns(hpb, rgn)) {
-> So if one of its subregions has inflight map request - you add it to the "starved" list?
-> Why call it starved?
-"starved list" was wrong name. I will change it to "postponed_evict_list".
-
-> > +        * Since the region state change occurs only in the hpb task-work,
-> > +        * the state of the region cannot HPB_RGN_INACTIVE at this point.
-> > +        * The region state must be changed in the hpb task-work
-> I think that you called this worker map_work?
-Yes, "the hpb task-work" will be changed to the map_work.
-
-> > +               spin_unlock_irqrestore(&hpb->hpb_state_lock, flags);
-> > +               ret = ufshpb_add_region(hpb, rgn);
-> If this is not an active region,
-> Although the device indicated to activate a specific subregion, 
-> You are activating all the subregions of that region.
-> You should elaborate on that in your commit log,
-> and explain why this is the correct activation course.
-Yes, I'm going to change the code to activate only the subregions that are "activate state".
-
-> get_unaligned instead of be16_to_cpu ?
-Yes, I will change.
+> How about calling ufshpb_issue_hpb_reset_query right after ufshpb_get_dev=
+_info?
+> This way waiting for the device to complete its reset can be done while s=
+csi is scanning the luns?
+I will change the call path as follows:
+- ufshpb_probe_async
+  - ufshpb_get_dev_info
+ =EF=83=A0 - ufshpb_issue_hpb_reset_query 1/2 (query part)
+  - ufshpb_scan_hpb_lu
+ =EF=83=A0 - ufshpb_issue_hpb_reset_query 2/2 (wait part)
 
 > > +
-> > +       if (!data_seg_len) {
-> data_seg_len should be DEV_DATA_SEG_LEN, and you should also check HPB_UPDATE_ALERT,
-> which you might want to do here and not in ufshpb_may_field_valid
-Yes, I will change.
+> > +static void ufshpb_reset(struct ufs_hba *hba)
+> > +static void ufshpb_reset_host(struct ufs_hba *hba)
+> > +static void ufshpb_suspend(struct ufs_hba *hba)
+> > +static void ufshpb_resume(struct ufs_hba *hba)
+> The above 4 functions essentially runs the same code but set a different =
+state.
+> Maybe call a helper?
+OK, I will.
 
-> > +       switch (rsp_field->hpb_type) {
-> > +       case HPB_RSP_REQ_REGION_UPDATE:
-> > +               WARN_ON(data_seg_len != DEV_DATA_SEG_LEN);
-> > +               ufshpb_rsp_req_region_update(hpb, rsp_field);
-> > +               break;
-> What about hpb dev reset - oper 0x2?
-Yes, I will change.
+> > +static int ufshpb_create_sysfs(struct ufs_hba *hba, struct ufshpb_lu *=
+hpb)
+> Why separate from ufs-sysfs?
+> Also you might want to introduce all the stats not as part of the functio=
+nal patch.
+The HPB feature is implemented as a device. So, We added the hpb-sysfs sepa=
+rated from ufs-sysfs.
 
-> > +static void ufshpb_add_active_list(struct ufshpb_lu *hpb,
-> > +                                  struct ufshpb_region *rgn,
-> > +                                  struct ufshpb_subregion *srgn)
-> > +{
-> > +       if (!list_empty(&rgn->list_inact_rgn))
-> > +               return;
 > > +
-> > +       if (!list_empty(&srgn->list_act_srgn)) {
-> > +               list_move(&srgn->list_act_srgn, &hpb->lh_act_srgn);
-> Why is this needed?
-> Why updating this subregion position?
-The "ufshpb_add_active_list()" is called from "ufshpb_run_active_subregion_list()" to retry activating subregion that failed to activate.
-Therefore, it requeues the subregion to activate region list head.
+> > +static int ufshpb_get_geo_info(struct ufs_hba *hba, u8 *geo_buf,
+> > +                              struct ufshpb_dev_info *hpb_dev_info)
+> > +{
+> > +       int hpb_device_max_active_rgns =3D 0;
+> > +       int hpb_num_lu;
+> > +
+> > +       hpb_dev_info->max_num_lun =3D
+> > +               geo_buf[GEOMETRY_DESC_PARAM_MAX_NUM_LUN] =3D=3D 0x00 ? =
+8 :
+> > 32;
+> You already have this in hba->dev_info.max_lu_supported
+> > +
+> > +       hpb_num_lu =3D geo_buf[GEOMETRY_DESC_HPB_NUMBER_LU];
+> You should capture hpb_dev_info->max_num_lun =3D hpb_num_lu
+You are right. And hpb_dev_info->max_num_lun will be deleted.
 
-> > @@ -195,8 +1047,15 @@ static int ufshpb_alloc_region_tbl(struct ufs_hba
-> > *hba, struct ufshpb_lu *hpb)
-> >  release_srgn_table:
-> >         for (i = 0; i < rgn_idx; i++) {
-> >                 rgn = rgn_table + i;
-> > -               if (rgn->srgn_tbl)
-> > +               if (rgn->srgn_tbl) {
-> > +                       for (srgn_idx = 0; srgn_idx < rgn->srgn_cnt;
-> > +                            srgn_idx++) {
-> > +                               srgn = rgn->srgn_tbl + srgn_idx;
-> > +                               if (srgn->mctx)
-> How is it even possible that on init there is an active subregion?
-> ufshpb_init_pinned_active_region does its own cleanup.
-I will fix the duplicated cleanup codes.
+> > +
+> > +       ret =3D ufshpb_read_desc(hba, QUERY_DESC_IDN_DEVICE, 0, SELECTO=
+R,
+> > +                            desc_buf, hba->desc_size.dev_desc);
+> What with this SELECTOR stuff?
+> Why not the default 0?
+Right, SELECTOR should be 0. I will fix it.=20
 
-> > +       hpb->m_page_cache = kmem_cache_create("ufshpb_m_page_cache",
-> > +                         sizeof(struct page *) * hpb->pages_per_srgn,
-> > +                         0, 0, NULL);
-> What is the advantage in using an array of page pointers,
-> Instead of a single pointer to pages_per_srgn?
-To minimize memory fragmentation problem, I used pointer + single page rather than single array of pages. 
+> What about the other hpb fields in the device descriptor:
+> DEVICE_DESC_PARAM_HPB_VER and DEVICE_DESC_PARAM_HPB_CONTROL ?
+I will add codes that checks these fields on initialization.
 
-> > @@ -398,6 +1326,9 @@ static void ufshpb_resume(struct ufs_hba *hba)
-> > 
-> >                 dev_info(&hpb->hpb_lu_dev, "ufshpb resume");
-> >                 ufshpb_set_state(hpb, HPB_PRESENT);
-> > +               if (!ufshpb_is_empty_rsp_lists(hpb))
-> > +                       queue_work(ufshpb_drv.ufshpb_wq, &hpb->map_work);
-> Ahha - so you are using the ufs driver pm flows to poll your work queue.
-> Why device recommendations isn't enough?
-I don't understand this comment. The code resumes map_work that was stopped by PM during the map request.
-Please explain your concerns.
+> > +unsigned int ufshpb_host_map_kbytes =3D 1 * 1024;
+> > +module_param(ufshpb_host_map_kbytes, uint, 0644);
+> > +MODULE_PARM_DESC(ufshpb_host_map_kbytes,
+> > +        "ufshpb host mapping memory kilo-bytes for ufshpb memory-pool"=
+);
+> You should introduce this module parameter in the patch that uses it.
+OK, could you recommend good location of introducing message? At the patch =
+letter or in the codes?
 
 Thanks,
-Avri
+Daejun
+
