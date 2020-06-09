@@ -2,215 +2,211 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0372C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 08:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADAC6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 08:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2C022078D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 08:54:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZsAh8yRo"
+	by mail.kernel.org (Postfix) with ESMTP id 9053F2078D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 08:55:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728324AbgFIIyn (ORCPT
+        id S1728327AbgFIIzL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 04:54:43 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53264 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728243AbgFIIym (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 04:54:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591692880;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=eLblsTqKUjq9s36ScyyJ5e0rwCHkqC/nIIt9NNzbhvM=;
-        b=ZsAh8yRoJ4LaRx0Po/jxsM1MEQPza6eMcybwpqsb1dEBLLTYKB/Wj70VH/lw6DfrH4OaRt
-        6D8ftfx/efE7imdWwV3dRjyy+Aeiinmq159BFF1Q8WLHYzmpVzrCSJH2kTuarNCKl8xcZF
-        IcmO/vzBy+mYNs2WRdgvMyYSPO5dK8c=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-417-sbCYSFYpNIuV7naGCe-jug-1; Tue, 09 Jun 2020 04:54:36 -0400
-X-MC-Unique: sbCYSFYpNIuV7naGCe-jug-1
-Received: by mail-wr1-f72.google.com with SMTP id r5so8340833wrt.9
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 01:54:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=eLblsTqKUjq9s36ScyyJ5e0rwCHkqC/nIIt9NNzbhvM=;
-        b=B+vxad2WBVjMUsuFqZVFUfmEYzbfN5wU2vrKX81Zro/4zz2dD0McT6nMkMUh4Hof22
-         V51xkHfQ88D2w+WllZ+kwrhRTR4V9/UeYq6gIsPrUt3G7RCZCzlb/yUPwjoJhmY8/Ja1
-         zb/xUwBddUMV/MmBXSZc5NsvCjNawbC/vG/a4/hdEE3/oRwhzzhC50MTbYHetPiTXGtu
-         cYnPwro8H5LOfnEUuDaIN0XQQmFoL9ije59ZUMDnW2RF+SZBiv9T4UVqjsemxMoSotPN
-         Dmfpdv3TfvrU1ahdwVePA8umiZFgRensQblKEffCPdK646VZ+R4dVijbdQq7q7U3xCLy
-         lUpg==
-X-Gm-Message-State: AOAM532BaoieHuJGhTHRyzjc19xEEwvBhB2m/rcu1Ua4jDgT74og4xFd
-        I7wbNuZ7IJOaSTXUtw9Y5tsGjY42aTyTeKHvsjIviYOEwETmFM+UtAtI4/NruaXvH6qI03UHXkF
-        1GFmLS/84TnIEsup/6w2AwrLv
-X-Received: by 2002:a1c:a403:: with SMTP id n3mr2869970wme.2.1591692875662;
-        Tue, 09 Jun 2020 01:54:35 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyk64DUIN2AMFcBfNkspM6xbGkxn8iVwgRRfLpEaDpf6XV5Ei2C8wWXXvmjDinm5JkdkQF20w==
-X-Received: by 2002:a1c:a403:: with SMTP id n3mr2869949wme.2.1591692875327;
-        Tue, 09 Jun 2020 01:54:35 -0700 (PDT)
-Received: from ?IPv6:2a01:cb14:499:3d00:cd47:f651:9d80:157a? ([2a01:cb14:499:3d00:cd47:f651:9d80:157a])
-        by smtp.gmail.com with ESMTPSA id o20sm2605541wra.29.2020.06.09.01.54.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Jun 2020 01:54:34 -0700 (PDT)
-Subject: Re: [RFC][PATCH v4 01/32] objtool: Prepare to merge recordmcount
-To:     Matt Helsley <mhelsley@vmware.com>, linux-kernel@vger.kernel.org
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-References: <cover.1591125127.git.mhelsley@vmware.com>
- <4a71852d8ca0a245588159a6bbdc064619de91d9.1591125127.git.mhelsley@vmware.com>
-From:   Julien Thierry <jthierry@redhat.com>
-Message-ID: <1e2783f2-6b52-d750-ecc5-4e3d6d7dba4f@redhat.com>
-Date:   Tue, 9 Jun 2020 09:54:33 +0100
+        Tue, 9 Jun 2020 04:55:11 -0400
+Received: from mout02.posteo.de ([185.67.36.142]:33695 "EHLO mout02.posteo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728056AbgFIIzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 04:55:07 -0400
+X-Greylist: delayed 430 seconds by postgrey-1.27 at vger.kernel.org; Tue, 09 Jun 2020 04:55:06 EDT
+Received: from submission (posteo.de [89.146.220.130]) 
+        by mout02.posteo.de (Postfix) with ESMTPS id ED5F42400FC
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 10:47:54 +0200 (CEST)
+Received: from customer (localhost [127.0.0.1])
+        by submission (posteo.de) with ESMTPSA id 49h3fd3Wy3z6tmh;
+        Tue,  9 Jun 2020 10:47:53 +0200 (CEST)
+Subject: Re: [PATCH] can: m_can_platform: fix m_can_runtime_suspend()
+To:     Dan Murphy <dmurphy@ti.com>,
+        Richard Genoud <richard.genoud@gmail.com>,
+        Sriram Dash <sriram.dash@samsung.com>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Faiz Abbas <faiz_abbas@ti.com>
+Cc:     linux-can@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200608094348.12650-1-richard.genoud@gmail.com>
+ <b9510aa6-d865-7c4f-6730-dcd207bdb753@ti.com>
+From:   Richard Genoud <richard.genoud@gmail.com>
+Message-ID: <d7f024a4-f2d0-8045-dfd2-d1f89e4789c8@sorico.fr>
+Date:   Tue, 9 Jun 2020 10:47:52 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <4a71852d8ca0a245588159a6bbdc064619de91d9.1591125127.git.mhelsley@vmware.com>
+In-Reply-To: <b9510aa6-d865-7c4f-6730-dcd207bdb753@ti.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matt,
+Hi Dan,
 
-On 6/2/20 8:49 PM, Matt Helsley wrote:
-> Move recordmcount into the objtool directory. We keep this step separate
-> so changes which turn recordmcount into a subcommand of objtool don't
-> get obscured.
+Le 08/06/2020 à 16:27, Dan Murphy a écrit :
+> Richard
 > 
-> Signed-off-by: Matt Helsley <mhelsley@vmware.com>
-> ---
->   Documentation/trace/ftrace-design.rst      |  4 ++--
->   Documentation/trace/ftrace.rst             |  2 +-
->   Makefile                                   | 15 +++++++++------
->   scripts/.gitignore                         |  1 -
->   scripts/Makefile                           |  1 -
->   scripts/Makefile.build                     | 11 ++++++-----
->   tools/objtool/.gitignore                   |  1 +
->   tools/objtool/Build                        |  2 ++
->   tools/objtool/Makefile                     | 13 ++++++++++++-
->   {scripts => tools/objtool}/recordmcount.c  |  0
->   {scripts => tools/objtool}/recordmcount.h  |  0
->   {scripts => tools/objtool}/recordmcount.pl |  0
->   12 files changed, 33 insertions(+), 17 deletions(-)
->   rename {scripts => tools/objtool}/recordmcount.c (100%)
->   rename {scripts => tools/objtool}/recordmcount.h (100%)
->   rename {scripts => tools/objtool}/recordmcount.pl (100%)
+> On 6/8/20 4:43 AM, Richard Genoud wrote:
+>> Since commit f524f829b75a ("can: m_can: Create a m_can platform
+>> framework"), the can peripheral on STM32MP1 wasn't working anymore.
+>>
+>> The reason was a bad copy/paste maneuver that added a call to
+>> m_can_class_suspend() in m_can_runtime_suspend().
 > 
-> diff --git a/Documentation/trace/ftrace-design.rst b/Documentation/trace/ftrace-design.rst
-> index a8e22e0db63c..dea8db5e79d0 100644
-> --- a/Documentation/trace/ftrace-design.rst
-> +++ b/Documentation/trace/ftrace-design.rst
-> @@ -261,7 +261,7 @@ You need very few things to get the syscalls tracing in an arch.
->   HAVE_FTRACE_MCOUNT_RECORD
->   -------------------------
->   
-> -See scripts/recordmcount.pl for more info.  Just fill in the arch-specific
-> +See tools/objtool/recordmcount.pl for more info.  Just fill in the arch-specific
->   details for how to locate the addresses of mcount call sites via objdump.
->   This option doesn't make much sense without also implementing dynamic ftrace.
->   
-> @@ -379,7 +379,7 @@ linux/ftrace.h for the functions::
->   	ftrace_make_call()
->   
->   The rec->ip value is the address of the mcount call site that was collected
-> -by the scripts/recordmcount.pl during build time.
-> +by the tools/objtool/recordmcount.pl during build time.
->   
->   The last function is used to do runtime patching of the active tracer.  This
->   will be modifying the assembly code at the location of the ftrace_call symbol
-> diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
-> index 3b5614b1d1a5..9adefcc3c7a8 100644
-> --- a/Documentation/trace/ftrace.rst
-> +++ b/Documentation/trace/ftrace.rst
-> @@ -2685,7 +2685,7 @@ starts of pointing to a simple return. (Enabling FTRACE will
->   include the -pg switch in the compiling of the kernel.)
->   
->   At compile time every C file object is run through the
-> -recordmcount program (located in the scripts directory). This
-> +recordmcount program (located in the tools/objtool directory). This
->   program will parse the ELF headers in the C object to find all
->   the locations in the .text section that call mcount. Starting
->   with gcc version 4.6, the -mfentry has been added for x86, which
-> diff --git a/Makefile b/Makefile
-> index 04f5662ae61a..d353a0a65a71 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -844,6 +844,7 @@ ifdef CONFIG_DYNAMIC_FTRACE
->   	ifdef CONFIG_HAVE_C_RECORDMCOUNT
->   		BUILD_C_RECORDMCOUNT := y
->   		export BUILD_C_RECORDMCOUNT
-> +		objtool_target := tools/objtool FORCE
->   	endif
->   endif
->   endif
-> @@ -1023,10 +1024,10 @@ endif
->   export mod_sign_cmd
->   
->   HOST_LIBELF_LIBS = $(shell pkg-config libelf --libs 2>/dev/null || echo -lelf)
-> +has_libelf := $(call try-run,\
-> +		echo "int main() {}" | $(HOSTCC) -xc -o /dev/null $(HOST_LIBELF_LIBS) -,1,0)
->   
+> Are you sure it was a copy paste error?
+> 
+> Probably don't want to have an unfounded cause unless you know for 
+> certain it was this.
+I understand.
 
-Maybe there could be some build dependency, e.g. CONFIG_OBJTOOL_SUBCMDS 
-that sets the "objtool_target" and "has_libelf" when selected.
+What makes me think it was a copy-paste error is that the primary goal 
+of the patch series "M_CAN Framework" was to introduce the tcan4x5x 
+driver into the kernel.
+For that, the code has to be split into a re-usable code (m_can.c) and a 
+platform code m_can_platform.c
+And finally, tcan4x5x.c can be added.
+(I'm sure you already know that since you write the patch, it's just to 
+be sure that we are on the same page :))
 
-Then the CONFIG_UNWINDER_ORC, RECORD_MCOUNT and STACK_VALIDATION would 
-just had to select that config option.
+So, when splitting the m_can code into m_can.c and m_can_platform.c, 
+there was no reason to change the behavior, even less reason to change 
+the behavior in m_can_platform.c, since the main target was tcan4x5x.
+(And the behavior changed because the CAN peripheral on the STM32MP1 was 
+working before this patch, and not after).
 
->   ifdef CONFIG_STACK_VALIDATION
-> -  has_libelf := $(call try-run,\
-> -		echo "int main() {}" | $(HOSTCC) -xc -o /dev/null $(HOST_LIBELF_LIBS) -,1,0)
->     ifeq ($(has_libelf),1)
->       objtool_target := tools/objtool FORCE
->     else
-> @@ -1163,13 +1164,15 @@ uapi-asm-generic:
->   
->   PHONY += prepare-objtool
->   prepare-objtool: $(objtool_target)
-> -ifeq ($(SKIP_STACK_VALIDATION),1)
-> -ifdef CONFIG_UNWINDER_ORC
-> +ifneq ($(has_libelf),1)
-> +  ifdef CONFIG_UNWINDER_ORC
->   	@echo "error: Cannot generate ORC metadata for CONFIG_UNWINDER_ORC=y, please install libelf-dev, libelf-devel or elfutils-libelf-devel" >&2
->   	@false
-> -else
-> +  else
-> +    ifeq ($(SKIP_STACK_VALIDATION),1)
->   	@echo "warning: Cannot use CONFIG_STACK_VALIDATION=y, please install libelf-dev, libelf-devel or elfutils-libelf-devel" >&2
+So I went digging into that and I realized that before this patch, 
+runtime suspend function was in m_can.c:
+static int __maybe_unused m_can_runtime_suspend(struct device *dev)
+{
+	struct net_device *ndev = dev_get_drvdata(dev);
+	struct m_can_priv *priv = netdev_priv(ndev);
+
+	clk_disable_unprepare(priv->cclk);
+	clk_disable_unprepare(priv->hclk);
+
+	return 0;
+}
+
+And after, in m_can_platform.c:
+static int __maybe_unused m_can_runtime_suspend(struct device *dev)
+{
+	struct net_device *ndev = dev_get_drvdata(dev);
+	struct m_can_priv *mcan_class = netdev_priv(ndev);
+
+	m_can_class_suspend(dev);
+
+	clk_disable_unprepare(mcan_class->cclk);
+	clk_disable_unprepare(mcan_class->hclk);
+
+	return 0;
+}
+
+Same for runtime resume,
+Before:
+static int __maybe_unused m_can_runtime_resume(struct device *dev)
+{
+	struct net_device *ndev = dev_get_drvdata(dev);
+	struct m_can_priv *priv = netdev_priv(ndev);
+	int err;
+
+	err = clk_prepare_enable(priv->hclk);
+	if (err)
+		return err;
+
+	err = clk_prepare_enable(priv->cclk);
+	if (err)
+		clk_disable_unprepare(priv->hclk);
+
+	return err;
+}
+
+After:
+static int __maybe_unused m_can_runtime_resume(struct device *dev)
+{
+	struct net_device *ndev = dev_get_drvdata(dev);
+	struct m_can_priv *mcan_class = netdev_priv(ndev);
+	int err;
+
+	err = clk_prepare_enable(mcan_class->hclk);
+	if (err)
+		return err;
+
+	err = clk_prepare_enable(mcan_class->cclk);
+	if (err)
+		clk_disable_unprepare(mcan_class->hclk);
+
+	m_can_class_resume(dev);
+
+	return err;
+}
+
+Now, the m_class_resume() call has been removed by commit 0704c5743694 
+("can: m_can_platform: remove unnecessary m_can_class_resume() call")
+cf https://lkml.org/lkml/2019/11/19/965
+
+Then only the m_can_class_suspend() call is left alone. If I remove it, 
+the stm32mp1 peripheral works as before the patch. (and the code is 
+symmetrical again :))
+
+I read all the iterations I could find about this patch (see note 1), 
+and I didn't found any comment on the addition of 
+m_can_class_{resume,suspend}() calls.
+
+But I found this in v3 cover letter:
+"The m_can platform code will need to be updated as I have not tested 
+this code."
+and in v3 1/4 comments:
+"This patch set is working for the TCAN and at least boots on io-mapped 
+devices."
+
+For me, that means that the code in m_can_platform.c was written with 
+this sentence in mind :
+"I can test everything but this, so let's try not to break things in 
+there, keep the changes at a minimum"
+And that was really the case for all the file, but the 2 calls to 
+m_can_class_{resume,suspend}().
+
+So that's why I have a pretty good confidence in the fact that it was a 
+copy-paste error.
+
+And, moreover, if m_can_class_suspend() is called, the CAN device is 
+stopped, and all interrupts are disabled (in m_can_stop()), so the 
+device can not wake-up by itself (and thus not working anymore).
 
 
-I think this would be more readable without the else branch:
-
-	ifneq ($(has_libelf),1)
-		ifdef <some objtool command config>
-			<warn about unavailability>
-		endif
-		ifdef <another objtool command config>
-			<warn ...>
-		endif
-		<...>
-	endif
+All this make me think that maybe I should send a v2 of this patch with 
+a bigger commit message.
+What do you think ?
 
 
-Cheers,
+Thanks !
 
--- 
-Julien Thierry
+Richard.
 
+
+> 
+> Dan
+> 
+> 
+
+Note 1: patches v3 to v12 (missing v11)
+https://lwn.net/ml/linux-kernel/20190111173236.14329-1-dmurphy@ti.com/
+https://lore.kernel.org/patchwork/patch/1033094/
+https://lore.kernel.org/patchwork/cover/1042441/
+https://lore.kernel.org/patchwork/patch/1047220/
+https://lore.kernel.org/patchwork/patch/1047980/
+https://lkml.org/lkml/2019/3/12/362
+https://lkml.org/lkml/2019/3/13/512
+https://www.spinics.net/lists/netdev/msg557961.html
+https://lore.kernel.org/patchwork/patch/1071894/
