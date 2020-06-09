@@ -2,99 +2,108 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CFF4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7539C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FB2D2074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:44:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E6362074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:44:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730911AbgFIPoD (ORCPT
+        id S1730931AbgFIPoV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 11:44:03 -0400
-Received: from foss.arm.com ([217.140.110.172]:44310 "EHLO foss.arm.com"
+        Tue, 9 Jun 2020 11:44:21 -0400
+Received: from mga14.intel.com ([192.55.52.115]:32389 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728903AbgFIPn7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 11:43:59 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E60621FB;
-        Tue,  9 Jun 2020 08:43:58 -0700 (PDT)
-Received: from [10.57.49.155] (unknown [10.57.49.155])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2950B3F66F;
-        Tue,  9 Jun 2020 08:43:55 -0700 (PDT)
-Subject: Re: [PATCH 2/2] arm-nommu: Add use_reserved_mem() to check if device
- support reserved memory
-To:     Christoph Hellwig <hch@lst.de>,
-        dillon min <dillon.minfei@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux@armlinux.org.uk, Kate Stewart <kstewart@linuxfoundation.org>,
-        allison@lohutok.net, info@metux.net, tglx@linutronix.de,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <1591605038-8682-1-git-send-email-dillon.minfei@gmail.com>
- <1591605038-8682-3-git-send-email-dillon.minfei@gmail.com>
- <90df5646-e0c4-fcac-d934-4cc922230dd2@arm.com>
- <CAL9mu0+__0Z3R3TcSrj9-kPxsyQHKS9WqK1u58P0dEZ+Jd-wbQ@mail.gmail.com>
- <20200609153646.GA17969@lst.de>
-From:   Vladimir Murzin <vladimir.murzin@arm.com>
-Message-ID: <031034fb-b109-7410-3ff8-e78cd12a5552@arm.com>
-Date:   Tue, 9 Jun 2020 16:43:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1728903AbgFIPoU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 11:44:20 -0400
+IronPort-SDR: x1PQhVfJKw0oFPhiHMSQ8hhoLNtys/bqJI8HJeO/Q/3BO4TaxxKyx4gyz1jl5AE3TXqjwIfrag
+ raTnV4UDgCfQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 08:44:19 -0700
+IronPort-SDR: B3OCjkA00+WDlux1lmQ1P9O1e4pJaj2LD9l02uW46lOwaDhjnF5OXOF6p9F2gYMvkW+Gnsg+Ka
+ 2B7QtNL69Agg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,492,1583222400"; 
+   d="scan'208";a="379769157"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 09 Jun 2020 08:44:16 -0700
+Received: by lahna (sSMTP sendmail emulation); Tue, 09 Jun 2020 18:44:16 +0300
+Date:   Tue, 9 Jun 2020 18:44:16 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Paul Menzel <pmenzel@molgen.mpg.de>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        it+linux-pci@molgen.mpg.de, amd-gfx@lists.freedesktop.org
+Subject: Re: close() on some Intel CNP-LP PCI devices takes up to 2.7 s
+Message-ID: <20200609154416.GU247495@lahna.fi.intel.com>
+References: <b0781d0e-2894-100d-a4da-e56c225eb2a6@molgen.mpg.de>
 MIME-Version: 1.0
-In-Reply-To: <20200609153646.GA17969@lst.de>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b0781d0e-2894-100d-a4da-e56c225eb2a6@molgen.mpg.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/9/20 4:36 PM, Christoph Hellwig wrote:
-> On Tue, Jun 09, 2020 at 11:22:24PM +0800, dillon min wrote:
->> Hi Vladimir,
->>
->> Thanks for reviewing.
->>
->> Hi Christoph Hellwig,
->>
->> I just want to know if kernel dma mapping/direct is focused on
->> platforms with MMU.
->> leave arch code to handle dma coherent memory management themself for
->> no-MMU platform.
+On Tue, Jun 09, 2020 at 05:39:21PM +0200, Paul Menzel wrote:
+> Dear Linux folks,
 > 
-> No, I'd really like to consolidate everything that isn't overly
-> arch specific eventually.
 > 
->>
->> so, you just return error code in kernel/dma/mapping.c,direct.c
->> without CONFIG_MMU defined ?
->> which means dma-direct mapping doesn't support !CONFIG_MMU is not a
->> bug, but design as it's.
->> or, just return error code currently, will add dma direct mapping
->> support for !CONFIG_MMU in the
->> future?
->>
->> As Vladimir Murzin's suggestion has changes in kernel code, I need
->> your input to get
->> the design goal about dma-direct mapping, thanks.
+> On the Intel Cannon Point-LP laptop Dell Precision 3540 with a dedicated AMD
+> graphics card (both graphics devices can be used) with Debian Sid/unstable
+> with Linux 5.6.14, running lspci takes quite some time, and the screen even
+> flickers a short moment before the result is displayed.
 > 
-> Can someone repost the whole patch?
+> Tracing lspci with strace, shows that the close() function of the three
+> devices takes from
 > 
+> •   00:1d.0 PCI bridge: Intel Corporation Cannon Point-LP PCI Express Root
+> Port #9
+> 
+> •   04:00.0 System peripheral: Intel Corporation JHL6340 Thunderbolt 3 NHI
+> (C step) [Alpine Ridge 2C 2016] (rev 02)
+> 
+> •   3b:00.0 Display controller: Advanced Micro Devices, Inc. [AMD/ATI] Lexa
+> XT [Radeon PRO WX 3100]
+> 
+> takes from 270 ms to 2.5 s.
+> 
+> > 11:43:21.714391 openat(AT_FDCWD, "/sys/bus/pci/devices/0000:04:00.0/config", O_RDONLY) = 3
+> > 11:43:21.714448 pread64(3, "\206\200\331\25\6\4\20\0\2\0\200\10 \0\0\0\0\0\0\352\0\0\4\352\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0(\20\272\10\0\0\0\0\
+> > 200\0\0\0\0\0\0\0\377\1\0\0", 64, 0) = 64
+> > 11:43:24.487818 close(3)                = 0
+> 
+> > 11:43:24.489508 openat(AT_FDCWD, "/sys/bus/pci/devices/0000:00:1d.0/config", O_RDONLY) = 3
+> > 11:43:24.489598 pread64(3, "\206\200\260\235\7\4\20\0\360\0\4\6\20\0\201\0\0\0\0\0\0\0\0\0\0;;\00000\0  \354 \354\1\300\21\320\0\0\0\0\0\0\0\0\0\0\0\0
+> > @\0\0\0\0\0\0\0\377\1\22\0", 64, 0) = 64
+> > 11:43:24.966661 close(3)                = 0
+> 
+> > 11:43:24.988544 openat(AT_FDCWD, "/sys/bus/pci/devices/0000:3b:00.0/config", O_RDONLY) = 3
+> > 11:43:24.988584 pread64(3, "\2\20\205i\7\4\20\0\0\0\200\3\20\0\0\0\f\0\0\300\0\0\0\0\f\0\0\320\0\0\0\0\0010\0\0\0\0 \354\0\0\0\0(\20\272\10\0\0$\354H\0\0\0\0\0\0\0\377\1\0\0", 64, 0) = 64
+> > 11:43:25.252745 close(3)
+> 
+> Unfortunately, I forgot to collect the tree output, but hopefully the
+> attached Linux messages and strace of lspci output will be enough for the
+> start.
+> 
+> Please tell me, if you want me to create a bug report in the Linux bug
+> tracker.
 
-Happy to repost as separate patch once dillon confirms it actually works.
+Can you try this commit?
 
-Meanwhile, I'm trying to understand at which point we lost this 
-functionality for NOMMU... maybe it will become different patch :)
+  https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?h=pci/pm&id=ec411e02b7a2e785a4ed9ed283207cd14f48699d
 
-Cheers
-Vladimir
+It should be in the mainline already as well.
+
+Note we still need to obey the delays required by the PCIe spec so 100ms
+after the link is trained but this one should at least get it down from
+1100ms.
