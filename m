@@ -2,132 +2,81 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4679EC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:03:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C1B4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 269DB20734
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:03:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725808;
-	bh=2wq8q15ub0uB0vMe8hgGxS46CrFW/myQrAZmv2wOkoE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B1hpfQFG8mOTAixQpUjCLpQfm8tQW9DXbdMGuU/GXaO4EE4bYiziXrfGNVEAUMdGT
-	 JSTgR10NHnyNhhRpdPfNESId9VX984rPFnqOwN617PWP4+Oe7IE+wO5qY0znL3s+TG
-	 zsKGjqfbdmOYO34ngHxRbdC+yJHz2Q1ZSSgv77qo=
+	by mail.kernel.org (Postfix) with ESMTP id 4672420734
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:03:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="HZqrRLQR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbgFIRwv (ORCPT
+        id S2387933AbgFISDf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:52:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41448 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732877AbgFIRvt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:51:49 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE0D1207ED;
-        Tue,  9 Jun 2020 17:51:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725109;
-        bh=2wq8q15ub0uB0vMe8hgGxS46CrFW/myQrAZmv2wOkoE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wrfOIVqGUldUVb82vmo5as5T1A8ITA9rNNm+1coUb+MQtyrnfzHaIwU39gDmHil/M
-         zK/5K45JlfsZJhpgzCJdwKuoWqPZbGyJNbnDurTenMczM6eI1XT0ktBESC198GXK7U
-         S8+iil764pKLjAvkLUqrnPNvLVvgkpT7Js7zxHNM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, syzbot <syzkaller@googlegroups.com>,
-        Willem de Bruijn <willemb@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 07/25] net: check untrusted gso_size at kernel entry
-Date:   Tue,  9 Jun 2020 19:44:57 +0200
-Message-Id: <20200609174049.478235209@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200609174048.576094775@linuxfoundation.org>
-References: <20200609174048.576094775@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 9 Jun 2020 14:03:35 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:37326 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733193AbgFISDb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 14:03:31 -0400
+Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 1AE4320B717B;
+        Tue,  9 Jun 2020 11:03:29 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1AE4320B717B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1591725809;
+        bh=RcRx8d20bjJpLdKxUmDt/7K3aLBKNzYGLcu36Ac8y94=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=HZqrRLQRrYDntNP1Jtw4oEaypC9lkwLUlI9j6+1PzvhOjT1Qc5LXxONmka95SLTCn
+         3XUFK/fUKZXRBC9WtrfrgBuaRLu7C85Q64Vzi4k01hbp+a9ZcOYepI2+zI368Z2U07
+         WLCodQHxPAE6p/ZbRNCcEjr8ia3didJ0LTwcNoQo=
+Subject: Re: [PATCH v3] IMA: Add audit log for failure conditions
+To:     Steve Grubb <sgrubb@redhat.com>,
+        Richard Guy Briggs <rgb@redhat.com>
+Cc:     linux-integrity@vger.kernel.org, linux-audit@redhat.com,
+        zohar@linux.ibm.com, linux-kernel@vger.kernel.org
+References: <20200608215343.4491-1-nramas@linux.microsoft.com>
+ <518a51b7-6c8d-f55f-c73a-b15abae8e0af@linux.microsoft.com>
+ <20200609171555.itbllvtgjdanbbk7@madcap2.tricolour.ca>
+ <2006844.2enhIMKrvE@x2>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <2e3bc793-0d29-5434-1da3-2bcc34ed9012@linux.microsoft.com>
+Date:   Tue, 9 Jun 2020 11:03:28 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <2006844.2enhIMKrvE@x2>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willem de Bruijn <willemb@google.com>
+On 6/9/20 10:35 AM, Steve Grubb wrote:
+>>
+>> If it is added, it should be appended to the end of the record since it
+>> is an existing record format, then in the case of res=1, errno= should
+>> still be present (not swing in and out) and just contain zero.  (Or
+>> another value if there is a non-fatal warning?)
+> 
+> This is not a searchable field, so it can go anywhere. If it is searchable,
+> ausearch expects ordering of other searchable fields.
+> 
 
-[ Upstream commit 6dd912f82680761d8fb6b1bb274a69d4c7010988 ]
+Thank you for the clarification Steve.
 
-Syzkaller again found a path to a kernel crash through bad gso input:
-a packet with gso size exceeding len.
+I'll add "errno=" right after "cause=".
 
-These packets are dropped in tcp_gso_segment and udp[46]_ufo_fragment.
-But they may affect gso size calculations earlier in the path.
+Also, "errno" will always be present - will be set to 0 if status is 
+"success" (res=1) and a non-zero value for failure (res=0)
 
-Now that we have thlen as of commit 9274124f023b ("net: stricter
-validation of untrusted gso packets"), check gso_size at entry too.
-
-Fixes: bfd5f4a3d605 ("packet: Add GSO/csum offload support.")
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- include/linux/virtio_net.h |   14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
-
---- a/include/linux/virtio_net.h
-+++ b/include/linux/virtio_net.h
-@@ -31,6 +31,7 @@ static inline int virtio_net_hdr_to_skb(
- {
- 	unsigned int gso_type = 0;
- 	unsigned int thlen = 0;
-+	unsigned int p_off = 0;
- 	unsigned int ip_proto;
- 
- 	if (hdr->gso_type != VIRTIO_NET_HDR_GSO_NONE) {
-@@ -68,7 +69,8 @@ static inline int virtio_net_hdr_to_skb(
- 		if (!skb_partial_csum_set(skb, start, off))
- 			return -EINVAL;
- 
--		if (skb_transport_offset(skb) + thlen > skb_headlen(skb))
-+		p_off = skb_transport_offset(skb) + thlen;
-+		if (p_off > skb_headlen(skb))
- 			return -EINVAL;
- 	} else {
- 		/* gso packets without NEEDS_CSUM do not set transport_offset.
-@@ -92,17 +94,25 @@ retry:
- 				return -EINVAL;
- 			}
- 
--			if (keys.control.thoff + thlen > skb_headlen(skb) ||
-+			p_off = keys.control.thoff + thlen;
-+			if (p_off > skb_headlen(skb) ||
- 			    keys.basic.ip_proto != ip_proto)
- 				return -EINVAL;
- 
- 			skb_set_transport_header(skb, keys.control.thoff);
-+		} else if (gso_type) {
-+			p_off = thlen;
-+			if (p_off > skb_headlen(skb))
-+				return -EINVAL;
- 		}
- 	}
- 
- 	if (hdr->gso_type != VIRTIO_NET_HDR_GSO_NONE) {
- 		u16 gso_size = __virtio16_to_cpu(little_endian, hdr->gso_size);
- 
-+		if (skb->len - p_off <= gso_size)
-+			return -EINVAL;
-+
- 		skb_shinfo(skb)->gso_size = gso_size;
- 		skb_shinfo(skb)->gso_type = gso_type;
- 
+thanks,
+  -lakshmi
 
 
