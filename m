@@ -2,223 +2,115 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46FCAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 07:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5460EC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 07:19:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20779207F9
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 07:17:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2892520835
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 07:19:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="rYFLbnwp"
+	dkim=pass (1024-bit key) header.d=mysnt.onmicrosoft.com header.i=@mysnt.onmicrosoft.com header.b="CWbc4wS6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbgFIHRR (ORCPT
+        id S1726917AbgFIHTV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 03:17:17 -0400
-Received: from mail-bn8nam12on2103.outbound.protection.outlook.com ([40.107.237.103]:5345
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        Tue, 9 Jun 2020 03:19:21 -0400
+Received: from mail-eopbgr80090.outbound.protection.outlook.com ([40.107.8.90]:30530
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725772AbgFIHRP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 03:17:15 -0400
+        id S1725772AbgFIHTU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 03:19:20 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aISb0tVSTfPMPYy94C6UguRIzus7GNuJze2SwPe9fDpheZViOmmpDG6WCIJkKLzwn27leQfpRsZlkYtXfIginTzUEViKAFqiVM/0ICvh2TA3nU1zE5EYbmMRNEHgcdhG4yiMEjtYtdVRRXJlSrqmHUUGAzZdOUt2tZv7moe2thu0IzNH5yp1S1oI5p+KKL3Qb2GiEXPvLe8tjRM+GWO6yZMBvw76PUm7ITyaFsgYCFEtSoCYblK+KELQHkmT806CC0TuYN+i9suJ0IKzQ7/amnxjluf7VraP9g5H2mjAfCIirsaHTVEs2fqfdg6OIT6porQBZqsGC7lIBwq44QuZtA==
+ b=KWQYsFMLcyeionsAiqrp/ST6Fhx4RRdHts3Tm9hS8ivPfdvhcva1K3QUx1I0U7fPz62/dWV9sx4IO2FH1LCYEASKav5AtB+G5vcXefJ6EIZa0/VjhiSLxb5NTlqV1unnizOYjqwNqyIZ488t53PLVds+AQf7ulzI2irp6bT5HbmMfXofiTpVGeuB11Hm/60wTS5L4tga3lKJrjfMfR1fCAIEUUM1HEDYHgHwCcgX/UYDlvFBZzsXaSdb4hzdWOq2N1JW90RATiRFUyisBYEIBtuAVrUOgMwpT0gdROtJOwR66iTWCYaiiARg3GoEmZqrZFThY7Z+88P6zp8iF04iMw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=g2l02bwqOJcFgzvXOM1FKabFhPQkV7mDdw5aOX8Ym6k=;
- b=SU8o8nfwsAM6hJSb/xWoSNxdPUXcIHLsl0nt7iSofr/oo4dULVk9zakgZoorkgXjX7Jv9UcJk7hUepI6/UI0UzygdVVnYRwhzeAB2EgWGqZ28qKPBHhtIstae1YiCVqho5N5aVRTY8ahTO0U+9yZBqpbAFT+sRjJz0F54KCW5wnasOpduwMobMDIixbeG1ukePV/qzx/QWrJ6iuFcmIAc7EvkfuAfS91QWUYXAqu3yVII5zoSYzt43cUaZn7ldhhzjpQEV4Gnhidvchl1g9tc/y2IRupQhwXmcP2+Zp5lA6iE/grXxjNhkomu+lizKmVB15mYKlr3PoLYvu6u1dIOg==
+ bh=KcsVgAYMMmFbjFB6GoRpFaurjS5r8yI6PiXQYTQz39s=;
+ b=j8jgF6P6QHyMerZfO22EfiojuJZmNZ3A4tS+d6dQzNEwWx70mIah+6TsIrpJcylGLZLyxiI9KuWl/LTMVhGRpMbkyTq1aJjwu5lAaOppw8XtUJM0gmgymPnUR95ZuKLgWvQEiDtQS7vzQy1iQGpTi9Rnuh9asEjLfdZl3hDKc23EXda6WgdrcQY1/Dq+XNMibrzknLdkc9qg4CAiUJpNAli/V2OLRs8XtuG4yrndz1X8zVMQm6zRIbUb4UCYdSf9Qmhw54IXAr/s5hTwzrfDAc24nymCtykDGi2AvZM293IQxBwaxepJpuEGh0UcllqvWdzXUaw6EQLmuxz8NlcLPg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
- header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Analogixsemi.onmicrosoft.com; s=selector2-Analogixsemi-onmicrosoft-com;
+ smtp.mailfrom=kontron.de; dmarc=pass action=none header.from=kontron.de;
+ dkim=pass header.d=kontron.de; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mysnt.onmicrosoft.com;
+ s=selector2-mysnt-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=g2l02bwqOJcFgzvXOM1FKabFhPQkV7mDdw5aOX8Ym6k=;
- b=rYFLbnwp5yLDa/vwM16TfpHncd/6pVZaE3RDcA88lpYlmFO9mBSZdWx2gQxu1Q9+qvpJlgIcYh0VUQyhGVoTBbIyhjgenp5LNRb7Z1xoAQif62ItWMEwmLGEX53LTcUX9RsxWm9AleywT0tth3ZEdLh77g/ups/k4P3E2voEJqM=
-Authentication-Results: analogixsemi.com; dkim=none (message not signed)
- header.d=none;analogixsemi.com; dmarc=none action=none
- header.from=analogixsemi.com;
-Received: from BY5PR04MB6739.namprd04.prod.outlook.com (2603:10b6:a03:229::8)
- by BY5PR04MB6641.namprd04.prod.outlook.com (2603:10b6:a03:22b::9) with
+ bh=KcsVgAYMMmFbjFB6GoRpFaurjS5r8yI6PiXQYTQz39s=;
+ b=CWbc4wS6F1FDS7ZLHWnLACgpCiK65NIjDnSg5c7Tai9Ze/gIblkniHIYZKXFuBW9lY3WS2xNnVNjdXHVmG5fXrHCq0r73TfaN6dtZEIyZfCrQGGxTo8QaLXupukj7fELaq5vFzrXjsEf/z8zZHXAa24G9PysF6ZoYKntDviVqMY=
+Received: from DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:50::12)
+ by DB7PR10MB2155.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:42::29) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Tue, 9 Jun
- 2020 07:17:12 +0000
-Received: from BY5PR04MB6739.namprd04.prod.outlook.com
- ([fe80::844e:398b:2165:631b]) by BY5PR04MB6739.namprd04.prod.outlook.com
- ([fe80::844e:398b:2165:631b%7]) with mapi id 15.20.3066.023; Tue, 9 Jun 2020
- 07:17:12 +0000
-Date:   Tue, 9 Jun 2020 15:17:05 +0800
-From:   Xin Ji <xji@analogixsemi.com>
-To:     devicetree@vger.kernel.org, devel@driverdev.osuosl.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Nicolas Boichat <drinkcat@google.com>,
-        Sam Ravnborg <sam@ravnborg.org>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Pi-Hsun Shih <pihsun@chromium.org>,
-        Sheng Pan <span@analogixsemi.com>
-Subject: [PATCH v13 1/2] dt-bindings: drm/bridge: anx7625: MIPI to DP
- transmitter DT schema
-Message-ID: <eb234492d16805c9b3a1f5a56b161dc50be3ba17.1591345160.git.xji@analogixsemi.com>
-References: <cover.1591345160.git.xji@analogixsemi.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1591345160.git.xji@analogixsemi.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-ClientProxiedBy: HK2PR03CA0052.apcprd03.prod.outlook.com
- (2603:1096:202:17::22) To BY5PR04MB6739.namprd04.prod.outlook.com
- (2603:10b6:a03:229::8)
+ 2020 07:19:15 +0000
+Received: from DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::acc5:2acd:49a6:5048]) by DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::acc5:2acd:49a6:5048%7]) with mapi id 15.20.3066.023; Tue, 9 Jun 2020
+ 07:19:15 +0000
+From:   Schrempf Frieder <frieder.schrempf@kontron.de>
+To:     Fabio Estevam <festevam@gmail.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= 
+        <u.kleine-koenig@pengutronix.de>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
+Subject: Re: [PATCH] serial: imx: Fix handling of TC irq in combination with
+ DMA
+Thread-Topic: [PATCH] serial: imx: Fix handling of TC irq in combination with
+ DMA
+Thread-Index: AQHWPacakgJZrwZ8pkOomdvwi0/9IajO3f8AgAABzQCAAQF0AA==
+Date:   Tue, 9 Jun 2020 07:19:15 +0000
+Message-ID: <a5bd8497-16a4-8ef8-a41f-a7ff6cbc73d5@kontron.de>
+References: <20200608151012.7296-1-frieder.schrempf@kontron.de>
+ <CAOMZO5BHF6ftHVgzKQ29o_G7Y+O6nrbDH1+J5+BYaONz==WebQ@mail.gmail.com>
+ <CAOMZO5D0oifxM3H4WoLmJQ72Zo_2uj8X0RcpVadj4wLJYh6BgQ@mail.gmail.com>
+In-Reply-To: <CAOMZO5D0oifxM3H4WoLmJQ72Zo_2uj8X0RcpVadj4wLJYh6BgQ@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=kontron.de;
+x-originating-ip: [77.246.119.226]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f5341654-a496-44ea-d951-08d80c456a74
+x-ms-traffictypediagnostic: DB7PR10MB2155:
+x-microsoft-antispam-prvs: <DB7PR10MB215539D14DEDD1E86F1E0D68E9820@DB7PR10MB2155.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 042957ACD7
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: k5joUdcmbzvae1pMrvwPxWDxBtHxEQYNwplpCHQY0d6WujBCb/OQU+2Vd5eEwnxH+gqUP8GG659EgcKdoRRMQ7n95QZZGAYv91SY4R33pt2NMMK6swsvojYTp5uErCb90+n0ybFFWSYrhMCVm19RD+b0AquaT8JWCsNoVNxph10QQdEYXvTtbQfiAKpPkOhga7KtF0Opf25sUa7KFQo+bpuQziqb4t6ljCngLfqlC0JNVP/LyZj3JZ+ebMZu97vMB0DLRbESVzlfKPAG5QE3fY6HhS602sJGdqvcKZB0rvvLFgkXx+4or49KkeXXJmEv927SUeR6FaU7jiE3XkC52Q==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39850400004)(396003)(376002)(366004)(136003)(346002)(478600001)(26005)(6506007)(31686004)(6486002)(6512007)(36756003)(316002)(91956017)(54906003)(2616005)(4744005)(86362001)(8936002)(66556008)(76116006)(6916009)(71200400001)(8676002)(66446008)(64756008)(53546011)(31696002)(186003)(66946007)(2906002)(66476007)(4326008)(5660300002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: m83yyVcqSHNfSaJlW7h84i5cB55zxrPvHvP3tyRjFZvRiOgqZUChsUazFb9dXK/5YdI60yiQOkhD8aZ4mEz3MGK31CY+FrJGdj1ToVrtrs5iMTDHXe7QFlJ0jAaQWkhUH6+HRJ2j4/6pe+Oft+5K6SCcG5lkDoJ9Wgig9lhtWED2loufzbyNGE97KvyAu9big0Ax/tjRr3qxfH9Dy4UwVv+a2lTHVwOnVRKNSfJKB0seM7u7bSm0JuimKNdMEGzdzJjA7Xzg/QlzrVwG4s3FxrlDYUll5C2LlUNPxecvMNsS6k1IeJcW7smXyLUpj8PfMVDTUjOd2X4QywDbBz+FgeOYPXmxlyPKk2Ci7xS5vqqCbT2sCvDpKRUsFCG+re/zs9HVKMPulf/IUaq+xglCyY/mbqUjghPc3n3n4+ak3a3MAkBUhmxLbpf3eg52iPtPGZparXSgnY7a9ffi6RpDWUhwehs+3bn4LeoOBAK2HSZPXXzHaCZhJfeoKUn9Owoa
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F32FB4F2C30F4F40A828468EB6F11AB2@EURPRD10.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from xin-VirtualBox (114.247.245.254) by HK2PR03CA0052.apcprd03.prod.outlook.com (2603:1096:202:17::22) with Microsoft SMTP Server (version=TLS1_0, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.20.3088.7 via Frontend Transport; Tue, 9 Jun 2020 07:17:11 +0000
-X-Originating-IP: [114.247.245.254]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: d0ca269c-eb0b-4ba1-3dc7-08d80c4520f9
-X-MS-TrafficTypeDiagnostic: BY5PR04MB6641:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BY5PR04MB66411D75E73413B7D5E5800EC7820@BY5PR04MB6641.namprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2733;
-X-Forefront-PRVS: 042957ACD7
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ljvS2lTScWTVe486TOvzMlHj5ggVn10MBefFqsgDblyfKshEf0fVfM8OH/93PPMSOo6uOGEPLeg+v+lv9ty3VUCbALtkuRJNWIePjd8egABkCXlLUZ+E39k607auVzTwip80nq7ZZUiNR2s+1j9E/7ZsVI8WGLHh7Oz8ShIdF73og4A1Zy3qw+TcItgzHDaPgSXdymu+vDWXw5eV3KczAUEdscRmi4HwO3Sr4gRJ4/OhB0SYxbGvNQfgQtYk6Z+2JsAB9TvhlMl13bLQKqoH00wVdo9Qo9KKD9XPTu6ioG2VarlYMMFtgPlB9fnceiXwxB0ZF0fV4etOptE+4zImiTjcY5z260vjDg/4QJkKHQGu6mDKFqeQWjb9C5LlLbdStOkB09DOD+8uY/w+hpoSOw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR04MB6739.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(346002)(376002)(39850400004)(136003)(366004)(2616005)(316002)(26005)(86362001)(186003)(478600001)(7416002)(54906003)(6496006)(5660300002)(8936002)(8676002)(110136005)(16526019)(6666004)(52116002)(2906002)(6486002)(66946007)(66556008)(107886003)(956004)(66476007)(36756003)(4326008);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: fguBw40sYRJmrnjXnyAK/lriz1CLStyDqFXd+ti39kJG8uBIgIcw+bly32UjNTRwxkKoYhZdCihzH3e7qjPrgmB7n0TrEEds9cvYjiBP01044pXV1T5h3AWOcuWeLhg6Nl3+ymNQsXm5JgQ+2h/Hp41FuYjLjookHzgogme3AoPRwJV/mMS8lFhcqGPwhbqsFCJdX05PLzORKwV+eR+0KPd0zkJxB43G0mdvfZdWfDOXMvWe/256KI7N9ntCpPk/3+FutwoX2I+8NggkDZl8eAbDdRvLmKCJbbCaYNgg9xKpsnV0h51KS7/5C1/G+YwN0+pcoTeFLwA+a/91Ojwkn2p9Jls5btHNsvGMz3PzXJNzFwcbK+VY4konS7DmSK/79QNtWgM9v7rj/PCybyHkCas7tZStmReCOUe3oDOW0ows6Fd2Oagjly466b+Mf8ESWhC06lBVQvR+3pmgYYMBa7d+RgW0Fk9CgkH2vm9zdWRj+3OutVbkojno0EbMbZFG
-X-OriginatorOrg: analogixsemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d0ca269c-eb0b-4ba1-3dc7-08d80c4520f9
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2020 07:17:12.3026
+X-OriginatorOrg: kontron.de
+X-MS-Exchange-CrossTenant-Network-Message-Id: f5341654-a496-44ea-d951-08d80c456a74
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jun 2020 07:19:15.0684
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YnjFKaUN0C7cRf3efjEgppcBQ9iWPezTGzf/dBN354IjfBKD6Nn+9aMU984etNiEwIxfsNeqGIbbyfRSK3SrsA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR04MB6641
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8c9d3c97-3fd9-41c8-a2b1-646f3942daf1
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 1iWPMi/iYUyE9cDEC1PYND81ErY5ln35IGprrXnvYjGCQuwjmIRXefO2w8t2+7cpy0HpicInfs0XpWla5c66XiDC1wLcehiOw/ZYosKDVdk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR10MB2155
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-anx7625: MIPI to DP transmitter DT schema
-
-Signed-off-by: Xin Ji <xji@analogixsemi.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../bindings/display/bridge/analogix,anx7625.yaml  | 95 ++++++++++++++++++++++
- 1 file changed, 95 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/analogix,anx7625.yaml
-
-diff --git a/Documentation/devicetree/bindings/display/bridge/analogix,anx7625.yaml b/Documentation/devicetree/bindings/display/bridge/analogix,anx7625.yaml
-new file mode 100644
-index 0000000..60585a4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/analogix,anx7625.yaml
-@@ -0,0 +1,95 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright 2019 Analogix Semiconductor, Inc.
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/display/bridge/analogix,anx7625.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Analogix ANX7625 SlimPort (4K Mobile HD Transmitter)
-+
-+maintainers:
-+  - Xin Ji <xji@analogixsemi.com>
-+
-+description: |
-+  The ANX7625 is an ultra-low power 4K Mobile HD Transmitter
-+  designed for portable devices.
-+
-+properties:
-+  compatible:
-+    items:
-+      - const: analogix,anx7625
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    description: used for interrupt pin B8.
-+    maxItems: 1
-+
-+  enable-gpios:
-+    description: used for power on chip control, POWER_EN pin D2.
-+    maxItems: 1
-+
-+  reset-gpios:
-+    description: used for reset chip control, RESET_N pin B7.
-+    maxItems: 1
-+
-+  ports:
-+    type: object
-+
-+    properties:
-+      port@0:
-+        type: object
-+        description:
-+          Video port for MIPI DSI input.
-+
-+      port@1:
-+        type: object
-+        description:
-+          Video port for panel or connector.
-+
-+    required:
-+        - port@0
-+        - port@1
-+
-+required:
-+  - compatible
-+  - reg
-+  - ports
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    i2c0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        encoder@58 {
-+            compatible = "analogix,anx7625";
-+            reg = <0x58>;
-+            enable-gpios = <&pio 45 GPIO_ACTIVE_HIGH>;
-+            reset-gpios = <&pio 73 GPIO_ACTIVE_HIGH>;
-+
-+            ports {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                mipi2dp_bridge_in: port@0 {
-+                    reg = <0>;
-+                    anx7625_in: endpoint {
-+                        remote-endpoint = <&mipi_dsi>;
-+                    };
-+                };
-+
-+                mipi2dp_bridge_out: port@1 {
-+                    reg = <1>;
-+                    anx7625_out: endpoint {
-+                        remote-endpoint = <&panel_in>;
-+                    };
-+                };
-+            };
-+        };
-+    };
--- 
-2.7.4
-
+T24gMDguMDYuMjAgMTc6NTcsIEZhYmlvIEVzdGV2YW0gd3JvdGU6DQo+IE9uIE1vbiwgSnVuIDgs
+IDIwMjAgYXQgMTI6NTEgUE0gRmFiaW8gRXN0ZXZhbSA8ZmVzdGV2YW1AZ21haWwuY29tPiB3cm90
+ZToNCj4+DQo+PiBPbiBNb24sIEp1biA4LCAyMDIwIGF0IDEyOjEyIFBNIFNjaHJlbXBmIEZyaWVk
+ZXINCj4+IDxmcmllZGVyLnNjaHJlbXBmQGtvbnRyb24uZGU+IHdyb3RlOg0KPj4NCj4+PiAgICAg
+ICAgICBpZiAocG9ydC0+cnM0ODUuZmxhZ3MgJiBTRVJfUlM0ODVfRU5BQkxFRCkgew0KPj4+ICAg
+ICAgICAgICAgICAgICAgdGVtcCA9IHJlYWRsKHBvcnQtPm1lbWJhc2UgKyBVQ1IyKTsNCj4+PiAr
+DQo+Pg0KPj4gVGhpcyBsb29rcyBsaWtlIGFuIHVucmVsYXRlZCBjaGFuZ2UuDQo+IA0KPiBBaCwg
+b2ssIGp1c3QgcmVhbGl6ZWQgdGhpcyBpcyBhIGJhY2twb3J0LiBJbiB0aGlzIGNhc2UsIGl0IGlz
+IGZpbmUgdGhlbi4NCg0KWWVzLCBidXQgdGhpcyBhZGRpdGlvbmFsIGJsYW5rIGxpbmUgaXMgbm90
+IGV2ZW4gdXBzdHJlYW0uIEkgdGhpbmsgSSBoYXZlIA0KYWRkZWQgaXQgYWNjaWRlbnRhbGx5IHdo
+ZW4gZG9pbmcgdGhlIGJhY2twb3J0LiBTbyBpdCdzIHByb2JhYmx5IHJpZ2h0IHRvIA0KZHJvcCBp
+dC4gSSdsbCBzZW5kIGEgdjIuIFRoYW5rcyE=
