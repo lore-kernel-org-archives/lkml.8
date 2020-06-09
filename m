@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39BE0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E48EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:23:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C1492067B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:23:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1917E2067B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:23:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591726997;
-	bh=uxgkLmEM+qRpdRQoAjDFTn3eJyZ9H2fvH5ojL6T9T60=;
+	s=default; t=1591727003;
+	bh=3VhzeYCfyFo9o7fz5Vi6e9lrLzkvJTjzxHdMTZtg2QA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yXDGhLABHCfqtNXZIq4EKiNQkT22nNMZRiSs2GKnmhYiupw1yg4JN4UmGTDWK+0lc
-	 ka3YDU4XZGX7Wbxc/yHgID9mn8zFSqUorzrlhziVAvhfWc5ZfY8xRaHQSH704xjhFn
-	 R9VvzF5XejzKsXC9bwEx/q+OZ28riYRlhfqbG1Ng=
+	b=wH5QXBltI8Z130ctb3BP3TlxLxBRPK/p+3aHmLB94qeJbEtpU4Fl831fEWt50aTAa
+	 8qT0qVKngjRhoYaK3mSdzbCPc9ha8ML5m6PfApMkG/7Gc1uMukkj9IliwHftLr+uKu
+	 Xeo4BHn8PynjWHM1atoHEQxMwLfbADfsT51hZ8O4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732110AbgFIRrb (ORCPT
+        id S2389071AbgFISXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:47:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58554 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 14:23:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732061AbgFIRrU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:47:20 -0400
+        id S1732114AbgFIRrb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:47:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E0D6207F9;
-        Tue,  9 Jun 2020 17:47:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F06E20801;
+        Tue,  9 Jun 2020 17:47:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591724840;
-        bh=uxgkLmEM+qRpdRQoAjDFTn3eJyZ9H2fvH5ojL6T9T60=;
+        s=default; t=1591724851;
+        bh=3VhzeYCfyFo9o7fz5Vi6e9lrLzkvJTjzxHdMTZtg2QA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CMesLuVscIlxMrGCM4cUiH3H70+KmQIqJ6g019syGzvn+MkygQ5FxRQJa7tuQxb3O
-         SFqs0Z9hbAT0p8tQTtVSX2DN5FcVfLtn/VIFMPLNKzbA1a7bRqWiRP9vxa5zRnLAqI
-         vwwjDHIoH8b5MjIlyB4MsyHMl/8BC7RR4JlSXaN4=
+        b=S3GmkNPTd+gnGSqCmuOWuorZ8jdXF2xeiO+G7TM3dOsaJZZZRHF0wyXCKQDC4qbH3
+         XuaNXQckFB1k1MEMeVzQJrJTceJ9qBjIdFfXktZNDNQc0CTqsPQwn5hGgtvhKdV5BN
+         HIMQmvn4j2rslKgnzZ1ekVGSitQIPYORbuF0KmOY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?David=20Bala=C5=BEic?= <xerces9@gmail.com>,
-        Guillaume Nault <gnault@redhat.com>,
+        stable@vger.kernel.org, Yang Yingliang <yangyingliang@huawei.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 14/36] pppoe: only process PADT targeted at local interfaces
-Date:   Tue,  9 Jun 2020 19:44:14 +0200
-Message-Id: <20200609173934.094297589@linuxfoundation.org>
+Subject: [PATCH 4.4 19/36] devinet: fix memleak in inetdev_init()
+Date:   Tue,  9 Jun 2020 19:44:19 +0200
+Message-Id: <20200609173934.396492898@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609173933.288044334@linuxfoundation.org>
 References: <20200609173933.288044334@linuxfoundation.org>
@@ -61,32 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guillaume Nault <gnault@redhat.com>
+From: Yang Yingliang <yangyingliang@huawei.com>
 
-We don't want to disconnect a session because of a stray PADT arriving
-while the interface is in promiscuous mode.
-Furthermore, multicast and broadcast packets make no sense here, so
-only PACKET_HOST is accepted.
+[ Upstream commit 1b49cd71b52403822731dc9f283185d1da355f97 ]
 
-Reported-by: David Balažic <xerces9@gmail.com>
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Guillaume Nault <gnault@redhat.com>
+When devinet_sysctl_register() failed, the memory allocated
+in neigh_parms_alloc() should be freed.
+
+Fixes: 20e61da7ffcf ("ipv4: fail early when creating netdev named all or default")
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+Acked-by: Cong Wang <xiyou.wangcong@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ppp/pppoe.c |    3 +++
- 1 file changed, 3 insertions(+)
+ net/ipv4/devinet.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/ppp/pppoe.c
-+++ b/drivers/net/ppp/pppoe.c
-@@ -494,6 +494,9 @@ static int pppoe_disc_rcv(struct sk_buff
- 	if (!skb)
+--- a/net/ipv4/devinet.c
++++ b/net/ipv4/devinet.c
+@@ -262,6 +262,7 @@ static struct in_device *inetdev_init(st
+ 	err = devinet_sysctl_register(in_dev);
+ 	if (err) {
+ 		in_dev->dead = 1;
++		neigh_parms_release(&arp_tbl, in_dev->arp_parms);
+ 		in_dev_put(in_dev);
+ 		in_dev = NULL;
  		goto out;
- 
-+	if (skb->pkt_type != PACKET_HOST)
-+		goto abort;
-+
- 	if (!pskb_may_pull(skb, sizeof(struct pppoe_hdr)))
- 		goto abort;
- 
 
 
