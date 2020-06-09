@@ -2,105 +2,85 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47CA7C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:20:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 790CEC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3BC62078D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:20:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53AD62078D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:21:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="KdOx0vwo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728563AbgFIJU4 (ORCPT
+        id S1728574AbgFIJVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 05:20:56 -0400
-Received: from mga03.intel.com ([134.134.136.65]:4325 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728024AbgFIJUz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 05:20:55 -0400
-IronPort-SDR: ZbiYHTRS4glaDIOlQfqi1bq+zu7SeDOI7Cdf75phjOZ73YP4dc4BqbzqBPLXz8odlPLchJ+/Eu
- Xt5bJwwA8uCw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 02:20:55 -0700
-IronPort-SDR: gcHUIYywt1/Pk50P+Z7CaFycv7MMxrwnX9RySDkwKoSy7QRqQQFiMoYkopfrd/plcKB1dM+2gI
- zYMi49UOBZxw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,491,1583222400"; 
-   d="scan'208";a="418346674"
-Received: from gklab-125-110.igk.intel.com ([10.91.125.110])
-  by orsmga004.jf.intel.com with ESMTP; 09 Jun 2020 02:20:51 -0700
-From:   Piotr Stankiewicz <piotr.stankiewicz@intel.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Cc:     Piotr Stankiewicz <piotr.stankiewicz@intel.com>,
-        Brian King <brking@us.ibm.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Jim Gill <jgill@vmware.com>,
-        VMware PV-Drivers <pv-drivers@vmware.com>,
-        Jason Yan <yanaijie@huawei.com>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Ming Lei <ming.lei@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-        Wen Xiong <wenxiong@linux.vnet.ibm.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        "Ewan D. Milne" <emilne@redhat.com>, Jan Kara <jack@suse.cz>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 15/15] scsi: Use PCI_IRQ_MSI_TYPES and PCI_IRQ_ALL_TYPES where appropriate
-Date:   Tue,  9 Jun 2020 11:20:45 +0200
-Message-Id: <20200609092048.2106-1-piotr.stankiewicz@intel.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20200609091148.32749-1-piotr.stankiewicz@intel.com>
-References: <20200609091148.32749-1-piotr.stankiewicz@intel.com>
+        Tue, 9 Jun 2020 05:21:17 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:22682 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728024AbgFIJVQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 05:21:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1591694476; x=1623230476;
+  h=subject:to:references:cc:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=nF9G0uIp0EqGaKlZRruPKwDafn+ACllof9PIxrZN6/Y=;
+  b=KdOx0vwoMxhR9DODJVQ1ownvGzmPse1REkJQ/naWeb6daA1KgzqceOVg
+   qCbxk71W5oWSRuchsgCoZv3RKlaC6pyYtIFcuOwWt1gdTFYMUcUHgCjWa
+   LK7/O9fBNR9EWiMbtmSDiBdPvb9TNrR4AtKijRmxLG3pWvwaEffSHkFCB
+   Q=;
+IronPort-SDR: lXQrI3dOyTOwIeEUHA0t5OQPZQHBtdrrnJhjqQny6iAR5hZ+rxBGYc5gOOZpO4d5KxTABwZVmL
+ ewF9BgQddWYA==
+X-IronPort-AV: E=Sophos;i="5.73,491,1583193600"; 
+   d="scan'208";a="35243491"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 09 Jun 2020 09:21:15 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com (Postfix) with ESMTPS id 26B6DA0681;
+        Tue,  9 Jun 2020 09:21:11 +0000 (UTC)
+Received: from EX13D19EUB001.ant.amazon.com (10.43.166.229) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 9 Jun 2020 09:21:08 +0000
+Received: from 8c85908914bf.ant.amazon.com (10.43.161.145) by
+ EX13D19EUB001.ant.amazon.com (10.43.166.229) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 9 Jun 2020 09:21:03 +0000
+Subject: Re: [PATCH 1/1] RDMA/core: Don't copy uninitialized stack memory to
+ userspace
+To:     Xidong Wang <wangxidong_97@163.com>
+References: <1591692057-46380-1-git-send-email-wangxidong_97@163.com>
+CC:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        "Yishai Hadas" <yishaih@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Maor Gottlieb <maorg@mellanox.com>,
+        <linux-rdma@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+From:   Gal Pressman <galpress@amazon.com>
+Message-ID: <844cee99-5f52-3110-02b2-60b205f1a189@amazon.com>
+Date:   Tue, 9 Jun 2020 12:20:57 +0300
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.8.1
+MIME-Version: 1.0
+In-Reply-To: <1591692057-46380-1-git-send-email-wangxidong_97@163.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.43.161.145]
+X-ClientProxiedBy: EX13D13UWB001.ant.amazon.com (10.43.161.156) To
+ EX13D19EUB001.ant.amazon.com (10.43.166.229)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Seeing as there is shorthand available to use when asking for any type
-of interrupt, or any type of message signalled interrupt, leverage it.
+On 09/06/2020 11:40, Xidong Wang wrote:
+> From: xidongwang <wangxidong_97@163.com>
+> 
+> ib_uverbs_create_ah() may copy stack allocated
+> structs to userspace without initializing all members of these
+> structs. Clear out this memory to prevent information leaks.
 
-Signed-off-by: Piotr Stankiewicz <piotr.stankiewicz@intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
----
- drivers/scsi/ipr.c        | 5 +++--
- drivers/scsi/vmw_pvscsi.c | 2 +-
- 2 files changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/scsi/ipr.c b/drivers/scsi/ipr.c
-index 7d77997d26d4..b320fc765a57 100644
---- a/drivers/scsi/ipr.c
-+++ b/drivers/scsi/ipr.c
-@@ -10272,9 +10272,10 @@ static int ipr_probe_ioa(struct pci_dev *pdev,
- 		ipr_number_of_msix = IPR_MAX_MSIX_VECTORS;
- 	}
- 
--	irq_flag = PCI_IRQ_LEGACY;
- 	if (ioa_cfg->ipr_chip->has_msi)
--		irq_flag |= PCI_IRQ_MSI | PCI_IRQ_MSIX;
-+		irq_flag = PCI_IRQ_ALL_TYPES;
-+	else
-+		irq_flag = PCI_IRQ_LEGACY;
- 	rc = pci_alloc_irq_vectors(pdev, 1, ipr_number_of_msix, irq_flag);
- 	if (rc < 0) {
- 		ipr_wait_for_pci_err_recovery(ioa_cfg);
-diff --git a/drivers/scsi/vmw_pvscsi.c b/drivers/scsi/vmw_pvscsi.c
-index 8dbb4db6831a..4aa7166d13fb 100644
---- a/drivers/scsi/vmw_pvscsi.c
-+++ b/drivers/scsi/vmw_pvscsi.c
-@@ -1347,7 +1347,7 @@ static u32 pvscsi_get_max_targets(struct pvscsi_adapter *adapter)
- 
- static int pvscsi_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- {
--	unsigned int irq_flag = PCI_IRQ_MSIX | PCI_IRQ_MSI | PCI_IRQ_LEGACY;
-+	unsigned int irq_flag = PCI_IRQ_ALL_TYPES;
- 	struct pvscsi_adapter *adapter;
- 	struct pvscsi_adapter adapter_temp;
- 	struct Scsi_Host *host = NULL;
--- 
-2.17.2
-
+Which members are not initialized?
