@@ -4,54 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4801C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:04:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49423C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:04:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BAAD20734
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:04:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2042F206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:04:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725871;
-	bh=GVHnm3hh3L2GRK/NDb/CACB4DM4slcHUXJjsoaWORg4=;
+	s=default; t=1591725876;
+	bh=TUchAfSP3c+TsOsIJC3hkMN+LDRDbG1kStznIlC4JxY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T7Ymp6MNexZAhhhmibBst3lLgmyJ+Dd2uh9Xj6WX2ngot4fbZ8Wmw1p9sQA4Y0WBy
-	 BfUYy6hubdi9k7XdD/nW8fB/Z+5Kxpokk05hmRaOfwJE8GwKfDkQX4D8iKg2JHQwcJ
-	 OkVuNrEWbBVPCNujmmluanZYVNqsv86aOlK9FCpQ=
+	b=OKULi437yRhXIM5uS7nsm/AsJQVvWgvRgJ9y28T5ncyC4JYz+3qE5iPri5v9mImci
+	 i4UmhSJqAjORMn+A+LSx5Ur3K3JOFuz5f0TDKSthuKVeCY/B2vUJ+cWrpJBgqM5bAs
+	 h1pfuPAuMaFpGlJOZ32ADWd/8sIb7rsdh/RUfVMo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728805AbgFIRwI (ORCPT
+        id S2388010AbgFISEc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:52:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39406 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 14:04:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732752AbgFIRvB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:51:01 -0400
+        id S1728272AbgFIRwM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:52:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 082AC20774;
-        Tue,  9 Jun 2020 17:51:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5010C20734;
+        Tue,  9 Jun 2020 17:52:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725061;
-        bh=GVHnm3hh3L2GRK/NDb/CACB4DM4slcHUXJjsoaWORg4=;
+        s=default; t=1591725131;
+        bh=TUchAfSP3c+TsOsIJC3hkMN+LDRDbG1kStznIlC4JxY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mhS123lxZTxKZOpWpz3NoCmzBOZ1IPGtBzddGNmKguqERbImNcdeNRlqcEoKV/try
-         JhhwRv6mYFz3mSjKGqkJ56nPJ4XimYw78sTpZlfF9QGQdn6+faddRxwlyGD03/YZeW
-         ZuAMx35bgqAjCmphPboEOJSSqK9EUmwFcvkKm8FA=
+        b=Gj5udDQNY+UZ6htT396ivANl2oLzwwpJ4TPCdIaZ+Dc1Zlf0SE35dn2kdPilbH8lo
+         1GnkGT4vjxTc+13eHka2UIRLrq6Cci7v19jqqZ6u7t1wK+B93EwL9CUJPKKRmXoLNf
+         vdHZqjVrk83g7IDF/Dr04ga1E2wb58X8/xtetYlw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Giuseppe Marco Randazzo <gmrandazzo@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Christian Lamparter <chunkeey@gmail.com>
-Subject: [PATCH 4.14 18/46] p54usb: add AirVasT USB stick device-id
-Date:   Tue,  9 Jun 2020 19:44:34 +0200
-Message-Id: <20200609174024.677216703@linuxfoundation.org>
+        stable@vger.kernel.org, Bin Liu <b-liu@ti.com>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.4 13/34] USB: serial: usb_wwan: do not resubmit rx urb on fatal errors
+Date:   Tue,  9 Jun 2020 19:45:09 +0200
+Message-Id: <20200609174054.295888909@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200609174022.938987501@linuxfoundation.org>
-References: <20200609174022.938987501@linuxfoundation.org>
+In-Reply-To: <20200609174052.628006868@linuxfoundation.org>
+References: <20200609174052.628006868@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,35 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Giuseppe Marco Randazzo <gmrandazzo@gmail.com>
+From: Bin Liu <b-liu@ti.com>
 
-commit 63e49a9fdac1b4e97ac26cb3fe953f210d83bc53 upstream.
+commit 986c1748c84d7727defeaeca74a73b37f7d5cce1 upstream.
 
-This patch adds the AirVasT USB wireless devices 124a:4026
-to the list of supported devices. It's using the ISL3886
-usb firmware. Without this modification, the wiki adapter
-is not recognized.
+usb_wwan_indat_callback() shouldn't resubmit rx urb if the previous urb
+status is a fatal error. Or the usb controller would keep processing the
+new urbs then run into interrupt storm, and has no chance to recover.
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Giuseppe Marco Randazzo <gmrandazzo@gmail.com>
-Signed-off-by: Christian Lamparter <chunkeey@gmail.com> [formatted, reworded]
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200405220659.45621-1-chunkeey@gmail.com
+Fixes: 6c1ee66a0b2b ("USB-Serial: Fix error handling of usb_wwan")
+Cc: stable@vger.kernel.org
+Signed-off-by: Bin Liu <b-liu@ti.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/intersil/p54/p54usb.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/serial/usb_wwan.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/net/wireless/intersil/p54/p54usb.c
-+++ b/drivers/net/wireless/intersil/p54/p54usb.c
-@@ -64,6 +64,7 @@ static const struct usb_device_id p54u_t
- 	{USB_DEVICE(0x0db0, 0x6826)},	/* MSI UB54G (MS-6826) */
- 	{USB_DEVICE(0x107b, 0x55f2)},	/* Gateway WGU-210 (Gemtek) */
- 	{USB_DEVICE(0x124a, 0x4023)},	/* Shuttle PN15, Airvast WM168g, IOGear GWU513 */
-+	{USB_DEVICE(0x124a, 0x4026)},	/* AirVasT USB wireless device */
- 	{USB_DEVICE(0x1435, 0x0210)},	/* Inventel UR054G */
- 	{USB_DEVICE(0x15a9, 0x0002)},	/* Gemtek WUBI-100GW 802.11g */
- 	{USB_DEVICE(0x1630, 0x0005)},	/* 2Wire 802.11g USB (v1) / Z-Com */
+--- a/drivers/usb/serial/usb_wwan.c
++++ b/drivers/usb/serial/usb_wwan.c
+@@ -270,6 +270,10 @@ static void usb_wwan_indat_callback(stru
+ 	if (status) {
+ 		dev_dbg(dev, "%s: nonzero status: %d on endpoint %02x.\n",
+ 			__func__, status, endpoint);
++
++		/* don't resubmit on fatal errors */
++		if (status == -ESHUTDOWN || status == -ENOENT)
++			return;
+ 	} else {
+ 		if (urb->actual_length) {
+ 			tty_insert_flip_string(&port->port, data,
 
 
