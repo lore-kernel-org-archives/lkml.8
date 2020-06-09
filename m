@@ -2,130 +2,79 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA8A5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C568EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:38:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9591B20737
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:37:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CUfa4wkd"
+	by mail.kernel.org (Postfix) with ESMTP id A6D6D20774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:38:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731100AbgFIQhV (ORCPT
+        id S1731065AbgFIQie (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 12:37:21 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:20739 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728388AbgFIQhP (ORCPT
+        Tue, 9 Jun 2020 12:38:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58564 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727820AbgFIQie (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 12:37:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591720634;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=+II8osbiFfoX/L1u4six/WCUHiqDeOz+O5rD4LfoR2M=;
-        b=CUfa4wkdqm1TJmH4WNtBHZYoBhxhlTnjJIAtAoO/IFzlkokVK83c67Xswg5Dxq+/F65bpL
-        YsBOyPWXl00CM1YLjjcuCj9J81/mVSx5NwcNKJ+ERV1h+aTagPKahXnsDHCe+3DU5tUW+M
-        OpLof0u3pkJ4Qrupcu0WFTZrqBkI9sU=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-455-z5kDnc5UMjaWF1Q9EsvRlA-1; Tue, 09 Jun 2020 12:37:10 -0400
-X-MC-Unique: z5kDnc5UMjaWF1Q9EsvRlA-1
-Received: by mail-wr1-f69.google.com with SMTP id a4so8808434wrp.5
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 09:37:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+II8osbiFfoX/L1u4six/WCUHiqDeOz+O5rD4LfoR2M=;
-        b=mlIXpAyQ8qwFBrECXQVmfyubT2GAOrhs8b/o0X9g2fEFxFVNQpLLbaF1AjN515qf8O
-         fidPq+DpbKA3XEERfZQbwWc50i0FPFnqH+Hm0d4rVzUQrwGWxOyA0aymFktfOMlGid3K
-         PP5trXbqnoAMFTrK5Lf6doOUXllj0+wmiqhGj/0eD47ntxrCimODPvEI51Vv+2Mfyr9l
-         Ku4/UpV5JPQZfYi3k5lA2XIWPvk613qDn9fi8OXTHoJmTlLP7BQG4vbnx267I48rJsmi
-         Rbgfr+Yj1WKsORIVVZccHYn+kUKWxKPujDpDKMlMPsNwSreUs4c+9CnUmITXLXPJRQaq
-         gNOg==
-X-Gm-Message-State: AOAM530Sirhw2y0l/ojTrcKx9o8P0790K/zvMWi13hUGngtJ0LWjOAeh
-        QbZ15Xbhw2TrXsWFXJxiA4D2CcMiIhf1VoRo7rqX7hWOP3baRO+Cc2MCIJUEFTiri1Qu4SXA+L/
-        mo7wlYbgqoLlLau/RxD591aMb
-X-Received: by 2002:a1c:dd44:: with SMTP id u65mr5269012wmg.180.1591720629586;
-        Tue, 09 Jun 2020 09:37:09 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz93L1cNiCH3xWCKNeXmWCa9GZNaquxVlfU7TmLWNCwG1IA511CFoLPu9aXLiiVBHF4IpYnIg==
-X-Received: by 2002:a1c:dd44:: with SMTP id u65mr5268995wmg.180.1591720629341;
-        Tue, 09 Jun 2020 09:37:09 -0700 (PDT)
-Received: from redhat.com (bzq-79-181-55-232.red.bezeqint.net. [79.181.55.232])
-        by smtp.gmail.com with ESMTPSA id a1sm3383430wmj.29.2020.06.09.09.37.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 09:37:08 -0700 (PDT)
-Date:   Tue, 9 Jun 2020 12:37:06 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Cc:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        David Hildenbrand <david@redhat.com>,
-        linux-renesas-soc@vger.kernel.org,
-        Jason Wang <jasowang@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jiri Kosina <trivial@kernel.org>,
-        "open list:VIRTIO CORE AND NET DRIVERS" 
-        <virtualization@lists.linux-foundation.org>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] mm/balloon_compaction: Fix trivial spelling
-Message-ID: <20200609123652-mutt-send-email-mst@kernel.org>
-References: <20200609124610.3445662-16-kieran.bingham+renesas@ideasonboard.com>
- <20200609143412.3456484-1-kieran.bingham+renesas@ideasonboard.com>
+        Tue, 9 Jun 2020 12:38:34 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4889C05BD1E;
+        Tue,  9 Jun 2020 09:38:33 -0700 (PDT)
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1jihGi-0004qD-9P; Tue, 09 Jun 2020 18:38:32 +0200
+Date:   Tue, 9 Jun 2020 18:38:32 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Tom Zanussi <zanussi@kernel.org>
+Cc:     linux-rt-users <linux-rt-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [4.19 stable-rt PATCH] tasklet: Fix UP case for tasklet CHAINED
+ state
+Message-ID: <20200609163832.vicpmza6qgxalhmg@linutronix.de>
+References: <7642da1ef2578601d8c2b7bb739b0f8451e69bed.camel@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200609143412.3456484-1-kieran.bingham+renesas@ideasonboard.com>
+In-Reply-To: <7642da1ef2578601d8c2b7bb739b0f8451e69bed.camel@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 03:34:12PM +0100, Kieran Bingham wrote:
-> The word 'descriptor' is misspelled throughout the tree.
-> 
-> Fix it up accordingly:
->     decriptors -> descriptors
-> 
-> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-> Reviewed-by: David Hildenbrand <david@redhat.com>
+On 2020-06-09 11:21:44 [-0500], Tom Zanussi wrote:
+> index 73dae64bfc9c..4f37a6173ab9 100644
+> --- a/kernel/softirq.c
+> +++ b/kernel/softirq.c
+> @@ -947,10 +947,12 @@ static void __tasklet_schedule_common(struct tasklet_struct *t,
+>  	 * is locked before adding it to the list.
+>  	 */
+>  	if (test_bit(TASKLET_STATE_SCHED, &t->state)) {
+> +#if defined(CONFIG_SMP)
+>  		if (test_and_set_bit(TASKLET_STATE_CHAINED, &t->state)) {
+>  			tasklet_unlock(t);
+>  			return;
+>  		}
+> +#endif
+>  		t->next = NULL;
+>  		*head->tail = t;
+>  		head->tail = &(t->next);
+> @@ -1044,7 +1046,11 @@ static void tasklet_action_common(struct softirq_action *a,
+>  again:
+>  		t->func(t->data);
+>  
+> +#if !defined(CONFIG_SMP)
+> +		while (!tasklet_tryunlock(t)) {
+> +#else
+>  		while (cmpxchg(&t->state, TASKLET_STATEF_RC, 0) != TASKLET_STATEF_RC) {
+> +#endif
 
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
+This is still needed for RT && !SMP
 
-Trivial tree pls.
+>  			/*
+>  			 * If it got disabled meanwhile, bail out:
+>  			 */
 
-> ---
->  mm/balloon_compaction.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/mm/balloon_compaction.c b/mm/balloon_compaction.c
-> index 26de020aae7b..907fefde2572 100644
-> --- a/mm/balloon_compaction.c
-> +++ b/mm/balloon_compaction.c
-> @@ -58,7 +58,7 @@ EXPORT_SYMBOL_GPL(balloon_page_list_enqueue);
->  /**
->   * balloon_page_list_dequeue() - removes pages from balloon's page list and
->   *				 returns a list of the pages.
-> - * @b_dev_info: balloon device decriptor where we will grab a page from.
-> + * @b_dev_info: balloon device descriptor where we will grab a page from.
->   * @pages: pointer to the list of pages that would be returned to the caller.
->   * @n_req_pages: number of requested pages.
->   *
-> @@ -157,7 +157,7 @@ EXPORT_SYMBOL_GPL(balloon_page_enqueue);
->  /*
->   * balloon_page_dequeue - removes a page from balloon's page list and returns
->   *			  its address to allow the driver to release the page.
-> - * @b_dev_info: balloon device decriptor where we will grab a page from.
-> + * @b_dev_info: balloon device descriptor where we will grab a page from.
->   *
->   * Driver must call this function to properly dequeue a previously enqueued page
->   * before definitively releasing it back to the guest system.
-> -- 
-> 2.25.1
-
+Sebastian
