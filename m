@@ -2,308 +2,238 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C025C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 08:38:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD296C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 08:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFF55207ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 08:38:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94C292078D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 08:40:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591692036;
+	bh=jh4pPeDllLIa0gzajHtaJgN8gFI5M1S9vMW6hQg+A4M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=S+s2xaF8m8M4lju7+lv/oPgYlxfs0S84T0nWdOrtsj8cc6gice2zGxntzjpd4xuoA
+	 8T7IhXI5YhEwsYs2hpR/BPZnNhwYPF79v0+V7aYUHIgAmPcjoe2tDTVw52wu5pxsZi
+	 XPD/you6oArsvt8HxUmvdb5VEaoPV6L+f1seD6iI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728234AbgFIIi4 (ORCPT
+        id S1728020AbgFIIkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 04:38:56 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2294 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726463AbgFIIiz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 04:38:55 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 2858351CAB73E6515A54;
-        Tue,  9 Jun 2020 09:38:53 +0100 (IST)
-Received: from localhost (10.47.27.61) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 9 Jun 2020
- 09:38:52 +0100
-Date:   Tue, 9 Jun 2020 09:38:08 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Lars Povlsen <lars.povlsen@microchip.com>
-CC:     Guenter Roeck <linux@roeck-us.net>, <linux-hwmon@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        <linux-kernel@vger.kernel.org>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2 3/3] hwmon: sparx5: Add Sparx5 SoC temperature driver
-Message-ID: <20200609093808.00003aad@Huawei.com>
-In-Reply-To: <20200609074940.9529-1-lars.povlsen@microchip.com>
-References: <20200609072828.9088-1-lars.povlsen@microchip.com>
-        <20200609074940.9529-1-lars.povlsen@microchip.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Tue, 9 Jun 2020 04:40:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36106 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726463AbgFIIkf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 04:40:35 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD8492078D;
+        Tue,  9 Jun 2020 08:40:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591692034;
+        bh=jh4pPeDllLIa0gzajHtaJgN8gFI5M1S9vMW6hQg+A4M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ycVrdILeVIX9+DRAS1oTAQC8ICKIWRxGRSCCmnrPC114tgfiiRBqSBhoLfi2K7dCu
+         O4cz9RTId2frkHAftqAxTLnk7WC59rZQ1VeSK35TFy0QUQGmA9qJ776Jlqpubv5HXk
+         UqkWkQ4IkStyT13yu70eQOj24AqC78YVHxiXWeW8=
+Received: by pali.im (Postfix)
+        id 9C3F5884; Tue,  9 Jun 2020 10:40:31 +0200 (CEST)
+Date:   Tue, 9 Jun 2020 10:40:31 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Y Paritcher <y.linux@paritcher.com>
+Cc:     Mario.Limonciello@dell.com, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, mjg59@srcf.ucam.org
+Subject: Re: [PATCH v2 2/3] platform/x86: dell-wmi: add new keymap type 0x0012
+Message-ID: <20200609084031.3hibhhygpgns4s73@pali>
+References: <cover.1591584631.git.y.linux@paritcher.com>
+ <cover.1591656154.git.y.linux@paritcher.com>
+ <74fdb288757cf5970a558f920f531b3bd1c51b47.1591656154.git.y.linux@paritcher.com>
+ <20200608233303.57ubv4rxo4tnaaxa@pali>
+ <295ad85ecc464a57bffd5b783d4170a1@AUSX13MPC105.AMER.DELL.COM>
+ <2d4b308d-ce03-b13b-0140-4bbe669878c4@paritcher.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.27.61]
-X-ClientProxiedBy: lhreml745-chm.china.huawei.com (10.201.108.195) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2d4b308d-ce03-b13b-0140-4bbe669878c4@paritcher.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 9 Jun 2020 09:49:40 +0200
-Lars Povlsen <lars.povlsen@microchip.com> wrote:
+On Monday 08 June 2020 20:57:38 Y Paritcher wrote:
+> On 6/8/20 8:26 PM, Mario.Limonciello@dell.com wrote:
+> >> -----Original Message-----
+> >> From: Pali Rohár <pali@kernel.org>
+> >> Sent: Monday, June 8, 2020 6:33 PM
+> >> To: Y Paritcher
+> >> Cc: linux-kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org;
+> >> Matthew Garrett; Limonciello, Mario
+> >> Subject: Re: [PATCH v2 2/3] platform/x86: dell-wmi: add new keymap type
+> >> 0x0012
+> >>
+> >>
+> >> [EXTERNAL EMAIL]
+> >>
+> >> On Monday 08 June 2020 19:05:29 Y Paritcher wrote:
+> >>> These are events with extended data. The extended data is
+> >>> currently ignored as userspace does not have a way to deal
+> >>> it.
+> >>>
+> >>> Ignore event with a type of 0x0012 and a code of 0xe035, as
+> >>> the keyboard controller takes care of Fn lock events by itself.
+> >>
+> >> Nice! This is information which is really important and need to have it
+> >> documented.
+> >>
+> >>> This silences the following messages being logged when
+> >>> pressing the Fn-lock key on a Dell Inspiron 5593:
+> >>>
+> >>> dell_wmi: Unknown WMI event type 0x12
+> >>> dell_wmi: Unknown key with type 0x0012 and code 0xe035 pressed
+> >>>
+> >>> This is consistent with the behavior for the Fn-lock key
+> >>> elsewhere in this file.
+> >>>
+> >>> Signed-off-by: Y Paritcher <y.linux@paritcher.com>
+> >>
+> >> I'm fine with this patch now.
+> >>
+> >> Reviewed-by: Pali Rohár <pali@kernel.org>
+> >>
+> >>> ---
+> >>>  drivers/platform/x86/dell-wmi.c | 20 +++++++++++++++++++-
+> >>>  1 file changed, 19 insertions(+), 1 deletion(-)
+> >>>
+> >>> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-
+> >> wmi.c
+> >>> index 0b2edfe2767d..6b510f8431a3 100644
+> >>> --- a/drivers/platform/x86/dell-wmi.c
+> >>> +++ b/drivers/platform/x86/dell-wmi.c
+> >>> @@ -334,6 +334,15 @@ static const struct key_entry
+> >> dell_wmi_keymap_type_0011[] = {
+> >>>  	{ KE_IGNORE, KBD_LED_AUTO_100_TOKEN, { KEY_RESERVED } },
+> >>>  };
+> >>>
+> >>> +/*
+> >>> + * Keymap for WMI events of type 0x0012
+> >>> + * They are events with extended data
+> >>> + */
+> >>> +static const struct key_entry dell_wmi_keymap_type_0012[] = {
+> >>> +	/* Fn-lock button pressed */
+> >>> +	{ KE_IGNORE, 0xe035, { KEY_RESERVED } },
+> >>> +};
+> >>> +
+> >>>  static void dell_wmi_process_key(struct wmi_device *wdev, int type, int
+> >> code)
+> >>>  {
+> >>>  	struct dell_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
+> >>> @@ -418,10 +427,11 @@ static void dell_wmi_notify(struct wmi_device
+> >> *wdev,
+> >>>
+> >>>  		switch (buffer_entry[1]) {
+> >>>  		case 0x0000: /* One key pressed or event occurred */
+> >>> +		case 0x0012: /* Event with extended data occurred */
+> > 
+> > I don't really like this being handled as a key as it's just discarding all
+> > that extended data.
 
-> This patch adds a temperature sensor driver to the Sparx5 SoC.
+It is not ideal. But currently we handle all events as key press. And
+non-key events are marked as ignored.
+
+I agree, it should be handled in better way. But that needs to extend
+driver. But it is something which should be done in next patches, not in
+this one (if somebody has time to do it, etc...).
+
+> >>
+> >> Mario, are you able to get some official documentation for these 0x0012
+> >> event types? I think it could be really useful for community so they can
+> >> understand and add easily new type of code and events. Because currently
+> >> we are just guessing what it could be. (It is sequence? Or single event?
+> >> Or single event with extended data? It is generic event? Or it is real
+> >> keypress? etc...)
+> > 
+> > It's a single event with more data in the subsequent words.  It is definitely
+> > not a real keypress.  It's supposed to be data that a user application would show.
+> > 
+> > Remember the way WMI works on Linux and Windows is different.  On Windows
+> > userland applications get the events directly.  On Linux kernel drivers get the
+> > events and either use it internally, pass to another kernel driver or pass to
+> > userland in the form of a translated event.
+> > 
+> > So on Windows the whole buffer gets looked at directly by the application and the
+> > application will decode it to show a translated string.
+> > 
+> > I can certainly discuss internally about our team releasing a patch to export
+> > all these other events.  I would like to know what interface to recommend it pass
+> > to userspace though, because as I said this is more than just a keycode that
+> > comes through in the event.  It's not useful to just do dev_info, it really should
+> > be something that userspace can act on and show a translated message.
+> > I don't think we want to add another 15 Dell specific keycodes to the kernel for the
+> > various events and add another 4 more when a laptop introduces another set of keys.
+> > 
 > 
-> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
-
-Hi.  Quick drive by review whilst waiting for coffee time...
-
-A few minor suggestions inline.
-
-Thanks,
-
-Jonathan
-
-> ---
->  drivers/hwmon/Kconfig       |  10 +++
->  drivers/hwmon/Makefile      |   2 +-
->  drivers/hwmon/sparx5-temp.c | 152 ++++++++++++++++++++++++++++++++++++
->  3 files changed, 163 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/hwmon/sparx5-temp.c
+> We can treat this as a key for now. This gets rid of the unnecessary log messages.
 > 
-> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-> index 288ae9f63588c..ec6bb8b8b12df 100644
-> --- a/drivers/hwmon/Kconfig
-> +++ b/drivers/hwmon/Kconfig
-> @@ -515,6 +515,16 @@ config SENSORS_I5K_AMB
->  	  This driver can also be built as a module. If so, the module
->  	  will be called i5k_amb.
+> When adecision is made about how to handle extended events it will be very easy
+> just to make this its own case statement and handle with it separately.
+
+I agree. Handle it in the same way like we handle all other events. That
+would make it easier to migrate to the new way, once it is there.
+
+> However if you want to pass Fn lock event to userspace there are keys from older
+> models of type 0010:
+>     /* Fn-lock switched to function keys */
+>     { KE_IGNORE, 0x0, { KEY_RESERVED } },
 > 
-> +config SENSORS_SPARX5
-> +	tristate "Sparx5 SoC temperature sensor"
-> +	depends on ARCH_SPARX5
-Anything stop this building with COMPILE_TEST?
-
-That will great increase automated build coverage.
-
-> +	help
-> +	  If you say yes here you get support for temperature monitoring
-> +	  with the Microchip Sparx5 SoC.
-> +
-> +	  This driver can also be built as a module. If so, the module
-> +	  will be called sparx5-temp.
-> +
->  config SENSORS_F71805F
->  	tristate "Fintek F71805F/FG, F71806F/FG and F71872F/FG"
->  	depends on !PPC
-> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-> index 3e32c21f5efe3..144f09993a3f4 100644
-> --- a/drivers/hwmon/Makefile
-> +++ b/drivers/hwmon/Makefile
-> @@ -66,6 +66,7 @@ obj-$(CONFIG_SENSORS_DS1621)	+= ds1621.o
->  obj-$(CONFIG_SENSORS_EMC1403)	+= emc1403.o
->  obj-$(CONFIG_SENSORS_EMC2103)	+= emc2103.o
->  obj-$(CONFIG_SENSORS_EMC6W201)	+= emc6w201.o
-> +obj-$(CONFIG_SENSORS_SPARX5)	+= sparx5-temp.o
->  obj-$(CONFIG_SENSORS_F71805F)	+= f71805f.o
->  obj-$(CONFIG_SENSORS_F71882FG)	+= f71882fg.o
->  obj-$(CONFIG_SENSORS_F75375S)	+= f75375s.o
-> @@ -193,4 +194,3 @@ obj-$(CONFIG_SENSORS_OCC)	+= occ/
->  obj-$(CONFIG_PMBUS)		+= pmbus/
+>     /* Fn-lock switched to multimedia keys */
+>     { KE_IGNORE, 0x1, { KEY_RESERVED } },
 > 
->  ccflags-$(CONFIG_HWMON_DEBUG_CHIP) := -DDEBUG
-> -
-> diff --git a/drivers/hwmon/sparx5-temp.c b/drivers/hwmon/sparx5-temp.c
-> new file mode 100644
-> index 0000000000000..2e754462b6010
-> --- /dev/null
-> +++ b/drivers/hwmon/sparx5-temp.c
-> @@ -0,0 +1,152 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/* Sparx5 SoC temperature sensor driver
-> + *
-> + * Copyright (C) 2020 Lars Povlsen <lars.povlsen@microchip.com>
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/init.h>
-> +#include <linux/hwmon.h>
-> +#include <linux/io.h>
-> +#include <linux/of_device.h>
-I think you only have this to define the id table?
-
-If so, perhaps better to include mod_devicetable.h and not include
-the of header.
-
-> +
-> +#define TEMP_CTRL		0
-> +#define TEMP_CFG		4
-> +#define  TEMP_CFG_CYCLES	GENMASK(24, 15)
-> +#define  TEMP_CFG_CYCLES_OFF	15
-
-Could you used FIELD_PREP etc to avoid having to have both
-the mask and offset defined here?
-
-> +#define  TEMP_CFG_ENA		BIT(0)
-> +#define TEMP_STAT		8
-> +#define  TEMP_STAT_VALID	BIT(12)
-> +#define  TEMP_STAT_TEMP		GENMASK(11, 0)
-> +
-> +struct s5_hwmon {
-> +	void __iomem *base;
-> +};
-> +
-> +static void s5_temp_enable(struct s5_hwmon *hwmon)
-> +{
-> +	u32 val = readl(hwmon->base + TEMP_CFG);
-> +	u32 clk = 250;
-> +
-> +	val &= ~TEMP_CFG_CYCLES;
-> +	val |= (clk << TEMP_CFG_CYCLES_OFF);
-> +	val |= TEMP_CFG_ENA;
-> +
-> +	writel(val, hwmon->base + TEMP_CFG);
-> +}
-> +
-> +static void s5_temp_disable(void *data)
-> +{
-> +	struct s5_hwmon *hwmon = data;
-> +	u32 val = readl(hwmon->base + TEMP_CFG);
-> +
-> +	val &= ~TEMP_CFG_ENA;
-> +
-> +	writel(val, hwmon->base + TEMP_CFG);
-> +}
-> +
-> +static int s5_read(struct device *dev, enum hwmon_sensor_types type,
-> +		   u32 attr, int channel, long *temp)
-> +{
-> +	struct s5_hwmon *hwmon = dev_get_drvdata(dev);
-> +	int rc = 0, value;
-> +	u32 stat;
-> +
-> +	switch (attr) {
-> +	case hwmon_temp_input:
-> +		stat = readl_relaxed(hwmon->base + TEMP_STAT);
-> +		if (!(stat & TEMP_STAT_VALID))
-> +			return -EIO;
-> +		value = stat & TEMP_STAT_TEMP;
-> +		value = DIV_ROUND_CLOSEST(value * 3522, 4096) - 1094;
-> +		value *= 100;
-> +		*temp = value;
-> +		break;
-> +	default:
-> +		rc = -EOPNOTSUPP;
-> +		break;
-> +	}
-> +
-> +	return rc;
-> +}
-> +
-> +static umode_t s5_is_visible(const void *_data, enum hwmon_sensor_types type,
-> +			     u32 attr, int channel)
-> +{
-> +	if (type != hwmon_temp)
-> +		return 0;
-> +
-> +	switch (attr) {
-> +	case hwmon_temp_input:
-> +		return 0444;
-> +	default:
-> +		return 0;
-> +	}
-> +}
-> +
-> +static const struct hwmon_channel_info *s5_info[] = {
-> +	HWMON_CHANNEL_INFO(chip,
-> +			   HWMON_C_REGISTER_TZ),
-> +	HWMON_CHANNEL_INFO(temp,
-> +			   HWMON_T_INPUT),
-
-Excess line breaks.  The above 2 would be more readable on one line each.
-
-> +	NULL
-> +};
-> +
-> +static const struct hwmon_ops s5_hwmon_ops = {
-> +	.is_visible = s5_is_visible,
-> +	.read = s5_read,
-> +};
-> +
-> +static const struct hwmon_chip_info s5_chip_info = {
-> +	.ops = &s5_hwmon_ops,
-> +	.info = s5_info,
-> +};
-> +
-> +static int s5_temp_probe(struct platform_device *pdev)
-> +{
-> +	struct device *hwmon_dev;
-> +	struct s5_hwmon *hwmon;
-> +	int err;
-> +
-> +	hwmon = devm_kzalloc(&pdev->dev, sizeof(*hwmon), GFP_KERNEL);
-> +	if (!hwmon)
-> +		return -ENOMEM;
-> +
-> +	hwmon->base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(hwmon->base))
-> +		return PTR_ERR(hwmon->base);
-> +
-> +	err = devm_add_action(&pdev->dev, s5_temp_disable, hwmon);
-> +	if (err)
-> +		return err;
-
-Probably just my linear way of thinking, but unusual to put error
-handling / remove stuff in place _before_ the thing it's unwinding.
-
-We have devm_add_action_or_reset to make it safe to call this after
-the thing it unwinds. 
-
-> +
-> +	s5_temp_enable(hwmon);
-> +
-> +	hwmon_dev = devm_hwmon_device_register_with_info(&pdev->dev,
-> +							 "s5_temp",
-> +							 hwmon,
-> +							 &s5_chip_info,
-> +							 NULL);
-> +
-> +	return PTR_ERR_OR_ZERO(hwmon_dev);
-> +}
-> +
-> +const struct of_device_id s5_temp_match[] = {
-> +	{ .compatible = "microchip,sparx5-temp" },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, s5_temp_match);
-> +
-> +static struct platform_driver s5_temp_driver = {
-> +	.probe = s5_temp_probe,
-> +	.driver = {
-> +		.name = "sparx5-temp",
-> +		.of_match_table = s5_temp_match,
-> +	},
-> +};
-> +
-> +module_platform_driver(s5_temp_driver);
-> +
-> +MODULE_AUTHOR("Lars Povlsen <lars.povlsen@microchip.com>");
-> +MODULE_DESCRIPTION("Sparx5 SoC temperature sensor driver");
-> +MODULE_LICENSE("GPL");
-> --
-> 2.27.0
+> They should also be changed to be passed to userspace and they don't signify status
+> with extended data rather by which event is called.
 > 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
-
+> This means that passing these types of events to userspace is a separate task, that
+> might require rethinking the entire design of how all event types are treated.
+> 
+> The current patch will be necessary regardless of what is decided in regards to
+> passing the events on, and continues the status quo.
+> >>
+> >>>  			if (len > 2)
+> >>>  				dell_wmi_process_key(wdev, 0x0000,
+> >>>  						     buffer_entry[2]);
+> >>> -			/* Other entries could contain additional information */
+> >>> +			/* Extended data is currently ignored */
+> >>>  			break;
+> >>>  		case 0x0010: /* Sequence of keys pressed */
+> >>>  		case 0x0011: /* Sequence of events occurred */
+> >>> @@ -556,6 +566,7 @@ static int dell_wmi_input_setup(struct wmi_device
+> >> *wdev)
+> >>>  			 ARRAY_SIZE(dell_wmi_keymap_type_0000) +
+> >>>  			 ARRAY_SIZE(dell_wmi_keymap_type_0010) +
+> >>>  			 ARRAY_SIZE(dell_wmi_keymap_type_0011) +
+> >>> +			 ARRAY_SIZE(dell_wmi_keymap_type_0012) +
+> >>>  			 1,
+> >>>  			 sizeof(struct key_entry), GFP_KERNEL);
+> >>>  	if (!keymap) {
+> >>> @@ -600,6 +611,13 @@ static int dell_wmi_input_setup(struct wmi_device
+> >> *wdev)
+> >>>  		pos++;
+> >>>  	}
+> >>>
+> >>> +	/* Append table with events of type 0x0012 */
+> >>> +	for (i = 0; i < ARRAY_SIZE(dell_wmi_keymap_type_0012); i++) {
+> >>> +		keymap[pos] = dell_wmi_keymap_type_0012[i];
+> >>> +		keymap[pos].code |= (0x0012 << 16);
+> >>> +		pos++;
+> >>> +	}
+> >>> +
+> >>>  	/*
+> >>>  	 * Now append also table with "legacy" events of type 0x0000. Some of
+> >>>  	 * them are reported also on laptops which have scancodes in DMI.
+> >>> --
+> >>> 2.27.0
+> >>>
