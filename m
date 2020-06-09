@@ -2,53 +2,53 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C11C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED74C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9594D2067B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:23:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29C022067B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:23:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591727009;
-	bh=UEtBzpPRnMXXcvZPch0gwKgleya4B+tA/veCfsBObmg=;
+	s=default; t=1591727013;
+	bh=GyyX7JDwC23wnpynPfM3VmIsUUQS2VfgCl7CFsrpotw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=snIkk3JRQcpQKJpAh/WQEbwed0jPuP/wJppI+5Sm5fg+XMfLrF0SwpPjf5SQuYR85
-	 SJOxCa3ADEQMcFHE0XETLmpnGuhEqc4GyckVyAUnbl/esLeuzje4S3P24etkcoOiOH
-	 Yny7HNH+rz9JJ796Jfta9ZkJK7zEQYoLk2U1mzRI=
+	b=NmaPKaFd9M1DoUReqDPX9ChQ7fr8ZAFaD03k5a3p0yuH5zVT2Uh17lKfyDJQbsCQq
+	 +5GIMJJV2Hgg8CpHp8vIUuZ2gKvcslB1mMFsTmvzmDfplzN5aYFhN83sZPMeVDGMvz
+	 uMAD8ynXfEGu0CHCTe//9Q8V4fG/L1yIohNX1owg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388904AbgFISX1 (ORCPT
+        id S1732088AbgFIRrY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:23:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58778 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:47:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732105AbgFIRr3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:47:29 -0400
+        id S1732052AbgFIRrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:47:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0D7B207F9;
-        Tue,  9 Jun 2020 17:47:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5D82207ED;
+        Tue,  9 Jun 2020 17:47:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591724849;
-        bh=UEtBzpPRnMXXcvZPch0gwKgleya4B+tA/veCfsBObmg=;
+        s=default; t=1591724833;
+        bh=GyyX7JDwC23wnpynPfM3VmIsUUQS2VfgCl7CFsrpotw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cg/wCYhBtWcK/0xuA6lTAjssqmzLsue+TgOh4bSFXvBBXaMO4jZ+Kl2DVMFTrnhcO
-         75NLkAfBzYaPs9gAx/s23lEoAzJ1fO9YG6vTXbO4tKseQxDj/i4V/ABgho54/Cgerk
-         H/bTKGq5TxGAzzm4gh1go9z+251K8fNv4Xsfffdw=
+        b=OE/pxgK11z6GPrhmDZi9qIszwfexVIsmL84Ryh6GIU4xKMTDokvrbBJC5vDA7vBf/
+         deYTqolwyz0wSHuIpY3PwHdQ2C5rYV0Jhkj0yucBQ45mp59Lh3/etFfLfN05SO/NXg
+         trKCQCYXmJdit2IA0M54y8nA+p2hJ9ClgGYpJUIE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bean Huo <beanhuo@micron.com>,
-        Can Guo <cang@codeaurora.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Eric Biggers <ebiggers@google.com>
-Subject: [PATCH 4.4 18/36] scsi: ufs: Release clock if DMA map fails
-Date:   Tue,  9 Jun 2020 19:44:18 +0200
-Message-Id: <20200609173934.332037261@linuxfoundation.org>
+        stable@vger.kernel.org, Mathieu Othacehe <m.othacehe@gmail.com>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 35/36] iio: vcnl4000: Fix i2c swapped word reading.
+Date:   Tue,  9 Jun 2020 19:44:35 +0200
+Message-Id: <20200609173935.835075859@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609173933.288044334@linuxfoundation.org>
 References: <20200609173933.288044334@linuxfoundation.org>
@@ -61,36 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Can Guo <cang@codeaurora.org>
+From: Mathieu Othacehe <m.othacehe@gmail.com>
 
-commit 17c7d35f141ef6158076adf3338f115f64fcf760 upstream.
+[ Upstream commit 18dfb5326370991c81a6d1ed6d1aeee055cb8c05 ]
 
-In queuecommand path, if DMA map fails, it bails out with clock held.  In
-this case, release the clock to keep its usage paired.
+The bytes returned by the i2c reading need to be swapped
+unconditionally. Otherwise, on be16 platforms, an incorrect value will be
+returned.
 
-[mkp: applied by hand]
+Taking the slow path via next merge window as its been around a while
+and we have a patch set dependent on this which would be held up.
 
-Link: https://lore.kernel.org/r/0101016ed3d66395-1b7e7fce-b74d-42ca-a88a-4db78b795d3b-000000@us-west-2.amazonses.com
-Reviewed-by: Bean Huo <beanhuo@micron.com>
-Signed-off-by: Can Guo <cang@codeaurora.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-[EB: resolved cherry-pick conflict caused by newer kernels not having
- the clear_bit_unlock() line]
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 62a1efb9f868 ("iio: add vcnl4000 combined ALS and proximity sensor")
+Signed-off-by: Mathieu Othacehe <m.othacehe@gmail.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/iio/light/vcnl4000.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -1374,6 +1374,7 @@ static int ufshcd_queuecommand(struct Sc
- 	ufshcd_compose_upiu(hba, lrbp);
- 	err = ufshcd_map_sg(lrbp);
- 	if (err) {
-+		ufshcd_release(hba);
- 		lrbp->cmd = NULL;
- 		clear_bit_unlock(tag, &hba->lrb_in_use);
- 		goto out;
+diff --git a/drivers/iio/light/vcnl4000.c b/drivers/iio/light/vcnl4000.c
+index c9d85bbc9230..a17891511be5 100644
+--- a/drivers/iio/light/vcnl4000.c
++++ b/drivers/iio/light/vcnl4000.c
+@@ -56,7 +56,6 @@ static int vcnl4000_measure(struct vcnl4000_data *data, u8 req_mask,
+ 				u8 rdy_mask, u8 data_reg, int *val)
+ {
+ 	int tries = 20;
+-	__be16 buf;
+ 	int ret;
+ 
+ 	ret = i2c_smbus_write_byte_data(data->client, VCNL4000_COMMAND,
+@@ -80,12 +79,11 @@ static int vcnl4000_measure(struct vcnl4000_data *data, u8 req_mask,
+ 		return -EIO;
+ 	}
+ 
+-	ret = i2c_smbus_read_i2c_block_data(data->client,
+-		data_reg, sizeof(buf), (u8 *) &buf);
++	ret = i2c_smbus_read_word_swapped(data->client, data_reg);
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	*val = be16_to_cpu(buf);
++	*val = ret;
+ 
+ 	return 0;
+ }
+-- 
+2.25.1
+
 
 
