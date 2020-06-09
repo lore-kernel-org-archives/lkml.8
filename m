@@ -2,141 +2,65 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AFE2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76AC7C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:15:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C92A207ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:15:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5680E207ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:15:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728274AbgFIJPb convert rfc822-to-8bit (ORCPT
+        id S1728358AbgFIJPu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 05:15:31 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:55037 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726778AbgFIJP2 (ORCPT
+        Tue, 9 Jun 2020 05:15:50 -0400
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:52799 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726187AbgFIJPt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 05:15:28 -0400
-Received: from mail-qt1-f172.google.com ([209.85.160.172]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1N2m7O-1ixPAe2F7E-0132Hu; Tue, 09 Jun 2020 11:15:24 +0200
-Received: by mail-qt1-f172.google.com with SMTP id z1so17033042qtn.2;
-        Tue, 09 Jun 2020 02:15:24 -0700 (PDT)
-X-Gm-Message-State: AOAM530RS4NuecT0s1oQr4x5f7MC0L6huT56ymvbTGx6JeZJh5qu27pn
-        lQOZlupwS82j3k6qHBlk9tTZB4uQOL4CgcrbNuY=
-X-Google-Smtp-Source: ABdhPJwLEIiew7LT85XJ7YMwfJX7yhLUFVtBnCDqoIKOxdCKDHjqNlOaWp8DLPqmET9skm0FQ81wStwRswqY7BJG62c=
-X-Received: by 2002:ac8:4742:: with SMTP id k2mr27989059qtp.304.1591694122865;
- Tue, 09 Jun 2020 02:15:22 -0700 (PDT)
+        Tue, 9 Jun 2020 05:15:49 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07484;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0U.3kARo_1591694145;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U.3kARo_1591694145)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 09 Jun 2020 17:15:45 +0800
+Subject: Re: [patch 113/131] mm: balance LRU lists based on relative thrashing
+To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        hannes@cmpxchg.org, iamjoonsoo.kim@lge.com, linux-mm@kvack.org,
+        mhocko@suse.com, minchan@kernel.org, mm-commits@vger.kernel.org,
+        riel@surriel.com, torvalds@linux-foundation.org
+References: <20200603230303.kSkT62Lb5%akpm@linux-foundation.org>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <a60f7866-3b32-7a0e-5d0a-a48d77f845a8@linux.alibaba.com>
+Date:   Tue, 9 Jun 2020 17:15:33 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200608164148.GA1394249@bjorn-Precision-5520> <bcf0a327-87b5-01ff-2f9c-ec6a6bd6c738@linaro.org>
-In-Reply-To: <bcf0a327-87b5-01ff-2f9c-ec6a6bd6c738@linaro.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 9 Jun 2020 11:15:06 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a38bhE_VO_eVcsfsGKgED=gmSEntQmrhwbLkeA6Si0qaw@mail.gmail.com>
-Message-ID: <CAK8P3a38bhE_VO_eVcsfsGKgED=gmSEntQmrhwbLkeA6Si0qaw@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Introduce PCI_FIXUP_IOMMU
-To:     Zhangfei Gao <zhangfei.gao@linaro.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        jean-philippe <jean-philippe@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-pci <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Provags-ID: V03:K1:kGYb3jMmETbHk7ETfChJPcg/kM3FCJJZyPXx2XC8g5Ud8G3UIHU
- xevtugFVfk44vd4itd6CeUSdhZ1TR+dMXfGOdfYN8RFRs0t2r3J7BtVJRhJasrZihguscsm
- TtxP+C2qRGuRL/nPub9KTWp9a/JVDQqUdXz+RMVjRKDW9tPyM8C55HldJstRePmeIPeHqDO
- A9fsJQT/cC7nc471uW3jQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:QGEsjw7JNoI=:qdRg51FIcOUv/GbrX7H8NU
- du6LH6NLpibryVn24IY3CrezHYu8HbUwKgMnamWMKV5Ntqwy148m/mbIv8mUBPRbNlRZHf6sF
- Qw3tYHvhV25Y99dTHUj1JrGTZj8m/Qh2kVzgMj06tPNJ4mFHKvFxGbEFEKuk/bxKZGQ4JdJzB
- 6vBGIHT6UvmRqALLZNgfEVvAWcWHuR7fIAwcAkzSqXIPGZQNKhmnMIfltPQ5xbFz+20IMUk7T
- E25RJNPZ1CO3+1pbZIaN8ZvcjVrjYQti647DdUfsCfboku7bJY4jFVbPD/u4mWquoz3sug7Ve
- xFWXqGW0EvAYinaE5IdIB7dAn4Wjk3Xo6cZKPq7RPK+2WIsT1QAxQn76hUN1afVjftxFPDXFv
- OsIveDASndAX/kKKR+nSnCSC8H65BlRrqcvNr700bS7S6wPES0bqO2FP3fVzy0/WZbE0plOE3
- pyywpEWtC02Pdnzu3sW/ftCMaHZgDALBYj6fwh4PdwMkKL3qmxtMkJ0OIpC/DsylQQomuHTdy
- wWgIp9BtzAQwzLAxiXBtXl07VZsjEODDFzxITnAt9JnPXI8ybZQ1GyvoYLB26rE1atxHOZA2z
- dKIHB5i9IANvwJrgwE79cc6RBdOrvbbzxRw/sPQeZZ96Mr3g3IYnjiWEvZc0eqmKln1wNUKHC
- dMRIVTtgnsllyrjESTy6ms3bLXh150dpetTWGamRv6aa6xNJEcEPnUlH8OdBk135xA/NKTBju
- C1VItJ6DSwqiJDIZUO9aDZkY16oRCdMYuoErBv23z1xc0hc9mwICqf6KFawbPVpR98NDybRhF
- 4aMjJNXE7j11IKWW8KxlBuuqgB8Xba5FMLCd/HPrSUtZy2Sklo=
+In-Reply-To: <20200603230303.kSkT62Lb5%akpm@linux-foundation.org>
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 9, 2020 at 6:02 AM Zhangfei Gao <zhangfei.gao@linaro.org> wrote:
-> On 2020/6/9 ä¸Šåˆ12:41, Bjorn Helgaas wrote:
-> > On Mon, Jun 08, 2020 at 10:54:15AM +0800, Zhangfei Gao wrote:
-> >> On 2020/6/6 ä¸Šåˆ7:19, Bjorn Helgaas wrote:
-> >>>> +++ b/drivers/iommu/iommu.c
-> >>>> @@ -2418,6 +2418,10 @@ int iommu_fwspec_init(struct device *dev, struct
-> >>>> fwnode_handle *iommu_fwnode,
-> >>>>           fwspec->iommu_fwnode = iommu_fwnode;
-> >>>>           fwspec->ops = ops;
-> >>>>           dev_iommu_fwspec_set(dev, fwspec);
-> >>>> +
-> >>>> +       if (dev_is_pci(dev))
-> >>>> +               pci_fixup_device(pci_fixup_final, to_pci_dev(dev));
-> >>>> +
-> >>>>
-> >>>> Then pci_fixup_final will be called twice, the first in pci_bus_add_device.
-> >>>> Here in iommu_fwspec_init is the second time, specifically for iommu_fwspec.
-> >>>> Will send this when 5.8-rc1 is open.
-> >>> Wait, this whole fixup approach seems wrong to me.  No matter how you
-> >>> do the fixup, it's still a fixup, which means it requires ongoing
-> >>> maintenance.  Surely we don't want to have to add the Vendor/Device ID
-> >>> for every new AMBA device that comes along, do we?
-> >>>
-> >> Here the fake pci device has standard PCI cfg space, but physical
-> >> implementation is base on AMBA
-> >> They can provide pasid feature.
-> >> However,
-> >> 1, does not support tlp since they are not real pci devices.
-> >> 2. does not support pri, instead support stall (provided by smmu)
-> >> And stall is not a pci feature, so it is not described in struct pci_dev,
-> >> but in struct iommu_fwspec.
-> >> So we use this fixup to tell pci system that the devices can support stall,
-> >> and hereby support pasid.
-> > This did not answer my question.  Are you proposing that we update a
-> > quirk every time a new AMBA device is released?  I don't think that
-> > would be a good model.
->
-> Yes, you are right, but we do not have any better idea yet.
-> Currently we have three fake pci devices, which support stall and pasid.
-> We have to let pci system know the device can support pasid, because of
-> stall feature, though not support pri.
-> Do you have any other ideas?
 
-It sounds like the best way would be to allocate a PCI capability for it, so
-detection can be done through config space, at least in future devices,
-or possibly after a firmware update if the config space in your system
-is controlled by firmware somewhere.  Once there is a proper mechanism
-to do this, using fixups to detect the early devices that don't use that
-should be uncontroversial. I have no idea what the process or timeline
-is to add new capabilities into the PCIe specification, or if this one
-would be acceptable to the PCI SIG at all.
 
-If detection cannot be done through PCI config space, the next best
-alternative is to pass auxiliary data through firmware. On DT based
-machines, you can list non-hotpluggable PCIe devices and add custom
-properties that could be read during device enumeration. I assume
-ACPI has something similar, but I have not done that.
+ÔÚ 2020/6/4 ÉÏÎç7:03, Andrew Morton Ð´µÀ:
+>  
+> +	/* XXX: Move to lru_cache_add() when it supports new vs putback */
 
-      Arnd
+Hi Hannes,
+
+Sorry for a bit lost, would you like to explain a bit more of your idea here?
+
+> +	spin_lock_irq(&page_pgdat(page)->lru_lock);
+> +	lru_note_cost(page);
+> +	spin_unlock_irq(&page_pgdat(page)->lru_lock);
+> +
+
+
+What could we see here w/o the lru_lock?
+
+Thanks
+Alex
