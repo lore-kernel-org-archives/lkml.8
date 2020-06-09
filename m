@@ -2,176 +2,170 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC84C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 05:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC0A5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 05:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6165207F9
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 05:15:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C930120825
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 05:21:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iszL6iYl"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ou2M7RFy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbgFIFPG (ORCPT
+        id S1726981AbgFIFVL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 01:15:06 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:35488 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725770AbgFIFPF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 01:15:05 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0595CVQm136842;
-        Tue, 9 Jun 2020 05:14:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=HvLmUO9WfIu9EpDHvCN9J3AGrpe38k/zLFBsg+AFDwY=;
- b=iszL6iYlKhWol9vdCUWhrzgkJJb+oMfZ/a0pOWH8y1Or5OZZhaOrkoI+k9ELCuIqVvID
- 10B9oBJ0YOdpHMemK5Wv/7H5FnPD+TmBn6fxV6EXqKPAY3OGOXiP91AjNhTumNsyxMPP
- 0SYH10AxC7qwII63f8AJ+1VokEux0NKpn7wxtJHRdqrj8CYIf9U+19FZEf/48O0czYoL
- vc5nJMD1PheyGaRJ0nW/MvXJKAYP8nSrHzakv2ic1lnh2GR1y0C2lYh7HQTUUFwf7eFq
- mWWY4CecbtgZOuuoQ8qI8IKX5l7qQ6LnuErWEM67L08Gbkik+Fvt2rd9JtxgA2ptYyc8 Sw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 31g3smtd5n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 09 Jun 2020 05:14:31 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05958KcB033010;
-        Tue, 9 Jun 2020 05:14:30 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 31gn24tm1y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 09 Jun 2020 05:14:30 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0595ETpL004959;
-        Tue, 9 Jun 2020 05:14:29 GMT
-Received: from dhcp-10-159-136-131.vpn.oracle.com (/10.159.136.131)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 08 Jun 2020 22:14:29 -0700
-Subject: Re: [PATCH] sample-trace-array: Fix sleeping function called from
- invalid context
-To:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
-References: <20200608075437.1760242-1-wangkefeng.wang@huawei.com>
-From:   Divya Indi <divya.indi@oracle.com>
-Message-ID: <0047f80f-4fff-16ff-7ac0-20181f03f06a@oracle.com>
-Date:   Mon, 8 Jun 2020 22:14:28 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.1
-MIME-Version: 1.0
-In-Reply-To: <20200608075437.1760242-1-wangkefeng.wang@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+        Tue, 9 Jun 2020 01:21:11 -0400
+Received: from mail-eopbgr60048.outbound.protection.outlook.com ([40.107.6.48]:39953
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725770AbgFIFVK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 01:21:10 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JP7rUtXQfxCyot87oW+5qXkXhyWY16+Jke3B0MJbe3Rfpc3BBPUPiuvYaqWMoNjnHH4HtbFtQLqFx1d3gitQdTI3axZLWDHQMoiPF8DQ9oUP1n9hHnYbTjD1tK2WdbaAJkgOX4qbxcdt3NtajLpm/u4sOse1nnXRBhdqred8tNoh8zqu60tyB6gfCGrk4x6z/WWGn1LjDZWLEJka+K+NZHbpQ3odqP8j67OllUsK9zCD2715I8BYINqkZA8S5ocW1+ILGRFIqOI+dCbUw0ufCTyDMZ3n3VBPCb+MDW37s+0ZvkEU4lSpdOS8HY7VD4E8FC0V1urX5yMrvnFKYbCwIg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yHkBw0HPxc+prr1W8elbO/t6RVzRCdRlO9wi82ahmio=;
+ b=bUICbCJ4k6Kk30gR5QEKPgBWNAkGUs5mg+rhw73MBzLGsZgKmoanHje7WQIS161lxt6bxILhlvvdeBOc8kOfIYBz4fAUk7cPEvC1bOLYT0XCHG9bOW/FCK0HXKjIHFhypo8d0BVzx/6qBRIyWSjIyq9Jesbf3lBosL5M1mtTOHMuGcZ/wT4iptMTxcjeCGcsx16ONwRI0D3CwpiVr+7Yt7njKarBjo6rGi/oA7V9T/zCvHeAhI0gxLl59irPmFgoUA2JYYzFsoNIcP2HDvqwnU05PVtwswdx2jSMfhpX3rjbhxJ6rs5LhV/EcsX/Ejr4aDexjkOrGyP89EOOTBig7g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yHkBw0HPxc+prr1W8elbO/t6RVzRCdRlO9wi82ahmio=;
+ b=ou2M7RFyYpOHdh+p6qHmmHysqyiQZIdpNpUt+4O5AxIKisLflGHuOvVnXMCxIUdGP+43wgblMSi/O5Pab62C9OerXekcBw7ZoG6RE8GxO58E3Bh+6FkYxcLYddYg2UqDYu8bo6W3fkJTVKfHFVP0gOPDHfobMAgKbf3nvDbP7J0=
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
+ by VE1PR04MB6685.eurprd04.prod.outlook.com (2603:10a6:803:120::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Tue, 9 Jun
+ 2020 05:21:04 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3066.023; Tue, 9 Jun 2020
+ 05:21:04 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Mark Brown <broonie@kernel.org>
+CC:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "matthias.schiffer@ew.tq-group.com" 
+        <matthias.schiffer@ew.tq-group.com>,
+        "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH v9 RESEND 01/13] spi: imx: add dma_sync_sg_for_device
+ after fallback from dma
+Thread-Topic: [PATCH v9 RESEND 01/13] spi: imx: add dma_sync_sg_for_device
+ after fallback from dma
+Thread-Index: AQHWPBYcMy4ZpJEEjkym0JBjSJknZajOy8sAgAABToCAAA6IgIAAFFCAgACn/7A=
+Date:   Tue, 9 Jun 2020 05:21:04 +0000
+Message-ID: <VE1PR04MB6638B1EC49D295C64292B7BD89820@VE1PR04MB6638.eurprd04.prod.outlook.com>
+References: <1591485677-20533-1-git-send-email-yibin.gong@nxp.com>
+ <1591485677-20533-2-git-send-email-yibin.gong@nxp.com>
+ <20200608143458.GH4593@sirena.org.uk>
+ <VE1PR04MB66388F89015F774EE3FFF69D89850@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <20200608153139.GI4593@sirena.org.uk>
+ <59ce3620-00b9-bac1-30e1-011a29583642@arm.com>
+In-Reply-To: <59ce3620-00b9-bac1-30e1-011a29583642@arm.com>
+Accept-Language: en-US
 Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9646 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=3 mlxscore=0
- phishscore=0 adultscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006090039
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9646 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
- lowpriorityscore=0 impostorscore=0 cotscore=-2147483648 suspectscore=3
- spamscore=0 bulkscore=0 malwarescore=0 phishscore=0 mlxscore=0
- mlxlogscore=999 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006090039
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: arm.com; dkim=none (message not signed)
+ header.d=none;arm.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 4b0ad395-6309-44de-8f10-08d80c34e846
+x-ms-traffictypediagnostic: VE1PR04MB6685:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB66853D9616D6B448BF527D5589820@VE1PR04MB6685.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 042957ACD7
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 2/lNHVr7dIMiPtQ8ub7DLLkN2z2SHr0IbK8WqUsUwy+s+hVtBgkLOZ4rn+Pp5wheI8RlVLx2THWpvLFRjINOtwpS7ibJNG0umcTyCK/ekV1eVwqpNfK/WysrusfKdilptJyHmOfSua8aWaUspqUiZdGBsGGsErhjPmqo6OtRcSSFb+Jd+qktUsAH79lKVj0Gwr+t5qsPmp2uIILQzYruhJM12udeAWzsnH7Uf7F+sljMFUlNXnJyL4TcftWeYC0FMBw2GElck543W6WOnxO9PQVAwwQ7SKc+NLCe+VW3dwLkKWDBm05sxt3Mx2/VMbyCOifrQ+mKesYl4/xPw3C2gA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(39860400002)(136003)(396003)(376002)(346002)(53546011)(76116006)(8676002)(2906002)(83380400001)(8936002)(71200400001)(55016002)(478600001)(33656002)(9686003)(5660300002)(66556008)(86362001)(186003)(26005)(54906003)(6506007)(7696005)(316002)(7416002)(110136005)(66476007)(4326008)(66946007)(66446008)(64756008)(52536014);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: Q4lfBzB9Q21BwKqHejUWnW1aU2D8WxZuJwTpbEaGSsgUFZjD3VS1nEGPsn3DraJalKpyqHyMqU+jAvGIwjdmz2GXVGbp2Yc31hiJPzr9vVAvRogDQISFFiyTsvoXdDsX04NenInSynyFFmbNdSHRwpSHBa/3cTETHGP8BeLPklewFbLSfrLA9Mz2WFEWwxakfZhC0PUJg9Fklry7DlKcThmRdukzove/JJIUkFjC/N6MJXRYWwrKrshaGk7TW2hXxZgD3mGWV11BS5f1EvN7NEwrTC6SVksdCbI2Dm/tvp5cdLf7m/kDjquCPFs4eGhhZhevYxO2dZlZp0a9F4SZjqpvHsUCnYRTrYAa/Kq3/kQNe3y2lqeEhlGWw6AEP95C4+j22TzEZCTkDEdGph3OMLK9zLmQrWqxyAG+DMuyOPzRPFpUfAxirbneJvFer9LXoF8Q705PoQRez7kQWzZg5tYhkFJZ4PbVIo98Ssyz31Y=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4b0ad395-6309-44de-8f10-08d80c34e846
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jun 2020 05:21:04.6746
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: K0zgAiXkt4M9D8HiTrgFRM5+reDiPPdbu3QQvzHuVPZMC9iY7HndPduCbGYMPRO/LtqJlyfibDCQf8q3zM6WXA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6685
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kefeng,
-
-Thanks for catching this issue.
-
-Please find my comments line -
-
-On 6/8/20 12:54 AM, Kefeng Wang wrote:
->  BUG: sleeping function called from invalid context at kernel/locking/mutex.c:935
->  in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 0, name: swapper/5
->  1 lock held by swapper/5/0:
->   #0: ffff80001002bd90 (samples/ftrace/sample-trace-array.c:38){+.-.}-{0:0}, at: call_timer_fn+0x8/0x3e0
->  CPU: 5 PID: 0 Comm: swapper/5 Not tainted 5.7.0+ #8
->  Hardware name: QEMU QEMU Virtual Machine, BIOS 0.0.0 02/06/2015
->  Call trace:
->   dump_backtrace+0x0/0x1a0
->   show_stack+0x20/0x30
->   dump_stack+0xe4/0x150
->   ___might_sleep+0x160/0x200
->   __might_sleep+0x58/0x90
->   __mutex_lock+0x64/0x948
->   mutex_lock_nested+0x3c/0x58
->   __ftrace_set_clr_event+0x44/0x88
->   trace_array_set_clr_event+0x24/0x38
->   mytimer_handler+0x34/0x40 [sample_trace_array]
->
-> mutex_lock() will be called in interrupt context, using workqueueu to fix it.
-
-/s/workqueueu/workqueue
-
-Fixes: 89ed42495ef4 ("tracing: Sample module to demonstrate kernel access to Ftrace instances.")
-
-> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-> ---
->  samples/ftrace/sample-trace-array.c | 16 +++++++++++-----
->  1 file changed, 11 insertions(+), 5 deletions(-)
->
-> diff --git a/samples/ftrace/sample-trace-array.c b/samples/ftrace/sample-trace-array.c
-> index d523450d73eb..41684c7dbd7b 100644
-> --- a/samples/ftrace/sample-trace-array.c
-> +++ b/samples/ftrace/sample-trace-array.c
-> @@ -20,6 +20,16 @@ struct trace_array *tr;
->  static void mytimer_handler(struct timer_list *unused);
->  static struct task_struct *simple_tsk;
->  
-> +static void trace_work_fn(struct work_struct *work)
-> +{
-> +	/*
-> +	 * Disable tracing for event "sample_event".
-> +	 */
-> +	trace_array_set_clr_event(tr, "sample-subsystem", "sample_event",
-> +			false);
-> +}
-> +static DECLARE_WORK(trace_work, trace_work_fn);
-> +
->  /*
->   * mytimer: Timer setup to disable tracing for event "sample_event". This
->   * timer is only for the purposes of the sample module to demonstrate access of
-> @@ -29,11 +39,7 @@ static DEFINE_TIMER(mytimer, mytimer_handler);
->  
->  static void mytimer_handler(struct timer_list *unused)
->  {
-> -	/*
-> -	 * Disable tracing for event "sample_event".
-> -	 */
-> -	trace_array_set_clr_event(tr, "sample-subsystem", "sample_event",
-> -			false);
-> +	schedule_work(&trace_work);
->  }
->  
->  static void simple_thread_func(int count)
-
-I think we also need to use cancel_work_sync() to handle the case -
-1. Module unloaded
-2. Timer already ran and scheduled work to disable trace event
-3. When the work runs we no longer have the relevant trace array.
-
-static int simple_thread(void *arg)
-{
-.....
-
- del_timer(&mytimer);
-
- <cancel_work_sync> 
-.....
- return 0;
-}
-
-Thanks,
-Divya
-
+On 2020/06/09 0:44 Robin Murphy <robin.murphy@arm.com> wrote:
+> On 2020-06-08 16:31, Mark Brown wrote:
+> > On Mon, Jun 08, 2020 at 03:08:45PM +0000, Robin Gong wrote:
+> >
+> >>>> +	if (transfer->rx_sg.sgl) {
+> >>>> +		struct device *rx_dev =3D spi->controller->dma_rx->device->dev;
+> >>>> +
+> >>>> +		dma_sync_sg_for_device(rx_dev, transfer->rx_sg.sgl,
+> >>>> +				       transfer->rx_sg.nents, DMA_TO_DEVICE);
+> >>>> +	}
+> >>>> +
+> >
+> >>> This is confusing - why are we DMA mapping to the device after doing
+> >>> a PIO transfer?
+> >
+> >> 'transfer->rx_sg.sgl' condition check that's the case fallback PIO
+> >> after DMA transfer failed. But the spi core still think the buffer
+> >> should be in 'device' while spi driver touch it by PIO(CPU), so sync i=
+t back to
+> device to ensure all received data flush to DDR.
+> >
+> > So we sync it back to the device so that we can then do another sync
+> > to CPU?  TBH I'm a bit surprised that there's a requirement that we
+> > explicitly undo a sync and that a redundant double sync in the same
+> > direction might be an issue but I've not had a need to care so I'm
+> > perfectly prepared to believe there is.
+> >
+> > At the very least this needs a comment.
+>=20
+> Yeah, something's off here - at the very least, syncing with DMA_TO_DEVIC=
+E on
+> the Rx buffer that was mapped with DMA_FROM_DEVICE is clearly wrong.
+> CONFIG_DMA_API_DEBUG should scream about that.
+>=20
+> If the device has written to the buffer at all since dma_map_sg() was cal=
+led
+> then you do need a dma_sync_sg_for_cpu() call before touching it from a C=
+PU
+> fallback path, but if nobody's going to touch it from that point until it=
+'s
+> unmapped then there's no point syncing it again. The
+> my_card_interrupt_handler() example in DMA-API_HOWTO.txt demonstrates
+> this.
+Thanks for you post, but sorry, that's not spi-imx case now, because the rx=
+ data in device memory is not truly updated from 'device'/DMA, but from PIO=
+, so that dma_sync_sg_for_cpu with DMA_FROM_DEVICE can't be used, otherwise=
+ the fresh data in cache will be invalidated.
+But you're right, kernel warning comes out if CONFIG_DMA_API_DEBUG enabled.=
+..=20
