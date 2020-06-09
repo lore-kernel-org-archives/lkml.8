@@ -2,218 +2,103 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E8DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 19:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B422FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 19:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 796042076A
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 19:31:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91C772076A
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 19:32:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MQPnb2JF"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OJfv/PGG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389258AbgFITbO (ORCPT
+        id S1731202AbgFITcd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 15:31:14 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:51235 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728679AbgFITbL (ORCPT
+        Tue, 9 Jun 2020 15:32:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57266 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727098AbgFITcc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 15:31:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591731068;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=F9dJdYadzEO2bKen+k695+nu1VEX+tghWgfADxXcezo=;
-        b=MQPnb2JFwWCi9Z9yragplUNLGM2X0sAe+H2YHz9WtdiY62LtCIX2FVj/FPRq5KHECAaEe6
-        aMOb9qbAbOAof8Ul6sss/DegWILxTS+P0HNNsT8TotV9q6yqjve0V2Vrk7qukilQzwcqAr
-        al/6nD+f0MHn1yIhi02GoBzVpUgtwcs=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-70-2jMhCUY1P1mgNpjGyffn2g-1; Tue, 09 Jun 2020 15:31:07 -0400
-X-MC-Unique: 2jMhCUY1P1mgNpjGyffn2g-1
-Received: by mail-wm1-f71.google.com with SMTP id k185so833549wme.8
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 12:31:07 -0700 (PDT)
+        Tue, 9 Jun 2020 15:32:32 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7617AC03E97C
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 12:32:32 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id q24so1847449pjd.1
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 12:32:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3rS0PjS0rxiYFFA6NkJOsLiVgpILALWXqX0+c6m8rUY=;
+        b=OJfv/PGGjziwHlWGLl+f5814ZzqprpOKgo0vPYSNCO/nX2sijtaq5FNv2gvbWNkhmp
+         ukFbQ40AvJEaCjIAoONUN7rBXUFQtFBC59T6RYgZf6/g+ZOE30WUE3PG/CzZUVuCMG2F
+         xYPtOViIgO4UXi78VEBAlZF2PZmzgpXAibdXz32MwoE5ZnUNKhuYdjOdPa3tRcIPJuPD
+         NI8Zjw7xlv97Ssky633X8+kf83KMTUNzd2Lvt3fH2AJwCNE2X+GxhWoqijUCJyQYRMZy
+         PvSNcDANXeakfxifbFaKVQtiKdwY6rLQetiJl79W0EhnNinpGxBPO9DxW5/K8v3jyoxD
+         VEbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=F9dJdYadzEO2bKen+k695+nu1VEX+tghWgfADxXcezo=;
-        b=BX2zbKig4UngrLVsp5+ZCmDOFxTZqhWgd3gS5o2QawyDryQ7hyIbywYT8eJmmId3P7
-         x7gsE6XOsIEkRLr12mpdXufURvWmKc4S6dtjUdV9GGuKJGyRctOhI4W3mg5E67P3b0Fa
-         +acSNnqjNnsNoOwdUOzhKxqmhA2Koygre4675MGWoduJHmgDjhzBQ4fnZXtUD4oThd4W
-         /68PiUuSNRXBetgYoQSH4Rq7/K07si2dEFDt4ji2RsvsI3KvpkTBa7M5aqReRUI0KeuI
-         b8WyOMZqfKONegIOz6xmJ+BnmgIvj/KVG/AO44Dkdbsb5N90z74i5wO8LB8dRhrMRnmY
-         N7vQ==
-X-Gm-Message-State: AOAM533Q2mMhHOfCuJuXSB9YkAJYCstM/wi75i4sI8fRiRFoGdBHgiU/
-        e1EAoGIjy1pVbEYrjgqy/PVkF47sJN+t3KxTMZM432dQrJ0CNN2cWXHKOH0iLvhMVWePBUezd3D
-        tLFwH7/YKrJTmrGyo6/+1uhHF
-X-Received: by 2002:adf:f507:: with SMTP id q7mr6016967wro.353.1591731066157;
-        Tue, 09 Jun 2020 12:31:06 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzHkj86I28FraeOP1PhHSi5A6Fch/qbf9NWhYUvWXyKQRo3jAr7Y+HR7JI1BlkZnUTl6Edohg==
-X-Received: by 2002:adf:f507:: with SMTP id q7mr6016953wro.353.1591731065925;
-        Tue, 09 Jun 2020 12:31:05 -0700 (PDT)
-Received: from ?IPv6:2a01:cb14:499:3d00:cd47:f651:9d80:157a? ([2a01:cb14:499:3d00:cd47:f651:9d80:157a])
-        by smtp.gmail.com with ESMTPSA id j5sm4667666wrm.57.2020.06.09.12.31.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Jun 2020 12:31:05 -0700 (PDT)
-Subject: Re: [RFC][PATCH v4 01/32] objtool: Prepare to merge recordmcount
-To:     Matt Helsley <mhelsley@vmware.com>, linux-kernel@vger.kernel.org,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-References: <cover.1591125127.git.mhelsley@vmware.com>
- <4a71852d8ca0a245588159a6bbdc064619de91d9.1591125127.git.mhelsley@vmware.com>
- <1e2783f2-6b52-d750-ecc5-4e3d6d7dba4f@redhat.com>
- <20200609154221.GC1284251@rlwimi.vmware.com>
-From:   Julien Thierry <jthierry@redhat.com>
-Message-ID: <35bd9eee-a4c4-dac0-0c6e-aaa3b8004b86@redhat.com>
-Date:   Tue, 9 Jun 2020 20:31:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3rS0PjS0rxiYFFA6NkJOsLiVgpILALWXqX0+c6m8rUY=;
+        b=PL72TPNaTAc1isbO7FzZX4al9fv9Gwa2T/6wruAgc2n+aldp0Q624cp6LQdhkN6waH
+         wR7s+DBDJ2khXbFhQ9Ytgmr6SR1S3h4enyGV2lS5tfDRQ/Psw7sMB08AX0rtxPGKD5MC
+         hTd63yTirbNlYBQ0gCbbDTFwT2L5oq+KEM6/LzmBEGrmoVfWeN6mYK3gB4y70pj1IeET
+         KnsNZgngp0SwN6452pQK2YBt9u/QDCS1CCaX4vc0xqGZfmVo57wkrmrqCdN+PjCav2o+
+         2LoRzaTSQtYVQKJuH3pxo+MH9M5OUhRtg2TvDloikI2KqcplQiUuP4PtfYDrWyyZ14IV
+         KwYA==
+X-Gm-Message-State: AOAM531CPSpf8ft5cfWxGIHxfP1Le+ljokSrLxbbVUPp5JDQCFseKoTk
+        Pe2lyq8lFVDRhqWphp0TOGRJKGJhxsByKQ3YJbZm+Q==
+X-Google-Smtp-Source: ABdhPJzT/ray+2iwWCZt/bmbUFyJRHb3+cB2WcthZLy3Trleot/HATDwSXKrTU7Vy+g0WzyotOm2sfBvvFzmrrJfW+E=
+X-Received: by 2002:a17:90a:df82:: with SMTP id p2mr6575703pjv.217.1591731151274;
+ Tue, 09 Jun 2020 12:32:31 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200609154221.GC1284251@rlwimi.vmware.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200606040349.246780-1-davidgow@google.com> <20200606040349.246780-6-davidgow@google.com>
+In-Reply-To: <20200606040349.246780-6-davidgow@google.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Tue, 9 Jun 2020 12:32:20 -0700
+Message-ID: <CAFd5g44KHLV3EV+At3tsnbcagbW5Yc-fRXoTBae8no=peCJsmQ@mail.gmail.com>
+Subject: Re: [PATCH v8 5/5] mm: kasan: Do not panic if both panic_on_warn and
+ kasan_multishot set
+To:     David Gow <davidgow@google.com>
+Cc:     Patricia Alfonso <trishalfonso@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        andreyknvl@google.com, shuah <shuah@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jun 5, 2020 at 9:04 PM 'David Gow' via KUnit Development
+<kunit-dev@googlegroups.com> wrote:
+>
+> KASAN errors will currently trigger a panic when panic_on_warn is set.
+> This renders kasan_multishot useless, as further KASAN errors won't be
+> reported if the kernel has already paniced. By making kasan_multishot
+> disable this behaviour for KASAN errors, we can still have the benefits
+> of panic_on_warn for non-KASAN warnings, yet be able to use
+> kasan_multishot.
+>
+> This is particularly important when running KASAN tests, which need to
+> trigger multiple KASAN errors: previously these would panic the system
+> if panic_on_warn was set, now they can run (and will panic the system
+> should non-KASAN warnings show up).
+>
+> Signed-off-by: David Gow <davidgow@google.com>
+> Reviewed-by: Andrey Konovalov <andreyknvl@google.com>
 
-
-On 6/9/20 4:42 PM, Matt Helsley wrote:
-> On Tue, Jun 09, 2020 at 09:54:33AM +0100, Julien Thierry wrote:
->> Hi Matt,
->>
->> On 6/2/20 8:49 PM, Matt Helsley wrote:
->>> Move recordmcount into the objtool directory. We keep this step separate
->>> so changes which turn recordmcount into a subcommand of objtool don't
->>> get obscured.
->>>
->>> Signed-off-by: Matt Helsley <mhelsley@vmware.com>
-> 
-> <snip>
-> 
->>> diff --git a/Makefile b/Makefile
->>> index 04f5662ae61a..d353a0a65a71 100644
->>> --- a/Makefile
->>> +++ b/Makefile
->>> @@ -844,6 +844,7 @@ ifdef CONFIG_DYNAMIC_FTRACE
->>>    	ifdef CONFIG_HAVE_C_RECORDMCOUNT
->>>    		BUILD_C_RECORDMCOUNT := y
->>>    		export BUILD_C_RECORDMCOUNT
->>> +		objtool_target := tools/objtool FORCE
->>>    	endif
->>>    endif
->>>    endif
->>> @@ -1023,10 +1024,10 @@ endif
->>>    export mod_sign_cmd
->>>    HOST_LIBELF_LIBS = $(shell pkg-config libelf --libs 2>/dev/null || echo -lelf)
->>> +has_libelf := $(call try-run,\
->>> +		echo "int main() {}" | $(HOSTCC) -xc -o /dev/null $(HOST_LIBELF_LIBS) -,1,0)
->>
->> Maybe there could be some build dependency, e.g. CONFIG_OBJTOOL_SUBCMDS that
->> sets the "objtool_target" and "has_libelf" when selected.
->>
->> Then the CONFIG_UNWINDER_ORC, RECORD_MCOUNT and STACK_VALIDATION would just
->> had to select that config option.
-> 
-> That might save a good amount of control flow in the Makefiles.
-> 
-> We could take it one step further and have specific CONFIG_OBJTOOL_<subcmd>
-> which might help us remove the per-architecture control-flow in
-> the multi-arch subcmd support found in tools/objtool/Makefile.
-> > What do folks think of that -- too far?
-> 
-
-I wasn't completely sure I understood before I saw your reply on the 
-next patch. I don't think it's too far, it's cleaner! The current way 
-was good enough to deal with only two x86 specific objtool subcommands.
-
-Since you're adding another one and it is likely that more will be added 
-in the future, I think it's worth having something a bit more structured 
-:) .
-
->>
->>>    ifdef CONFIG_STACK_VALIDATION
->>> -  has_libelf := $(call try-run,\
->>> -		echo "int main() {}" | $(HOSTCC) -xc -o /dev/null $(HOST_LIBELF_LIBS) -,1,0)
->>>      ifeq ($(has_libelf),1)
->>>        objtool_target := tools/objtool FORCE
->>>      else
->>> @@ -1163,13 +1164,15 @@ uapi-asm-generic:
->>>    PHONY += prepare-objtool
->>>    prepare-objtool: $(objtool_target)
->>> -ifeq ($(SKIP_STACK_VALIDATION),1)
->>> -ifdef CONFIG_UNWINDER_ORC
->>> +ifneq ($(has_libelf),1)
->>> +  ifdef CONFIG_UNWINDER_ORC
->>>    	@echo "error: Cannot generate ORC metadata for CONFIG_UNWINDER_ORC=y, please install libelf-dev, libelf-devel or elfutils-libelf-devel" >&2
->>>    	@false
->>> -else
->>> +  else
->>> +    ifeq ($(SKIP_STACK_VALIDATION),1)
->>>    	@echo "warning: Cannot use CONFIG_STACK_VALIDATION=y, please install libelf-dev, libelf-devel or elfutils-libelf-devel" >&2
->>
->>
->> I think this would be more readable without the else branch:
->>
->> 	ifneq ($(has_libelf),1)
->> 		ifdef <some objtool command config>
->> 			<warn about unavailability>
-> 
-> Note: error not warn
-> 
-
-Good point. But since those are errors, you don't need the "else" :)
-
->> 		endif
->> 		ifdef <another objtool command config>
->> 			<warn ...>
->> 		endif
->> 		<...>
->> 	endif
-> 
-> I think the next patch, which makes recordmcount a subcmd, makes it a
-> little clearer what the pattern is because it adds another ifdef block
-> in the way you suggest.
-> 
-> As for the else around the SKIP_STACK_VALIDATION check -- it is special
-> in a couple ways -- at least as best I can tell.
-> 
-> It's not a CONFIG_* -- it actually breaks the normal pattern with
-> CONFIG_* in that..
-> 
-
-Yes but $(SKIP_STACK_VALIDATION) == 1 is actually just 
-CONFIG_STACK_VALIDATION && ($(has_libelf) != 1). And since you are 
-already in the ifneq ($(has_libelf),1) branch, checking 
-$(SKIP_STACK_VALIDATION) == 1 is the same as CONFIG_STACK_VALIDATION 
-being defined.
-
-> It's about a judgement call that it's OK to merely warn and skip the
-> stack validation rather than produce an error. The other, CONFIG_*
-> blocks produce errors.
-> 
-
-To me this is minor, we could also imagine another command CONFIG_ 
-performing another action than warning or error when libelf is not 
-available.
-
-Anyway, this was just a suggestion, I don't want to insist to much on this.
-
-Cheers,
-
--- 
-Julien Thierry
-
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
