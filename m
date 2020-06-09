@@ -2,174 +2,210 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF41FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 456CFC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:17:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B990820872
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:15:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A1CD2078D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:17:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O4cPu1In"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728590AbgFIKPj convert rfc822-to-8bit (ORCPT
+        id S1728612AbgFIKRd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 06:15:39 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:37222 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727868AbgFIKPg (ORCPT
+        Tue, 9 Jun 2020 06:17:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56084 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727005AbgFIKRb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 06:15:36 -0400
-Received: from mail-pg1-f198.google.com ([209.85.215.198])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1jibI5-00019x-Bv
-        for linux-kernel@vger.kernel.org; Tue, 09 Jun 2020 10:15:33 +0000
-Received: by mail-pg1-f198.google.com with SMTP id u16so1337873pgj.17
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 03:15:33 -0700 (PDT)
+        Tue, 9 Jun 2020 06:17:31 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7292C05BD1E
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 03:17:31 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id bh7so7849490plb.11
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 03:17:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Ei1IGv6pNwnI9iIwQsOj4cyb+NLYlzCDt9t3fzNXihA=;
+        b=O4cPu1InWo4NtiyXgCv23ITCJpj3TORJbVbdZSIHXfmdXHml6gKL0VVIPvzLJlfmKZ
+         6/RV+AEglhUuM96qYTMjvD3yS2czFsqnHd8KeXekZhpyqUxCOFJ6kw30Cc4SuaRdORHo
+         gWPkJPqRiKQ5YAF8ShxHq5PK42j2LhyX7U6/QLiSfuewczEzTJUJZkjwvOWRqCmwLMqy
+         WeftOIFyIsqMTb+sHvRXqKEYQWIQKTS8jzR41Eh9Mq4ZD6vkoTnEbEz12W+Q4MxEdMN5
+         3sGsZlLcRJLOhn3QOYNClbGmlIG4olIUl8f+P85yH9ZRNxYWPg0WsdcHPMCo2uQQKwmJ
+         Ttaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=QP60xocmOwC5IAaiglv4xTRRaQB+4Ty9qPp45ts3sEo=;
-        b=RATe2gHh9Ld2OioWMbwkS0biq7NFtCsbedNKKVfy56ar9VAamK7ERedqCNIHNYcnCE
-         vakjqBlRIftc8bNCOq3XkGkTiw09s2PCZinWAmHPeGUaatVKAdjtc/wm28mL/xwexfGQ
-         k5lLzHkDzX/Mwbec8jbwmsDlfb0QULD1rM3p/bnXJnvPd4vaWulv6+DaECFQ9Vanvaor
-         5mD7C9Dn5csU+Ct2S2Er6P1N1v6buGV7BLBY2E+EXuENGDZAlOWEiK/0SdzDVbMXU5c2
-         de9sdcl2rpMiSlBIT1wZCvxEeX48eqzZ0iSk5e6Ib4ZrSpWeBv+Ehe0wdR9ELSMPwdLB
-         Xxwg==
-X-Gm-Message-State: AOAM531pPkjhBlm8zddoMdevXboDASiAC0UgywKRaUJfgY4/Z0DbzxpX
-        V/84YCilxTfzVKvNBOYq72quU24yPyGRD+JdW1sKrK7qTGyR4Mub7D3hBd0KQEH/I4WxCtLlJNk
-        TLWKcWEknLSlqmV8sWPbXO+ejh3xlrB4//Qy4MruMYA==
-X-Received: by 2002:a63:565b:: with SMTP id g27mr23932060pgm.166.1591697731813;
-        Tue, 09 Jun 2020 03:15:31 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz+/b+8Tto0RYWElC0VZLuZQwAJZOeuyJFOli1+TJe6rzxJ71wQl1iYvjjeSfuVZ1nKQI1ejw==
-X-Received: by 2002:a63:565b:: with SMTP id g27mr23932037pgm.166.1591697731426;
-        Tue, 09 Jun 2020 03:15:31 -0700 (PDT)
-Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
-        by smtp.gmail.com with ESMTPSA id o1sm2260671pjf.17.2020.06.09.03.15.29
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Ei1IGv6pNwnI9iIwQsOj4cyb+NLYlzCDt9t3fzNXihA=;
+        b=myMJ4x0WyXnxMGyOy9iFCr02NMUVQXukyz9FX+PX0ySW6YDy0kLILFcIK+iXIVgC82
+         7g98G37R73ivAnkWrxnS5Z0CAEF9tJ10ZyOinOCGy94Dejg/p/uxvUR9OnLnqzC9oB0J
+         N2WwAXgqxDftjVPEijy8EVOnaofI8f8/ayodVbdbrnKcFuMpykeGcI0j9xfd4/Y1lVGF
+         GOMePPfJL8Fh42uZvhvH4UOa27UpZDXyx/mplqu5vwMAY3jMjRmyEILFuXFhqDyAZMgb
+         CjIT/YmSkjaOFHgA2FxNpg3kuqGt0PsC76kR+sHW7BJEKuUY12AsmxJc4KpsE3/pzVdh
+         qBuA==
+X-Gm-Message-State: AOAM5330IyN/xoXKFhN/N8lILqZajAT275ITZUhWww5VLt9MFSXZ7dZa
+        EE/GFUewCY/GkqjrTgJcxBM=
+X-Google-Smtp-Source: ABdhPJxTxmMeCrekRie5MkDXGUvT9tCDia/+KW38/+b4ExBhXJR+wd43UV8lMWr60l/N4S32o2OpFw==
+X-Received: by 2002:a17:902:558f:: with SMTP id g15mr2635828pli.174.1591697851144;
+        Tue, 09 Jun 2020 03:17:31 -0700 (PDT)
+Received: from localhost.localdomain ([223.190.87.90])
+        by smtp.gmail.com with ESMTPSA id d189sm9637253pfc.51.2020.06.09.03.17.25
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Jun 2020 03:15:30 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH 2/2] xhci: Poll for U0 after disabling USB2 LPM
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <6c3ac2e5-73e9-6e4f-2940-63403821631f@linux.intel.com>
-Date:   Tue, 9 Jun 2020 18:15:28 +0800
-Cc:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:USB XHCI DRIVER" <linux-usb@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <8327233C-5DE8-43F8-9208-5FF888629047@canonical.com>
-References: <20200520101811.2623-1-kai.heng.feng@canonical.com>
- <20200520101811.2623-2-kai.heng.feng@canonical.com>
- <6c3ac2e5-73e9-6e4f-2940-63403821631f@linux.intel.com>
-To:     Mathias Nyman <mathias.nyman@linux.intel.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Tue, 09 Jun 2020 03:17:30 -0700 (PDT)
+From:   Amit Singh Tomar <amittomer25@gmail.com>
+To:     andre.przywara@arm.com, afaerber@suse.de,
+        manivannan.sadhasivam@linaro.org, vkoul@kernel.org,
+        sboyd@kernel.org, robh+dt@kernel.org
+Cc:     dan.j.williams@intel.com, cristian.ciocaltea@gmail.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-actions@lists.infradead.org
+Subject: [PATCH v4 00/10] Add MMC and DMA support for Actions S700
+Date:   Tue,  9 Jun 2020 15:47:00 +0530
+Message-Id: <1591697830-16311-1-git-send-email-amittomer25@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This series(v4) addressed the review comments provided by Mani, and
+there are changes in patch 1/10, 2/10 and 6/10 for it.
 
+For first couple of patches , old comments are preserved and more
+details about how DMA descriptors fields are programmed is added.
 
-> On Jun 8, 2020, at 19:21, Mathias Nyman <mathias.nyman@linux.intel.com> wrote:
-> 
-> On 20.5.2020 13.18, Kai-Heng Feng wrote:
->> USB2 devices with LPM enabled may interrupt the system suspend:
->> [  932.510475] usb 1-7: usb suspend, wakeup 0
->> [  932.510549] hub 1-0:1.0: hub_suspend
->> [  932.510581] usb usb1: bus suspend, wakeup 0
->> [  932.510590] xhci_hcd 0000:00:14.0: port 9 not suspended
->> [  932.510593] xhci_hcd 0000:00:14.0: port 8 not suspended
->> ..
->> [  932.520323] xhci_hcd 0000:00:14.0: Port change event, 1-7, id 7, portsc: 0x400e03
-> 
-> 400e03 = Connected, Enabled, U0 with port ink state change flag (PLC) set.
-> 
->> ..
->> [  932.591405] PM: pci_pm_suspend(): hcd_pci_suspend+0x0/0x30 returns -16
->> [  932.591414] PM: dpm_run_callback(): pci_pm_suspend+0x0/0x160 returns -16
->> [  932.591418] PM: Device 0000:00:14.0 failed to suspend async: error -16
->> 
->> During system suspend, USB core will let HC suspends the device if it
->> doesn't have remote wakeup enabled and doesn't have any children.
->> However, from the log above we can see that the usb 1-7 doesn't get bus
->> suspended due to not in U0. After a while the port finished U2 -> U0
->> transition, interrupts the suspend process.
-> 
-> In USB2 HW link PM the PLC flag should not be set in U2Exit -> U0 transitions.
-> Only case we should see a port change event is U2Entry -> U0 due to STALL or
-> error/timeout. (see xhci 4.23.5.1.1.1)
-> 
->> 
->> The observation is that after disabling LPM, port doesn't transit to U0
->> immediately and can linger in U2. xHCI spec 4.23.5.2 states that the
->> maximum exit latency for USB2 LPM should be BESL + 10us. The BESL for
->> the affected device is advertised as 400us, which is still not enough
->> based on my testing result.
->> 
->> So let's use the maximum permitted latency, 10000, to poll for U0
->> status to solve the issue.
-> 
-> I don't recall all details, but it could be that disabling LPM before suspend
-> is unnecessary. 
-> At least xhci should be able to set a port to U3 from U1 and U2 (see xhci 4.15.1)
-> so that is one change that could be done to xhci_bus_suspend()
+Apart from it, Typo is fixed patch 6/10 and placed the header file
+in alphabetical order.
 
-Yes, put the device to U3 directly does the trick.
+Also, this series fixes one compilation warning (reported by Kbuild)
+introduced by patch 2/10 using clang compiler.
+------------------------------------------------------------------------
 
-> 
-> Also just noticed that we are not really checking L1S field in PORTPMSC register, 
-> this should tell if there was an issue with USB2 lpm state transitions, and
-> perhaps we should disable lpm for that device. 
-> 
-> Does the L1S field show anything unuaual in your case?
-> That could explain the port event with the PLC bit set.
+Series(v3) addressed the review comments provided by Rob, and 
+there are changes in patch 5/10 for it.
 
-diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
-index 2c255d0620b0..a2099d42e490 100644
---- a/drivers/usb/host/xhci-ring.c
-+++ b/drivers/usb/host/xhci-ring.c
-@@ -1592,7 +1592,7 @@ static void handle_port_status(struct xhci_hcd *xhci,
- {
-        struct usb_hcd *hcd;
-        u32 port_id;
--       u32 portsc, cmd_reg;
-+       u32 portsc, portpmsc, cmd_reg;
-        int max_ports;
-        int slot_id;
-        unsigned int hcd_portnum;
-@@ -1634,9 +1634,10 @@ static void handle_port_status(struct xhci_hcd *xhci,
-        bus_state = &port->rhub->bus_state;
-        hcd_portnum = port->hcd_portnum;
-        portsc = readl(port->addr);
-+       portpmsc = readl(port->addr + PORTPMSC);
+Also, one of the important change for this series(v3) is about the way we 
+we handle address range conflict between pinctrl and sps node.
+
+In the last Series(v2), patch 4/10 was sent as *do not merge* but while
+discussing about some proper solution for it, we have come up with
+idea of limiting pinctrl address range(to 0x100) to avoid this conflict.
+This is safe to do as current pinctrl driver uses address range only
+up to 0x100 (even less than that?), and this would let sps to work properly.
+
+Since sps block is now enabled , we have to provide power-domain bit
+for dma to work properly and patch 6/10 has that change now.
+
+Looking forward have some comments for this series.
+
+---------------------------------------------------------------------------
+
+Series(v2) addressed the review comments provided by Andre, and
+there are changes in patch 1/10, 2/10, 5/10 and 9/10.
+
+* Accessor function (to get the frame lenght) has moved from
+  patch 2/9 to patch 1/9 with inline removed.
+* Removed the unnecessary line break.
+* Added comments about the way DMA descriptor differs between S700
+  and S900.
+* Added a macro to define fcnt value.
+* Updated dma DT bindings.
+* Used SoC secific compatible string for MMC.
+
+Apart from it, a new patch 8/10 is added in this series to
+update mmc DT bindings.
+
+Series is rebased on 5.7.0-rc6.
+
+-----------------------------------------------------------------------------
+
+Series(v1) have following changes from the previous series.
+
+New patch(5/8) has been introduced that converts dma dt-binding
+for Actions OWL SoC from text format to yaml file.
+
+For patch(2/8) new accessor function is added to get the frame
+lenght which is common to both S900 and S700. Apart from it
+SoC check is removed from irq routine as it is not needed.
+
+Patch(4/8) which is an hack to prove our DMA and MMC works
+for S700 is now sent as *do not merge* patch.
  
--       xhci_dbg(xhci, "Port change event, %d-%d, id %d, portsc: 0x%x\n",
--                hcd->self.busnum, hcd_portnum + 1, port_id, portsc);
-+       xhci_dbg(xhci, "Port change event, %d-%d, id %d, portsc: 0x%x, portpmsc 0x%0x\n",
-+                hcd->self.busnum, hcd_portnum + 1, port_id, portsc, portpmsc);
- 
-        trace_xhci_handle_port_status(hcd_portnum, portsc);
+DMA is tested using dmatest with follwoing result:
 
-[  685.460054] xhci_hcd 0000:00:14.0: Port change event, 1-7, id 7, portsc: 0x400e03, portpmsc 0x1
-[  685.460062] xhci_hcd 0000:00:14.0: resume root hub
-[  685.460079] xhci_hcd 0000:00:14.0: handle_port_status: starting port polling.
-[  685.460094] xhci_hcd 0000:00:14.0: xhci_hub_status_data: stopping port polling.
-[  685.521685] PM: pci_pm_suspend(): hcd_pci_suspend+0x0/0x30 returns -16
-[  685.521695] PM: dpm_run_callback(): pci_pm_suspend+0x0/0x160 returns -16
-[  685.521699] PM: Device 0000:00:14.0 failed to suspend async: error -16
+root@ubuntu:~# echo dma0chan1 > /sys/module/dmatest/parameters/channel
+root@ubuntu:~# echo 2000 > /sys/module/dmatest/parameters/timeout
+root@ubuntu:~# echo 1 > /sys/module/dmatest/parameters/iterations
+root@ubuntu:~# echo 1 > /sys/module/dmatest/parameters/run
 
-So after disabling LPM, it takes a long time to complete L1 transition, before transitioning to L0.
+root@ubuntu:~# dmesg | tail
+[  303.362586] dmatest: Added 1 threads using dma0chan1
+[  317.258658] dmatest: Started 1 threads using dma0chan1
+[  317.259397] dmatest: dma0chan1-copy0: summary 1 tests, 0 failures 16129.03 iops 32258 KB/s (0)
 
-Kai-Heng
+-------------------------------------------------------------------------------
 
-> 
-> I think we can avoid a readl_poll_timeout() solution in this case.
-> 
-> -Mathias
+The intention of RFC series is to enable uSD and DMA support for
+Cubieboard7 based on Actions S700 SoC, and on the way we found that
+it requires changes in dmaengine present on S700 as its different
+from what is present on S900.
+
+Patch(1/8) does provide a new way to describe DMA descriptor, idea is
+to remove the bit-fields as its less maintainable. It is only build
+tested and it would be great if this can be tested on S900 based
+hardware.
+
+Patch(2/8) adds S700 DMA engine support, there is new compatible
+string added for it, which means a changed bindings needed to submitted
+for this. I would plan to send it later the converted "owl-dma.yaml".
+
+Patch(4/8) disables the sps node as its memory range is conflicting
+pinctrl node and results in pinctrl proble failure.
+
+Rest of patches in the series adds DMA/MMC nodes for S700
+alone with binding constants and enables the uSD for Cubieboard7.
+
+This whole series is tested, by building/compiling Kernel on
+Cubieboard7-lite which was *almost* successful (OOM kicked in,
+while Linking due to less RAM present on hardware).
+
+Following is the mmc speed :
+
+ubuntu@ubuntu:~$ sudo hdparm -tT /dev/mmcblk0
+
+/dev/mmcblk0:
+ Timing cached reads:   1310 MB in  2.00 seconds = 655.15 MB/sec
+ Timing buffered disk reads:  62 MB in  3.05 seconds =  20.30 MB/sec
+
+Amit Singh Tomar (10):
+  dmaengine: Actions: get rid of bit fields from dma descriptor
+  dmaengine: Actions: Add support for S700 DMA engine
+  clk: actions: Add MMC clock-register reset bits
+  arm64: dts: actions: limit address range for pinctrl node
+  dt-bindings: dmaengine: convert Actions Semi Owl SoCs bindings to yaml
+  arm64: dts: actions: Add DMA Controller for S700
+  dt-bindings: reset: s700: Add binding constants for mmc
+  dt-bindings: mmc: owl: add compatible string actions,s700-mmc
+  arm64: dts: actions: Add MMC controller support for S700
+  arm64: dts: actions: Add uSD support for Cubieboard7
+
+ Documentation/devicetree/bindings/dma/owl-dma.txt  |  47 -------
+ Documentation/devicetree/bindings/dma/owl-dma.yaml |  79 ++++++++++++
+ Documentation/devicetree/bindings/mmc/owl-mmc.yaml |   6 +-
+ arch/arm64/boot/dts/actions/s700-cubieboard7.dts   |  41 ++++++
+ arch/arm64/boot/dts/actions/s700.dtsi              |  51 +++++++-
+ drivers/clk/actions/owl-s700.c                     |   3 +
+ drivers/dma/owl-dma.c                              | 142 ++++++++++++++-------
+ include/dt-bindings/reset/actions,s700-reset.h     |   3 +
+ 8 files changed, 274 insertions(+), 98 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/dma/owl-dma.txt
+ create mode 100644 Documentation/devicetree/bindings/dma/owl-dma.yaml
+
+-- 
+2.7.4
 
