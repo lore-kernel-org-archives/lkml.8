@@ -2,98 +2,136 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC24C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80259C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 921D020823
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:10:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591693821;
-	bh=jg4Sceh5hpjDtXW97go+X5pjTXtCfIonvB5PlysaFmg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zBGKGZ9x5qrc3o+nOdeg1jq/HYU40Xq0S7OpSAHeYBkY29Vx7PMcr3Lt39J/rfdY7
-	 Lw8bok3GfDdy8CFHVa9CQZNSsXA+E5btPW+hTyOhMTDCJXrkZzzf1JvrCvfj2adPuI
-	 PgNmfxjKufPJ6F8JJO6RcXwcAH3a21S4utnmwh8k=
+	by mail.kernel.org (Postfix) with ESMTP id 68587207C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:12:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728243AbgFIJKU (ORCPT
+        id S1728276AbgFIJM1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 05:10:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46528 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 05:12:27 -0400
+Received: from mga07.intel.com ([134.134.136.100]:64812 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727069AbgFIJKS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 05:10:18 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56FE6207ED;
-        Tue,  9 Jun 2020 09:10:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591693817;
-        bh=jg4Sceh5hpjDtXW97go+X5pjTXtCfIonvB5PlysaFmg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yF68NvEoUOLFG10VEqoVlctNb2zPaHIS3uYK9qOs32HdE9TumoEuZfMOGe6elJ5g6
-         EvnGGXULdPaDJZDBb31m2cNI9nqsRONsJcb/Uu1vF9dHUBcuHA6WQQ4D6+HSTYD+oE
-         i00blYKiJ3NCDEfpRkHaxBDWmI4bzOgbv5t234BE=
-Date:   Tue, 9 Jun 2020 11:10:14 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        linux-fsdevel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Namjae Jeon <namjae.jeon@samsung.com>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        Tetsuhiro Kohada <kohada.t2@gmail.com>
-Subject: Re: [PATCH] exfat: Fix use after free in exfat_load_upcase_table()
-Message-ID: <20200609091014.GA529192@kroah.com>
-References: <9b9272fb-b265-010b-0696-4c0579abd841@web.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9b9272fb-b265-010b-0696-4c0579abd841@web.de>
+        id S1726903AbgFIJMZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 05:12:25 -0400
+IronPort-SDR: 17jAvLCsSzqm2MnJ9js7gNER5F6PJE2PlQS20rKULSjzSybmRccHkvReEcz6+rQY6swGcBIvjd
+ hOhq6pgxTIBQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 02:12:23 -0700
+IronPort-SDR: qGJGbkP6jIjb06yFErHeRABfowARu5mYzAUtOXYGw11Yc0sLPVFLbgrHJYpz0pR5pOnUg+Kqew
+ W6B/kl9/AsNg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,491,1583222400"; 
+   d="scan'208";a="306121697"
+Received: from gklab-125-110.igk.intel.com ([10.91.125.110])
+  by fmsmga002.fm.intel.com with ESMTP; 09 Jun 2020 02:12:14 -0700
+From:   Piotr Stankiewicz <piotr.stankiewicz@intel.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Cc:     Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        Yisen Zhuang <yisen.zhuang@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Brian King <brking@us.ibm.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Jim Gill <jgill@vmware.com>, linux-doc@vger.kernel.org,
+        linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-mmc@vger.kernel.org, netdev@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Piotr Stankiewicz <piotr.stankiewicz@intel.com>
+Subject: [PATCH v3 00/15] Forward MSI-X vector enable error code in pci_alloc_irq_vectors_affinity()
+Date:   Tue,  9 Jun 2020 11:11:48 +0200
+Message-Id: <20200609091148.32749-1-piotr.stankiewicz@intel.com>
+X-Mailer: git-send-email 2.17.2
+In-Reply-To: <20200603114212.12525-1-piotr.stankiewicz@intel.com>
+References: <20200603114212.12525-1-piotr.stankiewicz@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 05:07:33PM +0200, Markus Elfring wrote:
-> > This code calls brelse(bh) and then dereferences "bh" on the next line
-> > resulting in a possible use after free.
-> 
-> There is an unfortunate function call sequence.
-> 
-> 
-> > The brelse() should just be moved down a line.
-> 
-> How do you think about a wording variant like the following?
-> 
->    Thus move a call of the function “brelse” one line down.
-> 
-> 
-> Would you like to omit a word from the patch subject so that
-> a typo will be avoided there?
+The primary objective of this patch series is to change the behaviour
+of pci_alloc_irq_vectors_affinity() such that it forwards the MSI-X enable
+error code when appropriate. In the process, though, it was pointed out
+that there are multiple places in the kernel which check/ask for message
+signalled interrupts (MSI or MSI-X), which spawned the first patch adding
+PCI_IRQ_MSI_TYPES. Finally the rest of the chain converts all users to
+take advantage of PCI_IRQ_MSI_TYPES or PCI_IRQ_ALL_TYPES, as
+appropriate.
 
-Hi,
+Piotr Stankiewicz (15):
+  PCI/MSI: Forward MSI-X vector enable error code in
+    pci_alloc_irq_vectors_affinity()
+  PCI: Add macro for message signalled interrupt types
+  PCI: Use PCI_IRQ_MSI_TYPES where appropriate
+  ahci: Use PCI_IRQ_MSI_TYPES where appropriate
+  crypto: inside-secure - Use PCI_IRQ_MSI_TYPES where appropriate
+  dmaengine: dw-edma: Use PCI_IRQ_MSI_TYPES  where appropriate
+  drm/amdgpu: Use PCI_IRQ_MSI_TYPES where appropriate
+  IB/qib: Use PCI_IRQ_MSI_TYPES where appropriate
+  media: ddbridge: Use PCI_IRQ_MSI_TYPES where appropriate
+  vmw_vmci: Use PCI_IRQ_ALL_TYPES where appropriate
+  mmc: sdhci: Use PCI_IRQ_MSI_TYPES where appropriate
+  amd-xgbe: Use PCI_IRQ_MSI_TYPES where appropriate
+  aquantia: atlantic: Use PCI_IRQ_ALL_TYPES where appropriate
+  net: hns3: Use PCI_IRQ_MSI_TYPES where appropriate
+  scsi: Use PCI_IRQ_MSI_TYPES and PCI_IRQ_ALL_TYPES where appropriate
 
-This is the semi-friendly patch-bot of Greg Kroah-Hartman.
+ Documentation/PCI/msi-howto.rst               |  5 +++--
+ drivers/ata/ahci.c                            |  2 +-
+ drivers/crypto/inside-secure/safexcel.c       |  2 +-
+ drivers/dma/dw-edma/dw-edma-pcie.c            |  2 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c       | 11 +---------
+ drivers/infiniband/hw/qib/qib_pcie.c          |  6 +++--
+ drivers/media/pci/ddbridge/ddbridge-main.c    |  2 +-
+ drivers/misc/vmw_vmci/vmci_guest.c            |  3 +--
+ drivers/mmc/host/sdhci-pci-gli.c              |  3 +--
+ drivers/mmc/host/sdhci-pci-o2micro.c          |  3 +--
+ drivers/net/ethernet/amd/xgbe/xgbe-pci.c      |  2 +-
+ .../ethernet/aquantia/atlantic/aq_pci_func.c  |  4 +---
+ .../hisilicon/hns3/hns3pf/hclge_main.c        |  3 +--
+ .../hisilicon/hns3/hns3vf/hclgevf_main.c      |  3 +--
+ drivers/pci/msi.c                             | 22 ++++++++-----------
+ drivers/pci/pcie/portdrv_core.c               |  4 ++--
+ drivers/pci/switch/switchtec.c                |  3 +--
+ drivers/scsi/ipr.c                            |  5 +++--
+ drivers/scsi/vmw_pvscsi.c                     |  2 +-
+ include/linux/pci.h                           |  4 ++--
+ 20 files changed, 37 insertions(+), 54 deletions(-)
 
-Markus, you seem to have sent a nonsensical or otherwise pointless
-review comment to a patch submission on a Linux kernel developer mailing
-list.  I strongly suggest that you not do this anymore.  Please do not
-bother developers who are actively working to produce patches and
-features with comments that, in the end, are a waste of time.
+-- 
+2.17.2
 
-Patch submitter, please ignore Markus's suggestion; you do not need to
-follow it at all.  The person/bot/AI that sent it is being ignored by
-almost all Linux kernel maintainers for having a persistent pattern of
-behavior of producing distracting and pointless commentary, and
-inability to adapt to feedback.  Please feel free to also ignore emails
-from them.
-
-thanks,
-
-greg k-h's patch email bot
