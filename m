@@ -2,240 +2,142 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44FA3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEBE0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:23:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DD6C20823
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:21:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A628E207ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:23:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="pcGpADbz"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g63E3uEV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728688AbgFIKVM (ORCPT
+        id S1728625AbgFIKXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 06:21:12 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:33885 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728852AbgFIKU7 (ORCPT
+        Tue, 9 Jun 2020 06:23:45 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:22942 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727005AbgFIKX1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 06:20:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1591698059; x=1623234059;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=uvdZLOXtOi7wg26h02hvchuYt3RHS4ijlXKYSpYjb/A=;
-  b=pcGpADbzfKjMF7ZeN1FWSAPr1rvFtfn60uZxKv+fhG0/kolZ0jPFoD98
-   9186fIkhXRwCRdtJ7X7UfDDeEzaQBNaUbYIN1tC1wsYX7sGHAQI9S04Oe
-   lXktQRizowNRfyF+1JzAS2zNKbjLkVSt1NyQYdPNsqr5hlEbBdwu1zjej
-   dl/qWdYZGGI36XTqWnm78U0PO9FpHq0FA/e+tIKVVgceigunb04JCyE3g
-   006XBQXGadTc1oHy/Fj6an6n+zYnE6IaSVu1zWC3C3jSzp9xTYCC/4AFV
-   5hQyFkU5oYY5Gj8IXj2b43mtD8UD+osW7hmYEnJ7lBFIxZPBEQZk1l6SY
-   w==;
-IronPort-SDR: CM/5mcfFvrCYnghsesSfofyMLt2nraWxG8jpg7ehNtqeAxUsrwXav3Pwwc+whY2PVa27Fa71hI
- vaN3+YeUUU7ryT+w5wl6aUfBQsTZJ1B13PsfsmOD5xYKdVzeDXy7qaB4OfHRJhpobN30uOIGYf
- F8a8TfEn9uDgkmcvlyRGW/cvesaQJsmxh+O3Mmo7q7MKpHSxBo7zup/C1OmTjWaRT1UQ0nIC49
- dGdLkVzptnrvm1bqyD6J1DVJoTbmB55+TItq+GGHmBdNW9p51rULWwnKUvVw0LcQ4MyPRw0yhB
- zCY=
-X-IronPort-AV: E=Sophos;i="5.73,491,1583218800"; 
-   d="scan'208";a="75959632"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Jun 2020 03:20:55 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Tue, 9 Jun 2020 03:20:55 -0700
-Received: from soft-dev15.microsemi.net (10.10.115.15) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1847.3 via Frontend Transport; Tue, 9 Jun 2020 03:20:52 -0700
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 3/3] arm64: dts: sparx5: Add Sparx5 eMMC support
-Date:   Tue, 9 Jun 2020 12:20:08 +0200
-Message-ID: <20200609102008.10530-4-lars.povlsen@microchip.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200609102008.10530-1-lars.povlsen@microchip.com>
-References: <20200609102008.10530-1-lars.povlsen@microchip.com>
+        Tue, 9 Jun 2020 06:23:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591698205;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=gfMNYwLx5N6zaEsK3dGHOQSxpMDlp05cCXAIGAvVa3o=;
+        b=g63E3uEVCB0OSp3CeMXVshIi1a1l5g1hD8fQWMV3fuPFQnIgOjjE5SC3iA638Jycfp6Qkm
+        SEsuC0rP9IZF/2ScEWfy79DfJnm6Bo8S+IFnAJMEyalpE3XPUIgeY4A0HGXDbPs5CthUTK
+        N2BOzYUO+3H2cMUll5Mjx0w3vWez1L8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-112-hpWuwiSnOzGn3_kXSQQYIg-1; Tue, 09 Jun 2020 06:23:23 -0400
+X-MC-Unique: hpWuwiSnOzGn3_kXSQQYIg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 116A9835B40;
+        Tue,  9 Jun 2020 10:23:22 +0000 (UTC)
+Received: from [10.36.114.103] (ovpn-114-103.ams2.redhat.com [10.36.114.103])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3B28E768C1;
+        Tue,  9 Jun 2020 10:23:18 +0000 (UTC)
+Subject: Re: [PATCH] virtio_mem: fix printk format
+To:     "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     Jason Wang <jasowang@redhat.com>,
+        virtualization@lists.linux-foundation.org
+References: <20200609095453.865827-1-mst@redhat.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <0fd18b65-c818-016b-be53-6be6ce1817ad@redhat.com>
+Date:   Tue, 9 Jun 2020 12:23:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+In-Reply-To: <20200609095453.865827-1-mst@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds eMMC support to the applicable Sparx5 board configuration
-files.
+On 09.06.20 11:54, Michael S. Tsirkin wrote:
+> Fixes: 676fa9ba893e ("virtio_mem: convert device block size into 64bit")
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> ---
+>  drivers/virtio/virtio_mem.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
+> index 7b1bece8a331..50c689f25045 100644
+> --- a/drivers/virtio/virtio_mem.c
+> +++ b/drivers/virtio/virtio_mem.c
+> @@ -1717,8 +1717,8 @@ static int virtio_mem_init(struct virtio_mem *vm)
+>  		 (unsigned long long)vm->device_block_size);
+>  	dev_info(&vm->vdev->dev, "memory block size: 0x%lx",
+>  		 memory_block_size_bytes());
+> -	dev_info(&vm->vdev->dev, "subblock size: 0x%x",
+> -		 vm->subblock_size);
+> +	dev_info(&vm->vdev->dev, "subblock size: 0x%llx",
+> +		 (unsigned long long)vm->subblock_size);
+>  	if (vm->nid != NUMA_NO_NODE)
+>  		dev_info(&vm->vdev->dev, "nid: %d", vm->nid);
+>  
+> 
 
-Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
----
- arch/arm64/boot/dts/microchip/sparx5.dtsi     | 24 +++++++++++++++++++
- .../boot/dts/microchip/sparx5_pcb125.dts      | 23 ++++++++++++++++++
- .../boot/dts/microchip/sparx5_pcb134_emmc.dts | 23 ++++++++++++++++++
- .../boot/dts/microchip/sparx5_pcb135_emmc.dts | 23 ++++++++++++++++++
- 4 files changed, 93 insertions(+)
+Acked-by: David Hildenbrand <david@redhat.com>
 
-diff --git a/arch/arm64/boot/dts/microchip/sparx5.dtsi b/arch/arm64/boot/dts/microchip/sparx5.dtsi
-index 84bca999420ef..c9dbd1a8b22b6 100644
---- a/arch/arm64/boot/dts/microchip/sparx5.dtsi
-+++ b/arch/arm64/boot/dts/microchip/sparx5.dtsi
-@@ -5,6 +5,7 @@
+-- 
+Thanks,
 
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/clock/microchip,sparx5.h>
+David / dhildenb
 
- / {
- 	compatible = "microchip,sparx5";
-@@ -162,6 +163,20 @@ timer1: timer@600105000 {
- 			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
- 		};
-
-+		sdhci0: sdhci@600800000 {
-+			compatible = "microchip,dw-sparx5-sdhci";
-+			status = "disabled";
-+			reg = <0x6 0x00800000 0x1000>;
-+			pinctrl-0 = <&emmc_pins>;
-+			pinctrl-names = "default";
-+			clocks = <&clks CLK_ID_AUX1>;
-+			clock-names = "core";
-+			assigned-clocks = <&clks CLK_ID_AUX1>;
-+			assigned-clock-rates = <800000000>;
-+			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-+			bus-width = <8>;
-+		};
-+
- 		gpio: pinctrl@6110101e0 {
- 			compatible = "microchip,sparx5-pinctrl";
- 			reg = <0x6 0x110101e0 0x90>, <0x6 0x10508010 0x100>;
-@@ -191,6 +206,15 @@ i2c2_pins: i2c2-pins {
- 				pins = "GPIO_28", "GPIO_29";
- 				function = "twi2";
- 			};
-+
-+			emmc_pins: emmc-pins {
-+				pins = "GPIO_34", "GPIO_35", "GPIO_36",
-+					"GPIO_37", "GPIO_38", "GPIO_39",
-+					"GPIO_40", "GPIO_41", "GPIO_42",
-+					"GPIO_43", "GPIO_44", "GPIO_45",
-+					"GPIO_46", "GPIO_47";
-+				function = "emmc";
-+			};
- 		};
-
- 		i2c0: i2c@600101000 {
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts b/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
-index 91ee5b6cfc37a..573309fe45823 100644
---- a/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
-+++ b/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
-@@ -16,6 +16,29 @@ memory@0 {
- 	};
- };
-
-+&gpio {
-+	emmc_pins: emmc-pins {
-+		/* NB: No "GPIO_35", "GPIO_36", "GPIO_37"
-+		 * (N/A: CARD_nDETECT, CARD_WP, CARD_LED)
-+		 */
-+		pins = "GPIO_34", "GPIO_38", "GPIO_39",
-+			"GPIO_40", "GPIO_41", "GPIO_42",
-+			"GPIO_43", "GPIO_44", "GPIO_45",
-+			"GPIO_46", "GPIO_47";
-+		drive-strength = <3>;
-+		function = "emmc";
-+	};
-+};
-+
-+&sdhci0 {
-+	status = "okay";
-+	bus-width = <8>;
-+	non-removable;
-+	pinctrl-0 = <&emmc_pins>;
-+	max-frequency = <8000000>;
-+	microchip,clock-delay = <10>;
-+};
-+
- &i2c1 {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb134_emmc.dts b/arch/arm64/boot/dts/microchip/sparx5_pcb134_emmc.dts
-index 10081a66961bb..bbb9852c1f151 100644
---- a/arch/arm64/boot/dts/microchip/sparx5_pcb134_emmc.dts
-+++ b/arch/arm64/boot/dts/microchip/sparx5_pcb134_emmc.dts
-@@ -15,3 +15,26 @@ memory@0 {
- 		reg = <0x00000000 0x00000000 0x10000000>;
- 	};
- };
-+
-+&gpio {
-+	emmc_pins: emmc-pins {
-+		/* NB: No "GPIO_35", "GPIO_36", "GPIO_37"
-+		 * (N/A: CARD_nDETECT, CARD_WP, CARD_LED)
-+		 */
-+		pins = "GPIO_34", "GPIO_38", "GPIO_39",
-+			"GPIO_40", "GPIO_41", "GPIO_42",
-+			"GPIO_43", "GPIO_44", "GPIO_45",
-+			"GPIO_46", "GPIO_47";
-+		drive-strength = <3>;
-+		function = "emmc";
-+	};
-+};
-+
-+&sdhci0 {
-+	status = "okay";
-+	pinctrl-0 = <&emmc_pins>;
-+	non-removable;
-+	max-frequency = <52000000>;
-+	bus-width = <8>;
-+	microchip,clock-delay = <10>;
-+};
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb135_emmc.dts b/arch/arm64/boot/dts/microchip/sparx5_pcb135_emmc.dts
-index 741f0e12260e5..f82266fe2ad49 100644
---- a/arch/arm64/boot/dts/microchip/sparx5_pcb135_emmc.dts
-+++ b/arch/arm64/boot/dts/microchip/sparx5_pcb135_emmc.dts
-@@ -15,3 +15,26 @@ memory@0 {
- 		reg = <0x00000000 0x00000000 0x10000000>;
- 	};
- };
-+
-+&gpio {
-+	emmc_pins: emmc-pins {
-+		/* NB: No "GPIO_35", "GPIO_36", "GPIO_37"
-+		 * (N/A: CARD_nDETECT, CARD_WP, CARD_LED)
-+		 */
-+		pins = "GPIO_34", "GPIO_38", "GPIO_39",
-+			"GPIO_40", "GPIO_41", "GPIO_42",
-+			"GPIO_43", "GPIO_44", "GPIO_45",
-+			"GPIO_46", "GPIO_47";
-+		drive-strength = <3>;
-+		function = "emmc";
-+	};
-+};
-+
-+&sdhci0 {
-+	status = "okay";
-+	pinctrl-0 = <&emmc_pins>;
-+	non-removable;
-+	max-frequency = <52000000>;
-+	bus-width = <8>;
-+	microchip,clock-delay = <10>;
-+};
---
-2.27.0
-Cc: Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
-Cc: linux-mmc@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
