@@ -2,99 +2,175 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6284C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88009C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B71B92078D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:02:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591732951;
-	bh=q+5FPsKLA/Z7flE7/7XyBpxYuqDVnTqZREclhjKh1Yg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Jhhyjfp054B0faB3xU0LwNKWSXQnDxwVIFqrlyrgaMCSHJQqnyAf897mO4TwVRCOh
-	 19Fx1XpW/FTHxaCTvW+odiwyc7JMpUh44Yq8aN9uXRX4IME2BeNKyLqGvp4cBD/5K3
-	 K+S++jW+IyFQ0DdLF9tqlBc+xwEZC7jAF+SH49SI=
+	by mail.kernel.org (Postfix) with ESMTP id 63904204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:03:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uAiroSBv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732566AbgFIUCa (ORCPT
+        id S1732642AbgFIUDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 16:02:30 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45692 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbgFIUC2 (ORCPT
+        Tue, 9 Jun 2020 16:03:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33890 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725926AbgFIUDc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 16:02:28 -0400
-Received: by mail-io1-f68.google.com with SMTP id y5so24174642iob.12;
-        Tue, 09 Jun 2020 13:02:27 -0700 (PDT)
+        Tue, 9 Jun 2020 16:03:32 -0400
+Received: from mail-oo1-xc42.google.com (mail-oo1-xc42.google.com [IPv6:2607:f8b0:4864:20::c42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25DFBC05BD1E;
+        Tue,  9 Jun 2020 13:03:31 -0700 (PDT)
+Received: by mail-oo1-xc42.google.com with SMTP id v3so15421oot.1;
+        Tue, 09 Jun 2020 13:03:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Pt0DPLBpPkPb8xYKYcZPNtFaSRjSBZPXqgtNpIMmDh0=;
+        b=uAiroSBv1gLnKdbZUEyupBr7lgsYb7M/vRhN2cfhjUKvRDBDE/zmbEA9xBTI1iuoAW
+         X6g314P0frYFreZ2U1Vewsjxalb2kCF8CnTqxxRh5yBqrER1VAyxOWRsXPBxMqDEbNtW
+         7xPO/ggNfcr80yQPFPlaeGVBCgg5HfZWljeGrWm66EnOVDbe5MCYJUamTAB+85mh8EV4
+         e0uQhnECuDBsPL6+iw1UJCKguOXLChw8EF5IwuIZfM92CGsfK+ySg7itmbzqO/RHuxDa
+         MsO4CIsyxYesXRwgQrf4jTo1AT3cK1qNpc7lGcE7zAw9HegXos08/OZLX6z2Qjm9sCXA
+         YzUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=k8Vtkuk+eVaXGU/8rfVJdWcttoiSK9i9poLLXc4pfnw=;
-        b=uUvqEBhR3EXCW+mC25JRkSeAgKuETy/N8Sae6xZgNXUOrjyI0FECNYsbroCECbajXq
-         dCHsQN+UiqSB2fbcx3A787iYg8yTfT7mWo8da9GBGETkj4YQJm65JGV9oAoxyQ5Oxgtq
-         bQcWDmPV3kupCm8l9dCikZ5who4CvhImNKn/oDmgopVnIm2/JKY6eZL6BNwuHsTMi1vo
-         pjdpJZ0uF9myXpxZfS3oTZmZnTsHgwaCYzr/cFcZ5LMuLTWOt509+dnRU+FMjmTcLlY7
-         GgB0RVqNav5c1Lzgt+r7nZCLxrXymqpid/+XI0rbx1iQWjQ+AEkft6zHrEx6v7vMOLQq
-         zOIg==
-X-Gm-Message-State: AOAM531oX/4IWQc2zMqx67sPN7oilvsD7g4J7eGMnmQ016ZbMiXdRqrZ
-        P0ilHD7QC6YZ1Kjx6OS7ZQ==
-X-Google-Smtp-Source: ABdhPJwwjhFBa9o+ou5vR9zbKMqsajdWUO/uk2RF8iJ7Mxb3+utXKh5+R6GmAI2gbaTUyNT6I1quhg==
-X-Received: by 2002:a05:6602:2e96:: with SMTP id m22mr28955927iow.165.1591732947458;
-        Tue, 09 Jun 2020 13:02:27 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id e184sm7664983iof.44.2020.06.09.13.02.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 13:02:27 -0700 (PDT)
-Received: (nullmailer pid 1359505 invoked by uid 1000);
-        Tue, 09 Jun 2020 20:02:25 -0000
-Date:   Tue, 9 Jun 2020 14:02:25 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Artur =?utf-8?B?xZp3aWdvxYQ=?= <a.swigon@samsung.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-kernel@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
-        linux-pm@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Mikko Perttunen <cyndis@kapsi.fi>, devicetree@vger.kernel.org,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>
-Subject: Re: [PATCH v3 24/39] dt-bindings: memory: tegra30: Add memory client
- IDs
-Message-ID: <20200609200225.GA1359394@bogus>
-References: <20200607185530.18113-1-digetx@gmail.com>
- <20200607185530.18113-25-digetx@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Pt0DPLBpPkPb8xYKYcZPNtFaSRjSBZPXqgtNpIMmDh0=;
+        b=Yj/sGhsJRB3GejTFTbT3v+/TIVa436N0f7CmaXlL1JD5YUhxeXUR4SP3mwbt5LHFO6
+         1xWCk6BChym9nCZCCVe3W5jpA0fjv4EiVwrwdlxqSfifSPfardqVG4oQcX6EdxCgYGrp
+         70jzoWIhv80bTNUiIbqH3T25eD9geD9kBzRlLLUSMGKijTeKGoBcwbwvzPwR8uH/WG9M
+         +ihnhBKC40nQAUpN4l4cb8pJhnN+Y1aufWx2C73f+neFIHqgtikrsBsr4Dca725VdaRR
+         oZfrvIl3UAUjhYsAn/WtsQt4gImC6g2Z0kaxPuL6y3kU1gg1271q+Q1M4WbzKcAiKzUL
+         gCZA==
+X-Gm-Message-State: AOAM532jzKIEJRmfn6H8t9Vdladp1R7L6qKO1ZL2FF+4DzFj0R1pMZsG
+        68u22lyssHwpDo00+zimc8Bw9Sp1tSyuXCczhdI=
+X-Google-Smtp-Source: ABdhPJwvRWOKzbf+DKVU8juNuXBGC7MEAwHZMPL+F9ZVDiWOBRsus8puDwqu5SfEy378bJmVu8/EiR20yZkdUXHvy9E=
+X-Received: by 2002:a4a:6c0d:: with SMTP id q13mr5977631ooc.50.1591733010983;
+ Tue, 09 Jun 2020 13:03:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200607185530.18113-25-digetx@gmail.com>
+References: <6d4c92b28c54d8ca687c29043562de943a373547.1587675252.git.zanussi@kernel.org>
+ <CAGi-RUKn6k98H5v9kw7je1MChb4+Uq8EGhKO0nuXNMBy9M1_qw@mail.gmail.com>
+ <b5026121af44601e4318479194357fdb956982f6.camel@kernel.org>
+ <20200609154741.5kesuvl7txz4s3yu@linutronix.de> <e288ef193f743782df48667b6b03122bd025119f.camel@kernel.org>
+ <20200609163446.efp76qbjzkbtl7nk@linutronix.de> <D6892A4E-18F7-4EB7-BA09-BD4DF9079BDE@gmail.com>
+ <34E6C220-A85B-4296-AB8E-62DE6D9DC561@gmail.com> <20200609164213.bshzpfuqgioyvtpm@linutronix.de>
+ <61D63A44-E3D9-4E7F-BE08-B887C078F445@gmail.com> <20200609171043.vhvms7lowffqm6e4@linutronix.de>
+ <50AE5644-D046-4043-8A70-204D0BFEB67F@gmail.com> <aee4ed8bdd405c1e0e964fef6d57f410267aa25a.camel@kernel.org>
+In-Reply-To: <aee4ed8bdd405c1e0e964fef6d57f410267aa25a.camel@kernel.org>
+From:   Ramon Fried <rfried.dev@gmail.com>
+Date:   Tue, 9 Jun 2020 23:03:19 +0300
+Message-ID: <CAGi-RUJ+JB972uv4DnNRNCxRyGrjP_nNNhbnZG6AyyW_ampbqw@mail.gmail.com>
+Subject: Re: [PATCH RT 1/2] tasklet: Address a race resulting in double-enqueue
+To:     Tom Zanussi <zanussi@kernel.org>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        John Kacur <jkacur@redhat.com>, Daniel Wagner <wagi@monom.org>,
+        Clark Williams <williams@redhat.com>,
+        Zhang Xiao <xiao.zhang@windriver.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 07 Jun 2020 21:55:15 +0300, Dmitry Osipenko wrote:
-> Each memory client have a unique hardware ID, this patch adds these IDs.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+On Tue, Jun 9, 2020 at 8:20 PM Tom Zanussi <zanussi@kernel.org> wrote:
+>
+> Hi Ramon,
+>
+> On Tue, 2020-06-09 at 20:14 +0300, Ramon Fried wrote:
+> >
+> > On June 9, 2020 8:10:43 PM GMT+03:00, Sebastian Andrzej Siewior <
+> > bigeasy@linutronix.de> wrote:
+> > > On 2020-06-09 20:07:06 [+0300], Ramon Fried wrote:
+> > > > Indeed
+> > > >  I'm truly sorry, I thought our crash kernel is configured as RT
+> > > > as
+> > >
+> > > well.
+> > > > so, as I understand, if I build the RT kernel without preempt
+> > > > enabled
+> > >
+> > > I can hit this bug?
+> > >
+> > > Don't worry, I should have been better with the details in the log.
+> > >
+> > > So you should _always_ hit the warning/bug if you compile a kernel
+> > > without SMP and RT. If you enable one of these then everything
+> > > should
+> > > be
+> > > fine.
+> >
+> > Would there be a fix for that?
+>
+> I haven't tested the fix yet, but can you try the below patch and see
+> if it fixes your broken case?
+>
+> [PATCH] tasklet: Fix UP case for tasklet CHAINED state
+>
+> commit 62d0a2a30cd0 (tasklet: Address a race resulting in
+> double-enqueue) addresses a problem that can result in a tasklet being
+> enqueued on two cpus at the same time by combining the RUN flag with a
+> new CHAINED flag, and relies on the combination to be present in order
+> to zero it out, which can never happen on (!SMP and !PREEMPT_RT_FULL)
+> because the RUN flag is SMP/PREEMPT_RT_FULL-only.
+>
+> So make sure the above commit is only applied for the SMP ||
+> PREEMPT_RT_FULL case.
+>
+> Signed-off-by: Tom Zanussi <zanussi@kernel.org>
 > ---
->  include/dt-bindings/memory/tegra30-mc.h | 67 +++++++++++++++++++++++++
->  1 file changed, 67 insertions(+)
-> 
+>  kernel/softirq.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/kernel/softirq.c b/kernel/softirq.c
+> index 73dae64bfc9c..9bad7a16dc61 100644
+> --- a/kernel/softirq.c
+> +++ b/kernel/softirq.c
+> @@ -947,10 +947,12 @@ static void __tasklet_schedule_common(struct
+> tasklet_struct *t,
+>          * is locked before adding it to the list.
+>          */
+>         if (test_bit(TASKLET_STATE_SCHED, &t->state)) {
+> +#if defined(CONFIG_SMP) || defined(CONFIG_PREEMPT_RT_FULL)
+>                 if (test_and_set_bit(TASKLET_STATE_CHAINED, &t->state))
+> {
+>                         tasklet_unlock(t);
+>                         return;
+>                 }
+> +#endif
+>                 t->next = NULL;
+>                 *head->tail = t;
+>                 head->tail = &(t->next);
+> @@ -1044,7 +1046,11 @@ static void tasklet_action_common(struct
+> softirq_action *a,
+>  again:
+>                 t->func(t->data);
+>
+> +#if defined(CONFIG_SMP) || defined(CONFIG_PREEMPT_RT_FULL)
+>                 while (cmpxchg(&t->state, TASKLET_STATEF_RC, 0) !=
+> TASKLET_STATEF_RC) {
+> +#else
+> +               while (!tasklet_tryunlock(t)) {
+> +#endif
+>                         /*
+>                          * If it got disabled meanwhile, bail out:
+>                          */
+> --
+> 2.17.1
+>
+>
+Tested-By: Ramon Fried <rfried.dev@gmail.com>
 
-
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
-
-If a tag was not added on purpose, please state why and what changed.
-
+Working, thanks a lot.
