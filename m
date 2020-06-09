@@ -2,32 +2,32 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF677C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D12FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C31B4206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:11:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F40182068D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:12:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388679AbgFISL4 (ORCPT
+        id S2387776AbgFISMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:11:56 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:41232 "EHLO
+        Tue, 9 Jun 2020 14:12:01 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:41242 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388130AbgFISF5 (ORCPT
+        by vger.kernel.org with ESMTP id S2388136AbgFISF5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 9 Jun 2020 14:05:57 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jiidF-0001oe-9B; Tue, 09 Jun 2020 19:05:53 +0100
+        id 1jiidE-0001oK-OX; Tue, 09 Jun 2020 19:05:52 +0100
 Received: from ben by deadeye with local (Exim 4.94)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jiidE-006VvG-Jl; Tue, 09 Jun 2020 19:05:52 +0100
+        id 1jiidE-006Vuc-88; Tue, 09 Jun 2020 19:05:52 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Alan Stern" <stern@rowland.harvard.edu>,
-        "David Mosberger" <davidm@egauge.net>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Date:   Tue, 09 Jun 2020 19:04:08 +0100
-Message-ID: <lsq.1591725832.694160445@decadent.org.uk>
+        "Oliver Hartkopp" <socketcan@hartkopp.net>,
+        "Lukas Bulwahn" <lukas.bulwahn@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Jouni Hogander" <jouni.hogander@unikie.com>
+Date:   Tue, 09 Jun 2020 19:03:55 +0100
+Message-ID: <lsq.1591725832.531643038@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 17/61] drivers: usb: core: Minimize irq disabling in
- usb_sg_cancel()
+Subject: [PATCH 3.16 04/61] slip: Fix memory leak in slip_open error path
 In-Reply-To: <lsq.1591725831.850867383@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,70 +57,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: David Mosberger <davidm@egauge.net>
+From: Jouni Hogander <jouni.hogander@unikie.com>
 
-commit 5f2e5fb873e269fcb806165715d237f0de4ecf1d upstream.
+commit 3b5a39979dafea9d0cd69c7ae06088f7a84cdafa upstream.
 
-Restructure usb_sg_cancel() so we don't have to disable interrupts
-while cancelling the URBs.
+Driver/net/can/slcan.c is derived from slip.c. Memory leak was detected
+by Syzkaller in slcan. Same issue exists in slip.c and this patch is
+addressing the leak in slip.c.
 
-Suggested-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: David Mosberger <davidm@egauge.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Here is the slcan memory leak trace reported by Syzkaller:
+
+BUG: memory leak unreferenced object 0xffff888067f65500 (size 4096):
+  comm "syz-executor043", pid 454, jiffies 4294759719 (age 11.930s)
+  hex dump (first 32 bytes):
+    73 6c 63 61 6e 30 00 00 00 00 00 00 00 00 00 00 slcan0..........
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+  backtrace:
+    [<00000000a06eec0d>] __kmalloc+0x18b/0x2c0
+    [<0000000083306e66>] kvmalloc_node+0x3a/0xc0
+    [<000000006ac27f87>] alloc_netdev_mqs+0x17a/0x1080
+    [<0000000061a996c9>] slcan_open+0x3ae/0x9a0
+    [<000000001226f0f9>] tty_ldisc_open.isra.1+0x76/0xc0
+    [<0000000019289631>] tty_set_ldisc+0x28c/0x5f0
+    [<000000004de5a617>] tty_ioctl+0x48d/0x1590
+    [<00000000daef496f>] do_vfs_ioctl+0x1c7/0x1510
+    [<0000000059068dbc>] ksys_ioctl+0x99/0xb0
+    [<000000009a6eb334>] __x64_sys_ioctl+0x78/0xb0
+    [<0000000053d0332e>] do_syscall_64+0x16f/0x580
+    [<0000000021b83b99>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+    [<000000008ea75434>] 0xfffffffffffffff
+
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Oliver Hartkopp <socketcan@hartkopp.net>
+Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Signed-off-by: Jouni Hogander <jouni.hogander@unikie.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/core/message.c | 37 +++++++++++++++++--------------------
- 1 file changed, 17 insertions(+), 20 deletions(-)
+ drivers/net/slip/slip.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/usb/core/message.c
-+++ b/drivers/usb/core/message.c
-@@ -581,31 +581,28 @@ EXPORT_SYMBOL_GPL(usb_sg_wait);
- void usb_sg_cancel(struct usb_sg_request *io)
- {
- 	unsigned long flags;
-+	int i, retval;
+--- a/drivers/net/slip/slip.c
++++ b/drivers/net/slip/slip.c
+@@ -867,6 +867,7 @@ err_free_chan:
+ 	sl->tty = NULL;
+ 	tty->disc_data = NULL;
+ 	clear_bit(SLF_INUSE, &sl->flags);
++	free_netdev(sl->dev);
  
- 	spin_lock_irqsave(&io->lock, flags);
-+	if (io->status) {
-+		spin_unlock_irqrestore(&io->lock, flags);
-+		return;
-+	}
-+	/* shut everything down */
-+	io->status = -ECONNRESET;
-+	spin_unlock_irqrestore(&io->lock, flags);
- 
--	/* shut everything down, if it didn't already */
--	if (!io->status) {
--		int i;
--
--		io->status = -ECONNRESET;
--		spin_unlock(&io->lock);
--		for (i = 0; i < io->entries; i++) {
--			int retval;
--
--			usb_block_urb(io->urbs[i]);
-+	for (i = io->entries - 1; i >= 0; --i) {
-+		usb_block_urb(io->urbs[i]);
- 
--			retval = usb_unlink_urb(io->urbs[i]);
--			if (retval != -EINPROGRESS
--					&& retval != -ENODEV
--					&& retval != -EBUSY
--					&& retval != -EIDRM)
--				dev_warn(&io->dev->dev, "%s, unlink --> %d\n",
--					__func__, retval);
--		}
--		spin_lock(&io->lock);
-+		retval = usb_unlink_urb(io->urbs[i]);
-+		if (retval != -EINPROGRESS
-+		    && retval != -ENODEV
-+		    && retval != -EBUSY
-+		    && retval != -EIDRM)
-+			dev_warn(&io->dev->dev, "%s, unlink --> %d\n",
-+				 __func__, retval);
- 	}
--	spin_unlock_irqrestore(&io->lock, flags);
- }
- EXPORT_SYMBOL_GPL(usb_sg_cancel);
- 
+ err_exit:
+ 	rtnl_unlock();
 
