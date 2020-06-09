@@ -2,137 +2,131 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7489FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 06:49:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1684BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 06:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54962207C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 06:49:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E315F207F9
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 06:50:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q2XX1BIc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727961AbgFIGtW (ORCPT
+        id S1727932AbgFIGud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 02:49:22 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10726 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726917AbgFIGtW (ORCPT
+        Tue, 9 Jun 2020 02:50:33 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:34354 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726896AbgFIGud (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 02:49:22 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0596Vjqi191885;
-        Tue, 9 Jun 2020 02:49:21 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31gg81hspu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 09 Jun 2020 02:49:21 -0400
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0596Vtac192581;
-        Tue, 9 Jun 2020 02:49:21 -0400
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31gg81hsp7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 09 Jun 2020 02:49:20 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0596k9oR002782;
-        Tue, 9 Jun 2020 06:49:18 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma04fra.de.ibm.com with ESMTP id 31g2s7t687-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 09 Jun 2020 06:49:18 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0596nFrb57671682
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 9 Jun 2020 06:49:15 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3B3AC42054;
-        Tue,  9 Jun 2020 06:49:15 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DD04B42041;
-        Tue,  9 Jun 2020 06:49:14 +0000 (GMT)
-Received: from osiris (unknown [9.171.82.114])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue,  9 Jun 2020 06:49:14 +0000 (GMT)
-Date:   Tue, 9 Jun 2020 08:49:13 +0200
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH v2] s390: vdso: Use $(LD) instead of $(CC) to link vDSO
-Message-ID: <20200609064913.GA6796@osiris>
-References: <CAKwvOdmCrM0eUZHR12OBgyRhNPFDzZKjrpZ0DW8Cg=wqTfzDFw@mail.gmail.com>
- <20200602192523.32758-1-natechancellor@gmail.com>
- <CAKwvOdnH8rxT7y1U0d=pyD19K38KwarrwA2s+Ji7ctgg+ks_kg@mail.gmail.com>
+        Tue, 9 Jun 2020 02:50:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591685432;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RMwcUIFPWAyOd8cKk46GmiqaJ7VH8w0Cpy4nyi0OjGc=;
+        b=Q2XX1BIcRvHh/Ffa/vOneVFLtSHNBU2WgyajTxzp9XVTiIr2U9z8txAdg4ZP1G9JfjKCr/
+        Xja7yaitye6uLhpV3ist3ib/FeOBnl9coc+NrcmYh2BBa1VPt3EJW/os/1bnWLn7sHxVMW
+        spaLPGcqbI+O9Xf8XKVKURsCMUZPvA8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-391-pfs1qKM-NFKoNWHgrO6dWA-1; Tue, 09 Jun 2020 02:50:28 -0400
+X-MC-Unique: pfs1qKM-NFKoNWHgrO6dWA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E95FC18FF661;
+        Tue,  9 Jun 2020 06:50:25 +0000 (UTC)
+Received: from carbon (unknown [10.40.208.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5700F768C1;
+        Tue,  9 Jun 2020 06:50:18 +0000 (UTC)
+Date:   Tue, 9 Jun 2020 08:50:17 +0200
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     gaurav singh <gaurav1086@gmail.com>
+Cc:     brouer@redhat.com, ast@kernel.org, daniel@iogearbox.net,
+        davem@davemloft.net, kuba@kernel.org, hawk@kernel.org,
+        john.fastabend@gmail.com, kafai@fb.com, songliubraving@fb.com,
+        yhs@fb.com, andriin@fb.com, kpsingh@chromium.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] bpf: alloc_record_per_cpu Add null check after malloc
+Message-ID: <20200609085017.0d285568@carbon>
+In-Reply-To: <CAFAFadDVe1Au2eJ8ho_cK1riwf9FDaGck3o+VEcKpqRgO5qXdA@mail.gmail.com>
+References: <CAFAFadDVe1Au2eJ8ho_cK1riwf9FDaGck3o+VEcKpqRgO5qXdA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwvOdnH8rxT7y1U0d=pyD19K38KwarrwA2s+Ji7ctgg+ks_kg@mail.gmail.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-09_01:2020-06-08,2020-06-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- suspectscore=0 adultscore=0 spamscore=0 priorityscore=1501
- lowpriorityscore=0 phishscore=0 impostorscore=0 clxscore=1011 bulkscore=0
- mlxlogscore=999 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006090046
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 12:52:26PM -0700, Nick Desaulniers wrote:
-> On Tue, Jun 2, 2020 at 12:25 PM Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
-> >
-> > Currently, the VDSO is being linked through $(CC). This does not match
-> > how the rest of the kernel links objects, which is through the $(LD)
-> > variable.
-> >
-> > When clang is built in a default configuration, it first attempts to use
-> > the target triple's default linker, which is just ld. However, the user
-> > can override this through the CLANG_DEFAULT_LINKER cmake define so that
-> > clang uses another linker by default, such as LLVM's own linker, ld.lld.
-> > This can be useful to get more optimized links across various different
-> > projects.
-> >
-> > However, this is problematic for the s390 vDSO because ld.lld does not
-> > have any s390 emulatiom support:
-> >
-> > https://github.com/llvm/llvm-project/blob/llvmorg-10.0.1-rc1/lld/ELF/Driver.cpp#L132-L150
-> >
-> > Thus, if a user is using a toolchain with ld.lld as the default, they
-> > will see an error, even if they have specified ld.bfd through the LD
-> > make variable:
-> >
-> > $ make -j"$(nproc)" -s ARCH=s390 CROSS_COMPILE=s390x-linux-gnu- LLVM=1 \
-> >                        LD=s390x-linux-gnu-ld \
-> >                        defconfig arch/s390/kernel/vdso64/
-> > ld.lld: error: unknown emulation: elf64_s390
-> > clang-11: error: linker command failed with exit code 1 (use -v to see invocation)
-> >
-> > Normally, '-fuse-ld=bfd' could be used to get around this; however, this
-> > can be fragile, depending on paths and variable naming. The cleaner
-> > solution for the kernel is to take advantage of the fact that $(LD) can
-> > be invoked directly, which bypasses the heuristics of $(CC) and respects
-> > the user's choice. Similar changes have been done for ARM, ARM64, and
-> > MIPS.
-> >
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/1041
-> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> 
-> Thanks, with this, I'm more confident that the linker flags don't change.
-> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-...
-> > -KBUILD_CFLAGS_64 += -nostdlib -Wl,-soname=linux-vdso64.so.1 \
-> > -                   -Wl,--hash-style=both
-> > +ldflags-y := -fPIC -shared -nostdlib -soname=linux-vdso64.so.1 \
-> > +            --hash-style=both -T
+On Sat, 6 Jun 2020 19:59:48 -0400
+gaurav singh <gaurav1086@gmail.com> wrote:
 
-I added the --build-id flag according to commit 7a0a93c51799 ("arm64:
-vdso: Explicitly add build-id option") and applied the patch.
-Thanks!
+> Hi,
+> 
+> The memset call is made right after malloc call. To fix this, add the null
+> check right after malloc and then do memset.
+> 
+> Please find the patch below.
+
+The fix in your patch seem correct (although there are more places),
+but the way you send/submit the patch is wrong.  The patch itself also
+mangle whitespaces.
+
+You can read the guide:
+
+ https://www.kernel.org/doc/html/latest/process/submitting-patches.html
+ https://www.kernel.org/doc/html/latest/process/index.html
+
+--Jesper
+
+
+> Thanks and regards,
+> Gaurav.
+> 
+> 
+> From 552b7df0e12572737929c60478b5dca2a40f4ad9 Mon Sep 17 00:00:00 2001
+> From: Gaurav Singh <gaurav1086@gmail.com>
+> Date: Sat, 6 Jun 2020 19:57:48 -0400
+> Subject: [PATCH] bpf: alloc_record_per_cpu Add null check after malloc
+> 
+> Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
+> ---
+>  samples/bpf/xdp_rxq_info_user.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/samples/bpf/xdp_rxq_info_user.c
+> b/samples/bpf/xdp_rxq_info_user.c
+> index 4fe47502ebed..490b07b7df78 100644
+> --- a/samples/bpf/xdp_rxq_info_user.c
+> +++ b/samples/bpf/xdp_rxq_info_user.c
+> @@ -202,11 +202,11 @@ static struct datarec *alloc_record_per_cpu(void)
+> 
+>   size = sizeof(struct datarec) * nr_cpus;
+>   array = malloc(size);
+> - memset(array, 0, size);
+>   if (!array) {
+>   fprintf(stderr, "Mem alloc error (nr_cpus:%u)\n", nr_cpus);
+>   exit(EXIT_FAIL_MEM);
+>   }
+> + memset(array, 0, size);
+>   return array;
+>  }
+> 
+
+
+
+-- 
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
+
