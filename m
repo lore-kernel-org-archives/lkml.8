@@ -2,127 +2,194 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE94C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:16:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A685C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B99A620734
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:16:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NUF5zRNz"
+	by mail.kernel.org (Postfix) with ESMTP id E156E20734
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:17:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731649AbgFIRQT (ORCPT
+        id S1731687AbgFIRRz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:16:19 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:56542 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729069AbgFIRQP (ORCPT
+        Tue, 9 Jun 2020 13:17:55 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:54520 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728783AbgFIRRy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:16:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591722974;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=yXdiOQv7NKIBd+DVRCSCXdbaCUEn9kqsC6k0oYzgv1w=;
-        b=NUF5zRNznQMQhhJfvHhkudLAi4CSKM0Pl16k/fNINUCs23kNZkLBKqXzR7UnlGCdCkfapx
-        sVMHYind71xL7hemN2xQbgvcbIIyxnienxb17FE7ZUv+TNz4NWPVW6+SE5elqJYiF6Ku/6
-        OVykLBcfn4qd0hlNyN1wy+qwjpd3SYE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-3-wXJTdLcZNqyNdx8RFUaYTA-1; Tue, 09 Jun 2020 13:16:09 -0400
-X-MC-Unique: wXJTdLcZNqyNdx8RFUaYTA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6B2A2801504;
-        Tue,  9 Jun 2020 17:16:08 +0000 (UTC)
-Received: from madcap2.tricolour.ca (unknown [10.10.110.54])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B39625D9E4;
-        Tue,  9 Jun 2020 17:15:58 +0000 (UTC)
-Date:   Tue, 9 Jun 2020 13:15:55 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Cc:     Steve Grubb <sgrubb@redhat.com>, linux-integrity@vger.kernel.org,
-        linux-audit@redhat.com, zohar@linux.ibm.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] IMA: Add audit log for failure conditions
-Message-ID: <20200609171555.itbllvtgjdanbbk7@madcap2.tricolour.ca>
-References: <20200608215343.4491-1-nramas@linux.microsoft.com>
- <27448076.Og45N0Lxmj@x2>
- <ada45440-aefd-a4b2-2a3b-c012872e86cb@linux.microsoft.com>
- <3776526.Vj75JV9fuy@x2>
- <518a51b7-6c8d-f55f-c73a-b15abae8e0af@linux.microsoft.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <518a51b7-6c8d-f55f-c73a-b15abae8e0af@linux.microsoft.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+        Tue, 9 Jun 2020 13:17:54 -0400
+Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 09 Jun 2020 10:17:53 -0700
+Received: from asutoshd-linux1.qualcomm.com ([10.46.160.39])
+  by ironmsg-SD-alpha.qualcomm.com with ESMTP; 09 Jun 2020 10:17:53 -0700
+Received: by asutoshd-linux1.qualcomm.com (Postfix, from userid 92687)
+        id 1EBFA20C1D; Tue,  9 Jun 2020 10:17:53 -0700 (PDT)
+From:   Asutosh Das <asutoshd@codeaurora.org>
+To:     gregkh@google.com, cang@codeaurora.org, martin.petersen@oracle.com
+Cc:     linux-scsi@vger.kernel.org, Asutosh Das <asutoshd@codeaurora.org>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 1/1] Documentation:sysfs-ufs: Add WriteBooster documentation
+Date:   Tue,  9 Jun 2020 10:17:46 -0700
+Message-Id: <1591723067-22998-1-git-send-email-asutoshd@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-09 10:00, Lakshmi Ramasubramanian wrote:
-> On 6/9/20 9:43 AM, Steve Grubb wrote:
-> 
-> > > The number in parenthesis is the error code (such as ENOMEM, EINVAL,
-> > > etc.) IMA uses this format for reporting TPM errors in one of the audit
-> > > messages (In ima_add_template_entry()). I followed the same pattern.
-> > > 
-> > > Would it be better if the value for "cause" is formatted as
-> > > 
-> > >      cause=hashing_error_-22
-> > > 
-> > >      cause=alloc_entry_-12
-> > 
-> > Neither fit the name=value style that all other events follow. What would fit
-> > the style is something like this:
-> > 
-> > cause=hashing_error  errno=-22
-> > cause=alloc_entry errno=-12
-> > 
-> > Would this be OK? Also, errno is only to illustrate. You can name it
-> > something else as long as there are no use case collisions with our
-> > dictionary of field names.
-> > 
-> > https://github.com/linux-audit/audit-documentation/blob/master/specs/fields/
-> > field-dictionary.csv
-> 
-> I am fine with this.
-> 
-> "errno" is currently not listed in the dictionary of audit message field
-> names (Thanks for the pointer to this one Steve)
-> 
-> Mimi - please let me know if you have any concerns with adding the "result"
-> code in "errno" field in integrity_audit_msg().
+Adds sysfs documentation for WriteBooster entries.
 
-If it is added, it should be appended to the end of the record since it
-is an existing record format, then in the case of res=1, errno= should
-still be present (not swing in and out) and just contain zero.  (Or
-another value if there is a non-fatal warning?)
+Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
+---
+ Documentation/ABI/testing/sysfs-driver-ufs | 136 +++++++++++++++++++++++++++++
+ 1 file changed, 136 insertions(+)
 
-> Sample message:
-> 
-> [    8.051937] audit: type=1804 audit(1591633422.365:8): pid=1 uid=0
-> auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0
-> op=measuring_keys cause=hashing_error errno=-22 comm="systemd"
-> name=".builtin_trusted_keys" res=0
-> 
-> thanks,
->  -lakshmi
-
-- RGB
-
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+diff --git a/Documentation/ABI/testing/sysfs-driver-ufs b/Documentation/ABI/testing/sysfs-driver-ufs
+index 016724e..d1a3521 100644
+--- a/Documentation/ABI/testing/sysfs-driver-ufs
++++ b/Documentation/ABI/testing/sysfs-driver-ufs
+@@ -883,3 +883,139 @@ Contact:	Subhash Jadavani <subhashj@codeaurora.org>
+ Description:	This entry shows the target state of an UFS UIC link
+ 		for the chosen system power management level.
+ 		The file is read only.
++
++What:		/sys/bus/platform/drivers/ufshcd/*/device_descriptor/wb_presv_us_en
++Date:		June 2020
++Contact:	Asutosh Das <asutoshd@codeaurora.org>
++Description:	This entry shows if preserve user-space was configured
++		The file is read only.
++
++What:		/sys/bus/platform/drivers/ufshcd/*/device_descriptor/wb_shared_alloc_units
++Date:		June 2020
++Contact:	Asutosh Das <asutoshd@codeaurora.org>
++Description:	This entry shows the shared allocated units of WB buffer
++		The file is read only.
++
++What:		/sys/bus/platform/drivers/ufshcd/*/device_descriptor/wb_type
++Date:		June 2020
++Contact:	Asutosh Das <asutoshd@codeaurora.org>
++Description:	This entry shows the configured WB type.
++		0x1 for shared buffer mode. 0x0 for dedicated buffer mode.
++		The file is read only.
++
++What:		/sys/bus/platform/drivers/ufshcd/*/geometry_descriptor/wb_buff_cap_adj
++Date:		June 2020
++Contact:	Asutosh Das <asutoshd@codeaurora.org>
++Description:	This entry shows the total user-space decrease in shared
++		buffer mode.
++		The value of this parameter is 3 for TLC NAND when SLC mode
++		is used as WriteBooster Buffer. 2 for MLC NAND.
++		The file is read only.
++
++What:		/sys/bus/platform/drivers/ufshcd/*/geometry_descriptor/wb_max_alloc_units
++Date:		June 2020
++Contact:	Asutosh Das <asutoshd@codeaurora.org>
++Description:	This entry shows the Maximum total WriteBooster Buffer size
++		which is supported by the entire device.
++		The file is read only.
++
++What:		/sys/bus/platform/drivers/ufshcd/*/geometry_descriptor/wb_max_wb_luns
++Date:		June 2020
++Contact:	Asutosh Das <asutoshd@codeaurora.org>
++Description:	This entry shows the maximum number of luns that can support
++		WriteBooster.
++		The file is read only.
++
++What:		/sys/bus/platform/drivers/ufshcd/*/geometry_descriptor/wb_sup_red_type
++Date:		June 2020
++Contact:	Asutosh Das <asutoshd@codeaurora.org>
++Description:	The supportability of user space reduction mode
++		and preserve user space mode.
++		00h: WriteBooster Buffer can be configured only in
++		user space reduction type.
++		01h: WriteBooster Buffer can be configured only in
++		preserve user space type.
++		02h: Device can be configured in either user space
++		reduction type or preserve user space type.
++		The file is read only.
++
++What:		/sys/bus/platform/drivers/ufshcd/*/geometry_descriptor/wb_sup_wb_type
++Date:		June 2020
++Contact:	Asutosh Das <asutoshd@codeaurora.org>
++Description:	The supportability of WriteBooster Buffer type.
++		00h: LU based WriteBooster Buffer configuration
++		01h: Single shared WriteBooster Buffer
++		configuration
++		02h: Supporting both LU based WriteBooster
++		Buffer and Single shared WriteBooster Buffer
++		configuration
++		The file is read only.
++
++What:		/sys/bus/platform/drivers/ufshcd/*/flags/wb_enable
++Date:		June 2020
++Contact:	Asutosh Das <asutoshd@codeaurora.org>
++Description:	This entry shows the status of WriteBooster.
++		0: WriteBooster is not enabled.
++		1: WriteBooster is enabled
++		The file is read only.
++
++What:		/sys/bus/platform/drivers/ufshcd/*/flags/wb_flush_en
++Date:		June 2020
++Contact:	Asutosh Das <asutoshd@codeaurora.org>
++Description:	This entry shows if flush is enabled.
++		0: Flush operation is not performed.
++		1: Flush operation is performed.
++		The file is read only.
++
++What:		/sys/bus/platform/drivers/ufshcd/*/flags/wb_flush_during_h8
++Date:		June 2020
++Contact:	Asutosh Das <asutoshd@codeaurora.org>
++Description:	Flush WriteBooster Buffer during hibernate state.
++		0: Device is not allowed to flush the
++		WriteBooster Buffer during link hibernate
++		state.
++		1: Device is allowed to flush the
++		WriteBooster Buffer during link hibernate
++		state
++		The file is read only.
++
++What:		/sys/bus/platform/drivers/ufshcd/*/attributes/wb_avail_buf
++Date:		June 2020
++Contact:	Asutosh Das <asutoshd@codeaurora.org>
++Description:	This entry shows the amount of unused WriteBooster buffer
++		available.
++		The file is read only.
++
++What:		/sys/bus/platform/drivers/ufshcd/*/attributes/wb_cur_buf
++Date:		June 2020
++Contact:	Asutosh Das <asutoshd@codeaurora.org>
++Description:	This entry shows the amount of unused current buffer.
++		The file is read only.
++
++What:		/sys/bus/platform/drivers/ufshcd/*/attributes/wb_flush_status
++Date:		June 2020
++Contact:	Asutosh Das <asutoshd@codeaurora.org>
++Description:	This entry shows the flush operation status.
++		00h: idle
++		01h: Flush operation in progress
++		02h: Flush operation stopped prematurely.
++		03h: Flush operation completed successfully
++		04h: Flush operation general failure
++		The file is read only.
++
++What:		/sys/bus/platform/drivers/ufshcd/*/attributes/wb_life_time_est
++Date:		June 2020
++Contact:	Asutosh Das <asutoshd@codeaurora.org>
++Description:	This entry shows an indication of the WriteBooster Buffer
++		lifetime based on the amount of performed program/erase cycles
++		01h: 0% - 10% WriteBooster Buffer life time used
++		...
++		0Ah: 90% - 100% WriteBooster Buffer life time used
++		The file is read only.
++
++What:		/sys/class/scsi_device/*/device/unit_descriptor/wb_buf_alloc_units
++Date:		June 2020
++Contact:	Asutosh Das <asutoshd@codeaurora.org>
++Description:	This entry shows the configured size of WriteBooster buffer.
++		0400h corresponds to 4GB.
++		The file is read only.
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
