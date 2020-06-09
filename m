@@ -2,153 +2,307 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19DF0C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 07:04:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C0B2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 07:10:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1FB02078D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 07:04:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ogjPKNNg"
+	by mail.kernel.org (Postfix) with ESMTP id 5C206207C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 07:10:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727804AbgFIHEZ (ORCPT
+        id S1726466AbgFIHKg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 03:04:25 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:42830 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727076AbgFIHEY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 03:04:24 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0597494t105938;
-        Tue, 9 Jun 2020 02:04:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1591686249;
-        bh=fVvPM3xAR1d/mI/5VFPWF9ZaRjF/LtwDr0yUg7t492w=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=ogjPKNNgmCd0Ex9DVbi+OV1kdGVTdN8OzqjXYMNJbe6ej4+Jdkr66KKa9U2L6i40E
-         JfA+SHKdcBwGBRy5wCJCmwv1ylI3V1x28JKTU5ftPEakySJTwq/JQDh3rOa4Vlkvvv
-         dTqZ2/M8Kp17h3VmCWCO2KYWrD0l7cgoFZ8BK1ug=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 059748nd106696
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 9 Jun 2020 02:04:08 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 9 Jun
- 2020 02:04:07 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 9 Jun 2020 02:04:08 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 059744Ia077724;
-        Tue, 9 Jun 2020 02:04:04 -0500
-Subject: Re: [PATCH 1/5] drm/omap: Fix suspend resume regression after
- platform data removal
-To:     Tony Lindgren <tony@atomide.com>
-CC:     <linux-omap@vger.kernel.org>, "Andrew F . Davis" <afd@ti.com>,
-        Dave Gerlach <d-gerlach@ti.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
+        Tue, 9 Jun 2020 03:10:36 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51776 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725926AbgFIHKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 03:10:35 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id BD541AC7D;
+        Tue,  9 Jun 2020 07:10:35 +0000 (UTC)
+Date:   Tue, 9 Jun 2020 09:10:30 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
-        Tero Kristo <t-kristo@ti.com>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <dri-devel@lists.freedesktop.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-References: <20200531193941.13179-1-tony@atomide.com>
- <20200531193941.13179-2-tony@atomide.com>
- <16ba1808-5c7f-573d-8dd0-c80cac2f476e@ti.com>
- <20200603140639.GG37466@atomide.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <47e286dd-f87a-4440-5bde-1f7b53e8b672@ti.com>
-Date:   Tue, 9 Jun 2020 10:04:03 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Andrea Parri <parri.andrea@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: blk->id read race: was: [PATCH v2 2/3] printk: add lockless buffer
+Message-ID: <20200609071030.GA23752@linux-b0ei>
+References: <20200501094010.17694-1-john.ogness@linutronix.de>
+ <20200501094010.17694-3-john.ogness@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200603140639.GG37466@atomide.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200501094010.17694-3-john.ogness@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/06/2020 17:06, Tony Lindgren wrote:
-> * Tomi Valkeinen <tomi.valkeinen@ti.com> [200603 12:34]:
->> Hi Tony,
->>
->> On 31/05/2020 22:39, Tony Lindgren wrote:
->>> When booting without legacy platform data, we no longer have omap_device
->>> calling PM runtime suspend for us on suspend. This causes the driver
->>> context not be saved as we have no suspend and resume functions defined.
->>>
->>> Let's fix the issue by switching over to use UNIVERSAL_DEV_PM_OPS as it
->>> will call the existing PM runtime suspend functions on suspend.
->>
->> I don't think we can use UNIVERSAL_DEV_PM_OPS, as we can't disable DSS
->> modules in any order, but things have to be shut down in orderly manner.
+On Fri 2020-05-01 11:46:09, John Ogness wrote:
+> Introduce a multi-reader multi-writer lockless ringbuffer for storing
+> the kernel log messages. Readers and writers may use their API from
+> any context (including scheduler and NMI). This ringbuffer will make
+> it possible to decouple printk() callers from any context, locking,
+> or console constraints. It also makes it possible for readers to have
+> full access to the ringbuffer contents at any time and context (for
+> example from any panic situation).
 > 
-> OK. I presume you talk about the order of dss child devices here.
+> --- /dev/null
+> +++ b/kernel/printk/printk_ringbuffer.c
+> +/*
+> + * Given a data ring (text or dict), put the associated descriptor of each
+> + * data block from @lpos_begin until @lpos_end into the reusable state.
+> + *
+> + * If there is any problem making the associated descriptor reusable, either
+> + * the descriptor has not yet been committed or another writer task has
+> + * already pushed the tail lpos past the problematic data block. Regardless,
+> + * on error the caller can re-load the tail lpos to determine the situation.
+> + */
+> +static bool data_make_reusable(struct printk_ringbuffer *rb,
+> +			       struct prb_data_ring *data_ring,
+> +			       unsigned long lpos_begin,
+> +			       unsigned long lpos_end,
+> +			       unsigned long *lpos_out)
+> +{
+> +	struct prb_desc_ring *desc_ring = &rb->desc_ring;
+> +	struct prb_data_blk_lpos *blk_lpos;
+> +	struct prb_data_block *blk;
+> +	unsigned long tail_lpos;
+> +	enum desc_state d_state;
+> +	struct prb_desc desc;
+> +	unsigned long id;
+> +
+> +	/*
+> +	 * Using the provided @data_ring, point @blk_lpos to the correct
+> +	 * blk_lpos within the local copy of the descriptor.
+> +	 */
+> +	if (data_ring == &rb->text_data_ring)
+> +		blk_lpos = &desc.text_blk_lpos;
+> +	else
+> +		blk_lpos = &desc.dict_blk_lpos;
+> +
+> +	/* Loop until @lpos_begin has advanced to or beyond @lpos_end. */
+> +	while ((lpos_end - lpos_begin) - 1 < DATA_SIZE(data_ring)) {
+> +		blk = to_block(data_ring, lpos_begin);
+> +		id = READ_ONCE(blk->id); /* LMM(data_make_reusable:A) */
 
-Yes, but not only that.
+This would deserve some comment:
 
-E.g. the dispc driver hasn't been designed to be suspended while active. The only way to properly 
-suspend the dispc HW is to first disable the outputs, wait until they've finished with their current 
-frame, and only then can things be shut down.
+1. Compiler could not optimize out the read because there is a data
+   dependency on lpos_begin.
 
-The suspend machinery doesn't handle all that (and it couldn't anyway, due to the dependencies to 
-other DSS devices in the pipeline).
+2. Compiler could not postpone the read because it is followed by
+   smp_rmb().
 
->> omapdrm hasn't relied on omap_device calling runtime suspend for us (I
->> didn't know it does that). We have system suspend hooks in omap_drv.c:
-> 
-> We had omap_device sort of brute forcing things to idle on suspend
-> which only really works for interconnect target modules with one
-> device in them.
-> 
->> SIMPLE_DEV_PM_OPS(omapdrm_pm_ops, omap_drm_suspend, omap_drm_resume)
->>
->> omap_drm_suspend() is supposed to turn off the displays, which then cause
->> dispc_runtime_put (and other runtime_puts) to be called, which result in
->> dispc_runtime_suspend (and other runtime PM suspends).
-> 
-> OK thanks for explaining, I missed that part.
-> 
->> So... For some reason that's no longer happening? I need to try to find a
->> board with which suspend/resume works (without DSS)...
-> 
-> Yes it seems something has changed. When diffing the dmesg debug output
-> on suspend and resume, context save and restore functions are no longer
-> called as the PM runtime suspend and resume functions are no longer
-> called on suspend and resume.
+So, is READ_ONCE() realy needed?
 
-I now tested with AM4 SK, and I still can't get system suspend/resume work (without DSS). I have no 
-clue about how to fix that. But if I use pm_test to prevent total suspend, I can reproduce this (or 
-at least looks the same).
+Well, blk->id clearly can be modified in parallel so we need to be
+careful. There is smp_rmb() right below. Do we needed smp_rmb() also
+before?
 
-And now that I look at this, I have a recollection that I've seen this before. What happens is that 
-the system suspend hook (omap_drm_suspend) gets called fine, and it turns off the displays, which 
-leads to dispc_runtime_puts etc. All goes fine.
+What about the following scenario?:
 
-But there's an extra runtime PM reference (dev.power.usage_count) that seems to come out of nowhere. 
-So when omap_drm_suspend is finished, there's still usage_count of 1, and dispc never suspends fully.
 
-I think the PM framework does this when starting system suspend process. Maybe this was also 
-happening earlier, but omap_device used to do the final suspend (so omapdrm depended on that 
-functionality, after all...).
+CPU0						CPU1
 
-  Tomi
+						data_alloc()
+						  data_push_tail()
 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+						blk = to_block(data_ring, begin_lpos)
+						WRITE_ONCE(blk->id, id); /* LMM(data_alloc:B) */
+
+desc_push_tail()
+  data_push_tail()
+
+    tail_lpos = data_ring->tail_lpos;
+    // see data_ring->tail_lpos already updated by CPU1
+
+    data_make_reusable()
+
+      // lpos_begin = tail_lpos via parameter
+      blk = to_block(data_ring, lpos_begin);
+      id = blk->id
+
+Now: CPU0 might see outdated blk->id before CPU1 wrote new value
+     because there is no read barrier betwen reading tail_lpos
+     and blk->id here.
+
+     The outdated id would cause desc_miss. CPU0 would return back
+     to data_push_tail(). It will try to re-read data_ring->tail_lpos.
+     But it will be the same as before because it already read the
+     updated value.
+
+     As a result, data_alloc() would fail.
+
+IMHO, we need smp_rmb() between data_ring->tail_lpos read and
+the related blk->id read. It should be either in data_push_tail()
+or in data_make_reusable().
+
+Best Regards,
+Petr
+
+PS: I am still in the middle of the review. I think that it is better
+to discuss each race separately.
+
+> +		/*
+> +		 * Guarantee the block ID is loaded before checking the tail
+> +		 * lpos. The loaded block ID can only be considered valid if
+> +		 * the tail lpos has not overtaken @lpos_begin. This pairs
+> +		 * with data_alloc:A.
+> +		 *
+> +		 * Memory barrier involvement:
+> +		 *
+> +		 * If data_make_reusable:A reads from data_alloc:B, then
+> +		 * data_make_reusable:C reads from data_push_tail:D.
+> +		 *
+> +		 * Relies on:
+> +		 *
+> +		 * MB from data_push_tail:D to data_alloc:B
+> +		 *    matching
+> +		 * RMB from data_make_reusable:A to data_make_reusable:C
+> +		 *
+> +		 * Note: data_push_tail:D and data_alloc:B can be different
+> +		 *       CPUs. However, the data_alloc:B CPU (which performs
+> +		 *       the full memory barrier) must have previously seen
+> +		 *       data_push_tail:D.
+> +		 */
+> +		smp_rmb(); /* LMM(data_make_reusable:B) */
+> +
+> +		tail_lpos = atomic_long_read(&data_ring->tail_lpos
+> +					); /* LMM(data_make_reusable:C) */
+> +
+> +		/*
+> +		 * If @lpos_begin has fallen behind the tail lpos, the read
+> +		 * block ID cannot be trusted. Fast forward @lpos_begin to the
+> +		 * tail lpos and try again.
+> +		 */
+> +		if (lpos_begin - tail_lpos >= DATA_SIZE(data_ring)) {
+> +			lpos_begin = tail_lpos;
+> +			continue;
+> +		}
+> +
+> +		d_state = desc_read(desc_ring, id,
+> +				    &desc); /* LMM(data_make_reusable:D) */
+> +
+> +		switch (d_state) {
+> +		case desc_miss:
+> +			return false;
+> +		case desc_reserved:
+> +			return false;
+> +		case desc_committed:
+> +			/*
+> +			 * This data block is invalid if the descriptor
+> +			 * does not point back to it.
+> +			 */
+> +			if (blk_lpos->begin != lpos_begin)
+> +				return false;
+> +			desc_make_reusable(desc_ring, id);
+> +			break;
+> +		case desc_reusable:
+> +			/*
+> +			 * This data block is invalid if the descriptor
+> +			 * does not point back to it.
+> +			 */
+> +			if (blk_lpos->begin != lpos_begin)
+> +				return false;
+> +			break;
+> +		}
+> +
+> +		/* Advance @lpos_begin to the next data block. */
+> +		lpos_begin = blk_lpos->next;
+> +	}
+> +
+> +	*lpos_out = lpos_begin;
+> +	return true;
+> +}
+> +
+> +/*
+> + * Advance the data ring tail to at least @lpos. This function puts
+> + * descriptors into the reusable state if the tail is pushed beyond
+> + * their associated data block.
+> + */
+> +static bool data_push_tail(struct printk_ringbuffer *rb,
+> +			   struct prb_data_ring *data_ring,
+> +			   unsigned long lpos)
+> +{
+> +	unsigned long tail_lpos;
+> +	unsigned long next_lpos;
+> +
+> +	/* If @lpos is not valid, there is nothing to do. */
+> +	if (lpos == INVALID_LPOS)
+> +		return true;
+> +
+> +	tail_lpos = atomic_long_read(&data_ring->tail_lpos);
+> +
+> +	do {
+> +		/* Done, if the tail lpos is already at or beyond @lpos. */
+> +		if ((lpos - tail_lpos) - 1 >= DATA_SIZE(data_ring))
+> +			break;
+> +
+> +		/*
+> +		 * Make all descriptors reusable that are associated with
+> +		 * data blocks before @lpos.
+> +		 */
+> +		if (!data_make_reusable(rb, data_ring, tail_lpos, lpos,
+> +					&next_lpos)) {
+> +			/*
+> +			 * Guarantee the descriptor state loaded in
+> +			 * data_make_reusable() is performed before reloading
+> +			 * the tail lpos. The failed data_make_reusable() may
+> +			 * be due to a newly recycled descriptor causing
+> +			 * the tail lpos to have been previously pushed. This
+> +			 * pairs with desc_reserve:D.
+> +			 *
+> +			 * Memory barrier involvement:
+> +			 *
+> +			 * If data_make_reusable:D reads from desc_reserve:G,
+> +			 * then data_push_tail:B reads from data_push_tail:D.
+> +			 *
+> +			 * Relies on:
+> +			 *
+> +			 * MB from data_push_tail:D to desc_reserve:G
+> +			 *    matching
+> +			 * RMB from data_make_reusable:D to data_push_tail:B
+> +			 *
+> +			 * Note: data_push_tail:D and desc_reserve:G can be
+> +			 *       different CPUs. However, the desc_reserve:G
+> +			 *       CPU (which performs the full memory barrier)
+> +			 *       must have previously seen data_push_tail:D.
+> +			 */
+> +			smp_rmb(); /* LMM(data_push_tail:A) */
+> +
+> +			next_lpos = atomic_long_read(&data_ring->tail_lpos
+> +						); /* LMM(data_push_tail:B) */
+> +			if (next_lpos == tail_lpos)
+> +				return false;
+> +
+> +			/* Another task pushed the tail. Try again. */
+> +			tail_lpos = next_lpos;
+> +			continue;
+> +		}
+> +
+> +		/*
+> +		 * Guarantee any descriptor states that have transitioned to
+> +		 * reusable are stored before pushing the tail lpos. This
+> +		 * allows readers to identify if data has expired while
+> +		 * reading the descriptor. This pairs with desc_read:D.
+> +		 */
+> +		smp_mb(); /* LMM(data_push_tail:C) */
+> +
+> +	} while (!atomic_long_try_cmpxchg_relaxed(&data_ring->tail_lpos,
+> +			&tail_lpos, next_lpos)); /* LMM(data_push_tail:D) */
+> +
+> +	return true;
+> +}
+> +
