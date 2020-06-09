@@ -2,114 +2,165 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7556BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5DCBC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F5E620774
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:31:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87CB520774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:32:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DlBUsRRr"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="xPrjNax1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728865AbgFIQbZ (ORCPT
+        id S1730652AbgFIQcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 12:31:25 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:48276 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725894AbgFIQbZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 12:31:25 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 059GQuVr029832;
-        Tue, 9 Jun 2020 16:30:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=tdyLlF57UFxSaMwWDT82g2GaZb0lkNJM3qwopX+fXmQ=;
- b=DlBUsRRrZ/j92bP4SIW4e10Tmd0Zle90gGR1hWqJXWp+o4IJMB4ZBQNgr4wzHNud9/I2
- CakYvf1N+V8/SVWzz9m9tAFB1AxP4hANptQIkTmn7vxEBs5qWHOhUU4p7eRImwceOFmk
- wCRcJxAjJ4rNnKnS2wfPNCAD+Wy743awQLH+RCJDNV9oqS5FvVUEqC1UkxPrXMXt/kxW
- 2yCtHwUiL1gcZ64HHKVFyPu3m7138e50hARb6az6WjI2WCXDAQdeFqo1SyDltwb1TMWh
- BAOeCWeunh5xT4cAkWyD7I+N9/kiO6ADVfqi4Y4aLCzjAvhbdLjKHB88GkMaq9SGlNZy ZA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 31g3smwraq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 09 Jun 2020 16:30:52 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 059GSNSv142368;
-        Tue, 9 Jun 2020 16:30:52 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 31gn26990p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 09 Jun 2020 16:30:51 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 059GUovU006554;
-        Tue, 9 Jun 2020 16:30:50 GMT
-Received: from dhcp-10-159-155-165.vpn.oracle.com (/10.159.155.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 09 Jun 2020 09:30:50 -0700
-Subject: Re: [PATCH] sample-trace-array: Remove trace_array 'sample-instance'
-To:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
-References: <20200609135200.2206726-1-wangkefeng.wang@huawei.com>
-From:   Divya Indi <divya.indi@oracle.com>
-Message-ID: <cd3f1c60-ae0f-8932-7096-95da5f6d419e@oracle.com>
-Date:   Tue, 9 Jun 2020 09:30:49 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.1
-MIME-Version: 1.0
-In-Reply-To: <20200609135200.2206726-1-wangkefeng.wang@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+        Tue, 9 Jun 2020 12:32:02 -0400
+Received: from mga02.intel.com ([134.134.136.20]:25418 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725894AbgFIQcB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 12:32:01 -0400
+IronPort-SDR: KjHqkLzKAnque62V01nkb44jAUB7kuDmvQI/kE04I140EOEn9qla2FvHxTzIqYcCX6WO3ZQfbW
+ c8o9883LdF5A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 09:31:59 -0700
+IronPort-SDR: bUpJbnGXiDybGzK0EBL6u2mX0WWDJcWCF3fo1P4ptpYZ0Q4yy3VGXo0KLci0WMkU5G0lTsGsf6
+ PTDD4XMfFQvg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,492,1583222400"; 
+   d="scan'208";a="379786117"
+Received: from orsmsx110.amr.corp.intel.com ([10.22.240.8])
+  by fmsmga001.fm.intel.com with ESMTP; 09 Jun 2020 09:31:58 -0700
+Received: from orsmsx158.amr.corp.intel.com (10.22.240.20) by
+ ORSMSX110.amr.corp.intel.com (10.22.240.8) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 9 Jun 2020 09:31:58 -0700
+Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
+ ORSMSX158.amr.corp.intel.com (10.22.240.20) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 9 Jun 2020 09:31:57 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.108)
+ by edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 9 Jun 2020 09:31:54 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RY7ZLeOZsjI8RlZ/B7J+i909h3QIR1Aqs3RfcXEwpmCHgjB9/d/EuZZHAqyNG0CpqdKccng3M/avzEieJpXrJ/1Ceucmqce6qHy1gWH8Ed55cmMis7ZEpExy33l/qR3gSUYgVsMZwbbkHoD9uoqmfaaZLFsXDgCJyJRXSpSJBDuJid8cBH2UJNUzxs3Ohf0ClWar3g2KF7ZZFEkQSWheC9sTrmvznQZifag5aVQMY3zbSuwySPW99XOMjeGLeu1GKkmOUIt5+AlZCxxWZ24t2mceN5TVyi3RxXGc6Y4lzmjvAEG8m+zo5VYLz59w44lYS1Zpgu7gzm2KZUsers/uIw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cN8UTs4yV6UhUHWVrmexrJmi+vfjBku0zHMtg98Z3v8=;
+ b=Xpa7ZYmtGR8D5wXL2At3DK8iqpXlNxdtWGO6oMbEvGn2afnvltPvlvRbiIWyh/R/kvTQOeR3ojYjZuI0oJhJU2ksDx6XdOftC4kUtzpSUbXZcZ/3y+29+HbZUxk8YdzY0Nf1TsbKkPTdqdbVY8l4FnKMS+Q2oXQNCXqmEDKxWdbTXjqS3F0TGgCeZyue/OuJoFHHozo4YF5R1gbjr6QPa5ZstZXIJdDqs14x+8ZCzfMRviqu9kPblnt+M1bvyZhfHZ1lyAVzKvVYkDzzavtHQZlimNkXD7W60njy5qaw9rsedELC5dQ5U5Cle/avhsc1dug3h1vqZzxSk63qPpyhKA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cN8UTs4yV6UhUHWVrmexrJmi+vfjBku0zHMtg98Z3v8=;
+ b=xPrjNax1gb/H1CX05Q0z6jfP2JtnElbHdtJXU1KXOxjsht6LAThD1PzEhJ7EgGOdL88xo/HT8+dWnPYPH4GX9z6iNw4SPr71zmgrRN3xPn3nYjzW2O+0anv4gF8KWRfN7hXP6mzS5hc1eItIOSh53aHRhhv1K19qtjMJmbLBI/A=
+Received: from CY4PR11MB1528.namprd11.prod.outlook.com (2603:10b6:910:d::12)
+ by CY4PR11MB0007.namprd11.prod.outlook.com (2603:10b6:910:79::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.20; Tue, 9 Jun
+ 2020 16:31:46 +0000
+Received: from CY4PR11MB1528.namprd11.prod.outlook.com
+ ([fe80::80a:cad3:9a37:28dd]) by CY4PR11MB1528.namprd11.prod.outlook.com
+ ([fe80::80a:cad3:9a37:28dd%11]) with mapi id 15.20.3066.023; Tue, 9 Jun 2020
+ 16:31:46 +0000
+From:   "Stankiewicz, Piotr" <piotr.stankiewicz@intel.com>
+To:     Christoph Hellwig <hch@infradead.org>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
+        Olof Johansson <olof@lixom.net>,
+        "Kuppuswamy Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Kelvin Cao <kelvin.cao@microchip.com>,
+        Wesley Sheng <wesley.sheng@microchip.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Krzysztof Wilczynski <kw@linux.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v3 03/15] PCI: Use PCI_IRQ_MSI_TYPES where appropriate
+Thread-Topic: [PATCH v3 03/15] PCI: Use PCI_IRQ_MSI_TYPES where appropriate
+Thread-Index: AQHWPj7A77kHrlOHmUula0Gcdul1nqjQbyoAgAAJ5JA=
+Date:   Tue, 9 Jun 2020 16:31:29 +0000
+Deferred-Delivery: Tue, 9 Jun 2020 16:30:30 +0000
+Message-ID: <CY4PR11MB15282CD0C16F87E8179DAD6AF9820@CY4PR11MB1528.namprd11.prod.outlook.com>
+References: <20200609091148.32749-1-piotr.stankiewicz@intel.com>
+ <20200609091650.801-1-piotr.stankiewicz@intel.com>
+ <20200609155124.GB2597@infradead.org>
+In-Reply-To: <20200609155124.GB2597@infradead.org>
+Accept-Language: en-US
 Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9647 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=3 mlxscore=0
- phishscore=0 adultscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006090125
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9647 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
- lowpriorityscore=0 impostorscore=0 cotscore=-2147483648 suspectscore=3
- spamscore=0 bulkscore=0 malwarescore=0 phishscore=0 mlxscore=0
- mlxlogscore=999 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006090125
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+dlp-product: dlpe-windows
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYjljODEwYjUtYmMwNC00YjU1LWJjY2EtYzY0ODRhZWY5MTgwIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoieGxRV3dLTzRkY054dDRTamtWbW9ucmNmT2FGekcxV2Y3eERoSFRrKzJNREtLNDF4MU14bEVyTEpWVU9xVnhxdiJ9
+authentication-results: infradead.org; dkim=none (message not signed)
+ header.d=none;infradead.org; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [134.191.221.97]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ac78d427-bbae-404f-89d0-08d80c929a45
+x-ms-traffictypediagnostic: CY4PR11MB0007:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR11MB00077A3BE635779ED8E7052DF9820@CY4PR11MB0007.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 042957ACD7
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: pPASrbfNPml25OYb1MtO14BWXINnd3wXdWk/X9dZjzGxH+HaHzUwvqsWCAxlwvWa09YaYsh9Uue68yxeFKlWyXebXeCAxOgtjv0JVQOxIItSNDq7CAULmfDDg/OSMfoXENBo9V+kWY20SiaRPST7pOg6GYewq28bdx3VEnL/4cHbdDkeyZ7MQHlAS+I9uM7+0XJt22GbMEYm7otjq17tS+yu0rHaFSEGjZGB0qzc2r7m6OG/rukLqNV3QCg1cTpk8wvCdw7wrdCB69TgF4IHn7ZYSICfZmkg7/ftX6+xk1TN72xmvXDbsIhA9m1AnmlTONxLg631m78Qo/o40lit3A==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR11MB1528.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(39860400002)(136003)(396003)(346002)(376002)(186003)(66446008)(8676002)(9686003)(55016002)(7696005)(6506007)(83380400001)(2906002)(7416002)(478600001)(54906003)(26005)(64756008)(316002)(6916009)(5660300002)(76116006)(71200400001)(52536014)(66476007)(66556008)(6666004)(66946007)(86362001)(8936002)(4326008)(33656002)(4744005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: L4PG+CL2KD1deHCPuC38wHPZBWmTQuYVzKFKNePYf5GPWaz/+KHSRkgGNby9CjMcEPPHVt0aaoz5R7XnNrQ69Vq1Rp7zzzmCEDFKh+dlA6wznVr7L7OJCOtvYNLA1YYzGZzVETW3+BnWy/isFbIPuq/zV9mRwCGxJkcizIFQzujLLh+tHMVEZ146Bm0GYFUlVqCBmjn9cljYPB2PnlGUemjkE17i7HQX/39QWcu9nxPKleAmRF9SkycUiV+U6+bPRkoQWJuY9EsY4fAi+xzS3ruJkJgX4MWeIAU0MtGZcQhkTedXfNFZo8vWYZvSiFm9aC7No+8WnThbhP1sb8uuwkza+LVqqHi1S9ydFOvsw6Tk51UiY318t6ewbt7yl8HRPsnEuEu6D+hzy9wkRu2u7ZONy9KZD9J6zwS0kKnZ9P0UHZ/6jbUm26EbTDfzzMV+4KbfubREcoLNbcS1+5wRy+cLYWXhJG3ncGdsJzZgXLisuvzYnxJCNrHUH9GGKVjc
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: ac78d427-bbae-404f-89d0-08d80c929a45
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jun 2020 16:31:46.5042
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 2rXenbqdqRPGedfJtvXbwi1y4XBRkm6oC+RrKLFZLr4CiLGFNsnQXnLZC5K3LGTq/ZT6Hqr9Pe5YwGxNiRZy89DRdhFe99HLhzs488RvzUs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR11MB0007
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reviewed-by: Divya Indi <divya.indi@oracle.com>
+> -----Original Message-----
+> From: Christoph Hellwig <hch@infradead.org>
+> Sent: Tuesday, June 9, 2020 5:51 PM
+>=20
+> On Tue, Jun 09, 2020 at 11:16:46AM +0200, Piotr Stankiewicz wrote:
+> > Seeing as there is shorthand available to use when asking for any type
+> > of interrupt, or any type of message signalled interrupt, leverage it.
+> >
+> > Signed-off-by: Piotr Stankiewicz <piotr.stankiewicz@intel.com>
+> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+> > Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+>=20
+> The patch actually adding PCI_IRQ_MSI_TYPES still didn't show up on linux=
+-pci.
+>=20
 
-On 6/9/20 6:52 AM, Kefeng Wang wrote:
-> Remove trace_array 'sample-instance' if kthread_run fails
-> in sample_trace_array_init().
->
-> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-> ---
->  samples/ftrace/sample-trace-array.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/samples/ftrace/sample-trace-array.c b/samples/ftrace/sample-trace-array.c
-> index 9e437f930280..6aba02a31c96 100644
-> --- a/samples/ftrace/sample-trace-array.c
-> +++ b/samples/ftrace/sample-trace-array.c
-> @@ -115,8 +115,12 @@ static int __init sample_trace_array_init(void)
->  	trace_printk_init_buffers();
->  
->  	simple_tsk = kthread_run(simple_thread, NULL, "sample-instance");
-> -	if (IS_ERR(simple_tsk))
-> +	if (IS_ERR(simple_tsk)) {
-> +		trace_array_put(tr);
-> +		trace_array_destroy(tr);
->  		return -1;
-> +	}
-> +
->  	return 0;
->  }
->  
+I'm not sure why it didn't get delivered. I just resent it, for sake of com=
+pleteness.
+
+> But from the person who added PCI_IRQ_*:
+>=20
+> NAK to the whole concept of PCI_IRQ_MSI_TYPES, I think this just makes th=
+e
+> code a lot more confusing.  Especially with the new IMS interrupt type, w=
+hich
+> really is a MSI-like interrupt but certainly shouldn't be added to this m=
+ask.
