@@ -2,73 +2,126 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DD3CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 05:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD75C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 05:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07293207F9
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 05:53:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B65E5207F9
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 05:55:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MQcVtyML"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TkRHdTU0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbgFIFxr (ORCPT
+        id S1727826AbgFIFzf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 01:53:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43630 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727118AbgFIFxq (ORCPT
+        Tue, 9 Jun 2020 01:55:35 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:46179 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726120AbgFIFzf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 01:53:46 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E6D7C03E97C
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 22:53:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=WDJS0ySUVAw6kQtMQKzgwZm9RScbAWiEhZ1h+MXRv5g=; b=MQcVtyMLgKl+y6Gj+FAVgPDZJ6
-        A05JWrb0/FYvd/P5bUzJ02U1p4VlG9s1fYtrgvhzlSCqDi9GfBZBvKM/fn4PhrIbK/Uz845Wgq3gk
-        iEiduuys3OM/Ji81sNzehEpoh5TeFSGVQvLy5sV4bBlNr+cVBMbyrWxi+/LtR+TsTs0/3iDlJ48F7
-        vWzLTn4lP72aMqDMBGbhEiQMxJwa2IrgBwAqn0R2LdU/IFhvUk2Hdyhu49aCijNsMxc0K8PnBuRPM
-        qQ3pWiXnzAYWYWftPcO+L2fz0pz93APi4dyrefTkublCB4/dpvQ7xIW3V7EaNvuWHPVmBtaciqn9N
-        d6IdJXFg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jiXCK-0006fA-A0; Tue, 09 Jun 2020 05:53:20 +0000
-Date:   Mon, 8 Jun 2020 22:53:20 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        naveen.n.rao@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] powerpc/kprobes: Use probe_address() to read instructions
-Message-ID: <20200609055320.GA14237@infradead.org>
-References: <7f24b5961a6839ff01df792816807f74ff236bf6.1582567319.git.christophe.leroy@c-s.fr>
- <159168034650.1381411.840854749818290996.b4-ty@ellerman.id.au>
+        Tue, 9 Jun 2020 01:55:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591682134;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=08pzgeVHE6/leOw9rkcb4hjTCcujAlE6G/nlp9Vnewk=;
+        b=TkRHdTU0rstOJqLz9heRxL0PpeZOLSnK5yYVME6HBEmnGQ3yhp0iKesKDayY/k+ctGVjDL
+        hUyHxncRVA1JBoFbKfn/w/0TqV5IBHxldh1LD+2xo6NjoVNjLHbSTezefSYrti9K098Pk4
+        whFF/Jkvv3lvEqvvGnnYFPKdwydjRSc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-419-UVqavzv0Or2l_IiTMItEdA-1; Tue, 09 Jun 2020 01:55:32 -0400
+X-MC-Unique: UVqavzv0Or2l_IiTMItEdA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 40FB81009440;
+        Tue,  9 Jun 2020 05:55:30 +0000 (UTC)
+Received: from [10.72.12.252] (ovpn-12-252.pek2.redhat.com [10.72.12.252])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B55F160BF3;
+        Tue,  9 Jun 2020 05:55:18 +0000 (UTC)
+Subject: Re: [PATCH 5/6] vdpa: introduce virtio pci driver
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rob.miller@broadcom.com, lingshan.zhu@intel.com,
+        eperezma@redhat.com, lulu@redhat.com, shahafs@mellanox.com,
+        hanand@xilinx.com, mhabets@solarflare.com, gdawar@xilinx.com,
+        saugatm@xilinx.com, vmireyno@marvell.com,
+        zhangweining@ruijie.com.cn, eli@mellanox.com
+References: <20200607095012-mutt-send-email-mst@kernel.org>
+ <9b1abd2b-232c-aa0f-d8bb-03e65fd47de2@redhat.com>
+ <20200608021438-mutt-send-email-mst@kernel.org>
+ <a1b1b7fb-b097-17b7-2e3a-0da07d2e48ae@redhat.com>
+ <20200608052041-mutt-send-email-mst@kernel.org>
+ <9d2571b6-0b95-53b3-6989-b4d801eeb623@redhat.com>
+ <20200608054453-mutt-send-email-mst@kernel.org>
+ <bc27064c-2309-acf3-ccd8-6182bfa2a4cd@redhat.com>
+ <20200608055331-mutt-send-email-mst@kernel.org>
+ <61117e6a-2568-d0f4-8713-d831af32814d@redhat.com>
+ <20200608092530-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <a01aced5-2357-b55c-296b-f152008ddbf2@redhat.com>
+Date:   Tue, 9 Jun 2020 13:55:14 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <159168034650.1381411.840854749818290996.b4-ty@ellerman.id.au>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200608092530-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 03:28:38PM +1000, Michael Ellerman wrote:
-> On Mon, 24 Feb 2020 18:02:10 +0000 (UTC), Christophe Leroy wrote:
-> > In order to avoid Oopses, use probe_address() to read the
-> > instruction at the address where the trap happened.
-> 
-> Applied to powerpc/next.
-> 
-> [1/1] powerpc/kprobes: Use probe_address() to read instructions
->       https://git.kernel.org/powerpc/c/9ed5df69b79a22b40b20bc2132ba2495708b19c4
 
-probe_addresss has been renamed to get_kernel_nofault in the -mm
-queue that Andrew sent off to Linus last night.
+On 2020/6/8 下午9:29, Michael S. Tsirkin wrote:
+> On Mon, Jun 08, 2020 at 06:07:36PM +0800, Jason Wang wrote:
+>> On 2020/6/8 下午5:54, Michael S. Tsirkin wrote:
+>>> On Mon, Jun 08, 2020 at 05:46:52PM +0800, Jason Wang wrote:
+>>>> On 2020/6/8 下午5:45, Michael S. Tsirkin wrote:
+>>>>> On Mon, Jun 08, 2020 at 05:43:58PM +0800, Jason Wang wrote:
+>>>>>>>> Looking at
+>>>>>>>> pci_match_one_device() it checks both subvendor and subdevice there.
+>>>>>>>>
+>>>>>>>> Thanks
+>>>>>>> But IIUC there is no guarantee that driver with a specific subvendor
+>>>>>>> matches in presence of a generic one.
+>>>>>>> So either IFC or virtio pci can win, whichever binds first.
+>>>>>> I'm not sure I get there. But I try manually bind IFCVF to qemu's
+>>>>>> virtio-net-pci, and it fails.
+>>>>>>
+>>>>>> Thanks
+>>>>> Right but the reverse can happen: virtio-net can bind to IFCVF first.
+>>>> That's kind of expected. The PF is expected to be bound to virtio-pci to
+>>>> create VF via sysfs.
+>>>>
+>>>> Thanks
+>>>>
+>>>>
+>>>>
+>>> Once VFs are created, don't we want IFCVF to bind rather than
+>>> virtio-pci?
+>>
+>> Yes, but for PF we need virtio-pci.
+>>
+>> Thanks
+>>
+> (Ab)using the driver_data field for this is an option.
+> What do you think?
+
+
+Maybe you can elaborate more on this idea?
+
+Thanks
+
+
+>
+
