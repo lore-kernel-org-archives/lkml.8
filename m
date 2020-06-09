@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E548C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8644EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:57:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53B9920734
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:56:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F1A320734
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:57:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725415;
-	bh=mQlyIZpsFwSxbxKyryxpvl6ccsVmLfLXK1O83SaWYIw=;
+	s=default; t=1591725423;
+	bh=f+8D/Ne//89piy8TFZmlemtTQKewWDLM3HEqhNsGpig=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UtjVGoQKrsQx1P0vUS0RK3LkSRZ85j5KVdyRTQZPrwN7VUgEWz5AvKDtFDg2lb/Hi
-	 8MswVAqqcW8D+hLN0HwgPTeIWS+E8JJwMkjugCJTPjjAwh3N143yb/6uu9sInGRsG2
-	 ijZwQgc5yvEwRSx/DHqh+H9izV+wBtAOGR57EM3U=
+	b=rPN3OhQYhGXwckdnYq/HL6xhl4aoXM0WLw69h2n/l4e6NGBQUfFD1hVuYbW7vuhkO
+	 iQ7R+2EZzxQEjqIUWH8o9oXmS9rNMKij7QDxYL0bAJVrAHKpe9rpMSqrdI8YTFrqWy
+	 74WhSGHLmUPRoJ80aI2Ylkga8ocO0JpZDPNMCJ7Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732058AbgFIR4v (ORCPT
+        id S2387626AbgFIR5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:56:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47812 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:57:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733247AbgFIRza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:55:30 -0400
+        id S1731306AbgFIRzq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:55:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88CA820734;
-        Tue,  9 Jun 2020 17:55:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 643352074B;
+        Tue,  9 Jun 2020 17:55:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725330;
-        bh=mQlyIZpsFwSxbxKyryxpvl6ccsVmLfLXK1O83SaWYIw=;
+        s=default; t=1591725345;
+        bh=f+8D/Ne//89piy8TFZmlemtTQKewWDLM3HEqhNsGpig=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qg6c3ga6aPYrddtpJ7FDhMBPItdIm+0yjjfYqHnyWMfxx7zhRWmdHyY2/s5F2S0Ff
-         K0WyRrBGCaspSWK3oSl3pxjOihv8rOhCY382ErpdoOHVb8631VtnOmDeF9zSRHEpXm
-         DGM2pLx+nCTn8JaMEYX3L4wEi4WY3xnVOXDDfHpY=
+        b=wrY9CTyxtJM7lXuzeLipFVvg5qDtDQRN3JhS3nkzEUPZ86GPYL33UF7BTFF4cfYk1
+         rzFNc4TbBJtt1JivJmrPnSQe6WtyMTaBAT+2uLRqivdzNtH5UBsoi02vXVEV3RLZw2
+         E0xpNNBH+sh+ihHsisQtTRDVIMaSevVYqUfaTl3k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: [PATCH 5.7 24/24] uprobes: ensure that uprobe->offset and ->ref_ctr_offset are properly aligned
-Date:   Tue,  9 Jun 2020 19:45:55 +0200
-Message-Id: <20200609174151.286066479@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Gross <mgross@linux.intel.com>,
+        Borislav Petkov <bp@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: [PATCH 5.7 20/24] x86/cpu: Add table argument to cpu_matches()
+Date:   Tue,  9 Jun 2020 19:45:51 +0200
+Message-Id: <20200609174150.962886517@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174149.255223112@linuxfoundation.org>
 References: <20200609174149.255223112@linuxfoundation.org>
@@ -64,76 +61,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleg Nesterov <oleg@redhat.com>
+From: Mark Gross <mgross@linux.intel.com>
 
-commit 013b2deba9a6b80ca02f4fafd7dedf875e9b4450 upstream.
+commit 93920f61c2ad7edb01e63323832585796af75fc9 upstream
 
-uprobe_write_opcode() must not cross page boundary; prepare_uprobe()
-relies on arch_uprobe_analyze_insn() which should validate "vaddr" but
-some architectures (csky, s390, and sparc) don't do this.
+To make cpu_matches() reusable for other matching tables, have it take a
+pointer to a x86_cpu_id table as an argument.
 
-We can remove the BUG_ON() check in prepare_uprobe() and validate the
-offset early in __uprobe_register(). The new IS_ALIGNED() check matches
-the alignment check in arch_prepare_kprobe() on supported architectures,
-so I think that all insns must be aligned to UPROBE_SWBP_INSN_SIZE.
+ [ bp: Flip arguments order. ]
 
-Another problem is __update_ref_ctr() which was wrong from the very
-beginning, it can read/write outside of kmap'ed page unless "vaddr" is
-aligned to sizeof(short), __uprobe_register() should check this too.
-
-Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Tested-by: Sven Schnelle <svens@linux.ibm.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: stable@vger.kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Mark Gross <mgross@linux.intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- kernel/events/uprobes.c |   16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ arch/x86/kernel/cpu/common.c |   25 ++++++++++++++-----------
+ 1 file changed, 14 insertions(+), 11 deletions(-)
 
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -867,10 +867,6 @@ static int prepare_uprobe(struct uprobe
- 	if (ret)
- 		goto out;
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1075,9 +1075,9 @@ static const __initconst struct x86_cpu_
+ 	{}
+ };
  
--	/* uprobe_write_opcode() assumes we don't cross page boundary */
--	BUG_ON((uprobe->offset & ~PAGE_MASK) +
--			UPROBE_SWBP_INSN_SIZE > PAGE_SIZE);
--
- 	smp_wmb(); /* pairs with the smp_rmb() in handle_swbp() */
- 	set_bit(UPROBE_COPY_INSN, &uprobe->flags);
+-static bool __init cpu_matches(unsigned long which)
++static bool __init cpu_matches(const struct x86_cpu_id *table, unsigned long which)
+ {
+-	const struct x86_cpu_id *m = x86_match_cpu(cpu_vuln_whitelist);
++	const struct x86_cpu_id *m = x86_match_cpu(table);
  
-@@ -1166,6 +1162,15 @@ static int __uprobe_register(struct inod
- 	if (offset > i_size_read(inode))
- 		return -EINVAL;
+ 	return m && !!(m->driver_data & which);
+ }
+@@ -1097,31 +1097,34 @@ static void __init cpu_set_bug_bits(stru
+ 	u64 ia32_cap = x86_read_arch_cap_msr();
  
-+	/*
-+	 * This ensures that copy_from_page(), copy_to_page() and
-+	 * __update_ref_ctr() can't cross page boundary.
-+	 */
-+	if (!IS_ALIGNED(offset, UPROBE_SWBP_INSN_SIZE))
-+		return -EINVAL;
-+	if (!IS_ALIGNED(ref_ctr_offset, sizeof(short)))
-+		return -EINVAL;
-+
-  retry:
- 	uprobe = alloc_uprobe(inode, offset, ref_ctr_offset);
- 	if (!uprobe)
-@@ -2014,6 +2019,9 @@ static int is_trap_at_addr(struct mm_str
- 	uprobe_opcode_t opcode;
- 	int result;
+ 	/* Set ITLB_MULTIHIT bug if cpu is not in the whitelist and not mitigated */
+-	if (!cpu_matches(NO_ITLB_MULTIHIT) && !(ia32_cap & ARCH_CAP_PSCHANGE_MC_NO))
++	if (!cpu_matches(cpu_vuln_whitelist, NO_ITLB_MULTIHIT) &&
++	    !(ia32_cap & ARCH_CAP_PSCHANGE_MC_NO))
+ 		setup_force_cpu_bug(X86_BUG_ITLB_MULTIHIT);
  
-+	if (WARN_ON_ONCE(!IS_ALIGNED(vaddr, UPROBE_SWBP_INSN_SIZE)))
-+		return -EINVAL;
-+
- 	pagefault_disable();
- 	result = __get_user(opcode, (uprobe_opcode_t __user *)vaddr);
- 	pagefault_enable();
+-	if (cpu_matches(NO_SPECULATION))
++	if (cpu_matches(cpu_vuln_whitelist, NO_SPECULATION))
+ 		return;
+ 
+ 	setup_force_cpu_bug(X86_BUG_SPECTRE_V1);
+ 
+-	if (!cpu_matches(NO_SPECTRE_V2))
++	if (!cpu_matches(cpu_vuln_whitelist, NO_SPECTRE_V2))
+ 		setup_force_cpu_bug(X86_BUG_SPECTRE_V2);
+ 
+-	if (!cpu_matches(NO_SSB) && !(ia32_cap & ARCH_CAP_SSB_NO) &&
++	if (!cpu_matches(cpu_vuln_whitelist, NO_SSB) &&
++	    !(ia32_cap & ARCH_CAP_SSB_NO) &&
+ 	   !cpu_has(c, X86_FEATURE_AMD_SSB_NO))
+ 		setup_force_cpu_bug(X86_BUG_SPEC_STORE_BYPASS);
+ 
+ 	if (ia32_cap & ARCH_CAP_IBRS_ALL)
+ 		setup_force_cpu_cap(X86_FEATURE_IBRS_ENHANCED);
+ 
+-	if (!cpu_matches(NO_MDS) && !(ia32_cap & ARCH_CAP_MDS_NO)) {
++	if (!cpu_matches(cpu_vuln_whitelist, NO_MDS) &&
++	    !(ia32_cap & ARCH_CAP_MDS_NO)) {
+ 		setup_force_cpu_bug(X86_BUG_MDS);
+-		if (cpu_matches(MSBDS_ONLY))
++		if (cpu_matches(cpu_vuln_whitelist, MSBDS_ONLY))
+ 			setup_force_cpu_bug(X86_BUG_MSBDS_ONLY);
+ 	}
+ 
+-	if (!cpu_matches(NO_SWAPGS))
++	if (!cpu_matches(cpu_vuln_whitelist, NO_SWAPGS))
+ 		setup_force_cpu_bug(X86_BUG_SWAPGS);
+ 
+ 	/*
+@@ -1139,7 +1142,7 @@ static void __init cpu_set_bug_bits(stru
+ 	     (ia32_cap & ARCH_CAP_TSX_CTRL_MSR)))
+ 		setup_force_cpu_bug(X86_BUG_TAA);
+ 
+-	if (cpu_matches(NO_MELTDOWN))
++	if (cpu_matches(cpu_vuln_whitelist, NO_MELTDOWN))
+ 		return;
+ 
+ 	/* Rogue Data Cache Load? No! */
+@@ -1148,7 +1151,7 @@ static void __init cpu_set_bug_bits(stru
+ 
+ 	setup_force_cpu_bug(X86_BUG_CPU_MELTDOWN);
+ 
+-	if (cpu_matches(NO_L1TF))
++	if (cpu_matches(cpu_vuln_whitelist, NO_L1TF))
+ 		return;
+ 
+ 	setup_force_cpu_bug(X86_BUG_L1TF);
 
 
