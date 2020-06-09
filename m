@@ -2,109 +2,96 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 826FEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF56C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:22:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C905206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:21:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E85D2067B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:22:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591726920;
+	bh=sAKqQsYspESBgdnN+eV9couIFzpg4RDXKq4PEh5Ww5M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=aRedkdvuesGI9aKfAaBzPJxJxYG/zoz0Y9PBHN1vw6BkRxlJ+ao7sd/LMTqZklfmt
+	 Kl0OXVDsw7GA/RD6TlLTx+2NnqONhLyIXKULlofNg9Cg9FsJHrw8phfKi8Gy4u55ku
+	 iqneZporyNB6mfSvxrJXGz0t3MmrpnAe1+urjeH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732960AbgFISVy (ORCPT
+        id S1732326AbgFIRsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:21:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41158 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732325AbgFIRsd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 9 Jun 2020 13:48:33 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6611C05BD1E;
-        Tue,  9 Jun 2020 10:48:33 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: aratiu)
-        with ESMTPSA id 132B52A3B67
-From:   Adrian Ratiu <adrian.ratiu@collabora.com>
-To:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Philippe CORNU <philippe.cornu@st.com>,
-        Yannick FERTRE <yannick.fertre@st.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Jonas Karlman <jonas@kwiboo.se>, linux-imx@nxp.com,
-        kernel@collabora.com, linux-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH v9 00/11] Genericize DW MIPI DSI bridge and add i.MX 6 driver
-Date:   Tue,  9 Jun 2020 20:49:48 +0300
-Message-Id: <20200609174959.955926-1-adrian.ratiu@collabora.com>
+Received: from mail.kernel.org ([198.145.29.99]:60640 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732271AbgFIRsW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:48:22 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A206207ED;
+        Tue,  9 Jun 2020 17:48:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591724901;
+        bh=sAKqQsYspESBgdnN+eV9couIFzpg4RDXKq4PEh5Ww5M=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=AsfEUCK2srszFp2b2HA7OzKcseLter37K/z/FmQautaF6YT0hQDM3Q0D772LiQQs7
+         iAVQQMeqAT1P1fWRJbPUa9406Y7/oHfErIOqopE2iZ6AjtcpwJ/NgumNprqH6Eytkm
+         xmvKazHlOhaiO521vkJvzfyK13Tji5QEvYsZK1f0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Zhen Lei <thunder.leizhen@huawei.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.9 03/42] esp6: fix memleak on error path in esp6_input
+Date:   Tue,  9 Jun 2020 19:44:09 +0200
+Message-Id: <20200609174015.786573756@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200609174015.379493548@linuxfoundation.org>
+References: <20200609174015.379493548@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Re-submitting to cc dri-devel, sorry about the noise]
+From: Zhen Lei <thunder.leizhen@huawei.com>
 
-Hello all,
+commit 7284fdf39a912322ce97de2d30def3c6068a418c upstream.
 
-v9 cleanly applies on top of latest next-20200609 tree.
+This ought to be an omission in e6194923237 ("esp: Fix memleaks on error
+paths."). The memleak on error path in esp6_input is similar to esp_input
+of esp4.
 
-v9 does not depend on other patches as the last binding doc has been merged.
+Fixes: e6194923237 ("esp: Fix memleaks on error paths.")
+Fixes: 3f29770723f ("ipsec: check return value of skb_to_sgvec always")
+Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-All feedback up to this point has been addressed. Specific details in
-individual patch changelogs.
+---
+ net/ipv6/esp6.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-The biggest changes are the deprecation of the Synopsys DW bridge bind()
-API in favor of of_drm_find_bridge() and .attach callbacks, the addition
-of a TODO entry which outlines future planned bridge driver refactorings
-and a reordering of some i.MX 6 patches to appease checkpatch.
+--- a/net/ipv6/esp6.c
++++ b/net/ipv6/esp6.c
+@@ -426,8 +426,10 @@ static int esp6_input(struct xfrm_state
+ 
+ 	sg_init_table(sg, nfrags);
+ 	ret = skb_to_sgvec(skb, sg, 0, skb->len);
+-	if (unlikely(ret < 0))
++	if (unlikely(ret < 0)) {
++		kfree(tmp);
+ 		goto out;
++	}
+ 
+ 	aead_request_set_crypt(req, sg, sg, elen + ivlen, iv);
+ 	aead_request_set_ad(req, assoclen);
 
-The idea behind the TODO is to get this regmap and i.MX 6 driver merged
-and then do the rest of refactorings in-tree because it's easier and the
-refactorings themselves are out-of-scope of this series which is adding
-i.MX 6 support and is quite big already, so please, if there are more
-refactoring ideas, let's add them to the TODO doc. :) I intend to tackle
-those after this series is merged to avoid two complex inter-dependent
-simultaneous series.
-
-As always more testing is welcome especially on Rockchip and STM SoCs.
-
-Big thank you to everyone who has contributed to this up to now,
-Adrian
-
-Adrian Ratiu (11):
-  drm: bridge: dw_mipi_dsi: add initial regmap infrastructure
-  drm: bridge: dw_mipi_dsi: abstract register access using reg_fields
-  drm: bridge: dw_mipi_dsi: add dsi v1.01 support
-  drm: bridge: dw_mipi_dsi: remove bind/unbind API
-  dt-bindings: display: add i.MX6 MIPI DSI host controller doc
-  ARM: dts: imx6qdl: add missing mipi dsi properties
-  drm: imx: Add i.MX 6 MIPI DSI host platform driver
-  drm: stm: dw-mipi-dsi: let the bridge handle the HW version check
-  drm: bridge: dw-mipi-dsi: split low power cfg register into fields
-  drm: bridge: dw-mipi-dsi: fix bad register field offsets
-  Documentation: gpu: todo: Add dw-mipi-dsi consolidation plan
-
- .../display/imx/fsl,mipi-dsi-imx6.yaml        | 112 +++
- Documentation/gpu/todo.rst                    |  25 +
- arch/arm/boot/dts/imx6qdl.dtsi                |   8 +
- drivers/gpu/drm/bridge/synopsys/Kconfig       |   1 +
- drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 713 ++++++++++++------
- drivers/gpu/drm/imx/Kconfig                   |   8 +
- drivers/gpu/drm/imx/Makefile                  |   1 +
- drivers/gpu/drm/imx/dw_mipi_dsi-imx6.c        | 399 ++++++++++
- .../gpu/drm/rockchip/dw-mipi-dsi-rockchip.c   |   7 +-
- drivers/gpu/drm/stm/dw_mipi_dsi-stm.c         |  16 +-
- 10 files changed, 1059 insertions(+), 231 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml
- create mode 100644 drivers/gpu/drm/imx/dw_mipi_dsi-imx6.c
-
--- 
-2.27.0
 
