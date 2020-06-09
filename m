@@ -2,166 +2,160 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE77C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA8C6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:40:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8256E2063A
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84F122074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:40:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="lK+45rqX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iZhInEof"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728503AbgFIJg0 (ORCPT
+        id S1728491AbgFIJk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 05:36:26 -0400
-Received: from mout.web.de ([212.227.17.11]:58071 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727086AbgFIJgV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 05:36:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1591695371;
-        bh=NpSwO6xMFBw8TDKDNbh3ZtFdFhrLZFzYnTF7UJssoFM=;
-        h=X-UI-Sender-Class:Cc:Subject:From:To:Date;
-        b=lK+45rqX6Fc7flnJKFO5plwbq8zR42zPEvB1icZgGK8LGOiihxFaI4k2QgdW8as1y
-         lj2p5hngN7Su+mAsfnImFtZKqWBcbvfftpINCzbJsH17R1x9nyzQFpE29BvHoajETp
-         bGft9SFOQXQyw6wpS/J5z+FP5LB3d//qWec3/91w=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([77.6.55.3]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1N0Icn-1ilWsW2Q6B-00xFxk; Tue, 09
- Jun 2020 11:36:11 +0200
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] coccinelle: api: add selfcheck for memdup_user
- rule
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
- +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
- mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
- lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
- YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
- GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
- rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
- 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
- jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
- BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
- cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
- Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
- g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
- OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
- CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
- LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
- sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
- kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
- i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
- g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
- q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
- NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
- nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
- 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
- 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
- wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
- riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
- DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
- fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
- 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
- xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
- qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
- Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
- Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
- +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
- hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
- /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
- tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
- qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
- Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
- x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
- pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-To:     Denis Efremov <efremov@linux.com>,
-        Coccinelle <cocci@systeme.lip6.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>
-Message-ID: <675f3bc3-99f4-1780-af04-cf7de2e9059a@web.de>
-Date:   Tue, 9 Jun 2020 11:36:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Tue, 9 Jun 2020 05:40:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50406 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726904AbgFIJk1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 05:40:27 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C5CEC05BD1E;
+        Tue,  9 Jun 2020 02:40:27 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id h95so1165846pje.4;
+        Tue, 09 Jun 2020 02:40:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0LmYuaLHDCX38AdTMp8CH5P20ueYkef1FJtYGuErWr0=;
+        b=iZhInEofjFBEHtHE7GeJouMaefY9oGLHcssBL97Z6FJSy5q7sVksn7kHNPbXs5Fyme
+         nvw1AygtgIRbGvSW3rcRriYX0/JkLCPSVsZ+qx9wtzi7+KUQ2fnnQcVz+ClqG1sHzwVu
+         A1aRmBRVcxD5xcxl3bOa3z7t+zHOvWIbRgrzx/LI+DceWfXpmTOAByclcazEeUoA7xfV
+         cpii/U189HXVjmYEZVsWgd9NOjMUbeTJqVwkCY8TWkVIH8cEhXNR3wIG5JgciwoF2F4u
+         qkvTw9bQnmnpQiUt5f4AGAgi+WP+d8AQj7WdVpnBhxfJ805ZNhPNnQ35IrNS7ATVSxhG
+         z6qQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0LmYuaLHDCX38AdTMp8CH5P20ueYkef1FJtYGuErWr0=;
+        b=Dr6QLH3k2yKeDCagFcqs6OqDqQhkoKdFO6PRpM7hEQUr73JJ2szd9FtfgF2WxfdBOe
+         JmmpFKAK1Y8UiCEN1+UZomVhRmvpDTlNTbLu4DCECDoW3Y/UAdMWugCgqZeiyCe+cQtz
+         9dYO3jmuCff+32a7EkFZyxM/m6T8kGN5Uh78jHD6CidyiKQkKHzdY89uNPjh9LsOrJ55
+         4WkQIdy7FY89h9/usUCpNxx6Y4XF1+168uA4sZLBxp+7g1IFx+PKb0VIbq9ys9XgH0Bh
+         xrDLL2QK1GLdpOCUHHazGCagpVLIFDhEE8SvsKYfGQc/nwWxq1El3vEN9ZquM5qgZHAY
+         Ouvw==
+X-Gm-Message-State: AOAM530xROteKjng/Ay4hg5KHt6NLmzYuR2TopimZyeBH+6pQPRBndwC
+        W8EmxuyPT741VI44I23NajrLX1GLBANfMCnGntE=
+X-Google-Smtp-Source: ABdhPJy0K6qECWGfNW5IeQp2dojJSGnEuDI05pVZLiMXScl5O0mHGkrQQNfkcQE+ESO73iwWP1mndKwR/w/GayrSQws=
+X-Received: by 2002:a17:90a:ac05:: with SMTP id o5mr3962059pjq.228.1591695626571;
+ Tue, 09 Jun 2020 02:40:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:7CeUvxCUQ6EJKnHmYxZyFtswKqKjx7kdOjE/wFEB1/nj6KWdiqf
- YJDX0kicge1A54j8VpqHqMvaDp8W2HUMuCwWCbn8B8pi3lnKAn6Icv57v8lMAjgHr6A4cq/
- 2jXmpjt/UDRG6HLQDMT1xqzgBUSgrI3hbDfJCUuccwnHzDzi95nPZ7g6bP5amsW2cDV61v5
- ZynDy7TTK8bDk1MinJq+Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:AfBzq1DY0VU=:BQZxKX84v1cpxQsKIW4lG4
- 7f+1ZVpSMBb4+leC47n/K+2TYUVg8JDLZiaXiX3D1rKbFN/6Noz/ozif+b5AGlRF5RUCGYpiS
- SbrTMWLTpMXNuXa9YuiW/gWtAnNccJicT8jtm6RqUCrr9C6RFOYZTH6CxSvng7m8mXEPVPJZE
- JJQKl8h86fVjkn/wZymV3oQQBiuBYq1K9ohKtxTkvl+QsoYjO/uSkGadibOHlj3K5PXBw4zDD
- gH8LnUwgSNbmP9I4uGYCN4kItJDENB+AA2EYrKtu8jcclsk7nhxKIM0waD3y8vaOPueRlYsJd
- FZjztEn5sO7vor6cF/jI0BrXFZk4s8AITttPXk4O39/Mqi+xeyALq9MPEeHUQMQjqko4uty6U
- kMnK81a+i09U8MsmxBhuZRcrO69uks/lCjukWMXm5RfM9XnkjwtYGF3/JzmrUPqC2jY9rPc7d
- YpSnHYjHN8M6CwdtGMh1A1605JxHtfzAp5X4h2Hwl6Ru5kiqnLXQ0+HiyUH47f67QD+VHYcIz
- Hkq7SrgDE3HBbBWvJXXzF8I99z4Uq2LQvGaiJF3+51MnBN7I1qIZAsTdue6OXLN+Pd0r7gV7y
- U2GNlwMca35pZrxdUQyINm2AM18DyJ/RHKZzHTkWxM9fJB2WsmoKTkaKtg0jN7GNS1zLXeqYW
- h2DB+xM9haoAgNkw2AfcGTCBU70ZGpnH9QJz3GrvrHh9aj+jtrb3bEZL6cFqesAg2VYBuvhDk
- 4AmFNMjc5nN9x1tU2Ez0sFcMXaffGPOE9uPQb40JDBGIWFjxClk3cN7cE2w5AttNlksrmnMwI
- hAKGg/H/1odZ9Y+GVEQ4D8GjU1LDNRhslSrg/YPUozeWdyiM1NWQB+1AKHiGXNnWajlkhOQaT
- 8ZCS1tD/shfqNBn7U44IUK2j2sGjvLdM/+jtbYwyZHmnLa2e2AFscYjnvnMySHIFGxZI5CrYR
- cVZ1t0U3DmTKNqBbq7wVqV63F7lgmPa3irVrOa2tVzmZlxQB0Ij/4cflU7IvrBANvIY1DVBvF
- 9Utt+4zQmd0Yrexh8a2YkqaDh68AN3xmRgeY4VMqEJVbuZlR7UMTMM/SV5TH3DeM2gi987xZy
- RjMDlW7Ok6FE8XCmEx9ba+QCn4r4Va82DW1a0Vl4EG770ejnRFJsAMbEtdIvHNntduAcVJ7Ev
- 2YafDIB26xITvu+zQJgfTR13o59ZtbBNsh8j76bBqHHG952TH/nn7RmyVRZ/XNhI0tckOmlA4
- OE22034hzyDRSev2X
+References: <1591634471-17647-1-git-send-email-agordeev@linux.ibm.com>
+In-Reply-To: <1591634471-17647-1-git-send-email-agordeev@linux.ibm.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 9 Jun 2020 12:40:14 +0300
+Message-ID: <CAHp75Vf1G6bpVvOHdG598o5oOZ3=S=ecsct-GhkyK0e+=FE_DQ@mail.gmail.com>
+Subject: Re: [PATCH v2] lib: fix bitmap_parse() on 64-bit big endian archs
+To:     Alexander Gordeev <agordeev@linux.ibm.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-s390@vger.kernel.org, Stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yury Norov <yury.norov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Amritha Nambiar <amritha.nambiar@intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        "Tobin C . Harding" <tobin@kernel.org>,
+        Vineet Gupta <vineet.gupta1@synopsys.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Willem de Bruijn <willemb@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=E2=80=A6
-> +++ b/scripts/coccinelle/api/memdup_user.cocci
-> @@ -14,13 +14,24 @@ virtual patch
->  virtual context
->  virtual org
->  virtual report
-> +virtual selfcheck
-
-Would you like to avoid the repetition of a SmPL key word here?
-
-+virtual patch, context, org, report, selfcheck
-
-
-> @@ -117,3 +128,34 @@ p << rv.p;
->  @@
+On Mon, Jun 8, 2020 at 8:47 PM Alexander Gordeev <agordeev@linux.ibm.com> wrote:
 >
->  coccilib.report.print_report(p[0], "WARNING opportunity for vmemdup_use=
-r")
-> +
-> +@script:python depends on selfcheck@
-> +@@
-> +coccinelle.checked_files |=3D set(definitions.values()) & set(cocci.fil=
-es())
+> Commit 2d6261583be0 ("lib: rework bitmap_parse()") does not
+> take into account order of halfwords on 64-bit big endian
+> architectures. As result (at least) Receive Packet Steering,
+> IRQ affinity masks and runtime kernel test "test_bitmap" get
+> broken on s390.
 
-I suggest to reconsider the usage of the function =E2=80=9Ccocci.files()=
-=E2=80=9D.
-Can such a script rule determine for which file it should perform data pro=
-cessing?
+LGTM (I would replace while loop, but it's style preference and one
+can consider worse than infinite loop)
+
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+>
+> Fixes: 2d6261583be0 ("lib: rework bitmap_parse()")
+> Cc: stable@vger.kernel.org
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Yury Norov <yury.norov@gmail.com>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Amritha Nambiar <amritha.nambiar@intel.com>
+> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Cc: Chris Wilson <chris@chris-wilson.co.uk>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: Miklos Szeredi <mszeredi@redhat.com>
+> Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> Cc: Steffen Klassert <steffen.klassert@secunet.com>
+> Cc: "Tobin C . Harding" <tobin@kernel.org>
+> Cc: Vineet Gupta <vineet.gupta1@synopsys.com>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Willem de Bruijn <willemb@google.com>
+> Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+> ---
+>  lib/bitmap.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+>
+> diff --git a/lib/bitmap.c b/lib/bitmap.c
+> index 89260aa342d6..80d26b183248 100644
+> --- a/lib/bitmap.c
+> +++ b/lib/bitmap.c
+> @@ -739,6 +739,7 @@ int bitmap_parse(const char *start, unsigned int buflen,
+>         const char *end = strnchrnul(start, buflen, '\n') - 1;
+>         int chunks = BITS_TO_U32(nmaskbits);
+>         u32 *bitmap = (u32 *)maskp;
+> +       int chunk = 0;
+>         int unset_bit;
+>
+>         while (1) {
+> @@ -749,9 +750,14 @@ int bitmap_parse(const char *start, unsigned int buflen,
+>                 if (!chunks--)
+>                         return -EOVERFLOW;
+>
+> -               end = bitmap_get_x32_reverse(start, end, bitmap++);
+> +#if defined(CONFIG_64BIT) && defined(__BIG_ENDIAN)
+> +               end = bitmap_get_x32_reverse(start, end, &bitmap[chunk ^ 1]);
+> +#else
+> +               end = bitmap_get_x32_reverse(start, end, &bitmap[chunk]);
+> +#endif
+>                 if (IS_ERR(end))
+>                         return PTR_ERR(end);
+> +               chunk++;
+>         }
+>
+>         unset_bit = (BITS_TO_U32(nmaskbits) - chunks) * 32;
+> --
+> 2.23.0
+>
 
 
-> +            print('SELF-CHECK: the pattern no longer matches ' \
-> +		  'definitions {} in file {}'.format(not_found, efile))
-
-Can the following code variant be a bit nicer?
-
-+            sys.stdout.write('SELF-CHECK: The pattern does not match defi=
-nitions {} in file {} any more.\n' \
-+                             .format(not_found, efile))
-
-
-Regards,
-Markus
+-- 
+With Best Regards,
+Andy Shevchenko
