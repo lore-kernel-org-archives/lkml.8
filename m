@@ -2,153 +2,137 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13EE3C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 06:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7489FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 06:49:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBDD8207C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 06:48:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="BTeBOB/G";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="cEjyZGmb"
+	by mail.kernel.org (Postfix) with ESMTP id 54962207C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 06:49:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbgFIGsx (ORCPT
+        id S1727961AbgFIGtW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 02:48:53 -0400
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:10666 "EHLO
-        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726935AbgFIGsu (ORCPT
+        Tue, 9 Jun 2020 02:49:22 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10726 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726917AbgFIGtW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 02:48:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1591685330; x=1623221330;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=LCs9de9PirTW/i9pCH2wjvcA8DKruW1YMWfpQUa1P9Q=;
-  b=BTeBOB/G2ZK91FlY+Gs6D0cU1eLiI74o2rdFPiklK0PQcfSZBvF8uxrM
-   r4ALlPvZZVmi3dr6zjVmhLYCjbrufUVOL0BIdFpsRS/M81uw6KA/OKVZz
-   1X2jh6t7GFK+VAt5yY9JSkqej2gJzHR1gYoXCa6/kvQq1J2TTNUxGXEFH
-   MeM+8xepT29v8KfzZtEz+s+eIXu1NYStiLE4zJQrOaN/kHpQaM2XhAJxz
-   Fmlev4+7J7dCY8z35sEPDPUPNlDU06xH9BErOF1QT+MIVMhdFZn64s9R7
-   q+IQPtzDpJQBhIYJQULkocN5TcH+5+PklDcSetarpN7aEJnA1rtxZGh6h
-   w==;
-IronPort-SDR: Ie+Y+uQwEy0CKqxMXQgotagQ0L+JMSwLD1SiM4Ue9zrn4KAqdkPOm/mdy1JfizYGTu7qNzyA3I
- jkGHGKqJ7/Y/G5OyKe98DHxEW3cuxtZYDkKS6ePKWGAhuyaIpXUozKS/f6OpO7Bzdos3szmUp1
- 3fC2a+SamLTbSTO2OaLptZXsrnto7FRto+IQfudljn2j9hHMMRMguHpDIy9FITSKSc5wPfpg+w
- 2QOHT9757uADwqaf02oD2wsrHlaY9Ebc350Ff5f5kJTVEIb1bJadoziMw7PuJsHTUyLMl8grrd
- 0B4=
-X-IronPort-AV: E=Sophos;i="5.73,490,1583164800"; 
-   d="scan'208";a="140934927"
-Received: from mail-bn8nam11lp2177.outbound.protection.outlook.com (HELO NAM11-BN8-obe.outbound.protection.outlook.com) ([104.47.58.177])
-  by ob1.hgst.iphmx.com with ESMTP; 09 Jun 2020 14:48:48 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SB+n7fRBdDo+z0/WZkGObekLE9PXoaqB45cBb6LjLPKGapQ/jL+GFIkPoTR9GuQEjgpXvDHx2jL3oPLi+sBx3G9btioaB8KMQDOEi+kk7+pIxvLx95E/JCX7GhklUBjHf10APki3Ocw6RABXOn0tQQgiVpNRUr4IqfkNnm7rSfP6rFziM2YmhuPAwJIIjCgmsyI6nW+9WRyOCmF4OA/NGtuaJxNzC5T76ITOmsYpxqu7nHZqtdpW705QuzSc7H88Zhfl2PUNJXmEWNnXutbYDZZ1hB0/eG00++sjKmuv3QnqJO016tAYGAqpskMhaXRQ211r9QrtD8Wgu6//CH7irg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LCs9de9PirTW/i9pCH2wjvcA8DKruW1YMWfpQUa1P9Q=;
- b=b21jWc6ZU2JDB1izWJD9nRnj4t/hFVHBBmdJY9jUOGyHRFvpdu4C3hOzzrsTlijLJi8HP3IJAqZSrTZOZyarDmYxYYO5ePjH9Y+ge3RyvtnSufwDFQG5DpOpZDuAej3F1zQ5rnCGPD+H0Yd6IagZLBfR10yQ0Opf+cPmJp/pTVhUrSDWNQC1Sf7BaRFKENR3nI9SR8PFYqW3zj16QzJaX6wrRGrsuEzBxkcokW+KbEejZ+fH6ATXZ/WQs+TIMqPGTOYiz+K28tXUPf3J5JJ1qlG5hfMdmgwquVAAmksJfsE4ttjl0AOu8FNQFFDAo+Az8kO695zRZ+nhNWQnNHmc/A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LCs9de9PirTW/i9pCH2wjvcA8DKruW1YMWfpQUa1P9Q=;
- b=cEjyZGmb3rReXU9obvPx8aeQOl34F1IVgr4HLKcvH56ZQTa9fdurjFb0NoBTTqtv3eL1ayEtzIIT8xunWI/G7LHTXb+FZa1U6eKQzCTGWRTxxLZ2qpHLDkTpueMGdx3fyDGqz4ow+QJP9NwEA9u090LSGZz4aX57pUZJuzM80K8=
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
- by SN6PR04MB4782.namprd04.prod.outlook.com (2603:10b6:805:af::26) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Tue, 9 Jun
- 2020 06:48:46 +0000
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::9cbe:995f:c25f:d288]) by SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::9cbe:995f:c25f:d288%6]) with mapi id 15.20.3066.023; Tue, 9 Jun 2020
- 06:48:46 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     "daejun7.park@samsung.com" <daejun7.park@samsung.com>,
-        ALIM AKHTAR <alim.akhtar@samsung.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        Sung-Jun Park <sungjun07.park@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>,
-        Adel Choi <adel.choi@samsung.com>,
-        BoRam Shin <boram.shin@samsung.com>
-Subject: RE: [RFC PATCH 4/5] scsi: ufs: L2P map management for HPB read
-Thread-Topic: [RFC PATCH 4/5] scsi: ufs: L2P map management for HPB read
-Thread-Index: AQHWOt5z/DbVMmIRNkq+06TbmiHC8KjLsIjggAPKWwCAAGFjwA==
-Date:   Tue, 9 Jun 2020 06:48:46 +0000
-Message-ID: <SN6PR04MB464062D306BA6D635F274CD4FC820@SN6PR04MB4640.namprd04.prod.outlook.com>
-References: <SN6PR04MB46409E16CCF95A0AA9FFE944FC870@SN6PR04MB4640.namprd04.prod.outlook.com>
-        <231786897.01591322101492.JavaMail.epsvc@epcpadp1>
-        <336371513.41591320902369.JavaMail.epsvc@epcpadp1>
-        <963815509.21591320301642.JavaMail.epsvc@epcpadp1>
-        <231786897.01591320001492.JavaMail.epsvc@epcpadp1>
-        <963815509.21591323002276.JavaMail.epsvc@epcpadp1>
-        <CGME20200605011604epcms2p8bec8ef6682583d7248dc7d9dc1bfc882@epcms2p4>
- <1776409896.101591664283293.JavaMail.epsvc@epcpadp2>
-In-Reply-To: <1776409896.101591664283293.JavaMail.epsvc@epcpadp2>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: samsung.com; dkim=none (message not signed)
- header.d=none;samsung.com; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [212.25.79.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: defa6f76-644c-4663-4266-08d80c412875
-x-ms-traffictypediagnostic: SN6PR04MB4782:
-x-microsoft-antispam-prvs: <SN6PR04MB47826F29877C3476CED42326FC820@SN6PR04MB4782.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 042957ACD7
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: iupXbVoDK4c8fPjGwD/F8pOBqz8ONV7KQ0RI+bimn9aZbSDchQ4wwVVpwQsP8lSltoto5AcS3T8iPzDSfwh4fjqdvkPGnOHInJM0qi+lAztBYAndXjwkV4ZJwfeKDkigz7nyGTieUroj8upJQcIp4F5o0MorJJ8wQOyIL0V8BgBSeXqKK26rq/6ltR1e8uQu4cLcUNwoK2lZq/brX51UeCkWl8GlH/7KUiNLhN7BS2Gf3lbhwQN8MljVyhLAFfXalJkr+Lp2AwY7qzAbU79GGi+K+d9bk4XYpdDQW0bga7pW4qmqxXDbFdSMIK5pdfb9xm0NHo/U/xAs6lO1mtxTUprCufFkhRVbmeVxThbTtmv3dPSklhVpDpTM2Qow5enk
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(376002)(366004)(39860400002)(346002)(33656002)(5660300002)(83380400001)(54906003)(52536014)(110136005)(86362001)(8936002)(8676002)(64756008)(66476007)(55016002)(2906002)(26005)(316002)(66556008)(7696005)(478600001)(6506007)(76116006)(71200400001)(4744005)(66946007)(9686003)(186003)(66446008)(4326008)(7416002)(921003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: clgJLdEpM8QzZoGrAMepXHnVvJ2y8UvSr28et1/ndkdCT7KwQWB4ZCON+JEk+WTebqMOUnwAuYSThK4ycYRK8tA35zKo15VEN5b4FolskFKslbDQnzdaoAENl2gCMSyNtjzTgMVcsjIKyHJtIA/1AyRZVCNvgN6VNJblBSOXY3XlVZH8BidigxBhR+YHbjoMh0RzrPZtoHtjan01NoUR4uPikvcbuWppUFHQ3mrvioRA/c4it92UfuIqGRpBrgd2hk4KttnY3gZSGwbCh/dOt1nJA+YbWeQ+Veco7SpmeFKk9wpInrvPfk3UF57atCgx2aU4uDWq86ArgKMjWyr355sNG+Kd9J2uq9spV9e7vbwkjhARNrSxGoCsepV4jDaCJw0G4vOEKn8itWacMTu4CehVCg09lCd6NtBt4M89xIgt3KtpKZmztkAoI8/EJxk+P6OS7Xi4IX7LTBHiP5smUVMIfcP82R9MDpqtyEo/0hE=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 9 Jun 2020 02:49:22 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0596Vjqi191885;
+        Tue, 9 Jun 2020 02:49:21 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31gg81hspu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 09 Jun 2020 02:49:21 -0400
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0596Vtac192581;
+        Tue, 9 Jun 2020 02:49:21 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31gg81hsp7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 09 Jun 2020 02:49:20 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0596k9oR002782;
+        Tue, 9 Jun 2020 06:49:18 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma04fra.de.ibm.com with ESMTP id 31g2s7t687-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 09 Jun 2020 06:49:18 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0596nFrb57671682
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 9 Jun 2020 06:49:15 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3B3AC42054;
+        Tue,  9 Jun 2020 06:49:15 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DD04B42041;
+        Tue,  9 Jun 2020 06:49:14 +0000 (GMT)
+Received: from osiris (unknown [9.171.82.114])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue,  9 Jun 2020 06:49:14 +0000 (GMT)
+Date:   Tue, 9 Jun 2020 08:49:13 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH v2] s390: vdso: Use $(LD) instead of $(CC) to link vDSO
+Message-ID: <20200609064913.GA6796@osiris>
+References: <CAKwvOdmCrM0eUZHR12OBgyRhNPFDzZKjrpZ0DW8Cg=wqTfzDFw@mail.gmail.com>
+ <20200602192523.32758-1-natechancellor@gmail.com>
+ <CAKwvOdnH8rxT7y1U0d=pyD19K38KwarrwA2s+Ji7ctgg+ks_kg@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: defa6f76-644c-4663-4266-08d80c412875
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jun 2020 06:48:46.2806
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: u72aqGgI+INS8nLq1QOLieef0w4lIHYxM2av9W89GL0oxZfFwu56TSyg/B70EP41pOfaZdrbY4ukT4S86n4obA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4782
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKwvOdnH8rxT7y1U0d=pyD19K38KwarrwA2s+Ji7ctgg+ks_kg@mail.gmail.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-09_01:2020-06-08,2020-06-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ suspectscore=0 adultscore=0 spamscore=0 priorityscore=1501
+ lowpriorityscore=0 phishscore=0 impostorscore=0 clxscore=1011 bulkscore=0
+ mlxlogscore=999 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006090046
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiA+ID4gICAgICAgICAgICAgICAgIGRldl9pbmZvKCZocGItPmhwYl9sdV9kZXYsICJ1ZnNocGIg
-cmVzdW1lIik7DQo+ID4gPiAgICAgICAgICAgICAgICAgdWZzaHBiX3NldF9zdGF0ZShocGIsIEhQ
-Ql9QUkVTRU5UKTsNCj4gPiA+ICsgICAgICAgICAgICAgICBpZiAoIXVmc2hwYl9pc19lbXB0eV9y
-c3BfbGlzdHMoaHBiKSkNCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHF1ZXVlX3dvcmso
-dWZzaHBiX2Rydi51ZnNocGJfd3EsICZocGItPm1hcF93b3JrKTsNCj4gPiBBaGhhIC0gc28geW91
-IGFyZSB1c2luZyB0aGUgdWZzIGRyaXZlciBwbSBmbG93cyB0byBwb2xsIHlvdXIgd29yayBxdWV1
-ZS4NCj4gPiBXaHkgZGV2aWNlIHJlY29tbWVuZGF0aW9ucyBpc24ndCBlbm91Z2g/DQo+IEkgZG9u
-J3QgdW5kZXJzdGFuZCB0aGlzIGNvbW1lbnQuIFRoZSBjb2RlIHJlc3VtZXMgbWFwX3dvcmsgdGhh
-dCB3YXMNCj4gc3RvcHBlZCBieSBQTSBkdXJpbmcgdGhlIG1hcCByZXF1ZXN0Lg0KPiBQbGVhc2Ug
-ZXhwbGFpbiB5b3VyIGNvbmNlcm5zLg0KVGhpcyBpcyBub3QgYSBjb25jZXJuLCBqdXN0IGEgcXVl
-c3Rpb24uDQpJZiBhIG1hcCByZXF1ZXN0IHN0YXJ0ZWQgd2hpbGUgcnVudGltZS9zeXN0ZW0gc3Vz
-cGVuZCwgY2FuIHlvdSBzaGFyZSBpdHMgZmxvdz8NCg0K
+On Tue, Jun 02, 2020 at 12:52:26PM -0700, Nick Desaulniers wrote:
+> On Tue, Jun 2, 2020 at 12:25 PM Nathan Chancellor
+> <natechancellor@gmail.com> wrote:
+> >
+> > Currently, the VDSO is being linked through $(CC). This does not match
+> > how the rest of the kernel links objects, which is through the $(LD)
+> > variable.
+> >
+> > When clang is built in a default configuration, it first attempts to use
+> > the target triple's default linker, which is just ld. However, the user
+> > can override this through the CLANG_DEFAULT_LINKER cmake define so that
+> > clang uses another linker by default, such as LLVM's own linker, ld.lld.
+> > This can be useful to get more optimized links across various different
+> > projects.
+> >
+> > However, this is problematic for the s390 vDSO because ld.lld does not
+> > have any s390 emulatiom support:
+> >
+> > https://github.com/llvm/llvm-project/blob/llvmorg-10.0.1-rc1/lld/ELF/Driver.cpp#L132-L150
+> >
+> > Thus, if a user is using a toolchain with ld.lld as the default, they
+> > will see an error, even if they have specified ld.bfd through the LD
+> > make variable:
+> >
+> > $ make -j"$(nproc)" -s ARCH=s390 CROSS_COMPILE=s390x-linux-gnu- LLVM=1 \
+> >                        LD=s390x-linux-gnu-ld \
+> >                        defconfig arch/s390/kernel/vdso64/
+> > ld.lld: error: unknown emulation: elf64_s390
+> > clang-11: error: linker command failed with exit code 1 (use -v to see invocation)
+> >
+> > Normally, '-fuse-ld=bfd' could be used to get around this; however, this
+> > can be fragile, depending on paths and variable naming. The cleaner
+> > solution for the kernel is to take advantage of the fact that $(LD) can
+> > be invoked directly, which bypasses the heuristics of $(CC) and respects
+> > the user's choice. Similar changes have been done for ARM, ARM64, and
+> > MIPS.
+> >
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/1041
+> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> 
+> Thanks, with this, I'm more confident that the linker flags don't change.
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+...
+> > -KBUILD_CFLAGS_64 += -nostdlib -Wl,-soname=linux-vdso64.so.1 \
+> > -                   -Wl,--hash-style=both
+> > +ldflags-y := -fPIC -shared -nostdlib -soname=linux-vdso64.so.1 \
+> > +            --hash-style=both -T
+
+I added the --build-id flag according to commit 7a0a93c51799 ("arm64:
+vdso: Explicitly add build-id option") and applied the patch.
+Thanks!
