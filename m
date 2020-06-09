@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C83C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45169C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74C1B20734
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:55:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 203AE206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:56:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725356;
-	bh=miLTQdPwzuk9lQFiqP5cxP8nhx922KpR3g6Sz11QT1U=;
+	s=default; t=1591725366;
+	bh=MIImldgjysfrlc1TOzZPJnfcebmhwNpBaVgtEbcGg+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sxSffcgfAee6jNE/V621u5nW9Y2NJp1zkW2YtWEuZizcTylFFcQMNWI7Joh/cwGY7
-	 2pz6rhx1992+oZz/WV/sHJ18rQEsK6uL91dXilVhnzKPOs/XDJB540+27YNrzL9GEO
-	 U02s+xCHFLb4ZP1xir3UR6Xqbfv/GQ4ZKjrIBLxw=
+	b=U2T2pC5eXGSQs9hc599XcMvCYKGaw7ZRcSy5ECoe/OsvKTbpvORPJQf5fElThaAXt
+	 52XmrlMTRnSTBai/qc/gU5iGvZ8PBkXA0lBPp19PhKDkDdbngF1R1H6sZNYt5uAQkS
+	 7fklrSsWWeXCp519R1ahpWlanlbeGF5yTbtf5G7w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733312AbgFIRzy (ORCPT
+        id S1730210AbgFIR4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:55:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45796 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:56:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733072AbgFIRyP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:54:15 -0400
+        id S1731774AbgFIRyc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:54:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA7502074B;
-        Tue,  9 Jun 2020 17:54:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D9AF207C3;
+        Tue,  9 Jun 2020 17:54:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725255;
-        bh=miLTQdPwzuk9lQFiqP5cxP8nhx922KpR3g6Sz11QT1U=;
+        s=default; t=1591725271;
+        bh=MIImldgjysfrlc1TOzZPJnfcebmhwNpBaVgtEbcGg+Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1aRaydkc+B/OwLKD2bjyEGp/Zh8aopevXaE2KVz/gUQgd3dIXJK3BF4adxj5xnu2m
-         KF2ZTodggkZuXbOcsr9Akvux8rgLDk6VxqYeiq8Pgf4MitMEMEtGVPedRhL0wHfEie
-         NuXzr+RanUGxGI0gLnHxGU58EH3Ppw/PY3bz7/+M=
+        b=MAZUSbWhy1TWJi66NR2CqG2O1tFVe9qUuANgIorklA4xLUr/4PhcAYZoF5S7thHZx
+         n1OcMPw3Ftd5eKPR8osXR8tLAPMjmrm1OK2Vmww48L93r6BV2H7tO2Zqu+huxjrXh1
+         fCGoqM6jioKzhNo8NXt9h7b5RIRX6Gti0jfMPG/w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pascal Terjan <pterjan@google.com>
-Subject: [PATCH 5.6 32/41] staging: rtl8712: Fix IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK
-Date:   Tue,  9 Jun 2020 19:45:34 +0200
-Message-Id: <20200609174115.150785569@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Gross <mgross@linux.intel.com>,
+        Borislav Petkov <bp@suse.de>, Tony Luck <tony.luck@intel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: [PATCH 5.6 38/41] x86/speculation: Add SRBDS vulnerability and mitigation documentation
+Date:   Tue,  9 Jun 2020 19:45:40 +0200
+Message-Id: <20200609174115.708532122@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174112.129412236@linuxfoundation.org>
 References: <20200609174112.129412236@linuxfoundation.org>
@@ -58,51 +60,183 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pascal Terjan <pterjan@google.com>
+From: Mark Gross <mgross@linux.intel.com>
 
-commit 15ea976a1f12b5fd76b1bd6ff3eb5132fd28047f upstream.
+commit 7222a1b5b87417f22265c92deea76a6aecd0fb0f upstream
 
-The value in shared headers was fixed 9 years ago in commit 8d661f1e462d
-("ieee80211: correct IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK macro") and
-while looking at using shared headers for other duplicated constants
-I noticed this driver uses the old value.
+Add documentation for the SRBDS vulnerability and its mitigation.
 
-The macros are also defined twice in this file so I am deleting the
-second definition.
+ [ bp: Massage.
+   jpoimboe: sysfs table strings. ]
 
-Signed-off-by: Pascal Terjan <pterjan@google.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200523211247.23262-1-pterjan@google.com
+Signed-off-by: Mark Gross <mgross@linux.intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/staging/rtl8712/wifi.h |    9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+ Documentation/admin-guide/hw-vuln/index.rst                                 |    1 
+ Documentation/admin-guide/hw-vuln/special-register-buffer-data-sampling.rst |  148 ++++++++++
+ 2 files changed, 149 insertions(+)
+ create mode 100644 Documentation/admin-guide/hw-vuln/special-register-buffer-data-sampling.rst
 
---- a/drivers/staging/rtl8712/wifi.h
-+++ b/drivers/staging/rtl8712/wifi.h
-@@ -440,7 +440,7 @@ static inline unsigned char *get_hdr_bss
- /* block-ack parameters */
- #define IEEE80211_ADDBA_PARAM_POLICY_MASK 0x0002
- #define IEEE80211_ADDBA_PARAM_TID_MASK 0x003C
--#define IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK 0xFFA0
-+#define IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK 0xFFC0
- #define IEEE80211_DELBA_PARAM_TID_MASK 0xF000
- #define IEEE80211_DELBA_PARAM_INITIATOR_MASK 0x0800
- 
-@@ -532,13 +532,6 @@ struct ieee80211_ht_addt_info {
- #define IEEE80211_HT_IE_NON_GF_STA_PRSNT	0x0004
- #define IEEE80211_HT_IE_NON_HT_STA_PRSNT	0x0010
- 
--/* block-ack parameters */
--#define IEEE80211_ADDBA_PARAM_POLICY_MASK 0x0002
--#define IEEE80211_ADDBA_PARAM_TID_MASK 0x003C
--#define IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK 0xFFA0
--#define IEEE80211_DELBA_PARAM_TID_MASK 0xF000
--#define IEEE80211_DELBA_PARAM_INITIATOR_MASK 0x0800
--
- /*
-  * A-PMDU buffer sizes
-  * According to IEEE802.11n spec size varies from 8K to 64K (in powers of 2)
+--- a/Documentation/admin-guide/hw-vuln/index.rst
++++ b/Documentation/admin-guide/hw-vuln/index.rst
+@@ -14,3 +14,4 @@ are configurable at compile, boot or run
+    mds
+    tsx_async_abort
+    multihit.rst
++   special-register-buffer-data-sampling.rst
+--- /dev/null
++++ b/Documentation/admin-guide/hw-vuln/special-register-buffer-data-sampling.rst
+@@ -0,0 +1,148 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++SRBDS - Special Register Buffer Data Sampling
++=============================================
++
++SRBDS is a hardware vulnerability that allows MDS :doc:`mds` techniques to
++infer values returned from special register accesses.  Special register
++accesses are accesses to off core registers.  According to Intel's evaluation,
++the special register reads that have a security expectation of privacy are
++RDRAND, RDSEED and SGX EGETKEY.
++
++When RDRAND, RDSEED and EGETKEY instructions are used, the data is moved
++to the core through the special register mechanism that is susceptible
++to MDS attacks.
++
++Affected processors
++--------------------
++Core models (desktop, mobile, Xeon-E3) that implement RDRAND and/or RDSEED may
++be affected.
++
++A processor is affected by SRBDS if its Family_Model and stepping is
++in the following list, with the exception of the listed processors
++exporting MDS_NO while Intel TSX is available yet not enabled. The
++latter class of processors are only affected when Intel TSX is enabled
++by software using TSX_CTRL_MSR otherwise they are not affected.
++
++  =============  ============  ========
++  common name    Family_Model  Stepping
++  =============  ============  ========
++  Haswell        06_3CH        All
++  Haswell_L      06_45H        All
++  Haswell_G      06_46H        All
++
++  Broadwell_G    06_47H        All
++  Broadwell      06_3DH        All
++
++  Skylake_L      06_4EH        All
++  Skylake        06_5EH        All
++
++  Kabylake_L     06_8EH        <=0xC
++
++  Kabylake       06_9EH        <=0xD
++  =============  ============  ========
++
++Related CVEs
++------------
++
++The following CVE entry is related to this SRBDS issue:
++
++    ==============  =====  =====================================
++    CVE-2020-0543   SRBDS  Special Register Buffer Data Sampling
++    ==============  =====  =====================================
++
++Attack scenarios
++----------------
++An unprivileged user can extract values returned from RDRAND and RDSEED
++executed on another core or sibling thread using MDS techniques.
++
++
++Mitigation mechanism
++-------------------
++Intel will release microcode updates that modify the RDRAND, RDSEED, and
++EGETKEY instructions to overwrite secret special register data in the shared
++staging buffer before the secret data can be accessed by another logical
++processor.
++
++During execution of the RDRAND, RDSEED, or EGETKEY instructions, off-core
++accesses from other logical processors will be delayed until the special
++register read is complete and the secret data in the shared staging buffer is
++overwritten.
++
++This has three effects on performance:
++
++#. RDRAND, RDSEED, or EGETKEY instructions have higher latency.
++
++#. Executing RDRAND at the same time on multiple logical processors will be
++   serialized, resulting in an overall reduction in the maximum RDRAND
++   bandwidth.
++
++#. Executing RDRAND, RDSEED or EGETKEY will delay memory accesses from other
++   logical processors that miss their core caches, with an impact similar to
++   legacy locked cache-line-split accesses.
++
++The microcode updates provide an opt-out mechanism (RNGDS_MITG_DIS) to disable
++the mitigation for RDRAND and RDSEED instructions executed outside of Intel
++Software Guard Extensions (Intel SGX) enclaves. On logical processors that
++disable the mitigation using this opt-out mechanism, RDRAND and RDSEED do not
++take longer to execute and do not impact performance of sibling logical
++processors memory accesses. The opt-out mechanism does not affect Intel SGX
++enclaves (including execution of RDRAND or RDSEED inside an enclave, as well
++as EGETKEY execution).
++
++IA32_MCU_OPT_CTRL MSR Definition
++--------------------------------
++Along with the mitigation for this issue, Intel added a new thread-scope
++IA32_MCU_OPT_CTRL MSR, (address 0x123). The presence of this MSR and
++RNGDS_MITG_DIS (bit 0) is enumerated by CPUID.(EAX=07H,ECX=0).EDX[SRBDS_CTRL =
++9]==1. This MSR is introduced through the microcode update.
++
++Setting IA32_MCU_OPT_CTRL[0] (RNGDS_MITG_DIS) to 1 for a logical processor
++disables the mitigation for RDRAND and RDSEED executed outside of an Intel SGX
++enclave on that logical processor. Opting out of the mitigation for a
++particular logical processor does not affect the RDRAND and RDSEED mitigations
++for other logical processors.
++
++Note that inside of an Intel SGX enclave, the mitigation is applied regardless
++of the value of RNGDS_MITG_DS.
++
++Mitigation control on the kernel command line
++---------------------------------------------
++The kernel command line allows control over the SRBDS mitigation at boot time
++with the option "srbds=".  The option for this is:
++
++  ============= =============================================================
++  off           This option disables SRBDS mitigation for RDRAND and RDSEED on
++                affected platforms.
++  ============= =============================================================
++
++SRBDS System Information
++-----------------------
++The Linux kernel provides vulnerability status information through sysfs.  For
++SRBDS this can be accessed by the following sysfs file:
++/sys/devices/system/cpu/vulnerabilities/srbds
++
++The possible values contained in this file are:
++
++ ============================== =============================================
++ Not affected                   Processor not vulnerable
++ Vulnerable                     Processor vulnerable and mitigation disabled
++ Vulnerable: No microcode       Processor vulnerable and microcode is missing
++                                mitigation
++ Mitigation: Microcode          Processor is vulnerable and mitigation is in
++                                effect.
++ Mitigation: TSX disabled       Processor is only vulnerable when TSX is
++                                enabled while this system was booted with TSX
++                                disabled.
++ Unknown: Dependent on
++ hypervisor status              Running on virtual guest processor that is
++                                affected but with no way to know if host
++                                processor is mitigated or vulnerable.
++ ============================== =============================================
++
++SRBDS Default mitigation
++------------------------
++This new microcode serializes processor access during execution of RDRAND,
++RDSEED ensures that the shared buffer is overwritten before it is released for
++reuse.  Use the "srbds=off" kernel command line to disable the mitigation for
++RDRAND and RDSEED.
 
 
