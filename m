@@ -4,54 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 373D1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 566EAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:00:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DEE320734
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:59:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EF68207ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:00:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725598;
-	bh=lIILPL42IFBVcWuXpYQIqz50dWGRHcCxPk53+yBLr3Y=;
+	s=default; t=1591725602;
+	bh=6YPxQIpnHA4tJL9vOwIld7dOcuszsw2Lm6F7R0UTo0s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TxOfqbjSbcFm/8BCxvCY4Z2BQWrperIoWVemRAOklli9ZvqvS7TfULOkEoxJqTffV
-	 vV7DlaqJgIVJXJApXrt2Ym7qtrc2scxnATC3eYF5ZJ440u31R99FpXrdFvaZmXlUvj
-	 qYfRcAkKUsxHK5ANPn0gSTPysF1QW9Hmr18T3xZY=
+	b=MxBor9jjxCyYLum8kY/RzZR+M/9EPTB9UYnMYZDJVT1I6ZKjNm3TVSfP4A2y23kHD
+	 6fTvCzzskVQWNu/CeOoA/rGLy+b+416hC9H88wS3HQoOaFlTb5F7kK//dzxncu5JIo
+	 hU5NsnEacthc1ZMtbb+K5lLfMyZrOLPdXhaE3SDU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731242AbgFIR7w (ORCPT
+        id S1733141AbgFIRyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:59:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46876 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:54:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733155AbgFIRyv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:54:51 -0400
+        id S1731732AbgFIRxK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:53:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E418C2074B;
-        Tue,  9 Jun 2020 17:54:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BC492074B;
+        Tue,  9 Jun 2020 17:53:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725291;
-        bh=lIILPL42IFBVcWuXpYQIqz50dWGRHcCxPk53+yBLr3Y=;
+        s=default; t=1591725189;
+        bh=6YPxQIpnHA4tJL9vOwIld7dOcuszsw2Lm6F7R0UTo0s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NUCYGtbpxbSfZ6fhPWJ5XFna/UR8KeK67r/oZ6ZJCZrrQUXtfuTUqWHN705SnKSTV
-         zl6LZfQQDnPtQZCgrPntg2cVAO53kQtvFBavtupL3/SDyoJvRtygK/rbh9eH/tO8uA
-         FNwltayzqijW18/ezXrnxX5ktC8AQeOg1p9xG3lQ=
+        b=0RDv4TuJp0SOuvmx4anxA0kTj72aoIVfFKf73sRo/P1/7tHEpnl27ja+RMSpa+NJA
+         p7/I7dRWmn5YrXwJYa/l0Mc2tbnY7ty0xu2p+mSOkaJm28gGwnZHhk+gCNVTUcDlx4
+         PaUgaexSH5NSMKmSs/rgO1JeZ43w0q0eyQrHISVc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Paul Gortmaker <paul.gortmaker@windriver.com>,
-        Roi Dayan <roid@mellanox.com>, Mark Bloch <markb@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.6 41/41] Revert "net/mlx5: Annotate mutex destroy for root ns"
-Date:   Tue,  9 Jun 2020 19:45:43 +0200
-Message-Id: <20200609174116.018450623@linuxfoundation.org>
+        stable@vger.kernel.org, Dinghao Liu <dinghao.liu@zju.edu.cn>,
+        Bin Liu <b-liu@ti.com>
+Subject: [PATCH 5.4 21/34] usb: musb: Fix runtime PM imbalance on error
+Date:   Tue,  9 Jun 2020 19:45:17 +0200
+Message-Id: <20200609174055.288728754@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200609174112.129412236@linuxfoundation.org>
-References: <20200609174112.129412236@linuxfoundation.org>
+In-Reply-To: <20200609174052.628006868@linuxfoundation.org>
+References: <20200609174052.628006868@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,59 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Dinghao Liu <dinghao.liu@zju.edu.cn>
 
-This reverts commit 9b035b08e7e5fe7b2e75636324edf41ee30c5f94 which is
-commit 9ca415399dae133b00273a4283ef31d003a6818d upstream.
+commit e4befc121df03dc8ed2ac1031c98f9538e244bae upstream.
 
-It was backported incorrectly, Paul writes at:
-	https://lore.kernel.org/r/20200607203425.GD23662@windriver.com
+When copy_from_user() returns an error code, there
+is a runtime PM usage counter imbalance.
 
-	I happened to notice this commit:
+Fix this by moving copy_from_user() to the beginning
+of this function.
 
-	9ca415399dae - "net/mlx5: Annotate mutex destroy for root ns"
+Fixes: 7b6c1b4c0e1e ("usb: musb: fix runtime PM in debugfs")
 
-	...was backported to 4.19 and 5.4 and v5.6 in linux-stable.
-
-	It patches del_sw_root_ns() - which only exists after v5.7-rc7 from:
-
-	6eb7a268a99b - "net/mlx5: Don't maintain a case of del_sw_func being
-	null"
-
-	which creates the one line del_sw_root_ns stub function around
-	kfree(node) by breaking it out of tree_put_node().
-
-	In the absense of del_sw_root_ns - the backport finds an identical one
-	line kfree stub fcn - named del_sw_prio from this earlier commit:
-
-	139ed6c6c46a - "net/mlx5: Fix steering memory leak"  [in v4.15-rc5]
-
-	and then puts the mutex_destroy() into that (wrong) function, instead of
-	putting it into tree_put_node where the root ns case used to be hand
-
-Reported-by: Paul Gortmaker <paul.gortmaker@windriver.com>
-Cc: Roi Dayan <roid@mellanox.com>
-Cc: Mark Bloch <markb@mellanox.com>
-Cc: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+Cc: stable@vger.kernel.org
+Signed-off-by: Bin Liu <b-liu@ti.com>
+Link: https://lore.kernel.org/r/20200525025049.3400-7-b-liu@ti.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/mellanox/mlx5/core/fs_core.c |    6 ------
- 1 file changed, 6 deletions(-)
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
-@@ -416,12 +416,6 @@ static void del_sw_ns(struct fs_node *no
+---
+ drivers/usb/musb/musb_debugfs.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+--- a/drivers/usb/musb/musb_debugfs.c
++++ b/drivers/usb/musb/musb_debugfs.c
+@@ -168,6 +168,11 @@ static ssize_t musb_test_mode_write(stru
+ 	u8			test;
+ 	char			buf[24];
  
- static void del_sw_prio(struct fs_node *node)
- {
--	struct mlx5_flow_root_namespace *root_ns;
--	struct mlx5_flow_namespace *ns;
++	memset(buf, 0x00, sizeof(buf));
++
++	if (copy_from_user(buf, ubuf, min_t(size_t, sizeof(buf) - 1, count)))
++		return -EFAULT;
++
+ 	pm_runtime_get_sync(musb->controller);
+ 	test = musb_readb(musb->mregs, MUSB_TESTMODE);
+ 	if (test) {
+@@ -176,11 +181,6 @@ static ssize_t musb_test_mode_write(stru
+ 		goto ret;
+ 	}
+ 
+-	memset(buf, 0x00, sizeof(buf));
 -
--	fs_get_obj(ns, node);
--	root_ns = container_of(ns, struct mlx5_flow_root_namespace, ns);
--	mutex_destroy(&root_ns->chain_lock);
- 	kfree(node);
- }
+-	if (copy_from_user(buf, ubuf, min_t(size_t, sizeof(buf) - 1, count)))
+-		return -EFAULT;
+-
+ 	if (strstarts(buf, "force host full-speed"))
+ 		test = MUSB_TEST_FORCE_HOST | MUSB_TEST_FORCE_FS;
  
 
 
