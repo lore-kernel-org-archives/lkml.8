@@ -2,130 +2,129 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03047C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42F10C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D004D2078D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:50:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ECDB2078D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:50:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="DspMUEni"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ymcn/bTu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728387AbgFIKuN (ORCPT
+        id S1728951AbgFIKuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 06:50:13 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:47935 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728300AbgFIKri (ORCPT
+        Tue, 9 Jun 2020 06:50:15 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:55604 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728153AbgFIKri (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 9 Jun 2020 06:47:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1591699658; x=1623235658;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=d8gMaNNmximhyQzG6Kal58H6sh8+EGIvUeK+r0l4uhw=;
-  b=DspMUEnik5GLo3FFXW6z58Xu7H/Ti6PHGmmdE+iglBYgA/94VkqNy4TY
-   b0G6HUrA7Lc8L8ushOdtpKwS25GZ1Lhw98BajI/2zx/VffKMH/CqHB6VX
-   2NDbomAhDBDkdjG+ZQNj8KiE1NkaZ/kUl6izCxbIJlMLI4xOdcLR4FO0c
-   o=;
-IronPort-SDR: kq+seaYbxzGfg3eMe4BizMCjWNXOpeOl06/slLYLaSvA8UKmf7nG/PXJctyulywzbmoVFVMmXp
- E0eg/OFLSBWw==
-X-IronPort-AV: E=Sophos;i="5.73,491,1583193600"; 
-   d="scan'208";a="36584521"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-17c49630.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 09 Jun 2020 10:47:36 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-17c49630.us-east-1.amazon.com (Postfix) with ESMTPS id 2BDAFA23B0;
-        Tue,  9 Jun 2020 10:47:34 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 9 Jun 2020 10:47:34 +0000
-Received: from 38f9d3867b82.ant.amazon.com (10.43.162.208) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 9 Jun 2020 10:47:29 +0000
-Subject: Re: [PATCH v3 07/18] nitro_enclaves: Init misc device providing the
- ioctl interface
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Greg KH <gregkh@linuxfoundation.org>
-CC:     Andra Paraschiv <andraprs@amazon.com>,
-        <linux-kernel@vger.kernel.org>,
-        Anthony Liguori <aliguori@amazon.com>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        "Martin Pohlack" <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>
-References: <20200525221334.62966-1-andraprs@amazon.com>
- <20200525221334.62966-8-andraprs@amazon.com>
- <20200526065133.GD2580530@kroah.com>
- <72647fa4-79d9-7754-9843-a254487703ea@amazon.de>
- <20200526123300.GA2798@kroah.com>
- <59007eb9-fad3-9655-a856-f5989fa9fdb3@amazon.de>
- <20200526131708.GA9296@kroah.com>
- <29ebdc29-2930-51af-8a54-279c1e449a48@amazon.de>
- <20200526222402.GC179549@kroah.com>
- <b4f17cbd-7471-fe61-6e7e-1399bd96e24e@amazon.de>
- <20200528131259.GA3345766@kroah.com>
- <a37b0156c076d3875f906e970071cb230e526df1.camel@kernel.crashing.org>
-From:   Alexander Graf <graf@amazon.de>
-Message-ID: <f83838cf-8a20-8c9c-be87-4c6625563bd6@amazon.de>
-Date:   Tue, 9 Jun 2020 12:47:27 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.1
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 059AgrtS159525;
+        Tue, 9 Jun 2020 10:47:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type : in-reply-to;
+ s=corp-2020-01-29; bh=V634sIqAzEcugfWlVFpBbVizQNUZkstFdXIm73939oE=;
+ b=Ymcn/bTu1ubls2ghrSKcDPt2xvvKAj/VCSbEfvToWmDK5LfNbq2cuaJphbU6y042Jhh5
+ wjBNr20XgEQh2GHi/kklkRDlC9On5iY0gEyJQolo2NuGYHCq+CqbLLMpqTeAmkXTKdaK
+ +PScmSYF2OlD7M3Bh/b9nQU7zfpbyUp1RYzq06iutl4xigB9etRkQWHe3gdtY/lcONuM
+ SAJvW/zD8PwXahMWXrZACMamzXaTU3k+fl930qHkpxw9Ed9Nl7zxDxQsaKklJ7GjWt6T
+ Z9xrXh+zllg89oMnw/lexh22U0X/+/H9Kw5O1ecDoEjvPfGClLHYd7Ceeg2g3fj3P4hV Og== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 31g33m4041-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 09 Jun 2020 10:47:05 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 059AiNk0079158;
+        Tue, 9 Jun 2020 10:47:04 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 31gmwr77ut-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 09 Jun 2020 10:47:04 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 059AksNo000927;
+        Tue, 9 Jun 2020 10:46:55 GMT
+Received: from mwanda (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 09 Jun 2020 03:46:54 -0700
+Date:   Tue, 9 Jun 2020 13:46:42 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Arnd Bergmann <arnd@arndb.de>, Aisheng Dong <aisheng.dong@nxp.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tuowen Zhao <ztuowen@gmail.com>,
+        Denis Efremov <efremov@linux.com>,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        BOUGH CHEN <haibo.chen@nxp.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: [PATCH] lib: devres: add a comment about the devm_of_iomap() function
+Message-ID: <20200609104642.GA43074@mwanda>
 MIME-Version: 1.0
-In-Reply-To: <a37b0156c076d3875f906e970071cb230e526df1.camel@kernel.crashing.org>
-Content-Language: en-US
-X-Originating-IP: [10.43.162.208]
-X-ClientProxiedBy: EX13D30UWC003.ant.amazon.com (10.43.162.122) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM6PR04MB496691DDA4447CD5624EE6E680850@AM6PR04MB4966.eurprd04.prod.outlook.com>
+X-Mailer: git-send-email haha only kidding
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9646 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0 adultscore=0
+ mlxscore=0 mlxlogscore=999 bulkscore=0 malwarescore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006090082
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9646 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0 spamscore=0
+ cotscore=-2147483648 malwarescore=0 phishscore=0 mlxscore=0 clxscore=1011
+ lowpriorityscore=0 impostorscore=0 priorityscore=1501 mlxlogscore=999
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006090082
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CgpPbiAwMS4wNi4yMCAwNTowNCwgQmVuamFtaW4gSGVycmVuc2NobWlkdCB3cm90ZToKPiAKPiAK
-PiBPbiBUaHUsIDIwMjAtMDUtMjggYXQgMTU6MTIgKzAyMDAsIEdyZWcgS0ggd3JvdGU6Cj4+IFNv
-IGF0IHJ1bnRpbWUsIGFmdGVyIGFsbCBpcyBib290ZWQgYW5kIHVwIGFuZCBnb2luZywgeW91IGp1
-c3QgcmlwcGVkCj4+IGNvcmVzIG91dCBmcm9tIHVuZGVyIHNvbWVvbmUncyBmZWV0PyAgOikKPj4K
-Pj4gQW5kIHRoZSBjb2RlIHJlYWxseSBoYW5kbGVzIHdyaXRpbmcgdG8gdGhhdCB2YWx1ZSB3aGls
-ZSB0aGUgbW9kdWxlIGlzCj4+IGFscmVhZHkgbG9hZGVkIGFuZCB1cCBhbmQgcnVubmluZz8gIEF0
-IGEgcXVpY2sgZ2xhbmNlLCBpdCBkaWRuJ3Qgc2VlbQo+PiBsaWtlIGl0IHdvdWxkIGhhbmRsZSB0
-aGF0IHZlcnkgd2VsbCBhcyBpdCBvbmx5IGlzIGNoZWNrZWQgYXQgbmVfaW5pdCgpCj4+IHRpbWUu
-Cj4+Cj4+IE9yIGFtIEkgbWlzc2luZyBzb21ldGhpbmc/Cj4+Cj4+IEFueXdheSwgeWVzLCBpZiB5
-b3UgY2FuIGR5bmFtaWNhbGx5IGRvIHRoaXMgYXQgcnVudGltZSwgdGhhdCdzIGdyZWF0LAo+PiBi
-dXQgaXQgZmVlbHMgYWNrd2FyZCB0byBtZSB0byByZWx5IG9uIG9uZSBjb25maWd1cmF0aW9uIHRo
-aW5nIGFzIGEKPj4gbW9kdWxlIHBhcmFtZXRlciwgYW5kIGV2ZXJ5dGhpbmcgZWxzZSB0aHJvdWdo
-IHRoZSBpb2N0bCBpbnRlcmZhY2UuCj4+IFVuaWZpY2F0aW9uIHdvdWxkIHNlZW0gdG8gYmUgYSBn
-b29kIHRoaW5nLCByaWdodD8KPiAKPiBJIHBlcnNvbmFsbHkgc3RpbGwgcHJlZmVyIGEgc3lzZnMg
-ZmlsZSA6KSBJIHJlYWxseSBkb24ndCBsaWtlIG1vZHVsZQo+IHBhcmFtZXRlcnMgYXMgYSB3YXkg
-dG8gZG8gc3VjaCB0aGluZ3MuCgpJIHRoaW5rIHdlJ3JlIGdvaW5nIGluIGNpcmNsZXMgOikuCgpB
-IG1vZHVsZSBwYXJhbWV0ZXIgaW5pdGlhbGl6ZWQgd2l0aCBtb2R1bGVfcGFyYW1fY2IgZ2l2ZXMg
-dXMgYSBzeXNmcyAKZmlsZSB0aGF0IGNhbiBhbHNvIGhhdmUgYSBkZWZhdWx0IHBhcmFtZXRlciBz
-ZXQgdGhyb3VnaCBlYXNpbHkgYXZhaWxhYmxlIAp0b29saW5nLgoKVGhlIGlvY3RsIGhhcyB0d28g
-ZG93bnNpZGVzOgoKICAgMSkgSXQgcmVsaWVzIG9uIGFuIGV4dGVybmFsIGFwcGxpY2F0aW9uCiAg
-IDIpIFRoZSBwZXJtaXNzaW9uIGNoZWNrIHdvdWxkIGJlIHN0cmljdGx5IGxpbWl0ZWQgdG8gQ0FQ
-X0FETUlOLCBzeXNmcyAKZmlsZXMgY2FuIGhhdmUgZGlmZmVyZW50IHBlcm1pc3Npb25zCgpTbyBJ
-IGZhaWwgdG8gc2VlIGhvdyBhIG1vZHVsZSBwYXJhbWV0ZXIgaXMgKm5vdCogZ2l2aW5nIGJvdGgg
-b2YgeW91IGFuZCAKbWUgd2hhdCB3ZSB3YW50PyBPZiBjb3Vyc2Ugb25seSBpZiBpdCBpbXBsZW1l
-bnRzIHRoZSBjYWxsYmFjay4gSXQgd2FzIAptaXNzaW5nIHRoYXQgYW5kIGFwb2xvZ2l6ZSBmb3Ig
-dGhhdCBvdmVyc2lnaHQuCgoKQWxleAoKCgpBbWF6b24gRGV2ZWxvcG1lbnQgQ2VudGVyIEdlcm1h
-bnkgR21iSApLcmF1c2Vuc3RyLiAzOAoxMDExNyBCZXJsaW4KR2VzY2hhZWZ0c2Z1ZWhydW5nOiBD
-aHJpc3RpYW4gU2NobGFlZ2VyLCBKb25hdGhhbiBXZWlzcwpFaW5nZXRyYWdlbiBhbSBBbXRzZ2Vy
-aWNodCBDaGFybG90dGVuYnVyZyB1bnRlciBIUkIgMTQ5MTczIEIKU2l0ejogQmVybGluClVzdC1J
-RDogREUgMjg5IDIzNyA4NzkKCgo=
+We recently introduced a bug when we tried to convert of_iomap() to
+devm_of_iomap().  The problem was that there were two drivers mapping
+the same io region.  The first driver was using of_iomap() and the
+second driver was using devm_of_iomap() and the kernel booted fine.
+When we converted the first drive to use devm_of_iomap() then the second
+driver failed with -EBUSY and the kernel couldn't boot.
+
+Let's add a comment to prevent this sort of mistake in the future.
+
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+ lib/devres.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/lib/devres.c b/lib/devres.c
+index 6ef51f159c54b..0abe7c1cc4681 100644
+--- a/lib/devres.c
++++ b/lib/devres.c
+@@ -204,6 +204,12 @@ void __iomem *devm_ioremap_resource_wc(struct device *dev,
+  *	base = devm_of_iomap(&pdev->dev, node, 0, NULL);
+  *	if (IS_ERR(base))
+  *		return PTR_ERR(base);
++ *
++ * Please Note: This is not a one-to-one replacement for of_iomap() because the
++ * of_iomap() function does not track whether the region is already mapped.  If
++ * two drivers try to map the same memory, the of_iomap() function will succeed
++ * but the the devm_of_iomap() function will return -EBUSY.
++ *
+  */
+ void __iomem *devm_of_iomap(struct device *dev, struct device_node *node, int index,
+ 			    resource_size_t *size)
+-- 
+2.26.2
 
