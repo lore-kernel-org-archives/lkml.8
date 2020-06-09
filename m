@@ -2,114 +2,99 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86586C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B515C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46A61207ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:42:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0CD62076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:42:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663363;
-	bh=ZTIsX73d20iSdcbXGG9Igm0SR8pILM4kweFvdrEtmjM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bP43Hh+0I0UYbfRQR+iMBi747GVMOTwE7MS3yv0rqHr76a/0K7ZDmkPOSV1UQ7Guj
-	 NW5pfqwGcfx5iofcCP+yY20cD3FQqxBL4B5SPKZSc8Vvf1ENnQ1VmUlbAkbaHlKLdO
-	 H1ds/Rg1ISBqISgV25zo9VD4S3Gbtgx0w1Syk3PI=
+	s=default; t=1591663372;
+	bh=V7sPRt5t1bPdgkFLTtlp3s+mAuZDhKkTlH4OAYkopVU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=S6x0OJtIZoSoip/tUk7uUvlRDy748WQE++2o7H/gVJBFgktoJkXOcG4QnvWfiy6Xa
+	 SF//sa3WF932YHROcUcrDvfY+Z008aD+qHbiqJJ/fitaa0Vlt3xkdwTHWeKJ0Dq7qS
+	 I5Xr5k1JtCfUKK7MhcLmgvTbF2aHiTuZJx3BFydw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728713AbgFIAml (ORCPT
+        id S1730677AbgFIAmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:42:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59924 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:42:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729089AbgFHXM1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:12:27 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728552AbgFIAmq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 20:42:46 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8075120C09;
-        Mon,  8 Jun 2020 23:12:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2502D20737;
+        Tue,  9 Jun 2020 00:42:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657947;
-        bh=ZTIsX73d20iSdcbXGG9Igm0SR8pILM4kweFvdrEtmjM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MJku1xQVUPrQzzGidFLR3WXAUh5rkt3HMvlto2k6xXJ1EjtkTC9hI9EiXXUEHp3Ci
-         V4s3WwxueyVGP4QBWafSgOrNOhdnlKVKqC0JSitewq0kPUN+2jwnvE2Uk12Hp45Zwn
-         kqz8zmixBnarkJ200Jb8pIJTkakClo0gIFwgsCOU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kbuild@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 012/606] gcc-10: disable 'array-bounds' warning for now
-Date:   Mon,  8 Jun 2020 19:02:17 -0400
-Message-Id: <20200608231211.3363633-12-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
-References: <20200608231211.3363633-1-sashal@kernel.org>
+        s=default; t=1591663365;
+        bh=V7sPRt5t1bPdgkFLTtlp3s+mAuZDhKkTlH4OAYkopVU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NkQ6oQQy24UsfoH9EPwlmMoqOD65lnqnabQ6xuLoQSsTcCn01weXzK9IRCvy8mknt
+         mriLOEa+8G6FBI5ZgdT3iq8H8zFIXXDyBFzLf6Rj0N3RzruZiZ0OZKXX+5N3s8tIGA
+         ILRxZuIxO2SHLbrTmEQWPbDGXQwSPsTVcxm8ZQo8=
+Date:   Mon, 8 Jun 2020 19:47:56 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: [PATCH] overflow.h: Add flex_array_size() helper
+Message-ID: <20200609004756.GH10051@embeddedor>
+References: <20200608221723.GA23644@embeddedor>
+ <05ab102b936ce922c4fae67bf5dd3e323aff0b93.camel@perches.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <05ab102b936ce922c4fae67bf5dd3e323aff0b93.camel@perches.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+On Mon, Jun 08, 2020 at 03:34:52PM -0700, Joe Perches wrote:
+> On Mon, 2020-06-08 at 17:17 -0500, Gustavo A. R. Silva wrote:
+> > Add flex_array_size() helper for the calculation of the size, in bytes,
+> > of a flexible array member contained within an enclosing structure.
+> > 
+> > Example of usage:
+> > foo
+> > struct something {
+> > 	size_t count;
+> > 	struct foo items[];
+> > };
+> > 
+> > struct something *instance;
+> []
+> > diff --git a/include/linux/overflow.h b/include/linux/overflow.h
+> []
+> > +/**
+> > + * flex_array_size() - Calculate size of a flexible array member within
+> > + * an enclosing structure.
+> 
+> These comment descriptions do not match
+> 
+> > + * Calculates size of memory needed for flexible array @member of @count
+> > + * elements within structure @p.
+> 
+> The first comment shows the size of an array member.
+> The second shows the size of an array member * count
+> 
+> Also the struct_size and flex_array_size definitions
+> are using two different forms:
+> 
+> 		sizeof(*(p)->member) + __must_be_array((p)->member),\
+> and
+> 		sizeof((p)->member[0]) + __must_be_array((p)->member))
+> 
 
-commit 44720996e2d79e47d508b0abe99b931a726a3197 upstream.
+Good catch.
 
-This is another fine warning, related to the 'zero-length-bounds' one,
-but hitting the same historical code in the kernel.
-
-Because C didn't historically support flexible array members, we have
-code that instead uses a one-sized array, the same way we have cases of
-zero-sized arrays.
-
-The one-sized arrays come from either not wanting to use the gcc
-zero-sized array extension, or from a slight convenience-feature, where
-particularly for strings, the size of the structure now includes the
-allocation for the final NUL character.
-
-So with a "char name[1];" at the end of a structure, you can do things
-like
-
-       v = my_malloc(sizeof(struct vendor) + strlen(name));
-
-and avoid the "+1" for the terminator.
-
-Yes, the modern way to do that is with a flexible array, and using
-'offsetof()' instead of 'sizeof()', and adding the "+1" by hand.  That
-also technically gets the size "more correct" in that it avoids any
-alignment (and thus padding) issues, but this is another long-term
-cleanup thing that will not happen for 5.7.
-
-So disable the warning for now, even though it's potentially quite
-useful.  Having a slew of warnings that then hide more urgent new issues
-is not an improvement.
-
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- Makefile | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Makefile b/Makefile
-index b1ce2a7a25b0..e7c2811856f1 100644
---- a/Makefile
-+++ b/Makefile
-@@ -859,6 +859,7 @@ KBUILD_CFLAGS += $(call cc-disable-warning, stringop-truncation)
- 
- # We'll want to enable this eventually, but it's not going away for 5.7 at least
- KBUILD_CFLAGS += $(call cc-disable-warning, zero-length-bounds)
-+KBUILD_CFLAGS += $(call cc-disable-warning, array-bounds)
- 
- # Enabled with W=2, disabled by default as noisy
- KBUILD_CFLAGS += $(call cc-disable-warning, maybe-uninitialized)
--- 
-2.25.1
-
+Thanks
+--
+Gustavo
