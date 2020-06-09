@@ -2,155 +2,105 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 756F0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D8C8C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:44:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55C402074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:41:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2B0020734
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:44:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bT+muX/Z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p9vwKPys"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731626AbgFISlv (ORCPT
+        id S1731912AbgFISoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:41:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49384 "EHLO
+        Tue, 9 Jun 2020 14:44:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728380AbgFISls (ORCPT
+        with ESMTP id S1728410AbgFISoL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 14:41:48 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75381C03E97C
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 11:41:47 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id j10so22471468wrw.8
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 11:41:46 -0700 (PDT)
+        Tue, 9 Jun 2020 14:44:11 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB008C05BD1E;
+        Tue,  9 Jun 2020 11:44:09 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id t16so8375542plo.7;
+        Tue, 09 Jun 2020 11:44:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=nmaejAPqL7w5RZ3rYBTgKoizKjTpzF9/rXO7+RKEnFs=;
-        b=bT+muX/ZHRyFVoKnvmGjZYEBoJBSQhFE7M258fsMuSAMDYowHgy3BXIG/jHiBLN3Eu
-         j44yKp2S1Qr5XCQKMWibyk0jNOe5ZUqG43z0mTcQgB8TqqYUAilZ/+TflAKsIoD+DYg1
-         GiUnrBLUYvuXERBXq188+PcxnG+tGm3IfxkW3Wq0xTDoNESuL/TXFOE+ZgasGd5La3cx
-         0RN999iXgJC2v/eadBv1wABQnyJuHz70FaHCXXpaWaEftcJLu5dCN01Qk2HOHHG4dywz
-         Noa2fAHca/bEcEoRRIgF3kdGyr3gXsT44NPGuPONy9VKwePCyay2oPzNkfZ81KyeTGx+
-         F5zQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uU2WSCc5fTUsgnysxzRNJxs8r/CkSU3tfyTjN091RxU=;
+        b=p9vwKPysRmyJpJidWcr/XZ5LPsj43gV5ylOJjIZy175anrIA0q0aXevn1w6L/tHw/2
+         CilRpz/A8s2Xgv66x+c5mJz9vnhs1M0AgkR2ZcF8llNB8ODgtv7yARYe8yqWxe67VcSl
+         eIXVmSioCEdDx/33i6p7MvUfrvtYy0/HDQhyuhDHJ58n7e+r5VBzSLiCXZSxfQG0tRcR
+         HhEnSrEO2ZuW9ibsFl4klHuJQsc7z0gSzT+Z3WRuhOoCOCAzEQ5MKiVF31zRcd6kdTFq
+         FfHFfprwiRoFz7vM50w46S4UN0PGMn6qorzg0xzKNinpDPZFMCCj1pEYjInhfYtc+Hwn
+         77PQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=nmaejAPqL7w5RZ3rYBTgKoizKjTpzF9/rXO7+RKEnFs=;
-        b=ZoUY0GdS2S42smX3QExBUdP1f1csTaDmzSKZ4LDdXmXHjAq6h/01fhauLlOhEwOsF6
-         T5oZXJmVeYzJIhfY1M1r0o3yfQLMk/I8rTexlJc9K7AkuGj7kAPX2Pbed/xsbDvSZ43o
-         nxwqUkcKMPIhkqXaKXFtj6V3GBcNSGoZgy3AKeJbAp1sK4FkqghIQxlFZyP7/75rcPAy
-         1DKo3dUmGOmekioqYAx1NvcKjUih36WZt4Odf+isdqVunES5kqq9mIbqgaTglwqQJfcQ
-         q+H8cXRqovJr1rvkksdVl3RltCcIXj82KFUX6dKC21HVyQj1p2xCZTeJZ+iqezBW2SRe
-         ZPfQ==
-X-Gm-Message-State: AOAM5332oj8k9zGdByc8pLQPHTeY5oOlbLjaMLOkBrssmA6tlo5NJ8rn
-        qnqhACIw65W2jxQmbyp7+TvSfg==
-X-Google-Smtp-Source: ABdhPJx5FO/vEubUSX2PK6P+KpZvhjPdNngyh29RNODEGr7a4h7Gn46X2+6wYsXyxNUmt6ZTCXwdvQ==
-X-Received: by 2002:adf:f44b:: with SMTP id f11mr5884154wrp.165.1591728105471;
-        Tue, 09 Jun 2020 11:41:45 -0700 (PDT)
-Received: from dell ([2.27.167.101])
-        by smtp.gmail.com with ESMTPSA id 40sm4694407wrc.15.2020.06.09.11.41.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 11:41:44 -0700 (PDT)
-Date:   Tue, 9 Jun 2020 19:41:42 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Michael Walle <michael@walle.cc>, Mark Brown <broonie@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        david.m.ertman@intel.com, shiraz.saleem@intel.com,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld
- management controller
-Message-ID: <20200609184142.GN4106@dell>
-References: <20200608082827.GB3567@dell>
- <CAHp75VdiH=J-ovCdh1RFJDW_bJM8=pbXRaHmB691GLb-5oBmYQ@mail.gmail.com>
- <7d7feb374cbf5a587dc1ce65fc3ad672@walle.cc>
- <20200608185651.GD4106@dell>
- <32231f26f7028d62aeda8fdb3364faf1@walle.cc>
- <20200609064735.GH4106@dell>
- <32287ac0488f7cbd5a7d1259c284e554@walle.cc>
- <20200609144201.GK4583@sirena.org.uk>
- <a2bae71634fe288f067d5e92090b7561@walle.cc>
- <20200609171520.GC1019634@bogus>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uU2WSCc5fTUsgnysxzRNJxs8r/CkSU3tfyTjN091RxU=;
+        b=dkMXabmKuCPIb5VuIkPE1uZtBPiMOxP210rDM8F8s8hLxvUZbOk62Sa83CztWrRRkZ
+         8Hk4HBs+e2a+KcjzfM+7iugzHmr2ZpXPNhQ4UDwNKCKZWkfwgOLICnFx6GBmR3ZFWP0H
+         8hyB+/j8ubJMRGnsnwClMb2dSPlwjU0KC9xsJhbNVMI9SZVEVP+ZtlxXZu6Kj71FaHWB
+         YCrkaTZPyd77J4XU7sx+sT8Lny0TW4duJTDYL0+A1MQejJRxp8F+UvymUhqRYz9fsay7
+         tObUhi0Lk1ewnzz8MgRMhCkTMt+ivLJHmdAIaO/rtc5gjGFmwhLSgh/DPhsyBsP3lv3K
+         6KwA==
+X-Gm-Message-State: AOAM532dEr6b2R3vs9OQWko320/Mr8cQ7j3lEJDMFTZHrKwKHhBfqG/F
+        3Iudu+X/8eqRnnyAGAMEemN0GMx7bAJxsxr8NVs=
+X-Google-Smtp-Source: ABdhPJx0RiX4lxJ3jtBScoX+hSRo7BJa7PbBAuUa09WsYVDwWWg5oyAqW2t/Zz4dsplunUK1BR4yGxVPksOs9RAEVnw=
+X-Received: by 2002:a17:90a:b30d:: with SMTP id d13mr6162606pjr.181.1591728249457;
+ Tue, 09 Jun 2020 11:44:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200609171520.GC1019634@bogus>
+References: <20200609175003.19793-1-nsaenzjulienne@suse.de> <20200609175003.19793-8-nsaenzjulienne@suse.de>
+In-Reply-To: <20200609175003.19793-8-nsaenzjulienne@suse.de>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 9 Jun 2020 21:43:57 +0300
+Message-ID: <CAHp75VcxjpMYgQV+Mv2_A6gT+qkG_Kihe4Ke+avJ6e6UNdZCnA@mail.gmail.com>
+Subject: Re: [PATCH v2 7/9] usb: host: pci-quirks: Bypass xHCI quirks for
+ Raspberry Pi 4
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        USB <linux-usb@vger.kernel.org>,
+        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        tim.gover@raspberrypi.org, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 09 Jun 2020, Rob Herring wrote:
+On Tue, Jun 9, 2020 at 8:50 PM Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
+>
+> The board doesn't need the quirks to be run, and takes care of its own
+> initialization trough a reset controller device. So let's bypass them.
 
-> On Tue, Jun 09, 2020 at 05:01:17PM +0200, Michael Walle wrote:
-> > Am 2020-06-09 16:42, schrieb Mark Brown:
-> > > On Tue, Jun 09, 2020 at 04:38:31PM +0200, Michael Walle wrote:
-> > > 
-> > > >   mfd-device@10 {
-> > > >     compatible = "simple-regmap", "simple-mfd";
-> > > >     reg = <10>;
-> > > >     regmap,reg-bits = <8>;
-> > > >     regmap,val-bits = <8>;
-> > > >     sub-device@0 {
-> > > >       compatible = "vendor,sub-device0";
-> > > >       reg = <0>;
-> > > >     };
-> > > 
-> > > A DT binding like this is not a good idea, encoding the details of the
-> > > register map into the DT binding makes it an ABI which is begging for
-> > > trouble.  I'd also suggest that any device using a generic driver like
-> > > this should have a specific compatible string for the device so we can
-> > > go back and add quirks later if we need them.
-> > 
-> > Like in the spidev case, yes. But OTOH if I _just_ encode the parameters
-> > for the regmap a MFD, Lee don't agree because its just a shim. So either
-> > way I seem to be stuck here.
-> > 
-> > Where should I put the code to create an i2c driver, init a regmap and
-> > populate its childen?
-> 
-> Find another driver doing this already and rename it 'simple-mfd' (no 
-> relation to the DT binding) and add your compatible string to it. 
-> 'Generic' or 'simple' drivers don't require generic/simple DT bindings.
+through
 
-Creating a generic driver is one of the options spinning around in my
-head.  If nothing better comes of these discussions, I'll turn my hand
-to it soon.
+...
 
-> Or extend the existing syscon driver to look up the bus_type and create 
-> the regmap based on the bus type?
+> +       if (pdev->vendor == PCI_VENDOR_ID_VIA && pdev->device == 0x3483 &&
+> +           of_device_is_compatible(of_get_parent(pdev->bus->dev.of_node),
+> +                                   "brcm,bcm2711-pcie"))
+> +               return;
+
+No put?
 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+With Best Regards,
+Andy Shevchenko
