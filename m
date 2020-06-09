@@ -2,102 +2,101 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F6EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:32:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 661A3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1250420691
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:32:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SgB1Sx4b"
+	by mail.kernel.org (Postfix) with ESMTP id 4A92720691
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:34:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731777AbgFIRct (ORCPT
+        id S1731807AbgFIReK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:32:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38758 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726848AbgFIRct (ORCPT
+        Tue, 9 Jun 2020 13:34:10 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51748 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726848AbgFIReJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:32:49 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43D0CC05BD1E;
-        Tue,  9 Jun 2020 10:32:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=1CWK56Bk1GHrXr3w3wzon+FcpFohKqu88sAYSOQgEFM=; b=SgB1Sx4bvrGnT6eCMKkEU2oRDe
-        aEDNmi4SqOfNTU2RS6Uo9FTIA80ZIRAVjR4R9xmjvj6jF/lYVsaBAIiV8pU/0krzPgXowjGlqkkQC
-        z7RcZIIbY4PFTJT5Gm3zIMBvI5uCJ8VFmDwCoyH7hIMR+KJW3u6wjzMKQPHSW/7QXkL9i3bmFrxKv
-        wQphVfi3F3EgFov+NqfSD33cizDNsjdBTZanKVDRox1HYJZc4o5BNYVWDpEEwhvZvms3loyYaCwbi
-        wwt8+K970BTHWvvaN9z8Syq+/454isZbXPaz5YULTfJtGYA6hu4jjrDiHELsJiYkjkByTF+Q9vbaF
-        MkIz44FQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jii6k-0004OT-Be; Tue, 09 Jun 2020 17:32:18 +0000
-Date:   Tue, 9 Jun 2020 10:32:18 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>,
-        axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        ming.lei@redhat.com, nstange@suse.de, akpm@linux-foundation.org,
-        mhocko@suse.com, yukuai3@huawei.com, martin.petersen@oracle.com,
-        jejb@linux.ibm.com, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
-Subject: Re: [PATCH v6 6/6] blktrace: fix debugfs use after free
-Message-ID: <20200609173218.GA7968@infradead.org>
-References: <20200608170127.20419-1-mcgrof@kernel.org>
- <20200608170127.20419-7-mcgrof@kernel.org>
- <20200609150602.GA7111@infradead.org>
- <20200609172922.GP11244@42.do-not-panic.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200609172922.GP11244@42.do-not-panic.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Tue, 9 Jun 2020 13:34:09 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 059HCGDP073608;
+        Tue, 9 Jun 2020 13:34:06 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31jemaghff-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 09 Jun 2020 13:34:05 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 059HNvaN109837;
+        Tue, 9 Jun 2020 13:34:05 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31jemaghey-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 09 Jun 2020 13:34:05 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 059HUKOh013946;
+        Tue, 9 Jun 2020 17:34:03 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma04fra.de.ibm.com with ESMTP id 31g2s7tk3h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 09 Jun 2020 17:34:03 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 059HY1Rf61472978
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 9 Jun 2020 17:34:01 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 21F9442042;
+        Tue,  9 Jun 2020 17:34:01 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4C1AA42045;
+        Tue,  9 Jun 2020 17:34:00 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.146.136])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  9 Jun 2020 17:34:00 +0000 (GMT)
+Message-ID: <1591724039.5567.33.camel@linux.ibm.com>
+Subject: Re: [PATCH v3] IMA: Add audit log for failure conditions
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Richard Guy Briggs <rgb@redhat.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Cc:     Steve Grubb <sgrubb@redhat.com>, linux-integrity@vger.kernel.org,
+        linux-audit@redhat.com, linux-kernel@vger.kernel.org
+Date:   Tue, 09 Jun 2020 13:33:59 -0400
+In-Reply-To: <20200609171555.itbllvtgjdanbbk7@madcap2.tricolour.ca>
+References: <20200608215343.4491-1-nramas@linux.microsoft.com>
+         <27448076.Og45N0Lxmj@x2>
+         <ada45440-aefd-a4b2-2a3b-c012872e86cb@linux.microsoft.com>
+         <3776526.Vj75JV9fuy@x2>
+         <518a51b7-6c8d-f55f-c73a-b15abae8e0af@linux.microsoft.com>
+         <20200609171555.itbllvtgjdanbbk7@madcap2.tricolour.ca>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-09_10:2020-06-09,2020-06-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ lowpriorityscore=0 spamscore=0 priorityscore=1501 cotscore=-2147483648
+ bulkscore=0 mlxscore=0 clxscore=1015 suspectscore=0 adultscore=0
+ phishscore=0 mlxlogscore=854 impostorscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006090130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 05:29:22PM +0000, Luis Chamberlain wrote:
-> Is scsi-generic is the only unwanted ugly child blktrace has to deal
-> with? For some reason I thought drivers/md/md.c was one but it seems
-> like it is not. Do we have an easy way to search for these? I think
-> this would just affect how we express the comment only.
+Hi Richard,
 
-grep for blk_trace_setup.  For all blk devices that setup comes in
-through the block device ioctl path, and that relies on having a
-struct block_device and queue.  sg on the other hand calls
-blk_trace_setup directly with a NULL bdev argument.
+On Tue, 2020-06-09 at 13:15 -0400, Richard Guy Briggs wrote:
+> On 2020-06-09 10:00, Lakshmi Ramasubramanian wrote:
 
-> >  		 */
-> > -		dir = q->sg_debugfs_dir;
-> > +		dir = debugfs_create_dir(buts->name, blk_debugfs_root);
-> > +		bt->dir = dir;
-> 
-> The other chicken and egg problem to consider at least in the comments
-> is that the debugfs directory for these types of devices *have* an
-> exposed path, but the data structure is rather opaque to the device and
-> even blktrace.  Fortunately given the recent set of changes around the
-> q->blk_trace and clarifications around its use we have made it clear now
-> that so long as hold the q->blk_trace_mutex *and* check q->blk_trace we
-> *should* not race against two separate creations of debugfs directories,
-> so I think this is safe, so long as these indpendent drivers don't end
-> up re-using the same path for some other things later in the future, and
-> since we have control over what goes under debugfsroot block / I think
-> we should be good.
-> 
-> But I think that the concern for race on names may still be worth
-> explaining a bit here.
+> If it is added, it should be appended to the end of the record since it
+> is an existing record format, then in the case of res=1, errno= should
+> still be present (not swing in and out) and just contain zero.  (Or
+> another value if there is a non-fatal warning?)
 
-Feel free to add more comments, but please try to keep them short
-and crisp.  At the some point long comments really distract from what
-is going on.
+Thank you for the clarification.
+
+Mimi
