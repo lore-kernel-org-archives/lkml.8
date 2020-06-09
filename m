@@ -6,87 +6,123 @@ X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5956C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:51:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F45C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 953AE20734
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:51:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83EA420734
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:53:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbgFIUvg (ORCPT
+        id S1727040AbgFIUxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 16:51:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41348 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726909AbgFIUvf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 16:51:35 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7234C05BD1E
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 13:51:34 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jilCt-0001E2-Ga; Tue, 09 Jun 2020 22:50:51 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id E50D510154A; Tue,  9 Jun 2020 22:50:50 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        Alexander Potapenko <glider@google.com>
-Subject: Re: [patch V9 10/39] x86/entry: Provide helpers for execute on irqstack
-In-Reply-To: <87zh9cnfmg.fsf@nanos.tec.linutronix.de>
-References: <87zh9cnfmg.fsf@nanos.tec.linutronix.de>
-Date:   Tue, 09 Jun 2020 22:50:50 +0200
-Message-ID: <87wo4gnetx.fsf@nanos.tec.linutronix.de>
+        Tue, 9 Jun 2020 16:53:10 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60948 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725993AbgFIUxK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 16:53:10 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 0A9B4AD5F;
+        Tue,  9 Jun 2020 20:53:08 +0000 (UTC)
+Received: by lion.mk-sys.cz (Postfix, from userid 1000)
+        id 9845460485; Tue,  9 Jun 2020 22:53:03 +0200 (CEST)
+Date:   Tue, 9 Jun 2020 22:53:03 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     netdev@vger.kernel.org
+Cc:     Kees Cook <keescook@chromium.org>,
+        David Miller <davem@davemloft.net>, stephen@networkplumber.org,
+        o.rempel@pengutronix.de, andrew@lunn.ch, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, kuba@kernel.org, corbet@lwn.net,
+        linville@tuxdriver.com, david@protonic.nl, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org, linux@armlinux.org.uk,
+        mkl@pengutronix.de, marex@denx.de, christian.herber@nxp.com,
+        amitc@mellanox.com, petrm@mellanox.com
+Subject: Re: [PATCH ethtool v1] netlink: add master/slave configuration
+ support
+Message-ID: <20200609205303.z3kfoptj7w2jpnts@lion.mk-sys.cz>
+References: <202006091222.CB97F743AD@keescook>
+ <20200609.123437.1057990370119930723.davem@davemloft.net>
+ <202006091244.C8B5F9525@keescook>
+ <20200609.130517.1373472507830142138.davem@davemloft.net>
+ <202006091312.F91BB4E0CE@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202006091312.F91BB4E0CE@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Qian,
+On Tue, Jun 09, 2020 at 01:29:42PM -0700, Kees Cook wrote:
+> On Tue, Jun 09, 2020 at 01:05:17PM -0700, David Miller wrote:
+> > From: Kees Cook <keescook@chromium.org>
+> > Date: Tue, 9 Jun 2020 12:49:48 -0700
+> > 
+> > > Okay, for now, how about:
+> > > 
+> > > - If we're dealing with an existing spec, match the language.
+> > 
+> > Yes.
+> > 
+> > > - If we're dealing with a new spec, ask the authors to fix their language.
+> > 
+> > Please be more specific about "new", if it's a passed and ratified standard
+> > then to me it is "existing".
+> 
+> Sure. But many kernel devs are also interacting with specifications as
+> they're being developed. We can have an eye out for this when we're in
+> such positions.
 
-Thomas Gleixner <tglx@linutronix.de> writes:
->> BAD (after oom02)
->> # cat /sys/kernel/debug/stackdepot/info
->> Unique stacks: 140476
->
-> That's indeed odd. I try to reproduce and figure out what really breaks
-> here.
+I fully agree that this is the right place to raise concern like this.
+But I have to remind that here we are talking about implementation of an
+existing standard.
 
-I checked your config file and I think I know where this comes from. Can
-you plase disable KASAN just for testing purposes and compare before
-after again?
+> > > - If a new version of a spec has updated its language, adjust the kernel's.
+> > 
+> > Unless you're willing to break UAPI, which I'm not, I don't see how this is
+> > tenable.
+> 
+> We'll get there when we get there. I honestly don't think any old spec is
+> actually going to change their language; I look forward to being proven
+> wrong. But many times there is no UAPI. If it's some register states
+> between driver and hardware, no users sees or cares what the register
+> is named.
 
-Thanks,
+In my eyes, that would be one less reason to invent different names for
+them just to avoid someone being offended.
 
-        tglx
+If you look into include/linux/tcp.h, you can find this comment near the
+beginning of struct tcp_sock definition:
+
+/*
+ *	RFC793 variables by their proper names. This means you can
+ *	read the code and the spec side by side (and laugh ...)
+ *	See RFC793 and RFC1122. The RFC writes these in capitals.
+ */
+
+It is a bit confusing now as there have been some reorderings but you
+can see that even if it's an internal kernel data structure, original
+author(s) of the code considered it beneficial to use the same names as
+standard for the state variables so that people reading the code don't
+need a translation table between state variables in kernel code and in
+standards.
+
+The same IMHO holds for your example with register states or names:
+I believe it is highly beneficial to make them consistent with technical
+documentation. There are even cases where we violate kernel coding style
+(e.g. by using camelcase) to match the names from specification.
+
+> > This is why I'm saying, just make sure new specs use language that is
+> > less controversial.  Then we just use what the specs use.
+> > 
+> > Then you don't have to figure out what to do about established UAPIs
+> > and such, it's a non-issue.
+> 
+> Yes, but there are places where people use these terms where they are
+> NOT part of specs, and usually there is actually _better_ terminology
+> to be used, and we can easily stop adding those. And we can start to
+> rename old "independent" cases too.
+
+Surely there are - but it is not the case here.
+
+Michal
