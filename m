@@ -2,98 +2,98 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F92AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD8EC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1018B2074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:36:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD8BA20774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:36:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="itb2uLnc"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WD1/Wl8I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731863AbgFIRgZ (ORCPT
+        id S1731875AbgFIRgd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:36:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39302 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728848AbgFIRgX (ORCPT
+        Tue, 9 Jun 2020 13:36:33 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:47602 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728848AbgFIRgc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:36:23 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73A0EC05BD1E;
-        Tue,  9 Jun 2020 10:36:22 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id y123so12533864vsb.6;
-        Tue, 09 Jun 2020 10:36:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=+hfc168tUC+zhE7HdDbSPvhxjLmLqzpSRuwOiO02lUo=;
-        b=itb2uLncUa38xuwzhKPG/cAifugxmQadT0b48g7STne0gbk3dYlJLHyvrrgArOoE+g
-         qN5+xW0Sy643o1KJ42gsdooR6Kfk1UaeFE0DFm2TK5OEidPfa0gec1D42Pq2kI2linJe
-         lBnS80uFIDJlutSoSyBgy99oynDCbR+nV1NObnIE29IOfr8Q3f48pQD4E4HD+IY7fmBR
-         3eGYJJqr7Faqyo7a2X/Pk38PXkCl/uBYBcv7+L7UaTQghus1ROrWYJ1Rf+aioPB3joJX
-         /pQeFm+RLm+MzAdDsRRYg2LKGBFsEG16IyGPUqE8q8YutEupgk7FgqD/O+FNqWXtlFOW
-         g0oQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=+hfc168tUC+zhE7HdDbSPvhxjLmLqzpSRuwOiO02lUo=;
-        b=RhTMH9d1zctADiEXliGpCIrf68kXSzf9kkv77Irxkqom3EQ1PLOQvcACu1rDWdBW+b
-         aqnBiCVRvfxv1OTd3S9HzPJZo1hB+4x8EGmW73YT6R+T8mP9LxUN2fb/OE5D2K8UAe4r
-         DJJn200DKSVmbd9XEykE1H928DXWDJLwHi9Lw5OZps0f4mYdIZUrRzRzg8jV/g7qr7Gr
-         8RB9lu5/I4uHw6iIN7fFLrZuHkGfjrL4OQGS6b7PVEYamgQXzBF+LmHGtzNfn4n1e3vj
-         QFdpgTtqZrDLv5diX137E27/BzHOmwBJUMUYWne8riObiJ1Jxz6QBe5ah0OAjCJJdPxl
-         4Tcw==
-X-Gm-Message-State: AOAM5323G70U7OQw4nrkVk2oBQXTxHU2wwW1MMXOyUFwpk3jrw5o4493
-        i3RFwRwRjHTWPrD8waFXFwwD0mUpKku1As5Cy+8Sbf2q
-X-Google-Smtp-Source: ABdhPJw/2fTGJwqklKkrDcB2UArjf16hmbr6TKwovs2+xdL81BE0n7Ouu4tJufHdu+KSm0ZrX2s861SskYQXto5PLDc=
-X-Received: by 2002:a05:6102:20c8:: with SMTP id i8mr4861338vsr.106.1591724181524;
- Tue, 09 Jun 2020 10:36:21 -0700 (PDT)
+        Tue, 9 Jun 2020 13:36:32 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 059HZot6046157;
+        Tue, 9 Jun 2020 12:35:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591724150;
+        bh=ulNJut/tfEzVpGlFxRW9r3khnz5f2N4uIk9e8tk29mw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=WD1/Wl8ITIn7CjclZy8e17qbQLxWjWCaCvCqb65B93zj5us74qrqpR8T1MnTxMYlY
+         5v0sKw9NGKDOVQ0MTB6pQKAnYkoDUV7U5nNvb3gy+f6wFygEErcdbDyCfIGRlRUC4n
+         i98wZPpburooNob5kL+A/PK4RpcG6WiFOhCnKaoc=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 059HZom8051593
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 9 Jun 2020 12:35:50 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 9 Jun
+ 2020 12:35:50 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 9 Jun 2020 12:35:50 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 059HZo2k032887;
+        Tue, 9 Jun 2020 12:35:50 -0500
+Subject: Re: [RFC PATCH 1/2] dt-bindings: tas2562: Add firmware support for
+ tas2563
+To:     Mark Brown <broonie@kernel.org>
+CC:     <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
+        <robh@kernel.org>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20200609172841.22541-1-dmurphy@ti.com>
+ <20200609172841.22541-2-dmurphy@ti.com> <20200609173143.GN4583@sirena.org.uk>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <bb7cff87-f814-1b37-c9eb-e68919e3c077@ti.com>
+Date:   Tue, 9 Jun 2020 12:35:50 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-From:   Pintu Agarwal <pintu.ping@gmail.com>
-Date:   Tue, 9 Jun 2020 23:06:10 +0530
-Message-ID: <CAOuPNLj4m_jvs90YpAq5r4gAP9o8Y1Uck3HN+MbsTPb3zP=4eA@mail.gmail.com>
-Subject: Generic way for verifying GPIO wakeup capability
-To:     Kernelnewbies <kernelnewbies@kernelnewbies.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-pm@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, linux-gpio@vger.kernel.org,
-        zonque@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200609173143.GN4583@sirena.org.uk>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+Mark
 
-I am looking for ways to wakeup any devices (from sleep) using any
-arbitrary gpio wakeup method in a generic way (either from user space
-or kernel space) that should work on any kernel version (starting from
-4.14 onwards).
+On 6/9/20 12:31 PM, Mark Brown wrote:
+> On Tue, Jun 09, 2020 at 12:28:40PM -0500, Dan Murphy wrote:
+>> Add a property called firmware-name that will be the name of the
+>> firmware that will reside in the file system or built into the kernel.
+> Why not just use a standard name for the firmware?  If the firmwares
+> vary per-board then building it using the machine compatible (or DMI
+> info) could handle that, with a fallback to a standard name for a
+> default setup.
 
-What are the options available right now ?
-I wanted to experiment with all of them and decide which is best for us.
+The number of firmwares can vary per IC on the board itself.  So you may 
+have X number of firmware files all with different names all targets for 
+different TAS2563 ICs.
 
-Is /sys/class/gpio/ method still valid with the latest kernel ?
-Or is there any other method to do it from user space ?
+Also TI will not be providing the individual binaries to the customer.  
+There is a customer tool that the user uses to create the binaries.
 
-One option I know is to use enable/disable_irq_wake() API from kernel
-driver suspend/resume path.
-Just like this:
-https://lwn.net/Articles/569027/
+So the output names are arbitrary.
 
-But this requires an additional kernel driver and device-tree changes
-for each gpio wakeup, which the end-user needs to implement on their
-own.
+I was going to mention this in the cover letter but did not think 
+mentioning the user tool had any value
 
-Is there any other existing generic mechanism?
+Dan
 
-
-Thanks,
-Pintu
