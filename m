@@ -2,395 +2,144 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB69C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:15:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1BF5C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:15:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D99C206A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:15:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A020D20691
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:15:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KBfezS03"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728187AbgFIMPG convert rfc822-to-8bit (ORCPT
+        id S1729196AbgFIMPQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 08:15:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46050 "EHLO
+        Tue, 9 Jun 2020 08:15:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726395AbgFIMPE (ORCPT
+        with ESMTP id S1728184AbgFIMPK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 08:15:04 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 345C9C05BD1E
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 05:15:04 -0700 (PDT)
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1jid9g-00086c-JV; Tue, 09 Jun 2020 14:15:00 +0200
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1jid9f-0004Vl-Vg; Tue, 09 Jun 2020 14:14:59 +0200
-Message-ID: <d2f30dbde89050e428b61092a1e5bbcf8d257129.camel@pengutronix.de>
-Subject: Re: [PATCH v1 2/2] usb: phy: Add USB3 PHY support for Intel LGM SoC
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        linux-kernel@vger.kernel.org, balbi@kernel.org
-Cc:     gregkh@linuxfoundation.org, robh@kernel.org,
-        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yin1.li@intel.com,
-        andriy.shevchenko@intel.com
-Date:   Tue, 09 Jun 2020 14:14:59 +0200
-In-Reply-To: <20200609110850.43469-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-References: <20200609110850.43469-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-         <20200609110850.43469-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
+        Tue, 9 Jun 2020 08:15:10 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6927AC05BD1E
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 05:15:10 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id y18so7969087plr.4
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 05:15:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0dKW+Kd5iAiFQPX60Bp7aaI38nX4AF0yQ8hLDeb5gc8=;
+        b=KBfezS03XZHLwY+2mBULAXoYYfvOAwPXvOpLQ4oldt9JOjJj5BCo87GEH1U634kCDU
+         h9+NoNelKMT0YAbAYjhKOTqfTV+tZviVfeDEGQj6Gm3fkm5fN2JBAgMKpZ/C2Fm5T6TJ
+         UIWr65WS202gyJv0e/vjq1AwykOBvPJ1XUM6aoJ9xuGBve2+KEqxmBhwS2u1RbGQEevt
+         ZEZcpxXjaasTlvOrgOTujW8C+/ygguQ/kb0lqJRDnxdOkl/NGHm31IZZLhtZHYwbO/6h
+         UECM4cHEaKe1I5i6V8ua8N/hBFjqvkCFZBeHWY9kaMHeFc2fqYO2A7ahjn632SC8WWeR
+         ApOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0dKW+Kd5iAiFQPX60Bp7aaI38nX4AF0yQ8hLDeb5gc8=;
+        b=V4sYNxiL8HdQJElrcZsiZ+dVLsbxowTV97SioDGaK/9d+oNTkGkr6jU3kXrQNPxABg
+         J21UZwz+i1WgOB1C473ah8U+zx2UBfc5XuUABbyQkcgqbw6i5jqraqLvgcsNST5XqPh5
+         fJcglGuRPEARUFgL6U3af1kCg+67/gDUrnLjCk3gvAtX1Ig9GpASEjMgxoTOT5uab/Fy
+         1f+RQEnqVaAa+91XZvZFeO9tHiKH4902/1lqvCZiAvYcQsx8R2KHTwc9W0CAC3fxM8iQ
+         H+4PovM2SWTI7f9kmLuQVMT5nsIAzdDL9wxcQKC83DX4HoIMsAyZy0dJY6eH6wGCJFdt
+         uSEQ==
+X-Gm-Message-State: AOAM533LLFQS2fBiRWnijBzxFa1qYjTTzJKYj6lFBj+PHwnPCpJqRmI5
+        OYZOkxImgQ2vy6aY+R8zNt8=
+X-Google-Smtp-Source: ABdhPJzgMu3yWE9LnAFG9gGAMC7UrErODLlG4QecO4O0nsWOWfTXYEv2cpZuEl1oLyvhscdLH5us0Q==
+X-Received: by 2002:a17:902:ea92:: with SMTP id x18mr3046191plb.157.1591704909657;
+        Tue, 09 Jun 2020 05:15:09 -0700 (PDT)
+Received: from localhost ([49.207.50.180])
+        by smtp.gmail.com with ESMTPSA id k7sm7624998pfp.84.2020.06.09.05.15.08
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 09 Jun 2020 05:15:08 -0700 (PDT)
+Date:   Tue, 9 Jun 2020 17:45:06 +0530
+From:   afzal mohammed <afzal.mohd.ma@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: ARM: vmsplit 4g/4g
+Message-ID: <20200609121506.GA7846@afzalpc>
+References: <CAK8P3a2PNZY-9L9+SFDLtrp731ZGo6Nbs-7jY6E2PwWXa0kfKw@mail.gmail.com>
+ <20200514133545.GA5020@afzalpc>
+ <CAK8P3a1PVwkAi8ycUAB-7EMk4nQ_qOu0rC5vJAQk_q9j5xvOJw@mail.gmail.com>
+ <20200516060624.GA6371@afzalpc>
+ <CAK8P3a01FYoWY9sZKU1q=UQ3ut4srwXXUeGRzW6APi+GpoKo1w@mail.gmail.com>
+ <20200607125932.GA4576@afzalpc>
+ <CAK8P3a2=o6RkONUoHTaR-2jpXg-wa-YnCYi0a4gAknYmvu8X7Q@mail.gmail.com>
+ <20200608111834.GB5736@afzalpc>
+ <CAK8P3a1q51=_DUS1A8k67c3TyQ+7LTpeo98LmzoFK=qg+8Fktw@mail.gmail.com>
+ <20200608151727.GA5017@afzalpc>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200608151727.GA5017@afzalpc>
+User-Agent: Mutt/1.9.3 (2018-01-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ramuthevar,
+Hi,
 
-On Tue, 2020-06-09 at 19:08 +0800, Ramuthevar,Vadivel MuruganX wrote:
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+On Mon, Jun 08, 2020 at 08:47:27PM +0530, afzal mohammed wrote:
+> On Mon, Jun 08, 2020 at 04:43:57PM +0200, Arnd Bergmann wrote:
+
+> > There is another difference: get_user_pages_fast() does not return
+> > a  vm_area_struct pointer, which is where you would check the access
+> > permissions. I suppose those pointers could not be returned to callers
+> > that don't already hold the mmap_sem.
 > 
-> Add support for USB PHY on Intel LGM SoC.
-> 
-> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> ---
->  drivers/usb/phy/Kconfig       |  11 ++
->  drivers/usb/phy/Makefile      |   1 +
->  drivers/usb/phy/phy-lgm-usb.c | 269 ++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 281 insertions(+)
->  create mode 100644 drivers/usb/phy/phy-lgm-usb.c
-> 
-> diff --git a/drivers/usb/phy/Kconfig b/drivers/usb/phy/Kconfig
-> index 4b3fa78995cf..95f2e737d663 100644
-> --- a/drivers/usb/phy/Kconfig
-> +++ b/drivers/usb/phy/Kconfig
-> @@ -192,4 +192,15 @@ config JZ4770_PHY
->  	  This driver provides PHY support for the USB controller found
->  	  on the JZ4770 SoC from Ingenic.
->  
-> +config USB_LGM_PHY
-> +	tristate "INTEL Lightning Mountain USB PHY Driver"
-> +	depends on USB_SUPPORT
-> +	select USB_PHY
-> +	select REGULATOR
-> +	select REGULATOR_FIXED_VOLTAGE
-> +	help
-> +	  Enable this to support Intel DWC3 PHY USB phy. This driver provides
-> +	  interface to interact with USB GEN-II and USB 3.x PHY that is part
-> +	  of the Intel network SOC.
-> +
->  endmenu
-> diff --git a/drivers/usb/phy/Makefile b/drivers/usb/phy/Makefile
-> index b352bdbe8712..ef5345164e10 100644
-> --- a/drivers/usb/phy/Makefile
-> +++ b/drivers/usb/phy/Makefile
-> @@ -25,3 +25,4 @@ obj-$(CONFIG_USB_ULPI)			+= phy-ulpi.o
->  obj-$(CONFIG_USB_ULPI_VIEWPORT)		+= phy-ulpi-viewport.o
->  obj-$(CONFIG_KEYSTONE_USB_PHY)		+= phy-keystone.o
->  obj-$(CONFIG_JZ4770_PHY)		+= phy-jz4770.o
-> +obj-$(CONFIG_USB_LGM_PHY)		+= phy-lgm-usb.o
-> diff --git a/drivers/usb/phy/phy-lgm-usb.c b/drivers/usb/phy/phy-lgm-usb.c
-> new file mode 100644
-> index 000000000000..66cb327b7b71
-> --- /dev/null
-> +++ b/drivers/usb/phy/phy-lgm-usb.c
-> @@ -0,0 +1,269 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Intel LGM USB PHY driver
-> + *
-> + * Copyright (C) 2020 Intel Corporation.
-> + */
-> +
-> +#include <linux/bitfield.h>
-> +#include <linux/delay.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/reset.h>
-> +#include <linux/usb/phy.h>
-> +#include <linux/workqueue.h>
-> +
-> +#define CTRL1_OFFSET		0x14
-> +#define SRAM_EXT_LD_DONE	BIT(25)
-> +#define SRAM_INIT_DONE		BIT(26)
-> +
-> +#define TCPC_OFFSET		0x1014
-> +#define TCPC_MUX_CTL		GENMASK(1, 0)
-> +#define MUX_NC			0
-> +#define MUX_USB			1
-> +#define MUX_DP			2
-> +#define MUX_USBDP		3
-> +#define TCPC_FLIPPED		BIT(2)
-> +#define TCPC_LOW_POWER_EN	BIT(3)
-> +#define TCPC_VALID		BIT(4)
-> +#define TCPC_DISCONN		\
-> +	(TCPC_VALID | FIELD_PREP(TCPC_MUX_CTL, MUX_NC) | TCPC_LOW_POWER_EN)
-> +
-> +static const char *const PHY_RESETS[] = { "phy31", "phy", };
-> +static const char *const CTL_RESETS[] = { "apb", "ctrl", };
-> +
-> +struct tca_apb {
-> +	struct reset_control *resets[ARRAY_SIZE(PHY_RESETS)];
-> +	struct regulator *vbus;
-> +	struct work_struct wk;
-> +	struct usb_phy phy;
-> +
-> +	bool phy_initialized;
-> +	bool connected;
-> +};
-> +
-> +static int get_flipped(struct tca_apb *ta, bool *flipped)
-> +{
-> +	union extcon_property_value property;
-> +	int ret;
-> +
-> +	ret = extcon_get_property(ta->phy.edev, EXTCON_USB_HOST,
-> +				  EXTCON_PROP_USB_TYPEC_POLARITY, &property);
-> +	if (ret) {
-> +		dev_err(ta->phy.dev, "no polarity property from extcon\n");
-> +		return false;
-> +	}
-> +
-> +	*flipped = property.intval;
-> +
-> +	return *flipped;
-> +}
-> +
-> +static int phy_init(struct usb_phy *phy)
-> +{
-> +	struct tca_apb *ta = container_of(phy, struct tca_apb, phy);
-> +	void __iomem *ctrl1 = phy->io_priv + CTRL1_OFFSET;
-> +	int val, ret, i;
-> +
-> +	if (ta->phy_initialized)
-> +		return 0;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(PHY_RESETS); i++)
-> +		reset_control_deassert(ta->resets[i]);
-> +
-> +	ret = readl_poll_timeout(ctrl1, val, val & SRAM_INIT_DONE,
-> +				 10, 10 * 1000);
-> +	if (IS_ERR(ret)) {
-> +		dev_err(ta->phy.dev, "SRAM init failed, 0x%x\n", val);
-> +		return PTR_ERR(ret);
-> +	}
-> +
-> +	writel(readl(ctrl1) | SRAM_EXT_LD_DONE, ctrl1);
-> +
-> +	ta->phy_initialized = true;
-> +	if (!ta->phy.edev)
-> +		return phy->set_vbus(phy, true);
-> +
-> +	schedule_work(&ta->wk);
-> +
-> +	return 0;
-> +}
-> +
-> +static void phy_shutdown(struct usb_phy *phy)
-> +{
-> +	struct tca_apb *ta = container_of(phy, struct tca_apb, phy);
-> +	int i;
-> +
-> +	if (!ta->phy_initialized)
-> +		return;
-> +
-> +	ta->phy_initialized = false;
-> +	flush_work(&ta->wk);
-> +	ta->phy.set_vbus(&ta->phy, false);
-> +	if (ta->connected) {
-> +		ta->connected = false;
-> +		writel(TCPC_DISCONN, ta->phy.io_priv + TCPC_OFFSET);
-> +	}
-> +
-> +	for (i = 0; i < ARRAY_SIZE(PHY_RESETS); i++)
-> +		reset_control_assert(ta->resets[i]);
-> +}
-> +
-> +static int phy_set_vbus(struct usb_phy *phy, int on)
-> +{
-> +	struct tca_apb *ta = container_of(phy, struct tca_apb, phy);
-> +	int ret = 0;
-> +
-> +	if (on) {
-> +		ret = regulator_enable(ta->vbus);
-> +		if (ret)
-> +			dev_err(ta->phy.dev, "regulator not enabled\n");
-> +	} else {
-> +		ret = regulator_disable(ta->vbus);
-> +		if (ret)
-> +			dev_err(ta->phy.dev, "regulator not disabled\n");
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static void tca_work(struct work_struct *work)
-> +{
-> +	struct tca_apb *ta = container_of(work, struct tca_apb, wk);
-> +	union extcon_property_value property;
-> +	bool connected;
-> +	bool flipped;
-> +	u32 val;
-> +	int ret;
-> +
-> +	ret = get_flipped(ta, &flipped);
-> +	if (!ret)
-> +		dev_err(ta->phy.dev, "no polarity property from extcon\n");
-> +
-> +	connected = extcon_get_state(ta->phy.edev, EXTCON_USB_HOST);
-> +	if (connected == ta->connected)
-> +		return;
-> +
-> +	ta->connected = connected;
-> +	if (connected) {
-> +		val = TCPC_VALID | FIELD_PREP(TCPC_MUX_CTL, MUX_USB);
-> +		if (flipped)
-> +			val |= TCPC_FLIPPED;
-> +		dev_info(ta->phy.dev, "connected%s\n", flipped ? " flipped" : "");
-> +	} else {
-> +		val = TCPC_DISCONN;
-> +		dev_info(ta->phy.dev, "disconnected\n");
-> +	}
-> +
-> +	writel(val, ta->phy.io_priv + TCPC_OFFSET);
-> +
-> +	if (ta->phy.set_vbus(&ta->phy, connected))
-> +		dev_err(ta->phy.dev, "failed to set VBUS\n");
-> +}
-> +
-> +static int id_notifier(struct notifier_block *nb, unsigned long event, void *ptr)
-> +{
-> +	struct tca_apb *ta = container_of(nb, struct tca_apb, phy.id_nb);
-> +
-> +	if (ta->phy_initialized)
-> +		schedule_work(&ta->wk);
-> +
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static int vbus_notifier(struct notifier_block *nb, unsigned long event, void *ptr)
-> +{
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static int phy_probe(struct platform_device *pdev)
-> +{
-> +	struct reset_control *resets[ARRAY_SIZE(CTL_RESETS)];
-> +	struct device *dev = &pdev->dev;
-> +	struct usb_phy *phy;
-> +	struct tca_apb *ta;
-> +	int i;
-> +
-> +	ta = devm_kzalloc(dev, sizeof(*ta), GFP_KERNEL);
-> +	if (!ta)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, ta);
-> +	INIT_WORK(&ta->wk, tca_work);
-> +
-> +	phy = &ta->phy;
-> +	phy->dev = dev;
-> +	phy->label = dev_name(dev);
-> +	phy->type = USB_PHY_TYPE_USB3;
-> +	phy->init = phy_init;
-> +	phy->shutdown = phy_shutdown;
-> +	phy->set_vbus = phy_set_vbus;
-> +	phy->id_nb.notifier_call = id_notifier;
-> +	phy->vbus_nb.notifier_call = vbus_notifier;
-> +
-> +	phy->io_priv = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(phy->io_priv))
-> +		return PTR_ERR(phy->io_priv);
-> +
-> +	ta->vbus = devm_regulator_get(dev, "vbus");
-> +	if (IS_ERR(ta->vbus))
-> +		return PTR_ERR(ta->vbus);
-> +
-> +	for (i = 0; i < ARRAY_SIZE(CTL_RESETS); i++) {
-> +		resets[i] = devm_reset_control_get(dev, CTL_RESETS[i]);
+> Ok, thanks for the details, i need to familiarize better with mm.
 
-Please use devm_reset_control_get_exclusive() instead.
+i was & now more confused w.r.t checking access permission using
+vm_area_struct to deny write on a read only user page.
 
-> +		if (IS_ERR(resets[i])) {
-> +			dev_err(dev, "%s reset not found\n", CTL_RESETS[i]);
-> +			return PTR_ERR(resets[i]);
-> +		}
-> +		reset_control_assert(resets[i]);
-> +	}
+i have been using get_user_pages_fast() w/ FOLL_WRITE in copy_to_user.
+Isn't that sufficient ?, afaiu, get_user_pages_fast() will ensure that
+w/ FOLL_WRITE, pte has write permission, else no struct page * is
+handed back to the caller.
 
-You should request all reset controls first, and only then start
-asserting / deasserting, otherwise you may end up with partially
-asserted resets in case a later reset control is not found.
+One of the simplified path which could be relevant in the majority of
+the cases that i figured out as follows,
 
-> +
-> +	for (i = 0; i < ARRAY_SIZE(PHY_RESETS); i++) {
-> +		ta->resets[i] = devm_reset_control_get(dev, PHY_RESETS[i]);
+ get_user_pages_fast
+  internal_user_pages_fast
+   gup_pgd_range [ no mmap_sem acquire path]
+    gup_p4d_range 
+     gup_pud_range
+      gup_pmd_range
+       gup_pte_range
+		if (!pte_access_permitted(pte, flags & FOLL_WRITE))
+                 [ causes to return NULL page if access violation ]
 
-Same as above.
+   __gup_longterm_unlocked [ mmap_sem acquire path]
+    get_user_pages_unlocked
+     __get_user_pages_locked
+      __get_user_pages
+       follow_page_mask
+        follow_p4d_mask
+         follow_pud_mask
+          follow_pmd_mask
+           follow_page_pte
+	        if ((flags & FOLL_WRITE) && !can_follow_write_pte(pte, flags))
+                 [ causes to return NULL page if access violation ]
 
-> +		if (IS_ERR(ta->resets[i])) {
-> +			dev_err(dev, "%s reset not found\n", PHY_RESETS[i]);
-> +			return PTR_ERR(ta->resets[i]);
-> +		}
-> +		reset_control_assert(ta->resets[i]);
-> +	}
-> +
-> +	for (i = 0; i < ARRAY_SIZE(CTL_RESETS); i++)
-> +		reset_control_deassert(resets[i]);
-> +	/* Need to wait at least 20us before de-assert the PHY */
-> +	usleep_range(20, 100);
+As far as i could see none of the get_user_pages() caller are passing
+struct vm_area_struct ** to get it populated.
 
-This waits 20us after de-asserting the reset, not before. Is this in the
-correct place?
+And Ingo's series eons ago didn't either pass it or check permission
+using it (it was passing a 'write' arguement, which i believe
+corrresponds to FOLL_WRITE)
 
-> +	return usb_add_phy_dev(phy);
-> +}
-> +
-> +static int phy_remove(struct platform_device *pdev)
-> +{
-> +	struct tca_apb *ta = platform_get_drvdata(pdev);
-> +
-> +	usb_remove_phy(&ta->phy);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id intel_usb_phy_dt_ids[] = {
-> +	{ .compatible = "intel,lgm-usb-phy" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, intel_usb_phy_dt_ids);
-> +
-> +static struct platform_driver lgm_phy_driver = {
-> +	.driver = {
-> +		.name = "lgm-usb-phy",
-> +		.of_match_table = intel_usb_phy_dt_ids,
-> +	},
-> +	.probe = phy_probe,
-> +	.remove = phy_remove,
-> +};
-> +
-> +module_platform_driver(lgm_phy_driver);
-> +
-> +MODULE_DESCRIPTION("Intel LGM USB PHY driver");
-> +MODULE_AUTHOR("Li Yin <yin1.li@intel.com>");
-> +MODULE_LICENSE("GPL v2");
+Am i missing something or wrong in the analysis ?
 
-regards
-Philipp
+Regards
+afzal
