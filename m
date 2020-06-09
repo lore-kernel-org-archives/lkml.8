@@ -2,88 +2,177 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04095C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D65DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF54520737
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:17:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC9E920737
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:17:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=perex.cz header.i=@perex.cz header.b="WvAeGGBA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f1i/e/fq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729987AbgFINRA (ORCPT
+        id S1729597AbgFINRK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 09:17:00 -0400
-Received: from mail1.perex.cz ([77.48.224.245]:33654 "EHLO mail1.perex.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729968AbgFINQz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 09:16:55 -0400
-Received: from mail1.perex.cz (localhost [127.0.0.1])
-        by smtp1.perex.cz (Perex's E-mail Delivery System) with ESMTP id B823CA003F;
-        Tue,  9 Jun 2020 15:16:52 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp1.perex.cz B823CA003F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=perex.cz; s=default;
-        t=1591708612; bh=Q6pAyvWAA5MDPmhkXsBCOnRP+oa87wANg1kmgbc1Kpc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=WvAeGGBAMKiFOFjTPXv8K3w5I1fxEZVOhQaZiXlSH1MVoJCMwtDLsMxaOSFHber3c
-         L1N+Ix+80HnPbrBixJ0V62C0B7d0XedIZzq/bLDST90WHVbtdXfgzYan8OfYvWB76T
-         tZVa+PvCOJTQmgNlwOSN0GHaj8vF3zuHqiiSmrAI=
-Received: from p50.perex-int.cz (unknown [192.168.100.94])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: perex)
-        by mail1.perex.cz (Perex's E-mail Delivery System) with ESMTPSA;
-        Tue,  9 Jun 2020 15:16:38 +0200 (CEST)
-Subject: Re: next-0519 on thinkpad x60: sound related? window manager crash
-To:     Christoph Hellwig <hch@lst.de>, Takashi Iwai <tiwai@suse.de>
-Cc:     David Rientjes <rientjes@google.com>,
-        "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>,
-        alsa-devel@alsa-project.org, bp@alien8.de, hch@infradead.org,
-        hpa@zytor.com, linux-kernel@vger.kernel.org, mingo@redhat.com,
-        Pavel Machek <pavel@ucw.cz>, tglx@linutronix.de,
-        tiwai@suse.com, x86@kernel.org
-References: <20200609054306.GA9606@lst.de> <s5hsgf4irzt.wl-tiwai@suse.de>
- <20200609084305.GA21671@lst.de> <s5hlfkwip1h.wl-tiwai@suse.de>
- <20200609091727.GA23814@lst.de> <s5hh7vkio0n.wl-tiwai@suse.de>
- <20200609113123.GA547@lst.de> <s5h3674ii49.wl-tiwai@suse.de>
- <20200609114059.GA1228@lst.de> <s5hzh9ch38h.wl-tiwai@suse.de>
- <20200609114955.GA2027@lst.de>
-From:   Jaroslav Kysela <perex@perex.cz>
-Message-ID: <a20ab909-bb60-8d47-0da3-122a724aecbe@perex.cz>
-Date:   Tue, 9 Jun 2020 15:16:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 9 Jun 2020 09:17:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55318 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728500AbgFINO4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 09:14:56 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DED0BC08C5C3;
+        Tue,  9 Jun 2020 06:14:55 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id n24so24953621lji.10;
+        Tue, 09 Jun 2020 06:14:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Aln/v5oHNx0uR1+3PdbEeFlof0TuksBXcZsr09IBv7Y=;
+        b=f1i/e/fq+GUsu+SLmELnxg5S2fQRNDxo4c3CHgnS7jzmTEUkQ4VR+0/3WxPkOJ/jiR
+         USM8+zSaZtsFhsKwEu7RV3zNuI/LcjxjafbHQnmIVWIQ9PPYaiwoe3UjBP9C7uhBbHFV
+         gUuXPduSXCcnfILK3uKo5LjhNhJyEnq/5d2Z6rBbD37d32eNZ6kPNAuU4tGh9Vgf+KuX
+         awGeIGssdX50Z5kPHh1ZgvdF3jgJQlhNkjhAAJIh/p6DgY0QQmbahJoBQX+b5jB5+5WB
+         P6m5mqQsOeKg41Y4nHrvSXhHfGXvgXzvQfMyDubT9Hv85B7dARvLxdvIZv7REDO25Sct
+         cMOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Aln/v5oHNx0uR1+3PdbEeFlof0TuksBXcZsr09IBv7Y=;
+        b=hZvUwlEYRhg5QatowRsybvBUR766JY4Ld3lDK2e8DQnJN1yvIIivvcGvrCNF1j2cd6
+         H4Fc4Q6nAY3uNk7l+RP2bickn8fHVAPnCGSsjq5hmEbj0ZD7hZ/GHIK7IphZfqnUWE9q
+         T2rmyxNTJboGwFua7zRF+xot2UJaCcLugmvNpUtV4DLFgB+bU5R7xG5JovjUgsP/3/47
+         hqzrs3RVc5vNwAFlYRhbIkWX9VlldxGzruw0/2ntFF/yiTZmydPiLBH+em0ix8ncUcbe
+         nPgknk1u0XEo1cCzlrERPyjS6xVhOYUgtYNUVMzlEr8Gu/4rdq8eqnL29k94uY8/iECn
+         JO4Q==
+X-Gm-Message-State: AOAM533Kz2RrrV0JSvVvZQYgZAVwk7DIqvb6K/Gj7EoWQJ1HG5jH2v4j
+        N4FVrH0KNgrugm4mNQVeDS4=
+X-Google-Smtp-Source: ABdhPJwR5s0/K2rLHpYv3O8omNNYS0C0VEkRc98oW6G9hNru7vvY1eTuzIcA9R0pWenyOoUhFWPfAQ==
+X-Received: by 2002:a2e:1412:: with SMTP id u18mr14378966ljd.309.1591708494412;
+        Tue, 09 Jun 2020 06:14:54 -0700 (PDT)
+Received: from localhost.localdomain (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
+        by smtp.gmail.com with ESMTPSA id l22sm4323522lji.120.2020.06.09.06.14.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2020 06:14:53 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Mikko Perttunen <cyndis@kapsi.fi>
+Cc:     =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@samsung.com>,
+        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH v4 24/37] dt-bindings: memory: tegra30: Add memory client IDs
+Date:   Tue,  9 Jun 2020 16:13:51 +0300
+Message-Id: <20200609131404.17523-25-digetx@gmail.com>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200609131404.17523-1-digetx@gmail.com>
+References: <20200609131404.17523-1-digetx@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200609114955.GA2027@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne 09. 06. 20 v 13:49 Christoph Hellwig napsal(a):
-> On Tue, Jun 09, 2020 at 01:45:34PM +0200, Takashi Iwai wrote:
->> Yes, for the sound stuff, something below should make things working.
->> But it means that we'll lose the SG-buffer allocation and the
->> allocation of large buffers might fail on some machines.
-> 
-> We crossed lines there.  In general due to better memory compaction and
-> CMA we have better chances to get larger contiguous allocations these
-> days, so this might not be too much of an issue in practice.
-> 
+Each memory client have a unique hardware ID, this patch adds these IDs.
 
-But turning off the SG DMA scheme seems like a step back. Would be possible to 
-fix this kind of memory mapping?
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ include/dt-bindings/memory/tegra30-mc.h | 67 +++++++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
 
-					Jaroslav
-
-
+diff --git a/include/dt-bindings/memory/tegra30-mc.h b/include/dt-bindings/memory/tegra30-mc.h
+index 169f005fbc78..930f708aca17 100644
+--- a/include/dt-bindings/memory/tegra30-mc.h
++++ b/include/dt-bindings/memory/tegra30-mc.h
+@@ -41,4 +41,71 @@
+ #define TEGRA30_MC_RESET_VDE		16
+ #define TEGRA30_MC_RESET_VI		17
+ 
++#define TEGRA30_MC_PTCR			0
++#define TEGRA30_MC_DISPLAY0A		1
++#define TEGRA30_MC_DISPLAY0AB		2
++#define TEGRA30_MC_DISPLAY0B		3
++#define TEGRA30_MC_DISPLAY0BB		4
++#define TEGRA30_MC_DISPLAY0C		5
++#define TEGRA30_MC_DISPLAY0CB		6
++#define TEGRA30_MC_DISPLAY1B		7
++#define TEGRA30_MC_DISPLAY1BB		8
++#define TEGRA30_MC_EPPUP		9
++#define TEGRA30_MC_G2PR			10
++#define TEGRA30_MC_G2SR			11
++#define TEGRA30_MC_MPEUNIFBR		12
++#define TEGRA30_MC_VIRUV		13
++#define TEGRA30_MC_AFIR			14
++#define TEGRA30_MC_AVPCARM7R		15
++#define TEGRA30_MC_DISPLAYHC		16
++#define TEGRA30_MC_DISPLAYHCB		17
++#define TEGRA30_MC_FDCDRD		18
++#define TEGRA30_MC_FDCDRD2		19
++#define TEGRA30_MC_G2DR			20
++#define TEGRA30_MC_HDAR			21
++#define TEGRA30_MC_HOST1XDMAR		22
++#define TEGRA30_MC_HOST1XR		23
++#define TEGRA30_MC_IDXSRD		24
++#define TEGRA30_MC_IDXSRD2		25
++#define TEGRA30_MC_MPE_IPRED		26
++#define TEGRA30_MC_MPEAMEMRD		27
++#define TEGRA30_MC_MPECSRD		28
++#define TEGRA30_MC_PPCSAHBDMAR		29
++#define TEGRA30_MC_PPCSAHBSLVR		30
++#define TEGRA30_MC_SATAR		31
++#define TEGRA30_MC_TEXSRD		32
++#define TEGRA30_MC_TEXSRD2		33
++#define TEGRA30_MC_VDEBSEVR		34
++#define TEGRA30_MC_VDEMBER		35
++#define TEGRA30_MC_VDEMCER		36
++#define TEGRA30_MC_VDETPER		37
++#define TEGRA30_MC_MPCORELPR		38
++#define TEGRA30_MC_MPCORER		39
++#define TEGRA30_MC_EPPU			40
++#define TEGRA30_MC_EPPV			41
++#define TEGRA30_MC_EPPY			42
++#define TEGRA30_MC_MPEUNIFBW		43
++#define TEGRA30_MC_VIWSB		44
++#define TEGRA30_MC_VIWU			45
++#define TEGRA30_MC_VIWV			46
++#define TEGRA30_MC_VIWY			47
++#define TEGRA30_MC_G2DW			48
++#define TEGRA30_MC_AFIW			49
++#define TEGRA30_MC_AVPCARM7W		50
++#define TEGRA30_MC_FDCDWR		51
++#define TEGRA30_MC_FDCDWR2		52
++#define TEGRA30_MC_HDAW			53
++#define TEGRA30_MC_HOST1XW		54
++#define TEGRA30_MC_ISPW			55
++#define TEGRA30_MC_MPCORELPW		56
++#define TEGRA30_MC_MPCOREW		57
++#define TEGRA30_MC_MPECSWR		58
++#define TEGRA30_MC_PPCSAHBDMAW		59
++#define TEGRA30_MC_PPCSAHBSLVW		60
++#define TEGRA30_MC_SATAW		61
++#define TEGRA30_MC_VDEBSEVW		62
++#define TEGRA30_MC_VDEDBGW		63
++#define TEGRA30_MC_VDEMBEW		64
++#define TEGRA30_MC_VDETPMW		65
++
+ #endif
 -- 
-Jaroslav Kysela <perex@perex.cz>
-Linux Sound Maintainer; ALSA Project; Red Hat, Inc.
+2.26.0
+
