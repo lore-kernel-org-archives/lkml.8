@@ -2,180 +2,154 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7981EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 22:54:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 261CEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 22:55:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 533B5206D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 22:54:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3D1620734
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 22:55:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FyAfw76h"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="pY6fBT37"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728833AbgFIWyY (ORCPT
+        id S1728841AbgFIWzP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 18:54:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60222 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728689AbgFIWyQ (ORCPT
+        Tue, 9 Jun 2020 18:55:15 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:44478 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728642AbgFIWzM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 18:54:16 -0400
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5020FC08C5C3
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 15:54:16 -0700 (PDT)
-Received: by mail-vs1-xe43.google.com with SMTP id k13so95938vsm.13
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 15:54:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uselWGWC3qoQQOxqWlrwlyYH4mqd92kQlOeG7RAljPU=;
-        b=FyAfw76hywaz53lg/VPnGi9e8IgE5jPMksWxgn5Xkbqe/yhjElKv8fMDCl4QFtXQIt
-         pSyJYqrnMJYgTyWBELqlUZa5CVrDBu1huuKU9dWbO6W+XR2+iweBUHxOBj0i2RvfGdFs
-         8NiNQVMybZaYdmRyiKjkdD25LAg7GOjVAE2ahVKfo1TFfOTPVhQxv3vrhhJB1ZZYju2x
-         Sdae+oKvdyfhBYlT1ObztTGi8b7ZlawE8tQkILK8OymFeQLH+QUknrl0lziOECLhGpgE
-         9Z2h7cuvDa588K6R2CH8Tk7KwRtyK4jUdgDpy+UOvR8NULevc8eRomSXClkk9nY8gFC8
-         7ASA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uselWGWC3qoQQOxqWlrwlyYH4mqd92kQlOeG7RAljPU=;
-        b=Iw5HD7YfLOBOM8+KE3r2B+wzRxBsgtx/N+e7mwZdOiNZa0BAMWMjcALvZyNeLODW+Z
-         b+nC7gpCPgdvOnU3j8vriloqZ2EIj7lZkAK1oicAY0u1anYVSGmMpwOQUa3/f/qx5O8M
-         DNn+X2DJApmcADb7nkikMP/rwuDl8mvfTuArFC0bSlkJacEoQxbIz1Ucye5/66ymHoX7
-         6GSJ53iKGcv+qAkmO8xEac1GGP3pwhUe2j+bk9oEbQMSuHMFjnfbDlbhlSYrMQGtV+u/
-         Hok30y71edI3snTnfIsok4fVubi+o9kvVpaJ9IIJwOH6+VmYYiFbZIdMF0O6//0JDGx0
-         FagQ==
-X-Gm-Message-State: AOAM533KiFkGDweANzTrs1JdQhpa0F+iuqtEZtJdDqe5CDuV17uqcULb
-        fpIFuP4oyJBFGEn9E+TmmoxBeyGVATJZo2UFGhsQoA==
-X-Google-Smtp-Source: ABdhPJx3dLS9VTThWqaFRDlqN1S9f5h0OrZVTBbY5/ftQgTD5GsCLfsUQ7mDqtAcQKwPK2rVrq3OTLOUBty+qRmGSEY=
-X-Received: by 2002:a67:af10:: with SMTP id v16mr448564vsl.235.1591743255002;
- Tue, 09 Jun 2020 15:54:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200605213853.14959-1-sean.j.christopherson@intel.com> <20200605213853.14959-3-sean.j.christopherson@intel.com>
-In-Reply-To: <20200605213853.14959-3-sean.j.christopherson@intel.com>
-From:   Ben Gardon <bgardon@google.com>
-Date:   Tue, 9 Jun 2020 15:54:04 -0700
-Message-ID: <CANgfPd-hDAUe188X4HNt7bQ=5_RxtOmpnEet3C3CwpJPxi4y4Q@mail.gmail.com>
-Subject: Re: [PATCH 02/21] KVM: x86/mmu: Consolidate "page" variant of memory
- cache helpers
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Marc Zyngier <maz@kernel.org>, Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Tue, 9 Jun 2020 18:55:12 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 059MqpYU162182;
+        Tue, 9 Jun 2020 22:54:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2020-01-29; bh=HvGdtjAHs0B66PLoqaTxJLCRKpFgcsRjar2VCL7YTAM=;
+ b=pY6fBT37pThpu8U1RgDw4s3DBAVMiKNNdDUyy8k7UG3GOq1xNqFjWifjrrvOEFerpyIj
+ Q8d9hNxYXng/Q52Zdkkz5H4wK6oELx9vtmwnr6pBgw11vQbmkbSGLultBH92JZEz3B3y
+ I7GwGV/yHvNtBwnpCepbjDqQEBSMx0AfUkv06MAJER7Wi7EWarykLFjN/J+Fs8ECAw+C
+ +W8m5cP1B7BDaNQ2bJsaPp5wlTGB54mAH+Pqf/EjS8iAfGzgIJw5Sjvy8q6JghauDjbH
+ GJ2wGhuKu6hLH3llB0Us/ckuB7PU5t5kbI4hkIn/5XVa3NQP0cuSY9RIajPqT2KUb16c YA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 31jepnsaq9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 09 Jun 2020 22:54:58 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 059Mru4t027272;
+        Tue, 9 Jun 2020 22:54:58 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 31gmqp8p6w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 09 Jun 2020 22:54:58 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 059MstQu012275;
+        Tue, 9 Jun 2020 22:54:55 GMT
+Received: from localhost.localdomain (/98.229.125.203)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 09 Jun 2020 15:54:55 -0700
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
         David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Feiner <pfeiner@google.com>,
-        Peter Shier <pshier@google.com>,
-        Junaid Shahid <junaids@google.com>,
-        Christoffer Dall <christoffer.dall@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+        Michal Hocko <mhocko@kernel.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Sistare <steven.sistare@oracle.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>
+Subject: [PATCH v2] x86/mm: use max memory block size on bare metal
+Date:   Tue,  9 Jun 2020 18:54:51 -0400
+Message-Id: <20200609225451.3542648-1-daniel.m.jordan@oracle.com>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9647 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0 mlxscore=0
+ mlxlogscore=999 adultscore=0 spamscore=0 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006090173
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9647 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 suspectscore=0
+ priorityscore=1501 bulkscore=0 clxscore=1015 phishscore=0 impostorscore=0
+ malwarescore=0 mlxscore=0 cotscore=-2147483648 adultscore=0 spamscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006090173
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 5, 2020 at 2:39 PM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> Drop the "page" variants of the topup/free memory cache helpers, using
-> the existence of an associated kmem_cache to select the correct alloc
-> or free routine.
->
-> No functional change intended.
->
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Reviewed-by: Ben Gardon <bgardon@google.com>
-> ---
->  arch/x86/kvm/mmu/mmu.c | 37 +++++++++++--------------------------
->  1 file changed, 11 insertions(+), 26 deletions(-)
->
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index 0830c195c9ed..cbc101663a89 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -1067,7 +1067,10 @@ static int mmu_topup_memory_cache(struct kvm_mmu_memory_cache *cache, int min)
->         if (cache->nobjs >= min)
->                 return 0;
->         while (cache->nobjs < ARRAY_SIZE(cache->objects)) {
-> -               obj = kmem_cache_zalloc(cache->kmem_cache, GFP_KERNEL_ACCOUNT);
-> +               if (cache->kmem_cache)
-> +                       obj = kmem_cache_zalloc(cache->kmem_cache, GFP_KERNEL_ACCOUNT);
-> +               else
-> +                       obj = (void *)__get_free_page(GFP_KERNEL_ACCOUNT);
->                 if (!obj)
->                         return cache->nobjs >= min ? 0 : -ENOMEM;
->                 cache->objects[cache->nobjs++] = obj;
-> @@ -1082,30 +1085,12 @@ static int mmu_memory_cache_free_objects(struct kvm_mmu_memory_cache *cache)
->
->  static void mmu_free_memory_cache(struct kvm_mmu_memory_cache *mc)
->  {
-> -       while (mc->nobjs)
-> -               kmem_cache_free(mc->kmem_cache, mc->objects[--mc->nobjs]);
-> -}
-> -
-> -static int mmu_topup_memory_cache_page(struct kvm_mmu_memory_cache *cache,
-> -                                      int min)
-> -{
-> -       void *page;
-> -
-> -       if (cache->nobjs >= min)
-> -               return 0;
-> -       while (cache->nobjs < ARRAY_SIZE(cache->objects)) {
-> -               page = (void *)__get_free_page(GFP_KERNEL_ACCOUNT);
-> -               if (!page)
-> -                       return cache->nobjs >= min ? 0 : -ENOMEM;
-> -               cache->objects[cache->nobjs++] = page;
-> +       while (mc->nobjs) {
-> +               if (mc->kmem_cache)
-> +                       kmem_cache_free(mc->kmem_cache, mc->objects[--mc->nobjs]);
-> +               else
-> +                       free_page((unsigned long)mc->objects[--mc->nobjs]);
->         }
-> -       return 0;
-> -}
-> -
-> -static void mmu_free_memory_cache_page(struct kvm_mmu_memory_cache *mc)
-> -{
-> -       while (mc->nobjs)
-> -               free_page((unsigned long)mc->objects[--mc->nobjs]);
->  }
->
->  static int mmu_topup_memory_caches(struct kvm_vcpu *vcpu)
-> @@ -1116,7 +1101,7 @@ static int mmu_topup_memory_caches(struct kvm_vcpu *vcpu)
->                                    8 + PTE_PREFETCH_NUM);
->         if (r)
->                 goto out;
-> -       r = mmu_topup_memory_cache_page(&vcpu->arch.mmu_page_cache, 8);
-> +       r = mmu_topup_memory_cache(&vcpu->arch.mmu_page_cache, 8);
->         if (r)
->                 goto out;
->         r = mmu_topup_memory_cache(&vcpu->arch.mmu_page_header_cache, 4);
-> @@ -1127,7 +1112,7 @@ static int mmu_topup_memory_caches(struct kvm_vcpu *vcpu)
->  static void mmu_free_memory_caches(struct kvm_vcpu *vcpu)
->  {
->         mmu_free_memory_cache(&vcpu->arch.mmu_pte_list_desc_cache);
-> -       mmu_free_memory_cache_page(&vcpu->arch.mmu_page_cache);
-> +       mmu_free_memory_cache(&vcpu->arch.mmu_page_cache);
->         mmu_free_memory_cache(&vcpu->arch.mmu_page_header_cache);
->  }
->
-> --
-> 2.26.0
->
+Some of our servers spend significant time at kernel boot initializing
+memory block sysfs directories and then creating symlinks between them
+and the corresponding nodes.  The slowness happens because the machines
+get stuck with the smallest supported memory block size on x86 (128M),
+which results in 16,288 directories to cover the 2T of installed RAM.
+The search for each memory block is noticeable even with
+commit 4fb6eabf1037 ("drivers/base/memory.c: cache memory blocks in
+xarray to accelerate lookup").
+
+Commit 078eb6aa50dc ("x86/mm/memory_hotplug: determine block size based
+on the end of boot memory") chooses the block size based on alignment
+with memory end.  That addresses hotplug failures in qemu guests, but
+for bare metal systems whose memory end isn't aligned to even the
+smallest size, it leaves them at 128M.
+
+Make kernels that aren't running on a hypervisor use the largest
+supported size (2G) to minimize overhead on big machines.  Kernel boot
+goes 7% faster on the aforementioned servers, shaving off half a second.
+
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Sistare <steven.sistare@oracle.com>
+Cc: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org
+---
+
+Applies to 5.7 and today's mainline
+
+ arch/x86/mm/init_64.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+index 8b5f73f5e207c..906fbdb060748 100644
+--- a/arch/x86/mm/init_64.c
++++ b/arch/x86/mm/init_64.c
+@@ -55,6 +55,7 @@
+ #include <asm/uv/uv.h>
+ #include <asm/setup.h>
+ #include <asm/ftrace.h>
++#include <asm/hypervisor.h>
+ 
+ #include "mm_internal.h"
+ 
+@@ -1390,6 +1391,15 @@ static unsigned long probe_memory_block_size(void)
+ 		goto done;
+ 	}
+ 
++	/*
++	 * Use max block size to minimize overhead on bare metal, where
++	 * alignment for memory hotplug isn't a concern.
++	 */
++	if (hypervisor_is_type(X86_HYPER_NATIVE)) {
++		bz = MAX_BLOCK_SIZE;
++		goto done;
++	}
++
+ 	/* Find the largest allowed block size that aligns to memory end */
+ 	for (bz = MAX_BLOCK_SIZE; bz > MIN_MEMORY_BLOCK_SIZE; bz >>= 1) {
+ 		if (IS_ALIGNED(boot_mem_end, bz))
+-- 
+2.26.2
+
