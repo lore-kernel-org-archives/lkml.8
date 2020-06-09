@@ -2,51 +2,53 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE987C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4433BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92DBC2067B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:18:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12FD92067B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:18:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591726718;
-	bh=Qji0P9ZYJP6rjevkptNRCSR27VQwxRHmmnnhzSFH4Xs=;
+	s=default; t=1591726726;
+	bh=FqvRd8mOZagwPH3YzoQJ04VsMlcPF40sFUnUv+c4Hg4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tW9+wG+ovv/LAt46MCSlD8/3yIkaSSjl5gfG2nNOx3bI76Rm6c2YoFIQJ31o69e6/
-	 L07A+lBVSJnYTCw9JyTwnmIAJCDIjQlr0z5GZpJ8ZVjufYvoOzkVqGReITVXAH62D4
-	 XkjTMM6OCeyxwA90ZC4rKZ7KQ6roUFwRbmw/EsVk=
+	b=GUfVMeUNVHSMWMl1QCVC0uVqXLcZbC6umX2+ZXcDYeJlsY/mQt6UqhG59F29ICGMV
+	 6g+cEsJm0nzd24fuTDTtLg0q3QQqLjTqD/yze3lsIRGhOJKPYP35G5fppKeaxPkMJX
+	 J54wZiANe5aWF78I3c8nbYWsJ36U89wkOb6cJw8s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731821AbgFISSf (ORCPT
+        id S1732616AbgFIRuH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:18:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37322 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:50:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730807AbgFIRuM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:50:12 -0400
+        id S1732559AbgFIRtp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:49:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D0C22081A;
-        Tue,  9 Jun 2020 17:50:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD7CA20814;
+        Tue,  9 Jun 2020 17:49:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725012;
-        bh=Qji0P9ZYJP6rjevkptNRCSR27VQwxRHmmnnhzSFH4Xs=;
+        s=default; t=1591724985;
+        bh=FqvRd8mOZagwPH3YzoQJ04VsMlcPF40sFUnUv+c4Hg4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hNySvtecEUw2gbZ2AkseH6njtf2xaa/MRciuj4++u6nzSlqZ29vcpHRQh7TorQhLB
-         TqxVisPoybCBsx3ySMRA166n4Q+4C6YMo6jcVOl1EdGIwBC/Bdz0xaHv+n/lcfofnJ
-         Cuzb3ARtuSyXRJZS3J/v786LXMJ0WPS+iVmNDu+I=
+        b=fzPsVaswd8gr7RW1a0Td864t+ga+N8vS2IwQh3Pf2rQFYx8Kn9ZrBvtaUPsEJAwZv
+         CVZPcJOaFAa/68SGgncDrb+RGJ3IJMlmN0Jurq6GiAjPqevblKXll7cPbFzCyco9e3
+         OPnXAuEXhC2C9HHwKcuSlk3REAJ8hrcngTNqSV1c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        Bin Liu <b-liu@ti.com>
-Subject: [PATCH 4.14 34/46] usb: musb: Fix runtime PM imbalance on error
-Date:   Tue,  9 Jun 2020 19:44:50 +0200
-Message-Id: <20200609174029.578394791@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?David=20Bala=C5=BEic?= <xerces9@gmail.com>,
+        Guillaume Nault <gnault@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 06/46] pppoe: only process PADT targeted at local interfaces
+Date:   Tue,  9 Jun 2020 19:44:22 +0200
+Message-Id: <20200609174023.446194633@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174022.938987501@linuxfoundation.org>
 References: <20200609174022.938987501@linuxfoundation.org>
@@ -59,54 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dinghao Liu <dinghao.liu@zju.edu.cn>
+From: Guillaume Nault <gnault@redhat.com>
 
-commit e4befc121df03dc8ed2ac1031c98f9538e244bae upstream.
+We don't want to disconnect a session because of a stray PADT arriving
+while the interface is in promiscuous mode.
+Furthermore, multicast and broadcast packets make no sense here, so
+only PACKET_HOST is accepted.
 
-When copy_from_user() returns an error code, there
-is a runtime PM usage counter imbalance.
-
-Fix this by moving copy_from_user() to the beginning
-of this function.
-
-Fixes: 7b6c1b4c0e1e ("usb: musb: fix runtime PM in debugfs")
-
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-Cc: stable@vger.kernel.org
-Signed-off-by: Bin Liu <b-liu@ti.com>
-Link: https://lore.kernel.org/r/20200525025049.3400-7-b-liu@ti.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reported-by: David Balažic <xerces9@gmail.com>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Guillaume Nault <gnault@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 ---
- drivers/usb/musb/musb_debugfs.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/net/ppp/pppoe.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/usb/musb/musb_debugfs.c
-+++ b/drivers/usb/musb/musb_debugfs.c
-@@ -206,6 +206,11 @@ static ssize_t musb_test_mode_write(stru
- 	u8			test;
- 	char			buf[24];
+diff --git a/drivers/net/ppp/pppoe.c b/drivers/net/ppp/pppoe.c
+index fa7121dcab67..202a0f415e1e 100644
+--- a/drivers/net/ppp/pppoe.c
++++ b/drivers/net/ppp/pppoe.c
+@@ -497,6 +497,9 @@ static int pppoe_disc_rcv(struct sk_buff *skb, struct net_device *dev,
+ 	if (!skb)
+ 		goto out;
  
-+	memset(buf, 0x00, sizeof(buf));
++	if (skb->pkt_type != PACKET_HOST)
++		goto abort;
 +
-+	if (copy_from_user(buf, ubuf, min_t(size_t, sizeof(buf) - 1, count)))
-+		return -EFAULT;
-+
- 	pm_runtime_get_sync(musb->controller);
- 	test = musb_readb(musb->mregs, MUSB_TESTMODE);
- 	if (test) {
-@@ -214,11 +219,6 @@ static ssize_t musb_test_mode_write(stru
- 		goto ret;
- 	}
+ 	if (!pskb_may_pull(skb, sizeof(struct pppoe_hdr)))
+ 		goto abort;
  
--	memset(buf, 0x00, sizeof(buf));
--
--	if (copy_from_user(buf, ubuf, min_t(size_t, sizeof(buf) - 1, count)))
--		return -EFAULT;
--
- 	if (strstarts(buf, "force host full-speed"))
- 		test = MUSB_TEST_FORCE_HOST | MUSB_TEST_FORCE_FS;
- 
+-- 
+2.25.1
+
 
 
