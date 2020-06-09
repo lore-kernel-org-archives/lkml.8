@@ -2,146 +2,199 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C03B7C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 21:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55FBAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 21:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 980C320737
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 21:04:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591736646;
-	bh=+/YoObOnMTDr/Y8JbI9ZCCUUmEH6TYbQ6zaa5y0pJ34=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=Lf5g8NxSgqGOe53OA6PeaPIV8wNvSWPednO+swrd6GYJeAKXe5xjGN5Jw6D5OkvtV
-	 dMH/kNMR5DCGHFZWBPoGVQiZfzbZwPc/x3TT7AteNi4EWNDazsp6rQEPEbZTsApwh2
-	 bSth2IuSgRspGzQ6CKUFYEqiyEgJuwC+RAqoFBsA=
+	by mail.kernel.org (Postfix) with ESMTP id 2181E2076A
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 21:07:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YQTUSvv3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbgFIVEF (ORCPT
+        id S1726871AbgFIVHR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 17:04:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33940 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725948AbgFIVEC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 17:04:02 -0400
-Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F19920734;
-        Tue,  9 Jun 2020 21:04:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591736642;
-        bh=+/YoObOnMTDr/Y8JbI9ZCCUUmEH6TYbQ6zaa5y0pJ34=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=eWWyU3V/twwncnFiKsfRI/Dw6AP48xi4InRBRSrOY2/B4bTSH30r2sa6yQY1cu/x+
-         PcHuEl/kz/e6+wYxEd2sMi4JQjN4uC/aDh7WWb6W/9m29cHvl6fkE7R7yH5tWDXQyj
-         dUvc/2Xxcln6+QeuMlKWp/tV6P7x1gN1uFcCJNhk=
-Date:   Tue, 9 Jun 2020 16:04:00 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Rajat Jain <rajatja@google.com>, Rajat Jain <rajatxjain@gmail.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Zubin Mithra <zsm@google.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
- "whitelisted" drivers
-Message-ID: <20200609210400.GA1461839@bjorn-Precision-5520>
+        Tue, 9 Jun 2020 17:07:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43758 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726449AbgFIVHP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 17:07:15 -0400
+Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C098DC08C5C2
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 14:07:15 -0700 (PDT)
+Received: by mail-ua1-x941.google.com with SMTP id b13so110598uav.3
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 14:07:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=f15ThlgRIs3s50AvF0kFQ8PMHdAjHFT357oOtlUx/ug=;
+        b=YQTUSvv3PxEEhj5ujE/dPySButOyH55bK4Xn7FFJQPplWJdwV27lg1hiiGZPMl+Csy
+         utkQv6pOjG6DMuuUAn6OW8rUDsTwDk+L09wjyrOsEHgSM9DO1jG+4DXrAkvtnH7+VocI
+         GJeE84ALY1lEBJxLNfWmnbxI8H4dKWQGgYe6NIzbLwEX92BP0BVccbN5ywjf+ad2hItV
+         hOK3koJ698Vs9caFgU0Oz67/J789jH+4rxh31hXP0eWCQ0G50xlrah8Vhcbhoz+wsVGG
+         RvWp/Z6BsjYqNpoy5p5CsKAw38VlYjZy47xgAAr8XRHehyo5E50oaLRajAfxViZwx+CC
+         YVIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=f15ThlgRIs3s50AvF0kFQ8PMHdAjHFT357oOtlUx/ug=;
+        b=pCp8OMkdLZp2lRBhnsDWZ/713YaZsMCL1gfKLkZcNlCnjjGIUFeGO2zIzJ20DjjpgL
+         TJ3eStdUmMRekJQjFB1ANol+a06n6UFFJ1oFr4XVhYWeHoGNgJMp2gmXwY6g99qvCWBD
+         3//1pogSY51XzTeC8s3gEkP1vqRkgVrm4SigkVIbGNaqc1jk6CRvuTw6BvQDSCY3iXQ7
+         qoVT7s8pydJz6MzfKpBz6++Gpnv/cc85rwdJCvrteKS8LQOa0l1zOy3zeVx5HiOtzN4X
+         882P9nq0yxAAueZpc/82J3MSGTSXCDrJpECVvhGcVtFFz3x1TpP6AnnMyHZTSsuNNtl4
+         D+MQ==
+X-Gm-Message-State: AOAM533OQvH3PWGP03ZHoJLBkRAjEgnF+w6rUnuTxrbzTvUuaffM2Mrf
+        Oh3TokK6vmyODXP/qObYLLnvgwvZ1AygmM4qIM/dag==
+X-Google-Smtp-Source: ABdhPJwQ+viuUyt4Xvfz0B/F5q8uWrpKqo6vNNs2uM0NepreAFEA0QuoyJVSJ76WQkzVbDy0sso7BcdwlZvUGeg7c1M=
+X-Received: by 2002:ab0:6012:: with SMTP id j18mr260224ual.69.1591736832385;
+ Tue, 09 Jun 2020 14:07:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200607113632.GA49147@kroah.com>
+References: <20200605213853.14959-1-sean.j.christopherson@intel.com> <20200605213853.14959-2-sean.j.christopherson@intel.com>
+In-Reply-To: <20200605213853.14959-2-sean.j.christopherson@intel.com>
+From:   Ben Gardon <bgardon@google.com>
+Date:   Tue, 9 Jun 2020 14:07:01 -0700
+Message-ID: <CANgfPd87=eS6h=GX6CxZRwAj=MTET-AtVAjVQn4i1zkwZ4ApXw@mail.gmail.com>
+Subject: Re: [PATCH 01/21] KVM: x86/mmu: Track the associated kmem_cache in
+ the MMU caches
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Marc Zyngier <maz@kernel.org>, Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Feiner <pfeiner@google.com>,
+        Peter Shier <pshier@google.com>,
+        Junaid Shahid <junaids@google.com>,
+        Christoffer Dall <christoffer.dall@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 07, 2020 at 01:36:32PM +0200, Greg Kroah-Hartman wrote:
-
-> Your "problem" I think can be summed up a bit more concise:
-> 	- you don't trust kernel drivers to be "secure" for untrusted
-> 	  devices
-> 	- you only want to bind kernel drivers to "internal" devices
-> 	  automatically as you "trust" drivers in that situation.
-> 	- you want to only bind specific kernel drivers that you somehow
-> 	  feel are "secure" to untrusted devices "outside" of a system
-> 	  when those devices are added to the system.
-> 
-> Is that correct?
-> 
-> If so, fine, you can do that today with the bind/unbind ability of
-> drivers, right?  After boot with your "trusted" drivers bound to
-> "internal" devices, turn off autobind of drivers to devices and then
-> manually bind them when you see new devices show up, as those "must" be
-> from external devices (see the bind/unbind files that all drivers export
-> for how to do this, and old lwn.net articles, this feature has been
-> around for a very long time.)
-> 
-> I know for USB you can do this, odds are PCI you can turn off
-> autobinding as well, as I think this is a per-bus flag somewhere.  If
-> that's not exported to userspace, should be trivial to do so, should be
-> somewere in the driver model already...
-> 
-> Ah, yes, look at the "drivers_autoprobe" and "drivers_probe" files in
-> sysfs for all busses.  Do those not work for you?
-> 
-> My other points are the fact that you don't want to put policy in the
-> kernel, and I think that you can do everything you want in userspace
-> today, except maybe the fact that trying to determine what is "inside"
-> and "outside" is not always easy given that most hardware does not
-> export this information properly, if at all.  Go work with the firmware
-> people on that issue please, that would be most helpful for everyone
-> involved to get that finally straightened out.
-
-To sketch this out, my understanding of how this would work is:
-
-  - Expose the PCI pdev->untrusted bit in sysfs.  We don't expose this
-    today, but doing so would be trivial.  I think I would prefer a
-    sysfs name like "external" so it's more descriptive and less of a
-    judgment.
-
-    This comes from either the DT "external-facing" property or the
-    ACPI "ExternalFacingPort" property.  
-
-  - All devices present at boot are enumerated.  Any statically built
-    drivers will bind to them before any userspace code runs.
-
-    If you want to keep statically built drivers from binding, you'd
-    need to invent some mechanism so pci_driver_init() could clear
-    drivers_autoprobe after registering pci_bus_type.
-
-  - Early userspace code prevents modular drivers from automatically
-    binding to PCI devices:
-
-      echo 0 > /sys/bus/pci/drivers_autoprobe
-
-    This prevents modular drivers from binding to all devices, whether
-    present at boot or hot-added.
-
-  - Userspace code uses the sysfs "bind" file to control which drivers
-    are loaded and can bind to each device, e.g.,
-
-      echo 0000:02:00.0 > /sys/bus/pci/drivers/nvme/bind
-
-Is that what you're thinking?  Is that enough for the control you
-need, Rajat?
+On Fri, Jun 5, 2020 at 2:39 PM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> Track the kmem_cache used for non-page KVM MMU memory caches instead of
+> passing in the associated kmem_cache when filling the cache.  This will
+> allow consolidating code and other cleanups.
+>
+> No functional change intended.
+>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Reviewed-by: Ben Gardon <bgardon@google.com>
+> ---
+>  arch/x86/include/asm/kvm_host.h |  1 +
+>  arch/x86/kvm/mmu/mmu.c          | 24 +++++++++++-------------
+>  2 files changed, 12 insertions(+), 13 deletions(-)
+>
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 1da5858501ca..16347b050754 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -251,6 +251,7 @@ struct kvm_kernel_irq_routing_entry;
+>   */
+>  struct kvm_mmu_memory_cache {
+>         int nobjs;
+> +       struct kmem_cache *kmem_cache;
+>         void *objects[KVM_NR_MEM_OBJS];
+>  };
+>
+> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> index fdd05c233308..0830c195c9ed 100644
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -1060,15 +1060,14 @@ static void walk_shadow_page_lockless_end(struct kvm_vcpu *vcpu)
+>         local_irq_enable();
+>  }
+>
+> -static int mmu_topup_memory_cache(struct kvm_mmu_memory_cache *cache,
+> -                                 struct kmem_cache *base_cache, int min)
+> +static int mmu_topup_memory_cache(struct kvm_mmu_memory_cache *cache, int min)
+>  {
+>         void *obj;
+>
+>         if (cache->nobjs >= min)
+>                 return 0;
+>         while (cache->nobjs < ARRAY_SIZE(cache->objects)) {
+> -               obj = kmem_cache_zalloc(base_cache, GFP_KERNEL_ACCOUNT);
+> +               obj = kmem_cache_zalloc(cache->kmem_cache, GFP_KERNEL_ACCOUNT);
+>                 if (!obj)
+>                         return cache->nobjs >= min ? 0 : -ENOMEM;
+>                 cache->objects[cache->nobjs++] = obj;
+> @@ -1081,11 +1080,10 @@ static int mmu_memory_cache_free_objects(struct kvm_mmu_memory_cache *cache)
+>         return cache->nobjs;
+>  }
+>
+> -static void mmu_free_memory_cache(struct kvm_mmu_memory_cache *mc,
+> -                                 struct kmem_cache *cache)
+> +static void mmu_free_memory_cache(struct kvm_mmu_memory_cache *mc)
+>  {
+>         while (mc->nobjs)
+> -               kmem_cache_free(cache, mc->objects[--mc->nobjs]);
+> +               kmem_cache_free(mc->kmem_cache, mc->objects[--mc->nobjs]);
+>  }
+>
+>  static int mmu_topup_memory_cache_page(struct kvm_mmu_memory_cache *cache,
+> @@ -1115,25 +1113,22 @@ static int mmu_topup_memory_caches(struct kvm_vcpu *vcpu)
+>         int r;
+>
+>         r = mmu_topup_memory_cache(&vcpu->arch.mmu_pte_list_desc_cache,
+> -                                  pte_list_desc_cache, 8 + PTE_PREFETCH_NUM);
+> +                                  8 + PTE_PREFETCH_NUM);
+>         if (r)
+>                 goto out;
+>         r = mmu_topup_memory_cache_page(&vcpu->arch.mmu_page_cache, 8);
+>         if (r)
+>                 goto out;
+> -       r = mmu_topup_memory_cache(&vcpu->arch.mmu_page_header_cache,
+> -                                  mmu_page_header_cache, 4);
+> +       r = mmu_topup_memory_cache(&vcpu->arch.mmu_page_header_cache, 4);
+>  out:
+>         return r;
+>  }
+>
+>  static void mmu_free_memory_caches(struct kvm_vcpu *vcpu)
+>  {
+> -       mmu_free_memory_cache(&vcpu->arch.mmu_pte_list_desc_cache,
+> -                               pte_list_desc_cache);
+> +       mmu_free_memory_cache(&vcpu->arch.mmu_pte_list_desc_cache);
+>         mmu_free_memory_cache_page(&vcpu->arch.mmu_page_cache);
+> -       mmu_free_memory_cache(&vcpu->arch.mmu_page_header_cache,
+> -                               mmu_page_header_cache);
+> +       mmu_free_memory_cache(&vcpu->arch.mmu_page_header_cache);
+>  }
+>
+>  static void *mmu_memory_cache_alloc(struct kvm_mmu_memory_cache *mc)
+> @@ -5684,6 +5679,9 @@ int kvm_mmu_create(struct kvm_vcpu *vcpu)
+>         uint i;
+>         int ret;
+>
+> +       vcpu->arch.mmu_pte_list_desc_cache.kmem_cache = pte_list_desc_cache;
+> +       vcpu->arch.mmu_page_header_cache.kmem_cache = mmu_page_header_cache;
+> +
+>         vcpu->arch.mmu = &vcpu->arch.root_mmu;
+>         vcpu->arch.walk_mmu = &vcpu->arch.root_mmu;
+>
+> --
+> 2.26.0
+>
