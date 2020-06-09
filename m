@@ -2,110 +2,93 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF45C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 22:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF34C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 22:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A84992068D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 22:40:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YJflalIk"
+	by mail.kernel.org (Postfix) with ESMTP id 41C31206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 22:40:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591742450;
+	bh=oIZ2SkZvc5i5FZodd8grydWh2wz+gTwpWrtXmJQbZ9E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=p0L6EoXesyLVL4X00wisy3zjQYmcxBzNMGBNB1KMQUSvUsZSE1T/kxVJUCnsxtN1P
+	 Lb+5A1csfLsI4N9Zxv4mLULTrluaCZP9JyQv91MYNSESew2ZYkgNp61iSiGrQyFq/e
+	 UxPeBGVK/mf6FFKE0gXx8fVc+cAgxbRGeunjeQU0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728581AbgFIWkS (ORCPT
+        id S1728596AbgFIWkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 18:40:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58068 "EHLO
+        Tue, 9 Jun 2020 18:40:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728108AbgFIWkR (ORCPT
+        with ESMTP id S1728108AbgFIWkp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 18:40:17 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64D31C05BD1E;
-        Tue,  9 Jun 2020 15:40:17 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id q8so225373qkm.12;
-        Tue, 09 Jun 2020 15:40:17 -0700 (PDT)
+        Tue, 9 Jun 2020 18:40:45 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7D83C08C5C2
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 15:40:44 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id x22so288008lfd.4
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 15:40:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MAUXZKtBQZj6B5Rk9FG9z3WffsCtrNY4aCuD4cUBdPc=;
-        b=YJflalIkp0KvIL27dtyF6mJD8QQVEqO9eeK32hEzzrhc8R4XGR8zDIgNYhe8VBAFr1
-         QTqZwF7AiUHee1tIkA6rcCjrc/Cw3JH/k8s6KsW86D49fqhCf7pIklHfgVRMZcUVSUc3
-         qkXh807NBKX98Yq8Heqr8dhKk8fgwIMHXsWnzuLxHkdlMqtPtSYINZ+xopFGu08R+ABJ
-         OajJ0AXZkA7g38Iu8m7ucC4WQWI90dbbo8jCBvjRA4JSHt+wYIIqO6N2bSIBlMZxkyR4
-         CgIthjnT7BmDw+GBQ5z5VTJqF7eKW6VC6YpSxf+Rm+joTYNILEnSSOs8BaFF/4tbY9Py
-         +0Sw==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=P1TRNNjJlvLVpkzYtiyuKXMMAtHYz93D6qUBO+R17NY=;
+        b=K1f23i0fqTaybBaIL91PC/uUGVhXSo8qFOrRZ6HkWINEL8dEywUK3T3EhTHBQo1onI
+         W2B23FJguSy+2BibfIkn2DkdpPgkPHbOxwkYkGJwdrS+/ZW6LOzw/y+emhKjQsn4I6lP
+         cbjUZmLILbknLg40OFWdmE+Q2u7LZ3zRFbcGo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MAUXZKtBQZj6B5Rk9FG9z3WffsCtrNY4aCuD4cUBdPc=;
-        b=HUFvKaokN03vg2vJqR5OA2q7xif9Ld8CEgPEpwXj/b6zw5MtjXp6h9CT4iUpetjcwS
-         fXAVnvNeRplHx0jLZzCyzCFWRL1sR9feJL6Bh5NyOayHO9ikTEQQunlzgipFjbfTbC89
-         pWuiKZTIrCpfBl+sDTndgtYUfAWLnU7IDmbGxlEFIWsl655EZsY+1WsvQYvHJ8qlDTtw
-         SZtkZ+B6JtNjEanLQ/3kWRAUznJpT4Z7C7ow9Vy/s/lsnb35eBrjqxO5vmvDJyeEY9kR
-         38sRwwghvKPrIoVXT8MO8IJj6dPqpL2V9BfQUv1eJoKdoreTNYl1fEWP8ldexLbS8Lag
-         vDTg==
-X-Gm-Message-State: AOAM532H+MbH6x/VTzKdmv+H+mo5k6VPNVS4oEPTAPWLk9uTJQAGkkev
-        UdcyI9F5kWQW/f0eF8/1/Q==
-X-Google-Smtp-Source: ABdhPJxLUvoEA0NFM0tB152OFCyhMpvWeKW4QTmDwJliy056wjYh0HVDJ8Hp7CgxnkyaKyjsPUhtVg==
-X-Received: by 2002:a05:620a:4e5:: with SMTP id b5mr168395qkh.341.1591742416350;
-        Tue, 09 Jun 2020 15:40:16 -0700 (PDT)
-Received: from localhost.localdomain ([142.119.96.191])
-        by smtp.googlemail.com with ESMTPSA id l69sm11282893qke.112.2020.06.09.15.40.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 15:40:15 -0700 (PDT)
-From:   Keyur Patel <iamkeyur96@gmail.com>
-Cc:     Keyur Patel <iamkeyur96@gmail.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] iio: cros_ec: fix spelling mistake
-Date:   Tue,  9 Jun 2020 18:39:52 -0400
-Message-Id: <20200609223955.107506-1-iamkeyur96@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=P1TRNNjJlvLVpkzYtiyuKXMMAtHYz93D6qUBO+R17NY=;
+        b=oHyJVOMGAghuq1vHrvViU1NbsCN7rD88OBjy9BBIvdobzX8zsu9+zWicXMtfLR+uVv
+         G4VrUDVqQ9UAr+j1mhDYAew2Ef/zY/6jTnIxOTs/XWSTemrxY4tqkYEUGGXEQmUIEpDn
+         z/8zcEl+FTmMtLEmbVhx3wEDaFLRKny2/pgJ7o7/QXynCJriJ97QnOozBMAwYfqixSCl
+         nlz4II6TYH36Lk4OaaFsV9lOiD7fTOKvqyHSblPNWkkeeQxLFRRI0zfRmhlGTeWwrqAR
+         K3cwya6Hjcb/p/2WfHj3iwIba5ThCeWVSSZ79iuz95D0ZEQcFeTq9bAGPuER/g36GPkx
+         HC8Q==
+X-Gm-Message-State: AOAM530u/VybdnFARYtUdcSAcjoWmsDdKmZyo/AHBy7G4iE7TLkv4Fw5
+        /zGWqVjII2XnRhI1tRDpGmX+8sIdTxQ=
+X-Google-Smtp-Source: ABdhPJyeo9ASPr+VwVHSVb8IrezczgVHTkgWpaP4c6HDtRlsU9HVdejupiKwjp09gsQ35bIHtZZuiw==
+X-Received: by 2002:a19:500e:: with SMTP id e14mr73000lfb.88.1591742442633;
+        Tue, 09 Jun 2020 15:40:42 -0700 (PDT)
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com. [209.85.167.42])
+        by smtp.gmail.com with ESMTPSA id 11sm4533623lju.118.2020.06.09.15.40.41
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jun 2020 15:40:41 -0700 (PDT)
+Received: by mail-lf1-f42.google.com with SMTP id e125so300988lfd.1
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 15:40:41 -0700 (PDT)
+X-Received: by 2002:a19:ae0f:: with SMTP id f15mr73046lfc.142.1591742441027;
+ Tue, 09 Jun 2020 15:40:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <3071963.1591734633@warthog.procyon.org.uk>
+In-Reply-To: <3071963.1591734633@warthog.procyon.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 9 Jun 2020 15:40:25 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wi4VjVHkMcALg3T4A+Vwfyo0NBWtPoKwvO8pWe_v=NF6Q@mail.gmail.com>
+Message-ID: <CAHk-=wi4VjVHkMcALg3T4A+Vwfyo0NBWtPoKwvO8pWe_v=NF6Q@mail.gmail.com>
+Subject: Re: [GIT PULL] afs: Misc small fixes
+To:     David Howells <dhowells@redhat.com>
+Cc:     Kees Cook <keescook@chromium.org>, chengzhihao1@huawei.com,
+        linux-afs@lists.infradead.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix typo: "tigger" --> "trigger"
+On Tue, Jun 9, 2020 at 1:30 PM David Howells <dhowells@redhat.com> wrote:
+>
+> Would you prefer I defer and submit it again after -rc1?
 
-Signed-off-by: Keyur Patel <iamkeyur96@gmail.com>
----
- drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+No, I'll take fixes at any time, and the better shape rc1 is in, the
+happier everybody will be and the more likely we'll have testers..
 
-diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-index c831915ca7e5..4888fb23d801 100644
---- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-+++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-@@ -352,7 +352,7 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
- 		} else {
- 			/*
- 			 * The only way to get samples in buffer is to set a
--			 * software tigger (systrig, hrtimer).
-+			 * software trigger (systrig, hrtimer).
- 			 */
- 			ret = devm_iio_triggered_buffer_setup(
- 					dev, indio_dev, NULL, trigger_capture,
--- 
-2.26.2
-
+             Linus
