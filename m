@@ -4,55 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50696C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C761C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20F252067B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 763D12067B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:23:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591726991;
-	bh=akhqUkT0c9xF/42feGFbgYB1eZCfR8+2RTKObv/fnaM=;
+	s=default; t=1591726993;
+	bh=gz4yzpENGTwtO6BvLL61gS3WMm5cksSG2EmPaENhZtw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FVC7L/CsS/+YVy15473D2exqRcgr4g5csj55nxo36/OWMzWTV+gmw5Hu+daV6TX3T
-	 tsHPvf/RNt5TtHivPbOZoPJRccEI+1RX1ZQyJ8YYPwG2JAAN3Oe1qOsLqWJ5Xnzuzq
-	 YulU1Us8ZqT2Hts+g84gy/3qtb05fx8K4CuFUt5Q=
+	b=ZVhn2V8Zlec70/356qJk3WgXkn4kaY3y8zBHtjli2um1bOxSIf9ApscSil4Co8pog
+	 h7jPnZ7NR96Al26phKsQ9gMytY1Cb2nX7T1+GUFhPNJlJP0x5/i33Svpaa+k8QXJM0
+	 mxC9hnTfISBkHpLtmMuldg7jZ4mFoUfYGpBJYTuw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732121AbgFIRrh (ORCPT
+        id S2389065AbgFISXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:47:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58712 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 14:23:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732103AbgFIRr1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:47:27 -0400
+        id S1732119AbgFIRrg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:47:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7323520801;
-        Tue,  9 Jun 2020 17:47:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5EE520801;
+        Tue,  9 Jun 2020 17:47:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591724846;
-        bh=akhqUkT0c9xF/42feGFbgYB1eZCfR8+2RTKObv/fnaM=;
+        s=default; t=1591724856;
+        bh=gz4yzpENGTwtO6BvLL61gS3WMm5cksSG2EmPaENhZtw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L+siqMPWa08kbtMxKgvqkjjBKBIYDfIlFSbSNEMHMivFNrCZDsttJzbtlYJcETXuj
-         xLgqtHijMicGy94soIo804RkIK3pZoijTOuRjSmgpBB5DPunjUraXQW3YnTE6UQAgY
-         vp7zVs9dBGABzNdsRUOkbuao82lfjvKU8inSxdos=
+        b=XoINWjCIWFHmRqoBdb55MjPhIUdGRPRwMm8BFlSk7XUQAzDNdOku9iH1NJw/76FRc
+         q1ZnJeQwJjVwIQLhXYpwDVgoF433aaKLulR2dVH6goZiu0Fux/dmRh7fCAVG3OyzNV
+         6cGjyD43pGXM0OqSG0RNR2Ty9AFlCJubS+3ll69k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, yangerkun <yangerkun@huawei.com>,
-        Oliver Hartkopp <socketcan@hartkopp.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.4 17/36] slip: not call free_netdev before rtnl_unlock in slip_open
-Date:   Tue,  9 Jun 2020 19:44:17 +0200
-Message-Id: <20200609173934.264332124@linuxfoundation.org>
+        stable@vger.kernel.org, Hannes Reinecke <hare@suse.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Bart Van Assche <bart.vanassche@wdc.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.9 01/42] scsi: scsi_devinfo: fixup string compare
+Date:   Tue,  9 Jun 2020 19:44:07 +0200
+Message-Id: <20200609174015.533553608@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200609173933.288044334@linuxfoundation.org>
-References: <20200609173933.288044334@linuxfoundation.org>
+In-Reply-To: <20200609174015.379493548@linuxfoundation.org>
+References: <20200609174015.379493548@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,35 +65,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yangerkun <yangerkun@huawei.com>
+From: Hannes Reinecke <hare@suse.de>
 
-commit f596c87005f7b1baeb7d62d9a9e25d68c3dfae10 upstream.
+commit b8018b973c7cefa5eb386540130fa47315b8e337 upstream.
 
-As the description before netdev_run_todo, we cannot call free_netdev
-before rtnl_unlock, fix it by reorder the code.
+When checking the model and vendor string we need to use the minimum
+value of either string, otherwise we'll miss out on wildcard matches.
 
-Signed-off-by: yangerkun <yangerkun@huawei.com>
-Reviewed-by: Oliver Hartkopp <socketcan@hartkopp.net>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-[bwh: Backported to <4.11: free_netdev() is called through sl_free_netdev()]
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+And we should take care when matching with zero size strings; results
+might be unpredictable.  With this patch the rules for matching devinfo
+strings are as follows:
+
+- Vendor strings must match exactly
+- Empty Model strings will only match if the devinfo model
+  is also empty
+- Model strings shorter than the devinfo model string will
+  not match
+
+Fixes: 5e7ff2c ("SCSI: fix new bug in scsi_dev_info_list string matching")
+Signed-off-by: Hannes Reinecke <hare@suse.com>
+Reviewed-by: Alan Stern <stern@rowland.harvard.edu>
+Reviewed-by: Bart Van Assche <bart.vanassche@wdc.com>
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/slip/slip.c |    3 +++
- 1 file changed, 3 insertions(+)
 
---- a/drivers/net/slip/slip.c
-+++ b/drivers/net/slip/slip.c
-@@ -867,7 +867,10 @@ err_free_chan:
- 	sl->tty = NULL;
- 	tty->disc_data = NULL;
- 	clear_bit(SLF_INUSE, &sl->flags);
-+	/* do not call free_netdev before rtnl_unlock */
-+	rtnl_unlock();
- 	sl_free_netdev(sl->dev);
-+	return err;
+---
+ drivers/scsi/scsi_devinfo.c |   23 +++++++++++++----------
+ 1 file changed, 13 insertions(+), 10 deletions(-)
+
+--- a/drivers/scsi/scsi_devinfo.c
++++ b/drivers/scsi/scsi_devinfo.c
+@@ -394,8 +394,8 @@ EXPORT_SYMBOL(scsi_dev_info_list_add_key
  
- err_exit:
- 	rtnl_unlock();
+ /**
+  * scsi_dev_info_list_find - find a matching dev_info list entry.
+- * @vendor:	vendor string
+- * @model:	model (product) string
++ * @vendor:	full vendor string
++ * @model:	full model (product) string
+  * @key:	specify list to use
+  *
+  * Description:
+@@ -410,7 +410,7 @@ static struct scsi_dev_info_list *scsi_d
+ 	struct scsi_dev_info_list *devinfo;
+ 	struct scsi_dev_info_list_table *devinfo_table =
+ 		scsi_devinfo_lookup_by_key(key);
+-	size_t vmax, mmax;
++	size_t vmax, mmax, mlen;
+ 	const char *vskip, *mskip;
+ 
+ 	if (IS_ERR(devinfo_table))
+@@ -449,15 +449,18 @@ static struct scsi_dev_info_list *scsi_d
+ 			    dev_info_list) {
+ 		if (devinfo->compatible) {
+ 			/*
+-			 * Behave like the older version of get_device_flags.
++			 * vendor strings must be an exact match
+ 			 */
+-			if (memcmp(devinfo->vendor, vskip, vmax) ||
+-					(vmax < sizeof(devinfo->vendor) &&
+-						devinfo->vendor[vmax]))
++			if (vmax != strlen(devinfo->vendor) ||
++			    memcmp(devinfo->vendor, vskip, vmax))
+ 				continue;
+-			if (memcmp(devinfo->model, mskip, mmax) ||
+-					(mmax < sizeof(devinfo->model) &&
+-						devinfo->model[mmax]))
++
++			/*
++			 * @model specifies the full string, and
++			 * must be larger or equal to devinfo->model
++			 */
++			mlen = strlen(devinfo->model);
++			if (mmax < mlen || memcmp(devinfo->model, mskip, mlen))
+ 				continue;
+ 			return devinfo;
+ 		} else {
 
 
