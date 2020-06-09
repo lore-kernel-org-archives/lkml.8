@@ -2,97 +2,141 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CCD3C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D97E8C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:29:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EC1B207C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:29:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="j2fQQ+aC"
+	by mail.kernel.org (Postfix) with ESMTP id B4967207ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:29:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591723770;
+	bh=acydBiGeh8FwrKWtO6J/nfBkJ6+s9T2S3xqZj+Gg9U4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HTE1chS0KD6/LX+Efg03Q2OMkCncUZwU6w1232Z8SZ82pYL52QBcMfaU6CBNdE5fN
+	 1MDZS0a12aqz6Y66PSkj6grNC9vSVrpKrUEB6gK/2IbeUfECbRSUnxzwJaaNyCdPKa
+	 tiMTwvWrkuRocf+z2mZtqBG4gPl0IBNvmmRLhoRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731754AbgFIR3A (ORCPT
+        id S1731790AbgFIR33 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:29:00 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:35644 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726938AbgFIR26 (ORCPT
+        Tue, 9 Jun 2020 13:29:29 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40096 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728110AbgFIR3Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:28:58 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 059HSgdK084614;
-        Tue, 9 Jun 2020 12:28:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1591723722;
-        bh=5a2z97hTdAdkh5ZKUO4ayG5VqkUbg5/xHMaTOyqvLAE=;
-        h=From:To:CC:Subject:Date;
-        b=j2fQQ+aCaMLEvkVZHtvc7KxJ+lY4ZMBNf8aMbTTUzTWHzqhVqcZInwVdgBvqgIMu1
-         h8BU6MDR6biZq5W6ENVlzO13dGuDKCdAuSi0BwHb1Bb31SYUyvbIBRJuyBbzdPDrAn
-         ujHE+i3MrYSetegtymCXQvHKCWiVuSBX/QQiNqdU=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 059HSg5N130134
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 9 Jun 2020 12:28:42 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 9 Jun
- 2020 12:28:42 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 9 Jun 2020 12:28:42 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 059HSg6u003016;
-        Tue, 9 Jun 2020 12:28:42 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <robh@kernel.org>
-CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [RFC PATCH 0/2] TAS2563 DSP Firmware Loader
-Date:   Tue, 9 Jun 2020 12:28:39 -0500
-Message-ID: <20200609172841.22541-1-dmurphy@ti.com>
-X-Mailer: git-send-email 2.26.2
+        Tue, 9 Jun 2020 13:29:25 -0400
+Received: by mail-pf1-f195.google.com with SMTP id s23so9049312pfh.7;
+        Tue, 09 Jun 2020 10:29:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0OeLiDypwAI4S3gVXdOOM121C3htVuuP9lkSYSY9yfg=;
+        b=RlEHJkeRXtywvGPDC2901D5+20ddROqtNsY1+h6j4oCsAD8B2yZ8ZMLxEk1LJ+ejDr
+         XQTtNkyV616jPCRlFAJlZAMQvbYXr0VV8SmAee12gNYtv+u/ALuo2rU9HxYZF1WYaITe
+         A0xVukhidYppLX+3scVcgxo2fhPm6v2XvhZsTYoWPu6IYNJA9BwOkB7cHRmxgR2a4Mt1
+         HbGeGw+BnBj6Y2ju5/L8pZdtMzivjVyIozFOlo0jyO/iXq/baLZVK/PxwBjW9ygtCuWp
+         GKMPJ/BaBZWjpHR5TLEa9sJyx9aCKO6P9RwsXF9vlr9ZpDipxqYwo4ZrmiXZCf2lz/o4
+         6SZA==
+X-Gm-Message-State: AOAM532N54heaMk5CedKpQQGJh/MO/nKGHq5b100oVHyIPsirBRpi04s
+        qERC61kANPDlmRe/8iqNYNA=
+X-Google-Smtp-Source: ABdhPJw7qyoggD4kTRMCmpjIgC5B/C5Ow+WGPUmYCS78BMRrwophWg5IQ1YAU2QskReoNULrHSPqYA==
+X-Received: by 2002:a63:f502:: with SMTP id w2mr25064936pgh.321.1591723764725;
+        Tue, 09 Jun 2020 10:29:24 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id n1sm10777379pfd.156.2020.06.09.10.29.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2020 10:29:23 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 7D342403AB; Tue,  9 Jun 2020 17:29:22 +0000 (UTC)
+Date:   Tue, 9 Jun 2020 17:29:22 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
+        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
+        ming.lei@redhat.com, nstange@suse.de, akpm@linux-foundation.org,
+        mhocko@suse.com, yukuai3@huawei.com, martin.petersen@oracle.com,
+        jejb@linux.ibm.com, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
+Subject: Re: [PATCH v6 6/6] blktrace: fix debugfs use after free
+Message-ID: <20200609172922.GP11244@42.do-not-panic.com>
+References: <20200608170127.20419-1-mcgrof@kernel.org>
+ <20200608170127.20419-7-mcgrof@kernel.org>
+ <20200609150602.GA7111@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200609150602.GA7111@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
+I like this, more below.
 
-The TAS2563 amplifier has a DSP that can run programs and configurations to
-produce alternate audio experiences.  The DSP firmware is not a typical firmware
-as the binary may contain various programs and configurations that are
-selectable during run time.
+On Tue, Jun 09, 2020 at 08:06:02AM -0700, Christoph Hellwig wrote:
+> diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+> index 432fa60e7f8808..44239f603379d5 100644
+> --- a/kernel/trace/blktrace.c
+> +++ b/kernel/trace/blktrace.c
+> @@ -492,34 +493,23 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
+>  	 */
+>  	strreplace(buts->name, '/', '_');
+>  
+> -	/*
+> -	 * We have to use a partition directory if a partition is being worked
+> -	 * on. The same request_queue is shared between all partitions.
+> -	 */
+> -	if (bdev && bdev != bdev->bd_contains) {
+> -		dir = bdev->bd_part->debugfs_dir;
+> -	} else if (IS_ENABLED(CONFIG_CHR_DEV_SG) &&
+> -		   MAJOR(dev) == SCSI_GENERIC_MAJOR) {
+> +	bt = kzalloc(sizeof(*bt), GFP_KERNEL);
+> +	if (!bt)
+> +		return -ENOMEM;
+> +
+> +	if (unlikely(!bdev)) {
+>  		/*
+> -		 * scsi-generic exposes the request_queue through the /dev/sg*
+> -		 * interface but since that uses a different path than whatever
+> -		 * the respective scsi driver device name may expose and use
+> -		 * for the request_queue debugfs_dir. We have a dedicated
+> -		 * dentry for scsi-generic then.
+> +		 * When tracing something that is not a block device (e.g. the
+> +		 * /dev/sg nodes), create debugfs directory on demand.  This
+> +		 * directory will be remove when stopping the trace.
 
-These programs and configurations are selectable via files under the I2C dev
-node.  There may be a better way to select this through ALSA controls but I was
-unable to find a good example of this.  This is why this is an RFC patchset.
+Is scsi-generic is the only unwanted ugly child blktrace has to deal
+with? For some reason I thought drivers/md/md.c was one but it seems
+like it is not. Do we have an easy way to search for these? I think
+this would just affect how we express the comment only.
 
-Dan
+>  		 */
+> -		dir = q->sg_debugfs_dir;
+> +		dir = debugfs_create_dir(buts->name, blk_debugfs_root);
+> +		bt->dir = dir;
 
-Dan Murphy (2):
-  dt-bindings: tas2562: Add firmware support for tas2563
-  ASoc: tas2563: DSP Firmware loading support
+The other chicken and egg problem to consider at least in the comments
+is that the debugfs directory for these types of devices *have* an
+exposed path, but the data structure is rather opaque to the device and
+even blktrace.  Fortunately given the recent set of changes around the
+q->blk_trace and clarifications around its use we have made it clear now
+that so long as hold the q->blk_trace_mutex *and* check q->blk_trace we
+*should* not race against two separate creations of debugfs directories,
+so I think this is safe, so long as these indpendent drivers don't end
+up re-using the same path for some other things later in the future, and
+since we have control over what goes under debugfsroot block / I think
+we should be good.
 
- .../devicetree/bindings/sound/tas2562.yaml    |   4 +
- sound/soc/codecs/Makefile                     |   2 +-
- sound/soc/codecs/tas2562.c                    |  48 ++-
- sound/soc/codecs/tas2562.h                    |  25 ++
- sound/soc/codecs/tas25xx_dsp_loader.c         | 377 ++++++++++++++++++
- sound/soc/codecs/tas25xx_dsp_loader.h         |  93 +++++
- 6 files changed, 530 insertions(+), 19 deletions(-)
- create mode 100644 sound/soc/codecs/tas25xx_dsp_loader.c
- create mode 100644 sound/soc/codecs/tas25xx_dsp_loader.h
+But I think that the concern for race on names may still be worth
+explaining a bit here.
 
--- 
-2.26.2
-
+  Luis
