@@ -2,76 +2,103 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C33C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 22:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71806C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 22:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65BEA206D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 22:50:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BFA420734
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 22:50:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wfhc0mYz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728623AbgFIWup (ORCPT
+        id S1728706AbgFIWuy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 18:50:45 -0400
-Received: from smtprelay0178.hostedemail.com ([216.40.44.178]:51698 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728108AbgFIWup (ORCPT
+        Tue, 9 Jun 2020 18:50:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59690 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728108AbgFIWuu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 18:50:45 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 6627218029138;
-        Tue,  9 Jun 2020 22:50:44 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: front10_2d174eb26dc6
-X-Filterd-Recvd-Size: 1181
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf20.hostedemail.com (Postfix) with ESMTPA;
-        Tue,  9 Jun 2020 22:50:43 +0000 (UTC)
-Message-ID: <573b3fbd5927c643920e1364230c296b23e7584d.camel@perches.com>
-Subject: RFC: Allow kfree to free all types of allocations ?
-From:   Joe Perches <joe@perches.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>
-Date:   Tue, 09 Jun 2020 15:50:42 -0700
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.2-0ubuntu1 
+        Tue, 9 Jun 2020 18:50:50 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82B0DC05BD1E;
+        Tue,  9 Jun 2020 15:50:49 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id u17so330070qtq.1;
+        Tue, 09 Jun 2020 15:50:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=oGAa4Mn6OsK1MTg/eaa33f/HGF3MMyA73RH3oZcHO8Q=;
+        b=Wfhc0mYzeiHLe6+K0/T43lF6dtzPYAjscyG41VUhNGlUUU/qUHKCCpSW3o3ehezQB6
+         glJWqCl6j0LwVh3n8K6rZk2w7btrZ9lwFG0TL+w3bS/NPXMOW1DxfR4a5ZMRQXWcf037
+         8OciGTHxhZNWEkXLsXKDwbzFKw1Gr32TOLhr6t0NxHd4DwghKwfvegpamD969N9LEZrD
+         ATZuAa9zPcIB8xmugNZspQyeKse3IiDU2TmH7h3PZSL0QSJLHMhaGB6Z5Do9OV5BBzfk
+         OZp9FK7KsLTf4XXmbt+CzCvk9t5wg5IuEe+qyPNQjveCh6mo06sL2leVLnuohzB5dMtw
+         sctA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=oGAa4Mn6OsK1MTg/eaa33f/HGF3MMyA73RH3oZcHO8Q=;
+        b=uS1188L9qzpFwyf5OXDVuAu+P4m6sTuEAiL3B79IEdImjdzdefJEsi6xtRV//LRJFb
+         UllAfw3+FdosV9gfFaGi94nsjV6TsvtH3A+ikipIuQzgeCIqa/IuQQkGuLwuam3FgHxX
+         a/Zr0FI5cfKMXwtjYr+IY3GwznjD45XVAPQWq+fp+KVonO2GXQ/XiqSnZ97C2QKfH4KY
+         hIYYyBv/dA0C/zfm0TiQyXXtB2CBLPuDTln0E45B21taRUS0WXCmxyYxb/q4+Y3QYKSM
+         7sFqkfOf/npA/Xy1oZgMfPnk6u29V3pVojk/pli45BUPaT6rrscg/E3YgtUnVQtOY0nz
+         8Sbg==
+X-Gm-Message-State: AOAM533I+GghGYi8nKDBhsT0/NKann1QW7aJ8eSfp2wpY9fZ6wfmDLD7
+        BgIXxQ/lUnrd6u4TEVdDKAREzOHjFd+/
+X-Google-Smtp-Source: ABdhPJys9woneWLnvJxMrdXdSf7xqgSI17WLZRCKPMv1V7/gyIV/jiHrBwLMFoBewqKnx4ny6CHiaQ==
+X-Received: by 2002:ac8:6947:: with SMTP id n7mr242325qtr.178.1591743048686;
+        Tue, 09 Jun 2020 15:50:48 -0700 (PDT)
+Received: from localhost.localdomain ([142.119.96.191])
+        by smtp.googlemail.com with ESMTPSA id v189sm10726314qkb.64.2020.06.09.15.50.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2020 15:50:48 -0700 (PDT)
+From:   Keyur Patel <iamkeyur96@gmail.com>
+Cc:     Keyur Patel <iamkeyur96@gmail.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] power: supply: axp20x_usb_power: fix spelling mistake
+Date:   Tue,  9 Jun 2020 18:50:35 -0400
+Message-Id: <20200609225035.108435-1-iamkeyur96@gmail.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200609224524.108092-1-iamkeyur96@gmail.com>
+References: <20200609224524.108092-1-iamkeyur96@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are a lot of patches trying to match
-various [kv].alloc allocations to specific frees.
+Fix typo: "triger" --> "trigger"
 
-But are there frees in a fast path?
+Signed-off-by: Keyur Patel <iamkeyur96@gmail.com>
+---
+ drivers/power/supply/axp20x_usb_power.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Why not convert kfree to add a few extra tests
-and add #defines for existing uses
-
-Something like:
-
-void kfree(const void *addr)
-{
-	if (is_kernel_rodata((unsigned long)addr))
-		return;
-
-	if (is_vmalloc_addr(addr))
-		_vfree(addr);
-	else
-		_kfree(addr);
-}
-
-And add defines like:
-
-#define kvfree		kfree
-#define vfree		kfree
-#define kfree_const	kfree
-
-Does 4 extra tests really matter?
-
+diff --git a/drivers/power/supply/axp20x_usb_power.c b/drivers/power/supply/axp20x_usb_power.c
+index 4fde24b5f35a..d01dc0332edc 100644
+--- a/drivers/power/supply/axp20x_usb_power.c
++++ b/drivers/power/supply/axp20x_usb_power.c
+@@ -78,7 +78,7 @@ static bool axp20x_usb_vbus_needs_polling(struct axp20x_usb_power *power)
+ 	/*
+ 	 * Polling is only necessary while VBUS is offline. While online, a
+ 	 * present->absent transition implies an online->offline transition
+-	 * and will triger the VBUS_REMOVAL IRQ.
++	 * and will trigger the VBUS_REMOVAL IRQ.
+ 	 */
+ 	if (power->axp20x_id >= AXP221_ID && !power->online)
+ 		return true;
+-- 
+2.26.2
 
