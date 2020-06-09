@@ -2,107 +2,107 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D01C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:41:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 497FAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D627E207C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:41:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591735297;
-	bh=duLQVpbtALQWLzcggIVyQsHbg8x6QVyxM3wzF2RUuaU=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=x1vACSk0blPFB6zUuNauyhazW82saHakGvmey7BFVmhCPd1Q0PqgbFF9UroPfbm3f
-	 XYAu4/CJyYDGkmgQMprvQCNgfJ/Yfe3jABm8Wdrv3Wapx4YyzHo20TRRx+ICMauzfi
-	 jNoXMp6dVQ4Ej/n2jh5pnMxGYqqj8ZyzmmHxst98=
+	by mail.kernel.org (Postfix) with ESMTP id 12187207C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:42:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YrIcM+oZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728238AbgFIUlg (ORCPT
+        id S1728926AbgFIUmF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 16:41:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39802 "EHLO
+        Tue, 9 Jun 2020 16:42:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727783AbgFIUlc (ORCPT
+        with ESMTP id S1727098AbgFIUmE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 16:41:32 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86FDBC08C5C2
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 13:41:30 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id s21so20056543oic.9
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 13:41:30 -0700 (PDT)
+        Tue, 9 Jun 2020 16:42:04 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC97FC05BD1E
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 13:42:02 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id m2so1914958pjv.2
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 13:42:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vX1/6HJoQCcRM+qq9131VZla5JA4KT3mXRX75cnko3A=;
-        b=BrYL37H9Bk7uAEUNaMcwXjG/MNCjhC3iNpF6ZpT63kqQij83xH0gjlVwJVXqCLTVgF
-         oA+ilSfSsSO5ACPPj7GmlgxSnRXUArbtbwmKkqZhSYRuNkUcNN8UY0LzNKArLVbavEHR
-         C7pTHhl94ZiniANQJg6iOCEPHGn/MDS6unvzA=
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=S1vBKT0yWnLuB7U8YX8ngGZwmaPvDRzzZCxacO5i+2o=;
+        b=YrIcM+oZzwpQaYRF0+ivYfdkE5+At1SGS3X9EkfMcFYnQ+ao3zSFVraPEM6FbJ8twK
+         HBHi4qmnExk02NZLB0ffAs8BamSKAcrwlwQAzlslHSqCzDpn7ILTkQUhPepWDwTN7hgf
+         AxufcJX6gK90h1RBevEPiDUscn+AdlZoV56is=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vX1/6HJoQCcRM+qq9131VZla5JA4KT3mXRX75cnko3A=;
-        b=WJMqrzxvFc/6deqK7+Pn58PHSoeS68wdY6xDyMtBLKLKyozlWZSeTKjTt1VLfqWNLI
-         r9hw91Mx4WlFNLOVUcvtyUbjtkPilLPIqnUI/UyKNJgFpqPU4J5cAcZjzKYoxhtNbw9B
-         9cBLRJNZhwFIqPOyFvGOx+Gx4rapABblMWL8P7/UT4KScIuYhwAPp0RGUh0I9yDS6tz2
-         FwC9HS84epNpaDbEl3Jl4XfwcmLhPPdMmo5GMtB8kjemipYNOu5zUJek4svS13M/I409
-         1F3Ci5pOtW16mAXKruVpn3afrH99i9c3Zwro+mYPf+6A5DpMSN3cIS7cQZC3+fxzaKC6
-         CiMA==
-X-Gm-Message-State: AOAM533/4AtuOp1syaXeDcB6SF7Ay4ZaQym0+GhyEzunHE7oIbd25zxt
-        csv0wKEWJOPdufSa5hezDTDvAQ==
-X-Google-Smtp-Source: ABdhPJzFMYW52w9uV8RuAmlTsOq4u2EKyDf2AQRspYRj1FSp4o+2To75XIoFy3P2h0L/XxIRfYT1MQ==
-X-Received: by 2002:aca:ed42:: with SMTP id l63mr69310oih.101.1591735289482;
-        Tue, 09 Jun 2020 13:41:29 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id h189sm3394193oif.10.2020.06.09.13.41.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Jun 2020 13:41:28 -0700 (PDT)
-Subject: Re: [PATCH v3 4/7] selftests/ftrace: Convert required interface
- checks into requires list
-To:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Shuah Khan <shuah@kernel.org>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <159115200085.70027.6141550347953439240.stgit@devnote2>
- <159115203782.70027.2241223276591824366.stgit@devnote2>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <1cf646af-ef25-a7df-9df3-1e6aa8e6a9c8@linuxfoundation.org>
-Date:   Tue, 9 Jun 2020 14:41:27 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=S1vBKT0yWnLuB7U8YX8ngGZwmaPvDRzzZCxacO5i+2o=;
+        b=LiJEK9UnXU+nDeN9BTzySOdXv9k9TuA/WbFAxZ+JxvtMrnK/SGJepXhZCv2+scG3LW
+         RMrCwodTkf8HQicvZ9VjWcff5xLPECVfMyu9uzdGzuyQ6pIVsAPUr9FjXQCEn2P6k+DA
+         Vdh1YccXdz/akrcOH15aQE3KCRxSgsahRIzbBXoDL0i8Cv7MpjTjDatJhmb8A9PBChiG
+         2o9/QbMdKPgHmn83QdPtzDSP6tGNn+MzwfaXiVUrZv622zU23eIaQWcIOAi1ImEk25aB
+         72/aafSwl8k1E0XnM6Yoc4JZZcdUpkM13NfJ6kRUuC1tCuzKWQENs50TbqSJCOlaz2gr
+         Dq7w==
+X-Gm-Message-State: AOAM533bqx9ugn5W2vf1B03kZZIqUSXs+DhtWCB7WL2yoFjU9O5ZU4XG
+        er0spB1IFPD0ykGXXVtyA3i2zQ==
+X-Google-Smtp-Source: ABdhPJzO1L5JcpjNQ1QE9BAOCAjYufkWhpqSvVnXwQlzZodQAiLOBVJh8pc1XAtAd6P8ACdRXXCBKA==
+X-Received: by 2002:a17:902:40a:: with SMTP id 10mr180863ple.52.1591735322434;
+        Tue, 09 Jun 2020 13:42:02 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id u17sm9394329pgo.90.2020.06.09.13.42.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2020 13:42:01 -0700 (PDT)
+Date:   Tue, 9 Jun 2020 13:42:00 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Kristen Carlson Accardi <kristen@linux.intel.com>
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Jessica Yu <jeyu@kernel.org>,
+        arjan@linux.intel.com, linux-kernel@vger.kernel.org,
+        kernel-hardening@lists.openwall.com, rick.p.edgecombe@intel.com,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Tony Luck <tony.luck@intel.com>
+Subject: Re: [PATCH v2 9/9] module: Reorder functions
+Message-ID: <202006091331.A94BB0DA@keescook>
+References: <20200521165641.15940-1-kristen@linux.intel.com>
+ <20200521165641.15940-10-kristen@linux.intel.com>
+ <202005211415.5A1ECC638@keescook>
+ <9fdea0bc0008eccd6dfcad496b37930cf5bd364a.camel@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <159115203782.70027.2241223276591824366.stgit@devnote2>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9fdea0bc0008eccd6dfcad496b37930cf5bd364a.camel@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/2/20 8:40 PM, Masami Hiramatsu wrote:
-> Convert the required tracefs interface checking code with
-> requires: list.
+On Tue, Jun 09, 2020 at 01:14:04PM -0700, Kristen Carlson Accardi wrote:
+> On Thu, 2020-05-21 at 14:33 -0700, Kees Cook wrote:
+> > Oh! And I am reminded suddenly about CONFIG_FG_KASLR needing to
+> > interact
+> > correctly with CONFIG_LD_DEAD_CODE_DATA_ELIMINATION in that we do NOT
+> > want the sections to be collapsed at link time:
 > 
-> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> Reviewed-by: Tom Zanussi <zanussi@kernel.org>
-> ---
->    Changes in v2: Fix trigger-onchange-action-hist.tc requires list.
+> sorry - I'm a little confused and was wondering if you could clarify
+> something. Does this mean you expect CONFIG_FG_KASLR=y and
+> CONFIG_LD_DEAD_CODE_DATA_ELIMINATION=y to be a valid config? I am not
 
-Masami,
+Yes, I don't see a reason they can't be used together.
 
-This patch doesn't apply to linux-kselftest next
+> familiar with the option, but it seems like you are saying that it
+> requires sections to be collapsed, in which case both of these options
+> as yes would not be allowed? Should I actively prevent this in the
+> Kconfig?
 
-Patches 1-3 applied fine and this one failed. For now I will
-hold off on applying this series.
+No, I'm saying that CONFIG_LD_DEAD_CODE_DATA_ELIMINATION does _not_
+actually require that the sections be collapsed, but the Makefile
+currently does this just to keep the resulting ELF "tidy". We want
+that disabled (for the .text parts) in the case of CONFIG_FG_KASLR. The
+dead code elimination step, is, IIUC, done at link time before the
+output sections are written.
 
-thanks,
--- Shuah
-
+-- 
+Kees Cook
