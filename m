@@ -2,53 +2,52 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D48CDC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:22:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE4FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B525B20734
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:22:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C6492067B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:22:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591726935;
-	bh=EbX82Yzt8Q0VSvMLZGGbjmMR+0pvA1lN1B3Jn3//PhY=;
+	s=default; t=1591726944;
+	bh=x19lvSIY3MsUHlq2q1XnZbGMzr214Q+5YpQTNA0yQvM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HD+qkRW0PZi9egg4eMGuMW6BY0rEUnQ3PTt1gId/697xz7OdvP5rKVp56d0LSG4gF
-	 gYYomHFHg1hJCtcqSRk+urxoCG/tfBLOSPbitXCHhFc0UBvFlZS1Xignjryht1imsY
-	 Yo6U3m4J02NKvpO0zS7vHGla24YJ4KNOddl+51io=
+	b=ebSBmL1Au0hv5BaOqowNnQQS3RMIeNe4isiiKz/YeguI7fQDivgLqCIaJpB3lNY0g
+	 mRwINh/aGJW7DeFQtHpQ7jRa9RmKYyrANK9+2NpfIDhqeDIXolfl3/gZmL/Nd8ju/R
+	 Gu62Va41vJxXvLA1ngaaGTBVCPzHusRpXhZMZWnU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389026AbgFISWK (ORCPT
+        id S1732276AbgFIRsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:22:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60892 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:48:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732305AbgFIRs3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:48:29 -0400
+        id S1732231AbgFIRsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:48:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CEB920801;
-        Tue,  9 Jun 2020 17:48:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42F22207F9;
+        Tue,  9 Jun 2020 17:48:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591724908;
-        bh=EbX82Yzt8Q0VSvMLZGGbjmMR+0pvA1lN1B3Jn3//PhY=;
+        s=default; t=1591724892;
+        bh=x19lvSIY3MsUHlq2q1XnZbGMzr214Q+5YpQTNA0yQvM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dYyeZe3ErAaWqFmhSeXjRhv2wz55G+C8jwZW1cs3ydzVwJ1txK3ZFZCjDMpE4G7Z/
-         xfUxiFNFSdPc3PCcBDwmG7S9rJa7SAcDDiizXpRNrdKkuv1VyIsJP5pqp7ccp65Q76
-         i37flXKPhuG6xwUsoZQkshNpKbA8VKs7oliStJdI=
+        b=ndMGd7yexUlPOC+5HfbnRcYnLivXeipV0rOkGGUqlYrbu6DNviKQBNaOHU4P/+/dg
+         hqm7xAj0q9c4oGtCdgUaU/D7RYT99KbBplh2dSRTpO4I2IvIvjgGnjje8RrvC2Jzl1
+         DKQ2M0R7YPW1DLypmvGLYDE8GNIII5nn9jjJbX/w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Greco <pmgreco@us.ibm.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 06/42] ARC: Fix ICCM & DCCM runtime size checks
-Date:   Tue,  9 Jun 2020 19:44:12 +0200
-Message-Id: <20200609174016.118334953@linuxfoundation.org>
+        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
+        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 24/42] net: usb: qmi_wwan: add Telit LE910C1-EUX composition
+Date:   Tue,  9 Jun 2020 19:44:30 +0200
+Message-Id: <20200609174018.116319808@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174015.379493548@linuxfoundation.org>
 References: <20200609174015.379493548@linuxfoundation.org>
@@ -61,54 +60,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+From: Daniele Palmas <dnlplm@gmail.com>
 
-[ Upstream commit 43900edf67d7ef3ac8909854d75b8a1fba2d570c ]
+[ Upstream commit 591612aa578cd7148b7b9d74869ef40118978389 ]
 
-As of today the ICCM and DCCM size checks are incorrectly using
-mismatched units (KiB checked against bytes). The CONFIG_ARC_DCCM_SZ
-and CONFIG_ARC_ICCM_SZ are in KiB, but the size calculated in
-runtime and stored in cpu->dccm.sz and cpu->iccm.sz is in bytes.
+Add support for Telit LE910C1-EUX composition
 
-Fix that.
-
-Reported-by: Paul Greco <pmgreco@us.ibm.com>
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+0x1031: tty, tty, tty, rmnet
+Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
+Acked-by: Bjørn Mork <bjorn@mork.no>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arc/kernel/setup.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/usb/qmi_wwan.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arc/kernel/setup.c b/arch/arc/kernel/setup.c
-index 9f96120eee6e..82464fae7772 100644
---- a/arch/arc/kernel/setup.c
-+++ b/arch/arc/kernel/setup.c
-@@ -12,6 +12,7 @@
- #include <linux/root_dev.h>
- #include <linux/console.h>
- #include <linux/module.h>
-+#include <linux/sizes.h>
- #include <linux/cpu.h>
- #include <linux/of_fdt.h>
- #include <linux/of.h>
-@@ -333,12 +334,12 @@ static void arc_chk_core_config(void)
- 	if ((unsigned int)__arc_dccm_base != cpu->dccm.base_addr)
- 		panic("Linux built with incorrect DCCM Base address\n");
- 
--	if (CONFIG_ARC_DCCM_SZ != cpu->dccm.sz)
-+	if (CONFIG_ARC_DCCM_SZ * SZ_1K != cpu->dccm.sz)
- 		panic("Linux built with incorrect DCCM Size\n");
- #endif
- 
- #ifdef CONFIG_ARC_HAS_ICCM
--	if (CONFIG_ARC_ICCM_SZ != cpu->iccm.sz)
-+	if (CONFIG_ARC_ICCM_SZ * SZ_1K != cpu->iccm.sz)
- 		panic("Linux built with incorrect ICCM Size\n");
- #endif
- 
--- 
-2.25.1
-
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -921,6 +921,7 @@ static const struct usb_device_id produc
+ 	{QMI_FIXED_INTF(0x1bbb, 0x0203, 2)},	/* Alcatel L800MA */
+ 	{QMI_FIXED_INTF(0x2357, 0x0201, 4)},	/* TP-LINK HSUPA Modem MA180 */
+ 	{QMI_FIXED_INTF(0x2357, 0x9000, 4)},	/* TP-LINK MA260 */
++	{QMI_QUIRK_SET_DTR(0x1bc7, 0x1031, 3)}, /* Telit LE910C1-EUX */
+ 	{QMI_QUIRK_SET_DTR(0x1bc7, 0x1040, 2)},	/* Telit LE922A */
+ 	{QMI_FIXED_INTF(0x1bc7, 0x1100, 3)},	/* Telit ME910 */
+ 	{QMI_FIXED_INTF(0x1bc7, 0x1101, 3)},	/* Telit ME910 dual modem */
 
 
