@@ -2,439 +2,321 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A9DC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD372C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6825E207C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:42:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75922207C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:44:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Q4cIlDSZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lk0Dyg+T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728705AbgFIKmg (ORCPT
+        id S1728118AbgFIKoo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 06:42:36 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:60501 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728118AbgFIKmf (ORCPT
+        Tue, 9 Jun 2020 06:44:44 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54782 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727122AbgFIKom (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 06:42:35 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200609104232euoutp015454c439ef314bf3b75e1713407b9095~W2iCwN_KU0920709207euoutp01B
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 10:42:32 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200609104232euoutp015454c439ef314bf3b75e1713407b9095~W2iCwN_KU0920709207euoutp01B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1591699352;
-        bh=PLSkqIpsLNlo/H+N+2IqGi7nS8Ifz833svNS45yASaU=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=Q4cIlDSZwf670+KHd/rCHR4dCy5PsuLxj5Cq1ZOgX3D3Yfw5JrO8SP7Z+uK8fXSdW
-         TkkIYqxU5MpGm/AdYPL5qX/VFkK93QlZxPTcE64iAVdeeuPE821sCYyAHS/xeVUl5H
-         74msriKs9OS8G6GaU1HitPdA64ZjG8MjagW6iyoY=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200609104231eucas1p112b22b13492cea33847f349dce05a938~W2iCAM-H61594015940eucas1p1V;
-        Tue,  9 Jun 2020 10:42:31 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 40.19.61286.7976FDE5; Tue,  9
-        Jun 2020 11:42:31 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200609104230eucas1p2efc14b59c4ccdcb839b54a62fbd8a31c~W2iBlGmiQ2622926229eucas1p2c;
-        Tue,  9 Jun 2020 10:42:30 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200609104230eusmtrp2bdccadc2492619067695f3ce648d7306~W2iBkUG5T2886328863eusmtrp2i;
-        Tue,  9 Jun 2020 10:42:30 +0000 (GMT)
-X-AuditID: cbfec7f2-ef1ff7000001ef66-07-5edf67973457
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 9F.A7.07950.6976FDE5; Tue,  9
-        Jun 2020 11:42:30 +0100 (BST)
-Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200609104230eusmtip21b6d4ef4b0fd3602023d5155dcc52158~W2iAvfttR1352613526eusmtip2G;
-        Tue,  9 Jun 2020 10:42:30 +0000 (GMT)
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>, peron.clem@gmail.com,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        linux-samsung-soc@vger.kernel.org,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Saravana Kannan <saravanak@google.com>
-Subject: [PATCH v3] soc: samsung: Add simple voltage coupler for Exynos5800
-Date:   Tue,  9 Jun 2020 12:42:21 +0200
-Message-Id: <20200609104221.21243-1-m.szyprowski@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA0WSe0hTURzHO7t3d9fR4naVPD2oWFgkpFtFnKzsQcHtSUQPKDSX3la5Tdl1
-        lf1TaNRaraIITUzFSvNRtrV0mxW1RltMp2iuiTO1hMgaldMeltbc7fHf5/c93+/5/g4cEqNt
-        wmnkQU0Oq9UoVFJCjNc/+96yoEDZkyqzeqYiU2GdEF3p6yfQy6G3QlTz+Q1ALS13Raj3WqcA
-        fXmhF6B2ezGBQkYnQIUtjwTotrNbhD58axagrpJ2HDV52oTI4Bgl0JjPhCO98wuGTMPMKpqx
-        FXWLmDKzjjFXnyGYgO8BwVwYlTGWjtM4c95SDRiXv0HAhMwzt0btFi/PYFUHD7PaxOQ08QF/
-        9w1RtmXb0eF+E34C9KwxgCgSUothVdMwbgBikqZuAdiYPwL4YQhA73W9kB9CAFpGf+B/I15f
-        4E+kEkBb3gj2L+IONIJxF0HJoSFoIMY5hkqB7sGKyFUY9RyHxe5bEVM0tRH2tJZh44xTcdDr
-        bIiwhFoBu0otQr5uFqy5+zjSACm7CL63dhL8wVr4sNT5h6PhgMsi4nkG/GUrFfCBfAD7vLdF
-        /HAOwPa8QsC7lsGAdyScJsM7zYd19kReXg2rvndEZEhNgv7g5HEZC+Ol+gKMlyVQf4rm3XNh
-        kevOv9onrW0Yzwysdfki+9Phxxsqx4iLYGbR/64yAKpBLKvj1EqWk2vYIwmcQs3pNMqE9Cy1
-        GYQ/lGfMNWgFw237HIAigXSixB/7KpUWKg5zuWoHgCQmjZGsafak0pIMRe4xVpu1V6tTsZwD
-        TCdxaaxkUfm7FJpSKnLYTJbNZrV/TwVk1LQTQO4umIP9FG52Jc3ZXiJz9T7Nh8F7Pwn1yXMf
-        7+/I7DyevKTWvxA3R9W8jrm5qzxJaUyz5u5XzQvMq9Jf7RL1XgvN2nBhZ63mrPrrhHS7Z9Rf
-        Fvy0giuu25O3dMehtd3MbPrySkdqdvym5C1FA03ljFGxWzYl0VfBro9LiwkZ10VLce6AQh6P
-        aTnFbxQw/wdMAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuphkeLIzCtJLcpLzFFi42I5/e/4Pd1p6ffjDLp7rCw2zljPajH14RM2
-        i+tfnrNarP74mNHi/PkN7BYP5t5ksvh2pYPJ4vKuOWwWn3uPMFrMOL+PyWLtkbvsFm9+nGWy
-        uD3vMovFmdOXWC26Dv1ls/h3bSOLRceRb8wWG796OAh57Jx1l91jwaZSj02rOtk87lzbw+bR
-        /9fAY8vVdhaPvi2rGD2O39jO5PF5k1wAZ5SeTVF+aUmqQkZ+cYmtUrShhZGeoaWFnpGJpZ6h
-        sXmslZGpkr6dTUpqTmZZapG+XYJexo27S9gLtgRVfH2ykaWB8b5TFyMnh4SAicS5a3dYQGwh
-        gaWMEm1TkyDiMhInpzWwQtjCEn+udbFB1HxilGi/ywViswkYSnS9hYiLCMRLnP5/gr2LkYuD
-        WeAqi8T/hnawZmEBb4n7FxYwg9gsAqoS545sB7N5BWwlbs/fArVAXmL1hgPMExh5FjAyrGIU
-        SS0tzk3PLTbSK07MLS7NS9dLzs/dxAiMiW3Hfm7Zwdj1LvgQowAHoxIP7w3xe3FCrIllxZW5
-        hxglOJiVRHidzp6OE+JNSaysSi3Kjy8qzUktPsRoCrR8IrOUaHI+MF7zSuINTQ3NLSwNzY3N
-        jc0slMR5OwQOxggJpCeWpGanphakFsH0MXFwSjUwGv+PC21d6fo3XNxseoy+Ua5EKhdr1/k9
-        s5yLp03ovictJTJrtli2WGZb9hrBvKOXWzkZ7YKSGWX8vE6e8/zjlzhzUd8Mg+8s5ZfZjvUc
-        75728cXhayXfFtT3N1VJP7rHHGnNH2TdfeLiGmcZjierJ9T1hZfHeG7P+3XRPqKv/J7Y6lNT
-        zZ4qsRRnJBpqMRcVJwIAxiycuJ8CAAA=
-X-CMS-MailID: 20200609104230eucas1p2efc14b59c4ccdcb839b54a62fbd8a31c
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200609104230eucas1p2efc14b59c4ccdcb839b54a62fbd8a31c
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200609104230eucas1p2efc14b59c4ccdcb839b54a62fbd8a31c
-References: <CGME20200609104230eucas1p2efc14b59c4ccdcb839b54a62fbd8a31c@eucas1p2.samsung.com>
+        Tue, 9 Jun 2020 06:44:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591699479;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qwMP1QMJ9V7sG+1vGh6zwbNZIAwnK+PCEmicjBiezlI=;
+        b=Lk0Dyg+Ta8X+/O1kOgHjI+oGBQuxkgQO1caSB0hUpyWfrRIbxcisqSzp8kg38lpiKGtzS2
+        NNadweUKATDvSi4g22PVMMhK2U2yzpo9UYc9zmS1B5pmOiMt+pFcLfWX0nrOovzKFTRJSA
+        IEoJt0psKGi29UTrNhfljMqaDVPi278=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-212-LAVprhMWObmXhJ99-2WTxw-1; Tue, 09 Jun 2020 06:44:37 -0400
+X-MC-Unique: LAVprhMWObmXhJ99-2WTxw-1
+Received: by mail-ed1-f69.google.com with SMTP id y5so2549548edt.3
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 03:44:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qwMP1QMJ9V7sG+1vGh6zwbNZIAwnK+PCEmicjBiezlI=;
+        b=Ru1TRSIx4N2bYYhcWALlO3N3rGXoD/+sTXWmA3wYrNskjFzatQJtiNZwAyLnOByV9C
+         DvENXfYQL6CSpBjZATTzCOXoX4qD0Mx0ii3XouUjZq7TOB/J4nRZ9s1CCoDG9t7pztGD
+         ljbojk2DYnI2M1QC/whBTVQbDj9sQr6w9rlhd6L2i630nuXcbUJOGF1U+2Bnk6AH4mew
+         ShGIyqVFCyIcrOYBGsdN5Lct7RWXf11aDlr5a5K9Gk7no07V0ugTl6RvdioU9y1SFbFG
+         WQknR8+iWYsFrNktHxGCdLYVXLTrMRjx5rrmoLKsTo5OYm2r73GAMYNIDlLVxY8CxZgl
+         RvmA==
+X-Gm-Message-State: AOAM532wGHdInIHHkzF1WlHR75ecfyOpjRRGR6or0rYh+iHYhylYvo12
+        UiKjM34EiHCnRyDnQuRvBjPC0prUz3RJsm/hhEKq8b7Tu8tLRUvKnOCPnwBvy4H/firOLVjNAQ6
+        DaPuT8urvUda1lz0Bzim9YWU7
+X-Received: by 2002:a17:907:212b:: with SMTP id qo11mr25748297ejb.235.1591699476424;
+        Tue, 09 Jun 2020 03:44:36 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyemFCrRYmtb3dPH+yP/k2MMt08xf+6m1XHEQzhn+cwsTk/l13kv9nL/DFFIlNl58nR0vpSYw==
+X-Received: by 2002:a17:907:212b:: with SMTP id qo11mr25748281ejb.235.1591699476092;
+        Tue, 09 Jun 2020 03:44:36 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id q3sm9548450eds.0.2020.06.09.03.44.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jun 2020 03:44:35 -0700 (PDT)
+Subject: Re: [PATCH 2/3] platform/x86: dell-wmi: add new keymap type 0x0012
+To:     Mario.Limonciello@dell.com, y.linux@paritcher.com
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        mjg59@srcf.ucam.org, pali@kernel.org
+References: <cover.1591584631.git.y.linux@paritcher.com>
+ <0dc191a3d16f0e114f6a8976433e248018e10c43.1591584631.git.y.linux@paritcher.com>
+ <83fe431cacbc4708962767668ac8f06f@AUSX13MPC105.AMER.DELL.COM>
+ <79bd59ee-dd37-bdc5-f6b4-00f2c33fdcff@paritcher.com>
+ <7f9f0410696141cfabb0237d33b7b529@AUSX13MPC105.AMER.DELL.COM>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <137d8e69-a83f-6129-19e0-316ef0a51076@redhat.com>
+Date:   Tue, 9 Jun 2020 12:44:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <7f9f0410696141cfabb0237d33b7b529@AUSX13MPC105.AMER.DELL.COM>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a simple custom voltage regulator coupler for Exynos5800 SoCs, which
-require coupling between "vdd_arm" and "vdd_int" regulators. This coupler
-ensures that the voltage values don't go below the bootloader-selected
-operation point during the boot process until a the clients sets their
-constraints. It is achieved by assuming minimal voltage value equal to
-the current value if no constraints are set. This also ensures proper
-voltage balancing if any of the client driver is missing.
+Hi,
 
-The balancing code comes from regulator core.c with the 
+On 6/8/20 10:36 PM, Mario.Limonciello@dell.com wrote:
+>> -----Original Message-----
+>> From: Y Paritcher <y.linux@paritcher.com>
+>> Sent: Monday, June 8, 2020 3:13 PM
+>> To: Limonciello, Mario
+>> Cc: linux-kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org;
+>> mjg59@srcf.ucam.org; pali@kernel.org
+>> Subject: Re: [PATCH 2/3] platform/x86: dell-wmi: add new keymap type 0x0012
+>>
+>>
+>> [EXTERNAL EMAIL]
+>>
+>> On 6/8/20 11:40 AM, Mario.Limonciello@dell.com wrote:
+>>>> -----Original Message-----
+>>>> From: platform-driver-x86-owner@vger.kernel.org <platform-driver-x86-
+>>>> owner@vger.kernel.org> On Behalf Of Y Paritcher
+>>>> Sent: Sunday, June 7, 2020 11:22 PM
+>>>> Cc: linux-kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org;
+>>>> Matthew Garrett; Pali Rohár
+>>>> Subject: [PATCH 2/3] platform/x86: dell-wmi: add new keymap type 0x0012
+>>>>
+>>>>
+>>>> [EXTERNAL EMAIL]
+>>>>
+>>>> Ignore events with a type of 0x0012 and a code of 0xe035,
+>>>> this silences the following messages being logged when
+>>>> pressing the Fn-lock key on a Dell Inspiron 5593:
+>>>>
+>>>> dell_wmi: Unknown WMI event type 0x12
+>>>> dell_wmi: Unknown key with type 0x0012 and code 0xe035 pressed
+>>>
+>>> Event type 0x12 is for "System Events".  This is the type of events that
+>>> you typically would see come in for things "like" the wrong power adapter
+>>> being plugged in on Windows or stuff about plugging a Thunderbolt dock
+>> into
+>>> a port that doesn't support Thunderbolt.
+>>>
+>>> A message might look something like (paraphrased)
+>>> "Your system requires a 180W power adapter to charge effectively, but you
+>>> plugged in a 60W adapter."
+>>>
+>>> There often is extended data with these events.  As such I don't believe
+>> all
+>>> information in event type 0x0012 should be treated like scan codes like
+>> those in
+>>> 0x10 or 0x11.
+>>>
+>>> I would guess that Fn-lock on this machine probably has extended data in
+>> the next
+>>> showing whether it was turned on and off.  If it does, perhaps it makes
+>> sense to
+>>> send this information to userspace as an evdev switch instead.
+>>>
+>>
+>> You are right.
+>> I had assumed (incorrectly) the were the same.
+>> I turned on dyndbg and got the events with the extended data.
+>>
+>> Fn lock key switched to multimedia keys
+>> dell_wmi: Received WMI event (02 00 12 00 35 e0 01 00 00 00 00 00 00 00 00
+>> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00)
+>> the extended data is e0 01
+>>
+>> Fn-lock switched to function keys
+>> dell_wmi: Received WMI event (02 00 12 00 35 e0 00 00 00 00 00 00 00 00 00
+>> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00)
+>> the extended data is e0 00
+> 
+> To be clear - do the function keys not send different scan codes on this laptop
+> in the two different modes?  I expected that they should be sending separate scan
+> codes.  If they are not sending different scan codes, then this actually needs
+> to be captured in the kernel and a translation map is needed which is platform
+> specific.
+> 
+>>
+>> Therefore i agree this should have it's own case in `dell_wmi_process_key`
+>> but i am
+>> not sure yet how to deal with it. any suggestion are helpful.
+>>
+>> About sending it to userspace, I just followed what was already done, if
+>> that is not
+>> desired we should change it for all the models.
+> 
+> Right, I don't think this was a bad first attempt.  I just think it's different
+> than the 0x10/0x11 events.
+> 
+> I'm not saying it shouldn't apply to more models, but just that events from
+> this 0x12 table should be treated differently.
+> 
+> I feel we need a different way to send these types of events to userspace
+> than a keycode.
+> 
+> I for example think that the power adapter and dock events are also potentially
+> useful but realistically userspace needs to be able to show translated messages to
+> a user.
+> 
+> Hans,
+> 
+> Can you please comment here how you would like to see events like this should come
+> through to userspace?
+> 
+> * Wrong power adapter (you have X and should have Y)
+> * You have plugged a dock into the wrong port
+> * Fn-lock mode
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
----
-This patch is yet another attempt to fix the regulator coupling on
-Exynos5800/5422 SoCs. Here are links to the previous attempts and
-discussions:
+Note just thinking out loud here.
 
-https://lore.kernel.org/linux-samsung-soc/20191008101709.qVNy8eijBi0LynOteWFMnTg4GUwKG599n6OyYoX1Abs@z/
-https://lore.kernel.org/lkml/20191017102758.8104-1-m.szyprowski@samsung.com/
-https://lore.kernel.org/linux-pm/cover.1589528491.git.viresh.kumar@linaro.org/
-https://lore.kernel.org/linux-pm/20200528131130.17984-1-m.szyprowski@samsung.com/
-https://lore.kernel.org/linux-samsung-soc/57cf3a15-5d9b-7636-4c69-60742e8cfae6@samsung.com/
-https://lore.kernel.org/lkml/20200605063724.9030-1-m.szyprowski@samsung.com/
+I'm thinking we just need a mechanism to show a "user notification". This would
+be just a plain text string passed from the kernel to userspace. I guess we
+may also want some mechanism to build (on the kernel side) a small file
+with all possible messages for translation from US English to other languages.
 
-The problem is with "vdd_int" regulator coupled with "vdd_arm" on Odroid
-XU3/XU4 boards family. "vdd_arm" is handled by CPUfreq. "vdd_int" is
-handled by devfreq. CPUfreq initialized quite early during boot and it
-starts changing OPPs and "vdd_arm" value. Sometimes CPU activity during
-boot goes down and some low-frequency OPPs are selected, what in turn
-causes lowering "vdd_arm". This happens before devfreq applies its
-requirements on "vdd_int". Regulator balancing code reduces "vdd_arm"
-voltage value, what in turn causes lowering "vdd_int" value to the lowest
-possible value. This is much below the operation point of the wcore bus,
-which still runs at the highest frequency.
+So the idea would be that e.g. gnome-shell can listen for these in some way
+and then show a notification in its notification mechanism with the message,
+like how it does for when software updates are available for example.
 
-The issue was hard to notice because in the most cases the board managed
-to boot properly, even when the regulator was set to lowest value allowed
-by the regulator constraints. However, it caused some random issues,
-which can be observed as "Unhandled prefetch abort" or low USB stability.
+I think we can make this as simple as using the normal printk buffer for this
+and prefixing the messages with "USER NOTIFY", we already have some messages
+in the kernel which would qualify for this, e.g. in the USB core we have:
 
-Handling this case in the generic code has been rejected, so the only way
-to ensure the desired behavior on Exynos5800-based SoCs is to make a
-custom regulator coupler driver. I've tried hard to extract some common
-code to simplify the exynos-regulator-coupler driver as much as possible,
-but the difference between it and the generic code is so deep that this
-approach failed, so indead I simply copied and modified the balancing
-code.
+                 dev_info(&udev->dev, "not running at top speed; "
+                         "connect to a high speed hub\n");
 
-Best regards
-Marek Szyprowski
----
- arch/arm/mach-exynos/Kconfig                  |   1 +
- drivers/soc/samsung/Kconfig                   |   3 +
- drivers/soc/samsung/Makefile                  |   1 +
- .../soc/samsung/exynos-regulator-coupler.c    | 221 ++++++++++++++++++
- 4 files changed, 226 insertions(+)
- create mode 100644 drivers/soc/samsung/exynos-regulator-coupler.c
+This one is about USB1 vs USB2 ports, but we have a similar one somewhere
+for USB2 vs USB3 ports (I think) which would also be an interesting message
+to actually show to the user inside the desktop environment.
 
-diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
-index 76838255b5fa..f185cd3d4c62 100644
---- a/arch/arm/mach-exynos/Kconfig
-+++ b/arch/arm/mach-exynos/Kconfig
-@@ -118,6 +118,7 @@ config SOC_EXYNOS5800
- 	bool "Samsung EXYNOS5800"
- 	default y
- 	depends on SOC_EXYNOS5420
-+	select EXYNOS_REGULATOR_COUPLER
- 
- config EXYNOS_MCPM
- 	bool
-diff --git a/drivers/soc/samsung/Kconfig b/drivers/soc/samsung/Kconfig
-index 19c4d3f1437b..5d7819b52eed 100644
---- a/drivers/soc/samsung/Kconfig
-+++ b/drivers/soc/samsung/Kconfig
-@@ -43,4 +43,7 @@ config EXYNOS_PM_DOMAINS
- 	bool "Exynos PM domains" if COMPILE_TEST
- 	depends on PM_GENERIC_DOMAINS || COMPILE_TEST
- 
-+config EXYNOS_REGULATOR_COUPLER
-+	bool "Exynos SoC Regulator Coupler" if COMPILE_TEST
-+	depends on ARCH_EXYNOS || COMPILE_TEST
- endif
-diff --git a/drivers/soc/samsung/Makefile b/drivers/soc/samsung/Makefile
-index 31db65cb7aa3..93285faec416 100644
---- a/drivers/soc/samsung/Makefile
-+++ b/drivers/soc/samsung/Makefile
-@@ -10,3 +10,4 @@ obj-$(CONFIG_EXYNOS_PMU_ARM_DRIVERS)	+= exynos3250-pmu.o exynos4-pmu.o \
- 					exynos5250-pmu.o exynos5420-pmu.o
- obj-$(CONFIG_EXYNOS_PMU_ARM64_DRIVERS)	+= exynos-pm.o exynos5433-pmu.o
- obj-$(CONFIG_EXYNOS_PM_DOMAINS) += pm_domains.o
-+obj-$(CONFIG_EXYNOS_REGULATOR_COUPLER) += exynos-regulator-coupler.o
-diff --git a/drivers/soc/samsung/exynos-regulator-coupler.c b/drivers/soc/samsung/exynos-regulator-coupler.c
-new file mode 100644
-index 000000000000..3cafc1738eb6
---- /dev/null
-+++ b/drivers/soc/samsung/exynos-regulator-coupler.c
-@@ -0,0 +1,221 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2020 Samsung Electronics Co., Ltd.
-+ *	      http://www.samsung.com/
-+ * Author: Marek Szyprowski <m.szyprowski@samsung.com>
-+ *
-+ * Simplified generic volatage coupler from regulator core.c
-+ * The main difference is that it keeps current regulator voltage
-+ * if consumers didn't apply their contraints yet.
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/of.h>
-+#include <linux/regulator/coupler.h>
-+#include <linux/regulator/driver.h>
-+#include <linux/regulator/machine.h>
-+
-+static int regulator_get_optimal_voltage(struct regulator_dev *rdev,
-+					 int *current_uV,
-+					 int *min_uV, int *max_uV,
-+					 suspend_state_t state)
-+{
-+	struct coupling_desc *c_desc = &rdev->coupling_desc;
-+	struct regulator_dev **c_rdevs = c_desc->coupled_rdevs;
-+	struct regulation_constraints *constraints = rdev->constraints;
-+	int desired_min_uV = 0, desired_max_uV = INT_MAX;
-+	int max_current_uV = 0, min_current_uV = INT_MAX;
-+	int highest_min_uV = 0, target_uV, possible_uV;
-+	int i, ret, max_spread, n_coupled = c_desc->n_coupled;
-+	bool done;
-+
-+	*current_uV = -1;
-+
-+	/* Find highest min desired voltage */
-+	for (i = 0; i < n_coupled; i++) {
-+		int tmp_min = 0;
-+		int tmp_max = INT_MAX;
-+
-+		lockdep_assert_held_once(&c_rdevs[i]->mutex.base);
-+
-+		ret = regulator_check_consumers(c_rdevs[i],
-+						&tmp_min,
-+						&tmp_max, state);
-+		if (ret < 0)
-+			return ret;
-+
-+		if (tmp_min == 0) {
-+			ret = regulator_get_voltage_rdev(c_rdevs[i]);
-+			if (ret < 0)
-+				return ret;
-+			tmp_min = ret;
-+		}
-+
-+		/* apply constraints */
-+		ret = regulator_check_voltage(c_rdevs[i], &tmp_min, &tmp_max);
-+		if (ret < 0)
-+			return ret;
-+
-+		highest_min_uV = max(highest_min_uV, tmp_min);
-+
-+		if (i == 0) {
-+			desired_min_uV = tmp_min;
-+			desired_max_uV = tmp_max;
-+		}
-+	}
-+
-+	max_spread = constraints->max_spread[0];
-+
-+	/*
-+	 * Let target_uV be equal to the desired one if possible.
-+	 * If not, set it to minimum voltage, allowed by other coupled
-+	 * regulators.
-+	 */
-+	target_uV = max(desired_min_uV, highest_min_uV - max_spread);
-+
-+	/*
-+	 * Find min and max voltages, which currently aren't violating
-+	 * max_spread.
-+	 */
-+	for (i = 1; i < n_coupled; i++) {
-+		int tmp_act;
-+
-+		tmp_act = regulator_get_voltage_rdev(c_rdevs[i]);
-+		if (tmp_act < 0)
-+			return tmp_act;
-+
-+		min_current_uV = min(tmp_act, min_current_uV);
-+		max_current_uV = max(tmp_act, max_current_uV);
-+	}
-+
-+	/*
-+	 * Correct target voltage, so as it currently isn't
-+	 * violating max_spread
-+	 */
-+	possible_uV = max(target_uV, max_current_uV - max_spread);
-+	possible_uV = min(possible_uV, min_current_uV + max_spread);
-+
-+	if (possible_uV > desired_max_uV)
-+		return -EINVAL;
-+
-+	done = (possible_uV == target_uV);
-+	desired_min_uV = possible_uV;
-+
-+	/* Set current_uV if wasn't done earlier in the code and if necessary */
-+	if (*current_uV == -1) {
-+		ret = regulator_get_voltage_rdev(rdev);
-+		if (ret < 0)
-+			return ret;
-+		*current_uV = ret;
-+	}
-+
-+	*min_uV = desired_min_uV;
-+	*max_uV = desired_max_uV;
-+
-+	return done;
-+}
-+
-+static int exynos_coupler_balance_voltage(struct regulator_coupler *coupler,
-+					  struct regulator_dev *rdev,
-+					  suspend_state_t state)
-+{
-+	struct regulator_dev **c_rdevs;
-+	struct regulator_dev *best_rdev;
-+	struct coupling_desc *c_desc = &rdev->coupling_desc;
-+	int i, ret, n_coupled, best_min_uV, best_max_uV, best_c_rdev;
-+	unsigned int delta, best_delta;
-+	unsigned long c_rdev_done = 0;
-+	bool best_c_rdev_done;
-+
-+	c_rdevs = c_desc->coupled_rdevs;
-+	n_coupled = c_desc->n_coupled;
-+
-+	/*
-+	 * Find the best possible voltage change on each loop. Leave the loop
-+	 * if there isn't any possible change.
-+	 */
-+	do {
-+		best_c_rdev_done = false;
-+		best_delta = 0;
-+		best_min_uV = 0;
-+		best_max_uV = 0;
-+		best_c_rdev = 0;
-+		best_rdev = NULL;
-+
-+		/*
-+		 * Find highest difference between optimal voltage
-+		 * and current voltage.
-+		 */
-+		for (i = 0; i < n_coupled; i++) {
-+			/*
-+			 * optimal_uV is the best voltage that can be set for
-+			 * i-th regulator at the moment without violating
-+			 * max_spread constraint in order to balance
-+			 * the coupled voltages.
-+			 */
-+			int optimal_uV = 0, optimal_max_uV = 0, current_uV = 0;
-+
-+			if (test_bit(i, &c_rdev_done))
-+				continue;
-+
-+			ret = regulator_get_optimal_voltage(c_rdevs[i],
-+							    &current_uV,
-+							    &optimal_uV,
-+							    &optimal_max_uV,
-+							    state);
-+			if (ret < 0)
-+				goto out;
-+
-+			delta = abs(optimal_uV - current_uV);
-+
-+			if (delta && best_delta <= delta) {
-+				best_c_rdev_done = ret;
-+				best_delta = delta;
-+				best_rdev = c_rdevs[i];
-+				best_min_uV = optimal_uV;
-+				best_max_uV = optimal_max_uV;
-+				best_c_rdev = i;
-+			}
-+		}
-+
-+		/* Nothing to change, return successfully */
-+		if (!best_rdev) {
-+			ret = 0;
-+			goto out;
-+		}
-+
-+		ret = regulator_set_voltage_rdev(best_rdev, best_min_uV,
-+						 best_max_uV, state);
-+
-+		if (ret < 0)
-+			goto out;
-+
-+		if (best_c_rdev_done)
-+			set_bit(best_c_rdev, &c_rdev_done);
-+
-+	} while (n_coupled > 1);
-+
-+out:
-+	return ret;
-+}
-+
-+static int exynos_coupler_attach(struct regulator_coupler *coupler,
-+				 struct regulator_dev *rdev)
-+{
-+	return 0;
-+}
-+
-+static struct regulator_coupler exynos_coupler = {
-+	.attach_regulator = exynos_coupler_attach,
-+	.balance_voltage  = exynos_coupler_balance_voltage,
-+};
-+
-+static int __init exynos_coupler_init(void)
-+{
-+	if (!of_machine_is_compatible("samsung,exynos5800"))
-+		return 0;
-+
-+	return regulator_coupler_register(&exynos_coupler);
-+}
-+arch_initcall(exynos_coupler_init);
--- 
-2.17.1
+So sticking with the above example, we could change that to
+
+#define USER_NOTIFY "USER NOTIFY: "
+
+dev_info(&udev->dev, USER_NOTIFY "not running at top speed; connect to a high speed hub\n");
+
+And then userspace would trigger on the "USER NOTIFY: " part, keep the
+bit before it (which describes the device) as is, try to translate
+the text after it and then combine the text before it + the possibly
+translated text after it and show that as a notification.
+
+The reason for (ab)using the printk ring-buffer for this is that
+we will still want to have these messages in dmesg too anyways,
+so why add a new mechanism and send the same message twice if
+we can just tag the messages inside the printk ring-buffer ?
+
+Note the dev_info above would likely be replaced with some new
+helper which also does some magic to help with gathering a
+list of strings to translate.
+
+Again just thinking out loud here. If anyone has any initial
+reaction to this please let me know...
+
+Regards,
+
+Hans
+
+
+
+
+
+
+
+
+
+
+> 
+>>>>
+>>>> Signed-off-by: Y Paritcher <y.linux@paritcher.com>
+>>>> ---
+>>>>   drivers/platform/x86/dell-wmi.c | 17 +++++++++++++++++
+>>>>   1 file changed, 17 insertions(+)
+>>>>
+>>>> diff --git a/drivers/platform/x86/dell-wmi.c
+>> b/drivers/platform/x86/dell-
+>>>> wmi.c
+>>>> index 0b4f72f923cd..f37e7e9093c2 100644
+>>>> --- a/drivers/platform/x86/dell-wmi.c
+>>>> +++ b/drivers/platform/x86/dell-wmi.c
+>>>> @@ -334,6 +334,14 @@ static const struct key_entry
+>>>> dell_wmi_keymap_type_0011[] = {
+>>>>   	{ KE_IGNORE, KBD_LED_AUTO_100_TOKEN, { KEY_RESERVED } },
+>>>>   };
+>>>>
+>>>> +/*
+>>>> + * Keymap for WMI events of type 0x0012
+>>>> + */
+>>>> +static const struct key_entry dell_wmi_keymap_type_0012[] = {
+>>>> +	/* Fn-lock button pressed */
+>>>> +	{ KE_IGNORE, 0xe035, { KEY_RESERVED } },
+>>>> +};
+>>>> +
+>>>>   static void dell_wmi_process_key(struct wmi_device *wdev, int type, int
+>>>> code)
+>>>>   {
+>>>>   	struct dell_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
+>>>> @@ -425,6 +433,7 @@ static void dell_wmi_notify(struct wmi_device *wdev,
+>>>>   			break;
+>>>>   		case 0x0010: /* Sequence of keys pressed */
+>>>>   		case 0x0011: /* Sequence of events occurred */
+>>>> +		case 0x0012: /* Sequence of events occurred */
+>>>>   			for (i = 2; i < len; ++i)
+>>>>   				dell_wmi_process_key(wdev, buffer_entry[1],
+>>>>   						     buffer_entry[i]);
+>>>> @@ -556,6 +565,7 @@ static int dell_wmi_input_setup(struct wmi_device
+>>>> *wdev)
+>>>>   			 ARRAY_SIZE(dell_wmi_keymap_type_0000) +
+>>>>   			 ARRAY_SIZE(dell_wmi_keymap_type_0010) +
+>>>>   			 ARRAY_SIZE(dell_wmi_keymap_type_0011) +
+>>>> +			 ARRAY_SIZE(dell_wmi_keymap_type_0012) +
+>>>>   			 1,
+>>>>   			 sizeof(struct key_entry), GFP_KERNEL);
+>>>>   	if (!keymap) {
+>>>> @@ -600,6 +610,13 @@ static int dell_wmi_input_setup(struct wmi_device
+>>>> *wdev)
+>>>>   		pos++;
+>>>>   	}
+>>>>
+>>>> +	/* Append table with events of type 0x0012 */
+>>>> +	for (i = 0; i < ARRAY_SIZE(dell_wmi_keymap_type_0012); i++) {
+>>>> +		keymap[pos] = dell_wmi_keymap_type_0012[i];
+>>>> +		keymap[pos].code |= (0x0012 << 16);
+>>>> +		pos++;
+>>>> +	}
+>>>> +
+>>>>   	/*
+>>>>   	 * Now append also table with "legacy" events of type 0x0000. Some of
+>>>>   	 * them are reported also on laptops which have scancodes in DMI.
+>>>> --
+>>>> 2.27.0
+>>>
 
