@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC5BC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5924AC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:05:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADDE520691
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:05:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3957D20691
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:05:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725939;
-	bh=ckNLh2n+Dc7ckEahQ8OUPixQxq1QJCpN7sdro1EuQFs=;
+	s=default; t=1591725946;
+	bh=KBJDsnC/ruZzhFkAosuSNvcMKVC5aIEuK5TDQj8MtJI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HShwS5nuF6pJDRqm8wBnfvjyFXRcfYV8Pp670NW3r/qFMVzmHo88XhHHbT4GRrssP
-	 g/kkfNpOzvToCYu1kGwdXBlX562+4nPXCmxsgwXhC3W37456zWxLkWS2IUJDMImTSs
-	 5oxUfsfzG2560YwsJ+/CZUgIJn84NEq/IOxG7zSM=
+	b=vAXInZCnQ8+Xu5kLic9dndUkhivPjDZ7Pz/Jc3EJRu1HjyL876KEq7m1cThYSGEGU
+	 SbGpGdKbxiZ51tuMkQpotzmNeLphvk1fUmVOj8DIPPhTebN1KLeQdvFXRjI78ASKqm
+	 Rx6IZR68sbr9PqFSg7b7pTA9qZMK5hm6TyBpzCWA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731569AbgFISFa (ORCPT
+        id S2388114AbgFISFo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:05:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41196 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 14:05:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728822AbgFIRvo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:51:44 -0400
+        id S1731094AbgFIRvi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:51:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 034A62074B;
-        Tue,  9 Jun 2020 17:51:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89440207ED;
+        Tue,  9 Jun 2020 17:51:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725102;
-        bh=ckNLh2n+Dc7ckEahQ8OUPixQxq1QJCpN7sdro1EuQFs=;
+        s=default; t=1591725098;
+        bh=KBJDsnC/ruZzhFkAosuSNvcMKVC5aIEuK5TDQj8MtJI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kNW2Wy1MZedKYxX/48bBsTPPSlc1iqyz7vYiTzbb9RAtgDUnaIMf8wq42T1Wos0zx
-         m3QCoR5lf/YliQBEXs3IrSWQ4+T78hfPBcaC7JlI4a6xEFow9vMQ0o7+9Jv2//b03O
-         xxvEAze8MkRaomPL10CEW+aJeNsVCnwSML8I6t/w=
+        b=lUFcgkJuqAUT+EkUBPGJkK+hWkABultFiESPCnKyhJf0yuBvEtZeLewySP7/iueL3
+         Qq6LOL+4JhnM8RZ8U7RJGWEqS1Li/OYeI9alxHgEz46hOQ+PhGpxuLcgOmyG3ConHs
+         7vhDkvSk5cofZml30KELwmi0RMcFNuoTrG7T/2rg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Paul Gortmaker <paul.gortmaker@windriver.com>,
-        Roi Dayan <roid@mellanox.com>, Mark Bloch <markb@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 4.19 25/25] Revert "net/mlx5: Annotate mutex destroy for root ns"
-Date:   Tue,  9 Jun 2020 19:45:15 +0200
-Message-Id: <20200609174051.624603139@linuxfoundation.org>
+        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 4.19 23/25] x86/speculation: Add Ivy Bridge to affected list
+Date:   Tue,  9 Jun 2020 19:45:13 +0200
+Message-Id: <20200609174051.367738188@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174048.576094775@linuxfoundation.org>
 References: <20200609174048.576094775@linuxfoundation.org>
@@ -61,59 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-This reverts commit 95fde2e46860c183f6f47a99381a3b9bff488bd5 which is
-commit 9ca415399dae133b00273a4283ef31d003a6818d upstream.
+commit 3798cc4d106e91382bfe016caa2edada27c2bb3f upstream
 
-It was backported incorrectly, Paul writes at:
-	https://lore.kernel.org/r/20200607203425.GD23662@windriver.com
+Make the docs match the code.
 
-	I happened to notice this commit:
-
-	9ca415399dae - "net/mlx5: Annotate mutex destroy for root ns"
-
-	...was backported to 4.19 and 5.4 and v5.6 in linux-stable.
-
-	It patches del_sw_root_ns() - which only exists after v5.7-rc7 from:
-
-	6eb7a268a99b - "net/mlx5: Don't maintain a case of del_sw_func being
-	null"
-
-	which creates the one line del_sw_root_ns stub function around
-	kfree(node) by breaking it out of tree_put_node().
-
-	In the absense of del_sw_root_ns - the backport finds an identical one
-	line kfree stub fcn - named del_sw_prio from this earlier commit:
-
-	139ed6c6c46a - "net/mlx5: Fix steering memory leak"  [in v4.15-rc5]
-
-	and then puts the mutex_destroy() into that (wrong) function, instead of
-	putting it into tree_put_node where the root ns case used to be hand
-
-Reported-by: Paul Gortmaker <paul.gortmaker@windriver.com>
-Cc: Roi Dayan <roid@mellanox.com>
-Cc: Mark Bloch <markb@mellanox.com>
-Cc: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/fs_core.c |    6 ------
- 1 file changed, 6 deletions(-)
+ Documentation/admin-guide/hw-vuln/special-register-buffer-data-sampling.rst |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
-@@ -364,12 +364,6 @@ static void del_sw_ns(struct fs_node *no
+--- a/Documentation/admin-guide/hw-vuln/special-register-buffer-data-sampling.rst
++++ b/Documentation/admin-guide/hw-vuln/special-register-buffer-data-sampling.rst
+@@ -27,6 +27,8 @@ by software using TSX_CTRL_MSR otherwise
+   =============  ============  ========
+   common name    Family_Model  Stepping
+   =============  ============  ========
++  IvyBridge      06_3AH        All
++
+   Haswell        06_3CH        All
+   Haswell_L      06_45H        All
+   Haswell_G      06_46H        All
+@@ -37,9 +39,8 @@ by software using TSX_CTRL_MSR otherwise
+   Skylake_L      06_4EH        All
+   Skylake        06_5EH        All
  
- static void del_sw_prio(struct fs_node *node)
- {
--	struct mlx5_flow_root_namespace *root_ns;
--	struct mlx5_flow_namespace *ns;
+-  Kabylake_L     06_8EH        <=0xC
 -
--	fs_get_obj(ns, node);
--	root_ns = container_of(ns, struct mlx5_flow_root_namespace, ns);
--	mutex_destroy(&root_ns->chain_lock);
- 	kfree(node);
- }
+-  Kabylake       06_9EH        <=0xD
++  Kabylake_L     06_8EH        <= 0xC
++  Kabylake       06_9EH        <= 0xD
+   =============  ============  ========
  
+ Related CVEs
 
 
