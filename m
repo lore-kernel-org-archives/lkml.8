@@ -2,93 +2,101 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E056C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 22:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ECE0C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 22:45:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35E00206D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 22:43:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED7EE2067B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 22:45:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AzHtaE2L"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J8DftvE3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728578AbgFIWn5 (ORCPT
+        id S1728588AbgFIWpt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 18:43:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58634 "EHLO
+        Tue, 9 Jun 2020 18:45:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728108AbgFIWn5 (ORCPT
+        with ESMTP id S1728108AbgFIWps (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 18:43:57 -0400
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEBD0C05BD1E;
-        Tue,  9 Jun 2020 15:43:56 -0700 (PDT)
-Received: by mail-ej1-x62a.google.com with SMTP id p20so335731ejd.13;
-        Tue, 09 Jun 2020 15:43:56 -0700 (PDT)
+        Tue, 9 Jun 2020 18:45:48 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2E0EC05BD1E;
+        Tue,  9 Jun 2020 15:45:47 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id w3so274909qkb.6;
+        Tue, 09 Jun 2020 15:45:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vXB5gpluMB0lOFLBpitZlFgfHQ/XlzIJ+dmR9JaAw9s=;
-        b=AzHtaE2Lkh8H/AOyQ7Dg5nOjigUf6h3B/3+Xp9DAKQK7f+uZnR6M9AkGLq3D/zEPf6
-         KGXydAltBQm2TxdndJXEP+baK+nPaU686iV3+QIDmtk7kh1gKiS2bcHfaqbwedUW7pC1
-         Yt6wLdqm3TS6OcpJ2JhrixMI2NtFkZtOKQyPJNpiLMtAJs+maq2Qy6/OBzIlB4yp+l8h
-         p0MIb0Ify5P8uhD+oL7q1YxFVxEz7a0UUJgIeS76a4P2mmnCXu8xrGsNlS+QvUzebo6K
-         pIItD1us/1Ij9KQTdPsgCNNaOi9UhSeQSt8iNktOJ8Z8y9xPnFUXt8qFkVwKfZ/pJyeh
-         33yg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bnajTCsYo//0LX6v48OVudY2hoQxnR0lPhAu3BVle9c=;
+        b=J8DftvE3CnS7ZKX6nz4fGSSQWd5bh0hJqetE9b7SOKmSp94WHGu8gsy92YCXxo8FNo
+         WC5PK/UaJZRC9YoL7WKrBKqmyIRcPCDFpnQMB3LXIaNXVCLljAjAqp/CkdNF3Nl6cq9U
+         wtoYooGY7WxWT8C2PMvAR257F3NUY8goeaoSAehXAyDZlFUM17EwmfCtzBCZ05x8yG2x
+         +119SZGLWC2I5lns6fzL2xjykKv8VV2NXPL4LfDX3+W6zxn05HlqRBHZqNGl4Xw6DE48
+         CadmMPWu/eCeTs5LK9qhw0IqXdGsopGzJqomdGGsARyfQZad2X8MxLs3aTXiYxw/81oV
+         9xKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vXB5gpluMB0lOFLBpitZlFgfHQ/XlzIJ+dmR9JaAw9s=;
-        b=oP6vGhJRtvKcgQ63St2/nuNPEjGl24a+oNNi1+dN9ymWN9DOc59x9QKMkNDXgQXU/j
-         7t1vDYK9EI/kp3l9j1cDGop3d0axO8ZLDQAH8GQsJ4N7rrKg0yiWMgEUjKXXDmIpVGjh
-         V0kSoAS9sGBzVNt5aFSsdLTU0pCAlY5Hc7Mnd8b0HkzICXgnXDuwadseLPkkUOoJWlVD
-         UfWiU3HI+Unlu5IhpO5xNWVJ3aoXUZLEQU01Rpz8nwTnIWT4JLz6b+zMzUqXl1CR9LNx
-         A3FzSZcFK6wqR45qtuoTgDHFv1c0ag5MkSZJKrW2DkemwHRsqs/fucBwD2frVzUpOIeL
-         ULhA==
-X-Gm-Message-State: AOAM533mRrEGGB7w63nN5XpFuBq7TW+ZwZfB5hT4POIV+nQZyG/thNWJ
-        v+71XNNpelRe6pxAPT+jAMz3fy8LAe2cMikKzqQ=
-X-Google-Smtp-Source: ABdhPJwN9jPv4IolKEOumXAjoRwK0NMxIMFahAbn/qm7zvM/qDz5Awmao4/g91Kf22umfwaTWyzg6FBx2yTf3qJgUWk=
-X-Received: by 2002:a17:906:5e06:: with SMTP id n6mr550181eju.504.1591742635550;
- Tue, 09 Jun 2020 15:43:55 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bnajTCsYo//0LX6v48OVudY2hoQxnR0lPhAu3BVle9c=;
+        b=IoRY+MLqjOJGokqiBPl08qQQx/maw3u6p01eXA1hlcRgVPos+eMcuSRhBolDVUcW+q
+         qYxivyFLyozVrNI6B9uV9yG2TH0bI3c7+BPfuMroonS7jRWSeJsbGFP341BYu7LtMd0+
+         ND9QErhUVYsDcQHR4X9KyPw4xruDO+dvtR81G2CsHnCfKQOVxR77kiyGQtFMkXVckHjz
+         ZAMzhDteXLo1kHapd9vbXZWaJNtuj93tI/YtvepyI6nC5HqQOoRSCDBDZuijNYV4PFG4
+         C3tG1JaDIkp/PTmNFSGjXcIx4I306l1jTu5myFQKrPmGMITQCP/HlvXOoGpIVbT9wg5H
+         DCJA==
+X-Gm-Message-State: AOAM530IcBNMv/AYPTxs/Nt3YyWAqQkLj1YDyFCruouG1KmmgdaTdPe1
+        Qu6EUB1Ztc3d98BZg6cKmQ==
+X-Google-Smtp-Source: ABdhPJy3OkPGQRSZZPsiFZzPVaGRJb/o3iSXN4EkyJCA80OAb7iK0e/0V0u0IDcCUZkx+xMzdQ9hzw==
+X-Received: by 2002:a37:a20c:: with SMTP id l12mr232487qke.34.1591742746924;
+        Tue, 09 Jun 2020 15:45:46 -0700 (PDT)
+Received: from localhost.localdomain ([142.119.96.191])
+        by smtp.googlemail.com with ESMTPSA id j5sm12698804qtc.72.2020.06.09.15.45.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2020 15:45:46 -0700 (PDT)
+From:   Keyur Patel <iamkeyur96@gmail.com>
+Cc:     Keyur Patel <iamkeyur96@gmail.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] power: supply: axp20x_usb_power: fix spelling mistake
+Date:   Tue,  9 Jun 2020 18:45:23 -0400
+Message-Id: <20200609224524.108092-1-iamkeyur96@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200531174612.260113-1-konradybcio@gmail.com>
- <20200531174612.260113-3-konradybcio@gmail.com> <20200609221917.GA1595469@bogus>
-In-Reply-To: <20200609221917.GA1595469@bogus>
-From:   Konrad Dybcio <konradybcio@gmail.com>
-Date:   Wed, 10 Jun 2020 00:43:19 +0200
-Message-ID: <CAMS8qEVZuGh-hkUQDoC0avSb7gKkWE7cswvhXHZHJhDPPU5u+Q@mail.gmail.com>
-Subject: Re: [PATCH 2/4] Add compatible strings and the include files for the
- msm8992 GCC.
-To:     Rob Herring <robh@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-clk@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->'dt-bindings: clock: qcom,gcc: ...' for the subject.
-Will do.
+Fix typo: "tigger" --> "trigger"
 
->Don't care about DT on non-GPL OSs?
-I'm not sure I understand? Now that I look at it the copyright to TLF
-looks kinda out of place.. what should it be?
+Signed-off-by: Keyur Patel <iamkeyur96@gmail.com>
+---
+ drivers/power/supply/axp20x_usb_power.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->License?
-Derp. Will correct in v2.
+diff --git a/drivers/power/supply/axp20x_usb_power.c b/drivers/power/supply/axp20x_usb_power.c
+index 4fde24b5f35a..d01dc0332edc 100644
+--- a/drivers/power/supply/axp20x_usb_power.c
++++ b/drivers/power/supply/axp20x_usb_power.c
+@@ -78,7 +78,7 @@ static bool axp20x_usb_vbus_needs_polling(struct axp20x_usb_power *power)
+ 	/*
+ 	 * Polling is only necessary while VBUS is offline. While online, a
+ 	 * present->absent transition implies an online->offline transition
+-	 * and will triger the VBUS_REMOVAL IRQ.
++	 * and will trigger the VBUS_REMOVAL IRQ.
+ 	 */
+ 	if (power->axp20x_id >= AXP221_ID && !power->online)
+ 		return true;
+-- 
+2.26.2
 
-
-Thanks for your review
-Konrad
