@@ -2,222 +2,100 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0669C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 678F6C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C93A0206A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:54:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BnhTERpJ"
+	by mail.kernel.org (Postfix) with ESMTP id 35DCE20820
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:54:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591707286;
+	bh=s6DjVd5S/9BMaBHFd1sXcmmcw3hwmnb2raoYKakwRWc=;
+	h=Date:From:To:In-Reply-To:References:Subject:List-ID:From;
+	b=aGiIS8/kUFRbqdMxK5wAcn85mogGYeDdcZWMDUWBDodpKjvJCHouMEAoFtd8EX5CH
+	 xr7KHh2dZV3LCKuu/QmMPa1ANdFM12vPAq4jf94LhWAian/zy+p8CaxRt5wX4cNv7M
+	 O54BKnGnKr1aT39Y95yB52S8tZy+OoZEyDZzWmC4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728330AbgFIMy0 (ORCPT
+        id S1728393AbgFIMyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 08:54:26 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33953 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728254AbgFIMyZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 08:54:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591707263;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=rEAst9iWMvpWNJViYQ7HxnY62Amp3Ak48Dlm2FPiyl8=;
-        b=BnhTERpJbKd3bf6K/D/W2av4y8niXjYZl2nlalDgVtgUBZWTdVy5QSVTywC0KguTHtqEri
-        /BM5dIoXrvqeBIgjIrUSGMwiGLt82QAF2BPSN6VlcUPnQEElGf3PubrKH3p0wabtKYCuwd
-        BFS3b2J8r1qE1ldm9nG4BcI+44eAsVs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-456-YM-xOyOvO_-FzEMKWxrwQA-1; Tue, 09 Jun 2020 08:54:21 -0400
-X-MC-Unique: YM-xOyOvO_-FzEMKWxrwQA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 9 Jun 2020 08:54:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57416 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728217AbgFIMyn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 08:54:43 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DB5C71B18BC2;
-        Tue,  9 Jun 2020 12:54:19 +0000 (UTC)
-Received: from madcap2.tricolour.ca (unknown [10.10.110.54])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6C84478FA0;
-        Tue,  9 Jun 2020 12:54:06 +0000 (UTC)
-Date:   Tue, 9 Jun 2020 08:54:02 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Cc:     zohar@linux.ibm.com, paul@paul-moore.com,
-        linux-integrity@vger.kernel.org, linux-audit@redhat.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] IMA: Add audit log for failure conditions
-Message-ID: <20200609125402.wigqnnhy7lxsyqxf@madcap2.tricolour.ca>
-References: <20200608215343.4491-1-nramas@linux.microsoft.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200608215343.4491-1-nramas@linux.microsoft.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+        by mail.kernel.org (Postfix) with ESMTPSA id EAC30206A4;
+        Tue,  9 Jun 2020 12:54:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591707283;
+        bh=s6DjVd5S/9BMaBHFd1sXcmmcw3hwmnb2raoYKakwRWc=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=dNl6PiKGvSYn9EtRbIRN37OwxVFkRJ6JigXpcIGgtBn7yFIifpMp+FpXxNWy81CP0
+         q/TXS0BDniJk36Hp8ST9U0GWXZkSZUuyb3UreVw0rbKlh8iRijWZ4iAza/1s8Ryruk
+         cIEQ4UReD6Qw6TSMUeS7Gr/2vEIR1iZUR3KQ+I40=
+Date:   Tue, 09 Jun 2020 13:54:41 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        khilman@baylibre.com, trivial@kernel.org, tiwai@suse.com,
+        linux-amlogic@lists.infradead.org, lgirdwood@gmail.com,
+        jbrunet@baylibre.com, perex@perex.cz, Pavel Machek <pavel@ucw.cz>
+In-Reply-To: <20200606153103.GA17905@amd>
+References: <20200606153103.GA17905@amd>
+Subject: Re: [PATCH] soc/meson: add missing free_irq() in error path
+Message-Id: <159170728116.39758.7078171173608119495.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-08 14:53, Lakshmi Ramasubramanian wrote:
-> The final log statement in process_buffer_measurement() for failure
-> condition is at debug level. This does not log the message unless
-> the system log level is raised which would significantly increase
-> the messages in the system log. Change this log message to an audit
-> message for better triaging failures in the function.
+On Sat, 6 Jun 2020 17:31:03 +0200, Pavel Machek wrote:
+> free_irq() is missing in case of error, fix that.
 > 
-> ima_alloc_key_entry() does not log a message for failure condition.
-> Add an audit message for failure condition in this function.
+> Signed-off-by: Pavel Machek (CIP) <pavel@denx.de>
 > 
-> Sample audit messages:
+> diff --git a/sound/soc/meson/axg-fifo.c b/sound/soc/meson/axg-fifo.c
+> index 2e9b56b29d31..b2e867113226 100644
+> --- a/sound/soc/meson/axg-fifo.c
+> +++ b/sound/soc/meson/axg-fifo.c
+> @@ -249,7 +249,7 @@ int axg_fifo_pcm_open(struct snd_soc_component *component,
+>  	/* Enable pclk to access registers and clock the fifo ip */
+>  	ret = clk_prepare_enable(fifo->pclk);
+>  	if (ret)
+> -		return ret;
+> +		goto free_irq;
 > 
-> [    8.051937] audit: type=1804 audit(1591633422.365:8): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0 op=measuring_keys cause=hashing_error(-22) comm="systemd" name=".builtin_trusted_keys" res=0
-> 
-> [    8.063218] audit: type=1804 audit(1591633422.377:9): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0 op=measuring_kexec_cmdline cause=alloc_entry(-12) comm="systemd" name="kexec-cmdline" res=0
-> 
-> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+> [...]
 
-Reviewed-by: Richard Guy Briggs <rgb@redhat.com>
+Applied to
 
-> ---
->  security/integrity/ima/ima.h            |  2 ++
->  security/integrity/ima/ima_main.c       | 37 +++++++++++++++++++++----
->  security/integrity/ima/ima_queue.c      |  2 --
->  security/integrity/ima/ima_queue_keys.c |  4 +++
->  4 files changed, 37 insertions(+), 8 deletions(-)
-> 
-> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-> index df93ac258e01..8a47249c6238 100644
-> --- a/security/integrity/ima/ima.h
-> +++ b/security/integrity/ima/ima.h
-> @@ -47,6 +47,8 @@ enum tpm_pcrs { TPM_PCR0 = 0, TPM_PCR8 = 8 };
->  
->  #define NR_BANKS(chip) ((chip != NULL) ? chip->nr_allocated_banks : 0)
->  
-> +#define AUDIT_CAUSE_LEN_MAX 32
-> +
->  /* current content of the policy */
->  extern int ima_policy_flag;
->  
-> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-> index 800fb3bba418..b10f09bc7eca 100644
-> --- a/security/integrity/ima/ima_main.c
-> +++ b/security/integrity/ima/ima_main.c
-> @@ -739,6 +739,9 @@ void process_buffer_measurement(const void *buf, int size,
->  				int pcr, const char *keyring)
->  {
->  	int ret = 0;
-> +	const char *audit_cause = "ENOMEM";
-> +	const char *op = "measuring_keys";
-> +	char measurement_audit_cause[AUDIT_CAUSE_LEN_MAX];
->  	struct ima_template_entry *entry = NULL;
->  	struct integrity_iint_cache iint = {};
->  	struct ima_event_data event_data = {.iint = &iint,
-> @@ -793,21 +796,43 @@ void process_buffer_measurement(const void *buf, int size,
->  	iint.ima_hash->length = hash_digest_size[ima_hash_algo];
->  
->  	ret = ima_calc_buffer_hash(buf, size, iint.ima_hash);
-> -	if (ret < 0)
-> +	if (ret < 0) {
-> +		audit_cause = "hashing_error";
->  		goto out;
-> +	}
->  
->  	ret = ima_alloc_init_template(&event_data, &entry, template);
-> -	if (ret < 0)
-> +	if (ret < 0) {
-> +		audit_cause = "alloc_entry";
->  		goto out;
-> +	}
->  
->  	ret = ima_store_template(entry, violation, NULL, buf, pcr);
-> -
-> -	if (ret < 0)
-> +	if (ret < 0) {
-> +		audit_cause = "store_entry";
->  		ima_free_template_entry(entry);
-> +	}
->  
->  out:
-> -	if (ret < 0)
-> -		pr_devel("%s: failed, result: %d\n", __func__, ret);
-> +	if (ret < 0) {
-> +		snprintf(measurement_audit_cause, AUDIT_CAUSE_LEN_MAX,
-> +			 "%s(%d)", audit_cause, ret);
-> +
-> +		switch (func) {
-> +		case KEXEC_CMDLINE:
-> +			op = "measuring_kexec_cmdline";
-> +			break;
-> +		case KEY_CHECK:
-> +			op = "measuring_keys";
-> +			break;
-> +		default:
-> +			op = "measuring_blacklisted_hash";
-> +			break;
-> +		}
-> +
-> +		integrity_audit_msg(AUDIT_INTEGRITY_PCR, NULL, eventname,
-> +				    op, measurement_audit_cause, ret, 0);
-> +	}
->  
->  	return;
->  }
-> diff --git a/security/integrity/ima/ima_queue.c b/security/integrity/ima/ima_queue.c
-> index fb4ec270f620..4a761d765c6c 100644
-> --- a/security/integrity/ima/ima_queue.c
-> +++ b/security/integrity/ima/ima_queue.c
-> @@ -19,8 +19,6 @@
->  #include <linux/slab.h>
->  #include "ima.h"
->  
-> -#define AUDIT_CAUSE_LEN_MAX 32
-> -
->  /* pre-allocated array of tpm_digest structures to extend a PCR */
->  static struct tpm_digest *digests;
->  
-> diff --git a/security/integrity/ima/ima_queue_keys.c b/security/integrity/ima/ima_queue_keys.c
-> index cb3e3f501593..4de31ff172aa 100644
-> --- a/security/integrity/ima/ima_queue_keys.c
-> +++ b/security/integrity/ima/ima_queue_keys.c
-> @@ -68,6 +68,7 @@ static struct ima_key_entry *ima_alloc_key_entry(struct key *keyring,
->  						 size_t payload_len)
->  {
->  	int rc = 0;
-> +	const char *audit_cause = "ENOMEM";
->  	struct ima_key_entry *entry;
->  
->  	entry = kzalloc(sizeof(*entry), GFP_KERNEL);
-> @@ -88,6 +89,9 @@ static struct ima_key_entry *ima_alloc_key_entry(struct key *keyring,
->  
->  out:
->  	if (rc) {
-> +		integrity_audit_msg(AUDIT_INTEGRITY_PCR, NULL,
-> +				    keyring->description, "measuring_keys",
-> +				    audit_cause, rc, 0);
->  		ima_free_key_entry(entry);
->  		entry = NULL;
->  	}
-> -- 
-> 2.27.0
-> 
-> 
-> --
-> Linux-audit mailing list
-> Linux-audit@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-audit
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-- RGB
+Thanks!
 
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+[1/1] ASoC: meson: add missing free_irq() in error path
+      commit: 3b8a299a58b2afce464ae11324b59dcf0f1d10a7
 
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
