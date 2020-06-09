@@ -2,168 +2,161 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDCB6C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 02:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55436C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 02:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9416B20737
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 02:45:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 279102078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 02:48:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="CX/+Tg4r"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="DUiDRPFR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbgFICpj (ORCPT
+        id S1726990AbgFICsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 22:45:39 -0400
-Received: from mail-am6eur05on2042.outbound.protection.outlook.com ([40.107.22.42]:26573
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        Mon, 8 Jun 2020 22:48:30 -0400
+Received: from mail-dm6nam12on2065.outbound.protection.outlook.com ([40.107.243.65]:35169
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726818AbgFICpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 22:45:38 -0400
+        id S1726818AbgFICs3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 22:48:29 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=d4sZAjPcjgT5J9cJvMMUl67dL4prIBMPPHPllkrcTTARLKiBl96dIkaLeHGDRNAL3p5FW7IUq4Y+2mDfgqKl3Z3nspHfZCfmaRbWyMD0uBzVcz3jqAC24tqN0E5yY3SCzug53UMe7kcpNfHwEPRJqncHf0L6YnTPOYbdCz/B0fPqY89GV+zYz0hu62w07Hwg4NVUZlourV8cV9tO0MNyq0xk7RLlq6pHF2D8jGCftHc597grdLauHHkptqYkrKH5N+2ZMeP7OwzIecTJ3B36S3fCt6n3c0zLzl7FG9mwa1nB1CQpx0wUhEmC6hcdPWDw2e/gvmdTadVvgZBlPNwJ7Q==
+ b=nPpbdonb22Dd0ac+McFUieBZBRUpbVfyH0lcRdzs4I+/AdL97Ilig1CEpeZsPdVFedz8iHoJvk/6wkavLrtrq8XaGH4c9pZViQqrI9YVvyZq/iai3JC31+VdslNKMnS4UHON3JcHP49hRrYjZ8Z6gkiC82xmPI1G+/EvKMgArvt96PgQJspCG3rLgMKItRz1zXZ+q+L+YFmjXKmOkQtJ911WmkoIdDL21WTHKN04AJgsOqR88BHYhwWWzLX6LiWVtgewxet14syue3FQyi2cs/LSZC5RJPyTHnn0QD1LpIpyQq3I5DQD+33uwUy+iG/gnlkyXFIcxDFirODkLCVk5Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IO76/tfyCIrbLJ0tSwuSMqcd/CCnMGsl+/J4mvn0Se0=;
- b=fk/IsQxsepIZpuvM0qFGtGp+6H3PpmTnn8YPWMTzucVva2jBV9mgsj+R2WrTK1ZhpGqdQ6hxHkv3GetWoSo3mCf3ZX/UTmFNEzWUkP2/srLmhXMjmEFhT9V39+MZ6g2+qqwfu+Py2F1jQVGqbTd2ylJg2IJ1ZopzaCa4LCh/QgetUJ4w74nTLPNZVtDUve2uIIdKHyys6UDN4ccNEnBhpo3P+sgZ9xlvm1OrUwRnTxIOmLfn6aKU+/eDQNGXZ+0lkYonAn6+Pi0BaDkK6ZDpweXt/hyRkh24DSIo85oWhFb8gPxVlcqS04PcMN7sbBmWIGRsqU4h26kWofpMs/qvIQ==
+ bh=l8BImfZSpAfBNILD0B9OkOCctJIJDuDXJ3wbiSHDatw=;
+ b=i4L82fr3kadl3lIgeL1t3opVpwvNCYnRWh17ZvZQBnJiBnssINIU1JcjDveSBcDbsXWY8jfXffy2+lklFXcxxHhmbRwpE1S+jUN7Ig/4mCGskq4g9qi6E5ogzjPb+Ke6IFJPQEiAmg8H2DyeFWzpL0r3F9LpyybTeqKp9/obKg92ZA7SEKKI6KoAAhuK4DNBnOnSIenWiQmB/YBXq6+DLHmpl+lpq8R9mnwox8LFP5DIZJtOguNLvkGpERZLDWCwB1yJXXfDRDig+NmMWFyyxOt7xMFmk7QHRveIdpq9GkZCdO8sV/sH2CF/LI1o+Susv4Ax//85XY7Yz7RyHBdn/g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IO76/tfyCIrbLJ0tSwuSMqcd/CCnMGsl+/J4mvn0Se0=;
- b=CX/+Tg4r8jrsUwdAN0LjU59QQdxaVGt1TylYs2Er56+APam7NpxDsgTgJQRwnpU8cJgQ8zPz7iWWulb+xuRv1XfIaWI4F43iQRL42XxCqzgeKMsKG2+UbkD6tr78JF7ouMOYHLhAB0x2Ujsqtn0oFD+SR1Leie//VmwpnI1IOUQ=
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
- by VE1PR04MB6493.eurprd04.prod.outlook.com (2603:10a6:803:11f::11) with
+ bh=l8BImfZSpAfBNILD0B9OkOCctJIJDuDXJ3wbiSHDatw=;
+ b=DUiDRPFRXtAgidSsk5EOqB6uJUFdDsSNPVntjoClaBUi5Bjx21uLONnts68kuwTX+LKoAtlZv0Rbi0GSpVHpchCzczcGRtSU6WOVuDbWl2yDSLGMXPEQ4p0ir0rsC+X4cU0EFO9GkYDdDvQi62lvCtuAnn0D1GoJUVolc7jHe3Q=
+Received: from CY4PR02MB2790.namprd02.prod.outlook.com (2603:10b6:903:11c::8)
+ by CY4PR02MB3255.namprd02.prod.outlook.com (2603:10b6:910:7b::29) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.20; Tue, 9 Jun
- 2020 02:45:32 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3066.023; Tue, 9 Jun 2020
- 02:45:32 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     Mark Brown <broonie@kernel.org>
-CC:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "matthias.schiffer@ew.tq-group.com" 
-        <matthias.schiffer@ew.tq-group.com>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.23; Tue, 9 Jun
+ 2020 02:48:26 +0000
+Received: from CY4PR02MB2790.namprd02.prod.outlook.com
+ ([fe80::8478:4f5d:d9e9:8979]) by CY4PR02MB2790.namprd02.prod.outlook.com
+ ([fe80::8478:4f5d:d9e9:8979%11]) with mapi id 15.20.3066.023; Tue, 9 Jun 2020
+ 02:48:26 +0000
+From:   Venkateshwar Rao Gannavarapu <VGANNAVA@xilinx.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+CC:     Hyun Kwon <hyunk@xilinx.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
-Subject: RE: [PATCH v9 RESEND 01/13] spi: imx: add dma_sync_sg_for_device
- after fallback from dma
-Thread-Topic: [PATCH v9 RESEND 01/13] spi: imx: add dma_sync_sg_for_device
- after fallback from dma
-Thread-Index: AQHWPBYcMy4ZpJEEjkym0JBjSJknZajOy8sAgAABToCAAA6IgIAAsIcw
-Date:   Tue, 9 Jun 2020 02:45:32 +0000
-Message-ID: <VE1PR04MB66386CEECCACEC111BA5D69589820@VE1PR04MB6638.eurprd04.prod.outlook.com>
-References: <1591485677-20533-1-git-send-email-yibin.gong@nxp.com>
- <1591485677-20533-2-git-send-email-yibin.gong@nxp.com>
- <20200608143458.GH4593@sirena.org.uk>
- <VE1PR04MB66388F89015F774EE3FFF69D89850@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <20200608153139.GI4593@sirena.org.uk>
-In-Reply-To: <20200608153139.GI4593@sirena.org.uk>
+        Sandip Kothari <sandipk@xilinx.com>,
+        Vishal Sagar <vsagar@xilinx.com>
+Subject: RE: [RFC PATCH 2/2] drm: xlnx: driver for Xilinx DSI TX Subsystem
+Thread-Topic: [RFC PATCH 2/2] drm: xlnx: driver for Xilinx DSI TX Subsystem
+Thread-Index: AQHWF1mglRaPzdyDqkWAZse0zugWnqiYWTEAgB5pO4CAC+/AsIAKBOUAgAMovAA=
+Date:   Tue, 9 Jun 2020 02:48:25 +0000
+Message-ID: <CY4PR02MB27908C70E9D66DA91868FF35B1820@CY4PR02MB2790.namprd02.prod.outlook.com>
+References: <1587417656-48078-1-git-send-email-venkateshwar.rao.gannavarapu@xilinx.com>
+ <1587417656-48078-3-git-send-email-venkateshwar.rao.gannavarapu@xilinx.com>
+ <20200504184348.GA3095@smtp.xilinx.com>
+ <20200524030813.GF6026@pendragon.ideasonboard.com>
+ <CY4PR02MB2790B791578160F257049FEAB18D0@CY4PR02MB2790.namprd02.prod.outlook.com>
+ <20200607022518.GA7339@pendragon.ideasonboard.com>
+In-Reply-To: <20200607022518.GA7339@pendragon.ideasonboard.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
 X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.66]
+authentication-results: ideasonboard.com; dkim=none (message not signed)
+ header.d=none;ideasonboard.com; dmarc=none action=none
+ header.from=xilinx.com;
+x-originating-ip: [223.230.61.224]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: cfde2409-ed8f-45c7-a302-08d80c1f2dd6
-x-ms-traffictypediagnostic: VE1PR04MB6493:
+x-ms-office365-filtering-correlation-id: 4932b949-7dcb-4fdb-3187-08d80c1f955c
+x-ms-traffictypediagnostic: CY4PR02MB3255:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB6493489B171EF7B7C1CD45A489820@VE1PR04MB6493.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-microsoft-antispam-prvs: <CY4PR02MB32554C42A13217FADDC277F7B1820@CY4PR02MB3255.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
 x-forefront-prvs: 042957ACD7
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 75JVlDZTc45ktXLUkkP0wwFoeN4lSzy93Z+eLZwl5NYl33R/h4kWf7rclbPcFfp/Hr7858HRJ+4Dl2l1Xs4f4xZQAOOps5oBtWpzczK+DfnKAbXZa03us6avvsuWbUAoHIo3g/QyqnwkSvURvzW5LJA3domYr3a91ShkiZ92gCGbdAJQsWFeKp1V7oeE48UzGq4hRxYWsn+iiT2ubpTD2WS5EQlrWi838dlLJpFU67FLjizYaewGqqWlkBaLl6o02bGMGpo4R6LU57wCIK2TQ924J5HFvc5VPym3usFSYxHd3AiBJAXiq7y4+EHbbfojrQgTlSVTWFW4i+TqaSl33w==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(39860400002)(376002)(366004)(136003)(396003)(478600001)(186003)(8676002)(8936002)(26005)(7416002)(4326008)(52536014)(83380400001)(86362001)(66446008)(76116006)(5660300002)(66946007)(71200400001)(64756008)(6916009)(316002)(9686003)(2906002)(55016002)(66476007)(7696005)(54906003)(53546011)(6506007)(33656002)(66556008);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: hO2DvtM4az7TLY4jkICt08OocKPdr5nMGZPCSVXlSaM7PesCPb+NwOR2bc9EsoqeVFSPntKj2WBp/ZnIjBkmMMHzGvJ0+IEnRlb28vo8h2BZu3t7CL8K36CQxzCUfxDlAKkUvhX09mTXkMR5JDJ6okMjYzT/2lGvbvxIPT5tkwX4atjkOki0GHl090oJglqCTilmudVtatWQj5xbwYDbO7hTm3ikI+jGvO0j75uDrQ6ICU9Gb1zl0o+oDoJskTx6/EgPhR0PCoovlYS8cImv74MG91rdjAhmJksafoquYTKZ02tItFEgvJDYWFC/bB4YAkrMSwOmq1FG5YT+ddX/ksIvKmLtXCyo1IqRjWkJOFyS1GRn44VX2X8fUciWvH+ckkQhykFmqpsYOpKv/uLPoYDe3jb6R9Sw6E4Twx7UhAwb1dRfq8AOX78VQUFVe/5K6aYEZBC6gIVjzwZapboQinHCsQB9bmAer/xvcNH00ew=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+x-microsoft-antispam-message-info: Xe3dyg/92hFjGHOdJhdoEr1XkCHHKGtC1qHpCs2XBZYH8ASPy1O1fCZhWdIda2pUr8QrX8Whq1widR+cLebKxSFmqI4+5kHOwqlT+LLCbuThJ8g3PFXWfILkP7gAunNl0utnTCmEHs7zHdwuXDhzxk2ODvv6aQz9dV5aUSLkCT5qaGz66W50kOVHRRyYq2fNQd7HGr56DgI/9rZ/eR5qA/C+fTgX/LybV9DKMQIYMm0G6nvLLGaYC6AjKPT9vJHXpi77vguki8q6I/dPhAHPysl5IqnsfLf931Z81Jq+eE2RctrYyFqz9g7PraKr56EHz/I/Wo1IF6CWz/e3Eine7g==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR02MB2790.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(136003)(346002)(376002)(396003)(366004)(66476007)(8676002)(4326008)(71200400001)(5660300002)(54906003)(6916009)(9686003)(33656002)(2906002)(86362001)(316002)(83380400001)(52536014)(8936002)(186003)(66446008)(66556008)(76116006)(66946007)(107886003)(64756008)(478600001)(6506007)(7696005)(53546011)(55016002)(26005);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: QmPlem22nicX78rzkdlpvBAkaJJA55mcyulzosplkXlt5YJtKNTNv3q9PH1hKH+Cme/Vg2l7eKNeo05FFe4KhRjPjnf2Ff6iAqZRDO/4QTxVQr2hc+z8/EET3SmSMMofdiIkwMjsV+NWBQO8wag/dcUxV4TAF9bjGTG3J05s2tX3wZpJoHv+BS1uc+2SI2Kz9bXnsatQRM2CoQOCN3wr7H2qIGMNDuVGXTUHkhsqwJTlTqpa0R24bOnUmIQsZZ6aZ2vcuQ6e9G891N2iiovOdAQd7Yvpy72uVxDyV1B2/2MgfyPLCn2KTNdk+yss6GNzELlcZfYuPHQv0LpOqTs7sVaDTjMcGUfztq1j+szQhvD6qvgUT63KwKbvWSVDZXpcVshkXPpQCa4EEAfvMCEtW/acjKy9/S0tQRJg3GHfhzhwtxnzX53+rhahpB++R6yKkmRCJoujxPNcmKjK4kfw9JO043ZnST2932oGmFojsfY5yfyTmY1ter5K0Xtcw1Vo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cfde2409-ed8f-45c7-a302-08d80c1f2dd6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jun 2020 02:45:32.3926
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4932b949-7dcb-4fdb-3187-08d80c1f955c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jun 2020 02:48:26.0372
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: M/E+eaQ5iDkZ9IIG3FOTrmm8dynedfNcqg8C3Z4cXg3Wfa7AwhLPZVU+XwG+rUaUF8RVauTKayvsvwM0Z/oEOQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6493
+X-MS-Exchange-CrossTenant-userprincipalname: WGPlOsqyHG/KSoHU/QT4UJ3HiI1gTsdsJSgTWMY3McaYhUnI4Wh9OFvYuIj15CC3ZDJ/FEXUAs3sVW8ipNcyRA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR02MB3255
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/06/08 23:32 Mark Brown <broonie@kernel.org> wrote:=20
-> On Mon, Jun 08, 2020 at 03:08:45PM +0000, Robin Gong wrote:
->=20
-> > > > +	if (transfer->rx_sg.sgl) {
-> > > > +		struct device *rx_dev =3D spi->controller->dma_rx->device->dev;
-> > > > +
-> > > > +		dma_sync_sg_for_device(rx_dev, transfer->rx_sg.sgl,
-> > > > +				       transfer->rx_sg.nents, DMA_TO_DEVICE);
-> > > > +	}
-> > > > +
->=20
-> > > This is confusing - why are we DMA mapping to the device after doing
-> > > a PIO transfer?
->=20
-> > 'transfer->rx_sg.sgl' condition check that's the case fallback PIO
-> > after DMA transfer failed. But the spi core still think the buffer
-> > should be in 'device' while spi driver touch it by PIO(CPU), so sync it=
- back to
-> device to ensure all received data flush to DDR.
->=20
-> So we sync it back to the device so that we can then do another sync to C=
-PU?
-Yes, spi.c will sync to CPU again in spi_unmap_buf() after transfer done fi=
-nally.
-Otherwise, the fresh received data by CPU in this fallback case may be inva=
-lidated
-by spi.c, which led to the data corrupt on Matthias's side.
-
-> TBH I'm a bit surprised that there's a requirement that we explicitly und=
-o a
-> sync and that a redundant double sync in the same direction might be an i=
-ssue
-Considering DMA transfer may be failed(for example, sdma firmware may not b=
-e
-updated as ERR009165 depends on), we'd better fallback to PIO to ensure no =
-any
-function break here. Thus should clean fresh rx data from cache into extern=
-al memory
-as real 'device' received by DMA. Understood a bit confusing here, but that=
- way could
-be avoided by any code changing in spi.c. Or make some code changes in spi.=
-c to cancel
-spi_unmap_buf() in such fallback case?
-
-> but I've not had a need to care so I'm perfectly prepared to believe ther=
-e is.
->=20
-> At the very least this needs a comment.
-Okay, I'll add comment here in next.
+SGkgTGF1cmVudCwNCg0KVGhhbmtzIGZvciB0aGUgcmV2aWV3LiANClBsZWFzZSBzZWUgbXkgY29t
+bWVudHMgYWJvdXQgRC1QSFkgYW5kIGJyaWRnZSBkcml2ZXIgaW1wbGVtZW50YXRpb24uDQoNCj4t
+LS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IExhdXJlbnQgUGluY2hhcnQgPGxhdXJl
+bnQucGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbT4NCj5TZW50OiBTdW5kYXksIEp1bmUgNywgMjAy
+MCA3OjU1IEFNDQo+VG86IFZlbmthdGVzaHdhciBSYW8gR2FubmF2YXJhcHUgPFZHQU5OQVZBQHhp
+bGlueC5jb20+DQo+Q2M6IEh5dW4gS3dvbiA8aHl1bmtAeGlsaW54LmNvbT47IGRyaS1kZXZlbEBs
+aXN0cy5mcmVlZGVza3RvcC5vcmc7DQo+YWlybGllZEBsaW51eC5pZTsgZGFuaWVsQGZmd2xsLmNo
+OyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBTYW5kaXAgS290aGFyaQ0KPjxzYW5kaXBr
+QHhpbGlueC5jb20+DQo+U3ViamVjdDogUmU6IFtSRkMgUEFUQ0ggMi8yXSBkcm06IHhsbng6IGRy
+aXZlciBmb3IgWGlsaW54IERTSSBUWCBTdWJzeXN0ZW0NCj4NCj5IaSBHVlJhbywNCj4NCj5PbiBT
+dW4sIE1heSAzMSwgMjAyMCBhdCAwNTo0MTo1MFBNICswMDAwLCBWZW5rYXRlc2h3YXIgUmFvIEdh
+bm5hdmFyYXB1DQo+d3JvdGU6DQo+PiBPbiBTdW5kYXksIE1heSAyNCwgMjAyMCA4OjM4IEFNLCBM
+YXVyZW50IFBpbmNoYXJ0IHdyb3RlOg0KPj4gPiBPbiBNb24sIE1heSAwNCwgMjAyMCBhdCAxMTo0
+Mzo0OEFNIC0wNzAwLCBIeXVuIEt3b24gd3JvdGU6DQo+PiA+PiBPbiBNb24sIDIwMjAtMDQtMjAg
+YXQgMTQ6MjA6NTYgLTA3MDAsIFZlbmthdGVzaHdhciBSYW8gR2FubmF2YXJhcHUNCj53cm90ZToN
+Cj4+ID4+PiBUaGUgWGlsaW54IE1JUEkgRFNJIFR4IFN1YnN5c3RlbSBzb2Z0IElQIGlzIHVzZWQg
+dG8gZGlzcGxheSB2aWRlbw0KPj4gPj4+IGRhdGEgZnJvbSBBWEktNCBzdHJlYW0gaW50ZXJmYWNl
+Lg0KPj4gPj4+DQo+PiA+Pj4gSXQgc3VwcG9ydHMgdXB0byA0IGxhbmVzLCBvcHRpb25hbCByZWdp
+c3RlciBpbnRlcmZhY2UgZm9yIHRoZQ0KPj4gPj4+IERQSFksDQo+PiA+Pg0KPj4gPj4gSSBkb24n
+dCBzZWUgdGhlIHJlZ2lzdGVyIGludGVyZmFjZSBmb3IgZHBoeSBzdXBwb3J0Lg0KPj4gPg0KPj4g
+PiBJIHRoaW5rIHRoZSBELVBIWSBzaG91bGQgYmUgc3VwcG9ydGVkIHRocm91Z2ggYSBQSFkgZHJp
+dmVyLCBhcyBpdA0KPj4gPiBzZWVtcyB0byBiZSBzaGFyZWQgYmV0d2VlbiBkaWZmZXJlbnQgc3Vi
+c3lzdGVtcy4NCj4+DQo+PiBJUCBoYXMgdGhlIHByb3Zpc2lvbiB0byByZWFkIERQSFkgcmVnaXN0
+ZXIgZm9yIGRlYnVnIHB1cnBvc2Ugb25seS4NCj4+IE5vIHByb2dyYW1taW5nIG9mIERQSFkgaXMg
+cmVxdWlyZWQgaW4gc3Vic3lzdGVtLg0KPg0KPkRvIHlvdSBrbm93IGlmIHRoaXMgaXMgdGhlIHNh
+bWUgRC1QSFkgYXMgdXNlZCBpbiB0aGUgQ1NJMi1SWCBzdWJzeXN0ZW0gPw0KIA0KU2FtZSBELVBI
+WSBjb3JlIGhhcyBiZWVuIHVzZWQgaW4gTUlQSSBDU0kyIFJYU1MsIGJ1dCB3aXRoIGRpZmZlcmVu
+dCBjb25maWd1cmF0aW9uLg0KPg0KPj4gPj4+IG11bHRpcGxlIFJHQiBjb2xvciBmb3JtYXRzLCBj
+b21tYW5kIG1vZGUgYW5kIHZpZGVvIG1vZGUuDQo+PiA+Pj4gVGhpcyBpcyBhIE1JUEktRFNJIGhv
+c3QgZHJpdmVyIGFuZCBwcm92aWRlcyBEU0kgYnVzIGZvciBwYW5lbHMuDQo+PiA+Pj4gVGhpcyBk
+cml2ZXIgYWxzbyBoZWxwcyB0byBjb21tdW5pY2F0ZSB3aXRoIGl0cyBwYW5lbCB1c2luZyBwYW5l
+bA0KPj4gPj4+IGZyYW1ld29yay4NCj4+ID4+Pg0KPj4gPj4+IFNpZ25lZC1vZmYtYnk6IFZlbmth
+dGVzaHdhciBSYW8gR2FubmF2YXJhcHUNCj4+ID4+PiA8dmVua2F0ZXNod2FyLnJhby5nYW5uYXZh
+cmFwdUB4aWxpbnguY29tPg0KPj4gPj4+IC0tLQ0KPj4gPj4+ICBkcml2ZXJzL2dwdS9kcm0veGxu
+eC9LY29uZmlnICAgIHwgIDExICsNCj4+ID4+PiAgZHJpdmVycy9ncHUvZHJtL3hsbngvTWFrZWZp
+bGUgICB8ICAgMiArDQo+PiA+Pj4gIGRyaXZlcnMvZ3B1L2RybS94bG54L3hsbnhfZHNpLmMgfCA3
+NTUNCj4+ID4+PiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+PiA+
+DQo+PiA+IERhbmllbCBWZXR0ZXIgaGFzIHJlY2VudGx5IGV4cHJlc3NlZCBoaXMgb3BpaW9uIHRo
+YXQgYnJpZGdlIGRyaXZlcnMNCj4+ID4gc2hvdWxkIGdvIHRvIGRyaXZlcnMvZ3B1L2RybS9icmlk
+Z2UvLiBJdCB3b3VsZCB0aGVuIGJlDQo+PiA+IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UveGxueC8u
+IEkgZG9uJ3QgaGF2ZSBhIHN0cm9uZyBvcGluaW9uIG15c2VsZi4NCg0KVGhlIERTSS1UWCBzdWJz
+eXN0ZW0gSVAgYmxvY2sgaXMgbm90IGEgYnJpZGdlIGRyaXZlci4NClRoZSBEU0ktVFggc3Vic3lz
+dGVtIElQIGJsb2NrIGl0c2VsZiBjb250YWlucyBhbGwgdGhlIGRybSBlbmNvZGVyL2Nvbm5lY3Rv
+cg0KZnVuY3Rpb25hbGl0eSBhbmQgaXTigJlzIHRoZSBsYXN0IG5vZGUgaW4gZGlzcGxheSBwaXBl
+IGxpbmUuIEkgZGlkbid0IHNlZSBhbnkgaGFyZA0KcmVxdWlyZW1lbnQgdG8gaW1wbGVtZW50IGl0
+IGludG8gYnJpZGdlIGRyaXZlciBhbmQgSSBzZWUgbWFueSBEU0kgZHJpdmVycyBhcmUNCmltcGxl
+bWVudGVkIGFzIGVuY29kZXIgZHJpdmVycy4NClhpbGlueCBQTCBEUk0gZW5jb2RlciBkcml2ZXJz
+IGFyZSBpbXBsZW1lbnRlZCBpbiBtb2R1bGFyIGFwcHJvYWNoIHNvIHRoYXQNCnRoZXkgY2FuIHdv
+cmsgd2l0aCBhbnkgQ1JUQyBkcml2ZXIgd2hpY2ggaGFuZGxlcyB0aGUgRE1BIGNhbGxzLg0KU28s
+IGF0IHRoaXMgc3RhZ2Ugd2Ugd2FudCB0byB1cHN0cmVhbSBhcyBlbmNvZGVyIGRyaXZlciBvbmx5
+Lg0KPj4gPg0KPj4gPj4+ICAzIGZpbGVzIGNoYW5nZWQsIDc2OCBpbnNlcnRpb25zKCspICBjcmVh
+dGUgbW9kZSAxMDA2NDQNCj4+ID4+PiBkcml2ZXJzL2dwdS9kcm0veGxueC94bG54X2RzaS5jDQo+
+DQo+W3NuaXBdDQo+DQo+LS0NCj5SZWdhcmRzLA0KPg0KPkxhdXJlbnQgUGluY2hhcnQNCg0KUmVn
+YXJkcywNCkdWUmFvDQogDQoNCg==
