@@ -2,327 +2,185 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF98C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DACD1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E40620814
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:27:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F7012078D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:27:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ZeBgYUOI"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="TirkZfWC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728437AbgFIJ1W (ORCPT
+        id S1728496AbgFIJ1a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 05:27:22 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:39013 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727071AbgFIJ1S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 05:27:18 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200609092715euoutp02594e86c93d1f6dd04ab5c3566bec7177~W1gT6otH83140331403euoutp02Q
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 09:27:15 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200609092715euoutp02594e86c93d1f6dd04ab5c3566bec7177~W1gT6otH83140331403euoutp02Q
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1591694835;
-        bh=1oTJUZTGUemYBnJ4VGwd/IwzPiruFCXGH1Fd6M1vuV0=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=ZeBgYUOIS8YpJTOJGWDInud97ioi+zRxfULhdXPLmwkbIs2pbqLsqUmm4BAhgRfA5
-         hkDGNFRcqnKwOqFOIBEIdO0Nc+kRQ5SOzgM538HoCC2jGtRlFnh6anbKjBTvXN2VJ9
-         QNwZKrp1Vl5frfc/8LxgmoqDdOEI2THvnCM7alGc=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200609092714eucas1p2e2a97cdee4cd9577232da18869a97fea~W1gTgac9D1043010430eucas1p2H;
-        Tue,  9 Jun 2020 09:27:14 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 4E.BE.60698.2F55FDE5; Tue,  9
-        Jun 2020 10:27:14 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200609092713eucas1p2c124ed58ec8ec751bfc8b88df17b9129~W1gSzQ1T31246612466eucas1p2X;
-        Tue,  9 Jun 2020 09:27:13 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200609092713eusmtrp2560db55b0d11ae191ee9aa74992646d2~W1gSyS5f41432714327eusmtrp2I;
-        Tue,  9 Jun 2020 09:27:13 +0000 (GMT)
-X-AuditID: cbfec7f5-a29ff7000001ed1a-a8-5edf55f2c6f0
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 09.50.08375.1F55FDE5; Tue,  9
-        Jun 2020 10:27:13 +0100 (BST)
-Received: from [106.210.85.205] (unknown [106.210.85.205]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200609092712eusmtip1490f8194d82337445d546cf678528a3a~W1gRvtnXv2463424634eusmtip1r;
-        Tue,  9 Jun 2020 09:27:12 +0000 (GMT)
-Subject: Re: [PATCH v3] driver core: Break infinite loop when deferred probe
- can't be satisfied
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Grant Likely <grant.likely@arm.com>,
-        Saravana Kannan <saravanak@google.com>,
-        artem.bityutskiy@linux.intel.com, balbi@kernel.org,
-        broonie@kernel.org, fntoth@gmail.com, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        peter.ujfalusi@ti.com, rafael@kernel.org, kernel-team@android.com,
-        nd <nd@arm.com>, kernel@pengutronix.de
-From:   Andrzej Hajda <a.hajda@samsung.com>
-Message-ID: <b413d39f-71c4-d291-276d-1087baf07080@samsung.com>
-Date:   Tue, 9 Jun 2020 11:27:12 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.8.1
-MIME-Version: 1.0
-In-Reply-To: <20200609064511.7nek2rhk6ebfjaia@pengutronix.de>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRjm23d2dhzOvqayt7KidSEFL1HRiUpNik5EN6J+FGqnPLjIG5va
-        5U9SYTo1S1zSvKaZNgRr5tSVRqu8YFZQkV1HJFqRmqldzLXcziT/Pc/zPs/3Pi98DFYOSucy
-        R5JSBW0Sn6Cm5ZSl/feT4O977TFhrVcC2bzTRRL268d+zLZn9slYw4c+mv1Vdp9mG/NfU+yZ
-        qnqabW7yY02GFop9Zi2h2dG8B4j9Zn2B2Uc1uZg1jvySsqVjBszqbQ46knCW2xYpV1dWh7gW
-        4zsZV2FO48ymbJor69rN3S2tk3H5jjCuo7dJwo2aF+yS75evjxMSjqQL2tDwg3KN0f5cklKw
-        /fjEPSuVgUoi9MiLAbIKikv1tB7JGSWpReAcn5CJZAxBtSFHKpJRBEMX2qXTkT8/73kGNQju
-        XH6FRTKM4GV3B3K5fAkPA4ND7oQfCQLHOac7gUkNht9n6rBrQJNAcDS8mtrOMAoSDvrJrS6Z
-        IktgZLiUcmF/Eg259i9uu4LMhq7LfW7di2yA5gGLxIUxWQhNgyVYxCo4PXbdvQuIgYHq4isy
-        sfYm+FFyHovYF7503PLoAeBsKZeI+BTYa89iMZyFoPFGiyewDt4+nnAXxVOl662horwRsupz
-        sEsG4gO9g7PFDj5QYCnyyArIylSK7kVg72n0PKiC6qfj9AWkNs64zDjjGuOMa4z/91YgyoRU
-        QpouMV7QrUwSjoXo+ERdWlJ8yOHkRDOa+oTdfzvGm1Hb5CEbIgxSeyt6Ve9jlFI+XXci0YaA
-        wWo/RVRPd4xSEcefOClok2O1aQmCzobmMZRapVhZ+TlaSeL5VOGoIKQI2umphPGam4E06QHX
-        yv0dgReDDzxsc74xmoMmh29+0rcy5beifDevWbYje/UiQ+fF/llzTLZ1RcUFKfP7911q+PB4
-        pHD5Hk372ugD394tTq50OLd01vJrt0DETr5Ik3G20FHoc3Ug8ujhbdyCONOPZ7O4Kh/l/cD8
-        l4uPew9E9fxJWPp31Bq75OHTGjWl0/ArgrBWx/8DJyBYn4ADAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpgleLIzCtJLcpLzFFi42I5/e/4Xd2PoffjDHbsMbfobZrOZPHm8TNm
-        i2NtT9gtpj58wmbxY95hNout/bdYLJoXr2ez2LFdxGLV1J0sFpd3zWGz+Nx7hNHiw66rzBZn
-        lvcwW8z6+IPVYu6XqcwWXYf+sjkIeGzbvY3VY828NYweO2fdZfdYsKnUY9OqTjaPeScDPfbP
-        XcPu0f/XwOP4je1MHp83yQVwRenZFOWXlqQqZOQXl9gqRRtaGOkZWlroGZlY6hkam8daGZkq
-        6dvZpKTmZJalFunbJehlzLp/halgkm/Fr4O7WBoY59h3MXJySAiYSPz+fpC1i5GLQ0hgKaPE
-        rZ+r2SES4hK7579lhrCFJf5c62KDKHrLKNG9dgkrSEJYIFHi+dt3YLaIgJbE3/b/YJOYBZYz
-        SzSfmsoI1cEs0fL/PVgVm4CmxN/NN4FGcXDwCthJdP3xBAmzCKhIfHw/lwXEFhWIlehe/APs
-        Cl4BQYmTM5+AxTkFbCV2PN/GBGIzC5hJzNv8kBnClpfY/nYOlC0u0fRlJesERqFZSNpnIWmZ
-        haRlFpKWBYwsqxhFUkuLc9Nziw31ihNzi0vz0vWS83M3MQJjf9uxn5t3MF7aGHyIUYCDUYmH
-        94b4vTgh1sSy4srcQ4wSHMxKIrxOZ0/HCfGmJFZWpRblxxeV5qQWH2I0BXpuIrOUaHI+MC3l
-        lcQbmhqaW1gamhubG5tZKInzdggcjBESSE8sSc1OTS1ILYLpY+LglGpg7Oz95XWbJVNzlZe0
-        i6LpXo/ZJYyvL+29ZJFy5jS3YLeiiU7uoyLzg7cq57aw1R5k9bAWc/uy+kba+SO/3kew9Rb7
-        Pn7/OeDbEoPo8ocfPx1/OYWpZCPbR7HQ6aoKR/zOni+2azypsL7qXLibt6WE185nsw6ycMod
-        lHURfXLeSiG7mXX24t/lSizFGYmGWsxFxYkANWZLlBMDAAA=
-X-CMS-MailID: 20200609092713eucas1p2c124ed58ec8ec751bfc8b88df17b9129
-X-Msg-Generator: CA
+        Tue, 9 Jun 2020 05:27:30 -0400
+Received: from mga02.intel.com ([134.134.136.20]:50159 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727086AbgFIJ1U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 05:27:20 -0400
+IronPort-SDR: kcN2xqS81Qf9Zj/6edpCn1dLLQtntsTaCB5+Kn+6fxdByfiiWAqN5OaQT/wbhTO3cemTsxIKZg
+ 8BWYLBz3eChQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 02:27:18 -0700
+IronPort-SDR: yiZQjbBMNwmDIEvR2JwqjClOdo7NWyHuTMZ5qlIhNosH95XwQEovKsQGg0XriWRym0MTjtkliB
+ sTOWrvQDLKfQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,491,1583222400"; 
+   d="scan'208";a="472906814"
+Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
+  by fmsmga006.fm.intel.com with ESMTP; 09 Jun 2020 02:27:18 -0700
+Received: from FMSEDG002.ED.cps.intel.com (10.1.192.134) by
+ FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 9 Jun 2020 02:27:18 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.170)
+ by edgegateway.intel.com (192.55.55.69) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Tue, 9 Jun 2020 02:27:18 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IXCP+nvumf1NsK5Mvezd6qQcRSTaeAyJpluo5FPscIlbB1O8E+4HbWG7ZJEghqgfXNlQ1Sr0FsCcb0HVyPGeWb0T9ID8BHk9gcnOmrqg70PNfmfZrjRe3hlK/lvwJnFKZ9Kz0rMtEp45zOihPyslIwdgqqqc9OLprTWTQBhmhLL/cZ4WoZXSkIl3QR1dcuArD3gX6rsWddjw2q5EDvwscQLf/hGvxxzfvx4E/zpX3A/2NiKMH0ZPV/7gfFq0sNHkJmQFD7JckwgBUb6RMCjFv/1dYHCCFLR2TxFkGhf6v7zMGI9ic9qADgfoRVOaLdWYB7XMAU4I8xBHQ/xg5HRJ7w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2KFzoIMRN3Hkj9feidBy2CTkdGPqqDzUp+ljZG2MYQI=;
+ b=g3aWjs+aG507k2atzVe0KnsMmYsrdBkPD4Cq3oBbx2Ka+0nE6FX8vb1Fp2wgnwhmC0AxQEM/yravFNCVa3pYge4K5C1OV33NJngFdeklwhUOIxSRJlZMtiVrcEfdhGaPJCeA6MfClFCS8LMnuRjWiQFHd0IZKGDPbOZeDGHMDLW5XQfSNYxIVaKjtoRAU5ScyFt88oAMtVswoZAfIm222BJs5WBVvOPkGohRWSuxHwZFE1irw+TwI3J+xv5CaqNfhQ/1JAuKnka9PWjUvm1chSY3jRiLwI3ati3ZyWvahMmCQ6DNi2+JOMSCYB3CXAffl9MRuRPT930wLENFwoSI5w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2KFzoIMRN3Hkj9feidBy2CTkdGPqqDzUp+ljZG2MYQI=;
+ b=TirkZfWCTTWzISBfm/TeylHP3mY8vBJ/bghY+OdMA51SZ/pOMFVOx1dc59UuqlRThw9qYYqPvZR81/78uY4zz9WJBClJnqvDYLDd93ebXlhUqdJ+UIunSkUr8o/PJyV6aw3Hw6QBZUGAcL8V5YyX/QgF/ifGAA1FIbVwfkkzbxU=
+Received: from CY4PR11MB1528.namprd11.prod.outlook.com (2603:10b6:910:d::12)
+ by CY4PR11MB1368.namprd11.prod.outlook.com (2603:10b6:903:2e::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Tue, 9 Jun
+ 2020 09:27:16 +0000
+Received: from CY4PR11MB1528.namprd11.prod.outlook.com
+ ([fe80::80a:cad3:9a37:28dd]) by CY4PR11MB1528.namprd11.prod.outlook.com
+ ([fe80::80a:cad3:9a37:28dd%11]) with mapi id 15.20.3066.023; Tue, 9 Jun 2020
+ 09:27:16 +0000
+From:   "Stankiewicz, Piotr" <piotr.stankiewicz@intel.com>
+To:     Logan Gunthorpe <logang@deltatee.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+CC:     "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        Jian-Hong Pan <jian-hong@endlessm.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 01/15] PCI/MSI: Forward MSI-X vector enable error code
+ in pci_alloc_irq_vectors_affinity()
+Thread-Topic: [PATCH v2 01/15] PCI/MSI: Forward MSI-X vector enable error code
+ in pci_alloc_irq_vectors_affinity()
+Thread-Index: AQHWOZyHaAYLXzqRs023OZ8sXbUNwKjHCZ0AgAABCJCAAAhsAIAI+FUw
+Date:   Tue, 9 Jun 2020 09:27:05 +0000
+Deferred-Delivery: Tue, 9 Jun 2020 09:26:11 +0000
+Message-ID: <CY4PR11MB1528E7DA159FD5E39AD3228BF9820@CY4PR11MB1528.namprd11.prod.outlook.com>
+References: <20200603114212.12525-1-piotr.stankiewicz@intel.com>
+ <20200603114425.12734-1-piotr.stankiewicz@intel.com>
+ <3bc1522b-33ba-04ee-4d8e-e4a31ec50756@deltatee.com>
+ <CY4PR11MB152819A4C01C524E06A48EBFF9880@CY4PR11MB1528.namprd11.prod.outlook.com>
+ <6bfeb14e-b2b7-3843-f417-1a2858859869@deltatee.com>
+In-Reply-To: <6bfeb14e-b2b7-3843-f417-1a2858859869@deltatee.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+dlp-product: dlpe-windows
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYjhkOGE4NjgtNjg0NS00NGU4LWFlZTUtNWJkYTJhZDI2ZWFiIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoibElJQmhmRUdWTTkwdzRYeXZUWHJWcmVqWlpkS2J0Z2Q0OWx1WmpjN3pkSG8zcnRJSFlxcnc4NUZaRVlPVXVnSyJ9
+authentication-results: deltatee.com; dkim=none (message not signed)
+ header.d=none;deltatee.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [134.191.221.97]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8871a5f3-e3a6-470f-311b-08d80c574cde
+x-ms-traffictypediagnostic: CY4PR11MB1368:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR11MB1368B954E1242F971B103F7CF9820@CY4PR11MB1368.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 042957ACD7
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 3uMLYFichEtlrXJXRmsR9bOzZ68aD/rWP6JcjFXsvtgP24IyybqeLxmlbquhV6+OxBnGzWszZRddbN3whcd+7f6V3BsnAbkI92XUz9gVeM0gQWUzADdLYP+0ZAb/J3BZTLcpX8Va1Rh7hni4QLESOCkRYaabjhGjvLZ8mUIxeiGC8h9trjvjYGH74EXfCKQYT40jDPNPI0MZ4/fsFvKIC2nGSMqG4CBjpj4GuiB02v9WWIv8nakCbXHiaB0+vZ2IiaPzLznLDlBzBvK7V8L0SK1s518gtMHXwVwrtmQkKPpFRf5x3wR2+C/JpHolHuYjAM9fuoFGxgNUAaANOt758w==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR11MB1528.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(376002)(346002)(366004)(39860400002)(396003)(8936002)(71200400001)(110136005)(4326008)(66946007)(6506007)(316002)(54906003)(7696005)(2906002)(478600001)(66476007)(76116006)(9686003)(64756008)(55016002)(5660300002)(52536014)(66446008)(53546011)(66556008)(8676002)(26005)(33656002)(6666004)(83380400001)(186003)(86362001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: ttaYPZq1jtCo2Bcs8Dv0JkTKb7gXkxjXiZN+j/+h5VdmXlSDvf+uUis/1Tfrg0JWCn6DjBeqanPtQ/DX/+4eXM577V8W8k2FuqM/E5Sel1IIYCwa87d40QUtiRQ7Lby2dEXsjgXGHmRH+9883H7itOgdRa8Cqa79b2qBtbf4MoCDo2Gn3Wdi3HJTzVLACLyrNeRNGceY4XYM7aNqZ8Ra3QYZRWAMQrOTtU1cGx7t5hj2fiDtrR7QIQ+MfDhbkQxivHhWLADNRiPi/fMdh0hMEFL6UYn3ByXXG/6GxcLDVCIXlE2+JtLKOiDZeDxxHQJCpCu1wbhaVLONETGNCVo4OIh38QM+i01cjTFQ0Kajw3yV+ntvdCYP6ofnaxbg6D1Chp2MhAK9AlqEH5Z7q7CIoX8mL/Y6cBBDp/SI/RJ4lN7cqQIQlviJisC3+t+6qX8kdzhm+1S7nTOrMWVTczjXNTfgMH9snE2wdVxNGBfInv1LwT8ssNiFLpsMJk0u4n4w
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200608091722eucas1p2fa8a4ac15c70e5a6e03c4babdf9f96b7
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200608091722eucas1p2fa8a4ac15c70e5a6e03c4babdf9f96b7
-References: <20200324175719.62496-1-andriy.shevchenko@linux.intel.com>
-        <20200325032901.29551-1-saravanak@google.com>
-        <20200325125120.GX1922688@smile.fi.intel.com>
-        <295d25de-f01e-26de-02d6-1ac0c149d828@arm.com>
-        <20200326163110.GD1922688@smile.fi.intel.com>
-        <CGME20200608091722eucas1p2fa8a4ac15c70e5a6e03c4babdf9f96b7@eucas1p2.samsung.com>
-        <20200608091712.GA28093@pengutronix.de>
-        <437de51b-37e9-d8d1-19c7-137a9265bf45@samsung.com>
-        <20200609064511.7nek2rhk6ebfjaia@pengutronix.de>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8871a5f3-e3a6-470f-311b-08d80c574cde
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jun 2020 09:27:16.3333
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: IYSKCN1x+bjoSz/hFuEMAcxr4qAahnhu3f8PS9/OGnCZ5RIFj0pZE1+MOgXOTto1OBp82G38SYUpZw7NMNxCS6QFXrLkTlon+pN86vp2ZsA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR11MB1368
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 09.06.2020 08:45, Marco Felsch wrote:
-> On 20-06-08 13:11, Andrzej Hajda wrote:
->> On 08.06.2020 11:17, Marco Felsch wrote:
->>> On 20-03-26 18:31, Andy Shevchenko wrote:
->>>> On Thu, Mar 26, 2020 at 03:01:22PM +0000, Grant Likely wrote:
->>>>> On 25/03/2020 12:51, Andy Shevchenko wrote:
->>>>>> On Tue, Mar 24, 2020 at 08:29:01PM -0700, Saravana Kannan wrote:
->>>>>>> On Tue, Mar 24, 2020 at 5:38 AM Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
->>>>>>>> Consider the following scenario.
->>>>>>>>
->>>>>>>> The main driver of USB OTG controller (dwc3-pci), which has the following
->>>>>>>> functional dependencies on certain platform:
->>>>>>>> - ULPI (tusb1210)
->>>>>>>> - extcon (tested with extcon-intel-mrfld)
->>>>>>>>
->>>>>>>> Note, that first driver, tusb1210, is available at the moment of
->>>>>>>> dwc3-pci probing, while extcon-intel-mrfld is built as a module and
->>>>>>>> won't appear till user space does something about it.
->>>>>>>>
->>>>>>>> This is depicted by kernel configuration excerpt:
->>>>>>>>
->>>>>>>> 	CONFIG_PHY_TUSB1210=y
->>>>>>>> 	CONFIG_USB_DWC3=y
->>>>>>>> 	CONFIG_USB_DWC3_ULPI=y
->>>>>>>> 	CONFIG_USB_DWC3_DUAL_ROLE=y
->>>>>>>> 	CONFIG_USB_DWC3_PCI=y
->>>>>>>> 	CONFIG_EXTCON_INTEL_MRFLD=m
->>>>>>>>
->>>>>>>> In the Buildroot environment the modules are probed by alphabetical ordering
->>>>>>>> of their modaliases. The latter comes to the case when USB OTG driver will be
->>>>>>>> probed first followed by extcon one.
->>>>>>>>
->>>>>>>> So, if the platform anticipates extcon device to be appeared, in the above case
->>>>>>>> we will get deferred probe of USB OTG, because of ordering.
->>>>>>>>
->>>>>>>> Since current implementation, done by the commit 58b116bce136 ("drivercore:
->>>>>>>> deferral race condition fix") counts the amount of triggered deferred probe,
->>>>>>>> we never advance the situation -- the change makes it to be an infinite loop.
->>>>>>> Hi Andy,
->>>>>>>
->>>>>>> I'm trying to understand this sequence of steps. Sorry if the questions
->>>>>>> are stupid -- I'm not very familiar with USB/PCI stuff.
->>>>>> Thank you for looking into this. My answer below.
->>>>>>
->>>>>> As a first thing I would like to tell that there is another example of bad
->>>>>> behaviour of deferred probe with no relation to USB. The proposed change also
->>>>>> fixes that one (however, less possible to find in real life).
->>>>>>
->>>>>>>> ---8<---8<---
->>>>>>>>
->>>>>>>> [   22.187127] driver_deferred_probe_trigger <<< 1
->>>>>>>>
->>>>>>>> ...here is the late initcall triggers deferred probe...
->>>>>>>>
->>>>>>>> [   22.191725] platform dwc3.0.auto: deferred_probe_work_func in deferred list
->>>>>>>>
->>>>>>>> ...dwc3.0.auto is the only device in the deferred list...
->>>>>>> Ok, dwc3.0.auto is the only unprobed device at this point?
->>>>>> Correct.
->>>>>>
->>>>>>>> [   22.198727] platform dwc3.0.auto: deferred_probe_work_func 1 <<< counter 1
->>>>>>>>
->>>>>>>> ...the counter before mutex is unlocked is kept the same...
->>>>>>>>
->>>>>>>> [   22.205663] platform dwc3.0.auto: Retrying from deferred list
->>>>>>>>
->>>>>>>> ...mutes has been unlocked, we try to re-probe the driver...
->>>>>>>>
->>>>>>>> [   22.211487] bus: 'platform': driver_probe_device: matched device dwc3.0.auto with driver dwc3
->>>>>>>> [   22.220060] bus: 'platform': really_probe: probing driver dwc3 with device dwc3.0.auto
->>>>>>>> [   22.238735] bus: 'ulpi': driver_probe_device: matched device dwc3.0.auto.ulpi with driver tusb1210
->>>>>>>> [   22.247743] bus: 'ulpi': really_probe: probing driver tusb1210 with device dwc3.0.auto.ulpi
->>>>>>>> [   22.256292] driver: 'tusb1210': driver_bound: bound to device 'dwc3.0.auto.ulpi'
->>>>>>>> [   22.263723] driver_deferred_probe_trigger <<< 2
->>>>>>>>
->>>>>>>> ...the dwc3.0.auto probes ULPI, we got successful bound and bumped counter...
->>>>>>>>
->>>>>>>> [   22.268304] bus: 'ulpi': really_probe: bound device dwc3.0.auto.ulpi to driver tusb1210
->>>>>>> So where did this dwc3.0.auto.ulpi come from?
->>>>>>> Looks like the device is created by dwc3_probe() through this call flow:
->>>>>>> dwc3_probe() -> dwc3_core_init() -> dwc3_core_ulpi_init() ->
->>>>>>> dwc3_ulpi_init() -> ulpi_register_interface() -> ulpi_register()
->>>>>> Correct.
->>>>>>
->>>>>>>> [   22.276697] platform dwc3.0.auto: Driver dwc3 requests probe deferral
->>>>>>> Can you please point me to which code patch actually caused the probe
->>>>>>> deferral?
->>>>>> Sure, it's in drd.c.
->>>>>>
->>>>>> if (device_property_read_string(dev, "linux,extcon-name", &name) == 0) {
->>>>>>      edev = extcon_get_extcon_dev(name);
->>>>>>      if (!edev)
->>>>>>        return ERR_PTR(-EPROBE_DEFER);
->>>>>>      return edev;
->>>>>> }
->>>>>>
->>>>>>>> ...but extcon driver is still missing...
->>>>>>>>
->>>>>>>> [   22.283174] platform dwc3.0.auto: Added to deferred list
->>>>>>>> [   22.288513] platform dwc3.0.auto: driver_deferred_probe_add_trigger local counter: 1 new counter 2
->>>>>>> I'm not fully aware of all the USB implications, but if extcon is
->>>>>>> needed, why can't that check be done before we add and probe the ulpi
->>>>>>> device? That'll avoid this whole "fake" probing and avoid the counter
->>>>>>> increase. And avoid the need for this patch that's touching the code
->>>>>>> code that's already a bit delicate.
->>>>>>> Also, with my limited experience with all the possible drivers in the
->>>>>>> kernel, it's weird that the ulpi device is added and probed before we
->>>>>>> make sure the parent device (dwc3.0.auto) can actually probe
->>>>>>> successfully.
->>>>>> As I said above the deferred probe trigger has flaw on its own.
->>>>>> Even if we fix for USB case, there is (and probably will be) others.
->>>>> Right here is the driver design bug. A driver's probe() hook should *not*
->>>>> return -EPROBE_DEFER after already creating child devices which may have
->>>>> already been probed.
->>>> Any documentation statement for this requirement?
->>>>
->>>> By the way, I may imagine other mechanisms that probe the driver on other CPU
->>>> at the same time (let's consider parallel modprobes). The current code has a
->>>> flaw with that.
->>> Hi,
->>>
->>> sorry for picking this up again but I stumbled above the same issue
->>> within the driver imx/drm driver which is using the component framework.
->>> I end up in a infinity boot loop if I enabled the HDMI (which is the
->>> DesignWare bridge device) and the LVDS support and the LVDS bind return
->>> with EPROBE_DEFER. There are no words within the component framework docs
->>> which says that this is forbidden. Of course we can work-around the
->>> driver-core framework but IMHO this shouldn't be the way to go. I do not
->>> say that we should revert the commit introducing the regression but we
->>> should address this not only by extending the docs since the most
->>> drm-drivers are using the component framework and can end up in the same
->>> situation.
->> I am not sure why do you think this is similar issue.
-> Because I see trying to bind the device over and over..
->
->> Please describe the issue in more detail. Which drivers defers probe and
->> why, and why do you have infinite loop.
-> As said I'm currently on the imx-drm driver. The iMX6 devices are
-> using the synopsis HDMI IP core and so they are using this bridge device
-> driver (drivers/gpu/drm/bridge/synopsys/). The imx-drm driver can be
-> build module wise. As example I enabled the LDB and the HDMI support.
-> The HDMI driver is composed as platform driver with different
-> (sub-)drivers and devices. Those devices are populated by the HDMI core
-> driver _probe() function and triggers a driver_deferred_probe_trigger()
-> after the driver successfully probed. The LDB driver bind() returns
-> -EPROBE_DEFER because the panel we are looking for depends on a defered
-> regulator device. Now the defered probe code tries to probe the defered
-> devices again because the local-trigger count was changed by the HDMI
-> driver and we are in the never ending loop.
->
->> In general deferring probe from bind is not forbidden, but it should be
->> used carefully (as everything in kernel :) ). Fixing deferring probe
->> issues in many cases it is a matter of figuring out 'dependency loops'
->> and breaking them by splitting device initialization into more than one
->> phase.
-> We are on the way of splitting the imx-drm driver but there are many
-> other DRM drivers using the component framework. As far as I can see the
-> sunxi8 driver is component based and uses the same HDMI driver. I'm with
-> Andy that we should fix that on the common/core place.
-
-
-I have looked at the drivers and I see the main issue I see is that imx 
-drivers performs resource acquisition in bind phase. I think rule of 
-thumb should be "do not expose yourself, until you are ready", which in 
-this case means "do not call component_add, until resources are 
-acquired" - ie resource acquisition should be performed in probe. I use 
-this approach mainly to avoid multiple deferred re-probes, but it should 
-solve also this issue, so even if there will be solution to "deferred 
-probe issues" in core it would be good to fix imx drivers.
-
-
-Regards
-
-Andrzej
-
-
->
-> Regards,
->    Marco
->
->> Regards
->>
->> Andrzej
->>
->>
->>>>> It can be solved by refactoring the driver probe routine. If a resource is
->>>>> required to be present, then check that it is available early; before
->>>>> registering child devices.
->>>> We fix one and leave others.
->>> E.g. the imx-drm and the sunxi driver...
->>>
->>> Regards,
->>>     Marco
->>>
->>>>> The proposed solution to modify driver core is fragile and susceptible to
->>>>> side effects from other probe paths. I don't think it is the right approach.
->>>> Have you tested it on your case? Does it fix the issue?
->>>>
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMb2dhbiBHdW50aG9ycGUgPGxv
+Z2FuZ0BkZWx0YXRlZS5jb20+DQo+IFNlbnQ6IFdlZG5lc2RheSwgSnVuZSAzLCAyMDIwIDY6MjIg
+UE0gDQo+IA0KPiANCj4gT24gMjAyMC0wNi0wMyAxMDowNCBhLm0uLCBTdGFua2lld2ljeiwgUGlv
+dHIgd3JvdGU6DQo+ID4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4+IEZyb206IExv
+Z2FuIEd1bnRob3JwZSA8bG9nYW5nQGRlbHRhdGVlLmNvbT4NCj4gPj4gU2VudDogV2VkbmVzZGF5
+LCBKdW5lIDMsIDIwMjAgNTo0OCBQTQ0KPiA+Pg0KPiA+Pg0KPiA+Pg0KPiA+PiBPbiAyMDIwLTA2
+LTAzIDU6NDQgYS5tLiwgUGlvdHIgU3RhbmtpZXdpY3ogd3JvdGU6DQo+ID4+PiBXaGVuIGRlYnVn
+Z2luZyBhbiBpc3N1ZSB3aGVyZSBJIHdhcyBhc2tpbmcgdGhlIFBDSSBtYWNoaW5lcnkgdG8gZW5h
+YmxlIGENCj4gPj4+IHNldCBvZiBNU0ktWCB2ZWN0b3JzLCB3aXRob3V0IGZhbGxpbmcgYmFjayBv
+biBNU0ksIEkgcmFuIGFjcm9zcyBhDQo+ID4+PiBiZWhhdmlvdXIgd2hpY2ggc2VlbXMgb2RkLiBU
+aGUgcGNpX2FsbG9jX2lycV92ZWN0b3JzX2FmZmluaXR5KCkgd2lsbA0KPiA+Pj4gYWx3YXlzIHJl
+dHVybiAtRU5PU1BDIG9uIGZhaWx1cmUsIHdoZW4gYWxsb2NhdGluZyBNU0ktWCB2ZWN0b3JzIG9u
+bHksDQo+ID4+PiB3aGVyZWFzIHdpdGggTVNJIGZhbGxiYWNrIGl0IHdpbGwgZm9yd2FyZCBhbnkg
+ZXJyb3IgcmV0dXJuZWQgYnkNCj4gPj4+IF9fcGNpX2VuYWJsZV9tc2lfcmFuZ2UoKS4gVGhpcyBp
+cyBhIGNvbmZ1c2luZyBiZWhhdmlvdXIsIHNvIGhhdmUgdGhlDQo+ID4+PiBwY2lfYWxsb2NfaXJx
+X3ZlY3RvcnNfYWZmaW5pdHkoKSBmb3J3YXJkIHRoZSBlcnJvciBjb2RlIGZyb20NCj4gPj4+IF9f
+cGNpX2VuYWJsZV9tc2l4X3JhbmdlKCkgd2hlbiBhcHByb3ByaWF0ZS4NCj4gPj4+DQo+ID4+PiBT
+aWduZWQtb2ZmLWJ5OiBQaW90ciBTdGFua2lld2ljeiA8cGlvdHIuc3RhbmtpZXdpY3pAaW50ZWwu
+Y29tPg0KPiA+Pj4gUmV2aWV3ZWQtYnk6IEFuZHkgU2hldmNoZW5rbyA8YW5kcml5LnNoZXZjaGVu
+a29AaW50ZWwuY29tPg0KPiA+Pj4gLS0tDQo+ID4+PiAgZHJpdmVycy9wY2kvbXNpLmMgfCA1ICsr
+Ky0tDQo+ID4+PiAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMo
+LSkNCj4gPj4+DQo+ID4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvbXNpLmMgYi9kcml2ZXJz
+L3BjaS9tc2kuYw0KPiA+Pj4gaW5kZXggNmI0M2E1NDU1YzdhLi40NDNjYzMyNGIxOTYgMTAwNjQ0
+DQo+ID4+PiAtLS0gYS9kcml2ZXJzL3BjaS9tc2kuYw0KPiA+Pj4gKysrIGIvZHJpdmVycy9wY2kv
+bXNpLmMNCj4gPj4+IEBAIC0xMjMxLDggKzEyMzEsOSBAQCBpbnQgcGNpX2FsbG9jX2lycV92ZWN0
+b3JzX2FmZmluaXR5KHN0cnVjdCBwY2lfZGV2DQo+ID4+ICpkZXYsIHVuc2lnbmVkIGludCBtaW5f
+dmVjcywNCj4gPj4+ICAJCX0NCj4gPj4+ICAJfQ0KPiA+Pj4NCj4gPj4+IC0JaWYgKG1zaXhfdmVj
+cyA9PSAtRU5PU1BDKQ0KPiA+Pj4gLQkJcmV0dXJuIC1FTk9TUEM7DQo+ID4+PiArCWlmIChtc2l4
+X3ZlY3MgPT0gLUVOT1NQQyB8fA0KPiA+Pj4gKwkgICAgKGZsYWdzICYgKFBDSV9JUlFfTVNJIHwg
+UENJX0lSUV9NU0lYKSkgPT0gUENJX0lSUV9NU0lYKQ0KPiA+Pj4gKwkJcmV0dXJuIG1zaXhfdmVj
+czsNCj4gPj4+ICAJcmV0dXJuIG1zaV92ZWNzOw0KPiA+Pj4gIH0NCj4gPj4+ICBFWFBPUlRfU1lN
+Qk9MKHBjaV9hbGxvY19pcnFfdmVjdG9yc19hZmZpbml0eSk7DQo+ID4+Pg0KPiA+Pg0KPiA+PiBJ
+dCBvY2N1cnMgdG8gbWUgdGhhdCB3ZSBjb3VsZCBjbGVhbiB0aGlzIGZ1bmN0aW9uIHVwIGEgYml0
+IG1vcmUuLi4gSQ0KPiA+PiBkb24ndCBzZWUgYW55IG5lZWQgdG8gaGF2ZSB0d28gdmFyaWFibGVz
+IGZvciBtc2lfdmVjcyBhbmQgbXNpeF92ZWNzIGFuZA0KPiA+PiB0aGVuIGhhdmUgYSBjb21wbGlj
+YXRlZCBiaXQgb2YgbG9naWMgYXQgdGhlIGVuZCB0byBkZWNpZGUgd2hpY2ggdG8gcmV0dXJuLg0K
+PiA+Pg0KPiA+PiBXaHkgbm90IGluc3RlYWQganVzdCBoYXZlIG9uZSB2YXJpYWJsZSB3aGljaCBp
+cyBzZXQgYnkNCj4gPj4gX19wY2lfZW5hYmxlX21zaXhfcmFuZ2UoKSwgdGhlbiBfX3BjaV9lbmFi
+bGVfbXNpX3JhbmdlKCksIHRoZW4gcmV0dXJuZWQNCj4gPj4gaWYgdGhleSBib3RoIGZhaWw/DQo+
+ID4+DQo+ID4NCj4gPiBUaGF0IHdvdWxkbid0IHByZXNlcnZlIHRoZSBvcmlnaW5hbCBiaXQgb2Yg
+bG9naWMgd2hlcmUgLUVOT1NQQyBpcyByZXR1cm5lZA0KPiA+IGFueSB0aW1lIF9fcGNpX2VuYWJs
+ZV9tc2l4X3JhbmdlKCkgZmFpbHMgd2l0aCAtRU5PU1BDLCBpcnJlc3BlY3RpdmUgb2YNCj4gd2hl
+dGhlcg0KPiA+IE1TSSBmYWxsYmFjayB3YXMgcmVxdWVzdGVkLiBUaG91Z2ggSSBkb24ndCBrbm93
+IGlmIHRoYXQgaXMgZGVzaXJlZCBiZWhhdmlvdXIuDQo+IA0KPiBUaGF0IGRvZXMgbG9vayB2ZXJ5
+IG9kZCwgYnV0IG9rLi4uIFRoZW4sIGNvdWxkbid0IHdlIGp1c3Qgc2V0IG1zaV92ZWNzDQo+IHRv
+IG1zaXhfdmVjcyBhZnRlciBjYWxsaW5nIF9fcGNpX2VuYWJsZV9tc2l4X3JhbmdlKCkgc3VjaCB0
+aGF0IGlmDQo+IF9fcGNpX2VuYWJsZV9tc2lfcmFuZ2UoKSBkb2Vzbid0IGdldCBjYWxsZWQgd2Ug
+d2lsbCByZXR1cm4gdGhlIHNhbWUNCj4gZXJyb3Igd2l0aG91dCBuZWVkaW5nIHRoZSBtZXNzeSBz
+ZWNvbmQgY29uZGl0aW9uYWw/DQoNCkhhdmluZyB0aG91Z2h0IGFib3V0IGl0IGEgYml0IG1vcmUg
+LSB0aGUgb3JpZ2luYWwgYmVoYXZpb3Igc2VlbXMgYnJva2VuIGJlY2F1c2UNCmluIGNhc2Ugc29t
+ZW9uZSBhc2tlZCBmb3IgTVNJIG9ubHkgYW5kIHRoYXQgZXJyb3JlZCB3ZSdkIGFsd2F5cyByZXR1
+cm4gLUVOT1NQQy4NClNvIEkgd2VudCB3aXRoIHlvdXIgb3JpZ2luYWwgc3VnZ2VzdGlvbiBvZiBo
+YXZpbmcgYSBzaW5nbGUgcmV0dXJuIGNvZGUgKEkganVzdCBzZW50IG91dA0KYSB2MykuDQoNClRo
+YW5rcywNClBpb3RyDQo=
