@@ -2,103 +2,195 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71806C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 22:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDDBC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 22:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BFA420734
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 22:50:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wfhc0mYz"
+	by mail.kernel.org (Postfix) with ESMTP id 932D3206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 22:52:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591743163;
+	bh=hw5vF1/IyMXaJb5i+dMnAluAh4GENKRIGUOqUOiaIhE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SoZEQ+9yoLd875Xk0HpyyAvWtTXM4TFWSEG7lU3XAL+ZugMynTebNDWQ0gpV3wTMm
+	 sb3AGNZ0RI1ho2wvW5gruOTqv6kp/muH+WzEirBOHUYTjcQGedcwD3ARfWfdwnunks
+	 Nx8RDCnfpt/QSLz9CfKe+ypwNaMfA3iP65NGXUds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728706AbgFIWuy (ORCPT
+        id S1728719AbgFIWwl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 18:50:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59690 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728108AbgFIWuu (ORCPT
+        Tue, 9 Jun 2020 18:52:41 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:35853 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728108AbgFIWwk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 18:50:50 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82B0DC05BD1E;
-        Tue,  9 Jun 2020 15:50:49 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id u17so330070qtq.1;
-        Tue, 09 Jun 2020 15:50:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=oGAa4Mn6OsK1MTg/eaa33f/HGF3MMyA73RH3oZcHO8Q=;
-        b=Wfhc0mYzeiHLe6+K0/T43lF6dtzPYAjscyG41VUhNGlUUU/qUHKCCpSW3o3ehezQB6
-         glJWqCl6j0LwVh3n8K6rZk2w7btrZ9lwFG0TL+w3bS/NPXMOW1DxfR4a5ZMRQXWcf037
-         8OciGTHxhZNWEkXLsXKDwbzFKw1Gr32TOLhr6t0NxHd4DwghKwfvegpamD969N9LEZrD
-         ATZuAa9zPcIB8xmugNZspQyeKse3IiDU2TmH7h3PZSL0QSJLHMhaGB6Z5Do9OV5BBzfk
-         OZp9FK7KsLTf4XXmbt+CzCvk9t5wg5IuEe+qyPNQjveCh6mo06sL2leVLnuohzB5dMtw
-         sctA==
+        Tue, 9 Jun 2020 18:52:40 -0400
+Received: by mail-io1-f68.google.com with SMTP id r77so49137ior.3;
+        Tue, 09 Jun 2020 15:52:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=oGAa4Mn6OsK1MTg/eaa33f/HGF3MMyA73RH3oZcHO8Q=;
-        b=uS1188L9qzpFwyf5OXDVuAu+P4m6sTuEAiL3B79IEdImjdzdefJEsi6xtRV//LRJFb
-         UllAfw3+FdosV9gfFaGi94nsjV6TsvtH3A+ikipIuQzgeCIqa/IuQQkGuLwuam3FgHxX
-         a/Zr0FI5cfKMXwtjYr+IY3GwznjD45XVAPQWq+fp+KVonO2GXQ/XiqSnZ97C2QKfH4KY
-         hIYYyBv/dA0C/zfm0TiQyXXtB2CBLPuDTln0E45B21taRUS0WXCmxyYxb/q4+Y3QYKSM
-         7sFqkfOf/npA/Xy1oZgMfPnk6u29V3pVojk/pli45BUPaT6rrscg/E3YgtUnVQtOY0nz
-         8Sbg==
-X-Gm-Message-State: AOAM533I+GghGYi8nKDBhsT0/NKann1QW7aJ8eSfp2wpY9fZ6wfmDLD7
-        BgIXxQ/lUnrd6u4TEVdDKAREzOHjFd+/
-X-Google-Smtp-Source: ABdhPJys9woneWLnvJxMrdXdSf7xqgSI17WLZRCKPMv1V7/gyIV/jiHrBwLMFoBewqKnx4ny6CHiaQ==
-X-Received: by 2002:ac8:6947:: with SMTP id n7mr242325qtr.178.1591743048686;
-        Tue, 09 Jun 2020 15:50:48 -0700 (PDT)
-Received: from localhost.localdomain ([142.119.96.191])
-        by smtp.googlemail.com with ESMTPSA id v189sm10726314qkb.64.2020.06.09.15.50.47
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=VtUNO0RmXUCA0lM/iTrqVIo0l7phzdy2MwUWXH663v4=;
+        b=aWwtPXBuCRCv1YWHuOeGu2xJCXjCZBtDNiicPUv+Y22oRRcsWjZTsnC0dXmmCcWBfc
+         ovywz7EJ5uw1fBgZnq2WcVDw2JH/D7Jsm3iMEPwSaJQn5U4JInlHH4EouOfCBJm/KgAb
+         rMFbuB7rIhmx9pPtzFBJhxoVrNmd4FRGw3AOZeZvtawZ6xao5gAo3HaF/F1jDHGoh/5i
+         WGx4w/Az9iX+pd+k+Tm6CnLQbWyw/9+aJu+rwurusu0vDYbXWu7LsJr4nJ0hQ8oQkijj
+         7CdkUugoV0TnLQeRtaF8Br2BHvkyKed7OfFuUfz53zDFC3swpXviwdYhkX/MeKbezLcr
+         xU/Q==
+X-Gm-Message-State: AOAM532ckY1e8nWANi6xlxRXk38qq0i7MUsNyPZYrcTi8DKvJD/sq/q5
+        YeEGDgn+0UbAQDQBEyz1fQ==
+X-Google-Smtp-Source: ABdhPJzAotuZigWCyKFS6KAx6Vd4f0JyrR9Qil5qXs28rQHD2OfKl7pATvicvO/4G8BEE8Bm7aqXkA==
+X-Received: by 2002:a05:6602:228c:: with SMTP id d12mr388575iod.43.1591743159407;
+        Tue, 09 Jun 2020 15:52:39 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id v16sm9833676ilo.47.2020.06.09.15.52.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 15:50:48 -0700 (PDT)
-From:   Keyur Patel <iamkeyur96@gmail.com>
-Cc:     Keyur Patel <iamkeyur96@gmail.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] power: supply: axp20x_usb_power: fix spelling mistake
-Date:   Tue,  9 Jun 2020 18:50:35 -0400
-Message-Id: <20200609225035.108435-1-iamkeyur96@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200609224524.108092-1-iamkeyur96@gmail.com>
-References: <20200609224524.108092-1-iamkeyur96@gmail.com>
+        Tue, 09 Jun 2020 15:52:38 -0700 (PDT)
+Received: (nullmailer pid 1655191 invoked by uid 1000);
+        Tue, 09 Jun 2020 22:52:37 -0000
+Date:   Tue, 9 Jun 2020 16:52:37 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sumit Semwal <sumit.semwal@linaro.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        broonie@kernel.org, nishakumari@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, kgunda@codeaurora.org,
+        rnayak@codeaurora.org
+Subject: Re: [PATCH v4 2/5] dt-bindings: regulator: Add labibb regulator
+Message-ID: <20200609225237.GA1647191@bogus>
+References: <20200602100924.26256-1-sumit.semwal@linaro.org>
+ <20200602100924.26256-3-sumit.semwal@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200602100924.26256-3-sumit.semwal@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix typo: "triger" --> "trigger"
+On Tue, Jun 02, 2020 at 03:39:21PM +0530, Sumit Semwal wrote:
+> From: Nisha Kumari <nishakumari@codeaurora.org>
+> 
+> Adding the devicetree binding for labibb regulator.
+> 
+> Signed-off-by: Nisha Kumari <nishakumari@codeaurora.org>
+> Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
+>  [sumits: cleanup as per review comments and update to yaml]
+> --
+> v2: updated for better compatible string and names.
+> v3: moved to yaml
+> v4: fixed dt_binding_check issues
+> ---
+>  .../regulator/qcom-labibb-regulator.yaml      | 79 +++++++++++++++++++
+>  1 file changed, 79 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.yaml b/Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.yaml
+> new file mode 100644
+> index 000000000000..178820ec04c7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.yaml
+> @@ -0,0 +1,79 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
 
-Signed-off-by: Keyur Patel <iamkeyur96@gmail.com>
----
- drivers/power/supply/axp20x_usb_power.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Dual license new bindings:
 
-diff --git a/drivers/power/supply/axp20x_usb_power.c b/drivers/power/supply/axp20x_usb_power.c
-index 4fde24b5f35a..d01dc0332edc 100644
---- a/drivers/power/supply/axp20x_usb_power.c
-+++ b/drivers/power/supply/axp20x_usb_power.c
-@@ -78,7 +78,7 @@ static bool axp20x_usb_vbus_needs_polling(struct axp20x_usb_power *power)
- 	/*
- 	 * Polling is only necessary while VBUS is offline. While online, a
- 	 * present->absent transition implies an online->offline transition
--	 * and will triger the VBUS_REMOVAL IRQ.
-+	 * and will trigger the VBUS_REMOVAL IRQ.
- 	 */
- 	if (power->axp20x_id >= AXP221_ID && !power->online)
- 		return true;
--- 
-2.26.2
+(GPL-2.0-only OR BSD-2-Clause)
 
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/regulator/qcom-labibb-regulator.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm's LAB(LCD AMOLED Boost)/IBB(Inverting Buck Boost) Regulator
+> +
+> +maintainers:
+> +  - Sumit Semwal <sumit.semwal@linaro.org>
+> +
+> +description:
+> +  LAB can be used as a positive boost power supply and IBB can be used as a
+> +  negative boost power supply for display panels. Currently implemented for
+> +  pmi8998.
+> +
+> +allOf:
+> +  - $ref: "regulator.yaml#"
+
+I think you want this under each child as this schema applies to each 
+regulator. But you aren't using any of the regulator properties, so not 
+even needed? Or the example is not complete?
+
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,pmi8998-lab-ibb
+> +
+> +  lab:
+> +    type: object
+> +
+> +    properties:
+> +
+> +      interrupts:
+> +        maxItems: 1
+> +        description:
+> +          Short-circuit interrupt for lab.
+> +
+> +      interrupt-names:
+> +        const: sc-err
+
+You don't really need a name if there's only 1.
+
+> +
+> +    required:
+> +    - interrupts
+> +    - interrupt-names
+> +
+> +  ibb:
+> +    type: object
+> +
+> +    properties:
+> +
+> +      interrupts:
+> +        maxItems: 1
+> +        description:
+> +          Short-circuit interrupt for lab.
+> +
+> +      interrupt-names:
+> +        const: sc-err
+> +
+> +    required:
+> +    - interrupts
+> +    - interrupt-names
+> +
+> +required:
+> +  - compatible
+
+unevaluatedProperties: false
+
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +    labibb {
+> +      compatible = "qcom,pmi8998-lab-ibb";
+> +
+> +      lab {
+> +        interrupts = <0x3 0x0 IRQ_TYPE_EDGE_RISING>;
+> +        interrupt-names = "sc-err";
+> +      };
+> +
+> +      ibb {
+> +        interrupts = <0x3 0x2 IRQ_TYPE_EDGE_RISING>;
+> +        interrupt-names = "sc-err";
+> +      };
+> +    };
+> +
+> +...
+> -- 
+> 2.26.2
+> 
