@@ -2,302 +2,121 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F83C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 992FAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:37:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76DE8207ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:29:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 744E02081A
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:37:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=vanguardiasur-com-ar.20150623.gappssmtp.com header.i=@vanguardiasur-com-ar.20150623.gappssmtp.com header.b="bWTGfVAO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N8yRfI3Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728733AbgFIK3D (ORCPT
+        id S1728686AbgFIKht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 06:29:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57864 "EHLO
+        Tue, 9 Jun 2020 06:37:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbgFIK26 (ORCPT
+        with ESMTP id S1727906AbgFIKhr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 06:28:58 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B145AC05BD1E
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 03:28:56 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id t21so13203016edr.12
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 03:28:56 -0700 (PDT)
+        Tue, 9 Jun 2020 06:37:47 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 139B2C05BD1E;
+        Tue,  9 Jun 2020 03:37:47 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id d6so1226600pjs.3;
+        Tue, 09 Jun 2020 03:37:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=vanguardiasur-com-ar.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=gFNWdxQvJsj/PAcrNno1NXDrWUfuQ3gELpOPfZFY9Ok=;
-        b=bWTGfVAOG6tfJfLLKI3RpHybPpWytXlALbTZ34ZpOyOmB1Dxfj7SykRUv/XYVfF6IA
-         QsjVmQiJIYrP7R/wcwSSnyfZjY8Bsgw2EWZy9Tsb0Cegmtpuwq5fJVZ6x0vCfDBXfPuI
-         tnx/l1sUi1c4IdE1GUCateS/CElmISjns8noFnDPXJzIwU5OM6MdRhEGmTzOfE2MDGZ5
-         /vmk6NNv1rTAsuOT5WMWZS9iuGAlmWexYWDEeWMgIjk1LXYBSNwvv1CFbiIsjPtq61Ir
-         QnTfYDvkxZc5Tf9hHLIUJ6hJVY0LpvnMc7fI8e1GP5Rx8E9l/MHT+h0EQ79CUyrBqOXi
-         sd6g==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=50KfskdRn64Hc1/lSl8hTGQPAB6Anp68wAajsIMysbk=;
+        b=N8yRfI3QLCXPUF2rD/bRYJEM+Mh17WVxAzkN9J6sENYz4rZ1DgqPRxQdWfx0clPQ0E
+         0OdkIHJIrHWTidgGAUePIhQN9gshC4ZlccHVr/ha0SVY0wfVXZszdyS7OLVVBgWvx7S4
+         sdyi1qrbKtxurlQKRKserA3VnQZhpq11IwKHmcYWdTbBFECHyuYRZ0Vw2q6sk16LcFMb
+         2fa73W2wGQVGweEBI18m0KGT6qipMysQ8avwlQlSAiKPy1xfrOwtpY6VwWdxr3jBRKD5
+         SuEr65t/9p2U4Mplfe5ZdFffIVniBzYED99XENuY2wETeHLmo6A1TjUb9+o9kDYDC/uA
+         EhOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=gFNWdxQvJsj/PAcrNno1NXDrWUfuQ3gELpOPfZFY9Ok=;
-        b=o+V3M+eZMGSvUTVyW9mQSs6jqNdJd9V7qSyNcS9dXd4AF7iEA4BaTOoX5MQfz/P43/
-         vH3y8fuELYpUdG4KktBB39n4zefDr1h370U3cCPmbpq6cl0oLBoLqJRwvlgfSPUtb6UJ
-         dQ7JIFwELqdK5BfTacW1FXyiF0gWqCSAvPhF3CQ3Z+zcJ7BIXTw6JC6sXhhaszF4sHXS
-         8NA7pLYTTx7bPmcLdjvo2jHBnDCHkcZEJT8xUt4KvLjBQqgIRpadjfjfGmGAIJSwgZzW
-         uz5s2/gUTeTpgibrBO+trUB9ue34rf6YbidJ6Rrul0L/pQ0J41uSKQvGU+v2IYIo6Tc5
-         oUPQ==
-X-Gm-Message-State: AOAM531598dDSr+FiXo6IDP/xYEdAKDCvMVPkFfd6HkGT9pYcfrQYjqp
-        GP9T7cMU0nhOti2KNSqCaXLPTDyiaEVoffgfwmDEpQ==
-X-Google-Smtp-Source: ABdhPJxZ6XlgVmh3lSP6SM9175REGiYedmbVtXDN/k3Pkaj/EKKBRDkAoZb/wAc6G53Gx2OymPWm4S7XPrTygcgKTIg=
-X-Received: by 2002:a05:6402:1746:: with SMTP id v6mr2922335edx.236.1591698535254;
- Tue, 09 Jun 2020 03:28:55 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=50KfskdRn64Hc1/lSl8hTGQPAB6Anp68wAajsIMysbk=;
+        b=gtxsi78qfHRbmNslXmHTyVO3yruuiAhKRXoq6+wUi4xOvfV8/HVkrWdUDEA6oiEqzt
+         QCE7w1Vv0Vsbvy9tHWNArwfqxdJak9srtMotKSa7zBpuXr7WUugLJjADTQM6z7KdN2KD
+         XEuFExl3rYVLXoq065jzaXDdHKbiyc2m8/qAkFssZZOMPMU4EHGoCV/8miRp1K3sWUae
+         FZOu4OAAYJ8JfRWTGYxlEoU52bkQRZ88s6haktibP/A5JkHOdMWPOYSDnKSZjROVpAGZ
+         fzMPD98T/aSbp7azfnfIpLuKlDc/SK0TsyHqlpTE+v4HZngQ7Ii7FXCSfmKiMNMcb46k
+         wgsA==
+X-Gm-Message-State: AOAM531MT7dCorNG+L7XOBZ0f2upKaIhfh0SeZ/zYA5/qmJLM8aoTnHk
+        5pt0XNVfO+jT+I1RguXn5oi3xA0M
+X-Google-Smtp-Source: ABdhPJxcGvVpDoZ5vTEidDhY3bM1eiX3cgin3LoExbype/8h0KCFNr+CRNByYU/bBIhWp4MH9ijD1w==
+X-Received: by 2002:a17:902:7088:: with SMTP id z8mr2597419plk.71.1591699066167;
+        Tue, 09 Jun 2020 03:37:46 -0700 (PDT)
+Received: from localhost.localdomain ([124.123.82.91])
+        by smtp.gmail.com with ESMTPSA id n4sm2273258pjt.48.2020.06.09.03.37.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jun 2020 03:37:45 -0700 (PDT)
+Subject: Re: [PATCHv5 3/5] ext4: mballoc: Introduce pcpu seqcnt for freeing PA
+ to improve ENOSPC handling
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Ritesh Harjani <riteshh@linux.ibm.com>,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Jan Kara <jack@suse.com>, Theodore Ts'o <tytso@mit.edu>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        linux-kernel@vger.kernel.org
+References: <cover.1589955723.git.riteshh@linux.ibm.com>
+ <7f254686903b87c419d798742fd9a1be34f0657b.1589955723.git.riteshh@linux.ibm.com>
+ <CGME20200603064851eucas1p2e435089fbdf4de1d1fa3fb051c2f3d7b@eucas1p2.samsung.com>
+ <aa4f7629-02ff-e49b-e9c0-5ef4a1deee90@samsung.com>
+ <2940d744-3f6f-d0b5-ad8d-e80128c495d0@gmail.com>
+ <20200609102015.GA7696@zn.tnic>
+From:   Ritesh Harjani <ritesh.list@gmail.com>
+Message-ID: <69a26eb8-e439-6574-6f46-e557d6c852d5@gmail.com>
+Date:   Tue, 9 Jun 2020 16:07:41 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200604135317.9235-1-narmstrong@baylibre.com>
- <20200604135317.9235-2-narmstrong@baylibre.com> <02aa06fd8397b77c9a75d3a8399cb55d3b4d39c1.camel@ndufresne.ca>
- <4d22ff40-11ac-c77a-564d-af9a678f23af@baylibre.com> <a15dea55-3ca4-2a65-5c56-6c1edd2de405@xs4all.nl>
- <a4c5ae79-1d4d-4c1e-1535-c6c8b02d4b6f@baylibre.com> <2a0db0a4-9d04-f20c-39d8-ff25e07e64b7@xs4all.nl>
- <f6d35521b61da395528d6dd1164a9af6c3acd664.camel@ndufresne.ca> <3ffe901f-73e4-bdf7-84a6-a5372186b55c@baylibre.com>
-In-Reply-To: <3ffe901f-73e4-bdf7-84a6-a5372186b55c@baylibre.com>
-From:   Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Date:   Tue, 9 Jun 2020 07:28:44 -0300
-Message-ID: <CAAEAJfB8HfgONpJ6YZhLnLdQz+emfhDetR_0=BoRykz3-7732Q@mail.gmail.com>
-Subject: Re: [PATCH 1/5] media: videodev2: add Compressed Framebuffer pixel formats
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Nicolas Dufresne <nicolas@ndufresne.ca>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        linux-media <linux-media@vger.kernel.org>,
-        linux-amlogic@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Maxime Jourdan <mjourdan@baylibre.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Helen Koike <helen.koike@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200609102015.GA7696@zn.tnic>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding Helen to the discussion.
 
-On Tue, 9 Jun 2020 at 04:43, Neil Armstrong <narmstrong@baylibre.com> wrote=
-:
->
-> Hi Nicolas,
->
-> On 08/06/2020 20:59, Nicolas Dufresne wrote:
-> > Le lundi 08 juin 2020 =C3=A0 16:43 +0200, Hans Verkuil a =C3=A9crit :
-> >> On 08/06/2020 16:14, Neil Armstrong wrote:
-> >>> On 08/06/2020 11:26, Hans Verkuil wrote:
-> >>>> On 08/06/2020 10:16, Neil Armstrong wrote:
-> >>>>> Hi Nicolas,
-> >>>>>
-> >>>>> On 05/06/2020 17:35, Nicolas Dufresne wrote:
-> >>>>>> Le jeudi 04 juin 2020 =C3=A0 15:53 +0200, Neil Armstrong a =C3=A9c=
-rit :
-> >>>>>>> From: Maxime Jourdan <mjourdan@baylibre.com>
-> >>>>>>>
-> >>>>>>> Add two generic Compressed Framebuffer pixel formats to be used
-> >>>>>>> with a modifier when imported back in another subsystem like DRM/=
-KMS.
-> >>>>>>>
-> >>>>>>> These pixel formats represents generic 8bits and 10bits compresse=
-d buffers
-> >>>>>>> with a vendor specific layout.
-> >>>>>>>
-> >>>>>>> These are aligned with the DRM_FORMAT_YUV420_8BIT and DRM_FORMAT_=
-YUV420_10BIT
-> >>>>>>> used to describe the underlying compressed buffers used for ARM F=
-ramebuffer
-> >>>>>>> Compression. In the Amlogic case, the compression is different bu=
-t the
-> >>>>>>> underlying buffer components is the same.
-> >>>>>>>
-> >>>>>>> Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
-> >>>>>>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> >>>>>>> ---
-> >>>>>>>  drivers/media/v4l2-core/v4l2-ioctl.c | 2 ++
-> >>>>>>>  include/uapi/linux/videodev2.h       | 9 +++++++++
-> >>>>>>>  2 files changed, 11 insertions(+)
-> >>>>>>>
-> >>>>>>> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media=
-/v4l2-core/v4l2-ioctl.c
-> >>>>>>> index 2322f08a98be..8f14adfd5bc5 100644
-> >>>>>>> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
-> >>>>>>> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-> >>>>>>> @@ -1447,6 +1447,8 @@ static void v4l_fill_fmtdesc(struct v4l2_fm=
-tdesc *fmt)
-> >>>>>>>                 case V4L2_PIX_FMT_S5C_UYVY_JPG: descr =3D "S5C73M=
-X interleaved UYVY/JPEG"; break;
-> >>>>>>>                 case V4L2_PIX_FMT_MT21C:        descr =3D "Mediat=
-ek Compressed Format"; break;
-> >>>>>>>                 case V4L2_PIX_FMT_SUNXI_TILED_NV12: descr =3D "Su=
-nxi Tiled NV12 Format"; break;
-> >>>>>>> +               case V4L2_PIX_FMT_YUV420_8BIT:  descr =3D "Compre=
-ssed YUV 4:2:0 8-bit Format"; break;
-> >>>>>>> +               case V4L2_PIX_FMT_YUV420_10BIT: descr =3D "Compre=
-ssed YUV 4:2:0 10-bit Format"; break;
-> >>>
-> >>> [..]
-> >>>
-> >>>>>> I'll remind that the modifier implementation has great value and i=
-s
-> >>>>>> much more scalable then the current V4L2 approach. There has been =
-some
-> >>>>>> early proposal for this, maybe it's time to prioritize because thi=
-s
-> >>>>>> list will starts growing with hundred or even thousands or format,
-> >>>>>> which is clearly indicated by the increase of modifier generator m=
-acro
-> >>>>>> on the DRM side.
-> >>>>>
-> >>>>> Yes, but until the migration of drm_fourcc and v4l2 fourcc into a c=
-ommon one
-> >>>>> is decided, I'm stuck and this is the only intermediate solution I =
-found.
-> >>>>
-> >>>> We can safely assume that drm fourcc and v4l2 fourcc won't be merged=
-.
-> >>>>
-> >>>> There is too much divergence and not enough interest in creating com=
-mon
-> >>>> fourccs.
-> >>>>
-> >>>> But we *do* want to share the modifiers.
-> >>>>
-> >>>>> We have a working solution with Boris's patchset with ext_fmt passi=
-ng the
-> >>>>> modifier to user-space.
-> >>>>>
-> >>>>> but anyway, since the goal is to merge the fourcc between DRM & V4L=
-2, these YUV420_*BIT
-> >>>>> will still be needed if we pass the modifier with an extended forma=
-t struct.
-> >>>>
-> >>>> We tried merging fourccs but that ran into resistance. Frankly, I wo=
-uldn't
-> >>>> bother with this, it is much easier to just create a conversion tabl=
-e in the
-> >>>> kernel docs.
-> >>>>
-> >>>> So don't block on this, I would really prefer if the ext_fmt series =
-is picked
-> >>>> up again and rebased and reposted and then worked on. The stateless =
-codec support
-> >>>> is taking less time (it's shaping up well) so there is more time to =
-work on this.
-> >>>
-> >>> Ok, I already starting discussing with Helen Koike about the ext_fnt =
-re-spin.
-> >>>
-> >>> Should I re-introduce different v4l2 pixfmt for these DRM YUV420_*BIT=
- or I can keep this
-> >>> patch along the new ext_fmt and shared modifiers ?
-> >>
-> >> So to be clear the DRM_FORMAT_YUV420_8BIT/10BIT fourccs define that th=
-is is a
-> >> buffer containing compressed YUV420 in 8 or 10 bit and the modifier te=
-lls userspace
-> >> which compression is used, right?
-> >>
-> >> And we would add V4L2_PIX_FMT_YUV420_8BIT/_10BIT that, I assume, use t=
-he same
-> >> fourcc values as the DRM variants?
-> >>
-> >> Since these fourccs are basically useless without V4L2 modifier suppor=
-t it would
-> >> only make sense in combination with the ext_fmt series.
-> >
-> > I personally still think that adding these fourcc will just create a
-> > source of confusion and that fourcc should not be tried to be matched
-> > at the cost of tripling the already duplicated pixel formats. Userspace
-> > already need to implement translation anyway.
->
-> By using the same fourcc + modifiers, the translation table would only be=
- needed
-> for v4l2-specific fourcc, by reusing the same it's not necessary anymore.
-> We have a really simple ffmpeg implementation using ext_fmt, and it makes=
- it
-> generic.
->
-> >
-> > On DRM side, new fourcc was not create for NV12+modifier, I don't see
-> > why planar YUV420 has to be different, with or without ext_fmt.
->
-> These V4L2_PIX_FMT_YUV420_8BIT/_10BIT were added because of the compresse=
-d nature
-> of buffers. It's not because of the modifiers, modifiers can be used we a=
-ny fourcc
-> to define vendor specific layout requirements or changes, but for compres=
-sed the
-> underlying YUV buffer cannot be physically described by any YUV420 fourcc=
-, so
-> ARM introduced these fourcc to describe a virtual YUV420 8 or 10bit buffe=
-r which
-> physical layout is defined by the modifier.
-> They could have re-used DRM_FORMAT_YUV420, but it's a 2 plane fourcc, and=
- the other
-> describe a true single or multiple plane layout which are simply not true=
- with
-> ARM AFBC or Amlogic FBC.
->
-> Neil
->
-> >
-> > Nicolas
-> >
-> >>
-> >> Regards,
-> >>
-> >>      Hans
-> >>
-> >>> Neil
-> >>>
-> >>>> I believe we really need this since v4l2_buffer and v4l2_format are =
-a real mess.
-> >>>>
-> >>>> Regards,
-> >>>>
-> >>>>    Hans
-> >>>>
-> >>>>>>>                 default:
-> >>>>>>>                         if (fmt->description[0])
-> >>>>>>>                                 return;
-> >>>>>>> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/=
-videodev2.h
-> >>>>>>> index c3a1cf1c507f..90b9949acb8a 100644
-> >>>>>>> --- a/include/uapi/linux/videodev2.h
-> >>>>>>> +++ b/include/uapi/linux/videodev2.h
-> >>>>>>> @@ -705,6 +705,15 @@ struct v4l2_pix_format {
-> >>>>>>>  #define V4L2_PIX_FMT_FWHT     v4l2_fourcc('F', 'W', 'H', 'T') /*=
- Fast Walsh Hadamard Transform (vicodec) */
-> >>>>>>>  #define V4L2_PIX_FMT_FWHT_STATELESS     v4l2_fourcc('S', 'F', 'W=
-', 'H') /* Stateless FWHT (vicodec) */
-> >>>>>>>
-> >>>>>>> +/*
-> >>>>>>> + * Compressed Luminance+Chrominance meta-formats
-> >>>>>>> + * In these formats, the component ordering is specified (Y, fol=
-lowed by U
-> >>>>>>> + * then V), but the exact Linear layout is undefined.
-> >>>>>>> + * These formats can only be used with a non-Linear modifier.
-> >>>>>>> + */
-> >>>>>>> +#define V4L2_PIX_FMT_YUV420_8BIT       v4l2_fourcc('Y', 'U', '0'=
-, '8') /* 1-plane YUV 4:2:0 8-bit */
-> >>>>>>> +#define V4L2_PIX_FMT_YUV420_10BIT      v4l2_fourcc('Y', 'U', '1'=
-, '0') /* 1-plane YUV 4:2:0 10-bit */
-> >>>>>>> +
-> >>>>>>>  /*  Vendor-specific formats   */
-> >>>>>>>  #define V4L2_PIX_FMT_CPIA1    v4l2_fourcc('C', 'P', 'I', 'A') /*=
- cpia1 YUV */
-> >>>>>>>  #define V4L2_PIX_FMT_WNVA     v4l2_fourcc('W', 'N', 'V', 'A') /*=
- Winnov hw compress */
-> >>>>>
-> >>>>> [1] https://patchwork.freedesktop.org/series/73722/#rev7
-> >>>>>
-> >
->
+
+On 6/9/20 3:50 PM, Borislav Petkov wrote:
+> On Wed, Jun 03, 2020 at 03:40:16PM +0530, Ritesh Harjani wrote:
+>> Yes, this is being discussed in the community.
+>> I have submitted a patch which should help fix this warning msg.
+>> Feel free to give this a try on your setup.
+>>
+>> https://marc.info/?l=linux-ext4&m=159110574414645&w=2
+> 
+> I just triggered the same thing here too. Looking at your fix and not
+> even pretending to know what's going on with that percpu sequence
+> counting, I can't help but wonder why do you wanna do:
+> 
+> 	seq = *raw_cpu_ptr(&discard_pa_seq);
+> 
+> instead of simply doing:
+> 
+> 	seq = this_cpu_read(discard_pa_seq);
+> 
+
+That's correct. Thanks for pointing that out.
+I guess in my development version of code I had seq as a u64 pointer
+variable which later I had changed to u64 variable but I guess I
+continued using pcpu ptr APIs for that.
+
+Let me re-submit that patch with your Suggested-by tag and corresponding
+changes.
+
+-riteshh
