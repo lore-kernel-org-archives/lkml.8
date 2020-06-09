@@ -2,151 +2,163 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3052C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 19:01:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA4BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 19:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1EC52068D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 19:01:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k3J4DviE"
+	by mail.kernel.org (Postfix) with ESMTP id CB7B7206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 19:03:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591729408;
+	bh=Vfyj+NMf8T/7CXC12HCXGIpKKfBA7HOZ+MDv198zK9s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hyNhclzA/k1t3A+6AVaX75wG4vVRWTVljBzUk0H3NQq5oxJbg09MAGJKzcGxZbxN7
+	 YW4xBh00Dz27gzcJCjKw8Um5JQJRDeznziFUnti6g4pEHedHVKi5lW5p9s4LqtoVCv
+	 /xz3hEtmlSuJ7B8OCt2XT2l6kwk57LE3E4q+4+X4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729969AbgFITBo (ORCPT
+        id S1730360AbgFITD0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 15:01:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52516 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728553AbgFITBn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 15:01:43 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64CF4C05BD1E
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 12:01:42 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id 9so26464626ljc.8
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 12:01:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=VAEh4u66db4pSNovW/A8Cvie0VZiNtfT/2/kRKGulxw=;
-        b=k3J4DviEwMIak3uXNfFrsxAmxDpoyv2/3smOqdag9qlLXBJ4os4Mi4De2WqPMUd6tf
-         oxDQnkVKD3Nj1OMXqZi+0l9jeJfsXxTI6Mmz3L3s5Qx3d2uUJo3dNhK38i2GtOA74tdB
-         fy7GZBvoDCXz36h3HOrg1loIPQDZtBomCHHDhwKIICvMaU3s+H5m7qJxWioQ76TB6usV
-         5hE1E+rQsLVwUydxaAvgUe/GnR4hKQRSlt/OF+9jfWI7CtzWKORtxEp5Ei64pg+xqQVn
-         +BhRijqYNXRMgD7h+vcs/DgvSs1KK8gvnZzCEkWKx7b/6hT+jNpJyBgmW9+tm5KgGny7
-         k0Ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=VAEh4u66db4pSNovW/A8Cvie0VZiNtfT/2/kRKGulxw=;
-        b=jt8SfeO6q37gNFMmw/Ofvl4norv0ZsAMBW5hhYMwupvxo+zAGwHDg7cv92HwEb7jDP
-         6OZAS3ZQXjXidkJ4w3i1uW8a5GFkddh0L/gUotgJ3lCB7K6iK8TPEzKlQT5SscVtAjux
-         qDs64E6dJf7A3UmHTL2WnV6PJS1rvw4k1+nZne2ztFtXVwnxlGYFYuskVHCNqAdSe4Qe
-         zo4U10bYEVCHYc1neGt98hkYYJLTlHStJXZHvVuRNWwmvUeCq1NKx+/WY/1p5cI0I3Xr
-         cp0oGpOTwEpcS2a/1Gt16O0ADS4GSavR2+AiK3PiYXpIH546zJplILpf5YGadJmYxeTC
-         BkYQ==
-X-Gm-Message-State: AOAM532LVi9c3fhJ2P1o6W6HjRJ704nGBDRGsi8Qng4D066YPQJIhAku
-        2RTEJ/r5LbURXdA729JzMstJCCWNpnz61CeDhH/yEQ==
-X-Google-Smtp-Source: ABdhPJwe8KI5CMjzs9md4aYyeDnpmI50MG/ft/bINCYlq7VcXqD2XHy3kYeFGn+CgcYDrYPD81hCirFjVFyDdToEGBY=
-X-Received: by 2002:a2e:b88c:: with SMTP id r12mr2697180ljp.266.1591729300719;
- Tue, 09 Jun 2020 12:01:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200609174048.576094775@linuxfoundation.org>
-In-Reply-To: <20200609174048.576094775@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 10 Jun 2020 00:31:29 +0530
-Message-ID: <CA+G9fYsxjJpM-bw_VamAH0Beri66aC+-kqZ-RiCWVqm4N=t4gA@mail.gmail.com>
-Subject: Re: [PATCH 4.19 00/25] 4.19.128-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+        Tue, 9 Jun 2020 15:03:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40298 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729806AbgFITDZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 15:03:25 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEC642068D;
+        Tue,  9 Jun 2020 19:03:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591729403;
+        bh=Vfyj+NMf8T/7CXC12HCXGIpKKfBA7HOZ+MDv198zK9s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pxu1syBzHoL2J5cnIy7N/PAPPSbc4BdrkkQHcs1hT4yP8W7PbeAF1yOPCraK5p0Im
+         h8LDblfbB+M4MWbEO1PeRBNmSlsTtVvX4+yyVmPZRqkX3FdPMwS5ViXdGuQnvAMdSs
+         JPyIGOYHvSRzf3kfpUavxXOzx2hUYs/vTXODdywQ=
+Date:   Tue, 9 Jun 2020 21:03:21 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
 Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
         linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Oleg Nesterov <oleg@redhat.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        lkft-triage@lists.linaro.org
+Subject: Re: [PATCH 4.19 24/25] uprobes: ensure that uprobe->offset and
+ ->ref_ctr_offset are properly aligned
+Message-ID: <20200609190321.GA1046130@kroah.com>
+References: <20200609174048.576094775@linuxfoundation.org>
+ <20200609174051.488794266@linuxfoundation.org>
+ <CA+G9fYukN5V1z3g6Qwe9K5xnnXEuFafWdqGfDA1Wj2iVstoxfw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+G9fYukN5V1z3g6Qwe9K5xnnXEuFafWdqGfDA1Wj2iVstoxfw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 9 Jun 2020 at 23:21, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.19.128 release.
-> There are 25 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 11 Jun 2020 17:40:24 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.19.128-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.19.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
-> -------------
-> Pseudo-Shortlog of commits:
->
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->     Linux 4.19.128-rc1
->
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->     Revert "net/mlx5: Annotate mutex destroy for root ns"
->
-> Oleg Nesterov <oleg@redhat.com>
->     uprobes: ensure that uprobe->offset and ->ref_ctr_offset are properly=
- aligned
+On Wed, Jun 10, 2020 at 12:25:56AM +0530, Naresh Kamboju wrote:
+> On Tue, 9 Jun 2020 at 23:35, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > From: Oleg Nesterov <oleg@redhat.com>
+> >
+> > commit 013b2deba9a6b80ca02f4fafd7dedf875e9b4450 upstream.
+> >
+> > uprobe_write_opcode() must not cross page boundary; prepare_uprobe()
+> > relies on arch_uprobe_analyze_insn() which should validate "vaddr" but
+> > some architectures (csky, s390, and sparc) don't do this.
+> >
+> > We can remove the BUG_ON() check in prepare_uprobe() and validate the
+> > offset early in __uprobe_register(). The new IS_ALIGNED() check matches
+> > the alignment check in arch_prepare_kprobe() on supported architectures,
+> > so I think that all insns must be aligned to UPROBE_SWBP_INSN_SIZE.
+> >
+> > Another problem is __update_ref_ctr() which was wrong from the very
+> > beginning, it can read/write outside of kmap'ed page unless "vaddr" is
+> > aligned to sizeof(short), __uprobe_register() should check this too.
+> >
+> > Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+> > Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+> > Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+> > Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+> > Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
+> > Tested-by: Sven Schnelle <svens@linux.ibm.com>
+> > Cc: Steven Rostedt <rostedt@goodmis.org>
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> >
+> > ---
+> >  kernel/events/uprobes.c |   16 ++++++++++++----
+> >  1 file changed, 12 insertions(+), 4 deletions(-)
+> >
+> > --- a/kernel/events/uprobes.c
+> > +++ b/kernel/events/uprobes.c
+> > @@ -612,10 +612,6 @@ static int prepare_uprobe(struct uprobe
+> >         if (ret)
+> >                 goto out;
+> >
+> > -       /* uprobe_write_opcode() assumes we don't cross page boundary */
+> > -       BUG_ON((uprobe->offset & ~PAGE_MASK) +
+> > -                       UPROBE_SWBP_INSN_SIZE > PAGE_SIZE);
+> > -
+> >         smp_wmb(); /* pairs with the smp_rmb() in handle_swbp() */
+> >         set_bit(UPROBE_COPY_INSN, &uprobe->flags);
+> >
+> > @@ -911,6 +907,15 @@ static int __uprobe_register(struct inod
+> >         if (offset > i_size_read(inode))
+> >                 return -EINVAL;
+> >
+> > +       /*
+> > +        * This ensures that copy_from_page(), copy_to_page() and
+> > +        * __update_ref_ctr() can't cross page boundary.
+> > +        */
+> > +       if (!IS_ALIGNED(offset, UPROBE_SWBP_INSN_SIZE))
+> > +               return -EINVAL;
+> > +       if (!IS_ALIGNED(ref_ctr_offset, sizeof(short)))
+> 
+> stable-rc 4.19 build failure for x86_64, i386 and arm.
+> make -sk KBUILD_BUILD_USER=TuxBuild -C/linux -j16 ARCH=x86 HOSTCC=gcc
+> CC="sccache gcc" O=build
+> 
+> 75 #
+> 76 In file included from ../kernel/events/uprobes.c:25:
+> 77 ../kernel/events/uprobes.c: In function ‘__uprobe_register’:
+> 78 ../kernel/events/uprobes.c:916:18: error: ‘ref_ctr_offset’
+> undeclared (first use in this function); did you mean
+> ‘per_cpu_offset’?
+> 79  916 | if (!IS_ALIGNED(ref_ctr_offset, sizeof(short)))
+> 80  | ^~~~~~~~~~~~~~
+> 81 ../include/linux/kernel.h:62:30: note: in definition of macro ‘IS_ALIGNED’
+> 82  62 | #define IS_ALIGNED(x, a) (((x) & ((typeof(x))(a) - 1)) == 0)
+> 83  | ^
+> 84 ../kernel/events/uprobes.c:916:18: note: each undeclared identifier
+> is reported only once for each function it appears in
+> 85  916 | if (!IS_ALIGNED(ref_ctr_offset, sizeof(short)))
+> 86  | ^~~~~~~~~~~~~~
+> 87 ../include/linux/kernel.h:62:30: note: in definition of macro ‘IS_ALIGNED’
+> 88  62 | #define IS_ALIGNED(x, a) (((x) & ((typeof(x))(a) - 1)) == 0)
+> 89  | ^
+> 90 make[3]: *** [../scripts/Makefile.build:304: kernel/events/uprobes.o] Error 1
+> 
+> --
+> Linaro LKFT
+> https://lkft.linaro.org
 
-stable-rc 4.19 build failure for x86_64, i386 and arm.
+Good catch, my builders just caught it too :(
 
- make -sk KBUILD_BUILD_USER=3DTuxBuild -C/linux -j16 ARCH=3Dx86 HOSTCC=3Dgc=
-c
-CC=3D"sccache gcc" O=3Dbuild
-75 #
-76 In file included from ../kernel/events/uprobes.c:25:
-77 ../kernel/events/uprobes.c: In function =E2=80=98__uprobe_register=E2=80=
-=99:
-78 ../kernel/events/uprobes.c:916:18: error: =E2=80=98ref_ctr_offset=E2=80=
-=99
-undeclared (first use in this function); did you mean
-=E2=80=98per_cpu_offset=E2=80=99?
-79  916 | if (!IS_ALIGNED(ref_ctr_offset, sizeof(short)))
-80  | ^~~~~~~~~~~~~~
-81 ../include/linux/kernel.h:62:30: note: in definition of macro =E2=80=98I=
-S_ALIGNED=E2=80=99
-82  62 | #define IS_ALIGNED(x, a) (((x) & ((typeof(x))(a) - 1)) =3D=3D 0)
-83  | ^
-84 ../kernel/events/uprobes.c:916:18: note: each undeclared identifier
-is reported only once for each function it appears in
-85  916 | if (!IS_ALIGNED(ref_ctr_offset, sizeof(short)))
-86  | ^~~~~~~~~~~~~~
-87 ../include/linux/kernel.h:62:30: note: in definition of macro =E2=80=98I=
-S_ALIGNED=E2=80=99
-88  62 | #define IS_ALIGNED(x, a) (((x) & ((typeof(x))(a) - 1)) =3D=3D 0)
-89  | ^
-90 make[3]: *** [../scripts/Makefile.build:304: kernel/events/uprobes.o] Er=
-ror 1
+4.19, 4.14, 4.9, and 4.4 are all broken, I have a fix will test it and
+push out -rc2 for all of those with it in a bit, thanks.
 
-kernel config:
-https://builds.tuxbuild.com/I3PT6_HS4PTt7EFgJUIPxA/kernel.config
-
---
-Linaro LKFT
-https://lkft.linaro.org
+greg k-h
