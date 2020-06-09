@@ -2,154 +2,288 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E8EAC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 19:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02353C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 19:52:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24E3120734
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 19:51:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEC5F206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 19:52:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="rJppI3bA"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="i6YB8Qz9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732077AbgFITvv (ORCPT
+        id S1732141AbgFITwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 15:51:51 -0400
-Received: from mail-eopbgr60072.outbound.protection.outlook.com ([40.107.6.72]:62303
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730897AbgFITvr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 15:51:47 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=k4736FyEEgswp/2TDTDMh0ieDLbynmRFhT0iH7FxvFjiYzXBPaQGhXedHUFFc3vC55vXobYkhtCP+mJCbZhAlZ+ldYYi69bPqWseWKaYOF58WQaoDZ00d1I2z+yWaXWv80ECv67PWU20ylr7N60V2eAw2kIbxI98HzZCm/w5aW5y74j78fVjubq4DMV6NfSVnE1KTPK2fcRNsUzFEH9ERy++t4/BtUFYaLsAI3ZyOhSjbWibiSankt/EhbX3ZFbUlBWVA+ECegxMdv/HsnSkjx/acqEer/jspfMDPYcKLl4KlIVzncXyj49Jk2OwF+YtNyeOqm3qzlgvSXJ38XaOhA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IN6TzoYfE/umvJXHNcb2c90kdwzIA11jSd0LDxHzmHM=;
- b=IGL85+kkJk//j9RU/DTCvHt8fKl3bDPZvCuGFr7x/lznfE47IUhxSoi6VBHq0YA4R/1rGvLE4KOYa4ciN+4cu+6DwxDte7fMdrF90SKANcRu5sK9n/ptk763QyzoRwCmaNjlGwSeosLKmzWqgPx2kfEPspTBVX9sOnG2FRPcD3fiLgRzO9lnDAdjAh2R5Rwg4Ew+YT/QvUYVkOX9x+Wn324ILwId+ZxXkLjPxVNcazw4JP45lT1YN9VPzTVSRk9ltQH3iSyevXshiJQiciAccz770WKuH2GO3Lej2snRrPbj21TiMYzSuWRyukBeqS0YrcmbmQlnU0a22A66Xn9+yg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IN6TzoYfE/umvJXHNcb2c90kdwzIA11jSd0LDxHzmHM=;
- b=rJppI3bAlUAWf0IHk5o3c9rHPHhv1BPiA4radMwoNgNk13QtWdjmg1/WcX3l+Dy32da1Eg1PSIFxhTd5+asXVVkAJO4tbG6Ge73mL+va4ISE0xes8A1LT873xalh1hKlxaHbezXINKIRxUszY/4R1lgsJSMK5KPRg4q/SPQ4pvM=
-Received: from VE1PR04MB6687.eurprd04.prod.outlook.com (2603:10a6:803:121::30)
- by VE1PR04MB6559.eurprd04.prod.outlook.com (2603:10a6:803:126::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.20; Tue, 9 Jun
- 2020 19:51:44 +0000
-Received: from VE1PR04MB6687.eurprd04.prod.outlook.com
- ([fe80::48b1:c82c:905:da9f]) by VE1PR04MB6687.eurprd04.prod.outlook.com
- ([fe80::48b1:c82c:905:da9f%3]) with mapi id 15.20.3088.018; Tue, 9 Jun 2020
- 19:51:43 +0000
-From:   Leo Li <leoyang.li@nxp.com>
-To:     Hui Song <hui.song_1@nxp.com>,
-        "linux-devel@linux.nxdi.nxp.com" <linux-devel@linux.nxdi.nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
+        Tue, 9 Jun 2020 15:52:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60382 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731644AbgFITwR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 15:52:17 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0365EC08C5C2
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 12:52:15 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id c14so22071106qka.11
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 12:52:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=cJVzflu3n0uAFQ+8fe+/LB9PjLnVhJPcHxR1Rq6fzmQ=;
+        b=i6YB8Qz988IiKK3aivE1cmhvyGVwPo82sEs4IqmBUcpVUf+K6dMCKKO2FKuT1B1XtT
+         laQrON3xYLZBOKA/v79TwV6Pdap89oIeGs7xMCUAEu+VxmAXCAUeFXl6Im9jV4CwRFHL
+         a0L1bnuyZgnyJoS0Zj3+LHnF/RPm+h13m1T9wpjTcVk7UOXXfdvIEfr38e80A8FcvqCC
+         te3m2UGli64Qg6SVog4icTymbN2vngxlkzZmqVJlhk7poXdnrz/NJ52WHY7oVmqi3u+7
+         V86N0wpSXtv/69KQ5soyepbiVyxZiq/MrxI4EvyQvqhWIJzOmd/5EsICg1v8qBoK/Y8V
+         qp8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cJVzflu3n0uAFQ+8fe+/LB9PjLnVhJPcHxR1Rq6fzmQ=;
+        b=XuIDUsZGMeV2E4hfHUN2qIZIOPQQ0VaIJJyAtvldHdg/lJoJ/F6K9WHc5Ho1sBZsLa
+         eg1yd4LI87j8yA4R6VcK4xYqGWrRwx6dS7dKdILMw7x2QdarpyDMRwbgLhvVOiKqW8tw
+         VYsqJC9MnxED13Jx5rocCk2eiWr6uNzcdAV+SAK5G+E1lyz5YiPw8WZWg3no5pZsatMR
+         OQ9DP4vaxXa0B7dEmyyzkU+PfM4fxMg2bRc8OpBQNaGw7ByGC7ldnnIov2tcCacS6+Wj
+         852UH4FEF3oVIdEfGJbzGGH+JqRpFjAbTIBeOXc83gjcB+nwOwXjca0Wb8uqyYIvkpDF
+         itVw==
+X-Gm-Message-State: AOAM533UlRYT+aZj5wgvXfdsMX3eLQxySw8iSdCnGAvAgtldhfsM3Ux9
+        3XSPbeZ096dnOnthU3KBOEHUXLKihJiJOw==
+X-Google-Smtp-Source: ABdhPJzTu4J+zNTT+apFn02pIcjAV1cLOi8wPlDl8Mt++CEUwZ+BUKZ8CcU+YKAZttH1le37hFXHjQ==
+X-Received: by 2002:ae9:dcc2:: with SMTP id q185mr29173384qkf.104.1591732334838;
+        Tue, 09 Jun 2020 12:52:14 -0700 (PDT)
+Received: from [192.168.0.189] ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id w94sm10850306qte.19.2020.06.09.12.52.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jun 2020 12:52:14 -0700 (PDT)
+Subject: Re: [PATCH 1/6] arm64: dts: qcom: sm8150: add apps_smmu node
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-CC:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        Hui Song <hui.song_1@nxp.com>
-Subject: RE: [PATCH] gpio: mpc8xxx: change the gpio interrupt flags.
-Thread-Topic: [PATCH] gpio: mpc8xxx: change the gpio interrupt flags.
-Thread-Index: AQHWPkPJIX2y5uVvV0i+EVd9iXRd3qjQsZ0w
-Date:   Tue, 9 Jun 2020 19:51:43 +0000
-Message-ID: <VE1PR04MB66874A7F9C037E5F9C3A99FB8F820@VE1PR04MB6687.eurprd04.prod.outlook.com>
-References: <20200609093741.44050-1-hui.song_1@nxp.com>
-In-Reply-To: <20200609093741.44050-1-hui.song_1@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [136.49.234.194]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 0dbb603f-908a-44a7-d35d-08d80cae8947
-x-ms-traffictypediagnostic: VE1PR04MB6559:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB65594CB1A982F7E817ED6BDF8F820@VE1PR04MB6559.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2201;
-x-forefront-prvs: 042957ACD7
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: bLrpEOG+KydswZAY2SXQfRs9l+ozWyIUxIVdlGEJWOFAOwhJvF8oEeTr2iiTG8a4rpTz3DlmyUG9/pN3iywrg/YvTTDC3WrStIrJf1lgLC7kWz0xsdl1Ite0Zw56wEAnveLXxcLTIz3zEr8tPsJPOdCkGK1Ygl7ltbcP4FkX+UsnosUy5NvRNIYoEHuUqmmGrOYZHCRUlWnKyV/fA6Ec7cFrIAtpbp2fuZAn6DCeU19YgkXxHurYVJch+Ieps3v6oFvDGbiH26Hbd+4ndA/v6L0pR1tdNmfT8WvLdcTeq8OlYzzpeqneSHsCjQ87WKLABAY5iWxXVsQm7P8KlaZlneXthseQ5EtDzjWw0WIEMDOLxRAHN8Cp9zI1B9shElXI
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6687.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(39850400004)(346002)(376002)(136003)(396003)(186003)(55016002)(316002)(66476007)(26005)(66446008)(66556008)(66946007)(64756008)(9686003)(478600001)(7696005)(54906003)(52536014)(4326008)(76116006)(83380400001)(5660300002)(6506007)(86362001)(8676002)(110136005)(8936002)(53546011)(2906002)(71200400001)(33656002)(32563001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: aRfp5H8uesVbGMRiu+dFKqyycku9ACPnPXSZq9JiTSFFG42tky3EVvV0/58xGsmnYcG/vDJqjPRJ9FiJJC2E75d+if2iAY+iGCLQPQYanV67RN89Jwskgvkwe3jPE/hyOel2Ix7mSdhYE29O313eFgXU0ENP13P2SYKX4+U9Mem5KruAjqvyUvoX2/y7Z4zwmAKXVtmblXFAGqEX+duk0QMspsv1562aT78WyKMSsxOgok4b9OjpXNU666S+AABkw8i2G8FsNZD6A6vGJgdDzM25Wn6NcpiEc97xm1Gxh40wR5/j8fcc0vP6uZIEv++DumgLDnlz3VxUVTuaDY3vBE5YOWM/1jyzudhdZQockTEs5htwL5eTzQIRDQPZ/vNL2044G2NSZzP4FDuUpCbbQu66DkmbnvUi6YNt/pcNwbIdIadvSS4HPvOPgUFK8P1hWt3kPcHSv52cZjI8nStsGK+LyedTHjOgmDHycnMMXW7LaZh370xlBR+PZt8JUDqV
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200524023815.21789-1-jonathan@marek.ca>
+ <20200524023815.21789-2-jonathan@marek.ca>
+ <20200529025246.GV279327@builder.lan>
+ <d0908f34-a698-3449-35b9-7a98e9641295@marek.ca>
+ <20200529031520.GA1799770@builder.lan>
+ <00b8f010-1ae1-45b2-8dd0-a1b582861a2e@marek.ca>
+ <20200529034231.GB1799770@builder.lan>
+From:   Jonathan Marek <jonathan@marek.ca>
+Message-ID: <8d7cca83-43e4-8889-ac7c-ce3393dc1f70@marek.ca>
+Date:   Tue, 9 Jun 2020 15:52:35 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0dbb603f-908a-44a7-d35d-08d80cae8947
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jun 2020 19:51:43.8194
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: WAG+PeNtOtE/UaZHafbs1v8z355eEtJVVw35IAukvz8vngqxENMw7o5QoPoks574k4mPYdgvd60u76RYU1qi6A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6559
+In-Reply-To: <20200529034231.GB1799770@builder.lan>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 5/28/20 11:42 PM, Bjorn Andersson wrote:
+> On Thu 28 May 20:34 PDT 2020, Jonathan Marek wrote:
+> 
+>> On 5/28/20 11:15 PM, Bjorn Andersson wrote:
+>>> On Thu 28 May 20:02 PDT 2020, Jonathan Marek wrote:
+>>>
+>>>>
+>>>>
+>>>> On 5/28/20 10:52 PM, Bjorn Andersson wrote:
+>>>>> On Sat 23 May 19:38 PDT 2020, Jonathan Marek wrote:
+>>>>>
+>>>>>> Add the apps_smmu node for sm8150. Note that adding the iommus field for
+>>>>>> UFS is required because initializing the iommu removes the bypass mapping
+>>>>>> that created by the bootloader.
+>>>>>>
+>>>>>
+>>>>> Unrelated to the patch itself; how do you disable the splash screen on
+>>>>> 8150? "fastboot oem select-display-panel none" doesn't seem to work for
+>>>>> me on the MTP - and hence this would prevent my device from booting.
+>>>>>
+>>>>> Thanks,
+>>>>> Bjorn
+>>>>>
+>>>>
+>>>> I don't have a MTP, but on HDK855, "fastboot oem select-display-panel none"
+>>>> combined with setting the physical switch to HDMI mode (which switches off
+>>>> the 1440x2560 panel) gets it to not setup the display at all (just the
+>>>> fastboot command isn't enough).
+>>>>
+>>>
+>>> Okay, I don't think we have anything equivalent on the MTP, but good to
+>>> know.
+>>>
+>>>> With HDK865 though that doesn't work and I have a hack to work around it
+>>>> (writing 0 to INTF_TIMING_ENGINE_EN early on in boot will stop video mode
+>>>> scanout and it won't crash).
+>>>>
+>>>
+>>> Then we need to sort this out in the arm-smmu driver before we can
+>>> enable the apps_smmu node on 8250. I did receive some guidance from Will
+>>> on the subject and have started looking into this.
+>>>
+>>
+>> That's annoying because a lot depends on apps_mmu. GPU is an exception with
+>> its own MMU but pretty much everything else uses apps_smmu (does it make
+>> sense to add USB nodes if it won't work without apps_smmu?) Is this
+>> something that will get resolved soon?
+>>
+> 
+> We have a number of boards where this is becoming a critical issue, so
+> we better find an acceptable solution to this very soon.
+> 
 
+I kept the sm8250 apps_smmu patch in V2:
 
-> -----Original Message-----
-> From: Hui Song <hui.song_1@nxp.com>
-> Sent: Tuesday, June 9, 2020 4:38 AM
-> To: linux-devel@linux.nxdi.nxp.com; Shawn Guo <shawnguo@kernel.org>;
-> Leo Li <leoyang.li@nxp.com>; Rob Herring <robh+dt@kernel.org>; Mark
-> Rutland <mark.rutland@arm.com>; Linus Walleij <linus.walleij@linaro.org>;
-> Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Cc: linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org; lin=
-ux-
-> kernel@vger.kernel.org; linux-gpio@vger.kernel.org; Hui Song
-> <hui.song_1@nxp.com>
-> Subject: [PATCH] gpio: mpc8xxx: change the gpio interrupt flags.
->=20
-> From: Song Hui <hui.song_1@nxp.com>
->=20
-> delete the interrupt IRQF_NO_THREAD flags.
+I am now using a modified xbl with my HDK865, with a hack to make it use 
+"none" for the display override string, and that allows me to use these 
+patches without any kernel hack.
 
-I think this is the correct direction but would be better to describe a lit=
-tle bit on what motived this change.  Any issue encountered or latency opti=
-mization?
+The "fastboot oem select-display-panel none" not working to disable 
+bootloader enabled display definitely seems like a bug (I have not tried 
+to debug it, but everything I've seen indicates that it should be 
+disabling it). I don't think we should be holding this back based on a 
+bootloader bug.
 
->=20
-> Signed-off-by: Song Hui <hui.song_1@nxp.com>
-> ---
->  drivers/gpio/gpio-mpc8xxx.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c in=
-dex
-> 604dfec..1e86652 100644
-> --- a/drivers/gpio/gpio-mpc8xxx.c
-> +++ b/drivers/gpio/gpio-mpc8xxx.c
-> @@ -417,7 +417,7 @@ static int mpc8xxx_probe(struct platform_device
-> *pdev)
->=20
->  	ret =3D devm_request_irq(&pdev->dev, mpc8xxx_gc->irqn,
->  			       mpc8xxx_gpio_irq_cascade,
-> -			       IRQF_NO_THREAD | IRQF_SHARED, "gpio-
-> cascade",
-> +			       IRQF_SHARED, "gpio-cascade",
->  			       mpc8xxx_gc);
->  	if (ret) {
->  		dev_err(&pdev->dev, "%s: failed to devm_request_irq(%d),
-> ret =3D %d\n",
-> --
-> 2.9.5
-
+> Regards,
+> Bjorn
+> 
+>> FWIW, I have another sm8250 board which does not need the workaround (its
+>> bootloader does not set up the display). AFAIK modifying the bootloader to
+>> not set up any display is a trivial modification (assuming that's an
+>> option).
+>>
+>>> Thanks,
+>>> Bjorn
+>>>
+>>>>>> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+>>>>>> ---
+>>>>>>     arch/arm64/boot/dts/qcom/sm8150.dtsi | 91 ++++++++++++++++++++++++++++
+>>>>>>     1 file changed, 91 insertions(+)
+>>>>>>
+>>>>>> diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+>>>>>> index a36512d1f6a1..acb839427b12 100644
+>>>>>> --- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
+>>>>>> +++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+>>>>>> @@ -442,6 +442,8 @@ ufs_mem_hc: ufshc@1d84000 {
+>>>>>>     			resets = <&gcc GCC_UFS_PHY_BCR>;
+>>>>>>     			reset-names = "rst";
+>>>>>> +			iommus = <&apps_smmu 0x300 0>;
+>>>>>> +
+>>>>>>     			clock-names =
+>>>>>>     				"core_clk",
+>>>>>>     				"bus_aggr_clk",
+>>>>>> @@ -706,6 +708,7 @@ usb_1_dwc3: dwc3@a600000 {
+>>>>>>     				compatible = "snps,dwc3";
+>>>>>>     				reg = <0 0x0a600000 0 0xcd00>;
+>>>>>>     				interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
+>>>>>> +				iommus = <&apps_smmu 0x140 0>;
+>>>>>>     				snps,dis_u2_susphy_quirk;
+>>>>>>     				snps,dis_enblslpm_quirk;
+>>>>>>     				phys = <&usb_1_hsphy>, <&usb_1_ssphy>;
+>>>>>> @@ -742,6 +745,94 @@ spmi_bus: spmi@c440000 {
+>>>>>>     			cell-index = <0>;
+>>>>>>     		};
+>>>>>> +		apps_smmu: iommu@15000000 {
+>>>>>> +			compatible = "qcom,sdm845-smmu-500", "arm,mmu-500";
+>>>>>> +			reg = <0 0x15000000 0 0x100000>;
+>>>>>> +			#iommu-cells = <2>;
+>>>>>> +			#global-interrupts = <1>;
+>>>>>> +			interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 181 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 182 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 185 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 186 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 187 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 315 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 316 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 317 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 318 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 319 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 320 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 321 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 322 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 323 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 324 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 325 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 326 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 327 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 328 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 329 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 330 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 331 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 333 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 334 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 336 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 337 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 338 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 339 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 340 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 341 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 342 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 343 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 344 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 345 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 395 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 396 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 397 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 398 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 399 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 400 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 401 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 402 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 403 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 404 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 405 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 406 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 407 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 408 IRQ_TYPE_LEVEL_HIGH>,
+>>>>>> +				     <GIC_SPI 409 IRQ_TYPE_LEVEL_HIGH>;
+>>>>>> +		};
+>>>>>> +
+>>>>>>     		remoteproc_adsp: remoteproc@17300000 {
+>>>>>>     			compatible = "qcom,sm8150-adsp-pas";
+>>>>>>     			reg = <0x0 0x17300000 0x0 0x4040>;
+>>>>>> -- 
+>>>>>> 2.26.1
+>>>>>>
