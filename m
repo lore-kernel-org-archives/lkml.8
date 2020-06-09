@@ -2,130 +2,204 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0670AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 06:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A885FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 07:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2FB22078D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 06:58:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="DGoJvZrz"
+	by mail.kernel.org (Postfix) with ESMTP id 7C8832074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 07:00:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591686041;
+	bh=rDOJUa2MoL+6PLdRJL8VEpQrMjWt4yMozKrDvxEuIZc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wVvSVOFITYxQhkfTekLPEICBVnSqDbfk1SjypSbO8qhv19yar9pwInduUY4+mvYku
+	 70BK970xYKanHfdF2/vyJbC+m46bHZ88LQAtd0cEvuKYbSnn40+RbJ44cy8v9xr8As
+	 fNq/rW04djMABk8qj9/xHSNcycdukribmaFXPoNQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbgFIG6c (ORCPT
+        id S1727036AbgFIHAh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 02:58:32 -0400
-Received: from mail-eopbgr40066.outbound.protection.outlook.com ([40.107.4.66]:63398
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725770AbgFIG6a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 02:58:30 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=S8JQk72lki02iAwhgi2JIBRRBBxOeLEDRfsDEK9HE869Ivzwd77O81mfvxaPhaMnzmP09rzzJ7uh2gzwEvXXpZu4ryaZeAVjG1BJK8tGAa+tAkfPN2sKdSdiByzT0Ofh3ueparjxyZW9R1XFvVS4Z+0H5cmUa/cQKRmNei8LK9s+7ohYxfKCb6QHepBwj4ILX+j3tYOl6EqJEph1WlJJ86E/RPDtCtZB6Bo+nnwliGABB9Yh28ikRAz5AYXuFgqexSOe98eyvNz+xD8H13/jhvrZwHYBLkvhLS++h3TryyqraQD3BssxE8SDbr6DkcVD2IM1qx4VEWC6yvKNV/1WXQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KwfbniCexmO1BaXUKybOutlIJi0ATeuUtxpiEEzu4KU=;
- b=mR1Vxrzu9NTabog/xKpjiKh2pDKgHEM7KQU2iFwm/Jo+gd4yovMy67uygKuXoR9VWY8qiv6lPZBQfctnkNH295BvU9uaCn2F9k7Pd4paSavVXx5Efq8dMq9/ItjeN0qxo3B1SA47XMV+jEJsiiP8IHlTwvR6xJ9n4FDOvoNdkqzBiaaPTiwOXcFv1/0xcULBc4+yj041A6O2F2QsrI+e2cf1hk5jLN9cCm/E2+/Irf8AGyFOJTHLZGyMoEzAhymZpneiaqQ46nYrjutgQIyEh8uk0cXlRpgc2EyyzPjCdu3Z60XKotAXRaG4d4mxunixU0JZT9xlQuBUMa7c98T2Gg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KwfbniCexmO1BaXUKybOutlIJi0ATeuUtxpiEEzu4KU=;
- b=DGoJvZrzY595X7PqzI5JyYCj8ldm5dUqQJJM4ixIrYMUv87ow2PP3csay2UVti4zxuXUAKJ9/9gNAQhLA67PB5yQxxLDRBKmZpzgZR+tWpo4bx/ek9OKyqg07POMAuCsQbPWxye8+W58LkCz2ek5scntsAtBo8yfAQ5Bx7seXwg=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=mellanox.com;
-Received: from AM0PR0502MB3826.eurprd05.prod.outlook.com
- (2603:10a6:208:1b::25) by AM0PR0502MB3953.eurprd05.prod.outlook.com
- (2603:10a6:208:2::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Tue, 9 Jun
- 2020 06:58:25 +0000
-Received: from AM0PR0502MB3826.eurprd05.prod.outlook.com
- ([fe80::2dae:c2a2:c26a:f5b]) by AM0PR0502MB3826.eurprd05.prod.outlook.com
- ([fe80::2dae:c2a2:c26a:f5b%7]) with mapi id 15.20.3066.023; Tue, 9 Jun 2020
- 06:58:25 +0000
-Subject: Re: [RFC PATCH net-next 07/10] mlxsw: spectrum_ethtool: Add link
- extended state
-To:     Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org
-Cc:     davem@davemloft.net, kuba@kernel.org, corbet@lwn.net,
-        jiri@mellanox.com, idosch@mellanox.com, shuah@kernel.org,
-        mkubecek@suse.cz, gustavo@embeddedor.com,
-        cforno12@linux.vnet.ibm.com, andrew@lunn.ch,
-        linux@rempel-privat.de, alexandru.ardelean@analog.com,
-        ayal@mellanox.com, petrm@mellanox.com, mlxsw@mellanox.com,
-        liuhangbin@gmail.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-References: <20200607145945.30559-1-amitc@mellanox.com>
- <20200607145945.30559-8-amitc@mellanox.com>
- <7dcb004e-7bab-3026-7863-af16c1a4d556@gmail.com>
-From:   Amit Cohen <amitc@mellanox.com>
-Message-ID: <0e550c27-3e8a-2d70-65f1-78b300110ba0@mellanox.com>
-Date:   Tue, 9 Jun 2020 09:58:19 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-In-Reply-To: <7dcb004e-7bab-3026-7863-af16c1a4d556@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM0P190CA0023.EURP190.PROD.OUTLOOK.COM
- (2603:10a6:208:190::33) To AM0PR0502MB3826.eurprd05.prod.outlook.com
- (2603:10a6:208:1b::25)
+        Tue, 9 Jun 2020 03:00:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33092 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725770AbgFIHAb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 03:00:31 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76FD12074B;
+        Tue,  9 Jun 2020 07:00:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591686030;
+        bh=rDOJUa2MoL+6PLdRJL8VEpQrMjWt4yMozKrDvxEuIZc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bAT2V+oSYqNg8tbwqBijILYHYjvYEkUB99JK/68GpsNOK2DP+OjFdWhTDC6lGHgsi
+         n75902sDGcKIVE+Ax1OZcwhe3/cyvsbxrUk+U8pqq1ZhSkNzK6sNtyqPM36Pch82Xk
+         j2WKfiGOVlqA+JcEQu3R5ymxGZ9j5y7F4tqCKOe8=
+Date:   Tue, 9 Jun 2020 10:00:26 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Divya Indi <divya.indi@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Gerd Rausch <gerd.rausch@oracle.com>,
+        =?iso-8859-1?Q?H=E5kon?= Bugge <haakon.bugge@oracle.com>,
+        Srinivas Eeda <srinivas.eeda@oracle.com>,
+        Rama Nichanamatlu <rama.nichanamatlu@oracle.com>,
+        Doug Ledford <dledford@redhat.com>
+Subject: Re: [PATCH v3] IB/sa: Resolving use-after-free in ib_nl_send_msg
+Message-ID: <20200609070026.GJ164174@unreal>
+References: <1591627576-920-1-git-send-email-divya.indi@oracle.com>
+ <1591627576-920-2-git-send-email-divya.indi@oracle.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.1.5] (87.68.150.248) by AM0P190CA0023.EURP190.PROD.OUTLOOK.COM (2603:10a6:208:190::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18 via Frontend Transport; Tue, 9 Jun 2020 06:58:22 +0000
-X-Originating-IP: [87.68.150.248]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: bf878b8a-59ce-4ea4-d979-08d80c42812e
-X-MS-TrafficTypeDiagnostic: AM0PR0502MB3953:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR0502MB39530E053284E176530F6EE0D7820@AM0PR0502MB3953.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3826;
-X-Forefront-PRVS: 042957ACD7
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: /Omc9wJAyIOpehIsDqz7lljADwBbwmApjmLjHUAuvK5jlSAmL56IYSwIRzZqmC7CuEy1pwIegtOTRNvGV4X3N5fcg3+ifFxbENn6P+IzRGpbvQ2Ep/RasOjbN0cLziBgcV7FyAeBQWHjK9urBPx3lq7O/Or/W0abTeZieeyzcH7LNCTmI6t183ewNUi/oBfviBEzioU/hsKp/Pk9yA5UqIEaTcUjQuarNtcgdZSeZ76Kz5JdpMyT20LgjtpMM+7jKF/Zvusd0sHIvMl8ZAv20YUm9iahg2JbE7TxXYxJH3FfD/7eSipQNIgsDYjWrqZjKl/+rtbLIRNWXFs6G5hUwBJnAh77qcR7yp/8E1pAaVy/higD8SqNt00GdqrjXz8W
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR0502MB3826.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(396003)(136003)(39860400002)(376002)(31686004)(16576012)(2906002)(316002)(26005)(186003)(5660300002)(36756003)(66556008)(66476007)(6486002)(6666004)(66946007)(53546011)(2616005)(31696002)(478600001)(956004)(52116002)(8676002)(16526019)(4326008)(7416002)(4744005)(86362001)(83380400001)(8936002)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: D6RO7mH6nhQi/rqLMy1vgy18rOm8sFPz5TUEW3RcFajmAItoBia0quSiWegz5WJ4vzU3ehD2G8htlem0n8fK1DY7ksW66xTMS6+rQ+GIhSavB2DubQEapiyC69zq92cG8wHYHgu9mW2Kc81xK6jbM6nCdX0AQF53du4gmhUchMnUrqb6ZCfPj7J1X1grmtqnyu3AGCKSnG1EbPnR6Os/4p8p2FxhjHKKOfrNVjf7r+lwU8EaGqtPRy8rNUYI3USfamaZclbqWzYdKGfFpGM6/hrZWOQxaHV6YxrAQgio9MrfPSHF/FtoZsQZJtjk4P00LAbh7RqfJDcIO2CMgqGpQMkix2sAc3DT1jZKQ4JdFakZLfrdvXeU7AJ/2/pJTpw2xAfppIdGVR4bhjqGSpY8dc8srsXo6Q36cdtpaJjOLkE1yQI3sjHNVpt0espw462dUwL0lyl/yLdT5gn3SRCARnWv9X6Zo+APJgcCu45+ww4=
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bf878b8a-59ce-4ea4-d979-08d80c42812e
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2020 06:58:25.0229
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5AsyouWyR1RrzBCYOl2Os45ndrZT4SM5wzUb73FfuTecd5QK0wZfMkTWKoMEpNeDCcLpF43BKlcXea1pKsQP6A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR0502MB3953
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1591627576-920-2-git-send-email-divya.indi@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07-Jun-20 21:25, Florian Fainelli wrote:
-> 
-> 
-> On 6/7/2020 7:59 AM, Amit Cohen wrote:
->> Implement .get_down_ext_state() as part of ethtool_ops.
->> Query link down reason from PDDR register and convert it to ethtool
->> ext_state.
->>
->> In case that more information than common ext_state is provided,
->> fill ext_substate also with the appropriate value.
->>
->> Signed-off-by: Amit Cohen <amitc@mellanox.com>
->> Reviewed-by: Petr Machata <petrm@mellanox.com>
->> Reviewed-by: Jiri Pirko <jiri@mellanox.com>
-> 
-> Is the firmware smart enough to report
-> ETHTOOL_EXT_SUBSTATE_LT_KR_FRAME_LOCK_NOT_ACQUIRED only when using a *KR
-> link mode for instance, or do you need to sanitize that against the
-> supported/advertised mode?
-> 
+On Mon, Jun 08, 2020 at 07:46:16AM -0700, Divya Indi wrote:
+> Commit 3ebd2fd0d011 ("IB/sa: Put netlink request into the request list before sending")'
+> -
+> 1. Adds the query to the request list before ib_nl_snd_msg.
+> 2. Removes ib_nl_send_msg from within the spinlock which also makes it
+> possible to allocate memory with GFP_KERNEL.
+>
+> However, if there is a delay in sending out the request (For
+> eg: Delay due to low memory situation) the timer to handle request timeout
+> might kick in before the request is sent out to ibacm via netlink.
+> ib_nl_request_timeout may release the query causing a use after free situation
+> while accessing the query in ib_nl_send_msg.
+>
+> Call Trace for the above race:
+>
+> [<ffffffffa02f43cb>] ? ib_pack+0x17b/0x240 [ib_core]
+> [<ffffffffa032aef1>] ib_sa_path_rec_get+0x181/0x200 [ib_sa]
+> [<ffffffffa0379db0>] rdma_resolve_route+0x3c0/0x8d0 [rdma_cm]
+> [<ffffffffa0374450>] ? cma_bind_port+0xa0/0xa0 [rdma_cm]
+> [<ffffffffa040f850>] ? rds_rdma_cm_event_handler_cmn+0x850/0x850
+> [rds_rdma]
+> [<ffffffffa040f22c>] rds_rdma_cm_event_handler_cmn+0x22c/0x850
+> [rds_rdma]
+> [<ffffffffa040f860>] rds_rdma_cm_event_handler+0x10/0x20 [rds_rdma]
+> [<ffffffffa037778e>] addr_handler+0x9e/0x140 [rdma_cm]
+> [<ffffffffa026cdb4>] process_req+0x134/0x190 [ib_addr]
+> [<ffffffff810a02f9>] process_one_work+0x169/0x4a0
+> [<ffffffff810a0b2b>] worker_thread+0x5b/0x560
+> [<ffffffff810a0ad0>] ? flush_delayed_work+0x50/0x50
+> [<ffffffff810a68fb>] kthread+0xcb/0xf0
+> [<ffffffff816ec49a>] ? __schedule+0x24a/0x810
+> [<ffffffff816ec49a>] ? __schedule+0x24a/0x810
+> [<ffffffff810a6830>] ? kthread_create_on_node+0x180/0x180
+> [<ffffffff816f25a7>] ret_from_fork+0x47/0x90
+> [<ffffffff810a6830>] ? kthread_create_on_node+0x180/0x180
+> ....
+> RIP  [<ffffffffa03296cd>] send_mad+0x33d/0x5d0 [ib_sa]
+>
+> To resolve the above issue -
+> 1. Add the req to the request list only after the request has been sent out.
+> 2. To handle the race where response comes in before adding request to
+> the request list, send(rdma_nl_multicast) and add to list while holding the
+> spinlock - request_lock.
+> 3. Use GFP_NOWAIT for rdma_nl_multicast since it is called while holding
+> a spinlock. In case of memory allocation failure, request will go out to SA.
+>
+> Signed-off-by: Divya Indi <divya.indi@oracle.com>
+> Fixes: 3ebd2fd0d011 ("IB/sa: Put netlink request into the request list
+> before sending")
 
-This reason can appear with copper cable or backplane. At the moment it is only supported with AN and PD modes (not Force mode).
+Author SOB should be after "Fixes" line.
+
+> ---
+>  drivers/infiniband/core/sa_query.c | 34 +++++++++++++++++-----------------
+>  1 file changed, 17 insertions(+), 17 deletions(-)
+>
+> diff --git a/drivers/infiniband/core/sa_query.c b/drivers/infiniband/core/sa_query.c
+> index 74e0058..042c99b 100644
+> --- a/drivers/infiniband/core/sa_query.c
+> +++ b/drivers/infiniband/core/sa_query.c
+> @@ -836,6 +836,9 @@ static int ib_nl_send_msg(struct ib_sa_query *query, gfp_t gfp_mask)
+>  	void *data;
+>  	struct ib_sa_mad *mad;
+>  	int len;
+> +	unsigned long flags;
+> +	unsigned long delay;
+> +	int ret;
+>
+>  	mad = query->mad_buf->mad;
+>  	len = ib_nl_get_path_rec_attrs_len(mad->sa_hdr.comp_mask);
+> @@ -860,35 +863,32 @@ static int ib_nl_send_msg(struct ib_sa_query *query, gfp_t gfp_mask)
+>  	/* Repair the nlmsg header length */
+>  	nlmsg_end(skb, nlh);
+>
+> -	return rdma_nl_multicast(&init_net, skb, RDMA_NL_GROUP_LS, gfp_mask);
+> +	spin_lock_irqsave(&ib_nl_request_lock, flags);
+> +	ret =  rdma_nl_multicast(&init_net, skb, RDMA_NL_GROUP_LS, GFP_NOWAIT);
+
+It is hard to be convinced that this is correct solution. The mix of
+gfp_flags and GFP_NOWAIT at the same time and usage of
+ib_nl_request_lock to protect lists and suddenly rdma_nl_multicast() too
+makes this code unreadable/non-maintainable.
+
+> +	if (!ret) {
+
+Please use kernel coding style.
+
+if (ret) {
+  spin_unlock_irqrestore(&ib_nl_request_lock, flags);
+  return ret;
+  }
+
+ ....
+
+> +		/* Put the request on the list.*/
+> +		delay = msecs_to_jiffies(sa_local_svc_timeout_ms);
+> +		query->timeout = delay + jiffies;
+> +		list_add_tail(&query->list, &ib_nl_request_list);
+> +		/* Start the timeout if this is the only request */
+> +		if (ib_nl_request_list.next == &query->list)
+> +			queue_delayed_work(ib_nl_wq, &ib_nl_timed_work, delay);
+> +	}
+> +	spin_unlock_irqrestore(&ib_nl_request_lock, flags);
+> +
+> +	return ret;
+>  }
+>
+>  static int ib_nl_make_request(struct ib_sa_query *query, gfp_t gfp_mask)
+>  {
+> -	unsigned long flags;
+> -	unsigned long delay;
+>  	int ret;
+>
+>  	INIT_LIST_HEAD(&query->list);
+>  	query->seq = (u32)atomic_inc_return(&ib_nl_sa_request_seq);
+>
+> -	/* Put the request on the list first.*/
+> -	spin_lock_irqsave(&ib_nl_request_lock, flags);
+> -	delay = msecs_to_jiffies(sa_local_svc_timeout_ms);
+> -	query->timeout = delay + jiffies;
+> -	list_add_tail(&query->list, &ib_nl_request_list);
+> -	/* Start the timeout if this is the only request */
+> -	if (ib_nl_request_list.next == &query->list)
+> -		queue_delayed_work(ib_nl_wq, &ib_nl_timed_work, delay);
+> -	spin_unlock_irqrestore(&ib_nl_request_lock, flags);
+> -
+>  	ret = ib_nl_send_msg(query, gfp_mask);
+>  	if (ret) {
+>  		ret = -EIO;
+> -		/* Remove the request */
+> -		spin_lock_irqsave(&ib_nl_request_lock, flags);
+> -		list_del(&query->list);
+> -		spin_unlock_irqrestore(&ib_nl_request_lock, flags);
+>  	}
+
+Brackets should be removed too.
+>
+>  	return ret;
+> --
+> 1.8.3.1
+>
