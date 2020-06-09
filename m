@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A7F9C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11131C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66B4020734
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:04:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E58E2206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:04:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725861;
-	bh=ViZa30ypR7/xokQKb3odmSsdv+h/Zb0AyqQm1aaQY/s=;
+	s=default; t=1591725862;
+	bh=CVLB4NPLvhL0KLMKjfEPnTma5oOJb9KeyFMZwVnC/aE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XrNrTWRYQb7ImydUC1GKNacbeyaMi/SH4JTt833OGxisqol3flVFyGagbAyd+0IGo
-	 GBd1UBbcgjWFQNdeFhX1tF5Mfc1Bggs7cQ6UvEs0ZfuVsM4esbIeP9VR9qygwtc9+k
-	 +QoJ1rLeAlSkoT+5adkYfDHouUBdknyIsP2uQLS8=
+	b=LD0aCPKdP0vWJ+2Oio92MYmoQwGH2JWGv+vEE3Jn8T/KX8a93OQX46IXurA5yw+9S
+	 RL85xE6IAU33+CymhmMoXPslGWvC/O3bWDl5/wBT5BWJE/KBuw/mnXy2E05+oSshCI
+	 ThDOiLe1CylvmPAHYdRa0tYNZRx46TaozwpDOuBM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387987AbgFISET (ORCPT
+        id S2387649AbgFISEP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:04:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42628 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 14:04:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732806AbgFIRwX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:52:23 -0400
+        id S1729185AbgFIRw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:52:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 795B720734;
-        Tue,  9 Jun 2020 17:52:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E841120734;
+        Tue,  9 Jun 2020 17:52:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725142;
-        bh=ViZa30ypR7/xokQKb3odmSsdv+h/Zb0AyqQm1aaQY/s=;
+        s=default; t=1591725147;
+        bh=CVLB4NPLvhL0KLMKjfEPnTma5oOJb9KeyFMZwVnC/aE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CfFdMtha45sqsXjdbwbRYNq8oaMSZNi9nwhZsTRX6x5/95sCRdHayghvqUlMAzBL3
-         sst/o2X2MqlBLbj2xX2kxxJeioJuwYeJsgqou6O8LA8pBWWAhvGTkBWzCbbEvg7NAP
-         YwjwsqADLsVuzO1e8Ub73qKeYnh/V3LI4gqYul2Q=
+        b=hiSPxvVrip7flHImhZ7jrspBsOj1LiW9r9pQDd+VqF/eqnJGITQIHLu65Lq8ed/wL
+         OiAwbJOOYKcj/Aa6kd8PcpVRQF0nRg61vdVqsaw4fjh5JHnjCiFOXgJT3kjo4zBIPH
+         u0ZwtODk/PVztCJEwEXl9/ALAcQsy3iwyTA4XvGM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fugang Duan <fugang.duan@nxp.com>,
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 05/34] net: stmmac: enable timestamp snapshot for required PTP packets in dwmac v5.10a
-Date:   Tue,  9 Jun 2020 19:45:01 +0200
-Message-Id: <20200609174053.303180274@linuxfoundation.org>
+Subject: [PATCH 5.4 07/34] NFC: st21nfca: add missed kfree_skb() in an error path
+Date:   Tue,  9 Jun 2020 19:45:03 +0200
+Message-Id: <20200609174053.529832369@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174052.628006868@linuxfoundation.org>
 References: <20200609174052.628006868@linuxfoundation.org>
@@ -59,55 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fugang Duan <fugang.duan@nxp.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit f2fb6b6275eba9d312957ca44c487bd780da6169 ]
+[ Upstream commit 3decabdc714ca56c944f4669b4cdec5c2c1cea23 ]
 
-For rx filter 'HWTSTAMP_FILTER_PTP_V2_EVENT', it should be
-PTP v2/802.AS1, any layer, any kind of event packet, but HW only
-take timestamp snapshot for below PTP message: sync, Pdelay_req,
-Pdelay_resp.
+st21nfca_tm_send_atr_res() misses to call kfree_skb() in an error path.
+Add the missed function call to fix it.
 
-Then it causes below issue when test E2E case:
-ptp4l[2479.534]: port 1: received DELAY_REQ without timestamp
-ptp4l[2481.423]: port 1: received DELAY_REQ without timestamp
-ptp4l[2481.758]: port 1: received DELAY_REQ without timestamp
-ptp4l[2483.524]: port 1: received DELAY_REQ without timestamp
-ptp4l[2484.233]: port 1: received DELAY_REQ without timestamp
-ptp4l[2485.750]: port 1: received DELAY_REQ without timestamp
-ptp4l[2486.888]: port 1: received DELAY_REQ without timestamp
-ptp4l[2487.265]: port 1: received DELAY_REQ without timestamp
-ptp4l[2487.316]: port 1: received DELAY_REQ without timestamp
-
-Timestamp snapshot dependency on register bits in received path:
-SNAPTYPSEL TSMSTRENA TSEVNTENA 	PTP_Messages
-01         x         0          SYNC, Follow_Up, Delay_Req,
-                                Delay_Resp, Pdelay_Req, Pdelay_Resp,
-                                Pdelay_Resp_Follow_Up
-01         0         1          SYNC, Pdelay_Req, Pdelay_Resp
-
-For dwmac v5.10a, enabling all events by setting register
-DWC_EQOS_TIME_STAMPING[SNAPTYPSEL] to 2’b01, clearing bit [TSEVNTENA]
-to 0’b0, which can support all required events.
-
-Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
+Fixes: 1892bf844ea0 ("NFC: st21nfca: Adding P2P support to st21nfca in Initiator & Target mode")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/nfc/st21nfca/dep.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -630,7 +630,8 @@ static int stmmac_hwtstamp_set(struct ne
- 			config.rx_filter = HWTSTAMP_FILTER_PTP_V2_EVENT;
- 			ptp_v2 = PTP_TCR_TSVER2ENA;
- 			snap_type_sel = PTP_TCR_SNAPTYPSEL_1;
--			ts_event_en = PTP_TCR_TSEVNTENA;
-+			if (priv->synopsys_id != DWMAC_CORE_5_10)
-+				ts_event_en = PTP_TCR_TSEVNTENA;
- 			ptp_over_ipv4_udp = PTP_TCR_TSIPV4ENA;
- 			ptp_over_ipv6_udp = PTP_TCR_TSIPV6ENA;
- 			ptp_over_ethernet = PTP_TCR_TSIPENA;
+--- a/drivers/nfc/st21nfca/dep.c
++++ b/drivers/nfc/st21nfca/dep.c
+@@ -173,8 +173,10 @@ static int st21nfca_tm_send_atr_res(stru
+ 		memcpy(atr_res->gbi, atr_req->gbi, gb_len);
+ 		r = nfc_set_remote_general_bytes(hdev->ndev, atr_res->gbi,
+ 						  gb_len);
+-		if (r < 0)
++		if (r < 0) {
++			kfree_skb(skb);
+ 			return r;
++		}
+ 	}
+ 
+ 	info->dep_info.curr_nfc_dep_pni = 0;
 
 
