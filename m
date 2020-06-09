@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 660F3C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A95D7C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:01:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38A9F20734
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:01:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89C5820774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:01:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725698;
-	bh=ArYRBpuJodeEIGm6WlIhSRxpcfAXCQI3/0XRtuztKYw=;
+	s=default; t=1591725703;
+	bh=ZrcFpicY48yEj/t3oOOvrY6iRxu9Vz8EnLcs7aIAD0c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Goq5t+h5ZMSfNepyYF9D3XM2rEY77gJnmZP88cNJJzmy8o6poiV2khiF5vM0bV9gw
-	 Bah4lrzNu4X62RCJnBD0n47z+6frJapDcZafm+zWsAjSrG+otGXmk49Zq5kGTIQ4ey
-	 w5rfCPplhzUxAamjBPCQixPJcAGb4SCOSpcW83PA=
+	b=kmM8XWjsYzLthRoPmbtUZrwYq7iMuMpP87vUpUbM595eDsVl78QxdGPGkUeuzTtzR
+	 8M7LXpx/SCNqiiDFw+RVWjQfGPNfh7rfHIS0YPCyJf4v5GuNiXXUkHzY6qep10FgV7
+	 BhBrnM6LRKnHkDPpXp7BOzFVBfcAwWqm9Tqgp85A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387813AbgFISBf (ORCPT
+        id S2387824AbgFISBl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:01:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45422 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 14:01:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731682AbgFIRyD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:54:03 -0400
+        id S1729245AbgFIRx7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:53:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34E2D207ED;
-        Tue,  9 Jun 2020 17:54:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED5C0207C3;
+        Tue,  9 Jun 2020 17:53:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725241;
-        bh=ArYRBpuJodeEIGm6WlIhSRxpcfAXCQI3/0XRtuztKYw=;
+        s=default; t=1591725239;
+        bh=ZrcFpicY48yEj/t3oOOvrY6iRxu9Vz8EnLcs7aIAD0c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rKp9kcTidBUsUbRc2jjJMF5ZCJvQJhVLkkEVYdExeuHH918tgPnJ8CXG+avgGx8po
-         SEI9ECGDhgpyMi5HVSEVjBOxHYbGYgfAKH/YvQ9SxtKlGGKMAyXLzDE4x5XpyCu7qG
-         2VX+v46V9ddj5oCKIcgpS6VY0HsZNLOK35Ow+trU=
+        b=j2veEF61ujdb4U7qvYvf3wRFmGmoZqnnwFQDkynalqajhhZMqW2SO2UmbdoObAsp6
+         TvL7XIkJP3HXwzY3TaSQqizqZot2G0ZZgWQjUdUBTiHFw8Px/61N2H9dk0rHvrk7Kf
+         lntk2VPsJVwsuvfuBRyDOI+6LX0eZkKRgxjkKBPI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Heinrich Kuhn <heinrich.kuhn@netronome.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 09/41] nfp: flower: fix used time of merge flow statistics
-Date:   Tue,  9 Jun 2020 19:45:11 +0200
-Message-Id: <20200609174113.004985779@linuxfoundation.org>
+        stable@vger.kernel.org, Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 5.6 26/41] iio: adc: stm32-adc: fix a wrong error message when probing interrupts
+Date:   Tue,  9 Jun 2020 19:45:28 +0200
+Message-Id: <20200609174114.621447158@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174112.129412236@linuxfoundation.org>
 References: <20200609174112.129412236@linuxfoundation.org>
@@ -61,41 +60,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heinrich Kuhn <heinrich.kuhn@netronome.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
 
-[ Upstream commit 5b186cd60f033110960a3db424ffbd6de4cee528 ]
+commit 10134ec3f8cefa6a40fe84987f1795e9e0da9715 upstream.
 
-Prior to this change the correct value for the used counter is calculated
-but not stored nor, therefore, propagated to user-space. In use-cases such
-as OVS use-case at least this results in active flows being removed from
-the hardware datapath. Which results in both unnecessary flow tear-down
-and setup, and packet processing on the host.
+A wrong error message is printed out currently, like on STM32MP15:
+- stm32-adc-core 48003000.adc: IRQ index 2 not found.
 
-This patch addresses the problem by saving the calculated used value
-which allows the value to propagate to user-space.
+This is seen since commit 7723f4c5ecdb ("driver core: platform: Add an
+error message to platform_get_irq*()").
+The STM32 ADC core driver wrongly requests up to 3 interrupt lines. It
+should request only the necessary IRQs, based on the compatible:
+- stm32f4/h7 ADCs share a common interrupt
+- stm32mp1, has one interrupt line per ADC.
+So add the number of required interrupts to the compatible data.
 
-Found by inspection.
-
-Fixes: aa6ce2ea0c93 ("nfp: flower: support stats update for merge flows")
-Signed-off-by: Heinrich Kuhn <heinrich.kuhn@netronome.com>
-Signed-off-by: Simon Horman <simon.horman@netronome.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: d58c67d1d851 ("iio: adc: stm32-adc: add support for STM32MP1")
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/netronome/nfp/flower/offload.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/netronome/nfp/flower/offload.c
-+++ b/drivers/net/ethernet/netronome/nfp/flower/offload.c
-@@ -1440,7 +1440,8 @@ __nfp_flower_update_merge_stats(struct n
- 		ctx_id = be32_to_cpu(sub_flow->meta.host_ctx_id);
- 		priv->stats[ctx_id].pkts += pkts;
- 		priv->stats[ctx_id].bytes += bytes;
--		max_t(u64, priv->stats[ctx_id].used, used);
-+		priv->stats[ctx_id].used = max_t(u64, used,
-+						 priv->stats[ctx_id].used);
+---
+ drivers/iio/adc/stm32-adc-core.c |   34 ++++++++++++++--------------------
+ 1 file changed, 14 insertions(+), 20 deletions(-)
+
+--- a/drivers/iio/adc/stm32-adc-core.c
++++ b/drivers/iio/adc/stm32-adc-core.c
+@@ -65,12 +65,14 @@ struct stm32_adc_priv;
+  * @clk_sel:	clock selection routine
+  * @max_clk_rate_hz: maximum analog clock rate (Hz, from datasheet)
+  * @has_syscfg: SYSCFG capability flags
++ * @num_irqs:	number of interrupt lines
+  */
+ struct stm32_adc_priv_cfg {
+ 	const struct stm32_adc_common_regs *regs;
+ 	int (*clk_sel)(struct platform_device *, struct stm32_adc_priv *);
+ 	u32 max_clk_rate_hz;
+ 	unsigned int has_syscfg;
++	unsigned int num_irqs;
+ };
+ 
+ /**
+@@ -375,21 +377,15 @@ static int stm32_adc_irq_probe(struct pl
+ 	struct device_node *np = pdev->dev.of_node;
+ 	unsigned int i;
+ 
+-	for (i = 0; i < STM32_ADC_MAX_ADCS; i++) {
++	/*
++	 * Interrupt(s) must be provided, depending on the compatible:
++	 * - stm32f4/h7 shares a common interrupt line.
++	 * - stm32mp1, has one line per ADC
++	 */
++	for (i = 0; i < priv->cfg->num_irqs; i++) {
+ 		priv->irq[i] = platform_get_irq(pdev, i);
+-		if (priv->irq[i] < 0) {
+-			/*
+-			 * At least one interrupt must be provided, make others
+-			 * optional:
+-			 * - stm32f4/h7 shares a common interrupt.
+-			 * - stm32mp1, has one line per ADC (either for ADC1,
+-			 *   ADC2 or both).
+-			 */
+-			if (i && priv->irq[i] == -ENXIO)
+-				continue;
+-
++		if (priv->irq[i] < 0)
+ 			return priv->irq[i];
+-		}
  	}
+ 
+ 	priv->domain = irq_domain_add_simple(np, STM32_ADC_MAX_ADCS, 0,
+@@ -400,9 +396,7 @@ static int stm32_adc_irq_probe(struct pl
+ 		return -ENOMEM;
+ 	}
+ 
+-	for (i = 0; i < STM32_ADC_MAX_ADCS; i++) {
+-		if (priv->irq[i] < 0)
+-			continue;
++	for (i = 0; i < priv->cfg->num_irqs; i++) {
+ 		irq_set_chained_handler(priv->irq[i], stm32_adc_irq_handler);
+ 		irq_set_handler_data(priv->irq[i], priv);
+ 	}
+@@ -420,11 +414,8 @@ static void stm32_adc_irq_remove(struct
+ 		irq_dispose_mapping(irq_find_mapping(priv->domain, hwirq));
+ 	irq_domain_remove(priv->domain);
+ 
+-	for (i = 0; i < STM32_ADC_MAX_ADCS; i++) {
+-		if (priv->irq[i] < 0)
+-			continue;
++	for (i = 0; i < priv->cfg->num_irqs; i++)
+ 		irq_set_chained_handler(priv->irq[i], NULL);
+-	}
  }
  
+ static int stm32_adc_core_switches_supply_en(struct stm32_adc_priv *priv,
+@@ -817,6 +808,7 @@ static const struct stm32_adc_priv_cfg s
+ 	.regs = &stm32f4_adc_common_regs,
+ 	.clk_sel = stm32f4_adc_clk_sel,
+ 	.max_clk_rate_hz = 36000000,
++	.num_irqs = 1,
+ };
+ 
+ static const struct stm32_adc_priv_cfg stm32h7_adc_priv_cfg = {
+@@ -824,6 +816,7 @@ static const struct stm32_adc_priv_cfg s
+ 	.clk_sel = stm32h7_adc_clk_sel,
+ 	.max_clk_rate_hz = 36000000,
+ 	.has_syscfg = HAS_VBOOSTER,
++	.num_irqs = 1,
+ };
+ 
+ static const struct stm32_adc_priv_cfg stm32mp1_adc_priv_cfg = {
+@@ -831,6 +824,7 @@ static const struct stm32_adc_priv_cfg s
+ 	.clk_sel = stm32h7_adc_clk_sel,
+ 	.max_clk_rate_hz = 40000000,
+ 	.has_syscfg = HAS_VBOOSTER | HAS_ANASWVDD,
++	.num_irqs = 2,
+ };
+ 
+ static const struct of_device_id stm32_adc_of_match[] = {
 
 
