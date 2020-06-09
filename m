@@ -2,283 +2,279 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F450C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0578C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:43:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D5EF20760
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:43:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5ED120774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:43:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FqwPLAk5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a9Eum29n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730040AbgFINnq (ORCPT
+        id S1730023AbgFINnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 09:43:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59570 "EHLO
+        Tue, 9 Jun 2020 09:43:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728908AbgFINmk (ORCPT
+        with ESMTP id S1729576AbgFINmx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 09:42:40 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8FB2C03E97C;
-        Tue,  9 Jun 2020 06:42:38 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id u26so2354828wmn.1;
-        Tue, 09 Jun 2020 06:42:38 -0700 (PDT)
+        Tue, 9 Jun 2020 09:42:53 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9085DC05BD1E;
+        Tue,  9 Jun 2020 06:42:53 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id 64so3232427pfv.11;
+        Tue, 09 Jun 2020 06:42:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=hfoxusuSqdP/Q9j4oFz+b/D8aXhm78zGREtLJ9r4tyw=;
-        b=FqwPLAk5mZ13poRsPXWdvFr2+ZMggBySu+R11ByBMm8Q5TDpd3m/3ejxPnZqvNZvs0
-         Giwlh1fogFWvjIlvEp/JZjC2MfJY0nvsXmhQcn5BXrUH+BKGB6qQTI6cAR8Q/0H1qmx2
-         fQ97YdlDenBcDxKW1FVTpBEHeX8vqiWLsEtD7Jd6bLYCb75EHrdR9NRDBMy2jvUtdM/r
-         5sTdosM2LwdvuKcyVV+Y0IDi5Sr5Go/FFB5NzGeUX91FxOPCJGB4ygIgLadwvFzCXFgA
-         N0GXzSB5rEB8VhxS9XT5gwzgl3WDUQTyLtFjN9RnAphigIwRPQQmv8DerHeTusN07M2r
-         iIVA==
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hg4XbzMRc321/FqU3t3M6QC5gbPOsmfWjnt4iHQGCLw=;
+        b=a9Eum29nPInujHeR5P6iDGSrhM0p9UGTvj4xwKlt8D6T2QDBM8GufDS+ehLt7sYC0w
+         BOWq2gpfJUNiqk+7UcARmryq1ilYPb6rn/Z64kd6Ln8hmTX14lM2KGeRq631IERgxSYm
+         A2jK2mcxeoyICsAnwO3mlou9B9a4uuEnCQ36PjBJeFAsip8fptMOOYgsPQKU+ysXnHTz
+         FYaL9+pypK70M+rfCLWCud8tXJhIctZeSPnO2qQ3cqPcTTtD6ya+DXngD9MehY1c89pH
+         KOEDvyDM3/FW3eAB10dSILFsygafe55txNk4zCVhnAHPajcOsmIl4WWzwFj1j/ygwH0j
+         U5Kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=hfoxusuSqdP/Q9j4oFz+b/D8aXhm78zGREtLJ9r4tyw=;
-        b=jLOfsRkxWz4V+Vo5+nYAsrr4A5/u5QhXhqKZJnhvq3ovPVjvOFSxcerkYPCb0qjWCM
-         PnWZIx3GAzIoRyWixbtPoXrpxjSuOPB87dxrpmFwjKJtEJXbg+38rUwMR3ixeIneiJzS
-         sOmO1mhmc70KEp69ldTQ+Ty67q7pz45QoRff6d3aAEps3Ntaw0oLiMRX2uHmaD0u0bM8
-         ikKJnrrkqEvg42fuCqg6LO6B/cngr79D59LNhImpieXwgfISmRcJ5aKFcAwiLtMRH5+x
-         gaebOQ23ZHp7G5jnECgnReMTdEOM768HZtaVUPl1KSKyVm3AXPeTgcmYVdlVRK+BxKlf
-         G4tw==
-X-Gm-Message-State: AOAM5307udlmDgAMC+uzwuQkyZJmHkFEaXfW3ZmfN0peIHKD+7KEOOAt
-        AwwYTUMcsa6DubhtpFfz/KY=
-X-Google-Smtp-Source: ABdhPJxWJ3YjuVjujrmyM6Zl9dGIDlku6BlIDQc83e85I49a+R6+pcpPnSs2NgebG8KTBzFpxriohg==
-X-Received: by 2002:a7b:c11a:: with SMTP id w26mr4053731wmi.0.1591710157591;
-        Tue, 09 Jun 2020 06:42:37 -0700 (PDT)
-Received: from skynet.lan (28.red-83-49-61.dynamicip.rima-tde.net. [83.49.61.28])
-        by smtp.gmail.com with ESMTPSA id w17sm3454067wra.71.2020.06.09.06.42.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 06:42:37 -0700 (PDT)
-From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-To:     p.zabel@pengutronix.de, robh+dt@kernel.org,
-        tsbogend@alpha.franken.de, f.fainelli@gmail.com,
-        jonas.gorski@gmail.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com
-Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-Subject: [PATCH 3/7] reset: add BCM6345 reset controller driver
-Date:   Tue,  9 Jun 2020 15:42:28 +0200
-Message-Id: <20200609134232.4084718-4-noltari@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200609134232.4084718-1-noltari@gmail.com>
-References: <20200609134232.4084718-1-noltari@gmail.com>
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=hg4XbzMRc321/FqU3t3M6QC5gbPOsmfWjnt4iHQGCLw=;
+        b=gquFZNZZjTI6vDLIvCG5TMe+SyFeKaIoaLIk4KM3TRuit4AupUhR1eooRFJeBQSKg7
+         HYYQpy1hMUCA85k5OWftduRx6okzyTdx7QWF6CgpLTokxjkW1RO2kaMo8awVmevTa7bz
+         eP0WRtNtO1rsErGYVZecCbDA8jlozche7fv4pB8rM+f8dlvR1fPeGC6X1VdbBq1NXRAA
+         Oq9O0ecjOFsvanOAuFcYP0kN9Mx5kFzBKa04yPx+V8+m3YIDNvWFtNPw5ifAiWlC5Gha
+         YnoNZQldmUUCY45zV7zD15ZZr80IhlhC/sOAg7fQDjkqyDDvLOsMGfu5iKQCb5Bsp/M1
+         3YSA==
+X-Gm-Message-State: AOAM531AWkFMBsvC39V5QBj7Fa2Wh+wB5db9DnZgIoLpj8WrDErtOsUw
+        PZKEZGPpdJY53FnZdIhP4LpEIird
+X-Google-Smtp-Source: ABdhPJwbZzZN13Qcr04DuYwIkR/p5HLAjHDsZbkX9yH23XCXyBbAZdWP+TXlPd1iA1V5a0G1gVwl5Q==
+X-Received: by 2002:a62:7610:: with SMTP id r16mr25351796pfc.70.1591710172970;
+        Tue, 09 Jun 2020 06:42:52 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id ev20sm2629731pjb.8.2020.06.09.06.42.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jun 2020 06:42:51 -0700 (PDT)
+Subject: Re: [PATCH 2/2] watchdog: intel: Watchdog timer support on Lightning
+ Mountain
+To:     Dilip Kota <eswara.kota@linux.intel.com>, wim@linux-watchdog.org,
+        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
+        robbh@kernel.org
+Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yixin.zhu@intel.com
+References: <cover.1591584255.git.eswara.kota@linux.intel.com>
+ <220609c6aec3dbd06585897ddcfdde277c823cac.1591584255.git.eswara.kota@linux.intel.com>
+ <61d256e7-88ca-ac89-9c80-132c0d2de4a8@roeck-us.net>
+ <af453186-8017-31de-f6b3-f39f0c3704b8@linux.intel.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <8cb36dce-bd2e-2581-5644-fc73e4d94316@roeck-us.net>
+Date:   Tue, 9 Jun 2020 06:42:49 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <af453186-8017-31de-f6b3-f39f0c3704b8@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for resetting blocks through the Linux reset controller
-subsystem for BCM63xx SoCs.
+On 6/9/20 1:57 AM, Dilip Kota wrote:
+> 
+> On 6/8/2020 9:36 PM, Guenter Roeck wrote:
+>> On 6/7/20 10:49 PM, Dilip Kota wrote:
+>>> On Intel Lightning Mountain SoC, General Purpose Timer Counter(GPTC)
+>>> programmable as clocksource, real time clock or watchdog timer.
+>>>
+>>> This driver configures GPTC as Watchdog timer and triggers reset signal
+>>> to CPU on timeout.
+>>>
+>>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+>>> ---
+>>>   drivers/watchdog/Kconfig              |  13 ++
+>>>   drivers/watchdog/Makefile             |   1 +
+>>>   drivers/watchdog/intel_lgm_gptc_wdt.c | 420 ++++++++++++++++++++++++++++++++++
+>>>   3 files changed, 434 insertions(+)
+>>>   create mode 100644 drivers/watchdog/intel_lgm_gptc_wdt.c
+>>>
+>>> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+>>> index 0663c604bd642..8009c11e75dda 100644
+>>> --- a/drivers/watchdog/Kconfig
+>>> +++ b/drivers/watchdog/Kconfig
+>>> @@ -1789,6 +1789,19 @@ config IMGPDC_WDT
+>>>         To compile this driver as a loadable module, choose M here.
+>>>         The module will be called imgpdc_wdt.
+>>>   +config INTEL_LGM_GPTC_WDT
+>>> +    tristate "INTEL LGM SoC Watchdog"
+>>> +    depends on X86 || COMPILE_TEST
+>>> +    depends on OF && HAS_IOMEM
+>>> +    select REGMAP
+>>> +    select MFD_SYSCON
+>>> +    select WATCHDOG_CORE
+>>> +    help
+>>> +      Driver for Watchdog Timer on Intel Lightning Mountain SoC.
+>>> +
+>>> +      To compile this driver as a loadable module, choose M here.
+>>> +      The module will be called intel_lgm_gptc_wdt.
+>>> +
+>>>   config LANTIQ_WDT
+>>>       tristate "Lantiq SoC watchdog"
+>>>       depends on LANTIQ
+>>> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+>>> index 6de2e4ceef190..92c99e4c46eb7 100644
+>>> --- a/drivers/watchdog/Makefile
+>>> +++ b/drivers/watchdog/Makefile
+>>> @@ -166,6 +166,7 @@ obj-$(CONFIG_TXX9_WDT) += txx9wdt.o
+>>>   obj-$(CONFIG_OCTEON_WDT) += octeon-wdt.o
+>>>   octeon-wdt-y := octeon-wdt-main.o octeon-wdt-nmi.o
+>>>   obj-$(CONFIG_LANTIQ_WDT) += lantiq_wdt.o
+>>> +obj-$(CONFIG_INTEL_LGM_GPTC_WDT) += intel_lgm_gptc_wdt.o
+>>>   obj-$(CONFIG_LOONGSON1_WDT) += loongson1_wdt.o
+>>>   obj-$(CONFIG_RALINK_WDT) += rt2880_wdt.o
+>>>   obj-$(CONFIG_IMGPDC_WDT) += imgpdc_wdt.o
+>>> diff --git a/drivers/watchdog/intel_lgm_gptc_wdt.c b/drivers/watchdog/intel_lgm_gptc_wdt.c
+>>> new file mode 100644
+>>> index 0000000000000..52be7cc194f8f
+>>> --- /dev/null
+>>> +++ b/drivers/watchdog/intel_lgm_gptc_wdt.c
+>>> @@ -0,0 +1,420 @@
+>>> +// SPDX-License-Identifier: GPL-2.0
+>>> +/*
+>>> + * Copyright (C) 2020 Intel Corporation.
+>>> + */
+>>> +
+>>> +#include <linux/bitfield.h>
+>>> +#include <linux/clk.h>
+>>> +#include <linux/cpu.h>
+>>> +#include <linux/io.h>
+>>> +#include <linux/kernel.h>
+>>> +#include <linux/mfd/syscon.h>
+>>> +#include <linux/module.h>
+>>> +#include <linux/of_device.h>
+>>> +#include <linux/platform_device.h>
+>>> +#include <linux/regmap.h>
+>>> +#include <linux/watchdog.h>
+>>> +
+>>> +#define GPTC_CLC        0x00
+>>> +#define GPTC_CLC_SUSPEND    BIT(4)
+>>> +#define GPTC_CLC_RMC        GENMASK(15, 8)
+>>> +
+>>> +/* divider 10 to produce 200 / 10 = 20 MHz clock */
+>>> +#define CLC_RMC_DIV        10
+>>> +
+>>> +#define GPTC_CON(X)        (0x10 + (X) * 0x20)
+>>> +#define GPTC_CON_CNT_UP        BIT(1)
+>>> +#define GPTC_CON_ONESHOT    BIT(3)
+>>> +#define GPTC_CON_EXT        BIT(4)
+>>> +
+>>> +#define GPTC_RUN(X)        (0x18 + (X) * 0x20)
+>>> +#define GPTC_RUN_EN        BIT(0)
+>>> +#define GPTC_RUN_STOP        BIT(1)
+>>> +#define GPTC_RUN_RELOAD        BIT(2)
+>>> +
+>>> +#define GPTC_RLD(X)        (0x20 + (X) * 0x20)
+>>> +#define GPTC_CNT(X)        (0x28 + (X) * 0x20)
+>>> +
+>>> +#define GPTC_IRNENCLR        0xF0
+>>> +#define GPTC_IRNEN        0xF4
+>>> +#define GPTC_IRNCR        0xFC
+>>> +
+>>> +/* Watchdog Timeout Reset register offset and bitfeilds */
+>>> +#define BIA_WDT_RST_EN        0x1E0
+>>> +#define BIA_WDT            BIT(6)
+>>> +
+>>> +#define MAX_TIMERID        2
+>>> +#define MAX_CPUID        3
+>>> +#define TIMER_MARGIN_SEC    300
+>>> +
+>>> +static bool nowayout = WATCHDOG_NOWAYOUT;
+>>> +module_param(nowayout, bool, 0);
+>>> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started\n"
+>>> +    " (default=" __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
+>>> +
+>>> +struct lgm_gptc_timer {
+>>> +    struct lgm_gptc_wdt    *wdt_node;
+>>> +    struct watchdog_device    wdd;
+>>> +    unsigned int        tid;
+>>> +    unsigned int        cpuid;
+>>> +    unsigned int        frequency;
+>>> +    unsigned int        cycles;
+>>> +    bool            enable;
+>>> +};
+>>> +
+>>> +struct lgm_gptc_wdt {
+>>> +    struct device        *dev;
+>>> +    void __iomem        *gptc_base;
+>>> +    struct regmap        *rst_hndl;
+>>> +    struct clk        *freqclk;
+>>> +    struct clk        *gateclk;
+>>> +    unsigned int        fpifreq;
+>>> +    enum cpuhp_state    state;
+>>> +};
+>>> +
+>>> +DEFINE_PER_CPU(struct lgm_gptc_timer, lgm_timer_per_cpu);
+>>> +
+>> This is unusual. You'll have to provide a very detailed explanation
+>> why this is needed.
+> Sure will add it.
+> It is required for the hotplug cpu support, and hotplug cpu is added because, the cpus on Lightning Mountain SoC can be online and offline dynamically.
+> If CPUs come to online after the watchdog driver probe, hotplug CPU support helps to configure watchdog timer once CPU is online.
+> 
 
-Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
----
- drivers/reset/Kconfig         |   7 ++
- drivers/reset/Makefile        |   1 +
- drivers/reset/reset-bcm6345.c | 149 ++++++++++++++++++++++++++++++++++
- 3 files changed, 157 insertions(+)
- create mode 100644 drivers/reset/reset-bcm6345.c
+There is another watchdog in the system monitoring individual CPUs.
+The watchdog subsystem monitors the system, not individual CPUs.
+Individual CUPs are monitored with kernel/watchdog.c, and we should
+keep it that way.
 
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index d9efbfd29646..9f1da978cef6 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -41,6 +41,13 @@ config RESET_BERLIN
- 	help
- 	  This enables the reset controller driver for Marvell Berlin SoCs.
- 
-+config RESET_BCM6345
-+	bool "BCM6345 Reset Controller"
-+	depends on BMIPS_GENERIC || COMPILE_TEST
-+	default BMIPS_GENERIC
-+	help
-+	  This enables the reset controller driver for BCM6345 SoCs.
-+
- config RESET_BRCMSTB
- 	tristate "Broadcom STB reset controller"
- 	depends on ARCH_BRCMSTB || COMPILE_TEST
-diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-index 249ed357c997..e642aae42f0f 100644
---- a/drivers/reset/Makefile
-+++ b/drivers/reset/Makefile
-@@ -6,6 +6,7 @@ obj-$(CONFIG_ARCH_TEGRA) += tegra/
- obj-$(CONFIG_RESET_A10SR) += reset-a10sr.o
- obj-$(CONFIG_RESET_ATH79) += reset-ath79.o
- obj-$(CONFIG_RESET_AXS10X) += reset-axs10x.o
-+obj-$(CONFIG_RESET_BCM6345) += reset-bcm6345.o
- obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
- obj-$(CONFIG_RESET_BRCMSTB) += reset-brcmstb.o
- obj-$(CONFIG_RESET_BRCMSTB_RESCAL) += reset-brcmstb-rescal.o
-diff --git a/drivers/reset/reset-bcm6345.c b/drivers/reset/reset-bcm6345.c
-new file mode 100644
-index 000000000000..088b7fdb896b
---- /dev/null
-+++ b/drivers/reset/reset-bcm6345.c
-@@ -0,0 +1,149 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * BCM6345 Reset Controller Driver
-+ *
-+ * Copyright (C) 2020 Álvaro Fernández Rojas <noltari@gmail.com>
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset-controller.h>
-+
-+#define BCM6345_RESET_NUM		32
-+#define BCM6345_RESET_SLEEP_MIN_US	10000
-+#define BCM6345_RESET_SLEEP_MAX_US	20000
-+
-+struct bcm6345_reset {
-+	struct reset_controller_dev rcdev;
-+	void __iomem *base;
-+	spinlock_t lock;
-+};
-+
-+static int bcm6345_reset_update(struct bcm6345_reset *bcm6345_reset,
-+				unsigned long id, bool assert)
-+{
-+	uint32_t val;
-+
-+	val = __raw_readl(bcm6345_reset->base);
-+	if (assert)
-+		val &= ~BIT(id);
-+	else
-+		val |= BIT(id);
-+	__raw_writel(val, bcm6345_reset->base);
-+
-+	return 0;
-+}
-+
-+static int bcm6345_reset_assert(struct reset_controller_dev *rcdev,
-+				unsigned long id)
-+{
-+	struct bcm6345_reset *bcm6345_reset =
-+		container_of(rcdev, struct bcm6345_reset, rcdev);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&bcm6345_reset->lock, flags);
-+	bcm6345_reset_update(bcm6345_reset, id, true);
-+	spin_unlock_irqrestore(&bcm6345_reset->lock, flags);
-+
-+	return 0;
-+}
-+
-+static int bcm6345_reset_deassert(struct reset_controller_dev *rcdev,
-+				  unsigned long id)
-+{
-+	struct bcm6345_reset *bcm6345_reset =
-+		container_of(rcdev, struct bcm6345_reset, rcdev);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&bcm6345_reset->lock, flags);
-+	bcm6345_reset_update(bcm6345_reset, id, false);
-+	spin_unlock_irqrestore(&bcm6345_reset->lock, flags);
-+
-+	return 0;
-+}
-+
-+static int bcm6345_reset_reset(struct reset_controller_dev *rcdev,
-+			       unsigned long id)
-+{
-+	struct bcm6345_reset *bcm6345_reset =
-+		container_of(rcdev, struct bcm6345_reset, rcdev);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&bcm6345_reset->lock, flags);
-+	usleep_range(BCM6345_RESET_SLEEP_MIN_US,
-+		     BCM6345_RESET_SLEEP_MAX_US);
-+	bcm6345_reset_update(bcm6345_reset, id, true);
-+	usleep_range(BCM6345_RESET_SLEEP_MIN_US,
-+		     BCM6345_RESET_SLEEP_MAX_US);
-+	bcm6345_reset_update(bcm6345_reset, id, false);
-+	spin_unlock_irqrestore(&bcm6345_reset->lock, flags);
-+
-+	return 0;
-+}
-+
-+static int bcm6345_reset_status(struct reset_controller_dev *rcdev,
-+				unsigned long id)
-+{
-+	struct bcm6345_reset *bcm6345_reset =
-+		container_of(rcdev, struct bcm6345_reset, rcdev);
-+
-+	return !(__raw_readl(bcm6345_reset->base) & BIT(id));
-+}
-+
-+static struct reset_control_ops bcm6345_reset_ops = {
-+	.assert = bcm6345_reset_assert,
-+	.deassert = bcm6345_reset_deassert,
-+	.reset = bcm6345_reset_reset,
-+	.status = bcm6345_reset_status,
-+};
-+
-+static int bcm6345_reset_probe(struct platform_device *pdev)
-+{
-+	struct bcm6345_reset *bcm6345_reset;
-+	struct resource *res;
-+	int err;
-+
-+	bcm6345_reset = devm_kzalloc(&pdev->dev,
-+				     sizeof(*bcm6345_reset), GFP_KERNEL);
-+	if (!bcm6345_reset)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, bcm6345_reset);
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	bcm6345_reset->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(bcm6345_reset->base))
-+		return PTR_ERR(bcm6345_reset->base);
-+
-+	spin_lock_init(&bcm6345_reset->lock);
-+	bcm6345_reset->rcdev.ops = &bcm6345_reset_ops;
-+	bcm6345_reset->rcdev.owner = THIS_MODULE;
-+	bcm6345_reset->rcdev.of_node = pdev->dev.of_node;
-+	bcm6345_reset->rcdev.of_reset_n_cells = 1;
-+	bcm6345_reset->rcdev.nr_resets = BCM6345_RESET_NUM;
-+
-+	err = devm_reset_controller_register(&pdev->dev,
-+					     &bcm6345_reset->rcdev);
-+	if (err)
-+		return err;
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id bcm6345_reset_of_match[] = {
-+	{ .compatible = "brcm,bcm6345-reset" },
-+	{ },
-+};
-+
-+static struct platform_driver bcm6345_reset_driver = {
-+	.probe = bcm6345_reset_probe,
-+	.driver	= {
-+		.name = "bcm6345-reset",
-+		.of_match_table = bcm6345_reset_of_match,
-+		.suppress_bind_attrs = true,
-+	},
-+};
-+builtin_platform_driver(bcm6345_reset_driver);
--- 
-2.26.2
-
+Guenter
