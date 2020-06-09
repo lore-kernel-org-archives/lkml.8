@@ -2,100 +2,102 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 678F6C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:54:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D71AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35DCE20820
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:54:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591707286;
-	bh=s6DjVd5S/9BMaBHFd1sXcmmcw3hwmnb2raoYKakwRWc=;
-	h=Date:From:To:In-Reply-To:References:Subject:List-ID:From;
-	b=aGiIS8/kUFRbqdMxK5wAcn85mogGYeDdcZWMDUWBDodpKjvJCHouMEAoFtd8EX5CH
-	 xr7KHh2dZV3LCKuu/QmMPa1ANdFM12vPAq4jf94LhWAian/zy+p8CaxRt5wX4cNv7M
-	 O54BKnGnKr1aT39Y95yB52S8tZy+OoZEyDZzWmC4=
+	by mail.kernel.org (Postfix) with ESMTP id 5616120825
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:55:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="liv9i5S2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728393AbgFIMyp (ORCPT
+        id S1728458AbgFIMzC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 08:54:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57416 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728217AbgFIMyn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 08:54:43 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAC30206A4;
-        Tue,  9 Jun 2020 12:54:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591707283;
-        bh=s6DjVd5S/9BMaBHFd1sXcmmcw3hwmnb2raoYKakwRWc=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=dNl6PiKGvSYn9EtRbIRN37OwxVFkRJ6JigXpcIGgtBn7yFIifpMp+FpXxNWy81CP0
-         q/TXS0BDniJk36Hp8ST9U0GWXZkSZUuyb3UreVw0rbKlh8iRijWZ4iAza/1s8Ryruk
-         cIEQ4UReD6Qw6TSMUeS7Gr/2vEIR1iZUR3KQ+I40=
-Date:   Tue, 09 Jun 2020 13:54:41 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        khilman@baylibre.com, trivial@kernel.org, tiwai@suse.com,
-        linux-amlogic@lists.infradead.org, lgirdwood@gmail.com,
-        jbrunet@baylibre.com, perex@perex.cz, Pavel Machek <pavel@ucw.cz>
-In-Reply-To: <20200606153103.GA17905@amd>
-References: <20200606153103.GA17905@amd>
-Subject: Re: [PATCH] soc/meson: add missing free_irq() in error path
-Message-Id: <159170728116.39758.7078171173608119495.b4-ty@kernel.org>
+        Tue, 9 Jun 2020 08:55:02 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:57913 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726903AbgFIMzB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 08:55:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1591707301; x=1623243301;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version;
+  bh=R4d1xFOQANOtBvYugE4Y6z/1+LM4tG8caBxOeDEyPCg=;
+  b=liv9i5S21PCOej3E82Sz/28uPN/9ah9nZQivmnSduccmsFjY5M5kNyTr
+   4ytXdZ7vbejVr7rVi4nnU/l3wGAld79jiqmvesgXFW5ZoO18euoSoElT8
+   Y0HWp1EtxQ8of/sX8sO7l25fB8u7eam/hNrB6QIJzBVk6jm+DuztciVQ/
+   jvShsyYeGqgHCS/nQ4PqZs1XAW55PkFYBY8UxUcnsRIwKJR4/7TjIhh3n
+   g7Aqxp0Iod9z2GlpQdS1U7Ke8+cWq4k/OOYgShW+1R2gj+Ea4KSKBFz1S
+   ysnP+xyEJ9YwYyZkyZcjfdkt5qX61JQVt37cXDNHHHmAf8888iXZ/LtJ+
+   A==;
+IronPort-SDR: WAUKnIXpcUbDouBuOz024F5bSzIZ7+iHnxZeWI8QHby6MNWMIDw5pmk2jj7PVMdBKyPVy4b81W
+ G2ktMI+O5H2bocpkSKi/DiHgvq2xQNE3wrNGF44mZhvL8AwD6GXlSJTS31FRmgqh1h6oKU5l6q
+ cBV3erkFaKmMlCnUKLxsDHoePKE46e4UA3nTOGz/4hlr+BYDH8+TJKsR31BRclTeuc3OjHcRVk
+ SL0aiMMVWITHhn41N73LPpgA8f6MFnevuSJ/xkG4MG0YZIamcdGmV8Gnwk4D0lyhE29g6mFHpO
+ /ak=
+X-IronPort-AV: E=Sophos;i="5.73,492,1583218800"; 
+   d="scan'208";a="79427220"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Jun 2020 05:55:00 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Tue, 9 Jun 2020 05:54:59 -0700
+Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Tue, 9 Jun 2020 05:54:57 -0700
+References: <20200609072828.9088-1-lars.povlsen@microchip.com> <20200609074940.9529-1-lars.povlsen@microchip.com> <20200609093808.00003aad@Huawei.com>
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        <linux-hwmon@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        <linux-kernel@vger.kernel.org>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 3/3] hwmon: sparx5: Add Sparx5 SoC temperature driver
+In-Reply-To: <20200609093808.00003aad@Huawei.com>
+Date:   Tue, 9 Jun 2020 14:54:56 +0200
+Message-ID: <87ftb4ielb.fsf@soft-dev15.microsemi.net>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 6 Jun 2020 17:31:03 +0200, Pavel Machek wrote:
-> free_irq() is missing in case of error, fix that.
-> 
-> Signed-off-by: Pavel Machek (CIP) <pavel@denx.de>
-> 
-> diff --git a/sound/soc/meson/axg-fifo.c b/sound/soc/meson/axg-fifo.c
-> index 2e9b56b29d31..b2e867113226 100644
-> --- a/sound/soc/meson/axg-fifo.c
-> +++ b/sound/soc/meson/axg-fifo.c
-> @@ -249,7 +249,7 @@ int axg_fifo_pcm_open(struct snd_soc_component *component,
->  	/* Enable pclk to access registers and clock the fifo ip */
->  	ret = clk_prepare_enable(fifo->pclk);
->  	if (ret)
-> -		return ret;
-> +		goto free_irq;
-> 
-> [...]
 
-Applied to
+Jonathan Cameron writes:
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+> On Tue, 9 Jun 2020 09:49:40 +0200
+> Lars Povlsen <lars.povlsen@microchip.com> wrote:
+>
+>> This patch adds a temperature sensor driver to the Sparx5 SoC.
+>>
+>> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+>> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+>
+> Hi.  Quick drive by review whilst waiting for coffee time...
+>
+> A few minor suggestions inline.
+>
 
-Thanks!
+Ooops, forgot to ack the COMPILE_TEST and bitfield.h suggestions.
 
-[1/1] ASoC: meson: add missing free_irq() in error path
-      commit: 3b8a299a58b2afce464ae11324b59dcf0f1d10a7
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Both adopted.
 
 Thanks,
-Mark
+
+---Lars
+
+-- 
+Lars Povlsen,
+Microchip
