@@ -2,52 +2,53 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36489C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09974C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:19:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 140612068D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:19:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBBFF2068D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:19:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591726743;
-	bh=VMfeFiVfnefWCA1tQkBq53HIAe43nKZj1VYQE+v3HNg=;
+	s=default; t=1591726753;
+	bh=Ha8hus8kNUcxNjEXYLlcqZknjg8ABCTXWAqD0vvPCzk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TP2g/oMJUeFGUn4jfIyLmytiZ3B5DaO5FejpnoQW6xZMGKYR/abUmGa3L8MR7e+eQ
-	 aI1p+YieWdRHTnf1KzQPtOyt3Wga4l4ghNgFpUANvWlanzOie2OK71Yxi4Iy9P/sqN
-	 Ypr2Z/B39apB6XmCE+bFOpWD3/2aVlhEJaQffTh4=
+	b=jd02y6ZPZyTNVHbRVrzNd8LaW5CPk4v37sKH+3zOO4F0ozr3iap86IhryWuNrTKkc
+	 nHXfzTUrVoB/PXfV4Yai6c9Kqvt3M3SAxmywtvFS/cFFFRo75TDg7wxBGM3vUj1+Oi
+	 qyocOtgrDOvThFqyXgozQIbaKCARmFdASfUPuXZ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388837AbgFISS7 (ORCPT
+        id S2388846AbgFISTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:18:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36838 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 14:19:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730963AbgFIRt7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:49:59 -0400
+        id S1730749AbgFIRts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:49:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CAA820801;
-        Tue,  9 Jun 2020 17:49:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E36D207F9;
+        Tue,  9 Jun 2020 17:49:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591724998;
-        bh=VMfeFiVfnefWCA1tQkBq53HIAe43nKZj1VYQE+v3HNg=;
+        s=default; t=1591724987;
+        bh=Ha8hus8kNUcxNjEXYLlcqZknjg8ABCTXWAqD0vvPCzk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XmGzQD82FaBxG/Pi0T2kzXLDcL8mu1rJpdiP6bvsoWAOGwM5TXLKejdbdaaR8kLYh
-         Ph2jEQSl1a+O2fKc90oWNi5aQomDGOHWkVURPiUWbJnPZYArkQ7ODWBfhTGg7cwEVS
-         1WRes+y8Pnn7WXp5yUA8HNLbPonM7r/mo6R6Qujk=
+        b=GWXGqHRJLgG9jfZpH8WrEp/Esf0h0n705o3l2S5r5kb5rTqQdZvzD8/8AK4q/nUX9
+         lADE2QjRwkpCF7lqRePdxCDTF/PzhbQHzAK9f57rdgHtsE9it1RG1pMrByuljtzT2W
+         oytYTUGnVnCYaywlwB02PYVT+poyHRqXq8RLIOKM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, syzbot <syzkaller@googlegroups.com>,
-        Willem de Bruijn <willemb@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 28/46] net: check untrusted gso_size at kernel entry
-Date:   Tue,  9 Jun 2020 19:44:44 +0200
-Message-Id: <20200609174028.165000124@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Greco <pmgreco@us.ibm.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 07/46] ARC: Fix ICCM & DCCM runtime size checks
+Date:   Tue,  9 Jun 2020 19:44:23 +0200
+Message-Id: <20200609174023.542770029@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174022.938987501@linuxfoundation.org>
 References: <20200609174022.938987501@linuxfoundation.org>
@@ -60,74 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willem de Bruijn <willemb@google.com>
+From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 
-[ Upstream commit 6dd912f82680761d8fb6b1bb274a69d4c7010988 ]
+[ Upstream commit 43900edf67d7ef3ac8909854d75b8a1fba2d570c ]
 
-Syzkaller again found a path to a kernel crash through bad gso input:
-a packet with gso size exceeding len.
+As of today the ICCM and DCCM size checks are incorrectly using
+mismatched units (KiB checked against bytes). The CONFIG_ARC_DCCM_SZ
+and CONFIG_ARC_ICCM_SZ are in KiB, but the size calculated in
+runtime and stored in cpu->dccm.sz and cpu->iccm.sz is in bytes.
 
-These packets are dropped in tcp_gso_segment and udp[46]_ufo_fragment.
-But they may affect gso size calculations earlier in the path.
+Fix that.
 
-Now that we have thlen as of commit 9274124f023b ("net: stricter
-validation of untrusted gso packets"), check gso_size at entry too.
-
-Fixes: bfd5f4a3d605 ("packet: Add GSO/csum offload support.")
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reported-by: Paul Greco <pmgreco@us.ibm.com>
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/virtio_net.h |   14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ arch/arc/kernel/setup.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/include/linux/virtio_net.h
-+++ b/include/linux/virtio_net.h
-@@ -31,6 +31,7 @@ static inline int virtio_net_hdr_to_skb(
- {
- 	unsigned int gso_type = 0;
- 	unsigned int thlen = 0;
-+	unsigned int p_off = 0;
- 	unsigned int ip_proto;
+diff --git a/arch/arc/kernel/setup.c b/arch/arc/kernel/setup.c
+index 6b8d106e0d53..11c2c4a3fe69 100644
+--- a/arch/arc/kernel/setup.c
++++ b/arch/arc/kernel/setup.c
+@@ -15,6 +15,7 @@
+ #include <linux/clocksource.h>
+ #include <linux/console.h>
+ #include <linux/module.h>
++#include <linux/sizes.h>
+ #include <linux/cpu.h>
+ #include <linux/of_fdt.h>
+ #include <linux/of.h>
+@@ -355,12 +356,12 @@ static void arc_chk_core_config(void)
+ 	if ((unsigned int)__arc_dccm_base != cpu->dccm.base_addr)
+ 		panic("Linux built with incorrect DCCM Base address\n");
  
- 	if (hdr->gso_type != VIRTIO_NET_HDR_GSO_NONE) {
-@@ -68,7 +69,8 @@ static inline int virtio_net_hdr_to_skb(
- 		if (!skb_partial_csum_set(skb, start, off))
- 			return -EINVAL;
+-	if (CONFIG_ARC_DCCM_SZ != cpu->dccm.sz)
++	if (CONFIG_ARC_DCCM_SZ * SZ_1K != cpu->dccm.sz)
+ 		panic("Linux built with incorrect DCCM Size\n");
+ #endif
  
--		if (skb_transport_offset(skb) + thlen > skb_headlen(skb))
-+		p_off = skb_transport_offset(skb) + thlen;
-+		if (p_off > skb_headlen(skb))
- 			return -EINVAL;
- 	} else {
- 		/* gso packets without NEEDS_CSUM do not set transport_offset.
-@@ -90,17 +92,25 @@ retry:
- 				return -EINVAL;
- 			}
+ #ifdef CONFIG_ARC_HAS_ICCM
+-	if (CONFIG_ARC_ICCM_SZ != cpu->iccm.sz)
++	if (CONFIG_ARC_ICCM_SZ * SZ_1K != cpu->iccm.sz)
+ 		panic("Linux built with incorrect ICCM Size\n");
+ #endif
  
--			if (keys.control.thoff + thlen > skb_headlen(skb) ||
-+			p_off = keys.control.thoff + thlen;
-+			if (p_off > skb_headlen(skb) ||
- 			    keys.basic.ip_proto != ip_proto)
- 				return -EINVAL;
- 
- 			skb_set_transport_header(skb, keys.control.thoff);
-+		} else if (gso_type) {
-+			p_off = thlen;
-+			if (p_off > skb_headlen(skb))
-+				return -EINVAL;
- 		}
- 	}
- 
- 	if (hdr->gso_type != VIRTIO_NET_HDR_GSO_NONE) {
- 		u16 gso_size = __virtio16_to_cpu(little_endian, hdr->gso_size);
- 
-+		if (skb->len - p_off <= gso_size)
-+			return -EINVAL;
-+
- 		skb_shinfo(skb)->gso_size = gso_size;
- 		skb_shinfo(skb)->gso_type = gso_type;
- 
+-- 
+2.25.1
+
 
 
