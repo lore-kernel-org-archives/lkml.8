@@ -2,70 +2,60 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F7C1C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD6E7C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4786D20734
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:10:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591722643;
-	bh=AGV7xMV78eyjBnrPi//kfZU+sGTqY2z4YfrrYO//a/o=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=W8SsUWH4I9Cot7T72RYXYrBwepIXWbD5htWLgEqa0TAAE0cXJJEX3hgFpKC5mULHO
-	 vIIK982p9iXdBl43FAQAgivnawr3oIoO5ajORJPKSmN+FswIBOgKL44YGegWh3pt2q
-	 1k6eE60VyQBbDomaw009X0KGrtxchsDg690e9p4g=
+	by mail.kernel.org (Postfix) with ESMTP id B905420734
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:10:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lqL7UlTQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728780AbgFIRKg (ORCPT
+        id S1731585AbgFIRKq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:10:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34674 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728300AbgFIRKW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:10:22 -0400
-Subject: Re: [GIT PULL] Kselftest update for Linux 5.8-rc1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591722621;
-        bh=AGV7xMV78eyjBnrPi//kfZU+sGTqY2z4YfrrYO//a/o=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=wxD2oxRX5TjT7XoqdiXZak9EjqvONv4yGPSCD12c8zor/sRaBLJqK2mAREoCHzv1z
-         8T2ntXrnSL7zXZcnT9Ives1GUofK2a/U08Vf22LqcS2Vv9ZjPE8wlC+HqLRBkpT8iE
-         +5N6QQBTZkQRVOO8yEwLKedgPt6kUCHYFKUurlDg=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <9e5f53d8-ecc7-5d78-e232-3f525541bf88@linuxfoundation.org>
-References: <9e5f53d8-ecc7-5d78-e232-3f525541bf88@linuxfoundation.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <9e5f53d8-ecc7-5d78-e232-3f525541bf88@linuxfoundation.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest
- tags/linux-kselftest-5.8-rc1
-X-PR-Tracked-Commit-Id: 382561a0f11c4995d48ab82670412f8d6c418430
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: fc2fb38c85508a875fc2e95f1e14e0bdcf59e1e9
-Message-Id: <159172262192.7211.14059629904718694859.pr-tracker-bot@kernel.org>
-Date:   Tue, 09 Jun 2020 17:10:21 +0000
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     torvalds@linux-foundation.org, sfr@canb.auug.org.au,
-        akpm@linux-foundation.org, skhan@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>, vbabka@suse.cz
+        Tue, 9 Jun 2020 13:10:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35310 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728728AbgFIRKk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:10:40 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BED61C05BD1E;
+        Tue,  9 Jun 2020 10:10:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=A1K/cxGGsTS842CwLaEcetTi7toHGKjgenADvZJMNHc=; b=lqL7UlTQLMvR6Y5lKy2n6whoBV
+        j2eaKSKvpPc1ThpI1nkn0AmPXkUk1plyqGmLqZCDoK0xt0G0dASoScelwhYXAelNPDDFXBYTulE0n
+        nG0cHlWJmHBPn972+yaFwy2hZvxKJPE8TVtlpnXZDX2WtkGZoS0YfWWiqdYWHlS5JDajq0hZG7H3z
+        RnsGk9RkRDW1kztsy+BspP59wvndVGNrCJvx1B0kXTc/U/L4jiis/MaCQiCxrDZhyNsdCr7vxloJ/
+        sqgUvuYTfBjC/6uyZFPgA4Mdt0MdluChEG+5XfmgiyNy3QMTepbD1SeG4dWuC3fG7E8e3hOUApbKi
+        GjDBkZCg==;
+Received: from 213-225-38-56.nat.highway.a1.net ([213.225.38.56] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jihlg-0006yp-8v; Tue, 09 Jun 2020 17:10:32 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: two more fixes for sysctl
+Date:   Tue,  9 Jun 2020 19:08:17 +0200
+Message-Id: <20200609170819.52353-1-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 8 Jun 2020 15:53:12 -0600:
+Hi Al,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest tags/linux-kselftest-5.8-rc1
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/fc2fb38c85508a875fc2e95f1e14e0bdcf59e1e9
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+two more fixes for the kernel pointers in the sysctl handlers.
