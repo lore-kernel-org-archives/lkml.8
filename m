@@ -2,188 +2,145 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E71A9C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:14:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50EFBC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:14:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1D3320760
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:14:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R3Gze83q"
+	by mail.kernel.org (Postfix) with ESMTP id 34C2820760
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:14:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731251AbgFIQOZ (ORCPT
+        id S1731264AbgFIQOx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 12:14:25 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:56402 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731151AbgFIQOS (ORCPT
+        Tue, 9 Jun 2020 12:14:53 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:53541 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731021AbgFIQOx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 12:14:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591719256;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3q22RYspYRyYbER8pK6XhkMiHhqOP+KQeLb3BfV3ios=;
-        b=R3Gze83qmQcztRthzuI3imdVYJ5+TKD1c6vj+5wOomGxoCwFeZ0NfncQvU6ydysKlxcegz
-        Ir/A8H152DGy2elI7xBeLthXMytzsCFpbDnyPnA7FxZ5YKHFW9XBAN3WMz2KWZWF0cJ91o
-        bojNYckd9GL6E5MRqHxysKir76xxptw=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-328-deGNIrcVNFWrUFcRW_QMMw-1; Tue, 09 Jun 2020 12:14:14 -0400
-X-MC-Unique: deGNIrcVNFWrUFcRW_QMMw-1
-Received: by mail-ej1-f71.google.com with SMTP id g9so7683630ejs.20
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 09:14:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3q22RYspYRyYbER8pK6XhkMiHhqOP+KQeLb3BfV3ios=;
-        b=EhM9Q+ZTRl4fGiZwcdbrhNRAqdgHGAY3mHT6UBHGPnovj20GvEWWAPPC+9YUq5g/nk
-         wQNZLrSSR2d/xzUECG+vasel6SB4B1L1sSvYeNNiKYbE+B0BT+ZuU3kWIt7vQjpKITok
-         okYREANwqwt7TbGy3Y8h+HU8V60jt5jhyHEyKanQDj8PHpEyRd5kM/8mqBS7ciNDLJuE
-         YqF8wuBWKtT9FZN0X3MhfT4n1R3TbvhdiN2VR40eaqm/lfmSEXR0n3xkk+mxb4yEPBV+
-         Hpi12frwjn0tMCdvQ7EMYvv83548M8whSDrDjhcBZyg0eJqGhP8+Vv0Lb79nmsvYxIVk
-         3Fuw==
-X-Gm-Message-State: AOAM530HSWcqKZlCkKiQWvPX8I0UC7opiqXIbkLtNJ4fTSvbDFzOwgCC
-        FupslEcj9bkUTeYmk4AZkMboMwIW5DtlgfQswy3ogqV7LPeAcUyMiC/3Skqgrdzcjv+4JyNWIoF
-        xkRvIGLZDlGu/Also49otTs6e
-X-Received: by 2002:a17:906:b7c8:: with SMTP id fy8mr25767625ejb.85.1591719253509;
-        Tue, 09 Jun 2020 09:14:13 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwxGjWA3j+DcBexKy5awWiWEr8epdgclPYU7N2XWOY5sJ5h4HvsCXoxB1j+wWy5yC1n/oRJQw==
-X-Received: by 2002:a17:906:b7c8:: with SMTP id fy8mr25767602ejb.85.1591719253188;
-        Tue, 09 Jun 2020 09:14:13 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id d11sm10688895edy.79.2020.06.09.09.14.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Jun 2020 09:14:12 -0700 (PDT)
-Subject: Re: [PATCH 2/3] platform/x86: dell-wmi: add new keymap type 0x0012
-To:     Mario.Limonciello@dell.com, y.linux@paritcher.com
-Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        mjg59@srcf.ucam.org, pali@kernel.org, linux-input@vger.kernel.org
-References: <cover.1591584631.git.y.linux@paritcher.com>
- <0dc191a3d16f0e114f6a8976433e248018e10c43.1591584631.git.y.linux@paritcher.com>
- <83fe431cacbc4708962767668ac8f06f@AUSX13MPC105.AMER.DELL.COM>
- <79bd59ee-dd37-bdc5-f6b4-00f2c33fdcff@paritcher.com>
- <7f9f0410696141cfabb0237d33b7b529@AUSX13MPC105.AMER.DELL.COM>
- <137d8e69-a83f-6129-19e0-316ef0a51076@redhat.com>
- <ae45da27126d470888ef0d839665b9ed@AUSX13MPC105.AMER.DELL.COM>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <10fcfbe7-cf2e-0911-334b-60be3336c990@redhat.com>
-Date:   Tue, 9 Jun 2020 18:14:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 9 Jun 2020 12:14:53 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jigtQ-0007qO-Cr; Tue, 09 Jun 2020 16:14:28 +0000
+Date:   Tue, 9 Jun 2020 18:14:27 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Andrei Vagin <avagin@gmail.com>
+Cc:     Adrian Reber <areber@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Nicolas Viennot <Nicolas.Viennot@twosigma.com>,
+        =?utf-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>,
+        Kamil Yurtsever <kyurtsever@google.com>,
+        Dirk Petersen <dipeit@gmail.com>,
+        Christine Flood <chf@redhat.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        Serge Hallyn <serge@hallyn.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, selinux@vger.kernel.org,
+        Eric Paris <eparis@parisplace.org>,
+        Jann Horn <jannh@google.com>, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] capabilities: Introduce CAP_CHECKPOINT_RESTORE
+Message-ID: <20200609161427.4eoozs3kkgablmaa@wittgenstein>
+References: <20200603162328.854164-1-areber@redhat.com>
+ <20200603162328.854164-2-areber@redhat.com>
+ <20200609034221.GA150921@gmail.com>
+ <20200609074422.burwzfgwgqqysrzh@wittgenstein>
+ <20200609160627.GA163855@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <ae45da27126d470888ef0d839665b9ed@AUSX13MPC105.AMER.DELL.COM>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200609160627.GA163855@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 6/9/20 5:36 PM, Mario.Limonciello@dell.com wrote:
-> Loop linux-input mailing list and trim to the relevant conversation.
+On Tue, Jun 09, 2020 at 09:06:27AM -0700, Andrei Vagin wrote:
+> On Tue, Jun 09, 2020 at 09:44:22AM +0200, Christian Brauner wrote:
+> > On Mon, Jun 08, 2020 at 08:42:21PM -0700, Andrei Vagin wrote:
+> > > On Wed, Jun 03, 2020 at 06:23:26PM +0200, Adrian Reber wrote:
+> > > > This patch introduces CAP_CHECKPOINT_RESTORE, a new capability facilitating
+> > > > checkpoint/restore for non-root users.
+> > > > 
+> > > > Over the last years, The CRIU (Checkpoint/Restore In Userspace) team has been
+> > > > asked numerous times if it is possible to checkpoint/restore a process as
+> > > > non-root. The answer usually was: 'almost'.
+> > > > 
+> > > > The main blocker to restore a process as non-root was to control the PID of the
+> > > > restored process. This feature available via the clone3 system call, or via
+> > > > /proc/sys/kernel/ns_last_pid is unfortunately guarded by CAP_SYS_ADMIN.
+> > > > 
+> > > > In the past two years, requests for non-root checkpoint/restore have increased
+> > > > due to the following use cases:
+> > > > * Checkpoint/Restore in an HPC environment in combination with a resource
+> > > >   manager distributing jobs where users are always running as non-root.
+> > > >   There is a desire to provide a way to checkpoint and restore long running
+> > > >   jobs.
+> > > > * Container migration as non-root
+> > > > * We have been in contact with JVM developers who are integrating
+> > > >   CRIU into a Java VM to decrease the startup time. These checkpoint/restore
+> > > >   applications are not meant to be running with CAP_SYS_ADMIN.
+> > > > 
+> > > ...
+> > > > 
+> > > > The introduced capability allows to:
+> > > > * Control PIDs when the current user is CAP_CHECKPOINT_RESTORE capable
+> > > >   for the corresponding PID namespace via ns_last_pid/clone3.
+> > > > * Open files in /proc/pid/map_files when the current user is
+> > > >   CAP_CHECKPOINT_RESTORE capable in the root namespace, useful for recovering
+> > > >   files that are unreachable via the file system such as deleted files, or memfd
+> > > >   files.
+> > > 
+> > > PTRACE_O_SUSPEND_SECCOMP is needed for C/R and it is protected by
+> > > CAP_SYS_ADMIN too.
+> > 
+> > This is currently capable(CAP_SYS_ADMIN) (init_ns capable) why is it
+> > safe to allow unprivileged users to suspend security policies? That
+> > sounds like a bad idea.
 > 
->>> Can you please comment here how you would like to see events like this
->> should come
->>> through to userspace?
->>>
->>> * Wrong power adapter (you have X and should have Y)
->>> * You have plugged a dock into the wrong port
->>> * Fn-lock mode
->>
->> Note just thinking out loud here.
->>
->> I'm thinking we just need a mechanism to show a "user notification". This
->> would
->> be just a plain text string passed from the kernel to userspace. I guess we
->> may also want some mechanism to build (on the kernel side) a small file
->> with all possible messages for translation from US English to other
->> languages.
+> Why do you think so bad about me;). I don't suggest to remove or
+
+Andrei, nothing could be further from me than to think bad about you!
+You've done way too much excellent work. ;)
+
+> downgrade this capability check. The patch allows all c/r related
+> operations if the current has CAP_CHECKPOINT_RESTORE.
 > 
-> The part that falls apart here is that some strings have dynamic data added to
-> them.  For example in the case I said wrong power adapter there will be some numbers
-> put into the string based on what comes into the buffer.  So how will you translate
-> these?
+> So in this case the check:
+>      if (!capable(CAP_SYS_ADMIN))
+>              return -EPERM;
 > 
-> I guess you can draw a line in the sand and say all strings that can be emitted must
-> be "static and generic".
+> will be converted in:
+>      if (!capable(CAP_SYS_ADMIN) && !capable(CAP_CHECKPOINT_RESTORE))
+>              return -EPERM;
 
-Right, that is what I was thinking, although for the power adapter case
-I was thinking there are not so much variants so we can just do
-a couple of fixed strings for the combos, or maybe just sat that
-the adapter does not delivers enough power and that at minimum X watts
-is necessary" then we only have 1 variable and we can probably easily
-do fixed strings for the few cases of X.
+Yeah, I got that but what's the goal here? Isn't it that you want to
+make it safe to install the criu binary with the CAP_CHECKPOINT_RESTORE
+fscap set so that unprivileged users can restore their own processes
+without creating a new user namespace or am I missing something? The
+use-cases in the cover-letter make it sound like that's what this is
+leading up to:
 
-Or we could get fancy and do some generic notification mechanism outside
-of printk/dmesg where we push a format string + parameters to the format
-string to userspace. So that the translation can be done on the format
-string rather then on the end result. I'm not sure we need to make things
-that complicated though.
+> > > > * Checkpoint/Restore in an HPC environment in combination with a resource
+> > > >   manager distributing jobs where users are always running as non-root.
+> > > >   There is a desire to provide a way to checkpoint and restore long running
+> > > >   jobs.
+> > > > * Container migration as non-root
+> > > > * We have been in contact with JVM developers who are integrating
+> > > >   CRIU into a Java VM to decrease the startup time. These checkpoint/restore
+> > > >   applications are not meant to be running with CAP_SYS_ADMIN.
 
->> So the idea would be that e.g. gnome-shell can listen for these in some way
->> and then show a notification in its notification mechanism with the
->> message,
->> like how it does for when software updates are available for example.
->>
->> I think we can make this as simple as using the normal printk buffer for
->> this
->> and prefixing the messages with "USER NOTIFY", we already have some
->> messages
->> in the kernel which would qualify for this, e.g. in the USB core we have:
->>
->>                   dev_info(&udev->dev, "not running at top speed; "
->>                           "connect to a high speed hub\n");
->>
->> This one is about USB1 vs USB2 ports, but we have a similar one somewhere
->> for USB2 vs USB3 ports (I think) which would also be an interesting message
->> to actually show to the user inside the desktop environment.
->>
->> So sticking with the above example, we could change that to
->>
->> #define USER_NOTIFY "USER NOTIFY: "
->>
->> dev_info(&udev->dev, USER_NOTIFY "not running at top speed; connect to a
->> high speed hub\n");
->>
->> And then userspace would trigger on the "USER NOTIFY: " part, keep the
->> bit before it (which describes the device) as is, try to translate
->> the text after it and then combine the text before it + the possibly
->> translated text after it and show that as a notification.
->>
->> The reason for (ab)using the printk ring-buffer for this is that
->> we will still want to have these messages in dmesg too anyways,
->> so why add a new mechanism and send the same message twice if
->> we can just tag the messages inside the printk ring-buffer ?
->>
->> Note the dev_info above would likely be replaced with some new
->> helper which also does some magic to help with gathering a
->> list of strings to translate.
->>
->> Again just thinking out loud here. If anyone has any initial
->> reaction to this please let me know...
->>
-> 
-> As a general comment, I think it captures very well the possibility
-> that the kernel has more information than userspace about the circumstances
-> of something that a user should be notified.  Definitely that's the
-> case for these WMI/ACPI events, and I would think similar circumstances
-> can apply to other subsystem too.
+But maybe I'm just misunderstanding crucial bits (likely (TM)).
 
-Right, that was my idea behind having a generic notification mechanism.
-
-Regards,
-
-Hans
-
+Christian
