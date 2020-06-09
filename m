@@ -2,110 +2,168 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B60AEC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 296FEC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:08:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FFC12076C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:07:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591664864;
-	bh=rBWiZvWqsDNBGLOZcEsUl4b/4HinwzVnrDOhaM190ko=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MJJttjBkeVDhdxwYJ9NBZE0SNhT2pxe+gwCMegUkih4aCJ6FSMiyYJ3AIfVT/MT+q
-	 MorhpcBEMuWmADvZQH32Hft4a5wQBYc0hwCLgaDYlqUsD6JvdCe4hP/LmWRA2WWYfe
-	 PBKuppA3OH/ouR1/hSm156xSInyipNll/kWmzRYg=
+	by mail.kernel.org (Postfix) with ESMTP id EB8152076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:08:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jw6AFzib"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388200AbgFIBHn (ORCPT
+        id S1727826AbgFIBIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 21:07:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50410 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727094AbgFHXGz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:06:55 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2655F2083E;
-        Mon,  8 Jun 2020 23:06:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657614;
-        bh=rBWiZvWqsDNBGLOZcEsUl4b/4HinwzVnrDOhaM190ko=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D9JHUwC0UPtNPPNiMfx7OYY6ulqaJh6pTPAUPDIBg/l9HCXJQFy1f12Z2XB20qOBp
-         aLhRU/BAILIuRCIudhgBAQvgnWE03wzPtuvzQU2lk970LoExNuYkeIyN5Wrzkv1pML
-         u9g3zMX0D0AbA6ctY2opmswA6qULR8pOCqCIeeDk=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kim Phillips <kim.phillips@amd.com>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.7 037/274] x86/cpu/amd: Make erratum #1054 a legacy erratum
-Date:   Mon,  8 Jun 2020 19:02:10 -0400
-Message-Id: <20200608230607.3361041-37-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
+        Mon, 8 Jun 2020 21:08:00 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:58926 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726844AbgFIBHl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 21:07:41 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0590uv8R173360;
+        Tue, 9 Jun 2020 01:07:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=IpEVVM0bj8zg9b7eJM0DwMCx4bTSNKHFjqpG8b9CCvg=;
+ b=jw6AFzibkdY0HIZu9DeavIDwExXpfTitqONPy/3YBycUFPgWq9HZddTXr+1ixVcYgvUO
+ bIeANndRdJ1dt2sYAj2brqgKI49ReS2ovmcUgUgHj/E+a6IiVgmFgnnrGb6vo8fi7Ijo
+ ovAiA7c9mIfAenoc0QEKa0rv1JvvWSptfQLHeM+uEVbiGXke8uonm5Tuup7AuoWp8p7R
+ uyr4QsHX08tVE9+lVztidOBlRwGAD1DLzOyfDMJSyy2bX0fjKBH55D/H9tjb0y2tilCB
+ YxyfR+gqU3Wd9rZCcoU6fYz14S8TVkHkDGoaW+BkB9BU2lMJa8x8XXy/A1fY0sqtAc1w Jw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 31g3smsqvv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 09 Jun 2020 01:07:30 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05913fGU016868;
+        Tue, 9 Jun 2020 01:07:29 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 31gn2vx6cq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 09 Jun 2020 01:07:29 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05917TFM022951;
+        Tue, 9 Jun 2020 01:07:29 GMT
+Received: from localhost (/10.159.129.223)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 08 Jun 2020 18:07:28 -0700
+Date:   Mon, 8 Jun 2020 18:07:27 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        Brian Foster <bfoster@redhat.com>, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.7 244/274] xfs: force writes to delalloc
+ regions to unwritten
+Message-ID: <20200609010727.GN1334206@magnolia>
 References: <20200608230607.3361041-1-sashal@kernel.org>
+ <20200608230607.3361041-244-sashal@kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200608230607.3361041-244-sashal@kernel.org>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9646 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 malwarescore=0
+ bulkscore=0 adultscore=0 mlxlogscore=999 spamscore=0 suspectscore=1
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006090005
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9646 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 impostorscore=0 cotscore=-2147483648 suspectscore=1
+ spamscore=0 bulkscore=0 malwarescore=0 phishscore=0 mlxscore=0
+ mlxlogscore=999 clxscore=1031 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006090004
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kim Phillips <kim.phillips@amd.com>
+On Mon, Jun 08, 2020 at 07:05:37PM -0400, Sasha Levin wrote:
+> From: "Darrick J. Wong" <darrick.wong@oracle.com>
+> 
+> [ Upstream commit a5949d3faedf492fa7863b914da408047ab46eb0 ]
+> 
+> When writing to a delalloc region in the data fork, commit the new
+> allocations (of the da reservation) as unwritten so that the mappings
+> are only marked written once writeback completes successfully.  This
+> fixes the problem of stale data exposure if the system goes down during
+> targeted writeback of a specific region of a file, as tested by
+> generic/042.
+> 
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> Reviewed-by: Brian Foster <bfoster@redhat.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-[ Upstream commit e2abfc0448a46d8a137505aa180caf14070ec535 ]
+Err, this doesn't have a Fixes: tag attached to it.  Does it pass
+fstests?  Because it doesn't look like you've pulled in "xfs: don't fail
+unwritten extent conversion on writeback due to edquot", which is needed
+to avoid regressing fstests...
 
-Commit
+...waitaminute, that whole series lacks Fixes: tags because it wasn't
+considered a good enough candidate for automatic backport.
 
-  21b5ee59ef18 ("x86/cpu/amd: Enable the fixed Instructions Retired
-		 counter IRPERF")
+Ummm, does the autosel fstests driver turn on quotas? ;)
 
-mistakenly added erratum #1054 as an OS Visible Workaround (OSVW) ID 0.
-Erratum #1054 is not OSVW ID 0 [1], so make it a legacy erratum.
+--D
 
-There would never have been a false positive on older hardware that
-has OSVW bit 0 set, since the IRPERF feature was not available.
-
-However, save a couple of RDMSR executions per thread, on modern
-system configurations that correctly set non-zero values in their
-OSVW_ID_Length MSRs.
-
-[1] Revision Guide for AMD Family 17h Models 00h-0Fh Processors. The
-revision guide is available from the bugzilla link below.
-
-Fixes: 21b5ee59ef18 ("x86/cpu/amd: Enable the fixed Instructions Retired counter IRPERF")
-Reported-by: Andrew Cooper <andrew.cooper3@citrix.com>
-Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200417143356.26054-1-kim.phillips@amd.com
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/kernel/cpu/amd.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index 547ad7bbf0e0..8a1bdda895a4 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -1142,8 +1142,7 @@ static const int amd_erratum_383[] =
- 
- /* #1054: Instructions Retired Performance Counter May Be Inaccurate */
- static const int amd_erratum_1054[] =
--	AMD_OSVW_ERRATUM(0, AMD_MODEL_RANGE(0x17, 0, 0, 0x2f, 0xf));
--
-+	AMD_LEGACY_ERRATUM(AMD_MODEL_RANGE(0x17, 0, 0, 0x2f, 0xf));
- 
- static bool cpu_has_amd_erratum(struct cpuinfo_x86 *cpu, const int *erratum)
- {
--- 
-2.25.1
-
+> ---
+>  fs/xfs/libxfs/xfs_bmap.c | 29 +++++++++++++++++------------
+>  1 file changed, 17 insertions(+), 12 deletions(-)
+> 
+> diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
+> index fda13cd7add0..f8fe83c9348d 100644
+> --- a/fs/xfs/libxfs/xfs_bmap.c
+> +++ b/fs/xfs/libxfs/xfs_bmap.c
+> @@ -4193,17 +4193,7 @@ xfs_bmapi_allocate(
+>  	bma->got.br_blockcount = bma->length;
+>  	bma->got.br_state = XFS_EXT_NORM;
+>  
+> -	/*
+> -	 * In the data fork, a wasdelay extent has been initialized, so
+> -	 * shouldn't be flagged as unwritten.
+> -	 *
+> -	 * For the cow fork, however, we convert delalloc reservations
+> -	 * (extents allocated for speculative preallocation) to
+> -	 * allocated unwritten extents, and only convert the unwritten
+> -	 * extents to real extents when we're about to write the data.
+> -	 */
+> -	if ((!bma->wasdel || (bma->flags & XFS_BMAPI_COWFORK)) &&
+> -	    (bma->flags & XFS_BMAPI_PREALLOC))
+> +	if (bma->flags & XFS_BMAPI_PREALLOC)
+>  		bma->got.br_state = XFS_EXT_UNWRITTEN;
+>  
+>  	if (bma->wasdel)
+> @@ -4611,8 +4601,23 @@ xfs_bmapi_convert_delalloc(
+>  	bma.offset = bma.got.br_startoff;
+>  	bma.length = max_t(xfs_filblks_t, bma.got.br_blockcount, MAXEXTLEN);
+>  	bma.minleft = xfs_bmapi_minleft(tp, ip, whichfork);
+> +
+> +	/*
+> +	 * When we're converting the delalloc reservations backing dirty pages
+> +	 * in the page cache, we must be careful about how we create the new
+> +	 * extents:
+> +	 *
+> +	 * New CoW fork extents are created unwritten, turned into real extents
+> +	 * when we're about to write the data to disk, and mapped into the data
+> +	 * fork after the write finishes.  End of story.
+> +	 *
+> +	 * New data fork extents must be mapped in as unwritten and converted
+> +	 * to real extents after the write succeeds to avoid exposing stale
+> +	 * disk contents if we crash.
+> +	 */
+> +	bma.flags = XFS_BMAPI_PREALLOC;
+>  	if (whichfork == XFS_COW_FORK)
+> -		bma.flags = XFS_BMAPI_COWFORK | XFS_BMAPI_PREALLOC;
+> +		bma.flags |= XFS_BMAPI_COWFORK;
+>  
+>  	if (!xfs_iext_peek_prev_extent(ifp, &bma.icur, &bma.prev))
+>  		bma.prev.br_startoff = NULLFILEOFF;
+> -- 
+> 2.25.1
+> 
