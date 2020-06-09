@@ -2,68 +2,126 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA1A8C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:42:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC6C1C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:44:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BD9A20774
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:42:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C908E20774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:44:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EqY8BeCg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731263AbgFIQmS convert rfc822-to-8bit (ORCPT
+        id S1731132AbgFIQoI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 12:42:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59164 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730180AbgFIQmR (ORCPT
+        Tue, 9 Jun 2020 12:44:08 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:45374 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730985AbgFIQoH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 12:42:17 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45065C05BD1E;
-        Tue,  9 Jun 2020 09:42:17 -0700 (PDT)
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1jihKH-0004wK-OB; Tue, 09 Jun 2020 18:42:13 +0200
-Date:   Tue, 9 Jun 2020 18:42:13 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Ramon Fried <rfried.dev@gmail.com>
-Cc:     Tom Zanussi <zanussi@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>, Daniel Wagner <wagi@monom.org>,
-        Clark Williams <williams@redhat.com>,
-        Zhang Xiao <xiao.zhang@windriver.com>
-Subject: Re: [PATCH RT 1/2] tasklet: Address a race resulting in
- double-enqueue
-Message-ID: <20200609164213.bshzpfuqgioyvtpm@linutronix.de>
-References: <cover.1587675252.git.zanussi@kernel.org>
- <6d4c92b28c54d8ca687c29043562de943a373547.1587675252.git.zanussi@kernel.org>
- <CAGi-RUKn6k98H5v9kw7je1MChb4+Uq8EGhKO0nuXNMBy9M1_qw@mail.gmail.com>
- <b5026121af44601e4318479194357fdb956982f6.camel@kernel.org>
- <20200609154741.5kesuvl7txz4s3yu@linutronix.de>
- <e288ef193f743782df48667b6b03122bd025119f.camel@kernel.org>
- <20200609163446.efp76qbjzkbtl7nk@linutronix.de>
- <D6892A4E-18F7-4EB7-BA09-BD4DF9079BDE@gmail.com>
- <34E6C220-A85B-4296-AB8E-62DE6D9DC561@gmail.com>
+        Tue, 9 Jun 2020 12:44:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591721045;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=z9O6ktJVnwwW4Vd/oKJVKAa0AEa9UNwRFffaC+dkedE=;
+        b=EqY8BeCgAHFSg88UYE/XenORC3ZD3v5MKTPRQ1WqZaGoBHegXTf2YcpaZYCohD/60kq/2/
+        2fJd5lbqfA3ifI0tBgG8ddl3YuzUIiU5FbyOkUu79IZ8h0v53JL7ErM+efMFZnfazbWJZG
+        nrjlFFXYOJnsjR1NLHYSXjcrcnMznOU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-112-Nu1i9sWhOYq7S2BC7VlD7Q-1; Tue, 09 Jun 2020 12:44:03 -0400
+X-MC-Unique: Nu1i9sWhOYq7S2BC7VlD7Q-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5EB90835B40;
+        Tue,  9 Jun 2020 16:44:02 +0000 (UTC)
+Received: from x2.localnet (ovpn-113-152.phx2.redhat.com [10.3.113.152])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B988E60C1D;
+        Tue,  9 Jun 2020 16:43:58 +0000 (UTC)
+From:   Steve Grubb <sgrubb@redhat.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Cc:     linux-audit@redhat.com, zohar@linux.ibm.com, paul@paul-moore.com,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] IMA: Add audit log for failure conditions
+Date:   Tue, 09 Jun 2020 12:43:58 -0400
+Message-ID: <3776526.Vj75JV9fuy@x2>
+Organization: Red Hat
+In-Reply-To: <ada45440-aefd-a4b2-2a3b-c012872e86cb@linux.microsoft.com>
+References: <20200608215343.4491-1-nramas@linux.microsoft.com> <27448076.Og45N0Lxmj@x2> <ada45440-aefd-a4b2-2a3b-c012872e86cb@linux.microsoft.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <34E6C220-A85B-4296-AB8E-62DE6D9DC561@gmail.com>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-09 19:40:03 [+0300], Ramon Fried wrote:
-> Correction. normal kernel is running with RT enabled, crash kernel without. 
+Hello,
 
-no RT and no SMP in your crash kernel? So this information in your first
-email would have saved me some time…
+On Tuesday, June 9, 2020 11:58:02 AM EDT Lakshmi Ramasubramanian wrote:
+> On 6/9/20 8:40 AM, Steve Grubb wrote:
+> > On Monday, June 8, 2020 5:53:43 PM EDT Lakshmi Ramasubramanian wrote:
+> >> The final log statement in process_buffer_measurement() for failure
+> >> condition is at debug level. This does not log the message unless
+> >> the system log level is raised which would significantly increase
+> >> the messages in the system log. Change this log message to an audit
+> >> message for better triaging failures in the function.
+> >> 
+> >> ima_alloc_key_entry() does not log a message for failure condition.
+> >> Add an audit message for failure condition in this function.
+> > 
+> >> Sample audit messages:
+> > Wouldn't it be better to have an IMA_ERROR record type?
+> 
+> type "1804" is AUDIT_INTEGRITY_PCR which is used for failures to add to
+> the measurement list.
+> 
+> >> [    8.051937] audit: type=1804 audit(1591633422.365:8): pid=1 uid=0
+> >> auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0
+> >> op=measuring_keys cause=hashing_error(-22)
+> > 
+> > The audit system uses a name=value scheme to express information. This
+> > last field has something in parenthesis that may need to be interpreted.
+> > In its current form, we can't do this. It would require writing code to
+> > special case this event, go to this field, find the first parenthesis,
+> > find the second, extract what's between, and look it up.
+> > 
+> > It would be better if that number in parenthesis was normalized to the
+> > expected way we do audit events so nothing special has to be made.
+> 
+> The number in parenthesis is the error code (such as ENOMEM, EINVAL,
+> etc.) IMA uses this format for reporting TPM errors in one of the audit
+> messages (In ima_add_template_entry()). I followed the same pattern.
+> 
+> Would it be better if the value for "cause" is formatted as
+> 
+>     cause=hashing_error_-22
+> 
+>     cause=alloc_entry_-12
 
-Sebastian
+Neither fit the name=value style that all other events follow. What would fit 
+the style is something like this:
+
+cause=hashing_error  errno=-22
+ 
+cause=alloc_entry errno=-12
+
+Would this be OK? Also, errno is only to illustrate. You can name it 
+something else as long as there are no use case collisions with our 
+dictionary of field names.
+
+https://github.com/linux-audit/audit-documentation/blob/master/specs/fields/
+field-dictionary.csv
+
+-Steve
+
+
+
