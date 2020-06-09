@@ -2,78 +2,112 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 316CAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31896C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A96F207ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:16:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 160FD207ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:17:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728295AbgFIJQt (ORCPT
+        id S1728372AbgFIJRA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 05:16:49 -0400
-Received: from mga07.intel.com ([134.134.136.100]:65193 "EHLO mga07.intel.com"
+        Tue, 9 Jun 2020 05:17:00 -0400
+Received: from mga11.intel.com ([192.55.52.93]:34219 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727975AbgFIJQs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 05:16:48 -0400
-IronPort-SDR: ReFmBkqDpzgMDluIiWAMUWcAAN9i12uFTzk1Zlw+5Oy7ZWevKW1dX3QZADjtSarVqOIPhIoWNj
- TU/tJvVO7IXg==
+        id S1727975AbgFIJRA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 05:17:00 -0400
+IronPort-SDR: MkR6RFwfDBgaDqrmS78IzoVRNUH+bBrvN8Mq0N7InUeAN6zu9TcFbLmYMbigC7p50wnMLLxZeL
+ wMBZU2C0xoEQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 02:16:47 -0700
-IronPort-SDR: DHCLJdYjcY8ckOKfzURIh3dxYBRhuAhHF4Uv53Aj7tCcARUyI4WitszBXQtMWFx6GXm92lJvGO
- 14Mc9AVmNAQA==
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 02:17:00 -0700
+IronPort-SDR: cJTD43w4V7TEilYLKRfNC0yboYYr2i+S4T2mCC+IywfNuCR/VMLxkNIfMMtjMK5nt7+NBgHAJm
+ LArOW+Nwmk9g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,491,1583222400"; 
-   d="scan'208";a="258947635"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga007.fm.intel.com with ESMTP; 09 Jun 2020 02:16:46 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jiaNF-00BrC1-E9; Tue, 09 Jun 2020 12:16:49 +0300
-Date:   Tue, 9 Jun 2020 12:16:49 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Wei Yang <richard.weiyang@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [Patch v2] lib: test get_count_order/long in test_bitops.c
-Message-ID: <20200609091649.GX2428291@smile.fi.intel.com>
-References: <20200602223728.32722-1-richard.weiyang@gmail.com>
- <CAMuHMdUfnmm4bXVRvFOmG5DFYR+LtcZ1UviDszr9bByiN=DO+Q@mail.gmail.com>
- <20200604122805.d2ndjmkmti6wl3nz@master>
- <CAMuHMdXnLUS8F4nWJBqDjoKhBmF2_ihfwe4jTGxuZ1e_WKRNPQ@mail.gmail.com>
- <20200605230610.bizp2j23ivyma5rn@master>
- <20200605171629.d931068c1a4d720d8faa2704@linux-foundation.org>
- <20200608223112.ftncszh7hfnmqj3m@master>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200608223112.ftncszh7hfnmqj3m@master>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+   d="scan'208";a="270830857"
+Received: from gklab-125-110.igk.intel.com ([10.91.125.110])
+  by orsmga003.jf.intel.com with ESMTP; 09 Jun 2020 02:16:56 -0700
+From:   Piotr Stankiewicz <piotr.stankiewicz@intel.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Cc:     Piotr Stankiewicz <piotr.stankiewicz@intel.com>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Olof Johansson <olof@lixom.net>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Kelvin Cao <kelvin.cao@microchip.com>,
+        Wesley Sheng <wesley.sheng@microchip.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Krzysztof Wilczynski <kw@linux.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 03/15] PCI: Use PCI_IRQ_MSI_TYPES where appropriate
+Date:   Tue,  9 Jun 2020 11:16:46 +0200
+Message-Id: <20200609091650.801-1-piotr.stankiewicz@intel.com>
+X-Mailer: git-send-email 2.17.2
+In-Reply-To: <20200609091148.32749-1-piotr.stankiewicz@intel.com>
+References: <20200609091148.32749-1-piotr.stankiewicz@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 10:31:12PM +0000, Wei Yang wrote:
-> On Fri, Jun 05, 2020 at 05:16:29PM -0700, Andrew Morton wrote:
+Seeing as there is shorthand available to use when asking for any type
+of interrupt, or any type of message signalled interrupt, leverage it.
 
-...
+Signed-off-by: Piotr Stankiewicz <piotr.stankiewicz@intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+---
+ drivers/pci/pcie/portdrv_core.c | 4 ++--
+ drivers/pci/switch/switchtec.c  | 3 +--
+ 2 files changed, 3 insertions(+), 4 deletions(-)
 
-> The test on 64bit machine pass. Since I don't have a 32bit machine by hand, 
-
-Out of curiosity what that machine is?
-
-> Geert, would you mind have a try on 32bit machine? 
-
+diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+index 50a9522ab07d..2a38a918ba12 100644
+--- a/drivers/pci/pcie/portdrv_core.c
++++ b/drivers/pci/pcie/portdrv_core.c
+@@ -105,7 +105,7 @@ static int pcie_port_enable_irq_vec(struct pci_dev *dev, int *irqs, int mask)
+ 
+ 	/* Allocate the maximum possible number of MSI/MSI-X vectors */
+ 	nr_entries = pci_alloc_irq_vectors(dev, 1, PCIE_PORT_MAX_MSI_ENTRIES,
+-			PCI_IRQ_MSIX | PCI_IRQ_MSI);
++			PCI_IRQ_MSI_TYPES);
+ 	if (nr_entries < 0)
+ 		return nr_entries;
+ 
+@@ -131,7 +131,7 @@ static int pcie_port_enable_irq_vec(struct pci_dev *dev, int *irqs, int mask)
+ 		pci_free_irq_vectors(dev);
+ 
+ 		nr_entries = pci_alloc_irq_vectors(dev, nvec, nvec,
+-				PCI_IRQ_MSIX | PCI_IRQ_MSI);
++				PCI_IRQ_MSI_TYPES);
+ 		if (nr_entries < 0)
+ 			return nr_entries;
+ 	}
+diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
+index 850cfeb74608..0ab17a71fe63 100644
+--- a/drivers/pci/switch/switchtec.c
++++ b/drivers/pci/switch/switchtec.c
+@@ -1442,8 +1442,7 @@ static int switchtec_init_isr(struct switchtec_dev *stdev)
+ 		nirqs = 4;
+ 
+ 	nvecs = pci_alloc_irq_vectors(stdev->pdev, 1, nirqs,
+-				      PCI_IRQ_MSIX | PCI_IRQ_MSI |
+-				      PCI_IRQ_VIRTUAL);
++				      PCI_IRQ_MSI_TYPES | PCI_IRQ_VIRTUAL);
+ 	if (nvecs < 0)
+ 		return nvecs;
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.17.2
 
