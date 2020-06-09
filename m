@@ -2,76 +2,71 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C07B1C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C36C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F78F207F9
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:09:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HlftRkd+"
+	by mail.kernel.org (Postfix) with ESMTP id A5666207ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:10:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726121AbgFILJQ (ORCPT
+        id S1728565AbgFILKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 07:09:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35874 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728338AbgFILJG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 07:09:06 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 760DDC05BD1E;
-        Tue,  9 Jun 2020 04:09:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=jzlGHVTHxHocaBNnVtWkIwZrj7yO/ADtEgfhe970dr4=; b=HlftRkd+efYJpZYlbgE32i9wn+
-        7aRy9RCVjvkXe262spiOpmcVXldxbLW7/W5eyOq9mvWooSAG/hcztag1XNy4s0gXBYEIv1gcOoyO2
-        zrBjMdqcH5Ek+oSdQdd1dejxY3IBaOgYUPrTAHFhJx3IFdrGCMnlGCyfXq1w2U14RudltTDExUbsr
-        GJSNOz4/zHKBwH0/gwBkkf+NO7Bbshuq3RFwe0ldmA0t2uoKvfBHPU+aOG9td0tWJoKfJiPGF00pV
-        watWjdSNArWtDhX0Mbr9Ujl7T3aHwjfpHvsF+t7bDMIvuVOhuPRWBCvr+RlgBosN86SBvFV+IFiGN
-        ZxdQjVhw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jic7q-0008MC-0t; Tue, 09 Jun 2020 11:09:02 +0000
-Date:   Tue, 9 Jun 2020 04:09:01 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-acpi@vger.kernel.org,
-        netdev@vger.kernel.org, Joe Perches <joe@perches.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jason Baron <jbaron@akamai.com>,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH v3 1/7] Documentation: dynamic-debug: Add description of
- level bitmask
-Message-ID: <20200609110901.GZ19604@bombadil.infradead.org>
-References: <20200609104604.1594-1-stanimir.varbanov@linaro.org>
- <20200609104604.1594-2-stanimir.varbanov@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200609104604.1594-2-stanimir.varbanov@linaro.org>
+        Tue, 9 Jun 2020 07:10:30 -0400
+Received: from mga17.intel.com ([192.55.52.151]:39536 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726083AbgFILK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 07:10:28 -0400
+IronPort-SDR: HZEpOpW3Sa3I0c5eXYCVsQF2z6S0GhpC9hoQL8lIF+GAgEMlRkjL0WUdLUTJlyt/zqATqFcSUx
+ UOKcLIZ+PA4Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 04:10:28 -0700
+IronPort-SDR: AEwrycebfpER+iAA9i20J217dU73zmxVPR+O4cMVHtQjNBhd9Jq//NPONiPpK4DllGf1CIwuVR
+ wBJx9oiFp5wQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,491,1583222400"; 
+   d="scan'208";a="349485957"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by orsmga001.jf.intel.com with ESMTP; 09 Jun 2020 04:10:24 -0700
+From:   "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, balbi@kernel.org
+Cc:     gregkh@linuxfoundation.org, robh@kernel.org,
+        devicetree@vger.kernel.org, p.zabel@pengutronix.de,
+        linux-usb@vger.kernel.org, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, yin1.li@intel.com,
+        andriy.shevchenko@intel.com,
+        "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v1 0/2] usb : phy: Add USB PHY support on Intel LGM SoC
+Date:   Tue,  9 Jun 2020 19:08:48 +0800
+Message-Id: <20200609110850.43469-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 01:45:58PM +0300, Stanimir Varbanov wrote:
-> +level
-> +    The given level will be a bitmask ANDed with the level of the each ``pr_debug()``
-> +    callsite. This will allow to group debug messages and show only those of the
-> +    same level.  The -p flag takes precedence over the given level. Note that we can
-> +    have up to five groups of debug messages.
+The USB PHY provides the optimized for low power dissipation while active, idle, or on standby.
+Requires minimal external components, a single resistor, for best operation.
+Supports 10/5-Gbps high-speed data transmission rates through 3-m USB 3.x cable
 
-That doesn't sound like a "level".  printk has levels.  If you ask for
-"level 3" messages, you get messages from levels 0, 1, 2, and 3.  These
-seem like "types" or "groups" or something.
+Ramuthevar Vadivel Murugan (2):
+  dt-bindings: usb: Add USB PHY support for Intel LGM SoC
+  usb: phy: Add USB3 PHY support for Intel LGM SoC
 
-> +  // enable all messages in file with 0x01 level bitmask
-> +  nullarbor:~ # echo -n 'file foo.c level 0x01 +p' >
-> +                                <debugfs>/dynamic_debug/control
+ .../devicetree/bindings/usb/intel,lgm-usb-phy.yaml |  53 ++++
+ drivers/usb/phy/Kconfig                            |  11 +
+ drivers/usb/phy/Makefile                           |   1 +
+ drivers/usb/phy/phy-lgm-usb.c                      | 269 +++++++++++++++++++++
+ 4 files changed, 334 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/intel,lgm-usb-phy.yaml
+ create mode 100644 drivers/usb/phy/phy-lgm-usb.c
+
+-- 
+2.11.0
+
