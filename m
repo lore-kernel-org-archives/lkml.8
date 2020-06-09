@@ -2,70 +2,74 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 027FEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:02:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF58C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:02:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C23C52067B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:02:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B82A82067B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:02:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SVaClwYm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SQ3cdlwy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728231AbgFINCh (ORCPT
+        id S1728250AbgFINCs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 09:02:37 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:51714 "EHLO
+        Tue, 9 Jun 2020 09:02:48 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:35922 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728120AbgFINCb (ORCPT
+        by vger.kernel.org with ESMTP id S1727783AbgFINCk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 09:02:31 -0400
+        Tue, 9 Jun 2020 09:02:40 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591707750;
+        s=mimecast20190719; t=1591707757;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=QvkO2PPp+zFnnylyA9/RHaMuHI9iwBcF6vd6fIsDp3k=;
-        b=SVaClwYm0zORDj4ov+0isWCF8Jccvx59p8gca4W79Y5/T0L4TvQe3dyFyFD8KCHcmfCGBx
-        0kxEs+qZS3er3Ba7t/Q4YDx/yXrwvdirVXluB9pmt+8giyUQh7W833ZyVqQdsRxeK/FBUs
-        Zi1GlaVQ+Q64tpcT9F7SK6WyiJMUpcQ=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-88-Vq6HKD_9PQGm74fuGIJoFA-1; Tue, 09 Jun 2020 09:02:29 -0400
-X-MC-Unique: Vq6HKD_9PQGm74fuGIJoFA-1
-Received: by mail-qv1-f71.google.com with SMTP id h30so12793508qva.17
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 06:02:29 -0700 (PDT)
+         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
+        bh=bREWkWb35OzfrHIRzdmmor2rUMQLv+plL/FvWsPvBUY=;
+        b=SQ3cdlwyCp1e/tukdKY8e4Z+TTpwdJWzdA9kxOzLbrGi6clbduXb7aNPW9p78Qe6bbzJ0d
+        4Tu30GkaXExCMVT2B6zewLaM5Z8xQ1q/wJkb4tBfyQ99d0wJWG6Py3GS045nJBvSRBzSWW
+        pdqiJAPgQ5mW0Rmu6l8Sz5Zb5Lmw1PI=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-385-WZqFJqaoPhOBGkPHOuagkw-1; Tue, 09 Jun 2020 09:02:30 -0400
+X-MC-Unique: WZqFJqaoPhOBGkPHOuagkw-1
+Received: by mail-qv1-f70.google.com with SMTP id v15so16652123qvm.2
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 06:02:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=QvkO2PPp+zFnnylyA9/RHaMuHI9iwBcF6vd6fIsDp3k=;
-        b=UFHUlIMWsJIOln3kB1aYo9O9qJ0Avl9YukWrqakUaAwZmRMim45Gg98pYGINOZ7Q6I
-         nTXbcI1L2JGKhZuL2lzTYCrmXgGiAwltnToP29IMMeN1zUmC5J7XMAwDJ5AqCu+l9aUF
-         gf2+u3vD3a+gYjYtaphnYrzjJ22BbtuZKVvE/CwwpYWVK9qB89y9cEyXoJKjAULpdeqQ
-         hyjMmtLQy5ZjI9siIChgs7pfeAKvN/+So+ZE2ODmACm1Yo5ulaBCTy2cP+S8xOQmIYoy
-         YGJqCWZFMyI1te8/Dt+qW6x67udfQCQLoH0CRRrevydJtRM+1htrA9vvASwHdtgByrac
-         TdcQ==
-X-Gm-Message-State: AOAM5310GAdm2n5WmvemLGQfqm80BqC/qBJ0ZXxLdgTl9w3GkCrmokTS
-        adeiLeba5hXRT7G+xHw5ZyeBBq+gf+qRx8svudlzVLrjO7Jl5qLSMVKT6NFz65/vZZ8PX50nn7R
-        j1S7CLWmZm+mWELYulpcuI81P
-X-Received: by 2002:a37:9e10:: with SMTP id h16mr27677245qke.381.1591707748761;
-        Tue, 09 Jun 2020 06:02:28 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyeetGPEU0xF9HLprMg4MvSdl54Lp4Jsvbf7QFI0FFyJ0mJJTghbDKHUiCqj2qRDoXcVNxScQ==
-X-Received: by 2002:a37:9e10:: with SMTP id h16mr27676931qke.381.1591707746339;
-        Tue, 09 Jun 2020 06:02:26 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=bREWkWb35OzfrHIRzdmmor2rUMQLv+plL/FvWsPvBUY=;
+        b=aREvYm9KRQQRBpQx2VU4jJG9J6vc55iEd0rofcDh/yLNz4kerQ8q461KKGgXcFC6qj
+         dYhW6J6XaDCBZFoP2+kbp8ZSy+hT2t5/GzXCJiH/NQT2PpquCZkqS3LxbY++tlqHi+kW
+         jvM9KgbcQg5QzKhNCcYb3dQewQyS3T+v5ouirvBnn9BPjgDhrTuHMMKK+00jw/89iW5T
+         16CzR1RMwYcQAQwojP5diPsvbPkXFTGoHSmHUBvw17p2Cqn/jHcQvKNAvj301YpeWD7M
+         fVjVoKkl0rOUZeDG05GTpO7GZszBllTGPWsmyEgdpAkt4gu3Uh+kxGlNj9+XQKWg7/1F
+         zbMg==
+X-Gm-Message-State: AOAM533grskDOnB4dyItqKomI9fNNh+zpuxqk2e2+AzWmSyiFul73bnX
+        fi3plgrzwR1w20xoNLiBdk0ir/Q3DZfw4OIlYayV7/8cl5SGeCSfFMxZGQqOZdAF02JTiAUkbnz
+        j6HqilZos+etZ2AxJSlAh7WwK
+X-Received: by 2002:ac8:1942:: with SMTP id g2mr29381327qtk.107.1591707749677;
+        Tue, 09 Jun 2020 06:02:29 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyG5qx7Rdh6rstfsYD4nmjRh99FD3i66w6W9E4Eo93OJSR2rUacVKoE4wgpbkgBwfiMzejw3A==
+X-Received: by 2002:ac8:1942:: with SMTP id g2mr29381276qtk.107.1591707749301;
+        Tue, 09 Jun 2020 06:02:29 -0700 (PDT)
 Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id m7sm9635939qti.6.2020.06.09.06.02.24
+        by smtp.gmail.com with ESMTPSA id m7sm9635939qti.6.2020.06.09.06.02.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 06:02:25 -0700 (PDT)
+        Tue, 09 Jun 2020 06:02:28 -0700 (PDT)
 From:   trix@redhat.com
 To:     linux-fpga@vger.kernel.org, shuah@kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
         Tom Rix <trix@redhat.com>
-Subject: [PATCH 0/1] selftests for drivers/fpga
-Date:   Tue,  9 Jun 2020 06:02:07 -0700
-Message-Id: <20200609130208.27390-1-trix@redhat.com>
+Subject: [PATCH 1/1] selftests: fpga: dfl: A test for afu interrupt support
+Date:   Tue,  9 Jun 2020 06:02:08 -0700
+Message-Id: <20200609130208.27390-2-trix@redhat.com>
 X-Mailer: git-send-email 2.18.1
+In-Reply-To: <20200609130208.27390-1-trix@redhat.com>
+References: <20200609130208.27390-1-trix@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -73,21 +77,18 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tom Rix <trix@redhat.com>
 
-repo : linux-next
-tag : next-20200608
+Check that the ioctl DFL_FPGA_PORT_ERR_GET_IRQ_NUM returns
+an expected result.
 
-Start applying selftests to drivers/fpga.
+Tested on vf device 0xbcc1
 
-While testing out this upcoming change on linux-fpga
-'Add interrupt support to FPGA DFL drivers'
+Sample run with
+$ sudo make -C tools/testing/selftests TARGETS=drivers/fpga run_tests
+...
+ok 1 selftests: drivers/fpga: afu_intr
 
-I did not see any existing fpga tests.
-So I added one.
-
-
-Tom Rix (1):
-  selftests: fpga: dfl: A test for afu interrupt support
-
+Signed-off-by: Tom Rix <trix@redhat.com>
+---
  tools/testing/selftests/Makefile              |  1 +
  tools/testing/selftests/drivers/fpga/Makefile |  9 +++++
  .../testing/selftests/drivers/fpga/afu_intr.c | 38 +++++++++++++++++++
@@ -97,6 +98,84 @@ Tom Rix (1):
  create mode 100644 tools/testing/selftests/drivers/fpga/afu_intr.c
  create mode 100644 tools/testing/selftests/drivers/fpga/config
 
+diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
+index 1195bd85af38..4c6eda659125 100644
+--- a/tools/testing/selftests/Makefile
++++ b/tools/testing/selftests/Makefile
+@@ -9,6 +9,7 @@ TARGETS += clone3
+ TARGETS += cpufreq
+ TARGETS += cpu-hotplug
+ TARGETS += drivers/dma-buf
++TARGETS += drivers/fpga
+ TARGETS += efivarfs
+ TARGETS += exec
+ TARGETS += filesystems
+diff --git a/tools/testing/selftests/drivers/fpga/Makefile b/tools/testing/selftests/drivers/fpga/Makefile
+new file mode 100644
+index 000000000000..0a472e8c67c5
+--- /dev/null
++++ b/tools/testing/selftests/drivers/fpga/Makefile
+@@ -0,0 +1,9 @@
++# SPDX-License-Identifier: GPL-2.0-only
++CFLAGS += -I../../../../../usr/include/
++CFLAGS += -I../../../../../include/uapi/
++
++TEST_GEN_PROGS := afu_intr
++
++top_srcdir ?=../../../../..
++
++include ../../lib.mk
+diff --git a/tools/testing/selftests/drivers/fpga/afu_intr.c b/tools/testing/selftests/drivers/fpga/afu_intr.c
+new file mode 100644
+index 000000000000..aa1efba94605
+--- /dev/null
++++ b/tools/testing/selftests/drivers/fpga/afu_intr.c
+@@ -0,0 +1,38 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <stdio.h>
++#include <stdlib.h>
++#include <stdint.h>
++#include <string.h>
++#include <linux/fcntl.h>
++#include <linux/fpga-dfl.h>
++
++#define TEST_PREFIX	"drivers/fpga/afu_intr"
++
++int main(int argc, char *argv[])
++{
++	int devfd, status;
++	struct dfl_fpga_port_info port_info;
++	uint32_t irq_num;
++
++	devfd = open("/dev/dfl-port.0", O_RDONLY);
++	if (devfd < 0) {
++		printf("%s: [skip,no-ufpgaintr]\n", TEST_PREFIX);
++		exit(77);
++	}
++
++	/*
++	 * From fpga-dl.h :
++	 * Currently hardware supports up to 1 irq.
++	 * Return: 0 on success, -errno on failure.
++	 */
++	irq_num = -1;
++	status = ioctl(devfd, DFL_FPGA_PORT_ERR_GET_IRQ_NUM, &irq_num);
++	if (status != 0 || irq_num > 255) {
++		printf("%s: [FAIL,err-get-irq-num]\n", TEST_PREFIX);
++		close(devfd);
++		exit(1);
++	}
++
++	close(devfd);
++	return 0;
++}
+diff --git a/tools/testing/selftests/drivers/fpga/config b/tools/testing/selftests/drivers/fpga/config
+new file mode 100644
+index 000000000000..e2111b81d8d7
+--- /dev/null
++++ b/tools/testing/selftests/drivers/fpga/config
+@@ -0,0 +1 @@
++CONFIG_FPGA_DFL_AFU=m
 -- 
 2.18.1
 
