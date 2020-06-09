@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44310C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:58:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DABBC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E1FB206D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:58:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 381C2206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:58:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725498;
-	bh=Nchi5rPksxeSgTW7vOly43VUU3E5jE2NOk7Oj9wAaIA=;
+	s=default; t=1591725504;
+	bh=KBJDsnC/ruZzhFkAosuSNvcMKVC5aIEuK5TDQj8MtJI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I9iwroM76qg/GeJu5JQCdI/LPNpPu86sfQJ0a18EoJVY8apsBd9tFnSUHYOaPMcjI
-	 IjfkxFrMDiVPTwB5h3mupM7LMR9P64M9eMvjqSNjXTC6bGMV9Wv6mkYLcUBYGLc5fa
-	 UXZWCwPrAaIadZ/eDopcJSDIbg9EI3TpcIP7KSKw=
+	b=ImIQPCLAkJ2MAcwf9O8Hcxk8xM5HRM/zPPsGcCBomWSimuVOcN8fo93mNtMZgpemq
+	 b/cSXPfk2kZg3Yk1/Hw2A9bnA5cqBILf5zIF6TYfmE+XTeqnNnTIXF6jfxbrtl+lWq
+	 KDZFws87/3tTHmXBXyNi/71fagOwT4/zINmfz5GE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732703AbgFIR6Q (ORCPT
+        id S2387665AbgFIR6W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:58:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47866 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:58:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733252AbgFIRzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:55:32 -0400
+        id S1733240AbgFIRz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:55:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C87E220774;
-        Tue,  9 Jun 2020 17:55:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AB0920812;
+        Tue,  9 Jun 2020 17:55:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725332;
-        bh=Nchi5rPksxeSgTW7vOly43VUU3E5jE2NOk7Oj9wAaIA=;
+        s=default; t=1591725327;
+        bh=KBJDsnC/ruZzhFkAosuSNvcMKVC5aIEuK5TDQj8MtJI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fn8fgO88PiFprwP5uFHgFvWbfkQvCYb+4TwxavDNsRzdkNIuOfxN56y8WsAGxC6rg
-         +xMCkz0Rl4SOarKquKlVinD2k0y7Q/8B1JOprQ1nFoTUX4sT0u/KtisnGOyyg9i5NQ
-         Qyg7H/tk0d7REZ9PzrpGQ8+chS8QMd0bEWWL+TgQ=
+        b=k8AUT3zz+NbAR3HQJXsz+8j7wQxdvKYzUtfVGzPSX9tslVEd67De8f6V3v1M4du3x
+         PudwIL0ketb0s9clTF6p1Lm3x+dC0HVrvWKCyH2fLo30HnQf3Pna8hZiJ3A6w3uFON
+         pD8ELnObcF0w3oZHzx8pIgZnaWblwyVVOuwD0t2c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kyungtae Kim <kt0755@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 5.7 14/24] vt: keyboard: avoid signed integer overflow in k_ascii
-Date:   Tue,  9 Jun 2020 19:45:45 +0200
-Message-Id: <20200609174150.492778027@linuxfoundation.org>
+        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 5.7 23/24] x86/speculation: Add Ivy Bridge to affected list
+Date:   Tue,  9 Jun 2020 19:45:54 +0200
+Message-Id: <20200609174151.202015474@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174149.255223112@linuxfoundation.org>
 References: <20200609174149.255223112@linuxfoundation.org>
@@ -59,101 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-commit b86dab054059b970111b5516ae548efaae5b3aae upstream.
+commit 3798cc4d106e91382bfe016caa2edada27c2bb3f upstream
 
-When k_ascii is invoked several times in a row there is a potential for
-signed integer overflow:
+Make the docs match the code.
 
-UBSAN: Undefined behaviour in drivers/tty/vt/keyboard.c:888:19 signed integer overflow:
-10 * 1111111111 cannot be represented in type 'int'
-CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.6.11 #1
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Bochs 01/01/2011
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xce/0x128 lib/dump_stack.c:118
- ubsan_epilogue+0xe/0x30 lib/ubsan.c:154
- handle_overflow+0xdc/0xf0 lib/ubsan.c:184
- __ubsan_handle_mul_overflow+0x2a/0x40 lib/ubsan.c:205
- k_ascii+0xbf/0xd0 drivers/tty/vt/keyboard.c:888
- kbd_keycode drivers/tty/vt/keyboard.c:1477 [inline]
- kbd_event+0x888/0x3be0 drivers/tty/vt/keyboard.c:1495
-
-While it can be worked around by using check_mul_overflow()/
-check_add_overflow(), it is better to introduce a separate flag to
-signal that number pad is being used to compose a symbol, and
-change type of the accumulator from signed to unsigned, thus
-avoiding undefined behavior when it overflows.
-
-Reported-by: Kyungtae Kim <kt0755@gmail.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200525232740.GA262061@dtor-ws
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/tty/vt/keyboard.c |   26 ++++++++++++++++----------
- 1 file changed, 16 insertions(+), 10 deletions(-)
+ Documentation/admin-guide/hw-vuln/special-register-buffer-data-sampling.rst |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/drivers/tty/vt/keyboard.c
-+++ b/drivers/tty/vt/keyboard.c
-@@ -127,7 +127,11 @@ static DEFINE_SPINLOCK(func_buf_lock); /
- static unsigned long key_down[BITS_TO_LONGS(KEY_CNT)];	/* keyboard key bitmap */
- static unsigned char shift_down[NR_SHIFT];		/* shift state counters.. */
- static bool dead_key_next;
--static int npadch = -1;					/* -1 or number assembled on pad */
+--- a/Documentation/admin-guide/hw-vuln/special-register-buffer-data-sampling.rst
++++ b/Documentation/admin-guide/hw-vuln/special-register-buffer-data-sampling.rst
+@@ -27,6 +27,8 @@ by software using TSX_CTRL_MSR otherwise
+   =============  ============  ========
+   common name    Family_Model  Stepping
+   =============  ============  ========
++  IvyBridge      06_3AH        All
 +
-+/* Handles a number being assembled on the number pad */
-+static bool npadch_active;
-+static unsigned int npadch_value;
-+
- static unsigned int diacr;
- static char rep;					/* flag telling character repeat */
+   Haswell        06_3CH        All
+   Haswell_L      06_45H        All
+   Haswell_G      06_46H        All
+@@ -37,9 +39,8 @@ by software using TSX_CTRL_MSR otherwise
+   Skylake_L      06_4EH        All
+   Skylake        06_5EH        All
  
-@@ -845,12 +849,12 @@ static void k_shift(struct vc_data *vc,
- 		shift_state &= ~(1 << value);
+-  Kabylake_L     06_8EH        <=0xC
+-
+-  Kabylake       06_9EH        <=0xD
++  Kabylake_L     06_8EH        <= 0xC
++  Kabylake       06_9EH        <= 0xD
+   =============  ============  ========
  
- 	/* kludge */
--	if (up_flag && shift_state != old_state && npadch != -1) {
-+	if (up_flag && shift_state != old_state && npadch_active) {
- 		if (kbd->kbdmode == VC_UNICODE)
--			to_utf8(vc, npadch);
-+			to_utf8(vc, npadch_value);
- 		else
--			put_queue(vc, npadch & 0xff);
--		npadch = -1;
-+			put_queue(vc, npadch_value & 0xff);
-+		npadch_active = false;
- 	}
- }
- 
-@@ -868,7 +872,7 @@ static void k_meta(struct vc_data *vc, u
- 
- static void k_ascii(struct vc_data *vc, unsigned char value, char up_flag)
- {
--	int base;
-+	unsigned int base;
- 
- 	if (up_flag)
- 		return;
-@@ -882,10 +886,12 @@ static void k_ascii(struct vc_data *vc,
- 		base = 16;
- 	}
- 
--	if (npadch == -1)
--		npadch = value;
--	else
--		npadch = npadch * base + value;
-+	if (!npadch_active) {
-+		npadch_value = 0;
-+		npadch_active = true;
-+	}
-+
-+	npadch_value = npadch_value * base + value;
- }
- 
- static void k_lock(struct vc_data *vc, unsigned char value, char up_flag)
+ Related CVEs
 
 
