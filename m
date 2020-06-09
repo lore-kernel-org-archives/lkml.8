@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49423C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:04:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02AFCC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:04:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2042F206D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:04:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C61FF206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:04:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725876;
-	bh=TUchAfSP3c+TsOsIJC3hkMN+LDRDbG1kStznIlC4JxY=;
+	s=default; t=1591725879;
+	bh=dneXgUP1hvA/ZLqtJEfa5ZryFKN8+0iq70e7wX8rxDU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OKULi437yRhXIM5uS7nsm/AsJQVvWgvRgJ9y28T5ncyC4JYz+3qE5iPri5v9mImci
-	 i4UmhSJqAjORMn+A+LSx5Ur3K3JOFuz5f0TDKSthuKVeCY/B2vUJ+cWrpJBgqM5bAs
-	 h1pfuPAuMaFpGlJOZ32ADWd/8sIb7rsdh/RUfVMo=
+	b=bi3dqiVFcFr6/zuaXwWVY0Dl9vSZ9De/vEtjBIoeEW112kYMNXgdCtpolz4Lh0V7j
+	 p3hDCKpdBAt6SIoSn7J3p276VsBxZfzT5vxWZszXBN3FWzM4pTCWaDEQvGcHqyMdnm
+	 P6kuRo1Wv9qkr6tnA5rQu9/vYMNhNJvZj4lvDHps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388010AbgFISEc (ORCPT
+        id S1732884AbgFIRwC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:04:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42290 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:52:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728272AbgFIRwM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:52:12 -0400
+        id S1732760AbgFIRu7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:50:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5010C20734;
-        Tue,  9 Jun 2020 17:52:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 906472074B;
+        Tue,  9 Jun 2020 17:50:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725131;
-        bh=TUchAfSP3c+TsOsIJC3hkMN+LDRDbG1kStznIlC4JxY=;
+        s=default; t=1591725059;
+        bh=dneXgUP1hvA/ZLqtJEfa5ZryFKN8+0iq70e7wX8rxDU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gj5udDQNY+UZ6htT396ivANl2oLzwwpJ4TPCdIaZ+Dc1Zlf0SE35dn2kdPilbH8lo
-         1GnkGT4vjxTc+13eHka2UIRLrq6Cci7v19jqqZ6u7t1wK+B93EwL9CUJPKKRmXoLNf
-         vdHZqjVrk83g7IDF/Dr04ga1E2wb58X8/xtetYlw=
+        b=rZVGqPR+O+8qDt9JtgnohGDCRp8YTdgtmAtGiK+MUEPkfRRoqTWy3gLD4WktF1icA
+         60Uc/Lxv3RBjjGPluvehXGVwp/7RvXG8QmVvIMElMApTqFSa+czZ7GPvGhrA6bdMZB
+         UmDktNyL2Zo94EEMby1DBPJSGaRIWTUs4Dd3JY1c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bin Liu <b-liu@ti.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.4 13/34] USB: serial: usb_wwan: do not resubmit rx urb on fatal errors
-Date:   Tue,  9 Jun 2020 19:45:09 +0200
-Message-Id: <20200609174054.295888909@linuxfoundation.org>
+        stable@vger.kernel.org, Stefano Garzarella <sgarzare@redhat.com>,
+        Jorgen Hansen <jhansen@vmware.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 27/46] vsock: fix timeout in vsock_accept()
+Date:   Tue,  9 Jun 2020 19:44:43 +0200
+Message-Id: <20200609174027.453089041@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200609174052.628006868@linuxfoundation.org>
-References: <20200609174052.628006868@linuxfoundation.org>
+In-Reply-To: <20200609174022.938987501@linuxfoundation.org>
+References: <20200609174022.938987501@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,36 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bin Liu <b-liu@ti.com>
+From: Stefano Garzarella <sgarzare@redhat.com>
 
-commit 986c1748c84d7727defeaeca74a73b37f7d5cce1 upstream.
+[ Upstream commit 7e0afbdfd13d1e708fe96e31c46c4897101a6a43 ]
 
-usb_wwan_indat_callback() shouldn't resubmit rx urb if the previous urb
-status is a fatal error. Or the usb controller would keep processing the
-new urbs then run into interrupt storm, and has no chance to recover.
+The accept(2) is an "input" socket interface, so we should use
+SO_RCVTIMEO instead of SO_SNDTIMEO to set the timeout.
 
-Fixes: 6c1ee66a0b2b ("USB-Serial: Fix error handling of usb_wwan")
-Cc: stable@vger.kernel.org
-Signed-off-by: Bin Liu <b-liu@ti.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+So this patch replace sock_sndtimeo() with sock_rcvtimeo() to
+use the right timeout in the vsock_accept().
+
+Fixes: d021c344051a ("VSOCK: Introduce VM Sockets")
+Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+Reviewed-by: Jorgen Hansen <jhansen@vmware.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/usb/serial/usb_wwan.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ net/vmw_vsock/af_vsock.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/serial/usb_wwan.c
-+++ b/drivers/usb/serial/usb_wwan.c
-@@ -270,6 +270,10 @@ static void usb_wwan_indat_callback(stru
- 	if (status) {
- 		dev_dbg(dev, "%s: nonzero status: %d on endpoint %02x.\n",
- 			__func__, status, endpoint);
-+
-+		/* don't resubmit on fatal errors */
-+		if (status == -ESHUTDOWN || status == -ENOENT)
-+			return;
- 	} else {
- 		if (urb->actual_length) {
- 			tty_insert_flip_string(&port->port, data,
+--- a/net/vmw_vsock/af_vsock.c
++++ b/net/vmw_vsock/af_vsock.c
+@@ -1290,7 +1290,7 @@ static int vsock_accept(struct socket *s
+ 	/* Wait for children sockets to appear; these are the new sockets
+ 	 * created upon connection establishment.
+ 	 */
+-	timeout = sock_sndtimeo(listener, flags & O_NONBLOCK);
++	timeout = sock_rcvtimeo(listener, flags & O_NONBLOCK);
+ 	prepare_to_wait(sk_sleep(listener), &wait, TASK_INTERRUPTIBLE);
+ 
+ 	while ((connected = vsock_dequeue_accept(listener)) == NULL &&
 
 
