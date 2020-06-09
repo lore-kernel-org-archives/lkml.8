@@ -2,127 +2,131 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6114CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F44CC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:14:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F078207ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:14:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591701262;
-	bh=KjT82kHj2v1VQexUfCPUAu1DnRSFG1hgOgh4ntVrp84=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=m39qU1uaZ7ZX8Ka0tfRS1oTqc5e69OvbZF4gmg1NuxzB4gvGmXYVYaqvU2jlOBtLf
-	 vwg63nemajnQThgflwy5L3Wypfe2iQsT0Iu0ggWHNThJNNR2NOd7OXYHoZk1/X2eF9
-	 OeEwOkjeF4pFxbG8KSVbtEzRIUQhErJccp1zC5BI=
+	by mail.kernel.org (Postfix) with ESMTP id 44AC4207ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:14:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728452AbgFILOU (ORCPT
+        id S1729017AbgFILOZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 07:14:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40016 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 07:14:25 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57828 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727002AbgFILOR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 07:14:17 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B36F0207ED;
-        Tue,  9 Jun 2020 11:14:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591701256;
-        bh=KjT82kHj2v1VQexUfCPUAu1DnRSFG1hgOgh4ntVrp84=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xeDSLknwuygyetEa2eWYHaDw4kFz8UQNQwBLTotMXaKexGC0/VHdJICdDooYk/fFP
-         LutM8aohZ1VpOKvKzGzhHKYu2O76ZUknzWmaKW9LYhikq3A9KdQD/Ggf9b1hwJoEN6
-         Wuj+np02lhoSKddpZOnRqAb/j9wYGY7iGoLOaFMM=
-Date:   Tue, 9 Jun 2020 13:14:14 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-acpi@vger.kernel.org,
-        netdev@vger.kernel.org, Joe Perches <joe@perches.com>,
-        Jason Baron <jbaron@akamai.com>
-Subject: Re: [PATCH v3 6/7] venus: Make debug infrastructure more flexible
-Message-ID: <20200609111414.GC780233@kroah.com>
-References: <20200609104604.1594-1-stanimir.varbanov@linaro.org>
- <20200609104604.1594-7-stanimir.varbanov@linaro.org>
+        id S1728938AbgFILOV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 07:14:21 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 1D01AABCE;
+        Tue,  9 Jun 2020 11:14:23 +0000 (UTC)
+Message-ID: <2cee4af79f5f599eb1a6c1f6f0ece504eb111799.camel@suse.de>
+Subject: Re: [PATCH 1/9] dt-bindings: reset: Add a binding for the RPi
+ Firmware USB reset
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        gregkh@linuxfoundation.org, wahrenst@gmx.net, robh@kernel.org,
+        mathias.nyman@linux.intel.com, Eric Anholt <eric@anholt.net>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-usb@vger.kernel.org,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>
+Cc:     linux-kernel@vger.kernel.org, tim.gover@raspberrypi.org,
+        helgaas@kernel.org, lorenzo.pieralisi@arm.com,
+        Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 09 Jun 2020 13:14:17 +0200
+In-Reply-To: <ffc9ec9e-bd1c-a8dd-8a68-a15bf95c919b@gmail.com>
+References: <20200608192701.18355-1-nsaenzjulienne@suse.de>
+         <20200608192701.18355-2-nsaenzjulienne@suse.de>
+         <ffc9ec9e-bd1c-a8dd-8a68-a15bf95c919b@gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-frycM163Ry/rWh+gs2/d"
+User-Agent: Evolution 3.36.2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200609104604.1594-7-stanimir.varbanov@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 01:46:03PM +0300, Stanimir Varbanov wrote:
-> Here we introduce few debug macros with levels (low, medium and
-> high) and debug macro for firmware. Enabling the particular level
-> will be done by dynamic debug with levels.
-> 
-> For example to enable debug messages with low level:
-> echo 'module venus_dec level 0x01 +p' > debugfs/dynamic_debug/control
-> 
-> If you want to enable all levels:
-> echo 'module venus_dec level 0x07 +p' > debugfs/dynamic_debug/control
-> 
-> All the features which dynamic debugging provide are preserved.
-> 
-> And finaly all dev_dbg are translated to VDBGX with appropriate
-> debug levels.
-> 
-> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-> ---
->  drivers/media/platform/qcom/venus/core.h      |  5 ++
->  drivers/media/platform/qcom/venus/helpers.c   |  2 +-
->  drivers/media/platform/qcom/venus/hfi_msgs.c  | 30 ++++-----
->  drivers/media/platform/qcom/venus/hfi_venus.c | 20 ++++--
->  .../media/platform/qcom/venus/pm_helpers.c    |  3 +-
->  drivers/media/platform/qcom/venus/vdec.c      | 63 +++++++++++++++++--
->  drivers/media/platform/qcom/venus/venc.c      |  4 ++
->  7 files changed, 96 insertions(+), 31 deletions(-)
-> 
-> diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
-> index b48782f9aa95..63eabf5ff96d 100644
-> --- a/drivers/media/platform/qcom/venus/core.h
-> +++ b/drivers/media/platform/qcom/venus/core.h
-> @@ -15,6 +15,11 @@
->  #include "dbgfs.h"
->  #include "hfi.h"
->  
-> +#define VDBGL(fmt, args...)	pr_debug_level(0x01, fmt, ##args)
-> +#define VDBGM(fmt, args...)	pr_debug_level(0x02, fmt, ##args)
-> +#define VDBGH(fmt, args...)	pr_debug_level(0x04, fmt, ##args)
-> +#define VDBGFW(fmt, args...)	pr_debug_level(0x08, fmt, ##args)
-> +
->  #define VIDC_CLKS_NUM_MAX		4
->  #define VIDC_VCODEC_CLKS_NUM_MAX	2
->  #define VIDC_PMDOMAINS_NUM_MAX		3
-> diff --git a/drivers/media/platform/qcom/venus/helpers.c b/drivers/media/platform/qcom/venus/helpers.c
-> index 0143af7822b2..115a9a2af1d6 100644
-> --- a/drivers/media/platform/qcom/venus/helpers.c
-> +++ b/drivers/media/platform/qcom/venus/helpers.c
-> @@ -396,7 +396,7 @@ put_ts_metadata(struct venus_inst *inst, struct vb2_v4l2_buffer *vbuf)
->  	}
->  
->  	if (slot == -1) {
-> -		dev_dbg(inst->core->dev, "%s: no free slot\n", __func__);
-> +		VDBGH("no free slot for timestamp\n");
 
-So you just lost the information that dev_dbg() gave you with regards to
-the device/driver/instance creating that message?
+--=-frycM163Ry/rWh+gs2/d
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Ick, no, don't do that.
+On Mon, 2020-06-08 at 12:58 -0700, Florian Fainelli wrote:
+>=20
+> On 6/8/2020 12:26 PM, Nicolas Saenz Julienne wrote:
+> > The firmware running on the RPi VideoCore can be used to reset and
+> > initialize the board's xHCI controller. The reset controller is passed
+> > to the PCI device through the DT, hence this binding.
+> >=20
+> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > ---
+> >  .../arm/bcm/raspberrypi,bcm2835-firmware.yaml | 21 +++++++++++++++++++
+> >  1 file changed, 21 insertions(+)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2=
+835-
+> > firmware.yaml
+> > b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
+> > firmware.yaml
+> > index b48ed875eb8e..8f9d0986c28f 100644
+> > --- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
+> > firmware.yaml
+> > +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
+> > firmware.yaml
+> > @@ -39,6 +39,22 @@ properties:
+> >        - compatible
+> >        - "#clock-cells"
+> > =20
+> > +  usb-reset:
+> > +    type: object
+> > +
+> > +    properties:
+> > +      compatible:
+> > +        const: raspberrypi,firmware-usb-reset
+>=20
+> I would make this less USB centric, even if this is the only consumer of
+> the reset controller for now, there could, in premise be other blocks
+> that require a reset (e.g.: V3D) that would involve going to the VPU
+> firmware because of various requirements (security, register blocking etc=
+.).
 
-And why is this driver somehow "special" compared to all the rest of
-the kernel?  Why is the current dev_dbg() control not sufficient that
-you need to change the core for just this tiny thing?
+I like the idea, I'll introduce this in v2.
 
-thanks,
+> > +
+> > +      "#clock-cells":
+>=20
+> Did not you mean #reset-cells here?
+>=20
 
-greg k-h
+Sorry I missed that.
+
+Regards,
+Nicolas
+
+
+--=-frycM163Ry/rWh+gs2/d
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7fbwkACgkQlfZmHno8
+x/4Fjwf/dpmZ6iwo1Evmz4GIdKPmASwHY2EwMJw9mBAU8Nx/FHwm7WSfpJ+LkMU5
+/2Qw5BvO882IZAxiCyz8tN3yigapEK8EyuawgZRZtT2hBqnlGhfs4TEgEhkub1Mo
+LdYOs9YFYQZ9kLeZO21TnBi/aqlRYj5cKKaxcZKgtPsGxrJJ37DgUmLYm06Q3llm
+lmGUMIdGKm7Gfcgc0BLac7AF2EY7vreHtCaBB6e1Dg8BOqLAT9776fbLJmmqR+zY
+2u6xZ7BL6W4i4wv1WJcJOdTC0R5fhB833Ko+XOKWNARY3iqZVBCU+Xk6A5s4vNDH
+s76WnK0O5nGoaF1JTbtRf31QUEbKVg==
+=hu0w
+-----END PGP SIGNATURE-----
+
+--=-frycM163Ry/rWh+gs2/d--
+
