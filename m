@@ -2,105 +2,207 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE04C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:45:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D7BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C667C2078C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:45:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D66D20774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:46:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Rstobshj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VDrlLBWe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729800AbgFINpz (ORCPT
+        id S1729906AbgFINqU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 09:45:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60076 "EHLO
+        Tue, 9 Jun 2020 09:46:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726803AbgFINpy (ORCPT
+        with ESMTP id S1726803AbgFINqT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 09:45:54 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CA48C05BD1E
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 06:45:54 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id c194so18769181oig.5
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 06:45:54 -0700 (PDT)
+        Tue, 9 Jun 2020 09:46:19 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77900C05BD1E;
+        Tue,  9 Jun 2020 06:46:18 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id r18so4052613pgk.11;
+        Tue, 09 Jun 2020 06:46:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=KEU/lBQXx7Y+HNqUAFaiNZ4WAPmvykZU+zkAfhPdu7U=;
-        b=RstobshjFqPQXoG7aJDr0mkuw/r7kmyuVTZRc2jc67iRHYWSTfVW+067l8A7njlWUh
-         1AoZ6XfD+bMV7uoJUqS6Qtd4k0sACUvB73vqSbPFt5a4fSt4axJ79DxXkZLwp+phAwuR
-         B6I9TZVboxX0pO+7P0Mx56xgDv8fJ1TvetW+LeHofSOABD4zrA+wvwj6lReiVkO0KjQW
-         K/T8FKsHcJqH+dQJxK2occbtn1rnp5iwqWSUjsdd43ZnyRy+aCOn7u8CpNeHZpzMyReJ
-         Tjo50cj7JPy486cQXNtMBk4clel8/AH7KEkpQ97+SLwsHASMG8vuINdGIOYh+/9JsBMj
-         j+BQ==
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/k4EmHOAERaREN8qWtWBob3gQXAhxOW13M9Yk4j9DWk=;
+        b=VDrlLBWev6iIEzXHhUoNI4IybHiCQHESLtVnw+LyJynyWlugmQDKaeF6CC+P5jp/mt
+         AZ/1aU88aJoFBGLY5EjklJ9GEqYyz/WcKcIXY9+GH+xWYhW281fY7XoWAfwsqK1uEFxk
+         KGkbEG00F0ocdlqdq8yzr+Y2P25C7yeH7L3HiZ0Mahf7ClIflBgtuXZ7Cn+gdfDb1QxF
+         Hzw89nAdaGmKM9lGEw8kec06jzqm+tBDLx+Lb4mNlxONlXFnKzKIKR6/+f7c94h/M/Uk
+         19GgDbpZzHD63DPAjoGmf+sFIJnLpwq6yX8vqrkFEH1t3k7cSaXZPXC5+2741XPhD+g8
+         rbwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=KEU/lBQXx7Y+HNqUAFaiNZ4WAPmvykZU+zkAfhPdu7U=;
-        b=p4qSlPo9SmbfRCsovq2V1gRRJwoKHxSfALtvvFHrAbUYwvkpyfyWmu8ouDDiP/5Hs2
-         2z2htwRTzClEpzCLgiAIUU2ra0v0ZmMdBMh5lqVkeENY7DRIc2cIorryZXNT+gQIR0Hv
-         aKhhRQmc4Uy7E0S055RutQO6YS6VGOOW1ZSXC5mJill9NhlMyS/514ELZEu8/qbwGJvo
-         0+g2RQhBf9E4mZ3ZDkggymyEdcY5q9+u0A2sB4Mo4ftpeLIreta3WPQZ1dfZf2nDJ249
-         s54kYZqVypzJwo9XB9HoJpv8MNKX+t/eCm5/gFEhity5BmZyAAhEHIsDh/2Ttbkv7KP9
-         yeLQ==
-X-Gm-Message-State: AOAM532MA1FPs3AXrk5xBTg3yJCy/jY4LGhmNcDqjIraxxQ9M45SduLp
-        nQQMbkaXdTAKmD7mV4AYHzeGTx2HH192+KM/cvbn4Ybg
-X-Google-Smtp-Source: ABdhPJwfw3Nh9kzyjHe6SMHjhOhOSlXDUoJN1LDhyMVk1y/wk8kecZ7j1fQqp/dXg2xEnH/o3AvQtfGx0a/v2nE7hok=
-X-Received: by 2002:a05:6808:34f:: with SMTP id j15mr3515515oie.121.1591710353326;
- Tue, 09 Jun 2020 06:45:53 -0700 (PDT)
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=/k4EmHOAERaREN8qWtWBob3gQXAhxOW13M9Yk4j9DWk=;
+        b=mZghWohhP5YArcRahWFw0Vh/BhUH32yEMryGzhL5QSRdIXEHL9WUNZa/3bG3niqq8Q
+         SC44xDWmPuJnFvm5syEJvC8UfnCb3BJZu9zt1/ZW2Z0bZUjPcXPlKlchy8lJhBbgxnbj
+         em3TT0u489LkvF8o29h1ZeTvjFvuoVfXo8XwAVi9QbzNs5wqtxXasdohazFPP27cid8I
+         vZSIQ+0KAIWKBkNYxc1v7JevhfqhSG/AeP8/t8nwWUkJ6Uq1ROqvzlFKlEt3uEECf1q5
+         qatplgxeeAz8bKGNtPERy/PTeTHZPqaoU2ZxvShynw4HIRfhkCl8sd4S9uQ9VxovmNF0
+         JKWw==
+X-Gm-Message-State: AOAM531Q+jslpDc3al9NiWNTzyHPwl1qBuXdqeuAM13df+u7LQKS/ZCy
+        YKC3kdM0XEIGq8sJY/yHBx4=
+X-Google-Smtp-Source: ABdhPJxrS819fvVw2qNU3AZPLSyn8wqMiP7zLeoTRVCfKpLdmwvNkMGjNppIdi/Cmtuey+iTtAhArQ==
+X-Received: by 2002:a63:c004:: with SMTP id h4mr24498663pgg.385.1591710377918;
+        Tue, 09 Jun 2020 06:46:17 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 84sm10022131pfu.167.2020.06.09.06.46.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jun 2020 06:46:17 -0700 (PDT)
+Subject: Re: [PATCH 1/2] dt-bindings: watchdog: intel: Add YAML Schemas for
+ Watchdog timer
+To:     Dilip Kota <eswara.kota@linux.intel.com>, wim@linux-watchdog.org,
+        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
+        robbh@kernel.org
+Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yixin.zhu@intel.com
+References: <cover.1591584255.git.eswara.kota@linux.intel.com>
+ <ac89e289b79fec0a82d1dd060e17eeca024885d5.1591584255.git.eswara.kota@linux.intel.com>
+ <235d301b-3b25-bb00-bd1b-c4392fa23c63@roeck-us.net>
+ <4a336f1d-68da-3356-a73a-95747ba4af4c@linux.intel.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <83812b78-41e3-299d-36a0-6ce1576e7e78@roeck-us.net>
+Date:   Tue, 9 Jun 2020 06:46:15 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200513124021.GB20278@willie-the-truck> <CANpmjNM5XW+ufJ6Mw2Tn7aShRCZaUPGcH=u=4Sk5kqLKyf3v5A@mail.gmail.com>
- <20200513165008.GA24836@willie-the-truck> <CANpmjNN=n59ue06s0MfmRFvKX=WB2NgLgbP6kG_MYCGy2R6PHg@mail.gmail.com>
- <20200513174747.GB24836@willie-the-truck> <CANpmjNNOpJk0tprXKB_deiNAv_UmmORf1-2uajLhnLWQQ1hvoA@mail.gmail.com>
- <20200513212520.GC28594@willie-the-truck> <CANpmjNOAi2K6knC9OFUGjpMo-rvtLDzKMb==J=vTRkmaWctFaQ@mail.gmail.com>
- <20200514110537.GC4280@willie-the-truck> <20200603185220.GA20613@zn.tnic>
- <20200603192353.GA180529@google.com> <87213fd1-950d-c2d5-4aa0-2f53ea3b505c@suse.cz>
- <CANpmjNNRz5OVKb6PE7K6GjfoGbht_ZhyPkNG9aD+KjNDzK7hGg@mail.gmail.com>
- <cf282ae4-892a-a341-07ce-8ea5db6463b7@suse.cz> <3df9cc45-97e6-b468-7d61-8b7aa3a6bd01@suse.cz>
-In-Reply-To: <3df9cc45-97e6-b468-7d61-8b7aa3a6bd01@suse.cz>
-From:   Marco Elver <elver@google.com>
-Date:   Tue, 9 Jun 2020 15:45:39 +0200
-Message-ID: <CANpmjNPde-1E_RbFnBykpPMC6HJ9hV_9JCKXK1tYkLu+HTT5Hg@mail.gmail.com>
-Subject: Re: [PATCH v5 00/18] Rework READ_ONCE() to improve codegen
-To:     =?UTF-8?Q?Martin_Li=C5=A1ka?= <mliska@suse.cz>
-Cc:     Borislav Petkov <bp@alien8.de>, Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <4a336f1d-68da-3356-a73a-95747ba4af4c@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 9 Jun 2020 at 14:36, Martin Li=C5=A1ka <mliska@suse.cz> wrote:
->
-> On 6/9/20 1:55 PM, Martin Li=C5=A1ka wrote:
-> > Works for me and I've just sent patch for that:
-> > https://gcc.gnu.org/pipermail/gcc-patches/2020-June/547618.html
->
-> The patch has landed into master.
+On 6/9/20 1:57 AM, Dilip Kota wrote:
+> 
+> On 6/8/2020 9:37 PM, Guenter Roeck wrote:
+>> On 6/7/20 10:49 PM, Dilip Kota wrote:
+>>> Add YAML schemas for the watchdog timer on Intel Lightning
+>>> Mountain SoC.
+>>>
+>>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+>>> ---
+>>>   .../bindings/watchdog/intel,lgm-gptc-wdt.yaml      | 75 ++++++++++++++++++++++
+>>>   1 file changed, 75 insertions(+)
+>>>   create mode 100644 Documentation/devicetree/bindings/watchdog/intel,lgm-gptc-wdt.yaml
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/watchdog/intel,lgm-gptc-wdt.yaml b/Documentation/devicetree/bindings/watchdog/intel,lgm-gptc-wdt.yaml
+>>> new file mode 100644
+>>> index 0000000000000..83dc39a5090c1
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/watchdog/intel,lgm-gptc-wdt.yaml
+>>> @@ -0,0 +1,75 @@
+>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>> +%YAML 1.2
+>>> +---
+>>> +$id: http://devicetree.org/schemas/watchdog/intel,lgm-gptc-wdt.yaml#
+>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>> +
+>>> +title: Intel Lightning Mountain Watchdog timer.
+>>> +
+>>> +maintainers:
+>>> +  - Dilip Kota <eswara.kota@linux.intel.com>
+>>> +
+>>> +description: |
+>>> +  Intel Lightning Mountain SoC has General Purpose Timer Counter(GPTC) which can
+>>> +  be configured as Clocksource, real time clock and Watchdog timer.
+>>> +  Each General Purpose Timer Counter has three timers. And total four General
+>>> +  Purpose Timer Counters are present on Lightning Mountain SoC which sums up
+>>> +  to 12 timers.
+>>> +  Lightning Mountain has four CPUs and each CPU is configured with one GPTC
+>>> +  timer as watchdog timer. Total four timers are configured as watchdog timers
+>>> +  on Lightning Mountain SoC.
+>>> +
+>> Why not just one ? The watchdog subsystem does not monitor individual CPUs,
+>> it monitors the system.
+> 
+> Intel Atom based Lightning Mountain SoC, system has four CPUs. On Lightning Mountain SoC ,Watchdog subsystem is combination of GPTC timers and reset controller unit. On Lightning Mountain SoC, each CPU is configured with one GPTC timer, so that if any of the CPU hangs or freezes, the watchdog daemon running on respective CPU cannot reset/ping or pet the watchdog timer. This causes the watchdog timeout. On watchdog timeout, reset controller triggers the reset to respective CPU.
+> 
+A system watchdog driver should not duplicate functionality
+from kernel/watchdog.c, which monitors individual CPUs.
+If the SoC does nto provide a system watchdog timer (which
+I think is unlikely), it should stick with that. A watchdog
+resetting an individual CPU instead of the entire system
+isn't something I would want to see in the watchdog subsystem.
 
-Great, thank you for turning this around so quickly!
+Guenter
 
-I've just sent v3 of the tsan-distinguish-volatile patch:
-https://gcc.gnu.org/pipermail/gcc-patches/2020-June/547633.html -- I
-think there is only the func-entry-exit param left.
+> 
+> ____________________
+> ----------------------------->|                |
+>                                                    |         ------------>| Reset controller unit    |
+> |                     |                 |___________________|
+> |                     |
+> |                     |
+>   ______________________|__________|______
+>   |                                  GPTC   | |            |
+>   | ___________   ________|_       ______|____   |
+>   | |      timer 1 |   | timer 2      |    | timer 3      |    |
+>   | |_________|   |_________|    |_________|    |
+>   |______________________________________|
+> 
+> Regards,
+> -Dilip
+> 
+> 
+>> Guenter
+>>
+>>
 
-Thanks,
--- Marco
-
-
--- Marco
