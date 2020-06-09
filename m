@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DABBC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BEDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:58:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 381C2206D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:58:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96AAD206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:58:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725504;
-	bh=KBJDsnC/ruZzhFkAosuSNvcMKVC5aIEuK5TDQj8MtJI=;
+	s=default; t=1591725510;
+	bh=OwzI0aRK/h+F2kEP/UMIb+22nVLukoXCw8gc0x42/Tg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ImIQPCLAkJ2MAcwf9O8Hcxk8xM5HRM/zPPsGcCBomWSimuVOcN8fo93mNtMZgpemq
-	 b/cSXPfk2kZg3Yk1/Hw2A9bnA5cqBILf5zIF6TYfmE+XTeqnNnTIXF6jfxbrtl+lWq
-	 KDZFws87/3tTHmXBXyNi/71fagOwT4/zINmfz5GE=
+	b=Gr+UJe0WOph4GOhoflkqfMV9DW8UVr4mVbds5PWeczU9ONmL7nwuS6nGos/CM/hZg
+	 QcreUsFYde8E73AxPaB5X2bs/UTrdrtW0K4u6TuACFvtrZ74j3MoiJfKcR+1x8+QXs
+	 VntfiskblT13MuwnIhy0TwHy3AVgfoR0QTrNyjc4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387665AbgFIR6W (ORCPT
+        id S1732769AbgFIR61 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:58:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47746 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:58:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733240AbgFIRz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:55:27 -0400
+        id S1733235AbgFIRzX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:55:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AB0920812;
-        Tue,  9 Jun 2020 17:55:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4FD420734;
+        Tue,  9 Jun 2020 17:55:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725327;
-        bh=KBJDsnC/ruZzhFkAosuSNvcMKVC5aIEuK5TDQj8MtJI=;
+        s=default; t=1591725323;
+        bh=OwzI0aRK/h+F2kEP/UMIb+22nVLukoXCw8gc0x42/Tg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k8AUT3zz+NbAR3HQJXsz+8j7wQxdvKYzUtfVGzPSX9tslVEd67De8f6V3v1M4du3x
-         PudwIL0ketb0s9clTF6p1Lm3x+dC0HVrvWKCyH2fLo30HnQf3Pna8hZiJ3A6w3uFON
-         pD8ELnObcF0w3oZHzx8pIgZnaWblwyVVOuwD0t2c=
+        b=GhvQ4WK+0agroZSzLtw2tCe2bvkahMg0g+oDh5BB7Lg9tsWnDBPjXcqdLxdIoRBXd
+         sz9Fl20MEaMLaMiwbUIJevpg4wZ7j1BaDpUcdWnc0EwsccxhYJHqxakxPr4jgliegb
+         w3BP9PRKe6s9+YH+p0If9nyStJYDDITP745CnTjc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 5.7 23/24] x86/speculation: Add Ivy Bridge to affected list
-Date:   Tue,  9 Jun 2020 19:45:54 +0200
-Message-Id: <20200609174151.202015474@linuxfoundation.org>
+        stable@vger.kernel.org, Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Maxim Kochetkov <fido_max@inbox.ru>,
+        Josh Triplett <josh@joshtriplett.org>
+Subject: [PATCH 5.7 13/24] serial: 8250: Enable 16550A variants by default on non-x86
+Date:   Tue,  9 Jun 2020 19:45:44 +0200
+Message-Id: <20200609174150.415424984@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174149.255223112@linuxfoundation.org>
 References: <20200609174149.255223112@linuxfoundation.org>
@@ -59,41 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Josh Triplett <josh@joshtriplett.org>
 
-commit 3798cc4d106e91382bfe016caa2edada27c2bb3f upstream
+commit 15a3f03d5ec0118f1e5db3fc1018686e72744e37 upstream.
 
-Make the docs match the code.
+Some embedded devices still use these serial ports; make sure they're
+still enabled by default on architectures more likely to have them, to
+avoid rendering someone's console unavailable.
 
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reported-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Reported-by: Maxim Kochetkov <fido_max@inbox.ru>
+Fixes: dc56ecb81a0a ("serial: 8250: Support disabling mdelay-filled probes of 16550A variants")
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Josh Triplett <josh@joshtriplett.org>
+Link: https://lore.kernel.org/r/a20b5fb7dd295cfb48160eecf4bdebd76332d67d.1590509426.git.josh@joshtriplett.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- Documentation/admin-guide/hw-vuln/special-register-buffer-data-sampling.rst |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/Documentation/admin-guide/hw-vuln/special-register-buffer-data-sampling.rst
-+++ b/Documentation/admin-guide/hw-vuln/special-register-buffer-data-sampling.rst
-@@ -27,6 +27,8 @@ by software using TSX_CTRL_MSR otherwise
-   =============  ============  ========
-   common name    Family_Model  Stepping
-   =============  ============  ========
-+  IvyBridge      06_3AH        All
-+
-   Haswell        06_3CH        All
-   Haswell_L      06_45H        All
-   Haswell_G      06_46H        All
-@@ -37,9 +39,8 @@ by software using TSX_CTRL_MSR otherwise
-   Skylake_L      06_4EH        All
-   Skylake        06_5EH        All
- 
--  Kabylake_L     06_8EH        <=0xC
--
--  Kabylake       06_9EH        <=0xD
-+  Kabylake_L     06_8EH        <= 0xC
-+  Kabylake       06_9EH        <= 0xD
-   =============  ============  ========
- 
- Related CVEs
+---
+ drivers/tty/serial/8250/Kconfig |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/drivers/tty/serial/8250/Kconfig
++++ b/drivers/tty/serial/8250/Kconfig
+@@ -63,6 +63,7 @@ config SERIAL_8250_PNP
+ config SERIAL_8250_16550A_VARIANTS
+ 	bool "Support for variants of the 16550A serial port"
+ 	depends on SERIAL_8250
++	default !X86
+ 	help
+ 	  The 8250 driver can probe for many variants of the venerable 16550A
+ 	  serial port. Doing so takes additional time at boot.
 
 
