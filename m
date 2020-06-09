@@ -2,86 +2,68 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF51C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:49:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F1F1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:50:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3BBE20812
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:49:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591717784;
-	bh=cftoxf7eTWLgxLNNfMKJScg7CB9uhYQT3PXokWq0xF4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QK9TLED7hDs57SzzSxAIuLKnRXymPg7B+f/OeRb3CdZU62N13wxO2s/VWkfARyAub
-	 ctJDGE68bb2U8Tjkr99prTNtfFQ9Vaa3WNL9/dycVi25ZFng+bLniv9bfMaiUMFcMh
-	 y0vtT1ZRPR7pTbhO90yPONuoaX5+y+s1wQz6CLjY=
+	by mail.kernel.org (Postfix) with ESMTP id DEC0420774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:49:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jHtX884D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730960AbgFIPtl (ORCPT
+        id S1730972AbgFIPt5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 11:49:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32778 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730944AbgFIPtk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 11:49:40 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54EAA206A4;
-        Tue,  9 Jun 2020 15:49:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591717780;
-        bh=cftoxf7eTWLgxLNNfMKJScg7CB9uhYQT3PXokWq0xF4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EWjWRScXWtcnYf++U7silmPJbFplH3TnwReqlvYhihZ78m+YCyBoQJJZ5VgqvcFOH
-         xMocALkjR79pqM6W8j7ddzFDiLQDpEVxcJ16cn2+lKzGIy4XSD9Rm83ZElDKjpwHCv
-         6kr9n4O7m6sAOmUeMd6+RhHLg9sN91aerE50WA/g=
-Received: by pali.im (Postfix)
-        id 5893BFB6; Tue,  9 Jun 2020 17:49:38 +0200 (CEST)
-Date:   Tue, 9 Jun 2020 17:49:38 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Mario.Limonciello@dell.com, Sebastian Reichel <sre@kernel.org>
-Cc:     y.linux@paritcher.com, hdegoede@redhat.com,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-pm@vger.kernel.org, mjg59@srcf.ucam.org
-Subject: Re: [PATCH 2/3] platform/x86: dell-wmi: add new keymap type 0x0012
-Message-ID: <20200609154938.udo7mn7ka7z7pr6c@pali>
-References: <cover.1591584631.git.y.linux@paritcher.com>
- <0dc191a3d16f0e114f6a8976433e248018e10c43.1591584631.git.y.linux@paritcher.com>
- <83fe431cacbc4708962767668ac8f06f@AUSX13MPC105.AMER.DELL.COM>
- <79bd59ee-dd37-bdc5-f6b4-00f2c33fdcff@paritcher.com>
- <7f9f0410696141cfabb0237d33b7b529@AUSX13MPC105.AMER.DELL.COM>
+        Tue, 9 Jun 2020 11:49:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51046 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730936AbgFIPtz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 11:49:55 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3893CC05BD1E;
+        Tue,  9 Jun 2020 08:49:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=l2WBiCb5duYJRA9nKpihqrJOH1Qjg6utSrFiu8qAdtc=; b=jHtX884DijMcV0iZfcI2N/Lwtp
+        KYav7vxoWwRRGZu3YyUhRaV0yDPrIydcNZZNJ37+9B/lgaV/vxYar3d8FsiFTEm51H2JBRpfAESY4
+        T6RwLoQ7SV1jm2a85+btKOETBsONIgrhejVyA6GwLdzQ/QsyqkV4BDKMwX6JdhX/TxDjwDa+gn/0P
+        kfQ8PJMrhG6N3aA0CIcik7N4Ky7BkoaEKjJKuA4b0jtZ+7nWRhxWxgAjnL0gFK+8QYlwKyJky22/T
+        T3hrdo02CaPHYH7rSnPlQQblDrIViGMfcHHgV2HJQ7uKyNEu6PbjbKhABYz0vv646VVRUVEeQ8ZpC
+        9qEW+n3A==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jigVb-0000yz-Ib; Tue, 09 Jun 2020 15:49:51 +0000
+Date:   Tue, 9 Jun 2020 08:49:51 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Piotr Stankiewicz <piotr.stankiewicz@intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Jian-Hong Pan <jian-hong@endlessm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 01/15] PCI/MSI: Forward MSI-X vector enable error code
+ in pci_alloc_irq_vectors_affinity()
+Message-ID: <20200609154951.GA2597@infradead.org>
+References: <20200609091148.32749-1-piotr.stankiewicz@intel.com>
+ <20200609091440.497-1-piotr.stankiewicz@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7f9f0410696141cfabb0237d33b7b529@AUSX13MPC105.AMER.DELL.COM>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200609091440.497-1-piotr.stankiewicz@intel.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday 08 June 2020 20:36:58 Mario.Limonciello@dell.com wrote:
-> Can you please comment here how you would like to see events like this should come
-> through to userspace?
-> 
-> * Wrong power adapter (you have X and should have Y)
-> * You have plugged a dock into the wrong port
-> * Fn-lock mode
+Looks good,
 
-In my opinion, Fn-lock mode is related to input subsystem and should be
-probably reported via input device. For a user, fn-lock is similar like
-caps-lock, scroll-lock or num-lock. Also fn-lock is provided by other
-laptops and therefore I would expect that kernel provide fn-lock state
-for all laptops (thinkpad / latitude / ...) via same interface. And not
-via dell-specific interface or general-vendor-message interface.
-
-Wrong power adapter sounds like something related to power subsystem.
-Adding Sebastian to the loop, maybe he can provide some useful ideas
-about it.
-
-And plugged dock into wrong port. This is probably dell-specific event
-and some interface for "vendor" messages from kernel to userspace would
-be needed to deliver such things.
+Reviewed-by: Christoph Hellwig <hch@lst.de>
