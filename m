@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A18C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB02C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 625D120734
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55E13206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:58:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725481;
-	bh=cVDViZWwgHNsufUmT2I+Hp2X1qg/QoZVvKpHAG/7+i8=;
+	s=default; t=1591725486;
+	bh=miLTQdPwzuk9lQFiqP5cxP8nhx922KpR3g6Sz11QT1U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HN6sMZ06zrPXkI6/I27vwDA/1h7cOoOaVLDXrkaSm9OpxCtgKEkII4qPb25+ViNtH
-	 ElNwkiYVAMzJgc4h4qRIpg+te1id7LpFWa8tTg7FbtcQnxtKItib7TEMTygXXayfKV
-	 l5OxkDIKDxwiUc19G6cJ7gNaXgIy5drL5lB4AHsE=
+	b=HhlbfI8bSTzc5aFn/KscfJ3O7HxkeD/0db9mYKd+C8OHz86uGfJT5gNByoWlYU4WE
+	 AKbJpIKngtHDmgqlSX6pWVqnVrrw31JAZbh3Y/9DiaLBiYajuTR5K3tNJzz62Hutko
+	 mG4+Ete/iIK0QKV7utzTl85Zz987VfeFgm3s82MM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731771AbgFIRzj (ORCPT
+        id S1728889AbgFIR6E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:55:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45128 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:58:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731621AbgFIRxv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:53:51 -0400
+        id S1733271AbgFIRzh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:55:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED8CE20774;
-        Tue,  9 Jun 2020 17:53:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A24720812;
+        Tue,  9 Jun 2020 17:55:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725230;
-        bh=cVDViZWwgHNsufUmT2I+Hp2X1qg/QoZVvKpHAG/7+i8=;
+        s=default; t=1591725336;
+        bh=miLTQdPwzuk9lQFiqP5cxP8nhx922KpR3g6Sz11QT1U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hAPwyxAOw1F+WwuWJE6MeFPzxtMg2tT0OqhMoH26skMcDrhCCjoy/T80R99pLkKZl
-         3kTf9s7RRLfShGRN9SmHyhBXD1bLhzN9hftq6cEmzzNrNWsH/QR2aIGwliZPOeyIfg
-         l9l9PsGqMr/lOABNESYK858+CPUoNkimHn+GITE0=
+        b=VhF5im26SG2cedIWsqYpMYE3O/+PQTPgJEj4waEu154iGl3SL4oAVwR4DLOy/tQoK
+         2GnaZd15+xmnGJ6HRN5zTKxCj9lJGyRWflRnRx0NcT+P/0k0gQWi4FI7dwi0gkAsLK
+         AGWAB0bcxNpKbJBwBjxsgOkfiaV4OLjCEi6Al2bI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Hanselmann <public@hansmi.ch>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.6 22/41] USB: serial: ch341: fix lockup of devices with limited prescaler
-Date:   Tue,  9 Jun 2020 19:45:24 +0200
-Message-Id: <20200609174114.240869918@linuxfoundation.org>
+        stable@vger.kernel.org, Pascal Terjan <pterjan@google.com>
+Subject: [PATCH 5.7 16/24] staging: rtl8712: Fix IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK
+Date:   Tue,  9 Jun 2020 19:45:47 +0200
+Message-Id: <20200609174150.650165331@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200609174112.129412236@linuxfoundation.org>
-References: <20200609174112.129412236@linuxfoundation.org>
+In-Reply-To: <20200609174149.255223112@linuxfoundation.org>
+References: <20200609174149.255223112@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,87 +58,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Pascal Terjan <pterjan@google.com>
 
-commit c432df155919582a3cefa35a8f86256c830fa9a4 upstream.
+commit 15ea976a1f12b5fd76b1bd6ff3eb5132fd28047f upstream.
 
-Michael Hanselmann reports that
+The value in shared headers was fixed 9 years ago in commit 8d661f1e462d
+("ieee80211: correct IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK macro") and
+while looking at using shared headers for other duplicated constants
+I noticed this driver uses the old value.
 
-	[a] subset of all CH341 devices stop responding to bulk
-	transfers, usually after the third byte, when the highest
-	prescaler bit (0b100) is set. There is one exception, namely a
-	prescaler of exactly 0b111 (fact=1, ps=3).
+The macros are also defined twice in this file so I am deleting the
+second definition.
 
-Fix this by forcing a lower base clock (fact = 0) whenever needed.
-
-This specifically makes the standard rates 110, 134 and 200 bps work
-again with these devices.
-
-Fixes: 35714565089e ("USB: serial: ch341: reimplement line-speed handling")
-Cc: stable <stable@vger.kernel.org>	# 5.5
-Reported-by: Michael Hanselmann <public@hansmi.ch>
-Link: https://lore.kernel.org/r/20200514141743.GE25962@localhost
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Pascal Terjan <pterjan@google.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200523211247.23262-1-pterjan@google.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/ch341.c |   15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ drivers/staging/rtl8712/wifi.h |    9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
---- a/drivers/usb/serial/ch341.c
-+++ b/drivers/usb/serial/ch341.c
-@@ -73,6 +73,8 @@
- #define CH341_LCR_CS6          0x01
- #define CH341_LCR_CS5          0x00
+--- a/drivers/staging/rtl8712/wifi.h
++++ b/drivers/staging/rtl8712/wifi.h
+@@ -440,7 +440,7 @@ static inline unsigned char *get_hdr_bss
+ /* block-ack parameters */
+ #define IEEE80211_ADDBA_PARAM_POLICY_MASK 0x0002
+ #define IEEE80211_ADDBA_PARAM_TID_MASK 0x003C
+-#define IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK 0xFFA0
++#define IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK 0xFFC0
+ #define IEEE80211_DELBA_PARAM_TID_MASK 0xF000
+ #define IEEE80211_DELBA_PARAM_INITIATOR_MASK 0x0800
  
-+#define CH341_QUIRK_LIMITED_PRESCALER	BIT(0)
-+
- static const struct usb_device_id id_table[] = {
- 	{ USB_DEVICE(0x4348, 0x5523) },
- 	{ USB_DEVICE(0x1a86, 0x7523) },
-@@ -160,9 +162,11 @@ static const speed_t ch341_min_rates[] =
-  *		2 <= div <= 256 if fact = 0, or
-  *		9 <= div <= 256 if fact = 1
-  */
--static int ch341_get_divisor(speed_t speed)
-+static int ch341_get_divisor(struct ch341_private *priv)
- {
- 	unsigned int fact, div, clk_div;
-+	speed_t speed = priv->baud_rate;
-+	bool force_fact0 = false;
- 	int ps;
+@@ -532,13 +532,6 @@ struct ieee80211_ht_addt_info {
+ #define IEEE80211_HT_IE_NON_GF_STA_PRSNT	0x0004
+ #define IEEE80211_HT_IE_NON_HT_STA_PRSNT	0x0010
  
- 	/*
-@@ -188,8 +192,12 @@ static int ch341_get_divisor(speed_t spe
- 	clk_div = CH341_CLK_DIV(ps, fact);
- 	div = CH341_CLKRATE / (clk_div * speed);
- 
-+	/* Some devices require a lower base clock if ps < 3. */
-+	if (ps < 3 && (priv->quirks & CH341_QUIRK_LIMITED_PRESCALER))
-+		force_fact0 = true;
-+
- 	/* Halve base clock (fact = 0) if required. */
--	if (div < 9 || div > 255) {
-+	if (div < 9 || div > 255 || force_fact0) {
- 		div /= 2;
- 		clk_div *= 2;
- 		fact = 0;
-@@ -228,7 +236,7 @@ static int ch341_set_baudrate_lcr(struct
- 	if (!priv->baud_rate)
- 		return -EINVAL;
- 
--	val = ch341_get_divisor(priv->baud_rate);
-+	val = ch341_get_divisor(priv);
- 	if (val < 0)
- 		return -EINVAL;
- 
-@@ -333,6 +341,7 @@ static int ch341_detect_quirks(struct us
- 			    CH341_REG_BREAK, 0, buffer, size, DEFAULT_TIMEOUT);
- 	if (r == -EPIPE) {
- 		dev_dbg(&port->dev, "break control not supported\n");
-+		quirks = CH341_QUIRK_LIMITED_PRESCALER;
- 		r = 0;
- 		goto out;
- 	}
+-/* block-ack parameters */
+-#define IEEE80211_ADDBA_PARAM_POLICY_MASK 0x0002
+-#define IEEE80211_ADDBA_PARAM_TID_MASK 0x003C
+-#define IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK 0xFFA0
+-#define IEEE80211_DELBA_PARAM_TID_MASK 0xF000
+-#define IEEE80211_DELBA_PARAM_INITIATOR_MASK 0x0800
+-
+ /*
+  * A-PMDU buffer sizes
+  * According to IEEE802.11n spec size varies from 8K to 64K (in powers of 2)
 
 
