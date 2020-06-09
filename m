@@ -2,96 +2,175 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BDCC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4544C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD0192078D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:55:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591703734;
-	bh=DZZhGzI+zYbVwAglBZbNEPnQrJ7dihjeI/FOUkhIb4k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qmwfv9VVm4lfULPJ5JJl6tfyPJeKcJbFixWGbb2PXnshEV116P8dDLUWGMIiFup+o
-	 EP7zIwP3Ds36iuYs4MqCs6nlpTA2smW8KTR4b5VxrXc4G+l56enrZSJcE1BeEn2rU2
-	 YdbWT7/5CfhIxRedkdMXCgdUofuZssoa8TooYXmY=
+	by mail.kernel.org (Postfix) with ESMTP id C36092078D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:55:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729166AbgFILzc (ORCPT
+        id S1729179AbgFILzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 07:55:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56328 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 07:55:44 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55612 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726911AbgFILz3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 07:55:29 -0400
-Received: from localhost (unknown [122.171.156.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9277720814;
-        Tue,  9 Jun 2020 11:55:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591703729;
-        bh=DZZhGzI+zYbVwAglBZbNEPnQrJ7dihjeI/FOUkhIb4k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2iLIT+qfuXefaCTB6NGgnXlaQ9kNKUrCXOe2fdo2ImwNm/o+nUFsHDKMzihTxBNB3
-         jJ++fFj5/tYq5RTz5SGC8GP6evZRU5ysoXx0Kz943WE8tiXdwCv14fJVDOhJGOE8pX
-         L3uFLHzuZNySy55RhcaZhTV/Pb/P1iPOa/DUO8g0=
-Date:   Tue, 9 Jun 2020 17:25:25 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Jonathan McDowell <noodles@earth.li>
-Cc:     ansuelsmth@gmail.com,
-        'Bjorn Andersson' <bjorn.andersson@linaro.org>,
-        'Andy Gross' <agross@codeaurora.org>,
-        'Andy Gross' <agross@kernel.org>,
-        'Kishon Vijay Abraham I' <kishon@ti.com>,
-        'Rob Herring' <robh+dt@kernel.org>,
-        'Mark Rutland' <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: R: [PATCH v6 1/2] phy: qualcomm: add qcom ipq806x dwc usb phy
- driver
-Message-ID: <20200609115525.GD1084979@vkoul-mobl>
-References: <20200603132237.6036-1-ansuelsmth@gmail.com>
- <20200604161942.GK311@earth.li>
- <017001d63b5a$c3807740$4a8165c0$@gmail.com>
- <20200609114148.GS311@earth.li>
+        id S1726911AbgFILzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 07:55:40 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 5588EAAD0;
+        Tue,  9 Jun 2020 11:55:42 +0000 (UTC)
+Subject: Re: [PATCH v5 00/18] Rework READ_ONCE() to improve codegen
+To:     Marco Elver <elver@google.com>
+Cc:     Borislav Petkov <bp@alien8.de>, Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+References: <20200513124021.GB20278@willie-the-truck>
+ <CANpmjNM5XW+ufJ6Mw2Tn7aShRCZaUPGcH=u=4Sk5kqLKyf3v5A@mail.gmail.com>
+ <20200513165008.GA24836@willie-the-truck>
+ <CANpmjNN=n59ue06s0MfmRFvKX=WB2NgLgbP6kG_MYCGy2R6PHg@mail.gmail.com>
+ <20200513174747.GB24836@willie-the-truck>
+ <CANpmjNNOpJk0tprXKB_deiNAv_UmmORf1-2uajLhnLWQQ1hvoA@mail.gmail.com>
+ <20200513212520.GC28594@willie-the-truck>
+ <CANpmjNOAi2K6knC9OFUGjpMo-rvtLDzKMb==J=vTRkmaWctFaQ@mail.gmail.com>
+ <20200514110537.GC4280@willie-the-truck> <20200603185220.GA20613@zn.tnic>
+ <20200603192353.GA180529@google.com>
+ <87213fd1-950d-c2d5-4aa0-2f53ea3b505c@suse.cz>
+ <CANpmjNNRz5OVKb6PE7K6GjfoGbht_ZhyPkNG9aD+KjNDzK7hGg@mail.gmail.com>
+From:   =?UTF-8?Q?Martin_Li=c5=a1ka?= <mliska@suse.cz>
+Message-ID: <cf282ae4-892a-a341-07ce-8ea5db6463b7@suse.cz>
+Date:   Tue, 9 Jun 2020 13:55:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200609114148.GS311@earth.li>
+In-Reply-To: <CANpmjNNRz5OVKb6PE7K6GjfoGbht_ZhyPkNG9aD+KjNDzK7hGg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09-06-20, 12:41, Jonathan McDowell wrote:
-> On Fri, Jun 05, 2020 at 07:00:04PM +0200, ansuelsmth@gmail.com wrote:
-> > > On Wed, Jun 03, 2020 at 03:22:34PM +0200, Ansuel Smith wrote:
-> > > > This has lost in the original push for the dwc3 qcom driver.
-> > > > This is needed for ipq806x SoC as without this the usb ports
-> > > > doesn't work at all.
-> > > 
-> > > FWIW I tested this on my RB3011 so feel free to add:
-> > > 
-> > > Tested-by: Jonathan McDowell <noodles@earth.li>
-> > > 
-> > > One minor comment; would PHY_QCOM_USB_IPQ806X not be a better
-> > > choice than PHY_QCOM_IPQ806X_USB given the existing naming?
-> > > 
-> >
-> > Thanks for the feedback. About naming I'm following the sata ipq806x
-> > naming.  I really hope someone gets this and reviews it since usb is
-> > broken for a long time now.
+On 6/8/20 9:56 PM, Marco Elver wrote:
+> On Mon, 8 Jun 2020 at 19:32, Martin Liška <mliska@suse.cz> wrote:
+>>
+>> On 6/3/20 9:23 PM, Marco Elver wrote:
+>>>
+>>>
+>>> On Wed, 03 Jun 2020, Borislav Petkov wrote:
+>>>
+>>>> On Thu, May 14, 2020 at 12:05:38PM +0100, Will Deacon wrote:
+>>>>> Talking off-list, Clang >= 7 is pretty reasonable wrt inlining decisions
+>>>>> and the behaviour for __always_inline is:
+>>>>>
+>>>>>     * An __always_inline function inlined into a __no_sanitize function is
+>>>>>       not instrumented
+>>>>>     * An __always_inline function inlined into an instrumented function is
+>>>>>       instrumented
+>>>>>     * You can't mark a function as both __always_inline __no_sanitize, because
+>>>>>       __no_sanitize functions are never inlined
+>>>>>
+>>>>> GCC, on the other hand, may still inline __no_sanitize functions and then
+>>>>> subsequently instrument them.
+>>>>
+>>>> Yeah, about that: I've been looking for a way to trigger this so that
+>>>> I can show preprocessed source to gcc people. So do you guys have a
+>>>> .config or somesuch I can try?
+>>>
+>>> For example take this:
+>>>
+>>>        int x;
+>>>
+>>>        static inline __attribute__((no_sanitize_thread)) void do_not_sanitize(void) {
+>>>          x++;
+>>>        }
+>>>
+>>>        void sanitize_this(void) {
+>>>          do_not_sanitize();
+>>>        }
+>>>
+>>> Then
+>>>
+>>>        gcc-10 -O3 -fsanitize=thread -o example.o -c example.c
+>>>        objdump -D example.o
+>>
+>> Hello.
+>>
+>> Thank you for the example. It seems to me that Clang does not inline a no_sanitize_* function
+>> into one which is instrumented. Is it a documented behavior ([1] doesn't mention that)?
+>> If so, we can do the same in GCC.
 > 
-> Doesn't seem to have made the 5.8 merge window; I note Vinod has done a
-> bunch of the recent commits to phy/qualcomm/ so adding him to the CC in
-> addition to Kishon.
+> It is not explicitly mentioned in [1]. But the contract of
+> "no_sanitize" is "that a particular instrumentation or set of
+> instrumentations should not be applied". That contract is broken if a
+> function is instrumented, however that may happen. It sadly does
+> happen with GCC when a function is inlined. Presumably because the
+> sanitizer passes for TSAN/ASAN/MSAN run after the optimizer -- this
+> definitely can't change. Also because it currently gives us the
+> property that __always_inline functions are instrumented according to
+> the function they are inlined into (a property we want).
+> 
+> The easy fix to no_sanitize seems to be to do what Clang does, and
+> never inline no_sanitize functions (with or without "inline"
+> attribute).  always_inline functions should remain unchanged
+> (specifying no_sanitize on an always_inline function is an error).
 
-It is too late for 5.8 now, please rebase and resend it after rc1 is
-tagged
+Hello.
 
-Thanks
--- 
-~Vinod
+Works for me and I've just sent patch for that:
+https://gcc.gnu.org/pipermail/gcc-patches/2020-June/547618.html
+
+> 
+> Note this applies to all sanitizers (TSAN/ASAN/MSAN) and their
+> no_sanitize attribute that GCC has.
+
+Sure.
+
+> 
+> The list of requirements were also summarized in more detail here:
+> https://lore.kernel.org/lkml/CANpmjNMTsY_8241bS7=XAfqvZHFLrVEkv_uM4aDUWE_kh3Rvbw@mail.gmail.com/
+> 
+> Hope that makes sense. (I also need to send a v2 for param
+> tsan-distinguish-volatile, but haven't gotten around to it yet --
+> hopefully soon.
+
+The patch is approved now.
+
+  And then we also need a param
+> tsan-instrument-func-entry-exit, which LLVM has for TSAN. One step at
+> a time though.)
+
+Yes, please send a patch for it.
+
+Martin
+
+> 
+> Thanks,
+> -- Marco
+> 
+> 
+>> Thanks,
+>> Martin
+>>
+>> [1] https://clang.llvm.org/docs/AttributeReference.html#no-sanitize
+>>
+>>>
+>>> will show that do_not_sanitize() was inlined into sanitize_this() and is
+>>> instrumented. (With Clang this doesn't happen.)
+>>>
+>>> Hope this is enough.
+>>>
+>>> Thanks,
+>>> -- Marco
+>>>
+>>
+
