@@ -6,39 +6,35 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC47C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA35CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6131A20760
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:44:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB3F520760
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:44:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730200AbgFINos (ORCPT
+        id S1730214AbgFINoz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 09:44:48 -0400
-Received: from verein.lst.de ([213.95.11.211]:42516 "EHLO verein.lst.de"
+        Tue, 9 Jun 2020 09:44:55 -0400
+Received: from verein.lst.de ([213.95.11.211]:42520 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726803AbgFINor (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 09:44:47 -0400
+        id S1726803AbgFINoz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 09:44:55 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 7E1CF68BEB; Tue,  9 Jun 2020 15:44:44 +0200 (CEST)
-Date:   Tue, 9 Jun 2020 15:44:43 +0200
+        id 1915C68B02; Tue,  9 Jun 2020 15:44:53 +0200 (CEST)
+Date:   Tue, 9 Jun 2020 15:44:52 +0200
 From:   Christoph Hellwig <hch@lst.de>
-To:     Niklas Cassel <niklas.cassel@wdc.com>
+To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
 Cc:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
         Christoph Hellwig <hch@lst.de>,
         Sagi Grimberg <sagi@grimberg.me>,
-        James Smart <james.smart@broadcom.com>,
-        Israel Rukshin <israelr@mellanox.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
         linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] nvme: do not call del_gendisk() on a disk that was
- never added
-Message-ID: <20200609134443.GA10030@lst.de>
-References: <20200607114520.130756-1-niklas.cassel@wdc.com>
+Subject: Re: [PATCH] nvme-tcp: constify static struct blk_mq_ops
+Message-ID: <20200609134452.GB10030@lst.de>
+References: <20200528222507.390172-1-rikard.falkeborn@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200607114520.130756-1-niklas.cassel@wdc.com>
+In-Reply-To: <20200528222507.390172-1-rikard.falkeborn@gmail.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
