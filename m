@@ -2,51 +2,53 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0279C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:20:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF791C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:20:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7506E2067B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:20:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0ECC2068D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:20:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591726839;
-	bh=X3vyRBVH4/GkTFt4U+nAcaxH2bkam9sS8gFS67sK6EU=;
+	s=default; t=1591726846;
+	bh=I8e9rXkiQJBJOMniruow/r9QenuLuPUf8wI/t2e2w7I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wg/WXRxwbleSu+W+DQWfi4yOFybFLZcAFl8nXg2fJIkANV+K9FB7IKDzRtM0+0yfm
-	 EPsPOuWBrhs7dAP3fV9hbsHMdI6TkPYIHFfM0eaBPwpcUUzqKP0favPQJWVUEfA92o
-	 ozR+IUQhiUuyZyw0vVO+X6naYK60HJjAy9jN0ffc=
+	b=oCQmz71yMiM8VlBpDYfga57+otq/DcstF6Tlqim0lOgJ3EGWpNN6aBfnr3TEYNEHv
+	 OFyKaIIgIoWsp7DNVVFLH8v2mYkuViqVQmI7kEHSpvR9HD9TqRwHOLyuCMr5/B4eTS
+	 6agNzJja3sJ6IRulHmx8ig6hpQ/o4lp6SI0tRJOc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732599AbgFISUi (ORCPT
+        id S1733005AbgFISUp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:20:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34054 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 14:20:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730870AbgFIRs5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:48:57 -0400
+        id S1732334AbgFIRsu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:48:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52725207ED;
-        Tue,  9 Jun 2020 17:48:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FB9620801;
+        Tue,  9 Jun 2020 17:48:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591724936;
-        bh=X3vyRBVH4/GkTFt4U+nAcaxH2bkam9sS8gFS67sK6EU=;
+        s=default; t=1591724929;
+        bh=I8e9rXkiQJBJOMniruow/r9QenuLuPUf8wI/t2e2w7I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tfVn5C5DIslctcTwcxp7NUnsQ1YWNwKergUqSaIU2AdZ++i5g3AQKIb0gHdVgQ2VS
-         8hbr1UvYBl7+FWQS4aCUzezdzofmAkmSUSd4Tr6TbsxSHlKZngh5bQ0C655GdmM5Fv
-         GbW4DcE7EOvheWR2NKcC2jhZq5g7PfuXYB27Q3xM=
+        b=wZ4h7GifXSawG66L9AoAWj3i4CTM/hfAmNNFNlo7OEE7IpxrFyKusuEyyCSyBU4AF
+         Z9CGz7mX2gIy1xmtMockt4iXgR+LAw1JP6DgLIE9JJmckYiyRgLzPRhOtRjaq7SNpM
+         8tz/a8syih/fJwodoAUs6MhOK/t7i/TCK5v+hYxo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        Bin Liu <b-liu@ti.com>
-Subject: [PATCH 4.9 31/42] usb: musb: Fix runtime PM imbalance on error
-Date:   Tue,  9 Jun 2020 19:44:37 +0200
-Message-Id: <20200609174018.888846237@linuxfoundation.org>
+        stable@vger.kernel.org, Mathieu Othacehe <m.othacehe@gmail.com>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 41/42] iio: vcnl4000: Fix i2c swapped word reading.
+Date:   Tue,  9 Jun 2020 19:44:47 +0200
+Message-Id: <20200609174020.075090473@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174015.379493548@linuxfoundation.org>
 References: <20200609174015.379493548@linuxfoundation.org>
@@ -59,54 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dinghao Liu <dinghao.liu@zju.edu.cn>
+From: Mathieu Othacehe <m.othacehe@gmail.com>
 
-commit e4befc121df03dc8ed2ac1031c98f9538e244bae upstream.
+[ Upstream commit 18dfb5326370991c81a6d1ed6d1aeee055cb8c05 ]
 
-When copy_from_user() returns an error code, there
-is a runtime PM usage counter imbalance.
+The bytes returned by the i2c reading need to be swapped
+unconditionally. Otherwise, on be16 platforms, an incorrect value will be
+returned.
 
-Fix this by moving copy_from_user() to the beginning
-of this function.
+Taking the slow path via next merge window as its been around a while
+and we have a patch set dependent on this which would be held up.
 
-Fixes: 7b6c1b4c0e1e ("usb: musb: fix runtime PM in debugfs")
-
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-Cc: stable@vger.kernel.org
-Signed-off-by: Bin Liu <b-liu@ti.com>
-Link: https://lore.kernel.org/r/20200525025049.3400-7-b-liu@ti.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 62a1efb9f868 ("iio: add vcnl4000 combined ALS and proximity sensor")
+Signed-off-by: Mathieu Othacehe <m.othacehe@gmail.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/musb/musb_debugfs.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/iio/light/vcnl4000.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
---- a/drivers/usb/musb/musb_debugfs.c
-+++ b/drivers/usb/musb/musb_debugfs.c
-@@ -200,6 +200,11 @@ static ssize_t musb_test_mode_write(stru
- 	u8			test;
- 	char			buf[18];
+diff --git a/drivers/iio/light/vcnl4000.c b/drivers/iio/light/vcnl4000.c
+index 360b6e98137a..5a3a532937ba 100644
+--- a/drivers/iio/light/vcnl4000.c
++++ b/drivers/iio/light/vcnl4000.c
+@@ -61,7 +61,6 @@ static int vcnl4000_measure(struct vcnl4000_data *data, u8 req_mask,
+ 				u8 rdy_mask, u8 data_reg, int *val)
+ {
+ 	int tries = 20;
+-	__be16 buf;
+ 	int ret;
  
-+	memset(buf, 0x00, sizeof(buf));
-+
-+	if (copy_from_user(buf, ubuf, min_t(size_t, sizeof(buf) - 1, count)))
-+		return -EFAULT;
-+
- 	pm_runtime_get_sync(musb->controller);
- 	test = musb_readb(musb->mregs, MUSB_TESTMODE);
- 	if (test) {
-@@ -208,11 +213,6 @@ static ssize_t musb_test_mode_write(stru
- 		goto ret;
+ 	mutex_lock(&data->lock);
+@@ -88,13 +87,12 @@ static int vcnl4000_measure(struct vcnl4000_data *data, u8 req_mask,
+ 		goto fail;
  	}
  
--	memset(buf, 0x00, sizeof(buf));
--
--	if (copy_from_user(buf, ubuf, min_t(size_t, sizeof(buf) - 1, count)))
--		return -EFAULT;
--
- 	if (strstarts(buf, "force host"))
- 		test = MUSB_TEST_FORCE_HOST;
+-	ret = i2c_smbus_read_i2c_block_data(data->client,
+-		data_reg, sizeof(buf), (u8 *) &buf);
++	ret = i2c_smbus_read_word_swapped(data->client, data_reg);
+ 	if (ret < 0)
+ 		goto fail;
  
+ 	mutex_unlock(&data->lock);
+-	*val = be16_to_cpu(buf);
++	*val = ret;
+ 
+ 	return 0;
+ 
+-- 
+2.25.1
+
 
 
