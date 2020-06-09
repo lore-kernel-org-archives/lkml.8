@@ -2,281 +2,215 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 523B2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 08:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0372C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 08:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30ADF206D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 08:54:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2C022078D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 08:54:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZsAh8yRo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728309AbgFIIyK (ORCPT
+        id S1728324AbgFIIyn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 04:54:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43262 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728243AbgFIIxx (ORCPT
+        Tue, 9 Jun 2020 04:54:43 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53264 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728243AbgFIIym (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 04:53:53 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED9A2C05BD43;
-        Tue,  9 Jun 2020 01:53:52 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jia10-0005d0-1E; Tue, 09 Jun 2020 10:53:50 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A48B91C0475;
-        Tue,  9 Jun 2020 10:53:49 +0200 (CEST)
-Date:   Tue, 09 Jun 2020 08:53:49 -0000
-From:   "tip-bot2 for Anthony Steinhauser" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/speculation: Avoid force-disabling IBPB based
- on STIBP and enhanced IBRS.
-Cc:     Anthony Steinhauser <asteinhauser@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>, stable@vger.kernel.org,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+        Tue, 9 Jun 2020 04:54:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591692880;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=eLblsTqKUjq9s36ScyyJ5e0rwCHkqC/nIIt9NNzbhvM=;
+        b=ZsAh8yRoJ4LaRx0Po/jxsM1MEQPza6eMcybwpqsb1dEBLLTYKB/Wj70VH/lw6DfrH4OaRt
+        6D8ftfx/efE7imdWwV3dRjyy+Aeiinmq159BFF1Q8WLHYzmpVzrCSJH2kTuarNCKl8xcZF
+        IcmO/vzBy+mYNs2WRdgvMyYSPO5dK8c=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-417-sbCYSFYpNIuV7naGCe-jug-1; Tue, 09 Jun 2020 04:54:36 -0400
+X-MC-Unique: sbCYSFYpNIuV7naGCe-jug-1
+Received: by mail-wr1-f72.google.com with SMTP id r5so8340833wrt.9
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 01:54:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=eLblsTqKUjq9s36ScyyJ5e0rwCHkqC/nIIt9NNzbhvM=;
+        b=B+vxad2WBVjMUsuFqZVFUfmEYzbfN5wU2vrKX81Zro/4zz2dD0McT6nMkMUh4Hof22
+         V51xkHfQ88D2w+WllZ+kwrhRTR4V9/UeYq6gIsPrUt3G7RCZCzlb/yUPwjoJhmY8/Ja1
+         zb/xUwBddUMV/MmBXSZc5NsvCjNawbC/vG/a4/hdEE3/oRwhzzhC50MTbYHetPiTXGtu
+         cYnPwro8H5LOfnEUuDaIN0XQQmFoL9ije59ZUMDnW2RF+SZBiv9T4UVqjsemxMoSotPN
+         Dmfpdv3TfvrU1ahdwVePA8umiZFgRensQblKEffCPdK646VZ+R4dVijbdQq7q7U3xCLy
+         lUpg==
+X-Gm-Message-State: AOAM532BaoieHuJGhTHRyzjc19xEEwvBhB2m/rcu1Ua4jDgT74og4xFd
+        I7wbNuZ7IJOaSTXUtw9Y5tsGjY42aTyTeKHvsjIviYOEwETmFM+UtAtI4/NruaXvH6qI03UHXkF
+        1GFmLS/84TnIEsup/6w2AwrLv
+X-Received: by 2002:a1c:a403:: with SMTP id n3mr2869970wme.2.1591692875662;
+        Tue, 09 Jun 2020 01:54:35 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyk64DUIN2AMFcBfNkspM6xbGkxn8iVwgRRfLpEaDpf6XV5Ei2C8wWXXvmjDinm5JkdkQF20w==
+X-Received: by 2002:a1c:a403:: with SMTP id n3mr2869949wme.2.1591692875327;
+        Tue, 09 Jun 2020 01:54:35 -0700 (PDT)
+Received: from ?IPv6:2a01:cb14:499:3d00:cd47:f651:9d80:157a? ([2a01:cb14:499:3d00:cd47:f651:9d80:157a])
+        by smtp.gmail.com with ESMTPSA id o20sm2605541wra.29.2020.06.09.01.54.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jun 2020 01:54:34 -0700 (PDT)
+Subject: Re: [RFC][PATCH v4 01/32] objtool: Prepare to merge recordmcount
+To:     Matt Helsley <mhelsley@vmware.com>, linux-kernel@vger.kernel.org
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+References: <cover.1591125127.git.mhelsley@vmware.com>
+ <4a71852d8ca0a245588159a6bbdc064619de91d9.1591125127.git.mhelsley@vmware.com>
+From:   Julien Thierry <jthierry@redhat.com>
+Message-ID: <1e2783f2-6b52-d750-ecc5-4e3d6d7dba4f@redhat.com>
+Date:   Tue, 9 Jun 2020 09:54:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Message-ID: <159169282952.17951.3529693809120577424.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <4a71852d8ca0a245588159a6bbdc064619de91d9.1591125127.git.mhelsley@vmware.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+Hi Matt,
 
-Commit-ID:     21998a351512eba4ed5969006f0c55882d995ada
-Gitweb:        https://git.kernel.org/tip/21998a351512eba4ed5969006f0c55882d995ada
-Author:        Anthony Steinhauser <asteinhauser@google.com>
-AuthorDate:    Tue, 19 May 2020 06:40:42 -07:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 09 Jun 2020 10:50:54 +02:00
+On 6/2/20 8:49 PM, Matt Helsley wrote:
+> Move recordmcount into the objtool directory. We keep this step separate
+> so changes which turn recordmcount into a subcommand of objtool don't
+> get obscured.
+> 
+> Signed-off-by: Matt Helsley <mhelsley@vmware.com>
+> ---
+>   Documentation/trace/ftrace-design.rst      |  4 ++--
+>   Documentation/trace/ftrace.rst             |  2 +-
+>   Makefile                                   | 15 +++++++++------
+>   scripts/.gitignore                         |  1 -
+>   scripts/Makefile                           |  1 -
+>   scripts/Makefile.build                     | 11 ++++++-----
+>   tools/objtool/.gitignore                   |  1 +
+>   tools/objtool/Build                        |  2 ++
+>   tools/objtool/Makefile                     | 13 ++++++++++++-
+>   {scripts => tools/objtool}/recordmcount.c  |  0
+>   {scripts => tools/objtool}/recordmcount.h  |  0
+>   {scripts => tools/objtool}/recordmcount.pl |  0
+>   12 files changed, 33 insertions(+), 17 deletions(-)
+>   rename {scripts => tools/objtool}/recordmcount.c (100%)
+>   rename {scripts => tools/objtool}/recordmcount.h (100%)
+>   rename {scripts => tools/objtool}/recordmcount.pl (100%)
+> 
+> diff --git a/Documentation/trace/ftrace-design.rst b/Documentation/trace/ftrace-design.rst
+> index a8e22e0db63c..dea8db5e79d0 100644
+> --- a/Documentation/trace/ftrace-design.rst
+> +++ b/Documentation/trace/ftrace-design.rst
+> @@ -261,7 +261,7 @@ You need very few things to get the syscalls tracing in an arch.
+>   HAVE_FTRACE_MCOUNT_RECORD
+>   -------------------------
+>   
+> -See scripts/recordmcount.pl for more info.  Just fill in the arch-specific
+> +See tools/objtool/recordmcount.pl for more info.  Just fill in the arch-specific
+>   details for how to locate the addresses of mcount call sites via objdump.
+>   This option doesn't make much sense without also implementing dynamic ftrace.
+>   
+> @@ -379,7 +379,7 @@ linux/ftrace.h for the functions::
+>   	ftrace_make_call()
+>   
+>   The rec->ip value is the address of the mcount call site that was collected
+> -by the scripts/recordmcount.pl during build time.
+> +by the tools/objtool/recordmcount.pl during build time.
+>   
+>   The last function is used to do runtime patching of the active tracer.  This
+>   will be modifying the assembly code at the location of the ftrace_call symbol
+> diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
+> index 3b5614b1d1a5..9adefcc3c7a8 100644
+> --- a/Documentation/trace/ftrace.rst
+> +++ b/Documentation/trace/ftrace.rst
+> @@ -2685,7 +2685,7 @@ starts of pointing to a simple return. (Enabling FTRACE will
+>   include the -pg switch in the compiling of the kernel.)
+>   
+>   At compile time every C file object is run through the
+> -recordmcount program (located in the scripts directory). This
+> +recordmcount program (located in the tools/objtool directory). This
+>   program will parse the ELF headers in the C object to find all
+>   the locations in the .text section that call mcount. Starting
+>   with gcc version 4.6, the -mfentry has been added for x86, which
+> diff --git a/Makefile b/Makefile
+> index 04f5662ae61a..d353a0a65a71 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -844,6 +844,7 @@ ifdef CONFIG_DYNAMIC_FTRACE
+>   	ifdef CONFIG_HAVE_C_RECORDMCOUNT
+>   		BUILD_C_RECORDMCOUNT := y
+>   		export BUILD_C_RECORDMCOUNT
+> +		objtool_target := tools/objtool FORCE
+>   	endif
+>   endif
+>   endif
+> @@ -1023,10 +1024,10 @@ endif
+>   export mod_sign_cmd
+>   
+>   HOST_LIBELF_LIBS = $(shell pkg-config libelf --libs 2>/dev/null || echo -lelf)
+> +has_libelf := $(call try-run,\
+> +		echo "int main() {}" | $(HOSTCC) -xc -o /dev/null $(HOST_LIBELF_LIBS) -,1,0)
+>   
 
-x86/speculation: Avoid force-disabling IBPB based on STIBP and enhanced IBRS.
+Maybe there could be some build dependency, e.g. CONFIG_OBJTOOL_SUBCMDS 
+that sets the "objtool_target" and "has_libelf" when selected.
 
-When STIBP is unavailable or enhanced IBRS is available, Linux
-force-disables the IBPB mitigation of Spectre-BTB even when simultaneous
-multithreading is disabled. While attempts to enable IBPB using
-prctl(PR_SET_SPECULATION_CTRL, PR_SPEC_INDIRECT_BRANCH, ...) fail with
-EPERM, the seccomp syscall (or its prctl(PR_SET_SECCOMP, ...) equivalent)
-which are used e.g. by Chromium or OpenSSH succeed with no errors but the
-application remains silently vulnerable to cross-process Spectre v2 attacks
-(classical BTB poisoning). At the same time the SYSFS reporting
-(/sys/devices/system/cpu/vulnerabilities/spectre_v2) displays that IBPB is
-conditionally enabled when in fact it is unconditionally disabled.
+Then the CONFIG_UNWINDER_ORC, RECORD_MCOUNT and STACK_VALIDATION would 
+just had to select that config option.
 
-STIBP is useful only when SMT is enabled. When SMT is disabled and STIBP is
-unavailable, it makes no sense to force-disable also IBPB, because IBPB
-protects against cross-process Spectre-BTB attacks regardless of the SMT
-state. At the same time since missing STIBP was only observed on AMD CPUs,
-AMD does not recommend using STIBP, but recommends using IBPB, so disabling
-IBPB because of missing STIBP goes directly against AMD's advice:
-https://developer.amd.com/wp-content/resources/Architecture_Guidelines_Update_Indirect_Branch_Control.pdf
+>   ifdef CONFIG_STACK_VALIDATION
+> -  has_libelf := $(call try-run,\
+> -		echo "int main() {}" | $(HOSTCC) -xc -o /dev/null $(HOST_LIBELF_LIBS) -,1,0)
+>     ifeq ($(has_libelf),1)
+>       objtool_target := tools/objtool FORCE
+>     else
+> @@ -1163,13 +1164,15 @@ uapi-asm-generic:
+>   
+>   PHONY += prepare-objtool
+>   prepare-objtool: $(objtool_target)
+> -ifeq ($(SKIP_STACK_VALIDATION),1)
+> -ifdef CONFIG_UNWINDER_ORC
+> +ifneq ($(has_libelf),1)
+> +  ifdef CONFIG_UNWINDER_ORC
+>   	@echo "error: Cannot generate ORC metadata for CONFIG_UNWINDER_ORC=y, please install libelf-dev, libelf-devel or elfutils-libelf-devel" >&2
+>   	@false
+> -else
+> +  else
+> +    ifeq ($(SKIP_STACK_VALIDATION),1)
+>   	@echo "warning: Cannot use CONFIG_STACK_VALIDATION=y, please install libelf-dev, libelf-devel or elfutils-libelf-devel" >&2
 
-Similarly, enhanced IBRS is designed to protect cross-core BTB poisoning
-and BTB-poisoning attacks from user space against kernel (and
-BTB-poisoning attacks from guest against hypervisor), it is not designed
-to prevent cross-process (or cross-VM) BTB poisoning between processes (or
-VMs) running on the same core. Therefore, even with enhanced IBRS it is
-necessary to flush the BTB during context-switches, so there is no reason
-to force disable IBPB when enhanced IBRS is available.
 
-Enable the prctl control of IBPB even when STIBP is unavailable or enhanced
-IBRS is available.
+I think this would be more readable without the else branch:
 
-Fixes: 7cc765a67d8e ("x86/speculation: Enable prctl mode for spectre_v2_user")
-Signed-off-by: Anthony Steinhauser <asteinhauser@google.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
----
- arch/x86/kernel/cpu/bugs.c | 87 +++++++++++++++++++++----------------
- 1 file changed, 50 insertions(+), 37 deletions(-)
+	ifneq ($(has_libelf),1)
+		ifdef <some objtool command config>
+			<warn about unavailability>
+		endif
+		ifdef <another objtool command config>
+			<warn ...>
+		endif
+		<...>
+	endif
 
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index ed54b3b..8d57562 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -495,7 +495,9 @@ early_param("nospectre_v1", nospectre_v1_cmdline);
- static enum spectre_v2_mitigation spectre_v2_enabled __ro_after_init =
- 	SPECTRE_V2_NONE;
- 
--static enum spectre_v2_user_mitigation spectre_v2_user __ro_after_init =
-+static enum spectre_v2_user_mitigation spectre_v2_user_stibp __ro_after_init =
-+	SPECTRE_V2_USER_NONE;
-+static enum spectre_v2_user_mitigation spectre_v2_user_ibpb __ro_after_init =
- 	SPECTRE_V2_USER_NONE;
- 
- #ifdef CONFIG_RETPOLINE
-@@ -641,15 +643,6 @@ spectre_v2_user_select_mitigation(enum spectre_v2_mitigation_cmd v2_cmd)
- 		break;
- 	}
- 
--	/*
--	 * At this point, an STIBP mode other than "off" has been set.
--	 * If STIBP support is not being forced, check if STIBP always-on
--	 * is preferred.
--	 */
--	if (mode != SPECTRE_V2_USER_STRICT &&
--	    boot_cpu_has(X86_FEATURE_AMD_STIBP_ALWAYS_ON))
--		mode = SPECTRE_V2_USER_STRICT_PREFERRED;
--
- 	/* Initialize Indirect Branch Prediction Barrier */
- 	if (boot_cpu_has(X86_FEATURE_IBPB)) {
- 		setup_force_cpu_cap(X86_FEATURE_USE_IBPB);
-@@ -672,23 +665,36 @@ spectre_v2_user_select_mitigation(enum spectre_v2_mitigation_cmd v2_cmd)
- 		pr_info("mitigation: Enabling %s Indirect Branch Prediction Barrier\n",
- 			static_key_enabled(&switch_mm_always_ibpb) ?
- 			"always-on" : "conditional");
-+
-+		spectre_v2_user_ibpb = mode;
- 	}
- 
--	/* If enhanced IBRS is enabled no STIBP required */
--	if (spectre_v2_enabled == SPECTRE_V2_IBRS_ENHANCED)
-+	/*
-+	 * If enhanced IBRS is enabled or SMT impossible, STIBP is not
-+	 * required.
-+	 */
-+	if (!smt_possible || spectre_v2_enabled == SPECTRE_V2_IBRS_ENHANCED)
- 		return;
- 
- 	/*
--	 * If SMT is not possible or STIBP is not available clear the STIBP
--	 * mode.
-+	 * At this point, an STIBP mode other than "off" has been set.
-+	 * If STIBP support is not being forced, check if STIBP always-on
-+	 * is preferred.
-+	 */
-+	if (mode != SPECTRE_V2_USER_STRICT &&
-+	    boot_cpu_has(X86_FEATURE_AMD_STIBP_ALWAYS_ON))
-+		mode = SPECTRE_V2_USER_STRICT_PREFERRED;
-+
-+	/*
-+	 * If STIBP is not available, clear the STIBP mode.
- 	 */
--	if (!smt_possible || !boot_cpu_has(X86_FEATURE_STIBP))
-+	if (!boot_cpu_has(X86_FEATURE_STIBP))
- 		mode = SPECTRE_V2_USER_NONE;
-+
-+	spectre_v2_user_stibp = mode;
-+
- set_mode:
--	spectre_v2_user = mode;
--	/* Only print the STIBP mode when SMT possible */
--	if (smt_possible)
--		pr_info("%s\n", spectre_v2_user_strings[mode]);
-+	pr_info("%s\n", spectre_v2_user_strings[mode]);
- }
- 
- static const char * const spectre_v2_strings[] = {
-@@ -921,7 +927,7 @@ void cpu_bugs_smt_update(void)
- {
- 	mutex_lock(&spec_ctrl_mutex);
- 
--	switch (spectre_v2_user) {
-+	switch (spectre_v2_user_stibp) {
- 	case SPECTRE_V2_USER_NONE:
- 		break;
- 	case SPECTRE_V2_USER_STRICT:
-@@ -1164,14 +1170,16 @@ static int ib_prctl_set(struct task_struct *task, unsigned long ctrl)
- {
- 	switch (ctrl) {
- 	case PR_SPEC_ENABLE:
--		if (spectre_v2_user == SPECTRE_V2_USER_NONE)
-+		if (spectre_v2_user_ibpb == SPECTRE_V2_USER_NONE &&
-+		    spectre_v2_user_stibp == SPECTRE_V2_USER_NONE)
- 			return 0;
- 		/*
- 		 * Indirect branch speculation is always disabled in strict
- 		 * mode.
- 		 */
--		if (spectre_v2_user == SPECTRE_V2_USER_STRICT ||
--		    spectre_v2_user == SPECTRE_V2_USER_STRICT_PREFERRED)
-+		if (spectre_v2_user_ibpb == SPECTRE_V2_USER_STRICT ||
-+		    spectre_v2_user_stibp == SPECTRE_V2_USER_STRICT ||
-+		    spectre_v2_user_stibp == SPECTRE_V2_USER_STRICT_PREFERRED)
- 			return -EPERM;
- 		task_clear_spec_ib_disable(task);
- 		task_update_spec_tif(task);
-@@ -1182,10 +1190,12 @@ static int ib_prctl_set(struct task_struct *task, unsigned long ctrl)
- 		 * Indirect branch speculation is always allowed when
- 		 * mitigation is force disabled.
- 		 */
--		if (spectre_v2_user == SPECTRE_V2_USER_NONE)
-+		if (spectre_v2_user_ibpb == SPECTRE_V2_USER_NONE &&
-+		    spectre_v2_user_stibp == SPECTRE_V2_USER_NONE)
- 			return -EPERM;
--		if (spectre_v2_user == SPECTRE_V2_USER_STRICT ||
--		    spectre_v2_user == SPECTRE_V2_USER_STRICT_PREFERRED)
-+		if (spectre_v2_user_ibpb == SPECTRE_V2_USER_STRICT ||
-+		    spectre_v2_user_stibp == SPECTRE_V2_USER_STRICT ||
-+		    spectre_v2_user_stibp == SPECTRE_V2_USER_STRICT_PREFERRED)
- 			return 0;
- 		task_set_spec_ib_disable(task);
- 		if (ctrl == PR_SPEC_FORCE_DISABLE)
-@@ -1216,7 +1226,8 @@ void arch_seccomp_spec_mitigate(struct task_struct *task)
- {
- 	if (ssb_mode == SPEC_STORE_BYPASS_SECCOMP)
- 		ssb_prctl_set(task, PR_SPEC_FORCE_DISABLE);
--	if (spectre_v2_user == SPECTRE_V2_USER_SECCOMP)
-+	if (spectre_v2_user_ibpb == SPECTRE_V2_USER_SECCOMP ||
-+	    spectre_v2_user_stibp == SPECTRE_V2_USER_SECCOMP)
- 		ib_prctl_set(task, PR_SPEC_FORCE_DISABLE);
- }
- #endif
-@@ -1247,22 +1258,24 @@ static int ib_prctl_get(struct task_struct *task)
- 	if (!boot_cpu_has_bug(X86_BUG_SPECTRE_V2))
- 		return PR_SPEC_NOT_AFFECTED;
- 
--	switch (spectre_v2_user) {
--	case SPECTRE_V2_USER_NONE:
-+	if (spectre_v2_user_ibpb == SPECTRE_V2_USER_NONE &&
-+	    spectre_v2_user_stibp == SPECTRE_V2_USER_NONE)
- 		return PR_SPEC_ENABLE;
--	case SPECTRE_V2_USER_PRCTL:
--	case SPECTRE_V2_USER_SECCOMP:
-+	else if (spectre_v2_user_ibpb == SPECTRE_V2_USER_STRICT ||
-+	    spectre_v2_user_stibp == SPECTRE_V2_USER_STRICT ||
-+	    spectre_v2_user_stibp == SPECTRE_V2_USER_STRICT_PREFERRED)
-+		return PR_SPEC_DISABLE;
-+	else if (spectre_v2_user_ibpb == SPECTRE_V2_USER_PRCTL ||
-+	    spectre_v2_user_ibpb == SPECTRE_V2_USER_SECCOMP ||
-+	    spectre_v2_user_stibp == SPECTRE_V2_USER_PRCTL ||
-+	    spectre_v2_user_stibp == SPECTRE_V2_USER_SECCOMP) {
- 		if (task_spec_ib_force_disable(task))
- 			return PR_SPEC_PRCTL | PR_SPEC_FORCE_DISABLE;
- 		if (task_spec_ib_disable(task))
- 			return PR_SPEC_PRCTL | PR_SPEC_DISABLE;
- 		return PR_SPEC_PRCTL | PR_SPEC_ENABLE;
--	case SPECTRE_V2_USER_STRICT:
--	case SPECTRE_V2_USER_STRICT_PREFERRED:
--		return PR_SPEC_DISABLE;
--	default:
-+	} else
- 		return PR_SPEC_NOT_AFFECTED;
--	}
- }
- 
- int arch_prctl_spec_ctrl_get(struct task_struct *task, unsigned long which)
-@@ -1501,7 +1514,7 @@ static char *stibp_state(void)
- 	if (spectre_v2_enabled == SPECTRE_V2_IBRS_ENHANCED)
- 		return "";
- 
--	switch (spectre_v2_user) {
-+	switch (spectre_v2_user_stibp) {
- 	case SPECTRE_V2_USER_NONE:
- 		return ", STIBP: disabled";
- 	case SPECTRE_V2_USER_STRICT:
+
+Cheers,
+
+-- 
+Julien Thierry
+
