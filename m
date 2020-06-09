@@ -2,113 +2,198 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 241F6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DADDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:50:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3F2A207C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:50:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IG5ZWN6A"
+	by mail.kernel.org (Postfix) with ESMTP id 6A100207ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:50:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591725040;
+	bh=5IN/lGGbzu1eRrZ/kosjpWT3H5V83nkEOUQyBgm4mx8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=PlIr+x9QkVOJjzHifRtzNToTZco/fYMqQBBGuzz8r2FwBQAGoo4fdshuFHSKLAfNl
+	 5fxeXpShC5nHFHx5N6+D/zEA/mGOiprBOZQD5L4cwtu0DKyX+xwAuslpN9HT5gB1ye
+	 hvaY7+LIv47Pyct3hfxWhDt8Goec5ZvWfv/PlIyg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732701AbgFIRud (ORCPT
+        id S1732710AbgFIRui (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:50:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41392 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732599AbgFIRt7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:49:59 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93B52C05BD1E
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 10:49:59 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id q16so8327616plr.2
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 10:49:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Jxw7SQE7IH2X4d9HfgPhhYW34Jo16ukZRQvK9MgirSU=;
-        b=IG5ZWN6Awq8yhiA2Np+VMzFdkY6ggmVPtGvmKZaaOE2sIL2OyyYtxrW+J1EaP8c7VE
-         rWKPAStlOVi4LznxoRCaje1R98TtgwMyFPXewLSepVH8AQK8U+zuG8AWrOAQUlTci5nR
-         oi2IheCskDUY7qIAb7oQTHAqcOQbO2tGzbq50DbMl9dw7iAAtH3uJj43KHMnR/kP/cgO
-         PQUo/03EPMTy5RkrfARr9IA7EELTP82nLlTzvWpFOJvqLaxLEiuNuT8Qc8KsEhsn6neX
-         mJoZCIQmT0SyfZftwuCKSQ2cvu01ukHpbFXUzJ7yvE+lPBFaCdRCCSjmHuLEpgoki6MT
-         DZSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Jxw7SQE7IH2X4d9HfgPhhYW34Jo16ukZRQvK9MgirSU=;
-        b=nn1MmcrvKDrdppBLnVhKNxnMY9KtlInEoarutDIeFOUH9PJcZJJksz+l0/v+Srdm4r
-         f49VMML7wwg8xlzm8ITthjIx81Fuh1fzfStqzmgfLIQDjv/WwpmR5xIXbb/7mK2VqDUz
-         uWY5KZqjIBEg8epxQFV5RuXxw6lN9sr/eD/KI/cG10pi4uBXUENH3NMxapqtaEBvDISQ
-         6H5xY+pO02bN0/FxXl5Ih+thFalgng8c8yOjl5/c1hB60fAHIYYi52ICLPf7ROZ9rMkp
-         u/361I3FRGGufMjcLiatwrG8iXbu2OtIsb7aFrk9td1LK9Cwky2Tjdo1b2GyklX6xotN
-         EZKQ==
-X-Gm-Message-State: AOAM533fT8LWHvhhvyR/B/X7EQs791/iMcd0Gq5eCj3unMR0bMaCwZEp
-        rNf2k/w4snF9gVidlIJwZhVtMQ==
-X-Google-Smtp-Source: ABdhPJwsNsaSNldo/AfnEBbWrWF7UYY8Wx/+CW9NAaFPVCd5sUHtiwAC0OhnaSJw0z+5Sq+3JQHB6g==
-X-Received: by 2002:a17:90a:3321:: with SMTP id m30mr6109263pjb.20.1591724998938;
-        Tue, 09 Jun 2020 10:49:58 -0700 (PDT)
-Received: from google.com ([2620:15c:2ce:0:9efe:9f1:9267:2b27])
-        by smtp.gmail.com with ESMTPSA id c9sm10609680pfp.100.2020.06.09.10.49.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 10:49:57 -0700 (PDT)
-Date:   Tue, 9 Jun 2020 10:49:54 -0700
-From:   Fangrui Song <maskray@google.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     kernel test robot <lkp@intel.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        kbuild-all@lists.01.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: gcc-5: error: -gz is not supported in this configuration
-Message-ID: <20200609174954.cckelwl6etwztmhv@google.com>
-References: <202006092115.nevT7m8D%lkp@intel.com>
- <CAKwvOd=jjFS7XOWyYMZgLTYJtZ7uc=4dP-S4VhuyjNmT=2EcPw@mail.gmail.com>
+        Tue, 9 Jun 2020 13:50:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36916 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732602AbgFIRuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:50:03 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8F152081A;
+        Tue,  9 Jun 2020 17:50:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591725001;
+        bh=5IN/lGGbzu1eRrZ/kosjpWT3H5V83nkEOUQyBgm4mx8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=NBwSnUtOspouG0RPCEPQhOyHAEj9J5C5FaNM4nZzwX4Blyid+P7a4V/ssm0bRoU1E
+         e8WZtUYF2oLgxZEeC33Y7IdViqflXkvhd8zPkV6p4yS8xVMx0yu20ut+m3Z1Cniz6S
+         YmlHQ8w/CTqZNDNC5LD38UHNYqAvoONpqGD6Fudg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        James Chapman <jchapman@katalix.com>,
+        Guillaume Nault <gnault@redhat.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 29/46] l2tp: add sk_family checks to l2tp_validate_socket
+Date:   Tue,  9 Jun 2020 19:44:45 +0200
+Message-Id: <20200609174028.506720599@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200609174022.938987501@linuxfoundation.org>
+References: <20200609174022.938987501@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CAKwvOd=jjFS7XOWyYMZgLTYJtZ7uc=4dP-S4VhuyjNmT=2EcPw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-09, Nick Desaulniers wrote:
->On Tue, Jun 9, 2020 at 6:12 AM kernel test robot <lkp@intel.com> wrote:
->>
->> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
->> head:   abfbb29297c27e3f101f348dc9e467b0fe70f919
->> commit: 10e68b02c861ccf2b3adb59d3f0c10dc6b5e3ace Makefile: support compressed debug info
->> date:   12 days ago
->> config: x86_64-randconfig-r032-20200609 (attached as .config)
->> compiler: gcc-5 (Ubuntu 5.5.0-12ubuntu1) 5.5.0 20171010
->> reproduce (this is a W=1 build):
->>         git checkout 10e68b02c861ccf2b3adb59d3f0c10dc6b5e3ace
->>         # save the attached .config to linux build tree
->>         make W=1 ARCH=x86_64
->>
->> If you fix the issue, kindly add following tag as appropriate
->> Reported-by: kernel test robot <lkp@intel.com>
->>
->> All errors (new ones prefixed by >>, old ones prefixed by <<):
->>
->> >> gcc-5: error: -gz is not supported in this configuration
->
->Hmm...I wonder if the feature detection is incomplete?  I suspect it's
->possible to not depend on zlib.
->
->> make[2]: *** [scripts/Makefile.build:277: scripts/mod/empty.o] Error 1
->> make[2]: Target '__build' not remade because of errors.
->> make[1]: *** [Makefile:1169: prepare0] Error 2
->> make[1]: Target 'prepare' not remade because of errors.
->> make: *** [Makefile:185: __sub-make] Error 2
+From: Eric Dumazet <edumazet@google.com>
 
-The output of gcc-5 -v --version on that machine may help.  The
-convoluted gcc_cv_ld_compress_de logic in gcc/configure.ac may be
-related, but I can't find any mistake that our
-CONFIG_DEBUG_INFO_COMPRESSED conditions may make.
+[ Upstream commit d9a81a225277686eb629938986d97629ea102633 ]
+
+syzbot was able to trigger a crash after using an ISDN socket
+and fool l2tp.
+
+Fix this by making sure the UDP socket is of the proper family.
+
+BUG: KASAN: slab-out-of-bounds in setup_udp_tunnel_sock+0x465/0x540 net/ipv4/udp_tunnel.c:78
+Write of size 1 at addr ffff88808ed0c590 by task syz-executor.5/3018
+
+CPU: 0 PID: 3018 Comm: syz-executor.5 Not tainted 5.7.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xd3/0x413 mm/kasan/report.c:382
+ __kasan_report.cold+0x20/0x38 mm/kasan/report.c:511
+ kasan_report+0x33/0x50 mm/kasan/common.c:625
+ setup_udp_tunnel_sock+0x465/0x540 net/ipv4/udp_tunnel.c:78
+ l2tp_tunnel_register+0xb15/0xdd0 net/l2tp/l2tp_core.c:1523
+ l2tp_nl_cmd_tunnel_create+0x4b2/0xa60 net/l2tp/l2tp_netlink.c:249
+ genl_family_rcv_msg_doit net/netlink/genetlink.c:673 [inline]
+ genl_family_rcv_msg net/netlink/genetlink.c:718 [inline]
+ genl_rcv_msg+0x627/0xdf0 net/netlink/genetlink.c:735
+ netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2469
+ genl_rcv+0x24/0x40 net/netlink/genetlink.c:746
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6e6/0x810 net/socket.c:2352
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2406
+ __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x45ca29
+Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007effe76edc78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00000000004fe1c0 RCX: 000000000045ca29
+RDX: 0000000000000000 RSI: 0000000020000240 RDI: 0000000000000005
+RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 000000000000094e R14: 00000000004d5d00 R15: 00007effe76ee6d4
+
+Allocated by task 3018:
+ save_stack+0x1b/0x40 mm/kasan/common.c:49
+ set_track mm/kasan/common.c:57 [inline]
+ __kasan_kmalloc mm/kasan/common.c:495 [inline]
+ __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:468
+ __do_kmalloc mm/slab.c:3656 [inline]
+ __kmalloc+0x161/0x7a0 mm/slab.c:3665
+ kmalloc include/linux/slab.h:560 [inline]
+ sk_prot_alloc+0x223/0x2f0 net/core/sock.c:1612
+ sk_alloc+0x36/0x1100 net/core/sock.c:1666
+ data_sock_create drivers/isdn/mISDN/socket.c:600 [inline]
+ mISDN_sock_create+0x272/0x400 drivers/isdn/mISDN/socket.c:796
+ __sock_create+0x3cb/0x730 net/socket.c:1428
+ sock_create net/socket.c:1479 [inline]
+ __sys_socket+0xef/0x200 net/socket.c:1521
+ __do_sys_socket net/socket.c:1530 [inline]
+ __se_sys_socket net/socket.c:1528 [inline]
+ __x64_sys_socket+0x6f/0xb0 net/socket.c:1528
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+
+Freed by task 2484:
+ save_stack+0x1b/0x40 mm/kasan/common.c:49
+ set_track mm/kasan/common.c:57 [inline]
+ kasan_set_free_info mm/kasan/common.c:317 [inline]
+ __kasan_slab_free+0xf7/0x140 mm/kasan/common.c:456
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x109/0x2b0 mm/slab.c:3757
+ kvfree+0x42/0x50 mm/util.c:603
+ __free_fdtable+0x2d/0x70 fs/file.c:31
+ put_files_struct fs/file.c:420 [inline]
+ put_files_struct+0x248/0x2e0 fs/file.c:413
+ exit_files+0x7e/0xa0 fs/file.c:445
+ do_exit+0xb04/0x2dd0 kernel/exit.c:791
+ do_group_exit+0x125/0x340 kernel/exit.c:894
+ get_signal+0x47b/0x24e0 kernel/signal.c:2739
+ do_signal+0x81/0x2240 arch/x86/kernel/signal.c:784
+ exit_to_usermode_loop+0x26c/0x360 arch/x86/entry/common.c:161
+ prepare_exit_to_usermode arch/x86/entry/common.c:196 [inline]
+ syscall_return_slowpath arch/x86/entry/common.c:279 [inline]
+ do_syscall_64+0x6b1/0x7d0 arch/x86/entry/common.c:305
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+
+The buggy address belongs to the object at ffff88808ed0c000
+ which belongs to the cache kmalloc-2k of size 2048
+The buggy address is located 1424 bytes inside of
+ 2048-byte region [ffff88808ed0c000, ffff88808ed0c800)
+The buggy address belongs to the page:
+page:ffffea00023b4300 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0
+flags: 0xfffe0000000200(slab)
+raw: 00fffe0000000200 ffffea0002838208 ffffea00015ba288 ffff8880aa000e00
+raw: 0000000000000000 ffff88808ed0c000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff88808ed0c480: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ ffff88808ed0c500: 00 00 00 fc fc fc fc fc fc fc fc fc fc fc fc fc
+>ffff88808ed0c580: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+                         ^
+ ffff88808ed0c600: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff88808ed0c680: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+
+Fixes: 6b9f34239b00 ("l2tp: fix races in tunnel creation")
+Fixes: fd558d186df2 ("l2tp: Split pppol2tp patch into separate l2tp and ppp parts")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: James Chapman <jchapman@katalix.com>
+Cc: Guillaume Nault <gnault@redhat.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Acked-by: Guillaume Nault <gnault@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/l2tp/l2tp_core.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/net/l2tp/l2tp_core.c
++++ b/net/l2tp/l2tp_core.c
+@@ -1589,6 +1589,8 @@ int l2tp_tunnel_create(struct net *net,
+ 			 tunnel_id, fd);
+ 		goto err;
+ 	}
++	if (sk->sk_family != PF_INET && sk->sk_family != PF_INET6)
++		goto err;
+ 	switch (encap) {
+ 	case L2TP_ENCAPTYPE_UDP:
+ 		if (sk->sk_protocol != IPPROTO_UDP) {
+
+
