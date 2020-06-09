@@ -2,236 +2,107 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C852AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F3CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:18:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFAE02068D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:17:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FA6620691
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:18:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591726692;
+	bh=A8/2DMt2DlV627jgZn/LmE7bO5UtcIiyT4fVmDE37ak=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=idx71tGstJSnPVCosJs9lReKn+OMOy93nnaiJpUnzX/C3WkrFvMtVNEWOC6ZQEncc
+	 dFhOM8ZI4wV2J5TbeGYK6lfS97zbPIpP4+GOe+plV3ideLDHoZxxP6r8ppQe2q9IPD
+	 mHzRC8px7HwuyAcrh9aHs8OkZZPmaj1H1jvIG4P4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732768AbgFISRu (ORCPT
+        id S2388453AbgFISSK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:17:50 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36714 "EHLO mx2.suse.de"
+        Tue, 9 Jun 2020 14:18:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732635AbgFIRuU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730956AbgFIRuU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 9 Jun 2020 13:50:20 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 8481BB17C;
-        Tue,  9 Jun 2020 17:50:22 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
-        p.zabel@pengutronix.de, linux-kernel@vger.kernel.org
-Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, helgaas@kernel.org,
-        andy.shevchenko@gmail.com, mathias.nyman@linux.intel.com,
-        lorenzo.pieralisi@arm.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH v2 2/9] reset: Add Raspberry Pi 4 firmware reset controller
-Date:   Tue,  9 Jun 2020 19:49:55 +0200
-Message-Id: <20200609175003.19793-3-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200609175003.19793-1-nsaenzjulienne@suse.de>
-References: <20200609175003.19793-1-nsaenzjulienne@suse.de>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C66520774;
+        Tue,  9 Jun 2020 17:50:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591725020;
+        bh=A8/2DMt2DlV627jgZn/LmE7bO5UtcIiyT4fVmDE37ak=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=C/2fPriWkUmBT90g8kIyIg8RddpD2pb8RUbnJp3IQ5L6MkE6i0V9wNEq2n236VgTC
+         7fk0F9bpSVVhRq48mMbvDY5wty449M6nqp9mPwIcpY3DHw5bMrDpVKLbZcm843KC6n
+         ANT/tDSjgtI7geG2i838FWBabG87Dzr6QBZ6UvAo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Pascal Terjan <pterjan@google.com>
+Subject: [PATCH 4.14 37/46] staging: rtl8712: Fix IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK
+Date:   Tue,  9 Jun 2020 19:44:53 +0200
+Message-Id: <20200609174030.070675162@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200609174022.938987501@linuxfoundation.org>
+References: <20200609174022.938987501@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Raspberry Pi 4's co-processor controls some of the board's HW
-initialization process, but it's up to Linux to trigger it when
-relevant. Introduce a reset controller capable of interfacing with
-RPi4's co-processor that models these firmware initialization routines as
-reset lines.
+From: Pascal Terjan <pterjan@google.com>
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+commit 15ea976a1f12b5fd76b1bd6ff3eb5132fd28047f upstream.
+
+The value in shared headers was fixed 9 years ago in commit 8d661f1e462d
+("ieee80211: correct IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK macro") and
+while looking at using shared headers for other duplicated constants
+I noticed this driver uses the old value.
+
+The macros are also defined twice in this file so I am deleting the
+second definition.
+
+Signed-off-by: Pascal Terjan <pterjan@google.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200523211247.23262-1-pterjan@google.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
+ drivers/staging/rtl8712/wifi.h |    9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
-Changes since v1:
-  - Make the whole driver less USB centric as per Florian's comments
-
- drivers/reset/Kconfig             |  11 +++
- drivers/reset/Makefile            |   1 +
- drivers/reset/reset-raspberrypi.c | 126 ++++++++++++++++++++++++++++++
- 3 files changed, 138 insertions(+)
- create mode 100644 drivers/reset/reset-raspberrypi.c
-
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index d9efbfd29646..97e848740e13 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -140,6 +140,17 @@ config RESET_QCOM_PDC
- 	  to control reset signals provided by PDC for Modem, Compute,
- 	  Display, GPU, Debug, AOP, Sensors, Audio, SP and APPS.
+--- a/drivers/staging/rtl8712/wifi.h
++++ b/drivers/staging/rtl8712/wifi.h
+@@ -468,7 +468,7 @@ static inline unsigned char *get_hdr_bss
+ /* block-ack parameters */
+ #define IEEE80211_ADDBA_PARAM_POLICY_MASK 0x0002
+ #define IEEE80211_ADDBA_PARAM_TID_MASK 0x003C
+-#define IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK 0xFFA0
++#define IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK 0xFFC0
+ #define IEEE80211_DELBA_PARAM_TID_MASK 0xF000
+ #define IEEE80211_DELBA_PARAM_INITIATOR_MASK 0x0800
  
-+config RESET_RASPBERRYPI
-+	tristate "Raspberry Pi 4 Firmware Reset Driver"
-+	depends on RASPBERRYPI_FIRMWARE || (RASPBERRYPI_FIRMWARE=n && COMPILE_TEST)
-+	default USB_XHCI_PCI
-+	help
-+	  Raspberry Pi 4's co-processor controls some of the board's HW
-+	  initialization process, but it's up to Linux to trigger it when
-+	  relevant. This driver provides a reset controller capable of
-+	  interfacing with RPi4's co-processor and model these firmware
-+	  initialization routines as reset lines.
-+
- config RESET_SCMI
- 	tristate "Reset driver controlled via ARM SCMI interface"
- 	depends on ARM_SCMI_PROTOCOL || COMPILE_TEST
-diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-index 249ed357c997..16947610cc3b 100644
---- a/drivers/reset/Makefile
-+++ b/drivers/reset/Makefile
-@@ -21,6 +21,7 @@ obj-$(CONFIG_RESET_OXNAS) += reset-oxnas.o
- obj-$(CONFIG_RESET_PISTACHIO) += reset-pistachio.o
- obj-$(CONFIG_RESET_QCOM_AOSS) += reset-qcom-aoss.o
- obj-$(CONFIG_RESET_QCOM_PDC) += reset-qcom-pdc.o
-+obj-$(CONFIG_RESET_RASPBERRYPI) += reset-raspberrypi.o
- obj-$(CONFIG_RESET_SCMI) += reset-scmi.o
- obj-$(CONFIG_RESET_SIMPLE) += reset-simple.o
- obj-$(CONFIG_RESET_STM32MP157) += reset-stm32mp1.o
-diff --git a/drivers/reset/reset-raspberrypi.c b/drivers/reset/reset-raspberrypi.c
-new file mode 100644
-index 000000000000..5fc8c6319a20
---- /dev/null
-+++ b/drivers/reset/reset-raspberrypi.c
-@@ -0,0 +1,126 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Raspberry Pi 4 firmware reset driver
-+ *
-+ * Copyright (C) 2020 Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-+ */
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset-controller.h>
-+#include <soc/bcm2835/raspberrypi-firmware.h>
-+
-+struct rpi_reset {
-+	struct reset_controller_dev rcdev;
-+	struct rpi_firmware *fw;
-+};
-+
-+enum rpi_reset_ids {
-+	RASPBERRYPI_FIRMWARE_RESET_ID_USB,
-+	RASPBERRYPI_FIRMWARE_RESET_NUM_IDS
-+};
-+
-+static inline struct rpi_reset *to_rpi(struct reset_controller_dev *rcdev)
-+{
-+	return container_of(rcdev, struct rpi_reset, rcdev);
-+}
-+
-+static int rpi_reset_reset(struct reset_controller_dev *rcdev, unsigned long id)
-+{
-+	struct rpi_reset *priv = to_rpi(rcdev);
-+	u32 dev_addr;
-+	int ret;
-+
-+	switch (id) {
-+	case RASPBERRYPI_FIRMWARE_RESET_ID_USB:
-+		/*
-+		 * The Raspberry Pi 4 gets its USB functionality from VL805, a
-+		 * PCIe chip that implements xHCI. After a PCI reset, VL805's
-+		 * firmware may either be loaded directly from an EEPROM or, if
-+		 * not present, by the SoC's co-processor, VideoCore. rpi's
-+		 * VideoCore OS contains both the non public firmware load
-+		 * logic and the VL805 firmware blob. This triggers the
-+		 * aforementioned process.
-+		 *
-+		 * The pci device address is expected is expected by the
-+		 * firmware encoded like this:
-+		 *
-+		 *	PCI_BUS << 20 | PCI_SLOT << 15 | PCI_FUNC << 12
-+		 *
-+		 * But since rpi's PCIe is hardwired, we know the address in
-+		 * advance.
-+		 */
-+		dev_addr = 0x100000;
-+		ret = rpi_firmware_property(priv->fw, RPI_FIRMWARE_NOTIFY_XHCI_RESET,
-+					    &dev_addr, sizeof(dev_addr));
-+		if (ret)
-+			return ret;
-+
-+		/* Wait for vl805 to startup */
-+		usleep_range(200, 1000);
-+		break;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct reset_control_ops rpi_reset_ops = {
-+	.reset	= rpi_reset_reset,
-+};
-+
-+static int rpi_reset_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *fw_node;
-+	struct rpi_firmware *fw;
-+	struct rpi_reset *priv;
-+
-+	fw_node = of_get_parent(dev->of_node);
-+	if (!fw_node) {
-+		dev_err(dev, "Missing firmware node\n");
-+		return -ENOENT;
-+	}
-+
-+	fw = rpi_firmware_get(fw_node);
-+	of_node_put(fw_node);
-+	if (!fw)
-+		return -EPROBE_DEFER;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	dev_set_drvdata(dev, priv);
-+
-+	priv->fw = fw;
-+	priv->rcdev.owner = THIS_MODULE;
-+	priv->rcdev.nr_resets = RASPBERRYPI_FIRMWARE_RESET_NUM_IDS;
-+	priv->rcdev.ops = &rpi_reset_ops;
-+	priv->rcdev.of_node = dev->of_node;
-+
-+	return devm_reset_controller_register(dev, &priv->rcdev);
-+}
-+
-+static const struct of_device_id rpi_reset_of_match[] = {
-+	{ .compatible = "raspberrypi,firmware-reset" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, rpi_reset_of_match);
-+
-+static struct platform_driver rpi_reset_driver = {
-+	.probe	= rpi_reset_probe,
-+	.driver	= {
-+		.name = "raspberrypi-reset",
-+		.of_match_table = rpi_reset_of_match,
-+	},
-+};
-+module_platform_driver(rpi_reset_driver);
-+
-+MODULE_AUTHOR("Nicolas Saenz Julienne <nsaenzjulienne@suse.de>");
-+MODULE_DESCRIPTION("Raspberry Pi 4 firmware reset driver");
-+MODULE_LICENSE("GPL");
--- 
-2.26.2
+@@ -562,13 +562,6 @@ struct ieee80211_ht_addt_info {
+ #define IEEE80211_HT_IE_NON_GF_STA_PRSNT	0x0004
+ #define IEEE80211_HT_IE_NON_HT_STA_PRSNT	0x0010
+ 
+-/* block-ack parameters */
+-#define IEEE80211_ADDBA_PARAM_POLICY_MASK 0x0002
+-#define IEEE80211_ADDBA_PARAM_TID_MASK 0x003C
+-#define IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK 0xFFA0
+-#define IEEE80211_DELBA_PARAM_TID_MASK 0xF000
+-#define IEEE80211_DELBA_PARAM_INITIATOR_MASK 0x0800
+-
+ /*
+  * A-PMDU buffer sizes
+  * According to IEEE802.11n spec size varies from 8K to 64K (in powers of 2)
+
 
