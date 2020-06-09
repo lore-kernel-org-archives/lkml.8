@@ -2,77 +2,96 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5856C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BDCC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDCDF20812
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:55:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD0192078D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:55:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591703722;
-	bh=qV4UJCt4oL3d8fYSD/QGpLUYiUgDIQDAupv4BVtBnlA=;
+	s=default; t=1591703734;
+	bh=DZZhGzI+zYbVwAglBZbNEPnQrJ7dihjeI/FOUkhIb4k=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=R0sjHiE5zA7EP9NgOB+YUYUxGoPDtwWbsJ4dj5SZ9yynzSao69qPNnj2LtlVH0C5Y
-	 r4bEzhqTpoGMADqN5dY9oMpwu7o/c8HaTeHXXRzJlUxJv7EwrtXz7V6mcnRQZfRYin
-	 QmPKkXYEG11cd8CSSmdPzfDzU0xTeXJCnZkl470k=
+	b=qmwfv9VVm4lfULPJ5JJl6tfyPJeKcJbFixWGbb2PXnshEV116P8dDLUWGMIiFup+o
+	 EP7zIwP3Ds36iuYs4MqCs6nlpTA2smW8KTR4b5VxrXc4G+l56enrZSJcE1BeEn2rU2
+	 YdbWT7/5CfhIxRedkdMXCgdUofuZssoa8TooYXmY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729148AbgFILzV (ORCPT
+        id S1729166AbgFILzc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 07:55:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56226 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 07:55:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727945AbgFILzU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 07:55:20 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1726911AbgFILz3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 07:55:29 -0400
+Received: from localhost (unknown [122.171.156.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE0FF2078D;
-        Tue,  9 Jun 2020 11:55:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9277720814;
+        Tue,  9 Jun 2020 11:55:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591703719;
-        bh=qV4UJCt4oL3d8fYSD/QGpLUYiUgDIQDAupv4BVtBnlA=;
+        s=default; t=1591703729;
+        bh=DZZhGzI+zYbVwAglBZbNEPnQrJ7dihjeI/FOUkhIb4k=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JGzQ+gOfszeVXZkHyCQ/ZEKaMDxVBo+TnASoha35Ooq7saWkOUAPwLoQbb+oKykBb
-         dk8yXlvQ15C6kGV+JeTIgVELNw2noy6JIsg/Tmcq070FBiYT0IhHJxC8oN/caMl1cV
-         TRVFDG9baIFtxp+mFx5foQhkipTT57mHzwhbyA3w=
-Date:   Tue, 9 Jun 2020 13:55:17 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Gaurav Singh <gaurav1086@gmail.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        "open list:BPF (Safe dynamic programs and tools)" 
-        <netdev@vger.kernel.org>,
-        "open list:BPF (Safe dynamic programs and tools)" 
-        <bpf@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] bpf: alloc_record_per_cpu Add null check after malloc
-Message-ID: <20200609115517.GC819153@kroah.com>
-References: <20200609113839.9628-1-gaurav1086@gmail.com>
- <20200609113839.9628-2-gaurav1086@gmail.com>
+        b=2iLIT+qfuXefaCTB6NGgnXlaQ9kNKUrCXOe2fdo2ImwNm/o+nUFsHDKMzihTxBNB3
+         jJ++fFj5/tYq5RTz5SGC8GP6evZRU5ysoXx0Kz943WE8tiXdwCv14fJVDOhJGOE8pX
+         L3uFLHzuZNySy55RhcaZhTV/Pb/P1iPOa/DUO8g0=
+Date:   Tue, 9 Jun 2020 17:25:25 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Jonathan McDowell <noodles@earth.li>
+Cc:     ansuelsmth@gmail.com,
+        'Bjorn Andersson' <bjorn.andersson@linaro.org>,
+        'Andy Gross' <agross@codeaurora.org>,
+        'Andy Gross' <agross@kernel.org>,
+        'Kishon Vijay Abraham I' <kishon@ti.com>,
+        'Rob Herring' <robh+dt@kernel.org>,
+        'Mark Rutland' <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: R: [PATCH v6 1/2] phy: qualcomm: add qcom ipq806x dwc usb phy
+ driver
+Message-ID: <20200609115525.GD1084979@vkoul-mobl>
+References: <20200603132237.6036-1-ansuelsmth@gmail.com>
+ <20200604161942.GK311@earth.li>
+ <017001d63b5a$c3807740$4a8165c0$@gmail.com>
+ <20200609114148.GS311@earth.li>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200609113839.9628-2-gaurav1086@gmail.com>
+In-Reply-To: <20200609114148.GS311@earth.li>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 07:38:39AM -0400, Gaurav Singh wrote:
-> Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
-> ---
->  samples/bpf/xdp_rxq_info_user.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On 09-06-20, 12:41, Jonathan McDowell wrote:
+> On Fri, Jun 05, 2020 at 07:00:04PM +0200, ansuelsmth@gmail.com wrote:
+> > > On Wed, Jun 03, 2020 at 03:22:34PM +0200, Ansuel Smith wrote:
+> > > > This has lost in the original push for the dwc3 qcom driver.
+> > > > This is needed for ipq806x SoC as without this the usb ports
+> > > > doesn't work at all.
+> > > 
+> > > FWIW I tested this on my RB3011 so feel free to add:
+> > > 
+> > > Tested-by: Jonathan McDowell <noodles@earth.li>
+> > > 
+> > > One minor comment; would PHY_QCOM_USB_IPQ806X not be a better
+> > > choice than PHY_QCOM_IPQ806X_USB given the existing naming?
+> > > 
+> >
+> > Thanks for the feedback. About naming I'm following the sata ipq806x
+> > naming.  I really hope someone gets this and reviews it since usb is
+> > broken for a long time now.
+> 
+> Doesn't seem to have made the 5.8 merge window; I note Vinod has done a
+> bunch of the recent commits to phy/qualcomm/ so adding him to the CC in
+> addition to Kishon.
 
-I know I don't take patches without any changelog text, maybe other
-maintainers are more lax...
+It is too late for 5.8 now, please rebase and resend it after rc1 is
+tagged
+
+Thanks
+-- 
+~Vinod
