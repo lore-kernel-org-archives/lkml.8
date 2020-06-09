@@ -2,94 +2,107 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CFADC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:12:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B42D8C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E34452068D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:12:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8721520691
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:12:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591726352;
+	bh=A8/2DMt2DlV627jgZn/LmE7bO5UtcIiyT4fVmDE37ak=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ikh9gppM4AVrndzn6tXtAf7dGkPZLF4NyySAVIxawPZI3ZZnrk2wK+qcCGnfXDR5u
+	 TdtEMuULGCzc1+n83H4hgTjiCIWhOubVQo54utqOqYrSqJeLUbXIKkVD1zV/SJfGuU
+	 rm1rKCS5w0OA4ZnYrA6PBv9OPk1ZVQ/IU4RynePA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388707AbgFISMW (ORCPT
+        id S2388719AbgFISMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:12:22 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:41218 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387667AbgFISF4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 14:05:56 -0400
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1jiidF-0001oR-1J; Tue, 09 Jun 2020 19:05:53 +0100
-Received: from ben by deadeye with local (Exim 4.94)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1jiidE-006Vuy-DJ; Tue, 09 Jun 2020 19:05:52 +0100
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+        Tue, 9 Jun 2020 14:12:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40138 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732793AbgFIRvU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:51:20 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 733D3207C3;
+        Tue,  9 Jun 2020 17:51:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591725079;
+        bh=A8/2DMt2DlV627jgZn/LmE7bO5UtcIiyT4fVmDE37ak=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WRrHNaCukbmXDC6j5ZoiNN/uhBzVMD2cFIVKCeeMAqNFezScMKqZ8SxdT768rY5Ln
+         H+JWfzED0usA0VV2lOM3Jygf9qe+iAPCHt5/530l81g2DPTSmmlLbXLiT4DM2ZhHSL
+         dJY5bPb2lbA/je433apflUJSdANxApEG6UKvKYI4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Pascal Terjan <pterjan@google.com>
+Subject: [PATCH 4.19 16/25] staging: rtl8712: Fix IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK
+Date:   Tue,  9 Jun 2020 19:45:06 +0200
+Message-Id: <20200609174050.473019746@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200609174048.576094775@linuxfoundation.org>
+References: <20200609174048.576094775@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Paul Moore" <pmoore@redhat.com>,
-        "Richard Guy Briggs" <rgb@redhat.com>
-Date:   Tue, 09 Jun 2020 19:04:02 +0100
-Message-ID: <lsq.1591725832.108846056@decadent.org.uk>
-X-Mailer: LinuxStableQueue (scripts by bwh)
-X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 11/61] selinux: cleanup error reporting in
- selinux_nlmsg_perm()
-In-Reply-To: <lsq.1591725831.850867383@decadent.org.uk>
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-3.16.85-rc1 review patch.  If anyone has any objections, please let me know.
+From: Pascal Terjan <pterjan@google.com>
 
-------------------
+commit 15ea976a1f12b5fd76b1bd6ff3eb5132fd28047f upstream.
 
-From: Richard Guy Briggs <rgb@redhat.com>
+The value in shared headers was fixed 9 years ago in commit 8d661f1e462d
+("ieee80211: correct IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK macro") and
+while looking at using shared headers for other duplicated constants
+I noticed this driver uses the old value.
 
-commit e173fb2646a832b424c80904c306b816760ce477 upstream.
+The macros are also defined twice in this file so I am deleting the
+second definition.
 
-Convert audit_log() call to WARN_ONCE().
+Signed-off-by: Pascal Terjan <pterjan@google.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200523211247.23262-1-pterjan@google.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Rename "type=" to nlmsg_type=" to avoid confusion with the audit record
-type.
-
-Added "protocol=" to help track down which protocol (NETLINK_AUDIT?) was used
-within the netlink protocol family.
-
-Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-[Rewrote the patch subject line]
-Signed-off-by: Paul Moore <pmoore@redhat.com>
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- security/selinux/hooks.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/staging/rtl8712/wifi.h |    9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -4683,10 +4683,9 @@ static int selinux_nlmsg_perm(struct soc
- 	err = selinux_nlmsg_lookup(sksec->sclass, nlh->nlmsg_type, &perm);
- 	if (err) {
- 		if (err == -EINVAL) {
--			audit_log(current->audit_context, GFP_KERNEL, AUDIT_SELINUX_ERR,
--				  "SELinux:  unrecognized netlink message"
--				  " type=%hu for sclass=%hu\n",
--				  nlh->nlmsg_type, sksec->sclass);
-+			WARN_ONCE(1, "selinux_nlmsg_perm: unrecognized netlink message:"
-+				  " protocol=%hu nlmsg_type=%hu sclass=%hu\n",
-+				  sk->sk_protocol, nlh->nlmsg_type, sksec->sclass);
- 			if (!selinux_enforcing || security_get_allow_unknown())
- 				err = 0;
- 		}
+--- a/drivers/staging/rtl8712/wifi.h
++++ b/drivers/staging/rtl8712/wifi.h
+@@ -468,7 +468,7 @@ static inline unsigned char *get_hdr_bss
+ /* block-ack parameters */
+ #define IEEE80211_ADDBA_PARAM_POLICY_MASK 0x0002
+ #define IEEE80211_ADDBA_PARAM_TID_MASK 0x003C
+-#define IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK 0xFFA0
++#define IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK 0xFFC0
+ #define IEEE80211_DELBA_PARAM_TID_MASK 0xF000
+ #define IEEE80211_DELBA_PARAM_INITIATOR_MASK 0x0800
+ 
+@@ -562,13 +562,6 @@ struct ieee80211_ht_addt_info {
+ #define IEEE80211_HT_IE_NON_GF_STA_PRSNT	0x0004
+ #define IEEE80211_HT_IE_NON_HT_STA_PRSNT	0x0010
+ 
+-/* block-ack parameters */
+-#define IEEE80211_ADDBA_PARAM_POLICY_MASK 0x0002
+-#define IEEE80211_ADDBA_PARAM_TID_MASK 0x003C
+-#define IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK 0xFFA0
+-#define IEEE80211_DELBA_PARAM_TID_MASK 0xF000
+-#define IEEE80211_DELBA_PARAM_INITIATOR_MASK 0x0800
+-
+ /*
+  * A-PMDU buffer sizes
+  * According to IEEE802.11n spec size varies from 8K to 64K (in powers of 2)
+
 
