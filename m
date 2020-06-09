@@ -2,157 +2,88 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9677C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:16:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04095C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8659F20737
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:16:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF54520737
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:17:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mNlr5JOg"
+	dkim=pass (1024-bit key) header.d=perex.cz header.i=@perex.cz header.b="WvAeGGBA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729975AbgFINQz (ORCPT
+        id S1729987AbgFINRA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 9 Jun 2020 09:17:00 -0400
+Received: from mail1.perex.cz ([77.48.224.245]:33654 "EHLO mail1.perex.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729968AbgFINQz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 9 Jun 2020 09:16:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55292 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729293AbgFINO7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 09:14:59 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E2CCC08C5C4;
-        Tue,  9 Jun 2020 06:14:57 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id c17so24952601lji.11;
-        Tue, 09 Jun 2020 06:14:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=THFCg3hKPmLC0meEu1tU7N3iWwUxXusX7wxKM7keO5E=;
-        b=mNlr5JOg4ibZJbPR/QoS0NVbhOoZg7qhUMAg+LkPxA4lVqfJ3ScEB+lf2kYh1vUwdj
-         Y/qqbIaEvcCTPMWpbMKKcYGsvBa2T1Nigt9WiU1Tcp9BhNqjw9n+d69/A8FsT/A3Am7T
-         qAXuETV1u6j6b7b04350uUeyijVY28l2Tb0lUOczxEWxRMwS2SNN8tEyTh1XOZIacZSa
-         B/SYiF2LQB9KhUIrtuGkyt/GJgmY0fL1KbQVsR6nXutGPaHzoOB8loMjs0Z1IL3bF4+c
-         s8mPif9RvF40lCpuB+EHW6cs5IzdiFgU2UjHy+/soGVHcy8tEfmpym2GcoW0FFFDJiLD
-         SHlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=THFCg3hKPmLC0meEu1tU7N3iWwUxXusX7wxKM7keO5E=;
-        b=E5NB2jniTp9XouDYy2uHmTMc1PtBf8w1zPUZNjKv3Jm4746W1X0kQMUR65bc6E7k5H
-         KQMv8PzbPVGiYz3PyguMZq5mDkNX/mRUPybUh9w7rDB5xjQlhr7GkFsG43lFuyLMKKlA
-         bl5VnsjAqns41IYr2ENj+ZqNzRKcaEqB94fCxZxJg3RqJPKU457MeVkk4ZtQJmDXBRms
-         zgy6RgT+9cCtaOKqiZQdH26M6/sH7Z5G3eh3kNyhsjKsi2escRzw1BTVwjcdnrZ7j0kH
-         xbN5XMgHBEv2DUTaqz2tbwX3ooImPXQlldZlK5L0YqNx68vPsYkCbi46e0mmD/sz3xh7
-         JvRA==
-X-Gm-Message-State: AOAM53218wU1ekPuHYTa9S+w8rR+OxYVcnI7g8WGno43dU9lhFa7A4XO
-        vV7W7+PbVSnN3Irwwtq/fqc=
-X-Google-Smtp-Source: ABdhPJzLpzFZbkSq5sri0+eLAtETFypE21d1qeDpAKvqDBb2E5Hi2u+SEX/f9NwdBl903TmDUO6FMw==
-X-Received: by 2002:a2e:860d:: with SMTP id a13mr11153440lji.344.1591708495561;
-        Tue, 09 Jun 2020 06:14:55 -0700 (PDT)
-Received: from localhost.localdomain (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.gmail.com with ESMTPSA id l22sm4323522lji.120.2020.06.09.06.14.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 06:14:55 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Mikko Perttunen <cyndis@kapsi.fi>
-Cc:     =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@samsung.com>,
-        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH v4 25/37] ARM: tegra: Add interconnect properties to Tegra20 device-tree
-Date:   Tue,  9 Jun 2020 16:13:52 +0300
-Message-Id: <20200609131404.17523-26-digetx@gmail.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200609131404.17523-1-digetx@gmail.com>
-References: <20200609131404.17523-1-digetx@gmail.com>
+Received: from mail1.perex.cz (localhost [127.0.0.1])
+        by smtp1.perex.cz (Perex's E-mail Delivery System) with ESMTP id B823CA003F;
+        Tue,  9 Jun 2020 15:16:52 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp1.perex.cz B823CA003F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=perex.cz; s=default;
+        t=1591708612; bh=Q6pAyvWAA5MDPmhkXsBCOnRP+oa87wANg1kmgbc1Kpc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=WvAeGGBAMKiFOFjTPXv8K3w5I1fxEZVOhQaZiXlSH1MVoJCMwtDLsMxaOSFHber3c
+         L1N+Ix+80HnPbrBixJ0V62C0B7d0XedIZzq/bLDST90WHVbtdXfgzYan8OfYvWB76T
+         tZVa+PvCOJTQmgNlwOSN0GHaj8vF3zuHqiiSmrAI=
+Received: from p50.perex-int.cz (unknown [192.168.100.94])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: perex)
+        by mail1.perex.cz (Perex's E-mail Delivery System) with ESMTPSA;
+        Tue,  9 Jun 2020 15:16:38 +0200 (CEST)
+Subject: Re: next-0519 on thinkpad x60: sound related? window manager crash
+To:     Christoph Hellwig <hch@lst.de>, Takashi Iwai <tiwai@suse.de>
+Cc:     David Rientjes <rientjes@google.com>,
+        "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>,
+        alsa-devel@alsa-project.org, bp@alien8.de, hch@infradead.org,
+        hpa@zytor.com, linux-kernel@vger.kernel.org, mingo@redhat.com,
+        Pavel Machek <pavel@ucw.cz>, tglx@linutronix.de,
+        tiwai@suse.com, x86@kernel.org
+References: <20200609054306.GA9606@lst.de> <s5hsgf4irzt.wl-tiwai@suse.de>
+ <20200609084305.GA21671@lst.de> <s5hlfkwip1h.wl-tiwai@suse.de>
+ <20200609091727.GA23814@lst.de> <s5hh7vkio0n.wl-tiwai@suse.de>
+ <20200609113123.GA547@lst.de> <s5h3674ii49.wl-tiwai@suse.de>
+ <20200609114059.GA1228@lst.de> <s5hzh9ch38h.wl-tiwai@suse.de>
+ <20200609114955.GA2027@lst.de>
+From:   Jaroslav Kysela <perex@perex.cz>
+Message-ID: <a20ab909-bb60-8d47-0da3-122a724aecbe@perex.cz>
+Date:   Tue, 9 Jun 2020 15:16:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200609114955.GA2027@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add interconnect properties to the memory controller, external memory
-controller and the display controller nodes in order to describe hardware
-interconnection.
+Dne 09. 06. 20 v 13:49 Christoph Hellwig napsal(a):
+> On Tue, Jun 09, 2020 at 01:45:34PM +0200, Takashi Iwai wrote:
+>> Yes, for the sound stuff, something below should make things working.
+>> But it means that we'll lose the SG-buffer allocation and the
+>> allocation of large buffers might fail on some machines.
+> 
+> We crossed lines there.  In general due to better memory compaction and
+> CMA we have better chances to get larger contiguous allocations these
+> days, so this might not be too much of an issue in practice.
+> 
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- arch/arm/boot/dts/tegra20.dtsi | 22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+But turning off the SG DMA scheme seems like a step back. Would be possible to 
+fix this kind of memory mapping?
 
-diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
-index c3b8ad53b967..974048e83541 100644
---- a/arch/arm/boot/dts/tegra20.dtsi
-+++ b/arch/arm/boot/dts/tegra20.dtsi
-@@ -109,6 +109,15 @@ dc@54200000 {
- 
- 			nvidia,head = <0>;
- 
-+			interconnects = <&mc TEGRA20_MC_DISPLAY0A &emc>,
-+					<&mc TEGRA20_MC_DISPLAY0B &emc>,
-+					<&mc TEGRA20_MC_DISPLAY0C &emc>,
-+					<&mc TEGRA20_MC_DISPLAY1B &emc>;
-+			interconnect-names = "display0a",
-+					     "display0b",
-+					     "display0c",
-+					     "display1b";
-+
- 			rgb {
- 				status = "disabled";
- 			};
-@@ -126,6 +135,15 @@ dc@54240000 {
- 
- 			nvidia,head = <1>;
- 
-+			interconnects = <&mc TEGRA20_MC_DISPLAY0AB &emc>,
-+					<&mc TEGRA20_MC_DISPLAY0BB &emc>,
-+					<&mc TEGRA20_MC_DISPLAY0CB &emc>,
-+					<&mc TEGRA20_MC_DISPLAY1BB &emc>;
-+			interconnect-names = "display0a",
-+					     "display0b",
-+					     "display0c",
-+					     "display1b";
-+
- 			rgb {
- 				status = "disabled";
- 			};
-@@ -626,15 +644,17 @@ mc: memory-controller@7000f000 {
- 		interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
- 		#reset-cells = <1>;
- 		#iommu-cells = <0>;
-+		#interconnect-cells = <1>;
- 	};
- 
--	memory-controller@7000f400 {
-+	emc: memory-controller@7000f400 {
- 		compatible = "nvidia,tegra20-emc";
- 		reg = <0x7000f400 0x200>;
- 		interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&tegra_car TEGRA20_CLK_EMC>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		#interconnect-cells = <0>;
- 	};
- 
- 	fuse@7000f800 {
+					Jaroslav
+
+
 -- 
-2.26.0
-
+Jaroslav Kysela <perex@perex.cz>
+Linux Sound Maintainer; ALSA Project; Red Hat, Inc.
