@@ -2,141 +2,220 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A124C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07AF4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:06:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25E7E2076C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8E892076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:06:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591664811;
-	bh=vqpwzmqgPum7xJcl5MJ2NPLpxEZEaPhP2tB5CEtYRks=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zRaDfFTjtwFGlaAe1ZIYMlRv/9Eu79fLUuYClkojideNae3lVhU+R8rR9N+AEm0Gx
-	 fog7DFubLbhDfQ0qrytE0oa7fFVE8pbNMTSYa7RXsvW5SQ5fH8GtvsZ6/h8I2M1nbk
-	 biPMEpruUR5PZr7MVL3zqTaIaLS19nW5hZ9C379s=
+	s=default; t=1591664817;
+	bh=NWvHiiYDMhs2rh7Aon529Br26QY1KWCFvJVk/nH8jhI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=P1Neggim51YW+t0QRpkkuPYj5jyhckb7lR+lZTqbru49E1TAW5Bw2J1sapp9MF1D/
+	 IJlen5TnGYGYEz1XrPTsghmY6EllFqoj60daRNFJc7yRL4lmDRUB+Rf4Bgvt2Cn99O
+	 n/oEpKa7/Ceu8cr2FDc9udlPBlkJ1Ja2rXwO3GB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727874AbgFIBGu (ORCPT
+        id S2388168AbgFIBG5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 21:06:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50826 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727797AbgFHXHH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:07:07 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71BB520E65;
-        Mon,  8 Jun 2020 23:07:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657626;
-        bh=vqpwzmqgPum7xJcl5MJ2NPLpxEZEaPhP2tB5CEtYRks=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mbx6w96Z4cmh5Gfw70rt7gu75XExqtWtB0QTHvxWBs1rvA6ksDQxik/AP2k6sSNu3
-         do57LiRDahAAf3fddaY94Bak3241hftJmkNomEJVhjzn6rHgUTLJ9CBRblTfGBDJrc
-         4I13GiUevcIR/tmSytux5JOpjYDJz0D6FIFJRXDw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tomohito Esaki <etom@igel.co.jp>,
-        Yoshihito Ogawa <yoshihito.ogawa.kc@renesas.com>,
-        Koji Matsuoka <koji.matsuoka.xm@renesas.com>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Daniel Stone <daniels@collabora.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 046/274] drm: rcar-du: Set primary plane zpos immutably at initializing
-Date:   Mon,  8 Jun 2020 19:02:19 -0400
-Message-Id: <20200608230607.3361041-46-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
-References: <20200608230607.3361041-1-sashal@kernel.org>
+        Mon, 8 Jun 2020 21:06:57 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:23814 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727064AbgFIBGn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 21:06:43 -0400
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id 05916J07005151;
+        Tue, 9 Jun 2020 10:06:20 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 05916J07005151
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1591664780;
+        bh=IBb92jm4Ah915aHM+Ge/Th0b/C+3AeknRBgnJHpoZVQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=LEKXGKyxGEQipzpQjpMvpFQR1n8q5gLVi/D0AaMR+mabsU5E5gtM34JKTuHT4Yng0
+         XByXMbU3CR7B7zCYH/YNHKY2+K3eriGmWfY5LSQTxOuwLZPkVztFDg+pD6W+wqbC1j
+         sUx6kseM3YSQlJiTUMzizHCNDa3q+Jzb6W48yC0axbHMGaJmh0BW9muOqjd2JOoC/J
+         w6GWS87SDASwsj1X8/6cBckmN32nZFV0L67BWtzvquAz3t445MoqvVfvzHxJKG6a94
+         juYf4ERtbSAy96y9X+2oCbu0Z6B6gHzbTW4sr/RsTmQuu6oJw3h/UjfCZrA5eljVIo
+         wXOqdF+rehiHQ==
+X-Nifty-SrcIP: [209.85.217.49]
+Received: by mail-vs1-f49.google.com with SMTP id t132so10706518vst.2;
+        Mon, 08 Jun 2020 18:06:20 -0700 (PDT)
+X-Gm-Message-State: AOAM5328OFca//sIgFMFoou8/tehwJF7QLbU0PsNAcMu5xSdjrDesFNc
+        WfbvizOT6F/vEkLXQdxG4OzXyK55zZLFKaXIhPU=
+X-Google-Smtp-Source: ABdhPJz1s8k9QJ98Odc6ZPnK1H102XeSxpGh1JKN3PaNg94LQelFS6gqtzrxku/BrWldeIq1DPcAZPplz9GCJ6f3ezw=
+X-Received: by 2002:a67:22c7:: with SMTP id i190mr1124857vsi.179.1591664779210;
+ Mon, 08 Jun 2020 18:06:19 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20200607032053.145302-1-masahiroy@kernel.org>
+In-Reply-To: <20200607032053.145302-1-masahiroy@kernel.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Tue, 9 Jun 2020 10:05:42 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASu-0yWi_K4H1Kmt5aSNX7EJ9tFqUMYxHAU+owkOmX+Nw@mail.gmail.com>
+Message-ID: <CAK7LNASu-0yWi_K4H1Kmt5aSNX7EJ9tFqUMYxHAU+owkOmX+Nw@mail.gmail.com>
+Subject: Re: [PATCH] samples: binderfs: really compile this sample and fix
+ build issues
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Christian Brauner <christian@brauner.io>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomohito Esaki <etom@igel.co.jp>
+On Sun, Jun 7, 2020 at 12:21 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> Even after commit c624adc9cb6e ("samples: fix binderfs sample"), this
+> sample is never compiled.
+>
+> 'hostprogs' teaches Kbuild that this is a host program, but not enough
+> to order to compile it. You must add it to 'always-y' to really compile
+> it.
+>
+> Since this sample has never been compiled in upstream, various issues
+> are left unnoticed.
+>
+> [1] compilers without <linux/android/binderfs.h> are still widely used
+>
+> <linux/android/binderfs.h> is only available since commit c13295ad219d
+> ("binderfs: rename header to binderfs.h"), i.e., Linux 5.0
+>
+> If your compiler is based on UAPI headers older than Linux 5.0, you
+> will see the following error:
+>
+>   samples/binderfs/binderfs_example.c:16:10: fatal error: linux/android/binderfs.h: No such file or directory
+>    #include <linux/android/binderfs.h>
+>             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+>   compilation terminated.
+>
+> You cannot rely on compilers to have such a new header.
+>
+> The common approach is to install UAPI headers of this kernel into
+> usr/include, and then add it to the header include path.
+>
+> I added 'depends on HEADERS_INSTALL' in Kconfig, and '-I usr/include'
+> compiler flag in Makefile.
+>
+> [2] compile the sample for target architecture
+>
+> Since headers_install works for the target architecture, only the native
+> build was able to build sample code that requires '-I usr/include'.
+>
+> Commit 7f3a59db274c ("kbuild: add infrastructure to build userspace
+> programs") added the new syntax 'userprogs' to compile user-space
+> programs for the target architecture.
+>
+> Use it, and 'ifndef CROSS_COMPILE' will go away.
+>
+> I added 'depends on CC_CAN_LINK' because $(CC) is not necessarily capable
+> of linking user-space programs.
+>
+> [3] use subdir-y to descend into samples/binderfs/
+>
+> Since this directory does not contain any kernel-space code, it has no
+> point to generate built-in.a or modules.order.
+>
+> Replace obj-$(CONFIG_...) with subdir-$(CONFIG_...).
+>
+> [4] -Wunused-variable warning
+>
+> If I compile this, I see the following warning.
+>
+>   samples/binderfs/binderfs_example.c: In function 'main':
+>   samples/binderfs/binderfs_example.c:21:9: warning: unused variable 'len' [-Wunused-variable]
+>      21 |  size_t len;
+>         |         ^~~
+>
+> I removed the unused 'len'.
+>
+> [5] CONFIG_ANDROID_BINDERFS is not required
+>
+> Since this is a user-space standalone program, it is independent of
+> the kernel configuration.
+>
+> Remove 'depends on ANDROID_BINDERFS'.
+>
+> Fixes: 9762dc1432e1 ("samples: add binderfs sample program")
+> Fixes: c624adc9cb6e ("samples: fix binderfs sample")
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
 
-[ Upstream commit 7982471d01aac33994276bf567c8f1f3a137648a ]
 
-According to drm_plane_create_zpos_property() function documentation,
-all planes zpos range should be set if zpos property is supported.
-However, the rcar-du driver didn't set primary plane zpos range. Since
-the primary plane's zpos is fixed, set it immutably.
+Applied to linux-kbuild.
 
-Reported-by: Yoshihito Ogawa <yoshihito.ogawa.kc@renesas.com>
-Reported-by: Koji Matsuoka <koji.matsuoka.xm@renesas.com>
-Signed-off-by: Tomohito Esaki <etom@igel.co.jp>
-Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Reviewed-by: Daniel Stone <daniels@collabora.com>
-[Turn continue into if ... else ...]
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/rcar-du/rcar_du_plane.c | 16 +++++++++-------
- drivers/gpu/drm/rcar-du/rcar_du_vsp.c   | 14 ++++++++------
- 2 files changed, 17 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/gpu/drm/rcar-du/rcar_du_plane.c b/drivers/gpu/drm/rcar-du/rcar_du_plane.c
-index c6430027169f..a0021fc25b27 100644
---- a/drivers/gpu/drm/rcar-du/rcar_du_plane.c
-+++ b/drivers/gpu/drm/rcar-du/rcar_du_plane.c
-@@ -785,13 +785,15 @@ int rcar_du_planes_init(struct rcar_du_group *rgrp)
- 
- 		drm_plane_create_alpha_property(&plane->plane);
- 
--		if (type == DRM_PLANE_TYPE_PRIMARY)
--			continue;
--
--		drm_object_attach_property(&plane->plane.base,
--					   rcdu->props.colorkey,
--					   RCAR_DU_COLORKEY_NONE);
--		drm_plane_create_zpos_property(&plane->plane, 1, 1, 7);
-+		if (type == DRM_PLANE_TYPE_PRIMARY) {
-+			drm_plane_create_zpos_immutable_property(&plane->plane,
-+								 0);
-+		} else {
-+			drm_object_attach_property(&plane->plane.base,
-+						   rcdu->props.colorkey,
-+						   RCAR_DU_COLORKEY_NONE);
-+			drm_plane_create_zpos_property(&plane->plane, 1, 1, 7);
-+		}
- 	}
- 
- 	return 0;
-diff --git a/drivers/gpu/drm/rcar-du/rcar_du_vsp.c b/drivers/gpu/drm/rcar-du/rcar_du_vsp.c
-index 5e4faf258c31..f1a81c9b184d 100644
---- a/drivers/gpu/drm/rcar-du/rcar_du_vsp.c
-+++ b/drivers/gpu/drm/rcar-du/rcar_du_vsp.c
-@@ -392,12 +392,14 @@ int rcar_du_vsp_init(struct rcar_du_vsp *vsp, struct device_node *np,
- 		drm_plane_helper_add(&plane->plane,
- 				     &rcar_du_vsp_plane_helper_funcs);
- 
--		if (type == DRM_PLANE_TYPE_PRIMARY)
--			continue;
--
--		drm_plane_create_alpha_property(&plane->plane);
--		drm_plane_create_zpos_property(&plane->plane, 1, 1,
--					       vsp->num_planes - 1);
-+		if (type == DRM_PLANE_TYPE_PRIMARY) {
-+			drm_plane_create_zpos_immutable_property(&plane->plane,
-+								 0);
-+		} else {
-+			drm_plane_create_alpha_property(&plane->plane);
-+			drm_plane_create_zpos_property(&plane->plane, 1, 1,
-+						       vsp->num_planes - 1);
-+		}
- 	}
- 
- 	return 0;
+>
+>  samples/Kconfig                     | 2 +-
+>  samples/Makefile                    | 2 +-
+>  samples/binderfs/Makefile           | 9 ++++-----
+>  samples/binderfs/binderfs_example.c | 1 -
+>  4 files changed, 6 insertions(+), 8 deletions(-)
+>
+> diff --git a/samples/Kconfig b/samples/Kconfig
+> index 0cbb6146f3cf..953abbdebf7b 100644
+> --- a/samples/Kconfig
+> +++ b/samples/Kconfig
+> @@ -185,7 +185,7 @@ config SAMPLE_VFIO_MDEV_MBOCHS
+>
+>  config SAMPLE_ANDROID_BINDERFS
+>         bool "Build Android binderfs example"
+> -       depends on ANDROID_BINDERFS
+> +       depends on CC_CAN_LINK && HEADERS_INSTALL
+>         help
+>           Builds a sample program to illustrate the use of the Android binderfs
+>           filesystem.
+> diff --git a/samples/Makefile b/samples/Makefile
+> index 29c66aadd954..4029d207cebb 100644
+> --- a/samples/Makefile
+> +++ b/samples/Makefile
+> @@ -2,7 +2,7 @@
+>  # Makefile for Linux samples code
+>
+>  subdir-$(CONFIG_SAMPLE_AUXDISPLAY)     += auxdisplay
+> -obj-$(CONFIG_SAMPLE_ANDROID_BINDERFS)  += binderfs/
+> +subdir-$(CONFIG_SAMPLE_ANDROID_BINDERFS) += binderfs
+>  obj-$(CONFIG_SAMPLE_CONFIGFS)          += configfs/
+>  obj-$(CONFIG_SAMPLE_CONNECTOR)         += connector/
+>  subdir-$(CONFIG_SAMPLE_HIDRAW)         += hidraw
+> diff --git a/samples/binderfs/Makefile b/samples/binderfs/Makefile
+> index a3ac5476338a..989e4badaee2 100644
+> --- a/samples/binderfs/Makefile
+> +++ b/samples/binderfs/Makefile
+> @@ -1,6 +1,5 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+> -ifndef CROSS_COMPILE
+> -ifdef CONFIG_SAMPLE_ANDROID_BINDERFS
+> -hostprogs := binderfs_example
+> -endif
+> -endif
+> +userprogs := binderfs_example
+> +always-y := $(userprogs)
+> +
+> +userccflags += -I usr/include
+> diff --git a/samples/binderfs/binderfs_example.c b/samples/binderfs/binderfs_example.c
+> index 5bbd2ebc0aea..0fd92cdda460 100644
+> --- a/samples/binderfs/binderfs_example.c
+> +++ b/samples/binderfs/binderfs_example.c
+> @@ -18,7 +18,6 @@
+>  int main(int argc, char *argv[])
+>  {
+>         int fd, ret, saved_errno;
+> -       size_t len;
+>         struct binderfs_device device = { 0 };
+>
+>         ret = unshare(CLONE_NEWNS);
+> --
+> 2.25.1
+>
+
+
 -- 
-2.25.1
-
+Best Regards
+Masahiro Yamada
