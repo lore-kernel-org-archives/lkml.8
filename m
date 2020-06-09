@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D7BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D3AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA3DF20734
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:59:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FDEB206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:59:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725572;
-	bh=7H0o9iPkpfeRrO+kK8fHciPXul+ErU2mXc1tBvSlrxs=;
+	s=default; t=1591725580;
+	bh=fl6azMfhIGuZjCmH+CkUOjvcD7goDESkGF2l0XOjBvo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q403BWFLkk2oJi71Vc6r1SgqCBfe0kSQ0OBtCs0qoLm/Y2xqiaOkU6AaUJRU3XH2w
-	 qFmZ0RhD0CA+gDU95WT7MOQdJ0NUDBTQC5vcpTkynxT+hqJUbiz0c8ZL6216cEMq7s
-	 ef16FkJspBnODm9zT/B7FqcnuciztA0xXDJOPE2Q=
+	b=KJM9OiTabedag+86YzAu7STGsVpbN2wZ5bYLGI4u9EYzVPPkYCXQrnHLdv1yuYOT3
+	 j7e40YY7gzhBeJ/b0y3Qft24Fs/WQPeJ1ANwafhlmAKMwfwTTtA9MkLEZ/ws+0cEEO
+	 ndliL49tKLvrpO+eePnzQVpazMhpqe0hgDrmRX8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731526AbgFIRy7 (ORCPT
+        id S2387720AbgFIR7g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:54:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44078 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:59:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733007AbgFIRxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:53:15 -0400
+        id S1731893AbgFIRy6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:54:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E94EF20734;
-        Tue,  9 Jun 2020 17:53:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4A8520734;
+        Tue,  9 Jun 2020 17:54:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725194;
-        bh=7H0o9iPkpfeRrO+kK8fHciPXul+ErU2mXc1tBvSlrxs=;
+        s=default; t=1591725298;
+        bh=fl6azMfhIGuZjCmH+CkUOjvcD7goDESkGF2l0XOjBvo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ozqkY8M1b7dv8cxh8S/oiIXPOWreofyGvUsvAId5Uhe947HSC7nyK3dMUxGpu2gkb
-         mWKbPIC9nI5uCTeWdqs5E+LVHa1Z2gFZF5VSNr9ddCL0MMhwVg2ENfiZMuYY1qZipZ
-         VvedbNZmsdflKdq5l4PIP7RXVht0+NGiAzTCVrrg=
+        b=Bhzcg44vqK8RWYhy7WADBz8ampII2KE42bPksNjd9roLENl6y7ej0JYo5mbrHwwEg
+         YIjrH6Py/Sh+sAKAY5eL411LYSNTYWV4oMX1elRj083rF4V9ha87A14jkz58aWGUj4
+         Y9OFL/e6GwBQ1qjnP0YBm8Cz8wLj+3qgf8PSrtxU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
-        Raghavendra <rananta@codeaurora.org>
-Subject: [PATCH 5.4 23/34] tty: hvc_console, fix crashes on parallel open/close
-Date:   Tue,  9 Jun 2020 19:45:19 +0200
-Message-Id: <20200609174055.648854409@linuxfoundation.org>
+        stable@vger.kernel.org, Bin Liu <b-liu@ti.com>
+Subject: [PATCH 5.7 10/24] usb: musb: start session in resume for host port
+Date:   Tue,  9 Jun 2020 19:45:41 +0200
+Message-Id: <20200609174150.155237499@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200609174052.628006868@linuxfoundation.org>
-References: <20200609174052.628006868@linuxfoundation.org>
+In-Reply-To: <20200609174149.255223112@linuxfoundation.org>
+References: <20200609174149.255223112@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,101 +58,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Slaby <jslaby@suse.cz>
+From: Bin Liu <b-liu@ti.com>
 
-commit 24eb2377f977fe06d84fca558f891f95bc28a449 upstream.
+commit 7f88a5ac393f39319f69b8b20cc8d5759878d1a1 upstream.
 
-hvc_open sets tty->driver_data to NULL when open fails at some point.
-Typically, the failure happens in hp->ops->notifier_add(). If there is
-a racing process which tries to open such mangled tty, which was not
-closed yet, the process will crash in hvc_open as tty->driver_data is
-NULL.
+Commit 17539f2f4f0b ("usb: musb: fix enumeration after resume") replaced
+musb_start() in musb_resume() to not override softconnect bit, but it
+doesn't restart the session for host port which was done in musb_start().
+The session could be disabled in musb_suspend(), which leads the host
+port doesn't stay in host mode.
 
-All this happens because close wants to know whether open failed or not.
-But ->open should not NULL this and other tty fields for ->close to be
-happy. ->open should call tty_port_set_initialized(true) and close
-should check by tty_port_initialized() instead. So do this properly in
-this driver.
+So let's start the session specifically for host port in musb_resume().
 
-So this patch removes these from ->open:
-* tty_port_tty_set(&hp->port, NULL). This happens on last close.
-* tty->driver_data = NULL. Dtto.
-* tty_port_put(&hp->port). This happens in shutdown and until now, this
-  must have been causing a reference underflow, if I am not missing
-  something.
+Fixes: 17539f2f4f0b ("usb: musb: fix enumeration after resume")
 
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Cc: stable <stable@vger.kernel.org>
-Reported-and-tested-by: Raghavendra <rananta@codeaurora.org>
-Link: https://lore.kernel.org/r/20200526145632.13879-1-jslaby@suse.cz
+Cc: stable@vger.kernel.org
+Signed-off-by: Bin Liu <b-liu@ti.com>
+Link: https://lore.kernel.org/r/20200525025049.3400-3-b-liu@ti.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/hvc/hvc_console.c |   23 ++++++++---------------
- 1 file changed, 8 insertions(+), 15 deletions(-)
+ drivers/usb/musb/musb_core.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/tty/hvc/hvc_console.c
-+++ b/drivers/tty/hvc/hvc_console.c
-@@ -371,15 +371,14 @@ static int hvc_open(struct tty_struct *t
- 	 * tty fields and return the kref reference.
- 	 */
- 	if (rc) {
--		tty_port_tty_set(&hp->port, NULL);
--		tty->driver_data = NULL;
--		tty_port_put(&hp->port);
- 		printk(KERN_ERR "hvc_open: request_irq failed with rc %d.\n", rc);
--	} else
-+	} else {
- 		/* We are ready... raise DTR/RTS */
- 		if (C_BAUD(tty))
- 			if (hp->ops->dtr_rts)
- 				hp->ops->dtr_rts(hp, 1);
-+		tty_port_set_initialized(&hp->port, true);
+--- a/drivers/usb/musb/musb_core.c
++++ b/drivers/usb/musb/musb_core.c
+@@ -2877,6 +2877,13 @@ static int musb_resume(struct device *de
+ 	musb_enable_interrupts(musb);
+ 	musb_platform_enable(musb);
+ 
++	/* session might be disabled in suspend */
++	if (musb->port_mode == MUSB_HOST &&
++	    !(musb->ops->quirks & MUSB_PRESERVE_SESSION)) {
++		devctl |= MUSB_DEVCTL_SESSION;
++		musb_writeb(musb->mregs, MUSB_DEVCTL, devctl);
 +	}
- 
- 	/* Force wakeup of the polling thread */
- 	hvc_kick();
-@@ -389,22 +388,12 @@ static int hvc_open(struct tty_struct *t
- 
- static void hvc_close(struct tty_struct *tty, struct file * filp)
- {
--	struct hvc_struct *hp;
-+	struct hvc_struct *hp = tty->driver_data;
- 	unsigned long flags;
- 
- 	if (tty_hung_up_p(filp))
- 		return;
- 
--	/*
--	 * No driver_data means that this close was issued after a failed
--	 * hvc_open by the tty layer's release_dev() function and we can just
--	 * exit cleanly because the kref reference wasn't made.
--	 */
--	if (!tty->driver_data)
--		return;
--
--	hp = tty->driver_data;
--
- 	spin_lock_irqsave(&hp->port.lock, flags);
- 
- 	if (--hp->port.count == 0) {
-@@ -412,6 +401,9 @@ static void hvc_close(struct tty_struct
- 		/* We are done with the tty pointer now. */
- 		tty_port_tty_set(&hp->port, NULL);
- 
-+		if (!tty_port_initialized(&hp->port))
-+			return;
 +
- 		if (C_HUPCL(tty))
- 			if (hp->ops->dtr_rts)
- 				hp->ops->dtr_rts(hp, 0);
-@@ -428,6 +420,7 @@ static void hvc_close(struct tty_struct
- 		 * waking periodically to check chars_in_buffer().
- 		 */
- 		tty_wait_until_sent(tty, HVC_CLOSE_WAIT);
-+		tty_port_set_initialized(&hp->port, false);
- 	} else {
- 		if (hp->port.count < 0)
- 			printk(KERN_ERR "hvc_close %X: oops, count is %d\n",
+ 	spin_lock_irqsave(&musb->lock, flags);
+ 	error = musb_run_resume_work(musb);
+ 	if (error)
 
 
