@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ADE4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C8CDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B5562067B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:20:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 802832067B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:20:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591726822;
-	bh=A8DUQ++xWggAbsfDt04Gt1Y8k5Y7x2Tg/Rp9UZgQZWs=;
+	s=default; t=1591726831;
+	bh=e9HiqkUS9AZSGsSrgo//g785d5RIDBsE9uWjLOnWiEo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wi6UduWo8Vx3H62x+/VeppxLHhCxJWcIFEeKDjMWNqYm9tjVitlLOaBnzI5nVrflG
-	 jJaSTuTWtciejkUAgxL3z2LZ0uqFLH1HhiTNAW4VBPtj1BGuHB5svlYi9B2KGk+reH
-	 Zn61lgCv8oolH8U5WFHjGUSg+t9L4XCdRhSYCD5w=
+	b=AWRRVK2ibVqHS9JNvS5wmG8N2hrj48EZXRKI4TbGJrl/AAraPo0qqL/n2K5tgsT2J
+	 qOtNuaypiJipGtcn3tKBL/gVDqdU89c4Ya+32ubVavoJG5jpjWU1mjyjLtWPQMWe+3
+	 Xbs/uXuAyra3P9da4LFtqGFiTsbo1nqqVKEqvzOA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388901AbgFISUU (ORCPT
+        id S2388916AbgFISU2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:20:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34738 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 14:20:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732461AbgFIRtK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:49:10 -0400
+        id S1732443AbgFIRtE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:49:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CAE2207ED;
-        Tue,  9 Jun 2020 17:49:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FE9F207ED;
+        Tue,  9 Jun 2020 17:49:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591724950;
-        bh=A8DUQ++xWggAbsfDt04Gt1Y8k5Y7x2Tg/Rp9UZgQZWs=;
+        s=default; t=1591724943;
+        bh=e9HiqkUS9AZSGsSrgo//g785d5RIDBsE9uWjLOnWiEo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ekV88K1ku2Tm0Ssu04v3AuCzML8ARDz3PhZi2e6OvYY9ujVlD84LkIYz4csfCbP1n
-         R/WSbyxkRLKzTv5AkYRVst2TB6WFvqqkKsC+22a2nyTRckcrWPb/SzP19CWzxKeMZk
-         pFZl7sQb5whgRHL2fM0ZCekJfKiQiCQblvv/Q4tw=
+        b=HPN01z+/ijMImzECqixuAYh4G8k93haPUs6cPV8gorrNhjEYk5XcyGfZiBGTLmE5d
+         LqTsncz9svRcryii7PhNQ/xb+diiL3ptdUJLnu412KdH+Pm5zuHyLzBGCgI/+Cp/J8
+         yUMfWu0nRU8S5vHuYjdfGH+EOxprxW72VGfCa8CY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Gross <mgross@linux.intel.com>,
-        Borislav Petkov <bp@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: [PATCH 4.9 37/42] x86/cpu: Add table argument to cpu_matches()
-Date:   Tue,  9 Jun 2020 19:44:43 +0200
-Message-Id: <20200609174019.612854509@linuxfoundation.org>
+        stable@vger.kernel.org, Pascal Terjan <pterjan@google.com>
+Subject: [PATCH 4.9 34/42] staging: rtl8712: Fix IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK
+Date:   Tue,  9 Jun 2020 19:44:40 +0200
+Message-Id: <20200609174019.249462402@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174015.379493548@linuxfoundation.org>
 References: <20200609174015.379493548@linuxfoundation.org>
@@ -61,94 +58,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Gross <mgross@linux.intel.com>
+From: Pascal Terjan <pterjan@google.com>
 
-commit 93920f61c2ad7edb01e63323832585796af75fc9 upstream
+commit 15ea976a1f12b5fd76b1bd6ff3eb5132fd28047f upstream.
 
-To make cpu_matches() reusable for other matching tables, have it take a
-pointer to a x86_cpu_id table as an argument.
+The value in shared headers was fixed 9 years ago in commit 8d661f1e462d
+("ieee80211: correct IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK macro") and
+while looking at using shared headers for other duplicated constants
+I noticed this driver uses the old value.
 
- [ bp: Flip arguments order. ]
+The macros are also defined twice in this file so I am deleting the
+second definition.
 
-Signed-off-by: Mark Gross <mgross@linux.intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Pascal Terjan <pterjan@google.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200523211247.23262-1-pterjan@google.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/x86/kernel/cpu/common.c |   23 +++++++++++++----------
- 1 file changed, 13 insertions(+), 10 deletions(-)
 
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -956,9 +956,9 @@ static const __initconst struct x86_cpu_
- 	{}
- };
+---
+ drivers/staging/rtl8712/wifi.h |    9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
+
+--- a/drivers/staging/rtl8712/wifi.h
++++ b/drivers/staging/rtl8712/wifi.h
+@@ -471,7 +471,7 @@ static inline unsigned char *get_hdr_bss
+ /* block-ack parameters */
+ #define IEEE80211_ADDBA_PARAM_POLICY_MASK 0x0002
+ #define IEEE80211_ADDBA_PARAM_TID_MASK 0x003C
+-#define IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK 0xFFA0
++#define IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK 0xFFC0
+ #define IEEE80211_DELBA_PARAM_TID_MASK 0xF000
+ #define IEEE80211_DELBA_PARAM_INITIATOR_MASK 0x0800
  
--static bool __init cpu_matches(unsigned long which)
-+static bool __init cpu_matches(const struct x86_cpu_id *table, unsigned long which)
- {
--	const struct x86_cpu_id *m = x86_match_cpu(cpu_vuln_whitelist);
-+	const struct x86_cpu_id *m = x86_match_cpu(table);
+@@ -565,13 +565,6 @@ struct ieee80211_ht_addt_info {
+ #define IEEE80211_HT_IE_NON_GF_STA_PRSNT	0x0004
+ #define IEEE80211_HT_IE_NON_HT_STA_PRSNT	0x0010
  
- 	return m && !!(m->driver_data & which);
- }
-@@ -978,29 +978,32 @@ static void __init cpu_set_bug_bits(stru
- 	u64 ia32_cap = x86_read_arch_cap_msr();
- 
- 	/* Set ITLB_MULTIHIT bug if cpu is not in the whitelist and not mitigated */
--	if (!cpu_matches(NO_ITLB_MULTIHIT) && !(ia32_cap & ARCH_CAP_PSCHANGE_MC_NO))
-+	if (!cpu_matches(cpu_vuln_whitelist, NO_ITLB_MULTIHIT) &&
-+	    !(ia32_cap & ARCH_CAP_PSCHANGE_MC_NO))
- 		setup_force_cpu_bug(X86_BUG_ITLB_MULTIHIT);
- 
--	if (cpu_matches(NO_SPECULATION))
-+	if (cpu_matches(cpu_vuln_whitelist, NO_SPECULATION))
- 		return;
- 
- 	setup_force_cpu_bug(X86_BUG_SPECTRE_V1);
- 	setup_force_cpu_bug(X86_BUG_SPECTRE_V2);
- 
--	if (!cpu_matches(NO_SSB) && !(ia32_cap & ARCH_CAP_SSB_NO) &&
-+	if (!cpu_matches(cpu_vuln_whitelist, NO_SSB) &&
-+	    !(ia32_cap & ARCH_CAP_SSB_NO) &&
- 	   !cpu_has(c, X86_FEATURE_AMD_SSB_NO))
- 		setup_force_cpu_bug(X86_BUG_SPEC_STORE_BYPASS);
- 
- 	if (ia32_cap & ARCH_CAP_IBRS_ALL)
- 		setup_force_cpu_cap(X86_FEATURE_IBRS_ENHANCED);
- 
--	if (!cpu_matches(NO_MDS) && !(ia32_cap & ARCH_CAP_MDS_NO)) {
-+	if (!cpu_matches(cpu_vuln_whitelist, NO_MDS) &&
-+	    !(ia32_cap & ARCH_CAP_MDS_NO)) {
- 		setup_force_cpu_bug(X86_BUG_MDS);
--		if (cpu_matches(MSBDS_ONLY))
-+		if (cpu_matches(cpu_vuln_whitelist, MSBDS_ONLY))
- 			setup_force_cpu_bug(X86_BUG_MSBDS_ONLY);
- 	}
- 
--	if (!cpu_matches(NO_SWAPGS))
-+	if (!cpu_matches(cpu_vuln_whitelist, NO_SWAPGS))
- 		setup_force_cpu_bug(X86_BUG_SWAPGS);
- 
- 	/*
-@@ -1018,7 +1021,7 @@ static void __init cpu_set_bug_bits(stru
- 	     (ia32_cap & ARCH_CAP_TSX_CTRL_MSR)))
- 		setup_force_cpu_bug(X86_BUG_TAA);
- 
--	if (cpu_matches(NO_MELTDOWN))
-+	if (cpu_matches(cpu_vuln_whitelist, NO_MELTDOWN))
- 		return;
- 
- 	/* Rogue Data Cache Load? No! */
-@@ -1027,7 +1030,7 @@ static void __init cpu_set_bug_bits(stru
- 
- 	setup_force_cpu_bug(X86_BUG_CPU_MELTDOWN);
- 
--	if (cpu_matches(NO_L1TF))
-+	if (cpu_matches(cpu_vuln_whitelist, NO_L1TF))
- 		return;
- 
- 	setup_force_cpu_bug(X86_BUG_L1TF);
+-/* block-ack parameters */
+-#define IEEE80211_ADDBA_PARAM_POLICY_MASK 0x0002
+-#define IEEE80211_ADDBA_PARAM_TID_MASK 0x003C
+-#define IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK 0xFFA0
+-#define IEEE80211_DELBA_PARAM_TID_MASK 0xF000
+-#define IEEE80211_DELBA_PARAM_INITIATOR_MASK 0x0800
+-
+ /*
+  * A-PMDU buffer sizes
+  * According to IEEE802.11n spec size varies from 8K to 64K (in powers of 2)
 
 
