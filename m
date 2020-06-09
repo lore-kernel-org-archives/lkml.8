@@ -2,101 +2,96 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E53CDC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:17:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81EF2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:17:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF4F62067B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:17:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aO1nwJ4j"
+	by mail.kernel.org (Postfix) with ESMTP id 5DBE02067B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:17:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591726659;
+	bh=0Sdw19cZUj8gXdGRxHjvIBv37iyXz0YRfj4NGJbcFrc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=f1V5TltIgcvgkHaXbyD5RUnB1FJbNTC51O8AX3TI6CIBbsAXnOosuG9FkwhnIVm7z
+	 QKQSxgWtNEx1Y/BuDiIwdnbWWq6fcF7B0kXYPtwx7cS79PZOIy9AX6IZiLQTGOj46g
+	 ZzKW/pZEdN7rbrFqxCdP/Vbu/symqaLr/grs8OIQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731220AbgFISRW (ORCPT
+        id S2388814AbgFISRh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:17:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45556 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388803AbgFISQ4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 14:16:56 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D117C05BD1E;
-        Tue,  9 Jun 2020 11:16:56 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id r9so3734094wmh.2;
-        Tue, 09 Jun 2020 11:16:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Ug8wVISZ12XWMBvX4HHfCm0Fc+Zf7t4MD5f5/8sqw/s=;
-        b=aO1nwJ4j0QobhNHEzgQZPBk/MtjQ5+6OjtVmG/ySo4zqByYb+/ekvWrbJg4WzX9ZJY
-         /yl3MaUYY8i+0jByrV8k5+GXrRGgSjnvFRctKbNH7aps+d97KS6NYURBz/1/C3Io6U1h
-         W3rWAyB+szhELBy3FnhZZF3ILg+PGEEKLfXnR0ArptM5dYaomVp1X8QWGprM6oPG9hWe
-         62odnXYw+OmDgiPQgPLig5QSs5bOC0gvs8tGXlcB/jy2ySj4gsgF1sIFqa7IwumGfTSp
-         vkOQ0BKvJrSY5SD83Jx1gJ4h642264tiLIO3jkKWPDsni6NTRfxYHgY0a7INa4EyzvZ5
-         IU3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Ug8wVISZ12XWMBvX4HHfCm0Fc+Zf7t4MD5f5/8sqw/s=;
-        b=K5QIoMlADkgskwNxisWM5JGVeW3JwlBYYtIUSkZuePJR4wipPTjSFR8rFGHgnms+Me
-         jlnBNm6SV4nyQZtRh9E6EcvSTLPIyhpzXGJz7mX7N/9u8oyF1DcVYs6C+0CHDtDhp9SD
-         BV3AxNMHVUWHzuw6p/8ofYvuhCycVRjOfMG/3SiJuLU+t5rNDpmz79WNKQcR7W9ntZEj
-         quiCUWpJi9a9Yb8/jqfulXYkca66OeyNedXGjBfiD6sZJgYS5W9FfluC3MBbugEbYLtD
-         Ks4y6nJNjFUhwnN2mb1ucw73jajKCMSyZrMBw4/+Ic3v738+LJUhVgMBCjcGjQn0fZrv
-         x5rw==
-X-Gm-Message-State: AOAM531Czij67blz0CWIOy+xEkd1b/X+2uy/n63avrfHzIBvQnPIVp0T
-        k5uio6LMW7kjOBrvaAuUyfFBjRjU
-X-Google-Smtp-Source: ABdhPJxOL4Ecmn0J0+sDHkxj1gGfa8vi3rcCIlrDSLzWe0OKpWBizVJBPiBgM6xRFNZZy0uAqRJF5g==
-X-Received: by 2002:a1c:544d:: with SMTP id p13mr5596028wmi.25.1591726614810;
-        Tue, 09 Jun 2020 11:16:54 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id b8sm4705442wrs.36.2020.06.09.11.16.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Jun 2020 11:16:54 -0700 (PDT)
-Subject: Re: [PATCH v2 3/9] ARM: dts: bcm2711: Add firmware usb reset node
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
-        p.zabel@pengutronix.de, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, helgaas@kernel.org,
-        andy.shevchenko@gmail.com, mathias.nyman@linux.intel.com,
-        lorenzo.pieralisi@arm.com, devicetree@vger.kernel.org
-References: <20200609175003.19793-1-nsaenzjulienne@suse.de>
- <20200609175003.19793-4-nsaenzjulienne@suse.de>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <1994ce6d-0599-3203-b512-a4e93528910b@gmail.com>
-Date:   Tue, 9 Jun 2020 11:16:48 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
+        Tue, 9 Jun 2020 14:17:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37690 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730953AbgFIRuW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:50:22 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA29420734;
+        Tue,  9 Jun 2020 17:50:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591725022;
+        bh=0Sdw19cZUj8gXdGRxHjvIBv37iyXz0YRfj4NGJbcFrc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=t+G/b15ucEen/2Mn39v1FiJBcMhvRl40OyyH9s8teck8A5Kun1ik8jXgHCjxJKjq3
+         QFbvXGdw9mNmfZ8HjqJBv8Ujma7LDj51Kz+l9m3Y6NQxd8eDltIeubbLQdNRp+6QnZ
+         PSD0lyVBVjuCVBw+P7y0ct/AwIzhQuOzUzJb3eAs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
+        <jerome.pouiller@silabs.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.14 20/46] mmc: fix compilation of user API
+Date:   Tue,  9 Jun 2020 19:44:36 +0200
+Message-Id: <20200609174025.231350016@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200609174022.938987501@linuxfoundation.org>
+References: <20200609174022.938987501@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200609175003.19793-4-nsaenzjulienne@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Jérôme Pouiller <jerome.pouiller@silabs.com>
+
+commit 83fc5dd57f86c3ec7d6d22565a6ff6c948853b64 upstream.
+
+The definitions of MMC_IOC_CMD  and of MMC_IOC_MULTI_CMD rely on
+MMC_BLOCK_MAJOR:
+
+    #define MMC_IOC_CMD       _IOWR(MMC_BLOCK_MAJOR, 0, struct mmc_ioc_cmd)
+    #define MMC_IOC_MULTI_CMD _IOWR(MMC_BLOCK_MAJOR, 1, struct mmc_ioc_multi_cmd)
+
+However, MMC_BLOCK_MAJOR is defined in linux/major.h and
+linux/mmc/ioctl.h did not include it.
+
+Signed-off-by: Jérôme Pouiller <jerome.pouiller@silabs.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200511161902.191405-1-Jerome.Pouiller@silabs.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ include/uapi/linux/mmc/ioctl.h |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/include/uapi/linux/mmc/ioctl.h
++++ b/include/uapi/linux/mmc/ioctl.h
+@@ -3,6 +3,7 @@
+ #define LINUX_MMC_IOCTL_H
+ 
+ #include <linux/types.h>
++#include <linux/major.h>
+ 
+ struct mmc_ioc_cmd {
+ 	/* Implies direction of data.  true = write, false = read */
 
 
-On 6/9/2020 10:49 AM, Nicolas Saenz Julienne wrote:
-> Now that the reset driver exposing Raspberry Pi 4's firmware based USB
-> reset routine is available, let's add the device tree node exposing it.
-> 
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
