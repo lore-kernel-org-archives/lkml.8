@@ -2,59 +2,104 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E12C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E92C4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:06:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD1C420691
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:06:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE51120812
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:06:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388275AbgFISGq (ORCPT
+        id S2388260AbgFISGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:06:46 -0400
-Received: from muru.com ([72.249.23.125]:57496 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730160AbgFISGg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 14:06:36 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 7D1E68088;
-        Tue,  9 Jun 2020 18:07:26 +0000 (UTC)
-Date:   Tue, 9 Jun 2020 11:06:31 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Drew Fustini <drew@beagleboard.org>
-Cc:     Haojian Zhuang <haojian.zhuang@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>
-Subject: Re: [PATCH v2] pinctrl-single: fix pcs_parse_pinconf() return value
-Message-ID: <20200609180631.GS37466@atomide.com>
-References: <20200608125143.GA2789203@x1>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+        Tue, 9 Jun 2020 14:06:40 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:41792 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388202AbgFISGE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 14:06:04 -0400
+Received: from [192.168.4.242] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1jiidG-0001pW-E2; Tue, 09 Jun 2020 19:05:54 +0100
+Received: from ben by deadeye with local (Exim 4.94)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1jiidF-006Vw8-Fb; Tue, 09 Jun 2020 19:05:53 +0100
+Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
-In-Reply-To: <20200608125143.GA2789203@x1>
+Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        "Christoph Hellwig" <hch@lst.de>,
+        "Eric Dumazet" <edumazet@google.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Hannes Reinecke" <hare@suse.com>,
+        "Hannes Reinecke" <hare@suse.de>,
+        "Bart Van Assche" <bart.vanassche@wdc.com>
+Date:   Tue, 09 Jun 2020 19:04:25 +0100
+Message-ID: <lsq.1591725832.201648349@decadent.org.uk>
+X-Mailer: LinuxStableQueue (scripts by bwh)
+X-Patchwork-Hint: ignore
+Subject: [PATCH 3.16 34/61] scsi: sg: fixup infoleak when using
+ SG_GET_REQUEST_TABLE
+In-Reply-To: <lsq.1591725831.850867383@decadent.org.uk>
+X-SA-Exim-Connect-IP: 192.168.4.242
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Drew Fustini <drew@beagleboard.org> [200608 12:52]:
-> This patch causes pcs_parse_pinconf() to return -ENOTSUPP when no
-> pinctrl_map is added.  The current behavior is to return 0 when
-> !PCS_HAS_PINCONF or !nconfs.  Thus pcs_parse_one_pinctrl_entry()
-> incorrectly assumes that a map was added and sets num_maps = 2.
-...
+3.16.85-rc1 review patch.  If anyone has any objections, please let me know.
 
-> Fixes: 9dddb4df90d1 ("pinctrl: single: support generic pinconf")
+------------------
 
-It would be good to get an ack/tested-by from Haojian for this.
+From: Hannes Reinecke <hare@suse.de>
 
-The patch looks right to me:
+commit 3e0097499839e0fe3af380410eababe5a47c4cf9 upstream.
 
-Acked-by: Tony Lindgren <tony@atomide.com>
+When calling SG_GET_REQUEST_TABLE ioctl only a half-filled table is
+returned; the remaining part will then contain stale kernel memory
+information.  This patch zeroes out the entire table to avoid this
+issue.
+
+Signed-off-by: Hannes Reinecke <hare@suse.com>
+Reviewed-by: Bart Van Assche <bart.vanassche@wdc.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+---
+ drivers/scsi/sg.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+--- a/drivers/scsi/sg.c
++++ b/drivers/scsi/sg.c
+@@ -881,7 +881,6 @@ sg_fill_request_table(Sg_fd *sfp, sg_req
+ 	list_for_each_entry(srp, &sfp->rq_list, entry) {
+ 		if (val > SG_MAX_QUEUE)
+ 			break;
+-		memset(&rinfo[val], 0, SZ_SG_REQ_INFO);
+ 		rinfo[val].req_state = srp->done + 1;
+ 		rinfo[val].problem =
+ 			srp->header.masked_status &
+@@ -1098,8 +1097,8 @@ sg_ioctl(struct file *filp, unsigned int
+ 		else {
+ 			sg_req_info_t *rinfo;
+ 
+-			rinfo = kmalloc(SZ_SG_REQ_INFO * SG_MAX_QUEUE,
+-								GFP_KERNEL);
++			rinfo = kzalloc(SZ_SG_REQ_INFO * SG_MAX_QUEUE,
++					GFP_KERNEL);
+ 			if (!rinfo)
+ 				return -ENOMEM;
+ 			read_lock_irqsave(&sfp->rq_list_lock, iflags);
+
