@@ -2,98 +2,79 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CBBEC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE40CC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:36:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9CD9207C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:36:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591717005;
-	bh=8jxQ4UoOVCXFybvExCDuNuK2icpIb8M2qVUBiuG5s4g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IKSYKTwHpOigbnR8LKQjtLse2fhc6wXm+urSWEC9Xg+Sb7NyrQ+F08iAqeksOW6pf
-	 WxEi0UpPTxmlvP29ALY3FVL+1nknV73kzfCwnmBYTkxCfO/Xj9J9yaplyELUgJ9SNz
-	 TvgxHQX7hibqh17Md/WyH1NFe5QazBe+C64zcYP8=
+	by mail.kernel.org (Postfix) with ESMTP id 9343D20774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:36:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730782AbgFIPgo (ORCPT
+        id S1730827AbgFIPgx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 11:36:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57164 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 11:36:53 -0400
+Received: from verein.lst.de ([213.95.11.211]:43019 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728944AbgFIPgo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 11:36:44 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A611420774;
-        Tue,  9 Jun 2020 15:36:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591717003;
-        bh=8jxQ4UoOVCXFybvExCDuNuK2icpIb8M2qVUBiuG5s4g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GJ8XxCq7LNSwdBtg6GkheDzfgXxEqiiVPgS1En+mEIw/DfevEWgjfnO6yOaAUd3JQ
-         etawWoLPW0tvEUzt4M1F/a3zcglZYz/GsCUR1jKDMPoPlETuiI4fbZCsdJcamrlm6a
-         o6n4hYBrvVDesYg5JHMNp87GeYdSf/wgFCjkaLtY=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id D3CFD40AFD; Tue,  9 Jun 2020 12:36:41 -0300 (-03)
-Date:   Tue, 9 Jun 2020 12:36:41 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 1/2] perf parse-events: fix an incompatible pointer
-Message-ID: <20200609153641.GG24868@kernel.org>
-References: <20200609053610.206588-1-irogers@google.com>
+        id S1728944AbgFIPgv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 11:36:51 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id B476668B02; Tue,  9 Jun 2020 17:36:46 +0200 (CEST)
+Date:   Tue, 9 Jun 2020 17:36:46 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     dillon min <dillon.minfei@gmail.com>
+Cc:     Vladimir Murzin <vladimir.murzin@arm.com>, hch@lst.de,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux@armlinux.org.uk, Kate Stewart <kstewart@linuxfoundation.org>,
+        allison@lohutok.net, info@metux.net, tglx@linutronix.de,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] arm-nommu: Add use_reserved_mem() to check if
+ device support reserved memory
+Message-ID: <20200609153646.GA17969@lst.de>
+References: <1591605038-8682-1-git-send-email-dillon.minfei@gmail.com> <1591605038-8682-3-git-send-email-dillon.minfei@gmail.com> <90df5646-e0c4-fcac-d934-4cc922230dd2@arm.com> <CAL9mu0+__0Z3R3TcSrj9-kPxsyQHKS9WqK1u58P0dEZ+Jd-wbQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200609053610.206588-1-irogers@google.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <CAL9mu0+__0Z3R3TcSrj9-kPxsyQHKS9WqK1u58P0dEZ+Jd-wbQ@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Jun 08, 2020 at 10:36:09PM -0700, Ian Rogers escreveu:
-> Arrays are pointer types and don't need their address taking.
-> Fixes: 8255718f4bed (perf pmu: Expand PMU events by prefix match)
-
-Thanks, applied.
-
-- Arnaldo
- 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/parse-events.y | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Tue, Jun 09, 2020 at 11:22:24PM +0800, dillon min wrote:
+> Hi Vladimir,
 > 
-> diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-> index c4ca932d092d..d4e076c9c2ab 100644
-> --- a/tools/perf/util/parse-events.y
-> +++ b/tools/perf/util/parse-events.y
-> @@ -349,7 +349,7 @@ PE_PMU_EVENT_PRE '-' PE_PMU_EVENT_SUF sep_dc
->  	struct list_head *list;
->  	char pmu_name[128];
->  
-> -	snprintf(&pmu_name, 128, "%s-%s", $1, $3);
-> +	snprintf(pmu_name, sizeof(pmu_name), "%s-%s", $1, $3);
->  	free($1);
->  	free($3);
->  	if (parse_events_multi_pmu_add(_parse_state, pmu_name, &list) < 0)
-> -- 
-> 2.27.0.278.ge193c7cf3a9-goog
+> Thanks for reviewing.
 > 
+> Hi Christoph Hellwig,
+> 
+> I just want to know if kernel dma mapping/direct is focused on
+> platforms with MMU.
+> leave arch code to handle dma coherent memory management themself for
+> no-MMU platform.
 
--- 
+No, I'd really like to consolidate everything that isn't overly
+arch specific eventually.
 
-- Arnaldo
+> 
+> so, you just return error code in kernel/dma/mapping.c,direct.c
+> without CONFIG_MMU defined ?
+> which means dma-direct mapping doesn't support !CONFIG_MMU is not a
+> bug, but design as it's.
+> or, just return error code currently, will add dma direct mapping
+> support for !CONFIG_MMU in the
+> future?
+> 
+> As Vladimir Murzin's suggestion has changes in kernel code, I need
+> your input to get
+> the design goal about dma-direct mapping, thanks.
+
+Can someone repost the whole patch?
