@@ -2,159 +2,149 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6995AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D807EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 449A7207C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:54:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591696491;
-	bh=b/I0kNxHIl+13KoxgRCT6zkbblfDXS0iLu6pitfhlpc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aiEYbVxZpCMlmIdxC8fupArfh8kU1U8GMDe5s9VJF8chj1Atn3Jjjj98HSqm6h/KI
-	 QoKJlQpRjfNcC+Mzf7B2zRIUGpCJkjtBZpUxFw06PRjMRwOvnFoVdEpbqjNOhneYm2
-	 pHeZk2gb4w9dCOJfm9fSDTlwJ9jJbFzgQTFxxnF4=
+	by mail.kernel.org (Postfix) with ESMTP id 8C6B82074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:55:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dd7z9JGa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728597AbgFIJyt (ORCPT
+        id S1728613AbgFIJy6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 05:54:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57652 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727037AbgFIJys (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 05:54:48 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2ACC2074B;
-        Tue,  9 Jun 2020 09:54:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591696486;
-        bh=b/I0kNxHIl+13KoxgRCT6zkbblfDXS0iLu6pitfhlpc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LrBZ8ycOBrsIie8XtRMmWnyHu9bjTpH+5cu1njFaZcwCTTexT3mRmcURDHoEQ8EhE
-         Q9DAexLcgpwTZ9cPhe+u4X2DxNWHiBujlEUN4QUOuRoe8BEz+9e5/hw3c63MnQRW1J
-         RdnFDqmQ0DtO0Ko2wtHgrl0zfWc7jeITMVyFrTtE=
-Date:   Tue, 9 Jun 2020 11:54:44 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Rajat Jain <rajatja@google.com>
-Cc:     Jesse Barnes <jsbarnes@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Zubin Mithra <zsm@google.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
- "whitelisted" drivers
-Message-ID: <20200609095444.GA533843@kroah.com>
-References: <CACK8Z6EXDf2vUuJbKm18R6HovwUZia4y_qUrTW8ZW+8LA2+RgA@mail.gmail.com>
- <20200603121613.GA1488883@kroah.com>
- <CACK8Z6EOGduHX1m7eyhFgsGV7CYiVN0en4U0cM4BEWJwk2bmoA@mail.gmail.com>
- <20200605080229.GC2209311@kroah.com>
- <CACK8Z6GR7-wseug=TtVyRarVZX_ao2geoLDNBwjtB+5Y7VWNEQ@mail.gmail.com>
- <20200607113632.GA49147@kroah.com>
- <CAJmaN=m5cGc8019LocvHTo-1U6beA9-h=T-YZtQEYEb_ry=b+Q@mail.gmail.com>
- <20200608175015.GA457685@kroah.com>
- <CAJmaN=mvnrLLkJC=6ddO_Rj+1FpRHoQzWFo9W3AZmsW_qS5CYQ@mail.gmail.com>
- <CACK8Z6GZprVZMM=JQ-9zjosYQ6OLpifp_g8RmSTa3HwWWTB8Lw@mail.gmail.com>
+        Tue, 9 Jun 2020 05:54:58 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21367 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727001AbgFIJyy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 05:54:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591696492;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4yqpZC69FI9gfC+3ZDTxgZNyTtJNF2wwb7CnB1Vobyk=;
+        b=Dd7z9JGamnkzFthispxNEjdJwIwwU1SHhP6GI0RYsHaxHsHrTIR+6MgmdgIPMPQYpi6WvZ
+        4lHrcMZtMTt4cq675xV7UOrwGShR0T4nOfXtRwR1Q/VA2xSn1INqeEsxmWqh5CISQGXdWC
+        7Hj54Ao30fVMz7dHAV9iQZlcflxV6cM=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-98-2o-3CtaaOx6H27whwkdRXw-1; Tue, 09 Jun 2020 05:54:51 -0400
+X-MC-Unique: 2o-3CtaaOx6H27whwkdRXw-1
+Received: by mail-wm1-f70.google.com with SMTP id p24so544424wmc.1
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 02:54:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4yqpZC69FI9gfC+3ZDTxgZNyTtJNF2wwb7CnB1Vobyk=;
+        b=Raexe1Smfl+sT9/04wolSrGJ79JDeHO86Ls4nRZRdl7JtHPDc0PkLndvJ5vDUqXNxE
+         FhwcRXFKWra/jYXRcKzuoQr7XRboTdeEkr/OLvFEt3KqwXoJuWR/5l0nkAteS9kn7wZB
+         DAxF1XKNY98Q0/+utsjsc/IRLakRdzWm5spUJmeedIZMOJsjEMZvvFMdeT3ZTx20wka5
+         uq85o7Yobl548maTozUO6OuFdEsdPXJCWzlXTJzHm4ChXRqeX8ynvBjH5dyEap8d7U5o
+         Lfp2EEcQOdRsZ4Hjzyo/Ed78/hP8udOHjv58TgMKsTDefAoS8pris10tDpxCf5P++BmI
+         4wbA==
+X-Gm-Message-State: AOAM531aij/dkg2o+oEbNFIodcd48fzOxxApL1u9skvQbauCH8zzfqit
+        uMmIgOkoJar1114yDcVfSeUUYjT03XL6Xu6VoaIZJlgEX0KvLNoZiIyd1HR1FL4IAdjx88A5FBe
+        VoQrEj6//rP12lF/r8bzGfrEy
+X-Received: by 2002:adf:f389:: with SMTP id m9mr3289940wro.195.1591696489740;
+        Tue, 09 Jun 2020 02:54:49 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwl0kF/fkynjmNqHsGFKgOWSXyai8zIz0vLEr3hLbMZc+5nW7Wqt4YcdTtmSjLLOFi4GirwgQ==
+X-Received: by 2002:adf:f389:: with SMTP id m9mr3289924wro.195.1591696489503;
+        Tue, 09 Jun 2020 02:54:49 -0700 (PDT)
+Received: from [192.168.178.58] ([151.21.172.168])
+        by smtp.gmail.com with ESMTPSA id l1sm2957773wrb.31.2020.06.09.02.54.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jun 2020 02:54:48 -0700 (PDT)
+Subject: Re: [PATCH] KVM: selftests: Ignore KVM 5-level paging support for
+ VM_MODE_PXXV48_4K
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sergio Perez Gonzalez <sergio.perez.gonzalez@intel.com>,
+        Adriana Cervantes Jimenez <adriana.cervantes.jimenez@intel.com>,
+        Peter Xu <peterx@redhat.com>
+References: <20200528021530.28091-1-sean.j.christopherson@intel.com>
+ <ed65de29-a07a-f424-937e-38576e740de7@redhat.com>
+ <20200608181658.GD8223@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <d6a3de35-f4de-9ae9-4467-cadaf679482d@redhat.com>
+Date:   Tue, 9 Jun 2020 11:54:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACK8Z6GZprVZMM=JQ-9zjosYQ6OLpifp_g8RmSTa3HwWWTB8Lw@mail.gmail.com>
+In-Reply-To: <20200608181658.GD8223@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 11:41:19AM -0700, Rajat Jain wrote:
-> Hi Jesse and Greg,
+On 08/06/20 20:16, Sean Christopherson wrote:
+> On Thu, May 28, 2020 at 01:55:44PM +0200, Paolo Bonzini wrote:
+>> On 28/05/20 04:15, Sean Christopherson wrote:
+>>> Explicitly set the VA width to 48 bits for the x86_64-only PXXV48_4K VM
+>>> mode instead of asserting the guest VA width is 48 bits.  The fact that
+>>> KVM supports 5-level paging is irrelevant unless the selftests opt-in to
+>>> 5-level paging by setting CR4.LA57 for the guest.  The overzealous
+>>> assert prevents running the selftests on a kernel with 5-level paging
+>>> enabled.
+>>>
+>>> Incorporate LA57 into the assert instead of removing the assert entirely
+>>> as a sanity check of KVM's CPUID output.
+>>>
+>>> Fixes: 567a9f1e9deb ("KVM: selftests: Introduce VM_MODE_PXXV48_4K")
+>>> Reported-by: Sergio Perez Gonzalez <sergio.perez.gonzalez@intel.com>
+>>> Cc: Adriana Cervantes Jimenez <adriana.cervantes.jimenez@intel.com>
+>>> Cc: Peter Xu <peterx@redhat.com>
+>>> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+>>> ---
+>>>  tools/testing/selftests/kvm/lib/kvm_util.c | 11 +++++++++--
+>>>  1 file changed, 9 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
+>>> index c9cede5c7d0de..74776ee228f2d 100644
+>>> --- a/tools/testing/selftests/kvm/lib/kvm_util.c
+>>> +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
+>>> @@ -195,11 +195,18 @@ struct kvm_vm *_vm_create(enum vm_guest_mode mode, uint64_t phy_pages, int perm)
+>>>  	case VM_MODE_PXXV48_4K:
+>>>  #ifdef __x86_64__
+>>>  		kvm_get_cpu_address_width(&vm->pa_bits, &vm->va_bits);
+>>> -		TEST_ASSERT(vm->va_bits == 48, "Linear address width "
+>>> -			    "(%d bits) not supported", vm->va_bits);
+>>> +		/*
+>>> +		 * Ignore KVM support for 5-level paging (vm->va_bits == 57),
+>>> +		 * it doesn't take effect unless a CR4.LA57 is set, which it
+>>> +		 * isn't for this VM_MODE.
+>>> +		 */
+>>> +		TEST_ASSERT(vm->va_bits == 48 || vm->va_bits == 57,
+>>> +			    "Linear address width (%d bits) not supported",
+>>> +			    vm->va_bits);
+>>>  		pr_debug("Guest physical address width detected: %d\n",
+>>>  			 vm->pa_bits);
+>>>  		vm->pgtable_levels = 4;
+>>> +		vm->va_bits = 48;
+>>>  #else
+>>>  		TEST_FAIL("VM_MODE_PXXV48_4K not supported on non-x86 platforms");
+>>>  #endif
+>>>
+>>
+>> Queued, thnaks.
+>>
+>> Paolo
 > 
-> On Mon, Jun 8, 2020 at 11:30 AM Jesse Barnes <jsbarnes@google.com> wrote:
-> >
-> > > > I think your suggestion to disable driver binding once the initial
-> > > > bus/slot devices have been bound will probably work for this
-> > > > situation.  I just wanted to be clear that without some auditing,
-> > > > fuzzing, and additional testing, we simply have to assume that drivers
-> > > > are *not* secure and avoid using them on untrusted devices until we're
-> > > > fairly confident they can handle them (whether just misbehaving or
-> > > > malicious), in combination with other approaches like IOMMUs of
-> > > > course.  And this isn't because we don't trust driver authors or
-> > > > kernel developers to dtrt, it's just that for many devices (maybe USB
-> > > > is an exception) I think driver authors haven't had to consider this
-> > > > case much, and so I think it's prudent to expect bugs in this area
-> > > > that we need to find & fix.
-> > >
-> > > For USB, yes, we have now had to deal with "untrusted devices" lieing
-> > > about their ids and sending us horrible data.  That's all due to the
-> > > fuzzing tools that have been written over the past few years, and now we
-> > > have some of those in the kernel tree itself to help with that testing.
+> Looks like this one also got lost in the 5.7 -> 5.8 transition.
 > 
-> This is great to hear! I tried to look up but didn't find anything
-> else in-kernel, except the kcov support to export coverage info for
-> userspace fuzzers. Can you please give us some pointers for in-kernel
-> fuzzing tools?
 
-For USB, it's a combination of using syzbot with the "raw gadget" driver
-and the loopback gadget/host controller.  See many posts from Andrey
-Konovalov <andreyknvl@google.com> on the linux-usb@vger.kernel.org list
-for details as to how he does this.
+Indeed, added back to the queue now.
 
-> > > For PCI, heh, good luck, those assumptions about "devices sending valid
-> > > data" are everywhere, if our experience with USB is any indication.
-> > >
-> > > But, to take USB as an example, this is exactly what the USB
-> > > "authorized" flag is there for, it's a "trust" setting that userspace
-> > > has control over.  This came from the wireless USB spec, where it was
-> > > determined that you could not trust devices.  So just use that same
-> > > model here, move it to the driver core for all busses to use and you
-> > > should be fine.
-> > >
-> > > If that doesn't meet your needs, please let me know the specifics of
-> > > why, with patches :)
-> >
-> > Yeah will do for sure.  I don't want to carry a big infra for this on our own!
-> >
-> > > Now, as to you all getting some sort of "Hardware flag" to determine
-> > > "inside" vs. "outside" devices, hah, good luck!  It took us a long time
-> > > to get that for USB, and even then, BIOSes lie and get it wrong all the
-> > > time.  So you will have to also deal with that in some way, for your
-> > > userspace policy.
-> >
-> > I think that's inherently platform specific to some extent.  We can do
-> > it with our coreboot based firmware, but there's no guarantee other
-> > vendors will adopt the same approach.  But I think at least for the
-> > ChromeOS ecosystem we can come up with something that'll work, and
-> > allow us to dtrt in userspace wrt driver binding.
-> 
-> Agree, we can work with our firmware teams to get that right, and then
-> expose it from kernel to userspace to help it implement the policy we
-> want.
+Paolo
 
-This is already in the spec for USB, I suggest working to get this added
-to the other bus type specs that you care about as well (UEFI, PCI,
-etc.)
-
-thanks,
-
-greg k-h
