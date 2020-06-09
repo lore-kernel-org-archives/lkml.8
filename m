@@ -2,100 +2,151 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19CE9C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB35C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE35E20774
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:22:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1947A20774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:23:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="S1rZ2mQv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730519AbgFIOW5 (ORCPT
+        id S1730184AbgFIOXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 10:22:57 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:33217 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729300AbgFIOW4 (ORCPT
+        Tue, 9 Jun 2020 10:23:12 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:26926 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726967AbgFIOXL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 10:22:56 -0400
-Received: from mail-qv1-f50.google.com ([209.85.219.50]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MowSu-1j9t9G2UcY-00qT1I for <linux-kernel@vger.kernel.org>; Tue, 09 Jun
- 2020 16:22:52 +0200
-Received: by mail-qv1-f50.google.com with SMTP id ec10so10148765qvb.5
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 07:22:52 -0700 (PDT)
-X-Gm-Message-State: AOAM532/5D1xi6PARJUidZLITM3bep6H9HVKKlJUVeInJFHfQiw7kkKs
-        TeZK3FtinAfi63RbrLEO4hXR46ksyBr4vXCxYpM=
-X-Google-Smtp-Source: ABdhPJzx+z0bcXYPuVlwRHOD6yM3S4Ldg2eDOed2FGAJyrwsRqttQVklksdSbVPsCNsJw/sXsvOlcAmaM4SRPmpBk0o=
-X-Received: by 2002:ad4:4b33:: with SMTP id s19mr3849476qvw.211.1591712571533;
- Tue, 09 Jun 2020 07:22:51 -0700 (PDT)
+        Tue, 9 Jun 2020 10:23:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1591712591; x=1623248591;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=IPd4MAGBWxg6kOh+k8voQ+4pluey7PcsDkEHOVO6xUg=;
+  b=S1rZ2mQvqT92tE+BtR0pilGMoKunwiUxLK63gjzdxlHbEVPlz22r6fhp
+   eJAUHEsX90tYpfDSl8hZzZ4R12WxFe48sd2m7l3HBpfRtn2fIHT0MU14g
+   AS0rTwwfOuG0hdcZmb2Jdd3QbQIBTHJ79nh92m7XTOkE+Zqjq5ihGQxl9
+   s=;
+IronPort-SDR: wwPwNkR4Zj9cANfnfbprtrW6WycDxHCId//+PvCS6TMpwF/Tbo+KxU76ZQVkbbyamwTCzS7oK+
+ GyqRUW2Kbggg==
+X-IronPort-AV: E=Sophos;i="5.73,492,1583193600"; 
+   d="scan'208";a="36626317"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-a70de69e.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 09 Jun 2020 14:23:10 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1e-a70de69e.us-east-1.amazon.com (Postfix) with ESMTPS id 4BC44A2091;
+        Tue,  9 Jun 2020 14:22:58 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 9 Jun 2020 14:22:58 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.109) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 9 Jun 2020 14:22:41 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <akpm@linux-foundation.org>
+CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
+        <aarcange@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
+        <brendanhiggins@google.com>, <cai@lca.pw>,
+        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
+        <foersleo@amazon.de>, <irogers@google.com>, <jolsa@redhat.com>,
+        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
+        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
+        <peterz@infradead.org>, <rdunlap@infradead.org>,
+        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
+        <sblbir@amazon.com>, <shakeelb@google.com>, <shuah@kernel.org>,
+        <sj38.park@gmail.com>, <snu@amazon.de>, <vbabka@suse.cz>,
+        <vdavydov.dev@gmail.com>, <yang.shi@linux.alibaba.com>,
+        <ying.huang@intel.com>, <david@redhat.com>,
+        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [RFC v3 08/10] mm/damon/debugfs: Support physical memory monitoring
+Date:   Tue, 9 Jun 2020 16:19:39 +0200
+Message-ID: <20200609141941.19184-9-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200609141941.19184-1-sjpark@amazon.com>
+References: <20200609141941.19184-1-sjpark@amazon.com>
 MIME-Version: 1.0
-References: <CAK8P3a2PNZY-9L9+SFDLtrp731ZGo6Nbs-7jY6E2PwWXa0kfKw@mail.gmail.com>
- <20200514133545.GA5020@afzalpc> <CAK8P3a1PVwkAi8ycUAB-7EMk4nQ_qOu0rC5vJAQk_q9j5xvOJw@mail.gmail.com>
- <20200516060624.GA6371@afzalpc> <CAK8P3a01FYoWY9sZKU1q=UQ3ut4srwXXUeGRzW6APi+GpoKo1w@mail.gmail.com>
- <20200607125932.GA4576@afzalpc> <CAK8P3a2=o6RkONUoHTaR-2jpXg-wa-YnCYi0a4gAknYmvu8X7Q@mail.gmail.com>
- <20200608111834.GB5736@afzalpc> <CAK8P3a1q51=_DUS1A8k67c3TyQ+7LTpeo98LmzoFK=qg+8Fktw@mail.gmail.com>
- <20200608151727.GA5017@afzalpc> <20200609121506.GA7846@afzalpc>
-In-Reply-To: <20200609121506.GA7846@afzalpc>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 9 Jun 2020 16:22:34 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2YKifKbt4-CUODe4YYPxT-+pRwkj0BAvbw1P8vUg9x1A@mail.gmail.com>
-Message-ID: <CAK8P3a2YKifKbt4-CUODe4YYPxT-+pRwkj0BAvbw1P8vUg9x1A@mail.gmail.com>
-Subject: Re: ARM: vmsplit 4g/4g
-To:     afzal mohammed <afzal.mohd.ma@gmail.com>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:dYKT4xLZJZzUO8UrZZkxtVwWMkYUu72Ces2H0O/ea5kH26b5FtR
- /unv/1zrXT3kyKLS0J287yhzxa+ByK9PTMR8hmSupj386h+30jEYvOn34tKlRhNuaLY4FhM
- ascVsWdQ0RScJrvw//1anza1z7NJlekYUQj0DrXlIayLG0l+SaeHobj6+rdxRdkeI9jY2U+
- kaMUF+dEGfOC1gqGLJjaw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:phX8Nb+0Bg0=:fwxf5ymuX67quHzFmeQUDa
- 0PfY1J6frCXXv+o+OQgC0xqBhGHju5jy41uFz8YmaD8T0wpfqUGSq/l0CI3Er1oxwspP4vjL7
- 3Spmr4evB5pnNr37wDxngJmAsXldNJShQEpGuOLT0ptHv5gpKRgusHgMjdjwEOt+vWlfhBjIy
- Nqms7sWUXfZm3K6wAdp/Ix1AQK2kTb0qfhsKh8QvVXV2x/kpzTrO7CWU+EnmvLGw/dibGm0G/
- qifaX8EWzYQ4GHOKLX1rZ5PqNPxvxwGb5u4R0Pq9zAe53abXjvcF+1uz87F5OH4teFEH7D0Or
- Ha01c6ql3PG603llV3va0K8a/OT/u6mGqaSbKJWXzcqGYHMtCycIcs6Eu4/Dj4k3Eknx2Q4kK
- 5ACf5dPazPtxAHdHeRAXkz/EQrdZV0kzMCs2rftInLZz5JbxcW2g1vyu2EsC4Db2SE2tBWDGh
- ZcvEzR7psjltiXithikChKkQERDJVz/5sxngVLKBdQvLkc72Gu6i9/226B/D3+TIgsWFpDIe1
- y9I/h2nKV5em18zPh9pyO+JAVlNtQyHOVAKQ2RWq/u8wJeGIGjE/UVtIaqcSAsMF4eF5AGSV6
- oZ92nTmMryFaYyhPoEEM0lSmQ/FXVnkWiVeZAhDA0rPzIeNlwuVNe/6/EGvEobDTmDkdCOV9x
- e8E63uJLhFKKPJur6+7YhdhC6SSLw4BZ6WjqWl5MeToBxLmKkPADITX7Ax4P3kTlJI0qGj+Af
- Pmqmcg/mNEINnr5Op+EWuuU+6+C+Qsmg86bfPRK4rHvY/0lz4hs9wdutZg3+nmKj68+mnh3De
- eU03Oz/N1+veqONrNaAMOulZaEdfDNBBDfMM9kR8X7fpEbnqHg=
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.109]
+X-ClientProxiedBy: EX13D30UWC004.ant.amazon.com (10.43.162.4) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 9, 2020 at 2:15 PM afzal mohammed <afzal.mohd.ma@gmail.com> wrote:
-> On Mon, Jun 08, 2020 at 08:47:27PM +0530, afzal mohammed wrote:
-> > On Mon, Jun 08, 2020 at 04:43:57PM +0200, Arnd Bergmann wrote:
->
-> > > There is another difference: get_user_pages_fast() does not return
-> > > a  vm_area_struct pointer, which is where you would check the access
-> > > permissions. I suppose those pointers could not be returned to callers
-> > > that don't already hold the mmap_sem.
-> >
-> > Ok, thanks for the details, i need to familiarize better with mm.
->
-> i was & now more confused w.r.t checking access permission using
-> vm_area_struct to deny write on a read only user page.
->
-> i have been using get_user_pages_fast() w/ FOLL_WRITE in copy_to_user.
-> Isn't that sufficient ?, afaiu, get_user_pages_fast() will ensure that
-> w/ FOLL_WRITE, pte has write permission, else no struct page * is
-> handed back to the caller.
+From: SeongJae Park <sjpark@amazon.de>
 
-Ah, that does make a lot of sense, I had just never used that flag
-myself so I wasn't aware of this.
+This commit makes the debugfs interface to support the physical memory
+monitoring, in addition to the virtual memory monitoring.
 
-> Am i missing something or wrong in the analysis ?
+Users can do the physical memory monitoring by writing a special
+keyword, 'paddr\n' to the 'pids' debugfs file.  Then, DAMON will check
+the special keyword and configure the callbacks of the monitoring
+context for the debugfs user for physical memory.  This will internally
+add one fake monitoring target process, which has pid as -1.
 
-As far as I can tell, you are absolutely right, and get_user_pages_fast()
-is the best way to handle this correctly and efficiently.
+Unlike the virtual memory monitoring, DAMON debugfs will not
+automatically set the monitoring target region.  Therefore, users should
+also set the monitoring target address region using the 'init_regions'
+debugfs file.  While doing this, the 'pid' in the input should be '-1'.
 
-      Arnd
+Finally, the physical memory monitoring will not automatically
+terminated because it has fake monitoring target process.  The user
+should explicitly turn off the monitoring by writing 'off' to the
+'monitor_on' debugfs file.
+
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
+---
+ mm/damon.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/mm/damon.c b/mm/damon.c
+index 3a5d14720cb7..b9cec7766b6c 100644
+--- a/mm/damon.c
++++ b/mm/damon.c
+@@ -1310,6 +1310,9 @@ static bool kdamond_need_stop(struct damon_ctx *ctx)
+ 		return true;
+ 
+ 	damon_for_each_task(t, ctx) {
++		if (t->pid == -1)
++			return false;
++
+ 		task = damon_get_task_struct(t);
+ 		if (task) {
+ 			put_task_struct(task);
+@@ -1849,6 +1852,23 @@ static ssize_t debugfs_pids_write(struct file *file,
+ 	if (ret < 0)
+ 		goto out;
+ 
++	if (!strncmp(kbuf, "paddr\n", count)) {
++		/* Configure the context for physical memory monitoring */
++		ctx->init_target_regions = kdamond_init_phys_regions;
++		ctx->update_target_regions = kdamond_update_phys_regions;
++		ctx->prepare_access_checks = kdamond_prepare_phys_access_checks;
++		ctx->check_accesses = kdamond_check_phys_accesses;
++
++		/* Set the fake target task pid as -1 */
++		snprintf(kbuf, count, "-1");
++	} else {
++		/* Configure the context for virtual memory monitoring */
++		ctx->init_target_regions = kdamond_init_vm_regions;
++		ctx->update_target_regions = kdamond_update_vm_regions;
++		ctx->prepare_access_checks = kdamond_prepare_vm_access_checks;
++		ctx->check_accesses = kdamond_check_vm_accesses;
++	}
++
+ 	targets = str_to_pids(kbuf, ret, &nr_targets);
+ 	if (!targets) {
+ 		ret = -ENOMEM;
+-- 
+2.17.1
+
