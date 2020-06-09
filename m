@@ -2,211 +2,134 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADAC6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 08:55:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC37AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 08:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9053F2078D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 08:55:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0B39206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 08:57:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728327AbgFIIzL (ORCPT
+        id S1728138AbgFII5q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 04:55:11 -0400
-Received: from mout02.posteo.de ([185.67.36.142]:33695 "EHLO mout02.posteo.de"
+        Tue, 9 Jun 2020 04:57:46 -0400
+Received: from mga11.intel.com ([192.55.52.93]:32395 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728056AbgFIIzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 04:55:07 -0400
-X-Greylist: delayed 430 seconds by postgrey-1.27 at vger.kernel.org; Tue, 09 Jun 2020 04:55:06 EDT
-Received: from submission (posteo.de [89.146.220.130]) 
-        by mout02.posteo.de (Postfix) with ESMTPS id ED5F42400FC
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 10:47:54 +0200 (CEST)
-Received: from customer (localhost [127.0.0.1])
-        by submission (posteo.de) with ESMTPSA id 49h3fd3Wy3z6tmh;
-        Tue,  9 Jun 2020 10:47:53 +0200 (CEST)
-Subject: Re: [PATCH] can: m_can_platform: fix m_can_runtime_suspend()
-To:     Dan Murphy <dmurphy@ti.com>,
-        Richard Genoud <richard.genoud@gmail.com>,
-        Sriram Dash <sriram.dash@samsung.com>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Faiz Abbas <faiz_abbas@ti.com>
-Cc:     linux-can@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200608094348.12650-1-richard.genoud@gmail.com>
- <b9510aa6-d865-7c4f-6730-dcd207bdb753@ti.com>
-From:   Richard Genoud <richard.genoud@gmail.com>
-Message-ID: <d7f024a4-f2d0-8045-dfd2-d1f89e4789c8@sorico.fr>
-Date:   Tue, 9 Jun 2020 10:47:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1727023AbgFII5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 04:57:45 -0400
+IronPort-SDR: oM/EaYzZwNaNuVI5WUQ6ChzyzQGTJXen0nOGs36QFgmslaKjgUQcY+VycSLOUbksuuWIf8aTVD
+ uZiT9L7jJA0A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 01:57:43 -0700
+IronPort-SDR: GIRaMrOrpXlCj1nB5MRcGlNFFZoOD5ymxT4t0908X5luyn6OQQIuqUi76fvu4DmlM+m0Rum7lN
+ dpgmJ98uBVlw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,491,1583222400"; 
+   d="scan'208";a="306199982"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 09 Jun 2020 01:57:43 -0700
+Received: from [10.215.166.141] (ekotax-mobl.gar.corp.intel.com [10.215.166.141])
+        by linux.intel.com (Postfix) with ESMTP id 874C15805B5;
+        Tue,  9 Jun 2020 01:57:40 -0700 (PDT)
+Subject: Re: [PATCH 1/2] dt-bindings: watchdog: intel: Add YAML Schemas for
+ Watchdog timer
+To:     Guenter Roeck <linux@roeck-us.net>, wim@linux-watchdog.org,
+        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
+        robbh@kernel.org
+Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yixin.zhu@intel.com
+References: <cover.1591584255.git.eswara.kota@linux.intel.com>
+ <ac89e289b79fec0a82d1dd060e17eeca024885d5.1591584255.git.eswara.kota@linux.intel.com>
+ <235d301b-3b25-bb00-bd1b-c4392fa23c63@roeck-us.net>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <4a336f1d-68da-3356-a73a-95747ba4af4c@linux.intel.com>
+Date:   Tue, 9 Jun 2020 16:57:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <b9510aa6-d865-7c4f-6730-dcd207bdb753@ti.com>
+In-Reply-To: <235d301b-3b25-bb00-bd1b-c4392fa23c63@roeck-us.net>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dan,
 
-Le 08/06/2020 à 16:27, Dan Murphy a écrit :
-> Richard
-> 
-> On 6/8/20 4:43 AM, Richard Genoud wrote:
->> Since commit f524f829b75a ("can: m_can: Create a m_can platform
->> framework"), the can peripheral on STM32MP1 wasn't working anymore.
+On 6/8/2020 9:37 PM, Guenter Roeck wrote:
+> On 6/7/20 10:49 PM, Dilip Kota wrote:
+>> Add YAML schemas for the watchdog timer on Intel Lightning
+>> Mountain SoC.
 >>
->> The reason was a bad copy/paste maneuver that added a call to
->> m_can_class_suspend() in m_can_runtime_suspend().
-> 
-> Are you sure it was a copy paste error?
-> 
-> Probably don't want to have an unfounded cause unless you know for 
-> certain it was this.
-I understand.
+>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+>> ---
+>>   .../bindings/watchdog/intel,lgm-gptc-wdt.yaml      | 75 ++++++++++++++++++++++
+>>   1 file changed, 75 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/watchdog/intel,lgm-gptc-wdt.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/watchdog/intel,lgm-gptc-wdt.yaml b/Documentation/devicetree/bindings/watchdog/intel,lgm-gptc-wdt.yaml
+>> new file mode 100644
+>> index 0000000000000..83dc39a5090c1
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/watchdog/intel,lgm-gptc-wdt.yaml
+>> @@ -0,0 +1,75 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/watchdog/intel,lgm-gptc-wdt.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Intel Lightning Mountain Watchdog timer.
+>> +
+>> +maintainers:
+>> +  - Dilip Kota <eswara.kota@linux.intel.com>
+>> +
+>> +description: |
+>> +  Intel Lightning Mountain SoC has General Purpose Timer Counter(GPTC) which can
+>> +  be configured as Clocksource, real time clock and Watchdog timer.
+>> +  Each General Purpose Timer Counter has three timers. And total four General
+>> +  Purpose Timer Counters are present on Lightning Mountain SoC which sums up
+>> +  to 12 timers.
+>> +  Lightning Mountain has four CPUs and each CPU is configured with one GPTC
+>> +  timer as watchdog timer. Total four timers are configured as watchdog timers
+>> +  on Lightning Mountain SoC.
+>> +
+> Why not just one ? The watchdog subsystem does not monitor individual CPUs,
+> it monitors the system.
 
-What makes me think it was a copy-paste error is that the primary goal 
-of the patch series "M_CAN Framework" was to introduce the tcan4x5x 
-driver into the kernel.
-For that, the code has to be split into a re-usable code (m_can.c) and a 
-platform code m_can_platform.c
-And finally, tcan4x5x.c can be added.
-(I'm sure you already know that since you write the patch, it's just to 
-be sure that we are on the same page :))
-
-So, when splitting the m_can code into m_can.c and m_can_platform.c, 
-there was no reason to change the behavior, even less reason to change 
-the behavior in m_can_platform.c, since the main target was tcan4x5x.
-(And the behavior changed because the CAN peripheral on the STM32MP1 was 
-working before this patch, and not after).
-
-So I went digging into that and I realized that before this patch, 
-runtime suspend function was in m_can.c:
-static int __maybe_unused m_can_runtime_suspend(struct device *dev)
-{
-	struct net_device *ndev = dev_get_drvdata(dev);
-	struct m_can_priv *priv = netdev_priv(ndev);
-
-	clk_disable_unprepare(priv->cclk);
-	clk_disable_unprepare(priv->hclk);
-
-	return 0;
-}
-
-And after, in m_can_platform.c:
-static int __maybe_unused m_can_runtime_suspend(struct device *dev)
-{
-	struct net_device *ndev = dev_get_drvdata(dev);
-	struct m_can_priv *mcan_class = netdev_priv(ndev);
-
-	m_can_class_suspend(dev);
-
-	clk_disable_unprepare(mcan_class->cclk);
-	clk_disable_unprepare(mcan_class->hclk);
-
-	return 0;
-}
-
-Same for runtime resume,
-Before:
-static int __maybe_unused m_can_runtime_resume(struct device *dev)
-{
-	struct net_device *ndev = dev_get_drvdata(dev);
-	struct m_can_priv *priv = netdev_priv(ndev);
-	int err;
-
-	err = clk_prepare_enable(priv->hclk);
-	if (err)
-		return err;
-
-	err = clk_prepare_enable(priv->cclk);
-	if (err)
-		clk_disable_unprepare(priv->hclk);
-
-	return err;
-}
-
-After:
-static int __maybe_unused m_can_runtime_resume(struct device *dev)
-{
-	struct net_device *ndev = dev_get_drvdata(dev);
-	struct m_can_priv *mcan_class = netdev_priv(ndev);
-	int err;
-
-	err = clk_prepare_enable(mcan_class->hclk);
-	if (err)
-		return err;
-
-	err = clk_prepare_enable(mcan_class->cclk);
-	if (err)
-		clk_disable_unprepare(mcan_class->hclk);
-
-	m_can_class_resume(dev);
-
-	return err;
-}
-
-Now, the m_class_resume() call has been removed by commit 0704c5743694 
-("can: m_can_platform: remove unnecessary m_can_class_resume() call")
-cf https://lkml.org/lkml/2019/11/19/965
-
-Then only the m_can_class_suspend() call is left alone. If I remove it, 
-the stm32mp1 peripheral works as before the patch. (and the code is 
-symmetrical again :))
-
-I read all the iterations I could find about this patch (see note 1), 
-and I didn't found any comment on the addition of 
-m_can_class_{resume,suspend}() calls.
-
-But I found this in v3 cover letter:
-"The m_can platform code will need to be updated as I have not tested 
-this code."
-and in v3 1/4 comments:
-"This patch set is working for the TCAN and at least boots on io-mapped 
-devices."
-
-For me, that means that the code in m_can_platform.c was written with 
-this sentence in mind :
-"I can test everything but this, so let's try not to break things in 
-there, keep the changes at a minimum"
-And that was really the case for all the file, but the 2 calls to 
-m_can_class_{resume,suspend}().
-
-So that's why I have a pretty good confidence in the fact that it was a 
-copy-paste error.
-
-And, moreover, if m_can_class_suspend() is called, the CAN device is 
-stopped, and all interrupts are disabled (in m_can_stop()), so the 
-device can not wake-up by itself (and thus not working anymore).
+Intel Atom based Lightning Mountain SoC, system has four CPUs. On 
+Lightning Mountain SoC ,Watchdog subsystem is combination of GPTC timers 
+and reset controller unit. On Lightning Mountain SoC, each CPU is 
+configured with one GPTC timer, so that if any of the CPU hangs or 
+freezes, the watchdog daemon running on respective CPU cannot reset/ping 
+or pet the watchdog timer. This causes the watchdog timeout. On watchdog 
+timeout, reset controller triggers the reset to respective CPU.
 
 
-All this make me think that maybe I should send a v2 of this patch with 
-a bigger commit message.
-What do you think ?
+____________________
+----------------------------->|                |
+                                                    |         
+------------>| Reset controller unit    |
+|                     |                 |___________________|
+|                     |
+|                     |
+   ______________________|__________|______
+   |                                  GPTC   | |            |
+   | ___________   ________|_       ______|____   |
+   | |      timer 1 |   | timer 2      |    | timer 3      |    |
+   | |_________|   |_________|    |_________|    |
+   |______________________________________|
+
+Regards,
+-Dilip
 
 
-Thanks !
-
-Richard.
-
-
-> 
-> Dan
-> 
-> 
-
-Note 1: patches v3 to v12 (missing v11)
-https://lwn.net/ml/linux-kernel/20190111173236.14329-1-dmurphy@ti.com/
-https://lore.kernel.org/patchwork/patch/1033094/
-https://lore.kernel.org/patchwork/cover/1042441/
-https://lore.kernel.org/patchwork/patch/1047220/
-https://lore.kernel.org/patchwork/patch/1047980/
-https://lkml.org/lkml/2019/3/12/362
-https://lkml.org/lkml/2019/3/13/512
-https://www.spinics.net/lists/netdev/msg557961.html
-https://lore.kernel.org/patchwork/patch/1071894/
+> Guenter
+>
+>
