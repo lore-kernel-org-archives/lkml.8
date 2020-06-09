@@ -2,68 +2,41 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CCD5C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:31:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4DC1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 368792074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:31:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="E/6dOlYy"
+	by mail.kernel.org (Postfix) with ESMTP id A57FE2074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:31:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730033AbgFINbo (ORCPT
+        id S1730065AbgFINb4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 09:31:44 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:24028 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729000AbgFINbn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 09:31:43 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591709502; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=jG1tgCEHH2uQuffHUZ/Jw+Nz7O4CF3RMgMRZBRqxeFE=; b=E/6dOlYy3Nd/amk3VeMrCxZa5ICaKyuZYGmvyadMjkTJvNV2SsCBsXbNgZomn80JrxAe4ofg
- 8lRm+aFWLDXQWPmG+uJanoUuQilFkUgHpjX6dWK1fmTwXoMYjfP0y9UCThC3YjwgyZGZskXt
- rT5aXVGEDsx6SMmmH7WGMFBcRDQ=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n08.prod.us-east-1.postgun.com with SMTP id
- 5edf8f1f0206ad41d1380b0f (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 09 Jun 2020 13:31:11
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3AF13C433C6; Tue,  9 Jun 2020 13:31:10 +0000 (UTC)
-Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DA75FC433CA;
-        Tue,  9 Jun 2020 13:31:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DA75FC433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        mike.leach@linaro.org, Jonathan Marek <jonathan@marek.ca>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCH 4/4] arm64: dts: qcom: sm8150: Add Coresight support
-Date:   Tue,  9 Jun 2020 19:00:31 +0530
-Message-Id: <fffd5f623ad9d609433d05e3b56f33b7582517fa.1591708204.git.saiprakash.ranjan@codeaurora.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1591708204.git.saiprakash.ranjan@codeaurora.org>
-References: <cover.1591708204.git.saiprakash.ranjan@codeaurora.org>
+        Tue, 9 Jun 2020 09:31:56 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:37916 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729644AbgFINbz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 09:31:55 -0400
+Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=phil.sntech)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1jieLu-0004rD-O6; Tue, 09 Jun 2020 15:31:42 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     davem@davemloft.net, kuba@kernel.org
+Cc:     robh+dt@kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, linux@armlinux.org.uk,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, heiko@sntech.de,
+        christoph.muellner@theobroma-systems.com,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Subject: [PATCH v2 1/2] net: phy: mscc: move shared probe code into a helper
+Date:   Tue,  9 Jun 2020 15:31:39 +0200
+Message-Id: <20200609133140.1421109-1-heiko@sntech.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -71,623 +44,176 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add coresight components found on Qualcomm SM8150 SoC.
+From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+The different probe functions share a lot of code, so move the
+common parts into a helper to reduce duplication.
+
+Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 ---
+changes in v2:
+- new patch as suggested by Andrew
 
-Depends on following coresight driver and SM8150 SMMU support:
- - https://git.linaro.org/kernel/coresight.git/commit/?h=next-v5.8-rc1&id=159e248e75b1b548276b6571d7740a35cab1f5be
- - https://git.linaro.org/kernel/coresight.git/commit/?h=next-v5.8-rc1&id=1b6cddfb7ebb5ed293124698f147e914b15315a1
- - https://lore.kernel.org/lkml/20200524023815.21789-2-jonathan@marek.ca/
+ drivers/net/phy/mscc/mscc_main.c | 97 +++++++++++++-------------------
+ 1 file changed, 40 insertions(+), 57 deletions(-)
 
----
- arch/arm64/boot/dts/qcom/sm8150.dtsi | 591 +++++++++++++++++++++++++++
- 1 file changed, 591 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-index 141c21dfa68c..a2fc77211cc3 100644
---- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-@@ -538,6 +538,597 @@
- 			};
- 		};
+diff --git a/drivers/net/phy/mscc/mscc_main.c b/drivers/net/phy/mscc/mscc_main.c
+index c8aa6d905d8e..54cac9c295ad 100644
+--- a/drivers/net/phy/mscc/mscc_main.c
++++ b/drivers/net/phy/mscc/mscc_main.c
+@@ -1983,12 +1983,11 @@ static int vsc85xx_read_status(struct phy_device *phydev)
+ 	return genphy_read_status(phydev);
+ }
  
-+		stm@6002000 {
-+			compatible = "arm,coresight-stm", "arm,primecell";
-+			reg = <0 0x06002000 0 0x1000>,
-+			      <0 0x16280000 0 0x180000>;
-+			reg-names = "stm-base", "stm-stimulus-base";
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					stm_out: endpoint {
-+						remote-endpoint = <&funnel0_in7>;
-+					};
-+				};
-+			};
-+		};
-+
-+		funnel@6041000 {
-+			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-+			reg = <0 0x06041000 0 0x1000>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					funnel0_out: endpoint {
-+						remote-endpoint = <&merge_funnel_in0>;
-+					};
-+				};
-+			};
-+
-+			in-ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@7 {
-+					reg = <7>;
-+					funnel0_in7: endpoint {
-+						remote-endpoint = <&stm_out>;
-+					};
-+				};
-+			};
-+		};
-+
-+		funnel@6042000 {
-+			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-+			reg = <0 0x06042000 0 0x1000>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					funnel1_out: endpoint {
-+						remote-endpoint = <&merge_funnel_in1>;
-+					};
-+				};
-+			};
-+
-+			in-ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@4 {
-+					reg = <4>;
-+					funnel1_in4: endpoint {
-+						remote-endpoint = <&swao_replicator_out>;
-+					};
-+				};
-+			};
-+		};
-+
-+		funnel@6043000 {
-+			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-+			reg = <0 0x06043000 0 0x1000>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					funnel2_out: endpoint {
-+						remote-endpoint = <&merge_funnel_in2>;
-+					};
-+				};
-+			};
-+
-+			in-ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@2 {
-+					reg = <2>;
-+					funnel2_in2: endpoint {
-+						remote-endpoint = <&apss_merge_funnel_out>;
-+					};
-+				};
-+			};
-+		};
-+
-+		funnel@6045000 {
-+			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-+			reg = <0 0x06045000 0 0x1000>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					merge_funnel_out: endpoint {
-+						remote-endpoint = <&etf_in>;
-+					};
-+				};
-+			};
-+
-+			in-ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					merge_funnel_in0: endpoint {
-+						remote-endpoint = <&funnel0_out>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+					merge_funnel_in1: endpoint {
-+						remote-endpoint = <&funnel1_out>;
-+					};
-+				};
-+
-+				port@2 {
-+					reg = <2>;
-+					merge_funnel_in2: endpoint {
-+						remote-endpoint = <&funnel2_out>;
-+					};
-+				};
-+			};
-+		};
-+
-+		replicator@6046000 {
-+			compatible = "arm,coresight-dynamic-replicator", "arm,primecell";
-+			reg = <0 0x06046000 0 0x1000>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					replicator_out0: endpoint {
-+						remote-endpoint = <&etr_in>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+					replicator_out1: endpoint {
-+						remote-endpoint = <&replicator1_in>;
-+					};
-+				};
-+			};
-+
-+			in-ports {
-+				port {
-+					replicator_in0: endpoint {
-+						remote-endpoint = <&etf_out>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etf@6047000 {
-+			compatible = "arm,coresight-tmc", "arm,primecell";
-+			reg = <0 0x06047000 0 0x1000>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					etf_out: endpoint {
-+						remote-endpoint = <&replicator_in0>;
-+					};
-+				};
-+			};
-+
-+			in-ports {
-+				port {
-+					etf_in: endpoint {
-+						remote-endpoint = <&merge_funnel_out>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etr@6048000 {
-+			compatible = "arm,coresight-tmc", "arm,primecell";
-+			reg = <0 0x06048000 0 0x1000>;
-+			iommus = <&apps_smmu 0x05e0 0x0>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+			arm,scatter-gather;
-+
-+			in-ports {
-+				port {
-+					etr_in: endpoint {
-+						remote-endpoint = <&replicator_out0>;
-+					};
-+				};
-+			};
-+		};
-+
-+		replicator@604a000 {
-+			compatible = "arm,coresight-dynamic-replicator", "arm,primecell";
-+			reg = <0 0x0604a000 0 0x1000>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@1 {
-+					reg = <1>;
-+					replicator1_out: endpoint {
-+						remote-endpoint = <&swao_funnel_in>;
-+					};
-+				};
-+			};
-+
-+			in-ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@1 {
-+					reg = <1>;
-+					replicator1_in: endpoint {
-+						remote-endpoint = <&replicator_out1>;
-+					};
-+				};
-+			};
-+		};
-+
-+		funnel@6b08000 {
-+			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-+			reg = <0 0x06b08000 0 0x1000>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					swao_funnel_out: endpoint {
-+						remote-endpoint = <&swao_etf_in>;
-+					};
-+				};
-+			};
-+
-+			in-ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@6 {
-+					reg = <6>;
-+					swao_funnel_in: endpoint {
-+						remote-endpoint = <&replicator1_out>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etf@6b09000 {
-+			compatible = "arm,coresight-tmc", "arm,primecell";
-+			reg = <0 0x06b09000 0 0x1000>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					swao_etf_out: endpoint {
-+						remote-endpoint = <&swao_replicator_in>;
-+					};
-+				};
-+			};
-+
-+			in-ports {
-+				port {
-+					swao_etf_in: endpoint {
-+						remote-endpoint = <&swao_funnel_out>;
-+					};
-+				};
-+			};
-+		};
-+
-+		replicator@6b0a000 {
-+			compatible = "arm,coresight-dynamic-replicator", "arm,primecell";
-+			reg = <0 0x06b0a000 0 0x1000>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+			qcom,replicator-loses-context;
-+
-+			out-ports {
-+				port {
-+					swao_replicator_out: endpoint {
-+						remote-endpoint = <&funnel1_in4>;
-+					};
-+				};
-+			};
-+
-+			in-ports {
-+				port {
-+					swao_replicator_in: endpoint {
-+						remote-endpoint = <&swao_etf_out>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@7040000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x07040000 0 0x1000>;
-+
-+			cpu = <&CPU0>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+			arm,coresight-loses-context-with-cpu;
-+			qcom,skip-power-up;
-+
-+			out-ports {
-+				port {
-+					etm0_out: endpoint {
-+						remote-endpoint = <&apss_funnel_in0>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@7140000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x07140000 0 0x1000>;
-+
-+			cpu = <&CPU1>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+			arm,coresight-loses-context-with-cpu;
-+			qcom,skip-power-up;
-+
-+			out-ports {
-+				port {
-+					etm1_out: endpoint {
-+						remote-endpoint = <&apss_funnel_in1>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@7240000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x07240000 0 0x1000>;
-+
-+			cpu = <&CPU2>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+			arm,coresight-loses-context-with-cpu;
-+			qcom,skip-power-up;
-+
-+			out-ports {
-+				port {
-+					etm2_out: endpoint {
-+						remote-endpoint = <&apss_funnel_in2>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@7340000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x07340000 0 0x1000>;
-+
-+			cpu = <&CPU3>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+			arm,coresight-loses-context-with-cpu;
-+			qcom,skip-power-up;
-+
-+			out-ports {
-+				port {
-+					etm3_out: endpoint {
-+						remote-endpoint = <&apss_funnel_in3>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@7440000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x07440000 0 0x1000>;
-+
-+			cpu = <&CPU4>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+			arm,coresight-loses-context-with-cpu;
-+			qcom,skip-power-up;
-+
-+			out-ports {
-+				port {
-+					etm4_out: endpoint {
-+						remote-endpoint = <&apss_funnel_in4>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@7540000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x07540000 0 0x1000>;
-+
-+			cpu = <&CPU5>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+			arm,coresight-loses-context-with-cpu;
-+			qcom,skip-power-up;
-+
-+			out-ports {
-+				port {
-+					etm5_out: endpoint {
-+						remote-endpoint = <&apss_funnel_in5>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@7640000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x07640000 0 0x1000>;
-+
-+			cpu = <&CPU6>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+			arm,coresight-loses-context-with-cpu;
-+			qcom,skip-power-up;
-+
-+			out-ports {
-+				port {
-+					etm6_out: endpoint {
-+						remote-endpoint = <&apss_funnel_in6>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@7740000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x07740000 0 0x1000>;
-+
-+			cpu = <&CPU7>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+			arm,coresight-loses-context-with-cpu;
-+			qcom,skip-power-up;
-+
-+			out-ports {
-+				port {
-+					etm7_out: endpoint {
-+						remote-endpoint = <&apss_funnel_in7>;
-+					};
-+				};
-+			};
-+		};
-+
-+		funnel@7800000 { /* APSS Funnel */
-+			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-+			reg = <0 0x07800000 0 0x1000>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					apss_funnel_out: endpoint {
-+						remote-endpoint = <&apss_merge_funnel_in>;
-+					};
-+				};
-+			};
-+
-+			in-ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					apss_funnel_in0: endpoint {
-+						remote-endpoint = <&etm0_out>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+					apss_funnel_in1: endpoint {
-+						remote-endpoint = <&etm1_out>;
-+					};
-+				};
-+
-+				port@2 {
-+					reg = <2>;
-+					apss_funnel_in2: endpoint {
-+						remote-endpoint = <&etm2_out>;
-+					};
-+				};
-+
-+				port@3 {
-+					reg = <3>;
-+					apss_funnel_in3: endpoint {
-+						remote-endpoint = <&etm3_out>;
-+					};
-+				};
-+
-+				port@4 {
-+					reg = <4>;
-+					apss_funnel_in4: endpoint {
-+						remote-endpoint = <&etm4_out>;
-+					};
-+				};
-+
-+				port@5 {
-+					reg = <5>;
-+					apss_funnel_in5: endpoint {
-+						remote-endpoint = <&etm5_out>;
-+					};
-+				};
-+
-+				port@6 {
-+					reg = <6>;
-+					apss_funnel_in6: endpoint {
-+						remote-endpoint = <&etm6_out>;
-+					};
-+				};
-+
-+				port@7 {
-+					reg = <7>;
-+					apss_funnel_in7: endpoint {
-+						remote-endpoint = <&etm7_out>;
-+					};
-+				};
-+			};
-+		};
-+
-+		funnel@7810000 {
-+			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-+			reg = <0 0x07810000 0 0x1000>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					apss_merge_funnel_out: endpoint {
-+						remote-endpoint = <&funnel2_in2>;
-+					};
-+				};
-+			};
-+
-+			in-ports {
-+				port {
-+					apss_merge_funnel_in: endpoint {
-+						remote-endpoint = <&apss_funnel_out>;
-+					};
-+				};
-+			};
-+		};
-+
- 		tlmm: pinctrl@3100000 {
- 			compatible = "qcom,sm8150-pinctrl";
- 			reg = <0x0 0x03100000 0x0 0x300000>,
+-static int vsc8514_probe(struct phy_device *phydev)
++static int vsc85xx_probe_helper(struct phy_device *phydev,
++				u32 *leds, int num_leds, u16 led_modes,
++				const struct vsc85xx_hw_stat *stats, int nstats)
+ {
+ 	struct vsc8531_private *vsc8531;
+-	u32 default_mode[4] = {VSC8531_LINK_1000_ACTIVITY,
+-	   VSC8531_LINK_100_ACTIVITY, VSC8531_LINK_ACTIVITY,
+-	   VSC8531_DUPLEX_COLLISION};
+ 
+ 	vsc8531 = devm_kzalloc(&phydev->mdio.dev, sizeof(*vsc8531), GFP_KERNEL);
+ 	if (!vsc8531)
+@@ -1996,46 +1995,46 @@ static int vsc8514_probe(struct phy_device *phydev)
+ 
+ 	phydev->priv = vsc8531;
+ 
+-	vsc8531->nleds = 4;
+-	vsc8531->supp_led_modes = VSC85XX_SUPP_LED_MODES;
+-	vsc8531->hw_stats = vsc85xx_hw_stats;
+-	vsc8531->nstats = ARRAY_SIZE(vsc85xx_hw_stats);
++	vsc8531->nleds = num_leds;
++	vsc8531->supp_led_modes = led_modes;
++	vsc8531->hw_stats = stats;
++	vsc8531->nstats = nstats;
+ 	vsc8531->stats = devm_kcalloc(&phydev->mdio.dev, vsc8531->nstats,
+ 				      sizeof(u64), GFP_KERNEL);
+ 	if (!vsc8531->stats)
+ 		return -ENOMEM;
+ 
+-	return vsc85xx_dt_led_modes_get(phydev, default_mode);
++	return vsc85xx_dt_led_modes_get(phydev, leds);
+ }
+ 
+-static int vsc8574_probe(struct phy_device *phydev)
++static int vsc8514_probe(struct phy_device *phydev)
+ {
+-	struct vsc8531_private *vsc8531;
+ 	u32 default_mode[4] = {VSC8531_LINK_1000_ACTIVITY,
+ 	   VSC8531_LINK_100_ACTIVITY, VSC8531_LINK_ACTIVITY,
+ 	   VSC8531_DUPLEX_COLLISION};
+ 
+-	vsc8531 = devm_kzalloc(&phydev->mdio.dev, sizeof(*vsc8531), GFP_KERNEL);
+-	if (!vsc8531)
+-		return -ENOMEM;
+-
+-	phydev->priv = vsc8531;
++	return vsc85xx_probe_helper(phydev, default_mode,
++				    ARRAY_SIZE(default_mode),
++				    VSC85XX_SUPP_LED_MODES,
++				    vsc85xx_hw_stats,
++				    ARRAY_SIZE(vsc85xx_hw_stats));
++}
+ 
+-	vsc8531->nleds = 4;
+-	vsc8531->supp_led_modes = VSC8584_SUPP_LED_MODES;
+-	vsc8531->hw_stats = vsc8584_hw_stats;
+-	vsc8531->nstats = ARRAY_SIZE(vsc8584_hw_stats);
+-	vsc8531->stats = devm_kcalloc(&phydev->mdio.dev, vsc8531->nstats,
+-				      sizeof(u64), GFP_KERNEL);
+-	if (!vsc8531->stats)
+-		return -ENOMEM;
++static int vsc8574_probe(struct phy_device *phydev)
++{
++	u32 default_mode[4] = {VSC8531_LINK_1000_ACTIVITY,
++	   VSC8531_LINK_100_ACTIVITY, VSC8531_LINK_ACTIVITY,
++	   VSC8531_DUPLEX_COLLISION};
+ 
+-	return vsc85xx_dt_led_modes_get(phydev, default_mode);
++	return vsc85xx_probe_helper(phydev, default_mode,
++				    ARRAY_SIZE(default_mode),
++				    VSC8584_SUPP_LED_MODES,
++				    vsc8584_hw_stats,
++				    ARRAY_SIZE(vsc8584_hw_stats));
+ }
+ 
+ static int vsc8584_probe(struct phy_device *phydev)
+ {
+-	struct vsc8531_private *vsc8531;
+ 	u32 default_mode[4] = {VSC8531_LINK_1000_ACTIVITY,
+ 	   VSC8531_LINK_100_ACTIVITY, VSC8531_LINK_ACTIVITY,
+ 	   VSC8531_DUPLEX_COLLISION};
+@@ -2045,28 +2044,17 @@ static int vsc8584_probe(struct phy_device *phydev)
+ 		return -ENOTSUPP;
+ 	}
+ 
+-	vsc8531 = devm_kzalloc(&phydev->mdio.dev, sizeof(*vsc8531), GFP_KERNEL);
+-	if (!vsc8531)
+-		return -ENOMEM;
+-
+-	phydev->priv = vsc8531;
+-
+-	vsc8531->nleds = 4;
+-	vsc8531->supp_led_modes = VSC8584_SUPP_LED_MODES;
+-	vsc8531->hw_stats = vsc8584_hw_stats;
+-	vsc8531->nstats = ARRAY_SIZE(vsc8584_hw_stats);
+-	vsc8531->stats = devm_kcalloc(&phydev->mdio.dev, vsc8531->nstats,
+-				      sizeof(u64), GFP_KERNEL);
+-	if (!vsc8531->stats)
+-		return -ENOMEM;
+-
+-	return vsc85xx_dt_led_modes_get(phydev, default_mode);
++	return vsc85xx_probe_helper(phydev, default_mode,
++				    ARRAY_SIZE(default_mode),
++				    VSC8584_SUPP_LED_MODES,
++				    vsc8584_hw_stats,
++				    ARRAY_SIZE(vsc8584_hw_stats));
+ }
+ 
+ static int vsc85xx_probe(struct phy_device *phydev)
+ {
+ 	struct vsc8531_private *vsc8531;
+-	int rate_magic;
++	int rate_magic, rc;
+ 	u32 default_mode[2] = {VSC8531_LINK_1000_ACTIVITY,
+ 	   VSC8531_LINK_100_ACTIVITY};
+ 
+@@ -2074,23 +2062,18 @@ static int vsc85xx_probe(struct phy_device *phydev)
+ 	if (rate_magic < 0)
+ 		return rate_magic;
+ 
+-	vsc8531 = devm_kzalloc(&phydev->mdio.dev, sizeof(*vsc8531), GFP_KERNEL);
+-	if (!vsc8531)
+-		return -ENOMEM;
+-
+-	phydev->priv = vsc8531;
++	rc = vsc85xx_probe_helper(phydev, default_mode,
++				  ARRAY_SIZE(default_mode),
++				  VSC85XX_SUPP_LED_MODES,
++				  vsc85xx_hw_stats,
++				  ARRAY_SIZE(vsc85xx_hw_stats));
++	if (rc < 0)
++		return rc;
+ 
++	vsc8531 = phydev->priv;
+ 	vsc8531->rate_magic = rate_magic;
+-	vsc8531->nleds = 2;
+-	vsc8531->supp_led_modes = VSC85XX_SUPP_LED_MODES;
+-	vsc8531->hw_stats = vsc85xx_hw_stats;
+-	vsc8531->nstats = ARRAY_SIZE(vsc85xx_hw_stats);
+-	vsc8531->stats = devm_kcalloc(&phydev->mdio.dev, vsc8531->nstats,
+-				      sizeof(u64), GFP_KERNEL);
+-	if (!vsc8531->stats)
+-		return -ENOMEM;
+ 
+-	return vsc85xx_dt_led_modes_get(phydev, default_mode);
++	return 0;
+ }
+ 
+ /* Microsemi VSC85xx PHYs */
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.26.2
 
