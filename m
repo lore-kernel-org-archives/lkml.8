@@ -2,124 +2,83 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB6FC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68048C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8982207C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:28:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591720116;
-	bh=8sNTrAUtKML2UxjNLUcCvxl5yxTMZGZg4hHFZh+vqYM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MuZ2D59hUfpt1ng9wXcDyhMyULBMZndKFCThCHzzbpIWZSlElJzESwR0BuwKxZ/RC
-	 h7LQhcD9w1Y8jX8trJJQEZT81X0GvUl5fTbiy32yaA8qC/L9xyvUlontx+WQo4X4hl
-	 yjW3JsiNwJQd8VwYi8W4XcRnM9aPcVw1vR/1UohA=
+	by mail.kernel.org (Postfix) with ESMTP id 3EE2220734
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:29:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728753AbgFIQ2f (ORCPT
+        id S1730066AbgFIQ3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 12:28:35 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36856 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbgFIQ2e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 12:28:34 -0400
-Received: by mail-io1-f67.google.com with SMTP id r77so10472969ior.3;
-        Tue, 09 Jun 2020 09:28:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=A6vd48ocHYfhIgGf9VmwdBfWMzr2z9+KHgzkdfZG/Pw=;
-        b=gdc5NQvllc6HFYMiHDxPVFrXN1WzeG6f8xWMyfju/+9W1a/dTIaU/TiTGVumkwsnmk
-         N1rfHuKlDQimxSYMvp91xWBOHVyuT1wOSVDxYlTJYqjTb6IM3kYrdj1QB2gnztgHDVVx
-         T9jeeXvkmkPvPj7RyutsbMgkJ8UxJ/QcJQpHgWazEt0SENDEy1G9OBRhv3XvO19yxEa3
-         vywbsfTsCsQgIgQIhlmAxS/ecYzbEUJlbQ6/5MCJVV5eVhrbkMEp7lAB35SxCelzlRNV
-         ezzpl+DW8XdZHIRw8OxyW6D7XxUMyw3ZDt+Q58/KcjndZ0DjF9+TFCX85SKtXBqvqFch
-         SrcA==
-X-Gm-Message-State: AOAM5321vBUx3YzsRbR/08cBtvMMGXjHs0lmIQkXipXsR38MJDA8fFgp
-        V1gko/kAdGR1ZRfkDt1qZA==
-X-Google-Smtp-Source: ABdhPJxppbDKoA41o6uRyry3FgAKOA+jukh4Ub5WxT2GMgvWiM/pMXyEGjvEw/XePOisx3B4ZJrI5Q==
-X-Received: by 2002:a05:6638:1483:: with SMTP id j3mr27698460jak.65.1591720112867;
-        Tue, 09 Jun 2020 09:28:32 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id y13sm7449594iob.51.2020.06.09.09.28.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 09:28:32 -0700 (PDT)
-Received: (nullmailer pid 1020807 invoked by uid 1000);
-        Tue, 09 Jun 2020 16:28:30 -0000
-Date:   Tue, 9 Jun 2020 10:28:30 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Mark Brown <broonie@kernel.org>, linux-watchdog@vger.kernel.org,
-        Shawn Guo <shawnguo@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-hwmon@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Jason Cooper <jason@lakedaemon.net>,
-        Lee Jones <lee.jones@linaro.org>, Li Yang <leoyang.li@nxp.com>,
-        linux-gpio@vger.kernel.org,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-kernel@vger.kernel.org,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 01/11] dt-bindings: mfd: Add bindings for sl28cpld
-Message-ID: <20200609162830.GA1019634@bogus>
-References: <20200604211039.12689-1-michael@walle.cc>
- <20200604211039.12689-2-michael@walle.cc>
+        Tue, 9 Jun 2020 12:29:52 -0400
+Received: from smtp.asem.it ([151.1.184.197]:62751 "EHLO smtp.asem.it"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725894AbgFIQ3w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 12:29:52 -0400
+Received: from webmail.asem.it
+        by asem.it (smtp.asem.it)
+        (SecurityGateway 6.5.2)
+        with ESMTP id SG000307107.MSG 
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 18:29:49 +0200S
+Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 9 Jun
+ 2020 18:29:47 +0200
+Received: from flavio-x.asem.intra (172.16.17.208) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
+ Transport; Tue, 9 Jun 2020 18:29:47 +0200
+From:   Flavio Suligoi <f.suligoi@asem.it>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Fabien Lahoudere <fabien.lahoudere@collabora.com>
+CC:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Flavio Suligoi <f.suligoi@asem.it>
+Subject: [PATCH 1/1] iio: common: fix spelling mistake
+Date:   Tue, 9 Jun 2020 18:29:43 +0200
+Message-ID: <20200609162943.867-1-f.suligoi@asem.it>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200604211039.12689-2-michael@walle.cc>
+Content-Type: text/plain
+X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
+X-SGSPF-Result: none (smtp.asem.it)
+X-SGOP-RefID: str=0001.0A090209.5EDFB8FC.0048,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 04 Jun 2020 23:10:29 +0200, Michael Walle wrote:
-> Add a device tree bindings for the board management controller found on
-> the Kontron SMARC-sAL28 board.
-> 
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> ---
->  .../bindings/gpio/kontron,sl28cpld-gpio.yaml  |  54 +++++++
->  .../hwmon/kontron,sl28cpld-hwmon.yaml         |  27 ++++
->  .../kontron,sl28cpld-intc.yaml                |  54 +++++++
->  .../bindings/mfd/kontron,sl28cpld.yaml        | 153 ++++++++++++++++++
->  .../bindings/pwm/kontron,sl28cpld-pwm.yaml    |  35 ++++
->  .../watchdog/kontron,sl28cpld-wdt.yaml        |  35 ++++
->  6 files changed, 358 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
->  create mode 100644 Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/kontron,sl28cpld-intc.yaml
->  create mode 100644 Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
->  create mode 100644 Documentation/devicetree/bindings/pwm/kontron,sl28cpld-pwm.yaml
->  create mode 100644 Documentation/devicetree/bindings/watchdog/kontron,sl28cpld-wdt.yaml
-> 
+Fix typo: "tigger" --> "trigger"
 
+Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+---
+ drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mfd/kontron,sl28cpld.example.dt.yaml: sl28cpld@4a: 'gpio@1a', 'gpio@1b', 'hwmon@b', 'interrupt-controller@1c', 'pwm@c', 'pwm@e' do not match any of the regexes: '^gpio(@[0-9]+)?$', '^hwmon(@[0-9]+)?$', '^interrupt-controller(@[0-9]+)?$', '^pwm(@[0-9]+)?$', '^watchdog(@[0-9]+)?$', 'pinctrl-[0-9]+'
-
-See https://patchwork.ozlabs.org/patch/1303780
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
+diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+index c831915ca7e5..4888fb23d801 100644
+--- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
++++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+@@ -352,7 +352,7 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
+ 		} else {
+ 			/*
+ 			 * The only way to get samples in buffer is to set a
+-			 * software tigger (systrig, hrtimer).
++			 * software trigger (systrig, hrtimer).
+ 			 */
+ 			ret = devm_iio_triggered_buffer_setup(
+ 					dev, indio_dev, NULL, trigger_capture,
+-- 
+2.17.1
 
