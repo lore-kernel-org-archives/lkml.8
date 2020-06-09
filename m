@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80FE3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2026C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:18:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 582842074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:18:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B3DD20737
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:18:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sr9smtd/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WubWCnlk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730176AbgFINSd (ORCPT
+        id S1728940AbgFINOe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 09:18:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55232 "EHLO
+        Tue, 9 Jun 2020 09:14:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729000AbgFINOf (ORCPT
+        with ESMTP id S1728425AbgFINO1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 09:14:35 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C118C03E97C;
-        Tue,  9 Jun 2020 06:14:35 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id n23so24969602ljh.7;
-        Tue, 09 Jun 2020 06:14:35 -0700 (PDT)
+        Tue, 9 Jun 2020 09:14:27 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 564A1C03E97C;
+        Tue,  9 Jun 2020 06:14:27 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id x18so8494562lji.1;
+        Tue, 09 Jun 2020 06:14:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=eQ3h8Ane+DGwk19e9LoUjeH+6kuRPH+cvxzXdTjxJoI=;
-        b=sr9smtd/X2TAtj+jB9Xt0hR75GzF+z9QEMDVwFu/VhYMicUKng0kG80Vs+otUE3E6e
-         OT8MlEj7ng0+A/YXa3upxyT1+xitxML7CL1pmQ6sFiJsHTRufjHjBdSWzIIJupI/2LwM
-         iAcSajC9XDB5SXxSpHwLyK9wuRp8kIMiL0V3TP7aCn4UZrMyagGowSfjZtIeX+5+T3Em
-         CgFnf5kKqegdAD1c4a9gT62gxmFaVxuInAEi52qng/n86OURvvDTdan7p6rHgNCmhXyk
-         y9gZJUiePCLkW1ueC+0ds06ZdHKlOImsS0Hht/TYCkie+SgGDM7IBDTY3WFlIBoGLGjJ
-         hKjA==
+        bh=o4M3bTUDA74h1lwoV4T2HnrphCh8yThUo/f/7p0LEJQ=;
+        b=WubWCnlkgI26pfDVw0Ep1IhBhHdHzkVOBYEPckyx1O/SSzugmHx8umh0venYLUw/Ro
+         mfDiF91/57n9ZKeX48nhhr3xmtVLkLmP8/aoMTjbmywRLYKaZeSd53ZXy9mqDLnhedCH
+         S3lBChQtwGUrZlKCvD8arJfsrruaX7nvAAwH5PLSoA1mNy1OqZCTFKZxW6Zk37QKK3So
+         yd3LTmHTyJXjSfb8Uc+4nUf1bGJUVgEGZJ7gr/nNpjwmINI2yKy2tVqq5QS43LkptZ8P
+         wCbHInI+KPaGs9kvstdV2zsM+mECcDcGDHnppOC73x608s71jfurL6wgGky/aC7rcNm0
+         d4Cg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=eQ3h8Ane+DGwk19e9LoUjeH+6kuRPH+cvxzXdTjxJoI=;
-        b=fy+fpTYYS02QEzNdq+TSyYYG5tAkRKzUZSwCsF/S3vBhxE4cfLahCamnHxa4Rnc30H
-         i9JWzEJjE7xd4SDS3FuTBQ2TfIzEHE1GGh7ubB7tSp6FbRQi3ecweEayXMjYvSvAISA/
-         vSMJuVfA6G5FnCfI5ibS+KMiEK9/Ci+IphADehSkzBMkYm/9wMWgaPE1w32O6jhEJ9rH
-         3vLFjaH5NF1ZdkFQlGazq4yB6isGuKJTSSDxnWLZMhqvN4BeHSd7Tg8pJwlVk8wH6JGW
-         jCegE5/RMDfxADwungyXO1LzyslBUZsWS00f5xFsj07mcl9RRt4OGdv08OitquHS0nCM
-         rgKg==
-X-Gm-Message-State: AOAM530212iPhbYUdPG0QJfD4Axw0gMrb/cMdmBQ/sUcCG2zZDkXyu/Q
-        f86xpyPL2fyfYJ1WH6mPWuw=
-X-Google-Smtp-Source: ABdhPJysLy/ytBXckY4POgNUQGKQ4QlbcnhjoNkfFQXjUOYkxP+flvZczjNtCZMYL6RWbQxYJYhw5Q==
-X-Received: by 2002:a2e:9c1:: with SMTP id 184mr14667970ljj.241.1591708473574;
-        Tue, 09 Jun 2020 06:14:33 -0700 (PDT)
+        bh=o4M3bTUDA74h1lwoV4T2HnrphCh8yThUo/f/7p0LEJQ=;
+        b=IlpiRaF0OjBFV2/oAG4LsBTyA0bgqIrTf5asDSmpniO5nMh2OYAOb7MmgzLT60s6Q0
+         PAF9OjHE+RSlYM+VCz2QPq5e/rZ4P5RqWnLmn0dD5oyyviYvfdD371WEnDAQfAJ3U2Hb
+         7U6BDvfXFGYT0dgK3GkqfSndjhO9COWauWq2Mu1o+mtJnEg7PWhBlw5iDXLpY8jSvP3o
+         H0690dOWVayrhoCJn0rg6ezRp7WhM6Q2oP5Kg/kBBvhfgywKekzUFEvhZOHsOQtsD4ut
+         1AaK0rDH+3zcipHcLy2cLY6Jh/felf+QPkSr3ohT0ar6yGVON+Or7pMPDMOSPqk7pjo+
+         RMKQ==
+X-Gm-Message-State: AOAM533NuJ6BMQ+V6jekdvCIdf6TddlhpLR0nhJtzS7huRqyRhmjviGc
+        TqdCOI2Nq1c9rHQ+ELPzgDI=
+X-Google-Smtp-Source: ABdhPJz0i8282/FJQIGDuc8pcHuZXMNEm+kWgDf2nK40LNBw6s1gDJI5NwQ3Sx3CyiBJD1F+eVni3Q==
+X-Received: by 2002:a2e:961a:: with SMTP id v26mr3973130ljh.296.1591708465781;
+        Tue, 09 Jun 2020 06:14:25 -0700 (PDT)
 Received: from localhost.localdomain (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.gmail.com with ESMTPSA id l22sm4323522lji.120.2020.06.09.06.14.32
+        by smtp.gmail.com with ESMTPSA id l22sm4323522lji.120.2020.06.09.06.14.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 06:14:33 -0700 (PDT)
+        Tue, 09 Jun 2020 06:14:25 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -76,9 +76,9 @@ Cc:     =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@samsung.com>,
         linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         devicetree@vger.kernel.org
-Subject: [PATCH v4 07/37] memory: tegra124-emc: Use devm_platform_ioremap_resource
-Date:   Tue,  9 Jun 2020 16:13:34 +0300
-Message-Id: <20200609131404.17523-8-digetx@gmail.com>
+Subject: [PATCH v4 01/37] clk: Export clk_hw_reparent()
+Date:   Tue,  9 Jun 2020 16:13:28 +0300
+Message-Id: <20200609131404.17523-2-digetx@gmail.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200609131404.17523-1-digetx@gmail.com>
 References: <20200609131404.17523-1-digetx@gmail.com>
@@ -89,35 +89,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Utilize that relatively new helper which makes code a bit cleaner.
+We're going to turn Tegra124 Memory Controller driver into a loadable
+kernel module. The driver uses clk_hw_reparent(), which isn't an exported
+kernel symbol. Let's export that function in order to allow modularization
+of the Tegra driver.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/memory/tegra/tegra124-emc.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/clk/clk.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/memory/tegra/tegra124-emc.c b/drivers/memory/tegra/tegra124-emc.c
-index 98d98d09b00c..6d2897d4dca9 100644
---- a/drivers/memory/tegra/tegra124-emc.c
-+++ b/drivers/memory/tegra/tegra124-emc.c
-@@ -1193,7 +1193,6 @@ static int tegra_emc_probe(struct platform_device *pdev)
- 	struct platform_device *mc;
- 	struct device_node *np;
- 	struct tegra_emc *emc;
--	struct resource *res;
- 	u32 ram_code;
- 	int err;
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index 3f588ed06ce3..2fa6394d9a1b 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -2439,6 +2439,7 @@ void clk_hw_reparent(struct clk_hw *hw, struct clk_hw *new_parent)
  
-@@ -1203,8 +1202,7 @@ static int tegra_emc_probe(struct platform_device *pdev)
+ 	clk_core_reparent(hw->core, !new_parent ? NULL : new_parent->core);
+ }
++EXPORT_SYMBOL_GPL(clk_hw_reparent);
  
- 	emc->dev = &pdev->dev;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	emc->regs = devm_ioremap_resource(&pdev->dev, res);
-+	emc->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(emc->regs))
- 		return PTR_ERR(emc->regs);
- 
+ /**
+  * clk_has_parent - check if a clock is a possible parent for another
 -- 
 2.26.0
 
