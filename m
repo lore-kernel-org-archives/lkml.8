@@ -2,237 +2,153 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FCA9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 23:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94DD5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 23:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 627D82067B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 23:24:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a9UnKgq3"
+	by mail.kernel.org (Postfix) with ESMTP id 6DF42206A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 23:29:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591745359;
+	bh=so9mtAq9IjDAKHSiqosXpkJZ9H3m/cJJihtj8+pjvW4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1cZVmHWK8Y+nMdmToNF21wdesHsFU3jrjNF+XQH+ZHkia8W9ism7DNvk10p31VPqc
+	 XZ5j88KK/ikAU0xGq2DDIIutk51EYkm0O6ANNOlCpDBUA3Gqwxg5EznKzj1iA1uPCo
+	 uU8y3gSWp+EG3hQdThLNKX0FxKxbQ8hAnSRxZYng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726027AbgFIXYh (ORCPT
+        id S1725967AbgFIX3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 19:24:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36728 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725468AbgFIXYf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 19:24:35 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3F2DC05BD1E
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 16:24:34 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id x22so334157lfd.4
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 16:24:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sMtF/qC2PC0Fc7hbbofyHpRlWklTrVKaPLffR+XkU1w=;
-        b=a9UnKgq3w+NZfrSXnyBqyipJbKa0Tuo3dnojjNN8atnvbBP6GEk3z2QlX1imC756KM
-         0tJiq6hRUkc6dTpdFJah7PgXagtdk+AxgsDwSbqw0U9Zjh/JncC/0El99i9r1N0/Spa6
-         p79TY7zT08KC5mIDFXGG9IAfq+8wtHM+wYM1r/sqlIniOncZ4GBL++cTx9MCo26DcbPt
-         L7r4sHXsT1zf22C0FSGNtjXqLMzG/mY8Z0AJe/Kj6nWXihSIHW8UzduTok+oObIwbse4
-         DUSvWWtfZXEatB84BYi1qo8c/lFJgnXxYbt8snslXCBa6+I/s/0ZBGr0XWn1nx/F+MRf
-         fvvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sMtF/qC2PC0Fc7hbbofyHpRlWklTrVKaPLffR+XkU1w=;
-        b=nR9Q2QpL1NdtKEm51Zpbq1Ix23riu4v+AKtvmrwqtVJUcfe6SEBTM89a8cWylSebQH
-         4VufpNTleLrDNTd0tyvvXfSBIT1zYFO0/FQtVeFtJwEHHJQxIPXtxNU1fk8MnXUs3C/B
-         0Yye0tfne3BBSSpTExDNLctcnn1T14cocVwa0jgtXActF5i0NkTKA8sAlCm1B8f7hIMR
-         T8YHG5j1msQ/aODCgzxQcc53gGyW22zgjU+cgjnwkFkfetcwGk7OzO0nvSrvAM1SHf+5
-         wNtnMk3qh/fUwKWoBr2lr1XeF220YbXkpHbKFR/cnI3kNbuyneUdd5Y29h3Q/zZ2x7RQ
-         EEIA==
-X-Gm-Message-State: AOAM531RHGlvDJLa4s/2eM0ETFS8RX4bf3lQSwrOYOriDz/DCFTNiFcV
-        LQuyDuLZlGM3BZxaP99UzTrcB0m6TRQoXkc+jZF0Ng==
-X-Google-Smtp-Source: ABdhPJzZrY0DI2VZNNrS4hhO2yx7vrk8VLovugxJWWKM5VjHU5bg/zH1GQOap9q4/SV4DIRAMadbJWFRtgiQBcfd3bo=
-X-Received: by 2002:a19:434e:: with SMTP id m14mr151638lfj.40.1591745072660;
- Tue, 09 Jun 2020 16:24:32 -0700 (PDT)
+        Tue, 9 Jun 2020 19:29:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46850 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725785AbgFIX3P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 19:29:15 -0400
+Received: from earth.universe (dyndsl-037-138-184-022.ewe-ip-backbone.de [37.138.184.22])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DF22206A4;
+        Tue,  9 Jun 2020 23:29:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591745354;
+        bh=so9mtAq9IjDAKHSiqosXpkJZ9H3m/cJJihtj8+pjvW4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QOfNUrJTZvqLC5gRSBiipLO0lLr4rkuFBrdmO4tJIMdfDfdTFKGSRLcwZQIm1btCI
+         l3vNpB3D0CLEU6VfaSySI97qpS3hFMrdS0/kZK3bOGgogyjjDW3R4C6mL/ngCjG6KS
+         +9TYqwT+FEVH/b9gLRi5hfHw0Tt+9S3o7FfWna8A=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 7975F3C08C6; Wed, 10 Jun 2020 01:29:12 +0200 (CEST)
+Date:   Wed, 10 Jun 2020 01:29:12 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Tim Wawrzynczak <twawrzynczak@chromium.org>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] power: supply: Add new power supply prop for date of
+ manufacture
+Message-ID: <20200609232912.oexmmr53feglqdg7@earth.universe>
+References: <20200609192237.32571-1-twawrzynczak@chromium.org>
 MIME-Version: 1.0
-References: <20200607113632.GA49147@kroah.com> <20200609210400.GA1461839@bjorn-Precision-5520>
-In-Reply-To: <20200609210400.GA1461839@bjorn-Precision-5520>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Tue, 9 Jun 2020 16:23:54 -0700
-Message-ID: <CACK8Z6E0s-Y207sb-AqSHVB7KmhvDgJQFFaz6ijQ_0OS3Qjisw@mail.gmail.com>
-Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
- "whitelisted" drivers
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Zubin Mithra <zsm@google.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ciom6auqowqlhjxy"
+Content-Disposition: inline
+In-Reply-To: <20200609192237.32571-1-twawrzynczak@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
 
-Thanks for sending out the summary, I was about to send it out but got lazy.
+--ciom6auqowqlhjxy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 9, 2020 at 2:04 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Sun, Jun 07, 2020 at 01:36:32PM +0200, Greg Kroah-Hartman wrote:
->
-> > Your "problem" I think can be summed up a bit more concise:
-> >       - you don't trust kernel drivers to be "secure" for untrusted
-> >         devices
-> >       - you only want to bind kernel drivers to "internal" devices
-> >         automatically as you "trust" drivers in that situation.
-> >       - you want to only bind specific kernel drivers that you somehow
-> >         feel are "secure" to untrusted devices "outside" of a system
-> >         when those devices are added to the system.
-> >
-> > Is that correct?
-> >
-> > If so, fine, you can do that today with the bind/unbind ability of
-> > drivers, right?  After boot with your "trusted" drivers bound to
-> > "internal" devices, turn off autobind of drivers to devices and then
-> > manually bind them when you see new devices show up, as those "must" be
-> > from external devices (see the bind/unbind files that all drivers export
-> > for how to do this, and old lwn.net articles, this feature has been
-> > around for a very long time.)
-> >
-> > I know for USB you can do this, odds are PCI you can turn off
-> > autobinding as well, as I think this is a per-bus flag somewhere.  If
-> > that's not exported to userspace, should be trivial to do so, should be
-> > somewere in the driver model already...
-> >
-> > Ah, yes, look at the "drivers_autoprobe" and "drivers_probe" files in
-> > sysfs for all busses.  Do those not work for you?
-> >
-> > My other points are the fact that you don't want to put policy in the
-> > kernel, and I think that you can do everything you want in userspace
-> > today, except maybe the fact that trying to determine what is "inside"
-> > and "outside" is not always easy given that most hardware does not
-> > export this information properly, if at all.  Go work with the firmware
-> > people on that issue please, that would be most helpful for everyone
-> > involved to get that finally straightened out.
->
-> To sketch this out, my understanding of how this would work is:
->
->   - Expose the PCI pdev->untrusted bit in sysfs.  We don't expose this
->     today, but doing so would be trivial.  I think I would prefer a
->     sysfs name like "external" so it's more descriptive and less of a
->     judgment.
+Hi,
 
-Yes. I think we should probably semantically differentiate between
-"external" and "external facing" devices. Root ports and downstream
-ports can be "external facing" but are actually internal devices.
-Anything below an "external facing" device is "external". So the sysfs
-attribute "external" should be set only for devices that are truly
-external.
+Support for SBS battery manufacturer date is part of power-supply's
+pull request for v5.8 with a different API allowing other batteries
+to expose less precise information:
 
-So I think we can possibly synthesize "external" sysfs attribute from
-"untrusted" bit like this (Sorry code looks more complex than it is):
+https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git/=
+commit/?h=3Dfor-next&id=3Dfeabe49e46bb556b8d43e28d4a0d459940f7a5cb
+https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git/=
+commit/?h=3Dfor-next&id=3D7721c2fd2668c751f9ba33b35db08b86293869e5
 
-parent = pdev->bus->self;
+-- Sebastian
 
-if (pdev->untrusted) {
-        if (parent && parent->untrusted)
-                pdev->external = true;   /* Device downstream of
-un-trusted device = external */
-        else {
-                pdev->external = false   /* Root complex or an
-internal Downstream port */
-} else {
-        pdev->external = false; /* Trusted device = Internal device */
-}
+On Tue, Jun 09, 2020 at 01:22:36PM -0600, Tim Wawrzynczak wrote:
+> The Smart Battery Specification v1.1 defines Manufacture Date as one of
+> its availabe registers. This patch adds this as a property so that
+> power_supply drivers can support the property and report it in syfs.
+>=20
+> Signed-off-by: Tim Wawrzynczak <twawrzynczak@chromium.org>
+> Change-Id: I90bf8c67b0cd531f2155404424a98302a1c931d6
+> ---
+>  drivers/power/supply/power_supply_sysfs.c | 3 ++-
+>  include/linux/power_supply.h              | 1 +
+>  2 files changed, 3 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/su=
+pply/power_supply_sysfs.c
+> index f37ad4eae60b9..ac6d9992a8675 100644
+> --- a/drivers/power/supply/power_supply_sysfs.c
+> +++ b/drivers/power/supply/power_supply_sysfs.c
+> @@ -171,7 +171,7 @@ static ssize_t power_supply_show_property(struct devi=
+ce *dev,
+>  		ret =3D sprintf(buf, "%s\n",
+>  			      power_supply_scope_text[value.intval]);
+>  		break;
+> -	case POWER_SUPPLY_PROP_MODEL_NAME ... POWER_SUPPLY_PROP_SERIAL_NUMBER:
+> +	case POWER_SUPPLY_PROP_MODEL_NAME ... POWER_SUPPLY_PROP_MANUFACTURE_DAT=
+E:
+>  		ret =3D sprintf(buf, "%s\n", value.strval);
+>  		break;
+>  	default:
+> @@ -310,6 +310,7 @@ static struct device_attribute power_supply_attrs[] =
+=3D {
+>  	POWER_SUPPLY_ATTR(model_name),
+>  	POWER_SUPPLY_ATTR(manufacturer),
+>  	POWER_SUPPLY_ATTR(serial_number),
+> +	POWER_SUPPLY_ATTR(manufacture_date),
+>  };
+> =20
+>  static struct attribute *
+> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+> index 28413f737e7d0..67839bb0a46b6 100644
+> --- a/include/linux/power_supply.h
+> +++ b/include/linux/power_supply.h
+> @@ -162,6 +162,7 @@ enum power_supply_property {
+>  	POWER_SUPPLY_PROP_MODEL_NAME,
+>  	POWER_SUPPLY_PROP_MANUFACTURER,
+>  	POWER_SUPPLY_PROP_SERIAL_NUMBER,
+> +	POWER_SUPPLY_PROP_MANUFACTURE_DATE,
+>  };
+> =20
+>  enum power_supply_type {
+> --=20
+> 2.26.2
+>=20
 
-For platforms that don't expose and untrusted" device, everything is
-assumed to be an "internal device".
+--ciom6auqowqlhjxy
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Just a suggestion: Do you think an enum attribute may be better
-instead, whose values could be "internal" / "external" /
-"external-facing" in case need arises later to distinguish between
-them?
+-----BEGIN PGP SIGNATURE-----
 
->
->     This comes from either the DT "external-facing" property or the
->     ACPI "ExternalFacingPort" property.
->
->   - All devices present at boot are enumerated.  Any statically built
->     drivers will bind to them before any userspace code runs.
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl7gG0EACgkQ2O7X88g7
++ppQ4g//dQB8TDo07iqPKqWYIBEtudBFSEGIfdNJ8qceSbxjZqBzA2TeQFnlCf+o
+UUFCZzvnX3txGmL+TnPC8n9jshPoRegaqKl/3B8Bp/Aw0HAGXuLHb1uNSdS4M6hS
+HXegBG34ToRo7WRKg6lJSpn24PATTxM9vElfDjTey4CJMaO6QiQvvwHyS7tfLHv8
+IAPOGL+yKZ1ya1yfaEZxQTc1AVuo5rZMWpbOMSfpNWRY+nse6aeRLDRqP10cEtMb
+r5TcxVwHn84T9uewkhfyrgxHQrGe1B0u4s/Ia7quFauZTM08AUvdVYMbMJI/WZaD
+nRdzCLK8CQ6GjjKX7OP8/x6XZTr+ScBj8yniNVk0/0Y6WCXnFXCgS3enux1jX+DP
+bKgonJ3iIyV4Y5c8MPtgq8exeKnOOpDdennqFzACp1j/MPvGMkkpeoNHbul3VkpU
+ibFX1hRshlqLKBIxckmLw6LM2aXJ7o0VbBKTmycBxCMBueffL/XqfDJ0J/PR/DS1
+EMYXj/DTXWPmlaaAhtrIl4rXXXBDj0Rri99N3lkGTtedFALCafTIq/NJlc0XxkNm
+9ysZp2izumrGFHapeSZGZudb1izlm38GKZ6OEdBvpRp+ojwycTlaIijjaGEpzvg6
+jSS/gn0Za62l2cU0iByXeX8w2PMvwHvDD/krEtFAsHW51yaIM+Y=
+=1Muu
+-----END PGP SIGNATURE-----
 
-Yes. For our (thunderbolt / USB4) use case, we'd still be protected
-because we can control the PCIe tunnels to thunderbolt / USB4 devices
-and will not enable them until we are ready. So while this approach
-may not work for a system that always enables PCIe connections to
-external devices at boot, it works for our use case as we are looking
-for only thunderbolt / USB4 devices. (Not a problem or concern, just
-wanted to be clear).
-
->
->     If you want to keep statically built drivers from binding, you'd
->     need to invent some mechanism so pci_driver_init() could clear
->     drivers_autoprobe after registering pci_bus_type.
-
-At present I am not planning this.
-
->
->   - Early userspace code prevents modular drivers from automatically
->     binding to PCI devices:
->
->       echo 0 > /sys/bus/pci/drivers_autoprobe
-
-Yes.
-I believe this setting will apply it equally to both modular and
-statically linked drivers?
-
->
->     This prevents modular drivers from binding to all devices, whether
->     present at boot or hot-added.
-
-Yes, at this time, the userspace will need to monitor udev events for
-any new PCI devices hot added, and lookup the VID/DID in pci driver
-database (Isn't it somewhere like modules.pcimap modules.dap or
-something in /lib/modules?) to get the driver name. and then after
-consulting a maintained whitelist, do the following:
-
->
->   - Userspace code uses the sysfs "bind" file to control which drivers
->     are loaded and can bind to each device, e.g.,
->
->       echo 0000:02:00.0 > /sys/bus/pci/drivers/nvme/bind
->
-> Is that what you're thinking?  Is that enough for the control you
-> need, Rajat?
-
-Yes, It sounds like it. That is my current plan.
-
-The one thing that still needs more thought is how about the
-"pcieport" driver that enumerates the PCI bridges. I'm unsure if it
-needs to be whitelisted for further enumeration downstream. What do
-you think?
-
-Thanks & Best Regards,
-
-Rajat
+--ciom6auqowqlhjxy--
