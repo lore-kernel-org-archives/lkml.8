@@ -7,53 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D7A8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:02:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA31C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4751B20734
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:02:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 399D3206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:02:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725767;
-	bh=vo3FdLqBqtbtjEeMD+wJP5z7o0CKJthufAyEqjJq63s=;
+	s=default; t=1591725779;
+	bh=RflnbD7gqZ1jl7ABeffmia6Gt/M0jQeppRlS42Z53+A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PUYtryWhAJT6sqF8gCkfECgKovyFhkk9aH72ns8gNP9j2uoAWTkI92u4fe/iP6MAW
-	 Mr7zAaDId1xzrULwcX5YpaIrMLbKFQ2grb2NsJ2kZshrypbc5sGPdt4P/NIwFkrDBo
-	 OWyFHvZicCPXxgFPGqOuSO3kJGeEEW/Bz9ABXct4=
+	b=InH/7mq3WuTNBrpouUlgPlyyr5hzshxBm5kmOuc+ENf6HAwJlcZZZGlJvscVvp/z0
+	 8z6Xl/+Q/LTOizdoGbAZJxesqrXt9KRE2IVFMhZavjWcXptMrDqgW3Zm5XW5nGFokg
+	 UT6R5Esn6Pvw6FM2XImZDb+fwblHYzQFr/O/1qMA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387875AbgFISCp (ORCPT
+        id S2387886AbgFISC5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:02:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44272 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 14:02:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731479AbgFIRxV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:53:21 -0400
+        id S1733002AbgFIRxI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:53:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0A5F207C3;
-        Tue,  9 Jun 2020 17:53:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46A9E207ED;
+        Tue,  9 Jun 2020 17:53:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725201;
-        bh=vo3FdLqBqtbtjEeMD+wJP5z7o0CKJthufAyEqjJq63s=;
+        s=default; t=1591725187;
+        bh=RflnbD7gqZ1jl7ABeffmia6Gt/M0jQeppRlS42Z53+A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wTVyAaoElcUrdnzJXuza6W2HvpsPSIQLaB8RV+bHYHf2HwEc48vd83mVOtqJ2oDGM
-         txvqCroEtqFxizK5MTtSz+3WeDBwlL7Y7REFDnX71baEa5w7+5wTbJ71KBb14NJnEm
-         JyHxb1CVVML3xbyRBL8/jNw4ZFhE5WELRUzorsjU=
+        b=oHSAxmK6qEpUxhGs+46314DrKmZDm9neS33D3Q57HvgBZQFrTDn+nD3gyy+BsNM5D
+         bFnqrLwlj7n7OyRIKkQgVR5NdfFGFU13dF3q5xqERqItFyF80yQywyE5EGrDvs61yp
+         a9HPTrAAFiG1VmWR0Ad341RxA/v3cshZvLCG84m0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yang Yingliang <yangyingliang@huawei.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 01/41] devinet: fix memleak in inetdev_init()
-Date:   Tue,  9 Jun 2020 19:45:03 +0200
-Message-Id: <20200609174112.249140476@linuxfoundation.org>
+        stable@vger.kernel.org, Bin Liu <b-liu@ti.com>
+Subject: [PATCH 5.4 20/34] usb: musb: start session in resume for host port
+Date:   Tue,  9 Jun 2020 19:45:16 +0200
+Message-Id: <20200609174055.141154547@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200609174112.129412236@linuxfoundation.org>
-References: <20200609174112.129412236@linuxfoundation.org>
+In-Reply-To: <20200609174052.628006868@linuxfoundation.org>
+References: <20200609174052.628006868@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,31 +58,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Yingliang <yangyingliang@huawei.com>
+From: Bin Liu <b-liu@ti.com>
 
-[ Upstream commit 1b49cd71b52403822731dc9f283185d1da355f97 ]
+commit 7f88a5ac393f39319f69b8b20cc8d5759878d1a1 upstream.
 
-When devinet_sysctl_register() failed, the memory allocated
-in neigh_parms_alloc() should be freed.
+Commit 17539f2f4f0b ("usb: musb: fix enumeration after resume") replaced
+musb_start() in musb_resume() to not override softconnect bit, but it
+doesn't restart the session for host port which was done in musb_start().
+The session could be disabled in musb_suspend(), which leads the host
+port doesn't stay in host mode.
 
-Fixes: 20e61da7ffcf ("ipv4: fail early when creating netdev named all or default")
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
-Acked-by: Cong Wang <xiyou.wangcong@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+So let's start the session specifically for host port in musb_resume().
+
+Fixes: 17539f2f4f0b ("usb: musb: fix enumeration after resume")
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Bin Liu <b-liu@ti.com>
+Link: https://lore.kernel.org/r/20200525025049.3400-3-b-liu@ti.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv4/devinet.c |    1 +
- 1 file changed, 1 insertion(+)
 
---- a/net/ipv4/devinet.c
-+++ b/net/ipv4/devinet.c
-@@ -276,6 +276,7 @@ static struct in_device *inetdev_init(st
- 	err = devinet_sysctl_register(in_dev);
- 	if (err) {
- 		in_dev->dead = 1;
-+		neigh_parms_release(&arp_tbl, in_dev->arp_parms);
- 		in_dev_put(in_dev);
- 		in_dev = NULL;
- 		goto out;
+---
+ drivers/usb/musb/musb_core.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
+
+--- a/drivers/usb/musb/musb_core.c
++++ b/drivers/usb/musb/musb_core.c
+@@ -2721,6 +2721,13 @@ static int musb_resume(struct device *de
+ 	musb_enable_interrupts(musb);
+ 	musb_platform_enable(musb);
+ 
++	/* session might be disabled in suspend */
++	if (musb->port_mode == MUSB_HOST &&
++	    !(musb->ops->quirks & MUSB_PRESERVE_SESSION)) {
++		devctl |= MUSB_DEVCTL_SESSION;
++		musb_writeb(musb->mregs, MUSB_DEVCTL, devctl);
++	}
++
+ 	spin_lock_irqsave(&musb->lock, flags);
+ 	error = musb_run_resume_work(musb);
+ 	if (error)
 
 
