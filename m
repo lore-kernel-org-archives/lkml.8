@@ -2,218 +2,162 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D148C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 480F8C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B4CD207ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:19:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 190372072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:21:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TrSlB8pY"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Tqsz7mN0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730739AbgFIPTu (ORCPT
+        id S1730784AbgFIPVa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 11:19:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46372 "EHLO
+        Tue, 9 Jun 2020 11:21:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729593AbgFIPTq (ORCPT
+        with ESMTP id S1729085AbgFIPV2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 11:19:46 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A86ADC05BD1E
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 08:19:45 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id j10so21763203wrw.8
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 08:19:45 -0700 (PDT)
+        Tue, 9 Jun 2020 11:21:28 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F21BAC03E97C
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 08:21:27 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id o6so10465899pgh.2
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 08:21:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Rk2oDZPnfwMXUWPErdEgPnP2nnFU5znUIkJLh8odeKY=;
-        b=TrSlB8pYYj3hLyZLYGz8CnGfrshe0S63alFmjMac7FlNzG2WrvJcCnPzJ8Y3oz/zHu
-         grMZ5fATJYLfW21vf4pqIUOAPjq+r3Et4vCnkaPwST2LbT2KEoI9waM0A52GPC6YdUT3
-         Wc8cUHOlxEpq9fSHi+NmPiY88KUNz40lvfstxa+lVwypcEQcKWkK1lidFi9i4AvNKYnx
-         vJyRjAGpSN4P2TaQTOE5rxOe+rMbWd3rvknENlTFtY9iDv9LR2IXfrDmM0YiCIhZ5Dtc
-         /f++AJlEm+hW9u6LzmlFxwyrCxmT2YbHV9t0fJaWdoOmplWYM0XKAZtxSVfkybGK8Xrc
-         MoRw==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uwvFGjyGkvShem51AX2k8l39E+uinZbFtzIiRAp08Pk=;
+        b=Tqsz7mN0ZQ/Ebtwuuhlz2Aj5Nxp7ZH2E32VDTotEwsEFHfoCIcICryte8znwPwr/ML
+         rJGLk5Don0hvRBsPIb38oIrdDDbG5L4Ob6CtN/+bzblcvgk0eAlGkyw9/JzYg5JF7rpH
+         AXZ4YKev82m2zvwOymfK78TMabY5wSKQSzWgk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Rk2oDZPnfwMXUWPErdEgPnP2nnFU5znUIkJLh8odeKY=;
-        b=jVACd9//uIN6scd8BlYNQl72gJYZvXk/q8AXV7MQWPz6be8zzV01OD6buvZndkEb1l
-         jCmeeSPu6yw/vYtiRUOj+bj0p19LVHThiaYtFgMNj67RnaUtCpVDsK+snp+b5tTY8OYa
-         FAMoymgqc9ecXmfWOD7kpQQAJXgEwprTSmDxOyr4WJm+1QUXdWf2vTgqf69Sr/+1XcDk
-         60f6wQxkdQbAW3c7o4k7cNLHMgfaZfOIEAfcA0QKpdZAo7Brj8x8cLdyyz2awEy1MP2h
-         m4RsnSadV5/CMLpCvS7iRIgfoKqItKPnXqqq4oqBtNdoW3EgkTidyO3AnXBMZoaP1qIw
-         5jXg==
-X-Gm-Message-State: AOAM532z0V5lj3TH+m1QxN5bM6qpnRMzM4WageLr0OPoT/dVW2eM40tc
-        r8goYiQHnJjI2Y9JuW29GHs9fA==
-X-Google-Smtp-Source: ABdhPJw2lbdxCvWfX4BaLx0JY0xh8sw3TkHMqxmT6Rm1ZGth1zxLA0vydahsSf+ib3yzcV5qZtEpfw==
-X-Received: by 2002:adf:f4c6:: with SMTP id h6mr5221915wrp.398.1591715984320;
-        Tue, 09 Jun 2020 08:19:44 -0700 (PDT)
-Received: from dell ([2.27.167.101])
-        by smtp.gmail.com with ESMTPSA id h5sm3800319wrw.85.2020.06.09.08.19.42
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uwvFGjyGkvShem51AX2k8l39E+uinZbFtzIiRAp08Pk=;
+        b=BQM0vWevHtcOJiL9ejyUQuBUTNUQ6Qnw2nYFY8a4dpobLqOuJXO777eFmmPKsLOKl2
+         il9KdmiXGGpTylPDIqsLRLUdblNgahPJFzUwZAA0vC3maUWIi6BeOHjugNRO7nGxi9Ji
+         avMZiThtLZrU9Ie32Oj7yLk5mow9JDvTfsB8U5Nsc0LWhkYKLu2KJwgvbFq3nBe0BGLn
+         7FoRpdNmXWsgVifK2DUQ55RpnfPA+NOjtWwsYO2PQS6aX88P7ejLu2bpac+XdJBNiCBK
+         z8R+RUDGzykIKBxWCqIqyaISE5U9SjlWtApvCksqYv2A0wmtu3m0ecpSoQmYnrQHwjDY
+         esJA==
+X-Gm-Message-State: AOAM530//o73A9jAuDFeMg9axIK7GC+LhvarY1fpjbf7U3xdSGY8qJ7G
+        1Gg6N+VAN83nrRayFwqArtwxb17wEVsZXA==
+X-Google-Smtp-Source: ABdhPJxfhZlV3Xjw60pqAdeCuYbdjB53klCTzNpy+pv6huQHBaXZLmLMb8qM09KF80pvp6RVg0iY4g==
+X-Received: by 2002:a62:b402:: with SMTP id h2mr27157063pfn.221.1591716087205;
+        Tue, 09 Jun 2020 08:21:27 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id c2sm10383572pfi.71.2020.06.09.08.21.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 08:19:43 -0700 (PDT)
-Date:   Tue, 9 Jun 2020 16:19:41 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        david.m.ertman@intel.com, shiraz.saleem@intel.com,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld
- management controller
-Message-ID: <20200609151941.GM4106@dell>
-References: <c5632bfab3956265e90fc2fb6c0b3cae@walle.cc>
- <20200606114645.GB2055@sirena.org.uk>
- <dc052a5c77171014ecc465b1da8b7ef8@walle.cc>
- <20200608082827.GB3567@dell>
- <CAHp75VdiH=J-ovCdh1RFJDW_bJM8=pbXRaHmB691GLb-5oBmYQ@mail.gmail.com>
- <7d7feb374cbf5a587dc1ce65fc3ad672@walle.cc>
- <20200608185651.GD4106@dell>
- <32231f26f7028d62aeda8fdb3364faf1@walle.cc>
- <20200609064735.GH4106@dell>
- <32287ac0488f7cbd5a7d1259c284e554@walle.cc>
+        Tue, 09 Jun 2020 08:21:26 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     kvalo@codeaurora.org
+Cc:     kuabhs@google.com, pillair@codeaurora.org,
+        saiprakash.ranjan@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, ath10k@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH] ath10k: Wait until copy complete is actually done before completing
+Date:   Tue,  9 Jun 2020 08:20:58 -0700
+Message-Id: <20200609082015.1.Ife398994e5a0a6830e4d4a16306ef36e0144e7ba@changeid>
+X-Mailer: git-send-email 2.27.0.278.ge193c7cf3a9-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <32287ac0488f7cbd5a7d1259c284e554@walle.cc>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 09 Jun 2020, Michael Walle wrote:
+On wcn3990 we have "per_ce_irq = true".  That makes the
+ath10k_ce_interrupt_summary() function always return 0xfff. The
+ath10k_ce_per_engine_service_any() function will see this and think
+that _all_ copy engines have an interrupt.  Without checking, the
+ath10k_ce_per_engine_service() assumes that if it's called that the
+"copy complete" (cc) interrupt fired.  This combination seems bad.
 
-> Am 2020-06-09 08:47, schrieb Lee Jones:
-> > On Mon, 08 Jun 2020, Michael Walle wrote:
-> > 
-> > > Am 2020-06-08 20:56, schrieb Lee Jones:
-> > > > On Mon, 08 Jun 2020, Michael Walle wrote:
-> > > >
-> > > > > Am 2020-06-08 12:02, schrieb Andy Shevchenko:
-> > > > > > +Cc: some Intel people WRT our internal discussion about similar
-> > > > > > problem and solutions.
-> > > > > >
-> > > > > > On Mon, Jun 8, 2020 at 11:30 AM Lee Jones <lee.jones@linaro.org> wrote:
-> > > > > > > On Sat, 06 Jun 2020, Michael Walle wrote:
-> > > > > > > > Am 2020-06-06 13:46, schrieb Mark Brown:
-> > > > > > > > > On Fri, Jun 05, 2020 at 10:07:36PM +0200, Michael Walle wrote:
-> > > > > > > > > > Am 2020-06-05 12:50, schrieb Mark Brown:
-> > > > > >
-> > > > > > ...
-> > > > > >
-> > > > > > > Right.  I'm suggesting a means to extrapolate complex shared and
-> > > > > > > sometimes intertwined batches of register sets to be consumed by
-> > > > > > > multiple (sub-)devices spanning different subsystems.
-> > > > > > >
-> > > > > > > Actually scrap that.  The most common case I see is a single Regmap
-> > > > > > > covering all child-devices.
-> > > > > >
-> > > > > > Yes, because often we need a synchronization across the entire address
-> > > > > > space of the (parent) device in question.
-> > > > > >
-> > > > > > >  It would be great if there was a way in
-> > > > > > > which we could make an assumption that the entire register address
-> > > > > > > space for a 'tagged' (MFD) device is to be shared (via Regmap) between
-> > > > > > > each of the devices described by its child-nodes.  Probably by picking
-> > > > > > > up on the 'simple-mfd' compatible string in the first instance.
-> > > > > > >
-> > > > > > > Rob, is the above something you would contemplate?
-> > > > > > >
-> > > > > > > Michael, do your register addresses overlap i.e. are they intermingled
-> > > > > > > with one another?  Do multiple child devices need access to the same
-> > > > > > > registers i.e. are they shared?
-> > > > >
-> > > > > No they don't overlap, expect for maybe the version register, which is
-> > > > > just there once and not per function block.
-> > > >
-> > > > Then what's stopping you having each device Regmap their own space?
-> > > 
-> > > Because its just one I2C device, AFAIK thats not possible, right?
-> > 
-> > Not sure what (if any) the restrictions are.
-> 
-> You can only have one device per I2C address. Therefore, I need one device
-> which is enumerated by the I2C bus, which then enumerates its sub-devices.
-> I thought this was one of the use cases for MFD. (Regardless of how a
-> sub-device access its registers). So even in the "simple-regmap" case this
-> would need to be an i2c device.
-> 
-> E.g.
-> 
-> &i2cbus {
->   mfd-device@10 {
->     compatible = "simple-regmap", "simple-mfd";
->     reg = <10>;
->     regmap,reg-bits = <8>;
->     regmap,val-bits = <8>;
->     sub-device@0 {
->       compatible = "vendor,sub-device0";
->       reg = <0>;
->     };
->     ...
-> };
-> 
-> Or if you just want the regmap:
-> 
-> &soc {
->   regmap: regmap@fff0000 {
->     compatible = "simple-regmap";
->     reg = <0xfff0000>;
->     regmap,reg-bits = <16>;
->     regmap,val-bits = <32>;
->   };
-> 
->   enet-which-needs-syscon-too@1000000 {
->     vendor,ctrl-regmap = <&regmap>;
->   };
-> };
-> 
-> Similar to the current syscon (which is MMIO only..).
+Let's add a check to make sure that the "copy complete" interrupt
+actually fired in ath10k_ce_per_engine_service().
 
-We do not need a 'simple-regmap' solution for your use-case.
+This might fix a hard-to-reproduce failure where it appears that the
+copy complete handlers run before the copy is really complete.
+Specifically a symptom was that we were seeing this on a Qualcomm
+sc7180 board:
+  arm-smmu 15000000.iommu: Unhandled context fault:
+  fsr=0x402, iova=0x7fdd45780, fsynr=0x30003, cbfrsynra=0xc1, cb=10
 
-Since your device's registers are segregated, just split up the
-register map and allocate each sub-device with it's own slice.
+Even on platforms that don't have wcn3990 this still seems like it
+would be a sane thing to do.  Specifically the current IRQ handler
+comments indicate that there might be other misc interrupt sources
+firing that need to be cleared.  If one of those sources was the one
+that caused the IRQ handler to be called it would also be important to
+double-check that the interrupt we cared about actually fired.
 
-> > I can't think of any reasons why not, off the top of my head.
-> > 
-> > Does Regmap only deal with shared accesses from multiple devices
-> > accessing a single register map, or can it also handle multiple
-> > devices communicating over a single I2C channel?
-> > 
-> > One for Mark perhaps.
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
 
+ drivers/net/wireless/ath/ath10k/ce.c | 30 +++++++++++++++++++---------
+ 1 file changed, 21 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/net/wireless/ath/ath10k/ce.c b/drivers/net/wireless/ath/ath10k/ce.c
+index 294fbc1e89ab..ffdd4b995f33 100644
+--- a/drivers/net/wireless/ath/ath10k/ce.c
++++ b/drivers/net/wireless/ath/ath10k/ce.c
+@@ -481,6 +481,15 @@ static inline void ath10k_ce_engine_int_status_clear(struct ath10k *ar,
+ 	ath10k_ce_write32(ar, ce_ctrl_addr + wm_regs->addr, mask);
+ }
+ 
++static inline bool ath10k_ce_engine_int_status_check(struct ath10k *ar,
++						     u32 ce_ctrl_addr,
++						     unsigned int mask)
++{
++	struct ath10k_hw_ce_host_wm_regs *wm_regs = ar->hw_ce_regs->wm_regs;
++
++	return ath10k_ce_read32(ar, ce_ctrl_addr + wm_regs->addr) & mask;
++}
++
+ /*
+  * Guts of ath10k_ce_send.
+  * The caller takes responsibility for any needed locking.
+@@ -1301,19 +1310,22 @@ void ath10k_ce_per_engine_service(struct ath10k *ar, unsigned int ce_id)
+ 
+ 	spin_lock_bh(&ce->ce_lock);
+ 
+-	/* Clear the copy-complete interrupts that will be handled here. */
+-	ath10k_ce_engine_int_status_clear(ar, ctrl_addr,
+-					  wm_regs->cc_mask);
++	if (ath10k_ce_engine_int_status_check(ar, ctrl_addr,
++					      wm_regs->cc_mask)) {
++		/* Clear before handling */
++		ath10k_ce_engine_int_status_clear(ar, ctrl_addr,
++						  wm_regs->cc_mask);
+ 
+-	spin_unlock_bh(&ce->ce_lock);
++		spin_unlock_bh(&ce->ce_lock);
+ 
+-	if (ce_state->recv_cb)
+-		ce_state->recv_cb(ce_state);
++		if (ce_state->recv_cb)
++			ce_state->recv_cb(ce_state);
+ 
+-	if (ce_state->send_cb)
+-		ce_state->send_cb(ce_state);
++		if (ce_state->send_cb)
++			ce_state->send_cb(ce_state);
+ 
+-	spin_lock_bh(&ce->ce_lock);
++		spin_lock_bh(&ce->ce_lock);
++	}
+ 
+ 	/*
+ 	 * Misc CE interrupts are not being handled, but still need
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.27.0.278.ge193c7cf3a9-goog
+
