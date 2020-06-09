@@ -2,82 +2,106 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C93D0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C457CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:36:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADE6B2078D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:34:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FE1720774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:36:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="MMjuTPcO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731008AbgFIQex (ORCPT
+        id S1730930AbgFIQgC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 12:34:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57994 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbgFIQew (ORCPT
+        Tue, 9 Jun 2020 12:36:02 -0400
+Received: from ts18-13.vcr.istar.ca ([204.191.154.188]:42288 "EHLO
+        ale.deltatee.com" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
+        with ESMTP id S1726100AbgFIQgB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 12:34:52 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C29DAC05BD1E;
-        Tue,  9 Jun 2020 09:34:51 -0700 (PDT)
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1jihD4-0004lD-T6; Tue, 09 Jun 2020 18:34:46 +0200
-Date:   Tue, 9 Jun 2020 18:34:46 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Tom Zanussi <zanussi@kernel.org>
-Cc:     Ramon Fried <rfried.dev@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>, Daniel Wagner <wagi@monom.org>,
-        Clark Williams <williams@redhat.com>,
-        Zhang Xiao <xiao.zhang@windriver.com>
-Subject: Re: [PATCH RT 1/2] tasklet: Address a race resulting in
- double-enqueue
-Message-ID: <20200609163446.efp76qbjzkbtl7nk@linutronix.de>
-References: <cover.1587675252.git.zanussi@kernel.org>
- <6d4c92b28c54d8ca687c29043562de943a373547.1587675252.git.zanussi@kernel.org>
- <CAGi-RUKn6k98H5v9kw7je1MChb4+Uq8EGhKO0nuXNMBy9M1_qw@mail.gmail.com>
- <b5026121af44601e4318479194357fdb956982f6.camel@kernel.org>
- <20200609154741.5kesuvl7txz4s3yu@linutronix.de>
- <e288ef193f743782df48667b6b03122bd025119f.camel@kernel.org>
+        Tue, 9 Jun 2020 12:36:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Sender:
+        Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+        :Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=47m4c67NQmMGP0uYxblsl5MMn1YEfYJqTmyXbRAMT6Q=; b=MMjuTPcO6mYInDTkMJo18+PE5E
+        xNPOksnpi7UCnZ+KEUz5Cj5dgNur+uHjs9DZanlO0a5KD6Pd9vIRDqa6a2JYVOVMu7H84hQiKs1QX
+        0wIsOu1CsJZvMVITJ6+y2wLIY033ic6d6JK4VGJdZWXHEcx63J9r6tK0RMXn2MQ2XCR5ShlEgCB53
+        jrAwDj2Vx0lEDyDelg3CGZrJYcSQWskr/aNvabeLRJal9fHn0TB7sV4WzE9L9C4UNUiI1KCdxYyIV
+        2CEnMqqQKNqKvBpdXtr6rQV+NYQjWTVYC047MqBXl5Im3+bBCdFY/+L25PvIjUs+u8YFHGbl/C501
+        cBOVTrhw==;
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1jihE7-0006xw-6u; Tue, 09 Jun 2020 10:35:52 -0600
+To:     Christoph Hellwig <hch@infradead.org>,
+        Piotr Stankiewicz <piotr.stankiewicz@intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Olof Johansson <olof@lixom.net>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Kelvin Cao <kelvin.cao@microchip.com>,
+        Wesley Sheng <wesley.sheng@microchip.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Krzysztof Wilczynski <kw@linux.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-kernel@vger.kernel.org
+References: <20200609091148.32749-1-piotr.stankiewicz@intel.com>
+ <20200609091650.801-1-piotr.stankiewicz@intel.com>
+ <20200609155124.GB2597@infradead.org>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <e7ffab57-424d-e149-05b4-0a377f31b83d@deltatee.com>
+Date:   Tue, 9 Jun 2020 10:35:49 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
+In-Reply-To: <20200609155124.GB2597@infradead.org>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <e288ef193f743782df48667b6b03122bd025119f.camel@kernel.org>
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, bigeasy@linutronix.de, kw@linux.com, peterz@infradead.org, wesley.sheng@microchip.com, kelvin.cao@microchip.com, sathyanarayanan.kuppuswamy@linux.intel.com, olof@lixom.net, andriy.shevchenko@intel.com, rafael.j.wysocki@intel.com, mika.westerberg@linux.intel.com, kurt.schwemmer@microsemi.com, linux-pci@vger.kernel.org, bhelgaas@google.com, piotr.stankiewicz@intel.com, hch@infradead.org
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH v3 03/15] PCI: Use PCI_IRQ_MSI_TYPES where appropriate
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-09 11:17:53 [-0500], Tom Zanussi wrote:
-> Hi Sebastian,
-Hi Tom,
 
-> I did find a problem with the patch when configured as !SMP since in
-> that case the RUN flag is never set (will send a patch for that
-> shortly), but that wouldn't be the case here.
 
-How?
-
-| #if defined(CONFIG_SMP) || defined(CONFIG_PREEMPT_RT_FULL)
-| static inline int tasklet_trylock(struct tasklet_struct *t)
-| {
-|         return !test_and_set_bit(TASKLET_STATE_RUN, &(t)->state);
-| }
-
-I can't tell from the backtrace if he runs with RT or without but I
-assumed RT. But yes, for !SMP && !RT it would explain it.
-
-> It would help to be able to reproduce it, but I haven't been able to
-> yet.
+On 2020-06-09 9:51 a.m., Christoph Hellwig wrote:
+> On Tue, Jun 09, 2020 at 11:16:46AM +0200, Piotr Stankiewicz wrote:
+>> Seeing as there is shorthand available to use when asking for any type
+>> of interrupt, or any type of message signalled interrupt, leverage it.
+>>
+>> Signed-off-by: Piotr Stankiewicz <piotr.stankiewicz@intel.com>
+>> Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+>> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
 > 
-> Tom
+> The patch actually adding PCI_IRQ_MSI_TYPES still didn't show up on
+> linux-pci.
 > 
-Sebastian
+> But from the person who added PCI_IRQ_*:
+> 
+> NAK to the whole concept of PCI_IRQ_MSI_TYPES, I think this just makes
+> the code a lot more confusing.  Especially with the new IMS interrupt
+> type, which really is a MSI-like interrupt but certainly shouldn't be
+> added to this mask.
+
+Yes, after cleaning up the first patch to not require the long messy
+conditional, this change doesn't seems like a win. I agree we should
+drop these patches.
+
+Logan
