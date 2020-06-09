@@ -2,234 +2,166 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4879C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 08:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2EF1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 08:36:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9DC9207ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 08:35:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591691754;
-	bh=JAspZs5Ru9i8zsF1Luz8OtOT1JFIDt+vTMcdcHBI0I4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YN8gsTtGp9BalV/864v/Qp+U8SCewqPUWgD/qoRkHvvou0CZgsKwc3JCjq+x5Qfos
-	 G0AmE9YCIS8QVpmhMpXPp7rJsYpCx7iGnBlnbW5uC04aK7FQ6hR/kVxJCbU5TkrkFd
-	 E2IZ9r00MFaiN3LnKf5iCbvL3CUfO1IBKbzpvIgQ=
+	by mail.kernel.org (Postfix) with ESMTP id A8C64207ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 08:36:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="hErCw1Pc";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="sU+NI+OQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbgFIIfk (ORCPT
+        id S1728160AbgFIIf5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 04:35:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33632 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726463AbgFIIfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 04:35:40 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 9 Jun 2020 04:35:57 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:36152 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726463AbgFIIf4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 04:35:56 -0400
+Received: from mailhost.synopsys.com (us03-mailhost1.synopsys.com [10.4.17.17])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B59B20737;
-        Tue,  9 Jun 2020 08:35:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591691738;
-        bh=JAspZs5Ru9i8zsF1Luz8OtOT1JFIDt+vTMcdcHBI0I4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KqvCpCz/b13WSCGzKw9vbrGW5Yu6oykakpg1pqzo5OcgLxrhKUsukm5ua19vlzmgF
-         feRVXjGmkU6DjTz/68hoDRau2WHgCTFkPblLzAzk6//ZR5E9strqoMF3vipHVQssaV
-         W+9uaDsvHPFhOfR5c5C4sJqT9KTenPJOC/cAGNNs=
-Received: by pali.im (Postfix)
-        id D1EA8884; Tue,  9 Jun 2020 10:35:36 +0200 (CEST)
-Date:   Tue, 9 Jun 2020 10:35:36 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Y Paritcher <y.linux@paritcher.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Mario.Limonciello@dell.com
-Subject: Re: [PATCH v2 3/3] platform/x86: dell-wmi: add new dmi keys to
- bios_to_linux_keycode
-Message-ID: <20200609083536.y4xhdrkydfwam4mk@pali>
-References: <cover.1591584631.git.y.linux@paritcher.com>
- <cover.1591656154.git.y.linux@paritcher.com>
- <d585d2a0f01a6b9480352530b571dec2d1afd79f.1591656154.git.y.linux@paritcher.com>
- <8053252a-83ad-bcaa-2830-ccfbca1b4152@infradead.org>
- <20200608235508.wthtgilgmifwfgz2@pali>
- <d48b54ab-09ad-381b-c130-c5f3cdb4da10@paritcher.com>
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 01F3A4024E;
+        Tue,  9 Jun 2020 08:35:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1591691756; bh=K/jKswHy6VZfLoO+gw0gmIMhVgQSp/gKXnfsMHJjfX0=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=hErCw1PcGgJjHm5YIHOPtbPyNsLtYQp1pJy2WsWUZJzEW/+hKzkkbpMDU8k78ovXW
+         C2ruHQ6YeiphdDtSfuuyPREFNTdpv8EbyEscsJruaquBBnUn/0OraI55vADKjarNm/
+         5yyd+sGVslidrXo2dlbmTGKdrTKgy7Mk5Ce7/Q7iftwcSHyIHDmQLm1ePKrV6Y2q5r
+         qEU5aqFvkndcsRKTmTILPGouewh8Qt2lFVMfEs5pXE8pgOJPNWm5oO2sGV7xN7E7I7
+         8YE25MrKWeiF4EAT7OQsJMLw7fhLXwvsRnycXibiVjq6jtmQHgfS9tc1hPUdfdqYJG
+         sLtqtxsoNAqHQ==
+Received: from o365relay-in.synopsys.com (us03-o365relay1.synopsys.com [10.4.161.137])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 372A0A0080;
+        Tue,  9 Jun 2020 08:35:53 +0000 (UTC)
+Authentication-Results: o365relay-in.synopsys.com; spf=pass (mailfrom) smtp.mailfrom=synopsys.com (client-ip=104.47.58.108; helo=nam10-dm6-obe.outbound.protection.outlook.com; envelope-from=hminas@synopsys.com; receiver=<UNKNOWN>)
+Authentication-Results: o365relay-in.synopsys.com; dmarc=pass (p=reject dis=none) header.from=synopsys.com
+Authentication-Results: o365relay-in.synopsys.com;
+        dkim=pass (1024-bit key; unprotected) header.d=synopsys.com header.i=@synopsys.com header.b="sU+NI+OQ";
+        dkim-atps=neutral
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2108.outbound.protection.outlook.com [104.47.58.108])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "mail.protection.outlook.com", Issuer "GlobalSign Organization Validation CA - SHA256 - G3" (verified OK))
+        by o365relay-in.synopsys.com (Postfix) with ESMTPS id 33EF4800D1;
+        Tue,  9 Jun 2020 08:35:52 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HwjOPKV4zDChNfvlpzPiploNeM1YdbvH4aoMPO8vYz1sOu4+/8/Hi2xneXB102CjreeIDNEhTK/z75695/6FQ7ST99tNp7+urFZsDxfZPoyVMP00nXtbZcA7daI7cWzgFHRpfqEHVnTtHmcrz6RZV/S5X+3PSrQqZS+edI7tuzOH8IspxXoDy4kUM00vh3gvjEn84qyFKChAtoxXM98jTVsFly4KIYbBjk4tPmLU3SerRXJT+/9rfh71yoYmHXy9V0ddZM+7FN7haTsy23vdNfp88CL5MOM1ce+MsbRw+8DdVo/W08XGKmHSFsCTY1qkHraZbS+itOtxm/nWOaa9EQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=K/jKswHy6VZfLoO+gw0gmIMhVgQSp/gKXnfsMHJjfX0=;
+ b=TiVmEydgBOnBSpxk810Btx1UTRdGTWkH42sQPRHPXYShd0OV0c0P6o4aIdpVnqiiC4QmyL/pT+t/NKwzz/hZ++nuNrsX/VeYL/zucFYhbUmRJWblyeK7MU/c92pQWHoMbo6rVivT2WkZtbbls+DGzfhUusdZi2H2jhMHg43bOVGPdNNTLZuEdub8K5XQ4P8Uz3bZI27Ux1sbO0CtiIR38lj4yQfpHza0fQqlXA38efoATxIwoPVliVusOjr5ybTV1tHOfhEsmxlkpnxbjuwpAjA2O1JW5o1kFCSLVfLFeYDgu2UJpkXN1NyHVBWDvwiP9dmtU9HArXYBJ6U68N+h+g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=K/jKswHy6VZfLoO+gw0gmIMhVgQSp/gKXnfsMHJjfX0=;
+ b=sU+NI+OQPKSC7vFJgsifzNWWvkNYqeP/AHEkELIoXuTNj0xBFggyJDRhySTLGXXTgTsPr7nE5H8j+zJnGGl57pXW90gMlD/ahKAOg2r2nELsnO4x2/k99Ub/Dk8u3pjbg1LK83zyGeqCoFeg5olmDlZSU5EFZ3akRkVGIP4Gb6I=
+Received: from SN1PR12MB2557.namprd12.prod.outlook.com (2603:10b6:802:22::15)
+ by SN1PR12MB2575.namprd12.prod.outlook.com (2603:10b6:802:25::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Tue, 9 Jun
+ 2020 08:35:50 +0000
+Received: from SN1PR12MB2557.namprd12.prod.outlook.com
+ ([fe80::78a8:d153:7e1c:57a5]) by SN1PR12MB2557.namprd12.prod.outlook.com
+ ([fe80::78a8:d153:7e1c:57a5%7]) with mapi id 15.20.3066.023; Tue, 9 Jun 2020
+ 08:35:50 +0000
+X-SNPS-Relay: synopsys.com
+From:   Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>
+To:     Pavel Machek <pavel@denx.de>,
+        Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>
+CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        "trivial@kernel.org" <trivial@kernel.org>
+Subject: Re: [PATCH] sr: dwc2/gadget: remove unneccessary if
+Thread-Topic: [PATCH] sr: dwc2/gadget: remove unneccessary if
+Thread-Index: AQHWPBhw3SL7LTHMVUK+qAoLyD/PXKjLur6AgAA32YCABAcrAA==
+Date:   Tue, 9 Jun 2020 08:35:50 +0000
+Message-ID: <3ccc1177-9e4c-130b-ab9a-f02169164ac4@synopsys.com>
+References: <20200606153703.GA18931@amd>
+ <4057a9d1-2cf4-78a1-9f29-587a87b523b4@synopsys.com>
+ <20200606190507.GA13421@amd>
+In-Reply-To: <20200606190507.GA13421@amd>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
+authentication-results: denx.de; dkim=none (message not signed)
+ header.d=none;denx.de; dmarc=none action=none header.from=synopsys.com;
+x-originating-ip: [198.182.37.200]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 78cb0992-dff3-4cc2-5964-08d80c501d93
+x-ms-traffictypediagnostic: SN1PR12MB2575:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SN1PR12MB2575F46A4B8DB310F14EB700A7820@SN1PR12MB2575.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5236;
+x-forefront-prvs: 042957ACD7
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Kdeg0T8gqsqAheibK7TiSazVFDWgPNW7TyZXGnZ60kQENXc6gULTGH0IiwXGlOXww+MGUc8gfGuUuMrO3EA60EdHAJUwpdnsWsFFCBDbR0n83hXwrKgv7mnOGQ3NXUotlJhty3km/53KBJ/01AdmzqYtq8kcUcw/FfgEMl4da35TDM2AYHjTWCu/rZjp5gNZuxWuSeP38pd4s3MPJiFP0udGN/l7/ZcHn/aj2bE2OBkFcG78YXbyxnqHYXzhhFgD3390Naqz7+dqz0wsvxsZ4umnyhKfgQOngT1LeizSzwpwDUtkfaHOgss5Xu57KdWYBYwzUacUZ27LtzOPmDRZmlSlUZNkUMDM5VMCp7bXLzz5Srrem+DkVoE5XamiZiXu
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2557.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(376002)(346002)(136003)(396003)(366004)(66946007)(6512007)(26005)(31696002)(316002)(54906003)(2906002)(110136005)(66556008)(64756008)(66476007)(8936002)(31686004)(76116006)(6506007)(478600001)(53546011)(4326008)(91956017)(83380400001)(2616005)(6486002)(66446008)(86362001)(36756003)(8676002)(5660300002)(186003)(71200400001)(43740500002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: GcDE5w9keWXhbvc61t29pLWJVWmIl1qOlhdQO9X9Aw0FFGFYzuREuwRNYKL8pH2CRFvnk3635fpQqpRwsejvwrkSzVosU/Jow6DvpAwiNWYxtyjuBWUAIlcQlx4Qm0Y3r/qr22EFuXSswmHda6UhlXQhw4qRilWKIE7s5jxyoXxulgAkax8Gb/ZGEizSAAFxUe+ulpGxQ+BaiKvQmW5TE9DHV7MIFZawrLu7E2BCaLUL0etymE86LqE8/cXniexTj7AuUdngzt/f/eIMJ/moL296cnWsnhn/k93lXJoIOhdWbbaol9IH5HzN7f4/7NkxhwQCB5lbP4YyfjBimoDpVpPpyj0viZPM5FE0uxLKA1vLk74OwRXk3n4itRJ2mywiEJXlJ3F3SQHiYxxYkFi2rFzQEKwd13jFOyGUTCxR8vymTdogSV4OECC8ZVDoUzpvMDI3/0g98PkFk4NY5J5WfClZGFRpT1Nz/piAR53I6WdXOBRzkOjVnzlOIwf6XMRo
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8D3422BAAA17314381136FBC7E2558BE@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d48b54ab-09ad-381b-c130-c5f3cdb4da10@paritcher.com>
-User-Agent: NeoMutt/20180716
+X-OriginatorOrg: synopsys.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 78cb0992-dff3-4cc2-5964-08d80c501d93
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jun 2020 08:35:50.4518
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: oU9VD1afRk+fveBqXXr+h7iPkw7sigLZIAQDCW5AiUAP/a8b4Z3csWDM9j9oxXucEm8+CDYN7WJkHvF4AnQ51g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2575
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday 08 June 2020 20:43:45 Y Paritcher wrote:
-> On 6/8/20 7:55 PM, Pali Rohár wrote:
-> > Hello!
-> > 
-> > On Monday 08 June 2020 16:27:10 Randy Dunlap wrote:
-> >> Hi--
-> >>
-> >> On 6/8/20 4:05 PM, Y Paritcher wrote:
-> >>> Increase length of bios_to_linux_keycode to 2 bytes (the true size of a
-> >>> keycode) to allow for a new keycode 0xffff, this silences the following
-> >>> messages being logged at startup on a Dell Inspiron 5593:
-> >>>
-> >>>     dell_wmi: firmware scancode 0x48 maps to unrecognized keycode 0xffff
-> >>>     dell_wmi: firmware scancode 0x50 maps to unrecognized keycode 0xffff
-> > 
-> > Which keys generate these two scancodes? Or how have you been able to
-> > trigger these scancodes (in case they are not generated by key press)?
-> > 
-> > It is important to know for which key or event or feature we need to
-> > include this patch and therefore what feature is currently
-> > non-functional on that laptop.
-> > 
-> 
-> As I said before:
-> The DMI contains a table of firmware scancode to linux keycode mappings.
-> this is parsed at boot and used together with the bios_to_linux_keycode
-> entries & dell_wmi_keymap_type_ tables to create a keymap.
-> 
-> If a DMI entry does not have a corresponding entry in bios_to_linux_keycode
-> we log a message to allow adding the correct linux keycode if known.
-> This is regardless of if the key actually exists on the device.
-> 
-> To date, I have not been able to generate this keycode on my computer.
-
-Ok, so you have just these bios scan codes in your DMI table, but you do
-not know what they means nor if you can trigger them somehow.
-
-You should include this information into commit message.
-
-It is possible that your particular laptop model does not have
-physically keys which can trigger these codes... (Just guessing)
-
-> >>> as per this code comment:
-> >>>
-> >>>    Log if we find an entry in the DMI table that we don't
-> >>>    understand.  If this happens, we should figure out what
-> >>>    the entry means and add it to bios_to_linux_keycode.
-> >>>
-> >>> These are keycodes included in the 0xB2 DMI table, for which the
-> >>> corosponding keys are not known.
-> >>
-> >>   corresponding
-> >>
-> >>>
-> >>> Now when a user will encounter this key, a proper message wil be printed:
-> >>>
-> >>>     dell_wmi: Unknown key with type 0xXXXX and code 0xXXXX pressed
-> >>>
-> >>> This will then allow the key to be identified properly.
-> >>>
-> >>> Signed-off-by: Y Paritcher <y.linux@paritcher.com>
-> >>> ---
-> >>>  drivers/platform/x86/dell-wmi.c | 8 +++-----
-> >>>  1 file changed, 3 insertions(+), 5 deletions(-)
-> >>>
-> >>> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-> >>> index 6b510f8431a3..dae1db96b5a0 100644
-> >>> --- a/drivers/platform/x86/dell-wmi.c
-> >>> +++ b/drivers/platform/x86/dell-wmi.c
-> >>> @@ -196,7 +196,7 @@ struct dell_dmi_results {
-> >>>  };
-> >>>  
-> >>>  /* Uninitialized entries here are KEY_RESERVED == 0. */
-> >>> -static const u16 bios_to_linux_keycode[256] = {
-> >>> +static const u16 bios_to_linux_keycode[65536] = {
-> >>
-> >> It surely seems odd to me to expand an array from 512 bytes to 128 Kbytes
-> >> just to handle one special case.  Can't it be handled in code as a
-> >> special case?
-> > 
-> > I already wrote that more developers would not be happy about this
-> > change. I would rather to see e.g. that Randy's suggestion with 0xffff
-> > check as increasing memory usage.
-> > 
-> 
-> Will change
-> 
-> >>>  	[0]	= KEY_MEDIA,
-> >>>  	[1]	= KEY_NEXTSONG,
-> >>>  	[2]	= KEY_PLAYPAUSE,
-> >>> @@ -237,6 +237,7 @@ static const u16 bios_to_linux_keycode[256] = {
-> >>>  	[37]	= KEY_UNKNOWN,
-> >>>  	[38]	= KEY_MICMUTE,
-> >>>  	[255]	= KEY_PROG3,
-> >>> +	[65535]	= KEY_UNKNOWN,
-> > 
-> > Looking at the last two lines... and for me it looks like that 0x00FF
-> > and 0xFFFF are just "placeholders" or special values for unknown /
-> > custom / unsupported / reserved / special / ... codes.
-> > 
-> 
-> Probably so, but i have no way of knowing.
-
-This was question for Mario as he is probably the only person who can
-bring some light to this area.
-
-> I just don't think there is a point spamming a users log with info that
-> they can't do anything with. If this is turned into a debug print then
-> i don't care to leave this as is, i had thought this might be helpful
-> just to know that this keycode mapping appears in the wild.
-> 
-> > It is really suspicious why first 38 values are defined, then there is
-> > gap, then one value 255 and then huge gap to 65535.
-> > 
-> > Mario, this looks like some mapping table between internal Dell BIOS key
-> > code and standard Linux key code. Are you able to get access to some
-> > documentation which contains explanation of those Dell key numbers?
-> > It could really help us to understand these gaps and what is correct
-> > interpretation of these numbers.
-> > 
-> > E.g. I remember that pressing Fn+Q or Fn+W on some Dell Latitude
-> > generates code 255, which could prove my thesis about "special codes"
-> > (which are probably not found in e.g. Windows or Linux mapping tables).
-> > 
-> >>>  };
-> >>>  
-> >>>  /*
-> >>> @@ -503,10 +504,7 @@ static void handle_dmi_entry(const struct dmi_header *dm, void *opaque)
-> >>>  					&table->keymap[i];
-> >>>  
-> >>>  		/* Uninitialized entries are 0 aka KEY_RESERVED. */
-> >>> -		u16 keycode = (bios_entry->keycode <
-> >>> -			       ARRAY_SIZE(bios_to_linux_keycode)) ?
-> >>> -			bios_to_linux_keycode[bios_entry->keycode] :
-> >>> -			KEY_RESERVED;
-> >>> +		u16 keycode = bios_to_linux_keycode[bios_entry->keycode];
-> >>>  
-> >>>  		/*
-> >>>  		 * Log if we find an entry in the DMI table that we don't
-> >>>
-> >>
-> >> Something like:
-> >>
-> >> 		u16 keycode;
-> >>
-> >> 		keycode = bios_entry->keycode == 0xffff ? KEY_UNKNOWN :
-> >> 			(bios_entry->keycode <
-> >> 			       ARRAY_SIZE(bios_to_linux_keycode)) ?
-> >> 			bios_to_linux_keycode[bios_entry->keycode] :
-> >> 			KEY_RESERVED;
-> >>
-> >>
-> >>
-> >> Also please fix this:
-> >> (no To-header on input) <>
-> > 
-> > Hint: specifying git send-email with '--to' argument instead of '--cc'
-> > should help.
-> > 
-> 
-> Sorry about that.
-> >>
-> >> -- 
-> >> ~Randy
-> >>
+SGksDQoNCk9uIDYvNi8yMDIwIDExOjA1IFBNLCBQYXZlbCBNYWNoZWsgd3JvdGU6DQo+IEhpIQ0K
+PiANCj4+PiBXZSBkb24ndCByZWFsbHkgbmVlZCBpZi9lbHNlIHRvIHNldCB2YXJpYWJsZSB0byAx
+LzAuDQo+Pj4NCj4+PiBTaWduZWQtb2ZmLWJ5OiBQYXZlbCBNYWNoZWsgKENJUCkgPHBhdmVsQGRl
+bnguZGU+DQo+Pj4NCj4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvZHdjMi9nYWRnZXQuYyBi
+L2RyaXZlcnMvdXNiL2R3YzIvZ2FkZ2V0LmMNCj4+PiBpbmRleCAxMmI5OGI0NjYyODcuLmY5ZjZm
+ZDQ3MGM4MSAxMDA2NDQNCj4+PiAtLS0gYS9kcml2ZXJzL3VzYi9kd2MyL2dhZGdldC5jDQo+Pj4g
+KysrIGIvZHJpdmVycy91c2IvZHdjMi9nYWRnZXQuYw0KPj4+IEBAIC0xNzYxLDEwICsxNzYxLDcg
+QEAgc3RhdGljIGludCBkd2MyX2hzb3RnX3Byb2Nlc3NfcmVxX2ZlYXR1cmUoc3RydWN0IGR3YzJf
+aHNvdGcgKmhzb3RnLA0KPj4+ICAgIAljYXNlIFVTQl9SRUNJUF9ERVZJQ0U6DQo+Pj4gICAgCQlz
+d2l0Y2ggKHdWYWx1ZSkgew0KPj4+ICAgIAkJY2FzZSBVU0JfREVWSUNFX1JFTU9URV9XQUtFVVA6
+DQo+Pj4gLQkJCWlmIChzZXQpDQo+Pj4gLQkJCQloc290Zy0+cmVtb3RlX3dha2V1cF9hbGxvd2Vk
+ID0gMTsNCj4+PiAtCQkJZWxzZQ0KPj4+IC0JCQkJaHNvdGctPnJlbW90ZV93YWtldXBfYWxsb3dl
+ZCA9IDA7DQo+Pj4gKwkJCWhzb3RnLT5yZW1vdGVfd2FrZXVwX2FsbG93ZWQgPSBzZXQ7DQo+Pj4g
+ICAgCQkJYnJlYWs7DQo+Pj4gICAgDQo+Pj4gICAgCQljYXNlIFVTQl9ERVZJQ0VfVEVTVF9NT0RF
+Og0KPj4+DQo+Pg0KPj4gSXQncyBnb29kIGNhdGNoLCBidXQgJ3NldCcgZGVjbGFyZWQgYXMgJ2Jv
+b2wnIHdoaWxlDQo+PiAncmVtb3RlX3dha2V1cF9hbGxvd2VkJyBpcyAndW5zaWduZWQgaW50Jy4g
+TWF5YmUgdXBkYXRlICdzZXQnIHR5cGUgdG8gc2FtZS4NCj4gDQo+IEkga25vdyBzZXQgaXMgYm9v
+bC4gQnV0IHRoYXQgc2hvdWxkIG5vdCBtYXR0ZXIsIGNvZGUgaXMgb2theSBhbmQNCj4gY29tcGls
+ZXIgd2lsbCBkbyB0aGUgcmlnaHQgdGhpbmc6DQo+IA0KPiBwYXZlbEBhbWQ6L3RtcCQgY2F0IGRl
+bG1lLmMNCj4gI2luY2x1ZGUgPHN0ZGJvb2wuaD4NCj4gDQo+IHZvaWQgbWFpbih2b2lkKQ0KPiB7
+DQo+ICAgIGJvb2wgYSA9IGZhbHNlOw0KPiAgICAgIGludCBiID0gYTsNCj4gICB9DQo+ICAgcGF2
+ZWxAYW1kOi90bXAkIGdjYyAtc3RkPWM5OSAtV2FsbCBkZWxtZS5jDQo+ICAgICAgZGVsbWUuYzoz
+OjY6IHdhcm5pbmc6IHJldHVybiB0eXBlIG9mIOKAmG1haW7igJkgaXMgbm90IOKAmGludOKAmSBb
+LVdtYWluXQ0KPiAgICAgICB2b2lkIG1haW4odm9pZCkNCj4gICAgICAgICAgICAgXg0KPiAJICAg
+ZGVsbWUuYzogSW4gZnVuY3Rpb24g4oCYbWFpbuKAmToNCj4gICBkZWxtZS5jOjY6Nzogd2Fybmlu
+ZzogdW51c2VkIHZhcmlhYmxlIOKAmGLigJkNCj4gICBbLVd1bnVzZWQtdmFyaWFibGVdDQo+IAkg
+ICAgICBpbnQgYiA9IGE7DQo+IAkgICAgICAgICAgICAgXg0KPiANCj4gQmVzdCByZWdhcmRzLA0K
+PiAJCQkJCQkJCVBhdmVsDQo+IA0KDQpUbyBhdm9pZCBhbnkgcG9zc2libGUgY2hlY2sgcGF0Y2gg
+aXNzdWVzIHVwZGF0ZSB0eXBlIG9mICJzZXQiIGZyb20gYm9vbCANCnRvIHNhbWUgYXMgInJlbW90
+ZV93YWtldXBfYWxsb3dlZCIuDQpQbGVhc2UgdXBkYXRlIHlvdXIgcGF0Y2ggdG9waWMgdG8gInVz
+YjogZHdjMjogZ2FkZ2V0OiByZW1vdmUgdW5uZWNlc3NhcnkgDQppZiIgYW5kIHJlc3VibWl0Lg0K
+DQpUaGFua3MsDQpNaW5hcw0KDQo=
