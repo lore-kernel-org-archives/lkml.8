@@ -2,103 +2,174 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C0A7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:55:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09F6FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5483D2074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:55:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8208207ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:57:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fhdNibbV"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="hvs/IFpk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728616AbgFIJzI (ORCPT
+        id S1728549AbgFIJ5o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 05:55:08 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:52194 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727001AbgFIJzC (ORCPT
+        Tue, 9 Jun 2020 05:57:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53042 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727098AbgFIJ5m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 05:55:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591696499;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=4uQuFZE858ZtA1kxzlQrkbfz4UDM1Xi81yVG0teJSpc=;
-        b=fhdNibbVykWH6CZReVgtTXcHOKJ9bHRwxmOuzv0WGKH9XZYGLrg+onnPHNUIs/lmUBgbgE
-        2DPONsv8b3XpLZJyoRPyKinAt9SofC+3/WEJcEhv9ykqcKadLgMfSlM409mFb05Q67XNb3
-        IGwFDsjDbk8ukuuIikAPMoSjtV6LuFc=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-6-qmJb0TeXOvqln5FPBtqVbQ-1; Tue, 09 Jun 2020 05:54:58 -0400
-X-MC-Unique: qmJb0TeXOvqln5FPBtqVbQ-1
-Received: by mail-wr1-f70.google.com with SMTP id n6so8408483wrv.6
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 02:54:57 -0700 (PDT)
+        Tue, 9 Jun 2020 05:57:42 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 045C6C05BD1E
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 02:57:40 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id b27so20142827qka.4
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 02:57:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=mSZ9Pf7BMHDh3WUE/xt0FmuEkxc1Vdz25gGMRgBtWPg=;
+        b=hvs/IFpkcvVFV9C0DuVWpln5RNediRV7+SlNLZGIbWgMSdFuPGK70CEnXRvuVqiCPQ
+         yEz0uxDZjlVw+OgyYdC5rQMURQocdeM1dcKoGVbveeOVW45aLBMd+LKdCjvyf0+U7pop
+         Sv+Zo+H8eoCH+rONDcBcgGvxNF4AodAUCq+m7SWn3lCIe1T2HT81SjW3ryd/AFpkrtaT
+         5Wrmt5XSUiwS/Aj8HYtyDObXrego3RX3Y4NCKNNDkoN2bzxAnOCQr6G68ui1/BThRaca
+         XgPEhB2hS00JxvtU+R6xXL4KLlSQh5TUSwuXq2qn+KTv/j8a95WcISYbssHxOzdzH5lv
+         5wKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=4uQuFZE858ZtA1kxzlQrkbfz4UDM1Xi81yVG0teJSpc=;
-        b=VS+PzeUW0+PzOmDbu+y7fHgsb7AQ1HPT2e1aVYy+8Vu0XhyDhnbPq4uMOGUee5vyDp
-         tsEzcMNKUlk7WP1dJ27BtvgbhDabnPBDHiR5FpFua4uHCFnpbh05oqGho3xHTkD99vGg
-         Fjjq87YzmbtjWRnBuowB0yFz5G0DTU13lA+c0fZ4bB/3GIYy5zv9hbaFzn00+ii4GNbY
-         vcP6m44yBwMrPgZEgaRa5LevJ/BInG0EvscdkTmHLSTa8dHJrgLWaV1er1q7kZ5FPW4D
-         5l0MtBv+7HTs5wzGffU0+LUqjPC0ehyfShNm9yAyzw6gASMWlltrIRxpaZI4ob1PR6Mn
-         UxeQ==
-X-Gm-Message-State: AOAM530uIa3TLda+ZJDsYGUUVhoh+5S53o6Oq67vTxDO6XnYmco0VRJU
-        7Avz3OSSUXJ7hif9UfYKJe6jEyKPHPvtNHk19nMVIlx3YIArtR4uDvcNzdfo5MEx7j2WnEUTN1N
-        zrTIb8vbtoeo0QVFQ5bhwxcJH
-X-Received: by 2002:adf:f552:: with SMTP id j18mr3307191wrp.279.1591696496853;
-        Tue, 09 Jun 2020 02:54:56 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzCbImdPZKhsgwExIy/WRmfb9dy+Hxq4t3PJbaH5t/zLpLqfOCP8FZP3A9tvZhzrBR8Z4U76w==
-X-Received: by 2002:adf:f552:: with SMTP id j18mr3307186wrp.279.1591696496718;
-        Tue, 09 Jun 2020 02:54:56 -0700 (PDT)
-Received: from redhat.com (bzq-79-181-55-232.red.bezeqint.net. [79.181.55.232])
-        by smtp.gmail.com with ESMTPSA id x186sm2380539wmg.8.2020.06.09.02.54.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 02:54:56 -0700 (PDT)
-Date:   Tue, 9 Jun 2020 05:54:55 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     David Hildenbrand <david@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH] virtio_mem: fix printk format
-Message-ID: <20200609095453.865827-1-mst@redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=mSZ9Pf7BMHDh3WUE/xt0FmuEkxc1Vdz25gGMRgBtWPg=;
+        b=YbLWwIPTpHJDg57ZdTpi+gCIppF83X3yBg+a+Ai2Q0XZ2LbnGxyrRi3nB2M8Sua8ox
+         iPsKlDP56VKUkKcAQrs0ndzb294szLZJuUBbDbUmPMnZXkljCkyLLg+xICjKessbvHjK
+         d3SMXsgPI7b49/rcOvv3IGXGoeNywyRRC7iMWn4hdP6VBQSCB6VQ8yaPUWMyEG0/U+sj
+         xCzJCBvst7srV2tawqF5pfI6nw4VOm7SayodK9N7zWr9nTkvQHSov3JKPVfrBQx8hDIe
+         F7Sj2YWuE7k/vYy31AKuZD3Im5qgJnjNQuMSq/z2AGlrhA0O/YlmrqcrnavJ0tAcEN4d
+         KMMw==
+X-Gm-Message-State: AOAM530u7BBQJgid9zyrGCZNOrcwQ4xOPL8IP2r6Bi6J2ZlBdXIwrAfv
+        jBivaM/BrQD6ppZiG/I0kFVwOawrV8CQKLg1NosC5Osf
+X-Google-Smtp-Source: ABdhPJxu6LS/DBVDrKsowqECfF6MhViQJW4MJiVqI/Gqv4K2dXJOO/xIxFFqQHdnBSnwNdXKJU2SU9BCvvkekboYeVo=
+X-Received: by 2002:a37:4f52:: with SMTP id d79mr26882586qkb.330.1591696659006;
+ Tue, 09 Jun 2020 02:57:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email 2.24.1.751.gd10ce2899c
-X-Mutt-Fcc: =sent
+References: <20200516064507.19058-1-warthog618@gmail.com> <CAMpxmJUbC4qmUGM0Z-6hXsYPRSpEpNM7iXgc7XbMcf_epi0Lig@mail.gmail.com>
+ <20200604160006.GA5730@sol> <CAMRc=MfS1sCTU3vs5Gq_6+Ubt_89HX34mqabtpGbAASo+SfzSw@mail.gmail.com>
+ <20200606015647.GA8099@sol> <CAMRc=Mdz__0TD8Qa33KRK9PE6jLvxa_O_dDjA54MHBLOeMxWfg@mail.gmail.com>
+ <20200609094338.GA16448@sol>
+In-Reply-To: <20200609094338.GA16448@sol>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 9 Jun 2020 11:57:27 +0200
+Message-ID: <CAMpxmJV9SL9pJpc5MwhREiP0On999CRW2Em4SbRKf9PQHOtPCg@mail.gmail.com>
+Subject: Re: [RFC PATCH] gpio: uapi: v2 proposal
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes: 676fa9ba893e ("virtio_mem: convert device block size into 64bit")
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
----
- drivers/virtio/virtio_mem.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+wt., 9 cze 2020 o 11:43 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a):
+>
+> On Tue, Jun 09, 2020 at 10:03:42AM +0200, Bartosz Golaszewski wrote:
+> > sob., 6 cze 2020 o 03:56 Kent Gibson <warthog618@gmail.com> napisa=C5=
+=82(a):
+> > >
+> >
+> > [snip!]
+> >
+> > > >
+> > > > I'd say yes - consolidation and reuse of data structures is always
+> > > > good and normally they are going to be wrapped in some kind of
+> > > > low-level user-space library anyway.
+> > > >
+> > >
+> > > Ok, and I've changed the values field name to bitmap, along with the =
+change
+> > > to a bitmap type, so the stuttering is gone.
+> > >
+> > > And, as the change to bitmap substantially reduced the size of
+> > > gpioline_config, I now embed that in the gpioline_info instead of
+> > > duplicating all the other fields.  The values field will be zeroed
+> > > when returned within info.
+> > >
+> >
+> > Could you post an example, I'm not sure I follow.
+> >
+>
+> The gpioline_info_v2 now looks like this:
+>
+> /**
+>  * struct gpioline_info_v2 - Information about a certain GPIO line
+>  * @name: the name of this GPIO line, such as the output pin of the line =
+on
+>  * the chip, a rail or a pin header name on a board, as specified by the
+>  * gpio chip, may be empty
+>  * @consumer: a functional name for the consumer of this GPIO line as set
+>  * by whatever is using it, will be empty if there is no current user but
+>  * may also be empty if the consumer doesn't set this up
+>  * @config: the configuration of the line.  Note that the values field is
+>  * always zeroed.
+>  * @offset: the local offset on this GPIO device, fill this in when
+>  * requesting the line information from the kernel
+>  * @padding: reserved for future use
+>  */
+> struct gpioline_info_v2 {
+>         char name[GPIO_MAX_NAME_SIZE];
+>         char consumer[GPIO_MAX_NAME_SIZE];
+>         struct gpioline_config config;
+>         __u32 offset;
+>         __u32 padding[GPIOLINE_INFO_V2_PAD_SIZE]; /* for future use */
+> };
+>
+> Previously that had all the fields from config - other than the values.
+>
+> When that is populated the config.values will always be zeroed.
+>
 
-diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
-index 7b1bece8a331..50c689f25045 100644
---- a/drivers/virtio/virtio_mem.c
-+++ b/drivers/virtio/virtio_mem.c
-@@ -1717,8 +1717,8 @@ static int virtio_mem_init(struct virtio_mem *vm)
- 		 (unsigned long long)vm->device_block_size);
- 	dev_info(&vm->vdev->dev, "memory block size: 0x%lx",
- 		 memory_block_size_bytes());
--	dev_info(&vm->vdev->dev, "subblock size: 0x%x",
--		 vm->subblock_size);
-+	dev_info(&vm->vdev->dev, "subblock size: 0x%llx",
-+		 (unsigned long long)vm->subblock_size);
- 	if (vm->nid != NUMA_NO_NODE)
- 		dev_info(&vm->vdev->dev, "nid: %d", vm->nid);
- 
--- 
-MST
+We'll probably abstract this away in libgpiod and your Go library but
+for someone looking at the ABI it may be confusing because a zeroed
+values array is still valid. I don't have a better idea though.
 
+[snip!]
+
+>
+> > > > > And would it be useful for userspace to be able to influence the =
+size of
+> > > > > the event buffer (currently fixed at 16 events per line)?
+> > > > >
+> > > >
+> > > > Good question. I would prefer to not overdo it though. The event
+> > > > request would need to contain the desired kfifo size and we'd only
+> > > > allow to set it on request, right?
+> > > >
+> > >
+> > > Yeah, it would only be relevant if edge detection was set and, as per
+> > > edge detection itself, would only be settable via the request, not
+> > > via set_config.  It would only be a suggestion, as the kfifo size get=
+s
+> > > rounded up to a power of 2 anyway.  It would be capped - I'm open to
+> > > suggestions for a suitable max value.  And the 0 value would mean use
+> > > the default - currently 16 per line.
+> > >
+> >
+> > This sounds good. How about 512 for max value for now and we can
+> > always increase it if needed. I don't think we should explicitly cap
+> > it though - let the user specify any value and just silently limit it
+> > to 512 in the kernel.
+> >
+>
+> It will be an internal cap only - no error if the user requests more.
+> I was thinking 1024, which corresponds to the maximum default - 16*64.
+>
+
+Yes, this sounds good too.
+
+Bart
