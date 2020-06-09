@@ -2,118 +2,103 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF17C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 07:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6743C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 08:01:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A6A720812
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 07:58:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591689535;
-	bh=zRdYAziJHxWBDEYM5KKlxSHJ/2cNJ4wlPkwlFghOTT0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UMxkZJ5Sc3OnLaZ4GtVRyS2GwZ5upcR8Ds+AaRb6vlEDGFJEEHGePlKahvHUAAd++
-	 meMO4O3w9fZ3J+/TlRiSWBphqFnh6QOnZUal4vgOs/rVKV4x2Ynax01usred58Zl4Q
-	 sfahIvXSbItahQrp7+sc0OS7kRekossUiOXfzNAw=
+	by mail.kernel.org (Postfix) with ESMTP id C2B1820812
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 08:01:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hFW4BRQ9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727849AbgFIH6y (ORCPT
+        id S1727109AbgFIIBE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 03:58:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50808 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726404AbgFIH6w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 03:58:52 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89617207ED;
-        Tue,  9 Jun 2020 07:58:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591689532;
-        bh=zRdYAziJHxWBDEYM5KKlxSHJ/2cNJ4wlPkwlFghOTT0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=H/AkDdO0kY2FimxYhm96ajehPTA3zfSW6Sntw50ctgKF1WWQka1lADXW7aKuwUdpo
-         UsTfX6zhKHwBXX2AXjjCksAjEP7bvBvAggSWz5rnjcS89C+sCnkn3DH+nitzPeE+rg
-         xL8mZDXC2UYdY5uJRVYmBjD6pxTvEN/tbfck+P5o=
-Date:   Tue, 9 Jun 2020 09:58:48 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Lucas De Marchi <lucas.demarchi@intel.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] kbuild: make module name conflict fatal error
-Message-ID: <20200609075848.GA509002@kroah.com>
-References: <20200511042149.1712876-1-masahiroy@kernel.org>
- <20200608020256.GA256950@roeck-us.net>
- <20200609062012.GA499862@kroah.com>
- <CAK8P3a2Pn22c8Z=w0FD15w4_+7LCWOpcbJ9b-Skh5iXzBjEx1g@mail.gmail.com>
+        Tue, 9 Jun 2020 04:01:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35104 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726911AbgFIIBC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 04:01:02 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA3A5C03E97C
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 01:01:01 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id jz3so1067470pjb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 01:01:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=itzxgfnqgSAh1Ay9xpcVxwCgvgDCbiUVPTUe7WIvLJs=;
+        b=hFW4BRQ9AwTSpzVGCnmWrFZVGvxQL5CD0ubfoFZOJ0Lzf+2Cs+4RmDTgWleXAy1aug
+         fmX4WtC4KI8t/fzCUBDw0yC/nMUJEfDsV2g32yq0gMCNy42Il/eKyEGi3fXfh+uMUE+o
+         OzPB/CFZO3Sp/PnarEI7e0OltYNMfzXOSCO+E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=itzxgfnqgSAh1Ay9xpcVxwCgvgDCbiUVPTUe7WIvLJs=;
+        b=rOxsKt00rFtMhr0Q6ovQVWYAKGsOiF/E469FPCW5dnFB2+5nwwCjpiyhDEVA+KyL/l
+         0FLQ5iN3xY8o+0ZXja2MHi3P+lN2NWM2KQiYYU3vu1g41hSVtvlAQcpQ0qRCz1uFyV5/
+         K7kxpdu+qdwX7yxAqR9YruQlaVFd84OVr3hs4DZIJTieO7uL2djYXQC+4S6O9n+TFf3V
+         174zt2YEoAm9FdOzywCsS/DCNd1iB+3D3IeM3/mSvErx0lqh+hJKeaNjRD3e/s3tbbT/
+         QZ2ByBlYWFlZO4xk98InarhuXegUORE9P18XH2mChQBtKBAgXX/G7dgHxWx+KQNzfaYZ
+         9zPg==
+X-Gm-Message-State: AOAM533+G0E1zBJiQWc8SETL6HgKOZv4mEdpCeqiRixqs9XO9FYgxTri
+        U1Av3zR3IQfDtZRwGsDBfhNq9Q==
+X-Google-Smtp-Source: ABdhPJx4KCbpY/d8Gen4dsrvOeam3rlwyvRdibOoKv1Gq0XSsIh2tkkNee7g5mfPRrfGeiDl6OJSNA==
+X-Received: by 2002:a17:902:82ca:: with SMTP id u10mr2213141plz.294.1591689660329;
+        Tue, 09 Jun 2020 01:01:00 -0700 (PDT)
+Received: from pihsun-glaptop.lan (180-176-97-18.dynamic.kbronet.com.tw. [180.176.97.18])
+        by smtp.googlemail.com with ESMTPSA id gt22sm2506252pjb.2.2020.06.09.01.00.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2020 01:00:59 -0700 (PDT)
+From:   Pi-Hsun Shih <pihsun@chromium.org>
+Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        linux-kernel@vger.kernel.org (open list),
+        Tzung-Bi Shih <tzungbi@google.com>
+Subject: [PATCH 0/2] Add support for voltage regulator on ChromeOS EC.
+Date:   Tue,  9 Jun 2020 15:59:53 +0800
+Message-Id: <20200609080001.121499-1-pihsun@chromium.org>
+X-Mailer: git-send-email 2.27.0.278.ge193c7cf3a9-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a2Pn22c8Z=w0FD15w4_+7LCWOpcbJ9b-Skh5iXzBjEx1g@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 09:51:46AM +0200, Arnd Bergmann wrote:
-> On Tue, Jun 9, 2020 at 8:20 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Sun, Jun 07, 2020 at 07:02:56PM -0700, Guenter Roeck wrote:
-> > > Hi,
-> > >
-> > > On Mon, May 11, 2020 at 01:21:49PM +0900, Masahiro Yamada wrote:
-> > > > I think all the warnings have been fixed by now. Make it a fatal error.
-> > > >
-> > >
-> > > Not entirely. With this patch in the tree, I get:
-> > >
-> > > Building sparc64:allmodconfig ... failed
-> > > --------------
-> > > Error log:
-> > > error: the following would cause module name conflict:
-> > >   drivers/char/adi.ko
-> > >   drivers/input/joystick/adi.ko
-> > > make[1]: *** [modules_check] Error 1
-> > > make[1]: *** Waiting for unfinished jobs....
-> > > make: *** [__sub-make] Error 2
-> > >
-> > > Reverting this patch fixes the problem.
-> >
-> > As it doesn't look like either of these drivers can be "auto-loaded"
-> > based on hardware detection, I don't know what to suggest as for
-> > renaming either of them.
-> >
-> > Any ideas?
-> 
-> I see zero chance of a kernel actually needing to provide both drivers,
-> given that the hardware is 20 years apart and gameports are almost
-> exclusive to x86 PCs. How about an ugly hack:
-> 
-> diff --git a/drivers/input/joystick/Kconfig b/drivers/input/joystick/Kconfig
-> index 940b744639c7..6f73f02059b5 100644
-> --- a/drivers/input/joystick/Kconfig
-> +++ b/drivers/input/joystick/Kconfig
-> @@ -45,6 +45,7 @@ config JOYSTICK_A3D
->  config JOYSTICK_ADI
->         tristate "Logitech ADI digital joysticks and gamepads"
->         select GAMEPORT
-> +       depends on ADI!=m # avoid module name conflict
->         help
->           Say Y here if you have a Logitech controller using the ADI
->           protocol over the PC gameport.
-> 
->       Arnd
+Add support for controlling voltage regulator that is connected and
+controlled by ChromeOS EC. Kernel controls these regulators through
+newly added EC host commands.
 
-Looks sane to me, thanks!
+Pi-Hsun Shih (2):
+  dt-bindings: regulator: Add DT binding for cros-ec-regulator
+  regulator: Add driver for cros-ec-regulator
 
-greg k-h
+ .../bindings/regulator/cros-ec-regulator.yaml |  39 +++
+ drivers/regulator/Kconfig                     |   7 +
+ drivers/regulator/Makefile                    |   1 +
+ drivers/regulator/cros-ec-regulator.c         | 261 ++++++++++++++++++
+ .../linux/platform_data/cros_ec_commands.h    |  82 ++++++
+ 5 files changed, 390 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/cros-ec-regulator.yaml
+ create mode 100644 drivers/regulator/cros-ec-regulator.c
+
+
+base-commit: abfbb29297c27e3f101f348dc9e467b0fe70f919
+-- 
+2.27.0.278.ge193c7cf3a9-goog
+
