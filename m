@@ -2,247 +2,271 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC530C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 19:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8208C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 19:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D4C620842
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 19:45:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2823206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 19:45:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Cimu+rlx"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="mudOolJS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730109AbgFITpR (ORCPT
+        id S1730612AbgFITp6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 15:45:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59260 "EHLO
+        Tue, 9 Jun 2020 15:45:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727966AbgFITpJ (ORCPT
+        with ESMTP id S1729737AbgFITp4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 15:45:09 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CF43C05BD1E
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 12:45:09 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id k26so4322774wmi.4
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 12:45:09 -0700 (PDT)
+        Tue, 9 Jun 2020 15:45:56 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CC8BC08C5C2
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 12:45:56 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id c14so22049941qka.11
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 12:45:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=eVChyNp9hZc+Gzjg8UZb0YNMtsUWDyIgCP+b2/L/34Y=;
-        b=Cimu+rlxTJjxCBFMH0knwV5QoVBXhRJmOfAz+EC43J0oGHTAEwARoNbay95Kx3eB7W
-         ptqDaODZ32mHoLWcGw81m9wQbqK3ifMfpRo9GyK+2vojRokke8yhlk/mJgXTBLsl4WpQ
-         0U0yQpDvzkXCZwXSxyDb/ufDjEoWfCeu66+0+50n9NPCoYUhTs2u2Gm62fETckdu7UWT
-         S/YtCKh4HnEschFfSQCfjdd7iC6oO8rLeRA759ywXW6qUciDGTfKtXEWRwHnlIKMAwc1
-         hfaewDA0sHH7tFerdI9BStCA5eGFa7Av0bxROgGCwkuT0nkS67vm8NnbqVA5lUEv8fuo
-         PUlg==
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9ZrCSzAkb7wfDLigc14LiL0kxxMcKFIrPg1xhm0sVbw=;
+        b=mudOolJSrL0i8n8Uu53mjbPsOjmwOnd+F1Mzz+H6lPXswNAymQI/IDcaisRnOCaAV4
+         AZlfucE/XT5vZI9p6GhTqHngOWPIbOIupP96RU9c/jQDfgXCs5FAfpkqJF9zEPcoGEA+
+         itqaf3eh+FRXLW4ACy+Bl+175M+YJp2A3UtAiIK1aD01uiZNa6RuBkZb/sYPjziUYCc8
+         kRA7ehQLaxixelCveNTEj5VzMrSefAINRGcZ0MCzsK82z3Huicrr5t5nQak8EyGlywQq
+         a0Gj+B/IpDiP3tjbUHLry4RoZC6EjURyuAaCOC2Ys02T1sw37agLIW9e6ftu7/8jFUQ1
+         f8/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=eVChyNp9hZc+Gzjg8UZb0YNMtsUWDyIgCP+b2/L/34Y=;
-        b=OXnt2qMku8ZXEHGoMMkHbxF2Ns6VX6I3b/H8UMbS2KChw4+g5B+Olae9Kutc2ItT/k
-         z++5iwL72cni0t09SZJQ+F8VTyjQnaZEJbHbWqkdFLj1bpYOKr76eAohNZ7iHiI0l0pr
-         ZXmyNT7cDVfo5G6C2IjgdGY38XCRVngbqrbgAVEDVSTBqeiDAAWy7FvNFp/3D4NrI+Dv
-         z4F4uclCvX6rGZuBTkI1f6UgYvAgbj7MmQQWmRWJ1REOpkUQQz9RhYIl24VT4A2frlUS
-         rWU1TqawEDtKk1qegvK6NDgapCkMPtRQQ1IpkfV7/4JSVyUvIwl9bIPIMk6MoTLugtJc
-         vaIQ==
-X-Gm-Message-State: AOAM531KEgqrdrX4CgkRBHVpE7CBuXpzMrLSclMDs2aQOe/9+lckCcuq
-        ZarjsTZecFUjxbTU3fVML7N63A==
-X-Google-Smtp-Source: ABdhPJy0yYa42yENG73o0WmFdkVW7mcgR4r704T13woKoj35YQQS5XtfAK0Wu3xQ01RXCjgttX8XLA==
-X-Received: by 2002:a1c:f216:: with SMTP id s22mr5325673wmc.167.1591731907981;
-        Tue, 09 Jun 2020 12:45:07 -0700 (PDT)
-Received: from dell ([2.27.167.101])
-        by smtp.gmail.com with ESMTPSA id q1sm3856878wmc.12.2020.06.09.12.45.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 12:45:07 -0700 (PDT)
-Date:   Tue, 9 Jun 2020 20:45:05 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        david.m.ertman@intel.com, shiraz.saleem@intel.com,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9ZrCSzAkb7wfDLigc14LiL0kxxMcKFIrPg1xhm0sVbw=;
+        b=LcLRJSsgvx+PSCOY1ljcZWM34qLtnGD0fByb6T18RDu6fCMAeWqszlhhODmOvf9YDQ
+         P89gEsUvZgx3ap16leRsfWY85kfPM1BfL4222KwY7lcSfZdYKeNQ0VsDCXKTams0OwvU
+         pJ6G7e3N8VjFBhqW6werYkoSHi7zouvQOENs3d7D5owU2qiYsrK8E0hH4CMhaBjJbVWs
+         6KGKtE0SWEhMsMjs/Ut32FyygBZ70bhXl8VrhcudGOiVymhdLPj5yeVEf2HCJgV6aw6x
+         ZflXxZbVvLnu/YFtNlMEGZuY31LbIFmC5YPx+eoU6JSG5tVcn+FheBNXwRlaRQLFngYK
+         ot0Q==
+X-Gm-Message-State: AOAM533P4rmex0j7QsfcSYTCqSVNEPEeCz3YQmq2Cvuwkfq5twc7q5Cx
+        OCVgq4msgKZEC2stBo4Oe5SWipLWQFW88g==
+X-Google-Smtp-Source: ABdhPJypggtDy4HDTW7EfQMcvJsTYtg7F/Gh9/LHK+ErfBIBRRg4/fEpTSQRZVqLlHPq3bVEYPzl1g==
+X-Received: by 2002:a05:620a:64f:: with SMTP id a15mr29544126qka.10.1591731955295;
+        Tue, 09 Jun 2020 12:45:55 -0700 (PDT)
+Received: from [192.168.0.189] ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id 137sm10785999qkf.44.2020.06.09.12.45.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jun 2020 12:45:54 -0700 (PDT)
+Subject: Re: [PATCH 5/6] arm64: dts: qcom: add sm8150 hdk dts
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld
- management controller
-Message-ID: <20200609194505.GQ4106@dell>
-References: <dc052a5c77171014ecc465b1da8b7ef8@walle.cc>
- <20200608082827.GB3567@dell>
- <CAHp75VdiH=J-ovCdh1RFJDW_bJM8=pbXRaHmB691GLb-5oBmYQ@mail.gmail.com>
- <7d7feb374cbf5a587dc1ce65fc3ad672@walle.cc>
- <20200608185651.GD4106@dell>
- <32231f26f7028d62aeda8fdb3364faf1@walle.cc>
- <20200609064735.GH4106@dell>
- <32287ac0488f7cbd5a7d1259c284e554@walle.cc>
- <20200609151941.GM4106@dell>
- <95e6ec9bbdf6af7a9ff9c31786f743f2@walle.cc>
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200524023815.21789-1-jonathan@marek.ca>
+ <20200524023815.21789-6-jonathan@marek.ca>
+ <20200529030126.GW279327@builder.lan>
+From:   Jonathan Marek <jonathan@marek.ca>
+Message-ID: <d7c4336f-a2a4-41b1-c481-4d11e57ae6de@marek.ca>
+Date:   Tue, 9 Jun 2020 15:46:16 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <95e6ec9bbdf6af7a9ff9c31786f743f2@walle.cc>
+In-Reply-To: <20200529030126.GW279327@builder.lan>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 09 Jun 2020, Michael Walle wrote:
-
-> Am 2020-06-09 17:19, schrieb Lee Jones:
-> > On Tue, 09 Jun 2020, Michael Walle wrote:
-> > 
-> > > Am 2020-06-09 08:47, schrieb Lee Jones:
-> > > > On Mon, 08 Jun 2020, Michael Walle wrote:
-> > > >
-> > > > > Am 2020-06-08 20:56, schrieb Lee Jones:
-> > > > > > On Mon, 08 Jun 2020, Michael Walle wrote:
-> > > > > >
-> > > > > > > Am 2020-06-08 12:02, schrieb Andy Shevchenko:
-> > > > > > > > +Cc: some Intel people WRT our internal discussion about similar
-> > > > > > > > problem and solutions.
-> > > > > > > >
-> > > > > > > > On Mon, Jun 8, 2020 at 11:30 AM Lee Jones <lee.jones@linaro.org> wrote:
-> > > > > > > > > On Sat, 06 Jun 2020, Michael Walle wrote:
-> > > > > > > > > > Am 2020-06-06 13:46, schrieb Mark Brown:
-> > > > > > > > > > > On Fri, Jun 05, 2020 at 10:07:36PM +0200, Michael Walle wrote:
-> > > > > > > > > > > > Am 2020-06-05 12:50, schrieb Mark Brown:
-> > > > > > > >
-> > > > > > > > ...
-> > > > > > > >
-> > > > > > > > > Right.  I'm suggesting a means to extrapolate complex shared and
-> > > > > > > > > sometimes intertwined batches of register sets to be consumed by
-> > > > > > > > > multiple (sub-)devices spanning different subsystems.
-> > > > > > > > >
-> > > > > > > > > Actually scrap that.  The most common case I see is a single Regmap
-> > > > > > > > > covering all child-devices.
-> > > > > > > >
-> > > > > > > > Yes, because often we need a synchronization across the entire address
-> > > > > > > > space of the (parent) device in question.
-> > > > > > > >
-> > > > > > > > >  It would be great if there was a way in
-> > > > > > > > > which we could make an assumption that the entire register address
-> > > > > > > > > space for a 'tagged' (MFD) device is to be shared (via Regmap) between
-> > > > > > > > > each of the devices described by its child-nodes.  Probably by picking
-> > > > > > > > > up on the 'simple-mfd' compatible string in the first instance.
-> > > > > > > > >
-> > > > > > > > > Rob, is the above something you would contemplate?
-> > > > > > > > >
-> > > > > > > > > Michael, do your register addresses overlap i.e. are they intermingled
-> > > > > > > > > with one another?  Do multiple child devices need access to the same
-> > > > > > > > > registers i.e. are they shared?
-> > > > > > >
-> > > > > > > No they don't overlap, expect for maybe the version register, which is
-> > > > > > > just there once and not per function block.
-> > > > > >
-> > > > > > Then what's stopping you having each device Regmap their own space?
-> > > > >
-> > > > > Because its just one I2C device, AFAIK thats not possible, right?
-> > > >
-> > > > Not sure what (if any) the restrictions are.
-> > > 
-> > > You can only have one device per I2C address. Therefore, I need one
-> > > device
-> > > which is enumerated by the I2C bus, which then enumerates its
-> > > sub-devices.
-> > > I thought this was one of the use cases for MFD. (Regardless of how a
-> > > sub-device access its registers). So even in the "simple-regmap"
-> > > case this
-> > > would need to be an i2c device.
+On 5/28/20 11:01 PM, Bjorn Andersson wrote:
+> On Sat 23 May 19:38 PDT 2020, Jonathan Marek wrote:
 > 
-> Here (see below)
-
-Yes, it should still be an I2C device.
-
-> > > 
-> > > E.g.
-> > > 
-> > > &i2cbus {
-> > >   mfd-device@10 {
-> > >     compatible = "simple-regmap", "simple-mfd";
-> > >     reg = <10>;
-> > >     regmap,reg-bits = <8>;
-> > >     regmap,val-bits = <8>;
-> > >     sub-device@0 {
-> > >       compatible = "vendor,sub-device0";
-> > >       reg = <0>;
-> > >     };
-> > >     ...
-> > > };
-> > > 
-> > > Or if you just want the regmap:
-> > > 
-> > > &soc {
-> > >   regmap: regmap@fff0000 {
-> > >     compatible = "simple-regmap";
-> > >     reg = <0xfff0000>;
-> > >     regmap,reg-bits = <16>;
-> > >     regmap,val-bits = <32>;
-> > >   };
-> > > 
-> > >   enet-which-needs-syscon-too@1000000 {
-> > >     vendor,ctrl-regmap = <&regmap>;
-> > >   };
-> > > };
-> > > 
-> > > Similar to the current syscon (which is MMIO only..).
-> > 
-> > We do not need a 'simple-regmap' solution for your use-case.
-> > 
-> > Since your device's registers are segregated, just split up the
-> > register map and allocate each sub-device with it's own slice.
+>> Add initial HDK855 dts, based on sm8150-mtp, with a few changes.
+>>
 > 
-> I don't get it, could you make a device tree example for my
-> use-case? (see also above)
+> Happy to see this on the list Jonathan, just some minor things on the
+> remoteproc nodes below.
+> 
+>> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+>> ---
+>>   arch/arm64/boot/dts/qcom/Makefile       |   1 +
+>>   arch/arm64/boot/dts/qcom/sm8150-hdk.dts | 461 ++++++++++++++++++++++++
+>>   2 files changed, 462 insertions(+)
+>>   create mode 100644 arch/arm64/boot/dts/qcom/sm8150-hdk.dts
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+>> index cc103f7020fd..e5dbd8b63951 100644
+>> --- a/arch/arm64/boot/dts/qcom/Makefile
+>> +++ b/arch/arm64/boot/dts/qcom/Makefile
+>> @@ -22,6 +22,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r3.dtb
+>>   dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-db845c.dtb
+>>   dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
+>>   dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-lenovo-yoga-c630.dtb
+>> +dtb-$(CONFIG_ARCH_QCOM)	+= sm8150-hdk.dtb
+>>   dtb-$(CONFIG_ARCH_QCOM)	+= sm8150-mtp.dtb
+>>   dtb-$(CONFIG_ARCH_QCOM)	+= sm8250-mtp.dtb
+>>   dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
+>> diff --git a/arch/arm64/boot/dts/qcom/sm8150-hdk.dts b/arch/arm64/boot/dts/qcom/sm8150-hdk.dts
+> [..]
+>> +/ {
+>> +	model = "Qualcomm Technologies, Inc. SM8150 HDK";
+>> +	compatible = "qcom,sm8150-hdk";
+>> +
+>> +	aliases {
+>> +		serial0 = &uart2;
+>> +	};
+>> +
+>> +	chosen {
+>> +		stdout-path = "serial0:115200n8";
+>> +	};
+>> +
+>> +	vph_pwr: vph-pwr-regulator {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "vph_pwr";
+>> +		regulator-min-microvolt = <3700000>;
+>> +		regulator-max-microvolt = <3700000>;
+>> +	};
+>> +
+>> +	/*
+>> +	 * Apparently RPMh does not provide support for PM8150 S4 because it
+>> +	 * is always-on; model it as a fixed regulator.
+>> +	 */
+> 
+> One day we should stop being surprised by this and drop the "Apparently"
+> from this comment ;)
+> 
 
-    &i2cbus {
-        mfd-device@10 {
-            compatible = "simple-mfd";
-            reg = <10>;
+Had this copied from sm8150-mtp, dropped the comment entirely (to match 
+sm8250-mtp dts).
 
-            sub-device@10 {
-                compatible = "vendor,sub-device";
-                reg = <10>;
-            };
-   };
+>> +	vreg_s4a_1p8: pm8150-s4 {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "vreg_s4a_1p8";
+>> +
+>> +		regulator-min-microvolt = <1800000>;
+>> +		regulator-max-microvolt = <1800000>;
+>> +
+>> +		regulator-always-on;
+>> +		regulator-boot-on;
+>> +
+>> +		vin-supply = <&vph_pwr>;
+>> +	};
+> [..]
+>> +&remoteproc_adsp {
+>> +	status = "okay";
+> 
+> It would be nice to see a
+> 	firmware-name = "qcom/sm8150/adsp.mbn";
+> 
+> here. Because if we ever end up pushing firmware to linux-firmware this
+> DTB would continue to work.
+> 
+> Use https://github.com/andersson/pil-squasher to get mbn files out of
+> the mdt+bXX files for your testing (or just rename/symlink the mdt to
+> mbn for now).
+> 
 
-The Regmap config would be present in each of the child devices.
+Added the firmware-name fields as you suggested. One thing to note (it 
+shouldn't matter for HDK), these firmwares can be modified by the device 
+maker, so not all sm8150 will have the same adsp/cdsp/slpi firmware.
 
-Each child device would call devm_regmap_init_i2c() in .probe().
-
-> > > > I can't think of any reasons why not, off the top of my head.
-> > > >
-> > > > Does Regmap only deal with shared accesses from multiple devices
-> > > > accessing a single register map, or can it also handle multiple
-> > > > devices communicating over a single I2C channel?
-> > > >
-> > > > One for Mark perhaps.
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+>> +};
+>> +
+>> +&remoteproc_cdsp {
+>> +	status = "okay";
+> 
+> 	firmware-name = "qcom/sm8150/cdsp.mbn";
+> 
+>> +};
+>> +
+>> +&remoteproc_slpi {
+>> +	status = "okay";
+> 
+> 	firmware-name = "qcom/sm8150/slpi.mbn";
+> 
+> Regards,
+> Bjorn
+> 
+>> +};
+>> +
+>> +&tlmm {
+>> +	gpio-reserved-ranges = <0 4>, <126 4>;
+>> +};
+>> +
+>> +&uart2 {
+>> +	status = "okay";
+>> +};
+>> +
+>> +&ufs_mem_hc {
+>> +	status = "okay";
+>> +
+>> +	reset-gpios = <&tlmm 175 GPIO_ACTIVE_LOW>;
+>> +
+>> +	vcc-supply = <&vreg_l10a_2p5>;
+>> +	vcc-max-microamp = <750000>;
+>> +	vccq-supply = <&vreg_l9a_1p2>;
+>> +	vccq-max-microamp = <700000>;
+>> +	vccq2-supply = <&vreg_s4a_1p8>;
+>> +	vccq2-max-microamp = <750000>;
+>> +};
+>> +
+>> +&ufs_mem_phy {
+>> +	status = "okay";
+>> +
+>> +	vdda-phy-supply = <&vdda_ufs_2ln_core_1>;
+>> +	vdda-max-microamp = <90200>;
+>> +	vdda-pll-supply = <&vreg_l3c_1p2>;
+>> +	vdda-pll-max-microamp = <19000>;
+>> +};
+>> +
+>> +&usb_1_hsphy {
+>> +	status = "okay";
+>> +	vdda-pll-supply = <&vdd_usb_hs_core>;
+>> +	vdda33-supply = <&vdda_usb_hs_3p1>;
+>> +	vdda18-supply = <&vdda_usb_hs_1p8>;
+>> +};
+>> +
+>> +&usb_2_hsphy {
+>> +	status = "okay";
+>> +	vdda-pll-supply = <&vdd_usb_hs_core>;
+>> +	vdda33-supply = <&vdda_usb_hs_3p1>;
+>> +	vdda18-supply = <&vdda_usb_hs_1p8>;
+>> +};
+>> +
+>> +&usb_1_qmpphy {
+>> +	status = "okay";
+>> +	vdda-phy-supply = <&vreg_l3c_1p2>;
+>> +	vdda-pll-supply = <&vdda_usb_ss_dp_core_1>;
+>> +};
+>> +
+>> +&usb_2_qmpphy {
+>> +	status = "okay";
+>> +	vdda-phy-supply = <&vreg_l3c_1p2>;
+>> +	vdda-pll-supply = <&vdda_usb_ss_dp_core_1>;
+>> +};
+>> +
+>> +&usb_1 {
+>> +	status = "okay";
+>> +};
+>> +
+>> +&usb_2 {
+>> +	status = "okay";
+>> +};
+>> +
+>> +&usb_1_dwc3 {
+>> +	dr_mode = "peripheral";
+>> +};
+>> +
+>> +&usb_2_dwc3 {
+>> +	dr_mode = "host";
+>> +};
+>> -- 
+>> 2.26.1
+>>
