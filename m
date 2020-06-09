@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 563A9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:12:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CFADC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:12:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 394D02074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:12:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E34452068D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:12:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388714AbgFISMX (ORCPT
+        id S2388707AbgFISMW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:12:23 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:41198 "EHLO
+        Tue, 9 Jun 2020 14:12:22 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:41218 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731654AbgFISF4 (ORCPT
+        by vger.kernel.org with ESMTP id S2387667AbgFISF4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 9 Jun 2020 14:05:56 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jiidE-0001oH-OX; Tue, 09 Jun 2020 19:05:52 +0100
+        id 1jiidF-0001oR-1J; Tue, 09 Jun 2020 19:05:53 +0100
 Received: from ben by deadeye with local (Exim 4.94)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jiidE-006VuV-3E; Tue, 09 Jun 2020 19:05:52 +0100
+        id 1jiidE-006Vuy-DJ; Tue, 09 Jun 2020 19:05:52 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Lukas Bulwahn" <lukas.bulwahn@gmail.com>,
-        "Jouni Hogander" <jouni.hogander@unikie.com>,
-        "Marc Kleine-Budde" <mkl@pengutronix.de>,
-        "Wolfgang Grandegger" <wg@grandegger.com>
-Date:   Tue, 09 Jun 2020 19:03:52 +0100
-Message-ID: <lsq.1591725832.514637201@decadent.org.uk>
+        "Paul Moore" <pmoore@redhat.com>,
+        "Richard Guy Briggs" <rgb@redhat.com>
+Date:   Tue, 09 Jun 2020 19:04:02 +0100
+Message-ID: <lsq.1591725832.108846056@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 01/61] slcan: Fix memory leak in error path
+Subject: [PATCH 3.16 11/61] selinux: cleanup error reporting in
+ selinux_nlmsg_perm()
 In-Reply-To: <lsq.1591725831.850867383@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,50 +56,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jouni Hogander <jouni.hogander@unikie.com>
+From: Richard Guy Briggs <rgb@redhat.com>
 
-commit ed50e1600b4483c049ce76e6bd3b665a6a9300ed upstream.
+commit e173fb2646a832b424c80904c306b816760ce477 upstream.
 
-This patch is fixing memory leak reported by Syzkaller:
+Convert audit_log() call to WARN_ONCE().
 
-BUG: memory leak unreferenced object 0xffff888067f65500 (size 4096):
-  comm "syz-executor043", pid 454, jiffies 4294759719 (age 11.930s)
-  hex dump (first 32 bytes):
-    73 6c 63 61 6e 30 00 00 00 00 00 00 00 00 00 00 slcan0..........
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
-  backtrace:
-    [<00000000a06eec0d>] __kmalloc+0x18b/0x2c0
-    [<0000000083306e66>] kvmalloc_node+0x3a/0xc0
-    [<000000006ac27f87>] alloc_netdev_mqs+0x17a/0x1080
-    [<0000000061a996c9>] slcan_open+0x3ae/0x9a0
-    [<000000001226f0f9>] tty_ldisc_open.isra.1+0x76/0xc0
-    [<0000000019289631>] tty_set_ldisc+0x28c/0x5f0
-    [<000000004de5a617>] tty_ioctl+0x48d/0x1590
-    [<00000000daef496f>] do_vfs_ioctl+0x1c7/0x1510
-    [<0000000059068dbc>] ksys_ioctl+0x99/0xb0
-    [<000000009a6eb334>] __x64_sys_ioctl+0x78/0xb0
-    [<0000000053d0332e>] do_syscall_64+0x16f/0x580
-    [<0000000021b83b99>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-    [<000000008ea75434>] 0xffffffffffffffff
+Rename "type=" to nlmsg_type=" to avoid confusion with the audit record
+type.
 
-Cc: Wolfgang Grandegger <wg@grandegger.com>
-Cc: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Signed-off-by: Jouni Hogander <jouni.hogander@unikie.com>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Added "protocol=" to help track down which protocol (NETLINK_AUDIT?) was used
+within the netlink protocol family.
+
+Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+[Rewrote the patch subject line]
+Signed-off-by: Paul Moore <pmoore@redhat.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/can/slcan.c | 1 +
- 1 file changed, 1 insertion(+)
+ security/selinux/hooks.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
---- a/drivers/net/can/slcan.c
-+++ b/drivers/net/can/slcan.c
-@@ -620,6 +620,7 @@ err_free_chan:
- 	sl->tty = NULL;
- 	tty->disc_data = NULL;
- 	clear_bit(SLF_INUSE, &sl->flags);
-+	free_netdev(sl->dev);
- 
- err_exit:
- 	rtnl_unlock();
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -4683,10 +4683,9 @@ static int selinux_nlmsg_perm(struct soc
+ 	err = selinux_nlmsg_lookup(sksec->sclass, nlh->nlmsg_type, &perm);
+ 	if (err) {
+ 		if (err == -EINVAL) {
+-			audit_log(current->audit_context, GFP_KERNEL, AUDIT_SELINUX_ERR,
+-				  "SELinux:  unrecognized netlink message"
+-				  " type=%hu for sclass=%hu\n",
+-				  nlh->nlmsg_type, sksec->sclass);
++			WARN_ONCE(1, "selinux_nlmsg_perm: unrecognized netlink message:"
++				  " protocol=%hu nlmsg_type=%hu sclass=%hu\n",
++				  sk->sk_protocol, nlh->nlmsg_type, sksec->sclass);
+ 			if (!selinux_enforcing || security_get_allow_unknown())
+ 				err = 0;
+ 		}
 
