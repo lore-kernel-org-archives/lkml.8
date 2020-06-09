@@ -2,158 +2,154 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD7AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:20:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C06DCC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:20:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3687207C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:20:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ED8020814
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:20:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="KBLTK0dt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728985AbgFILUC (ORCPT
+        id S1729007AbgFILUL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 07:20:02 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60676 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727002AbgFILUB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 07:20:01 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 182F8B160;
-        Tue,  9 Jun 2020 11:20:03 +0000 (UTC)
-Message-ID: <582f63b8140a01e75a79c96ec569c3a68f434c61.camel@suse.de>
-Subject: Re: [PATCH 5/9] usb: xhci-pci: Add support for reset controllers
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "wahrenst@gmx.net" <wahrenst@gmx.net>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "mathias.nyman@linux.intel.com" <mathias.nyman@linux.intel.com>,
-        Eric Anholt <eric@anholt.net>,
-        "bcm-kernel-feedback-list@broadcom.com" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "linux-rpi-kernel@lists.infradead.org" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tim.gover@raspberrypi.org" <tim.gover@raspberrypi.org>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
-Date:   Tue, 09 Jun 2020 13:19:57 +0200
-In-Reply-To: <CAHp75VdWq96SSzB1S9pM=H8=3np8-1Cep_9BqGiTCUTtCUt-yw@mail.gmail.com>
-References: <20200608192701.18355-1-nsaenzjulienne@suse.de>
-         <20200608192701.18355-6-nsaenzjulienne@suse.de>
-         <CAHp75VdWq96SSzB1S9pM=H8=3np8-1Cep_9BqGiTCUTtCUt-yw@mail.gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-9EBI8hzXNUG3ROBaqpAE"
-User-Agent: Evolution 3.36.2 
+        Tue, 9 Jun 2020 07:20:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37578 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728992AbgFILUJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 07:20:09 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 557CBC03E97C
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 04:20:08 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id w3so20340598qkb.6
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 04:20:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=4vbbsEa1uHDWb6XV9nSWbJE6AZC1+QscXr2WsFVfdlg=;
+        b=KBLTK0dtfIy71HT/+n78qaq5LuFpORynM8pRT77MsxRZ5O33t4z0oAYrLv2SrM0R29
+         WpRFkWTy3qANgKFRoV+Ck6M+A6U2SI+r6BvGxIgGVXs5+1bfVQ8CH16CrW4Ql/+hqa1V
+         bwBNHpGx2H6qmtqx9CZLLk2ETY0imojIN0z9xzcNgTjntduaCp+JVN7qXvTmAv+T3ws6
+         X52XbZmcup7Eytg6ZdzBpqg5v+O7/BNQWlqqTNTuYITHoOD002EgFS0mXiMVx/ts5ivN
+         cn4wYsSDaRTFkH6j4VtCP9uLcBI5ws6Q2L7xBe3dv/75UZqCD8hSR/yhjMPohMSXr4ym
+         gWSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4vbbsEa1uHDWb6XV9nSWbJE6AZC1+QscXr2WsFVfdlg=;
+        b=ClJreMfC8yf8k/HBXg0mFi89C88snwi7gsYBMrYf3jPrDenERWZMrRG5iS+9XgJKt2
+         XwC2XVwLZdv0IXmNdlBDqL3f+p9b3hnSmjl9ykpKU6CKhgJ9DNUTkb5hlmAjJdVwIgUx
+         +aAPlHd2Btu4IWNDr0diX2R5xC08HClGj7ZjM3blc2THYqAm6pMUhmX1tYR1606sHWul
+         UKAhI15Imge1pqAD3lunnAGBLkRnf67Sgx6vkvXIsIfoDQUeXfWKUvkd6OlnFBzMiy9G
+         MoXtPOscSkEtnOpeMfUJc59OxcQhkXr7elj87LFijbLXc4QAwIY4iF47fxVb7lfn0wJt
+         75Cw==
+X-Gm-Message-State: AOAM5323v5SpfRew9Zcoc9DiULjMiHmp+cg82kypjS2jM0ucVgodytuO
+        S7Qr+jQSwEz+qa4rdX7G8ZCbK5yc6ck=
+X-Google-Smtp-Source: ABdhPJzGJWLUixIeMGp2s5w5M+K/KN66kGS5c/6596VKFiPwBd+ENjZROdgaFYOPukx7ceM6miyzNw==
+X-Received: by 2002:a37:9e10:: with SMTP id h16mr27201817qke.381.1591701606051;
+        Tue, 09 Jun 2020 04:20:06 -0700 (PDT)
+Received: from [192.168.0.189] ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id r37sm10260096qtk.34.2020.06.09.04.20.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jun 2020 04:20:05 -0700 (PDT)
+Subject: Re: [PATCH 2/5] soundwire: qcom: add support for mmio soundwire
+ devices
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>
+Cc:     alsa-devel@alsa-project.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sanyog Kale <sanyog.r.kale@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200608204347.19685-1-jonathan@marek.ca>
+ <20200608204347.19685-3-jonathan@marek.ca>
+ <20200609043420.GA1084979@vkoul-mobl>
+ <bbb552ce-4b13-0395-e1bc-0b6c5766f4ae@linaro.org>
+From:   Jonathan Marek <jonathan@marek.ca>
+Message-ID: <a1098c40-adba-7e49-6d82-d7c50a6d286a@marek.ca>
+Date:   Tue, 9 Jun 2020 07:20:27 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
+In-Reply-To: <bbb552ce-4b13-0395-e1bc-0b6c5766f4ae@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 6/9/20 5:18 AM, Srinivas Kandagatla wrote:
+> 
+> 
+> On 09/06/2020 05:34, Vinod Koul wrote:
+>> Hi Jonathan,
+>>
+>> On 08-06-20, 16:43, Jonathan Marek wrote:
+>>> Adds support for qcom soundwire devices with memory mapped IO registers.
+>>
+>> Please use 'SoundWire Master devices' instead :)
+>>
+>>>
+>>> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+>>> ---
+>>>   drivers/soundwire/qcom.c | 25 +++++++++++++++++++++++--
+>>>   1 file changed, 23 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/soundwire/qcom.c b/drivers/soundwire/qcom.c
+>>> index f38d1fd3679f..628747df1c75 100644
+>>> --- a/drivers/soundwire/qcom.c
+>>> +++ b/drivers/soundwire/qcom.c
+>>> @@ -90,6 +90,7 @@ struct qcom_swrm_ctrl {
+>>>       struct sdw_bus bus;
+>>>       struct device *dev;
+>>>       struct regmap *regmap;
+>>> +    void __iomem *mmio;
+>>>       struct completion *comp;
+>>>       struct work_struct slave_work;
+>>>       /* read/write lock */
+>>> @@ -154,6 +155,20 @@ static int qcom_swrm_ahb_reg_write(struct 
+>>> qcom_swrm_ctrl *ctrl,
+>>>       return SDW_CMD_OK;
+>>>   }
+>>> +static int qcom_swrm_cpu_reg_read(struct qcom_swrm_ctrl *ctrl, int reg,
+>>> +                  u32 *val)
+>>> +{
+>>> +    *val = readl(ctrl->mmio + reg);
+>>> +    return SDW_CMD_OK;
+>>> +}
+>>> +
+>>> +static int qcom_swrm_cpu_reg_write(struct qcom_swrm_ctrl *ctrl, int 
+>>> reg,
+>>> +                   int val)
+>>> +{
+>>> +    writel(val, ctrl->mmio + reg);
+>>> +    return SDW_CMD_OK;
+>>> +}
+>>
+>> this looks fine but regmap supports mmio also, so I am thinking we
+>> should remove these and set regmap (mmio/slim)... Srini..?
+> 
+> That is doable, but not going to add great value in this case, unless we 
+> are having another layer of abstraction. So keeping it as readl/writel 
+> seems okay to me.
+> 
 
---=-9EBI8hzXNUG3ROBaqpAE
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Adding to this, the slim case doesn't use the regmap directly, it goes 
+through AHB_BRIDGE registers. So using a single regmap path is not 
+"doable" (at least not in a nice way IMO).
 
-On Mon, 2020-06-08 at 22:44 +0300, Andy Shevchenko wrote:
->=20
->=20
-> On Monday, June 8, 2020, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> wrote:
-> > Some atypical users of xhci-pci might need to manually reset their xHCI
-> > controller before starting the HCD setup. Check if a reset controller
-> > device is available to the PCI bus and trigger a reset.
-> >=20
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > ---
-> >  drivers/usb/host/xhci-pci.c | 9 +++++++++
-> >  1 file changed, 9 insertions(+)
-> >=20
-> > diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-> > index ef513c2fb843..45f70facdfcd 100644
-> > --- a/drivers/usb/host/xhci-pci.c
-> > +++ b/drivers/usb/host/xhci-pci.c
-> > @@ -12,6 +12,7 @@
-> >  #include <linux/slab.h>
-> >  #include <linux/module.h>
-> >  #include <linux/acpi.h>
-> > +#include <linux/reset.h>
-> >=20
-> >  #include "xhci.h"
-> >  #include "xhci-trace.h"
-> > @@ -339,6 +340,7 @@ static int xhci_pci_probe(struct pci_dev *dev, cons=
-t
-> > struct pci_device_id *id)
-> >         struct xhci_hcd *xhci;
-> >         struct usb_hcd *hcd;
-> >         struct xhci_driver_data *driver_data;
-> > +       struct reset_control *reset;
-> >=20
-> >         driver_data =3D (struct xhci_driver_data *)id->driver_data;
-> >         if (driver_data && driver_data->quirks & XHCI_RENESAS_FW_QUIRK)=
- {
-> > @@ -347,6 +349,13 @@ static int xhci_pci_probe(struct pci_dev *dev, con=
-st
-> > struct pci_device_id *id)
-> >                         return retval;
-> >         }
-> >=20
-> > +       reset =3D devm_reset_control_get(&dev->bus->dev, NULL);
->=20
-> =20
-> > +       if (IS_ERR(reset)) {
-> > +               retval =3D PTR_ERR(reset);
-> > +               return retval;
-> > +       }
->=20
-> These four can be two, we have too many LOCs in the kernel for no reason.
-
-Noted
-
-> =20
-> > +       reset_control_reset(reset);
-> > +
-> >         /* Prevent runtime suspending between USB-2 and USB-3 initializ=
-ation
-> > */
-> >         pm_runtime_get_noresume(&dev->dev);
-> > =20
-> > --=20
-> > 2.26.2
-> >=20
-> >=20
->=20
->=20
-
-
---=-9EBI8hzXNUG3ROBaqpAE
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7fcF0ACgkQlfZmHno8
-x/5HTAgAmhR811lue01X7GYq1cj7N9zCOPoNa2ZH9QWAMqqWbHR+24haBspjEywh
-jqF4feZsoD4jj1ZGrwSy+MKq2rRt+iaXPbDCcTrN/zuL38U9Zt/lZPxhvauQruKI
-NaVoK8R4lJRJ7HVHxMYPGUmT1FOVmZuYi4rp/uZlRjTmedsU/6s/x5xkgsTSAga1
-j9EWMT39vfMLMJeVsjynLw94bwl0nmwUxrWYi+C0W3qlrsIyTx39FOoa6HRdjwT9
-KPyQPzlPsUPEmrTbDdaDztFp39r0ESQYqvDjv3wReVtp3wWBsgbe5ECwiovUcKMu
-sp04DqMNxUJu/iqC8gkJkvc80XiI/Q==
-=H32q
------END PGP SIGNATURE-----
-
---=-9EBI8hzXNUG3ROBaqpAE--
-
+> --srini
+> 
+> 
+>>
