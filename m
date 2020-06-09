@@ -2,212 +2,264 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA861C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F60C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C12E320774
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:41:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591720864;
-	bh=3qetwtCZbV2rwtSX6HR1C8veFiMVvNuMnN2Up2WK8IE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=mj5/84OvDRHQkh/PjmaWTaCQzdMSC4cd25KzyvBToAXPwgD89+lyGWtFeY8EzuUHT
-	 lMvxoMnYw0VOO/n5AXJ1Fv6b4WV7WJbm2VDNV/H58TaP9T09qQXrET3uImNW7NJHEZ
-	 OXSahIyMxkQ9nhlWveKs+TV9OMoyoaL6TzdfdPJ4=
+	by mail.kernel.org (Postfix) with ESMTP id 983D720737
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:41:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qnc9zETf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731245AbgFIQlD (ORCPT
+        id S1731249AbgFIQly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 12:41:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49572 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731047AbgFIQlC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 12:41:02 -0400
-Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACB9620737;
-        Tue,  9 Jun 2020 16:41:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591720862;
-        bh=3qetwtCZbV2rwtSX6HR1C8veFiMVvNuMnN2Up2WK8IE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Gnv7iLW4r7aiutnfo5dX3y36vm4H9l0xBI/1GwNCCANyOEHLf/II0DhwSfPVU18xm
-         yBfN9P9uI3NczfOFDswMj/i9Ag3CZflc+9IgF+SuFvSu/G1WEhVlbzurUpP2yP0M71
-         /dkMZGf2bBOAUKqSrYo/3wRWWLy2hmdNK0+B57Gw=
-Date:   Tue, 9 Jun 2020 11:41:00 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     ansuelsmth@gmail.com
-Cc:     'Rob Herring' <robh+dt@kernel.org>,
-        'Sham Muthayyan' <smuthayy@codeaurora.org>,
-        'Rob Herring' <robh@kernel.org>,
-        'Andy Gross' <agross@kernel.org>,
-        'Bjorn Andersson' <bjorn.andersson@linaro.org>,
-        'Bjorn Helgaas' <bhelgaas@google.com>,
-        'Mark Rutland' <mark.rutland@arm.com>,
-        'Stanimir Varbanov' <svarbanov@mm-sol.com>,
-        'Lorenzo Pieralisi' <lorenzo.pieralisi@arm.com>,
-        'Andrew Murray' <amurray@thegoodpenguin.co.uk>,
-        'Philipp Zabel' <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        Tue, 9 Jun 2020 12:41:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59096 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730180AbgFIQlv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 12:41:51 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEE72C05BD1E;
+        Tue,  9 Jun 2020 09:41:50 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id t18so22078769wru.6;
+        Tue, 09 Jun 2020 09:41:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=AZYG0K93PsQJdOxUwBoc+JlrzBQiHlCzR6DIMHy9gzM=;
+        b=Qnc9zETfrjvQCtihO8N+ww82xz2gFstOVQIhtDytjaAswNCjJkOIeNxenav3SKer6u
+         VlZaasnPed6euS+O7aEP2hmu+H+0D3a5p4AaFtTmIeGlu7iALgddtoNyRkyMovUTuvuc
+         XLq8l61ge33GfudUR8C8wyFhghbuozL3uuEkXavOLGGdKDR1ML9zPw3emD6RiCVVTOFH
+         +GpnD32MeXFiSfmBt0ITJWzgbsIYIcZEZl8Dd+IbiiBLAoDv17IxQ5VncBdAxP4QbfbU
+         MwcB6wtaX6S2pvP4df22/0ISfrF47jEmrxFIG+OOXZgfkAEImxIjeRGXAuzqqFuJ8nI8
+         c3yQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=AZYG0K93PsQJdOxUwBoc+JlrzBQiHlCzR6DIMHy9gzM=;
+        b=mPWXsoYHGShcucGA7dOi2UJURQMllDxqcGYp8eMXjZROY4Y+V3yp84x8NVscRU+Z66
+         MJowOGUK2FcOGFC71eFzxCcR3lkcb7Y1LOaEYpI5U5kO3CJf00HpsiZboF9O+Ig6NsPu
+         cupvio4j87FXIg0NQTdh6XFfcWTkxSVi38gSKqWrRklcDWZ56e9581ALIXhKE2dtMpt8
+         Xuo1NoaUzptssK/Hmj6O+elW7br82+6GybOrjOc2KZ7S4eppLLPjACAN6reYKvdzNHmx
+         wCLeJwGX4dlNDSpWuEXke+04ayQ7kEB2wNil9l/1m0xOCQCq1I2G2zQHO7FKhDMm43g/
+         a2ug==
+X-Gm-Message-State: AOAM532t2wEs1vEnqpMIK5lOWdkk0j37vIpje4bLtxDROif7zXRhyZiI
+        SE/wChf5NrTn8HwPZqoxVb0=
+X-Google-Smtp-Source: ABdhPJyGpJCVZw+2xb/iyyGrCWfBAeQZNwZKVIZ4KwrEhZ9D9uA5HLtcYsA8YTZ1D5G9l66zXF2Zlg==
+X-Received: by 2002:a5d:4d4d:: with SMTP id a13mr5560604wru.252.1591720908896;
+        Tue, 09 Jun 2020 09:41:48 -0700 (PDT)
+Received: from macbook-pro-alvaro.lan (28.red-83-49-61.dynamicip.rima-tde.net. [83.49.61.28])
+        by smtp.gmail.com with ESMTPSA id n189sm3488999wmb.43.2020.06.09.09.41.47
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Jun 2020 09:41:48 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH 3/7] reset: add BCM6345 reset controller driver
+From:   =?utf-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>
+In-Reply-To: <2a621f170574a616bcf047f6725c74552f7abbb1.camel@pengutronix.de>
+Date:   Tue, 9 Jun 2020 18:41:47 +0200
+Cc:     robh+dt@kernel.org, tsbogend@alpha.franken.de,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jonas Gorski <jonas.gorski@gmail.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        'Varadarajan Narayanan' <varada@codeaurora.org>
-Subject: Re: R: R: [PATCH v5 11/11] PCI: qcom: Add Force GEN1 support
-Message-ID: <20200609164100.GA1451761@bjorn-Precision-5520>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <021501d63e6d$18a82b40$49f881c0$@gmail.com>
+        linux-mips@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <46614E69-578A-4782-9D72-85B2D2F38FB8@gmail.com>
+References: <20200609134232.4084718-1-noltari@gmail.com>
+ <20200609134232.4084718-4-noltari@gmail.com>
+ <341e8482c6bd06267633160d7358fa8331bef515.camel@pengutronix.de>
+ <729976E9-CAF7-47B6-8783-5FD3D85F9EFD@gmail.com>
+ <2a621f170574a616bcf047f6725c74552f7abbb1.camel@pengutronix.de>
+To:     Philipp Zabel <p.zabel@pengutronix.de>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 04:48:51PM +0200, ansuelsmth@gmail.com wrote:
-> > -----Messaggio originale-----
-> > Da: Bjorn Helgaas <helgaas@kernel.org>
-> > Inviato: martedì 2 giugno 2020 19:28
-> > A: ansuelsmth@gmail.com
-> > Cc: 'Rob Herring' <robh+dt@kernel.org>; 'Sham Muthayyan'
-> > <smuthayy@codeaurora.org>; 'Rob Herring' <robh@kernel.org>; 'Andy
-> > Gross' <agross@kernel.org>; 'Bjorn Andersson'
-> > <bjorn.andersson@linaro.org>; 'Bjorn Helgaas' <bhelgaas@google.com>;
-> > 'Mark Rutland' <mark.rutland@arm.com>; 'Stanimir Varbanov'
-> > <svarbanov@mm-sol.com>; 'Lorenzo Pieralisi'
-> > <lorenzo.pieralisi@arm.com>; 'Andrew Murray'
-> > <amurray@thegoodpenguin.co.uk>; 'Philipp Zabel'
-> > <p.zabel@pengutronix.de>; linux-arm-msm@vger.kernel.org; linux-
-> > pci@vger.kernel.org; devicetree@vger.kernel.org; linux-
-> > kernel@vger.kernel.org; Varadarajan Narayanan <varada@codeaurora.org>
-> > Oggetto: Re: R: [PATCH v5 11/11] PCI: qcom: Add Force GEN1 support
-> > 
-> > [+cc Varada]
-> > 
-> > On Tue, Jun 02, 2020 at 07:07:27PM +0200, ansuelsmth@gmail.com
-> > wrote:
-> > > > On Tue, Jun 02, 2020 at 01:53:52PM +0200, Ansuel Smith wrote:
-> > > > > From: Sham Muthayyan <smuthayy@codeaurora.org>
-> > > > >
-> > > > > Add Force GEN1 support needed in some ipq8064 board that needs to
-> > > > limit
-> > > > > some PCIe line to gen1 for some hardware limitation. This is set by
-> the
-> > > > > max-link-speed binding and needed by some soc based on ipq8064.
-> > (for
-> > > > > example Netgear R7800 router)
-> > > > >
-> > > > > Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
-> > > > > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> > > > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > > > > ---
-> > > > >  drivers/pci/controller/dwc/pcie-qcom.c | 13 +++++++++++++
-> > > > >  1 file changed, 13 insertions(+)
-> > > > >
-> > > > > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c
-> > > > b/drivers/pci/controller/dwc/pcie-qcom.c
-> > > > > index 259b627bf890..0ce15d53c46e 100644
-> > > > > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > > > > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > > > > @@ -27,6 +27,7 @@
-> > > > >  #include <linux/slab.h>
-> > > > >  #include <linux/types.h>
-> > > > >
-> > > > > +#include "../../pci.h"
-> > > > >  #include "pcie-designware.h"
-> > > > >
-> > > > >  #define PCIE20_PARF_SYS_CTRL			0x00
-> > > > > @@ -99,6 +100,8 @@
-> > > > >  #define PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE	0x358
-> > > > >  #define SLV_ADDR_SPACE_SZ			0x10000000
-> > > > >
-> > > > > +#define PCIE20_LNK_CONTROL2_LINK_STATUS2	0xa0
-> > > > > +
-> > > > >  #define DEVICE_TYPE_RC				0x4
-> > > > >
-> > > > >  #define QCOM_PCIE_2_1_0_MAX_SUPPLY	3
-> > > > > @@ -195,6 +198,7 @@ struct qcom_pcie {
-> > > > >  	struct phy *phy;
-> > > > >  	struct gpio_desc *reset;
-> > > > >  	const struct qcom_pcie_ops *ops;
-> > > > > +	int gen;
-> > > > >  };
-> > > > >
-> > > > >  #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
-> > > > > @@ -395,6 +399,11 @@ static int qcom_pcie_init_2_1_0(struct
-> > > > qcom_pcie *pcie)
-> > > > >  	/* wait for clock acquisition */
-> > > > >  	usleep_range(1000, 1500);
-> > > > >
-> > > > > +	if (pcie->gen == 1) {
-> > > > > +		val = readl(pci->dbi_base +
-> > > > PCIE20_LNK_CONTROL2_LINK_STATUS2);
-> > > > > +		val |= 1;
-> > > >
-> > > > Is this the same bit that's visible in config space as
-> > > > PCI_EXP_LNKSTA_CLS_2_5GB?  Why not use that #define?
-> > > >
-> > > > There are a bunch of other #defines in this file that look like
-> > > > redefinitions of standard things:
-> > > >
-> > > >   #define PCIE20_COMMAND_STATUS                   0x04
-> > > >     Looks like PCI_COMMAND
-> > > >
-> > > >   #define CMD_BME_VAL                             0x4
-> > > >     Looks like PCI_COMMAND_MASTER
-> > > >
-> > > >   #define PCIE20_DEVICE_CONTROL2_STATUS2          0x98
-> > > >     Looks like (PCIE20_CAP + PCI_EXP_DEVCTL2)
-> > > >
-> > > >   #define PCIE_CAP_CPL_TIMEOUT_DISABLE            0x10
-> > > >     Looks like PCI_EXP_DEVCTL2_COMP_TMOUT_DIS
-> > > >
-> > > >   #define PCIE20_CAP                              0x70
-> > > >     This one is obviously device-specific
-> > > >
-> > > >   #define PCIE20_CAP_LINK_CAPABILITIES            (PCIE20_CAP + 0xC)
-> > > >     Looks like (PCIE20_CAP + PCI_EXP_LNKCAP)
-> > > >
-> > > >   #define PCIE20_CAP_ACTIVE_STATE_LINK_PM_SUPPORT (BIT(10) |
-> > > > BIT(11))
-> > > >     Looks like PCI_EXP_LNKCAP_ASPMS
-> > > >
-> > > >   #define PCIE20_CAP_LINK_1                       (PCIE20_CAP + 0x14)
-> > > >   #define PCIE_CAP_LINK1_VAL                      0x2FD7F
-> > > >     This looks like PCIE20_CAP_LINK_1 should be (PCIE20_CAP +
-> > > >     PCI_EXP_SLTCAP), but "CAP_LINK_1" doesn't sound like the Slot
-> > > >     Capabilities register, and I don't know what PCIE_CAP_LINK1_VAL
-> > > >     means.
-> > >
-> > > The define are used by ipq8074 and I really can't test the changes.
-> > > Anyway it shouldn't make a difference use the define instead of the
-> > > custom value so a patch should not harm anything... Problem is the
-> > > last 2 define that we really don't know what they are about... How
-> > > should I proceed? Change only the value related to
-> > > PCI_EXP_LNKSTA_CLS_2_5GB or change all the other except the last 2?
-> > 
-> > I personally would change all the ones I mentioned above (in a
-> > separate patch from the one that adds "max-link-speed" support).
-> > Testing isn't a big deal because changing the #defines shouldn't
-> > change the generated code at all.
-> > 
-> > PCIE20_CAP_LINK_1 / PCIE_CAP_LINK1_VAL looks like a potential bug or
-> > at least a very misleading name.  I wouldn't touch it unless we can
-> > figure out what's going on.
-> > 
-> > Looks like most of this was added by 5d76117f070d ("PCI: qcom: Add
-> > support for IPQ8074 PCIe controller").  Shame on me for not asking
-> > these questions at the time.
-> > 
-> > Sham, Varada, can you shed any light on PCIE20_CAP_LINK_1 and
-> > PCIE_CAP_LINK1_VAL?
-> > 
-> 
-> Still no response. Should I push a v6 with this fix and leave the
-> unknown params as they are?
+Hello Philipp,
 
-Yep, that sounds good to me.
+> El 9 jun 2020, a las 18:32, Philipp Zabel <p.zabel@pengutronix.de> =
+escribi=C3=B3:
+>=20
+> Hi =C3=81lvaro,
+>=20
+> On Tue, 2020-06-09 at 17:14 +0200, =C3=81lvaro Fern=C3=A1ndez Rojas =
+wrote:
+>> Hi Philipp,
+>>=20
+>>> El 9 jun 2020, a las 17:06, Philipp Zabel <p.zabel@pengutronix.de> =
+escribi=C3=B3:
+>>>=20
+>>> Hi =C3=81lvaro,
+>>>=20
+>>> On Tue, 2020-06-09 at 15:42 +0200, =C3=81lvaro Fern=C3=A1ndez Rojas =
+wrote:
+>>>> Add support for resetting blocks through the Linux reset controller
+>>>> subsystem for BCM63xx SoCs.
+>>>>=20
+>>>> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
+>>>> ---
+>>>> drivers/reset/Kconfig         |   7 ++
+>>>> drivers/reset/Makefile        |   1 +
+>>>> drivers/reset/reset-bcm6345.c | 149 =
+++++++++++++++++++++++++++++++++++
+>>>> 3 files changed, 157 insertions(+)
+>>>> create mode 100644 drivers/reset/reset-bcm6345.c
+>>>>=20
+>>>> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+>>>> index d9efbfd29646..9f1da978cef6 100644
+>>>> --- a/drivers/reset/Kconfig
+>>>> +++ b/drivers/reset/Kconfig
+>>>> @@ -41,6 +41,13 @@ config RESET_BERLIN
+>>>> 	help
+>>>> 	  This enables the reset controller driver for Marvell Berlin =
+SoCs.
+>>>>=20
+>>>> +config RESET_BCM6345
+>>>> +	bool "BCM6345 Reset Controller"
+>>>> +	depends on BMIPS_GENERIC || COMPILE_TEST
+>>>> +	default BMIPS_GENERIC
+>>>> +	help
+>>>> +	  This enables the reset controller driver for BCM6345 SoCs.
+>>>> +
+>>>> config RESET_BRCMSTB
+>>>> 	tristate "Broadcom STB reset controller"
+>>>> 	depends on ARCH_BRCMSTB || COMPILE_TEST
+>>>> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+>>>> index 249ed357c997..e642aae42f0f 100644
+>>>> --- a/drivers/reset/Makefile
+>>>> +++ b/drivers/reset/Makefile
+>>>> @@ -6,6 +6,7 @@ obj-$(CONFIG_ARCH_TEGRA) +=3D tegra/
+>>>> obj-$(CONFIG_RESET_A10SR) +=3D reset-a10sr.o
+>>>> obj-$(CONFIG_RESET_ATH79) +=3D reset-ath79.o
+>>>> obj-$(CONFIG_RESET_AXS10X) +=3D reset-axs10x.o
+>>>> +obj-$(CONFIG_RESET_BCM6345) +=3D reset-bcm6345.o
+>>>> obj-$(CONFIG_RESET_BERLIN) +=3D reset-berlin.o
+>>>> obj-$(CONFIG_RESET_BRCMSTB) +=3D reset-brcmstb.o
+>>>> obj-$(CONFIG_RESET_BRCMSTB_RESCAL) +=3D reset-brcmstb-rescal.o
+>>>> diff --git a/drivers/reset/reset-bcm6345.c =
+b/drivers/reset/reset-bcm6345.c
+>>>> new file mode 100644
+>>>> index 000000000000..088b7fdb896b
+>>>> --- /dev/null
+>>>> +++ b/drivers/reset/reset-bcm6345.c
+>>>> @@ -0,0 +1,149 @@
+>>>> +// SPDX-License-Identifier: GPL-2.0-or-later
+>>>> +/*
+>>>> + * BCM6345 Reset Controller Driver
+>>>> + *
+>>>> + * Copyright (C) 2020 =C3=81lvaro Fern=C3=A1ndez Rojas =
+<noltari@gmail.com>
+>>>> + */
+>>>> +
+>>>> +#include <linux/delay.h>
+>>>> +#include <linux/init.h>
+>>>> +#include <linux/io.h>
+>>>> +#include <linux/mod_devicetable.h>
+>>>> +#include <linux/platform_device.h>
+>>>> +#include <linux/reset-controller.h>
+>>>> +
+>>>> +#define BCM6345_RESET_NUM		32
+>>>> +#define BCM6345_RESET_SLEEP_MIN_US	10000
+>>>> +#define BCM6345_RESET_SLEEP_MAX_US	20000
+>>>> +
+>>>> +struct bcm6345_reset {
+>>>> +	struct reset_controller_dev rcdev;
+>>>> +	void __iomem *base;
+>>>> +	spinlock_t lock;
+>>>> +};
+>>>> +
+>>>> +static int bcm6345_reset_update(struct bcm6345_reset =
+*bcm6345_reset,
+>>>> +				unsigned long id, bool assert)
+>>>> +{
+>>>> +	uint32_t val;
+>>>> +
+>>>> +	val =3D __raw_readl(bcm6345_reset->base);
+>>>> +	if (assert)
+>>>> +		val &=3D ~BIT(id);
+>>>> +	else
+>>>> +		val |=3D BIT(id);
+>>>> +	__raw_writel(val, bcm6345_reset->base);
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +static int bcm6345_reset_assert(struct reset_controller_dev =
+*rcdev,
+>>>> +				unsigned long id)
+>>>> +{
+>>>> +	struct bcm6345_reset *bcm6345_reset =3D
+>>>> +		container_of(rcdev, struct bcm6345_reset, rcdev);
+>>>> +	unsigned long flags;
+>>>> +
+>>>> +	spin_lock_irqsave(&bcm6345_reset->lock, flags);
+>>>> +	bcm6345_reset_update(bcm6345_reset, id, true);
+>>>> +	spin_unlock_irqrestore(&bcm6345_reset->lock, flags);
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +static int bcm6345_reset_deassert(struct reset_controller_dev =
+*rcdev,
+>>>> +				  unsigned long id)
+>>>> +{
+>>>> +	struct bcm6345_reset *bcm6345_reset =3D
+>>>> +		container_of(rcdev, struct bcm6345_reset, rcdev);
+>>>> +	unsigned long flags;
+>>>> +
+>>>> +	spin_lock_irqsave(&bcm6345_reset->lock, flags);
+>>>> +	bcm6345_reset_update(bcm6345_reset, id, false);
+>>>> +	spin_unlock_irqrestore(&bcm6345_reset->lock, flags);
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +static int bcm6345_reset_reset(struct reset_controller_dev *rcdev,
+>>>> +			       unsigned long id)
+>>>> +{
+>>>> +	struct bcm6345_reset *bcm6345_reset =3D
+>>>> +		container_of(rcdev, struct bcm6345_reset, rcdev);
+>>>> +	unsigned long flags;
+>>>> +
+>>>> +	spin_lock_irqsave(&bcm6345_reset->lock, flags);
+>>>> +	usleep_range(BCM6345_RESET_SLEEP_MIN_US,
+>>>> +		     BCM6345_RESET_SLEEP_MAX_US);
+>>>=20
+>>> What is the purpose of sleeping before reset assertion?
+>>=20
+>> None, I must have introduced that for testing something and then I =
+forgot to remove it. Sorry for that...
+>>=20
+>>> If you can do without this, with I think this driver could be made =
+to
+>>> use reset-simple.
+>>=20
+>> Yes, but only if I can add reset support with a configurable sleep =
+range to reset-simple. Is this possible?
+>=20
+> I should have mentioned, support for this is on the reset/next branch:
+>=20
+>  git://git.pengutronix.de/pza/linux.git reset/next
+
+Yes, but reset_us was only added to reset_simple_data, so there=E2=80=99s =
+no way to fill that value from reset_simple_devdata or device tree, =
+right?
+
+>=20
+> regards
+> Philipp
+
+Regards,
+=C3=81lvaro.
+
