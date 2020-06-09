@@ -2,129 +2,136 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 351EDC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:29:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7DCEC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C1B9206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:29:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D1C0207C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:29:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t/I94cLS"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="G3LYVQE3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387810AbgFIU3b (ORCPT
+        id S2387652AbgFIU3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 16:29:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37908 "EHLO
+        Tue, 9 Jun 2020 16:29:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731422AbgFIU3a (ORCPT
+        with ESMTP id S1731422AbgFIU3p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 16:29:30 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5532C05BD1E
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 13:29:29 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id g10so4024777wmh.4
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 13:29:29 -0700 (PDT)
+        Tue, 9 Jun 2020 16:29:45 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 631A4C05BD1E
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 13:29:45 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id r10so10775339pgv.8
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 13:29:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DfC1OeZlzvC82G4floLC0Zw276NOk/q2cFwSD6N7xKw=;
-        b=t/I94cLS3N8EINQ1/0Jxqjbe3TO3DARuZcAa66s9PrJqJ5b4PX1OBrtjw/g30W9Cgr
-         NCRl1uCRrHbGFR9JbjRfYz0M6Ve525XZZOICOD8qYdMv69DCAwF2Cd8RYZz1hQ3z6bFS
-         6PdnV5lNJVSSxMvGw9EItVqXpXHVyaHD7pDOGv2HktRvjZeoutpe3oXjhdY9G63sTYZB
-         LO34rT+wBRaQRqAidX+zEAipOjtuPY4w+ty/m0NxJAXe1QmUGcWAtRqyJdf/6hyMDrqP
-         rocVst8oVRExijG095HJsKV8EjjpP+MVPEXAk3DrcesSIBZ/YnXI+xVwxllKndA8P+tN
-         W8hQ==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=pk656TsUJuK10JSeFJHgNch8J905bhLTJffzrmjaoW0=;
+        b=G3LYVQE3kgZa52O1qrAqyWmJFU+2tTViQAcnJuNLMbNIs6Qu4xPteyvUQN6N9WJlso
+         hhXM1fybFGcJ0zpI48p6hFz7uEm3dL3KFXOoVgaIRJHdbbgzR/xwggGUP5hb3opNT2C1
+         kQHQ5U722EiLnMRrEsTK1sWx4kUzbQ4CLbZw0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=DfC1OeZlzvC82G4floLC0Zw276NOk/q2cFwSD6N7xKw=;
-        b=a328pUnrjgyp60yLrb9ogoyr+KXumUY3xU5tElyZTqrkci9z3HKN1dTVdqnoNDoVQI
-         tZBjoFXhKZYkzdF7K0M3bz2+bt/5zkWYPV9/u0kYLvjXHTBcV4yXM0o7KKELgCULh8xh
-         W+2n3uOUyAqufAuPMGIZ9zXOWsjxC8djLVNCIW+hDH146Qr5ZqsIluBiYCeWB2H4LTBI
-         wql6q0FjQCt9tHOJDx2eGOegTkmEpJcgvZ45OYXzqejW17fXLBaaROTxlfwkrsyj41/s
-         VvxKVPaKHcsk2thd4SgBfHncy7v+yYyVxsXPqS5Mzaqa8GoeEafTmcxr1ZLCAFRMdGVr
-         b5gw==
-X-Gm-Message-State: AOAM533w4aSyE2lo215vtrzap55n+30xi+J/27lgrq6/xENdmfeV0ye4
-        ZVTjrhIJZtXFMdb7mlXDqMI=
-X-Google-Smtp-Source: ABdhPJxgGATU09n3WWfGRMKa73eSNJiCvYsszsAU9ycH98PYXFAZqLL9LcJAqRgJCwIiuI3WBw7I+A==
-X-Received: by 2002:a1c:740e:: with SMTP id p14mr6054789wmc.155.1591734568465;
-        Tue, 09 Jun 2020 13:29:28 -0700 (PDT)
-Received: from eldamar (80-218-24-251.dclient.hispeed.ch. [80.218.24.251])
-        by smtp.gmail.com with ESMTPSA id s5sm3878699wme.37.2020.06.09.13.29.26
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=pk656TsUJuK10JSeFJHgNch8J905bhLTJffzrmjaoW0=;
+        b=jpmJJybi7UV8CwklGqVwRqhedWuj1fXqSDRsg214kmz1t7Q/CrFWH+t38/KB3D41RE
+         +5DjytsE/W2GHzeKyzOt4IDsXp6bR74LayXjzE8SpcHRXrsrRfj2sO1SgRQSxsaY/Ek3
+         0njkf8pi5VUfBCoRmBhRJb1smYytEzS9re1RGZP/cKDhnh/mo7wTyPRamsb/X70RAAMR
+         vbE2HfLe2UygJGEagiAlqkYaDTIhCwgvNG7txn9iphw/Qg5myFWP6mz7+A+IqHa+IWVG
+         yvJVLupzIjfWRMMB6vwO47+1R04kvO4m4omOV3HwS5MQmK28u4Qrhvtk7KRmbJZbYN1i
+         EpBg==
+X-Gm-Message-State: AOAM532PV0QpCDqrW31oUsqkzL/ZoJ6i6Nm/K/7JrvfNPyiEvKx8QEKa
+        tt3t/kDUcMF5VBvpShIpApzXiA==
+X-Google-Smtp-Source: ABdhPJzZR0RarRXC4o/vHbofF0KapOHjx+EtxFodTOCgJldHereBfqtez3ElV9LNiWAAjv3PzMgcqw==
+X-Received: by 2002:a63:e804:: with SMTP id s4mr26473158pgh.260.1591734584700;
+        Tue, 09 Jun 2020 13:29:44 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id w17sm11432412pff.27.2020.06.09.13.29.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 13:29:27 -0700 (PDT)
-From:   Salvatore Bonaccorso <carnil@debian.org>
-To:     Mark Gross <mgross@linux.intel.com>
-Cc:     Salvatore Bonaccorso <carnil@debian.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Borislav Petkov <bp@suse.de>, Tony Luck <tony.luck@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, trivial@kernel.org
-Subject: [PATCH] docs: hw-vuln: SRBDS: Fix "Title underline too short" warnings during build
-Date:   Tue,  9 Jun 2020 22:28:56 +0200
-Message-Id: <20200609202856.2283975-1-carnil@debian.org>
-X-Mailer: git-send-email 2.27.0
+        Tue, 09 Jun 2020 13:29:43 -0700 (PDT)
+Date:   Tue, 9 Jun 2020 13:29:42 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     David Miller <davem@davemloft.net>
+Cc:     stephen@networkplumber.org, o.rempel@pengutronix.de,
+        andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        kuba@kernel.org, corbet@lwn.net, mkubecek@suse.cz,
+        linville@tuxdriver.com, david@protonic.nl, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux@armlinux.org.uk, mkl@pengutronix.de, marex@denx.de,
+        christian.herber@nxp.com, amitc@mellanox.com, petrm@mellanox.com
+Subject: Re: [PATCH ethtool v1] netlink: add master/slave configuration
+ support
+Message-ID: <202006091312.F91BB4E0CE@keescook>
+References: <202006091222.CB97F743AD@keescook>
+ <20200609.123437.1057990370119930723.davem@davemloft.net>
+ <202006091244.C8B5F9525@keescook>
+ <20200609.130517.1373472507830142138.davem@davemloft.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200609.130517.1373472507830142138.davem@davemloft.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some of the title underlining did not have the correct length causing a few
-warnings when building the htmldocs. Line up each of the title underlinings
-with the text they are under.
+On Tue, Jun 09, 2020 at 01:05:17PM -0700, David Miller wrote:
+> From: Kees Cook <keescook@chromium.org>
+> Date: Tue, 9 Jun 2020 12:49:48 -0700
+> 
+> > Okay, for now, how about:
+> > 
+> > - If we're dealing with an existing spec, match the language.
+> 
+> Yes.
+> 
+> > - If we're dealing with a new spec, ask the authors to fix their language.
+> 
+> Please be more specific about "new", if it's a passed and ratified standard
+> then to me it is "existing".
 
-Fixes: 7222a1b5b874 ("x86/speculation: Add SRBDS vulnerability and mitigation documentation")
-Cc: Mark Gross <mgross@linux.intel.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org
-Cc: trivial@kernel.org
-Signed-off-by: Salvatore Bonaccorso <carnil@debian.org>
----
- .../hw-vuln/special-register-buffer-data-sampling.rst       | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Sure. But many kernel devs are also interacting with specifications as
+they're being developed. We can have an eye out for this when we're in
+such positions.
 
-diff --git a/Documentation/admin-guide/hw-vuln/special-register-buffer-data-sampling.rst b/Documentation/admin-guide/hw-vuln/special-register-buffer-data-sampling.rst
-index 47b1b3afac99..3b1ce68d2456 100644
---- a/Documentation/admin-guide/hw-vuln/special-register-buffer-data-sampling.rst
-+++ b/Documentation/admin-guide/hw-vuln/special-register-buffer-data-sampling.rst
-@@ -14,7 +14,7 @@ to the core through the special register mechanism that is susceptible
- to MDS attacks.
- 
- Affected processors
----------------------
-+-------------------
- Core models (desktop, mobile, Xeon-E3) that implement RDRAND and/or RDSEED may
- be affected.
- 
-@@ -59,7 +59,7 @@ executed on another core or sibling thread using MDS techniques.
- 
- 
- Mitigation mechanism
---------------------
-+--------------------
- Intel will release microcode updates that modify the RDRAND, RDSEED, and
- EGETKEY instructions to overwrite secret special register data in the shared
- staging buffer before the secret data can be accessed by another logical
-@@ -118,7 +118,7 @@ with the option "srbds=".  The option for this is:
-   ============= =============================================================
- 
- SRBDS System Information
-------------------------
-+------------------------
- The Linux kernel provides vulnerability status information through sysfs.  For
- SRBDS this can be accessed by the following sysfs file:
- /sys/devices/system/cpu/vulnerabilities/srbds
+> > - If a new version of a spec has updated its language, adjust the kernel's.
+> 
+> Unless you're willing to break UAPI, which I'm not, I don't see how this is
+> tenable.
+
+We'll get there when we get there. I honestly don't think any old spec is
+actually going to change their language; I look forward to being proven
+wrong. But many times there is no UAPI. If it's some register states
+between driver and hardware, no users sees or cares what the register
+is named.
+
+> > - If we're doing with something "internal" to the kernel (including UAPI),
+> >   stop adding new instances.
+> 
+> Even if it is part of supporting a technology where the standard uses
+> those terms?  So we'll use inconsitent terms internally?
+
+What? I mean "internal" in the sense of "does not have an external
+dependency". Maybe I should say "independent"?
+
+> This is why I'm saying, just make sure new specs use language that is
+> less controversial.  Then we just use what the specs use.
+> 
+> Then you don't have to figure out what to do about established UAPIs
+> and such, it's a non-issue.
+
+Yes, but there are places where people use these terms where they are
+NOT part of specs, and usually there is actually _better_ terminology
+to be used, and we can easily stop adding those. And we can start to
+rename old "independent" cases too.
+
+For example, if MS_SLAVE were being added now, we would rename it.
+
 -- 
-2.27.0
-
+Kees Cook
