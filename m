@@ -2,210 +2,119 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E1CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AFF6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93D3C206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:38:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663102;
-	bh=AgCdPAw2Lc1pRjr8p0PeGvmGQtAdYqv1IQNLk/DP3ws=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C4TPW36bV8kesZ1phqZ6rYpj8tc7zyHzZx8ZAE0oBM9TchdBLGu/iaHzV2+Wcnvde
-	 rpjb4r4B5fNB4kA3zvczqYFU4rsgPHIQE16YNj2w8C1TGfUzdgs4zfXEByoMwqrBW1
-	 PZetwB0flOBFQ8uUczv/td3LF3dGZ0V06sDu72U0=
+	by mail.kernel.org (Postfix) with ESMTP id 3F990206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:38:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731205AbgFIAiG (ORCPT
+        id S1731520AbgFIAic (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:38:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33426 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:38:32 -0400
+Received: from mga12.intel.com ([192.55.52.136]:64028 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728610AbgFHXNf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:13:35 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BD8321531;
-        Mon,  8 Jun 2020 23:13:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658015;
-        bh=AgCdPAw2Lc1pRjr8p0PeGvmGQtAdYqv1IQNLk/DP3ws=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NiCXV5hDTRvHg+L8tMmd3yGJNOUlP69RnLTG/Wp4KNUsfDKhyZ9TFrNQQO7Nn4aKj
-         f+/0541jeFgD3+1ibgRiMcaeoq1duMpLQbwNWAWWbzJOsTGPOI9fwSriEx1K5FRbpv
-         TRdeAU3ctgg6C8RzC+okWReRgEhlzJT7Xa6ZiIHM=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.6 069/606] powerpc/uaccess: Evaluate macro arguments once, before user access is allowed
-Date:   Mon,  8 Jun 2020 19:03:14 -0400
-Message-Id: <20200608231211.3363633-69-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
-References: <20200608231211.3363633-1-sashal@kernel.org>
+        id S1729217AbgFIAh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 20:37:58 -0400
+IronPort-SDR: H1Hmc7MDwOZ2/hkuXqqvRN5Wmqh1tPw+Flcx/7GrdEUrXToCau0M1eWgGkx7VEyRZzal71oLfD
+ xE4MtXMIUg6g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2020 17:37:58 -0700
+IronPort-SDR: p2oalkKzEMvdouJNti5J7BEPx5+c7jbkBE4nwQ9ipUiDR01a+CT8w1l0g7rz8F2ZaJhyJUfyMs
+ 55AqaSuuyXzA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,489,1583222400"; 
+   d="scan'208";a="472894832"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by fmsmga005.fm.intel.com with ESMTP; 08 Jun 2020 17:37:58 -0700
+Date:   Mon, 8 Jun 2020 17:38:12 -0700
+From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To:     Brendan Shanks <bshanks@codeweavers.com>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org, ebiederm@xmission.com,
+        andi@notmuch.email, Babu.Moger@amd.com
+Subject: Re: [PATCH v3] x86/umip: Add emulation/spoofing for SLDT and STR
+ instructions
+Message-ID: <20200609003812.GA26268@ranerica-svr.sc.intel.com>
+References: <20200608224424.7259-1-bshanks@codeweavers.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200608224424.7259-1-bshanks@codeweavers.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Piggin <npiggin@gmail.com>
+On Mon, Jun 08, 2020 at 03:44:24PM -0700, Brendan Shanks wrote:
+> Add emulation/spoofing of SLDT and STR for both 32- and 64-bit
+> processes.
+> 
+> Wine users have found a small number of Windows apps using SLDT that
+> were crashing when run on UMIP-enabled systems.
+> 
+> Reported-by: Andreas Rammhold <andi@notmuch.email>
+> Originally-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+> Signed-off-by: Brendan Shanks <bshanks@codeweavers.com>
+> ---
+> 
+> v3: Use (GDT_ENTRY_TSS * 8) for task register selector instead of
+> harcoding 0x40.
+> 
+>  arch/x86/kernel/umip.c | 32 +++++++++++++++++++++++---------
+>  1 file changed, 23 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/umip.c b/arch/x86/kernel/umip.c
+> index 8d5cbe1bbb3b..166c579b0273 100644
+> --- a/arch/x86/kernel/umip.c
+> +++ b/arch/x86/kernel/umip.c
+> @@ -244,16 +244,35 @@ static int emulate_umip_insn(struct insn *insn, int umip_inst,
+>  		*data_size += UMIP_GDT_IDT_LIMIT_SIZE;
+>  		memcpy(data, &dummy_limit, UMIP_GDT_IDT_LIMIT_SIZE);
+>  
+> -	} else if (umip_inst == UMIP_INST_SMSW) {
+> -		unsigned long dummy_value = CR0_STATE;
+> +	} else if (umip_inst == UMIP_INST_SMSW || umip_inst == UMIP_INST_SLDT ||
+> +		   umip_inst == UMIP_INST_STR) {
+> +		unsigned long dummy_value;
+> +
+> +		if (umip_inst == UMIP_INST_SMSW)
+> +			dummy_value = CR0_STATE;
+> +		else if (umip_inst == UMIP_INST_STR)
+> +			dummy_value = GDT_ENTRY_TSS * 8;
+> +		else if (umip_inst == UMIP_INST_SLDT)
+> +		{
 
-commit d02f6b7dab8228487268298ea1f21081c0b4b3eb upstream.
+This brace should go in the previous line. Also, if you use braces in
+the last part of the conditional you should probably use them in the
+previous ones. I guess in this case it woudln't improve readability.
+Instead, you can probably have a switch instead of the three ifs. That
+probably does improve readability and solves the dilemma of needing to
+put braces in all the one-line conditionals.
 
-get/put_user() can be called with nontrivial arguments. fs/proc/page.c
-has a good example:
+BTW, you should also delete the comment at the top of the file saying
+that str and sldt will not be emulated:
 
-    if (put_user(stable_page_flags(ppage), out)) {
+diff --git a/arch/x86/kernel/umip.c b/arch/x86/kernel/umip.c
+index 166c579b0273..0984a55eb8c0 100644
+--- a/arch/x86/kernel/umip.c
++++ b/arch/x86/kernel/umip.c
+@@ -45,9 +45,6 @@
+  * value that, lies close to the top of the kernel memory. The limit for the GDT
+  * and the IDT are set to zero.
+  *
+- * Given that SLDT and STR are not commonly used in programs that run on WineHQ
+- * or DOSEMU2, they are not emulated.
+- *
+  * The instruction smsw is emulated to return the value that the register CR0
+  * has at boot time as set in the head_32.
+  *
 
-stable_page_flags() is quite a lot of code, including spin locks in
-the page allocator.
-
-Ensure these arguments are evaluated before user access is allowed.
-
-This improves security by reducing code with access to userspace, but
-it also fixes a PREEMPT bug with KUAP on powerpc/64s:
-stable_page_flags() is currently called with AMR set to allow writes,
-it ends up calling spin_unlock(), which can call preempt_schedule. But
-the task switch code can not be called with AMR set (it relies on
-interrupts saving the register), so this blows up.
-
-It's fine if the code inside allow_user_access() is preemptible,
-because a timer or IPI will save the AMR, but it's not okay to
-explicitly cause a reschedule.
-
-Fixes: de78a9c42a79 ("powerpc: Add a framework for Kernel Userspace Access Protection")
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200407041245.600651-1-npiggin@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/powerpc/include/asm/uaccess.h | 49 +++++++++++++++++++++---------
- 1 file changed, 35 insertions(+), 14 deletions(-)
-
-diff --git a/arch/powerpc/include/asm/uaccess.h b/arch/powerpc/include/asm/uaccess.h
-index 2f500debae21..0969285996cb 100644
---- a/arch/powerpc/include/asm/uaccess.h
-+++ b/arch/powerpc/include/asm/uaccess.h
-@@ -166,13 +166,17 @@ do {								\
- ({								\
- 	long __pu_err;						\
- 	__typeof__(*(ptr)) __user *__pu_addr = (ptr);		\
-+	__typeof__(*(ptr)) __pu_val = (x);			\
-+	__typeof__(size) __pu_size = (size);			\
-+								\
- 	if (!is_kernel_addr((unsigned long)__pu_addr))		\
- 		might_fault();					\
--	__chk_user_ptr(ptr);					\
-+	__chk_user_ptr(__pu_addr);				\
- 	if (do_allow)								\
--		__put_user_size((x), __pu_addr, (size), __pu_err);		\
-+		__put_user_size(__pu_val, __pu_addr, __pu_size, __pu_err);	\
- 	else									\
--		__put_user_size_allowed((x), __pu_addr, (size), __pu_err);	\
-+		__put_user_size_allowed(__pu_val, __pu_addr, __pu_size, __pu_err); \
-+								\
- 	__pu_err;						\
- })
- 
-@@ -180,9 +184,13 @@ do {								\
- ({									\
- 	long __pu_err = -EFAULT;					\
- 	__typeof__(*(ptr)) __user *__pu_addr = (ptr);			\
-+	__typeof__(*(ptr)) __pu_val = (x);				\
-+	__typeof__(size) __pu_size = (size);				\
-+									\
- 	might_fault();							\
--	if (access_ok(__pu_addr, size))			\
--		__put_user_size((x), __pu_addr, (size), __pu_err);	\
-+	if (access_ok(__pu_addr, __pu_size))				\
-+		__put_user_size(__pu_val, __pu_addr, __pu_size, __pu_err); \
-+									\
- 	__pu_err;							\
- })
- 
-@@ -190,8 +198,12 @@ do {								\
- ({								\
- 	long __pu_err;						\
- 	__typeof__(*(ptr)) __user *__pu_addr = (ptr);		\
--	__chk_user_ptr(ptr);					\
--	__put_user_size((x), __pu_addr, (size), __pu_err);	\
-+	__typeof__(*(ptr)) __pu_val = (x);			\
-+	__typeof__(size) __pu_size = (size);			\
-+								\
-+	__chk_user_ptr(__pu_addr);				\
-+	__put_user_size(__pu_val, __pu_addr, __pu_size, __pu_err); \
-+								\
- 	__pu_err;						\
- })
- 
-@@ -283,15 +295,18 @@ do {								\
- 	long __gu_err;						\
- 	__long_type(*(ptr)) __gu_val;				\
- 	__typeof__(*(ptr)) __user *__gu_addr = (ptr);	\
--	__chk_user_ptr(ptr);					\
-+	__typeof__(size) __gu_size = (size);			\
-+								\
-+	__chk_user_ptr(__gu_addr);				\
- 	if (!is_kernel_addr((unsigned long)__gu_addr))		\
- 		might_fault();					\
- 	barrier_nospec();					\
- 	if (do_allow)								\
--		__get_user_size(__gu_val, __gu_addr, (size), __gu_err);		\
-+		__get_user_size(__gu_val, __gu_addr, __gu_size, __gu_err);	\
- 	else									\
--		__get_user_size_allowed(__gu_val, __gu_addr, (size), __gu_err);	\
-+		__get_user_size_allowed(__gu_val, __gu_addr, __gu_size, __gu_err); \
- 	(x) = (__typeof__(*(ptr)))__gu_val;			\
-+								\
- 	__gu_err;						\
- })
- 
-@@ -300,12 +315,15 @@ do {								\
- 	long __gu_err = -EFAULT;					\
- 	__long_type(*(ptr)) __gu_val = 0;				\
- 	__typeof__(*(ptr)) __user *__gu_addr = (ptr);		\
-+	__typeof__(size) __gu_size = (size);				\
-+									\
- 	might_fault();							\
--	if (access_ok(__gu_addr, (size))) {		\
-+	if (access_ok(__gu_addr, __gu_size)) {				\
- 		barrier_nospec();					\
--		__get_user_size(__gu_val, __gu_addr, (size), __gu_err);	\
-+		__get_user_size(__gu_val, __gu_addr, __gu_size, __gu_err); \
- 	}								\
- 	(x) = (__force __typeof__(*(ptr)))__gu_val;				\
-+									\
- 	__gu_err;							\
- })
- 
-@@ -314,10 +332,13 @@ do {								\
- 	long __gu_err;						\
- 	__long_type(*(ptr)) __gu_val;				\
- 	__typeof__(*(ptr)) __user *__gu_addr = (ptr);	\
--	__chk_user_ptr(ptr);					\
-+	__typeof__(size) __gu_size = (size);			\
-+								\
-+	__chk_user_ptr(__gu_addr);				\
- 	barrier_nospec();					\
--	__get_user_size(__gu_val, __gu_addr, (size), __gu_err);	\
-+	__get_user_size(__gu_val, __gu_addr, __gu_size, __gu_err); \
- 	(x) = (__force __typeof__(*(ptr)))__gu_val;			\
-+								\
- 	__gu_err;						\
- })
- 
--- 
-2.25.1
-
+Thanks and BR,
+Ricardo
