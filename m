@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E0FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E46C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:43:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4265520760
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:43:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BE8D20760
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:43:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VgU9rYtP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FTqP8Sy1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728916AbgFINnD (ORCPT
+        id S1729887AbgFINnF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 09:43:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59578 "EHLO
+        Tue, 9 Jun 2020 09:43:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729000AbgFINmm (ORCPT
+        with ESMTP id S1729136AbgFINmo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 09:42:42 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33B05C05BD1E;
-        Tue,  9 Jun 2020 06:42:41 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id j10so21370717wrw.8;
-        Tue, 09 Jun 2020 06:42:41 -0700 (PDT)
+        Tue, 9 Jun 2020 09:42:44 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E68AFC08C5C2;
+        Tue,  9 Jun 2020 06:42:43 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id q25so3225536wmj.0;
+        Tue, 09 Jun 2020 06:42:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=aeMQ/9K++8bABwRMfUzQMzHyI/wF+s2+iLytwEdjF7g=;
-        b=VgU9rYtPf+ULDOOG/RlAzlaAW+2VKcOp7DScStRHPXXaSsfnMtatkYCNavDvbSs1oK
-         DmKDzPT+sDkQwjYsKL6CSy2xFesNm8RblolUoiE4qwT4Zgn1zUraSAeOHcV0Vb7HWkEg
-         PvYg7ko8+1vZj5xnn8CQR2pFh47DFa1SAu09+V5MCzPpRaX6ZKI9om+65cg7y2Y5VdcR
-         aZL1LanPaY+i8jTPAsvnk1drSj793KZW3Sa4XIcfSaywWo1gzv6JGL+xeNVGVXosHUgc
-         QxJ06429JXw0sKX6simKCeibZ4ritgXP2e2klpJvXka2haIlr9/lKCMcPSzfusjsxLrV
-         6+Hw==
+        bh=agumoCX/gITs54EaA5i01A+uQtLiK9FiNBGsMq0jTL4=;
+        b=FTqP8Sy1h93z4+C+HpRRHM3ixzp5nP9O37ClBJ1RVGapK231kRY9ud0dxbVvwkXllz
+         zafqvqkMH/Y8gNQutPv81R6xvKrxnelmWS38ieXVrm/NVoTfrb6YXGzVPdhyM3i5hgoj
+         HEqsiLq2TzqHGWSRZV7NcijrRKhOZiE+U+jwnb5Vk9RpHreX9mBD1yEr6vPPsHOC/zMC
+         d9u/MhKzQWvI5GE51UJaxrN2HF+e8BK58pKBqetQ1qzA2O9mti+3/lpcAWivS3EBF6I5
+         qbW2jR54gIS7U/2t9721LaZ8IomuWyaz6nUBfTbvbU3xQcKtJA/1Nvg8sqRn0EaT0xTK
+         gIOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=aeMQ/9K++8bABwRMfUzQMzHyI/wF+s2+iLytwEdjF7g=;
-        b=BgdO3DYgySXNTY25Nvna3AY7nMU2BywbKu4wMU56x68ppXZ0LgpSLhV9sIEdFOsxza
-         F5FzZThc1i6rdzSK6HxqNjpxyobcG1P4kYGKfJnqgqqjvx8wxkHMFpKKXHEPOIQViwuu
-         CwZRZPkgBYX5cjOPFuvRA73PP07bKsACVqffAnTn8Q3n2SB5JOcstoUsPTX2lTMxMD5O
-         oLoN+kHGXTfXGFgvGishJog9AVQJnRFgRjFQm1AawnCNauIC6sVditR9xhtmwq0/5iYR
-         dlDujoEEQtF0YH7YSGfzY323jLNFywOZpvhOWUiEBtFsDEPlCbY4vQmucnBm/2r7JTa/
-         uGeA==
-X-Gm-Message-State: AOAM531nhNdn6lTb65cbswpDtm/snhztT+Z0RMi3qEUCUNCFm39wZ3Rm
-        Vix5tbO40h6IhwPMyxy7nAg=
-X-Google-Smtp-Source: ABdhPJwHKoygNlapjeXATNpuuOaVewZiX8fyUk9EGbfzmWr3qZQY1e//QrPErOPn2kzRL1JNQN7VAQ==
-X-Received: by 2002:a5d:6b81:: with SMTP id n1mr4455170wrx.411.1591710159808;
-        Tue, 09 Jun 2020 06:42:39 -0700 (PDT)
+        bh=agumoCX/gITs54EaA5i01A+uQtLiK9FiNBGsMq0jTL4=;
+        b=qPWLQg0jv54En49gsNl7H4KNlNFbb2E1Lz+p8UFMvysjZItaYGVEdKSc9zgIdC+hFl
+         JNr3w8L+Q45XFFBquTXN6oQ9scGKVwJfRqP42WmQJe9q2WfWDaDU0VLZmQGqFn8/0pSg
+         ffgkP2RLYbWNDEVRI43nG4UHgr5iFHXOkgndxWof9ES5UCgXgYVUod8PJucsoiXQUi1s
+         cR/DzONA0iDtaoCiEUXuN4E9772SjUMj7PLLouLjEqQNDgic7N7rQbq4zpOB7G5qfhdc
+         doQCpApAPMLQGjd50+v8vdkvvNn53Zw2fOtL0uHwvdJi1zLj6zQ10c7EoEhv6CIMx7af
+         W9hw==
+X-Gm-Message-State: AOAM5334HbhF/mn0esLaMPZruKfyxchiTyEtuhQIQ1rWQzO9mNbiiEn0
+        E34R+g1Lt5nRXr/cO99UGcg=
+X-Google-Smtp-Source: ABdhPJwWzjv4TCgkefiEcfF6BE08JESg/W/AwzD5Bj1LQJsL8kqUGpAwnqJPj6FANVyzQ/SrbIJTJQ==
+X-Received: by 2002:a1c:6056:: with SMTP id u83mr3942015wmb.138.1591710161728;
+        Tue, 09 Jun 2020 06:42:41 -0700 (PDT)
 Received: from skynet.lan (28.red-83-49-61.dynamicip.rima-tde.net. [83.49.61.28])
-        by smtp.gmail.com with ESMTPSA id w17sm3454067wra.71.2020.06.09.06.42.38
+        by smtp.gmail.com with ESMTPSA id w17sm3454067wra.71.2020.06.09.06.42.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 06:42:39 -0700 (PDT)
+        Tue, 09 Jun 2020 06:42:41 -0700 (PDT)
 From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
 To:     p.zabel@pengutronix.de, robh+dt@kernel.org,
@@ -69,9 +69,9 @@ To:     p.zabel@pengutronix.de, robh+dt@kernel.org,
         bcm-kernel-feedback-list@broadcom.com
 Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
-Subject: [PATCH 5/7] mips: bmips: dts: add BCM6358 reset controller support
-Date:   Tue,  9 Jun 2020 15:42:30 +0200
-Message-Id: <20200609134232.4084718-6-noltari@gmail.com>
+Subject: [PATCH 7/7] mips: bmips: dts: add BCM6368 reset controller support
+Date:   Tue,  9 Jun 2020 15:42:32 +0200
+Message-Id: <20200609134232.4084718-8-noltari@gmail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200609134232.4084718-1-noltari@gmail.com>
 References: <20200609134232.4084718-1-noltari@gmail.com>
@@ -83,30 +83,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-BCM6358 SoCs have a reset controller for certain components.
+BCM6368 SoCs have a reset controller for certain components.
 
 Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
 ---
- arch/mips/boot/dts/brcm/bcm6358.dtsi | 6 ++++++
+ arch/mips/boot/dts/brcm/bcm6368.dtsi | 6 ++++++
  1 file changed, 6 insertions(+)
 
-diff --git a/arch/mips/boot/dts/brcm/bcm6358.dtsi b/arch/mips/boot/dts/brcm/bcm6358.dtsi
-index f21176cac038..9d93e7f5e6fc 100644
---- a/arch/mips/boot/dts/brcm/bcm6358.dtsi
-+++ b/arch/mips/boot/dts/brcm/bcm6358.dtsi
-@@ -82,6 +82,12 @@ periph_intc: interrupt-controller@fffe000c {
- 			interrupts = <2>, <3>;
+diff --git a/arch/mips/boot/dts/brcm/bcm6368.dtsi b/arch/mips/boot/dts/brcm/bcm6368.dtsi
+index 449c167dd892..52c19f40b9cc 100644
+--- a/arch/mips/boot/dts/brcm/bcm6368.dtsi
++++ b/arch/mips/boot/dts/brcm/bcm6368.dtsi
+@@ -70,6 +70,12 @@ reboot: syscon-reboot@10000008 {
+ 			mask = <0x1>;
  		};
  
-+		periph_rst: reset-controller@fffe0034 {
++		periph_rst: reset-controller@10000010 {
 +			compatible = "brcm,bcm6345-reset";
-+			reg = <0xfffe0034 0x4>;
++			reg = <0x10000010 0x4>;
 +			#reset-cells = <1>;
 +		};
 +
- 		leds0: led-controller@fffe00d0 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
+ 		periph_intc: interrupt-controller@10000020 {
+ 			compatible = "brcm,bcm6345-l1-intc";
+ 			reg = <0x10000020 0x10>,
 -- 
 2.26.2
 
