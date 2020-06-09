@@ -2,92 +2,109 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54631C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E943C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BACA20774
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:13:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F0B220774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:13:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QBaLCWN2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731133AbgFIQNZ (ORCPT
+        id S1731067AbgFIQNq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 12:13:25 -0400
-Received: from smtp.asem.it ([151.1.184.197]:62643 "EHLO smtp.asem.it"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728888AbgFIQNT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 12:13:19 -0400
-Received: from webmail.asem.it
-        by asem.it (smtp.asem.it)
-        (SecurityGateway 6.5.2)
-        with ESMTP id SG000307084.MSG 
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 18:13:16 +0200S
-Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
- (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 9 Jun
- 2020 18:13:14 +0200
-Received: from flavio-x.asem.intra (172.16.17.208) by ASAS044.asem.intra
- (172.16.16.44) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
- Transport; Tue, 9 Jun 2020 18:13:14 +0200
-From:   Flavio Suligoi <f.suligoi@asem.it>
-To:     Sathya Prakash <sathya.prakash@broadcom.com>,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        Suganath Prabu Subramani 
-        <suganath-prabu.subramani@broadcom.com>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>
-CC:     <MPT-FusionLinux.pdl@broadcom.com>, <linux-scsi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Flavio Suligoi <f.suligoi@asem.it>
-Subject: [PATCH 1/1] scsi: mpt3sas: fix spelling mistake
-Date:   Tue, 9 Jun 2020 18:13:13 +0200
-Message-ID: <20200609161313.32098-1-f.suligoi@asem.it>
-X-Mailer: git-send-email 2.17.1
+        Tue, 9 Jun 2020 12:13:46 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38439 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731098AbgFIQNj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 12:13:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591719218;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=U5NH97ZcwEvgcbggB5cCoStGuDG8xCBT7rh0SCpAdEE=;
+        b=QBaLCWN2SAD/Ur71KEW98lUqBj2fc4RFbqOSFr9V1HLII44OjmYe0oMWH5sKA937g4e1tK
+        SS+rnepxppRu3fZwmYCasVhPJXqp7dppSDHEklbSnF/wGp7PWO/LysbH7zsaCnJMYePK/G
+        M0MWrES+K80mfyeR3LfiJ1QUWXCOtVM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-389-wdOCNE_SOFmOVkJqu5AyHg-1; Tue, 09 Jun 2020 12:13:36 -0400
+X-MC-Unique: wdOCNE_SOFmOVkJqu5AyHg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3D3388014D4;
+        Tue,  9 Jun 2020 16:13:35 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-114-66.rdu2.redhat.com [10.10.114.66])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5982360C87;
+        Tue,  9 Jun 2020 16:13:34 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH 4/6] afs: Fix debugging statements with %px to be %p
+From:   David Howells <dhowells@redhat.com>
+To:     linux-afs@lists.infradead.org
+Cc:     Kees Cook <keescook@chromium.org>, dhowells@redhat.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 09 Jun 2020 17:13:33 +0100
+Message-ID: <159171921360.3038039.10494245358653942664.stgit@warthog.procyon.org.uk>
+In-Reply-To: <159171918506.3038039.10915051218779105094.stgit@warthog.procyon.org.uk>
+References: <159171918506.3038039.10915051218779105094.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.22
 MIME-Version: 1.0
-Content-Type: text/plain
-X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
-X-SGSPF-Result: none (smtp.asem.it)
-X-SGOP-RefID: str=0001.0A090204.5EDFB51B.0067,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix typo: "tigger" --> "trigger"
+Fix a couple of %px to be %x in debugging statements.
 
-Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+Fixes: e49c7b2f6de7 ("afs: Build an abstraction around an "operation" concept")
+Fixes: 8a070a964877 ("afs: Detect cell aliases 1 - Cells with root volumes")
+Reported-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: David Howells <dhowells@redhat.com>
 ---
- drivers/scsi/mpt3sas/mpt3sas_base.h         | 2 +-
- drivers/scsi/mpt3sas/mpt3sas_trigger_diag.h | 2 +-
+
+ fs/afs/dir.c      |    2 +-
+ fs/afs/vl_alias.c |    2 +-
  2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/mpt3sas/mpt3sas_base.h b/drivers/scsi/mpt3sas/mpt3sas_base.h
-index 4fca3939c034..4ff876c31272 100644
---- a/drivers/scsi/mpt3sas/mpt3sas_base.h
-+++ b/drivers/scsi/mpt3sas/mpt3sas_base.h
-@@ -1770,7 +1770,7 @@ void mpt3sas_send_trigger_data_event(struct MPT3SAS_ADAPTER *ioc,
- void mpt3sas_process_trigger_data(struct MPT3SAS_ADAPTER *ioc,
- 	struct SL_WH_TRIGGERS_EVENT_DATA_T *event_data);
- void mpt3sas_trigger_master(struct MPT3SAS_ADAPTER *ioc,
--	u32 tigger_bitmask);
-+	u32 trigger_bitmask);
- void mpt3sas_trigger_event(struct MPT3SAS_ADAPTER *ioc, u16 event,
- 	u16 log_entry_qualifier);
- void mpt3sas_trigger_scsi(struct MPT3SAS_ADAPTER *ioc, u8 sense_key,
-diff --git a/drivers/scsi/mpt3sas/mpt3sas_trigger_diag.h b/drivers/scsi/mpt3sas/mpt3sas_trigger_diag.h
-index 6586a463bea9..405eada2669d 100644
---- a/drivers/scsi/mpt3sas/mpt3sas_trigger_diag.h
-+++ b/drivers/scsi/mpt3sas/mpt3sas_trigger_diag.h
-@@ -69,7 +69,7 @@
- #define MASTER_TRIGGER_TASK_MANAGMENT   (0x00000004)
- #define MASTER_TRIGGER_DEVICE_REMOVAL   (0x00000008)
+diff --git a/fs/afs/dir.c b/fs/afs/dir.c
+index 25cbe0aeeec5..aa1d34141ea3 100644
+--- a/fs/afs/dir.c
++++ b/fs/afs/dir.c
+@@ -980,7 +980,7 @@ static struct dentry *afs_lookup(struct inode *dir, struct dentry *dentry,
+ 	if (!IS_ERR_OR_NULL(inode))
+ 		fid = AFS_FS_I(inode)->fid;
  
--/* fake firmware event for tigger */
-+/* fake firmware event for trigger */
- #define MPI3_EVENT_DIAGNOSTIC_TRIGGER_FIRED	(0x6E)
+-	_debug("splice %px", dentry->d_inode);
++	_debug("splice %p", dentry->d_inode);
+ 	d = d_splice_alias(inode, dentry);
+ 	if (!IS_ERR_OR_NULL(d)) {
+ 		d->d_fsdata = dentry->d_fsdata;
+diff --git a/fs/afs/vl_alias.c b/fs/afs/vl_alias.c
+index 136fc6164e00..5082ef04e99c 100644
+--- a/fs/afs/vl_alias.c
++++ b/fs/afs/vl_alias.c
+@@ -28,7 +28,7 @@ static struct afs_volume *afs_sample_volume(struct afs_cell *cell, struct key *k
+ 	};
  
- /**
--- 
-2.17.1
+ 	volume = afs_create_volume(&fc);
+-	_leave(" = %px", volume);
++	_leave(" = %p", volume);
+ 	return volume;
+ }
+ 
+
 
