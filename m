@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 539FCC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C83C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:55:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E7AB20801
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:55:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74C1B20734
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:55:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725352;
-	bh=OwzI0aRK/h+F2kEP/UMIb+22nVLukoXCw8gc0x42/Tg=;
+	s=default; t=1591725356;
+	bh=miLTQdPwzuk9lQFiqP5cxP8nhx922KpR3g6Sz11QT1U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S50VtxQsYLNAsb9VaI0YRnEq/vQAfQsPsJhTqVuK/4We6k+dhrbUK1zpxAG29Tajq
-	 e2M3PGrGkqVpN00Y7zcVH7/9GWVSTpQz1aK4ZhFxuKwYzmEeO9ltrrE+kl/FPF46Jv
-	 kOOTxDDc4CQnnyik3YTJ9QRc2hluCI6vfItjfCpY=
+	b=sxSffcgfAee6jNE/V621u5nW9Y2NJp1zkW2YtWEuZizcTylFFcQMNWI7Joh/cwGY7
+	 2pz6rhx1992+oZz/WV/sHJ18rQEsK6uL91dXilVhnzKPOs/XDJB540+27YNrzL9GEO
+	 U02s+xCHFLb4ZP1xir3UR6Xqbfv/GQ4ZKjrIBLxw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733303AbgFIRzu (ORCPT
+        id S1733312AbgFIRzy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:55:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45618 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:55:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733060AbgFIRyJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:54:09 -0400
+        id S1733072AbgFIRyP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:54:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BF74207C3;
-        Tue,  9 Jun 2020 17:54:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA7502074B;
+        Tue,  9 Jun 2020 17:54:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725248;
-        bh=OwzI0aRK/h+F2kEP/UMIb+22nVLukoXCw8gc0x42/Tg=;
+        s=default; t=1591725255;
+        bh=miLTQdPwzuk9lQFiqP5cxP8nhx922KpR3g6Sz11QT1U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dQBoevc61MqR2mvxZufws54iVtY4BHHHKvwE6tc+sYimWIYhw0uciCA52Fz/naTVR
-         HheidcfEZQjDCb6nThKcMpduL9dCbsaB5/0a+ii3O9iuf9CnDpnKyBmsnHXez1a3d6
-         TlNYDGgj8qikQFlKQVJzS6fqZfplvbsmZMj9z2WM=
+        b=1aRaydkc+B/OwLKD2bjyEGp/Zh8aopevXaE2KVz/gUQgd3dIXJK3BF4adxj5xnu2m
+         KF2ZTodggkZuXbOcsr9Akvux8rgLDk6VxqYeiq8Pgf4MitMEMEtGVPedRhL0wHfEie
+         NuXzr+RanUGxGI0gLnHxGU58EH3Ppw/PY3bz7/+M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Maxim Kochetkov <fido_max@inbox.ru>,
-        Josh Triplett <josh@joshtriplett.org>
-Subject: [PATCH 5.6 29/41] serial: 8250: Enable 16550A variants by default on non-x86
-Date:   Tue,  9 Jun 2020 19:45:31 +0200
-Message-Id: <20200609174114.888204498@linuxfoundation.org>
+        stable@vger.kernel.org, Pascal Terjan <pterjan@google.com>
+Subject: [PATCH 5.6 32/41] staging: rtl8712: Fix IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK
+Date:   Tue,  9 Jun 2020 19:45:34 +0200
+Message-Id: <20200609174115.150785569@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174112.129412236@linuxfoundation.org>
 References: <20200609174112.129412236@linuxfoundation.org>
@@ -60,35 +58,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Triplett <josh@joshtriplett.org>
+From: Pascal Terjan <pterjan@google.com>
 
-commit 15a3f03d5ec0118f1e5db3fc1018686e72744e37 upstream.
+commit 15ea976a1f12b5fd76b1bd6ff3eb5132fd28047f upstream.
 
-Some embedded devices still use these serial ports; make sure they're
-still enabled by default on architectures more likely to have them, to
-avoid rendering someone's console unavailable.
+The value in shared headers was fixed 9 years ago in commit 8d661f1e462d
+("ieee80211: correct IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK macro") and
+while looking at using shared headers for other duplicated constants
+I noticed this driver uses the old value.
 
-Reported-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Reported-by: Maxim Kochetkov <fido_max@inbox.ru>
-Fixes: dc56ecb81a0a ("serial: 8250: Support disabling mdelay-filled probes of 16550A variants")
+The macros are also defined twice in this file so I am deleting the
+second definition.
+
+Signed-off-by: Pascal Terjan <pterjan@google.com>
 Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Josh Triplett <josh@joshtriplett.org>
-Link: https://lore.kernel.org/r/a20b5fb7dd295cfb48160eecf4bdebd76332d67d.1590509426.git.josh@joshtriplett.org
+Link: https://lore.kernel.org/r/20200523211247.23262-1-pterjan@google.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/8250/Kconfig |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/staging/rtl8712/wifi.h |    9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
---- a/drivers/tty/serial/8250/Kconfig
-+++ b/drivers/tty/serial/8250/Kconfig
-@@ -63,6 +63,7 @@ config SERIAL_8250_PNP
- config SERIAL_8250_16550A_VARIANTS
- 	bool "Support for variants of the 16550A serial port"
- 	depends on SERIAL_8250
-+	default !X86
- 	help
- 	  The 8250 driver can probe for many variants of the venerable 16550A
- 	  serial port. Doing so takes additional time at boot.
+--- a/drivers/staging/rtl8712/wifi.h
++++ b/drivers/staging/rtl8712/wifi.h
+@@ -440,7 +440,7 @@ static inline unsigned char *get_hdr_bss
+ /* block-ack parameters */
+ #define IEEE80211_ADDBA_PARAM_POLICY_MASK 0x0002
+ #define IEEE80211_ADDBA_PARAM_TID_MASK 0x003C
+-#define IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK 0xFFA0
++#define IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK 0xFFC0
+ #define IEEE80211_DELBA_PARAM_TID_MASK 0xF000
+ #define IEEE80211_DELBA_PARAM_INITIATOR_MASK 0x0800
+ 
+@@ -532,13 +532,6 @@ struct ieee80211_ht_addt_info {
+ #define IEEE80211_HT_IE_NON_GF_STA_PRSNT	0x0004
+ #define IEEE80211_HT_IE_NON_HT_STA_PRSNT	0x0010
+ 
+-/* block-ack parameters */
+-#define IEEE80211_ADDBA_PARAM_POLICY_MASK 0x0002
+-#define IEEE80211_ADDBA_PARAM_TID_MASK 0x003C
+-#define IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK 0xFFA0
+-#define IEEE80211_DELBA_PARAM_TID_MASK 0xF000
+-#define IEEE80211_DELBA_PARAM_INITIATOR_MASK 0x0800
+-
+ /*
+  * A-PMDU buffer sizes
+  * According to IEEE802.11n spec size varies from 8K to 64K (in powers of 2)
 
 
