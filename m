@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE461C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FBE4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:20:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD2BB206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30F182067B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:20:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591726804;
-	bh=ZX1tnruJSvdsfDaH4vcNnaq0VG75PQYjQCUTI1CB0R4=;
+	s=default; t=1591726810;
+	bh=TxT4HgKP8cxjnm29rmgpIbDnAgilIC2D7Ig1uEnXgPA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XCdpOQNLjL0RpQzEHXr7MyX/iEQ8AwbYkBmwaoZiZsXPC6qxD7hXQUcLP6TOgKCsh
-	 03TOjiv1CMAcv2lGDrfUKjDNM3U4oW+bF64UfKLKIltAIdr1CkGfnjnzTeYQNmTmFM
-	 KxEAl1VNf9U74wqw90Cahk469Ze6+M/WqqhoSwpE=
+	b=dRcYFcvjeEEn8hpn2ntI1QKhIp2q6znl1JIRo1cZCNW9RIE/VThQnoqPrxnGJEomQ
+	 0qm8NY58QO+SG7cT58jGMgdPxG/aNkr+wJy042ceah+pCuXZQ81CcEtYLHmyVqDZhQ
+	 TVXieO18GrXxgIDy6gftqWgpnz6UkLiHulXAtg6U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388880AbgFISUC (ORCPT
+        id S2388888AbgFISUI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:20:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35422 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 14:20:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730975AbgFIRt2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:49:28 -0400
+        id S1731058AbgFIRtU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:49:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 820E22081A;
-        Tue,  9 Jun 2020 17:49:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A2072081A;
+        Tue,  9 Jun 2020 17:49:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591724967;
-        bh=ZX1tnruJSvdsfDaH4vcNnaq0VG75PQYjQCUTI1CB0R4=;
+        s=default; t=1591724959;
+        bh=TxT4HgKP8cxjnm29rmgpIbDnAgilIC2D7Ig1uEnXgPA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ClNiBmRto52E88aFrVt7R6vReqUcdBEw3e7fD+xiDbj2K1vjj3VrJJ/ilQ/aEYQE/
-         6caoU5HdBiiZ7D93CXg200uF5ELeURhsigsGXbC79kI8m5HQQvJXGx+9L4TKV+E4OY
-         +aB6l6RtWARBmQwkNi9xma+lfEOHM90SMO8ehnHc=
+        b=AnHD+vB3UsJLMJ+Q+2vmUQ0eHBEzGamAT2RFArJqRBZMrcE9WkC9jGQw0FSR1VXDM
+         JDuIeKAeXAiLMzozDXJKhMzbA/xEwMNfB6tlSMeoFwRF/d4xd2UpO0eaarGa4EUyhw
+         QW3MN4UDaCicoeb4NXv4Jh9D3i0dkHwICoGnSwAA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dinghao Liu <dinghao.liu@zju.edu.cn>,
+        stable@vger.kernel.org, Jeremy Kerr <jk@ozlabs.org>,
+        Stan Johnson <userm57@yahoo.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 14/46] net: smsc911x: Fix runtime PM imbalance on error
-Date:   Tue,  9 Jun 2020 19:44:30 +0200
-Message-Id: <20200609174024.222420538@linuxfoundation.org>
+Subject: [PATCH 4.14 11/46] net: bmac: Fix read of MAC address from ROM
+Date:   Tue,  9 Jun 2020 19:44:27 +0200
+Message-Id: <20200609174023.912758807@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174022.938987501@linuxfoundation.org>
 References: <20200609174022.938987501@linuxfoundation.org>
@@ -60,61 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dinghao Liu <dinghao.liu@zju.edu.cn>
+From: Jeremy Kerr <jk@ozlabs.org>
 
-[ Upstream commit 539d39ad0c61b35f69565a037d7586deaf6d6166 ]
+[ Upstream commit ef01cee2ee1b369c57a936166483d40942bcc3e3 ]
 
-Remove runtime PM usage counter decrement when the
-increment function has not been called to keep the
-counter balanced.
+In bmac_get_station_address, We're reading two bytes at a time from ROM,
+but we do that six times, resulting in 12 bytes of read & writes. This
+means we will write off the end of the six-byte destination buffer.
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+This change fixes the for-loop to only read/write six bytes.
+
+Based on a proposed fix from Finn Thain <fthain@telegraphics.com.au>.
+
+Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+Reported-by: Stan Johnson <userm57@yahoo.com>
+Tested-by: Stan Johnson <userm57@yahoo.com>
+Reported-by: Finn Thain <fthain@telegraphics.com.au>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/smsc/smsc911x.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/apple/bmac.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/smsc/smsc911x.c b/drivers/net/ethernet/smsc/smsc911x.c
-index ce4bfecc26c7..ae80a223975d 100644
---- a/drivers/net/ethernet/smsc/smsc911x.c
-+++ b/drivers/net/ethernet/smsc/smsc911x.c
-@@ -2515,20 +2515,20 @@ static int smsc911x_drv_probe(struct platform_device *pdev)
+diff --git a/drivers/net/ethernet/apple/bmac.c b/drivers/net/ethernet/apple/bmac.c
+index eac740c476ce..a8b462e1beba 100644
+--- a/drivers/net/ethernet/apple/bmac.c
++++ b/drivers/net/ethernet/apple/bmac.c
+@@ -1187,7 +1187,7 @@ bmac_get_station_address(struct net_device *dev, unsigned char *ea)
+ 	int i;
+ 	unsigned short data;
  
- 	retval = smsc911x_init(dev);
- 	if (retval < 0)
--		goto out_disable_resources;
-+		goto out_init_fail;
- 
- 	netif_carrier_off(dev);
- 
- 	retval = smsc911x_mii_init(pdev, dev);
- 	if (retval) {
- 		SMSC_WARN(pdata, probe, "Error %i initialising mii", retval);
--		goto out_disable_resources;
-+		goto out_init_fail;
- 	}
- 
- 	retval = register_netdev(dev);
- 	if (retval) {
- 		SMSC_WARN(pdata, probe, "Error %i registering device", retval);
--		goto out_disable_resources;
-+		goto out_init_fail;
- 	} else {
- 		SMSC_TRACE(pdata, probe,
- 			   "Network interface: \"%s\"", dev->name);
-@@ -2569,9 +2569,10 @@ static int smsc911x_drv_probe(struct platform_device *pdev)
- 
- 	return 0;
- 
--out_disable_resources:
-+out_init_fail:
- 	pm_runtime_put(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
-+out_disable_resources:
- 	(void)smsc911x_disable_resources(pdev);
- out_enable_resources_fail:
- 	smsc911x_free_resources(pdev);
+-	for (i = 0; i < 6; i++)
++	for (i = 0; i < 3; i++)
+ 		{
+ 			reset_and_select_srom(dev);
+ 			data = read_srom(dev, i + EnetAddressOffset/2, SROMAddressBits);
 -- 
 2.25.1
 
