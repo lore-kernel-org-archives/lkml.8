@@ -7,48 +7,44 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64BF4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2CB7C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 301ED20823
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:47:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C3AE20835
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:47:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="uxop1aSE"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="qyPP2O01"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729799AbgFIMrT (ORCPT
+        id S1729659AbgFIMqo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 08:47:19 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:54322 "EHLO
+        Tue, 9 Jun 2020 08:46:44 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:54342 "EHLO
         perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729681AbgFIMqt (ORCPT
+        with ESMTP id S1729594AbgFIMqg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 08:46:49 -0400
+        Tue, 9 Jun 2020 08:46:36 -0400
 Received: from Q.local (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 253E61942;
-        Tue,  9 Jun 2020 14:46:44 +0200 (CEST)
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id B7EDA18F5;
+        Tue,  9 Jun 2020 14:46:33 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1591706804;
-        bh=2UAwZkYOU3U5khlBp2+65z4qlugY8z39u93qNZGjZBQ=;
+        s=mail; t=1591706794;
+        bh=bJXiI1PY8sfOtq2Yflmn9ep268J3jqJ88sOgCJyR8uM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uxop1aSEY/OnWjl2QlAuZ2Ol+e1obL1E0Ij6QB+kjKXxF++evWTKtILMgKy/Fa7rK
-         pV8nX5bkunCs4O1OT+p3gFIa8xPzZ5BbBlNoHv7BLimusHsHrHRs5lHW6M1/sNq+OZ
-         mvfofTopNzuMREz63h7nnxp5abODD0UFNaZMIKUQ=
+        b=qyPP2O01AWYg3ib9TWCRF0+8KEwPBkz5WdcgL9AfV0LepEslOPWer8lRt+V7AVFet
+         RLSXwAzec37f1YYasXfP0m9IUbYPNFs0kbcwZnvDSXdP7kJ1TOBd3jZku/KScLhrzP
+         6n5h3NzfvG7OurPeQKSLieAk/bOhHiorHtZjb1/4=
 From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
 Cc:     linux-renesas-soc@vger.kernel.org,
         Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Colin Ian King <colin.king@canonical.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Xiong <xndchn@gmail.com>,
-        Chris Paterson <chris.paterson2@renesas.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Luca Ceresoli <luca@lucaceresoli.net>,
-        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 17/17] scripts/spelling.txt: Add descriptors correction
-Date:   Tue,  9 Jun 2020 13:46:10 +0100
-Message-Id: <20200609124610.3445662-18-kieran.bingham+renesas@ideasonboard.com>
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jiri Kosina <trivial@kernel.org>,
+        linux-kernel@vger.kernel.org (open list:VOLTAGE AND CURRENT REGULATOR
+        FRAMEWORK)
+Subject: [PATCH 09/17] drivers: regulator: Fix trivial spelling
+Date:   Tue,  9 Jun 2020 13:46:02 +0100
+Message-Id: <20200609124610.3445662-10-kieran.bingham+renesas@ideasonboard.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200609124610.3445662-1-kieran.bingham+renesas@ideasonboard.com>
 References: <20200609124610.3445662-1-kieran.bingham+renesas@ideasonboard.com>
@@ -59,28 +55,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After coming across the s/decriptors/descriptors/ spelling error twice,
-a scan of the tree showed it was a pervasive mistake.
+The word 'descriptor' is misspelled throughout the tree.
 
-Update the spelling suggestions database to prevent it.
+Fix it up accordingly:
+    decriptors -> descriptors
 
 Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 ---
- scripts/spelling.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/regulator/fixed.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/scripts/spelling.txt b/scripts/spelling.txt
-index d9cd24cf0d40..c171a06efdad 100644
---- a/scripts/spelling.txt
-+++ b/scripts/spelling.txt
-@@ -404,6 +404,7 @@ decendants||descendants
- decompres||decompress
- decsribed||described
- decription||description
-+decriptors||descriptors
- dectected||detected
- defailt||default
- deferal||deferral
+diff --git a/drivers/regulator/fixed.c b/drivers/regulator/fixed.c
+index bc0bbd99e98d..d54830e48b8d 100644
+--- a/drivers/regulator/fixed.c
++++ b/drivers/regulator/fixed.c
+@@ -210,7 +210,7 @@ static int reg_fixed_voltage_probe(struct platform_device *pdev)
+ 
+ 	/*
+ 	 * The signal will be inverted by the GPIO core if flagged so in the
+-	 * decriptor.
++	 * descriptor.
+ 	 */
+ 	if (config->enabled_at_boot)
+ 		gflags = GPIOD_OUT_HIGH;
 -- 
 2.25.1
 
