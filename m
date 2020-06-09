@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE4FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96DD6C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:22:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C6492067B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:22:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 729072068D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:22:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591726944;
-	bh=x19lvSIY3MsUHlq2q1XnZbGMzr214Q+5YpQTNA0yQvM=;
+	s=default; t=1591726948;
+	bh=I/C5wTw0k+vOVdGvsWnZiMB/R9OHvicC4Y/1i2mXlxo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ebSBmL1Au0hv5BaOqowNnQQS3RMIeNe4isiiKz/YeguI7fQDivgLqCIaJpB3lNY0g
-	 mRwINh/aGJW7DeFQtHpQ7jRa9RmKYyrANK9+2NpfIDhqeDIXolfl3/gZmL/Nd8ju/R
-	 Gu62Va41vJxXvLA1ngaaGTBVCPzHusRpXhZMZWnU=
+	b=Zlht1XHK6IShOaNJztdjL1CyOs6m1Fu6ioc/39yfCMJSKmHiGbesWcd4WxGbj1+FS
+	 RWiR5gALgUecioRlo5B9W03HI2gbWZ1jYoB2stcgHiPQc0jKSZmQvKsQhIye9loofb
+	 m9DU/9BYznQidSeCJnxkTVdln0fSAgf7DAas6zMw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732276AbgFIRsZ (ORCPT
+        id S1732253AbgFIRsT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:48:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60356 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:48:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732231AbgFIRsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:48:12 -0400
+        id S1732216AbgFIRsG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:48:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42F22207F9;
-        Tue,  9 Jun 2020 17:48:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C9AA20814;
+        Tue,  9 Jun 2020 17:48:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591724892;
-        bh=x19lvSIY3MsUHlq2q1XnZbGMzr214Q+5YpQTNA0yQvM=;
+        s=default; t=1591724885;
+        bh=I/C5wTw0k+vOVdGvsWnZiMB/R9OHvicC4Y/1i2mXlxo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ndMGd7yexUlPOC+5HfbnRcYnLivXeipV0rOkGGUqlYrbu6DNviKQBNaOHU4P/+/dg
-         hqm7xAj0q9c4oGtCdgUaU/D7RYT99KbBplh2dSRTpO4I2IvIvjgGnjje8RrvC2Jzl1
-         DKQ2M0R7YPW1DLypmvGLYDE8GNIII5nn9jjJbX/w=
+        b=M3waLlpvJpRt+SOuLMIrBciDiRGnf6W+0snLeF/cN0XONymjtFS3OvpHvPt6DW9ie
+         cf9VfG4usnWVFCottqXlBrkYj4+mumefDrr/SaVvStd8VCthOyL2A4xlCuv5OLl/xa
+         uprOj8bczj2RG92YcwNJ+gC0PQvBg566oAXLyM6Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
-        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 24/42] net: usb: qmi_wwan: add Telit LE910C1-EUX composition
-Date:   Tue,  9 Jun 2020 19:44:30 +0200
-Message-Id: <20200609174018.116319808@linuxfoundation.org>
+        stable@vger.kernel.org, Hu Jiahui <kirin.say@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.9 21/42] airo: Fix read overflows sending packets
+Date:   Tue,  9 Jun 2020 19:44:27 +0200
+Message-Id: <20200609174017.780861051@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174015.379493548@linuxfoundation.org>
 References: <20200609174015.379493548@linuxfoundation.org>
@@ -60,30 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniele Palmas <dnlplm@gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 591612aa578cd7148b7b9d74869ef40118978389 ]
+commit 11e7a91994c29da96d847f676be023da6a2c1359 upstream.
 
-Add support for Telit LE910C1-EUX composition
+The problem is that we always copy a minimum of ETH_ZLEN (60) bytes from
+skb->data even when skb->len is less than ETH_ZLEN so it leads to a read
+overflow.
 
-0x1031: tty, tty, tty, rmnet
-Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
-Acked-by: Bjørn Mork <bjorn@mork.no>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The fix is to pad skb->data to at least ETH_ZLEN bytes.
+
+Cc: <stable@vger.kernel.org>
+Reported-by: Hu Jiahui <kirin.say@gmail.com>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200527184830.GA1164846@mwanda
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/usb/qmi_wwan.c |    1 +
- 1 file changed, 1 insertion(+)
 
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -921,6 +921,7 @@ static const struct usb_device_id produc
- 	{QMI_FIXED_INTF(0x1bbb, 0x0203, 2)},	/* Alcatel L800MA */
- 	{QMI_FIXED_INTF(0x2357, 0x0201, 4)},	/* TP-LINK HSUPA Modem MA180 */
- 	{QMI_FIXED_INTF(0x2357, 0x9000, 4)},	/* TP-LINK MA260 */
-+	{QMI_QUIRK_SET_DTR(0x1bc7, 0x1031, 3)}, /* Telit LE910C1-EUX */
- 	{QMI_QUIRK_SET_DTR(0x1bc7, 0x1040, 2)},	/* Telit LE922A */
- 	{QMI_FIXED_INTF(0x1bc7, 0x1100, 3)},	/* Telit ME910 */
- 	{QMI_FIXED_INTF(0x1bc7, 0x1101, 3)},	/* Telit ME910 dual modem */
+---
+ drivers/net/wireless/cisco/airo.c |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+--- a/drivers/net/wireless/cisco/airo.c
++++ b/drivers/net/wireless/cisco/airo.c
+@@ -1928,6 +1928,10 @@ static netdev_tx_t mpi_start_xmit(struct
+ 		airo_print_err(dev->name, "%s: skb == NULL!",__func__);
+ 		return NETDEV_TX_OK;
+ 	}
++	if (skb_padto(skb, ETH_ZLEN)) {
++		dev->stats.tx_dropped++;
++		return NETDEV_TX_OK;
++	}
+ 	npacks = skb_queue_len (&ai->txq);
+ 
+ 	if (npacks >= MAXTXQ - 1) {
+@@ -2130,6 +2134,10 @@ static netdev_tx_t airo_start_xmit(struc
+ 		airo_print_err(dev->name, "%s: skb == NULL!", __func__);
+ 		return NETDEV_TX_OK;
+ 	}
++	if (skb_padto(skb, ETH_ZLEN)) {
++		dev->stats.tx_dropped++;
++		return NETDEV_TX_OK;
++	}
+ 
+ 	/* Find a vacant FID */
+ 	for( i = 0; i < MAX_FIDS / 2 && (fids[i] & 0xffff0000); i++ );
+@@ -2204,6 +2212,10 @@ static netdev_tx_t airo_start_xmit11(str
+ 		airo_print_err(dev->name, "%s: skb == NULL!", __func__);
+ 		return NETDEV_TX_OK;
+ 	}
++	if (skb_padto(skb, ETH_ZLEN)) {
++		dev->stats.tx_dropped++;
++		return NETDEV_TX_OK;
++	}
+ 
+ 	/* Find a vacant FID */
+ 	for( i = MAX_FIDS / 2; i < MAX_FIDS && (fids[i] & 0xffff0000); i++ );
 
 
