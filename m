@@ -2,32 +2,33 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA92BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 07:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 971B1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 07:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 925572074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 07:43:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 741C3207F9
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 07:43:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727852AbgFIHnY (ORCPT
+        id S1727935AbgFIHn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 03:43:24 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:48502 "EHLO inva021.nxp.com"
+        Tue, 9 Jun 2020 03:43:28 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:47050 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726187AbgFIHnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 03:43:15 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E274F200FCC;
-        Tue,  9 Jun 2020 09:43:13 +0200 (CEST)
+        id S1726404AbgFIHnU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 03:43:20 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4D4A91A12A0;
+        Tue,  9 Jun 2020 09:43:18 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 09231200FC4;
-        Tue,  9 Jun 2020 09:43:04 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 507691A12A9;
+        Tue,  9 Jun 2020 09:43:08 +0200 (CEST)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 92BA34029F;
-        Tue,  9 Jun 2020 15:42:51 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 02D73402FB;
+        Tue,  9 Jun 2020 15:42:55 +0800 (SGT)
 From:   Anson Huang <Anson.Huang@nxp.com>
 To:     linux@armlinux.org.uk, shawnguo@kernel.org, s.hauer@pengutronix.de,
         kernel@pengutronix.de, festevam@gmail.com, mturquette@baylibre.com,
@@ -40,9 +41,9 @@ To:     linux@armlinux.org.uk, shawnguo@kernel.org, s.hauer@pengutronix.de,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-clk@vger.kernel.org
 Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2 1/9] clk: composite: Export clk_hw_register_composite()
-Date:   Tue,  9 Jun 2020 15:32:05 +0800
-Message-Id: <1591687933-19495-2-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH V2 3/9] clk: imx: Support building SCU clock driver as module
+Date:   Tue,  9 Jun 2020 15:32:07 +0800
+Message-Id: <1591687933-19495-4-git-send-email-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1591687933-19495-1-git-send-email-Anson.Huang@nxp.com>
 References: <1591687933-19495-1-git-send-email-Anson.Huang@nxp.com>
@@ -52,34 +53,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Export clk_hw_register_composite() to support user built as module.
-
-ERROR: modpost: "clk_hw_register_composite" [drivers/clk/imx/mxc-clk.ko] undefined!
-scripts/Makefile.modpost:111: recipe for target 'Module.symvers' failed
-make[1]: *** [Module.symvers] Error 1
-make[1]: *** Deleting file 'Module.symvers'
-Makefile:1384: recipe for target 'modules' failed
-make: *** [modules] Error 2
+There are more and more requirements of building SoC specific drivers
+as modules, add support for building SCU clock driver as module to meet
+the requirement.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-No change.
+Changes since V1:
+	- add ARCH_MXC to build dependency to avoid build fail on x86 arch;
+	- move clk-lpcg-scu.c change in to this patch.
 ---
- drivers/clk/clk-composite.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/clk/imx/Kconfig        | 4 ++--
+ drivers/clk/imx/Makefile       | 5 ++---
+ drivers/clk/imx/clk-lpcg-scu.c | 1 +
+ drivers/clk/imx/clk-scu.c      | 5 +++++
+ 4 files changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/clk/clk-composite.c b/drivers/clk/clk-composite.c
-index 7376f57..2ddb54f 100644
---- a/drivers/clk/clk-composite.c
-+++ b/drivers/clk/clk-composite.c
-@@ -328,6 +328,7 @@ struct clk_hw *clk_hw_register_composite(struct device *dev, const char *name,
- 					   rate_hw, rate_ops, gate_hw,
- 					   gate_ops, flags);
- }
-+EXPORT_SYMBOL_GPL(clk_hw_register_composite);
+diff --git a/drivers/clk/imx/Kconfig b/drivers/clk/imx/Kconfig
+index db0253f..ded0643 100644
+--- a/drivers/clk/imx/Kconfig
++++ b/drivers/clk/imx/Kconfig
+@@ -5,8 +5,8 @@ config MXC_CLK
+ 	def_bool ARCH_MXC
  
- struct clk_hw *clk_hw_register_composite_pdata(struct device *dev,
- 			const char *name,
+ config MXC_CLK_SCU
+-	bool
+-	depends on IMX_SCU
++	tristate "IMX SCU clock"
++	depends on ARCH_MXC && IMX_SCU
+ 
+ config CLK_IMX8MM
+ 	bool "IMX8MM CCM Clock Driver"
+diff --git a/drivers/clk/imx/Makefile b/drivers/clk/imx/Makefile
+index 928f874..1af8cff 100644
+--- a/drivers/clk/imx/Makefile
++++ b/drivers/clk/imx/Makefile
+@@ -21,9 +21,8 @@ obj-$(CONFIG_MXC_CLK) += \
+ 	clk-sscg-pll.o \
+ 	clk-pll14xx.o
+ 
+-obj-$(CONFIG_MXC_CLK_SCU) += \
+-	clk-scu.o \
+-	clk-lpcg-scu.o
++mxc-clk-scu-objs += clk-scu.o clk-lpcg-scu.o
++obj-$(CONFIG_MXC_CLK_SCU) += mxc-clk-scu.o
+ 
+ obj-$(CONFIG_CLK_IMX8MM) += clk-imx8mm.o
+ obj-$(CONFIG_CLK_IMX8MN) += clk-imx8mn.o
+diff --git a/drivers/clk/imx/clk-lpcg-scu.c b/drivers/clk/imx/clk-lpcg-scu.c
+index a73a799..8177f0e 100644
+--- a/drivers/clk/imx/clk-lpcg-scu.c
++++ b/drivers/clk/imx/clk-lpcg-scu.c
+@@ -114,3 +114,4 @@ struct clk_hw *imx_clk_lpcg_scu(const char *name, const char *parent_name,
+ 
+ 	return hw;
+ }
++EXPORT_SYMBOL_GPL(imx_clk_lpcg_scu);
+diff --git a/drivers/clk/imx/clk-scu.c b/drivers/clk/imx/clk-scu.c
+index b8b2072..9688981 100644
+--- a/drivers/clk/imx/clk-scu.c
++++ b/drivers/clk/imx/clk-scu.c
+@@ -8,6 +8,7 @@
+ #include <linux/arm-smccc.h>
+ #include <linux/clk-provider.h>
+ #include <linux/err.h>
++#include <linux/module.h>
+ #include <linux/slab.h>
+ 
+ #include "clk-scu.h"
+@@ -132,6 +133,7 @@ int imx_clk_scu_init(void)
+ {
+ 	return imx_scu_get_handle(&ccm_ipc_handle);
+ }
++EXPORT_SYMBOL_GPL(imx_clk_scu_init);
+ 
+ /*
+  * clk_scu_recalc_rate - Get clock rate for a SCU clock
+@@ -387,3 +389,6 @@ struct clk_hw *__imx_clk_scu(const char *name, const char * const *parents,
+ 
+ 	return hw;
+ }
++EXPORT_SYMBOL_GPL(__imx_clk_scu);
++
++MODULE_LICENSE("GPL v2");
 -- 
 2.7.4
 
