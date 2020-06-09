@@ -2,139 +2,49 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C62C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC47C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13C4420774
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:44:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DUxWZBBN"
+	by mail.kernel.org (Postfix) with ESMTP id 6131A20760
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:44:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730188AbgFINoI (ORCPT
+        id S1730200AbgFINos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 09:44:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59562 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728799AbgFINmj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 09:42:39 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E711FC05BD1E;
-        Tue,  9 Jun 2020 06:42:37 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id h5so21380191wrc.7;
-        Tue, 09 Jun 2020 06:42:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=7jeqUuW0hGtHPFhc2sVBu1AoQmVlpxLyTbacgMXEdX8=;
-        b=DUxWZBBN41gINwscR0RJwH3sDfQ73hrqc60FamwT1QU+qcaJdFFeOjtT0lDFDXjLnR
-         UCrXQhXwupNRKmfLWhbppejjSFykqXRAArndCJx8U6ls1ewIpQMHe4usSv7j3P5sdNxW
-         x5MlacZfwW72THPYVaszYh7Q47IE8EJ0foNehUlK7yFIEN2MRRPUQN4msrAa33w35WKf
-         idL3NwzxLnWaWXYsIKW2MS4tKOcNYar5rU6Uw0HugiAoDCw1qfm1N7xDzKTmCg/egdAt
-         itgqaFL/dUkvkkztpc6SS1zpgL3zrn4FOHed6ay53Cc1oOLtD4LE6DSYc27tJa2axjba
-         q52A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7jeqUuW0hGtHPFhc2sVBu1AoQmVlpxLyTbacgMXEdX8=;
-        b=cux2ybRaZi7qimFdL78CCbTxSI9stm7X/GA1EFRPY5d4JvXD1pN51YlYJ1qtNDv64h
-         5c4zA8J+JGiX6G+H5cpI2VYYjPxO19QDUIZ0Av5P/iCRDd9tX4ekSRfce3XRFZDBcgNc
-         DsTZON5P6xoJSxG7PFadb/NtXmmI+38Uq9BBGkukj8KnlbBNbZXbdop4d07OkxuMOaB/
-         FiwLmqg7FqisTB9MSerjwoda2hd3rCzHQIwG9OKGDhgE/BXPNN7ClzclBHtzPlB9b5TO
-         T9uD5A+6S6W41RqDywql1H1E6Kbhq+M0w6UHeuhRvHLLOhDrssCZbrA5tt4RRHCXlg/H
-         bOHw==
-X-Gm-Message-State: AOAM5332KLQNszlCf1u8F+JwlWZk533gCvhbMw514TH/0r34MJXNfXuW
-        WuB5rqrS6g+CUaqqbJAGr2o=
-X-Google-Smtp-Source: ABdhPJwPWGTDddUotMb53Rhg2Yvrr3ctp7WMj2Ax1vaav/7/tRHGwVX6cXlRWB+Hrx9fuPrUWXuxmw==
-X-Received: by 2002:adf:fd4f:: with SMTP id h15mr4471967wrs.397.1591710156590;
-        Tue, 09 Jun 2020 06:42:36 -0700 (PDT)
-Received: from skynet.lan (28.red-83-49-61.dynamicip.rima-tde.net. [83.49.61.28])
-        by smtp.gmail.com with ESMTPSA id w17sm3454067wra.71.2020.06.09.06.42.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 06:42:36 -0700 (PDT)
-From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-To:     p.zabel@pengutronix.de, robh+dt@kernel.org,
-        tsbogend@alpha.franken.de, f.fainelli@gmail.com,
-        jonas.gorski@gmail.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com
-Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-Subject: [PATCH 2/7] dt-bindings: reset: add BCM6345 reset controller bindings
-Date:   Tue,  9 Jun 2020 15:42:27 +0200
-Message-Id: <20200609134232.4084718-3-noltari@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200609134232.4084718-1-noltari@gmail.com>
-References: <20200609134232.4084718-1-noltari@gmail.com>
+        Tue, 9 Jun 2020 09:44:48 -0400
+Received: from verein.lst.de ([213.95.11.211]:42516 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726803AbgFINor (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 09:44:47 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 7E1CF68BEB; Tue,  9 Jun 2020 15:44:44 +0200 (CEST)
+Date:   Tue, 9 Jun 2020 15:44:43 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Niklas Cassel <niklas.cassel@wdc.com>
+Cc:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        James Smart <james.smart@broadcom.com>,
+        Israel Rukshin <israelr@mellanox.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] nvme: do not call del_gendisk() on a disk that was
+ never added
+Message-ID: <20200609134443.GA10030@lst.de>
+References: <20200607114520.130756-1-niklas.cassel@wdc.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200607114520.130756-1-niklas.cassel@wdc.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for resetting blocks through the Linux reset controller
-subsystem for BCM63xx SoCs.
+Thanks,
 
-Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
----
- .../bindings/reset/brcm,bcm6345-reset.yaml    | 37 +++++++++++++++++++
- 1 file changed, 37 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/reset/brcm,bcm6345-reset.yaml
-
-diff --git a/Documentation/devicetree/bindings/reset/brcm,bcm6345-reset.yaml b/Documentation/devicetree/bindings/reset/brcm,bcm6345-reset.yaml
-new file mode 100644
-index 000000000000..eb3f2182e631
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/brcm,bcm6345-reset.yaml
-@@ -0,0 +1,37 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/reset/brcm,bcm6345-reset.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: BCM6345 reset controller
-+
-+description: This document describes the BCM6345 reset controller.
-+
-+maintainers:
-+  - Álvaro Fernández Rojas <noltari@gmail.com>
-+
-+properties:
-+  compatible:
-+    const: brcm,bcm6345-reset
-+
-+  reg:
-+    maxItems: 2
-+
-+  "#reset-cells":
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#reset-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    reset-controller@10000010 {
-+      compatible = "brcm,bcm6345-reset";
-+      reg = <0x10000010 0x4>;
-+      #reset-cells = <1>;
-+    };
--- 
-2.26.2
-
+applied to nvme-5.8.
