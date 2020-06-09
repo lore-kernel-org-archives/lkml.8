@@ -2,115 +2,167 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50AEFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E55B3C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:59:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 321FE2078D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:58:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCF44207F9
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:59:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="eyGuIIOS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728514AbgFIK6D (ORCPT
+        id S1728318AbgFIK7V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 06:58:03 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:11394 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727090AbgFIK6D (ORCPT
+        Tue, 9 Jun 2020 06:59:21 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:61893 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726463AbgFIK7U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 06:58:03 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 059AZeQW063809;
-        Tue, 9 Jun 2020 06:58:00 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31g7n8us40-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 09 Jun 2020 06:58:00 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 059AfOWr013024;
-        Tue, 9 Jun 2020 10:57:57 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma03ams.nl.ibm.com with ESMTP id 31g2s7wsh7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 09 Jun 2020 10:57:57 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 059AucYj197328
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 9 Jun 2020 10:56:39 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E9AD2A4054;
-        Tue,  9 Jun 2020 10:57:54 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 21D45A405B;
-        Tue,  9 Jun 2020 10:57:50 +0000 (GMT)
-Received: from satheesh.ibmuc.com (unknown [9.85.125.230])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  9 Jun 2020 10:57:49 +0000 (GMT)
-From:   Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-To:     linuxppc-dev@lists.ozlabs.org
-Cc:     Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>,
-        Laurent Dufour <ldufour@linux.ibm.com>
-Subject: [PATCH] powerpc/pseries/svm: Remove unwanted check for shared_lppaca_size
-Date:   Tue,  9 Jun 2020 16:27:31 +0530
-Message-Id: <20200609105731.14032-1-sathnaga@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.26.2
+        Tue, 9 Jun 2020 06:59:20 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591700359; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=14BbUKA8gwFuHIS7l3zksIQLyrm5UF4WwK4qtAEQ7i8=; b=eyGuIIOS2C0ShV8uazxLXHb5RkA/XJHjlbvC0FtLDNyPW3jR3m/3IReRBmjDBFgFQyZ++epf
+ mIug425ilTimTZ0yDWJrnrl86MKH8d0rFLz158H3bxxL/yytUrIIl+fgyx8qbGJHXnMx5G7N
+ Y+IG1QtTWL60bUNxe2I/znbT1BI=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n11.prod.us-west-2.postgun.com with SMTP id
+ 5edf6b7a9545e9541f864646 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 09 Jun 2020 10:59:06
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 0568BC43391; Tue,  9 Jun 2020 10:59:05 +0000 (UTC)
+Received: from [192.168.1.102] (unknown [183.83.143.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: charante)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 24780C433CA;
+        Tue,  9 Jun 2020 10:59:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 24780C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=charante@codeaurora.org
+Subject: Re: [PATCH] mm, page_alloc: skip ->waternark_boost for atomic order-0
+ allocations
+To:     Andrew Morton <akpm@linux-foundation.org>, mgorman@suse.de,
+        mhocko@kernel.org, minchan@kernel.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        vinmenon@codeaurora.org
+References: <1589882284-21010-1-git-send-email-charante@codeaurora.org>
+ <20200604144347.7804bc81bbd6dd3027a1cb10@linux-foundation.org>
+From:   Charan Teja Kalla <charante@codeaurora.org>
+Message-ID: <a2c56bac-92c7-626d-453a-f9d4bc95ccb4@codeaurora.org>
+Date:   Tue, 9 Jun 2020 16:29:00 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-09_03:2020-06-09,2020-06-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 bulkscore=0
- priorityscore=1501 clxscore=1015 adultscore=0 lowpriorityscore=0
- mlxscore=0 malwarescore=0 impostorscore=0 phishscore=0 mlxlogscore=999
- suspectscore=1 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006090081
+In-Reply-To: <20200604144347.7804bc81bbd6dd3027a1cb10@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Early secure guest boot hits the below crash while booting with
-vcpus numbers aligned with page boundary for PAGE size of 64k
-and LPPACA size of 1k i.e 64, 128 etc, due to the BUG_ON assert
-for shared_lppaca_total_size equal to shared_lppaca_size,
+Adding more people to get additional reviewer inputs.
 
- [    0.000000] Partition configured for 64 cpus.
- [    0.000000] CPU maps initialized for 1 thread per core
- [    0.000000] ------------[ cut here ]------------
- [    0.000000] kernel BUG at arch/powerpc/kernel/paca.c:89!
- [    0.000000] Oops: Exception in kernel mode, sig: 5 [#1]
- [    0.000000] LE PAGE_SIZE=64K MMU=Radix SMP NR_CPUS=2048 NUMA pSeries
+On 6/5/2020 3:13 AM, Andrew Morton wrote:
+> On Tue, 19 May 2020 15:28:04 +0530 Charan Teja Reddy <charante@codeaurora.org> wrote:
+> 
+>> When boosting is enabled, it is observed that rate of atomic order-0
+>> allocation failures are high due to the fact that free levels in the
+>> system are checked with ->watermark_boost offset. This is not a problem
+>> for sleepable allocations but for atomic allocations which looks like
+>> regression.
+>>
+>> This problem is seen frequently on system setup of Android kernel
+>> running on Snapdragon hardware with 4GB RAM size. When no extfrag event
+>> occurred in the system, ->watermark_boost factor is zero, thus the
+>> watermark configurations in the system are:
+>>    _watermark = (
+>>           [WMARK_MIN] = 1272, --> ~5MB
+>>           [WMARK_LOW] = 9067, --> ~36MB
+>>           [WMARK_HIGH] = 9385), --> ~38MB
+>>    watermark_boost = 0
+>>
+>> After launching some memory hungry applications in Android which can
+>> cause extfrag events in the system to an extent that ->watermark_boost
+>> can be set to max i.e. default boost factor makes it to 150% of high
+>> watermark.
+>>    _watermark = (
+>>           [WMARK_MIN] = 1272, --> ~5MB
+>>           [WMARK_LOW] = 9067, --> ~36MB
+>>           [WMARK_HIGH] = 9385), --> ~38MB
+>>    watermark_boost = 14077, -->~57MB
+>>
+>> With default system configuration, for an atomic order-0 allocation to
+>> succeed, having free memory of ~2MB will suffice. But boosting makes
+>> the min_wmark to ~61MB thus for an atomic order-0 allocation to be
+>> successful system should have minimum of ~23MB of free memory(from
+>> calculations of zone_watermark_ok(), min = 3/4(min/2)). But failures are
+>> observed despite system is having ~20MB of free memory. In the testing,
+>> this is reproducible as early as first 300secs since boot and with
+>> furtherlowram configurations(<2GB) it is observed as early as first
+>> 150secs since boot.
+>>
+>> These failures can be avoided by excluding the ->watermark_boost in
+>> watermark caluculations for atomic order-0 allocations.
+> 
+> Do we have any additional reviewer input on this one?
+> 
+>> --- a/mm/page_alloc.c
+>> +++ b/mm/page_alloc.c
+>> @@ -3709,6 +3709,18 @@ static bool zone_allows_reclaim(struct zone *local_zone, struct zone *zone)
+>>  		}
+>>  
+>>  		mark = wmark_pages(zone, alloc_flags & ALLOC_WMARK_MASK);
+>> +		/*
+>> +		 * Allow GFP_ATOMIC order-0 allocations to exclude the
+>> +		 * zone->watermark_boost in its watermark calculations.
+>> +		 * We rely on the ALLOC_ flags set for GFP_ATOMIC
+>> +		 * requests in gfp_to_alloc_flags() for this. Reason not to
+>> +		 * use the GFP_ATOMIC directly is that we want to fall back
+>> +		 * to slow path thus wake up kswapd.
+>> +		 */
+>> +		if (unlikely(!order && !(alloc_flags & ALLOC_WMARK_MASK) &&
+>> +		     (alloc_flags & (ALLOC_HARDER | ALLOC_HIGH)))) {
+>> +			mark = zone->_watermark[WMARK_MIN];
+>> +		}
+>>  		if (!zone_watermark_fast(zone, order, mark,
+>>  				       ac->highest_zoneidx, alloc_flags)) {
+>>  			int ret;
+> 
+> It would seem smart to do
+> 
+> --- a/mm/page_alloc.c~mm-page_alloc-skip-waternark_boost-for-atomic-order-0-allocations-fix
+> +++ a/mm/page_alloc.c
+> @@ -3745,7 +3745,6 @@ retry:
+>  			}
+>  		}
+>  
+> -		mark = wmark_pages(zone, alloc_flags & ALLOC_WMARK_MASK);
+>  		/*
+>  		 * Allow GFP_ATOMIC order-0 allocations to exclude the
+>  		 * zone->watermark_boost in their watermark calculations.
+> @@ -3757,6 +3756,8 @@ retry:
+>  		if (unlikely(!order && !(alloc_flags & ALLOC_WMARK_MASK) &&
+>  		     (alloc_flags & (ALLOC_HARDER | ALLOC_HIGH)))) {
+>  			mark = zone->_watermark[WMARK_MIN];
+> +		} else {
+> +			mark = wmark_pages(zone, alloc_flags & ALLOC_WMARK_MASK);
+>  		}
+>  		if (!zone_watermark_fast(zone, order, mark,
+>  				       ac->highest_zoneidx, alloc_flags)) {
+> 
+> but that makes page_alloc.o 16 bytes larger, so I guess don't bother.
+> 
 
-which is not necessary, let's remove it.
-
-Cc: linux-kernel@vger.kernel.org
-Cc: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc: Ram Pai <linuxram@us.ibm.com>
-Cc: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
-Cc: Laurent Dufour <ldufour@linux.ibm.com>
-Signed-off-by: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
----
- arch/powerpc/kernel/paca.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/powerpc/kernel/paca.c b/arch/powerpc/kernel/paca.c
-index 949eceb25..10b7c54a7 100644
---- a/arch/powerpc/kernel/paca.c
-+++ b/arch/powerpc/kernel/paca.c
-@@ -86,7 +86,7 @@ static void *__init alloc_shared_lppaca(unsigned long size, unsigned long align,
- 	 * This is very early in boot, so no harm done if the kernel crashes at
- 	 * this point.
- 	 */
--	BUG_ON(shared_lppaca_size >= shared_lppaca_total_size);
-+	BUG_ON(shared_lppaca_size > shared_lppaca_total_size);
- 
- 	return ptr;
- }
 -- 
-2.26.2
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
+Forum, a Linux Foundation Collaborative Project
