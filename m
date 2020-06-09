@@ -2,193 +2,99 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 832B3C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9560C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5430920760
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:37:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A193120774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:39:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nutanix.com header.i=@nutanix.com header.b="xX/F9Ghp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="brayCqXK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729920AbgFINhJ (ORCPT
+        id S1729827AbgFINjB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 09:37:09 -0400
-Received: from mx0b-002c1b01.pphosted.com ([148.163.155.12]:29878 "EHLO
-        mx0b-002c1b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728400AbgFINhH (ORCPT
+        Tue, 9 Jun 2020 09:39:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59006 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728400AbgFINjA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 09:37:07 -0400
-Received: from pps.filterd (m0127843.ppops.net [127.0.0.1])
-        by mx0b-002c1b01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 059DQfF0030305;
-        Tue, 9 Jun 2020 06:36:17 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nutanix.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version;
- s=proofpoint20171006; bh=MdfX0Kpddp/8z0r6PqIWlieilzIfMHhCKQiA/8Iotoo=;
- b=xX/F9Ghpz4qQmmV3v5jyWzcRO9IBREUEUqlWC5pD7GLpKubWa2p4puwk/LTex/qUVhdF
- WfZPudGbNO09dSBQfMNM0SMb0BLBBV6g2bOHkUNpeoeulQszSJ5AHQR8Eht3ptJOJS/S
- bIo6cX/Fh3le+aB0DTpkSfwUu00KEWzR7iXEmNvaR1RkJdlNrdD2dakRCtc5w/KgZpoq
- e8tRbNDKjvDBkTAAJyJblNx88KpblWQK5z8DSQKdrarE7aQXpL5ytBKW9PG7jVWb6l/L
- vHeq0mMzjrOjCtA4vdXhmjN4nWa/A2t/JZvSwLakmeeLat3wUPxh2BzMowPQLxSWAJNu xQ== 
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2102.outbound.protection.outlook.com [104.47.55.102])
-        by mx0b-002c1b01.pphosted.com with ESMTP id 31g98jeeav-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 09 Jun 2020 06:36:17 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ahYwq5evvbbUl7/dCHsVHmXoLlUzVZN0/U8RBCYJAJY/icF3pAXZtAsm1z6r6IUwJLnWgm7dGYUoXFnhNEjVOkcFXCsHw8fQD7Y/NbfAlEZxSlVL3UXdAcT+vMr3/etGWJb7eb/vi7ScMiwXr3du1sBJvTPZsEtdSQNd2bFe/uEf/5X2qy2c0dz405r5gi8zQAapfdxQFFIxQxng9ea5pq55T3zmfrM70P+8xFtkJxQyTEJ2kI/z0XV5ndAry2iA5MLKVHjTcMuRlRAlp6OYFPbyHZG6gLPk+lXHMHHhdif7GCf0RepLNeWNW8q4tLNs4oFBYTkBaQPvh+Ww28YHzQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MdfX0Kpddp/8z0r6PqIWlieilzIfMHhCKQiA/8Iotoo=;
- b=Ggv2GO13Hat5QADTksQhT5BuKiPBKzTtJgUHRAiq/1gvuUpyB+NPNZnr8qHppnY5frzJthw+UL3WacbGyMDtwiED11X3bmT9rT210hNNVZSU/GTddIVD0lHn1HbZCmkTEf9l/uqZWSDaaztLm9Fp5ehRx6arNNoScd1VsBqajx1Rw92BV7yuEOi/yIz1JXo8esAJtG5LeOosGZExEREUHtnd5m6st+PQr2ioJA8JQyuZpKw/FsWzatRwzuo/950ji6QIP9kcJ3uWGg2LkR0Axm9WyuM3rnp+RUWn1OuvIblAbLvrfyD0RuwDPX74jSZvZ/IYs0h1N5BaI93EsnTdzA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nutanix.com; dmarc=pass action=none header.from=nutanix.com;
- dkim=pass header.d=nutanix.com; arc=none
-Received: from BY5PR02MB6690.namprd02.prod.outlook.com (2603:10b6:a03:213::10)
- by BY5PR02MB6820.namprd02.prod.outlook.com (2603:10b6:a03:213::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Tue, 9 Jun
- 2020 13:36:14 +0000
-Received: from BY5PR02MB6690.namprd02.prod.outlook.com
- ([fe80::6ceb:66bd:bb5f:179e]) by BY5PR02MB6690.namprd02.prod.outlook.com
- ([fe80::6ceb:66bd:bb5f:179e%9]) with mapi id 15.20.3066.023; Tue, 9 Jun 2020
- 13:36:13 +0000
-From:   Eiichi Tsukata <eiichi.tsukata@nutanix.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-CC:     "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "jmattson@google.com" <jmattson@google.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "x86@kernel.org" <x86@kernel.org>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Felipe Franciosi <felipe@nutanix.com>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>
-Subject: Re: [RFC PATCH] KVM: x86: Fix APIC page invalidation race
-Thread-Topic: [RFC PATCH] KVM: x86: Fix APIC page invalidation race
-Thread-Index: AQHWO7rKzyOSDfpNlUO9aScE6IXasajOtaaAgADGnYCAAJQaAIAAPg4A
-Date:   Tue, 9 Jun 2020 13:36:13 +0000
-Message-ID: <D9A42B2E-7BB1-4E70-98CD-40D295D9DB1A@nutanix.com>
-References: <20200606042627.61070-1-eiichi.tsukata@nutanix.com>
- <0d9b3313-5d4c-9ef3-63e4-ba08ddbbe7a1@redhat.com>
- <7B9024C7-98D0-4940-91AE-40BCDE555C8F@nutanix.com>
- <6d2d2faf-116f-8c71-fda2-3fc052952dee@redhat.com>
-In-Reply-To: <6d2d2faf-116f-8c71-fda2-3fc052952dee@redhat.com>
-Accept-Language: ja-JP, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3608.80.23.2.2)
-authentication-results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=nutanix.com;
-x-originating-ip: [39.110.210.156]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7e919419-a64a-4c7c-13df-08d80c7a144a
-x-ms-traffictypediagnostic: BY5PR02MB6820:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BY5PR02MB682036C5B06663115DEACD7380820@BY5PR02MB6820.namprd02.prod.outlook.com>
-x-proofpoint-crosstenant: true
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
-x-forefront-prvs: 042957ACD7
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: puI0/ENvHrevfSpP92IDleuUsaUXXb38mP/16ZmgHXHqXa1cym/jGCOsvTPlcYzyUXXPFipMTHVYIsIecWY7HAxa4PpX7JQFlJBYvAOlVDTYStjZlHoW8RrO4DsDpajd5THyzs+xoPKIJKBzaMguzla4BSq+zKgwVR9TfQAtq+bpuOdEmfUW/Lg/XKjwgoYQ350tF3UkzDE3mOxrGzb+4dTeKl8u9yFCEaZsvtzh7i7PTqIe2bG/7ktNorkbooYh0pvyupVAT7aUAFrr/cVegYZ+qnZYEdFL7uxpICSbs2U0DTU6T3dwdODNOJXN4z9ZADubGpfBnWbSIpRK6yd+ASGBY3gZNoupY9uA8PrUETtjqESyP08whIGTFE1JpG8TXp9qgPfD7F6fnyvgMfO49Q==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR02MB6690.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(376002)(346002)(396003)(39860400002)(366004)(478600001)(4326008)(33656002)(966005)(8676002)(44832011)(86362001)(7416002)(83380400001)(2616005)(8936002)(2906002)(6512007)(316002)(54906003)(5660300002)(76116006)(186003)(6506007)(26005)(6486002)(53546011)(66556008)(36756003)(66476007)(6916009)(71200400001)(66946007)(66446008)(64756008);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: V/s3Mku3px2S78lO8YklNrprvVnfEUPguB5L56aAOEYZqzcG9S1Y4DrqR8GDVKvqAeekI13+WlsM4hb7xpWBgLz6ULy9xumR5YVHDn1KCUc3q3OQcfAWFCEiF0Jx1NUZnmuepPym/qbO/lAvBIIj3aW3DHQrRn3HAbPP/J/wg4rCFrnPnbRY4iannxmUUMJS1ix/1ULPrVaS3QMi508lgMZgi0yvBZA9U8Bf1C7ciga0QkBpmtExc25gmAqjjDva4mNoh+Xr+YQWNMSitjeIbz4gFknpcbvyp21HHsUKmVkjdHQOFpG61OweoaoPrZETmmpH+4zkIbJ7ow2dYM7EkAhFuWolxmJ3vfSXIapus5TAZqgnd0quPdZEnSIuPWTnLe3ChblheAxdBzRY1m4m4o6FsCQUTd94r3SGhUGqrCYz5fvr/cNM5diocKUWP4lGaeXqperpI1VPJ13+NSokgMNLmH6NY6FBDwLOO55qQOYrivC9EUMkeerlDAUHhEyb
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <614DDFD98C7DE24685B5D905EF6E36D3@namprd02.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 9 Jun 2020 09:39:00 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20AB6C05BD1E;
+        Tue,  9 Jun 2020 06:39:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=HWh6P44BdWZmQIF8VcmUSbalmmaslEENnThQdSj8D00=; b=brayCqXKtixRb5UN8h2w5jf3wG
+        uy+WsOhWc3fl25hRI27mz1KhFK1K2u17Lol59T9g9m/Ph5Em7TZXq76biFFI2WfKE+JpV4mH/nYYr
+        rZFs9WaVesO0W8jpMY9X+urO0hWU6qd6L0vMv3+3b7r+mWgnhyQbYT/zH7iLf3mVu4coL/MSbRlm3
+        N7zWHM8+8x8gZXQrGnarcnwdlnNO7VycK1B/1hPkQU44jguvTwUUxpaLgYVJmrjNDyWVMPBIOeJl/
+        VwtJ9ejnv81zq64x2SJ5jKGRSU5O/IcfvuygoWFKYNaxbR9BOsEGs7FvRnWs4FLJEMg5zBmNHOjP5
+        Bfc/275w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jieSf-0006sf-7R; Tue, 09 Jun 2020 13:38:41 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D01273019CE;
+        Tue,  9 Jun 2020 15:38:37 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B5A87213D3A8E; Tue,  9 Jun 2020 15:38:37 +0200 (CEST)
+Date:   Tue, 9 Jun 2020 15:38:37 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, frederic@kernel.org,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
+Subject: Re: blk-softirq vs smp_call_function_single_async()
+Message-ID: <20200609133837.GA2514@hirez.programming.kicks-ass.net>
+References: <20200608115800.GA2531@hirez.programming.kicks-ass.net>
+ <20200608154557.GA26611@infradead.org>
+ <20200608155833.GC2531@hirez.programming.kicks-ass.net>
+ <20200608163342.GA5155@infradead.org>
+ <20200608164009.GD2531@hirez.programming.kicks-ass.net>
+ <20200608164254.GA2431@infradead.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nutanix.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7e919419-a64a-4c7c-13df-08d80c7a144a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jun 2020 13:36:13.7045
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: bb047546-786f-4de1-bd75-24e5b6f79043
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jHkkKJdpfTl+RzGqrFTA6V1XIxZFb6IXl/qL90jAIrTZc/bE7pRgV27wqMfClFF92xz41d8MmqXw2StJ5CxqowHxCOZtUlsJgzKHvNA8mlo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR02MB6820
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-09_06:2020-06-09,2020-06-09 signatures=0
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200608164254.GA2431@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 08, 2020 at 09:42:54AM -0700, Christoph Hellwig wrote:
+> On Mon, Jun 08, 2020 at 06:40:09PM +0200, Peter Zijlstra wrote:
+> > There isn't one, it was meant to be used with static allocations.
+> > 
+> > Frederic proposed changing all these to irq_work, and I think I'll go do
+> > that. First dinner though.
 
+OK, after having looked at this more, I think my initial analysis is
+actually wrong and this code should work as-is.
 
-> On Jun 9, 2020, at 18:54, Paolo Bonzini <pbonzini@redhat.com> wrote:
->=20
->=20
-> No need to resend, the patch is good.  Here is my take on the commit mess=
-age:
+The thing that I missed yesterday is that we only add the request to the
+blk_cpu_done list in the IPI, this means that the race I described
+earlier is not in fact possible.
 
-Thank you Paolo! Your commit message is much clearer.
-I really appreciate your great job.
+The IPI must happen for progress to be made.
 
-Best
+And the same is true for blk_mq_force_complete_rq(), which also uses
+this csd.
 
-Eiichi
+> The irq_work API looks reasonable.  What are the tradeoffs for
+> smp_call_single_async vs irq_work?
 
->=20
->    Commit b1394e745b94 ("KVM: x86: fix APIC page invalidation") tried
->    to fix inappropriate APIC page invalidation by re-introducing arch
->    specific kvm_arch_mmu_notifier_invalidate_range() and calling it from
->    kvm_mmu_notifier_invalidate_range_start. However, the patch left a
->    possible race where the VMCS APIC address cache is updated *before*
->    it is unmapped:
->=20
->      (Invalidator) kvm_mmu_notifier_invalidate_range_start()
->      (Invalidator) kvm_make_all_cpus_request(kvm, KVM_REQ_APIC_PAGE_RELOA=
-D)
->      (KVM VCPU) vcpu_enter_guest()
->      (KVM VCPU) kvm_vcpu_reload_apic_access_page()
->      (Invalidator) actually unmap page
->=20
->    Because of the above race, there can be a mismatch between the
->    host physical address stored in the APIC_ACCESS_PAGE VMCS field and
->    the host physical address stored in the EPT entry for the APIC GPA
->    (0xfee0000).  When this happens, the processor will not trap APIC
->    accesses, and will instead show the raw contents of the APIC-access pa=
-ge.
->    Because Windows OS periodically checks for unexpected modifications to
->    the LAPIC register, this will show up as a BSOD crash with BugCheck
->    CRITICAL_STRUCTURE_CORRUPTION (109) we are currently seeing in
->    https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__bugzilla.redhat=
-.com_show-5Fbug.cgi-3Fid-3D1751017&d=3DDwIDaQ&c=3Ds883GpUCOChKOHiocYtGcg&r=
-=3Ddy01Dr4Ly8mhvnUdx1pZhhT1bkq4h9z5aVWu3paoZtk&m=3Dyo6pYK4bnrvDLz_RwGyvwtJE=
-Y6oWkg-9XGlbPBq1B2g&s=3D7tKkV92x4mCNLQ7miJIanMVqokYNJdjrcK4Rqqb_h7s&e=3D .
->=20
->    The root cause of the issue is that kvm_arch_mmu_notifier_invalidate_r=
-ange()
->    cannot guarantee that no additional references are taken to the pages =
-in
->    the range before kvm_mmu_notifier_invalidate_range_end().  Fortunately=
-,
->    this case is supported by the MMU notifier API, as documented in
->    include/linux/mmu_notifier.h:
->=20
->             * If the subsystem
->             * can't guarantee that no additional references are taken to
->             * the pages in the range, it has to implement the
->             * invalidate_range() notifier to remove any references taken
->             * after invalidate_range_start().
->=20
->    The fix therefore is to reload the APIC-access page field in the VMCS
->    from kvm_mmu_notifier_invalidate_range() instead of ..._range_start().
->=20
-> Thanks,
->=20
-> Paolo
+To still answer your question; irq_work_queue*() has an atomic op extra
+that allows for more convenient semantics -- but is in your case
+strictly superfluous.
 
+Still, Jens' point about irq_work being smaller stands, and I think more
+users could benefit from something intermediate. Let me continue with
+the cleanups / audit and see what comes out at the end.
+
+Thanks!
