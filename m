@@ -3,43 +3,109 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0DB0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:55:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E368C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:55:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E4872078C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:55:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B86D2078C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:55:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730080AbgFINzK (ORCPT
+        id S1730288AbgFINzU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 09:55:10 -0400
-Received: from verein.lst.de ([213.95.11.211]:42576 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726967AbgFINzI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 09:55:08 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 29DEA68B02; Tue,  9 Jun 2020 15:55:06 +0200 (CEST)
-Date:   Tue, 9 Jun 2020 15:55:06 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Dongli Zhang <dongli.zhang@oracle.com>
-Cc:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
-        hch@lst.de, sagi@grimberg.me, chaitanya.kulkarni@wdc.com,
-        kbusch@kernel.org, axboe@fb.com
-Subject: Re: [PATCH 0/2] nvme: simple cleanup
-Message-ID: <20200609135506.GB10669@lst.de>
-References: <20200608162002.17017-1-dongli.zhang@oracle.com>
+        Tue, 9 Jun 2020 09:55:20 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:37954 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726967AbgFINzT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 09:55:19 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 2B30D1C0C0C; Tue,  9 Jun 2020 15:55:18 +0200 (CEST)
+Date:   Tue, 9 Jun 2020 15:55:17 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Daniel Axtens <dja@axtens.net>, Sasha Levin <sashal@kernel.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Gow <davidgow@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH AUTOSEL 4.14 72/72] string.h: fix incompatibility between
+ FORTIFY_SOURCE and KASAN
+Message-ID: <20200609135517.GA4806@amd>
+References: <20200608232500.3369581-1-sashal@kernel.org>
+ <20200608232500.3369581-72-sashal@kernel.org>
+ <87ftb5t933.fsf@dja-thinkpad.axtens.net>
+ <20200609112025.GA2523@amd>
+ <20200609115407.GA819153@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="2fHTh5uZTiUOsy+g"
 Content-Disposition: inline
-In-Reply-To: <20200608162002.17017-1-dongli.zhang@oracle.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20200609115407.GA819153@kroah.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks,
 
-applied to nvme-5.9.
+--2fHTh5uZTiUOsy+g
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue 2020-06-09 13:54:07, Greg KH wrote:
+> On Tue, Jun 09, 2020 at 01:20:25PM +0200, Pavel Machek wrote:
+> > On Tue 2020-06-09 09:46:08, Daniel Axtens wrote:
+> > > Hi Sasha,
+> > >=20
+> > > There's nothing inherently wrong with these patches being backported,
+> > > but they fix a bug that doesn't cause a crash and only affects debug
+> > > kernels compiled with KASAN and FORTIFY_SOURCE. Personally I wouldn't
+> > > change a core header file in a stable kernel for that. Perhaps I'm too
+> > > risk-averse.
+> >=20
+> > You are in agreement with existing documentation -- stable is only for
+> > serious bugs.
+>=20
+> No, lots of people run KASAN on those kernels when they are testing
+> their devices, this patch is fine.
+
+Documentation currently says:
+
+ - It must fix a problem that causes a build error (but not for things
+    marked CONFIG_BROKEN), an oops, a hang, data corruption, a real
+    security issue, or some "oh, that's not good" issue.  In short,
+    something critical.
+
+=2E..but we also get various warning fixes (sometimes for external
+tools), changes to make printk()s less verbose, changes to make
+debugging easier, etc...
+
+Could the documentation be updated to match current use?
+
+Thanks,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--2fHTh5uZTiUOsy+g
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl7flMUACgkQMOfwapXb+vK3pACglGW9799N3OTLxgOM/OIQZpKv
+P6gAoJr5V9ho8ygRxTBFRQuFKDpQConC
+=MJK1
+-----END PGP SIGNATURE-----
+
+--2fHTh5uZTiUOsy+g--
