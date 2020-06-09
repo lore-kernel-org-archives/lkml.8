@@ -2,204 +2,158 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A885FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 07:00:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C74C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 07:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C8832074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 07:00:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591686041;
-	bh=rDOJUa2MoL+6PLdRJL8VEpQrMjWt4yMozKrDvxEuIZc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wVvSVOFITYxQhkfTekLPEICBVnSqDbfk1SjypSbO8qhv19yar9pwInduUY4+mvYku
-	 70BK970xYKanHfdF2/vyJbC+m46bHZ88LQAtd0cEvuKYbSnn40+RbJ44cy8v9xr8As
-	 fNq/rW04djMABk8qj9/xHSNcycdukribmaFXPoNQ=
+	by mail.kernel.org (Postfix) with ESMTP id 8C9732074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 07:00:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="lljljUoU";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="tDEtfDdC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbgFIHAh (ORCPT
+        id S1727833AbgFIHAx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 03:00:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33092 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725770AbgFIHAb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 03:00:31 -0400
-Received: from localhost (unknown [213.57.247.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76FD12074B;
-        Tue,  9 Jun 2020 07:00:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591686030;
-        bh=rDOJUa2MoL+6PLdRJL8VEpQrMjWt4yMozKrDvxEuIZc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bAT2V+oSYqNg8tbwqBijILYHYjvYEkUB99JK/68GpsNOK2DP+OjFdWhTDC6lGHgsi
-         n75902sDGcKIVE+Ax1OZcwhe3/cyvsbxrUk+U8pqq1ZhSkNzK6sNtyqPM36Pch82Xk
-         j2WKfiGOVlqA+JcEQu3R5ymxGZ9j5y7F4tqCKOe8=
-Date:   Tue, 9 Jun 2020 10:00:26 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Divya Indi <divya.indi@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Gerd Rausch <gerd.rausch@oracle.com>,
-        =?iso-8859-1?Q?H=E5kon?= Bugge <haakon.bugge@oracle.com>,
-        Srinivas Eeda <srinivas.eeda@oracle.com>,
-        Rama Nichanamatlu <rama.nichanamatlu@oracle.com>,
-        Doug Ledford <dledford@redhat.com>
-Subject: Re: [PATCH v3] IB/sa: Resolving use-after-free in ib_nl_send_msg
-Message-ID: <20200609070026.GJ164174@unreal>
-References: <1591627576-920-1-git-send-email-divya.indi@oracle.com>
- <1591627576-920-2-git-send-email-divya.indi@oracle.com>
+        Tue, 9 Jun 2020 03:00:53 -0400
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:52563 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727021AbgFIHAi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 03:00:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1591686036; x=1623222036;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=E+CJgP62uQVMMG1kiy52vP/gdkf16Z2cQeivBp4C1dY=;
+  b=lljljUoUMreiuKBE/91xuYNaLgVhRaXB15MMvfJlsYasc+PNX2iMwA5x
+   Sk+yUJQcIV5gukeIILYruQYP5qxEWhi4ocPy967AcVWzeYrkzCAnPbrE7
+   vAuBuwLej56m6IVcbdNb6cX1A3XF+cthUkC7WitktqJ7810+gfkMqQBOO
+   nToQaO7EMkC11uJJZCjjWmH5sh01LmeLvlaJOSaQPHF5FtM21XKC1pT90
+   na4coctBJ/B8gX5IzOC5yTTSFZgVLz0fsHQ2uAevk2XfACMQZ8JolDeCl
+   xppwzTlvGifd1AbgvGyHVhinhsp4st3GpOelM0/hxxDfyKPgryxfWn2Xv
+   g==;
+IronPort-SDR: ybNRIChd7sQeGinx0mGspOfdwcAL+feXwdvjJlauQWLoWkBqaRV3S2R0kk6egRB+3E0mPllymU
+ tf+v+/42Mg72nELaDY+Uqm2ktSkrz/CNywh3l28frFBaiNPdsgq2/o30l8JsaEMkToU4nrPiZJ
+ 0knA5XZEUMZUQ/vuIheHsDYxWS6lqu3KlsVmPQCzhQJDJTUN6fEDVdET+uRzRuvXHweqWOEN8/
+ 2QWoep9w8l1nIKFxmrMUsZbOOZsEeOJgGw2nty5ij3wdUyq8dDisndSx2gChBp07NSbMZeuaqY
+ +Lk=
+X-IronPort-AV: E=Sophos;i="5.73,490,1583164800"; 
+   d="scan'208";a="248647955"
+Received: from mail-cys01nam02lp2054.outbound.protection.outlook.com (HELO NAM02-CY1-obe.outbound.protection.outlook.com) ([104.47.37.54])
+  by ob1.hgst.iphmx.com with ESMTP; 09 Jun 2020 15:00:35 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hQOAn+kb+XkHDSsQU9RID0957nV/SDjkghzFlOOeOiiT13IxUi1VRB4C4Qxh7OU/f3Uc3nKdAyeMRZfiW+sORA7TDUmTvVGthVFcLmoZfy7fUYQsMeEDN8QGWeaNfsdhCUKcFeK/AeH/PKwQUKaaXeOYHtim4FycAKkEgFx3tIG16WIRuLer6/GN/aBRtC5QqEchO/x2k9WDhR4RKRgsNxeDXMqlZA4REp3iyoBvEkAXuSMpvCcKKzVxwU31zligEA1Ba2p2i/8qHmWYK3MB4iga8P2bmblvKqn3jVDX9REENi1gFdrcdrL28xbvkobA+MHj69pcWBvOuPZhtq3uRA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=E+CJgP62uQVMMG1kiy52vP/gdkf16Z2cQeivBp4C1dY=;
+ b=Z2qqu1OhrGpGhoeHw6sssIO5LcSoKkrlZhS2GCez6dvML9b3u/LuElnk0nc49Fbt/9cXvNA3/XgKd/SQ1YN+3/BnCuWCkDL6aeA016jmiZEnkxt5cUaUqGpyWr67JxE15gIGvVQmb/IhSIW7RA4X3DESDwgFXN8uIbCzVsO8OmLNNMrOOeCidHFUg19Lxkvxzm1c2JzhSLgporCKK4YnhXZHJ8GsCahvSacs7Ao+MesTKB3yiqK+RZYBruptq3ps+geUurotX/8ihwc5bDWUTffy94PmnJyaKFv42szxhRziSNdGkspCBqmiT43s4HbeGGUZAuqIo28epDFDfu16Aw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=E+CJgP62uQVMMG1kiy52vP/gdkf16Z2cQeivBp4C1dY=;
+ b=tDEtfDdC/vRQuN9ogyr8B61BExlFLkxjWS1cmjpD1ipNJG54yayHdQQG2qUFp5OvzBtShLGokZr7vfopFbsJveE83i4RcQS8kNjhiOmLVzgWhW9OaY7jHNV9DpV8uXZy/NeYrAdvPXFAGcbfZ9etmZDoHOEkKmgvk0yNh7vuYPY=
+Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
+ by SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.20; Tue, 9 Jun
+ 2020 07:00:32 +0000
+Received: from SN6PR04MB4640.namprd04.prod.outlook.com
+ ([fe80::9cbe:995f:c25f:d288]) by SN6PR04MB4640.namprd04.prod.outlook.com
+ ([fe80::9cbe:995f:c25f:d288%6]) with mapi id 15.20.3066.023; Tue, 9 Jun 2020
+ 07:00:32 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     "daejun7.park@samsung.com" <daejun7.park@samsung.com>,
+        ALIM AKHTAR <alim.akhtar@samsung.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>
+Subject: RE: RE: [RFC PATCH 0/5] scsi: ufs: Add Host Performance Booster
+ Support
+Thread-Topic: RE: [RFC PATCH 0/5] scsi: ufs: Add Host Performance Booster
+ Support
+Thread-Index: AQHWOtdzuuOrqvV8XUaJuwxPo4VLXKjLfTtQgAP8xQCAAGXlgA==
+Date:   Tue, 9 Jun 2020 07:00:32 +0000
+Message-ID: <SN6PR04MB46402258DEFF46D6B9FBE2D9FC820@SN6PR04MB4640.namprd04.prod.outlook.com>
+References: <SN6PR04MB4640DC01229F2073C2BD3103FC870@SN6PR04MB4640.namprd04.prod.outlook.com>
+        <231786897.01591320001492.JavaMail.epsvc@epcpadp1>
+        <CGME20200605011604epcms2p8bec8ef6682583d7248dc7d9dc1bfc882@epcms2p4>
+ <336371513.41591664282662.JavaMail.epsvc@epcpadp2>
+In-Reply-To: <336371513.41591664282662.JavaMail.epsvc@epcpadp2>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: samsung.com; dkim=none (message not signed)
+ header.d=none;samsung.com; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [212.25.79.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 1e5a7048-1df1-4a96-2979-08d80c42cd65
+x-ms-traffictypediagnostic: SN6PR04MB4640:
+x-microsoft-antispam-prvs: <SN6PR04MB4640ED047613B3344BD2D7DFFC820@SN6PR04MB4640.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:4125;
+x-forefront-prvs: 042957ACD7
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Dqb2yfKkh3bq3JKKh9LlYcW4XZayhQdtOIfZ5YephDSA0wPQzpX9m9EnRcZzlroxSFobzUrZRMndfTaBB9Zron7oEcJ7aF3cZY7EoXnElKxvGZ76NnAJhNFf2lwLzupTrS0i315QG9wfPJUeNPZTntAftkcYhVrZsyICWoSQElq8E94HqePMOYXUHzVTx4qX4b2pwNvRp3so9DWXjVobWeEXekBD7voRyOT8HPR7BtSxBOoGXiqkwztB0ECbutCpn/3L4m/AW4975Nm4vfykVLhlELaV5oI6oA/Uskv6t7VHAOi5/RD+AMd4WL7qtI9MVvUhEH6sT5Kf1JWWab/hlUWbVR6zLtEEWJu/P58YEXCZD8Ap93mC4Y4rVGGj4K3q
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(136003)(39860400002)(396003)(376002)(186003)(33656002)(8936002)(55016002)(86362001)(7696005)(66946007)(478600001)(9686003)(26005)(66446008)(6506007)(110136005)(316002)(83380400001)(4326008)(54906003)(7416002)(8676002)(52536014)(71200400001)(64756008)(5660300002)(66476007)(76116006)(2906002)(66556008)(921003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: RS/tmmOKDNwRz+gU13THtF7aX8wSs1M0QEooQzzwj1DZlr507Xip/PXNm7l+tIi9G+y/Z/0qiScPKY4qr3El0gqI0zb5xPNrM0GEy3AGOLIoi+5dk6ux6Bh5B4fCpzgXGhtpZolFvTFhiVAgd7UQfnAYhKmLrb1P/Z+jIf6BdCe4Wr54tFNY15VOqX7uIsePel7iLAqHWIm/jh/tbA07ZwIVUMslP3O1oQk3PUdhEu9BiT1qqNq0q6Czg2DG75Z1588vTvA/uvG2/qSQegsFPsXZB+Z2HL/RDwWLpns5jbEHD2nSM71hPAZQafXTvNJo8ObABHVX6SDyG2gUol2+33pjrp4LDL8kmC9rgIFXxycrMSGVtLoF2bdS18m6x77U8pIRsjw/ZpVHXQXl80gs8E7uazSNduuEBmXHIkxRG1vk9HQcsSld1jvL9p4YziWbcWkHZLGg19TxCWmpJyFBYzn+wdlxSbGByFmUc2cchyc=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1591627576-920-2-git-send-email-divya.indi@oracle.com>
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1e5a7048-1df1-4a96-2979-08d80c42cd65
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jun 2020 07:00:32.4839
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: IIGBr1zFa+JKAlZYb+nm4vWk0FVneW3c17uLoXQhq3x8fAt1MRAf3Sour8b8jnJDScS9WUd/GI5Vk+16vdrmSg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4640
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 07:46:16AM -0700, Divya Indi wrote:
-> Commit 3ebd2fd0d011 ("IB/sa: Put netlink request into the request list before sending")'
-> -
-> 1. Adds the query to the request list before ib_nl_snd_msg.
-> 2. Removes ib_nl_send_msg from within the spinlock which also makes it
-> possible to allocate memory with GFP_KERNEL.
->
-> However, if there is a delay in sending out the request (For
-> eg: Delay due to low memory situation) the timer to handle request timeout
-> might kick in before the request is sent out to ibacm via netlink.
-> ib_nl_request_timeout may release the query causing a use after free situation
-> while accessing the query in ib_nl_send_msg.
->
-> Call Trace for the above race:
->
-> [<ffffffffa02f43cb>] ? ib_pack+0x17b/0x240 [ib_core]
-> [<ffffffffa032aef1>] ib_sa_path_rec_get+0x181/0x200 [ib_sa]
-> [<ffffffffa0379db0>] rdma_resolve_route+0x3c0/0x8d0 [rdma_cm]
-> [<ffffffffa0374450>] ? cma_bind_port+0xa0/0xa0 [rdma_cm]
-> [<ffffffffa040f850>] ? rds_rdma_cm_event_handler_cmn+0x850/0x850
-> [rds_rdma]
-> [<ffffffffa040f22c>] rds_rdma_cm_event_handler_cmn+0x22c/0x850
-> [rds_rdma]
-> [<ffffffffa040f860>] rds_rdma_cm_event_handler+0x10/0x20 [rds_rdma]
-> [<ffffffffa037778e>] addr_handler+0x9e/0x140 [rdma_cm]
-> [<ffffffffa026cdb4>] process_req+0x134/0x190 [ib_addr]
-> [<ffffffff810a02f9>] process_one_work+0x169/0x4a0
-> [<ffffffff810a0b2b>] worker_thread+0x5b/0x560
-> [<ffffffff810a0ad0>] ? flush_delayed_work+0x50/0x50
-> [<ffffffff810a68fb>] kthread+0xcb/0xf0
-> [<ffffffff816ec49a>] ? __schedule+0x24a/0x810
-> [<ffffffff816ec49a>] ? __schedule+0x24a/0x810
-> [<ffffffff810a6830>] ? kthread_create_on_node+0x180/0x180
-> [<ffffffff816f25a7>] ret_from_fork+0x47/0x90
-> [<ffffffff810a6830>] ? kthread_create_on_node+0x180/0x180
-> ....
-> RIP  [<ffffffffa03296cd>] send_mad+0x33d/0x5d0 [ib_sa]
->
-> To resolve the above issue -
-> 1. Add the req to the request list only after the request has been sent out.
-> 2. To handle the race where response comes in before adding request to
-> the request list, send(rdma_nl_multicast) and add to list while holding the
-> spinlock - request_lock.
-> 3. Use GFP_NOWAIT for rdma_nl_multicast since it is called while holding
-> a spinlock. In case of memory allocation failure, request will go out to SA.
->
-> Signed-off-by: Divya Indi <divya.indi@oracle.com>
-> Fixes: 3ebd2fd0d011 ("IB/sa: Put netlink request into the request list
-> before sending")
-
-Author SOB should be after "Fixes" line.
-
-> ---
->  drivers/infiniband/core/sa_query.c | 34 +++++++++++++++++-----------------
->  1 file changed, 17 insertions(+), 17 deletions(-)
->
-> diff --git a/drivers/infiniband/core/sa_query.c b/drivers/infiniband/core/sa_query.c
-> index 74e0058..042c99b 100644
-> --- a/drivers/infiniband/core/sa_query.c
-> +++ b/drivers/infiniband/core/sa_query.c
-> @@ -836,6 +836,9 @@ static int ib_nl_send_msg(struct ib_sa_query *query, gfp_t gfp_mask)
->  	void *data;
->  	struct ib_sa_mad *mad;
->  	int len;
-> +	unsigned long flags;
-> +	unsigned long delay;
-> +	int ret;
->
->  	mad = query->mad_buf->mad;
->  	len = ib_nl_get_path_rec_attrs_len(mad->sa_hdr.comp_mask);
-> @@ -860,35 +863,32 @@ static int ib_nl_send_msg(struct ib_sa_query *query, gfp_t gfp_mask)
->  	/* Repair the nlmsg header length */
->  	nlmsg_end(skb, nlh);
->
-> -	return rdma_nl_multicast(&init_net, skb, RDMA_NL_GROUP_LS, gfp_mask);
-> +	spin_lock_irqsave(&ib_nl_request_lock, flags);
-> +	ret =  rdma_nl_multicast(&init_net, skb, RDMA_NL_GROUP_LS, GFP_NOWAIT);
-
-It is hard to be convinced that this is correct solution. The mix of
-gfp_flags and GFP_NOWAIT at the same time and usage of
-ib_nl_request_lock to protect lists and suddenly rdma_nl_multicast() too
-makes this code unreadable/non-maintainable.
-
-> +	if (!ret) {
-
-Please use kernel coding style.
-
-if (ret) {
-  spin_unlock_irqrestore(&ib_nl_request_lock, flags);
-  return ret;
-  }
-
- ....
-
-> +		/* Put the request on the list.*/
-> +		delay = msecs_to_jiffies(sa_local_svc_timeout_ms);
-> +		query->timeout = delay + jiffies;
-> +		list_add_tail(&query->list, &ib_nl_request_list);
-> +		/* Start the timeout if this is the only request */
-> +		if (ib_nl_request_list.next == &query->list)
-> +			queue_delayed_work(ib_nl_wq, &ib_nl_timed_work, delay);
-> +	}
-> +	spin_unlock_irqrestore(&ib_nl_request_lock, flags);
-> +
-> +	return ret;
->  }
->
->  static int ib_nl_make_request(struct ib_sa_query *query, gfp_t gfp_mask)
->  {
-> -	unsigned long flags;
-> -	unsigned long delay;
->  	int ret;
->
->  	INIT_LIST_HEAD(&query->list);
->  	query->seq = (u32)atomic_inc_return(&ib_nl_sa_request_seq);
->
-> -	/* Put the request on the list first.*/
-> -	spin_lock_irqsave(&ib_nl_request_lock, flags);
-> -	delay = msecs_to_jiffies(sa_local_svc_timeout_ms);
-> -	query->timeout = delay + jiffies;
-> -	list_add_tail(&query->list, &ib_nl_request_list);
-> -	/* Start the timeout if this is the only request */
-> -	if (ib_nl_request_list.next == &query->list)
-> -		queue_delayed_work(ib_nl_wq, &ib_nl_timed_work, delay);
-> -	spin_unlock_irqrestore(&ib_nl_request_lock, flags);
-> -
->  	ret = ib_nl_send_msg(query, gfp_mask);
->  	if (ret) {
->  		ret = -EIO;
-> -		/* Remove the request */
-> -		spin_lock_irqsave(&ib_nl_request_lock, flags);
-> -		list_del(&query->list);
-> -		spin_unlock_irqrestore(&ib_nl_request_lock, flags);
->  	}
-
-Brackets should be removed too.
->
->  	return ret;
-> --
-> 1.8.3.1
->
+DQoNCj4gPiBMaWtlIEJhcnQsIEkgYW0gbm90IHN1cmUgdGhhdCB0aGlzIGV4dHJhIG1vZHVsZSBp
+cyBuZWVkZWQuDQo+ID4gSXQgb25seSBtYWtlcyBzZW5zZSBpZiBpbmRlZWQgdGhlcmUgYXJlIHNv
+bWUgY29tbW9uIGNhbGxzIHRoYXQgY2FuIGJlDQo+IHNoYXJlZCBieSBzZXZlcmFsIGZlYXR1cmVz
+Lg0KPiA+IFRoZXJlIGFyZSB1cCB0byBub3cgMTAgZXh0ZW5kZWQgZmVhdHVyZXMgZGVmaW5lZCwg
+YnV0IG5vbmUgb2YgdGhlbSBjYW4NCj4gc2hhcmUgYSBjb21tb24gYXBpLg0KPiA+IFdoYXQgb3Ro
+ZXIgZmVhdHVyZXMgY2FuIHNoYXJlIHRoaXMgYWRkaXRpb25hbCBsYXllcj8gIEFuZCBob3cgdGhv
+c2Ugb3BzDQo+IGNhbiBiZSByZXVzZWQ/DQo+ID4gSWYgeW91IGhhdmUgc29tZSBmdXR1cmUgaW1w
+bGVtZW50YXRpb25zIGluIG1pbmQsIHlvdSBzaG91bGQgYWRkIHRoaXMgYXBpDQo+IG9uY2UgeW91
+J2xsIGFkZCB0aG9zZS4NCj4gV2UgYWRkZWQgVUZTIGZlYXR1cmUgbGF5ZXIgd2l0aCBzZXZlcmFs
+IGNhbGxiYWNrcyB0byBpbXBvcnRhbnQgcGFydHMgb2YgdGhlDQo+IFVGUyBjb250cm9sIGZsb3cu
+DQo+IE90aGVyIGV4dGVuZGVkIGZlYXR1cmVzIGNhbiBhbHNvIGJlIGltcGxlbWVudGVkIHVzaW5n
+IHRoZSBwcm9wb3NlZCBBUElzLg0KPiBGb3IgZXhhbXBsZSwgaW4gV0IsICJwcmVwX2ZuIiBjYW4g
+YmUgdXNlZCB0byBndWFyYW50ZWUgdGhlIGxpZmV0aW1lIG9mIFVGUw0KPiBieSB1cGRhdGluZyB0
+aGUgYW1vdW50IG9mIHdyaXRlIElPIHVzZWQgYXMgV0IuDQpUaGlzIGlzIGFuIGludGVyZXN0aW5n
+IGlkZWEuDQoNCj4gQW5kIHJlc2V0L3Jlc2V0X2hvc3Qvc3VzcGVuZC9yZXN1bWUgY2FuIGJlIHVz
+ZWQgdG8gbWFuYWdlIHRoZSBrZXJuZWwgdGFzaw0KPiBmb3IgY2hlY2tpbmcgbGlmZXRpbWUgb2Yg
+VUZTLg0KQW5vdGhlciBpbnRlcmVzdGluZyBpZGVhLg0KDQpGYWlyIGVub3VnaC4gUGxlYXNlIHNo
+YXJlIGluIHRoZSBjb21taXQgbG9nIG9mIHBhdGNoIDIvNSB5b3VyIHBsYW5zLA0KT3RoZXJ3aXNl
+LCBqdXN0IGZvciBIUEIgLSBJdCBzZWVtcyBleGNlc3NpdmUuDQoNCg0K
