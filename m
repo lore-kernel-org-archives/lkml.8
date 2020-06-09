@@ -2,272 +2,164 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 324B6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:02:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 927B1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0961F20734
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:02:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6927120774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:02:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725754;
-	bh=M2qvBWuNsEMskpaQiCnMGc5yfr7IKHfgPpFxMoxMCnc=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=JRHDAsbh0nR4HPWJw78cEDaUi4yutXOIcdevUMjGl6WK1+INvECytmqP/lBNUDeCH
-	 HT5SYn/sz4cLIzErip/YOMbqGb2gISINzFOCvf0yzIyYUVB30B4ERXA8SEvImCXt33
-	 jAw9jUlAWIyyi9emCtPMwxfF6DHPI8cwC3B/n9RQ=
+	s=default; t=1591725761;
+	bh=3RKSAtWMH1lyWLRWFOOdp8K9w7gNBF2vUUFMIouVOIs=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=jTh+edS+hUJK3CHJpYRk5INlU1bjwyTTeigUFOkZYi2/lzDRVvl7dkcG9Ly8DWkFI
+	 AidUgNCf6I7QE4ydI5BDeumw84JIlkG2duF2NmaRB6ON6aaU48yVseO8x18igbaXBC
+	 O7MHWnEwNigLaGplMQ9SGjO0DP8eF6j2g1f/95VY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387858AbgFISCc (ORCPT
+        id S2387676AbgFISCj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:02:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44712 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 14:02:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731768AbgFIRxf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:53:35 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1729637AbgFISC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 14:02:29 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21FA12074B;
-        Tue,  9 Jun 2020 17:53:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 472BC206D5;
+        Tue,  9 Jun 2020 18:02:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725214;
-        bh=M2qvBWuNsEMskpaQiCnMGc5yfr7IKHfgPpFxMoxMCnc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=quT6YKfVWrUDuEaNqZrUMzVBlyHklLHCKtMFmC3ymRuU+HE6uW/R4/vnZIZBzVsku
-         9P9CjNsQmehNext5K9YZbpz849NckYat/XRoqbiweweGCQjF+bYoeIAjwUl9VspUkx
-         7yiEjvyGd2uYdnOs6VU4ZPCrJ+ut0NoghrHNMgoA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 5.6 00/41] 5.6.18-rc1 review
-Date:   Tue,  9 Jun 2020 19:45:02 +0200
-Message-Id: <20200609174112.129412236@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
+        s=default; t=1591725747;
+        bh=3RKSAtWMH1lyWLRWFOOdp8K9w7gNBF2vUUFMIouVOIs=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=Ebn5d4w7NWA678saEwBWdYf0fk2O/G8nw61u81Wr35USF5iJ1RzfbT2kT5BfGaCu1
+         VsYwITJ8GHL4sV/uN6tpAg7swZjW4cmYOwyTTxMr8bT2A6588oxxL4vL1rlvoOexTu
+         94cOggrOei9OneTWFq4upvxNCPRETbnYcIudMURc=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 2D1A835229D0; Tue,  9 Jun 2020 11:02:27 -0700 (PDT)
+Date:   Tue, 9 Jun 2020 11:02:27 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Josh Triplett <josh@joshtriplett.org>
+Subject: Re: [PATCH 01/10] rcu: Directly lock rdp->nocb_lock on nocb code
+ entrypoints
+Message-ID: <20200609180227.GR4455@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200513164714.22557-1-frederic@kernel.org>
+ <20200513164714.22557-2-frederic@kernel.org>
+ <20200520122949.GB16672@google.com>
+ <20200522175739.GM2869@paulmck-ThinkPad-P72>
+ <20200604114121.GA26398@lenoir>
+ <20200604163655.GC29598@paulmck-ThinkPad-P72>
+ <20200608125715.GA30920@lenoir>
 MIME-Version: 1.0
-User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.6.18-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.6.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.6.18-rc1
-X-KernelTest-Deadline: 2020-06-11T17:41+00:00
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200608125715.GA30920@lenoir>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 5.6.18 release.
-There are 41 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+On Mon, Jun 08, 2020 at 02:57:17PM +0200, Frederic Weisbecker wrote:
+> On Thu, Jun 04, 2020 at 09:36:55AM -0700, Paul E. McKenney wrote:
+> > On Thu, Jun 04, 2020 at 01:41:22PM +0200, Frederic Weisbecker wrote:
+> > > On Fri, May 22, 2020 at 10:57:39AM -0700, Paul E. McKenney wrote:
+> > > > On Wed, May 20, 2020 at 08:29:49AM -0400, Joel Fernandes wrote:
+> > > > > Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > > > 
+> > > > Thank you for looking this over, Joel!
+> > > > 
+> > > > Is it feasible to make rcu_nocb_lock*() and rcu_nocb_unlock*() "do the
+> > > > right thing", even when things are changing?  If it is feasible, that
+> > > > would prevent any number of "interesting" copy-pasta and "just now became
+> > > > common code" bugs down the road.
+> > > 
+> > > This won't be pretty:
+> > > 
+> > >     locked = rcu_nocb_lock();
+> > >     rcu_nocb_unlock(locked);
+> > 
+> > I was thinking in terms of a bit in the rcu_data structure into
+> > which rcu_nocb_lock() and friends stored the status, and from which
+> > rcu_nocb_unlock() and friends retrieved that same status.  Sort of like
+> > how preemptible RCU uses the ->rcu_read_lock_nesting field in task_struct.
+> > 
+> > As noted, this does require reworking the hotplug code to avoid the
+> > current holding of two such locks concurrently, which I am happy to do
+> > if that helps.
+> > 
+> > Or am I missing a subtle (or not-so-subtle) twist here?
+> 
+> So, during a CPU round, the nocb-gp kthread locks the corresponding rdp-nocb
+> and then ignores if it is not offloaded. Surely there is a smarter ways to do
+> that though. Well that's something we'll need to optimize at some point anyway.
+> 
+> Also we must then make sure that the nocb timers won't ever fire while we
+> switch to offloaded state or they may fiddle with internals without locking
+> nocb.
 
-Responses should be made by Thu, 11 Jun 2020 17:40:51 +0000.
-Anything received after that time might be too late.
+Understood, the synchronization requirements during the switchover will
+be tricky.  But that will be the case no matter how we set it up.
+If possible, it would be good if that trickiness could be concentrated
+rather than spread far and wide.
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.18-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
-and the diffstat can be found below.
+> > > And anyway we still want to unconditionally lock on many places,
+> > > regardless of the offloaded state. I don't know how we could have
+> > > a magic helper do the unconditional lock on some places and the
+> > > conditional on others.
+> > 
+> > I was assuming (perhaps incorrectly) that an intermediate phase between
+> > not-offloaded and offloaded would take care of all of those cases.
+> 
+> Perhaps partly but I fear that won't be enough.
 
-thanks,
+One approach is to rely on RCU read-side critical sections surrounding
+the lock acquisition and to stay in the intermediate phase until a grace
+period completes, preferably call_rcu() instead of synchronize_rcu().
 
-greg k-h
+This of course means refusing to do a transition if the CPU is still
+in the intermediate state from a prior transition.
 
--------------
-Pseudo-Shortlog of commits:
+> > > Also the point of turning the lock helpers into primitives is to make
+> > > it clearer as to where we really need unconditional locking and where
+> > > we allow it to be conditional. A gift to reviewers :-)
+> > 
+> > Unless and until someone does a copy-pasta, thus unconditionally
+> > doing the wrong thing.  ;-)
+> 
+> Yeah but the cost is more complicated code and synchronization to
+> maintain the use of those all-in-one locking APIs everywhere. And
+> current state is already not that simple :-)
+> 
+> Perhaps we should rename rcu_nocb_lock() into rcu_nocb_lock_cond() to
+> prevent from accidents?
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 5.6.18-rc1
+We do need something to avoid accidents.  ;-)
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Revert "net/mlx5: Annotate mutex destroy for root ns"
+> Also I've been thinking that rcu_nocb_lock() should meet any of these
+> requirements:
+> 
+> * hotplug is locked
+> * rcu barrier is locked
+> * rnp is locked
+> 
+> Because checking the offloaded state (when nocb isn't locked yet) of
+> an rdp without any of the above locks held is racy. And that should
+> be easy to check and prevent from copy-pasta accidents.
+> 
+> What do you think?
 
-Oleg Nesterov <oleg@redhat.com>
-    uprobes: ensure that uprobe->offset and ->ref_ctr_offset are properly aligned
+An RCU read-side critical section might be simpler.
 
-Josh Poimboeuf <jpoimboe@redhat.com>
-    x86/speculation: Add Ivy Bridge to affected list
-
-Mark Gross <mgross@linux.intel.com>
-    x86/speculation: Add SRBDS vulnerability and mitigation documentation
-
-Mark Gross <mgross@linux.intel.com>
-    x86/speculation: Add Special Register Buffer Data Sampling (SRBDS) mitigation
-
-Mark Gross <mgross@linux.intel.com>
-    x86/cpu: Add 'table' argument to cpu_matches()
-
-Mark Gross <mgross@linux.intel.com>
-    x86/cpu: Add a steppings field to struct x86_cpu_id
-
-Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-    nvmem: qfprom: remove incorrect write support
-
-Oliver Neukum <oneukum@suse.com>
-    CDC-ACM: heed quirk also in error handling
-
-Pascal Terjan <pterjan@google.com>
-    staging: rtl8712: Fix IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK
-
-Jiri Slaby <jslaby@suse.cz>
-    tty: hvc_console, fix crashes on parallel open/close
-
-Dmitry Torokhov <dmitry.torokhov@gmail.com>
-    vt: keyboard: avoid signed integer overflow in k_ascii
-
-Josh Triplett <josh@joshtriplett.org>
-    serial: 8250: Enable 16550A variants by default on non-x86
-
-Dinghao Liu <dinghao.liu@zju.edu.cn>
-    usb: musb: Fix runtime PM imbalance on error
-
-Bin Liu <b-liu@ti.com>
-    usb: musb: start session in resume for host port
-
-Fabrice Gasnier <fabrice.gasnier@st.com>
-    iio: adc: stm32-adc: fix a wrong error message when probing interrupts
-
-Jonathan Cameron <Jonathan.Cameron@huawei.com>
-    iio:chemical:pms7003: Fix timestamp alignment and prevent data leak.
-
-Mathieu Othacehe <m.othacehe@gmail.com>
-    iio: vcnl4000: Fix i2c swapped word reading.
-
-Jonathan Cameron <Jonathan.Cameron@huawei.com>
-    iio:chemical:sps30: Fix timestamp alignment
-
-Johan Hovold <johan@kernel.org>
-    USB: serial: ch341: fix lockup of devices with limited prescaler
-
-Michael Hanselmann <public@hansmi.ch>
-    USB: serial: ch341: add basis for quirk detection
-
-Daniele Palmas <dnlplm@gmail.com>
-    USB: serial: option: add Telit LE910C1-EUX compositions
-
-Bin Liu <b-liu@ti.com>
-    USB: serial: usb_wwan: do not resubmit rx urb on fatal errors
-
-Matt Jolly <Kangie@footclan.ninja>
-    USB: serial: qcserial: add DW5816e QDL support
-
-Pablo Neira Ayuso <pablo@netfilter.org>
-    net/mlx5e: replace EINVAL in mlx5e_flower_parse_meta()
-
-Davide Caratti <dcaratti@redhat.com>
-    net/sched: fix infinite loop in sch_fq_pie
-
-Paolo Abeni <pabeni@redhat.com>
-    mptcp: fix unblocking connect()
-
-Vladimir Oltean <vladimir.oltean@nxp.com>
-    net: dsa: felix: send VLANs on CPU port as egress-tagged
-
-Eric Dumazet <edumazet@google.com>
-    net: be more gentle about silly gso requests coming from user
-
-Stefano Garzarella <sgarzare@redhat.com>
-    vsock: fix timeout in vsock_accept()
-
-Jia He <justin.he@arm.com>
-    virtio_vsock: Fix race condition in virtio_transport_recv_pkt
-
-Jonas Falkevik <jonas.falkevik@gmail.com>
-    sctp: check assoc before SCTP_ADDR_{MADE_PRIM, ADDED} event
-
-Heinrich Kuhn <heinrich.kuhn@netronome.com>
-    nfp: flower: fix used time of merge flow statistics
-
-Chuhong Yuan <hslester96@gmail.com>
-    NFC: st21nfca: add missed kfree_skb() in an error path
-
-Daniele Palmas <dnlplm@gmail.com>
-    net: usb: qmi_wwan: add Telit LE910C1-EUX composition
-
-Fugang Duan <fugang.duan@nxp.com>
-    net: stmmac: enable timestamp snapshot for required PTP packets in dwmac v5.10a
-
-Mark Bloch <markb@mellanox.com>
-    net/mlx5: Fix crash upon suspend/resume
-
-Willem de Bruijn <willemb@google.com>
-    net: check untrusted gso_size at kernel entry
-
-Eric Dumazet <edumazet@google.com>
-    l2tp: do not use inet_hash()/inet_unhash()
-
-Eric Dumazet <edumazet@google.com>
-    l2tp: add sk_family checks to l2tp_validate_socket
-
-Yang Yingliang <yangyingliang@huawei.com>
-    devinet: fix memleak in inetdev_init()
-
-
--------------
-
-Diffstat:
-
- Documentation/ABI/testing/sysfs-devices-system-cpu |   1 +
- Documentation/admin-guide/hw-vuln/index.rst        |   1 +
- .../special-register-buffer-data-sampling.rst      | 149 +++++++++++++++++++++
- Documentation/admin-guide/kernel-parameters.txt    |  20 +++
- Makefile                                           |   4 +-
- arch/x86/include/asm/cpu_device_id.h               |  30 +++++
- arch/x86/include/asm/cpufeatures.h                 |   2 +
- arch/x86/include/asm/msr-index.h                   |   4 +
- arch/x86/kernel/cpu/bugs.c                         | 106 +++++++++++++++
- arch/x86/kernel/cpu/common.c                       |  56 ++++++--
- arch/x86/kernel/cpu/cpu.h                          |   1 +
- arch/x86/kernel/cpu/match.c                        |   7 +-
- drivers/base/cpu.c                                 |   8 ++
- drivers/iio/adc/stm32-adc-core.c                   |  34 ++---
- drivers/iio/chemical/pms7003.c                     |  17 ++-
- drivers/iio/chemical/sps30.c                       |   9 +-
- drivers/iio/light/vcnl4000.c                       |   6 +-
- drivers/net/dsa/ocelot/felix.c                     |   8 +-
- drivers/net/ethernet/mellanox/mlx5/core/en_tc.c    |   6 +-
- drivers/net/ethernet/mellanox/mlx5/core/fs_core.c  |   6 -
- drivers/net/ethernet/mellanox/mlx5/core/main.c     |  18 +++
- .../net/ethernet/netronome/nfp/flower/offload.c    |   3 +-
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |   3 +-
- drivers/net/usb/qmi_wwan.c                         |   1 +
- drivers/nfc/st21nfca/dep.c                         |   4 +-
- drivers/nvmem/qfprom.c                             |  14 --
- drivers/staging/rtl8712/wifi.h                     |   9 +-
- drivers/tty/hvc/hvc_console.c                      |  23 ++--
- drivers/tty/serial/8250/Kconfig                    |   1 +
- drivers/tty/vt/keyboard.c                          |  26 ++--
- drivers/usb/class/cdc-acm.c                        |   2 +-
- drivers/usb/musb/musb_core.c                       |   7 +
- drivers/usb/musb/musb_debugfs.c                    |  10 +-
- drivers/usb/serial/ch341.c                         |  68 +++++++++-
- drivers/usb/serial/option.c                        |   4 +
- drivers/usb/serial/qcserial.c                      |   1 +
- drivers/usb/serial/usb_wwan.c                      |   4 +
- include/linux/mod_devicetable.h                    |   6 +
- include/linux/virtio_net.h                         |  25 +++-
- kernel/events/uprobes.c                            |  16 ++-
- net/ipv4/devinet.c                                 |   1 +
- net/l2tp/l2tp_core.c                               |   3 +
- net/l2tp/l2tp_ip.c                                 |  29 +++-
- net/l2tp/l2tp_ip6.c                                |  30 +++--
- net/mptcp/protocol.c                               |  20 ++-
- net/sched/sch_fq_pie.c                             |   4 +-
- net/sctp/ulpevent.c                                |   3 +
- net/vmw_vsock/af_vsock.c                           |   2 +-
- net/vmw_vsock/virtio_transport_common.c            |   8 ++
- .../tc-testing/tc-tests/qdiscs/fq_pie.json         |  21 +++
- 50 files changed, 694 insertions(+), 147 deletions(-)
-
-
+							Thanx, Paul
