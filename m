@@ -2,116 +2,160 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49726C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA70C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AA5720774
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:35:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XTzixvZf"
+	by mail.kernel.org (Postfix) with ESMTP id 6D0C22074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:35:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591724159;
+	bh=VRqZLFTH+YowincKDGDWaB4Hpl3ukvyNb8oEHR/WfH0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SNMwNU2CbipK+/X+7BNi12EmiRYbIxjuTbVwxo4Kz0PqqflXQpJBaBvpDRg83V4fV
+	 Xta6VRUI/JYB0x6m1P0DxJZ+IA2PS2vp1wLmUhzW5wQ3HBiiYE3sLk2G/URMIri/eT
+	 HtP8h35Ikf1F47lIB+CJPa5xakczrOvSxOAxV9Fo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731835AbgFIRf2 (ORCPT
+        id S1731849AbgFIRf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:35:28 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:49723 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731824AbgFIRf1 (ORCPT
+        Tue, 9 Jun 2020 13:35:58 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:39682 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729986AbgFIRf5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:35:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591724126;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=d8NE7paHe8S13knpYfX/RMXrdocBZKzMgPI9WeSOxdc=;
-        b=XTzixvZfFYtKUL1Oe2VlyDKZf06IOZNPiE5eDXaCk1QwcA8dPDh0whb8cAP1b2+p2Dve05
-        8dm9n7icRZ0wiNt6Eayn2glSZwYeqrkJz+shhPiXDHWjGsTP02WxtB5ma0H3UZFDJZ3CtE
-        /043Q5Cd7Y96S5rDnbtt0/ny/RstZlY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-268-XsHm8cFQNcqrth7mXB8Wzw-1; Tue, 09 Jun 2020 13:35:22 -0400
-X-MC-Unique: XsHm8cFQNcqrth7mXB8Wzw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E4CB8107ACF2;
-        Tue,  9 Jun 2020 17:35:20 +0000 (UTC)
-Received: from x2.localnet (ovpn-113-152.phx2.redhat.com [10.3.113.152])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7B92F19D71;
-        Tue,  9 Jun 2020 17:35:14 +0000 (UTC)
-From:   Steve Grubb <sgrubb@redhat.com>
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        linux-integrity@vger.kernel.org, linux-audit@redhat.com,
-        zohar@linux.ibm.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] IMA: Add audit log for failure conditions
-Date:   Tue, 09 Jun 2020 13:35:14 -0400
-Message-ID: <2006844.2enhIMKrvE@x2>
-Organization: Red Hat
-In-Reply-To: <20200609171555.itbllvtgjdanbbk7@madcap2.tricolour.ca>
-References: <20200608215343.4491-1-nramas@linux.microsoft.com> <518a51b7-6c8d-f55f-c73a-b15abae8e0af@linux.microsoft.com> <20200609171555.itbllvtgjdanbbk7@madcap2.tricolour.ca>
+        Tue, 9 Jun 2020 13:35:57 -0400
+Received: by mail-io1-f66.google.com with SMTP id c8so23740036iob.6;
+        Tue, 09 Jun 2020 10:35:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=UemfyzL4CDaIbSMWhLIN31hIuc2Yr7jCv1si14uauIA=;
+        b=tmGfN4p1CL8o5qxW8yh+rwztXiV1NjYc9c26Re9MhaiitcRki6mbS1A1HLZqRV1hxv
+         t0t7C3BcrKdbHgYbAFAmeA3crFl6UpE7d7fuGLl2NLxj9JrhHEJh30CUK8jOh2yNKMeG
+         GGd0e4oC/FU5n0rBO+O0XFk0CdScGpR+tgjecVF9ppnf0fIlJ5UaoZNN/GdgY1917x8Q
+         ihKt+utSbm12vcSsyYTvOpYxswFES2Af+Vz/Lk3ab3JJNw5+a+XySKqWR4jUqvri9xJa
+         eA6f9k5UwL1ZNuNSYgT2z1upmTTvfKBmVviSSYY5c113blyeeZAcJ2F4FKVVgnaC46vy
+         zapQ==
+X-Gm-Message-State: AOAM530PO431tyvvHaZn8bv3g4bNFsLr+33ebsx4FzK4diMlmcDqUm80
+        4UCCmRn3XJdLKhKH/01RYA==
+X-Google-Smtp-Source: ABdhPJyHA9bqkWZOLvk/hYOQV0AQki68RB2uY7Ob2Db2LSH4HMdre46KjSCiZoV+zVZ26b+BnZ/s9A==
+X-Received: by 2002:a6b:1745:: with SMTP id 66mr12153914iox.151.1591724156628;
+        Tue, 09 Jun 2020 10:35:56 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id z4sm7599577iot.24.2020.06.09.10.35.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2020 10:35:56 -0700 (PDT)
+Received: (nullmailer pid 1125416 invoked by uid 1000);
+        Tue, 09 Jun 2020 17:35:54 -0000
+Date:   Tue, 9 Jun 2020 11:35:54 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Roger Lu <roger.lu@mediatek.com>
+Cc:     Kevin Hilman <khilman@kernel.org>,
+        Nicolas Boichat <drinkcat@google.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Fan Chen <fan.chen@mediatek.com>,
+        HenryC Chen <HenryC.Chen@mediatek.com>,
+        YT Lee <yt.lee@mediatek.com>,
+        Xiaoqing Liu <Xiaoqing.Liu@mediatek.com>,
+        Charles Yang <Charles.Yang@mediatek.com>,
+        Angus Lin <Angus.Lin@mediatek.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v9 1/4] dt-bindings: power: avs: add mtk svs dt-bindings
+Message-ID: <20200609173554.GA1119852@bogus>
+References: <20200609104534.29314-1-roger.lu@mediatek.com>
+ <20200609104534.29314-2-roger.lu@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200609104534.29314-2-roger.lu@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday, June 9, 2020 1:15:55 PM EDT Richard Guy Briggs wrote:
-> On 2020-06-09 10:00, Lakshmi Ramasubramanian wrote:
-> > On 6/9/20 9:43 AM, Steve Grubb wrote:
-> > > > The number in parenthesis is the error code (such as ENOMEM, EINVAL,
-> > > > etc.) IMA uses this format for reporting TPM errors in one of the
-> > > > audit
-> > > > messages (In ima_add_template_entry()). I followed the same pattern.
-> > > > 
-> > > > Would it be better if the value for "cause" is formatted as
-> > > > 
-> > > > cause=hashing_error_-22
-> > > > 
-> > > > cause=alloc_entry_-12
-> > > 
-> > > Neither fit the name=value style that all other events follow. What
-> > > would fit the style is something like this:
-> > > 
-> > > cause=hashing_error  errno=-22
-> > > cause=alloc_entry errno=-12
-> > > 
-> > > Would this be OK? Also, errno is only to illustrate. You can name it
-> > > something else as long as there are no use case collisions with our
-> > > dictionary of field names.
-> > > 
-> > > https://github.com/linux-audit/audit-documentation/blob/master/specs/fi
-> > > elds/ field-dictionary.csv
-> > 
-> > I am fine with this.
-
-Thanks, this makes interpreting it a couple lines of code.
-
-> > "errno" is currently not listed in the dictionary of audit message field
-> > names (Thanks for the pointer to this one Steve)
-
-It can be easily added.
-
-> > Mimi - please let me know if you have any concerns with adding the
-> > "result" code in "errno" field in integrity_audit_msg().
+On Tue, Jun 09, 2020 at 06:45:31PM +0800, Roger Lu wrote:
+> Document the binding for enabling mtk svs on MediaTek SoC.
 > 
-> If it is added, it should be appended to the end of the record since it
-> is an existing record format, then in the case of res=1, errno= should
-> still be present (not swing in and out) and just contain zero.  (Or
-> another value if there is a non-fatal warning?)
+> Signed-off-by: Roger Lu <roger.lu@mediatek.com>
+> ---
+>  .../bindings/power/avs/mtk_svs.yaml           | 141 ++++++++++++++++++
+>  1 file changed, 141 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/avs/mtk_svs.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/power/avs/mtk_svs.yaml b/Documentation/devicetree/bindings/power/avs/mtk_svs.yaml
+> new file mode 100644
+> index 000000000000..f16f4eb56ee3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/avs/mtk_svs.yaml
+> @@ -0,0 +1,141 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/power/avs/mtk_svs.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Introduce SVS engine
+> +
+> +maintainers:
+> +  - Kevin Hilman <khilman@kernel.org>
+> +  - Nishanth Menon <nm@ti.com>
+> +
+> +description: |+
+> +  The Smart Voltage Scaling(SVS) engine is a piece of hardware
+> +  which has several controllers(banks) for calculating suitable
+> +  voltage to different power domains(CPU/GPU/CCI) according to
+> +  chip process corner, temperatures and other factors. Then DVFS
+> +  driver could apply SVS bank voltage to PMIC/Buck.
+> +
+> +properties:
+> +  compatible:
+> +    const: mediatek,mt8183-svs
+> +
+> +  reg:
+> +    description: Address range of the MTK SVS controller.
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    description: IRQ for the MTK SVS controller.
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    description: Main clock for svs controller to work.
+> +
+> +  clock-names:
+> +    const: main
+> +
+> +  nvmem-cells:
+> +    maxItems: 2
+> +    description:
+> +      Phandle to the calibration data provided by a nvmem device.
+> +
+> +  nvmem-cell-names:
+> +    items:
+> +      - const: svs-calibration-data
+> +      - const: calibration-data
+> +
+> +patternProperties:
+> +  "^svs-(cpu-little|cpu-big|cci|gpu)$":
+> +    type: object
+> +    description:
+> +      Each subnode represents one SVS bank.
+> +        - svs-cpu-little (SVS bank device node of little CPU)
+> +        - svs-cpu-big (SVS bank device node of big CPU)
+> +        - svs-cci (SVS bank device node of CCI)
+> +        - svs-gpu (SVS bank device node of GPU)
 
-This is not a searchable field, so it can go anywhere. If it is searchable, 
-ausearch expects ordering of other searchable fields.
+As I've said before, I don't think these child nodes make sense. All 
+this data should already be available elsewhere in the DT.
 
--Steve
-
-
+Rob
