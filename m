@@ -2,107 +2,159 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8271AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:42:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F76C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:42:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B221207ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:42:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EFmTQSNt"
+	by mail.kernel.org (Postfix) with ESMTP id 23E2C207C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:42:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730889AbgFIPmQ (ORCPT
+        id S1730900AbgFIPmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 11:42:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49850 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728533AbgFIPmO (ORCPT
+        Tue, 9 Jun 2020 11:42:24 -0400
+Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:31243 "EHLO
+        EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730838AbgFIPmW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 11:42:14 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FCB2C05BD1E
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 08:42:14 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id w20so10463614pga.6
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 08:42:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=UdPQIe/td55auw0us8ClJOZgo9JTMMfzqiY2jJ/gIzc=;
-        b=EFmTQSNt9rLVA8xD54R57r9jXkmFaC5/q4b+aIlVZIb91XKe2mP5sZ6tYEG5sJ9uov
-         W1Juv+IBPMmRFXmqwHDmkjUZYFUcv2dP3Y6dulatZ/E8P4wdrfh4dZOzRvC0xRVQcj1S
-         LambSOcbc3AikwJg2p1+iCtNppzABU12NinqQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=UdPQIe/td55auw0us8ClJOZgo9JTMMfzqiY2jJ/gIzc=;
-        b=N/xIcbgHN8vCBVJfZxpZ2xrPfn+qzD2X630ldIj8gEPp13VjVpa30W4vu2zvQ6ll2D
-         +LupersHo3PVRhJslFb+8SElnlJ5nrKJxFdz7Jm8FRRfiYjJUOeus2g+G/JO4y5UATPG
-         b0DKqEx05b25Pf9G2tfRPUTzpJM7B+Fa8bDjzxSrnGlxeYQdNEYx52r8aiJaXhxrpoEF
-         Y8141TzyV8WiIdl4RItFjFFKimfoWqI3JFMpU7pnXoHKDiABRuXZVnPnJhXrcJIIEulu
-         HV6D1k8IsaXhnmWxggevjrM+tsM7XvJb1VOyWR8bbvOASbbx+Us1c1NW3lwEJuYJhLC2
-         xiWw==
-X-Gm-Message-State: AOAM533CHZbnPOe4fqv3BZigjc/Idjn8gdYYm1ttj7Om+Dm730fJnEBU
-        WlPRFdZxOfydbFYxqMc5sVHaZQ==
-X-Google-Smtp-Source: ABdhPJwDLPLgRwX/5YiOAWiSwfAnQNixgv/Z2SNb1uOLQRZJdt/7e9WNPMwlJCtPpMCSpJdfNnZybw==
-X-Received: by 2002:a63:6dc9:: with SMTP id i192mr22610589pgc.402.1591717333630;
-        Tue, 09 Jun 2020 08:42:13 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id t2sm8929682pgh.89.2020.06.09.08.42.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 08:42:12 -0700 (PDT)
-Date:   Tue, 9 Jun 2020 08:42:11 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: [PATCH v2] overflow.h: Add flex_array_size() helper
-Message-ID: <202006090841.83B5989A9@keescook>
-References: <20200609012233.GA3371@embeddedor>
- <e32b0a42aa00c20ef3868edd987c39a95ba68e95.camel@perches.com>
+        Tue, 9 Jun 2020 11:42:22 -0400
+Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
+ EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
+ 15.0.1156.6; Tue, 9 Jun 2020 08:42:19 -0700
+Received: from localhost (unknown [10.166.65.245])
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 721A940884;
+        Tue,  9 Jun 2020 08:42:21 -0700 (PDT)
+Date:   Tue, 9 Jun 2020 08:42:21 -0700
+From:   Matt Helsley <mhelsley@vmware.com>
+To:     Julien Thierry <jthierry@redhat.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+Subject: Re: [RFC][PATCH v4 01/32] objtool: Prepare to merge recordmcount
+Message-ID: <20200609154221.GC1284251@rlwimi.vmware.com>
+Mail-Followup-To: Matt Helsley <mhelsley@vmware.com>,
+        Julien Thierry <jthierry@redhat.com>, linux-kernel@vger.kernel.org,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+References: <cover.1591125127.git.mhelsley@vmware.com>
+ <4a71852d8ca0a245588159a6bbdc064619de91d9.1591125127.git.mhelsley@vmware.com>
+ <1e2783f2-6b52-d750-ecc5-4e3d6d7dba4f@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <e32b0a42aa00c20ef3868edd987c39a95ba68e95.camel@perches.com>
+In-Reply-To: <1e2783f2-6b52-d750-ecc5-4e3d6d7dba4f@redhat.com>
+Received-SPF: None (EX13-EDG-OU-001.vmware.com: mhelsley@vmware.com does not
+ designate permitted sender hosts)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 11:47:03PM -0700, Joe Perches wrote:
-> On Mon, 2020-06-08 at 20:22 -0500, Gustavo A. R. Silva wrote:
-> > Add flex_array_size() helper for the calculation of the size, in bytes,
-> > of a flexible array member contained within an enclosing structure.
-> []
-> > diff --git a/include/linux/overflow.h b/include/linux/overflow.h
-> []
-> > +/**
-> > + * flex_array_size() - Calculate size, in bytes, of a flexible array member
-> > + * within an enclosing structure. Read on for more details.
+On Tue, Jun 09, 2020 at 09:54:33AM +0100, Julien Thierry wrote:
+> Hi Matt,
 > 
-> IMO: "Read on for more details" isn't useful here.
-> Perhaps better would be something like:
-> 
->  * flex_array_size() - size of a flexible array (sizeof(typeof(member)) * count)
-> 
-> > + *
-> > + * @p: Pointer to the structure.
-> > + * @member: Name of the flexible array member.
-> > + * @count: Number of elements in the array.
-> > + *
-> > + * Calculates size, in bytes, of a flexible array @member of @count elements
-> 
-> IMO: "in bytes, " is redundant.  size is always bytes.
+> On 6/2/20 8:49 PM, Matt Helsley wrote:
+> > Move recordmcount into the objtool directory. We keep this step separate
+> > so changes which turn recordmcount into a subcommand of objtool don't
+> > get obscured.
+> > 
+> > Signed-off-by: Matt Helsley <mhelsley@vmware.com>
 
-While yes, that's the expected unit, I don't mind the clarification
-given that we want to be distinct from "count" and the size of an
-individual array element.
+<snip>
 
--- 
-Kees Cook
+> > diff --git a/Makefile b/Makefile
+> > index 04f5662ae61a..d353a0a65a71 100644
+> > --- a/Makefile
+> > +++ b/Makefile
+> > @@ -844,6 +844,7 @@ ifdef CONFIG_DYNAMIC_FTRACE
+> >   	ifdef CONFIG_HAVE_C_RECORDMCOUNT
+> >   		BUILD_C_RECORDMCOUNT := y
+> >   		export BUILD_C_RECORDMCOUNT
+> > +		objtool_target := tools/objtool FORCE
+> >   	endif
+> >   endif
+> >   endif
+> > @@ -1023,10 +1024,10 @@ endif
+> >   export mod_sign_cmd
+> >   HOST_LIBELF_LIBS = $(shell pkg-config libelf --libs 2>/dev/null || echo -lelf)
+> > +has_libelf := $(call try-run,\
+> > +		echo "int main() {}" | $(HOSTCC) -xc -o /dev/null $(HOST_LIBELF_LIBS) -,1,0)
+> 
+> Maybe there could be some build dependency, e.g. CONFIG_OBJTOOL_SUBCMDS that
+> sets the "objtool_target" and "has_libelf" when selected.
+> 
+> Then the CONFIG_UNWINDER_ORC, RECORD_MCOUNT and STACK_VALIDATION would just
+> had to select that config option.
+
+That might save a good amount of control flow in the Makefiles.
+
+We could take it one step further and have specific CONFIG_OBJTOOL_<subcmd>
+which might help us remove the per-architecture control-flow in
+the multi-arch subcmd support found in tools/objtool/Makefile.
+
+What do folks think of that -- too far?
+
+> 
+> >   ifdef CONFIG_STACK_VALIDATION
+> > -  has_libelf := $(call try-run,\
+> > -		echo "int main() {}" | $(HOSTCC) -xc -o /dev/null $(HOST_LIBELF_LIBS) -,1,0)
+> >     ifeq ($(has_libelf),1)
+> >       objtool_target := tools/objtool FORCE
+> >     else
+> > @@ -1163,13 +1164,15 @@ uapi-asm-generic:
+> >   PHONY += prepare-objtool
+> >   prepare-objtool: $(objtool_target)
+> > -ifeq ($(SKIP_STACK_VALIDATION),1)
+> > -ifdef CONFIG_UNWINDER_ORC
+> > +ifneq ($(has_libelf),1)
+> > +  ifdef CONFIG_UNWINDER_ORC
+> >   	@echo "error: Cannot generate ORC metadata for CONFIG_UNWINDER_ORC=y, please install libelf-dev, libelf-devel or elfutils-libelf-devel" >&2
+> >   	@false
+> > -else
+> > +  else
+> > +    ifeq ($(SKIP_STACK_VALIDATION),1)
+> >   	@echo "warning: Cannot use CONFIG_STACK_VALIDATION=y, please install libelf-dev, libelf-devel or elfutils-libelf-devel" >&2
+> 
+> 
+> I think this would be more readable without the else branch:
+> 
+> 	ifneq ($(has_libelf),1)
+> 		ifdef <some objtool command config>
+> 			<warn about unavailability>
+
+Note: error not warn
+
+> 		endif
+> 		ifdef <another objtool command config>
+> 			<warn ...>
+> 		endif
+> 		<...>
+> 	endif
+
+I think the next patch, which makes recordmcount a subcmd, makes it a
+little clearer what the pattern is because it adds another ifdef block
+in the way you suggest.
+
+As for the else around the SKIP_STACK_VALIDATION check -- it is special
+in a couple ways -- at least as best I can tell.
+
+It's not a CONFIG_* -- it actually breaks the normal pattern with
+CONFIG_* in that..
+
+It's about a judgement call that it's OK to merely warn and skip the
+stack validation rather than produce an error. The other, CONFIG_*
+blocks produce errors.
+
+These two reasons are why I think it makes sense to keep the logic
+distinct with the "else".
+
+Cheers,
+	-Matt Helsley
