@@ -2,124 +2,187 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B2EBC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 21:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05617C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 21:22:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DFBA2068D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 21:21:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC05D2068D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 21:22:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eDrRBDWR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbgFIVVa (ORCPT
+        id S1728124AbgFIVWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 17:21:30 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:46209 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725894AbgFIVV2 (ORCPT
+        Tue, 9 Jun 2020 17:22:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46066 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbgFIVWR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 17:21:28 -0400
-Received: by mail-il1-f198.google.com with SMTP id e12so41510ile.13
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 14:21:28 -0700 (PDT)
+        Tue, 9 Jun 2020 17:22:17 -0400
+Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B37A7C05BD1E;
+        Tue,  9 Jun 2020 14:22:16 -0700 (PDT)
+Received: by mail-ua1-x941.google.com with SMTP id b10so132720uaf.0;
+        Tue, 09 Jun 2020 14:22:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lvo6gmfaSUatvcdPmlKUWjisLMZTWlY31eXgIl8wXfM=;
+        b=eDrRBDWRazsKcuFMK88bS+L3xhQwKZ6Jde99eN2tR+dWuTnLjy34W+3n3Ww8l5kIlv
+         6u3uiJ0ogyzwor7kMHvuynNDvFYZv0RsaceiiQTePvf9a85dzWQlaD6tKOZfXFJ99yiW
+         WG/plUXLrS4SWDVfNvEp5HhjedWcizQsPrWs1BKJR/QKPV/uDb9fLb0gvJAzUQFNoxTZ
+         GEp7IoGPR9s4/SZhmqNzfvCoXIEzm94tdqhK898jXDa/wqtlyjdGYy9IdqNEpZaYWImJ
+         WHPtC/me7dvfRGSNwEZT5I1W+8Grot4LGawAxvsrNnr0JgAZsEG2UC/MqCaqS0H0ujyo
+         e4TQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=NSyl9LGsAtmwy93eIPaRM+kNwixkelOTwR/Z9dLPDoI=;
-        b=LiuMog2Mz4FCuD8JSzxNfoK5SJn2ngiMlrweDQnwssydsz09d3jCAqUkcZK7YMlxpf
-         cugorBs9xisknmOl+bXsdKeMQfgFX4v0wVXYLPAshxgI5bpl1WKATbUlOepQirc9sqPB
-         FFOb6IAgw3kHCfK6b5v+LU6RqcfUVx40u+Ik3Zg9P2fy6+dYJhleWO4ng2VL9Si7Erkp
-         +CXzWogN/Yo09Qt/mHb/akbAAxfdPEXeAEB+HKHAXZfV5ws4pVHfJrpg5t0dr1YLYinb
-         Bciiew0XTghDDi+a7sq/aUKbuXZCmxoDRbEmOpWX+JWfxvc4hpIMuBzM5tziv7dqjpf7
-         y+ng==
-X-Gm-Message-State: AOAM531UK7pEtlQnNwd/U8A6L80YXH/Uy6PhalBJHi+pBq1Lwj/KvFdx
-        fHFq3tp2KWJfGAN1JPsoD7hYETjUjBuSnPARB7Na3ozI1qd3
-X-Google-Smtp-Source: ABdhPJwto8akOcvT4yl7dgwb+4TYYWnVdkWbAqBEJHGcVxXjBKZsKBCHNOiDvm5gg++yi2HEiBp+osqyMVLuYjyCsBMwEYmeppbG
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lvo6gmfaSUatvcdPmlKUWjisLMZTWlY31eXgIl8wXfM=;
+        b=nvcsdlA6Jv4YgVi58OzH4TS3KHPxjDyfYeDKnYxQBHiHupgf/r6wBaW6UNpz9TEPci
+         V2bj+WYXiwdv43Jz29ppk91ycz5QS3rLvcu18mVMdT0KhKsV2WYArG9w6VlvLnTk/ggh
+         MnzMhKbKekFs0Gxao0J0UaYB5S+THRZIXs98Anegl9863CQfxx98M2qRCbakMQPXJ2y4
+         9j3MMxNnR85vdAfCgiG3UsTxd2TjS58qTOMHluKBMfKtXQD5jpai8zYo96UuTHSuwMnV
+         GHNd+FNtqjO8e6uGJGjoxcxWsEmgB/sBl4+B3EbUM4L7DaWSx27jGxsxWwsJkSkV0tfE
+         v/cw==
+X-Gm-Message-State: AOAM5308SBgNUK9DksbVTeqUo4JtPec5j1++hPlP5vn6eUkPPnQPZPdh
+        +MVlyApVzswF6qoCNZNWhY3Lr92CVLiE/APR7AQ=
+X-Google-Smtp-Source: ABdhPJzv9zcfmFRD/xb+N4TrM5e7mssTEt6wunGbMj0+XsQ2MiBmqviK4jz/SHdgoIOI6C7fqOlNqElwR4p7fO1/rwc=
+X-Received: by 2002:ab0:4754:: with SMTP id i20mr324220uac.142.1591737735766;
+ Tue, 09 Jun 2020 14:22:15 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a6b:ea10:: with SMTP id m16mr75992ioc.180.1591737687789;
- Tue, 09 Jun 2020 14:21:27 -0700 (PDT)
-Date:   Tue, 09 Jun 2020 14:21:27 -0700
-In-Reply-To: <00000000000003d19705a764d5ee@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000074d91105a7ad4fe9@google.com>
-Subject: Re: KMSAN: uninit-value in slhc_compress (2)
-From:   syzbot <syzbot+801c60509310ac8083dd@syzkaller.appspotmail.com>
-To:     adobriyan@gmail.com, davem@davemloft.net, edumazet@google.com,
-        glider@google.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+References: <20200609104604.1594-1-stanimir.varbanov@linaro.org>
+ <20200609111323.GA19604@bombadil.infradead.org> <c239d5df-e069-2091-589e-30f341c2cbd3@infradead.org>
+ <9a79aded6981ec47f1f8b317b784e6e44158ac61.camel@perches.com>
+In-Reply-To: <9a79aded6981ec47f1f8b317b784e6e44158ac61.camel@perches.com>
+From:   jim.cromie@gmail.com
+Date:   Tue, 9 Jun 2020 15:21:49 -0600
+Message-ID: <CAJfuBxwyDysP30cMWDusw4CsSQitchA5hOKkpk1PktbsbCKTSw@mail.gmail.com>
+Subject: Re: [PATCH v3 0/7] Venus dynamic debug
+To:     Joe Perches <joe@perches.com>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Linux Documentation List <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-acpi@vger.kernel.org, netdev@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jason Baron <jbaron@akamai.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+On Tue, Jun 9, 2020 at 10:49 AM Joe Perches <joe@perches.com> wrote:
+>
+> (adding Jim Cromie and comments)
+>
 
-HEAD commit:    f0d5ec90 kmsan: apply __no_sanitize_memory to dotraplinkag..
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=10495a36100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=86e4f8af239686c6
-dashboard link: https://syzkaller.appspot.com/bug?extid=801c60509310ac8083dd
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10a2b432100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=164753a6100000
+thanks for bringing me in...
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+801c60509310ac8083dd@syzkaller.appspotmail.com
 
-=====================================================
-BUG: KMSAN: uninit-value in slhc_compress+0x2c5/0x2fb0 drivers/net/slip/slhc.c:251
-CPU: 0 PID: 9204 Comm: syz-executor789 Not tainted 5.7.0-rc4-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1c9/0x220 lib/dump_stack.c:118
- kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
- __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
- slhc_compress+0x2c5/0x2fb0 drivers/net/slip/slhc.c:251
- ppp_send_frame drivers/net/ppp/ppp_generic.c:1637 [inline]
- __ppp_xmit_process+0x1902/0x2970 drivers/net/ppp/ppp_generic.c:1495
- ppp_xmit_process+0x147/0x2f0 drivers/net/ppp/ppp_generic.c:1516
- ppp_write+0x6bb/0x790 drivers/net/ppp/ppp_generic.c:512
- do_loop_readv_writev fs/read_write.c:718 [inline]
- do_iter_write+0xa0a/0xdc0 fs/read_write.c:1001
- vfs_writev fs/read_write.c:1072 [inline]
- do_pwritev+0x487/0x7d0 fs/read_write.c:1169
- __do_sys_pwritev fs/read_write.c:1216 [inline]
- __se_sys_pwritev+0xc6/0xe0 fs/read_write.c:1211
- __x64_sys_pwritev+0x62/0x80 fs/read_write.c:1211
- do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:297
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x4412f9
-Code: e8 fc ab 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 9b 09 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffd3ec8cf78 EFLAGS: 00000246 ORIG_RAX: 0000000000000128
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00000000004412f9
-RDX: 0000000000000003 RSI: 0000000020000480 RDI: 0000000000000003
-RBP: 0000000000014688 R08: 00000000004002c8 R09: 00000000004002c8
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402120
-R13: 00000000004021b0 R14: 0000000000000000 R15: 0000000000000000
+> On Tue, 2020-06-09 at 09:03 -0700, Randy Dunlap wrote:
+> > On 6/9/20 4:13 AM, Matthew Wilcox wrote:
+> > > On Tue, Jun 09, 2020 at 01:45:57PM +0300, Stanimir Varbanov wrote:
+> > > > Here is the third version of dynamic debug improvements in Venus
+> > > > driver.  As has been suggested on previous version by Joe [1] I've
+> > > > made the relevant changes in dynamic debug core to handle leveling
+> > > > as more generic way and not open-code/workaround it in the driver.
+> > > >
+> > > > About changes:
+> > > >  - added change in the dynamic_debug and in documentation
+> > > >  - added respective pr_debug_level and dev_dbg_level
+> > >
+> > > Honestly, this seems like you want to use tracepoints, not dynamic debug.
+>
+> Tracepoints are a bit heavy and do not have any class
+> or grouping mechanism.
+>
+> debug_class is likely a better name than debug_level
+>
+> > Also see this patch series:
+> > https://lore.kernel.org/lkml/20200605162645.289174-1-jim.cromie@gmail.com/
+> > [PATCH 00/16] dynamic_debug: cleanups, 2 features
+> >
+> > It adds/expands dynamic debug flags quite a bit.
+>
+> Yes, and thanks Randy and Jim and Stanimir
+>
+> I haven't gone through Jim's proposal enough yet.
+> It's unfortunate these patches series conflict.
+>
+> And for Jim, a link to Stanimir's patch series:
+> https://lore.kernel.org/lkml/20200609104604.1594-1-stanimir.varbanov@linaro.org/
+>
+>
 
-Uninit was created at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_poison_shadow+0x66/0xd0 mm/kmsan/kmsan.c:127
- kmsan_slab_alloc+0x8a/0xe0 mm/kmsan/kmsan_hooks.c:80
- slab_alloc_node mm/slub.c:2802 [inline]
- __kmalloc_node_track_caller+0xb40/0x1200 mm/slub.c:4436
- __kmalloc_reserve net/core/skbuff.c:142 [inline]
- __alloc_skb+0x2fd/0xac0 net/core/skbuff.c:210
- alloc_skb include/linux/skbuff.h:1083 [inline]
- ppp_write+0x115/0x790 drivers/net/ppp/ppp_generic.c:500
- do_loop_readv_writev fs/read_write.c:718 [inline]
- do_iter_write+0xa0a/0xdc0 fs/read_write.c:1001
- vfs_writev fs/read_write.c:1072 [inline]
- do_pwritev+0x487/0x7d0 fs/read_write.c:1169
- __do_sys_pwritev fs/read_write.c:1216 [inline]
- __se_sys_pwritev+0xc6/0xe0 fs/read_write.c:1211
- __x64_sys_pwritev+0x62/0x80 fs/read_write.c:1211
- do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:297
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-=====================================================
 
+As Joe noted, there is a lot of ad-hockery to possibly clean up,
+but I dont grok how these levels should be distinguished from
+KERN_(WARN|INFO|DEBUG) constants.
+Those constants are used by coders, partly to convey how bad things are
+As a user, Id be reluctant to disable an EMERG callsite.
+
+are you trying to add a User Bit ? or maybe 7-9 of them ?
+
+I have a patchset which adds a 'u' flag, for user.
+An earlier version had x,y,z flags for 3 different user purposes.
+I simplified, since only 1 was needed to mark up arbitrary sets of callsites.
+Another patchset feature lets u select on that flag.
+
+ #> echo u+p > control
+
+Joe suggested class, I certainly find level confusing.
+
+Is what you want user-flags u[1-7], or driver-flags d]1-7]   ?
+and let me distinguish,
+your flags are set in code, not modifiable by user, only for filtering
+on flag/bit state ?
+so theyd be different than [pfmltu_] flags, which are user changed.
+
+my patchset also adds filtering on flag-state,
+so that "echo u+p > control " could work.
+
+if you had
+     echo 'module venus 1+p; 2+p; 9+p' > control
+how far would you get ?
+
+if it covers your needs, then we could add
+numerical flags (aka U1, U9) can be distinguished from  [pfmltu_PFMLTU]
+and excluded from the mod-flags changes
+
+from there, it shouldnt be hard to add some macro help
+
+DECLARE_DYNDBG_FLAG ( 1, 'x' )
+DECLARE_DYNDBG_FLAG ( 2, 'y' )
+DECLARE_DYNDBG_FLAG ( 3, 'z' )
+
+DECLARE_DYNDBG_FLAG_INFO ( 4, 'q', "unquiet a programmer defined debug
+callsite set" )
+
+also, since Im here, and this is pretty much on-topic,
+I perused https://lkml.org/lkml/2020/5/21/399
+
+I see 3 things;
+- s / dev_dbg / VDBGL /
+- add a bunch of VDBGM calls
+- sys_get_prop_image_version  signature change.   (this doesnt really
+belong here)
+
+ISTM most of the selection of dyndbg callsites in that part of venus
+could be selected by format.
+
+   echo "module venus format error +p" > control
+
+if so, refining your messages will define the logical sets for you ?
+
+
+thanks
+JimC (one of them anyway)
