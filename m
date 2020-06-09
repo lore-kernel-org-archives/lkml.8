@@ -2,70 +2,121 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D714EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA83FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:10:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B17922078C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:10:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591722650;
-	bh=mUhfWNznLxmCWMFhxxdUHx438NavV98MJxuKPN+4wQM=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=tiqzmWlT4vUscXW/Of21OZTisrHiHEx1DgXfPJZIU5jSlC9B5Pp9rRf9+AoTLqi6M
-	 awIB/y0RXihy82/zjqfjCCJXhHGwo5zhXysfiN8OlgQ9i2Hggn8I0Kn6wOaiMXL1CJ
-	 1XP7KXTQVcZFaOFRtkQPWinZaCKwTsakpbMewpZc=
+	by mail.kernel.org (Postfix) with ESMTP id D18E320734
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:10:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731559AbgFIRKe (ORCPT
+        id S1731593AbgFIRKx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:10:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34716 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:10:53 -0400
+Received: from muru.com ([72.249.23.125]:57424 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727777AbgFIRKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:10:23 -0400
-Subject: Re: [GIT PULL] Kunit update for Linux 5.8-rc1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591722623;
-        bh=mUhfWNznLxmCWMFhxxdUHx438NavV98MJxuKPN+4wQM=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=1V/HIUeYSC9aTuWb8mRowJI7O7kSWkQLypqsEEgFvXABk6YIgyjsoedk51UiGlsuR
-         uwAnbwyA9zSumU2GZSEMyTJBNfYYtvGbzIOpypqyY68MIxfm1jza1q0FABKFzOK5d1
-         w3AtdHVGpA/ceDQqroK+alWBaC1VT8faUsiPoHe4=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <a975bc3c-a101-fe24-a2e3-1ae70ad7b181@linuxfoundation.org>
-References: <a975bc3c-a101-fe24-a2e3-1ae70ad7b181@linuxfoundation.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <a975bc3c-a101-fe24-a2e3-1ae70ad7b181@linuxfoundation.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest
- tags/linux-kselftest-kunit-5.8-rc1
-X-PR-Tracked-Commit-Id: 6d6861d45e38d42a7df9db244c871ee3856acf57
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 595a56ac1b0d5f0a16a89589ef55ffd35c1967a2
-Message-Id: <159172262303.7211.17730688109818843743.pr-tracker-bot@kernel.org>
-Date:   Tue, 09 Jun 2020 17:10:23 +0000
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        skhan@linuxfoundation.org
+        id S1728343AbgFIRKr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:10:47 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id AC9D28088;
+        Tue,  9 Jun 2020 17:11:37 +0000 (UTC)
+Date:   Tue, 9 Jun 2020 10:10:43 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc:     linux-omap@vger.kernel.org, "Andrew F . Davis" <afd@ti.com>,
+        Dave Gerlach <d-gerlach@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/5] drm/omap: Fix suspend resume regression after
+ platform data removal
+Message-ID: <20200609171043.GN37466@atomide.com>
+References: <20200531193941.13179-1-tony@atomide.com>
+ <20200531193941.13179-2-tony@atomide.com>
+ <16ba1808-5c7f-573d-8dd0-c80cac2f476e@ti.com>
+ <20200603140639.GG37466@atomide.com>
+ <47e286dd-f87a-4440-5bde-1f7b53e8b672@ti.com>
+ <20200609151943.GL37466@atomide.com>
+ <9ed70121-2a53-d2b3-051a-88eb83e6c53f@ti.com>
+ <20200609165234.GM37466@atomide.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200609165234.GM37466@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 8 Jun 2020 16:23:52 -0600:
+* Tony Lindgren <tony@atomide.com> [200609 16:53]:
+> * Tomi Valkeinen <tomi.valkeinen@ti.com> [200609 15:27]:
+> > On 09/06/2020 18:19, Tony Lindgren wrote:
+> > > Currently I'm only able to rmmod -f omapdrm, not sure if these issues might
+> > > be related.
+> > 
+> > Hmm, I always use modules, and can unload omapdrm and drm fine. But there's
+> > a sequence that must be followed. However, the sequence starts with
+> > unloading omapdrm... What behavior you see with rmmod?
+> 
+> Hmm maybe it's output specific somehow?
+> 
+> I just tried again with the following with v5.7. I see the omapdrm
+> usage count issue happen at least on duovero, but don't seem to
+> currently get /dev/fb0 initialized on x15 with these:
+> 
+> modprobe omapdrm
+> #modprobe connector_hdmi	# up to v5.6
+> modprobe display-connector	# starting with v5.7-rc1
+> modprobe ti-tpd12s015		# beagle-x15
+> modprobe omapdss
+> 
+> # rmmod omapdrm
+> rmmod: ERROR: Module omapdrm is in use
+> 
+> # lsmod | grep omapdrm
+> omapdrm                65536  1
+> omapdss_base           16384  2 omapdrm,omapdss
+> drm_kms_helper        155648  3 omapdss_base,omapdrm,omapdss
+> drm                   372736  7 ti_tpd12s015,omapdss_base,display_connector,omapdrm,omapdss,drm_kms_helper
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest tags/linux-kselftest-kunit-5.8-rc1
+I'm also seeing the rmmod omapdrm issue on am437x-sk-evm:
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/595a56ac1b0d5f0a16a89589ef55ffd35c1967a2
+modprobe pwm-omap-dmtimer
+modprobe pwm-tiecap
+modprobe pwm_bl
+modprobe omapdrm
+modprobe panel-simple
+modprobe display-connector      # starting with v5.7-rc1
+modprobe omapdss
 
-Thank you!
+# rmmod omapdrm
+rmmod: ERROR: Module omapdrm is in use
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+> On beagle-x15 I see these errors after modprobe:
+> 
+> DSS: OMAP DSS rev 6.1
+> omapdss_dss 58000000.dss: bound 58001000.dispc (ops dispc_component_ops [omapdss])
+> omapdss_dss 58000000.dss: bound 58040000.encoder (ops hdmi5_component_ops [omapdss])
+> [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
+> omapdrm omapdrm.0: [drm] Cannot find any crtc or sizes
+> [drm] Initialized omapdrm 1.0.0 20110917 for omapdrm.0 on minor 0
+> omapdrm omapdrm.0: [drm] Cannot find any crtc or sizes
+> aic_dvdd_fixed: disabling
+> ldousb: disabling
+> 
+> Maybe I'm missing some related module on x15?
+
+Still did not figure what I might be missing on x15 :)
+
+Regards,
+
+Tony
