@@ -2,207 +2,203 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD76C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E11EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C5D220737
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:55:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="YT5p2fmS"
+	by mail.kernel.org (Postfix) with ESMTP id 66D122072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:56:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731014AbgFIPzd (ORCPT
+        id S1731025AbgFIP4K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 11:55:33 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:42856 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730794AbgFIPzd (ORCPT
+        Tue, 9 Jun 2020 11:56:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51996 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728888AbgFIP4J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 11:55:33 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591718131; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=otJoXnyUTJ+AO1rtsueTFB+5jLpzPuvXqndqJnQhE84=;
- b=YT5p2fmSxx6XIuJFpYoWdrcGf4+o9/UrGJxjhbhMh8IgM815eT4UrOryf70dSTFFN7BppNDh
- wBcIpkCj/omVmuPhGonteYoGWyI2R6acEBNd4xPp2hlRmCeTlzpQ7GJthWG7qw1dbVcqb4sE
- Ru3bYeAXlZWLt+8JxBFLE9tuGr0=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5edfb0e5bfb34e631cdf6e98 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 09 Jun 2020 15:55:17
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 27FF7C433C6; Tue,  9 Jun 2020 15:55:16 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: gubbaven)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 32084C433C6;
-        Tue,  9 Jun 2020 15:55:15 +0000 (UTC)
+        Tue, 9 Jun 2020 11:56:09 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84C23C05BD1E
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 08:56:08 -0700 (PDT)
+Received: from localhost ([127.0.0.1] helo=vostro)
+        by Galois.linutronix.de with esmtps (TLS1.2:RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1jigbe-00044i-C0; Tue, 09 Jun 2020 17:56:06 +0200
+From:   John Ogness <john.ogness@linutronix.de>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Paul McKenney <paulmck@kernel.org>
+Subject: Re: Barrier before pushing desc_ring tail: was [PATCH v2 2/3] printk: add lockless buffer
+References: <20200501094010.17694-1-john.ogness@linutronix.de>
+        <20200501094010.17694-3-john.ogness@linutronix.de>
+        <20200609113751.GD23752@linux-b0ei>
+Date:   Tue, 09 Jun 2020 17:56:03 +0200
+In-Reply-To: <20200609113751.GD23752@linux-b0ei> (Petr Mladek's message of
+        "Tue, 9 Jun 2020 13:37:51 +0200")
+Message-ID: <87d068utbg.fsf@vostro.fn.ogness.net>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 09 Jun 2020 21:25:15 +0530
-From:   gubbaven@codeaurora.org
-To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
-        robh@kernel.org, hemantg@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        Claire Chang <tientzu@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>, rjliao@codeaurora.org,
-        Yoni Shavit <yshavit@google.com>
-Subject: Re: [PATCH v1] Bluetooth: hci_qca: Fix double free during SSR timeout
-In-Reply-To: <CANFp7mX1iKNETqzjdp5z4OrRJBdaGV+f4rOQBtGomYEhsazVfw@mail.gmail.com>
-References: <1591279032-7527-1-git-send-email-gubbaven@codeaurora.org>
- <CANFp7mX1iKNETqzjdp5z4OrRJBdaGV+f4rOQBtGomYEhsazVfw@mail.gmail.com>
-Message-ID: <219ebb83d596c245beed703e102122ab@codeaurora.org>
-X-Sender: gubbaven@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Abhishek,
-
-On 2020-06-05 10:23, Abhishek Pandit-Subedi wrote:
-> Hi,
-> 
-> On Thu, Jun 4, 2020 at 6:59 AM Venkata Lakshmi Narayana Gubba
-> <gubbaven@codeaurora.org> wrote:
->> 
->> Due to race conditions between qca_hw_error and qca_controller_memdump
->> during SSR timeout,the same pointer is freed twice. Which results to
->> double free error. Now a lock is acquired while SSR state moved to 
->> timeout.
-> suggestion: Change "which results to double free error" to "This
-> results in a double free."
-> suggestion: Change "while SSR state moved to timeout" to "when SSR
-> state is changed to timeout"
-> 
-[Venkata]:
-Sure will update in next patchset.
->> 
->> Signed-off-by: Venkata Lakshmi Narayana Gubba 
->> <gubbaven@codeaurora.org>
->> ---
->>  drivers/bluetooth/hci_qca.c | 19 ++++++++++++++-----
->>  1 file changed, 14 insertions(+), 5 deletions(-)
->> 
->> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
->> index 836949d..9110775 100644
->> --- a/drivers/bluetooth/hci_qca.c
->> +++ b/drivers/bluetooth/hci_qca.c
->> @@ -983,8 +983,11 @@ static void qca_controller_memdump(struct 
->> work_struct *work)
->>         while ((skb = skb_dequeue(&qca->rx_memdump_q))) {
->> 
->>                 mutex_lock(&qca->hci_memdump_lock);
->> -               /* Skip processing the received packets if timeout 
->> detected. */
->> -               if (qca->memdump_state == QCA_MEMDUMP_TIMEOUT) {
->> +               /* Skip processing the received packets if timeout 
->> detected
->> +                * or memdump collection completed.
->> +                */
->> +               if (qca->memdump_state == QCA_MEMDUMP_TIMEOUT ||
->> +                   qca->memdump_state == QCA_MEMDUMP_COLLECTED) {
->>                         mutex_unlock(&qca->hci_memdump_lock);
->>                         return;
->>                 }
->> @@ -1485,7 +1488,7 @@ static void qca_hw_error(struct hci_dev *hdev, 
->> u8 code)
->>  {
->>         struct hci_uart *hu = hci_get_drvdata(hdev);
->>         struct qca_data *qca = hu->priv;
->> -       struct qca_memdump_data *qca_memdump = qca->qca_memdump;
->> +       struct qca_memdump_data *qca_memdump = NULL;
->>         char *memdump_buf = NULL;
->> 
->>         set_bit(QCA_HW_ERROR_EVENT, &qca->flags);
->> @@ -1509,9 +1512,10 @@ static void qca_hw_error(struct hci_dev *hdev, 
->> u8 code)
->>                 qca_wait_for_dump_collection(hdev);
->>         }
->> 
->> +       mutex_lock(&qca->hci_memdump_lock);
->>         if (qca->memdump_state != QCA_MEMDUMP_COLLECTED) {
->>                 bt_dev_err(hu->hdev, "clearing allocated memory due to 
->> memdump timeout");
->> -               mutex_lock(&qca->hci_memdump_lock);
->> +               qca_memdump = qca->qca_memdump;
->>                 if (qca_memdump)
->>                         memdump_buf = qca_memdump->memdump_buf_head;
->>                 vfree(memdump_buf);
-> 
-> This section of code looks a bit unclear because it's only partially
-> in an if statement. Suggestion:
->   if (qca->qca_memdump) {
->     vfree(qca->qca_memdump->memdump_buf_head);
->     kfree(qca->qca_memdump);
->     qca->qca_memdump = NULL;
->   }
-> 
-[Venkata]:
-Sure will update in next patchset.
->> @@ -1520,8 +1524,13 @@ static void qca_hw_error(struct hci_dev *hdev, 
->> u8 code)
->>                 qca->memdump_state = QCA_MEMDUMP_TIMEOUT;
->>                 cancel_delayed_work(&qca->ctrl_memdump_timeout);
->>                 skb_queue_purge(&qca->rx_memdump_q);
->> -               mutex_unlock(&qca->hci_memdump_lock);
->> +       }
->> +       mutex_unlock(&qca->hci_memdump_lock);
+On 2020-06-09, Petr Mladek <pmladek@suse.com> wrote:
+>> --- /dev/null
+>> +++ b/kernel/printk/printk_ringbuffer.c
+>> +/*
+>> + * Advance the desc ring tail. This function advances the tail by one
+>> + * descriptor, thus invalidating the oldest descriptor. Before advancing
+>> + * the tail, the tail descriptor is made reusable and all data blocks up to
+>> + * and including the descriptor's data block are invalidated (i.e. the data
+>> + * ring tail is pushed past the data block of the descriptor being made
+>> + * reusable).
+>> + */
+>> +static bool desc_push_tail(struct printk_ringbuffer *rb,
+>> +			   unsigned long tail_id)
+>> +{
+>> +	struct prb_desc_ring *desc_ring = &rb->desc_ring;
+>> +	enum desc_state d_state;
+>> +	struct prb_desc desc;
 >> +
->> +       if (qca->memdump_state == QCA_MEMDUMP_TIMEOUT ||
->> +           qca->memdump_state == QCA_MEMDUMP_COLLECTED) {
->>                 cancel_work_sync(&qca->ctrl_memdump_evt);
->> +               skb_queue_purge(&qca->rx_memdump_q);
->>         }
-> 
-> Earlier in the function, you call qca_wait_for_dump_collection for
-> [Idle, Collecting] so the state should be either [Timeout, Collected]
-> at this branch. So, you can remove the `cancel_delayed_work` and
-> `skb_queue_purge` from above and just leave it only in the bottom
-> branch. Currently you're duplicating these calls unnecessarily.
-> 
-> I don't know if we discussed this in an earlier review but I noticed
-> that `qca_wait_for_dump_collection` doesn't actually pay attention to
-> the return value of `wait_on_bit_timeout`. I don't have context for
-> the order of calls anymore but is there a possibility for that timeout
-> to complete before `qca_memdump_timeout` is called? In that case, you
-> should probably set the state to timeout in
-> `qca_wait_for_dump_collection` as well.
-> 
-[Venkata]:
-I see only skb_queue_purge is getting duplicated and will update in next 
-patchset.
-But cancel_delayed_work is for qca->ctrl_memdump_timeout and 
-cancel_work_sync is for
-qca->ctrl_memdump_evt.So these calls are not getting duplicated.
+>> +	d_state = desc_read(desc_ring, tail_id, &desc);
+>> +
+>> +	switch (d_state) {
+>> +	case desc_miss:
+>> +		/*
+>> +		 * If the ID is exactly 1 wrap behind the expected, it is
+>> +		 * in the process of being reserved by another writer and
+>> +		 * must be considered reserved.
+>> +		 */
+>> +		if (DESC_ID(atomic_long_read(&desc.state_var)) ==
+>> +		    DESC_ID_PREV_WRAP(desc_ring, tail_id)) {
+>> +			return false;
+>> +		}
+>> +
+>> +		/*
+>> +		 * The ID has changed. Another writer must have pushed the
+>> +		 * tail and recycled the descriptor already. Success is
+>> +		 * returned because the caller is only interested in the
+>> +		 * specified tail being pushed, which it was.
+>> +		 */
+>> +		return true;
+>> +	case desc_reserved:
+>> +		return false;
+>> +	case desc_committed:
+>> +		desc_make_reusable(desc_ring, tail_id);
+>> +		break;
+>> +	case desc_reusable:
+>> +		break;
+>> +	}
+>> +
+>> +	/*
+>> +	 * Data blocks must be invalidated before their associated
+>> +	 * descriptor can be made available for recycling. Invalidating
+>> +	 * them later is not possible because there is no way to trust
+>> +	 * data blocks once their associated descriptor is gone.
+>> +	 */
+>> +
+>> +	if (!data_push_tail(rb, &rb->text_data_ring, desc.text_blk_lpos.next))
+>> +		return false;
+>> +	if (!data_push_tail(rb, &rb->dict_data_ring, desc.dict_blk_lpos.next))
+>> +		return false;
+>> +
+>> +	/*
+>> +	 * Check the next descriptor after @tail_id before pushing the tail
+>> +	 * to it because the tail must always be in a committed or reusable
+>> +	 * state. The implementation of prb_first_seq() relies on this.
+>> +	 *
+>> +	 * A successful read implies that the next descriptor is less than or
+>> +	 * equal to @head_id so there is no risk of pushing the tail past the
+>> +	 * head.
+>> +	 */
+>> +	d_state = desc_read(desc_ring, DESC_ID(tail_id + 1),
+>> +			    &desc); /* LMM(desc_push_tail:A) */
+>> +	if (d_state == desc_committed || d_state == desc_reusable) {
+>> +		/*
+>> +		 * Any CPU that loads the new tail ID, must see that the
+>> +		 * descriptor at @tail_id is in the reusable state. See the
+>> +		 * read memory barrier part of desc_reserve:D for details.
+>> +		 */
+>> +		atomic_long_cmpxchg_relaxed(&desc_ring->tail_id, tail_id,
+>> +			DESC_ID(tail_id + 1)); /* LMM(desc_push_tail:B) */
+>
+> I was quite confused by the above comment. Does it mean that we need
+> a barrier here? Or does it explain why the cmpxchg has its own
+> LMM marker?
 
-If timeout happens in qca_wait_for_dump_collection, we are setting state 
-to timeout
-in subsequent if block which is  if (qca->memdump_state != 
-QCA_MEMDUMP_COLLECTED).
->> 
->>         clear_bit(QCA_HW_ERROR_EVENT, &qca->flags);
->> --
->> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
->> member
->> of Code Aurora Forum, hosted by The Linux Foundation
->> 
+This LMM marker is referenced quite often, but since it is a relaxed
+cmpxchg(), its significance is not immediately clear. I was hoping to
+add some hints as to why it is significant. The comment that it is
+referring to is:
 
-Regards,
-Lakshmi Narayana.
+	/*
+	 * Guarantee the tail ID is read before validating the
+	 * recycled descriptor state. A read memory barrier is
+	 * sufficient for this. This pairs with data_push_tail:C.
+	 *
+	 * Memory barrier involvement:
+	 *
+	 * If desc_reserve:C reads from desc_push_tail:B, then
+	 * desc_reserve:F reads from desc_make_reusable:A.
+	 *
+	 * Relies on:
+	 *
+	 * MB from desc_make_reusable:A to desc_push_tail:B
+	 *    matching
+	 * RMB from desc_reserve:C to desc_reserve:F
+	 *
+	 * Note: desc_make_reusable:A, desc_push_tail:B, and
+	 *       data_push_tail:C can all be different CPUs. However,
+	 *       the desc_push_tail:B CPU must have previously seen
+	 *       data_push_tail:D and the data_push_tail:D CPU (which
+	 *       performs the full memory barrier) must have
+	 *       previously seen desc_make_reusable:A.
+	 */
+
+English translation:
+
+In order to push the data tail, a CPU must first see that the associated
+descriptor is in the reusable state. Since a full memory barrier is
+performed after that sighting and before doing the data tail push, _any_
+CPU that sees the pushed data tail will be able to see that the
+associated descriptor is in the reusable state.
+
+In order to push the descriptor tail, a CPU must first see that the
+associated data tail has been pushed. Therefore, that CPU would also see
+that the associated descriptor is in the reusable state.
+
+> I think that we actually need a full barrier here to make sure that
+> all CPUs see the changes made by data_push_tail() before we
+> allow to rewrite the descriptor. The changes in data_push_tail() might
+> be done on different CPUs.
+
+There needs to be a reason why the ordering of data tail pushing and
+descriptor tail pushing is important.
+
+> It is similar like the full barrier in data_push_tail() before changing
+> data_ring->tail_lpos.
+
+How so? That memory barrier exists to make sure the reusable descriptor
+state is stored before pushing the data tail. This is important for
+readers (which start from the data tail) so they can notice if the
+descriptor has since been invalidated (reusable state).
+
+But where is it important that the data tail change is seen before the
+descriptor tail change? How are the data tail and descriptor tail
+significantly related to each other?
+
+John Ogness
