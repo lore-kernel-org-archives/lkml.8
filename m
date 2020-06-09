@@ -2,90 +2,102 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE9FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F6EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7F14207C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:32:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591723928;
-	bh=LTcBoamWhld/ra+UitAF/59CJxE0THLNOV5UPkWwDm4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=M5mAAzemxRbhzEFWu71qvusGN9imekMmQsNGiBD2CvtEWG0suDNiWOFRnCmsrUbTY
-	 k5dK3V7Cv1UPFt8yB7xMHrngPuD+lrO/NAUsrwBsAk2V8tGN8U9ZCqgzc5MY3Sj3/8
-	 qLhlqIY3LzJSPaObt5cuMBi57KhWLtApx644zhMA=
+	by mail.kernel.org (Postfix) with ESMTP id 1250420691
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:32:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SgB1Sx4b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729769AbgFIRcH (ORCPT
+        id S1731777AbgFIRct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:32:07 -0400
-Received: from mail-il1-f173.google.com ([209.85.166.173]:36833 "EHLO
-        mail-il1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726848AbgFIRcG (ORCPT
+        Tue, 9 Jun 2020 13:32:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38758 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726848AbgFIRct (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:32:06 -0400
-Received: by mail-il1-f173.google.com with SMTP id a13so21170498ilh.3;
-        Tue, 09 Jun 2020 10:32:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=IGnSfBXB+3nfSv3N6F0fbjwPESQfDqrwP19nspwqC6U=;
-        b=AZiZx/neoKQAPCV9u1imUvPrnpXeDNwR7wx41FcKM/DswJRQgU+3qnmh18pSIySo/1
-         IeZDvKdcZ2S38p9/PmPQ/oYGGiuK1bJnvIyVOWYFPGI5JGQj/FFkUG7IivOq312WcJ0t
-         sp+nS/VmxQ6PAUVWxV8AI6zBMt6LG9aNgWFMXj0g1HZE7s5FMQ2721ifS+q5TGxSif9a
-         c3GZqYWI66CzKJ7+vMZnteJjOJ/n+woVQaxxthqDBIPSvHAy88/BCSFVvEFMBG3htm07
-         vLv0VgestMRYsb01bvBx2Uj+JWywdyExmg9Qg8MwjGiRJc+9oc0pRZe8nyoSJNKIetSM
-         cULg==
-X-Gm-Message-State: AOAM531Fx3dZjuohSRbSYUqtC3H/yc4t+mqagZFH8QQBJOBDPmDkqTaK
-        7/jsAt6rcTBGcGSdxT9B9A==
-X-Google-Smtp-Source: ABdhPJyVUj4y5yOWIEZhHu2FOPrV9CJO6MI8LLU5aR4WVyN9icWLtu67T0oniravBER69+CId1YnxA==
-X-Received: by 2002:a92:89cf:: with SMTP id w76mr20191903ilk.10.1591723925603;
-        Tue, 09 Jun 2020 10:32:05 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id l12sm640246ilj.8.2020.06.09.10.32.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 10:32:04 -0700 (PDT)
-Received: (nullmailer pid 1119483 invoked by uid 1000);
-        Tue, 09 Jun 2020 17:32:04 -0000
-Date:   Tue, 9 Jun 2020 11:32:04 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Neal Liu <neal.liu@mediatek.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        wsd_upstream@mediatek.com
-Subject: Re: Add MediaTek MT6873 devapc driver
-Message-ID: <20200609173204.GB1107294@bogus>
-References: <1591698261-22639-1-git-send-email-neal.liu@mediatek.com>
+        Tue, 9 Jun 2020 13:32:49 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43D0CC05BD1E;
+        Tue,  9 Jun 2020 10:32:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=1CWK56Bk1GHrXr3w3wzon+FcpFohKqu88sAYSOQgEFM=; b=SgB1Sx4bvrGnT6eCMKkEU2oRDe
+        aEDNmi4SqOfNTU2RS6Uo9FTIA80ZIRAVjR4R9xmjvj6jF/lYVsaBAIiV8pU/0krzPgXowjGlqkkQC
+        z7RcZIIbY4PFTJT5Gm3zIMBvI5uCJ8VFmDwCoyH7hIMR+KJW3u6wjzMKQPHSW/7QXkL9i3bmFrxKv
+        wQphVfi3F3EgFov+NqfSD33cizDNsjdBTZanKVDRox1HYJZc4o5BNYVWDpEEwhvZvms3loyYaCwbi
+        wwt8+K970BTHWvvaN9z8Syq+/454isZbXPaz5YULTfJtGYA6hu4jjrDiHELsJiYkjkByTF+Q9vbaF
+        MkIz44FQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jii6k-0004OT-Be; Tue, 09 Jun 2020 17:32:18 +0000
+Date:   Tue, 9 Jun 2020 10:32:18 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>,
+        axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
+        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
+        ming.lei@redhat.com, nstange@suse.de, akpm@linux-foundation.org,
+        mhocko@suse.com, yukuai3@huawei.com, martin.petersen@oracle.com,
+        jejb@linux.ibm.com, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
+Subject: Re: [PATCH v6 6/6] blktrace: fix debugfs use after free
+Message-ID: <20200609173218.GA7968@infradead.org>
+References: <20200608170127.20419-1-mcgrof@kernel.org>
+ <20200608170127.20419-7-mcgrof@kernel.org>
+ <20200609150602.GA7111@infradead.org>
+ <20200609172922.GP11244@42.do-not-panic.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1591698261-22639-1-git-send-email-neal.liu@mediatek.com>
+In-Reply-To: <20200609172922.GP11244@42.do-not-panic.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 06:24:19PM +0800, Neal Liu wrote:
-> These patch series introduce a MediaTek MT6873 devapc driver.
+On Tue, Jun 09, 2020 at 05:29:22PM +0000, Luis Chamberlain wrote:
+> Is scsi-generic is the only unwanted ugly child blktrace has to deal
+> with? For some reason I thought drivers/md/md.c was one but it seems
+> like it is not. Do we have an easy way to search for these? I think
+> this would just affect how we express the comment only.
+
+grep for blk_trace_setup.  For all blk devices that setup comes in
+through the block device ioctl path, and that relies on having a
+struct block_device and queue.  sg on the other hand calls
+blk_trace_setup directly with a NULL bdev argument.
+
+> >  		 */
+> > -		dir = q->sg_debugfs_dir;
+> > +		dir = debugfs_create_dir(buts->name, blk_debugfs_root);
+> > +		bt->dir = dir;
 > 
-> MT6873 bus frabric provides TrustZone security support and data
-> protection to prevent slaves from being accessed by unexpected
-> masters.
-> The security violations are logged and sent to the processor for
-> further analysis or countermeasures.
+> The other chicken and egg problem to consider at least in the comments
+> is that the debugfs directory for these types of devices *have* an
+> exposed path, but the data structure is rather opaque to the device and
+> even blktrace.  Fortunately given the recent set of changes around the
+> q->blk_trace and clarifications around its use we have made it clear now
+> that so long as hold the q->blk_trace_mutex *and* check q->blk_trace we
+> *should* not race against two separate creations of debugfs directories,
+> so I think this is safe, so long as these indpendent drivers don't end
+> up re-using the same path for some other things later in the future, and
+> since we have control over what goes under debugfsroot block / I think
+> we should be good.
 > 
-> Any occurrence of security violation would raise an interrupt, and
-> it will be handled by devapc-mt6873 driver. The violation
-> information is printed in order to find the murderer.
+> But I think that the concern for race on names may still be worth
+> explaining a bit here.
 
-There's also a proposed driver with similar functionality[1]. Come up 
-with a common solution.
-
-Rob
-
-[1] https://lore.kernel.org/linux-arm-kernel/20200128153806.7780-1-benjamin.gaignard@st.com/
+Feel free to add more comments, but please try to keep them short
+and crisp.  At the some point long comments really distract from what
+is going on.
