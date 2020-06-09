@@ -2,105 +2,113 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85922C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A4EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D53D20691
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:19:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LZqbSx12"
+	by mail.kernel.org (Postfix) with ESMTP id 193682067B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:19:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591726776;
+	bh=3XDvXZld3h/2dX04iqm+4ls4antOHtFKxEtomIO23CY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=gfApKM+PlzbCiPtet0pXbi8yTezPPeCrPrhJCMXJcXECJV62xQ4YA/IThmQjKt4ao
+	 g3xNVU4RGMi2ycn/7Ns50lxKVrsiIQzLF7KEaIcODGD3imuTMbnvML2otrTPdyw+Nw
+	 srbbGIO6qwo7maInWBOCiR4+bzKYyDgJt5jNmfw4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388854AbgFISTP (ORCPT
+        id S2388859AbgFISTe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:19:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45902 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388847AbgFISTK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 14:19:10 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 635B0C05BD1E;
-        Tue,  9 Jun 2020 11:19:10 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id u16so13080263lfl.8;
-        Tue, 09 Jun 2020 11:19:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8czp2mGud/X9y8SyDAs2+lXPkjmhftyAJy2rrCLMh7w=;
-        b=LZqbSx12x35LLKdUmVUSmHuoMheWg3Tm+NXcuDzeepDPMMH0UCb1N2L0jyxK7TbyvI
-         E35VVaQ+Z7Y38/aPC0+UHNVxS4jRMHme7YMCO4pz35HgHeWU22fJ2hv0mN/+K8S5slfy
-         k9Vyi2qYFLBDFPbfCG4YiilDap4zxInhhtLj4xAm3ykX5qgTORMmJ0NwzK4VLNv2htaL
-         8g7Bo4+teHW84V4Wlc4kN/Oq42hyjd2xfsQm95cka7tas9lGp7wJYMEJc1PdYWCyO1mC
-         e1TirmSj/ilv70OZaQleZsWp6YgGn9fL45zoppLglrp/HbaljykhJhq6x6Q01AlwmgdB
-         kxfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8czp2mGud/X9y8SyDAs2+lXPkjmhftyAJy2rrCLMh7w=;
-        b=HOOexHso2/EgosGz0RPkon8u9+wUERTYETy/9vU5X4eVsVFmD024AZhYM+DAbTtD7R
-         5YvtY2dyLtTlMI0YQMirO1OQlrhaBGltRqyNEiUXQeSuWWn2HP6hyGj97zD0fSlBl2wz
-         O0VVXRwgqfgI0gZxT6apJsFyUYhm0D6Lo3rPWtbEF9U05QuRoLyWI1lqmysjohJXClXN
-         ACsG5VSyYrF7tZg/tu1iuEWWkkmGS0nxDh3NC9pPI5EO8+aQhV5QxQVwremkuoehCXDC
-         OKaF5+fyiM0cy8qYOHFEQtn2sS9Mjoq2gjW10STGrbZgL91Z8BHW1MbqFqOnlC6gkQAO
-         AQcw==
-X-Gm-Message-State: AOAM533n3TSfgPpJtDrU/evgZIwui7MG+GcM/b/vYrZsx6I70hoUWPGG
-        SvgBE/F7fjMw9PnWH/moRZ+Qm7JUDwExG9qEwaU=
-X-Google-Smtp-Source: ABdhPJwJgkr+goe4IPDGLuPCQCuWqxBkd3MNiQkky0sI9TT2JC0L2pk6zNTvXPm+sziwRZVmsDOUBgsnUMR4Fp0WY4U=
-X-Received: by 2002:a19:987:: with SMTP id 129mr16215034lfj.8.1591726748546;
- Tue, 09 Jun 2020 11:19:08 -0700 (PDT)
+        Tue, 9 Jun 2020 14:19:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36092 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732550AbgFIRtn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:49:43 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 864C720801;
+        Tue,  9 Jun 2020 17:49:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591724983;
+        bh=3XDvXZld3h/2dX04iqm+4ls4antOHtFKxEtomIO23CY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=pjw3OcJcp6+hlROmUQVnu8ab/cPVtlGkapfORifQ6YWtpIJikZDEzuPmsWQaaTNxs
+         AG+zcD3VuxO4Y65OBgSNcRgc2wsh4uN6JBsNDo99Z8n91JGETcpl+/KjSt+0qJdyQK
+         jRxCecL5G3GtmObbwFVy6ciYbZiQmqkJXhJvYCqs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Sven Schnelle <svens@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 05/46] s390/ftrace: save traced function caller
+Date:   Tue,  9 Jun 2020 19:44:21 +0200
+Message-Id: <20200609174023.361913754@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200609174022.938987501@linuxfoundation.org>
+References: <20200609174022.938987501@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200608124531.819838-1-jean-philippe@linaro.org> <20200609161234.c0b1460e6a6ce73ba478a22a@kernel.org>
-In-Reply-To: <20200609161234.c0b1460e6a6ce73ba478a22a@kernel.org>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Tue, 9 Jun 2020 11:18:57 -0700
-Message-ID: <CAADnVQ+1CsKo1wdY6hUwExP8dnCBDhjoWCjoHp-jTvOoghPh4w@mail.gmail.com>
-Subject: Re: [PATCH] tracing/probe: Fix bpf_task_fd_query() for kprobes and uprobes
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 9, 2020 at 12:12 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
->
-> On Mon,  8 Jun 2020 14:45:32 +0200
-> Jean-Philippe Brucker <jean-philippe@linaro.org> wrote:
->
-> > Commit 60d53e2c3b75 ("tracing/probe: Split trace_event related data from
-> > trace_probe") removed the trace_[ku]probe structure from the
-> > trace_event_call->data pointer. As bpf_get_[ku]probe_info() were
-> > forgotten in that change, fix them now. These functions are currently
-> > only used by the bpf_task_fd_query() syscall handler to collect
-> > information about a perf event.
-> >
->
-> Oops, good catch!
->
-> Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
->
->
-> > Fixes: 60d53e2c3b75 ("tracing/probe: Split trace_event related data from trace_probe")
-> > Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
->
-> Cc: stable@vger.kernel.org
+From: Vasily Gorbik <gor@linux.ibm.com>
 
-Applied to bpf tree. Thanks
+[ Upstream commit b4adfe55915d8363e244e42386d69567db1719b9 ]
+
+A typical backtrace acquired from ftraced function currently looks like
+the following (e.g. for "path_openat"):
+
+arch_stack_walk+0x15c/0x2d8
+stack_trace_save+0x50/0x68
+stack_trace_call+0x15a/0x3b8
+ftrace_graph_caller+0x0/0x1c
+0x3e0007e3c98 <- ftraced function caller (should be do_filp_open+0x7c/0xe8)
+do_open_execat+0x70/0x1b8
+__do_execve_file.isra.0+0x7d8/0x860
+__s390x_sys_execve+0x56/0x68
+system_call+0xdc/0x2d8
+
+Note random "0x3e0007e3c98" stack value as ftraced function caller. This
+value causes either imprecise unwinder result or unwinding failure.
+That "0x3e0007e3c98" comes from r14 of ftraced function stack frame, which
+it haven't had a chance to initialize since the very first instruction
+calls ftrace code ("ftrace_caller"). (ftraced function might never
+save r14 as well). Nevertheless according to s390 ABI any function
+is called with stack frame allocated for it and r14 contains return
+address. "ftrace_caller" itself is called with "brasl %r0,ftrace_caller".
+So, to fix this issue simply always save traced function caller onto
+ftraced function stack frame.
+
+Reported-by: Sven Schnelle <svens@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/s390/kernel/mcount.S | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/s390/kernel/mcount.S b/arch/s390/kernel/mcount.S
+index 0cfd5a83a1da..151f001a90ff 100644
+--- a/arch/s390/kernel/mcount.S
++++ b/arch/s390/kernel/mcount.S
+@@ -40,6 +40,7 @@ EXPORT_SYMBOL(_mcount)
+ ENTRY(ftrace_caller)
+ 	.globl	ftrace_regs_caller
+ 	.set	ftrace_regs_caller,ftrace_caller
++	stg	%r14,(__SF_GPRS+8*8)(%r15)	# save traced function caller
+ 	lgr	%r1,%r15
+ #ifndef CC_USING_HOTPATCH
+ 	aghi	%r0,MCOUNT_RETURN_FIXUP
+-- 
+2.25.1
+
+
+
