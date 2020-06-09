@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A2BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 491FDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:23:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45EC22067B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:23:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 242B02067B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:23:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591727015;
-	bh=ps8pnlBp1WwH8dOmL2uAK8jQRRYb/JbeuNB5BmVB1l0=;
+	s=default; t=1591727025;
+	bh=HYg/oK6dZ3KBNE/5RfEG/bWIhWx8JyDZPz/txNutwuk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2BjOdHRT6xNcpjnGfgmliBmQZZ2GcwoRomKIHmVCJA4qVWHMaufJkogvQtrS4vo2u
-	 LMampaNGUq0x5JZNz1xy6tS3YyN/4E1mGb7BapND3r+DJl7Ru0d3Nt8RJbvNo9Womj
-	 yBSMxpUOhWDl1GSRsXuqCGsjWcpgDLUURB34WA6k=
+	b=LW/tU4RYTVTfBHEexII8HCzZRzT8PWmC/LhT/dcsjmfXTPaLO1mAbwInVIrqfbMsI
+	 YHwPO6wC0DrkL5au2sKT8NvBcmcRR9VpI7G2XKk0oSsPZDxbkiImxyKhUvquSL7/VX
+	 aFfSjs4RifTGsGgZ4tJMqd10B0kqThdG8vLCqsrI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389083AbgFISXe (ORCPT
+        id S2389089AbgFISXm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:23:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58670 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 14:23:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732090AbgFIRrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:47:24 -0400
+        id S1730656AbgFIRrX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:47:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D13D20823;
-        Tue,  9 Jun 2020 17:47:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDDF420801;
+        Tue,  9 Jun 2020 17:47:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591724844;
-        bh=ps8pnlBp1WwH8dOmL2uAK8jQRRYb/JbeuNB5BmVB1l0=;
+        s=default; t=1591724842;
+        bh=HYg/oK6dZ3KBNE/5RfEG/bWIhWx8JyDZPz/txNutwuk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z+z4vdbCsZK8ZTXQA/RurSSylVPPisUzCsmSFsabfi8KT3VMT04kxxLPNp4dq/rsx
-         PXA1gabhethlfHQDhYGkofsRmOgrFK9PkKjEMrjYLyLgvQZ9jZkfVkcgI15mh2QGQG
-         ehd33yZCFY1pL+Hva+4Uhxz63xQxNcWq05W7Z8/4=
+        b=0ZqGFQokof/LPn0zXuuqyslmkplS1rcPtQ596k6JFEvxhleGM4wAvIwAIzntuNvLn
+         QJgtNaXeZl78HGirnqxQiCi9jg95Jnuddfazh/ku3PmQPTA+IYWi17gXCLcSqF4BPX
+         vto+uahIpwaNxF2dh7nvLJ1X/fxoVpZBzrKpp8pw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, yangerkun <yangerkun@huawei.com>,
-        Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.4 16/36] slcan: Fix double-free on slcan_open() error path
-Date:   Tue,  9 Jun 2020 19:44:16 +0200
-Message-Id: <20200609173934.205737358@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
+        <jerome.pouiller@silabs.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.4 15/36] mmc: fix compilation of user API
+Date:   Tue,  9 Jun 2020 19:44:15 +0200
+Message-Id: <20200609173934.151130534@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609173933.288044334@linuxfoundation.org>
 References: <20200609173933.288044334@linuxfoundation.org>
@@ -59,43 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Hutchings <ben@decadent.org.uk>
+From: Jérôme Pouiller <jerome.pouiller@silabs.com>
 
-Commit 9ebd796e2400 ("can: slcan: Fix use-after-free Read in
-slcan_open") was incorrectly backported to 4.4 and 4.9 stable
-branches.
+commit 83fc5dd57f86c3ec7d6d22565a6ff6c948853b64 upstream.
 
-Since they do not have commit cf124db566e6 ("net: Fix inconsistent
-teardown and release of private netdev state."), the destructor
-function slc_free_netdev() is already responsible for calling
-free_netdev() and slcan_open() must not call both of them.
+The definitions of MMC_IOC_CMD  and of MMC_IOC_MULTI_CMD rely on
+MMC_BLOCK_MAJOR:
 
-yangerkun previously fixed the same bug in slip.
+    #define MMC_IOC_CMD       _IOWR(MMC_BLOCK_MAJOR, 0, struct mmc_ioc_cmd)
+    #define MMC_IOC_MULTI_CMD _IOWR(MMC_BLOCK_MAJOR, 1, struct mmc_ioc_multi_cmd)
 
-Fixes: ce624b2089ea ("can: slcan: Fix use-after-free Read in slcan_open") # 4.4
-Fixes: f59604a80fa4 ("slcan: not call free_netdev before rtnl_unlock ...") # 4.4
-Fixes: 56635a1e6ffb ("can: slcan: Fix use-after-free Read in slcan_open") # 4.9
-Fixes: a1c9b23142ac ("slcan: not call free_netdev before rtnl_unlock ...") # 4.9
-Cc: yangerkun <yangerkun@huawei.com>
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+However, MMC_BLOCK_MAJOR is defined in linux/major.h and
+linux/mmc/ioctl.h did not include it.
+
+Signed-off-by: Jérôme Pouiller <jerome.pouiller@silabs.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200511161902.191405-1-Jerome.Pouiller@silabs.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/can/slcan.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/net/can/slcan.c
-+++ b/drivers/net/can/slcan.c
-@@ -618,10 +618,9 @@ err_free_chan:
- 	sl->tty = NULL;
- 	tty->disc_data = NULL;
- 	clear_bit(SLF_INUSE, &sl->flags);
--	slc_free_netdev(sl->dev);
- 	/* do not call free_netdev before rtnl_unlock */
- 	rtnl_unlock();
--	free_netdev(sl->dev);
-+	slc_free_netdev(sl->dev);
- 	return err;
+---
+ include/uapi/linux/mmc/ioctl.h |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/include/uapi/linux/mmc/ioctl.h
++++ b/include/uapi/linux/mmc/ioctl.h
+@@ -2,6 +2,7 @@
+ #define LINUX_MMC_IOCTL_H
  
- err_exit:
+ #include <linux/types.h>
++#include <linux/major.h>
+ 
+ struct mmc_ioc_cmd {
+ 	/* Implies direction of data.  true = write, false = read */
 
 
