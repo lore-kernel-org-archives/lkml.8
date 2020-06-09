@@ -2,53 +2,51 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC87C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F76C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:19:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 751B52068D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:19:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C10052068D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:19:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591726781;
-	bh=mVl9YgrtiKcOe6VHrWSY6aDgR5QeahVoj7ufwEgl4dc=;
+	s=default; t=1591726788;
+	bh=SY18GA+tIARb2YcCuYXnUlMY8ORXBTCf1RfbNoTV/5g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sWTvXt1Tqm5HzC6btiUl6fBY4BfrHdBunZUiG8r4q8HYynEQLZZGMfnNAKRQZ5JKC
-	 npZkYDlaxD07EUUfYoJ9U7GQYVrlCgiChW/4c9BF5N38j3oQW5llEyBeRa/ET5Dk+Y
-	 w58dPUQDAcwtaUZCVT5wSUlu1yyQEFpY9lKg3fUk=
+	b=e0zgx0zbMEES0xzW/tUc4lMJPeE4u1n7sfrtK0hbuIpcf6QFpC2CgXQK9JhQr8gl8
+	 laG8XhM3A4JoGvBqwLDqlXtRl1Q3JjGeLrshCDsZItricVK/LIEHZwYt1Oi1CPuMuj
+	 2Z7+513fbi26D5PEd3BSBkenslzWD0bP0GxoNt+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388866AbgFISTh (ORCPT
+        id S2388872AbgFISTr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:19:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36004 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 14:19:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732544AbgFIRtl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:49:41 -0400
+        id S1732521AbgFIRtc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:49:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C2FE20812;
-        Tue,  9 Jun 2020 17:49:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13FA320825;
+        Tue,  9 Jun 2020 17:49:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591724980;
-        bh=mVl9YgrtiKcOe6VHrWSY6aDgR5QeahVoj7ufwEgl4dc=;
+        s=default; t=1591724971;
+        bh=SY18GA+tIARb2YcCuYXnUlMY8ORXBTCf1RfbNoTV/5g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Eoc7WEJsKPYfJ9bXd/KhhCwt/DzXPurbyHNWKvsIDHj/Z8OjaunU/BNBgLoZAjtCm
-         vV4Itxi15HHobzqSb3jN8MIXR3REadk0V40NPmRxfVOARfkf2UnQELvGvsK6m2Ik48
-         Ha6Mg/7MdEK7tLHeGLjsitKGjZ9Dhh8O0+lyhPJQ=
+        b=0EEVdbA5XtZf+u1K1ilcVksiHy3r9xnhndS73XgikRuxJn8iddoknyqH+OxfOOJ0S
+         xl1H6BdqcPao/U43gC2hfa2sfhDhq3KiihkT+R5lB0QUpZcetNHObbH0D43cY3zXVv
+         4rxH39J30Hda4yoweyIQknWyYa2kn3nkZBifnFJ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, fengsheng <fengsheng5@huawei.com>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 04/46] spi: dw: use "smp_mb()" to avoid sending spi data error
-Date:   Tue,  9 Jun 2020 19:44:20 +0200
-Message-Id: <20200609174023.282147985@linuxfoundation.org>
+        stable@vger.kernel.org, Scott Shumate <scott.shumate@gmail.com>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: [PATCH 4.14 16/46] HID: sony: Fix for broken buttons on DS3 USB dongles
+Date:   Tue,  9 Jun 2020 19:44:32 +0200
+Message-Id: <20200609174024.450732239@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174022.938987501@linuxfoundation.org>
 References: <20200609174022.938987501@linuxfoundation.org>
@@ -61,48 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xinwei Kong <kong.kongxinwei@hisilicon.com>
+From: Scott Shumate <scott.shumate@gmail.com>
 
-[ Upstream commit bfda044533b213985bc62bd7ca96f2b984d21b80 ]
+commit e72455b898ac678667c5674668186b4670d87d11 upstream.
 
-Because of out-of-order execution about some CPU architecture,
-In this debug stage we find Completing spi interrupt enable ->
-prodrucing TXEI interrupt -> running "interrupt_transfer" function
-will prior to set "dw->rx and dws->rx_end" data, so this patch add
-memory barrier to enable dw->rx and dw->rx_end to be visible and
-solve to send SPI data error.
-eg:
-it will fix to this following low possibility error in testing environment
-which using SPI control to connect TPM Modules
+Fix for non-working buttons on knock-off USB dongles for Sony
+controllers. These USB dongles are used to connect older Sony DA/DS1/DS2
+controllers via USB and are common on Amazon, AliExpress, etc.  Without
+the patch, the square, X, and circle buttons do not function.  These
+dongles used to work prior to kernel 4.10 but removing the global DS3
+report fixup in commit e19a267b9987 ("HID: sony: DS3 comply to Linux gamepad
+spec") exposed the problem.
 
-kernel: tpm tpm0: Operation Timed out
-kernel: tpm tpm0: tpm_relinquish_locality: : error -1
+Many people reported the problem on the Ubuntu forums and are working
+around the problem by falling back to the 4.9 hid-sony driver.
 
-Signed-off-by: fengsheng <fengsheng5@huawei.com>
-Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com>
-Link: https://lore.kernel.org/r/1578019930-55858-1-git-send-email-kong.kongxinwei@hisilicon.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The problem stems from these dongles incorrectly reporting their button
+count as 13 instead of 16.  This patch fixes up the report descriptor by
+changing the button report count to 16 and removing 3 padding bits.
+
+Cc: stable@vger.kernel.org
+Fixes: e19a267b9987 ("HID: sony: DS3 comply to Linux gamepad spec")
+Signed-off-by: Scott Shumate <scott.shumate@gmail.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/spi/spi-dw.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/hid/hid-sony.c |   17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
-index b461200871f8..cbdad3c4930f 100644
---- a/drivers/spi/spi-dw.c
-+++ b/drivers/spi/spi-dw.c
-@@ -305,6 +305,9 @@ static int dw_spi_transfer_one(struct spi_master *master,
- 	dws->len = transfer->len;
- 	spin_unlock_irqrestore(&dws->buf_lock, flags);
+--- a/drivers/hid/hid-sony.c
++++ b/drivers/hid/hid-sony.c
+@@ -837,6 +837,23 @@ static u8 *sony_report_fixup(struct hid_
+ 	if (sc->quirks & PS3REMOTE)
+ 		return ps3remote_fixup(hdev, rdesc, rsize);
  
-+	/* Ensure dw->rx and dw->rx_end are visible */
-+	smp_mb();
++	/*
++	 * Some knock-off USB dongles incorrectly report their button count
++	 * as 13 instead of 16 causing three non-functional buttons.
++	 */
++	if ((sc->quirks & SIXAXIS_CONTROLLER_USB) && *rsize >= 45 &&
++		/* Report Count (13) */
++		rdesc[23] == 0x95 && rdesc[24] == 0x0D &&
++		/* Usage Maximum (13) */
++		rdesc[37] == 0x29 && rdesc[38] == 0x0D &&
++		/* Report Count (3) */
++		rdesc[43] == 0x95 && rdesc[44] == 0x03) {
++		hid_info(hdev, "Fixing up USB dongle report descriptor\n");
++		rdesc[24] = 0x10;
++		rdesc[38] = 0x10;
++		rdesc[44] = 0x00;
++	}
 +
- 	spi_enable_chip(dws, 0);
+ 	return rdesc;
+ }
  
- 	/* Handle per transfer options for bpw and speed */
--- 
-2.25.1
-
 
 
