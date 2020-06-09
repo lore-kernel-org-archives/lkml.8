@@ -2,170 +2,129 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6DA1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE409C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 933FC2078C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:32:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DA5E20774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:32:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ej3xLcAg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qLhEyBBA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730921AbgFIQcW (ORCPT
+        id S1730989AbgFIQcr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 12:32:22 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:44910 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727820AbgFIQcV (ORCPT
+        Tue, 9 Jun 2020 12:32:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57676 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726404AbgFIQcq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 12:32:21 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 059GSQQR147264;
-        Tue, 9 Jun 2020 16:31:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=jZgCtbZbgkuq7BZtPfL2jcAm6vIJFlTHQIaDDJRq+ak=;
- b=ej3xLcAg9LMeYIqExEKvVkgMQMrCL6ZMR7pjIe3gxxirZcdwppqvIiKZ9Eoqjb2XH7F2
- kEG6weKcFGQqN0MIHYKwNRxSxZA4WF+Yuc4GhuIH1VqqSO1WjZPWF2XjBMmzeUfk/Nsu
- 6Rb8lex5c9XWwRN5fgdzezWw6zHb60I0U5BBzubY7o1ldoUJPIhjDdPRca5N27AbvfhD
- F+hnbZIrN5brZaYyp2QC2zI8dHMIi3i3kYdUt9GsOu2ZppIPMp9k/8rSLz63U8pSXhDf
- HHI3a+k9QQ6N5tFsYcnAD/Q/eG9mZwqM2dnS5HKKxhs/BfY9heCC30I2tRxYz6viEdY/ 4A== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 31g2jr5vhw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 09 Jun 2020 16:31:33 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 059GSPTx108999;
-        Tue, 9 Jun 2020 16:29:33 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 31gmwrn3p9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 09 Jun 2020 16:29:33 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 059GTWXu004780;
-        Tue, 9 Jun 2020 16:29:32 GMT
-Received: from dhcp-10-159-155-165.vpn.oracle.com (/10.159.155.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 09 Jun 2020 09:29:32 -0700
-Subject: Re: [PATCH v2] sample-trace-array: Fix sleeping function called from
- invalid context
-To:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
-References: <0047f80f-4fff-16ff-7ac0-20181f03f06a@oracle.com>
- <20200609135125.2206637-1-wangkefeng.wang@huawei.com>
-From:   Divya Indi <divya.indi@oracle.com>
-Message-ID: <53201591-082d-7e42-9043-237ae4239da6@oracle.com>
-Date:   Tue, 9 Jun 2020 09:29:30 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.1
+        Tue, 9 Jun 2020 12:32:46 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFD67C05BD1E;
+        Tue,  9 Jun 2020 09:32:44 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id x27so12853597lfg.9;
+        Tue, 09 Jun 2020 09:32:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6go56Xq/RaTcO68WpES6+R++GmUHJ81WAyZebs67Wk0=;
+        b=qLhEyBBAgr9n7RhT9t8a+uMdszZsW8+Dg02MTl7mAYbm/cmLLAt7T8IEoHH2I8M2JY
+         uCvwR4QmEx8zf4yVpzaIpeo4E9XsEG7YNac9sO2H/JxclOWrUsrdF6W7ucUvApbFXlpZ
+         9t29u3VwR/1AUZIFsRwJ3WU65f8pUbPbMGCjWMnRYIpeCGaT1pgxuAwZCgZuSVSMKY8h
+         yvNe9miWfYGPistvQuUwQ7tTYflvOKeCGG3SqWu/HKHTxFdPBMggetEuKgjftFv35Yag
+         KDVZyvPezB/CZ3RjR4dze3XOKAfoHYmqOtHVkyWGIAkayPybhpOLKfe8EmO7YHd5MoyM
+         lvEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6go56Xq/RaTcO68WpES6+R++GmUHJ81WAyZebs67Wk0=;
+        b=FIr/Xpdf+TGmT3RvggCospC4KQu5rBuiVrSh6jPAHfBkBGNAet1E80IPb+JAw6sdQE
+         KrxxDNHaANFWuldM8bUdBl+br/A9VKmIJeWk+r5uM4bD5Cjts8HGgt7YppeORId+WrtO
+         MsSOcxUG0oYVIxP+1BmN6ArpkyNsO8TeJMDK+b1IK1o+9PaXSG5LXcbVCPsWq2QEM4OD
+         sDxv7ItsYAW1XhIrmoVxWEbjTNdfFiQteWJNspk89hlxCZ22aY1qcJXvZiaZsYZtOlEk
+         wp8FLT0OeIppEtIhTaur5JRI84QDOewAMjeeydgaqtdumR1spYSY8PjMlkyux3bEeAxn
+         1ilQ==
+X-Gm-Message-State: AOAM530ngCeota6m9oPGSfkh6NNmHyTHF6zQmUCubau68XSMbrznEnBz
+        TMmdbeIIWNX5SxMZVq6bPtRVxWDJnK0Dn8GfCDEw1wqU
+X-Google-Smtp-Source: ABdhPJwetwbDhwOaowJM1IHjUeIE7J7rEQPR8y86E24tiPXpi8eNRnGgcRhUUqDsZIa/Gm7jnTwnZMCNoiw+R15qhq8=
+X-Received: by 2002:a19:2250:: with SMTP id i77mr16078586lfi.133.1591720363254;
+ Tue, 09 Jun 2020 09:32:43 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200609135125.2206637-1-wangkefeng.wang@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9647 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 spamscore=0 adultscore=0
- mlxscore=0 mlxlogscore=999 bulkscore=0 malwarescore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006090125
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9647 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 impostorscore=0
- cotscore=-2147483648 priorityscore=1501 spamscore=0 suspectscore=3
- lowpriorityscore=0 bulkscore=0 mlxlogscore=999 malwarescore=0 mlxscore=0
- phishscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006090125
+References: <20200609124610.3445662-16-kieran.bingham+renesas@ideasonboard.com>
+ <20200609143412.3456484-1-kieran.bingham+renesas@ideasonboard.com>
+In-Reply-To: <20200609143412.3456484-1-kieran.bingham+renesas@ideasonboard.com>
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+Date:   Tue, 9 Jun 2020 22:02:31 +0530
+Message-ID: <CAFqt6zYgS2tgapVQn93jpSnNWZna27wRSd+3ts_HoHm7pRmjZw@mail.gmail.com>
+Subject: Re: [PATCH v2] mm/balloon_compaction: Fix trivial spelling
+To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Cc:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        David Hildenbrand <david@redhat.com>,
+        linux-renesas-soc@vger.kernel.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jiri Kosina <trivial@kernel.org>,
+        "open list:VIRTIO CORE AND NET DRIVERS" 
+        <virtualization@lists.linux-foundation.org>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/9/20 6:51 AM, Kefeng Wang wrote:
->  BUG: sleeping function called from invalid context at kernel/locking/mutex.c:935
->  in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 0, name: swapper/5
->  1 lock held by swapper/5/0:
->   #0: ffff80001002bd90 (samples/ftrace/sample-trace-array.c:38){+.-.}-{0:0}, at: call_timer_fn+0x8/0x3e0
->  CPU: 5 PID: 0 Comm: swapper/5 Not tainted 5.7.0+ #8
->  Hardware name: QEMU QEMU Virtual Machine, BIOS 0.0.0 02/06/2015
->  Call trace:
->   dump_backtrace+0x0/0x1a0
->   show_stack+0x20/0x30
->   dump_stack+0xe4/0x150
->   ___might_sleep+0x160/0x200
->   __might_sleep+0x58/0x90
->   __mutex_lock+0x64/0x948
->   mutex_lock_nested+0x3c/0x58
->   __ftrace_set_clr_event+0x44/0x88
->   trace_array_set_clr_event+0x24/0x38
->   mytimer_handler+0x34/0x40 [sample_trace_array]
+On Tue, Jun 9, 2020 at 8:04 PM Kieran Bingham
+<kieran.bingham+renesas@ideasonboard.com> wrote:
 >
-> mutex_lock() will be called in interrupt context, using workqueue to fix it.
-Fixes:
-> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> The word 'descriptor' is misspelled throughout the tree.
 
-Reviewed-by: Divya Indi <divya.indi@oracle.com>
+I think, *throughout the tree* is not appropriate* here. This patch
+has fixed it within the file. With that,
 
+Acked-by: Souptick Joarder <jrdr.linux@gmail.com>
+
+>
+> Fix it up accordingly:
+>     decriptors -> descriptors
+>
+> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> Reviewed-by: David Hildenbrand <david@redhat.com>
 > ---
-> v2:
-> - add include of linux/workqueue.h
-> - add missing cancel_work_sync() suggested by Divya Indi
+>  mm/balloon_compaction.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 >
->  samples/ftrace/sample-trace-array.c | 18 +++++++++++++-----
->  1 file changed, 13 insertions(+), 5 deletions(-)
+> diff --git a/mm/balloon_compaction.c b/mm/balloon_compaction.c
+> index 26de020aae7b..907fefde2572 100644
+> --- a/mm/balloon_compaction.c
+> +++ b/mm/balloon_compaction.c
+> @@ -58,7 +58,7 @@ EXPORT_SYMBOL_GPL(balloon_page_list_enqueue);
+>  /**
+>   * balloon_page_list_dequeue() - removes pages from balloon's page list and
+>   *                              returns a list of the pages.
+> - * @b_dev_info: balloon device decriptor where we will grab a page from.
+> + * @b_dev_info: balloon device descriptor where we will grab a page from.
+>   * @pages: pointer to the list of pages that would be returned to the caller.
+>   * @n_req_pages: number of requested pages.
+>   *
+> @@ -157,7 +157,7 @@ EXPORT_SYMBOL_GPL(balloon_page_enqueue);
+>  /*
+>   * balloon_page_dequeue - removes a page from balloon's page list and returns
+>   *                       its address to allow the driver to release the page.
+> - * @b_dev_info: balloon device decriptor where we will grab a page from.
+> + * @b_dev_info: balloon device descriptor where we will grab a page from.
+>   *
+>   * Driver must call this function to properly dequeue a previously enqueued page
+>   * before definitively releasing it back to the guest system.
+> --
+> 2.25.1
 >
-> diff --git a/samples/ftrace/sample-trace-array.c b/samples/ftrace/sample-trace-array.c
-> index d523450d73eb..9e437f930280 100644
-> --- a/samples/ftrace/sample-trace-array.c
-> +++ b/samples/ftrace/sample-trace-array.c
-> @@ -6,6 +6,7 @@
->  #include <linux/timer.h>
->  #include <linux/err.h>
->  #include <linux/jiffies.h>
-> +#include <linux/workqueue.h>
->  
->  /*
->   * Any file that uses trace points, must include the header.
-> @@ -20,6 +21,16 @@ struct trace_array *tr;
->  static void mytimer_handler(struct timer_list *unused);
->  static struct task_struct *simple_tsk;
->  
-> +static void trace_work_fn(struct work_struct *work)
-> +{
-> +	/*
-> +	 * Disable tracing for event "sample_event".
-> +	 */
-> +	trace_array_set_clr_event(tr, "sample-subsystem", "sample_event",
-> +			false);
-> +}
-> +static DECLARE_WORK(trace_work, trace_work_fn);
-> +
->  /*
->   * mytimer: Timer setup to disable tracing for event "sample_event". This
->   * timer is only for the purposes of the sample module to demonstrate access of
-> @@ -29,11 +40,7 @@ static DEFINE_TIMER(mytimer, mytimer_handler);
->  
->  static void mytimer_handler(struct timer_list *unused)
->  {
-> -	/*
-> -	 * Disable tracing for event "sample_event".
-> -	 */
-> -	trace_array_set_clr_event(tr, "sample-subsystem", "sample_event",
-> -			false);
-> +	schedule_work(&trace_work);
->  }
->  
->  static void simple_thread_func(int count)
-> @@ -76,6 +83,7 @@ static int simple_thread(void *arg)
->  		simple_thread_func(count++);
->  
->  	del_timer(&mytimer);
-> +	cancel_work_sync(&trace_work);
->  
->  	/*
->  	 * trace_array_put() decrements the reference counter associated with
+>
