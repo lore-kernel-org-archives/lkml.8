@@ -2,105 +2,155 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 501B6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF7EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31F3220691
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:37:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EA2A20734
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:39:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nitingupta.dev header.i=@nitingupta.dev header.b="VIHY8xLi"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="muEdWnYf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729303AbgFIShp (ORCPT
+        id S1729556AbgFISjR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:37:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48748 "EHLO
+        Tue, 9 Jun 2020 14:39:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728004AbgFISho (ORCPT
+        with ESMTP id S1728470AbgFISjP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 14:37:44 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 495F6C03E97C
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 11:37:44 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id c12so13097938lfc.10
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 11:37:44 -0700 (PDT)
+        Tue, 9 Jun 2020 14:39:15 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7893C03E97C
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 11:39:14 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id ne5so1761296pjb.5
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 11:39:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=nitingupta.dev; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BwHRiAPDtrkwECsv6SA7fU7H4zLVJKTcGFNk2QXOnhU=;
-        b=VIHY8xLiHmbfAk+929GtvjqxvUF90uuWGK5L3c+gPpqDFRUpDiapReEG17Y3LutSww
-         3V4dWOmewogkwd+Eh2mmUpKoH16NlRQle+kI7Ko4/1uBuemv435R5GU4c4mZfT3By+vr
-         SVqe2G5aySIYKw5hxgQiZjXAPzP+T8vokiag6aXGMR6sDZe5pPUDOq6HgWNca8MC52A7
-         s5P1ye0S5PDBu7AxhHFPbfcEVraz8m2ymqGLFoxZrFnyou69s91LmCHH95LIuM1OqCgh
-         uMYv3citOqdRrf9huGay2dU3OYM+dmat6IejYUUbBgED5NkrInRwRjh2cXUyRAkBVYvk
-         BSSQ==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=oUUlKxLjSlKhbNUJ+/fS04FbBkWKQBhciBLdETtik1Q=;
+        b=muEdWnYfglQpo6mlvoIfHWOj2y/b2HPEYx/I/P/+afdRB9/f6IdVu5VnGI/3lcvXLS
+         I9FafGnjLFcRGiW36DCgnPzai2sfXVCBdgJRXMrqAW3e7b14inpyi/jwHBpjdNDnVDY1
+         GBTg1KJ1wEa1aW+kWXIDPsZzAOyVi1GSGs3y4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BwHRiAPDtrkwECsv6SA7fU7H4zLVJKTcGFNk2QXOnhU=;
-        b=JUiGDnv6uWRcE5kSs78lxqGwN9oxkZ7O2GmA2uz96SEr3d8iai7LyudZb04P9nXJIk
-         lYnjfpthiJyHYPNXZV+SrS5uhU0lDPJkQ551+MWmEmJd373zDxeDmw0CMflbs/bfSoxi
-         jAabUU+BWnUD/rLsnjL+K3jpCeoKlBpdxNJAHFcHIvNZM3bKI1gXiT4O0ck9Zy6NjndY
-         gMFVkfmi/sQ4UAWoObESnJfR1oVmjKlM+c6zBffr/j1efqcIEsph/O99YzPupfmsO4v3
-         aaZsgl1mJ4sm6VloxKP5Bb+StmqbDZyKMzlStMuwmb5ncXordP347U/2HbAsdi3aEQX8
-         /g/A==
-X-Gm-Message-State: AOAM530bfUM+kTYWqk0tINxI4eOW4mObKZXxiDjGXlhNeU2GjxflBuO1
-        eFfWioWSZoyxtTPiky6MkSzP2bxVR6vScM6Poywfvg==
-X-Google-Smtp-Source: ABdhPJxuVElaiZy/wi7zPSnZaETNDw3REFYZMvBDEZDwQF9KjdWC3LmrzfRnNv5y4/4dmn7H2To75+SN/JnbU9vOoOw=
-X-Received: by 2002:a19:ae0f:: with SMTP id f15mr16495368lfc.142.1591727862693;
- Tue, 09 Jun 2020 11:37:42 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=oUUlKxLjSlKhbNUJ+/fS04FbBkWKQBhciBLdETtik1Q=;
+        b=YMAEJmS74IJwOAsA3+GOdgmW3GD6cfKtjV16t8OmgaH8DiYdYL1kSgqCTPZCH6F2cl
+         u5gdPeHrhNxeqDBz2pvcX9mRKENWBdYxf7YcGxISezpmYj/+6VmWG2hCSfWBwAuVJSj6
+         GM8wFs9bT4hOboyJAI9ygsPUzgtZJyhKusPkMagfF0nyLbUyxTSI3GqysF6V1RMfntcp
+         +2t2bxma1sSpanJABp2Qh6aqBtg/LHwo6Aj3/Aa3WPP/RxQdL/VAEVzETVzQjVTnZ0c9
+         nUOqe3fyDWMGTspvcxhrD0ZBseKQF7xKbtd2uLFqPGH9rVH8Uq0IoOt/wXPFdghTvD1m
+         WnFg==
+X-Gm-Message-State: AOAM530GQbd0RLXOA3ndgbPPze9r/1gSoagg4H6nUmHajVsh+qsmIwjj
+        tz40LqvLonoeCOQppM9doCxTNw==
+X-Google-Smtp-Source: ABdhPJwtO8ctv+axOrlGnu6BhxO/Dmuz6uhavpkS9vfR+Ml1dYIGadDqm0xyQLuzwR4BmnGnulrmGw==
+X-Received: by 2002:a17:90b:4d10:: with SMTP id mw16mr6182260pjb.143.1591727953613;
+        Tue, 09 Jun 2020 11:39:13 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id u14sm11238034pfk.211.2020.06.09.11.39.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2020 11:39:12 -0700 (PDT)
+Date:   Tue, 9 Jun 2020 11:39:11 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Alexander Popov <alex.popov@linux.com>
+Cc:     Jann Horn <jannh@google.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Emese Revfy <re.emese@gmail.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Sven Schnelle <svens@stackframe.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Collingbourne <pcc@google.com>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        Alexander Monakov <amonakov@ispras.ru>,
+        Mathias Krause <minipli@googlemail.com>,
+        PaX Team <pageexec@freemail.hu>,
+        Brad Spengler <spender@grsecurity.net>,
+        Laura Abbott <labbott@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-kbuild@vger.kernel.org,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        kernel list <linux-kernel@vger.kernel.org>, gcc@gcc.gnu.org,
+        notify@kernel.org
+Subject: Re: [PATCH 1/5] gcc-plugins/stackleak: Exclude alloca() from the
+ instrumentation logic
+Message-ID: <202006091133.412F0E89@keescook>
+References: <20200604134957.505389-1-alex.popov@linux.com>
+ <20200604134957.505389-2-alex.popov@linux.com>
+ <CAG48ez05JOvqzYGr3PvyQGwFURspFWvNvf-b8Y613PX0biug8w@mail.gmail.com>
+ <70319f78-2c7c-8141-d751-07f28203db7c@linux.com>
 MIME-Version: 1.0
-References: <20200601194822.30252-1-nigupta@nvidia.com>
-In-Reply-To: <20200601194822.30252-1-nigupta@nvidia.com>
-From:   Nitin Gupta <ngupta@nitingupta.dev>
-Date:   Tue, 9 Jun 2020 11:37:31 -0700
-Message-ID: <CAB6CXpAGTWGNboAXEkqC2wZsHmvbhFf_5enguXJ7QssRpr=c9A@mail.gmail.com>
-Subject: Re: [PATCH v6] mm: Proactive compaction
-To:     Vlastimil Babka <vbabka@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>,
-        Nitin Gupta <nigupta@nvidia.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        David Rientjes <rientjes@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Khalid Aziz <khalid.aziz@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <70319f78-2c7c-8141-d751-07f28203db7c@linux.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 1, 2020 at 12:48 PM Nitin Gupta <nigupta@nvidia.com> wrote:
->
-> For some applications, we need to allocate almost all memory as
-> hugepages. However, on a running system, higher-order allocations can
-> fail if the memory is fragmented. Linux kernel currently does on-demand
-> compaction as we request more hugepages, but this style of compaction
-> incurs very high latency. Experiments with one-time full memory
-> compaction (followed by hugepage allocations) show that kernel is able
-> to restore a highly fragmented memory state to a fairly compacted memory
-> state within <1 sec for a 32G system. Such data suggests that a more
-> proactive compaction can help us allocate a large fraction of memory as
-> hugepages keeping allocation latencies low.
->
+On Thu, Jun 04, 2020 at 06:23:38PM +0300, Alexander Popov wrote:
+> On 04.06.2020 17:01, Jann Horn wrote:
+> > On Thu, Jun 4, 2020 at 3:51 PM Alexander Popov <alex.popov@linux.com> wrote:
+> >> Some time ago Variable Length Arrays (VLA) were removed from the kernel.
+> >> The kernel is built with '-Wvla'. Let's exclude alloca() from the
+> >> instrumentation logic and make it simpler. The build-time assertion
+> >> against alloca() is added instead.
+> > [...]
+> >> +                       /* Variable Length Arrays are forbidden in the kernel */
+> >> +                       gcc_assert(!is_alloca(stmt));
+> > 
+> > There is a patch series from Elena and Kees on the kernel-hardening
+> > list that deliberately uses __builtin_alloca() in the syscall entry
+> > path to randomize the stack pointer per-syscall - see
+> > <https://lore.kernel.org/kernel-hardening/20200406231606.37619-4-keescook@chromium.org/>.
+> 
+> Thanks, Jann.
+> 
+> At first glance, leaving alloca() handling in stackleak instrumentation logic
+> would allow to integrate stackleak and this version of random_kstack_offset.
 
-> Signed-off-by: Nitin Gupta <nigupta@nvidia.com>
-> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+Right, it seems there would be a need for this coverage to remain,
+otherwise the depth of stack erasure might be incorrect.
 
-(+CC Khalid)
+It doesn't seem like the other patches strictly depend on alloca()
+support being removed, though?
 
-Can this be pipelined for upstream inclusion now? Sorry, I'm a bit
-rusty on upstream flow these days.
+> Kees, Elena, did you try random_kstack_offset with upstream stackleak?
 
-Thanks,
-Nitin
+I didn't try that combination yet, no. It seemed there would likely
+still be further discussion about the offset series first (though the
+thread has been silent -- I'll rebase and resend it after rc2).
+
+> It looks to me that without stackleak erasing random_kstack_offset can be
+> weaker. I mean, if next syscall has a bigger stack randomization gap, the data
+> on thread stack from the previous syscall is not overwritten and can be used. Am
+> I right?
+
+That's correct. I think the combination is needed, but I don't think
+they need to be strictly tied together.
+
+> Another aspect: CONFIG_STACKLEAK_METRICS can be used for guessing kernel stack
+> offset, which is bad. It should be disabled if random_kstack_offset is on.
+
+Agreed.
+
+-- 
+Kees Cook
