@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F10C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FDAAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB2FA20691
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:06:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C6D620691
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:06:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388233AbgFISGW (ORCPT
+        id S2387495AbgFISGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:06:22 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:41304 "EHLO
+        Tue, 9 Jun 2020 14:06:18 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:41202 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388154AbgFISF6 (ORCPT
+        by vger.kernel.org with ESMTP id S1731897AbgFISFz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 14:05:58 -0400
+        Tue, 9 Jun 2020 14:05:55 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jiidF-0001oX-4m; Tue, 09 Jun 2020 19:05:53 +0100
+        id 1jiidF-0001oT-1I; Tue, 09 Jun 2020 19:05:53 +0100
 Received: from ben by deadeye with local (Exim 4.94)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jiidE-006Vv4-FM; Tue, 09 Jun 2020 19:05:52 +0100
+        id 1jiidE-006VvD-Iq; Tue, 09 Jun 2020 19:05:52 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Stephen Smalley" <sds@tycho.nsa.gov>,
-        "Marek Milkovic" <mmilkovi@redhat.com>,
-        "Paul Moore" <pmoore@redhat.com>
-Date:   Tue, 09 Jun 2020 19:04:04 +0100
-Message-ID: <lsq.1591725832.755257115@decadent.org.uk>
+        "David Mosberger" <davidm@egauge.net>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+Date:   Tue, 09 Jun 2020 19:04:07 +0100
+Message-ID: <lsq.1591725832.662003982@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 13/61] selinux: Print 'sclass' as string when
- unrecognized netlink message occurs
+Subject: [PATCH 3.16 16/61] drivers: usb: core: Don't disable irqs in
+ usb_sg_wait() during URB submit.
 In-Reply-To: <lsq.1591725831.850867383@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,34 +56,78 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Marek Milkovic <mmilkovi@redhat.com>
+From: David Mosberger <davidm@egauge.net>
 
-commit cded3fffbeab777e6ad2ec05d4a3b62c5caca0f3 upstream.
+commit 98b74b0ee57af1bcb6e8b2e76e707a71c5ef8ec9 upstream.
 
-This prints the 'sclass' field as string instead of index in unrecognized netlink message.
-The textual representation makes it easier to distinguish the right class.
+usb_submit_urb() may take quite long to execute.  For example, a
+single sg list may have 30 or more entries, possibly leading to that
+many calls to DMA-map pages.  This can cause interrupt latency of
+several hundred micro-seconds.
 
-Signed-off-by: Marek Milkovic <mmilkovi@redhat.com>
-Acked-by: Stephen Smalley <sds@tycho.nsa.gov>
-[PM: 80-char width fixes]
-Signed-off-by: Paul Moore <pmoore@redhat.com>
+Avoid the problem by releasing the io->lock spinlock and re-enabling
+interrupts before calling usb_submit_urb().  This opens races with
+usb_sg_cancel() and sg_complete().  Handle those races by using
+usb_block_urb() to stop URBs from being submitted after
+usb_sg_cancel() or sg_complete() with error.
+
+Note that usb_unlink_urb() is guaranteed to return -ENODEV if
+!io->urbs[i]->dev and since the -ENODEV case is already handled,
+we don't have to check for !io->urbs[i]->dev explicitly.
+
+Before this change, reading 512MB from an ext3 filesystem on a USB
+memory stick showed a throughput of 12 MB/s with about 500 missed
+deadlines.
+
+With this change, reading the same file gave the same throughput but
+only one or two missed deadlines.
+
+Signed-off-by: David Mosberger <davidm@egauge.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- security/selinux/hooks.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/usb/core/message.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -4685,8 +4685,9 @@ static int selinux_nlmsg_perm(struct soc
- 		if (err == -EINVAL) {
- 			printk(KERN_WARNING
- 			       "SELinux: unrecognized netlink message:"
--			       " protocol=%hu nlmsg_type=%hu sclass=%hu\n",
--			       sk->sk_protocol, nlh->nlmsg_type, sksec->sclass);
-+			       " protocol=%hu nlmsg_type=%hu sclass=%s\n",
-+			       sk->sk_protocol, nlh->nlmsg_type,
-+			       secclass_map[sksec->sclass - 1].name);
- 			if (!selinux_enforcing || security_get_allow_unknown())
- 				err = 0;
- 		}
+--- a/drivers/usb/core/message.c
++++ b/drivers/usb/core/message.c
+@@ -306,9 +306,10 @@ static void sg_complete(struct urb *urb)
+ 		 */
+ 		spin_unlock(&io->lock);
+ 		for (i = 0, found = 0; i < io->entries; i++) {
+-			if (!io->urbs[i] || !io->urbs[i]->dev)
++			if (!io->urbs[i])
+ 				continue;
+ 			if (found) {
++				usb_block_urb(io->urbs[i]);
+ 				retval = usb_unlink_urb(io->urbs[i]);
+ 				if (retval != -EINPROGRESS &&
+ 				    retval != -ENODEV &&
+@@ -519,12 +520,10 @@ void usb_sg_wait(struct usb_sg_request *
+ 		int retval;
+ 
+ 		io->urbs[i]->dev = io->dev;
+-		retval = usb_submit_urb(io->urbs[i], GFP_ATOMIC);
+-
+-		/* after we submit, let completions or cancellations fire;
+-		 * we handshake using io->status.
+-		 */
+ 		spin_unlock_irq(&io->lock);
++
++		retval = usb_submit_urb(io->urbs[i], GFP_NOIO);
++
+ 		switch (retval) {
+ 			/* maybe we retrying will recover */
+ 		case -ENXIO:	/* hc didn't queue this one */
+@@ -594,8 +593,8 @@ void usb_sg_cancel(struct usb_sg_request
+ 		for (i = 0; i < io->entries; i++) {
+ 			int retval;
+ 
+-			if (!io->urbs[i]->dev)
+-				continue;
++			usb_block_urb(io->urbs[i]);
++
+ 			retval = usb_unlink_urb(io->urbs[i]);
+ 			if (retval != -EINPROGRESS
+ 					&& retval != -ENODEV
 
