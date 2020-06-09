@@ -2,101 +2,92 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D78C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54631C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:13:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40C0220760
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:13:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AuCsk62R"
+	by mail.kernel.org (Postfix) with ESMTP id 2BACA20774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:13:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731184AbgFIQNe (ORCPT
+        id S1731133AbgFIQNZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 12:13:34 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:56920 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731163AbgFIQNc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 12:13:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591719211;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=JUGhyhAM3xv/+2IOQidLA1A/yKCzpzQ3bL3njFAMOIs=;
-        b=AuCsk62RuvQXn+b/oFfkWd69/W1qb041PlHeWy0vBT4yWK1YgfrfPzyVhjNrt4TxOTZcgs
-        CRmUwIKqeXCPk2icuUIex6thgl/mjAibdCqBPMnb2FnmdVevbaCNqlse2F2flY+cGTqOO9
-        5D2KyS3uqA9hUlTUWWPHYgUSdlzJP1c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-91-eumuOTcrNTyyjj6fSpoEKg-1; Tue, 09 Jun 2020 12:13:29 -0400
-X-MC-Unique: eumuOTcrNTyyjj6fSpoEKg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5E3FB8014D4;
-        Tue,  9 Jun 2020 16:13:28 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-114-66.rdu2.redhat.com [10.10.114.66])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6BD81768DA;
-        Tue,  9 Jun 2020 16:13:27 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 3/6] afs: Fix use of BUG()
-From:   David Howells <dhowells@redhat.com>
-To:     linux-afs@lists.infradead.org
-Cc:     Kees Cook <keescook@chromium.org>, dhowells@redhat.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 09 Jun 2020 17:13:26 +0100
-Message-ID: <159171920664.3038039.18059422273265286162.stgit@warthog.procyon.org.uk>
-In-Reply-To: <159171918506.3038039.10915051218779105094.stgit@warthog.procyon.org.uk>
-References: <159171918506.3038039.10915051218779105094.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.22
+        Tue, 9 Jun 2020 12:13:25 -0400
+Received: from smtp.asem.it ([151.1.184.197]:62643 "EHLO smtp.asem.it"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728888AbgFIQNT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 12:13:19 -0400
+Received: from webmail.asem.it
+        by asem.it (smtp.asem.it)
+        (SecurityGateway 6.5.2)
+        with ESMTP id SG000307084.MSG 
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 18:13:16 +0200S
+Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 9 Jun
+ 2020 18:13:14 +0200
+Received: from flavio-x.asem.intra (172.16.17.208) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
+ Transport; Tue, 9 Jun 2020 18:13:14 +0200
+From:   Flavio Suligoi <f.suligoi@asem.it>
+To:     Sathya Prakash <sathya.prakash@broadcom.com>,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>
+CC:     <MPT-FusionLinux.pdl@broadcom.com>, <linux-scsi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Flavio Suligoi <f.suligoi@asem.it>
+Subject: [PATCH 1/1] scsi: mpt3sas: fix spelling mistake
+Date:   Tue, 9 Jun 2020 18:13:13 +0200
+Message-ID: <20200609161313.32098-1-f.suligoi@asem.it>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain
+X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
+X-SGSPF-Result: none (smtp.asem.it)
+X-SGOP-RefID: str=0001.0A090204.5EDFB51B.0067,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix afs_compare_addrs() to use WARN_ON(1) instead of BUG() and return 1
-(ie. srx_a > srx_b).
+Fix typo: "tigger" --> "trigger"
 
-There's no point trying to put actual error handling in as this should not
-occur unless a new transport address type is allowed by AFS.  And even if
-it does, in this particular case, it'll just never match unknown types of
-addresses.  This BUG() was more of a 'you need to add a case here'
-indicator.
-
-Reported-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
 ---
+ drivers/scsi/mpt3sas/mpt3sas_base.h         | 2 +-
+ drivers/scsi/mpt3sas/mpt3sas_trigger_diag.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
- fs/afs/vl_alias.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/fs/afs/vl_alias.c b/fs/afs/vl_alias.c
-index 093895c49c21..136fc6164e00 100644
---- a/fs/afs/vl_alias.c
-+++ b/fs/afs/vl_alias.c
-@@ -73,7 +73,8 @@ static int afs_compare_addrs(const struct sockaddr_rxrpc *srx_a,
- 	}
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_base.h b/drivers/scsi/mpt3sas/mpt3sas_base.h
+index 4fca3939c034..4ff876c31272 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_base.h
++++ b/drivers/scsi/mpt3sas/mpt3sas_base.h
+@@ -1770,7 +1770,7 @@ void mpt3sas_send_trigger_data_event(struct MPT3SAS_ADAPTER *ioc,
+ void mpt3sas_process_trigger_data(struct MPT3SAS_ADAPTER *ioc,
+ 	struct SL_WH_TRIGGERS_EVENT_DATA_T *event_data);
+ void mpt3sas_trigger_master(struct MPT3SAS_ADAPTER *ioc,
+-	u32 tigger_bitmask);
++	u32 trigger_bitmask);
+ void mpt3sas_trigger_event(struct MPT3SAS_ADAPTER *ioc, u16 event,
+ 	u16 log_entry_qualifier);
+ void mpt3sas_trigger_scsi(struct MPT3SAS_ADAPTER *ioc, u8 sense_key,
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_trigger_diag.h b/drivers/scsi/mpt3sas/mpt3sas_trigger_diag.h
+index 6586a463bea9..405eada2669d 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_trigger_diag.h
++++ b/drivers/scsi/mpt3sas/mpt3sas_trigger_diag.h
+@@ -69,7 +69,7 @@
+ #define MASTER_TRIGGER_TASK_MANAGMENT   (0x00000004)
+ #define MASTER_TRIGGER_DEVICE_REMOVAL   (0x00000008)
  
- 	default:
--		BUG();
-+		WARN_ON(1);
-+		diff = 1;
- 	}
+-/* fake firmware event for tigger */
++/* fake firmware event for trigger */
+ #define MPI3_EVENT_DIAGNOSTIC_TRIGGER_FIRED	(0x6E)
  
- out:
-
+ /**
+-- 
+2.17.1
 
