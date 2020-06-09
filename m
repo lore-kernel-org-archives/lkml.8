@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E364C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0065BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DF6420734
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA7BA206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:03:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725784;
-	bh=tJ7i3gI0/ijEe7QVglU/MZNhpV1Jc+al4aF2FGTCKJs=;
+	s=default; t=1591725795;
+	bh=d6DNbeK+qZmskXZLjAOxdDEj9eIiTEaY0hausGND4U0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XybrbdaN84bKGKSHn/82+fR5DG5BlbR7g6daiKeOkWFPak1WPRxCIhudrH/AY925+
-	 UIHGdwbeB8Cs6W8uIBmckiTASkxOTUq2zaZXwFxnCmnmXjq+ei//EIdSTN+9T5m/i5
-	 t98uC65+xN2moxJvUIiCNGmCeWE0TNJSGGN2k1EI=
+	b=rhexGHtJD+DBEQXNDXYN1voXCvgnvnWaVcsvmp5qSbjAQo1ROOmPTQYb5OPMMMJQ/
+	 AXDbBZJd1CV1S7pOq6N4tAI2skbICO0j3NHnbMkcjkZq3mGjUOA7dX+PZQAsQPg1ky
+	 xSCtfqtWi6yV+amqHoMcsopZQDbDyPETYqRdIQwQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387895AbgFISDD (ORCPT
+        id S1732962AbgFIRxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:03:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43744 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:53:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732985AbgFIRxD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:53:03 -0400
+        id S1730980AbgFIRvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:51:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C61B0207C3;
-        Tue,  9 Jun 2020 17:53:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40FB520774;
+        Tue,  9 Jun 2020 17:51:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725183;
-        bh=tJ7i3gI0/ijEe7QVglU/MZNhpV1Jc+al4aF2FGTCKJs=;
+        s=default; t=1591725113;
+        bh=d6DNbeK+qZmskXZLjAOxdDEj9eIiTEaY0hausGND4U0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mvI099iCC1Xomkd3DHQmrDXKnJaHLRREPrTNFQLCXpyWSo9KRwMUuhthmMDWygIhw
-         pYuUAUvTungBGmQ1wCinnwgrZlycNuRMixnNvWAgSwsg2Ih6wN4t0rpoqh29jtmh3j
-         aJYL6Md/eWrSb/Te/vrZ11/YFQLaQxkY81kEhXbo=
+        b=gzA5p/+n6cnZJuXBlEeXz3lrS16C4Pe66RXip8vlzH9zeq7vJFA7JGbr1/EAyPQlD
+         gf8wl/e+SnCpBOuJEOxvuZOAH8YXINPwUX//6Nx/duXMWFRuOXP5SsHpNhJS/mRLf1
+         y3U5NwCmsQp4VCZdiFz5qUO5/8ZWU5iRBTQ7OOz0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Stable@vger.kernel.org,
-        Tomasz Duszynski <tomasz.duszynski@octakon.com>
-Subject: [PATCH 5.4 18/34] iio:chemical:pms7003: Fix timestamp alignment and prevent data leak.
-Date:   Tue,  9 Jun 2020 19:45:14 +0200
-Message-Id: <20200609174054.904245534@linuxfoundation.org>
+        stable@vger.kernel.org, Bin Liu <b-liu@ti.com>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.19 09/25] USB: serial: usb_wwan: do not resubmit rx urb on fatal errors
+Date:   Tue,  9 Jun 2020 19:44:59 +0200
+Message-Id: <20200609174049.714293801@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200609174052.628006868@linuxfoundation.org>
-References: <20200609174052.628006868@linuxfoundation.org>
+In-Reply-To: <20200609174048.576094775@linuxfoundation.org>
+References: <20200609174048.576094775@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,72 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+From: Bin Liu <b-liu@ti.com>
 
-commit 13e945631c2ffb946c0af342812a3cd39227de6e upstream.
+commit 986c1748c84d7727defeaeca74a73b37f7d5cce1 upstream.
 
-One of a class of bugs pointed out by Lars in a recent review.
-iio_push_to_buffers_with_timestamp assumes the buffer used is aligned
-to the size of the timestamp (8 bytes).  This is not guaranteed in
-this driver which uses an array of smaller elements on the stack.
-As Lars also noted this anti pattern can involve a leak of data to
-userspace and that indeed can happen here.  We close both issues by
-moving to a suitable structure in the iio_priv() data with alignment
-explicitly requested.  This data is allocated with kzalloc so no
-data can leak appart from previous readings.
+usb_wwan_indat_callback() shouldn't resubmit rx urb if the previous urb
+status is a fatal error. Or the usb controller would keep processing the
+new urbs then run into interrupt storm, and has no chance to recover.
 
-Fixes: a1d642266c14 ("iio: chemical: add support for Plantower PMS7003 sensor")
-Reported-by: Lars-Peter Clausen <lars@metafoo.de>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: <Stable@vger.kernel.org>
-Acked-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
+Fixes: 6c1ee66a0b2b ("USB-Serial: Fix error handling of usb_wwan")
+Cc: stable@vger.kernel.org
+Signed-off-by: Bin Liu <b-liu@ti.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/chemical/pms7003.c |   17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ drivers/usb/serial/usb_wwan.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/iio/chemical/pms7003.c
-+++ b/drivers/iio/chemical/pms7003.c
-@@ -73,6 +73,11 @@ struct pms7003_state {
- 	struct pms7003_frame frame;
- 	struct completion frame_ready;
- 	struct mutex lock; /* must be held whenever state gets touched */
-+	/* Used to construct scan to push to the IIO buffer */
-+	struct {
-+		u16 data[3]; /* PM1, PM2P5, PM10 */
-+		s64 ts;
-+	} scan;
- };
- 
- static int pms7003_do_cmd(struct pms7003_state *state, enum pms7003_cmd cmd)
-@@ -104,7 +109,6 @@ static irqreturn_t pms7003_trigger_handl
- 	struct iio_dev *indio_dev = pf->indio_dev;
- 	struct pms7003_state *state = iio_priv(indio_dev);
- 	struct pms7003_frame *frame = &state->frame;
--	u16 data[3 + 1 + 4]; /* PM1, PM2P5, PM10, padding, timestamp */
- 	int ret;
- 
- 	mutex_lock(&state->lock);
-@@ -114,12 +118,15 @@ static irqreturn_t pms7003_trigger_handl
- 		goto err;
- 	}
- 
--	data[PM1] = pms7003_get_pm(frame->data + PMS7003_PM1_OFFSET);
--	data[PM2P5] = pms7003_get_pm(frame->data + PMS7003_PM2P5_OFFSET);
--	data[PM10] = pms7003_get_pm(frame->data + PMS7003_PM10_OFFSET);
-+	state->scan.data[PM1] =
-+		pms7003_get_pm(frame->data + PMS7003_PM1_OFFSET);
-+	state->scan.data[PM2P5] =
-+		pms7003_get_pm(frame->data + PMS7003_PM2P5_OFFSET);
-+	state->scan.data[PM10] =
-+		pms7003_get_pm(frame->data + PMS7003_PM10_OFFSET);
- 	mutex_unlock(&state->lock);
- 
--	iio_push_to_buffers_with_timestamp(indio_dev, data,
-+	iio_push_to_buffers_with_timestamp(indio_dev, &state->scan,
- 					   iio_get_time_ns(indio_dev));
- err:
- 	iio_trigger_notify_done(indio_dev->trig);
+--- a/drivers/usb/serial/usb_wwan.c
++++ b/drivers/usb/serial/usb_wwan.c
+@@ -299,6 +299,10 @@ static void usb_wwan_indat_callback(stru
+ 	if (status) {
+ 		dev_dbg(dev, "%s: nonzero status: %d on endpoint %02x.\n",
+ 			__func__, status, endpoint);
++
++		/* don't resubmit on fatal errors */
++		if (status == -ESHUTDOWN || status == -ENOENT)
++			return;
+ 	} else {
+ 		if (urb->actual_length) {
+ 			tty_insert_flip_string(&port->port, data,
 
 
