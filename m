@@ -2,139 +2,161 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 435A6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94210C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08F5A20734
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:46:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="U99j7Jwk"
+	by mail.kernel.org (Postfix) with ESMTP id 81E7E20734
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:47:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733178AbgFISqq (ORCPT
+        id S2388561AbgFISrK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:46:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50154 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728400AbgFISqn (ORCPT
+        Tue, 9 Jun 2020 14:47:10 -0400
+Received: from dispatch1-us1.ppe-hosted.com ([148.163.129.52]:49906 "EHLO
+        dispatch1-us1.ppe-hosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728400AbgFISrG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 14:46:43 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB4B0C05BD1E
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 11:46:42 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id bg4so8385194plb.3
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 11:46:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=7dtLX6XP7HnlQbHJsaggWu4QmeqwjrddfqDvUbVDx4s=;
-        b=U99j7JwkXu9xDjTaNwOqMNsfY/1JGbl0JiVGPVKaBXgK5sILh3SCCo6eu1pc4epTXg
-         OFJZw9ln4TBPmUC0pW0XxrKMH3JsdoIHM3vcI+UatnP+BjixVR5jhLwwCKfajn4CK89/
-         LsKyztUzZULA3YetUMhR5C2itWjI8K5031e9w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7dtLX6XP7HnlQbHJsaggWu4QmeqwjrddfqDvUbVDx4s=;
-        b=qp3lFyV2oe+tWsxgyY+ZgyCawEDZM6Qy19I4DixHko6l29pFsTkV7BAhEm9kvUelt/
-         QFHFJZ411o0tZ3RuWS04H8DcOHpCR0UYop9a7/p1bLu6hPpG2DapXWJj4kftchdD7L9w
-         Fdj9zSjybNtTxrY7cfxpmZAWur1mOo85EA0gYSSOTtiedQlfNB2miik5ZQKU7OhbE83i
-         s2Sp0DXdxms7P7aycBw9O3W3WX1YDSEsCReRKdYrl+4tPzX/D/RYyuFLEfSYzDxG/Vyc
-         rvKusXoQix8sn/xC/1TKmxvGm2hsTSMNUsitoTX4aQ1Us7ZwfNItsrqZDES4LO+aBUCZ
-         Odng==
-X-Gm-Message-State: AOAM532f8+Un4LAyhhRePLpxoyhyo6e4ZVb2fiMmn+I1mo2eXxxLF4mK
-        AFGrFJeoPMLoe6/3tb13zgYsgw==
-X-Google-Smtp-Source: ABdhPJwL5HN0U2KSWusdzlMqd2urfWL8t6YS0AxExIzAB1X6VceO1GflzGC9ecX1Ma+jdmYtMYrhFQ==
-X-Received: by 2002:a17:90a:3489:: with SMTP id p9mr6357379pjb.56.1591728402460;
-        Tue, 09 Jun 2020 11:46:42 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id lt14sm3139209pjb.52.2020.06.09.11.46.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 11:46:41 -0700 (PDT)
-Date:   Tue, 9 Jun 2020 11:46:40 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Alexander Popov <alex.popov@linux.com>
-Cc:     Emese Revfy <re.emese@gmail.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Sven Schnelle <svens@stackframe.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Collingbourne <pcc@google.com>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Alexander Monakov <amonakov@ispras.ru>,
-        Mathias Krause <minipli@googlemail.com>,
-        PaX Team <pageexec@freemail.hu>,
-        Brad Spengler <spender@grsecurity.net>,
-        Laura Abbott <labbott@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        kernel-hardening@lists.openwall.com, linux-kbuild@vger.kernel.org,
-        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, gcc@gcc.gnu.org, notify@kernel.org
-Subject: Re: [PATCH 2/5] gcc-plugins/stackleak: Use asm instrumentation to
- avoid useless register saving
-Message-ID: <202006091143.AD1A662@keescook>
-References: <20200604134957.505389-1-alex.popov@linux.com>
- <20200604134957.505389-3-alex.popov@linux.com>
+        Tue, 9 Jun 2020 14:47:06 -0400
+Received: from mx1-us1.ppe-hosted.com (unknown [10.7.65.61])
+        by dispatch1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id F10CD600AC;
+        Tue,  9 Jun 2020 18:47:03 +0000 (UTC)
+Received: from us4-mdac16-37.ut7.mdlocal (unknown [10.7.66.156])
+        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id EEA9F8009E;
+        Tue,  9 Jun 2020 18:47:03 +0000 (UTC)
+X-Virus-Scanned: Proofpoint Essentials engine
+Received: from mx1-us1.ppe-hosted.com (unknown [10.7.65.175])
+        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id 5E5AA80055;
+        Tue,  9 Jun 2020 18:47:03 +0000 (UTC)
+Received: from webmail.solarflare.com (uk.solarflare.com [193.34.186.16])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id 0597C70006C;
+        Tue,  9 Jun 2020 18:47:01 +0000 (UTC)
+Received: from [10.17.20.203] (10.17.20.203) by ukex01.SolarFlarecom.com
+ (10.17.10.4) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 9 Jun 2020
+ 19:46:50 +0100
+Subject: Re: [PATCH ethtool v1] netlink: add master/slave configuration
+ support
+To:     Stephen Hemminger <stephen@networkplumber.org>,
+        David Miller <davem@davemloft.net>
+CC:     <o.rempel@pengutronix.de>, <andrew@lunn.ch>,
+        <f.fainelli@gmail.com>, <hkallweit1@gmail.com>, <kuba@kernel.org>,
+        <corbet@lwn.net>, <mkubecek@suse.cz>, <linville@tuxdriver.com>,
+        <david@protonic.nl>, <kernel@pengutronix.de>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux@armlinux.org.uk>, <mkl@pengutronix.de>, <marex@denx.de>,
+        <christian.herber@nxp.com>, <amitc@mellanox.com>,
+        <petrm@mellanox.com>
+References: <20200526091025.25243-1-o.rempel@pengutronix.de>
+ <20200607153019.3c8d6650@hermes.lan>
+ <20200607.164532.964293508393444353.davem@davemloft.net>
+ <20200609101935.5716b3bd@hermes.lan>
+From:   Edward Cree <ecree@solarflare.com>
+Message-ID: <b72ca873-d2d1-7361-c7b1-95156cc6b20f@solarflare.com>
+Date:   Tue, 9 Jun 2020 19:46:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200604134957.505389-3-alex.popov@linux.com>
+In-Reply-To: <20200609101935.5716b3bd@hermes.lan>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.17.20.203]
+X-ClientProxiedBy: ocex03.SolarFlarecom.com (10.20.40.36) To
+ ukex01.SolarFlarecom.com (10.17.10.4)
+X-TM-AS-Product-Ver: SMEX-12.5.0.1300-8.5.1020-25470.003
+X-TM-AS-Result: No-2.044500-8.000000-10
+X-TMASE-MatchedRID: I31hiQfYWUPoJ7/BCqClnedNi+0D4LmKiqCjW9swDxLk1kyQDpEj8Cj5
+        3aEB5qDLm+1fvYNhFyBXxguJUe2GCZRvsQ56OO4qOctXWsNe0qUOb7iOh4v5/Ul/J9Ro+MABiZT
+        IEGltZs0aSRZgvGgsvMSl+MnAnGpqvRY9Eui9+hzGAzTlP3eD9uq6JaIt1QeiAOoJD+M7nOm+O/
+        Fr84/iGLBUm9aP+NTyDXaTDtw9qt5JH11OOVB0ycEvKlG0CjjIojQrbrPpzzpMat91z9vy7D1Hu
+        bz0trKxNKNt3Qs1qr4Z6AKZ5CDJjoKuaJr4qkjK7I0RzvPYnMLEMDPEVkc5zDrW2rRfTfGrOcWn
+        tyTplLMC9V8w+aDVpAEhGMDW4utRwttG2hjGkeWieObBHrVnUgAWEaci2Ej6abJxhiIFjJlsKYH
+        pCFiCVDRpr9frjETDuFcRhUATSXhCUInNiru3wMqquP3qhQpqprzcyrz2L11xps32fZo2QXTYjQ
+        YTwAbR8sfxw8KspferIfOiZKnM2A6sbMpeuGpS+eKrHwoGV9MXyU2Cxtlxb2OMyb1Ixq8Vy46qz
+        TSht7d0QOrJWPXvVus4dFY9QFMbycoUIDNWKI3Rc75iroKqAmFDbD27a+U2Vu51yUEi8EMqO2wf
+        skV8/JS3tfb2kgp1ToE+2PHM5kemrRd7k2N7HK4GXSu53BPrGnGYpZN+xAgiOHkao5dpqAneP6Z
+        J8eSdj3aMjC9UtrzPNTb4wusNVDVM51zwCh5jMKPrF7dK57N9LQinZ4QefL6qvLNjDYTwmTDwp0
+        zM3zoqtq5d3cxkNTizVX2KWmj74ZLrXlvDZfHYjHL5MME3WgOM+WwfFTZmNLfMQ9dk3GCpalTRT
+        gI0TqRpZ1FQ4dmEsVnyzyXEOWtA2U6LQNPaf9oQy0xZsLaTBsRAh8WmTAcG2WAWHb2qekrMHC7k
+        mmSWJy4DmWREnADvdCUIFuasqw==
+X-TM-AS-User-Approved-Sender: Yes
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10-2.044500-8.000000
+X-TMASE-Version: SMEX-12.5.0.1300-8.5.1020-25470.003
+X-MDID: 1591728423-ZrdNJEdlB61c
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 04:49:54PM +0300, Alexander Popov wrote:
-> Let's improve the instrumentation to avoid this:
-> 
-> 1. Make stackleak_track_stack() save all register that it works with.
-> Use no_caller_saved_registers attribute for that function. This attribute
-> is available for x86_64 and i386 starting from gcc-7.
-> 
-> 2. Insert calling stackleak_track_stack() in asm:
->   asm volatile("call stackleak_track_stack" :: "r" (current_stack_pointer))
-> Here we use ASM_CALL_CONSTRAINT trick from arch/x86/include/asm/asm.h.
-> The input constraint is taken into account during gcc shrink-wrapping
-> optimization. It is needed to be sure that stackleak_track_stack() call is
-> inserted after the prologue of the containing function, when the stack
-> frame is prepared.
+Disclaimer: *definitely* not speaking for my employer.
 
-Very cool; nice work!
+On 09/06/2020 18:19, Stephen Hemminger wrote:
+> How many times have you or Linus argued about variable naming.
+> Yes, words do matter and convey a lot of implied connotation and meaning.
+Connotation, unlike denotation, is widely variable.  I would aver
+ that for most people who are triggered or offended by the technical
+ use of master/slave or similar terms, this is a *learned behaviour*
+ that occurs because they have been taught that they should be
+ offended by these words.  Are these people also incapable of using
+ those words to describe actual historical slavery?
+There is a difference between stating "X relates to Y as a slave to
+ a master" and "You relate to me (or ought to do so) as a slave to a
+ master".  The former is a merely factual claim which is often true
+ of technical entities (and in the past or in certain parts of the
+ world today is true of some humans, however morally wrong); the
+ latter is an assertion of power.  It is only the latter which is,
+ or at any rate should be, offensive; the attempt to ban the former
+ rests on an equivocation between positive and normative uses.
+Anyone who can't put connotation aside and stick to denotation
+ (a) needs to grow up
+ (b) is ill-suited to working with computers.
 
-> +static void add_stack_tracking(gimple_stmt_iterator *gsi)
-> +{
-> +	/*
-> +	 * The 'no_caller_saved_registers' attribute is used for
-> +	 * stackleak_track_stack(). If the compiler supports this attribute for
-> +	 * the target arch, we can add calling stackleak_track_stack() in asm.
-> +	 * That improves performance: we avoid useless operations with the
-> +	 * caller-saved registers in the functions from which we will remove
-> +	 * stackleak_track_stack() call during the stackleak_cleanup pass.
-> +	 */
-> +	if (lookup_attribute_spec(get_identifier("no_caller_saved_registers")))
-> +		add_stack_tracking_gasm(gsi);
-> +	else
-> +		add_stack_tracking_gcall(gsi);
-> +}
+> Most projects and standards bodies are taking a stance on fixing the
+> language. The IETF is has proposed making changes as well.
+An expired Internet-Draft authored by a human-rights charity and a
+ media studies postgrad student does not constitute "the IETF has
+ proposed".  (Besides, it's historically inaccurate; it claims that
+ the word "robot" means slave, when in fact it means the labour owed
+ by a _serf_ ("robotnik").  And it cites Orwell with apparently *no*
+ sense of irony whatsoever... he was arguing _against_ Newspeak, not
+ for it!)
 
-The build_for_x86 flag is only ever used as an assert() test against
-no_caller_saved_registers, but we're able to test for that separately.
-Why does the architecture need to be tested? (i.e. when this flag
-becomes supported o other architectures, why must it still be x86-only?)
+> A common example is that master/slave is unclear and would be clearer
+> as primary/secondary or active/backup or controller/worker.
+So why isn't controller/worker just as offensive, given all those
+ labourers throughout history who have suffered under abusive
+ managers?  Or does a word need a tenuous connection to race before
+ it can be ritually purified from the language?
+And is there really an EE anywhere who finds the terminology of
+ master and slave clocks unclear?  I suspect very few would gain a
+ better understanding from any of your suggested alternatives.
 
--- 
-Kees Cook
+> Most of networking is based on standards. When the standards wording changes
+> (and it will happen soon); then Linux should also change the wording in the
+> source, api and documentation.
+Rather, it seems that this is an attempt to change Linux in order
+ to _de facto_ change the standard, thereby creating pressure on
+ standards bodies to change it _de jure_ to match.  Yet, in the
+ real world, engineers use and understand the current terminology;
+ the push for language purification bears but little reference to
+ anything outside of itself.
+
+In conclusion, I'd like to quote from Henry Spencer's Ten
+ Commandments for C Programmers (Annotated Edition) [1]:
+> As a lamentable side issue, there has been some unrest from the
+> fanatics of the Pronoun Gestapo over the use of the word "man"
+> in [the eighth] Commandment, for they believe that great efforts
+> and loud shouting devoted to the ritual purification of the
+> language will somehow redound to the benefit of the downtrodden
+> (whose real and grievous woes tendeth to get lost amidst all that
+> thunder and fury).
+
+Grumpily yours,
+-ed
+
+[1] https://www.lysator.liu.se/c/ten-commandments.html
