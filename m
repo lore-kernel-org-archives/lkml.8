@@ -2,82 +2,237 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A68EBC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 23:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FCA9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 23:24:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8488A2067B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 23:23:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 627D82067B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 23:24:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a9UnKgq3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725985AbgFIXXC (ORCPT
+        id S1726027AbgFIXYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 19:23:02 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:38214 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725468AbgFIXXB (ORCPT
+        Tue, 9 Jun 2020 19:24:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36728 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725468AbgFIXYf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 19:23:01 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jina5-0005EV-L6; Tue, 09 Jun 2020 23:22:57 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] NFS: remove redundant pointer clnt
-Date:   Wed, 10 Jun 2020 00:22:57 +0100
-Message-Id: <20200609232257.1118354-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.27.0.rc0
+        Tue, 9 Jun 2020 19:24:35 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3F2DC05BD1E
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 16:24:34 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id x22so334157lfd.4
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 16:24:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sMtF/qC2PC0Fc7hbbofyHpRlWklTrVKaPLffR+XkU1w=;
+        b=a9UnKgq3w+NZfrSXnyBqyipJbKa0Tuo3dnojjNN8atnvbBP6GEk3z2QlX1imC756KM
+         0tJiq6hRUkc6dTpdFJah7PgXagtdk+AxgsDwSbqw0U9Zjh/JncC/0El99i9r1N0/Spa6
+         p79TY7zT08KC5mIDFXGG9IAfq+8wtHM+wYM1r/sqlIniOncZ4GBL++cTx9MCo26DcbPt
+         L7r4sHXsT1zf22C0FSGNtjXqLMzG/mY8Z0AJe/Kj6nWXihSIHW8UzduTok+oObIwbse4
+         DUSvWWtfZXEatB84BYi1qo8c/lFJgnXxYbt8snslXCBa6+I/s/0ZBGr0XWn1nx/F+MRf
+         fvvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sMtF/qC2PC0Fc7hbbofyHpRlWklTrVKaPLffR+XkU1w=;
+        b=nR9Q2QpL1NdtKEm51Zpbq1Ix23riu4v+AKtvmrwqtVJUcfe6SEBTM89a8cWylSebQH
+         4VufpNTleLrDNTd0tyvvXfSBIT1zYFO0/FQtVeFtJwEHHJQxIPXtxNU1fk8MnXUs3C/B
+         0Yye0tfne3BBSSpTExDNLctcnn1T14cocVwa0jgtXActF5i0NkTKA8sAlCm1B8f7hIMR
+         T8YHG5j1msQ/aODCgzxQcc53gGyW22zgjU+cgjnwkFkfetcwGk7OzO0nvSrvAM1SHf+5
+         wNtnMk3qh/fUwKWoBr2lr1XeF220YbXkpHbKFR/cnI3kNbuyneUdd5Y29h3Q/zZ2x7RQ
+         EEIA==
+X-Gm-Message-State: AOAM531RHGlvDJLa4s/2eM0ETFS8RX4bf3lQSwrOYOriDz/DCFTNiFcV
+        LQuyDuLZlGM3BZxaP99UzTrcB0m6TRQoXkc+jZF0Ng==
+X-Google-Smtp-Source: ABdhPJzZrY0DI2VZNNrS4hhO2yx7vrk8VLovugxJWWKM5VjHU5bg/zH1GQOap9q4/SV4DIRAMadbJWFRtgiQBcfd3bo=
+X-Received: by 2002:a19:434e:: with SMTP id m14mr151638lfj.40.1591745072660;
+ Tue, 09 Jun 2020 16:24:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20200607113632.GA49147@kroah.com> <20200609210400.GA1461839@bjorn-Precision-5520>
+In-Reply-To: <20200609210400.GA1461839@bjorn-Precision-5520>
+From:   Rajat Jain <rajatja@google.com>
+Date:   Tue, 9 Jun 2020 16:23:54 -0700
+Message-ID: <CACK8Z6E0s-Y207sb-AqSHVB7KmhvDgJQFFaz6ijQ_0OS3Qjisw@mail.gmail.com>
+Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
+ "whitelisted" drivers
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Zubin Mithra <zsm@google.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Hi Bjorn,
 
-The pointer clnt is being initialized with a value that is never
-read and so this is assignment redundant and can be removed. The
-pointer can removed because it is being used as a temporary
-variable and it is clearer to make the direct assignment and remove
-it completely.
+Thanks for sending out the summary, I was about to send it out but got lazy.
 
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- fs/nfs/nfs4proc.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+On Tue, Jun 9, 2020 at 2:04 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Sun, Jun 07, 2020 at 01:36:32PM +0200, Greg Kroah-Hartman wrote:
+>
+> > Your "problem" I think can be summed up a bit more concise:
+> >       - you don't trust kernel drivers to be "secure" for untrusted
+> >         devices
+> >       - you only want to bind kernel drivers to "internal" devices
+> >         automatically as you "trust" drivers in that situation.
+> >       - you want to only bind specific kernel drivers that you somehow
+> >         feel are "secure" to untrusted devices "outside" of a system
+> >         when those devices are added to the system.
+> >
+> > Is that correct?
+> >
+> > If so, fine, you can do that today with the bind/unbind ability of
+> > drivers, right?  After boot with your "trusted" drivers bound to
+> > "internal" devices, turn off autobind of drivers to devices and then
+> > manually bind them when you see new devices show up, as those "must" be
+> > from external devices (see the bind/unbind files that all drivers export
+> > for how to do this, and old lwn.net articles, this feature has been
+> > around for a very long time.)
+> >
+> > I know for USB you can do this, odds are PCI you can turn off
+> > autobinding as well, as I think this is a per-bus flag somewhere.  If
+> > that's not exported to userspace, should be trivial to do so, should be
+> > somewere in the driver model already...
+> >
+> > Ah, yes, look at the "drivers_autoprobe" and "drivers_probe" files in
+> > sysfs for all busses.  Do those not work for you?
+> >
+> > My other points are the fact that you don't want to put policy in the
+> > kernel, and I think that you can do everything you want in userspace
+> > today, except maybe the fact that trying to determine what is "inside"
+> > and "outside" is not always easy given that most hardware does not
+> > export this information properly, if at all.  Go work with the firmware
+> > people on that issue please, that would be most helpful for everyone
+> > involved to get that finally straightened out.
+>
+> To sketch this out, my understanding of how this would work is:
+>
+>   - Expose the PCI pdev->untrusted bit in sysfs.  We don't expose this
+>     today, but doing so would be trivial.  I think I would prefer a
+>     sysfs name like "external" so it's more descriptive and less of a
+>     judgment.
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index e32717fd1169..7a56e2ab473b 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -9518,7 +9518,6 @@ _nfs41_proc_secinfo_no_name(struct nfs_server *server, struct nfs_fh *fhandle,
- 		.rpc_argp = &args,
- 		.rpc_resp = &res,
- 	};
--	struct rpc_clnt *clnt = server->client;
- 	struct nfs4_call_sync_data data = {
- 		.seq_server = server,
- 		.seq_args = &args.seq_args,
-@@ -9535,8 +9534,7 @@ _nfs41_proc_secinfo_no_name(struct nfs_server *server, struct nfs_fh *fhandle,
- 	int status;
- 
- 	if (use_integrity) {
--		clnt = server->nfs_client->cl_rpcclient;
--		task_setup.rpc_client = clnt;
-+		task_setup.rpc_client = server->nfs_client->cl_rpcclient;
- 
- 		cred = nfs4_get_clid_cred(server->nfs_client);
- 		msg.rpc_cred = cred;
--- 
-2.27.0.rc0
+Yes. I think we should probably semantically differentiate between
+"external" and "external facing" devices. Root ports and downstream
+ports can be "external facing" but are actually internal devices.
+Anything below an "external facing" device is "external". So the sysfs
+attribute "external" should be set only for devices that are truly
+external.
 
+So I think we can possibly synthesize "external" sysfs attribute from
+"untrusted" bit like this (Sorry code looks more complex than it is):
+
+parent = pdev->bus->self;
+
+if (pdev->untrusted) {
+        if (parent && parent->untrusted)
+                pdev->external = true;   /* Device downstream of
+un-trusted device = external */
+        else {
+                pdev->external = false   /* Root complex or an
+internal Downstream port */
+} else {
+        pdev->external = false; /* Trusted device = Internal device */
+}
+
+For platforms that don't expose and untrusted" device, everything is
+assumed to be an "internal device".
+
+Just a suggestion: Do you think an enum attribute may be better
+instead, whose values could be "internal" / "external" /
+"external-facing" in case need arises later to distinguish between
+them?
+
+>
+>     This comes from either the DT "external-facing" property or the
+>     ACPI "ExternalFacingPort" property.
+>
+>   - All devices present at boot are enumerated.  Any statically built
+>     drivers will bind to them before any userspace code runs.
+
+Yes. For our (thunderbolt / USB4) use case, we'd still be protected
+because we can control the PCIe tunnels to thunderbolt / USB4 devices
+and will not enable them until we are ready. So while this approach
+may not work for a system that always enables PCIe connections to
+external devices at boot, it works for our use case as we are looking
+for only thunderbolt / USB4 devices. (Not a problem or concern, just
+wanted to be clear).
+
+>
+>     If you want to keep statically built drivers from binding, you'd
+>     need to invent some mechanism so pci_driver_init() could clear
+>     drivers_autoprobe after registering pci_bus_type.
+
+At present I am not planning this.
+
+>
+>   - Early userspace code prevents modular drivers from automatically
+>     binding to PCI devices:
+>
+>       echo 0 > /sys/bus/pci/drivers_autoprobe
+
+Yes.
+I believe this setting will apply it equally to both modular and
+statically linked drivers?
+
+>
+>     This prevents modular drivers from binding to all devices, whether
+>     present at boot or hot-added.
+
+Yes, at this time, the userspace will need to monitor udev events for
+any new PCI devices hot added, and lookup the VID/DID in pci driver
+database (Isn't it somewhere like modules.pcimap modules.dap or
+something in /lib/modules?) to get the driver name. and then after
+consulting a maintained whitelist, do the following:
+
+>
+>   - Userspace code uses the sysfs "bind" file to control which drivers
+>     are loaded and can bind to each device, e.g.,
+>
+>       echo 0000:02:00.0 > /sys/bus/pci/drivers/nvme/bind
+>
+> Is that what you're thinking?  Is that enough for the control you
+> need, Rajat?
+
+Yes, It sounds like it. That is my current plan.
+
+The one thing that still needs more thought is how about the
+"pcieport" driver that enumerates the PCI bridges. I'm unsure if it
+needs to be whitelisted for further enumeration downstream. What do
+you think?
+
+Thanks & Best Regards,
+
+Rajat
