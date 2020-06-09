@@ -2,250 +2,86 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D986C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 609C9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:20:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EA642078D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:19:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36C3B207ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:20:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pjhnNr4v"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="b9FcJ+mn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728813AbgFIKTY (ORCPT
+        id S1728828AbgFIKU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 06:19:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56158 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728676AbgFIKR5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 06:17:57 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19B9FC03E97C;
-        Tue,  9 Jun 2020 03:17:57 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id i12so1203712pju.3;
-        Tue, 09 Jun 2020 03:17:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=VwGuJZ2SH+okk9ABn43uTSotJJ51Z2CMuq/qQeoTEe4=;
-        b=pjhnNr4vrnj6HYrJGX/WyRx8Ck+Yvq1V3yeairSuLeJmlRbV/5vmehtKGpXFXZHdPv
-         qb67J9+elPBxQasYreEOTVLpQ2TuLkpIa2GVOnlzrmqcLVIBWb5SWnFhwR49Yz6z/fAW
-         yZ8xfkImwJDOJzlV4iS9Hlo4Dl7LhuGWNcqbklKdM3kzfFe0lOChEXAA06W/mCYDTJbE
-         TSRxIQCJ0onxfqaRGiAS8gM0zCkOx90noAs5AoWdUOX+UzEje01ALwSoTYtO+izX71ZL
-         g8ZI/ct9Z2Uw+nzr/zRC2taxiHIV/wAoLdrPoE3IOu1ZYQ5Ww6cncMlE8PidJHSilAUc
-         bXIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=VwGuJZ2SH+okk9ABn43uTSotJJ51Z2CMuq/qQeoTEe4=;
-        b=Ku89sWkWpliorTRAGYuwdT7JTbUeK9CQB3fDfTt1kNkDnTtqDmU363x5cFEtXX3tOx
-         Uf+YgtdVteSpUSOh4aP02H+znCvPc5KdMP0R9ip2XLZ1HS+b/7LLl5F3b/JwY3AEOQkO
-         GV1x39puskNjl7tZzj9Oh/vvczT16RXjr92eAVx/+h4B1So0BPAQhoSCmSO4tjzgmTxl
-         IcaH9XyvpuRBFU9OyCbgUvTvHT9ifQ6Bn/c/02fYP+m53hYLGcDV6gbC2nKiwZ3UDufm
-         LUUb4vG0NRd1gi1JwafmQiHd2PuTF/1F7dYTayilWWo2dQe3AECb/RWUVdIymxmopNnU
-         799w==
-X-Gm-Message-State: AOAM531Nt5sRKFicGvYZwL/btaw7SOyxeEfxq4nwU2p0Y2DyuiBqRp0q
-        LEgjrRV867WFpDPeD32wsjYOMjKDffQH3A==
-X-Google-Smtp-Source: ABdhPJy0RGzAkPRj4695BSIL/JFNnbyi0b/ndV/rgx2MHZZLBK0qJRib4cLx+e1PBg0PY/egHfAbDA==
-X-Received: by 2002:a17:902:aa4c:: with SMTP id c12mr2633454plr.280.1591697876517;
-        Tue, 09 Jun 2020 03:17:56 -0700 (PDT)
-Received: from localhost.localdomain ([223.190.87.90])
-        by smtp.gmail.com with ESMTPSA id d189sm9637253pfc.51.2020.06.09.03.17.52
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Jun 2020 03:17:55 -0700 (PDT)
-From:   Amit Singh Tomar <amittomer25@gmail.com>
-To:     andre.przywara@arm.com, afaerber@suse.de, vkoul@kernel.org,
-        manivannan.sadhasivam@linaro.org, robh+dt@kernel.org
-Cc:     dan.j.williams@intel.com, cristian.ciocaltea@gmail.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-actions@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH v4 05/10] dt-bindings: dmaengine: convert Actions Semi Owl SoCs bindings to yaml
-Date:   Tue,  9 Jun 2020 15:47:05 +0530
-Message-Id: <1591697830-16311-6-git-send-email-amittomer25@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1591697830-16311-1-git-send-email-amittomer25@gmail.com>
-References: <1591697830-16311-1-git-send-email-amittomer25@gmail.com>
+        Tue, 9 Jun 2020 06:20:26 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:38358 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727831AbgFIKUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 06:20:25 -0400
+Received: from zn.tnic (p200300ec2f0d68002503c5de6f6b5eb0.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:6800:2503:c5de:6f6b:5eb0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 21B641EC02B1;
+        Tue,  9 Jun 2020 12:20:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1591698023;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=085VCpEjqM+GYch4ms9evINYEp+0wAs7XM3mVBlU0S0=;
+        b=b9FcJ+mnX+Q47LOFSNU9YDy/3dRiU1w3RBY8bgcoCgkrdaRNbP/GouFz6vOgiKtrl38pMx
+        pV/jHoN7mWdbF16dfS5hAMKtsgLyxySnBkwXlmpPdpcPEzMK9EfNi7taapklf49q2HZui9
+        dcztIqPhrt6fhELlQj9WfKpK6elI13Q=
+Date:   Tue, 9 Jun 2020 12:20:15 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Ritesh Harjani <ritesh.list@gmail.com>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Ritesh Harjani <riteshh@linux.ibm.com>,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Jan Kara <jack@suse.com>, Theodore Ts'o <tytso@mit.edu>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv5 3/5] ext4: mballoc: Introduce pcpu seqcnt for freeing
+ PA to improve ENOSPC handling
+Message-ID: <20200609102015.GA7696@zn.tnic>
+References: <cover.1589955723.git.riteshh@linux.ibm.com>
+ <7f254686903b87c419d798742fd9a1be34f0657b.1589955723.git.riteshh@linux.ibm.com>
+ <CGME20200603064851eucas1p2e435089fbdf4de1d1fa3fb051c2f3d7b@eucas1p2.samsung.com>
+ <aa4f7629-02ff-e49b-e9c0-5ef4a1deee90@samsung.com>
+ <2940d744-3f6f-d0b5-ad8d-e80128c495d0@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <2940d744-3f6f-d0b5-ad8d-e80128c495d0@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Converts the device tree bindings for the Actions Semi Owl SoCs DMA
-Controller over to YAML schemas.
+On Wed, Jun 03, 2020 at 03:40:16PM +0530, Ritesh Harjani wrote:
+> Yes, this is being discussed in the community.
+> I have submitted a patch which should help fix this warning msg.
+> Feel free to give this a try on your setup.
+> 
+> https://marc.info/?l=linux-ext4&m=159110574414645&w=2
 
-It also adds new compatible string "actions,s700-dma".
+I just triggered the same thing here too. Looking at your fix and not
+even pretending to know what's going on with that percpu sequence
+counting, I can't help but wonder why do you wanna do:
 
-Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
----
-Changes since v3:
-	* No change.
-Changes since v2:
-        * Addressed Rob's comments:
-           - removed unnecessary description.
-           - added unevaluatedProperties
-           - added relevant information about
-             dma-channels and dma-request
-        * Added power-domain property.
-Change since v1:
-        * Updated the description field to reflect
-          only the necessary information.
-        * replaced the maxItems field with description for each
-          controller attribute(except interrupts).
-        * Replaced the clock macro with number to keep the example
-          as independent as possible.
+	seq = *raw_cpu_ptr(&discard_pa_seq);
 
- New patch, was not there in RFC.
----
- Documentation/devicetree/bindings/dma/owl-dma.txt  | 47 -------------
- Documentation/devicetree/bindings/dma/owl-dma.yaml | 79 ++++++++++++++++++++++
- 2 files changed, 79 insertions(+), 47 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/dma/owl-dma.txt
- create mode 100644 Documentation/devicetree/bindings/dma/owl-dma.yaml
+instead of simply doing:
 
-diff --git a/Documentation/devicetree/bindings/dma/owl-dma.txt b/Documentation/devicetree/bindings/dma/owl-dma.txt
-deleted file mode 100644
-index 03e9bb12b75f..000000000000
---- a/Documentation/devicetree/bindings/dma/owl-dma.txt
-+++ /dev/null
-@@ -1,47 +0,0 @@
--* Actions Semi Owl SoCs DMA controller
--
--This binding follows the generic DMA bindings defined in dma.txt.
--
--Required properties:
--- compatible: Should be "actions,s900-dma".
--- reg: Should contain DMA registers location and length.
--- interrupts: Should contain 4 interrupts shared by all channel.
--- #dma-cells: Must be <1>. Used to represent the number of integer
--              cells in the dmas property of client device.
--- dma-channels: Physical channels supported.
--- dma-requests: Number of DMA request signals supported by the controller.
--                Refer to Documentation/devicetree/bindings/dma/dma.txt
--- clocks: Phandle and Specifier of the clock feeding the DMA controller.
--
--Example:
--
--Controller:
--                dma: dma-controller@e0260000 {
--                        compatible = "actions,s900-dma";
--                        reg = <0x0 0xe0260000 0x0 0x1000>;
--                        interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
--                                     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
--                                     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
--                                     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
--                        #dma-cells = <1>;
--                        dma-channels = <12>;
--                        dma-requests = <46>;
--                        clocks = <&clock CLK_DMAC>;
--                };
--
--Client:
--
--DMA clients connected to the Actions Semi Owl SoCs DMA controller must
--use the format described in the dma.txt file, using a two-cell specifier
--for each channel.
--
--The two cells in order are:
--1. A phandle pointing to the DMA controller.
--2. The channel id.
--
--uart5: serial@e012a000 {
--        ...
--        dma-names = "tx", "rx";
--        dmas = <&dma 26>, <&dma 27>;
--        ...
--};
-diff --git a/Documentation/devicetree/bindings/dma/owl-dma.yaml b/Documentation/devicetree/bindings/dma/owl-dma.yaml
-new file mode 100644
-index 000000000000..5577cd910781
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/owl-dma.yaml
-@@ -0,0 +1,79 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dma/owl-dma.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Actions Semi Owl SoCs DMA controller
-+
-+description: |
-+  The OWL DMA is a general-purpose direct memory access controller capable of
-+  supporting 10 and 12 independent DMA channels for S700 and S900 SoCs
-+  respectively.
-+
-+maintainers:
-+  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-+
-+allOf:
-+  - $ref: "dma-controller.yaml#"
-+
-+properties:
-+  compatible:
-+    enum:
-+      - actions,s900-dma
-+      - actions,s700-dma
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    description:
-+      controller supports 4 interrupts, which are freely assignable to the
-+      DMA channels.
-+    maxItems: 4
-+
-+  "#dma-cells":
-+    const: 1
-+
-+  dma-channels:
-+    maximum: 12
-+
-+  dma-requests:
-+    maximum: 46
-+
-+  clocks:
-+    maxItems: 1
-+    description:
-+      Phandle and Specifier of the clock feeding the DMA controller.
-+
-+  power-domains:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - "#dma-cells"
-+  - dma-channels
-+  - dma-requests
-+  - clocks
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    dma: dma-controller@e0260000 {
-+        compatible = "actions,s900-dma";
-+        reg = <0x0 0xe0260000 0x0 0x1000>;
-+        interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
-+        #dma-cells = <1>;
-+        dma-channels = <12>;
-+        dma-requests = <46>;
-+        clocks = <&clock 22>;
-+    };
-+
-+...
+	seq = this_cpu_read(discard_pa_seq);
+
+?
+
 -- 
-2.7.4
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
