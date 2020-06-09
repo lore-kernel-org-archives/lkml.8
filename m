@@ -2,89 +2,108 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2505FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 376B4C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE88820760
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:18:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Wt0DGBGI"
+	by mail.kernel.org (Postfix) with ESMTP id 0A79D20774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:19:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591719550;
+	bh=rvAHvEibYz1tZdQIA/llKxglupAm3AZPm3CtQ+GmM/4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uEAp6y+cC70qxJd8lVCnTC6lLfUQGttoaVQD9bRHHoP61cIL1P+bprlUdsSK4OEL1
+	 wFOK17AW2PT9GZQ2lv8u0yil9tqRFOS+0n8K9l0ncQ/CoMWcbxT5AoFZeghV/HkXH6
+	 kVtE8whIhvNXgZV0wKvZEX773yuK4vTWtba+M7+U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727787AbgFIQSw (ORCPT
+        id S1727913AbgFIQTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 12:18:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55516 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725894AbgFIQSv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 12:18:51 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 197C2C03E97C
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 09:18:50 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id bh7so8217798plb.11
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 09:18:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ztrSjb9Hc0jDPbsrcCP9Go/9i0R+UcDFFdl7eZx/r6Q=;
-        b=Wt0DGBGICEfKEaimVAhmarg/KGSjFyRO5TzqXO6XNLncSbl4O/fYj7iUOCtswpKzN+
-         HevAzRySRopFcCSeXweK5e1PBXobSPbw5nH2EJMegFAuKaGoY8E1mOIVxh2aev2COv0t
-         kmR/gG4ejJZ4/WNjHaoSiU7wu9Cj80+IT+LS4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ztrSjb9Hc0jDPbsrcCP9Go/9i0R+UcDFFdl7eZx/r6Q=;
-        b=EtuvJvP5ZpNjdeoR8HoyfBnpb2DVY7C/Lz5bt6H7Uhd4oixT4AHhZ4IpCyAvL7kear
-         iplHXwlg2Drj8mP8ar2RYDLlqKPWeLTa5EXxolm/R9jFUvdBqe5sjUHp7WCG5wfL5iqQ
-         o85vz6Knb4dgdcg/vjiJXu9zEdB1kNn99IBoD5l+xWqqiMhkFO8aHrr9LO0erwI1hCjN
-         AcIWaEQE+C2fXtCUq2+I3UlN1fB3hhU8Zqjw1nddvNoLNBpkDBM9UI3tIvH4EDal22iM
-         Ot12YqbmOtXMyzBKyWTy5HJdYMLLFImXhLPyMZaGw+zBrfzm/rtsYM7BexHB7785eOEW
-         4Nvw==
-X-Gm-Message-State: AOAM531VcQ5PoEYVP6niM0WdWaF3BBV6ikTqreiKIdMv3+H6yGzgqvvS
-        0hwkYlFpvOxPPJ6Fs29o1Pww/g==
-X-Google-Smtp-Source: ABdhPJzjmSmb72TVgOWLhqsjL+dd4r5fyjx7ZveMTCvaUG5Lp8LN8tzhQDJ3aYIZ5V3XnrmyX+A/dg==
-X-Received: by 2002:a17:902:aa92:: with SMTP id d18mr4086799plr.127.1591719530249;
-        Tue, 09 Jun 2020 09:18:50 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id h3sm3136722pje.28.2020.06.09.09.18.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 09:18:49 -0700 (PDT)
-Date:   Tue, 9 Jun 2020 09:18:48 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/6] afs: Fix debugging statements with %px to be %p
-Message-ID: <202006090918.58395776C@keescook>
-References: <159171918506.3038039.10915051218779105094.stgit@warthog.procyon.org.uk>
- <159171921360.3038039.10494245358653942664.stgit@warthog.procyon.org.uk>
+        Tue, 9 Jun 2020 12:19:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40380 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725894AbgFIQTH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 12:19:07 -0400
+Received: from localhost (unknown [122.171.156.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA8DC20774;
+        Tue,  9 Jun 2020 16:19:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591719547;
+        bh=rvAHvEibYz1tZdQIA/llKxglupAm3AZPm3CtQ+GmM/4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FdoAj2OTopFQLxflu9h3hiqwerW2jivX6kpyV1x6Po4yqJnoJ6otofXs0/ayMvUGG
+         Gli4HUPBGzNsHxgfvEuCuTx6E4ZcfAaK44dt1qfKnljwiFRnwMORyM0oWP2mkLBDK9
+         hmnc06FkZ1h3DdrwWYUu7P8PaBrb3KgnlnbN8XiU=
+Date:   Tue, 9 Jun 2020 21:49:03 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Robert Marko <robert.marko@sartura.hr>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-kernel@vger.kernel.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, John Crispin <john@phrozen.org>,
+        Luka Perkov <luka.perkov@sartura.hr>
+Subject: Re: [PATCH v7 3/3] ARM: dts: qcom: ipq4019: add USB devicetree nodes
+Message-ID: <20200609161903.GE1084979@vkoul-mobl>
+References: <20200503201823.531757-1-robert.marko@sartura.hr>
+ <20200503201823.531757-3-robert.marko@sartura.hr>
+ <20200504073914.GQ1375924@vkoul-mobl>
+ <CA+HBbNEiB+o4KxonAu4-ra+P11Yb649v6AFaPjFc8JQDQ8T=CA@mail.gmail.com>
+ <CA+HBbNFsZ-v_2cMhDNGnQXTFaqsjGzB+1rAS3=_CLQhd0N4OKQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <159171921360.3038039.10494245358653942664.stgit@warthog.procyon.org.uk>
+In-Reply-To: <CA+HBbNFsZ-v_2cMhDNGnQXTFaqsjGzB+1rAS3=_CLQhd0N4OKQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 05:13:33PM +0100, David Howells wrote:
-> Fix a couple of %px to be %x in debugging statements.
+Hi Robert,
+
+On 09-06-20, 16:45, Robert Marko wrote:
+> HI,
+> Vinod can you maybe pick this?
+
+Sorry can't do.. this needs to go thru Bjorn..
+
+We are in merge window so it is too late for that.
+Bjorn can pick this for 5.9...
+
 > 
-> Fixes: e49c7b2f6de7 ("afs: Build an abstraction around an "operation" concept")
-> Fixes: 8a070a964877 ("afs: Detect cell aliases 1 - Cells with root volumes")
-> Reported-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: David Howells <dhowells@redhat.com>
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
-Thanks!
+> It would be great to have nodes in 5.8 along the driver
+> 
+> Thank
+> Robert
+> 
+> On Fri, May 29, 2020 at 11:36 AM Robert Marko <robert.marko@sartura.hr> wrote:
+> >
+> > On Mon, May 4, 2020 at 9:39 AM Vinod Koul <vkoul@kernel.org> wrote:
+> > >
+> > > On 03-05-20, 22:18, Robert Marko wrote:
+> > > > From: John Crispin <john@phrozen.org>
+> > > >
+> > > > Since we now have driver for the USB PHY, lets add the necessary nodes to DTSI.
+> > >
+> > > Reviewed-by: Vinod Koul <vkoul@kernel.org>
+> > >
+> > > Bjorn, I have picked the phy and dt binding, feel free to apply this one
+> > >
+> > > Thanks
+> > > --
+> > > ~Vinod
+> >
+> > Any chance of this landing into 5.7?
+> > Driver and bindings have been merged, but I don't see DT nodes queued.
+> >
+> > Regards,
+> > Robert
 
 -- 
-Kees Cook
+~Vinod
