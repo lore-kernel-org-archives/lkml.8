@@ -2,149 +2,106 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D32B9C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:37:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB03C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A11AC207C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:37:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HNwpo35N"
+	by mail.kernel.org (Postfix) with ESMTP id 8AA7C207C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:40:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729284AbgFIMhz (ORCPT
+        id S1729307AbgFIMkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 08:37:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49532 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726071AbgFIMhy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 08:37:54 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9E36C05BD1E
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 05:37:53 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id r7so21149727wro.1
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 05:37:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=OaLLq0Ise/Ixh68mcw0GTtKNxRwGdk2haUjNF3bqKfI=;
-        b=HNwpo35N2nLW7/U1Bt8WFCrfrSTqRec8P6IWjwqygMhGrq65UWmhQCvCimW7FOwAwg
-         K+u8ZdHRg5rIVdj2lfc0RwHdgQKvCpTJJCm1liZr9j9iw+KpWqO3u9u3E7Gw0e3xqDNL
-         oyTOWZboTgIfyROMTxeOfqkv7VtMQpdkHh1IHrGBR/DM7MHGoquk3peHUZWo7Yd27bSA
-         NFRAodi7s3Jb6xkL3EZDIpOBbLTGDaHzH1Kqg7ja6DODbQMobmoVxS9Q0Q6LmoIRtY4+
-         ZYokzYFuj8VkghXEwlNwUoCvdQoV6Gtok2TccfsUS+APVrrF90v3Sfry2/X/++ZThoay
-         uEiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=OaLLq0Ise/Ixh68mcw0GTtKNxRwGdk2haUjNF3bqKfI=;
-        b=lOrOrOV+zVyhA2DZT+8kzPGViZQB9Wrd6Ja2gyKmZuGqYwGRcFoQuRGkeqajehgQpI
-         vDT/LucNYCclWRf/F2Y0k5GOVdrwvoeZoc45VCcyjlw5OTdvWInbAgDqL2j/GggZiuJK
-         58LVH7WLrf5pBbwmWMbwsjjkuPoEATGU2uDfhenvuXNjG8+MUve8XOpSiVujKz3QEUNo
-         tb/hl57ISML4gGK3iyrm51pglbPCZJ4edrP8t9TyF22haGDEULlFnIIy3qHK+XfLeyd4
-         TLTJFewbGwIrfCPcWYHXl0uPSJcN0XLGNgiI21SVSW/unPij0MpgTzcAEmxsp5mcQtiH
-         1w0A==
-X-Gm-Message-State: AOAM532nmf48VVgC6XhXPRSuUelmelkem+fZlOldsDgiWKZzbha9wzwt
-        Kq63+TSVicHtfvZ0asDUg39owg==
-X-Google-Smtp-Source: ABdhPJwTaFo/vYfA1kqIdHzPagyq68k4h9FO813pZUImWX9Ozn9wns6HdyANurVh6IZNeslWIgDQvQ==
-X-Received: by 2002:a05:6000:90:: with SMTP id m16mr4339504wrx.191.1591706271903;
-        Tue, 09 Jun 2020 05:37:51 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e0a:f:6020:85b0:e991:18d8:84fd])
-        by smtp.gmail.com with ESMTPSA id w15sm2793199wmk.30.2020.06.09.05.37.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 05:37:50 -0700 (PDT)
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, linux-kernel@vger.kernel.org, iwtbavbm@gmail.com
-Cc:     valentin.schneider@arm.com,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Subject: [PATCH v2] sched/fair: fix nohz next idle balance
-Date:   Tue,  9 Jun 2020 14:37:48 +0200
-Message-Id: <20200609123748.18636-1-vincent.guittot@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Tue, 9 Jun 2020 08:40:02 -0400
+Received: from mga11.intel.com ([192.55.52.93]:51609 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728238AbgFIMkA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 08:40:00 -0400
+IronPort-SDR: nSjuFbcSsFyxpvJMS+3ux9ksK2kSv31qnRLbpqyjBtADwQ6NNwU255Ly73jVjrKVgOCjXe2xeh
+ azGggsepBpVQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 05:39:59 -0700
+IronPort-SDR: 6UdEfbdP4pMrhUnc1t8skUC9jkG4V7po3UjrAA0aoIpSyiEp2ss3TWdV5Qstu2B1GywRo8GFmk
+ XEb4eUTLoXnA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,492,1583222400"; 
+   d="scan'208";a="379725439"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga001.fm.intel.com with ESMTP; 09 Jun 2020 05:39:57 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jidXs-00BtqA-40; Tue, 09 Jun 2020 15:40:00 +0300
+Date:   Tue, 9 Jun 2020 15:40:00 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Serge Semin <fancer.lancer@gmail.com>, linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-kernel@vger.kernel.org,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v1 3/6] mfd: core: Propagate software node group to the
+ sub devices
+Message-ID: <20200609124000.GO2428291@smile.fi.intel.com>
+References: <20200608134300.76091-1-andriy.shevchenko@linux.intel.com>
+ <20200608134300.76091-4-andriy.shevchenko@linux.intel.com>
+ <20200608192524.GF4106@dell>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200608192524.GF4106@dell>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With commit:
-  'b7031a02ec75 ("sched/fair: Add NOHZ_STATS_KICK")'
-rebalance_domains of the local cfs_rq happens before others idle cpus have
-updated nohz.next_balance and its value is overwritten.
+On Mon, Jun 08, 2020 at 08:25:24PM +0100, Lee Jones wrote:
+> On Mon, 08 Jun 2020, Andy Shevchenko wrote:
+> 
+> > From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > 
+> > When ever device properties are supplied for a sub device, a software node
+> > (fwnode) is actually created and then associated with that device. By allowing
+> > the drivers to supply the complete software node group instead of just the
+> > properties in it, the drivers can take advantage of the other features the
+> > software nodes have on top of supplying the device properties.
+> > 
+> > Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > ---
+> >  drivers/mfd/mfd-core.c   | 31 +++++++++++++++++++++++++++----
+> >  include/linux/mfd/core.h |  3 +++
+> >  2 files changed, 30 insertions(+), 4 deletions(-)
+> 
+> I'm not sure a change to the API is justified presently (same does go
+> for 'properties' really, but as it was only a couple of lines, it
+> didn't seem too intrusive).
 
-Move the update of nohz.next_balance for other idles cpus before balancing
-and updating the next_balance of local cfs_rq.
+This is better and comprehensive API, but I heard you.
 
-Also, the nohz.next_balance is now updated only if all idle cpus got a
-chance to rebalance their domains and the idle balance has not been aborted
-because of new activities on the CPU. In case of need_resched, the idle
-load balance will be kick the next jiffie in order to address remaining
-ilb.
+> My recommendation is to handle this in-house (i.e. locally in-driver)
+> for now.
 
-Reported-by: Peng Liu <iwtbavbm@gmail.com>
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
----
+I think you understand that this is not gonna work (we need to attach fwnode
+to the child device before it's registration.
 
-- Changes v2:
-  - use jiffies instead of incrementing nohz.next_balance to be sure of the
-    value. The change slipped out of the previous version.
+> When (if) more users adopt the practice, then we should
+> consider to draw down on line numbers and repetition and make it part
+> of the API.
 
- kernel/sched/fair.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+I briefly looked at the current state of affairs and found that properties are
+used only for MFD LPSS driver. Would the conversion of that driver to swnodes
+work for you?
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 0ed04d2a8959..832164d441dd 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -10017,7 +10017,12 @@ static void kick_ilb(unsigned int flags)
- {
- 	int ilb_cpu;
- 
--	nohz.next_balance++;
-+	/*
-+	 * Increase nohz.next_balance only when if full ilb is triggered but
-+	 * not if we only update stats.
-+	 */
-+	if (flags & NOHZ_BALANCE_KICK)
-+		nohz.next_balance = jiffies+1;
- 
- 	ilb_cpu = find_new_ilb();
- 
-@@ -10338,6 +10343,14 @@ static bool _nohz_idle_balance(struct rq *this_rq, unsigned int flags,
- 		}
- 	}
- 
-+	/*
-+	 * next_balance will be updated only when there is a need.
-+	 * When the CPU is attached to null domain for ex, it will not be
-+	 * updated.
-+	 */
-+	if (likely(update_next_balance))
-+		nohz.next_balance = next_balance;
-+
- 	/* Newly idle CPU doesn't need an update */
- 	if (idle != CPU_NEWLY_IDLE) {
- 		update_blocked_averages(this_cpu);
-@@ -10358,14 +10371,6 @@ static bool _nohz_idle_balance(struct rq *this_rq, unsigned int flags,
- 	if (has_blocked_load)
- 		WRITE_ONCE(nohz.has_blocked, 1);
- 
--	/*
--	 * next_balance will be updated only when there is a need.
--	 * When the CPU is attached to null domain for ex, it will not be
--	 * updated.
--	 */
--	if (likely(update_next_balance))
--		nohz.next_balance = next_balance;
--
- 	return ret;
- }
- 
+Note, the long prospective is to get rid of platform_add_properties() API
+completely.
+
 -- 
-2.17.1
+With Best Regards,
+Andy Shevchenko
+
 
