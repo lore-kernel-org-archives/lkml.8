@@ -2,55 +2,53 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC77C433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D48CDC433E0
 	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D7502067B
+	by mail.kernel.org (Postfix) with ESMTP id B525B20734
 	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:22:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1591726935;
-	bh=ZdePdRXU8ATU95ggv1vzgQqxst9eZaKBHqoiOG6EeHg=;
+	bh=EbX82Yzt8Q0VSvMLZGGbjmMR+0pvA1lN1B3Jn3//PhY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j7w0JBHW2ZGryNk5EL6TIk4KtwEN38F67IN14Tx0Www0KCMZ5/Y0+WrbjvsZIEIYd
-	 h8bNkLVpIU0CGUQTqbsXCQLTbC+vS0WMRy39VGXzyx6yLnRzwD3c7C40G2yFI63SvH
-	 9XQqKl14xqDzHRFJRy8ulpJGoYd/ijw4qjagp+cE=
+	b=HD+qkRW0PZi9egg4eMGuMW6BY0rEUnQ3PTt1gId/697xz7OdvP5rKVp56d0LSG4gF
+	 gYYomHFHg1hJCtcqSRk+urxoCG/tfBLOSPbitXCHhFc0UBvFlZS1Xignjryht1imsY
+	 Yo6U3m4J02NKvpO0zS7vHGla24YJ4KNOddl+51io=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389033AbgFISWN (ORCPT
+        id S2389026AbgFISWK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:22:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32772 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 14:22:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732308AbgFIRsb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:48:31 -0400
+        id S1732305AbgFIRs3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:48:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B3F5207F9;
-        Tue,  9 Jun 2020 17:48:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CEB920801;
+        Tue,  9 Jun 2020 17:48:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591724910;
-        bh=ZdePdRXU8ATU95ggv1vzgQqxst9eZaKBHqoiOG6EeHg=;
+        s=default; t=1591724908;
+        bh=EbX82Yzt8Q0VSvMLZGGbjmMR+0pvA1lN1B3Jn3//PhY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dcDpkrklKn9OiQ1pg8sH+jczs/pXynPepvCCYxIIJr4OL6lbTzNhQW9KiVfb39W9R
-         JtpHYf58lb8aZyhzVUkU2MSQDxY9ZVKrZZjTNjAA5UQ14RbYsBsm0qA0rdsoxCfjvn
-         wbn2A6uINixG6QzhoN0jHbu6qkTUzj9Bd+d30jd4=
+        b=dYyeZe3ErAaWqFmhSeXjRhv2wz55G+C8jwZW1cs3ydzVwJ1txK3ZFZCjDMpE4G7Z/
+         xfUxiFNFSdPc3PCcBDwmG7S9rJa7SAcDDiizXpRNrdKkuv1VyIsJP5pqp7ccp65Q76
+         i37flXKPhuG6xwUsoZQkshNpKbA8VKs7oliStJdI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sedat Dilek <sedat.dilek@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Borislav Petkov <bp@suse.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        stable@vger.kernel.org, Paul Greco <pmgreco@us.ibm.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 07/42] x86/mmiotrace: Use cpumask_available() for cpumask_var_t variables
-Date:   Tue,  9 Jun 2020 19:44:13 +0200
-Message-Id: <20200609174016.240837390@linuxfoundation.org>
+Subject: [PATCH 4.9 06/42] ARC: Fix ICCM & DCCM runtime size checks
+Date:   Tue,  9 Jun 2020 19:44:12 +0200
+Message-Id: <20200609174016.118334953@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174015.379493548@linuxfoundation.org>
 References: <20200609174015.379493548@linuxfoundation.org>
@@ -63,65 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 
-[ Upstream commit d7110a26e5905ec2fe3fc88bc6a538901accb72b ]
+[ Upstream commit 43900edf67d7ef3ac8909854d75b8a1fba2d570c ]
 
-When building with Clang + -Wtautological-compare and
-CONFIG_CPUMASK_OFFSTACK unset:
+As of today the ICCM and DCCM size checks are incorrectly using
+mismatched units (KiB checked against bytes). The CONFIG_ARC_DCCM_SZ
+and CONFIG_ARC_ICCM_SZ are in KiB, but the size calculated in
+runtime and stored in cpu->dccm.sz and cpu->iccm.sz is in bytes.
 
-  arch/x86/mm/mmio-mod.c:375:6: warning: comparison of array 'downed_cpus'
-  equal to a null pointer is always false [-Wtautological-pointer-compare]
-          if (downed_cpus == NULL &&
-              ^~~~~~~~~~~    ~~~~
-  arch/x86/mm/mmio-mod.c:405:6: warning: comparison of array 'downed_cpus'
-  equal to a null pointer is always false [-Wtautological-pointer-compare]
-          if (downed_cpus == NULL || cpumask_weight(downed_cpus) == 0)
-              ^~~~~~~~~~~    ~~~~
-  2 warnings generated.
+Fix that.
 
-Commit
-
-  f7e30f01a9e2 ("cpumask: Add helper cpumask_available()")
-
-added cpumask_available() to fix warnings of this nature. Use that here
-so that clang does not warn regardless of CONFIG_CPUMASK_OFFSTACK's
-value.
-
-Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Link: https://github.com/ClangBuiltLinux/linux/issues/982
-Link: https://lkml.kernel.org/r/20200408205323.44490-1-natechancellor@gmail.com
+Reported-by: Paul Greco <pmgreco@us.ibm.com>
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/mm/mmio-mod.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arc/kernel/setup.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/mm/mmio-mod.c b/arch/x86/mm/mmio-mod.c
-index bef36622e408..abd4fa587ca4 100644
---- a/arch/x86/mm/mmio-mod.c
-+++ b/arch/x86/mm/mmio-mod.c
-@@ -385,7 +385,7 @@ static void enter_uniprocessor(void)
- 	int cpu;
- 	int err;
+diff --git a/arch/arc/kernel/setup.c b/arch/arc/kernel/setup.c
+index 9f96120eee6e..82464fae7772 100644
+--- a/arch/arc/kernel/setup.c
++++ b/arch/arc/kernel/setup.c
+@@ -12,6 +12,7 @@
+ #include <linux/root_dev.h>
+ #include <linux/console.h>
+ #include <linux/module.h>
++#include <linux/sizes.h>
+ #include <linux/cpu.h>
+ #include <linux/of_fdt.h>
+ #include <linux/of.h>
+@@ -333,12 +334,12 @@ static void arc_chk_core_config(void)
+ 	if ((unsigned int)__arc_dccm_base != cpu->dccm.base_addr)
+ 		panic("Linux built with incorrect DCCM Base address\n");
  
--	if (downed_cpus == NULL &&
-+	if (!cpumask_available(downed_cpus) &&
- 	    !alloc_cpumask_var(&downed_cpus, GFP_KERNEL)) {
- 		pr_notice("Failed to allocate mask\n");
- 		goto out;
-@@ -415,7 +415,7 @@ static void leave_uniprocessor(void)
- 	int cpu;
- 	int err;
+-	if (CONFIG_ARC_DCCM_SZ != cpu->dccm.sz)
++	if (CONFIG_ARC_DCCM_SZ * SZ_1K != cpu->dccm.sz)
+ 		panic("Linux built with incorrect DCCM Size\n");
+ #endif
  
--	if (downed_cpus == NULL || cpumask_weight(downed_cpus) == 0)
-+	if (!cpumask_available(downed_cpus) || cpumask_weight(downed_cpus) == 0)
- 		return;
- 	pr_notice("Re-enabling CPUs...\n");
- 	for_each_cpu(cpu, downed_cpus) {
+ #ifdef CONFIG_ARC_HAS_ICCM
+-	if (CONFIG_ARC_ICCM_SZ != cpu->iccm.sz)
++	if (CONFIG_ARC_ICCM_SZ * SZ_1K != cpu->iccm.sz)
+ 		panic("Linux built with incorrect ICCM Size\n");
+ #endif
+ 
 -- 
 2.25.1
 
