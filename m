@@ -2,207 +2,359 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D7BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 683C8C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D66D20774
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E73920774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:46:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VDrlLBWe"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="neUnJu+m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729906AbgFINqU (ORCPT
+        id S1730052AbgFINqw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 09:46:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60138 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726803AbgFINqT (ORCPT
+        Tue, 9 Jun 2020 09:46:52 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:51428 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726803AbgFINqv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 09:46:19 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77900C05BD1E;
-        Tue,  9 Jun 2020 06:46:18 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id r18so4052613pgk.11;
-        Tue, 09 Jun 2020 06:46:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/k4EmHOAERaREN8qWtWBob3gQXAhxOW13M9Yk4j9DWk=;
-        b=VDrlLBWev6iIEzXHhUoNI4IybHiCQHESLtVnw+LyJynyWlugmQDKaeF6CC+P5jp/mt
-         AZ/1aU88aJoFBGLY5EjklJ9GEqYyz/WcKcIXY9+GH+xWYhW281fY7XoWAfwsqK1uEFxk
-         KGkbEG00F0ocdlqdq8yzr+Y2P25C7yeH7L3HiZ0Mahf7ClIflBgtuXZ7Cn+gdfDb1QxF
-         Hzw89nAdaGmKM9lGEw8kec06jzqm+tBDLx+Lb4mNlxONlXFnKzKIKR6/+f7c94h/M/Uk
-         19GgDbpZzHD63DPAjoGmf+sFIJnLpwq6yX8vqrkFEH1t3k7cSaXZPXC5+2741XPhD+g8
-         rbwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=/k4EmHOAERaREN8qWtWBob3gQXAhxOW13M9Yk4j9DWk=;
-        b=mZghWohhP5YArcRahWFw0Vh/BhUH32yEMryGzhL5QSRdIXEHL9WUNZa/3bG3niqq8Q
-         SC44xDWmPuJnFvm5syEJvC8UfnCb3BJZu9zt1/ZW2Z0bZUjPcXPlKlchy8lJhBbgxnbj
-         em3TT0u489LkvF8o29h1ZeTvjFvuoVfXo8XwAVi9QbzNs5wqtxXasdohazFPP27cid8I
-         vZSIQ+0KAIWKBkNYxc1v7JevhfqhSG/AeP8/t8nwWUkJ6Uq1ROqvzlFKlEt3uEECf1q5
-         qatplgxeeAz8bKGNtPERy/PTeTHZPqaoU2ZxvShynw4HIRfhkCl8sd4S9uQ9VxovmNF0
-         JKWw==
-X-Gm-Message-State: AOAM531Q+jslpDc3al9NiWNTzyHPwl1qBuXdqeuAM13df+u7LQKS/ZCy
-        YKC3kdM0XEIGq8sJY/yHBx4=
-X-Google-Smtp-Source: ABdhPJxrS819fvVw2qNU3AZPLSyn8wqMiP7zLeoTRVCfKpLdmwvNkMGjNppIdi/Cmtuey+iTtAhArQ==
-X-Received: by 2002:a63:c004:: with SMTP id h4mr24498663pgg.385.1591710377918;
-        Tue, 09 Jun 2020 06:46:17 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 84sm10022131pfu.167.2020.06.09.06.46.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Jun 2020 06:46:17 -0700 (PDT)
-Subject: Re: [PATCH 1/2] dt-bindings: watchdog: intel: Add YAML Schemas for
- Watchdog timer
-To:     Dilip Kota <eswara.kota@linux.intel.com>, wim@linux-watchdog.org,
-        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
-        robbh@kernel.org
-Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yixin.zhu@intel.com
-References: <cover.1591584255.git.eswara.kota@linux.intel.com>
- <ac89e289b79fec0a82d1dd060e17eeca024885d5.1591584255.git.eswara.kota@linux.intel.com>
- <235d301b-3b25-bb00-bd1b-c4392fa23c63@roeck-us.net>
- <4a336f1d-68da-3356-a73a-95747ba4af4c@linux.intel.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <83812b78-41e3-299d-36a0-6ce1576e7e78@roeck-us.net>
-Date:   Tue, 9 Jun 2020 06:46:15 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 9 Jun 2020 09:46:51 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 059DkcNx024577;
+        Tue, 9 Jun 2020 08:46:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591710398;
+        bh=CRDrwcybVT9N4+Rd1TgbkKxzZEB1yAs9hUhxticrpIY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=neUnJu+mO8NHT+A4pwdDZdXv50a43/WeXz/kI8Il9FmHC80yKySP12nAfZBNIhTKi
+         hztEM11yYm1pR4rM7RUwRqKTBb6xhumzbA8AbyWiv0NL1m/yNeVMB91VrBSj8mmADl
+         yVLOQkcUE2Lnb9sGdaF8lTXSkhOvBPbjXI2ijDzc=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 059Dkc2R056437;
+        Tue, 9 Jun 2020 08:46:38 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 9 Jun
+ 2020 08:46:37 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 9 Jun 2020 08:46:37 -0500
+Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 059DkZi5124176;
+        Tue, 9 Jun 2020 08:46:35 -0500
+Subject: Re: [PATCH v4] PCI: cadence: Use "dma-ranges" instead of
+ "cdns,no-bar-match-nbits" property
+To:     Rob Herring <robh@kernel.org>
+CC:     Tom Joseph <tjoseph@cadence.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200521080153.5902-1-kishon@ti.com>
+ <CAL_Jsq+ZScKn1BJ9YWcs1uNEmLq5+XOdWfFNfF-S7cAqkYB1KA@mail.gmail.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <8b30d785-7f21-92e4-47e9-c8bfe76cc6cc@ti.com>
+Date:   Tue, 9 Jun 2020 19:16:34 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <4a336f1d-68da-3356-a73a-95747ba4af4c@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CAL_Jsq+ZScKn1BJ9YWcs1uNEmLq5+XOdWfFNfF-S7cAqkYB1KA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/9/20 1:57 AM, Dilip Kota wrote:
-> 
-> On 6/8/2020 9:37 PM, Guenter Roeck wrote:
->> On 6/7/20 10:49 PM, Dilip Kota wrote:
->>> Add YAML schemas for the watchdog timer on Intel Lightning
->>> Mountain SoC.
->>>
->>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
->>> ---
->>>   .../bindings/watchdog/intel,lgm-gptc-wdt.yaml      | 75 ++++++++++++++++++++++
->>>   1 file changed, 75 insertions(+)
->>>   create mode 100644 Documentation/devicetree/bindings/watchdog/intel,lgm-gptc-wdt.yaml
->>>
->>> diff --git a/Documentation/devicetree/bindings/watchdog/intel,lgm-gptc-wdt.yaml b/Documentation/devicetree/bindings/watchdog/intel,lgm-gptc-wdt.yaml
->>> new file mode 100644
->>> index 0000000000000..83dc39a5090c1
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/watchdog/intel,lgm-gptc-wdt.yaml
->>> @@ -0,0 +1,75 @@
->>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>> +%YAML 1.2
->>> +---
->>> +$id: http://devicetree.org/schemas/watchdog/intel,lgm-gptc-wdt.yaml#
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>> +
->>> +title: Intel Lightning Mountain Watchdog timer.
->>> +
->>> +maintainers:
->>> +  - Dilip Kota <eswara.kota@linux.intel.com>
->>> +
->>> +description: |
->>> +  Intel Lightning Mountain SoC has General Purpose Timer Counter(GPTC) which can
->>> +  be configured as Clocksource, real time clock and Watchdog timer.
->>> +  Each General Purpose Timer Counter has three timers. And total four General
->>> +  Purpose Timer Counters are present on Lightning Mountain SoC which sums up
->>> +  to 12 timers.
->>> +  Lightning Mountain has four CPUs and each CPU is configured with one GPTC
->>> +  timer as watchdog timer. Total four timers are configured as watchdog timers
->>> +  on Lightning Mountain SoC.
->>> +
->> Why not just one ? The watchdog subsystem does not monitor individual CPUs,
->> it monitors the system.
-> 
-> Intel Atom based Lightning Mountain SoC, system has four CPUs. On Lightning Mountain SoC ,Watchdog subsystem is combination of GPTC timers and reset controller unit. On Lightning Mountain SoC, each CPU is configured with one GPTC timer, so that if any of the CPU hangs or freezes, the watchdog daemon running on respective CPU cannot reset/ping or pet the watchdog timer. This causes the watchdog timeout. On watchdog timeout, reset controller triggers the reset to respective CPU.
-> 
-A system watchdog driver should not duplicate functionality
-from kernel/watchdog.c, which monitors individual CPUs.
-If the SoC does nto provide a system watchdog timer (which
-I think is unlikely), it should stick with that. A watchdog
-resetting an individual CPU instead of the entire system
-isn't something I would want to see in the watchdog subsystem.
+Hi Rob,
 
-Guenter
-
-> 
-> ____________________
-> ----------------------------->|                |
->                                                    |         ------------>| Reset controller unit    |
-> |                     |                 |___________________|
-> |                     |
-> |                     |
->   ______________________|__________|______
->   |                                  GPTC   | |            |
->   | ___________   ________|_       ______|____   |
->   | |      timer 1 |   | timer 2      |    | timer 3      |    |
->   | |_________|   |_________|    |_________|    |
->   |______________________________________|
-> 
-> Regards,
-> -Dilip
-> 
-> 
->> Guenter
+On 5/27/2020 3:29 AM, Rob Herring wrote:
+> On Thu, May 21, 2020 at 2:02 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
 >>
+>> Cadence PCIe core driver (host mode) uses "cdns,no-bar-match-nbits"
+>> property to configure the number of bits passed through from PCIe
+>> address to internal address in Inbound Address Translation register.
+>> This only used the NO MATCH BAR.
 >>
+>> However standard PCI dt-binding already defines "dma-ranges" to
+>> describe the address ranges accessible by PCIe controller. Add support
+>> in Cadence PCIe host driver to parse dma-ranges and configure the
+>> inbound regions for BAR0, BAR1 and NO MATCH BAR. Cadence IP specifies
+>> maximum size for BAR0 as 256GB, maximum size for BAR1 as 2 GB.
+>>
+>> This adds support to take the next biggest region in "dma-ranges" and
+>> find the smallest BAR that each of the regions fit in and if there is
+>> no BAR big enough to hold the region, split the region to see if it can
+>> be fitted using multiple BARs.
+>>
+>> "dma-ranges" of J721E will be
+>> dma-ranges = <0x02000000 0x0 0x0 0x0 0x0 0x10000 0x0>;
+>> Since there is no BAR which can hold 2^48 size, NO_MATCH_BAR will be
+>> used here.
+>>
+>> Legacy device tree binding compatibility is maintained by retaining
+>> support for "cdns,no-bar-match-nbits".
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>> The previous version of the patch can be found @
+>> https://lore.kernel.org/linux-arm-kernel/20200508130646.23939-5-kishon@ti.com/
+>>
+>> Changes from v3:
+>> *) The whole logic of how we select a BAR to fit a region from
+>> dma-ranges has been changed.
+>>   1) First select the biggest region in "dma-ranges" (after combining
+>>      adjacent regions)
+>>   2) Try to fit this region in a smallest available BAR whose size is
+>>      greater than the region size
+>>   3) If no such BAR is available try to find biggest availalbe BAR
+>>      whose size is lesser than the region size and only fit part of the
+>>      region in that BAR.
+>>   4) Repeat steps 3 and 4, to fit the remaining region size.
+>>  .../controller/cadence/pcie-cadence-host.c    | 254 +++++++++++++++++-
+>>  drivers/pci/controller/cadence/pcie-cadence.h |  28 +-
+>>  2 files changed, 265 insertions(+), 17 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> index 6ecebb79057a..cf8b34b71b8f 100644
+>> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> @@ -11,6 +11,12 @@
+>>
+>>  #include "pcie-cadence.h"
+>>
+>> +static u64 bar_max_size[] = {
+>> +       [RP_BAR0] = _ULL(128 * SZ_2G),
+>> +       [RP_BAR1] = SZ_2G,
+>> +       [RP_NO_BAR] = _BITULL(63),
+>> +};
+>> +
+>>  void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
+>>                                int where)
+>>  {
+>> @@ -106,6 +112,226 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
+>>         return 0;
+>>  }
+>>
+>> +static int cdns_pcie_host_bar_ib_config(struct cdns_pcie_rc *rc,
+>> +                                       enum cdns_pcie_rp_bar bar,
+>> +                                       u64 cpu_addr, u64 size,
+>> +                                       unsigned long flags)
+>> +{
+>> +       struct cdns_pcie *pcie = &rc->pcie;
+>> +       u32 addr0, addr1, aperture, value;
+>> +
+>> +       if (!rc->avail_ib_bar[bar])
+>> +               return -EBUSY;
+>> +
+>> +       rc->avail_ib_bar[bar] = false;
+>> +
+>> +       aperture = ilog2(size);
+>> +       addr0 = CDNS_PCIE_AT_IB_RP_BAR_ADDR0_NBITS(aperture) |
+>> +               (lower_32_bits(cpu_addr) & GENMASK(31, 8));
+>> +       addr1 = upper_32_bits(cpu_addr);
+>> +       cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_RP_BAR_ADDR0(bar), addr0);
+>> +       cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_RP_BAR_ADDR1(bar), addr1);
+>> +
+>> +       if (bar == RP_NO_BAR)
+>> +               return 0;
+>> +
+>> +       value = cdns_pcie_readl(pcie, CDNS_PCIE_LM_RC_BAR_CFG);
+> 
+> Why do you need to read this first? If you do, don't you need to clear
+> out any fields you're potentially writing?
 
+Part of the initialization is done in cdns_pcie_host_init_root_port() and part
+here. I'll add code to clear out the fields.
+> 
+>> +       if (size + cpu_addr >= SZ_4G) {
+>> +               if (!(flags & IORESOURCE_PREFETCH))
+>> +                       value |= LM_RC_BAR_CFG_CTRL_MEM_64BITS(bar);
+>> +               value |= LM_RC_BAR_CFG_CTRL_PREF_MEM_64BITS(bar);
+>> +       } else {
+>> +               if (!(flags & IORESOURCE_PREFETCH))
+>> +                       value |= LM_RC_BAR_CFG_CTRL_MEM_32BITS(bar);
+>> +               value |= LM_RC_BAR_CFG_CTRL_PREF_MEM_32BITS(bar);
+>> +       }
+>> +
+>> +       value |= LM_RC_BAR_CFG_APERTURE(bar, aperture);
+>> +       cdns_pcie_writel(pcie, CDNS_PCIE_LM_RC_BAR_CFG, value);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static enum cdns_pcie_rp_bar
+>> +cdns_pcie_host_find_min_bar(struct cdns_pcie_rc *rc, u64 size)
+>> +{
+>> +       enum cdns_pcie_rp_bar bar, sel_bar;
+>> +
+>> +       sel_bar = RP_BAR_UNDEFINED;
+>> +       for (bar = RP_BAR0; bar <= RP_NO_BAR; bar++) {
+>> +               if (!rc->avail_ib_bar[bar])
+>> +                       continue;
+>> +
+>> +               if (size <= bar_max_size[bar]) {
+>> +                       if (sel_bar == RP_BAR_UNDEFINED) {
+>> +                               sel_bar = bar;
+>> +                               continue;
+>> +                       }
+>> +
+>> +                       if (bar_max_size[bar] < bar_max_size[sel_bar])
+>> +                               sel_bar = bar;
+>> +               }
+>> +       }
+>> +
+>> +       return sel_bar;
+>> +}
+>> +
+>> +static enum cdns_pcie_rp_bar
+>> +cdns_pcie_host_find_max_bar(struct cdns_pcie_rc *rc, u64 size)
+>> +{
+>> +       enum cdns_pcie_rp_bar bar, sel_bar;
+>> +
+>> +       sel_bar = RP_BAR_UNDEFINED;
+>> +       for (bar = RP_BAR0; bar <= RP_NO_BAR; bar++) {
+>> +               if (!rc->avail_ib_bar[bar])
+>> +                       continue;
+>> +
+>> +               if (size >= bar_max_size[bar]) {
+>> +                       if (sel_bar == RP_BAR_UNDEFINED) {
+>> +                               sel_bar = bar;
+>> +                               continue;
+>> +                       }
+>> +
+>> +                       if (bar_max_size[bar] > bar_max_size[sel_bar])
+>> +                               sel_bar = bar;
+>> +               }
+>> +       }
+>> +
+>> +       return sel_bar;
+>> +}
+>> +
+>> +static int cdns_pcie_host_bar_config(struct cdns_pcie_rc *rc,
+>> +                                    struct resource_entry *entry)
+>> +{
+>> +       u64 cpu_addr, pci_addr, size, winsize;
+>> +       struct cdns_pcie *pcie = &rc->pcie;
+>> +       struct device *dev = pcie->dev;
+>> +       enum cdns_pcie_rp_bar bar;
+>> +       unsigned long flags;
+>> +       int ret;
+>> +
+>> +       cpu_addr = entry->res->start;
+>> +       pci_addr = entry->res->start - entry->offset;
+>> +       flags = entry->res->flags;
+>> +       size = resource_size(entry->res);
+>> +
+>> +       if (entry->offset) {
+>> +               dev_err(dev, "PCI addr: %llx must be equal to CPU addr: %llx\n",
+>> +                       pci_addr, cpu_addr);
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       while (size > 0) {
+>> +               /*
+>> +                * Try to find a minimum BAR whose size is greater than
+>> +                * or equal to the remaining resource_entry size. This will
+>> +                * fail if the size of each of the available BARs is less than
+>> +                * the remaining resource_entry size.
+>> +                * If a minimum BAR is found, IB ATU will be configured and
+>> +                * exited.
+>> +                */
+>> +               bar = cdns_pcie_host_find_min_bar(rc, size);
+>> +               if (bar != RP_BAR_UNDEFINED) {
+>> +                       ret = cdns_pcie_host_bar_ib_config(rc, bar, cpu_addr,
+>> +                                                          size, flags);
+>> +                       if (ret)
+>> +                               dev_err(dev, "IB BAR: %d config failed\n", bar);
+>> +                       return ret;
+>> +               }
+>> +
+>> +               /*
+>> +                * If the control reaches here, it would mean the remaining
+>> +                * resource_entry size cannot be fitted in a single BAR. So we
+>> +                * find a maximum BAR whose size is less than or equal to the
+>> +                * remaining resource_entry size and split the resource entry
+>> +                * so that part of resource entry is fitted inside the maximum
+>> +                * BAR. The remaining size would be fitted during the next
+>> +                * iteration of the loop.
+>> +                * If a maximum BAR is not found, there is no way we can fit
+>> +                * this resource_entry, so we error out.
+>> +                */
+>> +               bar = cdns_pcie_host_find_max_bar(rc, size);
+>> +               if (bar == RP_BAR_UNDEFINED) {
+>> +                       dev_err(dev, "No free BAR to map cpu_addr %llx\n",
+>> +                               cpu_addr);
+>> +                       return -EINVAL;
+>> +               }
+>> +
+>> +               winsize = bar_max_size[bar];
+>> +               ret = cdns_pcie_host_bar_ib_config(rc, bar, cpu_addr, winsize,
+>> +                                                  flags);
+>> +               if (ret) {
+>> +                       dev_err(dev, "IB BAR: %d config failed\n", bar);
+>> +                       return ret;
+>> +               }
+>> +
+>> +               size -= winsize;
+>> +               cpu_addr += winsize;
+>> +       }
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static int cdns_pcie_host_map_dma_ranges(struct cdns_pcie_rc *rc)
+>> +{
+>> +       struct resource_entry *entry, *ib_range[CDNS_PCIE_RP_MAX_IB];
+>> +       struct cdns_pcie *pcie = &rc->pcie;
+>> +       struct device *dev = pcie->dev;
+>> +       struct device_node *np = dev->of_node;
+>> +       struct pci_host_bridge *bridge;
+>> +       u32 no_bar_nbits = 32;
+>> +       int i = 0, j = 0, err;
+>> +       u64 size;
+>> +
+>> +       bridge = pci_host_bridge_from_priv(rc);
+>> +       if (!bridge)
+>> +               return -ENOMEM;
+>> +
+>> +       if (list_empty(&bridge->dma_ranges)) {
+>> +               of_property_read_u32(np, "cdns,no-bar-match-nbits",
+>> +                                    &no_bar_nbits);
+>> +               err = cdns_pcie_host_bar_ib_config(rc, RP_NO_BAR, 0x0,
+>> +                                                  (u64)1 << no_bar_nbits, 0);
+>> +               if (err)
+>> +                       dev_err(dev, "IB BAR: %d config failed\n", RP_NO_BAR);
+>> +               return err;
+>> +       }
+>> +
+>> +       memset(ib_range, 0x00, sizeof(ib_range));
+>> +       /* Sort the resource entries in descending order by resource size */
+> 
+> Use list_sort()
+
+Not sure why it's needed but it's explicitly been sorted in ascending order
+here in devm_of_pci_get_host_bridge_resources()
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/of.c#n377
+
+Using list_sort() will disturb that.
+> 
+>> +       resource_list_for_each_entry(entry, &bridge->dma_ranges) {
+>> +               if (i > CDNS_PCIE_RP_MAX_IB - 1) {
+>> +                       dev_err(dev, "Ranges exceed maximum supported %d\n",
+> 
+> s/Ranges/dma-ranges entries/
+
+Sure, will fix this.
+
+Thanks
+Kishon
