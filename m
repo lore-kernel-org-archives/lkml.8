@@ -2,245 +2,517 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD6D7C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:48:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF264C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 967872078C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:48:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A154E20774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:48:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sNLV/DmZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ikKwBhXp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732889AbgFIAs2 (ORCPT
+        id S1732953AbgFIAst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:48:28 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:48224 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728780AbgFHXKy (ORCPT
+        Mon, 8 Jun 2020 20:48:49 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:41040 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728780AbgFIAsd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:10:54 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 058NAi4F060849;
-        Mon, 8 Jun 2020 18:10:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1591657844;
-        bh=J15eJufKdDHorGHaYKdBz4fOpJXaofZH0gLXbZy+af4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=sNLV/DmZnULJuDOJYu9WDMgnzhgTBpfc+gZVE24GmrdNpm/BaeTxTkn7RXro2QdHh
-         f+PtS5/zox1sRzGEr73qdNqenszENbRmHt2OtNIP2siu7SyDNa4wSzYNSlgEiphQyJ
-         NIJzoTuStuqacbcd38bWFfZ64HcfmKAholGBF0HM=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 058NAiBX072956
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 8 Jun 2020 18:10:44 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 8 Jun
- 2020 18:10:44 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 8 Jun 2020 18:10:44 -0500
-Received: from [10.250.48.148] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 058NAiXa040586;
-        Mon, 8 Jun 2020 18:10:44 -0500
-Subject: Re: [PATCH v7 3/5] remoteproc: Add support for runtime PM
-To:     Paul Cercueil <paul@crapouillou.net>
-CC:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>, <od@zcrc.me>,
-        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Tero Kristo <t-kristo@ti.com>
-References: <20200515104340.10473-1-paul@crapouillou.net>
- <20200515104340.10473-3-paul@crapouillou.net>
- <035bf8ad-3ef0-8314-ae5c-a94a24c230c8@ti.com>
- <P2TQAQ.3VDG3B8W2EPF3@crapouillou.net>
- <daa239fe-afd4-ff2e-3d5c-db09434cac95@ti.com>
- <9XPMBQ.UM94FDID8MZW@crapouillou.net>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <107dc1d3-05c6-61be-b82c-197f0c43cdba@ti.com>
-Date:   Mon, 8 Jun 2020 18:10:39 -0500
+        Mon, 8 Jun 2020 20:48:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591663708;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=xggwuU1S2eOYnC26D2q+uKaoVFXR4OD19Er/g/QRl6k=;
+        b=ikKwBhXp4yFm4n31iCrJTQC3daF7s1eyEFbakwR2iyusSIEgCHmUGCldQvdzBzdgHnzy0A
+        UcWKMJmVTijcBMzorm11d5X0MIHoAO0JYLBos9x4RrOXhiaHfDLTgHqqosHH1RulvWFvQf
+        PDyP48YfLrbp8+Wnep4g9IUM30cHG6Q=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-387-hj4QYJpMOSOFjEv5DwePtw-1; Mon, 08 Jun 2020 20:48:26 -0400
+X-MC-Unique: hj4QYJpMOSOFjEv5DwePtw-1
+Received: by mail-qk1-f197.google.com with SMTP id d190so15829291qkc.20
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 17:48:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=xggwuU1S2eOYnC26D2q+uKaoVFXR4OD19Er/g/QRl6k=;
+        b=O38ZRuzutlNyNS+jvjTFo+Qz+NjRbSWBEOWAc+B0jRypcCDljG3DLROOk/z1hEjrbv
+         gbmrt5nTbMHSAdUmoH35otKuP0Q3CjotCbotDXSAciIIrE4+CzqaIMS/1kwf7X5/1Hak
+         dCdOu0ZiZ937ZNyszde4seHNi0wZAltuYepZS7Gd8iXAI04SNbPn+RTor6oQy4yR7Bz3
+         GjVarrG8sIuFmCDFe140m2U2qMkXifmhtvYwDmmXlCSCFY0TcpJaj+nQDWXvOl2yAXtU
+         hXi3lHNEa+q131X2P8Q/wDeQs0zWRFJ+HruDOgLhAHxY2/8d9PUfc+pfIkJrqpSMQFkO
+         sMKQ==
+X-Gm-Message-State: AOAM5331F7nXnHW38MEIKpkOITtHzPzUqnCNLiWa4eHxE6tKwiCM7BIh
+        p3a4K6GhnT25ADbxQ795QeTF8dh73KCR+is7xF6p8Dnt/fCk2Mpbup3XDvcdPkT9g0ICX/s+mVE
+        W8z7on6GZxsNOWe+3TCy8pQs6
+X-Received: by 2002:ad4:4f23:: with SMTP id fc3mr1411548qvb.25.1591663706019;
+        Mon, 08 Jun 2020 17:48:26 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxBOFdLgc0KGvx6nAnZzVawKbNnBCiGxmwb1u69XCY+auQT9U2/HWLYXBtO/4PvHrPUQTF0jw==
+X-Received: by 2002:ad4:4f23:: with SMTP id fc3mr1411514qvb.25.1591663705466;
+        Mon, 08 Jun 2020 17:48:25 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id a5sm8417545qtw.22.2020.06.08.17.48.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Jun 2020 17:48:24 -0700 (PDT)
+Subject: Re: [PATCH v6 1/7] fpga: dfl: parse interrupt info for feature
+ devices on enumeration
+To:     Xu Yilun <yilun.xu@intel.com>
+Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bhu@redhat.com, mtosatti@redhat.com,
+        gregkh@linuxfoundation.org, Luwei Kang <luwei.kang@intel.com>,
+        Wu Hao <hao.wu@intel.com>
+References: <1591260737-15211-1-git-send-email-yilun.xu@intel.com>
+ <1591260737-15211-2-git-send-email-yilun.xu@intel.com>
+From:   Tom Rix <trix@redhat.com>
+Message-ID: <a9329161-f94f-7b79-f423-c8d49986dae8@redhat.com>
+Date:   Mon, 8 Jun 2020 17:48:22 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <9XPMBQ.UM94FDID8MZW@crapouillou.net>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+In-Reply-To: <1591260737-15211-2-git-send-email-yilun.xu@intel.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+I am not sure about the use of parse_feature_irqs.
 
-On 6/8/20 5:46 PM, Paul Cercueil wrote:
-> Hi Suman,
-> 
->>>> On 5/15/20 5:43 AM, Paul Cercueil wrote:
->>>>> Call pm_runtime_get_sync() before the firmware is loaded, and
->>>>> pm_runtime_put() after the remote processor has been stopped.
->>>>>
->>>>> Even though the remoteproc device has no PM callbacks, this allows the
->>>>> parent device's PM callbacks to be properly called.
->>>>
->>>> I see this patch staged now for 5.8, and the latest -next branch 
->>>> has broken the pm-runtime autosuspend feature we have in the 
->>>> OMAP remoteproc driver. See commit 5f31b232c674 ("remoteproc/omap: 
->>>> Add support for runtime auto-suspend/resume").
->>>>
->>>> What was the original purpose of this patch, because there can be 
->>>> differing backends across different SoCs.
->>>
->>> Did you try pm_suspend_ignore_children()? It looks like it was made 
->>> for your use-case.
->>
->> Sorry for the delay in getting back. So, using 
->> pm_suspend_ignore_children() does fix my current issue.
->>
->> But I still fail to see the original purpose of this patch in the 
->> remoteproc core especially given that the core itself does not have 
->> any callbacks. If the sole intention was to call the parent pdev's 
->> callbacks, then I feel that state-machine is better managed within 
->> that particular platform driver itself, as the sequencing/device 
->> management can vary with different platform drivers.
-> 
-> The problem is that with Ingenic SoCs some clocks must be enabled in 
-> order to load the firmware, and the core doesn't give you an option to 
-> register a callback to be called before loading it.
+If the irq parse fails, the feature fails to be created.  So an old afu feature which loaded ok in an older kernel can fail.  This could surprise the user.
 
-Yep, I have similar usage in one of my remoteproc drivers (see 
-keystone_remoteproc.c), and I think this all stems from the need to 
-use/support loading into a processor's internal memories. My driver does 
-leverage the pm-clks backend plugged into pm_runtime, so you won't see 
-explicit calls on the clocks.
+Below is a change that fails more gracefully.  Even if there is a problem in the parse, the feature will be created. because the nr_irq's is 0, the irq code should not execute.
 
-I guess the question is what exact PM features you are looking for with 
-the Ingenic SoC. I do see you are using pm_runtime autosuspend, and your 
-callbacks are managing the clocks, but reset is managed only in start/stop.
+Tom
 
-> The first version of 
-> my patchset added .prepare/.unprepare callbacks to the struct rproc_ops, 
-> but the feedback from the maintainers was that I should do it via 
-> runtime PM. However, it was not possible to keep it contained in the 
-> driver, since again the core doesn't provide a "prepare" callback, so no 
-> place to call pm_runtime_get_sync(). 
+diff --git a/drivers/fpga/dfl.c b/drivers/fpga/dfl.c
+index 125369c6c5b3..edba1e8410bd 100644
+--- a/drivers/fpga/dfl.c
++++ b/drivers/fpga/dfl.c
+@@ -708,11 +708,8 @@ static int parse_feature_irqs(struct build_feature_devs_info *binfo,
+                break;
+        }
+ 
+-       if (!inr) {
+-               *irq_base = 0;
+-               *nr_irqs = 0;
++       if (!inr)
+                return 0;
+-       }
+ 
+        dev_dbg(binfo->dev, "feature: 0x%llx, irq_base: %u, nr_irqs: %u\n",
+                fid, ibase, inr);
+@@ -751,9 +748,9 @@ create_feature_instance(struct build_feature_devs_info *binfo,
+                        struct dfl_fpga_enum_dfl *dfl, resource_size_t ofst,
+                        resource_size_t size, u64 fid)
+ {
+-       unsigned int irq_base, nr_irqs;
++       unsigned int irq_base = 0;
++       unsigned int nr_irqs = 0;
+        struct dfl_feature_info *finfo;
+-       int ret;
+ 
+        /* read feature size and id if inputs are invalid */
+        size = size ? size : feature_size(dfl->ioaddr + ofst);
+@@ -762,9 +759,7 @@ create_feature_instance(struct build_feature_devs_info *binfo,
+        if (dfl->len - ofst < size)
+                return -EINVAL;
+ 
+-       ret = parse_feature_irqs(binfo, ofst, fid, &irq_base, &nr_irqs);
+-       if (ret)
+-               return ret;
++       parse_feature_irqs(binfo, ofst, fid, &irq_base, &nr_irqs);
+ 
+        finfo = kzalloc(sizeof(*finfo), GFP_KERNEL);
+        if (!finfo)
 
-FWIW, the .prepare/.unprepare callbacks is actually now part of the 
-rproc core. Looks like multiple developers had a need for this, and this 
-functionality went in at the same time as your driver :). Not sure if 
-you looked up the prior patches, I leveraged the patch that Loic had 
-submitted a long-time ago, and a revised version of it is now part of 
-5.8-rc1.
-
-So we settled with having runtime
-> PM in the core without callbacks, which will trigger the runtime PM 
-> callbacks of the driver at the right moment.
-
-Looks like we can do some cleanup on the Ingenic SoC driver depending on 
-the features you want.
-
-regards
-Suman
-
-> 
-> Sorry if that caused you trouble.
-> 
-> Cheers,
-> -Paul
->>>>
-> 
->>>>
->>>>>
->>>>> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>>>> ---
->>>>>
->>>>> Notes:
->>>>>      v2-v4: No change
->>>>>      v5: Move calls to prepare/unprepare to 
->>>>> rproc_fw_boot/rproc_shutdown
->>>>>      v6: Instead of prepare/unprepare callbacks, use PM runtime 
->>>>> callbacks
->>>>>      v7: Check return value of pm_runtime_get_sync()
->>>>>
->>>>>   drivers/remoteproc/remoteproc_core.c | 17 ++++++++++++++++-
->>>>>   1 file changed, 16 insertions(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/drivers/remoteproc/remoteproc_core.c 
->>>>> b/drivers/remoteproc/remoteproc_core.c
->>>>> index a7f96bc98406..e33d1ef27981 100644
->>>>> --- a/drivers/remoteproc/remoteproc_core.c
->>>>> +++ b/drivers/remoteproc/remoteproc_core.c
->>>>> @@ -29,6 +29,7 @@
->>>>>   #include <linux/devcoredump.h>
->>>>>   #include <linux/rculist.h>
->>>>>   #include <linux/remoteproc.h>
->>>>> +#include <linux/pm_runtime.h>
->>>>>   #include <linux/iommu.h>
->>>>>   #include <linux/idr.h>
->>>>>   #include <linux/elf.h>
->>>>> @@ -1382,6 +1383,12 @@ static int rproc_fw_boot(struct rproc 
->>>>> *rproc, const struct firmware *fw)
->>>>>       if (ret)
->>>>>           return ret;
->>>>>   +    ret = pm_runtime_get_sync(dev);
->>>>> +    if (ret < 0) {
->>>>> +        dev_err(dev, "pm_runtime_get_sync failed: %d\n", ret);
->>>>> +        return ret;
->>>>> +    }
->>>>> +
->>>>>       dev_info(dev, "Booting fw image %s, size %zd\n", name, 
->>>>> fw->size);
->>>>>         /*
->>>>> @@ -1391,7 +1398,7 @@ static int rproc_fw_boot(struct rproc 
->>>>> *rproc, const struct firmware *fw)
->>>>>       ret = rproc_enable_iommu(rproc);
->>>>>       if (ret) {
->>>>>           dev_err(dev, "can't enable iommu: %d\n", ret);
->>>>> -        return ret;
->>>>> +        goto put_pm_runtime;
->>>>>       }
->>>>>         rproc->bootaddr = rproc_get_boot_addr(rproc, fw);
->>>>> @@ -1435,6 +1442,8 @@ static int rproc_fw_boot(struct rproc 
->>>>> *rproc, const struct firmware *fw)
->>>>>       rproc->table_ptr = NULL;
->>>>>   disable_iommu:
->>>>>       rproc_disable_iommu(rproc);
->>>>> +put_pm_runtime:
->>>>> +    pm_runtime_put(dev);
->>>>>       return ret;
->>>>>   }
->>>>>   @@ -1840,6 +1849,8 @@ void rproc_shutdown(struct rproc *rproc)
->>>>>         rproc_disable_iommu(rproc);
->>>>>   +    pm_runtime_put(dev);
->>>>> +
->>>>>       /* Free the copy of the resource table */
->>>>>       kfree(rproc->cached_table);
->>>>>       rproc->cached_table = NULL;
->>>>> @@ -2118,6 +2129,9 @@ struct rproc *rproc_alloc(struct device 
->>>>> *dev, const char *name,
->>>>>         rproc->state = RPROC_OFFLINE;
->>>>>   +    pm_runtime_no_callbacks(&rproc->dev);
->>>>> +    pm_runtime_enable(&rproc->dev);
->>>>> +
->>>>>       return rproc;
->>>>>   }
->>>>>   EXPORT_SYMBOL(rproc_alloc);
->>>>> @@ -2133,6 +2147,7 @@ EXPORT_SYMBOL(rproc_alloc);
->>>>>    */
->>>>>   void rproc_free(struct rproc *rproc)
->>>>>   {
->>>>> +    pm_runtime_disable(&rproc->dev);
->>>>>       put_device(&rproc->dev);
->>>>>   }
->>>>>   EXPORT_SYMBOL(rproc_free);
->>>>>
->>>>
-> 
-> 
+On 6/4/20 1:52 AM, Xu Yilun wrote:
+> DFL based FPGA devices could support interrupts for different purposes,
+> but current DFL framework only supports feature device enumeration with
+> given MMIO resources information via common DFL headers. This patch
+> introduces one new API dfl_fpga_enum_info_add_irq for low level bus
+> drivers (e.g. PCIe device driver) to pass its interrupt resources
+> information to DFL framework for enumeration, and also adds interrupt
+> enumeration code in framework to parse and assign interrupt resources
+> for enumerated feature devices and their own sub features.
+>
+> With this patch, DFL framework enumerates interrupt resources for core
+> features, including PORT Error Reporting, FME (FPGA Management Engine)
+> Error Reporting and also AFU User Interrupts.
+>
+> Signed-off-by: Luwei Kang <luwei.kang@intel.com>
+> Signed-off-by: Wu Hao <hao.wu@intel.com>
+> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> Reviewed-by: Marcelo Tosatti <mtosatti@redhat.com>
+> Acked-by: Wu Hao <hao.wu@intel.com>
+> ----
+> v2: early validating irq table for each feature in parse_feature_irq().
+>     Some code improvement and minor fix for Hao's comments.
+> v3: put parse_feature_irqs() inside create_feature_instance()
+>     some minor fixes and more comments
+> v4: no need to include asm/irq.h.
+>     fail the dfl enumeration when irq parsing error happens.
+> v5: Some minor fix for Hao's comments
+> v6: Remove unnecessary type casting.
+>     Some comment fix for Moritz's comments.
+> ---
+>  drivers/fpga/dfl.c | 153 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/fpga/dfl.h |  40 ++++++++++++++
+>  2 files changed, 193 insertions(+)
+>
+> diff --git a/drivers/fpga/dfl.c b/drivers/fpga/dfl.c
+> index 9909948..02c1ec4 100644
+> --- a/drivers/fpga/dfl.c
+> +++ b/drivers/fpga/dfl.c
+> @@ -421,6 +421,9 @@ EXPORT_SYMBOL_GPL(dfl_fpga_dev_ops_unregister);
+>   *
+>   * @dev: device to enumerate.
+>   * @cdev: the container device for all feature devices.
+> + * @nr_irqs: number of irqs for all feature devices.
+> + * @irq_table: Linux IRQ numbers for all irqs, indexed by local irq index of
+> + *	       this device.
+>   * @feature_dev: current feature device.
+>   * @ioaddr: header register region address of feature device in enumeration.
+>   * @sub_features: a sub features linked list for feature device in enumeration.
+> @@ -429,6 +432,9 @@ EXPORT_SYMBOL_GPL(dfl_fpga_dev_ops_unregister);
+>  struct build_feature_devs_info {
+>  	struct device *dev;
+>  	struct dfl_fpga_cdev *cdev;
+> +	unsigned int nr_irqs;
+> +	int *irq_table;
+> +
+>  	struct platform_device *feature_dev;
+>  	void __iomem *ioaddr;
+>  	struct list_head sub_features;
+> @@ -442,12 +448,16 @@ struct build_feature_devs_info {
+>   * @mmio_res: mmio resource of this sub feature.
+>   * @ioaddr: mapped base address of mmio resource.
+>   * @node: node in sub_features linked list.
+> + * @irq_base: start of irq index in this sub feature.
+> + * @nr_irqs: number of irqs of this sub feature.
+>   */
+>  struct dfl_feature_info {
+>  	u64 fid;
+>  	struct resource mmio_res;
+>  	void __iomem *ioaddr;
+>  	struct list_head node;
+> +	unsigned int irq_base;
+> +	unsigned int nr_irqs;
+>  };
+>  
+>  static void dfl_fpga_cdev_add_port_dev(struct dfl_fpga_cdev *cdev,
+> @@ -520,6 +530,8 @@ static int build_info_commit_dev(struct build_feature_devs_info *binfo)
+>  	/* fill features and resource information for feature dev */
+>  	list_for_each_entry_safe(finfo, p, &binfo->sub_features, node) {
+>  		struct dfl_feature *feature = &pdata->features[index];
+> +		struct dfl_feature_irq_ctx *ctx;
+> +		unsigned int i;
+>  
+>  		/* save resource information for each feature */
+>  		feature->id = finfo->fid;
+> @@ -527,6 +539,20 @@ static int build_info_commit_dev(struct build_feature_devs_info *binfo)
+>  		feature->ioaddr = finfo->ioaddr;
+>  		fdev->resource[index++] = finfo->mmio_res;
+>  
+> +		if (finfo->nr_irqs) {
+> +			ctx = devm_kcalloc(binfo->dev, finfo->nr_irqs,
+> +					   sizeof(*ctx), GFP_KERNEL);
+> +			if (!ctx)
+> +				return -ENOMEM;
+> +
+> +			for (i = 0; i < finfo->nr_irqs; i++)
+> +				ctx[i].irq =
+> +					binfo->irq_table[finfo->irq_base + i];
+> +
+> +			feature->irq_ctx = ctx;
+> +			feature->nr_irqs = finfo->nr_irqs;
+> +		}
+> +
+>  		list_del(&finfo->node);
+>  		kfree(finfo);
+>  	}
+> @@ -638,6 +664,78 @@ static u64 feature_id(void __iomem *start)
+>  	return 0;
+>  }
+>  
+> +static int parse_feature_irqs(struct build_feature_devs_info *binfo,
+> +			      resource_size_t ofst, u64 fid,
+> +			      unsigned int *irq_base, unsigned int *nr_irqs)
+> +{
+> +	void __iomem *base = binfo->ioaddr + ofst;
+> +	unsigned int i, ibase, inr = 0;
+> +	int virq;
+> +	u64 v;
+> +
+> +	/*
+> +	 * Ideally DFL framework should only read info from DFL header, but
+> +	 * current version DFL only provides mmio resources information for
+> +	 * each feature in DFL Header, no field for interrupt resources.
+> +	 * Interrupt resource information is provided by specific mmio
+> +	 * registers of each private feature which supports interrupt. So in
+> +	 * order to parse and assign irq resources, DFL framework has to look
+> +	 * into specific capability registers of these private features.
+> +	 *
+> +	 * Once future DFL version supports generic interrupt resource
+> +	 * information in common DFL headers, the generic interrupt parsing
+> +	 * code will be added. But in order to be compatible to old version
+> +	 * DFL, the driver may still fall back to these quirks.
+> +	 */
+> +	switch (fid) {
+> +	case PORT_FEATURE_ID_UINT:
+> +		v = readq(base + PORT_UINT_CAP);
+> +		ibase = FIELD_GET(PORT_UINT_CAP_FST_VECT, v);
+> +		inr = FIELD_GET(PORT_UINT_CAP_INT_NUM, v);
+> +		break;
+> +	case PORT_FEATURE_ID_ERROR:
+> +		v = readq(base + PORT_ERROR_CAP);
+> +		ibase = FIELD_GET(PORT_ERROR_CAP_INT_VECT, v);
+> +		inr = FIELD_GET(PORT_ERROR_CAP_SUPP_INT, v);
+> +		break;
+> +	case FME_FEATURE_ID_GLOBAL_ERR:
+> +		v = readq(base + FME_ERROR_CAP);
+> +		ibase = FIELD_GET(FME_ERROR_CAP_INT_VECT, v);
+> +		inr = FIELD_GET(FME_ERROR_CAP_SUPP_INT, v);
+> +		break;
+> +	}
+> +
+> +	if (!inr) {
+> +		*irq_base = 0;
+> +		*nr_irqs = 0;
+> +		return 0;
+> +	}
+> +
+> +	dev_dbg(binfo->dev, "feature: 0x%llx, irq_base: %u, nr_irqs: %u\n",
+> +		fid, ibase, inr);
+> +
+> +	if (ibase + inr > binfo->nr_irqs) {
+> +		dev_err(binfo->dev,
+> +			"Invalid interrupt number in feature 0x%llx\n", fid);
+> +		return -EINVAL;
+> +	}
+> +
+> +	for (i = 0; i < inr; i++) {
+> +		virq = binfo->irq_table[ibase + i];
+> +		if (virq < 0 || virq > NR_IRQS) {
+> +			dev_err(binfo->dev,
+> +				"Invalid irq table entry for feature 0x%llx\n",
+> +				fid);
+> +			return -EINVAL;
+> +		}
+> +	}
+> +
+> +	*irq_base = ibase;
+> +	*nr_irqs = inr;
+> +
+> +	return 0;
+> +}
+> +
+>  /*
+>   * when create sub feature instances, for private features, it doesn't need
+>   * to provide resource size and feature id as they could be read from DFH
+> @@ -650,7 +748,9 @@ create_feature_instance(struct build_feature_devs_info *binfo,
+>  			struct dfl_fpga_enum_dfl *dfl, resource_size_t ofst,
+>  			resource_size_t size, u64 fid)
+>  {
+> +	unsigned int irq_base, nr_irqs;
+>  	struct dfl_feature_info *finfo;
+> +	int ret;
+>  
+>  	/* read feature size and id if inputs are invalid */
+>  	size = size ? size : feature_size(dfl->ioaddr + ofst);
+> @@ -659,6 +759,10 @@ create_feature_instance(struct build_feature_devs_info *binfo,
+>  	if (dfl->len - ofst < size)
+>  		return -EINVAL;
+>  
+> +	ret = parse_feature_irqs(binfo, ofst, fid, &irq_base, &nr_irqs);
+> +	if (ret)
+> +		return ret;
+> +
+>  	finfo = kzalloc(sizeof(*finfo), GFP_KERNEL);
+>  	if (!finfo)
+>  		return -ENOMEM;
+> @@ -667,6 +771,8 @@ create_feature_instance(struct build_feature_devs_info *binfo,
+>  	finfo->mmio_res.start = dfl->start + ofst;
+>  	finfo->mmio_res.end = finfo->mmio_res.start + size - 1;
+>  	finfo->mmio_res.flags = IORESOURCE_MEM;
+> +	finfo->irq_base = irq_base;
+> +	finfo->nr_irqs = nr_irqs;
+>  	finfo->ioaddr = dfl->ioaddr + ofst;
+>  
+>  	list_add_tail(&finfo->node, &binfo->sub_features);
+> @@ -853,6 +959,10 @@ void dfl_fpga_enum_info_free(struct dfl_fpga_enum_info *info)
+>  		devm_kfree(dev, dfl);
+>  	}
+>  
+> +	/* remove irq table */
+> +	if (info->irq_table)
+> +		devm_kfree(dev, info->irq_table);
+> +
+>  	devm_kfree(dev, info);
+>  	put_device(dev);
+>  }
+> @@ -892,6 +1002,45 @@ int dfl_fpga_enum_info_add_dfl(struct dfl_fpga_enum_info *info,
+>  }
+>  EXPORT_SYMBOL_GPL(dfl_fpga_enum_info_add_dfl);
+>  
+> +/**
+> + * dfl_fpga_enum_info_add_irq - add irq table to enum info
+> + *
+> + * @info: ptr to dfl_fpga_enum_info
+> + * @nr_irqs: number of irqs of the DFL fpga device to be enumerated.
+> + * @irq_table: Linux IRQ numbers for all irqs, indexed by local irq index of
+> + *	       this device.
+> + *
+> + * One FPGA device may have several interrupts. This function adds irq
+> + * information of the DFL fpga device to enum info for next step enumeration.
+> + * This function should be called before dfl_fpga_feature_devs_enumerate().
+> + * As we only support one irq domain for all DFLs in the same enum info, adding
+> + * irq table a second time for the same enum info will return error.
+> + *
+> + * If we need to enumerate DFLs which belong to different irq domains, we
+> + * should fill more enum info and enumerate them one by one.
+> + *
+> + * Return: 0 on success, negative error code otherwise.
+> + */
+> +int dfl_fpga_enum_info_add_irq(struct dfl_fpga_enum_info *info,
+> +			       unsigned int nr_irqs, int *irq_table)
+> +{
+> +	if (!nr_irqs || !irq_table)
+> +		return -EINVAL;
+> +
+> +	if (info->irq_table)
+> +		return -EEXIST;
+> +
+> +	info->irq_table = devm_kmemdup(info->dev, irq_table,
+> +				       sizeof(int) * nr_irqs, GFP_KERNEL);
+> +	if (!info->irq_table)
+> +		return -ENOMEM;
+> +
+> +	info->nr_irqs = nr_irqs;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(dfl_fpga_enum_info_add_irq);
+> +
+>  static int remove_feature_dev(struct device *dev, void *data)
+>  {
+>  	struct platform_device *pdev = to_platform_device(dev);
+> @@ -959,6 +1108,10 @@ dfl_fpga_feature_devs_enumerate(struct dfl_fpga_enum_info *info)
+>  	binfo->dev = info->dev;
+>  	binfo->cdev = cdev;
+>  
+> +	binfo->nr_irqs = info->nr_irqs;
+> +	if (info->nr_irqs)
+> +		binfo->irq_table = info->irq_table;
+> +
+>  	/*
+>  	 * start enumeration for all feature devices based on Device Feature
+>  	 * Lists.
+> diff --git a/drivers/fpga/dfl.h b/drivers/fpga/dfl.h
+> index 2f5d305..a3c9e4a 100644
+> --- a/drivers/fpga/dfl.h
+> +++ b/drivers/fpga/dfl.h
+> @@ -112,6 +112,13 @@
+>  #define FME_PORT_OFST_ACC_VF	1
+>  #define FME_PORT_OFST_IMP	BIT_ULL(60)
+>  
+> +/* FME Error Capability Register */
+> +#define FME_ERROR_CAP		0x70
+> +
+> +/* FME Error Capability Register Bitfield */
+> +#define FME_ERROR_CAP_SUPP_INT	BIT_ULL(0)		/* Interrupt Support */
+> +#define FME_ERROR_CAP_INT_VECT	GENMASK_ULL(12, 1)	/* Interrupt vector */
+> +
+>  /* PORT Header Register Set */
+>  #define PORT_HDR_DFH		DFH
+>  #define PORT_HDR_GUID_L		GUID_L
+> @@ -145,6 +152,20 @@
+>  #define PORT_STS_PWR_STATE_AP2	2			/* 90% throttling */
+>  #define PORT_STS_PWR_STATE_AP6	6			/* 100% throttling */
+>  
+> +/* Port Error Capability Register */
+> +#define PORT_ERROR_CAP		0x38
+> +
+> +/* Port Error Capability Register Bitfield */
+> +#define PORT_ERROR_CAP_SUPP_INT	BIT_ULL(0)		/* Interrupt Support */
+> +#define PORT_ERROR_CAP_INT_VECT	GENMASK_ULL(12, 1)	/* Interrupt vector */
+> +
+> +/* Port Uint Capability Register */
+> +#define PORT_UINT_CAP		0x8
+> +
+> +/* Port Uint Capability Register Bitfield */
+> +#define PORT_UINT_CAP_INT_NUM	GENMASK_ULL(11, 0)	/* Interrupts num */
+> +#define PORT_UINT_CAP_FST_VECT	GENMASK_ULL(23, 12)	/* First Vector */
+> +
+>  /**
+>   * struct dfl_fpga_port_ops - port ops
+>   *
+> @@ -189,6 +210,15 @@ struct dfl_feature_driver {
+>  };
+>  
+>  /**
+> + * struct dfl_feature_irq_ctx - dfl private feature interrupt context
+> + *
+> + * @irq: Linux IRQ number of this interrupt.
+> + */
+> +struct dfl_feature_irq_ctx {
+> +	int irq;
+> +};
+> +
+> +/**
+>   * struct dfl_feature - sub feature of the feature devices
+>   *
+>   * @id: sub feature id.
+> @@ -196,6 +226,8 @@ struct dfl_feature_driver {
+>   *		    this index is used to find its mmio resource from the
+>   *		    feature dev (platform device)'s reources.
+>   * @ioaddr: mapped mmio resource address.
+> + * @irq_ctx: interrupt context list.
+> + * @nr_irqs: number of interrupt contexts.
+>   * @ops: ops of this sub feature.
+>   * @priv: priv data of this feature.
+>   */
+> @@ -203,6 +235,8 @@ struct dfl_feature {
+>  	u64 id;
+>  	int resource_index;
+>  	void __iomem *ioaddr;
+> +	struct dfl_feature_irq_ctx *irq_ctx;
+> +	unsigned int nr_irqs;
+>  	const struct dfl_feature_ops *ops;
+>  	void *priv;
+>  };
+> @@ -390,10 +424,14 @@ static inline u8 dfl_feature_revision(void __iomem *base)
+>   *
+>   * @dev: parent device.
+>   * @dfls: list of device feature lists.
+> + * @nr_irqs: number of irqs for all feature devices.
+> + * @irq_table: Linux IRQ numbers for all irqs, indexed by hw irq numbers.
+>   */
+>  struct dfl_fpga_enum_info {
+>  	struct device *dev;
+>  	struct list_head dfls;
+> +	unsigned int nr_irqs;
+> +	int *irq_table;
+>  };
+>  
+>  /**
+> @@ -417,6 +455,8 @@ struct dfl_fpga_enum_info *dfl_fpga_enum_info_alloc(struct device *dev);
+>  int dfl_fpga_enum_info_add_dfl(struct dfl_fpga_enum_info *info,
+>  			       resource_size_t start, resource_size_t len,
+>  			       void __iomem *ioaddr);
+> +int dfl_fpga_enum_info_add_irq(struct dfl_fpga_enum_info *info,
+> +			       unsigned int nr_irqs, int *irq_table);
+>  void dfl_fpga_enum_info_free(struct dfl_fpga_enum_info *info);
+>  
+>  /**
 
