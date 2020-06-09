@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 339ADC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC38C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09F2B206D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:00:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F06D206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:00:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725653;
-	bh=mlChgyTv5SQLeyzNVZm89cxyxj49nT+0TF3uaH4MMaI=;
+	s=default; t=1591725656;
+	bh=XEGidvdyGCOiAiBQ9Tc8EFoGZ03ZmvSA/xlWKKMAXOo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VgOFU8LmLigOqOwyUOzcxJZNWnwoAR8JOnHK1JD8nosjdkc+Goi2iEduL2PMXGbIF
-	 HYc/kIYb8tcb7QqB1wAEGdvMcaRTlE+naMxiI3MGkeWU9+lwGsi0Rj+B/6bB0tqOqp
-	 /MINxQhZ2HxZD7v1rN9SEYOcsVhNC8OzP4FbA6aU=
+	b=s2UjxsnCPRKMOWn0HCFslSys0BWHG/ZkhelekxkxvEOSHo8XS94+8/t+wtgHY/fMI
+	 Ew1WvsMo67qhaqn33bF2WXIvMLMm4jPhAhpQDmorRZftpjboIdFsxHe7tWz117KG/Q
+	 M2CJYQxPAkrkOf1ALPrngzguQOQ26IJEjpSpIRt4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387754AbgFISAw (ORCPT
+        id S2387763AbgFISAx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:00:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45896 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 14:00:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733074AbgFIRyU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:54:20 -0400
+        id S1731571AbgFIRyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:54:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AD66207C3;
-        Tue,  9 Jun 2020 17:54:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DCC520774;
+        Tue,  9 Jun 2020 17:54:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725259;
-        bh=mlChgyTv5SQLeyzNVZm89cxyxj49nT+0TF3uaH4MMaI=;
+        s=default; t=1591725257;
+        bh=XEGidvdyGCOiAiBQ9Tc8EFoGZ03ZmvSA/xlWKKMAXOo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rNZL6LZ0wzYL1ltexgz6kaOe4ef0DqMstMUXx2e7REfsRLPL8FBsY1S/VWr6FLAis
-         IyakcJ3Ie6vrkTOdKq5J6a+tDTqXAWyoBJkDLB28HIOVfLjppzggOjRJrsBmT4YbBs
-         PuLPk5V3fYW0XqpS6c1+rniIoZsatgob628TJXeE=
+        b=QFQPGNtZTA/ug4qD1sgjpPxjqtzJ+3I33slp85jX15vKs42Qt7cJKxPADoWz2m/eg
+         C+SAfDmbMX2sV/LJUGWlv1f8lg7i9gb2g/IWVysZKzl0HE5HIWh2EPNqBqGf2ArzkM
+         3p7K4rg4gi3LDWeitlTtYjNSeX/eP1TfNJNNq9YM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH 5.6 34/41] nvmem: qfprom: remove incorrect write support
-Date:   Tue,  9 Jun 2020 19:45:36 +0200
-Message-Id: <20200609174115.324191619@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        Jean Rene Dawin <jdawin@math.uni-bielefeld.de>
+Subject: [PATCH 5.6 33/41] CDC-ACM: heed quirk also in error handling
+Date:   Tue,  9 Jun 2020 19:45:35 +0200
+Message-Id: <20200609174115.238537419@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174112.129412236@linuxfoundation.org>
 References: <20200609174112.129412236@linuxfoundation.org>
@@ -60,55 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit 8d9eb0d6d59a5d7028c80a30831143d3e75515a7 upstream.
+commit 97fe809934dd2b0b37dfef3a2fc70417f485d7af upstream.
 
-qfprom has different address spaces for read and write. Reads are
-always done from corrected address space, where as writes are done
-on raw address space.
-Writing to corrected address space is invalid and ignored, so it
-does not make sense to have this support in the driver which only
-supports corrected address space regions at the moment.
+If buffers are iterated over in the error case, the lower limits
+for quirky devices must be heeded.
 
-Fixes: 4ab11996b489 ("nvmem: qfprom: Add Qualcomm QFPROM support.")
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Reported-by: Jean Rene Dawin <jdawin@math.uni-bielefeld.de>
+Fixes: a4e7279cd1d19 ("cdc-acm: introduce a cool down")
 Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200522113341.7728-1-srinivas.kandagatla@linaro.org
+Link: https://lore.kernel.org/r/20200526124420.22160-1-oneukum@suse.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/nvmem/qfprom.c |   14 --------------
- 1 file changed, 14 deletions(-)
+ drivers/usb/class/cdc-acm.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/nvmem/qfprom.c
-+++ b/drivers/nvmem/qfprom.c
-@@ -27,25 +27,11 @@ static int qfprom_reg_read(void *context
- 	return 0;
- }
+--- a/drivers/usb/class/cdc-acm.c
++++ b/drivers/usb/class/cdc-acm.c
+@@ -584,7 +584,7 @@ static void acm_softint(struct work_stru
+ 	}
  
--static int qfprom_reg_write(void *context,
--			 unsigned int reg, void *_val, size_t bytes)
--{
--	struct qfprom_priv *priv = context;
--	u8 *val = _val;
--	int i = 0, words = bytes;
--
--	while (words--)
--		writeb(*val++, priv->base + reg + i++);
--
--	return 0;
--}
--
- static struct nvmem_config econfig = {
- 	.name = "qfprom",
- 	.stride = 1,
- 	.word_size = 1,
- 	.reg_read = qfprom_reg_read,
--	.reg_write = qfprom_reg_write,
- };
- 
- static int qfprom_probe(struct platform_device *pdev)
+ 	if (test_and_clear_bit(ACM_ERROR_DELAY, &acm->flags)) {
+-		for (i = 0; i < ACM_NR; i++)
++		for (i = 0; i < acm->rx_buflimit; i++)
+ 			if (test_and_clear_bit(i, &acm->urbs_in_error_delay))
+ 					acm_submit_read_urb(acm, i, GFP_NOIO);
+ 	}
 
 
