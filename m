@@ -2,201 +2,265 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 783DEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 08:45:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E99EEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 08:47:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CC8A2078D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 08:45:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="YtWEPImM"
+	by mail.kernel.org (Postfix) with ESMTP id BC38A2078D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 08:47:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728144AbgFIIpv (ORCPT
+        id S1728176AbgFIIrl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 04:45:51 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:45574 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbgFIIpt (ORCPT
+        Tue, 9 Jun 2020 04:47:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42292 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726918AbgFIIrk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 04:45:49 -0400
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200609084546epoutp03f964e4cdfbc27d4a73c606685deacf6a~W08GGAmlH3157931579epoutp031
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 08:45:46 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200609084546epoutp03f964e4cdfbc27d4a73c606685deacf6a~W08GGAmlH3157931579epoutp031
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1591692346;
-        bh=bI3oqIDWZ4rt+bmTVjAEn2Ya7lnsCa/ld4oq8kRKOhc=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=YtWEPImM6ZEztWNVIYRPqCZjVFkKHz0f1m5QcNrPdqLcSgYI4vxvGzXNXkRm1WqlD
-         MUCeGOUAJ6V3d/glqnwwTit1s3dJ6ytEclNf5MxDkTJAeXn/3WDEao1LqadegHCsJm
-         X/NEFi6B5V1rIzEW0L5XKXh70dL7MgwmrmHiITO8=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200609084546epcas1p13ddc7c81c902c05a86399d30fd94574e~W08Fxuyot2599825998epcas1p1q;
-        Tue,  9 Jun 2020 08:45:46 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.161]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 49h3c90Z6jzMqYkj; Tue,  9 Jun
-        2020 08:45:45 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        DF.25.19033.63C4FDE5; Tue,  9 Jun 2020 17:45:42 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200609084542epcas1p35b5e76b8b99735e2f48921b5aaf7d4c3~W08CcLPPB1165411654epcas1p32;
-        Tue,  9 Jun 2020 08:45:42 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200609084542epsmtrp1448500c4b92a05664368a242a3eaf22f~W08Cbm7vT0604806048epsmtrp1T;
-        Tue,  9 Jun 2020 08:45:42 +0000 (GMT)
-X-AuditID: b6c32a36-159ff70000004a59-73-5edf4c367f81
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        EA.9B.08382.63C4FDE5; Tue,  9 Jun 2020 17:45:42 +0900 (KST)
-Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip1.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200609084542epsmtip13aa25c6447fecc273e7419cb6f064e6a~W08CRmiI50989009890epsmtip1W;
-        Tue,  9 Jun 2020 08:45:42 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     "'Linus Torvalds'" <torvalds@linux-foundation.org>
-Cc:     "'LKML'" <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] exfat update for 5.8-rc1
-Date:   Tue, 9 Jun 2020 17:45:42 +0900
-Message-ID: <001301d63e3a$5bdb43d0$1391cb70$@samsung.com>
+        Tue, 9 Jun 2020 04:47:40 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99B83C03E97C
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 01:47:38 -0700 (PDT)
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jiZun-0008CC-4X; Tue, 09 Jun 2020 10:47:25 +0200
+Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jiZuh-0003gj-Dr; Tue, 09 Jun 2020 10:47:19 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        "John W. Linville" <linville@tuxdriver.com>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        David Jander <david@protonic.nl>, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Russell King <linux@armlinux.org.uk>, mkl@pengutronix.de,
+        Marek Vasut <marex@denx.de>,
+        Christian Herber <christian.herber@nxp.com>,
+        Amit Cohen <amitc@mellanox.com>,
+        Petr Machata <petrm@mellanox.com>
+Subject: [PATCH v3 2/3] netlink: add master/slave configuration support
+Date:   Tue,  9 Jun 2020 10:47:17 +0200
+Message-Id: <20200609084718.14110-3-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200609084718.14110-1-o.rempel@pengutronix.de>
+References: <20200609084718.14110-1-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AdY+LrMzOcJwC6u8TI6E/skAjA+lag==
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrPKsWRmVeSWpSXmKPExsWy7bCmvq6Zz/04g623LS0u75rDZvGo7y27
-        A5PHiRm/WTw+b5ILYIrKsclITUxJLVJIzUvOT8nMS7dV8g6Od443NTMw1DW0tDBXUshLzE21
-        VXLxCdB1y8wBGq+kUJaYUwoUCkgsLlbSt7Mpyi8tSVXIyC8usVVKLUjJKTA0KNArTswtLs1L
-        10vOz7UyNDAwMgWqTMjJeLvrL2PBCdmKX+sWMzYwLpPqYuTkkBAwkVhyeTs7iC0ksINRYneD
-        TxcjF5D9iVHi1Ol2dgjnG6PE9m2XWWA6vq/qZIHo2Mso0fqIG6LoJaPEwuO3mUASbAK6Ev/+
-        7GfrYuTgEBEwk/i2xBEkzCygLXHh0FywXmEBHYn1zR/YQGwWARWJ+RPuMYLYvAKWEnd2PGWH
-        sAUlTs58wgLRqydxY+oUNpg5yxa+Zoa4R0Hi59NlrCC2CFBN17PV7BA1IhKzO9uYQW6TENjH
-        LtG18TvUAy4S2z9vh7KFJV4d38IOYUtJvOxvYwe5WUKgWuLjfqj5HYwSL77bQtjGEjfXb2CF
-        sBUldv6eywixi0/i3dceVohWXomONiGIElWJvkuHmSBsaYmu9g9QmzwkHj5+xT6BUXEWki9n
-        IflyFpIvZyH5ZgEjyypGsdSC4tz01GLDAiPkuN7ECE55WmY7GCe9/aB3iJGJg/EQowQHs5II
-        b/WDO3FCvCmJlVWpRfnxRaU5qcWHGE2BAT+RWUo0OR+YdPNK4g1NjYyNjS1MzMzNTI2VxHnV
-        ZC7ECQmkJ5akZqemFqQWwfQxcXBKNTDFhnVVrdfNktiQf+XZ65TTi1SXbbnB+6wirTHrp3TS
-        vMyl+w9vn3t7/56u6DUFx6cnGjzlmrrd8XqJjewD1bt7j9h/dPVNCsma9LqxP9dnrtLC2U/0
-        FbQtTFZw3zE4KVTm8T897fjxzxmHZlpG5ktGuK+P/yJ+gc0y0LZijcTZpWZBb37U8C2qnnRL
-        /Wdg+7elR1/5i1aY/w6/mCOuvn9Dxm3JQ06/s04y/a27+nPafDanZBbN1inJHQJ7S5pamc6Z
-        XIqsmCqRmXJCzpOl7cTj/dLLT17mfPnYi+v5uV/v5UrYjFYYzqzeLPzUcZLlg/1KfDvZd3gp
-        Vh068GgO68bPKT0rJOts70RNabqX//mZEktxRqKhFnNRcSIAo3NoqQIEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrALMWRmVeSWpSXmKPExsWy7bCSnK6Zz/04g913pCwu75rDZvGo7y27
-        A5PHiRm/WTw+b5ILYIrisklJzcksSy3St0vgyujb5ViwRqLiZsc15gbGmcJdjJwcEgImEt9X
-        dbJ0MXJxCAnsZpSY9e8gI0RCWuLYiTPMXYwcQLawxOHDxRA1zxklLv39wwZSwyagK/Hvz342
-        kBoRATOJb0scQcLMAtoSFw7NZQGxhQV0JNY3fwArZxFQkZg/4R7YeF4BS4k7O56yQ9iCEidn
-        PmGB6DWQuH+ogxVmzrKFr5khzlGQ+Pl0GVhcREBPouvZanaIGhGJ2Z1tzBMYBWchGTULyahZ
-        SEbNQtKygJFlFaNkakFxbnpusWGBYV5quV5xYm5xaV66XnJ+7iZGcCBrae5g3L7qg94hRiYO
-        xkOMEhzMSiK81Q/uxAnxpiRWVqUW5ccXleakFh9ilOZgURLnvVG4ME5IID2xJDU7NbUgtQgm
-        y8TBKdXAtLH/l9VVz+1mcd7PvbonfXv482lpmQvr/L2XYhi/PpRU7YzUMCph1dC2rHxz3HmS
-        64EuMf+f3hOvxJz0XlWaemGHU4LvsRfaWvl2pl5xUa89veOD9WT3Lcq3vnxx6Yd0zrwdord0
-        jmiovz2RxGHbeF51ne5jQTUJkc1HZCenJ2mfcHz1QsH7rcwK3vDqBjmulGvht1Y5r9iaU3LH
-        UiBNakJ27bH7y47/tV3O0r8s1O3cpk2bP8/MNjVTcv81s+9om5iEHlv6hB3t79Zr/z6ef2Bx
-        5+qwJ3/1U0sm731w8Zr53yVX2WXkrl7eV8DYeex887cfk52Uvb+sbGyc4ex05WFJ/ikF0Zpt
-        dlopNd29SizFGYmGWsxFxYkA0JV7VNMCAAA=
-X-CMS-MailID: 20200609084542epcas1p35b5e76b8b99735e2f48921b5aaf7d4c3
-X-Msg-Generator: CA
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200609084542epcas1p35b5e76b8b99735e2f48921b5aaf7d4c3
-References: <CGME20200609084542epcas1p35b5e76b8b99735e2f48921b5aaf7d4c3@epcas1p3.samsung.com>
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+This UAPI is needed for BroadR-Reach 100BASE-T1 devices. Due to lack of
+auto-negotiation support, we needed to be able to configure the
+MASTER-SLAVE role of the port manually or from an application in user
+space.
 
-This is exfat update pull request for v5.8-rc1. I add description of
-this pull request on below. Please pull exfat with following ones.
+The same UAPI can be used for 1000BASE-T or MultiGBASE-T devices to
+force MASTER or SLAVE role. See IEEE 802.3-2018:
+22.2.4.3.7 MASTER-SLAVE control register (Register 9)
+22.2.4.3.8 MASTER-SLAVE status register (Register 10)
+40.5.2 MASTER-SLAVE configuration resolution
+45.2.1.185.1 MASTER-SLAVE config value (1.2100.14)
+45.2.7.10 MultiGBASE-T AN control 1 register (Register 7.32)
 
-Thanks=21
+The MASTER-SLAVE role affects the clock configuration:
 
-The following changes since commit 3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162=
-:
+-------------------------------------------------------------------------------
+When the  PHY is configured as MASTER, the PMA Transmit function shall
+source TX_TCLK from a local clock source. When configured as SLAVE, the
+PMA Transmit function shall source TX_TCLK from the clock recovered from
+data stream provided by MASTER.
 
-  Linux 5.7 (2020-05-31 16:49:15 -0700)
+iMX6Q                     KSZ9031                XXX
+------\                /-----------\        /------------\
+      |                |           |        |            |
+ MAC  |<----RGMII----->| PHY Slave |<------>| PHY Master |
+      |<--- 125 MHz ---+-<------/  |        | \          |
+------/                \-----------/        \------------/
+                                               ^
+                                                \-TX_TCLK
 
-are available in the Git repository at:
+-------------------------------------------------------------------------------
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/linkinjeon/exfat.git tags/e=
-xfat-for-5.8-rc1
+Since some clock or link related issues are only reproducible in a
+specific MASTER-SLAVE-role, MAC and PHY configuration, it is beneficial
+to provide generic (not 100BASE-T1 specific) interface to the user space
+for configuration flexibility and trouble shooting.
 
-for you to fetch changes up to fc961522ddbdf00254dd03b677627139cc1f68bc:
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ ethtool.8.in           | 19 ++++++++++++++++
+ ethtool.c              |  1 +
+ netlink/desc-ethtool.c |  2 ++
+ netlink/settings.c     | 50 ++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 72 insertions(+)
 
-  exfat: Fix potential use after free in exfat_load_upcase_table() (2020-06=
--09 16:50:18 +0900)
+diff --git a/ethtool.8.in b/ethtool.8.in
+index f8b09e0..dca7c7a 100644
+--- a/ethtool.8.in
++++ b/ethtool.8.in
+@@ -52,6 +52,10 @@
+ .\"
+ .ds MA \fIxx\fP\fB:\fP\fIyy\fP\fB:\fP\fIzz\fP\fB:\fP\fIaa\fP\fB:\fP\fIbb\fP\fB:\fP\fIcc\fP
+ .\"
++.\"	\(*MS - master-slave property
++.\"
++.ds MS \fBpreferred-master\fP|\fBpreferred-slave\fP|\fBforced-master\fP|\fBforced-slave\fP
++.\"
+ .\"	\(*PA - IP address
+ .\"
+ .ds PA \fIip-address\fP
+@@ -255,6 +259,7 @@ ethtool \- query or control network driver and hardware settings
+ .RB [ wol \ \fIN\fP[\fB/\fP\fIM\fP]
+ .RB | \ wol \ \*(WO]
+ .RB [ sopass \ \*(MA]
++.RB [ master-slave \ \*(MS]
+ .RB [ msglvl
+ .IR N\fP[/\fIM\fP] \ |
+ .BI msglvl \ type
+@@ -646,6 +651,20 @@ Sets full or half duplex mode.
+ .A4 port tp aui bnc mii fibre da
+ Selects device port.
+ .TP
++.BR master-slave \ \*(MS
++Configure MASTER/SLAVE role of the PHY. When the PHY is configured as MASTER,
++the PMA Transmit function shall source TX_TCLK from a local clock source. When
++configured as SLAVE, the PMA Transmit function shall source TX_TCLK from the
++clock recovered from data stream provided by MASTER. Not all devices support this.
++.TS
++nokeep;
++lB	l.
++preferred-master Prefer MASTER role on autonegotiation
++preferred-slave	 Prefer SLAVE role on autonegotiation
++forced-master    Force the PHY in MASTER role. Can be used without autonegotiation
++forced-slave     Force the PHY in SLAVE role. Can be used without autonegotiation
++.TE
++.TP
+ .A3 mdix auto on off
+ Selects MDI-X mode for port. May be used to override the automatic
+ detection feature of most adapters. An argument of \fBauto\fR means
+diff --git a/ethtool.c b/ethtool.c
+index 900880a..a6e9bfc 100644
+--- a/ethtool.c
++++ b/ethtool.c
+@@ -5196,6 +5196,7 @@ static const struct option args[] = {
+ 			  "		[ wol %d[/%d] | p|u|m|b|a|g|s|f|d... ]\n"
+ 			  "		[ sopass %x:%x:%x:%x:%x:%x ]\n"
+ 			  "		[ msglvl %d[/%d] | type on|off ... [--] ]\n"
++			  "		[ master-slave master-preferred|slave-preferred|master-force|slave-force ]\n"
+ 	},
+ 	{
+ 		.opts	= "-a|--show-pause",
+diff --git a/netlink/desc-ethtool.c b/netlink/desc-ethtool.c
+index 76c6f13..b0a793c 100644
+--- a/netlink/desc-ethtool.c
++++ b/netlink/desc-ethtool.c
+@@ -85,6 +85,8 @@ static const struct pretty_nla_desc __linkmodes_desc[] = {
+ 	NLATTR_DESC_NESTED(ETHTOOL_A_LINKMODES_PEER, bitset),
+ 	NLATTR_DESC_U32(ETHTOOL_A_LINKMODES_SPEED),
+ 	NLATTR_DESC_U8(ETHTOOL_A_LINKMODES_DUPLEX),
++	NLATTR_DESC_U8(ETHTOOL_A_LINKMODES_MASTER_SLAVE_CFG),
++	NLATTR_DESC_U8(ETHTOOL_A_LINKMODES_MASTER_SLAVE_STATE),
+ };
+ 
+ static const struct pretty_nla_desc __linkstate_desc[] = {
+diff --git a/netlink/settings.c b/netlink/settings.c
+index 8be5a22..3a5a237 100644
+--- a/netlink/settings.c
++++ b/netlink/settings.c
+@@ -37,6 +37,21 @@ static const char *const names_duplex[] = {
+ 	[DUPLEX_FULL]		= "Full",
+ };
+ 
++static const char *const names_master_slave_state[] = {
++	[MASTER_SLAVE_STATE_UNKNOWN]	= "unknown",
++	[MASTER_SLAVE_STATE_MASTER]	= "master",
++	[MASTER_SLAVE_STATE_SLAVE]	= "slave",
++	[MASTER_SLAVE_STATE_ERR]	= "resolution error",
++};
++
++static const char *const names_master_slave_cfg[] = {
++	[MASTER_SLAVE_CFG_UNKNOWN]		= "unknown",
++	[MASTER_SLAVE_CFG_MASTER_PREFERRED]	= "preferred master",
++	[MASTER_SLAVE_CFG_SLAVE_PREFERRED]	= "preferred slave",
++	[MASTER_SLAVE_CFG_MASTER_FORCE]		= "forced master",
++	[MASTER_SLAVE_CFG_SLAVE_FORCE]		= "forced slave",
++};
++
+ static const char *const names_port[] = {
+ 	[PORT_TP]		= "Twisted Pair",
+ 	[PORT_AUI]		= "AUI",
+@@ -520,6 +535,25 @@ int linkmodes_reply_cb(const struct nlmsghdr *nlhdr, void *data)
+ 		printf("\tAuto-negotiation: %s\n",
+ 		       (autoneg == AUTONEG_DISABLE) ? "off" : "on");
+ 	}
++	if (tb[ETHTOOL_A_LINKMODES_MASTER_SLAVE_CFG]) {
++		uint8_t val;
++
++		val = mnl_attr_get_u8(tb[ETHTOOL_A_LINKMODES_MASTER_SLAVE_CFG]);
++
++		print_banner(nlctx);
++		print_enum(names_master_slave_cfg,
++			   ARRAY_SIZE(names_master_slave_cfg), val,
++			   "master-slave cfg");
++	}
++	if (tb[ETHTOOL_A_LINKMODES_MASTER_SLAVE_STATE]) {
++		uint8_t val;
++
++		val = mnl_attr_get_u8(tb[ETHTOOL_A_LINKMODES_MASTER_SLAVE_STATE]);
++		print_banner(nlctx);
++		print_enum(names_master_slave_state,
++			   ARRAY_SIZE(names_master_slave_state), val,
++			   "master-slave status");
++	}
+ 
+ 	return MNL_CB_OK;
+ err:
+@@ -827,6 +861,14 @@ static const struct lookup_entry_u32 duplex_values[] = {
+ 	{}
+ };
+ 
++static const struct lookup_entry_u8 master_slave_values[] = {
++	{ .arg = "preferred-master", .val = MASTER_SLAVE_CFG_MASTER_PREFERRED },
++	{ .arg = "preferred-slave",  .val = MASTER_SLAVE_CFG_SLAVE_PREFERRED },
++	{ .arg = "forced-master",    .val = MASTER_SLAVE_CFG_MASTER_FORCE },
++	{ .arg = "forced-slave",     .val = MASTER_SLAVE_CFG_SLAVE_FORCE },
++	{}
++};
++
+ char wol_bit_chars[WOL_MODE_COUNT] = {
+ 	[WAKE_PHY_BIT]		= 'p',
+ 	[WAKE_UCAST_BIT]	= 'u',
+@@ -917,6 +959,14 @@ static const struct param_parser sset_params[] = {
+ 		.handler_data	= duplex_values,
+ 		.min_argc	= 1,
+ 	},
++	{
++		.arg		= "master-slave",
++		.group		= ETHTOOL_MSG_LINKMODES_SET,
++		.type		= ETHTOOL_A_LINKMODES_MASTER_SLAVE_CFG,
++		.handler	= nl_parse_lookup_u8,
++		.handler_data	= master_slave_values,
++		.min_argc	= 1,
++	},
+ 	{
+ 		.arg		= "wol",
+ 		.group		= ETHTOOL_MSG_WOL_SET,
+-- 
+2.27.0
 
-----------------------------------------------------------------
-Description for this pull request:
-* Bug fixes
-  - Fix memory leak on mount failure with iocharset=3D option.
-  - Fix Incorrect update of stream entry.
-  - Fix cluster range validation error.
-
-* Clean-up codes
-  - Remove unused code and unneeded assignment.
-  - Rename variables in exfat structure as specification.
-  - Reorganize boot sector analysis code.
-  - Simplify exfat_utf8_d_hash and exfat_utf8_d_cmp().
-  - Optimize exfat entry cache functions.
-  - Improve wording of EXFAT_DEFAULT_IOCHARSET config option.
-
-* New Feature
-  - Add boot region verification.
-
-----------------------------------------------------------------
-Al Viro (1):
-      exfat: fix memory leak in exfat_parse_param()
-
-Dan Carpenter (1):
-      exfat: Fix potential use after free in exfat_load_upcase_table()
-
-Geert Uytterhoeven (1):
-      exfat: Improve wording of EXFAT_DEFAULT_IOCHARSET config option
-
-Jason Yan (1):
-      exfat: remove the assignment of 0 to bool variable
-
-Joe Perches (1):
-      exfat: Use a more common logging style
-
-Namjae Jeon (2):
-      exfat: remove unnecessary reassignment of p_uniname->name_len
-      exfat: fix incorrect update of stream entry in __exfat_truncate()
-
-Pali Roh=E1r=20(3):=0D=0A=20=20=20=20=20=20exfat:=20Simplify=20exfat_utf8_d=
-_cmp()=20for=20code=20points=20above=20U+FFFF=0D=0A=20=20=20=20=20=20exfat:=
-=20Simplify=20exfat_utf8_d_hash()=20for=20code=20points=20above=20U+FFFF=0D=
-=0A=20=20=20=20=20=20exfat:=20Remove=20unused=20functions=20exfat_high_surr=
-ogate()=20and=20exfat_low_surrogate()=0D=0A=0D=0ATetsuhiro=20Kohada=20(6):=
-=0D=0A=20=20=20=20=20=20exfat:=20replace=20'time_ms'=20with=20'time_cs'=0D=
-=0A=20=20=20=20=20=20exfat:=20optimize=20dir-cache=0D=0A=20=20=20=20=20=20e=
-xfat:=20redefine=20PBR=20as=20boot_sector=0D=0A=20=20=20=20=20=20exfat:=20s=
-eparate=20the=20boot=20sector=20analysis=0D=0A=20=20=20=20=20=20exfat:=20ad=
-d=20boot=20region=20verification=0D=0A=20=20=20=20=20=20exfat:=20standardiz=
-e=20checksum=20calculation=0D=0A=0D=0Ahyeongseok.kim=20(1):=0D=0A=20=20=20=
-=20=20=20exfat:=20fix=20range=20validation=20error=20in=20alloc=20and=20fre=
-e=20cluster=0D=0A=0D=0A=20fs/exfat/Kconfig=20=20=20=20=20=7C=20=20=207=20+-=
-=0D=0A=20fs/exfat/balloc.c=20=20=20=20=7C=20=20=208=20+-=0D=0A=20fs/exfat/d=
-ir.c=20=20=20=20=20=20=20=7C=20222=20+++++++++++++++++---------------------=
------=0D=0A=20fs/exfat/exfat_fs.h=20=20=7C=20=2048=20+++++-----=0D=0A=20fs/=
-exfat/exfat_raw.h=20=7C=20=2085=20+++++++----------=0D=0A=20fs/exfat/fatent=
-.c=20=20=20=20=7C=20=2017=20++--=0D=0A=20fs/exfat/file.c=20=20=20=20=20=20=
-=7C=20=2025=20+++--=0D=0A=20fs/exfat/inode.c=20=20=20=20=20=7C=20=2057=20++=
-+++------=0D=0A=20fs/exfat/misc.c=20=20=20=20=20=20=7C=20=2046=20+++++----=
-=0D=0A=20fs/exfat/namei.c=20=20=20=20=20=7C=20=2063=20+++++--------=0D=0A=
-=20fs/exfat/nls.c=20=20=20=20=20=20=20=7C=20=2052=20+++-------=0D=0A=20fs/e=
-xfat/super.c=20=20=20=20=20=7C=20262=20+++++++++++++++++++++++++++++++-----=
----------------=0D=0A=2012=20files=20changed,=20423=20insertions(+),=20469=
-=20deletions(-)=0D=0A=0D=0A
