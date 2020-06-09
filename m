@@ -2,78 +2,68 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF119C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E25C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1F712074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:29:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 947612074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:31:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IBBB4GQd"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="TPwP9+Qo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730035AbgFIN3n (ORCPT
+        id S1729051AbgFINbM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 09:29:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57510 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726083AbgFIN3N (ORCPT
+        Tue, 9 Jun 2020 09:31:12 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:24028 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728850AbgFINbL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 09:29:13 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AF5AC03E97C;
-        Tue,  9 Jun 2020 06:29:13 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id x18so8559136lji.1;
-        Tue, 09 Jun 2020 06:29:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=AU8aHNXSJicC/3mJ6DI0lDrv2zkNv1iB0kltJtsuQAw=;
-        b=IBBB4GQdaEQ7q2KiJJZ5ip3X6bkBy0BSWrwk1+gyEldWqxQ2lxcYQ4NQnpk59EeLrV
-         6dMLrwurXlnlBTQSczdGrYF7UXiziOGT+t71YaEfRTR01pXXJtxWB71OKmt+3VNhxW1R
-         q7XIU34BO/1a7G6DB+tcbgukgu+Et04VM2jS9A+RVOIFOcgmkSG7VZK75XN3qpfSkY3K
-         8bYYAu5K+Tk+mUOXcbsKxZxMcHWwWDOmxNQpbiNe/Tr7PeVccT2sMdMQGHY47LW8iPZi
-         hw3BLwoBxXY3tBtq9eOBotQh9i8sq+FidpoV1AtLjP4FNOykoVwkAkbL9zo3k0UxKMqs
-         tVog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=AU8aHNXSJicC/3mJ6DI0lDrv2zkNv1iB0kltJtsuQAw=;
-        b=KbxrFsRkFQw62IlfAVrjg9Qi5Z9/VfyR5S6f0sEc2iOxuVXS5N4lzh+S6pmIcJpDmx
-         HJGF1otd1IJwcDa/WqEl6+8Y2XFpA1EakB7JaFLjLZPix6qLzmL8iZKfOYg97mCzHx8R
-         9MgZ60eTSo7g/aSTl6REJgwUnnLLawoQhwgGV8OsvMZpqb6n/3fwEAyYT/yWaMXnMFh5
-         MNRLAcsICpKfqMbWI4JebBHge/r8oVx9bJdUGYJApNFTwbg9KbBDZhf2ldlmr+O12wEP
-         GfTZRny38wO3BfNFWYDQGbeMxe92cWUohi4Pjq+u3toMFsnHMOhL/TymLLM7rGgOjpWh
-         F3xQ==
-X-Gm-Message-State: AOAM531gqt7JxiRmcQeDU48gekdhKsjoUoTleLfUKCt0CO+JqEx2wQ4P
-        oMUaz4dUSXy7RcvvOttFXn4=
-X-Google-Smtp-Source: ABdhPJyB6oVMLLLkelmcFvaeFNFXh7QjR+inoxngYrUQfB1L9V+tOfw6vava0XRT98i+C9Ak9k6fmA==
-X-Received: by 2002:a2e:810d:: with SMTP id d13mr7708009ljg.174.1591709351734;
-        Tue, 09 Jun 2020 06:29:11 -0700 (PDT)
-Received: from localhost.localdomain (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.gmail.com with ESMTPSA id s8sm5069821lfc.83.2020.06.09.06.29.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 06:29:11 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 1/6] of_graph: add of_graph_get_local_port()
-Date:   Tue,  9 Jun 2020 16:28:50 +0300
-Message-Id: <20200609132855.20975-2-digetx@gmail.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200609132855.20975-1-digetx@gmail.com>
-References: <20200609132855.20975-1-digetx@gmail.com>
+        Tue, 9 Jun 2020 09:31:11 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591709471; h=Content-Transfer-Encoding: MIME-Version:
+ References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=Pu361BIVMutlEnaoObCy2bBsM7kC4Zxpj0q8V0gR8wA=; b=TPwP9+Qo+w8P5tk/FJD7DraoTyjRo28kgedkH0R1aoKOZGr9y+E8TFtXGBjit7HBl6XO0VQE
+ N8y1I0VlD0aWqPf28tetRO148ikKfNkVimyDO/kmcobRQEjuGrpJ+Zkyg4xv4GBJ1+xtWDNc
+ Gf9r93t+QsbKM9hG48BkjK1cWQU=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n10.prod.us-east-1.postgun.com with SMTP id
+ 5edf8f0ebfb34e631c7d52d2 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 09 Jun 2020 13:30:54
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8FA96C433CA; Tue,  9 Jun 2020 13:30:53 +0000 (UTC)
+Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C744DC433C6;
+        Tue,  9 Jun 2020 13:30:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C744DC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        mike.leach@linaro.org, Jonathan Marek <jonathan@marek.ca>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCH 1/4] arm64: dts: qcom: sc7180: Add support to skip powering up of ETM
+Date:   Tue,  9 Jun 2020 19:00:28 +0530
+Message-Id: <8c5ff297d8c89d9d451352f189baf26c8938842a.1591708204.git.saiprakash.ranjan@codeaurora.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <cover.1591708204.git.saiprakash.ranjan@codeaurora.org>
+References: <cover.1591708204.git.saiprakash.ranjan@codeaurora.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -81,97 +71,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In some case, like a DRM display code for example, it's useful to silently
-check whether port node exists at all in a device-tree before proceeding
-with parsing the graph.
+Add "qcom,skip-power-up" property to skip powering up ETM
+on SC7180 SoC to workaround a hardware errata where CPU
+watchdog counter is stopped when ETM power up bit is set
+(i.e., when TRCPDCR.PU = 1).
 
-This patch adds of_graph_get_local_port() which returns pointer to a local
-port node, or NULL if graph isn't specified in a device-tree for a given
-device node.
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 ---
- drivers/of/property.c    | 32 +++++++++++++++++++++++---------
- include/linux/of_graph.h |  7 +++++++
- 2 files changed, 30 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/of/property.c b/drivers/of/property.c
-index 1f2086f4e7ce..05c5f619b8bb 100644
---- a/drivers/of/property.c
-+++ b/drivers/of/property.c
-@@ -608,15 +608,7 @@ struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
- 	 * parent port node.
- 	 */
- 	if (!prev) {
--		struct device_node *node;
--
--		node = of_get_child_by_name(parent, "ports");
--		if (node)
--			parent = node;
--
--		port = of_get_child_by_name(parent, "port");
--		of_node_put(node);
--
-+		port = of_graph_get_local_port(parent);
- 		if (!port) {
- 			pr_err("graph: no port node found in %pOF\n", parent);
- 			return NULL;
-@@ -765,6 +757,28 @@ struct device_node *of_graph_get_remote_port(const struct device_node *node)
- }
- EXPORT_SYMBOL(of_graph_get_remote_port);
+Depends on ETM driver change here:
+ - https://git.linaro.org/kernel/coresight.git/commit/?h=next-v5.8-rc1&id=159e248e75b1b548276b6571d7740a35cab1f5be 
+
+---
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 7c2b79dda3d7..f684a0b87848 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -1810,6 +1810,7 @@
+ 			clocks = <&aoss_qmp>;
+ 			clock-names = "apb_pclk";
+ 			arm,coresight-loses-context-with-cpu;
++			qcom,skip-power-up;
  
-+/**
-+ * of_graph_get_local_port() - get local port node
-+ * @node: pointer to a local endpoint device_node
-+ *
-+ * Return: First local port node associated with local endpoint node linked
-+ *	   to @node. Use of_node_put() on it when done.
-+ */
-+struct device_node *of_graph_get_local_port(const struct device_node *node)
-+{
-+	struct device_node *ports, *port;
-+
-+	ports = of_get_child_by_name(node, "ports");
-+	if (ports)
-+		node = ports;
-+
-+	port = of_get_child_by_name(node, "port");
-+	of_node_put(ports);
-+
-+	return port;
-+}
-+EXPORT_SYMBOL(of_graph_get_local_port);
-+
- int of_graph_get_endpoint_count(const struct device_node *np)
- {
- 	struct device_node *endpoint;
-diff --git a/include/linux/of_graph.h b/include/linux/of_graph.h
-index 01038a6aade0..1fdeb72c7765 100644
---- a/include/linux/of_graph.h
-+++ b/include/linux/of_graph.h
-@@ -54,6 +54,7 @@ struct device_node *of_graph_get_remote_port_parent(
- struct device_node *of_graph_get_remote_port(const struct device_node *node);
- struct device_node *of_graph_get_remote_node(const struct device_node *node,
- 					     u32 port, u32 endpoint);
-+struct device_node *of_graph_get_local_port(const struct device_node *node);
- #else
+ 			out-ports {
+ 				port {
+@@ -1829,6 +1830,7 @@
+ 			clocks = <&aoss_qmp>;
+ 			clock-names = "apb_pclk";
+ 			arm,coresight-loses-context-with-cpu;
++			qcom,skip-power-up;
  
- static inline int of_graph_parse_endpoint(const struct device_node *node,
-@@ -116,6 +117,12 @@ static inline struct device_node *of_graph_get_remote_node(
- 	return NULL;
- }
+ 			out-ports {
+ 				port {
+@@ -1848,6 +1850,7 @@
+ 			clocks = <&aoss_qmp>;
+ 			clock-names = "apb_pclk";
+ 			arm,coresight-loses-context-with-cpu;
++			qcom,skip-power-up;
  
-+static inline struct device_node *of_graph_get_local_port(
-+					const struct device_node *node)
-+{
-+	return NULL;
-+}
-+
- #endif /* CONFIG_OF */
+ 			out-ports {
+ 				port {
+@@ -1867,6 +1870,7 @@
+ 			clocks = <&aoss_qmp>;
+ 			clock-names = "apb_pclk";
+ 			arm,coresight-loses-context-with-cpu;
++			qcom,skip-power-up;
  
- #endif /* __LINUX_OF_GRAPH_H */
+ 			out-ports {
+ 				port {
+@@ -1886,6 +1890,7 @@
+ 			clocks = <&aoss_qmp>;
+ 			clock-names = "apb_pclk";
+ 			arm,coresight-loses-context-with-cpu;
++			qcom,skip-power-up;
+ 
+ 			out-ports {
+ 				port {
+@@ -1905,6 +1910,7 @@
+ 			clocks = <&aoss_qmp>;
+ 			clock-names = "apb_pclk";
+ 			arm,coresight-loses-context-with-cpu;
++			qcom,skip-power-up;
+ 
+ 			out-ports {
+ 				port {
+@@ -1924,6 +1930,7 @@
+ 			clocks = <&aoss_qmp>;
+ 			clock-names = "apb_pclk";
+ 			arm,coresight-loses-context-with-cpu;
++			qcom,skip-power-up;
+ 
+ 			out-ports {
+ 				port {
+@@ -1943,6 +1950,7 @@
+ 			clocks = <&aoss_qmp>;
+ 			clock-names = "apb_pclk";
+ 			arm,coresight-loses-context-with-cpu;
++			qcom,skip-power-up;
+ 
+ 			out-ports {
+ 				port {
 -- 
-2.26.0
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
