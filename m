@@ -2,153 +2,162 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94DD5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 23:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9342C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 23:30:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DF42206A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 23:29:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591745359;
-	bh=so9mtAq9IjDAKHSiqosXpkJZ9H3m/cJJihtj8+pjvW4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1cZVmHWK8Y+nMdmToNF21wdesHsFU3jrjNF+XQH+ZHkia8W9ism7DNvk10p31VPqc
-	 XZ5j88KK/ikAU0xGq2DDIIutk51EYkm0O6ANNOlCpDBUA3Gqwxg5EznKzj1iA1uPCo
-	 uU8y3gSWp+EG3hQdThLNKX0FxKxbQ8hAnSRxZYng=
+	by mail.kernel.org (Postfix) with ESMTP id 6C3FA206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 23:30:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="T4pD86Zp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725967AbgFIX3R (ORCPT
+        id S1726045AbgFIXaW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 19:29:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46850 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725785AbgFIX3P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 19:29:15 -0400
-Received: from earth.universe (dyndsl-037-138-184-022.ewe-ip-backbone.de [37.138.184.22])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 9 Jun 2020 19:30:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37634 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725785AbgFIXaV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 19:30:21 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45A35C05BD1E;
+        Tue,  9 Jun 2020 16:30:21 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DF22206A4;
-        Tue,  9 Jun 2020 23:29:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591745354;
-        bh=so9mtAq9IjDAKHSiqosXpkJZ9H3m/cJJihtj8+pjvW4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QOfNUrJTZvqLC5gRSBiipLO0lLr4rkuFBrdmO4tJIMdfDfdTFKGSRLcwZQIm1btCI
-         l3vNpB3D0CLEU6VfaSySI97qpS3hFMrdS0/kZK3bOGgogyjjDW3R4C6mL/ngCjG6KS
-         +9TYqwT+FEVH/b9gLRi5hfHw0Tt+9S3o7FfWna8A=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 7975F3C08C6; Wed, 10 Jun 2020 01:29:12 +0200 (CEST)
-Date:   Wed, 10 Jun 2020 01:29:12 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Tim Wawrzynczak <twawrzynczak@chromium.org>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] power: supply: Add new power supply prop for date of
- manufacture
-Message-ID: <20200609232912.oexmmr53feglqdg7@earth.universe>
-References: <20200609192237.32571-1-twawrzynczak@chromium.org>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49hRDm2cmSz9sRR;
+        Wed, 10 Jun 2020 09:30:15 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1591745416;
+        bh=lTqyPH1IXzHOL7YNp6Xf9Boc2LGwLLUlsKJcuVTbVIc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=T4pD86Zp/YjSKhnt56tra6AT0I67mQbEqxqlxmPN0eV92XdWPIBLMM2+vKCL41aTa
+         w/jfvQsoMFJBvnxUNBy1IW/GgSU4bOQXeELXANkpo9NeoNJaC0JdwSSGt6e/voa4tz
+         2BvMy+qQaMdcx5KB/jS+WgliBj4+I2z7hXSgvnK81Er8lBwkgIqfRewqVs4JzPhdDu
+         C119QGFU4U3CQ7reqjRLP5xFsxbJRW8NCbYOv79nNV34FZxn1L7Lo5nOfH+n9452Kb
+         lF/LZpNvj8A8O1x+AxRa3WJRc2o8MPzXP1iRGcHiFXbffVFDoGTstehHKmuzTaLQ8K
+         G/AlXmxN8FbLg==
+Date:   Wed, 10 Jun 2020 09:30:12 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michel Lespinasse <walken@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arjun Roy <arjunroy@google.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Soheil Hassas Yeganeh <soheil@google.com>
+Subject: linux-next: manual merge of the net tree with Linus' tree
+Message-ID: <20200610093012.13391de8@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ciom6auqowqlhjxy"
-Content-Disposition: inline
-In-Reply-To: <20200609192237.32571-1-twawrzynczak@chromium.org>
+Content-Type: multipart/signed; boundary="Sig_/_WFzV36PO8JK65ZVN9wu=UP";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---ciom6auqowqlhjxy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--Sig_/_WFzV36PO8JK65ZVN9wu=UP
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi all,
 
-Support for SBS battery manufacturer date is part of power-supply's
-pull request for v5.8 with a different API allowing other batteries
-to expose less precise information:
+Today's linux-next merge of the net tree got a conflict in:
 
-https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git/=
-commit/?h=3Dfor-next&id=3Dfeabe49e46bb556b8d43e28d4a0d459940f7a5cb
-https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git/=
-commit/?h=3Dfor-next&id=3D7721c2fd2668c751f9ba33b35db08b86293869e5
+  net/ipv4/tcp.c
 
--- Sebastian
+between commit:
 
-On Tue, Jun 09, 2020 at 01:22:36PM -0600, Tim Wawrzynczak wrote:
-> The Smart Battery Specification v1.1 defines Manufacture Date as one of
-> its availabe registers. This patch adds this as a property so that
-> power_supply drivers can support the property and report it in syfs.
->=20
-> Signed-off-by: Tim Wawrzynczak <twawrzynczak@chromium.org>
-> Change-Id: I90bf8c67b0cd531f2155404424a98302a1c931d6
-> ---
->  drivers/power/supply/power_supply_sysfs.c | 3 ++-
->  include/linux/power_supply.h              | 1 +
->  2 files changed, 3 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/su=
-pply/power_supply_sysfs.c
-> index f37ad4eae60b9..ac6d9992a8675 100644
-> --- a/drivers/power/supply/power_supply_sysfs.c
-> +++ b/drivers/power/supply/power_supply_sysfs.c
-> @@ -171,7 +171,7 @@ static ssize_t power_supply_show_property(struct devi=
-ce *dev,
->  		ret =3D sprintf(buf, "%s\n",
->  			      power_supply_scope_text[value.intval]);
->  		break;
-> -	case POWER_SUPPLY_PROP_MODEL_NAME ... POWER_SUPPLY_PROP_SERIAL_NUMBER:
-> +	case POWER_SUPPLY_PROP_MODEL_NAME ... POWER_SUPPLY_PROP_MANUFACTURE_DAT=
-E:
->  		ret =3D sprintf(buf, "%s\n", value.strval);
->  		break;
->  	default:
-> @@ -310,6 +310,7 @@ static struct device_attribute power_supply_attrs[] =
-=3D {
->  	POWER_SUPPLY_ATTR(model_name),
->  	POWER_SUPPLY_ATTR(manufacturer),
->  	POWER_SUPPLY_ATTR(serial_number),
-> +	POWER_SUPPLY_ATTR(manufacture_date),
->  };
-> =20
->  static struct attribute *
-> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-> index 28413f737e7d0..67839bb0a46b6 100644
-> --- a/include/linux/power_supply.h
-> +++ b/include/linux/power_supply.h
-> @@ -162,6 +162,7 @@ enum power_supply_property {
->  	POWER_SUPPLY_PROP_MODEL_NAME,
->  	POWER_SUPPLY_PROP_MANUFACTURER,
->  	POWER_SUPPLY_PROP_SERIAL_NUMBER,
-> +	POWER_SUPPLY_PROP_MANUFACTURE_DATE,
->  };
-> =20
->  enum power_supply_type {
-> --=20
-> 2.26.2
->=20
+  d8ed45c5dcd4 ("mmap locking API: use coccinelle to convert mmap_sem rwsem=
+ call sites")
 
---ciom6auqowqlhjxy
-Content-Type: application/pgp-signature; name="signature.asc"
+from Linus' tree and commit:
+
+  3763a24c727e ("net-zerocopy: use vm_insert_pages() for tcp rcv zerocopy")
+
+from the net tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc net/ipv4/tcp.c
+index 27716e4932bc,ecbba0abd3e5..000000000000
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@@ -1762,7 -1796,9 +1796,9 @@@ static int tcp_zerocopy_receive(struct=20
+ =20
+  	sock_rps_record_flow(sk);
+ =20
++ 	tp =3D tcp_sk(sk);
++=20
+ -	down_read(&current->mm->mmap_sem);
+ +	mmap_read_lock(current->mm);
+ =20
+  	vma =3D find_vma(current->mm, address);
+  	if (!vma || vma->vm_start > address || vma->vm_ops !=3D &tcp_vm_ops) {
+@@@ -1817,17 -1863,27 +1863,27 @@@
+  			zc->recv_skip_hint -=3D remaining;
+  			break;
+  		}
+- 		ret =3D vm_insert_page(vma, address + length,
+- 				     skb_frag_page(frags));
+- 		if (ret)
+- 			break;
++ 		pages[pg_idx] =3D skb_frag_page(frags);
++ 		pg_idx++;
+  		length +=3D PAGE_SIZE;
+- 		seq +=3D PAGE_SIZE;
+  		zc->recv_skip_hint -=3D PAGE_SIZE;
+  		frags++;
++ 		if (pg_idx =3D=3D PAGE_BATCH_SIZE) {
++ 			ret =3D tcp_zerocopy_vm_insert_batch(vma, pages, pg_idx,
++ 							   &curr_addr, &length,
++ 							   &seq, zc);
++ 			if (ret)
++ 				goto out;
++ 			pg_idx =3D 0;
++ 		}
++ 	}
++ 	if (pg_idx) {
++ 		ret =3D tcp_zerocopy_vm_insert_batch(vma, pages, pg_idx,
++ 						   &curr_addr, &length, &seq,
++ 						   zc);
+  	}
+  out:
+ -	up_read(&current->mm->mmap_sem);
+ +	mmap_read_unlock(current->mm);
+  	if (length) {
+  		WRITE_ONCE(tp->copied_seq, seq);
+  		tcp_rcv_space_adjust(sk);
+
+--Sig_/_WFzV36PO8JK65ZVN9wu=UP
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl7gG0EACgkQ2O7X88g7
-+ppQ4g//dQB8TDo07iqPKqWYIBEtudBFSEGIfdNJ8qceSbxjZqBzA2TeQFnlCf+o
-UUFCZzvnX3txGmL+TnPC8n9jshPoRegaqKl/3B8Bp/Aw0HAGXuLHb1uNSdS4M6hS
-HXegBG34ToRo7WRKg6lJSpn24PATTxM9vElfDjTey4CJMaO6QiQvvwHyS7tfLHv8
-IAPOGL+yKZ1ya1yfaEZxQTc1AVuo5rZMWpbOMSfpNWRY+nse6aeRLDRqP10cEtMb
-r5TcxVwHn84T9uewkhfyrgxHQrGe1B0u4s/Ia7quFauZTM08AUvdVYMbMJI/WZaD
-nRdzCLK8CQ6GjjKX7OP8/x6XZTr+ScBj8yniNVk0/0Y6WCXnFXCgS3enux1jX+DP
-bKgonJ3iIyV4Y5c8MPtgq8exeKnOOpDdennqFzACp1j/MPvGMkkpeoNHbul3VkpU
-ibFX1hRshlqLKBIxckmLw6LM2aXJ7o0VbBKTmycBxCMBueffL/XqfDJ0J/PR/DS1
-EMYXj/DTXWPmlaaAhtrIl4rXXXBDj0Rri99N3lkGTtedFALCafTIq/NJlc0XxkNm
-9ysZp2izumrGFHapeSZGZudb1izlm38GKZ6OEdBvpRp+ojwycTlaIijjaGEpzvg6
-jSS/gn0Za62l2cU0iByXeX8w2PMvwHvDD/krEtFAsHW51yaIM+Y=
-=1Muu
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7gG4QACgkQAVBC80lX
+0GyCnwf6ApvtS2bOp659IILBedqzBUQSqVTYXYtsSNhbQclLg3tUdHFHmrPYRDVE
+Ki/w1uhDK9vG0ZzZnLselpQDcDI0acNEb2RZ8Y4CjCQHqB+QmSHoEvAzEJGn/YUg
+DQLHLzKCWftRf555QJfBzm8vk+jZIzE6v0k6BsMfLLRdGLDX68dQ6w0/SyN9Ex1I
+M1cvRqSSrIvHQdkl3y4BgTuC1DXOiFD3k2xMtwgGZUQ4N1oY7zyOcl6aydoJO4X7
+wTAQXNdAWRWrMISkTE2zd9ziWyNYu3xuqQIRAGuczq0VzvsPjjFrRXWRa9HRCOeo
+YLV7f8coF9/mtZnyw/BYv1pq175lZw==
+=x2XT
 -----END PGP SIGNATURE-----
 
---ciom6auqowqlhjxy--
+--Sig_/_WFzV36PO8JK65ZVN9wu=UP--
