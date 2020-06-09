@@ -2,288 +2,246 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E40C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4179FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:24:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CE432078D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:23:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13217206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:24:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="fVr48oYR"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BckdTNi0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730553AbgFIOX4 (ORCPT
+        id S1730559AbgFIOY1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 10:23:56 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:8246 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726967AbgFIOXz (ORCPT
+        Tue, 9 Jun 2020 10:24:27 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:28625 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728601AbgFIOY0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 10:23:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1591712633; x=1623248633;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=lkv2Bo/3IctZrTSbBNlygdbTcIm2Ki8g0wDs1n3f3dA=;
-  b=fVr48oYRUR9adz9nOhqEvhHSKXL6RhxTM0EkXMSK/WwSz5Qv2FIJmSWF
-   EgJ2Fm3OrfB5B+cOvdIWOvrsd5Luabls41QhJZsmN9cIFZkxZoj59HPKv
-   SSId8p3YvqZIgk2Dctk7ZspX1YjYxdSYH7yts3iUBaQJ1AzKP257TBJDD
-   M=;
-IronPort-SDR: IB/F3te4GXNvy+j70MRkn080NGUmhRMc/djYPyReE4xxnzLFX3xRgopWCk5dRynwpdPzUePJjg
- tsJlLYjU0ivg==
-X-IronPort-AV: E=Sophos;i="5.73,492,1583193600"; 
-   d="scan'208";a="35297925"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1d-98acfc19.us-east-1.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 09 Jun 2020 14:23:52 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-98acfc19.us-east-1.amazon.com (Postfix) with ESMTPS id 3CCF6A07FF;
-        Tue,  9 Jun 2020 14:23:40 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 9 Jun 2020 14:23:40 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.109) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 9 Jun 2020 14:23:24 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
-        <foersleo@amazon.de>, <irogers@google.com>, <jolsa@redhat.com>,
-        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
-        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
-        <peterz@infradead.org>, <rdunlap@infradead.org>,
-        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
-        <sblbir@amazon.com>, <shakeelb@google.com>, <shuah@kernel.org>,
-        <sj38.park@gmail.com>, <snu@amazon.de>, <vbabka@suse.cz>,
-        <vdavydov.dev@gmail.com>, <yang.shi@linux.alibaba.com>,
-        <ying.huang@intel.com>, <david@redhat.com>,
-        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [RFC v3 10/10] Docs/damon: Document physical memory monitoring support
-Date:   Tue, 9 Jun 2020 16:19:41 +0200
-Message-ID: <20200609141941.19184-11-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200609141941.19184-1-sjpark@amazon.com>
-References: <20200609141941.19184-1-sjpark@amazon.com>
+        Tue, 9 Jun 2020 10:24:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591712663;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=RpR4db2BYUdmK1j0ocnwY36/XEkGSRK7q+SwrEA+exk=;
+        b=BckdTNi0bDdAQBu31/0MltqyZ0kQeTVs18KRHlDsAM0+RjpURrPfYk0Oqzn6fxKI/J1gG3
+        8hIpXJWg1Zyx5XpMhcYRcluXHwasKnmVdAB9Wl6U9e/jAZPRrqJvZ6KdkMfhwidkXaa+vX
+        jGSXsG+o+Xi6RVXBLiycKZqtisV1m4w=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-469-uXLG1sMLM4yasnAXztD_5w-1; Tue, 09 Jun 2020 10:24:11 -0400
+X-MC-Unique: uXLG1sMLM4yasnAXztD_5w-1
+Received: by mail-wr1-f71.google.com with SMTP id s7so8701770wrm.16
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 07:24:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=RpR4db2BYUdmK1j0ocnwY36/XEkGSRK7q+SwrEA+exk=;
+        b=takGA2eHr4BA+hAVsfMXYG7twCoqjg84O5SkkoZXUAXXHsepqGF5Z6eRszV91zpDHc
+         o6YVpp599E2+CVHminj/WAtx7GTHwfsRwRwh1EwxxhUmFSVDhZOam7pEI9YDEjaRvcFb
+         PsoXSzPk7UHBLecWkRLhGOuCKieQFRUsGMDACcHlyxk3JaZNTebGOmSdIew5/OHOv+Rv
+         XMhmhPNhUmqiKAl/c14Gd5jXjs6frEQnGaaMnDn2DOd8ZAvNOdyQdzFWtZzNCoZ9ZGPl
+         kaxrmGjyLCZ7Jnpy5LY1mFjmzjy82MMI9NVdxPK1AvQB1Ym860FbsIJbgmizUV0Tv+El
+         JHuQ==
+X-Gm-Message-State: AOAM531CPI+WOrvcnz/qnl6WxEKqsXEtFZsYUaB6OE8LztFg4Yfrw9Li
+        O8lckXkKHyaGe/+ESm8w1x0RKXJwlEoCMhjzyghlftfbmgZhr87Ev4mdz7k0q30dhJpOOxtvS6/
+        lPEI5efcIyghmJhcgk4wjgFR2
+X-Received: by 2002:adf:ed87:: with SMTP id c7mr4789073wro.108.1591712650531;
+        Tue, 09 Jun 2020 07:24:10 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw7k0clUUUuo0NQ83yaXJdGTvNwA1q+8Od/NT0+Gd4O+ygFtZPfo/lB99jWrl5o+uVeAv0zqQ==
+X-Received: by 2002:adf:ed87:: with SMTP id c7mr4789051wro.108.1591712650206;
+        Tue, 09 Jun 2020 07:24:10 -0700 (PDT)
+Received: from steredhat (host-79-49-207-108.retail.telecomitalia.it. [79.49.207.108])
+        by smtp.gmail.com with ESMTPSA id e12sm3613514wro.52.2020.06.09.07.24.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2020 07:24:09 -0700 (PDT)
+Date:   Tue, 9 Jun 2020 16:24:06 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Stefan Hajnoczi <stefanha@redhat.com>,
+        Jeff Moyer <jmoyer@redhat.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC] io_uring: add restrictions to support untrusted applications
+ and guests
+Message-ID: <20200609142406.upuwpfmgqjeji4lc@steredhat>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.162.109]
-X-ClientProxiedBy: EX13D30UWC004.ant.amazon.com (10.43.162.4) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+Hi Jens,
+Stefan and I have a proposal to share with io_uring community.
+Before implementing it we would like to discuss it to receive feedbacks and
+to see if it could be accepted:
 
-This commit adds description for the physical memory monitoring usage in
-the DAMON document.
+Adding restrictions to io_uring
+=====================================
+The io_uring API provides submission and completion queues for performing
+asynchronous I/O operations. The queues are located in memory that is
+accessible to both the host userspace application and the kernel, making it
+possible to monitor for activity through polling instead of system calls. This
+design offers good performance and this makes exposing io_uring to guests an
+attractive idea for improving I/O performance in virtualization.
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- Documentation/admin-guide/mm/damon/faq.rst    | 16 +++--
- Documentation/admin-guide/mm/damon/index.rst  |  1 -
- .../admin-guide/mm/damon/mechanisms.rst       |  4 +-
- Documentation/admin-guide/mm/damon/plans.rst  | 29 ---------
- Documentation/admin-guide/mm/damon/usage.rst  | 59 ++++++++++++++-----
- 5 files changed, 54 insertions(+), 55 deletions(-)
- delete mode 100644 Documentation/admin-guide/mm/damon/plans.rst
+PoC and preliminary benchmarks
+---------------------------
+We realized a PoC, using QEMU and virtio-blk device, to share io_uring
+CQ and SQ rings with the guest.
+QEMU initializes io_uring, registers the device (NVMe) fd through
+io_uring_register(2), and maps the rings in the guest memory.
+The virtio-blk driver uses these rings to send requests instead of using
+the standard virtqueues.
 
-diff --git a/Documentation/admin-guide/mm/damon/faq.rst b/Documentation/admin-guide/mm/damon/faq.rst
-index 02f7581b05f6..e9b69d1bf975 100644
---- a/Documentation/admin-guide/mm/damon/faq.rst
-+++ b/Documentation/admin-guide/mm/damon/faq.rst
-@@ -38,9 +38,13 @@ separate document, :doc:`guide`.  Please refer to that.
- Does DAMON support virtual memory only?
- ========================================
- 
--For now, yes.  But, DAMON will be able to support various address spaces
--including physical memory in near future.  An RFC patchset [1]_ for this
--extension is already available.  Please refer :doc:`plans` for detailed plan
--for this.
--
--.. [1] https://lore.kernel.org/linux-mm/20200409094232.29680-1-sjpark@amazon.com/
-+No.  DAMON supports the virtual memory address spaces and the physical memory
-+address space for now.  However, it can be extended to support any address
-+space, because the core logic of the DAMON can be configured with the low level
-+primitives for each address space.
-+
-+In other words, DAMON provides the reference implementations of the low level
-+primitives for the virtual memory address spaces and the physical memory
-+address spaces.  The programming interface users can further implement their
-+own low level primitives for their special use cases and configure those in
-+DAMON if they need.
-diff --git a/Documentation/admin-guide/mm/damon/index.rst b/Documentation/admin-guide/mm/damon/index.rst
-index 4d128e4fd9c8..7b2939d50408 100644
---- a/Documentation/admin-guide/mm/damon/index.rst
-+++ b/Documentation/admin-guide/mm/damon/index.rst
-@@ -33,4 +33,3 @@ optimizations of their systems.
-    faq
-    mechanisms
-    eval
--   plans
-diff --git a/Documentation/admin-guide/mm/damon/mechanisms.rst b/Documentation/admin-guide/mm/damon/mechanisms.rst
-index f0bc52c698a6..8a93a945cacf 100644
---- a/Documentation/admin-guide/mm/damon/mechanisms.rst
-+++ b/Documentation/admin-guide/mm/damon/mechanisms.rst
-@@ -76,9 +76,7 @@ keeping the bounds users set for their trade-off.
- Handling Virtual Memory Mappings
- ================================
- 
--This is for monitoring of virtual memory address space only.  It is the only
--one address space that supported by DAMON as of now, but other address spaces
--will be supported in the future.
-+This is for monitoring of virtual memory address space only.
- 
- Only small parts in the super-huge virtual address space of the processes are
- mapped to physical memory and accessed.  Thus, tracking the unmapped address
-diff --git a/Documentation/admin-guide/mm/damon/plans.rst b/Documentation/admin-guide/mm/damon/plans.rst
-deleted file mode 100644
-index 8eba8a1dcb98..000000000000
---- a/Documentation/admin-guide/mm/damon/plans.rst
-+++ /dev/null
-@@ -1,29 +0,0 @@
--.. SPDX-License-Identifier: GPL-2.0
--
--============
--Future Plans
--============
--
--DAMON is still on its early stage.  Below plans are still under development.
--
--
--Support Various Address Spaces
--==============================
--
--Currently, DAMON supports only virtual memory address spaces because it
--utilizes PTE Accessed bits as its low-level access check primitive and ``struct
--vma`` as a way to address the monitoring target regions.  However, the core
--idea of DAMON is in a separate higher layer.  Therefore, DAMON can support
--other various address spaces by changing the two low primitives to others for
--the address spaces.
--
--In the future, DAMON will make the lower level primitives configurable so that
--it can support various address spaces including physical memory.  The
--configuration will be highly flexible so that users can even implement the
--primitives by themselves for their special use cases.  Monitoring of
--clean/dirty/entire page cache, NUMA nodes, specific files, or block devices
--would be examples of such use cases.
--
--An RFC patchset for this plan is available [1]_.
--
--.. [1] https://lore.kernel.org/linux-mm/20200409094232.29680-1-sjpark@amazon.com/
-diff --git a/Documentation/admin-guide/mm/damon/usage.rst b/Documentation/admin-guide/mm/damon/usage.rst
-index f600366cdd4e..8942d09bfd49 100644
---- a/Documentation/admin-guide/mm/damon/usage.rst
-+++ b/Documentation/admin-guide/mm/damon/usage.rst
-@@ -58,9 +58,11 @@ Recording Data Access Pattern
- -----------------------------
- 
- The ``record`` subcommand records the data access pattern of target processes
--in a file (``./damon.data`` by default).  You can specify the target as either
--pid of running target or a command for execution of the process.  Below example
--shows a command target usage::
-+in a file (``./damon.data`` by default).  You can specify the target with 1)
-+the command for execution of the monitoring target process, 2) pid of running
-+target process, or 3) the special keyword, 'paddr', if you want to monitor the
-+system's physical memory address space.  Below example shows a command target
-+usage::
- 
-     # cd <kernel>/tools/damon/
-     # damo record "sleep 5"
-@@ -71,6 +73,15 @@ of the process.  Below example shows a pid target usage::
-     # sleep 5 &
-     # damo record `pidof sleep`
- 
-+Finally, below example shows the use of the special keyword, 'paddr'::
-+
-+    # damo record paddr
-+
-+In this case, the monitoring target regions defaults to the largetst 'System
-+RAM' region specified in '/proc/iomem' file.  Note that the initial monitoring
-+target region is maintained rather than dynamically updated like the virtual
-+memory address spaces monitoring mode.
-+
- You can tune this by setting the monitoring attributes and path to the record
- file using optional arguments to the subcommand.  To know about the monitoring
- attributes in detail, please refer to :doc:`mechanisms`.
-@@ -314,27 +325,42 @@ check it again::
- Target PIDs
- -----------
- 
--Users can get and set the pids of monitoring target processes by reading from
--and writing to the ``pids`` file.  For example, below commands set processes
--having pids 42 and 4242 as the processes to be monitored and check it again::
-+To monitor the virtual memory address spaces of specific processes, users can
-+get and set the pids of monitoring target processes by reading from and writing
-+to the ``pids`` file.  For example, below commands set processes having pids 42
-+and 4242 as the processes to be monitored and check it again::
- 
-     # cd <debugfs>/damon
-     # echo 42 4242 > pids
-     # cat pids
-     42 4242
- 
-+Users can also monitor the physical memory address space of the system by
-+writing a special keyword, "``paddr\n``" to the file.  In this case, reading the
-+file will show ``-1``, as below::
-+
-+    # cd <debugfs>/damon
-+    # echo paddr > pids
-+    # cat pids
-+    -1
-+
- Note that setting the pids doesn't start the monitoring.
- 
- 
- Initial Monitoring Target Regions
- ---------------------------------
- 
--DAMON automatically sets and updates the monitoring target regions so that
--entire memory mappings of target processes can be covered.  However, users
--might want to limit the monitoring region to specific address ranges, such as
--the heap, the stack, or specific file-mapped area.  Or, some users might know
--the initial access pattern of their workloads and therefore want to set optimal
--initial regions for the 'adaptive regions adjustment'.
-+In case of the virtual memory monitoring, DAMON automatically sets and updates
-+the monitoring target regions so that entire memory mappings of target
-+processes can be covered.  However, users might want to limit the monitoring
-+region to specific address ranges, such as the heap, the stack, or specific
-+file-mapped area.  Or, some users might know the initial access pattern of
-+their workloads and therefore want to set optimal initial regions for the
-+'adaptive regions adjustment'.
-+
-+In contrast, DAMON do not automatically sets and updates the monitoring target
-+regions in case of physical memory monitoring.  Therefore, users should set the
-+monitoring target regions by themselves.
- 
- In such cases, users can explicitly set the initial monitoring target regions
- as they want, by writing proper values to the ``init_regions`` file.  Each line
-@@ -354,10 +380,11 @@ region of process 42, and another couple of address ranges, ``20-40`` and
-             4242 20      40
-             4242 50      100" > init_regions
- 
--Note that this sets the initial monitoring target regions only.  DAMON will
--automatically updates the boundary of the regions after one ``regions update
--interval``.  Therefore, users should set the ``regions update interval`` large
--enough.
-+Note that this sets the initial monitoring target regions only.  In case of
-+virtual memory monitoring, DAMON will automatically updates the boundary of the
-+regions after one ``regions update interval``.  Therefore, users should set the
-+``regions update interval`` large enough in this case, if they don't want the
-+update.
- 
- 
- Record
--- 
-2.17.1
+The PoC implements a pure polling solution where the application is polling
+(IOPOLL enabled) in the guest and the sqpoll_kthread is polling in the host
+(SQPOLL and IOPOLL enabled).
+
+These are the encouraging results we obtained from this preliminary work;
+we used fio (rw=randread bs=4k) to measure the kIOPS on a NVMe device:
+
+- bare-metal
+                                                       iodepth
+  | fio ioengine                              |  1  |  8  |  16 |  32 |
+  |-------------------------------------------|----:|----:|----:|----:|
+  | io_uring (SQPOLL + IOPOLL)                | 119 | 550 | 581 | 585 |
+  | io_uring (IOPOLL)                         | 122 | 502 | 519 | 538 |
+
+- QEMU/KVM guest (aio=io_uring)
+                                                       iodepth
+  | virtio-blk            | fio ioengine      |  1  |  8  |  16 |  32 |
+  |-----------------------|-------------------|----:|----:|----:|----:|
+  | virtqueues            | io_uring (IOPOLL) |  27 | 144 | 209 | 266 |
+  | virtqueues + iothread | io_uring (IOPOLL) |  73 | 264 | 306 | 312 |
+  | io_uring passthrough  | io_uring (IOPOLL) | 104 | 532 | 577 | 585 |
+
+  All guest experiments are using the QEMU io_uring backend with SQPOLL and
+  IOPOLL enabled. The virtio-blk driver is modified to support blovk io_poll
+  on both virtqueues and io_uring passthrough.
+
+Before developing this proof-of-concept further we would like to discuss
+io_uring changes required to restrict rings since this mechanism is a
+prerequisite for real-world use cases where guests are untrusted.
+
+Restrictions
+------------
+This document proposes io_uring API changes that safely allow untrusted
+applications or guests to use io_uring. io_uring's existing security model is
+that of kernel system call handler code. It is designed to reject invalid
+inputs from host userspace applications. Supporting guests as io_uring API
+clients adds a new trust domain with access to even fewer resources than host
+userspace applications.
+
+Guests do not have direct access to host userspace application file descriptors
+or memory. The host userspace application, a Virtual Machine Monitor (VMM) such
+as QEMU, grants access to a subset of its file descriptors and memory. The
+allowed file descriptors are typically the disk image files belonging to the
+guest. The memory is typically the virtual machine's RAM that the VMM has
+allocated on behalf of the guest.
+
+The following extensions to the io_uring API allow the host application to
+grant access to some of its file descriptors.
+
+These extensions are designed to be applicable to other use cases besides
+untrusted guests and are not virtualization-specific. For example, the
+restrictions can be used to allow only a subset of sqe operations available to
+an application similar to seccomp syscall whitelisting.
+
+An address translation and memory restriction mechanism would also be
+necessary, but we can discuss this later.
+
+The IOURING_REGISTER_RESTRICTIONS opcode
+----------------------------------------
+The new io_uring_register(2) IOURING_REGISTER_RESTRICTIONS opcode permanently
+installs a feature whitelist on an io_ring_ctx. The io_ring_ctx can then be
+passed to untrusted code with the knowledge that only operations present in the
+whitelist can be executed.
+
+The whitelist approach ensures that new features added to io_uring do not
+accidentally become available when an existing application is launched on a
+newer kernel version.
+
+The IORING_REGISTER_RESTRICTIONS opcode takes an array of struct
+io_uring_restriction elements that describe whitelisted features:
+
+  #define IORING_REGISTER_RESTRICTIONS 11
+
+  /* struct io_uring_restriction::opcode values */
+  enum {
+      /* Allow an io_uring_register(2) opcode */
+      IORING_RESTRICTION_REGISTER_OP,
+
+      /* Allow an sqe opcode */
+      IORING_RESTRICTION_SQE_OP,
+
+      /* Only allow fixed files */
+      IORING_RESTRICTION_FIXED_FILES_ONLY,
+
+      /* Only allow registered addresses and translate them */
+      IORING_RESTRICTION_BUFFER_CHECK
+  };
+
+  struct io_uring_restriction {
+      __u16 opcode;
+      union {
+          __u8 register_op; /* IORING_RESTRICTION_REGISTER_OP */
+          __u8 sqe_op;      /* IORING_RESTRICTION_SQE_OP */
+      };
+      __u8 resv;
+      __u32 resv2[3];
+  };
+
+This call can only be made once. Afterwards it is not possible to change
+restrictions anymore. This prevents untrusted code from removing restrictions.
+
+Limiting access to io_uring operations
+--------------------------------------
+The following example shows how to whitelist IORING_OP_READV, IORING_OP_WRITEV,
+and IORING_OP_FSYNC:
+
+  struct io_uring_restriction restrictions[] = {
+      {
+          .opcode = IORING_RESTRICTION_SQE_OP,
+          .sqe_op = IORING_OP_READV,
+      },
+      {
+          .opcode = IORING_RESTRICTION_SQE_OP,
+          .sqe_op = IORING_OP_WRITEV,
+      },
+      {
+          .opcode = IORING_RESTRICTION_SQE_OP,
+          .sqe_op = IORING_OP_FSYNC,
+      },
+      ...
+  };
+
+  io_uring_register(ringfd, IORING_REGISTER_RESTRICTIONS,
+                    restrictions, ARRAY_SIZE(restrictions));
+
+Limiting access to file descriptors
+-----------------------------------
+The fixed files mechanism can be used to limit access to a set of file
+descriptors:
+
+  struct io_uring_restriction restrictions[] = {
+      {
+          .opcode = IORING_RESTRICTION_FIXED_FILES_ONLY,
+      },
+      ...
+  };
+
+  io_uring_register(ringfd, IORING_REGISTER_RESTRICTIONS,
+                    restrictions, ARRAY_SIZE(restrictions));
+
+Only requests with the sqe->flags IOSQE_FIXED_FILE bit set will be allowed.
+
+
+Thanks for your feedback,
+Stefano
 
