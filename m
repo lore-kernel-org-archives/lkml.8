@@ -2,104 +2,82 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E5AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 23:22:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A68EBC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 23:23:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54FBC2067B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 23:22:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8488A2067B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 23:23:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725927AbgFIXWF (ORCPT
+        id S1725985AbgFIXXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 19:22:05 -0400
-Received: from www62.your-server.de ([213.133.104.62]:56018 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725468AbgFIXWE (ORCPT
+        Tue, 9 Jun 2020 19:23:02 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:38214 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725468AbgFIXXB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 19:22:04 -0400
-Received: from sslproxy05.your-server.de ([78.46.172.2])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jinZ8-0008AV-RG; Wed, 10 Jun 2020 01:21:58 +0200
-Received: from [178.196.57.75] (helo=pc-9.home)
-        by sslproxy05.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jinZ8-000KbJ-FH; Wed, 10 Jun 2020 01:21:58 +0200
-Subject: Re: [PATCH] libbpf: Define __WORDSIZE if not available
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Ian Rogers <irogers@google.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Pekka Enberg <penberg@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Irina Tirdea <irina.tirdea@intel.com>,
-        bpf <bpf@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200608161150.GA3073@kernel.org>
- <CAEf4BzbEcV6YaezP4yY8J=kYSBhh0cRHCvgCUe9xvB12mF08qg@mail.gmail.com>
- <20200609153445.GF24868@kernel.org>
- <d8baea0a-7358-a15b-38e5-850e84eae702@iogearbox.net>
- <20200609211653.GI24868@kernel.org>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <6b2630e7-ac41-b6d4-9e6a-41db717d1b29@iogearbox.net>
-Date:   Wed, 10 Jun 2020 01:21:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 9 Jun 2020 19:23:01 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jina5-0005EV-L6; Tue, 09 Jun 2020 23:22:57 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] NFS: remove redundant pointer clnt
+Date:   Wed, 10 Jun 2020 00:22:57 +0100
+Message-Id: <20200609232257.1118354-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.27.0.rc0
 MIME-Version: 1.0
-In-Reply-To: <20200609211653.GI24868@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.102.3/25838/Tue Jun  9 14:50:43 2020)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/9/20 11:16 PM, Arnaldo Carvalho de Melo wrote:
-> Em Tue, Jun 09, 2020 at 10:37:48PM +0200, Daniel Borkmann escreveu:
->> Hey Arnaldo,
->>
->> On 6/9/20 5:34 PM, Arnaldo Carvalho de Melo wrote:
->>> Some systems, such as Android, don't have a define for __WORDSIZE, do it
->>> in terms of __SIZEOF_LONG__, as done in perf since 2012:
->>>
->>>     http://git.kernel.org/torvalds/c/3f34f6c0233ae055b5
->>>
->>> For reference: https://gcc.gnu.org/onlinedocs/cpp/Common-Predefined-Macros.html
->>>
->>> I build tested it here and Andrii did some Travis CI build tests too.
->>>
->>> Acked-by: Andrii Nakryiko <andriin@fb.com>
->>> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
->>
->> Diff missing?
-> 
-> Oh well, sorry about that, EBADCOFFEE or something:
-> 
-> From: Arnaldo Carvalho de Melo <acme@kernel.org>
-> 
-> Some systems, such as Android, don't have a define for __WORDSIZE, do it
-> in terms of __SIZEOF_LONG__, as done in perf since 2012:
-> 
->     http://git.kernel.org/torvalds/c/3f34f6c0233ae055b5
-> 
-> For reference: https://gcc.gnu.org/onlinedocs/cpp/Common-Predefined-Macros.html
-> 
-> I build tested it here and Andrii did some Travis CI build tests too.
-> 
-> Acked-by: Andrii Nakryiko <andriin@fb.com>
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-[...]
+From: Colin Ian King <colin.king@canonical.com>
 
-Applied, thanks!
+The pointer clnt is being initialized with a value that is never
+read and so this is assignment redundant and can be removed. The
+pointer can removed because it is being used as a temporary
+variable and it is clearer to make the direct assignment and remove
+it completely.
+
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ fs/nfs/nfs4proc.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index e32717fd1169..7a56e2ab473b 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -9518,7 +9518,6 @@ _nfs41_proc_secinfo_no_name(struct nfs_server *server, struct nfs_fh *fhandle,
+ 		.rpc_argp = &args,
+ 		.rpc_resp = &res,
+ 	};
+-	struct rpc_clnt *clnt = server->client;
+ 	struct nfs4_call_sync_data data = {
+ 		.seq_server = server,
+ 		.seq_args = &args.seq_args,
+@@ -9535,8 +9534,7 @@ _nfs41_proc_secinfo_no_name(struct nfs_server *server, struct nfs_fh *fhandle,
+ 	int status;
+ 
+ 	if (use_integrity) {
+-		clnt = server->nfs_client->cl_rpcclient;
+-		task_setup.rpc_client = clnt;
++		task_setup.rpc_client = server->nfs_client->cl_rpcclient;
+ 
+ 		cred = nfs4_get_clid_cred(server->nfs_client);
+ 		msg.rpc_cred = cred;
+-- 
+2.27.0.rc0
+
