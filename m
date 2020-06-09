@@ -2,28 +2,31 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B040C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8872CC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:21:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 884C72068D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:21:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 724272068D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:21:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388997AbgFISVf (ORCPT
+        id S2389004AbgFISVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:21:35 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:51740 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732339AbgFIRsh (ORCPT
+        Tue, 9 Jun 2020 14:21:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41168 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732338AbgFIRsg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:48:37 -0400
+        Tue, 9 Jun 2020 13:48:36 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D44E2C05BD1E;
+        Tue,  9 Jun 2020 10:48:35 -0700 (PDT)
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: aratiu)
-        with ESMTPSA id D6EA82A3BF5
+        with ESMTPSA id EE60D2A09BC
 From:   Adrian Ratiu <adrian.ratiu@collabora.com>
 To:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-rockchip@lists.infradead.org,
@@ -36,10 +39,11 @@ Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         Andrzej Hajda <a.hajda@samsung.com>,
         Jonas Karlman <jonas@kwiboo.se>, linux-imx@nxp.com,
         kernel@collabora.com, linux-stm32@st-md-mailman.stormreply.com,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: [PATCH v9 04/11] drm: bridge: dw_mipi_dsi: remove bind/unbind API
-Date:   Tue,  9 Jun 2020 20:49:52 +0300
-Message-Id: <20200609174959.955926-5-adrian.ratiu@collabora.com>
+        Adrian Pop <pop.adrian61@gmail.com>,
+        Arnaud Ferraris <arnaud.ferraris@collabora.com>
+Subject: [PATCH v9 03/11] drm: bridge: dw_mipi_dsi: add dsi v1.01 support
+Date:   Tue,  9 Jun 2020 20:49:51 +0300
+Message-Id: <20200609174959.955926-4-adrian.ratiu@collabora.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174959.955926-1-adrian.ratiu@collabora.com>
 References: <20200609174959.955926-1-adrian.ratiu@collabora.com>
@@ -50,96 +54,245 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The DW mipi-dsi bind/unbind API was only used to attach the bridge to
-the encoder in the Rockchip driver, but with the addition of i.MX6 it
-gets more complicated because the i.MX6 part of the bridge is another
-bridge in itself which needs to daisy chain to the dw-mipi-dsi core.
+The Synopsis MIPI DSI v1.01 host controller is quite widely used
+on platforms like i.mx6 and is not very different from the other
+versions like the 1.31/1.30 used on rockchip/stm. The protocols
+appear to be the same, only the register layout is different and
+the newer versions have new features symbolized by new registers
+so adding support for it is just a matter of defining the new
+layout and adding a couple of dsi version checks.
 
-So, instead of extending this API to allow daisy-chaining bridges and
-risk having trouble with multiple connectors added by various bridges
-just delete it and let the DW core bridge be accesed by SoC-specific
-parts via the of_drm_find_bridge() API.
-
-This just fixes the Rockchip driver for the bind() deprecation, it
-doesn't convert it to a proper bridge daisy-chain with simple encoder
-and bridge .attach call-backs, that refactoring work should be done
-separately (and the i.MX6 driver can be used as reference).
-
-Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Tested-by: Adrian Pop <pop.adrian61@gmail.com>
+Tested-by: Arnaud Ferraris <arnaud.ferraris@collabora.com>
 Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
 ---
-New in v9.
+Changes since v7:
+  - Minor commit msg rewording for consistency
+
+Changes since v5:
+  - Fixed cfg_phy_status range from [0,0] to [0,2]
+
+New in v5.
 ---
- drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 22 -------------------
- .../gpu/drm/rockchip/dw-mipi-dsi-rockchip.c   |  7 +++---
- 2 files changed, 3 insertions(+), 26 deletions(-)
+ drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 125 +++++++++++++++++-
+ 1 file changed, 119 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
-index 16fd87055e7b7..70df0578cbe7b 100644
+index f453df4eb5072..16fd87055e7b7 100644
 --- a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
 +++ b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
-@@ -1453,28 +1453,6 @@ void dw_mipi_dsi_remove(struct dw_mipi_dsi *dsi)
- }
- EXPORT_SYMBOL_GPL(dw_mipi_dsi_remove);
+@@ -32,6 +32,7 @@
  
--/*
-- * Bind/unbind API, used from platforms based on the component framework.
-- */
--int dw_mipi_dsi_bind(struct dw_mipi_dsi *dsi, struct drm_encoder *encoder)
--{
--	int ret;
--
--	ret = drm_bridge_attach(encoder, &dsi->bridge, NULL, 0);
--	if (ret) {
--		DRM_ERROR("Failed to initialize bridge with drm\n");
--		return ret;
--	}
--
--	return ret;
--}
--EXPORT_SYMBOL_GPL(dw_mipi_dsi_bind);
--
--void dw_mipi_dsi_unbind(struct dw_mipi_dsi *dsi)
--{
--}
--EXPORT_SYMBOL_GPL(dw_mipi_dsi_unbind);
--
- MODULE_AUTHOR("Chris Zhong <zyw@rock-chips.com>");
- MODULE_AUTHOR("Philippe Cornu <philippe.cornu@st.com>");
- MODULE_DESCRIPTION("DW MIPI DSI host controller driver");
-diff --git a/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c b/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c
-index 3feff0c45b3f7..86f87c7ea03cf 100644
---- a/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c
-+++ b/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c
-@@ -876,6 +876,7 @@ static int dw_mipi_dsi_rockchip_bind(struct device *dev,
- {
- 	struct dw_mipi_dsi_rockchip *dsi = dev_get_drvdata(dev);
- 	struct drm_device *drm_dev = data;
-+	struct drm_bridge *dw_bridge = of_drm_find_bridge(dev->of_node);
- 	struct device *second;
- 	bool master1, master2;
- 	int ret;
-@@ -929,9 +930,9 @@ static int dw_mipi_dsi_rockchip_bind(struct device *dev,
- 		return ret;
+ #define HWVER_131			0x31333100	/* IP version 1.31 */
+ #define HWVER_130			0x31333000	/* IP version 1.30 */
++#define HWVER_101			0x31303000	/* IP version 1.01 */
+ 
+ #define DSI_VERSION			0x00
+ #define VERSION				GENMASK(31, 8)
+@@ -100,6 +101,25 @@
+ #define DSI_EDPI_CMD_SIZE		0x64
+ 
+ #define DSI_CMD_MODE_CFG		0x68
++
++#define DSI_DPI_CFG			0x0c
++#define DSI_TMR_LINE_CFG		0x28
++#define DSI_VTIMING_CFG			0x2c
++#define DSI_PHY_TMR_CFG_V101		0x30
++#define DSI_PHY_IF_CFG_V101		0x58
++#define DSI_PHY_IF_CTRL			0x5c
++#define DSI_PHY_RSTZ_V101		0x54
++#define DSI_PHY_STATUS_V101		0x60
++#define DSI_PHY_TST_CTRL0_V101		0x64
++#define DSI_GEN_HDR_V101		0x34
++#define DSI_GEN_PLD_DATA_V101		0x38
++#define DSI_CMD_MODE_CFG_V101		0x24
++#define DSI_CMD_PKT_STATUS_V101		0x3c
++#define DSI_VID_PKT_CFG			0x20
++#define DSI_VID_MODE_CFG_V101		0x1c
++#define DSI_TO_CNT_CFG_V101		0x40
++#define DSI_PCKHDL_CFG_V101		0x18
++
+ #define MAX_RD_PKT_SIZE_LP		BIT(24)
+ #define DCS_LW_TX_LP			BIT(19)
+ #define DCS_SR_0P_TX_LP			BIT(18)
+@@ -127,6 +147,33 @@
+ 					 GEN_SW_1P_TX_LP | \
+ 					 GEN_SW_0P_TX_LP)
+ 
++#define EN_TEAR_FX_V101			BIT(14)
++#define DCS_LW_TX_LP_V101		BIT(12)
++#define GEN_LW_TX_LP_V101		BIT(11)
++#define MAX_RD_PKT_SIZE_LP_V101		BIT(10)
++#define DCS_SW_2P_TX_LP_V101		BIT(9)
++#define DCS_SW_1P_TX_LP_V101		BIT(8)
++#define DCS_SW_0P_TX_LP_V101		BIT(7)
++#define GEN_SR_2P_TX_LP_V101		BIT(6)
++#define GEN_SR_1P_TX_LP_V101		BIT(5)
++#define GEN_SR_0P_TX_LP_V101		BIT(4)
++#define GEN_SW_2P_TX_LP_V101		BIT(3)
++#define GEN_SW_1P_TX_LP_V101		BIT(2)
++#define GEN_SW_0P_TX_LP_V101		BIT(1)
++
++#define CMD_MODE_ALL_LP_V101		(DCS_LW_TX_LP_V101 | \
++					 GEN_LW_TX_LP_V101 | \
++					 MAX_RD_PKT_SIZE_LP_V101 | \
++					 DCS_SW_2P_TX_LP_V101 | \
++					 DCS_SW_1P_TX_LP_V101 | \
++					 DCS_SW_0P_TX_LP_V101 | \
++					 GEN_SR_2P_TX_LP_V101 | \
++					 GEN_SR_1P_TX_LP_V101 | \
++					 GEN_SR_0P_TX_LP_V101 | \
++					 GEN_SW_2P_TX_LP_V101 | \
++					 GEN_SW_1P_TX_LP_V101 | \
++					 GEN_SW_0P_TX_LP_V101)
++
+ #define DSI_GEN_HDR			0x6c
+ #define DSI_GEN_PLD_DATA		0x70
+ 
+@@ -165,6 +212,11 @@
+ #define DSI_INT_MSK0			0xc4
+ #define DSI_INT_MSK1			0xc8
+ 
++#define DSI_ERROR_ST0_V101		0x44
++#define DSI_ERROR_ST1_V101		0x48
++#define DSI_ERROR_MSK0_V101		0x4c
++#define DSI_ERROR_MSK1_V101		0x50
++
+ #define DSI_PHY_TMR_RD_CFG		0xf4
+ 
+ #define PHY_STATUS_TIMEOUT_US		10000
+@@ -359,6 +411,49 @@ static const struct dw_mipi_dsi_variant dw_mipi_dsi_v130_v131_layout = {
+ 	.cfg_gen_payload =		REG_FIELD(DSI_GEN_PLD_DATA, 0, 31),
+ };
+ 
++static const struct dw_mipi_dsi_variant dw_mipi_dsi_v101_layout = {
++	.cfg_dpi_vid =			REG_FIELD(DSI_DPI_CFG, 0, 1),
++	.cfg_dpi_color_coding =		REG_FIELD(DSI_DPI_CFG, 2, 4),
++	.cfg_dpi_18loosely_en =		REG_FIELD(DSI_DPI_CFG, 10, 10),
++	.cfg_dpi_vsync_active_low =	REG_FIELD(DSI_DPI_CFG, 6, 6),
++	.cfg_dpi_hsync_active_low =	REG_FIELD(DSI_DPI_CFG, 7, 7),
++	.cfg_cmd_mode_en =		REG_FIELD(DSI_CMD_MODE_CFG_V101, 0, 0),
++	.cfg_cmd_mode_all_lp_en =	REG_FIELD(DSI_CMD_MODE_CFG_V101, 1, 12),
++	.cfg_cmd_mode_ack_rqst_en =	REG_FIELD(DSI_CMD_MODE_CFG_V101, 13, 13),
++	.cfg_cmd_pkt_status =		REG_FIELD(DSI_CMD_PKT_STATUS_V101, 0, 14),
++	.cfg_vid_mode_en =		REG_FIELD(DSI_VID_MODE_CFG_V101, 0, 0),
++	.cfg_vid_mode_type =		REG_FIELD(DSI_VID_MODE_CFG_V101, 1, 2),
++	.cfg_vid_mode_low_power =	REG_FIELD(DSI_VID_MODE_CFG_V101, 3, 8),
++	.cfg_vid_pkt_size =		REG_FIELD(DSI_VID_PKT_CFG, 0, 10),
++	.cfg_vid_hsa_time =		REG_FIELD(DSI_TMR_LINE_CFG, 0, 8),
++	.cfg_vid_hbp_time =		REG_FIELD(DSI_TMR_LINE_CFG, 9, 17),
++	.cfg_vid_hline_time =		REG_FIELD(DSI_TMR_LINE_CFG, 18, 31),
++	.cfg_vid_vsa_time =		REG_FIELD(DSI_VTIMING_CFG, 0, 3),
++	.cfg_vid_vbp_time =		REG_FIELD(DSI_VTIMING_CFG, 4, 9),
++	.cfg_vid_vfp_time =		REG_FIELD(DSI_VTIMING_CFG, 10, 15),
++	.cfg_vid_vactive_time =		REG_FIELD(DSI_VTIMING_CFG, 16, 26),
++	.cfg_phy_txrequestclkhs =	REG_FIELD(DSI_PHY_IF_CTRL, 0, 0),
++	.cfg_phy_bta_time =		REG_FIELD(DSI_PHY_TMR_CFG_V101, 0, 11),
++	.cfg_phy_lp2hs_time =		REG_FIELD(DSI_PHY_TMR_CFG_V101, 12, 19),
++	.cfg_phy_hs2lp_time =		REG_FIELD(DSI_PHY_TMR_CFG_V101, 20, 27),
++	.cfg_phy_testclr =		REG_FIELD(DSI_PHY_TST_CTRL0_V101, 0, 0),
++	.cfg_phy_unshutdownz =		REG_FIELD(DSI_PHY_RSTZ_V101, 0, 0),
++	.cfg_phy_unrstz =		REG_FIELD(DSI_PHY_RSTZ_V101, 1, 1),
++	.cfg_phy_enableclk =		REG_FIELD(DSI_PHY_RSTZ_V101, 2, 2),
++	.cfg_phy_nlanes =		REG_FIELD(DSI_PHY_IF_CFG_V101, 0, 1),
++	.cfg_phy_stop_wait_time =	REG_FIELD(DSI_PHY_IF_CFG_V101, 2, 9),
++	.cfg_phy_status =		REG_FIELD(DSI_PHY_STATUS_V101, 0, 2),
++	.cfg_pckhdl_cfg =		REG_FIELD(DSI_PCKHDL_CFG_V101, 0, 4),
++	.cfg_hstx_timeout_counter =	REG_FIELD(DSI_TO_CNT_CFG_V101, 0, 15),
++	.cfg_lprx_timeout_counter =	REG_FIELD(DSI_TO_CNT_CFG_V101, 16, 31),
++	.cfg_int_stat0 =		REG_FIELD(DSI_ERROR_ST0_V101, 0, 20),
++	.cfg_int_stat1 =		REG_FIELD(DSI_ERROR_ST1_V101, 0, 17),
++	.cfg_int_mask0 =		REG_FIELD(DSI_ERROR_MSK0_V101, 0, 20),
++	.cfg_int_mask1 =		REG_FIELD(DSI_ERROR_MSK1_V101, 0, 17),
++	.cfg_gen_hdr =			REG_FIELD(DSI_GEN_HDR_V101, 0, 31),
++	.cfg_gen_payload =		REG_FIELD(DSI_GEN_PLD_DATA_V101, 0, 31),
++};
++
+ /*
+  * Check if either a link to a master or slave is present
+  */
+@@ -466,6 +561,9 @@ static void dw_mipi_message_config(struct dw_mipi_dsi *dsi,
+ 	case HWVER_131:
+ 		cmd_mode_lp = CMD_MODE_ALL_LP;
+ 		break;
++	case HWVER_101:
++		cmd_mode_lp = CMD_MODE_ALL_LP_V101;
++		break;
  	}
  
--	ret = dw_mipi_dsi_bind(dsi->dmd, &dsi->encoder);
-+	ret = drm_bridge_attach(&dsi->encoder, dw_bridge, NULL, 0);
- 	if (ret) {
--		DRM_DEV_ERROR(dev, "Failed to bind: %d\n", ret);
-+		DRM_DEV_ERROR(dev, "Failed to attach DW DSI bridge: %d\n", ret);
- 		return ret;
+ 	if (msg->flags & MIPI_DSI_MSG_REQ_ACK)
+@@ -644,7 +742,7 @@ static void dw_mipi_dsi_video_mode_config(struct dw_mipi_dsi *dsi)
+ 				   VID_MODE_TYPE_NON_BURST_SYNC_EVENTS);
+ 
+ #ifdef CONFIG_DEBUG_FS
+-	if (dsi->vpg) {
++	if (dsi->hw_version > HWVER_101 && dsi->vpg) {
+ 		regmap_field_write(dsi->field_vid_mode_vpg_en, 1);
+ 		regmap_field_write(dsi->field_vid_mode_vpg_horiz,
+ 				   dsi->vpg_horizontal ? 1 : 0);
+@@ -662,9 +760,15 @@ static void dw_mipi_dsi_set_mode(struct dw_mipi_dsi *dsi,
+ 
+ 		dw_mipi_dsi_video_mode_config(dsi);
+ 
++		if (dsi->hw_version == HWVER_101)
++			regmap_field_write(dsi->field_vid_mode_en, 1);
++
+ 		regmap_field_write(dsi->field_phy_txrequestclkhs, 1);
+ 	} else {
+ 		regmap_field_write(dsi->field_cmd_mode_en, 1);
++
++		if (dsi->hw_version == HWVER_101)
++			regmap_field_write(dsi->field_vid_mode_en, 0);
  	}
  
-@@ -947,8 +948,6 @@ static void dw_mipi_dsi_rockchip_unbind(struct device *dev,
- 	if (dsi->is_slave)
- 		return;
+ 	regmap_write(dsi->regs, DSI_PWR_UP, POWERUP);
+@@ -856,9 +960,13 @@ static void dw_mipi_dsi_dphy_timing_config(struct dw_mipi_dsi *dsi)
+ 	regmap_field_write(dsi->field_phy_lp2hs_time, timing.data_lp2hs);
+ 	regmap_field_write(dsi->field_phy_hs2lp_time, timing.data_hs2lp);
  
--	dw_mipi_dsi_unbind(dsi->dmd);
--
- 	clk_disable_unprepare(dsi->pllref_clk);
+-	regmap_field_write(dsi->field_phy_max_rd_time, 10000);
+-	regmap_field_write(dsi->field_phy_clkhs2lp_time, timing.clk_hs2lp);
+-	regmap_field_write(dsi->field_phy_clklp2hs_time, timing.clk_lp2hs);
++	if (dsi->hw_version > HWVER_101) {
++		regmap_field_write(dsi->field_phy_max_rd_time, 10000);
++		regmap_field_write(dsi->field_phy_clkhs2lp_time,
++				   timing.clk_hs2lp);
++		regmap_field_write(dsi->field_phy_clklp2hs_time,
++				   timing.clk_lp2hs);
++	}
  }
  
+ static void dw_mipi_dsi_dphy_interface_config(struct dw_mipi_dsi *dsi)
+@@ -879,7 +987,8 @@ static void dw_mipi_dsi_dphy_init(struct dw_mipi_dsi *dsi)
+ 	regmap_field_write(dsi->field_phy_unrstz, 0);
+ 	regmap_field_write(dsi->field_phy_unshutdownz, 0);
+ 
+-	regmap_field_write(dsi->field_phy_forcepll, 0);
++	if (dsi->hw_version > HWVER_101)
++		regmap_field_write(dsi->field_phy_forcepll, 0);
+ 
+ 	regmap_field_write(dsi->field_phy_testclr, 0);
+ 	regmap_field_write(dsi->field_phy_testclr, 1);
+@@ -895,7 +1004,8 @@ static void dw_mipi_dsi_dphy_enable(struct dw_mipi_dsi *dsi)
+ 	regmap_field_write(dsi->field_phy_unrstz, 1);
+ 	regmap_field_write(dsi->field_phy_unshutdownz, 1);
+ 
+-	regmap_field_write(dsi->field_phy_forcepll, 1);
++	if (dsi->hw_version > HWVER_101)
++		regmap_field_write(dsi->field_phy_forcepll, 1);
+ 
+ 	ret = regmap_field_read_poll_timeout(dsi->field_phy_status,
+ 					     val, val & PHY_LOCK,
+@@ -1132,6 +1242,9 @@ static int dw_mipi_dsi_regmap_fields_init(struct dw_mipi_dsi *dsi)
+ 	case HWVER_131:
+ 		variant = &dw_mipi_dsi_v130_v131_layout;
+ 		break;
++	case HWVER_101:
++		variant = &dw_mipi_dsi_v101_layout;
++		break;
+ 	default:
+ 		DRM_ERROR("Unrecognized DSI host controller HW revision\n");
+ 		return -ENODEV;
 -- 
 2.27.0
 
