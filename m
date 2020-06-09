@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D35C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:01:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10306C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82F0F20734
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:01:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE4E720734
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:02:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725719;
-	bh=9QiSaFPCF+LjbweQTWvY4JtLf48Yd8AZc7D1koPx13M=;
+	s=default; t=1591725726;
+	bh=61wbgqZP6RiTlB2en8fs2oA+5228qjJ/z3HAiGnFn+A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a+EagxZD6ivN24U/bZrok3F3JX9OPImdk3M96QAb73chh/BPcvbWBt/WFN9Fv9wyB
-	 Qj1AsK3mZ3VWMuG3Rds26rwg2+zTlDvbMe4Fb0L5DKxckECHijb1459fZPEC2yjMpx
-	 G1dQ9yQ59CziiXhXwCU7CFDDDdBX3Q8VS/5a9oGM=
+	b=UF59NHMYQefcRVLP6Elc9Pe54NSirEtvR2Y8YQ5emnBB/399M1BQfyB+tjA8hE+zl
+	 M7P2d+XWMfrruerKIKpdMYv2j9r/lAk7jcO4NS6NmH+cBq1Yjo2P+/g51ysnQEiYJF
+	 dfF2n5CWIWysWJ3VRVh0jHnKjsowbO3qmpNKGAMU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732513AbgFISB6 (ORCPT
+        id S2387837AbgFISCF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:01:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45192 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 14:02:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733050AbgFIRxx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:53:53 -0400
+        id S1731696AbgFIRxs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:53:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3299F20734;
-        Tue,  9 Jun 2020 17:53:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A926C20734;
+        Tue,  9 Jun 2020 17:53:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725232;
-        bh=9QiSaFPCF+LjbweQTWvY4JtLf48Yd8AZc7D1koPx13M=;
+        s=default; t=1591725228;
+        bh=61wbgqZP6RiTlB2en8fs2oA+5228qjJ/z3HAiGnFn+A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KTfcrRVN+Q4ElyHH+62b5l9J2IzMldIdirPp5+FZ6K+2FeD8llzJygHBAwpP1oJxa
-         A9fha9y6+ihvsuOzdXV2CUZ922vzuegk9gNYk4JX1/1w3iqNDTtfcxTnOfUXwLmEPD
-         8uknm97IvXwXD3ELlgLPYLBtaM7wVn/8C6iAoOfw=
+        b=BLpXqw6FgWG9zguQeLFPFMxGiubI9Ekaxza42YwjMI5++wa8JUAlGTkogbuNaURgq
+         ZYWV37MuhKiDcLsT783n0TK6A3yyLM1FmQEEjU5NtxDge/tFCPK7TRNElmJLQbJg5A
+         6K0W++e7muZ7uuPdFuDxgbHJqnB5t9BHsNR52Tp4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Stable@vger.kernel.org,
-        Tomasz Duszynski <tomasz.duszynski@octakon.com>
-Subject: [PATCH 5.6 23/41] iio:chemical:sps30: Fix timestamp alignment
-Date:   Tue,  9 Jun 2020 19:45:25 +0200
-Message-Id: <20200609174114.336417041@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Hanselmann <public@hansmi.ch>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.6 21/41] USB: serial: ch341: add basis for quirk detection
+Date:   Tue,  9 Jun 2020 19:45:23 +0200
+Message-Id: <20200609174114.150309933@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174112.129412236@linuxfoundation.org>
 References: <20200609174112.129412236@linuxfoundation.org>
@@ -61,49 +59,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+From: Michael Hanselmann <public@hansmi.ch>
 
-commit a5bf6fdd19c327bcfd9073a8740fa19ca4525fd4 upstream.
+commit c404bf4aa9236cb4d1068e499ae42acf48a6ff97 upstream.
 
-One of a class of bugs pointed out by Lars in a recent review.
-iio_push_to_buffers_with_timestamp assumes the buffer used is aligned
-to the size of the timestamp (8 bytes).  This is not guaranteed in
-this driver which uses an array of smaller elements on the stack.
+A subset of CH341 devices does not support all features, namely the
+prescaler is limited to a reduced precision and there is no support for
+sending a RS232 break condition. This patch adds a detection function
+which will be extended to set quirk flags as they're implemented.
 
-Fixes: 232e0f6ddeae ("iio: chemical: add support for Sensirion SPS30 sensor")
-Reported-by: Lars-Peter Clausen <lars@metafoo.de>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: <Stable@vger.kernel.org>
-Acked-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
+The author's affected device has an imprint of "340" on the
+turquoise-colored plug, but not all such devices appear to be affected.
+
+Signed-off-by: Michael Hanselmann <public@hansmi.ch>
+Link: https://lore.kernel.org/r/1e1ae0da6082bb528a44ef323d4e1d3733d38858.1585697281.git.public@hansmi.ch
+[ johan: use long type for quirks; rephrase and use port device for
+	 messages; handle short reads; set quirk flags directly in
+	 helper function ]
+Cc: stable <stable@vger.kernel.org>	# 5.5
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/chemical/sps30.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/usb/serial/ch341.c |   53 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
 
---- a/drivers/iio/chemical/sps30.c
-+++ b/drivers/iio/chemical/sps30.c
-@@ -230,15 +230,18 @@ static irqreturn_t sps30_trigger_handler
- 	struct iio_dev *indio_dev = pf->indio_dev;
- 	struct sps30_state *state = iio_priv(indio_dev);
- 	int ret;
--	s32 data[4 + 2]; /* PM1, PM2P5, PM4, PM10, timestamp */
-+	struct {
-+		s32 data[4]; /* PM1, PM2P5, PM4, PM10 */
-+		s64 ts;
-+	} scan;
+--- a/drivers/usb/serial/ch341.c
++++ b/drivers/usb/serial/ch341.c
+@@ -87,6 +87,7 @@ struct ch341_private {
+ 	u8 mcr;
+ 	u8 msr;
+ 	u8 lcr;
++	unsigned long quirks;
+ };
  
- 	mutex_lock(&state->lock);
--	ret = sps30_do_meas(state, data, 4);
-+	ret = sps30_do_meas(state, scan.data, ARRAY_SIZE(scan.data));
- 	mutex_unlock(&state->lock);
- 	if (ret)
- 		goto err;
+ static void ch341_set_termios(struct tty_struct *tty,
+@@ -308,6 +309,53 @@ out:	kfree(buffer);
+ 	return r;
+ }
  
--	iio_push_to_buffers_with_timestamp(indio_dev, data,
-+	iio_push_to_buffers_with_timestamp(indio_dev, &scan,
- 					   iio_get_time_ns(indio_dev));
- err:
- 	iio_trigger_notify_done(indio_dev->trig);
++static int ch341_detect_quirks(struct usb_serial_port *port)
++{
++	struct ch341_private *priv = usb_get_serial_port_data(port);
++	struct usb_device *udev = port->serial->dev;
++	const unsigned int size = 2;
++	unsigned long quirks = 0;
++	char *buffer;
++	int r;
++
++	buffer = kmalloc(size, GFP_KERNEL);
++	if (!buffer)
++		return -ENOMEM;
++
++	/*
++	 * A subset of CH34x devices does not support all features. The
++	 * prescaler is limited and there is no support for sending a RS232
++	 * break condition. A read failure when trying to set up the latter is
++	 * used to detect these devices.
++	 */
++	r = usb_control_msg(udev, usb_rcvctrlpipe(udev, 0), CH341_REQ_READ_REG,
++			    USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_IN,
++			    CH341_REG_BREAK, 0, buffer, size, DEFAULT_TIMEOUT);
++	if (r == -EPIPE) {
++		dev_dbg(&port->dev, "break control not supported\n");
++		r = 0;
++		goto out;
++	}
++
++	if (r != size) {
++		if (r >= 0)
++			r = -EIO;
++		dev_err(&port->dev, "failed to read break control: %d\n", r);
++		goto out;
++	}
++
++	r = 0;
++out:
++	kfree(buffer);
++
++	if (quirks) {
++		dev_dbg(&port->dev, "enabling quirk flags: 0x%02lx\n", quirks);
++		priv->quirks |= quirks;
++	}
++
++	return r;
++}
++
+ static int ch341_port_probe(struct usb_serial_port *port)
+ {
+ 	struct ch341_private *priv;
+@@ -330,6 +378,11 @@ static int ch341_port_probe(struct usb_s
+ 		goto error;
+ 
+ 	usb_set_serial_port_data(port, priv);
++
++	r = ch341_detect_quirks(port);
++	if (r < 0)
++		goto error;
++
+ 	return 0;
+ 
+ error:	kfree(priv);
 
 
