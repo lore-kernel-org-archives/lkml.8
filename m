@@ -2,149 +2,260 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CEEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 06:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A692BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 06:42:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CB5E207C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 06:39:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Ow/dOe14";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="XjskoM44"
+	by mail.kernel.org (Postfix) with ESMTP id 8461320812
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 06:42:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727782AbgFIGjM (ORCPT
+        id S1727813AbgFIGml (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 02:39:12 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:44836 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726918AbgFIGjL (ORCPT
+        Tue, 9 Jun 2020 02:42:41 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:9058 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726917AbgFIGmk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 02:39:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1591684750; x=1623220750;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=tsUwep0WiI9Q8gCgypimsZhvTO5athUBRpUtA/ft41k=;
-  b=Ow/dOe14fIxd2tP/AFOxZhmDf5TyvMj17GupN7ni4+VZwM4gkTMVlJFN
-   htpamK5odIVQpV2U/RnWoXGp7SnpBIfXSpSZdJLRv5A6diw6m6SE0Lhgx
-   2BCu1QF7zQ8Oq9QloQuRJXVEsPGQBRZb6mrLUr7O+mNeGNfa9BF5Gys6H
-   pGPP4AuGe11/0/tdaLerQQ6fWBN+49rpb4XuHl4CMIfP5/VndJNkI59v4
-   qIq6ZGfYAjKmCxR8eKmJ8wxsU55PCE8077Q6v98eWoOZ8kdHhHK8PD8g6
-   EETo5tZxJjHHM+SbE6iIJB4qF99ZKZbi4hRPwMR3i5ZXjoIRIUuG6V51J
-   Q==;
-IronPort-SDR: KIsi6jqjK3ZzCzmM9h0LL5nZiPqoMCew0FK9kNkmNZxIoNFaaPIt8HpIv/hc3za+WDdQ0IyI+s
- pGnIjpZdhGVfkjHuJORIptNf6y167MNpKIh37m4qi71jdlbam5J5TgfWynv1iG1mzluGLRXD0R
- VSLm742WXry/rn1nG1UbSKySrl2WiWUo+gxq1nMXaZA+f32vjBAfPjBWwwM/dSXSPXjllkPvpa
- b0ayrhHoGzyVZCu71dT0Ot2WWE90VTxg51PdutWoQR0pO3PIFM7sIwb6a/H81xy3o+JqXIaMGb
- cV4=
-X-IronPort-AV: E=Sophos;i="5.73,490,1583164800"; 
-   d="scan'208";a="248646438"
-Received: from mail-sn1nam04lp2058.outbound.protection.outlook.com (HELO NAM04-SN1-obe.outbound.protection.outlook.com) ([104.47.44.58])
-  by ob1.hgst.iphmx.com with ESMTP; 09 Jun 2020 14:39:09 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lRNxel0jO+Ziz7CDE0WMCNIQtzqShSTsBuTARrwlmOrslTggWRV+Uq0kszIrwfqSEn2huquezJnagmwr9o+b64Iqc5fOb5DbG1xeFan9AIdoZargq53EmaNQBtJu4FcbAqAL+L6ot4QmJ/RTWpFn9Ard5NSrfH1qLBC/dEapJiMVOW2IuZc/sFSkvPMIMeK4mOTpyIoB1NN0Z1HVxtgdGWfq/F3/+aGrU/+LRFTOOR1GCwRlof0aWSAY0U5BYhFRXtAaOPUNS91DPF8zyQTHRfrmjfAsw1jz8QuNk6EPwARfFHD2hHIdOayWlb2mWCjRFCRjp7y3fbNw/5TSAsrD8A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tsUwep0WiI9Q8gCgypimsZhvTO5athUBRpUtA/ft41k=;
- b=b+hIjL4XagXaeRykbTQdDPg+6XQg+ay/7Tljq5T8vA7TZT2hlPXgRAXwbFupRSf7XaMNLg/apHZ57HXQzz4ID4S0Yefl2aqCGOzNfOB6PEelUtCYNL2pe+edEFhe3Ga0o0s0OhLku3jg0Qnsw7sxjzn5TFi6vS8RVjkFRAEepu+pGVpUYTlk4R53lZ6rzgrSFlFGhOTURl+uKozogWM0VI/GfTb0jKBxC5ahKKWtDNEVVCnjptYdJkb8x8oBfbCdjFN/x30xZmndCrkA+2K+TctqNFob7z5J/+sL5QnNYDzPtgtMVWn9ui9BV11tYTlctfN4Xm3sz1HYn47TesSiZQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tsUwep0WiI9Q8gCgypimsZhvTO5athUBRpUtA/ft41k=;
- b=XjskoM44y1HcXXQmb/6EnukqXTegltJo1u7TRy0JzFqw6fA0feiLYiRCRxF+rveeDMb9ex8O0lovHP9TPy5Osdzl8Z/JdZNBD6ZUz/GQXbp5710uCbaQ4DdZ5VAWwnC4UTS+WkIkUCV/inADnQDuf1HVru9sP0fbQSBkcnirJnA=
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com (52.135.119.19) by
- SN6PR04MB4382.namprd04.prod.outlook.com (52.135.72.147) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3066.18; Tue, 9 Jun 2020 06:39:08 +0000
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::9cbe:995f:c25f:d288]) by SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::9cbe:995f:c25f:d288%6]) with mapi id 15.20.3066.023; Tue, 9 Jun 2020
- 06:39:07 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     "daejun7.park@samsung.com" <daejun7.park@samsung.com>,
-        ALIM AKHTAR <alim.akhtar@samsung.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        Sung-Jun Park <sungjun07.park@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>,
-        Adel Choi <adel.choi@samsung.com>,
-        BoRam Shin <boram.shin@samsung.com>
-Subject: RE: [RFC PATCH 4/5] scsi: ufs: L2P map management for HPB read
-Thread-Topic: [RFC PATCH 4/5] scsi: ufs: L2P map management for HPB read
-Thread-Index: AQHWOt5z/DbVMmIRNkq+06TbmiHC8KjLsIjggAPKWwCAAF+xcA==
-Date:   Tue, 9 Jun 2020 06:39:07 +0000
-Message-ID: <SN6PR04MB46407A85C194D2D8F03A01B3FC820@SN6PR04MB4640.namprd04.prod.outlook.com>
-References: <SN6PR04MB46409E16CCF95A0AA9FFE944FC870@SN6PR04MB4640.namprd04.prod.outlook.com>
-        <231786897.01591322101492.JavaMail.epsvc@epcpadp1>
-        <336371513.41591320902369.JavaMail.epsvc@epcpadp1>
-        <963815509.21591320301642.JavaMail.epsvc@epcpadp1>
-        <231786897.01591320001492.JavaMail.epsvc@epcpadp1>
-        <963815509.21591323002276.JavaMail.epsvc@epcpadp1>
-        <CGME20200605011604epcms2p8bec8ef6682583d7248dc7d9dc1bfc882@epcms2p4>
- <1776409896.101591664283293.JavaMail.epsvc@epcpadp2>
-In-Reply-To: <1776409896.101591664283293.JavaMail.epsvc@epcpadp2>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: samsung.com; dkim=none (message not signed)
- header.d=none;samsung.com; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [212.25.79.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: ba67aff5-b716-45cb-5ac2-08d80c3fcfae
-x-ms-traffictypediagnostic: SN6PR04MB4382:
-x-microsoft-antispam-prvs: <SN6PR04MB43821E36A308C74ED6EEB3A7FC820@SN6PR04MB4382.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 042957ACD7
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: YrRAVNf1a+LEzMWezhDJTyF0R2alusLpv9iBrO1pfyesry8c8ESPQrdzNinqdpfgdmwct4IsSBp2DFsEk45rmGZfknpV/9MP0OoSwIjKPy/WiE7nOkUg9pwwymCQ62SN2YOACLo6LDMTtQBuYEXBObkvvcLet7jkUCzEhFXWfhoK6RS9+Rg0cqr4QhFFBVxyMnjNl79t8hpshsk8oJtiorNYRmi4RPgQJY/8KdQ4qfH7q9pIE3CZk/urAmlUaCyNcqk/YekY9pp6XSGRhZYs2GOAViwyeGU9axA4CDEauAWvH/0QRNn4TmLTsj0iMWuk7drNdK0gRMbo5ADhDy+DL0ubV1JGe5h8QvNssoZiF5Ygw61Cg9mFmSBod8BkCtUs
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(396003)(39860400002)(376002)(136003)(346002)(316002)(2906002)(186003)(6506007)(26005)(55016002)(5660300002)(110136005)(66446008)(54906003)(64756008)(76116006)(66946007)(52536014)(9686003)(66476007)(66556008)(33656002)(478600001)(8676002)(71200400001)(4326008)(4744005)(7696005)(7416002)(86362001)(83380400001)(8936002)(921003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: Q4vsVRBUixx8x1wm6eGg377fbci+QZ7WXwzRhhzPYahsx8gy5WhAzq6npaHBUOlqYMthY/+YkgBrScCGevi0aPEJ6leh9Kxv6+FMwVOM3gFD3UPDcqZZlAl3EGsQrydIqwXj9Ux9KorK1vS1oj7u7rNY2LYtQhChDXs+p4NbHv7U7F7tQCHk3siNIXFuf36i0sN2eNzfJVPScielpkz28qqT+Is1dlLVCb/2FbMVwOKo0F+OqHcRE2gYs+hcDZFvQ7nYoDWAhgpZ49gdIlr6TtNTe37r8GOME/XGcEg/tt/5VQAM4fqjg1eDBtT+LLj0fIo43fGzIT9edgMIPX04meR2RIskI5Kf/w3jfHMmJnwyi0UKGKcJPf/uscAFWJOZ10XCqtLrK8+sX/GzNOK5ZQnlDpre8h3LJ9PoIQEbvBIy9U3rz84kfTyO8uBZgJN3f1RV718lJiOuzpGMB693fpw7P/s4xDpFr1okcID6ap0=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 9 Jun 2020 02:42:40 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0596VgAf025432;
+        Tue, 9 Jun 2020 02:42:04 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31hys6qy1v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 09 Jun 2020 02:42:04 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0596VnnL025968;
+        Tue, 9 Jun 2020 02:42:03 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31hys6qy10-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 09 Jun 2020 02:42:03 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0596aGra023961;
+        Tue, 9 Jun 2020 06:42:01 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma05fra.de.ibm.com with ESMTP id 31g2s7t68k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 09 Jun 2020 06:42:01 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0596fwsm37093540
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 9 Jun 2020 06:41:58 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D3E8DA4054;
+        Tue,  9 Jun 2020 06:41:58 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1DCC3A4060;
+        Tue,  9 Jun 2020 06:41:57 +0000 (GMT)
+Received: from JAVRIS.in.ibm.com (unknown [9.199.50.138])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue,  9 Jun 2020 06:41:56 +0000 (GMT)
+From:   Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+Subject: Re: [RFC][PATCH v4 27/32] objtool: mcount: Generic location and
+ relocation table types
+To:     Matt Helsley <mhelsley@vmware.com>
+Cc:     linux-kernel@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Julien Thierry <jthierry@redhat.com>
+References: <cover.1591125127.git.mhelsley@vmware.com>
+ <311ccd169cec877d0c1993772818f0e5cdf11dc4.1591125127.git.mhelsley@vmware.com>
+Message-ID: <79552506-b994-63ce-d3d9-8053dcbc02db@linux.vnet.ibm.com>
+Date:   Tue, 9 Jun 2020 12:11:55 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ba67aff5-b716-45cb-5ac2-08d80c3fcfae
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jun 2020 06:39:07.8259
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: AWcknOqthdwFIZZG93ooCjHrmOniFVYgoQnOURtGLUHLXDUSz3BbUzl5MtPU1u8R/XIuuQ8FRC28eYqZXnLLBQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4382
+In-Reply-To: <311ccd169cec877d0c1993772818f0e5cdf11dc4.1591125127.git.mhelsley@vmware.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-09_01:2020-06-08,2020-06-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
+ phishscore=0 mlxlogscore=999 malwarescore=0 priorityscore=1501
+ adultscore=0 impostorscore=0 lowpriorityscore=0 clxscore=1015
+ cotscore=-2147483648 bulkscore=0 suspectscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006090046
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiA+ID4gKyAgICAgICBzd2l0Y2ggKHJzcF9maWVsZC0+aHBiX3R5cGUpIHsNCj4gPiA+ICsgICAg
-ICAgY2FzZSBIUEJfUlNQX1JFUV9SRUdJT05fVVBEQVRFOg0KPiA+ID4gKyAgICAgICAgICAgICAg
-IFdBUk5fT04oZGF0YV9zZWdfbGVuICE9IERFVl9EQVRBX1NFR19MRU4pOw0KPiA+ID4gKyAgICAg
-ICAgICAgICAgIHVmc2hwYl9yc3BfcmVxX3JlZ2lvbl91cGRhdGUoaHBiLCByc3BfZmllbGQpOw0K
-PiA+ID4gKyAgICAgICAgICAgICAgIGJyZWFrOw0KPiA+IFdoYXQgYWJvdXQgaHBiIGRldiByZXNl
-dCAtIG9wZXIgMHgyPw0KPiBZZXMsIEkgd2lsbCBjaGFuZ2UuDQpUaGUgc3BlYyBkb2VzIG5vdCBk
-ZWZpbmUgd2hhdCB0aGUgaG9zdCBzaG91bGQgZG8gaW4gdGhpcyBjYXNlLA0KZS5nLiB3aGVuIHRo
-ZSBkZXZpY2UgaW5mb3JtcyBpdCB0aGF0IHRoZSBlbnRpcmUgZGIgaXMgbm8gbG9uZ2VyIHZhbGlk
-Lg0KV2hhdCBhcmUgeW91IHBsYW5uaW5nIHRvIGRvPw0KDQo=
+On 6/3/20 1:20 AM, Matt Helsley wrote:
+> Rather than building the exact ELF section data we need and
+> avoiding libelf's conversion step, use more GElf types
+> and then libelf's elfxx_xlatetof() functions to convert
+> the mcount locations (GElf_Addr) and associated relocations.
+> 
+> This converts sift_rel_mcount() so that it doesn't use the
+> recordmcount wrapper. The next patch will move it out of the
+> wrapper.
+> 
+> Signed-off-by: Matt Helsley <mhelsley@vmware.com>
+> ---
+>  tools/objtool/recordmcount.c |  44 +++----------
+>  tools/objtool/recordmcount.h | 120 ++++++++++++++---------------------
+>  2 files changed, 59 insertions(+), 105 deletions(-)
+> 
+> diff --git a/tools/objtool/recordmcount.c b/tools/objtool/recordmcount.c
+> index 06a8f8ddefa7..ef3c360a3db9 100644
+> --- a/tools/objtool/recordmcount.c
+> +++ b/tools/objtool/recordmcount.c
+
+[...]
+
+> -static uint_t *sift_rel_mcount(uint_t *mlocp,
+> -			       unsigned const offbase,
+> -			       Elf_Rel **const mrelpp,
+> +static void sift_rel_mcount(GElf_Addr **mlocpp,
+> +			       GElf_Sxword *r_offsetp,
+> +			       void **const mrelpp,
+>  			       const struct section * const rels,
+>  			       unsigned const recsym_index,
+>  			       unsigned long const recval,
+> -			       unsigned const reltype)
+> +			       unsigned const reltype,
+> +			       bool is_rela)
+>  {
+> -	uint_t *const mloc0 = mlocp;
+> -	Elf_Rel *mrelp = *mrelpp;
+> -	unsigned int rel_entsize = rels->sh.sh_entsize;
+> -	unsigned mcountsym = 0;
+> +	GElf_Rel *mrelp = *mrelpp;
+> +	GElf_Rela *mrelap = *mrelpp;
+> +	unsigned int mcount_sym_info = 0;
+>  	struct reloc *reloc;
+> 
+>  	list_for_each_entry(reloc, &rels->reloc_list, list) {
+> -		if (!mcountsym)
+> -			mcountsym = get_mcountsym(reloc);
+> -
+> -		if (mcountsym == GELF_R_INFO(reloc->sym->idx, reloc->type) && !is_fake_mcount(reloc)) {
+> -			uint_t const addend =
+> -				_w(reloc->offset - recval + mcount_adjust);
+> -			mrelp->r_offset = _w(offbase
+> -				+ ((void *)mlocp - (void *)mloc0));
+> -			Elf_r_info(mrelp, recsym_index, reltype);
+> -			if (rel_entsize == sizeof(Elf_Rela)) {
+> -				((Elf_Rela *)mrelp)->r_addend = addend;
+> -				*mlocp++ = 0;
+> -			} else
+> -				*mlocp++ = addend;
+> -
+> -			mrelp = (Elf_Rel *)(rel_entsize + (void *)mrelp);
+> +		unsigned long addend;
+> +
+> +		if (!mcount_sym_info)
+> +			mcount_sym_info = get_mcount_sym_info(reloc);
+> +
+> +		if (mcount_sym_info != GELF_R_INFO(reloc->sym->idx, reloc->type) || is_fake_mcount(reloc))
+> +			continue;
+
+Hi Matt,
+
+I was trying out the patch series on ppc64le and found that __mcount_loc
+and .rela__mcount_loc section pairs do not get generated. 
+
+# readelf -S fs/proc/cmdline.o|grep mcount
+#
+
+Debugged the cause to get_mcountsym()'s return type.  It returns reloc
+type from GELF_R_INFO() and expects Elf64_Xword a.k.a unsigned long
+to be the return type but get_mcountsym() returns unsigned int on 64-bit.
+
+On power the _mcount is of relocation type R_PPC64_REL24 (info 0x170000000a),
+using unsigned int truncates the value to 0xa and fails the above check.
+Using below fix, that converts mcount_sym_info to use unsigned long, generates
+the __mcount_loc section pairs.
+
+--- a/tools/objtool/mcount.c
++++ b/tools/objtool/mcount.c
+@@ -163,7 +163,7 @@ static int is_mcounted_section_name(char const *const txtname)
+                strcmp(".cpuidle.text", txtname) == 0;
+ }
+ 
+-static unsigned int get_mcount_sym_info(struct reloc *reloc)
++static unsigned long get_mcount_sym_info(struct reloc *reloc)
+ {
+        struct symbol *sym = reloc->sym;
+        char const *symname = sym->name;
+@@ -274,7 +274,7 @@ static int nop_mcount(struct section * const rels,
+ {
+        struct reloc *reloc;
+        struct section *txts = find_section_by_index(lf, rels->sh.sh_info);
+-       unsigned int mcount_sym_info = 0;
++       unsigned long mcount_sym_info = 0;
+        int once = 0;
+ 
+        list_for_each_entry(reloc, &rels->reloc_list, list) {
+@@ -363,7 +363,7 @@ static void sift_rel_mcount(GElf_Addr **mlocpp,
+ {
+        GElf_Rel *mrelp = *mrelpp;
+        GElf_Rela *mrelap = *mrelpp;
+-       unsigned int mcount_sym_info = 0;
++       unsigned long mcount_sym_info = 0;
+        struct reloc *reloc;
+ 
+        list_for_each_entry(reloc, &rels->reloc_list, list) {
+
+# readelf -S fs/proc/cmdline.o|grep mcount
+  [31] __mcount_loc      PROGBITS         0000000000000000  00022f10
+  [32] .rela__mcount_loc RELA             0000000000000000  00022f20
+
+
+> +
+> +		addend = reloc->offset - recval + mcount_adjust;
+> +		if (is_rela) {
+> +			mrelap->r_offset = *r_offsetp;
+> +			mrelap->r_info = GELF_R_INFO(recsym_index, reltype);
+> +			mrelap->r_addend = addend;
+> +			mrelap++;
+> +			**mlocpp = 0;
+> +		} else {
+> +			mrelp->r_offset = *r_offsetp;
+> +			mrelp->r_info = GELF_R_INFO(recsym_index, reltype);
+> +			mrelp++;
+> +			**mlocpp = addend;
+>  		}
+> +		(*mlocpp)++;
+> +		r_offsetp += loc_size;
+
+the offsets generated for rela__mcount_loc section are incorrect:
+
+# readelf -rW fs/proc/meminfo.o
+[...]
+Relocation section '.rela__mcount_loc' at offset 0x59a48 contains 4 entries:
+    Offset             Info             Type               Symbol's Value  Symbol's Name + Addend
+0000000000000000  0000000200000026 R_PPC64_ADDR64         0000000000000000 .text + c
+00000a059c401f38  0000000200000026 R_PPC64_ADDR64         0000000000000000 .text + 64
+0000000000000000  0000000200000026 R_PPC64_ADDR64         0000000000000000 .text + 7c
+0000000000000000  0000000600000026 R_PPC64_ADDR64         0000000000000000 .init.text + c
+
+changing the above line to *r_offsetp += loc_size and initializing
+r_offset=0 in do_mcount() generates the correct offset:
+
+# readelf -rW fs/proc/meminfo.o
+[...]
+Relocation section '.rela__mcount_loc' at offset 0x59a48 contains 4 entries:
+    Offset             Info             Type               Symbol's Value  Symbol's Name + Addend
+0000000000000000  0000000200000026 R_PPC64_ADDR64         0000000000000000 .text + c
+0000000000000008  0000000200000026 R_PPC64_ADDR64         0000000000000000 .text + 64
+0000000000000010  0000000200000026 R_PPC64_ADDR64         0000000000000000 .text + 7c
+0000000000000018  0000000600000026 R_PPC64_ADDR64         0000000000000000 .init.text + c
+
+>  	}
+> -	*mrelpp = mrelp;
+> -	return mlocp;
+> +	*mrelpp = is_rela ? (void *)mrelap : (void *)mrelp;
+>  }
+> 
+> 
+-- 
+Kamalesh
