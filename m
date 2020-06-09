@@ -2,144 +2,111 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E80C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:16:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA9BCC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:16:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 591E9206D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:16:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0DED206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:16:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="bpj8+NOO"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LdBf5J1S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730142AbgFIOQY (ORCPT
+        id S1730198AbgFIOQ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 10:16:24 -0400
-Received: from mout.web.de ([212.227.17.12]:58859 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726967AbgFIOQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 10:16:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1591712171;
-        bh=4e28CHChxT7wxLcfH98/m8r7z/2Hp4xhy6bqpTw5+6E=;
-        h=X-UI-Sender-Class:Cc:Subject:From:To:Date;
-        b=bpj8+NOODMCoywXkYrrRJkM769aY0w1Og6daKIEZHUZ4mxDdIBE8fFME7CBDWphOz
-         4iG41FyqTkYkuHQMHm79PtOsaYgLOVz0Q9EpRQdJpC1wGoRvwiy1yLkPA8+int+1A5
-         HjjnHnw+WBoPBlJ8IwRLtwtxrvqUm3p5QW7S1GyA=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([77.6.55.3]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0M1GAG-1ipaS32O64-00tFO3; Tue, 09
- Jun 2020 16:16:11 +0200
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] coccinelle: api: extend memdup_user transformation
- with GFP_USER
-From:   Markus Elfring <Markus.Elfring@web.de>
-To:     Denis Efremov <efremov@linux.com>,
-        Coccinelle <cocci@systeme.lip6.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <5c0dae88-e172-3ba6-f86c-d1a6238bb4c4@web.de>
-Date:   Tue, 9 Jun 2020 16:16:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Tue, 9 Jun 2020 10:16:57 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34674 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728338AbgFIOQz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 10:16:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591712214;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=YVbTooBt4UUkS5UYs7zdbnUxyfMbXNuMElqnNvrjHoA=;
+        b=LdBf5J1Sxe4DKl63+fNvwNimaGGlh5NmNB8xkPzwK4bABrtD93iDLyKBoJ7Nf/giIauACg
+        mmcWQlLdx0NYiq5enPOpjaIS1xYjWbd8HYeV95hRb/LAw43Rm2qJMBmxk+DdQyeS+Uj6mt
+        G/5qYAzMpi2VrP6zWb5jpBNrIvg3MrQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-510-ZhSurra8O_2w3QnNQbqLZQ-1; Tue, 09 Jun 2020 10:16:51 -0400
+X-MC-Unique: ZhSurra8O_2w3QnNQbqLZQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CF2BA464;
+        Tue,  9 Jun 2020 14:16:50 +0000 (UTC)
+Received: from sandy.ghostprotocols.net (unknown [10.3.128.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 690AF8202B;
+        Tue,  9 Jun 2020 14:16:50 +0000 (UTC)
+Received: by sandy.ghostprotocols.net (Postfix, from userid 1000)
+        id 378671D1; Tue,  9 Jun 2020 11:16:47 -0300 (BRT)
+Date:   Tue, 9 Jun 2020 11:16:47 -0300
+From:   Arnaldo Carvalho de Melo <acme@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Stephane Eranian <eranian@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>, mingo@elte.hu
+Subject: Re: [PATCH] perf headers: fix processing of pmu_mappings
+Message-ID: <20200609141647.GA10172@redhat.com>
+References: <20200608161805.65841-1-eranian@google.com>
+ <CAP-5=fXmrbBqDj6udGJCLHF5ePERr1S5qTKGZZAUBC1EmA-8LQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:5qOHi/QGPt6HDDy++mQcTjcvl6ZVbhg+a6OWbIowPMUPExg1FLM
- ytrFenQx99weYIyI3UcwQjBApTIflOTTc9lCa77JbbOQgvgC3lnvbzcrudAkWkmJTuxtYbX
- FSgvPIjMRqkTCKs+KqOUSAbnp4lREfw2QXeqHqS+9tYCNUPdjqb2TsFVg52WWlTUiX/vwuX
- P/Mr0zvv58D1tJf9uSROA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:mpYUnu5JEC0=:JaviUAuDGsXJK5Nwln/HGc
- ChxKS+GRPJrh3j0aI5i4AMTKuzEBxHauWmKvaWA6nCKJdPmvAyNy1DYmL1HUAo7FBK2YvMaYh
- eX/iFRAqHV39Tg8W++EMUAKweE+x3tsbm2h4/Z8fRmxKbxZv+HKAz1phIgOBUWTZSz4Tq2kD5
- BYkSv0wdaSoxrDfuJ4LeH270+PKuU0cHfo7vxSBxy8p28wqxenp9ytL4bCVp1El6OcJ0KwKkQ
- BiTTO+ZGN3nEDCYCWlf+bKzPJ2Qfci9zz3xTwUP9t6yE3TN2D8pQ78DJNVKp2+c6FEzuxfmFc
- FBE8jFmRY+4WulWaH33YZMlw02G/h1gCYmMVXW2atuy0vZR5UzilYvSEFKgYaZm/DqdnkLvvn
- U8qR97oORrlpzbo4cpw9ijIYaGqafn//qL8FeGAv9ssN9Dj1z4qT1YlWdRNIYtpLJkvuszWXD
- JrMuQKofELqBIov3vl6Erzj/S/OJxewuTn6rwweHdmJpoPX1U/i3qj4sYSr4GALiquLsOw61k
- EeJOHLkOwqCi55t3Fq4JLS2KGmTVSmqt4s6YbQ2FPjOjGB6Zx2w33kDSsPvwwCx1KRVU3DNtE
- OCXGQcnJyevO3X7kDMpUnjogFizmalpGWQ2L0VsOmAdh8VEKMQJa1gMwDUl9699z6iFJb73r1
- rXF8Eh12k59viryAQhIxPYCjZSBxmNFBY0ZGognW2nXvzh8TdmuGlMGCwL2WaHcq2bFtWTsnv
- cyiuNzBQQUxRq6LpS37xlQvWcMH7eptOThG+jnB1GU5eeozVHUshVWSCGA2h+Hpd19vu1ITjt
- BgMIv5RMPg8bH+xJZx39yZ0LxqJoGomcBjsbgCjkUfezHSD2tYXNr5MHHsU8FKi5ykQ/1yhhK
- CoFay7d/4/AdDyNA+DPSe2rPkxSed3kG2etq6IDcYkFSuzOXdUAtXula/fy+0xVeI3zSLcvIq
- K96ISQALVXUebWLzsFekPTrevE7urHjk/Wf4oAKLkFjDkmq0alESrrF0x+2yyFY4tHVGA7lng
- HRrUL+QfD1ZiQpodCONSVLwyH2upzjOvweHxUB2lk5vKcUgV2tJpscY+tveXVnnzbM2vxG/gS
- q/yBNLM3k6me25XLsZSb7gexYeZwsxzqo+2h1Fu/rcHd19g0lkPFB1geUl2NcNgUlOsA39j6o
- KO5TqxRRKRbhridmpvUhvWDk7SovV/ubbrhIoc0OGiNO4JbJ5kC5V7OwmoXFSSPDUU85nQtXe
- Mym/Ya5QwHw78I125
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fXmrbBqDj6udGJCLHF5ePERr1S5qTKGZZAUBC1EmA-8LQ@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.5.20 (2009-12-10)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=E2=80=A6
-> +++ b/scripts/coccinelle/api/memdup_user.cocci
-> @@ -20,7 +20,9 @@ expression from,to,size;
-=E2=80=A6
-> +-  to =3D \(kmalloc\|kzalloc\)
-> +		(size,\(GFP_KERNEL\|GFP_USER\|
-> +		      \(GFP_KERNEL\|GFP_USER\)|__GFP_NOWARN\));
+Em Mon, Jun 08, 2020 at 09:52:43AM -0700, Ian Rogers escreveu:
+> On Mon, Jun 8, 2020 at 9:18 AM Stephane Eranian <eranian@google.com> wrote:
+> > This patch fixes a bug in process_pmu_mappings() where the code
+> > would not produce an env->pmu_mappings string that was easily parsable.
+> > The function parses the PMU_MAPPING header information into a string
+> > consisting of value:name pairs where value is the PMU type identifier
+> > and name is the PMU name, e.g., 10:ibs_fetch. As it was, the code
+> > was producing a truncated string with only the first pair showing
+> > even though the rest was there but after the \0.
+> > This patch fixes the problem byt adding a proper white space between
+> > pairs and moving the \0 termination to the end. With this patch applied,
+> > all pairs appear and are easily parsed.
 
-I got the impression that this SmPL code needs another correction also
-according to the proposed SmPL disjunction.
+> > Before:
+> > 14:amd_iommu_1
 
-+-to =3D \( kmalloc \| kzalloc \) (size, \( GFP_KERNEL \| GFP_USER \) \( |=
- __GFP_NOWARN \| \) );
+> > After:
+> > 14:amd_iommu_1 7:uprobe 5:breakpoint 10:amd_l3 19:amd_iommu_6 8:power 4:cpu 17:amd_iommu_4 15:amd_iommu_2 1:software 6:kprobe 13:amd_iommu_0 9:amd_df 20:amd_iommu_7 18:amd_iommu_5 2:tracepoint 21:msr 12:ibs_op 16:amd_iommu_3 11:ibs_fetch
 
+Please check print_pmu_mappings() in tools/perf/util/header.c
 
-Would you like to express by any other approach that a specific flag
-is an optional source code transformation parameter?
+Before your patch:
+
+  [root@five ~]# perf report --header-only | grep "pmu mappings"
+  # pmu mappings: amd_df = 8, software = 1, ibs_op = 11, ibs_fetch = 10, uprobe = 7, cpu = 4, amd_iommu_0 = 12, breakpoint = 5, amd_l3 = 9, tracepoint = 2, kprobe = 6, msr = 13
+  [root@five ~]#
+
+After your patch:
+
+  [root@five ~]# perf report --header-only | grep "pmu mappings"
+  # pmu mappings: amd_df 1:software 11:ibs_op 10:ibs_fetch 7:uprobe 4:cpu 12:amd_iommu_0 5:breakpoint 9:amd_l3 2:tracepoint 6:kprobe 13:msr = 8# pmu mappings: unable to read
+  [root@five ~]# 
+
+I think having it space separated, as you propose, is best, but haven't
+checked if there are other cases that process ff->ph->env.pmu_mappings
+and expect it to be \0 separated, like print_pmu_mappings().
 
 Regards,
-Markus
+
+- Arnaldo
+
