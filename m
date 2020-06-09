@@ -2,98 +2,140 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 493A9C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E1BFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26755207ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:17:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="0BTxf6DY"
+	by mail.kernel.org (Postfix) with ESMTP id 11D84207F9
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:18:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728921AbgFILRP (ORCPT
+        id S1728975AbgFILSr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 07:17:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37124 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727002AbgFILRO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 07:17:14 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1F08C03E97C
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 04:17:13 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id d27so17230173qtg.4
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 04:17:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8K/jnkPsdiZF6eJ0n8tJ/WJEe8w05I+4ekJ4W32fFhU=;
-        b=0BTxf6DYNmwWNxgjnTyhdLS2gDHt0tdhFxIufvs5rouUZ5s7OVTL3OToXj4U94EtvZ
-         7ZOu8FTAXMIV9tPB0hmqwPP7j60dqxLxnRUAvadi9P51FjGmAHIhX3hgz58HkeX9jSIR
-         eG4vOcTNHAfF94fFcciRb2HhwAxwCX5GvUWXDKN2WYHB35Qk1CMSMAAUGm6+kn2W19Xp
-         uAvCoPY5+Nlyn6BkE9L7/B9PGEbVTg6lY7mRzn0FhQQRNjN7xuCO691bOTsikoS4OOkF
-         sTIH5f0oaq3u9AZ/mmcRqOpsjvquTvOMeJgnH8xgjGdexXzwNMfO6Z638OLU/dv8roSx
-         4/uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8K/jnkPsdiZF6eJ0n8tJ/WJEe8w05I+4ekJ4W32fFhU=;
-        b=blKB2tzJwSlu0Tm1EdcO/Ol2GZya0O38ksJGz6glPi/X3zZfriavmGJF04AL1ZsTZo
-         aR8LexChmEvI0OyPcgPIN3o1AOmpF9Fw3CqQP+OFV6cpWuXxYDXK8+4+KbDILivMtFNt
-         KttyLqsOb1EE1Dnt2aZ8zEf0JFbWWjiwhQj5SQDq/lLZDpQ793Dm878U5jG8/cGSr4Fy
-         qqmLcB02aBmEsZZWJ7Yx8S91VyIzc7pxAZKBV5F46o2CctKgHG/nqqqFdzWuV+aGAti/
-         9uYhYaKvnD4p5fZoiI1BKxuC6B4dCpaSj2XpbYqI3klVQS8MEvVrl7eD/vAcB6i1mpQ9
-         7XnA==
-X-Gm-Message-State: AOAM532QWbZYcc97py8cnh2RllvGQQkyWQJZd92rc+QzR5W+T0bLKjB4
-        qkligS0+EIBHnVathI0wvojz3bKTHiQ=
-X-Google-Smtp-Source: ABdhPJymdvBdrGAG6nTuShwBgY51Grt5Q2yeOf0MfZe95FaTvjZbkacfY2Sa7EQU4T2ZbivS/uDBtQ==
-X-Received: by 2002:ac8:3267:: with SMTP id y36mr29064664qta.241.1591701432472;
-        Tue, 09 Jun 2020 04:17:12 -0700 (PDT)
-Received: from [192.168.0.189] ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id y129sm9011684qkc.1.2020.06.09.04.17.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Jun 2020 04:17:11 -0700 (PDT)
-Subject: Re: [PATCH 3/5] soundwire: qcom: add v1.5.1 compatible
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     alsa-devel@alsa-project.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sanyog Kale <sanyog.r.kale@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200608204347.19685-1-jonathan@marek.ca>
- <20200608204347.19685-4-jonathan@marek.ca>
- <20200609052619.GB1084979@vkoul-mobl>
-From:   Jonathan Marek <jonathan@marek.ca>
-Message-ID: <53817047-f916-b042-70b7-66aa875a9ade@marek.ca>
-Date:   Tue, 9 Jun 2020 07:17:33 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 9 Jun 2020 07:18:47 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59602 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727002AbgFILSn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 07:18:43 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 7B218ACF2;
+        Tue,  9 Jun 2020 11:18:44 +0000 (UTC)
+Message-ID: <382b81937757de570a83ba4ff9276221c0bba547.camel@suse.de>
+Subject: Re: [PATCH 5/9] usb: xhci-pci: Add support for reset controllers
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        gregkh@linuxfoundation.org, wahrenst@gmx.net, robh@kernel.org,
+        mathias.nyman@linux.intel.com, Eric Anholt <eric@anholt.net>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-usb@vger.kernel.org,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     lorenzo.pieralisi@arm.com, tim.gover@raspberrypi.org,
+        helgaas@kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 09 Jun 2020 13:18:38 +0200
+In-Reply-To: <5d3200cc-17cc-026f-1dfe-c10ec949f9ad@gmail.com>
+References: <20200608192701.18355-1-nsaenzjulienne@suse.de>
+         <20200608192701.18355-6-nsaenzjulienne@suse.de>
+         <5d3200cc-17cc-026f-1dfe-c10ec949f9ad@gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-NVYfO6rea++DlkfIypsN"
+User-Agent: Evolution 3.36.2 
 MIME-Version: 1.0
-In-Reply-To: <20200609052619.GB1084979@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/9/20 1:26 AM, Vinod Koul wrote:
-> On 08-06-20, 16:43, Jonathan Marek wrote:
->> Add a compatible string for HW version v1.5.1 on sm8250 SoCs.
-> 
-> Please document this new compatible
-> 
 
-Does it really need to be documented? The documentation already says the 
-compatible should be "qcom,soundwire-v<MAJOR>.<MINOR>.<STEP>". It gives 
-"qcom,soundwire-v1.5.0" as an example, which is not actually a supported 
-compatible, so my understanding is we don't need to update the list of 
-examples with every possible compatible.
+--=-NVYfO6rea++DlkfIypsN
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hi Florian, thanks for the reviews!
+
+On Mon, 2020-06-08 at 12:43 -0700, Florian Fainelli wrote:
+>=20
+> On 6/8/2020 12:26 PM, Nicolas Saenz Julienne wrote:
+> > Some atypical users of xhci-pci might need to manually reset their xHCI
+> > controller before starting the HCD setup. Check if a reset controller
+> > device is available to the PCI bus and trigger a reset.
+> >=20
+> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > ---
+> >  drivers/usb/host/xhci-pci.c | 9 +++++++++
+> >  1 file changed, 9 insertions(+)
+> >=20
+> > diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
+> > index ef513c2fb843..45f70facdfcd 100644
+> > --- a/drivers/usb/host/xhci-pci.c
+> > +++ b/drivers/usb/host/xhci-pci.c
+> > @@ -12,6 +12,7 @@
+> >  #include <linux/slab.h>
+> >  #include <linux/module.h>
+> >  #include <linux/acpi.h>
+> > +#include <linux/reset.h>
+> > =20
+> >  #include "xhci.h"
+> >  #include "xhci-trace.h"
+> > @@ -339,6 +340,7 @@ static int xhci_pci_probe(struct pci_dev *dev, cons=
+t
+> > struct pci_device_id *id)
+> >  	struct xhci_hcd *xhci;
+> >  	struct usb_hcd *hcd;
+> >  	struct xhci_driver_data *driver_data;
+> > +	struct reset_control *reset;
+> > =20
+> >  	driver_data =3D (struct xhci_driver_data *)id->driver_data;
+> >  	if (driver_data && driver_data->quirks & XHCI_RENESAS_FW_QUIRK) {
+> > @@ -347,6 +349,13 @@ static int xhci_pci_probe(struct pci_dev *dev, con=
+st
+> > struct pci_device_id *id)
+> >  			return retval;
+> >  	}
+> > =20
+> > +	reset =3D devm_reset_control_get(&dev->bus->dev, NULL);
+>=20
+> Should not this be devm_reset_control_get_optional()?
+
+Yes, you're right.
+
+Regards,
+Nicolas
+
+> > +	if (IS_ERR(reset)) {
+> > +		retval =3D PTR_ERR(reset);
+> > +		return retval;
+> > +	}
+> > +	reset_control_reset(reset);
+> > +
+> >  	/* Prevent runtime suspending between USB-2 and USB-3 initialization =
+*/
+> >  	pm_runtime_get_noresume(&dev->dev);
+> > =20
+> >=20
+
+
+--=-NVYfO6rea++DlkfIypsN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7fcA4ACgkQlfZmHno8
+x/42lggAr4gRLoLdRsOhuBSqjjZLdGcfoxGXMXDpXwxrRsd71lmv+/LtQABORuU3
+Y4M35yyADqBeIuOMtzBSNCxGdLhCxhz4oRZwlAZMO2BRmbv5nVYbesB4JGCeGQ6j
+Kac2Fhfb5aBF7KhISqp7HGN5cH6fQQAgjiPebWDmCNqg0k/kC82VQgJ+JfB3uL3t
+3IuTyHni/9N/xdxeLwZDMjASxQGWRwCq0U+7uGJmsP1lYFB0ucjHa9egEzdeNbui
+DgOvWHSrBjNS3t3bcSpaG5IUspjT+zCYVUOr24zhW7k2WurtDGlkx5Oeh3+/Pipf
++z7kYFcTP0uYL6kbSA4G7CdRzBFWHw==
+=WpCe
+-----END PGP SIGNATURE-----
+
+--=-NVYfO6rea++DlkfIypsN--
+
