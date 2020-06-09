@@ -2,128 +2,156 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80896C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A61C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B7802072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:59:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B59C2078C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:00:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BYvYUZgK"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HbbZVpX8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731048AbgFIP7J (ORCPT
+        id S1731057AbgFIQAn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 11:59:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52462 "EHLO
+        Tue, 9 Jun 2020 12:00:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728888AbgFIP7J (ORCPT
+        with ESMTP id S1730640AbgFIQAm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 11:59:09 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38101C05BD1E;
-        Tue,  9 Jun 2020 08:59:09 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id a13so20849814ilh.3;
-        Tue, 09 Jun 2020 08:59:09 -0700 (PDT)
+        Tue, 9 Jun 2020 12:00:42 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66121C05BD1E
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 09:00:42 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id l10so9663606vsr.10
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 09:00:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=y7SNiI5A6RVtZsHvA5zBiQnX39Ic6ndLkU+dDGZxkkE=;
-        b=BYvYUZgKPOiFqhDqHbdFaVtVeJjo2pF7jf1ADysyareZY2mE4JGcQkzWaTDD40WYr9
-         rFsr99M5cb58XA+NucQrVrbraWMQKkQOnByLp3ArV3tE+p6LIQpWDb5q8GXyVna1RXsH
-         8XvEZItxotESA+kA9wSCI+i1eisarnUJ/tKVc/XVlldBXDeoMjuvSp6QoPHDktjB6I26
-         As3IEs6xOqwP4bavd8E4NI8w0pAsUTvIZ/oewpgNE0SkevnlK7NrW75K1gn1CSOrCmei
-         N4zXN0vWMHe5hLTpfmrSvAM3KYJjns0Vxnc4yE1ECaYPUXayuSn38H2DsKjFYrp4nkAD
-         Nm9Q==
+        bh=FVbKhA/NezMaX3sdFKjoaZBxdKpUb0BC4Yh1wEUX1i8=;
+        b=HbbZVpX8lEl1/PAJKl/LIFIScwEcEtm8iQCb2cSgM4H01kZLkY0m1q6Dfu/nQhkJ2u
+         BidyYYPVASIl2b1khHkuTADsCtKHzx57+fTgXQXWkl3/FFk33PEvEbHzPQfs5P7eDRdG
+         4Tohzxve7vwXPz/S9P4Dwv5Vky64S84P7KzKs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=y7SNiI5A6RVtZsHvA5zBiQnX39Ic6ndLkU+dDGZxkkE=;
-        b=EI3tZ+wXHyYjX87vgHKk6OgFrzBEe2bF01FW8zKmUBlO/3M2fVcSk0zisVl7wnFo5h
-         q2wDm1s6F7e0ggXKjFeI7CAg8mjzMcKd20UZ9v/1RlsChs3gcIM41CT9T7Y/2YPUcON9
-         LePa/BAsgzp09mzS7KdmK5/D2zWD8hOfOkgs88OhjWp0lUuhXsWvBD7zPZxd/or1kS9n
-         DaPACdgO6Kl+ZnWEt+SeIHBlKvuPFWnBigcTmn8S+5CDAP40t+ehtZ4XTYUiVXOEpZRZ
-         onq7MMipY3KZuavLzoUifc3dj2k/fyU/4iVHr8q9DuuopRneiS1S2SBG9n9nrmZCQK/V
-         m5Xw==
-X-Gm-Message-State: AOAM530D+tsYaGSpM7shQLvlccocguBOx8ryFPSQUtdfkptXUdR7KcuM
-        ASa4nYTUD8ZXTogdb6ImkcRCXYP9B3tf0CMunnY=
-X-Google-Smtp-Source: ABdhPJwrxzXrTqDvIYEv7sGYGoTfNgdI9+AwSKTngZ8wOe8qpPn+MALOTP1Ir5yJrOFe2XEpcp7yexnICas3NiVZxPk=
-X-Received: by 2002:a92:914a:: with SMTP id t71mr27627735ild.200.1591718348616;
- Tue, 09 Jun 2020 08:59:08 -0700 (PDT)
+        bh=FVbKhA/NezMaX3sdFKjoaZBxdKpUb0BC4Yh1wEUX1i8=;
+        b=jrZW7R1XuCEkIaM3AYzJkmejZE5wizsbLDVIYyDcLeF00kfBVunSZXVQ0c9mECuvVi
+         lz9l3s29lup6yrgFzecJRl/EnydZo59xbi2LeXazHaBz2qE3twJGeR7W9TcGGvEI2Kmt
+         Fv10SxR5UqQQh4lFiNBQX64c1BuhuC7Df11CRkLEvfHfuxaipYx21fMRPML5HUPwzj91
+         lX7oaRh14Rd/+Ztj2Dgu/ZzEcVUPUQjt0mw5WJnocscFl6574XRD/bVuKSMqlQGB2piT
+         OvCKtMUGaTLshZgfdANjoNUwuNtl00x6wqiISof27KooEqzHpVUc6QzfEQolKG1fk70u
+         rQqg==
+X-Gm-Message-State: AOAM5337dgtzwwUuNcneIs9/RySfzPCIZyEL7g/b5nk3whgTUPPkkhW9
+        xw9juoDy+/813274t9xHSwH3huyfJc283+yuQDQT3g==
+X-Google-Smtp-Source: ABdhPJx1Ay9r98Ol06bQfHruUDmVmqjfK/8k9ZGDrj+ekPNXTbJRyHNheNoU9kuUloYfvosgpr2CQOweMDeGNH8gWeI=
+X-Received: by 2002:a67:6a01:: with SMTP id f1mr4034591vsc.86.1591718441472;
+ Tue, 09 Jun 2020 09:00:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <1591605038-8682-1-git-send-email-dillon.minfei@gmail.com> <1591605038-8682-2-git-send-email-dillon.minfei@gmail.com>
-In-Reply-To: <1591605038-8682-2-git-send-email-dillon.minfei@gmail.com>
-From:   dillon min <dillon.minfei@gmail.com>
-Date:   Tue, 9 Jun 2020 23:58:32 +0800
-Message-ID: <CAL9mu0KWq-ANkLBRv_49kGzWf_kDPjMvMeA7S4E6f5MpVtjKaw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] ARM: dts: stm32: Setup 4M bytes reserved memory for mmap
-To:     Rob Herring <robh+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux@armlinux.org.uk, Vladimir Murzin <vladimir.murzin@arm.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        allison@lohutok.net, info@metux.net, tglx@linutronix.de, hch@lst.de
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1591718228-18819-1-git-send-email-gubbaven@codeaurora.org>
+In-Reply-To: <1591718228-18819-1-git-send-email-gubbaven@codeaurora.org>
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Date:   Tue, 9 Jun 2020 09:00:29 -0700
+Message-ID: <CANFp7mUT68Y9vGbSXdCTZE8JzWxYv47f2RZK8+V_4Bn=FVnypw@mail.gmail.com>
+Subject: Re: [PATCH v2] Bluetooth: hci_qca: Bug fix during SSR timeout
+To:     Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
+        hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
+        Rocky Liao <rjliao@codeaurora.org>, hbandi@codeaurora.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph Hellwig,
+Looks good to me.
 
-This is the patchset. for your reference.
+Reviewed-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
 
-thanks,
-
-On Mon, Jun 8, 2020 at 4:30 PM <dillon.minfei@gmail.com> wrote:
+On Tue, Jun 9, 2020 at 8:57 AM Venkata Lakshmi Narayana Gubba
+<gubbaven@codeaurora.org> wrote:
 >
-> From: dillon min <dillon.minfei@gmail.com>
+> Due to race conditions between qca_hw_error and qca_controller_memdump
+> during SSR timeout,the same pointer is freed twice. This results in a
+> double free. Now a lock is acquired before checking the stauts of SSR
+> state.
 >
-> To mmap a framebuffer or v4l2 buffer from kernel to userspace on
-> no-mmu platform, we need rely on 'arm_nommu_dma_ops' from
-> arch/arm/mm/dma-mapping-nommu.c , so setup 4M bytes memory
-> reserved for this purpose.
->
-> Signed-off-by: dillon min <dillon.minfei@gmail.com>
+> Fixes: d841502c79e3 ("Bluetooth: hci_qca: Collect controller memory dump during SSR")
+> Signed-off-by: Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
 > ---
->  arch/arm/boot/dts/stm32f469-disco.dts | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+>  drivers/bluetooth/hci_qca.c | 29 +++++++++++++++++------------
+>  1 file changed, 17 insertions(+), 12 deletions(-)
 >
-> diff --git a/arch/arm/boot/dts/stm32f469-disco.dts b/arch/arm/boot/dts/stm32f469-disco.dts
-> index 9397db0c43de..082b24ee81f7 100644
-> --- a/arch/arm/boot/dts/stm32f469-disco.dts
-> +++ b/arch/arm/boot/dts/stm32f469-disco.dts
-> @@ -65,6 +65,20 @@
->                 reg = <0x00000000 0x1000000>;
->         };
+> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+> index 28c34a1..f3fde99 100644
+> --- a/drivers/bluetooth/hci_qca.c
+> +++ b/drivers/bluetooth/hci_qca.c
+> @@ -981,8 +981,11 @@ static void qca_controller_memdump(struct work_struct *work)
+>         while ((skb = skb_dequeue(&qca->rx_memdump_q))) {
 >
-> +       reserved-memory {
-> +               #address-cells = <1>;
-> +               #size-cells = <1>;
-> +               ranges;
+>                 mutex_lock(&qca->hci_memdump_lock);
+> -               /* Skip processing the received packets if timeout detected. */
+> -               if (qca->memdump_state == QCA_MEMDUMP_TIMEOUT) {
+> +               /* Skip processing the received packets if timeout detected
+> +                * or memdump collection completed.
+> +                */
+> +               if (qca->memdump_state == QCA_MEMDUMP_TIMEOUT ||
+> +                   qca->memdump_state == QCA_MEMDUMP_COLLECTED) {
+>                         mutex_unlock(&qca->hci_memdump_lock);
+>                         return;
+>                 }
+> @@ -1483,8 +1486,6 @@ static void qca_hw_error(struct hci_dev *hdev, u8 code)
+>  {
+>         struct hci_uart *hu = hci_get_drvdata(hdev);
+>         struct qca_data *qca = hu->priv;
+> -       struct qca_memdump_data *qca_memdump = qca->qca_memdump;
+> -       char *memdump_buf = NULL;
+>
+>         set_bit(QCA_HW_ERROR_EVENT, &qca->flags);
+>         bt_dev_info(hdev, "mem_dump_status: %d", qca->memdump_state);
+> @@ -1507,19 +1508,23 @@ static void qca_hw_error(struct hci_dev *hdev, u8 code)
+>                 qca_wait_for_dump_collection(hdev);
+>         }
+>
+> +       mutex_lock(&qca->hci_memdump_lock);
+>         if (qca->memdump_state != QCA_MEMDUMP_COLLECTED) {
+>                 bt_dev_err(hu->hdev, "clearing allocated memory due to memdump timeout");
+> -               mutex_lock(&qca->hci_memdump_lock);
+> -               if (qca_memdump)
+> -                       memdump_buf = qca_memdump->memdump_buf_head;
+> -               vfree(memdump_buf);
+> -               kfree(qca_memdump);
+> -               qca->qca_memdump = NULL;
+> +               if (qca->qca_memdump) {
+> +                       vfree(qca->qca_memdump->memdump_buf_head);
+> +                       kfree(qca->qca_memdump);
+> +                       qca->qca_memdump = NULL;
+> +               }
+>                 qca->memdump_state = QCA_MEMDUMP_TIMEOUT;
+>                 cancel_delayed_work(&qca->ctrl_memdump_timeout);
+> -               skb_queue_purge(&qca->rx_memdump_q);
+> -               mutex_unlock(&qca->hci_memdump_lock);
+> +       }
+> +       mutex_unlock(&qca->hci_memdump_lock);
 > +
-> +               linux,dma {
-> +                       compatible = "shared-dma-pool";
-> +                       size = <0x400000>;
-> +                       no-map;
-> +                       linux,dma-default;
-> +               };
-> +
-> +       };
-> +
->         aliases {
->                 serial0 = &usart3;
->         };
+> +       if (qca->memdump_state == QCA_MEMDUMP_TIMEOUT ||
+> +           qca->memdump_state == QCA_MEMDUMP_COLLECTED) {
+>                 cancel_work_sync(&qca->ctrl_memdump_evt);
+> +               skb_queue_purge(&qca->rx_memdump_q);
+>         }
+>
+>         clear_bit(QCA_HW_ERROR_EVENT, &qca->flags);
 > --
-> 2.7.4
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
 >
