@@ -2,104 +2,137 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5871BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB049C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AE1D20774
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:21:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591719708;
-	bh=6qYCXRp4rlIwJzKIwSBl5gMRaYjfFI7zDht+KWOIiAc=;
-	h=Subject:From:To:Cc:Date:List-ID:From;
-	b=zgXWt1ZjzL4dU//oXIrx9wEQ9eZAg5nACk2iPkBe9zmzTrqWyrjrEkSi2E7BCVpqm
-	 QsJj7l5GT8H2nBIQb90mE4vsYc/6kPxWPcMPopwJJXzm67NYpSdyqwla6m8jPY3qrY
-	 O/k7zwx260PtUo7x7cEHWlPCQLbgv8FptFY3Sa3U=
+	by mail.kernel.org (Postfix) with ESMTP id 8FE24206A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:22:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727018AbgFIQVr (ORCPT
+        id S1727929AbgFIQWL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 12:21:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40954 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726100AbgFIQVp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 12:21:45 -0400
-Received: from tzanussi-mobl (c-73-211-240-131.hsd1.il.comcast.net [73.211.240.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0678F206A4;
-        Tue,  9 Jun 2020 16:21:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591719705;
-        bh=6qYCXRp4rlIwJzKIwSBl5gMRaYjfFI7zDht+KWOIiAc=;
-        h=Subject:From:To:Cc:Date:From;
-        b=qxaX8StGubWZDvNJ9q0Ys2YqmducF4o8eudlPfJJHUknZwMmLND5YSLkqi98b69EO
-         Vwm+NEOjSL7bgAr8m/xPdMxb5hBc402ygV+Sm+sw/rvIb/JodeUnF5zQEx8LkXoIM7
-         eWf6Ev8T8RwfLJtuxUm39hA4Ng7SGgjY4Tc2a/Lo=
-Message-ID: <7642da1ef2578601d8c2b7bb739b0f8451e69bed.camel@kernel.org>
-Subject: [4.19 stable-rt PATCH] tasklet: Fix UP case for tasklet CHAINED
- state
-From:   Tom Zanussi <zanussi@kernel.org>
-To:     linux-rt-users <linux-rt-users@vger.kernel.org>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Tue, 09 Jun 2020 11:21:44 -0500
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 9 Jun 2020 12:22:11 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:44249
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727773AbgFIQWL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 12:22:11 -0400
+X-IronPort-AV: E=Sophos;i="5.73,492,1583190000"; 
+   d="scan'208";a="351117269"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 18:22:05 +0200
+Date:   Tue, 9 Jun 2020 18:22:05 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Denis Efremov <efremov@linux.com>
+cc:     linux-kernel@vger.kernel.org, cocci@systeme.lip6.fr
+Subject: Re: [Cocci] [PATCH v2 4/4] coccinelle: api: add selfcheck for
+ memdup_user rule
+In-Reply-To: <20200608150038.223747-5-efremov@linux.com>
+Message-ID: <alpine.DEB.2.21.2006091821010.2516@hadrien>
+References: <20200608150038.223747-1-efremov@linux.com> <20200608150038.223747-5-efremov@linux.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.19 stable-rt commit 62d0a2a30cd0 (tasklet: Address a race resulting in
-double-enqueue) addresses a problem that can result in a tasklet being
-enqueued on two cpus at the same time by combining the RUN flag with a
-new CHAINED flag, and relies on the combination to be present in order
-to zero it out, which can never happen on !SMP because the RUN flag
-is SMP-only.
-
-So make sure the above commit is only applied for the SMP case.
-
-Signed-off-by: Tom Zanussi <zanussi@kernel.org>
----
- kernel/softirq.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/kernel/softirq.c b/kernel/softirq.c
-index 73dae64bfc9c..4f37a6173ab9 100644
---- a/kernel/softirq.c
-+++ b/kernel/softirq.c
-@@ -947,10 +947,12 @@ static void __tasklet_schedule_common(struct tasklet_struct *t,
- 	 * is locked before adding it to the list.
- 	 */
- 	if (test_bit(TASKLET_STATE_SCHED, &t->state)) {
-+#if defined(CONFIG_SMP)
- 		if (test_and_set_bit(TASKLET_STATE_CHAINED, &t->state)) {
- 			tasklet_unlock(t);
- 			return;
- 		}
-+#endif
- 		t->next = NULL;
- 		*head->tail = t;
- 		head->tail = &(t->next);
-@@ -1044,7 +1046,11 @@ static void tasklet_action_common(struct softirq_action *a,
- again:
- 		t->func(t->data);
- 
-+#if !defined(CONFIG_SMP)
-+		while (!tasklet_tryunlock(t)) {
-+#else
- 		while (cmpxchg(&t->state, TASKLET_STATEF_RC, 0) != TASKLET_STATEF_RC) {
-+#endif
- 			/*
- 			 * If it got disabled meanwhile, bail out:
- 			 */
--- 
-2.17.1
 
 
+On Mon, 8 Jun 2020, Denis Efremov wrote:
+
+> Check that the rule matches vmemdup_user implementation.
+> memdup_user is out of scope because we are not matching
+> kmalloc_track_caller() function.
+
+Is this a bit over-enginered?  More precisely, even if it is nice to check
+that the API definition has the expected behavior, does it make sense to
+do it in one case but not the other?
+
+julia
+
+>
+> Signed-off-by: Denis Efremov <efremov@linux.com>
+> ---
+>  scripts/coccinelle/api/memdup_user.cocci | 46 ++++++++++++++++++++++--
+>  1 file changed, 44 insertions(+), 2 deletions(-)
+>
+> diff --git a/scripts/coccinelle/api/memdup_user.cocci b/scripts/coccinelle/api/memdup_user.cocci
+> index 8621bd98be1e..78fded83b197 100644
+> --- a/scripts/coccinelle/api/memdup_user.cocci
+> +++ b/scripts/coccinelle/api/memdup_user.cocci
+> @@ -14,13 +14,24 @@ virtual patch
+>  virtual context
+>  virtual org
+>  virtual report
+> +virtual selfcheck
+>
+>  @initialize:python@
+>  @@
+> -filter = frozenset(['memdup_user', 'vmemdup_user'])
+> +
+> +definitions = {
+> +    'memdup_user': 'mm/util.c',
+> +    'vmemdup_user': 'mm/util.c',
+> +}
+> +
+> +filter = frozenset(definitions.keys())
+> +coccinelle.filtered = set()
+> +coccinelle.checked_files = set()
+>
+>  def relevant(p):
+> -    return not (filter & {el.current_element for el in p})
+> +    found = filter & {el.current_element for el in p}
+> +    coccinelle.filtered |= found
+> +    return not found
+>
+>  @depends on patch@
+>  expression from,to,size;
+> @@ -117,3 +128,34 @@ p << rv.p;
+>  @@
+>
+>  coccilib.report.print_report(p[0], "WARNING opportunity for vmemdup_user")
+> +
+> +@script:python depends on selfcheck@
+> +@@
+> +coccinelle.checked_files |= set(definitions.values()) & set(cocci.files())
+> +
+> +@finalize:python depends on selfcheck@
+> +filtered << merge.filtered;
+> +checked_files << merge.checked_files;
+> +@@
+> +
+> +# Don't check memdup_user because the pattern is not capturing
+> +# kmalloc_track_caller() calls
+> +del definitions['memdup_user']
+> +
+> +# mapping between checked files and filtered definitions
+> +found_defns = {}
+> +for files, funcs in zip(checked_files, filtered):
+> +   for file in files:
+> +      found_defns[file] = funcs
+> +
+> +# reverse mapping of definitions
+> +expected_defns = {v : set() for v in definitions.values()}
+> +for k, v in definitions.items():
+> +    expected_defns[v] |= {k}
+> +
+> +for efile, efuncs in expected_defns.items():
+> +    if efile in found_defns:
+> +        not_found = efuncs - found_defns[efile]
+> +        if not_found:
+> +            print('SELF-CHECK: the pattern no longer matches ' \
+> +		  'definitions {} in file {}'.format(not_found, efile))
+> --
+> 2.26.2
+>
+> _______________________________________________
+> Cocci mailing list
+> Cocci@systeme.lip6.fr
+> https://systeme.lip6.fr/mailman/listinfo/cocci
+>
