@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA594C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D68C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2EFD2078C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:03:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC1B82072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:03:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="btlSe6N5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pWbPhkaT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731169AbgFIQDX (ORCPT
+        id S1731200AbgFIQDf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 12:03:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53066 "EHLO
+        Tue, 9 Jun 2020 12:03:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731043AbgFIQCz (ORCPT
+        with ESMTP id S1731093AbgFIQCy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 12:02:55 -0400
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E54AC08C5C4;
-        Tue,  9 Jun 2020 09:02:55 -0700 (PDT)
-Received: by mail-wm1-x32c.google.com with SMTP id d128so3718477wmc.1;
-        Tue, 09 Jun 2020 09:02:55 -0700 (PDT)
+        Tue, 9 Jun 2020 12:02:54 -0400
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5EFEC03E97C;
+        Tue,  9 Jun 2020 09:02:53 -0700 (PDT)
+Received: by mail-wr1-x436.google.com with SMTP id t18so21937013wru.6;
+        Tue, 09 Jun 2020 09:02:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=v7+g5Y6J+VIP2hyLQn1gOGrcKQu1nQn5MWWY3BJimHA=;
-        b=btlSe6N5f0mgQg4Y7OSd90T4VNRMtgo8b62cGj5NRhNQoMD0bG5yfZb3txpvWR2BEu
-         fxgwpVY8GRGO2M7V7O5xI5L6a+Sttal+8lDGQILB6sbNPjH+2CrP/fwfXr7UoVpRwFfs
-         jh7yHVB69j8eeSjLYWlbS3Xz7ym8cF6Q7VIQtzYCDPRU1qUc5EUuOZ+6PjBrvHIJ9GUf
-         y84TS3IAOKtvy0lcP15m3tR3t7YVxd//OVwSX1/8h7jrTbTeMLNVnNU8rUPJMnq+spNp
-         /Poiso72FyHlTfHD4o9EMb9s2Plhsf1LeWiXKrA/HLV3FoLu8rvkGiYImpEBanad4n7i
-         L3Fw==
+        bh=Wql0nseKPHNVpMK7v44I3yXow2YiJmwlmAW5MLi37LA=;
+        b=pWbPhkaTHiBj/Bf6dnMoo7/4PMpfE/fZtYYoqtYbesjNeKeGwsi4x7A9PguTA25qAs
+         EO5IamlBUphfGQFDgP1OnWe3wsnDfD56r49Ty8SRNZxzxfJACMELjztYF9tqvbVcGDGc
+         evjYIdSEIxnQDFyL/BIGVGTuwFnSEK1N67Xqzz8t94EJ+d7UwnEFZOSMXJ2a79DuCm6p
+         CdStSnTRh44w20misckeVRsAis6JpIPmWgfoCfx5MR5Wzyt0oAHGi+FJ0xWs0nCf0B7K
+         F+d+se1HFQeB3w+4uvehu8meHHWFOSRmPcSCgv0vTSGgNMPV2R4hQlNYzlOgZ+ZZXhdC
+         Tsjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=v7+g5Y6J+VIP2hyLQn1gOGrcKQu1nQn5MWWY3BJimHA=;
-        b=LSZ2AAVWtfNbgcIaJGZI/yjA4piyeCYn5D+wU6dvTNxzV7/gCICvv4uSEk3DHG7GS3
-         sDCHPmqtqbq8RIOG7EKTC5D6dZ4Apj75/ABtzf0Spg+rOFafXHrtQoFzDlzZVu8epEUF
-         Ns23YwgyGhvnFGhK0fpJw5PnOYZIDiW9DcxAb/AVsymqbjeoXPRKZLO4qo2iyUlB+gC7
-         Tm8jrh7zYsaf7eWM+DNdA1DbqTki1B4gecuaHqrwD/aatrpFI/Kl+Dl6/YpKny9o2wAq
-         AME3GsHyiP54/oEAoyglqs2gtp4AlFhur590+X1oiDrkMdUpnch70hbnU6PxRKnO6qQK
-         OwSA==
-X-Gm-Message-State: AOAM532UtoR/liV8IxvUmzllu0TiWOk9UIu89wcoCt0FdFGksxc9jWsD
-        TOAsi+UogVpBLLuYynctv/4=
-X-Google-Smtp-Source: ABdhPJwc6V6htJyseRGO6OEK+YYDPMrLt46OS61F6ysv6c4T+Rb4Dao0AS6IoQh7Z5XFtHMZkbnfaQ==
-X-Received: by 2002:a1c:2d54:: with SMTP id t81mr5106166wmt.154.1591718573902;
-        Tue, 09 Jun 2020 09:02:53 -0700 (PDT)
+        bh=Wql0nseKPHNVpMK7v44I3yXow2YiJmwlmAW5MLi37LA=;
+        b=eVtCYm30KuGstSTgH7WtXfwaIxhqXP/9gi9Z8Ie1/U2w5h2NxUyKY3TSeWKC6a8z9f
+         CS0pDGy23HI3fQ/ugWOKEL59Lpxx7MGopCfHGqLiRH2dzPgzlGdOIxoRS18jVElWdhnn
+         /LDI7w5VwdTRmMsI+mC7jcKMZek4T18H0+kb15opTdhXI6C1l3YNdmfsjB0YIdwakuaI
+         LdzBz9IKeeiN632/j9yveMb4/S+7ntnKE4QoszoAMhpd6RFBiqs6hsrBTkuTfHpDnf8Q
+         slT/2dmL6o2o1J44tsSlWfBkQxcleMqalmi5mgThCd1Jt+wkvgWhR6myVfVDJUk+sY4L
+         ubQA==
+X-Gm-Message-State: AOAM5323dxu/T74Ci9BonofFWwNJ5qGSzfoGFTEBdwPVjMcvHSBvMiDG
+        O9bwlFrvA/sj90mfc5bh8NE=
+X-Google-Smtp-Source: ABdhPJx3tEwheDv/TsBaOYIF52VoU/X/lwBR3ioCoJwOEEkg5esB5UKX617kj6Ve3x7pPA45eRLLRg==
+X-Received: by 2002:adf:f601:: with SMTP id t1mr5212856wrp.244.1591718571541;
+        Tue, 09 Jun 2020 09:02:51 -0700 (PDT)
 Received: from skynet.lan (28.red-83-49-61.dynamicip.rima-tde.net. [83.49.61.28])
-        by smtp.gmail.com with ESMTPSA id y14sm3341864wma.25.2020.06.09.09.02.52
+        by smtp.gmail.com with ESMTPSA id y14sm3341864wma.25.2020.06.09.09.02.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 09:02:53 -0700 (PDT)
+        Tue, 09 Jun 2020 09:02:51 -0700 (PDT)
 From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
 To:     p.zabel@pengutronix.de, robh+dt@kernel.org,
@@ -69,9 +69,9 @@ To:     p.zabel@pengutronix.de, robh+dt@kernel.org,
         bcm-kernel-feedback-list@broadcom.com
 Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
-Subject: [PATCH v2 6/7] mips: bmips: dts: add BCM6362 reset controller support
-Date:   Tue,  9 Jun 2020 18:02:43 +0200
-Message-Id: <20200609160244.4139366-7-noltari@gmail.com>
+Subject: [PATCH v2 4/7] mips: bmips: dts: add BCM6328 reset controller support
+Date:   Tue,  9 Jun 2020 18:02:41 +0200
+Message-Id: <20200609160244.4139366-5-noltari@gmail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200609160244.4139366-1-noltari@gmail.com>
 References: <20200609134232.4084718-1-noltari@gmail.com>
@@ -84,21 +84,21 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-BCM6362 SoCs have a reset controller for certain components.
+BCM6328 SoCs have a reset controller for certain components.
 
 Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
 ---
  v2: no changes.
 
- arch/mips/boot/dts/brcm/bcm6362.dtsi | 6 ++++++
+ arch/mips/boot/dts/brcm/bcm6328.dtsi | 6 ++++++
  1 file changed, 6 insertions(+)
 
-diff --git a/arch/mips/boot/dts/brcm/bcm6362.dtsi b/arch/mips/boot/dts/brcm/bcm6362.dtsi
-index 8ae6981735b8..443af6b4c838 100644
---- a/arch/mips/boot/dts/brcm/bcm6362.dtsi
-+++ b/arch/mips/boot/dts/brcm/bcm6362.dtsi
-@@ -70,6 +70,12 @@ reboot: syscon-reboot@10000008 {
- 			mask = <0x1>;
+diff --git a/arch/mips/boot/dts/brcm/bcm6328.dtsi b/arch/mips/boot/dts/brcm/bcm6328.dtsi
+index af860d06def6..590118cf5c12 100644
+--- a/arch/mips/boot/dts/brcm/bcm6328.dtsi
++++ b/arch/mips/boot/dts/brcm/bcm6328.dtsi
+@@ -57,6 +57,12 @@ clkctl: clock-controller@10000004 {
+ 			#clock-cells = <1>;
  		};
  
 +		periph_rst: reset-controller@10000010 {
