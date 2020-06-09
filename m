@@ -2,140 +2,148 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E1BFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87BCAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11D84207F9
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:18:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C052207ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:19:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591701568;
+	bh=6oLQbi+VXC1BdFqllwYDYoh8Oblpv+hbligMTtN4J9A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ooYuj5V5TLPACn5SJmx1VDAsBg8Ev2EwMVXAqDp9mGeMd+dB1HIqoVur2oSlR5svL
+	 B+QGUZGPy7NoxkTIVCsomiYYL0f4pGdD7PjmAzJxFm/XWlUcij9wlBGPZCrbGRibFP
+	 ejvLeZwNlHbW6/wpv1FBlKt9eBEHSIs69hkqx4zQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728975AbgFILSr (ORCPT
+        id S1728956AbgFILTZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 07:18:47 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59602 "EHLO mx2.suse.de"
+        Tue, 9 Jun 2020 07:19:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727002AbgFILSn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 07:18:43 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 7B218ACF2;
-        Tue,  9 Jun 2020 11:18:44 +0000 (UTC)
-Message-ID: <382b81937757de570a83ba4ff9276221c0bba547.camel@suse.de>
-Subject: Re: [PATCH 5/9] usb: xhci-pci: Add support for reset controllers
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        gregkh@linuxfoundation.org, wahrenst@gmx.net, robh@kernel.org,
-        mathias.nyman@linux.intel.com, Eric Anholt <eric@anholt.net>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-usb@vger.kernel.org,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     lorenzo.pieralisi@arm.com, tim.gover@raspberrypi.org,
-        helgaas@kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 09 Jun 2020 13:18:38 +0200
-In-Reply-To: <5d3200cc-17cc-026f-1dfe-c10ec949f9ad@gmail.com>
-References: <20200608192701.18355-1-nsaenzjulienne@suse.de>
-         <20200608192701.18355-6-nsaenzjulienne@suse.de>
-         <5d3200cc-17cc-026f-1dfe-c10ec949f9ad@gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-NVYfO6rea++DlkfIypsN"
-User-Agent: Evolution 3.36.2 
+        id S1727002AbgFILTW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 07:19:22 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 474D6207ED;
+        Tue,  9 Jun 2020 11:19:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591701561;
+        bh=6oLQbi+VXC1BdFqllwYDYoh8Oblpv+hbligMTtN4J9A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=grNWNDH3GlB+YNv3nWCA/FnuaYvGvyFVA8jL/Y5gTcEYV8LTScYQ+LE56GWpT820v
+         CMxIrbcjLrnArBNgWsMIiLgu4ebGojdkmezi3xiDISKdOBUBpiZPg0val06pCT+YFz
+         jxwXA9YCaZ4ud06SzK/33S3Q6PVxjqWsEAJ+wI4A=
+Date:   Tue, 9 Jun 2020 12:19:19 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Pi-Hsun Shih <pihsun@chromium.org>
+Cc:     Nicolas Boichat <drinkcat@chromium.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
+        Tzung-Bi Shih <tzungbi@google.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] regulator: Add driver for cros-ec-regulator
+Message-ID: <20200609111919.GB4583@sirena.org.uk>
+References: <20200609080001.121499-1-pihsun@chromium.org>
+ <20200609080001.121499-3-pihsun@chromium.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="zx4FCpZtqtKETZ7O"
+Content-Disposition: inline
+In-Reply-To: <20200609080001.121499-3-pihsun@chromium.org>
+X-Cookie: Be careful!  Is it classified?
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---=-NVYfO6rea++DlkfIypsN
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+--zx4FCpZtqtKETZ7O
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi Florian, thanks for the reviews!
+On Tue, Jun 09, 2020 at 03:59:55PM +0800, Pi-Hsun Shih wrote:
 
-On Mon, 2020-06-08 at 12:43 -0700, Florian Fainelli wrote:
->=20
-> On 6/8/2020 12:26 PM, Nicolas Saenz Julienne wrote:
-> > Some atypical users of xhci-pci might need to manually reset their xHCI
-> > controller before starting the HCD setup. Check if a reset controller
-> > device is available to the PCI bus and trigger a reset.
-> >=20
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > ---
-> >  drivers/usb/host/xhci-pci.c | 9 +++++++++
-> >  1 file changed, 9 insertions(+)
-> >=20
-> > diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-> > index ef513c2fb843..45f70facdfcd 100644
-> > --- a/drivers/usb/host/xhci-pci.c
-> > +++ b/drivers/usb/host/xhci-pci.c
-> > @@ -12,6 +12,7 @@
-> >  #include <linux/slab.h>
-> >  #include <linux/module.h>
-> >  #include <linux/acpi.h>
-> > +#include <linux/reset.h>
-> > =20
-> >  #include "xhci.h"
-> >  #include "xhci-trace.h"
-> > @@ -339,6 +340,7 @@ static int xhci_pci_probe(struct pci_dev *dev, cons=
-t
-> > struct pci_device_id *id)
-> >  	struct xhci_hcd *xhci;
-> >  	struct usb_hcd *hcd;
-> >  	struct xhci_driver_data *driver_data;
-> > +	struct reset_control *reset;
-> > =20
-> >  	driver_data =3D (struct xhci_driver_data *)id->driver_data;
-> >  	if (driver_data && driver_data->quirks & XHCI_RENESAS_FW_QUIRK) {
-> > @@ -347,6 +349,13 @@ static int xhci_pci_probe(struct pci_dev *dev, con=
-st
-> > struct pci_device_id *id)
-> >  			return retval;
-> >  	}
-> > =20
-> > +	reset =3D devm_reset_control_get(&dev->bus->dev, NULL);
->=20
-> Should not this be devm_reset_control_get_optional()?
+> +static int cros_ec_regulator_set_state(struct regulator_dev *dev, bool enable)
+> +{
+> +	struct cros_ec_regulator_data *data = rdev_get_drvdata(dev);
+> +	struct ec_params_regulator_enable cmd = {
+> +		.index = data->index,
+> +		.enable = enable ? 1 : 0,
 
-Yes, you're right.
+The ternery operator is totally redundant here.
 
-Regards,
-Nicolas
+> +static int cros_ec_regulator_enable(struct regulator_dev *dev)
+> +{
+> +	return cros_ec_regulator_set_state(dev, true);
+> +}
 
-> > +	if (IS_ERR(reset)) {
-> > +		retval =3D PTR_ERR(reset);
-> > +		return retval;
-> > +	}
-> > +	reset_control_reset(reset);
-> > +
-> >  	/* Prevent runtime suspending between USB-2 and USB-3 initialization =
-*/
-> >  	pm_runtime_get_noresume(&dev->dev);
-> > =20
-> >=20
+> +static int cros_ec_regulator_disable(struct regulator_dev *dev)
+> +{
+> +	return cros_ec_regulator_set_state(dev, false);
+> +}
 
+I'm not sure that the shared function is really worthwhile though,
+there's not really enough in it and certainly not anything complicated.
 
---=-NVYfO6rea++DlkfIypsN
+> +static int cros_ec_regulator_set_voltage(struct regulator_dev *dev, int min_uV,
+> +					 int max_uV, unsigned int *selector)
+> +{
+> +	struct cros_ec_regulator_data *data = rdev_get_drvdata(dev);
+> +	int min_mV = DIV_ROUND_UP(min_uV, 1000);
+> +	int max_mV = max_uV / 1000;
+> +	struct ec_params_regulator_set_voltage cmd = {
+> +		.index = data->index,
+> +		.min_mv = min_mV,
+> +		.max_mv = max_mV,
+> +	};
+> +
+> +	if (min_mV > max_mV)
+> +		return -EINVAL;
+
+The core will do this for you.
+
+> +	ret = of_property_read_u32(np, "google,remote-regulator",
+> +				   &drvdata->index);
+> +	if (ret < 0)
+> +		return ret;
+
+This remote-regulator property is a bit weird, it feels like it should
+be a reg property on a bus.
+
+> +#if defined(CONFIG_OF)
+> +static const struct of_device_id regulator_cros_ec_of_match[] = {
+> +	{ .compatible = "regulator-cros-ec", },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, regulator_cros_ec_of_match);
+> +#endif
+
+Your compatible is google,regulator-cros-ec.
+
+--zx4FCpZtqtKETZ7O
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7fcA4ACgkQlfZmHno8
-x/42lggAr4gRLoLdRsOhuBSqjjZLdGcfoxGXMXDpXwxrRsd71lmv+/LtQABORuU3
-Y4M35yyADqBeIuOMtzBSNCxGdLhCxhz4oRZwlAZMO2BRmbv5nVYbesB4JGCeGQ6j
-Kac2Fhfb5aBF7KhISqp7HGN5cH6fQQAgjiPebWDmCNqg0k/kC82VQgJ+JfB3uL3t
-3IuTyHni/9N/xdxeLwZDMjASxQGWRwCq0U+7uGJmsP1lYFB0ucjHa9egEzdeNbui
-DgOvWHSrBjNS3t3bcSpaG5IUspjT+zCYVUOr24zhW7k2WurtDGlkx5Oeh3+/Pipf
-+z7kYFcTP0uYL6kbSA4G7CdRzBFWHw==
-=WpCe
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7fcDYACgkQJNaLcl1U
+h9A5Fgf/Yyo8CmM9ox3GNrQJJGSsFommmFLc+Zk9J9kySNzjzSAete1eVCX7D8XU
+LuLvLP7Adm0+ouCAaty/on0CMaXpnislczWMQDu3wWmIuv8RUGUGb5btlJi4M32p
+tcmDal42jgwj49szrLR9BlH96l2pfyfkW6+4lktXHQt51t8xonHBzH4pDptBUqSa
+UxQnCS1+lHQI8EG1GYOhWdlYFrV7kiYDVLyA9xJeFjuCE4QYkggyQq7Gy1fGFgw+
+WsKRmHQuHajXLFIKR+8SbVpBBVp2OYBCrSmVVWUBC8//VMR49yUOC1KMscDJ7Ujm
+eYA9OmT/RzJXN5LmZVsoqlXx93itFw==
+=j9T6
 -----END PGP SIGNATURE-----
 
---=-NVYfO6rea++DlkfIypsN--
-
+--zx4FCpZtqtKETZ7O--
