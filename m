@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F3F6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B426BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31B0F2067B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:20:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92B892067B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:20:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591726849;
-	bh=6dG3ob7rYkydmIVHfK+isbfmVkWGYTFmUuMdFmWLh9s=;
+	s=default; t=1591726856;
+	bh=nQ1WDh0G+xKPXzz3fq7UntKJcHjzuMBCe9VrvgHx87g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uHLrfF5pKEPqrwHrKcl3lx3Dm8T4AiLai+O9DY1xANeLx438zuHt0F5HeVX93Hdgd
-	 LF3zopgOORSiJETqgaytJmwfWOW2DxiTub6M8KFIA6tazgzc2UCDw4BxUGsRRuAQXp
-	 Gs95/oo3yCsmnt2FiKy6ZB53s9BAxmm6lPDKhrNs=
+	b=pdMtYfjrbJFYUbpSARN7L0CAWaZFTnUC2uqxufFZn0EZc1sFBPhzQ1lTK/q44wT+t
+	 27uys1z+wVYwaXQs8Cr6UFDiHm34N05jHOoAr5eleTdhOq+7fOUvSc38F/Csq1/GCb
+	 IRgsRlay4qJyHBzVDwB6iUpe66nk4DZ1Dzf9jBbk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388927AbgFISUo (ORCPT
+        id S2388942AbgFISUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:20:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33816 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 14:20:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730903AbgFIRsx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:48:53 -0400
+        id S1732378AbgFIRsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:48:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4A2020812;
-        Tue,  9 Jun 2020 17:48:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B585820801;
+        Tue,  9 Jun 2020 17:48:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591724932;
-        bh=6dG3ob7rYkydmIVHfK+isbfmVkWGYTFmUuMdFmWLh9s=;
+        s=default; t=1591724925;
+        bh=nQ1WDh0G+xKPXzz3fq7UntKJcHjzuMBCe9VrvgHx87g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cbBg+X3/7tHtbj/HIWSgaRMDqVGpWPHmltic4JB+ouCX0R9gW58cEzWUbzwjvG/OM
-         lxqV5wy4Qt+N9VUTq7QXvGVSXmGE1W0TLjKFlQ6Q76eaYQDRLIY0iuT3axsWYeTXbx
-         q7KiOt6RSbH6k+opWPaVfaZNtmBRSTFb75llSL04=
+        b=zMHmj3cHrcTYSliR8NsVwOY3OeTy3MN4rYJ4V6awlCvk03OBbPuioQPe41LMYYKvX
+         uaNKhqPHd8ZfG++NzoLXSQbS3HnJR9rSzt99AF1lPXMucY+2/ViO5Ed92pd72DF1Eo
+         CDE2xpBFiCZHOqFcuTkspCkeXV1BlMUHstsO4RQY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: [PATCH 4.9 42/42] uprobes: ensure that uprobe->offset and ->ref_ctr_offset are properly aligned
-Date:   Tue,  9 Jun 2020 19:44:48 +0200
-Message-Id: <20200609174020.195537504@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Gross <mgross@linux.intel.com>,
+        Borislav Petkov <bp@suse.de>, Tony Luck <tony.luck@intel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: [PATCH 4.9 39/42] x86/speculation: Add SRBDS vulnerability and mitigation documentation
+Date:   Tue,  9 Jun 2020 19:44:45 +0200
+Message-Id: <20200609174019.842140727@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174015.379493548@linuxfoundation.org>
 References: <20200609174015.379493548@linuxfoundation.org>
@@ -64,76 +60,185 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleg Nesterov <oleg@redhat.com>
+From: Mark Gross <mgross@linux.intel.com>
 
-commit 013b2deba9a6b80ca02f4fafd7dedf875e9b4450 upstream.
+commit 7222a1b5b87417f22265c92deea76a6aecd0fb0f upstream
 
-uprobe_write_opcode() must not cross page boundary; prepare_uprobe()
-relies on arch_uprobe_analyze_insn() which should validate "vaddr" but
-some architectures (csky, s390, and sparc) don't do this.
+Add documentation for the SRBDS vulnerability and its mitigation.
 
-We can remove the BUG_ON() check in prepare_uprobe() and validate the
-offset early in __uprobe_register(). The new IS_ALIGNED() check matches
-the alignment check in arch_prepare_kprobe() on supported architectures,
-so I think that all insns must be aligned to UPROBE_SWBP_INSN_SIZE.
+ [ bp: Massage.
+   jpoimboe: sysfs table strings. ]
 
-Another problem is __update_ref_ctr() which was wrong from the very
-beginning, it can read/write outside of kmap'ed page unless "vaddr" is
-aligned to sizeof(short), __uprobe_register() should check this too.
-
-Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Tested-by: Sven Schnelle <svens@linux.ibm.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: stable@vger.kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Mark Gross <mgross@linux.intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- kernel/events/uprobes.c |   16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ Documentation/hw-vuln/index.rst                                 |    3 
+ Documentation/hw-vuln/special-register-buffer-data-sampling.rst |  148 ++++++++++
+ 2 files changed, 150 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/hw-vuln/special-register-buffer-data-sampling.rst
 
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -604,10 +604,6 @@ static int prepare_uprobe(struct uprobe
- 	if (ret)
- 		goto out;
- 
--	/* uprobe_write_opcode() assumes we don't cross page boundary */
--	BUG_ON((uprobe->offset & ~PAGE_MASK) +
--			UPROBE_SWBP_INSN_SIZE > PAGE_SIZE);
--
- 	smp_wmb(); /* pairs with the smp_rmb() in handle_swbp() */
- 	set_bit(UPROBE_COPY_INSN, &uprobe->flags);
- 
-@@ -886,6 +882,15 @@ int uprobe_register(struct inode *inode,
- 	if (offset > i_size_read(inode))
- 		return -EINVAL;
- 
-+	/*
-+	 * This ensures that copy_from_page(), copy_to_page() and
-+	 * __update_ref_ctr() can't cross page boundary.
-+	 */
-+	if (!IS_ALIGNED(offset, UPROBE_SWBP_INSN_SIZE))
-+		return -EINVAL;
-+	if (!IS_ALIGNED(ref_ctr_offset, sizeof(short)))
-+		return -EINVAL;
+--- a/Documentation/hw-vuln/index.rst
++++ b/Documentation/hw-vuln/index.rst
+@@ -12,4 +12,5 @@ are configurable at compile, boot or run
+    l1tf
+    mds
+    tsx_async_abort
+-   multihit.rst
++   multihit
++   special-register-buffer-data-sampling
+--- /dev/null
++++ b/Documentation/hw-vuln/special-register-buffer-data-sampling.rst
+@@ -0,0 +1,148 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-  retry:
- 	uprobe = alloc_uprobe(inode, offset);
- 	if (!uprobe)
-@@ -1696,6 +1701,9 @@ static int is_trap_at_addr(struct mm_str
- 	uprobe_opcode_t opcode;
- 	int result;
- 
-+	if (WARN_ON_ONCE(!IS_ALIGNED(vaddr, UPROBE_SWBP_INSN_SIZE)))
-+		return -EINVAL;
++SRBDS - Special Register Buffer Data Sampling
++=============================================
 +
- 	pagefault_disable();
- 	result = __get_user(opcode, (uprobe_opcode_t __user *)vaddr);
- 	pagefault_enable();
++SRBDS is a hardware vulnerability that allows MDS :doc:`mds` techniques to
++infer values returned from special register accesses.  Special register
++accesses are accesses to off core registers.  According to Intel's evaluation,
++the special register reads that have a security expectation of privacy are
++RDRAND, RDSEED and SGX EGETKEY.
++
++When RDRAND, RDSEED and EGETKEY instructions are used, the data is moved
++to the core through the special register mechanism that is susceptible
++to MDS attacks.
++
++Affected processors
++--------------------
++Core models (desktop, mobile, Xeon-E3) that implement RDRAND and/or RDSEED may
++be affected.
++
++A processor is affected by SRBDS if its Family_Model and stepping is
++in the following list, with the exception of the listed processors
++exporting MDS_NO while Intel TSX is available yet not enabled. The
++latter class of processors are only affected when Intel TSX is enabled
++by software using TSX_CTRL_MSR otherwise they are not affected.
++
++  =============  ============  ========
++  common name    Family_Model  Stepping
++  =============  ============  ========
++  Haswell        06_3CH        All
++  Haswell_L      06_45H        All
++  Haswell_G      06_46H        All
++
++  Broadwell_G    06_47H        All
++  Broadwell      06_3DH        All
++
++  Skylake_L      06_4EH        All
++  Skylake        06_5EH        All
++
++  Kabylake_L     06_8EH        <=0xC
++
++  Kabylake       06_9EH        <=0xD
++  =============  ============  ========
++
++Related CVEs
++------------
++
++The following CVE entry is related to this SRBDS issue:
++
++    ==============  =====  =====================================
++    CVE-2020-0543   SRBDS  Special Register Buffer Data Sampling
++    ==============  =====  =====================================
++
++Attack scenarios
++----------------
++An unprivileged user can extract values returned from RDRAND and RDSEED
++executed on another core or sibling thread using MDS techniques.
++
++
++Mitigation mechanism
++-------------------
++Intel will release microcode updates that modify the RDRAND, RDSEED, and
++EGETKEY instructions to overwrite secret special register data in the shared
++staging buffer before the secret data can be accessed by another logical
++processor.
++
++During execution of the RDRAND, RDSEED, or EGETKEY instructions, off-core
++accesses from other logical processors will be delayed until the special
++register read is complete and the secret data in the shared staging buffer is
++overwritten.
++
++This has three effects on performance:
++
++#. RDRAND, RDSEED, or EGETKEY instructions have higher latency.
++
++#. Executing RDRAND at the same time on multiple logical processors will be
++   serialized, resulting in an overall reduction in the maximum RDRAND
++   bandwidth.
++
++#. Executing RDRAND, RDSEED or EGETKEY will delay memory accesses from other
++   logical processors that miss their core caches, with an impact similar to
++   legacy locked cache-line-split accesses.
++
++The microcode updates provide an opt-out mechanism (RNGDS_MITG_DIS) to disable
++the mitigation for RDRAND and RDSEED instructions executed outside of Intel
++Software Guard Extensions (Intel SGX) enclaves. On logical processors that
++disable the mitigation using this opt-out mechanism, RDRAND and RDSEED do not
++take longer to execute and do not impact performance of sibling logical
++processors memory accesses. The opt-out mechanism does not affect Intel SGX
++enclaves (including execution of RDRAND or RDSEED inside an enclave, as well
++as EGETKEY execution).
++
++IA32_MCU_OPT_CTRL MSR Definition
++--------------------------------
++Along with the mitigation for this issue, Intel added a new thread-scope
++IA32_MCU_OPT_CTRL MSR, (address 0x123). The presence of this MSR and
++RNGDS_MITG_DIS (bit 0) is enumerated by CPUID.(EAX=07H,ECX=0).EDX[SRBDS_CTRL =
++9]==1. This MSR is introduced through the microcode update.
++
++Setting IA32_MCU_OPT_CTRL[0] (RNGDS_MITG_DIS) to 1 for a logical processor
++disables the mitigation for RDRAND and RDSEED executed outside of an Intel SGX
++enclave on that logical processor. Opting out of the mitigation for a
++particular logical processor does not affect the RDRAND and RDSEED mitigations
++for other logical processors.
++
++Note that inside of an Intel SGX enclave, the mitigation is applied regardless
++of the value of RNGDS_MITG_DS.
++
++Mitigation control on the kernel command line
++---------------------------------------------
++The kernel command line allows control over the SRBDS mitigation at boot time
++with the option "srbds=".  The option for this is:
++
++  ============= =============================================================
++  off           This option disables SRBDS mitigation for RDRAND and RDSEED on
++                affected platforms.
++  ============= =============================================================
++
++SRBDS System Information
++-----------------------
++The Linux kernel provides vulnerability status information through sysfs.  For
++SRBDS this can be accessed by the following sysfs file:
++/sys/devices/system/cpu/vulnerabilities/srbds
++
++The possible values contained in this file are:
++
++ ============================== =============================================
++ Not affected                   Processor not vulnerable
++ Vulnerable                     Processor vulnerable and mitigation disabled
++ Vulnerable: No microcode       Processor vulnerable and microcode is missing
++                                mitigation
++ Mitigation: Microcode          Processor is vulnerable and mitigation is in
++                                effect.
++ Mitigation: TSX disabled       Processor is only vulnerable when TSX is
++                                enabled while this system was booted with TSX
++                                disabled.
++ Unknown: Dependent on
++ hypervisor status              Running on virtual guest processor that is
++                                affected but with no way to know if host
++                                processor is mitigated or vulnerable.
++ ============================== =============================================
++
++SRBDS Default mitigation
++------------------------
++This new microcode serializes processor access during execution of RDRAND,
++RDSEED ensures that the shared buffer is overwritten before it is released for
++reuse.  Use the "srbds=off" kernel command line to disable the mitigation for
++RDRAND and RDSEED.
 
 
