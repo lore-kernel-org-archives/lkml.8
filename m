@@ -2,119 +2,168 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D036CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 07:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B43C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 07:54:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4908207ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 07:52:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D130B207ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 07:54:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U/7xX1wy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbgFIHwG (ORCPT
+        id S1727839AbgFIHyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 03:52:06 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:55079 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbgFIHwF (ORCPT
+        Tue, 9 Jun 2020 03:54:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34018 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726888AbgFIHyE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 03:52:05 -0400
-Received: from mail-qv1-f50.google.com ([209.85.219.50]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MmlGg-1jGc0z34Zq-00jsQs; Tue, 09 Jun 2020 09:52:03 +0200
-Received: by mail-qv1-f50.google.com with SMTP id e20so9659888qvu.0;
-        Tue, 09 Jun 2020 00:52:03 -0700 (PDT)
-X-Gm-Message-State: AOAM533e10RpiAAlfYGE4zEuLxNE7PsPdGHE+u0jL1t1ZKv0vnj4Xr05
-        pHVtR56SdntKMFAlPf2nfHGs9ajBS6KGv/At6kg=
-X-Google-Smtp-Source: ABdhPJzAAwSa7VDzHc0IOAym25K3WCNuXLb4pQor4Gk1xHK/1l3NKmwBdWCSFx9PK4LZHFo8sP9a0U+zPqoOWpClh2M=
-X-Received: by 2002:a05:6214:846:: with SMTP id dg6mr2426736qvb.210.1591689122373;
- Tue, 09 Jun 2020 00:52:02 -0700 (PDT)
+        Tue, 9 Jun 2020 03:54:04 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 998E5C03E97C;
+        Tue,  9 Jun 2020 00:54:03 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id 64so2864301pfv.11;
+        Tue, 09 Jun 2020 00:54:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4uKwWjkBeGKGswJB1rtsp6iRvLZ81zR9x6/pq8AsVAQ=;
+        b=U/7xX1wyZKkmkicid4IRng//2YewQDpUJdNFAs2KG9nA+nTceYWC5PjTsGLABj0PDl
+         5BzFX+IlCb84Bubw/uxgfzWcjn8O52zd22rntIBFILCkzPxXw4kzcOO34CTxzJD9cV7c
+         MbnCcEpCxE+Obu5uIhYqH8skzyfbmBwanTRd0PT1NXfICtR17WuBT3kozTyA97TrUyxI
+         26Ph4zk64R/Z9Jpx/BhvvwbKGSR2yAIRut3OWA/CQL/JgXaC1Ghl3r3Q4KSToynVcY3i
+         /MZS/ezWA6mPmSj/oWpQUcBC82SY/DKQYIQ8RObNIlKnHD27pROWOx2tTQntFxkZZ+5V
+         Sj1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4uKwWjkBeGKGswJB1rtsp6iRvLZ81zR9x6/pq8AsVAQ=;
+        b=hwMKW1vfVin8NAl5OTsziEH2qpolvsR/fLIzF3FhjV4HbgsMvCx1+PWXnNuDYM7Zre
+         z7xspDCctvngS0ZfpmSedZQx39yNppwU9tb+olhhdn0/GvRIeWxCeWmZxRQAXSOhwcvC
+         uT3CsPjBYPptwEQBY5iLKrrSTcrQfVGVvvxCr5kOaUIZqn8YKZDgN+X/UtEgWDsLWpMa
+         zG5imILfYAB75VnYyCUa/5bvZoXlV4y883KCkMxQxtONcmyO9ed6/mAPxkv+lMRDzxE6
+         Xnp8o/Nu4/zQt8/qoOkx/mongeo1Ixl4oMaXmBpwVKIbm3/wy3g/wqB+PptUwm6X8haL
+         ZT4Q==
+X-Gm-Message-State: AOAM53020B+h5EBe5aX+P6x39hEbP72EF2WAiyuDRiW3valy5yJAglLL
+        9NJP/VfcuqLyx/pAiIXhSiY=
+X-Google-Smtp-Source: ABdhPJyjHZojemD/pn5jq9azXhxD4lMYU72dMlPM6n8Pq1Gmhn0sPozXmReQRMfWYB9Cl73MAVjH0A==
+X-Received: by 2002:a63:689:: with SMTP id 131mr21195128pgg.401.1591689243048;
+        Tue, 09 Jun 2020 00:54:03 -0700 (PDT)
+Received: from dc803.flets-west.jp ([2404:7a87:83e0:f800:99b4:eb52:d0bf:231c])
+        by smtp.gmail.com with ESMTPSA id x4sm4769929pfx.87.2020.06.09.00.53.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2020 00:54:00 -0700 (PDT)
+From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
+To:     kohada.t2@gmail.com
+Cc:     kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
+        mori.takahiro@ab.mitsubishielectric.co.jp,
+        motai.hirotaka@aj.mitsubishielectric.co.jp,
+        Namjae Jeon <linkinjeon@kernel.org>,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2 v2] exfat: write multiple sectors at once
+Date:   Tue,  9 Jun 2020 16:53:27 +0900
+Message-Id: <20200609075329.13313-1-kohada.t2@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200511042149.1712876-1-masahiroy@kernel.org>
- <20200608020256.GA256950@roeck-us.net> <20200609062012.GA499862@kroah.com>
-In-Reply-To: <20200609062012.GA499862@kroah.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 9 Jun 2020 09:51:46 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2Pn22c8Z=w0FD15w4_+7LCWOpcbJ9b-Skh5iXzBjEx1g@mail.gmail.com>
-Message-ID: <CAK8P3a2Pn22c8Z=w0FD15w4_+7LCWOpcbJ9b-Skh5iXzBjEx1g@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: make module name conflict fatal error
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Lucas De Marchi <lucas.demarchi@intel.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:UBHin40ZlcEu9qQg2SBpt8w226nLWkqSbXe4EHUKcVfIHp19t+y
- l75Xomds5u23VGitjViVR6iWv5aL4yKtsXuNrKquRFIbLPbF9/7vcw752JZGXz0q8bq/0GL
- i1Eubh53uoAPzd8KVSD7MtY/NoGLZdDcIbUXLKq6Z4ouYKc1AWoLc2MskDEqrZD75a4YJ9Y
- utBmWKICTh3S2lBuiHRjQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:HSXNM3Pcd6k=:AjquIMDn+Qg7VC1712DvZT
- f91RaXqU23MpzpGoQbU6n/0+H5D5grO6/makv7j7XzhUmhVKyt9TkM1wv3lY7+d4H2IHBH6c7
- 1WTZdR8v3zlnMGinUTpwTSJNBTHHxnA/4EaC3Cxm2i3mG25w3ycvL0RNNh2+3KNBbWGluA4Hv
- krII+fJCThUVh2Odk5hPAvILaFhJMQ5+1kZYDzPErhP3YORqD1iY18/myjkFXi9rL095H6pW2
- IhGCsg/6wqkdoQL4uRZvlIz84OCndNCiLbLLBwRaEk/SIEx3xaocwVREhdqGPx7WEPji8t4H5
- aqHlImU15Mv7WEHS0M54aOrCPx9K1uW/j5h2bdF7IYcCbugSBF/438DB7mjXPHRDgKSpZFfyU
- gep3Vvwo80Dj633RYD2vEZN0UxMwvHUW+JTfSAoSOT7CbxuuveVZzbBfZMh2ycbT+1mdril+x
- T5rQ05ekJ4WnMZVN+b8ywbqaDgGAkYVgSRMrSDuxrWIct/CJwgo+E9BqtRJgqocF2Ki2Lr+or
- FGuCEE+wuFh90zOXzDwMw8gJiU2B/cK+3SVOZWbnZqTg0J9zi2ieV5iizvj+1+Wu1aXuTReV6
- mrV9at9KEzrlc8CgS6ZvZNc4nECb7fXqFfXEv4vJtvcVjNWytKMJJglLIPChwH80UId/1MnSt
- fUzGiP+9n41/2fD+SG9jqvavul5gz062y+caFVvzuJXJVOUzqGh6qYOsCD3p9/uAxH7Tu8LC5
- PZSeH7y8FvflWh4p5/Pepn2UFMq6PfEzc8EQ/7PzBXV6Qh+jd++Hhj56AcOpq9JTo+m1aWSmg
- 0KG4VQWKUo+JaWaFF6n5K4JMRJksiGWDCM5NZ6bYylR57dZTcM=
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 9, 2020 at 8:20 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Sun, Jun 07, 2020 at 07:02:56PM -0700, Guenter Roeck wrote:
-> > Hi,
-> >
-> > On Mon, May 11, 2020 at 01:21:49PM +0900, Masahiro Yamada wrote:
-> > > I think all the warnings have been fixed by now. Make it a fatal error.
-> > >
-> >
-> > Not entirely. With this patch in the tree, I get:
-> >
-> > Building sparc64:allmodconfig ... failed
-> > --------------
-> > Error log:
-> > error: the following would cause module name conflict:
-> >   drivers/char/adi.ko
-> >   drivers/input/joystick/adi.ko
-> > make[1]: *** [modules_check] Error 1
-> > make[1]: *** Waiting for unfinished jobs....
-> > make: *** [__sub-make] Error 2
-> >
-> > Reverting this patch fixes the problem.
->
-> As it doesn't look like either of these drivers can be "auto-loaded"
-> based on hardware detection, I don't know what to suggest as for
-> renaming either of them.
->
-> Any ideas?
+Write multiple sectors at once when updating dir-entries.
+Add exfat_update_bhs() for that. It wait for write completion once
+instead of sector by sector.
+It's only effective if sync enabled.
 
-I see zero chance of a kernel actually needing to provide both drivers,
-given that the hardware is 20 years apart and gameports are almost
-exclusive to x86 PCs. How about an ugly hack:
+Suggested-by: Namjae Jeon <linkinjeon@kernel.org>
+Signed-off-by: Tetsuhiro Kohada <kohada.t2@gmail.com>
+---
+Changes in v2:
+ - Split into 'write multiple sectors at once'
+   and 'add error check when updating dir-entries'
 
-diff --git a/drivers/input/joystick/Kconfig b/drivers/input/joystick/Kconfig
-index 940b744639c7..6f73f02059b5 100644
---- a/drivers/input/joystick/Kconfig
-+++ b/drivers/input/joystick/Kconfig
-@@ -45,6 +45,7 @@ config JOYSTICK_A3D
- config JOYSTICK_ADI
-        tristate "Logitech ADI digital joysticks and gamepads"
-        select GAMEPORT
-+       depends on ADI!=m # avoid module name conflict
-        help
-          Say Y here if you have a Logitech controller using the ADI
-          protocol over the PC gameport.
+ fs/exfat/dir.c      | 12 +++++++-----
+ fs/exfat/exfat_fs.h |  1 +
+ fs/exfat/misc.c     | 19 +++++++++++++++++++
+ 3 files changed, 27 insertions(+), 5 deletions(-)
 
-      Arnd
+diff --git a/fs/exfat/dir.c b/fs/exfat/dir.c
+index de43534aa299..495884ccb352 100644
+--- a/fs/exfat/dir.c
++++ b/fs/exfat/dir.c
+@@ -604,13 +604,15 @@ void exfat_update_dir_chksum_with_entry_set(struct exfat_entry_set_cache *es)
+ 
+ void exfat_free_dentry_set(struct exfat_entry_set_cache *es, int sync)
+ {
+-	int i;
++	int i, err = 0;
+ 
+-	for (i = 0; i < es->num_bh; i++) {
+-		if (es->modified)
+-			exfat_update_bh(es->sb, es->bh[i], sync);
+-		brelse(es->bh[i]);
++	if (es->modified) {
++		set_bit(EXFAT_SB_DIRTY, &EXFAT_SB(es->sb)->s_state);
++		err = exfat_update_bhs(es->bh, es->num_bh, sync);
+ 	}
++
++	for (i = 0; i < es->num_bh; i++)
++		err ? bforget(es->bh[i]):brelse(es->bh[i]);
+ 	kfree(es);
+ }
+ 
+diff --git a/fs/exfat/exfat_fs.h b/fs/exfat/exfat_fs.h
+index 595f3117f492..935954da2e54 100644
+--- a/fs/exfat/exfat_fs.h
++++ b/fs/exfat/exfat_fs.h
+@@ -515,6 +515,7 @@ void exfat_set_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
+ u16 exfat_calc_chksum16(void *data, int len, u16 chksum, int type);
+ u32 exfat_calc_chksum32(void *data, int len, u32 chksum, int type);
+ void exfat_update_bh(struct super_block *sb, struct buffer_head *bh, int sync);
++int exfat_update_bhs(struct buffer_head **bhs, int nr_bhs, int sync);
+ void exfat_chain_set(struct exfat_chain *ec, unsigned int dir,
+ 		unsigned int size, unsigned char flags);
+ void exfat_chain_dup(struct exfat_chain *dup, struct exfat_chain *ec);
+diff --git a/fs/exfat/misc.c b/fs/exfat/misc.c
+index 17d41f3d3709..dc34968e99d3 100644
+--- a/fs/exfat/misc.c
++++ b/fs/exfat/misc.c
+@@ -173,6 +173,25 @@ void exfat_update_bh(struct super_block *sb, struct buffer_head *bh, int sync)
+ 		sync_dirty_buffer(bh);
+ }
+ 
++int exfat_update_bhs(struct buffer_head **bhs, int nr_bhs, int sync)
++{
++	int i, err = 0;
++
++	for (i = 0; i < nr_bhs; i++) {
++		set_buffer_uptodate(bhs[i]);
++		mark_buffer_dirty(bhs[i]);
++		if (sync)
++			write_dirty_buffer(bhs[i], 0);
++	}
++
++	for (i = 0; i < nr_bhs && sync; i++) {
++		wait_on_buffer(bhs[i]);
++		if (!buffer_uptodate(bhs[i]))
++			err = -EIO;
++	}
++	return err;
++}
++
+ void exfat_chain_set(struct exfat_chain *ec, unsigned int dir,
+ 		unsigned int size, unsigned char flags)
+ {
+-- 
+2.25.1
+
