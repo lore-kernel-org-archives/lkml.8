@@ -2,134 +2,191 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0470DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31DCFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:23:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA35D20737
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:21:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591734099;
-	bh=7Omx5Ufj4IP/9aozcsbfZbE20tRiHiqGloCyLqZg/hw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tw+laysqsCqvw6EdsuK2CYMHmBYjcmqzSPQ+rLI3/x0IeSW121qiMwXZ9NQXQQ4Id
-	 JY5/z/4qPw36gcbfu2UqAsClVvcorq7LBNgdLnwXHrTrWpxc1MEXaD3ZA6MeqZEy9z
-	 X66U83DkMbFkOHjYtielToJIhi4x2hCybHG59Ca8=
+	by mail.kernel.org (Postfix) with ESMTP id 1573F206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:23:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732904AbgFIUVh (ORCPT
+        id S1733137AbgFIUXm convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 16:21:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43810 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729875AbgFIUVg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 16:21:36 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D438C206C3;
-        Tue,  9 Jun 2020 20:21:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591734096;
-        bh=7Omx5Ufj4IP/9aozcsbfZbE20tRiHiqGloCyLqZg/hw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dYAtbV2mQ3dzCyPuZgI39zrAuS68KGdzy9NnCVxicEcqIKlMlUt/Gh1Li2bLJoC/X
-         wmcpVAjG9NaP05c9+LbepXdvPfk10YLZqSzMBdxtMpEMlq7VDGLSep4fbhrpUSg5k3
-         yiU4rYaZ2HO5340DOwknjkojRudCqsn3kSgDpf8Y=
-Date:   Tue, 9 Jun 2020 13:21:34 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Peter Zijlstra <peterz@infradead.org>, tglx@linutronix.de,
-        frederic@kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
-        cai@lca.pw, mgorman@techsingularity.net
-Subject: Re: [RFC][PATCH 7/7] sched: Replace rq::wake_list
-Message-ID: <20200609202134.GA1105@sol.localdomain>
-References: <20200526161057.531933155@infradead.org>
- <20200526161908.129371594@infradead.org>
- <20200604141837.GA179816@roeck-us.net>
- <20200605002433.GA148196@sol.localdomain>
- <20200605074154.GB2750@hirez.programming.kicks-ass.net>
- <20200605161532.GD1373@sol.localdomain>
- <53318971-561c-b445-0408-530b3d3ba44e@roeck-us.net>
+        Tue, 9 Jun 2020 16:23:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37008 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728272AbgFIUXm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 16:23:42 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD49BC05BD1E
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 13:23:41 -0700 (PDT)
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1jikmZ-0000v8-FR; Tue, 09 Jun 2020 22:23:39 +0200
+Date:   Tue, 9 Jun 2020 22:23:39 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Stephen Berman <stephen.berman@gmx.net>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: power-off delay/hang due to commit 6d25be57 (mainline)
+Message-ID: <20200609202339.cgy57twm2zdtjhje@linutronix.de>
+References: <87bln7ves7.fsf@gmx.net>
+ <20200506215713.qoo4enq32ckcjmz7@linutronix.de>
+ <87v9l65d2y.fsf@gmx.net>
+ <20200513220428.4nksinis2qs5dtmh@linutronix.de>
+ <87mu6aurfn.fsf@gmx.net>
+ <20200522164012.ynyvrjompv42jtmx@linutronix.de>
+ <87y2owwo2o.fsf@rub.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <53318971-561c-b445-0408-530b3d3ba44e@roeck-us.net>
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <87y2owwo2o.fsf@rub.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 06, 2020 at 04:13:33PM -0700, Guenter Roeck wrote:
-> On 6/5/20 9:15 AM, Eric Biggers wrote:
-> > On Fri, Jun 05, 2020 at 09:41:54AM +0200, Peter Zijlstra wrote:
-> >> On Thu, Jun 04, 2020 at 05:24:33PM -0700, Eric Biggers wrote:
-> >>> On Thu, Jun 04, 2020 at 07:18:37AM -0700, Guenter Roeck wrote:
-> >>>> On Tue, May 26, 2020 at 06:11:04PM +0200, Peter Zijlstra wrote:
-> >>>>> The recent commit: 90b5363acd47 ("sched: Clean up scheduler_ipi()")
-> >>>>> got smp_call_function_single_async() subtly wrong. Even though it will
-> >>>>> return -EBUSY when trying to re-use a csd, that condition is not
-> >>>>> atomic and still requires external serialization.
-> >>>>>
-> >>>>> The change in ttwu_queue_remote() got this wrong.
-> >>>>>
-> >>>>> While on first reading ttwu_queue_remote() has an atomic test-and-set
-> >>>>> that appears to serialize the use, the matching 'release' is not in
-> >>>>> the right place to actually guarantee this serialization.
-> >>>>>
-> >>>>> The actual race is vs the sched_ttwu_pending() call in the idle loop;
-> >>>>> that can run the wakeup-list without consuming the CSD.
-> >>>>>
-> >>>>> Instead of trying to chain the lists, merge them.
-> >>>>>
-> >>>>> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> >>>>> ---
-> >>>> ...
-> >>>>> +	/*
-> >>>>> +	 * Assert the CSD_TYPE_TTWU layout is similar enough
-> >>>>> +	 * for task_struct to be on the @call_single_queue.
-> >>>>> +	 */
-> >>>>> +	BUILD_BUG_ON(offsetof(struct task_struct, wake_entry_type) - offsetof(struct task_struct, wake_entry) !=
-> >>>>> +		     offsetof(struct __call_single_data, flags) - offsetof(struct __call_single_data, llist));
-> >>>>> +
-> >>>>
-> >>>> There is no guarantee in C that
-> >>>>
-> >>>> 	type1 a;
-> >>>> 	type2 b;
-> >>>>
-> >>>> in two different data structures means that offsetof(b) - offsetof(a)
-> >>>> is the same in both data structures unless attributes such as
-> >>>> __attribute__((__packed__)) are used.
-> >>>>
-> >>>> As result, this does and will cause a variety of build errors depending
-> >>>> on the compiler version and compile flags.
-> >>>>
-> >>>> Guenter
-> >>>
-> >>> Yep, this breaks the build for me.
-> >>
-> >> -ENOCONFIG
-> > 
-> > For me, the problem seems to be randstruct.  To reproduce, you can use
-> > (on x86_64):
-> > 
-> > 	make defconfig
-> > 	echo CONFIG_GCC_PLUGIN_RANDSTRUCT=y >> .config
-> > 	make olddefconfig
-> > 	make kernel/smp.o
-> > 
+On 2020-06-09 12:06:23 [+0200], Stephen Berman wrote:
+> I recompiled kernel 5.6.4 with the printk() call you suggested, then
+> booted the kernel with "ignore_loglevel initcall_debug" (but leaving the
+> CDROM and wifi intact for now).  After working as I normally do, I
+> called `shutdown -h now', again as usual.  After the "Bringing down the
+> loopback interface" message there were these two messages:
 > 
-> I confirmed that disabling CONFIG_GCC_PLUGIN_RANDSTRUCT "fixes" the problem
-> in my test builds. Maybe it would make sense to mark that configuration option
-> for the time being as BROKEN.
+> reboot: __do_sys_reboot(317)CMD: 89abcdef
+> reboot: __do_sys_reboot(317)CMD: 4321fedc
 > 
+> Then nothing more for two minutes, then, as previously:
+> 
+> sr 5:0:0:0: tag#10 timing out command, waited 120 seconds.
+> 
+> Then I did a hard reboot.
+> 
+> This morning I detached the cables to the CDROM (but left the disk in
+> the box) and again booted 5.6.4 with "ignore_loglevel initcall_debug".
+> After working for a bit, I called `shutdown -h now', and now there were
+> quite a few more messages, but again the machine did not power off.
+> Here is the ouput, which I transcribed carefully, hopefully without
+> error (I omitted the fractional parts of the timestamps and some of the
+> usb1-portX messages):
 
-Still occurring on Linus' tree.  This needs to be fixed.  (And not by removing
-support for randstruct; that's not a "fix"...)
+If it helps you could delay printks on shutdown (via
+/proc/sys/kernel/printk_delay) and record a video clip. I could make
+storage available for an upload.
 
-Shouldn't the kbuild test robot have caught this?
 
-- Eric
+| *   Bringing down the loopback interface...
+| [1123.***] reboot: __do_sys_reboot(317)CMD: 89abcdef
+| [1123.***] reboot: __do_sys_reboot(317)CMD: 4321fedc
+This happens quicker than I expected. Initially I assumed that you are
+not there yet and userland is still poking at your cdrom. Accordin
+…
+| [1124.***] sd 4:0:0:0: shutdown
+| [1124.***] sd 4:0:0:0: shutdown [sda] Synchronizing SCSI cache
+| [1124.***] sd 4:0:0:0: shutdown [sda] Stopping disk
+
+After this, there shouldn't be any outstanding disk requests.
+…
+| [1125.***] ahci 0000:00:17.0: shutdown
+
+This disables the ahci controller which means disk/cdrom requests won't
+be answered by the hardware.
+…
+| [1125.***] ACPI: Preparing to enter system sleep state S5
+| [1352.***] INFO: task halt:5187 blocked for more than 122 seconds.
+| [1352.***]                  Not tainted 5.6.4 #4
+| [1352.***] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message
+| [1352.***] halt            D13856  5187   5186 0x00004000
+| [1352.***] Call Trace:
+| [1352.***]  ? __schedule+0x272/0x5b0
+| [1352.***]  schedule+0x45/0xb0
+| [1352.***]  schedule_timeout+0x204/0x2f0
+| [1352.***]  ? acpi_os_release_object+0x5/0x10
+| [1352.***]  ? acpi_ut_update_object_reference+0x14e/0x1d2
+| [1352.***]  wait_for_completion+0xa3/0x100
+| [1352.***]  ? wake_up_q+0x90/0x90
+| [1352.***]  flush_workqueue+0x130/0x420
+
+I have no idea where this flush_workqueue() is coming from. The command
+  scripts/decode_stacktrace.sh vmlinux $(pwd)/ kernel_power_off+0x3d/0x70
+
+should reveal that.
+The cdrom is polled by the kernel every two seconds. I *think* the
+kernel is blocked for some reason and then the cdrom polled. This can't
+complete and you see the srX warning. The window is quite small but not
+impossible. 
+I managed to fabricate this case but after 
+|[  137.581613] sr 3:0:0:0: tag#1 timing out command, waited 120s
+
+The system shutdowns. So you are facing something different. I am
+surprised that the workqueue stall detector did not yell here. The patch
+at the bottom should get rid of the sr warnings.
+
+
+| [1352.***]  kernel_power_off+0x3d/0x70
+| [1352.***]  __do_sys_reboot+0x140/0x220
+…
+
+> After the last message here, the "echo", Call Trace, RIP and register
+> messages were repeated exactly as above.  At this point I did a hard
+> reboot.  A web search found something similar to the above output
+> ("System hangs (bad RIP value) when disk used in pool is removed"), but
+> didn't otherwise seem to be related to the problem I'm having.
+> 
+> Do you still want me to check whether removing the iwlwifi driver makes
+> a differece?  And with the CDROM still detached, or does that not
+> matter?
+
+I assumed the wifi driver shuts the AHCI port for some reason. But
+according to this log it does not happen, the ahci port is shutdown
+properly. The patch at the bottom should get rid of the sr warning. Then
+could you please try the other patch so we see which workqueue is
+blocked? I am curious to see why the system is blocked.
+
+> Steve Berman
+
+Sebastian
+
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Date: Tue, 9 Jun 2020 22:13:46 +0200
+Subject: [PATCH] SCSI: Disable CD-ROM poll on shutdown
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ drivers/scsi/sr.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/scsi/sr.c b/drivers/scsi/sr.c
+index d2fe3fa470f95..2484e594af283 100644
+--- a/drivers/scsi/sr.c
++++ b/drivers/scsi/sr.c
+@@ -85,6 +85,13 @@ static blk_status_t sr_init_command(struct scsi_cmnd *SCpnt);
+ static int sr_done(struct scsi_cmnd *);
+ static int sr_runtime_suspend(struct device *dev);
+ 
++static void sr_shutdown(struct device *dev)
++{
++	struct scsi_cd *cd = dev_get_drvdata(dev);
++
++	disk_block_events(cd->disk);
++}
++
+ static const struct dev_pm_ops sr_pm_ops = {
+ 	.runtime_suspend	= sr_runtime_suspend,
+ };
+@@ -95,6 +102,7 @@ static struct scsi_driver sr_template = {
+ 		.owner		= THIS_MODULE,
+ 		.probe		= sr_probe,
+ 		.remove		= sr_remove,
++		.shutdown	= sr_shutdown,
+ 		.pm		= &sr_pm_ops,
+ 	},
+ 	.init_command		= sr_init_command,
+-- 
+2.27.0
+
