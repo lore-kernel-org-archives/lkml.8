@@ -2,89 +2,153 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D5FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 809E3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B66A207C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:37:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591717036;
-	bh=3nKS9nvh6ZEopoO4uY4Sbrc9TYsSWEMTgTcU3kcNFr0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=b8NURRcbvle0D471pBfnFciHFoJifmnmTrUQ4BCmlk2QybpGqoYc17FnqYf6ZCVni
-	 dSqmyKHoHFmDJ+ijs8gcOk3PlxttQfNvun12GjCJnozv5yAMkDDiK09tWjwDIn6puR
-	 JEOScstPG7msXDHFw+D9S3lBJVs0X9NH1u3ZIa8Q=
+	by mail.kernel.org (Postfix) with ESMTP id 5AD6C20774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:37:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="RfotOqWz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730867AbgFIPhO (ORCPT
+        id S1730851AbgFIPhr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 11:37:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57518 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 11:37:47 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:29599 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728162AbgFIPhN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 11:37:13 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728533AbgFIPhq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 11:37:46 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591717065; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=kSmXCEZthPFBcc8b/FNZN3SWGb1YoOjWeX+5hiieEpY=;
+ b=RfotOqWzom4iLqUHJtqJm5/zX6I/4Pr7JBjlYWjceuEFqZd4CjNQjF5XzuGmQRVWlFYQanQn
+ pHAqzOrdy5iUXGmy9WyT05McG6HkrSXIN54mTNccoTRugE/fVbV5hy5p9tzbgGebBorNO1ob
+ VMUpsRp25zxjGf7wqHc2iyOeaiA=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 5edfacaec76a4e7a2a61f494 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 09 Jun 2020 15:37:18
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 9F607C43395; Tue,  9 Jun 2020 15:37:17 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2D8320774;
-        Tue,  9 Jun 2020 15:37:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591717033;
-        bh=3nKS9nvh6ZEopoO4uY4Sbrc9TYsSWEMTgTcU3kcNFr0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dYsDg7vpYoQIAnv07rNNJ4rONVnN5glNqDRVYJnarX1+2bfNNHoMK9pmcu7LNaokh
-         lruX+1XidWBIbzBwv/gHj7jdXukkI3+ethkT0kmC5W+vIKbOOlm3OVZAwtGhenGx7f
-         z3GaKMzH0UprZY0fLHcfkI9FqINvDkpcFpXKd9Wg=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 31A5B40AFD; Tue,  9 Jun 2020 12:37:11 -0300 (-03)
-Date:   Tue, 9 Jun 2020 12:37:11 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 2/2] perf parse-events: fix an old style declaration
-Message-ID: <20200609153711.GH24868@kernel.org>
-References: <20200609053610.206588-1-irogers@google.com>
- <20200609053610.206588-2-irogers@google.com>
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BA605C433CB;
+        Tue,  9 Jun 2020 15:37:16 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200609053610.206588-2-irogers@google.com>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 09 Jun 2020 21:07:16 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Mike Leach <mike.leach@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Coresight ML <coresight@lists.linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH 2/2] coresight: tmc: Add shutdown callback for TMC ETR/ETF
+In-Reply-To: <CANLsYkzqmMZNY=N+x7tVFppGHPp6GviQsDMLqoQ36mnL2aRBLA@mail.gmail.com>
+References: <cover.1590947174.git.saiprakash.ranjan@codeaurora.org>
+ <28123d1e19f235f97555ee36a5ed8b52d20cbdea.1590947174.git.saiprakash.ranjan@codeaurora.org>
+ <20200601212858.GB24287@xps15>
+ <6d759cc28628ea72767c1304883630eb@codeaurora.org>
+ <CAJ9a7VhMbdqVBHxEXGYxFkgPnnQqNnDAz=wkHP3s7Ntw0iLmKA@mail.gmail.com>
+ <f0357072de96970b641bbd0da98c1d61@codeaurora.org>
+ <CAJ9a7Vj9STJw4jBxWU_9wHftj4Q7+k8o1nTc8tr21KjYi0RkpQ@mail.gmail.com>
+ <4a09cd2e054836d85f2e024ca4435e91@codeaurora.org>
+ <CAJ9a7VgCFeHNbY_9Gwvu6uT9MFBeY=_GCaN4N1dwmm+iNpfJOw@mail.gmail.com>
+ <1a5a6a6d-b86d-df45-cf91-7081e70d88a3@arm.com>
+ <20200603174426.GA23165@xps15>
+ <da1fdf765ea29cfe7a44145b17431721@codeaurora.org>
+ <dfa6aa626f075f49d9ba1ae8ffa3d384@codeaurora.org>
+ <CANLsYkzqmMZNY=N+x7tVFppGHPp6GviQsDMLqoQ36mnL2aRBLA@mail.gmail.com>
+Message-ID: <2776eeee4532b0b84459da169c050ad7@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Jun 08, 2020 at 10:36:10PM -0700, Ian Rogers escreveu:
-> Fixes: a26e47162d76 (perf tools: Move ALLOC_LIST into a function)
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/parse-events.y | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Hi Mathieu,
+
+On 2020-06-09 20:57, Mathieu Poirier wrote:
+> On Mon, 8 Jun 2020 at 08:07, Sai Prakash Ranjan
+> <saiprakash.ranjan@codeaurora.org> wrote:
+>> 
+>> Hi Mathieu, Mike
+>> 
+>> On 2020-06-04 12:57, Sai Prakash Ranjan wrote:
+>> >
+>> 
+>> [...]
+>> 
+>> >>
+>> >> Robin has a point - user space is long gone at this time.  As such the
+>> >> first
+>> >> question to ask is what kind of CS session was running at the time the
+>> >> system
+>> >> was shutting down.  Was it a perf session of a sysfs session?
+>> >>
+>> >> I'm guessing it was a sysfs session because user space has been blown
+>> >> away a
+>> >> while back and part of that process should have killed all perf
+>> >> sessions.
+>> >
+>> > I was enabling trace via sysfs.
+>> >
+>> >>
+>> >> If I am correct then simply switching off the ETR HW in the shutdown()
+>> >> amba bus
+>> >> callback should be fine - otherwise Mike's approach is mandatory.
+>> >> There is
+>> >> also the exchange between Robin and Sai about removing the SMMU
+>> >> shutdown
+>> >> callback, but that thread is still incomplete.
+>> >>
+>> >
+>> > If Robin is hinting at removing SMMU shutdown callback, then I think
+>> > adding
+>> > all these shutdown callbacks to all clients of SMMU can be avoided. Git
+>> > blaming
+>> > the thing shows it was added to avoid some kexec memory corruption.
+>> >
+>> 
+>> I think I misread the cryptic hint from Robin and it is not right to
+>> remove
+>> SMMU shutdown callback. For more details on why that was a bad idea 
+>> and
+>> would
+>> break kexec, please refer to [1].
+>> 
+>> As for the coresight, can I disable the ETR only in the tmc shutdown
+>> callback
+>> or are we still concerned about the userspace coming into picture?
 > 
-> diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-> index d4e076c9c2ab..acef87d9af58 100644
-> --- a/tools/perf/util/parse-events.y
-> +++ b/tools/perf/util/parse-events.y
-> @@ -26,7 +26,7 @@ do { \
->  		YYABORT; \
->  } while (0)
->  
-> -static struct list_head* alloc_list()
-> +static struct list_head* alloc_list(void)
->  {
->  	struct list_head *list;
+> User space isn't a concern, especially after you've confirmed the
+> problem occured during an ongoing sysfs session.
+> 
 
-Thanks, applied.
+Will post v3 with comments addressed after 5.8-rc1 is out.
 
-- Arnaldo
+Thanks,
+Sai
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
