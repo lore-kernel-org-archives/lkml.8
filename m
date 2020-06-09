@@ -2,112 +2,139 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D69B9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2075DC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B36F20737
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:49:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFEDC2078C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:49:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591721353;
-	bh=JsT12WSvXhDryXhjex3aGi124e+fMsXrg8XGx3UU+ag=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=pThlHE1oeHU2fZ4R7je9nmTePqPrEzdFy+rkxD9R22PauEEb53MbC1vlyebu55Gm0
-	 M+uZWXH+bSdFRzvweNUIvI9wzMZ6McvD/uB9H1yHEweX2yDcBgtl2cEG+rVHwB+2rn
-	 9+2xgWR6JTOYsxG9mXjQzBtqKIwvVfdfPaaUqtOk=
+	s=default; t=1591721373;
+	bh=5Q7RvyofmbZbrB/I38g1tWmxg8QS/w1w0oFGJk1TAAE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=oOS/kyPIMrsFUMbR64S1le5pmmQ6t5UZeCEE6eLoJEfDsZKYUyU2GcQa2YPyGpHFn
+	 u4wmC1Fx+Xnpmw2ZGhDgYuXpc5PqEtPnSH+iAblo1l+jyamDtEtGqaOCorRx1GUzb6
+	 983NifqwYc06VThbLUYX9nMCMenxotMwh0R4NGQc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731127AbgFIQtM (ORCPT
+        id S1731236AbgFIQtb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 12:49:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60222 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731061AbgFIQtI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 12:49:08 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3201FC05BD1E
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 09:49:07 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id n24so25908787lji.10
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 09:49:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=v+eZVpWI+1D9dHZQUKIk/y34wQFtqgnbT/JoaV292xs=;
-        b=StMmkfoaPXkHKNIC++KAQhXjLtVDtWTNmiwfWeKs2x3DGD5m+CKz8gZnONJopQM1qP
-         Y9pXiegRmflg0Cz8lA4b3rWwvJiD8EU4smcIoU+Vy4LSD02Nyaf8sgWWRaZkCTI+qJOJ
-         mAoVVBJMY1T/6RmRBaNU6DQPPmW/Z85XwUq3o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v+eZVpWI+1D9dHZQUKIk/y34wQFtqgnbT/JoaV292xs=;
-        b=MaJlblJhKhZlnXHVCzWtRCxTBAWZm+TeM/UU10NJvc1X5VEGL3yHfpvVWMyHEtNsXc
-         t1+vrcU5D1NHdFPwaECvwldEY97qG2k6WhXXmAumcFCMORxlivMN7Ny6PxOF0DyekBAL
-         qo5WviBVgCTy4EzbrO/w3WjW5dC6GmKSm90eCtVLLRPT9qdcj0kpNWOeZ7b1xpudxDtJ
-         AedEsJzOfjUkL2ZJEWRtQ02t2QlIFpWO4M+2rG8Zrd0uSxftB94lUifVNxivB7+KwmWI
-         8ip1SVEkcODXR6+1Kp3dhZeUxmHF1aYZrJyq45lCAbMWyCFluEkkSTq1VEBgTi150iUN
-         44Jw==
-X-Gm-Message-State: AOAM532yxHq6HSMC+TQ/79dGjg8tSKWgGSr9eaPSJz++/wI4vhBGOI5a
-        5ur638xSs0xoudnoZh61+dajQlSaKG8=
-X-Google-Smtp-Source: ABdhPJxB8WY30MGB1mBVkuWrNflOi7BfDVnpKSliSOZkl1aJL614vvJ4VPaU9o+KL16p0Pi1fyNiWw==
-X-Received: by 2002:a2e:9e88:: with SMTP id f8mr11491070ljk.193.1591721344108;
-        Tue, 09 Jun 2020 09:49:04 -0700 (PDT)
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
-        by smtp.gmail.com with ESMTPSA id 193sm4415025ljj.48.2020.06.09.09.49.02
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Jun 2020 09:49:02 -0700 (PDT)
-Received: by mail-lj1-f177.google.com with SMTP id c17so25914002lji.11
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 09:49:02 -0700 (PDT)
-X-Received: by 2002:a2e:97c3:: with SMTP id m3mr14630049ljj.312.1591721341985;
- Tue, 09 Jun 2020 09:49:01 -0700 (PDT)
+        Tue, 9 Jun 2020 12:49:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51626 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731061AbgFIQt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 12:49:29 -0400
+Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D1D420737;
+        Tue,  9 Jun 2020 16:49:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591721368;
+        bh=5Q7RvyofmbZbrB/I38g1tWmxg8QS/w1w0oFGJk1TAAE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=dvG4keriVYERu7ME7jmTxlggF24dPHuT8ZHwsHgyeBv8aHb5TopY1KdfJVDndSoXl
+         RxQiw2j9xiinR8ke3p9Ltba3X4AhyTf4XbSb9RwT2AqKWdKTjRg+cV7DgApD257z37
+         fAvyNM3ngOAOHRMuIGrK7cGIhRs7rGlN9Hoz8zWA=
+Date:   Tue, 9 Jun 2020 11:49:26 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Zhangfei Gao <zhangfei.gao@linaro.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        jean-philippe <jean-philippe@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-pci <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH 0/2] Introduce PCI_FIXUP_IOMMU
+Message-ID: <20200609164926.GA1452092@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <CAHk-=whQt69ApMkZF8b2Q2idMDgPpPETZeeOuZg59CrOO4025w@mail.gmail.com>
- <20200428091149.GB19958@linux.vnet.ibm.com> <20200428123914.GA27920@redhat.com>
- <20200504164724.GA28697@redhat.com> <20200609153020.GB17951@redhat.com>
-In-Reply-To: <20200609153020.GB17951@redhat.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 9 Jun 2020 09:48:45 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgOkWaEwCNunc4_WXF_SLJZSeNEnstvHha9n82iLYpyCA@mail.gmail.com>
-Message-ID: <CAHk-=wgOkWaEwCNunc4_WXF_SLJZSeNEnstvHha9n82iLYpyCA@mail.gmail.com>
-Subject: Re: [PATCH] uprobes: ensure that uprobe->offset and ->ref_ctr_offset
- are properly aligned
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Guo Ren <guoren@kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Jann Horn <jannh@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jens Axboe <axboe@kernel.dk>,
-        Security Officers <security@kernel.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Ananth N Mavinakayanahalli <ananth@in.ibm.com>,
-        Naveen Rao <naveen.n.rao@linux.vnet.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK8P3a38bhE_VO_eVcsfsGKgED=gmSEntQmrhwbLkeA6Si0qaw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 9, 2020 at 8:30 AM Oleg Nesterov <oleg@redhat.com> wrote:
->
-> Looks like this patch was forgotten...
->
-> Should I resend it?
+On Tue, Jun 09, 2020 at 11:15:06AM +0200, Arnd Bergmann wrote:
+> On Tue, Jun 9, 2020 at 6:02 AM Zhangfei Gao <zhangfei.gao@linaro.org> wrote:
+> > On 2020/6/9 上午12:41, Bjorn Helgaas wrote:
+> > > On Mon, Jun 08, 2020 at 10:54:15AM +0800, Zhangfei Gao wrote:
+> > >> On 2020/6/6 上午7:19, Bjorn Helgaas wrote:
+> > >>>> +++ b/drivers/iommu/iommu.c
+> > >>>> @@ -2418,6 +2418,10 @@ int iommu_fwspec_init(struct device *dev, struct
+> > >>>> fwnode_handle *iommu_fwnode,
+> > >>>>           fwspec->iommu_fwnode = iommu_fwnode;
+> > >>>>           fwspec->ops = ops;
+> > >>>>           dev_iommu_fwspec_set(dev, fwspec);
+> > >>>> +
+> > >>>> +       if (dev_is_pci(dev))
+> > >>>> +               pci_fixup_device(pci_fixup_final, to_pci_dev(dev));
+> > >>>> +
+> > >>>>
+> > >>>> Then pci_fixup_final will be called twice, the first in pci_bus_add_device.
+> > >>>> Here in iommu_fwspec_init is the second time, specifically for iommu_fwspec.
+> > >>>> Will send this when 5.8-rc1 is open.
+> > >>> Wait, this whole fixup approach seems wrong to me.  No matter how you
+> > >>> do the fixup, it's still a fixup, which means it requires ongoing
+> > >>> maintenance.  Surely we don't want to have to add the Vendor/Device ID
+> > >>> for every new AMBA device that comes along, do we?
+> > >>>
+> > >> Here the fake pci device has standard PCI cfg space, but physical
+> > >> implementation is base on AMBA
+> > >> They can provide pasid feature.
+> > >> However,
+> > >> 1, does not support tlp since they are not real pci devices.
+> > >> 2. does not support pri, instead support stall (provided by smmu)
+> > >> And stall is not a pci feature, so it is not described in struct pci_dev,
+> > >> but in struct iommu_fwspec.
+> > >> So we use this fixup to tell pci system that the devices can support stall,
+> > >> and hereby support pasid.
+> > > This did not answer my question.  Are you proposing that we update a
+> > > quirk every time a new AMBA device is released?  I don't think that
+> > > would be a good model.
+> >
+> > Yes, you are right, but we do not have any better idea yet.
+> > Currently we have three fake pci devices, which support stall and pasid.
+> > We have to let pci system know the device can support pasid, because of
+> > stall feature, though not support pri.
+> > Do you have any other ideas?
+> 
+> It sounds like the best way would be to allocate a PCI capability for it, so
+> detection can be done through config space, at least in future devices,
+> or possibly after a firmware update if the config space in your system
+> is controlled by firmware somewhere.  Once there is a proper mechanism
+> to do this, using fixups to detect the early devices that don't use that
+> should be uncontroversial. I have no idea what the process or timeline
+> is to add new capabilities into the PCIe specification, or if this one
+> would be acceptable to the PCI SIG at all.
 
-I guess I'll just take it directly, since it was triggered by me
-complaining anyway.
+That sounds like a possibility.  The spec already defines a
+Vendor-Specific Extended Capability (PCIe r5.0, sec 7.9.5) that might
+be a candidate.
 
-I had hoped it would go through the usual channels.
+> If detection cannot be done through PCI config space, the next best
+> alternative is to pass auxiliary data through firmware. On DT based
+> machines, you can list non-hotpluggable PCIe devices and add custom
+> properties that could be read during device enumeration. I assume
+> ACPI has something similar, but I have not done that.
 
-                Linus
+ACPI has _DSM (ACPI v6.3, sec 9.1.1), which might be a candidate.  I
+like this better than a PCI capability because the property you need
+to expose is not a PCI property.
