@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D31C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 339ADC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:00:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30919206D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:00:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09F2B206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:00:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725644;
-	bh=4+Cz8ptYSoYm2xcypo5QyXImcSVs9nbjvhvcyN0v64c=;
+	s=default; t=1591725653;
+	bh=mlChgyTv5SQLeyzNVZm89cxyxj49nT+0TF3uaH4MMaI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p2Ar3hKRceMJGD6/Oitvftm8IxHqgijdITTLOgsYbAe1rvRamMxk8+02GrDPKGr8V
-	 JCn/kqSpzY9K8q1k9NG2cmgsy2sE0Gm/FS4Jk81FPFav1POp2U6DhdxcVLZqaVBw4Y
-	 54RKGpRkOQo4aGHaXQSfH3D7i3ox4KUVhCY2yLi8=
+	b=VgOFU8LmLigOqOwyUOzcxJZNWnwoAR8JOnHK1JD8nosjdkc+Goi2iEduL2PMXGbIF
+	 HYc/kIYb8tcb7QqB1wAEGdvMcaRTlE+naMxiI3MGkeWU9+lwGsi0Rj+B/6bB0tqOqp
+	 /MINxQhZ2HxZD7v1rN9SEYOcsVhNC8OzP4FbA6aU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387748AbgFISAn (ORCPT
+        id S2387754AbgFISAw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:00:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46088 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 14:00:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733092AbgFIRy0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:54:26 -0400
+        id S1733074AbgFIRyU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:54:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1ECE120774;
-        Tue,  9 Jun 2020 17:54:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5AD66207C3;
+        Tue,  9 Jun 2020 17:54:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725266;
-        bh=4+Cz8ptYSoYm2xcypo5QyXImcSVs9nbjvhvcyN0v64c=;
+        s=default; t=1591725259;
+        bh=mlChgyTv5SQLeyzNVZm89cxyxj49nT+0TF3uaH4MMaI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cnwQIgllwGswcu7NpFpE9/NEPjcvetNjzIot1nGmOXGIl8MwJBAimsRqJp17CJqTO
-         6U5MAxfrXl0wcE2pRWyj0La3fjTeqjKjOWBvy+bcZPttXaPWt+kx0GnHGJXunJFqHS
-         Jr2zTlk4srqxcrNmpBH0/QtVCNtxxg46maPGeP1M=
+        b=rNZL6LZ0wzYL1ltexgz6kaOe4ef0DqMstMUXx2e7REfsRLPL8FBsY1S/VWr6FLAis
+         IyakcJ3Ie6vrkTOdKq5J6a+tDTqXAWyoBJkDLB28HIOVfLjppzggOjRJrsBmT4YbBs
+         PuLPk5V3fYW0XqpS6c1+rniIoZsatgob628TJXeE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jonas Falkevik <jonas.falkevik@gmail.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Xin Long <lucien.xin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 10/41] sctp: check assoc before SCTP_ADDR_{MADE_PRIM, ADDED} event
-Date:   Tue,  9 Jun 2020 19:45:12 +0200
-Message-Id: <20200609174113.106939763@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH 5.6 34/41] nvmem: qfprom: remove incorrect write support
+Date:   Tue,  9 Jun 2020 19:45:36 +0200
+Message-Id: <20200609174115.324191619@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174112.129412236@linuxfoundation.org>
 References: <20200609174112.129412236@linuxfoundation.org>
@@ -61,40 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonas Falkevik <jonas.falkevik@gmail.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-[ Upstream commit 45ebf73ebcec88a34a778f5feaa0b82b1c76069e ]
+commit 8d9eb0d6d59a5d7028c80a30831143d3e75515a7 upstream.
 
-Make sure SCTP_ADDR_{MADE_PRIM,ADDED} are sent only for associations
-that have been established.
+qfprom has different address spaces for read and write. Reads are
+always done from corrected address space, where as writes are done
+on raw address space.
+Writing to corrected address space is invalid and ignored, so it
+does not make sense to have this support in the driver which only
+supports corrected address space regions at the moment.
 
-These events are described in rfc6458#section-6.1
-SCTP_PEER_ADDR_CHANGE:
-This tag indicates that an address that is
-part of an existing association has experienced a change of
-state (e.g., a failure or return to service of the reachability
-of an endpoint via a specific transport address).
-
-Signed-off-by: Jonas Falkevik <jonas.falkevik@gmail.com>
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Reviewed-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 4ab11996b489 ("nvmem: qfprom: Add Qualcomm QFPROM support.")
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200522113341.7728-1-srinivas.kandagatla@linaro.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/sctp/ulpevent.c |    3 +++
- 1 file changed, 3 insertions(+)
 
---- a/net/sctp/ulpevent.c
-+++ b/net/sctp/ulpevent.c
-@@ -343,6 +343,9 @@ void sctp_ulpevent_nofity_peer_addr_chan
- 	struct sockaddr_storage addr;
- 	struct sctp_ulpevent *event;
+---
+ drivers/nvmem/qfprom.c |   14 --------------
+ 1 file changed, 14 deletions(-)
+
+--- a/drivers/nvmem/qfprom.c
++++ b/drivers/nvmem/qfprom.c
+@@ -27,25 +27,11 @@ static int qfprom_reg_read(void *context
+ 	return 0;
+ }
  
-+	if (asoc->state < SCTP_STATE_ESTABLISHED)
-+		return;
-+
- 	memset(&addr, 0, sizeof(struct sockaddr_storage));
- 	memcpy(&addr, &transport->ipaddr, transport->af_specific->sockaddr_len);
+-static int qfprom_reg_write(void *context,
+-			 unsigned int reg, void *_val, size_t bytes)
+-{
+-	struct qfprom_priv *priv = context;
+-	u8 *val = _val;
+-	int i = 0, words = bytes;
+-
+-	while (words--)
+-		writeb(*val++, priv->base + reg + i++);
+-
+-	return 0;
+-}
+-
+ static struct nvmem_config econfig = {
+ 	.name = "qfprom",
+ 	.stride = 1,
+ 	.word_size = 1,
+ 	.reg_read = qfprom_reg_read,
+-	.reg_write = qfprom_reg_write,
+ };
  
+ static int qfprom_probe(struct platform_device *pdev)
 
 
