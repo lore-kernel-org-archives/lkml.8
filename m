@@ -2,197 +2,102 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30120C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B78C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:45:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07BC22078C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:42:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591713730;
-	bh=DBeZHLEQGulEBu3IQlBvivbxuD7CpCjdJ39fxG4UDBw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ffJsNLR+gJpkrkiJL+upJVwq7tN9AslvqsA0jpOz6403+lZ8UwgVcPVXDLcRuW2Qn
-	 VXhshtuIIJNMAaep1jWDQpWhF//Z31VEYfBMxpTX7Hejxr28UByT15A+YWt4zwgjvJ
-	 dGFoz1opLBIg+my6I5LRX4h64qQgr6jnrQr87S+M=
+	by mail.kernel.org (Postfix) with ESMTP id 4A4D22078C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:45:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KiW+sUf4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730403AbgFIOmF (ORCPT
+        id S1730401AbgFIOpc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 10:42:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38856 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728601AbgFIOmE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 10:42:04 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1442D2072F;
-        Tue,  9 Jun 2020 14:42:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591713723;
-        bh=DBeZHLEQGulEBu3IQlBvivbxuD7CpCjdJ39fxG4UDBw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Khl7WXZjz0yf6NrpGSUGwKvt+9K9Oxrk2SI7klUKYjRZn787104XzLQeBOo1pQ6XD
-         8P3ZXbXVKjAzZIirxNhWJodow3QE8tArvfWVwI7OmyATVf1vglnnzFlbQgsUhrX9os
-         sLU/nPY7O2QDkwwpcjPSl5w/ov2O5k6TSsc7WPf0=
-Date:   Tue, 9 Jun 2020 15:42:01 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        david.m.ertman@intel.com, shiraz.saleem@intel.com,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld
- management controller
-Message-ID: <20200609144201.GK4583@sirena.org.uk>
-References: <c5632bfab3956265e90fc2fb6c0b3cae@walle.cc>
- <20200606114645.GB2055@sirena.org.uk>
- <dc052a5c77171014ecc465b1da8b7ef8@walle.cc>
- <20200608082827.GB3567@dell>
- <CAHp75VdiH=J-ovCdh1RFJDW_bJM8=pbXRaHmB691GLb-5oBmYQ@mail.gmail.com>
- <7d7feb374cbf5a587dc1ce65fc3ad672@walle.cc>
- <20200608185651.GD4106@dell>
- <32231f26f7028d62aeda8fdb3364faf1@walle.cc>
- <20200609064735.GH4106@dell>
- <32287ac0488f7cbd5a7d1259c284e554@walle.cc>
+        Tue, 9 Jun 2020 10:45:32 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49772 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728905AbgFIOp1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 10:45:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591713926;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=D0N8IG0w6TqyvrPZq3Bf6WEEBOpAcUrPcq971x3xCR0=;
+        b=KiW+sUf40IGeFLP0CBk6z6ojC2g+Q6URZBahsgm6rI4TyUxGfVTFCvJsQcVIcAk92gMXA9
+        rHhvp5gIWj99A3BV0bwX+m1ynD85K8jZhYKTAgTPMdeqpe63goTMqyIiPDfF5LJ7ITyldw
+        7Z9a3pMiC0wSkzZlYToT/vkRtEDdAAs=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-514-XkJ4m6_qMcC4AEXWhSQToQ-1; Tue, 09 Jun 2020 10:45:23 -0400
+X-MC-Unique: XkJ4m6_qMcC4AEXWhSQToQ-1
+Received: by mail-qv1-f72.google.com with SMTP id h4so16789122qvr.21
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 07:45:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=D0N8IG0w6TqyvrPZq3Bf6WEEBOpAcUrPcq971x3xCR0=;
+        b=Qhcy5vTcVrso8npRWmeYp5NatTWqUpzQMSVvPCylfCofrX+eYCVNE398SMErzUUDdF
+         pcJC0kQ7yrFweiCboPlQuQuhWNzSltXQIZbLWTIvPI91GdNZT4VvzXip0dJo5Im+euHC
+         G42NapO2IkwoM0ep4kP8EOVHrhbQJo5E9A8ZiePAMRb4ywwcTJWcsXQkrulNWCyVDzdW
+         PP9VzKuVM/i8NlUATYogc9iD3P3tOpwNWxYm/0vOhbi7LxTqjdcJhZdIyzg3XKzACMJs
+         19eOqo5WDTZUaq+M9b18REta9o5rGm1UH52M99JRcD7f5z80wq2SQ8KV35zboNynmcJW
+         rzow==
+X-Gm-Message-State: AOAM533D5MI1dWbAesqLikF3O3tY9f8xoh5CeeOojzlPmGhFi5+7AVC5
+        zR9ThQlVVhDrIOWLLhp7O/E3GvxXkWzobDZAatpQU1fa6i47g1wmQ5tqrdadj2BS7oG5shRhCFL
+        OERM99U6M2b9C1LWNdG9xnl3R
+X-Received: by 2002:a37:7645:: with SMTP id r66mr27146855qkc.397.1591713921633;
+        Tue, 09 Jun 2020 07:45:21 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxrDWGGcedgDp0WJSfkST6HxfilfGNNkZ2qb1/AuAvSqBZwRXvtCKZT5td9mD5UlkwPlyTrdg==
+X-Received: by 2002:a37:7645:: with SMTP id r66mr27146798qkc.397.1591713921109;
+        Tue, 09 Jun 2020 07:45:21 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id f43sm11650042qte.58.2020.06.09.07.45.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jun 2020 07:45:20 -0700 (PDT)
+Subject: Re: [PATCH 1/1] selftests: fpga: dfl: A test for afu interrupt
+ support
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     stable <stable@vger.kernel.org>, linux-fpga@vger.kernel.org,
+        shuah@kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+References: <20200609130208.27390-1-trix@redhat.com>
+ <20200609130208.27390-2-trix@redhat.com> <20200609142007.GA831428@kroah.com>
+From:   Tom Rix <trix@redhat.com>
+Message-ID: <d3d8e518-0760-8cbe-cf74-191f70329a46@redhat.com>
+Date:   Tue, 9 Jun 2020 07:45:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="0FM4RQAc0jwHekq5"
-Content-Disposition: inline
-In-Reply-To: <32287ac0488f7cbd5a7d1259c284e554@walle.cc>
-X-Cookie: Be careful!  Is it classified?
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200609142007.GA831428@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---0FM4RQAc0jwHekq5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Why not use the ksft_* functions and frameworks to properly print out
+> the test status and results so that tools can correctly parse it?
+>
+> It's generally bad-form to make up your own format.
 
-On Tue, Jun 09, 2020 at 04:38:31PM +0200, Michael Walle wrote:
+I used the the drivers/dma-buf test a basis example.  Can you point me at a better example ?
 
->   mfd-device@10 {
->     compatible =3D "simple-regmap", "simple-mfd";
->     reg =3D <10>;
->     regmap,reg-bits =3D <8>;
->     regmap,val-bits =3D <8>;
->     sub-device@0 {
->       compatible =3D "vendor,sub-device0";
->       reg =3D <0>;
->     };
+T
 
-A DT binding like this is not a good idea, encoding the details of the
-register map into the DT binding makes it an ABI which is begging for
-trouble.  I'd also suggest that any device using a generic driver like
-this should have a specific compatible string for the device so we can
-go back and add quirks later if we need them.
+> thanks,
+>
+> gre gk-h
+>
 
->     ...
-> };
->=20
-> Or if you just want the regmap:
->=20
-> &soc {
->   regmap: regmap@fff0000 {
->     compatible =3D "simple-regmap";
->     reg =3D <0xfff0000>;
->     regmap,reg-bits =3D <16>;
->     regmap,val-bits =3D <32>;
->   };
->=20
->   enet-which-needs-syscon-too@1000000 {
->     vendor,ctrl-regmap =3D <&regmap>;
->   };
-> };
->=20
-> Similar to the current syscon (which is MMIO only..).
->=20
-> -michael
->=20
-> >=20
-> > I can't think of any reasons why not, off the top of my head.
-> >=20
-> > Does Regmap only deal with shared accesses from multiple devices
-> > accessing a single register map, or can it also handle multiple
-> > devices communicating over a single I2C channel?
-> >=20
-> > One for Mark perhaps.
-> >=20
-> > > > The issues I wish to resolve using 'simple-mfd' are when sub-devices
-> > > > register maps overlap and intertwine.
-> >=20
-> > [...]
-> >=20
-> > > > > > > What do these bits configure?
-> > > > >
-> > > > > - hardware strappings which have to be there before the board pow=
-ers
-> > > > > up,
-> > > > >   like clocking mode for different SerDes settings
-> > > > > - "keep-in-reset" bits for onboard peripherals if you want to save
-> > > > > power
-> > > > > - disable watchdog bits (there is a watchdog which is active right
-> > > > > from
-> > > > >   the start and supervises the bootloader start and switches to
-> > > > > failsafe
-> > > > >   mode if it wasn't successfully started)
-> > > > > - special boot modes, like eMMC, etc.
-> > > > >
-> > > > > Think of it as a 16bit configuration word.
-> > > >
-> > > > And you wish for users to be able to view these at run-time?
-> > >=20
-> > > And esp. change them.
-> > >=20
-> > > > Can they adapt any of them on-the-fly or will the be RO?
-> > >=20
-> > > They are R/W but only will only affect the board behavior after a
-> > > reset.
-> >=20
-> > I see.  Makes sense.  This is board controller territory.  Perhaps
-> > suitable for inclusion into drivers/soc or drivers/platform.
-
---0FM4RQAc0jwHekq5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7fn7gACgkQJNaLcl1U
-h9AhrQf/dpQW8gsPG9Ua7FU/Ae75V1zwG5NKx2ioZcYzal7CqZg3Q0+ciOedLwFs
-WELrgzSE7WB9V18aaNAg8CpMIKlBhqU+2I4JxSAZQWfuaFQgrP550jA5iij1L69d
-RIxP1xrQClXSvmJa33MBpD95uFdGEPWxMOiSB72lLy4E7jr65KwJ55P6tcOlXo7L
-Ma/qDeZ0tjrcZOtH5h3dPsJhEojskfrxWJq6CJ1UjXifZxvy+O/khY6E7TTetw3+
-0b8ttqNSXE4Yk9Z7TKhYlonnqWphaX3XdoDvTlbgxmBldVUrr63UJCTbiCm5pKJ1
-HYxxN5ha9XcJcvRtIDLWzkq7wpRCQg==
-=rwO1
------END PGP SIGNATURE-----
-
---0FM4RQAc0jwHekq5--
