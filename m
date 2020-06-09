@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96DD6C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2687C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 729072068D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4C1B2068D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:22:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591726948;
-	bh=I/C5wTw0k+vOVdGvsWnZiMB/R9OHvicC4Y/1i2mXlxo=;
+	s=default; t=1591726956;
+	bh=4ObKHEsY1sLIYWSZgAie3NuM6DBBmR8SfysgpafluGY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zlht1XHK6IShOaNJztdjL1CyOs6m1Fu6ioc/39yfCMJSKmHiGbesWcd4WxGbj1+FS
-	 RWiR5gALgUecioRlo5B9W03HI2gbWZ1jYoB2stcgHiPQc0jKSZmQvKsQhIye9loofb
-	 m9DU/9BYznQidSeCJnxkTVdln0fSAgf7DAas6zMw=
+	b=ErSkfU01tAbsv+Aapr877LdsGY/J6DrBNc1wVS/s5EtBySFYLDmGonsLFVl19Re8N
+	 w/oDgsmVmtHCLgpG6DEWOCagdgy4aopYUS94HvFGZ1gcrK9bEJQOuOKqs0iwekMK/s
+	 I4UNokCLKMdko4P8gm2GbOfzrtxX2U0ICFhsPTuM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732253AbgFIRsT (ORCPT
+        id S1732083AbgFISWe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:48:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60068 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 14:22:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732216AbgFIRsG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:48:06 -0400
+        id S1732205AbgFIRsS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:48:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C9AA20814;
-        Tue,  9 Jun 2020 17:48:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB25920814;
+        Tue,  9 Jun 2020 17:48:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591724885;
-        bh=I/C5wTw0k+vOVdGvsWnZiMB/R9OHvicC4Y/1i2mXlxo=;
+        s=default; t=1591724897;
+        bh=4ObKHEsY1sLIYWSZgAie3NuM6DBBmR8SfysgpafluGY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M3waLlpvJpRt+SOuLMIrBciDiRGnf6W+0snLeF/cN0XONymjtFS3OvpHvPt6DW9ie
-         cf9VfG4usnWVFCottqXlBrkYj4+mumefDrr/SaVvStd8VCthOyL2A4xlCuv5OLl/xa
-         uprOj8bczj2RG92YcwNJ+gC0PQvBg566oAXLyM6Y=
+        b=UzmJnzb7BkmrW5In7KyJitzMKwI2ocr2yQSAUjsoMplmEIbovN3MMZfbretr0Clty
+         oDQMhX/0N/OBHQsWI6DRPPmAmnfdvb4jaFvPXvThcA1eXGCn+Uyk8GSrGtQpTQ7LET
+         15BYG2zXf3xBzaK6dwy3aSuDqTyknAAFm1lkqLXk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hu Jiahui <kirin.say@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.9 21/42] airo: Fix read overflows sending packets
-Date:   Tue,  9 Jun 2020 19:44:27 +0200
-Message-Id: <20200609174017.780861051@linuxfoundation.org>
+        stable@vger.kernel.org, Stefano Garzarella <sgarzare@redhat.com>,
+        Jorgen Hansen <jhansen@vmware.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 26/42] vsock: fix timeout in vsock_accept()
+Date:   Tue,  9 Jun 2020 19:44:32 +0200
+Message-Id: <20200609174018.336578290@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174015.379493548@linuxfoundation.org>
 References: <20200609174015.379493548@linuxfoundation.org>
@@ -61,62 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Stefano Garzarella <sgarzare@redhat.com>
 
-commit 11e7a91994c29da96d847f676be023da6a2c1359 upstream.
+[ Upstream commit 7e0afbdfd13d1e708fe96e31c46c4897101a6a43 ]
 
-The problem is that we always copy a minimum of ETH_ZLEN (60) bytes from
-skb->data even when skb->len is less than ETH_ZLEN so it leads to a read
-overflow.
+The accept(2) is an "input" socket interface, so we should use
+SO_RCVTIMEO instead of SO_SNDTIMEO to set the timeout.
 
-The fix is to pad skb->data to at least ETH_ZLEN bytes.
+So this patch replace sock_sndtimeo() with sock_rcvtimeo() to
+use the right timeout in the vsock_accept().
 
-Cc: <stable@vger.kernel.org>
-Reported-by: Hu Jiahui <kirin.say@gmail.com>
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200527184830.GA1164846@mwanda
+Fixes: d021c344051a ("VSOCK: Introduce VM Sockets")
+Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+Reviewed-by: Jorgen Hansen <jhansen@vmware.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/net/wireless/cisco/airo.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ net/vmw_vsock/af_vsock.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/wireless/cisco/airo.c
-+++ b/drivers/net/wireless/cisco/airo.c
-@@ -1928,6 +1928,10 @@ static netdev_tx_t mpi_start_xmit(struct
- 		airo_print_err(dev->name, "%s: skb == NULL!",__func__);
- 		return NETDEV_TX_OK;
- 	}
-+	if (skb_padto(skb, ETH_ZLEN)) {
-+		dev->stats.tx_dropped++;
-+		return NETDEV_TX_OK;
-+	}
- 	npacks = skb_queue_len (&ai->txq);
+--- a/net/vmw_vsock/af_vsock.c
++++ b/net/vmw_vsock/af_vsock.c
+@@ -1296,7 +1296,7 @@ static int vsock_accept(struct socket *s
+ 	/* Wait for children sockets to appear; these are the new sockets
+ 	 * created upon connection establishment.
+ 	 */
+-	timeout = sock_sndtimeo(listener, flags & O_NONBLOCK);
++	timeout = sock_rcvtimeo(listener, flags & O_NONBLOCK);
+ 	prepare_to_wait(sk_sleep(listener), &wait, TASK_INTERRUPTIBLE);
  
- 	if (npacks >= MAXTXQ - 1) {
-@@ -2130,6 +2134,10 @@ static netdev_tx_t airo_start_xmit(struc
- 		airo_print_err(dev->name, "%s: skb == NULL!", __func__);
- 		return NETDEV_TX_OK;
- 	}
-+	if (skb_padto(skb, ETH_ZLEN)) {
-+		dev->stats.tx_dropped++;
-+		return NETDEV_TX_OK;
-+	}
- 
- 	/* Find a vacant FID */
- 	for( i = 0; i < MAX_FIDS / 2 && (fids[i] & 0xffff0000); i++ );
-@@ -2204,6 +2212,10 @@ static netdev_tx_t airo_start_xmit11(str
- 		airo_print_err(dev->name, "%s: skb == NULL!", __func__);
- 		return NETDEV_TX_OK;
- 	}
-+	if (skb_padto(skb, ETH_ZLEN)) {
-+		dev->stats.tx_dropped++;
-+		return NETDEV_TX_OK;
-+	}
- 
- 	/* Find a vacant FID */
- 	for( i = MAX_FIDS / 2; i < MAX_FIDS && (fids[i] & 0xffff0000); i++ );
+ 	while ((connected = vsock_dequeue_accept(listener)) == NULL &&
 
 
