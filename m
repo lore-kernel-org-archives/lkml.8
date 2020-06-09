@@ -2,360 +2,149 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC47C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DD56C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:02:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9837D2072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:02:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591718522;
-	bh=x9XnVqO3xzQBj6iIZG51MoTCRzkI+avhlJDOv1dW4A8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=asZlbgX84ntPIiUggaYpaew0BAZmWP9SYABxoXWcapB8h8ZYPCRJBj2P/ihWK856K
-	 blv8p74yq+rmZUJaHyJZLiMp2r2NfcHh7mwygXidZiMLu9S2YPRbycEgoNSuj7gGmF
-	 WAg1lSMedbsX24QBROxhkawPRC0xCOnHQ8eBmBkY=
+	by mail.kernel.org (Postfix) with ESMTP id E8D9B2072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:02:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="iP8V2/Wv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731066AbgFIQCB (ORCPT
+        id S1731075AbgFIQCe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 12:02:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35632 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730640AbgFIQCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 12:02:01 -0400
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4473720737;
-        Tue,  9 Jun 2020 16:01:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591718519;
-        bh=x9XnVqO3xzQBj6iIZG51MoTCRzkI+avhlJDOv1dW4A8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=apmbS8jhTSKRwyxpcAwAJ9YrmcalaKgkXVrW81HNwC3Q6pj0k6T60LHoFvvYIgErD
-         ynU7vSPR/6La4+GXlVu4pzaqqLjObBlhbdg56wBbME1cowdRWnAyxeKNei849YF3VJ
-         VsQibWle5h7TatZeMO8tUELXgC+S4FHfeYX0y3QY=
-Received: by mail-ej1-f43.google.com with SMTP id k11so23003752ejr.9;
-        Tue, 09 Jun 2020 09:01:59 -0700 (PDT)
-X-Gm-Message-State: AOAM531T9fdKhr6GFct/Hz32nyxJ/gamTqlqF3fvcs9cke6K0MoyDeQw
-        T0s2SG5PNYfGkFHg9xQXvbtJ4zAttkqQhFQIMA==
-X-Google-Smtp-Source: ABdhPJxKIl5SnYjgH7ywBQFvWrLorFiA1CakhpBe+UztqF4izapVMvaOZ1tYqCzy7V5MsEVltTQulE0V8mcD91jBlRg=
-X-Received: by 2002:a17:906:d105:: with SMTP id b5mr11030541ejz.375.1591718516695;
- Tue, 09 Jun 2020 09:01:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <1591698261-22639-1-git-send-email-neal.liu@mediatek.com> <1591698261-22639-3-git-send-email-neal.liu@mediatek.com>
-In-Reply-To: <1591698261-22639-3-git-send-email-neal.liu@mediatek.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Wed, 10 Jun 2020 00:01:44 +0800
-X-Gmail-Original-Message-ID: <CAAOTY__g3Fnwsoqx=x_tgdMii5K_L9TmF_9048XbAOSJwb-Cxg@mail.gmail.com>
-Message-ID: <CAAOTY__g3Fnwsoqx=x_tgdMii5K_L9TmF_9048XbAOSJwb-Cxg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] soc: mediatek: devapc: add devapc-mt6873 driver
-To:     Neal Liu <neal.liu@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        devicetree@vger.kernel.org, wsd_upstream@mediatek.com,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 9 Jun 2020 12:02:34 -0400
+Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:63624 "EHLO
+        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728888AbgFIQCc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 12:02:32 -0400
+Received: from pps.filterd (m0170394.ppops.net [127.0.0.1])
+        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 059G0xkQ012756;
+        Tue, 9 Jun 2020 12:02:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=smtpout1;
+ bh=U6N+TzAmWKQjj3h7+PuFl112p0HEZr29XppJBd7yFas=;
+ b=iP8V2/WvbBcFA5PpIT9N0UEK5pnCIxPr3ZhMxrKGxpsi89BnZfrk69SpdnLSdiEdhj3A
+ YKs8GGUx9f5/R1gG5Fyeemm4XQurjUNEGKl+XcjQ/fZ4tl6kipkT1VBlb6qiQXUcm7Du
+ iOxcb6p3e2yURq/YpPLqYlcY1FW/u4HQeNz1nKmJ5yPpkt1WILWAvbW8jmxe+Nnd+axz
+ Vdn/M/8EGQX3DJIL6Kc8loz7RXgu+JgEWscUGuA/0RA3Xv2Iv2+A20q+aiX/t8gZv8iS
+ u+W+92Nb2gKyW/S8D8ZI7rr6p4v0viV9xcUDvCIxzPO6oymZIbpKBO0St/ccZdKAXCCG mg== 
+Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
+        by mx0b-00154904.pphosted.com with ESMTP id 31g5q5st1g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 09 Jun 2020 12:02:31 -0400
+Received: from pps.filterd (m0134318.ppops.net [127.0.0.1])
+        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 059FwCro150426;
+        Tue, 9 Jun 2020 12:02:31 -0400
+Received: from ausxippc110.us.dell.com (AUSXIPPC110.us.dell.com [143.166.85.200])
+        by mx0a-00154901.pphosted.com with ESMTP id 31jbqe2p86-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 09 Jun 2020 12:02:31 -0400
+X-LoopCount0: from 10.166.132.131
+X-PREM-Routing: D-Outbound
+X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
+   d="scan'208";a="951522519"
+From:   <Mario.Limonciello@dell.com>
+To:     <y.linux@paritcher.com>, <pali@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>, <mjg59@srcf.ucam.org>
+Subject: RE: [PATCH v3 1/3] platform/x86: dell-wmi: add new backlight events
+Thread-Topic: [PATCH v3 1/3] platform/x86: dell-wmi: add new backlight events
+Thread-Index: AQHWPhGJPOp+TcXPeEephfzyP1MhbqjQcnIw
+Date:   Tue, 9 Jun 2020 16:02:28 +0000
+Message-ID: <29f57822df4e45f192b72c6151f4697c@AUSX13MPC105.AMER.DELL.COM>
+References: <cover.1591584631.git.y.linux@paritcher.com>
+ <cover.1591673143.git.y.linux@paritcher.com>
+ <50885a0c51c6fb31d20ddeb7434572448f1453be.1591673143.git.y.linux@paritcher.com>
+In-Reply-To: <50885a0c51c6fb31d20ddeb7434572448f1453be.1591673143.git.y.linux@paritcher.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2020-06-09T16:02:15.5982214Z;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_ActionId=6d82cfdf-b66e-4bb6-b9dd-68e72214b874;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [143.166.24.40]
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-09_10:2020-06-09,2020-06-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ priorityscore=1501 bulkscore=0 cotscore=-2147483648 mlxscore=0
+ mlxlogscore=999 spamscore=0 malwarescore=0 phishscore=0 adultscore=0
+ impostorscore=0 clxscore=1015 lowpriorityscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006090121
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0
+ malwarescore=0 adultscore=0 phishscore=0 bulkscore=0 mlxlogscore=999
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006090121
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Neal:
 
-Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B46=E6=9C=889=E6=97=
-=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=886:25=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> MT6873 bus frabric provides TrustZone security support and data
-> protection to prevent slaves from being accessed by unexpected
-> masters.
-> The security violations are logged and sent to the processor for
-> further analysis or countermeasures.
->
-> Any occurrence of security violation would raise an interrupt, and
-> it will be handled by devapc-mt6873 driver. The violation
-> information is printed in order to find the murderer.
->
-> Signed-off-by: Neal Liu <neal.liu@mediatek.com>
+
+> -----Original Message-----
+> From: Y Paritcher <y.linux@paritcher.com>
+> Sent: Monday, June 8, 2020 10:53 PM
+> To: Pali Roh=E1r
+> Cc: linux-kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org;
+> Matthew Garrett; Limonciello, Mario
+> Subject: [PATCH v3 1/3] platform/x86: dell-wmi: add new backlight events
+>=20
+>=20
+> [EXTERNAL EMAIL]
+>=20
+> Add events with a type of 0x0010 and a code of 0x57 / 0x58,
+> this silences the following messages being logged on a
+> Dell Inspiron 5593:
+>=20
+> dell_wmi: Unknown key with type 0x0010 and code 0x0057 pressed
+> dell_wmi: Unknown key with type 0x0010 and code 0x0058 pressed
+>=20
+> These are brightness events and will be handled by acpi-video
+>=20
+> Signed-off-by: Y Paritcher <y.linux@paritcher.com>
+
+Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
+
 > ---
->  drivers/soc/mediatek/Kconfig                      |    6 +
->  drivers/soc/mediatek/Makefile                     |    1 +
->  drivers/soc/mediatek/devapc/Kconfig               |   25 +
->  drivers/soc/mediatek/devapc/Makefile              |   13 +
->  drivers/soc/mediatek/devapc/devapc-mt6873.c       | 1733 +++++++++++++++=
-++++++
->  drivers/soc/mediatek/devapc/devapc-mt6873.h       |  130 ++
->  drivers/soc/mediatek/devapc/devapc-mtk-multi-ao.c | 1019 ++++++++++++
->  drivers/soc/mediatek/devapc/devapc-mtk-multi-ao.h |  183 +++
->  include/linux/soc/mediatek/devapc_public.h        |   41 +
->  9 files changed, 3151 insertions(+)
->  create mode 100644 drivers/soc/mediatek/devapc/Kconfig
->  create mode 100644 drivers/soc/mediatek/devapc/Makefile
->  create mode 100644 drivers/soc/mediatek/devapc/devapc-mt6873.c
->  create mode 100644 drivers/soc/mediatek/devapc/devapc-mt6873.h
->  create mode 100644 drivers/soc/mediatek/devapc/devapc-mtk-multi-ao.c
->  create mode 100644 drivers/soc/mediatek/devapc/devapc-mtk-multi-ao.h
->  create mode 100644 include/linux/soc/mediatek/devapc_public.h
->
-> diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
-> index 2114b56..cc46f50 100644
-> --- a/drivers/soc/mediatek/Kconfig
-> +++ b/drivers/soc/mediatek/Kconfig
-> @@ -44,4 +44,10 @@ config MTK_SCPSYS
->           Say yes here to add support for the MediaTek SCPSYS power domai=
-n
->           driver.
->
-> +menu "Security"
+>  drivers/platform/x86/dell-wmi.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>=20
+> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-
+> wmi.c
+> index c25a4286d766..0b2edfe2767d 100644
+> --- a/drivers/platform/x86/dell-wmi.c
+> +++ b/drivers/platform/x86/dell-wmi.c
+> @@ -255,6 +255,10 @@ static const struct key_entry
+> dell_wmi_keymap_type_0010[] =3D {
+>  	/* Keyboard backlight change notification */
+>  	{ KE_IGNORE, 0x3f, { KEY_RESERVED } },
+>=20
+> +	/* Backlight brightness level */
+> +	{ KE_KEY,    0x57, { KEY_BRIGHTNESSDOWN } },
+> +	{ KE_KEY,    0x58, { KEY_BRIGHTNESSUP } },
 > +
-> +source "drivers/soc/mediatek/devapc/Kconfig"
-> +
-> +endmenu # Security
-> +
->  endmenu
-> diff --git a/drivers/soc/mediatek/Makefile b/drivers/soc/mediatek/Makefil=
-e
-> index b017330..7154a2a 100644
-> --- a/drivers/soc/mediatek/Makefile
-> +++ b/drivers/soc/mediatek/Makefile
-> @@ -3,3 +3,4 @@ obj-$(CONFIG_MTK_CMDQ) +=3D mtk-cmdq-helper.o
->  obj-$(CONFIG_MTK_INFRACFG) +=3D mtk-infracfg.o
->  obj-$(CONFIG_MTK_PMIC_WRAP) +=3D mtk-pmic-wrap.o
->  obj-$(CONFIG_MTK_SCPSYS) +=3D mtk-scpsys.o
-> +obj-$(CONFIG_MTK_DEVAPC) +=3D devapc/
-
-alphabetic order.
-
-> diff --git a/drivers/soc/mediatek/devapc/Kconfig b/drivers/soc/mediatek/d=
-evapc/Kconfig
-> new file mode 100644
-> index 0000000..9428360
-> --- /dev/null
-> +++ b/drivers/soc/mediatek/devapc/Kconfig
-> @@ -0,0 +1,25 @@
-> +config MTK_DEVAPC
-> +       tristate "Mediatek Device APC Support"
-> +       help
-> +         Device APC is a kernel driver controlling internal device secur=
-ity.
-> +         If someone tries to access a device, which is not allowed by th=
-e
-> +         device, it cannot access the device and will get a violation
-> +         interrupt. Device APC prevents malicious access to internal dev=
-ices.
-> +
-> +config DEVAPC_ARCH_MULTI
-> +       tristate "Mediatek Device APC driver architecture multi"
-> +       help
-> +         Say yes here to enable support Mediatek
-> +         Device APC driver which is based on Infra
-> +         architecture.
-> +         This architecture supports multiple Infra AO.
-> +
-> +config DEVAPC_MT6873
-> +       tristate "Mediatek MT6873 Device APC driver"
-> +       select MTK_DEVAPC
-> +       select DEVAPC_ARCH_MULTI
-> +       help
-> +         Say yes here to enable support Mediatek MT6873
-> +         Device APC driver.
-> +         This driver is combined with DEVAPC_ARCH_MULTI for
-> +         common handle flow.
-
-[snip]
-
-> +static struct mtk_devapc_context {
-> + struct clk *devapc_infra_clk;
-> + u32 devapc_irq;
-> +
-> + /* HW reg mapped addr */
-> + void __iomem *devapc_pd_base[4];
-> + void __iomem *infracfg_base;
-> +
-> + struct mtk_devapc_soc *soc;
-> +} mtk_devapc_ctx[1];
-> +
-> +static LIST_HEAD(viocb_list);
-> +static DEFINE_SPINLOCK(devapc_lock);
-
-Move global variable into struct mtk_devapc_context .
-
-> +
-> +/*
-> + * mtk_devapc_pd_get - get devapc pd_types of register address.
-> + *
-> + * Returns the value of reg addr
-> + */
-> +static void __iomem *mtk_devapc_pd_get(int slave_type,
-> +                                      enum DEVAPC_PD_REG_TYPE pd_reg_typ=
-e,
-> +                                      u32 index)
-> +{
-> +       struct mtk_devapc_vio_info *vio_info =3D mtk_devapc_ctx->soc->vio=
-_info;
-> +       u32 slave_type_num =3D mtk_devapc_ctx->soc->slave_type_num;
-> +       const u32 *devapc_pds =3D mtk_devapc_ctx->soc->devapc_pds;
-> +       void __iomem *reg;
-> +
-> +       if (!devapc_pds)
-> +               return NULL;
-> +
-> +       if ((slave_type < slave_type_num &&
-> +            index < vio_info->vio_mask_sta_num[slave_type]) &&
-> +           pd_reg_type < PD_REG_TYPE_NUM) {
-> +               reg =3D mtk_devapc_ctx->devapc_pd_base[slave_type] +
-> +                       devapc_pds[pd_reg_type];
-> +
-> +               if (pd_reg_type =3D=3D VIO_MASK || pd_reg_type =3D=3D VIO=
-_STA)
-> +                       reg +=3D 0x4 * index;
-> +
-> +       } else {
-> +               pr_err(PFX "%s:0x%x or %s:0x%x or %s:0x%x is out of bound=
-ary\n",
-> +                      "slave_type", slave_type,
-
-Move "slave_type" into format string.
-
-> +                      "pd_reg_type", pd_reg_type,
-> +                      "index", index);
-> +               return NULL;
-> +       }
-> +
-> +       return reg;
-> +}
-> +
-
-[snip]
-
-> +
-> +/*
-> + * devapc_violation_irq - the devapc Interrupt Service Routine (ISR) wil=
-l dump
-> + *                       violation information including which master vi=
-olates
-> + *                       access slave.
-> + */
-> +static irqreturn_t devapc_violation_irq(int irq_number, void *dev_id)
-> +{
-> +       u32 slave_type_num =3D mtk_devapc_ctx->soc->slave_type_num;
-> +       const struct mtk_device_info **device_info;
-> +       struct mtk_devapc_vio_info *vio_info;
-> +       int slave_type, vio_idx, index;
-> +       const char *vio_master;
-> +       unsigned long flags;
-> +       bool normal;
-> +       u8 perm;
-> +
-> +       spin_lock_irqsave(&devapc_lock, flags);
-> +
-> +       device_info =3D mtk_devapc_ctx->soc->device_info;
-> +       vio_info =3D mtk_devapc_ctx->soc->vio_info;
-> +       normal =3D false;
-> +       vio_idx =3D -1;
-> +       index =3D -1;
-> +
-> +       /* There are multiple DEVAPC_PD */
-> +       for (slave_type =3D 0; slave_type < slave_type_num; slave_type++)=
- {
-> +               if (!check_type2_vio_status(slave_type, &vio_idx, &index)=
-)
-> +                       if (!mtk_devapc_dump_vio_dbg(slave_type, &vio_idx=
-,
-> +                                                    &index))
-> +                               continue;
-> +
-> +               /* Ensure that violation info are written before
-> +                * further operations
-> +                */
-> +               smp_mb();
-> +               normal =3D true;
-> +
-> +               mask_module_irq(slave_type, vio_idx, true);
-> +
-> +               if (clear_vio_status(slave_type, vio_idx))
-> +                       pr_warn(PFX "%s, %s:0x%x, %s:0x%x\n",
-> +                               "clear vio status failed",
-> +                               "slave_type", slave_type,
-> +                               "vio_index", vio_idx);
-> +
-> +               perm =3D get_permission(slave_type, index, vio_info->doma=
-in_id);
-> +
-> +               vio_master =3D mtk_devapc_ctx->soc->master_get
-> +                       (vio_info->master_id,
-> +                        vio_info->vio_addr,
-> +                        slave_type,
-> +                        vio_info->shift_sta_bit,
-> +                        vio_info->domain_id);
-
-Call mt6873_bus_id_to_master() directly. For first patch, make things
-as simple as possible.
-
-> +
-> +               if (!vio_master) {
-> +                       pr_warn(PFX "master_get failed\n");
-> +                       vio_master =3D "UNKNOWN_MASTER";
-> +               }
-> +
-> +               pr_info(PFX "%s - %s:0x%x, %s:0x%x, %s:0x%x, %s:0x%x\n",
-> +                       "Violation", "slave_type", slave_type,
-> +                       "sys_index",
-> +                       device_info[slave_type][index].sys_index,
-> +                       "ctrl_index",
-> +                       device_info[slave_type][index].ctrl_index,
-> +                       "vio_index",
-> +                       device_info[slave_type][index].vio_index);
-> +
-> +               pr_info(PFX "%s %s %s %s\n",
-> +                       "Violation - master:", vio_master,
-> +                       "access violation slave:",
-> +                       device_info[slave_type][index].device);
-> +
-> +               devapc_vio_reason(perm);
-> +
-> +               devapc_extra_handler(slave_type, vio_master, vio_idx,
-> +                                    vio_info->vio_addr);
-> +
-> +               mask_module_irq(slave_type, vio_idx, false);
-> +       }
-> +
-> +       if (normal) {
-> +               spin_unlock_irqrestore(&devapc_lock, flags);
-> +               return IRQ_HANDLED;
-> +       }
-> +
-> +       spin_unlock_irqrestore(&devapc_lock, flags);
-> +       return IRQ_HANDLED;
-> +}
-> +
-
-[snip]
-
-> +uint32_t devapc_vio_check(void);
-> +void dump_dbg_info(void);
-> +void register_devapc_vio_callback(struct devapc_vio_callbacks *viocb);
-> +void devapc_catch_illegal_range(phys_addr_t phys_addr, size_t size);
-
-devapc_catch_illegal_range() is useless, so remove it.
-
-Regards,
-Chun-Kuang.
-
-> +
-> +#endif  /* __DEVAPC_PUBLIC_H__ */
-> +
+>  	/* Mic mute */
+>  	{ KE_KEY, 0x150, { KEY_MICMUTE } },
+>=20
 > --
-> 1.7.9.5
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+> 2.27.0
+
