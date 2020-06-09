@@ -2,107 +2,118 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35856C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC5BC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1696C20734
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:05:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="KtMFLCgB"
+	by mail.kernel.org (Postfix) with ESMTP id ADDE520691
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:05:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591725939;
+	bh=ckNLh2n+Dc7ckEahQ8OUPixQxq1QJCpN7sdro1EuQFs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=HShwS5nuF6pJDRqm8wBnfvjyFXRcfYV8Pp670NW3r/qFMVzmHo88XhHHbT4GRrssP
+	 g/kkfNpOzvToCYu1kGwdXBlX562+4nPXCmxsgwXhC3W37456zWxLkWS2IUJDMImTSs
+	 5oxUfsfzG2560YwsJ+/CZUgIJn84NEq/IOxG7zSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388108AbgFISFf (ORCPT
+        id S1731569AbgFISFa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:05:35 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:61579 "EHLO m43-7.mailgun.net"
+        Tue, 9 Jun 2020 14:05:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388072AbgFISF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 14:05:27 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591725926; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=x01+HksEUfPnnuAjrfKal7kG0NEwAm/phbFVlSCT2kQ=; b=KtMFLCgBGJ7hGWyrlL8xG6fj+MUI7CYIW963Cv/7M9iFNUSf6J6L1VxcbfLDDEcQIM+1UwQM
- R5rv5Ljobacz+oPt0wrFbIdDz00Ozhog32UbsQDhqAq1dZ7aAxepSieU7ichlKodxqsFyRTL
- ePI87vXvKdamtFMPnV+9jONKJ/M=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n10.prod.us-east-1.postgun.com with SMTP id
- 5edfcf61c4bb4f886d289709 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 09 Jun 2020 18:05:21
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id EF512C4339C; Tue,  9 Jun 2020 18:05:20 +0000 (UTC)
-Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728822AbgFIRvo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:51:44 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1AD1EC43387;
-        Tue,  9 Jun 2020 18:05:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1AD1EC43387
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Patrick Daly <pdaly@codeaurora.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will@kernel.org>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] iommu/arm-smmu: Don't bypass pinned stream mappings
-Date:   Tue,  9 Jun 2020 12:05:16 -0600
-Message-Id: <20200609180516.14362-1-jcrouse@codeaurora.org>
-X-Mailer: git-send-email 2.17.1
+        by mail.kernel.org (Postfix) with ESMTPSA id 034A62074B;
+        Tue,  9 Jun 2020 17:51:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591725102;
+        bh=ckNLh2n+Dc7ckEahQ8OUPixQxq1QJCpN7sdro1EuQFs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kNW2Wy1MZedKYxX/48bBsTPPSlc1iqyz7vYiTzbb9RAtgDUnaIMf8wq42T1Wos0zx
+         m3QCoR5lf/YliQBEXs3IrSWQ4+T78hfPBcaC7JlI4a6xEFow9vMQ0o7+9Jv2//b03O
+         xxvEAze8MkRaomPL10CEW+aJeNsVCnwSML8I6t/w=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Paul Gortmaker <paul.gortmaker@windriver.com>,
+        Roi Dayan <roid@mellanox.com>, Mark Bloch <markb@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 4.19 25/25] Revert "net/mlx5: Annotate mutex destroy for root ns"
+Date:   Tue,  9 Jun 2020 19:45:15 +0200
+Message-Id: <20200609174051.624603139@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200609174048.576094775@linuxfoundation.org>
+References: <20200609174048.576094775@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 0e764a01015d ("iommu/arm-smmu: Allow client devices to select
-direct mapping") sets the initial domain type to SMMU_DOMAIN_IDENTITY
-for devices that select direct mapping. This ends up setting the domain
-as ARM_SMMU_DOMAIN_BYPASS which causes the stream ID mappings
-for the device to be programmed to S2CR_TYPE_BYPASS.
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-This causes a problem for stream mappings that are inherited from
-the bootloader since rewriting the stream to BYPASS will disrupt the
-display controller access to DDR.
+This reverts commit 95fde2e46860c183f6f47a99381a3b9bff488bd5 which is
+commit 9ca415399dae133b00273a4283ef31d003a6818d upstream.
 
-This is an extension to ("iommu/arm-smmu: Allow inheriting stream mapping
-from bootloader") [1] that identifies streams that are already configured
- and marked them as pinned. This patch extends that to not re-write pinned
-stream mappings for ARM_SMMU_DOMAIN_BYPASS domains.
+It was backported incorrectly, Paul writes at:
+	https://lore.kernel.org/r/20200607203425.GD23662@windriver.com
 
-[1] https://lore.kernel.org/r/20191226221709.3844244-4-bjorn.andersson@linaro.org
+	I happened to notice this commit:
 
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+	9ca415399dae - "net/mlx5: Annotate mutex destroy for root ns"
+
+	...was backported to 4.19 and 5.4 and v5.6 in linux-stable.
+
+	It patches del_sw_root_ns() - which only exists after v5.7-rc7 from:
+
+	6eb7a268a99b - "net/mlx5: Don't maintain a case of del_sw_func being
+	null"
+
+	which creates the one line del_sw_root_ns stub function around
+	kfree(node) by breaking it out of tree_put_node().
+
+	In the absense of del_sw_root_ns - the backport finds an identical one
+	line kfree stub fcn - named del_sw_prio from this earlier commit:
+
+	139ed6c6c46a - "net/mlx5: Fix steering memory leak"  [in v4.15-rc5]
+
+	and then puts the mutex_destroy() into that (wrong) function, instead of
+	putting it into tree_put_node where the root ns case used to be hand
+
+Reported-by: Paul Gortmaker <paul.gortmaker@windriver.com>
+Cc: Roi Dayan <roid@mellanox.com>
+Cc: Mark Bloch <markb@mellanox.com>
+Cc: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
+ drivers/net/ethernet/mellanox/mlx5/core/fs_core.c |    6 ------
+ 1 file changed, 6 deletions(-)
 
- drivers/iommu/arm-smmu.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index c7add09f11c1..9c1e5ba948a7 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -1143,6 +1143,10 @@ static int arm_smmu_domain_add_master(struct arm_smmu_domain *smmu_domain,
- 		if (type == s2cr[idx].type && cbndx == s2cr[idx].cbndx)
- 			continue;
+--- a/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
+@@ -364,12 +364,6 @@ static void del_sw_ns(struct fs_node *no
  
-+		/* Don't bypasss pinned streams; leave them as they are */
-+		if (type == S2CR_TYPE_BYPASS && s2cr[idx].pinned)
-+			continue;
-+
- 		s2cr[idx].type = type;
- 		s2cr[idx].privcfg = S2CR_PRIVCFG_DEFAULT;
- 		s2cr[idx].cbndx = cbndx;
--- 
-2.17.1
+ static void del_sw_prio(struct fs_node *node)
+ {
+-	struct mlx5_flow_root_namespace *root_ns;
+-	struct mlx5_flow_namespace *ns;
+-
+-	fs_get_obj(ns, node);
+-	root_ns = container_of(ns, struct mlx5_flow_root_namespace, ns);
+-	mutex_destroy(&root_ns->chain_lock);
+ 	kfree(node);
+ }
+ 
+
 
