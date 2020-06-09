@@ -2,32 +2,32 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C0EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F4C5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E40920691
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:07:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19F7420691
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:07:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388354AbgFISHk (ORCPT
+        id S2388361AbgFISHn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:07:40 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:41408 "EHLO
+        Tue, 9 Jun 2020 14:07:43 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:41552 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388169AbgFISF7 (ORCPT
+        by vger.kernel.org with ESMTP id S2388197AbgFISF7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 9 Jun 2020 14:05:59 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jiidG-0001p4-Ek; Tue, 09 Jun 2020 19:05:54 +0100
+        id 1jiidH-0001qH-Sv; Tue, 09 Jun 2020 19:05:55 +0100
 Received: from ben by deadeye with local (Exim 4.94)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jiidF-006Vww-Uz; Tue, 09 Jun 2020 19:05:53 +0100
+        id 1jiidG-006VyS-Gv; Tue, 09 Jun 2020 19:05:54 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,18 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Theodore Ts'o" <tytso@mit.edu>, stable@kernel.org
-Date:   Tue, 09 Jun 2020 19:04:40 +0100
-Message-ID: <lsq.1591725832.613622844@decadent.org.uk>
+        "Al Viro" <viro@zeniv.linux.org.uk>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        "Alexey Dobriyan" <adobriyan@gmail.com>,
+        "Kees Cook" <keescook@chromium.org>,
+        "Alexander Potapenko" <glider@google.com>,
+        "sam" <sunhaoyl@outlook.com>
+Date:   Tue, 09 Jun 2020 19:04:52 +0100
+Message-ID: <lsq.1591725832.570281262@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 49/61] ext4: protect journal inode's blocks using
- block_validity
+Subject: [PATCH 3.16 61/61] fs/binfmt_elf.c: allocate initialized memory
+ in fill_thread_core_info()
 In-Reply-To: <lsq.1591725831.850867383@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,100 +60,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Theodore Ts'o <tytso@mit.edu>
+From: Alexander Potapenko <glider@google.com>
 
-commit 345c0dbf3a30872d9b204db96b5857cd00808cae upstream.
+commit 1d605416fb7175e1adf094251466caa52093b413 upstream.
 
-Add the blocks which belong to the journal inode to block_validity's
-system zone so attempts to deallocate or overwrite the journal due a
-corrupted file system where the journal blocks are also claimed by
-another inode.
+KMSAN reported uninitialized data being written to disk when dumping
+core.  As a result, several kilobytes of kmalloc memory may be written
+to the core file and then read by a non-privileged user.
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202879
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org
-[bwh: Backported to 3.16:
- - Use EXT4_HAS_COMPAT_FEATURE()
- - Use EIO instead of EFSCORRUPTED]
+Reported-by: sam <sunhaoyl@outlook.com>
+Signed-off-by: Alexander Potapenko <glider@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Kees Cook <keescook@chromium.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Link: http://lkml.kernel.org/r/20200419100848.63472-1-glider@google.com
+Link: https://github.com/google/kmsan/issues/76
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/fs/ext4/block_validity.c
-+++ b/fs/ext4/block_validity.c
-@@ -137,6 +137,48 @@ static void debug_print_tree(struct ext4
- 	printk("\n");
- }
- 
-+static int ext4_protect_reserved_inode(struct super_block *sb, u32 ino)
-+{
-+	struct inode *inode;
-+	struct ext4_sb_info *sbi = EXT4_SB(sb);
-+	struct ext4_map_blocks map;
-+	u32 i = 0, err = 0, num, n;
-+
-+	if ((ino < EXT4_ROOT_INO) ||
-+	    (ino > le32_to_cpu(sbi->s_es->s_inodes_count)))
-+		return -EINVAL;
-+	inode = ext4_iget(sb, ino, EXT4_IGET_SPECIAL);
-+	if (IS_ERR(inode))
-+		return PTR_ERR(inode);
-+	num = (inode->i_size + sb->s_blocksize - 1) >> sb->s_blocksize_bits;
-+	while (i < num) {
-+		map.m_lblk = i;
-+		map.m_len = num - i;
-+		n = ext4_map_blocks(NULL, inode, &map, 0);
-+		if (n < 0) {
-+			err = n;
-+			break;
-+		}
-+		if (n == 0) {
-+			i++;
-+		} else {
-+			if (!ext4_data_block_valid(sbi, map.m_pblk, n)) {
-+				ext4_error(sb, "blocks %llu-%llu from inode %u "
-+					   "overlap system zone", map.m_pblk,
-+					   map.m_pblk + map.m_len - 1, ino);
-+				err = -EIO;
-+				break;
-+			}
-+			err = add_system_zone(sbi, map.m_pblk, n);
-+			if (err < 0)
-+				break;
-+			i += n;
-+		}
-+	}
-+	iput(inode);
-+	return err;
-+}
-+
- int ext4_setup_system_zone(struct super_block *sb)
- {
- 	ext4_group_t ngroups = ext4_get_groups_count(sb);
-@@ -171,6 +213,13 @@ int ext4_setup_system_zone(struct super_
- 		if (ret)
- 			return ret;
- 	}
-+	if (EXT4_HAS_COMPAT_FEATURE(sb, EXT4_FEATURE_COMPAT_HAS_JOURNAL) &&
-+	    sbi->s_es->s_journal_inum) {
-+		ret = ext4_protect_reserved_inode(sb,
-+				le32_to_cpu(sbi->s_es->s_journal_inum));
-+		if (ret)
-+			return ret;
-+	}
- 
- 	if (test_opt(sb, DEBUG))
- 		debug_print_tree(EXT4_SB(sb));
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -411,6 +411,11 @@ static int __check_block_validity(struct
- 				unsigned int line,
- 				struct ext4_map_blocks *map)
- {
-+	if (EXT4_HAS_COMPAT_FEATURE(inode->i_sb,
-+				    EXT4_FEATURE_COMPAT_HAS_JOURNAL) &&
-+	    (inode->i_ino ==
-+	     le32_to_cpu(EXT4_SB(inode->i_sb)->s_es->s_journal_inum)))
-+		return 0;
- 	if (!ext4_data_block_valid(EXT4_SB(inode->i_sb), map->m_pblk,
- 				   map->m_len)) {
- 		ext4_error_inode(inode, func, line, map->m_pblk,
+ fs/binfmt_elf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -1575,7 +1575,7 @@ static int fill_thread_core_info(struct
+ 		    (!regset->active || regset->active(t->task, regset) > 0)) {
+ 			int ret;
+ 			size_t size = regset->n * regset->size;
+-			void *data = kmalloc(size, GFP_KERNEL);
++			void *data = kzalloc(size, GFP_KERNEL);
+ 			if (unlikely(!data))
+ 				return 0;
+ 			ret = regset->get(t->task, regset,
 
