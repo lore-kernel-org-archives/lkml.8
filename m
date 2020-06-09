@@ -2,258 +2,105 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70757C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1340BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:09:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49D7F20734
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:08:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0F05207C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:09:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dnVRPOke"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730625AbgFIPI5 (ORCPT
+        id S1730699AbgFIPJm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 11:08:57 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50688 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728082AbgFIPI5 (ORCPT
+        Tue, 9 Jun 2020 11:09:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44804 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726903AbgFIPJl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 11:08:57 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 059F3iXK050778;
-        Tue, 9 Jun 2020 11:07:59 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31hrq84dk1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 09 Jun 2020 11:07:58 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 059F55G4029091;
-        Tue, 9 Jun 2020 15:07:57 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma04ams.nl.ibm.com with ESMTP id 31g2s7x5x1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 09 Jun 2020 15:07:56 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 059F7sNU42729578
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 9 Jun 2020 15:07:54 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BCF0242042;
-        Tue,  9 Jun 2020 15:07:54 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 23B7342041;
-        Tue,  9 Jun 2020 15:07:53 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.202.223])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue,  9 Jun 2020 15:07:53 +0000 (GMT)
-Date:   Tue, 9 Jun 2020 18:07:51 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, peterz@infradead.org,
-        jroedel@suse.de, Andy Lutomirski <luto@kernel.org>,
-        Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        manvanth@linux.vnet.ibm.com, linux-next@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org, hch@lst.de,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH] mm: Move p?d_alloc_track to separate header file
-Message-ID: <20200609150751.GF1149842@linux.ibm.com>
-References: <20200609120533.25867-1-joro@8bytes.org>
+        Tue, 9 Jun 2020 11:09:41 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49244C05BD1E
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 08:09:41 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id n23so10400883pgb.12
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 08:09:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=RmHUFo+IZkEW1sUj7r2fp4n5hZbj7/qoM8mQ5oWjeho=;
+        b=dnVRPOkeeIPU+OwHsVRLNvXWTSyrgQJxnAlVIn3nwK+bO08QVI2WWuevIzacF8/+Bp
+         9ljmJu/cZC1gmkio8bpDMxwjzaKyyTskQQfjvqBhBnuR+KA8KZHMfeXLxLZsNnxKx/yj
+         g95/HA2YHPjg2wzD2QQBkhoKtx6TWO8KQSg+Lv8vrmu2ViCY2SraCLu66scPJ22ip9Ha
+         x4gpJ2cG83+s40fWkPdAj289N75W7cnu59I0zSZBeuIPQgcYuJtvnGMI7+jiRReqba0D
+         xdXrhPUD6X+CYsGi6QBOE59swhoUOC/fc3PyQFfPQTbR0E7ahUYyhjmOa6IJbWcQyrOm
+         t27Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=RmHUFo+IZkEW1sUj7r2fp4n5hZbj7/qoM8mQ5oWjeho=;
+        b=XFpy7q4IjYMgwp0qCOsqEz+62dJ9VVKlKP4W2er5Lf99O0sDbVICLJIIoi+IFIPYba
+         wSvP79tr1d6T3tnFSPDn2IZp3L6Pc6VWyFZXyV+2hDAaKzwQXzUdbN7wyPbImO41ovrI
+         DuIowluKYY6+AjXl/v8ClxvNIcM+kj9qmGBGF2xMiPhnJArGWBMll72qBVpJEa5ZOSEI
+         wbJmyiP63McddLHDsZCyN+79nMipabpKx2wc+jtYkuMCnP0LwThr6jKX75liTylc06Vs
+         gI/tXXD5s+1io/4tMpTJMzd9m/P5NEDspQWWFW2Je6TSWP4DTUhKKHfnniJ6ANRgaIQ4
+         1K4A==
+X-Gm-Message-State: AOAM533RL0PE/evTE8HWwxBXicK/xgBipcj9sVknijmi8dgZF6mfLox6
+        UffmDdu+Q2SjTzLeXfrmNsQ=
+X-Google-Smtp-Source: ABdhPJzzerH9KqpML1As76cOZ8J8OBLMC+QEQwc+E37yjOOpWVRag5R0VqGwTtrWsJz1cGxsyYagEw==
+X-Received: by 2002:a65:614b:: with SMTP id o11mr24480145pgv.443.1591715380851;
+        Tue, 09 Jun 2020 08:09:40 -0700 (PDT)
+Received: from iZj6chx1xj0e0buvshuecpZ ([47.75.1.235])
+        by smtp.gmail.com with ESMTPSA id n1sm2931438pjn.24.2020.06.09.08.09.38
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 09 Jun 2020 08:09:40 -0700 (PDT)
+Date:   Tue, 9 Jun 2020 23:09:36 +0800
+From:   Peng Liu <iwtbavbm@gmail.com>
+To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        linux-kernel@vger.kernel.org
+Cc:     iwtbavbm@gmail.com
+Subject: [PATCH] sched: correct SD_flags returned by tl->sd_flags()
+Message-ID: <20200609150936.GA13060@iZj6chx1xj0e0buvshuecpZ>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200609120533.25867-1-joro@8bytes.org>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-09_09:2020-06-09,2020-06-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- phishscore=0 lowpriorityscore=0 adultscore=0 impostorscore=0
- cotscore=-2147483648 suspectscore=1 clxscore=1011 priorityscore=1501
- malwarescore=0 mlxlogscore=999 bulkscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006090111
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 02:05:33PM +0200, Joerg Roedel wrote:
-> From: Joerg Roedel <jroedel@suse.de>
-> 
-> The functions are only used in two source files, so there is no need
-> for them to be in the global <linux/mm.h> header. Move them to the new
-> <linux/pgalloc-track.h> header and include it only where needed.
-> 
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+During sched domain init, we check whether non-topological SD_flags are
+returned by tl->sd_flags(), if found, fire a waning and correct the
+violation, but the code failed to correct the violation. Correct this.
 
-Acked-by: Mike Rapoport <rppt@linux.ibm.com>
+Fixes: 143e1e28cb40 ("sched: Rework sched_domain topology definition")
+Signed-off-by: Peng Liu <iwtbavbm@gmail.com>
+---
+ kernel/sched/topology.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> ---
->  include/linux/mm.h            | 45 -------------------------------
->  include/linux/pgalloc-track.h | 51 +++++++++++++++++++++++++++++++++++
->  lib/ioremap.c                 |  1 +
->  mm/vmalloc.c                  |  1 +
->  4 files changed, 53 insertions(+), 45 deletions(-)
->  create mode 100644 include/linux/pgalloc-track.h
-> 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 9d6042178ca7..22d8b2a2c9bc 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -2092,51 +2092,11 @@ static inline pud_t *pud_alloc(struct mm_struct *mm, p4d_t *p4d,
->  		NULL : pud_offset(p4d, address);
->  }
->  
-> -static inline p4d_t *p4d_alloc_track(struct mm_struct *mm, pgd_t *pgd,
-> -				     unsigned long address,
-> -				     pgtbl_mod_mask *mod_mask)
-> -
-> -{
-> -	if (unlikely(pgd_none(*pgd))) {
-> -		if (__p4d_alloc(mm, pgd, address))
-> -			return NULL;
-> -		*mod_mask |= PGTBL_PGD_MODIFIED;
-> -	}
-> -
-> -	return p4d_offset(pgd, address);
-> -}
-> -
-> -static inline pud_t *pud_alloc_track(struct mm_struct *mm, p4d_t *p4d,
-> -				     unsigned long address,
-> -				     pgtbl_mod_mask *mod_mask)
-> -{
-> -	if (unlikely(p4d_none(*p4d))) {
-> -		if (__pud_alloc(mm, p4d, address))
-> -			return NULL;
-> -		*mod_mask |= PGTBL_P4D_MODIFIED;
-> -	}
-> -
-> -	return pud_offset(p4d, address);
-> -}
-> -
->  static inline pmd_t *pmd_alloc(struct mm_struct *mm, pud_t *pud, unsigned long address)
->  {
->  	return (unlikely(pud_none(*pud)) && __pmd_alloc(mm, pud, address))?
->  		NULL: pmd_offset(pud, address);
->  }
-> -
-> -static inline pmd_t *pmd_alloc_track(struct mm_struct *mm, pud_t *pud,
-> -				     unsigned long address,
-> -				     pgtbl_mod_mask *mod_mask)
-> -{
-> -	if (unlikely(pud_none(*pud))) {
-> -		if (__pmd_alloc(mm, pud, address))
-> -			return NULL;
-> -		*mod_mask |= PGTBL_PUD_MODIFIED;
-> -	}
-> -
-> -	return pmd_offset(pud, address);
-> -}
->  #endif /* CONFIG_MMU */
->  
->  #if USE_SPLIT_PTE_PTLOCKS
-> @@ -2252,11 +2212,6 @@ static inline void pgtable_pte_page_dtor(struct page *page)
->  	((unlikely(pmd_none(*(pmd))) && __pte_alloc_kernel(pmd))? \
->  		NULL: pte_offset_kernel(pmd, address))
->  
-> -#define pte_alloc_kernel_track(pmd, address, mask)			\
-> -	((unlikely(pmd_none(*(pmd))) &&					\
-> -	  (__pte_alloc_kernel(pmd) || ({*(mask)|=PGTBL_PMD_MODIFIED;0;})))?\
-> -		NULL: pte_offset_kernel(pmd, address))
-> -
->  #if USE_SPLIT_PMD_PTLOCKS
->  
->  static struct page *pmd_to_page(pmd_t *pmd)
-> diff --git a/include/linux/pgalloc-track.h b/include/linux/pgalloc-track.h
-> new file mode 100644
-> index 000000000000..1dcc865029a2
-> --- /dev/null
-> +++ b/include/linux/pgalloc-track.h
-> @@ -0,0 +1,51 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _LINUX_PGALLLC_TRACK_H
-> +#define _LINUX_PGALLLC_TRACK_H
-> +
-> +#if defined(CONFIG_MMU)
-> +static inline p4d_t *p4d_alloc_track(struct mm_struct *mm, pgd_t *pgd,
-> +				     unsigned long address,
-> +				     pgtbl_mod_mask *mod_mask)
-> +{
-> +	if (unlikely(pgd_none(*pgd))) {
-> +		if (__p4d_alloc(mm, pgd, address))
-> +			return NULL;
-> +		*mod_mask |= PGTBL_PGD_MODIFIED;
-> +	}
-> +
-> +	return p4d_offset(pgd, address);
-> +}
-> +
-> +static inline pud_t *pud_alloc_track(struct mm_struct *mm, p4d_t *p4d,
-> +				     unsigned long address,
-> +				     pgtbl_mod_mask *mod_mask)
-> +{
-> +	if (unlikely(p4d_none(*p4d))) {
-> +		if (__pud_alloc(mm, p4d, address))
-> +			return NULL;
-> +		*mod_mask |= PGTBL_P4D_MODIFIED;
-> +	}
-> +
-> +	return pud_offset(p4d, address);
-> +}
-> +
-> +static inline pmd_t *pmd_alloc_track(struct mm_struct *mm, pud_t *pud,
-> +				     unsigned long address,
-> +				     pgtbl_mod_mask *mod_mask)
-> +{
-> +	if (unlikely(pud_none(*pud))) {
-> +		if (__pmd_alloc(mm, pud, address))
-> +			return NULL;
-> +		*mod_mask |= PGTBL_PUD_MODIFIED;
-> +	}
-> +
-> +	return pmd_offset(pud, address);
-> +}
-> +#endif /* CONFIG_MMU */
-> +
-> +#define pte_alloc_kernel_track(pmd, address, mask)			\
-> +	((unlikely(pmd_none(*(pmd))) &&					\
-> +	  (__pte_alloc_kernel(pmd) || ({*(mask)|=PGTBL_PMD_MODIFIED;0;})))?\
-> +		NULL: pte_offset_kernel(pmd, address))
-> +
-> +#endif /* _LINUX_PGALLLC_TRACK_H */
-> diff --git a/lib/ioremap.c b/lib/ioremap.c
-> index ad485f08173b..608fcccd21c8 100644
-> --- a/lib/ioremap.c
-> +++ b/lib/ioremap.c
-> @@ -11,6 +11,7 @@
->  #include <linux/sched.h>
->  #include <linux/io.h>
->  #include <linux/export.h>
-> +#include <linux/pgalloc-track.h>
->  #include <asm/cacheflush.h>
->  #include <asm/pgtable.h>
->  
-> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> index 3091c2ca60df..edc43f003165 100644
-> --- a/mm/vmalloc.c
-> +++ b/mm/vmalloc.c
-> @@ -35,6 +35,7 @@
->  #include <linux/bitops.h>
->  #include <linux/rbtree_augmented.h>
->  #include <linux/overflow.h>
-> +#include <linux/pgalloc-track.h>
->  
->  #include <linux/uaccess.h>
->  #include <asm/tlbflush.h>
-> -- 
-> 2.26.2
-> 
-
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index ba81187bb7af..9079d865a935 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -1328,7 +1328,7 @@ sd_init(struct sched_domain_topology_level *tl,
+ 		sd_flags = (*tl->sd_flags)();
+ 	if (WARN_ONCE(sd_flags & ~TOPOLOGY_SD_FLAGS,
+ 			"wrong sd_flags in topology description\n"))
+-		sd_flags &= ~TOPOLOGY_SD_FLAGS;
++		sd_flags &= TOPOLOGY_SD_FLAGS;
+ 
+ 	/* Apply detected topology flags */
+ 	sd_flags |= dflags;
 -- 
-Sincerely yours,
-Mike.
+2.20.1
+
