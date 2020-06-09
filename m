@@ -2,203 +2,119 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D448FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5248C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:57:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE09F207ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:57:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725431;
-	bh=gFPb4+l7a7W54OwsxL9k4B3zEX7C1NHFUMeGEGuH1JY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=yyYgZnuo600Q0LDHWI4aikwsa3R46kqdm20iCOnjR59ohxeW+PAcokabaP2PTwCXA
-	 nTRv2HFzktELUMrF3pr8TGK7wqsvmU/e43mA93wC0jrZGmhVSA+kY1eU8jyOZLvFIo
-	 QLrASMHKHXX5KuG2izIHeKwSbQfUko/vgoUs/cak=
+	by mail.kernel.org (Postfix) with ESMTP id 980FD2081A
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:57:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387554AbgFIR4o (ORCPT
+        id S2387645AbgFIR5N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:56:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47546 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733230AbgFIRzV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:55:21 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7019F2074B;
-        Tue,  9 Jun 2020 17:55:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725320;
-        bh=gFPb4+l7a7W54OwsxL9k4B3zEX7C1NHFUMeGEGuH1JY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Z9AdUaJGFbGT8A50yOmoPTqku6DyF7ut1D3mIBLRqUFwAvgkd/3DOmqCdXJvkrh+I
-         34Fly+1x7INsQ9mTTxVPrxo0sY26WhsCfrzYHdlL17AlnM4678D5yqQKbflrFBH1iR
-         TvAS9FCIsmbuv3wQni2iWf7mpPIPUfGh+yO5VcF0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 5.7 00/24] 5.7.2-rc1 review
-Date:   Tue,  9 Jun 2020 19:45:31 +0200
-Message-Id: <20200609174149.255223112@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
+        Tue, 9 Jun 2020 13:57:13 -0400
+Received: from smtprelay0171.hostedemail.com ([216.40.44.171]:39502 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387532AbgFIR4g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:56:36 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id D3A118019465;
+        Tue,  9 Jun 2020 17:56:33 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: cover14_010615726dc4
+X-Filterd-Recvd-Size: 4084
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf11.hostedemail.com (Postfix) with ESMTPA;
+        Tue,  9 Jun 2020 17:56:31 +0000 (UTC)
+Message-ID: <2b291c34e10b3b3d9d6e01f8201ec0942e39575f.camel@perches.com>
+Subject: Re: [PATCH v3 1/7] Documentation: dynamic-debug: Add description of
+ level bitmask
+From:   Joe Perches <joe@perches.com>
+To:     Edward Cree <ecree@solarflare.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-acpi@vger.kernel.org,
+        netdev@vger.kernel.org, Jason Baron <jbaron@akamai.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Jim Cromie <jim.cromie@gmail.com>
+Date:   Tue, 09 Jun 2020 10:56:19 -0700
+In-Reply-To: <727b31a0-543b-3dc5-aa91-0d78dc77df9c@solarflare.com>
+References: <20200609104604.1594-1-stanimir.varbanov@linaro.org>
+         <20200609104604.1594-2-stanimir.varbanov@linaro.org>
+         <20200609111615.GD780233@kroah.com>
+         <ba32bfa93ac2e147c2e0d3a4724815a7bbf41c59.camel@perches.com>
+         <727b31a0-543b-3dc5-aa91-0d78dc77df9c@solarflare.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.7.2-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.7.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.7.2-rc1
-X-KernelTest-Deadline: 2020-06-11T17:41+00:00
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 5.7.2 release.
-There are 24 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+On Tue, 2020-06-09 at 18:42 +0100, Edward Cree wrote:
+> On 09/06/2020 17:58, Joe Perches wrote:
+> > On Tue, 2020-06-09 at 13:16 +0200, Greg Kroah-Hartman wrote:
+> > > What is wrong with the existing control of dynamic
+> > > debug messages that you want to add another type of arbitrary grouping
+> > > to it? 
+> > There is no existing grouping mechanism.
+> > 
+> > Many drivers and some subsystems used an internal one
+> > before dynamic debug.
+> > 
+> > $ git grep "MODULE_PARM.*\bdebug\b"|wc -l
+> > 501
+> > 
+> > This is an attempt to unify those homebrew mechanisms.
+> In network drivers, this is probablyusing the existing groupings
+>  defined by netif_level() - see NETIF_MSG_DRV and friends.  Note
+>  that those groups are orthogonal to the level, i.e. they control
+>  netif_err() etc. as well, not just debug messages.
 
-Responses should be made by Thu, 11 Jun 2020 17:41:38 +0000.
-Anything received after that time might be too late.
+These are _not_ netif_<level> control flags.  Some are though.
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.2-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.7.y
-and the diffstat can be found below.
+For instance:
 
-thanks,
+$ git grep "MODULE_PARM.*\bdebug\b" drivers/net | head -10
+drivers/net/ethernet/3com/3c509.c:MODULE_PARM_DESC(debug, "debug level (0-6)");
+drivers/net/ethernet/3com/3c515.c:MODULE_PARM_DESC(debug, "3c515 debug level (0-6)");
+drivers/net/ethernet/3com/3c59x.c:MODULE_PARM_DESC(debug, "3c59x debug level (0-6)");
+drivers/net/ethernet/adaptec/starfire.c:MODULE_PARM_DESC(debug, "Debug level (0-6)");
+drivers/net/ethernet/allwinner/sun4i-emac.c:MODULE_PARM_DESC(debug, "debug message flags");
+drivers/net/ethernet/altera/altera_tse_main.c:MODULE_PARM_DESC(debug, "Message Level (-1: default, 0: no output, 16: all)");
+drivers/net/ethernet/amazon/ena/ena_netdev.c:MODULE_PARM_DESC(debug, "Debug level (0=none,...,16=all)");
+drivers/net/ethernet/amd/atarilance.c:MODULE_PARM_DESC(lance_debug, "atarilance debug level (0-3)");
+drivers/net/ethernet/amd/lance.c:MODULE_PARM_DESC(lance_debug, "LANCE/PCnet debug level (0-7)");
+drivers/net/ethernet/amd/pcnet32.c:MODULE_PARM_DESC(debug, DRV_NAME " debug level");
 
-greg k-h
+These are all level/class output controls.
 
--------------
-Pseudo-Shortlog of commits:
+> Certainly in the case of sfc, and I'd imagine for many other net
+>  drivers too, the 'debug' modparam is setting the default for
+>  net_dev->msg_enable, which can be changed after probe with
+>  ethtool.
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 5.7.2-rc1
+True.
 
-Oleg Nesterov <oleg@redhat.com>
-    uprobes: ensure that uprobe->offset and ->ref_ctr_offset are properly aligned
+> It doesn't look like the proposed mechanism subsumes that (we have
+>  rather more than 5 groups, and it's not clear how you'd connect
+>  it to the existing msg_enable (which uapi must be maintained); if
+>  you don't have a way to do this, better exclude drivers/net/ from
+>  your grep|wc because you won't be unifying those - in my tree
+>  that's 119 hits.
 
-Josh Poimboeuf <jpoimboe@redhat.com>
-    x86/speculation: Add Ivy Bridge to affected list
+Likely not.
 
-Mark Gross <mgross@linux.intel.com>
-    x86/speculation: Add SRBDS vulnerability and mitigation documentation
+I agree it'd be useful to attach the modparam control flag
+to the dynamic debug use somehow.
 
-Mark Gross <mgross@linux.intel.com>
-    x86/speculation: Add Special Register Buffer Data Sampling (SRBDS) mitigation
-
-Mark Gross <mgross@linux.intel.com>
-    x86/cpu: Add 'table' argument to cpu_matches()
-
-Mark Gross <mgross@linux.intel.com>
-    x86/cpu: Add a steppings field to struct x86_cpu_id
-
-Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-    nvmem: qfprom: remove incorrect write support
-
-Oliver Neukum <oneukum@suse.com>
-    CDC-ACM: heed quirk also in error handling
-
-Pascal Terjan <pterjan@google.com>
-    staging: rtl8712: Fix IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK
-
-Jiri Slaby <jslaby@suse.cz>
-    tty: hvc_console, fix crashes on parallel open/close
-
-Dmitry Torokhov <dmitry.torokhov@gmail.com>
-    vt: keyboard: avoid signed integer overflow in k_ascii
-
-Josh Triplett <josh@joshtriplett.org>
-    serial: 8250: Enable 16550A variants by default on non-x86
-
-Paul Cercueil <paul@crapouillou.net>
-    usb: musb: jz4740: Prevent lockup when CONFIG_SMP is set
-
-Dinghao Liu <dinghao.liu@zju.edu.cn>
-    usb: musb: Fix runtime PM imbalance on error
-
-Bin Liu <b-liu@ti.com>
-    usb: musb: start session in resume for host port
-
-Fabrice Gasnier <fabrice.gasnier@st.com>
-    iio: adc: stm32-adc: fix a wrong error message when probing interrupts
-
-Jonathan Cameron <Jonathan.Cameron@huawei.com>
-    iio:chemical:pms7003: Fix timestamp alignment and prevent data leak.
-
-Mathieu Othacehe <m.othacehe@gmail.com>
-    iio: vcnl4000: Fix i2c swapped word reading.
-
-Jonathan Cameron <Jonathan.Cameron@huawei.com>
-    iio:chemical:sps30: Fix timestamp alignment
-
-Johan Hovold <johan@kernel.org>
-    USB: serial: ch341: fix lockup of devices with limited prescaler
-
-Michael Hanselmann <public@hansmi.ch>
-    USB: serial: ch341: add basis for quirk detection
-
-Daniele Palmas <dnlplm@gmail.com>
-    USB: serial: option: add Telit LE910C1-EUX compositions
-
-Bin Liu <b-liu@ti.com>
-    USB: serial: usb_wwan: do not resubmit rx urb on fatal errors
-
-Matt Jolly <Kangie@footclan.ninja>
-    USB: serial: qcserial: add DW5816e QDL support
-
-
--------------
-
-Diffstat:
-
- Documentation/ABI/testing/sysfs-devices-system-cpu |   1 +
- Documentation/admin-guide/hw-vuln/index.rst        |   1 +
- .../special-register-buffer-data-sampling.rst      | 149 +++++++++++++++++++++
- Documentation/admin-guide/kernel-parameters.txt    |  20 +++
- Makefile                                           |   4 +-
- arch/x86/include/asm/cpu_device_id.h               |  27 +++-
- arch/x86/include/asm/cpufeatures.h                 |   2 +
- arch/x86/include/asm/msr-index.h                   |   4 +
- arch/x86/kernel/cpu/bugs.c                         | 106 +++++++++++++++
- arch/x86/kernel/cpu/common.c                       |  56 ++++++--
- arch/x86/kernel/cpu/cpu.h                          |   1 +
- arch/x86/kernel/cpu/match.c                        |   7 +-
- drivers/base/cpu.c                                 |   8 ++
- drivers/iio/adc/stm32-adc-core.c                   |  34 ++---
- drivers/iio/chemical/pms7003.c                     |  17 ++-
- drivers/iio/chemical/sps30.c                       |   9 +-
- drivers/iio/light/vcnl4000.c                       |   6 +-
- drivers/nvmem/qfprom.c                             |  14 --
- drivers/staging/rtl8712/wifi.h                     |   9 +-
- drivers/tty/hvc/hvc_console.c                      |  23 ++--
- drivers/tty/serial/8250/Kconfig                    |   1 +
- drivers/tty/vt/keyboard.c                          |  26 ++--
- drivers/usb/class/cdc-acm.c                        |   2 +-
- drivers/usb/musb/jz4740.c                          |   4 +-
- drivers/usb/musb/musb_core.c                       |   7 +
- drivers/usb/musb/musb_debugfs.c                    |  10 +-
- drivers/usb/serial/ch341.c                         |  68 +++++++++-
- drivers/usb/serial/option.c                        |   4 +
- drivers/usb/serial/qcserial.c                      |   1 +
- drivers/usb/serial/usb_wwan.c                      |   4 +
- include/linux/mod_devicetable.h                    |   2 +
- kernel/events/uprobes.c                            |  16 ++-
- 32 files changed, 532 insertions(+), 111 deletions(-)
-
+cheers, Joe
 
