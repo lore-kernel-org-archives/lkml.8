@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A00C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC86C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C4FE206D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:01:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96E2F206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:01:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725684;
-	bh=6YPxQIpnHA4tJL9vOwIld7dOcuszsw2Lm6F7R0UTo0s=;
+	s=default; t=1591725692;
+	bh=fl6azMfhIGuZjCmH+CkUOjvcD7goDESkGF2l0XOjBvo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o0L29GAk27Sw9Zepjxrznm1xP2oaxsYiPa+C5LGx2YekJY1O0IVGYUT/6vL3J4yf2
-	 b3lRabCTagUhqKlg4l944gOj+cRlj6qPkjmq3jXadcy5c2OqVjpQY3BDXbsBbn5pKG
-	 ppZeEKWBNS41oKW/llRSeF1VXasYGzpPj3N6cVVA=
+	b=ujD2x2gxIeE66H9FZmKlpFziSGKORZPId5Pf3BkpTpQQ477AtGjrAmLkQbdwAnERo
+	 K/yjqN/L3+f/wDPTDc06xuQ2iWE6X/kAhmJxbbU9YhqhZ0fsGnle32xxLSEyQL9hhM
+	 tcuQM31yPPORBAq69Fr3TaGdstbbJFL4BA+vqrMA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387515AbgFISBW (ORCPT
+        id S2387784AbgFISBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:01:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45520 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 14:01:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733054AbgFIRyG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:54:06 -0400
+        id S1731647AbgFIRyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:54:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD58420734;
-        Tue,  9 Jun 2020 17:54:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D5E22074B;
+        Tue,  9 Jun 2020 17:54:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725246;
-        bh=6YPxQIpnHA4tJL9vOwIld7dOcuszsw2Lm6F7R0UTo0s=;
+        s=default; t=1591725244;
+        bh=fl6azMfhIGuZjCmH+CkUOjvcD7goDESkGF2l0XOjBvo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nyzcywBswJC1VoJ2CXJXplUStJLuqwgYL/2PceMtTtPRRdmxBJe13IsVWnmVEHPtV
-         HIAXTbZKpj7Ma7oyByBrjd3a8XK+PoFes6PB9GTJ9huAOdpstqmdWWaZBZpYvRUaWx
-         GuMw+7htvJj1QEXhZhp1lAnkF/nuEfR3dBFOFB3k=
+        b=bObg96Zakf/+xt298EL5SaGADzXV7SRIyhRpv8ZXZB15ugXTepoRb1zGFmIu/7wJo
+         8Mqk0Pk173ZxkvvKbROU9inYd22w+VBnxCojX5Qy1PGovTITvA60nWS+sN1UmkPGZy
+         Da+NdDu1Iu2hjceXW2645NmgmmGBfgBtibwjKK8E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        Bin Liu <b-liu@ti.com>
-Subject: [PATCH 5.6 28/41] usb: musb: Fix runtime PM imbalance on error
-Date:   Tue,  9 Jun 2020 19:45:30 +0200
-Message-Id: <20200609174114.801026661@linuxfoundation.org>
+        stable@vger.kernel.org, Bin Liu <b-liu@ti.com>
+Subject: [PATCH 5.6 27/41] usb: musb: start session in resume for host port
+Date:   Tue,  9 Jun 2020 19:45:29 +0200
+Message-Id: <20200609174114.713662820@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174112.129412236@linuxfoundation.org>
 References: <20200609174112.129412236@linuxfoundation.org>
@@ -59,54 +58,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dinghao Liu <dinghao.liu@zju.edu.cn>
+From: Bin Liu <b-liu@ti.com>
 
-commit e4befc121df03dc8ed2ac1031c98f9538e244bae upstream.
+commit 7f88a5ac393f39319f69b8b20cc8d5759878d1a1 upstream.
 
-When copy_from_user() returns an error code, there
-is a runtime PM usage counter imbalance.
+Commit 17539f2f4f0b ("usb: musb: fix enumeration after resume") replaced
+musb_start() in musb_resume() to not override softconnect bit, but it
+doesn't restart the session for host port which was done in musb_start().
+The session could be disabled in musb_suspend(), which leads the host
+port doesn't stay in host mode.
 
-Fix this by moving copy_from_user() to the beginning
-of this function.
+So let's start the session specifically for host port in musb_resume().
 
-Fixes: 7b6c1b4c0e1e ("usb: musb: fix runtime PM in debugfs")
+Fixes: 17539f2f4f0b ("usb: musb: fix enumeration after resume")
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
 Cc: stable@vger.kernel.org
 Signed-off-by: Bin Liu <b-liu@ti.com>
-Link: https://lore.kernel.org/r/20200525025049.3400-7-b-liu@ti.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lore.kernel.org/r/20200525025049.3400-3-b-liu@ti.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/musb/musb_debugfs.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/usb/musb/musb_core.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/usb/musb/musb_debugfs.c
-+++ b/drivers/usb/musb/musb_debugfs.c
-@@ -168,6 +168,11 @@ static ssize_t musb_test_mode_write(stru
- 	u8			test;
- 	char			buf[24];
+--- a/drivers/usb/musb/musb_core.c
++++ b/drivers/usb/musb/musb_core.c
+@@ -2877,6 +2877,13 @@ static int musb_resume(struct device *de
+ 	musb_enable_interrupts(musb);
+ 	musb_platform_enable(musb);
  
-+	memset(buf, 0x00, sizeof(buf));
++	/* session might be disabled in suspend */
++	if (musb->port_mode == MUSB_HOST &&
++	    !(musb->ops->quirks & MUSB_PRESERVE_SESSION)) {
++		devctl |= MUSB_DEVCTL_SESSION;
++		musb_writeb(musb->mregs, MUSB_DEVCTL, devctl);
++	}
 +
-+	if (copy_from_user(buf, ubuf, min_t(size_t, sizeof(buf) - 1, count)))
-+		return -EFAULT;
-+
- 	pm_runtime_get_sync(musb->controller);
- 	test = musb_readb(musb->mregs, MUSB_TESTMODE);
- 	if (test) {
-@@ -176,11 +181,6 @@ static ssize_t musb_test_mode_write(stru
- 		goto ret;
- 	}
- 
--	memset(buf, 0x00, sizeof(buf));
--
--	if (copy_from_user(buf, ubuf, min_t(size_t, sizeof(buf) - 1, count)))
--		return -EFAULT;
--
- 	if (strstarts(buf, "force host full-speed"))
- 		test = MUSB_TEST_FORCE_HOST | MUSB_TEST_FORCE_FS;
- 
+ 	spin_lock_irqsave(&musb->lock, flags);
+ 	error = musb_run_resume_work(musb);
+ 	if (error)
 
 
