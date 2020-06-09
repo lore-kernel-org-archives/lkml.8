@@ -2,86 +2,108 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F4132C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 668DDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4DE620734
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:12:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="0kT+i8bG"
+	by mail.kernel.org (Postfix) with ESMTP id 4752620734
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:14:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727955AbgFINM3 (ORCPT
+        id S1728876AbgFINO0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 09:12:29 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:41540 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728404AbgFINMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 09:12:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=T5qZZZONjhOyZmzsYwxogqZVynVoTskOeNFAgtVitgc=; b=0kT+i8bG4gJ9YNgZTit0buJYCX
-        2qKIXFpSv1dv/f1KOB1LgmNQD0/+namhgfd9+b1HqSPiPqIfpSYY8G8TA6yoIElSoHuD6Wog52UkJ
-        no6a7ZwRv6rKmWDmE7UTvQKa7kvzgR84SKAA9hSB0PpG340P16NmV+uv64+nvte0hASU=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jie36-004Vx2-MB; Tue, 09 Jun 2020 15:12:16 +0200
-Date:   Tue, 9 Jun 2020 15:12:16 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Sascha Hauer <s.hauer@pengutronix.de>
+        Tue, 9 Jun 2020 09:14:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55172 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727920AbgFINOS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 09:14:18 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4BFAC08C5C9
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 06:14:13 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1jie4q-0006Ap-DQ; Tue, 09 Jun 2020 15:14:04 +0200
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1jie4p-0000V1-1j; Tue, 09 Jun 2020 15:14:03 +0200
+Date:   Tue, 9 Jun 2020 15:14:03 +0200
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     Andrew Lunn <andrew@lunn.ch>
 Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
         devicetree@vger.kernel.org, kernel@pengutronix.de,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         linux-arm-kernel@lists.infradead.org
 Subject: Re: [PATCH] net: ethernet: mvneta: add support for 2.5G DRSGMII mode
-Message-ID: <20200609131216.GJ1022955@lunn.ch>
+Message-ID: <20200609131402.GL11869@pengutronix.de>
 References: <20200608074716.9975-1-s.hauer@pengutronix.de>
  <20200608145737.GG1006885@lunn.ch>
  <20200609125535.GK11869@pengutronix.de>
+ <20200609131216.GJ1022955@lunn.ch>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200609125535.GK11869@pengutronix.de>
+In-Reply-To: <20200609131216.GJ1022955@lunn.ch>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 15:13:06 up 110 days, 20:43, 124 users,  load average: 0.03, 0.14,
+ 0.18
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 02:55:35PM +0200, Sascha Hauer wrote:
-> On Mon, Jun 08, 2020 at 04:57:37PM +0200, Andrew Lunn wrote:
-> > On Mon, Jun 08, 2020 at 09:47:16AM +0200, Sascha Hauer wrote:
-> > > The Marvell MVNETA Ethernet controller supports a 2.5 Gbps SGMII mode
-> > > called DRSGMII.
+Hi Andrew,
+
+On Tue, Jun 09, 2020 at 03:12:16PM +0200, Andrew Lunn wrote:
+> On Tue, Jun 09, 2020 at 02:55:35PM +0200, Sascha Hauer wrote:
+> > On Mon, Jun 08, 2020 at 04:57:37PM +0200, Andrew Lunn wrote:
+> > > On Mon, Jun 08, 2020 at 09:47:16AM +0200, Sascha Hauer wrote:
+> > > > The Marvell MVNETA Ethernet controller supports a 2.5 Gbps SGMII mode
+> > > > called DRSGMII.
+> > > > 
+> > > > This patch adds a corresponding phy-mode string 'drsgmii' and parses it
+> > > > from DT. The MVNETA then configures the SERDES protocol value
+> > > > accordingly.
+> > > > 
+> > > > It was successfully tested on a MV78460 connected to a FPGA.
 > > > 
-> > > This patch adds a corresponding phy-mode string 'drsgmii' and parses it
-> > > from DT. The MVNETA then configures the SERDES protocol value
-> > > accordingly.
+> > > Hi Sascha
 > > > 
-> > > It was successfully tested on a MV78460 connected to a FPGA.
+> > > Is this really overclocked SGMII, or 2500BaseX? How does it differ
+> > > from 2500BaseX, which mvneta already supports?
 > > 
-> > Hi Sascha
-> > 
-> > Is this really overclocked SGMII, or 2500BaseX? How does it differ
-> > from 2500BaseX, which mvneta already supports?
+> > I think it is overclocked SGMII or 2500BaseX depending on the Port MAC
+> > Control Register0 PortType setting bit.
+> > As said to Russell we have a fixed link so nobody really cares if it's
+> > SGMII or 2500BaseX. This boils down the patch to fixing the Serdes
+> > configuration setting for 2500BaseX.
 > 
-> I think it is overclocked SGMII or 2500BaseX depending on the Port MAC
-> Control Register0 PortType setting bit.
-> As said to Russell we have a fixed link so nobody really cares if it's
-> SGMII or 2500BaseX. This boils down the patch to fixing the Serdes
-> configuration setting for 2500BaseX.
+> Hi Sascha
+> 
+> Does 2500BaseX work for your use case? Since this drsmgii mode is not
+> well defined, i would prefer to not add it, unless it is really
+> needed.
 
-Hi Sascha
+Yes, it does, see updated patch I just sent.
 
-Does 2500BaseX work for your use case? Since this drsmgii mode is not
-well defined, i would prefer to not add it, unless it is really
-needed.
+Sascha
 
-	Andrew
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
