@@ -2,200 +2,159 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFB2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6995AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:54:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52A942074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:54:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y5P3DQmS"
+	by mail.kernel.org (Postfix) with ESMTP id 449A7207C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:54:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591696491;
+	bh=b/I0kNxHIl+13KoxgRCT6zkbblfDXS0iLu6pitfhlpc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aiEYbVxZpCMlmIdxC8fupArfh8kU1U8GMDe5s9VJF8chj1Atn3Jjjj98HSqm6h/KI
+	 QoKJlQpRjfNcC+Mzf7B2zRIUGpCJkjtBZpUxFw06PRjMRwOvnFoVdEpbqjNOhneYm2
+	 pHeZk2gb4w9dCOJfm9fSDTlwJ9jJbFzgQTFxxnF4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728600AbgFIJyY (ORCPT
+        id S1728597AbgFIJyt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 05:54:24 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:50402 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727037AbgFIJyU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 05:54:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591696455;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=SC9syHJzq6iNk5VKVHnGheNpsoiQBFm88X04rtBYN08=;
-        b=Y5P3DQmSRySNy1nEl5QupgHL7BGk3hVm8z+O+iQft2lFnARqUZpGT/pN1C2ZQS7z7eQKfF
-        HcFF234r24EICSK5PXQpSOZkyAGQNDxvSQLypRHJD45Wfbj03clMnsMSE7qit8jtoiKv9I
-        g81zp6huTG+/nfwD3saOUExDBspNSJU=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-443-3xrtNILaNemw8DHVMedbsg-1; Tue, 09 Jun 2020 05:54:11 -0400
-X-MC-Unique: 3xrtNILaNemw8DHVMedbsg-1
-Received: by mail-wr1-f71.google.com with SMTP id a4so8380290wrp.5
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 02:54:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=SC9syHJzq6iNk5VKVHnGheNpsoiQBFm88X04rtBYN08=;
-        b=I8yptMOb2r2e/iYPQTFXOssS8E5CxuyTuHcK4+RlNd2sWl/ZYkNgCDliM9Y7xw4Dz2
-         7CBIEIFflBT9DFKbjkQGmJ2gjbkUaNojXsRFcPN4vqW27aJLHpIs3cItHamBXzKXSulf
-         w0XRbeXv1mdl/DxqCjQ7CEAlQGSoIASeqjr9COJJ6gFFwTXo0k1c6cJvY+/E/xe2BCZA
-         UalUj2dvsU3LII5GAifnC2fvW+wqn61Hamg4T/R2pqt4GmCbHkqTjnantbKM30LJAg2Z
-         6pOOZB0QActolspTcSNsnHmyyeyf1lobyCBLcBg39HesGrW3KJvphvmPV6K7VBaZWztW
-         +8hA==
-X-Gm-Message-State: AOAM5331kE3obJAgEAAyxBxZWc357o9PBwbbpUzFKBV8M6+XbGbRkLWq
-        4GVzu7XerFT+Y2CFuiIH9eFXN8KZVBjRH2CqekrmY6xZlgSycjAbBIYj/x4OkA00Q4BElN1uhrG
-        z7c/z0P7mLAieuJ6g8C9h0MaH
-X-Received: by 2002:adf:910e:: with SMTP id j14mr3319831wrj.278.1591696450442;
-        Tue, 09 Jun 2020 02:54:10 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwNaCwWIicA8xSDlpgm/W3oiuEgYalTH4d6fD5Fqj+9Mro5lSmTaPsGiPPa7w/Cmzt0VCbrlw==
-X-Received: by 2002:adf:910e:: with SMTP id j14mr3319797wrj.278.1591696450189;
-        Tue, 09 Jun 2020 02:54:10 -0700 (PDT)
-Received: from [192.168.178.58] ([151.21.172.168])
-        by smtp.gmail.com with ESMTPSA id n189sm2309651wmb.43.2020.06.09.02.54.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Jun 2020 02:54:09 -0700 (PDT)
-Subject: Re: [RFC PATCH] KVM: x86: Fix APIC page invalidation race
-To:     Eiichi Tsukata <eiichi.tsukata@nutanix.com>
-Cc:     "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "jmattson@google.com" <jmattson@google.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "x86@kernel.org" <x86@kernel.org>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Felipe Franciosi <felipe@nutanix.com>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>
-References: <20200606042627.61070-1-eiichi.tsukata@nutanix.com>
- <0d9b3313-5d4c-9ef3-63e4-ba08ddbbe7a1@redhat.com>
- <7B9024C7-98D0-4940-91AE-40BCDE555C8F@nutanix.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <6d2d2faf-116f-8c71-fda2-3fc052952dee@redhat.com>
-Date:   Tue, 9 Jun 2020 11:54:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 9 Jun 2020 05:54:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57652 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727037AbgFIJys (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 05:54:48 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2ACC2074B;
+        Tue,  9 Jun 2020 09:54:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591696486;
+        bh=b/I0kNxHIl+13KoxgRCT6zkbblfDXS0iLu6pitfhlpc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LrBZ8ycOBrsIie8XtRMmWnyHu9bjTpH+5cu1njFaZcwCTTexT3mRmcURDHoEQ8EhE
+         Q9DAexLcgpwTZ9cPhe+u4X2DxNWHiBujlEUN4QUOuRoe8BEz+9e5/hw3c63MnQRW1J
+         RdnFDqmQ0DtO0Ko2wtHgrl0zfWc7jeITMVyFrTtE=
+Date:   Tue, 9 Jun 2020 11:54:44 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     Jesse Barnes <jsbarnes@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Zubin Mithra <zsm@google.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
+ "whitelisted" drivers
+Message-ID: <20200609095444.GA533843@kroah.com>
+References: <CACK8Z6EXDf2vUuJbKm18R6HovwUZia4y_qUrTW8ZW+8LA2+RgA@mail.gmail.com>
+ <20200603121613.GA1488883@kroah.com>
+ <CACK8Z6EOGduHX1m7eyhFgsGV7CYiVN0en4U0cM4BEWJwk2bmoA@mail.gmail.com>
+ <20200605080229.GC2209311@kroah.com>
+ <CACK8Z6GR7-wseug=TtVyRarVZX_ao2geoLDNBwjtB+5Y7VWNEQ@mail.gmail.com>
+ <20200607113632.GA49147@kroah.com>
+ <CAJmaN=m5cGc8019LocvHTo-1U6beA9-h=T-YZtQEYEb_ry=b+Q@mail.gmail.com>
+ <20200608175015.GA457685@kroah.com>
+ <CAJmaN=mvnrLLkJC=6ddO_Rj+1FpRHoQzWFo9W3AZmsW_qS5CYQ@mail.gmail.com>
+ <CACK8Z6GZprVZMM=JQ-9zjosYQ6OLpifp_g8RmSTa3HwWWTB8Lw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <7B9024C7-98D0-4940-91AE-40BCDE555C8F@nutanix.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACK8Z6GZprVZMM=JQ-9zjosYQ6OLpifp_g8RmSTa3HwWWTB8Lw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/06/20 03:04, Eiichi Tsukata wrote:
+On Mon, Jun 08, 2020 at 11:41:19AM -0700, Rajat Jain wrote:
+> Hi Jesse and Greg,
 > 
+> On Mon, Jun 8, 2020 at 11:30 AM Jesse Barnes <jsbarnes@google.com> wrote:
+> >
+> > > > I think your suggestion to disable driver binding once the initial
+> > > > bus/slot devices have been bound will probably work for this
+> > > > situation.  I just wanted to be clear that without some auditing,
+> > > > fuzzing, and additional testing, we simply have to assume that drivers
+> > > > are *not* secure and avoid using them on untrusted devices until we're
+> > > > fairly confident they can handle them (whether just misbehaving or
+> > > > malicious), in combination with other approaches like IOMMUs of
+> > > > course.  And this isn't because we don't trust driver authors or
+> > > > kernel developers to dtrt, it's just that for many devices (maybe USB
+> > > > is an exception) I think driver authors haven't had to consider this
+> > > > case much, and so I think it's prudent to expect bugs in this area
+> > > > that we need to find & fix.
+> > >
+> > > For USB, yes, we have now had to deal with "untrusted devices" lieing
+> > > about their ids and sending us horrible data.  That's all due to the
+> > > fuzzing tools that have been written over the past few years, and now we
+> > > have some of those in the kernel tree itself to help with that testing.
 > 
->> On Jun 8, 2020, at 22:13, Paolo Bonzini <pbonzini@redhat.com> wrote:
->>
->> On 06/06/20 06:26, Eiichi Tsukata wrote:
->>> Commit b1394e745b94 ("KVM: x86: fix APIC page invalidation") tried to
->>> fix inappropriate APIC page invalidation by re-introducing arch specific
->>> kvm_arch_mmu_notifier_invalidate_range() and calling it from
->>> kvm_mmu_notifier_invalidate_range_start. But threre could be the
->>> following race because VMCS APIC address cache can be updated
->>> *before* it is unmapped.
->>>
->>> Race:
->>>  (Invalidator) kvm_mmu_notifier_invalidate_range_start()
->>>  (Invalidator) kvm_make_all_cpus_request(kvm, KVM_REQ_APIC_PAGE_RELOAD)
->>>  (KVM VCPU) vcpu_enter_guest()
->>>  (KVM VCPU) kvm_vcpu_reload_apic_access_page()
->>>  (Invalidator) actually unmap page
->>>
->>> Symptom:
->>>  The above race can make Guest OS see already freed page and Guest OS
->>> will see broken APIC register values.
->>
->> This is not exactly the issue.  The values in the APIC-access page do
->> not really matter, the problem is that the host physical address values
->> won't match between the page tables and the APIC-access page address.
->> Then the processor will not trap APIC accesses, and will instead show
->> the raw contents of the APIC-access page (zeroes), and cause the crash
->> as you mention below.
->>
->> Still, the race explains the symptoms and the patch matches this text in
->> include/linux/mmu_notifier.h:
->>
->> 	 * If the subsystem
->>         * can't guarantee that no additional references are taken to
->>         * the pages in the range, it has to implement the
->>         * invalidate_range() notifier to remove any references taken
->>         * after invalidate_range_start().
->>
->> where the "additional reference" is in the VMCS: because we have to
->> account for kvm_vcpu_reload_apic_access_page running between
->> invalidate_range_start() and invalidate_range_end(), we need to
->> implement invalidate_range().
->>
->> The patch seems good, but I'd like Andrea Arcangeli to take a look as
->> well so I've CCed him.
->>
->> Thank you very much!
->>
->> Paolo
->>
+> This is great to hear! I tried to look up but didn't find anything
+> else in-kernel, except the kcov support to export coverage info for
+> userspace fuzzers. Can you please give us some pointers for in-kernel
+> fuzzing tools?
+
+For USB, it's a combination of using syzbot with the "raw gadget" driver
+and the loopback gadget/host controller.  See many posts from Andrey
+Konovalov <andreyknvl@google.com> on the linux-usb@vger.kernel.org list
+for details as to how he does this.
+
+> > > For PCI, heh, good luck, those assumptions about "devices sending valid
+> > > data" are everywhere, if our experience with USB is any indication.
+> > >
+> > > But, to take USB as an example, this is exactly what the USB
+> > > "authorized" flag is there for, it's a "trust" setting that userspace
+> > > has control over.  This came from the wireless USB spec, where it was
+> > > determined that you could not trust devices.  So just use that same
+> > > model here, move it to the driver core for all busses to use and you
+> > > should be fine.
+> > >
+> > > If that doesn't meet your needs, please let me know the specifics of
+> > > why, with patches :)
+> >
+> > Yeah will do for sure.  I don't want to carry a big infra for this on our own!
+> >
+> > > Now, as to you all getting some sort of "Hardware flag" to determine
+> > > "inside" vs. "outside" devices, hah, good luck!  It took us a long time
+> > > to get that for USB, and even then, BIOSes lie and get it wrong all the
+> > > time.  So you will have to also deal with that in some way, for your
+> > > userspace policy.
+> >
+> > I think that's inherently platform specific to some extent.  We can do
+> > it with our coreboot based firmware, but there's no guarantee other
+> > vendors will adopt the same approach.  But I think at least for the
+> > ChromeOS ecosystem we can come up with something that'll work, and
+> > allow us to dtrt in userspace wrt driver binding.
 > 
-> Hello Paolo
-> 
-> Thanks for detailed explanation!
-> I’ll fix the commit message like this:
+> Agree, we can work with our firmware teams to get that right, and then
+> expose it from kernel to userspace to help it implement the policy we
+> want.
 
-No need to resend, the patch is good.  Here is my take on the commit message:
+This is already in the spec for USB, I suggest working to get this added
+to the other bus type specs that you care about as well (UEFI, PCI,
+etc.)
 
-    Commit b1394e745b94 ("KVM: x86: fix APIC page invalidation") tried
-    to fix inappropriate APIC page invalidation by re-introducing arch
-    specific kvm_arch_mmu_notifier_invalidate_range() and calling it from
-    kvm_mmu_notifier_invalidate_range_start. However, the patch left a
-    possible race where the VMCS APIC address cache is updated *before*
-    it is unmapped:
-    
-      (Invalidator) kvm_mmu_notifier_invalidate_range_start()
-      (Invalidator) kvm_make_all_cpus_request(kvm, KVM_REQ_APIC_PAGE_RELOAD)
-      (KVM VCPU) vcpu_enter_guest()
-      (KVM VCPU) kvm_vcpu_reload_apic_access_page()
-      (Invalidator) actually unmap page
-    
-    Because of the above race, there can be a mismatch between the
-    host physical address stored in the APIC_ACCESS_PAGE VMCS field and
-    the host physical address stored in the EPT entry for the APIC GPA
-    (0xfee0000).  When this happens, the processor will not trap APIC
-    accesses, and will instead show the raw contents of the APIC-access page.
-    Because Windows OS periodically checks for unexpected modifications to
-    the LAPIC register, this will show up as a BSOD crash with BugCheck
-    CRITICAL_STRUCTURE_CORRUPTION (109) we are currently seeing in
-    https://bugzilla.redhat.com/show_bug.cgi?id=1751017.
-    
-    The root cause of the issue is that kvm_arch_mmu_notifier_invalidate_range()
-    cannot guarantee that no additional references are taken to the pages in
-    the range before kvm_mmu_notifier_invalidate_range_end().  Fortunately,
-    this case is supported by the MMU notifier API, as documented in
-    include/linux/mmu_notifier.h:
-    
-             * If the subsystem
-             * can't guarantee that no additional references are taken to
-             * the pages in the range, it has to implement the
-             * invalidate_range() notifier to remove any references taken
-             * after invalidate_range_start().
-    
-    The fix therefore is to reload the APIC-access page field in the VMCS
-    from kvm_mmu_notifier_invalidate_range() instead of ..._range_start().
+thanks,
 
-Thanks,
-
-Paolo
-
+greg k-h
