@@ -2,91 +2,99 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F940C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63AD4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BCE920774
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:34:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pFZbRjVu"
+	by mail.kernel.org (Postfix) with ESMTP id 3A4122078D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:37:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730571AbgFIOew (ORCPT
+        id S1730006AbgFIOg7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 10:34:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39448 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726803AbgFIOev (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 10:34:51 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 240C7C05BD1E;
-        Tue,  9 Jun 2020 07:34:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=BS61t3scD5rhsvldmGOJtyXVG6rDl8HEmiFZUjqsT1Q=; b=pFZbRjVutesuWvEsLEcOIckCTU
-        B3HEtPGVpCN39H/vjxliXrmai3D//DgWvJMqaAaECUbY+uGMZ6/JoDe8HSpPKCIOxjdSsdO01gL4k
-        jOfpF4lX6pW0QRPLyuOg22AAoBgA/FbpiiAOEc6nvbB1s1puwqnevV0HVIEy8unMbIITqwStbo958
-        ORwKmICUrKdJ9Jpq/dlDO2GdCh36CSzheEAvMA4TxREBhMXFw8Dc31l+wFd++VFwgYc2Ytzeuu8FI
-        3Xhapr9ybl4wIdCXPbVFVt5XN4bcA0++9e/Y7RYBFDK6bTxa5Fju3SlXupYEV1qkJZRkRZmY0V66L
-        gazISSMA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jifKv-0008Vl-NS; Tue, 09 Jun 2020 14:34:45 +0000
-Date:   Tue, 9 Jun 2020 07:34:45 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Scott Branden <scott.branden@broadcom.com>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Wolfram Sang <wsa@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Subject: Re: [PATCH v7 2/8] firmware: add offset to request_firmware_into_buf
-Message-ID: <20200609143445.GD19604@bombadil.infradead.org>
-References: <20200606050458.17281-1-scott.branden@broadcom.com>
- <20200606050458.17281-3-scott.branden@broadcom.com>
+        Tue, 9 Jun 2020 10:36:59 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:43864 "EHLO ns.iliad.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726395AbgFIOg7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 10:36:59 -0400
+X-Greylist: delayed 326 seconds by postgrey-1.27 at vger.kernel.org; Tue, 09 Jun 2020 10:36:58 EDT
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id D3AA3201AA;
+        Tue,  9 Jun 2020 16:31:29 +0200 (CEST)
+Received: from [192.168.108.51] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id BBCDE200C3;
+        Tue,  9 Jun 2020 16:31:29 +0200 (CEST)
+Subject: Re: Scanning for TV channels over DVB-T and DVB-T2
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+To:     linux-media <linux-media@vger.kernel.org>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jan Pieter van Woerkom <jp@jpvw.nl>,
+        Brad Love <brad@nextdimension.cc>,
+        Antti Palosaari <crope@iki.fi>
+References: <11fbc112-c410-8c67-9bcb-9450924d12ef@free.fr>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+Message-ID: <4904d37d-1cd4-b8f3-9c3c-82eb4569bca7@free.fr>
+Date:   Tue, 9 Jun 2020 16:31:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200606050458.17281-3-scott.branden@broadcom.com>
+In-Reply-To: <11fbc112-c410-8c67-9bcb-9450924d12ef@free.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Tue Jun  9 16:31:29 2020 +0200 (CEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 10:04:52PM -0700, Scott Branden wrote:
->  static struct fw_priv *__allocate_fw_priv(const char *fw_name,
->  					  struct firmware_cache *fwc,
-> -					  void *dbuf, size_t size)
-> +					  void *dbuf, size_t size,
-> +					  size_t offset,
-> +					  enum kernel_pread_opt opt)
->  {
+On 08/06/2020 17:30, Marc Gonzalez wrote:
 
-Your types are screwed up.  size_t is the size of something in memory.
-loff_t is an offset in a file.  This should be an loff_t.  One of the
-other patches has the opposite problem.
+> Suppose we know that several channels are transmitted on a given frequency
+> by terrestrial antenna. However, we don't know if the signal is "encoded"
+> (not sure this is the right term) in DVB-T or DVB-T2 modulation.
+> 
+> Do we have to scan the frequency /twice/
+> first with DTV_DELIVERY_SYSTEM = SYS_DVBT
+>  then with DTV_DELIVERY_SYSTEM = SYS_DVBT2 ?
+> 
+> Or is there some optimization where both modulations are handled
+> in a single step?
+> 
+> Or maybe it depends on the tuner driver?
 
-(this is kind of a minor problem compared to all the complexity
-problems, but it's worth mentioning)
+Digging a bit deeper...
+
+My system sports a Silicon Labs Si2168 DVB-T2/T/C demodulator
+
+The data sheet states:
+
+"For DVB-T2 and T2-Lite:
+	DVB-T2 versus DVB-T automatic detection"
+
+"In DVB-T and DVB-T2 reception, parameters necessary for device synchronization
+are broadcast in the transmission parameters (respectively TPS and P1 symbol).
+When these transmission parameters are found and decoded, the demodulator is
+automatically and accordingly configured to achieve full synchronization."
+
+
+This HW is supported upstream by drivers/media/dvb-frontends/si2168.c
+https://elixir.bootlin.com/linux/latest/source/drivers/media/dvb-frontends/si2168.c
+
+I have a nagging feeling because si2168_set_frontend() appears to
+behave differently for SYS_DVBT and for SYS_DVBT2...
+
+https://elixir.bootlin.com/linux/latest/source/drivers/media/dvb-frontends/si2168.c#L250
+https://elixir.bootlin.com/linux/latest/source/drivers/media/dvb-frontends/si2168.c#L297
+https://elixir.bootlin.com/linux/latest/source/drivers/media/dvb-frontends/si2168.c#L345
+
+Maybe setting SYS_DVBT2 would also work for DVB-T transmissions?
+(TODO: test that)
+
+Any insight would be greatly appreciated.
+
+Regards.
