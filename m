@@ -2,155 +2,119 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 937BCC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2040C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75D47206D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:18:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAB3C2078C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:19:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730143AbgFIOSt (ORCPT
+        id S1730332AbgFIOS7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 10:18:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36924 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726967AbgFIOSs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 10:18:48 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 051FDC05BD1E
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 07:18:47 -0700 (PDT)
-Received: from localhost ([127.0.0.1] helo=vostro)
-        by Galois.linutronix.de with esmtps (TLS1.2:RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1jif5N-0002Lk-Jo; Tue, 09 Jun 2020 16:18:41 +0200
-From:   John Ogness <john.ogness@linutronix.de>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Paul McKenney <paulmck@kernel.org>
-Subject: Re: blk->id read race: was: [PATCH v2 2/3] printk: add lockless buffer
-References: <20200501094010.17694-1-john.ogness@linutronix.de>
-        <20200501094010.17694-3-john.ogness@linutronix.de>
-        <20200609071030.GA23752@linux-b0ei>
-Date:   Tue, 09 Jun 2020 16:18:35 +0200
-In-Reply-To: <20200609071030.GA23752@linux-b0ei> (Petr Mladek's message of
-        "Tue, 9 Jun 2020 09:10:30 +0200")
-Message-ID: <87tuzkuxtw.fsf@vostro.fn.ogness.net>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 9 Jun 2020 10:18:59 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:42004 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726967AbgFIOS5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 10:18:57 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id E58AA6A53D90B98A796E;
+        Tue,  9 Jun 2020 22:18:51 +0800 (CST)
+Received: from huawei.com (10.175.113.133) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Tue, 9 Jun 2020
+ 22:18:44 +0800
+From:   Wang Hai <wanghai38@huawei.com>
+To:     <davem@davemloft.net>, <kuba@kernel.org>, <gerrit@erg.abdn.ac.uk>,
+        <posk@google.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dccp@vger.kernel.org>, <wanghai38@huawei.com>
+Subject: [PATCH] dccp: Fix possible memleak in dccp_init and dccp_fini
+Date:   Tue, 9 Jun 2020 22:18:16 +0800
+Message-ID: <20200609141816.33467-1-wanghai38@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
 Content-Type: text/plain
+X-Originating-IP: [10.175.113.133]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-09, Petr Mladek <pmladek@suse.com> wrote:
->> --- /dev/null
->> +++ b/kernel/printk/printk_ringbuffer.c
->> +/*
->> + * Given a data ring (text or dict), put the associated descriptor of each
->> + * data block from @lpos_begin until @lpos_end into the reusable state.
->> + *
->> + * If there is any problem making the associated descriptor reusable, either
->> + * the descriptor has not yet been committed or another writer task has
->> + * already pushed the tail lpos past the problematic data block. Regardless,
->> + * on error the caller can re-load the tail lpos to determine the situation.
->> + */
->> +static bool data_make_reusable(struct printk_ringbuffer *rb,
->> +			       struct prb_data_ring *data_ring,
->> +			       unsigned long lpos_begin,
->> +			       unsigned long lpos_end,
->> +			       unsigned long *lpos_out)
->> +{
->> +	struct prb_desc_ring *desc_ring = &rb->desc_ring;
->> +	struct prb_data_blk_lpos *blk_lpos;
->> +	struct prb_data_block *blk;
->> +	unsigned long tail_lpos;
->> +	enum desc_state d_state;
->> +	struct prb_desc desc;
->> +	unsigned long id;
->> +
->> +	/*
->> +	 * Using the provided @data_ring, point @blk_lpos to the correct
->> +	 * blk_lpos within the local copy of the descriptor.
->> +	 */
->> +	if (data_ring == &rb->text_data_ring)
->> +		blk_lpos = &desc.text_blk_lpos;
->> +	else
->> +		blk_lpos = &desc.dict_blk_lpos;
->> +
->> +	/* Loop until @lpos_begin has advanced to or beyond @lpos_end. */
->> +	while ((lpos_end - lpos_begin) - 1 < DATA_SIZE(data_ring)) {
->> +		blk = to_block(data_ring, lpos_begin);
->> +		id = READ_ONCE(blk->id); /* LMM(data_make_reusable:A) */
->
-> This would deserve some comment:
->
-> 1. Compiler could not optimize out the read because there is a data
->    dependency on lpos_begin.
->
-> 2. Compiler could not postpone the read because it is followed by
->    smp_rmb().
->
-> So, is READ_ONCE() realy needed?
+There are some memory leaks in dccp_init() and dccp_fini().
 
-I agree that it is not needed. Both the READ_ONCE() and its countering
-WRITE_ONCE() (data_alloc:B) only document the lockless shared access. I
-will remove both for the next version.
+In dccp_fini() and the error handling path in dccp_init(), free lhash2
+is missing. Add inet_hashinfo2_free_mod() to do it.
 
-Do we still need a comment? Is it not obvious that there is a data
-dependency on @lpos_begin?
+If inet_hashinfo2_init_mod() failed in dccp_init(),
+percpu_counter_destroy() should be called to destroy dccp_orphan_count.
+It need to goto out_free_percpu when inet_hashinfo2_init_mod() failed.
 
-        blk = to_block(data_ring, lpos_begin);
-        id = blk->id;
+Fixes: c92c81df93df ("net: dccp: fix kernel crash on module load")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+---
+ include/net/inet_hashtables.h | 6 ++++++
+ net/dccp/proto.c              | 7 +++++--
+ 2 files changed, 11 insertions(+), 2 deletions(-)
 
-> Well, blk->id clearly can be modified in parallel so we need to be
-> careful. There is smp_rmb() right below. Do we needed smp_rmb() also
-> before?
->
-> What about the following scenario?:
->
->
-> CPU0						CPU1
->
-> 						data_alloc()
-> 						  data_push_tail()
->
-> 						blk = to_block(data_ring, begin_lpos)
-> 						WRITE_ONCE(blk->id, id); /* LMM(data_alloc:B) */
->
-> desc_push_tail()
->   data_push_tail()
->
->     tail_lpos = data_ring->tail_lpos;
->     // see data_ring->tail_lpos already updated by CPU1
->
->     data_make_reusable()
->
->       // lpos_begin = tail_lpos via parameter
->       blk = to_block(data_ring, lpos_begin);
->       id = blk->id
->
-> Now: CPU0 might see outdated blk->id before CPU1 wrote new value
->      because there is no read barrier betwen reading tail_lpos
->      and blk->id here.
+diff --git a/include/net/inet_hashtables.h b/include/net/inet_hashtables.h
+index ad64ba6..9256097 100644
+--- a/include/net/inet_hashtables.h
++++ b/include/net/inet_hashtables.h
+@@ -185,6 +185,12 @@ static inline spinlock_t *inet_ehash_lockp(
+ 
+ int inet_ehash_locks_alloc(struct inet_hashinfo *hashinfo);
+ 
++static inline void inet_hashinfo2_free_mod(struct inet_hashinfo *h)
++{
++	kfree(h->lhash2);
++	h->lhash2 = NULL;
++}
++
+ static inline void inet_ehash_locks_free(struct inet_hashinfo *hashinfo)
+ {
+ 	kvfree(hashinfo->ehash_locks);
+diff --git a/net/dccp/proto.c b/net/dccp/proto.c
+index 4af8a98..c13b660 100644
+--- a/net/dccp/proto.c
++++ b/net/dccp/proto.c
+@@ -1139,14 +1139,14 @@ static int __init dccp_init(void)
+ 	inet_hashinfo_init(&dccp_hashinfo);
+ 	rc = inet_hashinfo2_init_mod(&dccp_hashinfo);
+ 	if (rc)
+-		goto out_fail;
++		goto out_free_percpu;
+ 	rc = -ENOBUFS;
+ 	dccp_hashinfo.bind_bucket_cachep =
+ 		kmem_cache_create("dccp_bind_bucket",
+ 				  sizeof(struct inet_bind_bucket), 0,
+ 				  SLAB_HWCACHE_ALIGN, NULL);
+ 	if (!dccp_hashinfo.bind_bucket_cachep)
+-		goto out_free_percpu;
++		goto out_free_hashinfo2;
+ 
+ 	/*
+ 	 * Size and allocate the main established and bind bucket
+@@ -1242,6 +1242,8 @@ static int __init dccp_init(void)
+ 	free_pages((unsigned long)dccp_hashinfo.ehash, ehash_order);
+ out_free_bind_bucket_cachep:
+ 	kmem_cache_destroy(dccp_hashinfo.bind_bucket_cachep);
++out_free_hashinfo2:
++	inet_hashinfo2_free_mod(&dccp_hashinfo);
+ out_free_percpu:
+ 	percpu_counter_destroy(&dccp_orphan_count);
+ out_fail:
+@@ -1265,6 +1267,7 @@ static void __exit dccp_fini(void)
+ 	kmem_cache_destroy(dccp_hashinfo.bind_bucket_cachep);
+ 	dccp_ackvec_exit();
+ 	dccp_sysctl_exit();
++	inet_hashinfo2_free_mod(&dccp_hashinfo);
+ 	percpu_counter_destroy(&dccp_orphan_count);
+ }
+ 
+-- 
+1.8.3.1
 
-In your example, CPU1 is pushing the tail and then setting the block ID
-for the _newly_ allocated block, that is located is _before_ the new
-tail. If CPU0 sees the new tail already, it is still reading a valid
-block ID, which is _not_ from the block that CPU1 is in the process of
-writing.
-
-John Ogness
