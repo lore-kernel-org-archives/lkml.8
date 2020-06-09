@@ -2,92 +2,88 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4888EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 05:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DCCDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 05:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 252A520774
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 05:39:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="g1VsEAhW"
+	by mail.kernel.org (Postfix) with ESMTP id 6585620774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 05:43:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbgFIFjz (ORCPT
+        id S1727055AbgFIFnM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 01:39:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41512 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725770AbgFIFjy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 01:39:54 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06906C03E969
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 22:39:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=9d5I29beiuD8NWd2IsPtQEkt8LGPlWEkqusG+bWe9Kc=; b=g1VsEAhWGLq6aDTVOGdfeDkonX
-        y1gSr98rgZ2hcxCxV2zauJeM6hdWqvsFQnaSSQijOhtGEoNVA1aa07WMA42IHEOMq/RDPmo8hSeGi
-        pSUOrrie20eynxqznnGZXRmEu1/qMjG58X0vq16YJiVur+7QfzhxYdh5LepnWkJE+y5Q2YhkQtlnN
-        f+kBccJFktcR9xtsq7y6zdcC/88HnUpcCFZZumhRWXz6fTNUYIiGw1gf1PjM+9l6RRrNGSXBRyODQ
-        Sq35sayJTmQD1/WhSvbwCL5ruGavLLTd3hYDtD9ueSN+BLG5UPao6Wl5u0Sf3OSSe+KU5/xRDXFQi
-        YiB520Nw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jiWzF-0006xo-UR; Tue, 09 Jun 2020 05:39:49 +0000
-Date:   Mon, 8 Jun 2020 22:39:49 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Stefano Stabellini <sstabellini@kernel.org>
-Cc:     Christoph Hellwig <hch@infradead.org>, jgross@suse.com,
-        boris.ostrovsky@oracle.com, konrad.wilk@oracle.com,
-        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-        tamas@tklengyel.com, roman@zededa.com,
-        Stefano Stabellini <stefano.stabellini@xilinx.com>
-Subject: Re: [PATCH v2 10/11] xen/arm: introduce phys/dma translations in
- xen_dma_sync_for_*
-Message-ID: <20200609053949.GA26473@infradead.org>
-References: <alpine.DEB.2.21.2006031506590.6774@sstabellini-ThinkPad-T480s>
- <20200603222247.11681-10-sstabellini@kernel.org>
- <20200608071221.GF15742@infradead.org>
- <alpine.DEB.2.21.2006081614530.2815@sstabellini-ThinkPad-T480s>
- <20200609053802.GB3015@infradead.org>
+        Tue, 9 Jun 2020 01:43:12 -0400
+Received: from verein.lst.de ([213.95.11.211]:40741 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725770AbgFIFnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 01:43:11 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 28BA868AFE; Tue,  9 Jun 2020 07:43:07 +0200 (CEST)
+Date:   Tue, 9 Jun 2020 07:43:06 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     David Rientjes <rientjes@google.com>
+Cc:     "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>,
+        Christoph Hellwig <hch@lst.de>, alsa-devel@alsa-project.org,
+        bp@alien8.de, hch@infradead.org, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, mingo@redhat.com,
+        Pavel Machek <pavel@ucw.cz>, perex@perex.cz,
+        tglx@linutronix.de, tiwai@suse.com, x86@kernel.org
+Subject: Re: next-0519 on thinkpad x60: sound related? window manager crash
+Message-ID: <20200609054306.GA9606@lst.de>
+References: <20200520111136.GA3802@amd> <1591545088.74ii116nf2.none@localhost> <20200608061950.GA17476@lst.de> <1591624340.z01ejtod28.none@localhost> <alpine.DEB.2.22.394.2006081928070.148886@chino.kir.corp.google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200609053802.GB3015@infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <alpine.DEB.2.22.394.2006081928070.148886@chino.kir.corp.google.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 10:38:02PM -0700, Christoph Hellwig wrote:
-> On Mon, Jun 08, 2020 at 05:38:28PM -0700, Stefano Stabellini wrote:
-> > Yeah, the pfn_valid check is a bit weird by definition because we are
-> > using it to understand whether the address belong to us or to another
-> > VM. To do the pfn_valid check we need to translate the dma address into
-> > something the CPU understands, hence, the dma_to_phys call.
-> > 
-> > Why can't we use the already-provided paddr? Because paddr has been
-> > translated twice:
-> > 1) from dma to maybe-foreign phys address (could be ours, or another VM)
-> > 2) from maybe-foreign address to local (using our local mapping of the foreign page)
-> > 
-> > In fact, it would be clearer if we had all three addresses as parameters
-> > of xen_dma_sync_for_cpu: the dma address, the maybe-foreign physical
-> > address (we tend to call it xenbus address, baddr), the local physical
-> > address. Something like:
+On Mon, Jun 08, 2020 at 07:31:47PM -0700, David Rientjes wrote:
+> On Mon, 8 Jun 2020, Alex Xu (Hello71) wrote:
 > 
-> I think instead we should move the arch_sync_dma_for_{device,cpu}
-> calls from xen_dma_sync_for_{device,cpu} into the callers, as they
-> are provided by the generic dma-noncoherent.h and optimized out for
-> coherent architectures like x86.  Then the swiotlb-xen.c code only
-> need to call dma_cache_maint as the interface (which would have to
-> grow a better name), which should then only need a single kind of
-> address.
+> > Excerpts from Christoph Hellwig's message of June 8, 2020 2:19 am:
+> > > Can you do a listing using gdb where this happens?
+> > > 
+> > > gdb vmlinux
+> > > 
+> > > l *(snd_pcm_hw_params+0x3f3)
+> > > 
+> > > ?
+> > > 
+> > 
+> > (gdb) l *(snd_pcm_hw_params+0x3f3)
+> > 0xffffffff817efc85 is in snd_pcm_hw_params (.../linux/sound/core/pcm_native.c:749).
+> > 744             while (runtime->boundary * 2 <= LONG_MAX - runtime->buffer_size)
+> > 745                     runtime->boundary *= 2;
+> > 746
+> > 747             /* clear the buffer for avoiding possible kernel info leaks */
+> > 748             if (runtime->dma_area && !substream->ops->copy_user)
+> > 749                     memset(runtime->dma_area, 0, runtime->dma_bytes);
+> > 750
+> > 751             snd_pcm_timer_resolution_change(substream);
+> > 752             snd_pcm_set_state(substream, SNDRV_PCM_STATE_SETUP);
+> > 753
+> > 
+> 
+> Working theory is that CONFIG_DMA_NONCOHERENT_MMAP getting set is causing 
+> the error_code in the page fault path.  Debugging with Alex off-thread we 
+> found that dma_{alloc,free}_from_pool() are not getting called from the 
+> new code in dma_direct_{alloc,free}_pages() and he has not enabled 
+> mem_encrypt.
 
-... actually I'd keep the xen_dma_sync_for_{device,cpu} names for the
-low-level interface, just move the arch_sync_dma_for_{device,cpu}
-calls up.
+While DMA_COHERENT_POOL absolutely should not select DMA_NONCOHERENT_MMAP
+(and you should send your patch either way), I don't think it is going
+to make a difference here, as DMA_NONCOHERENT_MMAP just means we
+allows mmaps even for non-coherent devices, and we do not support
+non-coherent devices on x86.
+
+From the disassembly it seems like a vmalloc allocation is NULL, which
+seems really weird as this patch shouldn't make a difference for them,
+and I also only see a single places that allocates the field, and that
+checks for an allocation failure.  But the sound code is a little
+hard to unwind sometimes.
