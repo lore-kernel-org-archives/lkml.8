@@ -2,73 +2,133 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C714FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2856C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A29B820801
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:17:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C0892078D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:17:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591719477;
+	bh=kbiS3IeZLYDH4v02Cj0YwW8sa1nyhzC9CdnzZuDZIXk=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=A6Z96t/jhvY+zjdpYFD1DBbHkytQza/hg688NZ4cQLFfySg+2jON7wi/fTHAUgMbM
+	 S+wuPPptlcjU5LxqaUOV41DDnYJRgk9/+UvUia6nANM7gZhr1ZQsLBajUVtJXolhMC
+	 FegSR/4kT7p+I4v50EG9Uv7kLT5zjFEd+I4fVwYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbgFIQRm (ORCPT
+        id S1726946AbgFIQR4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 12:17:42 -0400
-Received: from smtp.asem.it ([151.1.184.197]:62675 "EHLO smtp.asem.it"
+        Tue, 9 Jun 2020 12:17:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725894AbgFIQRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 12:17:41 -0400
-Received: from webmail.asem.it
-        by asem.it (smtp.asem.it)
-        (SecurityGateway 6.5.2)
-        with ESMTP id SG000307092.MSG 
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 18:17:39 +0200S
-Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
- (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 9 Jun
- 2020 18:17:37 +0200
-Received: from flavio-x.asem.intra (172.16.17.208) by ASAS044.asem.intra
- (172.16.16.44) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
- Transport; Tue, 9 Jun 2020 18:17:37 +0200
-From:   Flavio Suligoi <f.suligoi@asem.it>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
-CC:     <linux-kernel@vger.kernel.org>, Flavio Suligoi <f.suligoi@asem.it>
-Subject: [PATCH 1/1] kernel: trace: fix spelling mistake
-Date:   Tue, 9 Jun 2020 18:17:37 +0200
-Message-ID: <20200609161737.32452-1-f.suligoi@asem.it>
-X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
-X-SGSPF-Result: none (smtp.asem.it)
-X-SGOP-RefID: str=0001.0A09020B.5EDFB622.0066,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
+        id S1725894AbgFIQRz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 12:17:55 -0400
+Received: from tzanussi-mobl (c-73-211-240-131.hsd1.il.comcast.net [73.211.240.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B75220760;
+        Tue,  9 Jun 2020 16:17:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591719475;
+        bh=kbiS3IeZLYDH4v02Cj0YwW8sa1nyhzC9CdnzZuDZIXk=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=qVwIGp2F4R1H4pQn658LdFIPwS+eh0qJs0YgEOdlL7KLAM38iIdg+E5Crz2MJ8SON
+         9en1ANfFKe5gsIunlsh+UtbhydO51NNnmaxFLPEc0O+VLE/hLBct7+dazZIgM75oSy
+         xcbzNm4UF6k9HvRohgYSCJdMEg9qxntdivKuITLo=
+Message-ID: <e288ef193f743782df48667b6b03122bd025119f.camel@kernel.org>
+Subject: Re: [PATCH RT 1/2] tasklet: Address a race resulting in
+ double-enqueue
+From:   Tom Zanussi <zanussi@kernel.org>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Ramon Fried <rfried.dev@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        John Kacur <jkacur@redhat.com>, Daniel Wagner <wagi@monom.org>,
+        Clark Williams <williams@redhat.com>,
+        Zhang Xiao <xiao.zhang@windriver.com>
+Date:   Tue, 09 Jun 2020 11:17:53 -0500
+In-Reply-To: <20200609154741.5kesuvl7txz4s3yu@linutronix.de>
+References: <cover.1587675252.git.zanussi@kernel.org>
+         <6d4c92b28c54d8ca687c29043562de943a373547.1587675252.git.zanussi@kernel.org>
+         <CAGi-RUKn6k98H5v9kw7je1MChb4+Uq8EGhKO0nuXNMBy9M1_qw@mail.gmail.com>
+         <b5026121af44601e4318479194357fdb956982f6.camel@kernel.org>
+         <20200609154741.5kesuvl7txz4s3yu@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix typo: "tigger" --> "trigger"
+Hi Sebastian,
 
-Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
----
- kernel/trace/trace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Tue, 2020-06-09 at 17:47 +0200, Sebastian Andrzej Siewior wrote:
+> On 2020-06-04 15:51:14 [-0500], Tom Zanussi wrote:
+> > > 
+> > > Hi, This patch introduced a regression in our kernel
+> > > (v4.19.124-rt53-rebase), It occurs when we're jumping to crush
+> > > kernel
+> > > using kexec, in the initialization of the emmc driver.
+> > > I'm still debugging the root cause, but I thought of mentioning
+> > > this
+> > > in the mailing list if you have any idea why this could occur.
+> > > The issue doesn't happen on normal boot, only when I specifically
+> > > crash the kernel into the crash kernel.
+> > > Thanks,
+> > > Ramon.
+> > 
+> > I'm not very familiar with crashing the kernel into the crash
+> > kernel. 
+> > Can you explain in enough detail how to set things up to reproduce
+> > this
+> > and how to trigger it?  Does it happen every time? 
+> > 
+> > > From looking at the backtrace, it's hitting the WARN_ON() in the
+> > 
+> > cmpxchg() loop below, because TASKLET_STATE is just
+> > TASKLET_STATE_CHAINED.
+> > 
+> > It seems that the only way to turn off TASKLET_STATE_CHAINED is via
+> > this cmpxchg(), but TASKLET_STATE_RUN can be independently turned
+> > off
+> > elsewhere (tasklet_unlock() and tasklet_tryunlock()), so if that
+> > happens and this loop is hit, you could loop until loops runs out
+> > and
+> > hit this warning.
+> 
+> But clearing TASKLET_STATE_RUN independently happens by the task,
+> that
+> set it / part of tasklet_schedule().
+> tasklet_tryunlock() does a cmpxchg() with only the RUN bit so it
+> won't
+> work if the additional CHAINED bit is set.
+> 
+> The tasklet itself (which may run on another CPU) sets the RUN bit at
+> the
+> begin and clears it at the end via cmpxchg() together with the
+> CHAINED
+> bit. 
+> 
+> I've been staring at it for sometime and I don't see how this can
+> happen.
+> 
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index ec44b0e2a19c..597e19b93165 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -2614,7 +2614,7 @@ trace_event_buffer_lock_reserve(struct trace_buffer **current_rb,
- 	/*
- 	 * If tracing is off, but we have triggers enabled
- 	 * we still need to look at the event data. Use the temp_buffer
--	 * to store the trace event for the tigger to use. It's recusive
-+	 * to store the trace event for the trigger to use. It's recusive
- 	 * safe and will not be recorded anywhere.
- 	 */
- 	if (!entry && trace_file->flags & EVENT_FILE_FL_TRIGGER_COND) {
--- 
-2.17.1
+I did find a problem with the patch when configured as !SMP since in
+that case the RUN flag is never set (will send a patch for that
+shortly), but that wouldn't be the case here.
+
+It would help to be able to reproduce it, but I haven't been able to
+yet.
+
+Tom
+
+> Sebastian
 
