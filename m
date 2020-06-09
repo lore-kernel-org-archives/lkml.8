@@ -2,118 +2,110 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B655CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F55C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 968BB207ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7797320734
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:54:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591725251;
+	bh=hOmNoff9bwoQAs+mY1OICGkI+7xRGt2c2lk5BdXv4rc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=kqCVHKPhHKDlYMhhnDphki0Dng0k81XF08+rnql+cM+9KoDpYBAqzL9gDJiYMaX3U
+	 adM83o5Ro43riA+ttt87OliPjmFcSfGNyqxEAQcFiRKKUIQarR3LXd6tNEYW6fdGKT
+	 ACCPPWqnfWmdthNBq/PYM6qj33Z4kD+xYgaGLJSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729833AbgFIRx5 (ORCPT
+        id S1733055AbgFIRyG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:53:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43028 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:54:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732920AbgFIRwh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:52:37 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S1731611AbgFIRwn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:52:43 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68E8F207ED;
-        Tue,  9 Jun 2020 17:52:36 +0000 (UTC)
-Date:   Tue, 9 Jun 2020 13:52:35 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Flavio Suligoi <f.suligoi@asem.it>
-Cc:     Ingo Molnar <mingo@redhat.com>, Shuah Khan <shuah@kernel.org>,
-        <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/1] tools: testing: ftrace: trigger: fix spelling
- mistake
-Message-ID: <20200609135235.608cdbf6@oasis.local.home>
-In-Reply-To: <20200609163853.1602-1-f.suligoi@asem.it>
-References: <20200609163853.1602-1-f.suligoi@asem.it>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7FCF20801;
+        Tue,  9 Jun 2020 17:52:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591725163;
+        bh=hOmNoff9bwoQAs+mY1OICGkI+7xRGt2c2lk5BdXv4rc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=LUyKuR3vOL4olONq1+4a7k3Bw/FXRuDntlYlXNCNbLwnaLVsVp9jesbEsd/PKqRn3
+         8ei9h3XiKEryZZGjz0qh15Hx9vk+XNrA5/lz5kOmlNA++B74+9iNJq/nc+96GOAuVA
+         WlWvGMqmu+eB4KUh4tfm9Qt2cCuxjjhKul55LkLM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 5.4 27/34] x86/speculation/spectre_v2: Exclude Zhaoxin CPUs from SPECTRE_V2
+Date:   Tue,  9 Jun 2020 19:45:23 +0200
+Message-Id: <20200609174056.885099252@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200609174052.628006868@linuxfoundation.org>
+References: <20200609174052.628006868@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 9 Jun 2020 18:38:53 +0200
-Flavio Suligoi <f.suligoi@asem.it> wrote:
+From: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
 
-> Fix typo: "tigger" --> "trigger"
+commit 1e41a766c98b481400ab8c5a7aa8ea63a1bb03de upstream.
 
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+New Zhaoxin family 7 CPUs are not affected by SPECTRE_V2. So define a
+separate cpu_vuln_whitelist bit NO_SPECTRE_V2 and add these CPUs to the cpu
+vulnerability whitelist.
 
-Shuah, want to take this patch?
+Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/1579227872-26972-2-git-send-email-TonyWWang-oc@zhaoxin.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ arch/x86/kernel/cpu/common.c |    9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
--- Steve
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1024,6 +1024,7 @@ static void identify_cpu_without_cpuid(s
+ #define MSBDS_ONLY		BIT(5)
+ #define NO_SWAPGS		BIT(6)
+ #define NO_ITLB_MULTIHIT	BIT(7)
++#define NO_SPECTRE_V2		BIT(8)
+ 
+ #define VULNWL(_vendor, _family, _model, _whitelist)	\
+ 	{ X86_VENDOR_##_vendor, _family, _model, X86_FEATURE_ANY, _whitelist }
+@@ -1085,6 +1086,10 @@ static const __initconst struct x86_cpu_
+ 	/* FAMILY_ANY must be last, otherwise 0x0f - 0x12 matches won't work */
+ 	VULNWL_AMD(X86_FAMILY_ANY,	NO_MELTDOWN | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT),
+ 	VULNWL_HYGON(X86_FAMILY_ANY,	NO_MELTDOWN | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT),
++
++	/* Zhaoxin Family 7 */
++	VULNWL(CENTAUR,	7, X86_MODEL_ANY,	NO_SPECTRE_V2),
++	VULNWL(ZHAOXIN,	7, X86_MODEL_ANY,	NO_SPECTRE_V2),
+ 	{}
+ };
+ 
+@@ -1117,7 +1122,9 @@ static void __init cpu_set_bug_bits(stru
+ 		return;
+ 
+ 	setup_force_cpu_bug(X86_BUG_SPECTRE_V1);
+-	setup_force_cpu_bug(X86_BUG_SPECTRE_V2);
++
++	if (!cpu_matches(NO_SPECTRE_V2))
++		setup_force_cpu_bug(X86_BUG_SPECTRE_V2);
+ 
+ 	if (!cpu_matches(NO_SSB) && !(ia32_cap & ARCH_CAP_SSB_NO) &&
+ 	   !cpu_has(c, X86_FEATURE_AMD_SSB_NO))
 
-> 
-> Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
-> ---
->  tools/testing/selftests/ftrace/test.d/trigger/trigger-hist.tc   | 2 +-
->  .../selftests/ftrace/test.d/trigger/trigger-stacktrace.tc       | 2 +-
->  .../ftrace/test.d/trigger/trigger-trace-marker-hist.tc          | 2 +-
->  .../ftrace/test.d/trigger/trigger-trace-marker-snapshot.tc      | 2 +-
->  4 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-hist.tc b/tools/testing/selftests/ftrace/test.d/trigger/trigger-hist.tc
-> index 177e8d4c4744..bf6374e1f6ae 100644
-> --- a/tools/testing/selftests/ftrace/test.d/trigger/trigger-hist.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-hist.tc
-> @@ -23,7 +23,7 @@ if [ ! -f events/sched/sched_process_fork/hist ]; then
->      exit_unsupported
->  fi
->  
-> -echo "Test histogram basic tigger"
-> +echo "Test histogram basic trigger"
->  
->  echo 'hist:keys=parent_pid:vals=child_pid' > events/sched/sched_process_fork/trigger
->  for i in `seq 1 10` ; do ( echo "forked" > /dev/null); done
-> diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-stacktrace.tc b/tools/testing/selftests/ftrace/test.d/trigger/trigger-stacktrace.tc
-> index 398c05c4d2a7..6248e6b40704 100644
-> --- a/tools/testing/selftests/ftrace/test.d/trigger/trigger-stacktrace.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-stacktrace.tc
-> @@ -23,7 +23,7 @@ if [ -z "$FEATURE" ]; then
->      exit_unsupported
->  fi
->  
-> -echo "Test stacktrace tigger"
-> +echo "Test stacktrace trigger"
->  echo 0 > trace
->  echo 0 > options/stacktrace
->  echo 'stacktrace' > events/sched/sched_process_fork/trigger
-> diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-hist.tc b/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-hist.tc
-> index ab6bedb25736..01fdfd50b4be 100644
-> --- a/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-hist.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-hist.tc
-> @@ -28,7 +28,7 @@ if [ ! -f events/ftrace/print/hist ]; then
->      exit_unsupported
->  fi
->  
-> -echo "Test histogram trace_marker tigger"
-> +echo "Test histogram trace_marker trigger"
->  
->  echo 'hist:keys=common_pid' > events/ftrace/print/trigger
->  for i in `seq 1 10` ; do echo "hello" > trace_marker; done
-> diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-snapshot.tc b/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-snapshot.tc
-> index df246e505af7..a7fef298e476 100644
-> --- a/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-snapshot.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-snapshot.tc
-> @@ -46,7 +46,7 @@ test_trace() {
->      done
->  }
->  
-> -echo "Test snapshot trace_marker tigger"
-> +echo "Test snapshot trace_marker trigger"
->  
->  echo 'snapshot' > events/ftrace/print/trigger
->  
 
