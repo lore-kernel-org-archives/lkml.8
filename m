@@ -2,110 +2,257 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75168C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B38A9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F5DA2072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:46:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="UicR4JIb"
+	by mail.kernel.org (Postfix) with ESMTP id 8810C2072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:48:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730620AbgFIOqk (ORCPT
+        id S1730483AbgFIOsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 10:46:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41256 "EHLO
+        Tue, 9 Jun 2020 10:48:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730603AbgFIOqi (ORCPT
+        with ESMTP id S1726395AbgFIOsg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 10:46:38 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E389EC05BD1E
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 07:46:37 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id f18so21040689qkh.1
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 07:46:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=K/z6d17bM6CZ1yRiOWNL2RNldGzd1FsrG0sI3iVgOdY=;
-        b=UicR4JIbN42s8kz0OU+6/Ag9GZZSbq+0yM4FgBbXTtyCBq58aliQiGguIJJDXNrkKS
-         96LEnAh88GMRNcnytADnFry3HoOGQY0ByuYcVHq9xTgM2aQ+uQVa4V2mt2bJS5A9HyPT
-         VdGzC4RdpUtv4WmbAtK1nVmNWKyb8GbBXIXpCUKvND0akz6zL2J03wQKTvvL5ppjGcwI
-         lfUD+Xp624KOABogal8AdKwZhNOH3tTVeMtDtZ2mnhqVSsZSLrs+y6s4gDH4qm8oQiJ5
-         UXhgne+FHZwC71UMSeaUiUYUZ06acXylqoK7As8lUhTs3cI1b7UJzr2jS5uPuwNUgq8o
-         kzCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=K/z6d17bM6CZ1yRiOWNL2RNldGzd1FsrG0sI3iVgOdY=;
-        b=EZmTAt4F/qJ7xb0mjvNIL+i/6a6vaHzo8hrpAi229FcjWCxmu0VuW4W/yD9zxEBgNF
-         mOk8b8nTwexdMG6aLRDVGtMvOTYZBaoDIWLbTe3ccNq79f1KBLsDhJRP+W6Ys2SkRDMK
-         pRDiLb8ll3R/Az0KkireyQn/7DpDrSFEIx0lTm8MMvkgBQJSbdEXkX5AwfZ4OwqZCwyw
-         FCOvlqEo5x26o9x+ieDoKs2pkN3e6jvP9DCkH2TUA5hGEQd4lKk+4fXVWnC6T/3OM1b9
-         8vI819LZe4QDKfCxgmI+N7V1Gc4A++IAcdJMrQNX8k5f2DZoLZdlgYfNLFloFc+lypuS
-         hkXA==
-X-Gm-Message-State: AOAM531YGmWkS2+RHIPDqEOxtfKYUQn10qd2Dq49Z0VzESa/EXW9JI+7
-        wfjBOgXWKxwX8lOAy77rDv4tHg==
-X-Google-Smtp-Source: ABdhPJzUlzfAEXmBIoUGNXohwOf1MQpFCkJG/fDZNnAITRiz9+WNk5lph79IKWPxvKqUzgaRsRxMcw==
-X-Received: by 2002:a37:7c6:: with SMTP id 189mr27091666qkh.24.1591713997119;
-        Tue, 09 Jun 2020 07:46:37 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:b568])
-        by smtp.gmail.com with ESMTPSA id b4sm9087946qka.133.2020.06.09.07.46.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 07:46:35 -0700 (PDT)
-Date:   Tue, 9 Jun 2020 10:45:51 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        iamjoonsoo.kim@lge.com, linux-mm@kvack.org, mhocko@suse.com,
-        minchan@kernel.org, mm-commits@vger.kernel.org, riel@surriel.com,
-        torvalds@linux-foundation.org
-Subject: Re: [patch 113/131] mm: balance LRU lists based on relative thrashing
-Message-ID: <20200609144551.GA452252@cmpxchg.org>
-References: <20200603230303.kSkT62Lb5%akpm@linux-foundation.org>
- <a60f7866-3b32-7a0e-5d0a-a48d77f845a8@linux.alibaba.com>
+        Tue, 9 Jun 2020 10:48:36 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A74D3C05BD1E
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 07:48:35 -0700 (PDT)
+Received: from localhost ([127.0.0.1] helo=vostro)
+        by Galois.linutronix.de with esmtps (TLS1.2:RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1jifYG-00030Y-CG; Tue, 09 Jun 2020 16:48:32 +0200
+From:   John Ogness <john.ogness@linutronix.de>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Paul McKenney <paulmck@kernel.org>
+Subject: Re: redundant check in make_data_reusable(): was [PATCH v2 2/3] printk: add lockless buffer
+References: <20200501094010.17694-1-john.ogness@linutronix.de>
+        <20200501094010.17694-3-john.ogness@linutronix.de>
+        <20200609093103.GB23752@linux-b0ei>
+Date:   Tue, 09 Jun 2020 16:48:30 +0200
+In-Reply-To: <20200609093103.GB23752@linux-b0ei> (Petr Mladek's message of
+        "Tue, 9 Jun 2020 11:31:03 +0200")
+Message-ID: <87lfkwuwg1.fsf@vostro.fn.ogness.net>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a60f7866-3b32-7a0e-5d0a-a48d77f845a8@linux.alibaba.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 05:15:33PM +0800, Alex Shi wrote:
-> 
-> 
-> 在 2020/6/4 上午7:03, Andrew Morton 写道:
-> >  
-> > +	/* XXX: Move to lru_cache_add() when it supports new vs putback */
-> 
-> Hi Hannes,
-> 
-> Sorry for a bit lost, would you like to explain a bit more of your idea here?
-> 
-> > +	spin_lock_irq(&page_pgdat(page)->lru_lock);
-> > +	lru_note_cost(page);
-> > +	spin_unlock_irq(&page_pgdat(page)->lru_lock);
-> > +
-> 
-> 
-> What could we see here w/o the lru_lock?
+On 2020-06-09, Petr Mladek <pmladek@suse.com> wrote:
+>> --- /dev/null
+>> +++ b/kernel/printk/printk_ringbuffer.c
+>> +/*
+>> + * Given a data ring (text or dict), put the associated descriptor of each
+>> + * data block from @lpos_begin until @lpos_end into the reusable state.
+>> + *
+>> + * If there is any problem making the associated descriptor reusable, either
+>> + * the descriptor has not yet been committed or another writer task has
+>> + * already pushed the tail lpos past the problematic data block. Regardless,
+>> + * on error the caller can re-load the tail lpos to determine the situation.
+>> + */
+>> +static bool data_make_reusable(struct printk_ringbuffer *rb,
+>> +			       struct prb_data_ring *data_ring,
+>> +			       unsigned long lpos_begin,
+>> +			       unsigned long lpos_end,
+>> +			       unsigned long *lpos_out)
+>> +{
+>> +	struct prb_desc_ring *desc_ring = &rb->desc_ring;
+>> +	struct prb_data_blk_lpos *blk_lpos;
+>> +	struct prb_data_block *blk;
+>> +	unsigned long tail_lpos;
+>> +	enum desc_state d_state;
+>> +	struct prb_desc desc;
+>> +	unsigned long id;
+>> +
+>> +	/*
+>> +	 * Using the provided @data_ring, point @blk_lpos to the correct
+>> +	 * blk_lpos within the local copy of the descriptor.
+>> +	 */
+>> +	if (data_ring == &rb->text_data_ring)
+>> +		blk_lpos = &desc.text_blk_lpos;
+>> +	else
+>> +		blk_lpos = &desc.dict_blk_lpos;
+>> +
+>> +	/* Loop until @lpos_begin has advanced to or beyond @lpos_end. */
+>> +	while ((lpos_end - lpos_begin) - 1 < DATA_SIZE(data_ring)) {
+>> +		blk = to_block(data_ring, lpos_begin);
+>> +		id = READ_ONCE(blk->id); /* LMM(data_make_reusable:A) */
+>> +
+>> +		/*
+>> +		 * Guarantee the block ID is loaded before checking the tail
+>> +		 * lpos. The loaded block ID can only be considered valid if
+>> +		 * the tail lpos has not overtaken @lpos_begin. This pairs
+>> +		 * with data_alloc:A.
+>> +		 *
+>> +		 * Memory barrier involvement:
+>> +		 *
+>> +		 * If data_make_reusable:A reads from data_alloc:B, then
+>> +		 * data_make_reusable:C reads from data_push_tail:D.
+>> +		 *
+>> +		 * Relies on:
+>> +		 *
+>> +		 * MB from data_push_tail:D to data_alloc:B
+>> +		 *    matching
+>> +		 * RMB from data_make_reusable:A to data_make_reusable:C
+>> +		 *
+>> +		 * Note: data_push_tail:D and data_alloc:B can be different
+>> +		 *       CPUs. However, the data_alloc:B CPU (which performs
+>> +		 *       the full memory barrier) must have previously seen
+>> +		 *       data_push_tail:D.
+>> +		 */
+>> +		smp_rmb(); /* LMM(data_make_reusable:B) */
+>> +
+>> +		tail_lpos = atomic_long_read(&data_ring->tail_lpos
+>> +					); /* LMM(data_make_reusable:C) */
+>> +
+>> +		/*
+>> +		 * If @lpos_begin has fallen behind the tail lpos, the read
+>> +		 * block ID cannot be trusted. Fast forward @lpos_begin to the
+>> +		 * tail lpos and try again.
+>> +		 */
+>> +		if (lpos_begin - tail_lpos >= DATA_SIZE(data_ring)) {
+>> +			lpos_begin = tail_lpos;
+>> +			continue;
+>> +		}
+>
+> I am sorry if we have had this discussion already in past.
 
-It'll just be part of the existing LRU locking in
-pagevec_lru_move_fn(), when the new pages are added to the LRU in
-batch. See this older patch for example:
+We have [0]. (Search for "Ouch.")
 
-https://lore.kernel.org/linux-mm/20160606194836.3624-6-hannes@cmpxchg.org/
+> Well, it would just prove that it really needs a comment why this
+> check is necessary.
 
-I didn't include it in this series to reduce conflict with Joonsoo's
-WIP series that also operates in this area and does something similar:
+The comment says why it is necessary. The previous read of the block ID
+cannot be trusted if the the tail has been pushed beyond it.
 
-https://lkml.org/lkml/2020/4/3/63
+> IMHO, the following check of the descriptor state should be enough:
+>
+> 1. This function returns "false" when the descriptor is in desc_misc or
+>    desc_reusable state or when it does not point back to the data.
+>
+>    In this case, data_push_tail() does similar check. It loads
+>    data_ring->tail_lpos as well. It returns false when the tail did
+>    not move. Otherwise, it calls data_make_reusable() again and has
+>    the same effect as the continue here.
+>
+>
+> 2. This function returns true only when the descriptor is in committed
+>    or reusable state and points back to the same data block. In this,
+>    case it really contains consistent data.
+>
+>    OK, it is possible that the block is already reused when the
+>    descriptor is in reusable state. But it is possible only when
+>    data_ring->tail_lpos moved. In this case, cmpxchg in
+>    data_push_tail() would fail and we would go back as well.
+
+In your email from our previous discussion, you pointed out that two
+writers could race to allocate a block and the loser would start freeing
+the winner's data because it gets a valid block ID to a descriptor in
+the committed state that points back to the block lpos.
+
+You wrote:
+
+> => We should add a check into data_make_reusable() that
+>    we are invalidating really the descriptor pointing to
+>    the given lpos and not a freshly reused one!
+
+That is what this check is doing. If the tail has been pushed beyond the
+block, we cannot trust the block ID read because that area may have been
+recycled already.
+
+>> +/*
+>> + * Advance the data ring tail to at least @lpos. This function puts
+>> + * descriptors into the reusable state if the tail is pushed beyond
+>> + * their associated data block.
+>> + */
+>> +static bool data_push_tail(struct printk_ringbuffer *rb,
+>> +			   struct prb_data_ring *data_ring,
+>> +			   unsigned long lpos)
+>> +{
+>> +	unsigned long tail_lpos;
+>> +	unsigned long next_lpos;
+>> +
+>> +	/* If @lpos is not valid, there is nothing to do. */
+>> +	if (lpos == INVALID_LPOS)
+>> +		return true;
+>> +
+>> +	tail_lpos = atomic_long_read(&data_ring->tail_lpos);
+>> +
+>> +	do {
+>> +		/* Done, if the tail lpos is already at or beyond @lpos. */
+>> +		if ((lpos - tail_lpos) - 1 >= DATA_SIZE(data_ring))
+>> +			break;
+>> +
+>> +		/*
+>> +		 * Make all descriptors reusable that are associated with
+>> +		 * data blocks before @lpos.
+>> +		 */
+>> +		if (!data_make_reusable(rb, data_ring, tail_lpos, lpos,
+>> +					&next_lpos)) {
+>> +			/*
+>> +			 * Guarantee the descriptor state loaded in
+>> +			 * data_make_reusable() is performed before reloading
+>> +			 * the tail lpos. The failed data_make_reusable() may
+>> +			 * be due to a newly recycled descriptor causing
+>> +			 * the tail lpos to have been previously pushed. This
+>> +			 * pairs with desc_reserve:D.
+>> +			 *
+>> +			 * Memory barrier involvement:
+>> +			 *
+>> +			 * If data_make_reusable:D reads from desc_reserve:G,
+>> +			 * then data_push_tail:B reads from data_push_tail:D.
+>> +			 *
+>> +			 * Relies on:
+>> +			 *
+>> +			 * MB from data_push_tail:D to desc_reserve:G
+>> +			 *    matching
+>> +			 * RMB from data_make_reusable:D to data_push_tail:B
+>> +			 *
+>> +			 * Note: data_push_tail:D and desc_reserve:G can be
+>> +			 *       different CPUs. However, the desc_reserve:G
+>> +			 *       CPU (which performs the full memory barrier)
+>> +			 *       must have previously seen data_push_tail:D.
+>> +			 */
+>> +			smp_rmb(); /* LMM(data_push_tail:A) */
+>> +
+>> +			next_lpos = atomic_long_read(&data_ring->tail_lpos
+>> +						); /* LMM(data_push_tail:B) */
+>
+> I have been a bit confused whether next_lpos variable is used
+> correctly everywhere. The primary purpose is to use a value provided
+> by data_make_reusable() in the cmpxchg below.
+>
+> But it is (mis)used here to temporary store the current tail_lpos
+> value. Could we please use another variable here? IMHO, the following
+> code would be more clear:
+>
+> 	tail_lpos_old = tail_lpos;
+> 	tail_lpos = atomic_long_read(&data_ring->tail_lpos); /* LMM(data_push_tail:B) */
+>
+> 	if (tail_lpos == tail_lpos_old)
+> 		return false;
+
+You are correct. I am ashamed about this misuse. I will add the variable
+and rely on the compiler to appropriately merge/recycle stack variables.
+
+John Ogness
+
+[0] https://lkml.kernel.org/r/87ftecy343.fsf@linutronix.de
