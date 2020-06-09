@@ -2,108 +2,99 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38EDEC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CFF4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E9BC2074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:43:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZtwkpJRD"
+	by mail.kernel.org (Postfix) with ESMTP id 4FB2D2074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:44:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730806AbgFIPnv (ORCPT
+        id S1730911AbgFIPoD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 11:43:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50104 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730002AbgFIPnt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 11:43:49 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54A47C05BD1E
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 08:43:49 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id z206so12774809lfc.6
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 08:43:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mfvQ52ttcjK9Eq/voTG3poD585rerSCB/T3Uek+27ow=;
-        b=ZtwkpJRD3VNhVTL/I2wbQ96ZghWx+3FqjLYZfi2FGrUA9GYI34kruy1gN1orlLo2rE
-         21lpKqp0pVuBQvi7YvxSlx0RQigctaGswPEOuJ+0uGjb2Dgx1vfxPZ1hDtyVj2uCpGYb
-         EKsvHqfci+huSC/6OcYspmnYGyQGUPnxa3EiRRX3GejQqvSVmTBrwCIb1yCJp3fwSwY7
-         wZYfkBNiY2jUolBYLbCHDGUT4ryRlFWywnGSKRh/kPSbRPcCpYcc/4PjKIICbq3T6vUe
-         q3otvxKQ9oyU2RHzFDGGmIvF8KYpN9Su8vxw6vo80hb7SGK0JmMVj8xU0spcRzu/FEXS
-         gyow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mfvQ52ttcjK9Eq/voTG3poD585rerSCB/T3Uek+27ow=;
-        b=A8I00T4DOEn0ATktr/nc1oAEY9TIGyokgvP4uVDBnzqRxcBtCaHobk6+bpxjawrymu
-         mLNijLr9+R+3oMSg4HYXLBDnzXVc7kxaAsun5qjHZuuwu1CZM0NpUmy5pjwmkXCKCYyF
-         B/pw98nU9ZOlJxt/61hJu/rOZ4baKrTMmCvAlb3+0LkcDJrI9zYUraK54RG2JHj16XUJ
-         R/N/gaTgDi/7Q5qZxlucgmem2hbbewOQByhi5UUc96eNJ26vxatLy+D/cSltvbYY7EJE
-         e2jt43ofl8t6tyCCs0W1jYDaCI0EO71jdidNaDLdCoDpq18H2M2bb2qLVDFSuSrsoms4
-         YtqQ==
-X-Gm-Message-State: AOAM531GJkUzEeji8D5LYtOMqIRcBiE5fyuSx7F3Txmu4bIrgoOt3g3B
-        75E96uCACcaEQdymfRO3Qpynnefhx2eGGw3++T0eVQ==
-X-Google-Smtp-Source: ABdhPJzzIcCMETtg64OuH+C8AoVpH5ZWgZFaSfct8u6yHOYgGHwUtoGcjhi6YvK1e00GG7gcpCo1nwUR9vbotSJIk+o=
-X-Received: by 2002:a19:4854:: with SMTP id v81mr15526135lfa.189.1591717427775;
- Tue, 09 Jun 2020 08:43:47 -0700 (PDT)
+        Tue, 9 Jun 2020 11:44:03 -0400
+Received: from foss.arm.com ([217.140.110.172]:44310 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728903AbgFIPn7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 11:43:59 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E60621FB;
+        Tue,  9 Jun 2020 08:43:58 -0700 (PDT)
+Received: from [10.57.49.155] (unknown [10.57.49.155])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2950B3F66F;
+        Tue,  9 Jun 2020 08:43:55 -0700 (PDT)
+Subject: Re: [PATCH 2/2] arm-nommu: Add use_reserved_mem() to check if device
+ support reserved memory
+To:     Christoph Hellwig <hch@lst.de>,
+        dillon min <dillon.minfei@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux@armlinux.org.uk, Kate Stewart <kstewart@linuxfoundation.org>,
+        allison@lohutok.net, info@metux.net, tglx@linutronix.de,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1591605038-8682-1-git-send-email-dillon.minfei@gmail.com>
+ <1591605038-8682-3-git-send-email-dillon.minfei@gmail.com>
+ <90df5646-e0c4-fcac-d934-4cc922230dd2@arm.com>
+ <CAL9mu0+__0Z3R3TcSrj9-kPxsyQHKS9WqK1u58P0dEZ+Jd-wbQ@mail.gmail.com>
+ <20200609153646.GA17969@lst.de>
+From:   Vladimir Murzin <vladimir.murzin@arm.com>
+Message-ID: <031034fb-b109-7410-3ff8-e78cd12a5552@arm.com>
+Date:   Tue, 9 Jun 2020 16:43:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20200609150936.GA13060@iZj6chx1xj0e0buvshuecpZ>
-In-Reply-To: <20200609150936.GA13060@iZj6chx1xj0e0buvshuecpZ>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Tue, 9 Jun 2020 17:43:36 +0200
-Message-ID: <CAKfTPtCra0RQFehTJWNdfHjQMOnqxwajBgz-AGP5CrQxp_Rbsw@mail.gmail.com>
-Subject: Re: [PATCH] sched: correct SD_flags returned by tl->sd_flags()
-To:     Peng Liu <iwtbavbm@gmail.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200609153646.GA17969@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 9 Jun 2020 at 17:09, Peng Liu <iwtbavbm@gmail.com> wrote:
->
-> During sched domain init, we check whether non-topological SD_flags are
-> returned by tl->sd_flags(), if found, fire a waning and correct the
-> violation, but the code failed to correct the violation. Correct this.
->
-> Fixes: 143e1e28cb40 ("sched: Rework sched_domain topology definition")
-> Signed-off-by: Peng Liu <iwtbavbm@gmail.com>
+On 6/9/20 4:36 PM, Christoph Hellwig wrote:
+> On Tue, Jun 09, 2020 at 11:22:24PM +0800, dillon min wrote:
+>> Hi Vladimir,
+>>
+>> Thanks for reviewing.
+>>
+>> Hi Christoph Hellwig,
+>>
+>> I just want to know if kernel dma mapping/direct is focused on
+>> platforms with MMU.
+>> leave arch code to handle dma coherent memory management themself for
+>> no-MMU platform.
+> 
+> No, I'd really like to consolidate everything that isn't overly
+> arch specific eventually.
+> 
+>>
+>> so, you just return error code in kernel/dma/mapping.c,direct.c
+>> without CONFIG_MMU defined ?
+>> which means dma-direct mapping doesn't support !CONFIG_MMU is not a
+>> bug, but design as it's.
+>> or, just return error code currently, will add dma direct mapping
+>> support for !CONFIG_MMU in the
+>> future?
+>>
+>> As Vladimir Murzin's suggestion has changes in kernel code, I need
+>> your input to get
+>> the design goal about dma-direct mapping, thanks.
+> 
+> Can someone repost the whole patch?
+> 
 
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+Happy to repost as separate patch once dillon confirms it actually works.
 
-> ---
->  kernel/sched/topology.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-> index ba81187bb7af..9079d865a935 100644
-> --- a/kernel/sched/topology.c
-> +++ b/kernel/sched/topology.c
-> @@ -1328,7 +1328,7 @@ sd_init(struct sched_domain_topology_level *tl,
->                 sd_flags = (*tl->sd_flags)();
->         if (WARN_ONCE(sd_flags & ~TOPOLOGY_SD_FLAGS,
->                         "wrong sd_flags in topology description\n"))
-> -               sd_flags &= ~TOPOLOGY_SD_FLAGS;
-> +               sd_flags &= TOPOLOGY_SD_FLAGS;
->
->         /* Apply detected topology flags */
->         sd_flags |= dflags;
-> --
-> 2.20.1
->
+Meanwhile, I'm trying to understand at which point we lost this 
+functionality for NOMMU... maybe it will become different patch :)
+
+Cheers
+Vladimir
