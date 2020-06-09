@@ -2,95 +2,126 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3CDCC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB487C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8939820737
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:31:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591734702;
-	bh=ZTFt6agJWvmtnPNCEyCUjjcDXXDNqQYSXTCnGm+IrUA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ct8Ez6Lvvj/HLne+JMe94M7jONA2ODY6YHYY9jy36cqbX/sWBOho+aCMLr8AO6pGH
-	 qtkyFk6w+mHKPeku7uKxlOvDtUwgBbzcPFW/K+tG17aPjEkEOgvViTnN6iJo6ocyHt
-	 VTqyV/2Z4ujXp6n5KI69qWZZqjZCig5i1gEZZYQE=
+	by mail.kernel.org (Postfix) with ESMTP id A543320737
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:31:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387697AbgFIUbf (ORCPT
+        id S2388316AbgFIUbn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 9 Jun 2020 16:31:43 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51420 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387862AbgFIUbf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 9 Jun 2020 16:31:35 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:40012 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731078AbgFIUbc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 16:31:32 -0400
-Received: by mail-il1-f196.google.com with SMTP id t8so21667435ilm.7;
-        Tue, 09 Jun 2020 13:31:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xpHxwxJyEi+QmAQh0g22EZ0JVBelN+B/lL6QJi2kkls=;
-        b=c3QU7h7TbdpJlD0HWArcBA5XGDfNXaR5qy1/dfxvAcmFejTu0QmEcqhigfOfA3D9MZ
-         2mdzGPdlJIDze4YifP8zY8TUFzO0daf908cVMb9CiLKMhYcNnZr+yAhY97hN3gl6JWc/
-         4v4lxH4ZockqJPDvpCKvBKm7bvZ8Ob1S+RC1QZ6XWxDrr+3pRxPKFdYAXxsr/O1Qpk3w
-         1Gag18AqleXdfFh4tI9ckKJdyviZL1l46VtSluRUSCUYDnef2IoD07mGwqJqZWIxExC5
-         iOulSE4oi4O+oMaUxtGJHTt57/8rJBf2cSLgGcT8mVJ00ipjUn0IXDp3d7ZQvvFv0yYU
-         oz2A==
-X-Gm-Message-State: AOAM533mFeDNZse8STW4MYONqo3KCa/rYqAz8ImEKBI01CmceyLsnFPN
-        RNnLdJUzaokuvktMbvqi9W25B7s=
-X-Google-Smtp-Source: ABdhPJyDdn+hAQ2PPSVGXZ5rLVbU0/5fzDWB5qz782naSnxuAHkG5eN2ZKhBcbafUZj+J+E2dFQVRg==
-X-Received: by 2002:a92:489b:: with SMTP id j27mr28987060ilg.295.1591734690074;
-        Tue, 09 Jun 2020 13:31:30 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id r1sm9823178iln.77.2020.06.09.13.31.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 13:31:29 -0700 (PDT)
-Received: (nullmailer pid 1404522 invoked by uid 1000);
-        Tue, 09 Jun 2020 20:31:28 -0000
-Date:   Tue, 9 Jun 2020 14:31:28 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org, kamel.bouhara@bootlin.com,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        devicetree@vger.kernel.org,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v4 1/9] dt-bindings: atmel-tcb: convert bindings to
- json-schema
-Message-ID: <20200609203128.GA1404472@bogus>
-References: <20200529232749.299627-1-alexandre.belloni@bootlin.com>
- <20200529232749.299627-2-alexandre.belloni@bootlin.com>
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 9D2DBAC51;
+        Tue,  9 Jun 2020 20:31:34 +0000 (UTC)
+Received: by lion.mk-sys.cz (Postfix, from userid 1000)
+        id 548EC60485; Tue,  9 Jun 2020 22:31:27 +0200 (CEST)
+Date:   Tue, 9 Jun 2020 22:31:27 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     netdev@vger.kernel.org
+Cc:     Stephen Hemminger <stephen@networkplumber.org>,
+        David Miller <davem@davemloft.net>, o.rempel@pengutronix.de,
+        andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        kuba@kernel.org, corbet@lwn.net, linville@tuxdriver.com,
+        david@protonic.nl, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org, linux@armlinux.org.uk,
+        mkl@pengutronix.de, marex@denx.de, christian.herber@nxp.com,
+        amitc@mellanox.com, petrm@mellanox.com
+Subject: Re: [PATCH ethtool v1] netlink: add master/slave configuration
+ support
+Message-ID: <20200609203127.aivc3tq4lq4bh6dt@lion.mk-sys.cz>
+References: <20200526091025.25243-1-o.rempel@pengutronix.de>
+ <20200607153019.3c8d6650@hermes.lan>
+ <20200607.164532.964293508393444353.davem@davemloft.net>
+ <20200609101935.5716b3bd@hermes.lan>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200529232749.299627-2-alexandre.belloni@bootlin.com>
+In-Reply-To: <20200609101935.5716b3bd@hermes.lan>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 30 May 2020 01:27:41 +0200, Alexandre Belloni wrote:
-> Convert Atmel Timer Counter Blocks bindings to DT schema format using
-> json-schema.
+On Tue, Jun 09, 2020 at 10:19:35AM -0700, Stephen Hemminger wrote:
+> On Sun, 07 Jun 2020 16:45:32 -0700 (PDT)
+> David Miller <davem@davemloft.net> wrote:
 > 
-> Also move it out of mfd as it is not and has never been related to mfd.
+> > From: Stephen Hemminger <stephen@networkplumber.org>
+> > Date: Sun, 7 Jun 2020 15:30:19 -0700
+> > 
+> > > Open source projects have been working hard to remove the terms master and slave
+> > > in API's and documentation. Apparently, Linux hasn't gotten the message.
+> > > It would make sense not to introduce new instances.  
+> > 
+> > Would you also be against, for example, the use of the terminology
+> > expressing the "death" of allocated registers in a compiler backend,
+> > for example?
+> > 
+> > How far do you plan take this resistence of terminology when it
+> > clearly has a well defined usage and meaning in a specific technical
+> > realm which is entirely disconnected to what the terms might imply,
+> > meaning wise, in other realms?
+> > 
+> > And if you are going to say not to use this terminology, you must
+> > suggest a reasonable (and I do mean _reasonable_) well understood
+> > and _specific_ replacement.
+> > 
+> > Thank you.
 > 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> ---
-> Changes in v4:
->  - use oneOf to describe possible clock-names list
+> How many times have you or Linus argued about variable naming.
+> Yes, words do matter and convey a lot of implied connotation and meaning.
 > 
->  .../devicetree/bindings/mfd/atmel-tcb.txt     |  56 --------
->  .../soc/microchip/atmel,at91rm9200-tcb.yaml   | 131 ++++++++++++++++++
->  2 files changed, 131 insertions(+), 56 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/mfd/atmel-tcb.txt
->  create mode 100644 Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml
+> Most projects and standards bodies are taking a stance on fixing the
+> language. The IETF is has proposed making changes as well.
 > 
+> There are a very specific set of trigger words and terms that
+> should be fixed. Most of these terms do have better alternatives.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Where can this list be found and who is the authority to determine what
+should be on this list? I could think of a long list of technical terms
+which could be seen as offensive in certain context. Some would feel
+just as obvious as master/slave, some would be borderline absurd, most
+somewhere between. Who has the authority to define what is acceptable
+and what not?
+
+Words can have very different meaning and raise different emotions,
+depending on context. Even an innocuous word like "black" can be
+offensive in certain context; is it a reason to stop talking about this
+color or to invent a new name for it? I don't think so - and for obvious
+reasons, it wouldn't help anyway. Should we rename rbtrees because of
+that? I don't think so either.
+
+The primary purpose of technical terms is to allow people to communicate
+and to express themselves in a way that will be easy to understand for
+others working in the field. Inventing our own terms which would differ
+both from existing relevant standards and from what people in the
+industry have been using for decades would not help anything; it would
+only make life of ethtool users harder.
+
+> A common example is that master/slave is unclear and would be clearer
+> as primary/secondary or active/backup or controller/worker.
+> 
+> Most of networking is based on standards. When the standards wording changes
+> (and it will happen soon); then Linux should also change the wording in the
+> source, api and documentation.
+
+Even if you are right about the upcoming change of IEEE standards (and
+I can't say I'm convinced), it would make little sense to invent some
+replacement terms now and risk that IEEE chooses something else. Waiting
+for the standard change (which might take years - or might not even
+happen at all) and not providing support for the feature doesn't seem
+like a good solution either.
+
+So what exactly would you like us to do?
+
+Michal
