@@ -2,124 +2,127 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD4CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFDDFC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76077207C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:30:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAC7820737
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:31:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e5IPL9QS"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UXCkAYCC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388194AbgFIUam (ORCPT
+        id S2388286AbgFIUbh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 16:30:42 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:57993 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731078AbgFIUak (ORCPT
+        Tue, 9 Jun 2020 16:31:37 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36836 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1732795AbgFIUbc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 16:30:40 -0400
+        Tue, 9 Jun 2020 16:31:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591734639;
+        s=mimecast20190719; t=1591734690;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=NWthi4+vrXEX/1oiVdu5yh/nfH9kWltS19ynUlwFR9Y=;
-        b=e5IPL9QSBtPGlesklqyznOVmIdJc08+mJe2DKcoA93bvHftZ+wfAiYVjsJgXcVDDKiuQKE
-        UFvZFbaiWlkdT9OZ7FgmQs9K7Z2nQdCNtDgfjyPk90U/X7VLvcpD/Ecm8wQNcn65uPuJIl
-        Nerc+ltjaCq9UjnWbPA1MgGqZbvxRXI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-264-5qSl20efM7ypRXiyD12wPQ-1; Tue, 09 Jun 2020 16:30:37 -0400
-X-MC-Unique: 5qSl20efM7ypRXiyD12wPQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BF449835B40;
-        Tue,  9 Jun 2020 20:30:35 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-114-66.rdu2.redhat.com [10.10.114.66])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 54969768C1;
-        Tue,  9 Jun 2020 20:30:34 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org
-cc:     dhowells@redhat.com, keescook@chromium.org,
-        chengzhihao1@huawei.com, linux-afs@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] afs: Misc small fixes
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=KEH5ES29dspwzWzD9R3UfAcYz+Md+T39kv30W9yHTos=;
+        b=UXCkAYCC2l7Hu6ZtJNdolN6MWNMOeA/u65InToAILAXkDVyIpVjBiJkS3CD01Egc/ApETR
+        NJx+Eb/9nm5wDpSwI8WoBWF+qqKOMQpc3Cb6GiW/+Eq2So5Re9F6kSFpm3cg6mIe+sbPF4
+        +pCaJQawhUvmFqK/+vhjTlLZq5h09VQ=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-419-vyiVX2cNP4OZ6mROpyi0Ag-1; Tue, 09 Jun 2020 16:31:29 -0400
+X-MC-Unique: vyiVX2cNP4OZ6mROpyi0Ag-1
+Received: by mail-wr1-f72.google.com with SMTP id m14so35708wrj.12
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 13:31:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=KEH5ES29dspwzWzD9R3UfAcYz+Md+T39kv30W9yHTos=;
+        b=bAP3tpNsXz2g5kbBla6agb1WbApY1levoFuA9/7as+aPGQMfk1m6v1o0rhgS09eDeQ
+         sN+euZjcG/MR1U4MTc+APfsYIwzcLz669l3dHDK9oKBPamhP9sp6Rio29vWpAnnf05xV
+         oyQ5NmJEd+UF4qCgn4dspNEF17T7NefkpD6CgTdXl04AtrE70TEKST8EJdHfdAkp/9+S
+         yhmDBn0VrRA3IuAapUeYYeV72p2vzFlsfDU06dljzvtxQMjaIjAAX/lzlvT7DMT+qeqW
+         pnhQpFP5Zn+5NyCoz6xzheBe5FI1afIvVqLlhuZ5twCDlH8rdAak2fHizLx3b8TDluD9
+         sP8Q==
+X-Gm-Message-State: AOAM530/3iMQPJhn+HjjVgkG6sCcT3HXTevghd6bA00IbL/+07RmYtEd
+        1UUN6kxzVUkA5QzV03ELrbcTvTQJ90UxrN6SrzOwMJtsZaJQO/NCC09OpQr54GgvzeQMzCC1oUh
+        pGXZEXUkus4jTc49NqOfUHnCK
+X-Received: by 2002:a5d:5351:: with SMTP id t17mr6156468wrv.287.1591734687727;
+        Tue, 09 Jun 2020 13:31:27 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzU7S6RgssO4So7xK5AEwaniOKS/T+uTUiN9P8P46IPWjTCUaoOuKpdhLRvZRnsxMmePD+jDQ==
+X-Received: by 2002:a5d:5351:: with SMTP id t17mr6156435wrv.287.1591734687404;
+        Tue, 09 Jun 2020 13:31:27 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:29ed:810e:962c:aa0d? ([2001:b07:6468:f312:29ed:810e:962c:aa0d])
+        by smtp.gmail.com with ESMTPSA id y5sm5007069wrs.63.2020.06.09.13.31.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jun 2020 13:31:26 -0700 (PDT)
+Subject: Re: [PATCH v2 05/10] KVM: x86: interrupt based APF 'page ready' event
+ delivery
+To:     Vivek Goyal <vgoyal@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Gavin Shan <gshan@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org
+References: <20200525144125.143875-1-vkuznets@redhat.com>
+ <20200525144125.143875-6-vkuznets@redhat.com>
+ <20200609191035.GA223235@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <dcdda87c-cf2f-da6f-3166-e2d0bfefce06@redhat.com>
+Date:   Tue, 9 Jun 2020 22:31:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3071962.1591734633.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Tue, 09 Jun 2020 21:30:33 +0100
-Message-ID: <3071963.1591734633@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <20200609191035.GA223235@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On 09/06/20 21:10, Vivek Goyal wrote:
+> Hi Vitaly,
+> 
+> Have a question about page ready events. 
+> 
+> Now we deliver PAGE_NOT_PRESENT page faults only if guest is not in
+> kernel mode. So say kernel tried to access a page and we halted cpu.
+> When page is available, we will inject page_ready interrupt. At
+> that time we don't seem to check whether page_not_present was injected
+> or not. 
+> 
+> IOW, we seem to deliver page_ready irrespective of the fact whether
+> PAGE_NOT_PRESENT was delivered or not. And that means we will be
+> sending page present tokens to guest. Guest will not have a state
+> associated with that token and think that page_not_present has
+> not been delivered yet and allocate an element in hash table for
+> future page_not_present event. And that will lead to memory leak
+> and token conflict etc.
 
-Here's a set of small patches to fix some things, most of them minor.
-Would you prefer I defer and submit it again after -rc1?
+Yes, and this is https://bugzilla.kernel.org/show_bug.cgi?id=208081
+which I was looking at right today.
 
- (1) Fix a memory leak in afs_put_sysnames().
+> While setting up async pf, should we keep track whether associated
+> page_not_present was delivered to guest or not and deliver page_ready
+> accordingly.
 
- (2) Fix an oops in AFS file locking.
+Yes, I think so.
 
- (3) Fix new use of BUG().
-
- (4) Fix debugging statements containing %px.
-
- (5) Remove afs_zero_fid as it's unused.
-
- (6) Make afs_zap_data() static.
-
-David
----
-The following changes since commit aaa2faab4ed8e5fe0111e04d6e168c028fe2987=
-f:
-
-  Merge tag 'for-linus-5.8-ofs1' of git://git.kernel.org/pub/scm/linux/ker=
-nel/git/hubcap/linux (2020-06-05 16:44:36 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags=
-/afs-fixes-20200609
-
-for you to fetch changes up to c68421bbad755a280851afff0fb236dd4e53e684:
-
-  afs: Make afs_zap_data() static (2020-06-09 18:17:14 +0100)
-
-----------------------------------------------------------------
-AFS fixes
-
-----------------------------------------------------------------
-David Howells (5):
-      afs: Fix file locking
-      afs: Fix use of BUG()
-      afs: Fix debugging statements with %px to be %p
-      afs: Remove afs_zero_fid as it's not used
-      afs: Make afs_zap_data() static
-
-Zhihao Cheng (1):
-      afs: Fix memory leak in afs_put_sysnames()
-
- fs/afs/dir.c       | 2 +-
- fs/afs/flock.c     | 2 +-
- fs/afs/inode.c     | 2 +-
- fs/afs/internal.h  | 2 --
- fs/afs/proc.c      | 1 +
- fs/afs/vl_alias.c  | 5 +++--
- fs/afs/yfsclient.c | 2 --
- 7 files changed, 7 insertions(+), 9 deletions(-)
+Paolo
 
