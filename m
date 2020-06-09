@@ -2,242 +2,144 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13187C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:14:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0303DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEFBD207C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:14:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GG5jWooO"
+	by mail.kernel.org (Postfix) with ESMTP id DFDBC2074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:19:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730774AbgFIPOI (ORCPT
+        id S1730765AbgFIPTv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 11:14:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45480 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730436AbgFIPOH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 11:14:07 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1461CC05BD1E;
-        Tue,  9 Jun 2020 08:14:07 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id e1so21769308wrt.5;
-        Tue, 09 Jun 2020 08:14:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=X7mlTDwQ6+p5MYv0bHUHt/egFgOWZQLtAR3nHiaWIwU=;
-        b=GG5jWooOcAQkNTeAPuyKWbI01TMiq/4C4rQErVii4COMwg+ZNuElAsKC20KVt34Bcv
-         aR4yl/D6QPdvzRfCFRp1x6+XCePKrCEzjwxX2hCkK9QC8sq5iyrCXKfpfAjkAlUgzFLU
-         fBacG/itsgQO5T5HWQQZLxPPMcAKm3RgDDa0qPS0wdDKWIdwcQvoLNZTCpYkqyb2LOST
-         1H9TtirrcwQQjJ5k2qc10/GwbGcj80DqfI/LP1z9aJ1uGs4B3kMqQ5sS0Wpo8kLw3UG5
-         rVB+gbDry3b/P1vSzX+Bndl5M6KvUdM21jxJGd28zqS+syvGhiYXbY47SFf+0UC0O193
-         U40g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=X7mlTDwQ6+p5MYv0bHUHt/egFgOWZQLtAR3nHiaWIwU=;
-        b=r9Q9m86E0mHDrO5sxrqRtPOMSMq3T/7Gzr6yD67ncXzIi+xe3JgQ4qfhG8vKjTR79S
-         rQXIj3cZ4H3vS2i7xqWtOdWBXvbQ+qjPNo3Jn8sO0T0Q3WvVh79Pzbt2P8cL/T+65vgZ
-         IytnkBylxC605nFM7PW0NQhALfk/hceG6HS6rRSQ7HvmDR58G2bvOOSL2auoZsnCvZGV
-         qlNNI5lT5L2Fi0l3u6YNSJhIc5AeV/yBljfQGAtO7/aD1j1tzMWEZ40kG2U65p68RntI
-         rw1tksEoyOsQWZbCGfKUxLjvmmtMB2R7j6J0Yj2PnvXK/DznGLn1aezxY62Zje8SPyC+
-         rERA==
-X-Gm-Message-State: AOAM531nHpcU6tlorgImgUydwToCtrKzeQZdVMOSsXTB0Jc50bMYmK2c
-        k4Is0NKBVDtuHnizxrk4j98=
-X-Google-Smtp-Source: ABdhPJwQpkMLSfl8xli+xJLnxxfKBKaQ18eLIxG1Kh0B2CCr63Y+ExyzL+lJyG5Gu2bjWNEd1Y+Pww==
-X-Received: by 2002:a5d:6acf:: with SMTP id u15mr5299037wrw.277.1591715645605;
-        Tue, 09 Jun 2020 08:14:05 -0700 (PDT)
-Received: from macbook-pro-alvaro.lan (28.red-83-49-61.dynamicip.rima-tde.net. [83.49.61.28])
-        by smtp.gmail.com with ESMTPSA id u12sm3779466wrq.90.2020.06.09.08.14.03
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Jun 2020 08:14:04 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH 3/7] reset: add BCM6345 reset controller driver
-From:   =?utf-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>
-In-Reply-To: <341e8482c6bd06267633160d7358fa8331bef515.camel@pengutronix.de>
-Date:   Tue, 9 Jun 2020 17:14:02 +0200
-Cc:     robh+dt@kernel.org, tsbogend@alpha.franken.de,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        jonas.gorski@gmail.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <729976E9-CAF7-47B6-8783-5FD3D85F9EFD@gmail.com>
-References: <20200609134232.4084718-1-noltari@gmail.com>
- <20200609134232.4084718-4-noltari@gmail.com>
- <341e8482c6bd06267633160d7358fa8331bef515.camel@pengutronix.de>
-To:     Philipp Zabel <p.zabel@pengutronix.de>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Tue, 9 Jun 2020 11:19:51 -0400
+Received: from muru.com ([72.249.23.125]:57370 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729665AbgFIPTt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 11:19:49 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 4AAD38088;
+        Tue,  9 Jun 2020 15:20:37 +0000 (UTC)
+Date:   Tue, 9 Jun 2020 08:19:43 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc:     linux-omap@vger.kernel.org, "Andrew F . Davis" <afd@ti.com>,
+        Dave Gerlach <d-gerlach@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/5] drm/omap: Fix suspend resume regression after
+ platform data removal
+Message-ID: <20200609151943.GL37466@atomide.com>
+References: <20200531193941.13179-1-tony@atomide.com>
+ <20200531193941.13179-2-tony@atomide.com>
+ <16ba1808-5c7f-573d-8dd0-c80cac2f476e@ti.com>
+ <20200603140639.GG37466@atomide.com>
+ <47e286dd-f87a-4440-5bde-1f7b53e8b672@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <47e286dd-f87a-4440-5bde-1f7b53e8b672@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Philipp,
+* Tomi Valkeinen <tomi.valkeinen@ti.com> [200609 07:05]:
+> On 03/06/2020 17:06, Tony Lindgren wrote:
+> > * Tomi Valkeinen <tomi.valkeinen@ti.com> [200603 12:34]:
+> > > Hi Tony,
+> > > 
+> > > On 31/05/2020 22:39, Tony Lindgren wrote:
+> > > > When booting without legacy platform data, we no longer have omap_device
+> > > > calling PM runtime suspend for us on suspend. This causes the driver
+> > > > context not be saved as we have no suspend and resume functions defined.
+> > > > 
+> > > > Let's fix the issue by switching over to use UNIVERSAL_DEV_PM_OPS as it
+> > > > will call the existing PM runtime suspend functions on suspend.
+> > > 
+> > > I don't think we can use UNIVERSAL_DEV_PM_OPS, as we can't disable DSS
+> > > modules in any order, but things have to be shut down in orderly manner.
+> > 
+> > OK. I presume you talk about the order of dss child devices here.
+> 
+> Yes, but not only that.
+> 
+> E.g. the dispc driver hasn't been designed to be suspended while active. The
+> only way to properly suspend the dispc HW is to first disable the outputs,
+> wait until they've finished with their current frame, and only then can
+> things be shut down.
 
-> El 9 jun 2020, a las 17:06, Philipp Zabel <p.zabel@pengutronix.de> =
-escribi=C3=B3:
->=20
-> Hi =C3=81lvaro,
->=20
-> On Tue, 2020-06-09 at 15:42 +0200, =C3=81lvaro Fern=C3=A1ndez Rojas =
-wrote:
->> Add support for resetting blocks through the Linux reset controller
->> subsystem for BCM63xx SoCs.
->>=20
->> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
->> ---
->> drivers/reset/Kconfig         |   7 ++
->> drivers/reset/Makefile        |   1 +
->> drivers/reset/reset-bcm6345.c | 149 =
-++++++++++++++++++++++++++++++++++
->> 3 files changed, 157 insertions(+)
->> create mode 100644 drivers/reset/reset-bcm6345.c
->>=20
->> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
->> index d9efbfd29646..9f1da978cef6 100644
->> --- a/drivers/reset/Kconfig
->> +++ b/drivers/reset/Kconfig
->> @@ -41,6 +41,13 @@ config RESET_BERLIN
->> 	help
->> 	  This enables the reset controller driver for Marvell Berlin =
-SoCs.
->>=20
->> +config RESET_BCM6345
->> +	bool "BCM6345 Reset Controller"
->> +	depends on BMIPS_GENERIC || COMPILE_TEST
->> +	default BMIPS_GENERIC
->> +	help
->> +	  This enables the reset controller driver for BCM6345 SoCs.
->> +
->> config RESET_BRCMSTB
->> 	tristate "Broadcom STB reset controller"
->> 	depends on ARCH_BRCMSTB || COMPILE_TEST
->> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
->> index 249ed357c997..e642aae42f0f 100644
->> --- a/drivers/reset/Makefile
->> +++ b/drivers/reset/Makefile
->> @@ -6,6 +6,7 @@ obj-$(CONFIG_ARCH_TEGRA) +=3D tegra/
->> obj-$(CONFIG_RESET_A10SR) +=3D reset-a10sr.o
->> obj-$(CONFIG_RESET_ATH79) +=3D reset-ath79.o
->> obj-$(CONFIG_RESET_AXS10X) +=3D reset-axs10x.o
->> +obj-$(CONFIG_RESET_BCM6345) +=3D reset-bcm6345.o
->> obj-$(CONFIG_RESET_BERLIN) +=3D reset-berlin.o
->> obj-$(CONFIG_RESET_BRCMSTB) +=3D reset-brcmstb.o
->> obj-$(CONFIG_RESET_BRCMSTB_RESCAL) +=3D reset-brcmstb-rescal.o
->> diff --git a/drivers/reset/reset-bcm6345.c =
-b/drivers/reset/reset-bcm6345.c
->> new file mode 100644
->> index 000000000000..088b7fdb896b
->> --- /dev/null
->> +++ b/drivers/reset/reset-bcm6345.c
->> @@ -0,0 +1,149 @@
->> +// SPDX-License-Identifier: GPL-2.0-or-later
->> +/*
->> + * BCM6345 Reset Controller Driver
->> + *
->> + * Copyright (C) 2020 =C3=81lvaro Fern=C3=A1ndez Rojas =
-<noltari@gmail.com>
->> + */
->> +
->> +#include <linux/delay.h>
->> +#include <linux/init.h>
->> +#include <linux/io.h>
->> +#include <linux/mod_devicetable.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/reset-controller.h>
->> +
->> +#define BCM6345_RESET_NUM		32
->> +#define BCM6345_RESET_SLEEP_MIN_US	10000
->> +#define BCM6345_RESET_SLEEP_MAX_US	20000
->> +
->> +struct bcm6345_reset {
->> +	struct reset_controller_dev rcdev;
->> +	void __iomem *base;
->> +	spinlock_t lock;
->> +};
->> +
->> +static int bcm6345_reset_update(struct bcm6345_reset *bcm6345_reset,
->> +				unsigned long id, bool assert)
->> +{
->> +	uint32_t val;
->> +
->> +	val =3D __raw_readl(bcm6345_reset->base);
->> +	if (assert)
->> +		val &=3D ~BIT(id);
->> +	else
->> +		val |=3D BIT(id);
->> +	__raw_writel(val, bcm6345_reset->base);
->> +
->> +	return 0;
->> +}
->> +
->> +static int bcm6345_reset_assert(struct reset_controller_dev *rcdev,
->> +				unsigned long id)
->> +{
->> +	struct bcm6345_reset *bcm6345_reset =3D
->> +		container_of(rcdev, struct bcm6345_reset, rcdev);
->> +	unsigned long flags;
->> +
->> +	spin_lock_irqsave(&bcm6345_reset->lock, flags);
->> +	bcm6345_reset_update(bcm6345_reset, id, true);
->> +	spin_unlock_irqrestore(&bcm6345_reset->lock, flags);
->> +
->> +	return 0;
->> +}
->> +
->> +static int bcm6345_reset_deassert(struct reset_controller_dev =
-*rcdev,
->> +				  unsigned long id)
->> +{
->> +	struct bcm6345_reset *bcm6345_reset =3D
->> +		container_of(rcdev, struct bcm6345_reset, rcdev);
->> +	unsigned long flags;
->> +
->> +	spin_lock_irqsave(&bcm6345_reset->lock, flags);
->> +	bcm6345_reset_update(bcm6345_reset, id, false);
->> +	spin_unlock_irqrestore(&bcm6345_reset->lock, flags);
->> +
->> +	return 0;
->> +}
->> +
->> +static int bcm6345_reset_reset(struct reset_controller_dev *rcdev,
->> +			       unsigned long id)
->> +{
->> +	struct bcm6345_reset *bcm6345_reset =3D
->> +		container_of(rcdev, struct bcm6345_reset, rcdev);
->> +	unsigned long flags;
->> +
->> +	spin_lock_irqsave(&bcm6345_reset->lock, flags);
->> +	usleep_range(BCM6345_RESET_SLEEP_MIN_US,
->> +		     BCM6345_RESET_SLEEP_MAX_US);
->=20
-> What is the purpose of sleeping before reset assertion?
+OK
 
-None, I must have introduced that for testing something and then I =
-forgot to remove it. Sorry for that...
+> The suspend machinery doesn't handle all that (and it couldn't anyway, due
+> to the dependencies to other DSS devices in the pipeline).
 
->=20
-> If you can do without this, with I think this driver could be made to
-> use reset-simple.
+OK I replied to your patch with some untested comments that might simplify
+it potentially.
 
-Yes, but only if I can add reset support with a configurable sleep range =
-to reset-simple. Is this possible?
+> > > omapdrm hasn't relied on omap_device calling runtime suspend for us (I
+> > > didn't know it does that). We have system suspend hooks in omap_drv.c:
+> > 
+> > We had omap_device sort of brute forcing things to idle on suspend
+> > which only really works for interconnect target modules with one
+> > device in them.
+> > 
+> > > SIMPLE_DEV_PM_OPS(omapdrm_pm_ops, omap_drm_suspend, omap_drm_resume)
+> > > 
+> > > omap_drm_suspend() is supposed to turn off the displays, which then cause
+> > > dispc_runtime_put (and other runtime_puts) to be called, which result in
+> > > dispc_runtime_suspend (and other runtime PM suspends).
+> > 
+> > OK thanks for explaining, I missed that part.
+> > 
+> > > So... For some reason that's no longer happening? I need to try to find a
+> > > board with which suspend/resume works (without DSS)...
+> > 
+> > Yes it seems something has changed. When diffing the dmesg debug output
+> > on suspend and resume, context save and restore functions are no longer
+> > called as the PM runtime suspend and resume functions are no longer
+> > called on suspend and resume.
+> 
+> I now tested with AM4 SK, and I still can't get system suspend/resume work
+> (without DSS). I have no clue about how to fix that. But if I use pm_test to
+> prevent total suspend, I can reproduce this (or at least looks the same).
 
->=20
-> regards
-> Philipp
+OK
 
-Best regards,
-=C3=81lvaro.
+> And now that I look at this, I have a recollection that I've seen this
+> before. What happens is that the system suspend hook (omap_drm_suspend) gets
+> called fine, and it turns off the displays, which leads to
+> dispc_runtime_puts etc. All goes fine.
+> 
+> But there's an extra runtime PM reference (dev.power.usage_count) that seems
+> to come out of nowhere. So when omap_drm_suspend is finished, there's still
+> usage_count of 1, and dispc never suspends fully.
 
+Hmm no idea about that. My guess is that there might be an issue that was
+masked earlier with omap_device calling the child runtime_suspend.
+
+Currently I'm only able to rmmod -f omapdrm, not sure if these issues might
+be related.
+
+As we now have the interconnect target module as the parent so usage counts
+might be different but should balance out the same way as earlier.
+
+> I think the PM framework does this when starting system suspend process.
+> Maybe this was also happening earlier, but omap_device used to do the final
+> suspend (so omapdrm depended on that functionality, after all...).
+
+Yes the different handling seems to be the main part of the issue.
+
+Regards,
+
+Tony
