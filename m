@@ -2,143 +2,99 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6ECEC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 02:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5882C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 02:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8893C206D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 02:54:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591671253;
-	bh=ZHGH67ddZaKnIGZ+GUujmres+KjJb1wQUw/0hpt2RBI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Ijke2j9cu92KQUvBtTiwV/yEdeyWdACX3bO4UrxWaUyInE5TSPcO+5iU3aOFkNo5z
-	 D81gBBjdJDaoJ8uPeJruqIoT3A4lrhok9ALEHLweZOjPle/BJn9mF6pyjRnDxqsNey
-	 KVzGZqiatJ6I1nR7alXgSot22yB+u1SJWYTRVSh8=
+	by mail.kernel.org (Postfix) with ESMTP id 79878207ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 02:55:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbgFICx5 (ORCPT
+        id S1727045AbgFICyt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 22:53:57 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:50514 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726884AbgFICx5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 22:53:57 -0400
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id 0592rUJ8013934;
-        Tue, 9 Jun 2020 11:53:31 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 0592rUJ8013934
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1591671211;
-        bh=mujRQ0cxOo6OPOJ8dVrqjK7M7O6Nf2q2d3tlIpH50xA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=khKBJu/XO182b8eTMlMt+O+VayyPunlN6lESOwHzwN+DXuObI/3/I2bW58siexI72
-         8d7j62plIxfAq/c+4GUuVYeS5TYhZ+lvCr7hdRUjh5XAnDZ6+YuZMkanf5fl2SdexE
-         k3Dp72pfCFXORG+8ONK+rpGTcCawlYYBeYoNq76+GwfTibWDtvMdKKZ6INjreIca15
-         jD+nGf0WtdnsYvqPc/88Ki4ysmU9B6VurCUfNYxGIuXzkmRzn2UaBdN+iAdDq2MoPK
-         VDMUHspvPXIu0Tp9GPou0WRSHLQeqnVF+jVpic7HtoTQJEHcuzZWVf2qW74AiR5KPI
-         3PqoGn2NqPXDQ==
-X-Nifty-SrcIP: [209.85.217.49]
-Received: by mail-vs1-f49.google.com with SMTP id y123so11083028vsb.6;
-        Mon, 08 Jun 2020 19:53:30 -0700 (PDT)
-X-Gm-Message-State: AOAM533dwjzE613/MZGf2cP1R9DCx/tPkOVNKYXLJVQ87duWlAsJFxrP
-        ChSroNoQ6pSofZpD6OPt4FA0tu6zffTli9D8h40=
-X-Google-Smtp-Source: ABdhPJzg+CEE8DiwhgKfoV4hbjmrtcMM113weZ2EiqDMkEYESySC0JZFhDlyAA48B31EDBwwoM/OOEzkooc0XERDwnQ=
-X-Received: by 2002:a67:2d42:: with SMTP id t63mr1258891vst.181.1591671209825;
- Mon, 08 Jun 2020 19:53:29 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200608084117.4563-1-jiping.ma2@windriver.com>
- <CAL_JsqKLfSE5tPEPi1=erqBzCF9fceKKDe4qBkywB4O_JhbjGg@mail.gmail.com> <acfc88fc-2a7e-19fe-3dc4-37a03ddabcf9@windriver.com>
-In-Reply-To: <acfc88fc-2a7e-19fe-3dc4-37a03ddabcf9@windriver.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 9 Jun 2020 11:52:53 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAS3xOvkUWZzZcb7Mk2YsWo+A6XTjzTZjxjvkYCjWjQvFg@mail.gmail.com>
-Message-ID: <CAK7LNAS3xOvkUWZzZcb7Mk2YsWo+A6XTjzTZjxjvkYCjWjQvFg@mail.gmail.com>
-Subject: Re: [PATCH] dtc: also check <yaml.h> for libyaml
-To:     Jiping Ma <Jiping.Ma2@windriver.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 8 Jun 2020 22:54:49 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:44036 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726992AbgFICys (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 22:54:48 -0400
+Received: from kvm-dev1.localdomain (unknown [10.2.5.134])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxn97s+d5e0ng_AA--.375S2;
+        Tue, 09 Jun 2020 10:54:37 +0800 (CST)
+From:   Bibo Mao <maobibo@loongson.cn>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] MIPS: Use arch specific syscall name match function
+Date:   Tue,  9 Jun 2020 10:54:35 +0800
+Message-Id: <1591671275-13849-1-git-send-email-maobibo@loongson.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-CM-TRANSID: AQAAf9Dxn97s+d5e0ng_AA--.375S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7tryDKFW3tr1xKw1xWw45ZFb_yoW8WrWrpF
+        98Aw1kCrsYqF4fZFWa9w48Grn8ArsY9ryaq3yDGryYva1Yq34Fgrsayw45tFyUAFs7Cayx
+        XFWSqFWUWr4DZaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUyvb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4
+        vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVAC
+        Y4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJV
+        W8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l
+        4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
+        AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
+        cVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI
+        8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAF
+        wI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU5PpnJUUUUU==
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 9, 2020 at 10:01 AM Jiping Ma <Jiping.Ma2@windriver.com> wrote:
->
->
->
-> On 06/09/2020 03:09 AM, Rob Herring wrote:
-> > On Mon, Jun 8, 2020 at 2:42 AM Jiping Ma <jiping.ma2@windriver.com> wrote:
-> >> yamltree.c includes <yaml.h>, If /usr/include/yaml.h does not exist,
-> >> it fails to build.
-> > Does this patch fix your issue?:
-> >
-> > https://lore.kernel.org/linux-devicetree/20200505100319.741454-1-masahiroy@kernel.org/
-> No, it did not fix the issue.
->
-> $ pkg-config --cflags yaml-0.1
->
-> $ pkg-config yaml-0.1 --libs
-> -L/buildarea/jma1/wr-19-0518/19.45/sysroots/aarch64-wrs-linux/usr/lib64
-> -lyaml
+On MIPS system, most of the syscall function name begin with prefix
+sys_. Some syscalls are special such as clone/fork, function name of
+these begin with __sys_. Since scratch registers need be saved in
+stack when these system calls happens.
 
+With ftrace system call method, system call functions are declared with
+SYSCALL_DEFINEx, metadata of the system call symbol name begins with
+sys_. Here mips specific function arch_syscall_match_sym_name is used to
+compare function name between sys_call_table[] and metadata of syscall
+symbol.
 
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/mips/include/asm/ftrace.h | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-
-If I install libyaml to a non-standard location
-(/home/masahiro/foo), my pkg-config shows as follows:
-
-
-
-masahiro@oscar:~$ pkg-config --cflags   yaml-0.1
--I/home/masahiro/foo/include
-masahiro@oscar:~$ pkg-config --libs   yaml-0.1
--L/home/masahiro/foo/lib -lyaml
-
-
-
-
-
-
-
-> >
-> >
-> >> Signed-off-by: Jiping Ma <jiping.ma2@windriver.com>
-> >> ---
-> >>   scripts/dtc/Makefile | 4 ++++
-> >>   1 file changed, 4 insertions(+)
-> >>
-> >> diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
-> >> index b5a5b1c..b49dfea 100644
-> >> --- a/scripts/dtc/Makefile
-> >> +++ b/scripts/dtc/Makefile
-> >> @@ -18,9 +18,13 @@ $(error dtc needs libyaml for DT schema validation support. \
-> >>   endif
-> >>   HOST_EXTRACFLAGS += -DNO_YAML
-> >>   else
-> >> +ifeq ($(wildcard /usr/include/yaml.h),)
-> >> +HOST_EXTRACFLAGS += -DNO_YAML
-> >> +else
-> >>   dtc-objs       += yamltree.o
-> >>   HOSTLDLIBS_dtc := $(shell pkg-config yaml-0.1 --libs)
-> >>   endif
-> >> +endif
-> >>
-> >>   # Generated files need one more search path to include headers in source tree
-> >>   HOSTCFLAGS_dtc-lexer.lex.o := -I $(srctree)/$(src)
-> >> --
-> >> 1.9.1
-> >>
->
-
-
+diff --git a/arch/mips/include/asm/ftrace.h b/arch/mips/include/asm/ftrace.h
+index b463f2a..9b42115 100644
+--- a/arch/mips/include/asm/ftrace.h
++++ b/arch/mips/include/asm/ftrace.h
+@@ -87,4 +87,20 @@ struct dyn_arch_ftrace {
+ #endif /*  CONFIG_DYNAMIC_FTRACE */
+ #endif /* __ASSEMBLY__ */
+ #endif /* CONFIG_FUNCTION_TRACER */
++
++#ifndef __ASSEMBLY__
++#ifdef CONFIG_FTRACE_SYSCALLS
++/*
++ * Some syscall entry functions on mips start with "__sys_" (fork and clone,
++ * for instance). We should also match the sys_ variant with those.
++ */
++#define ARCH_HAS_SYSCALL_MATCH_SYM_NAME
++static inline bool arch_syscall_match_sym_name(const char *sym,
++					       const char *name)
++{
++	return !strcmp(sym, name) ||
++		(!strncmp(sym, "__sys_", 6) && !strcmp(sym + 6, name + 4));
++}
++#endif /* CONFIG_FTRACE_SYSCALLS */
++#endif /* __ASSEMBLY__ */
+ #endif /* _ASM_MIPS_FTRACE_H */
 -- 
-Best Regards
-Masahiro Yamada
+1.8.3.1
+
