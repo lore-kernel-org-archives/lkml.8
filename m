@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BEF7C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:54:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35784C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 797CA20774
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:54:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 038E020823
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:54:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725269;
-	bh=mQlyIZpsFwSxbxKyryxpvl6ccsVmLfLXK1O83SaWYIw=;
+	s=default; t=1591725275;
+	bh=Nm6Enj1yAA/to0vIuhmN9PTYANqMr4oTBzNdJPmi7wI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=agn3BDvt/HMnH8I13AeOWZ7kZ2S39oKJJO3Q6PPRlX8Sb+UgRLui8nsUEQXkqwTgU
-	 lmaZtp2pG5MEcBuXqD+h049Lj4w0UxtO70oGnVNBN2+zLog0r7z/oycTm41x5xQAnk
-	 X2u3QG92azBUbHGAQjdiTptInWnXf2NCtEKuGjtE=
+	b=Quh8K7NOdqgYxCiwH8HtJw1KACRuI3T9Gbx2xEdWACngSIu5h5hA6y8BH4QCfHmZt
+	 mn1I6jpH3y+ufa/YMvjnyg6WvzDBEe9nGuspb9IP5Kj3xN440oZ8aTNCjNz0G4Tq+6
+	 KFlpOdSSxBD1ra1FqA9cbbuFUQ5RY7hcRH16EpG8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731765AbgFIRy2 (ORCPT
+        id S1733111AbgFIRyc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:54:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43578 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:54:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731797AbgFIRw5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:52:57 -0400
+        id S1732957AbgFIRw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:52:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F95820734;
-        Tue,  9 Jun 2020 17:52:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54D33207C3;
+        Tue,  9 Jun 2020 17:52:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725176;
-        bh=mQlyIZpsFwSxbxKyryxpvl6ccsVmLfLXK1O83SaWYIw=;
+        s=default; t=1591725178;
+        bh=Nm6Enj1yAA/to0vIuhmN9PTYANqMr4oTBzNdJPmi7wI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k+r0OGQ8lwrbGNgwJFr94rU2PkmJuJZYvP0m3wKRH791fBXeaw7Xp+essK/gtXkPl
-         JEJuUwi9WDMxsMBeOxaBqNVtaPgevfcyf2NPU13br2tFNaS4/7GgWTKxHwBNjG+l+7
-         7+2S+P/niIMMVUgNrgiK6CJ1uo6nrmQGnFloIuHY=
+        b=CWOJ7bREQH891tgca68yKghTqbUBg3R3OK2eU00Fzm7jGU1Ztnw+t9zZWIYaZ7sbh
+         y/65KW4LwHbc8zK2jSduYzZ3bf+v7/CfUOSplq7Yz23wv2iaeF0aGhI1HSbLuVlrZ/
+         igRQLAcNjL4/9J2QxC8JkOc88Dycgf5a4Sem9CAQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: [PATCH 5.4 33/34] uprobes: ensure that uprobe->offset and ->ref_ctr_offset are properly aligned
-Date:   Tue,  9 Jun 2020 19:45:29 +0200
-Message-Id: <20200609174058.227799592@linuxfoundation.org>
+        Paul Gortmaker <paul.gortmaker@windriver.com>,
+        Roi Dayan <roid@mellanox.com>, Mark Bloch <markb@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.4 34/34] Revert "net/mlx5: Annotate mutex destroy for root ns"
+Date:   Tue,  9 Jun 2020 19:45:30 +0200
+Message-Id: <20200609174058.653317561@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174052.628006868@linuxfoundation.org>
 References: <20200609174052.628006868@linuxfoundation.org>
@@ -64,76 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleg Nesterov <oleg@redhat.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-commit 013b2deba9a6b80ca02f4fafd7dedf875e9b4450 upstream.
+This reverts commit 3f4f034a8676e366857861e76c3ad11ae059b2fb which is
+commit 9ca415399dae133b00273a4283ef31d003a6818d upstream.
 
-uprobe_write_opcode() must not cross page boundary; prepare_uprobe()
-relies on arch_uprobe_analyze_insn() which should validate "vaddr" but
-some architectures (csky, s390, and sparc) don't do this.
+It was backported incorrectly, Paul writes at:
+	https://lore.kernel.org/r/20200607203425.GD23662@windriver.com
 
-We can remove the BUG_ON() check in prepare_uprobe() and validate the
-offset early in __uprobe_register(). The new IS_ALIGNED() check matches
-the alignment check in arch_prepare_kprobe() on supported architectures,
-so I think that all insns must be aligned to UPROBE_SWBP_INSN_SIZE.
+	I happened to notice this commit:
 
-Another problem is __update_ref_ctr() which was wrong from the very
-beginning, it can read/write outside of kmap'ed page unless "vaddr" is
-aligned to sizeof(short), __uprobe_register() should check this too.
+	9ca415399dae - "net/mlx5: Annotate mutex destroy for root ns"
 
-Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Tested-by: Sven Schnelle <svens@linux.ibm.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: stable@vger.kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+	...was backported to 4.19 and 5.4 and v5.6 in linux-stable.
+
+	It patches del_sw_root_ns() - which only exists after v5.7-rc7 from:
+
+	6eb7a268a99b - "net/mlx5: Don't maintain a case of del_sw_func being
+	null"
+
+	which creates the one line del_sw_root_ns stub function around
+	kfree(node) by breaking it out of tree_put_node().
+
+	In the absense of del_sw_root_ns - the backport finds an identical one
+	line kfree stub fcn - named del_sw_prio from this earlier commit:
+
+	139ed6c6c46a - "net/mlx5: Fix steering memory leak"  [in v4.15-rc5]
+
+	and then puts the mutex_destroy() into that (wrong) function, instead of
+	putting it into tree_put_node where the root ns case used to be hand
+
+Reported-by: Paul Gortmaker <paul.gortmaker@windriver.com>
+Cc: Roi Dayan <roid@mellanox.com>
+Cc: Mark Bloch <markb@mellanox.com>
+Cc: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- kernel/events/uprobes.c |   16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/fs_core.c |    6 ------
+ 1 file changed, 6 deletions(-)
 
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -867,10 +867,6 @@ static int prepare_uprobe(struct uprobe
- 	if (ret)
- 		goto out;
+--- a/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
+@@ -417,12 +417,6 @@ static void del_sw_ns(struct fs_node *no
  
--	/* uprobe_write_opcode() assumes we don't cross page boundary */
--	BUG_ON((uprobe->offset & ~PAGE_MASK) +
--			UPROBE_SWBP_INSN_SIZE > PAGE_SIZE);
+ static void del_sw_prio(struct fs_node *node)
+ {
+-	struct mlx5_flow_root_namespace *root_ns;
+-	struct mlx5_flow_namespace *ns;
 -
- 	smp_wmb(); /* pairs with the smp_rmb() in handle_swbp() */
- 	set_bit(UPROBE_COPY_INSN, &uprobe->flags);
+-	fs_get_obj(ns, node);
+-	root_ns = container_of(ns, struct mlx5_flow_root_namespace, ns);
+-	mutex_destroy(&root_ns->chain_lock);
+ 	kfree(node);
+ }
  
-@@ -1166,6 +1162,15 @@ static int __uprobe_register(struct inod
- 	if (offset > i_size_read(inode))
- 		return -EINVAL;
- 
-+	/*
-+	 * This ensures that copy_from_page(), copy_to_page() and
-+	 * __update_ref_ctr() can't cross page boundary.
-+	 */
-+	if (!IS_ALIGNED(offset, UPROBE_SWBP_INSN_SIZE))
-+		return -EINVAL;
-+	if (!IS_ALIGNED(ref_ctr_offset, sizeof(short)))
-+		return -EINVAL;
-+
-  retry:
- 	uprobe = alloc_uprobe(inode, offset, ref_ctr_offset);
- 	if (!uprobe)
-@@ -2014,6 +2019,9 @@ static int is_trap_at_addr(struct mm_str
- 	uprobe_opcode_t opcode;
- 	int result;
- 
-+	if (WARN_ON_ONCE(!IS_ALIGNED(vaddr, UPROBE_SWBP_INSN_SIZE)))
-+		return -EINVAL;
-+
- 	pagefault_disable();
- 	result = __get_user(opcode, (uprobe_opcode_t __user *)vaddr);
- 	pagefault_enable();
 
 
