@@ -2,216 +2,109 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F97C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F1A2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEA472078D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:05:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB1FE206A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:08:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aADFy46q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729244AbgFIMFu (ORCPT
+        id S1729163AbgFIMIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 08:05:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44618 "EHLO
+        Tue, 9 Jun 2020 08:08:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728051AbgFIMFq (ORCPT
+        with ESMTP id S1726395AbgFIMIf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 08:05:46 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 644F4C05BD1E;
-        Tue,  9 Jun 2020 05:05:45 -0700 (PDT)
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id F011E2C3; Tue,  9 Jun 2020 14:05:39 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     peterz@infradead.org, jroedel@suse.de,
-        Andy Lutomirski <luto@kernel.org>,
-        Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        manvanth@linux.vnet.ibm.com, linux-next@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org, hch@lst.de,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: [PATCH] mm: Move p?d_alloc_track to separate header file
-Date:   Tue,  9 Jun 2020 14:05:33 +0200
-Message-Id: <20200609120533.25867-1-joro@8bytes.org>
+        Tue, 9 Jun 2020 08:08:35 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82668C05BD1E;
+        Tue,  9 Jun 2020 05:08:34 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id v79so20425377qkb.10;
+        Tue, 09 Jun 2020 05:08:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id;
+        bh=vRHbPOXtPbJdANLvmSwZ4cS7X1/NwFEoLTvptBebMJM=;
+        b=aADFy46qw/Vq/MMCuSbBmbsKc0B9TH20nslbYSnWZNTVPRWLM4Eiu3okUJjB+jyDKP
+         2vQzs7enHj/b8o2w3J+JzTGAJPdJ8WeEZYsfgNlzUL4h//jWglPvInFIKrfyf/9pjggP
+         92SNWvRKlOQdNK2XiWmxqvUEuoR6VF0xR/YvgadYyuGbB6OEsPE9ZH5CaGJRYTE+S71n
+         ZO0to0h5nvo7nHqgv0Xb5EDS5xACoa2V4zsRXNc0N/eJNjRtFAhXHuKMtpRpqwhy64re
+         FoCCCSREHz0D7053m/SJ6t7asElKY97FrMaxLt85/87yvS/ZQjgp8FwATgT/CNbg2mvO
+         hiAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=vRHbPOXtPbJdANLvmSwZ4cS7X1/NwFEoLTvptBebMJM=;
+        b=aWV/18v53aZLyloCYaGfM8MuljcgxqsbkXAR+s/X9rjiy8CKTrXVAMTxsa6/qvUf4L
+         rZh0FvzzZ4Rq4OOzISzylvQHSdUgbx/ZC1jR3YCDlvKNKWdTACUhJclbz57nFvwyihgr
+         K0KZai5QMXRVKpy8WgoffYZs5FsxhSVwbWTtcxaW6uoBlAb2X8KpcinfatIXtYvi5S50
+         TFFgbFS+V669Tb1HxXHAyh/JyFXtnHzuohOSfbqOmFofawv245yFzsXBTwpbZxeb0Ke6
+         5QWdvqsf++zWAcEOtxLT7K9FtLbBpo07kfqTRYPEME5Dnr6Woq0IRf9Ofn/yiaOsSGQY
+         1r3A==
+X-Gm-Message-State: AOAM5301/TVXSeTr8X2GOkjuhfbzGT6Pdh9bDx084VJWqQL+YiS3FhwQ
+        bQQQCm7yfFZrbaVlOl1b4tI=
+X-Google-Smtp-Source: ABdhPJxSzISY4ib4u1DtG9gJaxQkMpZ71pq7o6ENgO3YLF6GKZ8qbVpkR7mK0rYln/VJQxzA8xkGTw==
+X-Received: by 2002:a37:9c91:: with SMTP id f139mr27953469qke.371.1591704513335;
+        Tue, 09 Jun 2020 05:08:33 -0700 (PDT)
+Received: from linux.home ([2604:2000:1344:41d:29ac:7979:1e2e:c67b])
+        by smtp.googlemail.com with ESMTPSA id d56sm10732690qtb.54.2020.06.09.05.08.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2020 05:08:32 -0700 (PDT)
+From:   Gaurav Singh <gaurav1086@gmail.com>
+To:     gaurav1086@gmail.com, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        KP Singh <kpsingh@chromium.org>,
+        netdev@vger.kernel.org (open list:XDP (eXpress Data Path)),
+        bpf@vger.kernel.org (open list:XDP (eXpress Data Path)),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] bpf: alloc_record_per_cpu Add null check after malloc
+Date:   Tue,  9 Jun 2020 08:08:03 -0400
+Message-Id: <20200609120804.10569-1-gaurav1086@gmail.com>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+The memset call is made right after malloc call. To fix this, add the null check right after malloc and then do memset.
 
-The functions are only used in two source files, so there is no need
-for them to be in the global <linux/mm.h> header. Move them to the new
-<linux/pgalloc-track.h> header and include it only where needed.
-
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
 ---
- include/linux/mm.h            | 45 -------------------------------
- include/linux/pgalloc-track.h | 51 +++++++++++++++++++++++++++++++++++
- lib/ioremap.c                 |  1 +
- mm/vmalloc.c                  |  1 +
- 4 files changed, 53 insertions(+), 45 deletions(-)
- create mode 100644 include/linux/pgalloc-track.h
+ samples/bpf/xdp_rxq_info_user.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 9d6042178ca7..22d8b2a2c9bc 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2092,51 +2092,11 @@ static inline pud_t *pud_alloc(struct mm_struct *mm, p4d_t *p4d,
- 		NULL : pud_offset(p4d, address);
+diff --git a/samples/bpf/xdp_rxq_info_user.c b/samples/bpf/xdp_rxq_info_user.c
+index 4fe47502ebed..490b07b7df78 100644
+--- a/samples/bpf/xdp_rxq_info_user.c
++++ b/samples/bpf/xdp_rxq_info_user.c
+@@ -202,11 +202,11 @@ static struct datarec *alloc_record_per_cpu(void)
+ 
+ 	size = sizeof(struct datarec) * nr_cpus;
+ 	array = malloc(size);
+-	memset(array, 0, size);
+ 	if (!array) {
+ 		fprintf(stderr, "Mem alloc error (nr_cpus:%u)\n", nr_cpus);
+ 		exit(EXIT_FAIL_MEM);
+ 	}
++	memset(array, 0, size);
+ 	return array;
  }
  
--static inline p4d_t *p4d_alloc_track(struct mm_struct *mm, pgd_t *pgd,
--				     unsigned long address,
--				     pgtbl_mod_mask *mod_mask)
--
--{
--	if (unlikely(pgd_none(*pgd))) {
--		if (__p4d_alloc(mm, pgd, address))
--			return NULL;
--		*mod_mask |= PGTBL_PGD_MODIFIED;
--	}
--
--	return p4d_offset(pgd, address);
--}
--
--static inline pud_t *pud_alloc_track(struct mm_struct *mm, p4d_t *p4d,
--				     unsigned long address,
--				     pgtbl_mod_mask *mod_mask)
--{
--	if (unlikely(p4d_none(*p4d))) {
--		if (__pud_alloc(mm, p4d, address))
--			return NULL;
--		*mod_mask |= PGTBL_P4D_MODIFIED;
--	}
--
--	return pud_offset(p4d, address);
--}
--
- static inline pmd_t *pmd_alloc(struct mm_struct *mm, pud_t *pud, unsigned long address)
- {
- 	return (unlikely(pud_none(*pud)) && __pmd_alloc(mm, pud, address))?
- 		NULL: pmd_offset(pud, address);
- }
--
--static inline pmd_t *pmd_alloc_track(struct mm_struct *mm, pud_t *pud,
--				     unsigned long address,
--				     pgtbl_mod_mask *mod_mask)
--{
--	if (unlikely(pud_none(*pud))) {
--		if (__pmd_alloc(mm, pud, address))
--			return NULL;
--		*mod_mask |= PGTBL_PUD_MODIFIED;
--	}
--
--	return pmd_offset(pud, address);
--}
- #endif /* CONFIG_MMU */
- 
- #if USE_SPLIT_PTE_PTLOCKS
-@@ -2252,11 +2212,6 @@ static inline void pgtable_pte_page_dtor(struct page *page)
- 	((unlikely(pmd_none(*(pmd))) && __pte_alloc_kernel(pmd))? \
- 		NULL: pte_offset_kernel(pmd, address))
- 
--#define pte_alloc_kernel_track(pmd, address, mask)			\
--	((unlikely(pmd_none(*(pmd))) &&					\
--	  (__pte_alloc_kernel(pmd) || ({*(mask)|=PGTBL_PMD_MODIFIED;0;})))?\
--		NULL: pte_offset_kernel(pmd, address))
--
- #if USE_SPLIT_PMD_PTLOCKS
- 
- static struct page *pmd_to_page(pmd_t *pmd)
-diff --git a/include/linux/pgalloc-track.h b/include/linux/pgalloc-track.h
-new file mode 100644
-index 000000000000..1dcc865029a2
---- /dev/null
-+++ b/include/linux/pgalloc-track.h
-@@ -0,0 +1,51 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_PGALLLC_TRACK_H
-+#define _LINUX_PGALLLC_TRACK_H
-+
-+#if defined(CONFIG_MMU)
-+static inline p4d_t *p4d_alloc_track(struct mm_struct *mm, pgd_t *pgd,
-+				     unsigned long address,
-+				     pgtbl_mod_mask *mod_mask)
-+{
-+	if (unlikely(pgd_none(*pgd))) {
-+		if (__p4d_alloc(mm, pgd, address))
-+			return NULL;
-+		*mod_mask |= PGTBL_PGD_MODIFIED;
-+	}
-+
-+	return p4d_offset(pgd, address);
-+}
-+
-+static inline pud_t *pud_alloc_track(struct mm_struct *mm, p4d_t *p4d,
-+				     unsigned long address,
-+				     pgtbl_mod_mask *mod_mask)
-+{
-+	if (unlikely(p4d_none(*p4d))) {
-+		if (__pud_alloc(mm, p4d, address))
-+			return NULL;
-+		*mod_mask |= PGTBL_P4D_MODIFIED;
-+	}
-+
-+	return pud_offset(p4d, address);
-+}
-+
-+static inline pmd_t *pmd_alloc_track(struct mm_struct *mm, pud_t *pud,
-+				     unsigned long address,
-+				     pgtbl_mod_mask *mod_mask)
-+{
-+	if (unlikely(pud_none(*pud))) {
-+		if (__pmd_alloc(mm, pud, address))
-+			return NULL;
-+		*mod_mask |= PGTBL_PUD_MODIFIED;
-+	}
-+
-+	return pmd_offset(pud, address);
-+}
-+#endif /* CONFIG_MMU */
-+
-+#define pte_alloc_kernel_track(pmd, address, mask)			\
-+	((unlikely(pmd_none(*(pmd))) &&					\
-+	  (__pte_alloc_kernel(pmd) || ({*(mask)|=PGTBL_PMD_MODIFIED;0;})))?\
-+		NULL: pte_offset_kernel(pmd, address))
-+
-+#endif /* _LINUX_PGALLLC_TRACK_H */
-diff --git a/lib/ioremap.c b/lib/ioremap.c
-index ad485f08173b..608fcccd21c8 100644
---- a/lib/ioremap.c
-+++ b/lib/ioremap.c
-@@ -11,6 +11,7 @@
- #include <linux/sched.h>
- #include <linux/io.h>
- #include <linux/export.h>
-+#include <linux/pgalloc-track.h>
- #include <asm/cacheflush.h>
- #include <asm/pgtable.h>
- 
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 3091c2ca60df..edc43f003165 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -35,6 +35,7 @@
- #include <linux/bitops.h>
- #include <linux/rbtree_augmented.h>
- #include <linux/overflow.h>
-+#include <linux/pgalloc-track.h>
- 
- #include <linux/uaccess.h>
- #include <asm/tlbflush.h>
 -- 
-2.26.2
+2.17.1
 
