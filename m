@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97806C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A18C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:58:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DA2B206D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:57:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 625D120734
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:58:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725479;
-	bh=YTyoHd0MzPjxsqW5XiQ39GqBwRaCwhClaKY7ifAGU4A=;
+	s=default; t=1591725481;
+	bh=cVDViZWwgHNsufUmT2I+Hp2X1qg/QoZVvKpHAG/7+i8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cV5IGgKZ4o1Dhli75mC6Q0og4mnCz9IzqItWDtGws9q57We9qkyUNB0uAPFfgGCzE
-	 1ti2Vl1PIlc/909YEKKpajyJe+zfFOJiFlBfQBVceGeQ+EOSKOEcKJxGIY+yOICQQW
-	 3lJgqTwhYpnFg1ggrbDk0WJez7lGYUeetGqXHf5E=
+	b=HN6sMZ06zrPXkI6/I27vwDA/1h7cOoOaVLDXrkaSm9OpxCtgKEkII4qPb25+ViNtH
+	 ElNwkiYVAMzJgc4h4qRIpg+te1id7LpFWa8tTg7FbtcQnxtKItib7TEMTygXXayfKV
+	 l5OxkDIKDxwiUc19G6cJ7gNaXgIy5drL5lB4AHsE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732572AbgFIR55 (ORCPT
+        id S1731771AbgFIRzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:57:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48024 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733274AbgFIRzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 9 Jun 2020 13:55:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45128 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731621AbgFIRxv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:53:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98F272074B;
-        Tue,  9 Jun 2020 17:55:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED8CE20774;
+        Tue,  9 Jun 2020 17:53:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725339;
-        bh=YTyoHd0MzPjxsqW5XiQ39GqBwRaCwhClaKY7ifAGU4A=;
+        s=default; t=1591725230;
+        bh=cVDViZWwgHNsufUmT2I+Hp2X1qg/QoZVvKpHAG/7+i8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OpnCH2hcShMHvvupvJ90e12xg75LbcIMd+xgWjTHxlxY+yKf78GBtu/w9V9dXF0t9
-         zwrsH6E653U6zqBkYoOzsW+k8QpVABGK1uUQk71DO6LyyjNn8duk1X8pKV5irtiA/H
-         JwJhm20oiwD7eA92rviZW9Ph4Yz4h8JORR7aZm3I=
+        b=hAPwyxAOw1F+WwuWJE6MeFPzxtMg2tT0OqhMoH26skMcDrhCCjoy/T80R99pLkKZl
+         3kTf9s7RRLfShGRN9SmHyhBXD1bLhzN9hftq6cEmzzNrNWsH/QR2aIGwliZPOeyIfg
+         l9l9PsGqMr/lOABNESYK858+CPUoNkimHn+GITE0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
-        Jean Rene Dawin <jdawin@math.uni-bielefeld.de>
-Subject: [PATCH 5.7 17/24] CDC-ACM: heed quirk also in error handling
-Date:   Tue,  9 Jun 2020 19:45:48 +0200
-Message-Id: <20200609174150.726412380@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Hanselmann <public@hansmi.ch>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.6 22/41] USB: serial: ch341: fix lockup of devices with limited prescaler
+Date:   Tue,  9 Jun 2020 19:45:24 +0200
+Message-Id: <20200609174114.240869918@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200609174149.255223112@linuxfoundation.org>
-References: <20200609174149.255223112@linuxfoundation.org>
+In-Reply-To: <20200609174112.129412236@linuxfoundation.org>
+References: <20200609174112.129412236@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,34 +59,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit 97fe809934dd2b0b37dfef3a2fc70417f485d7af upstream.
+commit c432df155919582a3cefa35a8f86256c830fa9a4 upstream.
 
-If buffers are iterated over in the error case, the lower limits
-for quirky devices must be heeded.
+Michael Hanselmann reports that
 
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Reported-by: Jean Rene Dawin <jdawin@math.uni-bielefeld.de>
-Fixes: a4e7279cd1d19 ("cdc-acm: introduce a cool down")
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200526124420.22160-1-oneukum@suse.com
+	[a] subset of all CH341 devices stop responding to bulk
+	transfers, usually after the third byte, when the highest
+	prescaler bit (0b100) is set. There is one exception, namely a
+	prescaler of exactly 0b111 (fact=1, ps=3).
+
+Fix this by forcing a lower base clock (fact = 0) whenever needed.
+
+This specifically makes the standard rates 110, 134 and 200 bps work
+again with these devices.
+
+Fixes: 35714565089e ("USB: serial: ch341: reimplement line-speed handling")
+Cc: stable <stable@vger.kernel.org>	# 5.5
+Reported-by: Michael Hanselmann <public@hansmi.ch>
+Link: https://lore.kernel.org/r/20200514141743.GE25962@localhost
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/class/cdc-acm.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/serial/ch341.c |   15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
---- a/drivers/usb/class/cdc-acm.c
-+++ b/drivers/usb/class/cdc-acm.c
-@@ -584,7 +584,7 @@ static void acm_softint(struct work_stru
- 	}
+--- a/drivers/usb/serial/ch341.c
++++ b/drivers/usb/serial/ch341.c
+@@ -73,6 +73,8 @@
+ #define CH341_LCR_CS6          0x01
+ #define CH341_LCR_CS5          0x00
  
- 	if (test_and_clear_bit(ACM_ERROR_DELAY, &acm->flags)) {
--		for (i = 0; i < ACM_NR; i++) 
-+		for (i = 0; i < acm->rx_buflimit; i++)
- 			if (test_and_clear_bit(i, &acm->urbs_in_error_delay))
- 					acm_submit_read_urb(acm, i, GFP_NOIO);
++#define CH341_QUIRK_LIMITED_PRESCALER	BIT(0)
++
+ static const struct usb_device_id id_table[] = {
+ 	{ USB_DEVICE(0x4348, 0x5523) },
+ 	{ USB_DEVICE(0x1a86, 0x7523) },
+@@ -160,9 +162,11 @@ static const speed_t ch341_min_rates[] =
+  *		2 <= div <= 256 if fact = 0, or
+  *		9 <= div <= 256 if fact = 1
+  */
+-static int ch341_get_divisor(speed_t speed)
++static int ch341_get_divisor(struct ch341_private *priv)
+ {
+ 	unsigned int fact, div, clk_div;
++	speed_t speed = priv->baud_rate;
++	bool force_fact0 = false;
+ 	int ps;
+ 
+ 	/*
+@@ -188,8 +192,12 @@ static int ch341_get_divisor(speed_t spe
+ 	clk_div = CH341_CLK_DIV(ps, fact);
+ 	div = CH341_CLKRATE / (clk_div * speed);
+ 
++	/* Some devices require a lower base clock if ps < 3. */
++	if (ps < 3 && (priv->quirks & CH341_QUIRK_LIMITED_PRESCALER))
++		force_fact0 = true;
++
+ 	/* Halve base clock (fact = 0) if required. */
+-	if (div < 9 || div > 255) {
++	if (div < 9 || div > 255 || force_fact0) {
+ 		div /= 2;
+ 		clk_div *= 2;
+ 		fact = 0;
+@@ -228,7 +236,7 @@ static int ch341_set_baudrate_lcr(struct
+ 	if (!priv->baud_rate)
+ 		return -EINVAL;
+ 
+-	val = ch341_get_divisor(priv->baud_rate);
++	val = ch341_get_divisor(priv);
+ 	if (val < 0)
+ 		return -EINVAL;
+ 
+@@ -333,6 +341,7 @@ static int ch341_detect_quirks(struct us
+ 			    CH341_REG_BREAK, 0, buffer, size, DEFAULT_TIMEOUT);
+ 	if (r == -EPIPE) {
+ 		dev_dbg(&port->dev, "break control not supported\n");
++		quirks = CH341_QUIRK_LIMITED_PRESCALER;
+ 		r = 0;
+ 		goto out;
  	}
 
 
