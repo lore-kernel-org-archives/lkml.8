@@ -2,95 +2,86 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89BB0C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD8DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:32:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7153520734
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:30:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4238E20734
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:32:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730409AbgFIOaO (ORCPT
+        id S1730448AbgFIOcQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 10:30:14 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:44818 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726803AbgFIOaM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 10:30:12 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 737B73C0579;
-        Tue,  9 Jun 2020 16:30:09 +0200 (CEST)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id KG_Oi9lxvAa8; Tue,  9 Jun 2020 16:30:04 +0200 (CEST)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 6D0653C00BB;
-        Tue,  9 Jun 2020 16:30:04 +0200 (CEST)
-Received: from lxhi-065.adit-jv.com (10.72.94.5) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.487.0; Tue, 9 Jun 2020
- 16:30:03 +0200
-Date:   Tue, 9 Jun 2020 16:29:59 +0200
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-CC:     Jacopo Mondi <jacopo@jmondi.org>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        <kieran.bingham+renesas@ideasonboard.com>, <geert@linux-m68k.org>,
-        <horms@verge.net.au>, <uli+renesas@fpond.eu>,
-        <VenkataRajesh.Kalakodima@in.bosch.com>, <airlied@linux.ie>,
-        <daniel@ffwll.ch>, <koji.matsuoka.xm@renesas.com>,
-        <muroya@ksk.co.jp>, <Harsha.ManjulaMallikarjun@in.bosch.com>,
-        <ezequiel@collabora.com>, <seanpaul@chromium.org>,
-        <linux-renesas-soc@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        <michael.dege@renesas.com>, <gotthard.voellmeke@renesas.com>,
-        <efriedrich@de.adit-jv.com>, <mrodin@de.adit-jv.com>,
-        <ChaitanyaKumar.Borah@in.bosch.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: [PATCH v5 0/8] drm: rcar-du: Add Color Management Module (CMM)
-Message-ID: <20200609142959.GA621@lxhi-065.adit-jv.com>
-References: <20191015104621.62514-1-jacopo+renesas@jmondi.org>
- <20200527071555.GA23912@lxhi-065.adit-jv.com>
- <20200605132900.on527xcggg6f6pil@uno.localdomain>
- <20200605134124.GA28734@lxhi-065.adit-jv.com>
- <20200605135315.xlph44pl7kvmt23a@uno.localdomain>
- <20200607024158.GD7339@pendragon.ideasonboard.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200607024158.GD7339@pendragon.ideasonboard.com>
-X-Originating-IP: [10.72.94.5]
+        Tue, 9 Jun 2020 10:32:16 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:49066 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728440AbgFIOcP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 10:32:15 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 82FB01A13DD;
+        Tue,  9 Jun 2020 16:32:12 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E7C9E1A13CA;
+        Tue,  9 Jun 2020 16:32:07 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 6D4BD40307;
+        Tue,  9 Jun 2020 22:32:02 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
+        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
+        s.hauer@pengutronix.de, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V3 0/9] Support i.MX8 SoCs pinctrl drivers built as module
+Date:   Tue,  9 Jun 2020 22:21:16 +0800
+Message-Id: <1591712485-20609-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
+There are more and mroe requirements that SoC specific modules should be built
+as module in order to support generic kernel image, such as Android GKI concept.
 
-On Sun, Jun 07, 2020 at 05:41:58AM +0300, Laurent Pinchart wrote:
-> Note that the CMM driver is controlled by the DU driver. As the DU
-> driver will reenable the display during resume, it will call
-> rcar_du_cmm_setup() at resume time, which will reprogram the CMM. There
-> should thus be no need for manual suspend/resume handling in the CMM as
-> far as I can tell, but we need to ensure that the CMM is suspended
-> before and resumed after the DU. I believe this could be implemented
-> using device links.
+This patch series supports i.MX8 SoCs pinctrl drivers to be built as module,
+including i.MX8MQ/MM/MN/MP/QXP/QM/DXL SoCs, and it also supports building i.MX
+common pinctrl driver and i.MX SCU common pinctrl driver as module.
 
-Based on below quote [*] from Jacopo's commit [**], isn't the device
-link relationship already in place?
+Compared to V2, the changes are as below:
+	- add "depends on OF" to PINCTRL_IMX to fix build error using x86 randconfig;
+	- change the config dependency of PINCTRL_IMX_SCU to support scenario of
+	  building in PINCTRL_IMX while building PINCTRL_IMX_SCU as module, no other
+	  good choice in my mind, if you have better idea without changing the driver
+	  code, please advise.
 
-[*] Quote from commit [**]
-   Enforce the probe and suspend/resume ordering of DU and CMM by
-   creating a stateless device link between the two.
+Anson Huang (9):
+  pinctrl: imx: Support building SCU pinctrl driver as module
+  pinctrl: imx: Support building i.MX pinctrl driver as module
+  pinctrl: imx8mm: Support building as module
+  pinctrl: imx8mn: Support building as module
+  pinctrl: imx8mq: Support building as module
+  pinctrl: imx8mp: Support building as module
+  pinctrl: imx8qxp: Support building as module
+  pinctrl: imx8qm: Support building as module
+  pinctrl: imx8dxl: Support building as module
 
-[**] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=8de707aeb45241
-    ("drm: rcar-du: kms: Initialize CMM instances")
+ drivers/pinctrl/freescale/Kconfig           | 27 ++++++++++++++-------------
+ drivers/pinctrl/freescale/pinctrl-imx.c     |  4 ++++
+ drivers/pinctrl/freescale/pinctrl-imx.h     |  2 +-
+ drivers/pinctrl/freescale/pinctrl-imx8dxl.c |  9 +++------
+ drivers/pinctrl/freescale/pinctrl-imx8mm.c  | 10 ++++------
+ drivers/pinctrl/freescale/pinctrl-imx8mn.c  | 10 ++++------
+ drivers/pinctrl/freescale/pinctrl-imx8mp.c  | 10 ++++------
+ drivers/pinctrl/freescale/pinctrl-imx8mq.c  |  9 ++++-----
+ drivers/pinctrl/freescale/pinctrl-imx8qm.c  |  9 +++------
+ drivers/pinctrl/freescale/pinctrl-imx8qxp.c |  9 +++------
+ drivers/pinctrl/freescale/pinctrl-scu.c     |  6 ++++++
+ 11 files changed, 50 insertions(+), 55 deletions(-)
 
 -- 
-Best regards,
-Eugeniu Rosca
+2.7.4
+
