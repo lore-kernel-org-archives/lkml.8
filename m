@@ -2,51 +2,53 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E27D3C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B48C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF67320801
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:47:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 924AE2081A
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:47:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591724828;
-	bh=RoSDSTtQUCnEe2phWFPiokBPc4v4Ur1EpGDFGCdtQMc=;
+	s=default; t=1591724830;
+	bh=vQz5uSiKzqmVGiwcla8GBB0B8mU94hU5bML76SFcTO8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FHm4cjrgh6TWMSJcSFzT5hcgQqLzYdqMKK9P2KOz6Oa+zCL+xX/KPT/YPSE0qITic
-	 /YzhS9F6gX7fKGpgyBxwsefjEEUc4PEB+KLfFaXDTifj9lBsQJPsWBq2i4v8LNdFK5
-	 6BmpekfumQ7NVOeaIORuUfUvgYZfwXS3YTpxDNqs=
+	b=1dZSq531E2zpjH6QoTOOv4D8FpJiR08kj1uTzFU4eDriTpkDIVU6mrReIFjR98MDs
+	 YzauWNlWXRzMVpd/lwdKsCLdnwSBmRM9U7Thk6UbOqtFtXvxRT2rRvnxtLQDVOlPSn
+	 UHc2zuadj9WJb/YdgrTm5DBwmVvabTj35sT+WSww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732049AbgFIRrF (ORCPT
+        id S1732055AbgFIRrI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:47:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57630 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:47:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732021AbgFIRqw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:46:52 -0400
+        id S1731163AbgFIRq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:46:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C8F7207F9;
-        Tue,  9 Jun 2020 17:46:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B37EF207ED;
+        Tue,  9 Jun 2020 17:46:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591724812;
-        bh=RoSDSTtQUCnEe2phWFPiokBPc4v4Ur1EpGDFGCdtQMc=;
+        s=default; t=1591724819;
+        bh=vQz5uSiKzqmVGiwcla8GBB0B8mU94hU5bML76SFcTO8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EEHj/C1SefjDkzRiUIBUKWIEvSoVVRj3piHnjlE2rA3+bJGhPzHmNgneXUmC+NqiT
-         b1qArE0YPHLrHP+7vKf8vEDYNKWRlQGOBCMbtV4sFfar9URHfDopLTPgROcjE1ZLD1
-         fEN0eE/d1yUSBCXWkuVDf69zIwzpPj3fXFtL/blw=
+        b=NIVXQZFh2sZmPNm7ndpe23mjI1EAhLN2ruTfp/+VmvWpw2zk/2/3Iy5SeUfk6bO1k
+         ugyze1dSm0Jf6rFXBo6uBr8KUlG0LuTfNvrdZBj9vQncX23YqvtvB6cvO9iE0YFIP7
+         SLpA/NDtN8upMjy6n0u+/W/sH766ZGk7PSw01MWI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kyungtae Kim <kt0755@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.4 27/36] vt: keyboard: avoid signed integer overflow in k_ascii
-Date:   Tue,  9 Jun 2020 19:44:27 +0200
-Message-Id: <20200609173935.042884554@linuxfoundation.org>
+        stable@vger.kernel.org, Valentin Longchamp <valentin@longchamp.me>,
+        Matteo Ghidoni <matteo.ghidoni@ch.abb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 12/36] net/ethernet/freescale: rework quiesce/activate for ucc_geth
+Date:   Tue,  9 Jun 2020 19:44:12 +0200
+Message-Id: <20200609173933.983120800@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609173933.288044334@linuxfoundation.org>
 References: <20200609173933.288044334@linuxfoundation.org>
@@ -59,101 +61,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Valentin Longchamp <valentin@longchamp.me>
 
-commit b86dab054059b970111b5516ae548efaae5b3aae upstream.
+[ Upstream commit 79dde73cf9bcf1dd317a2667f78b758e9fe139ed ]
 
-When k_ascii is invoked several times in a row there is a potential for
-signed integer overflow:
+ugeth_quiesce/activate are used to halt the controller when there is a
+link change that requires to reconfigure the mac.
 
-UBSAN: Undefined behaviour in drivers/tty/vt/keyboard.c:888:19 signed integer overflow:
-10 * 1111111111 cannot be represented in type 'int'
-CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.6.11 #1
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Bochs 01/01/2011
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xce/0x128 lib/dump_stack.c:118
- ubsan_epilogue+0xe/0x30 lib/ubsan.c:154
- handle_overflow+0xdc/0xf0 lib/ubsan.c:184
- __ubsan_handle_mul_overflow+0x2a/0x40 lib/ubsan.c:205
- k_ascii+0xbf/0xd0 drivers/tty/vt/keyboard.c:888
- kbd_keycode drivers/tty/vt/keyboard.c:1477 [inline]
- kbd_event+0x888/0x3be0 drivers/tty/vt/keyboard.c:1495
+The previous implementation called netif_device_detach(). This however
+causes the initial activation of the netdevice to fail precisely because
+it's detached. For details, see [1].
 
-While it can be worked around by using check_mul_overflow()/
-check_add_overflow(), it is better to introduce a separate flag to
-signal that number pad is being used to compose a symbol, and
-change type of the accumulator from signed to unsigned, thus
-avoiding undefined behavior when it overflows.
+A possible workaround was the revert of commit
+net: linkwatch: add check for netdevice being present to linkwatch_do_dev
+However, the check introduced in the above commit is correct and shall be
+kept.
 
-Reported-by: Kyungtae Kim <kt0755@gmail.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200525232740.GA262061@dtor-ws
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The netif_device_detach() is thus replaced with
+netif_tx_stop_all_queues() that prevents any tranmission. This allows to
+perform mac config change required by the link change, without detaching
+the corresponding netdevice and thus not preventing its initial
+activation.
 
+[1] https://lists.openwall.net/netdev/2020/01/08/201
+
+Signed-off-by: Valentin Longchamp <valentin@longchamp.me>
+Acked-by: Matteo Ghidoni <matteo.ghidoni@ch.abb.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/vt/keyboard.c |   26 ++++++++++++++++----------
- 1 file changed, 16 insertions(+), 10 deletions(-)
+ drivers/net/ethernet/freescale/ucc_geth.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
---- a/drivers/tty/vt/keyboard.c
-+++ b/drivers/tty/vt/keyboard.c
-@@ -125,7 +125,11 @@ static DEFINE_SPINLOCK(func_buf_lock); /
- static unsigned long key_down[BITS_TO_LONGS(KEY_CNT)];	/* keyboard key bitmap */
- static unsigned char shift_down[NR_SHIFT];		/* shift state counters.. */
- static bool dead_key_next;
--static int npadch = -1;					/* -1 or number assembled on pad */
-+
-+/* Handles a number being assembled on the number pad */
-+static bool npadch_active;
-+static unsigned int npadch_value;
-+
- static unsigned int diacr;
- static char rep;					/* flag telling character repeat */
+diff --git a/drivers/net/ethernet/freescale/ucc_geth.c b/drivers/net/ethernet/freescale/ucc_geth.c
+index 55ac00055977..96a1f62cc148 100644
+--- a/drivers/net/ethernet/freescale/ucc_geth.c
++++ b/drivers/net/ethernet/freescale/ucc_geth.c
+@@ -45,6 +45,7 @@
+ #include <asm/ucc.h>
+ #include <asm/ucc_fast.h>
+ #include <asm/machdep.h>
++#include <net/sch_generic.h>
  
-@@ -815,12 +819,12 @@ static void k_shift(struct vc_data *vc,
- 		shift_state &= ~(1 << value);
+ #include "ucc_geth.h"
  
- 	/* kludge */
--	if (up_flag && shift_state != old_state && npadch != -1) {
-+	if (up_flag && shift_state != old_state && npadch_active) {
- 		if (kbd->kbdmode == VC_UNICODE)
--			to_utf8(vc, npadch);
-+			to_utf8(vc, npadch_value);
- 		else
--			put_queue(vc, npadch & 0xff);
--		npadch = -1;
-+			put_queue(vc, npadch_value & 0xff);
-+		npadch_active = false;
- 	}
- }
+@@ -1551,11 +1552,8 @@ static int ugeth_disable(struct ucc_geth_private *ugeth, enum comm_dir mode)
  
-@@ -838,7 +842,7 @@ static void k_meta(struct vc_data *vc, u
- 
- static void k_ascii(struct vc_data *vc, unsigned char value, char up_flag)
+ static void ugeth_quiesce(struct ucc_geth_private *ugeth)
  {
--	int base;
-+	unsigned int base;
+-	/* Prevent any further xmits, plus detach the device. */
+-	netif_device_detach(ugeth->ndev);
+-
+-	/* Wait for any current xmits to finish. */
+-	netif_tx_disable(ugeth->ndev);
++	/* Prevent any further xmits */
++	netif_tx_stop_all_queues(ugeth->ndev);
  
- 	if (up_flag)
- 		return;
-@@ -852,10 +856,12 @@ static void k_ascii(struct vc_data *vc,
- 		base = 16;
- 	}
- 
--	if (npadch == -1)
--		npadch = value;
--	else
--		npadch = npadch * base + value;
-+	if (!npadch_active) {
-+		npadch_value = 0;
-+		npadch_active = true;
-+	}
+ 	/* Disable the interrupt to avoid NAPI rescheduling. */
+ 	disable_irq(ugeth->ug_info->uf_info.irq);
+@@ -1568,7 +1566,10 @@ static void ugeth_activate(struct ucc_geth_private *ugeth)
+ {
+ 	napi_enable(&ugeth->napi);
+ 	enable_irq(ugeth->ug_info->uf_info.irq);
+-	netif_device_attach(ugeth->ndev);
 +
-+	npadch_value = npadch_value * base + value;
++	/* allow to xmit again  */
++	netif_tx_wake_all_queues(ugeth->ndev);
++	__netdev_watchdog_up(ugeth->ndev);
  }
  
- static void k_lock(struct vc_data *vc, unsigned char value, char up_flag)
+ /* Called every time the controller might need to be made
+-- 
+2.25.1
+
 
 
