@@ -2,195 +2,96 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDDBC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 22:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62243C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 22:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 932D3206D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 22:52:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591743163;
-	bh=hw5vF1/IyMXaJb5i+dMnAluAh4GENKRIGUOqUOiaIhE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SoZEQ+9yoLd875Xk0HpyyAvWtTXM4TFWSEG7lU3XAL+ZugMynTebNDWQ0gpV3wTMm
-	 sb3AGNZ0RI1ho2wvW5gruOTqv6kp/muH+WzEirBOHUYTjcQGedcwD3ARfWfdwnunks
-	 Nx8RDCnfpt/QSLz9CfKe+ypwNaMfA3iP65NGXUds=
+	by mail.kernel.org (Postfix) with ESMTP id 36A422078D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 22:52:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728719AbgFIWwl (ORCPT
+        id S1728759AbgFIWws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 18:52:41 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35853 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728108AbgFIWwk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 18:52:40 -0400
-Received: by mail-io1-f68.google.com with SMTP id r77so49137ior.3;
-        Tue, 09 Jun 2020 15:52:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=VtUNO0RmXUCA0lM/iTrqVIo0l7phzdy2MwUWXH663v4=;
-        b=aWwtPXBuCRCv1YWHuOeGu2xJCXjCZBtDNiicPUv+Y22oRRcsWjZTsnC0dXmmCcWBfc
-         ovywz7EJ5uw1fBgZnq2WcVDw2JH/D7Jsm3iMEPwSaJQn5U4JInlHH4EouOfCBJm/KgAb
-         rMFbuB7rIhmx9pPtzFBJhxoVrNmd4FRGw3AOZeZvtawZ6xao5gAo3HaF/F1jDHGoh/5i
-         WGx4w/Az9iX+pd+k+Tm6CnLQbWyw/9+aJu+rwurusu0vDYbXWu7LsJr4nJ0hQ8oQkijj
-         7CdkUugoV0TnLQeRtaF8Br2BHvkyKed7OfFuUfz53zDFC3swpXviwdYhkX/MeKbezLcr
-         xU/Q==
-X-Gm-Message-State: AOAM532ckY1e8nWANi6xlxRXk38qq0i7MUsNyPZYrcTi8DKvJD/sq/q5
-        YeEGDgn+0UbAQDQBEyz1fQ==
-X-Google-Smtp-Source: ABdhPJzAotuZigWCyKFS6KAx6Vd4f0JyrR9Qil5qXs28rQHD2OfKl7pATvicvO/4G8BEE8Bm7aqXkA==
-X-Received: by 2002:a05:6602:228c:: with SMTP id d12mr388575iod.43.1591743159407;
-        Tue, 09 Jun 2020 15:52:39 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id v16sm9833676ilo.47.2020.06.09.15.52.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 15:52:38 -0700 (PDT)
-Received: (nullmailer pid 1655191 invoked by uid 1000);
-        Tue, 09 Jun 2020 22:52:37 -0000
-Date:   Tue, 9 Jun 2020 16:52:37 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sumit Semwal <sumit.semwal@linaro.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        broonie@kernel.org, nishakumari@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, kgunda@codeaurora.org,
-        rnayak@codeaurora.org
-Subject: Re: [PATCH v4 2/5] dt-bindings: regulator: Add labibb regulator
-Message-ID: <20200609225237.GA1647191@bogus>
-References: <20200602100924.26256-1-sumit.semwal@linaro.org>
- <20200602100924.26256-3-sumit.semwal@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200602100924.26256-3-sumit.semwal@linaro.org>
+        Tue, 9 Jun 2020 18:52:48 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:58658 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728527AbgFIWwp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 18:52:45 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 39AFA1A0322;
+        Wed, 10 Jun 2020 00:52:43 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id AC2AC1A031B;
+        Wed, 10 Jun 2020 00:52:38 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id C2B2B402BF;
+        Wed, 10 Jun 2020 06:52:32 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, leonard.crestez@nxp.com, abel.vesa@nxp.com,
+        l.stach@pengutronix.de, peng.fan@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V2] soc: imx8m: Correct i.MX8MP UID fuse offset
+Date:   Wed, 10 Jun 2020 06:41:55 +0800
+Message-Id: <1591742515-7108-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 03:39:21PM +0530, Sumit Semwal wrote:
-> From: Nisha Kumari <nishakumari@codeaurora.org>
-> 
-> Adding the devicetree binding for labibb regulator.
-> 
-> Signed-off-by: Nisha Kumari <nishakumari@codeaurora.org>
-> Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
->  [sumits: cleanup as per review comments and update to yaml]
-> --
-> v2: updated for better compatible string and names.
-> v3: moved to yaml
-> v4: fixed dt_binding_check issues
-> ---
->  .../regulator/qcom-labibb-regulator.yaml      | 79 +++++++++++++++++++
->  1 file changed, 79 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.yaml b/Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.yaml
-> new file mode 100644
-> index 000000000000..178820ec04c7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.yaml
-> @@ -0,0 +1,79 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
+Correct i.MX8MP UID fuse offset according to fuse map:
 
-Dual license new bindings:
+UID_LOW: 0x420
+UID_HIGH: 0x430
 
-(GPL-2.0-only OR BSD-2-Clause)
+Fixes: fc40200ebf82 ("soc: imx: increase build coverage for imx8m soc driver")
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+Changes since V1:
+	- add fix tag.
+---
+ drivers/soc/imx/soc-imx8m.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/regulator/qcom-labibb-regulator.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm's LAB(LCD AMOLED Boost)/IBB(Inverting Buck Boost) Regulator
-> +
-> +maintainers:
-> +  - Sumit Semwal <sumit.semwal@linaro.org>
-> +
-> +description:
-> +  LAB can be used as a positive boost power supply and IBB can be used as a
-> +  negative boost power supply for display panels. Currently implemented for
-> +  pmi8998.
-> +
-> +allOf:
-> +  - $ref: "regulator.yaml#"
+diff --git a/drivers/soc/imx/soc-imx8m.c b/drivers/soc/imx/soc-imx8m.c
+index 7b0759a..0bc8314 100644
+--- a/drivers/soc/imx/soc-imx8m.c
++++ b/drivers/soc/imx/soc-imx8m.c
+@@ -22,6 +22,8 @@
+ #define OCOTP_UID_LOW			0x410
+ #define OCOTP_UID_HIGH			0x420
+ 
++#define IMX8MP_OCOTP_UID_OFFSET		0x10
++
+ /* Same as ANADIG_DIGPROG_IMX7D */
+ #define ANADIG_DIGPROG_IMX8MM	0x800
+ 
+@@ -87,6 +89,8 @@ static void __init imx8mm_soc_uid(void)
+ {
+ 	void __iomem *ocotp_base;
+ 	struct device_node *np;
++	u32 offset = of_machine_is_compatible("fsl,imx8mp") ?
++		     IMX8MP_OCOTP_UID_OFFSET : 0;
+ 
+ 	np = of_find_compatible_node(NULL, NULL, "fsl,imx8mm-ocotp");
+ 	if (!np)
+@@ -95,9 +99,9 @@ static void __init imx8mm_soc_uid(void)
+ 	ocotp_base = of_iomap(np, 0);
+ 	WARN_ON(!ocotp_base);
+ 
+-	soc_uid = readl_relaxed(ocotp_base + OCOTP_UID_HIGH);
++	soc_uid = readl_relaxed(ocotp_base + OCOTP_UID_HIGH + offset);
+ 	soc_uid <<= 32;
+-	soc_uid |= readl_relaxed(ocotp_base + OCOTP_UID_LOW);
++	soc_uid |= readl_relaxed(ocotp_base + OCOTP_UID_LOW + offset);
+ 
+ 	iounmap(ocotp_base);
+ 	of_node_put(np);
+-- 
+2.7.4
 
-I think you want this under each child as this schema applies to each 
-regulator. But you aren't using any of the regulator properties, so not 
-even needed? Or the example is not complete?
-
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,pmi8998-lab-ibb
-> +
-> +  lab:
-> +    type: object
-> +
-> +    properties:
-> +
-> +      interrupts:
-> +        maxItems: 1
-> +        description:
-> +          Short-circuit interrupt for lab.
-> +
-> +      interrupt-names:
-> +        const: sc-err
-
-You don't really need a name if there's only 1.
-
-> +
-> +    required:
-> +    - interrupts
-> +    - interrupt-names
-> +
-> +  ibb:
-> +    type: object
-> +
-> +    properties:
-> +
-> +      interrupts:
-> +        maxItems: 1
-> +        description:
-> +          Short-circuit interrupt for lab.
-> +
-> +      interrupt-names:
-> +        const: sc-err
-> +
-> +    required:
-> +    - interrupts
-> +    - interrupt-names
-> +
-> +required:
-> +  - compatible
-
-unevaluatedProperties: false
-
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +    labibb {
-> +      compatible = "qcom,pmi8998-lab-ibb";
-> +
-> +      lab {
-> +        interrupts = <0x3 0x0 IRQ_TYPE_EDGE_RISING>;
-> +        interrupt-names = "sc-err";
-> +      };
-> +
-> +      ibb {
-> +        interrupts = <0x3 0x2 IRQ_TYPE_EDGE_RISING>;
-> +        interrupt-names = "sc-err";
-> +      };
-> +    };
-> +
-> +...
-> -- 
-> 2.26.2
-> 
