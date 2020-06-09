@@ -2,101 +2,98 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 344F2C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:33:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A46C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:34:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D49F20774
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:33:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81A0220734
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:34:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="rRn6/k2K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730636AbgFIOdE (ORCPT
+        id S1730411AbgFIOeX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 10:33:04 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:49112 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730289AbgFIOcR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 10:32:17 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A879B1A13DB;
-        Tue,  9 Jun 2020 16:32:14 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2866E1A13DE;
-        Tue,  9 Jun 2020 16:32:10 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 927EC402F0;
-        Tue,  9 Jun 2020 22:32:04 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
-        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
-        s.hauer@pengutronix.de, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V3 2/9] pinctrl: imx: Support building i.MX pinctrl driver as module
-Date:   Tue,  9 Jun 2020 22:21:18 +0800
-Message-Id: <1591712485-20609-3-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1591712485-20609-1-git-send-email-Anson.Huang@nxp.com>
-References: <1591712485-20609-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 9 Jun 2020 10:34:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39368 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728993AbgFIOeW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 10:34:22 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FE51C05BD1E;
+        Tue,  9 Jun 2020 07:34:21 -0700 (PDT)
+Received: from Q.local (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C8219291;
+        Tue,  9 Jun 2020 16:34:16 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1591713257;
+        bh=0agNJjMqAgbhptd9szuIECxsg77Xz5IU7DFai665Qsg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=rRn6/k2KQ1mipGk67KnjVjebbei7C7lTbTMDXm/CgMrvl5ODofqN6pDcsA2wJ9njZ
+         zy17vrqPTyuaLRQQMibavu5GGAEEuyib6BTvZSm+0SlL9Bh93oI3F5T4x3pVD+f0Vw
+         pmQqLkzJf+DmnG5n9JULJMjPc1TvzdX3AQnYSp0Q=
+From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+To:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        David Hildenbrand <david@redhat.com>
+Cc:     linux-renesas-soc@vger.kernel.org,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jiri Kosina <trivial@kernel.org>,
+        virtualization@lists.linux-foundation.org (open list:VIRTIO CORE AND
+        NET DRIVERS), linux-mm@kvack.org (open list:MEMORY MANAGEMENT),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2] mm/balloon_compaction: Fix trivial spelling
+Date:   Tue,  9 Jun 2020 15:34:12 +0100
+Message-Id: <20200609143412.3456484-1-kieran.bingham+renesas@ideasonboard.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200609124610.3445662-16-kieran.bingham+renesas@ideasonboard.com>
+References: <20200609124610.3445662-16-kieran.bingham+renesas@ideasonboard.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Export necessary functions to support building i.MX common pinctrl
-driver and its user to be built as module.
+The word 'descriptor' is misspelled throughout the tree.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V2:
-	- add "depends on OF" to fix build error when using x86 randconfig.
----
- drivers/pinctrl/freescale/Kconfig       | 3 ++-
- drivers/pinctrl/freescale/pinctrl-imx.c | 4 ++++
- 2 files changed, 6 insertions(+), 1 deletion(-)
+Fix it up accordingly:
+    decriptors -> descriptors
 
-diff --git a/drivers/pinctrl/freescale/Kconfig b/drivers/pinctrl/freescale/Kconfig
-index f6c00d5..3383fc2 100644
---- a/drivers/pinctrl/freescale/Kconfig
-+++ b/drivers/pinctrl/freescale/Kconfig
-@@ -1,6 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0-only
- config PINCTRL_IMX
--	bool
-+	tristate "IMX pinctrl driver"
-+	depends on OF
- 	select GENERIC_PINCTRL_GROUPS
- 	select GENERIC_PINMUX_FUNCTIONS
- 	select GENERIC_PINCONF
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/freescale/pinctrl-imx.c
-index cb7e0f0..116d808 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx.c
-@@ -11,6 +11,7 @@
- #include <linux/init.h>
- #include <linux/io.h>
- #include <linux/mfd/syscon.h>
-+#include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
- #include <linux/of_address.h>
-@@ -878,6 +879,7 @@ int imx_pinctrl_probe(struct platform_device *pdev,
- 
- 	return pinctrl_enable(ipctl->pctl);
- }
-+EXPORT_SYMBOL_GPL(imx_pinctrl_probe);
- 
- static int __maybe_unused imx_pinctrl_suspend(struct device *dev)
- {
-@@ -897,3 +899,5 @@ const struct dev_pm_ops imx_pinctrl_pm_ops = {
- 	SET_LATE_SYSTEM_SLEEP_PM_OPS(imx_pinctrl_suspend,
- 					imx_pinctrl_resume)
- };
-+EXPORT_SYMBOL_GPL(imx_pinctrl_pm_ops);
-+MODULE_LICENSE("GPL v2");
+Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+---
+ mm/balloon_compaction.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/mm/balloon_compaction.c b/mm/balloon_compaction.c
+index 26de020aae7b..907fefde2572 100644
+--- a/mm/balloon_compaction.c
++++ b/mm/balloon_compaction.c
+@@ -58,7 +58,7 @@ EXPORT_SYMBOL_GPL(balloon_page_list_enqueue);
+ /**
+  * balloon_page_list_dequeue() - removes pages from balloon's page list and
+  *				 returns a list of the pages.
+- * @b_dev_info: balloon device decriptor where we will grab a page from.
++ * @b_dev_info: balloon device descriptor where we will grab a page from.
+  * @pages: pointer to the list of pages that would be returned to the caller.
+  * @n_req_pages: number of requested pages.
+  *
+@@ -157,7 +157,7 @@ EXPORT_SYMBOL_GPL(balloon_page_enqueue);
+ /*
+  * balloon_page_dequeue - removes a page from balloon's page list and returns
+  *			  its address to allow the driver to release the page.
+- * @b_dev_info: balloon device decriptor where we will grab a page from.
++ * @b_dev_info: balloon device descriptor where we will grab a page from.
+  *
+  * Driver must call this function to properly dequeue a previously enqueued page
+  * before definitively releasing it back to the guest system.
 -- 
-2.7.4
+2.25.1
 
