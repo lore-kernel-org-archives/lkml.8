@@ -7,68 +7,68 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB5EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3343DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F135920774
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:46:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B9CD20774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:46:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="1HLg+512"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="3J5kaZr1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728800AbgFIAqF (ORCPT
+        id S1733294AbgFIAqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:46:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52802 "EHLO
+        Mon, 8 Jun 2020 20:46:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729062AbgFIApy (ORCPT
+        with ESMTP id S1729559AbgFIAqC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 20:45:54 -0400
-Received: from mail-oi1-x263.google.com (mail-oi1-x263.google.com [IPv6:2607:f8b0:4864:20::263])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F4B6C03E97C
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 17:45:54 -0700 (PDT)
-Received: by mail-oi1-x263.google.com with SMTP id d67so17154842oig.6
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 17:45:53 -0700 (PDT)
+        Mon, 8 Jun 2020 20:46:02 -0400
+Received: from mail-ot1-x363.google.com (mail-ot1-x363.google.com [IPv6:2607:f8b0:4864:20::363])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A2FDC03E969
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 17:46:01 -0700 (PDT)
+Received: by mail-ot1-x363.google.com with SMTP id n6so5913920otl.0
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 17:46:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:dkim-signature:from:to:cc:subject:date
-         :message-id:content-transfer-encoding;
-        bh=aM3H4KtnGL+PgPcPchRM5VYGjqUZm9ldRW8ECXkcMy4=;
-        b=OioIqchLMdBrPN6aEs5cxmwv+GPgI2Ck35LavoFA2LrXX2u0Sbc+lSX4Z1jvrxNjDt
-         cls3kSYvfRiEn/5r9qNQXajJIQ9TEs/1MnYg3986LABapUvA3UyMjuVyRcTQd4+kK8dR
-         Gbfa76IsQIap0A4UPkMOlEM6VFjhZRSn6vJXTnIqQ5RivHd+DjjyCRh2DKS+UNwS0xdB
-         roaN2OCC416X6w4kZfLbDnVeVHKN5CRMH1UZhu3+ePBCNuCWORDKwBxbO7tbpYFCFVaj
-         JFb6BVRuPbMdsGg3uKtm8hkXJuxdNBzjBsZpm1W/G54gAuR8nUb5TJWdML2SViilkuSr
-         6RTg==
-X-Gm-Message-State: AOAM533Scoz8bAtb014sYIGSA4H6TfCmGfw3qYdmdPwgHsDebxB6fiu6
-        nsn1znNaz04TUazAc8a1PGy/e3JbVkVHdXLXu0Y5Owi6pMwv
-X-Google-Smtp-Source: ABdhPJzqrXX0J/KC36eFF5LlLYj5tFarvag8WD82cgyyF6fbPjKMvCE2P7XxrK0+bslOvjXt47w9Eku+c9oc
-X-Received: by 2002:aca:f141:: with SMTP id p62mr1630242oih.136.1591663552456;
-        Mon, 08 Jun 2020 17:45:52 -0700 (PDT)
-Received: from smtp.aristanetworks.com (smtp.aristanetworks.com. [54.193.82.35])
-        by smtp-relay.gmail.com with ESMTPS id l16sm1556693otn.1.2020.06.08.17.45.52
+         :message-id:in-reply-to:references:content-transfer-encoding;
+        bh=NKSJp0rZrw1+cKT/x08zXjzbpHqLU8j+v1TneyTidX4=;
+        b=kfvgcVAnS1CeClTtPwQakmiXugkL1wHk0BbPkua+4k8ke2Vp/hOqUmBfaKkp06w+8j
+         xNijS9wcOW9/wwE5rYZDE+q5A+sUTZJRw6lZsGEhf8JjLhtFdD4NbRRm1FaAI9ECaoCw
+         HYyuDzRQG4+xDD8M96ixQz4mWxS80wTk0YrOtL3AmPvrPu7ymmYyXtP+YBXnswZ5/EmQ
+         3xi3mT77U20pw8rNi/jmHLf8FXMfDrlR7nFWglX/aWS7Z9uu5oy0Hl0OXRbc+DKZPmTM
+         AC1HAN25HBhdjJ849Cp6wsUya6g4hByS5tl4MIkMcEAQl1J4xllyW1V7TIG2k9ppo7VK
+         6IJA==
+X-Gm-Message-State: AOAM530PwSy0qmQxkdjQE9BzkqCSaUW+YRoLHhNAdfa7tOC03BYsGaoB
+        L0LdR7D+y0Vgy/lZyhG6/yengDxnVgSBLmKoyxdjwQINv12/
+X-Google-Smtp-Source: ABdhPJw0RrINSi0Nk5/hDpaHJzNHQDZThqaFZ+50TnYmqReJYNYn8O6jMQwcW0TY8GgrGAM5wURE2fGA9QNP
+X-Received: by 2002:a05:6830:1490:: with SMTP id s16mr20388013otq.74.1591663560501;
+        Mon, 08 Jun 2020 17:46:00 -0700 (PDT)
+Received: from smtp.aristanetworks.com (smtp.aristanetworks.com. [52.0.43.43])
+        by smtp-relay.gmail.com with ESMTPS id m4sm1417083oop.4.2020.06.08.17.46.00
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Jun 2020 17:45:52 -0700 (PDT)
+        Mon, 08 Jun 2020 17:46:00 -0700 (PDT)
 X-Relaying-Domain: arista.com
 Received: from chmeee (unknown [10.95.85.208])
-        by smtp.aristanetworks.com (Postfix) with ESMTP id 5514D30288A4;
-        Mon,  8 Jun 2020 17:45:51 -0700 (PDT)
+        by smtp.aristanetworks.com (Postfix) with ESMTP id 8E36A3002D17;
+        Mon,  8 Jun 2020 17:45:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arista.com;
-        s=Arista-A; t=1591663551;
-        bh=aM3H4KtnGL+PgPcPchRM5VYGjqUZm9ldRW8ECXkcMy4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=1HLg+512x5tnx6kZVgBwToFnHl5ogfS9sAtBAJ0Uq9yhWsLiIiVmJm/hcP18gQfc3
-         9vskGJaER+ZCtkzKXUsnSS99lrstvb8E75ZgFwwZhKr+8PRXXmwCcZBs+s5pVIcivp
-         OlGmvuL4sHpn9InOBjSrWI7sGiHj45Fwpuwk5LiaKGs9hwX19NOpXpmzLgfiE3QMhy
-         61KZ28tRTbng4rAHOT/bAJzlB+DJv37Ob3KMmAJFPcIb4eAGPCJsJcXkTLpoHxdLPi
-         h/4n/U5VC8Mku3KMl/Q4f/xCdCZi9wlaX/7SY9URNWlFlXjT2LyB4KGhVWR+bR/CyH
-         oW91EP/e1eYvA==
+        s=Arista-A; t=1591663559;
+        bh=NKSJp0rZrw1+cKT/x08zXjzbpHqLU8j+v1TneyTidX4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=3J5kaZr1W/Tba7a0Donvx5VHiNzWXfoDjbRVOW8UkDKZAPDwMOtADpSJzSi+R+s68
+         lpOhcvisCPLrW8OQxQNRcoS8XWbH7JgjGudfIcsmnUFUnZE/5XWvCI/ZoBZNop544N
+         rwTrAIAwUd240TkN20zajDQZZNshyXFD4fxP31Hs/s2bBnVz3EknFpVb0FECfsYp3x
+         5atcP2O5L5U7jWtGEdpHCCUGgG1f/CV31ysx15Zh9J8lV/E2wJp5Stpr/sYbi47HHa
+         WQNIWZrO47A40Ar9bEi8Jmwm1govO7xUqxKPYeS6OAa0/aoUjo8K/ZMkZbCG1AnvPy
+         HSpVEyyt9gEyw==
 Received: from kevmitch by chmeee with local (Exim 4.93)
         (envelope-from <kevmitch@chmeee>)
-        id 1jiSOj-005RR6-F6; Mon, 08 Jun 2020 17:45:49 -0700
+        id 1jiSOr-005RRq-FD; Mon, 08 Jun 2020 17:45:57 -0700
 From:   Kevin Mitchell <kevmitch@arista.com>
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>,
-        Kevin Mitchell <kevmitch@arista.com>, stable@vger.kernel.org,
+        Kevin Mitchell <kevmitch@arista.com>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -77,109 +77,75 @@ Cc:     HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>,
         David Rientjes <rientjes@google.com>,
         Dou Liyang <douly.fnst@cn.fujitsu.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] x86/mpparse: avoid overwriting boot_cpu_physical_apicid
-Date:   Mon,  8 Jun 2020 17:44:48 -0700
-Message-Id: <20200609004451.1296880-1-kevmitch@arista.com>
+Subject: [PATCH 2/2] x86/apic: remove boot_cpu_physical_apicid hacks
+Date:   Mon,  8 Jun 2020 17:44:49 -0700
+Message-Id: <20200609004451.1296880-2-kevmitch@arista.com>
+In-Reply-To: <20200609004451.1296880-1-kevmitch@arista.com>
+References: <20200609004451.1296880-1-kevmitch@arista.com>
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When booting with ACPI unavailable or disabled, get_smp_config() ends up
-calling MP_processor_info() for each CPU found in the MPS
-table. Previously, this resulted in boot_cpu_physical_apicid getting
-unconditionally overwritten by the apicid of whatever processor had the
-CPU_BOOTPROCESSOR flag. This occurred even if boot_cpu_physical_apicid
-had already been more reliably determined in register_lapic_address() by
-calling read_apic_id() from the actual boot processor.
+Now that mpparse can be relied upon to not sabotage
+boot_cpu_physical_apicid with nonsense, the hacks that tried to work
+around that nonsense can be removed.
 
-Ordinariliy, this is not a problem because the boot processor really is
-the one with the CPU_BOOTPROCESSOR flag. However, kexec is an exception
-in which the kernel may be booted from any processor regardless of the
-MPS table contents. In this case, boot_cpu_physical_apicid may not
-indicate the actual boot processor.
-
-This was particularly problematic when the second kernel was booted with
-NR_CPUS fewer than the number of physical processors. It's the job of
-generic_processor_info() to decide which CPUs to bring up in this case.
-That obviously must include the real boot processor which it takes care
-to save a slot for. It relies upon the contents of
-boot_cpu_physical_apicid to do this, which if incorrect, may result in
-the boot processor getting left out.
-
-This condition can be discovered by smp_sanity_check() and rectified by
-adding the boot processor to the phys_cpu_present_map with the warning
-"weird, boot CPU (#%d) not listed by the BIOS". However, commit
-3e730dad3b6da ("x86/apic: Unify interrupt mode setup for SMP-capable
-system") caused setup_local_APIC() to be called before this could happen
-resulting in a BUG_ON(!apic->apic_id_registered()):
-
-[    0.655452] ------------[ cut here ]------------
-[    0.660610] Kernel BUG at setup_local_APIC+0x74/0x280 [verbose debug info unavailable]
-[    0.669466] invalid opcode: 0000 [#1] SMP
-[    0.673948] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 4.19.109.Ar-16509018.eostrunkkernel419 #1
-[    0.683670] Hardware name: Quanta Quanta LY6 (1LY6UZZ0FBC), BIOS 1.0.6.0-e7d6a55 11/26/2015
-[    0.693007] RIP: 0010:setup_local_APIC+0x74/0x280
-[    0.698264] Code: 80 e4 fe bf f0 00 00 00 89 c6 48 8b 05 0f 1a 8e 00 ff 50 10 e8 12 53 fd ff 48 8b 05 00 1a 8e 00 ff 90 a0 00 00 00 85 c0 75 02 <0f> 0b 48 8b 05 ed 19 8e 00 41 be 00 02 00 00 ff 90 b0 00 00 00 48
-[    0.719251] RSP: 0000:ffffffff81a03e20 EFLAGS: 00010246
-[    0.725091] RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
-[    0.733066] RDX: 0000000000000000 RSI: 000000000000000f RDI: 0000000000000020
-[    0.741041] RBP: ffffffff81a03e98 R08: 0000000000000002 R09: 0000000000000000
-[    0.749014] R10: ffffffff81a204e0 R11: ffffffff81b50ea7 R12: 0000000000000000
-[    0.756989] R13: ffffffff81aef920 R14: ffffffff81af60a0 R15: 0000000000000000
-[    0.764965] FS:  0000000000000000(0000) GS:ffff888036800000(0000) knlGS:0000000000000000
-[    0.774007] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    0.780427] CR2: ffff888035c01000 CR3: 0000000035a08000 CR4: 00000000000006b0
-[    0.788401] Call Trace:
-[    0.791137]  ? amd_iommu_prepare+0x15/0x2a
-[    0.795717]  apic_bsp_setup+0x55/0x75
-[    0.799808]  apic_intr_mode_init+0x169/0x16e
-[    0.804579]  x86_late_time_init+0x10/0x17
-[    0.809062]  start_kernel+0x37e/0x3fe
-[    0.813154]  x86_64_start_reservations+0x2a/0x2c
-[    0.818316]  x86_64_start_kernel+0x72/0x75
-[    0.822886]  secondary_startup_64+0xa4/0xb0
-[    0.827564] ---[ end trace 237b64da0fd9b22e ]---
-
-This change avoids these issues by only setting boot_cpu_physical_apicid
-from the MPS table if it is not already set, which can occur in the
-construct_default_ISA_mptable() path. Otherwise,
-boot_cpu_physical_apicid will already have been set in
-register_lapic_address() and should therefore remain untouched.
-
-Looking through all the places where boot_cpu_physical_apicid is
-accessed, nearly all of them assume that boot_cpu_physical_apicid should
-match read_apic_id() on the booting processor. The only place that might
-intend to use the BSP apicid listed in the MPS table is amd_numa_init(),
-which explicitly requires boot_cpu_physical_apicid to be the lowest
-apicid of all processors. Ironically, due to the early exit short
-circuit in early_get_smp_config(), it instead gets
-boot_cpu_physical_apicid = read_apic_id() rather than the MPS table
-BSP. The behaviour of amd_numa_init() is therefore unaffected by this
-change.
-
-Fixes: 3e730dad3b6da ("x86/apic: Unify interrupt mode setup for SMP-capable system")
 Signed-off-by: Kevin Mitchell <kevmitch@arista.com>
-Cc: <stable@vger.kernel.org>
 ---
- arch/x86/kernel/mpparse.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/kernel/apic/apic.c | 30 +-----------------------------
+ 1 file changed, 1 insertion(+), 29 deletions(-)
 
-diff --git a/arch/x86/kernel/mpparse.c b/arch/x86/kernel/mpparse.c
-index afac7ccce72f..6f22f09bfe11 100644
---- a/arch/x86/kernel/mpparse.c
-+++ b/arch/x86/kernel/mpparse.c
-@@ -64,7 +64,8 @@ static void __init MP_processor_info(struct mpc_cpu *m)
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index 4b1d31be50b4..c1722a71aca5 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -2361,27 +2361,8 @@ int generic_processor_info(int apicid, int version)
+ 	bool boot_cpu_detected = physid_isset(boot_cpu_physical_apicid,
+ 				phys_cpu_present_map);
  
- 	if (m->cpuflag & CPU_BOOTPROCESSOR) {
- 		bootup_cpu = " (Bootup-CPU)";
--		boot_cpu_physical_apicid = m->apicid;
-+		if (boot_cpu_physical_apicid == -1U)
-+			boot_cpu_physical_apicid = m->apicid;
- 	}
+-	/*
+-	 * boot_cpu_physical_apicid is designed to have the apicid
+-	 * returned by read_apic_id(), i.e, the apicid of the
+-	 * currently booting-up processor. However, on some platforms,
+-	 * it is temporarily modified by the apicid reported as BSP
+-	 * through MP table. Concretely:
+-	 *
+-	 * - arch/x86/kernel/mpparse.c: MP_processor_info()
+-	 * - arch/x86/mm/amdtopology.c: amd_numa_init()
+-	 *
+-	 * This function is executed with the modified
+-	 * boot_cpu_physical_apicid. So, disabled_cpu_apicid kernel
+-	 * parameter doesn't work to disable APs on kdump 2nd kernel.
+-	 *
+-	 * Since fixing handling of boot_cpu_physical_apicid requires
+-	 * another discussion and tests on each platform, we leave it
+-	 * for now and here we use read_apic_id() directly in this
+-	 * function, generic_processor_info().
+-	 */
+ 	if (disabled_cpu_apicid != BAD_APICID &&
+-	    disabled_cpu_apicid != read_apic_id() &&
++	    disabled_cpu_apicid != boot_cpu_physical_apicid &&
+ 	    disabled_cpu_apicid == apicid) {
+ 		int thiscpu = num_processors + disabled_cpus;
  
- 	pr_info("Processor #%d%s\n", m->apicid, bootup_cpu);
+@@ -2498,15 +2479,6 @@ static void __init apic_bsp_up_setup(void)
+ {
+ #ifdef CONFIG_X86_64
+ 	apic_write(APIC_ID, apic->set_apic_id(boot_cpu_physical_apicid));
+-#else
+-	/*
+-	 * Hack: In case of kdump, after a crash, kernel might be booting
+-	 * on a cpu with non-zero lapic id. But boot_cpu_physical_apicid
+-	 * might be zero if read from MP tables. Get it from LAPIC.
+-	 */
+-# ifdef CONFIG_CRASH_DUMP
+-	boot_cpu_physical_apicid = read_apic_id();
+-# endif
+ #endif
+ 	physid_set_mask_of_physid(boot_cpu_physical_apicid, &phys_cpu_present_map);
+ }
 -- 
 2.26.2
 
