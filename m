@@ -2,97 +2,96 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D0B4C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 08:50:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FADAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 08:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B41020812
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 08:50:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NIjOfj+9"
+	by mail.kernel.org (Postfix) with ESMTP id 1F8DB20812
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 08:50:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591692643;
+	bh=inVJL1pBaM/2Esv94VoALP7DgQZqZS9LcZ/dSphQwsA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IhMj4n+OMshf6ntCgQi+4p6kAgAiTj7P/6Q7qf+lL4l7HENpolw9cdJQMlU/OEF6d
+	 Nc5jw9at7BwJE0JWx6h075VQPxX/wuFyNqpnv5aXdbmFnM4AKZP/X11xbxgRsvtZdB
+	 +qBU9oc22FtrGIqmG5pl1sC/dRsv7/MZDOjFBFiA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728244AbgFIIuX (ORCPT
+        id S1728367AbgFIIul (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 04:50:23 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:29264 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726463AbgFIIuX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 04:50:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591692621;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Flv6S2rTMdck7MgTpJf2hUpAzcm5hp/f8jle5Kb7TVE=;
-        b=NIjOfj+9DCo1LbesxSlrMw8SxapQ2n/X+9SxYwmYrkBRVSMh2u1WskudwgCGnH+5jO4aXB
-        uPkmKLNSY+PcuouGKuutvsU2xIzZ7HkgWlS62JgcUZvewfhSQbdHDZEogFKPFtRFhOqBFB
-        SDCcdZdAzjT5Y5cdDlAobeawv3No/+I=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-387-S8FIr6iGMhae9s18Vw6Juw-1; Tue, 09 Jun 2020 04:50:18 -0400
-X-MC-Unique: S8FIr6iGMhae9s18Vw6Juw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 9 Jun 2020 04:50:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38846 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726463AbgFIIul (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 04:50:41 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2793D800053;
-        Tue,  9 Jun 2020 08:50:17 +0000 (UTC)
-Received: from T590 (ovpn-13-202.pek2.redhat.com [10.72.13.202])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 57E8560CD0;
-        Tue,  9 Jun 2020 08:50:08 +0000 (UTC)
-Date:   Tue, 9 Jun 2020 16:50:02 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Josh Snyder <joshs@netflix.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Josh Snyder <josh@code406.com>
-Subject: Re: [RFC 2/2] Track io_ticks at microsecond granularity.
-Message-ID: <20200609085002.GB270404@T590>
-References: <20200609040724.448519-1-joshs@netflix.com>
- <20200609040724.448519-3-joshs@netflix.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 47EDE2078D;
+        Tue,  9 Jun 2020 08:50:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591692640;
+        bh=inVJL1pBaM/2Esv94VoALP7DgQZqZS9LcZ/dSphQwsA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MckQA8WeqpKxgslfsAJpE+5q26uVvey34xcJIEN6I6kNKDjBEC2jugP5enTLmL1Mg
+         kf6LYIJFUIpp+DLm3ZuvAyRA0rl4i9tZjcJN2FB3HnL0dMtdsEUWppJAOt69T1ax8C
+         /0eCUsnQdKMrMDglmuKP2gEkUmRbB/RyMGmSRri4=
+Received: by pali.im (Postfix)
+        id 6C6D8884; Tue,  9 Jun 2020 10:50:38 +0200 (CEST)
+Date:   Tue, 9 Jun 2020 10:50:38 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Mario.Limonciello@dell.com
+Cc:     y.linux@paritcher.com, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, mjg59@srcf.ucam.org
+Subject: Re: [PATCH v2 2/3] platform/x86: dell-wmi: add new keymap type 0x0012
+Message-ID: <20200609085038.vte777tltyeojjxs@pali>
+References: <cover.1591584631.git.y.linux@paritcher.com>
+ <cover.1591656154.git.y.linux@paritcher.com>
+ <74fdb288757cf5970a558f920f531b3bd1c51b47.1591656154.git.y.linux@paritcher.com>
+ <20200608233303.57ubv4rxo4tnaaxa@pali>
+ <295ad85ecc464a57bffd5b783d4170a1@AUSX13MPC105.AMER.DELL.COM>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200609040724.448519-3-joshs@netflix.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <295ad85ecc464a57bffd5b783d4170a1@AUSX13MPC105.AMER.DELL.COM>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 09:07:24PM -0700, Josh Snyder wrote:
-> Previously, we performed truncation of I/O issue/completion times during
-> calculation of io_ticks, counting only I/Os which cross a jiffy
-> boundary. The effect is a sampling of I/Os: at every boundary between
-> jiffies we ask "is there an outstanding I/O" and increment a counter if
-> the answer is yes. This produces results that are accurate (they don't
-> systematically over- or under-count), but not precise (there is high
-> variance associated with only taking 100 samples per second).
+On Tuesday 09 June 2020 00:26:45 Mario.Limonciello@dell.com wrote:
+> > Mario, are you able to get some official documentation for these 0x0012
+> > event types? I think it could be really useful for community so they can
+> > understand and add easily new type of code and events. Because currently
+> > we are just guessing what it could be. (It is sequence? Or single event?
+> > Or single event with extended data? It is generic event? Or it is real
+> > keypress? etc...)
 > 
-> This change modifies the sampling rate from 100Hz to 976562.5Hz (1
-> sample per 1024 nanoseconds). I chose this sampling rate by simulating a
-> workload in which I/Os are issued randomly (by a Poisson process), and
-> processed in constant time: an M/D/∞ system (Kendall's notation). My
-> goal was to produce a sampled utilization fraction which was correct to
-> one part-per-thousand given one second of samples.
+> It's a single event with more data in the subsequent words.  It is definitely
+> not a real keypress.  It's supposed to be data that a user application would show.
 > 
-> The tradeoff of the higher sampling rate is increased synchronization
-> overhead caused by more frequent compare-and-swap operations. The
-> technique of commit 5b18b5a73760 ("block: delete part_round_stats and
-> switch to less precise counting") is to allow multiple I/Os to complete
-> while performing only one synchronized operation. As we are increasing
-> the sample rate by a factor of 10000, we will less frequently be able to
-> exercise the synchronization-free code path.
+> Remember the way WMI works on Linux and Windows is different.  On Windows
+> userland applications get the events directly.  On Linux kernel drivers get the
+> events and either use it internally, pass to another kernel driver or pass to
+> userland in the form of a translated event.
+> 
+> So on Windows the whole buffer gets looked at directly by the application and the
+> application will decode it to show a translated string.
+> 
+> I can certainly discuss internally about our team releasing a patch to export
+> all these other events.  I would like to know what interface to recommend it pass
+> to userspace though, because as I said this is more than just a keycode that
+> comes through in the event.  It's not useful to just do dev_info, it really should
+> be something that userspace can act on and show a translated message.
+> I don't think we want to add another 15 Dell specific keycodes to the kernel for the
+> various events and add another 4 more when a laptop introduces another set of keys.
 
-Not sure if we need so precise %util, and ~1M sampling rate may cause to run
-cmpxchg() 1M/sec for each partition, which overhead might be observable.
-
-Thanks,
-Ming
-
+Which interface to use for events? That is a good question and probably
+this should be bring to the linux-input mailinglist. I think that
+linux-input maintainers could have idea how to do it properly. We need
+some interface which would be general enough and usable also by other
+drivers / components and I'm sure that ACPI/WMI is not the only
+subsystem which needs to send events from kernel to userspace.
