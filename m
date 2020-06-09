@@ -2,63 +2,64 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 714F6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 560C2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:14:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 461B820734
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:14:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B9202074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:14:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wi+IOfmA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZgHs8HAe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729032AbgFINOi (ORCPT
+        id S1729213AbgFINOv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 09:14:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55194 "EHLO
+        Tue, 9 Jun 2020 09:14:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728878AbgFINO2 (ORCPT
+        with ESMTP id S1729046AbgFINOm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 09:14:28 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EB46C05BD1E;
-        Tue,  9 Jun 2020 06:14:26 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id n24so24951379lji.10;
-        Tue, 09 Jun 2020 06:14:26 -0700 (PDT)
+        Tue, 9 Jun 2020 09:14:42 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 753A9C05BD1E;
+        Tue,  9 Jun 2020 06:14:41 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id z206so12447317lfc.6;
+        Tue, 09 Jun 2020 06:14:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VIcWcpLaTLlEzbSLM2kpyPsmSr3GOkVXSLdltQuwKFQ=;
-        b=Wi+IOfmAU71v10i/U0f5dSRs7pHU3RA4tSzHKKNIZpxYhSSbN5FHmYiN+DTmsGtCzO
-         SS5sMIjNmQmySB7lQbwbYWQI34MQGNRF6BmR41v9jYn555LjUDjIbO3QEYE5zJ8hRXAt
-         NXWI9qqm/KIkFKuKlW4D+nnYQB0Q6ANJ1SBIch0047zfy/Rr4Fe+SHqOi0nQTIBPekqJ
-         9/7QRKOHVOp0GfGjBJf1UKvqa4wLXk8af/J9sQxuac1QDFbQ/J+BH1vquffOHiaOWhEC
-         2r81kzyfS/7ADBqOWEHvR47rXMAbLrLnFxThhmkykfGaUW23O/lg5W5ZAT7NLFKR46t+
-         WR4g==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=mTclmq28GLYsw04BzrWHjRkTzltxC1UwK7DmWEtnz4Y=;
+        b=ZgHs8HAencTPVUhtbAVYSfa4nW9ULdGMWFzfvxSBO5tClV12UMwawdaUhNd9KiiV+r
+         8VAOPxPsIzXheMsc+tK3jIHwOPxrMlC82fTJ2weCWrznjCQnV0bXG7Vn0YQ2SAmR9/C/
+         /lc3t/xigYaV1oRweu18DW+mJFToE/kBWplXZJM2BRu2iqfeVB2xA2R0uRupdFSrvqXf
+         aJEtQTjrROz+JlCmtjUVQSagW2PayvibKYePfssT38LUkZBjclX/EoWShsr8lsX05+KH
+         O3Hh8tEwYxyfmYtTR8tWhbMxfOLwMCeQW++tZF1mwRVaHAH+flGbVGxIoeDBAZUvJn9+
+         lzJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VIcWcpLaTLlEzbSLM2kpyPsmSr3GOkVXSLdltQuwKFQ=;
-        b=GV4X94VaRJuJuFbS+zplVMWpHyLCbQp+VJele0Uf7DPeVZGV5D7KbgWO5BjYv/f1V0
-         YMn4SBO9kNhnOwQ74ndFZH1E2B+qzG9UFTVodrCE1F2yN9MvfLW1A+eXZ0H8cm7ya2/T
-         MA2jyLiy/Gqk+NJvD48eIYSqSmpfjOySrZfBytkHOzELZhKvBxhioQHUjNry2r/T6nEZ
-         98QkE5VTrDwQCGoVIPqe8osuIDdvP1eY9zQsVC8BrSSzZYCDkjZaR2D+lnevJnzeN989
-         jTyuqsFnmEebMwxU9VO7a7A1vGRPXwDDXpbDX2DvxNZAY5KsNVY3FZ1urbxVRrQOPwnh
-         aKzw==
-X-Gm-Message-State: AOAM531f+fB8tvSTsEeeYfv4bbjr54+cW5zff11l2Vmy4OaJFu0OCqeD
-        OAaMoqi5AXPLUOM2fM+cSaw=
-X-Google-Smtp-Source: ABdhPJzibtZeGfNEv8ZyPCOsMlDho+/PmqPjuaPSp3pY/M+qFm82Tgu/c87DPerk8Q9iMmDpSshXuQ==
-X-Received: by 2002:a2e:b4b3:: with SMTP id q19mr13085387ljm.90.1591708464561;
-        Tue, 09 Jun 2020 06:14:24 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=mTclmq28GLYsw04BzrWHjRkTzltxC1UwK7DmWEtnz4Y=;
+        b=Jjs0qxdoCHUfuamiRM5xcJkqyfwknpgZnsZp8zNTqC6DJLUcEqxhjy9aPsN3m6x276
+         zBRLmfPSyPlXR1GVIda+wH9HjHBaIx1XYUze3glA50V7WzsCjYh/EEhAbhbO/Pepnnrs
+         a0MeugwaIkPeZxpo8dmUdu7M5QS+YyeYuXrxXPV7eH5pVW8boKEQA90uYzTRzVpGWVH/
+         j2j64D0WGEC1FXPUIaRpPGEroboyzQk+Pryl7L5LdGJQ9fkFVU13BBLVXjwGY5QHN27G
+         Yry+miEhOfsnw3q5pxrj+A+i24JspciVOjc5v82IQ9JMv2LhCzS+AgXETWHc5P8j07t4
+         7g1A==
+X-Gm-Message-State: AOAM533wvHb5zjTCTZwqkSVT2WeeA0LXh06LtsG+0lAwCwxJ8au6nIQb
+        tJFwV0C+jH+fhecumcOP7Vs=
+X-Google-Smtp-Source: ABdhPJyIyUMdwz3u6ZmBBB5w+U+vbMx0NlPpvQjr3Gf+YZCBZjb6DmFh+D3ifSeUDjBMxXdiWvrmYg==
+X-Received: by 2002:a05:6512:10c3:: with SMTP id k3mr15602867lfg.33.1591708479951;
+        Tue, 09 Jun 2020 06:14:39 -0700 (PDT)
 Received: from localhost.localdomain (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.gmail.com with ESMTPSA id l22sm4323522lji.120.2020.06.09.06.14.22
+        by smtp.gmail.com with ESMTPSA id l22sm4323522lji.120.2020.06.09.06.14.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 06:14:23 -0700 (PDT)
+        Tue, 09 Jun 2020 06:14:39 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -75,183 +76,70 @@ Cc:     =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@samsung.com>,
         linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         devicetree@vger.kernel.org
-Subject: [PATCH v4 00/37] Introduce memory interconnect for NVIDIA Tegra SoCs
-Date:   Tue,  9 Jun 2020 16:13:27 +0300
-Message-Id: <20200609131404.17523-1-digetx@gmail.com>
+Subject: [PATCH v4 12/37] PM / devfreq: tegra20: Use MC timings for building OPP table
+Date:   Tue,  9 Jun 2020 16:13:39 +0300
+Message-Id: <20200609131404.17523-13-digetx@gmail.com>
 X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200609131404.17523-1-digetx@gmail.com>
+References: <20200609131404.17523-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+The clk_round_rate() won't be usable for building OPP table once
+interconnect support will be added to the EMC driver because that CLK API
+function limits the rounded rate based on the clk rate that is imposed by
+active clk-users, and thus, the rounding won't work as expected if
+interconnect will set the minimum EMC clock rate before devfreq driver is
+loaded. The struct tegra_mc contains memory timings which could be used by
+the devfreq driver for building up OPP table instead of rounding clock
+rate, this patch implements this idea.
 
-This series brings initial support for memory interconnect to Tegra20 and
-Tegra30 SoCs.
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/devfreq/tegra20-devfreq.c | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
-For the starter only display controllers are getting interconnect API
-support, others could be supported later on. The display controllers
-have the biggest demand for interconnect API right now because dynamic
-memory frequency scaling can't be done safely without taking into account
-bandwidth requirement from the displays.
-
-Changelog:
-
-v4: - All drivers that use interconnect API now select it in the Kconfig in
-      order to properly express the build dependency.
-
-    - The IS_ENABLED(CONFIG_INTERCONNECT) is dropped now from all patches.
-
-    - Added MODULE_AUTHOR() to the modularized drivers, for completeness.
-
-    - Added missed TEGRA_MC Kconfig dependency for the Tegra20 EMC driver.
-
-    - Added more acks from Rob Herring that I accidentally missed to add in v3.
-
-v3: - Added acks from Rob Herring that were given to some of the v2 patches.
-
-    - Specified name of the TRM documentation chapter in the patch
-      "dt-bindings: host1x: Document new interconnect properties", which was
-      suggested by Rob Herring in the review comment to v2.
-
-    - Added patches that allow EMC drivers to be compiled as a loadable kernel
-      modules. This came up during of the v2 review when Georgi Djakov pointed
-      out that interconnect-core could be compiled as a kernel module. Please
-      note that the Tegra124 EMC driver is compile-tested only, I don't have
-      Tegra124 HW.
-
-    - In the review comment to [1] Stephen Boyd suggested that it will be
-      better not to make changes to clk API, which was needed in order to
-      avoid clashing of the interconnect driver with the devfreq in regards
-      to memory clk-rate rounding.
-
-      [1] https://patchwork.ozlabs.org/project/linux-tegra/patch/20200330231617.17079-3-digetx@gmail.com/
-
-      Stephen Boyd suggested that instead we should provide OPP table via DT.
-      I tried to investigate whether this could be done and turned out
-      it's a bit complicated. Technically it should be doable, but:
-
-        1. For now we don't fully support voltage scaling of the CORE regulator
-           and so OPP table in the DT isn't really needed today. We can
-           generate table from the memory timings, which is what Tegra devfreq
-           drivers already do.
-
-        2. The OPP table should be defined in the DT for the Memory Controller
-           node and then its usage somehow should be shared by both interconnect
-           and devfreq drivers. It's not obvious what's the best way to do it.
-
-      So, it will be much better to postpone the DT OPP table addition
-      until these questions are resolved. We can infer OPPs from the
-      memory timings and we could get the memory rates from the memory
-      driver directly, avoiding the problems induced by the clk API usage.
-      This idea is implemented in v3, see these patches:
-
-        PM / devfreq: tegra20: Use MC timings for building OPP table
-        PM / devfreq: tegra30: Use MC timings for building OPP table
-
-v2: - Instead of a single dma-mem interconnect path, the paths are now
-      defined per memory client.
-
-    - The EMC provider now uses #interconnect-cells=<0>.
-
-    - Dropped Tegra124 because there is no enough information about how to
-      properly calculate required EMC clock rate for it and I don't have
-      hardware for testing. Somebody else will have to work on it.
-
-    - Moved interconnect providers code into drivers/memory/tegra/*.
-
-    - Added "Create tegra20-devfreq device" patch because interconnect
-      is not very usable without the devfreq memory auto-scaling since
-      memory freq will be fixed to the display's requirement.
-
-Artur Świgoń (1):
-  interconnect: Relax requirement in of_icc_get_from_provider()
-
-Dmitry Osipenko (36):
-  clk: Export clk_hw_reparent()
-  clk: tegra: Remove Memory Controller lock
-  clk: tegra: Export Tegra20 EMC kernel symbols
-  memory: tegra20-emc: Make driver modular
-  memory: tegra30-emc: Make driver modular
-  memory: tegra124-emc: Make driver modular
-  memory: tegra124-emc: Use devm_platform_ioremap_resource
-  soc/tegra: fuse: Export tegra_read_ram_code()
-  memory: tegra20-emc: Initialize MC timings
-  PM / devfreq: tegra20: Silence deferred probe error
-  PM / devfreq: tegra30: Silence deferred probe error
-  PM / devfreq: tegra20: Use MC timings for building OPP table
-  PM / devfreq: tegra30: Use MC timings for building OPP table
-  PM / devfreq: tegra20: Add error messages to tegra_devfreq_target()
-  PM / devfreq: tegra30: Add error messages to tegra_devfreq_target()
-  PM / devfreq: tegra20: Adjust clocks conversion ratio and polling
-    interval
-  PM / devfreq: tegra20: Relax Kconfig dependency
-  dt-bindings: memory: tegra20: mc: Document new interconnect property
-  dt-bindings: memory: tegra20: emc: Document new interconnect property
-  dt-bindings: memory: tegra30: mc: Document new interconnect property
-  dt-bindings: memory: tegra30: emc: Document new interconnect property
-  dt-bindings: host1x: Document new interconnect properties
-  dt-bindings: memory: tegra20: Add memory client IDs
-  dt-bindings: memory: tegra30: Add memory client IDs
-  ARM: tegra: Add interconnect properties to Tegra20 device-tree
-  ARM: tegra: Add interconnect properties to Tegra30 device-tree
-  memory: tegra: Register as interconnect provider
-  memory: tegra20-emc: Use devm_platform_ioremap_resource
-  memory: tegra20-emc: Continue probing if timings are missing in
-    device-tree
-  memory: tegra20-emc: Register as interconnect provider
-  memory: tegra20-emc: Create tegra20-devfreq device
-  memory: tegra30-emc: Continue probing if timings are missing in
-    device-tree
-  memory: tegra30-emc: Register as interconnect provider
-  drm/tegra: dc: Support memory bandwidth management
-  drm/tegra: dc: Tune up high priority request controls for Tegra20
-  drm/tegra: dc: Extend debug stats with total number of events
-
- .../display/tegra/nvidia,tegra20-host1x.txt   |  68 +++++
- .../memory-controllers/nvidia,tegra20-emc.txt |   2 +
- .../memory-controllers/nvidia,tegra20-mc.txt  |   3 +
- .../nvidia,tegra30-emc.yaml                   |   6 +
- .../memory-controllers/nvidia,tegra30-mc.yaml |   5 +
- arch/arm/boot/dts/tegra20.dtsi                |  22 +-
- arch/arm/boot/dts/tegra30.dtsi                |  23 +-
- drivers/clk/clk.c                             |   1 +
- drivers/clk/tegra/clk-divider.c               |   4 +-
- drivers/clk/tegra/clk-tegra114.c              |   6 +-
- drivers/clk/tegra/clk-tegra124-emc.c          |  63 ++--
- drivers/clk/tegra/clk-tegra124.c              |   8 +-
- drivers/clk/tegra/clk-tegra20-emc.c           |   3 +
- drivers/clk/tegra/clk-tegra20.c               |   3 +-
- drivers/clk/tegra/clk-tegra30.c               |   3 +-
- drivers/clk/tegra/clk.h                       |  14 +-
- drivers/devfreq/Kconfig                       |   2 +-
- drivers/devfreq/tegra20-devfreq.c             |  52 ++--
- drivers/devfreq/tegra30-devfreq.c             | 115 +++++--
- drivers/gpu/drm/tegra/Kconfig                 |   1 +
- drivers/gpu/drm/tegra/dc.c                    | 289 +++++++++++++++++-
- drivers/gpu/drm/tegra/dc.h                    |  13 +
- drivers/gpu/drm/tegra/drm.c                   |  19 ++
- drivers/gpu/drm/tegra/plane.c                 |   1 +
- drivers/gpu/drm/tegra/plane.h                 |   4 +-
- drivers/interconnect/core.c                   |  11 +-
- drivers/memory/tegra/Kconfig                  |   9 +-
- drivers/memory/tegra/mc.c                     | 117 +++++++
- drivers/memory/tegra/mc.h                     |   8 +
- drivers/memory/tegra/tegra124-emc.c           |  36 ++-
- drivers/memory/tegra/tegra20-emc.c            | 215 +++++++++++--
- drivers/memory/tegra/tegra30-emc.c            | 156 ++++++++--
- drivers/soc/tegra/fuse/tegra-apbmisc.c        |   2 +
- include/dt-bindings/memory/tegra20-mc.h       |  53 ++++
- include/dt-bindings/memory/tegra30-mc.h       |  67 ++++
- include/linux/clk/tegra.h                     |  11 +
- include/soc/tegra/emc.h                       |  16 -
- include/soc/tegra/mc.h                        |   3 +
- 38 files changed, 1235 insertions(+), 199 deletions(-)
- delete mode 100644 include/soc/tegra/emc.h
-
+diff --git a/drivers/devfreq/tegra20-devfreq.c b/drivers/devfreq/tegra20-devfreq.c
+index 6469dc69c5e0..bf504ca4dea2 100644
+--- a/drivers/devfreq/tegra20-devfreq.c
++++ b/drivers/devfreq/tegra20-devfreq.c
+@@ -123,8 +123,7 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+ {
+ 	struct tegra_devfreq *tegra;
+ 	struct tegra_mc *mc;
+-	unsigned long max_rate;
+-	unsigned long rate;
++	unsigned int i;
+ 	int err;
+ 
+ 	mc = tegra_get_memory_controller();
+@@ -151,12 +150,17 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+ 
+ 	tegra->regs = mc->regs;
+ 
+-	max_rate = clk_round_rate(tegra->emc_clock, ULONG_MAX);
+-
+-	for (rate = 0; rate <= max_rate; rate++) {
+-		rate = clk_round_rate(tegra->emc_clock, rate);
++	if (!mc->num_timings) {
++		err = dev_pm_opp_add(&pdev->dev,
++				     clk_get_rate(tegra->emc_clock), 0);
++		if (err) {
++			dev_err(&pdev->dev, "failed to add OPP: %d\n", err);
++			return err;
++		}
++	}
+ 
+-		err = dev_pm_opp_add(&pdev->dev, rate, 0);
++	for (i = 0; i < mc->num_timings; i++) {
++		err = dev_pm_opp_add(&pdev->dev, mc->timings[i].rate, 0);
+ 		if (err) {
+ 			dev_err(&pdev->dev, "failed to add opp: %d\n", err);
+ 			goto remove_opps;
 -- 
 2.26.0
 
