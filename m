@@ -5,48 +5,44 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50FDCC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B4DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A25520823
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:46:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8479720823
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:46:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="IBCBcaXw"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="fl9MRnJN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728872AbgFIMqx (ORCPT
+        id S1729724AbgFIMqz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 08:46:53 -0400
+        Tue, 9 Jun 2020 08:46:55 -0400
 Received: from perceval.ideasonboard.com ([213.167.242.64]:54342 "EHLO
         perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729599AbgFIMql (ORCPT
+        with ESMTP id S1729634AbgFIMqn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 08:46:41 -0400
+        Tue, 9 Jun 2020 08:46:43 -0400
 Received: from Q.local (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 7AE0118DB;
-        Tue,  9 Jun 2020 14:46:37 +0200 (CEST)
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 104331959;
+        Tue,  9 Jun 2020 14:46:39 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1591706797;
-        bh=yUDqaHQhhkfOJfrOhGeYQXYgQdqAUyO9Sr1tp6uX60I=;
+        s=mail; t=1591706799;
+        bh=FnfXSixkwt8D/IHmQKgp+pC938kjsBn3QArIwff1qxM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IBCBcaXwIMaM66OViixlYA8SyKxFiFbHL9Yri62GKuhsNOJMRe3zBQt9R3Yw2k9UH
-         fJbDUt4Fru0lRk8QWRxEw90O39W+HKkA8erw4s8brfvYT/+37xP8PiD26J+pdxPZkT
-         ZtEH/kPqZDllya2EHmEFhOWf6eXB5ZjMII/eppaU=
+        b=fl9MRnJNcVzXlCn98G49T2qZK7PMIK30UJZo4jpT5qNJ+GZGnaP6EMMgUmL0AqKZ4
+         DXB8iE5odAUuU8e7rKU/CQT4S++4tHclRw2q5w3W7S2IpcVsvd/nQlFu0b6ENN3+bj
+         adouhjQGUzQMyAcVm4eNDtz9pqVlvz+1hgDI8uEI=
 From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
 Cc:     linux-renesas-soc@vger.kernel.org,
         Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jason Baron <jbaron@akamai.com>,
         Jiri Kosina <trivial@kernel.org>,
-        linux-rdma@vger.kernel.org (open list:HFI1 DRIVER),
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 11/17] drivers: infiniband: Fix trivial spelling
-Date:   Tue,  9 Jun 2020 13:46:04 +0100
-Message-Id: <20200609124610.3445662-12-kieran.bingham+renesas@ideasonboard.com>
+Subject: [PATCH 13/17] include: dynamic_debug.h: Fix trivial spelling
+Date:   Tue,  9 Jun 2020 13:46:06 +0100
+Message-Id: <20200609124610.3445662-14-kieran.bingham+renesas@ideasonboard.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200609124610.3445662-1-kieran.bingham+renesas@ideasonboard.com>
 References: <20200609124610.3445662-1-kieran.bingham+renesas@ideasonboard.com>
@@ -64,22 +60,22 @@ Fix it up accordingly:
 
 Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 ---
- drivers/infiniband/hw/hfi1/ipoib_tx.c | 2 +-
+ include/linux/dynamic_debug.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/hfi1/ipoib_tx.c b/drivers/infiniband/hw/hfi1/ipoib_tx.c
-index 883cb9d48022..175290c56db9 100644
---- a/drivers/infiniband/hw/hfi1/ipoib_tx.c
-+++ b/drivers/infiniband/hw/hfi1/ipoib_tx.c
-@@ -364,7 +364,7 @@ static struct ipoib_txreq *hfi1_ipoib_send_dma_common(struct net_device *dev,
- 	if (unlikely(!tx))
- 		return ERR_PTR(-ENOMEM);
+diff --git a/include/linux/dynamic_debug.h b/include/linux/dynamic_debug.h
+index abcd5fde30eb..a06ef7380b2d 100644
+--- a/include/linux/dynamic_debug.h
++++ b/include/linux/dynamic_debug.h
+@@ -133,7 +133,7 @@ void __dynamic_ibdev_dbg(struct _ddebug *descriptor,
  
--	/* so that we can test if the sdma decriptors are there */
-+	/* so that we can test if the sdma descriptors are there */
- 	tx->txreq.num_desc = 0;
- 	tx->priv = priv;
- 	tx->txq = txp->txq;
+ /*
+  * "Factory macro" for generating a call to func, guarded by a
+- * DYNAMIC_DEBUG_BRANCH. The dynamic debug decriptor will be
++ * DYNAMIC_DEBUG_BRANCH. The dynamic debug descriptor will be
+  * initialized using the fmt argument. The function will be called with
+  * the address of the descriptor as first argument, followed by all
+  * the varargs. Note that fmt is repeated in invocations of this
 -- 
 2.25.1
 
