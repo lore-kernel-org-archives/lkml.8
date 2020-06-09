@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 964C2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38044C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:51:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F97C207C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:51:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15E0820774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:51:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725105;
-	bh=KBJDsnC/ruZzhFkAosuSNvcMKVC5aIEuK5TDQj8MtJI=;
+	s=default; t=1591725109;
+	bh=I/C5wTw0k+vOVdGvsWnZiMB/R9OHvicC4Y/1i2mXlxo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YiZEnAKbzw2L8lsr+Sul03Jh77atSEodWLMT/g9CVBpvfdzuOf32HlfOgYytcJYQl
-	 9gIu6yUZ0xhR7JknV/pUU2yUuemW03ivUUZZIJ+Nke3Y/nXhS3tI4SwK2ZEcRmM/j4
-	 9k6GvwvIAubDiSnRDgd3nNf66WVNWiISkP5elUf0=
+	b=0bUkqFb/wIxrsWqKs1XsTI3JuTmHF3D2tXx0PmTQ1ypShWRuzHTDfsszwqZKHmPjm
+	 QyMCzvje2bW7kY3eTZB5q3+9+RKrW2avtlKjlEnhduRcs5HDObLlr4kskOlpwHXsbd
+	 bi9flt0QN7AxWd/4mC5bzAR/MgUyT+Z5pn8b3uak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730436AbgFIRvl (ORCPT
+        id S1730781AbgFIRvq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:51:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38376 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:51:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732714AbgFIRui (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:50:38 -0400
+        id S1732722AbgFIRus (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:50:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF92E2074B;
-        Tue,  9 Jun 2020 17:50:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F503207ED;
+        Tue,  9 Jun 2020 17:50:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725038;
-        bh=KBJDsnC/ruZzhFkAosuSNvcMKVC5aIEuK5TDQj8MtJI=;
+        s=default; t=1591725047;
+        bh=I/C5wTw0k+vOVdGvsWnZiMB/R9OHvicC4Y/1i2mXlxo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iOA2Ig6hSGa1LbVtfK05wbl6sMs+xS3bCa7n8urh4drnR1OvY9KEbfhyj3TuTXZfu
-         pTmV9yEmM7v0xYgscyxrkwKGRZrFtguWzIiQQaN+LQCbcH2zbpqbo6QEE91C2Fvuly
-         1XD4kGHL7sSLZlqdxDiAkhjK+IrLBWbPmw7tU73w=
+        b=eAuj9UdgxUMJkcEH7Yot58uKnVRr9YNzNMc+YFZVV7bYvQtdwmqx2r76ZpWFkbI5t
+         6iV6kFs1/OPLXEZkUfPcS4HRQHvcKrutZn6dAlmtEK+dvnEdVP1SgqV/Dig+jqWpAc
+         2fJOLuEo1qpM2HoSzBfgbX2Q6H7cnBuVH+5anDUo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 4.14 44/46] x86/speculation: Add Ivy Bridge to affected list
-Date:   Tue,  9 Jun 2020 19:45:00 +0200
-Message-Id: <20200609174030.903153138@linuxfoundation.org>
+        stable@vger.kernel.org, Hu Jiahui <kirin.say@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.14 22/46] airo: Fix read overflows sending packets
+Date:   Tue,  9 Jun 2020 19:44:38 +0200
+Message-Id: <20200609174026.228819624@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174022.938987501@linuxfoundation.org>
 References: <20200609174022.938987501@linuxfoundation.org>
@@ -59,41 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 3798cc4d106e91382bfe016caa2edada27c2bb3f upstream
+commit 11e7a91994c29da96d847f676be023da6a2c1359 upstream.
 
-Make the docs match the code.
+The problem is that we always copy a minimum of ETH_ZLEN (60) bytes from
+skb->data even when skb->len is less than ETH_ZLEN so it leads to a read
+overflow.
 
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+The fix is to pad skb->data to at least ETH_ZLEN bytes.
+
+Cc: <stable@vger.kernel.org>
+Reported-by: Hu Jiahui <kirin.say@gmail.com>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200527184830.GA1164846@mwanda
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- Documentation/admin-guide/hw-vuln/special-register-buffer-data-sampling.rst |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/Documentation/admin-guide/hw-vuln/special-register-buffer-data-sampling.rst
-+++ b/Documentation/admin-guide/hw-vuln/special-register-buffer-data-sampling.rst
-@@ -27,6 +27,8 @@ by software using TSX_CTRL_MSR otherwise
-   =============  ============  ========
-   common name    Family_Model  Stepping
-   =============  ============  ========
-+  IvyBridge      06_3AH        All
-+
-   Haswell        06_3CH        All
-   Haswell_L      06_45H        All
-   Haswell_G      06_46H        All
-@@ -37,9 +39,8 @@ by software using TSX_CTRL_MSR otherwise
-   Skylake_L      06_4EH        All
-   Skylake        06_5EH        All
+---
+ drivers/net/wireless/cisco/airo.c |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+--- a/drivers/net/wireless/cisco/airo.c
++++ b/drivers/net/wireless/cisco/airo.c
+@@ -1928,6 +1928,10 @@ static netdev_tx_t mpi_start_xmit(struct
+ 		airo_print_err(dev->name, "%s: skb == NULL!",__func__);
+ 		return NETDEV_TX_OK;
+ 	}
++	if (skb_padto(skb, ETH_ZLEN)) {
++		dev->stats.tx_dropped++;
++		return NETDEV_TX_OK;
++	}
+ 	npacks = skb_queue_len (&ai->txq);
  
--  Kabylake_L     06_8EH        <=0xC
--
--  Kabylake       06_9EH        <=0xD
-+  Kabylake_L     06_8EH        <= 0xC
-+  Kabylake       06_9EH        <= 0xD
-   =============  ============  ========
+ 	if (npacks >= MAXTXQ - 1) {
+@@ -2130,6 +2134,10 @@ static netdev_tx_t airo_start_xmit(struc
+ 		airo_print_err(dev->name, "%s: skb == NULL!", __func__);
+ 		return NETDEV_TX_OK;
+ 	}
++	if (skb_padto(skb, ETH_ZLEN)) {
++		dev->stats.tx_dropped++;
++		return NETDEV_TX_OK;
++	}
  
- Related CVEs
+ 	/* Find a vacant FID */
+ 	for( i = 0; i < MAX_FIDS / 2 && (fids[i] & 0xffff0000); i++ );
+@@ -2204,6 +2212,10 @@ static netdev_tx_t airo_start_xmit11(str
+ 		airo_print_err(dev->name, "%s: skb == NULL!", __func__);
+ 		return NETDEV_TX_OK;
+ 	}
++	if (skb_padto(skb, ETH_ZLEN)) {
++		dev->stats.tx_dropped++;
++		return NETDEV_TX_OK;
++	}
+ 
+ 	/* Find a vacant FID */
+ 	for( i = MAX_FIDS / 2; i < MAX_FIDS && (fids[i] & 0xffff0000); i++ );
 
 
