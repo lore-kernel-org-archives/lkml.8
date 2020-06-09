@@ -2,165 +2,741 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UPPERCASE_50_75,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B84C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 19:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F07EFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 19:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AE77206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 19:41:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="uOh90i1B"
+	by mail.kernel.org (Postfix) with ESMTP id BFC58206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 19:41:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389386AbgFITlp (ORCPT
+        id S2389325AbgFITlt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 15:41:45 -0400
-Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:26360 "EHLO
-        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389350AbgFITlb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 15:41:31 -0400
-Received: from pps.filterd (m0170396.ppops.net [127.0.0.1])
-        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 059JbPEW026700;
-        Tue, 9 Jun 2020 15:41:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=T9irgzVCL7LJPLZqxd5NImvO9V7kKx0afgsKhA8gs4k=;
- b=uOh90i1BAfXCylHWQYysataPvYaeRSQPoQeKUgMJne9sl3xiMaz9XUw2DIaQ5lYNsjDl
- MjyKUirFkyIzPz4U1snqxKCyDY62Pe/JuhJjXnxKlQobV2QWbcQznY0rWjEDUrgPUG/7
- 528ZBmcK1zBMHzFaRKwUD97po0fWgD5TmDT8RcWJ6cMfJXvqRGU16AdcJGPHJwZq4hPn
- Yxb6jqHfDkto3aXGlxcmMpBOSHxY1FbLEMIThQmKYvgdIw4WZpATu76KuMwCHBxajf0k
- 4X82T6dGrgX7qKznA5U4n6N7+c6HrM/t8gTtK94bIDyz5rzKkagckz7AmOpkhdBqOP1X JA== 
-Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
-        by mx0b-00154904.pphosted.com with ESMTP id 31g6yy2jht-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 09 Jun 2020 15:41:22 -0400
-Received: from pps.filterd (m0089483.ppops.net [127.0.0.1])
-        by mx0b-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 059JX6ln167227;
-        Tue, 9 Jun 2020 15:41:22 -0400
-Received: from ausc60ps301.us.dell.com (ausc60ps301.us.dell.com [143.166.148.206])
-        by mx0b-00154901.pphosted.com with ESMTP id 31g7xfxyqk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 09 Jun 2020 15:41:22 -0400
-X-LoopCount0: from 10.166.132.129
-X-PREM-Routing: D-Outbound
-X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
-   d="scan'208";a="1450864496"
-From:   <Mario.Limonciello@dell.com>
-To:     <hdegoede@redhat.com>, <y.linux@paritcher.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        <platform-driver-x86@vger.kernel.org>, <mjg59@srcf.ucam.org>,
-        <pali@kernel.org>, <linux-input@vger.kernel.org>
-Subject: RE: [PATCH 2/3] platform/x86: dell-wmi: add new keymap type 0x0012
-Thread-Topic: [PATCH 2/3] platform/x86: dell-wmi: add new keymap type 0x0012
-Thread-Index: AQHWPUx5kZ6BCWcrZkepA13uOwTuTKjO2RsQgACifgD//7DjgIABQqkA///7V4CAAGDBgP//5M/A
-Date:   Tue, 9 Jun 2020 19:41:20 +0000
-Message-ID: <d9e3953bac9a4b4f8bf5b67add075368@AUSX13MPC105.AMER.DELL.COM>
-References: <cover.1591584631.git.y.linux@paritcher.com>
- <0dc191a3d16f0e114f6a8976433e248018e10c43.1591584631.git.y.linux@paritcher.com>
- <83fe431cacbc4708962767668ac8f06f@AUSX13MPC105.AMER.DELL.COM>
- <79bd59ee-dd37-bdc5-f6b4-00f2c33fdcff@paritcher.com>
- <7f9f0410696141cfabb0237d33b7b529@AUSX13MPC105.AMER.DELL.COM>
- <137d8e69-a83f-6129-19e0-316ef0a51076@redhat.com>
- <ae45da27126d470888ef0d839665b9ed@AUSX13MPC105.AMER.DELL.COM>
- <10fcfbe7-cf2e-0911-334b-60be3336c990@redhat.com>
-In-Reply-To: <10fcfbe7-cf2e-0911-334b-60be3336c990@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2020-06-09T19:41:19.0527934Z;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_ActionId=7475ca18-8a64-4486-b09d-f0463db4b82f;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [143.166.24.60]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 9 Jun 2020 15:41:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59910 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389295AbgFITlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 15:41:35 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 0EA6FAE0F;
+        Tue,  9 Jun 2020 19:41:34 +0000 (UTC)
+Received: by lion.mk-sys.cz (Postfix, from userid 1000)
+        id E809160485; Tue,  9 Jun 2020 21:41:29 +0200 (CEST)
+Date:   Tue, 9 Jun 2020 21:41:29 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "John W. Linville" <linville@tuxdriver.com>,
+        David Jander <david@protonic.nl>, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Russell King <linux@armlinux.org.uk>, mkl@pengutronix.de,
+        Marek Vasut <marex@denx.de>,
+        Christian Herber <christian.herber@nxp.com>,
+        Amit Cohen <amitc@mellanox.com>,
+        Petr Machata <petrm@mellanox.com>
+Subject: Re: [PATCH v3 1/3] update UAPI header copies
+Message-ID: <20200609194129.z2vajkc7i36epcf4@lion.mk-sys.cz>
+References: <20200609084718.14110-1-o.rempel@pengutronix.de>
+ <20200609084718.14110-2-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-09_13:2020-06-09,2020-06-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
- bulkscore=0 spamscore=0 mlxlogscore=963 cotscore=-2147483648 adultscore=0
- lowpriorityscore=0 priorityscore=1501 mlxscore=0 phishscore=0
- clxscore=1015 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006090148
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- mlxscore=0 adultscore=0 bulkscore=0 mlxlogscore=999 spamscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006090149
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200609084718.14110-2-o.rempel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBSaWdodCwgdGhhdCBpcyB3aGF0IEkgd2FzIHRoaW5raW5nLCBhbHRob3VnaCBmb3IgdGhlIHBv
-d2VyIGFkYXB0ZXIgY2FzZQ0KPiBJIHdhcyB0aGlua2luZyB0aGVyZSBhcmUgbm90IHNvIG11Y2gg
-dmFyaWFudHMgc28gd2UgY2FuIGp1c3QgZG8NCj4gYSBjb3VwbGUgb2YgZml4ZWQgc3RyaW5ncyBm
-b3IgdGhlIGNvbWJvcywgb3IgbWF5YmUganVzdCBzYXQgdGhhdA0KPiB0aGUgYWRhcHRlciBkb2Vz
-IG5vdCBkZWxpdmVycyBlbm91Z2ggcG93ZXIgYW5kIHRoYXQgYXQgbWluaW11bSBYIHdhdHRzDQo+
-IGlzIG5lY2Vzc2FyeSIgdGhlbiB3ZSBvbmx5IGhhdmUgMSB2YXJpYWJsZSBhbmQgd2UgY2FuIHBy
-b2JhYmx5IGVhc2lseQ0KPiBkbyBmaXhlZCBzdHJpbmdzIGZvciB0aGUgZmV3IGNhc2VzIG9mIFgu
-DQoNCkkgd291bGQgcmF0aGVyIGhhdmUgYSBnZW5lcmljIGZpeGVkIHN0cmluZyBvciBmaXhlZCBz
-dHJpbmdzIHdpdGggYSBzaW5nbGUNCnRoYW4gYW4gYXJyYXkuICBCdXQgdGhlIHByb2JsZW0gdGhl
-biBpcyB0aGF0IHRoZSBudW1iZXJzIGFyZSBub3QgZGlzY292ZXJhYmxlDQpmcm9tIGFueXdoZXJl
-IGFuZCB3b3VsZCBuZWVkIHRvIGJlIGhhcmRjb2RlZC4gIFNvIGluIHRoYXQgcmVnYXJkIEkgdGhp
-bmsgZ2VuZXJpYw0KZml4ZWQgc3RyaW5ncyBpcyB0aGUgb25seSB3YXkgdGhpcyBjYW4gd29yay4N
-Cg0KPiANCj4gT3Igd2UgY291bGQgZ2V0IGZhbmN5IGFuZCBkbyBzb21lIGdlbmVyaWMgbm90aWZp
-Y2F0aW9uIG1lY2hhbmlzbSBvdXRzaWRlDQo+IG9mIHByaW50ay9kbWVzZyB3aGVyZSB3ZSBwdXNo
-IGEgZm9ybWF0IHN0cmluZyArIHBhcmFtZXRlcnMgdG8gdGhlIGZvcm1hdA0KPiBzdHJpbmcgdG8g
-dXNlcnNwYWNlLiBTbyB0aGF0IHRoZSB0cmFuc2xhdGlvbiBjYW4gYmUgZG9uZSBvbiB0aGUgZm9y
-bWF0DQo+IHN0cmluZyByYXRoZXIgdGhlbiBvbiB0aGUgZW5kIHJlc3VsdC4gSSdtIG5vdCBzdXJl
-IHdlIG5lZWQgdG8gbWFrZSB0aGluZ3MNCj4gdGhhdCBjb21wbGljYXRlZCB0aG91Z2guDQo+IA0K
-PiA+PiBTbyB0aGUgaWRlYSB3b3VsZCBiZSB0aGF0IGUuZy4gZ25vbWUtc2hlbGwgY2FuIGxpc3Rl
-biBmb3IgdGhlc2UgaW4gc29tZQ0KPiB3YXkNCj4gPj4gYW5kIHRoZW4gc2hvdyBhIG5vdGlmaWNh
-dGlvbiBpbiBpdHMgbm90aWZpY2F0aW9uIG1lY2hhbmlzbSB3aXRoIHRoZQ0KPiA+PiBtZXNzYWdl
-LA0KPiA+PiBsaWtlIGhvdyBpdCBkb2VzIGZvciB3aGVuIHNvZnR3YXJlIHVwZGF0ZXMgYXJlIGF2
-YWlsYWJsZSBmb3IgZXhhbXBsZS4NCj4gPj4NCj4gPj4gSSB0aGluayB3ZSBjYW4gbWFrZSB0aGlz
-IGFzIHNpbXBsZSBhcyB1c2luZyB0aGUgbm9ybWFsIHByaW50ayBidWZmZXIgZm9yDQo+ID4+IHRo
-aXMNCj4gPj4gYW5kIHByZWZpeGluZyB0aGUgbWVzc2FnZXMgd2l0aCAiVVNFUiBOT1RJRlkiLCB3
-ZSBhbHJlYWR5IGhhdmUgc29tZQ0KPiA+PiBtZXNzYWdlcw0KPiA+PiBpbiB0aGUga2VybmVsIHdo
-aWNoIHdvdWxkIHF1YWxpZnkgZm9yIHRoaXMsIGUuZy4gaW4gdGhlIFVTQiBjb3JlIHdlDQo+IGhh
-dmU6DQo+ID4+DQo+ID4+ICAgICAgICAgICAgICAgICAgIGRldl9pbmZvKCZ1ZGV2LT5kZXYsICJu
-b3QgcnVubmluZyBhdCB0b3Agc3BlZWQ7ICINCj4gPj4gICAgICAgICAgICAgICAgICAgICAgICAg
-ICAiY29ubmVjdCB0byBhIGhpZ2ggc3BlZWQgaHViXG4iKTsNCj4gPj4NCj4gPj4gVGhpcyBvbmUg
-aXMgYWJvdXQgVVNCMSB2cyBVU0IyIHBvcnRzLCBidXQgd2UgaGF2ZSBhIHNpbWlsYXIgb25lDQo+
-IHNvbWV3aGVyZQ0KPiA+PiBmb3IgVVNCMiB2cyBVU0IzIHBvcnRzIChJIHRoaW5rKSB3aGljaCB3
-b3VsZCBhbHNvIGJlIGFuIGludGVyZXN0aW5nDQo+IG1lc3NhZ2UNCj4gPj4gdG8gYWN0dWFsbHkg
-c2hvdyB0byB0aGUgdXNlciBpbnNpZGUgdGhlIGRlc2t0b3AgZW52aXJvbm1lbnQuDQo+ID4+DQo+
-ID4+IFNvIHN0aWNraW5nIHdpdGggdGhlIGFib3ZlIGV4YW1wbGUsIHdlIGNvdWxkIGNoYW5nZSB0
-aGF0IHRvDQo+ID4+DQo+ID4+ICNkZWZpbmUgVVNFUl9OT1RJRlkgIlVTRVIgTk9USUZZOiAiDQo+
-ID4+DQo+ID4+IGRldl9pbmZvKCZ1ZGV2LT5kZXYsIFVTRVJfTk9USUZZICJub3QgcnVubmluZyBh
-dCB0b3Agc3BlZWQ7IGNvbm5lY3QgdG8gYQ0KPiA+PiBoaWdoIHNwZWVkIGh1YlxuIik7DQo+ID4+
-DQo+ID4+IEFuZCB0aGVuIHVzZXJzcGFjZSB3b3VsZCB0cmlnZ2VyIG9uIHRoZSAiVVNFUiBOT1RJ
-Rlk6ICIgcGFydCwga2VlcCB0aGUNCj4gPj4gYml0IGJlZm9yZSBpdCAod2hpY2ggZGVzY3JpYmVz
-IHRoZSBkZXZpY2UpIGFzIGlzLCB0cnkgdG8gdHJhbnNsYXRlDQo+ID4+IHRoZSB0ZXh0IGFmdGVy
-IGl0IGFuZCB0aGVuIGNvbWJpbmUgdGhlIHRleHQgYmVmb3JlIGl0ICsgdGhlIHBvc3NpYmx5DQo+
-ID4+IHRyYW5zbGF0ZWQgdGV4dCBhZnRlciBpdCBhbmQgc2hvdyB0aGF0IGFzIGEgbm90aWZpY2F0
-aW9uLg0KPiA+Pg0KPiA+PiBUaGUgcmVhc29uIGZvciAoYWIpdXNpbmcgdGhlIHByaW50ayByaW5n
-LWJ1ZmZlciBmb3IgdGhpcyBpcyB0aGF0DQo+ID4+IHdlIHdpbGwgc3RpbGwgd2FudCB0byBoYXZl
-IHRoZXNlIG1lc3NhZ2VzIGluIGRtZXNnIHRvbyBhbnl3YXlzLA0KPiA+PiBzbyB3aHkgYWRkIGEg
-bmV3IG1lY2hhbmlzbSBhbmQgc2VuZCB0aGUgc2FtZSBtZXNzYWdlIHR3aWNlIGlmDQo+ID4+IHdl
-IGNhbiBqdXN0IHRhZyB0aGUgbWVzc2FnZXMgaW5zaWRlIHRoZSBwcmludGsgcmluZy1idWZmZXIg
-Pw0KPiA+Pg0KPiA+PiBOb3RlIHRoZSBkZXZfaW5mbyBhYm92ZSB3b3VsZCBsaWtlbHkgYmUgcmVw
-bGFjZWQgd2l0aCBzb21lIG5ldw0KPiA+PiBoZWxwZXIgd2hpY2ggYWxzbyBkb2VzIHNvbWUgbWFn
-aWMgdG8gaGVscCB3aXRoIGdhdGhlcmluZyBhDQo+ID4+IGxpc3Qgb2Ygc3RyaW5ncyB0byB0cmFu
-c2xhdGUuDQo+ID4+DQo+ID4+IEFnYWluIGp1c3QgdGhpbmtpbmcgb3V0IGxvdWQgaGVyZS4gSWYg
-YW55b25lIGhhcyBhbnkgaW5pdGlhbA0KPiA+PiByZWFjdGlvbiB0byB0aGlzIHBsZWFzZSBsZXQg
-bWUga25vdy4uLg0KPiA+Pg0KPiA+DQo+ID4gQXMgYSBnZW5lcmFsIGNvbW1lbnQsIEkgdGhpbmsg
-aXQgY2FwdHVyZXMgdmVyeSB3ZWxsIHRoZSBwb3NzaWJpbGl0eQ0KPiA+IHRoYXQgdGhlIGtlcm5l
-bCBoYXMgbW9yZSBpbmZvcm1hdGlvbiB0aGFuIHVzZXJzcGFjZSBhYm91dCB0aGUNCj4gY2lyY3Vt
-c3RhbmNlcw0KPiA+IG9mIHNvbWV0aGluZyB0aGF0IGEgdXNlciBzaG91bGQgYmUgbm90aWZpZWQu
-ICBEZWZpbml0ZWx5IHRoYXQncyB0aGUNCj4gPiBjYXNlIGZvciB0aGVzZSBXTUkvQUNQSSBldmVu
-dHMsIGFuZCBJIHdvdWxkIHRoaW5rIHNpbWlsYXIgY2lyY3Vtc3RhbmNlcw0KPiA+IGNhbiBhcHBs
-eSB0byBvdGhlciBzdWJzeXN0ZW0gdG9vLg0KPiANCj4gUmlnaHQsIHRoYXQgd2FzIG15IGlkZWEg
-YmVoaW5kIGhhdmluZyBhIGdlbmVyaWMgbm90aWZpY2F0aW9uIG1lY2hhbmlzbS4NCj4gDQo+IFJl
-Z2FyZHMsDQo+IA0KPiBIYW5zDQoNCg==
+On Tue, Jun 09, 2020 at 10:47:16AM +0200, Oleksij Rempel wrote:
+> Update to net-dev:
+> dc0f3ed1973 ("net: phy: at803x: add cable diagnostics support for ATH9331 and ATH8032")
+> 
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
+
+Please rebase this commit (and the whole series - but the other two
+patches do not conflict) on current master branch and update from
+current kernel master so that we also get the documentation reference
+fix from kernel commit 72ef5e52b3f7 ("docs: fix broken references to
+text files").
+
+Michal
+
+>  uapi/linux/ethtool.h         |  25 ++-
+>  uapi/linux/ethtool_netlink.h | 326 +++++++++++++++++++++++++++++++++++
+>  uapi/linux/genetlink.h       |   2 +
+>  uapi/linux/if_link.h         |   7 +-
+>  uapi/linux/net_tstamp.h      |   6 +
+>  uapi/linux/netlink.h         | 103 +++++++++++
+>  uapi/linux/rtnetlink.h       |   6 +
+>  7 files changed, 471 insertions(+), 4 deletions(-)
+> 
+> diff --git a/uapi/linux/ethtool.h b/uapi/linux/ethtool.h
+> index d3dcb45..6074caa 100644
+> --- a/uapi/linux/ethtool.h
+> +++ b/uapi/linux/ethtool.h
+> @@ -594,6 +594,9 @@ struct ethtool_pauseparam {
+>   * @ETH_SS_LINK_MODES: link mode names
+>   * @ETH_SS_MSG_CLASSES: debug message class names
+>   * @ETH_SS_WOL_MODES: wake-on-lan modes
+> + * @ETH_SS_SOF_TIMESTAMPING: SOF_TIMESTAMPING_* flags
+> + * @ETH_SS_TS_TX_TYPES: timestamping Tx types
+> + * @ETH_SS_TS_RX_FILTERS: timestamping Rx filters
+>   */
+>  enum ethtool_stringset {
+>  	ETH_SS_TEST		= 0,
+> @@ -608,6 +611,9 @@ enum ethtool_stringset {
+>  	ETH_SS_LINK_MODES,
+>  	ETH_SS_MSG_CLASSES,
+>  	ETH_SS_WOL_MODES,
+> +	ETH_SS_SOF_TIMESTAMPING,
+> +	ETH_SS_TS_TX_TYPES,
+> +	ETH_SS_TS_RX_FILTERS,
+>  
+>  	/* add new constants above here */
+>  	ETH_SS_COUNT
+> @@ -1521,8 +1527,7 @@ enum ethtool_link_mode_bit_indices {
+>  	ETHTOOL_LINK_MODE_400000baseLR8_ER8_FR8_Full_BIT = 71,
+>  	ETHTOOL_LINK_MODE_400000baseDR8_Full_BIT	 = 72,
+>  	ETHTOOL_LINK_MODE_400000baseCR8_Full_BIT	 = 73,
+> -	ETHTOOL_LINK_MODE_FEC_LLRS_BIT                   = 74,
+> -
+> +	ETHTOOL_LINK_MODE_FEC_LLRS_BIT			 = 74,
+>  	/* must be last entry */
+>  	__ETHTOOL_LINK_MODE_MASK_NBITS
+>  };
+> @@ -1659,6 +1664,18 @@ static __inline__ int ethtool_validate_duplex(__u8 duplex)
+>  	return 0;
+>  }
+>  
+> +#define MASTER_SLAVE_CFG_UNSUPPORTED		0
+> +#define MASTER_SLAVE_CFG_UNKNOWN		1
+> +#define MASTER_SLAVE_CFG_MASTER_PREFERRED	2
+> +#define MASTER_SLAVE_CFG_SLAVE_PREFERRED	3
+> +#define MASTER_SLAVE_CFG_MASTER_FORCE		4
+> +#define MASTER_SLAVE_CFG_SLAVE_FORCE		5
+> +#define MASTER_SLAVE_STATE_UNSUPPORTED		0
+> +#define MASTER_SLAVE_STATE_UNKNOWN		1
+> +#define MASTER_SLAVE_STATE_MASTER		2
+> +#define MASTER_SLAVE_STATE_SLAVE		3
+> +#define MASTER_SLAVE_STATE_ERR			4
+> +
+>  /* Which connector port. */
+>  #define PORT_TP			0x00
+>  #define PORT_AUI		0x01
+> @@ -1897,7 +1914,9 @@ struct ethtool_link_settings {
+>  	__u8	eth_tp_mdix_ctrl;
+>  	__s8	link_mode_masks_nwords;
+>  	__u8	transceiver;
+> -	__u8	reserved1[3];
+> +	__u8	master_slave_cfg;
+> +	__u8	master_slave_state;
+> +	__u8	reserved1[1];
+>  	__u32	reserved[7];
+>  	__u32	link_mode_masks[0];
+>  	/* layout of link_mode_masks fields:
+> diff --git a/uapi/linux/ethtool_netlink.h b/uapi/linux/ethtool_netlink.h
+> index ad6d3a0..051b35b 100644
+> --- a/uapi/linux/ethtool_netlink.h
+> +++ b/uapi/linux/ethtool_netlink.h
+> @@ -24,6 +24,23 @@ enum {
+>  	ETHTOOL_MSG_DEBUG_SET,
+>  	ETHTOOL_MSG_WOL_GET,
+>  	ETHTOOL_MSG_WOL_SET,
+> +	ETHTOOL_MSG_FEATURES_GET,
+> +	ETHTOOL_MSG_FEATURES_SET,
+> +	ETHTOOL_MSG_PRIVFLAGS_GET,
+> +	ETHTOOL_MSG_PRIVFLAGS_SET,
+> +	ETHTOOL_MSG_RINGS_GET,
+> +	ETHTOOL_MSG_RINGS_SET,
+> +	ETHTOOL_MSG_CHANNELS_GET,
+> +	ETHTOOL_MSG_CHANNELS_SET,
+> +	ETHTOOL_MSG_COALESCE_GET,
+> +	ETHTOOL_MSG_COALESCE_SET,
+> +	ETHTOOL_MSG_PAUSE_GET,
+> +	ETHTOOL_MSG_PAUSE_SET,
+> +	ETHTOOL_MSG_EEE_GET,
+> +	ETHTOOL_MSG_EEE_SET,
+> +	ETHTOOL_MSG_TSINFO_GET,
+> +	ETHTOOL_MSG_CABLE_TEST_ACT,
+> +	ETHTOOL_MSG_CABLE_TEST_TDR_ACT,
+>  
+>  	/* add new constants above here */
+>  	__ETHTOOL_MSG_USER_CNT,
+> @@ -43,6 +60,24 @@ enum {
+>  	ETHTOOL_MSG_DEBUG_NTF,
+>  	ETHTOOL_MSG_WOL_GET_REPLY,
+>  	ETHTOOL_MSG_WOL_NTF,
+> +	ETHTOOL_MSG_FEATURES_GET_REPLY,
+> +	ETHTOOL_MSG_FEATURES_SET_REPLY,
+> +	ETHTOOL_MSG_FEATURES_NTF,
+> +	ETHTOOL_MSG_PRIVFLAGS_GET_REPLY,
+> +	ETHTOOL_MSG_PRIVFLAGS_NTF,
+> +	ETHTOOL_MSG_RINGS_GET_REPLY,
+> +	ETHTOOL_MSG_RINGS_NTF,
+> +	ETHTOOL_MSG_CHANNELS_GET_REPLY,
+> +	ETHTOOL_MSG_CHANNELS_NTF,
+> +	ETHTOOL_MSG_COALESCE_GET_REPLY,
+> +	ETHTOOL_MSG_COALESCE_NTF,
+> +	ETHTOOL_MSG_PAUSE_GET_REPLY,
+> +	ETHTOOL_MSG_PAUSE_NTF,
+> +	ETHTOOL_MSG_EEE_GET_REPLY,
+> +	ETHTOOL_MSG_EEE_NTF,
+> +	ETHTOOL_MSG_TSINFO_GET_REPLY,
+> +	ETHTOOL_MSG_CABLE_TEST_NTF,
+> +	ETHTOOL_MSG_CABLE_TEST_TDR_NTF,
+>  
+>  	/* add new constants above here */
+>  	__ETHTOOL_MSG_KERNEL_CNT,
+> @@ -185,6 +220,8 @@ enum {
+>  	ETHTOOL_A_LINKMODES_PEER,		/* bitset */
+>  	ETHTOOL_A_LINKMODES_SPEED,		/* u32 */
+>  	ETHTOOL_A_LINKMODES_DUPLEX,		/* u8 */
+> +	ETHTOOL_A_LINKMODES_MASTER_SLAVE_CFG,	/* u8 */
+> +	ETHTOOL_A_LINKMODES_MASTER_SLAVE_STATE,	/* u8 */
+>  
+>  	/* add new constants above here */
+>  	__ETHTOOL_A_LINKMODES_CNT,
+> @@ -197,6 +234,8 @@ enum {
+>  	ETHTOOL_A_LINKSTATE_UNSPEC,
+>  	ETHTOOL_A_LINKSTATE_HEADER,		/* nest - _A_HEADER_* */
+>  	ETHTOOL_A_LINKSTATE_LINK,		/* u8 */
+> +	ETHTOOL_A_LINKSTATE_SQI,		/* u32 */
+> +	ETHTOOL_A_LINKSTATE_SQI_MAX,		/* u32 */
+>  
+>  	/* add new constants above here */
+>  	__ETHTOOL_A_LINKSTATE_CNT,
+> @@ -228,6 +267,293 @@ enum {
+>  	ETHTOOL_A_WOL_MAX = __ETHTOOL_A_WOL_CNT - 1
+>  };
+>  
+> +/* FEATURES */
+> +
+> +enum {
+> +	ETHTOOL_A_FEATURES_UNSPEC,
+> +	ETHTOOL_A_FEATURES_HEADER,			/* nest - _A_HEADER_* */
+> +	ETHTOOL_A_FEATURES_HW,				/* bitset */
+> +	ETHTOOL_A_FEATURES_WANTED,			/* bitset */
+> +	ETHTOOL_A_FEATURES_ACTIVE,			/* bitset */
+> +	ETHTOOL_A_FEATURES_NOCHANGE,			/* bitset */
+> +
+> +	/* add new constants above here */
+> +	__ETHTOOL_A_FEATURES_CNT,
+> +	ETHTOOL_A_FEATURES_MAX = __ETHTOOL_A_FEATURES_CNT - 1
+> +};
+> +
+> +/* PRIVFLAGS */
+> +
+> +enum {
+> +	ETHTOOL_A_PRIVFLAGS_UNSPEC,
+> +	ETHTOOL_A_PRIVFLAGS_HEADER,			/* nest - _A_HEADER_* */
+> +	ETHTOOL_A_PRIVFLAGS_FLAGS,			/* bitset */
+> +
+> +	/* add new constants above here */
+> +	__ETHTOOL_A_PRIVFLAGS_CNT,
+> +	ETHTOOL_A_PRIVFLAGS_MAX = __ETHTOOL_A_PRIVFLAGS_CNT - 1
+> +};
+> +
+> +/* RINGS */
+> +
+> +enum {
+> +	ETHTOOL_A_RINGS_UNSPEC,
+> +	ETHTOOL_A_RINGS_HEADER,				/* nest - _A_HEADER_* */
+> +	ETHTOOL_A_RINGS_RX_MAX,				/* u32 */
+> +	ETHTOOL_A_RINGS_RX_MINI_MAX,			/* u32 */
+> +	ETHTOOL_A_RINGS_RX_JUMBO_MAX,			/* u32 */
+> +	ETHTOOL_A_RINGS_TX_MAX,				/* u32 */
+> +	ETHTOOL_A_RINGS_RX,				/* u32 */
+> +	ETHTOOL_A_RINGS_RX_MINI,			/* u32 */
+> +	ETHTOOL_A_RINGS_RX_JUMBO,			/* u32 */
+> +	ETHTOOL_A_RINGS_TX,				/* u32 */
+> +
+> +	/* add new constants above here */
+> +	__ETHTOOL_A_RINGS_CNT,
+> +	ETHTOOL_A_RINGS_MAX = (__ETHTOOL_A_RINGS_CNT - 1)
+> +};
+> +
+> +/* CHANNELS */
+> +
+> +enum {
+> +	ETHTOOL_A_CHANNELS_UNSPEC,
+> +	ETHTOOL_A_CHANNELS_HEADER,			/* nest - _A_HEADER_* */
+> +	ETHTOOL_A_CHANNELS_RX_MAX,			/* u32 */
+> +	ETHTOOL_A_CHANNELS_TX_MAX,			/* u32 */
+> +	ETHTOOL_A_CHANNELS_OTHER_MAX,			/* u32 */
+> +	ETHTOOL_A_CHANNELS_COMBINED_MAX,		/* u32 */
+> +	ETHTOOL_A_CHANNELS_RX_COUNT,			/* u32 */
+> +	ETHTOOL_A_CHANNELS_TX_COUNT,			/* u32 */
+> +	ETHTOOL_A_CHANNELS_OTHER_COUNT,			/* u32 */
+> +	ETHTOOL_A_CHANNELS_COMBINED_COUNT,		/* u32 */
+> +
+> +	/* add new constants above here */
+> +	__ETHTOOL_A_CHANNELS_CNT,
+> +	ETHTOOL_A_CHANNELS_MAX = (__ETHTOOL_A_CHANNELS_CNT - 1)
+> +};
+> +
+> +/* COALESCE */
+> +
+> +enum {
+> +	ETHTOOL_A_COALESCE_UNSPEC,
+> +	ETHTOOL_A_COALESCE_HEADER,			/* nest - _A_HEADER_* */
+> +	ETHTOOL_A_COALESCE_RX_USECS,			/* u32 */
+> +	ETHTOOL_A_COALESCE_RX_MAX_FRAMES,		/* u32 */
+> +	ETHTOOL_A_COALESCE_RX_USECS_IRQ,		/* u32 */
+> +	ETHTOOL_A_COALESCE_RX_MAX_FRAMES_IRQ,		/* u32 */
+> +	ETHTOOL_A_COALESCE_TX_USECS,			/* u32 */
+> +	ETHTOOL_A_COALESCE_TX_MAX_FRAMES,		/* u32 */
+> +	ETHTOOL_A_COALESCE_TX_USECS_IRQ,		/* u32 */
+> +	ETHTOOL_A_COALESCE_TX_MAX_FRAMES_IRQ,		/* u32 */
+> +	ETHTOOL_A_COALESCE_STATS_BLOCK_USECS,		/* u32 */
+> +	ETHTOOL_A_COALESCE_USE_ADAPTIVE_RX,		/* u8 */
+> +	ETHTOOL_A_COALESCE_USE_ADAPTIVE_TX,		/* u8 */
+> +	ETHTOOL_A_COALESCE_PKT_RATE_LOW,		/* u32 */
+> +	ETHTOOL_A_COALESCE_RX_USECS_LOW,		/* u32 */
+> +	ETHTOOL_A_COALESCE_RX_MAX_FRAMES_LOW,		/* u32 */
+> +	ETHTOOL_A_COALESCE_TX_USECS_LOW,		/* u32 */
+> +	ETHTOOL_A_COALESCE_TX_MAX_FRAMES_LOW,		/* u32 */
+> +	ETHTOOL_A_COALESCE_PKT_RATE_HIGH,		/* u32 */
+> +	ETHTOOL_A_COALESCE_RX_USECS_HIGH,		/* u32 */
+> +	ETHTOOL_A_COALESCE_RX_MAX_FRAMES_HIGH,		/* u32 */
+> +	ETHTOOL_A_COALESCE_TX_USECS_HIGH,		/* u32 */
+> +	ETHTOOL_A_COALESCE_TX_MAX_FRAMES_HIGH,		/* u32 */
+> +	ETHTOOL_A_COALESCE_RATE_SAMPLE_INTERVAL,	/* u32 */
+> +
+> +	/* add new constants above here */
+> +	__ETHTOOL_A_COALESCE_CNT,
+> +	ETHTOOL_A_COALESCE_MAX = (__ETHTOOL_A_COALESCE_CNT - 1)
+> +};
+> +
+> +/* PAUSE */
+> +
+> +enum {
+> +	ETHTOOL_A_PAUSE_UNSPEC,
+> +	ETHTOOL_A_PAUSE_HEADER,				/* nest - _A_HEADER_* */
+> +	ETHTOOL_A_PAUSE_AUTONEG,			/* u8 */
+> +	ETHTOOL_A_PAUSE_RX,				/* u8 */
+> +	ETHTOOL_A_PAUSE_TX,				/* u8 */
+> +
+> +	/* add new constants above here */
+> +	__ETHTOOL_A_PAUSE_CNT,
+> +	ETHTOOL_A_PAUSE_MAX = (__ETHTOOL_A_PAUSE_CNT - 1)
+> +};
+> +
+> +/* EEE */
+> +
+> +enum {
+> +	ETHTOOL_A_EEE_UNSPEC,
+> +	ETHTOOL_A_EEE_HEADER,				/* nest - _A_HEADER_* */
+> +	ETHTOOL_A_EEE_MODES_OURS,			/* bitset */
+> +	ETHTOOL_A_EEE_MODES_PEER,			/* bitset */
+> +	ETHTOOL_A_EEE_ACTIVE,				/* u8 */
+> +	ETHTOOL_A_EEE_ENABLED,				/* u8 */
+> +	ETHTOOL_A_EEE_TX_LPI_ENABLED,			/* u8 */
+> +	ETHTOOL_A_EEE_TX_LPI_TIMER,			/* u32 */
+> +
+> +	/* add new constants above here */
+> +	__ETHTOOL_A_EEE_CNT,
+> +	ETHTOOL_A_EEE_MAX = (__ETHTOOL_A_EEE_CNT - 1)
+> +};
+> +
+> +/* TSINFO */
+> +
+> +enum {
+> +	ETHTOOL_A_TSINFO_UNSPEC,
+> +	ETHTOOL_A_TSINFO_HEADER,			/* nest - _A_HEADER_* */
+> +	ETHTOOL_A_TSINFO_TIMESTAMPING,			/* bitset */
+> +	ETHTOOL_A_TSINFO_TX_TYPES,			/* bitset */
+> +	ETHTOOL_A_TSINFO_RX_FILTERS,			/* bitset */
+> +	ETHTOOL_A_TSINFO_PHC_INDEX,			/* u32 */
+> +
+> +	/* add new constants above here */
+> +	__ETHTOOL_A_TSINFO_CNT,
+> +	ETHTOOL_A_TSINFO_MAX = (__ETHTOOL_A_TSINFO_CNT - 1)
+> +};
+> +
+> +/* CABLE TEST */
+> +
+> +enum {
+> +	ETHTOOL_A_CABLE_TEST_UNSPEC,
+> +	ETHTOOL_A_CABLE_TEST_HEADER,		/* nest - _A_HEADER_* */
+> +
+> +	/* add new constants above here */
+> +	__ETHTOOL_A_CABLE_TEST_CNT,
+> +	ETHTOOL_A_CABLE_TEST_MAX = __ETHTOOL_A_CABLE_TEST_CNT - 1
+> +};
+> +
+> +/* CABLE TEST NOTIFY */
+> +enum {
+> +	ETHTOOL_A_CABLE_RESULT_CODE_UNSPEC,
+> +	ETHTOOL_A_CABLE_RESULT_CODE_OK,
+> +	ETHTOOL_A_CABLE_RESULT_CODE_OPEN,
+> +	ETHTOOL_A_CABLE_RESULT_CODE_SAME_SHORT,
+> +	ETHTOOL_A_CABLE_RESULT_CODE_CROSS_SHORT,
+> +};
+> +
+> +enum {
+> +	ETHTOOL_A_CABLE_PAIR_A,
+> +	ETHTOOL_A_CABLE_PAIR_B,
+> +	ETHTOOL_A_CABLE_PAIR_C,
+> +	ETHTOOL_A_CABLE_PAIR_D,
+> +};
+> +
+> +enum {
+> +	ETHTOOL_A_CABLE_RESULT_UNSPEC,
+> +	ETHTOOL_A_CABLE_RESULT_PAIR,		/* u8 ETHTOOL_A_CABLE_PAIR_ */
+> +	ETHTOOL_A_CABLE_RESULT_CODE,		/* u8 ETHTOOL_A_CABLE_RESULT_CODE_ */
+> +
+> +	__ETHTOOL_A_CABLE_RESULT_CNT,
+> +	ETHTOOL_A_CABLE_RESULT_MAX = (__ETHTOOL_A_CABLE_RESULT_CNT - 1)
+> +};
+> +
+> +enum {
+> +	ETHTOOL_A_CABLE_FAULT_LENGTH_UNSPEC,
+> +	ETHTOOL_A_CABLE_FAULT_LENGTH_PAIR,	/* u8 ETHTOOL_A_CABLE_PAIR_ */
+> +	ETHTOOL_A_CABLE_FAULT_LENGTH_CM,	/* u32 */
+> +
+> +	__ETHTOOL_A_CABLE_FAULT_LENGTH_CNT,
+> +	ETHTOOL_A_CABLE_FAULT_LENGTH_MAX = (__ETHTOOL_A_CABLE_FAULT_LENGTH_CNT - 1)
+> +};
+> +
+> +enum {
+> +	ETHTOOL_A_CABLE_TEST_NTF_STATUS_UNSPEC,
+> +	ETHTOOL_A_CABLE_TEST_NTF_STATUS_STARTED,
+> +	ETHTOOL_A_CABLE_TEST_NTF_STATUS_COMPLETED
+> +};
+> +
+> +enum {
+> +	ETHTOOL_A_CABLE_NEST_UNSPEC,
+> +	ETHTOOL_A_CABLE_NEST_RESULT,		/* nest - ETHTOOL_A_CABLE_RESULT_ */
+> +	ETHTOOL_A_CABLE_NEST_FAULT_LENGTH,	/* nest - ETHTOOL_A_CABLE_FAULT_LENGTH_ */
+> +	__ETHTOOL_A_CABLE_NEST_CNT,
+> +	ETHTOOL_A_CABLE_NEST_MAX = (__ETHTOOL_A_CABLE_NEST_CNT - 1)
+> +};
+> +
+> +enum {
+> +	ETHTOOL_A_CABLE_TEST_NTF_UNSPEC,
+> +	ETHTOOL_A_CABLE_TEST_NTF_HEADER,	/* nest - ETHTOOL_A_HEADER_* */
+> +	ETHTOOL_A_CABLE_TEST_NTF_STATUS,	/* u8 - _STARTED/_COMPLETE */
+> +	ETHTOOL_A_CABLE_TEST_NTF_NEST,		/* nest - of results: */
+> +
+> +	__ETHTOOL_A_CABLE_TEST_NTF_CNT,
+> +	ETHTOOL_A_CABLE_TEST_NTF_MAX = (__ETHTOOL_A_CABLE_TEST_NTF_CNT - 1)
+> +};
+> +
+> +/* CABLE TEST TDR */
+> +
+> +enum {
+> +	ETHTOOL_A_CABLE_TEST_TDR_CFG_UNSPEC,
+> +	ETHTOOL_A_CABLE_TEST_TDR_CFG_FIRST,		/* u32 */
+> +	ETHTOOL_A_CABLE_TEST_TDR_CFG_LAST,		/* u32 */
+> +	ETHTOOL_A_CABLE_TEST_TDR_CFG_STEP,		/* u32 */
+> +	ETHTOOL_A_CABLE_TEST_TDR_CFG_PAIR,		/* u8 */
+> +
+> +	/* add new constants above here */
+> +	__ETHTOOL_A_CABLE_TEST_TDR_CFG_CNT,
+> +	ETHTOOL_A_CABLE_TEST_TDR_CFG_MAX = __ETHTOOL_A_CABLE_TEST_TDR_CFG_CNT - 1
+> +};
+> +
+> +enum {
+> +	ETHTOOL_A_CABLE_TEST_TDR_UNSPEC,
+> +	ETHTOOL_A_CABLE_TEST_TDR_HEADER,	/* nest - _A_HEADER_* */
+> +	ETHTOOL_A_CABLE_TEST_TDR_CFG,		/* nest - *_TDR_CFG_* */
+> +
+> +	/* add new constants above here */
+> +	__ETHTOOL_A_CABLE_TEST_TDR_CNT,
+> +	ETHTOOL_A_CABLE_TEST_TDR_MAX = __ETHTOOL_A_CABLE_TEST_TDR_CNT - 1
+> +};
+> +
+> +/* CABLE TEST TDR NOTIFY */
+> +
+> +enum {
+> +	ETHTOOL_A_CABLE_AMPLITUDE_UNSPEC,
+> +	ETHTOOL_A_CABLE_AMPLITUDE_PAIR,         /* u8 */
+> +	ETHTOOL_A_CABLE_AMPLITUDE_mV,           /* s16 */
+> +
+> +	__ETHTOOL_A_CABLE_AMPLITUDE_CNT,
+> +	ETHTOOL_A_CABLE_AMPLITUDE_MAX = (__ETHTOOL_A_CABLE_AMPLITUDE_CNT - 1)
+> +};
+> +
+> +enum {
+> +	ETHTOOL_A_CABLE_PULSE_UNSPEC,
+> +	ETHTOOL_A_CABLE_PULSE_mV,		/* s16 */
+> +
+> +	__ETHTOOL_A_CABLE_PULSE_CNT,
+> +	ETHTOOL_A_CABLE_PULSE_MAX = (__ETHTOOL_A_CABLE_PULSE_CNT - 1)
+> +};
+> +
+> +enum {
+> +	ETHTOOL_A_CABLE_STEP_UNSPEC,
+> +	ETHTOOL_A_CABLE_STEP_FIRST_DISTANCE,	/* u32 */
+> +	ETHTOOL_A_CABLE_STEP_LAST_DISTANCE,	/* u32 */
+> +	ETHTOOL_A_CABLE_STEP_STEP_DISTANCE,	/* u32 */
+> +
+> +	__ETHTOOL_A_CABLE_STEP_CNT,
+> +	ETHTOOL_A_CABLE_STEP_MAX = (__ETHTOOL_A_CABLE_STEP_CNT - 1)
+> +};
+> +
+> +enum {
+> +	ETHTOOL_A_CABLE_TDR_NEST_UNSPEC,
+> +	ETHTOOL_A_CABLE_TDR_NEST_STEP,		/* nest - ETHTTOOL_A_CABLE_STEP */
+> +	ETHTOOL_A_CABLE_TDR_NEST_AMPLITUDE,	/* nest - ETHTOOL_A_CABLE_AMPLITUDE */
+> +	ETHTOOL_A_CABLE_TDR_NEST_PULSE,		/* nest - ETHTOOL_A_CABLE_PULSE */
+> +
+> +	__ETHTOOL_A_CABLE_TDR_NEST_CNT,
+> +	ETHTOOL_A_CABLE_TDR_NEST_MAX = (__ETHTOOL_A_CABLE_TDR_NEST_CNT - 1)
+> +};
+> +
+> +enum {
+> +	ETHTOOL_A_CABLE_TEST_TDR_NTF_UNSPEC,
+> +	ETHTOOL_A_CABLE_TEST_TDR_NTF_HEADER,	/* nest - ETHTOOL_A_HEADER_* */
+> +	ETHTOOL_A_CABLE_TEST_TDR_NTF_STATUS,	/* u8 - _STARTED/_COMPLETE */
+> +	ETHTOOL_A_CABLE_TEST_TDR_NTF_NEST,	/* nest - of results: */
+> +
+> +	/* add new constants above here */
+> +	__ETHTOOL_A_CABLE_TEST_TDR_NTF_CNT,
+> +	ETHTOOL_A_CABLE_TEST_TDR_NTF_MAX = __ETHTOOL_A_CABLE_TEST_TDR_NTF_CNT - 1
+> +};
+> +
+>  /* generic netlink info */
+>  #define ETHTOOL_GENL_NAME "ethtool"
+>  #define ETHTOOL_GENL_VERSION 1
+> diff --git a/uapi/linux/genetlink.h b/uapi/linux/genetlink.h
+> index 1317119..7c6c390 100644
+> --- a/uapi/linux/genetlink.h
+> +++ b/uapi/linux/genetlink.h
+> @@ -48,6 +48,7 @@ enum {
+>  	CTRL_CMD_NEWMCAST_GRP,
+>  	CTRL_CMD_DELMCAST_GRP,
+>  	CTRL_CMD_GETMCAST_GRP, /* unused */
+> +	CTRL_CMD_GETPOLICY,
+>  	__CTRL_CMD_MAX,
+>  };
+>  
+> @@ -62,6 +63,7 @@ enum {
+>  	CTRL_ATTR_MAXATTR,
+>  	CTRL_ATTR_OPS,
+>  	CTRL_ATTR_MCAST_GROUPS,
+> +	CTRL_ATTR_POLICY,
+>  	__CTRL_ATTR_MAX,
+>  };
+>  
+> diff --git a/uapi/linux/if_link.h b/uapi/linux/if_link.h
+> index cb88bcb..a8901a3 100644
+> --- a/uapi/linux/if_link.h
+> +++ b/uapi/linux/if_link.h
+> @@ -341,6 +341,7 @@ enum {
+>  	IFLA_BRPORT_NEIGH_SUPPRESS,
+>  	IFLA_BRPORT_ISOLATED,
+>  	IFLA_BRPORT_BACKUP_PORT,
+> +	IFLA_BRPORT_MRP_RING_OPEN,
+>  	__IFLA_BRPORT_MAX
+>  };
+>  #define IFLA_BRPORT_MAX (__IFLA_BRPORT_MAX - 1)
+> @@ -461,6 +462,7 @@ enum {
+>  	IFLA_MACSEC_REPLAY_PROTECT,
+>  	IFLA_MACSEC_VALIDATION,
+>  	IFLA_MACSEC_PAD,
+> +	IFLA_MACSEC_OFFLOAD,
+>  	__IFLA_MACSEC_MAX,
+>  };
+>  
+> @@ -487,6 +489,7 @@ enum macsec_validation_type {
+>  enum macsec_offload {
+>  	MACSEC_OFFLOAD_OFF = 0,
+>  	MACSEC_OFFLOAD_PHY = 1,
+> +	MACSEC_OFFLOAD_MAC = 2,
+>  	__MACSEC_OFFLOAD_END,
+>  	MACSEC_OFFLOAD_MAX = __MACSEC_OFFLOAD_END - 1,
+>  };
+> @@ -970,11 +973,12 @@ enum {
+>  #define XDP_FLAGS_SKB_MODE		(1U << 1)
+>  #define XDP_FLAGS_DRV_MODE		(1U << 2)
+>  #define XDP_FLAGS_HW_MODE		(1U << 3)
+> +#define XDP_FLAGS_REPLACE		(1U << 4)
+>  #define XDP_FLAGS_MODES			(XDP_FLAGS_SKB_MODE | \
+>  					 XDP_FLAGS_DRV_MODE | \
+>  					 XDP_FLAGS_HW_MODE)
+>  #define XDP_FLAGS_MASK			(XDP_FLAGS_UPDATE_IF_NOEXIST | \
+> -					 XDP_FLAGS_MODES)
+> +					 XDP_FLAGS_MODES | XDP_FLAGS_REPLACE)
+>  
+>  /* These are stored into IFLA_XDP_ATTACHED on dump. */
+>  enum {
+> @@ -994,6 +998,7 @@ enum {
+>  	IFLA_XDP_DRV_PROG_ID,
+>  	IFLA_XDP_SKB_PROG_ID,
+>  	IFLA_XDP_HW_PROG_ID,
+> +	IFLA_XDP_EXPECTED_FD,
+>  	__IFLA_XDP_MAX,
+>  };
+>  
+> diff --git a/uapi/linux/net_tstamp.h b/uapi/linux/net_tstamp.h
+> index f96e650..7ed0b3d 100644
+> --- a/uapi/linux/net_tstamp.h
+> +++ b/uapi/linux/net_tstamp.h
+> @@ -98,6 +98,9 @@ enum hwtstamp_tx_types {
+>  	 * receive a time stamp via the socket error queue.
+>  	 */
+>  	HWTSTAMP_TX_ONESTEP_P2P,
+> +
+> +	/* add new constants above here */
+> +	__HWTSTAMP_TX_CNT
+>  };
+>  
+>  /* possible values for hwtstamp_config->rx_filter */
+> @@ -140,6 +143,9 @@ enum hwtstamp_rx_filters {
+>  
+>  	/* NTP, UDP, all versions and packet modes */
+>  	HWTSTAMP_FILTER_NTP_ALL,
+> +
+> +	/* add new constants above here */
+> +	__HWTSTAMP_FILTER_CNT
+>  };
+>  
+>  /* SCM_TIMESTAMPING_PKTINFO control message */
+> diff --git a/uapi/linux/netlink.h b/uapi/linux/netlink.h
+> index 2c28d32..695c88e 100644
+> --- a/uapi/linux/netlink.h
+> +++ b/uapi/linux/netlink.h
+> @@ -245,4 +245,107 @@ struct nla_bitfield32 {
+>  	__u32 selector;
+>  };
+>  
+> +/*
+> + * policy descriptions - it's specific to each family how this is used
+> + * Normally, it should be retrieved via a dump inside another attribute
+> + * specifying where it applies.
+> + */
+> +
+> +/**
+> + * enum netlink_attribute_type - type of an attribute
+> + * @NL_ATTR_TYPE_INVALID: unused
+> + * @NL_ATTR_TYPE_FLAG: flag attribute (present/not present)
+> + * @NL_ATTR_TYPE_U8: 8-bit unsigned attribute
+> + * @NL_ATTR_TYPE_U16: 16-bit unsigned attribute
+> + * @NL_ATTR_TYPE_U32: 32-bit unsigned attribute
+> + * @NL_ATTR_TYPE_U64: 64-bit unsigned attribute
+> + * @NL_ATTR_TYPE_S8: 8-bit signed attribute
+> + * @NL_ATTR_TYPE_S16: 16-bit signed attribute
+> + * @NL_ATTR_TYPE_S32: 32-bit signed attribute
+> + * @NL_ATTR_TYPE_S64: 64-bit signed attribute
+> + * @NL_ATTR_TYPE_BINARY: binary data, min/max length may be specified
+> + * @NL_ATTR_TYPE_STRING: string, min/max length may be specified
+> + * @NL_ATTR_TYPE_NUL_STRING: NUL-terminated string,
+> + *	min/max length may be specified
+> + * @NL_ATTR_TYPE_NESTED: nested, i.e. the content of this attribute
+> + *	consists of sub-attributes. The nested policy and maxtype
+> + *	inside may be specified.
+> + * @NL_ATTR_TYPE_NESTED_ARRAY: nested array, i.e. the content of this
+> + *	attribute contains sub-attributes whose type is irrelevant
+> + *	(just used to separate the array entries) and each such array
+> + *	entry has attributes again, the policy for those inner ones
+> + *	and the corresponding maxtype may be specified.
+> + * @NL_ATTR_TYPE_BITFIELD32: &struct nla_bitfield32 attribute
+> + */
+> +enum netlink_attribute_type {
+> +	NL_ATTR_TYPE_INVALID,
+> +
+> +	NL_ATTR_TYPE_FLAG,
+> +
+> +	NL_ATTR_TYPE_U8,
+> +	NL_ATTR_TYPE_U16,
+> +	NL_ATTR_TYPE_U32,
+> +	NL_ATTR_TYPE_U64,
+> +
+> +	NL_ATTR_TYPE_S8,
+> +	NL_ATTR_TYPE_S16,
+> +	NL_ATTR_TYPE_S32,
+> +	NL_ATTR_TYPE_S64,
+> +
+> +	NL_ATTR_TYPE_BINARY,
+> +	NL_ATTR_TYPE_STRING,
+> +	NL_ATTR_TYPE_NUL_STRING,
+> +
+> +	NL_ATTR_TYPE_NESTED,
+> +	NL_ATTR_TYPE_NESTED_ARRAY,
+> +
+> +	NL_ATTR_TYPE_BITFIELD32,
+> +};
+> +
+> +/**
+> + * enum netlink_policy_type_attr - policy type attributes
+> + * @NL_POLICY_TYPE_ATTR_UNSPEC: unused
+> + * @NL_POLICY_TYPE_ATTR_TYPE: type of the attribute,
+> + *	&enum netlink_attribute_type (U32)
+> + * @NL_POLICY_TYPE_ATTR_MIN_VALUE_S: minimum value for signed
+> + *	integers (S64)
+> + * @NL_POLICY_TYPE_ATTR_MAX_VALUE_S: maximum value for signed
+> + *	integers (S64)
+> + * @NL_POLICY_TYPE_ATTR_MIN_VALUE_U: minimum value for unsigned
+> + *	integers (U64)
+> + * @NL_POLICY_TYPE_ATTR_MAX_VALUE_U: maximum value for unsigned
+> + *	integers (U64)
+> + * @NL_POLICY_TYPE_ATTR_MIN_LENGTH: minimum length for binary
+> + *	attributes, no minimum if not given (U32)
+> + * @NL_POLICY_TYPE_ATTR_MAX_LENGTH: maximum length for binary
+> + *	attributes, no maximum if not given (U32)
+> + * @NL_POLICY_TYPE_ATTR_POLICY_IDX: sub policy for nested and
+> + *	nested array types (U32)
+> + * @NL_POLICY_TYPE_ATTR_POLICY_MAXTYPE: maximum sub policy
+> + *	attribute for nested and nested array types, this can
+> + *	in theory be < the size of the policy pointed to by
+> + *	the index, if limited inside the nesting (U32)
+> + * @NL_POLICY_TYPE_ATTR_BITFIELD32_MASK: valid mask for the
+> + *	bitfield32 type (U32)
+> + * @NL_POLICY_TYPE_ATTR_PAD: pad attribute for 64-bit alignment
+> + */
+> +enum netlink_policy_type_attr {
+> +	NL_POLICY_TYPE_ATTR_UNSPEC,
+> +	NL_POLICY_TYPE_ATTR_TYPE,
+> +	NL_POLICY_TYPE_ATTR_MIN_VALUE_S,
+> +	NL_POLICY_TYPE_ATTR_MAX_VALUE_S,
+> +	NL_POLICY_TYPE_ATTR_MIN_VALUE_U,
+> +	NL_POLICY_TYPE_ATTR_MAX_VALUE_U,
+> +	NL_POLICY_TYPE_ATTR_MIN_LENGTH,
+> +	NL_POLICY_TYPE_ATTR_MAX_LENGTH,
+> +	NL_POLICY_TYPE_ATTR_POLICY_IDX,
+> +	NL_POLICY_TYPE_ATTR_POLICY_MAXTYPE,
+> +	NL_POLICY_TYPE_ATTR_BITFIELD32_MASK,
+> +	NL_POLICY_TYPE_ATTR_PAD,
+> +
+> +	/* keep last */
+> +	__NL_POLICY_TYPE_ATTR_MAX,
+> +	NL_POLICY_TYPE_ATTR_MAX = __NL_POLICY_TYPE_ATTR_MAX - 1
+> +};
+> +
+>  #endif /* __LINUX_NETLINK_H */
+> diff --git a/uapi/linux/rtnetlink.h b/uapi/linux/rtnetlink.h
+> index 9d802cd..bcb1ba4 100644
+> --- a/uapi/linux/rtnetlink.h
+> +++ b/uapi/linux/rtnetlink.h
+> @@ -609,11 +609,17 @@ enum {
+>  	TCA_HW_OFFLOAD,
+>  	TCA_INGRESS_BLOCK,
+>  	TCA_EGRESS_BLOCK,
+> +	TCA_DUMP_FLAGS,
+>  	__TCA_MAX
+>  };
+>  
+>  #define TCA_MAX (__TCA_MAX - 1)
+>  
+> +#define TCA_DUMP_FLAGS_TERSE (1 << 0) /* Means that in dump user gets only basic
+> +				       * data necessary to identify the objects
+> +				       * (handle, cookie, etc.) and stats.
+> +				       */
+> +
+>  #define TCA_RTA(r)  ((struct rtattr*)(((char*)(r)) + NLMSG_ALIGN(sizeof(struct tcmsg))))
+>  #define TCA_PAYLOAD(n) NLMSG_PAYLOAD(n,sizeof(struct tcmsg))
+>  
+> -- 
+> 2.27.0
+> 
