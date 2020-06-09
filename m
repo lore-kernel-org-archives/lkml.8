@@ -2,103 +2,140 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D793C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:14:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AEF6C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:15:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D01A2068D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:14:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ofzyfTDc"
+	by mail.kernel.org (Postfix) with ESMTP id 295312068D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:15:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591726513;
+	bh=Kz3s+85aToSNZor3lNSzTXgUCRi49bWyg4iRofM0lvo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=sUJHDMmM1K+fsp9NuDOWNUNDLuMrOu0wmTBFfXRBbPmc5qLpJRwqUBQ1zIGw3+SdG
+	 IAcamJzvE16ioEkGGwuAGWZEkjvFg8P/73G6Bc0JNazH0x/nqu7P7c8eYLCGcql7VG
+	 x/yEnVzfbKaC7wMHS0yqYXkRZd+OvIGUyKmIr5ak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388771AbgFISOz (ORCPT
+        id S1732683AbgFIRub (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:14:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45218 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732716AbgFISOs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 14:14:48 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9BEBC05BD1E;
-        Tue,  9 Jun 2020 11:14:48 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id b16so10400660pfi.13;
-        Tue, 09 Jun 2020 11:14:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=AS/XdckXtD5JdzBhAwpc/WtJW1ZnWelaj/7RjUzTTTY=;
-        b=ofzyfTDcbSR0iVmnOlwQrNgiLJk688yu4yKaniy1FmZvGhVlPmR+qx/S/V2J7M31i7
-         sBnfLijv4zGVBlM8tTHwV2tNvqMN+eDLy/8nYxIzkQtZvE6Q8X8CS9bzGYaRwW1CAcrc
-         Qrcz9dMBcwoiAizOECxolgNx0k32d1nYqZuCe9ln3pCAjSHZrgAmF4lyMxqvNMX3Z+aC
-         J6LVha9AtTt8375Pm2xUf/D/tE+irK0XKxAOAJsLCfkXGjeey0Wl3ZvgxB+IXUjmGal8
-         XZPVk9P3DPqQ8/qQzNUA6OI0QqTJQIJe7v/gRidSRM89xL/wXCYAIBPFoRdFNRIToIs9
-         eeBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=AS/XdckXtD5JdzBhAwpc/WtJW1ZnWelaj/7RjUzTTTY=;
-        b=adnKtZ/gvJ/HFaR4upUFiO93CY9SyzVPg5+H0XiMG6RpHlQKvcjYkCJZI6dnXhII/v
-         h6VpnI0+Zo4yP130dbSiq+24Au3LS5A2CE8Y2/fdsa2CpYd3oUPboxOr/IxZ//uef5Zp
-         qVEfS3NbGFp+z6TTDKOltUoDbm0HbOZt6OCIPl7M+5zC02QZ+oIUWE4ujqJXIn/aLba8
-         Lx6lePCk3NoBcW1vei0etulBx72Up6m98goQdJpoRvNs/kg4cLAJuY9O54XBHluZ3hJ8
-         QMZHri7NN/zfueplGLk2JD+nMofdJrG5xJfFdNC9Id+WD+ICWq9ZyYL7iZeYaKv3WKeK
-         51hw==
-X-Gm-Message-State: AOAM532iOUZlIK5AZrttVY8rex8/CbT0frUj033Nm5Akxi+nW5FAkjtX
-        PuW0U0BgW5Zl5+2Qccnd4D0=
-X-Google-Smtp-Source: ABdhPJx2SlXa0n42ZaJT1vZCe4xrRMIjnru6dBSBFP7GNH70CVg7MYDKbKWTswiYGotNLgBCKvVhAA==
-X-Received: by 2002:a63:eb42:: with SMTP id b2mr25756419pgk.105.1591726488350;
-        Tue, 09 Jun 2020 11:14:48 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id w12sm9688715pfn.68.2020.06.09.11.14.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Jun 2020 11:14:47 -0700 (PDT)
-Subject: Re: [PATCH v2 6/9] Revert "USB: pci-quirks: Add Raspberry Pi 4 quirk"
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
-        p.zabel@pengutronix.de, linux-kernel@vger.kernel.org,
-        Mathias Nyman <mathias.nyman@intel.com>
-Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, helgaas@kernel.org,
-        andy.shevchenko@gmail.com, mathias.nyman@linux.intel.com,
-        lorenzo.pieralisi@arm.com
-References: <20200609175003.19793-1-nsaenzjulienne@suse.de>
- <20200609175003.19793-7-nsaenzjulienne@suse.de>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <59accf8f-c947-4efb-f8fc-1df821b35c3d@gmail.com>
-Date:   Tue, 9 Jun 2020 11:14:44 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
+        Tue, 9 Jun 2020 13:50:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36744 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729535AbgFIRt5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:49:57 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 346D7207F9;
+        Tue,  9 Jun 2020 17:49:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591724996;
+        bh=Kz3s+85aToSNZor3lNSzTXgUCRi49bWyg4iRofM0lvo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zFmEIFo+hSYbHCScOYzZDvDii7UhQ2AOwvxCvQyXERc9nXywbTZTikgfuGMft1kfx
+         2LLYKYDdKHYRyqiiA9nDHoJ39MBlzGfe5MXSFpT5oNg6WO85yAQ9Ccgxdg5Xgz7jIT
+         ATS4284aLkjl9+xwhjBl1XsnSVXT94s+vEXqy5sw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        syzbot+1e925b4b836afe85a1c6@syzkaller-ppc64.appspotmail.com,
+        syzbot+587b2421926808309d21@syzkaller-ppc64.appspotmail.com,
+        syzbot+58320b7171734bf79d26@syzkaller.appspotmail.com,
+        syzbot+d6074fb08bdb2e010520@syzkaller.appspotmail.com,
+        Daniel Axtens <dja@axtens.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        David Rientjes <rientjes@google.com>,
+        Akash Goel <akash.goel@intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Salvatore Bonaccorso <carnil@debian.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 19/46] kernel/relay.c: handle alloc_percpu returning NULL in relay_open
+Date:   Tue,  9 Jun 2020 19:44:35 +0200
+Message-Id: <20200609174024.806888793@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200609174022.938987501@linuxfoundation.org>
+References: <20200609174022.938987501@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200609175003.19793-7-nsaenzjulienne@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Daniel Axtens <dja@axtens.net>
+
+commit 54e200ab40fc14c863bcc80a51e20b7906608fce upstream.
+
+alloc_percpu() may return NULL, which means chan->buf may be set to NULL.
+In that case, when we do *per_cpu_ptr(chan->buf, ...), we dereference an
+invalid pointer:
+
+  BUG: Unable to handle kernel data access at 0x7dae0000
+  Faulting instruction address: 0xc0000000003f3fec
+  ...
+  NIP relay_open+0x29c/0x600
+  LR relay_open+0x270/0x600
+  Call Trace:
+     relay_open+0x264/0x600 (unreliable)
+     __blk_trace_setup+0x254/0x600
+     blk_trace_setup+0x68/0xa0
+     sg_ioctl+0x7bc/0x2e80
+     do_vfs_ioctl+0x13c/0x1300
+     ksys_ioctl+0x94/0x130
+     sys_ioctl+0x48/0xb0
+     system_call+0x5c/0x68
+
+Check if alloc_percpu returns NULL.
+
+This was found by syzkaller both on x86 and powerpc, and the reproducer
+it found on powerpc is capable of hitting the issue as an unprivileged
+user.
+
+Fixes: 017c59c042d0 ("relay: Use per CPU constructs for the relay channel buffer pointers")
+Reported-by: syzbot+1e925b4b836afe85a1c6@syzkaller-ppc64.appspotmail.com
+Reported-by: syzbot+587b2421926808309d21@syzkaller-ppc64.appspotmail.com
+Reported-by: syzbot+58320b7171734bf79d26@syzkaller.appspotmail.com
+Reported-by: syzbot+d6074fb08bdb2e010520@syzkaller.appspotmail.com
+Signed-off-by: Daniel Axtens <dja@axtens.net>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Michael Ellerman <mpe@ellerman.id.au>
+Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
+Acked-by: David Rientjes <rientjes@google.com>
+Cc: Akash Goel <akash.goel@intel.com>
+Cc: Andrew Donnellan <ajd@linux.ibm.com>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: Salvatore Bonaccorso <carnil@debian.org>
+Cc: <stable@vger.kernel.org>	[4.10+]
+Link: http://lkml.kernel.org/r/20191219121256.26480-1-dja@axtens.net
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ kernel/relay.c |    5 +++++
+ 1 file changed, 5 insertions(+)
+
+--- a/kernel/relay.c
++++ b/kernel/relay.c
+@@ -580,6 +580,11 @@ struct rchan *relay_open(const char *bas
+ 		return NULL;
+ 
+ 	chan->buf = alloc_percpu(struct rchan_buf *);
++	if (!chan->buf) {
++		kfree(chan);
++		return NULL;
++	}
++
+ 	chan->version = RELAYFS_CHANNEL_VERSION;
+ 	chan->n_subbufs = n_subbufs;
+ 	chan->subbuf_size = subbuf_size;
 
 
-On 6/9/2020 10:49 AM, Nicolas Saenz Julienne wrote:
-> This reverts commit c65822fef4adc0ba40c37a47337376ce75f7a7bc.
-> 
-> The initialization of Raspberry Pi 4's USB chip is now handled through a
-> reset controller. No need to directly call the firmware routine trough a
-> pci quirk.
-> 
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
