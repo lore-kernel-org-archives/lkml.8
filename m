@@ -2,174 +2,132 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09F6FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 184F2C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8208207ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:57:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6D4B2074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:57:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="hvs/IFpk"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V/Ge9cmX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728549AbgFIJ5o (ORCPT
+        id S1728592AbgFIJ5v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 05:57:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53042 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727098AbgFIJ5m (ORCPT
+        Tue, 9 Jun 2020 05:57:51 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:42283 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727098AbgFIJ5t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 05:57:42 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 045C6C05BD1E
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 02:57:40 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id b27so20142827qka.4
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 02:57:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=mSZ9Pf7BMHDh3WUE/xt0FmuEkxc1Vdz25gGMRgBtWPg=;
-        b=hvs/IFpkcvVFV9C0DuVWpln5RNediRV7+SlNLZGIbWgMSdFuPGK70CEnXRvuVqiCPQ
-         yEz0uxDZjlVw+OgyYdC5rQMURQocdeM1dcKoGVbveeOVW45aLBMd+LKdCjvyf0+U7pop
-         Sv+Zo+H8eoCH+rONDcBcgGvxNF4AodAUCq+m7SWn3lCIe1T2HT81SjW3ryd/AFpkrtaT
-         5Wrmt5XSUiwS/Aj8HYtyDObXrego3RX3Y4NCKNNDkoN2bzxAnOCQr6G68ui1/BThRaca
-         XgPEhB2hS00JxvtU+R6xXL4KLlSQh5TUSwuXq2qn+KTv/j8a95WcISYbssHxOzdzH5lv
-         5wKQ==
+        Tue, 9 Jun 2020 05:57:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591696668;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ibKboGqiSHs1nijcwRb9DLkPlnX80F1iqE0itbybiSs=;
+        b=V/Ge9cmXLiNd7Afe80JENERLux+bgroMzmJO1Rmd87xMNpzY5KI3n9uB6lXm8FfgmZPQK8
+        OiSDWhoTFMth8KkX/7q+M90tXBACUB4aY7lZTvUubP3cLmcepxTyKy7a84G5mixYd73iqC
+        DfEXX0Dsg0qPp+gDDbHwFlD0+ME0oL8=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-153-X7nqIRilP9C3vTbKxQyEUg-1; Tue, 09 Jun 2020 05:57:46 -0400
+X-MC-Unique: X7nqIRilP9C3vTbKxQyEUg-1
+Received: by mail-wr1-f72.google.com with SMTP id f4so8400303wrp.21
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 02:57:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=mSZ9Pf7BMHDh3WUE/xt0FmuEkxc1Vdz25gGMRgBtWPg=;
-        b=YbLWwIPTpHJDg57ZdTpi+gCIppF83X3yBg+a+Ai2Q0XZ2LbnGxyrRi3nB2M8Sua8ox
-         iPsKlDP56VKUkKcAQrs0ndzb294szLZJuUBbDbUmPMnZXkljCkyLLg+xICjKessbvHjK
-         d3SMXsgPI7b49/rcOvv3IGXGoeNywyRRC7iMWn4hdP6VBQSCB6VQ8yaPUWMyEG0/U+sj
-         xCzJCBvst7srV2tawqF5pfI6nw4VOm7SayodK9N7zWr9nTkvQHSov3JKPVfrBQx8hDIe
-         F7Sj2YWuE7k/vYy31AKuZD3Im5qgJnjNQuMSq/z2AGlrhA0O/YlmrqcrnavJ0tAcEN4d
-         KMMw==
-X-Gm-Message-State: AOAM530u7BBQJgid9zyrGCZNOrcwQ4xOPL8IP2r6Bi6J2ZlBdXIwrAfv
-        jBivaM/BrQD6ppZiG/I0kFVwOawrV8CQKLg1NosC5Osf
-X-Google-Smtp-Source: ABdhPJxu6LS/DBVDrKsowqECfF6MhViQJW4MJiVqI/Gqv4K2dXJOO/xIxFFqQHdnBSnwNdXKJU2SU9BCvvkekboYeVo=
-X-Received: by 2002:a37:4f52:: with SMTP id d79mr26882586qkb.330.1591696659006;
- Tue, 09 Jun 2020 02:57:39 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ibKboGqiSHs1nijcwRb9DLkPlnX80F1iqE0itbybiSs=;
+        b=S7vIeKZjcxgXECP1gEVh63wUjd/RvfHAObLJo8ZYbRD5z3qP541damiWVetHqB5Nzi
+         YPko9bOEMVF2gLDBUe2lChvuXjX66zwrkA+W3FT/H6pbx7UPQyfpE0qic57/rx6kfD8F
+         IZndcoysooUwN/v1pEXDqnbP9QvHuN3C6HMJJ2gk1wJJ8FaYEXvKDDVs5xRpXkzON0Ay
+         DmpsYD/vmAKA8xR1WJcX55nJVfdm2fsJrwIuTGTJKC1F2o0VOXbQHVaud5RQukkY1Q+s
+         p6OmBdW4CBbAQNxmct3rpguJMauO56kHjVM3t0w3ZC/a76LCZm4Qqm0hz12uorqKfhw+
+         ooUg==
+X-Gm-Message-State: AOAM530BMplVrYbnl+Ncx6LZJAJblxK2pCj6ddK4UBdsVHiZVV/iNMkS
+        WAGE/oUFflR+Guq4X62pc1aiY2z4929FwuxPOqmqyjxvZBc2CvhjHYaUV5JHDTgnszwliiyhEsV
+        kb7RJHaREyWRz9EHhEibka0DC
+X-Received: by 2002:adf:fe07:: with SMTP id n7mr3395312wrr.240.1591696665231;
+        Tue, 09 Jun 2020 02:57:45 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwtipR1s180DRqzHexaQK8/Pl5cmXEYzJQ9vM4Nx4WXQAdi8dM4n59u6aYCvm3glAXpAyFksA==
+X-Received: by 2002:adf:fe07:: with SMTP id n7mr3395299wrr.240.1591696665042;
+        Tue, 09 Jun 2020 02:57:45 -0700 (PDT)
+Received: from [192.168.178.58] ([151.21.172.168])
+        by smtp.gmail.com with ESMTPSA id t14sm2849805wrb.94.2020.06.09.02.57.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jun 2020 02:57:44 -0700 (PDT)
+Subject: Re: [PATCH v2] KVM: x86: Unexport x86_fpu_cache and make it static
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200608180218.20946-1-sean.j.christopherson@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <8f94b6f1-d7f8-60d8-1d2e-59706ec8c763@redhat.com>
+Date:   Tue, 9 Jun 2020 11:57:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200516064507.19058-1-warthog618@gmail.com> <CAMpxmJUbC4qmUGM0Z-6hXsYPRSpEpNM7iXgc7XbMcf_epi0Lig@mail.gmail.com>
- <20200604160006.GA5730@sol> <CAMRc=MfS1sCTU3vs5Gq_6+Ubt_89HX34mqabtpGbAASo+SfzSw@mail.gmail.com>
- <20200606015647.GA8099@sol> <CAMRc=Mdz__0TD8Qa33KRK9PE6jLvxa_O_dDjA54MHBLOeMxWfg@mail.gmail.com>
- <20200609094338.GA16448@sol>
-In-Reply-To: <20200609094338.GA16448@sol>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 9 Jun 2020 11:57:27 +0200
-Message-ID: <CAMpxmJV9SL9pJpc5MwhREiP0On999CRW2Em4SbRKf9PQHOtPCg@mail.gmail.com>
-Subject: Re: [RFC PATCH] gpio: uapi: v2 proposal
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200608180218.20946-1-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wt., 9 cze 2020 o 11:43 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a):
->
-> On Tue, Jun 09, 2020 at 10:03:42AM +0200, Bartosz Golaszewski wrote:
-> > sob., 6 cze 2020 o 03:56 Kent Gibson <warthog618@gmail.com> napisa=C5=
-=82(a):
-> > >
-> >
-> > [snip!]
-> >
-> > > >
-> > > > I'd say yes - consolidation and reuse of data structures is always
-> > > > good and normally they are going to be wrapped in some kind of
-> > > > low-level user-space library anyway.
-> > > >
-> > >
-> > > Ok, and I've changed the values field name to bitmap, along with the =
-change
-> > > to a bitmap type, so the stuttering is gone.
-> > >
-> > > And, as the change to bitmap substantially reduced the size of
-> > > gpioline_config, I now embed that in the gpioline_info instead of
-> > > duplicating all the other fields.  The values field will be zeroed
-> > > when returned within info.
-> > >
-> >
-> > Could you post an example, I'm not sure I follow.
-> >
->
-> The gpioline_info_v2 now looks like this:
->
-> /**
->  * struct gpioline_info_v2 - Information about a certain GPIO line
->  * @name: the name of this GPIO line, such as the output pin of the line =
-on
->  * the chip, a rail or a pin header name on a board, as specified by the
->  * gpio chip, may be empty
->  * @consumer: a functional name for the consumer of this GPIO line as set
->  * by whatever is using it, will be empty if there is no current user but
->  * may also be empty if the consumer doesn't set this up
->  * @config: the configuration of the line.  Note that the values field is
->  * always zeroed.
->  * @offset: the local offset on this GPIO device, fill this in when
->  * requesting the line information from the kernel
->  * @padding: reserved for future use
->  */
-> struct gpioline_info_v2 {
->         char name[GPIO_MAX_NAME_SIZE];
->         char consumer[GPIO_MAX_NAME_SIZE];
->         struct gpioline_config config;
->         __u32 offset;
->         __u32 padding[GPIOLINE_INFO_V2_PAD_SIZE]; /* for future use */
-> };
->
-> Previously that had all the fields from config - other than the values.
->
-> When that is populated the config.values will always be zeroed.
->
+On 08/06/20 20:02, Sean Christopherson wrote:
+> Make x86_fpu_cache static now that FPU allocation and destruction is
+> handled entirely by common x86 code.
+> 
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+> 
+> v2: Rebased to kvm/queue, commit fb7333dfd812 ("KVM: SVM: fix calls ...").
+> 
+>  arch/x86/include/asm/kvm_host.h | 1 -
+>  arch/x86/kvm/x86.c              | 3 +--
+>  2 files changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 1da5858501ca..7030f2221259 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1306,7 +1306,6 @@ struct kvm_arch_async_pf {
+>  extern u64 __read_mostly host_efer;
+>  
+>  extern struct kvm_x86_ops kvm_x86_ops;
+> -extern struct kmem_cache *x86_fpu_cache;
+>  
+>  #define __KVM_HAVE_ARCH_VM_ALLOC
+>  static inline struct kvm *kvm_arch_alloc_vm(void)
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index c26dd1363151..e19f7c486d64 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -239,8 +239,7 @@ u64 __read_mostly host_xcr0;
+>  u64 __read_mostly supported_xcr0;
+>  EXPORT_SYMBOL_GPL(supported_xcr0);
+>  
+> -struct kmem_cache *x86_fpu_cache;
+> -EXPORT_SYMBOL_GPL(x86_fpu_cache);
+> +static struct kmem_cache *x86_fpu_cache;
+>  
+>  static struct kmem_cache *x86_emulator_cache;
+>  
+> 
 
-We'll probably abstract this away in libgpiod and your Go library but
-for someone looking at the ABI it may be confusing because a zeroed
-values array is still valid. I don't have a better idea though.
+Queued, thanks.
 
-[snip!]
+Paolo
 
->
-> > > > > And would it be useful for userspace to be able to influence the =
-size of
-> > > > > the event buffer (currently fixed at 16 events per line)?
-> > > > >
-> > > >
-> > > > Good question. I would prefer to not overdo it though. The event
-> > > > request would need to contain the desired kfifo size and we'd only
-> > > > allow to set it on request, right?
-> > > >
-> > >
-> > > Yeah, it would only be relevant if edge detection was set and, as per
-> > > edge detection itself, would only be settable via the request, not
-> > > via set_config.  It would only be a suggestion, as the kfifo size get=
-s
-> > > rounded up to a power of 2 anyway.  It would be capped - I'm open to
-> > > suggestions for a suitable max value.  And the 0 value would mean use
-> > > the default - currently 16 per line.
-> > >
-> >
-> > This sounds good. How about 512 for max value for now and we can
-> > always increase it if needed. I don't think we should explicitly cap
-> > it though - let the user specify any value and just silently limit it
-> > to 512 in the kernel.
-> >
->
-> It will be an internal cap only - no error if the user requests more.
-> I was thinking 1024, which corresponds to the maximum default - 16*64.
->
-
-Yes, this sounds good too.
-
-Bart
