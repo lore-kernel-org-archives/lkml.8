@@ -2,32 +2,32 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ADD6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95813C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D79AE2068D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:11:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EFD420691
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:11:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388620AbgFISLD (ORCPT
+        id S2388654AbgFISLj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:11:03 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:41282 "EHLO
+        Tue, 9 Jun 2020 14:11:39 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:41264 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388147AbgFISF5 (ORCPT
+        by vger.kernel.org with ESMTP id S2388141AbgFISF5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 9 Jun 2020 14:05:57 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jiidF-0001ow-LO; Tue, 09 Jun 2020 19:05:53 +0100
+        id 1jiidE-0001oI-OX; Tue, 09 Jun 2020 19:05:52 +0100
 Received: from ben by deadeye with local (Exim 4.94)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jiidE-006VvN-Ps; Tue, 09 Jun 2020 19:05:52 +0100
+        id 1jiidE-006VuZ-6h; Tue, 09 Jun 2020 19:05:52 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Dan Carpenter" <dan.carpenter@oracle.com>,
-        "Johannes Thumshirn" <jthumshirn@suse.de>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Date:   Tue, 09 Jun 2020 19:04:10 +0100
-Message-ID: <lsq.1591725832.803339175@decadent.org.uk>
+        "David S. Miller" <davem@davemloft.net>,
+        "Oliver Hartkopp" <socketcan@hartkopp.net>,
+        "yangerkun" <yangerkun@huawei.com>
+Date:   Tue, 09 Jun 2020 19:03:54 +0100
+Message-ID: <lsq.1591725832.366879170@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 19/61] scsi: mptfusion: Add bounds check in
- mptctl_hp_targetinfo()
+Subject: [PATCH 3.16 03/61] slcan: not call free_netdev before rtnl_unlock
+ in slcan_open
 In-Reply-To: <lsq.1591725831.850867383@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,34 +57,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Oliver Hartkopp <socketcan@hartkopp.net>
 
-commit a7043e9529f3c367cc4d82997e00be034cbe57ca upstream.
+commit 2091a3d42b4f339eaeed11228e0cbe9d4f92f558 upstream.
 
-My static checker complains about an out of bounds read:
+As the description before netdev_run_todo, we cannot call free_netdev
+before rtnl_unlock, fix it by reorder the code.
 
-    drivers/message/fusion/mptctl.c:2786 mptctl_hp_targetinfo()
-    error: buffer overflow 'hd->sel_timeout' 255 <= u32max.
+This patch is a 1:1 copy of upstream slip.c commit f596c87005f7
+("slip: not call free_netdev before rtnl_unlock in slip_open").
 
-It's true that we probably should have a bounds check here.
-
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reported-by: yangerkun <yangerkun@huawei.com>
+Signed-off-by: Oliver Hartkopp <socketcan@hartkopp.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/message/fusion/mptctl.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/can/slcan.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/message/fusion/mptctl.c
-+++ b/drivers/message/fusion/mptctl.c
-@@ -2698,6 +2698,8 @@ mptctl_hp_targetinfo(unsigned long arg)
- 				__FILE__, __LINE__, iocnum);
- 		return -ENODEV;
- 	}
-+	if (karg.hdr.id >= MPT_MAX_FC_DEVICES)
-+		return -EINVAL;
- 	dctlprintk(ioc, printk(MYIOC_s_DEBUG_FMT "mptctl_hp_targetinfo called.\n",
- 	    ioc->name));
+--- a/drivers/net/can/slcan.c
++++ b/drivers/net/can/slcan.c
+@@ -620,7 +620,10 @@ err_free_chan:
+ 	sl->tty = NULL;
+ 	tty->disc_data = NULL;
+ 	clear_bit(SLF_INUSE, &sl->flags);
++	/* do not call free_netdev before rtnl_unlock */
++	rtnl_unlock();
+ 	slc_free_netdev(sl->dev);
++	return err;
  
+ err_exit:
+ 	rtnl_unlock();
 
