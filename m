@@ -2,345 +2,130 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 998FCC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 06:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0670AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 06:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69CC32074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 06:57:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2FB22078D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 06:58:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="v3bF8HJ9"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="DGoJvZrz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbgFIG5V (ORCPT
+        id S1727811AbgFIG6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 02:57:21 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:18961 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725770AbgFIG5U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 02:57:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1591685839; x=1623221839;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=fnPPU8ZH6f5dbqstT5rByT9KestQPAM92Bb7SvZMRLs=;
-  b=v3bF8HJ9mY64JGjAKs3U+YvyhCbgzGiKXVoLFHrLQZ2HpSjh1t74tUG/
-   3+bW8K7QyfiP3a1Ykn5HkcW8oSd5Vc34ytk5poCfGR5hAPcGlT3ipDUWs
-   vKAzxnVAQi+Ua09JZpkSN4NB4A+D+Zfyk9LHsYI2BNuFpcvjMZdFUKk0H
-   4=;
-IronPort-SDR: p6MB8EL6xev+geyDfX7WtxK/oIMW3FZ4sxGzdZX9gqDH78Z9wx6ra4QJJH1yZCB2HcmNIHHTM/
- dfeDSkZKgj6A==
-X-IronPort-AV: E=Sophos;i="5.73,490,1583193600"; 
-   d="scan'208";a="50834252"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 09 Jun 2020 06:57:16 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com (Postfix) with ESMTPS id C28C3A1F38;
-        Tue,  9 Jun 2020 06:57:04 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 9 Jun 2020 06:57:03 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.53) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 9 Jun 2020 06:56:47 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
-        <foersleo@amazon.de>, <irogers@google.com>, <jolsa@redhat.com>,
-        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
-        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
-        <peterz@infradead.org>, <rdunlap@infradead.org>,
-        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
-        <sblbir@amazon.com>, <shakeelb@google.com>, <shuah@kernel.org>,
-        <sj38.park@gmail.com>, <snu@amazon.de>, <vbabka@suse.cz>,
-        <vdavydov.dev@gmail.com>, <yang.shi@linux.alibaba.com>,
-        <ying.huang@intel.com>, <david@redhat.com>,
-        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [RFC v11 8/8] Documentation/admin-guide/mm: Document DAMON-based operation schemes
-Date:   Tue, 9 Jun 2020 08:53:20 +0200
-Message-ID: <20200609065320.12941-9-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200609065320.12941-1-sjpark@amazon.com>
-References: <20200609065320.12941-1-sjpark@amazon.com>
+        Tue, 9 Jun 2020 02:58:32 -0400
+Received: from mail-eopbgr40066.outbound.protection.outlook.com ([40.107.4.66]:63398
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725770AbgFIG6a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 02:58:30 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=S8JQk72lki02iAwhgi2JIBRRBBxOeLEDRfsDEK9HE869Ivzwd77O81mfvxaPhaMnzmP09rzzJ7uh2gzwEvXXpZu4ryaZeAVjG1BJK8tGAa+tAkfPN2sKdSdiByzT0Ofh3ueparjxyZW9R1XFvVS4Z+0H5cmUa/cQKRmNei8LK9s+7ohYxfKCb6QHepBwj4ILX+j3tYOl6EqJEph1WlJJ86E/RPDtCtZB6Bo+nnwliGABB9Yh28ikRAz5AYXuFgqexSOe98eyvNz+xD8H13/jhvrZwHYBLkvhLS++h3TryyqraQD3BssxE8SDbr6DkcVD2IM1qx4VEWC6yvKNV/1WXQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KwfbniCexmO1BaXUKybOutlIJi0ATeuUtxpiEEzu4KU=;
+ b=mR1Vxrzu9NTabog/xKpjiKh2pDKgHEM7KQU2iFwm/Jo+gd4yovMy67uygKuXoR9VWY8qiv6lPZBQfctnkNH295BvU9uaCn2F9k7Pd4paSavVXx5Efq8dMq9/ItjeN0qxo3B1SA47XMV+jEJsiiP8IHlTwvR6xJ9n4FDOvoNdkqzBiaaPTiwOXcFv1/0xcULBc4+yj041A6O2F2QsrI+e2cf1hk5jLN9cCm/E2+/Irf8AGyFOJTHLZGyMoEzAhymZpneiaqQ46nYrjutgQIyEh8uk0cXlRpgc2EyyzPjCdu3Z60XKotAXRaG4d4mxunixU0JZT9xlQuBUMa7c98T2Gg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KwfbniCexmO1BaXUKybOutlIJi0ATeuUtxpiEEzu4KU=;
+ b=DGoJvZrzY595X7PqzI5JyYCj8ldm5dUqQJJM4ixIrYMUv87ow2PP3csay2UVti4zxuXUAKJ9/9gNAQhLA67PB5yQxxLDRBKmZpzgZR+tWpo4bx/ek9OKyqg07POMAuCsQbPWxye8+W58LkCz2ek5scntsAtBo8yfAQ5Bx7seXwg=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none
+ header.from=mellanox.com;
+Received: from AM0PR0502MB3826.eurprd05.prod.outlook.com
+ (2603:10a6:208:1b::25) by AM0PR0502MB3953.eurprd05.prod.outlook.com
+ (2603:10a6:208:2::10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Tue, 9 Jun
+ 2020 06:58:25 +0000
+Received: from AM0PR0502MB3826.eurprd05.prod.outlook.com
+ ([fe80::2dae:c2a2:c26a:f5b]) by AM0PR0502MB3826.eurprd05.prod.outlook.com
+ ([fe80::2dae:c2a2:c26a:f5b%7]) with mapi id 15.20.3066.023; Tue, 9 Jun 2020
+ 06:58:25 +0000
+Subject: Re: [RFC PATCH net-next 07/10] mlxsw: spectrum_ethtool: Add link
+ extended state
+To:     Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org
+Cc:     davem@davemloft.net, kuba@kernel.org, corbet@lwn.net,
+        jiri@mellanox.com, idosch@mellanox.com, shuah@kernel.org,
+        mkubecek@suse.cz, gustavo@embeddedor.com,
+        cforno12@linux.vnet.ibm.com, andrew@lunn.ch,
+        linux@rempel-privat.de, alexandru.ardelean@analog.com,
+        ayal@mellanox.com, petrm@mellanox.com, mlxsw@mellanox.com,
+        liuhangbin@gmail.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+References: <20200607145945.30559-1-amitc@mellanox.com>
+ <20200607145945.30559-8-amitc@mellanox.com>
+ <7dcb004e-7bab-3026-7863-af16c1a4d556@gmail.com>
+From:   Amit Cohen <amitc@mellanox.com>
+Message-ID: <0e550c27-3e8a-2d70-65f1-78b300110ba0@mellanox.com>
+Date:   Tue, 9 Jun 2020 09:58:19 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+In-Reply-To: <7dcb004e-7bab-3026-7863-af16c1a4d556@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM0P190CA0023.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:208:190::33) To AM0PR0502MB3826.eurprd05.prod.outlook.com
+ (2603:10a6:208:1b::25)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.162.53]
-X-ClientProxiedBy: EX13D31UWA004.ant.amazon.com (10.43.160.217) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.1.5] (87.68.150.248) by AM0P190CA0023.EURP190.PROD.OUTLOOK.COM (2603:10a6:208:190::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18 via Frontend Transport; Tue, 9 Jun 2020 06:58:22 +0000
+X-Originating-IP: [87.68.150.248]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: bf878b8a-59ce-4ea4-d979-08d80c42812e
+X-MS-TrafficTypeDiagnostic: AM0PR0502MB3953:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM0PR0502MB39530E053284E176530F6EE0D7820@AM0PR0502MB3953.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3826;
+X-Forefront-PRVS: 042957ACD7
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: /Omc9wJAyIOpehIsDqz7lljADwBbwmApjmLjHUAuvK5jlSAmL56IYSwIRzZqmC7CuEy1pwIegtOTRNvGV4X3N5fcg3+ifFxbENn6P+IzRGpbvQ2Ep/RasOjbN0cLziBgcV7FyAeBQWHjK9urBPx3lq7O/Or/W0abTeZieeyzcH7LNCTmI6t183ewNUi/oBfviBEzioU/hsKp/Pk9yA5UqIEaTcUjQuarNtcgdZSeZ76Kz5JdpMyT20LgjtpMM+7jKF/Zvusd0sHIvMl8ZAv20YUm9iahg2JbE7TxXYxJH3FfD/7eSipQNIgsDYjWrqZjKl/+rtbLIRNWXFs6G5hUwBJnAh77qcR7yp/8E1pAaVy/higD8SqNt00GdqrjXz8W
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR0502MB3826.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(396003)(136003)(39860400002)(376002)(31686004)(16576012)(2906002)(316002)(26005)(186003)(5660300002)(36756003)(66556008)(66476007)(6486002)(6666004)(66946007)(53546011)(2616005)(31696002)(478600001)(956004)(52116002)(8676002)(16526019)(4326008)(7416002)(4744005)(86362001)(83380400001)(8936002)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: D6RO7mH6nhQi/rqLMy1vgy18rOm8sFPz5TUEW3RcFajmAItoBia0quSiWegz5WJ4vzU3ehD2G8htlem0n8fK1DY7ksW66xTMS6+rQ+GIhSavB2DubQEapiyC69zq92cG8wHYHgu9mW2Kc81xK6jbM6nCdX0AQF53du4gmhUchMnUrqb6ZCfPj7J1X1grmtqnyu3AGCKSnG1EbPnR6Os/4p8p2FxhjHKKOfrNVjf7r+lwU8EaGqtPRy8rNUYI3USfamaZclbqWzYdKGfFpGM6/hrZWOQxaHV6YxrAQgio9MrfPSHF/FtoZsQZJtjk4P00LAbh7RqfJDcIO2CMgqGpQMkix2sAc3DT1jZKQ4JdFakZLfrdvXeU7AJ/2/pJTpw2xAfppIdGVR4bhjqGSpY8dc8srsXo6Q36cdtpaJjOLkE1yQI3sjHNVpt0espw462dUwL0lyl/yLdT5gn3SRCARnWv9X6Zo+APJgcCu45+ww4=
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bf878b8a-59ce-4ea4-d979-08d80c42812e
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2020 06:58:25.0229
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5AsyouWyR1RrzBCYOl2Os45ndrZT4SM5wzUb73FfuTecd5QK0wZfMkTWKoMEpNeDCcLpF43BKlcXea1pKsQP6A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR0502MB3953
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+On 07-Jun-20 21:25, Florian Fainelli wrote:
+> 
+> 
+> On 6/7/2020 7:59 AM, Amit Cohen wrote:
+>> Implement .get_down_ext_state() as part of ethtool_ops.
+>> Query link down reason from PDDR register and convert it to ethtool
+>> ext_state.
+>>
+>> In case that more information than common ext_state is provided,
+>> fill ext_substate also with the appropriate value.
+>>
+>> Signed-off-by: Amit Cohen <amitc@mellanox.com>
+>> Reviewed-by: Petr Machata <petrm@mellanox.com>
+>> Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+> 
+> Is the firmware smart enough to report
+> ETHTOOL_EXT_SUBSTATE_LT_KR_FRAME_LOCK_NOT_ACQUIRED only when using a *KR
+> link mode for instance, or do you need to sanitize that against the
+> supported/advertised mode?
+> 
 
-This commit documents DAMON-based operation schemes in the DAMON
-document.
-
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- Documentation/admin-guide/mm/damon/guide.rst |  35 +++++
- Documentation/admin-guide/mm/damon/plans.rst |  26 +---
- Documentation/admin-guide/mm/damon/usage.rst | 127 +++++++++++++++++--
- 3 files changed, 155 insertions(+), 33 deletions(-)
-
-diff --git a/Documentation/admin-guide/mm/damon/guide.rst b/Documentation/admin-guide/mm/damon/guide.rst
-index 4a840d1b02d4..c10f65ce721c 100644
---- a/Documentation/admin-guide/mm/damon/guide.rst
-+++ b/Documentation/admin-guide/mm/damon/guide.rst
-@@ -55,6 +55,11 @@ heats``.  If it shows a simple pattern consists of a small number of memory
- regions having high contrast of access temperature, you could consider `Manual
- Program Optimization`_.
- 
-+If the access pattern is very frequently changing so that you cannot figure out
-+what is the performance important region using your human eye, `Automated
-+DAMON-based Memory Operations`_ might help the case owing to its machine-level
-+microscope view.
-+
- You don't need to take only one approach among the above plans, but you could
- use multiple of the above approaches to maximize the benefit.  If you still
- want to absorb more benefits, you should develop `Personalized DAMON
-@@ -158,6 +163,36 @@ object is the hot object.
-           The chronological changes of working set size.
- 
- 
-+Automated DAMON-based Memory Operations
-+---------------------------------------
-+
-+Though `Manual Program Optimization` works well in many cases and DAMON can
-+help it, modifying the source code is not a good option in many cases.  First
-+of all, the source code could be too old or unavailable.  And, many workloads
-+will have complex data access patterns that even hard to distinguish hot memory
-+objects and cold memory objects with the human eye.  Finding the mapping from
-+the visualized access pattern to the source code and injecting the hinting
-+system calls inside the code will also be quite challenging.
-+
-+By using DAMON-based operation schemes (DAMOS) via ``damo schemes``, you will
-+be able to easily optimize your workload in such a case.  Our example schemes
-+called 'efficient THP' and 'proactive reclamation' achieved significant speedup
-+and memory space saves against 25 realistic workloads [2]_, [3]_.
-+
-+That said, note that you need careful tune of the schemes (e.g., target region
-+size and age) and monitoring attributes for the successful use of this
-+approach.  Because the optimal values of the parameters will be dependent on
-+each system and workload, misconfiguring the parameters could result in worse
-+memory management.
-+
-+For the tuning, you could measure the performance metrics such as IPC, TLB
-+misses, and swap in/out events and adjusts the parameters based on their
-+changes.  The total number and the total size of the regions that each scheme
-+is applied, which are provided via the debugfs interface and the programming
-+interface can also be useful.  Writing a program automating this optimal
-+parameter could be an option.
-+
-+
- Personalized DAMON Application
- ------------------------------
- 
-diff --git a/Documentation/admin-guide/mm/damon/plans.rst b/Documentation/admin-guide/mm/damon/plans.rst
-index 96251752b3f0..8eba8a1dcb98 100644
---- a/Documentation/admin-guide/mm/damon/plans.rst
-+++ b/Documentation/admin-guide/mm/damon/plans.rst
-@@ -4,25 +4,7 @@
- Future Plans
- ============
- 
--DAMON is still on its first stage.  Below plans are still under development.
--
--
--Automate Data Access Monitoring-based Memory Operation Schemes Execution
--========================================================================
--
--The ultimate goal of DAMON is being used as a building block of the data access
--pattern aware kernel memory management subsystem optimization.  However, as
--always, some users having very special workloads will want to do their
--optimization.  DAMON will automate most of the tasks for such manual
--optimizations soon.  Users will be required to only describe what kind of data
--access pattern-based operation schemes they want in a simple form.
--
--By applying a very simple scheme for THP promotion/demotion with a prototype
--implementation, DAMON reduced 60% of THP memory footprint overhead while
--preserving 50% of the THP performance benefit.  The detailed results can be
--seen on an external web page [1]_.
--
--Several RFC patchsets for this plan are available [2]_.
-+DAMON is still on its early stage.  Below plans are still under development.
- 
- 
- Support Various Address Spaces
-@@ -42,8 +24,6 @@ primitives by themselves for their special use cases.  Monitoring of
- clean/dirty/entire page cache, NUMA nodes, specific files, or block devices
- would be examples of such use cases.
- 
--An RFC patchset for this plan is available [3]_.
-+An RFC patchset for this plan is available [1]_.
- 
--.. [1] https://damonitor.github.io/test/result/perf/latest/html/
--.. [2] https://lore.kernel.org/linux-mm/20200429124540.32232-1-sjpark@amazon.com/
--.. [3] https://lore.kernel.org/linux-mm/20200409094232.29680-1-sjpark@amazon.com/
-+.. [1] https://lore.kernel.org/linux-mm/20200409094232.29680-1-sjpark@amazon.com/
-diff --git a/Documentation/admin-guide/mm/damon/usage.rst b/Documentation/admin-guide/mm/damon/usage.rst
-index 1aa4f66e4320..18a19c35b4f3 100644
---- a/Documentation/admin-guide/mm/damon/usage.rst
-+++ b/Documentation/admin-guide/mm/damon/usage.rst
-@@ -228,11 +228,71 @@ Similar to that of ``heats --heatmap``, it also supports 'gnuplot' based simple
- visualization of the distribution via ``--plot`` option.
- 
- 
-+DAMON-based Operation Schemes
-+-----------------------------
-+
-+The ``schemes`` subcommand allows users to do DAMON-based memory management
-+optimizations in a few seconds.  Similar to ``record``, it receives monitoring
-+attributes and target.  However, in addition to those, ``schemes`` receives
-+data access pattern-based memory operation schemes, which describes what memory
-+operation action should be applied to memory regions showing specific data
-+access pattern.  Then, it starts the data access monitoring and automatically
-+applies the schemes to the targets.
-+
-+The operation schemes should be saved in a text file in below format and passed
-+to ``schemes`` subcommand via ``--schemes`` option. ::
-+
-+    min-size max-size min-acc max-acc min-age max-age action
-+
-+The format also supports comments, several units for size and age of regions,
-+and human readable action names.  Currently supported operation actions are
-+``willneed``, ``cold``, ``pageout``, ``hugepage`` and ``nohugepage``.  Each of
-+the actions works same to the madvise() system call hints having the name.
-+Please also note that the range is inclusive (closed interval), and ``0`` for
-+max values means infinite. Below example schemes are possible. ::
-+
-+    # format is:
-+    # <min/max size> <min/max frequency (0-99)> <min/max age> <action>
-+    #
-+    # B/K/M/G/T for Bytes/KiB/MiB/GiB/TiB
-+    # us/ms/s/m/h/d for micro-seconds/milli-seconds/seconds/minutes/hours/days
-+    # 'null' means zero for size and age.
-+
-+    # if a region keeps a high access frequency for >=100ms, put the region on
-+    # the head of the LRU list (call madvise() with MADV_WILLNEED).
-+    null    null    80      null    100ms   0s      willneed
-+
-+    # if a region keeps a low access frequency at least 200ms and at most one
-+    # hour, put the region on the tail of the LRU list (call madvise() with
-+    # MADV_COLD).
-+    0B      0B      10      20      200ms   1h cold
-+
-+    # if a region keeps a very low access frequency for >=1 minute, swap
-+    # out the region immediately (call madvise() with MADV_PAGEOUT).
-+    0B      null    0       10      60s     0s pageout
-+
-+    # if a region of a size >=2MiB keeps a very high access frequency for
-+    # >=100ms, let the region to use huge pages (call madvise() with
-+    # MADV_HUGEPAGE).
-+    2M      null    90      99      100ms   0s hugepage
-+
-+    # If a region of a size >=2MiB keeps small access frequency for >=100ms,
-+    # avoid the region using huge pages (call madvise() with MADV_NOHUGEPAGE).
-+    2M      null    0       25      100ms   0s nohugepage
-+
-+For example, you can make a running process named 'foo' to use huge pages for
-+memory regions keeping 2MB or larger size and having very high access frequency
-+for at least 100 milliseconds using below commands::
-+
-+    $ echo "2M null 90 99 100ms 0s hugepage" > my_thp_scheme
-+    $ ./damo schemes --schemes my_thp_scheme `pidof foo`
-+
-+
- debugfs Interface
- =================
- 
--DAMON exports four files, ``attrs``, ``pids``, ``record``, and ``monitor_on``
--under its debugfs directory, ``<debugfs>/damon/``.
-+DAMON exports five files, ``attrs``, ``pids``, ``record``, ``schemes`` and
-+``monitor_on`` under its debugfs directory, ``<debugfs>/damon/``.
- 
- 
- Attributes
-@@ -282,17 +342,64 @@ saved in ``/damon.data``. ::
-     4096 /damon.data
- 
- 
-+Schemes
-+-------
-+
-+For usual DAMON-based data access aware memory management optimizations, users
-+would simply want the system to apply a memory management action to a memory
-+region of a specific size having a specific access frequency for a specific
-+time.  DAMON receives such formalized operation schemes from the user and
-+applies those to the target processes.  It also counts the total number and
-+size of regions that each scheme is applied.  This statistics can be used for
-+online analysis or tuning of the schemes.
-+
-+Users can get and set the schemes by reading from and writing to ``schemes``
-+debugfs file.  Reading the file also shows the statistics of each scheme.  To
-+the file, each of the schemes should be represented in each line in below form:
-+
-+    min-size max-size min-acc max-acc min-age max-age action
-+
-+Note that the ranges are closed interval.  Bytes for the size of regions
-+(``min-size`` and ``max-size``), number of monitored accesses per aggregate
-+interval for access frequency (``min-acc`` and ``max-acc``), number of
-+aggregate intervals for the age of regions (``min-age`` and ``max-age``), and a
-+predefined integer for memory management actions should be used.  The supported
-+numbers and their
-+meanings are as below.
-+
-+ - 0: Call ``madvise()`` for the region with ``MADV_WILLNEED``
-+ - 1: Call ``madvise()`` for the region with ``MADV_COLD``
-+ - 2: Call ``madvise()`` for the region with ``MADV_PAGEOUT``
-+ - 3: Call ``madvise()`` for the region with ``MADV_HUGEPAGE``
-+ - 4: Call ``madvise()`` for the region with ``MADV_NOHUGEPAGE``
-+ - 5: Do nothing but count the statistics
-+
-+You can disable schemes by simply writing an empty string to the file.  For
-+example, below commands applies a scheme saying "If a memory region >=4KiB is
-+showing <=5 accesses per aggregate interval (0 5) for >=5 aggregate interval (5
-+0), page out the region (2)", check the entered scheme again, and finally
-+remove the scheme. ::
-+
-+    # cd <debugfs>/damon
-+    # echo "4096 0 0 5 5 0 2" > schemes
-+    # cat schemes
-+    4096 0 0 5 5 0 2 0 0
-+    # echo > schemes
-+
-+The last two integers in the 4th line of above example is the total number and
-+the total size of the regions that the scheme is applied.
-+
- Turning On/Off
- --------------
- 
--Setting the attributes as described above doesn't incur effect unless you
--explicitly start the monitoring.  You can start, stop, and check the current
--status of the monitoring by writing to and reading from the ``monitor_on``
--file.  Writing ``on`` to the file make DAMON start monitoring of the target
--processes with the attributes.  Recording will also start if requested before.
--Writing ``off`` to the file stops those.  DAMON also stops if every target
--process is terminated.  Below example commands turn on, off, and check the
--status of DAMON::
-+Setting the attributes and schemes as described above doesn't incur effect
-+unless you explicitly start the monitoring.  You can start, stop, and check
-+the current status of the monitoring by writing to and reading from the
-+``monitor_on`` file.  Writing ``on`` to the file make DAMON start monitoring
-+of the target processes with the attributes.  Recording and schemes applying
-+will also start if requested before.  Writing ``off`` to the file stops those.
-+DAMON also stops if every target process is terminated.  Below example
-+commands turn on, off, and check the status of DAMON::
- 
-     # cd <debugfs>/damon
-     # echo on > monitor_on
--- 
-2.17.1
-
+This reason can appear with copper cable or backplane. At the moment it is only supported with AN and PD modes (not Force mode).
