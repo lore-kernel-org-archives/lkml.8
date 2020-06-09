@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE82C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15FEFC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9B202067B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:24:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC1F420734
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:25:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591727097;
-	bh=JWfUK1UurEc1IJd4vKsIl1wbDbG8V745DfuhATHNP6g=;
+	s=default; t=1591727109;
+	bh=YUQ3zE6gHknWLZQ8cWA+ZL/A4ox6L2Wm10Hf9XSjg5U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=go7wjQzk+3nwBF5B2EEPaS8XzKvXHxVbVAektSuL4Ep+5RGZgZk3Q9sq9aucmTion
-	 UPwbKXFoFikZD0Bdtfr8SFESgsy9xIS56Z+B5JitO+ExAGZq25JvWmdZbs5MiZqEB/
-	 kwwQM5IyPwklgGUB+ZLmvllF+kECebgT+ONNzrck=
+	b=MokJF9uAFMobeiiz27cGDCb6Q4mBY03mT/PeIM/B3Qc2SFqsF9Yp0H7to+6i6mPIY
+	 9hka8xOMOrdwUwDWVesbuU5oDCwT7ScFjqRG9uPoDiPhH4aQrsCf6msHIUXWMbJ0Ro
+	 BIthrT8s7tYXh3YY+otEfcXvUgCCBcEgAYk+D2tg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389160AbgFISYz (ORCPT
+        id S2389172AbgFISZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:24:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57432 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 14:25:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732014AbgFIRqq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:46:46 -0400
+        id S1731977AbgFIRqg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:46:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1C0520812;
-        Tue,  9 Jun 2020 17:46:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A612620801;
+        Tue,  9 Jun 2020 17:46:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591724805;
-        bh=JWfUK1UurEc1IJd4vKsIl1wbDbG8V745DfuhATHNP6g=;
+        s=default; t=1591724796;
+        bh=YUQ3zE6gHknWLZQ8cWA+ZL/A4ox6L2Wm10Hf9XSjg5U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MGoRYdn4PqZSQPQNNpRNLXYdahw4zMOzXBNb0EK7C9uy4O3Pd5a1XJgUKOY8j/Dgq
-         e90C0SgdHp4j1USPXo/urLtT1d8cEitSkrWFF+7pjWZv69VeEP0n3msM/IHoWAeQ9d
-         5b0TKGGpyEdq9LpMV+zMIVkv6h1Zj/F4lMXflo0Q=
+        b=X2Sm5jRe18EGnFkl2fAsL3JV2pBTleVXQWDgWDhYtEb6WaCA0n9JeYh4iA3TD8GOu
+         sT5iKfEB9pwWooA7372UWp9UA1o/NUiwTWZXSLzr1MEtziKUBClwQsf1LPjGKLShOW
+         ztgbgQ1Hsknn42XbYRFaTmXLZ/yJbtIJMZRvVg4s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matt Jolly <Kangie@footclan.ninja>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.4 24/36] USB: serial: qcserial: add DW5816e QDL support
-Date:   Tue,  9 Jun 2020 19:44:24 +0200
-Message-Id: <20200609173934.780403438@linuxfoundation.org>
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 20/36] NFC: st21nfca: add missed kfree_skb() in an error path
+Date:   Tue,  9 Jun 2020 19:44:20 +0200
+Message-Id: <20200609173934.469838229@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609173933.288044334@linuxfoundation.org>
 References: <20200609173933.288044334@linuxfoundation.org>
@@ -59,33 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matt Jolly <Kangie@footclan.ninja>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-commit 3429444abdd9dbd5faebd9bee552ec6162b17ad6 upstream.
+[ Upstream commit 3decabdc714ca56c944f4669b4cdec5c2c1cea23 ]
 
-Add support for Dell Wireless 5816e Download Mode (AKA boot & hold mode /
-QDL download mode) to drivers/usb/serial/qcserial.c
+st21nfca_tm_send_atr_res() misses to call kfree_skb() in an error path.
+Add the missed function call to fix it.
 
-This is required to update device firmware.
-
-Signed-off-by: Matt Jolly <Kangie@footclan.ninja>
-Cc: stable@vger.kernel.org
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Fixes: 1892bf844ea0 ("NFC: st21nfca: Adding P2P support to st21nfca in Initiator & Target mode")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/usb/serial/qcserial.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/nfc/st21nfca/dep.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/serial/qcserial.c
-+++ b/drivers/usb/serial/qcserial.c
-@@ -177,6 +177,7 @@ static const struct usb_device_id id_tab
- 	{DEVICE_SWI(0x413c, 0x81b3)},	/* Dell Wireless 5809e Gobi(TM) 4G LTE Mobile Broadband Card (rev3) */
- 	{DEVICE_SWI(0x413c, 0x81b5)},	/* Dell Wireless 5811e QDL */
- 	{DEVICE_SWI(0x413c, 0x81b6)},	/* Dell Wireless 5811e QDL */
-+	{DEVICE_SWI(0x413c, 0x81cb)},	/* Dell Wireless 5816e QDL */
- 	{DEVICE_SWI(0x413c, 0x81cc)},	/* Dell Wireless 5816e */
- 	{DEVICE_SWI(0x413c, 0x81cf)},   /* Dell Wireless 5819 */
- 	{DEVICE_SWI(0x413c, 0x81d0)},   /* Dell Wireless 5819 */
+--- a/drivers/nfc/st21nfca/dep.c
++++ b/drivers/nfc/st21nfca/dep.c
+@@ -184,8 +184,10 @@ static int st21nfca_tm_send_atr_res(stru
+ 		memcpy(atr_res->gbi, atr_req->gbi, gb_len);
+ 		r = nfc_set_remote_general_bytes(hdev->ndev, atr_res->gbi,
+ 						  gb_len);
+-		if (r < 0)
++		if (r < 0) {
++			kfree_skb(skb);
+ 			return r;
++		}
+ 	}
+ 
+ 	info->dep_info.curr_nfc_dep_pni = 0;
 
 
