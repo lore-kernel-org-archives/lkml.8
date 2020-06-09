@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FCDEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:58:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEBDCC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54478206D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:58:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4F72206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:58:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725534;
-	bh=PA51v+8qu5tTohf3fSlpnqr736v3GWdp8seuOgAKqAc=;
+	s=default; t=1591725537;
+	bh=9QiSaFPCF+LjbweQTWvY4JtLf48Yd8AZc7D1koPx13M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S0nvlSq2YFnUf66DvH65ysqCwqLKpMs0Vtp6eIkxZmauLh88bqrAeukOE9mX61pjA
-	 M6i1rjyImdW27nq1BTdwFC7SK/LnaZoNGWGrDTHSKwl2u7CrK/ZmivUJJn+UKX5v9A
-	 uixZ7F/4fWPq7zIgSrkbHodZguN0fw3dpmqAXHvA=
+	b=ALZgB4D4YuXT3OvcupcFLngdP6+Ao07XhDchqNmOWIV4ngEQn6APjsIQX1b8Cy2K4
+	 qSvxW/cH61wtRt92/lCqzY9FQxgPhjk6izk5xwLCjXzwfs6iyldMUbz4mHWh/xdkXY
+	 x64kN5VPkuSX5RPh7NYWWwJydggbIrGKhhNZ5ZHM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733211AbgFIR6w (ORCPT
+        id S2387691AbgFIR6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:58:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47396 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:58:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733207AbgFIRzO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:55:14 -0400
+        id S1733206AbgFIRzM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:55:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A59120734;
-        Tue,  9 Jun 2020 17:55:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59F3520774;
+        Tue,  9 Jun 2020 17:55:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725314;
-        bh=PA51v+8qu5tTohf3fSlpnqr736v3GWdp8seuOgAKqAc=;
+        s=default; t=1591725311;
+        bh=9QiSaFPCF+LjbweQTWvY4JtLf48Yd8AZc7D1koPx13M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FjpFHwRdD+/O1agnz3MqcFS0RDQEc0a7JtiKIQ77fdP+a1LFHK+Eowsdm2a1zqzhe
-         u/xmTSLmVuq/n1FvBv8QdOhXq0EpyP3Q4sKtDxXmb6B6+od8Bu67M/atKw14ZQ8CtU
-         4ttSnoU07pxxo+ylabt8niROOaDx84uH+6HuK1f4=
+        b=gPZoE1+0gH1iw84NFL4cDXmSrzXidyABkrCVJaGDEADrx3UMHqZsbmFp6soRIypd+
+         mV+jZYeXt8M3bdOcDW2D8xlJz+Q6/BXlOzTwQzSxWx1w6lpbFgVns1R7tIbIoP7yQy
+         nMuk3+xUvipF9GViRlx+WphNKdx84hfDIostuuj0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mathieu Othacehe <m.othacehe@gmail.com>,
+        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.7 07/24] iio: vcnl4000: Fix i2c swapped word reading.
-Date:   Tue,  9 Jun 2020 19:45:38 +0200
-Message-Id: <20200609174149.914104473@linuxfoundation.org>
+        Tomasz Duszynski <tomasz.duszynski@octakon.com>
+Subject: [PATCH 5.7 06/24] iio:chemical:sps30: Fix timestamp alignment
+Date:   Tue,  9 Jun 2020 19:45:37 +0200
+Message-Id: <20200609174149.832597490@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174149.255223112@linuxfoundation.org>
 References: <20200609174149.255223112@linuxfoundation.org>
@@ -60,52 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathieu Othacehe <m.othacehe@gmail.com>
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-commit 18dfb5326370991c81a6d1ed6d1aeee055cb8c05 upstream.
+commit a5bf6fdd19c327bcfd9073a8740fa19ca4525fd4 upstream.
 
-The bytes returned by the i2c reading need to be swapped
-unconditionally. Otherwise, on be16 platforms, an incorrect value will be
-returned.
+One of a class of bugs pointed out by Lars in a recent review.
+iio_push_to_buffers_with_timestamp assumes the buffer used is aligned
+to the size of the timestamp (8 bytes).  This is not guaranteed in
+this driver which uses an array of smaller elements on the stack.
 
-Taking the slow path via next merge window as its been around a while
-and we have a patch set dependent on this which would be held up.
-
-Fixes: 62a1efb9f868 ("iio: add vcnl4000 combined ALS and proximity sensor")
-Signed-off-by: Mathieu Othacehe <m.othacehe@gmail.com>
-Cc: <Stable@vger.kernel.org>
+Fixes: 232e0f6ddeae ("iio: chemical: add support for Sensirion SPS30 sensor")
+Reported-by: Lars-Peter Clausen <lars@metafoo.de>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: <Stable@vger.kernel.org>
+Acked-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/light/vcnl4000.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/iio/chemical/sps30.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/drivers/iio/light/vcnl4000.c
-+++ b/drivers/iio/light/vcnl4000.c
-@@ -219,7 +219,6 @@ static int vcnl4000_measure(struct vcnl4
- 				u8 rdy_mask, u8 data_reg, int *val)
- {
- 	int tries = 20;
--	__be16 buf;
+--- a/drivers/iio/chemical/sps30.c
++++ b/drivers/iio/chemical/sps30.c
+@@ -230,15 +230,18 @@ static irqreturn_t sps30_trigger_handler
+ 	struct iio_dev *indio_dev = pf->indio_dev;
+ 	struct sps30_state *state = iio_priv(indio_dev);
  	int ret;
+-	s32 data[4 + 2]; /* PM1, PM2P5, PM4, PM10, timestamp */
++	struct {
++		s32 data[4]; /* PM1, PM2P5, PM4, PM10 */
++		s64 ts;
++	} scan;
  
- 	mutex_lock(&data->vcnl4000_lock);
-@@ -246,13 +245,12 @@ static int vcnl4000_measure(struct vcnl4
- 		goto fail;
- 	}
+ 	mutex_lock(&state->lock);
+-	ret = sps30_do_meas(state, data, 4);
++	ret = sps30_do_meas(state, scan.data, ARRAY_SIZE(scan.data));
+ 	mutex_unlock(&state->lock);
+ 	if (ret)
+ 		goto err;
  
--	ret = i2c_smbus_read_i2c_block_data(data->client,
--		data_reg, sizeof(buf), (u8 *) &buf);
-+	ret = i2c_smbus_read_word_swapped(data->client, data_reg);
- 	if (ret < 0)
- 		goto fail;
- 
- 	mutex_unlock(&data->vcnl4000_lock);
--	*val = be16_to_cpu(buf);
-+	*val = ret;
- 
- 	return 0;
- 
+-	iio_push_to_buffers_with_timestamp(indio_dev, data,
++	iio_push_to_buffers_with_timestamp(indio_dev, &scan,
+ 					   iio_get_time_ns(indio_dev));
+ err:
+ 	iio_trigger_notify_done(indio_dev->trig);
 
 
