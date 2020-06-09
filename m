@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F3AEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F162FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:23:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D41A22067B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:22:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C18A52067B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:23:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591726978;
-	bh=HYg/oK6dZ3KBNE/5RfEG/bWIhWx8JyDZPz/txNutwuk=;
+	s=default; t=1591726987;
+	bh=sDGANuZ7FD1nVMA1tNWPzxIt/Uk/CzGd5Gz40qhIhgc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QOSd9XuR/2pxMdEZetUmchTmq/xmIKTuwHct7byNix2+A40c0vh6mNL4HdmCgPsej
-	 VPCKoDSm4gsFP2SKLB/IpgUE6ofO5CNiAGbOHwzYRfkAs6TCzb2/2jW97eFbSFkUNE
-	 WrF2epzpLfMqYt98iknf2TVuv/fnfA274Hlvvrjw=
+	b=GT7Vf8yjCusjhWnLfqG3/aC2b/xkR44ARr9hwvz/d6+ATPnEgWjohTKuqN+PZzgqV
+	 HjXfBdaMgElWhEabIUYrRjGLLGpB80fvLJH8NNNvTZfzlhpkIwbYsMMPTxG1Xam+v7
+	 BEnrQJjvUNP6umJ9adkBFhTkAL4EjapiLoII5GYg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389053AbgFISW5 (ORCPT
+        id S1732459AbgFISXD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:22:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59608 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 14:23:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732184AbgFIRry (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:47:54 -0400
+        id S1732146AbgFIRru (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:47:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB786207ED;
-        Tue,  9 Jun 2020 17:47:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D46320825;
+        Tue,  9 Jun 2020 17:47:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591724874;
-        bh=HYg/oK6dZ3KBNE/5RfEG/bWIhWx8JyDZPz/txNutwuk=;
+        s=default; t=1591724869;
+        bh=sDGANuZ7FD1nVMA1tNWPzxIt/Uk/CzGd5Gz40qhIhgc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VNjCMRQgYVcSra34dQZNwXi9vB7ni5dUiAHPb8eJ2wYmfn5HX4Bj8JyRdGZxXGz9Q
-         5YjN7zgpkkUHFzhn1aK7ryL0Fgdy2xqqLdSKyKHjDFlyUZTADmSd+3/8UpNN7kJz/C
-         8TiTgziv3sEUfM/UPVuLivB/3HBZx715daAJFZ34=
+        b=gerFKBfyOdKrgKQqg7t+/gmCNwuxgX8bAVSnOn/Y+wvKQ63YNULRyjb93aVuId1hB
+         juLVS2s0FyIRvcuWsXnxlVosSJAWD0nCFr3CHjIoM6r5hT5jXCW4/PT8NGHnjZVDPJ
+         6ZFnR+FIbQq5hFAn9ojlnO5iu+S7ZWO69HInVhRs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
-        <jerome.pouiller@silabs.com>, Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.9 17/42] mmc: fix compilation of user API
-Date:   Tue,  9 Jun 2020 19:44:23 +0200
-Message-Id: <20200609174017.345870933@linuxfoundation.org>
+        Giuseppe Marco Randazzo <gmrandazzo@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Christian Lamparter <chunkeey@gmail.com>
+Subject: [PATCH 4.9 15/42] p54usb: add AirVasT USB stick device-id
+Date:   Tue,  9 Jun 2020 19:44:21 +0200
+Message-Id: <20200609174017.128858518@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174015.379493548@linuxfoundation.org>
 References: <20200609174015.379493548@linuxfoundation.org>
@@ -60,38 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jérôme Pouiller <jerome.pouiller@silabs.com>
+From: Giuseppe Marco Randazzo <gmrandazzo@gmail.com>
 
-commit 83fc5dd57f86c3ec7d6d22565a6ff6c948853b64 upstream.
+commit 63e49a9fdac1b4e97ac26cb3fe953f210d83bc53 upstream.
 
-The definitions of MMC_IOC_CMD  and of MMC_IOC_MULTI_CMD rely on
-MMC_BLOCK_MAJOR:
+This patch adds the AirVasT USB wireless devices 124a:4026
+to the list of supported devices. It's using the ISL3886
+usb firmware. Without this modification, the wiki adapter
+is not recognized.
 
-    #define MMC_IOC_CMD       _IOWR(MMC_BLOCK_MAJOR, 0, struct mmc_ioc_cmd)
-    #define MMC_IOC_MULTI_CMD _IOWR(MMC_BLOCK_MAJOR, 1, struct mmc_ioc_multi_cmd)
-
-However, MMC_BLOCK_MAJOR is defined in linux/major.h and
-linux/mmc/ioctl.h did not include it.
-
-Signed-off-by: Jérôme Pouiller <jerome.pouiller@silabs.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200511161902.191405-1-Jerome.Pouiller@silabs.com
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Giuseppe Marco Randazzo <gmrandazzo@gmail.com>
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com> [formatted, reworded]
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200405220659.45621-1-chunkeey@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/uapi/linux/mmc/ioctl.h |    1 +
+ drivers/net/wireless/intersil/p54/p54usb.c |    1 +
  1 file changed, 1 insertion(+)
 
---- a/include/uapi/linux/mmc/ioctl.h
-+++ b/include/uapi/linux/mmc/ioctl.h
-@@ -2,6 +2,7 @@
- #define LINUX_MMC_IOCTL_H
- 
- #include <linux/types.h>
-+#include <linux/major.h>
- 
- struct mmc_ioc_cmd {
- 	/* Implies direction of data.  true = write, false = read */
+--- a/drivers/net/wireless/intersil/p54/p54usb.c
++++ b/drivers/net/wireless/intersil/p54/p54usb.c
+@@ -64,6 +64,7 @@ static struct usb_device_id p54u_table[]
+ 	{USB_DEVICE(0x0db0, 0x6826)},	/* MSI UB54G (MS-6826) */
+ 	{USB_DEVICE(0x107b, 0x55f2)},	/* Gateway WGU-210 (Gemtek) */
+ 	{USB_DEVICE(0x124a, 0x4023)},	/* Shuttle PN15, Airvast WM168g, IOGear GWU513 */
++	{USB_DEVICE(0x124a, 0x4026)},	/* AirVasT USB wireless device */
+ 	{USB_DEVICE(0x1435, 0x0210)},	/* Inventel UR054G */
+ 	{USB_DEVICE(0x15a9, 0x0002)},	/* Gemtek WUBI-100GW 802.11g */
+ 	{USB_DEVICE(0x1630, 0x0005)},	/* 2Wire 802.11g USB (v1) / Z-Com */
 
 
