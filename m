@@ -2,72 +2,74 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4179FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:24:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC0CEC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:25:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13217206D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:24:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFD77206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:25:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BckdTNi0"
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="bZo0Gti1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730559AbgFIOY1 (ORCPT
+        id S1730494AbgFIOZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 10:24:27 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:28625 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728601AbgFIOY0 (ORCPT
+        Tue, 9 Jun 2020 10:25:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37938 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728889AbgFIOZK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 10:24:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591712663;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=RpR4db2BYUdmK1j0ocnwY36/XEkGSRK7q+SwrEA+exk=;
-        b=BckdTNi0bDdAQBu31/0MltqyZ0kQeTVs18KRHlDsAM0+RjpURrPfYk0Oqzn6fxKI/J1gG3
-        8hIpXJWg1Zyx5XpMhcYRcluXHwasKnmVdAB9Wl6U9e/jAZPRrqJvZ6KdkMfhwidkXaa+vX
-        jGSXsG+o+Xi6RVXBLiycKZqtisV1m4w=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-469-uXLG1sMLM4yasnAXztD_5w-1; Tue, 09 Jun 2020 10:24:11 -0400
-X-MC-Unique: uXLG1sMLM4yasnAXztD_5w-1
-Received: by mail-wr1-f71.google.com with SMTP id s7so8701770wrm.16
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 07:24:11 -0700 (PDT)
+        Tue, 9 Jun 2020 10:25:10 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99D4BC03E97C
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 07:25:09 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id t18so21557944wru.6
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 07:25:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=K4rJYCnsX/Tj+0hJNClACYILsDLzG+crfTmE8yyLMu0=;
+        b=bZo0Gti1Sunym080vSY/iIyUfceTgSDi4jC8Vjap0IwR21v1vkt+7qklae8IIUCTPY
+         mPoCjARIuLdjIUsXJWAAm1r34IK67oCosIGbw8GN8pp5dbxh0f0ToaJOUp5YFs9zl/Li
+         KuMI4AO8o3KPKHax4nar5kqHOeS1jOjr8IvrF7ICkzlKffnRRhymEJmvvLXi/XNdk9w6
+         XcWZurXnBuLlxluoxgTnpDd9xHBeR2QGrI1JPVPnG7gJX0o4VF8KebzUzA8h1O1a3KG1
+         +bdrndxJpiYjEFAW5X0sgCyiFyaIWyz3GlVDMYsNh+TyV6L4+yeZNPum6qnj3SD3H44u
+         ZGkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
          :content-disposition;
-        bh=RpR4db2BYUdmK1j0ocnwY36/XEkGSRK7q+SwrEA+exk=;
-        b=takGA2eHr4BA+hAVsfMXYG7twCoqjg84O5SkkoZXUAXXHsepqGF5Z6eRszV91zpDHc
-         o6YVpp599E2+CVHminj/WAtx7GTHwfsRwRwh1EwxxhUmFSVDhZOam7pEI9YDEjaRvcFb
-         PsoXSzPk7UHBLecWkRLhGOuCKieQFRUsGMDACcHlyxk3JaZNTebGOmSdIew5/OHOv+Rv
-         XMhmhPNhUmqiKAl/c14Gd5jXjs6frEQnGaaMnDn2DOd8ZAvNOdyQdzFWtZzNCoZ9ZGPl
-         kaxrmGjyLCZ7Jnpy5LY1mFjmzjy82MMI9NVdxPK1AvQB1Ym860FbsIJbgmizUV0Tv+El
-         JHuQ==
-X-Gm-Message-State: AOAM531CPI+WOrvcnz/qnl6WxEKqsXEtFZsYUaB6OE8LztFg4Yfrw9Li
-        O8lckXkKHyaGe/+ESm8w1x0RKXJwlEoCMhjzyghlftfbmgZhr87Ev4mdz7k0q30dhJpOOxtvS6/
-        lPEI5efcIyghmJhcgk4wjgFR2
-X-Received: by 2002:adf:ed87:: with SMTP id c7mr4789073wro.108.1591712650531;
-        Tue, 09 Jun 2020 07:24:10 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw7k0clUUUuo0NQ83yaXJdGTvNwA1q+8Od/NT0+Gd4O+ygFtZPfo/lB99jWrl5o+uVeAv0zqQ==
-X-Received: by 2002:adf:ed87:: with SMTP id c7mr4789051wro.108.1591712650206;
-        Tue, 09 Jun 2020 07:24:10 -0700 (PDT)
-Received: from steredhat (host-79-49-207-108.retail.telecomitalia.it. [79.49.207.108])
-        by smtp.gmail.com with ESMTPSA id e12sm3613514wro.52.2020.06.09.07.24.09
+        bh=K4rJYCnsX/Tj+0hJNClACYILsDLzG+crfTmE8yyLMu0=;
+        b=TewQmWknnCKLGQgKQVL4oqUaJ0bf4i1b9mTXoJljjE+TqJVyrjF+Xq1w0S9/yGXtL6
+         v3EBm9vfIN8pEdSrqRswlS+2yeSr05ltN4w1vcZ1RchW2m0F4jfxr8BEb4SK54jEdnBe
+         NtSzgP+zR3q+x2tVwUCfBUAl49yZIf8vu4CbaZ4+zIClYD/8VzttTJ9gMRZt8s/668XT
+         nRrom2XVEf/foTAt6rrc5U7aA5Y1+W1Eyhh6OBcZG86ocrTOPffODyizHN44Zl3W24L5
+         PI5bd3rBOR8+sahH/zR1guSXwc9nAelmFUrTFHC8lTKGnVLybFp2IIA8deISpwJbYkes
+         WHKg==
+X-Gm-Message-State: AOAM532BATvB3eR3oL66KttAD4+ocHbd+rmpT4OlWnlS1lwJVgKz0+Yc
+        bcYfkPmBWDgHXS8dRXVSpoK3XOaAvWKIG5K1
+X-Google-Smtp-Source: ABdhPJxs/Re5zuZyyrNoCFIeUXFXWK+c7XYa+Hs6EenLmsAK2lmeQx5Ri0u6hONwcURrgxbSx64N1A==
+X-Received: by 2002:a05:6000:114e:: with SMTP id d14mr4720249wrx.110.1591712708066;
+        Tue, 09 Jun 2020 07:25:08 -0700 (PDT)
+Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
+        by smtp.gmail.com with ESMTPSA id j4sm3285673wma.7.2020.06.09.07.25.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 07:24:09 -0700 (PDT)
-Date:   Tue, 9 Jun 2020 16:24:06 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Stefan Hajnoczi <stefanha@redhat.com>,
-        Jeff Moyer <jmoyer@redhat.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [RFC] io_uring: add restrictions to support untrusted applications
- and guests
-Message-ID: <20200609142406.upuwpfmgqjeji4lc@steredhat>
+        Tue, 09 Jun 2020 07:25:07 -0700 (PDT)
+Date:   Tue, 9 Jun 2020 16:25:04 +0200
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>
+Subject: [PATCH] arm: dts: am335x-pocketbeagle: add gpio-line-names
+Message-ID: <20200609142504.GA2955236@x1>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -76,172 +78,323 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jens,
-Stefan and I have a proposal to share with io_uring community.
-Before implementing it we would like to discuss it to receive feedbacks and
-to see if it could be accepted:
+The BeagleBoard.org PocketBeagle has P1 and P2 headers [0] which expose
+many of the TI AM3358 SoC balls to stacking expansion boards called 
+"capes", or to other external connections like jumper wires connected
+to a breadboard.
 
-Adding restrictions to io_uring
-=====================================
-The io_uring API provides submission and completion queues for performing
-asynchronous I/O operations. The queues are located in memory that is
-accessible to both the host userspace application and the kernel, making it
-possible to monitor for activity through polling instead of system calls. This
-design offers good performance and this makes exposing io_uring to guests an
-attractive idea for improving I/O performance in virtualization.
+Note: the AM3358 die is actually embedded inside of the OSD335x-SM
+System-in-Package (SiP) [1] but that is irrelevant to the gpio driver.
 
-PoC and preliminary benchmarks
----------------------------
-We realized a PoC, using QEMU and virtio-blk device, to share io_uring
-CQ and SQ rings with the guest.
-QEMU initializes io_uring, registers the device (NVMe) fd through
-io_uring_register(2), and maps the rings in the guest memory.
-The virtio-blk driver uses these rings to send requests instead of using
-the standard virtqueues.
+Many of the P1 and P2 header pins can muxed to a GPIO line.  The
+gpio-line-names describe which P1 or P2 pin that line goes to and the
+default mux for that P1 or P2 pin if it is not GPIO.
+    
+Some GPIO lines are named "[NC]" as the corresponding balls are not
+routed to anything on the PCB.
 
-The PoC implements a pure polling solution where the application is polling
-(IOPOLL enabled) in the guest and the sqpoll_kthread is polling in the host
-(SQPOLL and IOPOLL enabled).
+The goal for these names is to make it easier for a user viewing the
+output of gpioinfo to determine which P1 or P2 pin is connected to a
+GPIO line.  The output of gpioinfo on a PocketBeagle would be:
 
-These are the encouraging results we obtained from this preliminary work;
-we used fio (rw=randread bs=4k) to measure the kIOPS on a NVMe device:
+gpiochip0 - 32 lines:
+	line   0:       "[NC]"       unused   input  active-high 
+	line   1:       "[NC]"       unused   input  active-high 
+	line   2: "P1.08 [SPI0_CLK]" unused input active-high 
+	line   3: "P1.10 [SPI0_MISO]" unused input active-high 
+	line   4: "P1.12 [SPI0_MOSI]" unused input active-high 
+	line   5: "P1.06 [SPI0_CS]" unused input active-high 
+	line   6:  "[MMC0_CD]"         "cd"   input   active-low [used]
+	line   7: "P2.29 [SPI1_CLK]" unused input active-high 
+	line   8:       "[NC]"       unused   input  active-high 
+	line   9:       "[NC]"       unused   input  active-high 
+	line  10:       "[NC]"       unused   input  active-high 
+	line  11:       "[NC]"       unused   input  active-high 
+	line  12: "P1.26 [I2C2_SDA]" unused input active-high 
+	line  13: "P1.28 [I2C2_SCL]" unused input active-high 
+	line  14: "P2.11 [I2C1_SDA]" unused input active-high 
+	line  15: "P2.09 [I2C1_SCL]" unused input active-high 
+	line  16:       "[NC]"       unused   input  active-high 
+	line  17:       "[NC]"       unused   input  active-high 
+	line  18:       "[NC]"       unused   input  active-high 
+	line  19: "P2.31 [SPI1_CS]" unused input active-high 
+	line  20: "P1.20 [PRU0.16]" unused input active-high 
+	line  21:       "[NC]"       unused   input  active-high 
+	line  22:       "[NC]"       unused   input  active-high 
+	line  23:      "P2.03"       unused   input  active-high 
+	line  24:       "[NC]"       unused   input  active-high 
+	line  25:       "[NC]"       unused   input  active-high 
+	line  26:      "P1.34"       unused   input  active-high 
+	line  27:      "P2.19"       unused   input  active-high 
+	line  28:       "[NC]"       unused   input  active-high 
+	line  29:       "[NC]"       unused   input  active-high 
+	line  30: "P2.05 [UART4_RX]" unused input active-high 
+	line  31: "P2.07 [UART4_TX]" unused input active-high 
+gpiochip1 - 32 lines:
+	line   0:       "[NC]"       unused   input  active-high 
+	line   1:       "[NC]"       unused   input  active-high 
+	line   2:       "[NC]"       unused   input  active-high 
+	line   3:       "[NC]"       unused   input  active-high 
+	line   4:       "[NC]"       unused   input  active-high 
+	line   5:       "[NC]"       unused   input  active-high 
+	line   6: "P1.06 [SPI0_CS]" unused input active-high 
+	line   7: "P1.06 [SPI0_CS]" unused input active-high 
+	line   8: "P2.27 [SPI1_MISO]" unused input active-high 
+	line   9: "P2.25 [SPI1_MOSI]" unused input active-high 
+	line  10: "P1.32 [UART0_RX]" unused input active-high 
+	line  11: "P1.30 [UART0_TX]" unused input active-high 
+	line  12:      "P2.24"       unused   input  active-high 
+	line  13:      "P2.33"       unused   input  active-high 
+	line  14:      "P2.22"       unused   input  active-high 
+	line  15:      "P2.18"       unused   input  active-high 
+	line  16:       "[NC]"       unused   input  active-high 
+	line  17:       "[NC]"       unused   input  active-high 
+	line  18: "P2.01 [PWM1A]" unused input active-high 
+	line  19:       "[NC]"       unused   input  active-high 
+	line  20:      "P2.10"       unused   input  active-high 
+	line  21: "[user led 0]" "beaglebone:green:usr0" output active-high [used]
+	line  22: "[user led 1]" "beaglebone:green:usr1" output active-high [used]
+	line  23: "[user led 2]" "beaglebone:green:usr2" output active-high [used]
+	line  24: "[user led 3]" "beaglebone:green:usr3" output active-high [used]
+	line  25:      "P2.06"       unused   input  active-high 
+	line  26:      "P2.04"       unused   input  active-high 
+	line  27:      "P2.02"       unused   input  active-high 
+	line  28:      "P2.08"       unused   input  active-high 
+	line  29:       "[NC]"       unused   input  active-high 
+	line  30:       "[NC]"       unused   input  active-high 
+	line  31:       "[NC]"       unused   input  active-high 
+gpiochip2 - 32 lines:
+	line   0:       "[NC]"       unused   input  active-high 
+	line   1:      "P2.17"       unused   input  active-high 
+	line   2:       "[NC]"       unused   input  active-high 
+	line   3:       "[NC]"       unused   input  active-high 
+	line   4:       "[NC]"       unused   input  active-high 
+	line   5: "[EEPROM_WP]" unused input active-high 
+	line   6:       "[NC]"       unused   input  active-high 
+	line   7:       "[NC]"       unused   input  active-high 
+	line   8:       "[NC]"       unused   input  active-high 
+	line   9:       "[NC]"       unused   input  active-high 
+	line  10:       "[NC]"       unused   input  active-high 
+	line  11:       "[NC]"       unused   input  active-high 
+	line  12:       "[NC]"       unused   input  active-high 
+	line  13:       "[NC]"       unused   input  active-high 
+	line  14:       "[NC]"       unused   input  active-high 
+	line  15:       "[NC]"       unused   input  active-high 
+	line  16:       "[NC]"       unused   input  active-high 
+	line  17:       "[NC]"       unused   input  active-high 
+	line  18:       "[NC]"       unused   input  active-high 
+	line  19:       "[NC]"       unused   input  active-high 
+	line  20:       "[NC]"       unused   input  active-high 
+	line  21:       "[NC]"       unused   input  active-high 
+	line  22: "P2.35 [AIN5]" unused input active-high 
+	line  23: "P1.02 [AIN6]" unused input active-high 
+	line  24: "P1.35 [PRU1.10]" unused input active-high 
+	line  25: "P1.04 [PRU1.11]" unused input active-high 
+	line  26: "[MMC0_DAT3]" unused input active-high 
+	line  27: "[MMC0_DAT2]" unused input active-high 
+	line  28: "[MMC0_DAT1]" unused input active-high 
+	line  29: "[MMC0_DAT0]" unused input active-high 
+	line  30: "[MMC0_CLK]"       unused   input  active-high 
+	line  31: "[MMC0_CMD]"       unused   input  active-high 
+gpiochip3 - 32 lines:
+	line   0:       "[NC]"       unused   input  active-high 
+	line   1:       "[NC]"       unused   input  active-high 
+	line   2:       "[NC]"       unused   input  active-high 
+	line   3:       "[NC]"       unused   input  active-high 
+	line   4:       "[NC]"       unused   input  active-high 
+	line   5: "[I2C0_SDA]"       unused   input  active-high 
+	line   6: "[I2C0_SCL]"       unused   input  active-high 
+	line   7:     "[JTAG]"       unused   input  active-high 
+	line   8:     "[JTAG]"       unused   input  active-high 
+	line   9:       "[NC]"       unused   input  active-high 
+	line  10:       "[NC]"       unused   input  active-high 
+	line  11:       "[NC]"       unused   input  active-high 
+	line  12:       "[NC]"       unused   input  active-high 
+	line  13: "P1.03 [USB1]" unused input active-high 
+	line  14: "P1.36 [PWM0A]" unused input active-high 
+	line  15: "P1.33 [PRU0.1]" unused input active-high 
+	line  16: "P2.32 [PRU0.2]" unused input active-high 
+	line  17: "P2.30 [PRU0.3]" unused input active-high 
+	line  18: "P1.31 [PRU0.4]" unused input active-high 
+	line  19: "P2.34 [PRU0.5]" unused input active-high 
+	line  20: "P2.28 [PRU0.6]" unused input active-high 
+	line  21: "P1.29 [PRU0.7]" unused input active-high 
+	line  22:       "[NC]"       unused   input  active-high 
+	line  23:       "[NC]"       unused   input  active-high 
+	line  24:       "[NC]"       unused   input  active-high 
+	line  25:       "[NC]"       unused   input  active-high 
+	line  26:       "[NC]"       unused   input  active-high 
+	line  27:       "[NC]"       unused   input  active-high 
+	line  28:       "[NC]"       unused   input  active-high 
+	line  29:       "[NC]"       unused   input  active-high 
+	line  30:       "[NC]"       unused   input  active-high 
+	line  31:       "[NC]"       unused   input  active-high 
 
-- bare-metal
-                                                       iodepth
-  | fio ioengine                              |  1  |  8  |  16 |  32 |
-  |-------------------------------------------|----:|----:|----:|----:|
-  | io_uring (SQPOLL + IOPOLL)                | 119 | 550 | 581 | 585 |
-  | io_uring (IOPOLL)                         | 122 | 502 | 519 | 538 |
+[0] https://github.com/beagleboard/pocketbeagle/wiki/System-Reference-Manual#71_Expansion_Header_Connectors
+[1] https://octavosystems.com/app_notes/osd335x-family-pin-assignments/
 
-- QEMU/KVM guest (aio=io_uring)
-                                                       iodepth
-  | virtio-blk            | fio ioengine      |  1  |  8  |  16 |  32 |
-  |-----------------------|-------------------|----:|----:|----:|----:|
-  | virtqueues            | io_uring (IOPOLL) |  27 | 144 | 209 | 266 |
-  | virtqueues + iothread | io_uring (IOPOLL) |  73 | 264 | 306 | 312 |
-  | io_uring passthrough  | io_uring (IOPOLL) | 104 | 532 | 577 | 585 |
+Reviewed-by: Jason Kridner <jason@beagleboard.org>
+Reviewed-by: Robert Nelson <robertcnelson@gmail.com>
+Signed-off-by: Drew Fustini <drew@beagleboard.org>
+---
+ arch/arm/boot/dts/am335x-pocketbeagle.dts | 144 ++++++++++++++++++++++
+ 1 file changed, 144 insertions(+)
 
-  All guest experiments are using the QEMU io_uring backend with SQPOLL and
-  IOPOLL enabled. The virtio-blk driver is modified to support blovk io_poll
-  on both virtqueues and io_uring passthrough.
-
-Before developing this proof-of-concept further we would like to discuss
-io_uring changes required to restrict rings since this mechanism is a
-prerequisite for real-world use cases where guests are untrusted.
-
-Restrictions
-------------
-This document proposes io_uring API changes that safely allow untrusted
-applications or guests to use io_uring. io_uring's existing security model is
-that of kernel system call handler code. It is designed to reject invalid
-inputs from host userspace applications. Supporting guests as io_uring API
-clients adds a new trust domain with access to even fewer resources than host
-userspace applications.
-
-Guests do not have direct access to host userspace application file descriptors
-or memory. The host userspace application, a Virtual Machine Monitor (VMM) such
-as QEMU, grants access to a subset of its file descriptors and memory. The
-allowed file descriptors are typically the disk image files belonging to the
-guest. The memory is typically the virtual machine's RAM that the VMM has
-allocated on behalf of the guest.
-
-The following extensions to the io_uring API allow the host application to
-grant access to some of its file descriptors.
-
-These extensions are designed to be applicable to other use cases besides
-untrusted guests and are not virtualization-specific. For example, the
-restrictions can be used to allow only a subset of sqe operations available to
-an application similar to seccomp syscall whitelisting.
-
-An address translation and memory restriction mechanism would also be
-necessary, but we can discuss this later.
-
-The IOURING_REGISTER_RESTRICTIONS opcode
-----------------------------------------
-The new io_uring_register(2) IOURING_REGISTER_RESTRICTIONS opcode permanently
-installs a feature whitelist on an io_ring_ctx. The io_ring_ctx can then be
-passed to untrusted code with the knowledge that only operations present in the
-whitelist can be executed.
-
-The whitelist approach ensures that new features added to io_uring do not
-accidentally become available when an existing application is launched on a
-newer kernel version.
-
-The IORING_REGISTER_RESTRICTIONS opcode takes an array of struct
-io_uring_restriction elements that describe whitelisted features:
-
-  #define IORING_REGISTER_RESTRICTIONS 11
-
-  /* struct io_uring_restriction::opcode values */
-  enum {
-      /* Allow an io_uring_register(2) opcode */
-      IORING_RESTRICTION_REGISTER_OP,
-
-      /* Allow an sqe opcode */
-      IORING_RESTRICTION_SQE_OP,
-
-      /* Only allow fixed files */
-      IORING_RESTRICTION_FIXED_FILES_ONLY,
-
-      /* Only allow registered addresses and translate them */
-      IORING_RESTRICTION_BUFFER_CHECK
-  };
-
-  struct io_uring_restriction {
-      __u16 opcode;
-      union {
-          __u8 register_op; /* IORING_RESTRICTION_REGISTER_OP */
-          __u8 sqe_op;      /* IORING_RESTRICTION_SQE_OP */
-      };
-      __u8 resv;
-      __u32 resv2[3];
-  };
-
-This call can only be made once. Afterwards it is not possible to change
-restrictions anymore. This prevents untrusted code from removing restrictions.
-
-Limiting access to io_uring operations
---------------------------------------
-The following example shows how to whitelist IORING_OP_READV, IORING_OP_WRITEV,
-and IORING_OP_FSYNC:
-
-  struct io_uring_restriction restrictions[] = {
-      {
-          .opcode = IORING_RESTRICTION_SQE_OP,
-          .sqe_op = IORING_OP_READV,
-      },
-      {
-          .opcode = IORING_RESTRICTION_SQE_OP,
-          .sqe_op = IORING_OP_WRITEV,
-      },
-      {
-          .opcode = IORING_RESTRICTION_SQE_OP,
-          .sqe_op = IORING_OP_FSYNC,
-      },
-      ...
-  };
-
-  io_uring_register(ringfd, IORING_REGISTER_RESTRICTIONS,
-                    restrictions, ARRAY_SIZE(restrictions));
-
-Limiting access to file descriptors
------------------------------------
-The fixed files mechanism can be used to limit access to a set of file
-descriptors:
-
-  struct io_uring_restriction restrictions[] = {
-      {
-          .opcode = IORING_RESTRICTION_FIXED_FILES_ONLY,
-      },
-      ...
-  };
-
-  io_uring_register(ringfd, IORING_REGISTER_RESTRICTIONS,
-                    restrictions, ARRAY_SIZE(restrictions));
-
-Only requests with the sqe->flags IOSQE_FIXED_FILE bit set will be allowed.
-
-
-Thanks for your feedback,
-Stefano
+diff --git a/arch/arm/boot/dts/am335x-pocketbeagle.dts b/arch/arm/boot/dts/am335x-pocketbeagle.dts
+index 4da719098028..60e5fa2b9156 100644
+--- a/arch/arm/boot/dts/am335x-pocketbeagle.dts
++++ b/arch/arm/boot/dts/am335x-pocketbeagle.dts
+@@ -59,6 +59,150 @@ vmmcsd_fixed: fixedregulator0 {
+ 	};
+ };
+ 
++&gpio0 {
++	gpio-line-names =
++		"[NC]",
++		"[NC]",
++		"P1.08 [SPI0_CLK]",
++		"P1.10 [SPI0_MISO]",
++		"P1.12 [SPI0_MOSI]",
++		"P1.06 [SPI0_CS]",
++		"[MMC0_CD]",
++		"P2.29 [SPI1_CLK]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"P1.26 [I2C2_SDA]",
++		"P1.28 [I2C2_SCL]",
++		"P2.11 [I2C1_SDA]",
++		"P2.09 [I2C1_SCL]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"P2.31 [SPI1_CS]",
++		"P1.20 [PRU0.16]",
++		"[NC]",
++		"[NC]",
++		"P2.03",
++		"[NC]",
++		"[NC]",
++		"P1.34",
++		"P2.19",
++		"[NC]",
++		"[NC]",
++		"P2.05 [UART4_RX]",
++		"P2.07 [UART4_TX]";
++};
++
++&gpio1 {
++	gpio-line-names =
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"P1.06 [SPI0_CS]",
++		"P1.06 [SPI0_CS]",
++		"P2.27 [SPI1_MISO]",
++		"P2.25 [SPI1_MOSI]",
++		"P1.32 [UART0_RX]",
++		"P1.30 [UART0_TX]",
++		"P2.24",
++		"P2.33",
++		"P2.22",
++		"P2.18",
++		"[NC]",
++		"[NC]",
++		"P2.01 [PWM1A]",
++		"[NC]",
++		"P2.10",
++		"[user led 0]",
++		"[user led 1]",
++		"[user led 2]",
++		"[user led 3]",
++		"P2.06",
++		"P2.04",
++		"P2.02",
++		"P2.08",
++		"[NC]",
++		"[NC]",
++		"[NC]";
++};
++
++&gpio2 {
++	gpio-line-names =
++		"[NC]",
++		"P2.17",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[EEPROM_WP]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"P2.35 [AIN5]",
++		"P1.02 [AIN6]",
++		"P1.35 [PRU1.10]",
++		"P1.04 [PRU1.11]",
++		"[MMC0_DAT3]",
++		"[MMC0_DAT2]",
++		"[MMC0_DAT1]",
++		"[MMC0_DAT0]",
++		"[MMC0_CLK]",
++		"[MMC0_CMD]";
++};
++
++&gpio3 {
++	gpio-line-names =
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[I2C0_SDA]",
++		"[I2C0_SCL]",
++		"[JTAG]",
++		"[JTAG]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"P1.03 [USB1]",
++		"P1.36 [PWM0A]",
++		"P1.33 [PRU0.1]",
++		"P2.32 [PRU0.2]",
++		"P2.30 [PRU0.3]",
++		"P1.31 [PRU0.4]",
++		"P2.34 [PRU0.5]",
++		"P2.28 [PRU0.6]",
++		"P1.29 [PRU0.7]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]";
++};
++
+ &am33xx_pinmux {
+ 	i2c2_pins: pinmux-i2c2-pins {
+ 		pinctrl-single,pins = <
+-- 
+2.25.1
 
