@@ -2,162 +2,89 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9362EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC82FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C35B20734
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:08:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAA2220734
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:08:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="f5XnrPJs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732157AbgFISIU (ORCPT
+        id S2388433AbgFISIk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:08:20 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:41502 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388192AbgFISF7 (ORCPT
+        Tue, 9 Jun 2020 14:08:40 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:40314 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732878AbgFISIg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 14:05:59 -0400
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1jiidG-0001pV-JS; Tue, 09 Jun 2020 19:05:54 +0100
-Received: from ben by deadeye with local (Exim 4.94)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1jiidF-006Vw6-Ep; Tue, 09 Jun 2020 19:05:53 +0100
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+        Tue, 9 Jun 2020 14:08:36 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 059I7reh053985;
+        Tue, 9 Jun 2020 13:07:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591726073;
+        bh=cm2RuIQ71UrmMw+X34myMwl7z6ENm3bU422kS2bPHGA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=f5XnrPJs4w2Wo3RbXRbUSSWUchDqz65sZXYm8RgxcPxtSRoPugfzAsuRu1O3bXhb7
+         naz1VTXM5GrtUAGtnVS6BcLUtTcSNlTQ2ItxFZwU0VG9rLz1yC262gDzxYArDGbNXn
+         VZ1Y5gvtf/DrguwAwzXcBNO1YuSzLUkB7BAEQ1UY=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 059I7rHB096669
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 9 Jun 2020 13:07:53 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 9 Jun
+ 2020 13:07:52 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 9 Jun 2020 13:07:52 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 059I7pnU088442;
+        Tue, 9 Jun 2020 13:07:51 -0500
+Subject: Re: [RFC PATCH 0/2] TAS2563 DSP Firmware Loader
+To:     Mark Brown <broonie@kernel.org>
+CC:     <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
+        <robh@kernel.org>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20200609172841.22541-1-dmurphy@ti.com>
+ <20200609175203.GP4583@sirena.org.uk>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <6d6aaed3-dac8-e1ec-436c-9b04273df2b3@ti.com>
+Date:   Tue, 9 Jun 2020 13:07:50 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Hannes Reinecke" <hare@suse.de>,
-        "Bart Van Assche" <bart.vanassche@wdc.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Hannes Reinecke" <hare@suse.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "Christoph Hellwig" <hch@lst.de>
-Date:   Tue, 09 Jun 2020 19:04:24 +0100
-Message-ID: <lsq.1591725832.196896298@decadent.org.uk>
-X-Mailer: LinuxStableQueue (scripts by bwh)
-X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 33/61] scsi: sg: factor out sg_fill_request_table()
-In-Reply-To: <lsq.1591725831.850867383@decadent.org.uk>
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+In-Reply-To: <20200609175203.GP4583@sirena.org.uk>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-3.16.85-rc1 review patch.  If anyone has any objections, please let me know.
+Mark
 
-------------------
+On 6/9/20 12:52 PM, Mark Brown wrote:
+> On Tue, Jun 09, 2020 at 12:28:39PM -0500, Dan Murphy wrote:
+>
+>> These programs and configurations are selectable via files under the I2C dev
+>> node.  There may be a better way to select this through ALSA controls but I was
+>> unable to find a good example of this.  This is why this is an RFC patchset.
+> I think you can just use enums for most of this - what you want to do I
+> think is parse the firmware, build templates for the controls and then
+> add them with snd_soc_add_component_controls().  Userspace *should* cope
+> with controls being hotplugged.
 
-From: Hannes Reinecke <hare@suse.de>
+Yes this was my concern if userspace could cope with dynamic controls.
 
-commit 4759df905a474d245752c9dc94288e779b8734dd upstream.
-
-Factor out sg_fill_request_table() for better readability.
-
-[mkp: typos, applied by hand]
-
-Signed-off-by: Hannes Reinecke <hare@suse.com>
-Reviewed-by: Bart Van Assche <bart.vanassche@wdc.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
----
- drivers/scsi/sg.c | 61 +++++++++++++++++++++++++++--------------------
- 1 file changed, 35 insertions(+), 26 deletions(-)
-
---- a/drivers/scsi/sg.c
-+++ b/drivers/scsi/sg.c
-@@ -870,6 +870,40 @@ static int max_sectors_bytes(struct requ
- 	return max_sectors << 9;
- }
- 
-+static void
-+sg_fill_request_table(Sg_fd *sfp, sg_req_info_t *rinfo)
-+{
-+	Sg_request *srp;
-+	int val;
-+	unsigned int ms;
-+
-+	val = 0;
-+	list_for_each_entry(srp, &sfp->rq_list, entry) {
-+		if (val > SG_MAX_QUEUE)
-+			break;
-+		memset(&rinfo[val], 0, SZ_SG_REQ_INFO);
-+		rinfo[val].req_state = srp->done + 1;
-+		rinfo[val].problem =
-+			srp->header.masked_status &
-+			srp->header.host_status &
-+			srp->header.driver_status;
-+		if (srp->done)
-+			rinfo[val].duration =
-+				srp->header.duration;
-+		else {
-+			ms = jiffies_to_msecs(jiffies);
-+			rinfo[val].duration =
-+				(ms > srp->header.duration) ?
-+				(ms - srp->header.duration) : 0;
-+		}
-+		rinfo[val].orphan = srp->orphan;
-+		rinfo[val].sg_io_owned = srp->sg_io_owned;
-+		rinfo[val].pack_id = srp->header.pack_id;
-+		rinfo[val].usr_ptr = srp->header.usr_ptr;
-+		val++;
-+	}
-+}
-+
- static long
- sg_ioctl(struct file *filp, unsigned int cmd_in, unsigned long arg)
- {
-@@ -1063,38 +1097,13 @@ sg_ioctl(struct file *filp, unsigned int
- 			return -EFAULT;
- 		else {
- 			sg_req_info_t *rinfo;
--			unsigned int ms;
- 
- 			rinfo = kmalloc(SZ_SG_REQ_INFO * SG_MAX_QUEUE,
- 								GFP_KERNEL);
- 			if (!rinfo)
- 				return -ENOMEM;
- 			read_lock_irqsave(&sfp->rq_list_lock, iflags);
--			val = 0;
--			list_for_each_entry(srp, &sfp->rq_list, entry) {
--				if (val >= SG_MAX_QUEUE)
--					break;
--				memset(&rinfo[val], 0, SZ_SG_REQ_INFO);
--				rinfo[val].req_state = srp->done + 1;
--				rinfo[val].problem =
--					srp->header.masked_status &
--					srp->header.host_status &
--					srp->header.driver_status;
--				if (srp->done)
--					rinfo[val].duration =
--						srp->header.duration;
--				else {
--					ms = jiffies_to_msecs(jiffies);
--					rinfo[val].duration =
--						(ms > srp->header.duration) ?
--						(ms - srp->header.duration) : 0;
--				}
--				rinfo[val].orphan = srp->orphan;
--				rinfo[val].sg_io_owned = srp->sg_io_owned;
--				rinfo[val].pack_id = srp->header.pack_id;
--				rinfo[val].usr_ptr = srp->header.usr_ptr;
--				val++;
--			}
-+			sg_fill_request_table(sfp, rinfo);
- 			read_unlock_irqrestore(&sfp->rq_list_lock, iflags);
- 			result = __copy_to_user(p, rinfo,
- 						SZ_SG_REQ_INFO * SG_MAX_QUEUE);
+Dan
 
