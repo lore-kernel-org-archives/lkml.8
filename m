@@ -2,53 +2,51 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89550C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F15F1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:47:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C29120820
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:47:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C990520801
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:47:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591724869;
-	bh=ztWBibTLyxtPC1/akqCXHZhfQhHK7+uZLcSbCXNi+kE=;
+	s=default; t=1591724874;
+	bh=yoGrA38esDLQ8SgY4VYMWUjj6qYv8c6hWJsXS2aZk1c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D6E2YYv/J+wo0KcTwrqoeBtuY3NBSNuZvCvYLktmpGIRN3xbjwJWsV9gjB0VBiBdy
-	 hXifZhlimoZYhXDWiULeNOjppoyX5eobw+Nxj+qX2flNNt67+dFWvbWcIDJhnUJF/I
-	 Xach/HiCC6n3rqa0WZ/uicp7nD+a1wXy8GyNtiQg=
+	b=qL2pq7rGke91OFRs5fFhz7u0+96Xtfa5MrZtpif1LqFDuPty/ImcEWthAnH/JHDWD
+	 qj5/WeQ2oDK5z4dVaizcxYn7KW3DjNA+6SAOoySTFNho2Ly/MFFLl6mhEV/7z6vyWX
+	 SuCLrY3vyQ04uOzIh+naxEI52MiJcTuIprmEs7TE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732160AbgFIRrs (ORCPT
+        id S1732178AbgFIRrw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:47:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59158 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:47:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732146AbgFIRrn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:47:43 -0400
+        id S1732156AbgFIRrr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:47:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97BC820820;
-        Tue,  9 Jun 2020 17:47:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2299820812;
+        Tue,  9 Jun 2020 17:47:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591724863;
-        bh=ztWBibTLyxtPC1/akqCXHZhfQhHK7+uZLcSbCXNi+kE=;
+        s=default; t=1591724867;
+        bh=yoGrA38esDLQ8SgY4VYMWUjj6qYv8c6hWJsXS2aZk1c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZF3kUYPzDqP+mhhBDbYul29ow8c71P5591i4pNe44VhSctAj1XsXjLfyVmr74RZ2e
-         eBxF2opo6lC6LaOHYfx3W1RZSmEpsmLQlGea1y+RX9HoGClnGU9bcFp3ZrFkOhjZ6W
-         glC0oqKdeB5XDz7WV0KZaBR2W9X0HVVikbmC0How=
+        b=xX5CJsxp79PtGR2nsci9LrHj0JBK1fPqM1yBoLHFfHRCAMPJkvaOJmu5/i9Q5kTt4
+         zUnZlOUqlgqFJDkJfZrrMxzjYo74DqYtdhYhE3XKOZ24sds0deJGhwufTRZMNaJXtg
+         BWwowGx8GZsXeJZDB18oOCMrc+hWNwSRRbNRB8pU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?David=20Bala=C5=BEic?= <xerces9@gmail.com>,
-        Guillaume Nault <gnault@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 12/42] pppoe: only process PADT targeted at local interfaces
-Date:   Tue,  9 Jun 2020 19:44:18 +0200
-Message-Id: <20200609174016.816264928@linuxfoundation.org>
+        stable@vger.kernel.org, Julian Sax <jsbc@gmx.de>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: [PATCH 4.9 14/42] HID: i2c-hid: add Schneider SCL142ALM to descriptor override
+Date:   Tue,  9 Jun 2020 19:44:20 +0200
+Message-Id: <20200609174017.028132158@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174015.379493548@linuxfoundation.org>
 References: <20200609174015.379493548@linuxfoundation.org>
@@ -61,37 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guillaume Nault <gnault@redhat.com>
+From: Julian Sax <jsbc@gmx.de>
 
-We don't want to disconnect a session because of a stray PADT arriving
-while the interface is in promiscuous mode.
-Furthermore, multicast and broadcast packets make no sense here, so
-only PACKET_HOST is accepted.
+commit 6507ef10660efdfee93f0f3b9fac24b5e4d83e56 upstream.
 
-Reported-by: David Balažic <xerces9@gmail.com>
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Guillaume Nault <gnault@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This device uses the SIPODEV SP1064 touchpad, which does not
+supply descriptors, so it has to be added to the override list.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Julian Sax <jsbc@gmx.de>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ppp/pppoe.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/net/ppp/pppoe.c b/drivers/net/ppp/pppoe.c
-index fa8f7c40a384..804c52c35f07 100644
---- a/drivers/net/ppp/pppoe.c
-+++ b/drivers/net/ppp/pppoe.c
-@@ -494,6 +494,9 @@ static int pppoe_disc_rcv(struct sk_buff *skb, struct net_device *dev,
- 	if (!skb)
- 		goto out;
+--- a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
++++ b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
+@@ -381,6 +381,14 @@ static const struct dmi_system_id i2c_hi
+ 		},
+ 		.driver_data = (void *)&sipodev_desc
+ 	},
++	{
++		.ident = "Schneider SCL142ALM",
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "SCHNEIDER"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "SCL142ALM"),
++		},
++		.driver_data = (void *)&sipodev_desc
++	},
+ 	{ }	/* Terminate list */
+ };
  
-+	if (skb->pkt_type != PACKET_HOST)
-+		goto abort;
-+
- 	if (!pskb_may_pull(skb, sizeof(struct pppoe_hdr)))
- 		goto abort;
- 
--- 
-2.25.1
-
 
 
