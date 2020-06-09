@@ -2,154 +2,212 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 261CEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 22:55:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B9F4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 22:55:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3D1620734
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 22:55:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D26AA206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 22:55:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="pY6fBT37"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="AaHx/ZOa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728841AbgFIWzP (ORCPT
+        id S1728891AbgFIWzb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 18:55:15 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:44478 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728642AbgFIWzM (ORCPT
+        Tue, 9 Jun 2020 18:55:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60410 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728642AbgFIWz0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 18:55:12 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 059MqpYU162182;
-        Tue, 9 Jun 2020 22:54:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2020-01-29; bh=HvGdtjAHs0B66PLoqaTxJLCRKpFgcsRjar2VCL7YTAM=;
- b=pY6fBT37pThpu8U1RgDw4s3DBAVMiKNNdDUyy8k7UG3GOq1xNqFjWifjrrvOEFerpyIj
- Q8d9hNxYXng/Q52Zdkkz5H4wK6oELx9vtmwnr6pBgw11vQbmkbSGLultBH92JZEz3B3y
- I7GwGV/yHvNtBwnpCepbjDqQEBSMx0AfUkv06MAJER7Wi7EWarykLFjN/J+Fs8ECAw+C
- +W8m5cP1B7BDaNQ2bJsaPp5wlTGB54mAH+Pqf/EjS8iAfGzgIJw5Sjvy8q6JghauDjbH
- GJ2wGhuKu6hLH3llB0Us/ckuB7PU5t5kbI4hkIn/5XVa3NQP0cuSY9RIajPqT2KUb16c YA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 31jepnsaq9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 09 Jun 2020 22:54:58 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 059Mru4t027272;
-        Tue, 9 Jun 2020 22:54:58 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 31gmqp8p6w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 09 Jun 2020 22:54:58 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 059MstQu012275;
-        Tue, 9 Jun 2020 22:54:55 GMT
-Received: from localhost.localdomain (/98.229.125.203)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 09 Jun 2020 15:54:55 -0700
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Sistare <steven.sistare@oracle.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>
-Subject: [PATCH v2] x86/mm: use max memory block size on bare metal
-Date:   Tue,  9 Jun 2020 18:54:51 -0400
-Message-Id: <20200609225451.3542648-1-daniel.m.jordan@oracle.com>
-X-Mailer: git-send-email 2.26.2
+        Tue, 9 Jun 2020 18:55:26 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C82A7C08C5C3
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 15:55:25 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id gl26so371051ejb.11
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 15:55:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=LYBqerZassKlqNTxy3as16L4QGqXx7iCtOa8miVjhI8=;
+        b=AaHx/ZOa9ijt0PdstPCqR8gBnbdFESmopPjGBDGxffkQDRZL90jPY01sy1MWqGcObY
+         87HwROzIZQ1L2Q8YQ484vcTEd7UOjhD9Mh94qQSIgwWMA2uHWRbBLDUTAa5IfouA/y67
+         bTJJY6ohZDhx97w2+JHLpCjKB9x/XZi6Tvn/0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=LYBqerZassKlqNTxy3as16L4QGqXx7iCtOa8miVjhI8=;
+        b=ln/fAivlrb/RqjlDbKOTvj+ya2YQKni54hGt6lFlxxrEoqNALEQSYt1GmK340wYM68
+         ApZyiHqlPbGSSARcZNuPYj1WniflxNtSSxD6TE/yUFr0j+avlK5GBpPLv+zkjNvrt7A+
+         WNIWW/VQsxMhUFwmDnl+s+9sf5Rf3BP7yTYMMPyksZVcfXkTQSuNH0adY9qhvYS1Lrra
+         38U8KPepd8wqJfLRSg7KAV98nl+neUbG2aHVKwREI8NOa0vNbqVYx15PBSLvZkPBD7/N
+         R4s6sQPjBhnvmjNnrLkRjKPVxzJGRsaD7w7plYNkpYLiYh5dWiVTm7WjpP/6tYsoCBC2
+         ll8Q==
+X-Gm-Message-State: AOAM530wlXovJdtuesCtrUkgTCezfyg7N3ww67VPg+I5BrAT/FOWLqa7
+        9kzNKQwYBEfSUKCk+LTd+8cpAg==
+X-Google-Smtp-Source: ABdhPJwjSrIRSIC7d+hmQ2dLRib2BwauXuZ6u2RlliwND0Gn7sBoGqarx5XYRfMDchpEAnJnjtTpgg==
+X-Received: by 2002:a17:906:1c02:: with SMTP id k2mr592170ejg.37.1591743323900;
+        Tue, 09 Jun 2020 15:55:23 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id ck11sm14207643ejb.41.2020.06.09.15.55.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jun 2020 15:55:23 -0700 (PDT)
+Subject: Re: [PATCH v7 1/8] fs: introduce kernel_pread_file* support
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Wolfram Sang <wsa@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Christoph Hellwig <hch@infradead.org>
+References: <20200606050458.17281-1-scott.branden@broadcom.com>
+ <20200606050458.17281-2-scott.branden@broadcom.com>
+ <20200606155216.GP19604@bombadil.infradead.org>
+ <ea16c19e-bd60-82ec-4825-05e233667f9f@broadcom.com>
+ <20200609132151.GC19604@bombadil.infradead.org>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <c983b910-d216-559a-60b5-dc8b4b2435a2@broadcom.com>
+Date:   Tue, 9 Jun 2020 15:55:15 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
+In-Reply-To: <20200609132151.GC19604@bombadil.infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9647 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0 mlxscore=0
- mlxlogscore=999 adultscore=0 spamscore=0 suspectscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006090173
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9647 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 suspectscore=0
- priorityscore=1501 bulkscore=0 clxscore=1015 phishscore=0 impostorscore=0
- malwarescore=0 mlxscore=0 cotscore=-2147483648 adultscore=0 spamscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006090173
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some of our servers spend significant time at kernel boot initializing
-memory block sysfs directories and then creating symlinks between them
-and the corresponding nodes.  The slowness happens because the machines
-get stuck with the smallest supported memory block size on x86 (128M),
-which results in 16,288 directories to cover the 2T of installed RAM.
-The search for each memory block is noticeable even with
-commit 4fb6eabf1037 ("drivers/base/memory.c: cache memory blocks in
-xarray to accelerate lookup").
+Hi Matthew,
 
-Commit 078eb6aa50dc ("x86/mm/memory_hotplug: determine block size based
-on the end of boot memory") chooses the block size based on alignment
-with memory end.  That addresses hotplug failures in qemu guests, but
-for bare metal systems whose memory end isn't aligned to even the
-smallest size, it leaves them at 128M.
+On 2020-06-09 6:21 a.m., Matthew Wilcox wrote:
+> On Mon, Jun 08, 2020 at 03:29:22PM -0700, Scott Branden wrote:
+>> Hi Matthew,
+>>
+>> I am requesting the experts in the filesystem subsystem to come to a
+>> consensus here.
+>> This is not my area of expertise at all but every time I have addressed all
+>> of the
+>> outstanding concerns someone else comes along and raises another one.
+> I appreciate it's frustrating for you, but this is the nature of
+> patch review.  I haven't even read the first five or so submissions.
+> I can see them in my inbox and they look like long threads.  I'm not
+> particularly inclined to read them.  I happened to read v6, and reacted
+> to the API being ugly.
+Thanks for the review.  Yes, I do see the enum being ugly now
+and have removed it in v8 of the patch.  Hopefully it addresses
+your concerns.  More comments below.
+>
+>> Please see me comments below.
+>>
+>> On 2020-06-06 8:52 a.m., Matthew Wilcox wrote:
+>>> On Fri, Jun 05, 2020 at 10:04:51PM -0700, Scott Branden wrote:
+>>>> -int kernel_read_file(struct file *file, void **buf, loff_t *size,
+>>>> -		     loff_t max_size, enum kernel_read_file_id id)
+>>>> -{
+>>>> -	loff_t i_size, pos;
+>> Please note that how checkpatch generated the diff here.  The code
+>> modifications
+>> below are for a new function kernel_pread_file, they do not modify the
+>> existing API
+>> kernel_read_file.  kernel_read_file requests the ENTIRE file is read.  So we
+>> need to be
+>> able to differentiate whether it is ok to read just a portion of the file or
+>> not.
+> You've gone about this in entirely the wrong way though.  This enum to
+> read the entire file or a partial is just bad design.
+Your point on the enum is valid.
+I've removed it from design.  Hopefully it is cleaner now.
+>
+>>>> +int kernel_pread_file(struct file *file, void **buf, loff_t *size,
+>>>> +		      loff_t pos, loff_t max_size,
+>>>> +		      enum kernel_pread_opt opt,
+>>>> +		      enum kernel_read_file_id id)
+>> So, to share common code a new kernel_pread_opt needed to be added in order
+>> to specify whether
+>> it was ok to read a partial file or not, and provide an offset into the file
+>> where to begin reading.
+>> The meaning of parameters doesn't change in the bonkers API. max_size still
+>> means max size, etc.
+>> These options are needed so common code can be shared with kernel_read_file
+>> api.
+> Does pread() in userspace take seven parameters?  No.  It takes four.
+> What you're doing is taking all the complexity of all of the interfaces
+> and stuffing it all down into the bottom function instead of handling
+> some of the complexity in the wrapper functions.  For example, you
+> could support the functionality of 'max_size' in kernel_read_file()
+> and leave it out of the kernel_pread_file() interface.
+I have removed the enum necessary in the kernel pread call now,
+so it is down to 6.
+The other 2 parameters are necessary as they are in kernel read.
 
-Make kernels that aren't running on a hypervisor use the largest
-supported size (2G) to minimize overhead on big machines.  Kernel boot
-goes 7% faster on the aforementioned servers, shaving off half a second.
+max_size makes no sense to remove - it serves the same purpose
+as in userspace pread and read functions.  To specify the max size
+to read.
+>>> I think what we actually want is:
+>>>
+>>> ssize_t vmap_file_range(struct file *, loff_t start, loff_t end, void **bufp);
+>>> void vunmap_file_range(struct file *, void *buf);
+>>>
+>>> If end > i_size, limit the allocation to i_size.  Returns the number
+>>> of bytes allocated, or a negative errno.  Writes the pointer allocated
+>>> to *bufp.  Internally, it should use the page cache to read in the pages
+>>> (taking appropriate reference counts).  Then it maps them using vmap()
+>>> instead of copying them to a private vmalloc() array.
+>>> kernel_read_file() can be converted to use this API.  The users will
+>>> need to be changed to call kernel_read_end(struct file *file, void *buf)
+>>> instead of vfree() so it can call allow_write_access() for them.
+>>>
+>>> vmap_file_range() has a lot of potential uses.  I'm surprised we don't
+>>> have it already, to be honest.
+>> Such a change sounds like it could be done in a later patch series.
+>> It's an incomplete solution.  It would work for some of the needed
+>> operations but not others.
+>> For kernel_read_file, I don't see how in your new API it indicates if the
+>> end of the file was reached or not.
+> That's the point.  It doesn't.  If a caller needs that, then they can
+> figure that out themselves.
+No, they can't.  The caller only calls kernel_read_file once and expects
+the whole file to be read.  The kernel_read_file doesn't work like 
+userspace.
+There is no tracking like userspace of where in the file you read?
+>
+>> Also, please note that buffers may be preallocated  and shouldn't be freed
+>> by the kernel in some cases and
+>> allocated and freed by the kernel in others.
+> You're trying to build the swiss army knife of functions.  Swiss army
+> knives are useful, but they're no good for carving a steak.
+Hopefully I'm carving steak now.
+>> I would like the experts here to decide on what needs to be done so we can
+>> move forward
+>> and get kernel_pread_file support added soon.
+> You know, you haven't even said _why_ you want this.  The cover letter
+> just says "I want this", and doesn't say why it's needed.
+Cover letter updated.
 
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Sistare <steven.sistare@oracle.com>
-Cc: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
----
-
-Applies to 5.7 and today's mainline
-
- arch/x86/mm/init_64.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-index 8b5f73f5e207c..906fbdb060748 100644
---- a/arch/x86/mm/init_64.c
-+++ b/arch/x86/mm/init_64.c
-@@ -55,6 +55,7 @@
- #include <asm/uv/uv.h>
- #include <asm/setup.h>
- #include <asm/ftrace.h>
-+#include <asm/hypervisor.h>
- 
- #include "mm_internal.h"
- 
-@@ -1390,6 +1391,15 @@ static unsigned long probe_memory_block_size(void)
- 		goto done;
- 	}
- 
-+	/*
-+	 * Use max block size to minimize overhead on bare metal, where
-+	 * alignment for memory hotplug isn't a concern.
-+	 */
-+	if (hypervisor_is_type(X86_HYPER_NATIVE)) {
-+		bz = MAX_BLOCK_SIZE;
-+		goto done;
-+	}
-+
- 	/* Find the largest allowed block size that aligns to memory end */
- 	for (bz = MAX_BLOCK_SIZE; bz > MIN_MEMORY_BLOCK_SIZE; bz >>= 1) {
- 		if (IS_ALIGNED(boot_mem_end, bz))
--- 
-2.26.2
-
+Thanks,
+Scott
