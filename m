@@ -2,192 +2,117 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A9EDC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 07:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D308C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 07:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6996C207F9
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 07:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A984207ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 07:58:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oTYqPAhx"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="F+Y1CC9/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727850AbgFIHyQ (ORCPT
+        id S1727076AbgFIH6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 03:54:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34044 "EHLO
+        Tue, 9 Jun 2020 03:58:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbgFIHyP (ORCPT
+        with ESMTP id S1726404AbgFIH63 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 03:54:15 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8175C05BD43;
-        Tue,  9 Jun 2020 00:54:11 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id 23so8828301pfw.10;
-        Tue, 09 Jun 2020 00:54:11 -0700 (PDT)
+        Tue, 9 Jun 2020 03:58:29 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE9F7C05BD43
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 00:58:27 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id m81so21723202ioa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 00:58:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ll44CFo3GjO/tzqh0xWX54XeAv4u4O/td7WM1gcEvQ0=;
-        b=oTYqPAhxteUqW28m+vJjUdPsmncw3YFmQyn+ohOJX6c18ikDA32xwKus+VJ53RoahK
-         PTRpr6cWYomcan9lR6yO6VWw3jnrVpd0pFz8EtE2TzPIEU2DV+dQ8ixAyn/m9eH/zFbL
-         0RXO+Lk82qD3bFuuyPA+TOKj7ObQFOrXTTWCIik0cLJPw5xzcM5yO4452JyP4bSHa4Bb
-         aWO8iZk8wPaZZ1utH6uUMWYBJlQ77ouNW+Ey9fGhW5ThyACjmtKmYtxRFWa+5ktcZz3G
-         j5QumgVYXaBnQGMvkBLqUESti97SSjiik6LyEclHOWsnOR9q64LKIBdJu1FzDjowuSXc
-         HrgA==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=D0Izobairq3HPGIM7wB1F+v5CJ0c4Z0+kAZbB2rwCBI=;
+        b=F+Y1CC9/NEP+GxLXxOTnfU4bNjYY1wz/x6+SLxjPKqio2rOqvkD87hsXOMdaAq0Xud
+         ZllRkeQk689ZblVTsazfI4A7GlJTegbZKyX2ZTP1pNjAVQupq+fFnyXLZtZuP/1nub8o
+         puChyFupDjWLtQvJSLILRou6XOJjURzf6OHkdVye3xCHgvnb738v3os4lRvrqzheh42n
+         A6Xdv5RCBxlU05vi+c5IIEHzyeBUqpxO4fiNnSRK/u//KAfUoJj9+d7XvE3T1lRRtWSV
+         CKr68NLRM5exe/mCIfwlN9X1HrseA7RBy4GEzdxRWwg7kxpfNLauOorlv0d7QZlGJA43
+         3aJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ll44CFo3GjO/tzqh0xWX54XeAv4u4O/td7WM1gcEvQ0=;
-        b=Q4CKaJzVbHpJQ5palTKFegxPzKSDfnsH9AzmeBWour+1pazcA/sFaaiw+NHIpfrlIs
-         DwFtpSSbJ6OMkMffL88WFS5nPhCadQnxeYrACsNUfcTgyxfReRQ4VM17uVXDbZMv+9rs
-         /Sq0xZtNJykcVW9VUag4JaNgCmtvdzMV9fDS0sdhDTI0bSfs5v2Oiu/YI7M2pkSiBDmj
-         Yfp0k2b4ynPbC/S7cqLK+xTcJGW1qVZZkRut+W0DPTqAfSzWyK5ivlj7/abVuw4pENnP
-         Un6tBfDfgGUB3xXnpqtipO1bkVA9MLNqPHen19RRDfZwA/eepnIEnm0HXl6p4Jws3+9o
-         a8ew==
-X-Gm-Message-State: AOAM531lv4GYLQSKA2D45EH8wr44QM4LPHs1N1agOvffazuqq6bj05qY
-        O1bV6rjn2t8dsqk5HVu5lB0=
-X-Google-Smtp-Source: ABdhPJwvvpv5IO++XmtsOJ1bTOdz3/jS9WtAVbKM5dgPlkb4S4o4lyOd5A9PepqrVZagTSJ1GfnuWQ==
-X-Received: by 2002:a65:66d5:: with SMTP id c21mr22631908pgw.155.1591689251332;
-        Tue, 09 Jun 2020 00:54:11 -0700 (PDT)
-Received: from dc803.flets-west.jp ([2404:7a87:83e0:f800:99b4:eb52:d0bf:231c])
-        by smtp.gmail.com with ESMTPSA id x4sm4769929pfx.87.2020.06.09.00.54.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 00:54:10 -0700 (PDT)
-From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
-To:     kohada.t2@gmail.com
-Cc:     kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
-        mori.takahiro@ab.mitsubishielectric.co.jp,
-        motai.hirotaka@aj.mitsubishielectric.co.jp,
-        Namjae Jeon <linkinjeon@kernel.org>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        Namjae Jeon <namjae.jeon@samsung.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] exfat: add error check when updating dir-entries
-Date:   Tue,  9 Jun 2020 16:53:28 +0900
-Message-Id: <20200609075329.13313-2-kohada.t2@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200609075329.13313-1-kohada.t2@gmail.com>
-References: <20200609075329.13313-1-kohada.t2@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=D0Izobairq3HPGIM7wB1F+v5CJ0c4Z0+kAZbB2rwCBI=;
+        b=HVoZB44M9Yk19ll7QF3LlSiPc0d5H4LimNc5fjDM3awuSU8VG/m2Xfl4tvYGU3+JXE
+         iK+vDMQZvMzzX+6GcnzY68jXPfy1SoEsGeyM+TrwdZrfx6OWLbPFFd+yuGg9lHjI+ClP
+         SQkLBG8a34hASyVmGbrG1EifahiHCdWwcfyeumIcXZGLGIokvDSkLgefG50Io9f6JUAk
+         miJnMejuTEtIcEuKg7apXlWkn/0x8Zhs6GN/RqXpbxPga2JSKVj8VWH5ZpI8qxz1KTDI
+         JBEb9Ex75yMaVxdXwqF2y5Ied+258bXHfJVKJ/aPtFqc4E+iWP5xWbjHloTELQcCyX23
+         7usw==
+X-Gm-Message-State: AOAM531ErdarNami6Q1/OQdoppYbH9et3EfBf+Zi0MEaWrpp6odJsqpi
+        u0TneuIfhYuBkSg35HBymysYltVT4CPVlv87Y2OsLw==
+X-Google-Smtp-Source: ABdhPJx2bQ9MpurOw+kbFkTpuwXAUL7qWR5/nMePphcxKeTXiD5GWJBTCE0v27bLoKC5cHGy8OdCkAkiYPTXgWfz/WY=
+X-Received: by 2002:a6b:39d7:: with SMTP id g206mr25951591ioa.31.1591689507052;
+ Tue, 09 Jun 2020 00:58:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191224120709.18247-1-brgl@bgdev.pl> <20191224120709.18247-13-brgl@bgdev.pl>
+ <20200609002346.GA6042@sol>
+In-Reply-To: <20200609002346.GA6042@sol>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 9 Jun 2020 09:58:16 +0200
+Message-ID: <CAMRc=Mf+xYFaznq+O=wEjb3UyanuH5b3hvOpNx9Jcx+Vm65g7A@mail.gmail.com>
+Subject: Re: [PATCH v4 12/13] gpiolib: add new ioctl() for monitoring changes
+ in line info
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add error check when synchronously updating dir-entries.
+wt., 9 cze 2020 o 02:23 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a):
+>
+> On Tue, Dec 24, 2019 at 01:07:08PM +0100, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+>
+> [snip!]
+>
+> > +static int lineinfo_changed_notify(struct notifier_block *nb,
+> > +                                unsigned long action, void *data)
+> > +{
+> > +     struct gpio_chardev_data *priv =3D to_gpio_chardev_data(nb);
+> > +     struct gpioline_info_changed chg;
+> > +     struct gpio_desc *desc =3D data;
+> > +     int ret;
+> > +
+> > +     if (!test_bit(desc_to_gpio(desc), priv->watched_lines))
+> > +             return NOTIFY_DONE;
+> > +
+> > +     memset(&chg, 0, sizeof(chg));
+> > +     chg.info.line_offset =3D gpio_chip_hwgpio(desc);
+> > +     chg.event_type =3D action;
+> > +     chg.timestamp =3D ktime_get_real_ns();
+> > +     gpio_desc_to_lineinfo(desc, &chg.info);
+> > +
+>
+> Is this call legal?  It can sleep - in fact you recently changed that
+> very function to move a mutex call outside of a spinlock protected sectio=
+n.
+> Here it is being called within an RCU lock, as lineinfo_changed_notify
+> is at the end of an atomic_notifier_call_chain.
+>
 
-Suggested-by: Namjae Jeon <linkinjeon@kernel.org>
-Suggested-by: Sungjong Seo <sj1557.seo@samsung.com>
-Signed-off-by: Tetsuhiro Kohada <kohada.t2@gmail.com>
----
-Changes in v2:
- - Split into 'write multiple sectors at once'
-   and 'add error check when updating dir-entries'
+Yeah, this is clearly wrong and lockdep would complain about invalid
+wait context. I'm trying to remember why I went for an atomic notifier
+chain here though... At first glance it doesn't look like the chain
+could be called from atomic context anywhere.
 
- fs/exfat/dir.c      | 3 ++-
- fs/exfat/exfat_fs.h | 2 +-
- fs/exfat/file.c     | 5 ++++-
- fs/exfat/inode.c    | 8 +++++---
- 4 files changed, 12 insertions(+), 6 deletions(-)
-
-diff --git a/fs/exfat/dir.c b/fs/exfat/dir.c
-index 495884ccb352..3eb8386fb5f2 100644
---- a/fs/exfat/dir.c
-+++ b/fs/exfat/dir.c
-@@ -602,7 +602,7 @@ void exfat_update_dir_chksum_with_entry_set(struct exfat_entry_set_cache *es)
- 	es->modified = true;
- }
- 
--void exfat_free_dentry_set(struct exfat_entry_set_cache *es, int sync)
-+int exfat_free_dentry_set(struct exfat_entry_set_cache *es, int sync)
- {
- 	int i, err = 0;
- 
-@@ -614,6 +614,7 @@ void exfat_free_dentry_set(struct exfat_entry_set_cache *es, int sync)
- 	for (i = 0; i < es->num_bh; i++)
- 		err ? bforget(es->bh[i]):brelse(es->bh[i]);
- 	kfree(es);
-+	return err;
- }
- 
- static int exfat_walk_fat_chain(struct super_block *sb,
-diff --git a/fs/exfat/exfat_fs.h b/fs/exfat/exfat_fs.h
-index 935954da2e54..f4fa0e833486 100644
---- a/fs/exfat/exfat_fs.h
-+++ b/fs/exfat/exfat_fs.h
-@@ -462,7 +462,7 @@ struct exfat_dentry *exfat_get_dentry_cached(struct exfat_entry_set_cache *es,
- 		int num);
- struct exfat_entry_set_cache *exfat_get_dentry_set(struct super_block *sb,
- 		struct exfat_chain *p_dir, int entry, unsigned int type);
--void exfat_free_dentry_set(struct exfat_entry_set_cache *es, int sync);
-+int exfat_free_dentry_set(struct exfat_entry_set_cache *es, int sync);
- int exfat_count_dir_entries(struct super_block *sb, struct exfat_chain *p_dir);
- 
- /* inode.c */
-diff --git a/fs/exfat/file.c b/fs/exfat/file.c
-index fce03f318787..37c8f04c1f8a 100644
---- a/fs/exfat/file.c
-+++ b/fs/exfat/file.c
-@@ -153,6 +153,7 @@ int __exfat_truncate(struct inode *inode, loff_t new_size)
- 		struct timespec64 ts;
- 		struct exfat_dentry *ep, *ep2;
- 		struct exfat_entry_set_cache *es;
-+		int err;
- 
- 		es = exfat_get_dentry_set(sb, &(ei->dir), ei->entry,
- 				ES_ALL_ENTRIES);
-@@ -187,7 +188,9 @@ int __exfat_truncate(struct inode *inode, loff_t new_size)
- 		}
- 
- 		exfat_update_dir_chksum_with_entry_set(es);
--		exfat_free_dentry_set(es, inode_needs_sync(inode));
-+		err = exfat_free_dentry_set(es, inode_needs_sync(inode));
-+		if (err)
-+			return err;
- 	}
- 
- 	/* cut off from the FAT chain */
-diff --git a/fs/exfat/inode.c b/fs/exfat/inode.c
-index ef7cf7a6d187..c0bfd1a586aa 100644
---- a/fs/exfat/inode.c
-+++ b/fs/exfat/inode.c
-@@ -77,8 +77,7 @@ static int __exfat_write_inode(struct inode *inode, int sync)
- 	ep2->dentry.stream.size = ep2->dentry.stream.valid_size;
- 
- 	exfat_update_dir_chksum_with_entry_set(es);
--	exfat_free_dentry_set(es, sync);
--	return 0;
-+	return exfat_free_dentry_set(es, sync);
- }
- 
- int exfat_write_inode(struct inode *inode, struct writeback_control *wbc)
-@@ -222,6 +221,7 @@ static int exfat_map_cluster(struct inode *inode, unsigned int clu_offset,
- 		if (ei->dir.dir != DIR_DELETED && modified) {
- 			struct exfat_dentry *ep;
- 			struct exfat_entry_set_cache *es;
-+			int err;
- 
- 			es = exfat_get_dentry_set(sb, &(ei->dir), ei->entry,
- 				ES_ALL_ENTRIES);
-@@ -240,7 +240,9 @@ static int exfat_map_cluster(struct inode *inode, unsigned int clu_offset,
- 				ep->dentry.stream.valid_size;
- 
- 			exfat_update_dir_chksum_with_entry_set(es);
--			exfat_free_dentry_set(es, inode_needs_sync(inode));
-+			err = exfat_free_dentry_set(es, inode_needs_sync(inode));
-+			if (err)
-+				return err;
- 
- 		} /* end of if != DIR_DELETED */
- 
--- 
-2.25.1
-
+Bart
