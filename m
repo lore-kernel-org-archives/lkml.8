@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05AF4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF389C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:13:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDAD02068D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:13:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEA3F2068D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:13:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591726413;
-	bh=YUQ3zE6gHknWLZQ8cWA+ZL/A4ox6L2Wm10Hf9XSjg5U=;
+	s=default; t=1591726421;
+	bh=MKi9Ec4ekA0zRqvxe3d+tTfsscx8C09ud9gHWbBEEOU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZDjZVnZiT5oI8zEAh2RoZ3rzpnHhzZQAjtZYXt1bDg5N8YAlQ+NwrBiyQHMBP9gTj
-	 5/OKOfnyQYLfI88KmOguK7qhuC2Fp5segrA6Lkq91FrpIv0C2D1XbaXESAc2nvuMvQ
-	 fO52f64MHKII0AkUo3QECHKnWsulZKSa43MbG6fE=
+	b=2m3CMUxaHjIwySK+Jh3108QTKct6A2V5fVM2+QEswi50/oHB7mEKmg1/oVbyAjaxW
+	 7yn93EjjejWdK+Kl49Dr/PPYXc2K2bX/7dznec6iN6ZWqxhGcv5k+rVlonmXQ58dab
+	 NBGsD+vueeftx4ZGROfURXgX0fBB39XkoCvh7I5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388424AbgFISNb (ORCPT
+        id S1732750AbgFIRuz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:13:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39216 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:50:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731220AbgFIRu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:50:57 -0400
+        id S1732627AbgFIRuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:50:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 424852074B;
-        Tue,  9 Jun 2020 17:50:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3AD320801;
+        Tue,  9 Jun 2020 17:50:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725056;
-        bh=YUQ3zE6gHknWLZQ8cWA+ZL/A4ox6L2Wm10Hf9XSjg5U=;
+        s=default; t=1591725010;
+        bh=MKi9Ec4ekA0zRqvxe3d+tTfsscx8C09ud9gHWbBEEOU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DHdEXvNbNXAEOtDZdIW12oiJgEUA81Zms3FTUBzA4WQferM5NtzVfJBbUN0bdIP3S
-         /2yIwucRVF8/fw9Bh/bwpNcJaolc8q8zHJJxCnQ8IqOr7AZD5pswlqLFf44malJWXB
-         V0YusCjXqhUunn3qGGW2iBcd/e547GZ5TkGurKQ8=
+        b=QIcNyU9ijW/WGXEWyW34zLXO9y8YuFXE+BTGoyEp9j0LvP++JUiMCZkzTtoXABZbt
+         VH7F94Xb2RYrL+ZnHfHC+018MKIUfe39PLZrPqtFLdfNi+utBDy2qa2/noYxhv1ULe
+         caUCPVcZHNeQPriyGTYh/v6hSxTr58kJ6fT8LZhg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 26/46] NFC: st21nfca: add missed kfree_skb() in an error path
-Date:   Tue,  9 Jun 2020 19:44:42 +0200
-Message-Id: <20200609174027.260635491@linuxfoundation.org>
+        stable@vger.kernel.org, Bin Liu <b-liu@ti.com>
+Subject: [PATCH 4.14 33/46] usb: musb: start session in resume for host port
+Date:   Tue,  9 Jun 2020 19:44:49 +0200
+Message-Id: <20200609174029.455219808@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174022.938987501@linuxfoundation.org>
 References: <20200609174022.938987501@linuxfoundation.org>
@@ -59,34 +58,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Bin Liu <b-liu@ti.com>
 
-[ Upstream commit 3decabdc714ca56c944f4669b4cdec5c2c1cea23 ]
+commit 7f88a5ac393f39319f69b8b20cc8d5759878d1a1 upstream.
 
-st21nfca_tm_send_atr_res() misses to call kfree_skb() in an error path.
-Add the missed function call to fix it.
+Commit 17539f2f4f0b ("usb: musb: fix enumeration after resume") replaced
+musb_start() in musb_resume() to not override softconnect bit, but it
+doesn't restart the session for host port which was done in musb_start().
+The session could be disabled in musb_suspend(), which leads the host
+port doesn't stay in host mode.
 
-Fixes: 1892bf844ea0 ("NFC: st21nfca: Adding P2P support to st21nfca in Initiator & Target mode")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+So let's start the session specifically for host port in musb_resume().
+
+Fixes: 17539f2f4f0b ("usb: musb: fix enumeration after resume")
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Bin Liu <b-liu@ti.com>
+Link: https://lore.kernel.org/r/20200525025049.3400-3-b-liu@ti.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/nfc/st21nfca/dep.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/nfc/st21nfca/dep.c
-+++ b/drivers/nfc/st21nfca/dep.c
-@@ -184,8 +184,10 @@ static int st21nfca_tm_send_atr_res(stru
- 		memcpy(atr_res->gbi, atr_req->gbi, gb_len);
- 		r = nfc_set_remote_general_bytes(hdev->ndev, atr_res->gbi,
- 						  gb_len);
--		if (r < 0)
-+		if (r < 0) {
-+			kfree_skb(skb);
- 			return r;
-+		}
- 	}
+---
+ drivers/usb/musb/musb_core.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
+
+--- a/drivers/usb/musb/musb_core.c
++++ b/drivers/usb/musb/musb_core.c
+@@ -2749,6 +2749,13 @@ static int musb_resume(struct device *de
+ 	musb_enable_interrupts(musb);
+ 	musb_platform_enable(musb);
  
- 	info->dep_info.curr_nfc_dep_pni = 0;
++	/* session might be disabled in suspend */
++	if (musb->port_mode == MUSB_HOST &&
++	    !(musb->ops->quirks & MUSB_PRESERVE_SESSION)) {
++		devctl |= MUSB_DEVCTL_SESSION;
++		musb_writeb(musb->mregs, MUSB_DEVCTL, devctl);
++	}
++
+ 	spin_lock_irqsave(&musb->lock, flags);
+ 	error = musb_run_resume_work(musb);
+ 	if (error)
 
 
