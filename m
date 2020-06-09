@@ -2,112 +2,91 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA23DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 19:53:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FA07C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 19:59:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A91E0206D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 19:53:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DFB7206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 19:59:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sK+8RlDj"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AUTUaWX5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732226AbgFITxR (ORCPT
+        id S1732023AbgFIT7K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 15:53:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60528 "EHLO
+        Tue, 9 Jun 2020 15:59:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731214AbgFITxN (ORCPT
+        with ESMTP id S1725926AbgFIT7I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 15:53:13 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86875C03E97C
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 12:53:12 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id h188so44478lfd.7
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 12:53:12 -0700 (PDT)
+        Tue, 9 Jun 2020 15:59:08 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5C1CC03E97C
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 12:59:07 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id s88so1862929pjb.5
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 12:59:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=tUWfuhibOgc2qDuR8j6PZRsitIEa5AgrV8pmEG0P02Y=;
-        b=sK+8RlDjikgHEuA3/kcxNekFgXz3Mu5DR09v16l8o+7xRQjax6TDincVJct+FsWt0/
-         IncvasH0MP32OvvhlGAjndRmYWzo/PA5Vt7aikyqeE2WCYB9RbkWH09rczh6i8LwgOEF
-         oR0AfEzkVg3A8q5iWCLYhVtz6dADYE/m8058DSVyr6w6Voc6edxVj1IPARx5HoawvfIz
-         8BUoMJfqmOh/nHtady0/cPmbRrLwAqGbdozHp1gXUvKYiXoiPMh0ZMuj51TFU+bbkj/o
-         Zfmkk9VrVGZ9k5fKv7JZnnLg33MBw5eaPWctnqDHeFnmUtNWwUaH1rIcIPYUsXcvXD9/
-         el9A==
+        bh=9JYzHVam3aoxA7E3Nf+mPqLW8Cnq9QYwGHyougBUIUM=;
+        b=AUTUaWX5mOdyWQvV9aN3Fs0Fise7Hqja4tWkV/PiRtUIxNvqLKLYiphFbWB7b/O6aO
+         uTR5rgofmlKNCQOkMsJaV6qZKZ2Gp+SxhXIoDMZPSsdV235fIHAuLEULkHuqXXrY1a17
+         msFy9ZV9xEoWbKlBjUrq75XEbUgFscR2TyaC9FxQUDaJC+dDXdbPUGxnWd+UTif5RKF1
+         8kwGGgfPh7GOQCiHqMDZd6KdYBbJWbibjNxQGA8YcQKBG7yjZdqz3GVDh61izcnneGGz
+         EEcoQys1jUziFulDUbSmEfzY5XN054YMd5xR2VOnw9mB/ddLUI0nPhhAv/TI0tbUZ20P
+         LteA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=tUWfuhibOgc2qDuR8j6PZRsitIEa5AgrV8pmEG0P02Y=;
-        b=kMIoBEiGYpUoa3I8iUldMCJK5kcS870aut3dP35tP/JzZq1uweDpUC39l2aWBuU2VS
-         Tj9AOuAFm87PpoCTpURwIvS0JX414HPB2JJ81IhJCIoA6Lm95XZMaOs3uG1LU3UgxvfP
-         LgGGX/BNYJ/Z1HA28+f9z68ieC6XZ+7Fja1bmRLH6hr5uDt4AKTA+x4cjbi3a7b1JOhm
-         xSwvsU/QNOyJdY1yunaQTaErqcnjxopvNF0R8EXEaGV9xH14neq0orwK/43AtyWWmTtl
-         GHwz3Cdmbs+rXqwtp5EhHhfZ9V/IZlLBIUXqA+QzS9347SHtANZX8x58PVjjwy0vGcYB
-         J39A==
-X-Gm-Message-State: AOAM532voFcw3wTN/A6Q015DNPYUmJQKhs4MFCbUXTkDGI4OmZkTWMxM
-        MufYYB6b1c6DnNNI9WCRyLM6cTKK70Lhj7Lzbcn91A==
-X-Google-Smtp-Source: ABdhPJwe80eLeSB161s6pLsJ9M/dSqM3rMPgLB0OQVvgMZYcddUazRxjNwbPDc8UxolcwAuZqNy8k+4V9D3RHC/fBus=
-X-Received: by 2002:ac2:4823:: with SMTP id 3mr16162946lft.194.1591732390917;
- Tue, 09 Jun 2020 12:53:10 -0700 (PDT)
+        bh=9JYzHVam3aoxA7E3Nf+mPqLW8Cnq9QYwGHyougBUIUM=;
+        b=pbnhCrAcQoAS7HSunC/sIS5LHJ39EASww3oCFoJ2y0JnbJfPgLFv5dRjkQ/02AIO0D
+         UGGrdEThh7zYOwrXVSzGHxgP3wpLVoBS9YY3iYSK2B0v9Rzq8ioeryVSa9cYhZaljhHq
+         5shhDYenufV1/H43HKByW6ho8Z1WsAyIWDJTuK96LzgLsKxYKBFM8WNx9ADLwHdcuieg
+         0wjSsUSA7H9VkpkM+EUpfUkLexJ07/jXj64R/+EHvRUmZp93i170aiP8ql3EfS2PsjGj
+         lEde6Rz0WKQtQw5PuyGCfTAABpQd227hupLLFjlaXEZpGLyRU1UYL0v4clRfr/L8xcGg
+         oAVg==
+X-Gm-Message-State: AOAM530xk5kITD7QPmMpbmBZnargQzzB2BFJTXXfehgvpBgkAhfpoPKe
+        lEfyhCBRqz/0XWnGs21/BJXI81AHl6WqJnR//342yg==
+X-Google-Smtp-Source: ABdhPJyhIu51fF1v8j4WHe7KZoGUQ+bTlaj2cYc7LVrH9vXLcLmlmmjSgAmDDa08jaWlaEbvPxkacC+s+dNbo9o8Qt4=
+X-Received: by 2002:a17:902:8d97:: with SMTP id v23mr12174plo.297.1591732746497;
+ Tue, 09 Jun 2020 12:59:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200408191458.1260397-1-arnd@arndb.de> <CACRpkdYQJocN_-i07J0fFC16pDUfb9o0mzRF0YRO8UMrE=Suxw@mail.gmail.com>
- <CACRpkdYUTujUX7FdwFjehFVAOLz_w6epXRzYc8e8yB=zDsRCyw@mail.gmail.com> <CAJs_Fx4V9JkwATGeY8eV=Z1khr6z=OVd+B=YRJ1RY7xxxM47_Q@mail.gmail.com>
-In-Reply-To: <CAJs_Fx4V9JkwATGeY8eV=Z1khr6z=OVd+B=YRJ1RY7xxxM47_Q@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 9 Jun 2020 21:53:00 +0200
-Message-ID: <CACRpkdadv9+Lu7f9uRibhdnd41rX2n_H7AUSzmXc_Dn_EYs1eA@mail.gmail.com>
-Subject: Re: [PATCH] drm/msm: fix link error without CONFIG_DEBUG_FS
-To:     Rob Clark <robdclark@chromium.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        "Kristian H. Kristensen" <hoegsberg@gmail.com>,
-        Allison Randal <allison@lohutok.net>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200607215715.90981-1-rikard.falkeborn@gmail.com>
+In-Reply-To: <20200607215715.90981-1-rikard.falkeborn@gmail.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Tue, 9 Jun 2020 12:58:55 -0700
+Message-ID: <CAFd5g44csNR6=-YcVNOPa-vshEC+=nd+OY95BMveRsifCXf+Vw@mail.gmail.com>
+Subject: Re: [PATCH] kunit: kunit_config: Fix parsing of CONFIG options with space
+To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Cc:     "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 9, 2020 at 4:04 PM Rob Clark <robdclark@chromium.org> wrote:
-> On Tue, Jun 9, 2020 at 5:48 AM Linus Walleij <linus.walleij@linaro.org> wrote:
-> > On Tue, May 5, 2020 at 10:27 AM Linus Walleij <linus.walleij@linaro.org> wrote:
-> > > On Wed, Apr 8, 2020 at 9:15 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > >
-> > > > I ran into a randconfig link error with debugfs disabled:
-> > > >
-> > > > arm-linux-gnueabi-ld:
-> > > > drivers/gpu/drm/msm/msm_gpu.o: in function `should_dump': msm_gpu.c:(.text+0x1cc): undefined reference to `rd_full'
-> > > >
-> > > > Change the helper to only look at this variable if debugfs is present.
-> > > >
-> > > > Fixes: e515af8d4a6f ("drm/msm: devcoredump should dump MSM_SUBMIT_BO_DUMP buffers")
-> > > > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > >
-> > > This fixes a compilation error for me on the APQ8060.
-> > > Tested-by: Linus Walleij <linus.walleij@linaro.org>
-> >
-> > Could someone be so kind and apply this fix to the MSM DRM tree?
-> >
+On Sun, Jun 7, 2020 at 2:57 PM Rikard Falkeborn
+<rikard.falkeborn@gmail.com> wrote:
 >
-> This should be fixed by 20aebe83698feb107d5a66b6cfd1d54459ccdfcf in
-> msm-next/drm-next, are you still seeing this issue?
+> Commit 8b59cd81dc5e ("kbuild: ensure full rebuild when the compiler is
+> updated") introduced a new CONFIG option CONFIG_CC_VERSION_TEXT. On my
+> system, this is set to "gcc (GCC) 10.1.0" which breaks KUnit config
+> parsing which did not like the spaces in the string.
+>
+> Fix this by updating the regex to allow strings containing spaces.
+>
+> Fixes: 8b59cd81dc5e ("kbuild: ensure full rebuild when the compiler is updated")
+> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
 
-Oh nice this works too, I was just rebasing my trees and the patch was still
-there, of course I didn't see that anothe patch fixed the same issue already.
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
 
-Thanks Rob!
-
-Linus Walleij
+Thanks for the patch! I had been meaning to send out a fix for this
+for a while, but never got around to it. :-)
