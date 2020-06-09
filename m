@@ -2,101 +2,146 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D71B3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:44:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02905C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6551207ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:44:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C927D2081A
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:46:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591724671;
-	bh=+yJJrS6f/w3XIG46YQKL+jlhy1JoGG/F40tY3Dp8vZ0=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=QI27FsCa2XEauhaRihjIaaH6H/3SasZTR5694wKsnQj7QI5/lhdYncjP4ayxIeGPS
-	 EcDQS08VZ7Vq9aZ87o7XgNFnNbFVlEy1Rrp2uZZGts9zX7GEfCgVY/dP6D+mziJiW7
-	 ouBH0r8dBhXRAW8CACMXCgHRF/N5zfLrqYmiBL8o=
+	s=default; t=1591724775;
+	bh=8RyuJMExQFwTzcJsp+/EOSi8Gpcr11RJm4EYhd9DXMw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=RsFKw4kUPhC71qnywDNtcDQwk6rLBTyYGLGOs0P4o+j7XuwWgYf24W3qCMhaqVAbp
+	 Tw52FM2RDEcYZVY8DBO7Uh6pkOMRC3iAX5Lt2U6TX5tDAYd0VDrxAl8dNGYXQriZN6
+	 438HLD1eD7ocsPuvxFwmsp52GH0CIM8owDqn5INE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731207AbgFIRoa (ORCPT
+        id S1730538AbgFIRqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:44:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54754 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:46:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728472AbgFIRo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:44:29 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        id S1728440AbgFIRqM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:46:12 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F6EB207ED;
-        Tue,  9 Jun 2020 17:44:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BC0C207ED;
+        Tue,  9 Jun 2020 17:46:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591724669;
-        bh=+yJJrS6f/w3XIG46YQKL+jlhy1JoGG/F40tY3Dp8vZ0=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=lDYH8mccyWzxHN9DFp1dhy7lbUDZoGrar7241LUfL5HMYo7IIW76NuGsHn3e9P5cA
-         rqaPh4jUNLq8mMz181kFj0BhhMa0AfSPpexGQky0f/QHZXTHVJjg9icPeLIewyZqsw
-         m0MjxOeQM3XC6q1BA1wl6KT5p4Wd2ndiAAnQZN6Q=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 083BA35229D0; Tue,  9 Jun 2020 10:44:29 -0700 (PDT)
-Date:   Tue, 9 Jun 2020 10:44:29 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     kernel test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org
-Subject: Re: [rcu:dev.2020.06.05a 85/92] powerpc-linux-ld: kernel/smp.c:128:
- undefined reference to `__udivdi3'
-Message-ID: <20200609174428.GQ4455@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <202006090518.ePllEE1U%lkp@intel.com>
+        s=default; t=1591724770;
+        bh=8RyuJMExQFwTzcJsp+/EOSi8Gpcr11RJm4EYhd9DXMw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1B0oWNxYfi/unq2aXXs/2MeaqbKHAFFbxlVStYrmzD1yuOoNskuEQe05rMYq7wFIk
+         Lk1z0E1ybMBOhJNeb0/MQPR4OrXcQ1rkgWAb/iuQaty4MGZvhQ63ziF8qxCc+4Vn/s
+         G1CIbJ0lS//2rylimFSSpBgaE8+aSW0ZZ0X+dHHA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Hannes Reinecke <hare@suse.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Bart Van Assche <bart.vanassche@wdc.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.4 01/36] scsi: scsi_devinfo: fixup string compare
+Date:   Tue,  9 Jun 2020 19:44:01 +0200
+Message-Id: <20200609173933.373818370@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200609173933.288044334@linuxfoundation.org>
+References: <20200609173933.288044334@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202006090518.ePllEE1U%lkp@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 05:39:21AM +0800, kernel test robot wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2020.06.05a
-> head:   c5432e18c8bfe9283bf5e0bc5e2460ae8f39a7ee
-> commit: 3f8c62d29ead7c3213a4af7c433ec6fbf8457f37 [85/92] EXP kernel/smp: Provide CSD lock timeout diagnostics
-> config: powerpc64-randconfig-c024-20200607 (attached as .config)
-> compiler: powerpc-linux-gcc (GCC) 9.3.0
-> 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
+From: Hannes Reinecke <hare@suse.de>
 
-Alleged fixes squashed into original with attribution, thank you!
+commit b8018b973c7cefa5eb386540130fa47315b8e337 upstream.
 
-						Thanx, Paul
+When checking the model and vendor string we need to use the minimum
+value of either string, otherwise we'll miss out on wildcard matches.
 
-> All errors (new ones prefixed by >>, old ones prefixed by <<):
-> 
-> powerpc-linux-ld: kernel/smp.o: in function `csd_lock_wait':
-> kernel/smp.c:122: undefined reference to `__udivdi3'
-> >> powerpc-linux-ld: kernel/smp.c:128: undefined reference to `__udivdi3'
-> powerpc-linux-ld: kernel/smp.c:136: undefined reference to `__umoddi3'
-> powerpc-linux-ld: kernel/smp.c:136: undefined reference to `__udivdi3'
-> powerpc-linux-ld: kernel/smp.c:122: undefined reference to `__udivdi3'
-> >> powerpc-linux-ld: kernel/smp.c:128: undefined reference to `__udivdi3'
-> powerpc-linux-ld: kernel/smp.c:136: undefined reference to `__umoddi3'
-> powerpc-linux-ld: kernel/smp.c:136: undefined reference to `__udivdi3'
-> powerpc-linux-ld: kernel/smp.c:122: undefined reference to `__udivdi3'
-> >> powerpc-linux-ld: kernel/smp.c:128: undefined reference to `__udivdi3'
-> powerpc-linux-ld: kernel/smp.c:136: undefined reference to `__umoddi3'
-> powerpc-linux-ld: kernel/smp.c:136: undefined reference to `__udivdi3'
-> powerpc-linux-ld: kernel/smp.c:122: undefined reference to `__udivdi3'
-> >> powerpc-linux-ld: kernel/smp.c:128: undefined reference to `__udivdi3'
-> powerpc-linux-ld: kernel/smp.c:136: undefined reference to `__umoddi3'
-> powerpc-linux-ld: kernel/smp.c:136: undefined reference to `__udivdi3'
-> 
-> ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+And we should take care when matching with zero size strings; results
+might be unpredictable.  With this patch the rules for matching devinfo
+strings are as follows:
+
+- Vendor strings must match exactly
+- Empty Model strings will only match if the devinfo model
+  is also empty
+- Model strings shorter than the devinfo model string will
+  not match
+
+Fixes: 5e7ff2c ("SCSI: fix new bug in scsi_dev_info_list string matching")
+Signed-off-by: Hannes Reinecke <hare@suse.com>
+Reviewed-by: Alan Stern <stern@rowland.harvard.edu>
+Reviewed-by: Bart Van Assche <bart.vanassche@wdc.com>
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/scsi/scsi_devinfo.c |   23 +++++++++++++----------
+ 1 file changed, 13 insertions(+), 10 deletions(-)
+
+--- a/drivers/scsi/scsi_devinfo.c
++++ b/drivers/scsi/scsi_devinfo.c
+@@ -386,8 +386,8 @@ EXPORT_SYMBOL(scsi_dev_info_list_add_key
+ 
+ /**
+  * scsi_dev_info_list_find - find a matching dev_info list entry.
+- * @vendor:	vendor string
+- * @model:	model (product) string
++ * @vendor:	full vendor string
++ * @model:	full model (product) string
+  * @key:	specify list to use
+  *
+  * Description:
+@@ -402,7 +402,7 @@ static struct scsi_dev_info_list *scsi_d
+ 	struct scsi_dev_info_list *devinfo;
+ 	struct scsi_dev_info_list_table *devinfo_table =
+ 		scsi_devinfo_lookup_by_key(key);
+-	size_t vmax, mmax;
++	size_t vmax, mmax, mlen;
+ 	const char *vskip, *mskip;
+ 
+ 	if (IS_ERR(devinfo_table))
+@@ -441,15 +441,18 @@ static struct scsi_dev_info_list *scsi_d
+ 			    dev_info_list) {
+ 		if (devinfo->compatible) {
+ 			/*
+-			 * Behave like the older version of get_device_flags.
++			 * vendor strings must be an exact match
+ 			 */
+-			if (memcmp(devinfo->vendor, vskip, vmax) ||
+-					(vmax < sizeof(devinfo->vendor) &&
+-						devinfo->vendor[vmax]))
++			if (vmax != strlen(devinfo->vendor) ||
++			    memcmp(devinfo->vendor, vskip, vmax))
+ 				continue;
+-			if (memcmp(devinfo->model, mskip, mmax) ||
+-					(mmax < sizeof(devinfo->model) &&
+-						devinfo->model[mmax]))
++
++			/*
++			 * @model specifies the full string, and
++			 * must be larger or equal to devinfo->model
++			 */
++			mlen = strlen(devinfo->model);
++			if (mmax < mlen || memcmp(devinfo->model, mskip, mlen))
+ 				continue;
+ 			return devinfo;
+ 		} else {
 
 
