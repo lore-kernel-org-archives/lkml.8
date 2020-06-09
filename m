@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BEDC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D74C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96AAD206D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:58:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86D5B206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:58:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725510;
-	bh=OwzI0aRK/h+F2kEP/UMIb+22nVLukoXCw8gc0x42/Tg=;
+	s=default; t=1591725513;
+	bh=eEi2BJJpFfnkUtBswv1aNYBxmzGniwh10zqbzAln51k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gr+UJe0WOph4GOhoflkqfMV9DW8UVr4mVbds5PWeczU9ONmL7nwuS6nGos/CM/hZg
-	 QcreUsFYde8E73AxPaB5X2bs/UTrdrtW0K4u6TuACFvtrZ74j3MoiJfKcR+1x8+QXs
-	 VntfiskblT13MuwnIhy0TwHy3AVgfoR0QTrNyjc4=
+	b=Pqtr0HgXxILoNucRmEVHocXhwEcXc+LXhKOeKE+25X05H6TAnl+kIC8nwsIATAsuf
+	 wAaSKxJh7cQPZRLZKTrQK6QxfCA+dgAAbidQRIPsSyS6ucL3Q9a+N+N6CdYbcS3bRr
+	 TbLGLNBvZuQ76E1vp4qW+kzf71mpDxYBshktTjJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732769AbgFIR61 (ORCPT
+        id S1733232AbgFIRzU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:58:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47616 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:55:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733235AbgFIRzX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:55:23 -0400
+        id S1726100AbgFIRxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:53:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4FD420734;
-        Tue,  9 Jun 2020 17:55:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B01F020774;
+        Tue,  9 Jun 2020 17:53:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725323;
-        bh=OwzI0aRK/h+F2kEP/UMIb+22nVLukoXCw8gc0x42/Tg=;
+        s=default; t=1591725210;
+        bh=eEi2BJJpFfnkUtBswv1aNYBxmzGniwh10zqbzAln51k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GhvQ4WK+0agroZSzLtw2tCe2bvkahMg0g+oDh5BB7Lg9tsWnDBPjXcqdLxdIoRBXd
-         sz9Fl20MEaMLaMiwbUIJevpg4wZ7j1BaDpUcdWnc0EwsccxhYJHqxakxPr4jgliegb
-         w3BP9PRKe6s9+YH+p0If9nyStJYDDITP745CnTjc=
+        b=z6eKE9ZWHphkC+FX4qn26Jivqs1pQ8DtnGTRSs1eMdEHxmE8lxVlNor+giovZDaBj
+         2IzNv8VkpPNmq+h68XYbp334cuj+Q8ZjDkfclxT8WI5zgK9IoTtksYsKXJeDhAw62H
+         ZPuBS8/gtSbnSt0bwd71oU45aC0pFDFTb2HWlYDY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Maxim Kochetkov <fido_max@inbox.ru>,
-        Josh Triplett <josh@joshtriplett.org>
-Subject: [PATCH 5.7 13/24] serial: 8250: Enable 16550A variants by default on non-x86
-Date:   Tue,  9 Jun 2020 19:45:44 +0200
-Message-Id: <20200609174150.415424984@linuxfoundation.org>
+        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+        Mark Bloch <markb@mellanox.com>,
+        Moshe Shemesh <moshe@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.6 05/41] net/mlx5: Fix crash upon suspend/resume
+Date:   Tue,  9 Jun 2020 19:45:07 +0200
+Message-Id: <20200609174112.638366127@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200609174149.255223112@linuxfoundation.org>
-References: <20200609174149.255223112@linuxfoundation.org>
+In-Reply-To: <20200609174112.129412236@linuxfoundation.org>
+References: <20200609174112.129412236@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,35 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Triplett <josh@joshtriplett.org>
+From: Mark Bloch <markb@mellanox.com>
 
-commit 15a3f03d5ec0118f1e5db3fc1018686e72744e37 upstream.
+[ Upstream commit 8fc3e29be9248048f449793502c15af329f35c6e ]
 
-Some embedded devices still use these serial ports; make sure they're
-still enabled by default on architectures more likely to have them, to
-avoid rendering someone's console unavailable.
+Currently a Linux system with the mlx5 NIC always crashes upon
+hibernation - suspend/resume.
 
-Reported-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Reported-by: Maxim Kochetkov <fido_max@inbox.ru>
-Fixes: dc56ecb81a0a ("serial: 8250: Support disabling mdelay-filled probes of 16550A variants")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Josh Triplett <josh@joshtriplett.org>
-Link: https://lore.kernel.org/r/a20b5fb7dd295cfb48160eecf4bdebd76332d67d.1590509426.git.josh@joshtriplett.org
+Add basic callbacks so the NIC could be suspended and resumed.
+
+Fixes: 9603b61de1ee ("mlx5: Move pci device handling from mlx5_ib to mlx5_core")
+Tested-by: Dexuan Cui <decui@microsoft.com>
+Signed-off-by: Mark Bloch <markb@mellanox.com>
+Reviewed-by: Moshe Shemesh <moshe@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/tty/serial/8250/Kconfig |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/mellanox/mlx5/core/main.c |   18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
---- a/drivers/tty/serial/8250/Kconfig
-+++ b/drivers/tty/serial/8250/Kconfig
-@@ -63,6 +63,7 @@ config SERIAL_8250_PNP
- config SERIAL_8250_16550A_VARIANTS
- 	bool "Support for variants of the 16550A serial port"
- 	depends on SERIAL_8250
-+	default !X86
- 	help
- 	  The 8250 driver can probe for many variants of the venerable 16550A
- 	  serial port. Doing so takes additional time at boot.
+--- a/drivers/net/ethernet/mellanox/mlx5/core/main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/main.c
+@@ -1552,6 +1552,22 @@ static void shutdown(struct pci_dev *pde
+ 	mlx5_pci_disable_device(dev);
+ }
+ 
++static int mlx5_suspend(struct pci_dev *pdev, pm_message_t state)
++{
++	struct mlx5_core_dev *dev = pci_get_drvdata(pdev);
++
++	mlx5_unload_one(dev, false);
++
++	return 0;
++}
++
++static int mlx5_resume(struct pci_dev *pdev)
++{
++	struct mlx5_core_dev *dev = pci_get_drvdata(pdev);
++
++	return mlx5_load_one(dev, false);
++}
++
+ static const struct pci_device_id mlx5_core_pci_table[] = {
+ 	{ PCI_VDEVICE(MELLANOX, PCI_DEVICE_ID_MELLANOX_CONNECTIB) },
+ 	{ PCI_VDEVICE(MELLANOX, 0x1012), MLX5_PCI_DEV_IS_VF},	/* Connect-IB VF */
+@@ -1595,6 +1611,8 @@ static struct pci_driver mlx5_core_drive
+ 	.id_table       = mlx5_core_pci_table,
+ 	.probe          = init_one,
+ 	.remove         = remove_one,
++	.suspend        = mlx5_suspend,
++	.resume         = mlx5_resume,
+ 	.shutdown	= shutdown,
+ 	.err_handler	= &mlx5_err_handler,
+ 	.sriov_configure   = mlx5_core_sriov_configure,
 
 
