@@ -2,129 +2,110 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0DDCC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75168C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:46:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2A0C2072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:46:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F5DA2072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:46:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="UicR4JIb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730600AbgFIOqb (ORCPT
+        id S1730620AbgFIOqk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 10:46:31 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:21630 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728184AbgFIOqa (ORCPT
+        Tue, 9 Jun 2020 10:46:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41256 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730603AbgFIOqi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 10:46:30 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 059Edcph076032;
-        Tue, 9 Jun 2020 10:46:17 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31grrj6u94-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 09 Jun 2020 10:46:17 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 059EjL9X023853;
-        Tue, 9 Jun 2020 14:46:13 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma02fra.de.ibm.com with ESMTP id 31g2s82gyn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 09 Jun 2020 14:46:13 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 059EkAvu54657206
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 9 Jun 2020 14:46:10 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8450AAE045;
-        Tue,  9 Jun 2020 14:46:10 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 36D27AE056;
-        Tue,  9 Jun 2020 14:46:10 +0000 (GMT)
-Received: from osiris (unknown [9.171.92.221])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue,  9 Jun 2020 14:46:10 +0000 (GMT)
-Date:   Tue, 9 Jun 2020 16:46:08 +0200
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>
-Subject: Re: [PATCH v6] s390: Fix vDSO clock_getres()
-Message-ID: <20200609144608.GB4575@osiris>
-References: <20200324121027.21665-1-vincenzo.frascino@arm.com>
+        Tue, 9 Jun 2020 10:46:38 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E389EC05BD1E
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 07:46:37 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id f18so21040689qkh.1
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 07:46:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=K/z6d17bM6CZ1yRiOWNL2RNldGzd1FsrG0sI3iVgOdY=;
+        b=UicR4JIbN42s8kz0OU+6/Ag9GZZSbq+0yM4FgBbXTtyCBq58aliQiGguIJJDXNrkKS
+         96LEnAh88GMRNcnytADnFry3HoOGQY0ByuYcVHq9xTgM2aQ+uQVa4V2mt2bJS5A9HyPT
+         VdGzC4RdpUtv4WmbAtK1nVmNWKyb8GbBXIXpCUKvND0akz6zL2J03wQKTvvL5ppjGcwI
+         lfUD+Xp624KOABogal8AdKwZhNOH3tTVeMtDtZ2mnhqVSsZSLrs+y6s4gDH4qm8oQiJ5
+         UXhgne+FHZwC71UMSeaUiUYUZ06acXylqoK7As8lUhTs3cI1b7UJzr2jS5uPuwNUgq8o
+         kzCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=K/z6d17bM6CZ1yRiOWNL2RNldGzd1FsrG0sI3iVgOdY=;
+        b=EZmTAt4F/qJ7xb0mjvNIL+i/6a6vaHzo8hrpAi229FcjWCxmu0VuW4W/yD9zxEBgNF
+         mOk8b8nTwexdMG6aLRDVGtMvOTYZBaoDIWLbTe3ccNq79f1KBLsDhJRP+W6Ys2SkRDMK
+         pRDiLb8ll3R/Az0KkireyQn/7DpDrSFEIx0lTm8MMvkgBQJSbdEXkX5AwfZ4OwqZCwyw
+         FCOvlqEo5x26o9x+ieDoKs2pkN3e6jvP9DCkH2TUA5hGEQd4lKk+4fXVWnC6T/3OM1b9
+         8vI819LZe4QDKfCxgmI+N7V1Gc4A++IAcdJMrQNX8k5f2DZoLZdlgYfNLFloFc+lypuS
+         hkXA==
+X-Gm-Message-State: AOAM531YGmWkS2+RHIPDqEOxtfKYUQn10qd2Dq49Z0VzESa/EXW9JI+7
+        wfjBOgXWKxwX8lOAy77rDv4tHg==
+X-Google-Smtp-Source: ABdhPJzUlzfAEXmBIoUGNXohwOf1MQpFCkJG/fDZNnAITRiz9+WNk5lph79IKWPxvKqUzgaRsRxMcw==
+X-Received: by 2002:a37:7c6:: with SMTP id 189mr27091666qkh.24.1591713997119;
+        Tue, 09 Jun 2020 07:46:37 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:b568])
+        by smtp.gmail.com with ESMTPSA id b4sm9087946qka.133.2020.06.09.07.46.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2020 07:46:35 -0700 (PDT)
+Date:   Tue, 9 Jun 2020 10:45:51 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        iamjoonsoo.kim@lge.com, linux-mm@kvack.org, mhocko@suse.com,
+        minchan@kernel.org, mm-commits@vger.kernel.org, riel@surriel.com,
+        torvalds@linux-foundation.org
+Subject: Re: [patch 113/131] mm: balance LRU lists based on relative thrashing
+Message-ID: <20200609144551.GA452252@cmpxchg.org>
+References: <20200603230303.kSkT62Lb5%akpm@linux-foundation.org>
+ <a60f7866-3b32-7a0e-5d0a-a48d77f845a8@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200324121027.21665-1-vincenzo.frascino@arm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-09_09:2020-06-09,2020-06-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=1
- lowpriorityscore=0 phishscore=0 impostorscore=0 priorityscore=1501
- cotscore=-2147483648 malwarescore=0 mlxlogscore=999 bulkscore=0
- spamscore=0 mlxscore=0 adultscore=0 clxscore=1011 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006090111
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a60f7866-3b32-7a0e-5d0a-a48d77f845a8@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Vincenzo,
-
-sorry it took such a long time to answer!
-
-> clock_getres in the vDSO library has to preserve the same behaviour
-> of posix_get_hrtimer_res().
+On Tue, Jun 09, 2020 at 05:15:33PM +0800, Alex Shi wrote:
 > 
-> In particular, posix_get_hrtimer_res() does:
->     sec = 0;
->     ns = hrtimer_resolution;
-> and hrtimer_resolution depends on the enablement of the high
-> resolution timers that can happen either at compile or at run time.
 > 
-> Fix the s390 vdso implementation of clock_getres keeping a copy of
-> hrtimer_resolution in vdso data and using that directly.
+> 在 2020/6/4 上午7:03, Andrew Morton 写道:
+> >  
+> > +	/* XXX: Move to lru_cache_add() when it supports new vs putback */
 > 
-> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> Acked-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
-> ---
->  arch/s390/include/asm/vdso.h           |  1 +
->  arch/s390/kernel/asm-offsets.c         |  2 +-
->  arch/s390/kernel/time.c                |  1 +
->  arch/s390/kernel/vdso64/clock_getres.S | 10 +++++-----
->  4 files changed, 8 insertions(+), 6 deletions(-)
-...
+> Hi Hannes,
+> 
+> Sorry for a bit lost, would you like to explain a bit more of your idea here?
+> 
+> > +	spin_lock_irq(&page_pgdat(page)->lru_lock);
+> > +	lru_note_cost(page);
+> > +	spin_unlock_irq(&page_pgdat(page)->lru_lock);
+> > +
+> 
+> 
+> What could we see here w/o the lru_lock?
 
-> diff --git a/arch/s390/kernel/vdso64/clock_getres.S b/arch/s390/kernel/vdso64/clock_getres.S
-> index 081435398e0a..022b58c980db 100644
-> --- a/arch/s390/kernel/vdso64/clock_getres.S
-> +++ b/arch/s390/kernel/vdso64/clock_getres.S
-> @@ -17,12 +17,14 @@
->  	.type  __kernel_clock_getres,@function
->  __kernel_clock_getres:
->  	CFI_STARTPROC
-> -	larl	%r1,4f
-> +	larl	%r1,3f
-> +	lg	%r0,0(%r1)
->  	cghi	%r2,__CLOCK_REALTIME_COARSE
->  	je	0f
->  	cghi	%r2,__CLOCK_MONOTONIC_COARSE
->  	je	0f
-> -	larl	%r1,3f
-> +	larl	%r1,_vdso_data
-> +	l	%r0,__VDSO_CLOCK_REALTIME_RES(%r1)
+It'll just be part of the existing LRU locking in
+pagevec_lru_move_fn(), when the new pages are added to the LRU in
+batch. See this older patch for example:
 
-This should be llgf for proper zero extension. The code works anyway,
-since the upper lg would clear the high order bits, however this looks
-like it works more or less by accident ;)
+https://lore.kernel.org/linux-mm/20160606194836.3624-6-hannes@cmpxchg.org/
 
-I changed it and applied your patch. Thanks a lot!
+I didn't include it in this series to reduce conflict with Joonsoo's
+WIP series that also operates in this area and does something similar:
+
+https://lkml.org/lkml/2020/4/3/63
