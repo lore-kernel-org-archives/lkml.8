@@ -2,186 +2,123 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B773C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5107C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB0DB20812
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:14:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="I+/yrmE9"
+	by mail.kernel.org (Postfix) with ESMTP id 98B8E20812
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:15:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727981AbgFIJN7 (ORCPT
+        id S1728339AbgFIJPd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 05:13:59 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:52003 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbgFIJN4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 05:13:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1591694036; x=1623230036;
-  h=references:from:to:cc:subject:in-reply-to:date:
-   message-id:mime-version;
-  bh=4gmH4roZ31BbBtOY/irMvwRh3t1QNa19BtAidrntvuM=;
-  b=I+/yrmE9DY6+aW85/yyKlTke2NVSHL6vRluht7C+jUG9f5Ov/0EeM5bE
-   nwAWVJZCoFH4xJoGMZyDFtO2PvI7OzmJVvad9PwO3NKfr0dO+r7Lx7R9k
-   neIYV9EkhbWNRZVk+EDF/mEYMSkMFbKYUBUrmwML5/CQ+2wuPAE9d7uRx
-   XK/D57mQj9VKgQn9NGH3XErnwoOi636yu24a6ZXeUdq/FBBzE5emONI3V
-   LoAmAGsLkEWjA7hZExXfoyWL33p4RZg1rZcNYHSEE6TUhGYglTpRiLxRR
-   sALYQWvjpqgOlJfBMOTJbHD6dT5xzOblfdfI7dTlEqIIzXuwKKVnboEw1
-   Q==;
-IronPort-SDR: VLYk1EEpijJRleQur2LDMOMpKQMGgwyaEf7wD34q+JX5WGTUZUwOWjxi1cLyHnGwvqQoFh4znt
- PD+6Cs+FVj/7nqOT0IVwVhKO0jeEKt2j3QZuYWoTg1iFOzypxd7USwXd4V5ldslOQlNLyHq6xk
- Le8BwgbLtGkLpqFEganF8yy8QODIlPizMZRGBCHZZUdvU6TnU3/bRRw3RxY2GXrC9EhHh0/f4d
- fvPR/R+JWJRdv+ejB81eL7EBaC+/UZGSnEWyKC/ELrQMfqUhuCR+nOwMq623x15E2gS5XbewU6
- CGo=
-X-IronPort-AV: E=Sophos;i="5.73,491,1583218800"; 
-   d="scan'208";a="15071190"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Jun 2020 02:13:55 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Tue, 9 Jun 2020 02:13:54 -0700
-Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3
- via Frontend Transport; Tue, 9 Jun 2020 02:13:51 -0700
-References: <20200513140031.25633-1-lars.povlsen@microchip.com> <20200513140031.25633-2-lars.povlsen@microchip.com> <20200602191025.ywo77nslrgswh6sw@mobilestation>
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-List-Id: <soc.lore.kernel.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Mark Brown <broonie@kernel.org>, SoC Team <soc@kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 01/10] spi: dw: Add support for polled operation via no IRQ specified in DT
-In-Reply-To: <20200602191025.ywo77nslrgswh6sw@mobilestation>
-Date:   Tue, 9 Jun 2020 11:13:50 +0200
-Message-ID: <87lfkwiott.fsf@soft-dev15.microsemi.net>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Tue, 9 Jun 2020 05:15:33 -0400
+Received: from mga01.intel.com ([192.55.52.88]:19611 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726187AbgFIJP3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 05:15:29 -0400
+IronPort-SDR: wDxBlxE1goElNLjzWI1owja+MkbhW0cN60lmx0+C7yBJqmUt459E+XyY0H59np+nTtSk9kVX5M
+ idzBKddX6JSw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 02:15:27 -0700
+IronPort-SDR: zuVF1mpKEINGAUTfFgnW32ujP1+dFBFdKRMr5TZil/7TzHAJ8widMg9onu+E1zBPM7s1hY41vc
+ yQpBURsN6aiA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,491,1583222400"; 
+   d="scan'208";a="259739056"
+Received: from gklab-125-110.igk.intel.com ([10.91.125.110])
+  by orsmga007.jf.intel.com with ESMTP; 09 Jun 2020 02:15:25 -0700
+From:   Piotr Stankiewicz <piotr.stankiewicz@intel.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Piotr Stankiewicz <piotr.stankiewicz@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Jian-Hong Pan <jian-hong@endlessm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 01/15] PCI/MSI: Forward MSI-X vector enable error code in pci_alloc_irq_vectors_affinity()
+Date:   Tue,  9 Jun 2020 11:14:39 +0200
+Message-Id: <20200609091440.497-1-piotr.stankiewicz@intel.com>
+X-Mailer: git-send-email 2.17.2
+In-Reply-To: <20200609091148.32749-1-piotr.stankiewicz@intel.com>
+References: <20200609091148.32749-1-piotr.stankiewicz@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+When debugging an issue where I was asking the PCI machinery to enable a
+set of MSI-X vectors, without falling back on MSI, I ran across a
+behaviour which seems odd. The pci_alloc_irq_vectors_affinity() will
+always return -ENOSPC on failure, when allocating MSI-X vectors only,
+whereas with MSI fallback it will forward any error returned by
+__pci_enable_msi_range(). This is a confusing behaviour, so have the
+pci_alloc_irq_vectors_affinity() forward the error code from
+__pci_enable_msix_range() when appropriate.
 
-Serge Semin writes:
+Signed-off-by: Piotr Stankiewicz <piotr.stankiewicz@intel.com>
+---
+ drivers/pci/msi.c | 22 +++++++++-------------
+ 1 file changed, 9 insertions(+), 13 deletions(-)
 
-> On Wed, May 13, 2020 at 04:00:22PM +0200, Lars Povlsen wrote:
->> With this change a SPI controller can be added without having a IRQ
->> associated, and causing all transfers to be polled. For SPI controllers
->> without DMA, this can significantly improve performance by less
->> interrupt handling overhead.
->>
->> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
->> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
->> ---
->>  drivers/spi/spi-dw.c | 21 +++++++++++++--------
->>  1 file changed, 13 insertions(+), 8 deletions(-)
->>
->> diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
->> index 31e3f866d11a7..e572eb34a3c1a 100644
->> --- a/drivers/spi/spi-dw.c
->> +++ b/drivers/spi/spi-dw.c
->> @@ -19,6 +19,8 @@
->>  #include <linux/debugfs.h>
->>  #endif
->>
->
->> +#define VALID_IRQ(i) (i >= 0)
->
-> Mark and Andy are right. It is a good candidate to be in a generic IRQ-related
-> code as Anyd suggested:
->
->> > drivers/rtc/rtc-cmos.c:95:#define is_valid_irq(n)               ((n) > 0)
->> > Candidate to be in include/linux/irq.h ?
->
-> So if you feel like to author additional useful patch integrated into the
-> kernel, this one is a good chance for it.
->
-
-Yeah, but with the poll_transfer() gone below, I think I'll settle on
-just getting this into the current framework. Optimization (as this is)
-has less priority. I'll put this on the back burner.
-
->> +
->>  /* Slave spi_dev related */
->>  struct chip_data {
->>       u8 tmode;               /* TR/TO/RO/EEPROM */
->> @@ -359,7 +361,7 @@ static int dw_spi_transfer_one(struct spi_controller *master,
->>                       spi_enable_chip(dws, 1);
->>                       return ret;
->>               }
->> -     } else if (!chip->poll_mode) {
->> +     } else if (!chip->poll_mode && VALID_IRQ(dws->irq)) {
->>               txlevel = min_t(u16, dws->fifo_len / 2, dws->len / dws->n_bytes);
->>               dw_writel(dws, DW_SPI_TXFLTR, txlevel);
->>
->> @@ -379,7 +381,7 @@ static int dw_spi_transfer_one(struct spi_controller *master,
->>                       return ret;
->>       }
->>
->> -     if (chip->poll_mode)
->> +     if (chip->poll_mode || !VALID_IRQ(dws->irq))
->>               return poll_transfer(dws);
->
-> Please note. The chip->poll and the poll_transfer() methods've been discarded
-> from the driver, since commit 1ceb09717e98 ("spi: dw: remove cs_control and
-> poll_mode members from chip_data"). So you gonna have to get the
-> poll_transfer-like method back.
->
-> -Sergey
->
->>
->>       return 1;
->> @@ -487,11 +489,13 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
->>
->>       spi_controller_set_devdata(master, dws);
->>
->> -     ret = request_irq(dws->irq, dw_spi_irq, IRQF_SHARED, dev_name(dev),
->> -                       master);
->> -     if (ret < 0) {
->> -             dev_err(dev, "can not get IRQ\n");
->> -             goto err_free_master;
->> +     if (VALID_IRQ(dws->irq)) {
->> +             ret = request_irq(dws->irq, dw_spi_irq, IRQF_SHARED,
->> +                               dev_name(dev), master);
->> +             if (ret < 0) {
->> +                     dev_err(dev, "can not get IRQ\n");
->> +                     goto err_free_master;
->> +             }
->>       }
->>
->>       master->use_gpio_descriptors = true;
->> @@ -539,7 +543,8 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
->>       if (dws->dma_ops && dws->dma_ops->dma_exit)
->>               dws->dma_ops->dma_exit(dws);
->>       spi_enable_chip(dws, 0);
->> -     free_irq(dws->irq, master);
->> +     if (VALID_IRQ(dws->irq))
->> +             free_irq(dws->irq, master);
->>  err_free_master:
->>       spi_controller_put(master);
->>       return ret;
->> --
->> 2.26.2
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
+diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+index 6b43a5455c7a..cade9be68b09 100644
+--- a/drivers/pci/msi.c
++++ b/drivers/pci/msi.c
+@@ -1191,8 +1191,7 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
+ 				   struct irq_affinity *affd)
+ {
+ 	struct irq_affinity msi_default_affd = {0};
+-	int msix_vecs = -ENOSPC;
+-	int msi_vecs = -ENOSPC;
++	int nvecs = -ENOSPC;
+ 
+ 	if (flags & PCI_IRQ_AFFINITY) {
+ 		if (!affd)
+@@ -1203,17 +1202,16 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
+ 	}
+ 
+ 	if (flags & PCI_IRQ_MSIX) {
+-		msix_vecs = __pci_enable_msix_range(dev, NULL, min_vecs,
+-						    max_vecs, affd, flags);
+-		if (msix_vecs > 0)
+-			return msix_vecs;
++		nvecs = __pci_enable_msix_range(dev, NULL, min_vecs, max_vecs,
++						affd, flags);
++		if (nvecs > 0)
++			return nvecs;
+ 	}
+ 
+ 	if (flags & PCI_IRQ_MSI) {
+-		msi_vecs = __pci_enable_msi_range(dev, min_vecs, max_vecs,
+-						  affd);
+-		if (msi_vecs > 0)
+-			return msi_vecs;
++		nvecs = __pci_enable_msi_range(dev, min_vecs, max_vecs, affd);
++		if (nvecs > 0)
++			return nvecs;
+ 	}
+ 
+ 	/* use legacy IRQ if allowed */
+@@ -1231,9 +1229,7 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
+ 		}
+ 	}
+ 
+-	if (msix_vecs == -ENOSPC)
+-		return -ENOSPC;
+-	return msi_vecs;
++	return nvecs;
+ }
+ EXPORT_SYMBOL(pci_alloc_irq_vectors_affinity);
+ 
 -- 
-Lars Povlsen,
-Microchip
+2.17.2
+
