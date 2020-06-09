@@ -2,116 +2,163 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE4E2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F3BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9974206D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08EDC20734
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:59:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725546;
-	bh=J8tlTkffI9vT+ZtetPjpRh4/bBL9Hh7emd0zTozTyXI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RqexkgC14b87B/EZZNj9WG5BsCoqFuXQW9nVGBoZD2PH0ooGeURfl+5f/58m9cZ24
-	 jByd5NK/IuMdqawxoeSlbw3t+E+aVuu9W0iKy5PhYuGLnIOlm00FzJ/D8mh63R0a19
-	 CoLpDJ5M1Hnz+cUtXzyRgRbbOL7HsicwJb9KkdsY=
+	s=default; t=1591725558;
+	bh=bJX62na9nTEl0Pq4sLZbSBoAwA/DlToxmXIGSJmxOQM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=D1fNRadOXv3sD1kcfGOpENSqQNqeGQpTN9aHNUKJob81Skb7OA/6zlVAj7vh6H27Y
+	 b/c6VVNLDFtTc9SPieDb310ReoZVs8zq0cd6WwUVWO9zR+YtP9GOQihFueiU7I/u6W
+	 hTTMa7li17s6MuA6HPcuAtJG0P9lS2We0dbmgf74=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731661AbgFIR7F (ORCPT
+        id S1733187AbgFIRzE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:59:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51384 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:55:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731651AbgFIR6z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:58:55 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        id S1733024AbgFIRxT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:53:19 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 777A720801;
-        Tue,  9 Jun 2020 17:58:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7555120734;
+        Tue,  9 Jun 2020 17:53:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725535;
-        bh=J8tlTkffI9vT+ZtetPjpRh4/bBL9Hh7emd0zTozTyXI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qF1dpbq4r6LixfMDbilCvEkZ/h6ZYJ1hJewkW/W1R/P4ihpjzb1aQ6Vqyu57/RnlE
-         1SXfvJeSswwlhZftcwITa7SGOlKrsZaPDX+PAwZ0JDQDw7COQCJH0tNaPuFmyJDIZ2
-         y1et7/fTJBDLN5J5sfQf0qMqwE6qExDOFqlvAYFs=
-Date:   Tue, 9 Jun 2020 18:58:52 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        robh@kernel.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [RFC PATCH 1/2] dt-bindings: tas2562: Add firmware support for
- tas2563
-Message-ID: <20200609175852.GQ4583@sirena.org.uk>
-References: <20200609172841.22541-1-dmurphy@ti.com>
- <20200609172841.22541-2-dmurphy@ti.com>
- <20200609173143.GN4583@sirena.org.uk>
- <bb7cff87-f814-1b37-c9eb-e68919e3c077@ti.com>
+        s=default; t=1591725198;
+        bh=bJX62na9nTEl0Pq4sLZbSBoAwA/DlToxmXIGSJmxOQM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=USP1xlEkGqR5BApthaUabga+Fhe+I+0DJlSbNZpbE2/pKa4PhakylTBZ5ugcU45dH
+         azP1wqft7Lxhr+WATjQ2beDepdDQw2SnRD+AdzQPrX3JrMiSiTSsNbi84asPi/4Szd
+         5YwguwqBK63WCuKGwj5j/Gjj+UE0w1HYihsA4wMw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Michael Hanselmann <public@hansmi.ch>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.4 15/34] USB: serial: ch341: add basis for quirk detection
+Date:   Tue,  9 Jun 2020 19:45:11 +0200
+Message-Id: <20200609174054.549510974@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200609174052.628006868@linuxfoundation.org>
+References: <20200609174052.628006868@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="JaBjgNvtdKe5H086"
-Content-Disposition: inline
-In-Reply-To: <bb7cff87-f814-1b37-c9eb-e68919e3c077@ti.com>
-X-Cookie: Be careful!  Is it classified?
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Michael Hanselmann <public@hansmi.ch>
 
---JaBjgNvtdKe5H086
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+commit c404bf4aa9236cb4d1068e499ae42acf48a6ff97 upstream.
 
-On Tue, Jun 09, 2020 at 12:35:50PM -0500, Dan Murphy wrote:
-> On 6/9/20 12:31 PM, Mark Brown wrote:
+A subset of CH341 devices does not support all features, namely the
+prescaler is limited to a reduced precision and there is no support for
+sending a RS232 break condition. This patch adds a detection function
+which will be extended to set quirk flags as they're implemented.
 
-> > Why not just use a standard name for the firmware?  If the firmwares
-> > vary per-board then building it using the machine compatible (or DMI
-> > info) could handle that, with a fallback to a standard name for a
-> > default setup.
+The author's affected device has an imprint of "340" on the
+turquoise-colored plug, but not all such devices appear to be affected.
 
-> The number of firmwares can vary per IC on the board itself.=A0 So you may
-> have X number of firmware files all with different names all targets for
-> different TAS2563 ICs.
+Signed-off-by: Michael Hanselmann <public@hansmi.ch>
+Link: https://lore.kernel.org/r/1e1ae0da6082bb528a44ef323d4e1d3733d38858.1585697281.git.public@hansmi.ch
+[ johan: use long type for quirks; rephrase and use port device for
+	 messages; handle short reads; set quirk flags directly in
+	 helper function ]
+Cc: stable <stable@vger.kernel.org>	# 5.5
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-> Also TI will not be providing the individual binaries to the customer.=A0
-> There is a customer tool that the user uses to create the binaries.
+---
+ drivers/usb/serial/ch341.c |   53 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
 
-> So the output names are arbitrary.
+--- a/drivers/usb/serial/ch341.c
++++ b/drivers/usb/serial/ch341.c
+@@ -93,6 +93,7 @@ struct ch341_private {
+ 	u8 mcr;
+ 	u8 msr;
+ 	u8 lcr;
++	unsigned long quirks;
+ };
+ 
+ static void ch341_set_termios(struct tty_struct *tty,
+@@ -245,6 +246,53 @@ out:	kfree(buffer);
+ 	return r;
+ }
+ 
++static int ch341_detect_quirks(struct usb_serial_port *port)
++{
++	struct ch341_private *priv = usb_get_serial_port_data(port);
++	struct usb_device *udev = port->serial->dev;
++	const unsigned int size = 2;
++	unsigned long quirks = 0;
++	char *buffer;
++	int r;
++
++	buffer = kmalloc(size, GFP_KERNEL);
++	if (!buffer)
++		return -ENOMEM;
++
++	/*
++	 * A subset of CH34x devices does not support all features. The
++	 * prescaler is limited and there is no support for sending a RS232
++	 * break condition. A read failure when trying to set up the latter is
++	 * used to detect these devices.
++	 */
++	r = usb_control_msg(udev, usb_rcvctrlpipe(udev, 0), CH341_REQ_READ_REG,
++			    USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_IN,
++			    CH341_REG_BREAK, 0, buffer, size, DEFAULT_TIMEOUT);
++	if (r == -EPIPE) {
++		dev_dbg(&port->dev, "break control not supported\n");
++		r = 0;
++		goto out;
++	}
++
++	if (r != size) {
++		if (r >= 0)
++			r = -EIO;
++		dev_err(&port->dev, "failed to read break control: %d\n", r);
++		goto out;
++	}
++
++	r = 0;
++out:
++	kfree(buffer);
++
++	if (quirks) {
++		dev_dbg(&port->dev, "enabling quirk flags: 0x%02lx\n", quirks);
++		priv->quirks |= quirks;
++	}
++
++	return r;
++}
++
+ static int ch341_port_probe(struct usb_serial_port *port)
+ {
+ 	struct ch341_private *priv;
+@@ -267,6 +315,11 @@ static int ch341_port_probe(struct usb_s
+ 		goto error;
+ 
+ 	usb_set_serial_port_data(port, priv);
++
++	r = ch341_detect_quirks(port);
++	if (r < 0)
++		goto error;
++
+ 	return 0;
+ 
+ error:	kfree(priv);
 
-> I was going to mention this in the cover letter but did not think mention=
-ing
-> the user tool had any value
 
-That's all fairly standard for this sort of device.  You could still
-cope with this by including the I2C address in the default name
-requested - do something like tas2562/myboard-addr.fw or whatever.  The
-concern here is that someone shouldn't have to replace their DT if they
-decide they want to start using the DSP, and someone making a distro
-shouldn't be stuck dealing with what happens if multiple vendors decide
-to just reuse the same name (eg, just calling everything tas2562
-regardless of plastics).
-
---JaBjgNvtdKe5H086
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7fzdsACgkQJNaLcl1U
-h9BKVQgAhwdvHDREJ2LZnjNuwAcY2lCGKrqH/sZ5zCuez+GTC3OioTnr1/2fRJP3
-oeO4H/IRo6/PsE6dhcl48e+/CVM8p9IBC4J7eLYtvwC3iOd5qZGUXq1HqoYQaYYp
-cJ22lWuYmG6EXPtcTM7eflfBIEdgbluyeksxIc1WSTccPFpEOkc8tElhlNN4eowI
-34B18qXdsfvX3eOghVWTAD/IoyTPmyvWLzOkrRSpk+oPKsiqJnx0g7wEAg95sBKg
-luhCZTAe1gaTpMC44kBIMN1ZVd22wZIGCJqXKY434H4xiVImRvv2/uqxbm0GsQQy
-4Wqt+BFO7MwvkNsDYTTFA/Uj8xQ++A==
-=re6H
------END PGP SIGNATURE-----
-
---JaBjgNvtdKe5H086--
