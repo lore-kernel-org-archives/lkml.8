@@ -2,101 +2,93 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D2DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85BDCC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E327820691
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:08:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D92A20734
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:08:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388440AbgFISIq (ORCPT
+        id S2388365AbgFISIQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:08:46 -0400
-Received: from dispatch1-us1.ppe-hosted.com ([67.231.154.164]:50580 "EHLO
-        dispatch1-us1.ppe-hosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731294AbgFISIg (ORCPT
+        Tue, 9 Jun 2020 14:08:16 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:41464 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388184AbgFISF7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 14:08:36 -0400
-Received: from mx1-us1.ppe-hosted.com (unknown [10.110.50.137])
-        by dispatch1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id F2C0B20093;
-        Tue,  9 Jun 2020 18:08:33 +0000 (UTC)
-Received: from us4-mdac16-21.at1.mdlocal (unknown [10.110.49.203])
-        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id F03EA6009B;
-        Tue,  9 Jun 2020 18:08:33 +0000 (UTC)
-X-Virus-Scanned: Proofpoint Essentials engine
-Received: from mx1-us1.ppe-hosted.com (unknown [10.110.49.106])
-        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id 88AD022007A;
-        Tue,  9 Jun 2020 18:08:33 +0000 (UTC)
-Received: from webmail.solarflare.com (uk.solarflare.com [193.34.186.16])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id 27A57B4007C;
-        Tue,  9 Jun 2020 18:08:33 +0000 (UTC)
-Received: from [10.17.20.203] (10.17.20.203) by ukex01.SolarFlarecom.com
- (10.17.10.4) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 9 Jun 2020
- 19:08:25 +0100
-Subject: Re: [PATCH v3 1/7] Documentation: dynamic-debug: Add description of
- level bitmask
-To:     Joe Perches <joe@perches.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>
-CC:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-btrfs@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-        <netdev@vger.kernel.org>, Jason Baron <jbaron@akamai.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Jim Cromie <jim.cromie@gmail.com>
-References: <20200609104604.1594-1-stanimir.varbanov@linaro.org>
- <20200609104604.1594-2-stanimir.varbanov@linaro.org>
- <20200609111615.GD780233@kroah.com>
- <ba32bfa93ac2e147c2e0d3a4724815a7bbf41c59.camel@perches.com>
- <727b31a0-543b-3dc5-aa91-0d78dc77df9c@solarflare.com>
- <2b291c34e10b3b3d9d6e01f8201ec0942e39575f.camel@perches.com>
-From:   Edward Cree <ecree@solarflare.com>
-Message-ID: <e91223b2-3b31-6564-00c9-bda9a2aeffe5@solarflare.com>
-Date:   Tue, 9 Jun 2020 19:08:22 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <2b291c34e10b3b3d9d6e01f8201ec0942e39575f.camel@perches.com>
-Content-Type: text/plain; charset="utf-8"
+        Tue, 9 Jun 2020 14:05:59 -0400
+Received: from [192.168.4.242] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1jiidG-0001oz-9p; Tue, 09 Jun 2020 19:05:54 +0100
+Received: from ben by deadeye with local (Exim 4.94)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1jiidG-006VxB-0s; Tue, 09 Jun 2020 19:05:54 +0100
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
-X-Originating-IP: [10.17.20.203]
-X-ClientProxiedBy: ocex03.SolarFlarecom.com (10.20.40.36) To
- ukex01.SolarFlarecom.com (10.17.10.4)
-X-TM-AS-Product-Ver: SMEX-12.5.0.1300-8.5.1020-25470.003
-X-TM-AS-Result: No-10.210900-8.000000-10
-X-TMASE-MatchedRID: 7ySqCuYCpfjsYbGmK/WYxvZvT2zYoYOwC/ExpXrHizyMUViaYYbK3JYv
-        /wbpWcIKq5ewd0UPS9hdKS1gReph0aH2g9syPs88A9lly13c/gEg/CIfleX9D0hcmj54ab4UNP+
-        2kwiBPOV5DzCqPSy3yOKHzP0BuUCDNyl1nd9CIt2DGx/OQ1GV8hFMgtPIAD6i+gtHj7OwNO2Ohz
-        Oa6g8KrdL6UoKG2HjArEiGVSydaXgrmmLgt5BrqsqcASyOtFdbnkXNoeOrXbw=
-X-TM-AS-User-Approved-Sender: Yes
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--10.210900-8.000000
-X-TMASE-Version: SMEX-12.5.0.1300-8.5.1020-25470.003
-X-MDID: 1591726113-WCvvrqNr18jp
+MIME-Version: 1.0
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        "Arthur Marsh" <arthur.marsh@internode.on.net>
+Date:   Tue, 09 Jun 2020 19:04:42 +0100
+Message-ID: <lsq.1591725832.862704926@decadent.org.uk>
+X-Mailer: LinuxStableQueue (scripts by bwh)
+X-Patchwork-Hint: ignore
+Subject: [PATCH 3.16 51/61] ext4: fix block validity checks for journal
+ inodes using indirect blocks
+In-Reply-To: <lsq.1591725831.850867383@decadent.org.uk>
+X-SA-Exim-Connect-IP: 192.168.4.242
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/06/2020 18:56, Joe Perches wrote:
-> These are _not_ netif_<level> control flags. Some are though.
-> For instance:
->
-> $ git grep "MODULE_PARM.*\bdebug\b" drivers/net | head -10
-> [...]
->
-> These are all level/class output controls.
-TIL, thanks!  I should have looked deeperrather than assuming
- they were all like ours.
+3.16.85-rc1 review patch.  If anyone has any objections, please let me know.
 
-Though judging just by that grep output, it also looks like
- quite a lot of those won't fit into 5 groups either, so some
- rethink may still be needed...
+------------------
 
--ed
+From: Theodore Ts'o <tytso@mit.edu>
+
+commit 170417c8c7bb2cbbdd949bf5c443c0c8f24a203b upstream.
+
+Commit 345c0dbf3a30 ("ext4: protect journal inode's blocks using
+block_validity") failed to add an exception for the journal inode in
+ext4_check_blockref(), which is the function used by ext4_get_branch()
+for indirect blocks.  This caused attempts to read from the ext3-style
+journals to fail with:
+
+[  848.968550] EXT4-fs error (device sdb7): ext4_get_branch:171: inode #8: block 30343695: comm jbd2/sdb7-8: invalid block
+
+Fix this by adding the missing exception check.
+
+Fixes: 345c0dbf3a30 ("ext4: protect journal inode's blocks using block_validity")
+Reported-by: Arthur Marsh <arthur.marsh@internode.on.net>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+[bwh: Backported to 3.16: Use EXT4_HAS_COMPAT_FEATURE]
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+---
+--- a/fs/ext4/block_validity.c
++++ b/fs/ext4/block_validity.c
+@@ -277,6 +277,12 @@ int ext4_check_blockref(const char *func
+ 	__le32 *bref = p;
+ 	unsigned int blk;
+ 
++	if (EXT4_HAS_COMPAT_FEATURE(inode->i_sb,
++				    EXT4_FEATURE_COMPAT_HAS_JOURNAL) &&
++	    (inode->i_ino ==
++	     le32_to_cpu(EXT4_SB(inode->i_sb)->s_es->s_journal_inum)))
++		return 0;
++
+ 	while (bref < p+max) {
+ 		blk = le32_to_cpu(*bref++);
+ 		if (blk &&
+
