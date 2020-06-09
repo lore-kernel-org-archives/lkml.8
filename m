@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 001A1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F290C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:53:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C93BD207F9
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 460D720774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:53:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725223;
-	bh=8YhENcGm/KsO1RO/b6JPjuxL+YBUf0Nsx3uSX/EKGHA=;
+	s=default; t=1591725228;
+	bh=5hEyJv+i8lgPkzKGzA2JKa81T8owg04PWOjhCN+qqAY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xLyYn0ycR8UfoOZqrSGlRnhJ3+fpbY9KimYqCGtoOmlFo6mceDIxmRTnOGdVfkV0f
-	 G5Re8COsN52zaEFf9AS+b09UOH99Yzn0kJQjtRKR6lBl0+pKsofg12n0kf9ZgUJrmV
-	 MrfVg6nlwrURfnIEyP5Eu+20nG0EFgS+9v/8hfIw=
+	b=JsZix+px4rQymLFktx0Eb7QhhNRWxsIl2Bh4iRXQHENYsx7J1OZm3GF1aeR44jPoU
+	 jB0XPTf9VclpGffTTiehtyv16LvWvvzcD//+B0157ucPgLtONimmeTkc2YHpbyYNBY
+	 NT77NKnmQvEkYysIhTyFUEpeiDCSEGRk2SxUR5R0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733039AbgFIRxk (ORCPT
+        id S1733044AbgFIRxq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:53:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42826 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:53:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732896AbgFIRwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:52:30 -0400
+        id S1732904AbgFIRwc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:52:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3616520774;
-        Tue,  9 Jun 2020 17:52:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7241A20734;
+        Tue,  9 Jun 2020 17:52:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725149;
-        bh=8YhENcGm/KsO1RO/b6JPjuxL+YBUf0Nsx3uSX/EKGHA=;
+        s=default; t=1591725151;
+        bh=5hEyJv+i8lgPkzKGzA2JKa81T8owg04PWOjhCN+qqAY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H4JzjI7+x3+bKhnwCYLss/0ZUUsFynVUeyUw23WMwyS/CXt4JaLEV0rki/ioGQZ2W
-         E4qT6GdUY+EKZyzOBpBFzf1AGFw17+FnfhU4aAesvNW+mERjQx/lXOZT/eUwuJ0+aL
-         o0CsTjQ7tyhyh20ZiTfX8b0p30t7z4H3RkyC472M=
+        b=AowsPmHtZqw6mQ+q6hsOb9kQ/RdfJEzCrqpiMVtwxdzuCl3UBoFd4t5dbiXdRtWJf
+         xNLe7z67cO5wuEnthYvvNGQ4cMzqDX/7LvBVU8BeGjczIaGfm8V/g0WKnUt8CMtrh+
+         Dl1QzBdneV2Oxk6xiJN3Mq14VSp5I562jXfPk21k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Heinrich Kuhn <heinrich.kuhn@netronome.com>,
-        Simon Horman <simon.horman@netronome.com>,
+        stable@vger.kernel.org, Stefano Garzarella <sgarzare@redhat.com>,
+        Jorgen Hansen <jhansen@vmware.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 08/34] nfp: flower: fix used time of merge flow statistics
-Date:   Tue,  9 Jun 2020 19:45:04 +0200
-Message-Id: <20200609174053.651825953@linuxfoundation.org>
+Subject: [PATCH 5.4 09/34] vsock: fix timeout in vsock_accept()
+Date:   Tue,  9 Jun 2020 19:45:05 +0200
+Message-Id: <20200609174053.793966089@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174052.628006868@linuxfoundation.org>
 References: <20200609174052.628006868@linuxfoundation.org>
@@ -61,41 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heinrich Kuhn <heinrich.kuhn@netronome.com>
+From: Stefano Garzarella <sgarzare@redhat.com>
 
-[ Upstream commit 5b186cd60f033110960a3db424ffbd6de4cee528 ]
+[ Upstream commit 7e0afbdfd13d1e708fe96e31c46c4897101a6a43 ]
 
-Prior to this change the correct value for the used counter is calculated
-but not stored nor, therefore, propagated to user-space. In use-cases such
-as OVS use-case at least this results in active flows being removed from
-the hardware datapath. Which results in both unnecessary flow tear-down
-and setup, and packet processing on the host.
+The accept(2) is an "input" socket interface, so we should use
+SO_RCVTIMEO instead of SO_SNDTIMEO to set the timeout.
 
-This patch addresses the problem by saving the calculated used value
-which allows the value to propagate to user-space.
+So this patch replace sock_sndtimeo() with sock_rcvtimeo() to
+use the right timeout in the vsock_accept().
 
-Found by inspection.
-
-Fixes: aa6ce2ea0c93 ("nfp: flower: support stats update for merge flows")
-Signed-off-by: Heinrich Kuhn <heinrich.kuhn@netronome.com>
-Signed-off-by: Simon Horman <simon.horman@netronome.com>
+Fixes: d021c344051a ("VSOCK: Introduce VM Sockets")
+Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+Reviewed-by: Jorgen Hansen <jhansen@vmware.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/netronome/nfp/flower/offload.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/vmw_vsock/af_vsock.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/netronome/nfp/flower/offload.c
-+++ b/drivers/net/ethernet/netronome/nfp/flower/offload.c
-@@ -1368,7 +1368,8 @@ __nfp_flower_update_merge_stats(struct n
- 		ctx_id = be32_to_cpu(sub_flow->meta.host_ctx_id);
- 		priv->stats[ctx_id].pkts += pkts;
- 		priv->stats[ctx_id].bytes += bytes;
--		max_t(u64, priv->stats[ctx_id].used, used);
-+		priv->stats[ctx_id].used = max_t(u64, used,
-+						 priv->stats[ctx_id].used);
- 	}
- }
+--- a/net/vmw_vsock/af_vsock.c
++++ b/net/vmw_vsock/af_vsock.c
+@@ -1275,7 +1275,7 @@ static int vsock_accept(struct socket *s
+ 	/* Wait for children sockets to appear; these are the new sockets
+ 	 * created upon connection establishment.
+ 	 */
+-	timeout = sock_sndtimeo(listener, flags & O_NONBLOCK);
++	timeout = sock_rcvtimeo(listener, flags & O_NONBLOCK);
+ 	prepare_to_wait(sk_sleep(listener), &wait, TASK_INTERRUPTIBLE);
  
+ 	while ((connected = vsock_dequeue_accept(listener)) == NULL &&
 
 
