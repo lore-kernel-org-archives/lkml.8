@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BCCDC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A835C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06972206D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:02:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4896D206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:02:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725733;
-	bh=Es5pHFAq7C4C4t/s9Cs/BOCCeaIGYNiWTOPz+6neDk4=;
+	s=default; t=1591725742;
+	bh=TUchAfSP3c+TsOsIJC3hkMN+LDRDbG1kStznIlC4JxY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=evFIUrvJuZlq0oYCKVK4r84edMfqqFRkXDgKsdomUBEtk1dE1ZjJ+i7vPhWTKsFWP
-	 2Rnc5LG7MBHS1fN+nJTiKS/UxSfZQwYs23peOXMTkwVG/Q5Tsw/IpVcvnqDmfIGC1K
-	 WBoZAH84wFzfOCcRYUwQMvH1MReF7qFpvwdYR+TQ=
+	b=Oi310NZ/FRmTDiob9bO1wGpcQj3VRKgvVSZ/yD08JD/CevUeVGAIMFHvK+kKf+0T0
+	 SFtu3WsizXv8w3rnl2KwtJ56NFJl5ixQpFcGAxcVDVnJ+e+fEUVkMo6BVmSR2afnRS
+	 iy+JZCoNF9W2c+aExEP12XwR9ygoyAeYgQtnYmg8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387848AbgFISCL (ORCPT
+        id S1733278AbgFISCU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:02:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44858 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 14:02:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733043AbgFIRxn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729657AbgFIRxn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 9 Jun 2020 13:53:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D53D5207C3;
-        Tue,  9 Jun 2020 17:53:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E3B420734;
+        Tue,  9 Jun 2020 17:53:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725221;
-        bh=Es5pHFAq7C4C4t/s9Cs/BOCCeaIGYNiWTOPz+6neDk4=;
+        s=default; t=1591725223;
+        bh=TUchAfSP3c+TsOsIJC3hkMN+LDRDbG1kStznIlC4JxY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ssqdaDxtGnorgRjGAQkqj+SUr2AYy2+L84kMWywHZ8MvVFGrshwpuRP57NikR3Z+v
-         DV1N8nn/HFiEgefc37GajG2YN99JJ7obv5/oSNSrquIdeDfCOTblGYj8AkWFJHiQyU
-         FdbLVH8eAQJC3+57pC8aqRd3dB4Jpul9AKrERUsg=
+        b=yQqJ0vqpm6w7Wn9es3HqoXD87QzYRLlBxuxwOXuPymoFVYqBpI8uJ3RfoSUZg5lov
+         CDmIWY6x3Tz473bIe+ylpvoBSp8CZ9Ehqq/JltwzI0/Xnm7y4QVRpcXKHofuHbuCFI
+         UVDBcWcCkdj3QiAbDgPXeAtlrT9kv2W3wghkj8QU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matt Jolly <Kangie@footclan.ninja>,
+        stable@vger.kernel.org, Bin Liu <b-liu@ti.com>,
         Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.6 18/41] USB: serial: qcserial: add DW5816e QDL support
-Date:   Tue,  9 Jun 2020 19:45:20 +0200
-Message-Id: <20200609174113.884041172@linuxfoundation.org>
+Subject: [PATCH 5.6 19/41] USB: serial: usb_wwan: do not resubmit rx urb on fatal errors
+Date:   Tue,  9 Jun 2020 19:45:21 +0200
+Message-Id: <20200609174113.975002897@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174112.129412236@linuxfoundation.org>
 References: <20200609174112.129412236@linuxfoundation.org>
@@ -59,33 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matt Jolly <Kangie@footclan.ninja>
+From: Bin Liu <b-liu@ti.com>
 
-commit 3429444abdd9dbd5faebd9bee552ec6162b17ad6 upstream.
+commit 986c1748c84d7727defeaeca74a73b37f7d5cce1 upstream.
 
-Add support for Dell Wireless 5816e Download Mode (AKA boot & hold mode /
-QDL download mode) to drivers/usb/serial/qcserial.c
+usb_wwan_indat_callback() shouldn't resubmit rx urb if the previous urb
+status is a fatal error. Or the usb controller would keep processing the
+new urbs then run into interrupt storm, and has no chance to recover.
 
-This is required to update device firmware.
-
-Signed-off-by: Matt Jolly <Kangie@footclan.ninja>
+Fixes: 6c1ee66a0b2b ("USB-Serial: Fix error handling of usb_wwan")
 Cc: stable@vger.kernel.org
+Signed-off-by: Bin Liu <b-liu@ti.com>
 Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/qcserial.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/serial/usb_wwan.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/usb/serial/qcserial.c
-+++ b/drivers/usb/serial/qcserial.c
-@@ -173,6 +173,7 @@ static const struct usb_device_id id_tab
- 	{DEVICE_SWI(0x413c, 0x81b3)},	/* Dell Wireless 5809e Gobi(TM) 4G LTE Mobile Broadband Card (rev3) */
- 	{DEVICE_SWI(0x413c, 0x81b5)},	/* Dell Wireless 5811e QDL */
- 	{DEVICE_SWI(0x413c, 0x81b6)},	/* Dell Wireless 5811e QDL */
-+	{DEVICE_SWI(0x413c, 0x81cb)},	/* Dell Wireless 5816e QDL */
- 	{DEVICE_SWI(0x413c, 0x81cc)},	/* Dell Wireless 5816e */
- 	{DEVICE_SWI(0x413c, 0x81cf)},   /* Dell Wireless 5819 */
- 	{DEVICE_SWI(0x413c, 0x81d0)},   /* Dell Wireless 5819 */
+--- a/drivers/usb/serial/usb_wwan.c
++++ b/drivers/usb/serial/usb_wwan.c
+@@ -270,6 +270,10 @@ static void usb_wwan_indat_callback(stru
+ 	if (status) {
+ 		dev_dbg(dev, "%s: nonzero status: %d on endpoint %02x.\n",
+ 			__func__, status, endpoint);
++
++		/* don't resubmit on fatal errors */
++		if (status == -ESHUTDOWN || status == -ENOENT)
++			return;
+ 	} else {
+ 		if (urb->actual_length) {
+ 			tty_insert_flip_string(&port->port, data,
 
 
