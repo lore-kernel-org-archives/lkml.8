@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D24E4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:22:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0271C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA63620774
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:22:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1212206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:22:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="pb8usziu"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="UuQjLAji"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730496AbgFIOWD (ORCPT
+        id S1730508AbgFIOWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 10:22:03 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:7814 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728601AbgFIOWC (ORCPT
+        Tue, 9 Jun 2020 10:22:23 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:33005 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728601AbgFIOWV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 10:22:02 -0400
+        Tue, 9 Jun 2020 10:22:21 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1591712522; x=1623248522;
+  t=1591712540; x=1623248540;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version;
-  bh=v6Vmzq5EIDAZEFmnvXrN4Ci7XeSQ+6uNTzvYLYOmCMg=;
-  b=pb8usziuC+fs/n+G+/Qy+woXfJmm2sEKfAj4VidLiSkUXwqgjRSBy+EG
-   dGryqdBNY3HqiVk1MrRxAybGkuGgX8UMV5bSn9su0CKiY3xbeGlKEtfdK
-   zZe1NSCEEc8ySMuhwA7NKw9v3d6hynS8Q8E0Oaeb3evCgzWi0YL2ar55l
-   w=;
-IronPort-SDR: nEpkDPK0Sk41CVJJYXq9cww3EDIAVJgQCfJearg4PLeUq/AU2/79A5knzDXjrum2RiFlD66pp1
- qSSxpNs97AnA==
+  bh=efag3GSalrV9NyyxpFArLX6aVPnGQkAMhSZzOaYu92g=;
+  b=UuQjLAjiPGuvjQ41TYJ5VcZIK5PQSz5ElguQI2LnkR23Tlr14IlzDnOZ
+   uzkhxer6c65flvlItOb+S7OHje0NL6QxY52Drking5NZTsUMxTxMqWJn+
+   cKGdBRI5vxf+0qx/xUSVECtuYjppKcjJ9w6H9FxqIkGY7xNeCb6O5cax5
+   Y=;
+IronPort-SDR: qmxu68i8ysiuerSo8dSgImOKcE6x8FjwCKPcDqs8o1kEzkmHRZRp9toomHUCHti9msGw5SzHrP
+ DSW0s07CcnLg==
 X-IronPort-AV: E=Sophos;i="5.73,492,1583193600"; 
-   d="scan'208";a="35297528"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1e-c7c08562.us-east-1.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 09 Jun 2020 14:22:01 +0000
+   d="scan'208";a="35296075"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-37fd6b3d.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 09 Jun 2020 14:22:19 +0000
 Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1e-c7c08562.us-east-1.amazon.com (Postfix) with ESMTPS id 6529F24230A;
-        Tue,  9 Jun 2020 14:21:50 +0000 (UTC)
+        by email-inbound-relay-1d-37fd6b3d.us-east-1.amazon.com (Postfix) with ESMTPS id A5964282443;
+        Tue,  9 Jun 2020 14:22:08 +0000 (UTC)
 Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
  EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 9 Jun 2020 14:21:49 +0000
+ id 15.0.1497.2; Tue, 9 Jun 2020 14:22:07 +0000
 Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.109) by
  EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 9 Jun 2020 14:21:33 +0000
+ id 15.0.1497.2; Tue, 9 Jun 2020 14:21:51 +0000
 From:   SeongJae Park <sjpark@amazon.com>
 To:     <akpm@linux-foundation.org>
 CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
@@ -67,9 +67,9 @@ CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
         <ying.huang@intel.com>, <david@redhat.com>,
         <linux-damon@amazon.com>, <linux-mm@kvack.org>,
         <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [RFC v3 05/10] Docs/damon: Document 'initial_regions' feature
-Date:   Tue, 9 Jun 2020 16:19:36 +0200
-Message-ID: <20200609141941.19184-6-sjpark@amazon.com>
+Subject: [RFC v3 06/10] mm/damon: Make access check primitive configurable
+Date:   Tue, 9 Jun 2020 16:19:37 +0200
+Message-ID: <20200609141941.19184-7-sjpark@amazon.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200609141941.19184-1-sjpark@amazon.com>
 References: <20200609141941.19184-1-sjpark@amazon.com>
@@ -85,58 +85,155 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: SeongJae Park <sjpark@amazon.de>
 
-This commit documents the 'initial_regions' feature.
+DAMON assumes the target region is in virtual address space and
+therefore uses PTE Accessed bit checking for access checking.  However,
+as some CPU provides H/W based memory access check features that usually
+more accurate and light-weight than PTE Accessed bit checking, some
+users would want to use those in special use cases.  Also, some users
+might want to use DAMON for different address spaces such as physical
+memory space, which needs different ways to check the access.
+
+This commit therefore allows DAMON users to configure the low level
+access check primitives as they want.
 
 Signed-off-by: SeongJae Park <sjpark@amazon.de>
 ---
- Documentation/admin-guide/mm/damon/usage.rst | 34 ++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+ include/linux/damon.h | 13 +++++++++++--
+ mm/damon.c            | 20 +++++++++++---------
+ 2 files changed, 22 insertions(+), 11 deletions(-)
 
-diff --git a/Documentation/admin-guide/mm/damon/usage.rst b/Documentation/admin-guide/mm/damon/usage.rst
-index 18a19c35b4f3..f600366cdd4e 100644
---- a/Documentation/admin-guide/mm/damon/usage.rst
-+++ b/Documentation/admin-guide/mm/damon/usage.rst
-@@ -326,6 +326,40 @@ having pids 42 and 4242 as the processes to be monitored and check it again::
- Note that setting the pids doesn't start the monitoring.
+diff --git a/include/linux/damon.h b/include/linux/damon.h
+index a1b6810ce0eb..1a788bfd1b4e 100644
+--- a/include/linux/damon.h
++++ b/include/linux/damon.h
+@@ -160,13 +160,18 @@ struct damos {
+  *
+  * @init_target_regions:	Constructs initial monitoring target regions.
+  * @update_target_regions:	Updates monitoring target regions.
++ * @prepare_access_checks:	Prepares next access check of target regions.
++ * @check_accesses:		Checks the access of target regions.
+  * @sample_cb:			Called for each sampling interval.
+  * @aggregate_cb:		Called for each aggregation interval.
+  *
+  * The monitoring thread calls @init_target_regions before starting the
+- * monitoring, @update_target_regions for each @regions_update_interval.  By
++ * monitoring, @update_target_regions for each @regions_update_interval, and
++ * @prepare_access_checks and @check_accesses for each @sample_interval.  By
+  * setting these callbacks to appropriate functions, therefore, users can
+- * monitor specific range of virtual address space.
++ * monitor any address space with special handling.  If these are not
++ * explicitly configured, the functions for virtual memory address space
++ * monitoring are used.
+  *
+  * @sample_cb and @aggregate_cb are called from @kdamond for each of the
+  * sampling intervals and aggregation intervals, respectively.  Therefore,
+@@ -199,6 +204,8 @@ struct damon_ctx {
+ 	/* callbacks */
+ 	void (*init_target_regions)(struct damon_ctx *context);
+ 	void (*update_target_regions)(struct damon_ctx *context);
++	void (*prepare_access_checks)(struct damon_ctx *context);
++	unsigned int (*check_accesses)(struct damon_ctx *context);
+ 	void (*sample_cb)(struct damon_ctx *context);
+ 	void (*aggregate_cb)(struct damon_ctx *context);
+ };
+@@ -206,6 +213,8 @@ struct damon_ctx {
+ /* Reference callback implementations for virtual memory */
+ void kdamond_init_vm_regions(struct damon_ctx *ctx);
+ void kdamond_update_vm_regions(struct damon_ctx *ctx);
++void kdamond_prepare_vm_access_checks(struct damon_ctx *ctx);
++unsigned int kdamond_check_vm_accesses(struct damon_ctx *ctx);
  
+ int damon_set_pids(struct damon_ctx *ctx, int *pids, ssize_t nr_pids);
+ int damon_set_attrs(struct damon_ctx *ctx, unsigned long sample_int,
+diff --git a/mm/damon.c b/mm/damon.c
+index 2d8322e6558f..95a4a7fedf4d 100644
+--- a/mm/damon.c
++++ b/mm/damon.c
+@@ -90,6 +90,8 @@ static struct damon_ctx damon_user_ctx = {
  
-+Initial Monitoring Target Regions
-+---------------------------------
-+
-+DAMON automatically sets and updates the monitoring target regions so that
-+entire memory mappings of target processes can be covered.  However, users
-+might want to limit the monitoring region to specific address ranges, such as
-+the heap, the stack, or specific file-mapped area.  Or, some users might know
-+the initial access pattern of their workloads and therefore want to set optimal
-+initial regions for the 'adaptive regions adjustment'.
-+
-+In such cases, users can explicitly set the initial monitoring target regions
-+as they want, by writing proper values to the ``init_regions`` file.  Each line
-+of the input should represent one region in below form.::
-+
-+    <pid> <start address> <end address>
-+
-+The ``pid`` should be already in ``pids`` file, and the regions should be
-+passed in address order.  For example, below commands will set a couple of
-+address ranges, ``1-100`` and ``100-200`` as the initial monitoring target
-+region of process 42, and another couple of address ranges, ``20-40`` and
-+``50-100`` as that of process 4242.::
-+
-+    # cd <debugfs>/damon
-+    # echo "42   1       100
-+            42   100     200
-+            4242 20      40
-+            4242 50      100" > init_regions
-+
-+Note that this sets the initial monitoring target regions only.  DAMON will
-+automatically updates the boundary of the regions after one ``regions update
-+interval``.  Therefore, users should set the ``regions update interval`` large
-+enough.
-+
-+
- Record
- ------
+ 	.init_target_regions = kdamond_init_vm_regions,
+ 	.update_target_regions = kdamond_update_vm_regions,
++	.prepare_access_checks = kdamond_prepare_vm_access_checks,
++	.check_accesses = kdamond_check_vm_accesses,
+ };
  
+ /*
+@@ -613,7 +615,7 @@ static void damon_mkold(struct mm_struct *mm, unsigned long addr)
+ #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+ }
+ 
+-static void damon_prepare_access_check(struct damon_ctx *ctx,
++static void damon_prepare_vm_access_check(struct damon_ctx *ctx,
+ 			struct mm_struct *mm, struct damon_region *r)
+ {
+ 	r->sampling_addr = damon_rand(r->ar.start, r->ar.end);
+@@ -621,7 +623,7 @@ static void damon_prepare_access_check(struct damon_ctx *ctx,
+ 	damon_mkold(mm, r->sampling_addr);
+ }
+ 
+-static void kdamond_prepare_access_checks(struct damon_ctx *ctx)
++void kdamond_prepare_vm_access_checks(struct damon_ctx *ctx)
+ {
+ 	struct damon_task *t;
+ 	struct mm_struct *mm;
+@@ -632,7 +634,7 @@ static void kdamond_prepare_access_checks(struct damon_ctx *ctx)
+ 		if (!mm)
+ 			continue;
+ 		damon_for_each_region(r, t)
+-			damon_prepare_access_check(ctx, mm, r);
++			damon_prepare_vm_access_check(ctx, mm, r);
+ 		mmput(mm);
+ 	}
+ }
+@@ -670,7 +672,7 @@ static bool damon_young(struct mm_struct *mm, unsigned long addr,
+  * mm	'mm_struct' for the given virtual address space
+  * r	the region to be checked
+  */
+-static void damon_check_access(struct damon_ctx *ctx,
++static void damon_check_vm_access(struct damon_ctx *ctx,
+ 			       struct mm_struct *mm, struct damon_region *r)
+ {
+ 	static struct mm_struct *last_mm;
+@@ -694,7 +696,7 @@ static void damon_check_access(struct damon_ctx *ctx,
+ 	last_addr = r->sampling_addr;
+ }
+ 
+-static unsigned int kdamond_check_accesses(struct damon_ctx *ctx)
++unsigned int kdamond_check_vm_accesses(struct damon_ctx *ctx)
+ {
+ 	struct damon_task *t;
+ 	struct mm_struct *mm;
+@@ -706,12 +708,12 @@ static unsigned int kdamond_check_accesses(struct damon_ctx *ctx)
+ 		if (!mm)
+ 			continue;
+ 		damon_for_each_region(r, t) {
+-			damon_check_access(ctx, mm, r);
++			damon_check_vm_access(ctx, mm, r);
+ 			max_nr_accesses = max(r->nr_accesses, max_nr_accesses);
+ 		}
+-
+ 		mmput(mm);
+ 	}
++
+ 	return max_nr_accesses;
+ }
+ 
+@@ -1141,13 +1143,13 @@ static int kdamond_fn(void *data)
+ 	kdamond_write_record_header(ctx);
+ 
+ 	while (!kdamond_need_stop(ctx)) {
+-		kdamond_prepare_access_checks(ctx);
++		ctx->prepare_access_checks(ctx);
+ 		if (ctx->sample_cb)
+ 			ctx->sample_cb(ctx);
+ 
+ 		usleep_range(ctx->sample_interval, ctx->sample_interval + 1);
+ 
+-		max_nr_accesses = kdamond_check_accesses(ctx);
++		max_nr_accesses = ctx->check_accesses(ctx);
+ 
+ 		if (kdamond_aggregate_interval_passed(ctx)) {
+ 			kdamond_merge_regions(ctx, max_nr_accesses / 10);
 -- 
 2.17.1
 
