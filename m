@@ -2,52 +2,54 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF56C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6418FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E85D2067B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:22:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37FC82067B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:22:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591726920;
-	bh=sAKqQsYspESBgdnN+eV9couIFzpg4RDXKq4PEh5Ww5M=;
+	s=default; t=1591726927;
+	bh=0l8c9k+8yFocyzIgv8IfzIQTVYUyVs5GizGv3/sGW/A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aRedkdvuesGI9aKfAaBzPJxJxYG/zoz0Y9PBHN1vw6BkRxlJ+ao7sd/LMTqZklfmt
-	 Kl0OXVDsw7GA/RD6TlLTx+2NnqONhLyIXKULlofNg9Cg9FsJHrw8phfKi8Gy4u55ku
-	 iqneZporyNB6mfSvxrJXGz0t3MmrpnAe1+urjeH4=
+	b=fwdWcbERXgQkLevt0yUeYBWALLltWvMMErDInH7YBEN8wHfvLH+pjOBcI5Uz5Sp4i
+	 xfCzWW7eXyAY5l5A0RvJtMBEX38VIkfQS+q9iM69KRvNSzfPVL43vDiOSorf4WAd7D
+	 K9w5N3VEnmNqM6p/Tw7DDLsFjPRNAGi/RehVVdKU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732326AbgFIRsd (ORCPT
+        id S2388832AbgFISWD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:48:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60640 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 14:22:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732271AbgFIRsW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:48:22 -0400
+        id S1732318AbgFIRsd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:48:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A206207ED;
-        Tue,  9 Jun 2020 17:48:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C098B20812;
+        Tue,  9 Jun 2020 17:48:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591724901;
-        bh=sAKqQsYspESBgdnN+eV9couIFzpg4RDXKq4PEh5Ww5M=;
+        s=default; t=1591724913;
+        bh=0l8c9k+8yFocyzIgv8IfzIQTVYUyVs5GizGv3/sGW/A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AsfEUCK2srszFp2b2HA7OzKcseLter37K/z/FmQautaF6YT0hQDM3Q0D772LiQQs7
-         iAVQQMeqAT1P1fWRJbPUa9406Y7/oHfErIOqopE2iZ6AjtcpwJ/NgumNprqH6Eytkm
-         xmvKazHlOhaiO521vkJvzfyK13Tji5QEvYsZK1f0=
+        b=uG4sTfXTAxSIY0PuiBYVMdZue1VgnI/wi23U0HmpPDBwrFJ08Xn/a3MoHVzERmLpM
+         YeSQosTEl1mEi4NlsxUdySmsvsSdzDo9+usNQqfVtQyQqRXPVqoWyvGaKwBmNF/Di1
+         xPiRHqa2GrfQ5QH5uo55jkc52WbDL3rD8iu4seEE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhen Lei <thunder.leizhen@huawei.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.9 03/42] esp6: fix memleak on error path in esp6_input
-Date:   Tue,  9 Jun 2020 19:44:09 +0200
-Message-Id: <20200609174015.786573756@linuxfoundation.org>
+        stable@vger.kernel.org, Jeremy Kerr <jk@ozlabs.org>,
+        Stan Johnson <userm57@yahoo.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 08/42] net: bmac: Fix read of MAC address from ROM
+Date:   Tue,  9 Jun 2020 19:44:14 +0200
+Message-Id: <20200609174016.347094176@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174015.379493548@linuxfoundation.org>
 References: <20200609174015.379493548@linuxfoundation.org>
@@ -60,38 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhen Lei <thunder.leizhen@huawei.com>
+From: Jeremy Kerr <jk@ozlabs.org>
 
-commit 7284fdf39a912322ce97de2d30def3c6068a418c upstream.
+[ Upstream commit ef01cee2ee1b369c57a936166483d40942bcc3e3 ]
 
-This ought to be an omission in e6194923237 ("esp: Fix memleaks on error
-paths."). The memleak on error path in esp6_input is similar to esp_input
-of esp4.
+In bmac_get_station_address, We're reading two bytes at a time from ROM,
+but we do that six times, resulting in 12 bytes of read & writes. This
+means we will write off the end of the six-byte destination buffer.
 
-Fixes: e6194923237 ("esp: Fix memleaks on error paths.")
-Fixes: 3f29770723f ("ipsec: check return value of skb_to_sgvec always")
-Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This change fixes the for-loop to only read/write six bytes.
 
+Based on a proposed fix from Finn Thain <fthain@telegraphics.com.au>.
+
+Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+Reported-by: Stan Johnson <userm57@yahoo.com>
+Tested-by: Stan Johnson <userm57@yahoo.com>
+Reported-by: Finn Thain <fthain@telegraphics.com.au>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv6/esp6.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/apple/bmac.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ipv6/esp6.c
-+++ b/net/ipv6/esp6.c
-@@ -426,8 +426,10 @@ static int esp6_input(struct xfrm_state
+diff --git a/drivers/net/ethernet/apple/bmac.c b/drivers/net/ethernet/apple/bmac.c
+index a65d7a60f116..ffa7e7e6d18d 100644
+--- a/drivers/net/ethernet/apple/bmac.c
++++ b/drivers/net/ethernet/apple/bmac.c
+@@ -1187,7 +1187,7 @@ bmac_get_station_address(struct net_device *dev, unsigned char *ea)
+ 	int i;
+ 	unsigned short data;
  
- 	sg_init_table(sg, nfrags);
- 	ret = skb_to_sgvec(skb, sg, 0, skb->len);
--	if (unlikely(ret < 0))
-+	if (unlikely(ret < 0)) {
-+		kfree(tmp);
- 		goto out;
-+	}
- 
- 	aead_request_set_crypt(req, sg, sg, elen + ivlen, iv);
- 	aead_request_set_ad(req, assoclen);
+-	for (i = 0; i < 6; i++)
++	for (i = 0; i < 3; i++)
+ 		{
+ 			reset_and_select_srom(dev);
+ 			data = read_srom(dev, i + EnetAddressOffset/2, SROMAddressBits);
+-- 
+2.25.1
+
 
 
