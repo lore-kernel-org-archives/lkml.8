@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4062FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:29:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75DF9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 194B52078D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:29:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 529E72074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:29:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CIAk2MfP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LO/pDAfK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729976AbgFIN3Z (ORCPT
+        id S1729953AbgFIN3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 09:29:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57518 "EHLO
+        Tue, 9 Jun 2020 09:29:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728973AbgFIN3O (ORCPT
+        with ESMTP id S1729097AbgFIN3R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 09:29:14 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 621BFC05BD1E;
-        Tue,  9 Jun 2020 06:29:14 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id c17so25015643lji.11;
-        Tue, 09 Jun 2020 06:29:14 -0700 (PDT)
+        Tue, 9 Jun 2020 09:29:17 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C947C08C5C3;
+        Tue,  9 Jun 2020 06:29:16 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id e4so25073126ljn.4;
+        Tue, 09 Jun 2020 06:29:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=VyQqkmAqCRmhebVrr7VbOeFm0zvD99iAEoTluAvbJX0=;
-        b=CIAk2MfPqSQmdCUuQCgNDKahaE/vsRM0XdOjTzVjv0eIHVz/7YGvl4ZBWOIsbIEiEp
-         F0YWveupWoIbRDD0vm0jMMq24Im00dNFHkqoppPcK5wVvLP55rBx+pAdazj/QChMjIHB
-         4BlGkOjESv0CkG1jnoLlAvYb19XndAFhH76io3uizAeHQ8VKuAVko6l+32vb/u8+nAT8
-         j+JkxEo9B+NspuoZYh/QJ7WFn97Xk4QrZEeVo9strAmn9dMq9X8RweFSjAKVqFeLACGq
-         1OAs5nu3f0wr/a/xzgAFp/pjwQvuSgZefIPRMfx5KaiIOi6O9zHLkRPQn9aWqhK6IRRH
-         evXA==
+        bh=a5nZg8KheWIS8ObVaNA2RcCFchGpMXgRR/HHGM1BHBw=;
+        b=LO/pDAfKccIgaQ5fHav45do3zAAxpH6cYqZNL4Ks0Nag6rg1TiV7PRLQAgrrwRvF/7
+         ScozvkvW1whNFhyUWdR5rNDDj0TMJcW9DozxyD2mAZKSw0dslNBejKUlpygRVq8eb2yZ
+         gvOlIiKxx8Ck7sBXuuSzXyv+0mm72EIsTGXx3pzq/G/B9vlEpE39saQ6vIJ2VTuXL7O4
+         FQYq0UZhKaCDjFGvsRqM3mr4rHqRjCSbvg54skBzGP99lk4IBy3/YM8eReqrrIMjPP9G
+         Gwa3/UIiX80qJh6bQhVwRK8pTuZGTAyED7wGghph6GljlLGezKNPFhP6acSS+G5/P2Gu
+         In4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=VyQqkmAqCRmhebVrr7VbOeFm0zvD99iAEoTluAvbJX0=;
-        b=l4aHrEMUb/wiie0FXGprm9YN0EJtl1cC2TmFV0NwHObwCkilpmdB8aGAagywSiyJVZ
-         gzX9ZL71lyBv+lk2h3YBe22mVQQc8jLAEofFz0944s5ERMqIfC/dJLDFCwxWkKQIx0Z4
-         W3nVe1jIn8j+fp7bL/M3Oar7TmO8uz/7j9l+u8ek6tXumBddIuDf8uG8O9o1jKKucIAI
-         M29nb0p5RIumpwB1uHJ1/RpH7yuwIOw8R9LKL3KHH5QioRBc5HASf5cHR776h5tGa8vw
-         VuIY4N7TItaZxd2z1oSxzgguniwBKpeWwTWGuuaFVSpqMhtCwMjx2/sdmITNAQH3oIvl
-         rjyA==
-X-Gm-Message-State: AOAM531vnawma9G+Hatvfu4vQeYx+7WwjzeZ5gP1/BSB7FK5btq9H/rF
-        sJK5pi2UEjWEpSW4dsfmfiA=
-X-Google-Smtp-Source: ABdhPJzbKrzIKoajQPdCZLcQ+VPt3ZjJhuXrc0D2alUYPYU30yDhBVt4EOUseD8KsWPRpYm4RdY4+Q==
-X-Received: by 2002:a05:651c:54e:: with SMTP id q14mr12329916ljp.279.1591709352921;
-        Tue, 09 Jun 2020 06:29:12 -0700 (PDT)
+        bh=a5nZg8KheWIS8ObVaNA2RcCFchGpMXgRR/HHGM1BHBw=;
+        b=G6pP/mFwb/OIl+7kojUHVM99gUBPgUVzlAM8bvJf+uE/lkgJgKD9FgXsa5XwZmybDS
+         MsJOmM5aRged1DNJkljE0pxhjOaqAO7cI3FZn0E+SjXednb0IezjWEGHhD6ofyeILnkF
+         AOTD/DBSo9eEx0CDjd4m9DrEodj0ESCUpbpugV7l2Y0Opk0WK1BxIjIAwHPPZk8xjtbZ
+         f8TnEJtsAJAPvuy3d1EyHGKbZDlB6WQb/3AiR9ZptxBPRLKOPbweooRQaM26nYULLais
+         P9qv8fzVeE93KipZk4XIr28ne3rgZAVulQC5IsBcMlGEsRCqcQdkhhMeHw12D39Mxn7D
+         Lrmg==
+X-Gm-Message-State: AOAM533VteOkDMig96Sh2xCmlI/Ult0KWW2dnK/vFz38pH4g66pKxwWy
+        2Co9qC+Dmr5BBYU6u/fAAFI=
+X-Google-Smtp-Source: ABdhPJzz2QrldO4fIrKUkRTl1Oo3K4hLblhuGYsUcIPU2pKjUY2pOSrmJezS/COh7b4iOpC4OH5OZw==
+X-Received: by 2002:a2e:974e:: with SMTP id f14mr13305849ljj.102.1591709354999;
+        Tue, 09 Jun 2020 06:29:14 -0700 (PDT)
 Received: from localhost.localdomain (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.gmail.com with ESMTPSA id s8sm5069821lfc.83.2020.06.09.06.29.11
+        by smtp.gmail.com with ESMTPSA id s8sm5069821lfc.83.2020.06.09.06.29.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 06:29:12 -0700 (PDT)
+        Tue, 09 Jun 2020 06:29:14 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Sam Ravnborg <sam@ravnborg.org>,
@@ -68,9 +68,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Frank Rowand <frowand.list@gmail.com>
 Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 2/6] drm/of: Make drm_of_find_panel_or_bridge() to check graph's presence
-Date:   Tue,  9 Jun 2020 16:28:51 +0300
-Message-Id: <20200609132855.20975-3-digetx@gmail.com>
+Subject: [PATCH v6 4/6] drm/tegra: output: Support DRM bridges
+Date:   Tue,  9 Jun 2020 16:28:53 +0300
+Message-Id: <20200609132855.20975-5-digetx@gmail.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200609132855.20975-1-digetx@gmail.com>
 References: <20200609132855.20975-1-digetx@gmail.com>
@@ -81,48 +81,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When graph isn't defined in a device-tree, the of_graph_get_remote_node()
-prints a noisy error message, telling that port node is not found. This is
-undesirable behaviour in our case because absence of a panel/bridge graph
-is a valid case. Let's check presence of the local port in a device-tree
-before proceeding with parsing the graph.
+Newer Tegra device-trees will specify a video output graph which involves
+a bridge. This patch adds initial support for the DRM bridges to the Tegra
+DRM output.
 
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/gpu/drm/drm_of.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/tegra/drm.h    |  2 ++
+ drivers/gpu/drm/tegra/output.c | 12 ++++++++++++
+ 2 files changed, 14 insertions(+)
 
-diff --git a/drivers/gpu/drm/drm_of.c b/drivers/gpu/drm/drm_of.c
-index b50b44e76279..e0652c38f357 100644
---- a/drivers/gpu/drm/drm_of.c
-+++ b/drivers/gpu/drm/drm_of.c
-@@ -239,13 +239,24 @@ int drm_of_find_panel_or_bridge(const struct device_node *np,
- 				struct drm_bridge **bridge)
- {
- 	int ret = -EPROBE_DEFER;
--	struct device_node *remote;
-+	struct device_node *local, *remote;
+diff --git a/drivers/gpu/drm/tegra/drm.h b/drivers/gpu/drm/tegra/drm.h
+index b25443255be6..f38de08e0c95 100644
+--- a/drivers/gpu/drm/tegra/drm.h
++++ b/drivers/gpu/drm/tegra/drm.h
+@@ -12,6 +12,7 @@
+ #include <linux/gpio/consumer.h>
  
- 	if (!panel && !bridge)
- 		return -EINVAL;
- 	if (panel)
- 		*panel = NULL;
+ #include <drm/drm_atomic.h>
++#include <drm/drm_bridge.h>
+ #include <drm/drm_edid.h>
+ #include <drm/drm_encoder.h>
+ #include <drm/drm_fb_helper.h>
+@@ -116,6 +117,7 @@ struct tegra_output {
+ 	struct device_node *of_node;
+ 	struct device *dev;
  
-+	/*
-+	 * of_graph_get_remote_node() produces a noisy error message if port
-+	 * node isn't found and the absence of the port is a legit case here,
-+	 * so at first we silently check presence of the local port.
-+	 */
-+	local = of_graph_get_local_port(np);
-+	if (!local)
-+		return -ENODEV;
++	struct drm_bridge *bridge;
+ 	struct drm_panel *panel;
+ 	struct i2c_adapter *ddc;
+ 	const struct edid *edid;
+diff --git a/drivers/gpu/drm/tegra/output.c b/drivers/gpu/drm/tegra/output.c
+index a6a711d54e88..ccd1421f1b24 100644
+--- a/drivers/gpu/drm/tegra/output.c
++++ b/drivers/gpu/drm/tegra/output.c
+@@ -5,6 +5,7 @@
+  */
+ 
+ #include <drm/drm_atomic_helper.h>
++#include <drm/drm_of.h>
+ #include <drm/drm_panel.h>
+ #include <drm/drm_simple_kms_helper.h>
+ 
+@@ -99,8 +100,19 @@ int tegra_output_probe(struct tegra_output *output)
+ 	if (!output->of_node)
+ 		output->of_node = output->dev->of_node;
+ 
++	err = drm_of_find_panel_or_bridge(output->of_node, -1, -1,
++					  &output->panel, &output->bridge);
++	if (err && err != -ENODEV)
++		return err;
 +
-+	of_node_put(local);
+ 	panel = of_parse_phandle(output->of_node, "nvidia,panel", 0);
+ 	if (panel) {
++		/*
++		 * Don't mix nvidia,panel phandle with the graph in a
++		 * device-tree.
++		 */
++		WARN_ON(output->panel || output->bridge);
 +
- 	remote = of_graph_get_remote_node(np, port, endpoint);
- 	if (!remote)
- 		return -ENODEV;
+ 		output->panel = of_drm_find_panel(panel);
+ 		of_node_put(panel);
+ 
 -- 
 2.26.0
 
