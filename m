@@ -2,175 +2,44 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8561DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:54:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0DB0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65DD72078D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:54:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="BLSY9aTj"
+	by mail.kernel.org (Postfix) with ESMTP id 9E4872078C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:55:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730354AbgFINyp (ORCPT
+        id S1730080AbgFINzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 09:54:45 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:45813 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730102AbgFINym (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 09:54:42 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591710881; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=MI3qK4wgmDjHmo1cYjSV72uJg5VksJKTM0Lx81cwbYE=;
- b=BLSY9aTjSa0AIOueJDqeMs2VibInbzT6czT25xtXLn00+0xRvyAjlD//4yrEIH+G+ITngJFM
- 1TFwG8QE4N8dyvYERljjqpzB366wqDveHAXG4yJ+ITLTyx9xQawaTxLwQ9rNw+IeM9B8VxL+
- 1QpcipncFDRObBJVR4hPlAemLpQ=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
- 5edf949bf3deea03f309cf53 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 09 Jun 2020 13:54:35
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A88EBC433CA; Tue,  9 Jun 2020 13:54:35 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 326BFC433C6;
-        Tue,  9 Jun 2020 13:54:34 +0000 (UTC)
+        Tue, 9 Jun 2020 09:55:10 -0400
+Received: from verein.lst.de ([213.95.11.211]:42576 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726967AbgFINzI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 09:55:08 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 29DEA68B02; Tue,  9 Jun 2020 15:55:06 +0200 (CEST)
+Date:   Tue, 9 Jun 2020 15:55:06 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Dongli Zhang <dongli.zhang@oracle.com>
+Cc:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+        hch@lst.de, sagi@grimberg.me, chaitanya.kulkarni@wdc.com,
+        kbusch@kernel.org, axboe@fb.com
+Subject: Re: [PATCH 0/2] nvme: simple cleanup
+Message-ID: <20200609135506.GB10669@lst.de>
+References: <20200608162002.17017-1-dongli.zhang@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 09 Jun 2020 19:24:34 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, coresight@lists.linaro.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 2/2] arm64: dts: qcom: sc7180: Add support to skip
- powering up of ETM
-In-Reply-To: <7599d58142dcefbcb08a2eaff71c7f411a1d52b1.1589539293.git.saiprakash.ranjan@codeaurora.org>
-References: <cover.1589539293.git.saiprakash.ranjan@codeaurora.org>
- <7599d58142dcefbcb08a2eaff71c7f411a1d52b1.1589539293.git.saiprakash.ranjan@codeaurora.org>
-Message-ID: <70271f66ad792f7ab16a907ddf73e0f3@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200608162002.17017-1-dongli.zhang@oracle.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
-
-On 2020-05-15 16:21, Sai Prakash Ranjan wrote:
-> Add "qcom,skip-power-up" property to skip powering up ETM
-> on SC7180 SoC to workaround a hardware errata where CPU
-> watchdog counter is stopped when ETM power up bit is set
-> (i.e., when TRCPDCR.PU = 1).
-> 
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> ---
-> 
-> Depends on ETM driver change here -
-> https://lore.kernel.org/patchwork/cover/1242100/
-> 
-> ---
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index 8b3707347547..de4bae4ec224 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -1657,6 +1657,7 @@
->  			clocks = <&aoss_qmp>;
->  			clock-names = "apb_pclk";
->  			arm,coresight-loses-context-with-cpu;
-> +			qcom,skip-power-up;
-> 
->  			out-ports {
->  				port {
-> @@ -1676,6 +1677,7 @@
->  			clocks = <&aoss_qmp>;
->  			clock-names = "apb_pclk";
->  			arm,coresight-loses-context-with-cpu;
-> +			qcom,skip-power-up;
-> 
->  			out-ports {
->  				port {
-> @@ -1695,6 +1697,7 @@
->  			clocks = <&aoss_qmp>;
->  			clock-names = "apb_pclk";
->  			arm,coresight-loses-context-with-cpu;
-> +			qcom,skip-power-up;
-> 
->  			out-ports {
->  				port {
-> @@ -1714,6 +1717,7 @@
->  			clocks = <&aoss_qmp>;
->  			clock-names = "apb_pclk";
->  			arm,coresight-loses-context-with-cpu;
-> +			qcom,skip-power-up;
-> 
->  			out-ports {
->  				port {
-> @@ -1733,6 +1737,7 @@
->  			clocks = <&aoss_qmp>;
->  			clock-names = "apb_pclk";
->  			arm,coresight-loses-context-with-cpu;
-> +			qcom,skip-power-up;
-> 
->  			out-ports {
->  				port {
-> @@ -1752,6 +1757,7 @@
->  			clocks = <&aoss_qmp>;
->  			clock-names = "apb_pclk";
->  			arm,coresight-loses-context-with-cpu;
-> +			qcom,skip-power-up;
-> 
->  			out-ports {
->  				port {
-> @@ -1771,6 +1777,7 @@
->  			clocks = <&aoss_qmp>;
->  			clock-names = "apb_pclk";
->  			arm,coresight-loses-context-with-cpu;
-> +			qcom,skip-power-up;
-> 
->  			out-ports {
->  				port {
-> @@ -1790,6 +1797,7 @@
->  			clocks = <&aoss_qmp>;
->  			clock-names = "apb_pclk";
->  			arm,coresight-loses-context-with-cpu;
-> +			qcom,skip-power-up;
-> 
->  			out-ports {
->  				port {
-
-I have sent this patch as a part of other coresight changes
-to keep all coresight DT changes together[1], we can drop this
-patch now.
-
-[1] - https://lore.kernel.org/patchwork/cover/1253969/
-
 Thanks,
-Sai
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+applied to nvme-5.9.
