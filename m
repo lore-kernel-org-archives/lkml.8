@@ -2,132 +2,129 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61473C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF3AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40D64206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:00:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="OeT1os0w"
+	by mail.kernel.org (Postfix) with ESMTP id 2CFA920814
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:01:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728573AbgFIKAS (ORCPT
+        id S1728591AbgFIKA5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 06:00:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53458 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbgFIKAR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 06:00:17 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 800EDC05BD1E;
-        Tue,  9 Jun 2020 03:00:17 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49h5G15PmVz9sT6;
-        Tue,  9 Jun 2020 20:00:09 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1591696810;
-        bh=rmK8hLTxcRQ8uaBcN/fGTaE+wcTgRw/Xhbx5UZND1rs=;
-        h=From:To:Subject:Date:From;
-        b=OeT1os0wLS5mryDhKd3XYld/5OKC9ESr1u/4L0fbJqZvp+LZVKaK3VaHNlNQy5/c4
-         WOkTrRKLeShGHuvk0767eykpGXwkSnzV3IaESW6DP1xKyK3vvNMTizaodQtalUOQqg
-         tLAthkI5toqMdqWapKp+HlZFE7oAqzjCiYeknPpvsFBt9cWLIUpZv5YbXZpaqTRGHV
-         8slIxNXLu+YqWNQCvVdw7rKo3+23tltyZr0rT8S3zS+RR5QF3s0yLFre4YuBArUElQ
-         fzy0D8C6DmL42CFKat56uADJrXO2/FhVGz4JnGCiRw2nVkgPJzLSffK9UnLPoFuW6o
-         czqWml5L4v2eg==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     brking@us.ibm.com, Christoph Hellwig <hch@lst.de>,
-        Jens Axboe <axboe@kernel.dk>, linux-scsi@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-block@vger.kernel.org,
-        linux-ide@vger.kernel.org
-Subject: ipr crashes due to NULL dma_need_drain since cc97923a5bcc ("block: move dma drain handling to scsi")
-Date:   Tue, 09 Jun 2020 20:00:35 +1000
-Message-ID: <87zh9cftj0.fsf@mpe.ellerman.id.au>
+        Tue, 9 Jun 2020 06:00:57 -0400
+Received: from foss.arm.com ([217.140.110.172]:39456 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726765AbgFIKA5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 06:00:57 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2F73A1FB;
+        Tue,  9 Jun 2020 03:00:56 -0700 (PDT)
+Received: from [10.57.11.57] (unknown [10.57.11.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 850DF3F73D;
+        Tue,  9 Jun 2020 03:00:47 -0700 (PDT)
+Subject: Re: [PATCH v9 RESEND 01/13] spi: imx: add dma_sync_sg_for_device
+ after fallback from dma
+To:     Robin Gong <yibin.gong@nxp.com>, Mark Brown <broonie@kernel.org>
+Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "matthias.schiffer@ew.tq-group.com" 
+        <matthias.schiffer@ew.tq-group.com>,
+        "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <1591485677-20533-1-git-send-email-yibin.gong@nxp.com>
+ <1591485677-20533-2-git-send-email-yibin.gong@nxp.com>
+ <20200608143458.GH4593@sirena.org.uk>
+ <VE1PR04MB66388F89015F774EE3FFF69D89850@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <20200608153139.GI4593@sirena.org.uk>
+ <59ce3620-00b9-bac1-30e1-011a29583642@arm.com>
+ <VE1PR04MB6638B1EC49D295C64292B7BD89820@VE1PR04MB6638.eurprd04.prod.outlook.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <bcfc3637-65af-577a-ddbd-890b6c83a6e6@arm.com>
+Date:   Tue, 9 Jun 2020 11:00:33 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <VE1PR04MB6638B1EC49D295C64292B7BD89820@VE1PR04MB6638.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+On 2020-06-09 06:21, Robin Gong wrote:
+> On 2020/06/09 0:44 Robin Murphy <robin.murphy@arm.com> wrote:
+>> On 2020-06-08 16:31, Mark Brown wrote:
+>>> On Mon, Jun 08, 2020 at 03:08:45PM +0000, Robin Gong wrote:
+>>>
+>>>>>> +	if (transfer->rx_sg.sgl) {
+>>>>>> +		struct device *rx_dev = spi->controller->dma_rx->device->dev;
+>>>>>> +
+>>>>>> +		dma_sync_sg_for_device(rx_dev, transfer->rx_sg.sgl,
+>>>>>> +				       transfer->rx_sg.nents, DMA_TO_DEVICE);
+>>>>>> +	}
+>>>>>> +
+>>>
+>>>>> This is confusing - why are we DMA mapping to the device after doing
+>>>>> a PIO transfer?
+>>>
+>>>> 'transfer->rx_sg.sgl' condition check that's the case fallback PIO
+>>>> after DMA transfer failed. But the spi core still think the buffer
+>>>> should be in 'device' while spi driver touch it by PIO(CPU), so sync it back to
+>> device to ensure all received data flush to DDR.
+>>>
+>>> So we sync it back to the device so that we can then do another sync
+>>> to CPU?  TBH I'm a bit surprised that there's a requirement that we
+>>> explicitly undo a sync and that a redundant double sync in the same
+>>> direction might be an issue but I've not had a need to care so I'm
+>>> perfectly prepared to believe there is.
+>>>
+>>> At the very least this needs a comment.
+>>
+>> Yeah, something's off here - at the very least, syncing with DMA_TO_DEVICE on
+>> the Rx buffer that was mapped with DMA_FROM_DEVICE is clearly wrong.
+>> CONFIG_DMA_API_DEBUG should scream about that.
+>>
+>> If the device has written to the buffer at all since dma_map_sg() was called
+>> then you do need a dma_sync_sg_for_cpu() call before touching it from a CPU
+>> fallback path, but if nobody's going to touch it from that point until it's
+>> unmapped then there's no point syncing it again. The
+>> my_card_interrupt_handler() example in DMA-API_HOWTO.txt demonstrates
+>> this.
+> Thanks for you post, but sorry, that's not spi-imx case now, because the rx data in device memory is not truly updated from 'device'/DMA, but from PIO, so that dma_sync_sg_for_cpu with DMA_FROM_DEVICE can't be used, otherwise the fresh data in cache will be invalidated.
+> But you're right, kernel warning comes out if CONFIG_DMA_API_DEBUG enabled...
 
-I'm seeing crashes on powerpc with the ipr driver, which I'm fairly sure
-are due to dma_need_drain being NULL.
+Ah, I think I understand what's going on now. That's... really ugly :(
 
-The backtrace is:
+Looking at the SPI core code, I think a better way to handle this would 
+be to have your fallback path call spi_unmap_buf() directly (or perform 
+the same actions, if exporting that to drivers is unacceptable), then 
+make sure ->can_dma() returns false after that such that spi_unmap_msg() 
+won't try to unmap it again. That's a lot more reasonable than trying to 
+fake up a DMA_TO_DEVICE transfer in the middle of a DMA_FROM_DEVICE 
+operation on the same buffer.
 
-  scsi_init_io+0x1d8/0x350
-  scsi_queue_rq+0x7a4/0xc30
-  blk_mq_dispatch_rq_list+0x1b0/0x910
-  blk_mq_sched_dispatch_requests+0x154/0x270
-  __blk_mq_run_hw_queue+0xa0/0x160
-  __blk_mq_delay_run_hw_queue+0x244/0x250
-  blk_mq_sched_insert_request+0x13c/0x250
-  blk_execute_rq_nowait+0x88/0xb0
-  blk_execute_rq+0x5c/0xf0
-  __scsi_execute+0x10c/0x270
-  scsi_mode_sense+0x144/0x440
-  sr_probe+0x2e8/0x810
-  really_probe+0x12c/0x580
-  driver_probe_device+0x88/0x170
-  device_driver_attach+0x11c/0x130
-  __driver_attach+0xac/0x190
-  bus_for_each_dev+0xa8/0x130
-  driver_attach+0x34/0x50
-  bus_add_driver+0x170/0x2b0
-  driver_register+0xb4/0x1c0
-  scsi_register_driver+0x2c/0x40
-  init_sr+0x4c/0x80
-  do_one_initcall+0x60/0x2b0
-  kernel_init_freeable+0x2e0/0x3a0
-  kernel_init+0x2c/0x148
-  ret_from_kernel_thread+0x5c/0x74
+Alternatively, is it feasible to initiate a dummy DMA request during 
+probe, such that you can detect the failure condition and give up on the 
+DMA channel early, and not have to deal with it during a real SPI transfer?
 
-And looking at the disassembly I think it's coming from:
-
-static inline bool scsi_cmd_needs_dma_drain(struct scsi_device *sdev,
-		struct request *rq)
-{
-	return sdev->dma_drain_len && blk_rq_is_passthrough(rq) &&
-	       !op_is_write(req_op(rq)) &&
-	       sdev->host->hostt->dma_need_drain(rq);
-                                  ^^^^^^^^^^^^^^
-}
-
-Bisect agrees:
-
-# first bad commit: [cc97923a5bccc776851c242b61015faf288d5c22] block: move dma drain handling to scsi
-
-
-And looking at ipr.c, it constructs its scsi_host_template manually,
-without using any of the macros that end up calling __ATA_BASE_SHT,
-which populates dma_need_drain.
-
-The obvious fix below works, the system boots and seems to be operating
-normally, but I don't know enough (anything) about SCSI to say if it's
-actually the correct fix.
-
-cheers
-
-
-diff --git a/drivers/scsi/ipr.c b/drivers/scsi/ipr.c
-index 7d77997d26d4..7d86f4ca266c 100644
---- a/drivers/scsi/ipr.c
-+++ b/drivers/scsi/ipr.c
-@@ -6731,6 +6731,7 @@ static struct scsi_host_template driver_template = {
- 	.compat_ioctl = ipr_ioctl,
- #endif
- 	.queuecommand = ipr_queuecommand,
-+	.dma_need_drain = ata_scsi_dma_need_drain,
- 	.eh_abort_handler = ipr_eh_abort,
- 	.eh_device_reset_handler = ipr_eh_dev_reset,
- 	.eh_host_reset_handler = ipr_eh_host_reset,
-
+Robin.
