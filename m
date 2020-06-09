@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF1FC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A7F9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:04:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E64C2074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:04:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66B4020734
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:04:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725845;
-	bh=IQ8TZqtNisZcnfd68GmdwMvlZEhBgeL4LcKHhgNydZo=;
+	s=default; t=1591725861;
+	bh=ViZa30ypR7/xokQKb3odmSsdv+h/Zb0AyqQm1aaQY/s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y1AtDt0VVI8nbteigR4pfS28GoKcnn+XgcxM4AzMy70MGKQWzYciglJJ6bJcS1eaa
-	 YI+Wd9zbpzOS7zOAx9QmcDC3SUOcJmcf5K2bxEq7FT8Y/GGh8fA/p0LHuSdhhl35Bi
-	 Tr5JJP4+XTowZBqt23l46xyi1JAOPYk+TVN572aI=
+	b=XrNrTWRYQb7ImydUC1GKNacbeyaMi/SH4JTt833OGxisqol3flVFyGagbAyd+0IGo
+	 GBd1UBbcgjWFQNdeFhX1tF5Mfc1Bggs7cQ6UvEs0ZfuVsM4esbIeP9VR9qygwtc9+k
+	 +QoJ1rLeAlSkoT+5adkYfDHouUBdknyIsP2uQLS8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732902AbgFIRwb (ORCPT
+        id S2387987AbgFISET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:52:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40524 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 14:04:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732838AbgFIRva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:51:30 -0400
+        id S1732806AbgFIRwX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:52:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8240F20801;
-        Tue,  9 Jun 2020 17:51:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 795B720734;
+        Tue,  9 Jun 2020 17:52:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725089;
-        bh=IQ8TZqtNisZcnfd68GmdwMvlZEhBgeL4LcKHhgNydZo=;
+        s=default; t=1591725142;
+        bh=ViZa30ypR7/xokQKb3odmSsdv+h/Zb0AyqQm1aaQY/s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vl5gezQwTNLrfIXYsL2zR0Uxu62Ytkln5hP4ufOw4yZchpUlghWP60P1ZV8WBp0Qp
-         zdHkjQ5BYVFMvfMrK67MlhSLC6lVGSqvV6dzw0d4CngHvx67s+VPQtdQtCaLA62XvD
-         dM9biG1XbdwB780qbg+no6FWHVq0Ak50VMKtdXhY=
+        b=CfFdMtha45sqsXjdbwbRYNq8oaMSZNi9nwhZsTRX6x5/95sCRdHayghvqUlMAzBL3
+         sst/o2X2MqlBLbj2xX2kxxJeioJuwYeJsgqou6O8LA8pBWWAhvGTkBWzCbbEvg7NAP
+         YwjwsqADLsVuzO1e8Ub73qKeYnh/V3LI4gqYul2Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Gross <mgross@linux.intel.com>,
-        Borislav Petkov <bp@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: [PATCH 4.19 20/25] x86/cpu: Add table argument to cpu_matches()
-Date:   Tue,  9 Jun 2020 19:45:10 +0200
-Message-Id: <20200609174050.982899765@linuxfoundation.org>
+        stable@vger.kernel.org, Fugang Duan <fugang.duan@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 05/34] net: stmmac: enable timestamp snapshot for required PTP packets in dwmac v5.10a
+Date:   Tue,  9 Jun 2020 19:45:01 +0200
+Message-Id: <20200609174053.303180274@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200609174048.576094775@linuxfoundation.org>
-References: <20200609174048.576094775@linuxfoundation.org>
+In-Reply-To: <20200609174052.628006868@linuxfoundation.org>
+References: <20200609174052.628006868@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,94 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Gross <mgross@linux.intel.com>
+From: Fugang Duan <fugang.duan@nxp.com>
 
-commit 93920f61c2ad7edb01e63323832585796af75fc9 upstream
+[ Upstream commit f2fb6b6275eba9d312957ca44c487bd780da6169 ]
 
-To make cpu_matches() reusable for other matching tables, have it take a
-pointer to a x86_cpu_id table as an argument.
+For rx filter 'HWTSTAMP_FILTER_PTP_V2_EVENT', it should be
+PTP v2/802.AS1, any layer, any kind of event packet, but HW only
+take timestamp snapshot for below PTP message: sync, Pdelay_req,
+Pdelay_resp.
 
- [ bp: Flip arguments order. ]
+Then it causes below issue when test E2E case:
+ptp4l[2479.534]: port 1: received DELAY_REQ without timestamp
+ptp4l[2481.423]: port 1: received DELAY_REQ without timestamp
+ptp4l[2481.758]: port 1: received DELAY_REQ without timestamp
+ptp4l[2483.524]: port 1: received DELAY_REQ without timestamp
+ptp4l[2484.233]: port 1: received DELAY_REQ without timestamp
+ptp4l[2485.750]: port 1: received DELAY_REQ without timestamp
+ptp4l[2486.888]: port 1: received DELAY_REQ without timestamp
+ptp4l[2487.265]: port 1: received DELAY_REQ without timestamp
+ptp4l[2487.316]: port 1: received DELAY_REQ without timestamp
 
-Signed-off-by: Mark Gross <mgross@linux.intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Timestamp snapshot dependency on register bits in received path:
+SNAPTYPSEL TSMSTRENA TSEVNTENA 	PTP_Messages
+01         x         0          SYNC, Follow_Up, Delay_Req,
+                                Delay_Resp, Pdelay_Req, Pdelay_Resp,
+                                Pdelay_Resp_Follow_Up
+01         0         1          SYNC, Pdelay_Req, Pdelay_Resp
+
+For dwmac v5.10a, enabling all events by setting register
+DWC_EQOS_TIME_STAMPING[SNAPTYPSEL] to 2’b01, clearing bit [TSEVNTENA]
+to 0’b0, which can support all required events.
+
+Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/kernel/cpu/common.c |   23 +++++++++++++----------
- 1 file changed, 13 insertions(+), 10 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1013,9 +1013,9 @@ static const __initconst struct x86_cpu_
- 	{}
- };
- 
--static bool __init cpu_matches(unsigned long which)
-+static bool __init cpu_matches(const struct x86_cpu_id *table, unsigned long which)
- {
--	const struct x86_cpu_id *m = x86_match_cpu(cpu_vuln_whitelist);
-+	const struct x86_cpu_id *m = x86_match_cpu(table);
- 
- 	return m && !!(m->driver_data & which);
- }
-@@ -1035,29 +1035,32 @@ static void __init cpu_set_bug_bits(stru
- 	u64 ia32_cap = x86_read_arch_cap_msr();
- 
- 	/* Set ITLB_MULTIHIT bug if cpu is not in the whitelist and not mitigated */
--	if (!cpu_matches(NO_ITLB_MULTIHIT) && !(ia32_cap & ARCH_CAP_PSCHANGE_MC_NO))
-+	if (!cpu_matches(cpu_vuln_whitelist, NO_ITLB_MULTIHIT) &&
-+	    !(ia32_cap & ARCH_CAP_PSCHANGE_MC_NO))
- 		setup_force_cpu_bug(X86_BUG_ITLB_MULTIHIT);
- 
--	if (cpu_matches(NO_SPECULATION))
-+	if (cpu_matches(cpu_vuln_whitelist, NO_SPECULATION))
- 		return;
- 
- 	setup_force_cpu_bug(X86_BUG_SPECTRE_V1);
- 	setup_force_cpu_bug(X86_BUG_SPECTRE_V2);
- 
--	if (!cpu_matches(NO_SSB) && !(ia32_cap & ARCH_CAP_SSB_NO) &&
-+	if (!cpu_matches(cpu_vuln_whitelist, NO_SSB) &&
-+	    !(ia32_cap & ARCH_CAP_SSB_NO) &&
- 	   !cpu_has(c, X86_FEATURE_AMD_SSB_NO))
- 		setup_force_cpu_bug(X86_BUG_SPEC_STORE_BYPASS);
- 
- 	if (ia32_cap & ARCH_CAP_IBRS_ALL)
- 		setup_force_cpu_cap(X86_FEATURE_IBRS_ENHANCED);
- 
--	if (!cpu_matches(NO_MDS) && !(ia32_cap & ARCH_CAP_MDS_NO)) {
-+	if (!cpu_matches(cpu_vuln_whitelist, NO_MDS) &&
-+	    !(ia32_cap & ARCH_CAP_MDS_NO)) {
- 		setup_force_cpu_bug(X86_BUG_MDS);
--		if (cpu_matches(MSBDS_ONLY))
-+		if (cpu_matches(cpu_vuln_whitelist, MSBDS_ONLY))
- 			setup_force_cpu_bug(X86_BUG_MSBDS_ONLY);
- 	}
- 
--	if (!cpu_matches(NO_SWAPGS))
-+	if (!cpu_matches(cpu_vuln_whitelist, NO_SWAPGS))
- 		setup_force_cpu_bug(X86_BUG_SWAPGS);
- 
- 	/*
-@@ -1075,7 +1078,7 @@ static void __init cpu_set_bug_bits(stru
- 	     (ia32_cap & ARCH_CAP_TSX_CTRL_MSR)))
- 		setup_force_cpu_bug(X86_BUG_TAA);
- 
--	if (cpu_matches(NO_MELTDOWN))
-+	if (cpu_matches(cpu_vuln_whitelist, NO_MELTDOWN))
- 		return;
- 
- 	/* Rogue Data Cache Load? No! */
-@@ -1084,7 +1087,7 @@ static void __init cpu_set_bug_bits(stru
- 
- 	setup_force_cpu_bug(X86_BUG_CPU_MELTDOWN);
- 
--	if (cpu_matches(NO_L1TF))
-+	if (cpu_matches(cpu_vuln_whitelist, NO_L1TF))
- 		return;
- 
- 	setup_force_cpu_bug(X86_BUG_L1TF);
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -630,7 +630,8 @@ static int stmmac_hwtstamp_set(struct ne
+ 			config.rx_filter = HWTSTAMP_FILTER_PTP_V2_EVENT;
+ 			ptp_v2 = PTP_TCR_TSVER2ENA;
+ 			snap_type_sel = PTP_TCR_SNAPTYPSEL_1;
+-			ts_event_en = PTP_TCR_TSEVNTENA;
++			if (priv->synopsys_id != DWMAC_CORE_5_10)
++				ts_event_en = PTP_TCR_TSEVNTENA;
+ 			ptp_over_ipv4_udp = PTP_TCR_TSIPV4ENA;
+ 			ptp_over_ipv6_udp = PTP_TCR_TSIPV6ENA;
+ 			ptp_over_ethernet = PTP_TCR_TSIPENA;
 
 
