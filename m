@@ -2,173 +2,147 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF123C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB851C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A30020812
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:43:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2EA42064C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:43:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="b/qfquyr";
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="YCxhP+mo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="caEOUEWg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729071AbgFILnV (ORCPT
+        id S1729092AbgFILny (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 07:43:21 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:1120 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbgFILnP (ORCPT
+        Tue, 9 Jun 2020 07:43:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41238 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726116AbgFILnu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 07:43:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1591702993; x=1623238993;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=a71Gi5Pdpc+FRcKZwoDdYv56rVeD6zjCzm6k+L/Irzc=;
-  b=b/qfquyrVPXtunPCux/seS4DLbN9SBIGaLv94ksfLOawSlAYei4omP/A
-   JVUZQVCykPAVG7MdcyaIC29nYnwPVqlKpevMnAlWS1IzXtfYJr/tiKgfC
-   uGBsvavL+Vp3OsdYkcs7654DtHUhK0wDG+UvfgU1I6xbu/AYVwsrx0KG4
-   7jwgWViHqzwYR3YzG2Y14XHeXuTP9ACdd1snJfXcdWgukB5lyuYSW/IFr
-   f+ptfelvpq3+i1CU1c/myLlf+n1wfNtT7vp8/blaOcR2hCdnZHIWPUZbO
-   1jPY7JdDXtlREzHBHr/Do0otmQt8DK5by7cEcUCHIiIEAsYxm4kcL33M8
-   g==;
-IronPort-SDR: YtuHFa1QpFSXBc+dZh1+nU+AF2kEbGLOJCzU4D9wWqKOWGwdy2kKJeKhaUvBE/nWp6Lxi7AB7S
- glcaBnzp7YGKjtTMNzsf7Qbdo7DcxO8/zgO6rlpErrgmRyZBrTPCPuUN7hD1oJq32G3CMpXvuM
- htF99qq0OnnssBHQvCCWZD9QNpU97pImoWB9kx3Dq6Qhqr3ntwooTEGIe+qCAS1TJ3JD/gZFM1
- bh/nOhzjOEZF40b4L+D71SLAVqVhRwi3JZ4F6BjHau04HqntQ/lGuFJIqiyt/hWjL64ausEQUk
- Sok=
-X-IronPort-AV: E=Sophos;i="5.73,491,1583218800"; 
-   d="scan'208";a="15086109"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Jun 2020 04:43:13 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Tue, 9 Jun 2020 04:43:13 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3 via Frontend
- Transport; Tue, 9 Jun 2020 04:43:12 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jD8S2EGWnvnbmBUANxC/nUeD18gVleZwwdx82PL0hFGb6mAGNiK7L40u7bCygNSduqLBOipTU8TQek3KZhJw+tHZMIk4tF74/cEHJkxFYD4ex7Lha0d+NIjbJ/fDz92noz2rxjz570WMLxBBm2i43wmaRl4Hb4W6cSaavOBBrm1IjuoGhFyUmB/hg3wCWUIA+OVP2gcTmBod3c/jA0Vc9WbQlcOTT8SehRnnSZhdgjp2jnUObEGLv+df52QRj53lYIS0HmI9+jV4+/kLPcuBiDWYYzzJdstM2B6diAHadaaTEmfADJeVd2rqYk2GmxurQOEAdk1mOH/oBn1JuxIlkw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=a71Gi5Pdpc+FRcKZwoDdYv56rVeD6zjCzm6k+L/Irzc=;
- b=Uab72m++Jf9wSsyMQd5Y4aEJPTRIAEOtRdEcZsohRZKkHKYk8OWTinWIl6X5wrsXCRdWtG/Wxn7pxaXKJTUFv0VJl2FCuZ5jzppTwS+rm/zQF0UUnw7VVmRwGe+L4k1SHB3paiTb3FtMhZBl7kSXfDSAFLn8wusIV2su7hGuMyoePbyhp0UBOARoyu5MJvTkilqKCihsHga5AE7b0tPa+awk1wg/Iwp7yqFWniAgeF2LW0eax/cDgvrqw/AOj9AzAP9kYytldTCHitPredjJm/T7FyJPGwVwwQ5zQtfBiP7XOeUiuuNjQ8ZyuV1N546QZg9iwLyJZvFugKXeIgrfJQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+        Tue, 9 Jun 2020 07:43:50 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FE3BC05BD1E
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 04:43:50 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id e11so14831746ilr.4
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 04:43:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=a71Gi5Pdpc+FRcKZwoDdYv56rVeD6zjCzm6k+L/Irzc=;
- b=YCxhP+mousiIGmoluAh6j0CWEj5fL5QzEgqQ/6YB4Ubb3+vs8lgQLvRE8YUrouZf7tvZI3Ea6HfVPrl9DnqMGD0rrVgQW6sxj8BHXVt7iM7bVCjOeSCgMr9+98UIV7wZsG+WKvxiaVg74cgev9TW3f1PrHqr8F4WapSo6jglPts=
-Received: from CY4PR11MB1688.namprd11.prod.outlook.com (2603:10b6:903:25::23)
- by CY4PR11MB1287.namprd11.prod.outlook.com (2603:10b6:903:2d::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.22; Tue, 9 Jun
- 2020 11:43:10 +0000
-Received: from CY4PR11MB1688.namprd11.prod.outlook.com
- ([fe80::d414:b3d8:74c7:7488]) by CY4PR11MB1688.namprd11.prod.outlook.com
- ([fe80::d414:b3d8:74c7:7488%9]) with mapi id 15.20.3066.023; Tue, 9 Jun 2020
- 11:43:10 +0000
-From:   <Codrin.Ciubotariu@microchip.com>
-To:     <wsa@the-dreams.de>
-CC:     <linux-gpio@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <Ludovic.Desroches@microchip.com>,
-        <Nicolas.Ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <kamel.bouhara@bootlin.com>, <linux@armlinux.org.uk>,
-        <linus.walleij@linaro.org>, <alan@softiron.com>
-Subject: Re: Re: Re: [RFC PATCH] i2c: at91: Fix pinmux after devm_gpiod_get()
- for bus recovery
-Thread-Topic: Re: Re: [RFC PATCH] i2c: at91: Fix pinmux after devm_gpiod_get()
- for bus recovery
-Thread-Index: AQHWEvR+GtAbavRk40KvRq7DN8dZF6iZuWYAgAxN9wCAC1nQAIAfHzQA
-Date:   Tue, 9 Jun 2020 11:43:10 +0000
-Message-ID: <e08c1cb7-351a-8874-44fc-2e44752b170f@microchip.com>
-References: <20200415070643.23663-1-codrin.ciubotariu@microchip.com>
- <20200505151256.GF2468@ninjato>
- <c7a35978-03dd-3c73-6e7d-15ed40b5c57c@microchip.com>
- <20200520162724.GG5759@ninjato>
-In-Reply-To: <20200520162724.GG5759@ninjato>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-authentication-results: the-dreams.de; dkim=none (message not signed)
- header.d=none;the-dreams.de; dmarc=none action=none
- header.from=microchip.com;
-x-originating-ip: [84.232.220.208]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3d939d02-5617-459a-fa30-08d80c6a48eb
-x-ms-traffictypediagnostic: CY4PR11MB1287:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CY4PR11MB1287056DDFAE7DD103E325BDE7820@CY4PR11MB1287.namprd11.prod.outlook.com>
-x-bypassexternaltag: True
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 042957ACD7
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: BV2BjFG58g66/hHuv5bz+fA/zWg3nErCXgOgMyjL9niOT+9Kl5yrsVLYDWxrJG3pDkfUbPL4oOIeejSJEH7eWj8UNCdVGfI1Q3adZ21In5vzgogbi1W7nwGPXgJcJnQ0oQd0tCayOaiaLyjioRZGyKaHgX4Q9TpTKORARITVlFvx2djBfC35G00DCozZl1GGrxdSEgybeUWsz3x4b7w8BLJO584gIQG3+o683hkbd0DTy5d3znPcj9MPPKY8pYLA9knQEXxrCJnmeArdLhFYj3i3mDE/jPaYE9Rm4xsF1Whfoo67EvcBZH23UAs129yn1PJChIv1UAUI78Cmp3cFA1UXSC9WpSezCLpfVfMM3UUPpNvIFKlRCZfmIFBWZuAh
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR11MB1688.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(64756008)(53546011)(66556008)(31696002)(2906002)(54906003)(31686004)(6506007)(76116006)(86362001)(71200400001)(91956017)(66946007)(2616005)(26005)(6486002)(6512007)(7416002)(66476007)(4326008)(83380400001)(5660300002)(186003)(8936002)(8676002)(36756003)(66446008)(498600001)(6916009)(43740500002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: d4A+F9V9EuQFiEiBE8e8zKVr4pkOH0p/S5ZCn+LHp8OktGAc90j8Emu5gpVtYYcCMY07e6P5uPGZt4AuS5bkJ1eJ6rEs+4wavRi9hnaYGlsYebCeOMPtnGcmqUrrgSGfQ/2e10MOs5BHwxOOPpQOhfPm0014u6oHcFoYs9AIHmeUqRc0fN5VoEbPzrFZaghnr15BcbQWe2ZMr8LLDUrBPxnfBw/pCIreghNS4F0yzugN8/lHTDdFvtP3m64Q91RiDqrCNatGiyGMukjGKbQ6R8qKIAU1bfvDP5F/cZgRBNqIMk9KEKFMfXLQBqRlj5bup9TK16Kh/rSoC0jYfL/C1Gj9+3jVUwofcz6CztNHNQdvX4pSkxeuCB2dV9QQoHDkdu8H9AwVlGapHjP5vf+yYAdy7kdDgphOdqrSaG6DMJmWRsbc8nLsorvW++/TvCr9xOThogvq6GQXroTP6qfINi13gaADafxNNLVROpR7ZghnpV5PMWcnXFRPL9ijlVrq
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <2E64A4B358CB5D4492DD10456E9F8B8A@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=hIZcde/O0lhQt+tclxIsnIomOUROmtIJB8oligd0v60=;
+        b=caEOUEWgCiTp1X9TY7aGflhD7i0tcXSAIXQwLHWDNIT8wViqQCEMUwbMUZN79zv0Yy
+         GJ6L25DJhiobGcDXStzcaGBSBL7JjhRMq8VVf7UG0TKdnN3kMiwm9OEH6SumeYuSIL4b
+         8IKyshulsfGdrx1DanUewpue+NbzNnbFBMbc+B1EMkcnD7vA0M53fTmZTYzTvRKo5Fa4
+         XPRj83VkH75J/rhe8g6B5u7D/k7bhYedqyWVvgy/X3qCFH/Lv6tC3SMYzQxfjZ/0+PMf
+         YffhKelf7OXkZsUmub9VENBfP7LO6CmhJnegxzmRfWg7wl7i6ZdbeRufsclRhfSzLf3r
+         Ay0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=hIZcde/O0lhQt+tclxIsnIomOUROmtIJB8oligd0v60=;
+        b=JZ6lTA7ZN5F48y0HoQACOcfaJG3tOGGKRhbdM2iyDAGDxOnfgL/sgSsZqZ9yMDZq3z
+         OhLWX1CP4vTW3AQKV/37n9xxmef4BsWilnlKYVbARRCn9IuRMuVpBA+fhujkyIsOlW8h
+         yWZU/mG/vxS5ClYjH5I/+adp7Bs9d0dpnhI0c1ZFr/swkNEe3GwCLVWYGLRtodgZEIOK
+         iH5KW2ROI7lyQlRo8dITlFKVo/Ib+Zat8IHUMxhrq3Bfi8Oc2YdqBwyyXnmpwJMwcltI
+         QrpfpR/hKm4wduiGxizduOhMHrgSNcnaUNf0t+Y8mxieEuHls4y09i3ITBctzN/tBH3s
+         lPFQ==
+X-Gm-Message-State: AOAM530OHTI0zFt7NGI5qlQGSLZwWq7JdZW77XiUHB3wH9baEjZwS+iV
+        z6jXNB9RsZB9RUSjaIYYRPNz9+ZnAch+fQlQL20=
+X-Google-Smtp-Source: ABdhPJzFYa1v7Pfs5GXW2MgOgJ+zvbsMZxjpmoT6A8GN/KqiUr3V0+OQQnD6tP1yjfm9+DD7zgMyU4xq8IyQ1U0x9Ug=
+X-Received: by 2002:a92:1904:: with SMTP id 4mr13037156ilz.212.1591703029556;
+ Tue, 09 Jun 2020 04:43:49 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3d939d02-5617-459a-fa30-08d80c6a48eb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jun 2020 11:43:10.0407
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: r2ZkjbgETA6/oPc8xhVPJnXHKvQPsCsZu0jMsNz4D9jCgQLQTh30NdcEZIzfUTRqngv7IbA/Q1U5p7YaqeZ2F1t6KhNVmcG75YoQgOi70sE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR11MB1287
+References: <1591609125-3761-1-git-send-email-gene.chen.richtek@gmail.com> <20200608192829.GG4106@dell>
+In-Reply-To: <20200608192829.GG4106@dell>
+From:   Gene Chen <gene.chen.richtek@gmail.com>
+Date:   Tue, 9 Jun 2020 19:43:38 +0800
+Message-ID: <CAE+NS36mxw-FpQhJ4qV=_+r2CXVi_PaGaZo2m3jXAGFuOO252Q@mail.gmail.com>
+Subject: Re: [PATCH] mfd: mt6360: Fix register driver NULL pointer by add
+ driver name
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Gene Chen <gene_chen@richtek.com>, Wilma.Wu@mediatek.com,
+        shufan_lee@richtek.com, cy_huang@richtek.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20.05.2020 19:27, Wolfram Sang wrote:
->=20
->>> This will do for 5.7. For 5.8 or 5.9, I can imagine to take the two
->>> pinctrl_state pointers into bus_recovery_info and handle all this in th=
-e
->>> core. I will try this later this week if noone is super-eager to try it
->>> out before.
->>>
->>
->> By 'all this' you mean to move the entire function in the core, right?
->> Having just these two pointers bus_recinovery_info won't help much. I
->> can try it, if you haven't already started...
->=20
-> I mean to add those two pointers to bus_recinovery_info and if they are
-> populated, then the I2C core is doing the necessary magic (or maybe just
-> the pinctrl handle and assume the states have fixed names?). Russell
-> just sent patches to add it to the PXA driver, so we could now double
-> check how much could be factored out.
->=20
-> I haven't started yet, let's keep in touch who started first :)
->=20
+Lee Jones <lee.jones@linaro.org> =E6=96=BC 2020=E5=B9=B46=E6=9C=889=E6=97=
+=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=883:28=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> On Mon, 08 Jun 2020, Gene Chen wrote:
+>
+> > From: Gene Chen <gene_chen@richtek.com>
+> >
+> > accidentally remove driver name when
+> > replace probe by probe_new in add mt6360 mfd driver patch v4
+> >
+> > [  121.243012] EAX: c2a8bc64 EBX: 00000000 ECX: 00000000 EDX: 00000000
+> > [  121.243012] ESI: c2a8bc79 EDI: 00000000 EBP: e54bdea8 ESP: e54bdea0
+> > [  121.243012] DS: 007b ES: 007b FS: 0000 GS: 0000 SS: 0068 EFLAGS: 000=
+10286
+> > [  121.243012] CR0: 80050033 CR2: 00000000 CR3: 02ec3000 CR4: 000006b0
+> > [  121.243012] Call Trace:
+> > [  121.243012]  kset_find_obj+0x3d/0xc0
+> > [  121.243012]  driver_find+0x16/0x40
+> > [  121.243012]  driver_register+0x49/0x100
+> > [  121.243012]  ? i2c_for_each_dev+0x39/0x50
+> > [  121.243012]  ? __process_new_adapter+0x20/0x20
+> > [  121.243012]  ? cht_wc_driver_init+0x11/0x11
+> > [  121.243012]  i2c_register_driver+0x30/0x80
+> > [  121.243012]  ? intel_lpss_pci_driver_init+0x16/0x16
+> > [  121.243012]  mt6360_pmu_driver_init+0xf/0x11
+> > [  121.243012]  do_one_initcall+0x33/0x1a0
+> > [  121.243012]  ? parse_args+0x1eb/0x3d0
+> > [  121.243012]  ? __might_sleep+0x31/0x90
+> > [  121.243012]  ? kernel_init_freeable+0x10a/0x17f
+> > [  121.243012]  kernel_init_freeable+0x12c/0x17f
+> > [  121.243012]  ? rest_init+0x110/0x110
+> > [  121.243012]  kernel_init+0xb/0x100
+> > [  121.243012]  ? schedule_tail_wrapper+0x9/0xc
+> > [  121.243012]  ret_from_fork+0x19/0x24
+> > [  121.243012] Modules linked in:
+> > [  121.243012] CR2: 0000000000000000
+> > [  121.243012] random: get_random_bytes called from init_oops_id+0x3a/0=
+x40 with crng_init=3D0
+> > [  121.243012] ---[ end trace 38a803400f1a2bee ]---
+> > [  121.243012] EIP: strcmp+0x11/0x30
+>
+> How did this driver ever work for you?
+>
 
-I started working at this. I added the pinctrl state initialization at=20
-the beginning of the i2c_init_recovery(). Due to the pinmux state issue=20
-with the GPIOs, the GPIO part needs to be also moved. The problem I ran=20
-in to now is the fact that, even if we can ignore if the GPIOs are not=20
-available, we should at least treat EPROBE_DEFER error. To do this, the=20
-I2C bus drivers should take into account the fact that=20
-i2c_register_adapter() can return -EPROBE_DEFER. Is this something to=20
-consider?
+i ask my coworker help me verify.
+i will check the patch myself, sincerely apologies for this.
 
-Thanks and best regards,
-Codrin
+> > Signed-off-by: Gene Chen <gene_chen@richtek.com>
+> > ---
+> >  drivers/mfd/mt6360-core.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/drivers/mfd/mt6360-core.c b/drivers/mfd/mt6360-core.c
+> > index db8cdf5..e9cacc2 100644
+> > --- a/drivers/mfd/mt6360-core.c
+> > +++ b/drivers/mfd/mt6360-core.c
+> > @@ -412,6 +412,7 @@ MODULE_DEVICE_TABLE(of, mt6360_pmu_of_id);
+> >
+> >  static struct i2c_driver mt6360_pmu_driver =3D {
+> >       .driver =3D {
+> > +             .name =3D "mt6360_pmu",
+> >               .pm =3D &mt6360_pmu_pm_ops,
+> >               .of_match_table =3D of_match_ptr(mt6360_pmu_of_id),
+> >       },
+>
+> --
+> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
+> Senior Technical Lead - Developer Services
+> Linaro.org =E2=94=82 Open source software for Arm SoCs
+> Follow Linaro: Facebook | Twitter | Blog
