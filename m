@@ -2,280 +2,158 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE6F1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 08:18:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A331C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 08:23:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76F1D207C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 08:18:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7A6F2074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 08:23:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FleY27Sk"
+	dkim=pass (1024-bit key) header.d=mysnt.onmicrosoft.com header.i=@mysnt.onmicrosoft.com header.b="d/0KV0va"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728112AbgFIISI (ORCPT
+        id S1728102AbgFIIXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 04:18:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37738 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727960AbgFIISG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 04:18:06 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AEE9C05BD43;
-        Tue,  9 Jun 2020 01:18:06 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id i25so7126073iog.0;
-        Tue, 09 Jun 2020 01:18:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=IB43x4syquVapjM2p98P5GQN/B+q99Drw3vZ08juZSk=;
-        b=FleY27SkuSCKk/tN28Js37FOixxvKGvu1e78WTe/QiKdf1FAnHjR6XXq6A+D7OKdiS
-         u4W1s2d12jd4H7xzsZ3ihUyTJoWB3wqhR7r0PxKFlj0x+1vEL4d+sfja6iDUyj5AdAJY
-         EY0DbaVZCTvl9iMwaPutI0htDg1o2Dt/UdQlAaLxVBNzxdIeONiThuY5J7XR7UV/s/OE
-         DTnzDrsZ+zxXR64oocs7Q6LmXxV375qn6bIHIVO8fq4FFUlFufWSTv5A4IQJbfdHoGVY
-         OPJJ3X7EsK05XQr8iIwoPgC3qEqDPfyJnU1Uym3cpskGtD83GvFR/0BNiBFII43Sjz60
-         5PXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=IB43x4syquVapjM2p98P5GQN/B+q99Drw3vZ08juZSk=;
-        b=CXRnTzafzeW0jBitZO37ebEPH2Gvdnwapnnqbk4IqWMi9wBAEJNeKjvIM89tBug/Is
-         uWKVG03bPOiCaqdlNxeHIiMccNtdp42ZK+WRpPXTQtWzeOcR60tbskQnRacPc+zpl656
-         Bf2HyQE+TYwIt+EzU9Cu5zShiuEQ3m0Mo7Eg76lZB6cLjiuZUXxtl4AVYf6jngQivP5M
-         /JL9APboC5owkSRN57LTI7/u5ezKPAIqTzW5X4wxh57ZOXYsWanchNOznJBvJ5fk2/wM
-         rT4NbHfofGQLWLayZf0fKFH5heIUKU98FjHAvICdlDGzcqo2AFhN+RaM98LUnxRNOO1i
-         NJ+Q==
-X-Gm-Message-State: AOAM531noK0HL1LDu1wonMkil1jG9tHDVBqztvWzlOeVvEiYbBCF+7eh
-        YgfLIhIEsBNy+GJy+M3ejR/FZjQkqiyh8gg/wNY=
-X-Google-Smtp-Source: ABdhPJxOuZWZNyXS2bjIrjk8dAXoP1W+0LoAb+/VhraksYKdPzF1Cam4WlIVtr+XtGB2p9DLFPh1oOOAL00JFvlxaHY=
-X-Received: by 2002:a05:6602:2dca:: with SMTP id l10mr25556219iow.163.1591690685638;
- Tue, 09 Jun 2020 01:18:05 -0700 (PDT)
+        Tue, 9 Jun 2020 04:23:38 -0400
+Received: from mail-eopbgr30124.outbound.protection.outlook.com ([40.107.3.124]:63103
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728034AbgFIIXg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 04:23:36 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Zmeq9y42FxfXrLgacnjU/YT9hzT0wraee6Pq0uDCAfUwn1Lvn9AZTNJm3usZ2bR7Et+BCFGX5SL9g0jly/ytI1O3dJ1+6y2o8YA7b+L2BXW80qufWzBh90DZeaWCFGnFkYItCLjNtW9Zzhk+uL1knBjM8LGaREtGuRcBw0uDTZa3lRsnEnEAN8tcVOwrJtqSAh/jMIXqGHqnfzTYXgUFed7V4hrT3CyP//uT5kmTFvDdfcPLPBush46BE90x25fboszp6iW358e1Pihn9tYcSGjoahJsF8HO3yBSEcuV0og/iFtao+kauDqfZsBDeqMT4IdliC+QKQ+/45idAnwT9A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aw1+QD+dZcHJ5X7zGaZ2DOPe9+1Gz7NZ6CY0sb02xk8=;
+ b=bU6e+70+S7eTEi1JrcyYmP6hQwOb/IVNJjdoVxdNvKZ8JZNAZnbX7R/ihANcjaL8EyCHSRrmlgm33NQ10V2UXwQOgAIaP4sDQCX0imFRd4zdr3hLrLlqcTrt/xUnktBcEzTUGT9J3mr8YuslUxWNlyTveH1QqVeMVB9+61FLIQKUaUwRrJoEaxHYboDWF5E/SH6fTwPOkSQ7rbnbpZQKeF0c2UAiMx/46fx/adaQ1hWIb2arkF8qFFa8Atvy9il70EDa5/yyEvUXglemZ3o+GsyhV3G4ECtbNwiS9XzZE+t5bvNs2FJU9t1s7kDmOybisxuQAwewXca0XSAHLuE7/w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=kontron.de; dmarc=pass action=none header.from=kontron.de;
+ dkim=pass header.d=kontron.de; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mysnt.onmicrosoft.com;
+ s=selector2-mysnt-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aw1+QD+dZcHJ5X7zGaZ2DOPe9+1Gz7NZ6CY0sb02xk8=;
+ b=d/0KV0vawMlS+RnwM/qSdknY70P2MP4hFXX3SFe/5sGGtQlbQRx1JQuLR1zzuDDchVPl7mvNalKGhc1sN0jsjunHuZG3Axbcj4hr7sHrtW0QxZpfKvC/Q4oY+npxj3a1bOrNp5r+SLDfQ0FM75q8Wy+oktOiC9T/KF5naloA9Fg=
+Received: from DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:50::12)
+ by DB7PR10MB1947.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:5:b::17) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3066.18; Tue, 9 Jun 2020 08:23:30 +0000
+Received: from DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::acc5:2acd:49a6:5048]) by DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::acc5:2acd:49a6:5048%7]) with mapi id 15.20.3066.023; Tue, 9 Jun 2020
+ 08:23:30 +0000
+From:   Schrempf Frieder <frieder.schrempf@kontron.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Fabio Estevam <festevam@gmail.com>,
+        =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= 
+        <u.kleine-koenig@pengutronix.de>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
+Subject: Re: [PATCH v2] serial: imx: Fix handling of TC irq in combination
+ with DMA
+Thread-Topic: [PATCH v2] serial: imx: Fix handling of TC irq in combination
+ with DMA
+Thread-Index: AQHWPi7m3YXfW/ta4UitHElBbvaQXajP8iSA
+Date:   Tue, 9 Jun 2020 08:23:30 +0000
+Message-ID: <a0b56107-bea0-7105-3021-030b181b2260@kontron.de>
+References: <20200609072259.8259-1-frieder.schrempf@kontron.de>
+In-Reply-To: <20200609072259.8259-1-frieder.schrempf@kontron.de>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: linuxfoundation.org; dkim=none (message not signed)
+ header.d=none;linuxfoundation.org; dmarc=none action=none
+ header.from=kontron.de;
+x-originating-ip: [77.246.119.226]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: df7343b0-5f11-4326-6a59-08d80c4e648b
+x-ms-traffictypediagnostic: DB7PR10MB1947:
+x-microsoft-antispam-prvs: <DB7PR10MB1947B225B927D4AD7AB639C5E9820@DB7PR10MB1947.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:226;
+x-forefront-prvs: 042957ACD7
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: n6420Fct38Bj26RBcrzED4nwfehPa5Hsofs8Yg3irWreRjC1U1P2Iq5LN34wEEJ4E5AC5jWCReIpYMiCs1dgFfmv9LpsepkZoNrdSzRGb/MQvs2gmwrdOINeT3ss7D7TFlZFbllqDnx5Eb8tzqJwivZoF5vM3tyl9NmR38vs6YtWo1UGhJqRHnmgPiaD0/iho8KUM48GI4gOVY55wGByLG5JOkns2HPVCYsXxD7TwFDYNfAkGxR038yBFTvprkP3pS90PRTPt28rGlrIZljHqmcdMZrzxx1YBqixW+RFxGw7BFcpgdiyj/OV9gXOQeFT4YLvzGgU/LYAECAGuFU3Zw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(376002)(136003)(396003)(39850400004)(346002)(2906002)(6512007)(71200400001)(8936002)(478600001)(8676002)(186003)(54906003)(6486002)(6506007)(66574014)(83380400001)(36756003)(53546011)(26005)(5660300002)(91956017)(31696002)(66446008)(66556008)(66476007)(66946007)(86362001)(31686004)(6916009)(76116006)(2616005)(4326008)(316002)(64756008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: oAh78Kf/Lxx52wX94LrDSvsMGqz1TFmIoUreo76oy/lEoudLJYZOkz7WP2AQYwAGva7/40TyNtf8MP8c+LgCC+89+v+TIUvPng9WGd8d8fjzdnVGMEc3vAoEHnes5Se8qkfGW++G2HTdjeDiohDdXgZQEfIjO71o6FXtuXplrEYlyEJOl/trx+1OgLXg5R0Cd3rgITM4V6ich1CmlA19uNHbsYvlp2KrU2KDN67FVBkQE8jCuyP+gK6kZB4nIC4MfkdtLw3dTknQq57cJ5axFoxua9ony0wSCfuEsjhtILQIxHoL4EHUH//e21cWFfAYdwnEsYrG3nEfVe6Xjs6jz82YeqTR/AneZm+QeQTsoRMRNJe4zJDDBKU9UNmZzek8JE5zLaB2RgjRlbsXhJ+9ymTEDiX6iPTlOJrsWw8Tj2bYon+56H5u1++SnNHAmFzITKQSm9q9KqeGEm+uGA/4uw9i1ATiKZ5QriBLP73wOo2oF5getlCBeXAHDwKDFfJp
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F34DAD4B8396954A9E88D62D1B8BB53D@EURPRD10.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200609022453.6190-1-yanaijie@huawei.com>
-In-Reply-To: <20200609022453.6190-1-yanaijie@huawei.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Tue, 9 Jun 2020 10:17:54 +0200
-Message-ID: <CA+icZUU7dapYbaFkRoO1Y41bWeMtUnw5wtk7oQrSOAXa+uVhPQ@mail.gmail.com>
-Subject: Re: [PATCH v5] block: Fix use-after-free in blkdev_get()
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     viro@zeniv.linux.org.uk, axboe@kernel.dk,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Ming Lei <ming.lei@redhat.com>, Jan Kara <jack@suse.cz>,
-        Hulk Robot <hulkci@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: kontron.de
+X-MS-Exchange-CrossTenant-Network-Message-Id: df7343b0-5f11-4326-6a59-08d80c4e648b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jun 2020 08:23:30.6146
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8c9d3c97-3fd9-41c8-a2b1-646f3942daf1
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: QHMz8D7MUyTVaokHuacpothlo3DTHfcKwd85TgqZjNCul+QK1Chq0NjE/MeOUkVOdUGHo8TgMIw/XGB+R3ry8O1YWUlcN/7iBsDpXoi56IY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR10MB1947
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 9, 2020 at 4:07 AM Jason Yan <yanaijie@huawei.com> wrote:
->
-> In blkdev_get() we call __blkdev_get() to do some internal jobs and if
-> there is some errors in __blkdev_get(), the bdput() is called which
-> means we have released the refcount of the bdev (actually the refcount of
-> the bdev inode). This means we cannot access bdev after that point. But
-> acctually bdev is still accessed in blkdev_get() after calling
-> __blkdev_get(). This results in use-after-free if the refcount is the
-> last one we released in __blkdev_get(). Let's take a look at the
-> following scenerio:
->
->   CPU0            CPU1                    CPU2
-> blkdev_open     blkdev_open           Remove disk
->                   bd_acquire
->                   blkdev_get
->                     __blkdev_get      del_gendisk
->                                         bdev_unhash_inode
->   bd_acquire          bdev_get_gendisk
->     bd_forget           failed because of unhashed
->           bdput
->                       bdput (the last one)
->                         bdev_evict_inode
->
->                     access bdev => use after free
->
-> [  459.350216] BUG: KASAN: use-after-free in __lock_acquire+0x24c1/0x31b0
-> [  459.351190] Read of size 8 at addr ffff88806c815a80 by task syz-executor.0/20132
-> [  459.352347]
-> [  459.352594] CPU: 0 PID: 20132 Comm: syz-executor.0 Not tainted 4.19.90 #2
-> [  459.353628] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-> [  459.354947] Call Trace:
-> [  459.355337]  dump_stack+0x111/0x19e
-> [  459.355879]  ? __lock_acquire+0x24c1/0x31b0
-> [  459.356523]  print_address_description+0x60/0x223
-> [  459.357248]  ? __lock_acquire+0x24c1/0x31b0
-> [  459.357887]  kasan_report.cold+0xae/0x2d8
-> [  459.358503]  __lock_acquire+0x24c1/0x31b0
-> [  459.359120]  ? _raw_spin_unlock_irq+0x24/0x40
-> [  459.359784]  ? lockdep_hardirqs_on+0x37b/0x580
-> [  459.360465]  ? _raw_spin_unlock_irq+0x24/0x40
-> [  459.361123]  ? finish_task_switch+0x125/0x600
-> [  459.361812]  ? finish_task_switch+0xee/0x600
-> [  459.362471]  ? mark_held_locks+0xf0/0xf0
-> [  459.363108]  ? __schedule+0x96f/0x21d0
-> [  459.363716]  lock_acquire+0x111/0x320
-> [  459.364285]  ? blkdev_get+0xce/0xbe0
-> [  459.364846]  ? blkdev_get+0xce/0xbe0
-> [  459.365390]  __mutex_lock+0xf9/0x12a0
-> [  459.365948]  ? blkdev_get+0xce/0xbe0
-> [  459.366493]  ? bdev_evict_inode+0x1f0/0x1f0
-> [  459.367130]  ? blkdev_get+0xce/0xbe0
-> [  459.367678]  ? destroy_inode+0xbc/0x110
-> [  459.368261]  ? mutex_trylock+0x1a0/0x1a0
-> [  459.368867]  ? __blkdev_get+0x3e6/0x1280
-> [  459.369463]  ? bdev_disk_changed+0x1d0/0x1d0
-> [  459.370114]  ? blkdev_get+0xce/0xbe0
-> [  459.370656]  blkdev_get+0xce/0xbe0
-> [  459.371178]  ? find_held_lock+0x2c/0x110
-> [  459.371774]  ? __blkdev_get+0x1280/0x1280
-> [  459.372383]  ? lock_downgrade+0x680/0x680
-> [  459.373002]  ? lock_acquire+0x111/0x320
-> [  459.373587]  ? bd_acquire+0x21/0x2c0
-> [  459.374134]  ? do_raw_spin_unlock+0x4f/0x250
-> [  459.374780]  blkdev_open+0x202/0x290
-> [  459.375325]  do_dentry_open+0x49e/0x1050
-> [  459.375924]  ? blkdev_get_by_dev+0x70/0x70
-> [  459.376543]  ? __x64_sys_fchdir+0x1f0/0x1f0
-> [  459.377192]  ? inode_permission+0xbe/0x3a0
-> [  459.377818]  path_openat+0x148c/0x3f50
-> [  459.378392]  ? kmem_cache_alloc+0xd5/0x280
-> [  459.379016]  ? entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> [  459.379802]  ? path_lookupat.isra.0+0x900/0x900
-> [  459.380489]  ? __lock_is_held+0xad/0x140
-> [  459.381093]  do_filp_open+0x1a1/0x280
-> [  459.381654]  ? may_open_dev+0xf0/0xf0
-> [  459.382214]  ? find_held_lock+0x2c/0x110
-> [  459.382816]  ? lock_downgrade+0x680/0x680
-> [  459.383425]  ? __lock_is_held+0xad/0x140
-> [  459.384024]  ? do_raw_spin_unlock+0x4f/0x250
-> [  459.384668]  ? _raw_spin_unlock+0x1f/0x30
-> [  459.385280]  ? __alloc_fd+0x448/0x560
-> [  459.385841]  do_sys_open+0x3c3/0x500
-> [  459.386386]  ? filp_open+0x70/0x70
-> [  459.386911]  ? trace_hardirqs_on_thunk+0x1a/0x1c
-> [  459.387610]  ? trace_hardirqs_off_caller+0x55/0x1c0
-> [  459.388342]  ? do_syscall_64+0x1a/0x520
-> [  459.388930]  do_syscall_64+0xc3/0x520
-> [  459.389490]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> [  459.390248] RIP: 0033:0x416211
-> [  459.390720] Code: 75 14 b8 02 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83
-> 04 19 00 00 c3 48 83 ec 08 e8 0a fa ff ff 48 89 04 24 b8 02 00 00 00 0f
->    05 <48> 8b 3c 24 48 89 c2 e8 53 fa ff ff 48 89 d0 48 83 c4 08 48 3d
->       01
-> [  459.393483] RSP: 002b:00007fe45dfe9a60 EFLAGS: 00000293 ORIG_RAX: 0000000000000002
-> [  459.394610] RAX: ffffffffffffffda RBX: 00007fe45dfea6d4 RCX: 0000000000416211
-> [  459.395678] RDX: 00007fe45dfe9b0a RSI: 0000000000000002 RDI: 00007fe45dfe9b00
-> [  459.396758] RBP: 000000000076bf20 R08: 0000000000000000 R09: 000000000000000a
-> [  459.397930] R10: 0000000000000075 R11: 0000000000000293 R12: 00000000ffffffff
-> [  459.399022] R13: 0000000000000bd9 R14: 00000000004cdb80 R15: 000000000076bf2c
-> [  459.400168]
-> [  459.400430] Allocated by task 20132:
-> [  459.401038]  kasan_kmalloc+0xbf/0xe0
-> [  459.401652]  kmem_cache_alloc+0xd5/0x280
-> [  459.402330]  bdev_alloc_inode+0x18/0x40
-> [  459.402970]  alloc_inode+0x5f/0x180
-> [  459.403510]  iget5_locked+0x57/0xd0
-> [  459.404095]  bdget+0x94/0x4e0
-> [  459.404607]  bd_acquire+0xfa/0x2c0
-> [  459.405113]  blkdev_open+0x110/0x290
-> [  459.405702]  do_dentry_open+0x49e/0x1050
-> [  459.406340]  path_openat+0x148c/0x3f50
-> [  459.406926]  do_filp_open+0x1a1/0x280
-> [  459.407471]  do_sys_open+0x3c3/0x500
-> [  459.408010]  do_syscall_64+0xc3/0x520
-> [  459.408572]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> [  459.409415]
-> [  459.409679] Freed by task 1262:
-> [  459.410212]  __kasan_slab_free+0x129/0x170
-> [  459.410919]  kmem_cache_free+0xb2/0x2a0
-> [  459.411564]  rcu_process_callbacks+0xbb2/0x2320
-> [  459.412318]  __do_softirq+0x225/0x8ac
->
-> Fix this by delaying bdput() to the end of blkdev_get() which means we
-> have finished accessing bdev.
->
-> Fixes: e525fd89d380 ("block: make blkdev_get/put() handle exclusive access")
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Jens Axboe <axboe@kernel.dk>
-> Cc: Ming Lei <ming.lei@redhat.com>
-> Cc: Jan Kara <jack@suse.cz>
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
-> Reviewed-by: Jan Kara <jack@suse.cz>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> ---
->  v5: Add fixes tag and Reviewed-by tag from Christoph.
-
-You forgot to CC Dan?
-AFAICS he provided the Fixes tag.
-
-Other than that:
-
-Tested-by: Sedat Dilek <sedat.dilek@gmail.com> # build+boot on bare
-metal (Debian/testing AMD64, LLVM/Clang/LLD v10.0.1-rc1+)
-
-- Sedat -
-
->  v4: Remove uneeded braces and add Reviewed-by tag from Jan Kara.
->  v3: Add bdput() when __blkdev_get() calling itself failed.
->  v2: Add Reported-by tag and cc linux-block mailing list
->
->  fs/block_dev.c | 12 +++++++-----
->  1 file changed, 7 insertions(+), 5 deletions(-)
->
-> diff --git a/fs/block_dev.c b/fs/block_dev.c
-> index 47860e589388..08c87db3a92b 100644
-> --- a/fs/block_dev.c
-> +++ b/fs/block_dev.c
-> @@ -1565,10 +1565,8 @@ static int __blkdev_get(struct block_device *bdev, fmode_t mode, int for_part)
->          */
->         if (!for_part) {
->                 ret = devcgroup_inode_permission(bdev->bd_inode, perm);
-> -               if (ret != 0) {
-> -                       bdput(bdev);
-> +               if (ret != 0)
->                         return ret;
-> -               }
->         }
->
->   restart:
-> @@ -1637,8 +1635,10 @@ static int __blkdev_get(struct block_device *bdev, fmode_t mode, int for_part)
->                                 goto out_clear;
->                         BUG_ON(for_part);
->                         ret = __blkdev_get(whole, mode, 1);
-> -                       if (ret)
-> +                       if (ret) {
-> +                               bdput(whole);
->                                 goto out_clear;
-> +                       }
->                         bdev->bd_contains = whole;
->                         bdev->bd_part = disk_get_part(disk, partno);
->                         if (!(disk->flags & GENHD_FL_UP) ||
-> @@ -1688,7 +1688,6 @@ static int __blkdev_get(struct block_device *bdev, fmode_t mode, int for_part)
->         disk_unblock_events(disk);
->         put_disk_and_module(disk);
->   out:
-> -       bdput(bdev);
->
->         return ret;
->  }
-> @@ -1755,6 +1754,9 @@ int blkdev_get(struct block_device *bdev, fmode_t mode, void *holder)
->                 bdput(whole);
->         }
->
-> +       if (res)
-> +               bdput(bdev);
-> +
->         return res;
->  }
->  EXPORT_SYMBOL(blkdev_get);
-> --
-> 2.21.3
->
+T24gMDkuMDYuMjAgMDk6MjMsIFNjaHJlbXBmIEZyaWVkZXIgd3JvdGU6DQo+IEZyb206IFV3ZSBL
+bGVpbmUtS8O2bmlnIDx1LmtsZWluZS1rb2VuaWdAcGVuZ3V0cm9uaXguZGU+DQo+IA0KPiBjb21t
+aXQgMTg2NjU0MTQ5MjY0MWMwMjg3NGJmNTFmOWQ4NzEyYjU1MTBmMmM2NCB1cHN0cmVhbQ0KPiAN
+Cj4gV2hlbiB1c2luZyBSUzQ4NSBoYWxmIGR1cGxleCB0aGUgVHJhbnNtaXR0ZXIgQ29tcGxldGUg
+aXJxIGlzIG5lZWRlZCB0bw0KPiBkZXRlcm1pbmUgdGhlIG1vbWVudCB3aGVuIHRoZSB0cmFuc21p
+dHRlciBjYW4gYmUgZGlzYWJsZWQuIFdoZW4gdXNpbmcNCj4gRE1BIHRoaXMgaXJxIG11c3Qgb25s
+eSBiZSBlbmFibGVkIHdoZW4gRE1BIGhhcyBjb21wbGV0ZWQgdG8gdHJhbnNmZXIgYWxsDQo+IGRh
+dGEuIE90aGVyd2lzZSB0aGUgQ1BVIG1pZ2h0IGJ1c2lseSB0cmlnZ2VyIHRoaXMgaXJxIHdoaWNo
+IGlzIG5vdA0KPiBwcm9wZXJseSBoYW5kbGVkIGFuZCBzbyB0aGUgYWxzbyBwZW5kaW5nIGlycSBm
+b3IgdGhlIERNQSB0cmFuc2ZlciBjYW5ub3QNCj4gdHJpZ2dlci4NCj4gDQo+IENjOiA8c3RhYmxl
+QHZnZXIua2VybmVsLm9yZz4gIyB2NC4xNC54DQo+IFNpZ25lZC1vZmYtYnk6IFV3ZSBLbGVpbmUt
+S8O2bmlnIDx1LmtsZWluZS1rb2VuaWdAcGVuZ3V0cm9uaXguZGU+DQo+IFNpZ25lZC1vZmYtYnk6
+IEdyZWcgS3JvYWgtSGFydG1hbiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc+DQo+IFtCYWNr
+cG9ydCB0byB2NC4xNF0NCj4gU2lnbmVkLW9mZi1ieTogRnJpZWRlciBTY2hyZW1wZiA8ZnJpZWRl
+ci5zY2hyZW1wZkBrb250cm9uLmRlPg0KPiAtLS0NCg0KU29ycnksIGZvcmdvdCB0aGUgY2hhbmdl
+bG9nOg0KDQpDaGFuZ2VzIGZvciBiYWNrcG9ydCB2MjoNCiogUmVtb3ZlIGFuIHVucmVsYXRlZCBh
+ZGRpdGlvbmFsIGJsYW5rIGxpbmUuDQoNCj4gV2hlbiB1c2luZyBSUzQ4NSB3aXRoIERNQSBlbmFi
+bGVkIHNpbXBseSB0cmFuc21pdHRpbmcgc29tZSBkYXRhIG9uIG91cg0KPiBpLk1YNlVMTCBiYXNl
+ZCBib2FyZHMgb2Z0ZW4gZnJlZXplcyB0aGUgc3lzdGVtIGNvbXBsZXRlbHkuIFRoZSBoaWdoZXIN
+Cj4gdGhlIGJhdWRyYXRlLCB0aGUgZWFzaWVyIGl0IGlzIHRvIHJlcHJvZHVjZSB0aGUgaXNzdWUu
+IFRvIHRlc3QgdGhpcyBJDQo+IHNpbXBseSB1c2VkOg0KPiANCj4gc3R0eSAtRiAvZGV2L3R0eW14
+YzEgc3BlZWQgMTE1MjAwDQo+IHdoaWxlIHRydWU7IGRvIGVjaG8gVEVTVCA+IC9kZXYvdHR5bXhj
+MTsgZG9uZQ0KPiANCj4gV2l0aG91dCB0aGUgcGF0Y2ggdGhpcyBsZWFkcyB0byBhbiBhbG1vc3Qg
+aW1tZWRpYXRlIHN5c3RlbSBmcmVlemUsDQo+IHdpdGggdGhlIHBhdGNoIGFwcGxpZWQsIGV2ZXJ5
+dGhpbmcga2VlcHMgd29ya2luZyBhcyBleHBlY3RlZC4NCj4gLS0tDQo+ICAgZHJpdmVycy90dHkv
+c2VyaWFsL2lteC5jIHwgMjIgKysrKysrKysrKysrKysrKysrLS0tLQ0KPiAgIDEgZmlsZSBjaGFu
+Z2VkLCAxOCBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvdHR5L3NlcmlhbC9pbXguYyBiL2RyaXZlcnMvdHR5L3NlcmlhbC9pbXguYw0KPiBp
+bmRleCAzZjI2MDVlZGQ4NTUuLjcwYzczNzIzNjg3MCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy90
+dHkvc2VyaWFsL2lteC5jDQo+ICsrKyBiL2RyaXZlcnMvdHR5L3NlcmlhbC9pbXguYw0KPiBAQCAt
+NTM4LDYgKzUzOCwxMSBAQCBzdGF0aWMgdm9pZCBkbWFfdHhfY2FsbGJhY2sodm9pZCAqZGF0YSkN
+Cj4gICANCj4gICAJaWYgKCF1YXJ0X2NpcmNfZW1wdHkoeG1pdCkgJiYgIXVhcnRfdHhfc3RvcHBl
+ZCgmc3BvcnQtPnBvcnQpKQ0KPiAgIAkJaW14X2RtYV90eChzcG9ydCk7DQo+ICsJZWxzZSBpZiAo
+c3BvcnQtPnBvcnQucnM0ODUuZmxhZ3MgJiBTRVJfUlM0ODVfRU5BQkxFRCkgew0KPiArCQl0ZW1w
+ID0gcmVhZGwoc3BvcnQtPnBvcnQubWVtYmFzZSArIFVDUjQpOw0KPiArCQl0ZW1wIHw9IFVDUjRf
+VENFTjsNCj4gKwkJd3JpdGVsKHRlbXAsIHNwb3J0LT5wb3J0Lm1lbWJhc2UgKyBVQ1I0KTsNCj4g
+Kwl9DQo+ICAgDQo+ICAgCXNwaW5fdW5sb2NrX2lycXJlc3RvcmUoJnNwb3J0LT5wb3J0LmxvY2ss
+IGZsYWdzKTsNCj4gICB9DQo+IEBAIC01NTUsNiArNTYwLDEwIEBAIHN0YXRpYyB2b2lkIGlteF9k
+bWFfdHgoc3RydWN0IGlteF9wb3J0ICpzcG9ydCkNCj4gICAJaWYgKHNwb3J0LT5kbWFfaXNfdHhp
+bmcpDQo+ICAgCQlyZXR1cm47DQo+ICAgDQo+ICsJdGVtcCA9IHJlYWRsKHNwb3J0LT5wb3J0Lm1l
+bWJhc2UgKyBVQ1I0KTsNCj4gKwl0ZW1wICY9IH5VQ1I0X1RDRU47DQo+ICsJd3JpdGVsKHRlbXAs
+IHNwb3J0LT5wb3J0Lm1lbWJhc2UgKyBVQ1I0KTsNCj4gKw0KPiAgIAlzcG9ydC0+dHhfYnl0ZXMg
+PSB1YXJ0X2NpcmNfY2hhcnNfcGVuZGluZyh4bWl0KTsNCj4gICANCj4gICAJaWYgKHhtaXQtPnRh
+aWwgPCB4bWl0LT5oZWFkIHx8IHhtaXQtPmhlYWQgPT0gMCkgew0KPiBAQCAtNjE3LDEwICs2MjYs
+MTUgQEAgc3RhdGljIHZvaWQgaW14X3N0YXJ0X3R4KHN0cnVjdCB1YXJ0X3BvcnQgKnBvcnQpDQo+
+ICAgCQlpZiAoIShwb3J0LT5yczQ4NS5mbGFncyAmIFNFUl9SUzQ4NV9SWF9EVVJJTkdfVFgpKQ0K
+PiAgIAkJCWlteF9zdG9wX3J4KHBvcnQpOw0KPiAgIA0KPiAtCQkvKiBlbmFibGUgdHJhbnNtaXR0
+ZXIgYW5kIHNoaWZ0ZXIgZW1wdHkgaXJxICovDQo+IC0JCXRlbXAgPSByZWFkbChwb3J0LT5tZW1i
+YXNlICsgVUNSNCk7DQo+IC0JCXRlbXAgfD0gVUNSNF9UQ0VOOw0KPiAtCQl3cml0ZWwodGVtcCwg
+cG9ydC0+bWVtYmFzZSArIFVDUjQpOw0KPiArCQkvKg0KPiArCQkgKiBFbmFibGUgdHJhbnNtaXR0
+ZXIgYW5kIHNoaWZ0ZXIgZW1wdHkgaXJxIG9ubHkgaWYgRE1BIGlzIG9mZi4NCj4gKwkJICogSW4g
+dGhlIERNQSBjYXNlIHRoaXMgaXMgZG9uZSBpbiB0aGUgdHgtY2FsbGJhY2suDQo+ICsJCSAqLw0K
+PiArCQlpZiAoIXNwb3J0LT5kbWFfaXNfZW5hYmxlZCkgew0KPiArCQkJdGVtcCA9IHJlYWRsKHBv
+cnQtPm1lbWJhc2UgKyBVQ1I0KTsNCj4gKwkJCXRlbXAgfD0gVUNSNF9UQ0VOOw0KPiArCQkJd3Jp
+dGVsKHRlbXAsIHBvcnQtPm1lbWJhc2UgKyBVQ1I0KTsNCj4gKwkJfQ0KPiAgIAl9DQo+ICAgDQo+
+ICAgCWlmICghc3BvcnQtPmRtYV9pc19lbmFibGVkKSB7DQo+IA==
