@@ -6,76 +6,88 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D564C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C5AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:31:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C48520691
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:30:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6261C207C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:31:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591723822;
-	bh=DVunaG+n2u65W+TwJo2ooX4ed7ttrxWIXRbMtcEGuek=;
+	s=default; t=1591723908;
+	bh=K0BGTYODR/iV0wXVelqhnKL30cXjlfOcm9U6wurUmVk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=z1XA8KvsEITUQwRm8qkyWFnYXM7g9BcIkOF41r+O9IOPN3x3RPJl6QmuGKiv5fgpf
-	 bSvrnCkNY9Y4qYHwO2n7cyXgmU/y0cYNy3Is7BirH21rEDJ7ciIaZJFWu41UBMs+EX
-	 faiQ2yEGgoUZfcpI5UkOEgqUalaxfDcPzSIGh504=
+	b=ux5Fq12IFwFM46mmTtXC9VP4APObsLp6grADjYJ56dwCVhXDr3PrHVEyZW6NhkspT
+	 b4gtuvO9+o2sbQV8h2GES3OVw7yAGl0jUSkqJn7R7DSL6ddoiAJnYSEDq7nQ/beQM0
+	 eB49zDGs2OEpIP2M2lfWn6Nw5J8I5Q7DRHfkZfqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731804AbgFIRaU (ORCPT
+        id S1729363AbgFIRbq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:30:20 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:37300 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727837AbgFIRaT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:30:19 -0400
-Received: by mail-pg1-f196.google.com with SMTP id d10so10608176pgn.4;
-        Tue, 09 Jun 2020 10:30:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=A8DHGMTd1sHPkNgYIyz/0Ui2MJBr+K+YUNJeV5ms+EI=;
-        b=igOUtULtAknXZjK+aFhId66cBEhCE3CGvTmixBp0iMPwrCGonD99peN8q+oBuwoWw7
-         PH3d5WAefviBxWL29Q6m03OQaTHStcig1EUG/ytKg1+pp7hDKycMjZNaYopqiTSnEcSL
-         O790CcktcvXwW9fIur2Ds4jXiM74KQKn06dV4uEur6QHGO3SxOljB0tAv3f8Ijl74XN7
-         MqXYbYlSR1GIuTmVq/4rL3t0gFmU9CZ539e7ibsYuo2s4Ge/cXeO+z576u6pusRch97z
-         orpLvAedPbja2v1mTSlPnhjTOpx+1mv4sjiqKKCP9N/biaUMMUIXZeqWb2QCZK665e7p
-         JwDw==
-X-Gm-Message-State: AOAM533n4a+Bkmh+ne0kOJbdfhbDzZf13aF0TSlA2XBcBtE3pHTy2HRW
-        gNvuS9V0jHIdIc13t8SmpxY=
-X-Google-Smtp-Source: ABdhPJwsI+1paYwGaFzDwlAO14eiQ4fYT9LWvjXVci//0s0p1BVhw2EugH1zomzKfGcgbezrP3ENSA==
-X-Received: by 2002:a62:2cd7:: with SMTP id s206mr18998392pfs.305.1591723819138;
-        Tue, 09 Jun 2020 10:30:19 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id 85sm10545242pfz.145.2020.06.09.10.30.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 10:30:17 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 630E3403AB; Tue,  9 Jun 2020 17:30:17 +0000 (UTC)
-Date:   Tue, 9 Jun 2020 17:30:17 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: two more fixes for sysctl
-Message-ID: <20200609173017.GQ11244@42.do-not-panic.com>
-References: <20200609170819.52353-1-hch@lst.de>
+        Tue, 9 Jun 2020 13:31:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45162 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726848AbgFIRbp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:31:45 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B35E20774;
+        Tue,  9 Jun 2020 17:31:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591723905;
+        bh=K0BGTYODR/iV0wXVelqhnKL30cXjlfOcm9U6wurUmVk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QcmALxhAjslUXnR6YC7eg8kryfNAJrhmSweugHk354NYxFsktyjtrsT4HD1rk4dsQ
+         3Xegf9abdCNTeo8ST5RgTYxBtK/l7h8TBi7Yc+O2qwb3pwHDDS3Eum+Wgt4XvB4eVk
+         w2Ll9jFjOhQHwgavtiCkF4P5PDyOgcBaq8D0Nqjg=
+Date:   Tue, 9 Jun 2020 18:31:43 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        robh@kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [RFC PATCH 1/2] dt-bindings: tas2562: Add firmware support for
+ tas2563
+Message-ID: <20200609173143.GN4583@sirena.org.uk>
+References: <20200609172841.22541-1-dmurphy@ti.com>
+ <20200609172841.22541-2-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="nRwNdQxTdQ7rZk9A"
 Content-Disposition: inline
-In-Reply-To: <20200609170819.52353-1-hch@lst.de>
+In-Reply-To: <20200609172841.22541-2-dmurphy@ti.com>
+X-Cookie: Be careful!  Is it classified?
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 07:08:17PM +0200, Christoph Hellwig wrote:
-> Hi Al,
-> 
-> two more fixes for the kernel pointers in the sysctl handlers.
 
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+--nRwNdQxTdQ7rZk9A
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-  Luis
+On Tue, Jun 09, 2020 at 12:28:40PM -0500, Dan Murphy wrote:
+> Add a property called firmware-name that will be the name of the
+> firmware that will reside in the file system or built into the kernel.
+
+Why not just use a standard name for the firmware?  If the firmwares
+vary per-board then building it using the machine compatible (or DMI
+info) could handle that, with a fallback to a standard name for a
+default setup.
+
+--nRwNdQxTdQ7rZk9A
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7fx34ACgkQJNaLcl1U
+h9B4Pgf/ehxijrs0I1XM6a7jjZd7I2o0Qr+iNYOZ2FZzlvfc/ctItyP+oleKNvu0
+Z+7bX/9Qz0KlfxABFmoUxik3859oNIASDdnZ9uPC7damLes7HkxLmixASJRcEyJT
+cMUPqPVVu2SYP8g5Zl4wDJKFBdg9vpsm7yUT/DJWEgwOS9MRXfM72rnxl5mgqN27
+mF77C5XHmIJu/kUg1g+KMjEBpwY7iTBWfDXLecGikn+egcUdRnx2NMDQegDN9AuI
+51ClUyGEYBsKX4KN1i4S1VdVA9db0Sd/Bsfkv2AS431i435xbfJSRZ40AUYFyWPJ
+kasHwah+rBUXN1Ue9hukXgdCrO3T3w==
+=JKgl
+-----END PGP SIGNATURE-----
+
+--nRwNdQxTdQ7rZk9A--
