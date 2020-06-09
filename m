@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5749C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:12:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD86C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AADD220691
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:12:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AC1C206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:12:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591726374;
-	bh=sLsSlm9bixx5QGDClr2mapnP/TmNEMDRdCmJ+WaR0uo=;
+	s=default; t=1591726378;
+	bh=Nchi5rPksxeSgTW7vOly43VUU3E5jE2NOk7Oj9wAaIA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mvRK+9gx6T6bwZM6PT4J5BbMxRQXKIHYARF3aWE45S1rCvJssDBXCjRnxC4EP/lLo
-	 JiYd44Pr7u1saWBYoosSFveHXnPepvdEAJsNtBEZLeGNW/vcOvg5zXFgxVi40VwMkA
-	 +MytXtxBNSNXBdQllbxdknUcM/SYSK0hHG4+6YBo=
+	b=e/yNrzVTfYY88oz6sCfRnP62tnSwKN3PhInSgrCPY/7AmCchoumk+nZyAjldt2lOU
+	 5nFHHen+ALgyDAZzukiSXqLscx6I8trx50qJ04ZWM77vfdtXkp2BmDzfrzj0Jo3H7H
+	 b6CqC/edBjK+GaBW0Y+C74wTBrGxN5qm391dldEU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388736AbgFISMx (ORCPT
+        id S2388745AbgFISM4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:12:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39820 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 14:12:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728344AbgFIRvL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:51:11 -0400
+        id S1726924AbgFIRvQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:51:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4465C207F9;
-        Tue,  9 Jun 2020 17:51:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA34D20734;
+        Tue,  9 Jun 2020 17:51:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725070;
-        bh=sLsSlm9bixx5QGDClr2mapnP/TmNEMDRdCmJ+WaR0uo=;
+        s=default; t=1591725075;
+        bh=Nchi5rPksxeSgTW7vOly43VUU3E5jE2NOk7Oj9wAaIA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GOyy8GWaP8gXuDzkftCEPdyP3k6Yzu5UZN9DnS0sl2KxNTWGgUU+9aN76Xr6oWSCi
-         zHbWYOBKV7RxVyXs+H72/zS/ghKD2hoPUIrRa/u6sdX/opmFd2C/4Y55ax9nDAOmZd
-         /rEdg2ODwdcVRAuiZ3ObIJOLwQdmw3wYChJP0Sl8=
+        b=v94b08FBqTpLruuj56sNvVgnCUV7wiQqj+mryxAVRo7pJB2lWgxhGkSCiItZ0/6AH
+         THQLqq06aXxD+dqp2lQfK3ZXURWDA8nze0wptcnPFgTZe5tN9QmbLnUeDIF6q7qQwG
+         VlY8CJZSbiJY8l1ct6AFfJ00abHwIgk4CgRlP1Yw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bin Liu <b-liu@ti.com>
-Subject: [PATCH 4.19 12/25] usb: musb: start session in resume for host port
-Date:   Tue,  9 Jun 2020 19:45:02 +0200
-Message-Id: <20200609174050.017202642@linuxfoundation.org>
+        stable@vger.kernel.org, Kyungtae Kim <kt0755@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.19 14/25] vt: keyboard: avoid signed integer overflow in k_ascii
+Date:   Tue,  9 Jun 2020 19:45:04 +0200
+Message-Id: <20200609174050.224328991@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174048.576094775@linuxfoundation.org>
 References: <20200609174048.576094775@linuxfoundation.org>
@@ -58,44 +59,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bin Liu <b-liu@ti.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-commit 7f88a5ac393f39319f69b8b20cc8d5759878d1a1 upstream.
+commit b86dab054059b970111b5516ae548efaae5b3aae upstream.
 
-Commit 17539f2f4f0b ("usb: musb: fix enumeration after resume") replaced
-musb_start() in musb_resume() to not override softconnect bit, but it
-doesn't restart the session for host port which was done in musb_start().
-The session could be disabled in musb_suspend(), which leads the host
-port doesn't stay in host mode.
+When k_ascii is invoked several times in a row there is a potential for
+signed integer overflow:
 
-So let's start the session specifically for host port in musb_resume().
+UBSAN: Undefined behaviour in drivers/tty/vt/keyboard.c:888:19 signed integer overflow:
+10 * 1111111111 cannot be represented in type 'int'
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.6.11 #1
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Bochs 01/01/2011
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xce/0x128 lib/dump_stack.c:118
+ ubsan_epilogue+0xe/0x30 lib/ubsan.c:154
+ handle_overflow+0xdc/0xf0 lib/ubsan.c:184
+ __ubsan_handle_mul_overflow+0x2a/0x40 lib/ubsan.c:205
+ k_ascii+0xbf/0xd0 drivers/tty/vt/keyboard.c:888
+ kbd_keycode drivers/tty/vt/keyboard.c:1477 [inline]
+ kbd_event+0x888/0x3be0 drivers/tty/vt/keyboard.c:1495
 
-Fixes: 17539f2f4f0b ("usb: musb: fix enumeration after resume")
+While it can be worked around by using check_mul_overflow()/
+check_add_overflow(), it is better to introduce a separate flag to
+signal that number pad is being used to compose a symbol, and
+change type of the accumulator from signed to unsigned, thus
+avoiding undefined behavior when it overflows.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Bin Liu <b-liu@ti.com>
-Link: https://lore.kernel.org/r/20200525025049.3400-3-b-liu@ti.com
+Reported-by: Kyungtae Kim <kt0755@gmail.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200525232740.GA262061@dtor-ws
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/musb/musb_core.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/tty/vt/keyboard.c |   26 ++++++++++++++++----------
+ 1 file changed, 16 insertions(+), 10 deletions(-)
 
---- a/drivers/usb/musb/musb_core.c
-+++ b/drivers/usb/musb/musb_core.c
-@@ -2737,6 +2737,13 @@ static int musb_resume(struct device *de
- 	musb_enable_interrupts(musb);
- 	musb_platform_enable(musb);
+--- a/drivers/tty/vt/keyboard.c
++++ b/drivers/tty/vt/keyboard.c
+@@ -127,7 +127,11 @@ static DEFINE_SPINLOCK(func_buf_lock); /
+ static unsigned long key_down[BITS_TO_LONGS(KEY_CNT)];	/* keyboard key bitmap */
+ static unsigned char shift_down[NR_SHIFT];		/* shift state counters.. */
+ static bool dead_key_next;
+-static int npadch = -1;					/* -1 or number assembled on pad */
++
++/* Handles a number being assembled on the number pad */
++static bool npadch_active;
++static unsigned int npadch_value;
++
+ static unsigned int diacr;
+ static char rep;					/* flag telling character repeat */
  
-+	/* session might be disabled in suspend */
-+	if (musb->port_mode == MUSB_HOST &&
-+	    !(musb->ops->quirks & MUSB_PRESERVE_SESSION)) {
-+		devctl |= MUSB_DEVCTL_SESSION;
-+		musb_writeb(musb->mregs, MUSB_DEVCTL, devctl);
+@@ -845,12 +849,12 @@ static void k_shift(struct vc_data *vc,
+ 		shift_state &= ~(1 << value);
+ 
+ 	/* kludge */
+-	if (up_flag && shift_state != old_state && npadch != -1) {
++	if (up_flag && shift_state != old_state && npadch_active) {
+ 		if (kbd->kbdmode == VC_UNICODE)
+-			to_utf8(vc, npadch);
++			to_utf8(vc, npadch_value);
+ 		else
+-			put_queue(vc, npadch & 0xff);
+-		npadch = -1;
++			put_queue(vc, npadch_value & 0xff);
++		npadch_active = false;
+ 	}
+ }
+ 
+@@ -868,7 +872,7 @@ static void k_meta(struct vc_data *vc, u
+ 
+ static void k_ascii(struct vc_data *vc, unsigned char value, char up_flag)
+ {
+-	int base;
++	unsigned int base;
+ 
+ 	if (up_flag)
+ 		return;
+@@ -882,10 +886,12 @@ static void k_ascii(struct vc_data *vc,
+ 		base = 16;
+ 	}
+ 
+-	if (npadch == -1)
+-		npadch = value;
+-	else
+-		npadch = npadch * base + value;
++	if (!npadch_active) {
++		npadch_value = 0;
++		npadch_active = true;
 +	}
 +
- 	spin_lock_irqsave(&musb->lock, flags);
- 	error = musb_run_resume_work(musb);
- 	if (error)
++	npadch_value = npadch_value * base + value;
+ }
+ 
+ static void k_lock(struct vc_data *vc, unsigned char value, char up_flag)
 
 
