@@ -2,206 +2,209 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C362C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8053C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:56:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47FF22078D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:54:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591721649;
-	bh=rAONHGowIT3bJrN+nBCPMc9n0hSPyAkiuQv9Uiw3SQU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=n8eKNAw5wlvekw/jygInTeYp5MZdBDnm1kJdDhJqaWVB3rRRdcnXp/Td8VLTh5WzJ
-	 Q4hTozBKpn6kJ9LK8uQTgJiW/KKnM+MFyh/cFff66saPT16Y9VC+9sBks4f86a/pmF
-	 rjHksgGOn2dlPaeyawITShraLn2ZZRjVk9y2YYO8=
+	by mail.kernel.org (Postfix) with ESMTP id 98BC52074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:56:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F/UkbE7q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731301AbgFIQyH (ORCPT
+        id S1731282AbgFIQ4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 12:54:07 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:42406 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731206AbgFIQyF (ORCPT
+        Tue, 9 Jun 2020 12:56:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33070 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731061AbgFIQ4I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 12:54:05 -0400
-Received: by mail-il1-f196.google.com with SMTP id 18so20976294iln.9;
-        Tue, 09 Jun 2020 09:54:04 -0700 (PDT)
+        Tue, 9 Jun 2020 12:56:08 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77EA8C05BD1E;
+        Tue,  9 Jun 2020 09:56:08 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id j1so10165107pfe.4;
+        Tue, 09 Jun 2020 09:56:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=DwFIFEm33WK8zpwzow16/Dg35tWTHR0C4Exi34I/iFY=;
+        b=F/UkbE7qW4IMLv2/8XuJRxV1kmf/y5Az56RFgPF8MowFaMblCedjZxAw9Ynd4fWCV3
+         IC2eV8c1ZQzlh0CBLiEydzQ88GlcPrcM1EqYWlmZJ9vKxQ5qPxxhD3HcLV4gNA04DLb0
+         R0b6QM37IsKw+Mrg/PE+RWasA83xcbcl4uDAmfpem1RrV+RDT176MjvO5iwWTnqpDnWs
+         iex2rTvq0vRqZ1suIo1aWMQKZBqX9ZR8dHBBmKon+Qb/U42MYc+3z/tClxfdr6zFW3E6
+         +2fbMEjQQZHNkdFqaNwoH3t65bEnjKq7bV+fLTgnpQlTzwSXLHj0X7G9ucn+ylUnF6wS
+         /j6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KmkTV1fA8j8tDa2ByE5bz4rItMAJ7USXbj2L8eg6OQc=;
-        b=ZLXGQTvAdS7kh6hVktmlNQQ8A/Oz+58OjsBXnGRozRq6AYwJeIyfQBTICC01ms4QCf
-         dB6tY6JjarD9qglL/Oe+tK+8mZJQxxI/16Z0TDjqUP80MeRnuBZuLefPz+Irv+9uh55u
-         PN1ja47tVOu/O3FUe7J9FZry90RhHeOBbJCxYVipB+1a/H5XhDdvB2mZ8ZIWD/mHNMYg
-         KvPfwjbVO/xkZ7ngF/JTRkKDY3HaqJPVmykNdZy7HljPmNvLUY/3kHSzgq9y0ugu8gID
-         xyr6h0Arl7L0jeZxz+2VlCjOYw0K8+FMr7sn+ergfZGxNGx626U+NxBckcIHxBIpZker
-         xW0Q==
-X-Gm-Message-State: AOAM531o7HbeR2p0yLYpJ+Eypkyu2Sh4NISOA5lNNW7KGx4XdJn2eC3S
-        tWRqrl18ApGPSu9n/pAnTA==
-X-Google-Smtp-Source: ABdhPJyxG7y3K+cLyUuJIAZTdZr/u/4CxX3l41yFs/vx7KzsnZpaQg3XY4fT7PITdO9rXJOWTk7gAA==
-X-Received: by 2002:a05:6e02:972:: with SMTP id q18mr25848913ilt.60.1591721643763;
-        Tue, 09 Jun 2020 09:54:03 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id t72sm2432957ilk.23.2020.06.09.09.54.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 09:54:03 -0700 (PDT)
-Received: (nullmailer pid 1059999 invoked by uid 1000);
-        Tue, 09 Jun 2020 16:54:01 -0000
-Date:   Tue, 9 Jun 2020 10:54:01 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Michael Walle <michael@walle.cc>, Mark Brown <broonie@kernel.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld
- management controller
-Message-ID: <20200609165401.GB1019634@bogus>
-References: <20200604211039.12689-1-michael@walle.cc>
- <20200604211039.12689-3-michael@walle.cc>
- <20200605065709.GD3714@dell>
- <20200605105026.GC5413@sirena.org.uk>
- <c5632bfab3956265e90fc2fb6c0b3cae@walle.cc>
- <20200606114645.GB2055@sirena.org.uk>
- <dc052a5c77171014ecc465b1da8b7ef8@walle.cc>
- <20200608082827.GB3567@dell>
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=DwFIFEm33WK8zpwzow16/Dg35tWTHR0C4Exi34I/iFY=;
+        b=odfDdAmh17Stul+isJSmI1erVOGDl68ZjpSTnZZtW2nUdPTfR/8BtOdxy18r99AGEq
+         qd5jRa4gn/sRWlhTMsVKnLyDJ81PtHG1+G+UZ5geek2wF8nFwSuwQBKRRJzy/A+zGddJ
+         A9+9R05/8XXXC9lJdhrR4ajrLECBWBve2CfwkECKqsY05XQf5FD4z9s6Gbt3a0jA3G4X
+         6AkM2L+IGYsh9niiU/wi2gmKl1FyDPVfBrrjH2hi/V7QSBRq+tjEaKpHak0tCL64+bTP
+         GxpVRSkbCadQ7D7T4jaPYSRtiVnDJpECPr8AMxC+KSkaYyf28ZQcU1PAD9ESTu5MFnBI
+         iTxw==
+X-Gm-Message-State: AOAM533I4D6gWDPatNFb0ca9LxpMzeeUnnGVlh5zqZ3Ed9R+GiU/x0mE
+        nHvGJgxpAizphDneIvUhBw0=
+X-Google-Smtp-Source: ABdhPJxVQm4eFrZE7Qrz3WB1BDMIayo66wwNvvv7MiXlxnuKh0CeWomXK5imIP0+NofJzXqV0ug4Zg==
+X-Received: by 2002:a63:3ec4:: with SMTP id l187mr25180522pga.358.1591721767457;
+        Tue, 09 Jun 2020 09:56:07 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id mp15sm2973756pjb.45.2020.06.09.09.56.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jun 2020 09:56:06 -0700 (PDT)
+Subject: Re: [PATCH v3] hwmon:(adm1275) Enable adm1278 ADM1278_TEMP1_EN
+To:     Manikandan <manikandan.hcl.ers.epl@gmail.com>
+Cc:     Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org, saipsdasari@fb.com, patrickw3@fb.com,
+        vijaykhemka@fb.com, linux-aspeed@lists.ozlabs.org,
+        openbmc@lists.ozlabs.org, manikandan.e@hcl.com
+References: <20200608104349.GA10918@cnn>
+ <23597b7b-de89-2911-092e-f3e1ad4884f5@roeck-us.net>
+ <20200609152628.GB8833@cnn>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ xsFNBE6H1WcBEACu6jIcw5kZ5dGeJ7E7B2uweQR/4FGxH10/H1O1+ApmcQ9i87XdZQiB9cpN
+ RYHA7RCEK2dh6dDccykQk3bC90xXMPg+O3R+C/SkwcnUak1UZaeK/SwQbq/t0tkMzYDRxfJ7
+ nyFiKxUehbNF3r9qlJgPqONwX5vJy4/GvDHdddSCxV41P/ejsZ8PykxyJs98UWhF54tGRWFl
+ 7i1xvaDB9lN5WTLRKSO7wICuLiSz5WZHXMkyF4d+/O5ll7yz/o/JxK5vO/sduYDIlFTvBZDh
+ gzaEtNf5tQjsjG4io8E0Yq0ViobLkS2RTNZT8ICq/Jmvl0SpbHRvYwa2DhNsK0YjHFQBB0FX
+ IdhdUEzNefcNcYvqigJpdICoP2e4yJSyflHFO4dr0OrdnGLe1Zi/8Xo/2+M1dSSEt196rXaC
+ kwu2KgIgmkRBb3cp2vIBBIIowU8W3qC1+w+RdMUrZxKGWJ3juwcgveJlzMpMZNyM1jobSXZ0
+ VHGMNJ3MwXlrEFPXaYJgibcg6brM6wGfX/LBvc/haWw4yO24lT5eitm4UBdIy9pKkKmHHh7s
+ jfZJkB5fWKVdoCv/omy6UyH6ykLOPFugl+hVL2Prf8xrXuZe1CMS7ID9Lc8FaL1ROIN/W8Vk
+ BIsJMaWOhks//7d92Uf3EArDlDShwR2+D+AMon8NULuLBHiEUQARAQABzTJHdWVudGVyIFJv
+ ZWNrIChMaW51eCBhY2NvdW50KSA8bGludXhAcm9lY2stdXMubmV0PsLBgQQTAQIAKwIbAwYL
+ CQgHAwIGFQgCCQoLBBYCAwECHgECF4ACGQEFAlVcphcFCRmg06EACgkQyx8mb86fmYFg0RAA
+ nzXJzuPkLJaOmSIzPAqqnutACchT/meCOgMEpS5oLf6xn5ySZkl23OxuhpMZTVX+49c9pvBx
+ hpvl5bCWFu5qC1jC2eWRYU+aZZE4sxMaAGeWenQJsiG9lP8wkfCJP3ockNu0ZXXAXwIbY1O1
+ c+l11zQkZw89zNgWgKobKzrDMBFOYtAh0pAInZ9TSn7oA4Ctejouo5wUugmk8MrDtUVXmEA9
+ 7f9fgKYSwl/H7dfKKsS1bDOpyJlqhEAH94BHJdK/b1tzwJCFAXFhMlmlbYEk8kWjcxQgDWMu
+ GAthQzSuAyhqyZwFcOlMCNbAcTSQawSo3B9yM9mHJne5RrAbVz4TWLnEaX8gA5xK3uCNCeyI
+ sqYuzA4OzcMwnnTASvzsGZoYHTFP3DQwf2nzxD6yBGCfwNGIYfS0i8YN8XcBgEcDFMWpOQhT
+ Pu3HeztMnF3HXrc0t7e5rDW9zCh3k2PA6D2NV4fews9KDFhLlTfCVzf0PS1dRVVWM+4jVl6l
+ HRIAgWp+2/f8dx5vPc4Ycp4IsZN0l1h9uT7qm1KTwz+sSl1zOqKD/BpfGNZfLRRxrXthvvY8
+ BltcuZ4+PGFTcRkMytUbMDFMF9Cjd2W9dXD35PEtvj8wnEyzIos8bbgtLrGTv/SYhmPpahJA
+ l8hPhYvmAvpOmusUUyB30StsHIU2LLccUPPOwU0ETofVZwEQALlLbQeBDTDbwQYrj0gbx3bq
+ 7kpKABxN2MqeuqGr02DpS9883d/t7ontxasXoEz2GTioevvRmllJlPQERVxM8gQoNg22twF7
+ pB/zsrIjxkE9heE4wYfN1AyzT+AxgYN6f8hVQ7Nrc9XgZZe+8IkuW/Nf64KzNJXnSH4u6nJM
+ J2+Dt274YoFcXR1nG76Q259mKwzbCukKbd6piL+VsT/qBrLhZe9Ivbjq5WMdkQKnP7gYKCAi
+ pNVJC4enWfivZsYupMd9qn7Uv/oCZDYoBTdMSBUblaLMwlcjnPpOYK5rfHvC4opxl+P/Vzyz
+ 6WC2TLkPtKvYvXmdsI6rnEI4Uucg0Au/Ulg7aqqKhzGPIbVaL+U0Wk82nz6hz+WP2ggTrY1w
+ ZlPlRt8WM9w6WfLf2j+PuGklj37m+KvaOEfLsF1v464dSpy1tQVHhhp8LFTxh/6RWkRIR2uF
+ I4v3Xu/k5D0LhaZHpQ4C+xKsQxpTGuYh2tnRaRL14YMW1dlI3HfeB2gj7Yc8XdHh9vkpPyuT
+ nY/ZsFbnvBtiw7GchKKri2gDhRb2QNNDyBnQn5mRFw7CyuFclAksOdV/sdpQnYlYcRQWOUGY
+ HhQ5eqTRZjm9z+qQe/T0HQpmiPTqQcIaG/edgKVTUjITfA7AJMKLQHgp04Vylb+G6jocnQQX
+ JqvvP09whbqrABEBAAHCwWUEGAECAA8CGwwFAlVcpi8FCRmg08MACgkQyx8mb86fmYHNRQ/+
+ J0OZsBYP4leJvQF8lx9zif+v4ZY/6C9tTcUv/KNAE5leyrD4IKbnV4PnbrVhjq861it/zRQW
+ cFpWQszZyWRwNPWUUz7ejmm9lAwPbr8xWT4qMSA43VKQ7ZCeTQJ4TC8kjqtcbw41SjkjrcTG
+ wF52zFO4bOWyovVAPncvV9eGA/vtnd3xEZXQiSt91kBSqK28yjxAqK/c3G6i7IX2rg6pzgqh
+ hiH3/1qM2M/LSuqAv0Rwrt/k+pZXE+B4Ud42hwmMr0TfhNxG+X7YKvjKC+SjPjqp0CaztQ0H
+ nsDLSLElVROxCd9m8CAUuHplgmR3seYCOrT4jriMFBtKNPtj2EE4DNV4s7k0Zy+6iRQ8G8ng
+ QjsSqYJx8iAR8JRB7Gm2rQOMv8lSRdjva++GT0VLXtHULdlzg8VjDnFZ3lfz5PWEOeIMk7Rj
+ trjv82EZtrhLuLjHRCaG50OOm0hwPSk1J64R8O3HjSLdertmw7eyAYOo4RuWJguYMg5DRnBk
+ WkRwrSuCn7UG+qVWZeKEsFKFOkynOs3pVbcbq1pxbhk3TRWCGRU5JolI4ohy/7JV1TVbjiDI
+ HP/aVnm6NC8of26P40Pg8EdAhajZnHHjA7FrJXsy3cyIGqvg9os4rNkUWmrCfLLsZDHD8FnU
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <258764db-0155-5f33-b33d-74b33ef687af@roeck-us.net>
+Date:   Tue, 9 Jun 2020 09:56:04 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200608082827.GB3567@dell>
+In-Reply-To: <20200609152628.GB8833@cnn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 09:28:27AM +0100, Lee Jones wrote:
-> Rob, something for you below.
+On 6/9/20 8:26 AM, Manikandan wrote:
+> On Mon, Jun 08, 2020 at 06:49:45AM -0700, Guenter Roeck wrote:
+>> On 6/8/20 3:43 AM, Manikandan Elumalai wrote:
+>>> The adm1278 temp attribute need it for openbmc platform .
+>>> This feature not enabled by default, so PMON_CONFIG needs to enable it.
+>>>
+>>> v3:
+>>> ----
+>>> fix invalid signed-off.
+>>> removed checkpath warnings.
+>>> write ADM1278_TEMP1_EN and ADM1278_VOUT_EN conf in single line operation.
+>>>
+>>> v2:
+>>> ----
+>>> add Signed-off-by.
+>>> removed ADM1278_TEMP1_EN check.
+>>>
+>>> Signed-off-by: Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
+>>> ---
+>>>  drivers/hwmon/pmbus/adm1275.c | 10 ++++------
+>>>  1 file changed, 4 insertions(+), 6 deletions(-)
+>>>
+>>> diff --git a/drivers/hwmon/pmbus/adm1275.c b/drivers/hwmon/pmbus/adm1275.c
+>>> index 5caa37fb..4782e31 100644
+>>> --- a/drivers/hwmon/pmbus/adm1275.c
+>>> +++ b/drivers/hwmon/pmbus/adm1275.c
+>>> @@ -666,11 +666,12 @@ static int adm1275_probe(struct i2c_client *client,
+>>>  		tindex = 3;
+>>>  
+>>>  		info->func[0] |= PMBUS_HAVE_PIN | PMBUS_HAVE_STATUS_INPUT |
+>>> -			PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT;
+>>> +			PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT |
+>>> +			PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP;
+>>>  
+>>> -		/* Enable VOUT if not enabled (it is disabled by default) */
+>>> +		/* Enable VOUT & TEMP1 if not enabled (disabled by default) */
+>>>  		if (!(config & ADM1278_VOUT_EN)) {
+>>
+>> This if statement needs to be
+>> 		if (config & (ADM1278_VOUT_EN | ADM1278_TEMP1_EN) != ADM1278_VOUT_EN | ADM1278_TEMP1_EN)
+>>
+>           Hi Guenter,
 > 
-> On Sat, 06 Jun 2020, Michael Walle wrote:
-> > Am 2020-06-06 13:46, schrieb Mark Brown:
-> > > On Fri, Jun 05, 2020 at 10:07:36PM +0200, Michael Walle wrote:
-> > > > Am 2020-06-05 12:50, schrieb Mark Brown:
-> > > 
-> > > > > I have no idea what you are thinking of when you say "simple-regmap" so
-> > > > > it is difficult to comment.
-> > > 
-> > > > I guess, Lee is suggesting to be able to create a regmap instance via
-> > > > device tree (and populate its child nodes?). Like
-> > > >   compatible = "syscon", "simple-mfd";
-> > > > but for any regmap, not just MMIO.
+>              The below warning shown by checkpatch after changes,
 > 
-> Bingo!
+>                   WARNING: line over 80 characters
+>                    #38: FILE: drivers/hwmon/pmbus/adm1275.c:672:
+>                    + if (config & (ADM1278_VOUT_EN | ADM1278_TEMP1_EN) != ADM1278_VOUT_EN | ADM1278_TEMP1_EN) {
+>  
+>                    total: 0 errors, 1 warnings, 24 lines checked
 > 
-> > > I don't understand why this would be anything separate to
-> > > simple-mfd.
-> > 
-> > Don't just simple-mfd tells the of core, to probe the children this
-> > node? Where does the regmap then come from?
+>               I didn't see any if() condition made as two line in the driver . Is this acceptable warning ?
 > 
-> Right.  I'm suggesting a means to extrapolate complex shared and
-> sometimes intertwined batches of register sets to be consumed by
-> multiple (sub-)devices spanning different subsystems.
-> 
-> Actually scrap that.  The most common case I see is a single Regmap
-> covering all child-devices.  It would be great if there was a way in
-> which we could make an assumption that the entire register address
-> space for a 'tagged' (MFD) device is to be shared (via Regmap) between
-> each of the devices described by its child-nodes.  Probably by picking
-> up on the 'simple-mfd' compatible string in the first instance.
-> 
-> Rob, is the above something you would contemplate?
 
-No. I'd like to just kill off syscon and simple-mfd really. Those are 
-just hints meaning a specific compatible is still needed, but I see them 
-all the time alone (or combined like above). 'syscon' just serves to 
-create a regmap. This could be accomplished just with a list of 
-compatibles to register a regmap for. That might be a longish list, but 
-wanting a regmap is really a kernel implementation detail and decision.
+The warning is (or should be) gone in the latest upstream kernel -
+the line length limit is now 100 bytes. Just ignore that warning,
+or rebase your patch to the latest upstream kernel.
 
-> Michael, do your register addresses overlap i.e. are they intermingled
-> with one another?  Do multiple child devices need access to the same
-> registers i.e. are they shared?
-> 
-> > > > But, there is more in my driver:
-> > > >  (1) there is a version check
-> 
-> If we can rid the Regmap dependency, then creating an entire driver to
-> conduct a version check is unjustifiable.  This could become an inline
-> function which is called by each of the sub-devices instead, for
-> example.
-> 
-> > > >  (2) there is another function for which there is no suitable linux
-> > > >      subsystem I'm aware of and thus which I'd like to us sysfs
-> > > >      attributes for: This controller supports 16 non-volatile
-> > > >      configuration bits. (this is still TBD)
-> 
-> There is a place for everything in Linux.
-> 
-> What do these bits configure?
-> 
-> > > TBH I'd also say that the enumeration of the subdevices for this
-> > > device should be in the device rather than the DT, they don't
-> > > seem to be things that exist outside of this one device.
-> > 
-> > We're going circles here, formerly they were enumerated in the MFD.
-> > Yes, they are devices which aren't likely be used outside a
-> > "sl28cpld", but there might there might be other versions of the
-> > sl28cpld with other components on different base addresses. I
-> > don't care if they are enumerated in DT or MFD, actually, I'd
-> > prefer the latter. _But_ I would like to have the device tree
-> > properties for its subdevices, e.g. the ones for the watchdog or
-> > whatever components there might be in the future.
-> 
-> [...]
-> 
-> > MFD core can
-> > match a device tree node today; but only one per unique compatible
-> > string. So what should I use to differentiate the different
-> > subdevices?
-> 
-> Right.  I have been aware of this issue.  The only suitable solution
-> to this would be to match on 'reg'.
-> 
-> FYI: I plan to fix this.
-> 
-> If your register map needs to change, then I suggest that this is
-> either a new device or at least a different version of the device and
-> would also have to be represented as different (sub-)mfd_cell.
+Guenter
 
-The same register set at a different offset is the same (sub)device.
+>          Thanks
+>          Mani.E
+>>> -			config |= ADM1278_VOUT_EN;
+>>> +			config |= ADM1278_VOUT_EN | ADM1278_TEMP1_EN;
+>>>  			ret = i2c_smbus_write_byte_data(client,
+>>>  							ADM1275_PMON_CONFIG,
+>>>  							config);
+>>> @@ -681,9 +682,6 @@ static int adm1275_probe(struct i2c_client *client,
+>>>  			}
+>>>  		}
+>>>  
+>>> -		if (config & ADM1278_TEMP1_EN)
+>>> -			info->func[0] |=
+>>> -				PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP;
+>>>  		if (config & ADM1278_VIN_EN)
+>>>  			info->func[0] |= PMBUS_HAVE_VIN;
+>>>  		break;
+>>>
+>>
 
-> 
-> > Rob suggested the internal offset, which I did here.
-> 
-> FWIW, I don't like this idea.  DTs should not have to be modified
-> (either in the first instance or subsequently) or specifically
-> designed to patch inadequacies in any given OS.
-
-My understanding is there can be differing combinations or number of 
-instances of sub devices for this device. That's when having DT sub 
-devices makes sense. If the h/w changes, then the DT should change.
-
-Multiple instances of devices require an address to identify them and we 
-don't make up numbering if we can avoid it. The earlier revisions just 
-had made up indices for addresses.
-
-Rob
