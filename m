@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1DBBC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ADD6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FD9F2068D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:11:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D79AE2068D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:11:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388648AbgFISLS (ORCPT
+        id S2388620AbgFISLD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:11:18 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:41268 "EHLO
+        Tue, 9 Jun 2020 14:11:03 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:41282 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388145AbgFISF5 (ORCPT
+        by vger.kernel.org with ESMTP id S2388147AbgFISF5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 9 Jun 2020 14:05:57 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jiidF-0001p0-Rb; Tue, 09 Jun 2020 19:05:53 +0100
+        id 1jiidF-0001ow-LO; Tue, 09 Jun 2020 19:05:53 +0100
 Received: from ben by deadeye with local (Exim 4.94)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jiidE-006VvT-V7; Tue, 09 Jun 2020 19:05:52 +0100
+        id 1jiidE-006VvN-Ps; Tue, 09 Jun 2020 19:05:52 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Kalle Valo" <kvalo@codeaurora.org>,
-        "Qing Xu" <m1s5p6688@gmail.com>
-Date:   Tue, 09 Jun 2020 19:04:12 +0100
-Message-ID: <lsq.1591725832.174115113@decadent.org.uk>
+        "Dan Carpenter" <dan.carpenter@oracle.com>,
+        "Johannes Thumshirn" <jthumshirn@suse.de>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Date:   Tue, 09 Jun 2020 19:04:10 +0100
+Message-ID: <lsq.1591725832.803339175@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 21/61] mwifiex: Fix possible buffer overflows in
- mwifiex_cmd_append_vsie_tlv()
+Subject: [PATCH 3.16 19/61] scsi: mptfusion: Add bounds check in
+ mptctl_hp_targetinfo()
 In-Reply-To: <lsq.1591725831.850867383@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,40 +57,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Qing Xu <m1s5p6688@gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit b70261a288ea4d2f4ac7cd04be08a9f0f2de4f4d upstream.
+commit a7043e9529f3c367cc4d82997e00be034cbe57ca upstream.
 
-mwifiex_cmd_append_vsie_tlv() calls memcpy() without checking
-the destination size may trigger a buffer overflower,
-which a local user could use to cause denial of service
-or the execution of arbitrary code.
-Fix it by putting the length check before calling memcpy().
+My static checker complains about an out of bounds read:
 
-Signed-off-by: Qing Xu <m1s5p6688@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-[bwh: Backported to 3.16:
- - Use dev_info() instead of mwifiex_dbg()
- - Adjust filename]
+    drivers/message/fusion/mptctl.c:2786 mptctl_hp_targetinfo()
+    error: buffer overflow 'hd->sel_timeout' 255 <= u32max.
+
+It's true that we probably should have a bounds check here.
+
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/wireless/mwifiex/scan.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/message/fusion/mptctl.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/net/wireless/mwifiex/scan.c
-+++ b/drivers/net/wireless/mwifiex/scan.c
-@@ -2267,6 +2267,13 @@ mwifiex_cmd_append_vsie_tlv(struct mwifi
- 			vs_param_set->header.len =
- 				cpu_to_le16((((u16) priv->vs_ie[id].ie[1])
- 				& 0x00FF) + 2);
-+			if (le16_to_cpu(vs_param_set->header.len) >
-+				MWIFIEX_MAX_VSIE_LEN) {
-+				dev_info(priv->adapter->dev,
-+					 "Invalid param length!\n");
-+				break;
-+			}
-+
- 			memcpy(vs_param_set->ie, priv->vs_ie[id].ie,
- 			       le16_to_cpu(vs_param_set->header.len));
- 			*buffer += le16_to_cpu(vs_param_set->header.len) +
+--- a/drivers/message/fusion/mptctl.c
++++ b/drivers/message/fusion/mptctl.c
+@@ -2698,6 +2698,8 @@ mptctl_hp_targetinfo(unsigned long arg)
+ 				__FILE__, __LINE__, iocnum);
+ 		return -ENODEV;
+ 	}
++	if (karg.hdr.id >= MPT_MAX_FC_DEVICES)
++		return -EINVAL;
+ 	dctlprintk(ioc, printk(MYIOC_s_DEBUG_FMT "mptctl_hp_targetinfo called.\n",
+ 	    ioc->name));
+ 
 
