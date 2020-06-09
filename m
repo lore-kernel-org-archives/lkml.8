@@ -2,144 +2,197 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1403C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 06:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D86C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 06:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 780E92081A
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 06:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 601832078D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 06:56:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="iianZOFy"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="nsuVsvsx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728045AbgFIGzy (ORCPT
+        id S1728049AbgFIG4N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 02:55:54 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:45221 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726886AbgFIGzx (ORCPT
+        Tue, 9 Jun 2020 02:56:13 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:18749 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726886AbgFIG4M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 02:55:53 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id B00815C0057;
-        Tue,  9 Jun 2020 02:55:51 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 09 Jun 2020 02:55:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=K8ADmm
-        X7v+hv/X8ogy48EiWtb/0gZSHGu5XCN38uzLo=; b=iianZOFy5NXWR1Q3QRxzAs
-        TYGq2I78ucdzlzojnu3c1HIKqiWWb9EE1y1X0PIZ7QnBWShyUFgeQGdIJ44V0oZR
-        thmfmqrlGRFWH61BP4mSxFih5Riimag7FTm4RYCMWWEdqCkDGagO6JrfJyeBiBso
-        EVx7VdEZ0KlnQtEsq5W3DFOw2V+mnO02fyLcxoSYiwZO1BSviqR0guK2JKMkn0mo
-        CQsnNHP+n/6AlCrpqPMMMwFwnA4D8gKVPowjHGud6nnzSmHLf2cIVKqGBZF5yrnT
-        fG/gMeVRepjXAEXgkO9i1s+s3sVPAup0l5pbaST9Y+Nb67J+Ryzj5Un03wz9XaLQ
-        ==
-X-ME-Sender: <xms:dzLfXkBp8Ej708ahrJZ8hMkWh6g7Z-ap4qFSrTQb9p4HrUAymXq9ag>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudehfedgudduiecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepkfguohcu
-    ufgthhhimhhmvghluceoihguohhstghhsehiughoshgthhdrohhrgheqnecuggftrfgrth
-    htvghrnhephefgueetjedtgfelffelhfehleelteeiuddtvefhfedvgfdvteejuedvgfdu
-    veefnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpihgvthhfrdhorhhgnecukfhppe
-    ejledrudejkedrgeehrddvvdefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghm
-    pehmrghilhhfrhhomhepihguohhstghhsehiughoshgthhdrohhrgh
-X-ME-Proxy: <xmx:dzLfXmhs4tuSyfhCuUzkC6RCMX6pk9Q5wjQ--zydiRfxPA6V3KNQIA>
-    <xmx:dzLfXnnwDSTVUqFkaOQC_bzVlGhN28LsDEXW12srjUz1RPBp27BVYA>
-    <xmx:dzLfXqyFa8LS_BxMNM0ZjVXDwsYRhg1rBm8woioD-XiNYbQsldB2qQ>
-    <xmx:dzLfXkcCUJE_TIvTXnc0Qdcm5fR0ll78Euk28JADyGjv0CGS8q76oA>
-Received: from localhost (bzq-79-178-45-223.red.bezeqint.net [79.178.45.223])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 13EEF328005D;
-        Tue,  9 Jun 2020 02:55:50 -0400 (EDT)
-Date:   Tue, 9 Jun 2020 09:55:48 +0300
-From:   Ido Schimmel <idosch@idosch.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Ido Schimmel <idosch@mellanox.com>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.7 264/274] vxlan: Avoid infinite loop when
- suppressing NS messages with invalid options
-Message-ID: <20200609065548.GA2113611@splinter>
-References: <20200608230607.3361041-1-sashal@kernel.org>
- <20200608230607.3361041-264-sashal@kernel.org>
+        Tue, 9 Jun 2020 02:56:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1591685772; x=1623221772;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=Y3TApI5hCDymjWLvwYp9oxbri4e06E85N4q9qWFSw0w=;
+  b=nsuVsvsxHwJW9B18SYx17h8btl8f8n5ObwKU4sZR4dG0D59V71KpSY0d
+   WO4CQpwKruY+B15BrlLQ9Y2kjfIIjd5la8gxQ1VEXFmTmH+mLiSxcQxmf
+   pguc7qlZ+k8d/NIydlABjCVP1gxWo/AS1ysm7FnrTzbyQYmbra69Ui+gN
+   o=;
+IronPort-SDR: adQ+B6Lg1TtoHu1LX+SgrJcSef0Do9ODVHGybEjAQ7UnUguhkmQANcGv5+plQe0N30UCFvsa5X
+ o7lmHU3XAcXQ==
+X-IronPort-AV: E=Sophos;i="5.73,490,1583193600"; 
+   d="scan'208";a="50834101"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-a70de69e.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 09 Jun 2020 06:56:07 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1e-a70de69e.us-east-1.amazon.com (Postfix) with ESMTPS id CF93AA21F2;
+        Tue,  9 Jun 2020 06:55:55 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 9 Jun 2020 06:55:55 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.53) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 9 Jun 2020 06:55:38 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <akpm@linux-foundation.org>
+CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
+        <aarcange@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
+        <brendanhiggins@google.com>, <cai@lca.pw>,
+        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
+        <foersleo@amazon.de>, <irogers@google.com>, <jolsa@redhat.com>,
+        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
+        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
+        <peterz@infradead.org>, <rdunlap@infradead.org>,
+        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
+        <sblbir@amazon.com>, <shakeelb@google.com>, <shuah@kernel.org>,
+        <sj38.park@gmail.com>, <snu@amazon.de>, <vbabka@suse.cz>,
+        <vdavydov.dev@gmail.com>, <yang.shi@linux.alibaba.com>,
+        <ying.huang@intel.com>, <david@redhat.com>,
+        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [RFC v11 5/8] mm/damon/schemes: Implement statistics feature
+Date:   Tue, 9 Jun 2020 08:53:17 +0200
+Message-ID: <20200609065320.12941-6-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200609065320.12941-1-sjpark@amazon.com>
+References: <20200609065320.12941-1-sjpark@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200608230607.3361041-264-sashal@kernel.org>
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.53]
+X-ClientProxiedBy: EX13D31UWA004.ant.amazon.com (10.43.160.217) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 07:05:57PM -0400, Sasha Levin wrote:
-> From: Ido Schimmel <idosch@mellanox.com>
-> 
-> [ Upstream commit 8066e6b449e050675df48e7c4b16c29f00507ff0 ]
+From: SeongJae Park <sjpark@amazon.de>
 
-Hi,
+To tune the DAMON-based operation schemes, knowing how many and how
+large regions are affected by each of the schemes will be helful.  Those
+stats could be used for not only the tuning, but also monitoring of the
+working set size and the number of regions, if the scheme does not
+change the program behavior too much.
 
-In the same patch set I also included a similar fix for the bridge
-module:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=53fc685243bd6fb90d90305cea54598b78d3cbfc
+For the reason, this commit implements the statistics for the schemes.
+The total number and size of the regions that each scheme is applied are
+exported to users via '->stat_count' and '->stat_sz' of 'struct damos'.
+Admins can also check the number by reading 'schemes' debugfs file.  The
+last two integers now represents the stats.  To allow collecting the
+stats without changing the program behavior, this commit also adds new
+scheme action, 'DAMOS_STAT'.  Note that 'DAMOS_STAT' is not only making
+no memory operation actions, but also does not reset the age of regions.
 
-But I don't see it in the patch sets you sent.
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
+---
+ include/linux/damon.h |  6 ++++++
+ mm/damon.c            | 13 ++++++++++---
+ 2 files changed, 16 insertions(+), 3 deletions(-)
 
-Don't see it here as well:
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/tree/queue-5.7
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/log/?h=linux-5.7.y
+diff --git a/include/linux/damon.h b/include/linux/damon.h
+index 842a01e80c6e..e77256cf30dd 100644
+--- a/include/linux/damon.h
++++ b/include/linux/damon.h
+@@ -64,6 +64,7 @@ struct damon_task {
+  * @DAMOS_PAGEOUT:	Call ``madvise()`` for the region with MADV_PAGEOUT.
+  * @DAMOS_HUGEPAGE:	Call ``madvise()`` for the region with MADV_HUGEPAGE.
+  * @DAMOS_NOHUGEPAGE:	Call ``madvise()`` for the region with MADV_NOHUGEPAGE.
++ * @DAMOS_STAT:		Do nothing but count the stat.
+  * @DAMOS_ACTION_LEN:	Number of supported actions.
+  */
+ enum damos_action {
+@@ -72,6 +73,7 @@ enum damos_action {
+ 	DAMOS_PAGEOUT,
+ 	DAMOS_HUGEPAGE,
+ 	DAMOS_NOHUGEPAGE,
++	DAMOS_STAT,		/* Do nothing but only record the stat */
+ 	DAMOS_ACTION_LEN,
+ };
+ 
+@@ -84,6 +86,8 @@ enum damos_action {
+  * @min_age_region:	Minimum age of target regions.
+  * @max_age_region:	Maximum age of target regions.
+  * @action:		&damo_action to be applied to the target regions.
++ * @stat_count:		Total number of regions that this scheme is applied.
++ * @stat_sz:		Total size of regions that this scheme is applied.
+  * @list:		List head for siblings.
+  *
+  * For each aggregation interval, DAMON applies @action to monitoring target
+@@ -98,6 +102,8 @@ struct damos {
+ 	unsigned int min_age_region;
+ 	unsigned int max_age_region;
+ 	enum damos_action action;
++	unsigned long stat_count;
++	unsigned long stat_sz;
+ 	struct list_head list;
+ };
+ 
+diff --git a/mm/damon.c b/mm/damon.c
+index 0d12a74aba58..98fd32ace6f7 100644
+--- a/mm/damon.c
++++ b/mm/damon.c
+@@ -206,6 +206,8 @@ static struct damos *damon_new_scheme(
+ 	scheme->min_age_region = min_age_region;
+ 	scheme->max_age_region = max_age_region;
+ 	scheme->action = action;
++	scheme->stat_count = 0;
++	scheme->stat_sz = 0;
+ 	INIT_LIST_HEAD(&scheme->list);
+ 
+ 	return scheme;
+@@ -882,6 +884,8 @@ static int damos_do_action(struct damon_task *task, struct damon_region *r,
+ 	case DAMOS_NOHUGEPAGE:
+ 		madv_action = MADV_NOHUGEPAGE;
+ 		break;
++	case DAMOS_STAT:
++		return 0;
+ 	default:
+ 		pr_warn("Wrong action %d\n", action);
+ 		return -EINVAL;
+@@ -909,8 +913,11 @@ static void damon_do_apply_schemes(struct damon_ctx *c, struct damon_task *t,
+ 				(s->max_age_region &&
+ 				 s->max_age_region < r->age))
+ 			continue;
++		s->stat_count++;
++		s->stat_sz += sz;
+ 		damos_do_action(t, r, s->action);
+-		r->age = 0;
++		if (s->action != DAMOS_STAT)
++			r->age = 0;
+ 	}
+ }
+ 
+@@ -1418,11 +1425,11 @@ static ssize_t sprint_schemes(struct damon_ctx *c, char *buf, ssize_t len)
+ 
+ 	damon_for_each_scheme(s, c) {
+ 		rc = snprintf(&buf[written], len - written,
+-				"%u %u %u %u %u %u %d\n",
++				"%u %u %u %u %u %u %d %lu %lu\n",
+ 				s->min_sz_region, s->max_sz_region,
+ 				s->min_nr_accesses, s->max_nr_accesses,
+ 				s->min_age_region, s->max_age_region,
+-				s->action);
++				s->action, s->stat_count, s->stat_sz);
+ 		if (!rc)
+ 			return -ENOMEM;
+ 
+-- 
+2.17.1
 
-Did it get lost or it's just pending somewhere else?
-
-Thanks
-
-> 
-> When proxy mode is enabled the vxlan device might reply to Neighbor
-> Solicitation (NS) messages on behalf of remote hosts.
-> 
-> In case the NS message includes the "Source link-layer address" option
-> [1], the vxlan device will use the specified address as the link-layer
-> destination address in its reply.
-> 
-> To avoid an infinite loop, break out of the options parsing loop when
-> encountering an option with length zero and disregard the NS message.
-> 
-> This is consistent with the IPv6 ndisc code and RFC 4886 which states
-> that "Nodes MUST silently discard an ND packet that contains an option
-> with length zero" [2].
-> 
-> [1] https://tools.ietf.org/html/rfc4861#section-4.3
-> [2] https://tools.ietf.org/html/rfc4861#section-4.6
-> 
-> Fixes: 4b29dba9c085 ("vxlan: fix nonfunctional neigh_reduce()")
-> Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-> Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-> Signed-off-by: David S. Miller <davem@davemloft.net>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/net/vxlan.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/net/vxlan.c b/drivers/net/vxlan.c
-> index a5b415fed11e..779e56c43d27 100644
-> --- a/drivers/net/vxlan.c
-> +++ b/drivers/net/vxlan.c
-> @@ -1924,6 +1924,10 @@ static struct sk_buff *vxlan_na_create(struct sk_buff *request,
->  	ns_olen = request->len - skb_network_offset(request) -
->  		sizeof(struct ipv6hdr) - sizeof(*ns);
->  	for (i = 0; i < ns_olen-1; i += (ns->opt[i+1]<<3)) {
-> +		if (!ns->opt[i + 1]) {
-> +			kfree_skb(reply);
-> +			return NULL;
-> +		}
->  		if (ns->opt[i] == ND_OPT_SOURCE_LL_ADDR) {
->  			daddr = ns->opt + i + sizeof(struct nd_opt_hdr);
->  			break;
-> -- 
-> 2.25.1
-> 
