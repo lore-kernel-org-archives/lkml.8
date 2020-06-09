@@ -6,64 +6,96 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F1F1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:50:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F5A6C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEC0420774
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:49:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DADDC2072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:51:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jHtX884D"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="TmT0LsDP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730972AbgFIPt5 (ORCPT
+        id S1730981AbgFIPvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 11:49:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51046 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730936AbgFIPtz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 11:49:55 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3893CC05BD1E;
-        Tue,  9 Jun 2020 08:49:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=l2WBiCb5duYJRA9nKpihqrJOH1Qjg6utSrFiu8qAdtc=; b=jHtX884DijMcV0iZfcI2N/Lwtp
-        KYav7vxoWwRRGZu3YyUhRaV0yDPrIydcNZZNJ37+9B/lgaV/vxYar3d8FsiFTEm51H2JBRpfAESY4
-        T6RwLoQ7SV1jm2a85+btKOETBsONIgrhejVyA6GwLdzQ/QsyqkV4BDKMwX6JdhX/TxDjwDa+gn/0P
-        kfQ8PJMrhG6N3aA0CIcik7N4Ky7BkoaEKjJKuA4b0jtZ+7nWRhxWxgAjnL0gFK+8QYlwKyJky22/T
-        T3hrdo02CaPHYH7rSnPlQQblDrIViGMfcHHgV2HJQ7uKyNEu6PbjbKhABYz0vv646VVRUVEeQ8ZpC
-        9qEW+n3A==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jigVb-0000yz-Ib; Tue, 09 Jun 2020 15:49:51 +0000
-Date:   Tue, 9 Jun 2020 08:49:51 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Piotr Stankiewicz <piotr.stankiewicz@intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Jian-Hong Pan <jian-hong@endlessm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 01/15] PCI/MSI: Forward MSI-X vector enable error code
- in pci_alloc_irq_vectors_affinity()
-Message-ID: <20200609154951.GA2597@infradead.org>
-References: <20200609091148.32749-1-piotr.stankiewicz@intel.com>
- <20200609091440.497-1-piotr.stankiewicz@intel.com>
+        Tue, 9 Jun 2020 11:51:02 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:25220 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730640AbgFIPvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 11:51:00 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591717860; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=L2RvbGPsA2kvMC3pVbmeJgOrqYdiDNvCRMHV2qaWaZg=;
+ b=TmT0LsDPDmXmpiFm8S/3S1TrPuBsX9CspzljA9LT6AXfYuINdmFwiOD1GZvLEtuLlHFIRoLo
+ 2NKUh97qcMjRbmzF13P09YVJsdM82QT8jToti9F+tRoJirSxguHQGjQN0segjnrfnKmOU4Jp
+ wvBlndNweuML6A6ln/SW/zNCqMs=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
+ 5edfafd4fe1db4db899d6123 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 09 Jun 2020 15:50:44
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 63AD0C433A0; Tue,  9 Jun 2020 15:50:44 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: gubbaven)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D666DC433CA;
+        Tue,  9 Jun 2020 15:50:43 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200609091440.497-1-piotr.stankiewicz@intel.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Tue, 09 Jun 2020 21:20:43 +0530
+From:   gubbaven@codeaurora.org
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
+        hemantg@codeaurora.org, Johan Hedberg <johan.hedberg@gmail.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rocky Liao <rjliao@codeaurora.org>,
+        Rob Herring <robh@kernel.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Claire Chang <tientzu@chromium.org>, yshavit@google.com,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] Bluetooth: hci_qca: Fix double free during SSR timeout
+In-Reply-To: <d3444be6-28e6-bef5-08cf-6038620f65c6@web.de>
+References: <d3444be6-28e6-bef5-08cf-6038620f65c6@web.de>
+Message-ID: <51c4dfe5daf8497bd99a013458d93b92@codeaurora.org>
+X-Sender: gubbaven@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good,
+Hi Markus,
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Sure we will update in next patch set.
+
+Regards,
+Lakshmi Narayna.
+On 2020-06-04 23:54, Markus Elfring wrote:
+>> Due to race conditions between qca_hw_error and qca_controller_memdump
+>> during SSR timeout,the same pointer is freed twice.
+> 
+> This is an unfortunate software situation.
+> 
+> 
+>> Which results to double free error.
+> 
+> How do you think about to omit this sentence from the change 
+> description?
+> 
+> 
+>> Now a lock is acquired while SSR state moved to timeout.
+> 
+> I suggest to convert this information into an imperative wording.
+> 
+> Would you like to add the tag “Fixes” to the commit message?
+> 
+> Regards,
+> Markus
