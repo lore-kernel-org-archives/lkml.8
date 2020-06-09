@@ -2,149 +2,88 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50125C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECAE3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 301F82068D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:13:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p0GOKJhY"
+	by mail.kernel.org (Postfix) with ESMTP id C46382068D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:13:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591726435;
+	bh=b9vOCKsHxoxrkiASyAMN5922ixYL3wmiSStmpuTWxyk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=vOGVRTJMReA4IIbP8ZjyItmkvTzSnoqq0dKmaH3Q1iLSvYkzmPYs93lrDAkTmcNqz
+	 YbtDs8MkdhRPOfgpKQyHoBDSIcJnrCQlHQS/LNE9UaAQulnqu5IzpFIxIygy/QU0co
+	 wuILWNKwBo7aCl06rsjmiuR8ZwHF/livez9OCvGk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388577AbgFISNs (ORCPT
+        id S2388760AbgFISNx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:13:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45028 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387968AbgFISNh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 14:13:37 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59257C05BD1E;
-        Tue,  9 Jun 2020 11:13:36 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id k26so4094113wmi.4;
-        Tue, 09 Jun 2020 11:13:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HvCHrSiZhJmADjuwF4pBq6CIXD97v5dk3vK3Zip2OOk=;
-        b=p0GOKJhY6wvvU2KcdvgSuWvIVOpAzgRnrkvFSIxYIkGFk6IoPtNOKV+/C18Ll29uPz
-         nBqyZLreTeWkUgSZWSIcnYIAhnHW5oWpyoqdX+3R9a2ibqgr6MRGrcI6Ffk8WxHwJ8aL
-         DdL+01t0CyzWPLd6BCGSvgJybzf8+fQoFv3/xgOUXuXrNnzO0VKYTPNmbNe/1WV/HE3q
-         jw1+BE07aYnrIqUEBD64HiQX69YOWyTRCM9Hdu4pzqb2nezJyq3ReuRBk+owjEdTOpDN
-         2gSAi6PvxDCAZsHw+ndUGZqll3ZwBtsP1Opa0hBcnGKJg+eLzNZKoTdC8dV0o4aIYTOE
-         o1SA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HvCHrSiZhJmADjuwF4pBq6CIXD97v5dk3vK3Zip2OOk=;
-        b=X7xiLndquOJBc1tqOunLNH+0sCzcn7fH3nRgKGQDVSVkmGurW1JdkJKQtCYel0hay+
-         W7WNjdJ2prkhEXvuqfzfYqKBHka3G2WkhnT1JgnM5m2JWB9CA67cjUO2G3aZ0E9VxOdT
-         h19cumVsYf+ldfa5y96oJD0qWtPWa5hvKyjb35ZKLeqcYgs/bTS7Zc/v3HgYcPEa+o0q
-         xIrkSkogAbiyZKEyctB5gnDUCCvPR31F/eh034nZX+SVgfg7T+thQeryM0I650aFlCOa
-         znsMDt4Zxjz4CkV1gc1x7EJsnXUPSMZKu7iBVUN0IzcKr4oozlQNKWr+Et8qDwOugcSe
-         rYeA==
-X-Gm-Message-State: AOAM5335liB2tpJDzdKY+g8O3KRKkdPtDFn8UppUyPa5JmnwJ6O59IWA
-        P8s5XdrLNTj0mvbRgNBgtjo=
-X-Google-Smtp-Source: ABdhPJxhpOaX7J8Q3M/gSS5Xp3Uaihda4VDb5vi94Gott9/Hfou31WEbAepReRxcUx6Qz/aimAEscQ==
-X-Received: by 2002:a05:600c:4102:: with SMTP id j2mr5191612wmi.48.1591726414843;
-        Tue, 09 Jun 2020 11:13:34 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id l204sm3904721wmf.19.2020.06.09.11.13.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Jun 2020 11:13:33 -0700 (PDT)
-Subject: Re: [PATCH v2 5/9] usb: xhci-pci: Add support for reset controllers
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
-        p.zabel@pengutronix.de, linux-kernel@vger.kernel.org,
-        Mathias Nyman <mathias.nyman@intel.com>
-Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, helgaas@kernel.org,
-        andy.shevchenko@gmail.com, mathias.nyman@linux.intel.com,
-        lorenzo.pieralisi@arm.com
-References: <20200609175003.19793-1-nsaenzjulienne@suse.de>
- <20200609175003.19793-6-nsaenzjulienne@suse.de>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <d452ddb8-cd30-1bfc-7b72-af3412e22ed4@gmail.com>
-Date:   Tue, 9 Jun 2020 11:13:29 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
+        Tue, 9 Jun 2020 14:13:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39136 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731078AbgFIRuz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:50:55 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB82020734;
+        Tue,  9 Jun 2020 17:50:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591725054;
+        bh=b9vOCKsHxoxrkiASyAMN5922ixYL3wmiSStmpuTWxyk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=XD7j4n9jI0KbkMYtBK6ItHM5wDTsnQRushN2CQJYMiYtcW1AwNSOMrHWX35zxOwXp
+         Kls5N7MgZc332VPUi3isGNlsT3TR2LYnaYrKxIWWREYaNR1K0zBs7zCbG1zWXNBX7W
+         Ju0u73bnm3BO4zSSuNA2eYT1x3zd4zT+MwpQ54CY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
+        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 25/46] net: usb: qmi_wwan: add Telit LE910C1-EUX composition
+Date:   Tue,  9 Jun 2020 19:44:41 +0200
+Message-Id: <20200609174026.932083653@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200609174022.938987501@linuxfoundation.org>
+References: <20200609174022.938987501@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200609175003.19793-6-nsaenzjulienne@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Daniele Palmas <dnlplm@gmail.com>
+
+[ Upstream commit 591612aa578cd7148b7b9d74869ef40118978389 ]
+
+Add support for Telit LE910C1-EUX composition
+
+0x1031: tty, tty, tty, rmnet
+Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
+Acked-by: Bjørn Mork <bjorn@mork.no>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/net/usb/qmi_wwan.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -1249,6 +1249,7 @@ static const struct usb_device_id produc
+ 	{QMI_FIXED_INTF(0x1bbb, 0x0203, 2)},	/* Alcatel L800MA */
+ 	{QMI_FIXED_INTF(0x2357, 0x0201, 4)},	/* TP-LINK HSUPA Modem MA180 */
+ 	{QMI_FIXED_INTF(0x2357, 0x9000, 4)},	/* TP-LINK MA260 */
++	{QMI_QUIRK_SET_DTR(0x1bc7, 0x1031, 3)}, /* Telit LE910C1-EUX */
+ 	{QMI_QUIRK_SET_DTR(0x1bc7, 0x1040, 2)},	/* Telit LE922A */
+ 	{QMI_FIXED_INTF(0x1bc7, 0x1100, 3)},	/* Telit ME910 */
+ 	{QMI_FIXED_INTF(0x1bc7, 0x1101, 3)},	/* Telit ME910 dual modem */
 
 
-On 6/9/2020 10:49 AM, Nicolas Saenz Julienne wrote:
-> Some atypical users of xhci-pci might need to manually reset their xHCI
-> controller before starting the HCD setup. Check if a reset controller
-> device is available to the PCI bus and trigger a reset.
-> 
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> 
-> ---
-> 
-> Changes since v1:
->  - Use proper reset API
->  - Make code simpler
-> 
->  drivers/usb/host/xhci-pci.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-> index ef513c2fb843..6e96affa4ceb 100644
-> --- a/drivers/usb/host/xhci-pci.c
-> +++ b/drivers/usb/host/xhci-pci.c
-> @@ -12,6 +12,7 @@
->  #include <linux/slab.h>
->  #include <linux/module.h>
->  #include <linux/acpi.h>
-> +#include <linux/reset.h>
->  
->  #include "xhci.h"
->  #include "xhci-trace.h"
-> @@ -339,6 +340,7 @@ static int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
->  	struct xhci_hcd *xhci;
->  	struct usb_hcd *hcd;
->  	struct xhci_driver_data *driver_data;
-> +	struct reset_control *reset;
->  
->  	driver_data = (struct xhci_driver_data *)id->driver_data;
->  	if (driver_data && driver_data->quirks & XHCI_RENESAS_FW_QUIRK) {
-> @@ -347,6 +349,11 @@ static int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
->  			return retval;
->  	}
->  
-> +	reset = devm_reset_control_get_optional_exclusive(&dev->bus->dev, NULL);
-> +	if (IS_ERR(reset))
-> +		return PTR_ERR(reset);
-> +	reset_control_reset(reset);
-
-Sorry for not catching this earlier, since this is a generic integration
-with the reset controller API, should not you also add a
-reset_control_reset() to hcd_pci_resume() for symmetry?
-
-> +
->  	/* Prevent runtime suspending between USB-2 and USB-3 initialization */
->  	pm_runtime_get_noresume(&dev->dev);
->  
-> 
-
--- 
-Florian
