@@ -2,119 +2,88 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5248C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:57:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CB26C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:57:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 980FD2081A
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:57:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CCBF206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:57:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591725449;
+	bh=tlrqTCvHAD7zvP2mZ+lUjBeNaDmgSx14Us+yObbsOvM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=XFFExLMa3GZreDQHDeNJCsrFyy3sOH02NRbY4Rwjl6JsgrOdk6pATlOjK6kcMf754
+	 1gKiRJmKl3GdW01228Tpy6Vx66XXPSilfXxHL0G7XQtrv+7IOZeyXZ5X2qzdInNkLa
+	 m/0jx/KvbfnVePFIsyAoLLk0GrIWcYH/Eo6hvj9U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387645AbgFIR5N (ORCPT
+        id S2387503AbgFIR4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:57:13 -0400
-Received: from smtprelay0171.hostedemail.com ([216.40.44.171]:39502 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387532AbgFIR4g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:56:36 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id D3A118019465;
-        Tue,  9 Jun 2020 17:56:33 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: cover14_010615726dc4
-X-Filterd-Recvd-Size: 4084
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf11.hostedemail.com (Postfix) with ESMTPA;
-        Tue,  9 Jun 2020 17:56:31 +0000 (UTC)
-Message-ID: <2b291c34e10b3b3d9d6e01f8201ec0942e39575f.camel@perches.com>
-Subject: Re: [PATCH v3 1/7] Documentation: dynamic-debug: Add description of
- level bitmask
-From:   Joe Perches <joe@perches.com>
-To:     Edward Cree <ecree@solarflare.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-acpi@vger.kernel.org,
-        netdev@vger.kernel.org, Jason Baron <jbaron@akamai.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Jim Cromie <jim.cromie@gmail.com>
-Date:   Tue, 09 Jun 2020 10:56:19 -0700
-In-Reply-To: <727b31a0-543b-3dc5-aa91-0d78dc77df9c@solarflare.com>
-References: <20200609104604.1594-1-stanimir.varbanov@linaro.org>
-         <20200609104604.1594-2-stanimir.varbanov@linaro.org>
-         <20200609111615.GD780233@kroah.com>
-         <ba32bfa93ac2e147c2e0d3a4724815a7bbf41c59.camel@perches.com>
-         <727b31a0-543b-3dc5-aa91-0d78dc77df9c@solarflare.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.2-0ubuntu1 
+        Tue, 9 Jun 2020 13:56:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46718 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733143AbgFIRyq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:54:46 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E64F20734;
+        Tue,  9 Jun 2020 17:54:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591725286;
+        bh=tlrqTCvHAD7zvP2mZ+lUjBeNaDmgSx14Us+yObbsOvM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=2td65ZtK6CHm4FaIlSw/dCM366iAYRSG7QeJwJQlqpdfLgdi+bzuDi5Y/IblSL9QZ
+         XkeWMzSC0CUKpJHrqwvgmURqBw21rfr0m9zUlaCkyDQUShBF3Uhm71qYFOjS1QKyud
+         +iWtCIZyLGeN+TpQZ5/vmqlFSNxznxxjC4JkxkrE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
+        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.6 07/41] net: usb: qmi_wwan: add Telit LE910C1-EUX composition
+Date:   Tue,  9 Jun 2020 19:45:09 +0200
+Message-Id: <20200609174112.819775734@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200609174112.129412236@linuxfoundation.org>
+References: <20200609174112.129412236@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-06-09 at 18:42 +0100, Edward Cree wrote:
-> On 09/06/2020 17:58, Joe Perches wrote:
-> > On Tue, 2020-06-09 at 13:16 +0200, Greg Kroah-Hartman wrote:
-> > > What is wrong with the existing control of dynamic
-> > > debug messages that you want to add another type of arbitrary grouping
-> > > to it? 
-> > There is no existing grouping mechanism.
-> > 
-> > Many drivers and some subsystems used an internal one
-> > before dynamic debug.
-> > 
-> > $ git grep "MODULE_PARM.*\bdebug\b"|wc -l
-> > 501
-> > 
-> > This is an attempt to unify those homebrew mechanisms.
-> In network drivers, this is probablyusing the existing groupings
->  defined by netif_level() - see NETIF_MSG_DRV and friends.  Note
->  that those groups are orthogonal to the level, i.e. they control
->  netif_err() etc. as well, not just debug messages.
+From: Daniele Palmas <dnlplm@gmail.com>
 
-These are _not_ netif_<level> control flags.  Some are though.
+[ Upstream commit 591612aa578cd7148b7b9d74869ef40118978389 ]
 
-For instance:
+Add support for Telit LE910C1-EUX composition
 
-$ git grep "MODULE_PARM.*\bdebug\b" drivers/net | head -10
-drivers/net/ethernet/3com/3c509.c:MODULE_PARM_DESC(debug, "debug level (0-6)");
-drivers/net/ethernet/3com/3c515.c:MODULE_PARM_DESC(debug, "3c515 debug level (0-6)");
-drivers/net/ethernet/3com/3c59x.c:MODULE_PARM_DESC(debug, "3c59x debug level (0-6)");
-drivers/net/ethernet/adaptec/starfire.c:MODULE_PARM_DESC(debug, "Debug level (0-6)");
-drivers/net/ethernet/allwinner/sun4i-emac.c:MODULE_PARM_DESC(debug, "debug message flags");
-drivers/net/ethernet/altera/altera_tse_main.c:MODULE_PARM_DESC(debug, "Message Level (-1: default, 0: no output, 16: all)");
-drivers/net/ethernet/amazon/ena/ena_netdev.c:MODULE_PARM_DESC(debug, "Debug level (0=none,...,16=all)");
-drivers/net/ethernet/amd/atarilance.c:MODULE_PARM_DESC(lance_debug, "atarilance debug level (0-3)");
-drivers/net/ethernet/amd/lance.c:MODULE_PARM_DESC(lance_debug, "LANCE/PCnet debug level (0-7)");
-drivers/net/ethernet/amd/pcnet32.c:MODULE_PARM_DESC(debug, DRV_NAME " debug level");
+0x1031: tty, tty, tty, rmnet
+Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
+Acked-by: Bjørn Mork <bjorn@mork.no>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/net/usb/qmi_wwan.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-These are all level/class output controls.
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -1324,6 +1324,7 @@ static const struct usb_device_id produc
+ 	{QMI_FIXED_INTF(0x1bbb, 0x0203, 2)},	/* Alcatel L800MA */
+ 	{QMI_FIXED_INTF(0x2357, 0x0201, 4)},	/* TP-LINK HSUPA Modem MA180 */
+ 	{QMI_FIXED_INTF(0x2357, 0x9000, 4)},	/* TP-LINK MA260 */
++	{QMI_QUIRK_SET_DTR(0x1bc7, 0x1031, 3)}, /* Telit LE910C1-EUX */
+ 	{QMI_QUIRK_SET_DTR(0x1bc7, 0x1040, 2)},	/* Telit LE922A */
+ 	{QMI_QUIRK_SET_DTR(0x1bc7, 0x1050, 2)},	/* Telit FN980 */
+ 	{QMI_FIXED_INTF(0x1bc7, 0x1100, 3)},	/* Telit ME910 */
 
-> Certainly in the case of sfc, and I'd imagine for many other net
->  drivers too, the 'debug' modparam is setting the default for
->  net_dev->msg_enable, which can be changed after probe with
->  ethtool.
-
-True.
-
-> It doesn't look like the proposed mechanism subsumes that (we have
->  rather more than 5 groups, and it's not clear how you'd connect
->  it to the existing msg_enable (which uapi must be maintained); if
->  you don't have a way to do this, better exclude drivers/net/ from
->  your grep|wc because you won't be unifying those - in my tree
->  that's 119 hits.
-
-Likely not.
-
-I agree it'd be useful to attach the modparam control flag
-to the dynamic debug use somehow.
-
-cheers, Joe
 
