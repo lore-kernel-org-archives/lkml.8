@@ -2,137 +2,165 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BBAEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 19:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B84C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 19:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 073B8206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 19:41:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591731704;
-	bh=tTi9AQ6cMecxxSEDxc0I7E4Qrl8xBrI7Q7ahhrNrv5w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Nlx5c1dkb8yPOjw9N8Q5DrOJ4olT6LqouOsTrvRS+WE08HpEUnHCEgTvnLXqWHo9+
-	 Z2RfFCgqgynFZb3LZvkv3wKf3LwryPNzf18+QyXyafGGgDigmNDPH78BEYrOcf1GOY
-	 2c4dKdNRlI6UNf6tGqMSomH3Hc0GTeivuVyXVNt8=
+	by mail.kernel.org (Postfix) with ESMTP id 6AE77206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 19:41:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="uOh90i1B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389374AbgFITlj (ORCPT
+        id S2389386AbgFITlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 15:41:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60158 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389353AbgFITla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 15:41:30 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52EF6206C3;
-        Tue,  9 Jun 2020 19:41:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591731684;
-        bh=tTi9AQ6cMecxxSEDxc0I7E4Qrl8xBrI7Q7ahhrNrv5w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lE8qdtPMZ+tZtusscQJyQDE5j8vqeNJ9x+lvXe7X/It7f3pa36bNvLiY6IslvYqZ5
-         mmVs5eWlCExwYsI9jzmqEXCasMh2kDQ/vrb5BRWsSxvP5IoKEuFehChFU533iuCMoM
-         +UePtzNhtNBNfHzb02nc/FYxVva6Hj8Rt07fFTBA=
-Date:   Tue, 9 Jun 2020 21:41:22 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 4.19 00/25] 4.19.128-rc1 review
-Message-ID: <20200609194122.GA1095933@kroah.com>
-References: <20200609174048.576094775@linuxfoundation.org>
- <CA+G9fYsxjJpM-bw_VamAH0Beri66aC+-kqZ-RiCWVqm4N=t4gA@mail.gmail.com>
- <f5429b08-e3d8-f6fb-79bc-3868bf8a2816@linuxfoundation.org>
+        Tue, 9 Jun 2020 15:41:45 -0400
+Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:26360 "EHLO
+        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389350AbgFITlb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 15:41:31 -0400
+Received: from pps.filterd (m0170396.ppops.net [127.0.0.1])
+        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 059JbPEW026700;
+        Tue, 9 Jun 2020 15:41:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=smtpout1;
+ bh=T9irgzVCL7LJPLZqxd5NImvO9V7kKx0afgsKhA8gs4k=;
+ b=uOh90i1BAfXCylHWQYysataPvYaeRSQPoQeKUgMJne9sl3xiMaz9XUw2DIaQ5lYNsjDl
+ MjyKUirFkyIzPz4U1snqxKCyDY62Pe/JuhJjXnxKlQobV2QWbcQznY0rWjEDUrgPUG/7
+ 528ZBmcK1zBMHzFaRKwUD97po0fWgD5TmDT8RcWJ6cMfJXvqRGU16AdcJGPHJwZq4hPn
+ Yxb6jqHfDkto3aXGlxcmMpBOSHxY1FbLEMIThQmKYvgdIw4WZpATu76KuMwCHBxajf0k
+ 4X82T6dGrgX7qKznA5U4n6N7+c6HrM/t8gTtK94bIDyz5rzKkagckz7AmOpkhdBqOP1X JA== 
+Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
+        by mx0b-00154904.pphosted.com with ESMTP id 31g6yy2jht-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 09 Jun 2020 15:41:22 -0400
+Received: from pps.filterd (m0089483.ppops.net [127.0.0.1])
+        by mx0b-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 059JX6ln167227;
+        Tue, 9 Jun 2020 15:41:22 -0400
+Received: from ausc60ps301.us.dell.com (ausc60ps301.us.dell.com [143.166.148.206])
+        by mx0b-00154901.pphosted.com with ESMTP id 31g7xfxyqk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 09 Jun 2020 15:41:22 -0400
+X-LoopCount0: from 10.166.132.129
+X-PREM-Routing: D-Outbound
+X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
+   d="scan'208";a="1450864496"
+From:   <Mario.Limonciello@dell.com>
+To:     <hdegoede@redhat.com>, <y.linux@paritcher.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>, <mjg59@srcf.ucam.org>,
+        <pali@kernel.org>, <linux-input@vger.kernel.org>
+Subject: RE: [PATCH 2/3] platform/x86: dell-wmi: add new keymap type 0x0012
+Thread-Topic: [PATCH 2/3] platform/x86: dell-wmi: add new keymap type 0x0012
+Thread-Index: AQHWPUx5kZ6BCWcrZkepA13uOwTuTKjO2RsQgACifgD//7DjgIABQqkA///7V4CAAGDBgP//5M/A
+Date:   Tue, 9 Jun 2020 19:41:20 +0000
+Message-ID: <d9e3953bac9a4b4f8bf5b67add075368@AUSX13MPC105.AMER.DELL.COM>
+References: <cover.1591584631.git.y.linux@paritcher.com>
+ <0dc191a3d16f0e114f6a8976433e248018e10c43.1591584631.git.y.linux@paritcher.com>
+ <83fe431cacbc4708962767668ac8f06f@AUSX13MPC105.AMER.DELL.COM>
+ <79bd59ee-dd37-bdc5-f6b4-00f2c33fdcff@paritcher.com>
+ <7f9f0410696141cfabb0237d33b7b529@AUSX13MPC105.AMER.DELL.COM>
+ <137d8e69-a83f-6129-19e0-316ef0a51076@redhat.com>
+ <ae45da27126d470888ef0d839665b9ed@AUSX13MPC105.AMER.DELL.COM>
+ <10fcfbe7-cf2e-0911-334b-60be3336c990@redhat.com>
+In-Reply-To: <10fcfbe7-cf2e-0911-334b-60be3336c990@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2020-06-09T19:41:19.0527934Z;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_ActionId=7475ca18-8a64-4486-b09d-f0463db4b82f;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [143.166.24.60]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f5429b08-e3d8-f6fb-79bc-3868bf8a2816@linuxfoundation.org>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-09_13:2020-06-09,2020-06-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
+ bulkscore=0 spamscore=0 mlxlogscore=963 cotscore=-2147483648 adultscore=0
+ lowpriorityscore=0 priorityscore=1501 mlxscore=0 phishscore=0
+ clxscore=1015 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006090148
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ mlxscore=0 adultscore=0 bulkscore=0 mlxlogscore=999 spamscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006090149
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 01:20:42PM -0600, Shuah Khan wrote:
-> On 6/9/20 1:01 PM, Naresh Kamboju wrote:
-> > On Tue, 9 Jun 2020 at 23:21, Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > > 
-> > > This is the start of the stable review cycle for the 4.19.128 release.
-> > > There are 25 patches in this series, all will be posted as a response
-> > > to this one.  If anyone has any issues with these being applied, please
-> > > let me know.
-> > > 
-> > > Responses should be made by Thu, 11 Jun 2020 17:40:24 +0000.
-> > > Anything received after that time might be too late.
-> > > 
-> > > The whole patch series can be found in one patch at:
-> > >          https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.128-rc1.gz
-> > > or in the git tree and branch at:
-> > >          git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
-> > > and the diffstat can be found below.
-> > > 
-> > > thanks,
-> > > 
-> > > greg k-h
-> > > 
-> > > -------------
-> > > Pseudo-Shortlog of commits:
-> > > 
-> > > Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > >      Linux 4.19.128-rc1
-> > > 
-> > > Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > >      Revert "net/mlx5: Annotate mutex destroy for root ns"
-> > > 
-> > > Oleg Nesterov <oleg@redhat.com>
-> > >      uprobes: ensure that uprobe->offset and ->ref_ctr_offset are properly aligned
-> > 
-> > stable-rc 4.19 build failure for x86_64, i386 and arm.
-> > 
-> >   make -sk KBUILD_BUILD_USER=TuxBuild -C/linux -j16 ARCH=x86 HOSTCC=gcc
-> > CC="sccache gcc" O=build
-> > 75 #
-> > 76 In file included from ../kernel/events/uprobes.c:25:
-> > 77 ../kernel/events/uprobes.c: In function ‘__uprobe_register’:
-> > 78 ../kernel/events/uprobes.c:916:18: error: ‘ref_ctr_offset’
-> > undeclared (first use in this function); did you mean
-> > ‘per_cpu_offset’?
-> > 79  916 | if (!IS_ALIGNED(ref_ctr_offset, sizeof(short)))
-> > 80  | ^~~~~~~~~~~~~~
-> > 81 ../include/linux/kernel.h:62:30: note: in definition of macro ‘IS_ALIGNED’
-> > 82  62 | #define IS_ALIGNED(x, a) (((x) & ((typeof(x))(a) - 1)) == 0)
-> > 83  | ^
-> > 84 ../kernel/events/uprobes.c:916:18: note: each undeclared identifier
-> > is reported only once for each function it appears in
-> > 85  916 | if (!IS_ALIGNED(ref_ctr_offset, sizeof(short)))
-> > 86  | ^~~~~~~~~~~~~~
-> > 87 ../include/linux/kernel.h:62:30: note: in definition of macro ‘IS_ALIGNED’
-> > 88  62 | #define IS_ALIGNED(x, a) (((x) & ((typeof(x))(a) - 1)) == 0)
-> > 89  | ^
-> > 90 make[3]: *** [../scripts/Makefile.build:304: kernel/events/uprobes.o] Error 1
-> > 
-> > kernel config:
-> > https://builds.tuxbuild.com/I3PT6_HS4PTt7EFgJUIPxA/kernel.config
-> > 
-> 
-> I am seeing the same problem on x86_64
-> 
-> CONFIG_UPROBES is enabled in my config.
-
-Should be fixed in the -rc2 release, sorry about that.
-
-greg k-h
+PiBSaWdodCwgdGhhdCBpcyB3aGF0IEkgd2FzIHRoaW5raW5nLCBhbHRob3VnaCBmb3IgdGhlIHBv
+d2VyIGFkYXB0ZXIgY2FzZQ0KPiBJIHdhcyB0aGlua2luZyB0aGVyZSBhcmUgbm90IHNvIG11Y2gg
+dmFyaWFudHMgc28gd2UgY2FuIGp1c3QgZG8NCj4gYSBjb3VwbGUgb2YgZml4ZWQgc3RyaW5ncyBm
+b3IgdGhlIGNvbWJvcywgb3IgbWF5YmUganVzdCBzYXQgdGhhdA0KPiB0aGUgYWRhcHRlciBkb2Vz
+IG5vdCBkZWxpdmVycyBlbm91Z2ggcG93ZXIgYW5kIHRoYXQgYXQgbWluaW11bSBYIHdhdHRzDQo+
+IGlzIG5lY2Vzc2FyeSIgdGhlbiB3ZSBvbmx5IGhhdmUgMSB2YXJpYWJsZSBhbmQgd2UgY2FuIHBy
+b2JhYmx5IGVhc2lseQ0KPiBkbyBmaXhlZCBzdHJpbmdzIGZvciB0aGUgZmV3IGNhc2VzIG9mIFgu
+DQoNCkkgd291bGQgcmF0aGVyIGhhdmUgYSBnZW5lcmljIGZpeGVkIHN0cmluZyBvciBmaXhlZCBz
+dHJpbmdzIHdpdGggYSBzaW5nbGUNCnRoYW4gYW4gYXJyYXkuICBCdXQgdGhlIHByb2JsZW0gdGhl
+biBpcyB0aGF0IHRoZSBudW1iZXJzIGFyZSBub3QgZGlzY292ZXJhYmxlDQpmcm9tIGFueXdoZXJl
+IGFuZCB3b3VsZCBuZWVkIHRvIGJlIGhhcmRjb2RlZC4gIFNvIGluIHRoYXQgcmVnYXJkIEkgdGhp
+bmsgZ2VuZXJpYw0KZml4ZWQgc3RyaW5ncyBpcyB0aGUgb25seSB3YXkgdGhpcyBjYW4gd29yay4N
+Cg0KPiANCj4gT3Igd2UgY291bGQgZ2V0IGZhbmN5IGFuZCBkbyBzb21lIGdlbmVyaWMgbm90aWZp
+Y2F0aW9uIG1lY2hhbmlzbSBvdXRzaWRlDQo+IG9mIHByaW50ay9kbWVzZyB3aGVyZSB3ZSBwdXNo
+IGEgZm9ybWF0IHN0cmluZyArIHBhcmFtZXRlcnMgdG8gdGhlIGZvcm1hdA0KPiBzdHJpbmcgdG8g
+dXNlcnNwYWNlLiBTbyB0aGF0IHRoZSB0cmFuc2xhdGlvbiBjYW4gYmUgZG9uZSBvbiB0aGUgZm9y
+bWF0DQo+IHN0cmluZyByYXRoZXIgdGhlbiBvbiB0aGUgZW5kIHJlc3VsdC4gSSdtIG5vdCBzdXJl
+IHdlIG5lZWQgdG8gbWFrZSB0aGluZ3MNCj4gdGhhdCBjb21wbGljYXRlZCB0aG91Z2guDQo+IA0K
+PiA+PiBTbyB0aGUgaWRlYSB3b3VsZCBiZSB0aGF0IGUuZy4gZ25vbWUtc2hlbGwgY2FuIGxpc3Rl
+biBmb3IgdGhlc2UgaW4gc29tZQ0KPiB3YXkNCj4gPj4gYW5kIHRoZW4gc2hvdyBhIG5vdGlmaWNh
+dGlvbiBpbiBpdHMgbm90aWZpY2F0aW9uIG1lY2hhbmlzbSB3aXRoIHRoZQ0KPiA+PiBtZXNzYWdl
+LA0KPiA+PiBsaWtlIGhvdyBpdCBkb2VzIGZvciB3aGVuIHNvZnR3YXJlIHVwZGF0ZXMgYXJlIGF2
+YWlsYWJsZSBmb3IgZXhhbXBsZS4NCj4gPj4NCj4gPj4gSSB0aGluayB3ZSBjYW4gbWFrZSB0aGlz
+IGFzIHNpbXBsZSBhcyB1c2luZyB0aGUgbm9ybWFsIHByaW50ayBidWZmZXIgZm9yDQo+ID4+IHRo
+aXMNCj4gPj4gYW5kIHByZWZpeGluZyB0aGUgbWVzc2FnZXMgd2l0aCAiVVNFUiBOT1RJRlkiLCB3
+ZSBhbHJlYWR5IGhhdmUgc29tZQ0KPiA+PiBtZXNzYWdlcw0KPiA+PiBpbiB0aGUga2VybmVsIHdo
+aWNoIHdvdWxkIHF1YWxpZnkgZm9yIHRoaXMsIGUuZy4gaW4gdGhlIFVTQiBjb3JlIHdlDQo+IGhh
+dmU6DQo+ID4+DQo+ID4+ICAgICAgICAgICAgICAgICAgIGRldl9pbmZvKCZ1ZGV2LT5kZXYsICJu
+b3QgcnVubmluZyBhdCB0b3Agc3BlZWQ7ICINCj4gPj4gICAgICAgICAgICAgICAgICAgICAgICAg
+ICAiY29ubmVjdCB0byBhIGhpZ2ggc3BlZWQgaHViXG4iKTsNCj4gPj4NCj4gPj4gVGhpcyBvbmUg
+aXMgYWJvdXQgVVNCMSB2cyBVU0IyIHBvcnRzLCBidXQgd2UgaGF2ZSBhIHNpbWlsYXIgb25lDQo+
+IHNvbWV3aGVyZQ0KPiA+PiBmb3IgVVNCMiB2cyBVU0IzIHBvcnRzIChJIHRoaW5rKSB3aGljaCB3
+b3VsZCBhbHNvIGJlIGFuIGludGVyZXN0aW5nDQo+IG1lc3NhZ2UNCj4gPj4gdG8gYWN0dWFsbHkg
+c2hvdyB0byB0aGUgdXNlciBpbnNpZGUgdGhlIGRlc2t0b3AgZW52aXJvbm1lbnQuDQo+ID4+DQo+
+ID4+IFNvIHN0aWNraW5nIHdpdGggdGhlIGFib3ZlIGV4YW1wbGUsIHdlIGNvdWxkIGNoYW5nZSB0
+aGF0IHRvDQo+ID4+DQo+ID4+ICNkZWZpbmUgVVNFUl9OT1RJRlkgIlVTRVIgTk9USUZZOiAiDQo+
+ID4+DQo+ID4+IGRldl9pbmZvKCZ1ZGV2LT5kZXYsIFVTRVJfTk9USUZZICJub3QgcnVubmluZyBh
+dCB0b3Agc3BlZWQ7IGNvbm5lY3QgdG8gYQ0KPiA+PiBoaWdoIHNwZWVkIGh1YlxuIik7DQo+ID4+
+DQo+ID4+IEFuZCB0aGVuIHVzZXJzcGFjZSB3b3VsZCB0cmlnZ2VyIG9uIHRoZSAiVVNFUiBOT1RJ
+Rlk6ICIgcGFydCwga2VlcCB0aGUNCj4gPj4gYml0IGJlZm9yZSBpdCAod2hpY2ggZGVzY3JpYmVz
+IHRoZSBkZXZpY2UpIGFzIGlzLCB0cnkgdG8gdHJhbnNsYXRlDQo+ID4+IHRoZSB0ZXh0IGFmdGVy
+IGl0IGFuZCB0aGVuIGNvbWJpbmUgdGhlIHRleHQgYmVmb3JlIGl0ICsgdGhlIHBvc3NpYmx5DQo+
+ID4+IHRyYW5zbGF0ZWQgdGV4dCBhZnRlciBpdCBhbmQgc2hvdyB0aGF0IGFzIGEgbm90aWZpY2F0
+aW9uLg0KPiA+Pg0KPiA+PiBUaGUgcmVhc29uIGZvciAoYWIpdXNpbmcgdGhlIHByaW50ayByaW5n
+LWJ1ZmZlciBmb3IgdGhpcyBpcyB0aGF0DQo+ID4+IHdlIHdpbGwgc3RpbGwgd2FudCB0byBoYXZl
+IHRoZXNlIG1lc3NhZ2VzIGluIGRtZXNnIHRvbyBhbnl3YXlzLA0KPiA+PiBzbyB3aHkgYWRkIGEg
+bmV3IG1lY2hhbmlzbSBhbmQgc2VuZCB0aGUgc2FtZSBtZXNzYWdlIHR3aWNlIGlmDQo+ID4+IHdl
+IGNhbiBqdXN0IHRhZyB0aGUgbWVzc2FnZXMgaW5zaWRlIHRoZSBwcmludGsgcmluZy1idWZmZXIg
+Pw0KPiA+Pg0KPiA+PiBOb3RlIHRoZSBkZXZfaW5mbyBhYm92ZSB3b3VsZCBsaWtlbHkgYmUgcmVw
+bGFjZWQgd2l0aCBzb21lIG5ldw0KPiA+PiBoZWxwZXIgd2hpY2ggYWxzbyBkb2VzIHNvbWUgbWFn
+aWMgdG8gaGVscCB3aXRoIGdhdGhlcmluZyBhDQo+ID4+IGxpc3Qgb2Ygc3RyaW5ncyB0byB0cmFu
+c2xhdGUuDQo+ID4+DQo+ID4+IEFnYWluIGp1c3QgdGhpbmtpbmcgb3V0IGxvdWQgaGVyZS4gSWYg
+YW55b25lIGhhcyBhbnkgaW5pdGlhbA0KPiA+PiByZWFjdGlvbiB0byB0aGlzIHBsZWFzZSBsZXQg
+bWUga25vdy4uLg0KPiA+Pg0KPiA+DQo+ID4gQXMgYSBnZW5lcmFsIGNvbW1lbnQsIEkgdGhpbmsg
+aXQgY2FwdHVyZXMgdmVyeSB3ZWxsIHRoZSBwb3NzaWJpbGl0eQ0KPiA+IHRoYXQgdGhlIGtlcm5l
+bCBoYXMgbW9yZSBpbmZvcm1hdGlvbiB0aGFuIHVzZXJzcGFjZSBhYm91dCB0aGUNCj4gY2lyY3Vt
+c3RhbmNlcw0KPiA+IG9mIHNvbWV0aGluZyB0aGF0IGEgdXNlciBzaG91bGQgYmUgbm90aWZpZWQu
+ICBEZWZpbml0ZWx5IHRoYXQncyB0aGUNCj4gPiBjYXNlIGZvciB0aGVzZSBXTUkvQUNQSSBldmVu
+dHMsIGFuZCBJIHdvdWxkIHRoaW5rIHNpbWlsYXIgY2lyY3Vtc3RhbmNlcw0KPiA+IGNhbiBhcHBs
+eSB0byBvdGhlciBzdWJzeXN0ZW0gdG9vLg0KPiANCj4gUmlnaHQsIHRoYXQgd2FzIG15IGlkZWEg
+YmVoaW5kIGhhdmluZyBhIGdlbmVyaWMgbm90aWZpY2F0aW9uIG1lY2hhbmlzbS4NCj4gDQo+IFJl
+Z2FyZHMsDQo+IA0KPiBIYW5zDQoNCg==
