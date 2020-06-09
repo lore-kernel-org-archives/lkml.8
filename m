@@ -7,52 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8BC2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86CC8C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB329206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:12:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65AD420691
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:12:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591726362;
-	bh=qbdyCf58m8+ORdca2KSYY9BjsjLeAO/ctzG3MgN7rTo=;
+	s=default; t=1591726369;
+	bh=7H0o9iPkpfeRrO+kK8fHciPXul+ErU2mXc1tBvSlrxs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DqERkXrdUdvg0zwSdjaq2fhmTMVdU5NuY//FlF1yu2l0/rHCdLPY4Bz3rCSJYnSGd
-	 FCbhBhpPpT6ZnqreER1Jg0DiCv1wrcBiRlpg8O7GGOYOjM6373+IpLUrfKXG2zScMT
-	 /thuWoQr7qzEwSi/gAL2x52O41iSKX3B9J4h2fts=
+	b=e6IVq0Sa/3m7shHVhu4uV7W8dQS1VZGUtIvhDhWNlAo/2VFif0y5iYGDH7jCsL7ZF
+	 YBfYCVtN4o+mxgszjLt22zalO+ifv9VaqSeEhrVxx+iXmGxtM08QOo4fKdA2L+Zm5c
+	 mrR8j/MxRrBO12IJ8ibPcoImXpNx5H86MKSL6OGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731574AbgFIRvT (ORCPT
+        id S2388731AbgFISMr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:51:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38030 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 14:12:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732678AbgFIRua (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:50:30 -0400
+        id S1731159AbgFIRvS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:51:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B79862074B;
-        Tue,  9 Jun 2020 17:50:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31CF5207F9;
+        Tue,  9 Jun 2020 17:51:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725029;
-        bh=qbdyCf58m8+ORdca2KSYY9BjsjLeAO/ctzG3MgN7rTo=;
+        s=default; t=1591725077;
+        bh=7H0o9iPkpfeRrO+kK8fHciPXul+ErU2mXc1tBvSlrxs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0XTpYkFmAWYQ5NJcpROsHBPFKjH+7lvgX6tYRl8i1NLUuyjlVjCHO/VpQ5r4hMmNs
-         nTCcV6zjOSfmQmMKLipg8TfwSd4XcY1R8FpCfA+NELukeka5JNqjABEeuKBLqEXhAe
-         iX3lmv0HRFqETCk99bu3G1hl7DXQeQIF+6zBeh+M=
+        b=h16I3SPN2jsOyARTHUArVV3/CRItM5JQo7T0eGL0rEbfOtA1V+z7359SToqpXMGwL
+         PiZNRLZUizbnPTrq6zkTNPtcLrT4ooaWVTvVW/h6yTD+EhQ182CWAl2GUWY6OlGVj7
+         XMnXx8I0m1pc7V3keF5jJOJfO1rZfFk5xpWeGbU4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Gross <mgross@linux.intel.com>,
-        Borislav Petkov <bp@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: [PATCH 4.14 40/46] x86/cpu: Add a steppings field to struct x86_cpu_id
-Date:   Tue,  9 Jun 2020 19:44:56 +0200
-Message-Id: <20200609174030.416433946@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
+        Raghavendra <rananta@codeaurora.org>
+Subject: [PATCH 4.19 15/25] tty: hvc_console, fix crashes on parallel open/close
+Date:   Tue,  9 Jun 2020 19:45:05 +0200
+Message-Id: <20200609174050.357586554@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200609174022.938987501@linuxfoundation.org>
-References: <20200609174022.938987501@linuxfoundation.org>
+In-Reply-To: <20200609174048.576094775@linuxfoundation.org>
+References: <20200609174048.576094775@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,118 +59,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Gross <mgross@linux.intel.com>
+From: Jiri Slaby <jslaby@suse.cz>
 
-commit e9d7144597b10ff13ff2264c059f7d4a7fbc89ac upstream
+commit 24eb2377f977fe06d84fca558f891f95bc28a449 upstream.
 
-Intel uses the same family/model for several CPUs. Sometimes the
-stepping must be checked to tell them apart.
+hvc_open sets tty->driver_data to NULL when open fails at some point.
+Typically, the failure happens in hp->ops->notifier_add(). If there is
+a racing process which tries to open such mangled tty, which was not
+closed yet, the process will crash in hvc_open as tty->driver_data is
+NULL.
 
-On x86 there can be at most 16 steppings. Add a steppings bitmask to
-x86_cpu_id and a X86_MATCH_VENDOR_FAMILY_MODEL_STEPPING_FEATURE macro
-and support for matching against family/model/stepping.
+All this happens because close wants to know whether open failed or not.
+But ->open should not NULL this and other tty fields for ->close to be
+happy. ->open should call tty_port_set_initialized(true) and close
+should check by tty_port_initialized() instead. So do this properly in
+this driver.
 
- [ bp: Massage.
-   tglx: Lightweight variant for backporting ]
+So this patch removes these from ->open:
+* tty_port_tty_set(&hp->port, NULL). This happens on last close.
+* tty->driver_data = NULL. Dtto.
+* tty_port_put(&hp->port). This happens in shutdown and until now, this
+  must have been causing a reference underflow, if I am not missing
+  something.
 
-Signed-off-by: Mark Gross <mgross@linux.intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Cc: stable <stable@vger.kernel.org>
+Reported-and-tested-by: Raghavendra <rananta@codeaurora.org>
+Link: https://lore.kernel.org/r/20200526145632.13879-1-jslaby@suse.cz
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/x86/include/asm/cpu_device_id.h |   27 +++++++++++++++++++++++++++
- arch/x86/kernel/cpu/match.c          |    7 ++++++-
- include/linux/mod_devicetable.h      |    6 ++++++
- 3 files changed, 39 insertions(+), 1 deletion(-)
 
---- a/arch/x86/include/asm/cpu_device_id.h
-+++ b/arch/x86/include/asm/cpu_device_id.h
-@@ -9,6 +9,33 @@
+---
+ drivers/tty/hvc/hvc_console.c |   23 ++++++++---------------
+ 1 file changed, 8 insertions(+), 15 deletions(-)
+
+--- a/drivers/tty/hvc/hvc_console.c
++++ b/drivers/tty/hvc/hvc_console.c
+@@ -371,15 +371,14 @@ static int hvc_open(struct tty_struct *t
+ 	 * tty fields and return the kref reference.
+ 	 */
+ 	if (rc) {
+-		tty_port_tty_set(&hp->port, NULL);
+-		tty->driver_data = NULL;
+-		tty_port_put(&hp->port);
+ 		printk(KERN_ERR "hvc_open: request_irq failed with rc %d.\n", rc);
+-	} else
++	} else {
+ 		/* We are ready... raise DTR/RTS */
+ 		if (C_BAUD(tty))
+ 			if (hp->ops->dtr_rts)
+ 				hp->ops->dtr_rts(hp, 1);
++		tty_port_set_initialized(&hp->port, true);
++	}
  
- #include <linux/mod_devicetable.h>
+ 	/* Force wakeup of the polling thread */
+ 	hvc_kick();
+@@ -389,22 +388,12 @@ static int hvc_open(struct tty_struct *t
  
-+#define X86_STEPPINGS(mins, maxs)    GENMASK(maxs, mins)
+ static void hvc_close(struct tty_struct *tty, struct file * filp)
+ {
+-	struct hvc_struct *hp;
++	struct hvc_struct *hp = tty->driver_data;
+ 	unsigned long flags;
+ 
+ 	if (tty_hung_up_p(filp))
+ 		return;
+ 
+-	/*
+-	 * No driver_data means that this close was issued after a failed
+-	 * hvc_open by the tty layer's release_dev() function and we can just
+-	 * exit cleanly because the kref reference wasn't made.
+-	 */
+-	if (!tty->driver_data)
+-		return;
+-
+-	hp = tty->driver_data;
+-
+ 	spin_lock_irqsave(&hp->port.lock, flags);
+ 
+ 	if (--hp->port.count == 0) {
+@@ -412,6 +401,9 @@ static void hvc_close(struct tty_struct
+ 		/* We are done with the tty pointer now. */
+ 		tty_port_tty_set(&hp->port, NULL);
+ 
++		if (!tty_port_initialized(&hp->port))
++			return;
 +
-+/**
-+ * X86_MATCH_VENDOR_FAM_MODEL_STEPPINGS_FEATURE - Base macro for CPU matching
-+ * @_vendor:	The vendor name, e.g. INTEL, AMD, HYGON, ..., ANY
-+ *		The name is expanded to X86_VENDOR_@_vendor
-+ * @_family:	The family number or X86_FAMILY_ANY
-+ * @_model:	The model number, model constant or X86_MODEL_ANY
-+ * @_steppings:	Bitmask for steppings, stepping constant or X86_STEPPING_ANY
-+ * @_feature:	A X86_FEATURE bit or X86_FEATURE_ANY
-+ * @_data:	Driver specific data or NULL. The internal storage
-+ *		format is unsigned long. The supplied value, pointer
-+ *		etc. is casted to unsigned long internally.
-+ *
-+ * Backport version to keep the SRBDS pile consistant. No shorter variants
-+ * required for this.
-+ */
-+#define X86_MATCH_VENDOR_FAM_MODEL_STEPPINGS_FEATURE(_vendor, _family, _model, \
-+						    _steppings, _feature, _data) { \
-+	.vendor		= X86_VENDOR_##_vendor,				\
-+	.family		= _family,					\
-+	.model		= _model,					\
-+	.steppings	= _steppings,					\
-+	.feature	= _feature,					\
-+	.driver_data	= (unsigned long) _data				\
-+}
-+
- extern const struct x86_cpu_id *x86_match_cpu(const struct x86_cpu_id *match);
- 
- #endif
---- a/arch/x86/kernel/cpu/match.c
-+++ b/arch/x86/kernel/cpu/match.c
-@@ -34,13 +34,18 @@ const struct x86_cpu_id *x86_match_cpu(c
- 	const struct x86_cpu_id *m;
- 	struct cpuinfo_x86 *c = &boot_cpu_data;
- 
--	for (m = match; m->vendor | m->family | m->model | m->feature; m++) {
-+	for (m = match;
-+	     m->vendor | m->family | m->model | m->steppings | m->feature;
-+	     m++) {
- 		if (m->vendor != X86_VENDOR_ANY && c->x86_vendor != m->vendor)
- 			continue;
- 		if (m->family != X86_FAMILY_ANY && c->x86 != m->family)
- 			continue;
- 		if (m->model != X86_MODEL_ANY && c->x86_model != m->model)
- 			continue;
-+		if (m->steppings != X86_STEPPING_ANY &&
-+		    !(BIT(c->x86_stepping) & m->steppings))
-+			continue;
- 		if (m->feature != X86_FEATURE_ANY && !cpu_has(c, m->feature))
- 			continue;
- 		return m;
---- a/include/linux/mod_devicetable.h
-+++ b/include/linux/mod_devicetable.h
-@@ -589,6 +589,10 @@ struct mips_cdmm_device_id {
- /*
-  * MODULE_DEVICE_TABLE expects this struct to be called x86cpu_device_id.
-  * Although gcc seems to ignore this error, clang fails without this define.
-+ *
-+ * Note: The ordering of the struct is different from upstream because the
-+ * static initializers in kernels < 5.7 still use C89 style while upstream
-+ * has been converted to proper C99 initializers.
-  */
- #define x86cpu_device_id x86_cpu_id
- struct x86_cpu_id {
-@@ -597,6 +601,7 @@ struct x86_cpu_id {
- 	__u16 model;
- 	__u16 feature;	/* bit index */
- 	kernel_ulong_t driver_data;
-+	__u16 steppings;
- };
- 
- #define X86_FEATURE_MATCH(x) \
-@@ -605,6 +610,7 @@ struct x86_cpu_id {
- #define X86_VENDOR_ANY 0xffff
- #define X86_FAMILY_ANY 0
- #define X86_MODEL_ANY  0
-+#define X86_STEPPING_ANY 0
- #define X86_FEATURE_ANY 0	/* Same as FPU, you can't test for that */
- 
- /*
+ 		if (C_HUPCL(tty))
+ 			if (hp->ops->dtr_rts)
+ 				hp->ops->dtr_rts(hp, 0);
+@@ -428,6 +420,7 @@ static void hvc_close(struct tty_struct
+ 		 * waking periodically to check chars_in_buffer().
+ 		 */
+ 		tty_wait_until_sent(tty, HVC_CLOSE_WAIT);
++		tty_port_set_initialized(&hp->port, false);
+ 	} else {
+ 		if (hp->port.count < 0)
+ 			printk(KERN_ERR "hvc_close %X: oops, count is %d\n",
 
 
