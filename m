@@ -2,106 +2,144 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB03C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 651AAC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:43:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AA7C207C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D9C7207C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:43:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="nmiFa7N9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729307AbgFIMkC (ORCPT
+        id S1729342AbgFIMm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 08:40:02 -0400
-Received: from mga11.intel.com ([192.55.52.93]:51609 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728238AbgFIMkA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 08:40:00 -0400
-IronPort-SDR: nSjuFbcSsFyxpvJMS+3ux9ksK2kSv31qnRLbpqyjBtADwQ6NNwU255Ly73jVjrKVgOCjXe2xeh
- azGggsepBpVQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 05:39:59 -0700
-IronPort-SDR: 6UdEfbdP4pMrhUnc1t8skUC9jkG4V7po3UjrAA0aoIpSyiEp2ss3TWdV5Qstu2B1GywRo8GFmk
- XEb4eUTLoXnA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,492,1583222400"; 
-   d="scan'208";a="379725439"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga001.fm.intel.com with ESMTP; 09 Jun 2020 05:39:57 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jidXs-00BtqA-40; Tue, 09 Jun 2020 15:40:00 +0300
-Date:   Tue, 9 Jun 2020 15:40:00 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Serge Semin <fancer.lancer@gmail.com>, linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-kernel@vger.kernel.org,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH v1 3/6] mfd: core: Propagate software node group to the
- sub devices
-Message-ID: <20200609124000.GO2428291@smile.fi.intel.com>
-References: <20200608134300.76091-1-andriy.shevchenko@linux.intel.com>
- <20200608134300.76091-4-andriy.shevchenko@linux.intel.com>
- <20200608192524.GF4106@dell>
+        Tue, 9 Jun 2020 08:42:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50320 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726848AbgFIMm6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 08:42:58 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 142A1C05BD1E;
+        Tue,  9 Jun 2020 05:42:57 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49h8sp1pwkz9sRW;
+        Tue,  9 Jun 2020 22:42:54 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1591706574;
+        bh=WE3JXySLmYgNjlUWsxltg1c+ac2THfPexOS2wHJxEt8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=nmiFa7N9mZld4e4sxIX3tQHR9yDquCpEPfiwEqmhDcixnEM7XZdN3rtVdRIYi31IP
+         dikB+gWm3gFmDeFcNYOki6AacT3GSZRYTzc/AI3/MzWbssjxsCtvONjvi4XtsG4By8
+         dfSueqT/maVXJnWe6NblUx1Fp8p5P1WlQ4LiZ+TjAMqhmu2yfsV+7efois71k1IHFX
+         i7fXwSBxFqanNTHD6bWcJ6MU7KP+aRdYehsS/qZ1XtdqF90y9sNwG7sbAp2eEj9qO4
+         /fki3U1+WrmDUN8Jeb5X9Bn0wnLqKEK7XBZox5KFcLJXHgJpCtUsqZC+4ILAJC4MYv
+         bctBAOD4RbtIg==
+Date:   Tue, 9 Jun 2020 22:42:52 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: linux-next: build failure after merge of the akpm-current tree
+Message-ID: <20200609224252.1704eff3@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200608192524.GF4106@dell>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: multipart/signed; boundary="Sig_/20osjNj6dzcJHlq1F.yGC.c";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 08:25:24PM +0100, Lee Jones wrote:
-> On Mon, 08 Jun 2020, Andy Shevchenko wrote:
-> 
-> > From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> > 
-> > When ever device properties are supplied for a sub device, a software node
-> > (fwnode) is actually created and then associated with that device. By allowing
-> > the drivers to supply the complete software node group instead of just the
-> > properties in it, the drivers can take advantage of the other features the
-> > software nodes have on top of supplying the device properties.
-> > 
-> > Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > ---
-> >  drivers/mfd/mfd-core.c   | 31 +++++++++++++++++++++++++++----
-> >  include/linux/mfd/core.h |  3 +++
-> >  2 files changed, 30 insertions(+), 4 deletions(-)
-> 
-> I'm not sure a change to the API is justified presently (same does go
-> for 'properties' really, but as it was only a couple of lines, it
-> didn't seem too intrusive).
+--Sig_/20osjNj6dzcJHlq1F.yGC.c
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This is better and comprehensive API, but I heard you.
+Hi all,
 
-> My recommendation is to handle this in-house (i.e. locally in-driver)
-> for now.
+After merging the akpm-current tree, today's linux-next build (sparc
+defconfig) failed like this:
 
-I think you understand that this is not gonna work (we need to attach fwnode
-to the child device before it's registration.
+In file included from include/linux/mm.h:32:0,
+                 from include/linux/memblock.h:13,
+                 from arch/sparc/mm/srmmu.c:14:
+include/linux/pgtable.h:74:27: error: redefinition of 'pte_offset_kernel'
+ #define pte_offset_kernel pte_offset_kernel
+                           ^
+arch/sparc/mm/srmmu.c:144:8: note: in expansion of macro 'pte_offset_kernel'
+ pte_t *pte_offset_kernel(pmd_t *dir, unsigned long address)
+        ^~~~~~~~~~~~~~~~~
+include/linux/pgtable.h:70:22: note: previous definition of 'pte_offset_ker=
+nel' was here
+ static inline pte_t *pte_offset_kernel(pmd_t *pmd, unsigned long address)
+                      ^~~~~~~~~~~~~~~~~
 
-> When (if) more users adopt the practice, then we should
-> consider to draw down on line numbers and repetition and make it part
-> of the API.
+Caused by commit
 
-I briefly looked at the current state of affairs and found that properties are
-used only for MFD LPSS driver. Would the conversion of that driver to swnodes
-work for you?
+  292aa65ed13a ("mm: consolidate pte_index() and pte_offset_*() definitions=
+")
 
-Note, the long prospective is to get rid of platform_add_properties() API
-completely.
+I used the (missing part of the) patch from next-20200608:
 
--- 
-With Best Regards,
-Andy Shevchenko
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Tue, 9 Jun 2020 22:36:14 +1000
+Subject: [PATCH] update sparc32 for "mm: consolidate pte_index() and
+ pte_offset_*() definitions"
 
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ arch/sparc/mm/srmmu.c | 10 ----------
+ 1 file changed, 10 deletions(-)
 
+diff --git a/arch/sparc/mm/srmmu.c b/arch/sparc/mm/srmmu.c
+index 989da22ba8e9..0070f8b9a753 100644
+--- a/arch/sparc/mm/srmmu.c
++++ b/arch/sparc/mm/srmmu.c
+@@ -140,16 +140,6 @@ void pmd_set(pmd_t *pmdp, pte_t *ptep)
+ 	set_pte((pte_t *)&pmd_val(*pmdp), __pte(SRMMU_ET_PTD | ptp));
+ }
+=20
+-/* Find an entry in the third-level page table.. */
+-pte_t *pte_offset_kernel(pmd_t *dir, unsigned long address)
+-{
+-	void *pte;
+-
+-	pte =3D __nocache_va((pmd_val(*dir) & SRMMU_PTD_PMASK) << 4);
+-	return (pte_t *) pte +
+-	    ((address >> PAGE_SHIFT) & (PTRS_PER_PTE - 1));
+-}
+-
+ /*
+  * size: bytes to allocate in the nocache area.
+  * align: bytes, number to align at.
+--=20
+2.26.2
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/20osjNj6dzcJHlq1F.yGC.c
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7fg8wACgkQAVBC80lX
+0GwVzQf+Mb6/pKs6w583Gf2Qh3JtbaZgw858sw8TmENiKIDjm+sQdAhJwZTXfNP6
+vYEO5ibieSF8PEIzFJyr0hryPvO6mXoAUG5/7vnIs/h60odPnNqPzjDMVmpbKVcX
++B2s3DO7gTwMgV6C/k61mzrF2NvXh38k2xJIxw7in2hP3l7c1kKPM/opgQls73VT
+g8JHhq3PjG/JA+jTkQXF3BWRgOTkFChLLb1cXL/bOKbsdLSiYHzZTXzDV1pYuG4M
+73bgt6pSSS5xabdtclCEFtTXU9SBEyN+drUhIrYVcapVF5n5KQ3JLUE6PtWPjnU/
+9RgvRNeGT6MPqSHB5K3VtiK3OJD32g==
+=w6m3
+-----END PGP SIGNATURE-----
+
+--Sig_/20osjNj6dzcJHlq1F.yGC.c--
