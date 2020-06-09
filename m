@@ -2,55 +2,52 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE04C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7790FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2846F20814
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 457B42083B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:49:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591724978;
-	bh=oneoTHrWpzNqI69GqpPe4DfpOYXgyNGWsMPEeL0cg/Y=;
+	s=default; t=1591724985;
+	bh=hTuX6Gj/Z///hx0xMNbk6em5czwcq15xu7qUuc2sooU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NkKpPIl69pV8Kj8joucVrJltL61bNCzhZ5xmPN0XnDLdhuPAyfaDDYvha173QTBCw
-	 wRQf6WUp6E1mRA7yNcxSlx4xYZ1AYEjEBP1JIZ/m+S9T6elcj+9/ZXU6evuilrNwJz
-	 0xwRCsfiILlGezM2dnmVawzpTutU+Bg0jGDdziE4=
+	b=TSOIsOAhBYGaNJjBMnDNFEDREBIIU64OSiGAr/3OcVSyTQ/y8T0CrMeElXcZ2y3Z+
+	 CBwaxRcXHzTctMFmKKUpdzpf98TLns2SAVhVF8tOZAqpzoIumjBww7yhGZGfoZqSHj
+	 lYco1HPpgWVBk6+AZ49h4C8Qv1pcs8ZUj8pt8nbQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732536AbgFIRth (ORCPT
+        id S1732552AbgFIRtn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:49:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35030 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:49:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730631AbgFIRtS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:49:18 -0400
+        id S1732506AbgFIRtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:49:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CA3E20814;
-        Tue,  9 Jun 2020 17:49:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23D0D2081A;
+        Tue,  9 Jun 2020 17:49:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591724957;
-        bh=oneoTHrWpzNqI69GqpPe4DfpOYXgyNGWsMPEeL0cg/Y=;
+        s=default; t=1591724964;
+        bh=hTuX6Gj/Z///hx0xMNbk6em5czwcq15xu7qUuc2sooU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KHitHh/TCcxeJv0kzsjokHYK4jF2tKxEg8MM9+3EOL6uk/KinpM4f9zdCY7mCF45W
-         Zh2pVsZhpMMt8742hWW4I2MBAG9HxkuHVWAkEHjO2sjvkj5Q2DyUEK688OJ8bvkVjQ
-         Zl8E5dckq4LXn3VKj0y6qGnF0SaTQkd8GHn/mTNs=
+        b=eENykR2GyjDUhH3ho0X8ykwVgaZkYpsWDVPy1q02W8jOZ3m9gvUKqIDiC/E1L1k9b
+         QJOSeBX4Q1KovLXaq/CbLC4WgUvMxQI/s2kzhJ5Lh6AmWAzRut7165aFxSv532hTw/
+         RXT9MOjfBf8ZG3gcwRR/u8M9E6vdQXKsFTFQ95sc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sedat Dilek <sedat.dilek@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Borislav Petkov <bp@suse.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        stable@vger.kernel.org, Jonathan McDowell <noodles@earth.li>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 10/46] x86/mmiotrace: Use cpumask_available() for cpumask_var_t variables
-Date:   Tue,  9 Jun 2020 19:44:26 +0200
-Message-Id: <20200609174023.806117500@linuxfoundation.org>
+Subject: [PATCH 4.14 13/46] net: ethernet: stmmac: Enable interface clocks on probe for IPQ806x
+Date:   Tue,  9 Jun 2020 19:44:29 +0200
+Message-Id: <20200609174024.110413848@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174022.938987501@linuxfoundation.org>
 References: <20200609174022.938987501@linuxfoundation.org>
@@ -63,65 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Jonathan McDowell <noodles@earth.li>
 
-[ Upstream commit d7110a26e5905ec2fe3fc88bc6a538901accb72b ]
+[ Upstream commit a96ac8a0045e3cbe3e5af6d1b3c78c6c2065dec5 ]
 
-When building with Clang + -Wtautological-compare and
-CONFIG_CPUMASK_OFFSTACK unset:
+The ipq806x_gmac_probe() function enables the PTP clock but not the
+appropriate interface clocks. This means that if the bootloader hasn't
+done so attempting to bring up the interface will fail with an error
+like:
 
-  arch/x86/mm/mmio-mod.c:375:6: warning: comparison of array 'downed_cpus'
-  equal to a null pointer is always false [-Wtautological-pointer-compare]
-          if (downed_cpus == NULL &&
-              ^~~~~~~~~~~    ~~~~
-  arch/x86/mm/mmio-mod.c:405:6: warning: comparison of array 'downed_cpus'
-  equal to a null pointer is always false [-Wtautological-pointer-compare]
-          if (downed_cpus == NULL || cpumask_weight(downed_cpus) == 0)
-              ^~~~~~~~~~~    ~~~~
-  2 warnings generated.
+[   59.028131] ipq806x-gmac-dwmac 37600000.ethernet: Failed to reset the dma
+[   59.028196] ipq806x-gmac-dwmac 37600000.ethernet eth1: stmmac_hw_setup: DMA engine initialization failed
+[   59.034056] ipq806x-gmac-dwmac 37600000.ethernet eth1: stmmac_open: Hw setup failed
 
-Commit
+This patch, a slightly cleaned up version of one posted by Sergey
+Sergeev in:
 
-  f7e30f01a9e2 ("cpumask: Add helper cpumask_available()")
+https://forum.openwrt.org/t/support-for-mikrotik-rb3011uias-rm/4064/257
 
-added cpumask_available() to fix warnings of this nature. Use that here
-so that clang does not warn regardless of CONFIG_CPUMASK_OFFSTACK's
-value.
+correctly enables the clock; we have already configured the source just
+before this.
 
-Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Link: https://github.com/ClangBuiltLinux/linux/issues/982
-Link: https://lkml.kernel.org/r/20200408205323.44490-1-natechancellor@gmail.com
+Tested on a MikroTik RB3011.
+
+Signed-off-by: Jonathan McDowell <noodles@earth.li>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/mm/mmio-mod.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/arch/x86/mm/mmio-mod.c b/arch/x86/mm/mmio-mod.c
-index 4d434ddb75db..f140b2d39319 100644
---- a/arch/x86/mm/mmio-mod.c
-+++ b/arch/x86/mm/mmio-mod.c
-@@ -385,7 +385,7 @@ static void enter_uniprocessor(void)
- 	int cpu;
- 	int err;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c
+index 11a4a81b0397..bcc5d1e16ce2 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c
+@@ -330,6 +330,19 @@ static int ipq806x_gmac_probe(struct platform_device *pdev)
+ 	/* Enable PTP clock */
+ 	regmap_read(gmac->nss_common, NSS_COMMON_CLK_GATE, &val);
+ 	val |= NSS_COMMON_CLK_GATE_PTP_EN(gmac->id);
++	switch (gmac->phy_mode) {
++	case PHY_INTERFACE_MODE_RGMII:
++		val |= NSS_COMMON_CLK_GATE_RGMII_RX_EN(gmac->id) |
++			NSS_COMMON_CLK_GATE_RGMII_TX_EN(gmac->id);
++		break;
++	case PHY_INTERFACE_MODE_SGMII:
++		val |= NSS_COMMON_CLK_GATE_GMII_RX_EN(gmac->id) |
++				NSS_COMMON_CLK_GATE_GMII_TX_EN(gmac->id);
++		break;
++	default:
++		/* We don't get here; the switch above will have errored out */
++		unreachable();
++	}
+ 	regmap_write(gmac->nss_common, NSS_COMMON_CLK_GATE, val);
  
--	if (downed_cpus == NULL &&
-+	if (!cpumask_available(downed_cpus) &&
- 	    !alloc_cpumask_var(&downed_cpus, GFP_KERNEL)) {
- 		pr_notice("Failed to allocate mask\n");
- 		goto out;
-@@ -415,7 +415,7 @@ static void leave_uniprocessor(void)
- 	int cpu;
- 	int err;
- 
--	if (downed_cpus == NULL || cpumask_weight(downed_cpus) == 0)
-+	if (!cpumask_available(downed_cpus) || cpumask_weight(downed_cpus) == 0)
- 		return;
- 	pr_notice("Re-enabling CPUs...\n");
- 	for_each_cpu(cpu, downed_cpus) {
+ 	if (gmac->phy_mode == PHY_INTERFACE_MODE_SGMII) {
 -- 
 2.25.1
 
