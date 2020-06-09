@@ -2,124 +2,93 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C0EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A0DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:39:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85BB42072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:25:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2094E2068D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:39:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ldS3WwZQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730773AbgFIPZM (ORCPT
+        id S1729074AbgFILjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 11:25:12 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:12170 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726395AbgFIPZL (ORCPT
+        Tue, 9 Jun 2020 07:39:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40586 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729009AbgFILjk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 11:25:11 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 059F4I5i079404;
-        Tue, 9 Jun 2020 11:24:47 -0400
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31jb0md19u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 09 Jun 2020 11:24:47 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 059FGGNL020904;
-        Tue, 9 Jun 2020 15:24:44 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma04fra.de.ibm.com with ESMTP id 31g2s7tgsc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 09 Jun 2020 15:24:44 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 059FOgOe47775890
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 9 Jun 2020 15:24:42 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6430CA4055;
-        Tue,  9 Jun 2020 15:24:42 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9BF91A4040;
-        Tue,  9 Jun 2020 15:24:41 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.202.223])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue,  9 Jun 2020 15:24:41 +0000 (GMT)
-Date:   Tue, 9 Jun 2020 18:24:39 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Joerg Roedel <jroedel@suse.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mm/vmalloc: track which page-table levels were modified
-Message-ID: <20200609152439.GG1149842@linux.ibm.com>
-References: <20200603232311.GA205619@roeck-us.net>
- <20200604083512.GN6857@suse.de>
- <CAHk-=wj2_YdxPaRFqBUUDZvtZKKG5To2KJhciJmDbchW2NFLnw@mail.gmail.com>
- <20200604140617.e340dd507ee68b0a05bd21cb@linux-foundation.org>
- <CAHk-=wjm+RrcTjB7KYCCsOouE2EyzRcwWUE9TVq6OCYYAt9Zyw@mail.gmail.com>
- <20200605081644.GS6857@suse.de>
- <20200605100059.GB7524@linux.ibm.com>
- <20200609121056.GB3871@suse.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200609121056.GB3871@suse.de>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-09_09:2020-06-09,2020-06-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0
- cotscore=-2147483648 malwarescore=0 spamscore=0 phishscore=0
- impostorscore=0 suspectscore=1 priorityscore=1501 bulkscore=0 adultscore=0
- mlxlogscore=864 lowpriorityscore=0 clxscore=1015 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006090111
+        Tue, 9 Jun 2020 07:39:40 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC7FEC05BD1E;
+        Tue,  9 Jun 2020 04:39:38 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id n11so20396557qkn.8;
+        Tue, 09 Jun 2020 04:39:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id;
+        bh=wlYOKY2I6wi0AZVoSy6PBE75mux/rrdwmF8a8HBdn5M=;
+        b=ldS3WwZQWTk8bDSo8NDt5VogtC72qUiaBdLyNmHMC8Na3TD+2I3riqEBMX9k/bv+9Y
+         S1o5oKbL6sDjCNhOfrfB6gt5xc6SYsPVzEQHv4BQdY3ZCTIj1o7CUkmks+CtvzTADCHm
+         WWfro0C6furMkC0n/rJJYwN9ke/lpL0ztj4F4Useg660aeEhdvCs6AHnETcKRt5zv1M+
+         e5+5VYhldjoNZYuvdsrdbO13Jhoe41zlzAhXTiJizXHMMxEAPcVTGrBXoEVTGrpH2A5H
+         TwFm8fk2JpTUlL4RbBYcP97AauT7BIaThq2W63+ZFVuacDlWHCRxND6GBGp21VuKOTOm
+         eWGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=wlYOKY2I6wi0AZVoSy6PBE75mux/rrdwmF8a8HBdn5M=;
+        b=BT0uDdLAtpvS+dpYN0v0RaPNC0k7Sr/vN1gjxxRH/WX7G6OeGW9ghupSwS3V4+eEqa
+         RNMYo1fBFdT4w5mUB0o1hWKH6zCinzrIr6Kt8U8//VlC3XKhhPSCXE7cc+S7z08CZjVc
+         7zLwRrC7XgDu20e0oZ6z5TA5hIdfs5utIKP8mvrB3AFs/THQjHOdLD5tI3HupYllZQyT
+         wOtAbgdiQouFWcrpyP7IAn75Wrqk2hznK2arq0Dylh+xYw1ym3gqAG8why5kdJUPJyCQ
+         UjV1NrCThNQorPbA3dCMRduLIkShQL/jLmVNWWg3vwrmbUY46zmcZ5l6+yICLWMUf/1Q
+         DbLQ==
+X-Gm-Message-State: AOAM533hLRUHmIu7A0ScNiZdcbj46fbr1GVe+xHqjD8+NC8EKoVFnYzH
+        fHbpm+qU6im46ji7V07m7/E=
+X-Google-Smtp-Source: ABdhPJyETuxHuDwV7vkN1AD62FuGp1fzYttn8Uu7IuV44VL/4wUSxOlnH0PrL/NZQOuUhH5eecI9ag==
+X-Received: by 2002:a05:620a:1321:: with SMTP id p1mr27394982qkj.476.1591702778157;
+        Tue, 09 Jun 2020 04:39:38 -0700 (PDT)
+Received: from linux.home ([2604:2000:1344:41d:29ac:7979:1e2e:c67b])
+        by smtp.googlemail.com with ESMTPSA id n13sm11281614qtb.20.2020.06.09.04.39.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2020 04:39:37 -0700 (PDT)
+From:   Gaurav Singh <gaurav1086@gmail.com>
+To:     gaurav1086@gmail.com, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        netdev@vger.kernel.org (open list:BPF (Safe dynamic programs and tools)),
+        bpf@vger.kernel.org (open list:BPF (Safe dynamic programs and tools)),
+        linux-kernel@vger.kernel.org (open list)
+Subject: 
+Date:   Tue,  9 Jun 2020 07:38:38 -0400
+Message-Id: <20200609113839.9628-1-gaurav1086@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joerg,
+Please find the patch below.
 
-On Tue, Jun 09, 2020 at 02:10:56PM +0200, Joerg Roedel wrote:
-> Hi Mike,
-> 
-> On Fri, Jun 05, 2020 at 01:00:59PM +0300, Mike Rapoport wrote:
-> > We already have include/asm-generic/pgalloc.h, so maybe something like
-> > that patch below would fork. This is not even compile tested.
-> > 
-> > diff --git a/include/asm-generic/pgalloc.h b/include/asm-generic/pgalloc.h
-> 
-> I experimented a bit with your diff, but it turned out that moving the
-> page-table allocation functions/macros to asm-generic/pgalloc.h does not
-> work on all architectures.
-> 
-> The reason is that some archs don't use that header at all (e.g. ARC)
-> and have their own version of the functions defined there. That could
-> all be made working, but I decided to no open this can of worms for now.
-> 
-> So I sent out a patch which moves the p?d_alloc_track() functions/macros
-> to a separate header and include it only in mm/vmalloc.c and
-> lib/ioremap.c. 
+Thanks and regards,
+Gaurav.
 
-I'm planning to open this can of worms eventually, but having
-p?d_alloc_track() in a separate header wouldn't be the biggest of my
-problems :)
+From Gaurav Singh <gaurav1086@gmail.com> # This line is ignored.
+From: Gaurav Singh <gaurav1086@gmail.com>
+Reply-To: 
+Subject: 
+In-Reply-To: 
 
-> That compiles on all architectures where current Linus'
-> master also builds (it does not for Alpha, CSky, Mips and Mips64), and
-> as usual Hexagon and Unicore32 are not tested because I have no working
-> compiler for those.
-> 
-> Regards,
-> 
-> 	Joerg
 
--- 
-Sincerely yours,
-Mike.
