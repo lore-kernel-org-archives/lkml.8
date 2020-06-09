@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38044C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26206C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15E0820774
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:51:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDA4220774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:51:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725109;
-	bh=I/C5wTw0k+vOVdGvsWnZiMB/R9OHvicC4Y/1i2mXlxo=;
+	s=default; t=1591725116;
+	bh=3VhzeYCfyFo9o7fz5Vi6e9lrLzkvJTjzxHdMTZtg2QA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0bUkqFb/wIxrsWqKs1XsTI3JuTmHF3D2tXx0PmTQ1ypShWRuzHTDfsszwqZKHmPjm
-	 QyMCzvje2bW7kY3eTZB5q3+9+RKrW2avtlKjlEnhduRcs5HDObLlr4kskOlpwHXsbd
-	 bi9flt0QN7AxWd/4mC5bzAR/MgUyT+Z5pn8b3uak=
+	b=ofPmGOGirTfQzUTWtzwkmCF1RkgrDPYrurKIYgm/Z+fTtlAqevYlMfp8X/n4AWq/i
+	 vPXKfP9+0D5pvVbFch9kYnbdgNtJVjFedXwPCCVsoAwEWNiBnLQSpNW/jEbxqd2EKU
+	 Dzd7VUWFBtZlAZ/mjMYTYv9utQrywtLwqWsYe45o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730781AbgFIRvq (ORCPT
+        id S1732882AbgFIRvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:51:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38818 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:51:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732722AbgFIRus (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:50:48 -0400
+        id S1732735AbgFIRuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:50:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F503207ED;
-        Tue,  9 Jun 2020 17:50:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66BF420734;
+        Tue,  9 Jun 2020 17:50:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725047;
-        bh=I/C5wTw0k+vOVdGvsWnZiMB/R9OHvicC4Y/1i2mXlxo=;
+        s=default; t=1591725049;
+        bh=3VhzeYCfyFo9o7fz5Vi6e9lrLzkvJTjzxHdMTZtg2QA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eAuj9UdgxUMJkcEH7Yot58uKnVRr9YNzNMc+YFZVV7bYvQtdwmqx2r76ZpWFkbI5t
-         6iV6kFs1/OPLXEZkUfPcS4HRQHvcKrutZn6dAlmtEK+dvnEdVP1SgqV/Dig+jqWpAc
-         2fJOLuEo1qpM2HoSzBfgbX2Q6H7cnBuVH+5anDUo=
+        b=uN0MLnAtoDBsoD0V/BXzPYkRNAWgtWzGt4B0u9ZvP1aw22LLOuerHUu+/sVXxaPFO
+         l2nJcF7aSjPiyieIYqxZefQy+Rw/YtXBEzSbHo0+30AaObP8woV1ydOz/x2U/ici//
+         nKjCdc/6rRz3FKfnR1Rhrsh4d2GPJ5kJ0mvXZqRI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hu Jiahui <kirin.say@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.14 22/46] airo: Fix read overflows sending packets
-Date:   Tue,  9 Jun 2020 19:44:38 +0200
-Message-Id: <20200609174026.228819624@linuxfoundation.org>
+        stable@vger.kernel.org, Yang Yingliang <yangyingliang@huawei.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 23/46] devinet: fix memleak in inetdev_init()
+Date:   Tue,  9 Jun 2020 19:44:39 +0200
+Message-Id: <20200609174026.336557949@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174022.938987501@linuxfoundation.org>
 References: <20200609174022.938987501@linuxfoundation.org>
@@ -61,62 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Yang Yingliang <yangyingliang@huawei.com>
 
-commit 11e7a91994c29da96d847f676be023da6a2c1359 upstream.
+[ Upstream commit 1b49cd71b52403822731dc9f283185d1da355f97 ]
 
-The problem is that we always copy a minimum of ETH_ZLEN (60) bytes from
-skb->data even when skb->len is less than ETH_ZLEN so it leads to a read
-overflow.
+When devinet_sysctl_register() failed, the memory allocated
+in neigh_parms_alloc() should be freed.
 
-The fix is to pad skb->data to at least ETH_ZLEN bytes.
-
-Cc: <stable@vger.kernel.org>
-Reported-by: Hu Jiahui <kirin.say@gmail.com>
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200527184830.GA1164846@mwanda
+Fixes: 20e61da7ffcf ("ipv4: fail early when creating netdev named all or default")
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+Acked-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/net/wireless/cisco/airo.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ net/ipv4/devinet.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/wireless/cisco/airo.c
-+++ b/drivers/net/wireless/cisco/airo.c
-@@ -1928,6 +1928,10 @@ static netdev_tx_t mpi_start_xmit(struct
- 		airo_print_err(dev->name, "%s: skb == NULL!",__func__);
- 		return NETDEV_TX_OK;
- 	}
-+	if (skb_padto(skb, ETH_ZLEN)) {
-+		dev->stats.tx_dropped++;
-+		return NETDEV_TX_OK;
-+	}
- 	npacks = skb_queue_len (&ai->txq);
- 
- 	if (npacks >= MAXTXQ - 1) {
-@@ -2130,6 +2134,10 @@ static netdev_tx_t airo_start_xmit(struc
- 		airo_print_err(dev->name, "%s: skb == NULL!", __func__);
- 		return NETDEV_TX_OK;
- 	}
-+	if (skb_padto(skb, ETH_ZLEN)) {
-+		dev->stats.tx_dropped++;
-+		return NETDEV_TX_OK;
-+	}
- 
- 	/* Find a vacant FID */
- 	for( i = 0; i < MAX_FIDS / 2 && (fids[i] & 0xffff0000); i++ );
-@@ -2204,6 +2212,10 @@ static netdev_tx_t airo_start_xmit11(str
- 		airo_print_err(dev->name, "%s: skb == NULL!", __func__);
- 		return NETDEV_TX_OK;
- 	}
-+	if (skb_padto(skb, ETH_ZLEN)) {
-+		dev->stats.tx_dropped++;
-+		return NETDEV_TX_OK;
-+	}
- 
- 	/* Find a vacant FID */
- 	for( i = MAX_FIDS / 2; i < MAX_FIDS && (fids[i] & 0xffff0000); i++ );
+--- a/net/ipv4/devinet.c
++++ b/net/ipv4/devinet.c
+@@ -262,6 +262,7 @@ static struct in_device *inetdev_init(st
+ 	err = devinet_sysctl_register(in_dev);
+ 	if (err) {
+ 		in_dev->dead = 1;
++		neigh_parms_release(&arp_tbl, in_dev->arp_parms);
+ 		in_dev_put(in_dev);
+ 		in_dev = NULL;
+ 		goto out;
 
 
