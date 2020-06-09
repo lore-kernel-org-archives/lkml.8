@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72391C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 830E9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:46:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C71E20814
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:46:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ABF020801
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:46:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591724796;
-	bh=zB/WZwl5Lv9DzA8ZRU7nN5IaoD3oyLoA2VH4IaYLapk=;
+	s=default; t=1591724799;
+	bh=HtOKJ+6AhzRcJp42rN8vMCosQZR/IW/NBwTb7UtPEfQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uCGrFdcjrphFeGzLFX4Y9XQDfIKD2cwKC0Dq4CnJrLHyGDPlUTYoN/34P+MCX6Jm7
-	 Ic4zyg6RwfIA3QkO2/QgwjWb/xQ3hP5abS0JEDDxanFG7FpZM5+UexZ/XXkHM8sjJ6
-	 l3rdgegXGOZjbzhdFklQ7bDJx+CeXRhEDXn1av2c=
+	b=kxfzO7Qj6Q2uLVzHrn+UGcXhomuJ+5xHWjAGQddUIsRqWNebFbpZFucxyKkTC7srA
+	 EfI5tTC8jcBSN2TGV7vigcQQ61DfQJJKE7vR4RLdbaNW1F3Et7Le93zUd/hTll/DSd
+	 Im/RR8yTGHVsdlHaogOVvCaCksNSYl6oBimjGvQs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731958AbgFIRqf (ORCPT
+        id S1731983AbgFIRqh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:46:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56528 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:46:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730424AbgFIRq3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:46:29 -0400
+        id S1731928AbgFIRq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:46:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8EB8207ED;
-        Tue,  9 Jun 2020 17:46:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59A972081A;
+        Tue,  9 Jun 2020 17:46:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591724789;
-        bh=zB/WZwl5Lv9DzA8ZRU7nN5IaoD3oyLoA2VH4IaYLapk=;
+        s=default; t=1591724784;
+        bh=HtOKJ+6AhzRcJp42rN8vMCosQZR/IW/NBwTb7UtPEfQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vdQNZo0aN68exjtCnoT2m0JhQSlOtoAKFYbPngu16WNzmYrT3nhiIE7C5t7GzwmxG
-         iZOgcYve+gR2ONvjteGM7aYQOMH1187GtS4Zd1Cq0e7f+Y3Wl3Zyo5arSrANze0Eq4
-         i5O9os4kNCBcMg+EAPxvIj9eciAX5+nWNcmBBlNA=
+        b=rclGf4Y3iN4zmI1W7O73mS+Rzjzby9epkvo98b0keK2AR+dzeHRJ9I0hsufxswY0j
+         OuuPFl6Xo/eKHiRFdR3a5x0i0ic9CkvLlShc0yDhC2ZZ68Uf2BspiS1MCv9njNROEv
+         cOCXDZ9n15rdULmdQ7lHk0xieLRjNqVi4ude1Usg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Greco <pmgreco@us.ibm.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
+        stable@vger.kernel.org, fengsheng <fengsheng5@huawei.com>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 09/36] ARC: Fix ICCM & DCCM runtime size checks
-Date:   Tue,  9 Jun 2020 19:44:09 +0200
-Message-Id: <20200609173933.818886101@linuxfoundation.org>
+Subject: [PATCH 4.4 07/36] spi: dw: use "smp_mb()" to avoid sending spi data error
+Date:   Tue,  9 Jun 2020 19:44:07 +0200
+Message-Id: <20200609173933.708823642@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609173933.288044334@linuxfoundation.org>
 References: <20200609173933.288044334@linuxfoundation.org>
@@ -61,52 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+From: Xinwei Kong <kong.kongxinwei@hisilicon.com>
 
-[ Upstream commit 43900edf67d7ef3ac8909854d75b8a1fba2d570c ]
+[ Upstream commit bfda044533b213985bc62bd7ca96f2b984d21b80 ]
 
-As of today the ICCM and DCCM size checks are incorrectly using
-mismatched units (KiB checked against bytes). The CONFIG_ARC_DCCM_SZ
-and CONFIG_ARC_ICCM_SZ are in KiB, but the size calculated in
-runtime and stored in cpu->dccm.sz and cpu->iccm.sz is in bytes.
+Because of out-of-order execution about some CPU architecture,
+In this debug stage we find Completing spi interrupt enable ->
+prodrucing TXEI interrupt -> running "interrupt_transfer" function
+will prior to set "dw->rx and dws->rx_end" data, so this patch add
+memory barrier to enable dw->rx and dw->rx_end to be visible and
+solve to send SPI data error.
+eg:
+it will fix to this following low possibility error in testing environment
+which using SPI control to connect TPM Modules
 
-Fix that.
+kernel: tpm tpm0: Operation Timed out
+kernel: tpm tpm0: tpm_relinquish_locality: : error -1
 
-Reported-by: Paul Greco <pmgreco@us.ibm.com>
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Signed-off-by: fengsheng <fengsheng5@huawei.com>
+Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com>
+Link: https://lore.kernel.org/r/1578019930-55858-1-git-send-email-kong.kongxinwei@hisilicon.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arc/kernel/setup.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/spi/spi-dw.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arc/kernel/setup.c b/arch/arc/kernel/setup.c
-index 3013f3f82b95..66e4dc8bce1d 100644
---- a/arch/arc/kernel/setup.c
-+++ b/arch/arc/kernel/setup.c
-@@ -12,6 +12,7 @@
- #include <linux/root_dev.h>
- #include <linux/console.h>
- #include <linux/module.h>
-+#include <linux/sizes.h>
- #include <linux/cpu.h>
- #include <linux/clk-provider.h>
- #include <linux/of_fdt.h>
-@@ -308,12 +309,12 @@ static void arc_chk_core_config(void)
- 	if ((unsigned int)__arc_dccm_base != cpu->dccm.base_addr)
- 		panic("Linux built with incorrect DCCM Base address\n");
+diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
+index 4edd38d03b93..5688591e9cd3 100644
+--- a/drivers/spi/spi-dw.c
++++ b/drivers/spi/spi-dw.c
+@@ -306,6 +306,9 @@ static int dw_spi_transfer_one(struct spi_master *master,
+ 	dws->len = transfer->len;
+ 	spin_unlock_irqrestore(&dws->buf_lock, flags);
  
--	if (CONFIG_ARC_DCCM_SZ != cpu->dccm.sz)
-+	if (CONFIG_ARC_DCCM_SZ * SZ_1K != cpu->dccm.sz)
- 		panic("Linux built with incorrect DCCM Size\n");
- #endif
++	/* Ensure dw->rx and dw->rx_end are visible */
++	smp_mb();
++
+ 	spi_enable_chip(dws, 0);
  
- #ifdef CONFIG_ARC_HAS_ICCM
--	if (CONFIG_ARC_ICCM_SZ != cpu->iccm.sz)
-+	if (CONFIG_ARC_ICCM_SZ * SZ_1K != cpu->iccm.sz)
- 		panic("Linux built with incorrect ICCM Size\n");
- #endif
- 
+ 	/* Handle per transfer options for bpw and speed */
 -- 
 2.25.1
 
