@@ -2,106 +2,79 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87300C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AECB7C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:26:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6291D207C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:24:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591723443;
-	bh=BnAF14OHzSDIKR/D4dfttWPAvtzmbpOdMQWbnZoeqTc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=td/NTQ32gV4l1y6vcnkE4yBf6X6qqXewG23+SllyHxxQsxj9ueWETz3O4sj4vpSZX
-	 qrJSy7l0rjdM1AQbp0SkKrc9qXv5fn1a6HTLH8s4PUCoP0S2YWeGvluEOCHMAYxBn2
-	 RqxRx1Y9vyySJ6T65838ZMWc+evnPXi68NibbtS0=
+	by mail.kernel.org (Postfix) with ESMTP id 955D120774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:26:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731701AbgFIRYB (ORCPT
+        id S1728788AbgFIR0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:24:01 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36166 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726938AbgFIRYA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:24:00 -0400
-Received: by mail-io1-f67.google.com with SMTP id r77so10695118ior.3;
-        Tue, 09 Jun 2020 10:23:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+JWrXVbSyibvd6RhyHADt/Z9H/n3o+CdfMcisJmBME0=;
-        b=JXsOj7VrsVl01Kuc5ysiSyo5ZlCFo7cfNaIcqYM09HorLGj7vyHR5tF+zuPz24PDM0
-         xGmO2jH94Jzyu0AsXdI+pL9yT4LPwh5IX9HYyp4k5RTTFWsitxyLYnh4gIK2sSzwqB2+
-         PGbStu3OjMohKKXURB6ML1wS1DDHhWuGaGXWb7A1yzqiyX5SQy/V0LMf6dD9ED/rg04m
-         mUmSmhWsf5IPwkGOvKlmMSJxiEOc+i6DrF/xkB5Iw/zmJvq2e+PrumYYfTz56W73dG2T
-         pOP217qb36tCSz48sle3QbjU3H01jS4tE0GxHw7f7+ChTbKMpjRjD1ccXNaJAbGGoOCN
-         i47w==
-X-Gm-Message-State: AOAM532cZGeO/6k3FtuPCEMNwJYnaHkC7E1RtzhBULa3NMgY5rdGcoy+
-        Cc/OoeuH8hBjQccnDBDrEA==
-X-Google-Smtp-Source: ABdhPJzv0IJM0Lx9lfjwbX+wS+9f+tuKGYyhNfoqSAYRqS4jPAu5A9ff5FKv1MMq99AsH5A+jE1RJw==
-X-Received: by 2002:a02:c4c8:: with SMTP id h8mr28557805jaj.64.1591723439090;
-        Tue, 09 Jun 2020 10:23:59 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id z4sm9576365ilm.72.2020.06.09.10.23.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 10:23:58 -0700 (PDT)
-Received: (nullmailer pid 1106677 invoked by uid 1000);
-        Tue, 09 Jun 2020 17:23:57 -0000
-Date:   Tue, 9 Jun 2020 11:23:57 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Cc:     jassisinghbrar@gmail.com, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH V3 2/4] dt-bindings: mailbox: Add dt-bindings for ipq6018
- apcs global block
-Message-ID: <20200609172357.GA1104091@bogus>
-References: <1591609047-29995-1-git-send-email-sivaprak@codeaurora.org>
- <1591609047-29995-3-git-send-email-sivaprak@codeaurora.org>
+        Tue, 9 Jun 2020 13:26:11 -0400
+Received: from muru.com ([72.249.23.125]:57456 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726938AbgFIR0K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:26:10 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 0168F8088;
+        Tue,  9 Jun 2020 17:27:00 +0000 (UTC)
+Date:   Tue, 9 Jun 2020 10:26:07 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc:     linux-omap@vger.kernel.org, "Andrew F . Davis" <afd@ti.com>,
+        Dave Gerlach <d-gerlach@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/5] drm/omap: Fix suspend resume regression after
+ platform data removal
+Message-ID: <20200609172607.GP37466@atomide.com>
+References: <20200531193941.13179-1-tony@atomide.com>
+ <20200531193941.13179-2-tony@atomide.com>
+ <16ba1808-5c7f-573d-8dd0-c80cac2f476e@ti.com>
+ <20200603140639.GG37466@atomide.com>
+ <47e286dd-f87a-4440-5bde-1f7b53e8b672@ti.com>
+ <20200609151943.GL37466@atomide.com>
+ <9ed70121-2a53-d2b3-051a-88eb83e6c53f@ti.com>
+ <20200609165234.GM37466@atomide.com>
+ <20200609171043.GN37466@atomide.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1591609047-29995-3-git-send-email-sivaprak@codeaurora.org>
+In-Reply-To: <20200609171043.GN37466@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 08 Jun 2020 15:07:25 +0530, Sivaprakash Murugesan wrote:
-> Add dt-bindings for ipq6018 mailbox driver
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
-> ---
->  .../bindings/mailbox/qcom,apcs-kpss-global.yaml         | 17 +++++++++++++++--
->  1 file changed, 15 insertions(+), 2 deletions(-)
-> 
+* Tony Lindgren <tony@atomide.com> [200609 17:11]:
+> I'm also seeing the rmmod omapdrm issue on am437x-sk-evm:
 
+Oops sorry this is a user error. I've forgotten I need
+to unbind the fb vtcon first :) thanks for hinting that
+Tomi!
 
-My bot found errors running 'make dt_binding_check' on your patch:
+I can rmmod omapdrm just fine after doing:
 
-Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.example.dts:80:18: fatal error: dt-bindings/clock/qcom,apss-ipq.h: No such file or directory
-         #include "dt-bindings/clock/qcom,apss-ipq.h"
-                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-compilation terminated.
-scripts/Makefile.lib:312: recipe for target 'Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.example.dt.yaml' failed
-make[1]: *** [Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.example.dt.yaml] Error 1
-make[1]: *** Waiting for unfinished jobs....
-Makefile:1300: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+# echo 0 > /sys/class/vtconsole/vtcon1/bind
 
-See https://patchwork.ozlabs.org/patch/1305051
+> Still did not figure what I might be missing on x15 :)
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
+So this is really the only issue that I have but
+sounds like Tomi has it working and I'm just missing
+some module.
 
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+Regards,
 
-Please check and re-submit.
-
+Tony
