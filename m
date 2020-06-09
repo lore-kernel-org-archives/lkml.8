@@ -2,85 +2,216 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2106CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F97C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:05:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE11E206A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:05:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEA472078D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:05:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729223AbgFIMFa (ORCPT
+        id S1729244AbgFIMFu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 08:05:30 -0400
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:42521 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728051AbgFIMF0 (ORCPT
+        Tue, 9 Jun 2020 08:05:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44618 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728051AbgFIMFq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 08:05:26 -0400
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 09 Jun 2020 17:35:23 +0530
-Received: from harigovi-linux.qualcomm.com ([10.204.66.157])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 09 Jun 2020 17:35:01 +0530
-Received: by harigovi-linux.qualcomm.com (Postfix, from userid 2332695)
-        id 3D1C82055; Tue,  9 Jun 2020 17:35:01 +0530 (IST)
-From:   Harigovindan P <harigovi@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Harigovindan P <harigovi@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        kalyan_t@codeaurora.org, nganji@codeaurora.org, sam@ravnborg.org
-Subject: [v3] drm/bridge: ti-sn65dsi86: ensure bridge suspend happens during PM sleep
-Date:   Tue,  9 Jun 2020 17:34:55 +0530
-Message-Id: <20200609120455.20458-1-harigovi@codeaurora.org>
-X-Mailer: git-send-email 2.27.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 9 Jun 2020 08:05:46 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 644F4C05BD1E;
+        Tue,  9 Jun 2020 05:05:45 -0700 (PDT)
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id F011E2C3; Tue,  9 Jun 2020 14:05:39 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     peterz@infradead.org, jroedel@suse.de,
+        Andy Lutomirski <luto@kernel.org>,
+        Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
+        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        manvanth@linux.vnet.ibm.com, linux-next@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org, hch@lst.de,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: [PATCH] mm: Move p?d_alloc_track to separate header file
+Date:   Tue,  9 Jun 2020 14:05:33 +0200
+Message-Id: <20200609120533.25867-1-joro@8bytes.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ti-sn65dsi86 bridge is enumerated as a runtime device. When
-suspend is triggered, PM core adds a refcount on all the
-devices and calls device suspend, since usage count is
-already incremented, runtime suspend will not be called
-and it kept the bridge regulators and gpios ON which resulted
-in platform not entering into XO shutdown.
+From: Joerg Roedel <jroedel@suse.de>
 
-Add changes to force suspend on the runtime device during pm sleep.
+The functions are only used in two source files, so there is no need
+for them to be in the global <linux/mm.h> header. Move them to the new
+<linux/pgalloc-track.h> header and include it only where needed.
 
-Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
+ include/linux/mm.h            | 45 -------------------------------
+ include/linux/pgalloc-track.h | 51 +++++++++++++++++++++++++++++++++++
+ lib/ioremap.c                 |  1 +
+ mm/vmalloc.c                  |  1 +
+ 4 files changed, 53 insertions(+), 45 deletions(-)
+ create mode 100644 include/linux/pgalloc-track.h
 
-Changes in v2:
-	- Include bridge name in the commit message and 
-	remove dependent patchwork link from the commit
-	text as bridge is independent of OEM(Stephen Boyd)
-
-Changes in v3:
-	- Updating changelog to explain the need for patch
-
- drivers/gpu/drm/bridge/ti-sn65dsi86.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-index 6ad688b320ae..2eef755b2917 100644
---- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-+++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-@@ -159,6 +159,8 @@ static int __maybe_unused ti_sn_bridge_suspend(struct device *dev)
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 9d6042178ca7..22d8b2a2c9bc 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2092,51 +2092,11 @@ static inline pud_t *pud_alloc(struct mm_struct *mm, p4d_t *p4d,
+ 		NULL : pud_offset(p4d, address);
+ }
  
- static const struct dev_pm_ops ti_sn_bridge_pm_ops = {
- 	SET_RUNTIME_PM_OPS(ti_sn_bridge_suspend, ti_sn_bridge_resume, NULL)
-+	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-+				pm_runtime_force_resume)
- };
+-static inline p4d_t *p4d_alloc_track(struct mm_struct *mm, pgd_t *pgd,
+-				     unsigned long address,
+-				     pgtbl_mod_mask *mod_mask)
+-
+-{
+-	if (unlikely(pgd_none(*pgd))) {
+-		if (__p4d_alloc(mm, pgd, address))
+-			return NULL;
+-		*mod_mask |= PGTBL_PGD_MODIFIED;
+-	}
+-
+-	return p4d_offset(pgd, address);
+-}
+-
+-static inline pud_t *pud_alloc_track(struct mm_struct *mm, p4d_t *p4d,
+-				     unsigned long address,
+-				     pgtbl_mod_mask *mod_mask)
+-{
+-	if (unlikely(p4d_none(*p4d))) {
+-		if (__pud_alloc(mm, p4d, address))
+-			return NULL;
+-		*mod_mask |= PGTBL_P4D_MODIFIED;
+-	}
+-
+-	return pud_offset(p4d, address);
+-}
+-
+ static inline pmd_t *pmd_alloc(struct mm_struct *mm, pud_t *pud, unsigned long address)
+ {
+ 	return (unlikely(pud_none(*pud)) && __pmd_alloc(mm, pud, address))?
+ 		NULL: pmd_offset(pud, address);
+ }
+-
+-static inline pmd_t *pmd_alloc_track(struct mm_struct *mm, pud_t *pud,
+-				     unsigned long address,
+-				     pgtbl_mod_mask *mod_mask)
+-{
+-	if (unlikely(pud_none(*pud))) {
+-		if (__pmd_alloc(mm, pud, address))
+-			return NULL;
+-		*mod_mask |= PGTBL_PUD_MODIFIED;
+-	}
+-
+-	return pmd_offset(pud, address);
+-}
+ #endif /* CONFIG_MMU */
  
- static int status_show(struct seq_file *s, void *data)
+ #if USE_SPLIT_PTE_PTLOCKS
+@@ -2252,11 +2212,6 @@ static inline void pgtable_pte_page_dtor(struct page *page)
+ 	((unlikely(pmd_none(*(pmd))) && __pte_alloc_kernel(pmd))? \
+ 		NULL: pte_offset_kernel(pmd, address))
+ 
+-#define pte_alloc_kernel_track(pmd, address, mask)			\
+-	((unlikely(pmd_none(*(pmd))) &&					\
+-	  (__pte_alloc_kernel(pmd) || ({*(mask)|=PGTBL_PMD_MODIFIED;0;})))?\
+-		NULL: pte_offset_kernel(pmd, address))
+-
+ #if USE_SPLIT_PMD_PTLOCKS
+ 
+ static struct page *pmd_to_page(pmd_t *pmd)
+diff --git a/include/linux/pgalloc-track.h b/include/linux/pgalloc-track.h
+new file mode 100644
+index 000000000000..1dcc865029a2
+--- /dev/null
++++ b/include/linux/pgalloc-track.h
+@@ -0,0 +1,51 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_PGALLLC_TRACK_H
++#define _LINUX_PGALLLC_TRACK_H
++
++#if defined(CONFIG_MMU)
++static inline p4d_t *p4d_alloc_track(struct mm_struct *mm, pgd_t *pgd,
++				     unsigned long address,
++				     pgtbl_mod_mask *mod_mask)
++{
++	if (unlikely(pgd_none(*pgd))) {
++		if (__p4d_alloc(mm, pgd, address))
++			return NULL;
++		*mod_mask |= PGTBL_PGD_MODIFIED;
++	}
++
++	return p4d_offset(pgd, address);
++}
++
++static inline pud_t *pud_alloc_track(struct mm_struct *mm, p4d_t *p4d,
++				     unsigned long address,
++				     pgtbl_mod_mask *mod_mask)
++{
++	if (unlikely(p4d_none(*p4d))) {
++		if (__pud_alloc(mm, p4d, address))
++			return NULL;
++		*mod_mask |= PGTBL_P4D_MODIFIED;
++	}
++
++	return pud_offset(p4d, address);
++}
++
++static inline pmd_t *pmd_alloc_track(struct mm_struct *mm, pud_t *pud,
++				     unsigned long address,
++				     pgtbl_mod_mask *mod_mask)
++{
++	if (unlikely(pud_none(*pud))) {
++		if (__pmd_alloc(mm, pud, address))
++			return NULL;
++		*mod_mask |= PGTBL_PUD_MODIFIED;
++	}
++
++	return pmd_offset(pud, address);
++}
++#endif /* CONFIG_MMU */
++
++#define pte_alloc_kernel_track(pmd, address, mask)			\
++	((unlikely(pmd_none(*(pmd))) &&					\
++	  (__pte_alloc_kernel(pmd) || ({*(mask)|=PGTBL_PMD_MODIFIED;0;})))?\
++		NULL: pte_offset_kernel(pmd, address))
++
++#endif /* _LINUX_PGALLLC_TRACK_H */
+diff --git a/lib/ioremap.c b/lib/ioremap.c
+index ad485f08173b..608fcccd21c8 100644
+--- a/lib/ioremap.c
++++ b/lib/ioremap.c
+@@ -11,6 +11,7 @@
+ #include <linux/sched.h>
+ #include <linux/io.h>
+ #include <linux/export.h>
++#include <linux/pgalloc-track.h>
+ #include <asm/cacheflush.h>
+ #include <asm/pgtable.h>
+ 
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 3091c2ca60df..edc43f003165 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -35,6 +35,7 @@
+ #include <linux/bitops.h>
+ #include <linux/rbtree_augmented.h>
+ #include <linux/overflow.h>
++#include <linux/pgalloc-track.h>
+ 
+ #include <linux/uaccess.h>
+ #include <asm/tlbflush.h>
 -- 
-2.27.0
+2.26.2
 
