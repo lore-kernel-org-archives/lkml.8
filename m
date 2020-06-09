@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16503C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD76DC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD676206D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:21:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A579F206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:21:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="h1YJsXsC"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="sku1/o1u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730472AbgFIOVL (ORCPT
+        id S1730476AbgFIOVa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 10:21:11 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:46321 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730456AbgFIOVI (ORCPT
+        Tue, 9 Jun 2020 10:21:30 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:56059 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728601AbgFIOV3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 10:21:08 -0400
+        Tue, 9 Jun 2020 10:21:29 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1591712467; x=1623248467;
+  t=1591712488; x=1623248488;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version;
-  bh=nIL22XofaxtLVU0O95H0B/lImASPrQqjRlXGSEAIqCw=;
-  b=h1YJsXsCbSEV4NTZKjCYH0l5OreXKU+TxS+btrstkqRWcker0b0uajdN
-   fwwh5g2KidxvKKehxFyGRQ0qgEzTDXqXBVw2MqGlxYi+cPQDp4rXjiqKE
-   iFlNLwiulH4ueCWcO9dgStduDs7uKNIE/0MOizaBy3gquNR4QcIUsyj5v
-   Y=;
-IronPort-SDR: 7ZT/BMgZK0IojUAPw4DiT+9l0AU6iE8tsdsD/l+aW2Kq2FjADXPASz5pEytvPMfvi03K2HxT6e
- qIINmW7Rv1wg==
+  bh=Z0IurggP0Ne0aRf1k3oi5eHLQ+CxnTgV+b+ukC/GSlc=;
+  b=sku1/o1u3raFG7rgF8jBNL01Q68T5481lBLmB+rVuxeJY9+qGHzx3uR6
+   xkHB8TqNKkON3M1c3OzRQMIIHZIwC1UvTVTAJ2/dJ5TD+Xv5v4GDHlteQ
+   49Yr8c8rgWHmF66O4WusKgr+c9WgZQ3yGXzh+LpnbNY89H0/jsYzY6c9n
+   M=;
+IronPort-SDR: IoIAhU2gdayHbH5DmuXPA0GLLungqSc+dCSDwl0z1N7LUvk9RzMBQM8e69uAV4+d7Y2POSHQp1
+ Vcc5IQNbm24w==
 X-IronPort-AV: E=Sophos;i="5.73,492,1583193600"; 
-   d="scan'208";a="35196772"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-715bee71.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 09 Jun 2020 14:21:05 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-715bee71.us-east-1.amazon.com (Postfix) with ESMTPS id 2839FA1D05;
-        Tue,  9 Jun 2020 14:20:54 +0000 (UTC)
+   d="scan'208";a="42677853"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 09 Jun 2020 14:21:24 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com (Postfix) with ESMTPS id 6BD7AA244A;
+        Tue,  9 Jun 2020 14:21:13 +0000 (UTC)
 Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
  EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 9 Jun 2020 14:20:54 +0000
+ id 15.0.1497.2; Tue, 9 Jun 2020 14:21:12 +0000
 Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.109) by
  EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 9 Jun 2020 14:20:38 +0000
+ id 15.0.1497.2; Tue, 9 Jun 2020 14:20:56 +0000
 From:   SeongJae Park <sjpark@amazon.com>
 To:     <akpm@linux-foundation.org>
 CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
@@ -67,9 +67,9 @@ CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
         <ying.huang@intel.com>, <david@redhat.com>,
         <linux-damon@amazon.com>, <linux-mm@kvack.org>,
         <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [RFC v3 02/10] mm/damon: Make monitoring target regions init/update configurable
-Date:   Tue, 9 Jun 2020 16:19:33 +0200
-Message-ID: <20200609141941.19184-3-sjpark@amazon.com>
+Subject: [RFC v3 03/10] mm/damon/debugfs: Allow users to set initial monitoring target regions
+Date:   Tue, 9 Jun 2020 16:19:34 +0200
+Message-ID: <20200609141941.19184-4-sjpark@amazon.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200609141941.19184-1-sjpark@amazon.com>
 References: <20200609141941.19184-1-sjpark@amazon.com>
@@ -85,130 +85,231 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: SeongJae Park <sjpark@amazon.de>
 
-This commit allows DAMON users to configure their own monitoring target
-regions initializer / updater.  Using this, users can confine the
-monitoring address spaces as they want.  For example, users can track
-only stack, heap, shared memory area, or specific file-backed area, as
-they want.
+Some users would want to monitor only a part of the entire virtual
+memory address space.  The '->init_target_regions' callback is therefore
+provided, but only programming interface can use it.
+
+For the reason, this commit introduces a new debugfs file,
+'init_region'.  Users can specify which initial monitoring target
+address regions they want by writing special input to the file.  The
+input should describe each region in each line in below form:
+
+    <pid> <start address> <end address>
+
+This commit also makes the default '->init_target_regions' callback,
+'kdamon_init_vm_regions()' to do nothing if the user has set the initial
+target regions already.
+
+Note that the regions will be updated to cover entire memory mapped
+regions after 'regions update interval'.  If you want the regions to not
+be updated after the initial setting, you could set the interval as a
+very long time, say, a few decades.
 
 Signed-off-by: SeongJae Park <sjpark@amazon.de>
 ---
- include/linux/damon.h | 13 +++++++++++++
- mm/damon.c            | 17 ++++++++++-------
- 2 files changed, 23 insertions(+), 7 deletions(-)
+ mm/damon.c | 168 +++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 162 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/damon.h b/include/linux/damon.h
-index b4b06ca905a2..a1b6810ce0eb 100644
---- a/include/linux/damon.h
-+++ b/include/linux/damon.h
-@@ -158,9 +158,16 @@ struct damos {
-  * @tasks_list:		Head of monitoring target tasks (&damon_task) list.
-  * @schemes_list:	Head of schemes (&damos) list.
-  *
-+ * @init_target_regions:	Constructs initial monitoring target regions.
-+ * @update_target_regions:	Updates monitoring target regions.
-  * @sample_cb:			Called for each sampling interval.
-  * @aggregate_cb:		Called for each aggregation interval.
-  *
-+ * The monitoring thread calls @init_target_regions before starting the
-+ * monitoring, @update_target_regions for each @regions_update_interval.  By
-+ * setting these callbacks to appropriate functions, therefore, users can
-+ * monitor specific range of virtual address space.
-+ *
-  * @sample_cb and @aggregate_cb are called from @kdamond for each of the
-  * sampling intervals and aggregation intervals, respectively.  Therefore,
-  * users can safely access to the monitoring results via @tasks_list without
-@@ -190,10 +197,16 @@ struct damon_ctx {
- 	struct list_head schemes_list;	/* 'damos' objects */
- 
- 	/* callbacks */
-+	void (*init_target_regions)(struct damon_ctx *context);
-+	void (*update_target_regions)(struct damon_ctx *context);
- 	void (*sample_cb)(struct damon_ctx *context);
- 	void (*aggregate_cb)(struct damon_ctx *context);
- };
- 
-+/* Reference callback implementations for virtual memory */
-+void kdamond_init_vm_regions(struct damon_ctx *ctx);
-+void kdamond_update_vm_regions(struct damon_ctx *ctx);
-+
- int damon_set_pids(struct damon_ctx *ctx, int *pids, ssize_t nr_pids);
- int damon_set_attrs(struct damon_ctx *ctx, unsigned long sample_int,
- 		unsigned long aggr_int, unsigned long regions_update_int,
 diff --git a/mm/damon.c b/mm/damon.c
-index fcd919e96754..b55d501365c0 100644
+index b55d501365c0..2d8322e6558f 100644
 --- a/mm/damon.c
 +++ b/mm/damon.c
-@@ -87,6 +87,9 @@ static struct damon_ctx damon_user_ctx = {
- 	.regions_update_interval = 1000 * 1000,
- 	.min_nr_regions = 10,
- 	.max_nr_regions = 1000,
+@@ -491,8 +491,10 @@ void kdamond_init_vm_regions(struct damon_ctx *ctx)
+ {
+ 	struct damon_task *t;
+ 
+-	damon_for_each_task(t, ctx)
+-		damon_init_vm_regions_of(ctx, t);
++	damon_for_each_task(t, ctx) {
++		if (!nr_damon_regions(t))
++			damon_init_vm_regions_of(ctx, t);
++	}
+ }
+ 
+ /*
+@@ -1721,6 +1723,153 @@ static ssize_t debugfs_record_write(struct file *file,
+ 	return ret;
+ }
+ 
++static ssize_t sprint_init_regions(struct damon_ctx *c, char *buf, ssize_t len)
++{
++	struct damon_task *t;
++	struct damon_region *r;
++	int written = 0;
++	int rc;
 +
-+	.init_target_regions = kdamond_init_vm_regions,
-+	.update_target_regions = kdamond_update_vm_regions,
++	damon_for_each_task(t, c) {
++		damon_for_each_region(r, t) {
++			rc = snprintf(&buf[written], len - written,
++					"%d %lu %lu\n",
++					t->pid, r->ar.start, r->ar.end);
++			if (!rc)
++				return -ENOMEM;
++			written += rc;
++		}
++	}
++	return written;
++}
++
++static ssize_t debugfs_init_regions_read(struct file *file, char __user *buf,
++		size_t count, loff_t *ppos)
++{
++	struct damon_ctx *ctx = &damon_user_ctx;
++	char *kbuf;
++	ssize_t len;
++
++	kbuf = kmalloc(count, GFP_KERNEL);
++	if (!kbuf)
++		return -ENOMEM;
++
++	mutex_lock(&ctx->kdamond_lock);
++	if (ctx->kdamond) {
++		mutex_unlock(&ctx->kdamond_lock);
++		return -EBUSY;
++	}
++
++	len = sprint_init_regions(ctx, kbuf, count);
++	mutex_unlock(&ctx->kdamond_lock);
++	if (len < 0)
++		goto out;
++	len = simple_read_from_buffer(buf, count, ppos, kbuf, len);
++
++out:
++	kfree(kbuf);
++	return len;
++}
++
++static int add_init_region(struct damon_ctx *c,
++			 int pid, struct damon_addr_range *ar)
++{
++	struct damon_task *t;
++	struct damon_region *r, *prev;
++	int rc = -EINVAL;
++
++	if (ar->start >= ar->end)
++		return -EINVAL;
++
++	damon_for_each_task(t, c) {
++		if (t->pid == pid) {
++			r = damon_new_region(c, ar->start, ar->end);
++			if (!r)
++				return -ENOMEM;
++			damon_add_region(r, t);
++			if (nr_damon_regions(t) > 1) {
++				prev = damon_prev_region(r);
++				if (prev->ar.end > r->ar.start) {
++					damon_destroy_region(r);
++					return -EINVAL;
++				}
++			}
++			rc = 0;
++		}
++	}
++	return rc;
++}
++
++static int set_init_regions(struct damon_ctx *c, const char *str, ssize_t len)
++{
++	struct damon_task *t;
++	struct damon_region *r, *next;
++	int pos = 0, parsed, ret;
++	int pid;
++	struct damon_addr_range ar;
++	int err;
++
++	damon_for_each_task(t, c) {
++		damon_for_each_region_safe(r, next, t)
++			damon_destroy_region(r);
++	}
++
++	while (pos < len) {
++		ret = sscanf(&str[pos], "%d %lu %lu%n",
++				&pid, &ar.start, &ar.end, &parsed);
++		if (ret != 3)
++			break;
++		err = add_init_region(c, pid, &ar);
++		if (err)
++			goto fail;
++		pos += parsed;
++	}
++
++	return 0;
++
++fail:
++	damon_for_each_task(t, c) {
++		damon_for_each_region_safe(r, next, t)
++			damon_destroy_region(r);
++	}
++	return err;
++}
++
++static ssize_t debugfs_init_regions_write(struct file *file, const char __user
++		*buf, size_t count, loff_t *ppos)
++{
++	struct damon_ctx *ctx = &damon_user_ctx;
++	char *kbuf;
++	ssize_t ret;
++	int err;
++
++	if (*ppos)
++		return -EINVAL;
++
++	kbuf = kmalloc(count, GFP_KERNEL);
++	if (!kbuf)
++		return -ENOMEM;
++
++	ret = simple_write_to_buffer(kbuf, count, ppos, buf, count);
++	if (ret < 0)
++		goto out;
++
++	mutex_lock(&ctx->kdamond_lock);
++	if (ctx->kdamond) {
++		ret = -EBUSY;
++		goto unlock_out;
++	}
++
++	err = set_init_regions(ctx, kbuf, ret);
++	if (err)
++		ret = err;
++
++unlock_out:
++	mutex_unlock(&ctx->kdamond_lock);
++out:
++	kfree(kbuf);
++	return ret;
++}
+ 
+ static ssize_t debugfs_attrs_read(struct file *file,
+ 		char __user *buf, size_t count, loff_t *ppos)
+@@ -1802,6 +1951,12 @@ static const struct file_operations record_fops = {
+ 	.write = debugfs_record_write,
  };
  
- /*
-@@ -343,7 +346,7 @@ static void swap_ranges(struct damon_addr_range *r1,
-  *
-  * This function receives an address space and finds three regions in it which
-  * separated by the two biggest unmapped regions in the space.  Please refer to
-- * below comments of 'damon_init_regions_of()' function to know why this is
-+ * below comments of 'damon_init_vm_regions_of()' function to know why this is
-  * necessary.
-  *
-  * Returns 0 if success, or negative error code otherwise.
-@@ -455,7 +458,7 @@ static int damon_three_regions_of(struct damon_task *t,
-  *   <BIG UNMAPPED REGION 2>
-  *   <stack>
-  */
--static void damon_init_regions_of(struct damon_ctx *c, struct damon_task *t)
-+static void damon_init_vm_regions_of(struct damon_ctx *c, struct damon_task *t)
++static const struct file_operations init_regions_fops = {
++	.owner = THIS_MODULE,
++	.read = debugfs_init_regions_read,
++	.write = debugfs_init_regions_write,
++};
++
+ static const struct file_operations attrs_fops = {
+ 	.owner = THIS_MODULE,
+ 	.read = debugfs_attrs_read,
+@@ -1812,10 +1967,11 @@ static struct dentry *debugfs_root;
+ 
+ static int __init damon_debugfs_init(void)
  {
- 	struct damon_region *r, *m = NULL;
- 	struct damon_addr_range regions[3];
-@@ -484,12 +487,12 @@ static void damon_init_regions_of(struct damon_ctx *c, struct damon_task *t)
- }
+-	const char * const file_names[] = {"attrs", "record", "schemes",
+-		"pids", "monitor_on"};
+-	const struct file_operations *fops[] = {&attrs_fops, &record_fops,
+-		&schemes_fops, &pids_fops, &monitor_on_fops};
++	const char * const file_names[] = {"attrs", "init_regions", "record",
++		"schemes", "pids", "monitor_on"};
++	const struct file_operations *fops[] = {&attrs_fops,
++		&init_regions_fops, &record_fops, &schemes_fops, &pids_fops,
++		&monitor_on_fops};
+ 	int i;
  
- /* Initialize '->regions_list' of every task */
--static void kdamond_init_regions(struct damon_ctx *ctx)
-+void kdamond_init_vm_regions(struct damon_ctx *ctx)
- {
- 	struct damon_task *t;
- 
- 	damon_for_each_task(t, ctx)
--		damon_init_regions_of(ctx, t);
-+		damon_init_vm_regions_of(ctx, t);
- }
- 
- /*
-@@ -563,7 +566,7 @@ static void damon_apply_three_regions(struct damon_ctx *ctx,
- /*
-  * Update regions for current memory mappings
-  */
--static void kdamond_update_regions(struct damon_ctx *ctx)
-+void kdamond_update_vm_regions(struct damon_ctx *ctx)
- {
- 	struct damon_addr_range three_regions[3];
- 	struct damon_task *t;
-@@ -1131,7 +1134,7 @@ static int kdamond_fn(void *data)
- 	unsigned int max_nr_accesses = 0;
- 
- 	pr_info("kdamond (%d) starts\n", ctx->kdamond->pid);
--	kdamond_init_regions(ctx);
-+	ctx->init_target_regions(ctx);
- 
- 	kdamond_write_record_header(ctx);
- 
-@@ -1154,7 +1157,7 @@ static int kdamond_fn(void *data)
- 		}
- 
- 		if (kdamond_need_update_regions(ctx))
--			kdamond_update_regions(ctx);
-+			ctx->update_target_regions(ctx);
- 	}
- 	damon_flush_rbuffer(ctx);
- 	damon_for_each_task(t, ctx) {
+ 	debugfs_root = debugfs_create_dir("damon", NULL);
 -- 
 2.17.1
 
