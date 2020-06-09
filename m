@@ -6,45 +6,51 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6190DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 05:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEA3CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 05:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 472ED207ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 05:29:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBA4E207ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 05:29:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbgFIF3b (ORCPT
+        id S1728008AbgFIF3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 01:29:31 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:38559 "EHLO ozlabs.org"
+        Tue, 9 Jun 2020 01:29:43 -0400
+Received: from ozlabs.org ([203.11.71.1]:51867 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727804AbgFIF2s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 01:28:48 -0400
+        id S1727824AbgFIF33 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 01:29:29 -0400
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 49gzDv2CZyz9sTV; Tue,  9 Jun 2020 15:28:46 +1000 (AEST)
+        id 49gzFg2B7xz9sTH; Tue,  9 Jun 2020 15:29:26 +1000 (AEST)
 From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-To:     Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-In-Reply-To: <b459e1600b969047a74e34251a84a3d6fdf1f312.1590858925.git.christophe.leroy@csgroup.eu>
-References: <b459e1600b969047a74e34251a84a3d6fdf1f312.1590858925.git.christophe.leroy@csgroup.eu>
-Subject: Re: [PATCH v2] powerpc/32s: Fix another build failure with CONFIG_PPC_KUAP_DEBUG
-Message-Id: <159168035275.1381411.17956354294019347730.b4-ty@ellerman.id.au>
-Date:   Tue,  9 Jun 2020 15:28:46 +1000 (AEST)
+To:     Nathan Chancellor <natechancellor@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org,
+        Paul Mackerras <paulus@samba.org>,
+        kbuild test robot <lkp@intel.com>,
+        linuxppc-dev@lists.ozlabs.org
+In-Reply-To: <20200413190644.16757-1-natechancellor@gmail.com>
+References: <20200413190644.16757-1-natechancellor@gmail.com>
+Subject: Re: [PATCH] powerpc/wii: Fix declaration made after definition
+Message-Id: <159168031335.1381411.13854674311774532181.b4-ty@ellerman.id.au>
+Date:   Tue,  9 Jun 2020 15:29:23 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 30 May 2020 17:16:33 +0000 (UTC), Christophe Leroy wrote:
-> 'thread' doesn't exist in kuap_check() macro.
+On Mon, 13 Apr 2020 12:06:45 -0700, Nathan Chancellor wrote:
+> A 0day randconfig uncovered an error with clang, trimmed for brevity:
 > 
-> Use 'current' instead.
+> arch/powerpc/platforms/embedded6xx/wii.c:195:7: error: attribute
+> declaration must precede definition [-Werror,-Wignored-attributes]
+>         if (!machine_is(wii))
+>              ^
+> 
+> [...]
 
 Applied to powerpc/next.
 
-[1/1] powerpc/32s: Fix another build failure with CONFIG_PPC_KUAP_DEBUG
-      https://git.kernel.org/powerpc/c/74016701fe5f873ae23bf02835407227138d874d
+[1/1] powerpc/wii: Fix declaration made after definition
+      https://git.kernel.org/powerpc/c/91ffeaa7e5dd62753e23a1204dc7ecd11f26eadc
 
 cheers
