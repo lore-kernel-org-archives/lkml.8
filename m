@@ -2,572 +2,176 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC2FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 04:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC84C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 05:15:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7557120774
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 04:57:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6165207F9
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 05:15:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rJPj/eBt"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iszL6iYl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbgFIE5j (ORCPT
+        id S1726897AbgFIFPG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 00:57:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35010 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725770AbgFIE5i (ORCPT
+        Tue, 9 Jun 2020 01:15:06 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:35488 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725770AbgFIFPF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 00:57:38 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AB65C03E969;
-        Mon,  8 Jun 2020 21:57:38 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id a25so23332729ljp.3;
-        Mon, 08 Jun 2020 21:57:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=/rdNmNWkxqhCR3QqsCqEA9Y2HDyv8WpjBBCHrPyt0r4=;
-        b=rJPj/eBtZV+oUEeP0Dg8lmsjWN1AYjOUObL6rPlO9ZnGBAbheQvJyHKBxraDk2ktre
-         bNoECwElnlDNztf2/bpJpTHoc/NfT0XYSPHYFEIoHAnhsszbfU6dUusNfwY5y8wD/eJU
-         Oz/6CMQ76XwoDpuc0YekRUz6xS+KR1AoKPNVlhTPolLWF4fgjR0yNYlqgMf+5uOYunl3
-         pUs6qDPVmwS4tuuVVB9a1Tj7j5xZWZUobl7Q2qRMBR9Go+SwT/PcpUIT7yXj5cgiA7Tj
-         oifx/srEnuFSHtmPvG5DvcxmOv5Pjim/gLav1HcFYw2xhkTVKqhV/w1vXgj+2mh9HhO3
-         ywrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/rdNmNWkxqhCR3QqsCqEA9Y2HDyv8WpjBBCHrPyt0r4=;
-        b=NFGuBRquPnh83zYl71iP+6eJNRFVzRA0rJd3SoLYfSiaCpOTgIcdLnEwbBGBb/BQd3
-         X9uyBWnz9XeRQnsRaOfMudPP/0bQEZY6E4AY2gAjm4yFx/mFIiVnSQIxDn72GAFhfmgJ
-         Z/elX4a8pTFPGiu+7epyf+B9E4aPk01bdSbgi3wb7sz9bcPMsdydalv1L163LAgwoBOO
-         uskbxWmVYlsUUJZpmCLz53vrGLt2OgI+5zKlzyAeFXCRujCTXpTUISTfei939SwZOUO9
-         KRvpDZ74k2wA1QY/oQFjQsFMgBZZ3tuPIvOmcWs3kJ29YbiQ81154RmudhXt49daJWx4
-         4UtA==
-X-Gm-Message-State: AOAM533XCpkkR3uxhd6SY99j75FzQLpD8ag20yBl/fNbsBzCb4ykJ8wb
-        +niGSWbGw+auu0f/jOP1wHg=
-X-Google-Smtp-Source: ABdhPJzCP0HOLbBNb6hzdKnKPWZS354dia2tUS446w6GMmDGQJoUoiTYCLI4op9/9BIbvmsi+RITMQ==
-X-Received: by 2002:a05:651c:547:: with SMTP id q7mr11689056ljp.437.1591678656490;
-        Mon, 08 Jun 2020 21:57:36 -0700 (PDT)
-Received: from dmitry-T520 ([185.57.31.227])
-        by smtp.gmail.com with ESMTPSA id u8sm4809594lff.38.2020.06.08.21.57.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 21:57:35 -0700 (PDT)
-Date:   Tue, 9 Jun 2020 14:57:32 +1000
-From:   Dmitry Buzdyk <dima.buzdyk@gmail.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] uvcvideo: Add mapping for HEVC payloads
-Message-ID: <20200609045732.GA781356@dmitry-T520>
-References: <20200529010547.GA630131@dmitry-T520>
- <20200607010719.GU7339@pendragon.ideasonboard.com>
+        Tue, 9 Jun 2020 01:15:05 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0595CVQm136842;
+        Tue, 9 Jun 2020 05:14:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=HvLmUO9WfIu9EpDHvCN9J3AGrpe38k/zLFBsg+AFDwY=;
+ b=iszL6iYlKhWol9vdCUWhrzgkJJb+oMfZ/a0pOWH8y1Or5OZZhaOrkoI+k9ELCuIqVvID
+ 10B9oBJ0YOdpHMemK5Wv/7H5FnPD+TmBn6fxV6EXqKPAY3OGOXiP91AjNhTumNsyxMPP
+ 0SYH10AxC7qwII63f8AJ+1VokEux0NKpn7wxtJHRdqrj8CYIf9U+19FZEf/48O0czYoL
+ vc5nJMD1PheyGaRJ0nW/MvXJKAYP8nSrHzakv2ic1lnh2GR1y0C2lYh7HQTUUFwf7eFq
+ mWWY4CecbtgZOuuoQ8qI8IKX5l7qQ6LnuErWEM67L08Gbkik+Fvt2rd9JtxgA2ptYyc8 Sw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 31g3smtd5n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 09 Jun 2020 05:14:31 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05958KcB033010;
+        Tue, 9 Jun 2020 05:14:30 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 31gn24tm1y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 09 Jun 2020 05:14:30 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0595ETpL004959;
+        Tue, 9 Jun 2020 05:14:29 GMT
+Received: from dhcp-10-159-136-131.vpn.oracle.com (/10.159.136.131)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 08 Jun 2020 22:14:29 -0700
+Subject: Re: [PATCH] sample-trace-array: Fix sleeping function called from
+ invalid context
+To:     Kefeng Wang <wangkefeng.wang@huawei.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
+References: <20200608075437.1760242-1-wangkefeng.wang@huawei.com>
+From:   Divya Indi <divya.indi@oracle.com>
+Message-ID: <0047f80f-4fff-16ff-7ac0-20181f03f06a@oracle.com>
+Date:   Mon, 8 Jun 2020 22:14:28 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200607010719.GU7339@pendragon.ideasonboard.com>
+In-Reply-To: <20200608075437.1760242-1-wangkefeng.wang@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9646 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=3 mlxscore=0
+ phishscore=0 adultscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006090039
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9646 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 impostorscore=0 cotscore=-2147483648 suspectscore=3
+ spamscore=0 bulkscore=0 malwarescore=0 phishscore=0 mlxscore=0
+ mlxlogscore=999 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006090039
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 07, 2020 at 04:07:19AM +0300, Laurent Pinchart wrote:
-> Hi Dmitry,
-> 
-> Thank you for the patch.
-> 
-> On Fri, May 29, 2020 at 11:05:47AM +1000, Dmitry Buzdyk wrote:
-> > Add HEVC GUID and assotiate with HEVC pixel format so that frame
-> > based format descriptors recognized by the UVC video driver.
-> 
-> The patch itself looks OK to me, but could you share a bit more
-> information about which device(s) implement this ? Are they UVC 1.1
-> devices ? Could you share their full USB descriptors (retrieved with
-> 'lsusb -v', running as root if possible) ?
-This is a UVC1.1 camera device based on Ambarella H22 SOC.
-Please note that device is still in development and yet to get actual
-VID and PID.
+Hi Kefeng,
 
-Output of lsusb is:
+Thanks for catching this issue.
 
-Bus 001 Device 010: ID 1209:0001 Generic pid.codes Test PID
-Device Descriptor:
-  bLength                18
-  bDescriptorType         1
-  bcdUSB               2.00
-  bDeviceClass          239 Miscellaneous Device
-  bDeviceSubClass         2 
-  bDeviceProtocol         1 Interface Association
-  bMaxPacketSize0        64
-  idVendor           0x1209 Generic
-  idProduct          0x0001 pid.codes Test PID
-  bcdDevice            0.10
-  iManufacturer           1 Rhonda
-  iProduct                2 Rhonda Cam
-  iSerial                 3 FMABCLE15000007
-  bNumConfigurations      1
-  Configuration Descriptor:
-    bLength                 9
-    bDescriptorType         2
-    wTotalLength       0x01ff
-    bNumInterfaces          3
-    bConfigurationValue     1
-    iConfiguration          0 
-    bmAttributes         0x80
-      (Bus Powered)
-    MaxPower              500mA
-    Interface Association:
-      bLength                 8
-      bDescriptorType        11
-      bFirstInterface         0
-      bInterfaceCount         3
-      bFunctionClass         14 Video
-      bFunctionSubClass       3 Video Interface Collection
-      bFunctionProtocol       0 
-      iFunction               2 Rhonda Cam
-    Interface Descriptor:
-      bLength                 9
-      bDescriptorType         4
-      bInterfaceNumber        0
-      bAlternateSetting       0
-      bNumEndpoints           1
-      bInterfaceClass        14 Video
-      bInterfaceSubClass      1 Video Control
-      bInterfaceProtocol      0 
-      iInterface              2 Rhonda Cam
-      VideoControl Interface Descriptor:
-        bLength                14
-        bDescriptorType        36
-        bDescriptorSubtype      1 (HEADER)
-        bcdUVC               1.10
-        wTotalLength       0x006b
-        dwClockFrequency       50.000000MHz
-        bInCollection           2
-        baInterfaceNr( 0)       1
-        baInterfaceNr( 1)       2
-      VideoControl Interface Descriptor:
-        bLength                44
-        bDescriptorType        36
-        bDescriptorSubtype      6 (EXTENSION_UNIT)
-        bUnitID                10
-        guidExtensionCode         {e307e649-4618-a3ff-82fc-2d8b5f216773}
-        bNumControl           146
-        bNrPins                 1
-        baSourceID( 0)          5
-        bControlSize           19
-        bmControls( 0)       0x05
-        bmControls( 1)       0x00
-        bmControls( 2)       0x00
-        bmControls( 3)       0x00
-        bmControls( 4)       0x00
-        bmControls( 5)       0x00
-        bmControls( 6)       0x00
-        bmControls( 7)       0x00
-        bmControls( 8)       0x00
-        bmControls( 9)       0x00
-        bmControls(10)       0x00
-        bmControls(11)       0x00
-        bmControls(12)       0x00
-        bmControls(13)       0x00
-        bmControls(14)       0x00
-        bmControls(15)       0x00
-        bmControls(16)       0x00
-        bmControls(17)       0xf0
-        bmControls(18)       0x02
-        iExtension              0 
-      VideoControl Interface Descriptor:
-        bLength                18
-        bDescriptorType        36
-        bDescriptorSubtype      2 (INPUT_TERMINAL)
-        bTerminalID             1
-        wTerminalType      0x0201 Camera Sensor
-        bAssocTerminal          0
-        iTerminal               0 
-        wObjectiveFocalLengthMin      0
-        wObjectiveFocalLengthMax      0
-        wOcularFocalLength            0
-        bControlSize                  3
-        bmControls           0x00100000
-      VideoControl Interface Descriptor:
-        bLength                13
-        bDescriptorType        36
-        bDescriptorSubtype      5 (PROCESSING_UNIT)
-        bUnitID                 5
-        bSourceID               1
-        wMaxMultiplier          0
-        bControlSize            3
-        bmControls     0x00000400
-          Power Line Frequency
-        iProcessing             0 
-        bmVideoStandards     0x00
-      VideoControl Interface Descriptor:
-        bLength                 9
-        bDescriptorType        36
-        bDescriptorSubtype      3 (OUTPUT_TERMINAL)
-        bTerminalID            16
-        wTerminalType      0x0101 USB Streaming
-        bAssocTerminal          0
-        bSourceID              10
-        iTerminal               0 
-      VideoControl Interface Descriptor:
-        bLength                 9
-        bDescriptorType        36
-        bDescriptorSubtype      3 (OUTPUT_TERMINAL)
-        bTerminalID            17
-        wTerminalType      0x0101 USB Streaming
-        bAssocTerminal          0
-        bSourceID              10
-        iTerminal               0 
-      Endpoint Descriptor:
-        bLength                 7
-        bDescriptorType         5
-        bEndpointAddress     0x81  EP 1 IN
-        bmAttributes            3
-          Transfer Type            Interrupt
-          Synch Type               None
-          Usage Type               Data
-        wMaxPacketSize     0x0010  1x 16 bytes
-        bInterval              15
-    Interface Descriptor:
-      bLength                 9
-      bDescriptorType         4
-      bInterfaceNumber        1
-      bAlternateSetting       0
-      bNumEndpoints           1
-      bInterfaceClass        14 Video
-      bInterfaceSubClass      2 Video Streaming
-      bInterfaceProtocol      0 
-      iInterface              0 
-      VideoStreaming Interface Descriptor:
-        bLength                            16
-        bDescriptorType                    36
-        bDescriptorSubtype                  1 (INPUT_HEADER)
-        bNumFormats                         3
-        wTotalLength                   0x00bf
-        bEndPointAddress                  130
-        bmInfo                              0
-        bTerminalLink                      16
-        bStillCaptureMethod                 0
-        bTriggerSupport                     0
-        bTriggerUsage                       0
-        bControlSize                        1
-        bmaControls( 0)                     0
-        bmaControls( 1)                     0
-        bmaControls( 2)                     4
-      VideoStreaming Interface Descriptor:
-        bLength                            28
-        bDescriptorType                    36
-        bDescriptorSubtype                 16 (FORMAT_FRAME_BASED)
-        bFormatIndex                        1
-        bNumFrameDescriptors                1
-        guidFormat                            {34363248-0000-0010-8000-00aa00389b71}
-        bBitsPerPixel                      16
-        bDefaultFrameIndex                  1
-        bAspectRatioX                       0
-        bAspectRatioY                       0
-        bmInterlaceFlags                 0x00
-          Interlaced stream or variable: No
-          Fields per frame: 2 fields
-          Field 1 first: No
-          Field pattern: Field 1 only
-        bCopyProtect                        0
-        bVariableSize                     1
-      VideoStreaming Interface Descriptor:
-        bLength                            30
-        bDescriptorType                    36
-        bDescriptorSubtype                 17 (FRAME_FRAME_BASED)
-        bFrameIndex                         1
-        bmCapabilities                   0x00
-          Still image unsupported
-        wWidth                           1440
-        wHeight                          1920
-        dwMinBitRate                 10000000
-        dwMaxBitRate                 10000000
-        dwDefaultFrameInterval         333333
-        bFrameIntervalType                  1
-        dwBytesPerLine                      0
-        dwFrameInterval( 0)            333333
-      VideoStreaming Interface Descriptor:
-        bLength                             6
-        bDescriptorType                    36
-        bDescriptorSubtype                 13 (COLORFORMAT)
-        bColorPrimaries                     1 (BT.709,sRGB)
-        bTransferCharacteristics            1 (BT.709)
-        bMatrixCoefficients                 4 (SMPTE 170M (BT.601))
-      VideoStreaming Interface Descriptor:
-        bLength                            28
-        bDescriptorType                    36
-        bDescriptorSubtype                 16 (FORMAT_FRAME_BASED)
-        bFormatIndex                        2
-        bNumFrameDescriptors                1
-        guidFormat                            {43564548-0000-0010-8000-00aa00389b71}
-        bBitsPerPixel                      16
-        bDefaultFrameIndex                  1
-        bAspectRatioX                       0
-        bAspectRatioY                       0
-        bmInterlaceFlags                 0x00
-          Interlaced stream or variable: No
-          Fields per frame: 2 fields
-          Field 1 first: No
-          Field pattern: Field 1 only
-        bCopyProtect                        0
-        bVariableSize                     1
-      VideoStreaming Interface Descriptor:
-        bLength                            30
-        bDescriptorType                    36
-        bDescriptorSubtype                 17 (FRAME_FRAME_BASED)
-        bFrameIndex                         1
-        bmCapabilities                   0x00
-          Still image unsupported
-        wWidth                           1440
-        wHeight                          1920
-        dwMinBitRate                 10000000
-        dwMaxBitRate                 10000000
-        dwDefaultFrameInterval         333333
-        bFrameIntervalType                  1
-        dwBytesPerLine                      0
-        dwFrameInterval( 0)            333333
-      VideoStreaming Interface Descriptor:
-        bLength                             6
-        bDescriptorType                    36
-        bDescriptorSubtype                 13 (COLORFORMAT)
-        bColorPrimaries                     1 (BT.709,sRGB)
-        bTransferCharacteristics            1 (BT.709)
-        bMatrixCoefficients                 4 (SMPTE 170M (BT.601))
-      VideoStreaming Interface Descriptor:
-        bLength                            11
-        bDescriptorType                    36
-        bDescriptorSubtype                  6 (FORMAT_MJPEG)
-        bFormatIndex                        3
-        bNumFrameDescriptors                1
-        bFlags                              0
-          Fixed-size samples: No
-        bDefaultFrameIndex                  1
-        bAspectRatioX                       0
-        bAspectRatioY                       0
-        bmInterlaceFlags                 0x00
-          Interlaced stream or variable: No
-          Fields per frame: 1 fields
-          Field 1 first: No
-          Field pattern: Field 1 only
-        bCopyProtect                        0
-      VideoStreaming Interface Descriptor:
-        bLength                            30
-        bDescriptorType                    36
-        bDescriptorSubtype                  7 (FRAME_MJPEG)
-        bFrameIndex                         1
-        bmCapabilities                   0x00
-          Still image unsupported
-        wWidth                           3000
-        wHeight                          4000
-        dwMinBitRate                 10000000
-        dwMaxBitRate                 10000000
-        dwMaxVideoFrameBufferSize    36000000
-        dwDefaultFrameInterval        1000000
-        bFrameIntervalType                  1
-        dwFrameInterval( 0)           1000000
-      VideoStreaming Interface Descriptor:
-        bLength                             6
-        bDescriptorType                    36
-        bDescriptorSubtype                 13 (COLORFORMAT)
-        bColorPrimaries                     1 (BT.709,sRGB)
-        bTransferCharacteristics            1 (BT.709)
-        bMatrixCoefficients                 4 (SMPTE 170M (BT.601))
-      Endpoint Descriptor:
-        bLength                 7
-        bDescriptorType         5
-        bEndpointAddress     0x82  EP 2 IN
-        bmAttributes            2
-          Transfer Type            Bulk
-          Synch Type               None
-          Usage Type               Data
-        wMaxPacketSize     0x0200  1x 512 bytes
-        bInterval               0
-    Interface Descriptor:
-      bLength                 9
-      bDescriptorType         4
-      bInterfaceNumber        2
-      bAlternateSetting       0
-      bNumEndpoints           1
-      bInterfaceClass        14 Video
-      bInterfaceSubClass      2 Video Streaming
-      bInterfaceProtocol      0 
-      iInterface              0 
-      VideoStreaming Interface Descriptor:
-        bLength                            15
-        bDescriptorType                    36
-        bDescriptorSubtype                  1 (INPUT_HEADER)
-        bNumFormats                         2
-        wTotalLength                   0x008f
-        bEndPointAddress                  131
-        bmInfo                              0
-        bTerminalLink                      17
-        bStillCaptureMethod                 0
-        bTriggerSupport                     0
-        bTriggerUsage                       0
-        bControlSize                        1
-        bmaControls( 0)                     0
-        bmaControls( 1)                     0
-      VideoStreaming Interface Descriptor:
-        bLength                            28
-        bDescriptorType                    36
-        bDescriptorSubtype                 16 (FORMAT_FRAME_BASED)
-        bFormatIndex                        1
-        bNumFrameDescriptors                1
-        guidFormat                            {34363248-0000-0010-8000-00aa00389b71}
-        bBitsPerPixel                      16
-        bDefaultFrameIndex                  1
-        bAspectRatioX                       0
-        bAspectRatioY                       0
-        bmInterlaceFlags                 0x00
-          Interlaced stream or variable: No
-          Fields per frame: 2 fields
-          Field 1 first: No
-          Field pattern: Field 1 only
-        bCopyProtect                        0
-        bVariableSize                     1
-      VideoStreaming Interface Descriptor:
-        bLength                            30
-        bDescriptorType                    36
-        bDescriptorSubtype                 17 (FRAME_FRAME_BASED)
-        bFrameIndex                         1
-        bmCapabilities                   0x00
-          Still image unsupported
-        wWidth                           1440
-        wHeight                          1920
-        dwMinBitRate                 10000000
-        dwMaxBitRate                 10000000
-        dwDefaultFrameInterval         333333
-        bFrameIntervalType                  1
-        dwBytesPerLine                      0
-        dwFrameInterval( 0)            333333
-      VideoStreaming Interface Descriptor:
-        bLength                             6
-        bDescriptorType                    36
-        bDescriptorSubtype                 13 (COLORFORMAT)
-        bColorPrimaries                     1 (BT.709,sRGB)
-        bTransferCharacteristics            1 (BT.709)
-        bMatrixCoefficients                 4 (SMPTE 170M (BT.601))
-      VideoStreaming Interface Descriptor:
-        bLength                            28
-        bDescriptorType                    36
-        bDescriptorSubtype                 16 (FORMAT_FRAME_BASED)
-        bFormatIndex                        2
-        bNumFrameDescriptors                1
-        guidFormat                            {43564548-0000-0010-8000-00aa00389b71}
-        bBitsPerPixel                      16
-        bDefaultFrameIndex                  1
-        bAspectRatioX                       0
-        bAspectRatioY                       0
-        bmInterlaceFlags                 0x00
-          Interlaced stream or variable: No
-          Fields per frame: 2 fields
-          Field 1 first: No
-          Field pattern: Field 1 only
-        bCopyProtect                        0
-        bVariableSize                     1
-      VideoStreaming Interface Descriptor:
-        bLength                            30
-        bDescriptorType                    36
-        bDescriptorSubtype                 17 (FRAME_FRAME_BASED)
-        bFrameIndex                         1
-        bmCapabilities                   0x00
-          Still image unsupported
-        wWidth                           1440
-        wHeight                          1920
-        dwMinBitRate                 10000000
-        dwMaxBitRate                 10000000
-        dwDefaultFrameInterval         333333
-        bFrameIntervalType                  1
-        dwBytesPerLine                      0
-        dwFrameInterval( 0)            333333
-      VideoStreaming Interface Descriptor:
-        bLength                             6
-        bDescriptorType                    36
-        bDescriptorSubtype                 13 (COLORFORMAT)
-        bColorPrimaries                     1 (BT.709,sRGB)
-        bTransferCharacteristics            1 (BT.709)
-        bMatrixCoefficients                 4 (SMPTE 170M (BT.601))
-      Endpoint Descriptor:
-        bLength                 7
-        bDescriptorType         5
-        bEndpointAddress     0x83  EP 3 IN
-        bmAttributes            2
-          Transfer Type            Bulk
-          Synch Type               None
-          Usage Type               Data
-        wMaxPacketSize     0x0200  1x 512 bytes
-        bInterval               0
-Device Qualifier (for other device speed):
-  bLength                10
-  bDescriptorType         6
-  bcdUSB               2.00
-  bDeviceClass          239 Miscellaneous Device
-  bDeviceSubClass         2 
-  bDeviceProtocol         1 Interface Association
-  bMaxPacketSize0        64
-  bNumConfigurations      1
-Device Status:     0x0000
-  (Bus Powered)
+Please find my comments line -
 
-> 
-> Is there anything else needed to get HEVC capture working, such as
-> extension unit controls, or is this patch enough ? What userspace
-> software do you use to capture and decode HEVC (or capture it to disk) ?
-No other changes to Linux nor extra actions needed to start HEVC capture.
-We use patched version of FFmpeg to capture, decode and display HEVC
-stream from camera device. That simple patch also going to be sent to
-FFmpeg upstream.
+On 6/8/20 12:54 AM, Kefeng Wang wrote:
+>  BUG: sleeping function called from invalid context at kernel/locking/mutex.c:935
+>  in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 0, name: swapper/5
+>  1 lock held by swapper/5/0:
+>   #0: ffff80001002bd90 (samples/ftrace/sample-trace-array.c:38){+.-.}-{0:0}, at: call_timer_fn+0x8/0x3e0
+>  CPU: 5 PID: 0 Comm: swapper/5 Not tainted 5.7.0+ #8
+>  Hardware name: QEMU QEMU Virtual Machine, BIOS 0.0.0 02/06/2015
+>  Call trace:
+>   dump_backtrace+0x0/0x1a0
+>   show_stack+0x20/0x30
+>   dump_stack+0xe4/0x150
+>   ___might_sleep+0x160/0x200
+>   __might_sleep+0x58/0x90
+>   __mutex_lock+0x64/0x948
+>   mutex_lock_nested+0x3c/0x58
+>   __ftrace_set_clr_event+0x44/0x88
+>   trace_array_set_clr_event+0x24/0x38
+>   mytimer_handler+0x34/0x40 [sample_trace_array]
+>
+> mutex_lock() will be called in interrupt context, using workqueueu to fix it.
 
-> 
-> > Signed-off-by: Dmitry Buzdyk <dima.buzdyk@gmail.com>
-> > ---
-> >  drivers/media/usb/uvc/uvc_driver.c | 5 +++++
-> >  drivers/media/usb/uvc/uvcvideo.h   | 4 ++++
-> >  2 files changed, 9 insertions(+)
-> > 
-> > diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
-> > index 431d86e1c94b..825ee3601661 100644
-> > --- a/drivers/media/usb/uvc/uvc_driver.c
-> > +++ b/drivers/media/usb/uvc/uvc_driver.c
-> > @@ -214,6 +214,11 @@ static struct uvc_format_desc uvc_fmts[] = {
-> >  		.guid		= UVC_GUID_FORMAT_CNF4,
-> >  		.fcc		= V4L2_PIX_FMT_CNF4,
-> >  	},
-> > +	{
-> > +		.name		= "HEVC",
-> > +		.guid		= UVC_GUID_FORMAT_HEVC,
-> > +		.fcc		= V4L2_PIX_FMT_HEVC,
-> > +	},
-> >  };
-> >  
-> >  /* ------------------------------------------------------------------------
-> > diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
-> > index 6ab972c643e3..c7f043121b41 100644
-> > --- a/drivers/media/usb/uvc/uvcvideo.h
-> > +++ b/drivers/media/usb/uvc/uvcvideo.h
-> > @@ -165,6 +165,10 @@
-> >  	{0x32, 0x00, 0x00, 0x00, 0x02, 0x00, 0x10, 0x00, \
-> >  	 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71}
-> >  
-> > +#define UVC_GUID_FORMAT_HEVC \
-> > +	{ 'H',  'E',  'V',  'C', 0x00, 0x00, 0x10, 0x00, \
-> > +	 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71}
-> > +
-> >  
-> >  /* ------------------------------------------------------------------------
-> >   * Driver specific constants.
-> 
-> -- 
-> Regards,
-> 
-> Laurent Pinchart
---
-Dmitry Buzdyk
-Rhonda Software
+/s/workqueueu/workqueue
+
+Fixes: 89ed42495ef4 ("tracing: Sample module to demonstrate kernel access to Ftrace instances.")
+
+> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> ---
+>  samples/ftrace/sample-trace-array.c | 16 +++++++++++-----
+>  1 file changed, 11 insertions(+), 5 deletions(-)
+>
+> diff --git a/samples/ftrace/sample-trace-array.c b/samples/ftrace/sample-trace-array.c
+> index d523450d73eb..41684c7dbd7b 100644
+> --- a/samples/ftrace/sample-trace-array.c
+> +++ b/samples/ftrace/sample-trace-array.c
+> @@ -20,6 +20,16 @@ struct trace_array *tr;
+>  static void mytimer_handler(struct timer_list *unused);
+>  static struct task_struct *simple_tsk;
+>  
+> +static void trace_work_fn(struct work_struct *work)
+> +{
+> +	/*
+> +	 * Disable tracing for event "sample_event".
+> +	 */
+> +	trace_array_set_clr_event(tr, "sample-subsystem", "sample_event",
+> +			false);
+> +}
+> +static DECLARE_WORK(trace_work, trace_work_fn);
+> +
+>  /*
+>   * mytimer: Timer setup to disable tracing for event "sample_event". This
+>   * timer is only for the purposes of the sample module to demonstrate access of
+> @@ -29,11 +39,7 @@ static DEFINE_TIMER(mytimer, mytimer_handler);
+>  
+>  static void mytimer_handler(struct timer_list *unused)
+>  {
+> -	/*
+> -	 * Disable tracing for event "sample_event".
+> -	 */
+> -	trace_array_set_clr_event(tr, "sample-subsystem", "sample_event",
+> -			false);
+> +	schedule_work(&trace_work);
+>  }
+>  
+>  static void simple_thread_func(int count)
+
+I think we also need to use cancel_work_sync() to handle the case -
+1. Module unloaded
+2. Timer already ran and scheduled work to disable trace event
+3. When the work runs we no longer have the relevant trace array.
+
+static int simple_thread(void *arg)
+{
+.....
+
+ del_timer(&mytimer);
+
+ <cancel_work_sync> 
+.....
+ return 0;
+}
+
+Thanks,
+Divya
+
