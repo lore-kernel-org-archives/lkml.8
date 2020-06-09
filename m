@@ -2,156 +2,85 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCDABC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC795C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:31:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9414A2078C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:30:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93E0C2078C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:31:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EYFXRr95"
+	dkim=pass (2048-bit key) header.d=hb9fxq.ch header.i=@hb9fxq.ch header.b="lJq+I/Ug"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730843AbgFIPah (ORCPT
+        id S1730861AbgFIPa7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 11:30:37 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:49109 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729027AbgFIPae (ORCPT
+        Tue, 9 Jun 2020 11:30:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48122 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729027AbgFIPa6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 11:30:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591716633;
+        Tue, 9 Jun 2020 11:30:58 -0400
+X-Greylist: delayed 584 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 09 Jun 2020 08:30:57 PDT
+Received: from sw.superlogical.ch (sw.superlogical.ch [IPv6:2a03:4000:9:189::4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12971C05BD1E;
+        Tue,  9 Jun 2020 08:30:57 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id F17F8C28BF;
+        Tue,  9 Jun 2020 17:21:06 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hb9fxq.ch; s=default;
+        t=1591716067;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=wGxRHo37DUWltmqxVTCqF+4Rh476hZizMv40WbrLKUk=;
-        b=EYFXRr95zYucfXj2XDHB3vG6FlgG+lhxbwKOJd/DaIZ3xlAaFbhZVplu0CbwT9xJUzsbuu
-        2nVL/QKBMNbQTbX9i2uNCRcNw+ygrqKoupVbFJORPoy5wNhMBO1dsBzySe716mPRzZnVu2
-        X81yYncgdrBcKPXeMFYddm8wLNuk9gk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-181-NsbE5nCNPHSLrjQlepNvhA-1; Tue, 09 Jun 2020 11:30:31 -0400
-X-MC-Unique: NsbE5nCNPHSLrjQlepNvhA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 82EB51940920;
-        Tue,  9 Jun 2020 15:30:28 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.193.154])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 2BCFE5C1D2;
-        Tue,  9 Jun 2020 15:30:21 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Tue,  9 Jun 2020 17:30:28 +0200 (CEST)
-Date:   Tue, 9 Jun 2020 17:30:20 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Guo Ren <guoren@kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Jann Horn <jannh@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jens Axboe <axboe@kernel.dk>,
-        Security Officers <security@kernel.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Ananth N Mavinakayanahalli <ananth@in.ibm.com>,
-        Naveen Rao <naveen.n.rao@linux.vnet.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] uprobes: ensure that uprobe->offset and ->ref_ctr_offset
- are properly aligned
-Message-ID: <20200609153020.GB17951@redhat.com>
-References: <CAHk-=whQt69ApMkZF8b2Q2idMDgPpPETZeeOuZg59CrOO4025w@mail.gmail.com>
- <20200428091149.GB19958@linux.vnet.ibm.com>
- <20200428123914.GA27920@redhat.com>
- <20200504164724.GA28697@redhat.com>
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=8+Nt7ROQbqai3uPLzcGnzXulo/FR7FIpsmMrw9Q5mCQ=;
+        b=lJq+I/Uggqk8XVZXt7sJ29wlB6RYBBwtBT3t5FbUTSQnwz7E+ydTJiqhYZxCNeNVfWLU69
+        +UeQN6UxZzoJNrqalKMB8tDyzK1gN1VipBrd2Yb+5ZTXiH2q1T3V2dT5r0gmyXfsKpcFDB
+        2USr9tk1D4ftm1y+diZ7PIADPwLAJ8yq8KZLgo4mSpIv+8LWSiPkQnmBin1Xewb2wcIh6N
+        HLDjBHQSDr6BZBUAZVfQSqMYc38acKGJrZXQo9x85stX7QRtJ+IJaFzkchaLI0x7LsjOqz
+        9T0tMYfp2KV5QxbOiBtvitbibGvvPTZKWZPYGavpvJT1chaTlRzJ5EpiJ48dyA==
+From:   Frank Werner-Krippendorf <mail@hb9fxq.ch>
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, wireguard@lists.zx2c4.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Frank Werner-Krippendorf <mail@hb9fxq.ch>
+Subject: [PATCH] Do not assign in if condition wg_noise_handshake_consume_initiation()
+Date:   Tue,  9 Jun 2020 17:21:00 +0200
+Message-Id: <20200609152100.29612-1-mail@hb9fxq.ch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200504164724.GA28697@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks like this patch was forgotten...
+Fixes an error condition reported by checkpatch.pl which caused by
+assigning a variable in an if condition in
+wg_noise_handshake_consume_initiation().
 
-Should I resend it?
+Signed-off-by: Frank Werner-Krippendorf <mail@hb9fxq.ch>
+---
+ drivers/net/wireguard/noise.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-On 05/04, Oleg Nesterov wrote:
->
-> uprobe_write_opcode() must not cross page boundary; prepare_uprobe()
-> relies on arch_uprobe_analyze_insn() which should validate "vaddr" but
-> some architectures (csky, s390, and sparc) don't do this.
-> 
-> We can remove the BUG_ON() check in prepare_uprobe() and validate the
-> offset early in __uprobe_register(). The new IS_ALIGNED() check matches
-> the alignment check in arch_prepare_kprobe() on supported architectures,
-> so I think that all insns must be aligned to UPROBE_SWBP_INSN_SIZE.
-> 
-> Another problem is __update_ref_ctr() which was wrong from the very
-> beginning, it can read/write outside of kmap'ed page unless "vaddr" is
-> aligned to sizeof(short), __uprobe_register() should check this too.
-> 
-> Cc: stable@vger.kernel.org
-> Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-> ---
->  kernel/events/uprobes.c | 16 ++++++++++++----
->  1 file changed, 12 insertions(+), 4 deletions(-)
-> 
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index ece7e13f6e4a..cc2095607c74 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -867,10 +867,6 @@ static int prepare_uprobe(struct uprobe *uprobe, struct file *file,
->  	if (ret)
->  		goto out;
->  
-> -	/* uprobe_write_opcode() assumes we don't cross page boundary */
-> -	BUG_ON((uprobe->offset & ~PAGE_MASK) +
-> -			UPROBE_SWBP_INSN_SIZE > PAGE_SIZE);
-> -
->  	smp_wmb(); /* pairs with the smp_rmb() in handle_swbp() */
->  	set_bit(UPROBE_COPY_INSN, &uprobe->flags);
->  
-> @@ -1166,6 +1162,15 @@ static int __uprobe_register(struct inode *inode, loff_t offset,
->  	if (offset > i_size_read(inode))
->  		return -EINVAL;
->  
-> +	/*
-> +	 * This ensures that copy_from_page(), copy_to_page() and
-> +	 * __update_ref_ctr() can't cross page boundary.
-> +	 */
-> +	if (!IS_ALIGNED(offset, UPROBE_SWBP_INSN_SIZE))
-> +		return -EINVAL;
-> +	if (!IS_ALIGNED(ref_ctr_offset, sizeof(short)))
-> +		return -EINVAL;
-> +
->   retry:
->  	uprobe = alloc_uprobe(inode, offset, ref_ctr_offset);
->  	if (!uprobe)
-> @@ -2014,6 +2019,9 @@ static int is_trap_at_addr(struct mm_struct *mm, unsigned long vaddr)
->  	uprobe_opcode_t opcode;
->  	int result;
->  
-> +	if (WARN_ON_ONCE(!IS_ALIGNED(vaddr, UPROBE_SWBP_INSN_SIZE)))
-> +		return -EINVAL;
-> +
->  	pagefault_disable();
->  	result = __get_user(opcode, (uprobe_opcode_t __user *)vaddr);
->  	pagefault_enable();
-> -- 
-> 2.25.1.362.g51ebf55
-> 
+diff --git a/drivers/net/wireguard/noise.c b/drivers/net/wireguard/noise.c
+index 626433690abb..9524a15a62a6 100644
+--- a/drivers/net/wireguard/noise.c
++++ b/drivers/net/wireguard/noise.c
+@@ -617,8 +617,9 @@ wg_noise_handshake_consume_initiation(struct message_handshake_initiation *src,
+ 	memcpy(handshake->hash, hash, NOISE_HASH_LEN);
+ 	memcpy(handshake->chaining_key, chaining_key, NOISE_HASH_LEN);
+ 	handshake->remote_index = src->sender_index;
++	initiation_consumption = ktime_get_coarse_boottime_ns();
+ 	if ((s64)(handshake->last_initiation_consumption -
+-	    (initiation_consumption = ktime_get_coarse_boottime_ns())) < 0)
++	    initiation_consumption) < 0)
+ 		handshake->last_initiation_consumption = initiation_consumption;
+ 	handshake->state = HANDSHAKE_CONSUMED_INITIATION;
+ 	up_write(&handshake->lock);
+-- 
+2.20.1
 
