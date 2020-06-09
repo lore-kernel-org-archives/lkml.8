@@ -2,165 +2,211 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5DCBC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6CEAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87CB520774
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:32:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="xPrjNax1"
+	by mail.kernel.org (Postfix) with ESMTP id 8529220774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:32:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730652AbgFIQcC (ORCPT
+        id S1730871AbgFIQcK convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 12:32:02 -0400
-Received: from mga02.intel.com ([134.134.136.20]:25418 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725894AbgFIQcB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 12:32:01 -0400
-IronPort-SDR: KjHqkLzKAnque62V01nkb44jAUB7kuDmvQI/kE04I140EOEn9qla2FvHxTzIqYcCX6WO3ZQfbW
- c8o9883LdF5A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 09:31:59 -0700
-IronPort-SDR: bUpJbnGXiDybGzK0EBL6u2mX0WWDJcWCF3fo1P4ptpYZ0Q4yy3VGXo0KLci0WMkU5G0lTsGsf6
- PTDD4XMfFQvg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,492,1583222400"; 
-   d="scan'208";a="379786117"
-Received: from orsmsx110.amr.corp.intel.com ([10.22.240.8])
-  by fmsmga001.fm.intel.com with ESMTP; 09 Jun 2020 09:31:58 -0700
-Received: from orsmsx158.amr.corp.intel.com (10.22.240.20) by
- ORSMSX110.amr.corp.intel.com (10.22.240.8) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 9 Jun 2020 09:31:58 -0700
-Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
- ORSMSX158.amr.corp.intel.com (10.22.240.20) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 9 Jun 2020 09:31:57 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.108)
- by edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 9 Jun 2020 09:31:54 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RY7ZLeOZsjI8RlZ/B7J+i909h3QIR1Aqs3RfcXEwpmCHgjB9/d/EuZZHAqyNG0CpqdKccng3M/avzEieJpXrJ/1Ceucmqce6qHy1gWH8Ed55cmMis7ZEpExy33l/qR3gSUYgVsMZwbbkHoD9uoqmfaaZLFsXDgCJyJRXSpSJBDuJid8cBH2UJNUzxs3Ohf0ClWar3g2KF7ZZFEkQSWheC9sTrmvznQZifag5aVQMY3zbSuwySPW99XOMjeGLeu1GKkmOUIt5+AlZCxxWZ24t2mceN5TVyi3RxXGc6Y4lzmjvAEG8m+zo5VYLz59w44lYS1Zpgu7gzm2KZUsers/uIw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cN8UTs4yV6UhUHWVrmexrJmi+vfjBku0zHMtg98Z3v8=;
- b=Xpa7ZYmtGR8D5wXL2At3DK8iqpXlNxdtWGO6oMbEvGn2afnvltPvlvRbiIWyh/R/kvTQOeR3ojYjZuI0oJhJU2ksDx6XdOftC4kUtzpSUbXZcZ/3y+29+HbZUxk8YdzY0Nf1TsbKkPTdqdbVY8l4FnKMS+Q2oXQNCXqmEDKxWdbTXjqS3F0TGgCeZyue/OuJoFHHozo4YF5R1gbjr6QPa5ZstZXIJdDqs14x+8ZCzfMRviqu9kPblnt+M1bvyZhfHZ1lyAVzKvVYkDzzavtHQZlimNkXD7W60njy5qaw9rsedELC5dQ5U5Cle/avhsc1dug3h1vqZzxSk63qPpyhKA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cN8UTs4yV6UhUHWVrmexrJmi+vfjBku0zHMtg98Z3v8=;
- b=xPrjNax1gb/H1CX05Q0z6jfP2JtnElbHdtJXU1KXOxjsht6LAThD1PzEhJ7EgGOdL88xo/HT8+dWnPYPH4GX9z6iNw4SPr71zmgrRN3xPn3nYjzW2O+0anv4gF8KWRfN7hXP6mzS5hc1eItIOSh53aHRhhv1K19qtjMJmbLBI/A=
-Received: from CY4PR11MB1528.namprd11.prod.outlook.com (2603:10b6:910:d::12)
- by CY4PR11MB0007.namprd11.prod.outlook.com (2603:10b6:910:79::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.20; Tue, 9 Jun
- 2020 16:31:46 +0000
-Received: from CY4PR11MB1528.namprd11.prod.outlook.com
- ([fe80::80a:cad3:9a37:28dd]) by CY4PR11MB1528.namprd11.prod.outlook.com
- ([fe80::80a:cad3:9a37:28dd%11]) with mapi id 15.20.3066.023; Tue, 9 Jun 2020
- 16:31:46 +0000
-From:   "Stankiewicz, Piotr" <piotr.stankiewicz@intel.com>
-To:     Christoph Hellwig <hch@infradead.org>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
-        Olof Johansson <olof@lixom.net>,
-        "Kuppuswamy Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Kelvin Cao <kelvin.cao@microchip.com>,
-        Wesley Sheng <wesley.sheng@microchip.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Krzysztof Wilczynski <kw@linux.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3 03/15] PCI: Use PCI_IRQ_MSI_TYPES where appropriate
-Thread-Topic: [PATCH v3 03/15] PCI: Use PCI_IRQ_MSI_TYPES where appropriate
-Thread-Index: AQHWPj7A77kHrlOHmUula0Gcdul1nqjQbyoAgAAJ5JA=
-Date:   Tue, 9 Jun 2020 16:31:29 +0000
-Deferred-Delivery: Tue, 9 Jun 2020 16:30:30 +0000
-Message-ID: <CY4PR11MB15282CD0C16F87E8179DAD6AF9820@CY4PR11MB1528.namprd11.prod.outlook.com>
-References: <20200609091148.32749-1-piotr.stankiewicz@intel.com>
- <20200609091650.801-1-piotr.stankiewicz@intel.com>
- <20200609155124.GB2597@infradead.org>
-In-Reply-To: <20200609155124.GB2597@infradead.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-reaction: no-action
-dlp-version: 11.2.0.6
-dlp-product: dlpe-windows
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYjljODEwYjUtYmMwNC00YjU1LWJjY2EtYzY0ODRhZWY5MTgwIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoieGxRV3dLTzRkY054dDRTamtWbW9ucmNmT2FGekcxV2Y3eERoSFRrKzJNREtLNDF4MU14bEVyTEpWVU9xVnhxdiJ9
-authentication-results: infradead.org; dkim=none (message not signed)
- header.d=none;infradead.org; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [134.191.221.97]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ac78d427-bbae-404f-89d0-08d80c929a45
-x-ms-traffictypediagnostic: CY4PR11MB0007:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CY4PR11MB00077A3BE635779ED8E7052DF9820@CY4PR11MB0007.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 042957ACD7
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: pPASrbfNPml25OYb1MtO14BWXINnd3wXdWk/X9dZjzGxH+HaHzUwvqsWCAxlwvWa09YaYsh9Uue68yxeFKlWyXebXeCAxOgtjv0JVQOxIItSNDq7CAULmfDDg/OSMfoXENBo9V+kWY20SiaRPST7pOg6GYewq28bdx3VEnL/4cHbdDkeyZ7MQHlAS+I9uM7+0XJt22GbMEYm7otjq17tS+yu0rHaFSEGjZGB0qzc2r7m6OG/rukLqNV3QCg1cTpk8wvCdw7wrdCB69TgF4IHn7ZYSICfZmkg7/ftX6+xk1TN72xmvXDbsIhA9m1AnmlTONxLg631m78Qo/o40lit3A==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR11MB1528.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(39860400002)(136003)(396003)(346002)(376002)(186003)(66446008)(8676002)(9686003)(55016002)(7696005)(6506007)(83380400001)(2906002)(7416002)(478600001)(54906003)(26005)(64756008)(316002)(6916009)(5660300002)(76116006)(71200400001)(52536014)(66476007)(66556008)(6666004)(66946007)(86362001)(8936002)(4326008)(33656002)(4744005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: L4PG+CL2KD1deHCPuC38wHPZBWmTQuYVzKFKNePYf5GPWaz/+KHSRkgGNby9CjMcEPPHVt0aaoz5R7XnNrQ69Vq1Rp7zzzmCEDFKh+dlA6wznVr7L7OJCOtvYNLA1YYzGZzVETW3+BnWy/isFbIPuq/zV9mRwCGxJkcizIFQzujLLh+tHMVEZ146Bm0GYFUlVqCBmjn9cljYPB2PnlGUemjkE17i7HQX/39QWcu9nxPKleAmRF9SkycUiV+U6+bPRkoQWJuY9EsY4fAi+xzS3ruJkJgX4MWeIAU0MtGZcQhkTedXfNFZo8vWYZvSiFm9aC7No+8WnThbhP1sb8uuwkza+LVqqHi1S9ydFOvsw6Tk51UiY318t6ewbt7yl8HRPsnEuEu6D+hzy9wkRu2u7ZONy9KZD9J6zwS0kKnZ9P0UHZ/6jbUm26EbTDfzzMV+4KbfubREcoLNbcS1+5wRy+cLYWXhJG3ncGdsJzZgXLisuvzYnxJCNrHUH9GGKVjc
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 9 Jun 2020 12:32:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57580 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730717AbgFIQcI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 12:32:08 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89334C03E97C
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 09:32:08 -0700 (PDT)
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1jihAS-0004bR-Sg; Tue, 09 Jun 2020 18:32:04 +0200
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1jihAS-0005wb-3c; Tue, 09 Jun 2020 18:32:04 +0200
+Message-ID: <2a621f170574a616bcf047f6725c74552f7abbb1.camel@pengutronix.de>
+Subject: Re: [PATCH 3/7] reset: add BCM6345 reset controller driver
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     =?ISO-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>
+Cc:     robh+dt@kernel.org, tsbogend@alpha.franken.de,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        jonas.gorski@gmail.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com
+Date:   Tue, 09 Jun 2020 18:32:03 +0200
+In-Reply-To: <729976E9-CAF7-47B6-8783-5FD3D85F9EFD@gmail.com>
+References: <20200609134232.4084718-1-noltari@gmail.com>
+         <20200609134232.4084718-4-noltari@gmail.com>
+         <341e8482c6bd06267633160d7358fa8331bef515.camel@pengutronix.de>
+         <729976E9-CAF7-47B6-8783-5FD3D85F9EFD@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: ac78d427-bbae-404f-89d0-08d80c929a45
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jun 2020 16:31:46.5042
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2rXenbqdqRPGedfJtvXbwi1y4XBRkm6oC+RrKLFZLr4CiLGFNsnQXnLZC5K3LGTq/ZT6Hqr9Pe5YwGxNiRZy89DRdhFe99HLhzs488RvzUs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR11MB0007
-X-OriginatorOrg: intel.com
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Christoph Hellwig <hch@infradead.org>
-> Sent: Tuesday, June 9, 2020 5:51 PM
->=20
-> On Tue, Jun 09, 2020 at 11:16:46AM +0200, Piotr Stankiewicz wrote:
-> > Seeing as there is shorthand available to use when asking for any type
-> > of interrupt, or any type of message signalled interrupt, leverage it.
-> >
-> > Signed-off-by: Piotr Stankiewicz <piotr.stankiewicz@intel.com>
-> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-> > Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
->=20
-> The patch actually adding PCI_IRQ_MSI_TYPES still didn't show up on linux=
--pci.
->=20
+Hi Álvaro,
 
-I'm not sure why it didn't get delivered. I just resent it, for sake of com=
-pleteness.
+On Tue, 2020-06-09 at 17:14 +0200, Álvaro Fernández Rojas wrote:
+> Hi Philipp,
+> 
+> > El 9 jun 2020, a las 17:06, Philipp Zabel <p.zabel@pengutronix.de> escribió:
+> > 
+> > Hi Álvaro,
+> > 
+> > On Tue, 2020-06-09 at 15:42 +0200, Álvaro Fernández Rojas wrote:
+> > > Add support for resetting blocks through the Linux reset controller
+> > > subsystem for BCM63xx SoCs.
+> > > 
+> > > Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+> > > ---
+> > > drivers/reset/Kconfig         |   7 ++
+> > > drivers/reset/Makefile        |   1 +
+> > > drivers/reset/reset-bcm6345.c | 149 ++++++++++++++++++++++++++++++++++
+> > > 3 files changed, 157 insertions(+)
+> > > create mode 100644 drivers/reset/reset-bcm6345.c
+> > > 
+> > > diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+> > > index d9efbfd29646..9f1da978cef6 100644
+> > > --- a/drivers/reset/Kconfig
+> > > +++ b/drivers/reset/Kconfig
+> > > @@ -41,6 +41,13 @@ config RESET_BERLIN
+> > > 	help
+> > > 	  This enables the reset controller driver for Marvell Berlin SoCs.
+> > > 
+> > > +config RESET_BCM6345
+> > > +	bool "BCM6345 Reset Controller"
+> > > +	depends on BMIPS_GENERIC || COMPILE_TEST
+> > > +	default BMIPS_GENERIC
+> > > +	help
+> > > +	  This enables the reset controller driver for BCM6345 SoCs.
+> > > +
+> > > config RESET_BRCMSTB
+> > > 	tristate "Broadcom STB reset controller"
+> > > 	depends on ARCH_BRCMSTB || COMPILE_TEST
+> > > diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+> > > index 249ed357c997..e642aae42f0f 100644
+> > > --- a/drivers/reset/Makefile
+> > > +++ b/drivers/reset/Makefile
+> > > @@ -6,6 +6,7 @@ obj-$(CONFIG_ARCH_TEGRA) += tegra/
+> > > obj-$(CONFIG_RESET_A10SR) += reset-a10sr.o
+> > > obj-$(CONFIG_RESET_ATH79) += reset-ath79.o
+> > > obj-$(CONFIG_RESET_AXS10X) += reset-axs10x.o
+> > > +obj-$(CONFIG_RESET_BCM6345) += reset-bcm6345.o
+> > > obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
+> > > obj-$(CONFIG_RESET_BRCMSTB) += reset-brcmstb.o
+> > > obj-$(CONFIG_RESET_BRCMSTB_RESCAL) += reset-brcmstb-rescal.o
+> > > diff --git a/drivers/reset/reset-bcm6345.c b/drivers/reset/reset-bcm6345.c
+> > > new file mode 100644
+> > > index 000000000000..088b7fdb896b
+> > > --- /dev/null
+> > > +++ b/drivers/reset/reset-bcm6345.c
+> > > @@ -0,0 +1,149 @@
+> > > +// SPDX-License-Identifier: GPL-2.0-or-later
+> > > +/*
+> > > + * BCM6345 Reset Controller Driver
+> > > + *
+> > > + * Copyright (C) 2020 Álvaro Fernández Rojas <noltari@gmail.com>
+> > > + */
+> > > +
+> > > +#include <linux/delay.h>
+> > > +#include <linux/init.h>
+> > > +#include <linux/io.h>
+> > > +#include <linux/mod_devicetable.h>
+> > > +#include <linux/platform_device.h>
+> > > +#include <linux/reset-controller.h>
+> > > +
+> > > +#define BCM6345_RESET_NUM		32
+> > > +#define BCM6345_RESET_SLEEP_MIN_US	10000
+> > > +#define BCM6345_RESET_SLEEP_MAX_US	20000
+> > > +
+> > > +struct bcm6345_reset {
+> > > +	struct reset_controller_dev rcdev;
+> > > +	void __iomem *base;
+> > > +	spinlock_t lock;
+> > > +};
+> > > +
+> > > +static int bcm6345_reset_update(struct bcm6345_reset *bcm6345_reset,
+> > > +				unsigned long id, bool assert)
+> > > +{
+> > > +	uint32_t val;
+> > > +
+> > > +	val = __raw_readl(bcm6345_reset->base);
+> > > +	if (assert)
+> > > +		val &= ~BIT(id);
+> > > +	else
+> > > +		val |= BIT(id);
+> > > +	__raw_writel(val, bcm6345_reset->base);
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static int bcm6345_reset_assert(struct reset_controller_dev *rcdev,
+> > > +				unsigned long id)
+> > > +{
+> > > +	struct bcm6345_reset *bcm6345_reset =
+> > > +		container_of(rcdev, struct bcm6345_reset, rcdev);
+> > > +	unsigned long flags;
+> > > +
+> > > +	spin_lock_irqsave(&bcm6345_reset->lock, flags);
+> > > +	bcm6345_reset_update(bcm6345_reset, id, true);
+> > > +	spin_unlock_irqrestore(&bcm6345_reset->lock, flags);
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static int bcm6345_reset_deassert(struct reset_controller_dev *rcdev,
+> > > +				  unsigned long id)
+> > > +{
+> > > +	struct bcm6345_reset *bcm6345_reset =
+> > > +		container_of(rcdev, struct bcm6345_reset, rcdev);
+> > > +	unsigned long flags;
+> > > +
+> > > +	spin_lock_irqsave(&bcm6345_reset->lock, flags);
+> > > +	bcm6345_reset_update(bcm6345_reset, id, false);
+> > > +	spin_unlock_irqrestore(&bcm6345_reset->lock, flags);
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static int bcm6345_reset_reset(struct reset_controller_dev *rcdev,
+> > > +			       unsigned long id)
+> > > +{
+> > > +	struct bcm6345_reset *bcm6345_reset =
+> > > +		container_of(rcdev, struct bcm6345_reset, rcdev);
+> > > +	unsigned long flags;
+> > > +
+> > > +	spin_lock_irqsave(&bcm6345_reset->lock, flags);
+> > > +	usleep_range(BCM6345_RESET_SLEEP_MIN_US,
+> > > +		     BCM6345_RESET_SLEEP_MAX_US);
+> > 
+> > What is the purpose of sleeping before reset assertion?
+> 
+> None, I must have introduced that for testing something and then I forgot to remove it. Sorry for that...
+> 
+> > If you can do without this, with I think this driver could be made to
+> > use reset-simple.
+> 
+> Yes, but only if I can add reset support with a configurable sleep range to reset-simple. Is this possible?
 
-> But from the person who added PCI_IRQ_*:
->=20
-> NAK to the whole concept of PCI_IRQ_MSI_TYPES, I think this just makes th=
-e
-> code a lot more confusing.  Especially with the new IMS interrupt type, w=
-hich
-> really is a MSI-like interrupt but certainly shouldn't be added to this m=
-ask.
+I should have mentioned, support for this is on the reset/next branch:
+
+  git://git.pengutronix.de/pza/linux.git reset/next
+
+regards
+Philipp
