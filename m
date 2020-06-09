@@ -2,110 +2,460 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C0BDC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:21:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A30C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E1132067B
+	by mail.kernel.org (Postfix) with ESMTP id E89E62068D
 	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:21:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591726863;
+	bh=Si2NmDq9UcW73F9umGE9C05vEjvqsU+XbjyHT+zq2gQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=kabFW9RBzcUD6oiAyDN4G5J0XBTJuOSv1STsyc+chgvQu26IyJOD8KDE25gZg1Vbu
+	 XZULOKvend2DWZO7UidCEpL/tWgbMxDNz9YZSp0b0mVD5xFimo6y8y9ecXJPDulFgk
+	 x2EzF/01N+kT/oQk2g0BKpkfrLXCjWV0t/s8E7tk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388959AbgFISVA (ORCPT
+        id S2388950AbgFISU5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:21:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41198 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730905AbgFIRso (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 14:20:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33296 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732370AbgFIRso (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 9 Jun 2020 13:48:44 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4E12C03E97C;
-        Tue,  9 Jun 2020 10:48:43 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: aratiu)
-        with ESMTPSA id B100A2A3B92
-From:   Adrian Ratiu <adrian.ratiu@collabora.com>
-To:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Philippe CORNU <philippe.cornu@st.com>,
-        Yannick FERTRE <yannick.fertre@st.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Jonas Karlman <jonas@kwiboo.se>, linux-imx@nxp.com,
-        kernel@collabora.com, linux-stm32@st-md-mailman.stormreply.com,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-Subject: [PATCH v9 11/11] Documentation: gpu: todo: Add dw-mipi-dsi consolidation plan
-Date:   Tue,  9 Jun 2020 20:49:59 +0300
-Message-Id: <20200609174959.955926-12-adrian.ratiu@collabora.com>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B653207ED;
+        Tue,  9 Jun 2020 17:48:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591724922;
+        bh=Si2NmDq9UcW73F9umGE9C05vEjvqsU+XbjyHT+zq2gQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=IbgDJwM6YwOFWNvKvWTBAgVFsoSnX8gD80cg7ufkz4uJ5D8OHDVkJn0yu3MnKkV2k
+         t1AT9stlehqNUWGYTPkxTZe0UbKshlGPiuKHIIfB2mWcAvHd2noDaQEWqFGMaGjOSj
+         1mqnYNA0kAhBogA6wwhR1SDerlL0cBr1keJX7Bl8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Mark Gross <mgross@linux.intel.com>,
+        Borislav Petkov <bp@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Neelima Krishnan <neelima.krishnan@intel.com>
+Subject: [PATCH 4.9 38/42] x86/speculation: Add Special Register Buffer Data Sampling (SRBDS) mitigation
+Date:   Tue,  9 Jun 2020 19:44:44 +0200
+Message-Id: <20200609174019.731275068@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200609174959.955926-1-adrian.ratiu@collabora.com>
-References: <20200609174959.955926-1-adrian.ratiu@collabora.com>
+In-Reply-To: <20200609174015.379493548@linuxfoundation.org>
+References: <20200609174015.379493548@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This documents the longer-term plan to cleanup the dw-mipi-dsi bridge
-based drivers after the regmap refactor and i.MX6 driver have landed.
+From: Mark Gross <mgross@linux.intel.com>
 
-The goal is to get the entire bridge logic in one place and continue
-the refactorings under the drm/bridge tree.
+commit 7e5b3c267d256822407a22fdce6afdf9cd13f9fb upstream
 
-Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Cc: Boris Brezillon <boris.brezillon@collabora.com>
-Cc: Sam Ravnborg <sam@ravnborg.org>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
+SRBDS is an MDS-like speculative side channel that can leak bits from the
+random number generator (RNG) across cores and threads. New microcode
+serializes the processor access during the execution of RDRAND and
+RDSEED. This ensures that the shared buffer is overwritten before it is
+released for reuse.
+
+While it is present on all affected CPU models, the microcode mitigation
+is not needed on models that enumerate ARCH_CAPABILITIES[MDS_NO] in the
+cases where TSX is not supported or has been disabled with TSX_CTRL.
+
+The mitigation is activated by default on affected processors and it
+increases latency for RDRAND and RDSEED instructions. Among other
+effects this will reduce throughput from /dev/urandom.
+
+* Enable administrator to configure the mitigation off when desired using
+  either mitigations=off or srbds=off.
+
+* Export vulnerability status via sysfs
+
+* Rename file-scoped macros to apply for non-whitelist table initializations.
+
+ [ bp: Massage,
+   - s/VULNBL_INTEL_STEPPING/VULNBL_INTEL_STEPPINGS/g,
+   - do not read arch cap MSR a second time in tsx_fused_off() - just pass it in,
+   - flip check in cpu_set_bug_bits() to save an indentation level,
+   - reflow comments.
+   jpoimboe: s/Mitigated/Mitigation/ in user-visible strings
+   tglx: Dropped the fused off magic for now
+ ]
+
+Signed-off-by: Mark Gross <mgross@linux.intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Reviewed-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Tested-by: Neelima Krishnan <neelima.krishnan@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- Documentation/gpu/todo.rst | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ Documentation/ABI/testing/sysfs-devices-system-cpu |    1 
+ Documentation/kernel-parameters.txt                |   20 +++
+ arch/x86/include/asm/cpufeatures.h                 |   30 +++--
+ arch/x86/include/asm/msr-index.h                   |    4 
+ arch/x86/kernel/cpu/bugs.c                         |  106 +++++++++++++++++++++
+ arch/x86/kernel/cpu/common.c                       |   31 ++++++
+ arch/x86/kernel/cpu/cpu.h                          |    1 
+ drivers/base/cpu.c                                 |    8 +
+ 8 files changed, 187 insertions(+), 14 deletions(-)
 
-diff --git a/Documentation/gpu/todo.rst b/Documentation/gpu/todo.rst
-index 658b52f7ffc6c..2b142980a4b16 100644
---- a/Documentation/gpu/todo.rst
-+++ b/Documentation/gpu/todo.rst
-@@ -548,6 +548,31 @@ See drivers/gpu/drm/amd/display/TODO for tasks.
+--- a/Documentation/ABI/testing/sysfs-devices-system-cpu
++++ b/Documentation/ABI/testing/sysfs-devices-system-cpu
+@@ -358,6 +358,7 @@ What:		/sys/devices/system/cpu/vulnerabi
+ 		/sys/devices/system/cpu/vulnerabilities/spec_store_bypass
+ 		/sys/devices/system/cpu/vulnerabilities/l1tf
+ 		/sys/devices/system/cpu/vulnerabilities/mds
++		/sys/devices/system/cpu/vulnerabilities/srbds
+ 		/sys/devices/system/cpu/vulnerabilities/tsx_async_abort
+ 		/sys/devices/system/cpu/vulnerabilities/itlb_multihit
+ Date:		January 2018
+--- a/Documentation/kernel-parameters.txt
++++ b/Documentation/kernel-parameters.txt
+@@ -4262,6 +4262,26 @@ bytes respectively. Such letter suffixes
+ 	spia_pedr=
+ 	spia_peddr=
  
- Contact: Harry Wentland, Alex Deucher
++	srbds=		[X86,INTEL]
++			Control the Special Register Buffer Data Sampling
++			(SRBDS) mitigation.
++
++			Certain CPUs are vulnerable to an MDS-like
++			exploit which can leak bits from the random
++			number generator.
++
++			By default, this issue is mitigated by
++			microcode.  However, the microcode fix can cause
++			the RDRAND and RDSEED instructions to become
++			much slower.  Among other effects, this will
++			result in reduced throughput from /dev/urandom.
++
++			The microcode mitigation can be disabled with
++			the following option:
++
++			off:    Disable mitigation and remove
++				performance impact to RDRAND and RDSEED
++
+ 	ssbd=		[ARM64,HW]
+ 			Speculative Store Bypass Disable control
  
-+Reorganize dw-mipi-dsi bridge-based host-controller drivers
-+-----------------------------------------------------------
-+
-+The Synopsys DW MIPI DSI bridge is used by a number of SoC platform drivers
-+(STM, Rockchip, i.MX) which don't cleanly encapsulate their bridge logic which
-+gets split between the Synopsys bridge (drm/bridge/synopsys/dw-mipi-dsi.c) and
-+platform drivers like drm/imx/dw_mipi_dsi-imx6.c by passing around the bridge
-+configuration regmap, creating new bridges / daisy chaining in platform drivers,
-+duplicating encoder creation, having too much encoder logic instead of using the
-+simple encoder interface and so on.
-+
-+The goal of this rework is to make the dw-mipi-dsi driver a better encapsulated
-+bridge by moving all bridge-related logic under drm/bridge, including the SoC
-+bindings which chain to the core Synopsys code under drm/bridge/dw-mipi-dsi/
-+from which they can be further consolidated and cleaned up.
-+
-+If this goal proves to be impossible then drm_bridge might not be the correct
-+abstraction for these host controllers and unifying their logic into a helper
-+library encapsulating a drm_encoder might be more desirable, in other words to
-+move away from drm_bridge entirely.
-+
-+Contact: Adrian Ratiu, Daniel Vetter, Laurent Pinchart
-+
-+Level: Intermediate
-+
- Bootsplash
- ==========
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -316,6 +316,7 @@
+ /* Intel-defined CPU features, CPUID level 0x00000007:0 (EDX), word 18 */
+ #define X86_FEATURE_AVX512_4VNNIW	(18*32+ 2) /* AVX-512 Neural Network Instructions */
+ #define X86_FEATURE_AVX512_4FMAPS	(18*32+ 3) /* AVX-512 Multiply Accumulation Single precision */
++#define X86_FEATURE_SRBDS_CTRL		(18*32+ 9) /* "" SRBDS mitigation MSR available */
+ #define X86_FEATURE_TSX_FORCE_ABORT	(18*32+13) /* "" TSX_FORCE_ABORT */
+ #define X86_FEATURE_MD_CLEAR		(18*32+10) /* VERW clears CPU buffers */
+ #define X86_FEATURE_PCONFIG		(18*32+18) /* Intel PCONFIG */
+@@ -346,19 +347,20 @@
+  */
+ #define X86_BUG_ESPFIX		X86_BUG(9) /* "" IRET to 16-bit SS corrupts ESP/RSP high bits */
+ #endif
+-#define X86_BUG_NULL_SEG	X86_BUG(10) /* Nulling a selector preserves the base */
+-#define X86_BUG_SWAPGS_FENCE	X86_BUG(11) /* SWAPGS without input dep on GS */
+-#define X86_BUG_MONITOR		X86_BUG(12) /* IPI required to wake up remote CPU */
+-#define X86_BUG_AMD_E400	X86_BUG(13) /* CPU is among the affected by Erratum 400 */
+-#define X86_BUG_CPU_MELTDOWN	X86_BUG(14) /* CPU is affected by meltdown attack and needs kernel page table isolation */
+-#define X86_BUG_SPECTRE_V1	X86_BUG(15) /* CPU is affected by Spectre variant 1 attack with conditional branches */
+-#define X86_BUG_SPECTRE_V2	X86_BUG(16) /* CPU is affected by Spectre variant 2 attack with indirect branches */
+-#define X86_BUG_SPEC_STORE_BYPASS X86_BUG(17) /* CPU is affected by speculative store bypass attack */
+-#define X86_BUG_L1TF		X86_BUG(18) /* CPU is affected by L1 Terminal Fault */
+-#define X86_BUG_MDS		X86_BUG(19) /* CPU is affected by Microarchitectural data sampling */
+-#define X86_BUG_MSBDS_ONLY	X86_BUG(20) /* CPU is only affected by the  MSDBS variant of BUG_MDS */
+-#define X86_BUG_SWAPGS		X86_BUG(21) /* CPU is affected by speculation through SWAPGS */
+-#define X86_BUG_TAA		X86_BUG(22) /* CPU is affected by TSX Async Abort(TAA) */
+-#define X86_BUG_ITLB_MULTIHIT	X86_BUG(23) /* CPU may incur MCE during certain page attribute changes */
++#define X86_BUG_NULL_SEG		X86_BUG(10) /* Nulling a selector preserves the base */
++#define X86_BUG_SWAPGS_FENCE		X86_BUG(11) /* SWAPGS without input dep on GS */
++#define X86_BUG_MONITOR			X86_BUG(12) /* IPI required to wake up remote CPU */
++#define X86_BUG_AMD_E400		X86_BUG(13) /* CPU is among the affected by Erratum 400 */
++#define X86_BUG_CPU_MELTDOWN		X86_BUG(14) /* CPU is affected by meltdown attack and needs kernel page table isolation */
++#define X86_BUG_SPECTRE_V1		X86_BUG(15) /* CPU is affected by Spectre variant 1 attack with conditional branches */
++#define X86_BUG_SPECTRE_V2		X86_BUG(16) /* CPU is affected by Spectre variant 2 attack with indirect branches */
++#define X86_BUG_SPEC_STORE_BYPASS	X86_BUG(17) /* CPU is affected by speculative store bypass attack */
++#define X86_BUG_L1TF			X86_BUG(18) /* CPU is affected by L1 Terminal Fault */
++#define X86_BUG_MDS			X86_BUG(19) /* CPU is affected by Microarchitectural data sampling */
++#define X86_BUG_MSBDS_ONLY		X86_BUG(20) /* CPU is only affected by the  MSDBS variant of BUG_MDS */
++#define X86_BUG_SWAPGS			X86_BUG(21) /* CPU is affected by speculation through SWAPGS */
++#define X86_BUG_TAA			X86_BUG(22) /* CPU is affected by TSX Async Abort(TAA) */
++#define X86_BUG_ITLB_MULTIHIT		X86_BUG(23) /* CPU may incur MCE during certain page attribute changes */
++#define X86_BUG_SRBDS			X86_BUG(24) /* CPU may leak RNG bits if not mitigated */
  
--- 
-2.27.0
+ #endif /* _ASM_X86_CPUFEATURES_H */
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -103,6 +103,10 @@
+ #define TSX_CTRL_RTM_DISABLE		BIT(0)	/* Disable RTM feature */
+ #define TSX_CTRL_CPUID_CLEAR		BIT(1)	/* Disable TSX enumeration */
+ 
++/* SRBDS support */
++#define MSR_IA32_MCU_OPT_CTRL		0x00000123
++#define RNGDS_MITG_DIS			BIT(0)
++
+ #define MSR_IA32_SYSENTER_CS		0x00000174
+ #define MSR_IA32_SYSENTER_ESP		0x00000175
+ #define MSR_IA32_SYSENTER_EIP		0x00000176
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -40,6 +40,7 @@ static void __init l1tf_select_mitigatio
+ static void __init mds_select_mitigation(void);
+ static void __init mds_print_mitigation(void);
+ static void __init taa_select_mitigation(void);
++static void __init srbds_select_mitigation(void);
+ 
+ /* The base value of the SPEC_CTRL MSR that always has to be preserved. */
+ u64 x86_spec_ctrl_base;
+@@ -107,6 +108,7 @@ void __init check_bugs(void)
+ 	l1tf_select_mitigation();
+ 	mds_select_mitigation();
+ 	taa_select_mitigation();
++	srbds_select_mitigation();
+ 
+ 	/*
+ 	 * As MDS and TAA mitigations are inter-related, print MDS
+@@ -390,6 +392,97 @@ static int __init tsx_async_abort_parse_
+ early_param("tsx_async_abort", tsx_async_abort_parse_cmdline);
+ 
+ #undef pr_fmt
++#define pr_fmt(fmt)	"SRBDS: " fmt
++
++enum srbds_mitigations {
++	SRBDS_MITIGATION_OFF,
++	SRBDS_MITIGATION_UCODE_NEEDED,
++	SRBDS_MITIGATION_FULL,
++	SRBDS_MITIGATION_TSX_OFF,
++	SRBDS_MITIGATION_HYPERVISOR,
++};
++
++static enum srbds_mitigations srbds_mitigation __ro_after_init = SRBDS_MITIGATION_FULL;
++
++static const char * const srbds_strings[] = {
++	[SRBDS_MITIGATION_OFF]		= "Vulnerable",
++	[SRBDS_MITIGATION_UCODE_NEEDED]	= "Vulnerable: No microcode",
++	[SRBDS_MITIGATION_FULL]		= "Mitigation: Microcode",
++	[SRBDS_MITIGATION_TSX_OFF]	= "Mitigation: TSX disabled",
++	[SRBDS_MITIGATION_HYPERVISOR]	= "Unknown: Dependent on hypervisor status",
++};
++
++static bool srbds_off;
++
++void update_srbds_msr(void)
++{
++	u64 mcu_ctrl;
++
++	if (!boot_cpu_has_bug(X86_BUG_SRBDS))
++		return;
++
++	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
++		return;
++
++	if (srbds_mitigation == SRBDS_MITIGATION_UCODE_NEEDED)
++		return;
++
++	rdmsrl(MSR_IA32_MCU_OPT_CTRL, mcu_ctrl);
++
++	switch (srbds_mitigation) {
++	case SRBDS_MITIGATION_OFF:
++	case SRBDS_MITIGATION_TSX_OFF:
++		mcu_ctrl |= RNGDS_MITG_DIS;
++		break;
++	case SRBDS_MITIGATION_FULL:
++		mcu_ctrl &= ~RNGDS_MITG_DIS;
++		break;
++	default:
++		break;
++	}
++
++	wrmsrl(MSR_IA32_MCU_OPT_CTRL, mcu_ctrl);
++}
++
++static void __init srbds_select_mitigation(void)
++{
++	u64 ia32_cap;
++
++	if (!boot_cpu_has_bug(X86_BUG_SRBDS))
++		return;
++
++	/*
++	 * Check to see if this is one of the MDS_NO systems supporting
++	 * TSX that are only exposed to SRBDS when TSX is enabled.
++	 */
++	ia32_cap = x86_read_arch_cap_msr();
++	if ((ia32_cap & ARCH_CAP_MDS_NO) && !boot_cpu_has(X86_FEATURE_RTM))
++		srbds_mitigation = SRBDS_MITIGATION_TSX_OFF;
++	else if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
++		srbds_mitigation = SRBDS_MITIGATION_HYPERVISOR;
++	else if (!boot_cpu_has(X86_FEATURE_SRBDS_CTRL))
++		srbds_mitigation = SRBDS_MITIGATION_UCODE_NEEDED;
++	else if (cpu_mitigations_off() || srbds_off)
++		srbds_mitigation = SRBDS_MITIGATION_OFF;
++
++	update_srbds_msr();
++	pr_info("%s\n", srbds_strings[srbds_mitigation]);
++}
++
++static int __init srbds_parse_cmdline(char *str)
++{
++	if (!str)
++		return -EINVAL;
++
++	if (!boot_cpu_has_bug(X86_BUG_SRBDS))
++		return 0;
++
++	srbds_off = !strcmp(str, "off");
++	return 0;
++}
++early_param("srbds", srbds_parse_cmdline);
++
++#undef pr_fmt
+ #define pr_fmt(fmt)     "Spectre V1 : " fmt
+ 
+ enum spectre_v1_mitigation {
+@@ -1501,6 +1594,11 @@ static char *ibpb_state(void)
+ 	return "";
+ }
+ 
++static ssize_t srbds_show_state(char *buf)
++{
++	return sprintf(buf, "%s\n", srbds_strings[srbds_mitigation]);
++}
++
+ static ssize_t cpu_show_common(struct device *dev, struct device_attribute *attr,
+ 			       char *buf, unsigned int bug)
+ {
+@@ -1542,6 +1640,9 @@ static ssize_t cpu_show_common(struct de
+ 	case X86_BUG_ITLB_MULTIHIT:
+ 		return itlb_multihit_show_state(buf);
+ 
++	case X86_BUG_SRBDS:
++		return srbds_show_state(buf);
++
+ 	default:
+ 		break;
+ 	}
+@@ -1588,4 +1689,9 @@ ssize_t cpu_show_itlb_multihit(struct de
+ {
+ 	return cpu_show_common(dev, attr, buf, X86_BUG_ITLB_MULTIHIT);
+ }
++
++ssize_t cpu_show_srbds(struct device *dev, struct device_attribute *attr, char *buf)
++{
++	return cpu_show_common(dev, attr, buf, X86_BUG_SRBDS);
++}
+ #endif
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -956,6 +956,27 @@ static const __initconst struct x86_cpu_
+ 	{}
+ };
+ 
++#define VULNBL_INTEL_STEPPINGS(model, steppings, issues)		   \
++	X86_MATCH_VENDOR_FAM_MODEL_STEPPINGS_FEATURE(INTEL, 6,		   \
++					    INTEL_FAM6_##model, steppings, \
++					    X86_FEATURE_ANY, issues)
++
++#define SRBDS		BIT(0)
++
++static const struct x86_cpu_id cpu_vuln_blacklist[] __initconst = {
++	VULNBL_INTEL_STEPPINGS(IVYBRIDGE,	X86_STEPPING_ANY,		SRBDS),
++	VULNBL_INTEL_STEPPINGS(HASWELL_CORE,	X86_STEPPING_ANY,		SRBDS),
++	VULNBL_INTEL_STEPPINGS(HASWELL_ULT,	X86_STEPPING_ANY,		SRBDS),
++	VULNBL_INTEL_STEPPINGS(HASWELL_GT3E,	X86_STEPPING_ANY,		SRBDS),
++	VULNBL_INTEL_STEPPINGS(BROADWELL_GT3E,	X86_STEPPING_ANY,		SRBDS),
++	VULNBL_INTEL_STEPPINGS(BROADWELL_CORE,	X86_STEPPING_ANY,		SRBDS),
++	VULNBL_INTEL_STEPPINGS(SKYLAKE_MOBILE,	X86_STEPPING_ANY,		SRBDS),
++	VULNBL_INTEL_STEPPINGS(SKYLAKE_DESKTOP,	X86_STEPPING_ANY,		SRBDS),
++	VULNBL_INTEL_STEPPINGS(KABYLAKE_MOBILE,	X86_STEPPINGS(0x0, 0xC),	SRBDS),
++	VULNBL_INTEL_STEPPINGS(KABYLAKE_DESKTOP,X86_STEPPINGS(0x0, 0xD),	SRBDS),
++	{}
++};
++
+ static bool __init cpu_matches(const struct x86_cpu_id *table, unsigned long which)
+ {
+ 	const struct x86_cpu_id *m = x86_match_cpu(table);
+@@ -1021,6 +1042,15 @@ static void __init cpu_set_bug_bits(stru
+ 	     (ia32_cap & ARCH_CAP_TSX_CTRL_MSR)))
+ 		setup_force_cpu_bug(X86_BUG_TAA);
+ 
++	/*
++	 * SRBDS affects CPUs which support RDRAND or RDSEED and are listed
++	 * in the vulnerability blacklist.
++	 */
++	if ((cpu_has(c, X86_FEATURE_RDRAND) ||
++	     cpu_has(c, X86_FEATURE_RDSEED)) &&
++	    cpu_matches(cpu_vuln_blacklist, SRBDS))
++		    setup_force_cpu_bug(X86_BUG_SRBDS);
++
+ 	if (cpu_matches(cpu_vuln_whitelist, NO_MELTDOWN))
+ 		return;
+ 
+@@ -1453,6 +1483,7 @@ void identify_secondary_cpu(struct cpuin
+ 	mtrr_ap_init();
+ 	validate_apic_and_package_id(c);
+ 	x86_spec_ctrl_setup_ap();
++	update_srbds_msr();
+ }
+ 
+ struct msr_range {
+--- a/arch/x86/kernel/cpu/cpu.h
++++ b/arch/x86/kernel/cpu/cpu.h
+@@ -66,6 +66,7 @@ extern int detect_extended_topology_earl
+ extern int detect_ht_early(struct cpuinfo_x86 *c);
+ 
+ extern void x86_spec_ctrl_setup_ap(void);
++extern void update_srbds_msr(void);
+ 
+ extern u64 x86_read_arch_cap_msr(void);
+ 
+--- a/drivers/base/cpu.c
++++ b/drivers/base/cpu.c
+@@ -550,6 +550,12 @@ ssize_t __weak cpu_show_itlb_multihit(st
+ 	return sprintf(buf, "Not affected\n");
+ }
+ 
++ssize_t __weak cpu_show_srbds(struct device *dev,
++			      struct device_attribute *attr, char *buf)
++{
++	return sprintf(buf, "Not affected\n");
++}
++
+ static DEVICE_ATTR(meltdown, 0444, cpu_show_meltdown, NULL);
+ static DEVICE_ATTR(spectre_v1, 0444, cpu_show_spectre_v1, NULL);
+ static DEVICE_ATTR(spectre_v2, 0444, cpu_show_spectre_v2, NULL);
+@@ -558,6 +564,7 @@ static DEVICE_ATTR(l1tf, 0444, cpu_show_
+ static DEVICE_ATTR(mds, 0444, cpu_show_mds, NULL);
+ static DEVICE_ATTR(tsx_async_abort, 0444, cpu_show_tsx_async_abort, NULL);
+ static DEVICE_ATTR(itlb_multihit, 0444, cpu_show_itlb_multihit, NULL);
++static DEVICE_ATTR(srbds, 0444, cpu_show_srbds, NULL);
+ 
+ static struct attribute *cpu_root_vulnerabilities_attrs[] = {
+ 	&dev_attr_meltdown.attr,
+@@ -568,6 +575,7 @@ static struct attribute *cpu_root_vulner
+ 	&dev_attr_mds.attr,
+ 	&dev_attr_tsx_async_abort.attr,
+ 	&dev_attr_itlb_multihit.attr,
++	&dev_attr_srbds.attr,
+ 	NULL
+ };
+ 
+
 
