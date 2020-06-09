@@ -2,53 +2,53 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC4EC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:49:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB78C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:50:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D97E0207ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:49:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC1202081A
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:50:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591724995;
-	bh=et9YtkaNWCi90vne3IgotzdPWzrupwfZhlFMkeqow5o=;
+	s=default; t=1591725004;
+	bh=elzZlFVVbJQP/RVUFulbrxVPPSPHvHGxsKQio13tRac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dOVvIA4UePZfdgK0/O2XTpA1/jgQzNTi6pAYbUyg78aodbnFyx8hVNSg4rcAL97xM
-	 vfZP9odfYL+VJf8WQj75FJ6P2NZXca9bir3HsEB6swC5QBFOLy6A6vgL6NHA71cGzN
-	 1t8W+TmKkw/Kox/OmwIu7eq3u4Tt7ImreDbI/zEk=
+	b=QWB231snjxgB/LqnrKYiExzOtt8ndG1KVQrXcLekVN9Cxnv7A/tPtluGc9HnrYaOI
+	 daaxf6VZ3DOKPE/o23IAubTmw+CVCxDOgFX7sf9FJwbALd60aRYsQfmu7D06qcWO5Q
+	 LSwG7PCQsZ+V5Zy8W8zRr8T+M2tTLYi1MJdclJOw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732589AbgFIRty (ORCPT
+        id S1732601AbgFIRuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:49:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35832 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:50:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730925AbgFIRtg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:49:36 -0400
+        id S1732542AbgFIRti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:49:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAC0B2081A;
-        Tue,  9 Jun 2020 17:49:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB18E20801;
+        Tue,  9 Jun 2020 17:49:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591724976;
-        bh=et9YtkaNWCi90vne3IgotzdPWzrupwfZhlFMkeqow5o=;
+        s=default; t=1591724978;
+        bh=elzZlFVVbJQP/RVUFulbrxVPPSPHvHGxsKQio13tRac=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WlrXtT38WxwU8GtocmYUUTododx/JW2+wN/q4vvCrn6gSFX2j7U46a8xis5yFy8nD
-         iHhO7ojic/9u0PNVxdXhv4nQq+Id9kyK+I1ka9WpsGgQnWUooH5YIhcul5cHUZqkoH
-         GS87bEMHMGhejZ7UoxpwEIneOyyYuL+pfBixsw2o=
+        b=Xe8OSZ9wOtT4/I7D+g3c3pwM4gRVil3SEyXY7a1LnBYchrbCosSEpJpgqe4hYRSps
+         A/Gr+iT7Yj0vgoIRbrWuMOrfu5I5bxoQaFmIyKN0JMJ150wbU3snUue67fFarC66hi
+         HAZ8puuM7MugLK4uv7QwGnI4pBb9NEhi2WKHupJc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vishal Verma <vishal.l.verma@intel.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: =?UTF-8?q?=5BPATCH=204=2E14=2002/46=5D=20libnvdimm=3A=20Fix=20endian=20conversion=20issues=C2=A0?=
-Date:   Tue,  9 Jun 2020 19:44:18 +0200
-Message-Id: <20200609174023.128836157@linuxfoundation.org>
+        stable@vger.kernel.org, Xiang Chen <chenxiang66@hisilicon.com>,
+        John Garry <john.garry@huawei.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 03/46] scsi: hisi_sas: Check sas_port before using it
+Date:   Tue,  9 Jun 2020 19:44:19 +0200
+Message-Id: <20200609174023.206203623@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174022.938987501@linuxfoundation.org>
 References: <20200609174022.938987501@linuxfoundation.org>
@@ -61,75 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+From: Xiang Chen <chenxiang66@hisilicon.com>
 
-commit 86aa66687442ef45909ff9814b82b4d2bb892294 upstream.
+[ Upstream commit 8c39673d5474b95374df2104dc1f65205c5278b8 ]
 
-nd_label->dpa issue was observed when trying to enable the namespace created
-with little-endian kernel on a big-endian kernel. That made me run
-`sparse` on the rest of the code and other changes are the result of that.
+Need to check the structure sas_port before using it.
 
-Fixes: d9b83c756953 ("libnvdimm, btt: rework error clearing")
-Fixes: 9dedc73a4658 ("libnvdimm/btt: Fix LBA masking during 'free list' population")
-Reviewed-by: Vishal Verma <vishal.l.verma@intel.com>
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Link: https://lore.kernel.org/r/20190809074726.27815-1-aneesh.kumar@linux.ibm.com
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: https://lore.kernel.org/r/1573551059-107873-2-git-send-email-john.garry@huawei.com
+Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvdimm/btt.c            |    8 ++++----
- drivers/nvdimm/namespace_devs.c |    7 ++++---
- 2 files changed, 8 insertions(+), 7 deletions(-)
+ drivers/scsi/hisi_sas/hisi_sas_main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/nvdimm/btt.c
-+++ b/drivers/nvdimm/btt.c
-@@ -399,9 +399,9 @@ static int btt_flog_write(struct arena_i
- 	arena->freelist[lane].sub = 1 - arena->freelist[lane].sub;
- 	if (++(arena->freelist[lane].seq) == 4)
- 		arena->freelist[lane].seq = 1;
--	if (ent_e_flag(ent->old_map))
-+	if (ent_e_flag(le32_to_cpu(ent->old_map)))
- 		arena->freelist[lane].has_err = 1;
--	arena->freelist[lane].block = le32_to_cpu(ent_lba(ent->old_map));
-+	arena->freelist[lane].block = ent_lba(le32_to_cpu(ent->old_map));
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
+index b167411580ba..dd918c5d5cb8 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_main.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
+@@ -655,12 +655,13 @@ static void hisi_sas_port_notify_formed(struct asd_sas_phy *sas_phy)
+ 	struct hisi_hba *hisi_hba = sas_ha->lldd_ha;
+ 	struct hisi_sas_phy *phy = sas_phy->lldd_phy;
+ 	struct asd_sas_port *sas_port = sas_phy->port;
+-	struct hisi_sas_port *port = to_hisi_sas_port(sas_port);
++	struct hisi_sas_port *port;
+ 	unsigned long flags;
  
- 	return ret;
- }
-@@ -567,8 +567,8 @@ static int btt_freelist_init(struct aren
- 		 * FIXME: if error clearing fails during init, we want to make
- 		 * the BTT read-only
- 		 */
--		if (ent_e_flag(log_new.old_map) &&
--				!ent_normal(log_new.old_map)) {
-+		if (ent_e_flag(le32_to_cpu(log_new.old_map)) &&
-+		    !ent_normal(le32_to_cpu(log_new.old_map))) {
- 			arena->freelist[i].has_err = 1;
- 			ret = arena_clear_freelist_error(arena, i);
- 			if (ret)
---- a/drivers/nvdimm/namespace_devs.c
-+++ b/drivers/nvdimm/namespace_devs.c
-@@ -1978,7 +1978,7 @@ struct device *create_namespace_pmem(str
- 		nd_mapping = &nd_region->mapping[i];
- 		label_ent = list_first_entry_or_null(&nd_mapping->labels,
- 				typeof(*label_ent), list);
--		label0 = label_ent ? label_ent->label : 0;
-+		label0 = label_ent ? label_ent->label : NULL;
+ 	if (!sas_port)
+ 		return;
  
- 		if (!label0) {
- 			WARN_ON(1);
-@@ -2315,8 +2315,9 @@ static struct device **scan_labels(struc
- 			continue;
- 
- 		/* skip labels that describe extents outside of the region */
--		if (nd_label->dpa < nd_mapping->start || nd_label->dpa > map_end)
--			continue;
-+		if (__le64_to_cpu(nd_label->dpa) < nd_mapping->start ||
-+		    __le64_to_cpu(nd_label->dpa) > map_end)
-+				continue;
- 
- 		i = add_namespace_resource(nd_region, nd_label, devs, count);
- 		if (i < 0)
++	port = to_hisi_sas_port(sas_port);
+ 	spin_lock_irqsave(&hisi_hba->lock, flags);
+ 	port->port_attached = 1;
+ 	port->id = phy->port_id;
+-- 
+2.25.1
+
 
 
