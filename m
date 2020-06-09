@@ -4,49 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C65E9C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:05:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0668C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A288C20691
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:05:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF8CA20734
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:05:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725926;
-	bh=YUQ3zE6gHknWLZQ8cWA+ZL/A4ox6L2Wm10Hf9XSjg5U=;
+	s=default; t=1591725933;
+	bh=ccjtb1exREAQABGA30nQpiXVzk+9HpQ22UP3vU8g8vc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HLvSEF7ftZCen+4Dh2O6qWkPIULlC1DNTVy/bUUFg5bS9NjPf8+hJNhcdoWVe8HLL
-	 CMxTT8tMABkIOja9FAdtlYGS1QPbTOUZTuTscGVMro+g7uG/t8JSOFyFl0Svm/RNCP
-	 +Gi3rayuevzFHwTj4CW2DDDtfr8oKRZCjsKuJdpY=
+	b=u43bGoz82icD/FWFPm5gJiuinLFgBNFmyB5R1fnGwz1C8DRaST4d6ezNgPTS+1whL
+	 IDYZ1UEIZI4QNHF84tPfqj9sNVJqwXBPg7aZ9Jf2H7Abo+mGPPGNo+P/bB50ARN0dE
+	 u2TYM7eFNL1i2Wt6/G2Cgb2qWxMVVeauitkh7HtU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388071AbgFISFY (ORCPT
+        id S2388100AbgFISFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:05:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41270 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 14:05:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732714AbgFIRvp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:51:45 -0400
+        id S1731021AbgFIRvk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:51:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3702C20774;
-        Tue,  9 Jun 2020 17:51:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEBC420734;
+        Tue,  9 Jun 2020 17:51:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725104;
-        bh=YUQ3zE6gHknWLZQ8cWA+ZL/A4ox6L2Wm10Hf9XSjg5U=;
+        s=default; t=1591725100;
+        bh=ccjtb1exREAQABGA30nQpiXVzk+9HpQ22UP3vU8g8vc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zuG3f/WgEjhhwoSvFLWEFenvf3xEE4H9UfUOJdxihMb6CULYzHGSyJpZfCOgvQb5C
-         B2RHn60sXC3gkMbupcbDBp7ZdVndEy4BQg1hZXGu6eaHKJvO20tcU76QwszO0n4OBN
-         BkdkmZI010O08pfryRlsn+chthxDlST9QU+hVoLM=
+        b=lH5I65G/LBMdBe4pqcRWk1m9d9AE4XnnQpMN6SiOq5fksmEV9j5dVfYC0y6cmRhx4
+         HdTB216pUaZTA4cTeAhifOsnGovBTvuPilSmN5dvDj0W0xbIl4vVrKNFNooCqYeE+K
+         AqExG8S/gnqwc3yoHN86Rav8+JzMfYchRyRLDvw8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 05/25] NFC: st21nfca: add missed kfree_skb() in an error path
-Date:   Tue,  9 Jun 2020 19:44:55 +0200
-Message-Id: <20200609174049.232877910@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH 4.19 24/25] uprobes: ensure that uprobe->offset and ->ref_ctr_offset are properly aligned
+Date:   Tue,  9 Jun 2020 19:45:14 +0200
+Message-Id: <20200609174051.488794266@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174048.576094775@linuxfoundation.org>
 References: <20200609174048.576094775@linuxfoundation.org>
@@ -59,34 +64,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Oleg Nesterov <oleg@redhat.com>
 
-[ Upstream commit 3decabdc714ca56c944f4669b4cdec5c2c1cea23 ]
+commit 013b2deba9a6b80ca02f4fafd7dedf875e9b4450 upstream.
 
-st21nfca_tm_send_atr_res() misses to call kfree_skb() in an error path.
-Add the missed function call to fix it.
+uprobe_write_opcode() must not cross page boundary; prepare_uprobe()
+relies on arch_uprobe_analyze_insn() which should validate "vaddr" but
+some architectures (csky, s390, and sparc) don't do this.
 
-Fixes: 1892bf844ea0 ("NFC: st21nfca: Adding P2P support to st21nfca in Initiator & Target mode")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+We can remove the BUG_ON() check in prepare_uprobe() and validate the
+offset early in __uprobe_register(). The new IS_ALIGNED() check matches
+the alignment check in arch_prepare_kprobe() on supported architectures,
+so I think that all insns must be aligned to UPROBE_SWBP_INSN_SIZE.
+
+Another problem is __update_ref_ctr() which was wrong from the very
+beginning, it can read/write outside of kmap'ed page unless "vaddr" is
+aligned to sizeof(short), __uprobe_register() should check this too.
+
+Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Tested-by: Sven Schnelle <svens@linux.ibm.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/nfc/st21nfca/dep.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/nfc/st21nfca/dep.c
-+++ b/drivers/nfc/st21nfca/dep.c
-@@ -184,8 +184,10 @@ static int st21nfca_tm_send_atr_res(stru
- 		memcpy(atr_res->gbi, atr_req->gbi, gb_len);
- 		r = nfc_set_remote_general_bytes(hdev->ndev, atr_res->gbi,
- 						  gb_len);
--		if (r < 0)
-+		if (r < 0) {
-+			kfree_skb(skb);
- 			return r;
-+		}
- 	}
+---
+ kernel/events/uprobes.c |   16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
+
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -612,10 +612,6 @@ static int prepare_uprobe(struct uprobe
+ 	if (ret)
+ 		goto out;
  
- 	info->dep_info.curr_nfc_dep_pni = 0;
+-	/* uprobe_write_opcode() assumes we don't cross page boundary */
+-	BUG_ON((uprobe->offset & ~PAGE_MASK) +
+-			UPROBE_SWBP_INSN_SIZE > PAGE_SIZE);
+-
+ 	smp_wmb(); /* pairs with the smp_rmb() in handle_swbp() */
+ 	set_bit(UPROBE_COPY_INSN, &uprobe->flags);
+ 
+@@ -911,6 +907,15 @@ static int __uprobe_register(struct inod
+ 	if (offset > i_size_read(inode))
+ 		return -EINVAL;
+ 
++	/*
++	 * This ensures that copy_from_page(), copy_to_page() and
++	 * __update_ref_ctr() can't cross page boundary.
++	 */
++	if (!IS_ALIGNED(offset, UPROBE_SWBP_INSN_SIZE))
++		return -EINVAL;
++	if (!IS_ALIGNED(ref_ctr_offset, sizeof(short)))
++		return -EINVAL;
++
+  retry:
+ 	uprobe = alloc_uprobe(inode, offset);
+ 	if (!uprobe)
+@@ -1708,6 +1713,9 @@ static int is_trap_at_addr(struct mm_str
+ 	uprobe_opcode_t opcode;
+ 	int result;
+ 
++	if (WARN_ON_ONCE(!IS_ALIGNED(vaddr, UPROBE_SWBP_INSN_SIZE)))
++		return -EINVAL;
++
+ 	pagefault_disable();
+ 	result = __get_user(opcode, (uprobe_opcode_t __user *)vaddr);
+ 	pagefault_enable();
 
 
