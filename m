@@ -2,460 +2,565 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A30C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5934CC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E89E62068D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:21:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591726863;
-	bh=Si2NmDq9UcW73F9umGE9C05vEjvqsU+XbjyHT+zq2gQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kabFW9RBzcUD6oiAyDN4G5J0XBTJuOSv1STsyc+chgvQu26IyJOD8KDE25gZg1Vbu
-	 XZULOKvend2DWZO7UidCEpL/tWgbMxDNz9YZSp0b0mVD5xFimo6y8y9ecXJPDulFgk
-	 x2EzF/01N+kT/oQk2g0BKpkfrLXCjWV0t/s8E7tk=
+	by mail.kernel.org (Postfix) with ESMTP id 3B3012067B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:21:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388950AbgFISU5 (ORCPT
+        id S2388968AbgFISVL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:20:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33296 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732370AbgFIRso (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:48:44 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B653207ED;
-        Tue,  9 Jun 2020 17:48:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591724922;
-        bh=Si2NmDq9UcW73F9umGE9C05vEjvqsU+XbjyHT+zq2gQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IbgDJwM6YwOFWNvKvWTBAgVFsoSnX8gD80cg7ufkz4uJ5D8OHDVkJn0yu3MnKkV2k
-         t1AT9stlehqNUWGYTPkxTZe0UbKshlGPiuKHIIfB2mWcAvHd2noDaQEWqFGMaGjOSj
-         1mqnYNA0kAhBogA6wwhR1SDerlL0cBr1keJX7Bl8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Gross <mgross@linux.intel.com>,
-        Borislav Petkov <bp@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Neelima Krishnan <neelima.krishnan@intel.com>
-Subject: [PATCH 4.9 38/42] x86/speculation: Add Special Register Buffer Data Sampling (SRBDS) mitigation
-Date:   Tue,  9 Jun 2020 19:44:44 +0200
-Message-Id: <20200609174019.731275068@linuxfoundation.org>
+        Tue, 9 Jun 2020 14:21:11 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:51816 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732356AbgFIRsm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:48:42 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: aratiu)
+        with ESMTPSA id CC1742A3C1F
+From:   Adrian Ratiu <adrian.ratiu@collabora.com>
+To:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Philippe CORNU <philippe.cornu@st.com>,
+        Yannick FERTRE <yannick.fertre@st.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Jonas Karlman <jonas@kwiboo.se>, linux-imx@nxp.com,
+        kernel@collabora.com, linux-stm32@st-md-mailman.stormreply.com,
+        Fabio Estevam <festevam@gmail.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Adrian Pop <pop.adrian61@gmail.com>,
+        Arnaud Ferraris <arnaud.ferraris@collabora.com>,
+        Sjoerd Simons <sjoerd.simons@collabora.com>,
+        Martyn Welch <martyn.welch@collabora.com>
+Subject: [PATCH v9 07/11] drm: imx: Add i.MX 6 MIPI DSI host platform driver
+Date:   Tue,  9 Jun 2020 20:49:55 +0300
+Message-Id: <20200609174959.955926-8-adrian.ratiu@collabora.com>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200609174015.379493548@linuxfoundation.org>
-References: <20200609174015.379493548@linuxfoundation.org>
-User-Agent: quilt/0.66
+In-Reply-To: <20200609174959.955926-1-adrian.ratiu@collabora.com>
+References: <20200609174959.955926-1-adrian.ratiu@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Gross <mgross@linux.intel.com>
+This adds support for the Synopsis DesignWare MIPI DSI v1.01 host
+controller which is embedded in i.MX 6 SoCs.
 
-commit 7e5b3c267d256822407a22fdce6afdf9cd13f9fb upstream
+Based on following patches, but updated/extended to work with existing
+support found in the kernel:
 
-SRBDS is an MDS-like speculative side channel that can leak bits from the
-random number generator (RNG) across cores and threads. New microcode
-serializes the processor access during the execution of RDRAND and
-RDSEED. This ensures that the shared buffer is overwritten before it is
-released for reuse.
+- drm: imx: Support Synopsys DesignWare MIPI DSI host controller
+  Signed-off-by: Liu Ying <Ying.Liu@freescale.com>
 
-While it is present on all affected CPU models, the microcode mitigation
-is not needed on models that enumerate ARCH_CAPABILITIES[MDS_NO] in the
-cases where TSX is not supported or has been disabled with TSX_CTRL.
-
-The mitigation is activated by default on affected processors and it
-increases latency for RDRAND and RDSEED instructions. Among other
-effects this will reduce throughput from /dev/urandom.
-
-* Enable administrator to configure the mitigation off when desired using
-  either mitigations=off or srbds=off.
-
-* Export vulnerability status via sysfs
-
-* Rename file-scoped macros to apply for non-whitelist table initializations.
-
- [ bp: Massage,
-   - s/VULNBL_INTEL_STEPPING/VULNBL_INTEL_STEPPINGS/g,
-   - do not read arch cap MSR a second time in tsx_fused_off() - just pass it in,
-   - flip check in cpu_set_bug_bits() to save an indentation level,
-   - reflow comments.
-   jpoimboe: s/Mitigated/Mitigation/ in user-visible strings
-   tglx: Dropped the fused off magic for now
- ]
-
-Signed-off-by: Mark Gross <mgross@linux.intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Reviewed-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Tested-by: Neelima Krishnan <neelima.krishnan@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Reviewed-by: Emil Velikov <emil.velikov@collabora.com>
+Tested-by: Adrian Pop <pop.adrian61@gmail.com>
+Tested-by: Arnaud Ferraris <arnaud.ferraris@collabora.com>
+Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.com>
+Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
+Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
 ---
- Documentation/ABI/testing/sysfs-devices-system-cpu |    1 
- Documentation/kernel-parameters.txt                |   20 +++
- arch/x86/include/asm/cpufeatures.h                 |   30 +++--
- arch/x86/include/asm/msr-index.h                   |    4 
- arch/x86/kernel/cpu/bugs.c                         |  106 +++++++++++++++++++++
- arch/x86/kernel/cpu/common.c                       |   31 ++++++
- arch/x86/kernel/cpu/cpu.h                          |    1 
- drivers/base/cpu.c                                 |    8 +
- 8 files changed, 187 insertions(+), 14 deletions(-)
+Changes since v8:
+  - Changed Enric's email in the CC tag to his work address
+  - pllref_clk != 27Mhz promoted from WARN to DRM_DEV_ERROR and
+  is tested ASAP after clk enable in probe() (Enric)
+  - Multiple small bridge init cleanups (Enric)
+  - Multiple debug/error msg fixes to make them more clear or
+  avoid redundancy (Enric)
+  - Simplified imx_mipi_dsi_bind() as a result of the DW bridge
+  bind() removal (Laurent)
+  - Added a bridge .attach callback
+  - Dropped unnecessary bridge_to_imxdsi() conversion
+  - Fixed minor whitespace checkpatch warnings and moved the
+  bindings doc before this patch to appease checkpatch
 
---- a/Documentation/ABI/testing/sysfs-devices-system-cpu
-+++ b/Documentation/ABI/testing/sysfs-devices-system-cpu
-@@ -358,6 +358,7 @@ What:		/sys/devices/system/cpu/vulnerabi
- 		/sys/devices/system/cpu/vulnerabilities/spec_store_bypass
- 		/sys/devices/system/cpu/vulnerabilities/l1tf
- 		/sys/devices/system/cpu/vulnerabilities/mds
-+		/sys/devices/system/cpu/vulnerabilities/srbds
- 		/sys/devices/system/cpu/vulnerabilities/tsx_async_abort
- 		/sys/devices/system/cpu/vulnerabilities/itlb_multihit
- Date:		January 2018
---- a/Documentation/kernel-parameters.txt
-+++ b/Documentation/kernel-parameters.txt
-@@ -4262,6 +4262,26 @@ bytes respectively. Such letter suffixes
- 	spia_pedr=
- 	spia_peddr=
- 
-+	srbds=		[X86,INTEL]
-+			Control the Special Register Buffer Data Sampling
-+			(SRBDS) mitigation.
+Changes since v7:
+  - Removed encoder helper ops and added drm_bridge (Laurent)
+  - Brought back drm_simple_encoder_init and dropped dependency on
+  external unify encoder creation patch (Laurent)
+  - Minor typo fixes
+
+Changes since v6:
+  - Replaced custom noop encoder with the simple drm encoder (Enric)
+  - Added CONFIG_DRM_IMX6_MIPI_DSI depends on CONFIG_OF (Enric)
+  - Dropped imx_mipi_dsi_register() because now it only creates the
+  dummy encoder which can easily be done directly in imx_dsi_bind()
+
+Changes since v5:
+  - Reword to remove unrelated device tree patch mention (Fabio)
+  - Move pllref_clk enable/disable to bind/unbind (Ezequiel)
+  - Fix freescale.com -> nxp.com email addresses (Fabio)
+  - Also added myself as module author (Fabio)
+  - Use DRM_DEV_* macros for consistency, print more error msg
+
+Changes since v4:
+  - Split off driver-specific configuration of phy timings due
+  to new upstream API.
+  - Move regmap infrastructure logic to separate commit (Ezequiel)
+  - Move dsi v1.01 layout addition to a separate commit (Ezequiel)
+  - Minor warnings and driver name fixes
+
+Changes since v3:
+  - Renamed platform driver to reflect it's i.MX6 only. (Fabio)
+
+Changes since v2:
+  - Fixed commit tags. (Emil)
+
+Changes since v1:
+  - Moved register definitions & regmap initialization into bridge
+  module. Platform drivers get the regmap via plat_data after
+  calling the bridge probe. (Emil)
+---
+ drivers/gpu/drm/imx/Kconfig            |   8 +
+ drivers/gpu/drm/imx/Makefile           |   1 +
+ drivers/gpu/drm/imx/dw_mipi_dsi-imx6.c | 399 +++++++++++++++++++++++++
+ 3 files changed, 408 insertions(+)
+ create mode 100644 drivers/gpu/drm/imx/dw_mipi_dsi-imx6.c
+
+diff --git a/drivers/gpu/drm/imx/Kconfig b/drivers/gpu/drm/imx/Kconfig
+index 874cc532eabad..5f5b925ed09ca 100644
+--- a/drivers/gpu/drm/imx/Kconfig
++++ b/drivers/gpu/drm/imx/Kconfig
+@@ -46,3 +46,11 @@ config DRM_IMX_HDMI
+ 	depends on DRM_IMX
+ 	help
+ 	  Choose this if you want to use HDMI on i.MX6.
 +
-+			Certain CPUs are vulnerable to an MDS-like
-+			exploit which can leak bits from the random
-+			number generator.
-+
-+			By default, this issue is mitigated by
-+			microcode.  However, the microcode fix can cause
-+			the RDRAND and RDSEED instructions to become
-+			much slower.  Among other effects, this will
-+			result in reduced throughput from /dev/urandom.
-+
-+			The microcode mitigation can be disabled with
-+			the following option:
-+
-+			off:    Disable mitigation and remove
-+				performance impact to RDRAND and RDSEED
-+
- 	ssbd=		[ARM64,HW]
- 			Speculative Store Bypass Disable control
++config DRM_IMX6_MIPI_DSI
++	tristate "Freescale i.MX6 DRM MIPI DSI"
++	select DRM_DW_MIPI_DSI
++	depends on DRM_IMX
++	depends on OF
++	help
++	  Choose this if you want to use MIPI DSI on i.MX6.
+diff --git a/drivers/gpu/drm/imx/Makefile b/drivers/gpu/drm/imx/Makefile
+index 94fc8e2d92344..205d7e65aa170 100644
+--- a/drivers/gpu/drm/imx/Makefile
++++ b/drivers/gpu/drm/imx/Makefile
+@@ -10,3 +10,4 @@ obj-$(CONFIG_DRM_IMX_LDB) += imx-ldb.o
+ obj-$(CONFIG_DRM_IMX_DCIC) += imx-dcic.o
  
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -316,6 +316,7 @@
- /* Intel-defined CPU features, CPUID level 0x00000007:0 (EDX), word 18 */
- #define X86_FEATURE_AVX512_4VNNIW	(18*32+ 2) /* AVX-512 Neural Network Instructions */
- #define X86_FEATURE_AVX512_4FMAPS	(18*32+ 3) /* AVX-512 Multiply Accumulation Single precision */
-+#define X86_FEATURE_SRBDS_CTRL		(18*32+ 9) /* "" SRBDS mitigation MSR available */
- #define X86_FEATURE_TSX_FORCE_ABORT	(18*32+13) /* "" TSX_FORCE_ABORT */
- #define X86_FEATURE_MD_CLEAR		(18*32+10) /* VERW clears CPU buffers */
- #define X86_FEATURE_PCONFIG		(18*32+18) /* Intel PCONFIG */
-@@ -346,19 +347,20 @@
-  */
- #define X86_BUG_ESPFIX		X86_BUG(9) /* "" IRET to 16-bit SS corrupts ESP/RSP high bits */
- #endif
--#define X86_BUG_NULL_SEG	X86_BUG(10) /* Nulling a selector preserves the base */
--#define X86_BUG_SWAPGS_FENCE	X86_BUG(11) /* SWAPGS without input dep on GS */
--#define X86_BUG_MONITOR		X86_BUG(12) /* IPI required to wake up remote CPU */
--#define X86_BUG_AMD_E400	X86_BUG(13) /* CPU is among the affected by Erratum 400 */
--#define X86_BUG_CPU_MELTDOWN	X86_BUG(14) /* CPU is affected by meltdown attack and needs kernel page table isolation */
--#define X86_BUG_SPECTRE_V1	X86_BUG(15) /* CPU is affected by Spectre variant 1 attack with conditional branches */
--#define X86_BUG_SPECTRE_V2	X86_BUG(16) /* CPU is affected by Spectre variant 2 attack with indirect branches */
--#define X86_BUG_SPEC_STORE_BYPASS X86_BUG(17) /* CPU is affected by speculative store bypass attack */
--#define X86_BUG_L1TF		X86_BUG(18) /* CPU is affected by L1 Terminal Fault */
--#define X86_BUG_MDS		X86_BUG(19) /* CPU is affected by Microarchitectural data sampling */
--#define X86_BUG_MSBDS_ONLY	X86_BUG(20) /* CPU is only affected by the  MSDBS variant of BUG_MDS */
--#define X86_BUG_SWAPGS		X86_BUG(21) /* CPU is affected by speculation through SWAPGS */
--#define X86_BUG_TAA		X86_BUG(22) /* CPU is affected by TSX Async Abort(TAA) */
--#define X86_BUG_ITLB_MULTIHIT	X86_BUG(23) /* CPU may incur MCE during certain page attribute changes */
-+#define X86_BUG_NULL_SEG		X86_BUG(10) /* Nulling a selector preserves the base */
-+#define X86_BUG_SWAPGS_FENCE		X86_BUG(11) /* SWAPGS without input dep on GS */
-+#define X86_BUG_MONITOR			X86_BUG(12) /* IPI required to wake up remote CPU */
-+#define X86_BUG_AMD_E400		X86_BUG(13) /* CPU is among the affected by Erratum 400 */
-+#define X86_BUG_CPU_MELTDOWN		X86_BUG(14) /* CPU is affected by meltdown attack and needs kernel page table isolation */
-+#define X86_BUG_SPECTRE_V1		X86_BUG(15) /* CPU is affected by Spectre variant 1 attack with conditional branches */
-+#define X86_BUG_SPECTRE_V2		X86_BUG(16) /* CPU is affected by Spectre variant 2 attack with indirect branches */
-+#define X86_BUG_SPEC_STORE_BYPASS	X86_BUG(17) /* CPU is affected by speculative store bypass attack */
-+#define X86_BUG_L1TF			X86_BUG(18) /* CPU is affected by L1 Terminal Fault */
-+#define X86_BUG_MDS			X86_BUG(19) /* CPU is affected by Microarchitectural data sampling */
-+#define X86_BUG_MSBDS_ONLY		X86_BUG(20) /* CPU is only affected by the  MSDBS variant of BUG_MDS */
-+#define X86_BUG_SWAPGS			X86_BUG(21) /* CPU is affected by speculation through SWAPGS */
-+#define X86_BUG_TAA			X86_BUG(22) /* CPU is affected by TSX Async Abort(TAA) */
-+#define X86_BUG_ITLB_MULTIHIT		X86_BUG(23) /* CPU may incur MCE during certain page attribute changes */
-+#define X86_BUG_SRBDS			X86_BUG(24) /* CPU may leak RNG bits if not mitigated */
- 
- #endif /* _ASM_X86_CPUFEATURES_H */
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -103,6 +103,10 @@
- #define TSX_CTRL_RTM_DISABLE		BIT(0)	/* Disable RTM feature */
- #define TSX_CTRL_CPUID_CLEAR		BIT(1)	/* Disable TSX enumeration */
- 
-+/* SRBDS support */
-+#define MSR_IA32_MCU_OPT_CTRL		0x00000123
-+#define RNGDS_MITG_DIS			BIT(0)
+ obj-$(CONFIG_DRM_IMX_HDMI) += dw_hdmi-imx.o
++obj-$(CONFIG_DRM_IMX6_MIPI_DSI) += dw_mipi_dsi-imx6.o
+diff --git a/drivers/gpu/drm/imx/dw_mipi_dsi-imx6.c b/drivers/gpu/drm/imx/dw_mipi_dsi-imx6.c
+new file mode 100644
+index 0000000000000..f19b355c6c06d
+--- /dev/null
++++ b/drivers/gpu/drm/imx/dw_mipi_dsi-imx6.c
+@@ -0,0 +1,399 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * i.MX6 drm driver - MIPI DSI Host Controller
++ *
++ * Copyright (C) 2011-2015 Freescale Semiconductor, Inc.
++ * Copyright (C) 2019-2020 Collabora, Ltd.
++ */
 +
- #define MSR_IA32_SYSENTER_CS		0x00000174
- #define MSR_IA32_SYSENTER_ESP		0x00000175
- #define MSR_IA32_SYSENTER_EIP		0x00000176
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -40,6 +40,7 @@ static void __init l1tf_select_mitigatio
- static void __init mds_select_mitigation(void);
- static void __init mds_print_mitigation(void);
- static void __init taa_select_mitigation(void);
-+static void __init srbds_select_mitigation(void);
- 
- /* The base value of the SPEC_CTRL MSR that always has to be preserved. */
- u64 x86_spec_ctrl_base;
-@@ -107,6 +108,7 @@ void __init check_bugs(void)
- 	l1tf_select_mitigation();
- 	mds_select_mitigation();
- 	taa_select_mitigation();
-+	srbds_select_mitigation();
- 
- 	/*
- 	 * As MDS and TAA mitigations are inter-related, print MDS
-@@ -390,6 +392,97 @@ static int __init tsx_async_abort_parse_
- early_param("tsx_async_abort", tsx_async_abort_parse_cmdline);
- 
- #undef pr_fmt
-+#define pr_fmt(fmt)	"SRBDS: " fmt
++#include <linux/clk.h>
++#include <linux/component.h>
++#include <linux/mfd/syscon.h>
++#include <linux/mfd/syscon/imx6q-iomuxc-gpr.h>
++#include <linux/module.h>
++#include <linux/of_device.h>
++#include <linux/regmap.h>
++#include <linux/videodev2.h>
++#include <drm/bridge/dw_mipi_dsi.h>
++#include <drm/drm_atomic_state_helper.h>
++#include <drm/drm_crtc_helper.h>
++#include <drm/drm_mipi_dsi.h>
++#include <drm/drm_of.h>
++#include <drm/drm_print.h>
++#include <drm/drm_simple_kms_helper.h>
 +
-+enum srbds_mitigations {
-+	SRBDS_MITIGATION_OFF,
-+	SRBDS_MITIGATION_UCODE_NEEDED,
-+	SRBDS_MITIGATION_FULL,
-+	SRBDS_MITIGATION_TSX_OFF,
-+	SRBDS_MITIGATION_HYPERVISOR,
++#include "imx-drm.h"
++
++#define DSI_PWR_UP			0x04
++#define RESET				0
++#define POWERUP				BIT(0)
++
++#define DSI_PHY_IF_CTRL			0x5c
++#define PHY_IF_CTRL_RESET		0x0
++
++#define DSI_PHY_TST_CTRL0		0x64
++#define PHY_TESTCLK			BIT(1)
++#define PHY_UNTESTCLK			0
++#define PHY_TESTCLR			BIT(0)
++#define PHY_UNTESTCLR			0
++
++#define DSI_PHY_TST_CTRL1		0x68
++#define PHY_TESTEN			BIT(16)
++#define PHY_UNTESTEN			0
++#define PHY_TESTDOUT(n)			(((n) & 0xff) << 8)
++#define PHY_TESTDIN(n)			(((n) & 0xff) << 0)
++
++struct imx_mipi_dsi {
++	struct drm_encoder encoder;
++	struct drm_bridge bridge;
++	struct device *dev;
++	struct regmap *mux_sel;
++	struct dw_mipi_dsi *mipi_dsi;
++	struct clk *pllref_clk;
++
++	void __iomem *base;
++	unsigned int lane_mbps;
 +};
 +
-+static enum srbds_mitigations srbds_mitigation __ro_after_init = SRBDS_MITIGATION_FULL;
-+
-+static const char * const srbds_strings[] = {
-+	[SRBDS_MITIGATION_OFF]		= "Vulnerable",
-+	[SRBDS_MITIGATION_UCODE_NEEDED]	= "Vulnerable: No microcode",
-+	[SRBDS_MITIGATION_FULL]		= "Mitigation: Microcode",
-+	[SRBDS_MITIGATION_TSX_OFF]	= "Mitigation: TSX disabled",
-+	[SRBDS_MITIGATION_HYPERVISOR]	= "Unknown: Dependent on hypervisor status",
++struct dphy_pll_testdin_map {
++	unsigned int max_mbps;
++	u8 testdin;
 +};
 +
-+static bool srbds_off;
++/* The table is based on 27MHz DPHY pll reference clock. */
++static const struct dphy_pll_testdin_map dptdin_map[] = {
++	{160, 0x04}, {180, 0x24}, {200, 0x44}, {210, 0x06},
++	{240, 0x26}, {250, 0x46}, {270, 0x08}, {300, 0x28},
++	{330, 0x48}, {360, 0x2a}, {400, 0x4a}, {450, 0x0c},
++	{500, 0x2c}, {550, 0x0e}, {600, 0x2e}, {650, 0x10},
++	{700, 0x30}, {750, 0x12}, {800, 0x32}, {850, 0x14},
++	{900, 0x34}, {950, 0x54}, {1000, 0x74}
++};
 +
-+void update_srbds_msr(void)
++static int
++imx_mipi_dsi_bridge_atomic_check(struct drm_bridge *bridge,
++				 struct drm_bridge_state *bridge_state,
++				 struct drm_crtc_state *crtc_state,
++				 struct drm_connector_state *conn_state)
 +{
-+	u64 mcu_ctrl;
++	struct imx_crtc_state *imx_crtc_state = to_imx_crtc_state(crtc_state);
 +
-+	if (!boot_cpu_has_bug(X86_BUG_SRBDS))
-+		return;
++	/* The following values are taken from dw_hdmi_imx_atomic_check */
++	imx_crtc_state->bus_format = MEDIA_BUS_FMT_RGB888_1X24;
++	imx_crtc_state->di_hsync_pin = 2;
++	imx_crtc_state->di_vsync_pin = 3;
 +
-+	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
-+		return;
-+
-+	if (srbds_mitigation == SRBDS_MITIGATION_UCODE_NEEDED)
-+		return;
-+
-+	rdmsrl(MSR_IA32_MCU_OPT_CTRL, mcu_ctrl);
-+
-+	switch (srbds_mitigation) {
-+	case SRBDS_MITIGATION_OFF:
-+	case SRBDS_MITIGATION_TSX_OFF:
-+		mcu_ctrl |= RNGDS_MITG_DIS;
-+		break;
-+	case SRBDS_MITIGATION_FULL:
-+		mcu_ctrl &= ~RNGDS_MITG_DIS;
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	wrmsrl(MSR_IA32_MCU_OPT_CTRL, mcu_ctrl);
-+}
-+
-+static void __init srbds_select_mitigation(void)
-+{
-+	u64 ia32_cap;
-+
-+	if (!boot_cpu_has_bug(X86_BUG_SRBDS))
-+		return;
-+
-+	/*
-+	 * Check to see if this is one of the MDS_NO systems supporting
-+	 * TSX that are only exposed to SRBDS when TSX is enabled.
-+	 */
-+	ia32_cap = x86_read_arch_cap_msr();
-+	if ((ia32_cap & ARCH_CAP_MDS_NO) && !boot_cpu_has(X86_FEATURE_RTM))
-+		srbds_mitigation = SRBDS_MITIGATION_TSX_OFF;
-+	else if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
-+		srbds_mitigation = SRBDS_MITIGATION_HYPERVISOR;
-+	else if (!boot_cpu_has(X86_FEATURE_SRBDS_CTRL))
-+		srbds_mitigation = SRBDS_MITIGATION_UCODE_NEEDED;
-+	else if (cpu_mitigations_off() || srbds_off)
-+		srbds_mitigation = SRBDS_MITIGATION_OFF;
-+
-+	update_srbds_msr();
-+	pr_info("%s\n", srbds_strings[srbds_mitigation]);
-+}
-+
-+static int __init srbds_parse_cmdline(char *str)
-+{
-+	if (!str)
-+		return -EINVAL;
-+
-+	if (!boot_cpu_has_bug(X86_BUG_SRBDS))
-+		return 0;
-+
-+	srbds_off = !strcmp(str, "off");
 +	return 0;
 +}
-+early_param("srbds", srbds_parse_cmdline);
 +
-+#undef pr_fmt
- #define pr_fmt(fmt)     "Spectre V1 : " fmt
- 
- enum spectre_v1_mitigation {
-@@ -1501,6 +1594,11 @@ static char *ibpb_state(void)
- 	return "";
- }
- 
-+static ssize_t srbds_show_state(char *buf)
++static void imx_mipi_dsi_bridge_atomic_enable(struct drm_bridge *bridge,
++					      struct drm_bridge_state *old_st)
 +{
-+	return sprintf(buf, "%s\n", srbds_strings[srbds_mitigation]);
++	struct imx_mipi_dsi *dsi = bridge->driver_private;
++	int mux = drm_of_encoder_active_port_id(dsi->dev->of_node,
++						&dsi->encoder);
++	/* Set IOMUX DSI output reg to correct IPU 1 or 0 and DI 1 or 0 ports */
++	regmap_update_bits(dsi->mux_sel, IOMUXC_GPR3,
++			   IMX6Q_GPR3_MIPI_MUX_CTL_MASK,
++			   mux << IMX6Q_GPR3_MIPI_MUX_CTL_SHIFT);
 +}
 +
- static ssize_t cpu_show_common(struct device *dev, struct device_attribute *attr,
- 			       char *buf, unsigned int bug)
- {
-@@ -1542,6 +1640,9 @@ static ssize_t cpu_show_common(struct de
- 	case X86_BUG_ITLB_MULTIHIT:
- 		return itlb_multihit_show_state(buf);
- 
-+	case X86_BUG_SRBDS:
-+		return srbds_show_state(buf);
-+
- 	default:
- 		break;
- 	}
-@@ -1588,4 +1689,9 @@ ssize_t cpu_show_itlb_multihit(struct de
- {
- 	return cpu_show_common(dev, attr, buf, X86_BUG_ITLB_MULTIHIT);
- }
-+
-+ssize_t cpu_show_srbds(struct device *dev, struct device_attribute *attr, char *buf)
++static int imx_mipi_dsi_bridge_attach(struct drm_bridge *bridge,
++				      enum drm_bridge_attach_flags flags)
 +{
-+	return cpu_show_common(dev, attr, buf, X86_BUG_SRBDS);
++	struct imx_mipi_dsi *dsi = bridge->driver_private;
++	struct drm_bridge *dw_bridge = of_drm_find_bridge(dsi->dev->of_node);
++
++	return drm_bridge_attach(bridge->encoder, dw_bridge,
++				 &dsi->bridge, flags);
 +}
- #endif
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -956,6 +956,27 @@ static const __initconst struct x86_cpu_
- 	{}
- };
- 
-+#define VULNBL_INTEL_STEPPINGS(model, steppings, issues)		   \
-+	X86_MATCH_VENDOR_FAM_MODEL_STEPPINGS_FEATURE(INTEL, 6,		   \
-+					    INTEL_FAM6_##model, steppings, \
-+					    X86_FEATURE_ANY, issues)
 +
-+#define SRBDS		BIT(0)
-+
-+static const struct x86_cpu_id cpu_vuln_blacklist[] __initconst = {
-+	VULNBL_INTEL_STEPPINGS(IVYBRIDGE,	X86_STEPPING_ANY,		SRBDS),
-+	VULNBL_INTEL_STEPPINGS(HASWELL_CORE,	X86_STEPPING_ANY,		SRBDS),
-+	VULNBL_INTEL_STEPPINGS(HASWELL_ULT,	X86_STEPPING_ANY,		SRBDS),
-+	VULNBL_INTEL_STEPPINGS(HASWELL_GT3E,	X86_STEPPING_ANY,		SRBDS),
-+	VULNBL_INTEL_STEPPINGS(BROADWELL_GT3E,	X86_STEPPING_ANY,		SRBDS),
-+	VULNBL_INTEL_STEPPINGS(BROADWELL_CORE,	X86_STEPPING_ANY,		SRBDS),
-+	VULNBL_INTEL_STEPPINGS(SKYLAKE_MOBILE,	X86_STEPPING_ANY,		SRBDS),
-+	VULNBL_INTEL_STEPPINGS(SKYLAKE_DESKTOP,	X86_STEPPING_ANY,		SRBDS),
-+	VULNBL_INTEL_STEPPINGS(KABYLAKE_MOBILE,	X86_STEPPINGS(0x0, 0xC),	SRBDS),
-+	VULNBL_INTEL_STEPPINGS(KABYLAKE_DESKTOP,X86_STEPPINGS(0x0, 0xD),	SRBDS),
-+	{}
++static const struct drm_bridge_funcs imx_dsi_bridge_funcs = {
++	.atomic_enable = imx_mipi_dsi_bridge_atomic_enable,
++	.atomic_check = imx_mipi_dsi_bridge_atomic_check,
++	.atomic_reset = drm_atomic_helper_bridge_reset,
++	.atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
++	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
++	.attach	= imx_mipi_dsi_bridge_attach,
 +};
 +
- static bool __init cpu_matches(const struct x86_cpu_id *table, unsigned long which)
- {
- 	const struct x86_cpu_id *m = x86_match_cpu(table);
-@@ -1021,6 +1042,15 @@ static void __init cpu_set_bug_bits(stru
- 	     (ia32_cap & ARCH_CAP_TSX_CTRL_MSR)))
- 		setup_force_cpu_bug(X86_BUG_TAA);
- 
-+	/*
-+	 * SRBDS affects CPUs which support RDRAND or RDSEED and are listed
-+	 * in the vulnerability blacklist.
-+	 */
-+	if ((cpu_has(c, X86_FEATURE_RDRAND) ||
-+	     cpu_has(c, X86_FEATURE_RDSEED)) &&
-+	    cpu_matches(cpu_vuln_blacklist, SRBDS))
-+		    setup_force_cpu_bug(X86_BUG_SRBDS);
-+
- 	if (cpu_matches(cpu_vuln_whitelist, NO_MELTDOWN))
- 		return;
- 
-@@ -1453,6 +1483,7 @@ void identify_secondary_cpu(struct cpuin
- 	mtrr_ap_init();
- 	validate_apic_and_package_id(c);
- 	x86_spec_ctrl_setup_ap();
-+	update_srbds_msr();
- }
- 
- struct msr_range {
---- a/arch/x86/kernel/cpu/cpu.h
-+++ b/arch/x86/kernel/cpu/cpu.h
-@@ -66,6 +66,7 @@ extern int detect_extended_topology_earl
- extern int detect_ht_early(struct cpuinfo_x86 *c);
- 
- extern void x86_spec_ctrl_setup_ap(void);
-+extern void update_srbds_msr(void);
- 
- extern u64 x86_read_arch_cap_msr(void);
- 
---- a/drivers/base/cpu.c
-+++ b/drivers/base/cpu.c
-@@ -550,6 +550,12 @@ ssize_t __weak cpu_show_itlb_multihit(st
- 	return sprintf(buf, "Not affected\n");
- }
- 
-+ssize_t __weak cpu_show_srbds(struct device *dev,
-+			      struct device_attribute *attr, char *buf)
++static enum drm_mode_status imx_mipi_dsi_mode_valid(void *priv_data,
++					const struct drm_display_mode *mode)
 +{
-+	return sprintf(buf, "Not affected\n");
++	/*
++	 * The VID_PKT_SIZE field in the DSI_VID_PKT_CFG
++	 * register is 11-bit.
++	 */
++	if (mode->hdisplay > 0x7ff)
++		return MODE_BAD_HVALUE;
++
++	/*
++	 * The V_ACTIVE_LINES field in the DSI_VTIMING_CFG
++	 * register is 11-bit.
++	 */
++	if (mode->vdisplay > 0x7ff)
++		return MODE_BAD_VVALUE;
++
++	return MODE_OK;
 +}
 +
- static DEVICE_ATTR(meltdown, 0444, cpu_show_meltdown, NULL);
- static DEVICE_ATTR(spectre_v1, 0444, cpu_show_spectre_v1, NULL);
- static DEVICE_ATTR(spectre_v2, 0444, cpu_show_spectre_v2, NULL);
-@@ -558,6 +564,7 @@ static DEVICE_ATTR(l1tf, 0444, cpu_show_
- static DEVICE_ATTR(mds, 0444, cpu_show_mds, NULL);
- static DEVICE_ATTR(tsx_async_abort, 0444, cpu_show_tsx_async_abort, NULL);
- static DEVICE_ATTR(itlb_multihit, 0444, cpu_show_itlb_multihit, NULL);
-+static DEVICE_ATTR(srbds, 0444, cpu_show_srbds, NULL);
- 
- static struct attribute *cpu_root_vulnerabilities_attrs[] = {
- 	&dev_attr_meltdown.attr,
-@@ -568,6 +575,7 @@ static struct attribute *cpu_root_vulner
- 	&dev_attr_mds.attr,
- 	&dev_attr_tsx_async_abort.attr,
- 	&dev_attr_itlb_multihit.attr,
-+	&dev_attr_srbds.attr,
- 	NULL
- };
- 
-
++
++static unsigned int max_mbps_to_testdin(unsigned int max_mbps)
++{
++	unsigned int i;
++
++	for (i = 0; i < ARRAY_SIZE(dptdin_map); i++)
++		if (dptdin_map[i].max_mbps == max_mbps)
++			return dptdin_map[i].testdin;
++
++	return -EINVAL;
++}
++
++static inline void dsi_write(struct imx_mipi_dsi *dsi, u32 reg, u32 val)
++{
++	writel(val, dsi->base + reg);
++}
++
++static int imx_mipi_dsi_phy_init(void *priv_data)
++{
++	struct imx_mipi_dsi *dsi = priv_data;
++	int testdin;
++
++	testdin = max_mbps_to_testdin(dsi->lane_mbps);
++	if (testdin < 0) {
++		DRM_DEV_ERROR(dsi->dev,
++			      "failed to get testdin for %dmbps lane clock\n",
++			      dsi->lane_mbps);
++		return testdin;
++	}
++
++	dsi_write(dsi, DSI_PHY_IF_CTRL, PHY_IF_CTRL_RESET);
++	dsi_write(dsi, DSI_PWR_UP, POWERUP);
++
++	dsi_write(dsi, DSI_PHY_TST_CTRL0, PHY_UNTESTCLK | PHY_UNTESTCLR);
++	dsi_write(dsi, DSI_PHY_TST_CTRL1, PHY_TESTEN | PHY_TESTDOUT(0) |
++		  PHY_TESTDIN(0x44));
++	dsi_write(dsi, DSI_PHY_TST_CTRL0, PHY_TESTCLK | PHY_UNTESTCLR);
++	dsi_write(dsi, DSI_PHY_TST_CTRL0, PHY_UNTESTCLK | PHY_UNTESTCLR);
++	dsi_write(dsi, DSI_PHY_TST_CTRL1, PHY_UNTESTEN | PHY_TESTDOUT(0) |
++		  PHY_TESTDIN(testdin));
++	dsi_write(dsi, DSI_PHY_TST_CTRL0, PHY_TESTCLK | PHY_UNTESTCLR);
++	dsi_write(dsi, DSI_PHY_TST_CTRL0, PHY_UNTESTCLK | PHY_UNTESTCLR);
++
++	return 0;
++}
++
++static int imx_mipi_dsi_get_lane_mbps(void *priv_data,
++				      const struct drm_display_mode *mode,
++				      unsigned long mode_flags, u32 lanes,
++				      u32 format, unsigned int *lane_mbps)
++{
++	struct imx_mipi_dsi *dsi = priv_data;
++	unsigned int i, target_mbps, mpclk;
++	int bpp;
++
++	bpp = mipi_dsi_pixel_format_to_bpp(format);
++	if (bpp < 0) {
++		DRM_DEV_ERROR(dsi->dev, "Failed to get bpp for format %d: %d\n",
++			      format, bpp);
++		return bpp;
++	}
++
++	mpclk = DIV_ROUND_UP(mode->clock, MSEC_PER_SEC);
++	if (mpclk) {
++		/* take 1/0.7 blanking overhead into consideration */
++		target_mbps = (mpclk * (bpp / lanes) * 10) / 7;
++	} else {
++		DRM_DEV_DEBUG(dsi->dev, "Using default 1Gbps DPHY pll clock\n");
++		target_mbps = 1000;
++	}
++
++	DRM_DEV_DEBUG(dsi->dev, "Target lane mbps is %u Mbps\n", target_mbps);
++
++	for (i = 0; i < ARRAY_SIZE(dptdin_map); i++) {
++		if (target_mbps < dptdin_map[i].max_mbps) {
++			*lane_mbps = dptdin_map[i].max_mbps;
++			dsi->lane_mbps = *lane_mbps;
++			DRM_DEV_DEBUG(dsi->dev, "Real lane mbps is %u Mbps\n",
++				      *lane_mbps);
++			return 0;
++		}
++	}
++
++	DRM_DEV_ERROR(dsi->dev, "Out of range DPHY clk frequency for %uMbps\n",
++		      target_mbps);
++
++	return -EINVAL;
++}
++
++static int
++dw_mipi_dsi_phy_get_timing(void *priv_data, unsigned int lane_mbps,
++			   struct dw_mipi_dsi_dphy_timing *timing)
++{
++	timing->clk_hs2lp = 0x40;
++	timing->clk_lp2hs = 0x40;
++	timing->data_hs2lp = 0x40;
++	timing->data_lp2hs = 0x40;
++
++	return 0;
++}
++
++static const struct dw_mipi_dsi_phy_ops dw_mipi_dsi_imx6_phy_ops = {
++	.init = imx_mipi_dsi_phy_init,
++	.get_lane_mbps = imx_mipi_dsi_get_lane_mbps,
++	.get_timing = dw_mipi_dsi_phy_get_timing,
++};
++
++static struct dw_mipi_dsi_plat_data imx6_mipi_dsi_drv_data = {
++	.max_data_lanes = 2,
++	.mode_valid = imx_mipi_dsi_mode_valid,
++	.phy_ops = &dw_mipi_dsi_imx6_phy_ops,
++};
++
++static const struct of_device_id imx_dsi_dt_ids[] = {
++	{
++		.compatible = "fsl,imx6-mipi-dsi",
++		.data = &imx6_mipi_dsi_drv_data,
++	},
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, imx_dsi_dt_ids);
++
++static int imx_mipi_dsi_bind(struct device *dev, struct device *master,
++			     void *data)
++{
++	struct imx_mipi_dsi *dsi = dev_get_drvdata(dev);
++	struct drm_device *drm = data;
++	int ret;
++
++	ret = imx_drm_encoder_parse_of(drm, &dsi->encoder, dsi->dev->of_node);
++	if (ret) {
++		DRM_DEV_ERROR(dev, "Failed to parse encoder of node\n");
++		return ret;
++	}
++
++	ret = drm_simple_encoder_init(drm, &dsi->encoder,
++				      DRM_MODE_ENCODER_NONE);
++	if (ret) {
++		DRM_DEV_ERROR(dev, "Failed to create drm encoder\n");
++		return ret;
++	}
++
++	ret = drm_bridge_attach(&dsi->encoder, &dsi->bridge, NULL, 0);
++	if (ret < 0) {
++		DRM_DEV_ERROR(dev, "Failed to attach IMX6 bridge\n");
++		drm_encoder_cleanup(&dsi->encoder);
++		return ret;
++	}
++
++	return 0;
++}
++
++static void imx_mipi_dsi_unbind(struct device *dev, struct device *master,
++				void *data)
++{
++	struct imx_mipi_dsi *dsi = dev_get_drvdata(dev);
++
++	drm_encoder_cleanup(&dsi->encoder);
++}
++
++static const struct component_ops imx_mipi_dsi_ops = {
++	.bind	= imx_mipi_dsi_bind,
++	.unbind	= imx_mipi_dsi_unbind,
++};
++
++static int imx_mipi_dsi_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	const struct of_device_id *of_id = of_match_device(imx_dsi_dt_ids, dev);
++	struct dw_mipi_dsi_plat_data *pdata = (struct dw_mipi_dsi_plat_data *) of_id->data;
++	struct imx_mipi_dsi *dsi;
++	struct resource *res;
++	unsigned long pllref_rate;
++	int ret;
++
++	dsi = devm_kzalloc(dev, sizeof(*dsi), GFP_KERNEL);
++	if (!dsi)
++		return -ENOMEM;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	dsi->base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(dsi->base))
++		return PTR_ERR(dsi->base);
++
++	dsi->pllref_clk = devm_clk_get(dev, "ref");
++	if (IS_ERR(dsi->pllref_clk))
++		return PTR_ERR(dsi->pllref_clk);
++
++	ret = clk_prepare_enable(dsi->pllref_clk);
++	if (ret) {
++		DRM_DEV_ERROR(dev, "Failed to enable pllref_clk: %d\n", ret);
++		return ret;
++	}
++
++	pllref_rate = clk_get_rate(dsi->pllref_clk);
++	if (pllref_rate != 27000000) {
++		DRM_DEV_ERROR(dev, "Only 27Mhz pllref_clk is currently supported\n");
++		ret = -EINVAL;
++		goto err_clkdisable;
++	}
++
++	dsi->mux_sel = syscon_regmap_lookup_by_phandle(dev->of_node, "fsl,gpr");
++	if (IS_ERR(dsi->mux_sel)) {
++		ret = PTR_ERR(dsi->mux_sel);
++		DRM_DEV_ERROR(dev, "Failed to get GPR regmap: %d\n", ret);
++		goto err_clkdisable;
++	}
++
++	dsi->dev = dev;
++	dev_set_drvdata(dev, dsi);
++
++	imx6_mipi_dsi_drv_data.base = dsi->base;
++	imx6_mipi_dsi_drv_data.priv_data = dsi;
++
++	dsi->mipi_dsi = dw_mipi_dsi_probe(pdev, pdata);
++	if (IS_ERR(dsi->mipi_dsi)) {
++		ret = PTR_ERR(dsi->mipi_dsi);
++		DRM_DEV_ERROR(dev, "Failed to probe DW DSI host: %d\n", ret);
++		goto err_clkdisable;
++	}
++
++	dsi->bridge.driver_private = dsi;
++	dsi->bridge.funcs = &imx_dsi_bridge_funcs;
++	dsi->bridge.type = DRM_MODE_CONNECTOR_DSI;
++	dsi->bridge.encoder = &dsi->encoder;
++
++	drm_bridge_add(&dsi->bridge);
++
++	return component_add(&pdev->dev, &imx_mipi_dsi_ops);
++
++err_clkdisable:
++	clk_disable_unprepare(dsi->pllref_clk);
++	return ret;
++}
++
++static int imx_mipi_dsi_remove(struct platform_device *pdev)
++{
++	struct imx_mipi_dsi *dsi = platform_get_drvdata(pdev);
++
++	clk_disable_unprepare(dsi->pllref_clk);
++	drm_bridge_remove(&dsi->bridge);
++	component_del(&pdev->dev, &imx_mipi_dsi_ops);
++
++	return 0;
++}
++
++static struct platform_driver imx_mipi_dsi_driver = {
++	.probe		= imx_mipi_dsi_probe,
++	.remove		= imx_mipi_dsi_remove,
++	.driver		= {
++		.of_match_table = imx_dsi_dt_ids,
++		.name	= "dw-mipi-dsi-imx6",
++	},
++};
++module_platform_driver(imx_mipi_dsi_driver);
++
++MODULE_DESCRIPTION("i.MX6 MIPI DSI host controller driver");
++MODULE_AUTHOR("Liu Ying <victor.liu@nxp.com>");
++MODULE_AUTHOR("Adrian Ratiu <adrian.ratiu@collabora.com>");
++MODULE_LICENSE("GPL");
+-- 
+2.27.0
 
