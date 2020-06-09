@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C11C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A094C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0937206D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:57:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B081206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:57:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725454;
-	bh=f+8D/Ne//89piy8TFZmlemtTQKewWDLM3HEqhNsGpig=;
+	s=default; t=1591725456;
+	bh=BezFaNOoQeB/h0/SXH8z6R7uWaYaqCX+rDTRwXq5E+8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rwgPjYMi9cH+5vYQ58ImLU6EBd3ZOgtYL1OCpDLrg6hm7JDqgjGvowk4fzaTXojkn
-	 c6gZOnvTLb2UmimDhyDIPYdB4Bn2qxRgho/qZ8HU4Vvu6XpKbQXjhHdQTo2UEiAMAf
-	 QqRzv+vXIitIUePSqU5JFAxKxelr6BlacSYHIN9c=
+	b=ZF39IR7NDe+Z+3RWXfFodZsl8BQqE1wLj7g612BVw9/IDvs92yhVlDe24Yt3yaZiL
+	 PyNPlkTiEVpx6dPTT/c2sXBgsArynhBK4qx2iOGjMwIq4Hb3EbP+6eqoMLXFyfWQY0
+	 lgn4ahl2+73Fzv/3rIjkafNp4+LaJrOnGgvGQRZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387436AbgFIRz7 (ORCPT
+        id S2387418AbgFIRz5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:55:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46028 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:55:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733086AbgFIRyY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:54:24 -0400
+        id S1733081AbgFIRyX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:54:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0AA320801;
-        Tue,  9 Jun 2020 17:54:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 957A7207ED;
+        Tue,  9 Jun 2020 17:54:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725264;
-        bh=f+8D/Ne//89piy8TFZmlemtTQKewWDLM3HEqhNsGpig=;
+        s=default; t=1591725262;
+        bh=BezFaNOoQeB/h0/SXH8z6R7uWaYaqCX+rDTRwXq5E+8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RCAnRjm7NRCv6cVGH+8+MzoZmOUDkRCsCwAEnENJV9HMNeNz0OQw272G41PwZbN0S
-         +vco09oznt1y7iJ8D7wVdJjhopJrU7W2L05MBps5HKAgIL3UUBy37wJoS9vodtIAGt
-         9W25YwSSuAwJC5hshRh0Ol6Vu+0pX+jFdrTFQuc0=
+        b=EPCbC2EfvNT076i03feYIwHIyWDxZQAQfWl0KZcLE72p252JGOSLpjuGGwmYe77G8
+         pdwoMEWxWezYTsQGGKa9Hp9F/D6tVAtY8wElun7GORaCq8+NOriZD9fTvFAnnr5oUU
+         K8RsGpB3p67msgaFBPIUx3HlI+fgvdQXZSLss7oM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Mark Gross <mgross@linux.intel.com>,
         Borislav Petkov <bp@suse.de>,
         Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: [PATCH 5.6 36/41] x86/cpu: Add table argument to cpu_matches()
-Date:   Tue,  9 Jun 2020 19:45:38 +0200
-Message-Id: <20200609174115.494862120@linuxfoundation.org>
+Subject: [PATCH 5.6 35/41] x86/cpu: Add a steppings field to struct x86_cpu_id
+Date:   Tue,  9 Jun 2020 19:45:37 +0200
+Message-Id: <20200609174115.410869178@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174112.129412236@linuxfoundation.org>
 References: <20200609174112.129412236@linuxfoundation.org>
@@ -63,95 +64,119 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Mark Gross <mgross@linux.intel.com>
 
-commit 93920f61c2ad7edb01e63323832585796af75fc9 upstream
+commit e9d7144597b10ff13ff2264c059f7d4a7fbc89ac upstream
 
-To make cpu_matches() reusable for other matching tables, have it take a
-pointer to a x86_cpu_id table as an argument.
+Intel uses the same family/model for several CPUs. Sometimes the
+stepping must be checked to tell them apart.
 
- [ bp: Flip arguments order. ]
+On x86 there can be at most 16 steppings. Add a steppings bitmask to
+x86_cpu_id and a X86_MATCH_VENDOR_FAMILY_MODEL_STEPPING_FEATURE macro
+and support for matching against family/model/stepping.
+
+ [ bp: Massage.
+   tglx: Lightweight variant for backporting ]
 
 Signed-off-by: Mark Gross <mgross@linux.intel.com>
 Signed-off-by: Borislav Petkov <bp@suse.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
 Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/kernel/cpu/common.c |   25 ++++++++++++++-----------
- 1 file changed, 14 insertions(+), 11 deletions(-)
+ arch/x86/include/asm/cpu_device_id.h |   30 ++++++++++++++++++++++++++++++
+ arch/x86/kernel/cpu/match.c          |    7 ++++++-
+ include/linux/mod_devicetable.h      |    6 ++++++
+ 3 files changed, 42 insertions(+), 1 deletion(-)
 
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1075,9 +1075,9 @@ static const __initconst struct x86_cpu_
- 	{}
+--- a/arch/x86/include/asm/cpu_device_id.h
++++ b/arch/x86/include/asm/cpu_device_id.h
+@@ -9,6 +9,36 @@
+ 
+ #include <linux/mod_devicetable.h>
+ 
++#define X86_CENTAUR_FAM6_C7_D		0xd
++#define X86_CENTAUR_FAM6_NANO		0xf
++
++#define X86_STEPPINGS(mins, maxs)    GENMASK(maxs, mins)
++
++/**
++ * X86_MATCH_VENDOR_FAM_MODEL_STEPPINGS_FEATURE - Base macro for CPU matching
++ * @_vendor:	The vendor name, e.g. INTEL, AMD, HYGON, ..., ANY
++ *		The name is expanded to X86_VENDOR_@_vendor
++ * @_family:	The family number or X86_FAMILY_ANY
++ * @_model:	The model number, model constant or X86_MODEL_ANY
++ * @_steppings:	Bitmask for steppings, stepping constant or X86_STEPPING_ANY
++ * @_feature:	A X86_FEATURE bit or X86_FEATURE_ANY
++ * @_data:	Driver specific data or NULL. The internal storage
++ *		format is unsigned long. The supplied value, pointer
++ *		etc. is casted to unsigned long internally.
++ *
++ * Backport version to keep the SRBDS pile consistant. No shorter variants
++ * required for this.
++ */
++#define X86_MATCH_VENDOR_FAM_MODEL_STEPPINGS_FEATURE(_vendor, _family, _model, \
++						    _steppings, _feature, _data) { \
++	.vendor		= X86_VENDOR_##_vendor,				\
++	.family		= _family,					\
++	.model		= _model,					\
++	.steppings	= _steppings,					\
++	.feature	= _feature,					\
++	.driver_data	= (unsigned long) _data				\
++}
++
+ /*
+  * Match specific microcode revisions.
+  *
+--- a/arch/x86/kernel/cpu/match.c
++++ b/arch/x86/kernel/cpu/match.c
+@@ -34,13 +34,18 @@ const struct x86_cpu_id *x86_match_cpu(c
+ 	const struct x86_cpu_id *m;
+ 	struct cpuinfo_x86 *c = &boot_cpu_data;
+ 
+-	for (m = match; m->vendor | m->family | m->model | m->feature; m++) {
++	for (m = match;
++	     m->vendor | m->family | m->model | m->steppings | m->feature;
++	     m++) {
+ 		if (m->vendor != X86_VENDOR_ANY && c->x86_vendor != m->vendor)
+ 			continue;
+ 		if (m->family != X86_FAMILY_ANY && c->x86 != m->family)
+ 			continue;
+ 		if (m->model != X86_MODEL_ANY && c->x86_model != m->model)
+ 			continue;
++		if (m->steppings != X86_STEPPING_ANY &&
++		    !(BIT(c->x86_stepping) & m->steppings))
++			continue;
+ 		if (m->feature != X86_FEATURE_ANY && !cpu_has(c, m->feature))
+ 			continue;
+ 		return m;
+--- a/include/linux/mod_devicetable.h
++++ b/include/linux/mod_devicetable.h
+@@ -657,6 +657,10 @@ struct mips_cdmm_device_id {
+ /*
+  * MODULE_DEVICE_TABLE expects this struct to be called x86cpu_device_id.
+  * Although gcc seems to ignore this error, clang fails without this define.
++ *
++ * Note: The ordering of the struct is different from upstream because the
++ * static initializers in kernels < 5.7 still use C89 style while upstream
++ * has been converted to proper C99 initializers.
+  */
+ #define x86cpu_device_id x86_cpu_id
+ struct x86_cpu_id {
+@@ -665,6 +669,7 @@ struct x86_cpu_id {
+ 	__u16 model;
+ 	__u16 feature;	/* bit index */
+ 	kernel_ulong_t driver_data;
++	__u16 steppings;
  };
  
--static bool __init cpu_matches(unsigned long which)
-+static bool __init cpu_matches(const struct x86_cpu_id *table, unsigned long which)
- {
--	const struct x86_cpu_id *m = x86_match_cpu(cpu_vuln_whitelist);
-+	const struct x86_cpu_id *m = x86_match_cpu(table);
+ #define X86_FEATURE_MATCH(x) \
+@@ -673,6 +678,7 @@ struct x86_cpu_id {
+ #define X86_VENDOR_ANY 0xffff
+ #define X86_FAMILY_ANY 0
+ #define X86_MODEL_ANY  0
++#define X86_STEPPING_ANY 0
+ #define X86_FEATURE_ANY 0	/* Same as FPU, you can't test for that */
  
- 	return m && !!(m->driver_data & which);
- }
-@@ -1097,31 +1097,34 @@ static void __init cpu_set_bug_bits(stru
- 	u64 ia32_cap = x86_read_arch_cap_msr();
- 
- 	/* Set ITLB_MULTIHIT bug if cpu is not in the whitelist and not mitigated */
--	if (!cpu_matches(NO_ITLB_MULTIHIT) && !(ia32_cap & ARCH_CAP_PSCHANGE_MC_NO))
-+	if (!cpu_matches(cpu_vuln_whitelist, NO_ITLB_MULTIHIT) &&
-+	    !(ia32_cap & ARCH_CAP_PSCHANGE_MC_NO))
- 		setup_force_cpu_bug(X86_BUG_ITLB_MULTIHIT);
- 
--	if (cpu_matches(NO_SPECULATION))
-+	if (cpu_matches(cpu_vuln_whitelist, NO_SPECULATION))
- 		return;
- 
- 	setup_force_cpu_bug(X86_BUG_SPECTRE_V1);
- 
--	if (!cpu_matches(NO_SPECTRE_V2))
-+	if (!cpu_matches(cpu_vuln_whitelist, NO_SPECTRE_V2))
- 		setup_force_cpu_bug(X86_BUG_SPECTRE_V2);
- 
--	if (!cpu_matches(NO_SSB) && !(ia32_cap & ARCH_CAP_SSB_NO) &&
-+	if (!cpu_matches(cpu_vuln_whitelist, NO_SSB) &&
-+	    !(ia32_cap & ARCH_CAP_SSB_NO) &&
- 	   !cpu_has(c, X86_FEATURE_AMD_SSB_NO))
- 		setup_force_cpu_bug(X86_BUG_SPEC_STORE_BYPASS);
- 
- 	if (ia32_cap & ARCH_CAP_IBRS_ALL)
- 		setup_force_cpu_cap(X86_FEATURE_IBRS_ENHANCED);
- 
--	if (!cpu_matches(NO_MDS) && !(ia32_cap & ARCH_CAP_MDS_NO)) {
-+	if (!cpu_matches(cpu_vuln_whitelist, NO_MDS) &&
-+	    !(ia32_cap & ARCH_CAP_MDS_NO)) {
- 		setup_force_cpu_bug(X86_BUG_MDS);
--		if (cpu_matches(MSBDS_ONLY))
-+		if (cpu_matches(cpu_vuln_whitelist, MSBDS_ONLY))
- 			setup_force_cpu_bug(X86_BUG_MSBDS_ONLY);
- 	}
- 
--	if (!cpu_matches(NO_SWAPGS))
-+	if (!cpu_matches(cpu_vuln_whitelist, NO_SWAPGS))
- 		setup_force_cpu_bug(X86_BUG_SWAPGS);
- 
- 	/*
-@@ -1139,7 +1142,7 @@ static void __init cpu_set_bug_bits(stru
- 	     (ia32_cap & ARCH_CAP_TSX_CTRL_MSR)))
- 		setup_force_cpu_bug(X86_BUG_TAA);
- 
--	if (cpu_matches(NO_MELTDOWN))
-+	if (cpu_matches(cpu_vuln_whitelist, NO_MELTDOWN))
- 		return;
- 
- 	/* Rogue Data Cache Load? No! */
-@@ -1148,7 +1151,7 @@ static void __init cpu_set_bug_bits(stru
- 
- 	setup_force_cpu_bug(X86_BUG_CPU_MELTDOWN);
- 
--	if (cpu_matches(NO_L1TF))
-+	if (cpu_matches(cpu_vuln_whitelist, NO_L1TF))
- 		return;
- 
- 	setup_force_cpu_bug(X86_BUG_L1TF);
+ /*
 
 
