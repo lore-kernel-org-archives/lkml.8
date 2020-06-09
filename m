@@ -2,286 +2,136 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF6B2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB7EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2E8D2074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:32:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CCFF207C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:36:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591709795;
+	bh=Li2Zv/6mZ+A+7R/O4fGGBVAxKZqiekxdMlcIJEyMsuw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hbw/JxZDD7b90oaE0gqIXypn2Gi5wVrAHBTnRkZ+Qn68hVMYmI20zE/t8XiWz7f2h
+	 InDnuIgOvPt/NCftMzREJxIj1nO9aTBD571eeKTttmSjjCpSoZXhEcL1uXrpmzK+DU
+	 h3AR2GZnR5UvKB4VVG2BqUAIGFVB+iNeceuvQ280=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730094AbgFINcB (ORCPT
+        id S1729167AbgFINgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 09:32:01 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:37912 "EHLO gloria.sntech.de"
+        Tue, 9 Jun 2020 09:36:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729000AbgFINb4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 09:31:56 -0400
-Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=phil.sntech)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1jieLv-0004rD-6B; Tue, 09 Jun 2020 15:31:43 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     davem@davemloft.net, kuba@kernel.org
-Cc:     robh+dt@kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, linux@armlinux.org.uk,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, heiko@sntech.de,
-        christoph.muellner@theobroma-systems.com,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Subject: [PATCH v2 2/2] net: phy: mscc: handle the clkout control on some phy variants
-Date:   Tue,  9 Jun 2020 15:31:40 +0200
-Message-Id: <20200609133140.1421109-2-heiko@sntech.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200609133140.1421109-1-heiko@sntech.de>
-References: <20200609133140.1421109-1-heiko@sntech.de>
+        id S1728400AbgFINga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 09:36:30 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 302F220760;
+        Tue,  9 Jun 2020 13:36:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591709789;
+        bh=Li2Zv/6mZ+A+7R/O4fGGBVAxKZqiekxdMlcIJEyMsuw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wvyrDCX2Kyt8XdCcriT/loGbIqItmnhi6dxs74zoVk3ao9QrbLlBuUdzAO7csHcG8
+         8J9cfDv4FK0Oazwhr1o1bqrJ4gQgjb60Rw+jFyneV0En2dSvoJSxNOc/LXZ2e7b8hU
+         pyoTKOiQHj5Q/qf8HCS3CKeh3ZntT4ycRcBMu3ww=
+Date:   Tue, 9 Jun 2020 14:36:27 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Robin Gong <yibin.gong@nxp.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "matthias.schiffer@ew.tq-group.com" 
+        <matthias.schiffer@ew.tq-group.com>,
+        "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v9 RESEND 01/13] spi: imx: add dma_sync_sg_for_device
+ after fallback from dma
+Message-ID: <20200609133627.GG4583@sirena.org.uk>
+References: <1591485677-20533-1-git-send-email-yibin.gong@nxp.com>
+ <1591485677-20533-2-git-send-email-yibin.gong@nxp.com>
+ <20200608143458.GH4593@sirena.org.uk>
+ <VE1PR04MB66388F89015F774EE3FFF69D89850@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <20200608153139.GI4593@sirena.org.uk>
+ <59ce3620-00b9-bac1-30e1-011a29583642@arm.com>
+ <VE1PR04MB6638B1EC49D295C64292B7BD89820@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <bcfc3637-65af-577a-ddbd-890b6c83a6e6@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="9/eUdp+dLtKXvemk"
+Content-Disposition: inline
+In-Reply-To: <bcfc3637-65af-577a-ddbd-890b6c83a6e6@arm.com>
+X-Cookie: Be careful!  Is it classified?
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 
-At least VSC8530/8531/8540/8541 contain a clock output that can emit
-a predefined rate of 25, 50 or 125MHz.
+--9/eUdp+dLtKXvemk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This may then feed back into the network interface as source clock.
-So follow the example the at803x already set and introduce a
-vsc8531,clk-out-frequency property to set that output.
+On Tue, Jun 09, 2020 at 11:00:33AM +0100, Robin Murphy wrote:
 
-Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
----
-Hi Andrew,
+> Ah, I think I understand what's going on now. That's... really ugly :(
 
-I didn't change the property yet, do you have a suggestion on
-how to name it though? Going by the other examples in the
-ethernet-phy.yamls, something like enet-phy-clock-out-frequency ?
+> Looking at the SPI core code, I think a better way to handle this would be
+> to have your fallback path call spi_unmap_buf() directly (or perform the
+> same actions, if exporting that to drivers is unacceptable), then make su=
+re
+> ->can_dma() returns false after that such that spi_unmap_msg() won't try =
+to
+> unmap it again. That's a lot more reasonable than trying to fake up a
+> DMA_TO_DEVICE transfer in the middle of a DMA_FROM_DEVICE operation on the
+> same buffer.
 
+Ideally the driver would be checking in can_dma() if the DMA controller
+is able to perform transactions rather than letting things run as far as=20
+trying to actually do the transfer, that's a whole lot cleaner and more
+manageable than running into an error doing the transfer.  I'm surprised
+that there's no DMA API way to figure this out TBH.
 
- .../bindings/net/mscc-phy-vsc8531.txt         |  3 +
- drivers/net/phy/mscc/mscc.h                   |  9 ++
- drivers/net/phy/mscc/mscc_main.c              | 87 +++++++++++++++++--
- 3 files changed, 92 insertions(+), 7 deletions(-)
+We'll also need some handling for this changing at runtime, we're not
+expecting this to be dynamic at all - we're expecting it to be a static
+property of the controller/transfer combination, we didn't contemplate
+this varying randomly at runtime.  Instead of rechecking can_dma() we
+ought to have a flag saying if we did the mapping (which the bodge Robin
+suggests above could clear).
 
-diff --git a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
-index 5ff37c68c941..4a1f50ae48e1 100644
---- a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
-+++ b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
-@@ -1,6 +1,8 @@
- * Microsemi - vsc8531 Giga bit ethernet phy
- 
- Optional properties:
-+- vsc8531,clk-out-frequency: Clock output frequency in Hertz.
-+			  Should be one of 25000000, 50000000, 125000000
- - vsc8531,vddmac	: The vddmac in mV. Allowed values is listed
- 			  in the first row of Table 1 (below).
- 			  This property is only used in combination
-@@ -63,6 +65,7 @@ Example:
- 
-         vsc8531_0: ethernet-phy@0 {
-                 compatible = "ethernet-phy-id0007.0570";
-+                vsc8531,clk-out-frequency = <125000000>;
-                 vsc8531,vddmac		= <3300>;
-                 vsc8531,edge-slowdown	= <7>;
-                 vsc8531,led-0-mode	= <LINK_1000_ACTIVITY>;
-diff --git a/drivers/net/phy/mscc/mscc.h b/drivers/net/phy/mscc/mscc.h
-index 414e3b31bb1f..c8c395a041c2 100644
---- a/drivers/net/phy/mscc/mscc.h
-+++ b/drivers/net/phy/mscc/mscc.h
-@@ -218,6 +218,13 @@ enum rgmii_clock_delay {
- #define INT_MEM_DATA_M			  0x00ff
- #define INT_MEM_DATA(x)			  (INT_MEM_DATA_M & (x))
- 
-+#define MSCC_CLKOUT_CNTL		  13
-+#define CLKOUT_ENABLE			  BIT(15)
-+#define CLKOUT_FREQ_MASK		  GENMASK(14, 13)
-+#define CLKOUT_FREQ_25M			  (0x0 << 13)
-+#define CLKOUT_FREQ_50M			  (0x1 << 13)
-+#define CLKOUT_FREQ_125M		  (0x2 << 13)
-+
- #define MSCC_PHY_PROC_CMD		  18
- #define PROC_CMD_NCOMPLETED		  0x8000
- #define PROC_CMD_FAILED			  0x4000
-@@ -361,6 +368,8 @@ struct vsc8531_private {
- 	 */
- 	unsigned int base_addr;
- 
-+	u32 clkout_rate;
-+
- #if IS_ENABLED(CONFIG_MACSEC)
- 	/* MACsec fields:
- 	 * - One SecY per device (enforced at the s/w implementation level)
-diff --git a/drivers/net/phy/mscc/mscc_main.c b/drivers/net/phy/mscc/mscc_main.c
-index 54cac9c295ad..012d5019d7c8 100644
---- a/drivers/net/phy/mscc/mscc_main.c
-+++ b/drivers/net/phy/mscc/mscc_main.c
-@@ -432,6 +432,18 @@ static int vsc85xx_dt_led_mode_get(struct phy_device *phydev,
- 	return led_mode;
- }
- 
-+static void vsc8531_dt_clkout_rate_get(struct phy_device *phydev)
-+{
-+	struct vsc8531_private *priv = phydev->priv;
-+	struct device *dev = &phydev->mdio.dev;
-+	struct device_node *of_node = dev->of_node;
-+
-+	if (!of_node)
-+		return;
-+
-+	of_property_read_u32(of_node, "vsc8531,clk-out-frequency",
-+			     &priv->clkout_rate);
-+}
- #else
- static int vsc85xx_edge_rate_magic_get(struct phy_device *phydev)
- {
-@@ -444,6 +456,10 @@ static int vsc85xx_dt_led_mode_get(struct phy_device *phydev,
- {
- 	return default_mode;
- }
-+
-+static void vsc8531_dt_clkout_rate_get(struct phy_device *phydev)
-+{
-+}
- #endif /* CONFIG_OF_MDIO */
- 
- static int vsc85xx_dt_led_modes_get(struct phy_device *phydev,
-@@ -1540,6 +1556,37 @@ static int vsc85xx_config_init(struct phy_device *phydev)
- 	return 0;
- }
- 
-+static int vsc8531_config_init(struct phy_device *phydev)
-+{
-+	struct vsc8531_private *vsc8531 = phydev->priv;
-+	u16 val;
-+	int rc;
-+
-+	rc = vsc85xx_config_init(phydev);
-+	if (rc)
-+		return rc;
-+
-+	switch (vsc8531->clkout_rate) {
-+	case 0:
-+		val = 0;
-+		break;
-+	case 25000000:
-+		val = CLKOUT_FREQ_25M | CLKOUT_ENABLE;
-+		break;
-+	case 50000000:
-+		val = CLKOUT_FREQ_50M | CLKOUT_ENABLE;
-+		break;
-+	case 125000000:
-+		val = CLKOUT_FREQ_125M | CLKOUT_ENABLE;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return phy_write_paged(phydev, MSCC_PHY_PAGE_EXTENDED_GPIO,
-+			       MSCC_CLKOUT_CNTL, val);
-+}
-+
- static int vsc8584_did_interrupt(struct phy_device *phydev)
- {
- 	int rc = 0;
-@@ -2020,6 +2067,32 @@ static int vsc8514_probe(struct phy_device *phydev)
- 				    ARRAY_SIZE(vsc85xx_hw_stats));
- }
- 
-+static int vsc8531_probe(struct phy_device *phydev)
-+{
-+	struct vsc8531_private *vsc8531;
-+	int rate_magic, rc;
-+	u32 default_mode[2] = {VSC8531_LINK_1000_ACTIVITY,
-+	   VSC8531_LINK_100_ACTIVITY};
-+
-+	rate_magic = vsc85xx_edge_rate_magic_get(phydev);
-+	if (rate_magic < 0)
-+		return rate_magic;
-+
-+	rc = vsc85xx_probe_helper(phydev, default_mode,
-+				  ARRAY_SIZE(default_mode),
-+				  VSC85XX_SUPP_LED_MODES,
-+				  vsc85xx_hw_stats,
-+				  ARRAY_SIZE(vsc85xx_hw_stats));
-+	if (rc < 0)
-+		return rc;
-+
-+	vsc8531 = phydev->priv;
-+	vsc8531->rate_magic = rate_magic;
-+	vsc8531_dt_clkout_rate_get(phydev);
-+
-+	return 0;
-+}
-+
- static int vsc8574_probe(struct phy_device *phydev)
- {
- 	u32 default_mode[4] = {VSC8531_LINK_1000_ACTIVITY,
-@@ -2157,14 +2230,14 @@ static struct phy_driver vsc85xx_driver[] = {
- 	.phy_id_mask	= 0xfffffff0,
- 	/* PHY_BASIC_FEATURES */
- 	.soft_reset	= &genphy_soft_reset,
--	.config_init	= &vsc85xx_config_init,
-+	.config_init	= &vsc8531_config_init,
- 	.config_aneg    = &vsc85xx_config_aneg,
- 	.read_status	= &vsc85xx_read_status,
- 	.ack_interrupt	= &vsc85xx_ack_interrupt,
- 	.config_intr	= &vsc85xx_config_intr,
- 	.suspend	= &genphy_suspend,
- 	.resume		= &genphy_resume,
--	.probe		= &vsc85xx_probe,
-+	.probe		= &vsc8531_probe,
- 	.set_wol	= &vsc85xx_wol_set,
- 	.get_wol	= &vsc85xx_wol_get,
- 	.get_tunable	= &vsc85xx_get_tunable,
-@@ -2181,14 +2254,14 @@ static struct phy_driver vsc85xx_driver[] = {
- 	.phy_id_mask    = 0xfffffff0,
- 	/* PHY_GBIT_FEATURES */
- 	.soft_reset	= &genphy_soft_reset,
--	.config_init    = &vsc85xx_config_init,
-+	.config_init    = &vsc8531_config_init,
- 	.config_aneg    = &vsc85xx_config_aneg,
- 	.read_status	= &vsc85xx_read_status,
- 	.ack_interrupt  = &vsc85xx_ack_interrupt,
- 	.config_intr    = &vsc85xx_config_intr,
- 	.suspend	= &genphy_suspend,
- 	.resume		= &genphy_resume,
--	.probe		= &vsc85xx_probe,
-+	.probe		= &vsc8531_probe,
- 	.set_wol	= &vsc85xx_wol_set,
- 	.get_wol	= &vsc85xx_wol_get,
- 	.get_tunable	= &vsc85xx_get_tunable,
-@@ -2205,14 +2278,14 @@ static struct phy_driver vsc85xx_driver[] = {
- 	.phy_id_mask	= 0xfffffff0,
- 	/* PHY_BASIC_FEATURES */
- 	.soft_reset	= &genphy_soft_reset,
--	.config_init	= &vsc85xx_config_init,
-+	.config_init	= &vsc8531_config_init,
- 	.config_aneg	= &vsc85xx_config_aneg,
- 	.read_status	= &vsc85xx_read_status,
- 	.ack_interrupt	= &vsc85xx_ack_interrupt,
- 	.config_intr	= &vsc85xx_config_intr,
- 	.suspend	= &genphy_suspend,
- 	.resume		= &genphy_resume,
--	.probe		= &vsc85xx_probe,
-+	.probe		= &vsc8531_probe,
- 	.set_wol	= &vsc85xx_wol_set,
- 	.get_wol	= &vsc85xx_wol_get,
- 	.get_tunable	= &vsc85xx_get_tunable,
-@@ -2229,7 +2302,7 @@ static struct phy_driver vsc85xx_driver[] = {
- 	.phy_id_mask    = 0xfffffff0,
- 	/* PHY_GBIT_FEATURES */
- 	.soft_reset	= &genphy_soft_reset,
--	.config_init    = &vsc85xx_config_init,
-+	.config_init    = &vsc8531_config_init,
- 	.config_aneg    = &vsc85xx_config_aneg,
- 	.read_status	= &vsc85xx_read_status,
- 	.ack_interrupt  = &vsc85xx_ack_interrupt,
--- 
-2.26.2
+--9/eUdp+dLtKXvemk
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7fkFoACgkQJNaLcl1U
+h9DtGQgAg3cybc1xp7BBF/QRvws6J4hPoAwnctYQTcfaBVM70lGt4MoQdY+j0ymD
+YB6menlav/89t8bYFq7D5gtHajROU0WHsoMpV0MqojMtTOJG+Bo7uALWKblPRuTH
+kFOBCkPPZXT/yJGw47VaNlQuvjI/Zh8SlLBzjqMAmkDF9OjNN8ZAp8c2KBihDg8O
+YeQZEPlcgtdR/rJlia6YucfA52ZDivjbKaCQIg6hQhiuFU86nxRFqaohBUqxRb5a
+SacvLkra2J+oUkr6z/P76+DkFlZ6cQ3hWGuKWIyr89Ie1/4cvuKvahvYfrpgR2ph
+rY445Tv19HnK2Aaz0RUu6zumFOa3pA==
+=2yHW
+-----END PGP SIGNATURE-----
+
+--9/eUdp+dLtKXvemk--
