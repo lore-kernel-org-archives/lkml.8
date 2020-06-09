@@ -2,162 +2,76 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9342C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 23:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07967C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 23:31:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C3FA206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 23:30:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="T4pD86Zp"
+	by mail.kernel.org (Postfix) with ESMTP id D41E3206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 23:31:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726045AbgFIXaW (ORCPT
+        id S1726039AbgFIXbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 19:30:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37634 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbgFIXaV (ORCPT
+        Tue, 9 Jun 2020 19:31:48 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:38354 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725797AbgFIXbs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 19:30:21 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45A35C05BD1E;
-        Tue,  9 Jun 2020 16:30:21 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49hRDm2cmSz9sRR;
-        Wed, 10 Jun 2020 09:30:15 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1591745416;
-        bh=lTqyPH1IXzHOL7YNp6Xf9Boc2LGwLLUlsKJcuVTbVIc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=T4pD86Zp/YjSKhnt56tra6AT0I67mQbEqxqlxmPN0eV92XdWPIBLMM2+vKCL41aTa
-         w/jfvQsoMFJBvnxUNBy1IW/GgSU4bOQXeELXANkpo9NeoNJaC0JdwSSGt6e/voa4tz
-         2BvMy+qQaMdcx5KB/jS+WgliBj4+I2z7hXSgvnK81Er8lBwkgIqfRewqVs4JzPhdDu
-         C119QGFU4U3CQ7reqjRLP5xFsxbJRW8NCbYOv79nNV34FZxn1L7Lo5nOfH+n9452Kb
-         lF/LZpNvj8A8O1x+AxRa3WJRc2o8MPzXP1iRGcHiFXbffVFDoGTstehHKmuzTaLQ8K
-         G/AlXmxN8FbLg==
-Date:   Wed, 10 Jun 2020 09:30:12 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michel Lespinasse <walken@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arjun Roy <arjunroy@google.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Soheil Hassas Yeganeh <soheil@google.com>
-Subject: linux-next: manual merge of the net tree with Linus' tree
-Message-ID: <20200610093012.13391de8@canb.auug.org.au>
+        Tue, 9 Jun 2020 19:31:48 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jiniD-0005mQ-Lw; Tue, 09 Jun 2020 23:31:21 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
+        kvm@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] kvm: i8254: remove redundant assignment to pointer s
+Date:   Wed, 10 Jun 2020 00:31:21 +0100
+Message-Id: <20200609233121.1118683-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.27.0.rc0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/_WFzV36PO8JK65ZVN9wu=UP";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/_WFzV36PO8JK65ZVN9wu=UP
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Colin Ian King <colin.king@canonical.com>
 
-Hi all,
+The pointer s is being assigned a value that is never read, the
+assignment is redundant and can be removed.
 
-Today's linux-next merge of the net tree got a conflict in:
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ arch/x86/kvm/i8254.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-  net/ipv4/tcp.c
+diff --git a/arch/x86/kvm/i8254.c b/arch/x86/kvm/i8254.c
+index febca334c320..a6e218c6140d 100644
+--- a/arch/x86/kvm/i8254.c
++++ b/arch/x86/kvm/i8254.c
+@@ -462,7 +462,6 @@ static int pit_ioport_write(struct kvm_vcpu *vcpu,
+ 		if (channel == 3) {
+ 			/* Read-Back Command. */
+ 			for (channel = 0; channel < 3; channel++) {
+-				s = &pit_state->channels[channel];
+ 				if (val & (2 << channel)) {
+ 					if (!(val & 0x20))
+ 						pit_latch_count(pit, channel);
+-- 
+2.27.0.rc0
 
-between commit:
-
-  d8ed45c5dcd4 ("mmap locking API: use coccinelle to convert mmap_sem rwsem=
- call sites")
-
-from Linus' tree and commit:
-
-  3763a24c727e ("net-zerocopy: use vm_insert_pages() for tcp rcv zerocopy")
-
-from the net tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc net/ipv4/tcp.c
-index 27716e4932bc,ecbba0abd3e5..000000000000
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@@ -1762,7 -1796,9 +1796,9 @@@ static int tcp_zerocopy_receive(struct=20
- =20
-  	sock_rps_record_flow(sk);
- =20
-+ 	tp =3D tcp_sk(sk);
-+=20
- -	down_read(&current->mm->mmap_sem);
- +	mmap_read_lock(current->mm);
- =20
-  	vma =3D find_vma(current->mm, address);
-  	if (!vma || vma->vm_start > address || vma->vm_ops !=3D &tcp_vm_ops) {
-@@@ -1817,17 -1863,27 +1863,27 @@@
-  			zc->recv_skip_hint -=3D remaining;
-  			break;
-  		}
-- 		ret =3D vm_insert_page(vma, address + length,
-- 				     skb_frag_page(frags));
-- 		if (ret)
-- 			break;
-+ 		pages[pg_idx] =3D skb_frag_page(frags);
-+ 		pg_idx++;
-  		length +=3D PAGE_SIZE;
-- 		seq +=3D PAGE_SIZE;
-  		zc->recv_skip_hint -=3D PAGE_SIZE;
-  		frags++;
-+ 		if (pg_idx =3D=3D PAGE_BATCH_SIZE) {
-+ 			ret =3D tcp_zerocopy_vm_insert_batch(vma, pages, pg_idx,
-+ 							   &curr_addr, &length,
-+ 							   &seq, zc);
-+ 			if (ret)
-+ 				goto out;
-+ 			pg_idx =3D 0;
-+ 		}
-+ 	}
-+ 	if (pg_idx) {
-+ 		ret =3D tcp_zerocopy_vm_insert_batch(vma, pages, pg_idx,
-+ 						   &curr_addr, &length, &seq,
-+ 						   zc);
-  	}
-  out:
- -	up_read(&current->mm->mmap_sem);
- +	mmap_read_unlock(current->mm);
-  	if (length) {
-  		WRITE_ONCE(tp->copied_seq, seq);
-  		tcp_rcv_space_adjust(sk);
-
---Sig_/_WFzV36PO8JK65ZVN9wu=UP
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7gG4QACgkQAVBC80lX
-0GyCnwf6ApvtS2bOp659IILBedqzBUQSqVTYXYtsSNhbQclLg3tUdHFHmrPYRDVE
-Ki/w1uhDK9vG0ZzZnLselpQDcDI0acNEb2RZ8Y4CjCQHqB+QmSHoEvAzEJGn/YUg
-DQLHLzKCWftRf555QJfBzm8vk+jZIzE6v0k6BsMfLLRdGLDX68dQ6w0/SyN9Ex1I
-M1cvRqSSrIvHQdkl3y4BgTuC1DXOiFD3k2xMtwgGZUQ4N1oY7zyOcl6aydoJO4X7
-wTAQXNdAWRWrMISkTE2zd9ziWyNYu3xuqQIRAGuczq0VzvsPjjFrRXWRa9HRCOeo
-YLV7f8coF9/mtZnyw/BYv1pq175lZw==
-=x2XT
------END PGP SIGNATURE-----
-
---Sig_/_WFzV36PO8JK65ZVN9wu=UP--
