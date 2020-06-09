@@ -2,114 +2,114 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A88E7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82070C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C17D2074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:47:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RRs1XpvK"
+	by mail.kernel.org (Postfix) with ESMTP id 66E8B2074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:47:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591728461;
+	bh=uCUPSy3LHC5NpBWjYwABGrcETfQmegBMc7n+u3jXo5s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iDu7JVYs8nnxlzD4dFsNnxFbnux0M5AntkToVrrAnyuh2tiCx4jrlkg78ehDxInCw
+	 t0VpHBDEINiUJf3zZZ8PbbSIhwR2rI+CsdeMn7I008oXJ9jlcqxzkPVu/9+WE7/Rfe
+	 aBK1hpWj+JHgMdzJI/3I/fxiu4lMzfBVY+5dzDJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388844AbgFISre (ORCPT
+        id S2389045AbgFISrk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:47:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50282 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728400AbgFISrc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 14:47:32 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B317DC05BD1E
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 11:47:30 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id q24so1795257pjd.1
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 11:47:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=uJfu7VCoabwyy7XV4REVbfqvINHE8jJHSSQxXyuHXd8=;
-        b=RRs1XpvKUrWcGC9rIH96xpb3pTK7Sz9Y478qOvPHNO4RLX043gSI9fVBKTbIjskAsD
-         NYVbHiStuO9ZNyJZjm0N/3IRfTEgzEFthkAy/Nt63yzoJ0aFhLDWR5b0DOgY+O1mRVuG
-         TpNIJcS9r6syyH23xPO0c25GxRl4Du26VqrsU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=uJfu7VCoabwyy7XV4REVbfqvINHE8jJHSSQxXyuHXd8=;
-        b=anC1mWWX17UHE79cbW5gaROe7AJ3JBh+bqbnWRHGlUXL+NBVnkLdw4WxvMsknz7qaB
-         dRg7CKeqh3VuO8XztwF4LlB+2Odpqmas3jM+h6spbkjs3HYUuvX8EZDIhgkA7yWbJB7P
-         r03elpnACZn5q9K59cLp8fzVxOEu2f544Qrf47xY2vRwMolny6UVjS/6gEBffCsqlmRO
-         BwunnNtGrD271XgZ00ZYVqrrHo4aQLcwiD3em1e0CR81reExpZoLSIHbkCXaQ7Ph9tl6
-         /sY5N4yXu7Qt4QzSPEE3XJYyxt6HTjdHjnc6u3Jv8Cd2FrYcRspT+pgYAbjdU+qudyYt
-         pZYg==
-X-Gm-Message-State: AOAM533/tzZSE/MTZdDSm1P9/cUGDWWBxz5e96mFxf6r1aQjOhMs6YDQ
-        2jDui3C4GaTjMBE/sFWvwwi7SA==
-X-Google-Smtp-Source: ABdhPJx/4VVBlneDG36Q/SLWPtFp+CtxwJnOIUCT1u2jRalyMTmf8uve0S/G2MJuu/H/na/+h9PhSA==
-X-Received: by 2002:a17:90a:30a5:: with SMTP id h34mr6603724pjb.36.1591728450330;
-        Tue, 09 Jun 2020 11:47:30 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id f3sm3388976pjw.57.2020.06.09.11.47.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 11:47:29 -0700 (PDT)
-Date:   Tue, 9 Jun 2020 11:47:28 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Alexander Popov <alex.popov@linux.com>
-Cc:     Emese Revfy <re.emese@gmail.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Sven Schnelle <svens@stackframe.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Collingbourne <pcc@google.com>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Alexander Monakov <amonakov@ispras.ru>,
-        Mathias Krause <minipli@googlemail.com>,
-        PaX Team <pageexec@freemail.hu>,
-        Brad Spengler <spender@grsecurity.net>,
-        Laura Abbott <labbott@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        kernel-hardening@lists.openwall.com, linux-kbuild@vger.kernel.org,
-        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, gcc@gcc.gnu.org, notify@kernel.org
-Subject: Re: [PATCH 3/5] gcc-plugins/stackleak: Add 'verbose' plugin parameter
-Message-ID: <202006091147.193047096C@keescook>
-References: <20200604134957.505389-1-alex.popov@linux.com>
- <20200604134957.505389-4-alex.popov@linux.com>
+        Tue, 9 Jun 2020 14:47:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32956 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728400AbgFISrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 14:47:37 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76DB520737;
+        Tue,  9 Jun 2020 18:47:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591728457;
+        bh=uCUPSy3LHC5NpBWjYwABGrcETfQmegBMc7n+u3jXo5s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xjqZkmD59drnpt66B3AiMrUEFDamsUUadN8nTRe2dZuviEldMp/gylnJXMc0evNq3
+         VsShA3bQiprNZIaobB1SPaT9wDmYV1nablAHV9pbAYXicU9ovABBDwqYj9CrWU17Dq
+         lGxdoq7nSDB4TdNGoCCsTHMrRHN14lhpwLfSIInY=
+Date:   Tue, 9 Jun 2020 19:47:34 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        robh@kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [RFC PATCH 1/2] dt-bindings: tas2562: Add firmware support for
+ tas2563
+Message-ID: <20200609184734.GS4583@sirena.org.uk>
+References: <20200609172841.22541-1-dmurphy@ti.com>
+ <20200609172841.22541-2-dmurphy@ti.com>
+ <20200609173143.GN4583@sirena.org.uk>
+ <bb7cff87-f814-1b37-c9eb-e68919e3c077@ti.com>
+ <20200609175852.GQ4583@sirena.org.uk>
+ <414a2d73-6d09-1e76-59c8-4943c0e8f720@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Pa4xkLBhPDIhDLv1"
 Content-Disposition: inline
-In-Reply-To: <20200604134957.505389-4-alex.popov@linux.com>
+In-Reply-To: <414a2d73-6d09-1e76-59c8-4943c0e8f720@ti.com>
+X-Cookie: Be careful!  Is it classified?
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 04:49:55PM +0300, Alexander Popov wrote:
-> Add 'verbose' plugin parameter for stackleak gcc plugin.
-> It can be used for printing additional info about the kernel code
-> instrumentation.
-> 
-> For using it add the following to scripts/Makefile.gcc-plugins:
->   gcc-plugin-cflags-$(CONFIG_GCC_PLUGIN_STACKLEAK) \
->     += -fplugin-arg-stackleak_plugin-verbose
-> 
-> Signed-off-by: Alexander Popov <alex.popov@linux.com>
 
-Acked-by: Kees Cook <keescook@chromium.org>
+--Pa4xkLBhPDIhDLv1
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Kees Cook
+On Tue, Jun 09, 2020 at 01:06:50PM -0500, Dan Murphy wrote:
+
+> I could make a default as you suggested to include i2c address and bus in
+> the name.=A0 But the TAS2563 does not need the firmware to operate and the
+> 2562 does not have a DSP.
+
+That's fine, the driver can just use the compatible string to check this
+and not offer any of the DSP related stuff (it should do this regardless
+of the method used here).  I'm guessing the regmap configs should also
+be different.
+
+> What if there was an ALSA control instead that passed in the firmware name
+> from the user space instead of using the DT?
+
+> Then the control can load and parse the firmware and wait for the user to
+> select the program.
+
+> This would solve a user from having ot update the DT to use a firmware.
+
+That's really not very idiomatic for how Linux does stuff and seems to
+pretty much guarantee issues with hotplugging controls and ordering -
+you'd need special userspace to start up even if it was just a really
+simple DSP config doing only speaker correction or something.  I'm not
+sure what the advantage would be - what problem is this solving over
+static names?
+
+--Pa4xkLBhPDIhDLv1
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7f2UUACgkQJNaLcl1U
+h9B2rwf/YFbqDdxSX14Y6RPwmFML2pjKw2MuRY9938rKnwgtQ37Os922ucZ6N6uq
++WvyT864PZsYY8N01/dkmmPd8B+8lV/85PlWg+K+O9BNDLtLY5jnHE4a9xMdaYyB
+zyKzaKlKti2ZpEAJ6fgQY3ja05YEBGKSPtL0PORFHmSKgaQie91AFWRPbbv7Prqb
+FSB4J45Z7rUQ9OTz6qLlxixQbjMjXTx/zXUl9AptuKUvCO3ei2VP9Kx7M1vN7EFn
+ava9TCr/Zex1DfGtLGR2xj48m3UYHcp+r2STuTW3L185w09c9oU3pduzQcF+qd7+
+wngrO/PscDnJ+YLElOOVyQJOcZhFEQ==
+=/Hdd
+-----END PGP SIGNATURE-----
+
+--Pa4xkLBhPDIhDLv1--
