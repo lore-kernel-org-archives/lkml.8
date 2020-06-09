@@ -2,330 +2,286 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D4AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 06:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B233C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 06:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E8752074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 06:54:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D1292074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 06:54:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="lr+cN9Bk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbgFIGyJ (ORCPT
+        id S1727905AbgFIGyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 02:54:09 -0400
-Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:8734 "EHLO
-        EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727837AbgFIGyJ (ORCPT
+        Tue, 9 Jun 2020 02:54:14 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:15744 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726941AbgFIGyK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 02:54:09 -0400
-Received: from sc9-mailhost2.vmware.com (10.113.161.72) by
- EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
- 15.0.1156.6; Mon, 8 Jun 2020 23:51:15 -0700
-Received: from vikash-ubuntu-virtual-machine.eng.vmware.com (unknown [10.197.103.194])
-        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id 2882CB2774;
-        Tue,  9 Jun 2020 02:51:16 -0400 (EDT)
-From:   Vikash Bansal <bvikas@vmware.com>
-To:     <gregkh@linuxfoundation.org>
-CC:     <stable@vger.kernel.org>, <srivatsab@vmware.com>,
-        <srivatsa@csail.mit.edu>, <amakhalov@vmware.com>,
-        <srinidhir@vmware.com>, <bvikas@vmware.com>, <anishs@vmware.com>,
-        <vsirnapalli@vmware.com>, <akaher@vmware.com>, <clm@fb.com>,
-        <josef@toxicpanda.com>, <dsterba@suse.com>,
-        <anand.jain@oracle.com>, <linux-btrfs@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4.19.y 1/2] btrfs: merge btrfs_find_device and find_device
-Date:   Tue, 9 Jun 2020 12:20:17 +0530
-Message-ID: <20200609065018.26378-2-bvikas@vmware.com>
+        Tue, 9 Jun 2020 02:54:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1591685648; x=1623221648;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=s+lAt2ovjJo4KeksjaOBsCKoxhOAqoXG5nSOSsxO0FE=;
+  b=lr+cN9BktAIcj+Rx9NhBb9Xq632vapOYvAUGSJIxUvDD9wv0uE0Y/SZV
+   kQmzOzwdoR1fZn1l3jfid6amPTAqGDhG0AyXmgGO2kdxE8AZPHUWNC7/F
+   YuZC1sY8mP15YMMl1lFVuz3OEL+9MCpLirUEzw0yDE2107r50O4GIV7zn
+   8=;
+IronPort-SDR: M324Bj4pr4+IwN65o90dgSjczH3RssoQjlvoeYmd5OEKUawrPo7cZ1vps+tDFaDIcJdYUr9EsP
+ 4YlamzAcOJOw==
+X-IronPort-AV: E=Sophos;i="5.73,490,1583193600"; 
+   d="scan'208";a="35222063"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-715bee71.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 09 Jun 2020 06:54:06 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1a-715bee71.us-east-1.amazon.com (Postfix) with ESMTPS id D8018A18CC;
+        Tue,  9 Jun 2020 06:53:54 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 9 Jun 2020 06:53:53 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.53) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 9 Jun 2020 06:53:38 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <akpm@linux-foundation.org>
+CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
+        <aarcange@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
+        <brendanhiggins@google.com>, <cai@lca.pw>,
+        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
+        <foersleo@amazon.de>, <irogers@google.com>, <jolsa@redhat.com>,
+        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
+        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
+        <peterz@infradead.org>, <rdunlap@infradead.org>,
+        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
+        <sblbir@amazon.com>, <shakeelb@google.com>, <shuah@kernel.org>,
+        <sj38.park@gmail.com>, <snu@amazon.de>, <vbabka@suse.cz>,
+        <vdavydov.dev@gmail.com>, <yang.shi@linux.alibaba.com>,
+        <ying.huang@intel.com>, <david@redhat.com>,
+        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [RFC v11 0/8] Implement Data Access Monitoring-based Memory Operation Schemes
+Date:   Tue, 9 Jun 2020 08:53:12 +0200
+Message-ID: <20200609065320.12941-1-sjpark@amazon.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200609065018.26378-1-bvikas@vmware.com>
-References: <20200609065018.26378-1-bvikas@vmware.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-Received-SPF: None (EX13-EDG-OU-001.vmware.com: bvikas@vmware.com does not
- designate permitted sender hosts)
+X-Originating-IP: [10.43.162.53]
+X-ClientProxiedBy: EX13D31UWA004.ant.amazon.com (10.43.160.217) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anand Jain <anand.jain@oracle.com>
+From: SeongJae Park <sjpark@amazon.de>
 
-commit 09ba3bc9dd150457c506e4661380a6183af651c1 upstream
+DAMON[1] can be used as a primitive for data access awared memory management
+optimizations.  For that, users who want such optimizations should run DAMON,
+read the monitoring results, analyze it, plan a new memory management scheme,
+and apply the new scheme by themselves.  Such efforts will be inevitable for
+some complicated optimizations.
 
-Both btrfs_find_device() and find_device() does the same thing except
-that the latter does not take the seed device onto account in the device
-scanning context. We can merge them.
+However, in many other cases, the users would simply want the system to apply a
+memory management action to a memory region of a specific size having a
+specific access frequency for a specific time.  For example, "page out a memory
+region larger than 100 MiB keeping only rare accesses more than 2 minutes", or
+"Do not use THP for a memory region larger than 2 MiB rarely accessed for more
+than 1 seconds".
 
-Signed-off-by: Anand Jain <anand.jain@oracle.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-[4.19.y backport notes:
-Vikash : - To apply this patch, a portion of commit e4319cd9cace
-           was used to change the first argument of function
-           "btrfs_find_device" from "struct btrfs_fs_info" to
-           "struct btrfs_fs_devices".
-Signed-off-by: Vikash Bansal <bvikas@vmware.com>
----
- fs/btrfs/dev-replace.c |  8 ++--
- fs/btrfs/ioctl.c       |  5 ++-
- fs/btrfs/scrub.c       |  4 +-
- fs/btrfs/volumes.c     | 84 +++++++++++++++++++++---------------------
- fs/btrfs/volumes.h     |  4 +-
- 5 files changed, 53 insertions(+), 52 deletions(-)
+This RFC patchset makes DAMON to handle such data access monitoring-based
+operation schemes.  With this change, users can do the data access aware
+optimizations by simply specifying their schemes to DAMON.
 
-diff --git a/fs/btrfs/dev-replace.c b/fs/btrfs/dev-replace.c
-index 96763805787e..1b9c8ffb038f 100644
---- a/fs/btrfs/dev-replace.c
-+++ b/fs/btrfs/dev-replace.c
-@@ -112,11 +112,11 @@ int btrfs_init_dev_replace(struct btrfs_fs_info *fs_info)
- 		break;
- 	case BTRFS_IOCTL_DEV_REPLACE_STATE_STARTED:
- 	case BTRFS_IOCTL_DEV_REPLACE_STATE_SUSPENDED:
--		dev_replace->srcdev = btrfs_find_device(fs_info, src_devid,
--							NULL, NULL);
--		dev_replace->tgtdev = btrfs_find_device(fs_info,
-+		dev_replace->srcdev = btrfs_find_device(fs_info->fs_devices,
-+						src_devid, NULL, NULL, true);
-+		dev_replace->tgtdev = btrfs_find_device(fs_info->fs_devices,
- 							BTRFS_DEV_REPLACE_DEVID,
--							NULL, NULL);
-+							NULL, NULL, true);
- 		/*
- 		 * allow 'btrfs dev replace_cancel' if src/tgt device is
- 		 * missing
-diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
-index 199c70b8f7d8..a5ae02bf3652 100644
---- a/fs/btrfs/ioctl.c
-+++ b/fs/btrfs/ioctl.c
-@@ -1642,7 +1642,7 @@ static noinline int btrfs_ioctl_resize(struct file *file,
- 		btrfs_info(fs_info, "resizing devid %llu", devid);
- 	}
- 
--	device = btrfs_find_device(fs_info, devid, NULL, NULL);
-+	device = btrfs_find_device(fs_info->fs_devices, devid, NULL, NULL, true);
- 	if (!device) {
- 		btrfs_info(fs_info, "resizer unable to find device %llu",
- 			   devid);
-@@ -3178,7 +3178,8 @@ static long btrfs_ioctl_dev_info(struct btrfs_fs_info *fs_info,
- 		s_uuid = di_args->uuid;
- 
- 	rcu_read_lock();
--	dev = btrfs_find_device(fs_info, di_args->devid, s_uuid, NULL);
-+	dev = btrfs_find_device(fs_info->fs_devices, di_args->devid, s_uuid,
-+				NULL, true);
- 
- 	if (!dev) {
- 		ret = -ENODEV;
-diff --git a/fs/btrfs/scrub.c b/fs/btrfs/scrub.c
-index 6b6008db3e03..fee8995c9a0c 100644
---- a/fs/btrfs/scrub.c
-+++ b/fs/btrfs/scrub.c
-@@ -3835,7 +3835,7 @@ int btrfs_scrub_dev(struct btrfs_fs_info *fs_info, u64 devid, u64 start,
- 		return PTR_ERR(sctx);
- 
- 	mutex_lock(&fs_info->fs_devices->device_list_mutex);
--	dev = btrfs_find_device(fs_info, devid, NULL, NULL);
-+	dev = btrfs_find_device(fs_info->fs_devices, devid, NULL, NULL, true);
- 	if (!dev || (test_bit(BTRFS_DEV_STATE_MISSING, &dev->dev_state) &&
- 		     !is_dev_replace)) {
- 		mutex_unlock(&fs_info->fs_devices->device_list_mutex);
-@@ -4019,7 +4019,7 @@ int btrfs_scrub_progress(struct btrfs_fs_info *fs_info, u64 devid,
- 	struct scrub_ctx *sctx = NULL;
- 
- 	mutex_lock(&fs_info->fs_devices->device_list_mutex);
--	dev = btrfs_find_device(fs_info, devid, NULL, NULL);
-+	dev = btrfs_find_device(fs_info->fs_devices, devid, NULL, NULL, true);
- 	if (dev)
- 		sctx = dev->scrub_ctx;
- 	if (sctx)
-diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
-index 9c3b394b99fa..5b0d00c63fbb 100644
---- a/fs/btrfs/volumes.c
-+++ b/fs/btrfs/volumes.c
-@@ -347,27 +347,6 @@ static struct btrfs_device *__alloc_device(void)
- 	return dev;
- }
- 
--/*
-- * Find a device specified by @devid or @uuid in the list of @fs_devices, or
-- * return NULL.
-- *
-- * If devid and uuid are both specified, the match must be exact, otherwise
-- * only devid is used.
-- */
--static struct btrfs_device *find_device(struct btrfs_fs_devices *fs_devices,
--		u64 devid, const u8 *uuid)
--{
--	struct btrfs_device *dev;
--
--	list_for_each_entry(dev, &fs_devices->devices, dev_list) {
--		if (dev->devid == devid &&
--		    (!uuid || !memcmp(dev->uuid, uuid, BTRFS_UUID_SIZE))) {
--			return dev;
--		}
--	}
--	return NULL;
--}
--
- static noinline struct btrfs_fs_devices *find_fsid(u8 *fsid)
- {
- 	struct btrfs_fs_devices *fs_devices;
-@@ -772,8 +751,8 @@ static noinline struct btrfs_device *device_list_add(const char *path,
- 		device = NULL;
- 	} else {
- 		mutex_lock(&fs_devices->device_list_mutex);
--		device = find_device(fs_devices, devid,
--				disk_super->dev_item.uuid);
-+		device = btrfs_find_device(fs_devices, devid,
-+				disk_super->dev_item.uuid, NULL, false);
- 	}
- 
- 	if (!device) {
-@@ -2144,7 +2123,8 @@ static int btrfs_find_device_by_path(struct btrfs_fs_info *fs_info,
- 	disk_super = (struct btrfs_super_block *)bh->b_data;
- 	devid = btrfs_stack_device_id(&disk_super->dev_item);
- 	dev_uuid = disk_super->dev_item.uuid;
--	*device = btrfs_find_device(fs_info, devid, dev_uuid, disk_super->fsid);
-+	*device = btrfs_find_device(fs_info->fs_devices, devid, dev_uuid,
-+				    disk_super->fsid, true);
- 	brelse(bh);
- 	if (!*device)
- 		ret = -ENOENT;
-@@ -2190,7 +2170,8 @@ int btrfs_find_device_by_devspec(struct btrfs_fs_info *fs_info, u64 devid,
- 
- 	if (devid) {
- 		ret = 0;
--		*device = btrfs_find_device(fs_info, devid, NULL, NULL);
-+		*device = btrfs_find_device(fs_info->fs_devices, devid,
-+					    NULL, NULL, true);
- 		if (!*device)
- 			ret = -ENOENT;
- 	} else {
-@@ -2322,7 +2303,8 @@ static int btrfs_finish_sprout(struct btrfs_trans_handle *trans,
- 				   BTRFS_UUID_SIZE);
- 		read_extent_buffer(leaf, fs_uuid, btrfs_device_fsid(dev_item),
- 				   BTRFS_FSID_SIZE);
--		device = btrfs_find_device(fs_info, devid, dev_uuid, fs_uuid);
-+		device = btrfs_find_device(fs_info->fs_devices, devid, dev_uuid,
-+					   fs_uuid, true);
- 		BUG_ON(!device); /* Logic error */
- 
- 		if (device->fs_devices->seeding) {
-@@ -6254,21 +6236,36 @@ blk_status_t btrfs_map_bio(struct btrfs_fs_info *fs_info, struct bio *bio,
- 	return BLK_STS_OK;
- }
- 
--struct btrfs_device *btrfs_find_device(struct btrfs_fs_info *fs_info, u64 devid,
--				       u8 *uuid, u8 *fsid)
-+/*
-+ * Find a device specified by @devid or @uuid in the list of @fs_devices, or
-+ * return NULL.
-+ *
-+ * If devid and uuid are both specified, the match must be exact, otherwise
-+ * only devid is used.
-+ *
-+ * If @seed is true, traverse through the seed devices.
-+ */
-+struct btrfs_device *btrfs_find_device(struct btrfs_fs_devices *fs_devices,
-+					u64 devid, u8 *uuid, u8 *fsid,
-+					bool seed)
- {
- 	struct btrfs_device *device;
--	struct btrfs_fs_devices *cur_devices;
- 
--	cur_devices = fs_info->fs_devices;
--	while (cur_devices) {
-+	while (fs_devices) {
- 		if (!fsid ||
--		    !memcmp(cur_devices->fsid, fsid, BTRFS_FSID_SIZE)) {
--			device = find_device(cur_devices, devid, uuid);
--			if (device)
--				return device;
-+		    !memcmp(fs_devices->fsid, fsid, BTRFS_FSID_SIZE)) {
-+			list_for_each_entry(device, &fs_devices->devices,
-+					    dev_list) {
-+				if (device->devid == devid &&
-+				    (!uuid || memcmp(device->uuid, uuid,
-+						     BTRFS_UUID_SIZE) == 0))
-+					return device;
-+			}
- 		}
--		cur_devices = cur_devices->seed;
-+		if (seed)
-+			fs_devices = fs_devices->seed;
-+		else
-+			return NULL;
- 	}
- 	return NULL;
- }
-@@ -6513,8 +6510,8 @@ static int read_one_chunk(struct btrfs_fs_info *fs_info, struct btrfs_key *key,
- 		read_extent_buffer(leaf, uuid, (unsigned long)
- 				   btrfs_stripe_dev_uuid_nr(chunk, i),
- 				   BTRFS_UUID_SIZE);
--		map->stripes[i].dev = btrfs_find_device(fs_info, devid,
--							uuid, NULL);
-+		map->stripes[i].dev = btrfs_find_device(fs_info->fs_devices,
-+						devid, uuid, NULL, true);
- 		if (!map->stripes[i].dev &&
- 		    !btrfs_test_opt(fs_info, DEGRADED)) {
- 			free_extent_map(em);
-@@ -6653,7 +6650,8 @@ static int read_one_dev(struct btrfs_fs_info *fs_info,
- 			return PTR_ERR(fs_devices);
- 	}
- 
--	device = btrfs_find_device(fs_info, devid, dev_uuid, fs_uuid);
-+	device = btrfs_find_device(fs_info->fs_devices, devid, dev_uuid,
-+				   fs_uuid, true);
- 	if (!device) {
- 		if (!btrfs_test_opt(fs_info, DEGRADED)) {
- 			btrfs_report_missing_device(fs_info, devid,
-@@ -7243,7 +7241,8 @@ int btrfs_get_dev_stats(struct btrfs_fs_info *fs_info,
- 	int i;
- 
- 	mutex_lock(&fs_devices->device_list_mutex);
--	dev = btrfs_find_device(fs_info, stats->devid, NULL, NULL);
-+	dev = btrfs_find_device(fs_info->fs_devices, stats->devid,
-+				NULL, NULL, true);
- 	mutex_unlock(&fs_devices->device_list_mutex);
- 
- 	if (!dev) {
-@@ -7460,7 +7459,7 @@ static int verify_one_dev_extent(struct btrfs_fs_info *fs_info,
- 	}
- 
- 	/* Make sure no dev extent is beyond device bondary */
--	dev = btrfs_find_device(fs_info, devid, NULL, NULL);
-+	dev = btrfs_find_device(fs_info->fs_devices, devid, NULL, NULL, true);
- 	if (!dev) {
- 		btrfs_err(fs_info, "failed to find devid %llu", devid);
- 		ret = -EUCLEAN;
-@@ -7469,7 +7468,8 @@ static int verify_one_dev_extent(struct btrfs_fs_info *fs_info,
- 
- 	/* It's possible this device is a dummy for seed device */
- 	if (dev->disk_total_bytes == 0) {
--		dev = find_device(fs_info->fs_devices->seed, devid, NULL);
-+		dev = btrfs_find_device(fs_info->fs_devices->seed, devid,
-+					NULL, NULL, false);
- 		if (!dev) {
- 			btrfs_err(fs_info, "failed to find seed devid %llu",
- 				  devid);
-diff --git a/fs/btrfs/volumes.h b/fs/btrfs/volumes.h
-index ac703b15d679..ddd30c162f98 100644
---- a/fs/btrfs/volumes.h
-+++ b/fs/btrfs/volumes.h
-@@ -430,8 +430,8 @@ void __exit btrfs_cleanup_fs_uuids(void);
- int btrfs_num_copies(struct btrfs_fs_info *fs_info, u64 logical, u64 len);
- int btrfs_grow_device(struct btrfs_trans_handle *trans,
- 		      struct btrfs_device *device, u64 new_size);
--struct btrfs_device *btrfs_find_device(struct btrfs_fs_info *fs_info, u64 devid,
--				       u8 *uuid, u8 *fsid);
-+struct btrfs_device *btrfs_find_device(struct btrfs_fs_devices *fs_devices,
-+				       u64 devid, u8 *uuid, u8 *fsid, bool seed);
- int btrfs_shrink_device(struct btrfs_device *device, u64 new_size);
- int btrfs_init_new_device(struct btrfs_fs_info *fs_info, const char *path);
- int btrfs_balance(struct btrfs_fs_info *fs_info,
+[1] https://lore.kernel.org/linux-mm/20200608114047.26589-1-sjpark@amazon.com/
+
+
+Evaluations
+===========
+
+We evaluated DAMON's overhead, monitoring quality and usefulness using 25
+realistic workloads on my QEMU/KVM based virtual machine running a kernel that
+RFC v9 of this patchset is applied.
+
+DAMON is lightweight.  It increases system memory usage by only -0.39% and
+consumes less than 1% CPU time in most case.  It slows target workloads down by
+only 0.63%.
+
+DAMON is accurate and useful for memory management optimizations.  An
+experimental DAMON-based operation scheme for THP, 'ethp', removes 69.43% of
+THP memory overheads while preserving 37.11% of THP speedup.  Another
+experimental DAMON-based 'proactive reclamation' implementation, 'prcl',
+reduces 89.30% of residential sets and 22.40% of system memory footprint while
+incurring only 1.98% runtime overhead in the best case (parsec3/freqmine).
+
+NOTE that the experimentail THP optimization and proactive reclamation are not
+for production, just only for proof of concepts.
+
+Please refer to the official document[1] or "Documentation/admin-guide/mm: Add
+a document for DAMON" patch in the latest DAMON patchset for detailed
+evaluation setup and results.
+
+[1] https://damonitor.github.io/doc/html/latest-damos
+
+
+More Information
+================
+
+We prepared a showcase web site[1] that you can get more information.  There
+are
+
+- the official documentations[2],
+- the heatmap format dynamic access pattern of various realistic workloads for
+  heap area[3], mmap()-ed area[4], and stack[5] area,
+- the dynamic working set size distribution[6] and chronological working set
+  size changes[7], and
+- the latest performance test results[8].
+
+[1] https://damonitor.github.io/_index
+[2] https://damonitor.github.io/doc/html/latest-damos
+[3] https://damonitor.github.io/test/result/visual/latest/heatmap.0.html
+[4] https://damonitor.github.io/test/result/visual/latest/heatmap.1.html
+[5] https://damonitor.github.io/test/result/visual/latest/heatmap.2.html
+[6] https://damonitor.github.io/test/result/visual/latest/wss_sz.html
+[7] https://damonitor.github.io/test/result/visual/latest/wss_time.html
+[8] https://damonitor.github.io/test/result/perf/latest/html/index.html
+
+
+Baseline and Complete Git Tree
+==============================
+
+
+The patches are based on the v5.7 plus v15 DAMON patchset[1] and Minchan's
+``do_madvise()`` patch[2], which retrieved from linux-next/master and slightly
+modified for backporting on v5.7.  You can also clone the complete git tree:
+
+    $ git clone git://github.com/sjp38/linux -b damos/rfc/v11
+
+The web is also available:
+https://github.com/sjp38/linux/releases/tag/damos/rfc/v11
+
+There are a couple of trees for entire DAMON patchset series that future
+features are included.  The first one[3] contains the changes for latest
+release, while the other one[4] contains the changes for next release.
+
+[1] TODO: Add DAMON v15 patchset link
+[2] https://lore.kernel.org/linux-mm/20200302193630.68771-2-minchan@kernel.org/
+[3] https://github.com/sjp38/linux/tree/damon/master
+[4] https://github.com/sjp38/linux/tree/damon/next
+
+
+Sequence Of Patches
+===================
+
+The 1st patch allows DAMON to reuse ``madvise()`` code for the actions.  The
+2nd patch accounts age of each region.  The 3rd patch implements the handling
+of the schemes in DAMON and exports a kernel space programming interface for
+it.  The 4th patch implements a debugfs interface for the privileged people and
+user programs.  The 5th patch implements schemes statistics feature for easier
+tuning of the schemes and runtime access pattern analysis.  The 6th patche adds
+selftests for these changes, and the 7th patch adds human friendly schemes
+support to the user space tool for DAMON.  Finally, the 8th patch documents
+this new feature in the document.
+
+
+Patch History
+=============
+
+Changes from RFC v10
+(https://lore.kernel.org/linux-mm/20200603071138.8152-1-sjpark@amazon.com/)
+ - Fix the wrong error handling for schemes debugfs file
+ - Handle the schemes stats from the user space tool
+ - Remove the schemes implementation plan from the document
+
+Changes from RFC v9
+(https://lore.kernel.org/linux-mm/20200526075702.27339-1-sjpark@amazon.com/)
+ - Rebase on v5.7
+ - Fix wrong comments and documents for schemes apply conditions
+
+Changes from RFC v8
+(https://lore.kernel.org/linux-mm/20200512115343.27699-1-sjpark@amazon.com/)
+ - Rewrite the document (Stefan Nuernberger)
+ - Make 'damon_for_each_*' argument order consistent (Leonard Foerster)
+ - Implement statistics for schemes
+ - Avoid races between debugfs readers and writers
+ - Reset age for only significant access frequency changes
+ - Add kernel-doc comments in damon.h
+
+Changes from RFC v7
+(https://lore.kernel.org/linux-mm/20200429124540.32232-1-sjpark@amazon.com/)
+ - Rebase on DAMON v11 patchset
+ - Add documentation
+
+Changes from RFC v6
+(https://lore.kernel.org/linux-mm/20200407100007.3894-1-sjpark@amazon.com/)
+ - Rebase on DAMON v9 patchset
+ - Cleanup code and fix typos (Stefan Nuernberger)
+
+Changes from RFC v5
+(https://lore.kernel.org/linux-mm/20200330115042.17431-1-sjpark@amazon.com/)
+ - Rebase on DAMON v8 patchset
+ - Update test results
+ - Fix DAMON userspace tool crash on signal handling
+ - Fix checkpatch warnings
+
+Changes from RFC v4
+(https://lore.kernel.org/linux-mm/20200303121406.20954-1-sjpark@amazon.com/)
+ - Handle CONFIG_ADVISE_SYSCALL
+ - Clean up code (Jonathan Cameron)
+ - Update test results
+ - Rebase on v5.6 + DAMON v7
+
+Changes from RFC v3
+(https://lore.kernel.org/linux-mm/20200225102300.23895-1-sjpark@amazon.com/)
+ - Add Reviewed-by from Brendan Higgins
+ - Code cleanup: Modularize madvise() call
+ - Fix a trivial bug in the wrapper python script
+ - Add more stable and detailed evaluation results with updated ETHP scheme
+
+Changes from RFC v2
+(https://lore.kernel.org/linux-mm/20200218085309.18346-1-sjpark@amazon.com/)
+ - Fix aging mechanism for more better 'old region' selection
+ - Add more kunittests and kselftests for this patchset
+ - Support more human friedly description and application of 'schemes'
+
+Changes from RFC v1
+(https://lore.kernel.org/linux-mm/20200210150921.32482-1-sjpark@amazon.com/)
+ - Properly adjust age accounting related properties after splitting, merging,
+   and action applying
+
+SeongJae Park (8):
+  mm/madvise: Export do_madvise() to external GPL modules
+  mm/damon: Account age of target regions
+  mm/damon: Implement data access monitoring-based operation schemes
+  mm/damon/schemes: Implement a debugfs interface
+  mm/damon/schemes: Implement statistics feature
+  mm/damon/selftests: Add 'schemes' debugfs tests
+  damon/tools: Support more human friendly 'schemes' control
+  Documentation/admin-guide/mm: Document DAMON-based operation schemes
+
+ Documentation/admin-guide/mm/damon/guide.rst  |  35 ++
+ Documentation/admin-guide/mm/damon/plans.rst  |  26 +-
+ Documentation/admin-guide/mm/damon/usage.rst  | 127 +++++-
+ include/linux/damon.h                         |  66 ++++
+ mm/damon.c                                    | 363 +++++++++++++++++-
+ mm/madvise.c                                  |   1 +
+ tools/damon/_convert_damos.py                 | 128 ++++++
+ tools/damon/_damon.py                         | 146 +++++++
+ tools/damon/damo                              |   7 +
+ tools/damon/record.py                         | 139 +------
+ tools/damon/schemes.py                        | 109 ++++++
+ .../testing/selftests/damon/debugfs_attrs.sh  |  29 ++
+ 12 files changed, 1008 insertions(+), 168 deletions(-)
+ create mode 100755 tools/damon/_convert_damos.py
+ create mode 100644 tools/damon/_damon.py
+ create mode 100644 tools/damon/schemes.py
+
 -- 
-2.23.1
+2.17.1
 
