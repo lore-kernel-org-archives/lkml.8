@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA73C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51BE9C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:53:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDB2E20774
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:53:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AF5420774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:53:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725208;
-	bh=QY93wMTMJtChRvyaGZk2P4YKUxEb/t/zQgecsPwdtVc=;
+	s=default; t=1591725214;
+	bh=tlrqTCvHAD7zvP2mZ+lUjBeNaDmgSx14Us+yObbsOvM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Byqub6PZhSo3isoGjEt0T47OlA57V9UENIvEGEPWEQUqOiPDZNapimh7AIc/qSI3/
-	 wZxi0IkXh/CeBUc94Sek7doD9lcFObdmN7mHF60LRKNinEJPxC1tICuoUM092WTgPF
-	 U+J3BKaeSLh3hKNqObhhxaiuW6/SMbvCZmVlV1GE=
+	b=2mggQsS/SZ5g5FAhQSvHUvuWxiZWeB3quM6UbjAHffsYrxg0Sg7OIlUIVEbwuAiud
+	 cOuNOAktx6wotV8qOoEm0p4zQ2xbRB/KBZuvNAa/RAiJzfH3OqkPI5eIF2x/kpM+7n
+	 YELj9arGyogJ9nNEAsaKkBn21rwrTMCZddy+PT+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733030AbgFIRxZ (ORCPT
+        id S1729949AbgFIRxc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:53:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42582 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:53:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729795AbgFIRwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:52:21 -0400
+        id S1732892AbgFIRwZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:52:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4088F2074B;
-        Tue,  9 Jun 2020 17:52:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0FA02074B;
+        Tue,  9 Jun 2020 17:52:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725140;
-        bh=QY93wMTMJtChRvyaGZk2P4YKUxEb/t/zQgecsPwdtVc=;
+        s=default; t=1591725145;
+        bh=tlrqTCvHAD7zvP2mZ+lUjBeNaDmgSx14Us+yObbsOvM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zHYVNCexZ/kBweTH01TDlTOtDRSj3/mYWv2jsfVslW7SQg1D0JyZGFjnq51kpJL6j
-         rhnwhYAaHtlbaiFqCVJ+g2E6KSmGGYCJdQkf7+RiCwebaPM0UUhEXtRQTL0PKmKZR9
-         qhBbns4A9Nm36vh6QgvstoF0AOhpHH4I8KvrSwec=
+        b=C8SNNAdU+hl6Z+K0zW7Owb8cQYrnwCw4YLcqTZ6+NmLz0EtGCH63WRv8D8K4Ne0ZQ
+         QJiPS60t7rVR+ZACJIO0ujHayk6Drq4dtXMzHLGEA2YdHnPIwPfz5aehRMJjo/gHZZ
+         /c9vbU+avxkMklfNT9VRQYP5rx1p4+mJtaXHR9D4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-        Mark Bloch <markb@mellanox.com>,
-        Moshe Shemesh <moshe@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.4 04/34] net/mlx5: Fix crash upon suspend/resume
-Date:   Tue,  9 Jun 2020 19:45:00 +0200
-Message-Id: <20200609174053.194915880@linuxfoundation.org>
+        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
+        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 06/34] net: usb: qmi_wwan: add Telit LE910C1-EUX composition
+Date:   Tue,  9 Jun 2020 19:45:02 +0200
+Message-Id: <20200609174053.406992811@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174052.628006868@linuxfoundation.org>
 References: <20200609174052.628006868@linuxfoundation.org>
@@ -61,58 +60,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Bloch <markb@mellanox.com>
+From: Daniele Palmas <dnlplm@gmail.com>
 
-[ Upstream commit 8fc3e29be9248048f449793502c15af329f35c6e ]
+[ Upstream commit 591612aa578cd7148b7b9d74869ef40118978389 ]
 
-Currently a Linux system with the mlx5 NIC always crashes upon
-hibernation - suspend/resume.
+Add support for Telit LE910C1-EUX composition
 
-Add basic callbacks so the NIC could be suspended and resumed.
-
-Fixes: 9603b61de1ee ("mlx5: Move pci device handling from mlx5_ib to mlx5_core")
-Tested-by: Dexuan Cui <decui@microsoft.com>
-Signed-off-by: Mark Bloch <markb@mellanox.com>
-Reviewed-by: Moshe Shemesh <moshe@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+0x1031: tty, tty, tty, rmnet
+Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
+Acked-by: Bjørn Mork <bjorn@mork.no>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/main.c |   18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/net/usb/qmi_wwan.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-@@ -1554,6 +1554,22 @@ static void shutdown(struct pci_dev *pde
- 	mlx5_pci_disable_device(dev);
- }
- 
-+static int mlx5_suspend(struct pci_dev *pdev, pm_message_t state)
-+{
-+	struct mlx5_core_dev *dev = pci_get_drvdata(pdev);
-+
-+	mlx5_unload_one(dev, false);
-+
-+	return 0;
-+}
-+
-+static int mlx5_resume(struct pci_dev *pdev)
-+{
-+	struct mlx5_core_dev *dev = pci_get_drvdata(pdev);
-+
-+	return mlx5_load_one(dev, false);
-+}
-+
- static const struct pci_device_id mlx5_core_pci_table[] = {
- 	{ PCI_VDEVICE(MELLANOX, PCI_DEVICE_ID_MELLANOX_CONNECTIB) },
- 	{ PCI_VDEVICE(MELLANOX, 0x1012), MLX5_PCI_DEV_IS_VF},	/* Connect-IB VF */
-@@ -1597,6 +1613,8 @@ static struct pci_driver mlx5_core_drive
- 	.id_table       = mlx5_core_pci_table,
- 	.probe          = init_one,
- 	.remove         = remove_one,
-+	.suspend        = mlx5_suspend,
-+	.resume         = mlx5_resume,
- 	.shutdown	= shutdown,
- 	.err_handler	= &mlx5_err_handler,
- 	.sriov_configure   = mlx5_core_sriov_configure,
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -1324,6 +1324,7 @@ static const struct usb_device_id produc
+ 	{QMI_FIXED_INTF(0x1bbb, 0x0203, 2)},	/* Alcatel L800MA */
+ 	{QMI_FIXED_INTF(0x2357, 0x0201, 4)},	/* TP-LINK HSUPA Modem MA180 */
+ 	{QMI_FIXED_INTF(0x2357, 0x9000, 4)},	/* TP-LINK MA260 */
++	{QMI_QUIRK_SET_DTR(0x1bc7, 0x1031, 3)}, /* Telit LE910C1-EUX */
+ 	{QMI_QUIRK_SET_DTR(0x1bc7, 0x1040, 2)},	/* Telit LE922A */
+ 	{QMI_QUIRK_SET_DTR(0x1bc7, 0x1050, 2)},	/* Telit FN980 */
+ 	{QMI_FIXED_INTF(0x1bc7, 0x1100, 3)},	/* Telit ME910 */
 
 
