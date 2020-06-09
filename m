@@ -2,166 +2,324 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BE61C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E8EDC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F2A52064C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:36:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LFMzSUM8"
+	by mail.kernel.org (Postfix) with ESMTP id 122982064C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:38:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729035AbgFILfw (ORCPT
+        id S1729054AbgFILh6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 07:35:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40012 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728729AbgFILfv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 07:35:51 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60FC7C05BD1E;
-        Tue,  9 Jun 2020 04:35:51 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id k8so16039433edq.4;
-        Tue, 09 Jun 2020 04:35:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=3GKLgi9m7hHA4w9uhGKyQr7NX05qUvTZLk4S931FPYM=;
-        b=LFMzSUM8AA6jIHJuzhSflMSKJcV0epp9vpAmPskgARmQOVqJdqwsS3uTFhVjszdG5m
-         2/BVCszhYHGUYxnLTNuP8XKsCDUFcIGffotUF4M/6Nfj6sx0EXrWHLXgOl/a8p50cSSF
-         OFKtg0xB45L1QGhjWVOEL0GNTwynrypX82Qd2rBYle5j9bA4agUq/EXFy/mknMkuyRIB
-         O4W4Zz5uBZGmzhetuD3jovy7ZHyd1sq4Up4buBOJt2m1Cy39BvVslEDu2rthFIoBILtq
-         IDSYO4fBEL8ZmLpBqi+XozVIug6dlxDwAjKpk7DSXDSNgReXWOFhRJBOIMXr1grguQ3g
-         3ImA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=3GKLgi9m7hHA4w9uhGKyQr7NX05qUvTZLk4S931FPYM=;
-        b=VITZnNLHX7aMYKTkXGKrQCw6Ps9khadH9Lj6ATWLi8nnjvNUKIM/gtv/J01pTwY5/h
-         iNAJUBdAhWMzxYDmmgKT40ZeMPoHvvVcg56kZDrFig4adJpDLjTBx0N+YM70zs3uhNqj
-         tNNctIue8Ks1r7ci+RJTFjAhE+QQ78eRTx9ACOIIurUtJrOpFadtF/D1V40VgD9UtgYm
-         7FqRgd8CBSucnlXr9LSiOcz8KqVfidJHJNf5aFfa1JDFshiWJiO30jinJm5m1QwGoBpO
-         1zgJ+RIU1nmsBpRLa+ZTOLxxlGbgeHT8+PSmxhAz5a2lOVLFQ0MonsUYNlb/Q/QDwTnF
-         TJgg==
-X-Gm-Message-State: AOAM533fApfynrg+xwdMFf8jRHc1rS0BPB0ttn+ZQ3iRAdgu/vbTviX7
-        LTqngPza2WdQM5qzdERbjuOBkWZ0vw/vunZOhMY=
-X-Google-Smtp-Source: ABdhPJykjpPs5vfLoL59YFbbxUZOlqaIj1xtUIkg5mLmUOrgafYoa7TVbq7+qPlqul4A8vjq+IQXSZ9ZDzl8kRpvy7Q=
-X-Received: by 2002:aa7:dc50:: with SMTP id g16mr18036226edu.318.1591702549991;
- Tue, 09 Jun 2020 04:35:49 -0700 (PDT)
+        Tue, 9 Jun 2020 07:37:58 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44070 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726915AbgFILhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 07:37:55 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id EFE53AAC6;
+        Tue,  9 Jun 2020 11:37:55 +0000 (UTC)
+Date:   Tue, 9 Jun 2020 13:37:51 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Barrier before pushing desc_ring tail: was [PATCH v2 2/3] printk:
+ add lockless buffer
+Message-ID: <20200609113751.GD23752@linux-b0ei>
+References: <20200501094010.17694-1-john.ogness@linutronix.de>
+ <20200501094010.17694-3-john.ogness@linutronix.de>
 MIME-Version: 1.0
-References: <20200602051828.5734-1-xiaoliang.yang_1@nxp.com>
- <CA+h21hp5K8BvNSuWKuAc_tVYeLpRUqrZtfvFz+3hdLWcAOfMag@mail.gmail.com> <DB8PR04MB5785D8DA658A4557973EA233F08B0@DB8PR04MB5785.eurprd04.prod.outlook.com>
-In-Reply-To: <DB8PR04MB5785D8DA658A4557973EA233F08B0@DB8PR04MB5785.eurprd04.prod.outlook.com>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Tue, 9 Jun 2020 14:35:39 +0300
-Message-ID: <CA+h21hpK6iuzyVCLbosUSGcdqCERxpE4WbZrgeB1C6sKmSrK2Q@mail.gmail.com>
-Subject: Re: [EXT] Re: [PATCH v2 net-next 00/10] net: ocelot: VCAP IS1 and ES0 support
-To:     Xiaoliang Yang <xiaoliang.yang_1@nxp.com>
-Cc:     Po Liu <po.liu@nxp.com>, Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Leo Li <leoyang.li@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Ido Schimmel <idosch@idosch.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        Roopa Prabhu <roopa@cumulusnetworks.com>,
-        netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "Allan W. Nielsen" <allan.nielsen@microchip.com>,
-        Joergen Andreasen <joergen.andreasen@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        "linux-devel@linux.nxdi.nxp.com" <linux-devel@linux.nxdi.nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200501094010.17694-3-john.ogness@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Xiaoliang,
+On Fri 2020-05-01 11:46:09, John Ogness wrote:
+> Introduce a multi-reader multi-writer lockless ringbuffer for storing
+> the kernel log messages. Readers and writers may use their API from
+> any context (including scheduler and NMI). This ringbuffer will make
+> it possible to decouple printk() callers from any context, locking,
+> or console constraints. It also makes it possible for readers to have
+> full access to the ringbuffer contents at any time and context (for
+> example from any panic situation).
+> 
+> --- /dev/null
+> +++ b/kernel/printk/printk_ringbuffer.c
+> +/*
+> + * Advance the desc ring tail. This function advances the tail by one
+> + * descriptor, thus invalidating the oldest descriptor. Before advancing
+> + * the tail, the tail descriptor is made reusable and all data blocks up to
+> + * and including the descriptor's data block are invalidated (i.e. the data
+> + * ring tail is pushed past the data block of the descriptor being made
+> + * reusable).
+> + */
+> +static bool desc_push_tail(struct printk_ringbuffer *rb,
+> +			   unsigned long tail_id)
+> +{
+> +	struct prb_desc_ring *desc_ring = &rb->desc_ring;
+> +	enum desc_state d_state;
+> +	struct prb_desc desc;
+> +
+> +	d_state = desc_read(desc_ring, tail_id, &desc);
+> +
+> +	switch (d_state) {
+> +	case desc_miss:
+> +		/*
+> +		 * If the ID is exactly 1 wrap behind the expected, it is
+> +		 * in the process of being reserved by another writer and
+> +		 * must be considered reserved.
+> +		 */
+> +		if (DESC_ID(atomic_long_read(&desc.state_var)) ==
+> +		    DESC_ID_PREV_WRAP(desc_ring, tail_id)) {
+> +			return false;
+> +		}
+> +
+> +		/*
+> +		 * The ID has changed. Another writer must have pushed the
+> +		 * tail and recycled the descriptor already. Success is
+> +		 * returned because the caller is only interested in the
+> +		 * specified tail being pushed, which it was.
+> +		 */
+> +		return true;
+> +	case desc_reserved:
+> +		return false;
+> +	case desc_committed:
+> +		desc_make_reusable(desc_ring, tail_id);
+> +		break;
+> +	case desc_reusable:
+> +		break;
+> +	}
+> +
+> +	/*
+> +	 * Data blocks must be invalidated before their associated
+> +	 * descriptor can be made available for recycling. Invalidating
+> +	 * them later is not possible because there is no way to trust
+> +	 * data blocks once their associated descriptor is gone.
+> +	 */
+> +
+> +	if (!data_push_tail(rb, &rb->text_data_ring, desc.text_blk_lpos.next))
+> +		return false;
+> +	if (!data_push_tail(rb, &rb->dict_data_ring, desc.dict_blk_lpos.next))
+> +		return false;
+> +
+> +	/*
+> +	 * Check the next descriptor after @tail_id before pushing the tail
+> +	 * to it because the tail must always be in a committed or reusable
+> +	 * state. The implementation of prb_first_seq() relies on this.
+> +	 *
+> +	 * A successful read implies that the next descriptor is less than or
+> +	 * equal to @head_id so there is no risk of pushing the tail past the
+> +	 * head.
+> +	 */
+> +	d_state = desc_read(desc_ring, DESC_ID(tail_id + 1),
+> +			    &desc); /* LMM(desc_push_tail:A) */
+> +	if (d_state == desc_committed || d_state == desc_reusable) {
+> +		/*
+> +		 * Any CPU that loads the new tail ID, must see that the
+> +		 * descriptor at @tail_id is in the reusable state. See the
+> +		 * read memory barrier part of desc_reserve:D for details.
+> +		 */
 
-On Tue, 2 Jun 2020 at 11:50, Xiaoliang Yang <xiaoliang.yang_1@nxp.com> wrot=
-e:
->
-> Hi Vladimir,
->
-> On Tus, 2 Jun 2020 at 16:04,
-> > First of all, net-next has just closed yesterday and will be closed for=
- the following 2 weeks:
-> > https://eur01.safelinks.protection.outlook.com/?url=3Dhttp:%2F%2Fvger.k=
-ernel.org%2F~davem%2Fnet-next.html&amp;data=3D02%7C01% 7Cxiaoliang.yang_1%4=
-0nxp.com%7C2fad4495dabc4f4ca5fd08d806cb70af%7C686ea1d3bc2b4c6fa92cd99c5c301=
-635%7C0%7C0%7C637266818117666386&amp;sdata=3DziVybWb4HzYXanehF5KwNv5RJL%2BZ=
-z6NeFvrZWg657B8%3D&amp;reserved=3D0
-> >
-> > Secondly, could you give an example of how different chains could expre=
-ss the fact that rules are executed in parallel between the IS1,
-> > IS2 and ES0 TCAMs?
-> >
->
-> Different TCAMs are not running in parallel, they have flow order: IS1->I=
-S2->ES0. Using goto chain to express the flow order.
-> For example:
->         tc qdisc add dev swp0 ingress
->         tc filter add dev swp0 chain 0 protocol 802.1Q parent ffff: flowe=
-r skip_sw vlan_id 1 vlan_prio 1 action vlan modify id 2 priority 2 action g=
-oto chain 1
->         tc filter add dev swp0 chain 1 protocol 802.1Q parent ffff: flowe=
-r skip_sw vlan_id 2 vlan_prio 2 action drop
-> In this example, package with (vid=3D1,pcp=3D1) vlan tag will be modified=
- to (vid=3D2,pcp=3D2) vlan tag on IS1, then will be dropped on IS2.
->
-> If there is no rule match on IS1, it will still lookup on IS2. We can set=
- a rule on chain 0 to express this:
->         tc filter add dev swp0 chain 0 parent ffff: flower skip_sw action=
- goto chain 1
->
-> In addition, VSC9959 chip has PSFP and "Sequence Generation recovery" mod=
-ules are running after IS2, the flow order like this: IS1->IS2->PSFP-> "Seq=
-uence Generation recovery" ->ES0, we can also add chains like this to expre=
-ss these two modules in future.
->
+I was quite confused by the above comment. Does it mean that we need
+a barrier here? Or does it explain why the cmpxchg has its own
+LMM marker?
 
-I've been pondering over what is a good abstraction for 802.1CB and I
-don't think that it would be a tc action. After reading Annex C "Frame
-Replication and Elimination for Reliability in systems" in
-8021CB-2017, I think maybe it should be modeled as a stacked net
-device a la hsr, but with the ability to add its own stream filtering
-rules and actions (a la bridge fdb).
-But for the PSFP policers, in principle I think you are correct, we
-could designate a static chain id for those.
+I think that we actually need a full barrier here to make sure that
+all CPUs see the changes made by data_push_tail() before we
+allow to rewrite the descriptor. The changes in data_push_tail() might
+be done on different CPUs.
 
-> BTW, where should I sent patches to due to net-next closed?
->
+It is similar like the full barrier in data_push_tail() before changing
+data_ring->tail_lpos.
 
-You can keep sending patches just as you did. There's nothing wrong
-with doing that as long as you're only doing it for the feedback (RFC
-=3D=3D Request For Comments).
-Since David receives a lot of patches and the backlog builds up very
-quickly, he just rejects patches sent to net-next during the merge
-window instead of queuing them up.
-Patches that are bugfixes (not the case here, just in general) can be
-sent to the net tree at all times (even during the merge window).
-In all cases, the mailing list is the same, just the --subject-prefix
-is different (net, net-next, rfc).
+Best Regards,
+Petr
 
-> Thanks,
-> Xiaoliang Yang
-
-Thanks,
--Vladimir
+> +		atomic_long_cmpxchg_relaxed(&desc_ring->tail_id, tail_id,
+> +			DESC_ID(tail_id + 1)); /* LMM(desc_push_tail:B) */
+> +	} else {
+> +		/*
+> +		 * Guarantee the last state load from desc_read() is before
+> +		 * reloading @tail_id in order to see a new tail ID in the
+> +		 * case that the descriptor has been recycled. This pairs
+> +		 * with desc_reserve:D.
+> +		 *
+> +		 * Memory barrier involvement:
+> +		 *
+> +		 * If desc_push_tail:A reads from desc_reserve:G, then
+> +		 * desc_push_tail:D reads from desc_push_tail:B.
+> +		 *
+> +		 * Relies on:
+> +		 *
+> +		 * MB from desc_push_tail:B to desc_reserve:G
+> +		 *    matching
+> +		 * RMB from desc_push_tail:A to desc_push_tail:D
+> +		 *
+> +		 * Note: desc_push_tail:B and desc_reserve:G can be different
+> +		 *       CPUs. However, the desc_reserve:G CPU (which performs
+> +		 *       the full memory barrier) must have previously seen
+> +		 *       desc_push_tail:B.
+> +		 */
+> +		smp_rmb(); /* LMM(desc_push_tail:C) */
+> +
+> +		/*
+> +		 * Re-check the tail ID. The descriptor following @tail_id is
+> +		 * not in an allowed tail state. But if the tail has since
+> +		 * been moved by another task, then it does not matter.
+> +		 */
+> +		if (atomic_long_read(&desc_ring->tail_id) ==
+> +					tail_id) { /* LMM(desc_push_tail:D) */
+> +			return false;
+> +		}
+> +	}
+> +
+> +	return true;
+> +}
+> +
+> +/* Reserve a new descriptor, invalidating the oldest if necessary. */
+> +static bool desc_reserve(struct printk_ringbuffer *rb, unsigned long *id_out)
+> +{
+> +	struct prb_desc_ring *desc_ring = &rb->desc_ring;
+> +	unsigned long prev_state_val;
+> +	unsigned long id_prev_wrap;
+> +	struct prb_desc *desc;
+> +	unsigned long head_id;
+> +	unsigned long id;
+> +
+> +	head_id = atomic_long_read(&desc_ring->head_id
+> +						); /* LMM(desc_reserve:A) */
+> +
+> +	do {
+> +		desc = to_desc(desc_ring, head_id);
+> +
+> +		id = DESC_ID(head_id + 1);
+> +		id_prev_wrap = DESC_ID_PREV_WRAP(desc_ring, id);
+> +
+> +		/*
+> +		 * Guarantee the head ID is read before reading the tail ID.
+> +		 * Since the tail ID is updated before the head ID, this
+> +		 * guarantees that @id_prev_wrap is never ahead of the tail
+> +		 * ID. This pairs with desc_reserve:D.
+> +		 *
+> +		 * Memory barrier involvement:
+> +		 *
+> +		 * If desc_reserve:A reads from desc_reserve:E, then
+> +		 * desc_reserve:C reads from desc_push_tail:B.
+> +		 *
+> +		 * Relies on:
+> +		 *
+> +		 * MB from desc_push_tail:B to desc_reserve:E
+> +		 *    matching
+> +		 * RMB from desc_reserve:A to desc_reserve:C
+> +		 *
+> +		 * Note: desc_push_tail:B and desc_reserve:E can be different
+> +		 *       CPUs. However, the desc_reserve:E CPU (which performs
+> +		 *       the full memory barrier) must have previously seen
+> +		 *       desc_push_tail:B.
+> +		 */
+> +		smp_rmb(); /* LMM(desc_reserve:B) */
+> +
+> +		if (id_prev_wrap == atomic_long_read(&desc_ring->tail_id
+> +						)) { /* LMM(desc_reserve:C) */
+> +			/*
+> +			 * Make space for the new descriptor by
+> +			 * advancing the tail.
+> +			 */
+> +			if (!desc_push_tail(rb, id_prev_wrap))
+> +				return false;
+> +		}
+> +
+> +		/*
+> +		 * Guarantee the tail ID is read before validating the
+> +		 * recycled descriptor state. A read memory barrier is
+> +		 * sufficient for this. This pairs with data_push_tail:C.
+> +		 *
+> +		 * Memory barrier involvement:
+> +		 *
+> +		 * If desc_reserve:C reads from desc_push_tail:B, then
+> +		 * desc_reserve:F reads from desc_make_reusable:A.
+> +		 *
+> +		 * Relies on:
+> +		 *
+> +		 * MB from desc_make_reusable:A to desc_push_tail:B
+> +		 *    matching
+> +		 * RMB from desc_reserve:C to desc_reserve:F
+> +		 *
+> +		 * Note: desc_make_reusable:A, desc_push_tail:B, and
+> +		 *       data_push_tail:C can all be different CPUs. However,
+> +		 *       the desc_push_tail:B CPU must have previously seen
+> +		 *       data_push_tail:D and the data_push_tail:D CPU (which
+> +		 *       performs the full memory barrier) must have
+> +		 *       previously seen desc_make_reusable:A.
+> +		 *
+> +		 * Guarantee any data ring tail changes are stored before
+> +		 * recycling the descriptor. Data ring tail changes can happen
+> +		 * via desc_push_tail()->data_push_tail(). A full memory
+> +		 * barrier is needed since another task may have pushed the
+> +		 * data ring tails. This pairs with data_push_tail:A.
+> +		 *
+> +		 * Guarantee a new tail ID is stored before recycling the
+> +		 * descriptor. A full memory barrier is needed since another
+> +		 * task may have pushed the tail ID. This pairs with
+> +		 * desc_push_tail:C and prb_first_seq:C.
+> +		 *
+> +		 * Guarantee the tail ID is stored before storing the head ID.
+> +		 * This pairs with desc_reserve:B.
+> +		 */
+> +		smp_mb(); /* LMM(desc_reserve:D) */
+> +
+> +	} while (!atomic_long_try_cmpxchg_relaxed(&desc_ring->head_id,
+> +				&head_id, id)); /* LMM(desc_reserve:E) */
+> +
+> +	desc = to_desc(desc_ring, id);
+> +
+> +	/*
+> +	 * If the descriptor has been recycled, verify the old state val.
+> +	 * See "ABA Issues" about why this verification is performed.
+> +	 */
+> +	prev_state_val = atomic_long_read(&desc->state_var
+> +						); /* LMM(desc_reserve:F) */
+> +	if (prev_state_val && prev_state_val != (id_prev_wrap |
+> +						 DESC_COMMITTED_MASK |
+> +						 DESC_REUSE_MASK)) {
+> +		WARN_ON_ONCE(1);
+> +		return false;
+> +	}
+> +
+> +	/*
+> +	 * Assign the descriptor a new ID and set its state to reserved.
+> +	 * See "ABA Issues" about why cmpxchg() instead of set() is used.
+> +	 */
+> +	if (!atomic_long_try_cmpxchg_relaxed(&desc->state_var,
+> +			&prev_state_val, id | 0)) { /* LMM(desc_reserve:G) */
+> +		WARN_ON_ONCE(1);
+> +		return false;
+> +	}
+> +
+> +	/*
+> +	 * Guarantee the new descriptor ID and state is stored before making
+> +	 * any other changes. This pairs with desc_read:D.
+> +	 */
+> +	smp_wmb(); /* LMM(desc_reserve:H) */
+> +
+> +	/* Now data in @desc can be modified: LMM(desc_reserve:I) */
+> +
+> +	*id_out = id;
+> +	return true;
+> +}
