@@ -2,51 +2,52 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD73C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8584C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6C72207ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:47:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C946020823
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:47:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591724841;
-	bh=L7YJy0y9nLm8blOqjElc3xEZMQQ5twDSw/fGhd5AN1s=;
+	s=default; t=1591724848;
+	bh=9FKigbwOpgAEiepoTIiMFDOnRzBmRyu809l/veBXigM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rSDZgqRRcDvU0IGIiN1uLgA+id6N3mvNePfTQCJVlucEmR63CWk6oQNHJHbuowa7E
-	 jUVnoHHpET4IGYIHwwRJ4xpzxddhMlq6pK6+0It6kaeZS7pnrYW4T0pIjQvkpt36+r
-	 kuU5tCAVFsYxNcQoaMEa9Cp9Z/K2bWHEadv0+pEI=
+	b=vUz/3Ute9LvunfT+IkXBWN5gcG2bLX/x+Xs77FHDVtU/moWpDeDWVgD9K8K86idEy
+	 GDw1s/IJS8TmuKWuSh2ZvQqW1tdkq0cEXXpO9MHkae/eC4dyji2kCiYbdkUJ2DWnVe
+	 eFCAlr5WefBnzuUpbuGL/pJPcy95+1kZtIy5f8XQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732080AbgFIRrT (ORCPT
+        id S1732100AbgFIRr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:47:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58216 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:47:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732061AbgFIRrL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:47:11 -0400
+        id S1732074AbgFIRrS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:47:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0681720801;
-        Tue,  9 Jun 2020 17:47:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F0F4207ED;
+        Tue,  9 Jun 2020 17:47:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591724830;
-        bh=L7YJy0y9nLm8blOqjElc3xEZMQQ5twDSw/fGhd5AN1s=;
+        s=default; t=1591724837;
+        bh=9FKigbwOpgAEiepoTIiMFDOnRzBmRyu809l/veBXigM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VTw2C3I2H4iUFSGHNTZEjwoCBwRhTyuEiyG/4WyAGw2n6URUD06uPy0qOu5AUvsc3
-         Ub2gFa4H7S3yo2t3IVScFO+0GWmBrG3kzoJKfqY63hlZpYkdaMEH9nxc6W/BVLqlAl
-         lag1iWpD17NHGrfFAx2bCKcriWlyYw8LNTMLXcaU=
+        b=gIZyxFTPmNaxw3rvY+BO309pyyBN5XhyVNcKS0WjCy7ojlVrXupccIYQwOR0WdXim
+         I+iYuzimrnwvuSEC2hqDHrj5YZfayT61p/Twz3rzqk+znDtJnzrrMJu5W0adI1gPwm
+         bETZjGfM2lKA6Yah8VVAgUbglMS6b4RS+SZ+ho7A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 4.4 34/36] x86/speculation: Add Ivy Bridge to affected list
-Date:   Tue,  9 Jun 2020 19:44:34 +0200
-Message-Id: <20200609173935.740168010@linuxfoundation.org>
+        stable@vger.kernel.org, Jonathan McDowell <noodles@earth.li>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 13/36] net: ethernet: stmmac: Enable interface clocks on probe for IPQ806x
+Date:   Tue,  9 Jun 2020 19:44:13 +0200
+Message-Id: <20200609173934.040147772@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609173933.288044334@linuxfoundation.org>
 References: <20200609173933.288044334@linuxfoundation.org>
@@ -59,41 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Jonathan McDowell <noodles@earth.li>
 
-commit 3798cc4d106e91382bfe016caa2edada27c2bb3f upstream
+[ Upstream commit a96ac8a0045e3cbe3e5af6d1b3c78c6c2065dec5 ]
 
-Make the docs match the code.
+The ipq806x_gmac_probe() function enables the PTP clock but not the
+appropriate interface clocks. This means that if the bootloader hasn't
+done so attempting to bring up the interface will fail with an error
+like:
 
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[   59.028131] ipq806x-gmac-dwmac 37600000.ethernet: Failed to reset the dma
+[   59.028196] ipq806x-gmac-dwmac 37600000.ethernet eth1: stmmac_hw_setup: DMA engine initialization failed
+[   59.034056] ipq806x-gmac-dwmac 37600000.ethernet eth1: stmmac_open: Hw setup failed
+
+This patch, a slightly cleaned up version of one posted by Sergey
+Sergeev in:
+
+https://forum.openwrt.org/t/support-for-mikrotik-rb3011uias-rm/4064/257
+
+correctly enables the clock; we have already configured the source just
+before this.
+
+Tested on a MikroTik RB3011.
+
+Signed-off-by: Jonathan McDowell <noodles@earth.li>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/hw-vuln/special-register-buffer-data-sampling.rst |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
---- a/Documentation/hw-vuln/special-register-buffer-data-sampling.rst
-+++ b/Documentation/hw-vuln/special-register-buffer-data-sampling.rst
-@@ -27,6 +27,8 @@ by software using TSX_CTRL_MSR otherwise
-   =============  ============  ========
-   common name    Family_Model  Stepping
-   =============  ============  ========
-+  IvyBridge      06_3AH        All
-+
-   Haswell        06_3CH        All
-   Haswell_L      06_45H        All
-   Haswell_G      06_46H        All
-@@ -37,9 +39,8 @@ by software using TSX_CTRL_MSR otherwise
-   Skylake_L      06_4EH        All
-   Skylake        06_5EH        All
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c
+index 1fc356c17750..15aabffd21a8 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c
+@@ -328,6 +328,19 @@ static int ipq806x_gmac_probe(struct platform_device *pdev)
+ 	/* Enable PTP clock */
+ 	regmap_read(gmac->nss_common, NSS_COMMON_CLK_GATE, &val);
+ 	val |= NSS_COMMON_CLK_GATE_PTP_EN(gmac->id);
++	switch (gmac->phy_mode) {
++	case PHY_INTERFACE_MODE_RGMII:
++		val |= NSS_COMMON_CLK_GATE_RGMII_RX_EN(gmac->id) |
++			NSS_COMMON_CLK_GATE_RGMII_TX_EN(gmac->id);
++		break;
++	case PHY_INTERFACE_MODE_SGMII:
++		val |= NSS_COMMON_CLK_GATE_GMII_RX_EN(gmac->id) |
++				NSS_COMMON_CLK_GATE_GMII_TX_EN(gmac->id);
++		break;
++	default:
++		/* We don't get here; the switch above will have errored out */
++		unreachable();
++	}
+ 	regmap_write(gmac->nss_common, NSS_COMMON_CLK_GATE, val);
  
--  Kabylake_L     06_8EH        <=0xC
--
--  Kabylake       06_9EH        <=0xD
-+  Kabylake_L     06_8EH        <= 0xC
-+  Kabylake       06_9EH        <= 0xD
-   =============  ============  ========
- 
- Related CVEs
+ 	if (gmac->phy_mode == PHY_INTERFACE_MODE_SGMII) {
+-- 
+2.25.1
+
 
 
