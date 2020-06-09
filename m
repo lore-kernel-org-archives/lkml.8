@@ -2,172 +2,96 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9581C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE36CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8139C20734
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:55:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95AC720734
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:59:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NUHZ0GdZ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="F0p8OK8q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbgFIUzu (ORCPT
+        id S1728043AbgFIU7E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 16:55:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41990 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727113AbgFIUzq (ORCPT
+        Tue, 9 Jun 2020 16:59:04 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:15073 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727966AbgFIU7D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 16:55:46 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6656EC08C5C4
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 13:55:46 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id n23so10788940pgb.12
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 13:55:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=lNYRWXDFOIEUX1YNrkuu2evKxT3eLlEeiZYQ/REgVvc=;
-        b=NUHZ0GdZs74B9irVa6slDIfz4CCekIjp6DZqLAqnreAj0h9UZUn7D5AOr3YNHyVe3s
-         aQUohghlZYvlK0GoSoIYSFZFxGBx5YgCWgvrlYA6dUVYGEgAGSwOJsXrQDZxG18s2gI2
-         TTnlYBEqLQoMCTwNoW1jVeo7P1Oyp3C6b5pVs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=lNYRWXDFOIEUX1YNrkuu2evKxT3eLlEeiZYQ/REgVvc=;
-        b=Phwv4nRlVnMOV1i2i7MVuzW9R9qWilOniikRhxgGZXNZVS3nwy1gJUDBqNAJi+28as
-         C/tpUmuOb+QR4xBUnbVZoSVDkbS08BOQgejXAQ3Sz6zg+RSv2ukv4nRRGpLycSKSAJQM
-         OUh9a6aCtgeQ1aYa9JW1DsM1A92DyxNvkV42wvFq9fQHytxNcOd2i0+ZQl/7mPAkKj2v
-         fXJOKWeqYGpqJMNq1lGzn6zp0OcRzoZLmGF2bZg2Tq3pc+sV+a5emVMTJ8gDprQkRnCb
-         hUozU8EYjEhbO9uFDFO5xJKRj5nON9PuKfs2IW4z4aL3GYA1JsgpdFtz/fOPNWIDbO7o
-         F15A==
-X-Gm-Message-State: AOAM532ET5a46kC4Q7lYF8pCdn72Y5R4/vC6PrdW0zDknCNtRROEImNp
-        eu3lXeEmyWTsdbWZsxgWGqjElg==
-X-Google-Smtp-Source: ABdhPJxWT5591LaNE8X/UdYoTAzsao8AEaWF3rwSS4mm8Jt3I4BLq3phZ6m/cnjY18ZEnCB3G0T7UA==
-X-Received: by 2002:a62:cf01:: with SMTP id b1mr26250412pfg.84.1591736145364;
-        Tue, 09 Jun 2020 13:55:45 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id o2sm3243121pjp.53.2020.06.09.13.55.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 13:55:43 -0700 (PDT)
-Date:   Tue, 9 Jun 2020 13:55:42 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Sargun Dhillon <sargun@sargun.me>,
-        Giuseppe Scrivano <gscrivan@redhat.com>,
-        Robert Sesek <rsesek@google.com>,
-        Chris Palmer <palmer@google.com>, Jann Horn <jannh@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        containers@lists.linux-foundation.org,
-        Daniel Wagner <daniel.wagner@bmw-carit.de>,
-        linux-kernel@vger.kernel.org, Matt Denton <mpdenton@google.com>,
-        John Fastabend <john.r.fastabend@intel.com>,
-        linux-fsdevel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        cgroups@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        stable@vger.kernel.org, "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v3 1/4] fs, net: Standardize on file_receive helper to
- move fds across processes
-Message-ID: <202006091346.66B79E07@keescook>
-References: <20200603011044.7972-1-sargun@sargun.me>
- <20200603011044.7972-2-sargun@sargun.me>
- <20200604012452.vh33nufblowuxfed@wittgenstein>
- <202006031845.F587F85A@keescook>
- <20200604125226.eztfrpvvuji7cbb2@wittgenstein>
- <20200605075435.GA3345@ircssh-2.c.rugged-nimbus-611.internal>
- <202006091235.930519F5B@keescook>
- <20200609200346.3fthqgfyw3bxat6l@wittgenstein>
+        Tue, 9 Jun 2020 16:59:03 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591736343; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=beRbT9nazG0y9JQq1jhnco2lsPOiB7MB09hn5iNtxXg=; b=F0p8OK8q3UsMLuK+Bjyf/YwJcw6NiHxfvhVIZ5sY0WypfFzr9Vvb47nZf+znsmE9p22xzplG
+ tP6sIzJgsqFLDhPnTxpv8ObiGPrF3ArdTMPHmGJupyiCytBJpGxlfSragWLZIK021Sfo5OVA
+ 3MYIkdv1PY30ptzMsGcc0PdRG+0=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n08.prod.us-west-2.postgun.com with SMTP id
+ 5edff811fe1db4db8952ee15 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 09 Jun 2020 20:58:57
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 83C9CC433CA; Tue,  9 Jun 2020 20:58:57 +0000 (UTC)
+Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D3E5FC433CA;
+        Tue,  9 Jun 2020 20:58:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D3E5FC433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+From:   Wesley Cheng <wcheng@codeaurora.org>
+To:     heikki.krogerus@linux.intel.com, gregkh@linuxfoundation.org,
+        mark.rutland@arm.com, robh+dt@kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
+        jackp@codeaurora.org, bryan.odonoghue@linaro.org,
+        Wesley Cheng <wcheng@codeaurora.org>
+Subject: [PATCH 0/3] Introduce PMIC based USB type C detection
+Date:   Tue,  9 Jun 2020 13:58:48 -0700
+Message-Id: <20200609205851.30113-1-wcheng@codeaurora.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200609200346.3fthqgfyw3bxat6l@wittgenstein>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 10:03:46PM +0200, Christian Brauner wrote:
-> I'm looking at __scm_install_fd() and I wonder what specifically you
-> mean by that? The put_user() seems to be placed such that the install
-> occurrs only if it succeeded. Sure, it only handles a single fd but
-> whatever. Userspace knows that already. Just look at systemd when a msg
-> fails:
-> 
-> void cmsg_close_all(struct msghdr *mh) {
->         struct cmsghdr *cmsg;
-> 
->         assert(mh);
-> 
->         CMSG_FOREACH(cmsg, mh)
->                 if (cmsg->cmsg_level == SOL_SOCKET && cmsg->cmsg_type == SCM_RIGHTS)
->                         close_many((int*) CMSG_DATA(cmsg), (cmsg->cmsg_len - CMSG_LEN(0)) / sizeof(int));
-> }
-> 
-> The only reasonable scenario for this whole mess I can think of is sm like (pseudo code):
-> 
-> fd_install_received(int fd, struct file *file)
-> {
->  	sock = sock_from_file(fd, &err);
->  	if (sock) {
->  		sock_update_netprioidx(&sock->sk->sk_cgrp_data);
->  		sock_update_classid(&sock->sk->sk_cgrp_data);
->  	}
-> 
-> 	fd_install();
-> }
-> 
-> error = 0;
-> fdarray = malloc(fdmax);
-> for (i = 0; i < fdmax; i++) {
-> 	fdarray[i] = get_unused_fd_flags(o_flags);
-> 	if (fdarray[i] < 0) {
-> 		error = -EBADF;
-> 		break;
-> 	}
-> 
-> 	error = security_file_receive(file);
-> 	if (error)
-> 		break;
-> 
-> 	error = put_user(fd_array[i], ufd);
-> 	if (error)
-> 		break;
-> }
-> 
-> for (i = 0; i < fdmax; i++) {
-> 	if (error) {
-> 		/* ignore errors */
-> 		put_user(-EBADF, ufd); /* If this put_user() fails and the first one succeeded userspace might now close an fd it didn't intend to. */
-> 		put_unused_fd(fdarray[i]);
-> 	} else {
-> 		fd_install_received(fdarray[i], file);
-> 	}
-> }
+Add the required drivers for implementing type C orientation and role
+detection using the Qualcomm PMIC.  Currently, PMICs such as the PM8150B
+have an integrated type C block, which can be utilized for this.  This
+series adds the dt-binding, PMIC type C driver, and DTS nodes.
 
-I see 4 cases of the same code pattern (get_unused_fd_flags(),
-sock_update_*(), fd_install()), one of them has this difficult put_user()
-in the middle, and one of them has a potential replace_fd() instead of
-the get_used/fd_install. So, to me, it makes sense to have a helper that
-encapsulates the common work that each of those call sites has to do,
-which I keep cringing at all these suggestions that leave portions of it
-outside the helper.
+The PMIC type C driver will register itself as a type C port w/ a
+registered type C switch for orientation, and will fetch a USB role switch
+handle for the role notifications.  It will also have the ability to enable
+the VBUS output to any connected devices based on if the device is behaving
+as a UFP or DFP.
 
-If it's too ugly to keep the put_user() in the helper, then we can try
-what was suggested earlier, and just totally rework the failure path for
-SCM_RIGHTS.
+Wesley Cheng (3):
+  usb: typec: Add QCOM PMIC typec detection driver
+  dt-bindings: usb: Add Qualcomm PMIC type C controller dt-binding
+  arm64: boot: dts: qcom: pm8150b: Add node for USB type C block
 
-LOL. And while we were debating this, hch just went and cleaned stuff
-up:
-
-2618d530dd8b ("net/scm: cleanup scm_detach_fds")
-
-So, um, yeah, now my proposal is actually even closer to what we already
-have there. We just add the replace_fd() logic to __scm_install_fd() and
-we're done with it.
+ .../devicetree/bindings/usb/qcom,pmic-typec.yaml   | 118 +++++++++
+ arch/arm64/boot/dts/qcom/pm8150b.dtsi              |   7 +
+ drivers/usb/typec/Kconfig                          |  11 +
+ drivers/usb/typec/Makefile                         |   1 +
+ drivers/usb/typec/qcom-pmic-typec.c                | 278 +++++++++++++++++++++
+ 5 files changed, 415 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/qcom,pmic-typec.yaml
+ create mode 100644 drivers/usb/typec/qcom-pmic-typec.c
 
 -- 
-Kees Cook
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
