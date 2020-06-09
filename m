@@ -2,85 +2,92 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD406C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD7FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8031C206D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:56:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QagLW0xh"
+	by mail.kernel.org (Postfix) with ESMTP id 217EE20734
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:56:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591725393;
+	bh=Es5pHFAq7C4C4t/s9Cs/BOCCeaIGYNiWTOPz+6neDk4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=tNK6/XK36OGFihYkI81LkE0o0hOHoAf097Kf2p+BY+wKdczUw3ZPxhELgEFxaM+7d
+	 rvYQ/m8xXlXiSZ3WssWq6fCK5aYfqxzIMu8F8aJ2xukZtBYASY6Q/HZDW0rcLsx/N9
+	 e/AWMl0/ICM/6A68NLoESRXcwsxxpONPj02W2li4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387507AbgFIR4Z (ORCPT
+        id S2387521AbgFIR4b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:56:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42116 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733147AbgFIRyr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:54:47 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B0DCC05BD1E
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 10:54:47 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id 18so21181469iln.9
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 10:54:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=05NTV0Dt6UYVXxwfdhrIdCqnO3jxBBJw4IueZ8RD+7w=;
-        b=QagLW0xhYVivrf+fT0GpfqIhULa+0BoIReJgWQ4UG4ZnoG+XMKy/w7HGYpVd67BdQA
-         yBrBxfFd4gZ3bKvEvkij5lW0bvtA7HABVCtLvz5nYmO7FoyKuoA4UALm77fOcp0DgJDh
-         GT6D558y+9Vyh6JMT9pBNlGYzU3aqGEI8wrJRJiE/+SxPSLUca6UPuX/0UMUwAHd2RF0
-         eiL1BdCGSiys15bIZBBJ3qWfhlZ9NkzUYzkHXtQgrTgpHUCs66vTlQHZbcxYaoR41Za/
-         7rekPAtwrixokrF9yg29B6rsKatExgDUZTIHjdBFYAHPrW4Ssarnogl/b7ib3LkjMlG/
-         Pu1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=05NTV0Dt6UYVXxwfdhrIdCqnO3jxBBJw4IueZ8RD+7w=;
-        b=XusHkVDj8XpJraULFEyWu9WMoyv0L0kjXufGYa9r3aNzLzMX/O/octFq9B+uJXoiXI
-         2Qoe0z/JZuMzabRN42J/MR6bjFpoJzEXkn4tnJikC4COhhyLKPHMnPxU/oB5MNS5Hfyc
-         30jHlYb76uumZwO4htkWJHkoiVj0mfN8rz+C8q3xRIShbv3rPKUzQ0rNXDwaIKeAXyqT
-         vkePZqz/uYPgCkZMiXcjp6nLiWXHBz7qwyq7+Enwnex1LBqghQysSaCENlAHrUonb/kz
-         OVGXykeZwYNPTddJHJ2BHGJSQO12o5dhHIpI/htkNEFQwMHb7aFwQttZ4TrhBSmKcPYi
-         gSiQ==
-X-Gm-Message-State: AOAM5322zN+wBlrgeAW907Rq1VDYqBDJ4q0Vumq1vMHrJXLPxZJPtPeK
-        a3XoY+3jQohGfmWZKtV54+rAZkj0SfwuAX6NJlrUGQ==
-X-Google-Smtp-Source: ABdhPJwuLfNie5HIlzjHaWphh6RtDbAg/FDCzpuDHUKyY1vJHWGYnA2ygsohkISwy6QnC524BI5sknCPNIg+7WLksdE=
-X-Received: by 2002:a05:6e02:1208:: with SMTP id a8mr27882705ilq.118.1591725286609;
- Tue, 09 Jun 2020 10:54:46 -0700 (PDT)
+        Tue, 9 Jun 2020 13:56:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46938 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730316AbgFIRy4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:54:56 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76BA42074B;
+        Tue,  9 Jun 2020 17:54:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591725295;
+        bh=Es5pHFAq7C4C4t/s9Cs/BOCCeaIGYNiWTOPz+6neDk4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Vo4FEcirkt4B3dLGF8VZrsEXeaHse1+PEjTs9VWGDTcKlkQbW46nOArAlyz7qESpY
+         gbkiKm19bFF2hArJL4h4dH93o8PJRWuH3Ld1ed5/AoCvB9JCccZh+dkpZGlzD6tM7Y
+         mw9fNEcaCwo+3Zn2cBRMAjTEIvLi0rbIaEqVHnjA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Matt Jolly <Kangie@footclan.ninja>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.7 01/24] USB: serial: qcserial: add DW5816e QDL support
+Date:   Tue,  9 Jun 2020 19:45:32 +0200
+Message-Id: <20200609174149.393518043@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200609174149.255223112@linuxfoundation.org>
+References: <20200609174149.255223112@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-References: <20200609015607.6994-1-sean.j.christopherson@intel.com>
-In-Reply-To: <20200609015607.6994-1-sean.j.christopherson@intel.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Tue, 9 Jun 2020 10:54:34 -0700
-Message-ID: <CALMp9eQNF0b8q3naibxtKxo=pym554hRoMJ5ro5febzOUBU-=A@mail.gmail.com>
-Subject: Re: [PATCH] KVM: nVMX: Wrap VM-Fail valid path in generic VM-Fail helper
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 8, 2020 at 6:56 PM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> Add nested_vmx_fail() to wrap VM-Fail paths that _may_ result in VM-Fail
-> Valid to make it clear at the call sites that the Valid flavor isn't
-> guaranteed.
->
-> Suggested-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Reviewed-by: Jim Mattson <jmattson@google.com>
+From: Matt Jolly <Kangie@footclan.ninja>
+
+commit 3429444abdd9dbd5faebd9bee552ec6162b17ad6 upstream.
+
+Add support for Dell Wireless 5816e Download Mode (AKA boot & hold mode /
+QDL download mode) to drivers/usb/serial/qcserial.c
+
+This is required to update device firmware.
+
+Signed-off-by: Matt Jolly <Kangie@footclan.ninja>
+Cc: stable@vger.kernel.org
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/usb/serial/qcserial.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/drivers/usb/serial/qcserial.c
++++ b/drivers/usb/serial/qcserial.c
+@@ -173,6 +173,7 @@ static const struct usb_device_id id_tab
+ 	{DEVICE_SWI(0x413c, 0x81b3)},	/* Dell Wireless 5809e Gobi(TM) 4G LTE Mobile Broadband Card (rev3) */
+ 	{DEVICE_SWI(0x413c, 0x81b5)},	/* Dell Wireless 5811e QDL */
+ 	{DEVICE_SWI(0x413c, 0x81b6)},	/* Dell Wireless 5811e QDL */
++	{DEVICE_SWI(0x413c, 0x81cb)},	/* Dell Wireless 5816e QDL */
+ 	{DEVICE_SWI(0x413c, 0x81cc)},	/* Dell Wireless 5816e */
+ 	{DEVICE_SWI(0x413c, 0x81cf)},   /* Dell Wireless 5819 */
+ 	{DEVICE_SWI(0x413c, 0x81d0)},   /* Dell Wireless 5819 */
+
+
