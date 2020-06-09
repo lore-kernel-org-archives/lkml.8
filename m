@@ -5,47 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA3FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64BF4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47B5520890
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:47:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 301ED20823
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:47:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="bhVVUs5y"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="uxop1aSE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729755AbgFIMrA (ORCPT
+        id S1729799AbgFIMrT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 08:47:00 -0400
+        Tue, 9 Jun 2020 08:47:19 -0400
 Received: from perceval.ideasonboard.com ([213.167.242.64]:54322 "EHLO
         perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729633AbgFIMqn (ORCPT
+        with ESMTP id S1729681AbgFIMqt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 08:46:43 -0400
+        Tue, 9 Jun 2020 08:46:49 -0400
 Received: from Q.local (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 3D1C61942;
-        Tue,  9 Jun 2020 14:46:38 +0200 (CEST)
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 253E61942;
+        Tue,  9 Jun 2020 14:46:44 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1591706798;
-        bh=IVJbkKSA3nwijksI90SOHTVUzDelDAqxTGP00p3RZP4=;
+        s=mail; t=1591706804;
+        bh=2UAwZkYOU3U5khlBp2+65z4qlugY8z39u93qNZGjZBQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bhVVUs5yfKtNLvnMkgmH0YgIp/kJ9qvg3VdsJYoP15iABTZdUaFOde/I7JcpMe6IQ
-         CBUt8Z4nFqbX3uitfCp2xbRAyBiFECNuXCZnlQjl3PmoNLkmF+Y5+XJs9pAmHBrSo4
-         klNYLKOpeewxwHewo/5By9RdtOTCtBXF41mR3atQ=
+        b=uxop1aSEY/OnWjl2QlAuZ2Ol+e1obL1E0Ij6QB+kjKXxF++evWTKtILMgKy/Fa7rK
+         pV8nX5bkunCs4O1OT+p3gFIa8xPzZ5BbBlNoHv7BLimusHsHrHRs5lHW6M1/sNq+OZ
+         mvfofTopNzuMREz63h7nnxp5abODD0UFNaZMIKUQ=
 From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
 Cc:     linux-renesas-soc@vger.kernel.org,
         Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jiri Kosina <trivial@kernel.org>,
-        linux-pm@vger.kernel.org (open list:DEVICE FREQUENCY EVENT
-        (DEVFREQ-EVENT)), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 12/17] drivers: devfreq: Fix trivial spelling
-Date:   Tue,  9 Jun 2020 13:46:05 +0100
-Message-Id: <20200609124610.3445662-13-kieran.bingham+renesas@ideasonboard.com>
+        Andrew Morton <akpm@linux-foundation.org>,
+        Colin Ian King <colin.king@canonical.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Xiong <xndchn@gmail.com>,
+        Chris Paterson <chris.paterson2@renesas.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Luca Ceresoli <luca@lucaceresoli.net>,
+        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 17/17] scripts/spelling.txt: Add descriptors correction
+Date:   Tue,  9 Jun 2020 13:46:10 +0100
+Message-Id: <20200609124610.3445662-18-kieran.bingham+renesas@ideasonboard.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200609124610.3445662-1-kieran.bingham+renesas@ideasonboard.com>
 References: <20200609124610.3445662-1-kieran.bingham+renesas@ideasonboard.com>
@@ -56,38 +59,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The word 'descriptor' is misspelled throughout the tree.
+After coming across the s/decriptors/descriptors/ spelling error twice,
+a scan of the tree showed it was a pervasive mistake.
 
-Fix it up accordingly:
-    decriptors -> descriptors
+Update the spelling suggestions database to prevent it.
 
 Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 ---
- drivers/devfreq/devfreq-event.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ scripts/spelling.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/devfreq/devfreq-event.c b/drivers/devfreq/devfreq-event.c
-index 8c31b0f2e28f..56efbeb7851e 100644
---- a/drivers/devfreq/devfreq-event.c
-+++ b/drivers/devfreq/devfreq-event.c
-@@ -293,7 +293,7 @@ static void devfreq_event_release_edev(struct device *dev)
- /**
-  * devfreq_event_add_edev() - Add new devfreq-event device.
-  * @dev		: the device owning the devfreq-event device being created
-- * @desc	: the devfreq-event device's decriptor which include essential
-+ * @desc	: the devfreq-event device's descriptor which include essential
-  *		  data for devfreq-event device.
-  *
-  * Note that this function add new devfreq-event device to devfreq-event class
-@@ -385,7 +385,7 @@ static void devm_devfreq_event_release(struct device *dev, void *res)
- /**
-  * devm_devfreq_event_add_edev() - Resource-managed devfreq_event_add_edev()
-  * @dev		: the device owning the devfreq-event device being created
-- * @desc	: the devfreq-event device's decriptor which include essential
-+ * @desc	: the devfreq-event device's descriptor which include essential
-  *		  data for devfreq-event device.
-  *
-  * Note that this function manages automatically the memory of devfreq-event
+diff --git a/scripts/spelling.txt b/scripts/spelling.txt
+index d9cd24cf0d40..c171a06efdad 100644
+--- a/scripts/spelling.txt
++++ b/scripts/spelling.txt
+@@ -404,6 +404,7 @@ decendants||descendants
+ decompres||decompress
+ decsribed||described
+ decription||description
++decriptors||descriptors
+ dectected||detected
+ defailt||default
+ deferal||deferral
 -- 
 2.25.1
 
