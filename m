@@ -2,93 +2,109 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A0DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:39:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E551C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:26:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2094E2068D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 11:39:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAF8F2072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:26:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ldS3WwZQ"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NM/Q1KIV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729074AbgFILjp (ORCPT
+        id S1730388AbgFIP0o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 07:39:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40586 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729009AbgFILjk (ORCPT
+        Tue, 9 Jun 2020 11:26:44 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:33380 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726395AbgFIP0l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 07:39:40 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC7FEC05BD1E;
-        Tue,  9 Jun 2020 04:39:38 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id n11so20396557qkn.8;
-        Tue, 09 Jun 2020 04:39:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id;
-        bh=wlYOKY2I6wi0AZVoSy6PBE75mux/rrdwmF8a8HBdn5M=;
-        b=ldS3WwZQWTk8bDSo8NDt5VogtC72qUiaBdLyNmHMC8Na3TD+2I3riqEBMX9k/bv+9Y
-         S1o5oKbL6sDjCNhOfrfB6gt5xc6SYsPVzEQHv4BQdY3ZCTIj1o7CUkmks+CtvzTADCHm
-         WWfro0C6furMkC0n/rJJYwN9ke/lpL0ztj4F4Useg660aeEhdvCs6AHnETcKRt5zv1M+
-         e5+5VYhldjoNZYuvdsrdbO13Jhoe41zlzAhXTiJizXHMMxEAPcVTGrBXoEVTGrpH2A5H
-         TwFm8fk2JpTUlL4RbBYcP97AauT7BIaThq2W63+ZFVuacDlWHCRxND6GBGp21VuKOTOm
-         eWGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id;
-        bh=wlYOKY2I6wi0AZVoSy6PBE75mux/rrdwmF8a8HBdn5M=;
-        b=BT0uDdLAtpvS+dpYN0v0RaPNC0k7Sr/vN1gjxxRH/WX7G6OeGW9ghupSwS3V4+eEqa
-         RNMYo1fBFdT4w5mUB0o1hWKH6zCinzrIr6Kt8U8//VlC3XKhhPSCXE7cc+S7z08CZjVc
-         7zLwRrC7XgDu20e0oZ6z5TA5hIdfs5utIKP8mvrB3AFs/THQjHOdLD5tI3HupYllZQyT
-         wOtAbgdiQouFWcrpyP7IAn75Wrqk2hznK2arq0Dylh+xYw1ym3gqAG8why5kdJUPJyCQ
-         UjV1NrCThNQorPbA3dCMRduLIkShQL/jLmVNWWg3vwrmbUY46zmcZ5l6+yICLWMUf/1Q
-         DbLQ==
-X-Gm-Message-State: AOAM533hLRUHmIu7A0ScNiZdcbj46fbr1GVe+xHqjD8+NC8EKoVFnYzH
-        fHbpm+qU6im46ji7V07m7/E=
-X-Google-Smtp-Source: ABdhPJyETuxHuDwV7vkN1AD62FuGp1fzYttn8Uu7IuV44VL/4wUSxOlnH0PrL/NZQOuUhH5eecI9ag==
-X-Received: by 2002:a05:620a:1321:: with SMTP id p1mr27394982qkj.476.1591702778157;
-        Tue, 09 Jun 2020 04:39:38 -0700 (PDT)
-Received: from linux.home ([2604:2000:1344:41d:29ac:7979:1e2e:c67b])
-        by smtp.googlemail.com with ESMTPSA id n13sm11281614qtb.20.2020.06.09.04.39.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 04:39:37 -0700 (PDT)
-From:   Gaurav Singh <gaurav1086@gmail.com>
-To:     gaurav1086@gmail.com, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        netdev@vger.kernel.org (open list:BPF (Safe dynamic programs and tools)),
-        bpf@vger.kernel.org (open list:BPF (Safe dynamic programs and tools)),
-        linux-kernel@vger.kernel.org (open list)
-Subject: 
-Date:   Tue,  9 Jun 2020 07:38:38 -0400
-Message-Id: <20200609113839.9628-1-gaurav1086@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 9 Jun 2020 11:26:41 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 059FQVk8025874;
+        Tue, 9 Jun 2020 10:26:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591716391;
+        bh=b2y0Z9lHjVbTdDJI+gowNTOtYPhQ4/O11hsyYQYGYbw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=NM/Q1KIVU9p5v8dRAq0vTOu/+MLVqokNfJBx6vwOykd4tvFA89FhrVzPt+yCWeQyg
+         CpZwyl2+kAGmy0br/XsUocQ/bIUPGGUtWIVM58hwIq+uotM7cZGd6973A+ybtcNadU
+         wo/kcgJYYh8xbH604xU4auA6DtPDEi5YLI/PBa54=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 059FQVvA056533
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 9 Jun 2020 10:26:31 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 9 Jun
+ 2020 10:26:30 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 9 Jun 2020 10:26:30 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 059FQQVY052033;
+        Tue, 9 Jun 2020 10:26:27 -0500
+Subject: Re: [PATCH 1/5] drm/omap: Fix suspend resume regression after
+ platform data removal
+To:     Tony Lindgren <tony@atomide.com>
+CC:     <linux-omap@vger.kernel.org>, "Andrew F . Davis" <afd@ti.com>,
+        Dave Gerlach <d-gerlach@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <dri-devel@lists.freedesktop.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+References: <20200531193941.13179-1-tony@atomide.com>
+ <20200531193941.13179-2-tony@atomide.com>
+ <16ba1808-5c7f-573d-8dd0-c80cac2f476e@ti.com>
+ <20200603140639.GG37466@atomide.com>
+ <47e286dd-f87a-4440-5bde-1f7b53e8b672@ti.com>
+ <20200609151943.GL37466@atomide.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <9ed70121-2a53-d2b3-051a-88eb83e6c53f@ti.com>
+Date:   Tue, 9 Jun 2020 18:26:26 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200609151943.GL37466@atomide.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please find the patch below.
+On 09/06/2020 18:19, Tony Lindgren wrote:
 
-Thanks and regards,
-Gaurav.
+>> But there's an extra runtime PM reference (dev.power.usage_count) that seems
+>> to come out of nowhere. So when omap_drm_suspend is finished, there's still
+>> usage_count of 1, and dispc never suspends fully.
+> 
+> Hmm no idea about that. My guess is that there might be an issue that was
+> masked earlier with omap_device calling the child runtime_suspend.
 
-From Gaurav Singh <gaurav1086@gmail.com> # This line is ignored.
-From: Gaurav Singh <gaurav1086@gmail.com>
-Reply-To: 
-Subject: 
-In-Reply-To: 
+Yes. It's how PM works. It calls pm_runtime_get_noresume() before starting the suspend of a device. 
+So I guess omapdrm's suspend has been broken all the time, but it was "fixed" by omap_device.
 
+> Currently I'm only able to rmmod -f omapdrm, not sure if these issues might
+> be related.
 
+Hmm, I always use modules, and can unload omapdrm and drm fine. But there's a sequence that must be 
+followed. However, the sequence starts with unloading omapdrm... What behavior you see with rmmod?
+
+  Tomi
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
