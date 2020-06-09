@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F3BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11385C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08EDC20734
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8CDA20734
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:59:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725558;
-	bh=bJX62na9nTEl0Pq4sLZbSBoAwA/DlToxmXIGSJmxOQM=;
+	s=default; t=1591725559;
+	bh=miLTQdPwzuk9lQFiqP5cxP8nhx922KpR3g6Sz11QT1U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D1fNRadOXv3sD1kcfGOpENSqQNqeGQpTN9aHNUKJob81Skb7OA/6zlVAj7vh6H27Y
-	 b/c6VVNLDFtTc9SPieDb310ReoZVs8zq0cd6WwUVWO9zR+YtP9GOQihFueiU7I/u6W
-	 hTTMa7li17s6MuA6HPcuAtJG0P9lS2We0dbmgf74=
+	b=IGvtF65VTNxi11zj94cOuWSsJJpYXw+XDWDDT/S2mw93DXSJ2DaFv1WSsy+1GmZwO
+	 Y1c8y9TkUwCbTi4ZeTeU5ZcQ5NgjByLPS/Eu4vJNRX04Q99SdX4pkmO4nMEf/Gbtfj
+	 6Pd9ER1gIVnECDHp1rvY0ed6Ps6eqD9+bak+D+QU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733187AbgFIRzE (ORCPT
+        id S1733171AbgFIRzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:55:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44206 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:55:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733024AbgFIRxT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:53:19 -0400
+        id S1733014AbgFIRxR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:53:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7555120734;
-        Tue,  9 Jun 2020 17:53:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32B172074B;
+        Tue,  9 Jun 2020 17:53:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725198;
-        bh=bJX62na9nTEl0Pq4sLZbSBoAwA/DlToxmXIGSJmxOQM=;
+        s=default; t=1591725196;
+        bh=miLTQdPwzuk9lQFiqP5cxP8nhx922KpR3g6Sz11QT1U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=USP1xlEkGqR5BApthaUabga+Fhe+I+0DJlSbNZpbE2/pKa4PhakylTBZ5ugcU45dH
-         azP1wqft7Lxhr+WATjQ2beDepdDQw2SnRD+AdzQPrX3JrMiSiTSsNbi84asPi/4Szd
-         5YwguwqBK63WCuKGwj5j/Gjj+UE0w1HYihsA4wMw=
+        b=wfHaRxKfACHuJKy6i7epq16MqyLHTeIuApNuuXuAJIJAvxvEEisEG3Lq3TOtqTyKb
+         o3JpqIJS+unhA7YldkMkWRQBn0m21tiTuIBa7bJOfyq01lcWK/t43Xrs8Y+p7L6vSx
+         XF/Tn83LxMJFUIFIZ1pLU8GwwSgmTJfDlde/O268=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Hanselmann <public@hansmi.ch>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.4 15/34] USB: serial: ch341: add basis for quirk detection
-Date:   Tue,  9 Jun 2020 19:45:11 +0200
-Message-Id: <20200609174054.549510974@linuxfoundation.org>
+        stable@vger.kernel.org, Pascal Terjan <pterjan@google.com>
+Subject: [PATCH 5.4 24/34] staging: rtl8712: Fix IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK
+Date:   Tue,  9 Jun 2020 19:45:20 +0200
+Message-Id: <20200609174056.116658615@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174052.628006868@linuxfoundation.org>
 References: <20200609174052.628006868@linuxfoundation.org>
@@ -59,106 +58,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Hanselmann <public@hansmi.ch>
+From: Pascal Terjan <pterjan@google.com>
 
-commit c404bf4aa9236cb4d1068e499ae42acf48a6ff97 upstream.
+commit 15ea976a1f12b5fd76b1bd6ff3eb5132fd28047f upstream.
 
-A subset of CH341 devices does not support all features, namely the
-prescaler is limited to a reduced precision and there is no support for
-sending a RS232 break condition. This patch adds a detection function
-which will be extended to set quirk flags as they're implemented.
+The value in shared headers was fixed 9 years ago in commit 8d661f1e462d
+("ieee80211: correct IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK macro") and
+while looking at using shared headers for other duplicated constants
+I noticed this driver uses the old value.
 
-The author's affected device has an imprint of "340" on the
-turquoise-colored plug, but not all such devices appear to be affected.
+The macros are also defined twice in this file so I am deleting the
+second definition.
 
-Signed-off-by: Michael Hanselmann <public@hansmi.ch>
-Link: https://lore.kernel.org/r/1e1ae0da6082bb528a44ef323d4e1d3733d38858.1585697281.git.public@hansmi.ch
-[ johan: use long type for quirks; rephrase and use port device for
-	 messages; handle short reads; set quirk flags directly in
-	 helper function ]
-Cc: stable <stable@vger.kernel.org>	# 5.5
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Pascal Terjan <pterjan@google.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200523211247.23262-1-pterjan@google.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/ch341.c |   53 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
+ drivers/staging/rtl8712/wifi.h |    9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
---- a/drivers/usb/serial/ch341.c
-+++ b/drivers/usb/serial/ch341.c
-@@ -93,6 +93,7 @@ struct ch341_private {
- 	u8 mcr;
- 	u8 msr;
- 	u8 lcr;
-+	unsigned long quirks;
- };
+--- a/drivers/staging/rtl8712/wifi.h
++++ b/drivers/staging/rtl8712/wifi.h
+@@ -440,7 +440,7 @@ static inline unsigned char *get_hdr_bss
+ /* block-ack parameters */
+ #define IEEE80211_ADDBA_PARAM_POLICY_MASK 0x0002
+ #define IEEE80211_ADDBA_PARAM_TID_MASK 0x003C
+-#define IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK 0xFFA0
++#define IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK 0xFFC0
+ #define IEEE80211_DELBA_PARAM_TID_MASK 0xF000
+ #define IEEE80211_DELBA_PARAM_INITIATOR_MASK 0x0800
  
- static void ch341_set_termios(struct tty_struct *tty,
-@@ -245,6 +246,53 @@ out:	kfree(buffer);
- 	return r;
- }
+@@ -532,13 +532,6 @@ struct ieee80211_ht_addt_info {
+ #define IEEE80211_HT_IE_NON_GF_STA_PRSNT	0x0004
+ #define IEEE80211_HT_IE_NON_HT_STA_PRSNT	0x0010
  
-+static int ch341_detect_quirks(struct usb_serial_port *port)
-+{
-+	struct ch341_private *priv = usb_get_serial_port_data(port);
-+	struct usb_device *udev = port->serial->dev;
-+	const unsigned int size = 2;
-+	unsigned long quirks = 0;
-+	char *buffer;
-+	int r;
-+
-+	buffer = kmalloc(size, GFP_KERNEL);
-+	if (!buffer)
-+		return -ENOMEM;
-+
-+	/*
-+	 * A subset of CH34x devices does not support all features. The
-+	 * prescaler is limited and there is no support for sending a RS232
-+	 * break condition. A read failure when trying to set up the latter is
-+	 * used to detect these devices.
-+	 */
-+	r = usb_control_msg(udev, usb_rcvctrlpipe(udev, 0), CH341_REQ_READ_REG,
-+			    USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_IN,
-+			    CH341_REG_BREAK, 0, buffer, size, DEFAULT_TIMEOUT);
-+	if (r == -EPIPE) {
-+		dev_dbg(&port->dev, "break control not supported\n");
-+		r = 0;
-+		goto out;
-+	}
-+
-+	if (r != size) {
-+		if (r >= 0)
-+			r = -EIO;
-+		dev_err(&port->dev, "failed to read break control: %d\n", r);
-+		goto out;
-+	}
-+
-+	r = 0;
-+out:
-+	kfree(buffer);
-+
-+	if (quirks) {
-+		dev_dbg(&port->dev, "enabling quirk flags: 0x%02lx\n", quirks);
-+		priv->quirks |= quirks;
-+	}
-+
-+	return r;
-+}
-+
- static int ch341_port_probe(struct usb_serial_port *port)
- {
- 	struct ch341_private *priv;
-@@ -267,6 +315,11 @@ static int ch341_port_probe(struct usb_s
- 		goto error;
- 
- 	usb_set_serial_port_data(port, priv);
-+
-+	r = ch341_detect_quirks(port);
-+	if (r < 0)
-+		goto error;
-+
- 	return 0;
- 
- error:	kfree(priv);
+-/* block-ack parameters */
+-#define IEEE80211_ADDBA_PARAM_POLICY_MASK 0x0002
+-#define IEEE80211_ADDBA_PARAM_TID_MASK 0x003C
+-#define IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK 0xFFA0
+-#define IEEE80211_DELBA_PARAM_TID_MASK 0xF000
+-#define IEEE80211_DELBA_PARAM_INITIATOR_MASK 0x0800
+-
+ /*
+  * A-PMDU buffer sizes
+  * According to IEEE802.11n spec size varies from 8K to 64K (in powers of 2)
 
 
