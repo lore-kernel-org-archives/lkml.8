@@ -2,162 +2,210 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 480F8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD62C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 190372072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:21:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE4722072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:23:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Tqsz7mN0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T+Zzc+a9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730784AbgFIPVa (ORCPT
+        id S1730569AbgFIPXD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 11:21:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46644 "EHLO
+        Tue, 9 Jun 2020 11:23:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729085AbgFIPV2 (ORCPT
+        with ESMTP id S1728609AbgFIPXC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 11:21:28 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F21BAC03E97C
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 08:21:27 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id o6so10465899pgh.2
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 08:21:27 -0700 (PDT)
+        Tue, 9 Jun 2020 11:23:02 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D26F7C05BD1E;
+        Tue,  9 Jun 2020 08:23:02 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id m81so23201144ioa.1;
+        Tue, 09 Jun 2020 08:23:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uwvFGjyGkvShem51AX2k8l39E+uinZbFtzIiRAp08Pk=;
-        b=Tqsz7mN0ZQ/Ebtwuuhlz2Aj5Nxp7ZH2E32VDTotEwsEFHfoCIcICryte8znwPwr/ML
-         rJGLk5Don0hvRBsPIb38oIrdDDbG5L4Ob6CtN/+bzblcvgk0eAlGkyw9/JzYg5JF7rpH
-         AXZ4YKev82m2zvwOymfK78TMabY5wSKQSzWgk=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Tm2L6wHDp3vnilQA0CPW6PPlVERzEGHmJnGxVxjkT7E=;
+        b=T+Zzc+a927fTmCQYyxa3HRIQOfzwB1rlff67AJQPfhedtRBsi15M7hvfbqDBXLIz2Q
+         4KRSTB9cKCGWi5zszA165U7802EQ1b74v54j3AsREkXTLXlxzSrced4LqVHdtgrT1BQ9
+         icKt9YViOgQcAKVNZjPcxK88gttpktYPeUNKqPo0gT68ATxzhYHzokNHc6pQNtrlY3IB
+         KLlyZtOGJ7375RmWBKPKHCsRXSeqb8bmjuZkdeSsCP5k1BIfCRczdUBF+5569MGYmO+T
+         9qN0v9U3DtCz4Hj+aIgzbWRsAMWfOM1PmMsRZr4OhT+ygqb8U0vc40a1PdHjSqLm2//i
+         88sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uwvFGjyGkvShem51AX2k8l39E+uinZbFtzIiRAp08Pk=;
-        b=BQM0vWevHtcOJiL9ejyUQuBUTNUQ6Qnw2nYFY8a4dpobLqOuJXO777eFmmPKsLOKl2
-         il9KdmiXGGpTylPDIqsLRLUdblNgahPJFzUwZAA0vC3maUWIi6BeOHjugNRO7nGxi9Ji
-         avMZiThtLZrU9Ie32Oj7yLk5mow9JDvTfsB8U5Nsc0LWhkYKLu2KJwgvbFq3nBe0BGLn
-         7FoRpdNmXWsgVifK2DUQ55RpnfPA+NOjtWwsYO2PQS6aX88P7ejLu2bpac+XdJBNiCBK
-         z8R+RUDGzykIKBxWCqIqyaISE5U9SjlWtApvCksqYv2A0wmtu3m0ecpSoQmYnrQHwjDY
-         esJA==
-X-Gm-Message-State: AOAM530//o73A9jAuDFeMg9axIK7GC+LhvarY1fpjbf7U3xdSGY8qJ7G
-        1Gg6N+VAN83nrRayFwqArtwxb17wEVsZXA==
-X-Google-Smtp-Source: ABdhPJxfhZlV3Xjw60pqAdeCuYbdjB53klCTzNpy+pv6huQHBaXZLmLMb8qM09KF80pvp6RVg0iY4g==
-X-Received: by 2002:a62:b402:: with SMTP id h2mr27157063pfn.221.1591716087205;
-        Tue, 09 Jun 2020 08:21:27 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id c2sm10383572pfi.71.2020.06.09.08.21.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 08:21:26 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     kvalo@codeaurora.org
-Cc:     kuabhs@google.com, pillair@codeaurora.org,
-        saiprakash.ranjan@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, ath10k@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH] ath10k: Wait until copy complete is actually done before completing
-Date:   Tue,  9 Jun 2020 08:20:58 -0700
-Message-Id: <20200609082015.1.Ife398994e5a0a6830e4d4a16306ef36e0144e7ba@changeid>
-X-Mailer: git-send-email 2.27.0.278.ge193c7cf3a9-goog
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Tm2L6wHDp3vnilQA0CPW6PPlVERzEGHmJnGxVxjkT7E=;
+        b=Z00A6fa/fFA0XEYYPSwjY//jtmBNL+jQFDxM54Ued2khmGn/rh+d2B6+XPF04zJCx6
+         TvlKHr+zBzkXmE3bf2blhsJxPbt5ujR3trz72JZWxrofG3062Uz3SimglGzTaWHZHFNQ
+         OrwT4ni7eKkBzoQ8Km5XaPsETdPXlCPQpAYa5slLueYgGT5qBDbJQNctaus3dyHjoxr/
+         E2wWfKsqHqjv0XByhfBMjzL/SI6t6nn2rvC3EPiqeUeNkNQkSxbCVpMpPvb/22k0PcXM
+         tHJjNCuvZlUcL4JFQEN4q4ODxlIul4BeqQ8+r9CEMhSqDNQiES34GdLclbQdPw8K12ly
+         M8hg==
+X-Gm-Message-State: AOAM532Kp0Gqo6rqP52Xzo2Oa0lZ/iwjKZ8+S0fjvT8NW1IZlVCo5aqd
+        UrecXt6BsXnuEANlWFP+TVykLUJXAk95+i+sSLE=
+X-Google-Smtp-Source: ABdhPJzVZNaa7SnqUFgCpq6WJTUKH4jHLaYl37zbFlWb1E6BwdaMRDZEkUg9vCMO67A149eiG/aXayH1ph7RpIU/MNM=
+X-Received: by 2002:a05:6638:d05:: with SMTP id q5mr26413027jaj.2.1591716182166;
+ Tue, 09 Jun 2020 08:23:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1591605038-8682-1-git-send-email-dillon.minfei@gmail.com>
+ <1591605038-8682-3-git-send-email-dillon.minfei@gmail.com> <90df5646-e0c4-fcac-d934-4cc922230dd2@arm.com>
+In-Reply-To: <90df5646-e0c4-fcac-d934-4cc922230dd2@arm.com>
+From:   dillon min <dillon.minfei@gmail.com>
+Date:   Tue, 9 Jun 2020 23:22:24 +0800
+Message-ID: <CAL9mu0+__0Z3R3TcSrj9-kPxsyQHKS9WqK1u58P0dEZ+Jd-wbQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] arm-nommu: Add use_reserved_mem() to check if device
+ support reserved memory
+To:     Vladimir Murzin <vladimir.murzin@arm.com>, hch@lst.de
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux@armlinux.org.uk, Kate Stewart <kstewart@linuxfoundation.org>,
+        allison@lohutok.net, info@metux.net, tglx@linutronix.de,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On wcn3990 we have "per_ce_irq = true".  That makes the
-ath10k_ce_interrupt_summary() function always return 0xfff. The
-ath10k_ce_per_engine_service_any() function will see this and think
-that _all_ copy engines have an interrupt.  Without checking, the
-ath10k_ce_per_engine_service() assumes that if it's called that the
-"copy complete" (cc) interrupt fired.  This combination seems bad.
+Hi Vladimir,
 
-Let's add a check to make sure that the "copy complete" interrupt
-actually fired in ath10k_ce_per_engine_service().
+Thanks for reviewing.
 
-This might fix a hard-to-reproduce failure where it appears that the
-copy complete handlers run before the copy is really complete.
-Specifically a symptom was that we were seeing this on a Qualcomm
-sc7180 board:
-  arm-smmu 15000000.iommu: Unhandled context fault:
-  fsr=0x402, iova=0x7fdd45780, fsynr=0x30003, cbfrsynra=0xc1, cb=10
+Hi Christoph Hellwig,
 
-Even on platforms that don't have wcn3990 this still seems like it
-would be a sane thing to do.  Specifically the current IRQ handler
-comments indicate that there might be other misc interrupt sources
-firing that need to be cleared.  If one of those sources was the one
-that caused the IRQ handler to be called it would also be important to
-double-check that the interrupt we cared about actually fired.
+I just want to know if kernel dma mapping/direct is focused on
+platforms with MMU.
+leave arch code to handle dma coherent memory management themself for
+no-MMU platform.
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
+so, you just return error code in kernel/dma/mapping.c,direct.c
+without CONFIG_MMU defined ?
+which means dma-direct mapping doesn't support !CONFIG_MMU is not a
+bug, but design as it's.
+or, just return error code currently, will add dma direct mapping
+support for !CONFIG_MMU in the
+future?
 
- drivers/net/wireless/ath/ath10k/ce.c | 30 +++++++++++++++++++---------
- 1 file changed, 21 insertions(+), 9 deletions(-)
+As Vladimir Murzin's suggestion has changes in kernel code, I need
+your input to get
+the design goal about dma-direct mapping, thanks.
 
-diff --git a/drivers/net/wireless/ath/ath10k/ce.c b/drivers/net/wireless/ath/ath10k/ce.c
-index 294fbc1e89ab..ffdd4b995f33 100644
---- a/drivers/net/wireless/ath/ath10k/ce.c
-+++ b/drivers/net/wireless/ath/ath10k/ce.c
-@@ -481,6 +481,15 @@ static inline void ath10k_ce_engine_int_status_clear(struct ath10k *ar,
- 	ath10k_ce_write32(ar, ce_ctrl_addr + wm_regs->addr, mask);
- }
- 
-+static inline bool ath10k_ce_engine_int_status_check(struct ath10k *ar,
-+						     u32 ce_ctrl_addr,
-+						     unsigned int mask)
-+{
-+	struct ath10k_hw_ce_host_wm_regs *wm_regs = ar->hw_ce_regs->wm_regs;
-+
-+	return ath10k_ce_read32(ar, ce_ctrl_addr + wm_regs->addr) & mask;
-+}
-+
- /*
-  * Guts of ath10k_ce_send.
-  * The caller takes responsibility for any needed locking.
-@@ -1301,19 +1310,22 @@ void ath10k_ce_per_engine_service(struct ath10k *ar, unsigned int ce_id)
- 
- 	spin_lock_bh(&ce->ce_lock);
- 
--	/* Clear the copy-complete interrupts that will be handled here. */
--	ath10k_ce_engine_int_status_clear(ar, ctrl_addr,
--					  wm_regs->cc_mask);
-+	if (ath10k_ce_engine_int_status_check(ar, ctrl_addr,
-+					      wm_regs->cc_mask)) {
-+		/* Clear before handling */
-+		ath10k_ce_engine_int_status_clear(ar, ctrl_addr,
-+						  wm_regs->cc_mask);
- 
--	spin_unlock_bh(&ce->ce_lock);
-+		spin_unlock_bh(&ce->ce_lock);
- 
--	if (ce_state->recv_cb)
--		ce_state->recv_cb(ce_state);
-+		if (ce_state->recv_cb)
-+			ce_state->recv_cb(ce_state);
- 
--	if (ce_state->send_cb)
--		ce_state->send_cb(ce_state);
-+		if (ce_state->send_cb)
-+			ce_state->send_cb(ce_state);
- 
--	spin_lock_bh(&ce->ce_lock);
-+		spin_lock_bh(&ce->ce_lock);
-+	}
- 
- 	/*
- 	 * Misc CE interrupts are not being handled, but still need
--- 
-2.27.0.278.ge193c7cf3a9-goog
+On Tue, Jun 9, 2020 at 10:07 PM Vladimir Murzin <vladimir.murzin@arm.com> wrote:
+>
+> On 6/8/20 9:30 AM, dillon.minfei@gmail.com wrote:
+> > From: dillon min <dillon.minfei@gmail.com>
+> >
+> > Currently, we use dma direct to request coherent memory for driver on armv7m
+> > platform if 'cacheid' is zero, but dma_direct_can_mmap() is return false,
+> > dma_direct_mmap() return -ENXIO for CONFIG_MMU undefined platform.
+> >
+> > so we have to back to use 'arm_nommu_dma_ops', add use_reserved_mem() to check
+> > if device support global or device corherent memory. if yes, then call
+> > set_dma_ops()
+> >
+> > Signed-off-by: dillon min <dillon.minfei@gmail.com>
+> > ---
+> >  arch/arm/mm/dma-mapping-nommu.c | 28 +++++++++++++++++++++++++++-
+> >  1 file changed, 27 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/arm/mm/dma-mapping-nommu.c b/arch/arm/mm/dma-mapping-nommu.c
+> > index 287ef898a55e..e1c213fec152 100644
+> > --- a/arch/arm/mm/dma-mapping-nommu.c
+> > +++ b/arch/arm/mm/dma-mapping-nommu.c
+> > @@ -14,6 +14,7 @@
+> >  #include <asm/cacheflush.h>
+> >  #include <asm/outercache.h>
+> >  #include <asm/cp15.h>
+> > +#include <linux/of.h>
+> >
+> >  #include "dma.h"
+> >
+> > @@ -188,6 +189,31 @@ const struct dma_map_ops arm_nommu_dma_ops = {
+> >  };
+> >  EXPORT_SYMBOL(arm_nommu_dma_ops);
+> >
+> > +static bool use_reserved_mem(struct device *dev)
+> > +{
+> > +     struct device_node *np;
+> > +
+> > +     np = of_find_node_by_path("/reserved-memory/linux,dma");
+> > +
+> > +     if (np &&
+> > +             of_device_is_compatible(np, "shared-dma-pool") &&
+> > +             of_property_read_bool(np, "no-map") &&
+> > +             of_property_read_bool(np, "linux,dma-default")) {
+> > +             /* has global corherent mem support */
+> > +             of_node_put(np);
+> > +             return true;
+> > +     }
+> > +
+> > +     np = of_parse_phandle(dev->of_node, "memory-region", 0);
+> > +     if (np) {
+> > +             /* has dev corherent mem support */
+> > +             of_node_put(np);
+> > +             return true;
+> > +     }
+> > +
+> > +     return false;
+> > +}
+> > +
+> >  void arch_setup_dma_ops(struct device *dev, u64 dma_base, u64 size,
+> >                       const struct iommu_ops *iommu, bool coherent)
+> >  {
+> > @@ -206,6 +232,6 @@ void arch_setup_dma_ops(struct device *dev, u64 dma_base, u64 size,
+> >               dev->archdata.dma_coherent = (get_cr() & CR_M) ? coherent : true;
+> >       }
+> >
+> > -     if (!dev->archdata.dma_coherent)
+> > +     if (!dev->archdata.dma_coherent || use_reserved_mem(dev))
+> >               set_dma_ops(dev, &arm_nommu_dma_ops);
+> >  }
+> >
+>
+> Sorry I have to NAK this hack :(
+>
+> Digging git history reveled 79964a1c2972 ("ARM: 8633/1: nommu: allow mmap when !CONFIG_MMU")
+> which make me wonder if diff below does the trick for you
+>
+> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+> index 8f4bbda..8623b9e 100644
+> --- a/kernel/dma/direct.c
+> +++ b/kernel/dma/direct.c
+> @@ -456,14 +456,14 @@ int dma_direct_mmap(struct device *dev, struct vm_area_struct *vma,
+>  #else /* CONFIG_MMU */
+>  bool dma_direct_can_mmap(struct device *dev)
+>  {
+> -       return false;
+> +       return true;
+>  }
+>
+>  int dma_direct_mmap(struct device *dev, struct vm_area_struct *vma,
+>                 void *cpu_addr, dma_addr_t dma_addr, size_t size,
+>                 unsigned long attrs)
+>  {
+> -       return -ENXIO;
+> +       return vm_iomap_memory(vma, vma->vm_start, (vma->vm_end - vma->vm_start));;
+>  }
+>  #endif /* CONFIG_MMU */
+Yes, this is a quite nice way to support !CONFIG_MMU without cache on
+platforms. I will try your suggestion.
+thanks
 
+>
+> Cheers
+> Vladimir
