@@ -2,91 +2,225 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED1E8C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 06:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B19EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 06:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7F0B20814
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 06:20:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591683616;
-	bh=exUDV2J9JxWIk54v1sf9Jxd5EhusLTjEp6+l+MK3hf0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=i3mhm4IdyjfYN6B3EoeyKMcu2cTM2tNNYdSXomrrhFla73+SVng7IC0wuH2GAaWBH
-	 t4GtT08JrDWGqbQrrGL6fIfcIVuDK3xvAwTHwI7lEBQ7kHI7gstHkQX2wGYZE8ZwfU
-	 /6zV1lseKWlHzUTAj1JqRj6k6s/4BLbpz8z4+rBo=
+	by mail.kernel.org (Postfix) with ESMTP id 7C19920820
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 06:20:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbgFIGUP (ORCPT
+        id S1727855AbgFIGUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 02:20:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49554 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726886AbgFIGUO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 02:20:14 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15C0220760;
-        Tue,  9 Jun 2020 06:20:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591683614;
-        bh=exUDV2J9JxWIk54v1sf9Jxd5EhusLTjEp6+l+MK3hf0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hfXiNDu+MHItIX1POBiMTgAXiCJsANVm44QN6el+qusXnvzP8Ldc5d+6SN+xbLkJR
-         g+t/wiNisdoKFTM58QaOhTGMMNs/2J8Ij2FWWKux9aLGzeL4ZCD3f6vSbQAPavpWVE
-         g2PGUSzNp/Mu/V8piMlMDRnVJZG+O9x1ix07vyvM=
-Date:   Tue, 9 Jun 2020 08:20:12 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kbuild@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Lucas De Marchi <lucas.demarchi@intel.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kbuild: make module name conflict fatal error
-Message-ID: <20200609062012.GA499862@kroah.com>
-References: <20200511042149.1712876-1-masahiroy@kernel.org>
- <20200608020256.GA256950@roeck-us.net>
+        Tue, 9 Jun 2020 02:20:22 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:54024 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726886AbgFIGUU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 02:20:20 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 60BDBDA984993C9E617F;
+        Tue,  9 Jun 2020 14:20:17 +0800 (CST)
+Received: from use12-sp2.huawei.com (10.67.189.174) by
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 9 Jun 2020 14:20:08 +0800
+From:   Xiaoming Ni <nixiaoming@huawei.com>
+To:     <ebiederm@xmission.com>, <keescook@chromium.org>,
+        <ak@linux.intel.com>
+CC:     <nixiaoming@huawei.com>, <alex.huangjianhui@huawei.com>,
+        <linzichang@huawei.com>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] sysctl: Delete the code of sys_sysctl
+Date:   Tue, 9 Jun 2020 14:20:05 +0800
+Message-ID: <1591683605-8585-1-git-send-email-nixiaoming@huawei.com>
+X-Mailer: git-send-email 1.8.5.6
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200608020256.GA256950@roeck-us.net>
+Content-Type: text/plain
+X-Originating-IP: [10.67.189.174]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 07, 2020 at 07:02:56PM -0700, Guenter Roeck wrote:
-> Hi,
-> 
-> On Mon, May 11, 2020 at 01:21:49PM +0900, Masahiro Yamada wrote:
-> > I think all the warnings have been fixed by now. Make it a fatal error.
-> > 
-> 
-> Not entirely. With this patch in the tree, I get:
-> 
-> Building sparc64:allmodconfig ... failed
-> --------------
-> Error log:
-> error: the following would cause module name conflict:
->   drivers/char/adi.ko
->   drivers/input/joystick/adi.ko
-> make[1]: *** [modules_check] Error 1
-> make[1]: *** Waiting for unfinished jobs....
-> make: *** [__sub-make] Error 2
-> 
-> Reverting this patch fixes the problem.
+Since the commit 61a47c1ad3a4dc ("sysctl: Remove the sysctl system call"),
+sys_sysctl has lost its actual role: any input can only return an error.
 
-As it doesn't look like either of these drivers can be "auto-loaded"
-based on hardware detection, I don't know what to suggest as for
-renaming either of them.
+Delete the code and return -ENOSYS directly at the function entry
 
-Any ideas?
+Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
+---
+ kernel/sysctl_binary.c | 146 +------------------------------------------------
+ 1 file changed, 2 insertions(+), 144 deletions(-)
 
-thanks,
+diff --git a/kernel/sysctl_binary.c b/kernel/sysctl_binary.c
+index 7d550cc..41a88f8 100644
+--- a/kernel/sysctl_binary.c
++++ b/kernel/sysctl_binary.c
+@@ -1,126 +1,11 @@
+ // SPDX-License-Identifier: GPL-2.0
+-#include <linux/stat.h>
+ #include <linux/sysctl.h>
+-#include "../fs/xfs/xfs_sysctl.h"
+-#include <linux/sunrpc/debug.h>
+-#include <linux/string.h>
+ #include <linux/syscalls.h>
+-#include <linux/namei.h>
+-#include <linux/mount.h>
+-#include <linux/fs.h>
+-#include <linux/nsproxy.h>
+-#include <linux/pid_namespace.h>
+-#include <linux/file.h>
+-#include <linux/ctype.h>
+-#include <linux/netdevice.h>
+-#include <linux/kernel.h>
+-#include <linux/uuid.h>
+-#include <linux/slab.h>
+ #include <linux/compat.h>
+ 
+-static ssize_t binary_sysctl(const int *name, int nlen,
+-	void __user *oldval, size_t oldlen, void __user *newval, size_t newlen)
+-{
+-	return -ENOSYS;
+-}
+-
+-static void deprecated_sysctl_warning(const int *name, int nlen)
+-{
+-	int i;
+-
+-	/*
+-	 * CTL_KERN/KERN_VERSION is used by older glibc and cannot
+-	 * ever go away.
+-	 */
+-	if (nlen >= 2 && name[0] == CTL_KERN && name[1] == KERN_VERSION)
+-		return;
+-
+-	if (printk_ratelimit()) {
+-		printk(KERN_INFO
+-			"warning: process `%s' used the deprecated sysctl "
+-			"system call with ", current->comm);
+-		for (i = 0; i < nlen; i++)
+-			printk(KERN_CONT "%d.", name[i]);
+-		printk(KERN_CONT "\n");
+-	}
+-	return;
+-}
+-
+-#define WARN_ONCE_HASH_BITS 8
+-#define WARN_ONCE_HASH_SIZE (1<<WARN_ONCE_HASH_BITS)
+-
+-static DECLARE_BITMAP(warn_once_bitmap, WARN_ONCE_HASH_SIZE);
+-
+-#define FNV32_OFFSET 2166136261U
+-#define FNV32_PRIME 0x01000193
+-
+-/*
+- * Print each legacy sysctl (approximately) only once.
+- * To avoid making the tables non-const use a external
+- * hash-table instead.
+- * Worst case hash collision: 6, but very rarely.
+- * NOTE! We don't use the SMP-safe bit tests. We simply
+- * don't care enough.
+- */
+-static void warn_on_bintable(const int *name, int nlen)
+-{
+-	int i;
+-	u32 hash = FNV32_OFFSET;
+-
+-	for (i = 0; i < nlen; i++)
+-		hash = (hash ^ name[i]) * FNV32_PRIME;
+-	hash %= WARN_ONCE_HASH_SIZE;
+-	if (__test_and_set_bit(hash, warn_once_bitmap))
+-		return;
+-	deprecated_sysctl_warning(name, nlen);
+-}
+-
+-static ssize_t do_sysctl(int __user *args_name, int nlen,
+-	void __user *oldval, size_t oldlen, void __user *newval, size_t newlen)
+-{
+-	int name[CTL_MAXNAME];
+-	int i;
+-
+-	/* Check args->nlen. */
+-	if (nlen < 0 || nlen > CTL_MAXNAME)
+-		return -ENOTDIR;
+-	/* Read in the sysctl name for simplicity */
+-	for (i = 0; i < nlen; i++)
+-		if (get_user(name[i], args_name + i))
+-			return -EFAULT;
+-
+-	warn_on_bintable(name, nlen);
+-
+-	return binary_sysctl(name, nlen, oldval, oldlen, newval, newlen);
+-}
+-
+ SYSCALL_DEFINE1(sysctl, struct __sysctl_args __user *, args)
+ {
+-	struct __sysctl_args tmp;
+-	size_t oldlen = 0;
+-	ssize_t result;
+-
+-	if (copy_from_user(&tmp, args, sizeof(tmp)))
+-		return -EFAULT;
+-
+-	if (tmp.oldval && !tmp.oldlenp)
+-		return -EFAULT;
+-
+-	if (tmp.oldlenp && get_user(oldlen, tmp.oldlenp))
+-		return -EFAULT;
+-
+-	result = do_sysctl(tmp.name, tmp.nlen, tmp.oldval, oldlen,
+-			   tmp.newval, tmp.newlen);
+-
+-	if (result >= 0) {
+-		oldlen = result;
+-		result = 0;
+-	}
+-
+-	if (tmp.oldlenp && put_user(oldlen, tmp.oldlenp))
+-		return -EFAULT;
+-
+-	return result;
++	return -ENOSYS;
+ }
+ 
+ 
+@@ -138,34 +23,7 @@ struct compat_sysctl_args {
+ 
+ COMPAT_SYSCALL_DEFINE1(sysctl, struct compat_sysctl_args __user *, args)
+ {
+-	struct compat_sysctl_args tmp;
+-	compat_size_t __user *compat_oldlenp;
+-	size_t oldlen = 0;
+-	ssize_t result;
+-
+-	if (copy_from_user(&tmp, args, sizeof(tmp)))
+-		return -EFAULT;
+-
+-	if (tmp.oldval && !tmp.oldlenp)
+-		return -EFAULT;
+-
+-	compat_oldlenp = compat_ptr(tmp.oldlenp);
+-	if (compat_oldlenp && get_user(oldlen, compat_oldlenp))
+-		return -EFAULT;
+-
+-	result = do_sysctl(compat_ptr(tmp.name), tmp.nlen,
+-			   compat_ptr(tmp.oldval), oldlen,
+-			   compat_ptr(tmp.newval), tmp.newlen);
+-
+-	if (result >= 0) {
+-		oldlen = result;
+-		result = 0;
+-	}
+-
+-	if (compat_oldlenp && put_user(oldlen, compat_oldlenp))
+-		return -EFAULT;
+-
+-	return result;
++	return -ENOSYS;
+ }
+ 
+ #endif /* CONFIG_COMPAT */
+-- 
+1.8.5.6
 
-greg k-h
