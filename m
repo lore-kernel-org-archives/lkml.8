@@ -2,225 +2,92 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B19EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 06:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 409FFC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 06:23:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C19920820
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 06:20:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1978A20760
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 06:23:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FRHRoixS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727855AbgFIGUW (ORCPT
+        id S1727806AbgFIGXk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 02:20:22 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:54024 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726886AbgFIGUU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 02:20:20 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 60BDBDA984993C9E617F;
-        Tue,  9 Jun 2020 14:20:17 +0800 (CST)
-Received: from use12-sp2.huawei.com (10.67.189.174) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 9 Jun 2020 14:20:08 +0800
-From:   Xiaoming Ni <nixiaoming@huawei.com>
-To:     <ebiederm@xmission.com>, <keescook@chromium.org>,
-        <ak@linux.intel.com>
-CC:     <nixiaoming@huawei.com>, <alex.huangjianhui@huawei.com>,
-        <linzichang@huawei.com>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] sysctl: Delete the code of sys_sysctl
-Date:   Tue, 9 Jun 2020 14:20:05 +0800
-Message-ID: <1591683605-8585-1-git-send-email-nixiaoming@huawei.com>
-X-Mailer: git-send-email 1.8.5.6
+        Tue, 9 Jun 2020 02:23:40 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:48010 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726887AbgFIGXk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 02:23:40 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591683818; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=4+aCPVmw8jrDJQlSPv04BpPt31w8OcaqeOyj/nVXCVU=;
+ b=FRHRoixSKeYKS7HJcB+ZXe4ccNlsdS+GT9H61QOdmpQsbHSvwXGcRAWp8RktW6Qn1xisH3c8
+ Q+EW+rG1thbmoYyOfv4KzRxXKmzNqvcJlo13TUkkoTLqLMC0MpADM9UyaougN74QmFKYBrhM
+ tRHFBTuQmkYa6dZqA/NEea6LbT0=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n11.prod.us-east-1.postgun.com with SMTP id
+ 5edf2ae98bec50776860c72b (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 09 Jun 2020 06:23:37
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 46ABEC433C6; Tue,  9 Jun 2020 06:23:36 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 31652C433C6;
+        Tue,  9 Jun 2020 06:23:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 31652C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.189.174]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] ath10k: Acquire tx_lock in tx error paths
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200604105901.1.I5b8b0c7ee0d3e51a73248975a9da61401b8f3900@changeid>
+References: <20200604105901.1.I5b8b0c7ee0d3e51a73248975a9da61401b8f3900@changeid>
+To:     Evan Green <evgreen@chromium.org>
+Cc:     kuabhs@google.com.org, sujitka@chromium.org,
+        Evan Green <evgreen@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Govind Singh <govinds@qti.qualcomm.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Michal Kazior <michal.kazior@tieto.com>,
+        ath10k@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200609062336.46ABEC433C6@smtp.codeaurora.org>
+Date:   Tue,  9 Jun 2020 06:23:36 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the commit 61a47c1ad3a4dc ("sysctl: Remove the sysctl system call"),
-sys_sysctl has lost its actual role: any input can only return an error.
+Evan Green <evgreen@chromium.org> wrote:
 
-Delete the code and return -ENOSYS directly at the function entry
+> ath10k_htt_tx_free_msdu_id() has a lockdep assertion that htt->tx_lock
+> is held. Acquire the lock in a couple of error paths when calling that
+> function to ensure this condition is met.
+> 
+> Fixes: 6421969f248fd ("ath10k: refactor tx pending management")
+> Fixes: e62ee5c381c59 ("ath10k: Add support for htt_data_tx_desc_64 descriptor")
+> Signed-off-by: Evan Green <evgreen@chromium.org>
+> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 
-Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
----
- kernel/sysctl_binary.c | 146 +------------------------------------------------
- 1 file changed, 2 insertions(+), 144 deletions(-)
+Patch applied to ath-next branch of ath.git, thanks.
 
-diff --git a/kernel/sysctl_binary.c b/kernel/sysctl_binary.c
-index 7d550cc..41a88f8 100644
---- a/kernel/sysctl_binary.c
-+++ b/kernel/sysctl_binary.c
-@@ -1,126 +1,11 @@
- // SPDX-License-Identifier: GPL-2.0
--#include <linux/stat.h>
- #include <linux/sysctl.h>
--#include "../fs/xfs/xfs_sysctl.h"
--#include <linux/sunrpc/debug.h>
--#include <linux/string.h>
- #include <linux/syscalls.h>
--#include <linux/namei.h>
--#include <linux/mount.h>
--#include <linux/fs.h>
--#include <linux/nsproxy.h>
--#include <linux/pid_namespace.h>
--#include <linux/file.h>
--#include <linux/ctype.h>
--#include <linux/netdevice.h>
--#include <linux/kernel.h>
--#include <linux/uuid.h>
--#include <linux/slab.h>
- #include <linux/compat.h>
- 
--static ssize_t binary_sysctl(const int *name, int nlen,
--	void __user *oldval, size_t oldlen, void __user *newval, size_t newlen)
--{
--	return -ENOSYS;
--}
--
--static void deprecated_sysctl_warning(const int *name, int nlen)
--{
--	int i;
--
--	/*
--	 * CTL_KERN/KERN_VERSION is used by older glibc and cannot
--	 * ever go away.
--	 */
--	if (nlen >= 2 && name[0] == CTL_KERN && name[1] == KERN_VERSION)
--		return;
--
--	if (printk_ratelimit()) {
--		printk(KERN_INFO
--			"warning: process `%s' used the deprecated sysctl "
--			"system call with ", current->comm);
--		for (i = 0; i < nlen; i++)
--			printk(KERN_CONT "%d.", name[i]);
--		printk(KERN_CONT "\n");
--	}
--	return;
--}
--
--#define WARN_ONCE_HASH_BITS 8
--#define WARN_ONCE_HASH_SIZE (1<<WARN_ONCE_HASH_BITS)
--
--static DECLARE_BITMAP(warn_once_bitmap, WARN_ONCE_HASH_SIZE);
--
--#define FNV32_OFFSET 2166136261U
--#define FNV32_PRIME 0x01000193
--
--/*
-- * Print each legacy sysctl (approximately) only once.
-- * To avoid making the tables non-const use a external
-- * hash-table instead.
-- * Worst case hash collision: 6, but very rarely.
-- * NOTE! We don't use the SMP-safe bit tests. We simply
-- * don't care enough.
-- */
--static void warn_on_bintable(const int *name, int nlen)
--{
--	int i;
--	u32 hash = FNV32_OFFSET;
--
--	for (i = 0; i < nlen; i++)
--		hash = (hash ^ name[i]) * FNV32_PRIME;
--	hash %= WARN_ONCE_HASH_SIZE;
--	if (__test_and_set_bit(hash, warn_once_bitmap))
--		return;
--	deprecated_sysctl_warning(name, nlen);
--}
--
--static ssize_t do_sysctl(int __user *args_name, int nlen,
--	void __user *oldval, size_t oldlen, void __user *newval, size_t newlen)
--{
--	int name[CTL_MAXNAME];
--	int i;
--
--	/* Check args->nlen. */
--	if (nlen < 0 || nlen > CTL_MAXNAME)
--		return -ENOTDIR;
--	/* Read in the sysctl name for simplicity */
--	for (i = 0; i < nlen; i++)
--		if (get_user(name[i], args_name + i))
--			return -EFAULT;
--
--	warn_on_bintable(name, nlen);
--
--	return binary_sysctl(name, nlen, oldval, oldlen, newval, newlen);
--}
--
- SYSCALL_DEFINE1(sysctl, struct __sysctl_args __user *, args)
- {
--	struct __sysctl_args tmp;
--	size_t oldlen = 0;
--	ssize_t result;
--
--	if (copy_from_user(&tmp, args, sizeof(tmp)))
--		return -EFAULT;
--
--	if (tmp.oldval && !tmp.oldlenp)
--		return -EFAULT;
--
--	if (tmp.oldlenp && get_user(oldlen, tmp.oldlenp))
--		return -EFAULT;
--
--	result = do_sysctl(tmp.name, tmp.nlen, tmp.oldval, oldlen,
--			   tmp.newval, tmp.newlen);
--
--	if (result >= 0) {
--		oldlen = result;
--		result = 0;
--	}
--
--	if (tmp.oldlenp && put_user(oldlen, tmp.oldlenp))
--		return -EFAULT;
--
--	return result;
-+	return -ENOSYS;
- }
- 
- 
-@@ -138,34 +23,7 @@ struct compat_sysctl_args {
- 
- COMPAT_SYSCALL_DEFINE1(sysctl, struct compat_sysctl_args __user *, args)
- {
--	struct compat_sysctl_args tmp;
--	compat_size_t __user *compat_oldlenp;
--	size_t oldlen = 0;
--	ssize_t result;
--
--	if (copy_from_user(&tmp, args, sizeof(tmp)))
--		return -EFAULT;
--
--	if (tmp.oldval && !tmp.oldlenp)
--		return -EFAULT;
--
--	compat_oldlenp = compat_ptr(tmp.oldlenp);
--	if (compat_oldlenp && get_user(oldlen, compat_oldlenp))
--		return -EFAULT;
--
--	result = do_sysctl(compat_ptr(tmp.name), tmp.nlen,
--			   compat_ptr(tmp.oldval), oldlen,
--			   compat_ptr(tmp.newval), tmp.newlen);
--
--	if (result >= 0) {
--		oldlen = result;
--		result = 0;
--	}
--
--	if (compat_oldlenp && put_user(oldlen, compat_oldlenp))
--		return -EFAULT;
--
--	return result;
-+	return -ENOSYS;
- }
- 
- #endif /* CONFIG_COMPAT */
+a738e766e3ed ath10k: Acquire tx_lock in tx error paths
+
 -- 
-1.8.5.6
+https://patchwork.kernel.org/patch/11588229/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
