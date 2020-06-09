@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74796C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5452C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5249820820
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:18:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8598C2067B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:18:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591726701;
-	bh=VtjkihTuVllpFfhNrS3tRvO8qxCmSo/LYqKqAW5Ms8M=;
+	s=default; t=1591726707;
+	bh=0ctzlTivcvYKVK0qXh7I1nTlH3cJHR+nkz97FZGU0Ds=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y+BvtfdNWDpZE4ACr2ugGRghvIjsTMtnzri4+pK67JjyCMGDvFxDYtq2NIY2nxNGS
-	 Yw5ceC8MQTwkntYYF9XyOJ/bZ/dxSzf/E+vyzEUVavQ5Qkv9Qj94zDWTW2e4RwqD7Q
-	 W5MlBhjNfXOzTO105GNgzGRiY5B/HOs0ihaP+s6U=
+	b=WAZB1WkQ4ijXumq2Wz5kZBuM8ehtYpVu81GditVeiuIwJhYcjRFybpFTIC/m/0niP
+	 TJ3fNS9BwrpEnWrbMNSW8nC97NL6lmK1vx+qHCoB7q02P5M5bCB3daOxm5EibBuhwc
+	 zinPnRuA5sIHznaPDUlKgSNPfuOCSyxk0ESuC2rU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388717AbgFISSP (ORCPT
+        id S2387701AbgFISSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:18:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37524 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 14:18:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730831AbgFIRuS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:50:18 -0400
+        id S1732631AbgFIRuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:50:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DACAD20734;
-        Tue,  9 Jun 2020 17:50:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 824D9207C3;
+        Tue,  9 Jun 2020 17:50:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725017;
-        bh=VtjkihTuVllpFfhNrS3tRvO8qxCmSo/LYqKqAW5Ms8M=;
+        s=default; t=1591725015;
+        bh=0ctzlTivcvYKVK0qXh7I1nTlH3cJHR+nkz97FZGU0Ds=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r2GVySLVE4Z9kC+YYki5uDoOthhrCYndHfTuqAtcBVP7x/lxHvCnkWu04cRv8hyZD
-         BHPgFQgqhAP0ASNbFRu3cdxmO8+33NOC4n/TStAnKHphVmXcoIju4FRugEfO+GHLmE
-         OR3m6KHaLBq0AhG9O+a0B1b+X3XvS80MncMddQ+Q=
+        b=JsMcIERQNS2yedDcA7d6zj8f/+ptKfzsdywLcDl0/xlnq0sdULEhZb00EhWPw53R8
+         w5Ad8sImKe/66sh+Md8OAj4vYkBuMS4tAwSZ/4lZ0wP39E/Z4yg2gkUSBXs9yvLV4+
+         q0BjDWGmHv/4M/bHgMdKRUF6yY+BAdBxZ3QZr2zg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
-        Raghavendra <rananta@codeaurora.org>
-Subject: [PATCH 4.14 36/46] tty: hvc_console, fix crashes on parallel open/close
-Date:   Tue,  9 Jun 2020 19:44:52 +0200
-Message-Id: <20200609174029.956324114@linuxfoundation.org>
+        stable@vger.kernel.org, Kyungtae Kim <kt0755@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.14 35/46] vt: keyboard: avoid signed integer overflow in k_ascii
+Date:   Tue,  9 Jun 2020 19:44:51 +0200
+Message-Id: <20200609174029.735837494@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174022.938987501@linuxfoundation.org>
 References: <20200609174022.938987501@linuxfoundation.org>
@@ -59,101 +59,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Slaby <jslaby@suse.cz>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-commit 24eb2377f977fe06d84fca558f891f95bc28a449 upstream.
+commit b86dab054059b970111b5516ae548efaae5b3aae upstream.
 
-hvc_open sets tty->driver_data to NULL when open fails at some point.
-Typically, the failure happens in hp->ops->notifier_add(). If there is
-a racing process which tries to open such mangled tty, which was not
-closed yet, the process will crash in hvc_open as tty->driver_data is
-NULL.
+When k_ascii is invoked several times in a row there is a potential for
+signed integer overflow:
 
-All this happens because close wants to know whether open failed or not.
-But ->open should not NULL this and other tty fields for ->close to be
-happy. ->open should call tty_port_set_initialized(true) and close
-should check by tty_port_initialized() instead. So do this properly in
-this driver.
+UBSAN: Undefined behaviour in drivers/tty/vt/keyboard.c:888:19 signed integer overflow:
+10 * 1111111111 cannot be represented in type 'int'
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.6.11 #1
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Bochs 01/01/2011
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xce/0x128 lib/dump_stack.c:118
+ ubsan_epilogue+0xe/0x30 lib/ubsan.c:154
+ handle_overflow+0xdc/0xf0 lib/ubsan.c:184
+ __ubsan_handle_mul_overflow+0x2a/0x40 lib/ubsan.c:205
+ k_ascii+0xbf/0xd0 drivers/tty/vt/keyboard.c:888
+ kbd_keycode drivers/tty/vt/keyboard.c:1477 [inline]
+ kbd_event+0x888/0x3be0 drivers/tty/vt/keyboard.c:1495
 
-So this patch removes these from ->open:
-* tty_port_tty_set(&hp->port, NULL). This happens on last close.
-* tty->driver_data = NULL. Dtto.
-* tty_port_put(&hp->port). This happens in shutdown and until now, this
-  must have been causing a reference underflow, if I am not missing
-  something.
+While it can be worked around by using check_mul_overflow()/
+check_add_overflow(), it is better to introduce a separate flag to
+signal that number pad is being used to compose a symbol, and
+change type of the accumulator from signed to unsigned, thus
+avoiding undefined behavior when it overflows.
 
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Reported-by: Kyungtae Kim <kt0755@gmail.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Cc: stable <stable@vger.kernel.org>
-Reported-and-tested-by: Raghavendra <rananta@codeaurora.org>
-Link: https://lore.kernel.org/r/20200526145632.13879-1-jslaby@suse.cz
+Link: https://lore.kernel.org/r/20200525232740.GA262061@dtor-ws
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/hvc/hvc_console.c |   23 ++++++++---------------
- 1 file changed, 8 insertions(+), 15 deletions(-)
+ drivers/tty/vt/keyboard.c |   26 ++++++++++++++++----------
+ 1 file changed, 16 insertions(+), 10 deletions(-)
 
---- a/drivers/tty/hvc/hvc_console.c
-+++ b/drivers/tty/hvc/hvc_console.c
-@@ -357,15 +357,14 @@ static int hvc_open(struct tty_struct *t
- 	 * tty fields and return the kref reference.
- 	 */
- 	if (rc) {
--		tty_port_tty_set(&hp->port, NULL);
--		tty->driver_data = NULL;
--		tty_port_put(&hp->port);
- 		printk(KERN_ERR "hvc_open: request_irq failed with rc %d.\n", rc);
--	} else
-+	} else {
- 		/* We are ready... raise DTR/RTS */
- 		if (C_BAUD(tty))
- 			if (hp->ops->dtr_rts)
- 				hp->ops->dtr_rts(hp, 1);
-+		tty_port_set_initialized(&hp->port, true);
-+	}
- 
- 	/* Force wakeup of the polling thread */
- 	hvc_kick();
-@@ -375,22 +374,12 @@ static int hvc_open(struct tty_struct *t
- 
- static void hvc_close(struct tty_struct *tty, struct file * filp)
- {
--	struct hvc_struct *hp;
-+	struct hvc_struct *hp = tty->driver_data;
- 	unsigned long flags;
- 
- 	if (tty_hung_up_p(filp))
- 		return;
- 
--	/*
--	 * No driver_data means that this close was issued after a failed
--	 * hvc_open by the tty layer's release_dev() function and we can just
--	 * exit cleanly because the kref reference wasn't made.
--	 */
--	if (!tty->driver_data)
--		return;
--
--	hp = tty->driver_data;
--
- 	spin_lock_irqsave(&hp->port.lock, flags);
- 
- 	if (--hp->port.count == 0) {
-@@ -398,6 +387,9 @@ static void hvc_close(struct tty_struct
- 		/* We are done with the tty pointer now. */
- 		tty_port_tty_set(&hp->port, NULL);
- 
-+		if (!tty_port_initialized(&hp->port))
-+			return;
+--- a/drivers/tty/vt/keyboard.c
++++ b/drivers/tty/vt/keyboard.c
+@@ -126,7 +126,11 @@ static DEFINE_SPINLOCK(func_buf_lock); /
+ static unsigned long key_down[BITS_TO_LONGS(KEY_CNT)];	/* keyboard key bitmap */
+ static unsigned char shift_down[NR_SHIFT];		/* shift state counters.. */
+ static bool dead_key_next;
+-static int npadch = -1;					/* -1 or number assembled on pad */
 +
- 		if (C_HUPCL(tty))
- 			if (hp->ops->dtr_rts)
- 				hp->ops->dtr_rts(hp, 0);
-@@ -414,6 +406,7 @@ static void hvc_close(struct tty_struct
- 		 * waking periodically to check chars_in_buffer().
- 		 */
- 		tty_wait_until_sent(tty, HVC_CLOSE_WAIT);
-+		tty_port_set_initialized(&hp->port, false);
- 	} else {
- 		if (hp->port.count < 0)
- 			printk(KERN_ERR "hvc_close %X: oops, count is %d\n",
++/* Handles a number being assembled on the number pad */
++static bool npadch_active;
++static unsigned int npadch_value;
++
+ static unsigned int diacr;
+ static char rep;					/* flag telling character repeat */
+ 
+@@ -816,12 +820,12 @@ static void k_shift(struct vc_data *vc,
+ 		shift_state &= ~(1 << value);
+ 
+ 	/* kludge */
+-	if (up_flag && shift_state != old_state && npadch != -1) {
++	if (up_flag && shift_state != old_state && npadch_active) {
+ 		if (kbd->kbdmode == VC_UNICODE)
+-			to_utf8(vc, npadch);
++			to_utf8(vc, npadch_value);
+ 		else
+-			put_queue(vc, npadch & 0xff);
+-		npadch = -1;
++			put_queue(vc, npadch_value & 0xff);
++		npadch_active = false;
+ 	}
+ }
+ 
+@@ -839,7 +843,7 @@ static void k_meta(struct vc_data *vc, u
+ 
+ static void k_ascii(struct vc_data *vc, unsigned char value, char up_flag)
+ {
+-	int base;
++	unsigned int base;
+ 
+ 	if (up_flag)
+ 		return;
+@@ -853,10 +857,12 @@ static void k_ascii(struct vc_data *vc,
+ 		base = 16;
+ 	}
+ 
+-	if (npadch == -1)
+-		npadch = value;
+-	else
+-		npadch = npadch * base + value;
++	if (!npadch_active) {
++		npadch_value = 0;
++		npadch_active = true;
++	}
++
++	npadch_value = npadch_value * base + value;
+ }
+ 
+ static void k_lock(struct vc_data *vc, unsigned char value, char up_flag)
 
 
