@@ -2,53 +2,51 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E88EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81B8CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAF6620801
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:49:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46E6B207F9
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:49:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591724989;
-	bh=Sao3mKXa6QCHzNKmB4UGYb0blIhTleDdGlYruvxO+UY=;
+	s=default; t=1591724991;
+	bh=yoGrA38esDLQ8SgY4VYMWUjj6qYv8c6hWJsXS2aZk1c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i8X2XHXH8s4AGcYRjcq3ncv8+XGsIkzqgsiWHByftykrzQSbXmMyxsW53sy6uyHyh
-	 ek2C5L+dQXXTArW/UG+5/zaGs9nINHqfX/fuWK8liiywxcExLRedkTvR7aaO9/xOb7
-	 CIJQKTMxZ9OdJOvOeY0Nq65TfSRZBwX3gQrYgG1c=
+	b=ip8eHy3HGg5GlFgkkpwHQQYBmvjpWZIBZ4igUq0bEf8EzwHCtjBUVOTWI4X4HZSbo
+	 dp1GzRlIn/GELVgCr1zhgmopb9g+RxO1MM2DzxXz7nasoPvL9Kls2B7Hcv0SGjOzsl
+	 HACjZEDe5Jw+aIfcxUz1f5mKwM3rcgkj8ZhDMfVU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732568AbgFIRtq (ORCPT
+        id S1732579AbgFIRtt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:49:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35236 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:49:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730749AbgFIRtW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:49:22 -0400
+        id S1732529AbgFIRte (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:49:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDC8520820;
-        Tue,  9 Jun 2020 17:49:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50FB020814;
+        Tue,  9 Jun 2020 17:49:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591724962;
-        bh=Sao3mKXa6QCHzNKmB4UGYb0blIhTleDdGlYruvxO+UY=;
+        s=default; t=1591724973;
+        bh=yoGrA38esDLQ8SgY4VYMWUjj6qYv8c6hWJsXS2aZk1c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vj4WTrQc1ipKdR7RLkTcoiL7Qj03I5J2VGZHouPepvEu1LgOHqXhkBULrXF7PYQYi
-         HJtT7SmaHhia9YxN3c/snZJbXNGnqaswkezlN0/wIrjasn36ZGp0iPXUuEXiILKEsY
-         kNv4TnlS6+g+ukJ8ehBpVNwGUmWWSiYw8KwWmf+o=
+        b=hCMkEJLnisxt3hpYRHht94gwVcquTiTyP6BtfTrLu0Ag3rjtPoj4dG0EmGfwKLt6T
+         yg6ZAuprllygMuqm3huOCGam31svz7tL8aOZoaHdzxfMrja+TZTbWKAPk+Z03GNVXv
+         L0SfdfXRVA5l5og7SVhDMIF9V/cfPl31Kd3AFDlI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Valentin Longchamp <valentin@longchamp.me>,
-        Matteo Ghidoni <matteo.ghidoni@ch.abb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 12/46] net/ethernet/freescale: rework quiesce/activate for ucc_geth
-Date:   Tue,  9 Jun 2020 19:44:28 +0200
-Message-Id: <20200609174024.001468920@linuxfoundation.org>
+        stable@vger.kernel.org, Julian Sax <jsbc@gmx.de>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: [PATCH 4.14 17/46] HID: i2c-hid: add Schneider SCL142ALM to descriptor override
+Date:   Tue,  9 Jun 2020 19:44:33 +0200
+Message-Id: <20200609174024.569127744@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174022.938987501@linuxfoundation.org>
 References: <20200609174022.938987501@linuxfoundation.org>
@@ -61,78 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valentin Longchamp <valentin@longchamp.me>
+From: Julian Sax <jsbc@gmx.de>
 
-[ Upstream commit 79dde73cf9bcf1dd317a2667f78b758e9fe139ed ]
+commit 6507ef10660efdfee93f0f3b9fac24b5e4d83e56 upstream.
 
-ugeth_quiesce/activate are used to halt the controller when there is a
-link change that requires to reconfigure the mac.
+This device uses the SIPODEV SP1064 touchpad, which does not
+supply descriptors, so it has to be added to the override list.
 
-The previous implementation called netif_device_detach(). This however
-causes the initial activation of the netdevice to fail precisely because
-it's detached. For details, see [1].
+Cc: stable@vger.kernel.org
+Signed-off-by: Julian Sax <jsbc@gmx.de>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-A possible workaround was the revert of commit
-net: linkwatch: add check for netdevice being present to linkwatch_do_dev
-However, the check introduced in the above commit is correct and shall be
-kept.
-
-The netif_device_detach() is thus replaced with
-netif_tx_stop_all_queues() that prevents any tranmission. This allows to
-perform mac config change required by the link change, without detaching
-the corresponding netdevice and thus not preventing its initial
-activation.
-
-[1] https://lists.openwall.net/netdev/2020/01/08/201
-
-Signed-off-by: Valentin Longchamp <valentin@longchamp.me>
-Acked-by: Matteo Ghidoni <matteo.ghidoni@ch.abb.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/ucc_geth.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/net/ethernet/freescale/ucc_geth.c b/drivers/net/ethernet/freescale/ucc_geth.c
-index bddf4c25ee6e..7c2a9fd4dc1a 100644
---- a/drivers/net/ethernet/freescale/ucc_geth.c
-+++ b/drivers/net/ethernet/freescale/ucc_geth.c
-@@ -45,6 +45,7 @@
- #include <soc/fsl/qe/ucc.h>
- #include <soc/fsl/qe/ucc_fast.h>
- #include <asm/machdep.h>
-+#include <net/sch_generic.h>
+--- a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
++++ b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
+@@ -381,6 +381,14 @@ static const struct dmi_system_id i2c_hi
+ 		},
+ 		.driver_data = (void *)&sipodev_desc
+ 	},
++	{
++		.ident = "Schneider SCL142ALM",
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "SCHNEIDER"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "SCL142ALM"),
++		},
++		.driver_data = (void *)&sipodev_desc
++	},
+ 	{ }	/* Terminate list */
+ };
  
- #include "ucc_geth.h"
- 
-@@ -1551,11 +1552,8 @@ static int ugeth_disable(struct ucc_geth_private *ugeth, enum comm_dir mode)
- 
- static void ugeth_quiesce(struct ucc_geth_private *ugeth)
- {
--	/* Prevent any further xmits, plus detach the device. */
--	netif_device_detach(ugeth->ndev);
--
--	/* Wait for any current xmits to finish. */
--	netif_tx_disable(ugeth->ndev);
-+	/* Prevent any further xmits */
-+	netif_tx_stop_all_queues(ugeth->ndev);
- 
- 	/* Disable the interrupt to avoid NAPI rescheduling. */
- 	disable_irq(ugeth->ug_info->uf_info.irq);
-@@ -1568,7 +1566,10 @@ static void ugeth_activate(struct ucc_geth_private *ugeth)
- {
- 	napi_enable(&ugeth->napi);
- 	enable_irq(ugeth->ug_info->uf_info.irq);
--	netif_device_attach(ugeth->ndev);
-+
-+	/* allow to xmit again  */
-+	netif_tx_wake_all_queues(ugeth->ndev);
-+	__netdev_watchdog_up(ugeth->ndev);
- }
- 
- /* Called every time the controller might need to be made
--- 
-2.25.1
-
 
 
