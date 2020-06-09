@@ -2,118 +2,129 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4287EC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ADCFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:51:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17CFC2078C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:50:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591710659;
-	bh=QLyGqEIUvJCZktBQO3E8b5CNoUk6xAoFrKqLtbqNglk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rsXMbWznqEDw1nZAIugC8WDJZlm8Qr36N2V3oXi4vcIkWmjg9k4+0Xf8Fj2Ute8Hv
-	 uFgQ1DIIH+Q4W7/EnITwTdgktuIiEDWTnV//kDfWTKxIQTyeaHLxcHVGJRosmlKoCS
-	 +BzNSKQM+vrMiSMDCrccKDqj18kDrp8PaIyMQrGU=
+	by mail.kernel.org (Postfix) with ESMTP id D492D2078C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:51:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730220AbgFINu5 (ORCPT
+        id S1730384AbgFINvO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 09:50:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35186 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728388AbgFINu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 09:50:57 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B61520737;
-        Tue,  9 Jun 2020 13:50:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591710656;
-        bh=QLyGqEIUvJCZktBQO3E8b5CNoUk6xAoFrKqLtbqNglk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SgBCgfOg8D/M+dvQX5QNjeGmhKzkxrdjcDxhSSrj0Rjwea5+jRa4nCpF/cyiqPoFp
-         SAG3+xF9PTbYhGHopwujbytcte2t2dYZlU11C8YOxHGzo8SoD8XYgQpP8f6MithbKO
-         jUoT+p6ERnegqu65UE27VuvmLeA6tjTpMvi78y2s=
-Date:   Tue, 9 Jun 2020 14:50:54 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     lars@metafoo.de, perex@perex.cz, tiwai@suse.com,
-        lgirdwood@gmail.com, timur@kernel.org, nicoleotsuka@gmail.com,
-        Xiubo.Lee@gmail.com, festevam@gmail.com,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [RFC PATCH] ASoC: fsl_asrc_dma: Fix warning "Cannot create DMA
- dma:tx symlink"
-Message-ID: <20200609135054.GJ4583@sirena.org.uk>
-References: <83e1682e88baf127d25e3470011bd034cfc32032.1591598561.git.shengjiu.wang@nxp.com>
+        Tue, 9 Jun 2020 09:51:14 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:42314 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728388AbgFINvN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 09:51:13 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 93F01A185329BB60FEFD;
+        Tue,  9 Jun 2020 21:51:10 +0800 (CST)
+Received: from localhost.localdomain (10.175.112.125) by
+ DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 9 Jun 2020 21:51:01 +0800
+From:   Kefeng Wang <wangkefeng.wang@huawei.com>
+To:     Divya Indi <divya.indi@oracle.com>, <linux-kernel@vger.kernel.org>
+CC:     Steven Rostedt <rostedt@goodmis.org>,
+        Aruna Ramakrishna <aruna.ramakrishna@oracle.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>
+Subject: [PATCH v2] sample-trace-array: Fix sleeping function called from invalid context
+Date:   Tue, 9 Jun 2020 13:51:25 +0000
+Message-ID: <20200609135125.2206637-1-wangkefeng.wang@huawei.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <0047f80f-4fff-16ff-7ac0-20181f03f06a@oracle.com>
+References: <0047f80f-4fff-16ff-7ac0-20181f03f06a@oracle.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ELVYuRnMxQ5nnKRy"
-Content-Disposition: inline
-In-Reply-To: <83e1682e88baf127d25e3470011bd034cfc32032.1591598561.git.shengjiu.wang@nxp.com>
-X-Cookie: Be careful!  Is it classified?
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.112.125]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+ BUG: sleeping function called from invalid context at kernel/locking/mutex.c:935
+ in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 0, name: swapper/5
+ 1 lock held by swapper/5/0:
+  #0: ffff80001002bd90 (samples/ftrace/sample-trace-array.c:38){+.-.}-{0:0}, at: call_timer_fn+0x8/0x3e0
+ CPU: 5 PID: 0 Comm: swapper/5 Not tainted 5.7.0+ #8
+ Hardware name: QEMU QEMU Virtual Machine, BIOS 0.0.0 02/06/2015
+ Call trace:
+  dump_backtrace+0x0/0x1a0
+  show_stack+0x20/0x30
+  dump_stack+0xe4/0x150
+  ___might_sleep+0x160/0x200
+  __might_sleep+0x58/0x90
+  __mutex_lock+0x64/0x948
+  mutex_lock_nested+0x3c/0x58
+  __ftrace_set_clr_event+0x44/0x88
+  trace_array_set_clr_event+0x24/0x38
+  mytimer_handler+0x34/0x40 [sample_trace_array]
 
---ELVYuRnMxQ5nnKRy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+mutex_lock() will be called in interrupt context, using workqueue to fix it.
 
-On Mon, Jun 08, 2020 at 03:07:00PM +0800, Shengjiu Wang wrote:
-> The issue log is:
->=20
-> [   48.021506] CPU: 0 PID: 664 Comm: aplay Not tainted 5.7.0-rc1-13120-g1=
-2b434cbbea0 #343
-> [   48.031063] Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
-> [   48.037638] [<c0110dd8>] (unwind_backtrace) from [<c010b8ec>] (show_st=
-ack+0x10/0x14)
-> [   48.045413] [<c010b8ec>] (show_stack) from [<c0557fc0>] (dump_stack+0x=
-e4/0x118)
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+---
+v2:
+- add include of linux/workqueue.h
+- add missing cancel_work_sync() suggested by Divya Indi
 
-Please think hard before including complete backtraces in upstream
-reports, they are very large and contain almost no useful information
-relative to their size so often obscure the relevant content in your
-message. If part of the backtrace is usefully illustrative (it often is
-for search engines if nothing else) then it's usually better to pull out
-the relevant sections.
+ samples/ftrace/sample-trace-array.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
 
-> ---
->  include/sound/dmaengine_pcm.h         | 11 ++++++
->  include/sound/soc.h                   |  2 ++
->  sound/soc/fsl/fsl_asrc_common.h       |  2 ++
->  sound/soc/fsl/fsl_asrc_dma.c          | 49 +++++++++++++++++++++------
->  sound/soc/soc-core.c                  |  3 +-
->  sound/soc/soc-generic-dmaengine-pcm.c | 12 -------
->  6 files changed, 55 insertions(+), 24 deletions(-)
+diff --git a/samples/ftrace/sample-trace-array.c b/samples/ftrace/sample-trace-array.c
+index d523450d73eb..9e437f930280 100644
+--- a/samples/ftrace/sample-trace-array.c
++++ b/samples/ftrace/sample-trace-array.c
+@@ -6,6 +6,7 @@
+ #include <linux/timer.h>
+ #include <linux/err.h>
+ #include <linux/jiffies.h>
++#include <linux/workqueue.h>
+ 
+ /*
+  * Any file that uses trace points, must include the header.
+@@ -20,6 +21,16 @@ struct trace_array *tr;
+ static void mytimer_handler(struct timer_list *unused);
+ static struct task_struct *simple_tsk;
+ 
++static void trace_work_fn(struct work_struct *work)
++{
++	/*
++	 * Disable tracing for event "sample_event".
++	 */
++	trace_array_set_clr_event(tr, "sample-subsystem", "sample_event",
++			false);
++}
++static DECLARE_WORK(trace_work, trace_work_fn);
++
+ /*
+  * mytimer: Timer setup to disable tracing for event "sample_event". This
+  * timer is only for the purposes of the sample module to demonstrate access of
+@@ -29,11 +40,7 @@ static DEFINE_TIMER(mytimer, mytimer_handler);
+ 
+ static void mytimer_handler(struct timer_list *unused)
+ {
+-	/*
+-	 * Disable tracing for event "sample_event".
+-	 */
+-	trace_array_set_clr_event(tr, "sample-subsystem", "sample_event",
+-			false);
++	schedule_work(&trace_work);
+ }
+ 
+ static void simple_thread_func(int count)
+@@ -76,6 +83,7 @@ static int simple_thread(void *arg)
+ 		simple_thread_func(count++);
+ 
+ 	del_timer(&mytimer);
++	cancel_work_sync(&trace_work);
+ 
+ 	/*
+ 	 * trace_array_put() decrements the reference counter associated with
+-- 
+2.27.0
 
-Please split the core changes you are adding from the driver changes
-that use them.
-
-The change does look reasonable for the issue, it's not ideal but I'm
-not sure it's avoidable with DPCM.
-
---ELVYuRnMxQ5nnKRy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7fk70ACgkQJNaLcl1U
-h9BOngf/aLSe603sBhY25UjUBm5u7bXy02u1WBCRODt4C2xhzRdn/ONB0kSnJZWH
-sMhms0bZYQD3+F08frWKdLRZzzfTqjTCJYIUnI53dNTGflHB3eVyLSOwhL4VgRwd
-kwjHJACGkDrwncomu6q5hoFNIBnnnz0Ng8hs17CnUmelNFbGyz7oUzLRNYboJy/8
-6S5lJ8xXcCVzQshXwALtw1ap0i42G+lagJpgnslaguun5p2/f700o422CQiteofT
-Wn6GMhF125HPe/MpKSheTO234UQ3xuPlrE/ZHEiu0cDH5UFWnFeIBeRmkqfSpKsz
-jdUXsC+t9AipuS2loQv/KSDyrZG4MQ==
-=rIq/
------END PGP SIGNATURE-----
-
---ELVYuRnMxQ5nnKRy--
