@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E841AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5133BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C63BB2068D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:10:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31F9720734
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:10:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388585AbgFISKg (ORCPT
+        id S2388573AbgFISKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:10:36 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:41384 "EHLO
+        Tue, 9 Jun 2020 14:10:31 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:41374 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388164AbgFISF6 (ORCPT
+        by vger.kernel.org with ESMTP id S2388160AbgFISF6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 9 Jun 2020 14:05:58 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jiidG-0001oz-Hi; Tue, 09 Jun 2020 19:05:54 +0100
+        id 1jiidG-0001pM-9B; Tue, 09 Jun 2020 19:05:54 +0100
 Received: from ben by deadeye with local (Exim 4.94)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jiidF-006Vwf-RD; Tue, 09 Jun 2020 19:05:53 +0100
+        id 1jiidF-006Vvu-Ai; Tue, 09 Jun 2020 19:05:53 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "Wu Bo" <wubo40@huawei.com>, "Guenter Roeck" <linux@roeck-us.net>,
-        "Sasha Levin" <sashal@kernel.org>,
         "Douglas Gilbert" <dgilbert@interlog.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Date:   Tue, 09 Jun 2020 19:04:36 +0100
-Message-ID: <lsq.1591725832.128093427@decadent.org.uk>
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "Todd Poynor" <toddpoynor@google.com>
+Date:   Tue, 09 Jun 2020 19:04:20 +0100
+Message-ID: <lsq.1591725832.86967356@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 45/61] scsi: sg: add sg_remove_request in sg_write
+Subject: [PATCH 3.16 29/61] scsi: sg: recheck MMAP_IO request length with
+ lock held
 In-Reply-To: <lsq.1591725831.850867383@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,38 +58,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Wu Bo <wubo40@huawei.com>
+From: Todd Poynor <toddpoynor@google.com>
 
-commit 83c6f2390040f188cc25b270b4befeb5628c1aee upstream.
+commit 8d26f491116feaa0b16de370b6a7ba40a40fa0b4 upstream.
 
-If the __copy_from_user function failed we need to call sg_remove_request
-in sg_write.
+Commit 1bc0eb044615 ("scsi: sg: protect accesses to 'reserved' page
+array") adds needed concurrency protection for the "reserve" buffer.
+Some checks that are initially made outside the lock are replicated once
+the lock is taken to ensure the checks and resulting decisions are made
+using consistent state.
 
-Link: https://lore.kernel.org/r/610618d9-e983-fd56-ed0f-639428343af7@huawei.com
+The check that a request with flag SG_FLAG_MMAP_IO set fits in the
+reserve buffer also needs to be performed again under the lock to ensure
+the reserve buffer length compared against matches the value in effect
+when the request is linked to the reserve buffer.  An -ENOMEM should be
+returned in this case, instead of switching over to an indirect buffer
+as for non-MMAP_IO requests.
+
+Signed-off-by: Todd Poynor <toddpoynor@google.com>
 Acked-by: Douglas Gilbert <dgilbert@interlog.com>
-Signed-off-by: Wu Bo <wubo40@huawei.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
-[groeck: Backport to v5.4.y and older kernels]
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/scsi/sg.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/scsi/sg.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
 --- a/drivers/scsi/sg.c
 +++ b/drivers/scsi/sg.c
-@@ -696,8 +696,10 @@ sg_write(struct file *filp, const char _
- 	hp->flags = input_size;	/* structure abuse ... */
- 	hp->pack_id = old_hdr.pack_id;
- 	hp->usr_ptr = NULL;
--	if (__copy_from_user(cmnd, buf, cmd_size))
-+	if (__copy_from_user(cmnd, buf, cmd_size)) {
-+		sg_remove_request(sfp, srp);
- 		return -EFAULT;
-+	}
- 	/*
- 	 * SG_DXFER_TO_FROM_DEV is functionally equivalent to SG_DXFER_FROM_DEV,
- 	 * but is is possible that the app intended SG_DXFER_TO_DEV, because there
+@@ -1772,9 +1772,12 @@ sg_start_req(Sg_request *srp, unsigned c
+ 		    !sfp->res_in_use) {
+ 			sfp->res_in_use = 1;
+ 			sg_link_reserve(sfp, srp, dxfer_len);
+-		} else if ((hp->flags & SG_FLAG_MMAP_IO) && sfp->res_in_use) {
++		} else if (hp->flags & SG_FLAG_MMAP_IO) {
++			res = -EBUSY; /* sfp->res_in_use == 1 */
++			if (dxfer_len > rsv_schp->bufflen)
++				res = -ENOMEM;
+ 			mutex_unlock(&sfp->f_mutex);
+-			return -EBUSY;
++			return res;
+ 		} else {
+ 			res = sg_build_indirect(req_schp, sfp, dxfer_len);
+ 			if (res) {
 
