@@ -2,144 +2,110 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 651AAC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 332D7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D9C7207C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:43:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="nmiFa7N9"
+	by mail.kernel.org (Postfix) with ESMTP id 099F0207ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:43:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591706632;
+	bh=+gVx3wgcg7Sd3cQ0sMU6w7abwVymSVpRBRCTExi/xGA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tq5NeRrrSYujgoLZa7kFdW2UtCB1OUsfDVgc6DSbvP7cYMJfEMEgFWykhi9cKMZhe
+	 +7mXFWCK+dwUsY7QCV2d8TV3cQdOTGR3wgbWOXjHgaHA0Ul5rMpUe8bUWABVzpF8RA
+	 O+2v7NIFHVvzH5ka/684wreJOosb5JDBIWVuH8Ck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729342AbgFIMm7 (ORCPT
+        id S1729286AbgFIMnu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 08:42:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50320 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726848AbgFIMm6 (ORCPT
+        Tue, 9 Jun 2020 08:43:50 -0400
+Received: from mail-ej1-f65.google.com ([209.85.218.65]:35051 "EHLO
+        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727773AbgFIMnt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 08:42:58 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 142A1C05BD1E;
-        Tue,  9 Jun 2020 05:42:57 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49h8sp1pwkz9sRW;
-        Tue,  9 Jun 2020 22:42:54 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1591706574;
-        bh=WE3JXySLmYgNjlUWsxltg1c+ac2THfPexOS2wHJxEt8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=nmiFa7N9mZld4e4sxIX3tQHR9yDquCpEPfiwEqmhDcixnEM7XZdN3rtVdRIYi31IP
-         dikB+gWm3gFmDeFcNYOki6AacT3GSZRYTzc/AI3/MzWbssjxsCtvONjvi4XtsG4By8
-         dfSueqT/maVXJnWe6NblUx1Fp8p5P1WlQ4LiZ+TjAMqhmu2yfsV+7efois71k1IHFX
-         i7fXwSBxFqanNTHD6bWcJ6MU7KP+aRdYehsS/qZ1XtdqF90y9sNwG7sbAp2eEj9qO4
-         /fki3U1+WrmDUN8Jeb5X9Bn0wnLqKEK7XBZox5KFcLJXHgJpCtUsqZC+4ILAJC4MYv
-         bctBAOD4RbtIg==
-Date:   Tue, 9 Jun 2020 22:42:52 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: linux-next: build failure after merge of the akpm-current tree
-Message-ID: <20200609224252.1704eff3@canb.auug.org.au>
+        Tue, 9 Jun 2020 08:43:49 -0400
+Received: by mail-ej1-f65.google.com with SMTP id y13so22208145eju.2
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 05:43:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=t3GQNmWtf4ksIggwptv0txsHLVgsuiaz0p09us+yUC0=;
+        b=VLKbjyYmXUhnirRmmILwmD/D7qCwWO1kEQC32a5ZixGYqmudDS7cKxQc2gjhXs0wC2
+         n1hH7Ijd0vZreNNCRseFQginn4+J7BA/o9Wsg9dPpM5I6lsTyllZSAcqOr1DTrr/GCe3
+         y728RjVnRmIyUuGNsHegpNqWEyjKvPsX1N9ROftzIUmRgTlHjWlhCkIjerWykdb6CoSF
+         C3m7QGHcRX2vWI1hbluRRSYuZLbMtzHva1PR9He0Jy1nOpAagQD4ujqE8Oqg2vUss2ZK
+         IHw9Qy5lFErgyiN+RyChXwrX5BKUpGV4jqN9DGk8JCOaW8GY+cwCuz+uLSSxO8llm2LO
+         B3vg==
+X-Gm-Message-State: AOAM533whjg0sxtn0Z6vT5k0iTOWbdQ9eM1yXJIfSaGIypysmdSiPY2M
+        xIxlVz+0u4eFJWthryu2U28=
+X-Google-Smtp-Source: ABdhPJzrhhabnTeUtVY91t7kfFr3pxKvQaWZW7X9nXWAtIKEyVK75iUHEyP3Zo7mM/2HyIVcn8BNOA==
+X-Received: by 2002:a17:906:7c5a:: with SMTP id g26mr25499817ejp.200.1591706626955;
+        Tue, 09 Jun 2020 05:43:46 -0700 (PDT)
+Received: from localhost (ip-37-188-174-195.eurotel.cz. [37.188.174.195])
+        by smtp.gmail.com with ESMTPSA id k23sm954411ejk.114.2020.06.09.05.43.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2020 05:43:45 -0700 (PDT)
+Date:   Tue, 9 Jun 2020 14:43:44 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     js1304@gmail.com
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kernel-team@lge.com,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Hellwig <hch@infradead.org>,
+        Roman Gushchin <guro@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Subject: Re: [PATCH v2 01/12] mm/page_isolation: prefer the node of the
+ source page
+Message-ID: <20200609124344.GC22623@dhcp22.suse.cz>
+References: <1590561903-13186-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <1590561903-13186-2-git-send-email-iamjoonsoo.kim@lge.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/20osjNj6dzcJHlq1F.yGC.c";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1590561903-13186-2-git-send-email-iamjoonsoo.kim@lge.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/20osjNj6dzcJHlq1F.yGC.c
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed 27-05-20 15:44:52, Joonsoo Kim wrote:
+> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> 
+> For locality, it's better to migrate the page to the same node
+> rather than the node of the current caller's cpu.
+> 
+> Acked-by: Roman Gushchin <guro@fb.com>
+> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 
-Hi all,
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-After merging the akpm-current tree, today's linux-next build (sparc
-defconfig) failed like this:
+> ---
+>  mm/page_isolation.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+> index 2c11a38..7df89bd 100644
+> --- a/mm/page_isolation.c
+> +++ b/mm/page_isolation.c
+> @@ -300,5 +300,7 @@ int test_pages_isolated(unsigned long start_pfn, unsigned long end_pfn,
+>  
+>  struct page *alloc_migrate_target(struct page *page, unsigned long private)
+>  {
+> -	return new_page_nodemask(page, numa_node_id(), &node_states[N_MEMORY]);
+> +	int nid = page_to_nid(page);
+> +
+> +	return new_page_nodemask(page, nid, &node_states[N_MEMORY]);
+>  }
+> -- 
+> 2.7.4
 
-In file included from include/linux/mm.h:32:0,
-                 from include/linux/memblock.h:13,
-                 from arch/sparc/mm/srmmu.c:14:
-include/linux/pgtable.h:74:27: error: redefinition of 'pte_offset_kernel'
- #define pte_offset_kernel pte_offset_kernel
-                           ^
-arch/sparc/mm/srmmu.c:144:8: note: in expansion of macro 'pte_offset_kernel'
- pte_t *pte_offset_kernel(pmd_t *dir, unsigned long address)
-        ^~~~~~~~~~~~~~~~~
-include/linux/pgtable.h:70:22: note: previous definition of 'pte_offset_ker=
-nel' was here
- static inline pte_t *pte_offset_kernel(pmd_t *pmd, unsigned long address)
-                      ^~~~~~~~~~~~~~~~~
-
-Caused by commit
-
-  292aa65ed13a ("mm: consolidate pte_index() and pte_offset_*() definitions=
-")
-
-I used the (missing part of the) patch from next-20200608:
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Tue, 9 Jun 2020 22:36:14 +1000
-Subject: [PATCH] update sparc32 for "mm: consolidate pte_index() and
- pte_offset_*() definitions"
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- arch/sparc/mm/srmmu.c | 10 ----------
- 1 file changed, 10 deletions(-)
-
-diff --git a/arch/sparc/mm/srmmu.c b/arch/sparc/mm/srmmu.c
-index 989da22ba8e9..0070f8b9a753 100644
---- a/arch/sparc/mm/srmmu.c
-+++ b/arch/sparc/mm/srmmu.c
-@@ -140,16 +140,6 @@ void pmd_set(pmd_t *pmdp, pte_t *ptep)
- 	set_pte((pte_t *)&pmd_val(*pmdp), __pte(SRMMU_ET_PTD | ptp));
- }
-=20
--/* Find an entry in the third-level page table.. */
--pte_t *pte_offset_kernel(pmd_t *dir, unsigned long address)
--{
--	void *pte;
--
--	pte =3D __nocache_va((pmd_val(*dir) & SRMMU_PTD_PMASK) << 4);
--	return (pte_t *) pte +
--	    ((address >> PAGE_SHIFT) & (PTRS_PER_PTE - 1));
--}
--
- /*
-  * size: bytes to allocate in the nocache area.
-  * align: bytes, number to align at.
---=20
-2.26.2
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/20osjNj6dzcJHlq1F.yGC.c
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7fg8wACgkQAVBC80lX
-0GwVzQf+Mb6/pKs6w583Gf2Qh3JtbaZgw858sw8TmENiKIDjm+sQdAhJwZTXfNP6
-vYEO5ibieSF8PEIzFJyr0hryPvO6mXoAUG5/7vnIs/h60odPnNqPzjDMVmpbKVcX
-+B2s3DO7gTwMgV6C/k61mzrF2NvXh38k2xJIxw7in2hP3l7c1kKPM/opgQls73VT
-g8JHhq3PjG/JA+jTkQXF3BWRgOTkFChLLb1cXL/bOKbsdLSiYHzZTXzDV1pYuG4M
-73bgt6pSSS5xabdtclCEFtTXU9SBEyN+drUhIrYVcapVF5n5KQ3JLUE6PtWPjnU/
-9RgvRNeGT6MPqSHB5K3VtiK3OJD32g==
-=w6m3
------END PGP SIGNATURE-----
-
---Sig_/20osjNj6dzcJHlq1F.yGC.c--
+-- 
+Michal Hocko
+SUSE Labs
