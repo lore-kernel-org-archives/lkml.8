@@ -2,100 +2,87 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F5A6C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB255C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:51:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DADDC2072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:51:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 936BC2072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:51:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="TmT0LsDP"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VAL71rjp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730981AbgFIPvC (ORCPT
+        id S1730986AbgFIPv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 11:51:02 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:25220 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730640AbgFIPvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 11:51:00 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591717860; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=L2RvbGPsA2kvMC3pVbmeJgOrqYdiDNvCRMHV2qaWaZg=;
- b=TmT0LsDPDmXmpiFm8S/3S1TrPuBsX9CspzljA9LT6AXfYuINdmFwiOD1GZvLEtuLlHFIRoLo
- 2NKUh97qcMjRbmzF13P09YVJsdM82QT8jToti9F+tRoJirSxguHQGjQN0segjnrfnKmOU4Jp
- wvBlndNweuML6A6ln/SW/zNCqMs=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
- 5edfafd4fe1db4db899d6123 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 09 Jun 2020 15:50:44
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 63AD0C433A0; Tue,  9 Jun 2020 15:50:44 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: gubbaven)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D666DC433CA;
-        Tue,  9 Jun 2020 15:50:43 +0000 (UTC)
+        Tue, 9 Jun 2020 11:51:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51282 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730603AbgFIPv1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 11:51:27 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 993CBC05BD1E;
+        Tue,  9 Jun 2020 08:51:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=vC8V+aEno7HGDbaQpVa4ZBc8i79Usy689nIDntg7S3Y=; b=VAL71rjpnJm1wjZrTaRm0cyHc+
+        Lu7Palz6Uv26rhNL5PglxtMJfNtnk4wM6LuwN+LFfR1soMcZSKT5/wqpb0PV5BoHkrC48JpkrmuDI
+        yNh2oWICb96YEFv3oSt4q+ZgncoiC3ePWVXSxIWMT5tKMYVqPaCRhsWT2P6T5uz0Yjo9NdRyTV5VZ
+        wewZ2C+xjpvEre+j4hOP7R6RMq5gCDYVSDxDmxCtYXYRKkBlvbGrO2IkOo7RFvMC7HYv6FZDRQBFl
+        42VLjDtvgGV0AuxzA25TmoEr9QeG/k1E4OVJcjtt+4W58IquDw67QFzsyrJ+JMyYBiAmgzGBm12Sb
+        u2zdDHUw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jigX6-0003SL-TY; Tue, 09 Jun 2020 15:51:24 +0000
+Date:   Tue, 9 Jun 2020 08:51:24 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Piotr Stankiewicz <piotr.stankiewicz@intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Olof Johansson <olof@lixom.net>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Kelvin Cao <kelvin.cao@microchip.com>,
+        Wesley Sheng <wesley.sheng@microchip.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Krzysztof Wilczynski <kw@linux.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 03/15] PCI: Use PCI_IRQ_MSI_TYPES where appropriate
+Message-ID: <20200609155124.GB2597@infradead.org>
+References: <20200609091148.32749-1-piotr.stankiewicz@intel.com>
+ <20200609091650.801-1-piotr.stankiewicz@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Tue, 09 Jun 2020 21:20:43 +0530
-From:   gubbaven@codeaurora.org
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
-        hemantg@codeaurora.org, Johan Hedberg <johan.hedberg@gmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Rocky Liao <rjliao@codeaurora.org>,
-        Rob Herring <robh@kernel.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Claire Chang <tientzu@chromium.org>, yshavit@google.com,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] Bluetooth: hci_qca: Fix double free during SSR timeout
-In-Reply-To: <d3444be6-28e6-bef5-08cf-6038620f65c6@web.de>
-References: <d3444be6-28e6-bef5-08cf-6038620f65c6@web.de>
-Message-ID: <51c4dfe5daf8497bd99a013458d93b92@codeaurora.org>
-X-Sender: gubbaven@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200609091650.801-1-piotr.stankiewicz@intel.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Markus,
+On Tue, Jun 09, 2020 at 11:16:46AM +0200, Piotr Stankiewicz wrote:
+> Seeing as there is shorthand available to use when asking for any type
+> of interrupt, or any type of message signalled interrupt, leverage it.
+> 
+> Signed-off-by: Piotr Stankiewicz <piotr.stankiewicz@intel.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
 
-Sure we will update in next patch set.
+The patch actually adding PCI_IRQ_MSI_TYPES still didn't show up on
+linux-pci.
 
-Regards,
-Lakshmi Narayna.
-On 2020-06-04 23:54, Markus Elfring wrote:
->> Due to race conditions between qca_hw_error and qca_controller_memdump
->> during SSR timeout,the same pointer is freed twice.
-> 
-> This is an unfortunate software situation.
-> 
-> 
->> Which results to double free error.
-> 
-> How do you think about to omit this sentence from the change 
-> description?
-> 
-> 
->> Now a lock is acquired while SSR state moved to timeout.
-> 
-> I suggest to convert this information into an imperative wording.
-> 
-> Would you like to add the tag “Fixes” to the commit message?
-> 
-> Regards,
-> Markus
+But from the person who added PCI_IRQ_*:
+
+NAK to the whole concept of PCI_IRQ_MSI_TYPES, I think this just makes
+the code a lot more confusing.  Especially with the new IMS interrupt
+type, which really is a MSI-like interrupt but certainly shouldn't be
+added to this mask.
