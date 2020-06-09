@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C8CDC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0279C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:20:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 802832067B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:20:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7506E2067B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:20:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591726831;
-	bh=e9HiqkUS9AZSGsSrgo//g785d5RIDBsE9uWjLOnWiEo=;
+	s=default; t=1591726839;
+	bh=X3vyRBVH4/GkTFt4U+nAcaxH2bkam9sS8gFS67sK6EU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AWRRVK2ibVqHS9JNvS5wmG8N2hrj48EZXRKI4TbGJrl/AAraPo0qqL/n2K5tgsT2J
-	 qOtNuaypiJipGtcn3tKBL/gVDqdU89c4Ya+32ubVavoJG5jpjWU1mjyjLtWPQMWe+3
-	 Xbs/uXuAyra3P9da4LFtqGFiTsbo1nqqVKEqvzOA=
+	b=Wg/WXRxwbleSu+W+DQWfi4yOFybFLZcAFl8nXg2fJIkANV+K9FB7IKDzRtM0+0yfm
+	 EPsPOuWBrhs7dAP3fV9hbsHMdI6TkPYIHFfM0eaBPwpcUUzqKP0favPQJWVUEfA92o
+	 ozR+IUQhiUuyZyw0vVO+X6naYK60HJjAy9jN0ffc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388916AbgFISU2 (ORCPT
+        id S1732599AbgFISUi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:20:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34394 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 14:20:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732443AbgFIRtE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:49:04 -0400
+        id S1730870AbgFIRs5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:48:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FE9F207ED;
-        Tue,  9 Jun 2020 17:49:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52725207ED;
+        Tue,  9 Jun 2020 17:48:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591724943;
-        bh=e9HiqkUS9AZSGsSrgo//g785d5RIDBsE9uWjLOnWiEo=;
+        s=default; t=1591724936;
+        bh=X3vyRBVH4/GkTFt4U+nAcaxH2bkam9sS8gFS67sK6EU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HPN01z+/ijMImzECqixuAYh4G8k93haPUs6cPV8gorrNhjEYk5XcyGfZiBGTLmE5d
-         LqTsncz9svRcryii7PhNQ/xb+diiL3ptdUJLnu412KdH+Pm5zuHyLzBGCgI/+Cp/J8
-         yUMfWu0nRU8S5vHuYjdfGH+EOxprxW72VGfCa8CY=
+        b=tfVn5C5DIslctcTwcxp7NUnsQ1YWNwKergUqSaIU2AdZ++i5g3AQKIb0gHdVgQ2VS
+         8hbr1UvYBl7+FWQS4aCUzezdzofmAkmSUSd4Tr6TbsxSHlKZngh5bQ0C655GdmM5Fv
+         GbW4DcE7EOvheWR2NKcC2jhZq5g7PfuXYB27Q3xM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pascal Terjan <pterjan@google.com>
-Subject: [PATCH 4.9 34/42] staging: rtl8712: Fix IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK
-Date:   Tue,  9 Jun 2020 19:44:40 +0200
-Message-Id: <20200609174019.249462402@linuxfoundation.org>
+        stable@vger.kernel.org, Dinghao Liu <dinghao.liu@zju.edu.cn>,
+        Bin Liu <b-liu@ti.com>
+Subject: [PATCH 4.9 31/42] usb: musb: Fix runtime PM imbalance on error
+Date:   Tue,  9 Jun 2020 19:44:37 +0200
+Message-Id: <20200609174018.888846237@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174015.379493548@linuxfoundation.org>
 References: <20200609174015.379493548@linuxfoundation.org>
@@ -58,51 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pascal Terjan <pterjan@google.com>
+From: Dinghao Liu <dinghao.liu@zju.edu.cn>
 
-commit 15ea976a1f12b5fd76b1bd6ff3eb5132fd28047f upstream.
+commit e4befc121df03dc8ed2ac1031c98f9538e244bae upstream.
 
-The value in shared headers was fixed 9 years ago in commit 8d661f1e462d
-("ieee80211: correct IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK macro") and
-while looking at using shared headers for other duplicated constants
-I noticed this driver uses the old value.
+When copy_from_user() returns an error code, there
+is a runtime PM usage counter imbalance.
 
-The macros are also defined twice in this file so I am deleting the
-second definition.
+Fix this by moving copy_from_user() to the beginning
+of this function.
 
-Signed-off-by: Pascal Terjan <pterjan@google.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200523211247.23262-1-pterjan@google.com
+Fixes: 7b6c1b4c0e1e ("usb: musb: fix runtime PM in debugfs")
+
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+Cc: stable@vger.kernel.org
+Signed-off-by: Bin Liu <b-liu@ti.com>
+Link: https://lore.kernel.org/r/20200525025049.3400-7-b-liu@ti.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/rtl8712/wifi.h |    9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+ drivers/usb/musb/musb_debugfs.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
---- a/drivers/staging/rtl8712/wifi.h
-+++ b/drivers/staging/rtl8712/wifi.h
-@@ -471,7 +471,7 @@ static inline unsigned char *get_hdr_bss
- /* block-ack parameters */
- #define IEEE80211_ADDBA_PARAM_POLICY_MASK 0x0002
- #define IEEE80211_ADDBA_PARAM_TID_MASK 0x003C
--#define IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK 0xFFA0
-+#define IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK 0xFFC0
- #define IEEE80211_DELBA_PARAM_TID_MASK 0xF000
- #define IEEE80211_DELBA_PARAM_INITIATOR_MASK 0x0800
+--- a/drivers/usb/musb/musb_debugfs.c
++++ b/drivers/usb/musb/musb_debugfs.c
+@@ -200,6 +200,11 @@ static ssize_t musb_test_mode_write(stru
+ 	u8			test;
+ 	char			buf[18];
  
-@@ -565,13 +565,6 @@ struct ieee80211_ht_addt_info {
- #define IEEE80211_HT_IE_NON_GF_STA_PRSNT	0x0004
- #define IEEE80211_HT_IE_NON_HT_STA_PRSNT	0x0010
++	memset(buf, 0x00, sizeof(buf));
++
++	if (copy_from_user(buf, ubuf, min_t(size_t, sizeof(buf) - 1, count)))
++		return -EFAULT;
++
+ 	pm_runtime_get_sync(musb->controller);
+ 	test = musb_readb(musb->mregs, MUSB_TESTMODE);
+ 	if (test) {
+@@ -208,11 +213,6 @@ static ssize_t musb_test_mode_write(stru
+ 		goto ret;
+ 	}
  
--/* block-ack parameters */
--#define IEEE80211_ADDBA_PARAM_POLICY_MASK 0x0002
--#define IEEE80211_ADDBA_PARAM_TID_MASK 0x003C
--#define IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK 0xFFA0
--#define IEEE80211_DELBA_PARAM_TID_MASK 0xF000
--#define IEEE80211_DELBA_PARAM_INITIATOR_MASK 0x0800
+-	memset(buf, 0x00, sizeof(buf));
 -
- /*
-  * A-PMDU buffer sizes
-  * According to IEEE802.11n spec size varies from 8K to 64K (in powers of 2)
+-	if (copy_from_user(buf, ubuf, min_t(size_t, sizeof(buf) - 1, count)))
+-		return -EFAULT;
+-
+ 	if (strstarts(buf, "force host"))
+ 		test = MUSB_TEST_FORCE_HOST;
+ 
 
 
