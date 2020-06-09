@@ -2,128 +2,93 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0742CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 539FCC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:55:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7EFB20812
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:55:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E7AB20801
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:55:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725348;
-	bh=XqQiaFHrsQiVBWa9z6v2XCVeqMzgZZiT7qjQk9hlmk0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KQHxrMEqhFWv009265Qsd+/rA5nbObItNlheW1ySolBZ704u2ekPYbeH7L/+Au+TT
-	 zf+EPeT40qzW/G7LI/EaYa8rISWeQ2/KhwsSbuJxdVsfAMo9GM47tla0bUhFOtIt+D
-	 XqHv4HHjjVK5OleW5tc/eatJQ8JGqGJFhFeZy7RI=
+	s=default; t=1591725352;
+	bh=OwzI0aRK/h+F2kEP/UMIb+22nVLukoXCw8gc0x42/Tg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=S50VtxQsYLNAsb9VaI0YRnEq/vQAfQsPsJhTqVuK/4We6k+dhrbUK1zpxAG29Tajq
+	 e2M3PGrGkqVpN00Y7zcVH7/9GWVSTpQz1aK4ZhFxuKwYzmEeO9ltrrE+kl/FPF46Jv
+	 kOOTxDDc4CQnnyik3YTJ9QRc2hluCI6vfItjfCpY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733294AbgFIRzq (ORCPT
+        id S1733303AbgFIRzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:55:46 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:53469 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728829AbgFIRyD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:54:03 -0400
-Received: by mail-pj1-f67.google.com with SMTP id i12so1709348pju.3;
-        Tue, 09 Jun 2020 10:54:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=l535t0gtEMhwRmJuEGpot34AcMJTeoyuOmb6/SPxdIo=;
-        b=B5DgajjKiI9YxNKx3abMttvo0hbyCx/XRBLHlugEJpi/G2A/cO0I3u5Zr2SnmTxHjE
-         g072HopjEFjGy03WlGK9aPdmASfcPh1podyiYdgqXTDoPWVQgNVV8ERPtibQQfQrafNg
-         AJb5BSEYLfsi7hdZQdrjFXYbRukuh0zuUmfFcYGa4pVBmhds4rw7WoMek0R0FrPeIJX1
-         WEPkJkirttW0EU7/l2Quh9j4xVNfeidQY4w2zNksYG+tXq4rVrGpRjc3JylJQiBsv6na
-         3YGcNQsJ2HbDhv/hUX0+GHVG22CAvON2xvB9KJYaZshONiroRieWKJKA4VR1tkwBA3Oo
-         Uz+A==
-X-Gm-Message-State: AOAM5329nLo6KWzv2i2WgScI5WdIwpGHz5jz/3QEmaHp/Hz5Z9PGpZVB
-        JTUM+XwFKdJb+0x+il05znU=
-X-Google-Smtp-Source: ABdhPJy/NmjQ3jEGM1rDQ6v1rJGJ2kfZGaht+oE0SOlu7pxqvuGtyZmIoYsQQ37mHn9Ym+N88QSF5w==
-X-Received: by 2002:a17:902:ee93:: with SMTP id a19mr4432067pld.144.1591725241302;
-        Tue, 09 Jun 2020 10:54:01 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id x77sm10745875pfc.4.2020.06.09.10.54.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 10:54:00 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id A13B6403AB; Tue,  9 Jun 2020 17:53:59 +0000 (UTC)
-Date:   Tue, 9 Jun 2020 17:53:59 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Jan Kara <jack@suse.cz>, axboe@kernel.dk, viro@zeniv.linux.org.uk,
-        bvanassche@acm.org, gregkh@linuxfoundation.org,
-        rostedt@goodmis.org, mingo@redhat.com, ming.lei@redhat.com,
-        nstange@suse.de, akpm@linux-foundation.org, mhocko@suse.com,
-        yukuai3@huawei.com, martin.petersen@oracle.com, jejb@linux.ibm.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
-Subject: Re: [PATCH v6 6/6] blktrace: fix debugfs use after free
-Message-ID: <20200609175359.GR11244@42.do-not-panic.com>
-References: <20200608170127.20419-1-mcgrof@kernel.org>
- <20200608170127.20419-7-mcgrof@kernel.org>
- <20200609150602.GA7111@infradead.org>
- <20200609172922.GP11244@42.do-not-panic.com>
- <20200609173218.GA7968@infradead.org>
+        Tue, 9 Jun 2020 13:55:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45618 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733060AbgFIRyJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:54:09 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BF74207C3;
+        Tue,  9 Jun 2020 17:54:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591725248;
+        bh=OwzI0aRK/h+F2kEP/UMIb+22nVLukoXCw8gc0x42/Tg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dQBoevc61MqR2mvxZufws54iVtY4BHHHKvwE6tc+sYimWIYhw0uciCA52Fz/naTVR
+         HheidcfEZQjDCb6nThKcMpduL9dCbsaB5/0a+ii3O9iuf9CnDpnKyBmsnHXez1a3d6
+         TlNYDGgj8qikQFlKQVJzS6fqZfplvbsmZMj9z2WM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Maxim Kochetkov <fido_max@inbox.ru>,
+        Josh Triplett <josh@joshtriplett.org>
+Subject: [PATCH 5.6 29/41] serial: 8250: Enable 16550A variants by default on non-x86
+Date:   Tue,  9 Jun 2020 19:45:31 +0200
+Message-Id: <20200609174114.888204498@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200609174112.129412236@linuxfoundation.org>
+References: <20200609174112.129412236@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200609173218.GA7968@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 10:32:18AM -0700, Christoph Hellwig wrote:
-> On Tue, Jun 09, 2020 at 05:29:22PM +0000, Luis Chamberlain wrote:
-> > Is scsi-generic is the only unwanted ugly child blktrace has to deal
-> > with? For some reason I thought drivers/md/md.c was one but it seems
-> > like it is not. Do we have an easy way to search for these? I think
-> > this would just affect how we express the comment only.
-> 
-> grep for blk_trace_setup.  For all blk devices that setup comes in
-> through the block device ioctl path, and that relies on having a
-> struct block_device and queue.  sg on the other hand calls
-> blk_trace_setup directly with a NULL bdev argument.
+From: Josh Triplett <josh@joshtriplett.org>
 
-Alright, then we should be good.
+commit 15a3f03d5ec0118f1e5db3fc1018686e72744e37 upstream.
 
-> > >  		 */
-> > > -		dir = q->sg_debugfs_dir;
-> > > +		dir = debugfs_create_dir(buts->name, blk_debugfs_root);
-> > > +		bt->dir = dir;
-> > 
-> > The other chicken and egg problem to consider at least in the comments
-> > is that the debugfs directory for these types of devices *have* an
-> > exposed path, but the data structure is rather opaque to the device and
-> > even blktrace.  Fortunately given the recent set of changes around the
-> > q->blk_trace and clarifications around its use we have made it clear now
-> > that so long as hold the q->blk_trace_mutex *and* check q->blk_trace we
-> > *should* not race against two separate creations of debugfs directories,
-> > so I think this is safe, so long as these indpendent drivers don't end
-> > up re-using the same path for some other things later in the future, and
-> > since we have control over what goes under debugfsroot block / I think
-> > we should be good.
-> > 
-> > But I think that the concern for race on names may still be worth
-> > explaining a bit here.
-> 
-> Feel free to add more comments, but please try to keep them short
-> and crisp.  At the some point long comments really distract from what
-> is going on.
+Some embedded devices still use these serial ports; make sure they're
+still enabled by default on architectures more likely to have them, to
+avoid rendering someone's console unavailable.
 
-Sure.
+Reported-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Reported-by: Maxim Kochetkov <fido_max@inbox.ru>
+Fixes: dc56ecb81a0a ("serial: 8250: Support disabling mdelay-filled probes of 16550A variants")
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Josh Triplett <josh@joshtriplett.org>
+Link: https://lore.kernel.org/r/a20b5fb7dd295cfb48160eecf4bdebd76332d67d.1590509426.git.josh@joshtriplett.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Come to think of it, given the above, I think we can also do way with
-the the partition stuff too, and rely on the buts->name too. I'll try
-this out, and test it.
+---
+ drivers/tty/serial/8250/Kconfig |    1 +
+ 1 file changed, 1 insertion(+)
 
-  Luis
+--- a/drivers/tty/serial/8250/Kconfig
++++ b/drivers/tty/serial/8250/Kconfig
+@@ -63,6 +63,7 @@ config SERIAL_8250_PNP
+ config SERIAL_8250_16550A_VARIANTS
+ 	bool "Support for variants of the 16550A serial port"
+ 	depends on SERIAL_8250
++	default !X86
+ 	help
+ 	  The 8250 driver can probe for many variants of the venerable 16550A
+ 	  serial port. Doing so takes additional time at boot.
+
+
