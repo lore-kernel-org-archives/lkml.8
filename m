@@ -6,51 +6,50 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEA3CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 05:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01928C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 05:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBA4E207ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 05:29:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3638207ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 05:29:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728008AbgFIF3n (ORCPT
+        id S1728023AbgFIF3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 01:29:43 -0400
-Received: from ozlabs.org ([203.11.71.1]:51867 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727824AbgFIF33 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 01:29:29 -0400
+        Tue, 9 Jun 2020 01:29:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39974 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727824AbgFIF3t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 01:29:49 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4848C03E969
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 22:29:48 -0700 (PDT)
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 49gzFg2B7xz9sTH; Tue,  9 Jun 2020 15:29:26 +1000 (AEST)
+        id 49gzFy57Skz9sV3; Tue,  9 Jun 2020 15:29:42 +1000 (AEST)
 From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-To:     Nathan Chancellor <natechancellor@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org,
-        Paul Mackerras <paulus@samba.org>,
-        kbuild test robot <lkp@intel.com>,
-        linuxppc-dev@lists.ozlabs.org
-In-Reply-To: <20200413190644.16757-1-natechancellor@gmail.com>
-References: <20200413190644.16757-1-natechancellor@gmail.com>
-Subject: Re: [PATCH] powerpc/wii: Fix declaration made after definition
-Message-Id: <159168031335.1381411.13854674311774532181.b4-ty@ellerman.id.au>
-Date:   Tue,  9 Jun 2020 15:29:23 +1000 (AEST)
+To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>, mpe@ellerman.id.au
+Cc:     apopple@linux.ibm.com, christophe.leroy@c-s.fr,
+        linux-kernel@vger.kernel.org, npiggin@gmail.com,
+        naveen.n.rao@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
+        mikey@neuling.org, paulus@samba.org
+In-Reply-To: <20200602041208.128913-1-ravi.bangoria@linux.ibm.com>
+References: <20200602041208.128913-1-ravi.bangoria@linux.ibm.com>
+Subject: Re: [PATCH] hw_breakpoint: Fix build warnings with clang
+Message-Id: <159168035653.1381411.3943139630396101455.b4-ty@ellerman.id.au>
+Date:   Tue,  9 Jun 2020 15:29:42 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Apr 2020 12:06:45 -0700, Nathan Chancellor wrote:
-> A 0day randconfig uncovered an error with clang, trimmed for brevity:
+On Tue, 2 Jun 2020 09:42:08 +0530, Ravi Bangoria wrote:
+> kbuild test robot reported few build warnings with hw_breakpoint code
+> when compiled with clang[1]. Fix those.
 > 
-> arch/powerpc/platforms/embedded6xx/wii.c:195:7: error: attribute
-> declaration must precede definition [-Werror,-Wignored-attributes]
->         if (!machine_is(wii))
->              ^
-> 
-> [...]
+> [1]: https://lore.kernel.org/linuxppc-dev/202005192233.oi9CjRtA%25lkp@intel.com/
 
 Applied to powerpc/next.
 
-[1/1] powerpc/wii: Fix declaration made after definition
-      https://git.kernel.org/powerpc/c/91ffeaa7e5dd62753e23a1204dc7ecd11f26eadc
+[1/1] hw-breakpoints: Fix build warnings with clang
+      https://git.kernel.org/powerpc/c/ef3534a94fdbdeab4c89d18d0164be2ad5d6dbb7
 
 cheers
