@@ -2,177 +2,181 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12CC3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 21:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE61DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 21:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E87D9206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 21:09:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4520206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 21:15:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591737341;
+	bh=SxQV2Ugt3zKyDWzjvtu7SIHBUY5zdgcRwPzOteTbB8I=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=F2wuVyEe3yJwKM+Fu2FRYZ3BfNvAlpHrFdwfP7kDDZa5fM7RClO/vleDxaVdnnptJ
+	 jgtWnI98+4FQyqg2o1B1x06hku7+N9wSn8/qdiXxpPhDwT+ScWMlTn7Z3RZ8g9rlSS
+	 qNABpT+JDr7u9kR+UHHMbKsMS8gZhqJoWOjGeLZw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727857AbgFIVJ4 (ORCPT
+        id S1726606AbgFIVPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 17:09:56 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:43448 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725993AbgFIVJx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 17:09:53 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jilVC-00051G-GE; Tue, 09 Jun 2020 15:09:46 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jilV9-0008Hl-NF; Tue, 09 Jun 2020 15:09:45 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Nicolas Viennot <Nicolas.Viennot@twosigma.com>
-Cc:     Cyrill Gorcunov <gorcunov@gmail.com>,
-        Adrian Reber <areber@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        =?utf-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>,
-        Kamil Yurtsever <kyurtsever@google.com>,
-        "Dirk Petersen" <dipeit@gmail.com>,
-        Christine Flood <chf@redhat.com>,
-        "Casey Schaufler" <casey@schaufler-ca.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>,
-        Serge Hallyn <serge@hallyn.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "linux-security-module\@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "selinux\@vger.kernel.org" <selinux@vger.kernel.org>,
-        Eric Paris <eparis@parisplace.org>,
-        Jann Horn <jannh@google.com>,
-        "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-References: <20200603162328.854164-1-areber@redhat.com>
-        <20200603162328.854164-2-areber@redhat.com>
-        <20200609184517.GL134822@grain>
-        <cda72e8402244a85862f95ea84ff9204@EXMBDFT11.ad.twosigma.com>
-Date:   Tue, 09 Jun 2020 16:05:35 -0500
-In-Reply-To: <cda72e8402244a85862f95ea84ff9204@EXMBDFT11.ad.twosigma.com>
-        (Nicolas Viennot's message of "Tue, 9 Jun 2020 20:09:49 +0000")
-Message-ID: <875zc00x28.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 9 Jun 2020 17:15:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38444 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726395AbgFIVPi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 17:15:38 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4410206D5;
+        Tue,  9 Jun 2020 21:15:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591737337;
+        bh=SxQV2Ugt3zKyDWzjvtu7SIHBUY5zdgcRwPzOteTbB8I=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=zVbV7IZfMHOC5Q3MDct9SsP4YHZHXvS2i6yQS9lpdNllBBaEqi/NtLf5V83PXjy1u
+         WdbGM+hQ+pwOo/U3rwCTMLbKoty3V84TugkrK9PhV3umD+TB3GkaD3S0rsoaxGhmeg
+         8oPia7m7TbB1ZQCEMWObMBnIXgEBo4bAyIul2RmI=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jilV9-0008Hl-NF;;;mid=<875zc00x28.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+3zNtYhezsH7anMEiBSb9uRTosANJSnWY=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v2 1/3] capabilities: Introduce CAP_CHECKPOINT_RESTORE
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200608094714.382149-1-robert.marko@sartura.hr>
+References: <20200608094714.382149-1-robert.marko@sartura.hr>
+Subject: Re: [PATCH] clk: qcom: ipq4019: fix apss cpu overclocking
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Christian Lamparter <chunkeey@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Robert Marko <robert.marko@sartura.hr>,
+        Luka Perkov <luka.perkov@sartura.hr>
+To:     Robert Marko <robert.marko@sartura.hr>, agross@kernel.org,
+        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mturquette@baylibre.com
+Date:   Tue, 09 Jun 2020 14:15:36 -0700
+Message-ID: <159173733699.242598.1278531930794428520@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nicolas Viennot <Nicolas.Viennot@twosigma.com> writes:
+Quoting Robert Marko (2020-06-08 02:47:15)
+> From: Christian Lamparter <chunkeey@gmail.com>
+>=20
+> There's an interaction issue between the clk changes:"
+> clk: qcom: ipq4019: Add the apss cpu pll divider clock node
+> clk: qcom: ipq4019: remove fixed clocks and add pll clocks
+> " and the cpufreq-dt.
+>=20
+> cpufreq-dt is now spamming the kernel-log with the following:
+>=20
+> [ 1099.190658] cpu cpu0: dev_pm_opp_set_rate: failed to find current OPP
+> for freq 761142857 (-34)
+>=20
+> This only happens on certain devices like the Compex WPJ428
+> and AVM FritzBox!4040. However, other devices like the Asus
+> RT-AC58U and Meraki MR33 work just fine.
+>=20
+> The issue stem from the fact that all higher CPU-Clocks
+> are achieved by switching the clock-parent to the P_DDRPLLAPSS
+> (ddrpllapss). Which is set by Qualcomm's proprietary bootcode
+> as part of the DDR calibration.
+>=20
+> For example, the FB4040 uses 256 MiB Nanya NT5CC128M16IP clocked
+> at round 533 MHz (ddrpllsdcc =3D 190285714 Hz).
+>=20
+> whereas the 128 MiB Nanya NT5CC64M16GP-DI in the ASUS RT-AC58U is
+> clocked at a slightly higher 537 MHz ( ddrpllsdcc =3D 192000000 Hz).
+>=20
+> This patch attempts to fix the issue by modifying
+> clk_cpu_div_round_rate(), clk_cpu_div_set_rate(), clk_cpu_div_recalc_rate=
+()
+> to use a new qcom_find_freq_close() function, which returns the closest
+> matching frequency, instead of the next higher. This way, the SoC in
+> the FB4040 (with its max clock speed of 710.4 MHz) will no longer
+> try to overclock to 761 MHz.
 
->>>  proc_map_files_get_link(struct dentry *dentry,
->>>  			struct inode *inode,
->>>  		        struct delayed_call *done)
->>>  {
->>> -	if (!capable(CAP_SYS_ADMIN))
->>> +	if (!(capable(CAP_SYS_ADMIN) || capable(CAP_CHECKPOINT_RESTORE)))
->>>  		return ERR_PTR(-EPERM);
->
->> First of all -- sorry for late reply. You know, looking into this
->> code more I think this CAP_SYS_ADMIN is simply wrong: for example I
->> can't even fetch links for /proc/self/map_files. Still
->> /proc/$pid/maps (which as well points to the files opened) test for
->> ptrace-read permission. I think we need ptrace-may-attach test here
->> instead of these capabilities (if I can attach to a process I can
->> read any data needed, including the content of the mapped files, if
->> only I'm not missing something obvious).
->
-> Currently /proc/pid/map_files/* have exactly the same permission
-> checks as /proc/pid/fd/*, with the exception of the extra
-> CAP_SYS_ADMIN check. The check originated from the following
-> discussions where 3 security issues are discussed:
-> http://lkml.iu.edu/hypermail/linux/kernel/1505.2/02524.html
-> http://lkml.iu.edu/hypermail/linux/kernel/1505.2/04030.html
->
-> From what I understand, the extra CAP_SYS_ADMIN comes from the
-> following issues:
+Why are the OPP tables not properly indicating the frequencies that
+should be chosen? The rounding policy should presumably be matching the
+frequency exactly vs. relying on some sort of rounding policy to fix it.
 
-> 1. Being able to open dma-buf / kdbus region (referred in the
-> referenced email as problem #1). I don't fully understand what the
-> dangers are, but perhaps we could do CAP_SYS_ADMIN check only for such
-> dangerous files, as opposed to all files.
+>=20
+> Fixes: d83dcacea18 ("clk: qcom: ipq4019: Add the apss cpu pll divider clo=
+ck node")
+> Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+> Signed-off-by: John Crispin <john@phrozen.org>
+> Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+> Cc: Luka Perkov <luka.perkov@sartura.hr>
+> ---
+> Changes from v1 to v2:
 
-I don't know precisely the concern but my memory is that some drivers do
-interesting things when mmaped.  Possibly even to changing the vm_file.
+Please update subject of the patch to indicate patch version (i.e.
+PATCHv2 and next time PATCHv3, not just PATCH).
 
-I think that is worth running to the ground and figuring out in the
-context of checkpoint/restart because the ordinary checkpoint/restart
-code won't be able deal with them either.
+> * Resolve warnings discovered by the kbot
+> * Return the return of regmap_update_bits instead of not using it at all
+>=20
+>  drivers/clk/qcom/gcc-ipq4019.c | 36 ++++++++++++++++++++++++++++++----
+>  1 file changed, 32 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/clk/qcom/gcc-ipq4019.c b/drivers/clk/qcom/gcc-ipq401=
+9.c
+> index ef5137fd50f3..62fa17a4291c 100644
+> --- a/drivers/clk/qcom/gcc-ipq4019.c
+> +++ b/drivers/clk/qcom/gcc-ipq4019.c
+> @@ -1243,6 +1243,29 @@ static const struct clk_fepll_vco gcc_fepll_vco =
+=3D {
+>         .reg =3D 0x2f020,
+>  };
+> =20
+> +
+> +static const struct freq_tbl *qcom_find_freq_close(const struct freq_tbl=
+ *f,
 
-So I vote for figuring that case out and dealing with it.
+Please call it qcom_find_freq_closest() instead.
 
+> +                                            unsigned long rate)
+> +{
+> +       const struct freq_tbl *last =3D NULL;
+> +
+> +       for ( ; f->freq; f++) {
+> +               if (rate =3D=3D f->freq)
+> +                       return f;
+> +
+> +               if (f->freq > rate) {
+> +                       if (!last ||
+> +                          (f->freq - rate) < (rate - last->freq))
 
-> 2. /proc/pid/fd/* is already a security hole (Andy says "I hope to fix
-> that some day"). He essentially says that it's not because fds are
-> insecure that map_files should be too. He seems to claim that mapped
-> files that are then closed seems to be a bigger concern than other
-> opened files. However, in the present time (5 years after these email
-> conversations), the fd directory does not have the CAP_SYS_ADMIN check
-> which doesn't convinces me that the holes of /proc/pid/fd/* are such a
-> big of a deal. I'm not entirely sure what security issue Andy refers
-> to, but, I understand something along the lines of: Some process gets
-> an fd of a file read-only opened (via a unix socket for example, or
-> after a chroot), and gets to re-open the file in write access via
-> /proc/self/fd/N to do some damage.
+> +                               return f;
+> +                       else
+> +                               return last;
 
-I would hope the other permission checks on such a file will prevent
-some of that nonsense.  But definitely worth taking a hard look at.
+	if (...)
+		return ...;
+	else
 
-> 3. Being able to ftruncate a file after a chroot+privilege drop. I may
-> be wrong, but if privileges were dropped, then there's no reason that
-> the then unprivileged user would have write access to the mmaped file
-> inode. Seems a false problem.
+should be replaced with
 
-Yes.
+	if (...)
+		return ...;
 
-> It turns out that some of these concerns have been addressed with the
-> introduction of memfd with seals, introduced around the same time
-> where the map_files discussions took place. These seals allow one to
-> share write access of an mmap region to an unsecure program, without
-> fearing of getting a SIGBUS because the unsecure program could call
-> ftruncate() on the fd. More on that at
-> https://lwn.net/Articles/593918/ . Also, that article says "There are
-> a number of fairly immediate use cases for the sealing functionality
-> in general. Graphics drivers could use it to safely receive buffers
-> from applications. The upcoming kdbus transport can benefit from
-> sealing.". This rings a bell with problem #1. Perhaps memfd is a
-> solution to Andy's concerns?
+	...
 
-> Overall, I think the CAP_SYS_ADMIN map_files/ extra check compared to
-> fd/ does not improve security in practice. Fds will be given to
-> insecure programs. Better security can be achieved with memfd seals,
-> and sane permissioning on files, regardless if they were once closed.
+but I also wonder if it would be clearer with some sort of 'break' and
+then 'return f' type of logic.
 
-I would love to see the work put in to safely relax the permission check
-from capable to ns_capable.  Which is just dealing with point 1.
+> +               }
+> +               last =3D f;
+> +       }
+> +
+> +       return last;
+> +}
 
-There might be some other assumptions that a process can't get at mmaped
-regions.
+Please relocate this to common.c in the qcom directory.
 
-Eric
-
-
-
+> +
+>  /*
+>   * Round rate function for APSS CPU PLL Clock divider.
+>   * It looks up the frequency table and returns the next higher frequency
