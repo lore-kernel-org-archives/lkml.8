@@ -2,142 +2,105 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEBE0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81699C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:25:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A628E207ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:23:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 583F1207ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:25:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g63E3uEV"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="g7kdY3Pz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728625AbgFIKXp (ORCPT
+        id S1727874AbgFIKZh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 06:23:45 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:22942 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727005AbgFIKX1 (ORCPT
+        Tue, 9 Jun 2020 06:25:37 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:65338 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728629AbgFIKYr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 06:23:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591698205;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=gfMNYwLx5N6zaEsK3dGHOQSxpMDlp05cCXAIGAvVa3o=;
-        b=g63E3uEVCB0OSp3CeMXVshIi1a1l5g1hD8fQWMV3fuPFQnIgOjjE5SC3iA638Jycfp6Qkm
-        SEsuC0rP9IZF/2ScEWfy79DfJnm6Bo8S+IFnAJMEyalpE3XPUIgeY4A0HGXDbPs5CthUTK
-        N2BOzYUO+3H2cMUll5Mjx0w3vWez1L8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-112-hpWuwiSnOzGn3_kXSQQYIg-1; Tue, 09 Jun 2020 06:23:23 -0400
-X-MC-Unique: hpWuwiSnOzGn3_kXSQQYIg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 116A9835B40;
-        Tue,  9 Jun 2020 10:23:22 +0000 (UTC)
-Received: from [10.36.114.103] (ovpn-114-103.ams2.redhat.com [10.36.114.103])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3B28E768C1;
-        Tue,  9 Jun 2020 10:23:18 +0000 (UTC)
-Subject: Re: [PATCH] virtio_mem: fix printk format
-To:     "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org
-References: <20200609095453.865827-1-mst@redhat.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABtCREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT6JAlgEEwEIAEICGwMFCQlmAYAGCwkIBwMCBhUI
- AgkKCwQWAgMBAh4BAheAFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl3pImkCGQEACgkQTd4Q
- 9wD/g1o+VA//SFvIHUAvul05u6wKv/pIR6aICPdpF9EIgEU448g+7FfDgQwcEny1pbEzAmiw
- zAXIQ9H0NZh96lcq+yDLtONnXk/bEYWHHUA014A1wqcYNRY8RvY1+eVHb0uu0KYQoXkzvu+s
- Dncuguk470XPnscL27hs8PgOP6QjG4jt75K2LfZ0eAqTOUCZTJxA8A7E9+XTYuU0hs7QVrWJ
- jQdFxQbRMrYz7uP8KmTK9/Cnvqehgl4EzyRaZppshruKMeyheBgvgJd5On1wWq4ZUV5PFM4x
- II3QbD3EJfWbaJMR55jI9dMFa+vK7MFz3rhWOkEx/QR959lfdRSTXdxs8V3zDvChcmRVGN8U
- Vo93d1YNtWnA9w6oCW1dnDZ4kgQZZSBIjp6iHcA08apzh7DPi08jL7M9UQByeYGr8KuR4i6e
- RZI6xhlZerUScVzn35ONwOC91VdYiQgjemiVLq1WDDZ3B7DIzUZ4RQTOaIWdtXBWb8zWakt/
- ztGhsx0e39Gvt3391O1PgcA7ilhvqrBPemJrlb9xSPPRbaNAW39P8ws/UJnzSJqnHMVxbRZC
- Am4add/SM+OCP0w3xYss1jy9T+XdZa0lhUvJfLy7tNcjVG/sxkBXOaSC24MFPuwnoC9WvCVQ
- ZBxouph3kqc4Dt5X1EeXVLeba+466P1fe1rC8MbcwDkoUo65Ag0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAGJAiUEGAECAA8FAlXLn5ECGwwFCQlmAYAACgkQTd4Q
- 9wD/g1qA6w/+M+ggFv+JdVsz5+ZIc6MSyGUozASX+bmIuPeIecc9UsFRatc91LuJCKMkD9Uv
- GOcWSeFpLrSGRQ1Z7EMzFVU//qVs6uzhsNk0RYMyS0B6oloW3FpyQ+zOVylFWQCzoyyf227y
- GW8HnXunJSC+4PtlL2AY4yZjAVAPLK2l6mhgClVXTQ/S7cBoTQKP+jvVJOoYkpnFxWE9pn4t
- H5QIFk7Ip8TKr5k3fXVWk4lnUi9MTF/5L/mWqdyIO1s7cjharQCstfWCzWrVeVctpVoDfJWp
- 4LwTuQ5yEM2KcPeElLg5fR7WB2zH97oI6/Ko2DlovmfQqXh9xWozQt0iGy5tWzh6I0JrlcxJ
- ileZWLccC4XKD1037Hy2FLAjzfoWgwBLA6ULu0exOOdIa58H4PsXtkFPrUF980EEibUp0zFz
- GotRVekFAceUaRvAj7dh76cToeZkfsjAvBVb4COXuhgX6N4pofgNkW2AtgYu1nUsPAo+NftU
- CxrhjHtLn4QEBpkbErnXQyMjHpIatlYGutVMS91XTQXYydCh5crMPs7hYVsvnmGHIaB9ZMfB
- njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
- FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
-Organization: Red Hat GmbH
-Message-ID: <0fd18b65-c818-016b-be53-6be6ce1817ad@redhat.com>
-Date:   Tue, 9 Jun 2020 12:23:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 9 Jun 2020 06:24:47 -0400
+X-UUID: ccdb7e9ef7a6440ea7d68c8ca41ac69e-20200609
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=Pphig5E72pSzrTgo7laaj0FG7wdPeUVc8Qwu7DTlR6Y=;
+        b=g7kdY3Pz8YBtxq3Fk1Gly9EAJn6tm83QMF2FvZwRWykYxBcTr6HmXPOEC7DHBzOMen3aeICCoJDL1hoTyolp+IH8A00DRVNMDuJwbw3cEBGC/LTpuS4yvUH9SfWcS7s1mDXFlhU3wVzuJdbMUgbYmnZgDcPn/fOnHRyNF839ROc=;
+X-UUID: ccdb7e9ef7a6440ea7d68c8ca41ac69e-20200609
+Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw02.mediatek.com
+        (envelope-from <neal.liu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1948155468; Tue, 09 Jun 2020 18:24:33 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 9 Jun 2020 18:24:30 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 9 Jun 2020 18:24:30 +0800
+From:   Neal Liu <neal.liu@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Neal Liu <neal.liu@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>
+Subject: [PATCH 1/2] dt-bindings: devapc: add bindings for devapc-mt6873
+Date:   Tue, 9 Jun 2020 18:24:20 +0800
+Message-ID: <1591698261-22639-2-git-send-email-neal.liu@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <1591698261-22639-1-git-send-email-neal.liu@mediatek.com>
+References: <1591698261-22639-1-git-send-email-neal.liu@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <20200609095453.865827-1-mst@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 90D7BBE212CB78B6A32409EBD84AF1D7145490B753E88B3BF2C71BDBC1052BBA2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09.06.20 11:54, Michael S. Tsirkin wrote:
-> Fixes: 676fa9ba893e ("virtio_mem: convert device block size into 64bit")
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> ---
->  drivers/virtio/virtio_mem.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
-> index 7b1bece8a331..50c689f25045 100644
-> --- a/drivers/virtio/virtio_mem.c
-> +++ b/drivers/virtio/virtio_mem.c
-> @@ -1717,8 +1717,8 @@ static int virtio_mem_init(struct virtio_mem *vm)
->  		 (unsigned long long)vm->device_block_size);
->  	dev_info(&vm->vdev->dev, "memory block size: 0x%lx",
->  		 memory_block_size_bytes());
-> -	dev_info(&vm->vdev->dev, "subblock size: 0x%x",
-> -		 vm->subblock_size);
-> +	dev_info(&vm->vdev->dev, "subblock size: 0x%llx",
-> +		 (unsigned long long)vm->subblock_size);
->  	if (vm->nid != NUMA_NO_NODE)
->  		dev_info(&vm->vdev->dev, "nid: %d", vm->nid);
->  
-> 
-
-Acked-by: David Hildenbrand <david@redhat.com>
-
--- 
-Thanks,
-
-David / dhildenb
+QWRkIGJpbmRpbmdzIGZvciBNVDY4NzMgZGV2YXBjLg0KDQpTaWduZWQtb2ZmLWJ5OiBOZWFsIExp
+dSA8bmVhbC5saXVAbWVkaWF0ZWsuY29tPg0KLS0tDQogLi4uL3NvYy9tZWRpYXRlay9kZXZhcGMv
+ZGV2YXBjLW10Njg3My55YW1sICAgICAgICAgfCAgIDYxICsrKysrKysrKysrKysrKysrKysrDQog
+MSBmaWxlIGNoYW5nZWQsIDYxIGluc2VydGlvbnMoKykNCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9tZWRpYXRlay9kZXZhcGMvZGV2YXBj
+LW10Njg3My55YW1sDQoNCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3Mvc29jL21lZGlhdGVrL2RldmFwYy9kZXZhcGMtbXQ2ODczLnlhbWwgYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL21lZGlhdGVrL2RldmFwYy9kZXZhcGMtbXQ2ODcz
+LnlhbWwNCm5ldyBmaWxlIG1vZGUgMTAwNjQ0DQppbmRleCAwMDAwMDAwLi43M2ExNGI4ZA0KLS0t
+IC9kZXYvbnVsbA0KKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9t
+ZWRpYXRlay9kZXZhcGMvZGV2YXBjLW10Njg3My55YW1sDQpAQCAtMCwwICsxLDYxIEBADQorIyBT
+UERYLUxpY2Vuc2UtSWRlbnRpZmllcjogKEdQTC0yLjAgT1IgQlNELTItQ2xhdXNlKQ0KKyMgIyBD
+b3B5cmlnaHQgMjAyMCBNZWRpYVRlayBJbmMuDQorJVlBTUwgMS4yDQorLS0tDQorJGlkOiAiaHR0
+cDovL2RldmljZXRyZWUub3JnL3NjaGVtYXMvc29jL21lZGlhdGVrL2RldmFwYy9kZXZhcGMtbXQ2
+ODczLnlhbWwjIg0KKyRzY2hlbWE6ICJodHRwOi8vZGV2aWNldHJlZS5vcmcvbWV0YS1zY2hlbWFz
+L2NvcmUueWFtbCMiDQorDQordGl0bGU6IE1lZGlhVGVrIE1UNjg3MyBEZXZpY2UgQWNjZXNzIFBl
+cm1pc3Npb24gQ29udHJvbCBkcml2ZXINCisNCitkZXNjcmlwdGlvbjogfA0KKyAgTWVkaWFUZWsg
+TVQ2ODczIGJ1cyBmcmFicmljIHByb3ZpZGVzIFRydXN0Wm9uZSBzZWN1cml0eSBzdXBwb3J0IGFu
+ZCBkYXRhDQorICBwcm90ZWN0aW9uIHRvIHByZXZlbnQgc2xhdmVzIGZyb20gYmVpbmcgYWNjZXNz
+ZWQgYnkgdW5leHBlY3RlZCBtYXN0ZXJzLg0KKyAgVGhlIHNlY3VyaXR5IHZpb2xhdGlvbnMgYXJl
+IGxvZ2dlZCBhbmQgc2VudCB0byB0aGUgcHJvY2Vzc29yIGZvciBmdXJ0aGVyDQorICBhbmFseXNp
+cyBhbmQgY291bnRlcm1lYXN1cmVzLg0KKw0KK21haW50YWluZXI6DQorICAtIE5lYWwgTGl1IDxu
+ZWFsLmxpdUBtZWRpYXRlay5jb20+DQorDQorcHJvcGVydGllczoNCisgIGNvbXBhdGlibGU6DQor
+ICAgIGVudW06DQorICAgICAgLSBtZWRpYXRlayxtdDY4NzMtZGV2YXBjDQorDQorICByZWc6DQor
+ICAgIGRlc2NyaXB0aW9uOiBUaGUgYmFzZSBhZGRyZXNzIG9mIGRldmFwYyByZWdpc3RlciBiYW5r
+DQorICAgIG1heEl0ZW1zOiA1DQorDQorICBpbnRlcnJ1cHRzOg0KKyAgICBkZXNjcmlwdGlvbjog
+QSBzaW5nbGUgaW50ZXJydXB0IHNwZWNpZmllcg0KKyAgICBtYXhJdGVtczogMQ0KKw0KKyAgY2xv
+Y2tzOg0KKyAgICBkZXNjcmlwdGlvbjogQ29udGFpbnMgbW9kdWxlIGNsb2NrIHNvdXJjZSBhbmQg
+Y2xvY2sgbmFtZXMNCisgICAgbWF4SXRlbXM6IDENCisNCisgIGNsb2NrLW5hbWVzOg0KKyAgICBk
+ZXNjcmlwdGlvbjogTmFtZXMgb2YgdGhlIGNsb2NrcyBsaXN0IGluIGNsb2NrcyBwcm9wZXJ0eQ0K
+KyAgICBtYXhJdGVtczogMQ0KKw0KK3JlcXVpcmVkOg0KKyAgLSBjb21wYXRpYmxlDQorICAtIHJl
+Zw0KKyAgLSBpbnRlcnJ1cHRzDQorICAtIGNsb2Nrcw0KKyAgLSBjbG9jay1uYW1lcw0KKw0KK2Fk
+ZGl0aW9uYWxQcm9wZXJ0aWVzOiBmYWxzZQ0KKw0KK2V4YW1wbGVzOg0KKyAgLSB8DQorICAgIGRl
+dmFwYzogZGV2YXBjQDEwMjA3MDAwIHsNCisgICAgICAgICAgICBjb21wYXRpYmxlID0gIm1lZGlh
+dGVrLG10Njg3My1kZXZhcGMiOw0KKyAgICAgICAgICAgIHJlZyA9IDwwIDB4MTAyMDcwMDAgMCAw
+eDEwMDA+LA0KKyAgICAgICAgICAgICAgICAgIDwwIDB4MTAyNzQwMDAgMCAweDEwMDA+LA0KKyAg
+ICAgICAgICAgICAgICAgIDwwIDB4MTAyNzUwMDAgMCAweDEwMDA+LA0KKyAgICAgICAgICAgICAg
+ICAgIDwwIDB4MTEwMjAwMDAgMCAweDEwMDA+LA0KKyAgICAgICAgICAgICAgICAgIDwwIDB4MTAy
+MGUwMDAgMCAweDEwMDA+Ow0KKyAgICAgICAgICAgIGludGVycnVwdHMgPSA8R0lDX1NQSSAxODcg
+SVJRX1RZUEVfTEVWRUxfSElHSCAwPjsNCisgICAgICAgICAgICBjbG9ja3MgPSA8JmluZnJhY2Zn
+IENMS19JTkZSQV9ERVZJQ0VfQVBDPjsNCisgICAgICAgICAgICBjbG9jay1uYW1lcyA9ICJkZXZh
+cGMtaW5mcmEtY2xvY2siOw0KKyAgICB9Ow0KLS0gDQoxLjcuOS41DQo=
 
