@@ -2,126 +2,173 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A7EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBCD1C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D91C2074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:19:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2DB5206A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:22:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ffYgl05p"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VuQsL7AB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729870AbgFINTI (ORCPT
+        id S1727928AbgFINWB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 09:19:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55210 "EHLO
+        Tue, 9 Jun 2020 09:22:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728903AbgFINOb (ORCPT
+        with ESMTP id S1728082AbgFINV6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 09:14:31 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42421C03E97C;
-        Tue,  9 Jun 2020 06:14:30 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id s1so24995711ljo.0;
-        Tue, 09 Jun 2020 06:14:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=GpFtIVnKnNndfebpkGzqwkaxd/wyRN7pW9EKTYyaD+o=;
-        b=ffYgl05pncbdubAvxWR63NSZaAmUmQNPcFogjQbb+PcGJRKuP8Iq/ynaiJSynit/xg
-         keR+9mZfb+LT6ii5FdCO/lBy9nE/++3QDwTMdUwltsZ5pAKMoT9XYkt3z4nHItDpv3Ir
-         0qmVkGd6cqv+vkib9r0Xd+yR8tOef58QmS/0k4be7cUsNgxeZ/jn+0LFdn6PFu6n14nt
-         q7hPh1Jugmrq4m4erOiKWDXBLb2SCJylG30nC61UA3EcVkxpjArkVw8FpOrzQRtlghtI
-         rtLoYVULmY1s8AakiUWvvvk9Pcm179rk9SFjhpkTk6vQCIKeL6zHGKzo+Ek/dkRR2DNB
-         JG/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=GpFtIVnKnNndfebpkGzqwkaxd/wyRN7pW9EKTYyaD+o=;
-        b=CnmUNTBg5f11AdYghJBW0VhvBzAG78EUtd7o9rlqTfpULa8/3AUHzYwqixnZ6sCxM/
-         2s9YXHMix5UU34lzBAsfQ73jdAml8Nm0LMlxs9pq4b4AE03NiNVZFKD6vwmsDz40INIT
-         Pz5F/1pO24wPz+2BEnF2JP+eQIeH8XR/hLRL2junD8vW9FMc5OFXnUy6rAUakiaCEQYT
-         Rq7sUr/os1QlzJt10dcDRz0Wc8sjHd3rksCEirZ5ccH8BCh2C5wUIP8ZCu3Zvq9hqUF+
-         kLZcqLqjAUKlzf1m6ARtV0KJSr1bF7q4JNWlsar+/FpOF5X6njMUilGE5jMecCAW/qea
-         CYaw==
-X-Gm-Message-State: AOAM5327B9gje5y+VMZXqW8GdQTXaxOUq4gg6FzG3PNPXw6WgHJa5N7v
-        MRP/61Zo6OhJjT2AiyRSbGo=
-X-Google-Smtp-Source: ABdhPJxejwOTAdW+uqBjAbDKAokXmYlrwzxZ/NkKhjhobM21Hk8tYt+VAfsUsH4qHeMB+LmaIWHrgQ==
-X-Received: by 2002:a2e:b003:: with SMTP id y3mr13797412ljk.78.1591708468663;
-        Tue, 09 Jun 2020 06:14:28 -0700 (PDT)
-Received: from localhost.localdomain (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.gmail.com with ESMTPSA id l22sm4323522lji.120.2020.06.09.06.14.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 06:14:28 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Mikko Perttunen <cyndis@kapsi.fi>
-Cc:     =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@samsung.com>,
-        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH v4 03/37] clk: tegra: Export Tegra20 EMC kernel symbols
-Date:   Tue,  9 Jun 2020 16:13:30 +0300
-Message-Id: <20200609131404.17523-4-digetx@gmail.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200609131404.17523-1-digetx@gmail.com>
-References: <20200609131404.17523-1-digetx@gmail.com>
+        Tue, 9 Jun 2020 09:21:58 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C464AC05BD1E;
+        Tue,  9 Jun 2020 06:21:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=V3d421xQlXEJCML3wEa7LbtDgAd0pPCbPZf0itcOVZ8=; b=VuQsL7ABDfE4mueZRE489uDo1M
+        eM4Y9jTz9gyCzJYdzmiTdSNVyu5pjPS5CXs09Wknm2mH5UOFrqyk0xrX5l9H/cklBqVT9ykRBV7C3
+        IWhoIkgrYD2Z19w9mu1XA81RLZNh9R5A+ECNnKPjJWWE+fQRDKjuGbRrTxpYH+4fXq/APDQPul2fj
+        K1xei6kJzZlH8DNagtemxgNhvyzuKJnGcBjbP4gos3FLszISbop9vUZMawb8rdI6f8W5+bWJT+8xT
+        ss0Xmb5GpKQ8vqysTU1ndMnkyw5LHcveHtKtKWo9pu6wtW3oiqIr3oyHD91t8ghef9wbBg0O+qxaY
+        GeHEHHEg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jieCN-0007n5-3Y; Tue, 09 Jun 2020 13:21:51 +0000
+Date:   Tue, 9 Jun 2020 06:21:51 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Scott Branden <scott.branden@broadcom.com>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Wolfram Sang <wsa@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH v7 1/8] fs: introduce kernel_pread_file* support
+Message-ID: <20200609132151.GC19604@bombadil.infradead.org>
+References: <20200606050458.17281-1-scott.branden@broadcom.com>
+ <20200606050458.17281-2-scott.branden@broadcom.com>
+ <20200606155216.GP19604@bombadil.infradead.org>
+ <ea16c19e-bd60-82ec-4825-05e233667f9f@broadcom.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <ea16c19e-bd60-82ec-4825-05e233667f9f@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We're going to modularize Tegra EMC drivers and some of the EMC clk driver
-symbols need to be exported, let's export them.
+On Mon, Jun 08, 2020 at 03:29:22PM -0700, Scott Branden wrote:
+> Hi Matthew,
+> 
+> I am requesting the experts in the filesystem subsystem to come to a
+> consensus here.
+> This is not my area of expertise at all but every time I have addressed all
+> of the
+> outstanding concerns someone else comes along and raises another one.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/clk/tegra/clk-tegra20-emc.c | 3 +++
- 1 file changed, 3 insertions(+)
+I appreciate it's frustrating for you, but this is the nature of
+patch review.  I haven't even read the first five or so submissions.
+I can see them in my inbox and they look like long threads.  I'm not
+particularly inclined to read them.  I happened to read v6, and reacted
+to the API being ugly.
 
-diff --git a/drivers/clk/tegra/clk-tegra20-emc.c b/drivers/clk/tegra/clk-tegra20-emc.c
-index 03bf0009a33c..dd74b8543bf1 100644
---- a/drivers/clk/tegra/clk-tegra20-emc.c
-+++ b/drivers/clk/tegra/clk-tegra20-emc.c
-@@ -13,6 +13,7 @@
- #include <linux/clk-provider.h>
- #include <linux/clk/tegra.h>
- #include <linux/err.h>
-+#include <linux/export.h>
- #include <linux/io.h>
- #include <linux/kernel.h>
- #include <linux/slab.h>
-@@ -235,6 +236,7 @@ void tegra20_clk_set_emc_round_callback(tegra20_clk_emc_round_cb *round_cb,
- 		emc->cb_arg = cb_arg;
- 	}
- }
-+EXPORT_SYMBOL_GPL(tegra20_clk_set_emc_round_callback);
- 
- bool tegra20_clk_emc_driver_available(struct clk_hw *emc_hw)
- {
-@@ -291,3 +293,4 @@ int tegra20_clk_prepare_emc_mc_same_freq(struct clk *emc_clk, bool same)
- 
- 	return 0;
- }
-+EXPORT_SYMBOL_GPL(tegra20_clk_prepare_emc_mc_same_freq);
--- 
-2.26.0
+> Please see me comments below.
+> 
+> On 2020-06-06 8:52 a.m., Matthew Wilcox wrote:
+> > On Fri, Jun 05, 2020 at 10:04:51PM -0700, Scott Branden wrote:
+> > > -int kernel_read_file(struct file *file, void **buf, loff_t *size,
+> > > -		     loff_t max_size, enum kernel_read_file_id id)
+> > > -{
+> > > -	loff_t i_size, pos;
+> Please note that how checkpatch generated the diff here.  The code
+> modifications
+> below are for a new function kernel_pread_file, they do not modify the
+> existing API
+> kernel_read_file.  kernel_read_file requests the ENTIRE file is read.  So we
+> need to be
+> able to differentiate whether it is ok to read just a portion of the file or
+> not.
 
+You've gone about this in entirely the wrong way though.  This enum to
+read the entire file or a partial is just bad design.
+
+> > > +int kernel_pread_file(struct file *file, void **buf, loff_t *size,
+> > > +		      loff_t pos, loff_t max_size,
+> > > +		      enum kernel_pread_opt opt,
+> > > +		      enum kernel_read_file_id id)
+> So, to share common code a new kernel_pread_opt needed to be added in order
+> to specify whether
+> it was ok to read a partial file or not, and provide an offset into the file
+> where to begin reading.
+> The meaning of parameters doesn't change in the bonkers API. max_size still
+> means max size, etc.
+> These options are needed so common code can be shared with kernel_read_file
+> api.
+
+Does pread() in userspace take seven parameters?  No.  It takes four.
+What you're doing is taking all the complexity of all of the interfaces
+and stuffing it all down into the bottom function instead of handling
+some of the complexity in the wrapper functions.  For example, you
+could support the functionality of 'max_size' in kernel_read_file()
+and leave it out of the kernel_pread_file() interface.
+
+> > I think what we actually want is:
+> > 
+> > ssize_t vmap_file_range(struct file *, loff_t start, loff_t end, void **bufp);
+> > void vunmap_file_range(struct file *, void *buf);
+> > 
+> > If end > i_size, limit the allocation to i_size.  Returns the number
+> > of bytes allocated, or a negative errno.  Writes the pointer allocated
+> > to *bufp.  Internally, it should use the page cache to read in the pages
+> > (taking appropriate reference counts).  Then it maps them using vmap()
+> > instead of copying them to a private vmalloc() array.
+> > kernel_read_file() can be converted to use this API.  The users will
+> > need to be changed to call kernel_read_end(struct file *file, void *buf)
+> > instead of vfree() so it can call allow_write_access() for them.
+> > 
+> > vmap_file_range() has a lot of potential uses.  I'm surprised we don't
+> > have it already, to be honest.
+> Such a change sounds like it could be done in a later patch series.
+> It's an incomplete solution.  It would work for some of the needed
+> operations but not others.
+> For kernel_read_file, I don't see how in your new API it indicates if the
+> end of the file was reached or not.
+
+That's the point.  It doesn't.  If a caller needs that, then they can
+figure that out themselves.
+
+> Also, please note that buffers may be preallocated  and shouldn't be freed
+> by the kernel in some cases and
+> allocated and freed by the kernel in others.
+
+You're trying to build the swiss army knife of functions.  Swiss army
+knives are useful, but they're no good for carving a steak.
+
+> I would like the experts here to decide on what needs to be done so we can
+> move forward
+> and get kernel_pread_file support added soon.
+
+You know, you haven't even said _why_ you want this.  The cover letter
+just says "I want this", and doesn't say why it's needed.
