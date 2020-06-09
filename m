@@ -2,101 +2,155 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3491AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 03:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A81D0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 03:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A76D2078C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 03:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75FC9206A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 03:15:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cb17Qv/f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbgFIDLr (ORCPT
+        id S1727038AbgFIDPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 23:11:47 -0400
-Received: from mga03.intel.com ([134.134.136.65]:53709 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726803AbgFIDLq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 23:11:46 -0400
-IronPort-SDR: oFim8bOGTTgZzSbZxLh5YJzrhekEXpzEKnutpZjEQQ1dFOsA4lD/JtvTzbQAmsoINJyWJTOV6o
- zvpkQgm/rD3A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2020 20:11:46 -0700
-IronPort-SDR: 41gQ4+UFJ1LwzdlsxqTdkKI9KQT7UgNLO+3RdRxfrxQgI3+2UblSq+sKyvzJmVtsKkAzmsz5sK
- aITrlSyXvLtQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,490,1583222400"; 
-   d="scan'208";a="349380289"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 08 Jun 2020 20:11:46 -0700
-Received: from [10.213.44.24] (unknown [10.213.44.24])
-        by linux.intel.com (Postfix) with ESMTP id BEFB75805EF;
-        Mon,  8 Jun 2020 20:11:44 -0700 (PDT)
-Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
-Subject: Re: FATAL: drivers/phy/intel/phy-intel-emmc: sizeof(struct
- of_device_id)=200 is not a modulo of the size of section
- __mod_of__<identifier>_device_table=512.
-To:     kernel test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org, clang-built-linux@googlegroups.com,
-        linux-kernel@vger.kernel.org,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>
-References: <202006081031.R2VosrSx%lkp@intel.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <8fda2c12-a243-043f-3f56-b70fdb0fb033@linux.intel.com>
-Date:   Tue, 9 Jun 2020 11:11:42 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Mon, 8 Jun 2020 23:15:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47570 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726884AbgFIDPM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 23:15:12 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 141A8C03E969
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 20:15:11 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id x207so9456307pfc.5
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 20:15:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=CqK6Guno3gXrwz3/D+TZMYLBJMF7ZONm8ZADtpfFYTo=;
+        b=cb17Qv/fm4r8TM/G1iFjkEL5MMZZSRhxRy0GlM37eJFvmhiQm9k/8fhwKL3RXhEKg9
+         muyVFf05aksn2h/ImMZQTkY2kN7TC0/vW7XjWMu9tL+q5cdUBGWKX/bWlc40na4c0zA1
+         zfNV3tqmo78rbn7r9XiltMsN/IPKJRtVAO71o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=CqK6Guno3gXrwz3/D+TZMYLBJMF7ZONm8ZADtpfFYTo=;
+        b=qwAMIBCHKXTN6C8nIAuk1snfmz+lGvnX2r2Ra1FOn/mNBJ6NaPZgnJq9JPDFeWnCnY
+         nZcDziMItBayomq9DEMGNUY4SudmYUe6TGAdab8YZhBBmWTa+U9oqE/Wh/NvtIorisJL
+         fpxJeFX6JcfhyZ+Ito5bbsIX77luS9MNMa4EpJds0q7fsl6XeTk+IEbGTMqdtj/RQwBQ
+         QE14j/UEkjoBiZ1EH65gtbDPXJZTop9AKStoSxpUGR+TBVJR5JsDegafhU7BnUIdjMis
+         vXedISlb3tHGVgh+LNW+JX+ku2mwi9U1VXXogtbogzcCrrAkuTVWeCmgNyysWDoXz4Ef
+         9ijw==
+X-Gm-Message-State: AOAM531b162+bQGLqURiagO+vk2XA8ZLq0WqXFOO4Gox7zTmqQR4+ZR0
+        vqagydYiXScc4GajE34QLS8bSg==
+X-Google-Smtp-Source: ABdhPJypGOQXdWk+nTZxJm5ZV0XHNKTJ5c1Bd13Yq8+/k0f165l6eIvPWL5VedUd7PaomM8yZp9V9A==
+X-Received: by 2002:a62:cd87:: with SMTP id o129mr23123606pfg.74.1591672511227;
+        Mon, 08 Jun 2020 20:15:11 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id cm13sm804362pjb.5.2020.06.08.20.15.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jun 2020 20:15:10 -0700 (PDT)
+Date:   Mon, 8 Jun 2020 20:15:09 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     x86@kernel.org, Andi Kleen <andi@firstfloor.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH] x86/cpu: Use pinning mask for CR4 bits needing to be 0
+Message-ID: <202006082013.71E29A42@keescook>
 MIME-Version: 1.0
-In-Reply-To: <202006081031.R2VosrSx%lkp@intel.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+The X86_CR4_FSGSBASE bit of CR4 should not change after boot[1]. Older
+kernels should enforce this bit to zero, and newer kernels need to
+enforce it depending on boot-time configuration (e.g. "nofsgsbase").
+To support a pinned bit being either 1 or 0, use an explicit mask in
+combination with the expected pinned bit values.
 
-On 8/6/2020 10:23 am, kernel test robot wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   af7b4801030c07637840191c69eb666917e4135d
-> commit: 9227942383307f97fa6992416f73af4a23ef972c phy: intel-lgm-emmc: Add support for eMMC PHY
-> date:   5 months ago
-> config: x86_64-randconfig-a011-20200607 (attached as .config)
-> compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project e429cffd4f228f70c1d9df0e5d77c08590dd9766)
-> reproduce (this is a W=1 build):
->          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->          chmod +x ~/bin/make.cross
->          # install x86_64 cross compiling tool for clang build
->          # apt-get install binutils-x86-64-linux-gnu
->          git checkout 9227942383307f97fa6992416f73af4a23ef972c
->          # save the attached .config to linux build tree
->          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross ARCH=x86_64
-> 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
-> 
-> All errors (new ones prefixed by >>, old ones prefixed by <<):
-> 
-> WARNING: modpost: missing MODULE_LICENSE() in drivers/phy/intel/phy-intel-emmc.o
-> see include/linux/module.h for more information
->>> FATAL: drivers/phy/intel/phy-intel-emmc: sizeof(struct of_device_id)=200 is not a modulo of the size of section __mod_of__<identifier>_device_table=512.
-> Fix definition of struct of_device_id in mod_devicetable.h
-Thanks for the report!
+[1] https://lore.kernel.org/lkml/20200527103147.GI325280@hirez.programming.kicks-ass.net
 
-Noted, will fix it.
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ arch/x86/kernel/cpu/common.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-Regards
-Vadivel
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index bed0cb83fe24..677a7d593a04 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -347,6 +347,9 @@ static __always_inline void setup_umip(struct cpuinfo_x86 *c)
+ 	cr4_clear_bits(X86_CR4_UMIP);
+ }
+ 
++/* These bits should not change their value after CPU init is finished. */
++static const unsigned long cr4_pinned_mask =
++	X86_CR4_SMEP | X86_CR4_SMAP | X86_CR4_UMIP | X86_CR4_FSGSBASE;
+ static DEFINE_STATIC_KEY_FALSE_RO(cr_pinning);
+ static unsigned long cr4_pinned_bits __ro_after_init;
+ 
+@@ -371,20 +374,20 @@ EXPORT_SYMBOL(native_write_cr0);
+ 
+ void native_write_cr4(unsigned long val)
+ {
+-	unsigned long bits_missing = 0;
++	unsigned long bits_changed = 0;
+ 
+ set_register:
+ 	asm volatile("mov %0,%%cr4": "+r" (val), "+m" (cr4_pinned_bits));
+ 
+ 	if (static_branch_likely(&cr_pinning)) {
+-		if (unlikely((val & cr4_pinned_bits) != cr4_pinned_bits)) {
+-			bits_missing = ~val & cr4_pinned_bits;
+-			val |= bits_missing;
++		if (unlikely((val & cr4_pinned_mask) != cr4_pinned_bits)) {
++			bits_changed = (val & cr4_pinned_mask) ^ cr4_pinned_bits;
++			val = (val & ~cr4_pinned_mask) | cr4_pinned_bits;
+ 			goto set_register;
+ 		}
+-		/* Warn after we've set the missing bits. */
+-		WARN_ONCE(bits_missing, "CR4 bits went missing: %lx!?\n",
+-			  bits_missing);
++		/* Warn after we've corrected the changed bits. */
++		WARN_ONCE(bits_changed, "pinned CR4 bits changed: 0x%lx!?\n",
++			  bits_changed);
+ 	}
+ }
+ EXPORT_SYMBOL(native_write_cr4);
+@@ -396,7 +399,7 @@ void cr4_init(void)
+ 	if (boot_cpu_has(X86_FEATURE_PCID))
+ 		cr4 |= X86_CR4_PCIDE;
+ 	if (static_branch_likely(&cr_pinning))
+-		cr4 |= cr4_pinned_bits;
++		cr4 = (cr4 & ~cr4_pinned_mask) | cr4_pinned_bits;
+ 
+ 	__write_cr4(cr4);
+ 
+@@ -411,10 +414,7 @@ void cr4_init(void)
+  */
+ static void __init setup_cr_pinning(void)
+ {
+-	unsigned long mask;
+-
+-	mask = (X86_CR4_SMEP | X86_CR4_SMAP | X86_CR4_UMIP);
+-	cr4_pinned_bits = this_cpu_read(cpu_tlbstate.cr4) & mask;
++	cr4_pinned_bits = this_cpu_read(cpu_tlbstate.cr4) & cr4_pinned_mask;
+ 	static_key_enable(&cr_pinning.key);
+ }
+ 
+-- 
+2.25.1
 
-> 
-> ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
-> 
+
+-- 
+Kees Cook
