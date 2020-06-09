@@ -2,113 +2,112 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3399C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D69B9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:49:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9843206D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:45:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B36F20737
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:49:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591721353;
+	bh=JsT12WSvXhDryXhjex3aGi124e+fMsXrg8XGx3UU+ag=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=pThlHE1oeHU2fZ4R7je9nmTePqPrEzdFy+rkxD9R22PauEEb53MbC1vlyebu55Gm0
+	 M+uZWXH+bSdFRzvweNUIvI9wzMZ6McvD/uB9H1yHEweX2yDcBgtl2cEG+rVHwB+2rn
+	 9+2xgWR6JTOYsxG9mXjQzBtqKIwvVfdfPaaUqtOk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731217AbgFIQpi (ORCPT
+        id S1731127AbgFIQtM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 12:45:38 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:51122 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729988AbgFIQph (ORCPT
+        Tue, 9 Jun 2020 12:49:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60222 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731061AbgFIQtI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 12:45:37 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 850262A0313
-Received: by earth.universe (Postfix, from userid 1000)
-        id 2545F3C08C6; Tue,  9 Jun 2020 18:45:33 +0200 (CEST)
-Date:   Tue, 9 Jun 2020 18:45:33 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-Cc:     Mario.Limonciello@dell.com, y.linux@paritcher.com,
-        hdegoede@redhat.com, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org,
-        mjg59@srcf.ucam.org
-Subject: Re: [PATCH 2/3] platform/x86: dell-wmi: add new keymap type 0x0012
-Message-ID: <20200609164533.qtup47io2aoc5hgl@earth.universe>
-References: <cover.1591584631.git.y.linux@paritcher.com>
- <0dc191a3d16f0e114f6a8976433e248018e10c43.1591584631.git.y.linux@paritcher.com>
- <83fe431cacbc4708962767668ac8f06f@AUSX13MPC105.AMER.DELL.COM>
- <79bd59ee-dd37-bdc5-f6b4-00f2c33fdcff@paritcher.com>
- <7f9f0410696141cfabb0237d33b7b529@AUSX13MPC105.AMER.DELL.COM>
- <20200609154938.udo7mn7ka7z7pr6c@pali>
+        Tue, 9 Jun 2020 12:49:08 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3201FC05BD1E
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 09:49:07 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id n24so25908787lji.10
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 09:49:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v+eZVpWI+1D9dHZQUKIk/y34wQFtqgnbT/JoaV292xs=;
+        b=StMmkfoaPXkHKNIC++KAQhXjLtVDtWTNmiwfWeKs2x3DGD5m+CKz8gZnONJopQM1qP
+         Y9pXiegRmflg0Cz8lA4b3rWwvJiD8EU4smcIoU+Vy4LSD02Nyaf8sgWWRaZkCTI+qJOJ
+         mAoVVBJMY1T/6RmRBaNU6DQPPmW/Z85XwUq3o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v+eZVpWI+1D9dHZQUKIk/y34wQFtqgnbT/JoaV292xs=;
+        b=MaJlblJhKhZlnXHVCzWtRCxTBAWZm+TeM/UU10NJvc1X5VEGL3yHfpvVWMyHEtNsXc
+         t1+vrcU5D1NHdFPwaECvwldEY97qG2k6WhXXmAumcFCMORxlivMN7Ny6PxOF0DyekBAL
+         qo5WviBVgCTy4EzbrO/w3WjW5dC6GmKSm90eCtVLLRPT9qdcj0kpNWOeZ7b1xpudxDtJ
+         AedEsJzOfjUkL2ZJEWRtQ02t2QlIFpWO4M+2rG8Zrd0uSxftB94lUifVNxivB7+KwmWI
+         8ip1SVEkcODXR6+1Kp3dhZeUxmHF1aYZrJyq45lCAbMWyCFluEkkSTq1VEBgTi150iUN
+         44Jw==
+X-Gm-Message-State: AOAM532yxHq6HSMC+TQ/79dGjg8tSKWgGSr9eaPSJz++/wI4vhBGOI5a
+        5ur638xSs0xoudnoZh61+dajQlSaKG8=
+X-Google-Smtp-Source: ABdhPJxB8WY30MGB1mBVkuWrNflOi7BfDVnpKSliSOZkl1aJL614vvJ4VPaU9o+KL16p0Pi1fyNiWw==
+X-Received: by 2002:a2e:9e88:: with SMTP id f8mr11491070ljk.193.1591721344108;
+        Tue, 09 Jun 2020 09:49:04 -0700 (PDT)
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
+        by smtp.gmail.com with ESMTPSA id 193sm4415025ljj.48.2020.06.09.09.49.02
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jun 2020 09:49:02 -0700 (PDT)
+Received: by mail-lj1-f177.google.com with SMTP id c17so25914002lji.11
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 09:49:02 -0700 (PDT)
+X-Received: by 2002:a2e:97c3:: with SMTP id m3mr14630049ljj.312.1591721341985;
+ Tue, 09 Jun 2020 09:49:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="elc5oav6xzcv43cc"
-Content-Disposition: inline
-In-Reply-To: <20200609154938.udo7mn7ka7z7pr6c@pali>
+References: <CAHk-=whQt69ApMkZF8b2Q2idMDgPpPETZeeOuZg59CrOO4025w@mail.gmail.com>
+ <20200428091149.GB19958@linux.vnet.ibm.com> <20200428123914.GA27920@redhat.com>
+ <20200504164724.GA28697@redhat.com> <20200609153020.GB17951@redhat.com>
+In-Reply-To: <20200609153020.GB17951@redhat.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 9 Jun 2020 09:48:45 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgOkWaEwCNunc4_WXF_SLJZSeNEnstvHha9n82iLYpyCA@mail.gmail.com>
+Message-ID: <CAHk-=wgOkWaEwCNunc4_WXF_SLJZSeNEnstvHha9n82iLYpyCA@mail.gmail.com>
+Subject: Re: [PATCH] uprobes: ensure that uprobe->offset and ->ref_ctr_offset
+ are properly aligned
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Guo Ren <guoren@kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Jann Horn <jannh@google.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jens Axboe <axboe@kernel.dk>,
+        Security Officers <security@kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Ananth N Mavinakayanahalli <ananth@in.ibm.com>,
+        Naveen Rao <naveen.n.rao@linux.vnet.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jun 9, 2020 at 8:30 AM Oleg Nesterov <oleg@redhat.com> wrote:
+>
+> Looks like this patch was forgotten...
+>
+> Should I resend it?
 
---elc5oav6xzcv43cc
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I guess I'll just take it directly, since it was triggered by me
+complaining anyway.
 
-Hi,
+I had hoped it would go through the usual channels.
 
-On Tue, Jun 09, 2020 at 05:49:38PM +0200, Pali Roh=E1r wrote:
-> On Monday 08 June 2020 20:36:58 Mario.Limonciello@dell.com wrote:
-> > Can you please comment here how you would like to see events like this =
-should come
-> > through to userspace?
-> >=20
-> > * Wrong power adapter (you have X and should have Y)
-> > * You have plugged a dock into the wrong port
-> > * Fn-lock mode
->=20
-> In my opinion, Fn-lock mode is related to input subsystem and should be
-> probably reported via input device. For a user, fn-lock is similar like
-> caps-lock, scroll-lock or num-lock. Also fn-lock is provided by other
-> laptops and therefore I would expect that kernel provide fn-lock state
-> for all laptops (thinkpad / latitude / ...) via same interface. And not
-> via dell-specific interface or general-vendor-message interface.
->=20
-> Wrong power adapter sounds like something related to power subsystem.
-> Adding Sebastian to the loop, maybe he can provide some useful ideas
-> about it.
-
-I'm missing a bit of context. I suppose this is about connecting a
-non-genuine power adapter rejected by the embedded controller?
-Support for that should be hooked into 'drivers/acpi/ac.c' (note:
-so far there is no standard power-supply class property for this).
-Also printing a warning to dmesg seems sensible.
-
--- Sebastian
-
-> And plugged dock into wrong port. This is probably dell-specific event
-> and some interface for "vendor" messages from kernel to userspace would
-> be needed to deliver such things.
-
---elc5oav6xzcv43cc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl7fvKYACgkQ2O7X88g7
-+ppc9BAAimtl9m9AQ0TWGS8hVWKz3JFaPVxqbJgv8Pl8QmMyPgJDkqEMgERgQDg9
-nuCrDj0HmhyFnPwnO5SZ8nJRlbS28voErRIbkp/9tYa5mLSXp/qWheG7vpV6dtlh
-NjwHszhlDaUQogT12i7ueTwUNjqwV2m+iwVkkrGl53xr7hJMHIaghMcI2Ze9ukpg
-f1fJvrmAtQTPQMon3KL95kyA4AGuBfk86Df2vNldAqZL++U61vgssFeWKaY0i49v
-W0D/Qr3UsEwANGRFAuJkda0uv2Cs+os2bqubvl8I0Z9fMv43BaVrWH8gCdWqC3pD
-qKFe7mzhtPqcSFDSfIWsBCcoMWSuJFqNcK29BUxa+SIxVJttdY/O+KvSPXG26u8u
-nwVValPBD9OGBp5VWIBY6Wl94uf+jqNpnfk1fv1P9Jm4gGXu26t1f0scPN5B6FNI
-QMUOOHw0oElKX9ltcLlN94bhImpd43U0fVEmVAgNpSEU5JGj4hSg2xj3JI5Iu2GL
-QZGGwPASkcYm2YMMKcW7ZqpNmjqXsI3kMoILmglWYDelPa7xlq0gjuVQUcO57h18
-KVCiFYJ4cLQb95Y+E8VmnJKD1q/tRdi+7GLrX2BGvYYFlWq97r/3Gczw448QpscO
-f2FLYt+5ZQ4F63YDZiE3ng6tzBalKnD1+OwHXhmlCg0BtHSoQGY=
-=Kp0K
------END PGP SIGNATURE-----
-
---elc5oav6xzcv43cc--
+                Linus
