@@ -2,182 +2,144 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11708C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E80C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:16:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA2622078D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:15:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 591E9206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 14:16:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yk6c4pcG"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="bpj8+NOO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729994AbgFIOPs (ORCPT
+        id S1730142AbgFIOQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 10:15:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36468 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726967AbgFIOPr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 10:15:47 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15F44C05BD1E
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 07:15:46 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id b16so10110890pfi.13
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 07:15:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=KkxDiQa68qKNvgLwM3rURPXoQaUSZ7141ZuwiD11WYc=;
-        b=Yk6c4pcGbmHyRUevGDDZBeLK6qmgNGHVmzO/bdb8Zyxag7C6ENwravk4Xb7HLrytk9
-         dCANF4U1J4HnwGdqpuTynXyF8iOZx9DztBCAel5qC91qmRXvYqa4aW7wGD7yOMlNsURU
-         dtqNNUrCLzNwS9PrWFkPDolyiBNzozk9AsV3w5+9Z6Sd6XvXiFDT0WK2ORCdZAN00b3m
-         bi/RMchFdWaKkFLhPL2cJ8K4CKkL0YkRl0ZQ5M2pVl7q2gLAvpNnEr/bz6ctwCrrIXp9
-         dcLuHpnIml4vTsIe9qtsY3MD4iXrl0iFyuhkuxMKRM/kcWfSC/WRQttmtDFmw65va9Qo
-         Riyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=KkxDiQa68qKNvgLwM3rURPXoQaUSZ7141ZuwiD11WYc=;
-        b=kv9J7fPfP8nt51Rum0VJRdo73k8m23IVB4/xr+IKtJp1c9zwnLuWKksdEoWAHLI7Ba
-         Gd77AFj991kpW8CMZtBBq7GqA1HAYO0yQhwAMMKrHTce6LmommCxevzgtef3OJ9yey35
-         eJhuA8pmzwuNifUQKA0S2EXASrByh3p/7vWKPwRcdPTPbUFyrBBpzDSRnGRynEXIfsqK
-         f7xj+YAX8NYkqehxeUyahY2RP5MsRj9VGz2Jr48JJGMPp+XttvmSXMpilyJxQK3ZEakQ
-         5S/sr6JOYrZs3Q0wW/HiGJc9RYyowxeplIJHZ0r0VBmL3vKlkBYAdywpef7tMeuQa74t
-         5OeQ==
-X-Gm-Message-State: AOAM5330eDVfCYcxxCaXgW0uIl7KKXc+rKHe1uD96xdYDcvnsr3r7oRs
-        GA3FYIvLhGPAZn++73euVzbEvBsG
-X-Google-Smtp-Source: ABdhPJw6NRk+LgfeM91W3mBCEvHkIRY9lv5nSH2hNWeSThSXhGG12WuNo3b1sN/jKUBn/pPJUeMgVQ==
-X-Received: by 2002:a05:6a00:78b:: with SMTP id g11mr24543789pfu.86.1591712145202;
-        Tue, 09 Jun 2020 07:15:45 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id hv15sm2613981pjb.17.2020.06.09.07.15.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Jun 2020 07:15:43 -0700 (PDT)
-Subject: Re: [PATCH] mm/vmalloc: track which page-table levels were modified
-To:     Joerg Roedel <jroedel@suse.de>, Mike Rapoport <rppt@linux.ibm.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200603232311.GA205619@roeck-us.net>
- <20200604083512.GN6857@suse.de>
- <CAHk-=wj2_YdxPaRFqBUUDZvtZKKG5To2KJhciJmDbchW2NFLnw@mail.gmail.com>
- <20200604140617.e340dd507ee68b0a05bd21cb@linux-foundation.org>
- <CAHk-=wjm+RrcTjB7KYCCsOouE2EyzRcwWUE9TVq6OCYYAt9Zyw@mail.gmail.com>
- <20200605081644.GS6857@suse.de> <20200605100059.GB7524@linux.ibm.com>
- <20200609121056.GB3871@suse.de>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <c11fd19b-e5b6-1bc9-6392-04dbab358b67@roeck-us.net>
-Date:   Tue, 9 Jun 2020 07:15:42 -0700
+        Tue, 9 Jun 2020 10:16:24 -0400
+Received: from mout.web.de ([212.227.17.12]:58859 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726967AbgFIOQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 10:16:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1591712171;
+        bh=4e28CHChxT7wxLcfH98/m8r7z/2Hp4xhy6bqpTw5+6E=;
+        h=X-UI-Sender-Class:Cc:Subject:From:To:Date;
+        b=bpj8+NOODMCoywXkYrrRJkM769aY0w1Og6daKIEZHUZ4mxDdIBE8fFME7CBDWphOz
+         4iG41FyqTkYkuHQMHm79PtOsaYgLOVz0Q9EpRQdJpC1wGoRvwiy1yLkPA8+int+1A5
+         HjjnHnw+WBoPBlJ8IwRLtwtxrvqUm3p5QW7S1GyA=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([77.6.55.3]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0M1GAG-1ipaS32O64-00tFO3; Tue, 09
+ Jun 2020 16:16:11 +0200
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] coccinelle: api: extend memdup_user transformation
+ with GFP_USER
+From:   Markus Elfring <Markus.Elfring@web.de>
+To:     Denis Efremov <efremov@linux.com>,
+        Coccinelle <cocci@systeme.lip6.fr>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <5c0dae88-e172-3ba6-f86c-d1a6238bb4c4@web.de>
+Date:   Tue, 9 Jun 2020 16:16:10 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-In-Reply-To: <20200609121056.GB3871@suse.de>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:5qOHi/QGPt6HDDy++mQcTjcvl6ZVbhg+a6OWbIowPMUPExg1FLM
+ ytrFenQx99weYIyI3UcwQjBApTIflOTTc9lCa77JbbOQgvgC3lnvbzcrudAkWkmJTuxtYbX
+ FSgvPIjMRqkTCKs+KqOUSAbnp4lREfw2QXeqHqS+9tYCNUPdjqb2TsFVg52WWlTUiX/vwuX
+ P/Mr0zvv58D1tJf9uSROA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:mpYUnu5JEC0=:JaviUAuDGsXJK5Nwln/HGc
+ ChxKS+GRPJrh3j0aI5i4AMTKuzEBxHauWmKvaWA6nCKJdPmvAyNy1DYmL1HUAo7FBK2YvMaYh
+ eX/iFRAqHV39Tg8W++EMUAKweE+x3tsbm2h4/Z8fRmxKbxZv+HKAz1phIgOBUWTZSz4Tq2kD5
+ BYkSv0wdaSoxrDfuJ4LeH270+PKuU0cHfo7vxSBxy8p28wqxenp9ytL4bCVp1El6OcJ0KwKkQ
+ BiTTO+ZGN3nEDCYCWlf+bKzPJ2Qfci9zz3xTwUP9t6yE3TN2D8pQ78DJNVKp2+c6FEzuxfmFc
+ FBE8jFmRY+4WulWaH33YZMlw02G/h1gCYmMVXW2atuy0vZR5UzilYvSEFKgYaZm/DqdnkLvvn
+ U8qR97oORrlpzbo4cpw9ijIYaGqafn//qL8FeGAv9ssN9Dj1z4qT1YlWdRNIYtpLJkvuszWXD
+ JrMuQKofELqBIov3vl6Erzj/S/OJxewuTn6rwweHdmJpoPX1U/i3qj4sYSr4GALiquLsOw61k
+ EeJOHLkOwqCi55t3Fq4JLS2KGmTVSmqt4s6YbQ2FPjOjGB6Zx2w33kDSsPvwwCx1KRVU3DNtE
+ OCXGQcnJyevO3X7kDMpUnjogFizmalpGWQ2L0VsOmAdh8VEKMQJa1gMwDUl9699z6iFJb73r1
+ rXF8Eh12k59viryAQhIxPYCjZSBxmNFBY0ZGognW2nXvzh8TdmuGlMGCwL2WaHcq2bFtWTsnv
+ cyiuNzBQQUxRq6LpS37xlQvWcMH7eptOThG+jnB1GU5eeozVHUshVWSCGA2h+Hpd19vu1ITjt
+ BgMIv5RMPg8bH+xJZx39yZ0LxqJoGomcBjsbgCjkUfezHSD2tYXNr5MHHsU8FKi5ykQ/1yhhK
+ CoFay7d/4/AdDyNA+DPSe2rPkxSed3kG2etq6IDcYkFSuzOXdUAtXula/fy+0xVeI3zSLcvIq
+ K96ISQALVXUebWLzsFekPTrevE7urHjk/Wf4oAKLkFjDkmq0alESrrF0x+2yyFY4tHVGA7lng
+ HRrUL+QfD1ZiQpodCONSVLwyH2upzjOvweHxUB2lk5vKcUgV2tJpscY+tveXVnnzbM2vxG/gS
+ q/yBNLM3k6me25XLsZSb7gexYeZwsxzqo+2h1Fu/rcHd19g0lkPFB1geUl2NcNgUlOsA39j6o
+ KO5TqxRRKRbhridmpvUhvWDk7SovV/ubbrhIoc0OGiNO4JbJ5kC5V7OwmoXFSSPDUU85nQtXe
+ Mym/Ya5QwHw78I125
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/9/20 5:10 AM, Joerg Roedel wrote:
-> Hi Mike,
-> 
-> On Fri, Jun 05, 2020 at 01:00:59PM +0300, Mike Rapoport wrote:
->> We already have include/asm-generic/pgalloc.h, so maybe something like
->> that patch below would fork. This is not even compile tested.
->>
->> diff --git a/include/asm-generic/pgalloc.h b/include/asm-generic/pgalloc.h
-> 
-> I experimented a bit with your diff, but it turned out that moving the
-> page-table allocation functions/macros to asm-generic/pgalloc.h does not
-> work on all architectures.
-> 
-> The reason is that some archs don't use that header at all (e.g. ARC)
-> and have their own version of the functions defined there. That could
-> all be made working, but I decided to no open this can of worms for now.
-> 
-> So I sent out a patch which moves the p?d_alloc_track() functions/macros
-> to a separate header and include it only in mm/vmalloc.c and
-> lib/ioremap.c. That compiles on all architectures where current Linus'
-> master also builds (it does not for Alpha, CSky, Mips and Mips64), and
-> as usual Hexagon and Unicore32 are not tested because I have no working
-> compiler for those.
-> 
+=E2=80=A6
+> +++ b/scripts/coccinelle/api/memdup_user.cocci
+> @@ -20,7 +20,9 @@ expression from,to,size;
+=E2=80=A6
+> +-  to =3D \(kmalloc\|kzalloc\)
+> +		(size,\(GFP_KERNEL\|GFP_USER\|
+> +		      \(GFP_KERNEL\|GFP_USER\)|__GFP_NOWARN\));
 
-To build csky images, you have to disable CONFIG_FRAME_POINTER or use a
-non-upstream compiler. To build any images reliably, you have to disable
-CONFIG_GCC_PLUGIN_RANDSTRUCT or use a version of gcc old enough to not
-support it (gcc 6.x is fine). For mips, you have to specify ARCH and
-CROSS_COMPILE as environment variables.
+I got the impression that this SmPL code needs another correction also
+according to the proposed SmPL disjunction.
 
-alpha is a lost case. The offending commit is 0f1c9688a19 ("tty/sysrq:
-alpha: export and use __sysrq_get_key_op()"); it looks like that wasn't
-build tested. It can not be reverted easily because of subsequent changes.
++-to =3D \( kmalloc \| kzalloc \) (size, \( GFP_KERNEL \| GFP_USER \) \( |=
+ __GFP_NOWARN \| \) );
 
-I have stopped building unicore32 images since v4.19 since there is
-no available compiler that is still supported by the kernel. I am
-surprised that support for it has not been removed from the kernel.
 
-I am told that hexagon only supports llvm/clang, and the only version
-of gcc that supports it is v4.6.1 (from Sourcery CodeBench Lite
-2012.03-66). The minimum version of gcc will be raised to v4.8;
-that has already happened in linux-next and will presumably be applied
-to mainline shortly. With that, I'll stop build testing hexagon images
-as well until I find the time to build a llvm/clang hexagon toolchain.
+Would you like to express by any other approach that a specific flag
+is an optional source code transformation parameter?
 
-So you are in good company, and thanks for testing everything else.
-
-Guenter
+Regards,
+Markus
