@@ -2,131 +2,114 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0E2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 23:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10BDFC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 23:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA1D02072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 23:04:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rwanDsZd"
+	by mail.kernel.org (Postfix) with ESMTP id D06A12072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 23:04:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591743892;
+	bh=moczUC36VykAyFkoIp9pElBGUFPl9/IrhPvHfPQwVMQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=moQkcNiD139LncRZQTiXNREXzYqaIU9YqBlKhj1xY+AH8h9ibAdhTd64uO3y9/6i/
+	 51WcZWTJDgpmnq+6dO17fmawYXsw+TWOpfN4L95au5D5z3rCeQC2igA6AszrEdG3vT
+	 5yT664K4OPtcwq8A4sBFFUybX0GeROd/R8+/oTQY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729049AbgFIXD7 (ORCPT
+        id S1729073AbgFIXEv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 19:03:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33550 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728942AbgFIXDx (ORCPT
+        Tue, 9 Jun 2020 19:04:51 -0400
+Received: from mail-io1-f45.google.com ([209.85.166.45]:33705 "EHLO
+        mail-io1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728527AbgFIXEu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 19:03:53 -0400
-Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50B25C08C5C3
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 16:03:53 -0700 (PDT)
-Received: by mail-vk1-xa41.google.com with SMTP id e1so122498vkd.1
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 16:03:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QPEA53MpdF9ON3exFjCberFh9r4WY/+iX04WGFZFtXU=;
-        b=rwanDsZdo86Rv+vzZDRG+0C9QrHIbGQgfj2nwO+GiGBNVyLSExN93DGrkptklgs9I1
-         AC0cy3+rivR0wtaNSSV9u8U2CqWzAr9cwayr0OtE6O+jC2+BtUr9VjUb8UFNbXJkVAi1
-         WfJhopss4dvT37wHibefpDeELAXyANGodPwrJTtsn9yIlJTNlMVMXjXyhR/cP5akWDCP
-         mjbboyehlJjrEud3b556BAnXu9H3ea7lZqMAdBWMg65r0d3SNuuwYPZvv8rUlGOJMmVx
-         1rAQzDRF0wybOVz5i+mnG2dV7tbBHX6NxTZfN6sP+E0p5F7rIRZGBiMOtY3RefHOaxGa
-         MGfQ==
+        Tue, 9 Jun 2020 19:04:50 -0400
+Received: by mail-io1-f45.google.com with SMTP id i25so92285iog.0;
+        Tue, 09 Jun 2020 16:04:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QPEA53MpdF9ON3exFjCberFh9r4WY/+iX04WGFZFtXU=;
-        b=tue+a6anbwGJ/MYdJtkzWuIVtxwhKAJVNo4gruE6Ez2ODluW3YGnWn4gJkNm0EVksx
-         BpuE1LnZCxAln18tZnPenpCJoCdakfFfWq4M0OtdM7FWJlDsYh7iCEOkjtJ6t2SfBdti
-         2biq1JIZaibRoHTQODIjH6WUoA1tlh2jzulcuw8HY3k93bwFv+a30wYuaKKNzGpkWSfY
-         3TR3Sr1eP+J9sSQu29POlm6cmPCP1MnD40CK55k7Zg4dGYymydSlwj+xfAZIqQepB7v/
-         KWdF8lrgauQh6ZlB0mUaZXARkAiszXxc5q+ljMVtkLxrcHB5XTEo/5EgzS432XGfOHw8
-         se7Q==
-X-Gm-Message-State: AOAM531Wdt77mldwd925vLsQzobWC90Apat8KEsND0ojIhZOv37Ty2Lz
-        KvikL5wAfuy9kzyknU7UvkpgqMLumDWx1co+Vdy9Wg==
-X-Google-Smtp-Source: ABdhPJwvz0K9ugkUS0zUu2sV6SC9xdH2ngcwyFlRhaY+EjhyMbUztSqGBkZnAcJGtcUe/roomwm1IuKpnHfl3gWMyfI=
-X-Received: by 2002:a1f:974d:: with SMTP id z74mr401275vkd.40.1591743831579;
- Tue, 09 Jun 2020 16:03:51 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WM6pC+NaWV8CTga8ZnlVnJ5VfcCeVmRJv2RMndMJd+c=;
+        b=jzXCWG7ox2YX3VCHAFJ1y5JpfNINBSH8K8H4lYwFFHKl2gnvZk5Zb+TrSRQOEQK/8c
+         aOPIr7XRNldkMzYX08mw+OUmP9ibr1oUfExIQJxE+5tMGi17cw0Ywn85oUfhnnCkONbA
+         D5kXXJ1+lsHM5Pm24tZbjM9KUiYYYtiF27YuEym/AFptq5Tk0k5J2ER7l8dXepKtYiJr
+         Wds8F0dULw/acdEb5Ad8FsrYcb6vEL5wR95DndvErvXF2VCKlO3j2bnhxk7fHISDyQJp
+         A2LcGq38TvQJZCGZpFCRVcYHezchUbaXlEu3qceTqzsFMQbOh7025E1eoHoi682gtPos
+         JE2w==
+X-Gm-Message-State: AOAM533ZZ0lnpPVEXvMfltf3cVfVPCG2GerKwKn6JYx8J30D4E5jgX6Q
+        ce2mFyuV3q0pGqvtzsgcOLhkMGs=
+X-Google-Smtp-Source: ABdhPJwOXnWBlPPjiKf9bCvET4uGRf1cCsJ6WSZ4GTiLWLE4BDf6KUE175QXCkWFOpZSmnTCvJL6mA==
+X-Received: by 2002:a05:6638:272:: with SMTP id x18mr495856jaq.122.1591743889297;
+        Tue, 09 Jun 2020 16:04:49 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id g17sm9881885ilc.18.2020.06.09.16.04.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2020 16:04:48 -0700 (PDT)
+Received: (nullmailer pid 1674233 invoked by uid 1000);
+        Tue, 09 Jun 2020 23:04:47 -0000
+Date:   Tue, 9 Jun 2020 17:04:47 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Roger Quadros <rogerq@ti.com>
+Cc:     kishon@ti.com, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCHv2 1/3] dt-binding: phy: convert ti,omap-usb2 to YAML
+Message-ID: <20200609230447.GA1670701@bogus>
+References: <20200602114606.32045-1-rogerq@ti.com>
+ <20200602114606.32045-2-rogerq@ti.com>
 MIME-Version: 1.0
-References: <20200605213853.14959-1-sean.j.christopherson@intel.com> <20200605213853.14959-7-sean.j.christopherson@intel.com>
-In-Reply-To: <20200605213853.14959-7-sean.j.christopherson@intel.com>
-From:   Ben Gardon <bgardon@google.com>
-Date:   Tue, 9 Jun 2020 16:03:40 -0700
-Message-ID: <CANgfPd9Y9P+-got9HmtrvChmwZBe-XOA0zSSLMsPCUKcuBv4aQ@mail.gmail.com>
-Subject: Re: [PATCH 06/21] KVM: x86/mmu: Move fast_page_fault() call above mmu_topup_memory_caches()
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Marc Zyngier <maz@kernel.org>, Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Feiner <pfeiner@google.com>,
-        Peter Shier <pshier@google.com>,
-        Junaid Shahid <junaids@google.com>,
-        Christoffer Dall <christoffer.dall@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200602114606.32045-2-rogerq@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 5, 2020 at 2:39 PM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> Avoid refilling the memory caches and potentially slow reclaim/swap when
-> handling a fast page fault, which does not need to allocate any new
-> objects.
->
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Reviewed-by: Ben Gardon <bgardon@google.com>
+On Tue, Jun 02, 2020 at 02:46:04PM +0300, Roger Quadros wrote:
+> Move ti,omap-usb2 to its own YAML schema.
+> 
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
 > ---
->  arch/x86/kvm/mmu/mmu.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index 5e773564ab20..4b4c3234d623 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -4095,6 +4095,9 @@ static int direct_page_fault(struct kvm_vcpu *vcpu, gpa_t gpa, u32 error_code,
->         if (page_fault_handle_page_track(vcpu, error_code, gfn))
->                 return RET_PF_EMULATE;
->
-> +       if (fast_page_fault(vcpu, gpa, error_code))
-> +               return RET_PF_RETRY;
+>  .../devicetree/bindings/phy/ti,omap-usb2.yaml | 69 +++++++++++++++++++
+>  .../devicetree/bindings/phy/ti-phy.txt        | 37 ----------
+>  2 files changed, 69 insertions(+), 37 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml b/Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml
+> new file mode 100644
+> index 000000000000..2bbea8d2bcb1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml
+> @@ -0,0 +1,69 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/phy/ti,omap-usb2.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
->         r = mmu_topup_memory_caches(vcpu);
->         if (r)
->                 return r;
-> @@ -4102,9 +4105,6 @@ static int direct_page_fault(struct kvm_vcpu *vcpu, gpa_t gpa, u32 error_code,
->         if (lpage_disallowed)
->                 max_level = PG_LEVEL_4K;
->
-> -       if (fast_page_fault(vcpu, gpa, error_code))
-> -               return RET_PF_RETRY;
-> -
->         mmu_seq = vcpu->kvm->mmu_notifier_seq;
->         smp_rmb();
->
-> --
-> 2.26.0
->
+> +title: OMAP USB2 PHY
+> +
+> +maintainers:
+> + - Kishon Vijay Abraham I <kishon@ti.com>
+> + - Roger Quadros <rogerq@ti.com>
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +        - "ti,dra7x-usb2"
+> +        - "ti,dra7x-usb2-phy2"
+> +        - "ti,am654-usb2"
+> +      - enum:
+> +        - "ti,omap-usb2"
+
+Don't need quotes on all these.
+
+Otherwise,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
