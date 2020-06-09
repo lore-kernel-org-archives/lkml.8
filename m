@@ -2,115 +2,104 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D4E4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 21:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77738C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 22:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07B1720737
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 21:58:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EE1320825
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 22:01:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gc+jIrTQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728368AbgFIV6a (ORCPT
+        id S1728316AbgFIWBP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 17:58:30 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:42827 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728185AbgFIV6O (ORCPT
+        Tue, 9 Jun 2020 18:01:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52100 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726992AbgFIWBO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 17:58:14 -0400
-Received: by mail-il1-f200.google.com with SMTP id j71so93424ilg.9
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 14:58:12 -0700 (PDT)
+        Tue, 9 Jun 2020 18:01:14 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F228C05BD1E;
+        Tue,  9 Jun 2020 15:01:13 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id h185so170718pfg.2;
+        Tue, 09 Jun 2020 15:01:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MRXZKngqhLb+ar4aO9Lsmg4caWqUFoMOzojN3p3S434=;
+        b=gc+jIrTQiLDyd2W9Lb98OOfoARYG5umI69HXDYVWWt1Cpw+gdNZGG/2D7DgU2ja7sQ
+         yMxGxEMiojoTc5V7TPAu2+OoP3kX99L4ORobn8zcgI1Bw20NDwLuHrKogWsgjJyccha5
+         39sSMtWfiFX4ipSRj7o0FeIKza4ArnEOxQ0kF03JOj7iymPLyptfV/J7oBzrkA0lnz4Z
+         B6EYz717JNdNwF3yieCICMKVPLspgN1QfQ7F0UuOMW++lROHoCHBYpIM9Kfq35YmWRa2
+         fkCl5q4PPq4R9HLGRZ1nZ1FNvEwbyBNF21HmIGRgYA8PpsJz0+0nR+us74skl3kEs8OK
+         KtuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=pw0UgTHVe4ORi9w9G47RxZH+2R3g4C+RyCbV9ziJVuQ=;
-        b=AjcJkMmJ0xZmWkjfAgcMmNIfE7tdOiK7TvRxmzhRjSVQ+tExqW51yeqtvh+d9C5UJn
-         pjF6PwxNJAhy3IW+sdAtJjX6s3CEztzeuWbLgBWsAkw8BE1PF7aGF6Bp8qysPIE4nGnI
-         26wQs6KZhROA5tJujc5uPPXaMW0Ed8fYLB0HKZwkFj/nr6qEzQBmhzDyYbtToQqnyOQu
-         zS9GcBgx9Q9/Cner6vBc4PiaJBr5P7BdqHZ5ZCBuK8xdEK3STbgrAXa8bTiV8EuyegXF
-         kJofElOUwp1gWvOKHWXuVkP0OTCF8vAuH2svkKjX/1ZruUr77qLUtOsW0VcvkeELOI2X
-         arNg==
-X-Gm-Message-State: AOAM5338e1HdBG6DM364KLd/CZPM6BVivnvZlgPdx7SLmwLUcEonQaey
-        i2kkO8FbVAPmhAAOewQiI0VW6H3GuBSMwg36K3qJjctvTXQt
-X-Google-Smtp-Source: ABdhPJzLGtUrYFSaKZsCsFiJTeD8F6gQ2x4xdGfJQRk1G0TMrdZjwyUwp8nP0wCHl1E4+iAeiQQ3NndOOrF/LrO47sXaQuRjGCp1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MRXZKngqhLb+ar4aO9Lsmg4caWqUFoMOzojN3p3S434=;
+        b=aLIXb4BKcXOFCnumjXLWrKgwa7csJqG+jo05+bvauyazOQmi0tJZVSR96FjFAvoVJh
+         3LLD+i4vH53+ty2MQW08A8m/axV6r/VJnRRszxQleyIKYUoCqzjHnBvMBvy9B4Eeo0iM
+         fv9QINVc7XzT6iAWgIFQ0WDt3f9Z5rnysAvzFfRpbKQRshH8rRPm4W934LTRROVNwIle
+         uAhu1cuIZ2FVDORztHXgI4/hPgQxNmkBCBERKTOij/PUjghEON9CrDSZas4qvkAz0vpu
+         K1AOGwEn1V3FALYv9rLDM+ybkgHtl1ZKb1Hm2ECMWynME1NrBCrgDxwJCKLB6znOB51f
+         xE5Q==
+X-Gm-Message-State: AOAM531ooUcWNZL3NIj+TpTuTpyMVLKbKwSzDJNi/egJhA4DOHPXr7/1
+        P+GDEBGoYX4ayYgyZPVQRZe970QCc3XU5S8c4Ls=
+X-Google-Smtp-Source: ABdhPJwAcywTeq5QYPmU1nL+2RNn3CEo1ceXk+l+ZyG4B1GFi8+1suYBPRU8EFXECKAdXGpd+6CzZGz8eo0rnbZ4Iqw=
+X-Received: by 2002:a63:ff52:: with SMTP id s18mr62377pgk.203.1591740072651;
+ Tue, 09 Jun 2020 15:01:12 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:1616:: with SMTP id x22mr229920iow.70.1591739892592;
- Tue, 09 Jun 2020 14:58:12 -0700 (PDT)
-Date:   Tue, 09 Jun 2020 14:58:12 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000df74f605a7add28b@google.com>
-Subject: memory leak in ctnetlink_start
-From:   syzbot <syzbot+b005af2cfb0411e617de@syzkaller.appspotmail.com>
-To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
-        kadlec@netfilter.org, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, pablo@netfilter.org,
-        syzkaller-bugs@googlegroups.com
+References: <20200609201555.11401-1-eajames@linux.ibm.com>
+In-Reply-To: <20200609201555.11401-1-eajames@linux.ibm.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 10 Jun 2020 01:00:55 +0300
+Message-ID: <CAHp75Vd32ivnOgenr1q9gd5kJRAQseAhZoiRb80Xv5O7qeBaJw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] i2c: fsi: Fixes for systems with more ports
+To:     Eddie James <eajames@linux.ibm.com>
+Cc:     linux-i2c <linux-i2c@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        wsa@kernel.org, Joel Stanley <joel@jms.id.au>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, Jun 9, 2020 at 11:15 PM Eddie James <eajames@linux.ibm.com> wrote:
+>
+> This series fixes a register definition for the FSI-attached I2C master to
+> allow all the available ports. In addition, the code to add an adapter for
+> each port is modified to require a device-tree entry for the bus. This is so
+> that systems with lots of busses that have no devices on them don't add lots
+> of unecessary devices.
+>
 
-syzbot found the following crash on:
+FWIW,
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-HEAD commit:    7ae77150 Merge tag 'powerpc-5.8-1' of git://git.kernel.org..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=128a9df2100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9a1aa05456dfd557
-dashboard link: https://syzkaller.appspot.com/bug?extid=b005af2cfb0411e617de
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17304a96100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=168a9df2100000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+b005af2cfb0411e617de@syzkaller.appspotmail.com
-
-executing program
-executing program
-executing program
-BUG: memory leak
-unreferenced object 0xffff88811c797900 (size 128):
-  comm "syz-executor256", pid 6458, jiffies 4294947022 (age 13.050s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<000000004276332a>] kmalloc include/linux/slab.h:555 [inline]
-    [<000000004276332a>] kzalloc include/linux/slab.h:669 [inline]
-    [<000000004276332a>] ctnetlink_alloc_filter+0x3a/0x2a0 net/netfilter/nf_conntrack_netlink.c:924
-    [<000000000047e6fb>] ctnetlink_start+0x3a/0x80 net/netfilter/nf_conntrack_netlink.c:998
-    [<00000000a431a924>] __netlink_dump_start+0x1a3/0x2e0 net/netlink/af_netlink.c:2343
-    [<0000000016b073fa>] netlink_dump_start include/linux/netlink.h:246 [inline]
-    [<0000000016b073fa>] ctnetlink_get_conntrack+0x26d/0x2f0 net/netfilter/nf_conntrack_netlink.c:1611
-    [<00000000d311138b>] nfnetlink_rcv_msg+0x32f/0x370 net/netfilter/nfnetlink.c:229
-    [<0000000008feca87>] netlink_rcv_skb+0x5a/0x180 net/netlink/af_netlink.c:2469
-    [<0000000088caad78>] nfnetlink_rcv+0x83/0x1b0 net/netfilter/nfnetlink.c:563
-    [<0000000052160488>] netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
-    [<0000000052160488>] netlink_unicast+0x20a/0x2f0 net/netlink/af_netlink.c:1329
-    [<00000000ee36d991>] netlink_sendmsg+0x2b5/0x560 net/netlink/af_netlink.c:1918
-    [<00000000dee2cafe>] sock_sendmsg_nosec net/socket.c:652 [inline]
-    [<00000000dee2cafe>] sock_sendmsg+0x4c/0x60 net/socket.c:672
-    [<00000000b0b655cb>] ____sys_sendmsg+0x2c4/0x2f0 net/socket.c:2352
-    [<000000005bba2f8d>] ___sys_sendmsg+0x8a/0xd0 net/socket.c:2406
-    [<0000000060ac6563>] __sys_sendmsg+0x77/0xe0 net/socket.c:2439
-    [<000000002f7b34b0>] do_syscall_64+0x6e/0x220 arch/x86/entry/common.c:295
-    [<00000000941009bb>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> Changes since v1:
+>  - Remove the check for null device node since that is checked in
+>    of_device_is_available
+>
+> Eddie James (2):
+>   i2c: fsi: Fix the port number field in status register
+>   i2c: fsi: Prevent adding adapters for ports without dts nodes
+>
+>  drivers/i2c/busses/i2c-fsi.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> --
+> 2.24.0
+>
 
 
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+-- 
+With Best Regards,
+Andy Shevchenko
