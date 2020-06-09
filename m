@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75954C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:51:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E4C8C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:51:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5713620734
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:51:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2810A207C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:51:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725085;
-	bh=GEoeqiGrpGRe3rSrKqJTatBUEbBd+QnjdommEb2Bwuw=;
+	s=default; t=1591725090;
+	bh=ptMIwntJnMGbrD0v5s0o+uuIc2+29HxsaQvIIRbjF1U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FL9FpQrk4ccVVi2cru8d4odaOkOpwJZRjjuhQ+6L/gt9RXDdJxKtyEfc3ZoUxg4lY
-	 PplSz0JCBznm2jtskuvBISbduxAAnMuiyAuwH58YcK6Dm5764Vo6Arkj994BhB0v5e
-	 8k+jGdaLhAKkpB9fooRUkW2HfVzx6L6ChRcVXY1k=
+	b=rQKV2/g3tboQZaZFL9uDsp5R0H5SzK+HkxOjRQ0sAANQF76/HQYFM3gkNC8TO2N45
+	 TpmcPVtPaKFo/zC8xcze08Y4Kiqi7zOnmduyYhpH0TwOb78zg9wc2I33o7fnksItgw
+	 8RSbrsd5l8SE4ze+A6fxZttoB5vJUlBpQm6Va6lc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732815AbgFIRvX (ORCPT
+        id S1728444AbgFIRv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:51:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37916 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:51:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732655AbgFIRu2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:50:28 -0400
+        id S1732690AbgFIRuc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:50:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7204120734;
-        Tue,  9 Jun 2020 17:50:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F02CC20774;
+        Tue,  9 Jun 2020 17:50:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725026;
-        bh=GEoeqiGrpGRe3rSrKqJTatBUEbBd+QnjdommEb2Bwuw=;
+        s=default; t=1591725031;
+        bh=ptMIwntJnMGbrD0v5s0o+uuIc2+29HxsaQvIIRbjF1U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lwYixYohIHahTjfQ7SUozri52kGI85vpuSi97noRoWhZ2ZQeBJUA2JcCJHxtH6//l
-         bJNy7Gti0rxGYHg7a15da5dI6qAPUPmHRkGs/+HAAhglowIEQPpOat2YppRN6AlzY/
-         zsaZap6sBa4D0dJzYXNbdt/bl2b5y6EhnkQGlx7I=
+        b=MZiG4/UxjQkE1bfvdHBifW0sJAF950TfPaX6hbqDQVBQG6SjVdN4QIS8J57PcVsKU
+         hm0Emqf4VhnMyRBl4/JyuAld67AUaYQGehnZTRIf4V5WPu3TkJBI6dunsH/l/qxfQb
+         IHuspCD6r8wl+dcktn8SzEUWtNrQheheX8y4bQVc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH 4.14 39/46] nvmem: qfprom: remove incorrect write support
-Date:   Tue,  9 Jun 2020 19:44:55 +0200
-Message-Id: <20200609174030.310539358@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Gross <mgross@linux.intel.com>,
+        Borislav Petkov <bp@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: [PATCH 4.14 41/46] x86/cpu: Add table argument to cpu_matches()
+Date:   Tue,  9 Jun 2020 19:44:57 +0200
+Message-Id: <20200609174030.541493657@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174022.938987501@linuxfoundation.org>
 References: <20200609174022.938987501@linuxfoundation.org>
@@ -60,57 +61,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Mark Gross <mgross@linux.intel.com>
 
-commit 8d9eb0d6d59a5d7028c80a30831143d3e75515a7 upstream.
+commit 93920f61c2ad7edb01e63323832585796af75fc9 upstream
 
-qfprom has different address spaces for read and write. Reads are
-always done from corrected address space, where as writes are done
-on raw address space.
-Writing to corrected address space is invalid and ignored, so it
-does not make sense to have this support in the driver which only
-supports corrected address space regions at the moment.
+To make cpu_matches() reusable for other matching tables, have it take a
+pointer to a x86_cpu_id table as an argument.
 
-Fixes: 4ab11996b489 ("nvmem: qfprom: Add Qualcomm QFPROM support.")
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200522113341.7728-1-srinivas.kandagatla@linaro.org
+ [ bp: Flip arguments order. ]
+
+Signed-off-by: Mark Gross <mgross@linux.intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/nvmem/qfprom.c |   14 --------------
- 1 file changed, 14 deletions(-)
+ arch/x86/kernel/cpu/common.c |   23 +++++++++++++----------
+ 1 file changed, 13 insertions(+), 10 deletions(-)
 
---- a/drivers/nvmem/qfprom.c
-+++ b/drivers/nvmem/qfprom.c
-@@ -30,19 +30,6 @@ static int qfprom_reg_read(void *context
- 	return 0;
- }
- 
--static int qfprom_reg_write(void *context,
--			 unsigned int reg, void *_val, size_t bytes)
--{
--	void __iomem *base = context;
--	u8 *val = _val;
--	int i = 0, words = bytes;
--
--	while (words--)
--		writeb(*val++, base + reg + i++);
--
--	return 0;
--}
--
- static int qfprom_remove(struct platform_device *pdev)
- {
- 	struct nvmem_device *nvmem = platform_get_drvdata(pdev);
-@@ -56,7 +43,6 @@ static struct nvmem_config econfig = {
- 	.stride = 1,
- 	.word_size = 1,
- 	.reg_read = qfprom_reg_read,
--	.reg_write = qfprom_reg_write,
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -964,9 +964,9 @@ static const __initconst struct x86_cpu_
+ 	{}
  };
  
- static int qfprom_probe(struct platform_device *pdev)
+-static bool __init cpu_matches(unsigned long which)
++static bool __init cpu_matches(const struct x86_cpu_id *table, unsigned long which)
+ {
+-	const struct x86_cpu_id *m = x86_match_cpu(cpu_vuln_whitelist);
++	const struct x86_cpu_id *m = x86_match_cpu(table);
+ 
+ 	return m && !!(m->driver_data & which);
+ }
+@@ -986,29 +986,32 @@ static void __init cpu_set_bug_bits(stru
+ 	u64 ia32_cap = x86_read_arch_cap_msr();
+ 
+ 	/* Set ITLB_MULTIHIT bug if cpu is not in the whitelist and not mitigated */
+-	if (!cpu_matches(NO_ITLB_MULTIHIT) && !(ia32_cap & ARCH_CAP_PSCHANGE_MC_NO))
++	if (!cpu_matches(cpu_vuln_whitelist, NO_ITLB_MULTIHIT) &&
++	    !(ia32_cap & ARCH_CAP_PSCHANGE_MC_NO))
+ 		setup_force_cpu_bug(X86_BUG_ITLB_MULTIHIT);
+ 
+-	if (cpu_matches(NO_SPECULATION))
++	if (cpu_matches(cpu_vuln_whitelist, NO_SPECULATION))
+ 		return;
+ 
+ 	setup_force_cpu_bug(X86_BUG_SPECTRE_V1);
+ 	setup_force_cpu_bug(X86_BUG_SPECTRE_V2);
+ 
+-	if (!cpu_matches(NO_SSB) && !(ia32_cap & ARCH_CAP_SSB_NO) &&
++	if (!cpu_matches(cpu_vuln_whitelist, NO_SSB) &&
++	    !(ia32_cap & ARCH_CAP_SSB_NO) &&
+ 	   !cpu_has(c, X86_FEATURE_AMD_SSB_NO))
+ 		setup_force_cpu_bug(X86_BUG_SPEC_STORE_BYPASS);
+ 
+ 	if (ia32_cap & ARCH_CAP_IBRS_ALL)
+ 		setup_force_cpu_cap(X86_FEATURE_IBRS_ENHANCED);
+ 
+-	if (!cpu_matches(NO_MDS) && !(ia32_cap & ARCH_CAP_MDS_NO)) {
++	if (!cpu_matches(cpu_vuln_whitelist, NO_MDS) &&
++	    !(ia32_cap & ARCH_CAP_MDS_NO)) {
+ 		setup_force_cpu_bug(X86_BUG_MDS);
+-		if (cpu_matches(MSBDS_ONLY))
++		if (cpu_matches(cpu_vuln_whitelist, MSBDS_ONLY))
+ 			setup_force_cpu_bug(X86_BUG_MSBDS_ONLY);
+ 	}
+ 
+-	if (!cpu_matches(NO_SWAPGS))
++	if (!cpu_matches(cpu_vuln_whitelist, NO_SWAPGS))
+ 		setup_force_cpu_bug(X86_BUG_SWAPGS);
+ 
+ 	/*
+@@ -1026,7 +1029,7 @@ static void __init cpu_set_bug_bits(stru
+ 	     (ia32_cap & ARCH_CAP_TSX_CTRL_MSR)))
+ 		setup_force_cpu_bug(X86_BUG_TAA);
+ 
+-	if (cpu_matches(NO_MELTDOWN))
++	if (cpu_matches(cpu_vuln_whitelist, NO_MELTDOWN))
+ 		return;
+ 
+ 	/* Rogue Data Cache Load? No! */
+@@ -1035,7 +1038,7 @@ static void __init cpu_set_bug_bits(stru
+ 
+ 	setup_force_cpu_bug(X86_BUG_CPU_MELTDOWN);
+ 
+-	if (cpu_matches(NO_L1TF))
++	if (cpu_matches(cpu_vuln_whitelist, NO_L1TF))
+ 		return;
+ 
+ 	setup_force_cpu_bug(X86_BUG_L1TF);
 
 
