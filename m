@@ -2,60 +2,61 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F74C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 02:06:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96BE3C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 02:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73E51207C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 02:06:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591668402;
-	bh=papM9bdqtASJSJWgzY96IDpNtIjXVPC8jiJhqHOTvjk=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=0po5c2eXylazsxrNew88YdIEA9DdX5Nbc0Gekl9JXllMl4+P/Vo0VJhneSFfVgNc5
-	 xZtvb0ysw4cDII5d8YjasWKUqjcQd1IJY2LwN7s4xIlO5XIk1XO8uUlsVbF9H6g2Mu
-	 VaSKYmozenevgrQArq1OmYXEfPR3cu9Demt7Ly4Y=
+	by mail.kernel.org (Postfix) with ESMTP id 79D3F206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 02:07:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbgFICGl (ORCPT
+        id S1727064AbgFICHj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 22:06:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45844 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726749AbgFICGk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 22:06:40 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8FC6206D5;
-        Tue,  9 Jun 2020 02:06:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591668400;
-        bh=papM9bdqtASJSJWgzY96IDpNtIjXVPC8jiJhqHOTvjk=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=bapl6munPmbh1b61gmITTkZ6yK4e93+dSB9+BBnmdiW3Nlp+midLbzFNgFrf1rlOr
-         0cWbeFd+ha+jvT40H1UUgS5P1ZOr8/dQBuSXXVG0/CmOuu1xKbSs1K19u+C3uzM2nh
-         9h9K3kJzIXJfe4cmo8KB5wbetwWuDOxr1nwoi2A8=
-Date:   Mon, 8 Jun 2020 22:06:38 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.6 001/606] hwmon: (da9052) Synchronize access
- with mfd
-Message-ID: <20200609020638.GT1407771@sasha-vm>
-References: <20200608231211.3363633-1-sashal@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
+        Mon, 8 Jun 2020 22:07:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37154 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726749AbgFICHj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 22:07:39 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09690C08C5C2;
+        Mon,  8 Jun 2020 19:07:39 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id D18AB128A517B;
+        Mon,  8 Jun 2020 19:07:37 -0700 (PDT)
+Date:   Mon, 08 Jun 2020 19:07:37 -0700 (PDT)
+Message-Id: <20200608.190737.2279619081686680210.davem@davemloft.net>
+To:     xypron.glpk@gmx.de
+Cc:     vishal@chelsio.com, kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] cxgb4: fix cxgb4_uld_in_use() not used error
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200608005823.911290-1-xypron.glpk@gmx.de>
+References: <20200608005823.911290-1-xypron.glpk@gmx.de>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=iso-8859-7
+Content-Transfer-Encoding: base64
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 08 Jun 2020 19:07:38 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Uh, I messed something up for the 5.6 series, sorry :(
-
--- 
-Thanks,
-Sasha
+RnJvbTogSGVpbnJpY2ggU2NodWNoYXJkdCA8eHlwcm9uLmdscGtAZ214LmRlPg0KRGF0ZTogTW9u
+LCAgOCBKdW4gMjAyMCAwMjo1ODoyMyArMDIwMA0KDQo+IFdoZW4gYnVpbGRpbmcgd2l0aG91dCBD
+T05GSUdfQ0hFTFNJT19UTFNfREVWSUNFIGEgYnVpbGQgZXJyb3Igb2NjdXJzOg0KPiANCj4gZHJp
+dmVycy9uZXQvZXRoZXJuZXQvY2hlbHNpby9jeGdiNC9jeGdiNF91bGQuYzo2NjY6MTM6IGVycm9y
+Og0KPiChY3hnYjRfdWxkX2luX3VzZaIgZGVmaW5lZCBidXQgbm90IHVzZWQgWy1XZXJyb3I9dW51
+c2VkLWZ1bmN0aW9uXQ0KPiAgIDY2NiB8IHN0YXRpYyBib29sIGN4Z2I0X3VsZF9pbl91c2Uoc3Ry
+dWN0IGFkYXB0ZXIgKmFkYXApDQo+ICAgICAgIHwgICAgICAgICAgICAgXn5+fn5+fn5+fn5+fn5+
+fg0KPiANCj4gR3VhcmQgY3hnYjRfdWxkX2luX3VzZSgpIHdpdGggI2lmZGVmIENPTkZJR19DSEVM
+U0lPX1RMU19ERVZJQ0UuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBIZWlucmljaCBTY2h1Y2hhcmR0
+IDx4eXByb24uZ2xwa0BnbXguZGU+DQoNCg0KUGxlYXNlIHNlZSBjb21taXQgZWYxYzc1NTkzZTc3
+MGFmZjg3NDllOTAyYWEwZGViNjg1NWEzZjQ4NSwgd2hpY2ggYWxyZWFkeQ0KZG9lcyB0aGlzLg0K
+DQpUaGFuayB5b3UuDQo=
