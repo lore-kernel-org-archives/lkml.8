@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F7ABC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC942C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71DAB207ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:56:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD9B420734
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:56:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725399;
-	bh=61wbgqZP6RiTlB2en8fs2oA+5228qjJ/z3HAiGnFn+A=;
+	s=default; t=1591725402;
+	bh=tJ7i3gI0/ijEe7QVglU/MZNhpV1Jc+al4aF2FGTCKJs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xq8O2st4zz1ME6efhNEXOIbw3UG2whh4DMyasiww1x21RU88GyExJAtnRTPXcnBJR
-	 of6w66/i+cL0LBcQCtoKzo9dtJHtUcH8wy6+g7C1XdZ7M3YV0Ad+ukDb1114WfiMNy
-	 Rm7iNBpD2AWpoxsEYjOl0En48V1oqaZXIN7n4Ggs=
+	b=Pl8nv8Lnoi9z8kP0FaHrpxkHS/Jb2N4vXLBCE/WIccghtnA+DLf+PQ5OMiFdsvvaR
+	 k5pqexyeqvLufyj4br3rREHnZs4ZKZFiYOBXNhn/MP1qWwel8uJPvBcIi3InmSCkp5
+	 gdkrlMKk9Dd+ycNlX5yWtLzGE0kyfiDfwQryK8G0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387544AbgFIR4g (ORCPT
+        id S1732158AbgFIR4k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:56:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47218 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:56:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733198AbgFIRzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:55:07 -0400
+        id S1733214AbgFIRzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:55:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C85BB20734;
-        Tue,  9 Jun 2020 17:55:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEC70206D5;
+        Tue,  9 Jun 2020 17:55:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725307;
-        bh=61wbgqZP6RiTlB2en8fs2oA+5228qjJ/z3HAiGnFn+A=;
+        s=default; t=1591725316;
+        bh=tJ7i3gI0/ijEe7QVglU/MZNhpV1Jc+al4aF2FGTCKJs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EV+R6ag0lLfVl4tGzI4WtFo9zj+/5hUOpk6Pda7uRFdu+N4E8+KkbcirHBbbeIegu
-         6zVhG9zKu4gHaXMrMV/TngQWgvzAQaRvPQ6TYIEjsvWRqVPd5wxRziksZ76zvi5GRp
-         qR72dc8fcdAPYN8YYvJFX5e6YYfY9lvPArYkex/I=
+        b=C6yg4MSKdkVkVyqg67IAuUJ60fs09iEbb//H8cEWYazXuLDAB1aTqR3uaXAstPMVF
+         lp0stQUBJkMZGypspxBp5H4tQaqXdT4VM5H3lfL8hcWV07sVC1TfY8zNzsMOTGpB9Z
+         D0vPTs1rmFtduFJQiDvrMVQFRsmH+R/CyiFNCg7E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Hanselmann <public@hansmi.ch>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.7 04/24] USB: serial: ch341: add basis for quirk detection
-Date:   Tue,  9 Jun 2020 19:45:35 +0200
-Message-Id: <20200609174149.663568644@linuxfoundation.org>
+        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Stable@vger.kernel.org,
+        Tomasz Duszynski <tomasz.duszynski@octakon.com>
+Subject: [PATCH 5.7 08/24] iio:chemical:pms7003: Fix timestamp alignment and prevent data leak.
+Date:   Tue,  9 Jun 2020 19:45:39 +0200
+Message-Id: <20200609174149.993708614@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174149.255223112@linuxfoundation.org>
 References: <20200609174149.255223112@linuxfoundation.org>
@@ -59,106 +61,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Hanselmann <public@hansmi.ch>
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-commit c404bf4aa9236cb4d1068e499ae42acf48a6ff97 upstream.
+commit 13e945631c2ffb946c0af342812a3cd39227de6e upstream.
 
-A subset of CH341 devices does not support all features, namely the
-prescaler is limited to a reduced precision and there is no support for
-sending a RS232 break condition. This patch adds a detection function
-which will be extended to set quirk flags as they're implemented.
+One of a class of bugs pointed out by Lars in a recent review.
+iio_push_to_buffers_with_timestamp assumes the buffer used is aligned
+to the size of the timestamp (8 bytes).  This is not guaranteed in
+this driver which uses an array of smaller elements on the stack.
+As Lars also noted this anti pattern can involve a leak of data to
+userspace and that indeed can happen here.  We close both issues by
+moving to a suitable structure in the iio_priv() data with alignment
+explicitly requested.  This data is allocated with kzalloc so no
+data can leak appart from previous readings.
 
-The author's affected device has an imprint of "340" on the
-turquoise-colored plug, but not all such devices appear to be affected.
-
-Signed-off-by: Michael Hanselmann <public@hansmi.ch>
-Link: https://lore.kernel.org/r/1e1ae0da6082bb528a44ef323d4e1d3733d38858.1585697281.git.public@hansmi.ch
-[ johan: use long type for quirks; rephrase and use port device for
-	 messages; handle short reads; set quirk flags directly in
-	 helper function ]
-Cc: stable <stable@vger.kernel.org>	# 5.5
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Fixes: a1d642266c14 ("iio: chemical: add support for Plantower PMS7003 sensor")
+Reported-by: Lars-Peter Clausen <lars@metafoo.de>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: <Stable@vger.kernel.org>
+Acked-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/ch341.c |   53 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
+ drivers/iio/chemical/pms7003.c |   17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
---- a/drivers/usb/serial/ch341.c
-+++ b/drivers/usb/serial/ch341.c
-@@ -87,6 +87,7 @@ struct ch341_private {
- 	u8 mcr;
- 	u8 msr;
- 	u8 lcr;
-+	unsigned long quirks;
+--- a/drivers/iio/chemical/pms7003.c
++++ b/drivers/iio/chemical/pms7003.c
+@@ -73,6 +73,11 @@ struct pms7003_state {
+ 	struct pms7003_frame frame;
+ 	struct completion frame_ready;
+ 	struct mutex lock; /* must be held whenever state gets touched */
++	/* Used to construct scan to push to the IIO buffer */
++	struct {
++		u16 data[3]; /* PM1, PM2P5, PM10 */
++		s64 ts;
++	} scan;
  };
  
- static void ch341_set_termios(struct tty_struct *tty,
-@@ -308,6 +309,53 @@ out:	kfree(buffer);
- 	return r;
- }
+ static int pms7003_do_cmd(struct pms7003_state *state, enum pms7003_cmd cmd)
+@@ -104,7 +109,6 @@ static irqreturn_t pms7003_trigger_handl
+ 	struct iio_dev *indio_dev = pf->indio_dev;
+ 	struct pms7003_state *state = iio_priv(indio_dev);
+ 	struct pms7003_frame *frame = &state->frame;
+-	u16 data[3 + 1 + 4]; /* PM1, PM2P5, PM10, padding, timestamp */
+ 	int ret;
  
-+static int ch341_detect_quirks(struct usb_serial_port *port)
-+{
-+	struct ch341_private *priv = usb_get_serial_port_data(port);
-+	struct usb_device *udev = port->serial->dev;
-+	const unsigned int size = 2;
-+	unsigned long quirks = 0;
-+	char *buffer;
-+	int r;
-+
-+	buffer = kmalloc(size, GFP_KERNEL);
-+	if (!buffer)
-+		return -ENOMEM;
-+
-+	/*
-+	 * A subset of CH34x devices does not support all features. The
-+	 * prescaler is limited and there is no support for sending a RS232
-+	 * break condition. A read failure when trying to set up the latter is
-+	 * used to detect these devices.
-+	 */
-+	r = usb_control_msg(udev, usb_rcvctrlpipe(udev, 0), CH341_REQ_READ_REG,
-+			    USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_IN,
-+			    CH341_REG_BREAK, 0, buffer, size, DEFAULT_TIMEOUT);
-+	if (r == -EPIPE) {
-+		dev_dbg(&port->dev, "break control not supported\n");
-+		r = 0;
-+		goto out;
-+	}
-+
-+	if (r != size) {
-+		if (r >= 0)
-+			r = -EIO;
-+		dev_err(&port->dev, "failed to read break control: %d\n", r);
-+		goto out;
-+	}
-+
-+	r = 0;
-+out:
-+	kfree(buffer);
-+
-+	if (quirks) {
-+		dev_dbg(&port->dev, "enabling quirk flags: 0x%02lx\n", quirks);
-+		priv->quirks |= quirks;
-+	}
-+
-+	return r;
-+}
-+
- static int ch341_port_probe(struct usb_serial_port *port)
- {
- 	struct ch341_private *priv;
-@@ -330,6 +378,11 @@ static int ch341_port_probe(struct usb_s
- 		goto error;
+ 	mutex_lock(&state->lock);
+@@ -114,12 +118,15 @@ static irqreturn_t pms7003_trigger_handl
+ 		goto err;
+ 	}
  
- 	usb_set_serial_port_data(port, priv);
-+
-+	r = ch341_detect_quirks(port);
-+	if (r < 0)
-+		goto error;
-+
- 	return 0;
+-	data[PM1] = pms7003_get_pm(frame->data + PMS7003_PM1_OFFSET);
+-	data[PM2P5] = pms7003_get_pm(frame->data + PMS7003_PM2P5_OFFSET);
+-	data[PM10] = pms7003_get_pm(frame->data + PMS7003_PM10_OFFSET);
++	state->scan.data[PM1] =
++		pms7003_get_pm(frame->data + PMS7003_PM1_OFFSET);
++	state->scan.data[PM2P5] =
++		pms7003_get_pm(frame->data + PMS7003_PM2P5_OFFSET);
++	state->scan.data[PM10] =
++		pms7003_get_pm(frame->data + PMS7003_PM10_OFFSET);
+ 	mutex_unlock(&state->lock);
  
- error:	kfree(priv);
+-	iio_push_to_buffers_with_timestamp(indio_dev, data,
++	iio_push_to_buffers_with_timestamp(indio_dev, &state->scan,
+ 					   iio_get_time_ns(indio_dev));
+ err:
+ 	iio_trigger_notify_done(indio_dev->trig);
 
 
