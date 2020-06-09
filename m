@@ -2,164 +2,91 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 927B1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D7A8C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6927120774
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:02:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4751B20734
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:02:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591725761;
-	bh=3RKSAtWMH1lyWLRWFOOdp8K9w7gNBF2vUUFMIouVOIs=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=jTh+edS+hUJK3CHJpYRk5INlU1bjwyTTeigUFOkZYi2/lzDRVvl7dkcG9Ly8DWkFI
-	 AidUgNCf6I7QE4ydI5BDeumw84JIlkG2duF2NmaRB6ON6aaU48yVseO8x18igbaXBC
-	 O7MHWnEwNigLaGplMQ9SGjO0DP8eF6j2g1f/95VY=
+	s=default; t=1591725767;
+	bh=vo3FdLqBqtbtjEeMD+wJP5z7o0CKJthufAyEqjJq63s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=PUYtryWhAJT6sqF8gCkfECgKovyFhkk9aH72ns8gNP9j2uoAWTkI92u4fe/iP6MAW
+	 Mr7zAaDId1xzrULwcX5YpaIrMLbKFQ2grb2NsJ2kZshrypbc5sGPdt4P/NIwFkrDBo
+	 OWyFHvZicCPXxgFPGqOuSO3kJGeEEW/Bz9ABXct4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387676AbgFISCj (ORCPT
+        id S2387875AbgFISCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:02:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54268 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 14:02:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729637AbgFISC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 14:02:29 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        id S1731479AbgFIRxV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:53:21 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 472BC206D5;
-        Tue,  9 Jun 2020 18:02:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0A5F207C3;
+        Tue,  9 Jun 2020 17:53:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725747;
-        bh=3RKSAtWMH1lyWLRWFOOdp8K9w7gNBF2vUUFMIouVOIs=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=Ebn5d4w7NWA678saEwBWdYf0fk2O/G8nw61u81Wr35USF5iJ1RzfbT2kT5BfGaCu1
-         VsYwITJ8GHL4sV/uN6tpAg7swZjW4cmYOwyTTxMr8bT2A6588oxxL4vL1rlvoOexTu
-         94cOggrOei9OneTWFq4upvxNCPRETbnYcIudMURc=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 2D1A835229D0; Tue,  9 Jun 2020 11:02:27 -0700 (PDT)
-Date:   Tue, 9 Jun 2020 11:02:27 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Josh Triplett <josh@joshtriplett.org>
-Subject: Re: [PATCH 01/10] rcu: Directly lock rdp->nocb_lock on nocb code
- entrypoints
-Message-ID: <20200609180227.GR4455@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200513164714.22557-1-frederic@kernel.org>
- <20200513164714.22557-2-frederic@kernel.org>
- <20200520122949.GB16672@google.com>
- <20200522175739.GM2869@paulmck-ThinkPad-P72>
- <20200604114121.GA26398@lenoir>
- <20200604163655.GC29598@paulmck-ThinkPad-P72>
- <20200608125715.GA30920@lenoir>
+        s=default; t=1591725201;
+        bh=vo3FdLqBqtbtjEeMD+wJP5z7o0CKJthufAyEqjJq63s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=wTVyAaoElcUrdnzJXuza6W2HvpsPSIQLaB8RV+bHYHf2HwEc48vd83mVOtqJ2oDGM
+         txvqCroEtqFxizK5MTtSz+3WeDBwlL7Y7REFDnX71baEa5w7+5wTbJ71KBb14NJnEm
+         JyHxb1CVVML3xbyRBL8/jNw4ZFhE5WELRUzorsjU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Yang Yingliang <yangyingliang@huawei.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.6 01/41] devinet: fix memleak in inetdev_init()
+Date:   Tue,  9 Jun 2020 19:45:03 +0200
+Message-Id: <20200609174112.249140476@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200609174112.129412236@linuxfoundation.org>
+References: <20200609174112.129412236@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200608125715.GA30920@lenoir>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 02:57:17PM +0200, Frederic Weisbecker wrote:
-> On Thu, Jun 04, 2020 at 09:36:55AM -0700, Paul E. McKenney wrote:
-> > On Thu, Jun 04, 2020 at 01:41:22PM +0200, Frederic Weisbecker wrote:
-> > > On Fri, May 22, 2020 at 10:57:39AM -0700, Paul E. McKenney wrote:
-> > > > On Wed, May 20, 2020 at 08:29:49AM -0400, Joel Fernandes wrote:
-> > > > > Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > > > 
-> > > > Thank you for looking this over, Joel!
-> > > > 
-> > > > Is it feasible to make rcu_nocb_lock*() and rcu_nocb_unlock*() "do the
-> > > > right thing", even when things are changing?  If it is feasible, that
-> > > > would prevent any number of "interesting" copy-pasta and "just now became
-> > > > common code" bugs down the road.
-> > > 
-> > > This won't be pretty:
-> > > 
-> > >     locked = rcu_nocb_lock();
-> > >     rcu_nocb_unlock(locked);
-> > 
-> > I was thinking in terms of a bit in the rcu_data structure into
-> > which rcu_nocb_lock() and friends stored the status, and from which
-> > rcu_nocb_unlock() and friends retrieved that same status.  Sort of like
-> > how preemptible RCU uses the ->rcu_read_lock_nesting field in task_struct.
-> > 
-> > As noted, this does require reworking the hotplug code to avoid the
-> > current holding of two such locks concurrently, which I am happy to do
-> > if that helps.
-> > 
-> > Or am I missing a subtle (or not-so-subtle) twist here?
-> 
-> So, during a CPU round, the nocb-gp kthread locks the corresponding rdp-nocb
-> and then ignores if it is not offloaded. Surely there is a smarter ways to do
-> that though. Well that's something we'll need to optimize at some point anyway.
-> 
-> Also we must then make sure that the nocb timers won't ever fire while we
-> switch to offloaded state or they may fiddle with internals without locking
-> nocb.
+From: Yang Yingliang <yangyingliang@huawei.com>
 
-Understood, the synchronization requirements during the switchover will
-be tricky.  But that will be the case no matter how we set it up.
-If possible, it would be good if that trickiness could be concentrated
-rather than spread far and wide.
+[ Upstream commit 1b49cd71b52403822731dc9f283185d1da355f97 ]
 
-> > > And anyway we still want to unconditionally lock on many places,
-> > > regardless of the offloaded state. I don't know how we could have
-> > > a magic helper do the unconditional lock on some places and the
-> > > conditional on others.
-> > 
-> > I was assuming (perhaps incorrectly) that an intermediate phase between
-> > not-offloaded and offloaded would take care of all of those cases.
-> 
-> Perhaps partly but I fear that won't be enough.
+When devinet_sysctl_register() failed, the memory allocated
+in neigh_parms_alloc() should be freed.
 
-One approach is to rely on RCU read-side critical sections surrounding
-the lock acquisition and to stay in the intermediate phase until a grace
-period completes, preferably call_rcu() instead of synchronize_rcu().
+Fixes: 20e61da7ffcf ("ipv4: fail early when creating netdev named all or default")
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+Acked-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/ipv4/devinet.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-This of course means refusing to do a transition if the CPU is still
-in the intermediate state from a prior transition.
+--- a/net/ipv4/devinet.c
++++ b/net/ipv4/devinet.c
+@@ -276,6 +276,7 @@ static struct in_device *inetdev_init(st
+ 	err = devinet_sysctl_register(in_dev);
+ 	if (err) {
+ 		in_dev->dead = 1;
++		neigh_parms_release(&arp_tbl, in_dev->arp_parms);
+ 		in_dev_put(in_dev);
+ 		in_dev = NULL;
+ 		goto out;
 
-> > > Also the point of turning the lock helpers into primitives is to make
-> > > it clearer as to where we really need unconditional locking and where
-> > > we allow it to be conditional. A gift to reviewers :-)
-> > 
-> > Unless and until someone does a copy-pasta, thus unconditionally
-> > doing the wrong thing.  ;-)
-> 
-> Yeah but the cost is more complicated code and synchronization to
-> maintain the use of those all-in-one locking APIs everywhere. And
-> current state is already not that simple :-)
-> 
-> Perhaps we should rename rcu_nocb_lock() into rcu_nocb_lock_cond() to
-> prevent from accidents?
 
-We do need something to avoid accidents.  ;-)
-
-> Also I've been thinking that rcu_nocb_lock() should meet any of these
-> requirements:
-> 
-> * hotplug is locked
-> * rcu barrier is locked
-> * rnp is locked
-> 
-> Because checking the offloaded state (when nocb isn't locked yet) of
-> an rdp without any of the above locks held is racy. And that should
-> be easy to check and prevent from copy-pasta accidents.
-> 
-> What do you think?
-
-An RCU read-side critical section might be simpler.
-
-							Thanx, Paul
