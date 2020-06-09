@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0551FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF410C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D316B20814
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:48:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F985207F9
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 17:48:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591724903;
-	bh=3VhzeYCfyFo9o7fz5Vi6e9lrLzkvJTjzxHdMTZtg2QA=;
+	s=default; t=1591724908;
+	bh=YUQ3zE6gHknWLZQ8cWA+ZL/A4ox6L2Wm10Hf9XSjg5U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R6ASRIspimIEZ8P5mmVnZgMT8jpRYrabal52Ckod2Gm5kvYO0358Gz+pEHecmlzTG
-	 J86PYMA5HK5XfAN8wUwIZRNfNjTE66R5b4kjZUVi1lPklY79xt/NJW9aLy85DUkBZT
-	 weo3cWNaTBfrpvVw8j2oyzAVT5i/J7ZylxN3orBQ=
+	b=AG7fjVc0NrsfLAPyNn0YIeBmOBYbJ2xDVrYFFQtCNSx+WvaMpfWldkexm2WkWs3fY
+	 uvAymvEXTAw5pyqAnBAKvGtl8bMRP0pMhT0507Qs6eKFdKTVh7Hp8pyFJWnyx7xsIV
+	 koaFkm/3tVo+K0ELCQFuzvJgDRkH79Q8ee8YBdMw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732266AbgFIRsV (ORCPT
+        id S1732089AbgFIRs0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:48:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60190 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 13:48:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732222AbgFIRsI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:48:08 -0400
+        id S1732244AbgFIRsP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:48:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2443207F9;
-        Tue,  9 Jun 2020 17:48:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75A4B20812;
+        Tue,  9 Jun 2020 17:48:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591724888;
-        bh=3VhzeYCfyFo9o7fz5Vi6e9lrLzkvJTjzxHdMTZtg2QA=;
+        s=default; t=1591724894;
+        bh=YUQ3zE6gHknWLZQ8cWA+ZL/A4ox6L2Wm10Hf9XSjg5U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RUif5H1sGUTxvRBpHnUJnTP7z9fNCyyI8eBbkDOWwohC44LqRoxyZ01DfMYQDRgbP
-         Lw0UeDRYkxfX6wvdnV39omWoW6gJF7f9/cVGe6soAAAQvnG4Sq9Y8Kus5HcZwRhdHs
-         p0cr1jIe/tOlctaewY7jyWepJIiyP4sv370FEg0k=
+        b=bNxUHBkIGRNvBqKRc2p2B/Bo+g7jas+Ay0jTIBJtPLxww/O123NhqUbWDH6A8/RMn
+         cAw0eWTS9TEuodPHkvfDcdNVntp0XMiVYfpvKlMP3idHq1L6c34yLEb46RVgMPh3D9
+         43fpIbX2tKy6Tdg3owaZLVgEsObjWZ3JwfKq8D2k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yang Yingliang <yangyingliang@huawei.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 22/42] devinet: fix memleak in inetdev_init()
-Date:   Tue,  9 Jun 2020 19:44:28 +0200
-Message-Id: <20200609174017.889143099@linuxfoundation.org>
+Subject: [PATCH 4.9 25/42] NFC: st21nfca: add missed kfree_skb() in an error path
+Date:   Tue,  9 Jun 2020 19:44:31 +0200
+Message-Id: <20200609174018.230484510@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174015.379493548@linuxfoundation.org>
 References: <20200609174015.379493548@linuxfoundation.org>
@@ -60,31 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Yingliang <yangyingliang@huawei.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 1b49cd71b52403822731dc9f283185d1da355f97 ]
+[ Upstream commit 3decabdc714ca56c944f4669b4cdec5c2c1cea23 ]
 
-When devinet_sysctl_register() failed, the memory allocated
-in neigh_parms_alloc() should be freed.
+st21nfca_tm_send_atr_res() misses to call kfree_skb() in an error path.
+Add the missed function call to fix it.
 
-Fixes: 20e61da7ffcf ("ipv4: fail early when creating netdev named all or default")
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
-Acked-by: Cong Wang <xiyou.wangcong@gmail.com>
+Fixes: 1892bf844ea0 ("NFC: st21nfca: Adding P2P support to st21nfca in Initiator & Target mode")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/devinet.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/nfc/st21nfca/dep.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/net/ipv4/devinet.c
-+++ b/net/ipv4/devinet.c
-@@ -262,6 +262,7 @@ static struct in_device *inetdev_init(st
- 	err = devinet_sysctl_register(in_dev);
- 	if (err) {
- 		in_dev->dead = 1;
-+		neigh_parms_release(&arp_tbl, in_dev->arp_parms);
- 		in_dev_put(in_dev);
- 		in_dev = NULL;
- 		goto out;
+--- a/drivers/nfc/st21nfca/dep.c
++++ b/drivers/nfc/st21nfca/dep.c
+@@ -184,8 +184,10 @@ static int st21nfca_tm_send_atr_res(stru
+ 		memcpy(atr_res->gbi, atr_req->gbi, gb_len);
+ 		r = nfc_set_remote_general_bytes(hdev->ndev, atr_res->gbi,
+ 						  gb_len);
+-		if (r < 0)
++		if (r < 0) {
++			kfree_skb(skb);
+ 			return r;
++		}
+ 	}
+ 
+ 	info->dep_info.curr_nfc_dep_pni = 0;
 
 
