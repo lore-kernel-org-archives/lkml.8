@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0C6C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68AEEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:25:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB4CA2068D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:25:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4613B206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:25:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591727117;
-	bh=tQDjHVEAGy3xPyqfNA0RAzmpf7LBtFyTEvPPWoq8YZQ=;
+	s=default; t=1591727129;
+	bh=0l8c9k+8yFocyzIgv8IfzIQTVYUyVs5GizGv3/sGW/A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eFDhCMW9y44llCMgk6Mb1JIWwEDh6Siiwaq/g+WQDFz4mU38d8NFLGg3hrtTa2DN6
-	 D4Fw4lSHUcrAsZ/6f1YWTRtHdZjKdtXKAZxmkOYTsLTeY2KZ9kso87OGJ5yrFGO7Md
-	 kngTUl1ZoPtZo3zydVw7AKDCv4/5UY6w7OZWtkNI=
+	b=Hx09fGVZ7iUZWs4e4EDdCY0qTpB4IiJyTg12jsCKsa6AXiN5AnVlwvYHPgedR99Du
+	 6+5kDmpnVaZYQ1NT2O+Av8AB3v4pB068B/69bglcEUYWNYkoEHjiq2oiW2LRAyPmwR
+	 fmCDt8b+FMiw5HM5Nde34zTRu8hkPwDI7VYz571o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731971AbgFIRqf (ORCPT
+        id S2388984AbgFISZZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:46:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56454 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 14:25:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728440AbgFIRq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:46:28 -0400
+        id S1729130AbgFIRqe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:46:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99EAE2083B;
-        Tue,  9 Jun 2020 17:46:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65CCF2081A;
+        Tue,  9 Jun 2020 17:46:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591724787;
-        bh=tQDjHVEAGy3xPyqfNA0RAzmpf7LBtFyTEvPPWoq8YZQ=;
+        s=default; t=1591724793;
+        bh=0l8c9k+8yFocyzIgv8IfzIQTVYUyVs5GizGv3/sGW/A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H2A7Lz2/S9goBeohb2P68jM9+tSuEfO/s94fC5Z3sNxXY1a7RP3LTqKbrhL5LlCI5
-         RxTmzwqk3iB4uH1tfJfNQHCpqE0TXdu2mggtsVAD+lxAKI/CCUz7OCPlxgKUGSh0eI
-         5+PeFqzOoDxhT+59fgzJXU8p19Od82B5MDX1ayZo=
+        b=iAo/PJIndw9TdZx/YluEk0PezjzWAScc175htn+7lKoqB3XTN9I7gCJflJux/yRDb
+         g/V4Q5qAfZ1oM2fFkskhk35Vq0ZGsbyhAGyXWLADec32k7iarJNlzzR5H5hsis5+U3
+         uqhTgp2FeaeGtWrf/+QzNKd5A/nfIZkfKe5gQ5Q8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sven Schnelle <svens@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        stable@vger.kernel.org, Jeremy Kerr <jk@ozlabs.org>,
+        Stan Johnson <userm57@yahoo.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 08/36] s390/ftrace: save traced function caller
-Date:   Tue,  9 Jun 2020 19:44:08 +0200
-Message-Id: <20200609173933.762054768@linuxfoundation.org>
+Subject: [PATCH 4.4 11/36] net: bmac: Fix read of MAC address from ROM
+Date:   Tue,  9 Jun 2020 19:44:11 +0200
+Message-Id: <20200609173933.927328978@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609173933.288044334@linuxfoundation.org>
 References: <20200609173933.288044334@linuxfoundation.org>
@@ -60,53 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Gorbik <gor@linux.ibm.com>
+From: Jeremy Kerr <jk@ozlabs.org>
 
-[ Upstream commit b4adfe55915d8363e244e42386d69567db1719b9 ]
+[ Upstream commit ef01cee2ee1b369c57a936166483d40942bcc3e3 ]
 
-A typical backtrace acquired from ftraced function currently looks like
-the following (e.g. for "path_openat"):
+In bmac_get_station_address, We're reading two bytes at a time from ROM,
+but we do that six times, resulting in 12 bytes of read & writes. This
+means we will write off the end of the six-byte destination buffer.
 
-arch_stack_walk+0x15c/0x2d8
-stack_trace_save+0x50/0x68
-stack_trace_call+0x15a/0x3b8
-ftrace_graph_caller+0x0/0x1c
-0x3e0007e3c98 <- ftraced function caller (should be do_filp_open+0x7c/0xe8)
-do_open_execat+0x70/0x1b8
-__do_execve_file.isra.0+0x7d8/0x860
-__s390x_sys_execve+0x56/0x68
-system_call+0xdc/0x2d8
+This change fixes the for-loop to only read/write six bytes.
 
-Note random "0x3e0007e3c98" stack value as ftraced function caller. This
-value causes either imprecise unwinder result or unwinding failure.
-That "0x3e0007e3c98" comes from r14 of ftraced function stack frame, which
-it haven't had a chance to initialize since the very first instruction
-calls ftrace code ("ftrace_caller"). (ftraced function might never
-save r14 as well). Nevertheless according to s390 ABI any function
-is called with stack frame allocated for it and r14 contains return
-address. "ftrace_caller" itself is called with "brasl %r0,ftrace_caller".
-So, to fix this issue simply always save traced function caller onto
-ftraced function stack frame.
+Based on a proposed fix from Finn Thain <fthain@telegraphics.com.au>.
 
-Reported-by: Sven Schnelle <svens@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+Reported-by: Stan Johnson <userm57@yahoo.com>
+Tested-by: Stan Johnson <userm57@yahoo.com>
+Reported-by: Finn Thain <fthain@telegraphics.com.au>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/mcount.S | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/apple/bmac.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/s390/kernel/mcount.S b/arch/s390/kernel/mcount.S
-index 78ba14546e00..68425e68e65a 100644
---- a/arch/s390/kernel/mcount.S
-+++ b/arch/s390/kernel/mcount.S
-@@ -36,6 +36,7 @@ ENTRY(_mcount)
- ENTRY(ftrace_caller)
- 	.globl	ftrace_regs_caller
- 	.set	ftrace_regs_caller,ftrace_caller
-+	stg	%r14,(__SF_GPRS+8*8)(%r15)	# save traced function caller
- 	lgr	%r1,%r15
- #ifndef CC_USING_HOTPATCH
- 	aghi	%r0,MCOUNT_RETURN_FIXUP
+diff --git a/drivers/net/ethernet/apple/bmac.c b/drivers/net/ethernet/apple/bmac.c
+index a65d7a60f116..ffa7e7e6d18d 100644
+--- a/drivers/net/ethernet/apple/bmac.c
++++ b/drivers/net/ethernet/apple/bmac.c
+@@ -1187,7 +1187,7 @@ bmac_get_station_address(struct net_device *dev, unsigned char *ea)
+ 	int i;
+ 	unsigned short data;
+ 
+-	for (i = 0; i < 6; i++)
++	for (i = 0; i < 3; i++)
+ 		{
+ 			reset_and_select_srom(dev);
+ 			data = read_srom(dev, i + EnetAddressOffset/2, SROMAddressBits);
 -- 
 2.25.1
 
