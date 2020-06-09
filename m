@@ -2,291 +2,238 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D48C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF41C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:57:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE3F22078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:56:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AC8D207C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:57:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbgFIB4J (ORCPT
+        id S1727806AbgFIB5Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 21:56:09 -0400
-Received: from mga17.intel.com ([192.55.52.151]:53926 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726887AbgFIB4I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 21:56:08 -0400
-IronPort-SDR: JHcyhO/3m2nGyZjtjBcI+SYwiI1uk4NXysBs/l88sYDPz1/y2hzXwSFWy9Glw2giDKNQl7O3Sm
- byz/I/ykzdpQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2020 18:56:07 -0700
-IronPort-SDR: PgR7H+/r10o+UHFp4bMpZMT7Lfs8UvfXoFBE09iEk7o7Rp7FfIRkdZG8U6dt8jGXfv9+93YFPA
- tmP7YDWhmqaQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,490,1583222400"; 
-   d="scan'208";a="288665884"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
-  by orsmga002.jf.intel.com with ESMTP; 08 Jun 2020 18:56:07 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] KVM: nVMX: Wrap VM-Fail valid path in generic VM-Fail helper
-Date:   Mon,  8 Jun 2020 18:56:07 -0700
-Message-Id: <20200609015607.6994-1-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.26.0
+        Mon, 8 Jun 2020 21:57:25 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:52660 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726887AbgFIB5Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 21:57:24 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 50E58489A72CEE3843A3;
+        Tue,  9 Jun 2020 09:57:22 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Tue, 9 Jun 2020
+ 09:57:15 +0800
+From:   Jason Yan <yanaijie@huawei.com>
+To:     <viro@zeniv.linux.org.uk>, <axboe@kernel.dk>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-block@vger.kernel.org>
+CC:     Jason Yan <yanaijie@huawei.com>, Christoph Hellwig <hch@lst.de>,
+        Ming Lei <ming.lei@redhat.com>, Jan Kara <jack@suse.cz>,
+        Hulk Robot <hulkci@huawei.com>
+Subject: [PATCH v5] block: Fix use-after-free in blkdev_get()
+Date:   Tue, 9 Jun 2020 10:24:53 +0800
+Message-ID: <20200609022453.6190-1-yanaijie@huawei.com>
+X-Mailer: git-send-email 2.21.3
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add nested_vmx_fail() to wrap VM-Fail paths that _may_ result in VM-Fail
-Valid to make it clear at the call sites that the Valid flavor isn't
-guaranteed.
+In blkdev_get() we call __blkdev_get() to do some internal jobs and if
+there is some errors in __blkdev_get(), the bdput() is called which
+means we have released the refcount of the bdev (actually the refcount of
+the bdev inode). This means we cannot access bdev after that point. But
+acctually bdev is still accessed in blkdev_get() after calling
+__blkdev_get(). This results in use-after-free if the refcount is the
+last one we released in __blkdev_get(). Let's take a look at the
+following scenerio:
 
-Suggested-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+  CPU0            CPU1                    CPU2
+blkdev_open     blkdev_open           Remove disk
+                  bd_acquire
+		  blkdev_get
+		    __blkdev_get      del_gendisk
+					bdev_unhash_inode
+  bd_acquire          bdev_get_gendisk
+    bd_forget           failed because of unhashed
+	  bdput
+	              bdput (the last one)
+		        bdev_evict_inode
+
+	  	    access bdev => use after free
+
+[  459.350216] BUG: KASAN: use-after-free in __lock_acquire+0x24c1/0x31b0
+[  459.351190] Read of size 8 at addr ffff88806c815a80 by task syz-executor.0/20132
+[  459.352347]
+[  459.352594] CPU: 0 PID: 20132 Comm: syz-executor.0 Not tainted 4.19.90 #2
+[  459.353628] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+[  459.354947] Call Trace:
+[  459.355337]  dump_stack+0x111/0x19e
+[  459.355879]  ? __lock_acquire+0x24c1/0x31b0
+[  459.356523]  print_address_description+0x60/0x223
+[  459.357248]  ? __lock_acquire+0x24c1/0x31b0
+[  459.357887]  kasan_report.cold+0xae/0x2d8
+[  459.358503]  __lock_acquire+0x24c1/0x31b0
+[  459.359120]  ? _raw_spin_unlock_irq+0x24/0x40
+[  459.359784]  ? lockdep_hardirqs_on+0x37b/0x580
+[  459.360465]  ? _raw_spin_unlock_irq+0x24/0x40
+[  459.361123]  ? finish_task_switch+0x125/0x600
+[  459.361812]  ? finish_task_switch+0xee/0x600
+[  459.362471]  ? mark_held_locks+0xf0/0xf0
+[  459.363108]  ? __schedule+0x96f/0x21d0
+[  459.363716]  lock_acquire+0x111/0x320
+[  459.364285]  ? blkdev_get+0xce/0xbe0
+[  459.364846]  ? blkdev_get+0xce/0xbe0
+[  459.365390]  __mutex_lock+0xf9/0x12a0
+[  459.365948]  ? blkdev_get+0xce/0xbe0
+[  459.366493]  ? bdev_evict_inode+0x1f0/0x1f0
+[  459.367130]  ? blkdev_get+0xce/0xbe0
+[  459.367678]  ? destroy_inode+0xbc/0x110
+[  459.368261]  ? mutex_trylock+0x1a0/0x1a0
+[  459.368867]  ? __blkdev_get+0x3e6/0x1280
+[  459.369463]  ? bdev_disk_changed+0x1d0/0x1d0
+[  459.370114]  ? blkdev_get+0xce/0xbe0
+[  459.370656]  blkdev_get+0xce/0xbe0
+[  459.371178]  ? find_held_lock+0x2c/0x110
+[  459.371774]  ? __blkdev_get+0x1280/0x1280
+[  459.372383]  ? lock_downgrade+0x680/0x680
+[  459.373002]  ? lock_acquire+0x111/0x320
+[  459.373587]  ? bd_acquire+0x21/0x2c0
+[  459.374134]  ? do_raw_spin_unlock+0x4f/0x250
+[  459.374780]  blkdev_open+0x202/0x290
+[  459.375325]  do_dentry_open+0x49e/0x1050
+[  459.375924]  ? blkdev_get_by_dev+0x70/0x70
+[  459.376543]  ? __x64_sys_fchdir+0x1f0/0x1f0
+[  459.377192]  ? inode_permission+0xbe/0x3a0
+[  459.377818]  path_openat+0x148c/0x3f50
+[  459.378392]  ? kmem_cache_alloc+0xd5/0x280
+[  459.379016]  ? entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[  459.379802]  ? path_lookupat.isra.0+0x900/0x900
+[  459.380489]  ? __lock_is_held+0xad/0x140
+[  459.381093]  do_filp_open+0x1a1/0x280
+[  459.381654]  ? may_open_dev+0xf0/0xf0
+[  459.382214]  ? find_held_lock+0x2c/0x110
+[  459.382816]  ? lock_downgrade+0x680/0x680
+[  459.383425]  ? __lock_is_held+0xad/0x140
+[  459.384024]  ? do_raw_spin_unlock+0x4f/0x250
+[  459.384668]  ? _raw_spin_unlock+0x1f/0x30
+[  459.385280]  ? __alloc_fd+0x448/0x560
+[  459.385841]  do_sys_open+0x3c3/0x500
+[  459.386386]  ? filp_open+0x70/0x70
+[  459.386911]  ? trace_hardirqs_on_thunk+0x1a/0x1c
+[  459.387610]  ? trace_hardirqs_off_caller+0x55/0x1c0
+[  459.388342]  ? do_syscall_64+0x1a/0x520
+[  459.388930]  do_syscall_64+0xc3/0x520
+[  459.389490]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[  459.390248] RIP: 0033:0x416211
+[  459.390720] Code: 75 14 b8 02 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83
+04 19 00 00 c3 48 83 ec 08 e8 0a fa ff ff 48 89 04 24 b8 02 00 00 00 0f
+   05 <48> 8b 3c 24 48 89 c2 e8 53 fa ff ff 48 89 d0 48 83 c4 08 48 3d
+      01
+[  459.393483] RSP: 002b:00007fe45dfe9a60 EFLAGS: 00000293 ORIG_RAX: 0000000000000002
+[  459.394610] RAX: ffffffffffffffda RBX: 00007fe45dfea6d4 RCX: 0000000000416211
+[  459.395678] RDX: 00007fe45dfe9b0a RSI: 0000000000000002 RDI: 00007fe45dfe9b00
+[  459.396758] RBP: 000000000076bf20 R08: 0000000000000000 R09: 000000000000000a
+[  459.397930] R10: 0000000000000075 R11: 0000000000000293 R12: 00000000ffffffff
+[  459.399022] R13: 0000000000000bd9 R14: 00000000004cdb80 R15: 000000000076bf2c
+[  459.400168]
+[  459.400430] Allocated by task 20132:
+[  459.401038]  kasan_kmalloc+0xbf/0xe0
+[  459.401652]  kmem_cache_alloc+0xd5/0x280
+[  459.402330]  bdev_alloc_inode+0x18/0x40
+[  459.402970]  alloc_inode+0x5f/0x180
+[  459.403510]  iget5_locked+0x57/0xd0
+[  459.404095]  bdget+0x94/0x4e0
+[  459.404607]  bd_acquire+0xfa/0x2c0
+[  459.405113]  blkdev_open+0x110/0x290
+[  459.405702]  do_dentry_open+0x49e/0x1050
+[  459.406340]  path_openat+0x148c/0x3f50
+[  459.406926]  do_filp_open+0x1a1/0x280
+[  459.407471]  do_sys_open+0x3c3/0x500
+[  459.408010]  do_syscall_64+0xc3/0x520
+[  459.408572]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[  459.409415]
+[  459.409679] Freed by task 1262:
+[  459.410212]  __kasan_slab_free+0x129/0x170
+[  459.410919]  kmem_cache_free+0xb2/0x2a0
+[  459.411564]  rcu_process_callbacks+0xbb2/0x2320
+[  459.412318]  __do_softirq+0x225/0x8ac
+
+Fix this by delaying bdput() to the end of blkdev_get() which means we
+have finished accessing bdev.
+
+Fixes: e525fd89d380 ("block: make blkdev_get/put() handle exclusive access")
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Ming Lei <ming.lei@redhat.com>
+Cc: Jan Kara <jack@suse.cz>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- arch/x86/kvm/vmx/nested.c | 77 ++++++++++++++++++---------------------
- 1 file changed, 36 insertions(+), 41 deletions(-)
+ v5: Add fixes tag and Reviewed-by tag from Christoph.
+ v4: Remove uneeded braces and add Reviewed-by tag from Jan Kara.
+ v3: Add bdput() when __blkdev_get() calling itself failed.
+ v2: Add Reported-by tag and cc linux-block mailing list
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index bcb50724be38..f45a36e5c863 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -171,15 +171,6 @@ static int nested_vmx_failInvalid(struct kvm_vcpu *vcpu)
- static int nested_vmx_failValid(struct kvm_vcpu *vcpu,
- 				u32 vm_instruction_error)
- {
--	struct vcpu_vmx *vmx = to_vmx(vcpu);
--
--	/*
--	 * failValid writes the error number to the current VMCS, which
--	 * can't be done if there isn't a current VMCS.
--	 */
--	if (vmx->nested.current_vmptr == -1ull && !vmx->nested.hv_evmcs)
--		return nested_vmx_failInvalid(vcpu);
--
- 	vmx_set_rflags(vcpu, (vmx_get_rflags(vcpu)
- 			& ~(X86_EFLAGS_CF | X86_EFLAGS_PF | X86_EFLAGS_AF |
- 			    X86_EFLAGS_SF | X86_EFLAGS_OF))
-@@ -192,6 +183,20 @@ static int nested_vmx_failValid(struct kvm_vcpu *vcpu,
- 	return kvm_skip_emulated_instruction(vcpu);
- }
- 
-+static int nested_vmx_fail(struct kvm_vcpu *vcpu, u32 vm_instruction_error)
-+{
-+	struct vcpu_vmx *vmx = to_vmx(vcpu);
-+
-+	/*
-+	 * failValid writes the error number to the current VMCS, which
-+	 * can't be done if there isn't a current VMCS.
-+	 */
-+	if (vmx->nested.current_vmptr == -1ull && !vmx->nested.hv_evmcs)
-+		return nested_vmx_failInvalid(vcpu);
-+
-+	return nested_vmx_failValid(vcpu, vm_instruction_error);
-+}
-+
- static void nested_vmx_abort(struct kvm_vcpu *vcpu, u32 indicator)
- {
- 	/* TODO: not to reset guest simply here. */
-@@ -3456,19 +3461,18 @@ static int nested_vmx_run(struct kvm_vcpu *vcpu, bool launch)
- 	 * when using the merged vmcs02.
+ fs/block_dev.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/fs/block_dev.c b/fs/block_dev.c
+index 47860e589388..08c87db3a92b 100644
+--- a/fs/block_dev.c
++++ b/fs/block_dev.c
+@@ -1565,10 +1565,8 @@ static int __blkdev_get(struct block_device *bdev, fmode_t mode, int for_part)
  	 */
- 	if (interrupt_shadow & KVM_X86_SHADOW_INT_MOV_SS)
--		return nested_vmx_failValid(vcpu,
--			VMXERR_ENTRY_EVENTS_BLOCKED_BY_MOV_SS);
-+		return nested_vmx_fail(vcpu, VMXERR_ENTRY_EVENTS_BLOCKED_BY_MOV_SS);
- 
- 	if (vmcs12->launch_state == launch)
--		return nested_vmx_failValid(vcpu,
-+		return nested_vmx_fail(vcpu,
- 			launch ? VMXERR_VMLAUNCH_NONCLEAR_VMCS
- 			       : VMXERR_VMRESUME_NONLAUNCHED_VMCS);
- 
- 	if (nested_vmx_check_controls(vcpu, vmcs12))
--		return nested_vmx_failValid(vcpu, VMXERR_ENTRY_INVALID_CONTROL_FIELD);
-+		return nested_vmx_fail(vcpu, VMXERR_ENTRY_INVALID_CONTROL_FIELD);
- 
- 	if (nested_vmx_check_host_state(vcpu, vmcs12))
--		return nested_vmx_failValid(vcpu, VMXERR_ENTRY_INVALID_HOST_STATE_FIELD);
-+		return nested_vmx_fail(vcpu, VMXERR_ENTRY_INVALID_HOST_STATE_FIELD);
- 
- 	/*
- 	 * We're finally done with prerequisite checking, and can start with
-@@ -3517,7 +3521,7 @@ static int nested_vmx_run(struct kvm_vcpu *vcpu, bool launch)
- 	if (status == NVMX_VMENTRY_VMEXIT)
- 		return 1;
- 	WARN_ON_ONCE(status != NVMX_VMENTRY_VMFAIL);
--	return nested_vmx_failValid(vcpu, VMXERR_ENTRY_INVALID_CONTROL_FIELD);
-+	return nested_vmx_fail(vcpu, VMXERR_ENTRY_INVALID_CONTROL_FIELD);
- }
- 
- /*
-@@ -4460,7 +4464,7 @@ void nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 vm_exit_reason,
- 	 * flag and the VM-instruction error field of the VMCS
- 	 * accordingly, and skip the emulated instruction.
- 	 */
--	(void)nested_vmx_failValid(vcpu, VMXERR_ENTRY_INVALID_CONTROL_FIELD);
-+	(void)nested_vmx_fail(vcpu, VMXERR_ENTRY_INVALID_CONTROL_FIELD);
- 
- 	/*
- 	 * Restore L1's host state to KVM's software model.  We're here
-@@ -4760,8 +4764,7 @@ static int handle_vmon(struct kvm_vcpu *vcpu)
+ 	if (!for_part) {
+ 		ret = devcgroup_inode_permission(bdev->bd_inode, perm);
+-		if (ret != 0) {
+-			bdput(bdev);
++		if (ret != 0)
+ 			return ret;
+-		}
  	}
  
- 	if (vmx->nested.vmxon)
--		return nested_vmx_failValid(vcpu,
--			VMXERR_VMXON_IN_VMX_ROOT_OPERATION);
-+		return nested_vmx_fail(vcpu, VMXERR_VMXON_IN_VMX_ROOT_OPERATION);
+  restart:
+@@ -1637,8 +1635,10 @@ static int __blkdev_get(struct block_device *bdev, fmode_t mode, int for_part)
+ 				goto out_clear;
+ 			BUG_ON(for_part);
+ 			ret = __blkdev_get(whole, mode, 1);
+-			if (ret)
++			if (ret) {
++				bdput(whole);
+ 				goto out_clear;
++			}
+ 			bdev->bd_contains = whole;
+ 			bdev->bd_part = disk_get_part(disk, partno);
+ 			if (!(disk->flags & GENHD_FL_UP) ||
+@@ -1688,7 +1688,6 @@ static int __blkdev_get(struct block_device *bdev, fmode_t mode, int for_part)
+ 	disk_unblock_events(disk);
+ 	put_disk_and_module(disk);
+  out:
+-	bdput(bdev);
  
- 	if ((vmx->msr_ia32_feature_control & VMXON_NEEDED_FEATURES)
- 			!= VMXON_NEEDED_FEATURES) {
-@@ -4852,12 +4855,10 @@ static int handle_vmclear(struct kvm_vcpu *vcpu)
- 		return r;
+ 	return ret;
+ }
+@@ -1755,6 +1754,9 @@ int blkdev_get(struct block_device *bdev, fmode_t mode, void *holder)
+ 		bdput(whole);
+ 	}
  
- 	if (!page_address_valid(vcpu, vmptr))
--		return nested_vmx_failValid(vcpu,
--			VMXERR_VMCLEAR_INVALID_ADDRESS);
-+		return nested_vmx_fail(vcpu, VMXERR_VMCLEAR_INVALID_ADDRESS);
- 
- 	if (vmptr == vmx->nested.vmxon_ptr)
--		return nested_vmx_failValid(vcpu,
--			VMXERR_VMCLEAR_VMXON_POINTER);
-+		return nested_vmx_fail(vcpu, VMXERR_VMCLEAR_VMXON_POINTER);
- 
- 	/*
- 	 * When Enlightened VMEntry is enabled on the calling CPU we treat
-@@ -4927,8 +4928,7 @@ static int handle_vmread(struct kvm_vcpu *vcpu)
- 
- 	offset = vmcs_field_to_offset(field);
- 	if (offset < 0)
--		return nested_vmx_failValid(vcpu,
--			VMXERR_UNSUPPORTED_VMCS_COMPONENT);
-+		return nested_vmx_fail(vcpu, VMXERR_UNSUPPORTED_VMCS_COMPONENT);
- 
- 	if (!is_guest_mode(vcpu) && is_vmcs12_ext_field(field))
- 		copy_vmcs02_to_vmcs12_rare(vcpu, vmcs12);
-@@ -5031,8 +5031,7 @@ static int handle_vmwrite(struct kvm_vcpu *vcpu)
- 
- 	offset = vmcs_field_to_offset(field);
- 	if (offset < 0)
--		return nested_vmx_failValid(vcpu,
--			VMXERR_UNSUPPORTED_VMCS_COMPONENT);
-+		return nested_vmx_fail(vcpu, VMXERR_UNSUPPORTED_VMCS_COMPONENT);
- 
- 	/*
- 	 * If the vCPU supports "VMWRITE to any supported field in the
-@@ -5040,8 +5039,7 @@ static int handle_vmwrite(struct kvm_vcpu *vcpu)
- 	 */
- 	if (vmcs_field_readonly(field) &&
- 	    !nested_cpu_has_vmwrite_any_field(vcpu))
--		return nested_vmx_failValid(vcpu,
--			VMXERR_VMWRITE_READ_ONLY_VMCS_COMPONENT);
-+		return nested_vmx_fail(vcpu, VMXERR_VMWRITE_READ_ONLY_VMCS_COMPONENT);
- 
- 	/*
- 	 * Ensure vmcs12 is up-to-date before any VMWRITE that dirties
-@@ -5116,12 +5114,10 @@ static int handle_vmptrld(struct kvm_vcpu *vcpu)
- 		return r;
- 
- 	if (!page_address_valid(vcpu, vmptr))
--		return nested_vmx_failValid(vcpu,
--			VMXERR_VMPTRLD_INVALID_ADDRESS);
-+		return nested_vmx_fail(vcpu, VMXERR_VMPTRLD_INVALID_ADDRESS);
- 
- 	if (vmptr == vmx->nested.vmxon_ptr)
--		return nested_vmx_failValid(vcpu,
--			VMXERR_VMPTRLD_VMXON_POINTER);
-+		return nested_vmx_fail(vcpu, VMXERR_VMPTRLD_VMXON_POINTER);
- 
- 	/* Forbid normal VMPTRLD if Enlightened version was used */
- 	if (vmx->nested.hv_evmcs)
-@@ -5138,7 +5134,7 @@ static int handle_vmptrld(struct kvm_vcpu *vcpu)
- 			 * given physical address won't match the required
- 			 * VMCS12_REVISION identifier.
- 			 */
--			return nested_vmx_failValid(vcpu,
-+			return nested_vmx_fail(vcpu,
- 				VMXERR_VMPTRLD_INCORRECT_VMCS_REVISION_ID);
- 		}
- 
-@@ -5148,7 +5144,7 @@ static int handle_vmptrld(struct kvm_vcpu *vcpu)
- 		    (new_vmcs12->hdr.shadow_vmcs &&
- 		     !nested_cpu_has_vmx_shadow_vmcs(vcpu))) {
- 			kvm_vcpu_unmap(vcpu, &map, false);
--			return nested_vmx_failValid(vcpu,
-+			return nested_vmx_fail(vcpu,
- 				VMXERR_VMPTRLD_INCORRECT_VMCS_REVISION_ID);
- 		}
- 
-@@ -5233,8 +5229,7 @@ static int handle_invept(struct kvm_vcpu *vcpu)
- 	types = (vmx->nested.msrs.ept_caps >> VMX_EPT_EXTENT_SHIFT) & 6;
- 
- 	if (type >= 32 || !(types & (1 << type)))
--		return nested_vmx_failValid(vcpu,
--				VMXERR_INVALID_OPERAND_TO_INVEPT_INVVPID);
-+		return nested_vmx_fail(vcpu, VMXERR_INVALID_OPERAND_TO_INVEPT_INVVPID);
- 
- 	/* According to the Intel VMX instruction reference, the memory
- 	 * operand is read even if it isn't needed (e.g., for type==global)
-@@ -5255,7 +5250,7 @@ static int handle_invept(struct kvm_vcpu *vcpu)
- 	switch (type) {
- 	case VMX_EPT_EXTENT_CONTEXT:
- 		if (!nested_vmx_check_eptp(vcpu, operand.eptp))
--			return nested_vmx_failValid(vcpu,
-+			return nested_vmx_fail(vcpu,
- 				VMXERR_INVALID_OPERAND_TO_INVEPT_INVVPID);
- 
- 		roots_to_free = 0;
-@@ -5315,7 +5310,7 @@ static int handle_invvpid(struct kvm_vcpu *vcpu)
- 			VMX_VPID_EXTENT_SUPPORTED_MASK) >> 8;
- 
- 	if (type >= 32 || !(types & (1 << type)))
--		return nested_vmx_failValid(vcpu,
-+		return nested_vmx_fail(vcpu,
- 			VMXERR_INVALID_OPERAND_TO_INVEPT_INVVPID);
- 
- 	/* according to the intel vmx instruction reference, the memory
-@@ -5329,7 +5324,7 @@ static int handle_invvpid(struct kvm_vcpu *vcpu)
- 		return vmx_handle_memory_failure(vcpu, r, &e);
- 
- 	if (operand.vpid >> 16)
--		return nested_vmx_failValid(vcpu,
-+		return nested_vmx_fail(vcpu,
- 			VMXERR_INVALID_OPERAND_TO_INVEPT_INVVPID);
- 
- 	vpid02 = nested_get_vpid02(vcpu);
-@@ -5337,14 +5332,14 @@ static int handle_invvpid(struct kvm_vcpu *vcpu)
- 	case VMX_VPID_EXTENT_INDIVIDUAL_ADDR:
- 		if (!operand.vpid ||
- 		    is_noncanonical_address(operand.gla, vcpu))
--			return nested_vmx_failValid(vcpu,
-+			return nested_vmx_fail(vcpu,
- 				VMXERR_INVALID_OPERAND_TO_INVEPT_INVVPID);
- 		vpid_sync_vcpu_addr(vpid02, operand.gla);
- 		break;
- 	case VMX_VPID_EXTENT_SINGLE_CONTEXT:
- 	case VMX_VPID_EXTENT_SINGLE_NON_GLOBAL:
- 		if (!operand.vpid)
--			return nested_vmx_failValid(vcpu,
-+			return nested_vmx_fail(vcpu,
- 				VMXERR_INVALID_OPERAND_TO_INVEPT_INVVPID);
- 		vpid_sync_context(vpid02);
- 		break;
++	if (res)
++		bdput(bdev);
++
+ 	return res;
+ }
+ EXPORT_SYMBOL(blkdev_get);
 -- 
-2.26.0
+2.21.3
 
