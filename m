@@ -2,126 +2,113 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC6C1C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3399C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C908E20774
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:44:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EqY8BeCg"
+	by mail.kernel.org (Postfix) with ESMTP id C9843206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:45:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731132AbgFIQoI (ORCPT
+        id S1731217AbgFIQpi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 12:44:08 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:45374 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730985AbgFIQoH (ORCPT
+        Tue, 9 Jun 2020 12:45:38 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:51122 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729988AbgFIQph (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 12:44:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591721045;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=z9O6ktJVnwwW4Vd/oKJVKAa0AEa9UNwRFffaC+dkedE=;
-        b=EqY8BeCgAHFSg88UYE/XenORC3ZD3v5MKTPRQ1WqZaGoBHegXTf2YcpaZYCohD/60kq/2/
-        2fJd5lbqfA3ifI0tBgG8ddl3YuzUIiU5FbyOkUu79IZ8h0v53JL7ErM+efMFZnfazbWJZG
-        nrjlFFXYOJnsjR1NLHYSXjcrcnMznOU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-112-Nu1i9sWhOYq7S2BC7VlD7Q-1; Tue, 09 Jun 2020 12:44:03 -0400
-X-MC-Unique: Nu1i9sWhOYq7S2BC7VlD7Q-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5EB90835B40;
-        Tue,  9 Jun 2020 16:44:02 +0000 (UTC)
-Received: from x2.localnet (ovpn-113-152.phx2.redhat.com [10.3.113.152])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B988E60C1D;
-        Tue,  9 Jun 2020 16:43:58 +0000 (UTC)
-From:   Steve Grubb <sgrubb@redhat.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Cc:     linux-audit@redhat.com, zohar@linux.ibm.com, paul@paul-moore.com,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] IMA: Add audit log for failure conditions
-Date:   Tue, 09 Jun 2020 12:43:58 -0400
-Message-ID: <3776526.Vj75JV9fuy@x2>
-Organization: Red Hat
-In-Reply-To: <ada45440-aefd-a4b2-2a3b-c012872e86cb@linux.microsoft.com>
-References: <20200608215343.4491-1-nramas@linux.microsoft.com> <27448076.Og45N0Lxmj@x2> <ada45440-aefd-a4b2-2a3b-c012872e86cb@linux.microsoft.com>
+        Tue, 9 Jun 2020 12:45:37 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 850262A0313
+Received: by earth.universe (Postfix, from userid 1000)
+        id 2545F3C08C6; Tue,  9 Jun 2020 18:45:33 +0200 (CEST)
+Date:   Tue, 9 Jun 2020 18:45:33 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+Cc:     Mario.Limonciello@dell.com, y.linux@paritcher.com,
+        hdegoede@redhat.com, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org,
+        mjg59@srcf.ucam.org
+Subject: Re: [PATCH 2/3] platform/x86: dell-wmi: add new keymap type 0x0012
+Message-ID: <20200609164533.qtup47io2aoc5hgl@earth.universe>
+References: <cover.1591584631.git.y.linux@paritcher.com>
+ <0dc191a3d16f0e114f6a8976433e248018e10c43.1591584631.git.y.linux@paritcher.com>
+ <83fe431cacbc4708962767668ac8f06f@AUSX13MPC105.AMER.DELL.COM>
+ <79bd59ee-dd37-bdc5-f6b4-00f2c33fdcff@paritcher.com>
+ <7f9f0410696141cfabb0237d33b7b529@AUSX13MPC105.AMER.DELL.COM>
+ <20200609154938.udo7mn7ka7z7pr6c@pali>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="elc5oav6xzcv43cc"
+Content-Disposition: inline
+In-Reply-To: <20200609154938.udo7mn7ka7z7pr6c@pali>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-On Tuesday, June 9, 2020 11:58:02 AM EDT Lakshmi Ramasubramanian wrote:
-> On 6/9/20 8:40 AM, Steve Grubb wrote:
-> > On Monday, June 8, 2020 5:53:43 PM EDT Lakshmi Ramasubramanian wrote:
-> >> The final log statement in process_buffer_measurement() for failure
-> >> condition is at debug level. This does not log the message unless
-> >> the system log level is raised which would significantly increase
-> >> the messages in the system log. Change this log message to an audit
-> >> message for better triaging failures in the function.
-> >> 
-> >> ima_alloc_key_entry() does not log a message for failure condition.
-> >> Add an audit message for failure condition in this function.
-> > 
-> >> Sample audit messages:
-> > Wouldn't it be better to have an IMA_ERROR record type?
-> 
-> type "1804" is AUDIT_INTEGRITY_PCR which is used for failures to add to
-> the measurement list.
-> 
-> >> [    8.051937] audit: type=1804 audit(1591633422.365:8): pid=1 uid=0
-> >> auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0
-> >> op=measuring_keys cause=hashing_error(-22)
-> > 
-> > The audit system uses a name=value scheme to express information. This
-> > last field has something in parenthesis that may need to be interpreted.
-> > In its current form, we can't do this. It would require writing code to
-> > special case this event, go to this field, find the first parenthesis,
-> > find the second, extract what's between, and look it up.
-> > 
-> > It would be better if that number in parenthesis was normalized to the
-> > expected way we do audit events so nothing special has to be made.
-> 
-> The number in parenthesis is the error code (such as ENOMEM, EINVAL,
-> etc.) IMA uses this format for reporting TPM errors in one of the audit
-> messages (In ima_add_template_entry()). I followed the same pattern.
-> 
-> Would it be better if the value for "cause" is formatted as
-> 
->     cause=hashing_error_-22
-> 
->     cause=alloc_entry_-12
+--elc5oav6xzcv43cc
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Neither fit the name=value style that all other events follow. What would fit 
-the style is something like this:
+Hi,
 
-cause=hashing_error  errno=-22
- 
-cause=alloc_entry errno=-12
+On Tue, Jun 09, 2020 at 05:49:38PM +0200, Pali Roh=E1r wrote:
+> On Monday 08 June 2020 20:36:58 Mario.Limonciello@dell.com wrote:
+> > Can you please comment here how you would like to see events like this =
+should come
+> > through to userspace?
+> >=20
+> > * Wrong power adapter (you have X and should have Y)
+> > * You have plugged a dock into the wrong port
+> > * Fn-lock mode
+>=20
+> In my opinion, Fn-lock mode is related to input subsystem and should be
+> probably reported via input device. For a user, fn-lock is similar like
+> caps-lock, scroll-lock or num-lock. Also fn-lock is provided by other
+> laptops and therefore I would expect that kernel provide fn-lock state
+> for all laptops (thinkpad / latitude / ...) via same interface. And not
+> via dell-specific interface or general-vendor-message interface.
+>=20
+> Wrong power adapter sounds like something related to power subsystem.
+> Adding Sebastian to the loop, maybe he can provide some useful ideas
+> about it.
 
-Would this be OK? Also, errno is only to illustrate. You can name it 
-something else as long as there are no use case collisions with our 
-dictionary of field names.
+I'm missing a bit of context. I suppose this is about connecting a
+non-genuine power adapter rejected by the embedded controller?
+Support for that should be hooked into 'drivers/acpi/ac.c' (note:
+so far there is no standard power-supply class property for this).
+Also printing a warning to dmesg seems sensible.
 
-https://github.com/linux-audit/audit-documentation/blob/master/specs/fields/
-field-dictionary.csv
+-- Sebastian
 
--Steve
+> And plugged dock into wrong port. This is probably dell-specific event
+> and some interface for "vendor" messages from kernel to userspace would
+> be needed to deliver such things.
 
+--elc5oav6xzcv43cc
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl7fvKYACgkQ2O7X88g7
++ppc9BAAimtl9m9AQ0TWGS8hVWKz3JFaPVxqbJgv8Pl8QmMyPgJDkqEMgERgQDg9
+nuCrDj0HmhyFnPwnO5SZ8nJRlbS28voErRIbkp/9tYa5mLSXp/qWheG7vpV6dtlh
+NjwHszhlDaUQogT12i7ueTwUNjqwV2m+iwVkkrGl53xr7hJMHIaghMcI2Ze9ukpg
+f1fJvrmAtQTPQMon3KL95kyA4AGuBfk86Df2vNldAqZL++U61vgssFeWKaY0i49v
+W0D/Qr3UsEwANGRFAuJkda0uv2Cs+os2bqubvl8I0Z9fMv43BaVrWH8gCdWqC3pD
+qKFe7mzhtPqcSFDSfIWsBCcoMWSuJFqNcK29BUxa+SIxVJttdY/O+KvSPXG26u8u
+nwVValPBD9OGBp5VWIBY6Wl94uf+jqNpnfk1fv1P9Jm4gGXu26t1f0scPN5B6FNI
+QMUOOHw0oElKX9ltcLlN94bhImpd43U0fVEmVAgNpSEU5JGj4hSg2xj3JI5Iu2GL
+QZGGwPASkcYm2YMMKcW7ZqpNmjqXsI3kMoILmglWYDelPa7xlq0gjuVQUcO57h18
+KVCiFYJ4cLQb95Y+E8VmnJKD1q/tRdi+7GLrX2BGvYYFlWq97r/3Gczw448QpscO
+f2FLYt+5ZQ4F63YDZiE3ng6tzBalKnD1+OwHXhmlCg0BtHSoQGY=
+=Kp0K
+-----END PGP SIGNATURE-----
+
+--elc5oav6xzcv43cc--
