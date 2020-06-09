@@ -2,219 +2,137 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5374C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 19:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BBAEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 19:41:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 728702072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 19:41:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="Uw+KzPzO"
+	by mail.kernel.org (Postfix) with ESMTP id 073B8206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 19:41:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591731704;
+	bh=tTi9AQ6cMecxxSEDxc0I7E4Qrl8xBrI7Q7ahhrNrv5w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Nlx5c1dkb8yPOjw9N8Q5DrOJ4olT6LqouOsTrvRS+WE08HpEUnHCEgTvnLXqWHo9+
+	 Z2RfFCgqgynFZb3LZvkv3wKf3LwryPNzf18+QyXyafGGgDigmNDPH78BEYrOcf1GOY
+	 2c4dKdNRlI6UNf6tGqMSomH3Hc0GTeivuVyXVNt8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728288AbgFITlb (ORCPT
+        id S2389374AbgFITlj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 15:41:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58534 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389295AbgFITkj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 15:40:39 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CB34C08C5C8
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 12:40:39 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id g28so22058669qkl.0
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 12:40:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Xhsbcv6ELYs8gtPa7Zn2QEWCa6cPXNXWT2fgZku/yEM=;
-        b=Uw+KzPzOaqBIlyyAEazcDBTydcQvlpNfQHYQNwVPBNq2ynBZwbsVyd5y8Qr5PsdHAn
-         zdVMjtvxpvBBJ8KzyVx3nq+AC1mp+DlaHAg0XWcYIsT1PMyhtDhpED/wfXT78Fxx1cNF
-         OqOVr8V3c1wqCui1QBge5TWaUHCiwXrs9ZPNWsBcrxIUW8v1e7PICTO1uOnvoL2dS1c4
-         CS4+Y2PfVKU7gOTRdI6k18rDscn952InsaGF+r9j2Mq7MYMtPoMQAIQdmawG8TMeg7Zu
-         +rTabLAql/e5IqPMSnk+E7cQpFyu/7IJ+hdmJaiWU/8J2nCyy7WwFkTuv/m+4LK0nTs3
-         FSSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Xhsbcv6ELYs8gtPa7Zn2QEWCa6cPXNXWT2fgZku/yEM=;
-        b=kZFEPCW/4tg1HLLxOScEDJ8AGgDyKvY8KuWxRjuq8/lPpZgW8RCzJFvr4Pqtt2ynpI
-         zN8QuyY9WQw1iwU5HtAfRL3ZeIcETcTJfMM8e0U7hhadkNzf+BY/iUCxDcYIQjbXr/2/
-         /5qcr8brNWMbV/u8Jn4FP+TRi2Ppwr/7xILxLHJOqc4lD92i8rdUEeiUxSD7XjvnIsGM
-         7ifw3Y41TntMsY7RviKcsBKyrOgBTbYYhGCOhe0k5Qoclsf6Ew6s3wGidL6dPMVp5vOP
-         SLA2bgnC6CXsV/yI+GW5IgVVOlFeamu4EhrIdPbrSA/NpUzxQJueOlFp11mkKqbUWk1i
-         FysA==
-X-Gm-Message-State: AOAM533VH/EYSH2Y8ksR4mUL4yxdvC7uDcJ6gvt5FyekltFb5uTxAPEU
-        fIChEw19SbMseGVQ9JDP8sicBA==
-X-Google-Smtp-Source: ABdhPJy6lTAflgRnSHpZVTx3Z6KE7cW5oFIiORIVj7tAXTrZSAMfzhaLj0wfhk608cOXcqojcODG1w==
-X-Received: by 2002:a37:9581:: with SMTP id x123mr28672959qkd.163.1591731638458;
-        Tue, 09 Jun 2020 12:40:38 -0700 (PDT)
-Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id v8sm10513181qto.21.2020.06.09.12.40.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 12:40:37 -0700 (PDT)
-From:   Jonathan Marek <jonathan@marek.ca>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 4/8] arm64: dts: qcom: sm8250: add apps_smmu node
-Date:   Tue,  9 Jun 2020 15:40:22 -0400
-Message-Id: <20200609194030.17756-5-jonathan@marek.ca>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200609194030.17756-1-jonathan@marek.ca>
-References: <20200609194030.17756-1-jonathan@marek.ca>
+        Tue, 9 Jun 2020 15:41:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60158 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389353AbgFITla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 15:41:30 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52EF6206C3;
+        Tue,  9 Jun 2020 19:41:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591731684;
+        bh=tTi9AQ6cMecxxSEDxc0I7E4Qrl8xBrI7Q7ahhrNrv5w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lE8qdtPMZ+tZtusscQJyQDE5j8vqeNJ9x+lvXe7X/It7f3pa36bNvLiY6IslvYqZ5
+         mmVs5eWlCExwYsI9jzmqEXCasMh2kDQ/vrb5BRWsSxvP5IoKEuFehChFU533iuCMoM
+         +UePtzNhtNBNfHzb02nc/FYxVva6Hj8Rt07fFTBA=
+Date:   Tue, 9 Jun 2020 21:41:22 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 4.19 00/25] 4.19.128-rc1 review
+Message-ID: <20200609194122.GA1095933@kroah.com>
+References: <20200609174048.576094775@linuxfoundation.org>
+ <CA+G9fYsxjJpM-bw_VamAH0Beri66aC+-kqZ-RiCWVqm4N=t4gA@mail.gmail.com>
+ <f5429b08-e3d8-f6fb-79bc-3868bf8a2816@linuxfoundation.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <f5429b08-e3d8-f6fb-79bc-3868bf8a2816@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the apps_smmu node for sm8250.
+On Tue, Jun 09, 2020 at 01:20:42PM -0600, Shuah Khan wrote:
+> On 6/9/20 1:01 PM, Naresh Kamboju wrote:
+> > On Tue, 9 Jun 2020 at 23:21, Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > > 
+> > > This is the start of the stable review cycle for the 4.19.128 release.
+> > > There are 25 patches in this series, all will be posted as a response
+> > > to this one.  If anyone has any issues with these being applied, please
+> > > let me know.
+> > > 
+> > > Responses should be made by Thu, 11 Jun 2020 17:40:24 +0000.
+> > > Anything received after that time might be too late.
+> > > 
+> > > The whole patch series can be found in one patch at:
+> > >          https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.128-rc1.gz
+> > > or in the git tree and branch at:
+> > >          git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> > > and the diffstat can be found below.
+> > > 
+> > > thanks,
+> > > 
+> > > greg k-h
+> > > 
+> > > -------------
+> > > Pseudo-Shortlog of commits:
+> > > 
+> > > Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > >      Linux 4.19.128-rc1
+> > > 
+> > > Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > >      Revert "net/mlx5: Annotate mutex destroy for root ns"
+> > > 
+> > > Oleg Nesterov <oleg@redhat.com>
+> > >      uprobes: ensure that uprobe->offset and ->ref_ctr_offset are properly aligned
+> > 
+> > stable-rc 4.19 build failure for x86_64, i386 and arm.
+> > 
+> >   make -sk KBUILD_BUILD_USER=TuxBuild -C/linux -j16 ARCH=x86 HOSTCC=gcc
+> > CC="sccache gcc" O=build
+> > 75 #
+> > 76 In file included from ../kernel/events/uprobes.c:25:
+> > 77 ../kernel/events/uprobes.c: In function ‘__uprobe_register’:
+> > 78 ../kernel/events/uprobes.c:916:18: error: ‘ref_ctr_offset’
+> > undeclared (first use in this function); did you mean
+> > ‘per_cpu_offset’?
+> > 79  916 | if (!IS_ALIGNED(ref_ctr_offset, sizeof(short)))
+> > 80  | ^~~~~~~~~~~~~~
+> > 81 ../include/linux/kernel.h:62:30: note: in definition of macro ‘IS_ALIGNED’
+> > 82  62 | #define IS_ALIGNED(x, a) (((x) & ((typeof(x))(a) - 1)) == 0)
+> > 83  | ^
+> > 84 ../kernel/events/uprobes.c:916:18: note: each undeclared identifier
+> > is reported only once for each function it appears in
+> > 85  916 | if (!IS_ALIGNED(ref_ctr_offset, sizeof(short)))
+> > 86  | ^~~~~~~~~~~~~~
+> > 87 ../include/linux/kernel.h:62:30: note: in definition of macro ‘IS_ALIGNED’
+> > 88  62 | #define IS_ALIGNED(x, a) (((x) & ((typeof(x))(a) - 1)) == 0)
+> > 89  | ^
+> > 90 make[3]: *** [../scripts/Makefile.build:304: kernel/events/uprobes.o] Error 1
+> > 
+> > kernel config:
+> > https://builds.tuxbuild.com/I3PT6_HS4PTt7EFgJUIPxA/kernel.config
+> > 
+> 
+> I am seeing the same problem on x86_64
+> 
+> CONFIG_UPROBES is enabled in my config.
 
-For UFS, now that the kernel initializes the iommu, the stream mappings
-set by the bootloader are cleared. Adding the iommus property is required
-so that new mappings are created for UFS.
+Should be fixed in the -rc2 release, sorry about that.
 
-Signed-off-by: Jonathan Marek <jonathan@marek.ca>
----
- arch/arm64/boot/dts/qcom/sm8250.dtsi | 107 +++++++++++++++++++++++++++
- 1 file changed, 107 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-index 2f99c350c287..035f4552a0ff 100644
---- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-@@ -323,6 +323,8 @@ ufs_mem_hc: ufshc@1d84000 {
- 
- 			power-domains = <&gcc UFS_PHY_GDSC>;
- 
-+			iommus = <&apps_smmu 0x0e0 0>, <&apps_smmu 0x4e0 0>;
-+
- 			clock-names =
- 				"core_clk",
- 				"bus_aggr_clk",
-@@ -428,6 +430,111 @@ tlmm: pinctrl@f100000 {
- 			wakeup-parent = <&pdc>;
- 		};
- 
-+		apps_smmu: iommu@15000000 {
-+			compatible = "qcom,sm8250-smmu-500", "arm,mmu-500";
-+			reg = <0 0x15000000 0 0x100000>;
-+			#iommu-cells = <2>;
-+			#global-interrupts = <2>;
-+			interrupts =    <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 181 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 182 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 185 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 186 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 187 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 315 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 316 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 317 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 318 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 319 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 320 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 321 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 322 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 323 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 324 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 325 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 326 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 327 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 328 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 329 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 330 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 331 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 333 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 334 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 336 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 337 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 338 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 339 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 340 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 341 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 342 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 343 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 344 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 345 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 395 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 396 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 397 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 398 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 399 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 400 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 401 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 402 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 403 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 404 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 405 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 406 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 407 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 408 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 409 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 412 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 690 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 691 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 692 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 693 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 694 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 695 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 696 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 697 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 707 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
- 		intc: interrupt-controller@17a00000 {
- 			compatible = "arm,gic-v3";
- 			#interrupt-cells = <3>;
--- 
-2.26.1
-
+greg k-h
