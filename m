@@ -2,199 +2,175 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55FBAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 21:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFBC8C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 21:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2181E2076A
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 21:07:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YQTUSvv3"
+	by mail.kernel.org (Postfix) with ESMTP id ACB9E20842
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 21:08:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgFIVHR (ORCPT
+        id S1727788AbgFIVIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 17:07:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43758 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726449AbgFIVHP (ORCPT
+        Tue, 9 Jun 2020 17:08:01 -0400
+Received: from vmicros1.altlinux.org ([194.107.17.57]:35212 "EHLO
+        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726395AbgFIVIA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 17:07:15 -0400
-Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C098DC08C5C2
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 14:07:15 -0700 (PDT)
-Received: by mail-ua1-x941.google.com with SMTP id b13so110598uav.3
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 14:07:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=f15ThlgRIs3s50AvF0kFQ8PMHdAjHFT357oOtlUx/ug=;
-        b=YQTUSvv3PxEEhj5ujE/dPySButOyH55bK4Xn7FFJQPplWJdwV27lg1hiiGZPMl+Csy
-         utkQv6pOjG6DMuuUAn6OW8rUDsTwDk+L09wjyrOsEHgSM9DO1jG+4DXrAkvtnH7+VocI
-         GJeE84ALY1lEBJxLNfWmnbxI8H4dKWQGgYe6NIzbLwEX92BP0BVccbN5ywjf+ad2hItV
-         hOK3koJ698Vs9caFgU0Oz67/J789jH+4rxh31hXP0eWCQ0G50xlrah8Vhcbhoz+wsVGG
-         RvWp/Z6BsjYqNpoy5p5CsKAw38VlYjZy47xgAAr8XRHehyo5E50oaLRajAfxViZwx+CC
-         YVIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=f15ThlgRIs3s50AvF0kFQ8PMHdAjHFT357oOtlUx/ug=;
-        b=pCp8OMkdLZp2lRBhnsDWZ/713YaZsMCL1gfKLkZcNlCnjjGIUFeGO2zIzJ20DjjpgL
-         TJ3eStdUmMRekJQjFB1ANol+a06n6UFFJ1oFr4XVhYWeHoGNgJMp2gmXwY6g99qvCWBD
-         3//1pogSY51XzTeC8s3gEkP1vqRkgVrm4SigkVIbGNaqc1jk6CRvuTw6BvQDSCY3iXQ7
-         qoVT7s8pydJz6MzfKpBz6++Gpnv/cc85rwdJCvrteKS8LQOa0l1zOy3zeVx5HiOtzN4X
-         882P9nq0yxAAueZpc/82J3MSGTSXCDrJpECVvhGcVtFFz3x1TpP6AnnMyHZTSsuNNtl4
-         D+MQ==
-X-Gm-Message-State: AOAM533OQvH3PWGP03ZHoJLBkRAjEgnF+w6rUnuTxrbzTvUuaffM2Mrf
-        Oh3TokK6vmyODXP/qObYLLnvgwvZ1AygmM4qIM/dag==
-X-Google-Smtp-Source: ABdhPJwQ+viuUyt4Xvfz0B/F5q8uWrpKqo6vNNs2uM0NepreAFEA0QuoyJVSJ76WQkzVbDy0sso7BcdwlZvUGeg7c1M=
-X-Received: by 2002:ab0:6012:: with SMTP id j18mr260224ual.69.1591736832385;
- Tue, 09 Jun 2020 14:07:12 -0700 (PDT)
+        Tue, 9 Jun 2020 17:08:00 -0400
+X-Greylist: delayed 559 seconds by postgrey-1.27 at vger.kernel.org; Tue, 09 Jun 2020 17:07:57 EDT
+Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
+        by vmicros1.altlinux.org (Postfix) with ESMTP id 67E6E72CCED;
+        Tue,  9 Jun 2020 23:58:37 +0300 (MSK)
+Received: from altlinux.org (sole.flsd.net [185.75.180.6])
+        by imap.altlinux.org (Postfix) with ESMTPSA id 3E0A24A4A16;
+        Tue,  9 Jun 2020 23:58:37 +0300 (MSK)
+Date:   Tue, 9 Jun 2020 23:58:37 +0300
+From:   Vitaly Chikunov <vt@altlinux.org>
+To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Cc:     herbert@gondor.apana.org.au, davem@davemloft.net,
+        dhowells@redhat.com, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, jmorris@namei.org, serge@hallyn.com,
+        nramas@linux.microsoft.com, tusharsu@linux.microsoft.com,
+        zohar@linux.ibm.com, gilad@benyossef.com, pvanleeuwen@rambus.com,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        keyrings@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-security-module@vger.kernel.org, zhang.jia@linux.alibaba.com
+Subject: Re: [PATCH v3 0/8] crpyto: introduce OSCCA certificate and SM2
+ asymmetric algorithm
+Message-ID: <20200609205837.osganry2tyzwvanz@altlinux.org>
+Mail-Followup-To: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
+        herbert@gondor.apana.org.au, davem@davemloft.net,
+        dhowells@redhat.com, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, jmorris@namei.org, serge@hallyn.com,
+        nramas@linux.microsoft.com, tusharsu@linux.microsoft.com,
+        zohar@linux.ibm.com, gilad@benyossef.com, pvanleeuwen@rambus.com,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        keyrings@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-security-module@vger.kernel.org, zhang.jia@linux.alibaba.com
+References: <20200609134855.21431-1-tianjia.zhang@linux.alibaba.com>
 MIME-Version: 1.0
-References: <20200605213853.14959-1-sean.j.christopherson@intel.com> <20200605213853.14959-2-sean.j.christopherson@intel.com>
-In-Reply-To: <20200605213853.14959-2-sean.j.christopherson@intel.com>
-From:   Ben Gardon <bgardon@google.com>
-Date:   Tue, 9 Jun 2020 14:07:01 -0700
-Message-ID: <CANgfPd87=eS6h=GX6CxZRwAj=MTET-AtVAjVQn4i1zkwZ4ApXw@mail.gmail.com>
-Subject: Re: [PATCH 01/21] KVM: x86/mmu: Track the associated kmem_cache in
- the MMU caches
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Marc Zyngier <maz@kernel.org>, Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Feiner <pfeiner@google.com>,
-        Peter Shier <pshier@google.com>,
-        Junaid Shahid <junaids@google.com>,
-        Christoffer Dall <christoffer.dall@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=koi8-r
+Content-Disposition: inline
+In-Reply-To: <20200609134855.21431-1-tianjia.zhang@linux.alibaba.com>
+User-Agent: NeoMutt/20171215-106-ac61c7
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 5, 2020 at 2:39 PM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> Track the kmem_cache used for non-page KVM MMU memory caches instead of
-> passing in the associated kmem_cache when filling the cache.  This will
-> allow consolidating code and other cleanups.
->
-> No functional change intended.
->
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Reviewed-by: Ben Gardon <bgardon@google.com>
+Tianjia,
+
+On Tue, Jun 09, 2020 at 09:48:47PM +0800, Tianjia Zhang wrote:
+> Hello all,
+> 
+> This new module implement the OSCCA certificate and SM2 public key
+> algorithm. It was published by State Encryption Management Bureau, China.
+> List of specifications for OSCCA certificate and SM2 elliptic curve
+> public key cryptography:
+> 
+> * GM/T 0003.1-2012
+> * GM/T 0003.2-2012
+> * GM/T 0003.3-2012
+> * GM/T 0003.4-2012
+> * GM/T 0003.5-2012
+> * GM/T 0015-2012
+> * GM/T 0009-2012 
+> 
+> IETF: https://tools.ietf.org/html/draft-shen-sm2-ecdsa-02
+> oscca: http://www.oscca.gov.cn/sca/xxgk/2010-12/17/content_1002386.shtml
+> scctc: http://www.gmbz.org.cn/main/bzlb.html
+> 
+> These patchs add the OID object identifier defined by OSCCA. The
+> x509 certificate supports sm2-with-sm3 type certificate parsing
+> and verification.
+> 
+> The sm2 algorithm is based on libgcrypt's mpi implementation, and has
+> made some additions to the kernel's original mpi library, and added the
+> implementation of ec to better support elliptic curve-like algorithms.
+> 
+> sm2 has good support in both openssl and gnupg projects, and sm3 and sm4
+> of the OSCCA algorithm family have also been implemented in the kernel.
+> 
+> Among them, sm3 and sm4 have been well implemented in the kernel.
+> This group of patches has newly introduced sm2. In order to implement
+> sm2 more perfectly, I expanded the mpi library and introduced the
+> ec implementation of the mpi library as the basic algorithm. Compared
+> to the kernel's crypto/ecc.c, the implementation of mpi/ec.c is more
+> complete and elegant, sm2 is implemented based on these algorithms.
+
+Does it use constant-time algorithms?
+
+Thanks,
+
+> 
 > ---
->  arch/x86/include/asm/kvm_host.h |  1 +
->  arch/x86/kvm/mmu/mmu.c          | 24 +++++++++++-------------
->  2 files changed, 12 insertions(+), 13 deletions(-)
->
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 1da5858501ca..16347b050754 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -251,6 +251,7 @@ struct kvm_kernel_irq_routing_entry;
->   */
->  struct kvm_mmu_memory_cache {
->         int nobjs;
-> +       struct kmem_cache *kmem_cache;
->         void *objects[KVM_NR_MEM_OBJS];
->  };
->
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index fdd05c233308..0830c195c9ed 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -1060,15 +1060,14 @@ static void walk_shadow_page_lockless_end(struct kvm_vcpu *vcpu)
->         local_irq_enable();
->  }
->
-> -static int mmu_topup_memory_cache(struct kvm_mmu_memory_cache *cache,
-> -                                 struct kmem_cache *base_cache, int min)
-> +static int mmu_topup_memory_cache(struct kvm_mmu_memory_cache *cache, int min)
->  {
->         void *obj;
->
->         if (cache->nobjs >= min)
->                 return 0;
->         while (cache->nobjs < ARRAY_SIZE(cache->objects)) {
-> -               obj = kmem_cache_zalloc(base_cache, GFP_KERNEL_ACCOUNT);
-> +               obj = kmem_cache_zalloc(cache->kmem_cache, GFP_KERNEL_ACCOUNT);
->                 if (!obj)
->                         return cache->nobjs >= min ? 0 : -ENOMEM;
->                 cache->objects[cache->nobjs++] = obj;
-> @@ -1081,11 +1080,10 @@ static int mmu_memory_cache_free_objects(struct kvm_mmu_memory_cache *cache)
->         return cache->nobjs;
->  }
->
-> -static void mmu_free_memory_cache(struct kvm_mmu_memory_cache *mc,
-> -                                 struct kmem_cache *cache)
-> +static void mmu_free_memory_cache(struct kvm_mmu_memory_cache *mc)
->  {
->         while (mc->nobjs)
-> -               kmem_cache_free(cache, mc->objects[--mc->nobjs]);
-> +               kmem_cache_free(mc->kmem_cache, mc->objects[--mc->nobjs]);
->  }
->
->  static int mmu_topup_memory_cache_page(struct kvm_mmu_memory_cache *cache,
-> @@ -1115,25 +1113,22 @@ static int mmu_topup_memory_caches(struct kvm_vcpu *vcpu)
->         int r;
->
->         r = mmu_topup_memory_cache(&vcpu->arch.mmu_pte_list_desc_cache,
-> -                                  pte_list_desc_cache, 8 + PTE_PREFETCH_NUM);
-> +                                  8 + PTE_PREFETCH_NUM);
->         if (r)
->                 goto out;
->         r = mmu_topup_memory_cache_page(&vcpu->arch.mmu_page_cache, 8);
->         if (r)
->                 goto out;
-> -       r = mmu_topup_memory_cache(&vcpu->arch.mmu_page_header_cache,
-> -                                  mmu_page_header_cache, 4);
-> +       r = mmu_topup_memory_cache(&vcpu->arch.mmu_page_header_cache, 4);
->  out:
->         return r;
->  }
->
->  static void mmu_free_memory_caches(struct kvm_vcpu *vcpu)
->  {
-> -       mmu_free_memory_cache(&vcpu->arch.mmu_pte_list_desc_cache,
-> -                               pte_list_desc_cache);
-> +       mmu_free_memory_cache(&vcpu->arch.mmu_pte_list_desc_cache);
->         mmu_free_memory_cache_page(&vcpu->arch.mmu_page_cache);
-> -       mmu_free_memory_cache(&vcpu->arch.mmu_page_header_cache,
-> -                               mmu_page_header_cache);
-> +       mmu_free_memory_cache(&vcpu->arch.mmu_page_header_cache);
->  }
->
->  static void *mmu_memory_cache_alloc(struct kvm_mmu_memory_cache *mc)
-> @@ -5684,6 +5679,9 @@ int kvm_mmu_create(struct kvm_vcpu *vcpu)
->         uint i;
->         int ret;
->
-> +       vcpu->arch.mmu_pte_list_desc_cache.kmem_cache = pte_list_desc_cache;
-> +       vcpu->arch.mmu_page_header_cache.kmem_cache = mmu_page_header_cache;
-> +
->         vcpu->arch.mmu = &vcpu->arch.root_mmu;
->         vcpu->arch.walk_mmu = &vcpu->arch.root_mmu;
->
-> --
-> 2.26.0
->
+> v3 changes:
+>   1. integrity asymmetric digsig support sm2-with-sm3 algorithm.
+>   2. remove unused sm2_set_priv_key().
+>   3. rebase on mainline.
+> 
+> v2 changes:
+>   1. simplify the sm2 algorithm and only retain the verify function.
+>   2. extract the sm2 certificate code into a separate file.
+> 
+> Tianjia Zhang (8):
+>   crypto: sm3 - export crypto_sm3_final function
+>   lib/mpi: Extend the MPI library
+>   lib/mpi: Introduce ec implementation to MPI library
+>   crypto: sm2 - introduce OSCCA SM2 asymmetric cipher algorithm
+>   crypto: testmgr - support test with different ciphertext per
+>     encryption
+>   X.509: support OSCCA certificate parse
+>   X.509: support OSCCA sm2-with-sm3 certificate verification
+>   integrity: Asymmetric digsig supports SM2-with-SM3 algorithm
+> 
+>  crypto/Kconfig                            |   17 +
+>  crypto/Makefile                           |    8 +
+>  crypto/asymmetric_keys/Makefile           |    1 +
+>  crypto/asymmetric_keys/public_key.c       |    6 +
+>  crypto/asymmetric_keys/public_key_sm2.c   |   59 +
+>  crypto/asymmetric_keys/x509_cert_parser.c |   14 +-
+>  crypto/asymmetric_keys/x509_public_key.c  |    2 +
+>  crypto/sm2.c                              |  473 +++++++
+>  crypto/sm2signature.asn1                  |    4 +
+>  crypto/sm3_generic.c                      |    7 +-
+>  crypto/testmgr.c                          |    7 +-
+>  include/crypto/public_key.h               |   14 +
+>  include/crypto/sm2.h                      |   25 +
+>  include/crypto/sm3.h                      |    2 +
+>  include/linux/mpi.h                       |  193 +++
+>  include/linux/oid_registry.h              |    6 +
+>  lib/mpi/Makefile                          |    6 +
+>  lib/mpi/ec.c                              | 1538 +++++++++++++++++++++
+>  lib/mpi/mpi-add.c                         |  207 +++
+>  lib/mpi/mpi-bit.c                         |  251 ++++
+>  lib/mpi/mpi-cmp.c                         |   46 +-
+>  lib/mpi/mpi-div.c                         |  259 ++++
+>  lib/mpi/mpi-internal.h                    |   53 +
+>  lib/mpi/mpi-inv.c                         |  143 ++
+>  lib/mpi/mpi-mod.c                         |  155 +++
+>  lib/mpi/mpi-mul.c                         |  166 +++
+>  lib/mpi/mpicoder.c                        |  336 +++++
+>  lib/mpi/mpih-div.c                        |  294 ++++
+>  lib/mpi/mpih-mul.c                        |   25 +
+>  lib/mpi/mpiutil.c                         |  204 +++
+>  security/integrity/digsig_asymmetric.c    |   14 +-
+>  31 files changed, 4517 insertions(+), 18 deletions(-)
+>  create mode 100644 crypto/asymmetric_keys/public_key_sm2.c
+>  create mode 100644 crypto/sm2.c
+>  create mode 100644 crypto/sm2signature.asn1
+>  create mode 100644 include/crypto/sm2.h
+>  create mode 100644 lib/mpi/ec.c
+>  create mode 100644 lib/mpi/mpi-add.c
+>  create mode 100644 lib/mpi/mpi-div.c
+>  create mode 100644 lib/mpi/mpi-inv.c
+>  create mode 100644 lib/mpi/mpi-mod.c
+>  create mode 100644 lib/mpi/mpi-mul.c
+> 
+> -- 
+> 2.17.1
