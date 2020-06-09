@@ -2,334 +2,118 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B97EDC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 22:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76451C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 23:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 880282076A
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 22:58:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50E0B2083E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 23:00:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="NeIH+vrf"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uWX8PhxX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729175AbgFIW6x (ORCPT
+        id S1728710AbgFIXAq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 18:58:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60720 "EHLO
+        Tue, 9 Jun 2020 19:00:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728938AbgFIW53 (ORCPT
+        with ESMTP id S1728108AbgFIXAn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 18:57:29 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF3A6C00862E
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 15:57:18 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id j1so223681pfe.4
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 15:57:18 -0700 (PDT)
+        Tue, 9 Jun 2020 19:00:43 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AD83C05BD1E;
+        Tue,  9 Jun 2020 16:00:39 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id n24so87904lji.10;
+        Tue, 09 Jun 2020 16:00:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=oEagKHQfVZx0qdrYMa0dmoo1zYusLN9mgZl9FtDlBHc=;
-        b=NeIH+vrfN4cZXSsFgfJJBlW5vXLPso8ES5K1s09V6HLo9WoXGSLRcsF8Y6NsqFlxSN
-         rrlpl9CcNAjDy2X7DPlehg6vK9F/PgB9fukbufYwwE/u6VMwcEjIcT5G4rTluYnqNaSi
-         XZPkis/kHXF3v0rXYo2oMXKynczH3+7CqafGU=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=s8uiAmqlfKhbNS8zB94at4653DA3vsfFnLuxtD8Ft50=;
+        b=uWX8PhxX5ck/fIgnf6AhjoNGa9v1kr5t35QzGp2u2JIVCjZ0+WiYHj4q9+GAG4lrp7
+         BVyECS9oPaynGxiySyf0LfbYxB9FMTctWW/NS2cXpcN3mGFgjRLCQaYmRd6Y7QStPRQT
+         dI3JV5gwgO8alapw4DfHWnl+jk1s2Wfolr8Ek+/bwobQXHRcjzLabkRyYWAU/tY2lPQ8
+         I/M25+6IxYgMvCDSQIRLznO3jJ1QlJGAo07ltgjwKMJYFxsG2oQve6YoEfVWq9wCSRd1
+         MuGl7isbbfFue0V2H6NUqHDsMhjZ/R8+ZM9pMy30iALOYfyar/kuf0V4ch6JD04gozaH
+         dfxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=oEagKHQfVZx0qdrYMa0dmoo1zYusLN9mgZl9FtDlBHc=;
-        b=KZ5pkIvSsdIw7uggm292lbWqaqxfnTv9VKAD8jts+IX8VDy876ESf4bDqWPY9A6mdp
-         PpLxytB+aPNSFoAircwZpZNoiP05ocglP0jGUzrQU477I+5WTF+a8iCsoOOxQ7UE+HRe
-         XeOr9chdaR2wXF1GbWTWXCId5abCGPiUIolnb9Kuoz3TGF5AgS4J6O/vxh/a1ODwltpE
-         fzT0r8dJg9QOrMpbxA8sX6XzRcZbS8QzQ0Nef6R4KTphdzvlG54HWC49E7qu8nnOM4Qo
-         qojJyU0iuLDWPvLgow7RoW8EMpnT0d90/hVLPz0z3DBm9coPCU/+DV+JNjW4TAQ3w87v
-         Y6gQ==
-X-Gm-Message-State: AOAM5337Pv0ONJazPtoSgRinIUvgrkp8FwtPuyHqD+O6yxPboYqGyFEb
-        J7TTTxmw9yWZJCi4nEc6uvqywg==
-X-Google-Smtp-Source: ABdhPJyFipcfqgEYG9bZZZAf3PmjyTcJZiZCNb7sc8hY6kL8TjcCie8ZpBQEEqX1Ole43jhLoNBs/g==
-X-Received: by 2002:a65:4489:: with SMTP id l9mr220170pgq.223.1591743437934;
-        Tue, 09 Jun 2020 15:57:17 -0700 (PDT)
-Received: from lbrmn-lnxub113.broadcom.net ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id p8sm9104978pgs.29.2020.06.09.15.57.14
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=s8uiAmqlfKhbNS8zB94at4653DA3vsfFnLuxtD8Ft50=;
+        b=G1lprtOvpO0boT/5IX/1GtRGyi+stQQTofaVkqL4ttevq21ZpWff/S1R+pioSIGJSq
+         pBhBZXHlytJvP85SkBqB6WgI+4LCRiFS79Te7DbsJ2NC1Jv1ajGBJ4Qf/CvLDnwZDFWc
+         wwpJjrPgbj/ScRypXp3AY6In4Wnaq/7W84CIDQljQytWD8N5K5PwPpbVL5sTzs0iSXNS
+         UYLy43gl8JB0RVpFIErG3649r7OWmsCCp52/Cq9NEo+QlitQqAtBynaXlz1KsqUH3nvl
+         ShhZSbQSXuHLwCZtWNIpGmphdtlfYFQg/8SHRAGDupJSBhoSudj+iFzPIn5njBQ+h/l2
+         90Bw==
+X-Gm-Message-State: AOAM532oQUZh2aevolwUTMBMe6MLMoTtwfc5CN20DvZwaANFcY9Tzd+c
+        ST/fllRgO+HiNC9wpFnckho=
+X-Google-Smtp-Source: ABdhPJwcuwJBEnfuj2h/lT/fcSUcFngGefHGqO+wURSYU5P9LQf6N3Rt2gy0UEdq2la9dxghMEP3gw==
+X-Received: by 2002:a2e:95d9:: with SMTP id y25mr264828ljh.167.1591743637017;
+        Tue, 09 Jun 2020 16:00:37 -0700 (PDT)
+Received: from localhost.localdomain (h-82-196-111-136.NA.cust.bahnhof.se. [82.196.111.136])
+        by smtp.gmail.com with ESMTPSA id b15sm5306278lfa.74.2020.06.09.16.00.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 15:57:17 -0700 (PDT)
-From:   Scott Branden <scott.branden@broadcom.com>
-To:     Luis Chamberlain <mcgrof@kernel.org>,
-        Wolfram Sang <wsa@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Scott Branden <scott.branden@broadcom.com>
-Subject: [PATCH v8 3/8] test_firmware: add partial read support for request_firmware_into_buf
-Date:   Tue,  9 Jun 2020 15:56:51 -0700
-Message-Id: <20200609225656.18663-4-scott.branden@broadcom.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200609225656.18663-1-scott.branden@broadcom.com>
-References: <20200609225656.18663-1-scott.branden@broadcom.com>
+        Tue, 09 Jun 2020 16:00:36 -0700 (PDT)
+From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, vkoul@kernel.org,
+        sanyog.r.kale@intel.com, pierre-louis.bossart@linux.intel.com,
+        linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org,
+        Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Subject: [PATCH] soundwire: qcom: Constify static structs
+Date:   Wed, 10 Jun 2020 01:00:29 +0200
+Message-Id: <20200609230029.69802-1-rikard.falkeborn@gmail.com>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add additional hooks to test_firmware to pass in support
-for partial file read using request_firmware_into_buf.
-buf_size: size of buffer to request firmware into
-partial: indicates that a partial file request is being made
-file_offset: to indicate offset into file to request
+qcom_swrm_port_ops and qcom_swrm_ops are not modified and can be made
+const to allow the compiler to put them in read-only memory.
 
-Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+Before:
+   text    data     bss     dec     hex filename
+  18266    3056     256   21578    544a drivers/soundwire/qcom.o
+
+After:
+   text    data     bss     dec     hex filename
+  18426    2896     256   21578    544a drivers/soundwire/qcom.o
+
+Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
 ---
- lib/test_firmware.c | 154 ++++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 142 insertions(+), 12 deletions(-)
+ drivers/soundwire/qcom.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/lib/test_firmware.c b/lib/test_firmware.c
-index 9fee2b93a8d1..48d8a3d5bea9 100644
---- a/lib/test_firmware.c
-+++ b/lib/test_firmware.c
-@@ -50,6 +50,9 @@ struct test_batched_req {
-  * @name: the name of the firmware file to look for
-  * @into_buf: when the into_buf is used if this is true
-  *	request_firmware_into_buf() will be used instead.
-+ * @buf_size: size of buf to allocate when into_buf is true
-+ * @file_offset: file offset to request when calling request_firmware_into_buf
-+ * @partial: partial read opt when calling request_firmware_into_buf
-  * @sync_direct: when the sync trigger is used if this is true
-  *	request_firmware_direct() will be used instead.
-  * @send_uevent: whether or not to send a uevent for async requests
-@@ -89,6 +92,9 @@ struct test_batched_req {
- struct test_config {
- 	char *name;
- 	bool into_buf;
-+	size_t buf_size;
-+	size_t file_offset;
-+	bool partial;
- 	bool sync_direct;
- 	bool send_uevent;
- 	u8 num_requests;
-@@ -183,6 +189,9 @@ static int __test_firmware_config_init(void)
- 	test_fw_config->num_requests = TEST_FIRMWARE_NUM_REQS;
- 	test_fw_config->send_uevent = true;
- 	test_fw_config->into_buf = false;
-+	test_fw_config->buf_size = TEST_FIRMWARE_BUF_SIZE;
-+	test_fw_config->file_offset = 0;
-+	test_fw_config->partial = false;
- 	test_fw_config->sync_direct = false;
- 	test_fw_config->req_firmware = request_firmware;
- 	test_fw_config->test_result = 0;
-@@ -236,28 +245,35 @@ static ssize_t config_show(struct device *dev,
- 			dev_name(dev));
- 
- 	if (test_fw_config->name)
--		len += scnprintf(buf+len, PAGE_SIZE - len,
-+		len += scnprintf(buf + len, PAGE_SIZE - len,
- 				"name:\t%s\n",
- 				test_fw_config->name);
- 	else
--		len += scnprintf(buf+len, PAGE_SIZE - len,
-+		len += scnprintf(buf + len, PAGE_SIZE - len,
- 				"name:\tEMTPY\n");
- 
--	len += scnprintf(buf+len, PAGE_SIZE - len,
-+	len += scnprintf(buf + len, PAGE_SIZE - len,
- 			"num_requests:\t%u\n", test_fw_config->num_requests);
- 
--	len += scnprintf(buf+len, PAGE_SIZE - len,
-+	len += scnprintf(buf + len, PAGE_SIZE - len,
- 			"send_uevent:\t\t%s\n",
- 			test_fw_config->send_uevent ?
- 			"FW_ACTION_HOTPLUG" :
- 			"FW_ACTION_NOHOTPLUG");
--	len += scnprintf(buf+len, PAGE_SIZE - len,
-+	len += scnprintf(buf + len, PAGE_SIZE - len,
- 			"into_buf:\t\t%s\n",
- 			test_fw_config->into_buf ? "true" : "false");
--	len += scnprintf(buf+len, PAGE_SIZE - len,
-+	len += scnprintf(buf + len, PAGE_SIZE - len,
-+			"buf_size:\t%zu\n", test_fw_config->buf_size);
-+	len += scnprintf(buf + len, PAGE_SIZE - len,
-+			"file_offset:\t%zu\n", test_fw_config->file_offset);
-+	len += scnprintf(buf + len, PAGE_SIZE - len,
-+			"partial:\t\t%s\n",
-+			test_fw_config->partial ? "true" : "false");
-+	len += scnprintf(buf + len, PAGE_SIZE - len,
- 			"sync_direct:\t\t%s\n",
- 			test_fw_config->sync_direct ? "true" : "false");
--	len += scnprintf(buf+len, PAGE_SIZE - len,
-+	len += scnprintf(buf + len, PAGE_SIZE - len,
- 			"read_fw_idx:\t%u\n", test_fw_config->read_fw_idx);
- 
- 	mutex_unlock(&test_fw_mutex);
-@@ -315,6 +331,30 @@ static ssize_t test_dev_config_show_bool(char *buf, bool val)
- 	return snprintf(buf, PAGE_SIZE, "%d\n", val);
+diff --git a/drivers/soundwire/qcom.c b/drivers/soundwire/qcom.c
+index a1c2a44a3b4d..915c2cf0c274 100644
+--- a/drivers/soundwire/qcom.c
++++ b/drivers/soundwire/qcom.c
+@@ -406,13 +406,13 @@ static int qcom_swrm_port_enable(struct sdw_bus *bus,
+ 	return ctrl->reg_write(ctrl, reg, val);
  }
  
-+static int test_dev_config_update_size_t(const char *buf,
-+					 size_t size,
-+					 size_t *cfg)
-+{
-+	int ret;
-+	long new;
-+
-+	ret = kstrtol(buf, 10, &new);
-+	if (ret)
-+		return ret;
-+
-+	mutex_lock(&test_fw_mutex);
-+	*(size_t *)cfg = new;
-+	mutex_unlock(&test_fw_mutex);
-+
-+	/* Always return full write size even if we didn't consume all */
-+	return size;
-+}
-+
-+static ssize_t test_dev_config_show_size_t(char *buf, size_t val)
-+{
-+	return snprintf(buf, PAGE_SIZE, "%zu\n", val);
-+}
-+
- static ssize_t test_dev_config_show_int(char *buf, int val)
- {
- 	return snprintf(buf, PAGE_SIZE, "%d\n", val);
-@@ -400,6 +440,83 @@ static ssize_t config_into_buf_show(struct device *dev,
- }
- static DEVICE_ATTR_RW(config_into_buf);
+-static struct sdw_master_port_ops qcom_swrm_port_ops = {
++static const struct sdw_master_port_ops qcom_swrm_port_ops = {
+ 	.dpn_set_port_params = qcom_swrm_port_params,
+ 	.dpn_set_port_transport_params = qcom_swrm_transport_params,
+ 	.dpn_port_enable_ch = qcom_swrm_port_enable,
+ };
  
-+static ssize_t config_buf_size_store(struct device *dev,
-+				     struct device_attribute *attr,
-+				     const char *buf, size_t count)
-+{
-+	int rc;
-+
-+	mutex_lock(&test_fw_mutex);
-+	if (test_fw_config->reqs) {
-+		pr_err("Must call release_all_firmware prior to changing config\n");
-+		rc = -EINVAL;
-+		mutex_unlock(&test_fw_mutex);
-+		goto out;
-+	}
-+	mutex_unlock(&test_fw_mutex);
-+
-+	rc = test_dev_config_update_size_t(buf, count,
-+					   &test_fw_config->buf_size);
-+
-+out:
-+	return rc;
-+}
-+
-+static ssize_t config_buf_size_show(struct device *dev,
-+				    struct device_attribute *attr,
-+				    char *buf)
-+{
-+	return test_dev_config_show_size_t(buf, test_fw_config->buf_size);
-+}
-+static DEVICE_ATTR_RW(config_buf_size);
-+
-+static ssize_t config_file_offset_store(struct device *dev,
-+					struct device_attribute *attr,
-+					const char *buf, size_t count)
-+{
-+	int rc;
-+
-+	mutex_lock(&test_fw_mutex);
-+	if (test_fw_config->reqs) {
-+		pr_err("Must call release_all_firmware prior to changing config\n");
-+		rc = -EINVAL;
-+		mutex_unlock(&test_fw_mutex);
-+		goto out;
-+	}
-+	mutex_unlock(&test_fw_mutex);
-+
-+	rc = test_dev_config_update_size_t(buf, count,
-+					   &test_fw_config->file_offset);
-+
-+out:
-+	return rc;
-+}
-+
-+static ssize_t config_file_offset_show(struct device *dev,
-+				       struct device_attribute *attr,
-+				       char *buf)
-+{
-+	return test_dev_config_show_size_t(buf, test_fw_config->file_offset);
-+}
-+static DEVICE_ATTR_RW(config_file_offset);
-+
-+static ssize_t config_partial_store(struct device *dev,
-+				    struct device_attribute *attr,
-+				    const char *buf, size_t count)
-+{
-+	return test_dev_config_update_bool(buf,
-+					   count,
-+					   &test_fw_config->partial);
-+}
-+
-+static ssize_t config_partial_show(struct device *dev,
-+				   struct device_attribute *attr,
-+				   char *buf)
-+{
-+	return test_dev_config_show_bool(buf, test_fw_config->partial);
-+}
-+static DEVICE_ATTR_RW(config_partial);
-+
- static ssize_t config_sync_direct_store(struct device *dev,
- 					struct device_attribute *attr,
- 					const char *buf, size_t count)
-@@ -650,11 +767,21 @@ static int test_fw_run_batch_request(void *data)
- 		if (!test_buf)
- 			return -ENOSPC;
- 
--		req->rc = request_firmware_into_buf(&req->fw,
--						    req->name,
--						    req->dev,
--						    test_buf,
--						    TEST_FIRMWARE_BUF_SIZE);
-+		if (test_fw_config->partial)
-+			req->rc = request_partial_firmware_into_buf
-+						(&req->fw,
-+						 req->name,
-+						 req->dev,
-+						 test_buf,
-+						 test_fw_config->buf_size,
-+						 test_fw_config->file_offset);
-+		else
-+			req->rc = request_firmware_into_buf
-+						(&req->fw,
-+						 req->name,
-+						 req->dev,
-+						 test_buf,
-+						 test_fw_config->buf_size);
- 		if (!req->fw)
- 			kfree(test_buf);
- 	} else {
-@@ -927,6 +1054,9 @@ static struct attribute *test_dev_attrs[] = {
- 	TEST_FW_DEV_ATTR(config_name),
- 	TEST_FW_DEV_ATTR(config_num_requests),
- 	TEST_FW_DEV_ATTR(config_into_buf),
-+	TEST_FW_DEV_ATTR(config_buf_size),
-+	TEST_FW_DEV_ATTR(config_file_offset),
-+	TEST_FW_DEV_ATTR(config_partial),
- 	TEST_FW_DEV_ATTR(config_sync_direct),
- 	TEST_FW_DEV_ATTR(config_send_uevent),
- 	TEST_FW_DEV_ATTR(config_read_fw_idx),
+-static struct sdw_master_ops qcom_swrm_ops = {
++static const struct sdw_master_ops qcom_swrm_ops = {
+ 	.xfer_msg = qcom_swrm_xfer_msg,
+ 	.pre_bank_switch = qcom_swrm_pre_bank_switch,
+ };
 -- 
-2.17.1
+2.27.0
 
