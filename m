@@ -2,191 +2,111 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F51EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 07:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7892CC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 07:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CDCD207F9
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 07:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E710207F9
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 07:47:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728079AbgFIHpX (ORCPT
+        id S1727028AbgFIHry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 03:45:23 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:60814 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbgFIHpV (ORCPT
+        Tue, 9 Jun 2020 03:47:54 -0400
+Received: from lucky1.263xmail.com ([211.157.147.132]:51182 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726116AbgFIHry (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 03:45:21 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jiYwa-00061m-MX; Tue, 09 Jun 2020 07:45:12 +0000
-Date:   Tue, 9 Jun 2020 09:45:12 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-kbuild@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian@brauner.io>,
-        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] samples: binderfs: really compile this sample and fix
- build issues
-Message-ID: <20200609074512.4uh7gs5gg6tewmj5@wittgenstein>
-References: <20200607032053.145302-1-masahiroy@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200607032053.145302-1-masahiroy@kernel.org>
+        Tue, 9 Jun 2020 03:47:54 -0400
+X-Greylist: delayed 440 seconds by postgrey-1.27 at vger.kernel.org; Tue, 09 Jun 2020 03:47:53 EDT
+Received: from localhost (unknown [192.168.167.235])
+        by lucky1.263xmail.com (Postfix) with ESMTP id F2ABADCC95;
+        Tue,  9 Jun 2020 15:47:51 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-ABS-CHECKED: 0
+Received: from ubuntu18.lan (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P31250T139912977241856S1591688866315878_;
+        Tue, 09 Jun 2020 15:47:51 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <ac98c4fc750db21fd964623330b9865c>
+X-RL-SENDER: yifeng.zhao@rock-chips.com
+X-SENDER: zyf@rock-chips.com
+X-LOGIN-NAME: yifeng.zhao@rock-chips.com
+X-FST-TO: miquel.raynal@bootlin.com
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+X-System-Flag: 0
+From:   Yifeng Zhao <yifeng.zhao@rock-chips.com>
+To:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-mtd@lists.infradead.org,
+        heiko@sntech.de, linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Yifeng Zhao <zyf@rock-chips.com>,
+        Yifeng Zhao <yifeng.zhao@rock-chips.com>
+Subject: [PATCH v6 4/8] arm64: dts: rockchip: Add nfc dts for RK3308 SOC
+Date:   Tue,  9 Jun 2020 15:47:44 +0800
+Message-Id: <20200609074744.24016-1-yifeng.zhao@rock-chips.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200609074020.23860-1-yifeng.zhao@rock-chips.com>
+References: <20200609074020.23860-1-yifeng.zhao@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 07, 2020 at 12:20:53PM +0900, Masahiro Yamada wrote:
-> Even after commit c624adc9cb6e ("samples: fix binderfs sample"), this
-> sample is never compiled.
-> 
-> 'hostprogs' teaches Kbuild that this is a host program, but not enough
-> to order to compile it. You must add it to 'always-y' to really compile
-> it.
-> 
-> Since this sample has never been compiled in upstream, various issues
-> are left unnoticed.
-> 
-> [1] compilers without <linux/android/binderfs.h> are still widely used
-> 
-> <linux/android/binderfs.h> is only available since commit c13295ad219d
-> ("binderfs: rename header to binderfs.h"), i.e., Linux 5.0
-> 
-> If your compiler is based on UAPI headers older than Linux 5.0, you
-> will see the following error:
-> 
->   samples/binderfs/binderfs_example.c:16:10: fatal error: linux/android/binderfs.h: No such file or directory
->    #include <linux/android/binderfs.h>
->             ^~~~~~~~~~~~~~~~~~~~~~~~~~
->   compilation terminated.
-> 
-> You cannot rely on compilers to have such a new header.
-> 
-> The common approach is to install UAPI headers of this kernel into
-> usr/include, and then add it to the header include path.
-> 
-> I added 'depends on HEADERS_INSTALL' in Kconfig, and '-I usr/include'
-> compiler flag in Makefile.
-> 
-> [2] compile the sample for target architecture
-> 
-> Since headers_install works for the target architecture, only the native
-> build was able to build sample code that requires '-I usr/include'.
-> 
-> Commit 7f3a59db274c ("kbuild: add infrastructure to build userspace
-> programs") added the new syntax 'userprogs' to compile user-space
-> programs for the target architecture.
-> 
-> Use it, and 'ifndef CROSS_COMPILE' will go away.
-> 
-> I added 'depends on CC_CAN_LINK' because $(CC) is not necessarily capable
-> of linking user-space programs.
-> 
-> [3] use subdir-y to descend into samples/binderfs/
-> 
-> Since this directory does not contain any kernel-space code, it has no
-> point to generate built-in.a or modules.order.
-> 
-> Replace obj-$(CONFIG_...) with subdir-$(CONFIG_...).
-> 
-> [4] -Wunused-variable warning
-> 
-> If I compile this, I see the following warning.
-> 
->   samples/binderfs/binderfs_example.c: In function 'main':
->   samples/binderfs/binderfs_example.c:21:9: warning: unused variable 'len' [-Wunused-variable]
->      21 |  size_t len;
->         |         ^~~
-> 
-> I removed the unused 'len'.
-> 
-> [5] CONFIG_ANDROID_BINDERFS is not required
-> 
-> Since this is a user-space standalone program, it is independent of
-> the kernel configuration.
-> 
-> Remove 'depends on ANDROID_BINDERFS'.
-> 
-> Fixes: 9762dc1432e1 ("samples: add binderfs sample program")
-> Fixes: c624adc9cb6e ("samples: fix binderfs sample")
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+From: Yifeng Zhao <zyf@rock-chips.com>
 
-Sorry, I missed this:
+Add nfc(nand flash controller) node for RK3308 Soc.
 
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+Signed-off-by: Yifeng Zhao <zyf@rock-chips.com>
+Signed-off-by: Yifeng Zhao <yifeng.zhao@rock-chips.com>
+---
 
-Thanks!
-Christian
+Changes in v6: None
+Changes in v5: None
+Changes in v4: None
+Changes in v3: None
+Changes in v2: None
 
-> ---
-> 
->  samples/Kconfig                     | 2 +-
->  samples/Makefile                    | 2 +-
->  samples/binderfs/Makefile           | 9 ++++-----
->  samples/binderfs/binderfs_example.c | 1 -
->  4 files changed, 6 insertions(+), 8 deletions(-)
-> 
-> diff --git a/samples/Kconfig b/samples/Kconfig
-> index 0cbb6146f3cf..953abbdebf7b 100644
-> --- a/samples/Kconfig
-> +++ b/samples/Kconfig
-> @@ -185,7 +185,7 @@ config SAMPLE_VFIO_MDEV_MBOCHS
->  
->  config SAMPLE_ANDROID_BINDERFS
->  	bool "Build Android binderfs example"
-> -	depends on ANDROID_BINDERFS
-> +	depends on CC_CAN_LINK && HEADERS_INSTALL
->  	help
->  	  Builds a sample program to illustrate the use of the Android binderfs
->  	  filesystem.
-> diff --git a/samples/Makefile b/samples/Makefile
-> index 29c66aadd954..4029d207cebb 100644
-> --- a/samples/Makefile
-> +++ b/samples/Makefile
-> @@ -2,7 +2,7 @@
->  # Makefile for Linux samples code
->  
->  subdir-$(CONFIG_SAMPLE_AUXDISPLAY)	+= auxdisplay
-> -obj-$(CONFIG_SAMPLE_ANDROID_BINDERFS)	+= binderfs/
-> +subdir-$(CONFIG_SAMPLE_ANDROID_BINDERFS) += binderfs
->  obj-$(CONFIG_SAMPLE_CONFIGFS)		+= configfs/
->  obj-$(CONFIG_SAMPLE_CONNECTOR)		+= connector/
->  subdir-$(CONFIG_SAMPLE_HIDRAW)		+= hidraw
-> diff --git a/samples/binderfs/Makefile b/samples/binderfs/Makefile
-> index a3ac5476338a..989e4badaee2 100644
-> --- a/samples/binderfs/Makefile
-> +++ b/samples/binderfs/Makefile
-> @@ -1,6 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -ifndef CROSS_COMPILE
-> -ifdef CONFIG_SAMPLE_ANDROID_BINDERFS
-> -hostprogs := binderfs_example
-> -endif
-> -endif
-> +userprogs := binderfs_example
-> +always-y := $(userprogs)
-> +
-> +userccflags += -I usr/include
-> diff --git a/samples/binderfs/binderfs_example.c b/samples/binderfs/binderfs_example.c
-> index 5bbd2ebc0aea..0fd92cdda460 100644
-> --- a/samples/binderfs/binderfs_example.c
-> +++ b/samples/binderfs/binderfs_example.c
-> @@ -18,7 +18,6 @@
->  int main(int argc, char *argv[])
->  {
->  	int fd, ret, saved_errno;
-> -	size_t len;
->  	struct binderfs_device device = { 0 };
->  
->  	ret = unshare(CLONE_NEWNS);
-> -- 
-> 2.25.1
-> 
+ arch/arm64/boot/dts/rockchip/rk3308.dtsi | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3308.dtsi b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
+index 1a58df6e242b..da056b8dfde5 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3308.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
+@@ -627,6 +627,21 @@
+ 		status = "disabled";
+ 	};
+ 
++	nfc: nand-controller@ff4b0000 {
++		compatible = "rockchip,rk3308-nfc",
++			     "rockchip,rv1108-nfc";
++		reg = <0x0 0xff4b0000 0x0 0x4000>;
++		interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru HCLK_NANDC>, <&cru SCLK_NANDC>;
++		clock-names = "ahb", "nfc";
++		assigned-clocks = <&cru SCLK_NANDC>;
++		assigned-clock-rates = <150000000>;
++		pinctrl-0 = <&flash_ale &flash_bus8 &flash_cle &flash_csn0
++			     &flash_rdn &flash_rdy &flash_wrn>;
++		pinctrl-names = "default";
++		status = "disabled";
++	};
++
+ 	cru: clock-controller@ff500000 {
+ 		compatible = "rockchip,rk3308-cru";
+ 		reg = <0x0 0xff500000 0x0 0x1000>;
+-- 
+2.17.1
+
+
+
