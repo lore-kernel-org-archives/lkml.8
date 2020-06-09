@@ -2,128 +2,121 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F51C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:24:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A16C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B771A206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:24:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kCzVd5FI"
+	by mail.kernel.org (Postfix) with ESMTP id 17160206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:25:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591734311;
+	bh=Dc2KaBA0YaPvrVSNR7oaxqCSMmXiGjdT9I3+Z3OZxQw=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=nDUKS1lLKhF5VDpbW2Ez/Sk6vHVzIrfMmni/Zgo5K801j/BRynGjIAoepZp+V7NSg
+	 CFYKl5/vExXWEQPuRJMjyqvyqWhw8r+Kvpp0aYoSU9JCEGkGGGyHK8hZ+2K4nUsfzI
+	 cdMfAD3NAvfzYDsvbmc+K91fcyHVeQnbpQnmgU2k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387647AbgFIUX5 (ORCPT
+        id S2387670AbgFIUZJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 16:23:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37044 "EHLO
+        Tue, 9 Jun 2020 16:25:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728272AbgFIUX4 (ORCPT
+        with ESMTP id S1728272AbgFIUZH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 16:23:56 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93F9DC05BD1E;
-        Tue,  9 Jun 2020 13:23:56 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id l26so4021537wme.3;
-        Tue, 09 Jun 2020 13:23:56 -0700 (PDT)
+        Tue, 9 Jun 2020 16:25:07 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D106C05BD1E
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 13:25:07 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id k4so18456996oik.2
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 13:25:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ck1C6EXNHUjnwGhraJCX8UhZ310w3SODnS0Nvhpy7Ok=;
-        b=kCzVd5FILPb4egqErBHlATnOzfXPIbTWCRF8E98PDByFmSR91m7L94+UvwP+svZ4Dj
-         6R4uQ6sjO1OcpaMoRA/A99bINYdE3a5QamoJEqb8pPN/gwku6piVEwr5omelIVFse3Xu
-         YzarWMs7HObw6skg1BIbwg8ncKddn+/3xzWtyFtNdPnizy5iPTb3qrzqnPC5Q1v2tZKi
-         ZWdq9W4KX5No9iMpALXa9dApY7lkCO5o5GoLj6o27jtI1+cBrmwVg6bVlFmMmZ/srBJG
-         +PVMg0Vx68kelE+hzEkcFe8NZO9bQ1fknbV9Ro1zSy4Azu9o7KvCgzgvwjqqTKsmYWo6
-         O8dA==
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=3a1cFohP5xw0SV+VDh6kY4yNG0l/fwhW7wJHz/37M90=;
+        b=cHeNgvM5Hf+c4H85+zrIqqKMKChQ7S50KExa9V4xoBcS5wkf0/gAR35whBaF7VbuxQ
+         lGrGPr3/7TrOiAjgfs8MYAx01JEZu4oaU2/w+3/dZGAWBuwZgJdy2L4izk6jjv2TfY3w
+         tzw/q7Wwg/rLiFR4hdka4xMMe6NWOSMxPTY+0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ck1C6EXNHUjnwGhraJCX8UhZ310w3SODnS0Nvhpy7Ok=;
-        b=s0aPEHL3PJ8+rdNeBavtqbbMPYsAYx56mt3acTe8xtTSVoNHC1xZeXiqlLMxjhERw3
-         xoOC9equ1mWCxhEs4B9YsyLNmGdw9W97g4Ah6k+FwLl+uDQrCZnqDR8KVq6crmPBn1C8
-         xQijLMSYu5QVME8KkJJFryb/cu+eceT2R5oeIQhvsaITwfbyV07890faYyL1AfU/66T/
-         uixJJvNANoVSMTb0v4+Z8OpwoIde67ueEcOl18sjDBnDIQ42XiyudW+tFzrIjF43pG/T
-         RyroHwCQrc1LYJ87jf3w+Fi0nRF+PgIyrIMQY889ZHkiTaOMKJWOzFkW2Htp5qrxIcnE
-         /EwA==
-X-Gm-Message-State: AOAM532qNAHmvX15BgSGQvL0pEWWr2isk8coV37Luh9zoqZ5uWAPNx3r
-        JfYmTpCDkjwNPL0sUNl/Z6cm68fSHHQTV9Wu7ec=
-X-Google-Smtp-Source: ABdhPJwihJefCyui3E30tzcKp6cIuhvys9g/LJ6hC/9nbSQ9EPyOHipcwlZJG5XUXe+Q9lkGOQXaHWSptAQdy7oGtqY=
-X-Received: by 2002:a1c:541d:: with SMTP id i29mr438556wmb.73.1591734235174;
- Tue, 09 Jun 2020 13:23:55 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3a1cFohP5xw0SV+VDh6kY4yNG0l/fwhW7wJHz/37M90=;
+        b=nGyvGLpe7IlRIfWAptez/RdQS8gswQNhbW4bo7ed+3Q7TeFQ6CW0DIodoQDC4pIkm7
+         7KWl2b5lwNGIkhyyAdwrM6zJB/bu26PyCa3NLHqQZXORQ7DzbEiLrIPb6a9QsZdz2i1M
+         /keO3swglbkpq6d3aef5/OSTi6bWz+2HmHTupSIkW7pmmLquUiSXqsQYtGKBaPT9g6+T
+         De0D7uGAFnvOfUvl8RfWXxXVQJiY7Kh0WxaE9iicAELLi4HaUpcgkHrpHwlXXsr/g34+
+         qVIC2wzFZUcsloXJdJAA6t0trD90nWWT2Vdo2ek1+twTdBpwG8/zINSrfu8o0pcf7wYU
+         BabA==
+X-Gm-Message-State: AOAM533HWSun+za0zWT/ienGTd0yqT9V62OtL8QzT011lh8Jo2gq5tQS
+        8uy3FKoQJmYw50DYiE5qpbUpEw==
+X-Google-Smtp-Source: ABdhPJzxTh55TjnmOg/XSzXnQ/u8fDQYGX0Tks1gLIZvUQGYGRIMrDcm5uD/nL/rlrEgh2ptqf0H+A==
+X-Received: by 2002:aca:4757:: with SMTP id u84mr30544oia.95.1591734306589;
+        Tue, 09 Jun 2020 13:25:06 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id n60sm2385638otn.75.2020.06.09.13.25.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jun 2020 13:25:06 -0700 (PDT)
+Subject: Re: [PATCH v4 kunit-next 0/2] kunit: extend kunit resources API
+To:     Brendan Higgins <brendanhiggins@google.com>,
+        Alan Maguire <alan.maguire@oracle.com>
+Cc:     David Gow <davidgow@google.com>,
+        Patricia Alfonso <trishalfonso@google.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <1590788781-1895-1-git-send-email-alan.maguire@oracle.com>
+ <CAFd5g46Uu_5TG89uOm0Dj5CMq+11cwjBnsd-k_CVy6bQUeU4Jw@mail.gmail.com>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <cef5ddd1-52c2-dc2b-2e11-9196ab5b094c@linuxfoundation.org>
+Date:   Tue, 9 Jun 2020 14:25:05 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200609091148.32749-1-piotr.stankiewicz@intel.com> <20200609091804.1220-1-piotr.stankiewicz@intel.com>
-In-Reply-To: <20200609091804.1220-1-piotr.stankiewicz@intel.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Tue, 9 Jun 2020 16:23:44 -0400
-Message-ID: <CADnq5_N95PjqU4nMgZBL_PoNKk8ourb_k9HLGvR_RN5FeZ3tkg@mail.gmail.com>
-Subject: Re: [PATCH v3 07/15] drm/amdgpu: Use PCI_IRQ_MSI_TYPES where appropriate
-To:     Piotr Stankiewicz <piotr.stankiewicz@intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Aurabindo Pillai <mail@aurabindo.in>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        shaoyunl <shaoyun.liu@amd.com>, Sam Ravnborg <sam@ravnborg.org>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        Hawking Zhang <Hawking.Zhang@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAFd5g46Uu_5TG89uOm0Dj5CMq+11cwjBnsd-k_CVy6bQUeU4Jw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 9, 2020 at 5:18 AM Piotr Stankiewicz
-<piotr.stankiewicz@intel.com> wrote:
->
-> Seeing as there is shorthand available to use when asking for any type
-> of interrupt, or any type of message signalled interrupt, leverage it.
->
-> Signed-off-by: Piotr Stankiewicz <piotr.stankiewicz@intel.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+On 6/5/20 3:20 PM, Brendan Higgins wrote:
+> On Fri, May 29, 2020 at 2:46 PM Alan Maguire <alan.maguire@oracle.com> wrote:
+>>
+>> A recent RFC patch set [1] suggests some additional functionality
+>> may be needed around kunit resources.  It seems to require
+>>
+>> 1. support for resources without allocation
+>> 2. support for lookup of such resources
+>> 3. support for access to resources across multiple kernel threads
+>>
+>> The proposed changes here are designed to address these needs.
+>> The idea is we first generalize the API to support adding
+>> resources with static data; then from there we support named
+>> resources.  The latter support is needed because if we are
+>> in a different thread context and only have the "struct kunit *"
+>> to work with, we need a way to identify a resource in lookup.
+>>
+>> [1] https://lkml.org/lkml/2020/2/26/1286
+>>
+>> Changes since v3:
+>> - removed unused "init" field from "struct kunit_resources" (Brendan)
+> 
+> Shuah, it looks like you haven't sent a PR to Linus yet. Would you
+> mind picking this up for 5.8?
+> 
 
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
+Applied to linux-kselftest kunit branch for second update for
+Linux 5.8-rc1
 
-> ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c | 11 +----------
->  1 file changed, 1 insertion(+), 10 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
-> index 0cc4c67f95f7..97141aa81f32 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
-> @@ -248,17 +248,8 @@ int amdgpu_irq_init(struct amdgpu_device *adev)
->         adev->irq.msi_enabled = false;
->
->         if (amdgpu_msi_ok(adev)) {
-> -               int nvec = pci_msix_vec_count(adev->pdev);
-> -               unsigned int flags;
-> -
-> -               if (nvec <= 0) {
-> -                       flags = PCI_IRQ_MSI;
-> -               } else {
-> -                       flags = PCI_IRQ_MSI | PCI_IRQ_MSIX;
-> -               }
->                 /* we only need one vector */
-> -               nvec = pci_alloc_irq_vectors(adev->pdev, 1, 1, flags);
-> -               if (nvec > 0) {
-> +               if (pci_alloc_irq_vectors(adev->pdev, 1, 1, PCI_IRQ_MSI_TYPES) > 0) {
->                         adev->irq.msi_enabled = true;
->                         dev_dbg(adev->dev, "using MSI/MSI-X.\n");
->                 }
-> --
-> 2.17.2
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+thanks,
+-- Shuah
