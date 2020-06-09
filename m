@@ -2,118 +2,150 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 755A3C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:10:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCECBC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F61F207C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:10:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591665056;
-	bh=JrvphMfoqQIUMDepOvQOrRqazbu+04kxc3ja68COgyM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t8zBWDTFwrN2qjhUocjQ86JniM9lLdFiFfoeBj8A7Onb1U+bBk7/PZFc0ke6Dk277
-	 36QFm2Tey3bOm7PeGrb0uoUVavmPuj0LYD7gcXe0IOZp7z08iLvpgoHj/10t/yXJ7w
-	 ZG851LmLnPA++w65tJ23z41hTuK7zm8T7YW6YUqU=
+	by mail.kernel.org (Postfix) with ESMTP id 9E8992076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:14:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388256AbgFIBKz (ORCPT
+        id S1726964AbgFIBOu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 21:10:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49020 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726877AbgFHXGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:06:13 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5112A20801;
-        Mon,  8 Jun 2020 23:06:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657572;
-        bh=JrvphMfoqQIUMDepOvQOrRqazbu+04kxc3ja68COgyM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yXakXsZ10iXu622Mg1bWNHDxKQ0gCvF7WpcpB1zyyWHfUi2uSjeHgFO+W67/ouvgj
-         E/GLA8RE4L6vVgenuXDj4C9mtKCWl12uW6iKiDaEj1AZktPjA9zZW1U3+UFEz5OcNg
-         iQktpl1T1T76zwYfMceBsSJXpbPdgJGX6fQ+3P5w=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qiujun Huang <hqjagain@gmail.com>,
-        syzbot+d403396d4df67ad0bd5f@syzkaller.appspotmail.com,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 003/274] ath9x: Fix stack-out-of-bounds Write in ath9k_hif_usb_rx_cb
-Date:   Mon,  8 Jun 2020 19:01:36 -0400
-Message-Id: <20200608230607.3361041-3-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
-References: <20200608230607.3361041-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        Mon, 8 Jun 2020 21:14:50 -0400
+Received: from lucky1.263xmail.com ([211.157.147.131]:53284 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726803AbgFIBOt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 21:14:49 -0400
+Received: from localhost (unknown [192.168.167.32])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 7ABB3AD7D9;
+        Tue,  9 Jun 2020 09:14:45 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-ABS-CHECKED: 0
+Received: from localhost.localdomain (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P3328T139696397076224S1591665277471272_;
+        Tue, 09 Jun 2020 09:14:45 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <71cb5e1613a1d627514ec9d43b8b166b>
+X-RL-SENDER: sugar.zhang@rock-chips.com
+X-SENDER: zxg@rock-chips.com
+X-LOGIN-NAME: sugar.zhang@rock-chips.com
+X-FST-TO: vkoul@kernel.org
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+X-System-Flag: 0
+From:   Sugar Zhang <sugar.zhang@rock-chips.com>
+To:     Vinod Koul <vkoul@kernel.org>, Heiko Stuebner <heiko@sntech.de>
+Cc:     linux-rockchip@lists.infradead.org,
+        Sugar Zhang <sugar.zhang@rock-chips.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 01/13] dmaengine: pl330: Remove the burst limit for quirk 'NO-FLUSHP'
+Date:   Tue,  9 Jun 2020 09:14:15 +0800
+Message-Id: <1591665267-37713-2-git-send-email-sugar.zhang@rock-chips.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1591665267-37713-1-git-send-email-sugar.zhang@rock-chips.com>
+References: <1591665267-37713-1-git-send-email-sugar.zhang@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiujun Huang <hqjagain@gmail.com>
+There is no reason to limit the performance on the 'NO-FLUSHP' SoCs,
+cuz these platforms are just that the 'FLUSHP' instruction is broken.
+so, remove the limit to improve the efficiency.
 
-[ Upstream commit 19d6c375d671ce9949a864fb9a03e19f5487b4d3 ]
-
-Add barrier to accessing the stack array skb_pool.
-
-The case reported by syzbot:
-https://lore.kernel.org/linux-usb/0000000000003d7c1505a2168418@google.com
-BUG: KASAN: stack-out-of-bounds in ath9k_hif_usb_rx_stream
-drivers/net/wireless/ath/ath9k/hif_usb.c:626 [inline]
-BUG: KASAN: stack-out-of-bounds in ath9k_hif_usb_rx_cb+0xdf6/0xf70
-drivers/net/wireless/ath/ath9k/hif_usb.c:666
-Write of size 8 at addr ffff8881db309a28 by task swapper/1/0
-
-Call Trace:
-ath9k_hif_usb_rx_stream drivers/net/wireless/ath/ath9k/hif_usb.c:626
-[inline]
-ath9k_hif_usb_rx_cb+0xdf6/0xf70
-drivers/net/wireless/ath/ath9k/hif_usb.c:666
-__usb_hcd_giveback_urb+0x1f2/0x470 drivers/usb/core/hcd.c:1648
-usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1713
-dummy_timer+0x1258/0x32ae drivers/usb/gadget/udc/dummy_hcd.c:1966
-call_timer_fn+0x195/0x6f0 kernel/time/timer.c:1404
-expire_timers kernel/time/timer.c:1449 [inline]
-__run_timers kernel/time/timer.c:1773 [inline]
-__run_timers kernel/time/timer.c:1740 [inline]
-run_timer_softirq+0x5f9/0x1500 kernel/time/timer.c:1786
-
-Reported-and-tested-by: syzbot+d403396d4df67ad0bd5f@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200404041838.10426-5-hqjagain@gmail.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
 ---
- drivers/net/wireless/ath/ath9k/hif_usb.c | 5 +++++
- 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/net/wireless/ath/ath9k/hif_usb.c b/drivers/net/wireless/ath/ath9k/hif_usb.c
-index dd0c32379375..c4a2b7201ce3 100644
---- a/drivers/net/wireless/ath/ath9k/hif_usb.c
-+++ b/drivers/net/wireless/ath/ath9k/hif_usb.c
-@@ -612,6 +612,11 @@ static void ath9k_hif_usb_rx_stream(struct hif_device_usb *hif_dev,
- 			hif_dev->remain_skb = nskb;
- 			spin_unlock(&hif_dev->rx_lock);
- 		} else {
-+			if (pool_index == MAX_PKT_NUM_IN_TRANSFER) {
-+				dev_err(&hif_dev->udev->dev,
-+					"ath9k_htc: over RX MAX_PKT_NUM\n");
-+				goto err;
-+			}
- 			nskb = __dev_alloc_skb(pkt_len + 32, GFP_ATOMIC);
- 			if (!nskb) {
- 				dev_err(&hif_dev->udev->dev,
+Changes in v2: None
+
+ drivers/dma/pl330.c | 34 ++++++++++++++++++++++------------
+ 1 file changed, 22 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
+index 6a158ee..ff0a91f 100644
+--- a/drivers/dma/pl330.c
++++ b/drivers/dma/pl330.c
+@@ -1183,9 +1183,6 @@ static inline int _ldst_peripheral(struct pl330_dmac *pl330,
+ {
+ 	int off = 0;
+ 
+-	if (pl330->quirks & PL330_QUIRK_BROKEN_NO_FLUSHP)
+-		cond = BURST;
+-
+ 	/*
+ 	 * do FLUSHP at beginning to clear any stale dma requests before the
+ 	 * first WFP.
+@@ -1231,8 +1228,9 @@ static int _bursts(struct pl330_dmac *pl330, unsigned dry_run, u8 buf[],
+ }
+ 
+ /*
+- * transfer dregs with single transfers to peripheral, or a reduced size burst
+- * for mem-to-mem.
++ * only the unaligned bursts transfers have the dregs.
++ * transfer dregs with a reduced size burst to peripheral,
++ * or a reduced size burst for mem-to-mem.
+  */
+ static int _dregs(struct pl330_dmac *pl330, unsigned int dry_run, u8 buf[],
+ 		const struct _xfer_spec *pxs, int transfer_length)
+@@ -1247,8 +1245,23 @@ static int _dregs(struct pl330_dmac *pl330, unsigned int dry_run, u8 buf[],
+ 	case DMA_MEM_TO_DEV:
+ 		/* fall through */
+ 	case DMA_DEV_TO_MEM:
+-		off += _ldst_peripheral(pl330, dry_run, &buf[off], pxs,
+-			transfer_length, SINGLE);
++		/*
++		 * dregs_len = (total bytes - BURST_TO_BYTE(bursts, ccr)) /
++		 *             BRST_SIZE(ccr)
++		 * the dregs len must be smaller than burst len,
++		 * so, for higher efficiency, we can modify CCR
++		 * to use a reduced size burst len for the dregs.
++		 */
++		dregs_ccr = pxs->ccr;
++		dregs_ccr &= ~((0xf << CC_SRCBRSTLEN_SHFT) |
++			(0xf << CC_DSTBRSTLEN_SHFT));
++		dregs_ccr |= (((transfer_length - 1) & 0xf) <<
++			CC_SRCBRSTLEN_SHFT);
++		dregs_ccr |= (((transfer_length - 1) & 0xf) <<
++			CC_DSTBRSTLEN_SHFT);
++		off += _emit_MOV(dry_run, &buf[off], CCR, dregs_ccr);
++		off += _ldst_peripheral(pl330, dry_run, &buf[off], pxs, 1,
++					BURST);
+ 		break;
+ 
+ 	case DMA_MEM_TO_MEM:
+@@ -2221,9 +2234,7 @@ static bool pl330_prep_slave_fifo(struct dma_pl330_chan *pch,
+ 
+ static int fixup_burst_len(int max_burst_len, int quirks)
+ {
+-	if (quirks & PL330_QUIRK_BROKEN_NO_FLUSHP)
+-		return 1;
+-	else if (max_burst_len > PL330_MAX_BURST)
++	if (max_burst_len > PL330_MAX_BURST)
+ 		return PL330_MAX_BURST;
+ 	else if (max_burst_len < 1)
+ 		return 1;
+@@ -3128,8 +3139,7 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
+ 	pd->dst_addr_widths = PL330_DMA_BUSWIDTHS;
+ 	pd->directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
+ 	pd->residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
+-	pd->max_burst = ((pl330->quirks & PL330_QUIRK_BROKEN_NO_FLUSHP) ?
+-			 1 : PL330_MAX_BURST);
++	pd->max_burst = PL330_MAX_BURST;
+ 
+ 	ret = dma_async_device_register(pd);
+ 	if (ret) {
 -- 
-2.25.1
+2.7.4
+
+
 
