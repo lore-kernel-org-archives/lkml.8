@@ -2,134 +2,172 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C547C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9581C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:55:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 131DD20737
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:54:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8139C20734
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 20:55:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NUHZ0GdZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbgFIUyj (ORCPT
+        id S1726463AbgFIUzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 16:54:39 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:40464 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727788AbgFIUyd (ORCPT
+        Tue, 9 Jun 2020 16:55:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41990 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727113AbgFIUzq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 16:54:33 -0400
-X-IronPort-AV: E=Sophos;i="5.73,493,1583161200"; 
-   d="scan'208";a="49022066"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 10 Jun 2020 05:54:28 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 2D3C340EA258;
-        Wed, 10 Jun 2020 05:54:25 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>
-Cc:     linux-spi@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 2/2] ARM: dts: r8a7742: Add MSIOF[0123] support
-Date:   Tue,  9 Jun 2020 21:54:14 +0100
-Message-Id: <1591736054-568-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1591736054-568-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <1591736054-568-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Tue, 9 Jun 2020 16:55:46 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6656EC08C5C4
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 13:55:46 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id n23so10788940pgb.12
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 13:55:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=lNYRWXDFOIEUX1YNrkuu2evKxT3eLlEeiZYQ/REgVvc=;
+        b=NUHZ0GdZs74B9irVa6slDIfz4CCekIjp6DZqLAqnreAj0h9UZUn7D5AOr3YNHyVe3s
+         aQUohghlZYvlK0GoSoIYSFZFxGBx5YgCWgvrlYA6dUVYGEgAGSwOJsXrQDZxG18s2gI2
+         TTnlYBEqLQoMCTwNoW1jVeo7P1Oyp3C6b5pVs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=lNYRWXDFOIEUX1YNrkuu2evKxT3eLlEeiZYQ/REgVvc=;
+        b=Phwv4nRlVnMOV1i2i7MVuzW9R9qWilOniikRhxgGZXNZVS3nwy1gJUDBqNAJi+28as
+         C/tpUmuOb+QR4xBUnbVZoSVDkbS08BOQgejXAQ3Sz6zg+RSv2ukv4nRRGpLycSKSAJQM
+         OUh9a6aCtgeQ1aYa9JW1DsM1A92DyxNvkV42wvFq9fQHytxNcOd2i0+ZQl/7mPAkKj2v
+         fXJOKWeqYGpqJMNq1lGzn6zp0OcRzoZLmGF2bZg2Tq3pc+sV+a5emVMTJ8gDprQkRnCb
+         hUozU8EYjEhbO9uFDFO5xJKRj5nON9PuKfs2IW4z4aL3GYA1JsgpdFtz/fOPNWIDbO7o
+         F15A==
+X-Gm-Message-State: AOAM532ET5a46kC4Q7lYF8pCdn72Y5R4/vC6PrdW0zDknCNtRROEImNp
+        eu3lXeEmyWTsdbWZsxgWGqjElg==
+X-Google-Smtp-Source: ABdhPJxWT5591LaNE8X/UdYoTAzsao8AEaWF3rwSS4mm8Jt3I4BLq3phZ6m/cnjY18ZEnCB3G0T7UA==
+X-Received: by 2002:a62:cf01:: with SMTP id b1mr26250412pfg.84.1591736145364;
+        Tue, 09 Jun 2020 13:55:45 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id o2sm3243121pjp.53.2020.06.09.13.55.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2020 13:55:43 -0700 (PDT)
+Date:   Tue, 9 Jun 2020 13:55:42 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Sargun Dhillon <sargun@sargun.me>,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        Robert Sesek <rsesek@google.com>,
+        Chris Palmer <palmer@google.com>, Jann Horn <jannh@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        containers@lists.linux-foundation.org,
+        Daniel Wagner <daniel.wagner@bmw-carit.de>,
+        linux-kernel@vger.kernel.org, Matt Denton <mpdenton@google.com>,
+        John Fastabend <john.r.fastabend@intel.com>,
+        linux-fsdevel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        cgroups@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        stable@vger.kernel.org, "David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v3 1/4] fs, net: Standardize on file_receive helper to
+ move fds across processes
+Message-ID: <202006091346.66B79E07@keescook>
+References: <20200603011044.7972-1-sargun@sargun.me>
+ <20200603011044.7972-2-sargun@sargun.me>
+ <20200604012452.vh33nufblowuxfed@wittgenstein>
+ <202006031845.F587F85A@keescook>
+ <20200604125226.eztfrpvvuji7cbb2@wittgenstein>
+ <20200605075435.GA3345@ircssh-2.c.rugged-nimbus-611.internal>
+ <202006091235.930519F5B@keescook>
+ <20200609200346.3fthqgfyw3bxat6l@wittgenstein>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200609200346.3fthqgfyw3bxat6l@wittgenstein>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the DT nodes needed by MSIOF[0123] interfaces to the SoC dtsi.
+On Tue, Jun 09, 2020 at 10:03:46PM +0200, Christian Brauner wrote:
+> I'm looking at __scm_install_fd() and I wonder what specifically you
+> mean by that? The put_user() seems to be placed such that the install
+> occurrs only if it succeeded. Sure, it only handles a single fd but
+> whatever. Userspace knows that already. Just look at systemd when a msg
+> fails:
+> 
+> void cmsg_close_all(struct msghdr *mh) {
+>         struct cmsghdr *cmsg;
+> 
+>         assert(mh);
+> 
+>         CMSG_FOREACH(cmsg, mh)
+>                 if (cmsg->cmsg_level == SOL_SOCKET && cmsg->cmsg_type == SCM_RIGHTS)
+>                         close_many((int*) CMSG_DATA(cmsg), (cmsg->cmsg_len - CMSG_LEN(0)) / sizeof(int));
+> }
+> 
+> The only reasonable scenario for this whole mess I can think of is sm like (pseudo code):
+> 
+> fd_install_received(int fd, struct file *file)
+> {
+>  	sock = sock_from_file(fd, &err);
+>  	if (sock) {
+>  		sock_update_netprioidx(&sock->sk->sk_cgrp_data);
+>  		sock_update_classid(&sock->sk->sk_cgrp_data);
+>  	}
+> 
+> 	fd_install();
+> }
+> 
+> error = 0;
+> fdarray = malloc(fdmax);
+> for (i = 0; i < fdmax; i++) {
+> 	fdarray[i] = get_unused_fd_flags(o_flags);
+> 	if (fdarray[i] < 0) {
+> 		error = -EBADF;
+> 		break;
+> 	}
+> 
+> 	error = security_file_receive(file);
+> 	if (error)
+> 		break;
+> 
+> 	error = put_user(fd_array[i], ufd);
+> 	if (error)
+> 		break;
+> }
+> 
+> for (i = 0; i < fdmax; i++) {
+> 	if (error) {
+> 		/* ignore errors */
+> 		put_user(-EBADF, ufd); /* If this put_user() fails and the first one succeeded userspace might now close an fd it didn't intend to. */
+> 		put_unused_fd(fdarray[i]);
+> 	} else {
+> 		fd_install_received(fdarray[i], file);
+> 	}
+> }
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
----
- arch/arm/boot/dts/r8a7742.dtsi | 64 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 64 insertions(+)
+I see 4 cases of the same code pattern (get_unused_fd_flags(),
+sock_update_*(), fd_install()), one of them has this difficult put_user()
+in the middle, and one of them has a potential replace_fd() instead of
+the get_used/fd_install. So, to me, it makes sense to have a helper that
+encapsulates the common work that each of those call sites has to do,
+which I keep cringing at all these suggestions that leave portions of it
+outside the helper.
 
-diff --git a/arch/arm/boot/dts/r8a7742.dtsi b/arch/arm/boot/dts/r8a7742.dtsi
-index 08af9e2..08d89cf 100644
---- a/arch/arm/boot/dts/r8a7742.dtsi
-+++ b/arch/arm/boot/dts/r8a7742.dtsi
-@@ -853,6 +853,70 @@
- 			status = "disabled";
- 		};
- 
-+		msiof0: spi@e6e20000 {
-+			compatible = "renesas,msiof-r8a7742",
-+				     "renesas,rcar-gen2-msiof";
-+			reg = <0 0xe6e20000 0 0x0064>;
-+			interrupts = <GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 0>;
-+			dmas = <&dmac0 0x51>, <&dmac0 0x52>,
-+			       <&dmac1 0x51>, <&dmac1 0x52>;
-+			dma-names = "tx", "rx", "tx", "rx";
-+			power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
-+			resets = <&cpg 0>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		msiof1: spi@e6e10000 {
-+			compatible = "renesas,msiof-r8a7742",
-+				     "renesas,rcar-gen2-msiof";
-+			reg = <0 0xe6e10000 0 0x0064>;
-+			interrupts = <GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 208>;
-+			dmas = <&dmac0 0x55>, <&dmac0 0x56>,
-+			       <&dmac1 0x55>, <&dmac1 0x56>;
-+			dma-names = "tx", "rx", "tx", "rx";
-+			power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
-+			resets = <&cpg 208>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		msiof2: spi@e6e00000 {
-+			compatible = "renesas,msiof-r8a7742",
-+				     "renesas,rcar-gen2-msiof";
-+			reg = <0 0xe6e00000 0 0x0064>;
-+			interrupts = <GIC_SPI 158 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 205>;
-+			dmas = <&dmac0 0x41>, <&dmac0 0x42>,
-+			       <&dmac1 0x41>, <&dmac1 0x42>;
-+			dma-names = "tx", "rx", "tx", "rx";
-+			power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
-+			resets = <&cpg 205>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		msiof3: spi@e6c90000 {
-+			compatible = "renesas,msiof-r8a7742",
-+				     "renesas,rcar-gen2-msiof";
-+			reg = <0 0xe6c90000 0 0x0064>;
-+			interrupts = <GIC_SPI 159 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 215>;
-+			dmas = <&dmac0 0x45>, <&dmac0 0x46>,
-+			       <&dmac1 0x45>, <&dmac1 0x46>;
-+			dma-names = "tx", "rx", "tx", "rx";
-+			power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
-+			resets = <&cpg 215>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
- 		rcar_sound: sound@ec500000 {
- 			/*
- 			 * #sound-dai-cells is required
+If it's too ugly to keep the put_user() in the helper, then we can try
+what was suggested earlier, and just totally rework the failure path for
+SCM_RIGHTS.
+
+LOL. And while we were debating this, hch just went and cleaned stuff
+up:
+
+2618d530dd8b ("net/scm: cleanup scm_detach_fds")
+
+So, um, yeah, now my proposal is actually even closer to what we already
+have there. We just add the replace_fd() logic to __scm_install_fd() and
+we're done with it.
+
 -- 
-2.7.4
-
+Kees Cook
