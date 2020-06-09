@@ -2,197 +2,242 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B074C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13187C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CBE8207C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:13:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591715631;
-	bh=Hz3L8+5ifhOMGNZlsBtp86xHQWd1bggYuz2oDBEhF8k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ya7wH71rTF+dcLtHDKKjUdFP0iIeqQ6nzeLr/yDR5oZ/D4mrdzrG3dKwG0oJXK6Oz
-	 XmTT95c10WfbOuV0pWFF6KmFeLRBZYc84Gu5HgJetsuFrmtWr8uuOfOrYpinKa01sf
-	 ClehXhajmUxfrhXpiP5zdGUyOu5MZsM3c1hwCNAY=
+	by mail.kernel.org (Postfix) with ESMTP id DEFBD207C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:14:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GG5jWooO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730767AbgFIPNt (ORCPT
+        id S1730774AbgFIPOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 11:13:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51434 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730673AbgFIPNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 11:13:48 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 677EE20734;
-        Tue,  9 Jun 2020 15:13:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591715627;
-        bh=Hz3L8+5ifhOMGNZlsBtp86xHQWd1bggYuz2oDBEhF8k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=m28NIcISxyHiFWgd1jg3MrYOc+Hyx5Bd+OamH2cMzBvS/QQjyIErVpNVHreaQpy1T
-         ijC9siPL7WmL2cI7NDs0GNTfdG4G6qrYavF4jT7YeumX9VRL+Y4pJ2B8Lte9cKyix0
-         pRZx1hj8NgAyYgD2AqfqhZua01yRtmeCKIM2nDUk=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id B909B40AFD; Tue,  9 Jun 2020 12:13:44 -0300 (-03)
-Date:   Tue, 9 Jun 2020 12:13:44 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Sumanth Korikkar <sumanthk@linux.ibm.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
-        jolsa@redhat.com, tmricht@linux.ibm.com, heiko.carstens@de.ibm.com,
-        mhiramat@kernel.org, iii@linux.ibm.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/2] perf: Fix user attribute access in kprobes
-Message-ID: <20200609151344.GD24868@kernel.org>
-References: <20200609081019.60234-1-sumanthk@linux.ibm.com>
- <20200609081019.60234-2-sumanthk@linux.ibm.com>
- <20200609150931.GC24868@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200609150931.GC24868@kernel.org>
-X-Url:  http://acmel.wordpress.com
+        Tue, 9 Jun 2020 11:14:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45480 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730436AbgFIPOH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 11:14:07 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1461CC05BD1E;
+        Tue,  9 Jun 2020 08:14:07 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id e1so21769308wrt.5;
+        Tue, 09 Jun 2020 08:14:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=X7mlTDwQ6+p5MYv0bHUHt/egFgOWZQLtAR3nHiaWIwU=;
+        b=GG5jWooOcAQkNTeAPuyKWbI01TMiq/4C4rQErVii4COMwg+ZNuElAsKC20KVt34Bcv
+         aR4yl/D6QPdvzRfCFRp1x6+XCePKrCEzjwxX2hCkK9QC8sq5iyrCXKfpfAjkAlUgzFLU
+         fBacG/itsgQO5T5HWQQZLxPPMcAKm3RgDDa0qPS0wdDKWIdwcQvoLNZTCpYkqyb2LOST
+         1H9TtirrcwQQjJ5k2qc10/GwbGcj80DqfI/LP1z9aJ1uGs4B3kMqQ5sS0Wpo8kLw3UG5
+         rVB+gbDry3b/P1vSzX+Bndl5M6KvUdM21jxJGd28zqS+syvGhiYXbY47SFf+0UC0O193
+         U40g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=X7mlTDwQ6+p5MYv0bHUHt/egFgOWZQLtAR3nHiaWIwU=;
+        b=r9Q9m86E0mHDrO5sxrqRtPOMSMq3T/7Gzr6yD67ncXzIi+xe3JgQ4qfhG8vKjTR79S
+         rQXIj3cZ4H3vS2i7xqWtOdWBXvbQ+qjPNo3Jn8sO0T0Q3WvVh79Pzbt2P8cL/T+65vgZ
+         IytnkBylxC605nFM7PW0NQhALfk/hceG6HS6rRSQ7HvmDR58G2bvOOSL2auoZsnCvZGV
+         qlNNI5lT5L2Fi0l3u6YNSJhIc5AeV/yBljfQGAtO7/aD1j1tzMWEZ40kG2U65p68RntI
+         rw1tksEoyOsQWZbCGfKUxLjvmmtMB2R7j6J0Yj2PnvXK/DznGLn1aezxY62Zje8SPyC+
+         rERA==
+X-Gm-Message-State: AOAM531nHpcU6tlorgImgUydwToCtrKzeQZdVMOSsXTB0Jc50bMYmK2c
+        k4Is0NKBVDtuHnizxrk4j98=
+X-Google-Smtp-Source: ABdhPJwQpkMLSfl8xli+xJLnxxfKBKaQ18eLIxG1Kh0B2CCr63Y+ExyzL+lJyG5Gu2bjWNEd1Y+Pww==
+X-Received: by 2002:a5d:6acf:: with SMTP id u15mr5299037wrw.277.1591715645605;
+        Tue, 09 Jun 2020 08:14:05 -0700 (PDT)
+Received: from macbook-pro-alvaro.lan (28.red-83-49-61.dynamicip.rima-tde.net. [83.49.61.28])
+        by smtp.gmail.com with ESMTPSA id u12sm3779466wrq.90.2020.06.09.08.14.03
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Jun 2020 08:14:04 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH 3/7] reset: add BCM6345 reset controller driver
+From:   =?utf-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>
+In-Reply-To: <341e8482c6bd06267633160d7358fa8331bef515.camel@pengutronix.de>
+Date:   Tue, 9 Jun 2020 17:14:02 +0200
+Cc:     robh+dt@kernel.org, tsbogend@alpha.franken.de,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        jonas.gorski@gmail.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <729976E9-CAF7-47B6-8783-5FD3D85F9EFD@gmail.com>
+References: <20200609134232.4084718-1-noltari@gmail.com>
+ <20200609134232.4084718-4-noltari@gmail.com>
+ <341e8482c6bd06267633160d7358fa8331bef515.camel@pengutronix.de>
+To:     Philipp Zabel <p.zabel@pengutronix.de>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Jun 09, 2020 at 12:09:31PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Tue, Jun 09, 2020 at 10:10:18AM +0200, Sumanth Korikkar escreveu:
-> > Issue:
-> > perf probe -a 'do_sched_setscheduler  pid policy
-> > param->sched_priority@user' did not work before.
-> > 
-> > Fix:
-> > Make (perf probe -a 'do_sched_setscheduler  pid policy
-> > param->sched_priority@user') output equivalent to ftrace
-> > ('p:probe/do_sched_setscheduler _text+517384 pid=%r2:s32 policy=%r3:s32
-> > sched_priority=+u0(%r4):s32' > kprobe_events)
-> > 
-> > Other:
-> > 1. Right now, __match_glob() does not handle [u]<offset>. For now, use
-> >   *u]<offset>.
-> > 2. @user attribute was introduced in commit 1e032f7cfa14 ("perf-probe:
-> >    Add user memory access attribute support")
-> > 
-> > Test:
-> > 1. perf probe -a 'do_sched_setscheduler  pid policy
-> >    param->sched_priority@user'
-> > 
-> > 2 ./perf script
-> >    sched 305669 [000] 1614458.838675: perf_bpf_probe:func: (2904e508)
-> >    pid=261614 policy=2 sched_priority=1
-> > 
-> > 3. cat /sys/kernel/debug/tracing/trace
-> >    <...>-309956 [006] .... 1616098.093957: 0: prio: 1
-> 
-> Thanks, I'm adding this:
-> 
-> Fixes: 1e032f7cfa14 ("perf-probe: Add user memory access attribute support")
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> 
-> So that the stable guys pick this up eventually,
-> 
-> That first hunk with the strcmp() return check could have gone into a
-> separate patch, but I'll process it as-is for expediency,
+Hi Philipp,
 
-I also added this:
+> El 9 jun 2020, a las 17:06, Philipp Zabel <p.zabel@pengutronix.de> =
+escribi=C3=B3:
+>=20
+> Hi =C3=81lvaro,
+>=20
+> On Tue, 2020-06-09 at 15:42 +0200, =C3=81lvaro Fern=C3=A1ndez Rojas =
+wrote:
+>> Add support for resetting blocks through the Linux reset controller
+>> subsystem for BCM63xx SoCs.
+>>=20
+>> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
+>> ---
+>> drivers/reset/Kconfig         |   7 ++
+>> drivers/reset/Makefile        |   1 +
+>> drivers/reset/reset-bcm6345.c | 149 =
+++++++++++++++++++++++++++++++++++
+>> 3 files changed, 157 insertions(+)
+>> create mode 100644 drivers/reset/reset-bcm6345.c
+>>=20
+>> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+>> index d9efbfd29646..9f1da978cef6 100644
+>> --- a/drivers/reset/Kconfig
+>> +++ b/drivers/reset/Kconfig
+>> @@ -41,6 +41,13 @@ config RESET_BERLIN
+>> 	help
+>> 	  This enables the reset controller driver for Marvell Berlin =
+SoCs.
+>>=20
+>> +config RESET_BCM6345
+>> +	bool "BCM6345 Reset Controller"
+>> +	depends on BMIPS_GENERIC || COMPILE_TEST
+>> +	default BMIPS_GENERIC
+>> +	help
+>> +	  This enables the reset controller driver for BCM6345 SoCs.
+>> +
+>> config RESET_BRCMSTB
+>> 	tristate "Broadcom STB reset controller"
+>> 	depends on ARCH_BRCMSTB || COMPILE_TEST
+>> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+>> index 249ed357c997..e642aae42f0f 100644
+>> --- a/drivers/reset/Makefile
+>> +++ b/drivers/reset/Makefile
+>> @@ -6,6 +6,7 @@ obj-$(CONFIG_ARCH_TEGRA) +=3D tegra/
+>> obj-$(CONFIG_RESET_A10SR) +=3D reset-a10sr.o
+>> obj-$(CONFIG_RESET_ATH79) +=3D reset-ath79.o
+>> obj-$(CONFIG_RESET_AXS10X) +=3D reset-axs10x.o
+>> +obj-$(CONFIG_RESET_BCM6345) +=3D reset-bcm6345.o
+>> obj-$(CONFIG_RESET_BERLIN) +=3D reset-berlin.o
+>> obj-$(CONFIG_RESET_BRCMSTB) +=3D reset-brcmstb.o
+>> obj-$(CONFIG_RESET_BRCMSTB_RESCAL) +=3D reset-brcmstb-rescal.o
+>> diff --git a/drivers/reset/reset-bcm6345.c =
+b/drivers/reset/reset-bcm6345.c
+>> new file mode 100644
+>> index 000000000000..088b7fdb896b
+>> --- /dev/null
+>> +++ b/drivers/reset/reset-bcm6345.c
+>> @@ -0,0 +1,149 @@
+>> +// SPDX-License-Identifier: GPL-2.0-or-later
+>> +/*
+>> + * BCM6345 Reset Controller Driver
+>> + *
+>> + * Copyright (C) 2020 =C3=81lvaro Fern=C3=A1ndez Rojas =
+<noltari@gmail.com>
+>> + */
+>> +
+>> +#include <linux/delay.h>
+>> +#include <linux/init.h>
+>> +#include <linux/io.h>
+>> +#include <linux/mod_devicetable.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/reset-controller.h>
+>> +
+>> +#define BCM6345_RESET_NUM		32
+>> +#define BCM6345_RESET_SLEEP_MIN_US	10000
+>> +#define BCM6345_RESET_SLEEP_MAX_US	20000
+>> +
+>> +struct bcm6345_reset {
+>> +	struct reset_controller_dev rcdev;
+>> +	void __iomem *base;
+>> +	spinlock_t lock;
+>> +};
+>> +
+>> +static int bcm6345_reset_update(struct bcm6345_reset *bcm6345_reset,
+>> +				unsigned long id, bool assert)
+>> +{
+>> +	uint32_t val;
+>> +
+>> +	val =3D __raw_readl(bcm6345_reset->base);
+>> +	if (assert)
+>> +		val &=3D ~BIT(id);
+>> +	else
+>> +		val |=3D BIT(id);
+>> +	__raw_writel(val, bcm6345_reset->base);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int bcm6345_reset_assert(struct reset_controller_dev *rcdev,
+>> +				unsigned long id)
+>> +{
+>> +	struct bcm6345_reset *bcm6345_reset =3D
+>> +		container_of(rcdev, struct bcm6345_reset, rcdev);
+>> +	unsigned long flags;
+>> +
+>> +	spin_lock_irqsave(&bcm6345_reset->lock, flags);
+>> +	bcm6345_reset_update(bcm6345_reset, id, true);
+>> +	spin_unlock_irqrestore(&bcm6345_reset->lock, flags);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int bcm6345_reset_deassert(struct reset_controller_dev =
+*rcdev,
+>> +				  unsigned long id)
+>> +{
+>> +	struct bcm6345_reset *bcm6345_reset =3D
+>> +		container_of(rcdev, struct bcm6345_reset, rcdev);
+>> +	unsigned long flags;
+>> +
+>> +	spin_lock_irqsave(&bcm6345_reset->lock, flags);
+>> +	bcm6345_reset_update(bcm6345_reset, id, false);
+>> +	spin_unlock_irqrestore(&bcm6345_reset->lock, flags);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int bcm6345_reset_reset(struct reset_controller_dev *rcdev,
+>> +			       unsigned long id)
+>> +{
+>> +	struct bcm6345_reset *bcm6345_reset =3D
+>> +		container_of(rcdev, struct bcm6345_reset, rcdev);
+>> +	unsigned long flags;
+>> +
+>> +	spin_lock_irqsave(&bcm6345_reset->lock, flags);
+>> +	usleep_range(BCM6345_RESET_SLEEP_MIN_US,
+>> +		     BCM6345_RESET_SLEEP_MAX_US);
+>=20
+> What is the purpose of sleeping before reset assertion?
 
-ommitter testing:
+None, I must have introduced that for testing something and then I =
+forgot to remove it. Sorry for that...
 
-Before:
+>=20
+> If you can do without this, with I think this driver could be made to
+> use reset-simple.
 
-  # perf probe -a 'do_sched_setscheduler pid policy param->sched_priority@user'
-  param(type:sched_param) has no member sched_priority@user.
-    Error: Failed to add events.
-  # pahole sched_param
-  struct sched_param {
-        int                        sched_priority;       /*     0     4 */
+Yes, but only if I can add reset support with a configurable sleep range =
+to reset-simple. Is this possible?
 
-        /* size: 4, cachelines: 1, members: 1 */
-        /* last cacheline: 4 bytes */
-  };
-  #
+>=20
+> regards
+> Philipp
 
-After:
+Best regards,
+=C3=81lvaro.
 
-  # perf probe -a 'do_sched_setscheduler pid policy param->sched_priority@user'
-  Added new event:
-    probe:do_sched_setscheduler (on do_sched_setscheduler with pid policy sched_priority=param->sched_priority)
-
-  You can now use it in all perf tools, such as:
-
-        perf record -e probe:do_sched_setscheduler -aR sleep 1
-
-  # cat /sys/kernel/debug/tracing/kprobe_events
-  p:probe/do_sched_setscheduler _text+1113792 pid=%di:s32 policy=%si:s32 sched_priority=+u0(%dx):s32
-  #
-
- 
-> - Arnaldo
->  
-> > Signed-off-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
-> > Reviewed-by: Thomas Richter <tmricht@linux.ibm.com>
-> > Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-> > ---
-> >  tools/perf/util/probe-event.c | 7 +++++--
-> >  tools/perf/util/probe-file.c  | 2 +-
-> >  2 files changed, 6 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-> > index a08f373d3305..df713a5d1e26 100644
-> > --- a/tools/perf/util/probe-event.c
-> > +++ b/tools/perf/util/probe-event.c
-> > @@ -1575,7 +1575,7 @@ static int parse_perf_probe_arg(char *str, struct perf_probe_arg *arg)
-> >  	}
-> >  
-> >  	tmp = strchr(str, '@');
-> > -	if (tmp && tmp != str && strcmp(tmp + 1, "user")) { /* user attr */
-> > +	if (tmp && tmp != str && !strcmp(tmp + 1, "user")) { /* user attr */
-> >  		if (!user_access_is_supported()) {
-> >  			semantic_error("ftrace does not support user access\n");
-> >  			return -EINVAL;
-> > @@ -1995,7 +1995,10 @@ static int __synthesize_probe_trace_arg_ref(struct probe_trace_arg_ref *ref,
-> >  		if (depth < 0)
-> >  			return depth;
-> >  	}
-> > -	err = strbuf_addf(buf, "%+ld(", ref->offset);
-> > +	if (ref->user_access)
-> > +		err = strbuf_addf(buf, "%s%ld(", "+u", ref->offset);
-> > +	else
-> > +		err = strbuf_addf(buf, "%+ld(", ref->offset);
-> >  	return (err < 0) ? err : depth;
-> >  }
-> >  
-> > diff --git a/tools/perf/util/probe-file.c b/tools/perf/util/probe-file.c
-> > index 8c852948513e..064b63a6a3f3 100644
-> > --- a/tools/perf/util/probe-file.c
-> > +++ b/tools/perf/util/probe-file.c
-> > @@ -1044,7 +1044,7 @@ static struct {
-> >  	DEFINE_TYPE(FTRACE_README_PROBE_TYPE_X, "*type: * x8/16/32/64,*"),
-> >  	DEFINE_TYPE(FTRACE_README_KRETPROBE_OFFSET, "*place (kretprobe): *"),
-> >  	DEFINE_TYPE(FTRACE_README_UPROBE_REF_CTR, "*ref_ctr_offset*"),
-> > -	DEFINE_TYPE(FTRACE_README_USER_ACCESS, "*[u]<offset>*"),
-> > +	DEFINE_TYPE(FTRACE_README_USER_ACCESS, "*u]<offset>*"),
-> >  	DEFINE_TYPE(FTRACE_README_MULTIPROBE_EVENT, "*Create/append/*"),
-> >  	DEFINE_TYPE(FTRACE_README_IMMEDIATE_VALUE, "*\\imm-value,*"),
-> >  };
-> > -- 
-> > 2.17.1
-> > 
-> 
-> -- 
-> 
-> - Arnaldo
-
--- 
-
-- Arnaldo
