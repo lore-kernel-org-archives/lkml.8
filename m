@@ -2,118 +2,102 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F8CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FBBEC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09AA52072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:57:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EF1620737
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:58:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="FCzHnhd2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730992AbgFIP5h (ORCPT
+        id S1731032AbgFIP6E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 11:57:37 -0400
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:19073 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728888AbgFIP5g (ORCPT
+        Tue, 9 Jun 2020 11:58:04 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:53034 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730640AbgFIP6D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 11:57:36 -0400
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 09 Jun 2020 21:27:33 +0530
-Received: from gubbaven-linux.qualcomm.com ([10.206.64.32])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 09 Jun 2020 21:27:12 +0530
-Received: by gubbaven-linux.qualcomm.com (Postfix, from userid 2365015)
-        id 40474216F2; Tue,  9 Jun 2020 21:27:11 +0530 (IST)
-From:   Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
-To:     marcel@holtmann.org, johan.hedberg@gmail.com
-Cc:     mka@chromium.org, linux-kernel@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        rjliao@codeaurora.org, hbandi@codeaurora.org,
-        abhishekpandit@chromium.org,
-        Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
-Subject: [PATCH v2] Bluetooth: hci_qca: Bug fix during SSR timeout
-Date:   Tue,  9 Jun 2020 21:27:08 +0530
-Message-Id: <1591718228-18819-1-git-send-email-gubbaven@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Tue, 9 Jun 2020 11:58:03 -0400
+Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
+        by linux.microsoft.com (Postfix) with ESMTPSA id B053620B717B;
+        Tue,  9 Jun 2020 08:58:02 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B053620B717B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1591718282;
+        bh=WkMSWOBEMcZxCr/lBlsLlRkLTBokiJBDduFX5I7V3BE=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=FCzHnhd2K9TkZSTHvhIULaVL/CIXp/M9Cz+mcJlcIDvHz1yKNqHML4uG+5BsQVbMo
+         9tEEprfz663FYe5ivH9HowLfjACAJEkC0vyZfj0lZYoPoqb/PMUQHdq0InTZhUbN5c
+         hE1nDELVH9dr+dHBRBElhv8WfzJbWlCe/Rxa8Rfc=
+Subject: Re: [PATCH v3] IMA: Add audit log for failure conditions
+To:     Steve Grubb <sgrubb@redhat.com>, linux-audit@redhat.com
+Cc:     zohar@linux.ibm.com, paul@paul-moore.com,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200608215343.4491-1-nramas@linux.microsoft.com>
+ <27448076.Og45N0Lxmj@x2>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <ada45440-aefd-a4b2-2a3b-c012872e86cb@linux.microsoft.com>
+Date:   Tue, 9 Jun 2020 08:58:02 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <27448076.Og45N0Lxmj@x2>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Due to race conditions between qca_hw_error and qca_controller_memdump
-during SSR timeout,the same pointer is freed twice. This results in a
-double free. Now a lock is acquired before checking the stauts of SSR
-state.
+On 6/9/20 8:40 AM, Steve Grubb wrote:
 
-Fixes: d841502c79e3 ("Bluetooth: hci_qca: Collect controller memory dump during SSR")
-Signed-off-by: Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
----
- drivers/bluetooth/hci_qca.c | 29 +++++++++++++++++------------
- 1 file changed, 17 insertions(+), 12 deletions(-)
+> On Monday, June 8, 2020 5:53:43 PM EDT Lakshmi Ramasubramanian wrote:
+>> The final log statement in process_buffer_measurement() for failure
+>> condition is at debug level. This does not log the message unless
+>> the system log level is raised which would significantly increase
+>> the messages in the system log. Change this log message to an audit
+>> message for better triaging failures in the function.
+>>
+>> ima_alloc_key_entry() does not log a message for failure condition.
+>> Add an audit message for failure condition in this function.
+>>
+>> Sample audit messages:
+> 
+> Wouldn't it be better to have an IMA_ERROR record type?
 
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index 28c34a1..f3fde99 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -981,8 +981,11 @@ static void qca_controller_memdump(struct work_struct *work)
- 	while ((skb = skb_dequeue(&qca->rx_memdump_q))) {
- 
- 		mutex_lock(&qca->hci_memdump_lock);
--		/* Skip processing the received packets if timeout detected. */
--		if (qca->memdump_state == QCA_MEMDUMP_TIMEOUT) {
-+		/* Skip processing the received packets if timeout detected
-+		 * or memdump collection completed.
-+		 */
-+		if (qca->memdump_state == QCA_MEMDUMP_TIMEOUT ||
-+		    qca->memdump_state == QCA_MEMDUMP_COLLECTED) {
- 			mutex_unlock(&qca->hci_memdump_lock);
- 			return;
- 		}
-@@ -1483,8 +1486,6 @@ static void qca_hw_error(struct hci_dev *hdev, u8 code)
- {
- 	struct hci_uart *hu = hci_get_drvdata(hdev);
- 	struct qca_data *qca = hu->priv;
--	struct qca_memdump_data *qca_memdump = qca->qca_memdump;
--	char *memdump_buf = NULL;
- 
- 	set_bit(QCA_HW_ERROR_EVENT, &qca->flags);
- 	bt_dev_info(hdev, "mem_dump_status: %d", qca->memdump_state);
-@@ -1507,19 +1508,23 @@ static void qca_hw_error(struct hci_dev *hdev, u8 code)
- 		qca_wait_for_dump_collection(hdev);
- 	}
- 
-+	mutex_lock(&qca->hci_memdump_lock);
- 	if (qca->memdump_state != QCA_MEMDUMP_COLLECTED) {
- 		bt_dev_err(hu->hdev, "clearing allocated memory due to memdump timeout");
--		mutex_lock(&qca->hci_memdump_lock);
--		if (qca_memdump)
--			memdump_buf = qca_memdump->memdump_buf_head;
--		vfree(memdump_buf);
--		kfree(qca_memdump);
--		qca->qca_memdump = NULL;
-+		if (qca->qca_memdump) {
-+			vfree(qca->qca_memdump->memdump_buf_head);
-+			kfree(qca->qca_memdump);
-+			qca->qca_memdump = NULL;
-+		}
- 		qca->memdump_state = QCA_MEMDUMP_TIMEOUT;
- 		cancel_delayed_work(&qca->ctrl_memdump_timeout);
--		skb_queue_purge(&qca->rx_memdump_q);
--		mutex_unlock(&qca->hci_memdump_lock);
-+	}
-+	mutex_unlock(&qca->hci_memdump_lock);
-+
-+	if (qca->memdump_state == QCA_MEMDUMP_TIMEOUT ||
-+	    qca->memdump_state == QCA_MEMDUMP_COLLECTED) {
- 		cancel_work_sync(&qca->ctrl_memdump_evt);
-+		skb_queue_purge(&qca->rx_memdump_q);
- 	}
- 
- 	clear_bit(QCA_HW_ERROR_EVENT, &qca->flags);
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
-of Code Aurora Forum, hosted by The Linux Foundation
+type "1804" is AUDIT_INTEGRITY_PCR which is used for failures to add to 
+the measurement list.
+
+> 
+>> [    8.051937] audit: type=1804 audit(1591633422.365:8): pid=1 uid=0
+>> auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0
+>> op=measuring_keys cause=hashing_error(-22)
+> 
+> The audit system uses a name=value scheme to express information. This last
+> field has something in parenthesis that may need to be interpreted. In its
+> current form, we can't do this. It would require writing code to special case
+> this event, go to this field, find the first parenthesis, find the second,
+> extract what's between, and look it up.
+> 
+> It would be better if that number in parenthesis was normalized to the
+> expected way we do audit events so nothing special has to be made.
+
+The number in parenthesis is the error code (such as ENOMEM, EINVAL, 
+etc.) IMA uses this format for reporting TPM errors in one of the audit 
+messages (In ima_add_template_entry()). I followed the same pattern.
+
+Would it be better if the value for "cause" is formatted as
+
+    cause=hashing_error_-22
+
+    cause=alloc_entry_-12
+
+thanks,
+  -lakshmi
 
