@@ -2,121 +2,439 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 992FAC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A9DC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:42:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 744E02081A
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:37:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6825E207C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 10:42:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N8yRfI3Q"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Q4cIlDSZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728686AbgFIKht (ORCPT
+        id S1728705AbgFIKmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 06:37:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59244 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727906AbgFIKhr (ORCPT
+        Tue, 9 Jun 2020 06:42:36 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:60501 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728118AbgFIKmf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 06:37:47 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 139B2C05BD1E;
-        Tue,  9 Jun 2020 03:37:47 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id d6so1226600pjs.3;
-        Tue, 09 Jun 2020 03:37:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=50KfskdRn64Hc1/lSl8hTGQPAB6Anp68wAajsIMysbk=;
-        b=N8yRfI3QLCXPUF2rD/bRYJEM+Mh17WVxAzkN9J6sENYz4rZ1DgqPRxQdWfx0clPQ0E
-         0OdkIHJIrHWTidgGAUePIhQN9gshC4ZlccHVr/ha0SVY0wfVXZszdyS7OLVVBgWvx7S4
-         sdyi1qrbKtxurlQKRKserA3VnQZhpq11IwKHmcYWdTbBFECHyuYRZ0Vw2q6sk16LcFMb
-         2fa73W2wGQVGweEBI18m0KGT6qipMysQ8avwlQlSAiKPy1xfrOwtpY6VwWdxr3jBRKD5
-         SuEr65t/9p2U4Mplfe5ZdFffIVniBzYED99XENuY2wETeHLmo6A1TjUb9+o9kDYDC/uA
-         EhOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=50KfskdRn64Hc1/lSl8hTGQPAB6Anp68wAajsIMysbk=;
-        b=gtxsi78qfHRbmNslXmHTyVO3yruuiAhKRXoq6+wUi4xOvfV8/HVkrWdUDEA6oiEqzt
-         QCE7w1Vv0Vsbvy9tHWNArwfqxdJak9srtMotKSa7zBpuXr7WUugLJjADTQM6z7KdN2KD
-         XEuFExl3rYVLXoq065jzaXDdHKbiyc2m8/qAkFssZZOMPMU4EHGoCV/8miRp1K3sWUae
-         FZOu4OAAYJ8JfRWTGYxlEoU52bkQRZ88s6haktibP/A5JkHOdMWPOYSDnKSZjROVpAGZ
-         fzMPD98T/aSbp7azfnfIpLuKlDc/SK0TsyHqlpTE+v4HZngQ7Ii7FXCSfmKiMNMcb46k
-         wgsA==
-X-Gm-Message-State: AOAM531MT7dCorNG+L7XOBZ0f2upKaIhfh0SeZ/zYA5/qmJLM8aoTnHk
-        5pt0XNVfO+jT+I1RguXn5oi3xA0M
-X-Google-Smtp-Source: ABdhPJxcGvVpDoZ5vTEidDhY3bM1eiX3cgin3LoExbype/8h0KCFNr+CRNByYU/bBIhWp4MH9ijD1w==
-X-Received: by 2002:a17:902:7088:: with SMTP id z8mr2597419plk.71.1591699066167;
-        Tue, 09 Jun 2020 03:37:46 -0700 (PDT)
-Received: from localhost.localdomain ([124.123.82.91])
-        by smtp.gmail.com with ESMTPSA id n4sm2273258pjt.48.2020.06.09.03.37.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Jun 2020 03:37:45 -0700 (PDT)
-Subject: Re: [PATCHv5 3/5] ext4: mballoc: Introduce pcpu seqcnt for freeing PA
- to improve ENOSPC handling
-To:     Borislav Petkov <bp@alien8.de>
+        Tue, 9 Jun 2020 06:42:35 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200609104232euoutp015454c439ef314bf3b75e1713407b9095~W2iCwN_KU0920709207euoutp01B
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 10:42:32 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200609104232euoutp015454c439ef314bf3b75e1713407b9095~W2iCwN_KU0920709207euoutp01B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1591699352;
+        bh=PLSkqIpsLNlo/H+N+2IqGi7nS8Ifz833svNS45yASaU=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=Q4cIlDSZwf670+KHd/rCHR4dCy5PsuLxj5Cq1ZOgX3D3Yfw5JrO8SP7Z+uK8fXSdW
+         TkkIYqxU5MpGm/AdYPL5qX/VFkK93QlZxPTcE64iAVdeeuPE821sCYyAHS/xeVUl5H
+         74msriKs9OS8G6GaU1HitPdA64ZjG8MjagW6iyoY=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200609104231eucas1p112b22b13492cea33847f349dce05a938~W2iCAM-H61594015940eucas1p1V;
+        Tue,  9 Jun 2020 10:42:31 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 40.19.61286.7976FDE5; Tue,  9
+        Jun 2020 11:42:31 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200609104230eucas1p2efc14b59c4ccdcb839b54a62fbd8a31c~W2iBlGmiQ2622926229eucas1p2c;
+        Tue,  9 Jun 2020 10:42:30 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200609104230eusmtrp2bdccadc2492619067695f3ce648d7306~W2iBkUG5T2886328863eusmtrp2i;
+        Tue,  9 Jun 2020 10:42:30 +0000 (GMT)
+X-AuditID: cbfec7f2-ef1ff7000001ef66-07-5edf67973457
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 9F.A7.07950.6976FDE5; Tue,  9
+        Jun 2020 11:42:30 +0100 (BST)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200609104230eusmtip21b6d4ef4b0fd3602023d5155dcc52158~W2iAvfttR1352613526eusmtip2G;
+        Tue,  9 Jun 2020 10:42:30 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>
 Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Ritesh Harjani <riteshh@linux.ibm.com>,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Jan Kara <jack@suse.com>, Theodore Ts'o <tytso@mit.edu>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        linux-kernel@vger.kernel.org
-References: <cover.1589955723.git.riteshh@linux.ibm.com>
- <7f254686903b87c419d798742fd9a1be34f0657b.1589955723.git.riteshh@linux.ibm.com>
- <CGME20200603064851eucas1p2e435089fbdf4de1d1fa3fb051c2f3d7b@eucas1p2.samsung.com>
- <aa4f7629-02ff-e49b-e9c0-5ef4a1deee90@samsung.com>
- <2940d744-3f6f-d0b5-ad8d-e80128c495d0@gmail.com>
- <20200609102015.GA7696@zn.tnic>
-From:   Ritesh Harjani <ritesh.list@gmail.com>
-Message-ID: <69a26eb8-e439-6574-6f46-e557d6c852d5@gmail.com>
-Date:   Tue, 9 Jun 2020 16:07:41 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200609102015.GA7696@zn.tnic>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>, peron.clem@gmail.com,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        linux-samsung-soc@vger.kernel.org,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Saravana Kannan <saravanak@google.com>
+Subject: [PATCH v3] soc: samsung: Add simple voltage coupler for Exynos5800
+Date:   Tue,  9 Jun 2020 12:42:21 +0200
+Message-Id: <20200609104221.21243-1-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA0WSe0hTURzHO7t3d9fR4naVPD2oWFgkpFtFnKzsQcHtSUQPKDSX3la5Tdl1
+        lf1TaNRaraIITUzFSvNRtrV0mxW1RltMp2iuiTO1hMgaldMeltbc7fHf5/c93+/5/g4cEqNt
+        wmnkQU0Oq9UoVFJCjNc/+96yoEDZkyqzeqYiU2GdEF3p6yfQy6G3QlTz+Q1ALS13Raj3WqcA
+        fXmhF6B2ezGBQkYnQIUtjwTotrNbhD58axagrpJ2HDV52oTI4Bgl0JjPhCO98wuGTMPMKpqx
+        FXWLmDKzjjFXnyGYgO8BwVwYlTGWjtM4c95SDRiXv0HAhMwzt0btFi/PYFUHD7PaxOQ08QF/
+        9w1RtmXb0eF+E34C9KwxgCgSUothVdMwbgBikqZuAdiYPwL4YQhA73W9kB9CAFpGf+B/I15f
+        4E+kEkBb3gj2L+IONIJxF0HJoSFoIMY5hkqB7sGKyFUY9RyHxe5bEVM0tRH2tJZh44xTcdDr
+        bIiwhFoBu0otQr5uFqy5+zjSACm7CL63dhL8wVr4sNT5h6PhgMsi4nkG/GUrFfCBfAD7vLdF
+        /HAOwPa8QsC7lsGAdyScJsM7zYd19kReXg2rvndEZEhNgv7g5HEZC+Ol+gKMlyVQf4rm3XNh
+        kevOv9onrW0Yzwysdfki+9Phxxsqx4iLYGbR/64yAKpBLKvj1EqWk2vYIwmcQs3pNMqE9Cy1
+        GYQ/lGfMNWgFw237HIAigXSixB/7KpUWKg5zuWoHgCQmjZGsafak0pIMRe4xVpu1V6tTsZwD
+        TCdxaaxkUfm7FJpSKnLYTJbNZrV/TwVk1LQTQO4umIP9FG52Jc3ZXiJz9T7Nh8F7Pwn1yXMf
+        7+/I7DyevKTWvxA3R9W8jrm5qzxJaUyz5u5XzQvMq9Jf7RL1XgvN2nBhZ63mrPrrhHS7Z9Rf
+        Fvy0giuu25O3dMehtd3MbPrySkdqdvym5C1FA03ljFGxWzYl0VfBro9LiwkZ10VLce6AQh6P
+        aTnFbxQw/wdMAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuphkeLIzCtJLcpLzFFi42I5/e/4Pd1p6ffjDLp7rCw2zljPajH14RM2
+        i+tfnrNarP74mNHi/PkN7BYP5t5ksvh2pYPJ4vKuOWwWn3uPMFrMOL+PyWLtkbvsFm9+nGWy
+        uD3vMovFmdOXWC26Dv1ls/h3bSOLRceRb8wWG796OAh57Jx1l91jwaZSj02rOtk87lzbw+bR
+        /9fAY8vVdhaPvi2rGD2O39jO5PF5k1wAZ5SeTVF+aUmqQkZ+cYmtUrShhZGeoaWFnpGJpZ6h
+        sXmslZGpkr6dTUpqTmZZapG+XYJexo27S9gLtgRVfH2ykaWB8b5TFyMnh4SAicS5a3dYQGwh
+        gaWMEm1TkyDiMhInpzWwQtjCEn+udbFB1HxilGi/ywViswkYSnS9hYiLCMRLnP5/gr2LkYuD
+        WeAqi8T/hnawZmEBb4n7FxYwg9gsAqoS545sB7N5BWwlbs/fArVAXmL1hgPMExh5FjAyrGIU
+        SS0tzk3PLTbSK07MLS7NS9dLzs/dxAiMiW3Hfm7Zwdj1LvgQowAHoxIP7w3xe3FCrIllxZW5
+        hxglOJiVRHidzp6OE+JNSaysSi3Kjy8qzUktPsRoCrR8IrOUaHI+MF7zSuINTQ3NLSwNzY3N
+        jc0slMR5OwQOxggJpCeWpGanphakFsH0MXFwSjUwGv+PC21d6fo3XNxseoy+Ua5EKhdr1/k9
+        s5yLp03ovictJTJrtli2WGZb9hrBvKOXWzkZ7YKSGWX8vE6e8/zjlzhzUd8Mg+8s5ZfZjvUc
+        75728cXhayXfFtT3N1VJP7rHHGnNH2TdfeLiGmcZjierJ9T1hZfHeG7P+3XRPqKv/J7Y6lNT
+        zZ4qsRRnJBpqMRcVJwIAxiycuJ8CAAA=
+X-CMS-MailID: 20200609104230eucas1p2efc14b59c4ccdcb839b54a62fbd8a31c
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200609104230eucas1p2efc14b59c4ccdcb839b54a62fbd8a31c
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200609104230eucas1p2efc14b59c4ccdcb839b54a62fbd8a31c
+References: <CGME20200609104230eucas1p2efc14b59c4ccdcb839b54a62fbd8a31c@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add a simple custom voltage regulator coupler for Exynos5800 SoCs, which
+require coupling between "vdd_arm" and "vdd_int" regulators. This coupler
+ensures that the voltage values don't go below the bootloader-selected
+operation point during the boot process until a the clients sets their
+constraints. It is achieved by assuming minimal voltage value equal to
+the current value if no constraints are set. This also ensures proper
+voltage balancing if any of the client driver is missing.
 
+The balancing code comes from regulator core.c with the 
 
-On 6/9/20 3:50 PM, Borislav Petkov wrote:
-> On Wed, Jun 03, 2020 at 03:40:16PM +0530, Ritesh Harjani wrote:
->> Yes, this is being discussed in the community.
->> I have submitted a patch which should help fix this warning msg.
->> Feel free to give this a try on your setup.
->>
->> https://marc.info/?l=linux-ext4&m=159110574414645&w=2
-> 
-> I just triggered the same thing here too. Looking at your fix and not
-> even pretending to know what's going on with that percpu sequence
-> counting, I can't help but wonder why do you wanna do:
-> 
-> 	seq = *raw_cpu_ptr(&discard_pa_seq);
-> 
-> instead of simply doing:
-> 
-> 	seq = this_cpu_read(discard_pa_seq);
-> 
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+This patch is yet another attempt to fix the regulator coupling on
+Exynos5800/5422 SoCs. Here are links to the previous attempts and
+discussions:
 
-That's correct. Thanks for pointing that out.
-I guess in my development version of code I had seq as a u64 pointer
-variable which later I had changed to u64 variable but I guess I
-continued using pcpu ptr APIs for that.
+https://lore.kernel.org/linux-samsung-soc/20191008101709.qVNy8eijBi0LynOteWFMnTg4GUwKG599n6OyYoX1Abs@z/
+https://lore.kernel.org/lkml/20191017102758.8104-1-m.szyprowski@samsung.com/
+https://lore.kernel.org/linux-pm/cover.1589528491.git.viresh.kumar@linaro.org/
+https://lore.kernel.org/linux-pm/20200528131130.17984-1-m.szyprowski@samsung.com/
+https://lore.kernel.org/linux-samsung-soc/57cf3a15-5d9b-7636-4c69-60742e8cfae6@samsung.com/
+https://lore.kernel.org/lkml/20200605063724.9030-1-m.szyprowski@samsung.com/
 
-Let me re-submit that patch with your Suggested-by tag and corresponding
-changes.
+The problem is with "vdd_int" regulator coupled with "vdd_arm" on Odroid
+XU3/XU4 boards family. "vdd_arm" is handled by CPUfreq. "vdd_int" is
+handled by devfreq. CPUfreq initialized quite early during boot and it
+starts changing OPPs and "vdd_arm" value. Sometimes CPU activity during
+boot goes down and some low-frequency OPPs are selected, what in turn
+causes lowering "vdd_arm". This happens before devfreq applies its
+requirements on "vdd_int". Regulator balancing code reduces "vdd_arm"
+voltage value, what in turn causes lowering "vdd_int" value to the lowest
+possible value. This is much below the operation point of the wcore bus,
+which still runs at the highest frequency.
 
--riteshh
+The issue was hard to notice because in the most cases the board managed
+to boot properly, even when the regulator was set to lowest value allowed
+by the regulator constraints. However, it caused some random issues,
+which can be observed as "Unhandled prefetch abort" or low USB stability.
+
+Handling this case in the generic code has been rejected, so the only way
+to ensure the desired behavior on Exynos5800-based SoCs is to make a
+custom regulator coupler driver. I've tried hard to extract some common
+code to simplify the exynos-regulator-coupler driver as much as possible,
+but the difference between it and the generic code is so deep that this
+approach failed, so indead I simply copied and modified the balancing
+code.
+
+Best regards
+Marek Szyprowski
+---
+ arch/arm/mach-exynos/Kconfig                  |   1 +
+ drivers/soc/samsung/Kconfig                   |   3 +
+ drivers/soc/samsung/Makefile                  |   1 +
+ .../soc/samsung/exynos-regulator-coupler.c    | 221 ++++++++++++++++++
+ 4 files changed, 226 insertions(+)
+ create mode 100644 drivers/soc/samsung/exynos-regulator-coupler.c
+
+diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
+index 76838255b5fa..f185cd3d4c62 100644
+--- a/arch/arm/mach-exynos/Kconfig
++++ b/arch/arm/mach-exynos/Kconfig
+@@ -118,6 +118,7 @@ config SOC_EXYNOS5800
+ 	bool "Samsung EXYNOS5800"
+ 	default y
+ 	depends on SOC_EXYNOS5420
++	select EXYNOS_REGULATOR_COUPLER
+ 
+ config EXYNOS_MCPM
+ 	bool
+diff --git a/drivers/soc/samsung/Kconfig b/drivers/soc/samsung/Kconfig
+index 19c4d3f1437b..5d7819b52eed 100644
+--- a/drivers/soc/samsung/Kconfig
++++ b/drivers/soc/samsung/Kconfig
+@@ -43,4 +43,7 @@ config EXYNOS_PM_DOMAINS
+ 	bool "Exynos PM domains" if COMPILE_TEST
+ 	depends on PM_GENERIC_DOMAINS || COMPILE_TEST
+ 
++config EXYNOS_REGULATOR_COUPLER
++	bool "Exynos SoC Regulator Coupler" if COMPILE_TEST
++	depends on ARCH_EXYNOS || COMPILE_TEST
+ endif
+diff --git a/drivers/soc/samsung/Makefile b/drivers/soc/samsung/Makefile
+index 31db65cb7aa3..93285faec416 100644
+--- a/drivers/soc/samsung/Makefile
++++ b/drivers/soc/samsung/Makefile
+@@ -10,3 +10,4 @@ obj-$(CONFIG_EXYNOS_PMU_ARM_DRIVERS)	+= exynos3250-pmu.o exynos4-pmu.o \
+ 					exynos5250-pmu.o exynos5420-pmu.o
+ obj-$(CONFIG_EXYNOS_PMU_ARM64_DRIVERS)	+= exynos-pm.o exynos5433-pmu.o
+ obj-$(CONFIG_EXYNOS_PM_DOMAINS) += pm_domains.o
++obj-$(CONFIG_EXYNOS_REGULATOR_COUPLER) += exynos-regulator-coupler.o
+diff --git a/drivers/soc/samsung/exynos-regulator-coupler.c b/drivers/soc/samsung/exynos-regulator-coupler.c
+new file mode 100644
+index 000000000000..3cafc1738eb6
+--- /dev/null
++++ b/drivers/soc/samsung/exynos-regulator-coupler.c
+@@ -0,0 +1,221 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2020 Samsung Electronics Co., Ltd.
++ *	      http://www.samsung.com/
++ * Author: Marek Szyprowski <m.szyprowski@samsung.com>
++ *
++ * Simplified generic volatage coupler from regulator core.c
++ * The main difference is that it keeps current regulator voltage
++ * if consumers didn't apply their contraints yet.
++ */
++
++#include <linux/init.h>
++#include <linux/kernel.h>
++#include <linux/of.h>
++#include <linux/regulator/coupler.h>
++#include <linux/regulator/driver.h>
++#include <linux/regulator/machine.h>
++
++static int regulator_get_optimal_voltage(struct regulator_dev *rdev,
++					 int *current_uV,
++					 int *min_uV, int *max_uV,
++					 suspend_state_t state)
++{
++	struct coupling_desc *c_desc = &rdev->coupling_desc;
++	struct regulator_dev **c_rdevs = c_desc->coupled_rdevs;
++	struct regulation_constraints *constraints = rdev->constraints;
++	int desired_min_uV = 0, desired_max_uV = INT_MAX;
++	int max_current_uV = 0, min_current_uV = INT_MAX;
++	int highest_min_uV = 0, target_uV, possible_uV;
++	int i, ret, max_spread, n_coupled = c_desc->n_coupled;
++	bool done;
++
++	*current_uV = -1;
++
++	/* Find highest min desired voltage */
++	for (i = 0; i < n_coupled; i++) {
++		int tmp_min = 0;
++		int tmp_max = INT_MAX;
++
++		lockdep_assert_held_once(&c_rdevs[i]->mutex.base);
++
++		ret = regulator_check_consumers(c_rdevs[i],
++						&tmp_min,
++						&tmp_max, state);
++		if (ret < 0)
++			return ret;
++
++		if (tmp_min == 0) {
++			ret = regulator_get_voltage_rdev(c_rdevs[i]);
++			if (ret < 0)
++				return ret;
++			tmp_min = ret;
++		}
++
++		/* apply constraints */
++		ret = regulator_check_voltage(c_rdevs[i], &tmp_min, &tmp_max);
++		if (ret < 0)
++			return ret;
++
++		highest_min_uV = max(highest_min_uV, tmp_min);
++
++		if (i == 0) {
++			desired_min_uV = tmp_min;
++			desired_max_uV = tmp_max;
++		}
++	}
++
++	max_spread = constraints->max_spread[0];
++
++	/*
++	 * Let target_uV be equal to the desired one if possible.
++	 * If not, set it to minimum voltage, allowed by other coupled
++	 * regulators.
++	 */
++	target_uV = max(desired_min_uV, highest_min_uV - max_spread);
++
++	/*
++	 * Find min and max voltages, which currently aren't violating
++	 * max_spread.
++	 */
++	for (i = 1; i < n_coupled; i++) {
++		int tmp_act;
++
++		tmp_act = regulator_get_voltage_rdev(c_rdevs[i]);
++		if (tmp_act < 0)
++			return tmp_act;
++
++		min_current_uV = min(tmp_act, min_current_uV);
++		max_current_uV = max(tmp_act, max_current_uV);
++	}
++
++	/*
++	 * Correct target voltage, so as it currently isn't
++	 * violating max_spread
++	 */
++	possible_uV = max(target_uV, max_current_uV - max_spread);
++	possible_uV = min(possible_uV, min_current_uV + max_spread);
++
++	if (possible_uV > desired_max_uV)
++		return -EINVAL;
++
++	done = (possible_uV == target_uV);
++	desired_min_uV = possible_uV;
++
++	/* Set current_uV if wasn't done earlier in the code and if necessary */
++	if (*current_uV == -1) {
++		ret = regulator_get_voltage_rdev(rdev);
++		if (ret < 0)
++			return ret;
++		*current_uV = ret;
++	}
++
++	*min_uV = desired_min_uV;
++	*max_uV = desired_max_uV;
++
++	return done;
++}
++
++static int exynos_coupler_balance_voltage(struct regulator_coupler *coupler,
++					  struct regulator_dev *rdev,
++					  suspend_state_t state)
++{
++	struct regulator_dev **c_rdevs;
++	struct regulator_dev *best_rdev;
++	struct coupling_desc *c_desc = &rdev->coupling_desc;
++	int i, ret, n_coupled, best_min_uV, best_max_uV, best_c_rdev;
++	unsigned int delta, best_delta;
++	unsigned long c_rdev_done = 0;
++	bool best_c_rdev_done;
++
++	c_rdevs = c_desc->coupled_rdevs;
++	n_coupled = c_desc->n_coupled;
++
++	/*
++	 * Find the best possible voltage change on each loop. Leave the loop
++	 * if there isn't any possible change.
++	 */
++	do {
++		best_c_rdev_done = false;
++		best_delta = 0;
++		best_min_uV = 0;
++		best_max_uV = 0;
++		best_c_rdev = 0;
++		best_rdev = NULL;
++
++		/*
++		 * Find highest difference between optimal voltage
++		 * and current voltage.
++		 */
++		for (i = 0; i < n_coupled; i++) {
++			/*
++			 * optimal_uV is the best voltage that can be set for
++			 * i-th regulator at the moment without violating
++			 * max_spread constraint in order to balance
++			 * the coupled voltages.
++			 */
++			int optimal_uV = 0, optimal_max_uV = 0, current_uV = 0;
++
++			if (test_bit(i, &c_rdev_done))
++				continue;
++
++			ret = regulator_get_optimal_voltage(c_rdevs[i],
++							    &current_uV,
++							    &optimal_uV,
++							    &optimal_max_uV,
++							    state);
++			if (ret < 0)
++				goto out;
++
++			delta = abs(optimal_uV - current_uV);
++
++			if (delta && best_delta <= delta) {
++				best_c_rdev_done = ret;
++				best_delta = delta;
++				best_rdev = c_rdevs[i];
++				best_min_uV = optimal_uV;
++				best_max_uV = optimal_max_uV;
++				best_c_rdev = i;
++			}
++		}
++
++		/* Nothing to change, return successfully */
++		if (!best_rdev) {
++			ret = 0;
++			goto out;
++		}
++
++		ret = regulator_set_voltage_rdev(best_rdev, best_min_uV,
++						 best_max_uV, state);
++
++		if (ret < 0)
++			goto out;
++
++		if (best_c_rdev_done)
++			set_bit(best_c_rdev, &c_rdev_done);
++
++	} while (n_coupled > 1);
++
++out:
++	return ret;
++}
++
++static int exynos_coupler_attach(struct regulator_coupler *coupler,
++				 struct regulator_dev *rdev)
++{
++	return 0;
++}
++
++static struct regulator_coupler exynos_coupler = {
++	.attach_regulator = exynos_coupler_attach,
++	.balance_voltage  = exynos_coupler_balance_voltage,
++};
++
++static int __init exynos_coupler_init(void)
++{
++	if (!of_machine_is_compatible("samsung,exynos5800"))
++		return 0;
++
++	return regulator_coupler_register(&exynos_coupler);
++}
++arch_initcall(exynos_coupler_init);
+-- 
+2.17.1
+
