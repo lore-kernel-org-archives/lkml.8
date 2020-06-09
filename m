@@ -2,135 +2,133 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E59EEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:17:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94ACBC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE0F420737
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:17:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SEopFD6W"
+	by mail.kernel.org (Postfix) with ESMTP id 75ED420737
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 13:17:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730082AbgFINRo (ORCPT
+        id S1730096AbgFINRt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 09:17:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55266 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729090AbgFINOp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 09:14:45 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3064C03E97C;
-        Tue,  9 Jun 2020 06:14:43 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id 9so24988181ljc.8;
-        Tue, 09 Jun 2020 06:14:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=AmHb/qTFiuR6DXvA/ffC/nHLs0yGE7r571S6zKct1lc=;
-        b=SEopFD6WA6X0oE0yMZuxwxvYBQFHQJCCJua3OwUoX/QqrQlqZ3M+GzRG9yCFrFseZP
-         KZ+VpLlPociuyizoUcEgoYDc2D/f2f8RlMbG1zK/GokjMg4umvEjcEmwl8hkk4TLK6IM
-         tF61xjPihOqkZaHBYYLssFhno8KgX92dIUtIiLfVbo7+JTImobm6iXLX6gfB3RtJ5DyG
-         XKkEb75lI/cBFh6PztCCh/B2uQerDExyOHECRoi7sA+VgHSYD7KRAvCeDqt0GOgOcVFJ
-         6NtBgNT9LVFusNmYz3wZSuJN11UhTRhKjbre8gvBXoW09blWoxZd16ni/P2Vt7/5xtgS
-         eQmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=AmHb/qTFiuR6DXvA/ffC/nHLs0yGE7r571S6zKct1lc=;
-        b=enai5aiH/umStV/4nIXur0XZZ9zZZNy4nVnmXSNnOcu6ED0VSObU6m49KHr6wUnnRO
-         7f8o0R0qhYtR4bx7ubcdnRrIw2+KfV3bjBwpGTYPOorrlfiWWTRJv/fGzUaIPPiNw2e0
-         Ab0aT1X/p4Jw+W07WoQ1mvsMw3FPlhyborGsLHJdI0kv/6k6wwv6Q31Qf8gAqolw4CdR
-         4zNpqf7DeCtmlNjnOfjNkK2+B8Z9W0o0k6eLklkfE9DGKUsMxZUj3IyZwUwIlU5FWxRh
-         Mv9C4mTGGu41BV8pqYCCLH9SOC3chfYvv4Wm3d+mGleE3BsXmOBRSNC8r92BOxfS1XSv
-         WpCg==
-X-Gm-Message-State: AOAM531s+pa3ppgtUltTW/2dKlxHrAmj7ZsfiVIM7GYunfbcOMZIgxys
-        e/ObTY2QUHnQQ6wO8tm8Y6A=
-X-Google-Smtp-Source: ABdhPJyyEojgVqUPpi4CNo4lhcaSGa8eRgXbgLQjT8AsOnF95049pCzOGKyIKTvZUwaIiCa8veiYMQ==
-X-Received: by 2002:a2e:9f57:: with SMTP id v23mr11785142ljk.324.1591708482389;
-        Tue, 09 Jun 2020 06:14:42 -0700 (PDT)
-Received: from localhost.localdomain (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.gmail.com with ESMTPSA id l22sm4323522lji.120.2020.06.09.06.14.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 06:14:41 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Mikko Perttunen <cyndis@kapsi.fi>
-Cc:     =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@samsung.com>,
-        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH v4 14/37] PM / devfreq: tegra20: Add error messages to tegra_devfreq_target()
-Date:   Tue,  9 Jun 2020 16:13:41 +0300
-Message-Id: <20200609131404.17523-15-digetx@gmail.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200609131404.17523-1-digetx@gmail.com>
-References: <20200609131404.17523-1-digetx@gmail.com>
+        Tue, 9 Jun 2020 09:17:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36020 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729585AbgFINRm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 09:17:42 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D633F20737;
+        Tue,  9 Jun 2020 13:17:41 +0000 (UTC)
+Date:   Tue, 9 Jun 2020 09:17:40 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] tracing: Updates for 5.8
+Message-ID: <20200609091740.303dda01@oasis.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's useful to now when something goes wrong instead of failing silently,
-so let's add error messages to tegra_devfreq_target() to prevent situation
-where it fails silently.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/devfreq/tegra20-devfreq.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+Linus,
 
-diff --git a/drivers/devfreq/tegra20-devfreq.c b/drivers/devfreq/tegra20-devfreq.c
-index bf504ca4dea2..249d0dc44f6c 100644
---- a/drivers/devfreq/tegra20-devfreq.c
-+++ b/drivers/devfreq/tegra20-devfreq.c
-@@ -44,19 +44,25 @@ static int tegra_devfreq_target(struct device *dev, unsigned long *freq,
- 	int err;
- 
- 	opp = devfreq_recommended_opp(dev, freq, flags);
--	if (IS_ERR(opp))
-+	if (IS_ERR(opp)) {
-+		dev_err(dev, "failed to find opp for %lu Hz\n", *freq);
- 		return PTR_ERR(opp);
-+	}
- 
- 	rate = dev_pm_opp_get_freq(opp);
- 	dev_pm_opp_put(opp);
- 
- 	err = clk_set_min_rate(tegra->emc_clock, rate);
--	if (err)
-+	if (err) {
-+		dev_err(dev, "failed to set min rate: %d\n", err);
- 		return err;
-+	}
- 
- 	err = clk_set_rate(tegra->emc_clock, 0);
--	if (err)
-+	if (err) {
-+		dev_err(dev, "failed to set rate: %d\n", err);
- 		goto restore_min_rate;
-+	}
- 
- 	return 0;
- 
--- 
-2.26.0
+Tracing updates for 5.8:
 
+No new features this release. Mostly clean ups, restructuring and
+documentation.
+
+ - Have ftrace_bug() show ftrace errors before the WARN, as the WARN will
+   reboot the box before the error messages are printed if panic_on_warn
+   is set.
+
+ - Have traceoff_on_warn disable tracing sooner (before prints)
+
+ - Write a message to the trace buffer that its being disabled when
+   disable_trace_on_warning() is set.
+
+ - Separate out synthetic events from histogram code to let it be used by
+   other parts of the kernel.
+
+ - More documentation on histogram design.
+
+ - Other small fixes and clean ups.
+
+
+Please pull the latest trace-v5.8 tree, which can be found at:
+
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
+trace-v5.8
+
+Tag SHA1: a9317885fb7c4418fea2588e3fbaeaafd773b106
+Head SHA1: 388d8bdb87e01bcea6d0b2bf797b5f6d7b2401fb
+
+
+Cheng Jian (1):
+      ftrace: show debugging information when panic_on_warn set
+
+Julia Lawall (1):
+      tracing/probe: reverse arguments to list_add
+
+Masami Hiramatsu (1):
+      tools/bootconfig: Add a summary of test cases and return error
+
+Mel Gorman (1):
+      tracing: Remove obsolete PREEMPTIRQ_EVENTS kconfig option
+
+Peter Zijlstra (1):
+      ftrace,bug: Improve traceoff_on_warn
+
+Steven Rostedt (VMware) (2):
+      tracing/doc: Fix typos in histogram-design.rst
+      tracing: Add a trace print when traceoff_on_warning is triggered
+
+Tom Zanussi (7):
+      tracing: Check state.disabled in synth event trace functions
+      tracing: Add histogram-design document
+      tracing: Add hist_debug trace event files for histogram debugging
+      tracing: Fix events.rst section numbering
+      tracing: Move synthetic events to a separate file
+      selftests/ftrace: Distinguish between hist and synthetic event checks
+      tracing/doc: Fix ascii-art in histogram-design.rst
+
+----
+ Documentation/trace/events.rst                     |   28 +-
+ Documentation/trace/histogram-design.rst           | 2115 +++++++++++++++++++
+ kernel/trace/Kconfig                               |   52 +-
+ kernel/trace/Makefile                              |    1 +
+ kernel/trace/ftrace.c                              |    8 +-
+ kernel/trace/trace.c                               |    5 +-
+ kernel/trace/trace.h                               |    1 +
+ kernel/trace/trace_events.c                        |    4 +
+ kernel/trace/trace_events_hist.c                   | 2193 +++-----------------
+ kernel/trace/trace_events_synth.c                  | 1789 ++++++++++++++++
+ kernel/trace/trace_probe.c                         |    2 +-
+ kernel/trace/trace_synth.h                         |   36 +
+ lib/bug.c                                          |    3 +
+ tools/bootconfig/test-bootconfig.sh                |    7 +
+ .../inter-event/trigger-field-variable-support.tc  |    5 +
+ .../trigger-inter-event-combined-hist.tc           |    5 +
+ .../inter-event/trigger-multi-actions-accept.tc    |    5 +
+ .../inter-event/trigger-onmatch-action-hist.tc     |    5 +
+ .../trigger-onmatch-onmax-action-hist.tc           |    5 +
+ .../inter-event/trigger-onmax-action-hist.tc       |    5 +
+ .../inter-event/trigger-snapshot-action-hist.tc    |    5 +
+ .../inter-event/trigger-trace-action-hist.tc       |    5 +
+ 22 files changed, 4396 insertions(+), 1888 deletions(-)
+ create mode 100644 Documentation/trace/histogram-design.rst
+ create mode 100644 kernel/trace/trace_events_synth.c
+ create mode 100644 kernel/trace/trace_synth.h
+---------------------------
