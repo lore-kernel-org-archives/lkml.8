@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.8 required=3.0
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C153C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 21:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91227C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 21:02:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4CA720734
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 21:02:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68DF520734
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 21:02:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbgFIVB7 convert rfc822-to-8bit (ORCPT
+        id S1727818AbgFIVCE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 17:01:59 -0400
-Received: from lithops.sigma-star.at ([195.201.40.130]:44168 "EHLO
+        Tue, 9 Jun 2020 17:02:04 -0400
+Received: from lithops.sigma-star.at ([195.201.40.130]:44190 "EHLO
         lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726428AbgFIVBy (ORCPT
+        with ESMTP id S1726428AbgFIVCB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 17:01:54 -0400
+        Tue, 9 Jun 2020 17:02:01 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 81B1F607400D;
-        Tue,  9 Jun 2020 23:01:51 +0200 (CEST)
+        by lithops.sigma-star.at (Postfix) with ESMTP id 316CA607400D;
+        Tue,  9 Jun 2020 23:01:59 +0200 (CEST)
 Received: from lithops.sigma-star.at ([127.0.0.1])
         by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id SM50kajbXWN9; Tue,  9 Jun 2020 23:01:51 +0200 (CEST)
+        with ESMTP id 4bIAtOZviiwE; Tue,  9 Jun 2020 23:01:58 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 25BB36074010;
-        Tue,  9 Jun 2020 23:01:51 +0200 (CEST)
+        by lithops.sigma-star.at (Postfix) with ESMTP id D2FB16074010;
+        Tue,  9 Jun 2020 23:01:58 +0200 (CEST)
 Received: from lithops.sigma-star.at ([127.0.0.1])
         by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id OZ7bmjqrn-kD; Tue,  9 Jun 2020 23:01:51 +0200 (CEST)
+        with ESMTP id jQ3-NoYnJRix; Tue,  9 Jun 2020 23:01:58 +0200 (CEST)
 Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-        by lithops.sigma-star.at (Postfix) with ESMTP id EA2E4607400D;
-        Tue,  9 Jun 2020 23:01:50 +0200 (CEST)
-Date:   Tue, 9 Jun 2020 23:01:50 +0200 (CEST)
+        by lithops.sigma-star.at (Postfix) with ESMTP id BAA0B607400D;
+        Tue,  9 Jun 2020 23:01:58 +0200 (CEST)
+Date:   Tue, 9 Jun 2020 23:01:58 +0200 (CEST)
 From:   Richard Weinberger <richard@nod.at>
 To:     torvalds <torvalds@linux-foundation.org>
 Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-um <linux-um@lists.infradead.org>
-Message-ID: <1858220125.350.1591736510906.JavaMail.zimbra@nod.at>
-Subject: [GIT PULL] UML changes for v5.8
+        linux-mtd <linux-mtd@lists.infradead.org>
+Message-ID: <818706511.351.1591736518682.JavaMail.zimbra@nod.at>
+Subject: [GIT PULL] UBI changes for v5.8
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 7bit
 X-Originating-IP: [195.201.40.130]
 X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF68 (Linux)/8.8.12_GA_3809)
-Thread-Index: eBoFZpqVB3Ctbf548VMEVBglzkcn8A==
-Thread-Topic: UML changes for v5.8
+Thread-Index: elUTXxzBgxSDBQp23tI4ZRWGqBhMNg==
+Thread-Topic: UBI changes for v5.8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -63,42 +63,23 @@ The following changes since commit 3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162:
 
 are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/rw/uml.git tags/for-linus-5.8-rc1
+  git://git.kernel.org/pub/scm/linux/kernel/git/rw/ubifs.git tags/for-linus-5.8-rc1
 
-for you to fetch changes up to f6e8c474390be2e6f5bd0b8966e19958214609ff:
+for you to fetch changes up to 4b68bf9a69d22dd512d61d5f0ba01b065b01ede6:
 
-  um: virtio: Replace zero-length array with flexible-array (2020-06-02 22:38:00 +0200)
-
-----------------------------------------------------------------
-This pull request contains the following changes for UML:
-
-- Use fdatasync() in ubd
-- Add a generic "fd" vector transport
-- Minor cleanups and fixes
+  ubi: Select fastmap anchor PEBs considering wear level rules (2020-06-02 22:53:05 +0200)
 
 ----------------------------------------------------------------
-Anton Ivanov (1):
-      um: Use fdatasync() when mapping the UBD FSYNC command
+This pull request contains a single change for UBI:
 
-Gustavo A. R. Silva (1):
-      um: virtio: Replace zero-length array with flexible-array
+- Select fastmap anchor PEBs considering wear level rules
 
-Joe Perches (1):
-      um: Neaten vu_err macro definition
+----------------------------------------------------------------
+Arne Edholm (1):
+      ubi: Select fastmap anchor PEBs considering wear level rules
 
-Marc-André Lureau (1):
-      um: Add a generic "fd" vector transport
-
-Masahiro Yamada (1):
-      um: Do not evaluate compiler's library path when cleaning
-
-Zach van Rijn (1):
-      um: Add include: memset() and memcpy() are in <string.h>
-
- arch/um/drivers/Makefile      |  4 +--
- arch/um/drivers/vector_kern.h |  2 +-
- arch/um/drivers/vector_user.c | 59 +++++++++++++++++++++++++++++++++++++++++++
- arch/um/drivers/vhost_user.h  |  2 +-
- arch/um/drivers/virtio_uml.c  |  2 +-
- arch/um/os-Linux/file.c       |  3 ++-
- 6 files changed, 66 insertions(+), 6 deletions(-)
+ drivers/mtd/ubi/fastmap-wl.c | 39 ++++++++++++++++++++++++---------------
+ drivers/mtd/ubi/fastmap.c    | 11 +++++++++++
+ drivers/mtd/ubi/ubi.h        |  4 +++-
+ drivers/mtd/ubi/wl.c         | 28 +++++++++++++++++++---------
+ 4 files changed, 57 insertions(+), 25 deletions(-)
