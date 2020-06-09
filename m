@@ -2,121 +2,145 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F54C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 06:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D01C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 06:04:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93D8920814
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 06:04:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F50920812
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 06:04:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="cvpBD6MG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ostVs+eV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727768AbgFIGEV (ORCPT
+        id S1727843AbgFIGE0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 02:04:21 -0400
-Received: from mta-p5.oit.umn.edu ([134.84.196.205]:35858 "EHLO
-        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726886AbgFIGEV (ORCPT
+        Tue, 9 Jun 2020 02:04:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45252 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726886AbgFIGEY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 02:04:21 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 49h01w2yhxz9vHdJ
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 06:04:20 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p5.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id wnMnS-L_qsDt for <linux-kernel@vger.kernel.org>;
-        Tue,  9 Jun 2020 01:04:20 -0500 (CDT)
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 49h01w1Jnkz9vHdL
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 01:04:20 -0500 (CDT)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p5.oit.umn.edu 49h01w1Jnkz9vHdL
-DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p5.oit.umn.edu 49h01w1Jnkz9vHdL
-Received: by mail-io1-f69.google.com with SMTP id l22so12313108iob.23
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 23:04:20 -0700 (PDT)
+        Tue, 9 Jun 2020 02:04:24 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0184CC03E969;
+        Mon,  8 Jun 2020 23:04:23 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id r10so9821338pgv.8;
+        Mon, 08 Jun 2020 23:04:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=Qp1siVLk0nid8BSzHT63AObSAVlRWQN8KhFQ4rgXWZE=;
-        b=cvpBD6MGcwov6zUSlrt8xsxr0/G+EN6CcO2938JEvuL876kUW4h/QOZfrUeryircsF
-         A1GQtohroAxh9cv+nN1SjvEAEZ+9C79/EfG+6p7RCtZhsyE3dzmxrC9S8+yrR5JN7ctl
-         zoYptSYdiCIg9fWf2RYga+TLqBJu1lo1nD/LfpiFeOBkHbzzvJB59OTpyH+YwPMvM0os
-         5RJKDOohWfb6h5BgUnx9QoBentAj0reRTEkwNrzi7co6+JLYDhmgCG1bRP1HjLDPJH4r
-         oYY7sxXrj8z8eHsMxe1jbJXKbowoBA+c+peNMtp3lnZToJCsvPHjlOrDrBweONlCeskE
-         B2+w==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lYRB6PYVBiyapz6A4TFF091mtZ2ITZTsavPC5C/0Rns=;
+        b=ostVs+eVDVPNhSoNRalUVxqeALKfy5K9ysWzxpwLghJo7kTuGhZrujIKIf6IExO9uo
+         x8uK5LW1cUtPR6OQLDjW1KCh//T+Hqexlvm4OfHNAp/H0u3QGtkBB/1aY7iwGQBF6qfA
+         1/G7kckFA/GzY17xhaysM8ckNTiRwPmMxChmD5riHb3EV1uhlKKCRiSaAT0ilvXEp7yI
+         lPhkZ4bAMd5UzPXpnfH9gp0aN8HWYClRhvlS+v2OtF9j9zRJeZR7nrJDHllA1rlFgMeG
+         L5XCVnZ+jpZjJG5uRsdXsXvEiZ8SydNPzeMuvpRM7Zl3YIJn7HP79Tas3gmN6uXXwTQC
+         2lOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Qp1siVLk0nid8BSzHT63AObSAVlRWQN8KhFQ4rgXWZE=;
-        b=sFCXsi3stcBEOWIGwB3dbpA/x++xtU9yXWNX7onv4MVWrjYrT6Y0XYOZhW9m7Ef7oA
-         YAlqZ25+Df4CT0wmFbrtvSE+JMoGBtGtroCTvBlxpfoKiikdQzhk6lNRT/R1YxI6DOh9
-         AREZkjSfduK9mqCKxLlRD6AUfwXTPyTR13/cS71hhbBAFcCp0Lv+5O2lU0fzxyn04NBN
-         Snj/jdL37RTlRBGUS1GOErleMhSU3Egh16vN/UJJ53y9OA9/BfwYLBvxUjpKzHLhAT+a
-         rqLPe+/R8qn3SFq4MAxzAp31bhGlYn40p5eCL8Ki/kvEeh7N1dvS1Dn7Xn+jwZa0cxPb
-         rCsA==
-X-Gm-Message-State: AOAM533p7A4VppKOuD2FUHTlg8QkiMUPLsTJJIab7k2CitjrgIe1ZkCQ
-        AVhSG7R8iAQAyqnIkPSSZ8i4LtKxPNnt3UtDTWTzfm3goWZNTihE5G5+y4hIW+PsABDcc77szGG
-        XI1PTRlFJ3G/eTq7K8nSNXruDze7G
-X-Received: by 2002:a92:cf48:: with SMTP id c8mr5177123ilr.147.1591682659411;
-        Mon, 08 Jun 2020 23:04:19 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzDq11S3HVxoMsWpujNgvBqDksIorgsVe1JbXy5KSCpOa+e7sdI+YU4GkQ0TIZic29C5yJzDw==
-X-Received: by 2002:a92:cf48:: with SMTP id c8mr5177100ilr.147.1591682659049;
-        Mon, 08 Jun 2020 23:04:19 -0700 (PDT)
-Received: from qiushi.dtc.umn.edu (cs-kh5248-02-umh.cs.umn.edu. [128.101.106.4])
-        by smtp.gmail.com with ESMTPSA id p11sm6967446ioo.26.2020.06.08.23.04.17
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lYRB6PYVBiyapz6A4TFF091mtZ2ITZTsavPC5C/0Rns=;
+        b=di2PK50XoJRO0ODZgv2bPQYPeywPEPiQwVT+znWrVbZre0ecsRZkuRryJNNhT1N0ni
+         ho42Bnr4Fwvnj5KnsD0+Wk3z3rBgPUdA9JUN5xrBPqnYRNTxO6rl41Fg8rYlPLWcQsdb
+         4gzJdmUV9LPopr2fwmDuTyNeJFPwerqW1ELLEaKARzYAAO97aHDODpunzytrD83R12aw
+         1WdxvPzt4ELRiDTdp5pJN152XByu8xWCXIXnRYXJP/MN5abXsCh3OB2jHMtfdgIwhQqB
+         JVrrR3t7fnZGHh+gS3iyiq9CSoMT6D2heL731NJc9NnZfdsjuNIJEj9/avCkW5dBLGd/
+         kY/Q==
+X-Gm-Message-State: AOAM531wpo8P5NV5gZM0UtDjsQj41GHD3fGoHfNN6fWqGnsZbv9stubi
+        1o5E5inLGGOKEKshGMRWuRs=
+X-Google-Smtp-Source: ABdhPJySk8EwSWOeKNoqW2OQmmyGb4a/Nb5lkvkHGv9rYME55B44uny3+LDxrOTbf7VlUX+WW4Zk6Q==
+X-Received: by 2002:a05:6a00:15ca:: with SMTP id o10mr11956214pfu.169.1591682663336;
+        Mon, 08 Jun 2020 23:04:23 -0700 (PDT)
+Received: from localhost.localdomain ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
+        by smtp.gmail.com with ESMTPSA id p12sm8934905pfq.69.2020.06.08.23.04.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 23:04:18 -0700 (PDT)
-From:   wu000273@umn.edu
-To:     kjlu@umn.edu
-Cc:     wu000273@umn.edu, Corey Minyard <minyard@acm.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        openipmi-developer@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ipmi: code cleanup and prevent potential issue.
-Date:   Tue,  9 Jun 2020 01:04:10 -0500
-Message-Id: <20200609060410.29700-1-wu000273@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        Mon, 08 Jun 2020 23:04:22 -0700 (PDT)
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: [PATCH] videobuf2: always re-init queue memory consistency attribute
+Date:   Tue,  9 Jun 2020 15:04:17 +0900
+Message-Id: <20200609060417.8066-1-sergey.senozhatsky@gmail.com>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+We need a combination of two factors in order to permit modification
+of queue's memory consistency attribute in set_queue_consistency():
+  (1) queue should allow user-space cache hints
+  (2) queue should be used for MMAP-ed I/O
 
-All the previous get/put operations against intf->refcount are
-inside the mutex. Thus, put the last kref_put() also inside mutex
-to make sure get/put functions execute in order and prevent the
-potential race condition.
+Therefore the code in videobuf2 core looks as follows:
 
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+	q->memory = req->memory;
+	set_queue_consistency(q, consistent);
+
+This works when we do something like this (suppose that queue allows
+cache hints)
+
+	reqbufs.memory = V4L2_MEMORY_DMABUF;
+	reqbufs.flags = 0;
+	doioctl(node, VIDIOC_REQBUFS, &reqbufs);
+
+	reqbufs.memory = V4L2_MEMORY_MMAP;
+	reqbufs.flags = V4L2_FLAG_MEMORY_NON_CONSISTENT;
+	doioctl(node, VIDIOC_REQBUFS, &reqbufs);
+
+However, this doesn't work the other way around
+
+	reqbufs.memory = V4L2_MEMORY_MMAP;
+	reqbufs.flags = V4L2_FLAG_MEMORY_NON_CONSISTENT;
+	doioctl(node, VIDIOC_REQBUFS, &reqbufs);
+
+	reqbufs.memory = V4L2_MEMORY_DMABUF;
+	reqbufs.flags = 0;
+	doioctl(node, VIDIOC_REQBUFS, &reqbufs);
+
+because __vb2_queue_free() doesn't clear queue's ->dma_attrs
+once its don't freeing queue buffers, and by the time we call
+set_queue_consistency() the queue is DMABUF so (2) is false
+and we never clear the stale consistency attribute.
+
+Re-implement set_queue_consistency() - it must always clear
+queue's non-consistency attr and set it only if (1) and (2).
+
+Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 ---
- drivers/char/ipmi/ipmi_msghandler.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/media/common/videobuf2/videobuf2-core.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
-index e1b22fe0916c..d34343e34272 100644
---- a/drivers/char/ipmi/ipmi_msghandler.c
-+++ b/drivers/char/ipmi/ipmi_msghandler.c
-@@ -2583,10 +2583,11 @@ static int __bmc_get_device_id(struct ipmi_smi *intf, struct bmc_device *bmc,
- 			*guid =  bmc->guid;
- 	}
+diff --git a/drivers/media/common/videobuf2/videobuf2-core.c b/drivers/media/common/videobuf2/videobuf2-core.c
+index 7e081716b8da..37d0186ba330 100644
+--- a/drivers/media/common/videobuf2/videobuf2-core.c
++++ b/drivers/media/common/videobuf2/videobuf2-core.c
+@@ -704,12 +704,11 @@ EXPORT_SYMBOL(vb2_verify_memory_type);
  
-+	kref_put(&intf->refcount, intf_free);
+ static void set_queue_consistency(struct vb2_queue *q, bool consistent_mem)
+ {
++	q->dma_attrs &= ~DMA_ATTR_NON_CONSISTENT;
 +
- 	mutex_unlock(&bmc->dyn_mutex);
- 	mutex_unlock(&intf->bmc_reg_mutex);
- 
--	kref_put(&intf->refcount, intf_free);
- 	return rv;
+ 	if (!vb2_queue_allows_cache_hints(q))
+ 		return;
+-
+-	if (consistent_mem)
+-		q->dma_attrs &= ~DMA_ATTR_NON_CONSISTENT;
+-	else
++	if (!consistent_mem)
+ 		q->dma_attrs |= DMA_ATTR_NON_CONSISTENT;
  }
  
 -- 
-2.17.1
+2.27.0
 
