@@ -2,137 +2,118 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB049C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D876BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:22:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FE24206A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:22:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD6F1206A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:22:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727929AbgFIQWL (ORCPT
+        id S1728447AbgFIQWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 12:22:11 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:44249
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727773AbgFIQWL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 12:22:11 -0400
-X-IronPort-AV: E=Sophos;i="5.73,492,1583190000"; 
-   d="scan'208";a="351117269"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 18:22:05 +0200
-Date:   Tue, 9 Jun 2020 18:22:05 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Denis Efremov <efremov@linux.com>
-cc:     linux-kernel@vger.kernel.org, cocci@systeme.lip6.fr
-Subject: Re: [Cocci] [PATCH v2 4/4] coccinelle: api: add selfcheck for
- memdup_user rule
-In-Reply-To: <20200608150038.223747-5-efremov@linux.com>
-Message-ID: <alpine.DEB.2.21.2006091821010.2516@hadrien>
-References: <20200608150038.223747-1-efremov@linux.com> <20200608150038.223747-5-efremov@linux.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Tue, 9 Jun 2020 12:22:52 -0400
+Received: from mga01.intel.com ([192.55.52.88]:64397 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725894AbgFIQWv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 12:22:51 -0400
+IronPort-SDR: ygPXPU273i+Y56NthJaHSQ8MplyXOI8FicpPcQgiF6yXFsfE/uadEFkmw2X20XEQRQAWet+s1g
+ hykR9GTkPN6w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 09:22:50 -0700
+IronPort-SDR: u3wLAA8jj9T4eckHnT2rBy6BcpvPBTqQNd6uftqv3XbmTuAaa6yaqsI0W4n0B2oc0tCM9TpqsM
+ MsBnNJWQ6D4A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,492,1583222400"; 
+   d="scan'208";a="349568491"
+Received: from gklab-125-110.igk.intel.com ([10.91.125.110])
+  by orsmga001.jf.intel.com with ESMTP; 09 Jun 2020 09:22:46 -0700
+From:   Piotr Stankiewicz <piotr.stankiewicz@intel.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Cc:     Piotr Stankiewicz <piotr.stankiewicz@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        Kelsey Skunberg <skunberg.kelsey@gmail.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Krzysztof Wilczynski <kw@linux.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Yicong Yang <yangyicong@hisilicon.com>,
+        Denis Efremov <efremov@linux.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 02/15] PCI: Add macro for message signalled interrupt types
+Date:   Tue,  9 Jun 2020 18:22:40 +0200
+Message-Id: <20200609162243.9102-1-piotr.stankiewicz@intel.com>
+X-Mailer: git-send-email 2.17.2
+In-Reply-To: <20200609091148.32749-1-piotr.stankiewicz@intel.com>
+References: <20200609091148.32749-1-piotr.stankiewicz@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+There are several places in the kernel which check/ask for MSI or MSI-X
+interrupts. It would make sense to have a macro which defines all types
+of message signalled interrupts, to use in such situations. Add
+PCI_IRQ_MSI_TYPES, for this purpose.
 
+Signed-off-by: Piotr Stankiewicz <piotr.stankiewicz@intel.com>
+Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+---
+ Documentation/PCI/msi-howto.rst | 5 +++--
+ include/linux/pci.h             | 4 ++--
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
-On Mon, 8 Jun 2020, Denis Efremov wrote:
+diff --git a/Documentation/PCI/msi-howto.rst b/Documentation/PCI/msi-howto.rst
+index aa2046af69f7..2800ff5aa395 100644
+--- a/Documentation/PCI/msi-howto.rst
++++ b/Documentation/PCI/msi-howto.rst
+@@ -105,7 +105,8 @@ if it can't meet the minimum number of vectors.
+ The flags argument is used to specify which type of interrupt can be used
+ by the device and the driver (PCI_IRQ_LEGACY, PCI_IRQ_MSI, PCI_IRQ_MSIX).
+ A convenient short-hand (PCI_IRQ_ALL_TYPES) is also available to ask for
+-any possible kind of interrupt.  If the PCI_IRQ_AFFINITY flag is set,
++any possible kind of interrupt, and (PCI_IRQ_MSI_TYPES) to ask for message
++signalled interrupts (MSI or MSI-X).  If the PCI_IRQ_AFFINITY flag is set,
+ pci_alloc_irq_vectors() will spread the interrupts around the available CPUs.
+ 
+ To get the Linux IRQ numbers passed to request_irq() and free_irq() and the
+@@ -160,7 +161,7 @@ the single MSI mode for a device.  It could be done by passing two 1s as
+ Some devices might not support using legacy line interrupts, in which case
+ the driver can specify that only MSI or MSI-X is acceptable::
+ 
+-	nvec = pci_alloc_irq_vectors(pdev, 1, nvec, PCI_IRQ_MSI | PCI_IRQ_MSIX);
++	nvec = pci_alloc_irq_vectors(pdev, 1, nvec, PCI_IRQ_MSI_TYPES);
+ 	if (nvec < 0)
+ 		goto out_err;
+ 
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index c79d83304e52..a99094f17b21 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1431,8 +1431,8 @@ int pci_set_vga_state(struct pci_dev *pdev, bool decode,
+  */
+ #define PCI_IRQ_VIRTUAL		(1 << 4)
+ 
+-#define PCI_IRQ_ALL_TYPES \
+-	(PCI_IRQ_LEGACY | PCI_IRQ_MSI | PCI_IRQ_MSIX)
++#define PCI_IRQ_MSI_TYPES	(PCI_IRQ_MSI | PCI_IRQ_MSIX)
++#define PCI_IRQ_ALL_TYPES	(PCI_IRQ_LEGACY | PCI_IRQ_MSI_TYPES)
+ 
+ /* kmem_cache style wrapper around pci_alloc_consistent() */
+ 
+-- 
+2.17.2
 
-> Check that the rule matches vmemdup_user implementation.
-> memdup_user is out of scope because we are not matching
-> kmalloc_track_caller() function.
-
-Is this a bit over-enginered?  More precisely, even if it is nice to check
-that the API definition has the expected behavior, does it make sense to
-do it in one case but not the other?
-
-julia
-
->
-> Signed-off-by: Denis Efremov <efremov@linux.com>
-> ---
->  scripts/coccinelle/api/memdup_user.cocci | 46 ++++++++++++++++++++++--
->  1 file changed, 44 insertions(+), 2 deletions(-)
->
-> diff --git a/scripts/coccinelle/api/memdup_user.cocci b/scripts/coccinelle/api/memdup_user.cocci
-> index 8621bd98be1e..78fded83b197 100644
-> --- a/scripts/coccinelle/api/memdup_user.cocci
-> +++ b/scripts/coccinelle/api/memdup_user.cocci
-> @@ -14,13 +14,24 @@ virtual patch
->  virtual context
->  virtual org
->  virtual report
-> +virtual selfcheck
->
->  @initialize:python@
->  @@
-> -filter = frozenset(['memdup_user', 'vmemdup_user'])
-> +
-> +definitions = {
-> +    'memdup_user': 'mm/util.c',
-> +    'vmemdup_user': 'mm/util.c',
-> +}
-> +
-> +filter = frozenset(definitions.keys())
-> +coccinelle.filtered = set()
-> +coccinelle.checked_files = set()
->
->  def relevant(p):
-> -    return not (filter & {el.current_element for el in p})
-> +    found = filter & {el.current_element for el in p}
-> +    coccinelle.filtered |= found
-> +    return not found
->
->  @depends on patch@
->  expression from,to,size;
-> @@ -117,3 +128,34 @@ p << rv.p;
->  @@
->
->  coccilib.report.print_report(p[0], "WARNING opportunity for vmemdup_user")
-> +
-> +@script:python depends on selfcheck@
-> +@@
-> +coccinelle.checked_files |= set(definitions.values()) & set(cocci.files())
-> +
-> +@finalize:python depends on selfcheck@
-> +filtered << merge.filtered;
-> +checked_files << merge.checked_files;
-> +@@
-> +
-> +# Don't check memdup_user because the pattern is not capturing
-> +# kmalloc_track_caller() calls
-> +del definitions['memdup_user']
-> +
-> +# mapping between checked files and filtered definitions
-> +found_defns = {}
-> +for files, funcs in zip(checked_files, filtered):
-> +   for file in files:
-> +      found_defns[file] = funcs
-> +
-> +# reverse mapping of definitions
-> +expected_defns = {v : set() for v in definitions.values()}
-> +for k, v in definitions.items():
-> +    expected_defns[v] |= {k}
-> +
-> +for efile, efuncs in expected_defns.items():
-> +    if efile in found_defns:
-> +        not_found = efuncs - found_defns[efile]
-> +        if not_found:
-> +            print('SELF-CHECK: the pattern no longer matches ' \
-> +		  'definitions {} in file {}'.format(not_found, efile))
-> --
-> 2.26.2
->
-> _______________________________________________
-> Cocci mailing list
-> Cocci@systeme.lip6.fr
-> https://systeme.lip6.fr/mailman/listinfo/cocci
->
