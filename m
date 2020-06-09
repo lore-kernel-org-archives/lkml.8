@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A18D1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F3AEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 817E2206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:22:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D41A22067B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:22:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591726969;
-	bh=L99taIM+omKw6xpLci/GzbwOu6gRvGvUPFTqXy6EsDM=;
+	s=default; t=1591726978;
+	bh=HYg/oK6dZ3KBNE/5RfEG/bWIhWx8JyDZPz/txNutwuk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KjtjgZpoeH7+QasHz+IJBfmU3S2eFFfm085IfliPrRvYB8nCU4H1zt7DCAk5lMIsw
-	 Zy6GdQeXdameTFMj9mmUlCKqcYBioma82GsmyxQPLZfxtyBjbncARJJZLaaf7+2G1p
-	 /WiTxU4ZDEvHXQs6TzShD9aYLb4ASl8k486zhOx4=
+	b=QOSd9XuR/2pxMdEZetUmchTmq/xmIKTuwHct7byNix2+A40c0vh6mNL4HdmCgPsej
+	 VPCKoDSm4gsFP2SKLB/IpgUE6ofO5CNiAGbOHwzYRfkAs6TCzb2/2jW97eFbSFkUNE
+	 WrF2epzpLfMqYt98iknf2TVuv/fnfA274Hlvvrjw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389048AbgFISWq (ORCPT
+        id S2389053AbgFISW5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:22:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60004 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 14:22:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732212AbgFIRsD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:48:03 -0400
+        id S1732184AbgFIRry (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:47:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21D5F207F9;
-        Tue,  9 Jun 2020 17:48:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB786207ED;
+        Tue,  9 Jun 2020 17:47:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591724883;
-        bh=L99taIM+omKw6xpLci/GzbwOu6gRvGvUPFTqXy6EsDM=;
+        s=default; t=1591724874;
+        bh=HYg/oK6dZ3KBNE/5RfEG/bWIhWx8JyDZPz/txNutwuk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=09hjy3maDUW6fBMjwjHJLi0y+SfOjlsDmm8SvCAUkAmoNtB5dd7lqABoX84vCc/51
-         vw0CIJKTfvZXG+tzOL8vxLgaNU+WjdwQsR/JYVYb1eABr7qm6x46j9OCeTnzamLWsS
-         tiWpfN8Jg/SAbafr5RQ77QImqLBpf2xZlrLFf56U=
+        b=VNjCMRQgYVcSra34dQZNwXi9vB7ni5dUiAHPb8eJ2wYmfn5HX4Bj8JyRdGZxXGz9Q
+         5YjN7zgpkkUHFzhn1aK7ryL0Fgdy2xqqLdSKyKHjDFlyUZTADmSd+3/8UpNN7kJz/C
+         8TiTgziv3sEUfM/UPVuLivB/3HBZx715daAJFZ34=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bean Huo <beanhuo@micron.com>,
-        Can Guo <cang@codeaurora.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Eric Biggers <ebiggers@google.com>
-Subject: [PATCH 4.9 20/42] scsi: ufs: Release clock if DMA map fails
-Date:   Tue,  9 Jun 2020 19:44:26 +0200
-Message-Id: <20200609174017.670122929@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
+        <jerome.pouiller@silabs.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.9 17/42] mmc: fix compilation of user API
+Date:   Tue,  9 Jun 2020 19:44:23 +0200
+Message-Id: <20200609174017.345870933@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609174015.379493548@linuxfoundation.org>
 References: <20200609174015.379493548@linuxfoundation.org>
@@ -61,36 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Can Guo <cang@codeaurora.org>
+From: Jérôme Pouiller <jerome.pouiller@silabs.com>
 
-commit 17c7d35f141ef6158076adf3338f115f64fcf760 upstream.
+commit 83fc5dd57f86c3ec7d6d22565a6ff6c948853b64 upstream.
 
-In queuecommand path, if DMA map fails, it bails out with clock held.  In
-this case, release the clock to keep its usage paired.
+The definitions of MMC_IOC_CMD  and of MMC_IOC_MULTI_CMD rely on
+MMC_BLOCK_MAJOR:
 
-[mkp: applied by hand]
+    #define MMC_IOC_CMD       _IOWR(MMC_BLOCK_MAJOR, 0, struct mmc_ioc_cmd)
+    #define MMC_IOC_MULTI_CMD _IOWR(MMC_BLOCK_MAJOR, 1, struct mmc_ioc_multi_cmd)
 
-Link: https://lore.kernel.org/r/0101016ed3d66395-1b7e7fce-b74d-42ca-a88a-4db78b795d3b-000000@us-west-2.amazonses.com
-Reviewed-by: Bean Huo <beanhuo@micron.com>
-Signed-off-by: Can Guo <cang@codeaurora.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-[EB: resolved cherry-pick conflict caused by newer kernels not having
- the clear_bit_unlock() line]
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+However, MMC_BLOCK_MAJOR is defined in linux/major.h and
+linux/mmc/ioctl.h did not include it.
+
+Signed-off-by: Jérôme Pouiller <jerome.pouiller@silabs.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200511161902.191405-1-Jerome.Pouiller@silabs.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/scsi/ufs/ufshcd.c |    1 +
+ include/uapi/linux/mmc/ioctl.h |    1 +
  1 file changed, 1 insertion(+)
 
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -1512,6 +1512,7 @@ static int ufshcd_queuecommand(struct Sc
+--- a/include/uapi/linux/mmc/ioctl.h
++++ b/include/uapi/linux/mmc/ioctl.h
+@@ -2,6 +2,7 @@
+ #define LINUX_MMC_IOCTL_H
  
- 	err = ufshcd_map_sg(hba, lrbp);
- 	if (err) {
-+		ufshcd_release(hba);
- 		lrbp->cmd = NULL;
- 		clear_bit_unlock(tag, &hba->lrb_in_use);
- 		goto out;
+ #include <linux/types.h>
++#include <linux/major.h>
+ 
+ struct mmc_ioc_cmd {
+ 	/* Implies direction of data.  true = write, false = read */
 
 
