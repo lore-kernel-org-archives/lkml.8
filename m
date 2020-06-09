@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 925F0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:24:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0889DC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72A6E2067B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:24:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C97F42067B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 18:24:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591727091;
-	bh=mvN444EYeBC8fFHTPY2yR4t38No63yDfTSFm+X7LJlo=;
+	s=default; t=1591727092;
+	bh=wn3XWVZZ2akmsZZ8dExHmnbVJm8QGK5HCGpsdbydC6c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nh7ZDMJIAWqQUW6nZqy12UlmIlrCIq1suv87dEMnPswPnHYSLyxZ4jiAYb6eAc3Ux
-	 YQnK5h84y/WqLlFTK9YzKU8Ep/Sa2qRk2V3mPcVZqMQN6r3ECBSnnDKwTw1HdY0Nr0
-	 O4m1TBjoZ6THwrR7NOnTP2XaZt3zy4YvGEBYA+7g=
+	b=gaIRw/b5Cf0DZ1TFD/jSUVSBv/WidYyqlnqpY8YF1BsGsauumgVnwpigms3iEmNjx
+	 w7gEzHuPYoQ1cRt4ABHwPuIdZSkJKl+iFS5D+MIGB4n3nt7gDFWtRPLS00APYg/IDr
+	 dJqht23+MjH++gfKAZYP75HpLk9LqvSqzh0Ng8+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389001AbgFISYu (ORCPT
+        id S2389147AbgFISYv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:24:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57572 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 14:24:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732018AbgFIRqu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:46:50 -0400
+        id S1731989AbgFIRqr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:46:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44F4F20801;
-        Tue,  9 Jun 2020 17:46:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0102C207ED;
+        Tue,  9 Jun 2020 17:46:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591724809;
-        bh=mvN444EYeBC8fFHTPY2yR4t38No63yDfTSFm+X7LJlo=;
+        s=default; t=1591724807;
+        bh=wn3XWVZZ2akmsZZ8dExHmnbVJm8QGK5HCGpsdbydC6c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dI3XWeqAQumcRqidexR9BFpGHseIgF93b1fSKXhRNBL08c23EimXMUBoczacf6N7y
-         OTufZU3/1S94XGz858/mxhQdDbL01rMWn64RJ9p4dLaJhZWnhCRaNPsFGUcfK4NjA/
-         rKm/dkTmNCu6jQr1D4pSxT3ojEWlB+WrWVLOd/mk=
+        b=gAywkIT+2b5ciSIb9KN4x4NW5DrOFqhmcNk+ONBxY7y4xNa3tNWKMJB0Gf0TR8uth
+         EExwW2htWC8vScC3RE9wjd8L4sOoPc1C7GDn1FpyhXYaGziicezErZCY1BoYQMAzg4
+         5aEq24o8X+w+wX6Znao8gPcWDi9wpl2b/AjgoOVk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
+        stable@vger.kernel.org, Bin Liu <b-liu@ti.com>,
         Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.4 26/36] USB: serial: option: add Telit LE910C1-EUX compositions
-Date:   Tue,  9 Jun 2020 19:44:26 +0200
-Message-Id: <20200609173934.951285925@linuxfoundation.org>
+Subject: [PATCH 4.4 25/36] USB: serial: usb_wwan: do not resubmit rx urb on fatal errors
+Date:   Tue,  9 Jun 2020 19:44:25 +0200
+Message-Id: <20200609173934.866798832@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609173933.288044334@linuxfoundation.org>
 References: <20200609173933.288044334@linuxfoundation.org>
@@ -59,37 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniele Palmas <dnlplm@gmail.com>
+From: Bin Liu <b-liu@ti.com>
 
-commit 399ad9477c523f721f8e51d4f824bdf7267f120c upstream.
+commit 986c1748c84d7727defeaeca74a73b37f7d5cce1 upstream.
 
-Add Telit LE910C1-EUX compositions:
+usb_wwan_indat_callback() shouldn't resubmit rx urb if the previous urb
+status is a fatal error. Or the usb controller would keep processing the
+new urbs then run into interrupt storm, and has no chance to recover.
 
-	0x1031: tty, tty, tty, rmnet
-	0x1033: tty, tty, tty, ecm
-
-Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
-Link: https://lore.kernel.org/r/20200525211106.27338-1-dnlplm@gmail.com
+Fixes: 6c1ee66a0b2b ("USB-Serial: Fix error handling of usb_wwan")
 Cc: stable@vger.kernel.org
+Signed-off-by: Bin Liu <b-liu@ti.com>
 Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/option.c |    4 ++++
+ drivers/usb/serial/usb_wwan.c |    4 ++++
  1 file changed, 4 insertions(+)
 
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -1146,6 +1146,10 @@ static const struct usb_device_id option
- 	{ USB_DEVICE(TELIT_VENDOR_ID, TELIT_PRODUCT_CC864_SINGLE) },
- 	{ USB_DEVICE(TELIT_VENDOR_ID, TELIT_PRODUCT_DE910_DUAL) },
- 	{ USB_DEVICE(TELIT_VENDOR_ID, TELIT_PRODUCT_UE910_V2) },
-+	{ USB_DEVICE_INTERFACE_CLASS(TELIT_VENDOR_ID, 0x1031, 0xff),	/* Telit LE910C1-EUX */
-+	 .driver_info = NCTRL(0) | RSVD(3) },
-+	{ USB_DEVICE_INTERFACE_CLASS(TELIT_VENDOR_ID, 0x1033, 0xff),	/* Telit LE910C1-EUX (ECM) */
-+	 .driver_info = NCTRL(0) },
- 	{ USB_DEVICE(TELIT_VENDOR_ID, TELIT_PRODUCT_LE922_USBCFG0),
- 	  .driver_info = RSVD(0) | RSVD(1) | NCTRL(2) | RSVD(3) },
- 	{ USB_DEVICE(TELIT_VENDOR_ID, TELIT_PRODUCT_LE922_USBCFG1),
+--- a/drivers/usb/serial/usb_wwan.c
++++ b/drivers/usb/serial/usb_wwan.c
+@@ -305,6 +305,10 @@ static void usb_wwan_indat_callback(stru
+ 	if (status) {
+ 		dev_dbg(dev, "%s: nonzero status: %d on endpoint %02x.\n",
+ 			__func__, status, endpoint);
++
++		/* don't resubmit on fatal errors */
++		if (status == -ESHUTDOWN || status == -ENOENT)
++			return;
+ 	} else {
+ 		if (urb->actual_length) {
+ 			tty_insert_flip_string(&port->port, data,
 
 
