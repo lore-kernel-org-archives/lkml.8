@@ -2,93 +2,123 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6AE3C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47393C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7290C20760
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:54:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591664070;
-	bh=IAdVph0fG5ogOIukRAnscPJyX0P9LSD/fmItIjoQA6w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k5SLZ7loSvSueRbYvXzsUBpLokMbL2Fie9yLqPZUAZqixIREo1RCvJ+GY1JSEQqNf
-	 MtWVluQrU/aPjwLFJoiHenpFJQeLzYbe45GpLB1TT0BEJxSy18INVx3+muy3zEaMKg
-	 q/t1E4/HupO9yM2L57CNE+uRTIgezEHkSLJ0JXuk=
+	by mail.kernel.org (Postfix) with ESMTP id 2292420760
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:54:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733274AbgFIAy3 (ORCPT
+        id S2387653AbgFIAy1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:54:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55284 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:54:27 -0400
+Received: from mga02.intel.com ([134.134.136.20]:5268 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728426AbgFHXJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:09:33 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2562C208FE;
-        Mon,  8 Jun 2020 23:09:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657773;
-        bh=IAdVph0fG5ogOIukRAnscPJyX0P9LSD/fmItIjoQA6w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sQfSHCDrQL6b7JgP2w1D5u+3u7UgUrMstqS62Z4xg44YjmKC5ZjZPrtG5Ku8vC8Ny
-         3dxmczQP6TeUeou2TXLtHMSFMDBvtWg8ZCpQ4ucEB1GOhrPbBWzDdvyd+Ae2rtQnO7
-         Y+KJMyk2Kp4NhQO4mPQsx9TKzRo6mys1w6JShqPw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 156/274] ath10k: fix possible memory leak in ath10k_bmi_lz_data_large()
-Date:   Mon,  8 Jun 2020 19:04:09 -0400
-Message-Id: <20200608230607.3361041-156-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
-References: <20200608230607.3361041-1-sashal@kernel.org>
+        id S1726904AbgFIAyV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 20:54:21 -0400
+IronPort-SDR: 2iT1VAJ7QKJIg62srJZF90Jzt/+4IHLpwDnoRzMblwnpF1b6F6+olekk7pQFRzOQc/XVhMuiTs
+ WBXQH23jBnrQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2020 17:54:19 -0700
+IronPort-SDR: IE0OzXBrF8K8Gg9X7tlQNcvpRZbS8aIPXNwXPzZRhn9ehVNaJ/+ItkfaFNGQRCNtKhnEsQ+XR6
+ pvP+RHfqp/kw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,490,1583222400"; 
+   d="scan'208";a="259970287"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by fmsmga008.fm.intel.com with ESMTP; 08 Jun 2020 17:54:19 -0700
+Date:   Mon, 8 Jun 2020 17:54:34 -0700
+From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To:     Brendan Shanks <bshanks@codeweavers.com>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org, ebiederm@xmission.com,
+        andi@notmuch.email, Babu.Moger@amd.com
+Subject: Re: [PATCH v3] x86/umip: Add emulation/spoofing for SLDT and STR
+ instructions
+Message-ID: <20200609005434.GA26427@ranerica-svr.sc.intel.com>
+References: <20200608224424.7259-1-bshanks@codeweavers.com>
+ <20200609003812.GA26268@ranerica-svr.sc.intel.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200609003812.GA26268@ranerica-svr.sc.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+On Mon, Jun 08, 2020 at 05:38:12PM -0700, Ricardo Neri wrote:
+> On Mon, Jun 08, 2020 at 03:44:24PM -0700, Brendan Shanks wrote:
+> > Add emulation/spoofing of SLDT and STR for both 32- and 64-bit
+> > processes.
+> > 
+> > Wine users have found a small number of Windows apps using SLDT that
+> > were crashing when run on UMIP-enabled systems.
+> > 
+> > Reported-by: Andreas Rammhold <andi@notmuch.email>
+> > Originally-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+> > Signed-off-by: Brendan Shanks <bshanks@codeweavers.com>
+> > ---
+> > 
+> > v3: Use (GDT_ENTRY_TSS * 8) for task register selector instead of
+> > harcoding 0x40.
+> > 
+> >  arch/x86/kernel/umip.c | 32 +++++++++++++++++++++++---------
+> >  1 file changed, 23 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/arch/x86/kernel/umip.c b/arch/x86/kernel/umip.c
+> > index 8d5cbe1bbb3b..166c579b0273 100644
+> > --- a/arch/x86/kernel/umip.c
+> > +++ b/arch/x86/kernel/umip.c
+> > @@ -244,16 +244,35 @@ static int emulate_umip_insn(struct insn *insn, int umip_inst,
+> >  		*data_size += UMIP_GDT_IDT_LIMIT_SIZE;
+> >  		memcpy(data, &dummy_limit, UMIP_GDT_IDT_LIMIT_SIZE);
+> >  
+> > -	} else if (umip_inst == UMIP_INST_SMSW) {
+> > -		unsigned long dummy_value = CR0_STATE;
+> > +	} else if (umip_inst == UMIP_INST_SMSW || umip_inst == UMIP_INST_SLDT ||
+> > +		   umip_inst == UMIP_INST_STR) {
+> > +		unsigned long dummy_value;
+> > +
+> > +		if (umip_inst == UMIP_INST_SMSW)
+> > +			dummy_value = CR0_STATE;
+> > +		else if (umip_inst == UMIP_INST_STR)
+> > +			dummy_value = GDT_ENTRY_TSS * 8;
+> > +		else if (umip_inst == UMIP_INST_SLDT)
+> > +		{
+> 
+> This brace should go in the previous line. Also, if you use braces in
+> the last part of the conditional you should probably use them in the
+> previous ones. I guess in this case it woudln't improve readability.
+> Instead, you can probably have a switch instead of the three ifs. That
+> probably does improve readability and solves the dilemma of needing to
+> put braces in all the one-line conditionals.
+> 
+> BTW, you should also delete the comment at the top of the file saying
+> that str and sldt will not be emulated:
+> 
+> diff --git a/arch/x86/kernel/umip.c b/arch/x86/kernel/umip.c
+> index 166c579b0273..0984a55eb8c0 100644
+> --- a/arch/x86/kernel/umip.c
+> +++ b/arch/x86/kernel/umip.c
+> @@ -45,9 +45,6 @@
+>   * value that, lies close to the top of the kernel memory. The limit for the GDT
+>   * and the IDT are set to zero.
+>   *
+> - * Given that SLDT and STR are not commonly used in programs that run on WineHQ
+> - * or DOSEMU2, they are not emulated.
+> - *
+>   * The instruction smsw is emulated to return the value that the register CR0
+>   * has at boot time as set in the head_32.
 
-[ Upstream commit 2326aa011967f0afbcba7fe1a005d01f8b12900b ]
+... And also explain that the emulated values for str and sldt are the
+simply the values that Linux assigns programatically.
 
-'cmd' is malloced in ath10k_bmi_lz_data_large() and should be freed
-before leaving from the error handling cases, otherwise it will cause
-memory leak.
-
-Fixes: d58f466a5dee ("ath10k: add large size for BMI download data for SDIO")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200427104348.13570-1-weiyongjun1@huawei.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/wireless/ath/ath10k/bmi.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/net/wireless/ath/ath10k/bmi.c b/drivers/net/wireless/ath/ath10k/bmi.c
-index ea908107581d..5b6db6e66f65 100644
---- a/drivers/net/wireless/ath/ath10k/bmi.c
-+++ b/drivers/net/wireless/ath/ath10k/bmi.c
-@@ -380,6 +380,7 @@ static int ath10k_bmi_lz_data_large(struct ath10k *ar, const void *buffer, u32 l
- 						  NULL, NULL);
- 		if (ret) {
- 			ath10k_warn(ar, "unable to write to the device\n");
-+			kfree(cmd);
- 			return ret;
- 		}
- 
--- 
-2.25.1
-
+Thanks and BR,
+Ricardo
