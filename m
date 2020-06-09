@@ -7,49 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55972C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:46:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3210EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1688620823
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:46:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BB3020835
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 12:46:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="WFGsSysa"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="qUqBHIMm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729563AbgFIMqc (ORCPT
+        id S1729590AbgFIMqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 08:46:32 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:54176 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729524AbgFIMq1 (ORCPT
+        Tue, 9 Jun 2020 08:46:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50878 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729556AbgFIMqc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 08:46:27 -0400
+        Tue, 9 Jun 2020 08:46:32 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A045BC05BD1E;
+        Tue,  9 Jun 2020 05:46:31 -0700 (PDT)
 Received: from Q.local (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6D4B21314;
-        Tue,  9 Jun 2020 14:46:22 +0200 (CEST)
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2C322181E;
+        Tue,  9 Jun 2020 14:46:29 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1591706784;
-        bh=k2d6Fgi2DgTc07BY1d7t3Uj5hqRkZW7TQacEh7wmTzg=;
+        s=mail; t=1591706789;
+        bh=YFKrkm32kVOPplzX9Ke4v6/4mOrSe77eJjI6rVHe9BY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WFGsSysaYs+5unqI2BUTf63py99p8e6AsjzRDMPr/wx2ZOkReZbwRY72uyNfMcphz
-         C5o/B9a1Gl/4fq7clChpv0yA0dkgMyCFVsiUfhNlzSB2skBccLhn0BOnanRGLgBB9B
-         GMDi8Czfb+rWvc2bfNBYWfEib1hdQn3Vri9kHj9Y=
+        b=qUqBHIMmwN2gihb/s7oE9n3dKVNLyIg+ccgR+cVU9UyfZF7khDjc0QR7jfOVT+0sw
+         XNbTejYmerz9jV4AUKtvQrOLPKLHr+GNWUCjOW0CSjecaj/G85mRM+lcIOj8yXORBx
+         J75Pap3RxRl2lt/pk/329smjsPRCC3liARAo7tIg=
 From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
 Cc:     linux-renesas-soc@vger.kernel.org,
         Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Jiri Kosina <trivial@kernel.org>,
-        Wenwen Wang <wenwen@cs.uga.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-mtd@lists.infradead.org (open list:NAND FLASH SUBSYSTEM),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 04/17] drivers: mtd: nand: raw: Fix trivial spelling
-Date:   Tue,  9 Jun 2020 13:45:57 +0100
-Message-Id: <20200609124610.3445662-5-kieran.bingham+renesas@ideasonboard.com>
+        Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Nilesh Javali <njavali@marvell.com>,
+        GR-QLogic-Storage-Upstream@marvell.com (supporter:QLOGIC QLA2XXX
+        FC-SCSI DRIVER), Jiri Kosina <trivial@kernel.org>,
+        linux-scsi@vger.kernel.org (open list:IBM Power Virtual FC Device
+        Drivers),
+        linuxppc-dev@lists.ozlabs.org (open list:LINUX FOR POWERPC (32-BIT AND
+        64-BIT)), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 06/17] drivers: scsi: Fix trivial spelling
+Date:   Tue,  9 Jun 2020 13:45:59 +0100
+Message-Id: <20200609124610.3445662-7-kieran.bingham+renesas@ideasonboard.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200609124610.3445662-1-kieran.bingham+renesas@ideasonboard.com>
 References: <20200609124610.3445662-1-kieran.bingham+renesas@ideasonboard.com>
@@ -67,36 +73,82 @@ Fix it up accordingly:
 
 Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 ---
- drivers/mtd/nand/raw/mxc_nand.c | 2 +-
- drivers/mtd/nand/raw/nand_bbt.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/ibmvscsi/ibmvfc.c    | 2 +-
+ drivers/scsi/ibmvscsi/ibmvscsi.c  | 2 +-
+ drivers/scsi/qla2xxx/qla_inline.h | 2 +-
+ drivers/scsi/qla2xxx/qla_iocb.c   | 6 +++---
+ 4 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/mtd/nand/raw/mxc_nand.c b/drivers/mtd/nand/raw/mxc_nand.c
-index 59554c187e01..81659c09770a 100644
---- a/drivers/mtd/nand/raw/mxc_nand.c
-+++ b/drivers/mtd/nand/raw/mxc_nand.c
-@@ -1432,7 +1432,7 @@ static int mxc_nand_get_features(struct nand_chip *chip, int addr,
+diff --git a/drivers/scsi/ibmvscsi/ibmvfc.c b/drivers/scsi/ibmvscsi/ibmvfc.c
+index 635f6f9cffc4..77f4d37d5bd6 100644
+--- a/drivers/scsi/ibmvscsi/ibmvfc.c
++++ b/drivers/scsi/ibmvscsi/ibmvfc.c
+@@ -1344,7 +1344,7 @@ static void ibmvfc_map_sg_list(struct scsi_cmnd *scmd, int nseg,
  }
  
- /*
-- * The generic flash bbt decriptors overlap with our ecc
-+ * The generic flash bbt descriptors overlap with our ecc
-  * hardware, so define some i.MX specific ones.
-  */
- static uint8_t bbt_pattern[] = { 'B', 'b', 't', '0' };
-diff --git a/drivers/mtd/nand/raw/nand_bbt.c b/drivers/mtd/nand/raw/nand_bbt.c
-index 96045d60471e..344a24fd2ca8 100644
---- a/drivers/mtd/nand/raw/nand_bbt.c
-+++ b/drivers/mtd/nand/raw/nand_bbt.c
-@@ -1226,7 +1226,7 @@ static int nand_scan_bbt(struct nand_chip *this, struct nand_bbt_descr *bd)
- 		return -ENOMEM;
+ /**
+- * ibmvfc_map_sg_data - Maps dma for a scatterlist and initializes decriptor fields
++ * ibmvfc_map_sg_data - Maps dma for a scatterlist and initializes descriptor fields
+  * @scmd:		struct scsi_cmnd with the scatterlist
+  * @evt:		ibmvfc event struct
+  * @vfc_cmd:	vfc_cmd that contains the memory descriptor
+diff --git a/drivers/scsi/ibmvscsi/ibmvscsi.c b/drivers/scsi/ibmvscsi/ibmvscsi.c
+index 44e64aa21194..a92587624c72 100644
+--- a/drivers/scsi/ibmvscsi/ibmvscsi.c
++++ b/drivers/scsi/ibmvscsi/ibmvscsi.c
+@@ -667,7 +667,7 @@ static int map_sg_list(struct scsi_cmnd *cmd, int nseg,
+ }
  
- 	/*
--	 * If no primary table decriptor is given, scan the device to build a
-+	 * If no primary table descriptor is given, scan the device to build a
- 	 * memory based bad block table.
- 	 */
- 	if (!td) {
+ /**
+- * map_sg_data: - Maps dma for a scatterlist and initializes decriptor fields
++ * map_sg_data: - Maps dma for a scatterlist and initializes descriptor fields
+  * @cmd:	struct scsi_cmnd with the scatterlist
+  * @srp_cmd:	srp_cmd that contains the memory descriptor
+  * @dev:	device for which to map dma memory
+diff --git a/drivers/scsi/qla2xxx/qla_inline.h b/drivers/scsi/qla2xxx/qla_inline.h
+index 1fb6ccac07cc..861dc522723c 100644
+--- a/drivers/scsi/qla2xxx/qla_inline.h
++++ b/drivers/scsi/qla2xxx/qla_inline.h
+@@ -11,7 +11,7 @@
+  * Continuation Type 1 IOCBs to allocate.
+  *
+  * @vha: HA context
+- * @dsds: number of data segment decriptors needed
++ * @dsds: number of data segment descriptors needed
+  *
+  * Returns the number of IOCB entries needed to store @dsds.
+  */
+diff --git a/drivers/scsi/qla2xxx/qla_iocb.c b/drivers/scsi/qla2xxx/qla_iocb.c
+index 8865c35d3421..1d3c58c5f0e2 100644
+--- a/drivers/scsi/qla2xxx/qla_iocb.c
++++ b/drivers/scsi/qla2xxx/qla_iocb.c
+@@ -44,7 +44,7 @@ qla2x00_get_cmd_direction(srb_t *sp)
+  * qla2x00_calc_iocbs_32() - Determine number of Command Type 2 and
+  * Continuation Type 0 IOCBs to allocate.
+  *
+- * @dsds: number of data segment decriptors needed
++ * @dsds: number of data segment descriptors needed
+  *
+  * Returns the number of IOCB entries needed to store @dsds.
+  */
+@@ -66,7 +66,7 @@ qla2x00_calc_iocbs_32(uint16_t dsds)
+  * qla2x00_calc_iocbs_64() - Determine number of Command Type 3 and
+  * Continuation Type 1 IOCBs to allocate.
+  *
+- * @dsds: number of data segment decriptors needed
++ * @dsds: number of data segment descriptors needed
+  *
+  * Returns the number of IOCB entries needed to store @dsds.
+  */
+@@ -669,7 +669,7 @@ qla24xx_build_scsi_type_6_iocbs(srb_t *sp, struct cmd_type_6 *cmd_pkt,
+  * qla24xx_calc_dsd_lists() - Determine number of DSD list required
+  * for Command Type 6.
+  *
+- * @dsds: number of data segment decriptors needed
++ * @dsds: number of data segment descriptors needed
+  *
+  * Returns the number of dsd list needed to store @dsds.
+  */
 -- 
 2.25.1
 
