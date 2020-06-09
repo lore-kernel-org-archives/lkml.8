@@ -2,108 +2,107 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7539C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:44:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEEC7C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E6362074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:44:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D5C22074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 15:44:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="I08Q47WF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730931AbgFIPoV (ORCPT
+        id S1730939AbgFIPon (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 11:44:21 -0400
-Received: from mga14.intel.com ([192.55.52.115]:32389 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728903AbgFIPoU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 11:44:20 -0400
-IronPort-SDR: x1PQhVfJKw0oFPhiHMSQ8hhoLNtys/bqJI8HJeO/Q/3BO4TaxxKyx4gyz1jl5AE3TXqjwIfrag
- raTnV4UDgCfQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 08:44:19 -0700
-IronPort-SDR: B3OCjkA00+WDlux1lmQ1P9O1e4pJaj2LD9l02uW46lOwaDhjnF5OXOF6p9F2gYMvkW+Gnsg+Ka
- 2B7QtNL69Agg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,492,1583222400"; 
-   d="scan'208";a="379769157"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 09 Jun 2020 08:44:16 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 09 Jun 2020 18:44:16 +0300
-Date:   Tue, 9 Jun 2020 18:44:16 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Paul Menzel <pmenzel@molgen.mpg.de>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        it+linux-pci@molgen.mpg.de, amd-gfx@lists.freedesktop.org
-Subject: Re: close() on some Intel CNP-LP PCI devices takes up to 2.7 s
-Message-ID: <20200609154416.GU247495@lahna.fi.intel.com>
-References: <b0781d0e-2894-100d-a4da-e56c225eb2a6@molgen.mpg.de>
+        Tue, 9 Jun 2020 11:44:43 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:46518 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728903AbgFIPol (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 11:44:41 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 059FaxxL057615;
+        Tue, 9 Jun 2020 15:44:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=GC6aPT5hAt4URZMa3rOo5BoBeN+vVqf9KIXgG4/G2fA=;
+ b=I08Q47WFZ3i5Blm491cA3QLwvA/AGXX6COgYK0oGzOF5GSf3af5wu57xQD5PoFPBHgHQ
+ P73V5lsUhXGxuG+CwwD6gCUSgN3PpqAHzmWcwCrispdHlsSMlhn+XAh3ZT4B0jJGw+Yw
+ csuLKtjngPavbXzNM6ZXV5HxgMAyog/frDdeK2OG+eCjW8PpELlB0hxRA2v7DQjlIV4z
+ NCmUePZhmjvomx3AExA6OlmQhK5dy/JBwbmXRPyhwKj31Nr+pEheMqMdaYPxNpVbc3Al
+ zoUl3NcuRUYSOhgbXGqODgrKXfSpPtHhRxD/QN8/PHAs5wEYTjxOPPKIwnLeKZE3ICMe zQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 31g33m5hy1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 09 Jun 2020 15:44:36 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 059FbtpF069165;
+        Tue, 9 Jun 2020 15:44:36 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 31gn2wweu8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 09 Jun 2020 15:44:36 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 059FiYeK019014;
+        Tue, 9 Jun 2020 15:44:35 GMT
+Received: from dhcp-10-159-155-165.vpn.oracle.com (/10.159.155.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 09 Jun 2020 08:44:34 -0700
+Subject: Re: Review Request
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Gerd Rausch <gerd.rausch@oracle.com>,
+        =?UTF-8?Q?H=c3=a5kon_Bugge?= <haakon.bugge@oracle.com>,
+        Srinivas Eeda <srinivas.eeda@oracle.com>,
+        Rama Nichanamatlu <rama.nichanamatlu@oracle.com>,
+        Doug Ledford <dledford@redhat.com>
+References: <1591627576-920-1-git-send-email-divya.indi@oracle.com>
+ <20200609070352.GK164174@unreal>
+From:   Divya Indi <divya.indi@oracle.com>
+Message-ID: <c4a8fffe-b963-7627-7f39-a14b16dbe312@oracle.com>
+Date:   Tue, 9 Jun 2020 08:44:32 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.8.1
 MIME-Version: 1.0
+In-Reply-To: <20200609070352.GK164174@unreal>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b0781d0e-2894-100d-a4da-e56c225eb2a6@molgen.mpg.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9647 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 malwarescore=0
+ bulkscore=0 adultscore=0 mlxlogscore=943 spamscore=0 suspectscore=11
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006090118
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9647 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=11 adultscore=0
+ spamscore=0 cotscore=-2147483648 malwarescore=0 phishscore=0 mlxscore=0
+ clxscore=1015 lowpriorityscore=0 impostorscore=0 priorityscore=1501
+ mlxlogscore=973 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006090118
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 05:39:21PM +0200, Paul Menzel wrote:
-> Dear Linux folks,
-> 
-> 
-> On the Intel Cannon Point-LP laptop Dell Precision 3540 with a dedicated AMD
-> graphics card (both graphics devices can be used) with Debian Sid/unstable
-> with Linux 5.6.14, running lspci takes quite some time, and the screen even
-> flickers a short moment before the result is displayed.
-> 
-> Tracing lspci with strace, shows that the close() function of the three
-> devices takes from
-> 
-> •   00:1d.0 PCI bridge: Intel Corporation Cannon Point-LP PCI Express Root
-> Port #9
-> 
-> •   04:00.0 System peripheral: Intel Corporation JHL6340 Thunderbolt 3 NHI
-> (C step) [Alpine Ridge 2C 2016] (rev 02)
-> 
-> •   3b:00.0 Display controller: Advanced Micro Devices, Inc. [AMD/ATI] Lexa
-> XT [Radeon PRO WX 3100]
-> 
-> takes from 270 ms to 2.5 s.
-> 
-> > 11:43:21.714391 openat(AT_FDCWD, "/sys/bus/pci/devices/0000:04:00.0/config", O_RDONLY) = 3
-> > 11:43:21.714448 pread64(3, "\206\200\331\25\6\4\20\0\2\0\200\10 \0\0\0\0\0\0\352\0\0\4\352\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0(\20\272\10\0\0\0\0\
-> > 200\0\0\0\0\0\0\0\377\1\0\0", 64, 0) = 64
-> > 11:43:24.487818 close(3)                = 0
-> 
-> > 11:43:24.489508 openat(AT_FDCWD, "/sys/bus/pci/devices/0000:00:1d.0/config", O_RDONLY) = 3
-> > 11:43:24.489598 pread64(3, "\206\200\260\235\7\4\20\0\360\0\4\6\20\0\201\0\0\0\0\0\0\0\0\0\0;;\00000\0  \354 \354\1\300\21\320\0\0\0\0\0\0\0\0\0\0\0\0
-> > @\0\0\0\0\0\0\0\377\1\22\0", 64, 0) = 64
-> > 11:43:24.966661 close(3)                = 0
-> 
-> > 11:43:24.988544 openat(AT_FDCWD, "/sys/bus/pci/devices/0000:3b:00.0/config", O_RDONLY) = 3
-> > 11:43:24.988584 pread64(3, "\2\20\205i\7\4\20\0\0\0\200\3\20\0\0\0\f\0\0\300\0\0\0\0\f\0\0\320\0\0\0\0\0010\0\0\0\0 \354\0\0\0\0(\20\272\10\0\0$\354H\0\0\0\0\0\0\0\377\1\0\0", 64, 0) = 64
-> > 11:43:25.252745 close(3)
-> 
-> Unfortunately, I forgot to collect the tree output, but hopefully the
-> attached Linux messages and strace of lspci output will be enough for the
-> start.
-> 
-> Please tell me, if you want me to create a bug report in the Linux bug
-> tracker.
+Thanks Leon, Noted!
 
-Can you try this commit?
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?h=pci/pm&id=ec411e02b7a2e785a4ed9ed283207cd14f48699d
-
-It should be in the mainline already as well.
-
-Note we still need to obey the delays required by the PCIe spec so 100ms
-after the link is trained but this one should at least get it down from
-1100ms.
+On 6/9/20 12:03 AM, Leon Romanovsky wrote:
+> On Mon, Jun 08, 2020 at 07:46:15AM -0700, Divya Indi wrote:
+>> [PATCH v3] IB/sa: Resolving use-after-free in ib_nl_send_msg
+>>
+>> Hi,
+>>
+>> Please review the patch that follows.
+> Please read Documentation/process/submitting-patches.rst
+> 14) The canonical patch format
+>
+> You don't need an extra email "Review request" and Changelog should be
+> put inside the patch itself under "---" marker.
+>
+> Thanks
