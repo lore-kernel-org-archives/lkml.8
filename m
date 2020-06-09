@@ -2,85 +2,116 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 790CEC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6FF4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:26:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53AD62078D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:21:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD6ED2078D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 09:26:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="KdOx0vwo"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lwGlA9aF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728574AbgFIJVR (ORCPT
+        id S1728384AbgFIJ0b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 05:21:17 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:22682 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728024AbgFIJVQ (ORCPT
+        Tue, 9 Jun 2020 05:26:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48278 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728024AbgFIJ0a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 05:21:16 -0400
+        Tue, 9 Jun 2020 05:26:30 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D317C03E97C
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 02:26:30 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id x14so20458968wrp.2
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 02:26:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1591694476; x=1623230476;
-  h=subject:to:references:cc:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=nF9G0uIp0EqGaKlZRruPKwDafn+ACllof9PIxrZN6/Y=;
-  b=KdOx0vwoMxhR9DODJVQ1ownvGzmPse1REkJQ/naWeb6daA1KgzqceOVg
-   qCbxk71W5oWSRuchsgCoZv3RKlaC6pyYtIFcuOwWt1gdTFYMUcUHgCjWa
-   LK7/O9fBNR9EWiMbtmSDiBdPvb9TNrR4AtKijRmxLG3pWvwaEffSHkFCB
-   Q=;
-IronPort-SDR: lXQrI3dOyTOwIeEUHA0t5OQPZQHBtdrrnJhjqQny6iAR5hZ+rxBGYc5gOOZpO4d5KxTABwZVmL
- ewF9BgQddWYA==
-X-IronPort-AV: E=Sophos;i="5.73,491,1583193600"; 
-   d="scan'208";a="35243491"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 09 Jun 2020 09:21:15 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com (Postfix) with ESMTPS id 26B6DA0681;
-        Tue,  9 Jun 2020 09:21:11 +0000 (UTC)
-Received: from EX13D19EUB001.ant.amazon.com (10.43.166.229) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 9 Jun 2020 09:21:08 +0000
-Received: from 8c85908914bf.ant.amazon.com (10.43.161.145) by
- EX13D19EUB001.ant.amazon.com (10.43.166.229) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 9 Jun 2020 09:21:03 +0000
-Subject: Re: [PATCH 1/1] RDMA/core: Don't copy uninitialized stack memory to
- userspace
-To:     Xidong Wang <wangxidong_97@163.com>
-References: <1591692057-46380-1-git-send-email-wangxidong_97@163.com>
-CC:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        "Yishai Hadas" <yishaih@mellanox.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Maor Gottlieb <maorg@mellanox.com>,
-        <linux-rdma@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-From:   Gal Pressman <galpress@amazon.com>
-Message-ID: <844cee99-5f52-3110-02b2-60b205f1a189@amazon.com>
-Date:   Tue, 9 Jun 2020 12:20:57 +0300
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.1
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=OYOer7lO0HMljBOHZ7VovGKXhgNnImZ/DWlp+lLXDhQ=;
+        b=lwGlA9aFiWXoQo1DkoldN6nVQ6xfAmPPpEBNreQ/NY8mCy1e5jYCYL4LzarPPBhOPj
+         psuNkcGRcO69SKRqTAcHPKoBP9vvtaeMvXgBuYaL5TcCATeNIuFJZ0iUOguVCImoPCdK
+         SBGq19n2APiuvZPfc+IVAggLo1ys2yio/nm5ml6EnIqYvlHBj9TZsz3bVSoXVwsH4ZEN
+         aoCmQl4YzjUoDr8hMwazPRvBOgPbUUDa3+GPOdEI85rbMxuXuHoizvwN4dInjJHY//xM
+         PVrN6ZiLu2DQ5p4B5S1SQvL4nuO/gskTnkuE5KVpW0yOWQBuNejazQzZ4uReaCAv7tVC
+         zXuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=OYOer7lO0HMljBOHZ7VovGKXhgNnImZ/DWlp+lLXDhQ=;
+        b=q3brq7VbbUNkZoufis+zWH4H9vC/eV+Cnrs030tcmVOw1H4YtY+c7c+qd08Tnezy2/
+         96TDAMYXQKvJ/Duruiu+AobmcmWn/454KyXB8W+q9y9eeG57RC1ni29if3DSyRwLvYPR
+         dmb7IEajKuSFt6bA6hLZhsof/ARx/NUcBe3rYfrz4AfitYCghoJdYHHiS2ez0mIEezCA
+         smVg5PCnkV9AKzCzNcOA/K+3xABrc3URz2h0UK1J//JpdVROV/750dpfH7ly7OyPrksG
+         g7yPE1OBu29G1EWijscFMheQFUKDyNwoIriLf5KXh1GvhTtePzJjUiJGcs3tHPnp/k9/
+         Ny1w==
+X-Gm-Message-State: AOAM53393StBN3CoSDQLH4CXQokShHtQJVcxoIatFPJmR3t9AvAg+BWY
+        4ldmRUK+ihFH6f+JLgZZXZXrow==
+X-Google-Smtp-Source: ABdhPJxWMvDjtTmVzjIvQ5bnpDEp9HTCwOBamTqcDavKulml7UlPJ+hGq9M6TEK4ho5i4CsMZThnYw==
+X-Received: by 2002:a5d:4c4b:: with SMTP id n11mr3170101wrt.381.1591694788647;
+        Tue, 09 Jun 2020 02:26:28 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id b8sm2862295wrs.36.2020.06.09.02.26.27
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Jun 2020 02:26:28 -0700 (PDT)
+Subject: Re: [PATCH 0/5] soundwire: qcom: add mmio support
+To:     Jonathan Marek <jonathan@marek.ca>, alsa-devel@alsa-project.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>,
+        Vinod Koul <vkoul@kernel.org>
+References: <20200608204347.19685-1-jonathan@marek.ca>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <7fc23e7d-b6ef-b97d-0252-8b6fafae64ac@linaro.org>
+Date:   Tue, 9 Jun 2020 10:26:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <1591692057-46380-1-git-send-email-wangxidong_97@163.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200608204347.19685-1-jonathan@marek.ca>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.43.161.145]
-X-ClientProxiedBy: EX13D13UWB001.ant.amazon.com (10.43.161.156) To
- EX13D19EUB001.ant.amazon.com (10.43.166.229)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/06/2020 11:40, Xidong Wang wrote:
-> From: xidongwang <wangxidong_97@163.com>
-> 
-> ib_uverbs_create_ah() may copy stack allocated
-> structs to userspace without initializing all members of these
-> structs. Clear out this memory to prevent information leaks.
+Thanks Jonathan for the patches,
 
-Which members are not initialized?
+On 08/06/2020 21:43, Jonathan Marek wrote:
+> This adds initial support for soundwire device on sm8250.
+> 
+
+One thing off my list!!
+
+> Tested with the "wsa" sdw device, which is simpler than the others.
+
+WSA881x?
+
+did you test both enumeration and streaming?
+
+Are you planing to add any new WSA or WCD codec support for this SoC?
+
+thanks,
+srini
+
+> 
+> Jonathan Marek (5):
+>    soundwire: qcom: fix abh/ahb typo
+>    soundwire: qcom: add support for mmio soundwire devices
+>    soundwire: qcom: add v1.5.1 compatible
+>    soundwire: qcom: avoid dependency on CONFIG_SLIMBUS
+>    soundwire: qcom: enable CPU interrupts for mmio devices
+> 
+>   drivers/soundwire/Kconfig |  1 -
+>   drivers/soundwire/qcom.c  | 42 +++++++++++++++++++++++++++++++++++----
+>   2 files changed, 38 insertions(+), 5 deletions(-)
+> 
