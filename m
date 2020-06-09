@@ -2,113 +2,130 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38573C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA8A5C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1838C20801
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:37:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9591B20737
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 16:37:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F7zMLyWY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CUfa4wkd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731081AbgFIQhP (ORCPT
+        id S1731100AbgFIQhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 12:37:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58362 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727820AbgFIQhO (ORCPT
+        Tue, 9 Jun 2020 12:37:21 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:20739 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728388AbgFIQhP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 12:37:14 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E75BAC05BD1E;
-        Tue,  9 Jun 2020 09:37:13 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id p18so16877847eds.7;
-        Tue, 09 Jun 2020 09:37:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5zdFQXbi2jEnzDpG2Ck8q/HnYKsfdUw2+F8QDngmiKQ=;
-        b=F7zMLyWYpJ0qmKz+GeJ8kzlkQLNweXPH3lYQ3OLqYB9IEd6nAHwM93vCkSCT/J2mwy
-         CoAbk+b3GcZtPKv6BbLKI7uMDPlJyXeoFnxAtJlf+uF8OBfNtA8yXOJD3X2zZ+gTriLc
-         OzXmowP4hnAVOXgtrQjqiqKJaTKDK3nBWYWqYeQaf6VkvwCqNItr1g8fszQLXIKFIlUn
-         +SSNNz954OkC8Ygsh51E19fERojpf9iuhRn7DUsDzVksGdKh5x/pYAliLQkmiz9XnEnz
-         O+dai0+0Dn/4yVopePQ/OHo8tWZJMqYww3M45BM+at/fuURJQYn12r3lOroLSgh+ra+2
-         hQUw==
+        Tue, 9 Jun 2020 12:37:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591720634;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=+II8osbiFfoX/L1u4six/WCUHiqDeOz+O5rD4LfoR2M=;
+        b=CUfa4wkdqm1TJmH4WNtBHZYoBhxhlTnjJIAtAoO/IFzlkokVK83c67Xswg5Dxq+/F65bpL
+        YsBOyPWXl00CM1YLjjcuCj9J81/mVSx5NwcNKJ+ERV1h+aTagPKahXnsDHCe+3DU5tUW+M
+        OpLof0u3pkJ4Qrupcu0WFTZrqBkI9sU=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-455-z5kDnc5UMjaWF1Q9EsvRlA-1; Tue, 09 Jun 2020 12:37:10 -0400
+X-MC-Unique: z5kDnc5UMjaWF1Q9EsvRlA-1
+Received: by mail-wr1-f69.google.com with SMTP id a4so8808434wrp.5
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 09:37:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5zdFQXbi2jEnzDpG2Ck8q/HnYKsfdUw2+F8QDngmiKQ=;
-        b=f1Nu3sZ+KXh3i9iRTu5+pa07NvETUsbKTdUU5KWWLeqMeKsbaV2AngekaTiAEXwRwx
-         zu6tracSEvlJPVXSwpm3PmItHHQ49FC6S/njdlMNnniIRSp9eKcVXFwkQjphTPxtb/Tu
-         xQQq2g3At/ozNUcTH/Y/MMm1W6AV2LdbGHntu7E87F9wgrrMIqwvMe0EQ2K39SUMxXeY
-         vzYtk2NoRg56eUBiASIhhMGdJQmPirg/WpOtZHAo2BqIQ3MQli4z0f1yyPYqSxvDVnhm
-         oIzxYmCJkiruePzD3D5Pzz8SxnPiUG71xzyRW+8fMyln0MTqtciEi3OqBAbXI4Gx3C59
-         vq9g==
-X-Gm-Message-State: AOAM530x06dqBWiWcLtqGwTERU/p20UMrseoHtM7dvGez+2ifmDjAgV1
-        grfWHJzcu8eC/RNOAE0976vtGTVw2vCQQUuvyqZLNw==
-X-Google-Smtp-Source: ABdhPJzjhIrhG02sLXKCQeDwvpfszTZfG+GusKIqD8JJbVajGJXm9pQ5UE8RyspvJq7mJWNrACAsTL/ckSKiRRplnn8=
-X-Received: by 2002:a50:fb0b:: with SMTP id d11mr28358326edq.118.1591720632648;
- Tue, 09 Jun 2020 09:37:12 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+II8osbiFfoX/L1u4six/WCUHiqDeOz+O5rD4LfoR2M=;
+        b=mlIXpAyQ8qwFBrECXQVmfyubT2GAOrhs8b/o0X9g2fEFxFVNQpLLbaF1AjN515qf8O
+         fidPq+DpbKA3XEERfZQbwWc50i0FPFnqH+Hm0d4rVzUQrwGWxOyA0aymFktfOMlGid3K
+         PP5trXbqnoAMFTrK5Lf6doOUXllj0+wmiqhGj/0eD47ntxrCimODPvEI51Vv+2Mfyr9l
+         Ku4/UpV5JPQZfYi3k5lA2XIWPvk613qDn9fi8OXTHoJmTlLP7BQG4vbnx267I48rJsmi
+         Rbgfr+Yj1WKsORIVVZccHYn+kUKWxKPujDpDKMlMPsNwSreUs4c+9CnUmITXLXPJRQaq
+         gNOg==
+X-Gm-Message-State: AOAM530Sirhw2y0l/ojTrcKx9o8P0790K/zvMWi13hUGngtJ0LWjOAeh
+        QbZ15Xbhw2TrXsWFXJxiA4D2CcMiIhf1VoRo7rqX7hWOP3baRO+Cc2MCIJUEFTiri1Qu4SXA+L/
+        mo7wlYbgqoLlLau/RxD591aMb
+X-Received: by 2002:a1c:dd44:: with SMTP id u65mr5269012wmg.180.1591720629586;
+        Tue, 09 Jun 2020 09:37:09 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz93L1cNiCH3xWCKNeXmWCa9GZNaquxVlfU7TmLWNCwG1IA511CFoLPu9aXLiiVBHF4IpYnIg==
+X-Received: by 2002:a1c:dd44:: with SMTP id u65mr5268995wmg.180.1591720629341;
+        Tue, 09 Jun 2020 09:37:09 -0700 (PDT)
+Received: from redhat.com (bzq-79-181-55-232.red.bezeqint.net. [79.181.55.232])
+        by smtp.gmail.com with ESMTPSA id a1sm3383430wmj.29.2020.06.09.09.37.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2020 09:37:08 -0700 (PDT)
+Date:   Tue, 9 Jun 2020 12:37:06 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Cc:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        David Hildenbrand <david@redhat.com>,
+        linux-renesas-soc@vger.kernel.org,
+        Jason Wang <jasowang@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jiri Kosina <trivial@kernel.org>,
+        "open list:VIRTIO CORE AND NET DRIVERS" 
+        <virtualization@lists.linux-foundation.org>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] mm/balloon_compaction: Fix trivial spelling
+Message-ID: <20200609123652-mutt-send-email-mst@kernel.org>
+References: <20200609124610.3445662-16-kieran.bingham+renesas@ideasonboard.com>
+ <20200609143412.3456484-1-kieran.bingham+renesas@ideasonboard.com>
 MIME-Version: 1.0
-References: <4781d250-9a29-cef3-268d-7d83c98bf16a@gmail.com>
- <87wo4lekm5.fsf@kurt> <CA+h21hqbKasMAuHL+B-2Gb-YQ3QGF+_pWGCxr8LTcusjvuqFeg@mail.gmail.com>
-In-Reply-To: <CA+h21hqbKasMAuHL+B-2Gb-YQ3QGF+_pWGCxr8LTcusjvuqFeg@mail.gmail.com>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Tue, 9 Jun 2020 19:37:01 +0300
-Message-ID: <CA+h21hp+UsW+Uc-xHyQAMrRVLX9CXZu8B2Svq+9npLtxs0_DWw@mail.gmail.com>
-Subject: Re: stress-ng --hrtimers hangs system
-To:     Kurt Kanzenbach <kurt.kanzenbach@linutronix.de>
-Cc:     linux-rt-users@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>, rcu@vger.kernel.org,
-        Colin King <colin.king@canonical.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200609143412.3456484-1-kieran.bingham+renesas@ideasonboard.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kurt,
+On Tue, Jun 09, 2020 at 03:34:12PM +0100, Kieran Bingham wrote:
+> The word 'descriptor' is misspelled throughout the tree.
+> 
+> Fix it up accordingly:
+>     decriptors -> descriptors
+> 
+> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> Reviewed-by: David Hildenbrand <david@redhat.com>
 
-On Fri, 5 Jun 2020 at 16:19, Vladimir Oltean <olteanv@gmail.com> wrote:
->
-> Hi Kurt,
->
-> On Fri, 5 Jun 2020 at 15:57, Kurt Kanzenbach
-> <kurt.kanzenbach@linutronix.de> wrote:
-> >
-> > Hi Vladimir,
-> >
-> > On Fri Jun 05 2020, Vladimir Oltean wrote:
-> > > Hi,
-> > >
-> > > I was testing stress-ng on an ARM64 box and I found that it can be killed instantaneously with a --hrtimers 1 test:
-> > > https://github.com/ColinIanKing/stress-ng/blob/master/stress-hrtimers.c
-> > > The console shell locks up immediately after starting the process, and I get this rcu_preempt splat after 21 seconds,
-> > > letting me know that the grace-periods kernel thread could not run:
-> >
-> > interesting. Just tested this on an ARM64 box with v5.6-rt and the
-> > stress-ng hrtimer test works fine. No lockups, cyclictest results are
-> > looking good. So maybe this is v5.7 related.
-> >
-> > Thanks,
-> > Kurt
->
-> This is not actually v5.7 related. I could also reproduce it on a
-> downstream 5.4 kernel which is how I originally saw it.
->
-> Thanks,
-> -Vladimir
+Acked-by: Michael S. Tsirkin <mst@redhat.com>
 
-Just out of curiosity, what and how many CPU cores does your ARM64 box
-have, and what frequency are you running them at?
-Mine is a dual-core A72 machine running at 1500 MHz.
+Trivial tree pls.
 
-Thanks,
--Vladimir
+> ---
+>  mm/balloon_compaction.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/mm/balloon_compaction.c b/mm/balloon_compaction.c
+> index 26de020aae7b..907fefde2572 100644
+> --- a/mm/balloon_compaction.c
+> +++ b/mm/balloon_compaction.c
+> @@ -58,7 +58,7 @@ EXPORT_SYMBOL_GPL(balloon_page_list_enqueue);
+>  /**
+>   * balloon_page_list_dequeue() - removes pages from balloon's page list and
+>   *				 returns a list of the pages.
+> - * @b_dev_info: balloon device decriptor where we will grab a page from.
+> + * @b_dev_info: balloon device descriptor where we will grab a page from.
+>   * @pages: pointer to the list of pages that would be returned to the caller.
+>   * @n_req_pages: number of requested pages.
+>   *
+> @@ -157,7 +157,7 @@ EXPORT_SYMBOL_GPL(balloon_page_enqueue);
+>  /*
+>   * balloon_page_dequeue - removes a page from balloon's page list and returns
+>   *			  its address to allow the driver to release the page.
+> - * @b_dev_info: balloon device decriptor where we will grab a page from.
+> + * @b_dev_info: balloon device descriptor where we will grab a page from.
+>   *
+>   * Driver must call this function to properly dequeue a previously enqueued page
+>   * before definitively releasing it back to the guest system.
+> -- 
+> 2.25.1
+
