@@ -2,89 +2,110 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EBDFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E88C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 497DF2078C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:48:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D87EA2078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:48:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xLtjgtJ8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pgYRvjiW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbgFJIsH (ORCPT
+        id S1726926AbgFJIsl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 04:48:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38912 "EHLO
+        Wed, 10 Jun 2020 04:48:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726890AbgFJIsE (ORCPT
+        with ESMTP id S1726673AbgFJIsk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 04:48:04 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05717C03E96F
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 01:48:03 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id c21so985087lfb.3
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 01:48:03 -0700 (PDT)
+        Wed, 10 Jun 2020 04:48:40 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A1A5C03E96B;
+        Wed, 10 Jun 2020 01:48:40 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id x22so982877lfd.4;
+        Wed, 10 Jun 2020 01:48:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=tv9cLm6NrVEw+od9yE+yuCdvd9rQx1UMp3tOwcdNQ6A=;
-        b=xLtjgtJ8Kq7VuUa8BbXEMYn+JDvsxigXSI5oo/wg1liD77Uvva30qb+Ue4DnxHtjam
-         Elme55spXBwYx5CgDUeaml/cfsQ6LUZao9b16LKSlvxj+G3XM/yuoK3udquOLtevy+Er
-         X3e38FLE+ZpA/4fIR+5OQTAwQDmiPRijmpAsDwGyCr0J2LItdBJDDaL9eH4cO7INk82q
-         u6yPzASpg7nLl0pPg/QrXZEHd2naQGjDOEtaT7FGM09+z5sv5CgiZyW/HS6BA2EFJCjC
-         1pPLZYV1z1UzaBQ6SXSQSAssU+Xs5qrn40m2JbMhlQUjEky8+UyVJs07RaE5BULZHY1c
-         Swrw==
+        bh=VC9z0YQVw/ovp7RcdPcoELOnuCQp6hRBgNQO9wmx/S4=;
+        b=pgYRvjiWI9A4AuDA7s2i4gT5VqsCkDiNA5Q+kChiJCsMF9JGQLAV6ZdXISKFy8Y6ZJ
+         NOTHCgAE1sIW3aluZnjE+2ms1ZgSQdlixIcx2+fPunWGZCFTZuPd/CQbkcMNBaq0r7VW
+         Lz+K+h6q+GyXXyc8OgJIY9GuSXlLbfHc4O/c6JY9HmCEa6vcunouYF8BJognnuFmCMzr
+         t3TtpAGHy/c9hghZlSFJ6RuDBfeqeQGU39jzyVHzqYb+YmwG3x/Lz0R2XUN9LlsJPHoJ
+         n7zOLDs4k3BF+tP9jIT/pab+/VGu+fjKBIcNckh/VOAw8MPbLUmBGp/4qBDhC8+eghYh
+         DFNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=tv9cLm6NrVEw+od9yE+yuCdvd9rQx1UMp3tOwcdNQ6A=;
-        b=eds42c7DXqTi8wSOS/R7hMYoKfIfXEB/3ox++Cm9AZOa/kkoOMrYETTmGkOWh6b4da
-         U5OXmXHz5Hl5NlpU0SiMGAXnPxUx2I9s0CV2e7ZPBbdKEd93xi/FdZ/BRqErAc7DGBEo
-         A41EbWQ63o+v//okO7MsSxSxlWoeo2QtcvH0jweT703ctZy8CO9OFeYQIW5jxnK5ZKOc
-         cDD+GqnuCzagyiSIBjp27PBmcQTGVy8I0zhgGR7NFwNpJjGb1dmuoj9SpmYJOsKZ9fut
-         eDzpiVo6Ok3cdQNzfqAGF3ZPAvVPxi8cs3vf71YR82Gw1Y40zORvMLBBm5VqGYtgcD6f
-         i/iA==
-X-Gm-Message-State: AOAM531ukh/2GeK0L5QW1LUFs67VJkZxr8CHSCT1OdYGhOf9Rfp3naCj
-        kEQXW6zopmdVnUd7Y2DoGChFKPXem/PQb/Yc9I/EeQ==
-X-Google-Smtp-Source: ABdhPJwB1YdVqyxgQzEn1jME2RfkT9tqX2deD1Fxk7xDGiza8EgLMKE2iE1rVqr0cl5GGteUcAmL6g68Mcu61Hc88ho=
-X-Received: by 2002:ac2:5a07:: with SMTP id q7mr1123126lfn.77.1591778882313;
- Wed, 10 Jun 2020 01:48:02 -0700 (PDT)
+        bh=VC9z0YQVw/ovp7RcdPcoELOnuCQp6hRBgNQO9wmx/S4=;
+        b=bL8OBvBmbWK/7eos4WxZlmIPL5DPLtkRpqQmSOfjfo9WnGVUV3i6gKnFyTsgUGQ8Sp
+         QxAbv5ZFgMWNMo7lxzYIMditj9e+5gLXqxOXcv8k4I1nr6PAve5MJI5rtT04/0UVB0bw
+         skMA5s7NomeFdNvWNKqwqV7SBSbNl7MhctmTvXiUPcurDaxwQNMtGgJdqXTBPzPJWDiR
+         f0Q4m7fNNrTeNuwlWIO3++qqpMXEnf+vpTcYVJvBd3t1R3u+DpwKhcqYNcoQM6CWJ8Nz
+         zuJKquE30OCNzfs0Zfh+2VArfDLtPXiVSd/ewoa7Yp7Wt8IE3Sh4OB401ibAR77hgA9E
+         2LzQ==
+X-Gm-Message-State: AOAM531yAsSBlJcUZa4i7Dz+Cuo97cEVFoC+ym+t6IAhrClzBE8frXpl
+        tg+mbIQgXMaZf179Z47QmjMmq8qrPgnlkd+FfVE=
+X-Google-Smtp-Source: ABdhPJxsPu3S/Zw+UKXoVa8bsgKlBQqtFzO4VbdBKA+uqODD6HONKVUcUzPacw2j/I2RQ+GOYTg8BcAd9QNwnEDl+BE=
+X-Received: by 2002:ac2:55b2:: with SMTP id y18mr1128272lfg.55.1591778918010;
+ Wed, 10 Jun 2020 01:48:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200604174935.26560-1-vidyas@nvidia.com>
-In-Reply-To: <20200604174935.26560-1-vidyas@nvidia.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 10 Jun 2020 10:47:51 +0200
-Message-ID: <CACRpkdYnwYFr2NEfGmCRYCEr7J0fdT1L5jkuPrkPQGJmudMgJw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: tegra: Use noirq suspend/resume callbacks
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     Thierry Reding <treding@nvidia.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+References: <20200610065801.3579-1-zhenzhong.duan@gmail.com> <20200610082040.GB14118@zn.tnic>
+In-Reply-To: <20200610082040.GB14118@zn.tnic>
+From:   Zhenzhong Duan <zhenzhong.duan@gmail.com>
+Date:   Wed, 10 Jun 2020 16:48:26 +0800
+Message-ID: <CAFH1YnNsM0okzpLru9Fd__F9yp-a00+J17L2atLBrnV3vWSqLw@mail.gmail.com>
+Subject: Re: [PATCH] EDAC, {skx,i10nm}: Advice mcelog that the error were handled
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-edac@vger.kernel.org, tony.luck@intel.com,
+        mchehab@kernel.org, james.morse@arm.com, rrichter@marvell.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 4, 2020 at 7:49 PM Vidya Sagar <vidyas@nvidia.com> wrote:
-
-> Use noirq suspend/resume callbacks as other drivers which implement
-> noirq suspend/resume callbacks (Ex:- PCIe) depend on pinctrl driver to
-> configure the signals used by their respective devices in the noirq phase.
+On Wed, Jun 10, 2020 at 4:20 PM Borislav Petkov <bp@alien8.de> wrote:
 >
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> On Wed, Jun 10, 2020 at 02:58:01PM +0800, Zhenzhong Duan wrote:
+> > If one MCE error has been processed in kernel, it's not necessory
+> > to pass it to user level mcelog.
+> >
+> > Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+> > ---
+> >  drivers/edac/skx_common.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/edac/skx_common.c b/drivers/edac/skx_common.c
+> > index 46be1a7..8c0165b 100644
+> > --- a/drivers/edac/skx_common.c
+> > +++ b/drivers/edac/skx_common.c
+> > @@ -615,7 +615,8 @@ int skx_mce_check_error(struct notifier_block *nb, unsigned long val,
+> >
+> >       skx_mce_output_error(mci, mce, &res);
+> >
+> > -     return NOTIFY_DONE;
+> > +     /* Advice mcelog that the error were handled */
+> > +     return NOTIFY_STOP;
+> >  }
+> >
+> >  void skx_remove(void)
+> > --
+>
+> No, we won't be doing that anymore. See here:
+>
+> https://git.kernel.org/tip/23ba710a0864108910c7531dc4c73ef65eca5568
+>
+> it should appear mainline soon-ish, I hope.
 
-Patch applied for fixes.
+I see, thanks for showing.
 
-Yours,
-Linus Walleij
+Zhenzhong
