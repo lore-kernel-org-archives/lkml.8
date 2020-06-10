@@ -5,39 +5,39 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD555C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE4D1C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:03:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 896BB2081A
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:03:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA4AB2081A
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:03:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="pbejqEq1"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ei59UQXi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726350AbgFJGDL (ORCPT
+        id S1726339AbgFJGDK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 02:03:11 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:6094 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726251AbgFJGCt (ORCPT
+        Wed, 10 Jun 2020 02:03:10 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:11231 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726268AbgFJGCu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 02:02:49 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ee0775b0000>; Tue, 09 Jun 2020 23:02:03 -0700
+        Wed, 10 Jun 2020 02:02:50 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ee0772e0000>; Tue, 09 Jun 2020 23:01:18 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 09 Jun 2020 23:02:48 -0700
+  Tue, 09 Jun 2020 23:02:50 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 09 Jun 2020 23:02:48 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 10 Jun
- 2020 06:02:48 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 10 Jun 2020 06:02:48 +0000
+        by hqpgpgate101.nvidia.com on Tue, 09 Jun 2020 23:02:50 -0700
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 10 Jun
+ 2020 06:02:49 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 10 Jun 2020 06:02:49 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.167.70]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ee077870000>; Tue, 09 Jun 2020 23:02:47 -0700
+        id <B5ee077890000>; Tue, 09 Jun 2020 23:02:49 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
         <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
@@ -47,9 +47,9 @@ CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
         <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
-Subject: [RFC PATCH v1 07/18] media: tegra-video: Fix channel format alignment
-Date:   Tue, 9 Jun 2020 23:02:29 -0700
-Message-ID: <1591768960-31648-8-git-send-email-skomatineni@nvidia.com>
+Subject: [RFC PATCH v1 10/18] dt-bindings: tegra: Document VI and CSI port nodes
+Date:   Tue, 9 Jun 2020 23:02:32 -0700
+Message-ID: <1591768960-31648-11-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1591768960-31648-1-git-send-email-skomatineni@nvidia.com>
 References: <1591768960-31648-1-git-send-email-skomatineni@nvidia.com>
@@ -57,67 +57,141 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1591768923; bh=8GJbUvoTqNXQhoilqMQO06MgCPv5IgO6eahUeR7/0ig=;
+        t=1591768878; bh=wPUjcK5pjatayPbHQg+cG5OdMe7PMrZuDRJsqwl5MoU=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=pbejqEq1pq31KzLzJ/BnpGUQSpGRX3kiKwRtDSyFNjxMx2bWJZCoRynik19X8Eo+N
-         SE0fFIHiGkxfgcnfbJ8s42EkUjVAlHInPXIx6Hv1Ean21ghAEoDwsMJsTXitbeuPoq
-         8RoHlGMhjAveHXUQ+ic3800PIaBZV1mSGlCw9z+Nl1iJxlwrzcIucGwJQCaHHqDfxK
-         alwAekJbgXRDMvuAYRZMR7WGhRmIFb02b3qKt0fQd+qPCVhnCoS3cZ5YdVh3JN4x8a
-         9J4b4oVZB0su9+0acnNE8hr2UFTmoB8AbTjZP200O+09uWESf2tEvZQZgW78UXllO8
-         c5MUQF7Rz6+jw==
+        b=ei59UQXi7yEOg3WW32Mp1G+liqrIbq6KgKYXkk5nfw4KS4XF6G1yTXTM4NS+8WpFB
+         74gYnQSUQz5zn6ViJqqtSIM4vz2NRmAYhgfO+U1QT4Uk2IcGrVB8/ajaCkbm8C3iVj
+         bUWH2UR0uUDnV3vvyjurqDumaWcl6tCQ5uAxKeH4EvESVuDWISRSDc3Ysn8xgh+ha4
+         nVGS/9bnwsxhQ3HLVmgoGyjACSF6pWPzN7tnqR23rr3pAzKVpxylFeR78yZnHwFq4w
+         OhV1OyaWPXqNHwyFlikaNPLlwrGQNcAUgbP0Y5uRp1HVP4HK5iw9RcpgksXCpW//UT
+         AJJlQOjq0R06g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pixel format width is mistakenly aligned to surface align bytes
-and altering width to aligned value may force sensor mode change
-other than the requested one and also cause mismatch in width
-programmed between sensor and vi which can lead to capture errors.
-
-This patch removes width alignment and clamps width as per Tegra
-minimum and maximum limits.
+This patch documents Tegra VI and CSI port and endpoint nodes along
+with the other required properties.
 
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/staging/media/tegra-video/vi.c | 16 +++-------------
- 1 file changed, 3 insertions(+), 13 deletions(-)
+ .../display/tegra/nvidia,tegra20-host1x.txt        | 87 ++++++++++++++++++++++
+ 1 file changed, 87 insertions(+)
 
-diff --git a/drivers/staging/media/tegra-video/vi.c b/drivers/staging/media/tegra-video/vi.c
-index 1b5e660..d621ebc 100644
---- a/drivers/staging/media/tegra-video/vi.c
-+++ b/drivers/staging/media/tegra-video/vi.c
-@@ -359,25 +359,15 @@ static void tegra_channel_fmt_align(struct tegra_vi_channel *chan,
- 				    struct v4l2_pix_format *pix,
- 				    unsigned int bpp)
- {
--	unsigned int align;
--	unsigned int min_width;
--	unsigned int max_width;
--	unsigned int width;
- 	unsigned int min_bpl;
- 	unsigned int max_bpl;
- 	unsigned int bpl;
+diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+index 4731921..f70a838 100644
+--- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
++++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+@@ -65,6 +65,48 @@ of the following host1x client modules:
+       - power-domains: Must include sor powergate node as csicil is in
+         SOR partition.
  
- 	/*
--	 * The transfer alignment requirements are expressed in bytes. Compute
--	 * minimum and maximum values, clamp the requested width and convert
--	 * it back to pixels. Use bytesperline to adjust the width.
-+	 * The transfer alignment requirements are expressed in bytes.
-+	 * Clamp the requested width and height to the limits.
- 	 */
--	align = lcm(SURFACE_ALIGN_BYTES, bpp);
--	min_width = roundup(TEGRA_MIN_WIDTH, align);
--	max_width = rounddown(TEGRA_MAX_WIDTH, align);
--	width = roundup(pix->width * bpp, align);
--
--	pix->width = clamp(width, min_width, max_width) / bpp;
-+	pix->width = clamp(pix->width, TEGRA_MIN_WIDTH, TEGRA_MAX_WIDTH);
- 	pix->height = clamp(pix->height, TEGRA_MIN_HEIGHT, TEGRA_MAX_HEIGHT);
++      Optional properties for csi node:
++
++      - channel nodes: Max upto 6 channels/streams are supported with each CSI
++	brick can as either x4 or x2 based on hw connectivity to sensor.
++
++	Required properties:
++	- reg: channel/stream index
++	- nvidia,mipi-calibrate: Should contain a phandle and a specifier
++	  specifying which pads are used by this CSI port and need to be
++	  calibrated. See also ../display/tegra/nvidia,tegra114-mipi.txt.
++
++	- port: CSI port node and its endpoint nodes as per device graph
++          bindings defined in Documentation/devicetree/bindings/graph.txt.
++	  Required properties:
++	  - reg: csi port index based on hw csi lanes connectivity to the
++	    sensor.
++	  - bus-width: number of lanes used by this port. Supported lanes
++	    are 1/2/4.
++	  - endpoint@0: sink node
++	    Required properties:
++	    - reg: endpoint id. This is used to retrieve pad for creating
++	      media link
++	    - remote-endpoint: phandle to sensor endpoint
++	  - endpoint@1: source node
++	    - reg: endpoint id. This is used to retrieve pad for creating
++	      media link
++	    - remote-endpoint: phandle to vi port endpoint
++
++  Optional properties for vi node:
++  - ports: Video port nodes and endpoint nodes as per device graph bindings
++    defined in Documentation/devicetree/bindings/graph.txt
++    Max 6 ports are supported and each port should have one endpoint node.
++
++    Required properties:
++    - port: VI port node and its sink endpoint node
++      Required properties:
++    - reg: should match port index
++    - endpoint@0: sink node
++      Required properties:
++      - reg: endpoint id must be 0
++      - remote-endpoint: phandle to CSI endpoint node.
++
+ - epp: encoder pre-processor
  
- 	/* Clamp the requested bytes per line value. If the maximum bytes per
+   Required properties:
+@@ -340,6 +382,22 @@ Example:
+ 
+ 			ranges = <0x0 0x0 0x54080000 0x2000>;
+ 
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					imx219_vi_in0: endpoint@0 {
++						reg = <0>;
++						remote-endpoint = <&imx219_csi_out0>;
++					};
++				};
++			};
++
+ 			csi@838 {
+ 				compatible = "nvidia,tegra210-csi";
+ 				reg = <0x838 0x1300>;
+@@ -362,6 +420,35 @@ Example:
+ 					 <&tegra_car TEGRA210_CLK_CSI_TPG>;
+ 				clock-names = "csi", "cilab", "cilcd", "cile", "csi_tpg";
+ 				power-domains = <&pd_sor>;
++
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				channel@0 {
++					reg = <0>;
++					nvidia,mipi-calibrate = <&mipi 0x001>;
++
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					port@0 {
++						reg = <0>;
++						bus-width = <2>;
++
++						#address-cells = <1>;
++						#size-cells = <0>;
++
++						imx219_csi_in0: endpoint@0 {
++							reg = <0>;
++							remote-endpoint = <&imx219_out0>;
++						};
++
++						imx219_csi_out0: endpoint@1 {
++							reg = <1>;
++							remote-endpoint = <&imx219_vi_in0>;
++						};
++					};
++				};
+ 			};
+ 		};
+ 
 -- 
 2.7.4
 
