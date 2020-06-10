@@ -2,101 +2,126 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD2EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 04:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C0AEC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 04:01:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDCCA2076A
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 04:00:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="tkOUYuvC"
+	by mail.kernel.org (Postfix) with ESMTP id 17C012076A
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 04:01:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591761701;
+	bh=JgoxUrLGdtIT0rdQEolneUeAu0VWld204OmTx7TWZ6g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=PWOo0/QP1x8gip5+bN3vN5kijUIS3255q3fv2Ma2vnZgdKLkAgv+lk3SbZsgHjeSV
+	 ZWr+Bgoms8+RPycNoCm2GfIZMhMGy+fQmJISA93RHGbAgIHwNAuhOQf1HVi7eCGEec
+	 j13hf7vxqwTYpVvT3T/bj5RGN5jnnuaa/tER5md8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726123AbgFJEAH (ORCPT
+        id S1726132AbgFJEBj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 00:00:07 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:12475 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbgFJEAG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 00:00:06 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200610040003epoutp016c29cabd1ca2c8eee1cda46e5274a991~XEr6obYoR1648716487epoutp01j
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 04:00:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200610040003epoutp016c29cabd1ca2c8eee1cda46e5274a991~XEr6obYoR1648716487epoutp01j
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1591761603;
-        bh=S1lNTGTwft1rHKlGBBhm/z8ha0dAATf801dKovrWqlQ=;
-        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=tkOUYuvCpPnAyCNJ4Kaq8QLciCkJNgQcvfhAmtVypkqTIwpNIlIjHE/m4iwwWVWu6
-         8HwbNF72pzr/fYEJDvjeceoXIBrp4tv0Hm/fQDo6NJFnDFEeQLwO8NM65TMa5gqvoR
-         OPVEBK2jl2Zd4+n1MD3CSV4bDFMdwWK2NconAacY=
-Received: from epcpadp1 (unknown [182.195.40.11]) by epcas1p4.samsung.com
-        (KnoxPortal) with ESMTP id
-        20200610040002epcas1p46125676dd84ab042413fbbcb32eb6b7a~XEr54rpCe0290302903epcas1p4V;
-        Wed, 10 Jun 2020 04:00:02 +0000 (GMT)
+        Wed, 10 Jun 2020 00:01:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50102 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725927AbgFJEBj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 00:01:39 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80B3220734;
+        Wed, 10 Jun 2020 04:01:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591761697;
+        bh=JgoxUrLGdtIT0rdQEolneUeAu0VWld204OmTx7TWZ6g=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=LpYD6v/zcuwQgpKRHtGYTbseMzq/O+zOZRzvj7M5x7Zb0QwrMmIack+kWn+pXZFZg
+         3e8JV7AGFScc5BL2MA5SDBGuM1iQLGgyKol7JVEEBuP6OZ2RuPbthS+M72RGp12LTy
+         H+SQ5YwqhFlA4pzrvAaXKqQY6YMuEDGWn/b0B4Nw=
+Date:   Tue, 9 Jun 2020 21:01:37 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: linux-next: build failure after merge of the akpm-current tree
+Message-Id: <20200609210137.e7aaf4efa9f8b9ff0bcdc1dc@linux-foundation.org>
+In-Reply-To: <20200610134425.6dd32bf6@canb.auug.org.au>
+References: <20200609224252.1704eff3@canb.auug.org.au>
+        <20200610134425.6dd32bf6@canb.auug.org.au>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
-Subject: RE: [RFC PATCH 4/5] scsi: ufs: L2P map management for HPB read
-Reply-To: daejun7.park@samsung.com
-From:   Daejun Park <daejun7.park@samsung.com>
-To:     Avri Altman <Avri.Altman@wdc.com>,
-        Daejun Park <daejun7.park@samsung.com>,
-        ALIM AKHTAR <alim.akhtar@samsung.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        Sung-Jun Park <sungjun07.park@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>,
-        Adel Choi <adel.choi@samsung.com>,
-        BoRam Shin <boram.shin@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <SN6PR04MB46407A85C194D2D8F03A01B3FC820@SN6PR04MB4640.namprd04.prod.outlook.com>
-X-CPGS-Detection: blocking_info_exchange
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <231786897.01591761602548.JavaMail.epsvc@epcpadp1>
-Date:   Wed, 10 Jun 2020 11:49:14 +0900
-X-CMS-MailID: 20200610024914epcms2p570190ab8b6cc3188e84c728f01391cba
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-X-CPGSPASS: Y
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20200605011604epcms2p8bec8ef6682583d7248dc7d9dc1bfc882
-References: <SN6PR04MB46407A85C194D2D8F03A01B3FC820@SN6PR04MB4640.namprd04.prod.outlook.com>
-        <SN6PR04MB46409E16CCF95A0AA9FFE944FC870@SN6PR04MB4640.namprd04.prod.outlook.com>
-        <231786897.01591322101492.JavaMail.epsvc@epcpadp1>
-        <336371513.41591320902369.JavaMail.epsvc@epcpadp1>
-        <963815509.21591320301642.JavaMail.epsvc@epcpadp1>
-        <231786897.01591320001492.JavaMail.epsvc@epcpadp1>
-        <963815509.21591323002276.JavaMail.epsvc@epcpadp1>
-        <1776409896.101591664283293.JavaMail.epsvc@epcpadp2>
-        <CGME20200605011604epcms2p8bec8ef6682583d7248dc7d9dc1bfc882@epcms2p5>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> The spec does not define what the host should do in this case,
-> e.g. when the device informs it that the entire db is no longer valid.
-> What are you planning to do?
-In Jedec spec, there is no decription about what the driver should do.
-So, I will just inform to user about the "HPB reset" happening with kernel message.
+On Wed, 10 Jun 2020 13:44:25 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 
-Thanks,
-Daejun
+> Hi all,
+> 
+> On Tue, 9 Jun 2020 22:42:52 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> >
+> > After merging the akpm-current tree, today's linux-next build (sparc
+> > defconfig) failed like this:
+> > 
+> > In file included from include/linux/mm.h:32:0,
+> >                  from include/linux/memblock.h:13,
+> >                  from arch/sparc/mm/srmmu.c:14:
+> > include/linux/pgtable.h:74:27: error: redefinition of 'pte_offset_kernel'
+> >  #define pte_offset_kernel pte_offset_kernel
+> >                            ^
+> > arch/sparc/mm/srmmu.c:144:8: note: in expansion of macro 'pte_offset_kernel'
+> >  pte_t *pte_offset_kernel(pmd_t *dir, unsigned long address)
+> >         ^~~~~~~~~~~~~~~~~
+> > include/linux/pgtable.h:70:22: note: previous definition of 'pte_offset_kernel' was here
+> >  static inline pte_t *pte_offset_kernel(pmd_t *pmd, unsigned long address)
+> >                       ^~~~~~~~~~~~~~~~~
+> > 
+> > Caused by commit
+> > 
+> >   292aa65ed13a ("mm: consolidate pte_index() and pte_offset_*() definitions")
+> 
+> This breakage is now in Linus' tree :-(
+
+I've sent this in as well:
+
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: arch/sparc/mm/srmmu.c: fix build
+
+"mm: consolidate pte_index() and pte_offset_*() definitions" was supposed
+to remove arch/sparc/mm/srmmu.c:pte_offset_kernel().
+
+Fixes: 974b9b2c68f3d35 ("mm: consolidate pte_index() and pte_offset_*() definitions")
+Reported-by: kernel test robot <lkp@intel.com>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+---
+
+ arch/sparc/mm/srmmu.c |   10 ----------
+ 1 file changed, 10 deletions(-)
+
+--- a/arch/sparc/mm/srmmu.c~arch-sparc-mm-srmmuc-fix-build
++++ a/arch/sparc/mm/srmmu.c
+@@ -140,16 +140,6 @@ void pmd_set(pmd_t *pmdp, pte_t *ptep)
+ 	set_pte((pte_t *)&pmd_val(*pmdp), __pte(SRMMU_ET_PTD | ptp));
+ }
+ 
+-/* Find an entry in the third-level page table.. */
+-pte_t *pte_offset_kernel(pmd_t *dir, unsigned long address)
+-{
+-	void *pte;
+-
+-	pte = __nocache_va((pmd_val(*dir) & SRMMU_PTD_PMASK) << 4);
+-	return (pte_t *) pte +
+-	    ((address >> PAGE_SHIFT) & (PTRS_PER_PTE - 1));
+-}
+-
+ /*
+  * size: bytes to allocate in the nocache area.
+  * align: bytes, number to align at.
+_
+
