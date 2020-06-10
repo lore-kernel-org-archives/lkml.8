@@ -2,122 +2,184 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FEAFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 16:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BBA2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 16:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E0172070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 16:25:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G7cIYBil"
+	by mail.kernel.org (Postfix) with ESMTP id 858B220734
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 16:31:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728912AbgFJQZC (ORCPT
+        id S1729147AbgFJQbz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 12:25:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53358 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728077AbgFJQZA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 12:25:00 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DAC5C03E96B;
-        Wed, 10 Jun 2020 09:25:00 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id t18so2972592wru.6;
-        Wed, 10 Jun 2020 09:25:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=7MdATQTOMqVdqWwVcwhsiYUCt9se11ZiKZMK8K7BiCo=;
-        b=G7cIYBilI7XvkCmFr1RcYL6e4zYFpHIZ+Fui6TE+JRVNwNH2zv5vQSu8BRtPxnIt7C
-         vJA+h6aqYIlEFyyN9eAyLbU6G4Rd5hE110kw2icRuIcR/u607F61WcB8SJ23NqURkprp
-         MYEO/00q+hnhVypeBkUnj5x46gxYtjKsD2FILL7Ty0WTWoT3/gnjwebcrg+aIJmrftuu
-         2O0RZBYLN+aHegRryBKBOadEJKeQyD/yhkj4RhreWaqj7JNHhfFU5vDmYiXpJ2zdT3d6
-         UaLFH0zSnwtDezlwQ7fMLd5f2FVohoGZXiXLQ7x0OjgPdLTMJuanoCvQZMcxKSTWHerz
-         ryFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7MdATQTOMqVdqWwVcwhsiYUCt9se11ZiKZMK8K7BiCo=;
-        b=Vfvdmlb9UMFTG7EArmYHBSpIC8aWYRnmBh/GeAYc4j0d/y60l+fgMPL6+QqRouLGXd
-         NT0WrQ1A5rOc6WbRTvlYyZxZwkzh2E0uXDF4evq3R4iQxbw53KDeGSdHI4c2wIv55AV5
-         fqMPJplT1d1bbsnEASm3DvNX6X8ktDGp5wn2woGmy0c9S9lUU2pBCeg2FrgjHHkF9icT
-         xLzKrpN/QMNgrynhWPOnFH1OaSHfKXlWcS7vEiPHbmWNuwkojGeyx7wOuoMAOXrACqsf
-         h8mYcWXkEEK0bkeGv6LMgy/kWu5o87rS36YGP/09JDimu9b0ryX6l48iE/LmtuiwokD3
-         VJeQ==
-X-Gm-Message-State: AOAM531QHcymcW7NAxrUzZXhic1k0IZOj9/8rGWY0nFCbP0RxL2zpoC6
-        7HAMxhzJfkI2jBAY88pO7h4=
-X-Google-Smtp-Source: ABdhPJwJUsnozQmJ8rArz+o+VE7Ug+Ogn3pwymbR97IR9oAxEz6MkGrQ1RZU+2WkilkvLYCz//PBwA==
-X-Received: by 2002:a5d:5006:: with SMTP id e6mr4869928wrt.170.1591806299316;
-        Wed, 10 Jun 2020 09:24:59 -0700 (PDT)
-Received: from ?IPv6:2a02:8084:e84:2480:228:f8ff:fe6f:83a8? ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id s8sm458703wrg.50.2020.06.10.09.24.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jun 2020 09:24:58 -0700 (PDT)
-Subject: Re: [PATCH v2 2/3] serial: core: fix sysrq overhead regression
-To:     Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Jiri Slaby <jslaby@suse.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200610152232.16925-1-johan@kernel.org>
- <20200610152232.16925-3-johan@kernel.org>
-From:   Dmitry Safonov <0x7f454c46@gmail.com>
-Message-ID: <19008afb-bfbb-35e2-3bd5-e7fd1b7355cc@gmail.com>
-Date:   Wed, 10 Jun 2020 17:24:57 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 10 Jun 2020 12:31:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60458 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728859AbgFJQbx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 12:31:53 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id C1CABAD6B;
+        Wed, 10 Jun 2020 16:31:53 +0000 (UTC)
+From:   Vlastimil Babka <vbabka@suse.cz>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com, vinmenon@codeaurora.org,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Roman Gushchin <guro@fb.com>, Vlastimil Babka <vbabka@suse.cz>,
+        Jann Horn <jannh@google.com>,
+        Vijayanand Jitta <vjitta@codeaurora.org>
+Subject: [PATCH 4/9] mm, slub: make remaining slub_debug related attributes read-only
+Date:   Wed, 10 Jun 2020 18:31:30 +0200
+Message-Id: <20200610163135.17364-5-vbabka@suse.cz>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200610163135.17364-1-vbabka@suse.cz>
+References: <20200610163135.17364-1-vbabka@suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20200610152232.16925-3-johan@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Johan,
+SLUB_DEBUG creates several files under /sys/kernel/slab/<cache>/ that can be
+read to check if the respective debugging options are enabled for given cache.
+Some options, namely sanity_checks, trace, and failslab can be also enabled and
+disabled at runtime by writing into the files.
 
-On 6/10/20 4:22 PM, Johan Hovold wrote:
-> Commit 8e20fc391711 ("serial_core: Move sysrq functions from header
-> file") converted the inline sysrq helpers to exported functions which
-> are now called for every received character, interrupt and break signal
-> also on systems without CONFIG_MAGIC_SYSRQ_SERIAL instead of being
-> optimised away by the compiler.
+The runtime toggling is racy. Some options disable __CMPXCHG_DOUBLE when
+enabled, which means that in case of concurrent allocations, some can still use
+__CMPXCHG_DOUBLE and some not, leading to potential corruption. The s->flags
+field is also not updated or checked atomically. The simplest solution is to
+remove the runtime toggling. The extended slub_debug boot parameter syntax
+introduced by earlier patch should allow to fine-tune the debugging
+configuration during boot with same granularity.
 
-The part with ifdeffing looks good to me.
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Acked-by: Roman Gushchin <guro@fb.com>
+---
+ Documentation/vm/slub.rst |  7 ++---
+ mm/slub.c                 | 62 ++-------------------------------------
+ 2 files changed, 5 insertions(+), 64 deletions(-)
 
-> Inlining these helpers again also avoids the function call overhead when
-> CONFIG_MAGIC_SYSRQ_SERIAL is enabled (e.g. when the port is not used as
-> a console).
+diff --git a/Documentation/vm/slub.rst b/Documentation/vm/slub.rst
+index 36241dfba024..289d231cee97 100644
+--- a/Documentation/vm/slub.rst
++++ b/Documentation/vm/slub.rst
+@@ -116,11 +116,8 @@ If the file contains 1, the option is enabled, 0 means disabled. The debug
+ 	T	trace
+ 	A	failslab
+ 
+-The sanity_checks, trace and failslab files are writable, so writing 1 or 0
+-will enable or disable the option at runtime. The writes to trace and failslab
+-may return -EINVAL if the cache is subject to slab merging. Careful with
+-tracing: It may spew out lots of information and never stop if used on the
+-wrong slab.
++Careful with tracing: It may spew out lots of information and never stop if
++used on the wrong slab.
+ 
+ Slab merging
+ ============
+diff --git a/mm/slub.c b/mm/slub.c
+index c5f3f2424392..0108829838e7 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -5056,20 +5056,6 @@ static ssize_t show_slab_objects(struct kmem_cache *s,
+ 	return x + sprintf(buf + x, "\n");
+ }
+ 
+-#ifdef CONFIG_SLUB_DEBUG
+-static int any_slab_objects(struct kmem_cache *s)
+-{
+-	int node;
+-	struct kmem_cache_node *n;
+-
+-	for_each_kmem_cache_node(s, node, n)
+-		if (atomic_long_read(&n->total_objects))
+-			return 1;
+-
+-	return 0;
+-}
+-#endif
+-
+ #define to_slab_attr(n) container_of(n, struct slab_attribute, attr)
+ #define to_slab(n) container_of(n, struct kmem_cache, kobj)
+ 
+@@ -5291,43 +5277,13 @@ static ssize_t sanity_checks_show(struct kmem_cache *s, char *buf)
+ {
+ 	return sprintf(buf, "%d\n", !!(s->flags & SLAB_CONSISTENCY_CHECKS));
+ }
+-
+-static ssize_t sanity_checks_store(struct kmem_cache *s,
+-				const char *buf, size_t length)
+-{
+-	s->flags &= ~SLAB_CONSISTENCY_CHECKS;
+-	if (buf[0] == '1') {
+-		s->flags &= ~__CMPXCHG_DOUBLE;
+-		s->flags |= SLAB_CONSISTENCY_CHECKS;
+-	}
+-	return length;
+-}
+-SLAB_ATTR(sanity_checks);
++SLAB_ATTR_RO(sanity_checks);
+ 
+ static ssize_t trace_show(struct kmem_cache *s, char *buf)
+ {
+ 	return sprintf(buf, "%d\n", !!(s->flags & SLAB_TRACE));
+ }
+-
+-static ssize_t trace_store(struct kmem_cache *s, const char *buf,
+-							size_t length)
+-{
+-	/*
+-	 * Tracing a merged cache is going to give confusing results
+-	 * as well as cause other issues like converting a mergeable
+-	 * cache into an umergeable one.
+-	 */
+-	if (s->refcount > 1)
+-		return -EINVAL;
+-
+-	s->flags &= ~SLAB_TRACE;
+-	if (buf[0] == '1') {
+-		s->flags &= ~__CMPXCHG_DOUBLE;
+-		s->flags |= SLAB_TRACE;
+-	}
+-	return length;
+-}
+-SLAB_ATTR(trace);
++SLAB_ATTR_RO(trace);
+ 
+ static ssize_t red_zone_show(struct kmem_cache *s, char *buf)
+ {
+@@ -5391,19 +5347,7 @@ static ssize_t failslab_show(struct kmem_cache *s, char *buf)
+ {
+ 	return sprintf(buf, "%d\n", !!(s->flags & SLAB_FAILSLAB));
+ }
+-
+-static ssize_t failslab_store(struct kmem_cache *s, const char *buf,
+-							size_t length)
+-{
+-	if (s->refcount > 1)
+-		return -EINVAL;
+-
+-	s->flags &= ~SLAB_FAILSLAB;
+-	if (buf[0] == '1')
+-		s->flags |= SLAB_FAILSLAB;
+-	return length;
+-}
+-SLAB_ATTR(failslab);
++SLAB_ATTR_RO(failslab);
+ #endif
+ 
+ static ssize_t shrink_show(struct kmem_cache *s, char *buf)
+-- 
+2.26.2
 
-But this one, coul you add measures? (it will also help to understand if
-it's a stable material).
-
-If one function call actually matters here, than should
-uart_insert_char() also go into header?
-
-I see quite common pattern in drivers:
-: if (!uart_handle_sysrq_char(&up->port, ch))
-: 	uart_insert_char(&up->port, byte, 0, ch, TTY_NORMAL);
-
-Don't misunderstand me, but I would prefer keeping headers cleaner
-without realization details with the exception if function calls
-actually hurts the performance.
-
-Probably, a comment like
-/*
- * Keeping these functions in the header improves performance by X% on
- * YYY platform by letting the compiler inline them.
- */
-would also help.
-
-Thanks for working on this,
-          Dmitry
