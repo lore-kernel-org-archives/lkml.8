@@ -2,143 +2,142 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A2B1C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F1A0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:53:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65D602072F
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:53:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 161262072F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:53:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sPb6shlw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HPcjkcyz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729931AbgFJOxA (ORCPT
+        id S1729938AbgFJOxr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 10:53:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39080 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726992AbgFJOw6 (ORCPT
+        Wed, 10 Jun 2020 10:53:47 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43483 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726943AbgFJOxq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 10:52:58 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 723E7C03E96B;
-        Wed, 10 Jun 2020 07:52:57 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id jz3so939043pjb.0;
-        Wed, 10 Jun 2020 07:52:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=W5XkcC7KeYS10PiOng4uQLLTra/keU9RDeMCG9b6HTE=;
-        b=sPb6shlw/GMM34jCjyI+1IyQl4hjR/gFWJT6F1W1mWxRRFErqnyy4lHrqQqDvzki4D
-         HWjwpt79BKVEZlT/4vlA7Ly8ojfKRPU6RcNA7BxoWt2xC7fX+vMKkINKQDJNT8iOzA8a
-         /acoLzDyGF/oRQShetdsDD2X7jOGGZ+SD68udu7rqFtnh6G4NrKf/fgQM26zjjpykRxt
-         7n/nBGjtNaBwkIu+I1M4EutJwtWZ/Tah9TQybU2I1181c3LgNk/ctC1FggbDvtMeDGcG
-         lptWQfeoGMvUS6Czd/p2Dn/C3dtUjqPuy7TUtwUZoiwlkJ3+XivdFUxQjNa9sOEE/fvE
-         Fo9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=W5XkcC7KeYS10PiOng4uQLLTra/keU9RDeMCG9b6HTE=;
-        b=lH7wYDq3E3LonMKXUXzXnWXT8OPbZQf+QMkpdX50jFZN9CtFILJYeX0KIf72uwRd4N
-         KI+78GrCB6c2S3O4fjmi0bd+N20HTDL2Z2hQHBVv0Ol1D5XhtYHJfjz7TirOPCuyqsBp
-         jZrnm92yDsomIuDayj6MRP5NGqXvasK+QIJot+pqB+7mhO8E2nDWyurESV5d1V/Sc2vR
-         pmc7Mng1T1rWUQnwVieg6XxUBcBXMjGmO3lFcCSyjSMBDt7iPy9LfSxEwxLBgBXJwqrA
-         kkDBqrh0q5u72Ou/ifbnTHhfffshNlMCqvzhmV8hGDgH3wVDQHkTBc/JlBcP5lYFiqqa
-         lpig==
-X-Gm-Message-State: AOAM532PVIRhoe8RebOv1u2Z4SCevD2jthHRhjQKlh5nCH9vIuU+y8RR
-        QgOyfKLRqNdFL8kUNdJVn8o=
-X-Google-Smtp-Source: ABdhPJyKgwdIOuUz7O0lHPIz41Jqpk6jni0GZnkqI+vYAHow4N0nEvag/EnBCXAmZff942QnsJ46Vg==
-X-Received: by 2002:a17:90b:1087:: with SMTP id gj7mr3513264pjb.124.1591800777042;
-        Wed, 10 Jun 2020 07:52:57 -0700 (PDT)
-Received: from cnn ([2402:3a80:464:d8d9:cd72:839f:5826:c552])
-        by smtp.gmail.com with ESMTPSA id a5sm203465pfi.41.2020.06.10.07.52.53
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Jun 2020 07:52:56 -0700 (PDT)
-Date:   Wed, 10 Jun 2020 20:22:50 +0530
-From:   Manikandan <manikandan.hcl.ers.epl@gmail.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org, saipsdasari@fb.com, patrickw3@fb.com,
-        vijaykhemka@fb.com, linux-aspeed@lists.ozlabs.org,
-        openbmc@lists.ozlabs.org, manikandan.e@hcl.com
-Subject: Re: [PATCH v4] hwmon:(adm1275) Enable adm1278 ADM1278_TEMP1_EN
-Message-ID: <20200610145250.GA25183@cnn>
-References: <20200610082611.GA14266@cnn>
- <20200610132833.GA237017@roeck-us.net>
+        Wed, 10 Jun 2020 10:53:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591800824;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=SEnQxAW9uQsVBSiEtzbPpC8TpA8ftH1ryZnX+gay5Vs=;
+        b=HPcjkcyzbx35eWQpX4w1b6WI3AZDGWFZ7D//ctGuUX1RHUxNa0mVpI1I8p3sy3nCPXXxrA
+        MTddUbxvz/4fcYw3HB86G8OfBxv3vjKB6ZSWmNuo8ABugU7FxkGCM3VWS4PBUSeefFW2t9
+        K1Ss4CpnoNOT2bbS6hN06SIGjtH9EwM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-249-flirENk-PkmWukFoCP548w-1; Wed, 10 Jun 2020 10:53:43 -0400
+X-MC-Unique: flirENk-PkmWukFoCP548w-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 79F9318A4176;
+        Wed, 10 Jun 2020 14:53:10 +0000 (UTC)
+Received: from gondolin (ovpn-112-196.ams2.redhat.com [10.36.112.196])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6CFB75C296;
+        Wed, 10 Jun 2020 14:53:08 +0000 (UTC)
+Date:   Wed, 10 Jun 2020 16:53:05 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, pasic@linux.ibm.com,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com, mst@redhat.com,
+        jasowang@redhat.com, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH] s390: protvirt: virtio: Refuse device without IOMMU
+Message-ID: <20200610165305.1a34c548.cohuck@redhat.com>
+In-Reply-To: <54b28498-a6a7-4be2-9d2c-aef46c7fc642@linux.ibm.com>
+References: <1591794711-5915-1-git-send-email-pmorel@linux.ibm.com>
+        <20200610152431.358fded7.cohuck@redhat.com>
+        <54b28498-a6a7-4be2-9d2c-aef46c7fc642@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200610132833.GA237017@roeck-us.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 06:28:33AM -0700, Guenter Roeck wrote:
-> On Wed, Jun 10, 2020 at 01:56:11PM +0530, Manikandan Elumalai wrote:
-> > The adm1278 temp attribute need it for openbmc platform .
-> > This feature not enabled by default, so PMON_CONFIG needs to enable it.
+On Wed, 10 Jun 2020 16:37:55 +0200
+Pierre Morel <pmorel@linux.ibm.com> wrote:
+
+> On 2020-06-10 15:24, Cornelia Huck wrote:
+> > On Wed, 10 Jun 2020 15:11:51 +0200
+> > Pierre Morel <pmorel@linux.ibm.com> wrote:
+> >   
+> >> Protected Virtualisation protects the memory of the guest and
+> >> do not allow a the host to access all of its memory.
+> >>
+> >> Let's refuse a VIRTIO device which does not use IOMMU
+> >> protected access.
+> >>
+> >> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> >> ---
+> >>   drivers/s390/virtio/virtio_ccw.c | 5 +++++
+> >>   1 file changed, 5 insertions(+)
+> >>
+> >> diff --git a/drivers/s390/virtio/virtio_ccw.c b/drivers/s390/virtio/virtio_ccw.c
+> >> index 5730572b52cd..06ffbc96587a 100644
+> >> --- a/drivers/s390/virtio/virtio_ccw.c
+> >> +++ b/drivers/s390/virtio/virtio_ccw.c
+> >> @@ -986,6 +986,11 @@ static void virtio_ccw_set_status(struct virtio_device *vdev, u8 status)
+> >>   	if (!ccw)
+> >>   		return;
+> >>   
+> >> +	/* Protected Virtualisation guest needs IOMMU */
+> >> +	if (is_prot_virt_guest() &&
+> >> +	    !__virtio_test_bit(vdev, VIRTIO_F_IOMMU_PLATFORM))
+> >> +			status &= ~VIRTIO_CONFIG_S_FEATURES_OK;
+> >> +  
 > > 
-> > v4:
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > ---
-> > changes in conditional check to enable vout & temp1 by default.
-> > v3:
-> > ----
-> > fix invalid signed-off.
-> > removed checkpath warnings.
-> > write ADM1278_TEMP1_EN and ADM1278_VOUT_EN conf in single line operation.
-> > v2:
-> > ----
-> > add Signed-off-by.
-> > removed ADM1278_TEMP1_EN check.
-> > 
-> > Signed-off-by: Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
+> > set_status seems like an odd place to look at features; shouldn't that
+> > rather be done in finalize_features?  
 > 
-> Applied (and I fixed the problem reported by 0-day, so no need to resend).
->                  Thank you  Guenter. 
+> Right, looks better to me too.
+> What about:
+> 
+> 
+> 
+> diff --git a/drivers/s390/virtio/virtio_ccw.c 
+> b/drivers/s390/virtio/virtio_ccw.c
+> index 06ffbc96587a..227676297ea0 100644
+> --- a/drivers/s390/virtio/virtio_ccw.c
+> +++ b/drivers/s390/virtio/virtio_ccw.c
+> @@ -833,6 +833,11 @@ static int virtio_ccw_finalize_features(struct 
+> virtio_device *vdev)
+>                  ret = -ENOMEM;
+>                  goto out_free;
+>          }
+> +
+> +       if (is_prot_virt_guest() &&
+> +           !__virtio_test_bit(vdev, VIRTIO_F_IOMMU_PLATFORM))
+
+Add a comment, and (maybe) a message?
+
+Otherwise, I think this is fine, as it should fail the probe, which is
+what we want.
+
+> +               return -EIO;
+> +
+>          /* Give virtio_ring a chance to accept features. */
+>          vring_transport_features(vdev);
+> 
+> 
+> 
 > Thanks,
-> Guenter
 > 
-> > ---
-> >  drivers/hwmon/pmbus/adm1275.c | 12 +++++-------
-> >  1 file changed, 5 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/drivers/hwmon/pmbus/adm1275.c b/drivers/hwmon/pmbus/adm1275.c
-> > index 5caa37fb..d4e1925 100644
-> > --- a/drivers/hwmon/pmbus/adm1275.c
-> > +++ b/drivers/hwmon/pmbus/adm1275.c
-> > @@ -666,11 +666,12 @@ static int adm1275_probe(struct i2c_client *client,
-> >  		tindex = 3;
-> >  
-> >  		info->func[0] |= PMBUS_HAVE_PIN | PMBUS_HAVE_STATUS_INPUT |
-> > -			PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT;
-> > +			PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT |
-> > +			PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP;
-> >  
-> > -		/* Enable VOUT if not enabled (it is disabled by default) */
-> > -		if (!(config & ADM1278_VOUT_EN)) {
-> > -			config |= ADM1278_VOUT_EN;
-> > +		/* Enable VOUT & TEMP1 if not enabled (disabled by default) */
-> > +		if (config & (ADM1278_VOUT_EN | ADM1278_TEMP1_EN) != ADM1278_VOUT_EN | ADM1278_TEMP1_EN) {
-> > +			config |= ADM1278_VOUT_EN | ADM1278_TEMP1_EN;
-> >  			ret = i2c_smbus_write_byte_data(client,
-> >  							ADM1275_PMON_CONFIG,
-> >  							config);
-> > @@ -681,9 +682,6 @@ static int adm1275_probe(struct i2c_client *client,
-> >  			}
-> >  		}
-> >  
-> > -		if (config & ADM1278_TEMP1_EN)
-> > -			info->func[0] |=
-> > -				PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP;
-> >  		if (config & ADM1278_VIN_EN)
-> >  			info->func[0] |= PMBUS_HAVE_VIN;
-> >  		break;
+> Regards,
+> Pierre
+> 
+
