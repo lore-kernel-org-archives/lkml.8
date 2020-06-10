@@ -8,75 +8,73 @@ X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D23DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 02:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 054C4C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 02:22:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 070C920734
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 02:22:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6CA72074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 02:22:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sK8rI60A"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dMQRy+Gp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726109AbgFJCWB (ORCPT
+        id S1726130AbgFJCWq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 22:22:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35930 "EHLO
+        Tue, 9 Jun 2020 22:22:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725798AbgFJCWA (ORCPT
+        with ESMTP id S1725798AbgFJCWp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 22:22:00 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E66AC05BD1E;
-        Tue,  9 Jun 2020 19:22:00 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id e9so284015pgo.9;
-        Tue, 09 Jun 2020 19:22:00 -0700 (PDT)
+        Tue, 9 Jun 2020 22:22:45 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F5D0C05BD1E;
+        Tue,  9 Jun 2020 19:22:45 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id y18so352486plr.4;
+        Tue, 09 Jun 2020 19:22:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:references:from:message-id:date:user-agent:mime-version
          :in-reply-to:content-language:content-transfer-encoding;
-        bh=6MDJxP19WPGYDK5RYXnflZJ1FBWzKzFWdzGVhyzU/Lk=;
-        b=sK8rI60AsbWsh3JwhXzYcXyAkUhNHSg2pbGU2IX1PaiSdhY41fcfiMd3U9UxqkcM/t
-         bLihMU3wAZlB64dayGyl6qz11RNWB9Dc7jIfvnXJqZlUI0PuJWys60vW+OZ0/tPTy96f
-         GbtZPqawK7zvLXWlSpolLOTp0711JoWQT9PR8h0kCwb/gA1KVxZ9IwCm3Nx15sjmqN23
-         A/4dpBuCWPfvwVspmyzYn8grolZC/Qglbkq1ufgDWJX+FvjgnNXu85WUOaZJEHIOZXls
-         cl+vwwWpYx79bIiPfIZiYN+Rwv3uwvmVWm0p6L3QRDQ0en/yeCmJ3EJO1Vmm8DJCCGsf
-         vYxg==
+        bh=UpfONqHOTnPkMZI1MuZIK6j7EXHEnIyi1MFBGT9FXEA=;
+        b=dMQRy+Gp5fMQtRBL8EX0XCXRRd9k8EdV1ldu8ZaCdpLe7rBBQxMquJ36WWEmNUoT/K
+         MUHvzmAFnuO10U79TmazJZX4rFRU04WjwPczqmhhgShahd6kXZMjJM7u3Q/ARC/0fe5+
+         SUGQjfdFo3lcXQGrDG+6aCIqRNcWpZsO6Oqw7ilikMHuu3AUSD3gpV5JhK6l71Piwyno
+         6O1ApwsVeiTwhPI+S3IYP2GtMvY7GePmdilTVmfbypUd2E/8AHpGF0PakV/NX/rEzyhu
+         9baoLc3XAWoK3ZQ4vGXhX0gBHCT3/1w2+skjZsXU8EOqFczeDb+OalNDj0ClPd80ez45
+         bvnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=6MDJxP19WPGYDK5RYXnflZJ1FBWzKzFWdzGVhyzU/Lk=;
-        b=Mx68GPj17ldSddFiGhwVPg+NzKNrG+CCC2hG5ZQNnkQhNo7U98K4ly3SZfu5nneA8e
-         POBoKLQhGSJxspJ8ZOgtSS+ZB/zHgw71aBoGOPsHXf+5pZ6hK9PCt7vC3PmWHEstMeN/
-         dqeKmIkkMqPLBRnKw6PSRaH0kqpCc3ICr6cH/kfmjZ0dbVXt/gCqIG3DEsD+RLn2ijlv
-         u++UxelXZ7865xkS/j0V6Mr9Tp5x2PyzXTReOYJmeyiWZAOlDWPchb6i4BjUahOPnIqY
-         3B/YmcSmXU/+j9HjtGA2Ndx+G6sdtAHuCzUJVzVDslK/If3h4SMYqWXuTLtsN4MX//X0
-         c8Yg==
-X-Gm-Message-State: AOAM531dzhUdO108ZdetyR/aFL3sDLQy/GdBneyDTu/t/XjSPsBO4guF
-        oqaSOC3qS+AwitXjbjK/hW0=
-X-Google-Smtp-Source: ABdhPJzhBd02ppYU69Tbttf4OygJ4jKSUHDwxH0mbLQ80yfFlk2lgSGlv77qWFGMBQvEjdbXdu5bIA==
-X-Received: by 2002:a63:6dc7:: with SMTP id i190mr781038pgc.171.1591755720098;
-        Tue, 09 Jun 2020 19:22:00 -0700 (PDT)
+        bh=UpfONqHOTnPkMZI1MuZIK6j7EXHEnIyi1MFBGT9FXEA=;
+        b=Azl5K3CZAvO7V4gXWGCQZAIy9MZjjepbMzBd3kRfYV5ngAcmBSaE1C5OQ8n7YxKVp8
+         dlWQm8b15Jiq47DD6mq+u9LXhUXRobg/DCad+8PWWvseHzSliD92BMyTiDG0yhWK17Uf
+         VNMgWPXiNVgYOnjUIr8MxSeLGKRmoRg4Afx5TM7Cv3UWmqhWfmCy5YoS55K1ordta25C
+         aNRv72GysYiO21sGE4ow6/jmlAmmotgdhRurzUW9+1uC1yMNLT7lc09kafwecTndOl79
+         p/6TT+W3u9S0H3+ZEyEYLKurgWLQ+Dehmu+g3cwI50yTRuueAae6r8615Rjfzemzn/XK
+         BWRQ==
+X-Gm-Message-State: AOAM533q82GMPP1UddF4DVJaIMzkh+lNwSlCw9t9h3Ou4cwKObOnO1Lv
+        CKv5ieyluk6giidN5S2j+ELO/VAD
+X-Google-Smtp-Source: ABdhPJzaaYXoIL6215yKQWaWFR4LG1Geaz3r+nF0Ie6KUmiSAO7bVi4+B83Uaghj2fAMv8mERp0jPQ==
+X-Received: by 2002:a17:90b:430f:: with SMTP id ih15mr750281pjb.61.1591755764484;
+        Tue, 09 Jun 2020 19:22:44 -0700 (PDT)
 Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id y23sm9328956pgc.78.2020.06.09.19.21.58
+        by smtp.gmail.com with ESMTPSA id m7sm11163371pfb.1.2020.06.09.19.22.42
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Jun 2020 19:21:59 -0700 (PDT)
-Subject: Re: [PATCH 4/4] mips: bmips: dts: add BCM6362 power domain support
+        Tue, 09 Jun 2020 19:22:43 -0700 (PDT)
+Subject: Re: [PATCH] clk: bcm63xx-gate: fix last clock availability
 To:     =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
-        hauke@hauke-m.de, zajec5@gmail.com, tsbogend@alpha.franken.de,
-        robh+dt@kernel.org, jonas.gorski@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20200609105244.4014823-1-noltari@gmail.com>
- <20200609105244.4014823-5-noltari@gmail.com>
+        mturquette@baylibre.com, sboyd@kernel.org, f.fainelli@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, lkp@intel.com,
+        jonas.gorski@gmail.com, f4bug@amsat.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200609110846.4029620-1-noltari@gmail.com>
 From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <5876ff02-5cc7-961f-eec7-95449fd2adae@gmail.com>
-Date:   Tue, 9 Jun 2020 19:21:57 -0700
+Message-ID: <916f6100-34d4-cd5c-025d-de236546daa2@gmail.com>
+Date:   Tue, 9 Jun 2020 19:22:41 -0700
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Firefox/68.0 Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200609105244.4014823-5-noltari@gmail.com>
+In-Reply-To: <20200609110846.4029620-1-noltari@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -87,12 +85,13 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 6/9/2020 3:52 AM, Álvaro Fernández Rojas wrote:
-> BCM6362 SoCs have a power domain controller to enable/disable certain
-> components in order to save power.
+On 6/9/2020 4:08 AM, Álvaro Fernández Rojas wrote:
+> In order to make the last clock available, maxbit has to be set to the
+> highest bit value plus 1.
 > 
+> Fixes: 1c099779c1e2 ("clk: add BCM63XX gated clock controller driver")
 > Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
 
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
 Florian
