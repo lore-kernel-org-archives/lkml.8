@@ -2,131 +2,179 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A57C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3EA1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:12:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A44752072E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:11:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83B7A2072E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:12:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="eyKD4RIk"
+	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="nI03ANMd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbgFJILF (ORCPT
+        id S1726660AbgFJIMo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 04:11:05 -0400
-Received: from mail-dm6nam10on2071.outbound.protection.outlook.com ([40.107.93.71]:1601
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726207AbgFJILE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 04:11:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fVwF+woz4A0Lx6nKrNVMkXCy5vEaWU2tHvsr5V47I0dUV4g+y+a+VZbYeulaGFaP6tI/B++5TzM9aGmEhL945cyOqKs4lU+KJ3rqVqjaLOkJBZbjvfFP5LKCbOySn4pARxxeF7Eh1TEibXeFTGxIEJQodchklEPv4g673K3qB5kzUc9gAd8hNHmBjCLqShWmpZVxcbWjP15TWMayc/HkTpzptjmTjivjOaYu/2NebJP9Q9NRCuQj9Gnqn0z3zJq7+Gb4SvQgU9CppvvoAmPRbLZFUAsCLLGTINdzOZIWSfKjstvRQdCEy/7FdDhjouyIIzUFWK115uvT7+Yb7UqeNw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZZxzLyYzUEfPT32+wlwwCf77+/PVJ0spb08GUhwPgzU=;
- b=MpJbSIqw/YUS9FRUgd9yW2XdA2m1NixQuXg1yYbOzKm7K+9mPavPsnHJAtaepGBM8cV/McvTmfp/SWW/oyiHdZxoTIiBiWg4I3/U4m3T1fOZ9hi5jpGVsZBOgtrownB9V3QmMJZw3yQWcnHXcev40DPFzecC91MS4jV8NT0KvSdhe/qgsvnIgcvz3MbOohu75W1fABOgdtB6l2gTvTs0dKYAeqx513WqyjuritBEW5fWIR5GdjmRmGHndPyIF0BNRAu9zaWFpDZYgfQ8YvL4pexS5eRciggABvH8ocuF9nMS6fHhr0EzngmtfANID0dQ5pXzX3Z++zKasJtDeZwEMQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
- dkim=pass header.d=silabs.com; arc=none
+        Wed, 10 Jun 2020 04:12:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33450 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726506AbgFJIMn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 04:12:43 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 670F7C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 01:12:43 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id x18so1072624ilp.1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 01:12:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZZxzLyYzUEfPT32+wlwwCf77+/PVJ0spb08GUhwPgzU=;
- b=eyKD4RIk5oVozk3pCDZLY1Eoe90DxjCAS40pyCgjxCue54XdtZgIh0nTWmn1A83mwLGBiBq1JiaGW98dLF+3TpIzCmmM5lt9heF90VXtVrsiZpewOtHkCjKgvVL1+YYTCPaMh0UqwYRieHfpcsJ9yKd1x8BpLqtO01fwzDGfcXU=
-Authentication-Results: linuxfoundation.org; dkim=none (message not signed)
- header.d=none;linuxfoundation.org; dmarc=none action=none
- header.from=silabs.com;
-Received: from SN6PR11MB2718.namprd11.prod.outlook.com (2603:10b6:805:63::18)
- by SN6PR11MB2542.namprd11.prod.outlook.com (2603:10b6:805:60::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.20; Wed, 10 Jun
- 2020 08:11:02 +0000
-Received: from SN6PR11MB2718.namprd11.prod.outlook.com
- ([fe80::c504:2d66:a8f7:2336]) by SN6PR11MB2718.namprd11.prod.outlook.com
- ([fe80::c504:2d66:a8f7:2336%7]) with mapi id 15.20.3066.023; Wed, 10 Jun 2020
- 08:11:01 +0000
-From:   =?ISO-8859-1?Q?J=E9r=F4me?= Pouiller <jerome.pouiller@silabs.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Mohamed Dawod <mhm.dawod@gmail.com>,
-        kernelnewbies@kernelnewbies.org
-Subject: Re: [staging-testing] drivers/staging/wfx/hif_tx.c
-Date:   Wed, 10 Jun 2020 10:10:56 +0200
-Message-ID: <1949452.ECF46Ag4iX@pc-42>
-Organization: Silicon Labs
-In-Reply-To: <CAGCTLNSwM+5kzSABDN7DGFKz4FcCN-DwUmhU8dzhtyW0=kh3gg@mail.gmail.com>
-References: <CAGCTLNSwM+5kzSABDN7DGFKz4FcCN-DwUmhU8dzhtyW0=kh3gg@mail.gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
-X-ClientProxiedBy: DM5PR19CA0041.namprd19.prod.outlook.com
- (2603:10b6:3:9a::27) To SN6PR11MB2718.namprd11.prod.outlook.com
- (2603:10b6:805:63::18)
+        d=sargun.me; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=RQkLDm2OyY/FS3M4wUNUpYL3uyFZaGvTTxUYnj5+5u0=;
+        b=nI03ANMd7aBQf/IJrmaOWgFbNKk87eTPdr17BZT0Q368D+WxFJkHvpDctCS/hVgbyT
+         kVsyxxlLofq2LzBHJQHeL5sgW4BdwA/8TjesGJxuPUVxCVXjgL0xnTX8DntCK/Y5ZijX
+         psuGxMlO5RjaN5LuNj5pokTZLwnbyC0KnIpO8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RQkLDm2OyY/FS3M4wUNUpYL3uyFZaGvTTxUYnj5+5u0=;
+        b=MHCLfPmzkag2z42o+g71rT7pHfaYb95Bxp4HerXzC/jGxh3EEex3mlFic4aRSzaYK1
+         Kf01RiZpwfBp3+6ZNcGBSdg5h5PpfLwcxrmBWUe0NxPmKX1VQywYP8Wh96aeINwM+QXX
+         I9b4wgDWs3LM+QRTJwTMgdWvq0mdNsOXgetwOpc3PDoaqtM5i/bSk8J3Xgazw4rwpnmq
+         Fdy96+NiV99IJHyFW+zFP8TM/3wGtkEQcYE3SjAAZnySt0sUC7PiR7L+eLnp25Pt5EhY
+         +sZ0lqcByEBUKbjyLfoXq/ozY/7u6QYflvHlz9PDmuIBk77kK8MrivyAk7/nYFxpM/P1
+         2PRg==
+X-Gm-Message-State: AOAM530g14BnVfGVfKpPmKX7WoRMYcgrZMK6sEDdiE6+4RDGHskLKhM0
+        Vm4zYd6tOLDIIlE2u8xgLJAcMQ==
+X-Google-Smtp-Source: ABdhPJxGEPCGwJ8UWjC4fgMF8tdHJLSlj8CP8GaCNRxU8QqPToZFuzNsOKfIXMk7CIP+I0gYPieKXA==
+X-Received: by 2002:a92:914a:: with SMTP id t71mr1931962ild.200.1591776761027;
+        Wed, 10 Jun 2020 01:12:41 -0700 (PDT)
+Received: from ircssh-2.c.rugged-nimbus-611.internal (80.60.198.104.bc.googleusercontent.com. [104.198.60.80])
+        by smtp.gmail.com with ESMTPSA id q15sm8491624ioh.45.2020.06.10.01.12.40
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 10 Jun 2020 01:12:40 -0700 (PDT)
+Date:   Wed, 10 Jun 2020 08:12:38 +0000
+From:   Sargun Dhillon <sargun@sargun.me>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        containers@lists.linux-foundation.org,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        Robert Sesek <rsesek@google.com>,
+        Chris Palmer <palmer@google.com>, Jann Horn <jannh@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Wagner <daniel.wagner@bmw-carit.de>,
+        linux-kernel@vger.kernel.org, Matt Denton <mpdenton@google.com>,
+        John Fastabend <john.r.fastabend@intel.com>,
+        linux-fsdevel@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, cgroups@vger.kernel.org,
+        stable@vger.kernel.org, "David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v3 1/4] fs, net: Standardize on file_receive helper to
+ move fds across processes
+Message-ID: <20200610081237.GA23425@ircssh-2.c.rugged-nimbus-611.internal>
+References: <20200603011044.7972-2-sargun@sargun.me>
+ <20200604012452.vh33nufblowuxfed@wittgenstein>
+ <202006031845.F587F85A@keescook>
+ <20200604125226.eztfrpvvuji7cbb2@wittgenstein>
+ <20200605075435.GA3345@ircssh-2.c.rugged-nimbus-611.internal>
+ <202006091235.930519F5B@keescook>
+ <20200609200346.3fthqgfyw3bxat6l@wittgenstein>
+ <202006091346.66B79E07@keescook>
+ <037A305F-B3F8-4CFA-B9F8-CD4C9EF9090B@ubuntu.com>
+ <202006092227.D2D0E1F8F@keescook>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from pc-42.localnet (2a01:e35:2435:66a0:544b:f17b:7ae8:fb7) by DM5PR19CA0041.namprd19.prod.outlook.com (2603:10b6:3:9a::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.19 via Frontend Transport; Wed, 10 Jun 2020 08:11:00 +0000
-X-Originating-IP: [2a01:e35:2435:66a0:544b:f17b:7ae8:fb7]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 70ccfaf5-9417-4404-f59c-08d80d15d062
-X-MS-TrafficTypeDiagnostic: SN6PR11MB2542:
-X-Microsoft-Antispam-PRVS: <SN6PR11MB254241A81422E5939CEE9B6E93830@SN6PR11MB2542.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 0430FA5CB7
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: tmdT2/PYlgWxno2R6vOorMz27AY/lsQTLTaRNl9V7jqHw97QBiyArRwJeoLWLK5PuGiRj4m46aa4OcRIjIQF80aVl951p8JP84lH/X1ZVOSBa9oBC0NwNS5epCqlTu9esEdO/QiWWAqVS0slerrLnZe1Vic1jl67lLvGUJMyJneQg89VhSKGrgx54gqMpO0RnHr/U9ehEQz/AOfvMXtV0btVsbMpIz/34bJwfh7POKFt8/heGkFY6wT0ZNKdEYANYGMcC1K7a2xhEI9ZPb6QRYF4B2wDZnldHUO9v4Gh+VAo2hTNkiD5JnY+W6aNhUPcurW2QHIFg3iyuzWfKOoabkTo8y+/RQWPZMW7sRx8hp9/QRQ/cEBlQsIFMnqrcL6SPE5q6doyVqEOM1tq4+BLIq6CgKEls4DA1yMOSfpAME8nGG5nTCiR3OK9cXIZjkCmDaExp9vVMOiYrwXdaPdecA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB2718.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(376002)(39850400004)(136003)(396003)(346002)(8936002)(966005)(110136005)(8676002)(36916002)(5660300002)(16526019)(478600001)(86362001)(66946007)(66476007)(66556008)(186003)(52116002)(2906002)(9686003)(33716001)(66574014)(83380400001)(6506007)(316002)(6666004)(6512007)(6486002)(39026012);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 4nRCYPUo8AZwc6ytnJs6QUOlpZfgKZ7iV4aCN2n3c5K947HjYSb71l+1waY010SFWlHTVoeqXDdiIi+lRRGUlSE/1uCuKHmYVddSKUt3KyZZc7S4XwK5tzQKB6oOdt+/yq9nq0Fcxfb3DpD6kIr4zlye5rr1rKaBQMO629q0xY7CgzpJAFI7wxK74ZekK6gGIhSWpFgima88XKWfbjahchzfmEMVgm57pmXC7x4fJAKZRubJQFCXGEuq29jFDhEAElmdkybxBSmleKWYPJrpx0NKIZ6/SCdFShvTL3E9ysXa3q1+uTDWNcnPhADFSyRIjGuQXqSSO7yceJd4Hp2WdcAt5AvGr37v/kXkAlbL436J18K3Y+EnkrOrydxzc6Qg8psH8pYpyF4AkYYSaJSCS3qykR42y4RJbTUg3z7bE2kL2FfdoQC3+7ok+1Jdy8hLxiXc8itEXo940i1Qm1RwEOsSxJvrE3QtBKmt8fHq/YJo9TWSTVyWQhrsPaLCWE8RG+vLpcux2QAcaBetaL2Eb4EliZFdP6SSp4zZrmaHLzA=
-X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 70ccfaf5-9417-4404-f59c-08d80d15d062
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2020 08:11:01.8333
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 54dbd822-5231-4b20-944d-6f4abcd541fb
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: aN2DX3hbb+px8JnwTIpAuaW90utXEAN84F4GCOXtPReI4hR+G/bHNgRKBMfbsYO2ZZUNwYwNHboLzYT4zOT5tg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB2542
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202006092227.D2D0E1F8F@keescook>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday 10 June 2020 08:53:13 CEST Mohamed Dawod wrote:
-> Hello,
->=20
-> I read this point in  staging/wfx/TODO file
->=20
-> - In wfx_cmd_send(), "async" allow to send command without waiting the re=
-ply.
->     It may help in some situation, but it is not yet used. In add, it may=
- cause
->     some trouble:
->       https://lore.kernel.org/driverdev-devel/alpine.DEB.2.21.19100413173=
-81.2992@hadrien/
->     So, fix it (by replacing the mutex with a semaphore) or drop it.
->=20
-> I think that this issue has already been fixed in hif_shutdown() function=
-, hasn't it ?
+On Tue, Jun 09, 2020 at 10:27:54PM -0700, Kees Cook wrote:
+> On Tue, Jun 09, 2020 at 11:27:30PM +0200, Christian Brauner wrote:
+> > On June 9, 2020 10:55:42 PM GMT+02:00, Kees Cook <keescook@chromium.org> wrote:
+> > >LOL. And while we were debating this, hch just went and cleaned stuff up:
+> > >
+> > >2618d530dd8b ("net/scm: cleanup scm_detach_fds")
+> > >
+> > >So, um, yeah, now my proposal is actually even closer to what we already
+> > >have there. We just add the replace_fd() logic to __scm_install_fd() and
+> > >we're done with it.
+> > 
+> > Cool, you have a link? :)
+> 
+> How about this:
+> 
+Thank you.
+> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/commit/?h=devel/seccomp/addfd/v3.1&id=bb94586b9e7cc88e915536c2e9fb991a97b62416
+> 
+> -- 
+> Kees Cook
 
-Indeed, when I wrote the TODO file, the function hif_shutdown() didn't
-exist yet.
++		if (ufd) {
++			error = put_user(new_fd, ufd);
++			if (error) {
++				put_unused_fd(new_fd);
++				return error;
++			}
++ 		}
+I'm fairly sure this introduces a bug[1] if the user does:
 
-> I have another question. How can (replacing the mutex with a semaphore) s=
-olve the problem?
+struct msghdr msg = {};
+struct cmsghdr *cmsg;
+struct iovec io = {
+	.iov_base = &c,
+	.iov_len = 1,
+};
 
-My understanding is that a mutex aims to be acquired and released from the
-same context. In some specific usages (RT-mutex? lock proving?), acquire
-mutex from a context and release it from another can produce some errors.
-In contrary a boolean semaphore does not have this restriction.=20
+msg.msg_iov = &io;
+msg.msg_iovlen = 1;
+msg.msg_control = NULL;
+msg.msg_controllen = sizeof(buf);
 
-(can anyone confirm that?)
+recvmsg(sock, &msg, 0);
+
+They will have the FD installed, no error message, but FD number wont be written 
+to memory AFAICT. If two FDs are passed, you will get an efault. They will both
+be installed, but memory wont be written to. Maybe instead of 0, make it a
+poison pointer, or -1 instead?
+
+-----
+As an aside, all of this junk should be dropped:
++	ret = get_user(size, &uaddfd->size);
++	if (ret)
++		return ret;
++
++	ret = copy_struct_from_user(&addfd, sizeof(addfd), uaddfd, size);
++	if (ret)
++		return ret;
+
+and the size member of the seccomp_notif_addfd struct. I brought this up 
+off-list with Tycho that ioctls have the size of the struct embedded in them. We 
+should just use that. The ioctl definition is based on this[2]:
+#define _IOC(dir,type,nr,size) \
+	(((dir)  << _IOC_DIRSHIFT) | \
+	 ((type) << _IOC_TYPESHIFT) | \
+	 ((nr)   << _IOC_NRSHIFT) | \
+	 ((size) << _IOC_SIZESHIFT))
 
 
+We should just use copy_from_user for now. In the future, we can either 
+introduce new ioctl names for new structs, or extract the size dynamically from 
+the ioctl (and mask it out on the switch statement in seccomp_notify_ioctl.
 
---=20
-J=E9r=F4me Pouiller
+----
++#define SECCOMP_IOCTL_NOTIF_ADDFD	SECCOMP_IOR(3,	\
++						struct seccomp_notif_addfd)
+
+Lastly, what I believe to be a small mistake, it should be SECCOMP_IOW, based on 
+the documentation in ioctl.h -- "_IOW means userland is writing and kernel is 
+reading."
 
 
+[1]: https://lore.kernel.org/lkml/20200604052040.GA16501@ircssh-2.c.rugged-nimbus-611.internal/
+[2]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/uapi/asm-generic/ioctl.h?id=v5.7#n69
