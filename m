@@ -2,111 +2,118 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B22C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 923A8C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:50:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C015C206C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:50:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64A3B206F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:50:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591804207;
-	bh=p6i/IqPt79eKNWiJ/ilbD6VdrBxWjGYWZhum1eNHc/k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ud5oWjYJtSykJo3MCYb1HEJJ8nN7obIiJ817Cjl/RiaqCwHA59mZU8A2q5j/te7Pp
-	 2pmNdXtklB9GZKjolZtFJqptetzDHK9tgx9LYn3fHVpBsW8BSngkjGHmH4H3KeW0AA
-	 oMmNRppjKHt0NzzX9LLEV+rTpyA4Q/v0jG9WpwOA=
+	s=default; t=1591804218;
+	bh=gjNi9v8mH0UE14YlBjV9C7FAXJQuACnUBQ+1HxXujq8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OtoSY2KLWZGoWmU7/7kkZE8RZmF+dBe8AwJTtyRi/8IEQnHGEY/k1FgY2tX/h3BDd
+	 bmbV6XM1xbIWRNLfmjckYQM6OLEqHtv7ZweKtfkoa0ERip0SE985HXfVGVInrqD34x
+	 7eQBt8fL9IbF6KzO2OWylbjBHKaKaxXfUyFDN7LI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730424AbgFJPuG (ORCPT
+        id S1730436AbgFJPuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 11:50:06 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44741 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730336AbgFJPta (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 11:49:30 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 64so1260190pfv.11;
-        Wed, 10 Jun 2020 08:49:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=CrxGEOGFjsdVHn3Jd9UDXtWDflxIQ5FEpiOYf5podJs=;
-        b=K4vctIrodxtU656nnPd0chQXWRRECjOiTHcokQ3nwzufmTJH48yozHbRvOCQ0mTLJJ
-         EAW/wqlgQC6svpjRJXD/iBd+JtHpxEoDFIFddPTD7nu7czb218EYL30ZZwnDdlrvPZMZ
-         nkN/6xXB6y25bdJz3vybKfdQkWxz5Qwjeho3wGqDidMv+CGPw3POKKOg523eI5qtL7F0
-         oJxTImI5/M5rt+mNxX3mrfj1KBI1Fzcq0ccG9pLpKsY2+PKF1WJySJa9siG3vUxH8Vhp
-         c/a8bjp/5ij6LRNdPBQSgdzpnb3n1r4SBQAajDTGpslv/Yh3iHCKVnurtp4OyPlt0ZG3
-         nzqg==
-X-Gm-Message-State: AOAM531W96+PUtpPQt5YADLaZqYLW3WxLAgYAxzLatPnsAM2QKs4i5qt
-        fGuXMZgB65p5ABWhJHc8G9Q=
-X-Google-Smtp-Source: ABdhPJwXqgq7uS6Tcjx1SZx1Aww2/d5U2tI05GsSHHER7yozK95nSSwZLGkFi7ZnI4HAy3+k2OwCKQ==
-X-Received: by 2002:a63:ce14:: with SMTP id y20mr3147465pgf.186.1591804168526;
-        Wed, 10 Jun 2020 08:49:28 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id c9sm302681pfp.100.2020.06.10.08.49.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 08:49:26 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 4CCCE40ED5; Wed, 10 Jun 2020 15:49:25 +0000 (UTC)
-From:   "Luis R. Rodriguez" <mcgrof@kernel.org>
-To:     gregkh@linuxfoundation.org, viro@zeniv.linux.org.uk,
-        philipp.reisner@linbit.com, lars.ellenberg@linbit.com,
-        axboe@kernel.dk, bfields@fieldses.org, chuck.lever@oracle.com,
-        roopa@cumulusnetworks.com, nikolay@cumulusnetworks.com,
-        davem@davemloft.net, kuba@kernel.org, dhowells@redhat.com,
-        jarkko.sakkinen@linux.intel.com, jmorris@namei.org,
-        serge@hallyn.com, christian.brauner@ubuntu.com
-Cc:     slyfox@gentoo.org, ast@kernel.org, keescook@chromium.org,
-        josh@joshtriplett.org, ravenexp@gmail.com, chainsaw@gentoo.org,
-        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        bridge@lists.linux-foundation.org, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH 2/5] kmod: Remove redundant "be an" in the comment
-Date:   Wed, 10 Jun 2020 15:49:20 +0000
-Message-Id: <20200610154923.27510-3-mcgrof@kernel.org>
-X-Mailer: git-send-email 2.23.0.rc1
-In-Reply-To: <20200610154923.27510-1-mcgrof@kernel.org>
-References: <20200610154923.27510-1-mcgrof@kernel.org>
+        Wed, 10 Jun 2020 11:50:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47966 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730336AbgFJPuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 11:50:15 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA0A8206C3;
+        Wed, 10 Jun 2020 15:50:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591804215;
+        bh=gjNi9v8mH0UE14YlBjV9C7FAXJQuACnUBQ+1HxXujq8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pxYTFTM6+6hKI5D1epsl48SmXcRjOBEt8sQ+0GCnrbjo8tOx0zkNan2Gb4mVS/sSU
+         2UdnoVKqsVgEVtc4oBDq7DD/NZDEs+OKexSEFRWEu0YRL7DzURB54rbwpLDawaDR7R
+         qNk4xmtA4yXe/MrtTSxASUbeUpQBoDSgYht6S/u0=
+Date:   Wed, 10 Jun 2020 08:50:13 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     mtk.manpages@gmail.com, linux-man@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][man-pages] sync.2: syncfs() now returns errors if
+ writeback fails
+Message-ID: <20200610155013.GA1339@sol.localdomain>
+References: <20200610103347.14395-1-jlayton@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200610103347.14395-1-jlayton@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
+On Wed, Jun 10, 2020 at 06:33:47AM -0400, Jeff Layton wrote:
+> A patch has been merged for v5.8 that changes how syncfs() reports
+> errors. Change the sync() manpage accordingly.
+> 
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+>  man2/sync.2 | 24 +++++++++++++++++++++++-
+>  1 file changed, 23 insertions(+), 1 deletion(-)
+> 
+> diff --git a/man2/sync.2 b/man2/sync.2
+> index 7198f3311b05..27e04cff5845 100644
+> --- a/man2/sync.2
+> +++ b/man2/sync.2
+> @@ -86,11 +86,26 @@ to indicate the error.
+>  is always successful.
+>  .PP
+>  .BR syncfs ()
+> -can fail for at least the following reason:
+> +can fail for at least the following reasons:
+>  .TP
+>  .B EBADF
+>  .I fd
+>  is not a valid file descriptor.
+> +.TP
+> +.B EIO
+> +An error occurred during synchronization.
+> +This error may relate to data written to any file on the filesystem, or on
+> +metadata related to the filesytem itself.
+> +.TP
+> +.B ENOSPC
+> +Disk space was exhausted while synchronizing.
+> +.TP
+> +.BR ENOSPC ", " EDQUOT
+> +Data was written to a files on NFS or another filesystem which does not
+> +allocate space at the time of a
+> +.BR write (2)
+> +system call, and some previous write failed due to insufficient
+> +storage space.
+>  .SH VERSIONS
+>  .BR syncfs ()
+>  first appeared in Linux 2.6.39;
+> @@ -121,6 +136,13 @@ or
+>  .BR syncfs ()
+>  provide the same guarantees as fsync called on every file in
+>  the system or filesystem respectively.
+> +.PP
+> +In mainline kernel versions prior to 5.8,
+> +.\" commit 735e4ae5ba28c886d249ad04d3c8cc097dad6336
+> +.BR syncfs ()
+> +will only fail with EBADF when passed a bad file descriptor. In 5.8
+> +and later kernels, it will also report an error if one or more inodes failed
+> +to be written back since the last syncfs call.
 
-There exists redundant "be an" in the comment, remove it.
+The sentence "In mainline kernel versions prior to 5.8, syncfs() will only fail
+with EBADF when passed a bad file descriptor" is ambiguous.  It could mean that
+EBADF can now mean other things too.
 
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
- kernel/kmod.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+Maybe write: "In mainline kernel versions prior to 5.8, syncfs() will only fail
+when passed a bad file descriptor (EBADF)."
 
-diff --git a/kernel/kmod.c b/kernel/kmod.c
-index 37c3c4b97b8e..3cd075ce2a1e 100644
---- a/kernel/kmod.c
-+++ b/kernel/kmod.c
-@@ -36,9 +36,8 @@
-  *
-  * If you need less than 50 threads would mean we're dealing with systems
-  * smaller than 3200 pages. This assumes you are capable of having ~13M memory,
-- * and this would only be an be an upper limit, after which the OOM killer
-- * would take effect. Systems like these are very unlikely if modules are
-- * enabled.
-+ * and this would only be an upper limit, after which the OOM killer would take
-+ * effect. Systems like these are very unlikely if modules are enabled.
-  */
- #define MAX_KMOD_CONCURRENT 50
- static atomic_t kmod_concurrent_max = ATOMIC_INIT(MAX_KMOD_CONCURRENT);
--- 
-2.26.2
-
+- Eric
