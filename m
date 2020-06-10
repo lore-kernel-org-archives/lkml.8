@@ -2,98 +2,81 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85CADC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 494A8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A189206C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:34:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18B2520656
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:34:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="QxTP5VFv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728295AbgFJKeZ (ORCPT
+        id S1728311AbgFJKea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 06:34:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55372 "EHLO
+        Wed, 10 Jun 2020 06:34:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728083AbgFJKeY (ORCPT
+        with ESMTP id S1728083AbgFJKe3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 06:34:24 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8408BC03E96F;
-        Wed, 10 Jun 2020 03:34:24 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jiy3l-0001gw-HJ; Wed, 10 Jun 2020 12:34:17 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 14FFA1C0105;
-        Wed, 10 Jun 2020 12:34:17 +0200 (CEST)
-Date:   Wed, 10 Jun 2020 10:34:16 -0000
-From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/urgent] sched: Fix RANDSTRUCT build fail
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+        Wed, 10 Jun 2020 06:34:29 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33164C03E96F
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 03:34:28 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f0c190058967d889e42c717.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:1900:5896:7d88:9e42:c717])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3AA5F1EC0347;
+        Wed, 10 Jun 2020 12:34:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1591785266;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=oUqsKM3VGX+allcG7hbfIpXBxBk39Nd9J5AqFmM6K8s=;
+        b=QxTP5VFvFhwFGfG/QYHXDM7gSslE/W6R1WJhaFnz1bVKe+oeRo84Me3nh+MdyOw/VWloeE
+        OznB+C/Y//kxVKnJN/UZ6ud/8aurD2f/dnXT6tBvc48bTJKtlcJT7ZqGC5GcpkDjMC487W
+        NmNpiwaF00QJbhLY2aDpaK9rKcTZbDE=
+Date:   Wed, 10 Jun 2020 12:34:18 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        x86-ml <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] x86/microcode: Do not select FW_LOADER
+Message-ID: <20200610103418.GE14118@zn.tnic>
+References: <20200610042911.GA20058@gondor.apana.org.au>
+ <20200610081609.GA14118@zn.tnic>
+ <20200610102851.GA22584@gondor.apana.org.au>
 MIME-Version: 1.0
-Message-ID: <159178525684.17951.17825196124597318263.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200610102851.GA22584@gondor.apana.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/urgent branch of tip:
+On Wed, Jun 10, 2020 at 08:28:51PM +1000, Herbert Xu wrote:
+> Because MICROCODE is the only thing on my system that pulls it
+> into the kernel.
 
-Commit-ID:     bfb9fbe0f7e70ec5c8e51ee55b6968d4dff14456
-Gitweb:        https://git.kernel.org/tip/bfb9fbe0f7e70ec5c8e51ee55b6968d4dff14456
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Wed, 10 Jun 2020 12:14:09 +02:00
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Wed, 10 Jun 2020 12:30:19 +02:00
+That's a very interesting system you have.
 
-sched: Fix RANDSTRUCT build fail
+> That shouldn't be a problem.  That function can simply move under
+> another (hidden) Kconfig option that gets selected by both MICROCODE
+> and FW_LOADER.
 
-As a temporary build fix, the proper cleanup needs more work.
+Out Kconfig symbols space is a mess and I'd prefer not to add another
+one if there's no good reason for it.
 
-Reported-by: Guenter Roeck <linux@roeck-us.net>
-Reported-by: Eric Biggers <ebiggers@kernel.org>
-Suggested-by: Eric Biggers <ebiggers@kernel.org>
-Suggested-by: Kees Cook <keescook@chromium.org>
-Fixes: a148866489fb ("sched: Replace rq::wake_list")
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- include/linux/sched.h | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+-- 
+Regards/Gruss,
+    Boris.
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 57a5ce9..59caeb9 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -653,8 +653,10 @@ struct task_struct {
- 	unsigned int			ptrace;
- 
- #ifdef CONFIG_SMP
--	struct llist_node		wake_entry;
--	unsigned int			wake_entry_type;
-+	struct {
-+		struct llist_node		wake_entry;
-+		unsigned int			wake_entry_type;
-+	};
- 	int				on_cpu;
- #ifdef CONFIG_THREAD_INFO_IN_TASK
- 	/* Current CPU: */
+https://people.kernel.org/tglx/notes-about-netiquette
