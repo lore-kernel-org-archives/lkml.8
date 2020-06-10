@@ -2,70 +2,104 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 944F0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F2DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68F95206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:52:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D62D22078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:53:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Nw3Qv6ZG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727981AbgFJJwV (ORCPT
+        id S1727995AbgFJJxD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 05:52:21 -0400
-Received: from mga01.intel.com ([192.55.52.88]:32460 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726134AbgFJJwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 05:52:21 -0400
-IronPort-SDR: cduVAJmSd528RDmgIk+Mld6BseDiHugEed6+7LwJJmXVKZ2ISNf7Sz1KzUlKw3aIqJMAmfXDEK
- Y8yid7HmNRZw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2020 02:52:20 -0700
-IronPort-SDR: ZzvQkhgHvZvcqUrsFkdxNV042deSsHvS0fa9T3uHHvJaSIVqlnf2duh5G5SMtRJVqC7f+Ipxy2
- DRs7ZtW3wSyA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,495,1583222400"; 
-   d="scan'208";a="380013092"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 10 Jun 2020 02:52:18 -0700
-Received: by lahna (sSMTP sendmail emulation); Wed, 10 Jun 2020 12:52:17 +0300
-Date:   Wed, 10 Jun 2020 12:52:17 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Paul Menzel <pmenzel@molgen.mpg.de>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        it+linux-pci@molgen.mpg.de, amd-gfx@lists.freedesktop.org
-Subject: Re: close() on some Intel CNP-LP PCI devices takes up to 2.7 s
-Message-ID: <20200610095217.GE247495@lahna.fi.intel.com>
-References: <b0781d0e-2894-100d-a4da-e56c225eb2a6@molgen.mpg.de>
- <20200609154416.GU247495@lahna.fi.intel.com>
- <3854150d-f193-d34e-557e-41090e4f39b5@molgen.mpg.de>
+        Wed, 10 Jun 2020 05:53:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48962 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727887AbgFJJxC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 05:53:02 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A6AEC03E96F
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 02:53:01 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id r125so1055842lff.13
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 02:53:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VRh1o2eQq3dG1Zvvq6SPoPAkNUd6uKb8MY9HPcGIRes=;
+        b=Nw3Qv6ZGCW9xzc0Npt6Hxvu7gTXEq++EwjUUbzdPJcG6Rmm2lnOsTgbc/7UMKErZ4F
+         +d60EC7ezVyJwyo/Pzk1peeneGBaZ8vnz5rtahwqsdD/KUTlvXx5bjYirsjq4Xnsn3Rr
+         uwnTl5GvuV4QptUDJfGI/8DCMBuxlIV+m5bnOiAthlKa8T0NE5IA5N9+2r1o2H9j+SZO
+         6s7Tf/SPrb0jZG8425cAvfz7dNt4UNaIap+YX3Ht/RTNk5ok2uM1jLbYZc0irh/r0Ggv
+         PntiBWTOV01xkayy/miHT2UwNllJSKy/nYnmMGcyJUNB4Gf9WJWJEX13zvf1sDxIwLRL
+         FnuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VRh1o2eQq3dG1Zvvq6SPoPAkNUd6uKb8MY9HPcGIRes=;
+        b=DMFlqoJ4QWDt0sWlYVKTugJAvHCGFOYMJq+6aM05U8vszQOxHwKyBHCKOqg99PyEBA
+         8vsgGEVMgOkFY/LY0Zdu6lFdKvbtkH8OzDXBnK/VRWrftzZ+vtxZEuiZgaUjAmlwjt0Q
+         sG+ewx4pv1sYv9qQz125GdrhK0qWrgM0LqcbKKWzQKUo27o0wXWpZFceo+HqtaDWUq0Q
+         0GOmYD7m5MUBbKR8MjjWN274ShVBVlRqxn0+Wb61LZ2cua8n0VCXYHeeVFB1Y/QLs/sF
+         7aQujeL10SqIN2ErQ7+G0+Y/qJWXv/xYCO1VMgtHZ4L706MC+CToVjpPS5Cpgw0dCQxe
+         7lhw==
+X-Gm-Message-State: AOAM531QTLaGpzQl/i4Mz3hfN2ecrSzj4Ef8TWxZtcKgLSq6B7NrUyUI
+        HAalwuiOoIAd+oaFo7dIA8BWDIYFTE1o1TzVxD+G0g==
+X-Google-Smtp-Source: ABdhPJzOMSuJGce69DNBlwY6+Eui820jOc7lQXp4MpPIfNmTvz1y18Agd0Fc44hqxES++vxVimhy/4mkOO9C2Qeirek=
+X-Received: by 2002:ac2:5473:: with SMTP id e19mr1273238lfn.21.1591782779579;
+ Wed, 10 Jun 2020 02:52:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3854150d-f193-d34e-557e-41090e4f39b5@molgen.mpg.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200605224403.181015-1-sebastian.reichel@collabora.com> <20200605224403.181015-5-sebastian.reichel@collabora.com>
+In-Reply-To: <20200605224403.181015-5-sebastian.reichel@collabora.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 10 Jun 2020 11:52:48 +0200
+Message-ID: <CACRpkdZWZ196LC8gBv_cUs2=h1Dvko_1Z4y2z571BaDu4jnWtQ@mail.gmail.com>
+Subject: Re: [PATCHv2 4/6] ARM: pxa: Use GPIO descriptor for gpio-charger
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Russell King <linux@armlinux.org.uk>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kernel@collabora.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 08:18:07AM +0200, Paul Menzel wrote:
-> Thank you for replying so quickly. Hopefully, I’ll be able to test the
-> commit tomorrow.
-> 
-> One question though. The commit talks about resuming from suspend. I
-> understand that training happens there.
-> 
-> In my case the system is already running. So I wonder, why link(?) training
-> would still happening.
+On Sat, Jun 6, 2020 at 12:44 AM Sebastian Reichel
+<sebastian.reichel@collabora.com> wrote:
 
-It also includes runtime PM so when the PCIe topology goes into D3cold
-the links are "down" so once you run tool such as lspci the links need
-to be re-trained to be able to access the devices connected to them.
+> Provide AC detect GPIO via gpiod table instead of
+> legacy platform data so that legacy GPIO support
+> can be removed from the driver.
+>
+> Also remove useless IRQ resource, which is not
+> used by the driver.
+>
+> Due to lack of hardware this has only been compile
+> tested.
+>
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Thanks for going the extra mile and doing this deep clean-up.
+
+Yours,
+Linus Walleij
