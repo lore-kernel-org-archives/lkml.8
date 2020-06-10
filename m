@@ -2,134 +2,87 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6691FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:10:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F52EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B6FA206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:10:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591780242;
-	bh=eA9b9r/VfrB6XIgnaOoOlI7iRbldULAZTDwgqhhpxns=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=SN4h1E5Qq/fRT9jemu0GtrpvG/bN+ZtCXZHUMfHpqaxC0u76Oyp08nrMUKGFP67SU
-	 6h6VW2igqeivWanWQ2oZFVQ9uL5PZxvMqOw88NHqUlH/fmUFxi/Rt3MAMkPEoldRIo
-	 9A6eglvToLTjhmR8Ok21jXsVqBa0A/3BY75F4i/Y=
+	by mail.kernel.org (Postfix) with ESMTP id 0A060206F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:13:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TWzngnQI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727846AbgFJJKk (ORCPT
+        id S1727039AbgFJJNU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 05:10:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34466 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726981AbgFJJKk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 05:10:40 -0400
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2F97206F4;
-        Wed, 10 Jun 2020 09:10:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591780239;
-        bh=eA9b9r/VfrB6XIgnaOoOlI7iRbldULAZTDwgqhhpxns=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ysqkV0trPvjiou3OvlVUwFiMEbfJsJWB2NCYw87pPBFoAmnvtTa2U+oy4Zoic5MY8
-         5Tc+yvPbaHY0s8T9+K35Jr75czQDlTVaR8X/vSY94btpo2Y5Y0c16YQhRnYUeaoeyh
-         exMxp1EYO2b48yb+9aNsvpni/PNS3QOJZjRxK0PA=
-Received: by mail-ot1-f51.google.com with SMTP id k15so1137856otp.8;
-        Wed, 10 Jun 2020 02:10:39 -0700 (PDT)
-X-Gm-Message-State: AOAM5317uMzkx8km+CgKSOQtI+Xe4MrXzEcaA8kH5ho+gH5I003R43e2
-        lhGZSGhhf9vowB1jWRIZDz+1qhP0Hg8zjFI4Sos=
-X-Google-Smtp-Source: ABdhPJyrpM2kAa85IxQlBAnrXXaGFJblaR/dF94rvrYfkdYJt0hYgrbcRlP2X8+uJW1d97ToMjRO5FTwp3KOw5XmtuY=
-X-Received: by 2002:a9d:42e:: with SMTP id 43mr1845458otc.108.1591780238955;
- Wed, 10 Jun 2020 02:10:38 -0700 (PDT)
+        Wed, 10 Jun 2020 05:13:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42846 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726948AbgFJJNU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 05:13:20 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5772C03E96F
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 02:13:18 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id h188so1011533lfd.7
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 02:13:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=C38mlKFbKcn0KxflluI+40IimgVnduQnhaBOHbkWa8E=;
+        b=TWzngnQIgK9IeP2unLrjbP2Nq3Pxntzaj1eVDSWc25mWOIpm8isZibtRz6skHc1PfG
+         uuoXBeQTDjC6NmfpP0ZwdZ1GHRFKXlJDI8QctYnsr2ubz+wkvDC295kESRHh0HLIfFZB
+         WwG1yaDH+MjUFA5cruCUKV4z9FWeU7hkwMmnn3GIcXK8VO1iUZR1HDyp5bFzCbI51tLl
+         W79qWy35Ib1RhXQzkfwuVBUPIXntIKiGc1NXQso1Nrl9RPZAtAQqAnP7MTArEVHqA2Re
+         Wc4xWwm5lbUyl2Z5Bb6ptXu76oedSrvofnMELcMiPNBFBTPbddKU1MrE+vxuUQaxDkYH
+         eVKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=C38mlKFbKcn0KxflluI+40IimgVnduQnhaBOHbkWa8E=;
+        b=dwZXtvdFNXza2sLdBziKRsfNKOSXZ5QmW1rd0qxnT1V3B21ncilLYXj2lPFzRUItPY
+         SNMghaecH+Nl0jcwYunFnhSvCnUtUZm1+rv97PRisqJZcqOsFh/2/+7+M1fuWIqCVS2y
+         oYEajpFm7mh/NJbIp0TK56fzLT0OSI5l/QhotqZnr28YJadj7xwSeMwZG2SEYQ3dp4gn
+         lTPOXS4jqMmLN2RGzXQwyp8+nPZpvQfAf41Wl7aEDxQoF5iL/Fu0P5PFt6vrC3LWrWEi
+         vAFO4KlzJmHj/oeE015Rv2CY4wOZswMumAQnmSCbmz3qx4OhJPj2d7yCjZbfxM2i2k/Y
+         NCNg==
+X-Gm-Message-State: AOAM533EVEPHpHELcdOxy9ARluZE3au/WdADWH72aFD/TwPiSJFhQ9EP
+        jibQ5/K0Fkye2TChI6Vp1Mu724L8goe1LMuIVXOAkg==
+X-Google-Smtp-Source: ABdhPJz+O3CiP/rQT2+fskrv9NUMEXKRdot09KjDq1C18L6A+qUjVgcXu1eTGOkzU+Rmxr5tJWULYao3d+wWZfCgSsk=
+X-Received: by 2002:ac2:4823:: with SMTP id 3mr1184193lft.194.1591780397116;
+ Wed, 10 Jun 2020 02:13:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200610071446.3737-1-zhenzhong.duan@gmail.com> <20200610085932.GA461993@ubuntu-n2-xlarge-x86>
-In-Reply-To: <20200610085932.GA461993@ubuntu-n2-xlarge-x86>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 10 Jun 2020 11:10:27 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHun8-SS4L03ccp=pt1oyPSfpuPezju294NnJoKLtcvcA@mail.gmail.com>
-Message-ID: <CAMj1kXHun8-SS4L03ccp=pt1oyPSfpuPezju294NnJoKLtcvcA@mail.gmail.com>
-Subject: Re: [PATCH] efi/libstub: Fix build error with libstub
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Zhenzhong Duan <zhenzhong.duan@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Kees Cook <keescook@chromium.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
+References: <20200602141048.1995-1-warthog618@gmail.com>
+In-Reply-To: <20200602141048.1995-1-warthog618@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 10 Jun 2020 11:13:06 +0200
+Message-ID: <CACRpkdbVmrjgqXHvav3JWmncrKhNnroJKvTYm57dgKu1VrVfUQ@mail.gmail.com>
+Subject: Re: [PATCH v2] gpiolib: split character device into gpiolib-cdev
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 10 Jun 2020 at 10:59, Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> On Wed, Jun 10, 2020 at 03:14:46PM +0800, Zhenzhong Duan wrote:
-> > Got below error during build:
-> >
-> >   In file included from drivers/firmware/efi/libstub/efi-stub-helper.c:=
-16:0:
-> >   drivers/firmware/efi/libstub/efi-stub-helper.c: In function =E2=80=98=
-efi_char16_puts=E2=80=99:
-> >   arch/x86/include/asm/efi.h:355:3: sorry, unimplemented: ms_abi attrib=
-ute requires -maccumulate-outgoing-args or subtarget optimization implying =
-it
-> >      : __efi64_thunk_map(inst, func, inst, ##__VA_ARGS__))
-> >      ^
-> >   drivers/firmware/efi/libstub/efi-stub-helper.c:37:2: note: in expansi=
-on of macro =E2=80=98efi_call_proto=E2=80=99
-> >     efi_call_proto(efi_table_attr(efi_system_table, con_out),
-> >     ^
-> >   drivers/firmware/efi/libstub/efi-stub-helper.c:37: confused by earlie=
-r errors, bailing out
-> >
-> > Fix it by adding -maccumulate-outgoing-args for efi libstub build
-> > as suggested by gcc.
-> >
-> > Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
-> > ---
-> >  drivers/firmware/efi/libstub/Makefile | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/e=
-fi/libstub/Makefile
-> > index cce4a74..25e5d02 100644
-> > --- a/drivers/firmware/efi/libstub/Makefile
-> > +++ b/drivers/firmware/efi/libstub/Makefile
-> > @@ -6,7 +6,7 @@
-> >  # enabled, even if doing so doesn't break the build.
-> >  #
-> >  cflags-$(CONFIG_X86_32)              :=3D -march=3Di386
-> > -cflags-$(CONFIG_X86_64)              :=3D -mcmodel=3Dsmall
-> > +cflags-$(CONFIG_X86_64)              :=3D -mcmodel=3Dsmall -maccumulat=
-e-outgoing-args
->
-> This will need a cc-option call if this patch is necessary because clang
-> does not support this flag.
->
-> clang-11: error: unknown argument: '-maccumulate-outgoing-args'
->
+On Tue, Jun 2, 2020 at 4:11 PM Kent Gibson <warthog618@gmail.com> wrote:
 
-A fix was already sent for this
-
-https://lore.kernel.org/bpf/20200605150638.1011637-1-nivedita@alum.mit.edu/
-
-which does the right thing here.
-
-> >  cflags-$(CONFIG_X86)         +=3D -m$(BITS) -D__KERNEL__ \
-> >                                  -fPIC -fno-strict-aliasing -mno-red-zo=
-ne \
-> >                                  -mno-mmx -mno-sse -fshort-wchar \
-> > --
-> > 1.8.3.1
-> >
+> Split the cdev specific functionality out of gpiolib.c and into
+> gpiolib-cdev.c. This improves the readability and maintainability of both
+> the cdev and core gpiolib code.
 >
-> Cheers,
-> Nathan
+> Suggested-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Signed-off-by: Kent Gibson <warthog618@gmail.com>
+
+Patch applied as early v5.9 development.
+
+I will include it into linux-next after v5.8-rc1 is out.
+
+Yours,
+Linus Walleij
