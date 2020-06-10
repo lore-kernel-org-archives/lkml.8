@@ -2,168 +2,253 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4140BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F016C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1AB520734
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:16:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AEEE20734
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:19:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="YNyKvmHG";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="rHIxeSRP"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="RWPUr9CK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726324AbgFJHQf (ORCPT
+        id S1726372AbgFJHTX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 03:16:35 -0400
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:3838 "EHLO
-        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbgFJHQe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 03:16:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1591773394; x=1623309394;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=sHcFTewgvSzoYGhbh8TFpSO5IAs00x0ZxL7bd75hvAc=;
-  b=YNyKvmHGOjyJJHUTSZvezK8TxzXyn+Lu6uZIZqWNMGoqIvcmoD/vgMpb
-   38X5+Gv7b+z/NE1QSr+6qv0ZhMWAi2FQZCMihWWWtr3ZeKswUqpUOG6rj
-   da/hl9OeWUghHBFEym779a3zLL5CrBFknJjYxVhJbZU7edfj1fVSs6TOO
-   mJLgIXCHHUq6LGzjw8lLBBswlawsiNNEZYdxXXs1QiGIWbhB8HlaVCkj+
-   hpbNjV11lsBdeyGKHzH7qn/7njt5R044ooY/MUM5xrQuxgfcBhQwczgBH
-   5R3ZdJBY2rIexnBSJ6uQpfFEvvQP6ZrnJGNxy10euoJqSsfYHxs9+iQbv
-   Q==;
-IronPort-SDR: rllLeGfDrujFXpTuS/nn3TJFIhmvXpZsJuedEUMPH9eYqpfr/Dv4ij4p0ZhYfTXjVt7kbP5VuR
- jZ+re8MzWnuYoQrVu3+l43CpUWyPcnOQGQTgGg37re2SDd0gqGX58MKn/pY43p3Bnc4zMxz32X
- gJzRZN4v2QKEk5iNTUaNFOh9S8ORu3p+GPuqrV5Vz7HHj0jNTxIzRURqlbAv3Z71YiP2u0xiy6
- dgnNhqF3iUlWcSW3OlMPGImPM/nlPeMktqJFm6DL0/6Kvr0/SGkMU8MzMOvKoVNVXu1ugSKNPt
- NEI=
-X-IronPort-AV: E=Sophos;i="5.73,495,1583164800"; 
-   d="scan'208";a="141028445"
-Received: from mail-cys01nam02lp2052.outbound.protection.outlook.com (HELO NAM02-CY1-obe.outbound.protection.outlook.com) ([104.47.37.52])
-  by ob1.hgst.iphmx.com with ESMTP; 10 Jun 2020 15:16:33 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oK4uulboYy5rUxsI9/DWWF1keFgBS5yewj5D53tD1CVbDSD+hbCSNKTiBThMjeGPfXbvFbL9Z4FO3OWjP0nyru++lRjLe5Rq7StQy905KUVaYOxgs9OUd8YH3BymwtARyCM1TcVwzwhWpHYqRFNmz6hxo4s6wAY0O0fVOEK2aKQN8GiKX3ranfgCCWTG16RE/y15z0N/vGRBv1RmiM6Fz7BMHZOLEOkpJQB4tOrtObeLQj9EsnFB++0V7yq2CQdRRAQKFiE+1XxTe7QI8U4XEbQVzd0oox4OJktiQiCX6k1TkqZLJ4kHFrV06AQ9xwa/MrMRhfs4BepGGum4Inp5sQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wAFPXcS5ofoxT8E3UMYeNkP4z5Q0dYk+7F44su0mSY4=;
- b=F9Gx3cD3DI64uKq6kXiU7yzcCMVIg6UZoWr+EYHNqHmlFl/KnCjaJEIrNGHhoNaMg0y+Lfoz0mlA40L/3fSdO2ZgtM8M3vqMFYuCCBoyMbbI8NU7RhJBBg/JZ7/v+t4vC/b0g6naqRAlklEE100WGaUnJ6yiiaWy27+2KaBa5Lx1YFAzMVD4jCXtB8wBgxWqUfiHX3KA2J8Ui38B+9R/safne1tEFdl7RtYeMOx2hAap0wMP3HJbGFgM2xW3fPoG37WmdHGCVQcJGnHauv6C9iznqAJmxfBc7c1nDqHWXyJYp6/CjKj/MoChCRqUYEUVSgi1jr4k8FWY82FfaORykg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wAFPXcS5ofoxT8E3UMYeNkP4z5Q0dYk+7F44su0mSY4=;
- b=rHIxeSRPCc5IVvAkFCfI9KkGNzRYCRDz/xhGaO4qXNyf9+QPPuhp2dgolpvPertAhnA2PMb7S9DVgSfafHEEFcBiONT0IeD1WJFSG6QxhcTfqp4XRIfGMH/HjTGyiRyMGjHh0GLiASIN3Ox3jIAWO/bJLFOuoPioxWoYS3qlou8=
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
- by SN6PR04MB4400.namprd04.prod.outlook.com (2603:10b6:805:39::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Wed, 10 Jun
- 2020 07:16:32 +0000
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::9cbe:995f:c25f:d288]) by SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::9cbe:995f:c25f:d288%6]) with mapi id 15.20.3088.018; Wed, 10 Jun 2020
- 07:16:32 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-CC:     "kjlu@umn.edu" <kjlu@umn.edu>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Can Guo <cang@codeaurora.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dinghao Liu <dinghao.liu@zju.edu.cn>
-Subject: RE: [PATCH] scsi: ufs-bsg: Fix runtime PM imbalance on error
-Thread-Topic: [PATCH] scsi: ufs-bsg: Fix runtime PM imbalance on error
-Thread-Index: AQHWPsyO1tMSQcTvHEyUblbEcRc526jRb/8Q
-Date:   Wed, 10 Jun 2020 07:16:31 +0000
-Message-ID: <SN6PR04MB464040E5275E7F5C28CFB9E9FC830@SN6PR04MB4640.namprd04.prod.outlook.com>
-References: <20200522045932.31795-1-dinghao.liu@zju.edu.cn>
- <yq1k10fsmaj.fsf@ca-mkp.ca.oracle.com>
-In-Reply-To: <yq1k10fsmaj.fsf@ca-mkp.ca.oracle.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: oracle.com; dkim=none (message not signed)
- header.d=none;oracle.com; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [212.25.79.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 54beff7a-faa4-4992-fd07-08d80d0e33c5
-x-ms-traffictypediagnostic: SN6PR04MB4400:
-x-microsoft-antispam-prvs: <SN6PR04MB4400427759B785B34752C9E9FC830@SN6PR04MB4400.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:3631;
-x-forefront-prvs: 0430FA5CB7
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: zfbMVJpZrSYtC24wKSEs6HhbLoRuh4DXE/PtBi7BnUMvHR2WXvfvMABySvRy7um9CUzsGgHxsyEBeUD7+tnqg/uyO7r6v/TWZmHFkOfjAXxGSoM+oMgquFMZUGp1cGm0liGKfzo1F0nHPJ4byP+9WQJ8hTfPqzEgsicNt2CmXca5QJyAT54jQ+FGYOlKPlkHrpWREd2FEYtesO//H5wmMrjnrmgmCiezZ2021FO70BT/N7OqrwAFuBLdjI2/1twQl6WdS9uwzoeUSdQk9ZD6+9D80EpBPnawAJrRvAPTpM3cePh/pPb7RJXRF0dyW717
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(39860400002)(346002)(396003)(376002)(136003)(71200400001)(66556008)(76116006)(186003)(2906002)(54906003)(6506007)(5660300002)(9686003)(316002)(26005)(66476007)(66946007)(55016002)(66446008)(6916009)(52536014)(64756008)(478600001)(8676002)(4326008)(83380400001)(86362001)(8936002)(7696005)(7416002)(33656002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: ZhdHKjrwygb8oUAdnZlm3n3zCVChIdPjkUh5mOeMnkpXyp+x27nAVItngdNi45dXlZ/lKBKBF0Gn9qGqi7H7R0FWAWN64sr27qsDEYLtyIhkhsbil/BvConh1OyJKOBvmp1GFTXFWRwqThJPVkCglI0zo2bKCnWwtR+ZqonZa6pGVmJE2X/3MfCqbrVzAEjXWsbz55+AYcVx8mbUsHO2qhLaJvROo6F+ApLDGEj4fBuBQEwCLKL7up1X+RTZwxusLXMIaR6CQfcPJtnHFWV3zuixuqihsKi9dkbKVs0OIZpqlGkAGhjTxs70WdeRAYfWSs3DznaVFT+D6UdVD7foFUI2Z+adneBFtnyahM4kGFV1yxC/Na0Epm8Ml25nEE5CkHxNapfJOoQIw+XfakG00VZb6E4ZkPwhVlrFM9aL/94Iuc/EJJQO7M+YM2Nl8HCKWdPo4J1/oftM/i4OKDSpPM8XnzOWs3uQKe5MnmXx17w=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 10 Jun 2020 03:19:23 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:53928 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726121AbgFJHTW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 03:19:22 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 49hddz0HkhzcG;
+        Wed, 10 Jun 2020 09:19:18 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1591773559; bh=7gEYY7fEDHliIe4ICwlpvlUotLaIa5/Vi0eVTaTvsf4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=RWPUr9CKHHz19QR4ikOHzJIOVVtcmJ/omgGqvqX1DQZswAuEOeiGgmVB8dY2P66in
+         34yliL9OuGsBSjEiRQI0iPEGn4SqQzco4nryZRHbC+Odw5Rw6hBfe0KLDFSUNV0Mv6
+         KjYJY1ro7EckAcLfAlGn51P8YSp0Pj3XynXc1ziLG35iGE4pH+uRiYGz1ekRlytFs5
+         3rrGpWjgTVAE/EEZTJXvMApdaDJzFXrnwBAc5vObteoZU6gXmDRTu6dfT6+Bysvory
+         CoY5QA2+0mu/kaO12riuZSZAtJR6X0iR/+5LjwPD9MJLTUG/lQOAxg3mSAERO/Zv/X
+         iB47QCEtJkwmA==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+Date:   Wed, 10 Jun 2020 09:19:17 +0200
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     linux-btrfs@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: Lockdep warning after `mdadm -S`
+Message-ID: <20200610071916.GA2668@qmqm.qmqm.pl>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 54beff7a-faa4-4992-fd07-08d80d0e33c5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jun 2020 07:16:31.9863
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: LTaJgzcYCY0IVh8AQJT4YSRQjBNcc/jaFPmAk20mwAkbdXv7CK9dcmC8mOQvLBKdPC4ScWAOkDS3zr6yPCua2g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4400
+Content-Type: text/plain; charset=iso-8859-2
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-=20
-> Avri: Please review!
->=20
-> > When ufs_bsg_alloc_desc_buffer() returns an error code,
-> > a pairing runtime PM usage counter decrement is needed
-> > to keep the counter balanced.
-> >
-> > Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-Please add:
-Fixes: 74e5e468b664 (scsi: ufs-bsg: Wake the device before sending raw upiu=
- commands)
+Dear Developers,
 
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
+I found a lockdep warning in dmesg some after doing 'mdadm -S' while
+also having btrfs mounted (light to none I/O load).  Disks under MD and
+btrfs are unrelated.
 
-Thanks,
-Avri
+Best Regards,
+Micha³ Miros³aw
 
-> > ---
-> >  drivers/scsi/ufs/ufs_bsg.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/scsi/ufs/ufs_bsg.c b/drivers/scsi/ufs/ufs_bsg.c
-> > index 53dd87628cbe..516a7f573942 100644
-> > --- a/drivers/scsi/ufs/ufs_bsg.c
-> > +++ b/drivers/scsi/ufs/ufs_bsg.c
-> > @@ -106,8 +106,10 @@ static int ufs_bsg_request(struct bsg_job *job)
-> >               desc_op =3D bsg_request->upiu_req.qr.opcode;
-> >               ret =3D ufs_bsg_alloc_desc_buffer(hba, job, &desc_buff,
-> >                                               &desc_len, desc_op);
-> > -             if (ret)
-> > +             if (ret) {
-> > +                     pm_runtime_put_sync(hba->dev);
-> >                       goto out;
-> > +             }
-> >
-> >               /* fall through */
-> >       case UPIU_TRANSACTION_NOP_OUT:
->=20
-> --
-> Martin K. Petersen      Oracle Linux Engineering
+======================================================
+WARNING: possible circular locking dependency detected
+5.7.1mq+ #383 Tainted: G           O     
+------------------------------------------------------
+kworker/u16:3/8175 is trying to acquire lock:
+ffff8882f19556a0 (sb_internal#3){.+.+}-{0:0}, at: start_transaction+0x37e/0x550 [btrfs]
+
+but task is already holding lock:
+ffffc900087c7e68 ((work_completion)(&(&wb->dwork)->work)){+.+.}-{0:0}, at: process_one_work+0x235/0x620
+
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #8 ((work_completion)(&(&wb->dwork)->work)){+.+.}-{0:0}:
+       __flush_work+0x331/0x490
+       wb_shutdown+0x8f/0xb0
+       bdi_unregister+0x72/0x1f0
+       del_gendisk+0x2b0/0x2c0
+       md_free+0x28/0x90
+       kobject_put+0xa6/0x1b0
+       process_one_work+0x2b6/0x620
+       worker_thread+0x35/0x3e0
+       kthread+0x143/0x160
+       ret_from_fork+0x3a/0x50
+
+-> #7 ((work_completion)(&mddev->del_work)){+.+.}-{0:0}:
+       process_one_work+0x28d/0x620
+       worker_thread+0x35/0x3e0
+       kthread+0x143/0x160
+       ret_from_fork+0x3a/0x50
+
+-> #6 ((wq_completion)md_misc){+.+.}-{0:0}:
+       flush_workqueue+0xa9/0x4e0
+       __md_stop_writes+0x18/0x100
+       do_md_stop+0x165/0x2d0
+       md_ioctl+0xa52/0x1d60
+       blkdev_ioctl+0x1cc/0x2a0
+       block_ioctl+0x3a/0x40
+       ksys_ioctl+0x81/0xc0
+       __x64_sys_ioctl+0x11/0x20
+       do_syscall_64+0x4f/0x210
+       entry_SYSCALL_64_after_hwframe+0x49/0xb3
+
+-> #5 (&mddev->open_mutex){+.+.}-{3:3}:
+       __mutex_lock+0x93/0x9c0
+       md_open+0x43/0xc0
+       __blkdev_get+0xea/0x560
+       blkdev_get+0x60/0x130
+       do_dentry_open+0x147/0x3e0
+       path_openat+0x84f/0xa80
+       do_filp_open+0x8e/0x100
+       do_sys_openat2+0x225/0x2e0
+       do_sys_open+0x46/0x80
+       do_syscall_64+0x4f/0x210
+       entry_SYSCALL_64_after_hwframe+0x49/0xb3
+
+-> #4 (&bdev->bd_mutex){+.+.}-{3:3}:
+       __mutex_lock+0x93/0x9c0
+       __blkdev_get+0x77/0x560
+       blkdev_get+0x60/0x130
+       blkdev_get_by_path+0x41/0x80
+       btrfs_get_bdev_and_sb+0x16/0xb0 [btrfs]
+       open_fs_devices+0x9d/0x240 [btrfs]
+       btrfs_open_devices+0x89/0x90 [btrfs]
+       btrfs_mount_root+0x26a/0x4b0 [btrfs]
+       legacy_get_tree+0x2b/0x50
+       vfs_get_tree+0x23/0xc0
+       fc_mount+0x9/0x40
+       vfs_kern_mount.part.40+0x57/0x80
+       btrfs_mount+0x148/0x3f0 [btrfs]
+       legacy_get_tree+0x2b/0x50
+       vfs_get_tree+0x23/0xc0
+       do_mount+0x712/0xa40
+       __x64_sys_mount+0xbf/0xe0
+       do_syscall_64+0x4f/0x210
+       entry_SYSCALL_64_after_hwframe+0x49/0xb3
+
+-> #3 (&fs_devs->device_list_mutex){+.+.}-{3:3}:
+       __mutex_lock+0x93/0x9c0
+       btrfs_run_dev_stats+0x44/0x470 [btrfs]
+       commit_cowonly_roots+0xac/0x2a0 [btrfs]
+       btrfs_commit_transaction+0x511/0xa70 [btrfs]
+       transaction_kthread+0x13c/0x160 [btrfs]
+       kthread+0x143/0x160
+       ret_from_fork+0x3a/0x50
+
+-> #2 (&fs_info->tree_log_mutex){+.+.}-{3:3}:
+       __mutex_lock+0x93/0x9c0
+       btrfs_commit_transaction+0x4b6/0xa70 [btrfs]
+       transaction_kthread+0x13c/0x160 [btrfs]
+       kthread+0x143/0x160
+       ret_from_fork+0x3a/0x50
+
+-> #1 (&fs_info->reloc_mutex){+.+.}-{3:3}:
+       __mutex_lock+0x93/0x9c0
+       btrfs_record_root_in_trans+0x3e/0x60 [btrfs]
+       start_transaction+0xcb/0x550 [btrfs]
+       btrfs_mkdir+0x5c/0x1e0 [btrfs]
+       vfs_mkdir+0x107/0x1d0
+       do_mkdirat+0xe7/0x110
+       do_syscall_64+0x4f/0x210
+       entry_SYSCALL_64_after_hwframe+0x49/0xb3
+
+-> #0 (sb_internal#3){.+.+}-{0:0}:
+       __lock_acquire+0x11f9/0x1aa0
+       lock_acquire+0x9e/0x380
+       __sb_start_write+0x13a/0x270
+       start_transaction+0x37e/0x550 [btrfs]
+       cow_file_range_inline.constprop.74+0xe4/0x640 [btrfs]
+       cow_file_range+0xe5/0x3f0 [btrfs]
+       btrfs_run_delalloc_range+0x128/0x620 [btrfs]
+       writepage_delalloc+0xe2/0x140 [btrfs]
+       __extent_writepage+0x1a3/0x370 [btrfs]
+       extent_write_cache_pages+0x2b8/0x470 [btrfs]
+       extent_writepages+0x3f/0x90 [btrfs]
+       do_writepages+0x3c/0xe0
+       __writeback_single_inode+0x4f/0x650
+       writeback_sb_inodes+0x1f7/0x560
+       __writeback_inodes_wb+0x58/0xa0
+       wb_writeback+0x33b/0x4b0
+       wb_workfn+0x428/0x5b0
+       process_one_work+0x2b6/0x620
+       worker_thread+0x35/0x3e0
+       kthread+0x143/0x160
+       ret_from_fork+0x3a/0x50
+
+other info that might help us debug this:
+
+Chain exists of:
+  sb_internal#3 --> (work_completion)(&mddev->del_work) --> (work_completion)(&(&wb->dwork)->work)
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock((work_completion)(&(&wb->dwork)->work));
+                               lock((work_completion)(&mddev->del_work));
+                               lock((work_completion)(&(&wb->dwork)->work));
+  lock(sb_internal#3);
+
+ *** DEADLOCK ***
+
+3 locks held by kworker/u16:3/8175:
+ #0: ffff88840baa6948 ((wq_completion)writeback){+.+.}-{0:0}, at: process_one_work+0x235/0x620
+ #1: ffffc900087c7e68 ((work_completion)(&(&wb->dwork)->work)){+.+.}-{0:0}, at: process_one_work+0x235/0x620
+ #2: ffff8882f19550e8 (&type->s_umount_key#52){++++}-{3:3}, at: trylock_super+0x11/0x50
+
+stack backtrace:
+CPU: 1 PID: 8175 Comm: kworker/u16:3 Tainted: G           O      5.7.1mq+ #383
+Hardware name: System manufacturer System Product Name/P8Z68-V PRO, BIOS 3603 11/09/2012
+Workqueue: writeback wb_workfn (flush-btrfs-1)
+Call Trace:
+ dump_stack+0x71/0xa0
+ check_noncircular+0x165/0x180
+ ? stack_trace_save+0x46/0x70
+ __lock_acquire+0x11f9/0x1aa0
+ lock_acquire+0x9e/0x380
+ ? start_transaction+0x37e/0x550 [btrfs]
+ __sb_start_write+0x13a/0x270
+ ? start_transaction+0x37e/0x550 [btrfs]
+ start_transaction+0x37e/0x550 [btrfs]
+ ? kmem_cache_alloc+0x1b0/0x2c0
+ cow_file_range_inline.constprop.74+0xe4/0x640 [btrfs]
+ ? lock_acquire+0x9e/0x380
+ ? test_range_bit+0x3d/0x130 [btrfs]
+ cow_file_range+0xe5/0x3f0 [btrfs]
+ btrfs_run_delalloc_range+0x128/0x620 [btrfs]
+ ? find_lock_delalloc_range+0x1f3/0x220 [btrfs]
+ writepage_delalloc+0xe2/0x140 [btrfs]
+ __extent_writepage+0x1a3/0x370 [btrfs]
+ extent_write_cache_pages+0x2b8/0x470 [btrfs]
+ ? __lock_acquire+0x3fc/0x1aa0
+ extent_writepages+0x3f/0x90 [btrfs]
+ do_writepages+0x3c/0xe0
+ ? find_held_lock+0x2d/0x90
+ __writeback_single_inode+0x4f/0x650
+ writeback_sb_inodes+0x1f7/0x560
+ __writeback_inodes_wb+0x58/0xa0
+ wb_writeback+0x33b/0x4b0
+ wb_workfn+0x428/0x5b0
+ ? sched_clock_cpu+0xe/0xd0
+ process_one_work+0x2b6/0x620
+ ? worker_thread+0xc7/0x3e0
+ worker_thread+0x35/0x3e0
+ ? process_one_work+0x620/0x620
+ kthread+0x143/0x160
+ ? kthread_park+0x80/0x80
+ ret_from_fork+0x3a/0x50
+
