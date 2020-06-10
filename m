@@ -2,135 +2,67 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 024B9C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05DAAC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D27AB20734
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:15:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GhLDgR6t"
+	by mail.kernel.org (Postfix) with ESMTP id E10F42078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:16:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728164AbgFJKPG (ORCPT
+        id S1728173AbgFJKQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 06:15:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52362 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726134AbgFJKPG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 06:15:06 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F5E2C03E96B;
-        Wed, 10 Jun 2020 03:15:05 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49hjXf4CBYz9sQx;
-        Wed, 10 Jun 2020 20:14:58 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1591784098;
-        bh=8UMlMKyh418ho0oWZQ7XY53wR1BrVLFmXQhMaFHpS/8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=GhLDgR6tTFsJx79L7F+HPXR1BKGomT3NyUwq+blWaXzMoUJ07aAA48sTOeaLZvyAs
-         aGsbEOegaXRMwvQ1qyNYZKn/npM6ZSBdPXX3evuYE/v2FiFRZmQmAxl0XMkKt7G+xG
-         3rV2K24dE69frphNi830pI4xCAbMhcpGyC5NneLifK9sFop6uXwQoUR1QuGcshxWhm
-         qhh2658tSbsP18wH3E4N7L/HcCpxdRD0TxkPCMLhSYOR0DqMEtqhYJKNyNuby6koWx
-         MBNV+7qRBaqtqoNYfvVqxy33unnFyoDelv0muRlt8Fo2bsjsvJvdP4+XwD1W+lq6Ra
-         O6WpKn/YI93Ug==
-Date:   Wed, 10 Jun 2020 20:14:57 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: linux-next: build failure after merge of the akpm-current tree
-Message-ID: <20200610201457.5698b119@canb.auug.org.au>
-In-Reply-To: <20200609210137.e7aaf4efa9f8b9ff0bcdc1dc@linux-foundation.org>
-References: <20200609224252.1704eff3@canb.auug.org.au>
-        <20200610134425.6dd32bf6@canb.auug.org.au>
-        <20200609210137.e7aaf4efa9f8b9ff0bcdc1dc@linux-foundation.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/BiVkGYbjM6ry4uwpZ9Rrkzi";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Wed, 10 Jun 2020 06:16:43 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:46712 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726533AbgFJKQm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 06:16:42 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 408921A0482;
+        Wed, 10 Jun 2020 12:16:41 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5E6251A02CE;
+        Wed, 10 Jun 2020 12:16:36 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id E5B81402FB;
+        Wed, 10 Jun 2020 18:16:29 +0800 (SGT)
+From:   Shengjiu Wang <shengjiu.wang@nxp.com>
+To:     lars@metafoo.de, perex@perex.cz, tiwai@suse.com,
+        lgirdwood@gmail.com, broonie@kernel.org, timur@kernel.org,
+        nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com, festevam@gmail.com,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [RFC PATCH v2 0/3] ASoC: fsl_asrc_dma: Reuse the dma channel if available in Back-End
+Date:   Wed, 10 Jun 2020 18:05:46 +0800
+Message-Id: <cover.1591783089.git.shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/BiVkGYbjM6ry4uwpZ9Rrkzi
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Reuse the dma channel if available in Back-End
 
-Hi Andrew,
+Shengjiu Wang (3):
+  ASoC: soc-card: export snd_soc_lookup_component_nolocked
+  ASoC: dmaengine_pcm: export soc_component_to_pcm
+  ASoC: fsl_asrc_dma: Reuse the dma channel if available in Back-End
 
-On Tue, 9 Jun 2020 21:01:37 -0700 Andrew Morton <akpm@linux-foundation.org>=
- wrote:
->
-> I've sent this in as well:
->=20
-> From: Andrew Morton <akpm@linux-foundation.org>
-> Subject: arch/sparc/mm/srmmu.c: fix build
->=20
-> "mm: consolidate pte_index() and pte_offset_*() definitions" was supposed
-> to remove arch/sparc/mm/srmmu.c:pte_offset_kernel().
->=20
-> Fixes: 974b9b2c68f3d35 ("mm: consolidate pte_index() and pte_offset_*() d=
-efinitions")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Cc: Mike Rapoport <rppt@linux.ibm.com>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-> ---
->=20
->  arch/sparc/mm/srmmu.c |   10 ----------
->  1 file changed, 10 deletions(-)
->=20
-> --- a/arch/sparc/mm/srmmu.c~arch-sparc-mm-srmmuc-fix-build
-> +++ a/arch/sparc/mm/srmmu.c
-> @@ -140,16 +140,6 @@ void pmd_set(pmd_t *pmdp, pte_t *ptep)
->  	set_pte((pte_t *)&pmd_val(*pmdp), __pte(SRMMU_ET_PTD | ptp));
->  }
-> =20
-> -/* Find an entry in the third-level page table.. */
-> -pte_t *pte_offset_kernel(pmd_t *dir, unsigned long address)
-> -{
-> -	void *pte;
-> -
-> -	pte =3D __nocache_va((pmd_val(*dir) & SRMMU_PTD_PMASK) << 4);
-> -	return (pte_t *) pte +
-> -	    ((address >> PAGE_SHIFT) & (PTRS_PER_PTE - 1));
-> -}
-> -
->  /*
->   * size: bytes to allocate in the nocache area.
->   * align: bytes, number to align at.
-> _
->=20
+changes in v2:
+- update according to Mark's comments and split the patch
 
-Thanks.
 
---=20
-Cheers,
-Stephen Rothwell
+ include/sound/dmaengine_pcm.h         | 11 ++++++
+ include/sound/soc.h                   |  2 ++
+ sound/soc/fsl/fsl_asrc_common.h       |  2 ++
+ sound/soc/fsl/fsl_asrc_dma.c          | 52 ++++++++++++++++++++-------
+ sound/soc/soc-core.c                  |  3 +-
+ sound/soc/soc-generic-dmaengine-pcm.c | 12 -------
+ 6 files changed, 57 insertions(+), 25 deletions(-)
 
---Sig_/BiVkGYbjM6ry4uwpZ9Rrkzi
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+-- 
+2.21.0
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7gsqEACgkQAVBC80lX
-0GwGOggAij4ikq4ze7TVxoyBkxNel6dX4MOOaLgfCmNkxOtrWfo49e6p1SbCj+wR
-OlHf/wm5NoZZVLnJJqT4jBc79tcqiDons5kZ9/zd+tsWAbPJob46qYqEOTuGeQoQ
-Wiq3OqLeE6LjwB2fD8R7ydcC36hqDRCyTIYV4wZEX8HgNWvT0vtLeXBKTaEtyyKF
-R2gVI+/U7iMVqkvM5ce1SdZKsv4QiAmrVsfM8ZLFP2Rq8WI4oqmcgG3QkHf0iSOP
-IK9P7jSp8l6HDyz0niDM4B63HFGspNKUD8aAOzVKrVECJqZzNZ3Uc8xM2y7N6vGQ
-vuhtollzg4+J8g4eKslVm2P7vhUAXA==
-=OF1y
------END PGP SIGNATURE-----
-
---Sig_/BiVkGYbjM6ry4uwpZ9Rrkzi--
