@@ -2,110 +2,89 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE7FAC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:48:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EBDFC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 787AB2078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:48:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591778883;
-	bh=XmJ4HSxl4hqG6l3t1jcWoLYOgV//M491zGdVj+6y1cs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=i9UvTR4sWD0ZwyO1b3ApxZX4kAQVtzMEM1IGMC8lvIneGRdEpdk5RE51CT+POAGxT
-	 I5Soovhur+KlPIwlcjg8DKYIC2609gXu3D5oABEsH3dhyZtI+8TCyqlf7IRTSSFNtT
-	 6hrRmKAKk7Lo25PrcL9WemnKxhoLDzm0rLIYTCWc=
+	by mail.kernel.org (Postfix) with ESMTP id 497DF2078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:48:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xLtjgtJ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbgFJIsC (ORCPT
+        id S1726909AbgFJIsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 04:48:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54724 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726081AbgFJIsB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 04:48:01 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDCFD2078C;
-        Wed, 10 Jun 2020 08:47:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591778881;
-        bh=XmJ4HSxl4hqG6l3t1jcWoLYOgV//M491zGdVj+6y1cs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yPQ0Gn3ME6yN2FN9zfRHpgCOwfCYNMmgtZNq/1Qc1Y9lWLTi7EgLBE+ceOFwekFAr
-         BPy2IzPJIwhEykv0N0q/1FvwtRO8QIPl5WmVzTw24LCdU4SPKU5ktMLNX0I0Zc+Dh/
-         URIKegjZCtuwKT88nDENRmGm4av/IJGbwrYZqVzw=
-Date:   Wed, 10 Jun 2020 09:47:55 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Stephen Boyd <swboyd@google.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Luis Lozano <llozano@google.com>,
-        Manoj Gupta <manojgupta@google.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH v2] arm64: vdso32: add CONFIG_THUMB2_COMPAT_VDSO
-Message-ID: <20200610084755.GB17035@willie-the-truck>
-References: <20200528072031.GA22156@willie-the-truck>
- <20200608205711.109418-1-ndesaulniers@google.com>
- <20200609203502.GA21214@gaia>
- <CAKwvOdnDeYQ-tbyW8=tcKcbbFxtDzqk8dCUSzbBYP1amb9a2hg@mail.gmail.com>
+        Wed, 10 Jun 2020 04:48:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38912 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726890AbgFJIsE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 04:48:04 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05717C03E96F
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 01:48:03 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id c21so985087lfb.3
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 01:48:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tv9cLm6NrVEw+od9yE+yuCdvd9rQx1UMp3tOwcdNQ6A=;
+        b=xLtjgtJ8Kq7VuUa8BbXEMYn+JDvsxigXSI5oo/wg1liD77Uvva30qb+Ue4DnxHtjam
+         Elme55spXBwYx5CgDUeaml/cfsQ6LUZao9b16LKSlvxj+G3XM/yuoK3udquOLtevy+Er
+         X3e38FLE+ZpA/4fIR+5OQTAwQDmiPRijmpAsDwGyCr0J2LItdBJDDaL9eH4cO7INk82q
+         u6yPzASpg7nLl0pPg/QrXZEHd2naQGjDOEtaT7FGM09+z5sv5CgiZyW/HS6BA2EFJCjC
+         1pPLZYV1z1UzaBQ6SXSQSAssU+Xs5qrn40m2JbMhlQUjEky8+UyVJs07RaE5BULZHY1c
+         Swrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tv9cLm6NrVEw+od9yE+yuCdvd9rQx1UMp3tOwcdNQ6A=;
+        b=eds42c7DXqTi8wSOS/R7hMYoKfIfXEB/3ox++Cm9AZOa/kkoOMrYETTmGkOWh6b4da
+         U5OXmXHz5Hl5NlpU0SiMGAXnPxUx2I9s0CV2e7ZPBbdKEd93xi/FdZ/BRqErAc7DGBEo
+         A41EbWQ63o+v//okO7MsSxSxlWoeo2QtcvH0jweT703ctZy8CO9OFeYQIW5jxnK5ZKOc
+         cDD+GqnuCzagyiSIBjp27PBmcQTGVy8I0zhgGR7NFwNpJjGb1dmuoj9SpmYJOsKZ9fut
+         eDzpiVo6Ok3cdQNzfqAGF3ZPAvVPxi8cs3vf71YR82Gw1Y40zORvMLBBm5VqGYtgcD6f
+         i/iA==
+X-Gm-Message-State: AOAM531ukh/2GeK0L5QW1LUFs67VJkZxr8CHSCT1OdYGhOf9Rfp3naCj
+        kEQXW6zopmdVnUd7Y2DoGChFKPXem/PQb/Yc9I/EeQ==
+X-Google-Smtp-Source: ABdhPJwB1YdVqyxgQzEn1jME2RfkT9tqX2deD1Fxk7xDGiza8EgLMKE2iE1rVqr0cl5GGteUcAmL6g68Mcu61Hc88ho=
+X-Received: by 2002:ac2:5a07:: with SMTP id q7mr1123126lfn.77.1591778882313;
+ Wed, 10 Jun 2020 01:48:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwvOdnDeYQ-tbyW8=tcKcbbFxtDzqk8dCUSzbBYP1amb9a2hg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200604174935.26560-1-vidyas@nvidia.com>
+In-Reply-To: <20200604174935.26560-1-vidyas@nvidia.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 10 Jun 2020 10:47:51 +0200
+Message-ID: <CACRpkdYnwYFr2NEfGmCRYCEr7J0fdT1L5jkuPrkPQGJmudMgJw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: tegra: Use noirq suspend/resume callbacks
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     Thierry Reding <treding@nvidia.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-tegra@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 04:55:13PM -0700, Nick Desaulniers wrote:
-> On Tue, Jun 9, 2020 at 1:35 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
-> >
-> > On Mon, Jun 08, 2020 at 01:57:08PM -0700, Nick Desaulniers wrote:
-> > > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> > > index 7f9d38444d6d..fe9e6b231cac 100644
-> > > --- a/arch/arm64/Kconfig
-> > > +++ b/arch/arm64/Kconfig
-> > > @@ -1299,6 +1299,14 @@ config COMPAT_VDSO
-> > >         You must have a 32-bit build of glibc 2.22 or later for programs
-> > >         to seamlessly take advantage of this.
-> > >
-> > > +config THUMB2_COMPAT_VDSO
-> > > +     bool "Compile the vDSO in THUMB2 mode"
-> > > +     depends on COMPAT_VDSO
-> > > +     default y
-> > > +     help
-> > > +       Compile the compat vDSO with -mthumb -fomit-frame-pointer if y, otherwise
-> > > +       as -marm.
-> >
-> > Now that we understood the issue (I think), do we actually need this
-> > choice? Why not going for -mthumb -fomit-frame-pointer always for the
-> > compat vdso?
-> 
-> "Why should the compat vdso be configurable?" is a fair question.  I
-> don't have an answer, but maybe some of the folks on thread do?
-> 
-> Our problem is more so "if the vdso is built as thumb, we need it also
-> explicitly built with -fomit-frame-pointer."  Whether it should be
-> built as thumb, arm, or configurable (and which default to pick in
-> that case) are still an open questions.  Will asked for it to be
-> configurable, so I sent a patch making it configurable.
+On Thu, Jun 4, 2020 at 7:49 PM Vidya Sagar <vidyas@nvidia.com> wrote:
 
-It's configurable for 32-bit arm, so I was just following that as it's
-hardly a maintenance burden to support both. I suppose you could have
-a toolchain that only supports one or the other, but it does seem a little
-esoteric if you're building a kernel for an arm64 CPU.
+> Use noirq suspend/resume callbacks as other drivers which implement
+> noirq suspend/resume callbacks (Ex:- PCIe) depend on pinctrl driver to
+> configure the signals used by their respective devices in the noirq phase.
+>
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 
-Will
+Patch applied for fixes.
+
+Yours,
+Linus Walleij
