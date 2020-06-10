@@ -6,128 +6,103 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E03AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:16:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF515C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72D0720853
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:16:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 989342072E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:18:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rFS2ORtv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q6IUMGq1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728392AbgFJLQU (ORCPT
+        id S1728407AbgFJLSU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 07:16:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33618 "EHLO
+        Wed, 10 Jun 2020 07:18:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728304AbgFJLQT (ORCPT
+        with ESMTP id S1728264AbgFJLST (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 07:16:19 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25D51C03E96B
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 04:16:19 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id j10so1797463wrw.8
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 04:16:19 -0700 (PDT)
+        Wed, 10 Jun 2020 07:18:19 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B59AC03E96B
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 04:18:19 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id e4so1978654ljn.4
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 04:18:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=2zMZpeYnCtb3OvEhwTC1cmq94O9vgkXCVzFHFnyeATg=;
-        b=rFS2ORtvsQ1X6+RDaKRXGMV1yL9XjaiWWY81ATO2FCRzjAiw3O+Ml2YfR2ncHeJneK
-         1zwvIR548svKd/IkUpBiKfyzoqOibTjmf9slbPvCQkCWcUQoDvU6ZrGlGSeN348GUpeJ
-         z34Tss8KgQ2cwfEMea+yF4Lx9cPZt+zQL+8YTq/Dty1ZDbn/6qaXOu8GxWnIIgRUVRfT
-         4pqwHjWsAcyYgqO1ie4DoQXgHkGF7kSrSfl3cVFbM/EHAcDtDvZ5X23pbaaSJBawp67J
-         3oHuAufqnadATgjOHgTdXj+cb1EkTSpilzlelaEx9oYJ0/5uEJlqeuSa26WW2E56hw7N
-         0bYw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=R/H/MbVOF2wG1dAksFZHKza8JjVA0mBuXbjfgXmU1gI=;
+        b=q6IUMGq1BoyrzF+yphtauVJSkEKnYVpLrCpHxSKEezsjWMWsSneZ9MYEZWLufzYv4m
+         WB77pudqkIPq6h8aSKtcawWDrMyuyYGSYoPz17sFJ/BYCfBHD9A3DHYrWfjUFKpprjh/
+         q4LWZnmqgeJJr9AObHAQPaOoFzNGEYnTOX0xjDfNvmVANSGexwCLUNdWIPjSYskLdxMR
+         GGEMS42Kcoiij8ZCTppz+8QMyN3zCO80Yplre+E0lPj/0pRIfppGHm9IQrkERGt0sCpB
+         xL3cuSSmEXLwhqu5Yp+z0o+3pgf1BIRAtIMP7019kxuiRumrgAAbRi4zQWbzrt8V7teP
+         J/Vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2zMZpeYnCtb3OvEhwTC1cmq94O9vgkXCVzFHFnyeATg=;
-        b=ZWPlmlC0LbOMbvqPXJ41Bzi/vA7TMdQbC4n6TesLeooUkSwGTM6gahZvb/TgP6IP/s
-         fsvWux0Uo0Q0+M3JuRDkw2Qzmx41sreIGbvIFnvcO5LyVzwAa0hgRYECRec5oQWGf4oh
-         ufBqa/nPv1NoojPgxg8J2fYs29czc1BgXFUbHvMu9XXc9WPkQ5L5YZ2ZOW4WBLvMZF/e
-         ZRzhUtfz7DLyWZL6RAJq54o1FNGxodQFvuQbxhhUZmHuRDJoPxM2JGIEYDk0SGd4R5gM
-         ac/Yhe4TwtkmVwYJustQFBSR7iyTUlpA2oXwOC9VnCSeHTUqXx8y9Bf46YAmZFxYhvTt
-         SRxw==
-X-Gm-Message-State: AOAM530lLcctMzdNk5D1Dt1184R9K0gH60cwP3KO1KZ4iJpmWvx73xhf
-        K6C3ySf220nW0YtLR/7AG+8qrQ==
-X-Google-Smtp-Source: ABdhPJw7AW05W+LUQZ5VIYJ8nsQULakkp0WgLU+jGtkhhN4gUvGIQJ+EFBbfxxObWsFHWqGmdtWheQ==
-X-Received: by 2002:a5d:608d:: with SMTP id w13mr3105813wrt.298.1591787777793;
-        Wed, 10 Jun 2020 04:16:17 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id k64sm6739643wmf.34.2020.06.10.04.16.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 04:16:16 -0700 (PDT)
-Date:   Wed, 10 Jun 2020 12:16:15 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     jim.cromie@gmail.com
-Cc:     Jason Baron <jbaron@akamai.com>,
-        LKML <linux-kernel@vger.kernel.org>, akpm@linuxfoundation.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: Re: [PATCH 03/16] dyndbg: refine debug verbosity; 1 is basic, 2 more
- chatty
-Message-ID: <20200610111615.z6vukjsq2aprkug4@holly.lan>
-References: <20200605162645.289174-1-jim.cromie@gmail.com>
- <20200605162645.289174-4-jim.cromie@gmail.com>
- <20200608112150.7ohrax6pzpi7ss2l@holly.lan>
- <CAJfuBxwHOyvOcSB8005=z1G_-Hux1UxaLOutOX1SE2wYONSsrg@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=R/H/MbVOF2wG1dAksFZHKza8JjVA0mBuXbjfgXmU1gI=;
+        b=bPnzdI0Meg9SmmQBVXZ6ImoV1LRv5e0h68++STzw2TJXVqC+IpMdElMYn5C9cD9Au7
+         dUKWBzg8mERq3HKKQtkomCa9eBLET40gOOejR2rMG316F1qAFYMn//rInsw/R4jtMN90
+         1rJ/P8vfu7LNiNByWrtuH2dWdqabl4kHugnwbWsL5QgQuPHgC1pXuOHjAp88ajSoivWO
+         eFpyu01vOt7UNSvKrTZ69NlPUBlOqEkF6Wau2rB8t/Nk254ihblJkHNfapIgf5vs/l8K
+         Mgzmb+D+334dullEUeLIAhC7GqIPclorwetTWOmHzQ6j3u7dxTzXWmGmMV+5HJ0ZShEO
+         kSFQ==
+X-Gm-Message-State: AOAM530ZghWSlVytwxGd/QmwwBnI7OLAktuqpeMM2cey07cJ4PdA2pJP
+        wIDAz+3+VylcN2/zWIXvj8TRauPjWTTxNlRqzliVlw==
+X-Google-Smtp-Source: ABdhPJwYHSqLY8+MZktVcG/jK3d2tobvKvb5DukA5J3ghqqrGvCncKgJl0YY4MKk7oh9UCfApO7oANgemtP3qCfhFRk=
+X-Received: by 2002:a2e:7303:: with SMTP id o3mr1616150ljc.100.1591787897894;
+ Wed, 10 Jun 2020 04:18:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJfuBxwHOyvOcSB8005=z1G_-Hux1UxaLOutOX1SE2wYONSsrg@mail.gmail.com>
+References: <bafd8df9e743c433196c727293c5015620fae2b8.1591428452.git.christophe.leroy@csgroup.eu>
+In-Reply-To: <bafd8df9e743c433196c727293c5015620fae2b8.1591428452.git.christophe.leroy@csgroup.eu>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 10 Jun 2020 13:18:06 +0200
+Message-ID: <CACRpkdasvyWRLiaHuZ+vkDC4MxNqx3qvjhy7Q8Qnfn+d74Xpkg@mail.gmail.com>
+Subject: Re: [PATCH] tty: serial: cpm_uart: Fix behaviour for non existing GPIOs
+To:     Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org list" <linuxppc-dev@lists.ozlabs.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 01:59:41PM -0600, jim.cromie@gmail.com wrote:
-> On Mon, Jun 8, 2020 at 5:21 AM Daniel Thompson
-> <daniel.thompson@linaro.org> wrote:
-> >
-> > On Fri, Jun 05, 2020 at 10:26:32AM -0600, Jim Cromie wrote:
-> > > The verbose/debug logging done for `cat $MNT/dynamic_debug/control` is
-> > > voluminous (2 per control file entry + 2 per PAGE).  Moreover, it just
-> > > prints pointer and sequence, which is not useful to a dyndbg user.
-> > > So just drop them.
-> >
-> > I'd assumed these messages where to help the dyndbg implementer rather
-> > than the dyndbg user.
-> 
-> So I thought I was guilty of adding those noisy pr_info()s in the
-> ddebug_proc_* functions,
-> but I have touched them, changing them to vpr_info().
-> In any case, I dont think theyre useful to the implementer either.
-> 
-> If the verbose messages really are useful to help
-> > users who (mis)configure .../control then should the enable/disable
-> > control be shadowed in debugfs to make it easy to find?
-> >
-> 
-> I would hesitate to change the API, even if this is just an add-on,
-> without changes to existing.
-> OTOH, I could see it added as /proc/dynamic_debug/verbose
+Hi Christophe!
 
-/proc ? 
-
-I was assuming that if the verbose output of dynamic debug is useful to
-the person trying to *use* dynamic_debug then it should be in
-/sys/kernel/debug/dynamic_debug/verbose .
-
-If they are only likely useful to the person trying to *implement*
-dynamic_debug itself (or to check that the infrastructure is not broken)
-then there is no reason to add them to debugfs.
+On Sat, Jun 6, 2020 at 9:30 AM Christophe Leroy
+<christophe.leroy@csgroup.eu> wrote:
 
 
-> with this patch, verbose=1 is better focused on showing the parsing process,
-> to give user more context as to what his query-command is doing
-> verbose=2 additionally shows callsites that match the query, including
-> any unchanged (iirc)
+>                 gpiod = devm_gpiod_get_index(dev, NULL, i, GPIOD_ASIS);
+>
+> -               if (gpiod) {
+> +               if (!IS_ERR_OR_NULL(gpiod)) {
+>                         if (i == GPIO_RTS || i == GPIO_DTR)
+>                                 ret = gpiod_direction_output(gpiod, 0);
+>                         else
 
-I'm still a little confused by what benefit having two levels of
-verbosity really is. Why does a user need to turn on verbose mode to
-figure out what is happening? Why isn't reading back
-.../dynamic_debug/control (perhaps using grep and friends) sufficient?
+This code, and the way descriptors are used in the driver leads
+me to believe that the right solution is to use the optional
+call with a hard error check:
 
+gpiod = devm_gpiod_get_index_optional(...);
 
-Daniel.
+if (IS_ERR(gpiod))
+    return PTR_ERR(gpiod);
+
+if (gpiod) {
+... followed by the old code ...
+
+This makes sure that the array member is left NULL if there is no
+GPIO on this line, and all other errors, such as -EPROBE_DEFER
+which currently absolutely does not work, will lead to us properly
+exiting with an error.
+
+Yours,
+Linus Walleij
