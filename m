@@ -2,60 +2,61 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28DAFC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8203C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0481520656
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:03:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC4D220656
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:04:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VmhHMiuh"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Les6gM1u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730450AbgFJUDa (ORCPT
+        id S1730483AbgFJUEe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 16:03:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58916 "EHLO
+        Wed, 10 Jun 2020 16:04:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727877AbgFJUDa (ORCPT
+        with ESMTP id S1727877AbgFJUEd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 16:03:30 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1BCDC03E96B
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 13:03:29 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id v24so1377158plo.6
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 13:03:29 -0700 (PDT)
+        Wed, 10 Jun 2020 16:04:33 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B78C5C03E96F
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 13:04:32 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id 64so1570553pfv.11
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 13:04:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=gMJmfBXQHkqYBkdWFgkIELmfTMw2QzimZzoX9rnpMvg=;
-        b=VmhHMiuh5ohUCH3fDJnKjrDQRFL0Ji8PnJG1vfqLFDTNpxPKF/jUW6bjeiV5SjTR6o
-         WXLVjXgIO5BzDsgibhA+L18doG6dCY7DA2U8R4aA2THMwHzIRdDqPqVTIOT51M5UhGjo
-         pbeqxJDSxr/3GPDIEZHoH3PhBmMXdRDJJDdIM=
+        bh=DXoJ3aLq9uhplWhtB2O8RgTDmA73SlXyMWG4MRv/Ld0=;
+        b=Les6gM1utqz0wgQgKhZ4Nfpc6QS2e+nlg1Z/E14+jR0X69Sr3LwW3Zm/3lj8osjycK
+         p6DUplVPD/d8Rthsbcyt2ZdYdwH3RELL5O74k3dxdMf4kX7zka4VtVliwa5J4nSVuu9e
+         CL0gdKwiiV/4hvJM+5XPBMzv9WqFgKyQV9MGQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=gMJmfBXQHkqYBkdWFgkIELmfTMw2QzimZzoX9rnpMvg=;
-        b=H9mIC+u0ehUjflNMuWUDyF0sjhA11q8NCHIlYUhNIA9IcFt24J4WJXEiZjvvu0mUQ0
-         N9WCE72rRUnTEl4/Kt4jftKIS9X1/8NLDJF2O362VcXKqnsOxKZBQpT/amK2wgpM/BZ+
-         iccV2hnmY/fqrM8tsXTtz8e1LFzRD83EZsdg9b0u3tGa10e0aGGUBoJ5XAI0fY/uqWcx
-         LOfQaK4JW5BVfqE1lcTrVs1GukgNSGN9AAao1ZcnfM5gAyOWpNlXSdHW2E0x3vqGDKSY
-         SbUZ2qZyCvh2YyFgy8kZ1a9hWxvYamb+Ie3TLfPGLI35f52IY/Dcvq7jr7V7j6rNlhm7
-         6Kag==
-X-Gm-Message-State: AOAM532vHzEBtONC7Vrf59djsE/uATCbyWHz7x/hnQvM8mPlcjSqJsUz
-        trT0cjL4zXS4GyZSNpGTW89UHQ==
-X-Google-Smtp-Source: ABdhPJzkqdGCWRf/l2Trk3MffvrvqWcW6Bumgrl4Vv2VZmme66jypNqah8ksfCDrx7bzuNc50pX7OQ==
-X-Received: by 2002:a17:90a:cb8d:: with SMTP id a13mr4644611pju.175.1591819409470;
-        Wed, 10 Jun 2020 13:03:29 -0700 (PDT)
+        bh=DXoJ3aLq9uhplWhtB2O8RgTDmA73SlXyMWG4MRv/Ld0=;
+        b=CrlbFXI67l0ttYtK/VuWAZ0v5525tY7ybzIodrRFbUEwa/WFKqDkJUtVOTKH91Vn+W
+         4UqpCJbsQ2NzxBe1mMj9bx3dcPXmX5XqJFX3lCSHiIF/lyLOheWpJ2bxVyGkK+RBcm1N
+         sRbRfVW252i7xe2BQs123PsfHjNPpy67EVM10BLYVqM6mv48RZoHSXM1RMSRHkfHKN3e
+         VMNUTScuF4mIlr/MVs1AJHEe+tNYSejeBYAqVrvpJmi82DLhSwv6tiMWUNsomzG10fPj
+         OHoI3sDj2+WmhXJLDThwz/326tNtEkIg8Y6xF3VRyH8n2yR27lXPjtNneTZ9O5f4nZDe
+         8K9Q==
+X-Gm-Message-State: AOAM533FtB+sY/yXK6492/HrtBd5YiTKGtjas08f9Qh6s8HN46+cSkj8
+        rLPJrVjNQKlbc7rWcVwPPJ83hw==
+X-Google-Smtp-Source: ABdhPJwC9KNAXjpOXoR+vUMW+1gcz/392CyELM73At2IMG3pDZxxAs+wEHjca9ODW8LTFHMHIMEw8g==
+X-Received: by 2002:a63:df48:: with SMTP id h8mr3947452pgj.411.1591819472188;
+        Wed, 10 Jun 2020 13:04:32 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id l63sm724636pfd.122.2020.06.10.13.03.28
+        by smtp.gmail.com with ESMTPSA id w190sm723093pfw.35.2020.06.10.13.04.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 13:03:28 -0700 (PDT)
-Date:   Wed, 10 Jun 2020 13:03:27 -0700
+        Wed, 10 Jun 2020 13:04:30 -0700 (PDT)
+Date:   Wed, 10 Jun 2020 13:04:29 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     Alexander Popov <alex.popov@linux.com>
 Cc:     Emese Revfy <re.emese@gmail.com>,
@@ -84,38 +85,43 @@ Cc:     Emese Revfy <re.emese@gmail.com>,
         kernel-hardening@lists.openwall.com, linux-kbuild@vger.kernel.org,
         x86@kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, gcc@gcc.gnu.org, notify@kernel.org
-Subject: Re: [PATCH 2/5] gcc-plugins/stackleak: Use asm instrumentation to
- avoid useless register saving
-Message-ID: <202006101302.AC218FA1@keescook>
+Subject: Re: [PATCH 3/5] gcc-plugins/stackleak: Add 'verbose' plugin parameter
+Message-ID: <202006101303.71B51BF1@keescook>
 References: <20200604134957.505389-1-alex.popov@linux.com>
- <20200604134957.505389-3-alex.popov@linux.com>
- <202006091143.AD1A662@keescook>
- <757cbafb-1e13-8989-e30d-33c557d33cc4@linux.com>
+ <20200604134957.505389-4-alex.popov@linux.com>
+ <202006091147.193047096C@keescook>
+ <fb051386-4913-9442-f051-23ed25802c9e@linux.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <757cbafb-1e13-8989-e30d-33c557d33cc4@linux.com>
+In-Reply-To: <fb051386-4913-9442-f051-23ed25802c9e@linux.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 06:47:14PM +0300, Alexander Popov wrote:
-> On 09.06.2020 21:46, Kees Cook wrote:
-> The inline asm statement that is used for instrumentation is arch-specific.
-> Trying to add
->   asm volatile("call stackleak_track_stack")
-> in gcc plugin on aarch64 makes gcc break spectacularly.
-
-Ah! Thank you, that eluded my eyes. :)
-
-> I pass the target arch name to the plugin and check it explicitly to avoid that.
+On Wed, Jun 10, 2020 at 06:52:10PM +0300, Alexander Popov wrote:
+> On 09.06.2020 21:47, Kees Cook wrote:
+> > On Thu, Jun 04, 2020 at 04:49:55PM +0300, Alexander Popov wrote:
+> >> Add 'verbose' plugin parameter for stackleak gcc plugin.
+> >> It can be used for printing additional info about the kernel code
+> >> instrumentation.
+> >>
+> >> For using it add the following to scripts/Makefile.gcc-plugins:
+> >>   gcc-plugin-cflags-$(CONFIG_GCC_PLUGIN_STACKLEAK) \
+> >>     += -fplugin-arg-stackleak_plugin-verbose
+> >>
+> >> Signed-off-by: Alexander Popov <alex.popov@linux.com>
+> > 
+> > Acked-by: Kees Cook <keescook@chromium.org>
 > 
-> Moreover, I'm going to create a gcc enhancement request for supporting
-> no_caller_saved_registers attribute on aarch64.
+> I see that I will change this patch after leaving alloca() support.
+> I'm going to add debug printing about functions that call alloca().
+> I have to omit your 'acked-by' for the changed patch, right?
 
-For arm64 right now it looks like the plugin will just remain
-"inefficient" in these cleanup, as before, yes?
+If it changes dramatically, drop my Ack, yes. But since it's going via
+my tree, my Ack is mostly just a quick email marker to say "yes, looks
+good". :)
 
 -- 
 Kees Cook
