@@ -2,95 +2,95 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC81C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 02:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32EF7C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 02:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE88F2072E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 02:40:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F225B2074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 02:42:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ac++HWFR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726100AbgFJCkY (ORCPT
+        id S1726017AbgFJCmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 22:40:24 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:50216 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725927AbgFJCkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 22:40:22 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxT9_3R+BeKBdAAA--.3191S2;
-        Wed, 10 Jun 2020 10:39:51 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH] PCI: Loongson: Use DECLARE_PCI_FIXUP_EARLY for bridge_class_quirk()
-Date:   Wed, 10 Jun 2020 10:39:50 +0800
-Message-Id: <1591756790-12081-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9DxT9_3R+BeKBdAAA--.3191S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxJrW3Wr18tF4UGF48ZryrZwb_yoW8Gr17p3
-        45Aa17KF4ftrs8A3WDX3yDGas8ZF93G34kCFWfuwnFgasxXa4UWry2k3ZYvF4UJrZ7XayU
-        ZayDCw18Can8ur7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9F14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-        6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
-        4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
-        Yx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbV
-        WUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7Cj
-        xVA2Y2ka0xkIwI1lc2xSY4AK67AK6r4UMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
-        AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
-        17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
-        IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3
-        Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcS
-        sGvfC2KfnxnUUI43ZEXa7VUbN6pPUUUUU==
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Tue, 9 Jun 2020 22:42:07 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:60844 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725927AbgFJCmD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 22:42:03 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05A2aQ53156139;
+        Wed, 10 Jun 2020 02:41:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=jsoQcyzfrxL4t8e+aWIRBwCpl33orrtek8y501RHyXY=;
+ b=ac++HWFR3PniNo+ib7ObhN2pXkU5X3ONXn9a+sCR9kaE/S/jfXkgciDuaEbHn7A2Rem3
+ n6jFTQ7JrrC8TPsJjf97NH+t+bEUCKuW9b6qmQ467e6Henc0gjZTUg8ei2wE9XpwTi59
+ gG4nqAi9nAKc7FUlgSFDuJqcZsQtg8D1YuexnXRlWa0inqB9hN7nRoPvYmznfFeR58/X
+ 8EvObtt3v4XzM9ScrKqgnxXPd2OM8VEmc7A6YsitMMocvkEVLHUzTHZxPCVAJe/G2EfF
+ RlejOJXRwDWmBCBazBIgYuXuPYb/qRbA57AxZuArqW+tNUtw0zu0bpBrwgk7Wl787/f1 UQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 31g3smytkq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 10 Jun 2020 02:41:26 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05A2cQsU168143;
+        Wed, 10 Jun 2020 02:41:26 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 31gmwsd3dm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 10 Jun 2020 02:41:26 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05A2fMSp000824;
+        Wed, 10 Jun 2020 02:41:22 GMT
+Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 09 Jun 2020 19:41:22 -0700
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+To:     jejb@linux.ibm.com, linux@armlinux.org.uk,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-scsi@vger.kernel.org
+Subject: Re: [PATCH] scsi: acornscsi: Fix an error handling path in 'acornscsi_probe()'
+Date:   Tue,  9 Jun 2020 22:41:19 -0400
+Message-Id: <159175686975.7062.3916571088976504463.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200530081622.577888-1-christophe.jaillet@wanadoo.fr>
+References: <20200530081622.577888-1-christophe.jaillet@wanadoo.fr>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9647 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0 adultscore=0
+ mlxscore=0 mlxlogscore=971 bulkscore=0 malwarescore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006100019
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9647 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 impostorscore=0 cotscore=-2147483648 suspectscore=0
+ spamscore=0 bulkscore=0 malwarescore=0 phishscore=0 mlxscore=0
+ mlxlogscore=999 clxscore=1011 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006100019
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use DECLARE_PCI_FIXUP_EARLY instead of DECLARE_PCI_FIXUP_HEADER
-for bridge_class_quirk() in pci-loongson.c, otherwise the fixup
-has no effect.
+On Sat, 30 May 2020 10:16:22 +0200, Christophe JAILLET wrote:
 
-Fixes: 1f58cca5cf2b ("PCI: Add Loongson PCI Controller support")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
+> 'ret' is known to be 0 at this point.
+> So, explicitly return -ENOMEM if one of the 'ecardm_iomap()' calls fail.
 
-This patch is based on mips-next tree.
+Applied to 5.8/scsi-queue, thanks!
 
- drivers/pci/controller/pci-loongson.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+[1/1] scsi: acornscsi: Fix an error handling path in acornscsi_probe()
+      https://git.kernel.org/mkp/scsi/c/7960c0b29626
 
-diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
-index 459009c..58b862a 100644
---- a/drivers/pci/controller/pci-loongson.c
-+++ b/drivers/pci/controller/pci-loongson.c
-@@ -37,11 +37,11 @@ static void bridge_class_quirk(struct pci_dev *dev)
- {
- 	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
- }
--DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
- 			DEV_PCIE_PORT_0, bridge_class_quirk);
--DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
- 			DEV_PCIE_PORT_1, bridge_class_quirk);
--DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
- 			DEV_PCIE_PORT_2, bridge_class_quirk);
- 
- static void system_bus_quirk(struct pci_dev *pdev)
 -- 
-2.1.0
-
+Martin K. Petersen	Oracle Linux Engineering
