@@ -2,113 +2,104 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D654BC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB9DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B422C2072E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:05:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 250802072E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:08:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="AFlVfLb5"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="EXDkkNsN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728326AbgFJRFu (ORCPT
+        id S1729312AbgFJRIF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 13:05:50 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:41344 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726560AbgFJRFu (ORCPT
+        Wed, 10 Jun 2020 13:08:05 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:13113 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728302AbgFJRIE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 13:05:50 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id BCAAA29E;
-        Wed, 10 Jun 2020 19:05:47 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1591808747;
-        bh=ZT/nC6qDo3qrxgHBIHIVh6Z1UO4m1PQ4ivQ/Rys58vg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AFlVfLb5GWleANehz2I1Q3WGTN1a+PF08g2R3csISBNuHDYxzQ1Q2/J7MLXwsw8qy
-         Hfm9q3uexu28uC50dA9K3rNzTUrjYJEiBPBRWZ3CiizAZI58/37KsMD6/rgv53Gf4A
-         ZOhIdw03o69fRSdFjLPbm3As2Ypiqnbn6VtUj7rI=
-Date:   Wed, 10 Jun 2020 20:05:27 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Michal Simek <michal.simek@xilinx.com>, devicetree@vger.kernel.org,
-        Rob Herring <robh@kernel.org>,
-        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
-        linux-kernel@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH v8 1/3] dt-bindings: phy: Add DT bindings for Xilinx
- ZynqMP PSGTR PHY
-Message-ID: <20200610170527.GA364@pendragon.ideasonboard.com>
-References: <20200513172239.26444-1-laurent.pinchart@ideasonboard.com>
- <20200513172239.26444-2-laurent.pinchart@ideasonboard.com>
- <20200526183201.GA134956@bogus>
- <20200528015537.GF4670@pendragon.ideasonboard.com>
+        Wed, 10 Jun 2020 13:08:04 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591808883; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=MhG4R5Vs80hCvljeBG9B5Ken60GZ0ZhM2+DRcSqYPJ8=; b=EXDkkNsNPc4QxwmTBLmeastnb4ikZtlIMR6fe+Luv40GY/G7fBpvbcW87rrR2C8jonNMU4pL
+ klyki2L+EwXyFs/WvbR9cVAaNChKScPZDOLYJQOBJn1VJ3giVfVJC+xOhI23A1HgS/55uTo3
+ Pq8mDkH4KFxw9r8k9zAdWxR49mk=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
+ 5ee113735866879c764a71e8 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 10 Jun 2020 17:08:03
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 710E3C433CA; Wed, 10 Jun 2020 17:08:02 +0000 (UTC)
+Received: from [192.168.0.104] (unknown [183.82.139.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id AE64CC433C6;
+        Wed, 10 Jun 2020 17:07:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AE64CC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+Subject: Re: [PATCH v2 2/4] dt-bindings: clock: Add YAML schemas for LPASS
+ clocks on SC7180
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org
+References: <1589707344-8871-1-git-send-email-tdas@codeaurora.org>
+ <1589707344-8871-3-git-send-email-tdas@codeaurora.org>
+ <159054910485.88029.14861222587907627358@swboyd.mtv.corp.google.com>
+From:   Taniya Das <tdas@codeaurora.org>
+Message-ID: <b12652b6-3c82-c5fd-42cc-89bba4a15a01@codeaurora.org>
+Date:   Wed, 10 Jun 2020 22:37:56 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200528015537.GF4670@pendragon.ideasonboard.com>
+In-Reply-To: <159054910485.88029.14861222587907627358@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kishon,
+Thanks for the review.
 
-On Thu, May 28, 2020 at 04:55:38AM +0300, Laurent Pinchart wrote:
-> On Tue, May 26, 2020 at 12:32:01PM -0600, Rob Herring wrote:
-> > On Wed, 13 May 2020 20:22:37 +0300, Laurent Pinchart wrote:
-> > > From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-> > > 
-> > > Add DT bindings for the Xilinx ZynqMP PHY. ZynqMP SoCs have a High Speed
-> > > Processing System Gigabit Transceiver which provides PHY capabilities to
-> > > USB, SATA, PCIE, Display Port and Ehernet SGMII controllers.
-> > > 
-> > > Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-> > > Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > > ---
-> > > Changes since v7:
-> > > 
-> > > - Switch to GPL-2.0-only OR BSD-2-Clause
-> > > 
-> > > Changes since v6:
-> > > 
-> > > - Fixed specification of compatible-dependent xlnx,tx-termination-fix
-> > >   property
-> > > - Dropped status property from example
-> > > - Use 4 spaces to indent example
-> > > 
-> > > Changes since v5:
-> > > 
-> > > - Document clocks and clock-names properties
-> > > - Document resets and reset-names properties
-> > > - Replace subnodes with an additional entry in the PHY cells
-> > > - Drop lane frequency PHY cell, replaced by reference clock phandle
-> > > - Convert bindings to YAML
-> > > - Reword the subject line
-> > > - Drop Rob's R-b as the bindings have significantly changed
-> > > - Drop resets and reset-names properties
-> > > ---
-> > >  .../bindings/phy/xlnx,zynqmp-psgtr.yaml       | 105 ++++++++++++++++++
-> > >  include/dt-bindings/phy/phy.h                 |   1 +
-> > >  2 files changed, 106 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
-> > 
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> 
-> Thank you Rob.
-> 
-> Kishon, now that the bindings have been acked, could you please take the
-> series in your tree (which I assume to tbe
-> https://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git/) ?
-> Is it too late for v5.8 ?
+On 5/27/2020 8:41 AM, Stephen Boyd wrote:
 
-Gentle ping.
+>> +  clocks:
+>> +    items:
+>> +      - description: gcc_lpass_sway clock from GCC
+>> +
+>> +  clock-names:
+>> +    items:
+>> +      - const: gcc_lpass_sway
+> 
+> As said on patch #4, maybe "iface" instead?
+> 
+
+Will take care in the next patch.
+
+>> +
+>> +  power-domains:
+>> +    items:
+>> +      - description: LPASS CORE HM GSDCR
+>> +
 
 -- 
-Regards,
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
 
-Laurent Pinchart
+--
