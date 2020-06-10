@@ -2,166 +2,139 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0644C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 22:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC7EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 22:12:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C896E2072E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 22:12:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kTsXOfwb"
+	by mail.kernel.org (Postfix) with ESMTP id 26A332074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 22:12:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591827171;
+	bh=bXURC8eTjwT+ydR04KJKf77k89/eZspbvVP0SRM6Dus=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VlD5dsRlXuBkegBFHKgP05JD3Cbsp5CdOIPHuoxJCdO0ZffftARPm7MXGhve+JY3u
+	 oxlhSBFyKcyot48pRN/yyUKQcA5z0wLXBf5Cg0+hxTGdfcMKP58em52iGlx9WVyKB/
+	 reOYQmYX1ug0TdhH+Y2RRnDPr17BgNN5zeemHFgs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726672AbgFJWMR (ORCPT
+        id S1726675AbgFJWMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 18:12:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50686 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726513AbgFJWMQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 18:12:16 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88C2EC08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 15:12:16 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id k13so2232663vsm.13
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 15:12:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8ql4vRpj/ZWF0M5dCwe9+ml5aQlV0lcOnQe3sK6ypzM=;
-        b=kTsXOfwbXO1Uvm6+8Wf5L/fmhgemJhOoPbGZtDXyP56sRmOUE+HA356ytHrF/MlXkQ
-         r+1fTsody5otxHns0nzVjZjMeQJj9WoPKXg0BPcii5S2Vq1Ayu70wHvn3U6G6RqrQBvC
-         jSu1p0ysxMxnJa2TzDGY4sLYXQnzRJLHj0xaUVf1zUO19aG6ujSzer2qXhNyA2X+cvfN
-         QNZYptdgi9zoEJS5toP3hYFMkkzdyd1H8EpsMi509eCk6JMhMyTb06cU3CaECg/JVl6m
-         tAYCYRdOo7EvNdkjSrQY9nVTNc4YUOIJmFbRZZ2waZnieyy4pcGkAdQQzGPlFugLlj6g
-         3d7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8ql4vRpj/ZWF0M5dCwe9+ml5aQlV0lcOnQe3sK6ypzM=;
-        b=O+wJzKA1xh6FZjkGjUv5Zxh8Z0LNClPFBaOfaMqjPpsGQ/aN0VWmGB7WnVbEWboxXv
-         CtJ8Nppwm2CSndpzs6ecSAvzAzTvll3Lqjg904IWOHwTaP5E3XqXMF1R8UYh9qFaRNaO
-         cMDwuthoomjRWbTzYNNcIslxN2kTWD+FSXfI6cH3h2I9vUwbM7P3rwOWwjpguxDkX0bV
-         Msduqu/bH6MrnygrPhkFt2QTYpcRbiDqcjWWaKfhVBkrrq+HKkEBJzpjVjGANgQmJ6iM
-         7dM4q4rBoys1U1MHdZ+K/nLeBEdi7AkyNVW9xLWxH1Asj+3/Ks4jrrQOiwwh23flwDng
-         H7PQ==
-X-Gm-Message-State: AOAM533cnWqesA5KYeiaIF5j0iAogXUHt9jt8LCvbtrQcT8JSBq7E09g
-        3s1cnaEAmKWVTtAJzzmEVpTjvIzR0BXLAiUlNwuojQ==
-X-Google-Smtp-Source: ABdhPJzdmghMx590xCu3q0oAa1Tiyl8Cd4txMWbr/Hdcmg3h07QCfUudu4lcAnLl2oYkxmlR4q6o6Uh/L8LMxNpv/bE=
-X-Received: by 2002:a67:f982:: with SMTP id b2mr4434307vsq.202.1591827135387;
- Wed, 10 Jun 2020 15:12:15 -0700 (PDT)
+        Wed, 10 Jun 2020 18:12:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45920 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726513AbgFJWMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 18:12:49 -0400
+Received: from localhost (lfbn-ncy-1-1025-94.w92-138.abo.wanadoo.fr [92.138.0.94])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B97B2072E;
+        Wed, 10 Jun 2020 22:12:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591827168;
+        bh=bXURC8eTjwT+ydR04KJKf77k89/eZspbvVP0SRM6Dus=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nCxNT0uzQoIF/6PlgjKI/OXhbhL9EsfG/lkkmPoQOleBevZAHymRQhtfmvZVRwIoJ
+         YVQF8v4YHE4bohMwIJgc6fhD0+z/4+7Rv9veZOXdh8s2JBuA0ud+6TqbRJy3hwjWSu
+         X5FVSXchmO6+AMfdzifXuK3nzjAfjSP5srxcye2g=
+Date:   Thu, 11 Jun 2020 00:12:46 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Josh Triplett <josh@joshtriplett.org>
+Subject: Re: [PATCH 01/10] rcu: Directly lock rdp->nocb_lock on nocb code
+ entrypoints
+Message-ID: <20200610221245.GA3833@lenoir>
+References: <20200513164714.22557-1-frederic@kernel.org>
+ <20200513164714.22557-2-frederic@kernel.org>
+ <20200520122949.GB16672@google.com>
+ <20200522175739.GM2869@paulmck-ThinkPad-P72>
+ <20200604114121.GA26398@lenoir>
+ <20200604163655.GC29598@paulmck-ThinkPad-P72>
+ <20200608125715.GA30920@lenoir>
+ <20200609180227.GR4455@paulmck-ThinkPad-P72>
+ <20200610131238.GA26639@lenoir>
+ <20200610140210.GT4455@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-References: <20200605213853.14959-1-sean.j.christopherson@intel.com> <20200605213853.14959-6-sean.j.christopherson@intel.com>
-In-Reply-To: <20200605213853.14959-6-sean.j.christopherson@intel.com>
-From:   Ben Gardon <bgardon@google.com>
-Date:   Wed, 10 Jun 2020 15:12:04 -0700
-Message-ID: <CANgfPd8B5R9NRL5q_4v4xvvn_3Vo9N93Ms3EiUFANMzqAMedMw@mail.gmail.com>
-Subject: Re: [PATCH 05/21] KVM: x86/mmu: Try to avoid crashing KVM if a MMU
- memory cache is empty
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Marc Zyngier <maz@kernel.org>, Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Feiner <pfeiner@google.com>,
-        Peter Shier <pshier@google.com>,
-        Junaid Shahid <junaids@google.com>,
-        Christoffer Dall <christoffer.dall@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200610140210.GT4455@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 5, 2020 at 2:39 PM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> Attempt to allocate a new object instead of crashing KVM (and likely the
-> kernel) if a memory cache is unexpectedly empty.  Use GFP_ATOMIC for the
-> allocation as the caches are used while holding mmu_lock.  The immediate
-> BUG_ON() makes the code unnecessarily explosive and led to confusing
-> minimums being used in the past, e.g. allocating 4 objects where 1 would
-> suffice.
->
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/kvm/mmu/mmu.c | 21 +++++++++++++++------
->  1 file changed, 15 insertions(+), 6 deletions(-)
->
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index ba70de24a5b0..5e773564ab20 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -1060,6 +1060,15 @@ static void walk_shadow_page_lockless_end(struct kvm_vcpu *vcpu)
->         local_irq_enable();
->  }
->
-> +static inline void *mmu_memory_cache_alloc_obj(struct kvm_mmu_memory_cache *mc,
-> +                                              gfp_t gfp_flags)
-> +{
-> +       if (mc->kmem_cache)
-> +               return kmem_cache_zalloc(mc->kmem_cache, gfp_flags);
-> +       else
-> +               return (void *)__get_free_page(gfp_flags);
-> +}
-> +
->  static int mmu_topup_memory_cache(struct kvm_mmu_memory_cache *mc, int min)
->  {
->         void *obj;
-> @@ -1067,10 +1076,7 @@ static int mmu_topup_memory_cache(struct kvm_mmu_memory_cache *mc, int min)
->         if (mc->nobjs >= min)
->                 return 0;
->         while (mc->nobjs < ARRAY_SIZE(mc->objects)) {
-> -               if (mc->kmem_cache)
-> -                       obj = kmem_cache_zalloc(mc->kmem_cache, GFP_KERNEL_ACCOUNT);
-> -               else
-> -                       obj = (void *)__get_free_page(GFP_KERNEL_ACCOUNT);
-> +               obj = mmu_memory_cache_alloc_obj(mc, GFP_KERNEL_ACCOUNT);
->                 if (!obj)
->                         return mc->nobjs >= min ? 0 : -ENOMEM;
->                 mc->objects[mc->nobjs++] = obj;
-> @@ -1118,8 +1124,11 @@ static void *mmu_memory_cache_alloc(struct kvm_mmu_memory_cache *mc)
->  {
->         void *p;
->
-> -       BUG_ON(!mc->nobjs);
-> -       p = mc->objects[--mc->nobjs];
-> +       if (WARN_ON(!mc->nobjs))
-> +               p = mmu_memory_cache_alloc_obj(mc, GFP_ATOMIC | __GFP_ACCOUNT);
-Is an atomic allocation really necessary here? In most cases, when
-topping up the memory cache we are handing a guest page fault. This
-bug could also be removed by returning null if unable to allocate from
-the cache, and then re-trying the page fault in that case. I don't
-know if this is necessary to handle other, non-x86 architectures more
-easily, but I worry this could cause some unpleasantness if combined
-with some other bug or the host was in a low memory situation and then
-this consumed the atomic pool. Perhaps this is a moot point since we
-log a warning and consider the atomic allocation something of an
-error.
-> +       else
-> +               p = mc->objects[--mc->nobjs];
-> +       BUG_ON(!p);
->         return p;
->  }
->
-> --
-> 2.26.0
->
+On Wed, Jun 10, 2020 at 07:02:10AM -0700, Paul E. McKenney wrote:
+> And just to argue against myself...
+> 
+> Another approach is to maintain explicit multiple states for each
+> ->cblist, perhaps something like this:
+> 
+> 1.	In softirq.  Transition code advances to next.
+> 2.	To no-CB 1.  Either GP or CB kthread for the transitioning
+> 	CPU advances to next.  Note that the fact that the
+> 	transition code runs on the transitioning CPU means that
+> 	the RCU softirq handler doesn't need to be involved.
+> 3.	To no-CB 2.  Either GP or CB kthread for the transitioning
+> 	CPU advances to next.
+
+Just to clarify, if GP has set NO_CB2 in (2), we want CB to set NO_CB3
+in 3), right? OTOH if CB has set NO_CB2 in (2), we want GP to set NO_CB3
+in (3), right?
+
+The point being to make sure that both threads acknowledge the transition?
+
+> 4.	To no-CB 3.  Transitioning code advances to next.
+> 	At this point, the no-CBs setup is fully functional.
+
+And softirq can stop processing callbacks from that point on.
+
+> 5.	No-CB.  Transitioning code advances to next.
+> 	Again, the fact that the transitioning code is running
+> 	on the transitioning CPU with interrupts disabled means
+> 	that the RCU softirq handler need not be explicitly
+> 	involved.
+> 6.	To softirq 1.  The RCU softirq handler for the transitioning
+> 	CPU advances to next.
+> 	At this point, the RCU softirq handler is processing callbacks.
+> 7.	To softirq 2.  Either GP or CB kthread for the transitioning
+> 	CPU advances to next.
+> 	At this point, the softirq handler is processing callbacks.
+
+SOFTIRQ2 should be part of what happens in SOFTIRQ1. The transitioning
+CPU sets SOFTIRQ1, which is immediately visible by local softirqs,
+and wakes up CB/GP. CB/GP sets SOFTIRQ2, CB/GP sets SOFTIRQ3 and
+we go back to transitioning code that sets IN_SOFTIRQ.
+
+Or did I miss something?
+
+
+> 8.	To softirq 3.  Either GP or CB kthread for the transitioning
+> 	CPU advances to next.
+> 	At this point, the no-CBs setup is fully shut down.
+> 9.	To softirq 4.  Transitioning code advances to next,
+> 	which is the first, "In softirq".
+> 	(This one -might- be unnecessary, but...)
+> 
+> All transitions are of course with the ->nocb_lock held.
+> 
+> When there is only one CPU during early boot near rcu_init() time,
+> the transition from "In softirq" to "No-CB" can remain be instantaneous.
+> 
+> This has the advantage of not slowing things down just because there
+> is an RCU callback flood in progress.  It also uses an explicit
+> protocol that should (give or take bugs) maintain full safety both
+> in protection of ->cblist and in dealing with RCU callback floods.
+> 
+> Thoughts?
+
+Agreed. And I really like that it details the whole process in a very
+explicit way.
+
+Thanks!
