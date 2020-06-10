@@ -2,131 +2,130 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F065C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98041C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D405206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:06:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 744232078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:06:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Y6F1J1An"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ESqqyDvX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbgFJJGB (ORCPT
+        id S1727063AbgFJJG1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 05:06:01 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:10213 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726219AbgFJJGA (ORCPT
+        Wed, 10 Jun 2020 05:06:27 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:45224 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbgFJJG0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 05:06:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1591779959; x=1623315959;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=qtiUArQA4p5apTipUrkfZICOBUdYloVo/SZ9mlHt4CE=;
-  b=Y6F1J1An8+MnuPpMHZhvmT1JdVyrl09Cz8qduE3vT+b+XiRvVxmeDbPf
-   UTAukGSM/9YJo/BY2ZU5mA4A/WjeH4Ss6FnRECgOscViJEQz2e0GlDZOF
-   RiTkGvmsqc8Gi2n4kDj6uf9m7s7Yg7M+fbzcJTumdZS5Dz7O5+vA8ZIpK
-   8dPsq8zul+IwmYmEFQ44Ef28l6yBU1sUrQmFezB5W99oGRmvoE2jv2wtr
-   tzW85NvnFA/V533E06vnTFKM7mw8od7171HWC04yncmzKW3S7eKx/5KxU
-   /qrdnKyNqt4dBBhVy43ZMSYUeX+hGmKYyxBmkEVM2/35KMMuu7pQcbk/j
-   g==;
-IronPort-SDR: M4p3KWa4v3dCbOqfupbupyIlgMFVn+ggBBOGIuGBUL4gm84DSrObBOzSMfdhoI6a+u5rPBMcsM
- xG66W88fqLYD/xhoxvF7RqmDw/zuMemtZnxO7J+vqySlRTI/TZ1KuwRM8QYwwrcHsHY+3illSj
- AYELCK8PhZ5CN2ILWoTYlez7/lgWnmtsWcfIyYZ1/5XU88b1OUMGwMhiymbyFn6nkK6H57h3Rf
- AbzfBK9xSMsfYGrI3RpFzFivBTqCNEi872FDud0vctBZMZzLP/lNdvA5waJMq9EoT5AgCkyzyc
- nSs=
-X-IronPort-AV: E=Sophos;i="5.73,495,1583218800"; 
-   d="scan'208";a="82953284"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Jun 2020 02:05:59 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Wed, 10 Jun 2020 02:05:57 -0700
-Received: from m18063-ThinkPad-T460p.microchip.com (10.10.115.15) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.1847.3 via Frontend Transport; Wed, 10 Jun 2020 02:05:53 -0700
-From:   Claudiu Beznea <claudiu.beznea@microchip.com>
-To:     <a.zummo@towertech.it>, <alexandre.belloni@bootlin.com>,
-        <robh+dt@kernel.org>, <nicolas.ferre@microchip.com>,
-        <ludovic.desroches@microchip.com>, <tglx@linutronix.de>,
-        <jason@lakedaemon.net>, <maz@kernel.org>
-CC:     <linux-rtc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH v2 3/3] ARM: dts: sam9x60: add rtt
-Date:   Wed, 10 Jun 2020 12:05:36 +0300
-Message-ID: <1591779936-18577-4-git-send-email-claudiu.beznea@microchip.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1591779936-18577-1-git-send-email-claudiu.beznea@microchip.com>
-References: <1591779936-18577-1-git-send-email-claudiu.beznea@microchip.com>
+        Wed, 10 Jun 2020 05:06:26 -0400
+Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id CEBCA29E;
+        Wed, 10 Jun 2020 11:06:22 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1591779983;
+        bh=jDahtic4X/hGHdvUIUQ4poL1ADmSmvhjqpE/zX70PGE=;
+        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ESqqyDvXadCuJ/5DhuogFj+9nhJ3DYr6jXzQxi/YaQMldGP+LuS1pyEQwt1Sa1cto
+         jxwC62SWsTHQjWCidDleNwcwmXRRBKe625Tu2BhfSmNsmGvUgRMvORTQ9Mmra8Zz/5
+         zJvB6DLBCFmx+gonkYuhV07BxIg4L7gOC+vP03pw=
+Reply-To: kieran.bingham+renesas@ideasonboard.com
+Subject: Re: [PATCH v2] mm/balloon_compaction: Fix trivial spelling
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        David Hildenbrand <david@redhat.com>
+Cc:     linux-renesas-soc@vger.kernel.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jiri Kosina <trivial@kernel.org>,
+        "open list:VIRTIO CORE AND NET DRIVERS" 
+        <virtualization@lists.linux-foundation.org>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200609124610.3445662-16-kieran.bingham+renesas@ideasonboard.com>
+ <20200609143412.3456484-1-kieran.bingham+renesas@ideasonboard.com>
+ <6b13243c-db22-ef33-8aed-9b385cc10b58@cogentembedded.com>
+From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Organization: Ideas on Board
+Message-ID: <731a9af2-57eb-3b4e-458e-b652df446d04@ideasonboard.com>
+Date:   Wed, 10 Jun 2020 10:06:20 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <6b13243c-db22-ef33-8aed-9b385cc10b58@cogentembedded.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add RTT. Allong with it enable GBPR as it is requested by RTT.
+Hi Sergei,
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
----
- arch/arm/boot/dts/at91-sam9x60ek.dts | 9 +++++++++
- arch/arm/boot/dts/sam9x60.dtsi       | 7 +++++++
- 2 files changed, 16 insertions(+)
+On 10/06/2020 10:00, Sergei Shtylyov wrote:
+> Hello!
+> 
+> On 09.06.2020 17:34, Kieran Bingham wrote:
+> 
+>> The word 'descriptor' is misspelled throughout the tree.
+>>
+>> Fix it up accordingly:
+>>      decriptors -> descriptors
+> 
+>       decriptor -> descriptor really. ;-)
 
-diff --git a/arch/arm/boot/dts/at91-sam9x60ek.dts b/arch/arm/boot/dts/at91-sam9x60ek.dts
-index b484745bf2d4..39d946e0a47c 100644
---- a/arch/arm/boot/dts/at91-sam9x60ek.dts
-+++ b/arch/arm/boot/dts/at91-sam9x60ek.dts
-@@ -309,6 +309,10 @@
- 	};
- };
- 
-+&gpbr {
-+	status = "okay";
-+};
-+
- &i2s {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_i2s_default>;
-@@ -613,6 +617,11 @@
- 	};
- };
- 
-+&rtt {
-+	atmel,rtt-rtc-time-reg = <&gpbr 0x0>;
-+	status = "okay";
-+};
-+
- &shutdown_controller {
- 	atmel,shdwc-debouncer = <976>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/sam9x60.dtsi b/arch/arm/boot/dts/sam9x60.dtsi
-index 6763423d64b8..d10843da4a85 100644
---- a/arch/arm/boot/dts/sam9x60.dtsi
-+++ b/arch/arm/boot/dts/sam9x60.dtsi
-@@ -661,6 +661,13 @@
- 				status = "disabled";
- 			};
- 
-+			rtt: rtt@fffffe20 {
-+				compatible = "microchip,sam9x60-rtt", "atmel,at91sam9260-rtt";
-+				reg = <0xfffffe20 0x20>;
-+				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
-+				clocks = <&clk32k 0>;
-+			};
-+
- 			pit: timer@fffffe40 {
- 				compatible = "atmel,at91sam9260-pit";
- 				reg = <0xfffffe40 0x10>;
--- 
-2.7.4
+Ayeee ... that's what I get for doing a batch fixup ...
+
+Which - I believe I probably actually did a sed conversion on decriptor,
+anyway, so I'm not even sure why the commit messages ended up all
+pluralised ;-)
+
+Thanks for the highlight, I'll fix up in any resends.
+--
+Kieran
+
+
+
+>> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+>> Reviewed-by: David Hildenbrand <david@redhat.com>
+>> ---
+>>   mm/balloon_compaction.c | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/mm/balloon_compaction.c b/mm/balloon_compaction.c
+>> index 26de020aae7b..907fefde2572 100644
+>> --- a/mm/balloon_compaction.c
+>> +++ b/mm/balloon_compaction.c
+>> @@ -58,7 +58,7 @@ EXPORT_SYMBOL_GPL(balloon_page_list_enqueue);
+>>   /**
+>>    * balloon_page_list_dequeue() - removes pages from balloon's page
+>> list and
+>>    *                 returns a list of the pages.
+>> - * @b_dev_info: balloon device decriptor where we will grab a page from.
+>> + * @b_dev_info: balloon device descriptor where we will grab a page
+>> from.
+>>    * @pages: pointer to the list of pages that would be returned to
+>> the caller.
+>>    * @n_req_pages: number of requested pages.
+>>    *
+>> @@ -157,7 +157,7 @@ EXPORT_SYMBOL_GPL(balloon_page_enqueue);
+>>   /*
+>>    * balloon_page_dequeue - removes a page from balloon's page list
+>> and returns
+>>    *              its address to allow the driver to release the page.
+>> - * @b_dev_info: balloon device decriptor where we will grab a page from.
+>> + * @b_dev_info: balloon device descriptor where we will grab a page
+>> from.
+>>    *
+>>    * Driver must call this function to properly dequeue a previously
+>> enqueued page
+>>    * before definitively releasing it back to the guest system.
+> 
+> MBR, Sergei
 
