@@ -2,223 +2,107 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLACK autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D44DFC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79788C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:28:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B01F8206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:27:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55C5A20734
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:28:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="hnRHTdJr"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="rhC0j4t2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729063AbgFJM1p (ORCPT
+        id S1729071AbgFJM2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 08:27:45 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:46310 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728595AbgFJM1p (ORCPT
+        Wed, 10 Jun 2020 08:28:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44862 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728728AbgFJM2V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 08:27:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1591792064; x=1623328064;
-  h=references:from:to:cc:subject:in-reply-to:date:
-   message-id:mime-version;
-  bh=QiFuJl1R5fgwI47VUdUxy1XjRtgrcDqvma+iH44NFSk=;
-  b=hnRHTdJronscFR2yTjdh97Lj7hS7DuvbTw98YNO51LZ3UXc/1VMvT8iB
-   tL32XQg6qZmB6lfLXpoB2+hle/VHVqO0638F1CEGsBCKwtcezoAnTve40
-   UtUMcouuRqBCG2vZROnAdGnkLkF3n4xEH4so9O9shjaHuRwzWkSXN++Dg
-   nAX7PHQHVJ+VPaqQzE/QaSkUOXkRjHN0YWkIxvvNbhEGsAoBZYHFFM+e1
-   XzF4NOtkHPx8N+c74t5M1N2DM2VmSRzs38MnZhCez0+lm1Ql7QT9DniJX
-   /3Ff2ZGW35ZOcUDC3V/+4FNzDYCCEapg/1X7uBVSRMVOABLrnwaMGtED2
-   Q==;
-IronPort-SDR: 0d4g912uhVPOIXVwiNumUIxOuwQwPv1k6y8Nq0I/CzHL1DwOmpG02rnaDxCk0Xul9ey7Wz6RVN
- MoGmGnZ+EQRMel+AUBLPvkn7ON7+DX3N23NsBUbSe4kf82ZfGLZHOVKqaD2P/bCFZobnMwyTGW
- Mk/GSb29bEgBZO+qe3ATVlY/gWm3VEHHqjYkS8fUrMoicwslgxm0AquKfxlA4tXmFapYTg87ht
- IqeLuIZL/Xyzue7miwmvTsqASQip6ZlkRDLZm2sBWdIJbnx0uIdzdqdMkwOrhoL/map1dFX0IR
- qI4=
-X-IronPort-AV: E=Sophos;i="5.73,496,1583218800"; 
-   d="scan'208";a="15250796"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Jun 2020 05:27:36 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Wed, 10 Jun 2020 05:27:35 -0700
-Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3
- via Frontend Transport; Wed, 10 Jun 2020 05:27:32 -0700
-References: <20200513140031.25633-1-lars.povlsen@microchip.com> <20200513140031.25633-7-lars.povlsen@microchip.com> <20200602230738.mz2y6i2kjagyt7tk@mobilestation>
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-List-Id: <soc.lore.kernel.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Mark Brown <broonie@kernel.org>, SoC Team <soc@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 06/10] dt-bindings: spi: spi-dw-mchp: Add Sparx5 support
-In-Reply-To: <20200602230738.mz2y6i2kjagyt7tk@mobilestation>
-Date:   Wed, 10 Jun 2020 14:27:31 +0200
-Message-ID: <87d067hzrg.fsf@soft-dev15.microsemi.net>
+        Wed, 10 Jun 2020 08:28:21 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 116E6C03E96B
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 05:28:20 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id q14so1507177qtr.9
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 05:28:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=+g/QNFEcpPiOwSyTtWV6UhK4FMdUVFtGGz85G+f+/28=;
+        b=rhC0j4t2YEoK08PnkL2fihhmC5XXVkrYeI4vb3VnKbwE+l9tdbbSmO2UgkqGtnyPlM
+         A0GI3PJZEbPKn/4mia3nw1st3f5LEAUJ/4yoKbxTGeg/DRiLE/NmVjmolN4gSsplKLU7
+         amPaMjgFwZua3VOnt2Zy7xqvx+XlxhC82VvOKuAPgQ2RbNfnBlItygDqkAdoOT/xWXU9
+         Wk0yiDW1EFJ5x7iRkIj1gIZaK8JS1Fvrk9alFm1NrVleNsjzwxK9ULdORw3y+dXJeW5H
+         jXzsHtnjfTHJmigC5tqVrgpSEfYqVtdxngTj/gbhYCrOPI1k3ODgCD4pfaNPsIwqt4xX
+         7gHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+g/QNFEcpPiOwSyTtWV6UhK4FMdUVFtGGz85G+f+/28=;
+        b=kyNvwyxbRAwfS7SxJ8IOcvvdsVIgTUNEPkQEJiVORRxXYwHmqFk68xQeUhX3tw1bwU
+         cy2s4YLlwsRCox43cEeiurwloxJSbwo/mHujjWVa+Y69YnIHguKFRvkIy9ASivJmQtt4
+         4MkHSDc2EAP44B4sgW56HKpQDLJsvzZtGQd5e6FtgEQ0pFd7zcd/b4OH67CDiegZw12g
+         h7pnQR5+q5cZGSwg/8pkRyG4qPUYXL5a6YwIzqI5pGNpz6dfdnn25tVQ9tx9VRlALEkc
+         NYwSKeuXe3Pn93KVSNtahn9sEFKfxggqILC/UNgeoqeipHH/zZGqnpr9N7ibTl0eumWq
+         l7kg==
+X-Gm-Message-State: AOAM532AwOc2qifeWI5DPMKcDjIbXgaVb5XZ0i4DkR+FNmMHQYiP0rBU
+        eaM5lZr+jMldth8alESiUOV8iGxxuPzYRw==
+X-Google-Smtp-Source: ABdhPJwLAeGPv59jZfZ3qqXM7MmZExkYgusex/dA6RWdkGRe+zbe7XyTijd5FwfQuIcBFIcoyaZGiw==
+X-Received: by 2002:ac8:fa7:: with SMTP id b36mr2997242qtk.100.1591792100186;
+        Wed, 10 Jun 2020 05:28:20 -0700 (PDT)
+Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id h64sm11681352qkf.46.2020.06.10.05.28.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2020 05:28:19 -0700 (PDT)
+Date:   Wed, 10 Jun 2020 08:28:17 -0400
+From:   Qian Cai <cai@lca.pw>
+To:     Alexander Potapenko <glider@google.com>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Kees Cook <keescook@chromium.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: Re: [PATCH] mm/page_alloc: silence a KASAN false positive
+Message-ID: <20200610122817.GC954@lca.pw>
+References: <20200610052154.5180-1-cai@lca.pw>
+ <CACT4Y+Ze=cddKcU_bYf4L=GaHuJRUjY=AdFFpM7aKy2+aZrmyQ@mail.gmail.com>
+ <CAG_fn=X-da3V0OC-Bzd2rmkNuZ_bVpH_n7Sp5P_hSGXD4ryyBA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG_fn=X-da3V0OC-Bzd2rmkNuZ_bVpH_n7Sp5P_hSGXD4ryyBA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 10, 2020 at 01:02:04PM +0200, Alexander Potapenko wrote:
+> On Wed, Jun 10, 2020 at 7:55 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+> >
+> > On Wed, Jun 10, 2020 at 7:22 AM Qian Cai <cai@lca.pw> wrote:
+> > >
+> > > kernel_init_free_pages() will use memset() on s390 to clear all pages
+> > > from kmalloc_order() which will override KASAN redzones because a
+> > > redzone was setup from the end of the allocation size to the end of the
+> > > last page. Silence it by not reporting it there. An example of the
+> > > report is,
+> >
+> > Interesting. The reason why we did not hit it on x86_64 is because
+> > clear_page is implemented in asm (arch/x86/lib/clear_page_64.S) and
+> > thus is not instrumented. Arm64 probably does the same. However, on
+> > s390 clear_page is defined to memset.
+> 
+> Can we define it to __memset() instead?
+> __memset() is supposed to be ignored by KASAN, e.g. KASAN runtime uses
+> it in the places where we don't care about bugs.
 
-Serge Semin writes:
-
-> On Wed, May 13, 2020 at 04:00:27PM +0200, Lars Povlsen wrote:
->> This add DT bindings for the Sparx5 SPI driver.
->
-> This whole file can be easily merged in to the generic DW APB SSI DT
-> binding file. Just use "if: properties: compatible: const: ..." construction
-> to distinguish ocelot, jaguar, sparx5 and non-sparx5 nodes.
->
->>
->> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
->> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
->> ---
->>  .../bindings/spi/mscc,ocelot-spi.yaml         | 49 +++++++++++++++----
->>  1 file changed, 39 insertions(+), 10 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml b/Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml
->> index a3ac0fa576553..8beecde4b0880 100644
->> --- a/Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml
->> +++ b/Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml
->> @@ -23,15 +23,23 @@ properties:
->>      enum:
->>        - mscc,ocelot-spi
->>        - mscc,jaguar2-spi
->> +      - microchip,sparx5-spi
->>
->>    interrupts:
->>      maxItems: 1
->>
->>    reg:
->>      minItems: 2
->> -    items:
->> -      - description: Designware SPI registers
->> -      - description: CS override registers
->> +    maxItems: 3
->> +    oneOf:
->> +      - items:
->> +          - description: Designware SPI registers
->> +          - description: CS override registers (Not sparx5).
->> +      - items:
->> +          - description: Designware SPI registers
->> +          - description: CS override registers (Not sparx5).
->> +          - description: Direct mapped SPI read area. If provided, the
->> +              driver will register spi_mem_op's to take advantage of it.
->>
->>    clocks:
->>      maxItems: 1
->> @@ -43,6 +51,23 @@ properties:
->>         enum: [ 2, 4 ]
->>      maxItems: 1
->>
->
->> +  spi-rx-delay-us:
->> +    description: |
->> +      The delay (in usec) of the RX signal sample position. This can
->> +      be used to tne the RX timing in order to acheive higher
->> +      speeds. This is used for all devices on the bus.
->> +    default: 0
->> +    maxItems: 1
->
-> spi-rx-delay-us is defined for a particular SPI-slave. Please see the
-> DT binding file: Documentation/devicetree/bindings/spi/spi-controller.yaml .
-> Although as I suggested before this delay isn't what the Dw APB SSI RX sample
-> delay functionality does. Probably a vendor-specific property would be better
-> here. But I'd also define it on a SPI-slave basis, not for all devices on the
-> bus.
-
-Right, I was hunting for something "similar". As pointed out, this is
-really different in nature, and the unit is also too coarse.
-
-I will change this to "snps,rx-sample-delay-ns" as suggested in your
-other comments.
-
->
->> +
->> +  interface-mapping-mask:
->> +    description: |
->> +      On the Sparx5 variant, two different busses are connected to the
->> +      controller. This property is a mask per chip-select, indicating
->> +      whether the CS should go to one or the other interface.
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    default: 0
->> +    maxItems: 1
->
-> As Mark rightfully suggested this seems like an SPI-slave related property, then
-> most likely it should be defined on the SPI-slave basis (probably as a bool
-> property). Additionally it's vendor-specific, so the property name should be
-> accordingly prefixed.
-
-Yes, I'll change this to a per-device property. I need the same for the
-above as well.
-
->
->> +
->>  required:
->>    - compatible
->>    - reg
->> @@ -50,11 +75,15 @@ required:
->>
->>  examples:
->>    - |
->> -    spi0: spi@101000 {
->> -      compatible = "mscc,ocelot-spi";
->> -      #address-cells = <1>;
->> -      #size-cells = <0>;
->> -      reg = <0x101000 0x100>, <0x3c 0x18>;
->> -      interrupts = <9>;
->> -      clocks = <&ahb_clk>;
->> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
->> +    spi0: spi@600104000 {
->> +        #address-cells = <1>;
->> +        #size-cells = <0>;
->> +        compatible = "microchip,sparx5-spi";
->
->> +        reg = <0x00104000 0x40>, <0 0>, <0x3000000 0x4000000>;
->
-> I have a doubt that defining an empty reg region is a good idea, since you can
-> detect the reg requirements by the node compatible string.
-
-Yes, its probably better that way. It looks ugly too :-)
-
-Thanks for your comments!
-
----Lars
-
-
-> -Sergey
->
->> +        num-cs = <16>;
->> +        reg-io-width = <4>;
->> +        reg-shift = <2>;
->> +        clocks = <&ahb_clk>;
->> +        interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
->>      };
->> --
->> 2.26.2
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
--- 
-Lars Povlsen,
-Microchip
+I suppose that could work if s390 maintains perfer this way.
