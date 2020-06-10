@@ -2,130 +2,176 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C686FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD7CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3F7E207ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:52:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591825940;
-	bh=1mB9qo0mQqlBR2asORG2q/eNPb0O9RBr6d1/9JvB+DI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ElAPTi49lbKZ8SN0uMan/iqlA0yDGqth60FVWrrd6kJlWvcDSwEVuS7VWD1DgM9Dz
-	 IyCXfyNUFw7LcRB7rxwVAT/P/T4VUy2NJNDtXdn+80tU5hX24eCNQxH2PYabAmyW8x
-	 f8qqvsDKel8FSDKbCK4vy2DDv53XN8oClQQS6p6E=
+	by mail.kernel.org (Postfix) with ESMTP id 39D75207ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:52:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="LcEVKNY0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgFJVwT (ORCPT
+        id S1726839AbgFJVwY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 17:52:19 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45621 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726289AbgFJVwR (ORCPT
+        Wed, 10 Jun 2020 17:52:24 -0400
+Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:15172 "EHLO
+        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726317AbgFJVwS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 17:52:17 -0400
-Received: by mail-pg1-f193.google.com with SMTP id n23so1561442pgb.12;
-        Wed, 10 Jun 2020 14:52:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=eRf6W4oVEmwpsh0h+K1sCW7NaH3bq1FpwEBiNryS1Wo=;
-        b=GVfmeToqAO9SEml7j9bByOpsYVyCsxug/bX6H9XLG7OC9NfuH5pjGiWLQEEZzTAsHM
-         d7EpWSbJn/Qp+6FxhUkJQJFl6QYtMS/bpQEEfnihJR6WZlA/Yr5GZzXUcRKEgvsBTh3P
-         pV6BYcZvb3atDdRmAqUaYlsLORSlWiJKVee239z+S7WD+KXNJaDxtw2j1uR7VPhNE5qr
-         deNri2wUB9Ki+IZ9rUw0l1UUYyqaW3G1Giu6nx3HjuzSO5axDQIUbvvLaNXpBfTv7iTT
-         /5eDvDQK7zHhjci9nk8KKZZnvOKIGC9XXKrky4lC+yGy3S9/Im0tyrobF0nx54nSP5J7
-         JCTA==
-X-Gm-Message-State: AOAM530EWaOzgQw5VdHOft0Yf0VERYq+euCqLCQV1dH+ZrcbR92iwMX7
-        CLlaCKtU8S9M6uU6Z1w3ank=
-X-Google-Smtp-Source: ABdhPJy992mUv5U8bhwojNTbIZ80dvsxUMVUFbzemXqKRntKpx7DGKHGnQxvq9NILxqv4J2ZE+scdw==
-X-Received: by 2002:a63:4d5a:: with SMTP id n26mr4421932pgl.85.1591825936625;
-        Wed, 10 Jun 2020 14:52:16 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id n69sm854031pfd.171.2020.06.10.14.52.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 14:52:14 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 038B5403AB; Wed, 10 Jun 2020 21:52:13 +0000 (UTC)
-Date:   Wed, 10 Jun 2020 21:52:13 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Jan Kara <jack@suse.cz>, axboe@kernel.dk, viro@zeniv.linux.org.uk,
-        bvanassche@acm.org, gregkh@linuxfoundation.org,
-        rostedt@goodmis.org, mingo@redhat.com, ming.lei@redhat.com,
-        nstange@suse.de, akpm@linux-foundation.org, mhocko@suse.com,
-        yukuai3@huawei.com, martin.petersen@oracle.com, jejb@linux.ibm.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
-Subject: Re: [PATCH v6 6/6] blktrace: fix debugfs use after free
-Message-ID: <20200610215213.GH13911@42.do-not-panic.com>
-References: <20200608170127.20419-1-mcgrof@kernel.org>
- <20200608170127.20419-7-mcgrof@kernel.org>
- <20200609150602.GA7111@infradead.org>
- <20200609172922.GP11244@42.do-not-panic.com>
- <20200609173218.GA7968@infradead.org>
- <20200609175359.GR11244@42.do-not-panic.com>
- <20200610064234.GB24975@infradead.org>
- <20200610210917.GH11244@42.do-not-panic.com>
+        Wed, 10 Jun 2020 17:52:18 -0400
+Received: from pps.filterd (m0170395.ppops.net [127.0.0.1])
+        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05ALqGCn024963;
+        Wed, 10 Jun 2020 17:52:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=smtpout1;
+ bh=jkIE3moYoaNpj1ljEBfKnxJ6RSIRje6RAXQB8no/Okk=;
+ b=LcEVKNY0HmuRhX+IyDjU+kD/BOwt5+WTJKeC9jIdrj+gX+ijGIApckBtdJXNhG4scJcT
+ kWDvJJA75eIiINTR1n28eGuiUrpFv568WDyy7VP/BxtWs7pffBxnX2y8WYxtyouHSO7O
+ KV0N5kBD3s5GnYIZVznJ6UoLIgZ/AsZpy1RPfeTac1f/XKbg+sAXkqDR19l3bU4n/M23
+ +P1dbOkv0XlekdSEudlBKPoTs5X+Rt17YSd1QCoA3Ogx8xolhU9ixQCy+gNdFrsprZ3S
+ E/Yy/G+cpF/9H51Q5sqnGcZV0xM17V0brbO2W4cqncExxdEJZQgObbzbxhFRnxsHPoZx 2A== 
+Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
+        by mx0b-00154904.pphosted.com with ESMTP id 31jjqumpfs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 10 Jun 2020 17:52:16 -0400
+Received: from pps.filterd (m0134746.ppops.net [127.0.0.1])
+        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05ALYF9t013590;
+        Wed, 10 Jun 2020 17:52:14 -0400
+Received: from ausc60pc101.us.dell.com (ausc60pc101.us.dell.com [143.166.85.206])
+        by mx0a-00154901.pphosted.com with ESMTP id 31k6fq90ye-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 10 Jun 2020 17:52:14 -0400
+X-LoopCount0: from 10.166.132.131
+X-PREM-Routing: D-Outbound
+X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
+   d="scan'208";a="1564454969"
+From:   <Mario.Limonciello@dell.com>
+To:     <dmitry.torokhov@gmail.com>
+CC:     <enric.balletbo@collabora.com>, <rjw@rjwysocki.net>,
+        <rafael@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>, <lenb@kernel.org>,
+        <kernel@collabora.com>, <groeck@chromium.org>,
+        <bleung@chromium.org>, <dtor@chromium.org>, <gwendal@chromium.org>,
+        <vbendeb@chromium.org>, <andy@infradead.org>,
+        <ayman.bagabas@gmail.com>, <benjamin.tissoires@redhat.com>,
+        <blaz@mxxn.io>, <dvhart@infradead.org>,
+        <gregkh@linuxfoundation.org>, <hdegoede@redhat.com>,
+        <jeremy@system76.com>, <2pi@mok.nu>, <mchehab+samsung@kernel.org>,
+        <rajatja@google.com>, <srinivas.pandruvada@linux.intel.com>,
+        <platform-driver-x86@vger.kernel.org>
+Subject: RE: [PATCH v4] platform: x86: Add ACPI driver for ChromeOS
+Thread-Topic: [PATCH v4] platform: x86: Add ACPI driver for ChromeOS
+Thread-Index: AQHWEZn1ic1J55wnDUCcmSeyJR9LmKh32IiAgFJaEOiACNhPAP//rP0AgABYQ4D//63d4A==
+Date:   Wed, 10 Jun 2020 21:52:12 +0000
+Message-ID: <adf9daaf08f1464684e48ec203194fe9@AUSX13MPC105.AMER.DELL.COM>
+References: <20200413134611.478441-1-enric.balletbo@collabora.com>
+ <CAJZ5v0gWZ27_DwWQadsJOUxLo4a0rAMe45d4AWXS2gHJZfgfKg@mail.gmail.com>
+ <a2953d50-da22-279a-f1e4-faa796d815b1@collabora.com>
+ <10490419.gsntqH5CaE@kreacher>
+ <4e7f8bf3-b72b-d418-ec95-e1f8c3d61261@collabora.com>
+ <59771d3689da41a5bbc67541aa6f4777@AUSX13MPC105.AMER.DELL.COM>
+ <20200610214033.GB248110@dtor-ws>
+In-Reply-To: <20200610214033.GB248110@dtor-ws>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2020-06-10T21:48:50.9216576Z;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_ActionId=80b762a3-4bd9-4820-ae3a-ab81180832bf;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [143.166.24.60]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200610210917.GH11244@42.do-not-panic.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-10_13:2020-06-10,2020-06-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
+ lowpriorityscore=0 impostorscore=0 clxscore=1015 adultscore=0
+ malwarescore=0 cotscore=-2147483648 mlxlogscore=748 spamscore=0
+ phishscore=0 priorityscore=1501 mlxscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006100156
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0
+ mlxlogscore=880 phishscore=0 adultscore=0 bulkscore=0 malwarescore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006100157
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-So, upon updating the commit log, and moving the empty directory check
-into another patch, I realized we might be able to simplify this now even
-further still. Patch below. The key of the issue was that the use after free
-happens when a recursive removal happens, and then later a specific
-dentry removal happens. This happened for make_request block drivers
-when using the whole disk, but since we *don't* have any other users of
-the directory for the others cases, this in theory shuld not happen for
-them either.
+> -----Original Message-----
+> From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Sent: Wednesday, June 10, 2020 4:41 PM
+> To: Limonciello, Mario
+> Cc: enric.balletbo@collabora.com; rjw@rjwysocki.net; rafael@kernel.org;
+> linux-kernel@vger.kernel.org; linux-acpi@vger.kernel.org; lenb@kernel.org=
+;
+> kernel@collabora.com; groeck@chromium.org; bleung@chromium.org;
+> dtor@chromium.org; gwendal@chromium.org; vbendeb@chromium.org;
+> andy@infradead.org; ayman.bagabas@gmail.com; benjamin.tissoires@redhat.co=
+m;
+> blaz@mxxn.io; dvhart@infradead.org; gregkh@linuxfoundation.org;
+> hdegoede@redhat.com; jeremy@system76.com; 2pi@mok.nu;
+> mchehab+samsung@kernel.org; rajatja@google.com;
+> srinivas.pandruvada@linux.intel.com; platform-driver-x86@vger.kernel.org
+> Subject: Re: [PATCH v4] platform: x86: Add ACPI driver for ChromeOS
+>=20
+>=20
+> [EXTERNAL EMAIL]
+>=20
+> On Wed, Jun 10, 2020 at 09:28:36PM +0000, Mario.Limonciello@dell.com wrot=
+e:
+> > >
+> > > To give you some references, if I'm not wrong, this prefix is used in
+> all
+> > > or
+> > > almost all Intel Chromebook devices (auron, cyan, eve, fizz, hatch,
+> > > octopus,
+> > > poppy, strago ...) The ACPI source for this device can be found here
+> [1],
+> > > and,
+> > > if not all, almost all Intel based Chromebooks are shipped with the
+> > > firmware
+> > > that supports this.
+> >
+> > You can potentially carry a small patch in your downstream kernel for t=
+he
+> > legacy stuff until it reaches EOL.  At least for the new stuff you coul=
+d
+> > enact a process that properly reserves unique numbers and changes the
+> driver
+> > when the interface provided by the ACPI device has changed.
+>=20
+> If we use this prefix for hatch EOL is ~7 years from now.
+>=20
 
-I'll try to shoot some bullets at this.
+Isn't the whole point of the ACPI registry and choosing an ID?  You know in=
+ternally
+if you need to change the interface that a new ID is needed and a new drive=
+r will
+be needed that comprehends that ID change.  So if you can't guarantee that =
+0001 is
+the same driver interface in every firmware implementation google used then=
+ that is
+where this falls apart.
 
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index 7ff2ea5cd05e..5cea04c05e09 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -524,10 +524,16 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
- 	if (!bt->msg_data)
- 		goto err;
- 
--	ret = -ENOENT;
--
--	dir = debugfs_lookup(buts->name, blk_debugfs_root);
--	if (!dir)
-+	/*
-+	 * When tracing whole make_request drivers (multiqueue) block devices,
-+	 * reuse the existing debugfs directory created by the block layer on
-+	 * init. For request-based block devices, all partitions block devices,
-+	 * and scsi-generic block devices we create a temporary new debugfs
-+	 * directory that will be removed once the trace ends.
-+	 */
-+	if (queue_is_mq(q))
-+		dir = q->debugfs_dir;
-+	else
- 		bt->dir = dir = debugfs_create_dir(buts->name, blk_debugfs_root);
- 
- 	bt->dev = dev;
-@@ -565,8 +571,6 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
- 
- 	ret = 0;
- err:
--	if (dir && !bt->dir)
--		dput(dir);
- 	if (ret)
- 		blk_trace_free(bt);
- 	return ret;
+I know there is a long support lifecycle but you're talking about rebasing
+to new LTS kernels a handful of times between now and then.  If the interfa=
+ce really
+is stable the patch should be small and it shouldn't be a large amount of t=
+echnical
+debt to carry downstream until EOL.
+=20
