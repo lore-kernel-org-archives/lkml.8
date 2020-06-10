@@ -4,47 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2336CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:16:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD08C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:16:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9DD02065C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:16:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03B8620823
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:16:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="igTBtfUm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qcRuO7qB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728403AbgFJUQE (ORCPT
+        id S1730551AbgFJUQd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 16:16:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60512 "EHLO
+        Wed, 10 Jun 2020 16:16:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730560AbgFJUNu (ORCPT
+        with ESMTP id S1730550AbgFJUNu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 10 Jun 2020 16:13:50 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A06E9C008633;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DB00C00862E;
         Wed, 10 Jun 2020 13:13:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=NF4IbJ7tnb1BDecklJKAGawEVJngscEaY/hk+Y65vZs=; b=igTBtfUmXt8Mznyh9YOcO59toO
-        3vqpDxaK4c26kTmcie0ib46b+joeV0vZI044ZEzVKnl9axARAjdnM5utCYzbPKHgKBNio/S2phuVn
-        2ucEZ+AlaK7ZFrwiwb6G8bnHHA/6Y3Sck4HLUVAX4Piv1COkFXSTQG6BFlnNIIHNQFKdLXlj4G606
-        jxBeKSdAi86B4Yxpk2/HYIhrKw23tZsWvZvfjsvKZOBJ+SRX1VtQ8+auhYf853jKeZ+weKscFrH5C
-        ZRn3S3st12cQtogLDrb3CGF56kritIFeUu6l5naRJaSbRf1kWwDnehV03zRwIeaFvMdNdEwQpDkUV
-        9sE8Iz4Q==;
+        bh=hfj7nvAJQpdF1gepuLuX+65YmLup2Ovu+X8+8QHyAHw=; b=qcRuO7qBGPf0OdGpDWT27F6hEb
+        rgVvYJxj/KD4udt31sGi07iE6f0yKu5B+dceWQbTsMezUbA9o6+sEUOdyvcGUNqlejxVHcpYhMsud
+        5KD5ussyhQvJz5DQ0VeUxhaXFqbRXF+J0JNpvjy4dlQwykwGx9d4AePGxnsuQn6HpBehY1J6OnXQJ
+        aFJVI1JC2mw8T2oEp6oIMDtvT5aRMfV7hVpXvPRMFNtaQR0yOXtwKcZgDd+FY+9+txO+HaDBLFeSb
+        s02BSBur5St9bzgC5ZcXVYtkzEgU/czCTXoWoUti27KKSSZrfKCxN+f8wIx513HuqAyxX9ziOBx/j
+        8fRCVe7w==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jj76a-0003WG-Ga; Wed, 10 Jun 2020 20:13:48 +0000
+        id 1jj76a-0003VT-79; Wed, 10 Jun 2020 20:13:48 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 31/51] iomap: Handle tail pages in iomap_page_mkwrite
-Date:   Wed, 10 Jun 2020 13:13:25 -0700
-Message-Id: <20200610201345.13273-32-willy@infradead.org>
+Subject: [PATCH v6 25/51] iomap: Support THPs in read paths
+Date:   Wed, 10 Jun 2020 13:13:19 -0700
+Message-Id: <20200610201345.13273-26-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200610201345.13273-1-willy@infradead.org>
 References: <20200610201345.13273-1-willy@infradead.org>
@@ -57,28 +57,75 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-iomap_page_mkwrite() can be called with a tail page.  If we are,
-operate on the head page, since we're treating the entire thing as a
-single unit and the whole page is dirtied at the same time.
+Use thp_size() instead of PAGE_SIZE, offset_in_thp() instead of
+offset_in_page() and bio_for_each_thp_segment_all().
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- fs/iomap/buffered-io.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/iomap/buffered-io.c | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
 
 diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index 318c1ecc18c0..8359e369c4b5 100644
+index b1a2ab2c7a8d..555ec90e8b54 100644
 --- a/fs/iomap/buffered-io.c
 +++ b/fs/iomap/buffered-io.c
-@@ -1046,7 +1046,7 @@ iomap_page_mkwrite_actor(struct inode *inode, loff_t pos, loff_t length,
+@@ -192,7 +192,7 @@ iomap_read_end_io(struct bio *bio)
+ 	struct bio_vec *bvec;
+ 	struct bvec_iter_all iter_all;
  
- vm_fault_t iomap_page_mkwrite(struct vm_fault *vmf, const struct iomap_ops *ops)
- {
--	struct page *page = vmf->page;
-+	struct page *page = thp_head(vmf->page);
- 	struct inode *inode = file_inode(vmf->vma->vm_file);
- 	unsigned long length;
- 	loff_t offset;
+-	bio_for_each_segment_all(bvec, bio, iter_all)
++	bio_for_each_thp_segment_all(bvec, bio, iter_all)
+ 		iomap_read_page_end_io(bvec, error);
+ 	bio_put(bio);
+ }
+@@ -232,6 +232,16 @@ static inline bool iomap_block_needs_zeroing(struct inode *inode,
+ 		pos >= i_size_read(inode);
+ }
+ 
++/*
++ * Estimate the number of vectors we need based on the current page size;
++ * if we're wrong we'll end up doing an overly large allocation or needing
++ * to do a second allocation, neither of which is a big deal.
++ */
++static unsigned int iomap_nr_vecs(struct page *page, loff_t length)
++{
++	return (length + thp_size(page) - 1) >> page_shift(page);
++}
++
+ static loff_t
+ iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
+ 		struct iomap *iomap, struct iomap *srcmap)
+@@ -288,7 +298,7 @@ iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
+ 	if (!ctx->bio || !is_contig || bio_full(ctx->bio, plen)) {
+ 		gfp_t gfp = mapping_gfp_constraint(page->mapping, GFP_KERNEL);
+ 		gfp_t orig_gfp = gfp;
+-		int nr_vecs = (length + PAGE_SIZE - 1) >> PAGE_SHIFT;
++		int nr_vecs = iomap_nr_vecs(page, length);
+ 
+ 		if (ctx->bio)
+ 			submit_bio(ctx->bio);
+@@ -332,9 +342,9 @@ iomap_readpage(struct page *page, const struct iomap_ops *ops)
+ 
+ 	trace_iomap_readpage(page->mapping->host, 1);
+ 
+-	for (poff = 0; poff < PAGE_SIZE; poff += ret) {
++	for (poff = 0; poff < thp_size(page); poff += ret) {
+ 		ret = iomap_apply(inode, page_offset(page) + poff,
+-				PAGE_SIZE - poff, 0, ops, &ctx,
++				thp_size(page) - poff, 0, ops, &ctx,
+ 				iomap_readpage_actor);
+ 		if (ret <= 0) {
+ 			WARN_ON_ONCE(ret == 0);
+@@ -368,7 +378,8 @@ iomap_readahead_actor(struct inode *inode, loff_t pos, loff_t length,
+ 	loff_t done, ret;
+ 
+ 	for (done = 0; done < length; done += ret) {
+-		if (ctx->cur_page && offset_in_page(pos + done) == 0) {
++		if (ctx->cur_page &&
++		    offset_in_thp(ctx->cur_page, pos + done) == 0) {
+ 			if (!ctx->cur_page_in_bio)
+ 				unlock_page(ctx->cur_page);
+ 			put_page(ctx->cur_page);
 -- 
 2.26.2
 
