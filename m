@@ -2,237 +2,161 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B6FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE85C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDEDB2072E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:31:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E561D20760
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:33:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W0Cz675y"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XtXvu6K1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbgFJJbe (ORCPT
+        id S1727858AbgFJJdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 05:31:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45656 "EHLO
+        Wed, 10 Jun 2020 05:33:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727769AbgFJJbe (ORCPT
+        with ESMTP id S1727007AbgFJJdj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 05:31:34 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAE87C03E96B
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 02:31:33 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id m25so821740vsp.8
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 02:31:33 -0700 (PDT)
+        Wed, 10 Jun 2020 05:33:39 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33AF6C03E96F
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 02:33:38 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id x207so868314pfc.5
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 02:33:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RTWTNTnttUMY8c4LO5nuXRyQ/hk5iUqIN8IFxFs6Y8g=;
-        b=W0Cz675yK1r99+1cm+bdJFL4xpsbijR2BP42iQ7LmmcSNhsLxpdLTVbcuoqH8/vcDZ
-         uMsvg+UUWFxrZOKtJe+PEOu0tRFcQtFy8A+6DWB8x1pACNtwbmVwpWGkIGQvwETEuAcn
-         rnBWS0qwpihHuGlhwOKE0xuHuOosRFXf2Wk8g=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=gDnPaCqGGqbwLUgYXT8RQfx+Yi25CTYpPlgWUh+k1DU=;
+        b=XtXvu6K1Uz1YjnpXdERt17M6pBkHDYVwHCy9UaMX6WqDUssPF9INUCclHDNNTCEEaZ
+         q4hxviUAlk/YkgC8d4X/EwOfwz635nxrXQW4fBPO0PnzM/9fvI7uDjp7TxKWdvKpPRWt
+         tf8FyeFeGTuNMIGxlY0t9umSLy84CNOoRvsoCYdYuU9yjO/H9dpOBO18GL63fSWEU9io
+         yX77jxrbWQBzjzT9xMXfRNkrzO2IEXoibRVYJORPvN3liQu8veOBPWuX1FVuqd8BuFpS
+         CYYafNkhZEc6/9ZonezXmUYWQiFzMm/As8rBg36aeU8BsKjdUtbQnDRwe6FOJLu+MlQ8
+         7BbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RTWTNTnttUMY8c4LO5nuXRyQ/hk5iUqIN8IFxFs6Y8g=;
-        b=YiIWQmu59/MltenG7WUmcKjShtVbHAn9o5fhfUJP5aeLQSemzBkamOTtAcYdzOIlKL
-         rZ/xvmjBLrv1chgJtqV6y2Iyv3t6ZXsU+Uiv0ij+/nDG8u+lHfwOjkQjQQWEHnWN0BVM
-         DsSZVLVlJFt9dBr/FHznG+zf7YUcAFabT/dYYdemY0WyJfPc6hezur2FPoJuvQQapHMz
-         fUzR04+HZiplaE2IbEyj0/vFsd8FWRyewMekGyFktT0O6fnHj2l0bQ4RKQJlWOwmQ5rZ
-         zvzd0Tqp8kMNpfZSbU/8/mdvZUugM5Lkh1jqC5VO2Nk99ivIY1Tv8DggOsw9L+mncvV/
-         0rxw==
-X-Gm-Message-State: AOAM532akSbTC8eoWxuYVG0qUK2wK+aZ3xbV5sTfnHi7KBVJYlzvdp4A
-        mmcs8LMj4pK+3V6j7FJ8NBqe0OFRLHNHHNhh81as7w==
-X-Google-Smtp-Source: ABdhPJzxTLQwakJ/ifeS+M6Sh8hEJoiuOpUo10N3znE2EtXkKk6GKSbkqZVlh7jKwv5nhTkcIKqk3FEdZLG+jL5g7FU=
-X-Received: by 2002:a67:f9d6:: with SMTP id c22mr1573844vsq.14.1591781492897;
- Wed, 10 Jun 2020 02:31:32 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gDnPaCqGGqbwLUgYXT8RQfx+Yi25CTYpPlgWUh+k1DU=;
+        b=akH+GKbw8/ekHLTucxnBNoY+vqhYYOSuIsOM4O9NjgFxrpCu15l9g75MR8H6eOtZzM
+         TW4vcllErAEYVIwenpv3g9u/IyAAK9/r6Cly8BuOcsylO0kPPOg7P/lKgy36Fxq4bypG
+         tx4878WztvIOENAl4jF4GXmvLFiXw2lbvPSBLdjQouFGC9WtX5EbneyhjXMNSuUjTwd1
+         WfPs3z889yzM8M85IQ2s42Y07RqyItuHYKUmH3t2kcXcqo1V5gk+gYrdFk3WAl2p9Vss
+         F/ghhukZhOgL0F6WP5s7ne2JIr051cu51TEL80OwipkXG/Hcyq3fYGKP3bx0cbQ6urSC
+         HN4Q==
+X-Gm-Message-State: AOAM531MyU7CeM1gKGdMJNKlbEJUYlbJV1YDWxN3tgNTeyRJDoejZ+wV
+        K+n/M4WFSo3smmh0jxEgSA/VWQ==
+X-Google-Smtp-Source: ABdhPJyzL85kYroXLj9+vmzfJphNT9Bonj9nRBKzkkm5g4L1YoB1Va6xm3HiIlJ7CjmADnx7RrAx1g==
+X-Received: by 2002:a62:8106:: with SMTP id t6mr1985814pfd.103.1591781617417;
+        Wed, 10 Jun 2020 02:33:37 -0700 (PDT)
+Received: from localhost ([122.172.62.209])
+        by smtp.gmail.com with ESMTPSA id w73sm12759725pfd.113.2020.06.10.02.33.35
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Jun 2020 02:33:36 -0700 (PDT)
+Date:   Wed, 10 Jun 2020 15:03:34 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Jassi Brar <jassisinghbrar@gmail.com>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] dt-bindings: mailbox: add doorbell support to ARM MHU
+Message-ID: <20200610093334.yznxl2esv5ht27ns@vireshk-i7>
+References: <20200528192005.GA494874@bogus>
+ <20200529040758.kneg2j4n3gxh2rfv@vireshk-i7>
+ <20200603180435.GB23722@bogus>
+ <CABb+yY0cW1GZHVmwEr19JRdJTmsAxw9uq83QV_aq-tdPJO5_Fg@mail.gmail.com>
+ <20200604092052.GD8814@bogus>
+ <CABb+yY27Ngb0C-onkU2qyt=uKgG4iVrcv8hGkC+anypQbTRA1w@mail.gmail.com>
+ <20200605045645.GD12397@bogus>
+ <CABb+yY2YZ99NjHYNi0=KLGFDsVUeJmqiJD3E25Chwk-THJV4iw@mail.gmail.com>
+ <20200605085830.GA32372@bogus>
+ <CABb+yY2TR7tuMx6u8yah6mO2GwZ5SWYOO80EQRL-i=ybgn=Wog@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200610075156.GE12456@shao2-debian>
-In-Reply-To: <20200610075156.GE12456@shao2-debian>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Wed, 10 Jun 2020 17:31:21 +0800
-Message-ID: <CANMq1KCf3Q2DDBMJkCM=PB8AHOPKJOhKA+C8TqY5v7AsAfD63A@mail.gmail.com>
-Subject: Re: [kmemleak] b751c52bb5: BUG:kernel_hang_in_boot_stage
-To:     kernel test robot <rong.a.chen@intel.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABb+yY2TR7tuMx6u8yah6mO2GwZ5SWYOO80EQRL-i=ybgn=Wog@mail.gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 3:52 PM kernel test robot <rong.a.chen@intel.com> wrote:
->
-> Greeting,
->
-> FYI, we noticed the following commit (built with gcc-7):
->
-> commit: b751c52bb587ae66f773b15204ef7a147467f4c7 ("kmemleak: increase DEBUG_KMEMLEAK_EARLY_LOG_SIZE default to 16K")
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+On 05-06-20, 10:42, Jassi Brar wrote:
+> Since origin upto scmi_xfer, there can be many forms of sleep like
+> schedule/mutexlock etc.... think of some userspace triggering sensor
+> or dvfs operation. Linux does not provide real-time guarantees. Even
+> if remote (scmi) firmware guarantee RT response, it makes sense to
+> timeout a response only after the _request is on the bus_  and not
+> when you submit a request to the api (unless you serialise it).
+> IOW, start the timeout from  mbox_client.tx_prepare()  when the
+> message actually gets on the bus.
 
-Huh, It's not impossible there is an underlying issue, but I really
-don't see how that change could cause any of the issues below...
+There are multiple purposes of the timeout IMO:
 
+- Returning early if the other side is dead/hung, in such a case the
+  timeout can be put when the request is put on the bus as we don't
+  care of the time it takes to complete the request until the time the
+  request can be fulfilled. This can be a example of i2c/spi memory
+  read.
 
-> in testcase: boot
->
-> on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 8G
->
-> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
->
->
-> +-------------------------------------------------+------------+------------+
-> |                                                 | 9d5f0be0f7 | b751c52bb5 |
-> +-------------------------------------------------+------------+------------+
-> | boot_successes                                  | 0          | 0          |
-> | boot_failures                                   | 3          | 4          |
-> | WARNING:at_kernel/locking/mutex.c:#__mutex_lock | 3          |            |
-> | EIP:__mutex_lock                                | 3          |            |
-> | BUG:kernel_hang_in_boot_stage                   | 0          | 4          |
-> +-------------------------------------------------+------------+------------+
->
->
-> If you fix the issue, kindly add following tag
-> Reported-by: kernel test robot <rong.a.chen@intel.com>
->
->
-> [    0.247058] ------------------------
-> [    0.247878] | Locking API testsuite:
-> [    0.248695] ----------------------------------------------------------------------------
-> [    0.250509]                                  | spin |wlock |rlock |mutex | wsem | rsem |
-> [    0.252429]   --------------------------------------------------------------------------
-> [    0.254369]                      A-A deadlock:  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |
-> [    0.263731]                  A-B-B-A deadlock:  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |
-> [    0.273828]              A-B-B-C-C-A deadlock:  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |
-> [    0.284876]              A-B-C-A-B-C deadlock:  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |
-> [    0.296642]          A-B-B-C-C-D-D-A deadlock:  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |
-> [    0.308919]          A-B-C-D-B-D-D-A deadlock:  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |
-> [    0.320993]          A-B-C-D-B-C-D-A deadlock:  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |
-> [    0.333668]                     double unlock:  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |
-> [    0.343237]                   initialize held:  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |
-> [    0.352761]   --------------------------------------------------------------------------
-> [    0.354703]               recursive read-lock:             |  ok  |             |  ok  |
-> [    0.358943]            recursive read-lock #2:             |  ok  |             |  ok  |
-> [    0.363056]             mixed read-write-lock:             |  ok  |             |  ok  |
-> [    0.367191]             mixed write-read-lock:             |  ok  |             |  ok  |
-> [    0.371251]   mixed read-lock/lock-write ABBA:             |FAILED|             |  ok  |
-> [    0.373667]    mixed read-lock/lock-read ABBA:             |  ok  |             |  ok  |
-> [    0.377895]  mixed write-lock/lock-write ABBA:             |  ok  |             |  ok  |
-> [    0.381888]   --------------------------------------------------------------------------
-> [    0.385416]      hard-irqs-on + irq-safe-A/12:  ok  |  ok  |  ok  |
-> [    0.389990]      soft-irqs-on + irq-safe-A/12:  ok  |  ok  |  ok  |
-> [    0.395489]      hard-irqs-on + irq-safe-A/21:  ok  |  ok  |  ok  |
-> [    0.400157]      soft-irqs-on + irq-safe-A/21:  ok  |  ok  |  ok  |
-> [    0.408936]        sirq-safe-A => hirqs-on/12:  ok  |  ok  |  ok  |
-> [    0.413666]        sirq-safe-A => hirqs-on/21:  ok  |  ok  |  ok  |
-> [    0.418073]          hard-safe-A + irqs-on/12:  ok  |  ok  |  ok  |
-> [    0.422942]          soft-safe-A + irqs-on/12:  ok  |  ok  |  ok  |
-> [    0.427616]          hard-safe-A + irqs-on/21:  ok  |  ok  |  ok  |
-> [    0.433873]          soft-safe-A + irqs-on/21:  ok  |  ok  |  ok  |
-> [    0.442630]     hard-safe-A + unsafe-B #1/123:  ok  |  ok  |  ok  |
-> [    0.447955]     soft-safe-A + unsafe-B #1/123:  ok  |  ok  |  ok  |
-> [    0.453324]     hard-safe-A + unsafe-B #1/132:  ok  |  ok  |  ok  |
-> [    0.458298]     soft-safe-A + unsafe-B #1/132:  ok  |  ok  |  ok  |
-> [    0.463422]     hard-safe-A + unsafe-B #1/213:  ok  |  ok  |  ok  |
-> [    0.468262]     soft-safe-A + unsafe-B #1/213:  ok  |  ok  |  ok  |
-> [    0.473090]     hard-safe-A + unsafe-B #1/231:  ok  |  ok  |  ok  |
-> [    0.478066]     soft-safe-A + unsafe-B #1/231:  ok  |  ok  |  ok  |
-> [    0.482982]     hard-safe-A + unsafe-B #1/312:  ok  |  ok  |  ok  |
-> [    0.490885]     soft-safe-A + unsafe-B #1/312:  ok  |  ok  |  ok  |
-> [    0.496095]     hard-safe-A + unsafe-B #1/321:  ok  |  ok  |  ok  |
-> [    0.501193]     soft-safe-A + unsafe-B #1/321:  ok  |  ok  |  ok  |
-> [    0.506457]     hard-safe-A + unsafe-B #2/123:  ok  |  ok  |  ok  |
-> [    0.516060]     soft-safe-A + unsafe-B #2/123:  ok  |  ok  |  ok  |
-> [    0.521157]     hard-safe-A + unsafe-B #2/132:  ok  |  ok  |  ok  |
-> [    0.530477]     soft-safe-A + unsafe-B #2/132:  ok  |  ok  |  ok  |
-> [    0.535387]     hard-safe-A + unsafe-B #2/213:  ok  |  ok  |  ok  |
-> [    0.540393]     soft-safe-A + unsafe-B #2/213:  ok  |  ok  |  ok  |
-> [    0.552196]     hard-safe-A + unsafe-B #2/231:  ok  |  ok  |  ok  |
-> [    0.557088]     soft-safe-A + unsafe-B #2/231:  ok  |  ok  |  ok  |
-> [    0.562135]     hard-safe-A + unsafe-B #2/312:  ok  |  ok  |  ok  |
-> [    0.567072]     soft-safe-A + unsafe-B #2/312:  ok  |  ok  |  ok  |
-> [    0.572107]     hard-safe-A + unsafe-B #2/321:  ok  |  ok  |  ok  |
-> [    0.577276]     soft-safe-A + unsafe-B #2/321:  ok  |  ok  |  ok  |
-> [    0.582592]       hard-irq lock-inversion/123:  ok  |  ok  |  ok  |
-> [    0.587839]       soft-irq lock-inversion/123:  ok  |  ok  |  ok  |
-> [    0.593347]       hard-irq lock-inversion/132:  ok  |  ok  |  ok  |
-> [    0.598574]       soft-irq lock-inversion/132:  ok  |  ok  |  ok  |
-> [    0.603629]       hard-irq lock-inversion/213:  ok  |  ok  |  ok  |
-> [    0.608515]       soft-irq lock-inversion/213:  ok  |  ok  |  ok  |
-> [    0.613650]       hard-irq lock-inversion/231:  ok  |  ok  |  ok  |
-> [    0.620111]       soft-irq lock-inversion/231:  ok  |  ok  |  ok  |
-> [    0.625090]       hard-irq lock-inversion/312:  ok  |  ok  |  ok  |
-> [    0.630141]       soft-irq lock-inversion/312:  ok  |  ok  |  ok  |
-> [    0.634948]       hard-irq lock-inversion/321:  ok  |  ok  |  ok  |
-> [    0.639932]       soft-irq lock-inversion/321:  ok  |  ok  |  ok  |
-> [    0.645786]       hard-irq read-recursion/123:  ok  |
-> [    0.648025]       soft-irq read-recursion/123:  ok  |
-> [    0.650400]       hard-irq read-recursion/132:  ok  |
-> [    0.652820]       soft-irq read-recursion/132:  ok  |
-> [    0.655214]       hard-irq read-recursion/213:  ok  |
-> [    0.657531]       soft-irq read-recursion/213:  ok  |
-> [    0.659993]       hard-irq read-recursion/231:  ok  |
-> [    0.662498]       soft-irq read-recursion/231:  ok  |
-> [    0.664895]       hard-irq read-recursion/312:  ok  |
-> [    0.667422]       soft-irq read-recursion/312:  ok  |
-> [    0.669851]       hard-irq read-recursion/321:  ok  |
-> [    0.672222]       soft-irq read-recursion/321:  ok  |
-> [    0.674713]   --------------------------------------------------------------------------
-> [    0.676711]   | Wound/wait tests |
-> [    0.677592]   ---------------------
-> [    0.678496]                   ww api failures:  ok  |  ok  |  ok  |
-> [    0.684457]                ww contexts mixing:  ok  |  ok  |
-> [    0.688135]              finishing ww context:  ok  |  ok  |  ok  |  ok  |
-> [    0.694329]                locking mismatches:  ok  |  ok  |  ok  |
-> [    0.699328]                  EDEADLK handling:  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |
-> [    0.714881]            spinlock nest unlocked:  ok  |
-> [    0.717152]   -----------------------------------------------------
-> [    0.718723]                                  |block | try  |context|
-> [    0.720196]   -----------------------------------------------------
-> [    0.721677]                           context:  ok  |  ok  |  ok  |
-> [    0.727929]                               try:  ok  |  ok  |  ok  |
-> [    0.732790]                             block:  ok  |  ok  |  ok  |
-> [    0.737894]                          spinlock:  ok  |  ok  |  ok  |
-> [    0.743082] -------------------------------------------------------
-> [    0.744547] Good, all 261 testcases passed! |
-> [    0.745547] ---------------------------------
-> BUG: kernel hang in boot stage
->
->
->
-> To reproduce:
->
->         # build kernel
->         cd linux
->         cp config-5.3.0-11789-gb751c52bb587a .config
->         make HOSTCC=gcc-7 CC=gcc-7 ARCH=i386 olddefconfig prepare modules_prepare bzImage
->
->         git clone https://github.com/intel/lkp-tests.git
->         cd lkp-tests
->         bin/lkp qemu -k <bzImage> job-script # job-script is attached in this email
->
->
->
-> Thanks,
-> Rong Chen
->
+- Ensuring maximum time in which the request needs to be serviced.
+  There may be hard requirements, like in case for DVFS from
+  scheduler's hot path (which is essential for better working of the
+  overall system). And for such a case the timeout is placed at the
+  right place IMO, i.e. right after a request is submitted to mailbox.
+
+And some more points I wanted to share..
+
+- I am not sure I understood the *serializing* part you guys were
+  talking about. I believe mailbox framework is already serializing
+  the requests it is receiving on a single channel with a spin lock,
+  right ? Why does the client need to serialize them as well? Is that
+  for avoiding timeouts ?
+
+- For me, and Sudeep as well IIUC, the bigger problem isn't that
+  timeouts are happening and requests are failing (and so changing the
+  timeout to a bigger value isn't going to fix anything), but the
+  problem is that it is taking too long (because of the queue of
+  requests on a channel) for a request to finish after being
+  submitted. Scheduler doesn't care of the underneath logistics for
+  example, all it cares for is the time it takes to change the
+  frequency of a CPU. If you can do it fast enough in a guaranteed
+  manner, then you can use fast switching, otherwise not.
+
+- The hardware can very well support the case today where this can be
+  done in parallel and (almost) in a guaranteed time-frame. While the
+  software wants to add a limit to that and so wants to serialize
+  requests.
+
+- As many people have already suggested it (like me, Sudeep, Rob,
+  maybe Bjorn as well), it seems silly to not allow driving the h/w in
+  the most efficient way possible (and allow fast cpu switching in
+  this case).
+ 
+> Interesting logs !  The time taken to complete _successful_ requests
+> are arguably better in bad_trace ... there are many <10usec responses
+> in bad_trace, while the fastest response in good_trace is  53usec.
+
+Indeed this is interesting. It may be worth looking (separately) into
+why don't we see those 3 us long requests anymore, or maybe they were
+just not there in the logs.
+
+> And the requests that 'fail/timeout' are purely the result of not
+> serialising them or checkout for timeout at wrong place as explained
+> above.
+
+We can't allow for the requests to go on for ever in some cases, while
+in other cases it may be absolutely fine.
+
+-- 
+viresh
