@@ -2,125 +2,223 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF17C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D44DFC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA8B5206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:26:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591792012;
-	bh=PBnbsD1r4hBJSwpcdPlA8plwD/kWkJiD61twepTwXNE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Xt22CXRCsM4xlAa2uMvHwHPKb6qqw/kqvsNftHI0aG0XD1lTKEAWyrwzdPjOE1znf
-	 1E3ufCGi2uNvvGTCg+DTAOsiJqC0tLs8oGtbr3MlN+IDD+AtyxFbW/FIodQi3NOlp5
-	 gK8mUGkhUDqBpnc2om744IghJ0IPgWKPObtgCsvU=
+	by mail.kernel.org (Postfix) with ESMTP id B01F8206F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:27:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="hnRHTdJr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729177AbgFJM0u (ORCPT
+        id S1729063AbgFJM1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 08:26:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38506 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729077AbgFJM0s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 08:26:48 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8D02206F4;
-        Wed, 10 Jun 2020 12:26:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591792007;
-        bh=PBnbsD1r4hBJSwpcdPlA8plwD/kWkJiD61twepTwXNE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jJpTTwI4BcRIVrN10ZRmWWQHb9uLqvUrrTbyJC1G5ckdCzOCEOBlPdgX2dMouNv0y
-         YAgEbPCewSSW4UUxn4RQtfuCNeuAdQ/VXQBBn5Ha87ZqsZt+1tcxAPrnMH0pHm3w0F
-         EFkHX/7w+geTl3Np545ZBkOWixSYUU12SBQ6Y3Ls=
-Date:   Wed, 10 Jun 2020 14:26:41 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-acpi@vger.kernel.org,
-        netdev@vger.kernel.org, Joe Perches <joe@perches.com>,
-        Jason Baron <jbaron@akamai.com>,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH v3 1/7] Documentation: dynamic-debug: Add description of
- level bitmask
-Message-ID: <20200610122641.GB1900758@kroah.com>
-References: <20200609104604.1594-1-stanimir.varbanov@linaro.org>
- <20200609104604.1594-2-stanimir.varbanov@linaro.org>
- <20200609111615.GD780233@kroah.com>
- <0830ba57-d416-4788-351a-6d1b2ca5b7d8@linaro.org>
+        Wed, 10 Jun 2020 08:27:45 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:46310 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728595AbgFJM1p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 08:27:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1591792064; x=1623328064;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version;
+  bh=QiFuJl1R5fgwI47VUdUxy1XjRtgrcDqvma+iH44NFSk=;
+  b=hnRHTdJronscFR2yTjdh97Lj7hS7DuvbTw98YNO51LZ3UXc/1VMvT8iB
+   tL32XQg6qZmB6lfLXpoB2+hle/VHVqO0638F1CEGsBCKwtcezoAnTve40
+   UtUMcouuRqBCG2vZROnAdGnkLkF3n4xEH4so9O9shjaHuRwzWkSXN++Dg
+   nAX7PHQHVJ+VPaqQzE/QaSkUOXkRjHN0YWkIxvvNbhEGsAoBZYHFFM+e1
+   XzF4NOtkHPx8N+c74t5M1N2DM2VmSRzs38MnZhCez0+lm1Ql7QT9DniJX
+   /3Ff2ZGW35ZOcUDC3V/+4FNzDYCCEapg/1X7uBVSRMVOABLrnwaMGtED2
+   Q==;
+IronPort-SDR: 0d4g912uhVPOIXVwiNumUIxOuwQwPv1k6y8Nq0I/CzHL1DwOmpG02rnaDxCk0Xul9ey7Wz6RVN
+ MoGmGnZ+EQRMel+AUBLPvkn7ON7+DX3N23NsBUbSe4kf82ZfGLZHOVKqaD2P/bCFZobnMwyTGW
+ Mk/GSb29bEgBZO+qe3ATVlY/gWm3VEHHqjYkS8fUrMoicwslgxm0AquKfxlA4tXmFapYTg87ht
+ IqeLuIZL/Xyzue7miwmvTsqASQip6ZlkRDLZm2sBWdIJbnx0uIdzdqdMkwOrhoL/map1dFX0IR
+ qI4=
+X-IronPort-AV: E=Sophos;i="5.73,496,1583218800"; 
+   d="scan'208";a="15250796"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Jun 2020 05:27:36 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Wed, 10 Jun 2020 05:27:35 -0700
+Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3
+ via Frontend Transport; Wed, 10 Jun 2020 05:27:32 -0700
+References: <20200513140031.25633-1-lars.povlsen@microchip.com> <20200513140031.25633-7-lars.povlsen@microchip.com> <20200602230738.mz2y6i2kjagyt7tk@mobilestation>
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+List-Id: <soc.lore.kernel.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>, SoC Team <soc@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 06/10] dt-bindings: spi: spi-dw-mchp: Add Sparx5 support
+In-Reply-To: <20200602230738.mz2y6i2kjagyt7tk@mobilestation>
+Date:   Wed, 10 Jun 2020 14:27:31 +0200
+Message-ID: <87d067hzrg.fsf@soft-dev15.microsemi.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0830ba57-d416-4788-351a-6d1b2ca5b7d8@linaro.org>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 01:29:20PM +0300, Stanimir Varbanov wrote:
-> Hi Greg,
-> 
-> On 6/9/20 2:16 PM, Greg Kroah-Hartman wrote:
-> > On Tue, Jun 09, 2020 at 01:45:58PM +0300, Stanimir Varbanov wrote:
-> >> This adds description of the level bitmask feature.
-> >>
-> >> Cc: Jonathan Corbet <corbet@lwn.net> (maintainer:DOCUMENTATION)
-> >>
-> >> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-> >> ---
-> >>  Documentation/admin-guide/dynamic-debug-howto.rst | 10 ++++++++++
-> >>  1 file changed, 10 insertions(+)
-> >>
-> >> diff --git a/Documentation/admin-guide/dynamic-debug-howto.rst b/Documentation/admin-guide/dynamic-debug-howto.rst
-> >> index 0dc2eb8e44e5..c2b751fc8a17 100644
-> >> --- a/Documentation/admin-guide/dynamic-debug-howto.rst
-> >> +++ b/Documentation/admin-guide/dynamic-debug-howto.rst
-> >> @@ -208,6 +208,12 @@ line
-> >>  	line -1605          // the 1605 lines from line 1 to line 1605
-> >>  	line 1600-          // all lines from line 1600 to the end of the file
-> >>  
-> >> +level
-> >> +    The given level will be a bitmask ANDed with the level of the each ``pr_debug()``
-> >> +    callsite. This will allow to group debug messages and show only those of the
-> >> +    same level.  The -p flag takes precedence over the given level. Note that we can
-> >> +    have up to five groups of debug messages.
-> > 
-> > As was pointed out, this isn't a "level", it's some arbitrary type of
-> > "grouping".
-> 
-> Yes, it is grouping of KERN_DEBUG level messages by importance (my
-> fault, I put incorrect name).  What is important is driver author
-> decision.  Usually when the driver is huge and has a lot of debug
-> messages it is not practical to enable all of them to chasing a
-> particular bug or issue.  You know that debugging (printk) add delays
-> which could hide or rise additional issue(s) which would complicate
-> debug and waste time.
 
-That is why it is possible to turn on and off debugging messages on a
-function/line basis already.  Why not just use that instead?
+Serge Semin writes:
 
-> For the Venus driver I have defined three groups of KERN_DEBUG - low,
-> medium and high (again the driver author(s) will decide what the
-> importance is depending on his past experience).
-> 
-> There is another point where the debugging is made by person who is not
-> familiar with the driver code. In that case he/she cannot enable lines
-> or range of lines because he don't know the details. Here the grouping
-> by importance could help.
+> On Wed, May 13, 2020 at 04:00:27PM +0200, Lars Povlsen wrote:
+>> This add DT bindings for the Sparx5 SPI driver.
+>
+> This whole file can be easily merged in to the generic DW APB SSI DT
+> binding file. Just use "if: properties: compatible: const: ..." construction
+> to distinguish ocelot, jaguar, sparx5 and non-sparx5 nodes.
+>
+>>
+>> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+>> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+>> ---
+>>  .../bindings/spi/mscc,ocelot-spi.yaml         | 49 +++++++++++++++----
+>>  1 file changed, 39 insertions(+), 10 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml b/Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml
+>> index a3ac0fa576553..8beecde4b0880 100644
+>> --- a/Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml
+>> +++ b/Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml
+>> @@ -23,15 +23,23 @@ properties:
+>>      enum:
+>>        - mscc,ocelot-spi
+>>        - mscc,jaguar2-spi
+>> +      - microchip,sparx5-spi
+>>
+>>    interrupts:
+>>      maxItems: 1
+>>
+>>    reg:
+>>      minItems: 2
+>> -    items:
+>> -      - description: Designware SPI registers
+>> -      - description: CS override registers
+>> +    maxItems: 3
+>> +    oneOf:
+>> +      - items:
+>> +          - description: Designware SPI registers
+>> +          - description: CS override registers (Not sparx5).
+>> +      - items:
+>> +          - description: Designware SPI registers
+>> +          - description: CS override registers (Not sparx5).
+>> +          - description: Direct mapped SPI read area. If provided, the
+>> +              driver will register spi_mem_op's to take advantage of it.
+>>
+>>    clocks:
+>>      maxItems: 1
+>> @@ -43,6 +51,23 @@ properties:
+>>         enum: [ 2, 4 ]
+>>      maxItems: 1
+>>
+>
+>> +  spi-rx-delay-us:
+>> +    description: |
+>> +      The delay (in usec) of the RX signal sample position. This can
+>> +      be used to tne the RX timing in order to acheive higher
+>> +      speeds. This is used for all devices on the bus.
+>> +    default: 0
+>> +    maxItems: 1
+>
+> spi-rx-delay-us is defined for a particular SPI-slave. Please see the
+> DT binding file: Documentation/devicetree/bindings/spi/spi-controller.yaml .
+> Although as I suggested before this delay isn't what the Dw APB SSI RX sample
+> delay functionality does. Probably a vendor-specific property would be better
+> here. But I'd also define it on a SPI-slave basis, not for all devices on the
+> bus.
 
-And they will really know what "low/medium/high" are?
+Right, I was hunting for something "similar". As pointed out, this is
+really different in nature, and the unit is also too coarse.
 
-Anyway, that makes a bit more sense, but the documentation could use a
-lot more in order to describe this type of behavior, and what is
-expected by both driver authors, and users of the interface.
+I will change this to "snps,rx-sample-delay-ns" as suggested in your
+other comments.
 
-thanks,
+>
+>> +
+>> +  interface-mapping-mask:
+>> +    description: |
+>> +      On the Sparx5 variant, two different busses are connected to the
+>> +      controller. This property is a mask per chip-select, indicating
+>> +      whether the CS should go to one or the other interface.
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    default: 0
+>> +    maxItems: 1
+>
+> As Mark rightfully suggested this seems like an SPI-slave related property, then
+> most likely it should be defined on the SPI-slave basis (probably as a bool
+> property). Additionally it's vendor-specific, so the property name should be
+> accordingly prefixed.
 
-greg k-h
+Yes, I'll change this to a per-device property. I need the same for the
+above as well.
+
+>
+>> +
+>>  required:
+>>    - compatible
+>>    - reg
+>> @@ -50,11 +75,15 @@ required:
+>>
+>>  examples:
+>>    - |
+>> -    spi0: spi@101000 {
+>> -      compatible = "mscc,ocelot-spi";
+>> -      #address-cells = <1>;
+>> -      #size-cells = <0>;
+>> -      reg = <0x101000 0x100>, <0x3c 0x18>;
+>> -      interrupts = <9>;
+>> -      clocks = <&ahb_clk>;
+>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +    spi0: spi@600104000 {
+>> +        #address-cells = <1>;
+>> +        #size-cells = <0>;
+>> +        compatible = "microchip,sparx5-spi";
+>
+>> +        reg = <0x00104000 0x40>, <0 0>, <0x3000000 0x4000000>;
+>
+> I have a doubt that defining an empty reg region is a good idea, since you can
+> detect the reg requirements by the node compatible string.
+
+Yes, its probably better that way. It looks ugly too :-)
+
+Thanks for your comments!
+
+---Lars
+
+
+> -Sergey
+>
+>> +        num-cs = <16>;
+>> +        reg-io-width = <4>;
+>> +        reg-shift = <2>;
+>> +        clocks = <&ahb_clk>;
+>> +        interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
+>>      };
+>> --
+>> 2.26.2
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+-- 
+Lars Povlsen,
+Microchip
