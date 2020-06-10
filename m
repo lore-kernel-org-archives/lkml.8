@@ -2,116 +2,179 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB77C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C25CBC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE50E20812
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:42:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591778554;
-	bh=wjjPmI+WG54Mz1EL7HwR233NE+u8BMlzD5wxbDmEoOM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fqzWckAsPmQNq1kzpaL+3bkFjzRDqYN/dV/UeYc/4InEdZXJqHR9y9DgrQkCCryZK
-	 uP8Co1U4Wj27vl4q5/Em3agZWE11G5n+rooZOoiPm8A2Y6DSOzh1yNZ9Yw70zavnc2
-	 32skvjhx7j1t0mLl0nNXRXHAEAMvGwNabwJh6Mm8=
+	by mail.kernel.org (Postfix) with ESMTP id A5E372078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:42:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbgFJImd (ORCPT
+        id S1726889AbgFJImx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 04:42:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53442 "EHLO mail.kernel.org"
+        Wed, 10 Jun 2020 04:42:53 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60294 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726424AbgFJIma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 04:42:30 -0400
-Received: from kernel.org (unknown [87.70.26.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD9A320734;
-        Wed, 10 Jun 2020 08:42:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591778550;
-        bh=wjjPmI+WG54Mz1EL7HwR233NE+u8BMlzD5wxbDmEoOM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oIJl3PxAd6TD5nHzwj0UKLRZMXYmocYU4/TUG9EvAfB4xNNfdmxYRGV0shFVvn3Pk
-         URWZzVLrf1BNkBqOD4VV3l4aP2i+WGka8F5JjZ7ztm7TgcoAaC8sYeVJSgWcFvTatG
-         HPGyY4wcqKg3LD+WQrlEMnuJcnMtmBEjLG5R9qw0=
-Date:   Wed, 10 Jun 2020 11:42:23 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        id S1726424AbgFJImw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 04:42:52 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 4944AABE3;
+        Wed, 10 Jun 2020 08:42:53 +0000 (UTC)
+Date:   Wed, 10 Jun 2020 10:42:48 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <parri.andrea@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tony Luck <tony.luck@intel.com>, x86@kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Dave Hansen <dave.hansen@intel.com>, stable@vger.kernel.org
-Subject: Re: [PATCHv2 2/2] x86/boot/KASLR: Fix boot with some memory above
- MAXMEM
-Message-ID: <20200610084223.GE1151302@kernel.org>
-References: <20200608125424.70198-1-kirill.shutemov@linux.intel.com>
- <20200608125424.70198-3-kirill.shutemov@linux.intel.com>
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Paul McKenney <paulmck@kernel.org>
+Subject: Re: blk->id read race: was: [PATCH v2 2/3] printk: add lockless
+ buffer
+Message-ID: <20200610084248.GA4311@linux-b0ei>
+References: <20200501094010.17694-1-john.ogness@linutronix.de>
+ <20200501094010.17694-3-john.ogness@linutronix.de>
+ <20200609071030.GA23752@linux-b0ei>
+ <87tuzkuxtw.fsf@vostro.fn.ogness.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200608125424.70198-3-kirill.shutemov@linux.intel.com>
+In-Reply-To: <87tuzkuxtw.fsf@vostro.fn.ogness.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 03:54:24PM +0300, Kirill A. Shutemov wrote:
-> A 5-level paging capable machine can have memory above 46-bit in the
-> physical address space. This memory is only addressable in the 5-level
-> paging mode: we don't have enough virtual address space to create direct
-> mapping for such memory in the 4-level paging mode
+On Tue 2020-06-09 16:18:35, John Ogness wrote:
+> On 2020-06-09, Petr Mladek <pmladek@suse.com> wrote:
+> >> --- /dev/null
+> >> +++ b/kernel/printk/printk_ringbuffer.c
+> >> +/*
+> >> + * Given a data ring (text or dict), put the associated descriptor of each
+> >> + * data block from @lpos_begin until @lpos_end into the reusable state.
+> >> + *
+> >> + * If there is any problem making the associated descriptor reusable, either
+> >> + * the descriptor has not yet been committed or another writer task has
+> >> + * already pushed the tail lpos past the problematic data block. Regardless,
+> >> + * on error the caller can re-load the tail lpos to determine the situation.
+> >> + */
+> >> +static bool data_make_reusable(struct printk_ringbuffer *rb,
+> >> +			       struct prb_data_ring *data_ring,
+> >> +			       unsigned long lpos_begin,
+> >> +			       unsigned long lpos_end,
+> >> +			       unsigned long *lpos_out)
+> >> +{
+> >> +	struct prb_desc_ring *desc_ring = &rb->desc_ring;
+> >> +	struct prb_data_blk_lpos *blk_lpos;
+> >> +	struct prb_data_block *blk;
+> >> +	unsigned long tail_lpos;
+> >> +	enum desc_state d_state;
+> >> +	struct prb_desc desc;
+> >> +	unsigned long id;
+> >> +
+> >> +	/*
+> >> +	 * Using the provided @data_ring, point @blk_lpos to the correct
+> >> +	 * blk_lpos within the local copy of the descriptor.
+> >> +	 */
+> >> +	if (data_ring == &rb->text_data_ring)
+> >> +		blk_lpos = &desc.text_blk_lpos;
+> >> +	else
+> >> +		blk_lpos = &desc.dict_blk_lpos;
+> >> +
+> >> +	/* Loop until @lpos_begin has advanced to or beyond @lpos_end. */
+> >> +	while ((lpos_end - lpos_begin) - 1 < DATA_SIZE(data_ring)) {
+> >> +		blk = to_block(data_ring, lpos_begin);
+> >> +		id = READ_ONCE(blk->id); /* LMM(data_make_reusable:A) */
+> >
+> > This would deserve some comment:
+> >
+> > 1. Compiler could not optimize out the read because there is a data
+> >    dependency on lpos_begin.
+> >
+> > 2. Compiler could not postpone the read because it is followed by
+> >    smp_rmb().
+> >
+> > So, is READ_ONCE() realy needed?
 > 
-> Teach KASLR to avoid memory regions above MAXMEM or truncate the region
-> if the end is above MAXMEM.
-> 
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Reviewed-by: Dave Hansen <dave.hansen@intel.com>
-> Cc: stable@vger.kernel.org # v4.14
+> I agree that it is not needed. Both the READ_ONCE() and its countering
+> WRITE_ONCE() (data_alloc:B) only document the lockless shared access. I
+> will remove both for the next version.
 
-Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
+Sounds good.
 
-> ---
->  arch/x86/boot/compressed/kaslr.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
-> index d7408af55738..99db18eeb40e 100644
-> --- a/arch/x86/boot/compressed/kaslr.c
-> +++ b/arch/x86/boot/compressed/kaslr.c
-> @@ -695,7 +695,18 @@ static bool process_mem_region(struct mem_vector *region,
->  			       unsigned long long minimum,
->  			       unsigned long long image_size)
->  {
-> +	unsigned long long end;
->  	int i;
-> +
-> +	/* Cannot access memory region above MAXMEM: skip it. */
-> +	if (region->start >= MAXMEM)
-> +		return 0;
-> +
-> +	/* Truncate the region if the end is above MAXMEM */
-> +	end = region->start + region->size;
-> +	end = min_t(unsigned long long, end, MAXMEM - 1);
-> +	region->size = end - region->start;
-> +
->  	/*
->  	 * If no immovable memory found, or MEMORY_HOTREMOVE disabled,
->  	 * use @region directly.
-> -- 
-> 2.26.2
-> 
-> 
+> Do we still need a comment? Is it not obvious that there is a data
+> dependency on @lpos_begin?
 
--- 
-Sincerely yours,
-Mike.
+Sigh, I just wonder why I am always confusedby this. See below.
+
+
+>         blk = to_block(data_ring, lpos_begin);
+>         id = blk->id;
+> 
+> > Well, blk->id clearly can be modified in parallel so we need to be
+> > careful. There is smp_rmb() right below. Do we needed smp_rmb() also
+> > before?
+> >
+> > What about the following scenario?:
+> >
+> >
+> > CPU0						CPU1
+> >
+> > 						data_alloc()
+> > 						  data_push_tail()
+> >
+> > 						blk = to_block(data_ring, begin_lpos)
+> > 						WRITE_ONCE(blk->id, id); /* LMM(data_alloc:B) */
+> >
+> > desc_push_tail()
+> >   data_push_tail()
+> >
+> >     tail_lpos = data_ring->tail_lpos;
+> >     // see data_ring->tail_lpos already updated by CPU1
+> >
+> >     data_make_reusable()
+> >
+> >       // lpos_begin = tail_lpos via parameter
+> >       blk = to_block(data_ring, lpos_begin);
+> >       id = blk->id
+> >
+> > Now: CPU0 might see outdated blk->id before CPU1 wrote new value
+> >      because there is no read barrier betwen reading tail_lpos
+> >      and blk->id here.
+> 
+> In your example, CPU1 is pushing the tail and then setting the block ID
+> for the _newly_ allocated block, that is located is _before_ the new
+> tail. If CPU0 sees the new tail already, it is still reading a valid
+> block ID, which is _not_ from the block that CPU1 is in the process of
+> writing.
+
+Ah, I see. I wrongly assumed that both CPO0 and CPU1 are working with
+the same block address. But if CPU0 sees the new tail_lpos, it is
+already looking at another block. And it is the classic fight against
+yet another potential CPUs that try to push the tail as well.
+
+I wonder if the comment might look like:
+
+/*
+ * No barrier is needed between reading tail_lpos and the related
+ * blk->id. Only CPU that modifies tail_lpos via cmpxchg is allowed
+ * to modify the related blk->id. CPUs that see the moved tail_lpos
+ * are looking at another block related to the new tail_lpos.
+ * It does not mater when the previous winner modifies the previous
+ * block.
+ */
+
+I am not sure how many people are confused like me. It is possible
+that it is not worth it. I just know that I did this mistake
+repeatedly ;-)
+
+Best Regards,
+Petr
