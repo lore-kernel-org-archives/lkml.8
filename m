@@ -2,111 +2,213 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A159AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 05:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E37C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 05:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75A4D20734
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 05:28:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5776E207F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 05:28:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PIgAxHYr"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NVKK8Ncy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726148AbgFJF2A (ORCPT
+        id S1726167AbgFJF2P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 01:28:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36198 "EHLO
+        Wed, 10 Jun 2020 01:28:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbgFJF16 (ORCPT
+        with ESMTP id S1726046AbgFJF2N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 01:27:58 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48CA7C05BD1E
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 22:27:57 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id u5so478971pgn.5
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 22:27:57 -0700 (PDT)
+        Wed, 10 Jun 2020 01:28:13 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13844C03E96B
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 22:28:13 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id gl26so1073751ejb.11
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 22:28:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=YuvdGzIyUzej8b6gdTa5D7P2JhC6M3cmDi3clfShF/E=;
-        b=PIgAxHYrxUvRr9+6B+Y6rNbCq5cYmCyrWJFoGVB5vsnqF1cxlaBH0TdQtEogAZhAkK
-         0IZo+oyIm9PFRRK9u2lfat+U9IAqccCDhsh4QXM2Gz3Qz/v7cJ50lWwTlK+oRjnhtS65
-         WPTyN5BUNxT9qFvRvz655OCTZSSLHH3QKWdPg=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=T/jnmVd/bh9loEdDEgeb3HlsdzM3UCvTcIUqLjOK8wM=;
+        b=NVKK8Ncy1CLQa1GlK2EjqNT2z0/cxOFotcgTyS92UZqtKAixCKZm5P7LgHCa7PP2ZI
+         flclmztcZcsY97HSfIjpavaBhH70f7SwiaDd+gawqqoyVQlxTMpEdNgc/jgzcCjWhhOW
+         IgLUEocOdgu4TeJds3+h6ALqtlmtSFVLyCp72tDI98Jd5HlUjBP/m1ptwaW494vPhlbL
+         89LaiuT6ofUQDTvESFwkYMIu3CNjtgnVg8FPjvrogRE77m2XTcyS72gpTNhIcBxtoZSl
+         fKqk4/D7LjIeJA8S65IHkkW364GmTwj8Ucz4eCMw+TqvWNyuVMQclYcWPDll7rLd/V1t
+         /O9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=YuvdGzIyUzej8b6gdTa5D7P2JhC6M3cmDi3clfShF/E=;
-        b=fmZ4ksJIMXULCRayuV2YVIEph0Modp1M7xdLw1DJi/CgIBP2Rc3zdL0gncXC9sMg6C
-         xNBgEz1/JXX9hOWfQ8P1tNvdG/TwRlfr63R8fozM4IN8naIJDBgxXY2rRwdg8nD75FGx
-         csHwtnJ21EcgLGpTZHizAW6ZfBv3Bx7aGAomyE6JcqhkdAb024PGLpps4foINHqkKXth
-         YkU2TAHbtMxzfpSkcV/FoYm07Oov76ZlljjW4Br3dX4Yyi+O7zebeUSEH8DgwCDajs4Q
-         q/aV0eTQUvvnosmM9vixSrMXrTmfxA7WCDvy4FsV2w9aPYuwWYh+/72xgKs8Q4ycP9UQ
-         4wiw==
-X-Gm-Message-State: AOAM530iYIzMJENbvYyLLn39M2Yx7fmoywqHLfEexz6D2Z/jv5mATLOE
-        wyr25pmkmnYwJutYOBACGXWqzA==
-X-Google-Smtp-Source: ABdhPJxlpq2wABOjHadp4pv2ChXznPW+NT4TMS3Cp+fGD3SZI3IGpPc5oHKwOnJ2E6uX2YT9b+mkZA==
-X-Received: by 2002:a62:1917:: with SMTP id 23mr1215614pfz.272.1591766876846;
-        Tue, 09 Jun 2020 22:27:56 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id x3sm11513892pfi.57.2020.06.09.22.27.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 22:27:55 -0700 (PDT)
-Date:   Tue, 9 Jun 2020 22:27:54 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     containers@lists.linux-foundation.org,
-        Giuseppe Scrivano <gscrivan@redhat.com>,
-        Robert Sesek <rsesek@google.com>,
-        Chris Palmer <palmer@google.com>, Jann Horn <jannh@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Wagner <daniel.wagner@bmw-carit.de>,
-        linux-kernel@vger.kernel.org, Matt Denton <mpdenton@google.com>,
-        John Fastabend <john.r.fastabend@intel.com>,
-        linux-fsdevel@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, cgroups@vger.kernel.org,
-        stable@vger.kernel.org, "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v3 1/4] fs, net: Standardize on file_receive helper to
- move fds across processes
-Message-ID: <202006092227.D2D0E1F8F@keescook>
-References: <20200603011044.7972-1-sargun@sargun.me>
- <20200603011044.7972-2-sargun@sargun.me>
- <20200604012452.vh33nufblowuxfed@wittgenstein>
- <202006031845.F587F85A@keescook>
- <20200604125226.eztfrpvvuji7cbb2@wittgenstein>
- <20200605075435.GA3345@ircssh-2.c.rugged-nimbus-611.internal>
- <202006091235.930519F5B@keescook>
- <20200609200346.3fthqgfyw3bxat6l@wittgenstein>
- <202006091346.66B79E07@keescook>
- <037A305F-B3F8-4CFA-B9F8-CD4C9EF9090B@ubuntu.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=T/jnmVd/bh9loEdDEgeb3HlsdzM3UCvTcIUqLjOK8wM=;
+        b=rUal1bV12znnro6zVdJTvkh/z78QeTOwgpzjzrn4Q30nMkIu7b/thQhaIGflRZlRJ2
+         LKdjqtuAm3VY6aC2E01rhV6qmWuckfTCzbvjlk2HiFzwxv0kVfk39M1sqSTF85v0mK/o
+         9qQmVfdQdaMnr15BLx+cQVq2EIY4cTeNo7z7ItPKeuRJ1ZhXZ6DOrN4To3hKLiTeBWA8
+         QhR3H01WRI0glf+xazpmS3cPexS/O4XxA984mRoNqO22tYJYXEWQFu0SmuTb2fZ/S5PD
+         DXijlDfKzNAlubgL8/LKOs5FrIGuDhZhx50qOGHv0I1okmPuO2K4ax77zoqTo8g+n3kE
+         scaQ==
+X-Gm-Message-State: AOAM532iamT85xlM1EB31Cr95tDORUrsiE+iwCFTllUi4K++SCD7fj+K
+        NyBj3VrvaUQGYh3xknOsw2ABk0vUyNNpcxqJd4JANA==
+X-Google-Smtp-Source: ABdhPJz0/EqE/wsKuHGBezMRKKF5qcxIfkGPjwwqO2vlE2Lz0OqDCLBvz2CrRh6NSHlfDRU79JvbMI9q2sJ2yf+qmxg=
+X-Received: by 2002:a17:906:9a02:: with SMTP id ai2mr1671514ejc.97.1591766891357;
+ Tue, 09 Jun 2020 22:28:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <037A305F-B3F8-4CFA-B9F8-CD4C9EF9090B@ubuntu.com>
+References: <20200610043824.GA171503@dtor-ws>
+In-Reply-To: <20200610043824.GA171503@dtor-ws>
+From:   Guenter Roeck <groeck@google.com>
+Date:   Tue, 9 Jun 2020 22:28:00 -0700
+Message-ID: <CABXOdTfdLv5iiZhyGmrmYfk15esoiJhshs_ey+9ma7hLqC4p2A@mail.gmail.com>
+Subject: Re: [PATCH v2] HID: usbhid: do not sleep when opening device
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        linux-usb@vger.kernel.org,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 11:27:30PM +0200, Christian Brauner wrote:
-> On June 9, 2020 10:55:42 PM GMT+02:00, Kees Cook <keescook@chromium.org> wrote:
-> >LOL. And while we were debating this, hch just went and cleaned stuff up:
-> >
-> >2618d530dd8b ("net/scm: cleanup scm_detach_fds")
-> >
-> >So, um, yeah, now my proposal is actually even closer to what we already
-> >have there. We just add the replace_fd() logic to __scm_install_fd() and
-> >we're done with it.
-> 
-> Cool, you have a link? :)
+On Tue, Jun 9, 2020 at 9:38 PM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+>
+> usbhid tries to give the device 50 milliseconds to drain its queues when
+> opening the device, but dies it naively by simply sleeping in open handler,
+> which slows down device probing (and thus may affect overall boot time).
+>
+> However we do not need to sleep as we can instead mark a point of time in
+> the future when we should start processing the events.
+>
+> Reported-by: Nicolas Boichat <drinkcat@chromium.org>
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-How about this:
+Reviewed-by: Guenter Roeck <groeck@chromium.org>
 
-https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/commit/?h=devel/seccomp/addfd/v3.1&id=bb94586b9e7cc88e915536c2e9fb991a97b62416
-
--- 
-Kees Cook
+> ---
+>
+> v2: switched from using jiffies to ktime_t to make sure we won't have
+> issues with jiffies overflowing.
+>
+>  drivers/hid/usbhid/hid-core.c | 53 +++++++++++++++++++----------------
+>  drivers/hid/usbhid/usbhid.h   |  2 ++
+>  2 files changed, 31 insertions(+), 24 deletions(-)
+>
+> diff --git a/drivers/hid/usbhid/hid-core.c b/drivers/hid/usbhid/hid-core.c
+> index c7bc9db5b192..72c92aab2b18 100644
+> --- a/drivers/hid/usbhid/hid-core.c
+> +++ b/drivers/hid/usbhid/hid-core.c
+> @@ -26,6 +26,7 @@
+>  #include <linux/wait.h>
+>  #include <linux/workqueue.h>
+>  #include <linux/string.h>
+> +#include <linux/timekeeping.h>
+>
+>  #include <linux/usb.h>
+>
+> @@ -95,6 +96,18 @@ static int hid_start_in(struct hid_device *hid)
+>                                 set_bit(HID_NO_BANDWIDTH, &usbhid->iofl);
+>                 } else {
+>                         clear_bit(HID_NO_BANDWIDTH, &usbhid->iofl);
+> +
+> +                       if (test_bit(HID_RESUME_RUNNING, &usbhid->iofl)) {
+> +                               /*
+> +                                * In case events are generated while nobody was
+> +                                * listening, some are released when the device
+> +                                * is re-opened. Wait 50 msec for the queue to
+> +                                * empty before allowing events to go through
+> +                                * hid.
+> +                                */
+> +                               usbhid->input_start_time =
+> +                                       ktime_add_ms(ktime_get_coarse(), 50);
+> +                       }
+>                 }
+>         }
+>         spin_unlock_irqrestore(&usbhid->lock, flags);
+> @@ -280,20 +293,23 @@ static void hid_irq_in(struct urb *urb)
+>                 if (!test_bit(HID_OPENED, &usbhid->iofl))
+>                         break;
+>                 usbhid_mark_busy(usbhid);
+> -               if (!test_bit(HID_RESUME_RUNNING, &usbhid->iofl)) {
+> -                       hid_input_report(urb->context, HID_INPUT_REPORT,
+> -                                        urb->transfer_buffer,
+> -                                        urb->actual_length, 1);
+> -                       /*
+> -                        * autosuspend refused while keys are pressed
+> -                        * because most keyboards don't wake up when
+> -                        * a key is released
+> -                        */
+> -                       if (hid_check_keys_pressed(hid))
+> -                               set_bit(HID_KEYS_PRESSED, &usbhid->iofl);
+> -                       else
+> -                               clear_bit(HID_KEYS_PRESSED, &usbhid->iofl);
+> +               if (test_bit(HID_RESUME_RUNNING, &usbhid->iofl)) {
+> +                       if (ktime_before(ktime_get_coarse(),
+> +                                        usbhid->input_start_time))
+> +                               break;
+> +                       clear_bit(HID_RESUME_RUNNING, &usbhid->iofl);
+>                 }
+> +               hid_input_report(urb->context, HID_INPUT_REPORT,
+> +                                urb->transfer_buffer, urb->actual_length, 1);
+> +               /*
+> +                * autosuspend refused while keys are pressed
+> +                * because most keyboards don't wake up when
+> +                * a key is released
+> +                */
+> +               if (hid_check_keys_pressed(hid))
+> +                       set_bit(HID_KEYS_PRESSED, &usbhid->iofl);
+> +               else
+> +                       clear_bit(HID_KEYS_PRESSED, &usbhid->iofl);
+>                 break;
+>         case -EPIPE:            /* stall */
+>                 usbhid_mark_busy(usbhid);
+> @@ -714,17 +730,6 @@ static int usbhid_open(struct hid_device *hid)
+>         }
+>
+>         usb_autopm_put_interface(usbhid->intf);
+> -
+> -       /*
+> -        * In case events are generated while nobody was listening,
+> -        * some are released when the device is re-opened.
+> -        * Wait 50 msec for the queue to empty before allowing events
+> -        * to go through hid.
+> -        */
+> -       if (res == 0)
+> -               msleep(50);
+> -
+> -       clear_bit(HID_RESUME_RUNNING, &usbhid->iofl);
+>         return res;
+>  }
+>
+> diff --git a/drivers/hid/usbhid/usbhid.h b/drivers/hid/usbhid/usbhid.h
+> index 8620408bd7af..0f0bcf7037f8 100644
+> --- a/drivers/hid/usbhid/usbhid.h
+> +++ b/drivers/hid/usbhid/usbhid.h
+> @@ -13,6 +13,7 @@
+>
+>  #include <linux/types.h>
+>  #include <linux/slab.h>
+> +#include <linux/ktime.h>
+>  #include <linux/list.h>
+>  #include <linux/mutex.h>
+>  #include <linux/timer.h>
+> @@ -82,6 +83,7 @@ struct usbhid_device {
+>
+>         spinlock_t lock;                                                /* fifo spinlock */
+>         unsigned long iofl;                                             /* I/O flags (CTRL_RUNNING, OUT_RUNNING) */
+> +       ktime_t input_start_time;                                       /* When to start handling input */
+>         struct timer_list io_retry;                                     /* Retry timer */
+>         unsigned long stop_retry;                                       /* Time to give up, in jiffies */
+>         unsigned int retry_delay;                                       /* Delay length in ms */
+> --
+> 2.27.0.278.ge193c7cf3a9-goog
+>
+>
+> --
+> Dmitry
