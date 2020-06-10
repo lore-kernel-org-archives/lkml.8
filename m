@@ -2,197 +2,178 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C56C1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E5C5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F49D20814
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:36:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2489D2081A
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:39:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Rbr0h1Se"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726341AbgFJVgG (ORCPT
+        id S1726313AbgFJVjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 17:36:06 -0400
-Received: from mga03.intel.com ([134.134.136.65]:8907 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726114AbgFJVgF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 17:36:05 -0400
-IronPort-SDR: 743q4c38cybqGE+XYfq4CNivY8uXZwV2V9WjKFap4l31AMJM913au8trOfcavxvV9gqbQpTpQ9
- mBRTUTbcIwCA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2020 14:36:04 -0700
-IronPort-SDR: VGR49SxO4V7TZXUsKgr0PkSZES+SlQ/oVEiz8EZpTNdpGpxR8a9I7NZe29I5vOtDH+GDwr9SBA
- QVlAn+F0J8YQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,497,1583222400"; 
-   d="scan'208";a="275115369"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga006.jf.intel.com with ESMTP; 10 Jun 2020 14:36:04 -0700
-Date:   Wed, 10 Jun 2020 14:36:04 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     "David P. Reed" <dpreed@deepplum.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Allison Randal <allison@lohutok.net>,
-        Enrico Weigelt <info@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Martin Molnar <martin.molnar.programming@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Jann Horn <jannh@google.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Fix undefined operation VMXOFF during reboot and crash
-Message-ID: <20200610213604.GG18790@linux.intel.com>
-References: <20200610181254.2142-1-dpreed@deepplum.com>
+        Wed, 10 Jun 2020 17:39:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45524 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726134AbgFJVjC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 17:39:02 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E3BCC03E96B
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 14:39:02 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id m2so1457575pjv.2
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 14:39:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=UaaxvVuEHQrVAu/jxhStnl/lvg3EdN7pxE+mrpm0qVk=;
+        b=Rbr0h1SeiTN78KosHmSXDvYzqg/XXy+aQQm0nN5G4DhZUxzr2O7np6CMT74RLK6rE4
+         xOgl0Bw+fBBXdzF8A0X7/lSe9JqtnEyjA2gGNkJw2subjeJwi4V1Z9Yk4DRES5NWOxrP
+         +zlW3XZSyaxcdFH2drOG6MnNsTdLQGkWkPj9I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=UaaxvVuEHQrVAu/jxhStnl/lvg3EdN7pxE+mrpm0qVk=;
+        b=cHxooJTcLCx3xntvSw6H0ef21/a/G20BN+AG1tj6k8ehLBCV/qDpkRQrmUhpJCSi1U
+         FJjs9WJpmVYdC5KP0gEVZXRMc/NNiWAoclt2z1dugcrAeXrB6gO9WWuffLj0lMgAzXYk
+         CoCc4DeWjHtJOxdzKwvQ/KUq8kojwxrY7NXU7Q/nKra1gB8NbQbvmTfQ9jbGZHKB5Moq
+         q1N0JC/bo6IWoTfYhulIO8NvgODJvN8KdiKxfRYh+8Je342M3vncxGpqkGRmgyyzUJVc
+         hW55oBcXLydycDlNTOHbWh9EjTBVIRsK2NdqmgfTWlj8V7QtcBRFlhNnDaf36q2WsdMK
+         9XBg==
+X-Gm-Message-State: AOAM5306zumCU9hL/v0643aSs6hXGgDHOAcDWVf7O6URdrFL3YWWdHvL
+        YvV2bZPfV5b/02k3MGwTafVTuw==
+X-Google-Smtp-Source: ABdhPJyaJj6JdEG4QEQHKRCbpTCuGNNQl8NZIXwiu7rbWQnmNV/s+taf/gvlb4fkZK7lWoA7UZz9eg==
+X-Received: by 2002:a17:90b:3d1:: with SMTP id go17mr4802563pjb.114.1591825141557;
+        Wed, 10 Jun 2020 14:39:01 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id h12sm670889pgj.71.2020.06.10.14.39.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2020 14:39:00 -0700 (PDT)
+Date:   Wed, 10 Jun 2020 14:38:59 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: [PATCH v2] overflow.h: Add flex_array_size() helper
+Message-ID: <202006101427.68A436C@keescook>
+References: <20200609012233.GA3371@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200610181254.2142-1-dpreed@deepplum.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200609012233.GA3371@embeddedor>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 02:12:50PM -0400, David P. Reed wrote:
-> If a panic/reboot occurs when CR4 has VMX enabled, a VMXOFF is
-> done on all CPUS, to allow the INIT IPI to function, since
-> INIT is suppressed when CPUs are in VMX root operation.
-> However, VMXOFF causes an undefined operation fault if the CPU is not
-> in VMX operation, that is, VMXON has not been executed, or VMXOFF
-> has been executed, but VMX is enabled. This fix makes the reboot
-> work more reliably by modifying the #UD handler to skip the VMXOFF
-> if VMX is enabled on the CPU and the VMXOFF is executed as part
-> of cpu_emergency_vmxoff().
-> The logic in reboot.c is also corrected, since the point of forcing
-> the processor out of VMX root operation is because when VMX root
-> operation is enabled, the processor INIT signal is always masked.
-> See Intel SDM section on differences between VMX Root operation and normal
-> operation. Thus every CPU must be forced out of VMX operation.
-> Since the CPU will hang rather than restart, a manual "reset" is the
-> only way out of this state (or if there is a BMC, it can issue a RESET
-> to the chip).
+On Mon, Jun 08, 2020 at 08:22:33PM -0500, Gustavo A. R. Silva wrote:
+> Add flex_array_size() helper for the calculation of the size, in bytes,
+> of a flexible array member contained within an enclosing structure.
 > 
-> Signed-off-by: David P. Reed <dpreed@deepplum.com>
+> Example of usage:
+> 
+> struct something {
+> 	size_t count;
+> 	struct foo items[];
+> };
+> 
+> struct something *instance;
+> 
+> instance = kmalloc(struct_size(instance, items, count), GFP_KERNEL);
+> instance->count = count;
+> 
+> memcpy(instance->items, source, flex_array_size(instance, items, instance->count));
+> 
+> The helper returns SIZE_MAX on overflow instead of wrapping around.
+> 
+> (Additionally replace parameter n with count in struct_size() for
+> unification).
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > ---
-> @@ -47,17 +51,25 @@ static inline int cpu_vmx_enabled(void)
->  	return __read_cr4() & X86_CR4_VMXE;
->  }
->  
-> -/** Disable VMX if it is enabled on the current CPU
-> +/** Force disable VMX if it is enabled on the current CPU.
-> + * Note that if CPU is not in VMX root operation this
-> + * VMXOFF will fault an undefined operation fault.
-> + * So the 'doing_emergency_vmxoff' percpu flag is set,
-> + * the trap handler for just restarts execution after
-> + * the VMXOFF instruction.
+> Changes in v2:
+>  - Add further information to the helper documentation.
+>  - Use same code style as struct_size() for consistency.
+> 
+>  include/linux/overflow.h | 25 +++++++++++++++++++++----
+>  1 file changed, 21 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/linux/overflow.h b/include/linux/overflow.h
+> index 659045046468f..d2329a914304c 100644
+> --- a/include/linux/overflow.h
+> +++ b/include/linux/overflow.h
+> @@ -304,16 +304,33 @@ static inline __must_check size_t __ab_c_size(size_t a, size_t b, size_t c)
+>   * struct_size() - Calculate size of structure with trailing array.
+>   * @p: Pointer to the structure.
+>   * @member: Name of the array member.
+> - * @n: Number of elements in the array.
+> + * @count: Number of elements in the array.
 >   *
-> - * You shouldn't call this if cpu_has_vmx() returns 0.
-> + * You shouldn't call this directly if cpu_has_vmx() returns 0.
+>   * Calculates size of memory needed for structure @p followed by an
+> - * array of @n @member elements.
+> + * array of @count @member elements.
+>   *
+>   * Return: number of bytes needed or SIZE_MAX on overflow.
 >   */
->  static inline void __cpu_emergency_vmxoff(void)
->  {
-> -	if (cpu_vmx_enabled())
-> +	if (cpu_vmx_enabled()) {
-> +		this_cpu_write(doing_emergency_vmxoff, 1);
->  		cpu_vmxoff();
-> +		this_cpu_write(doing_emergency_vmxoff, 0);
-> +	}
->  }
+> -#define struct_size(p, member, n)					\
+> -	__ab_c_size(n,							\
+> +#define struct_size(p, member, count)					\
+> +	__ab_c_size(count,							\
+>  		    sizeof(*(p)->member) + __must_be_array((p)->member),\
+>  		    sizeof(*(p)))
 
-...
+I like the "count" change -- "n" can be seen as either count or bytes,
+so I like this being distinctly "count".
 
-> +/*
-> + * Fix any unwanted undefined operation fault due to VMXOFF instruction that
-> + * is needed to ensure that CPU is not in VMX root operation at time of
-> + * a reboot/panic CPU reset. There is no safe and reliable way to know
-> + * if a processor is in VMX root operation, other than to skip the
-> + * VMXOFF. It is safe to just skip any VMXOFF that might generate this
-> + * exception, when VMX operation is enabled in CR4. In the extremely
-> + * rare case that a VMXOFF is erroneously executed while VMX is enabled,
-> + * but VMXON has not been executed yet, the undefined opcode fault
-> + * should not be missed by valid code, though it would be an error.
-> + * To detect this, we could somehow restrict the instruction address
-> + * to the specific use during reboot/panic.
+>  
+> +/**
+> + * flex_array_size() - Calculate size, in bytes, of a flexible array member
+> + * within an enclosing structure. Read on for more details.
+> + *
+> + * @p: Pointer to the structure.
+> + * @member: Name of the flexible array member.
+> + * @count: Number of elements in the array.
+> + *
+> + * Calculates size, in bytes, of a flexible array @member of @count elements
+> + * within structure @p.
+> + *
+> + * Return: number of bytes needed or SIZE_MAX on overflow.
 > + */
-> +static int fixup_emergency_vmxoff(struct pt_regs *regs, int trapnr)
-> +{
-> +	const static u8 insn_vmxoff[3] = { 0x0f, 0x01, 0xc4 };
-> +	u8 ud[3];
+> +#define flex_array_size(p, member, count)					\
+> +	array_size(count,							\
+> +		    sizeof(*(p)->member) + __must_be_array((p)->member))
 > +
-> +	if (trapnr != X86_TRAP_UD)
-> +		return 0;
-> +	if (!cpu_vmx_enabled())
-> +		return 0;
-> +	if (!this_cpu_read(doing_emergency_vmxoff))
-> +		return 0;
-> +
-> +	/* undefined instruction must be in kernel and be VMXOFF */
-> +	if (regs->ip < TASK_SIZE_MAX)
-> +		return 0;
-> +	if (probe_kernel_address((u8 *)regs->ip, ud))
-> +		return 0;
-> +	if (memcmp(ud, insn_vmxoff, sizeof(insn_vmxoff)))
-> +		return 0;
-> +
-> +	regs->ip += sizeof(insn_vmxoff);
-> +	return 1;
-> +}
-> +
->  static nokprobe_inline int
->  do_trap_no_signal(struct task_struct *tsk, int trapnr, const char *str,
->  		  struct pt_regs *regs,	long error_code)
-> @@ -193,9 +234,16 @@ static void do_error_trap(struct pt_regs *regs, long error_code, char *str,
->  	/*
->  	 * WARN*()s end up here; fix them up before we call the
->  	 * notifier chain.
-> +	 * Also, VMXOFF causes unwanted fault during reboot
-> +	 * if VMX is enabled, but not in VMX root operation. Fix
-> +	 * before calling notifier chain.
->  	 */
-> -	if (!user_mode(regs) && fixup_bug(regs, trapnr))
-> -		return;
-> +	if (!user_mode(regs)) {
-> +		if (fixup_bug(regs, trapnr))
-> +			return;
-> +		if (fixup_emergency_vmxoff(regs, trapnr))
-> +			return;
-> +	}
+>  #endif /* __LINUX_OVERFLOW_H */
 
-Isn't this just a really kludgy way of doing fixup on vmxoff?  E.g. wouldn't
-the below patch do the trick?
+I like it! You mentioned off-list that maybe this could be named
+sizeof_flex_array() (like sizeof_field(), etc), and that does seem
+attractive. As you also mentioned, it begs the question of renaming
+struct_size() to sizeof_struct().
 
-diff --git a/arch/x86/include/asm/virtext.h b/arch/x86/include/asm/virtext.h
-index 9aad0e0876fb..54bc84d7028d 100644
---- a/arch/x86/include/asm/virtext.h
-+++ b/arch/x86/include/asm/virtext.h
-@@ -32,13 +32,15 @@ static inline int cpu_has_vmx(void)
+Looking back through the thread[1], it seems the name came from Linus[2],
+and was more related to the existing array_size() helper.
 
- /** Disable VMX on the current CPU
-  *
-- * vmxoff causes a undefined-opcode exception if vmxon was not run
-- * on the CPU previously. Only call this function if you know VMX
-- * is enabled.
-+ * VMXOFF causes a #UD if the CPU is not post-VMXON, eat any #UDs to handle
-+ * races with a hypervisor doing VMXOFF, e.g. if an NMI arrived between VMXOFF
-+ * and clearing CR4.VMXE.
-  */
- static inline void cpu_vmxoff(void)
- {
--       asm volatile ("vmxoff");
-+       asm volatile("1: vmxoff\n\t"
-+                    "2:\n\t"
-+                    _ASM_EXTABLE(1b, 2b));
-        cr4_clear_bits(X86_CR4_VMXE);
- }
+So, how about this, as a convention we can use to make a choice:
 
+For things that are strictly constant in size, we can use sizeof_*. For
+things that have a dynamic component, we'll use *_size(). So, this patch
+is correct as-is.
 
+Acked-by: Kees Cook <keescook@chromium.org>
+
+(I wonder who's tree this should go via?)
+
+-Kees
+
+[1] https://lore.kernel.org/lkml/20180507113902.GC18116@bombadil.infradead.org/
+[2] https://lore.kernel.org/lkml/CA+55aFy8DSRoUvtiuu5w+XGOK6tYvtJGBH-i8i-y7aiUD2EGLA@mail.gmail.com/
+
+-- 
+Kees Cook
