@@ -2,135 +2,124 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EFD9C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BEFC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DACFF20734
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:26:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gV025CDP"
+	by mail.kernel.org (Postfix) with ESMTP id CFAAA2064C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:29:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbgFJI0V (ORCPT
+        id S1726716AbgFJI3p convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 04:26:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35526 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726512AbgFJI0U (ORCPT
+        Wed, 10 Jun 2020 04:29:45 -0400
+Received: from mail-ej1-f67.google.com ([209.85.218.67]:46879 "EHLO
+        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726424AbgFJI3p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 04:26:20 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8367BC03E96B;
-        Wed, 10 Jun 2020 01:26:19 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id j1so797679pfe.4;
-        Wed, 10 Jun 2020 01:26:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=EeIfeMtC6ZVKYeciuWjHUrT7P8TMj/nqx7gXpKs4XCw=;
-        b=gV025CDPRGRjF9olznMwB9I8BVSSZyFb6nZT9v8dhM3lR9EOk99EmbUOrOVBIJkU1k
-         XJApj6a9uHsHCS8WuNg9nf8+3fRndJp2++HkXAnOMNh7IslSSunzMND27SdnLZ04HADf
-         U4J/FgsvkwskI1E/y4QYWhRM1A7EMeBz6tohFNhyjL0ZowQG/Lxyx8A3R3tUueuKdkEe
-         tFC/RQt/vozPGE7s8VeSllKn/BHZXvB9lxuRwD+gSlYOlaONDWioa0AiGRoHBHMMKiyj
-         tlLhrr8U3RGcpAaO5qwhlP8RPhiDoLAGib6NyhKfj3Xu7X8LD1UBYgGJO1yWo2wlRB5P
-         kDcQ==
+        Wed, 10 Jun 2020 04:29:45 -0400
+Received: by mail-ej1-f67.google.com with SMTP id p20so1543952ejd.13;
+        Wed, 10 Jun 2020 01:29:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=EeIfeMtC6ZVKYeciuWjHUrT7P8TMj/nqx7gXpKs4XCw=;
-        b=YEPIaji7G0ouNDQ6tewjykMgDYycVJOVZ6OLzTqGZjbTOpDhiYON+atmulgF4Ono/d
-         /6AkRMQiDKfZp3zz5/ImZgc8T7FxNP5ajLXosBLxK6OG+Apxkl1Bo07QHSNr/Bi+H6Gc
-         AUe9zVA1vE0whIWvCxT9nGuEjAHdy4tPWW+baNeFWbR8muJXPrfHqMjU75zYX2MCxhoh
-         ARVo2KTCBVM7ilmrSCIn/b0XoBivIVhCj+aoRXHogoT2Bx08WN4ybhd67nMiLR+SWTO7
-         lJ6z41v/NnKF5Oiu3kEnhZ+vaXhA0lptKiwF2G6uwbzw7g58b3534ifqaD5Wg2KX14DS
-         HvVw==
-X-Gm-Message-State: AOAM5314v8iwkppSOeoFhsvKY9aVIJDm38Ay5lgo90Np6apVOoTvsAMD
-        FemHbtG2gXdpLnd4oKueldI=
-X-Google-Smtp-Source: ABdhPJzl+voonL1FEiRC2ZFApPnKYyVNuEkBlIo+oyZjozrtQXiPPJ2+TVtcMhKqtohIEOSPcJMKpA==
-X-Received: by 2002:a63:ce14:: with SMTP id y20mr1710922pgf.186.1591777579132;
-        Wed, 10 Jun 2020 01:26:19 -0700 (PDT)
-Received: from cnn ([2402:3a80:407:e743:cd72:839f:5826:c552])
-        by smtp.gmail.com with ESMTPSA id c9sm12172754pfp.100.2020.06.10.01.26.14
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Jun 2020 01:26:18 -0700 (PDT)
-Date:   Wed, 10 Jun 2020 13:56:11 +0530
-From:   Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     saipsdasari@fb.com, patrickw3@fb.com, vijaykhemka@fb.com,
-        linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
-        manikandan.e@hcl.com
-Subject: [PATCH v4] hwmon:(adm1275) Enable adm1278 ADM1278_TEMP1_EN
-Message-ID: <20200610082611.GA14266@cnn>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=FDSNWzEU1BCo6wG/cdIC3mu6f2xb06oIyPX8U4p2La0=;
+        b=nG6Purdq6ub66hKETSZxcqLCzaIHIIL4KgpgNjsW+FEHBZIMOXMQyk2SecPPxM1/2A
+         x+VMFCg6wnWL+mkuNJDvFeHdLpHhrzUYtnuYGsAL9f5B4yBBp5g965vNAVsQ7Yyc46Dy
+         ox3QiB5n+RALtawxU/UKA5rjpu/1Msh+Krtx2tDsyS92Wc86CE/48DENExl+cn9ZHLva
+         ORheGGqoj3B6jnI86o5dNWAeGgvOldGUd1F6uc4fa8KR6MYN5j5kTm5IwMiscJS1KeAj
+         E7ztG4o6QvE3QZ68zZHmI0hafSRwtO7/XihnV3j6aEVOverjRbjBpYy3EFO0vp+ksbdp
+         JMSQ==
+X-Gm-Message-State: AOAM532vpShi8vYLU/7pF7fTOKxpK8n/fDI7f4yjsvOiq8aehF0wwAcR
+        WcMI1/exLwZ1WxHeTDzsAqyAQGkW+kVrkmUU6PQ=
+X-Google-Smtp-Source: ABdhPJxOEtPuPOmj6dC8S4CZ/xJTRRt5rhm7PcV4cCO58Wg9TMbFQP8d/SywDEkq0BNkQlzSPKMmCP8/XoHZ7bIpl94=
+X-Received: by 2002:a17:907:4096:: with SMTP id nm6mr2343355ejb.4.1591777782737;
+ Wed, 10 Jun 2020 01:29:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20200609113049.4035426-1-noltari@gmail.com> <20200609113049.4035426-3-noltari@gmail.com>
+ <1367fcf3-24ed-9106-a329-da5f8e168e17@gmail.com> <3E897527-55EB-47DB-99ED-C737725F0F9E@gmail.com>
+In-Reply-To: <3E897527-55EB-47DB-99ED-C737725F0F9E@gmail.com>
+From:   =?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <f4bug@amsat.org>
+Date:   Wed, 10 Jun 2020 10:29:31 +0200
+Message-ID: <CAAdtpL7dUZ2RqkrqSxiZxDbp4qY-KdtSc7CyuR+rbnRRA2Yvrw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] clk: bcm63xx-gate: add BCM6318 support
+To:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Jonas Gorski <jonas.gorski@gmail.com>,
+        kbuild test robot <lkp@intel.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The adm1278 temp attribute need it for openbmc platform .
-This feature not enabled by default, so PMON_CONFIG needs to enable it.
+Hi,
 
-v4:
----
-changes in conditional check to enable vout & temp1 by default.
-v3:
-----
-fix invalid signed-off.
-removed checkpath warnings.
-write ADM1278_TEMP1_EN and ADM1278_VOUT_EN conf in single line operation.
-v2:
-----
-add Signed-off-by.
-removed ADM1278_TEMP1_EN check.
+On Wed, Jun 10, 2020 at 8:13 AM Álvaro Fernández Rojas
+<noltari@gmail.com> wrote:
+>
+> Hi Florian,
+>
+> > El 10 jun 2020, a las 4:27, Florian Fainelli <f.fainelli@gmail.com> escribió:
+> >
+> >
+> >
+> > On 6/9/2020 4:30 AM, Álvaro Fernández Rojas wrote:
+> >> +static const struct clk_bcm63xx_table_entry bcm6318_clocks[] = {
+> >> +    { .name = "adsl_asb", .bit = 0, },
+> >> +    { .name = "usb_asb", .bit = 1, },
+> >> +    { .name = "mips_asb", .bit = 2, },
+> >> +    { .name = "pcie_asb", .bit = 3, },
+> >> +    { .name = "phymips_asb", .bit = 4, },
+> >> +    { .name = "robosw_asb", .bit = 5, },
+> >> +    { .name = "sar_asb", .bit = 6, },
+> >> +    { .name = "sdr_asb", .bit = 7, },
+> >> +    { .name = "swreg_asb", .bit = 8, },
+> >> +    { .name = "periph_asb", .bit = 9, },
+> >> +    { .name = "cpubus160", .bit = 10, },
+> >> +    { .name = "adsl", .bit = 11, },
+> >> +    { .name = "sar124", .bit = 12, },
+> >
+> > Nit: this should be sar125
+>
+> Nice catch, I will fix this in v2.
+>
+> >
+> >> +    { .name = "mips", .bit = 13, .flags = CLK_IS_CRITICAL, },
+> >> +    { .name = "pcie", .bit = 14, },
+> >> +    { .name = "robosw250", .bit = 16, },
+> >> +    { .name = "robosw025", .bit = 17, },
+> >> +    { .name = "sdr", .bit = 19, .flags = CLK_IS_CRITICAL, },
+> >> +    { .name = "usb", .bit = 20, },
+> >
+> > This should probably be "usbd" to indicate this is the USB device clock
+> > (not host)
+>
+> Ok, I will change it. I got confused by the fact that both (usbd and usbh) were present on 6318_map_part.h:
+> #define USBD_CLK_EN         (1 << 20)
+> #define USBH_CLK_EN         (1 << 20)
 
-Signed-off-by: Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
----
- drivers/hwmon/pmbus/adm1275.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+Is there a datasheet to verify that?
 
-diff --git a/drivers/hwmon/pmbus/adm1275.c b/drivers/hwmon/pmbus/adm1275.c
-index 5caa37fb..d4e1925 100644
---- a/drivers/hwmon/pmbus/adm1275.c
-+++ b/drivers/hwmon/pmbus/adm1275.c
-@@ -666,11 +666,12 @@ static int adm1275_probe(struct i2c_client *client,
- 		tindex = 3;
- 
- 		info->func[0] |= PMBUS_HAVE_PIN | PMBUS_HAVE_STATUS_INPUT |
--			PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT;
-+			PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT |
-+			PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP;
- 
--		/* Enable VOUT if not enabled (it is disabled by default) */
--		if (!(config & ADM1278_VOUT_EN)) {
--			config |= ADM1278_VOUT_EN;
-+		/* Enable VOUT & TEMP1 if not enabled (disabled by default) */
-+		if (config & (ADM1278_VOUT_EN | ADM1278_TEMP1_EN) != ADM1278_VOUT_EN | ADM1278_TEMP1_EN) {
-+			config |= ADM1278_VOUT_EN | ADM1278_TEMP1_EN;
- 			ret = i2c_smbus_write_byte_data(client,
- 							ADM1275_PMON_CONFIG,
- 							config);
-@@ -681,9 +682,6 @@ static int adm1275_probe(struct i2c_client *client,
- 			}
- 		}
- 
--		if (config & ADM1278_TEMP1_EN)
--			info->func[0] |=
--				PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP;
- 		if (config & ADM1278_VIN_EN)
- 			info->func[0] |= PMBUS_HAVE_VIN;
- 		break;
--- 
-2.7.4
-
+>
+> >
+> > With that fixed:
+> >
+> > Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> > --
+> > Florian
+>
