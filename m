@@ -2,84 +2,241 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC80C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A17EAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 925E42072E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:50:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73D3320734
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:51:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KZMBJMy8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hY3TlnVK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728991AbgFJMty (ORCPT
+        id S1729055AbgFJMvq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 08:49:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48170 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728730AbgFJMty (ORCPT
+        Wed, 10 Jun 2020 08:51:46 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57023 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728595AbgFJMvp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 08:49:54 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DACD8C03E96B
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 05:49:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=3Mul5KAxOGk2b7Zi1O+VKvrqvTFd8MfuytPDM5+l5Oo=; b=KZMBJMy8/LwjgJfHVC6VnZJTq8
-        p8teu0zgxg/11Y7iPUXgzmZq/OZqPpALucwErxz3jGL0HsBqPmVopvkQoD5g+FPnD15XcEH9cgEnJ
-        fxqk4E3xYDUuYPIN+ikM7g3i+ph634/udVFyTPpCyrE9YjR7KxHB6fg2VUCsDwswVF+T2WeJAmQv8
-        lLKJRJu5Z9B1S/aRz9sDNxUeLqMDYO+LePB4ocC+Jjc0jWM0T+wSokLy7t8aJUhZbtFrjVxTcDJ6E
-        4FLYrsVeEa/BBNZHpnetJ+tUNScQuVI+TMTq2B/e0t4UKpy/uu23lfFAwfDxwizg7fRgc2LQ/FRYB
-        ZT2r2Wdg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jj0AV-0005yL-Ae; Wed, 10 Jun 2020 12:49:23 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A2DD7301A7A;
-        Wed, 10 Jun 2020 14:49:21 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 645B8203EE214; Wed, 10 Jun 2020 14:49:21 +0200 (CEST)
-Date:   Wed, 10 Jun 2020 14:49:21 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     mingo@redhat.com, juri.lelli@redhat.com, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        linux-kernel@vger.kernel.org, iwtbavbm@gmail.com,
-        valentin.schneider@arm.com
-Subject: Re: [PATCH v2] sched/fair: fix nohz next idle balance
-Message-ID: <20200610124921.GD2497@hirez.programming.kicks-ass.net>
-References: <20200609123748.18636-1-vincent.guittot@linaro.org>
+        Wed, 10 Jun 2020 08:51:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591793502;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=N3I4oGuxEPTyNsPj6w713UH4LRBydd4acB6ALuwor4Y=;
+        b=hY3TlnVKkw4qokoTMKtuangkWbM9ccl4Nki7vuFY9KOQaO1mUHO4lTJ09xCkA+r9ghftxb
+        WcKSKzY5xJCqslgatrLtZbAN/nGkxLeVWR7TJNMSn3V3JWT1XtTyVvO8P0segxVmIdHSXi
+        GMVP6kdAEE0MwWsEpd8J79dA3xAFZuA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-485-wVvNgFC-NCiq0rgkKz_zKA-1; Wed, 10 Jun 2020 08:51:41 -0400
+X-MC-Unique: wVvNgFC-NCiq0rgkKz_zKA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1F00919057A0;
+        Wed, 10 Jun 2020 12:51:38 +0000 (UTC)
+Received: from horse.redhat.com (ovpn-115-64.rdu2.redhat.com [10.10.115.64])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BAB4C1A7CD;
+        Wed, 10 Jun 2020 12:51:37 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 29C6C2205BD; Wed, 10 Jun 2020 08:51:37 -0400 (EDT)
+Date:   Wed, 10 Jun 2020 08:51:37 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Gavin Shan <gshan@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 05/10] KVM: x86: interrupt based APF 'page ready'
+ event delivery
+Message-ID: <20200610125137.GA243520@redhat.com>
+References: <20200525144125.143875-1-vkuznets@redhat.com>
+ <20200525144125.143875-6-vkuznets@redhat.com>
+ <20200609191035.GA223235@redhat.com>
+ <dcdda87c-cf2f-da6f-3166-e2d0bfefce06@redhat.com>
+ <873673b8gc.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200609123748.18636-1-vincent.guittot@linaro.org>
+In-Reply-To: <873673b8gc.fsf@vitty.brq.redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 02:37:48PM +0200, Vincent Guittot wrote:
-> With commit:
->   'b7031a02ec75 ("sched/fair: Add NOHZ_STATS_KICK")'
-> rebalance_domains of the local cfs_rq happens before others idle cpus have
-> updated nohz.next_balance and its value is overwritten.
+On Wed, Jun 10, 2020 at 11:01:39AM +0200, Vitaly Kuznetsov wrote:
+> Paolo Bonzini <pbonzini@redhat.com> writes:
 > 
-> Move the update of nohz.next_balance for other idles cpus before balancing
-> and updating the next_balance of local cfs_rq.
+> > On 09/06/20 21:10, Vivek Goyal wrote:
+> >> Hi Vitaly,
+> >> 
+> >> Have a question about page ready events. 
+> >> 
+> >> Now we deliver PAGE_NOT_PRESENT page faults only if guest is not in
+> >> kernel mode. So say kernel tried to access a page and we halted cpu.
+> >> When page is available, we will inject page_ready interrupt. At
+> >> that time we don't seem to check whether page_not_present was injected
+> >> or not. 
+> >> 
+> >> IOW, we seem to deliver page_ready irrespective of the fact whether
+> >> PAGE_NOT_PRESENT was delivered or not. And that means we will be
+> >> sending page present tokens to guest. Guest will not have a state
+> >> associated with that token and think that page_not_present has
+> >> not been delivered yet and allocate an element in hash table for
+> >> future page_not_present event. And that will lead to memory leak
+> >> and token conflict etc.
+> >
+> > Yes, and this is https://bugzilla.kernel.org/show_bug.cgi?id=208081
+> > which I was looking at right today.
+> >
 > 
-> Also, the nohz.next_balance is now updated only if all idle cpus got a
-> chance to rebalance their domains and the idle balance has not been aborted
-> because of new activities on the CPU. In case of need_resched, the idle
-> load balance will be kick the next jiffie in order to address remaining
-> ilb.
+> The issue isn't related to the interrupt based APF mechanism, right?
+> 'Page ready' events are always injected (sooner or later). I'll take a
+> look.
 > 
-> Reported-by: Peng Liu <iwtbavbm@gmail.com>
-> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> >> While setting up async pf, should we keep track whether associated
+> >> page_not_present was delivered to guest or not and deliver page_ready
+> >> accordingly.
+> >
+> > Yes, I think so.
+> >
+> 
+> Something like this? (not even compile tested yet):
+> 
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 8e8fea13b6c7..68178d29d35c 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1661,7 +1661,7 @@ void kvm_make_scan_ioapic_request(struct kvm *kvm);
+>  void kvm_make_scan_ioapic_request_mask(struct kvm *kvm,
+>  				       unsigned long *vcpu_bitmap);
+>  
+> -void kvm_arch_async_page_not_present(struct kvm_vcpu *vcpu,
+> +bool kvm_arch_async_page_not_present(struct kvm_vcpu *vcpu,
+>  				     struct kvm_async_pf *work);
+>  void kvm_arch_async_page_present(struct kvm_vcpu *vcpu,
+>  				 struct kvm_async_pf *work);
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index c26dd1363151..e1e840df6b69 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -10515,7 +10515,7 @@ bool kvm_can_do_async_pf(struct kvm_vcpu *vcpu)
+>  	return kvm_arch_interrupt_allowed(vcpu);
+>  }
+>  
+> -void kvm_arch_async_page_not_present(struct kvm_vcpu *vcpu,
+> +bool kvm_arch_async_page_not_present(struct kvm_vcpu *vcpu,
+>  				     struct kvm_async_pf *work)
+>  {
+>  	struct x86_exception fault;
+> @@ -10532,17 +10532,19 @@ void kvm_arch_async_page_not_present(struct kvm_vcpu *vcpu,
+>  		fault.address = work->arch.token;
+>  		fault.async_page_fault = true;
+>  		kvm_inject_page_fault(vcpu, &fault);
+> -	} else {
+> -		/*
+> -		 * It is not possible to deliver a paravirtualized asynchronous
+> -		 * page fault, but putting the guest in an artificial halt state
+> -		 * can be beneficial nevertheless: if an interrupt arrives, we
+> -		 * can deliver it timely and perhaps the guest will schedule
+> -		 * another process.  When the instruction that triggered a page
+> -		 * fault is retried, hopefully the page will be ready in the host.
+> -		 */
+> -		kvm_make_request(KVM_REQ_APF_HALT, vcpu);
+> +		return true;
+>  	}
+> +
+> +	/*
+> +	 * It is not possible to deliver a paravirtualized asynchronous
+> +	 * page fault, but putting the guest in an artificial halt state
+> +	 * can be beneficial nevertheless: if an interrupt arrives, we
+> +	 * can deliver it timely and perhaps the guest will schedule
+> +	 * another process.  When the instruction that triggered a page
+> +	 * fault is retried, hopefully the page will be ready in the host.
+> +	 */
+> +	kvm_make_request(KVM_REQ_APF_HALT, vcpu);
+> +	return false;
+>  }
+>  
+>  void kvm_arch_async_page_present(struct kvm_vcpu *vcpu,
+> @@ -10559,7 +10561,8 @@ void kvm_arch_async_page_present(struct kvm_vcpu *vcpu,
+>  		kvm_del_async_pf_gfn(vcpu, work->arch.gfn);
+>  	trace_kvm_async_pf_ready(work->arch.token, work->cr2_or_gpa);
+>  
+> -	if (kvm_pv_async_pf_enabled(vcpu) &&
+> +	if (work->notpresent_injected &&
+> +	    kvm_pv_async_pf_enabled(vcpu) &&
+>  	    !apf_put_user_ready(vcpu, work->arch.token)) {
+>  		vcpu->arch.apf.pageready_pending = true;
+>  		kvm_apic_set_irq(vcpu, &irq, NULL);
+> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> index 802b9e2306f0..2456dc5338f8 100644
+> --- a/include/linux/kvm_host.h
+> +++ b/include/linux/kvm_host.h
+> @@ -206,6 +206,7 @@ struct kvm_async_pf {
+>  	unsigned long addr;
+>  	struct kvm_arch_async_pf arch;
+>  	bool   wakeup_all;
+> +	bool notpresent_injected;
+>  };
+>  
+>  void kvm_clear_async_pf_completion_queue(struct kvm_vcpu *vcpu);
+> diff --git a/virt/kvm/async_pf.c b/virt/kvm/async_pf.c
+> index f1e07fae84e9..de28413abefd 100644
+> --- a/virt/kvm/async_pf.c
+> +++ b/virt/kvm/async_pf.c
+> @@ -189,12 +189,14 @@ int kvm_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+>  		goto retry_sync;
+>  
+>  	INIT_WORK(&work->work, async_pf_execute);
+> -	if (!schedule_work(&work->work))
+> -		goto retry_sync;
+>  
+>  	list_add_tail(&work->queue, &vcpu->async_pf.queue);
+>  	vcpu->async_pf.queued++;
+> -	kvm_arch_async_page_not_present(vcpu, work);
+> +	work->notpresent_injected = kvm_arch_async_page_not_present(vcpu, work);
+> +
+> +	/* schedule_work() only fails for already queued works */
+> +	schedule_work(&work->work);
+> +
+>  	return 1;
+>  retry_sync:
+
+This label and associated logic can go away as we are not expecting
+error from schedule_work().
+
+>  	kvm_put_kvm(work->vcpu->kvm);
+> @@ -216,6 +218,7 @@ int kvm_async_pf_wakeup_all(struct kvm_vcpu *vcpu)
+>  		return -ENOMEM;
+>  
+>  	work->wakeup_all = true;
+> +	work->notpresent_injected = true;
+
+This probably is not needed. We already have work->wakeup_all set and
+this has to be always injected. There is no associated page_not_present
+event. IMHO, it probably is cleaner to not set it for  wake up all
+events and check work->wakeup_all instead and always inject it.
+
+Once you have final patch, I will test it. I have now configured nvdimm
+device with a file backing the device. I drop the page cache on host
+and that means any page accessed in guest triggers async pf on host. So
+I can easily test it.
 
 Thanks
+Vivek
+
