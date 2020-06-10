@@ -2,101 +2,97 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF0CCC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C610DC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:23:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C550F20734
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:22:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90CB320734
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:23:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591802587;
+	bh=3tOvKZALFeC10KTluWq5qeYGwZcCp6/RMxk7/aiNMFc=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=08aFRhSJdfYJrt9d9VjcOy+OvTzN8F54NI02A9oM5CJe5EWZVVJWrjKbZi0Z7zmQI
+	 KVOAfN0A3qXrErIcJkHiRKqAfLbrLiUVv/L2+o49y2u2Y2xDQUnyx5Pe22/vkMdJwH
+	 EpgBuOZijKF15Q5muqHE/uZEQSBuVQDrtvLL5gvk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730135AbgFJPWI (ORCPT
+        id S1730146AbgFJPXG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 11:22:08 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:57116 "EHLO ns.iliad.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728264AbgFJPWH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 11:22:07 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 87561202F1;
-        Wed, 10 Jun 2020 17:22:05 +0200 (CEST)
-Received: from [192.168.108.51] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id 71E2D20187;
-        Wed, 10 Jun 2020 17:22:05 +0200 (CEST)
-Subject: Re: Scanning for TV channels over DVB-T and DVB-T2
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-To:     linux-media <linux-media@vger.kernel.org>,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jan Pieter van Woerkom <jp@jpvw.nl>,
-        Brad Love <brad@nextdimension.cc>,
-        Antti Palosaari <crope@iki.fi>
-Cc:     LKML <linux-kernel@vger.kernel.org>
-References: <11fbc112-c410-8c67-9bcb-9450924d12ef@free.fr>
- <4904d37d-1cd4-b8f3-9c3c-82eb4569bca7@free.fr>
-Message-ID: <778d08be-b606-018a-c2bc-164fbbc33615@free.fr>
-Date:   Wed, 10 Jun 2020 17:22:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 10 Jun 2020 11:23:06 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:41652 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728331AbgFJPXF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 11:23:05 -0400
+Received: by mail-lj1-f196.google.com with SMTP id 9so2979789ljc.8;
+        Wed, 10 Jun 2020 08:23:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QRq2KlneLdvkgeGBvtIInEMf7/XC7XYNm4CS79Oqsg4=;
+        b=abhvCwhEHlvz/aF/av8p7DmDbjWN9PH94N017tzz6gGagHr4ZQqC3DtFXXLyNaLpZ5
+         +gEL/1xGKVm7vG0WEWoS3iMD27jStzGLF8h4ZYeiNk5gUr66kDD88M4HYjL6T/hYWzas
+         TeeWg+k+h+4UVEk4yE+/SnwrwQDx8FDrrTj1/gRW3c0n+IshmcLcxPDPc2ZvwnETw4ik
+         KTCQeksUFab67F57iddqUzA+rwyYDLCIH7sp0rh4DqA+w3FxHLv3ArKSMWvp198GefT4
+         /dsfUJTRT/EFinOU2qoI5NbR+DHt72324VniLE7XXuMNB6vnk8PgvvlKJMjipqm6g7bB
+         BPLQ==
+X-Gm-Message-State: AOAM532pfHW+V8y+E0CJPplAFemAlf4XF88/v8J6n2RfkneRv4lJx2e8
+        eMkPVaxgV8RM3nQFsrvpEnc=
+X-Google-Smtp-Source: ABdhPJzcctVka+CvL+lqcnWENwKg+C6fHk331iDt6j+G8x1gzpyqy2MkkCfHZxfZ97erli7naaQwGA==
+X-Received: by 2002:a2e:92d5:: with SMTP id k21mr2029404ljh.445.1591802583688;
+        Wed, 10 Jun 2020 08:23:03 -0700 (PDT)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id u6sm9610ljk.109.2020.06.10.08.23.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2020 08:23:01 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.93.0.4)
+        (envelope-from <johan@xi.terra>)
+        id 1jj2Z8-0004Po-6c; Wed, 10 Jun 2020 17:22:58 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Jiri Slaby <jslaby@suse.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH v2 0/3] serial: core: fix up sysrq regressions
+Date:   Wed, 10 Jun 2020 17:22:29 +0200
+Message-Id: <20200610152232.16925-1-johan@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <4904d37d-1cd4-b8f3-9c3c-82eb4569bca7@free.fr>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Wed Jun 10 17:22:05 2020 +0200 (CEST)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/06/2020 16:31, Marc Gonzalez wrote:
+This series fixes a few regressions introduced by the recent sysrq
+rework that went into 5.6.
 
-> On 08/06/2020 17:30, Marc Gonzalez wrote:
-> 
->> Suppose we know that several channels are transmitted on a given frequency
->> by terrestrial antenna. However, we don't know if the signal is "encoded"
->> (not sure this is the right term) in DVB-T or DVB-T2 modulation.
->>
->> Do we have to scan the frequency /twice/
->> first with DTV_DELIVERY_SYSTEM = SYS_DVBT
->>  then with DTV_DELIVERY_SYSTEM = SYS_DVBT2 ?
->>
->> Or is there some optimization where both modulations are handled
->> in a single step?
->>
->> Or maybe it depends on the tuner driver?
-> 
-> Digging a bit deeper...
-> 
-> My system sports a Silicon Labs Si2168 DVB-T2/T/C demodulator
-> 
-> The data sheet states:
-> 
-> "For DVB-T2 and T2-Lite:
-> 	DVB-T2 versus DVB-T automatic detection"
-> 
-> "In DVB-T and DVB-T2 reception, parameters necessary for device synchronization
-> are broadcast in the transmission parameters (respectively TPS and P1 symbol).
-> When these transmission parameters are found and decoded, the demodulator is
-> automatically and accordingly configured to achieve full synchronization."
-> 
-> 
-> This HW is supported upstream by drivers/media/dvb-frontends/si2168.c
-> https://elixir.bootlin.com/linux/latest/source/drivers/media/dvb-frontends/si2168.c
-> 
-> I have a nagging feeling because si2168_set_frontend() appears to
-> behave differently for SYS_DVBT and for SYS_DVBT2...
-> 
-> https://elixir.bootlin.com/linux/latest/source/drivers/media/dvb-frontends/si2168.c#L250
-> https://elixir.bootlin.com/linux/latest/source/drivers/media/dvb-frontends/si2168.c#L297
-> https://elixir.bootlin.com/linux/latest/source/drivers/media/dvb-frontends/si2168.c#L345
-> 
-> Maybe setting SYS_DVBT2 would also work for DVB-T transmissions?
-> (TODO: test that)
-> 
-> Any insight would be greatly appreciated.
+The fix for the unnecessary per-character overhead probably could have
+been marked for stable but I left that decision to the maintainers as it
+is a bit intrusive (although mostly shuffling code around).
 
-FTR, on IRC, Brad pointed out this patch of his:
-https://patchwork.kernel.org/patch/10744999/
+Johan
+
+Changes in v2
+ - inline uart_unlock_and_check_sysrq() along with the other helpers
+   (restoring the interrupt state in a helper was never an issue)
+
+
+Johan Hovold (3):
+  Revert "serial: core: Refactor uart_unlock_and_check_sysrq()"
+  serial: core: fix sysrq overhead regression
+  serial: core: drop redundant sysrq checks
+
+ drivers/tty/serial/serial_core.c |  96 +----------------------------
+ include/linux/serial_core.h      | 102 +++++++++++++++++++++++++++++--
+ 2 files changed, 100 insertions(+), 98 deletions(-)
+
+-- 
+2.26.2
+
