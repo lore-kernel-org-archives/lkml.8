@@ -2,143 +2,77 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9484CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB19C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EB472072E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:08:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="l00YqhZu"
+	by mail.kernel.org (Postfix) with ESMTP id 61D5E2072E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:08:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbgFJVID (ORCPT
+        id S1726379AbgFJVIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 17:08:03 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:59316 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726134AbgFJVIC (ORCPT
+        Wed, 10 Jun 2020 17:08:25 -0400
+Received: from smtprelay0114.hostedemail.com ([216.40.44.114]:50876 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726353AbgFJVIZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 17:08:02 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05AL6ZKo049476;
-        Wed, 10 Jun 2020 21:07:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2020-01-29;
- bh=D8dZBcbd0rS3Mfv7fJRsU05nZ7ZNUJshc+qX8byxghM=;
- b=l00YqhZu6VQKiuY2NcMYYhH2xKq6Xu3lotQq2J9LMSOioRLNXq/0xMAMtAzNda/ERupI
- AJmQSL8zDZ2mcKUUymKxwlxJmc9AJzVjlOMkUndwHqAq7TfVu05/+vs8F8c6X5BgLz8U
- 9DkPoZ6HNqAn5LYJQUXlDCP/CGRlK8UywXe+S5nRw5Sm5JUttK/3Vq5tkEwO9+dW5JDg
- crXMz5euEmReQ0XtvMRB8ET3voelroEqNITATRrCQD+C9MKKClcEqumfJWsz/gpH7csm
- j+aL2CYKrjkDllLHyf2j3D3TvGZFXc4zo/hOBIwcTuElzOnvrK5c3Qexs2m1WP1Paqus /g== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 31g2jrcma8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 10 Jun 2020 21:07:52 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05AKiSOm132390;
-        Wed, 10 Jun 2020 21:05:51 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by userp3020.oracle.com with ESMTP id 31gmwtve3t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 10 Jun 2020 21:05:51 +0000
-Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05AL5o8c021995;
-        Wed, 10 Jun 2020 21:05:51 GMT
-Received: from localhost.localdomain (dhcp-10-65-148-96.vpn.oracle.com [10.65.148.96])
-        by userp3020.oracle.com with ESMTP id 31gmwtve2s-2;
-        Wed, 10 Jun 2020 21:05:51 +0000
-From:   Tom Hromatka <tom.hromatka@oracle.com>
-To:     tom.hromatka@oracle.com, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Cc:     fweisbec@gmail.com, tglx@linutronix.de, mingo@kernel.org,
-        adobriyan@gmail.com
-Subject: [PATCH 1/2] tick-sched: Do not clear the iowait and idle times
-Date:   Wed, 10 Jun 2020 15:05:48 -0600
-Message-Id: <20200610210549.61193-2-tom.hromatka@oracle.com>
-X-Mailer: git-send-email 2.25.3
-In-Reply-To: <20200610210549.61193-1-tom.hromatka@oracle.com>
-References: <20200610210549.61193-1-tom.hromatka@oracle.com>
+        Wed, 10 Jun 2020 17:08:25 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id DAFF318029137;
+        Wed, 10 Jun 2020 21:08:23 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: smile40_320491826dce
+X-Filterd-Recvd-Size: 1830
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf16.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 10 Jun 2020 21:08:22 +0000 (UTC)
+Message-ID: <fe98c147136c5625641d14bf70b13ffbfaeb025a.camel@perches.com>
+Subject: Re: [PATCH] checkpatch: add --max-file-size option
+From:   Joe Perches <joe@perches.com>
+To:     Scott Branden <scott.branden@broadcom.com>,
+        Andy Whitcroft <apw@canonical.com>
+Cc:     BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 10 Jun 2020 14:08:21 -0700
+In-Reply-To: <20200610205616.9965-1-scott.branden@broadcom.com>
+References: <20200610205616.9965-1-scott.branden@broadcom.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9648 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 impostorscore=0
- cotscore=-2147483648 priorityscore=1501 spamscore=0 suspectscore=0
- lowpriorityscore=0 bulkscore=0 mlxlogscore=999 malwarescore=0 mlxscore=0
- phishscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006100155
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A customer reported that when a cpu goes offline and then comes back
-online, the overall cpu idle and iowait data in /proc/stat decreases.
-This is wreaking havoc with their cpu usage calculations.
+On Wed, 2020-06-10 at 13:56 -0700, Scott Branden wrote:
+> Add --max-file-size option (default off) to limit size of files
+> that checkpatch processes.  Such an option is useful when checkpatch
+> is run automatically during checkins to a source control system and
+> someone acccidently or purposely attempt to commit massive size files
+> to the system.  If the checkpatch script runs on such files it could take
+> a long time to run and limit the server's ability to perform other
+> operations.
 
-Prior to this patch:
+Does everything need to be in checkpatch or can this facility
+be run by a separate script that does the file size validation
+before running checkpatch?
 
-	        user nice system    idle iowait
-	cpu  1390748  636 209444 9802206  19598
-	cpu1  178384   75  24545 1392450   3025
+Also:
 
-take cpu1 offline and bring it back online
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+[]
+> +	if ($max_file_size > 0) {
+> +		my $filesize = -s$FILE;
 
-	        user nice system    idle iowait
-	cpu  1391209  636 209682 8453440  16595
-	cpu1  178440   75  24572     627      0
+Does this work if the input file is from STDIN?
+I'd guess it does not.
 
-To prevent this, do not clear the idle and iowait times for the
-cpu that has come back online.
+I think this might be better using (stat($FILE))[7]
+or at least a space between -s and $file.
 
-With this patch:
-
-	        user nice system    idle iowait
-	cpu   129913   17  17590  166512    704
-	cpu1   15916    3   2395   20989     47
-
-take cpu1 offline and bring it back online
-
-	        user nice system    idle iowait
-	cpu   130089   17  17686  184625    711
-        cpu1   15942    3   2401   23088     47
-
-Signed-off-by: Tom Hromatka <tom.hromatka@oracle.com>
----
- kernel/time/tick-sched.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
-index 3e2dc9b8858c..8103bad7bbd6 100644
---- a/kernel/time/tick-sched.c
-+++ b/kernel/time/tick-sched.c
-@@ -1375,13 +1375,22 @@ void tick_setup_sched_timer(void)
- void tick_cancel_sched_timer(int cpu)
- {
- 	struct tick_sched *ts = &per_cpu(tick_cpu_sched, cpu);
-+	ktime_t idle_sleeptime, iowait_sleeptime;
- 
- # ifdef CONFIG_HIGH_RES_TIMERS
- 	if (ts->sched_timer.base)
- 		hrtimer_cancel(&ts->sched_timer);
- # endif
- 
-+	/* save off and restore the idle_sleeptime and the iowait_sleeptime
-+	 * to avoid discontinuities and ensure that they are monotonically
-+	 * increasing
-+	 */
-+	idle_sleeptime = ts->idle_sleeptime;
-+	iowait_sleeptime = ts->iowait_sleeptime;
- 	memset(ts, 0, sizeof(*ts));
-+	ts->idle_sleeptime = idle_sleeptime;
-+	ts->iowait_sleeptime = iowait_sleeptime;
- }
- #endif
- 
--- 
-2.25.3
 
