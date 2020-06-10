@@ -2,176 +2,154 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4BDDC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 03:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 061CBC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 03:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABB3420737
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 03:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D263E20737
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 03:23:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XVJhVenJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mNgWJODn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726105AbgFJDWl (ORCPT
+        id S1726151AbgFJDXg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 23:22:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45252 "EHLO
+        Tue, 9 Jun 2020 23:23:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbgFJDWk (ORCPT
+        with ESMTP id S1725999AbgFJDXg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 23:22:40 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DCC9C05BD1E
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 20:22:39 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id 69so610803otv.2
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 20:22:39 -0700 (PDT)
+        Tue, 9 Jun 2020 23:23:36 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60F6FC05BD1E
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 20:23:35 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id i16so697607qtr.7
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 20:23:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=hHH9e/LiOW5H3k9fW9AUTTMwkhJh6YJBdmz/N3uFEuo=;
-        b=XVJhVenJbge0EJlY/D27dtJq6OjTVaxc3kSV5ZZZCuWVDJpXLNUEQ09Zo/uvIh2X/i
-         4JmhwPMUkfBrnVCqR9BsXP0zqduoCC9+kBisKz0cpZSDuOTQQjVGH7C25YVzb9uq1zfk
-         XKftOKeOXeyho8NhPGubvDBR4gDvLo5kPwkZ5K6wPvoxlCuPlv1GmoqrnsFrl3+53FEH
-         o0StwJIYUD9o9Ib2hY/MgLOUGXZ4tZZPOTjL7jt3oYX+OoqoxGlh9wgJMnyduIMCdwQc
-         lH9RGelXuLRj+tHiaCkPH3qD8HA09k3u2LqXxxt8eVFX6kRR0RoQ9ry94ViruOtngRsF
-         ESJw==
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=HK9ir5YqLJV5ZUuAryCYskq/ln3yZyDIMSHc1NLebXg=;
+        b=mNgWJODnGAFOJr8jjBzMg/pgjvwUpSTYa8yWWLmwL2RF6xCJyqVM38dwoYwwBXtybT
+         xlexCTs6kvb0Y1mBI3o+EY9N1BIn4kdPIQJ80DAhUO6JYcBvNAwsRKDucMPoiy7V8G6F
+         z+Yb7/i696nor9y1Hfw5V5t1KLoBSvn12Y43vWyNcUnVtO6l7nYkS7z0gtttaEreeEc0
+         nd7b2a7QSsS0TaoYoYtC7Nva+gh52slD5wHVfCweLI72wYh70SPZnWAB6JWtrIrxds9D
+         OZVzhmJ62/BemwfzC5G1J36B7OSWAF0FlbYbjaGrYscQPgwIjQG7TIlJzsAq9VI0SKGB
+         qaDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=hHH9e/LiOW5H3k9fW9AUTTMwkhJh6YJBdmz/N3uFEuo=;
-        b=J8CW14+73/mR2E6PvOgAAo+EKUnyG8bzOgoXGaCMWUSVkNEEFn6pjTRxqGA3dBBeDA
-         WzQOnsmHxFrUBVs7aP5oJwP8bIsIXTPtQFAhspLaTvTfLJbPdPGZiM7RZy+4UoxmxYvy
-         LP5DDqsLStX5+4S5R+nws9rC2E/8cIJioQEAzSlmkWQC+4BMIdGKNol0J388F/1RfsGI
-         cP/XBPdr4lIoSHwIHtna4VZVZhbneGNtltS1QzVH/rqETDwWl8xJHZPVCtEQF49pJSbQ
-         LQOQL6KgxTE0MQsmOrU9X5bCvBnlJuW6JJrx/skp/wlGOvwkol0vS1gzg5ryxKwl83ia
-         h0sg==
-X-Gm-Message-State: AOAM533wszWbZybNopmB4xQLdHKqevBryfOCFYe1RAKY52UjR8QBdK64
-        pWedgFUIlzQMhZPeSfyKDb/BEw==
-X-Google-Smtp-Source: ABdhPJx8TFQhzDmzqiHaHJXj5Ts880eSan4PQLvc/01qOh7b7uB2a7s9lFYXfIyLy3HCZo2Jr4jC8g==
-X-Received: by 2002:a9d:220c:: with SMTP id o12mr1128942ota.155.1591759357385;
-        Tue, 09 Jun 2020 20:22:37 -0700 (PDT)
-Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id a64sm3622078oib.43.2020.06.09.20.22.34
-        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
-        Tue, 09 Jun 2020 20:22:36 -0700 (PDT)
-Date:   Tue, 9 Jun 2020 20:22:13 -0700 (PDT)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-cc:     Hugh Dickins <hughd@google.com>, akpm@linux-foundation.org,
-        mgorman@techsingularity.net, tj@kernel.org,
-        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
-        yang.shi@linux.alibaba.com, willy@infradead.org,
-        hannes@cmpxchg.org, lkp@intel.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-        shakeelb@google.com, iamjoonsoo.kim@lge.com,
-        richard.weiyang@gmail.com
-Subject: Re: [PATCH v11 00/16] per memcg lru lock
-In-Reply-To: <31943f08-a8e8-be38-24fb-ab9d25fd96ff@linux.alibaba.com>
-Message-ID: <alpine.LSU.2.11.2006091904530.2779@eggly.anvils>
-References: <1590663658-184131-1-git-send-email-alex.shi@linux.alibaba.com> <alpine.LSU.2.11.2006072100390.2001@eggly.anvils> <31943f08-a8e8-be38-24fb-ab9d25fd96ff@linux.alibaba.com>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to;
+        bh=HK9ir5YqLJV5ZUuAryCYskq/ln3yZyDIMSHc1NLebXg=;
+        b=gIruLtRK1d3O/H14ETOfUelbADM44Sqi7xnsLb0yfjUWgrcw8XaorkKKE4JDfayzMo
+         83mLffyAEaruJmfQsgNVQ2JzDOz2yMi2rZAIgkdcR1ulQ25eomlqpE3307TNjPQ9DJOP
+         cUkeByVPUghQtYEwKLAeTift7tGNWvG1nx+tR1xKvliVThaLseVfGbQYQoOS6S0w7wgt
+         cGI1SVamIbqj9dW5fHKNBHpG9adwjy7szAIJD2n3fgCTp258bdZoMoqhAayGMxmCgDUz
+         gy2WAQ17LGbVYR+DJLtJ+Kke2+vrM+cl7CcPplbNQXh2zo2FGWgX20RGgMbFC3URLGaV
+         YC6Q==
+X-Gm-Message-State: AOAM532/M7TUX3yCSpPRKDLNbguc19doHwNffb96mRVt9+gak14UBI6C
+        UPlTWpB04Pl9SsKV5FwqCMA=
+X-Google-Smtp-Source: ABdhPJwAj5/Q0jNneQ0SG5B0LH6i0xFDcolUf/4TPeBL7yAavSO18ECr9nvS7d87d3Ga0Cv/mYqUzw==
+X-Received: by 2002:ac8:f47:: with SMTP id l7mr1137460qtk.292.1591759414495;
+        Tue, 09 Jun 2020 20:23:34 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id w3sm11717431qkb.85.2020.06.09.20.23.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2020 20:23:33 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Tue, 9 Jun 2020 23:23:31 -0400
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Rong Chen <rong.a.chen@intel.com>,
+        Fangrui Song <maskray@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        kernel test robot <lkp@intel.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        kbuild-all@lists.01.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [kbuild-all] Re: gcc-5: error: -gz is not supported in this
+ configuration
+Message-ID: <20200610032331.GA1928844@rani.riverdale.lan>
+References: <202006092115.nevT7m8D%lkp@intel.com>
+ <CAKwvOd=jjFS7XOWyYMZgLTYJtZ7uc=4dP-S4VhuyjNmT=2EcPw@mail.gmail.com>
+ <20200609174954.cckelwl6etwztmhv@google.com>
+ <05c88916-7d91-ad1a-1ea6-15167a994a0b@intel.com>
+ <20200610005830.s6gus7r3umwgzozk@google.com>
+ <c2c2c2db-439f-5c60-068d-e53adbe960c1@intel.com>
+ <20200610031225.GA1917869@rani.riverdale.lan>
 MIME-Version: 1.0
-Content-Type: MULTIPART/MIXED; BOUNDARY="0-761195576-1591759355=:2779"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200610031225.GA1917869@rani.riverdale.lan>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Tue, Jun 09, 2020 at 11:12:25PM -0400, Arvind Sankar wrote:
+> On Wed, Jun 10, 2020 at 09:49:01AM +0800, Rong Chen wrote:
+> > 
+> > 
+> > On 6/10/20 8:58 AM, Fangrui Song wrote:
+> > > On 2020-06-10, Rong Chen wrote:
+> > >>
+> > >>
+> > >> On 6/10/20 1:49 AM, Fangrui Song wrote:
+> > >>> On 2020-06-09, Nick Desaulniers wrote:
+> > >>>> On Tue, Jun 9, 2020 at 6:12 AM kernel test robot <lkp@intel.com> 
+> > >>>> wrote:
+> > >>>>>
+> > >>>>> tree: 
+> > >>>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 
+> > >>>>> master
+> > >>>>> head:   abfbb29297c27e3f101f348dc9e467b0fe70f919
+> > >>>>> commit: 10e68b02c861ccf2b3adb59d3f0c10dc6b5e3ace Makefile: support 
+> > >>>>> compressed debug info
+> > >>>>> date:   12 days ago
+> > >>>>> config: x86_64-randconfig-r032-20200609 (attached as .config)
+> > >>>>> compiler: gcc-5 (Ubuntu 5.5.0-12ubuntu1) 5.5.0 20171010
+> > >>>>> reproduce (this is a W=1 build):
+> > >>>>>         git checkout 10e68b02c861ccf2b3adb59d3f0c10dc6b5e3ace
+> > >>>>>         # save the attached .config to linux build tree
+> > >>>>>         make W=1 ARCH=x86_64
+> > >>>>>
+> > >>>>> If you fix the issue, kindly add following tag as appropriate
+> > >>>>> Reported-by: kernel test robot <lkp@intel.com>
+> > >>>>>
+> > >>>>> All errors (new ones prefixed by >>, old ones prefixed by <<):
+> > >>>>>
+> > >>>>>>> gcc-5: error: -gz is not supported in this configuration
+> > >>>>
+> > >>>> Hmm...I wonder if the feature detection is incomplete?  I suspect it's
+> > >>>> possible to not depend on zlib.
+> > >>>>
+> > >>>>> make[2]: *** [scripts/Makefile.build:277: scripts/mod/empty.o] 
+> > >>>>> Error 1
+> > >>>>> make[2]: Target '__build' not remade because of errors.
+> > >>>>> make[1]: *** [Makefile:1169: prepare0] Error 2
+> > >>>>> make[1]: Target 'prepare' not remade because of errors.
+> > >>>>> make: *** [Makefile:185: __sub-make] Error 2
+> > >>>
+> > >>> The output of gcc-5 -v --version on that machine may help. The
+> > >>> convoluted gcc_cv_ld_compress_de logic in gcc/configure.ac may be
+> > >>> related, but I can't find any mistake that our
+> > >>> CONFIG_DEBUG_INFO_COMPRESSED conditions may make.
+> > >>
+> 
+> The output of gcc-5 -dumpspecs may also be useful.
+> 
+> The exact Kconfig check should have been
+> 	gcc-5 -Werror -gz=zlib -S -x c /dev/null -o /dev/null
+> 
+> I can't see how that would succeed if the a.c test didn't but maybe just
+> in case?
 
---0-761195576-1591759355=:2779
-Content-Type: TEXT/PLAIN; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-
-On Mon, 8 Jun 2020, Alex Shi wrote:
-> =E5=9C=A8 2020/6/8 =E4=B8=8B=E5=8D=8812:15, Hugh Dickins =E5=86=99=E9=81=
-=93:
-> >>  24 files changed, 487 insertions(+), 312 deletions(-)
-> > Hi Alex,
-> >=20
-> > I didn't get to try v10 at all, waited until Johannes's preparatory
-> > memcg swap cleanup was in mmotm; but I have spent a while thrashing
-> > this v11, and can happily report that it is much better than v9 etc:
-> > I believe this memcg lru_lock work will soon be ready for v5.9.
-> >=20
-> > I've not yet found any flaw at the swapping end, but fixes are needed
-> > for isolate_migratepages_block() and mem_cgroup_move_account(): I've
-> > got a series of 4 fix patches to send you (I guess two to fold into
-> > existing patches of yours, and two to keep as separate from me).
-> >=20
-> > I haven't yet written the patch descriptions, will return to that
-> > tomorrow.  I expect you will be preparing a v12 rebased on v5.8-rc1
-> > or v5.8-rc2, and will be able to include these fixes in that.
->=20
-> I am very glad to get your help on this feature!=20
->=20
-> and looking forward for your fixes tomorrow. :)
->=20
-> Thanks a lot!
-> Alex
-
-Sorry, Alex, the news is not so good today.
-
-You'll have noticed I sent nothing yesterday. That's because I got
-stuck on my second patch: could not quite convince myself that it
-was safe.
-
-I keep hinting at these patches, and I can't complete their writeups
-until I'm convinced; but to give you a better idea of what they do:
-
-1. Fixes isolate_fail and isolate_abort in isolate_migratepages_block().
-2. Fixes unsafe use of trylock_page() in __isolate_lru_page_prepare().
-3. Reverts 07/16 inversion of lock ordering in split_huge_page_to_list().
-4. Adds lruvec lock protection in mem_cgroup_move_account().
-
-In the second, I was using rcu_read_lock() instead of trylock_page()
-(like in my own patchset), but could not quite be sure of the case when
-PageSwapCache gets set at the wrong moment. Gave up for the night, and
-in the morning abandoned that, instead just shifting the call to
-__isolate_lru_page_prepare() after the get_page_unless_zero(),
-where that trylock_page() becomes safe (no danger of stomping on page
-flags while page is being freed or newly allocated to another owner).
-
-I thought that a very safe change, but best to do some test runs with
-it in before finalizing. And was then unpleasantly surprised to hit a
-VM_BUG_ON_PAGE(lruvec_memcg(lruvec) !=3D page->mem_cgroup) from
-lock_page_lruvec_irqsave < relock_page_lruvec < pagevec_lru_move_fn <
-pagevec_move_tail < lru_add_drain_cpu after 6 hours on one machine.
-Then similar but < rotate_reclaimable_page after 8 hours on another.
-
-Only seen once before: that's what drove me to add patch 4 (with 3 to
-revert the locking before it): somehow, when adding the lruvec locking
-there, I just took it for granted that your patchset would have the
-appropriate locking (or TestClearPageLRU magic) at the other end.
-
-But apparently not. And I'm beginning to think that TestClearPageLRU
-was just to distract the audience from the lack of proper locking.
-
-I have certainly not concluded that yet, but I'm having to think about
-an area of the code which I'd imagined you had under control (and I'm
-puzzled why my testing has found it so very hard to hit). If we're
-lucky, I'll find that pagevec_move_tail is a special case, and
-nothing much else needs changing; but I doubt that will be so.
-
-There's one other unexplained and unfixed bug I've seen several times
-while exercising mem_cgroup_move_account(): refcount_warn_saturate()
-from where __mem_cgroup_clear_mc() calls mem_cgroup_id_get_many().
-I'll be glad if that goes away when the lruvec locking is fixed,
-but don't understand the connection. And it's quite possible that
-this refcounting bug has nothing to do with your changes: I have
-not succeeded in reproducing it on 5.7 nor on 5.7-rc7-mm1,
-but I didn't really try long enough to be sure.
-
-(I should also warn, that I'm surprised by the amount of change
-11/16 makes to mm/mlock.c: I've not been exercising mlock at all.)
-
-Taking a break for the evening,
-Hugh
---0-761195576-1591759355=:2779--
+Oh wait, -S instead of -c. Which means it runs neither the assembler nor
+the linker, so gcc won't error out. But if that gcc was originally
+_configured_ with a version of binutils that doesn't support -gz=zlib,
+it will give an error on -c regardless of whether the runtime binutils
+would actually support it or not.
