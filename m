@@ -2,157 +2,102 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF829C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 22:20:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC57C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 22:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C58E3206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 22:20:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QyyXrmeK"
+	by mail.kernel.org (Postfix) with ESMTP id A71BF206F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 22:23:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726724AbgFJWUh (ORCPT
+        id S1726582AbgFJWW6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 18:20:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51958 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726374AbgFJWUf (ORCPT
+        Wed, 10 Jun 2020 18:22:58 -0400
+Received: from smtprelay0143.hostedemail.com ([216.40.44.143]:59178 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726374AbgFJWW6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 18:20:35 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE4E2C03E96B
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 15:20:34 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id c1so2247903vsc.11
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 15:20:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gbYrwjkRNzZs52wtNe5b9ymrBledc5fgJdW/7CYMczg=;
-        b=QyyXrmeKJSKKc54VOXRhBA48lstvw0q3ctLwmRUmYvuniF6MaKqprw76G6WKeXgKXB
-         r/jbdUg8yJ7iw34oE1OWz0dWyMIlim7iHYcQtD67/ivBRy+I7B838Bxvx4JWOVUAxYN3
-         POzPLtPUSvRylefwwyiJnNCwZ28r+eFHCfQTlfjzukPMl52cDhRE0H8vA3A5R5qZ//vK
-         hyVJruxV9jjEt3XKZbDLdCyH9tLqObhgWfqQJpRCLqqkFBHz8EB0eQ7avKhqHHK0zYzj
-         RESHvTrXTKtZufFfvsuK5nk/vVANKcnKj1isrCHWI7ENKEYpAZgFY60ZfqvyNfgEDVAL
-         29Zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gbYrwjkRNzZs52wtNe5b9ymrBledc5fgJdW/7CYMczg=;
-        b=WinfFpmHGGgKnUdunfZ4dekxO0p3KhpTik6GVspBdh8Abawoc8ZmdCPO49D4efjOJ8
-         LMpMfXi6yPEYwaQoXYIgRNvcNlM3HPua94z7LmNk32sNF5AUYGoCpmEa63tS3tm8xbYi
-         /L4pNGhOVproZFxw75zQsJ7mEt9w9JRzvczj8m4SJZtKECoJoh90gzs7F9A2kJdxrkJG
-         OnwDQVVcuMDUR0trId9OIevgkr5SWswcJmTvNKFGXLKDSVF28ySCklR7nQ4VG2Og7OO1
-         JAdvBzxP4zC2/liHk7f1DmdRWlTLEh+/Pf5Wp/JenwkWgD6/UPgW8vGUQfKYXE7Rc0t+
-         cCMw==
-X-Gm-Message-State: AOAM531sBWgesSKKAOMwmlhPP70ZV9otyneWtwQVF6SC6xwV/IM/tonM
-        f6RNAT9Myq2Ocn4pF/mlfcVa47VlZrMr0js0J95Dcw==
-X-Google-Smtp-Source: ABdhPJzOjvq/kbEr1iPy17gDm6Y5SxC/Oi9n4y5NbS27Re14ZbRVe9raYSH+GiU0z+vIPd8N4LFp9am07TBNHW7Kx80=
-X-Received: by 2002:a67:d287:: with SMTP id z7mr4666597vsi.2.1591827633895;
- Wed, 10 Jun 2020 15:20:33 -0700 (PDT)
+        Wed, 10 Jun 2020 18:22:58 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 77216180431E1;
+        Wed, 10 Jun 2020 22:22:57 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: horse92_09036d126dce
+X-Filterd-Recvd-Size: 2747
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf02.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 10 Jun 2020 22:22:56 +0000 (UTC)
+Message-ID: <6e2e2095f1b6839ec78d41233fa8d908d1bd2bbe.camel@perches.com>
+Subject: Re: [PATCH] checkpatch: ignore CamelCase for inttypes.h format
+ specifiers
+From:   Joe Perches <joe@perches.com>
+To:     Scott Branden <scott.branden@broadcom.com>,
+        Andy Whitcroft <apw@canonical.com>
+Cc:     BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 10 Jun 2020 15:22:55 -0700
+In-Reply-To: <a3d5f2c5-40fb-c97d-8365-423213926e89@broadcom.com>
+References: <20200610203307.9344-1-scott.branden@broadcom.com>
+         <1b2d9ead79a5a035a287b7ecba8655b2c633d5cd.camel@perches.com>
+         <a3d5f2c5-40fb-c97d-8365-423213926e89@broadcom.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-References: <20200605213853.14959-1-sean.j.christopherson@intel.com> <20200605213853.14959-9-sean.j.christopherson@intel.com>
-In-Reply-To: <20200605213853.14959-9-sean.j.christopherson@intel.com>
-From:   Ben Gardon <bgardon@google.com>
-Date:   Wed, 10 Jun 2020 15:20:19 -0700
-Message-ID: <CANgfPd-19pam9sujfsk1pdrp8YhVft1+JAmSS=xgUULqXRyUDg@mail.gmail.com>
-Subject: Re: [PATCH 08/21] KVM: x86/mmu: Clean up the gorilla math in mmu_topup_memory_caches()
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Marc Zyngier <maz@kernel.org>, Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Feiner <pfeiner@google.com>,
-        Peter Shier <pshier@google.com>,
-        Junaid Shahid <junaids@google.com>,
-        Christoffer Dall <christoffer.dall@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 5, 2020 at 2:39 PM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> Clean up the minimums in mmu_topup_memory_caches() to document the
-> driving mechanisms behind the minimums.  Now that encountering an empty
-> cache is unlikely to trigger BUG_ON(), it is less dangerous to be more
-> precise when defining the minimums.
->
-> For rmaps, the logic is 1 parent PTE per level, plus a single rmap, and
-> prefetched rmaps.  The extra objects in the current '8 + PREFETCH'
-> minimum came about due to an abundance of paranoia in commit
-> c41ef344de212 ("KVM: MMU: increase per-vcpu rmap cache alloc size"),
-> i.e. it could have increased the minimum to 2 rmaps.  Furthermore, the
-> unexpected extra rmap case was killed off entirely by commits
-> f759e2b4c728c ("KVM: MMU: avoid pte_list_desc running out in
-> kvm_mmu_pte_write") and f5a1e9f89504f ("KVM: MMU: remove call to
-> kvm_mmu_pte_write from walk_addr").
->
-> For the so called page cache, replace '8' with 2*PT64_ROOT_MAX_LEVEL.
-> The 2x multiplier is needed because the cache is used for both shadow
-> pages and gfn arrays for indirect MMUs.
->
-> And finally, for page headers, replace '4' with PT64_ROOT_MAX_LEVEL.
->
-> Note, KVM now supports 5-level paging, i.e. the old minimums that used a
-> baseline derived from 4-level paging were technically wrong.  But, KVM
-> always allocates roots in a separate flow, e.g. it's impossible in the
-> current implementation to actually need 5 new shadow pages in a single
-> flow.  Use PT64_ROOT_MAX_LEVEL unmodified instead of subtracting 1, as
-> the direct usage is likely more intuitive to uninformed readers, and the
-> inflated minimum is unlikely to affect functionality in practice.
->
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Reviewed-by: Ben Gardon <bgardon@google.com>
-> ---
->  arch/x86/kvm/mmu/mmu.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index 4b4c3234d623..451e0365e5dd 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -1103,14 +1103,17 @@ static int mmu_topup_memory_caches(struct kvm_vcpu *vcpu)
->  {
->         int r;
->
-> +       /* 1 rmap, 1 parent PTE per level, and the prefetched rmaps. */
->         r = mmu_topup_memory_cache(&vcpu->arch.mmu_pte_list_desc_cache,
-> -                                  8 + PTE_PREFETCH_NUM);
-> +                                  1 + PT64_ROOT_MAX_LEVEL + PTE_PREFETCH_NUM);
->         if (r)
->                 return r;
-> -       r = mmu_topup_memory_cache(&vcpu->arch.mmu_page_cache, 8);
-> +       r = mmu_topup_memory_cache(&vcpu->arch.mmu_page_cache,
-> +                                  2 * PT64_ROOT_MAX_LEVEL);
->         if (r)
->                 return r;
-> -       return mmu_topup_memory_cache(&vcpu->arch.mmu_page_header_cache, 4);
-> +       return mmu_topup_memory_cache(&vcpu->arch.mmu_page_header_cache,
-> +                                     PT64_ROOT_MAX_LEVEL);
->  }
->
->  static void mmu_free_memory_caches(struct kvm_vcpu *vcpu)
-> --
-> 2.26.0
->
+On Wed, 2020-06-10 at 14:48 -0700, Scott Branden wrote:
+> 
+> On 2020-06-10 2:09 p.m., Joe Perches wrote:
+> > On Wed, 2020-06-10 at 13:33 -0700, Scott Branden wrote:
+> > > Ignore CamelCase for inttypes.h for fixed integer types format specifiers.
+> > > (ex. PRIx32 for uint32_t).
+> > Personally, I don't like those.
+> Checkpatch is run against a lot of code outside of the linux kernel but 
+> following linux coding style.
+
+I know.  I don't have any strong feeling about this either.
+
+But _this_ checkpatch is specifically for the linux-kernel.
+
+I just don't want to encourage a bunch of uses of these
+somewhat useless defines internal to linux-kernel sources.
+
+> There is nothing personal about this, they are the format specifiers in 
+> inttypes.h for fixed width types .
+
+True.  It's impersonal to me too.
+
+> > > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+[]
+> > > @@ -5157,6 +5157,8 @@ sub process {
+> > >   			    $var =~ /[A-Z][a-z]|[a-z][A-Z]/ &&
+> > >   #Ignore Page<foo> variants
+> > >   			    $var !~ /^(?:Clear|Set|TestClear|TestSet|)Page[A-Z]/ &&
+> > > +#Ignore inttypes.h scanf/printf format specifiers for fixed size integer types
+> > > +			    $var !~ /^(?:PRI|SCN)[dxoui](8|16|32|64|PTR|MAX)?$/ &&
+
+There are missing format specifiers.
+If this is done, the test should be against a variable
+
+Something like:
+
+our $inttype_format = qr{(?x:
+		(?:PRI|SCN)
+		[diouxX]
+		(?:FAST|LEAST)?
+		(?:8|16|32|64|MAX|PTR)
+};
+
+btw: what about 24, 48, 96, 128 and 256?
+
+> > >   #Ignore SI style variants like nS, mV and dB
+> > >   #(ie: max_uV, regulator_min_uA_show, RANGE_mA_VALUE)
+> > >   			    $var !~ /^(?:[a-z0-9_]*|[A-Z0-9_]*)?_?[a-z][A-Z](?:_[a-z0-9_]+|_[A-Z0-9_]+)?$/ &&
+
