@@ -2,199 +2,106 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D9F2C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62175C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5778B204EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:23:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FA58204EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:24:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728475AbgFJLXI (ORCPT
+        id S1728483AbgFJLYF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 07:23:08 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:53702 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728322AbgFJLXH (ORCPT
+        Wed, 10 Jun 2020 07:24:05 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:54116 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728322AbgFJLYE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 07:23:07 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 466B8634C87;
-        Wed, 10 Jun 2020 14:23:04 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1jiyox-0000ED-RI; Wed, 10 Jun 2020 14:23:03 +0300
-Date:   Wed, 10 Jun 2020 14:23:03 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, robh+dt@kernel.org, helen.koike@collabora.com,
-        digetx@gmail.com, sboyd@kernel.org, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-Subject: Re: [RFC PATCH v1 10/18] dt-bindings: tegra: Document VI and CSI
- port nodes
-Message-ID: <20200610112303.GB805@valkosipuli.retiisi.org.uk>
-References: <1591768960-31648-1-git-send-email-skomatineni@nvidia.com>
- <1591768960-31648-11-git-send-email-skomatineni@nvidia.com>
+        Wed, 10 Jun 2020 07:24:04 -0400
+Received: from fsav401.sakura.ne.jp (fsav401.sakura.ne.jp [133.242.250.100])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 05ABNb8c049454;
+        Wed, 10 Jun 2020 20:23:38 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav401.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav401.sakura.ne.jp);
+ Wed, 10 Jun 2020 20:23:37 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav401.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 05ABNWVG049156
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Wed, 10 Jun 2020 20:23:37 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Subject: Re: general protection fault in proc_kill_sb
+To:     viro@zeniv.linux.org.uk
+References: <0000000000002d7ca605a7b8b1c5@google.com>
+From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc:     syzbot <syzbot+4abac52934a48af5ff19@syzkaller.appspotmail.com>,
+        adobriyan@gmail.com, ebiederm@xmission.com,
+        gladkov.alexey@gmail.com, keescook@chromium.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Message-ID: <10cd85a7-2958-57a8-aa7e-0075194fc788@I-love.SAKURA.ne.jp>
+Date:   Wed, 10 Jun 2020 20:23:33 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1591768960-31648-11-git-send-email-skomatineni@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <0000000000002d7ca605a7b8b1c5@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sowjanya,
-
-Thanks for the patchset.
-
-On Tue, Jun 09, 2020 at 11:02:32PM -0700, Sowjanya Komatineni wrote:
-> This patch documents Tegra VI and CSI port and endpoint nodes along
-> with the other required properties.
+On 2020/06/10 19:56, syzbot wrote:
+> Hello,
 > 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  .../display/tegra/nvidia,tegra20-host1x.txt        | 87 ++++++++++++++++++++++
->  1 file changed, 87 insertions(+)
+> syzbot found the following crash on:
 > 
-> diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
-> index 4731921..f70a838 100644
-> --- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
-> +++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
-> @@ -65,6 +65,48 @@ of the following host1x client modules:
->        - power-domains: Must include sor powergate node as csicil is in
->          SOR partition.
->  
-> +      Optional properties for csi node:
+> HEAD commit:    7ae77150 Merge tag 'powerpc-5.8-1' of git://git.kernel.org..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=16e12212100000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=d195fe572fb15312
+> dashboard link: https://syzkaller.appspot.com/bug?extid=4abac52934a48af5ff19
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> 
+> Unfortunately, I don't have any reproducer for this crash yet.
 
-What hardware does the csi node represent? A CSI-2 receiver? Something
-else?
+The report says proc_sb_info(sb) == NULL at proc_kill_sb() which was called via
+fs->kill_sb(s) from deactivate_locked_super(). The console log says that memory
+allocation for proc_sb_info(sb) failed due to memory allocation fault injection.
 
-If you have two connections, you need two ports. The example isn't quite
-clear on this; it would appear to represent a single physical interface.
+[ 1492.052802][ T6840] FAULT_INJECTION: forcing a failure.
+[ 1492.052802][ T6840] name failslab, interval 1, probability 0, space 0, times 0
+[ 1492.077153][ T6840] CPU: 0 PID: 6840 Comm: syz-executor.2 Not tainted 5.7.0-syzkaller #0
+[ 1492.085449][ T6840] Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+[ 1492.095511][ T6840] Call Trace:
+[ 1492.098811][ T6840]  dump_stack+0x188/0x20d
+[ 1492.103157][ T6840]  should_fail.cold+0x5/0xa
+[ 1492.107686][ T6840]  ? fault_create_debugfs_attr+0x140/0x140
+[ 1492.107721][ T6840]  ? idr_replace+0xee/0x160
+[ 1492.127210][ T6840]  should_failslab+0x5/0xf
+[ 1492.131638][ T6840]  kmem_cache_alloc_trace+0x2d0/0x7d0
+[ 1492.137020][ T6840]  ? up_write+0x148/0x470
+[ 1492.141367][ T6840]  proc_fill_super+0x79/0x5c0
+[ 1492.146052][ T6840]  ? proc_parse_param+0x8a0/0x8a0
+[ 1492.151092][ T6840]  vfs_get_super+0x12e/0x2d0
+[ 1492.155694][ T6840]  vfs_get_tree+0x89/0x2f0
+[ 1492.160126][ T6840]  do_mount+0x1306/0x1b40
+[ 1492.164467][ T6840]  ? copy_mount_string+0x40/0x40
+[ 1492.169411][ T6840]  ? __might_fault+0x190/0x1d0
+[ 1492.174188][ T6840]  ? _copy_from_user+0x13c/0x1a0
+[ 1492.179138][ T6840]  ? memdup_user+0x7c/0xd0
+[ 1492.183575][ T6840]  __x64_sys_mount+0x18f/0x230
+[ 1492.188351][ T6840]  do_syscall_64+0xf6/0x7d0
+[ 1492.192861][ T6840]  entry_SYSCALL_64_after_hwframe+0x49/0xb3
+[ 1492.198759][ T6840] RIP: 0033:0x45ca69
 
-> +
-> +      - channel nodes: Max upto 6 channels/streams are supported with each CSI
-> +	brick can as either x4 or x2 based on hw connectivity to sensor.
-> +
-> +	Required properties:
-> +	- reg: channel/stream index
-> +	- nvidia,mipi-calibrate: Should contain a phandle and a specifier
-> +	  specifying which pads are used by this CSI port and need to be
-> +	  calibrated. See also ../display/tegra/nvidia,tegra114-mipi.txt.
-> +
-> +	- port: CSI port node and its endpoint nodes as per device graph
-> +          bindings defined in Documentation/devicetree/bindings/graph.txt.
-> +	  Required properties:
+That is, proc_kill_sb() was assuming "s->s_fs_info = fs_info;" is always
+called from proc_fill_super() which is called via fill_super(sb, fc); from
+vfs_get_super().
 
-You have both properties and nodes here. Same for the above (port is a
-node).
-
-> +	  - reg: csi port index based on hw csi lanes connectivity to the
-> +	    sensor.
-> +	  - bus-width: number of lanes used by this port. Supported lanes
-> +	    are 1/2/4.
-
-bus-width belongs to the endpoint. Note that this is for parallel busses
-only. If you need the number of lanes, the property is called data-lanes.
-
-> +	  - endpoint@0: sink node
-> +	    Required properties:
-> +	    - reg: endpoint id. This is used to retrieve pad for creating
-> +	      media link
-> +	    - remote-endpoint: phandle to sensor endpoint
-> +	  - endpoint@1: source node
-> +	    - reg: endpoint id. This is used to retrieve pad for creating
-> +	      media link
-> +	    - remote-endpoint: phandle to vi port endpoint
-> +
-> +  Optional properties for vi node:
-> +  - ports: Video port nodes and endpoint nodes as per device graph bindings
-> +    defined in Documentation/devicetree/bindings/graph.txt
-> +    Max 6 ports are supported and each port should have one endpoint node.
-> +
-> +    Required properties:
-> +    - port: VI port node and its sink endpoint node
-> +      Required properties:
-> +    - reg: should match port index
-> +    - endpoint@0: sink node
-> +      Required properties:
-> +      - reg: endpoint id must be 0
-> +      - remote-endpoint: phandle to CSI endpoint node.
-> +
->  - epp: encoder pre-processor
->  
->    Required properties:
-> @@ -340,6 +382,22 @@ Example:
->  
->  			ranges = <0x0 0x0 0x54080000 0x2000>;
->  
-> +			ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port@0 {
-> +					reg = <0>;
-> +					#address-cells = <1>;
-> +					#size-cells = <0>;
-> +
-> +					imx219_vi_in0: endpoint@0 {
-> +						reg = <0>;
-> +						remote-endpoint = <&imx219_csi_out0>;
-> +					};
-> +				};
-> +			};
-> +
->  			csi@838 {
->  				compatible = "nvidia,tegra210-csi";
->  				reg = <0x838 0x1300>;
-> @@ -362,6 +420,35 @@ Example:
->  					 <&tegra_car TEGRA210_CLK_CSI_TPG>;
->  				clock-names = "csi", "cilab", "cilcd", "cile", "csi_tpg";
->  				power-domains = <&pd_sor>;
-> +
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				channel@0 {
-> +					reg = <0>;
-> +					nvidia,mipi-calibrate = <&mipi 0x001>;
-> +
-> +					#address-cells = <1>;
-> +					#size-cells = <0>;
-> +
-> +					port@0 {
-> +						reg = <0>;
-> +						bus-width = <2>;
-> +
-> +						#address-cells = <1>;
-> +						#size-cells = <0>;
-> +
-> +						imx219_csi_in0: endpoint@0 {
-> +							reg = <0>;
-> +							remote-endpoint = <&imx219_out0>;
-> +						};
-> +
-> +						imx219_csi_out0: endpoint@1 {
-> +							reg = <1>;
-> +							remote-endpoint = <&imx219_vi_in0>;
-> +						};
-> +					};
-> +				};
->  			};
->  		};
->  
-
--- 
-Kind regards,
-
-Sakari Ailus
