@@ -2,246 +2,108 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6609C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6869C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 935432078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:12:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC4652078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:12:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591794767;
+	bh=ccKcrDJ9vgY+vczOxvBZN8klM3S/Ibm9bitAkG+Tg1I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=E7n6grVkrAONJlyJSevg2w82eVyPS4UMUTH00bubGgZAbFp18goUw0SCSTgd6MI1C
+	 rr59S1jeBOd1UmiQwYmq+lDaon15xRfZW/1lrh1mEGVlrnr6I0nHuTTlTM+oFbaviJ
+	 EJFDTnJUl42M9N4xCuT8I19n5bTN2J3TKEJLZJyE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729237AbgFJNMk (ORCPT
+        id S1729245AbgFJNMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 09:12:40 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:35014 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729120AbgFJNMj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 09:12:39 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: andrzej.p)
-        with ESMTPSA id DE8CE2A44F8
-Subject: Re: [PATCH v4 0/7] Support inhibiting input devices
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Samsung SoC <linux-samsung-soc@vger.kernel.org>,
-        linux-input@vger.kernel.org,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        patches@opensource.cirrus.com,
-        ibm-acpi-devel@lists.sourceforge.net,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Barry Song <baohua@kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Nick Dyer <nick@shmanahar.org>,
-        Ferruh Yigit <fery@cypress.com>,
-        Sangwon Jee <jeesw@melfas.com>,
-        Peter Hutterer <peter.hutterer@redhat.com>,
-        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
-        Collabora Kernel ML <kernel@collabora.com>
-References: <2336e15d-ff4b-bbb6-c701-dbf3aa110fcd@redhat.com>
- <20200608112211.12125-1-andrzej.p@collabora.com>
- <964ca07a-3da5-101f-7edf-64bdeec98a4b@redhat.com>
- <CAJZ5v0hB2ra2K=dd9ZjVyy1V2b1PmFHm79uDO2HtHU1D_4YUbw@mail.gmail.com>
-From:   Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Message-ID: <6136f26c-e090-e025-af55-4c5f3a6aec92@collabora.com>
-Date:   Wed, 10 Jun 2020 15:12:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 10 Jun 2020 09:12:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50062 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729120AbgFJNMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 09:12:42 -0400
+Received: from localhost (lfbn-ncy-1-1025-94.w92-138.abo.wanadoo.fr [92.138.0.94])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A320206F4;
+        Wed, 10 Jun 2020 13:12:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591794762;
+        bh=ccKcrDJ9vgY+vczOxvBZN8klM3S/Ibm9bitAkG+Tg1I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EtcXatLaGES4NGAyOj2p9rtVKe3kKZWB8ifao71wky3x/aWfeFYl/jvEEB7mjBIVx
+         BgL9X+EyM/SRPK0QB0n5bPb2LbliG5mvtiBbecz3K5PsqfPd8kEKdsXOy/EFLglyQc
+         8kLQaX2eDfl+Xw/NXJoKH+B2Bhj6v6EGYYfhvH2Q=
+Date:   Wed, 10 Jun 2020 15:12:39 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Josh Triplett <josh@joshtriplett.org>
+Subject: Re: [PATCH 01/10] rcu: Directly lock rdp->nocb_lock on nocb code
+ entrypoints
+Message-ID: <20200610131238.GA26639@lenoir>
+References: <20200513164714.22557-1-frederic@kernel.org>
+ <20200513164714.22557-2-frederic@kernel.org>
+ <20200520122949.GB16672@google.com>
+ <20200522175739.GM2869@paulmck-ThinkPad-P72>
+ <20200604114121.GA26398@lenoir>
+ <20200604163655.GC29598@paulmck-ThinkPad-P72>
+ <20200608125715.GA30920@lenoir>
+ <20200609180227.GR4455@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-In-Reply-To: <CAJZ5v0hB2ra2K=dd9ZjVyy1V2b1PmFHm79uDO2HtHU1D_4YUbw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200609180227.GR4455@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
-
-W dniu 10.06.2020 o 12:38, Rafael J. Wysocki pisze:
-> On Wed, Jun 10, 2020 at 11:50 AM Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> Hi All,
->>
->> On 6/8/20 1:22 PM, Andrzej Pietrasiewicz wrote:
->>> This is a quick respin of v3, with just two small changes, please see
->>> the changelog below.
->>>
->>> Userspace might want to implement a policy to temporarily disregard input
->>> from certain devices.
->>>
->>> An example use case is a convertible laptop, whose keyboard can be folded
->>> under the screen to create tablet-like experience. The user then must hold
->>> the laptop in such a way that it is difficult to avoid pressing the keyboard
->>> keys. It is therefore desirable to temporarily disregard input from the
->>> keyboard, until it is folded back. This obviously is a policy which should
->>> be kept out of the kernel, but the kernel must provide suitable means to
->>> implement such a policy.
->>
->> First of all sorry to start a somewhat new discussion about this
->> while this patch set is also somewhat far along in the review process,
->> but I believe what I discuss below needs to be taken into account.
->>
->> Yesterday I have been looking into why an Asus T101HA would not stay
->> suspended when the LID is closed. The cause is that the USB HID multi-touch
->> touchpad in the base of the device starts sending events when the screen
->> gets close to the touchpad (so when the LID is fully closed) and these
->> events are causing a wakeup from suspend. HID multi-touch devices
->> do have a way to tell them to fully stop sending events, also disabling
->> the USB remote wakeup the device is doing. The question is when to tell
->> it to not send events though ...
->>
->> So now I've been thinking about how to fix this and I believe that there
->> is some interaction between this problem and this patch-set.
->>
->> The problem I'm seeing on the T101HA is about wakeups, so the question
->> which I want to discuss is:
->>
->> 1. How does inhibiting interact with enabling /
->> disabling the device as a wakeup source ?
->>
->> 2. Since we have now made inhibiting equal open/close how does open/close
->> interact with a device being a wakeup source ?
->>
->> And my own initial (to be discussed) answers to these questions:
->>
->> 1. It seems to me that when a device is inhibited it should not be a
->> wakeup source, so where possible a input-device-driver should disable
->> a device's wakeup capabilities on suspend if inhibited
+On Tue, Jun 09, 2020 at 11:02:27AM -0700, Paul E. McKenney wrote:
+> > > > And anyway we still want to unconditionally lock on many places,
+> > > > regardless of the offloaded state. I don't know how we could have
+> > > > a magic helper do the unconditional lock on some places and the
+> > > > conditional on others.
+> > > 
+> > > I was assuming (perhaps incorrectly) that an intermediate phase between
+> > > not-offloaded and offloaded would take care of all of those cases.
+> > 
+> > Perhaps partly but I fear that won't be enough.
 > 
-> If "inhibit" means "do not generate any events going forward", then
-> this must also cover wakeup events, so I agree.
-
-I agree, too.
-
+> One approach is to rely on RCU read-side critical sections surrounding
+> the lock acquisition and to stay in the intermediate phase until a grace
+> period completes, preferably call_rcu() instead of synchronize_rcu().
 > 
->> 2. This one is trickier I don't think we have really clearly specified
->> any behavior here. The default behavior of most drivers seems to be
->> using something like this in their suspend callback:
->>
->>           if (device_may_wakeup(dev))
->>                   enable_irq_wake(data->irq);
->>           else if (input->users)
->>                   foo_stop_receiving_events(data);
->>
->> Since this is what most drivers seem to do I believe we should keep
->> this as is and that we should just clearly document that if the
->> input_device has users (has been opened) or not does not matter
->> for its wakeup behavior.
->>
->> Combining these 2 answers leads to this new pseudo code template
->> for an input-device's suspend method:
->>
->>          /*
->>           * If inhibited we have already disabled events and
->>           * we do NOT want to setup the device as wake source.
->>           */
->>          if (input->inhibited)
->>                  return 0;
+> This of course means refusing to do a transition if the CPU is still
+> in the intermediate state from a prior transition.
 
-Right, if a device is inhibited it shouldn't become a wakeup source,
-because that would contradict the purpose of being inhibited.
+That sounds good. But using synchronize_rcu() would be far easier. We
+need to keep the hotplug and rcu barrier locked during the transition.
 
->>
->>           if (device_may_wakeup(dev))
->>                   enable_irq_wake(data->irq);
-
-What would it mean to become a wakeup source if there are no users,
-or nobody has ever opened the device? There are no interested
-input handlers (users) so what's the point of becoming a wakeup
-source? Why would the system need to wake up?
-
->>           else if (input->users)
->>                   foo_stop_receiving_events(data);
->>
->> ###
+> > Also I've been thinking that rcu_nocb_lock() should meet any of these
+> > requirements:
+> > 
+> > * hotplug is locked
+> > * rcu barrier is locked
+> > * rnp is locked
+> > 
+> > Because checking the offloaded state (when nocb isn't locked yet) of
+> > an rdp without any of the above locks held is racy. And that should
+> > be easy to check and prevent from copy-pasta accidents.
+> > 
+> > What do you think?
 > 
-> Sounds reasonable to me.
-> 
->> A different, but related issue is how to make devices actually use the
->> new inhibit support on the builtin keyboard + touchpad when say the lid
->> is closed.   Arguably this is an userspace problem, but it is a tricky
->> one. Currently on most modern Linux distributions suspend-on-lid-close
->> is handled by systemd-logind and most modern desktop-environments are
->> happy to have logind handle this for them.
->>
->> But most knowledge about input devices and e.g. heurisitics to decide
->> if a touchpad is internal or external are part of libinput. Now we could
->> have libinput use the new inhibit support (1), but then when the lid
->> closes we get race between whatever process is using libinput trying
->> to inhibit the touchpad (which must be done before to suspend to disable
->> it as wakeup source) and logind trying to suspend the system.
->>
->> One solution here would be to move the setting of the inhibit sysfs
->> attr into logind, but that requires adding a whole bunch of extra
->> knowledge to logind which does not really belong there IMHO.
->>
->> I've been thinking a bit about this and to me it seems that the kernel
->> is in the ideal position to automatically inhibit some devices when
->> some EV_SW transitions from 0->1 (and uninhibit again on 1->0). The
->> issue here is to chose on which devices to enable this. I believe
->> that the auto inhibit on some switches mechanism is best done inside
->> the kernel (disabled by default) and then we can have a sysfs
->> attr called auto_inhibit_ev_sw_mask which can be set to e.g.
->> (1 << SW_LID) to make the kernel auto-inhibit the input-device whenever
->> the lid is closed, or to ((1 << SW_LID) | (1 << SW_TABLET_MODE)) to
->> inhibit both when the lid is closed or when switched to tablet mode.
-> 
-> I agree that the kernel is the right place to handle this, but it
-> requires some extra knowledge about dependencies between devices.
-> 
-> It'd be kind of like power resources in ACPI, so for each state of a
-> "master" device (in principle, there may be more states of it than
-> just two) there would be a list of "dependent" intput devices that
-> need to be inhibited when the "master" device goes into that state.
-> 
->> This could then be combined with a userspace utility run from an
->> udev rule which makes the actual decision what auto_inhibit_ev_sw_mask
->> should be set for a given input device.
->>
->> This will put the mechanism for what we want inside the kernel and
->> leaves the policy on which switches we want this for out of the
->> kernel.
->>
->> Note adding this new auto_inhibit_ev_sw_mask sysfs attr falls
->> somewhat outside the context of this patchset and could be done
->> as a follow up to this patch-set.
+> An RCU read-side critical section might be simpler.
 
-Yes, please ;)
+Ok I think I can manage that.
 
-But I do believe that we need to
->> figure out how (non ChromeOS) userspace can / will use the new inhibit
->> interface before merging it.
-
-Of course.
-
-Regards,
-
-Andrzej
+Thanks.
