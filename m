@@ -2,198 +2,110 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10DDAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:15:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F55BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD61B20734
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:15:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED1B620734
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:16:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="jtdmFDFj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g9xaGjht"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726258AbgFJGPd (ORCPT
+        id S1726277AbgFJGQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 02:15:33 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:14391 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725988AbgFJGPc (ORCPT
+        Wed, 10 Jun 2020 02:16:43 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:37104 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725988AbgFJGQl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 02:15:32 -0400
-X-UUID: 327b123795a04ebf8d9fdc0b9bb252f6-20200610
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=81Y2fVdBy50AQH7tnAGVr/bbzD+zlTSuDvNwyWyE3pk=;
-        b=jtdmFDFjG+qvDMCWSc/8DriAaIKl4oqTGI/cGIZnqlaE8Cbayz3pWxNqoqLsw7Ir3KzE+kQuljCoaiPhMxzn4bLfMYXitK7Go/X1wTMWJ7v9yt6x216T2CNNDqrMttsE612bEajxaF6o08reMpbGoRK3v2VKU8yBb+XJLB1KLz0=;
-X-UUID: 327b123795a04ebf8d9fdc0b9bb252f6-20200610
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <macpaul.lin@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 903741230; Wed, 10 Jun 2020 14:15:25 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 10 Jun 2020 14:15:24 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 10 Jun 2020 14:15:23 +0800
-From:   Macpaul Lin <macpaul.lin@mediatek.com>
-To:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Bart Van Assche <bvanassche@acm.org>,
-        EJ Hsu <ejh@nvidia.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Peter Chen <peter.chen@nxp.com>, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-CC:     Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
-        Macpaul Lin <macpaul.lin@mediatek.com>,
-        Macpaul Lin <macpaul.lin@gmail.com>,
-        Justin Hsieh <justinhsieh@google.com>,
-        Hakieyin Hsieh <hakieyin@gmail.com>
-Subject: [PATCH v2] usb/gadget/function: introduce Built-in CDROM support
-Date:   Wed, 10 Jun 2020 14:15:18 +0800
-Message-ID: <1591769718-3287-1-git-send-email-macpaul.lin@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1591756349-17865-1-git-send-email-macpaul.lin@mediatek.com>
-References: <1591756349-17865-1-git-send-email-macpaul.lin@mediatek.com>
+        Wed, 10 Jun 2020 02:16:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591769800;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Dd9hSPJklMgRKnOtvAiPIti1OIPB2Shfs7YNJkiFzA4=;
+        b=g9xaGjht/ceWgCHZ06Njx4//HgEk7rPdXJ3e64cy1JOqJAGkdXNfnPsoLOQFdsFLq4aoOZ
+        /rm+kiHB8oT8iDPBDWu52oJgs0y3iosqBdiONbVyWSWUX10XQeJ+bV6VzucjQvFk91aVep
+        K+WqtIfkWKkWEWLbMTmsJYcFOobRbws=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-281-WyxVb7iaOrqXm3GFQIDRNg-1; Wed, 10 Jun 2020 02:16:37 -0400
+X-MC-Unique: WyxVb7iaOrqXm3GFQIDRNg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9AA56107ACCD;
+        Wed, 10 Jun 2020 06:16:35 +0000 (UTC)
+Received: from [10.72.13.194] (ovpn-13-194.pek2.redhat.com [10.72.13.194])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DC6895D9D3;
+        Wed, 10 Jun 2020 06:16:27 +0000 (UTC)
+Subject: Re: [PATCH RESEND V2] vdpa: introduce virtio pci driver
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, rob.miller@broadcom.com,
+        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
+        shahafs@mellanox.com, hanand@xilinx.com, mhabets@solarflare.com,
+        gdawar@xilinx.com, saugatm@xilinx.com, vmireyno@marvell.com,
+        zhangweining@ruijie.com.cn, eli@mellanox.com
+References: <20200610054951.16197-1-jasowang@redhat.com>
+ <20200610020728-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <0964bd2d-8329-a091-41ed-a9b912ec4283@redhat.com>
+Date:   Wed, 10 Jun 2020 14:16:26 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200610020728-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SW50cm9kdWNlIEJ1aWx0LUluIENEUk9NIChCSUNSKSBzdXBwb3J0Lg0KVGhpcyBmZWF0dXJlIGRl
-cGVuZHMgb24gVVNCX0NPTkZJR0ZTX01BU1NfU1RPUkFHRSBvcHRpb24uDQoNCjEuIFNvbWUgc2V0
-dGluZ3MgYW5kIG5ldyBmdW5jdGlvbiBpcyBpbnRyb2R1Y2VkIGZvciBCSUNSLg0KMi4gU29tZSB3
-b3JrIGFyb3VuZCBmb3IgYWRhcHRpbmcgQW5kcm9pZCBzZXR0aW5ncyBpcyBpbnRyb2R1Y2VkIGFz
-IHdlbGwuDQoNClNpZ25lZC1vZmYtYnk6IEp1c3RpbiBIc2llaCA8anVzdGluaHNpZWhAZ29vZ2xl
-LmNvbT4NClNpZ25lZC1vZmYtYnk6IEhha2lleWluIEhzaWVoIDxoYWtpZXlpbkBnbWFpbC5jb20+
-DQpTaWduZWQtb2ZmLWJ5OiBNYWNwYXVsIExpbiA8bWFjcGF1bC5saW5AbWVkaWF0ZWsuY29tPg0K
-LS0tDQpDaGFuZ2VzIGZvciB2MjoNCiAgLSBUaGFua3MgZm9yIFBldGVyJ3MgcmV2aWV3Lg0KICAg
-IC0gRml4IHR5cG8gaW4gY29tbWl0IG1lc3NhZ2UuDQogICAgLSB1c2UgdmFyaWFibGUgY29tbW9u
-LT5iaWNyIGluc3RlYWQgb2YgSVNfRU5BQkxFRCgpLg0KICAgIC0gRml4ICNpZmRlZiBDT05GSUdf
-VVNCX0NPTkZJR0ZTX0JJQ1IuDQoNCiBkcml2ZXJzL3VzYi9nYWRnZXQvS2NvbmZpZyAgICAgICAg
-ICAgICAgICAgICB8IDE2ICsrKysrKysNCiBkcml2ZXJzL3VzYi9nYWRnZXQvZnVuY3Rpb24vZl9t
-YXNzX3N0b3JhZ2UuYyB8IDQ5ICsrKysrKysrKysrKysrKysrKystDQogZHJpdmVycy91c2IvZ2Fk
-Z2V0L2Z1bmN0aW9uL2ZfbWFzc19zdG9yYWdlLmggfCAgNSArLQ0KIGRyaXZlcnMvdXNiL2dhZGdl
-dC9mdW5jdGlvbi9zdG9yYWdlX2NvbW1vbi5jIHwgMjMgKysrKysrKysrDQogNCBmaWxlcyBjaGFu
-Z2VkLCA5MCBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJp
-dmVycy91c2IvZ2FkZ2V0L0tjb25maWcgYi9kcml2ZXJzL3VzYi9nYWRnZXQvS2NvbmZpZw0KaW5k
-ZXggNGRjNGQ0OGZlNmE2Li42ODZiYTAxYmVkYjUgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3VzYi9n
-YWRnZXQvS2NvbmZpZw0KKysrIGIvZHJpdmVycy91c2IvZ2FkZ2V0L0tjb25maWcNCkBAIC0xODgs
-NiArMTg4LDkgQEAgY29uZmlnIFVTQl9GX1JORElTDQogY29uZmlnIFVTQl9GX01BU1NfU1RPUkFH
-RQ0KIAl0cmlzdGF0ZQ0KIA0KK2NvbmZpZyBVU0JfRl9CSUNSDQorCXRyaXN0YXRlDQorDQogY29u
-ZmlnIFVTQl9GX0ZTDQogCXRyaXN0YXRlDQogDQpAQCAtMzU3LDYgKzM2MCwxOSBAQCBjb25maWcg
-VVNCX0NPTkZJR0ZTX01BU1NfU1RPUkFHRQ0KIAkgIGRldmljZSAoaW4gbXVjaCB0aGUgc2FtZSB3
-YXkgYXMgdGhlICJsb29wIiBkZXZpY2UgZHJpdmVyKSwNCiAJICBzcGVjaWZpZWQgYXMgYSBtb2R1
-bGUgcGFyYW1ldGVyIG9yIHN5c2ZzIG9wdGlvbi4NCiANCitjb25maWcgVVNCX0NPTkZJR0ZTX0JJ
-Q1INCisJYm9vbCAiQnVpbHQtSW4gQ0RST00gZW11bGF0aW9uIg0KKwlkZXBlbmRzIG9uIFVTQl9D
-T05GSUdGUw0KKwlkZXBlbmRzIG9uIEJMT0NLDQorCWRlcGVuZHMgb24gVVNCX0NPTkZJR0ZTX01B
-U1NfU1RPUkFHRQ0KKwlzZWxlY3QgVVNCX0ZfQklDUg0KKwloZWxwDQorCSAgVGhlIEJ1aWxkLUlu
-IENEUk9NIEdhZGdldCBhY3RzIGFzIGEgQ0RST00gZW11bGF0aW9uIGRpc2sgZHJpdmUuDQorCSAg
-SXQgaXMgYmFzZWQgb24ga2VybmVsIG9wdGlvbiAiVVNCX0NPTkZJR0ZTX01BU1NfU1RPUkFHRSIu
-DQorCSAgQXMgaXRzIHN0b3JhZ2UgcmVwb3NpdG9yeSBpdCBjYW4gdXNlIGEgcmVndWxhciBmaWxl
-IG9yIGEgYmxvY2sNCisJICBkZXZpY2UgKGluIG11Y2ggdGhlIHNhbWUgd2F5IGFzIHRoZSAibG9v
-cCIgZGV2aWNlIGRyaXZlciksDQorCSAgc3BlY2lmaWVkIGFzIGEgbW9kdWxlIHBhcmFtZXRlciBv
-ciBzeXNmcyBvcHRpb24uDQorDQogY29uZmlnIFVTQl9DT05GSUdGU19GX0xCX1NTDQogCWJvb2wg
-Ikxvb3BiYWNrIGFuZCBzb3VyY2VzaW5rIGZ1bmN0aW9uIChmb3IgdGVzdGluZykiDQogCWRlcGVu
-ZHMgb24gVVNCX0NPTkZJR0ZTDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvZ2FkZ2V0L2Z1bmN0
-aW9uL2ZfbWFzc19zdG9yYWdlLmMgYi9kcml2ZXJzL3VzYi9nYWRnZXQvZnVuY3Rpb24vZl9tYXNz
-X3N0b3JhZ2UuYw0KaW5kZXggMzNjMjI2NGEwZTM1Li45ZGUxY2Q0NjU2MzUgMTAwNjQ0DQotLS0g
-YS9kcml2ZXJzL3VzYi9nYWRnZXQvZnVuY3Rpb24vZl9tYXNzX3N0b3JhZ2UuYw0KKysrIGIvZHJp
-dmVycy91c2IvZ2FkZ2V0L2Z1bmN0aW9uL2ZfbWFzc19zdG9yYWdlLmMNCkBAIC0zMTUsNiArMzE1
-LDkgQEAgc3RydWN0IGZzZ19jb21tb24gew0KIAl2b2lkCQkJKnByaXZhdGVfZGF0YTsNCiANCiAJ
-Y2hhciBpbnF1aXJ5X3N0cmluZ1tJTlFVSVJZX1NUUklOR19MRU5dOw0KKw0KKwkvKiBGb3IgYnVp
-bGQtaW4gQ0RST00gKi8NCisJdTggYmljcjsNCiB9Ow0KIA0KIHN0cnVjdCBmc2dfZGV2IHsNCkBA
-IC0zNjksNiArMzcyLDEwIEBAIHN0YXRpYyB2b2lkIHNldF9idWxrX291dF9yZXFfbGVuZ3RoKHN0
-cnVjdCBmc2dfY29tbW9uICpjb21tb24sDQogCWlmIChyZW0gPiAwKQ0KIAkJbGVuZ3RoICs9IGNv
-bW1vbi0+YnVsa19vdXRfbWF4cGFja2V0IC0gcmVtOw0KIAliaC0+b3V0cmVxLT5sZW5ndGggPSBs
-ZW5ndGg7DQorDQorCS8qIHNvbWUgVVNCIDIuMCBoYXJkd2FyZSByZXF1aXJlcyB0aGlzIHNldHRp
-bmcgKi8NCisJaWYgKGNvbW1vbi0+YmljcikNCisJCWJoLT5vdXRyZXEtPnNob3J0X25vdF9vayA9
-IDE7DQogfQ0KIA0KIA0KQEAgLTUyNyw3ICs1MzQsMTYgQEAgc3RhdGljIGludCBmc2dfc2V0dXAo
-c3RydWN0IHVzYl9mdW5jdGlvbiAqZiwNCiAJCQkJd19sZW5ndGggIT0gMSkNCiAJCQlyZXR1cm4g
-LUVET007DQogCQlWREJHKGZzZywgImdldCBtYXggTFVOXG4iKTsNCi0JCSoodTggKilyZXEtPmJ1
-ZiA9IF9mc2dfY29tbW9uX2dldF9tYXhfbHVuKGZzZy0+Y29tbW9uKTsNCisJCWlmIChJU19FTkFC
-TEVEKFVTQl9DT05GSUdGU19CSUNSKSAmJiBmc2ctPmNvbW1vbi0+Ymljcikgew0KKwkJCS8qDQor
-CQkJICogV2hlbiBCdWlsdC1JbiBDRFJPTSBpcyBlbmFibGVkLA0KKwkJCSAqIHdlIHNoYXJlIG9u
-bHkgb25lIExVTi4NCisJCQkgKi8NCisJCQkqKHU4ICopcmVxLT5idWYgPSAwOw0KKwkJfSBlbHNl
-IHsNCisJCQkqKHU4ICopcmVxLT5idWYgPSBfZnNnX2NvbW1vbl9nZXRfbWF4X2x1bihmc2ctPmNv
-bW1vbik7DQorCQl9DQorCQlJTkZPKGZzZywgImdldCBtYXggTFVOID0gJWRcbiIsICoodTggKily
-ZXEtPmJ1Zik7DQogDQogCQkvKiBSZXNwb25kIHdpdGggZGF0YS9zdGF0dXMgKi8NCiAJCXJlcS0+
-bGVuZ3RoID0gbWluKCh1MTYpMSwgd19sZW5ndGgpOw0KQEAgLTEzMjksNyArMTM0NSw3IEBAIHN0
-YXRpYyBpbnQgZG9fc3RhcnRfc3RvcChzdHJ1Y3QgZnNnX2NvbW1vbiAqY29tbW9uKQ0KIAl9DQog
-DQogCS8qIEFyZSB3ZSBhbGxvd2VkIHRvIHVubG9hZCB0aGUgbWVkaWE/ICovDQotCWlmIChjdXJs
-dW4tPnByZXZlbnRfbWVkaXVtX3JlbW92YWwpIHsNCisJaWYgKCFjdXJsdW4tPm5vZnVhICYmIGN1
-cmx1bi0+cHJldmVudF9tZWRpdW1fcmVtb3ZhbCkgew0KIAkJTERCRyhjdXJsdW4sICJ1bmxvYWQg
-YXR0ZW1wdCBwcmV2ZW50ZWRcbiIpOw0KIAkJY3VybHVuLT5zZW5zZV9kYXRhID0gU1NfTUVESVVN
-X1JFTU9WQUxfUFJFVkVOVEVEOw0KIAkJcmV0dXJuIC1FSU5WQUw7DQpAQCAtMjY5Miw2ICsyNzA4
-LDcgQEAgaW50IGZzZ19jb21tb25fc2V0X2NkZXYoc3RydWN0IGZzZ19jb21tb24gKmNvbW1vbiwN
-CiAJY29tbW9uLT5lcDAgPSBjZGV2LT5nYWRnZXQtPmVwMDsNCiAJY29tbW9uLT5lcDByZXEgPSBj
-ZGV2LT5yZXE7DQogCWNvbW1vbi0+Y2RldiA9IGNkZXY7DQorCWNvbW1vbi0+YmljciA9IDA7DQog
-DQogCXVzID0gdXNiX2dzdHJpbmdzX2F0dGFjaChjZGV2LCBmc2dfc3RyaW5nc19hcnJheSwNCiAJ
-CQkJIEFSUkFZX1NJWkUoZnNnX3N0cmluZ3MpKTsNCkBAIC0yODk1LDYgKzI5MTIsMzMgQEAgc3Rh
-dGljIHZvaWQgZnNnX2NvbW1vbl9yZWxlYXNlKHN0cnVjdCBmc2dfY29tbW9uICpjb21tb24pDQog
-CQlrZnJlZShjb21tb24pOw0KIH0NCiANCisjaWZkZWYgQ09ORklHX1VTQl9DT05GSUdGU19CSUNS
-DQorc3NpemVfdCBmc2dfYmljcl9zaG93KHN0cnVjdCBmc2dfY29tbW9uICpjb21tb24sIGNoYXIg
-KmJ1ZikNCit7DQorCXJldHVybiBzcHJpbnRmKGJ1ZiwgIiVkXG4iLCBjb21tb24tPmJpY3IpOw0K
-K30NCisNCitzc2l6ZV90IGZzZ19iaWNyX3N0b3JlKHN0cnVjdCBmc2dfY29tbW9uICpjb21tb24s
-IGNvbnN0IGNoYXIgKmJ1Ziwgc2l6ZV90IHNpemUpDQorew0KKwlpbnQgcmV0Ow0KKw0KKwlyZXQg
-PSBrc3RydG91OChidWYsIDEwLCAmY29tbW9uLT5iaWNyKTsNCisJaWYgKHJldCkNCisJCXJldHVy
-biAtRUlOVkFMOw0KKw0KKwkvKiBTZXQgTHVuWzBdIGlzIGEgQ0RST00gd2hlbiBlbmFibGUgYmlj
-ci4qLw0KKwlpZiAoIXN0cmNtcChidWYsICIxIikpDQorCQljb21tb24tPmx1bnNbMF0tPmNkcm9t
-ID0gMTsNCisJZWxzZSB7DQorCQljb21tb24tPmx1bnNbMF0tPmNkcm9tID0gMDsNCisJCWNvbW1v
-bi0+bHVuc1swXS0+YmxrYml0cyA9IDA7DQorCQljb21tb24tPmx1bnNbMF0tPmJsa3NpemUgPSAw
-Ow0KKwkJY29tbW9uLT5sdW5zWzBdLT5udW1fc2VjdG9ycyA9IDA7DQorCX0NCisNCisJcmV0dXJu
-IHNpemU7DQorfQ0KKyNlbmRpZg0KIA0KIC8qLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSovDQogDQpAQCAtMzQ2
-Myw2ICszNTA3LDcgQEAgdm9pZCBmc2dfY29uZmlnX2Zyb21fcGFyYW1zKHN0cnVjdCBmc2dfY29u
-ZmlnICpjZmcsDQogCQlsdW4tPnJvID0gISFwYXJhbXMtPnJvW2ldOw0KIAkJbHVuLT5jZHJvbSA9
-ICEhcGFyYW1zLT5jZHJvbVtpXTsNCiAJCWx1bi0+cmVtb3ZhYmxlID0gISFwYXJhbXMtPnJlbW92
-YWJsZVtpXTsNCisJCWx1bi0+bm9mdWEgPSAhIXBhcmFtcy0+bm9mdWFbaV07DQogCQlsdW4tPmZp
-bGVuYW1lID0NCiAJCQlwYXJhbXMtPmZpbGVfY291bnQgPiBpICYmIHBhcmFtcy0+ZmlsZVtpXVsw
-XQ0KIAkJCT8gcGFyYW1zLT5maWxlW2ldDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvZ2FkZ2V0
-L2Z1bmN0aW9uL2ZfbWFzc19zdG9yYWdlLmggYi9kcml2ZXJzL3VzYi9nYWRnZXQvZnVuY3Rpb24v
-Zl9tYXNzX3N0b3JhZ2UuaA0KaW5kZXggM2I4YzRjZTJhNDBhLi43MDk3ZTJlYTVjYzkgMTAwNjQ0
-DQotLS0gYS9kcml2ZXJzL3VzYi9nYWRnZXQvZnVuY3Rpb24vZl9tYXNzX3N0b3JhZ2UuaA0KKysr
-IGIvZHJpdmVycy91c2IvZ2FkZ2V0L2Z1bmN0aW9uL2ZfbWFzc19zdG9yYWdlLmgNCkBAIC0xNDAs
-NSArMTQwLDggQEAgdm9pZCBmc2dfY29tbW9uX3NldF9pbnF1aXJ5X3N0cmluZyhzdHJ1Y3QgZnNn
-X2NvbW1vbiAqY29tbW9uLCBjb25zdCBjaGFyICp2biwNCiB2b2lkIGZzZ19jb25maWdfZnJvbV9w
-YXJhbXMoc3RydWN0IGZzZ19jb25maWcgKmNmZywNCiAJCQkgICAgY29uc3Qgc3RydWN0IGZzZ19t
-b2R1bGVfcGFyYW1ldGVycyAqcGFyYW1zLA0KIAkJCSAgICB1bnNpZ25lZCBpbnQgZnNnX251bV9i
-dWZmZXJzKTsNCi0NCisjaWZkZWYgQ09ORklHX1VTQl9DT05GSUdGU19CSUNSDQorc3NpemVfdCBm
-c2dfYmljcl9zaG93KHN0cnVjdCBmc2dfY29tbW9uICpjb21tb24sIGNoYXIgKmJ1Zik7DQorc3Np
-emVfdCBmc2dfYmljcl9zdG9yZShzdHJ1Y3QgZnNnX2NvbW1vbiAqY29tbW9uLCBjb25zdCBjaGFy
-ICpidWYsIHNpemVfdCBzaXplKTsNCisjZW5kaWYNCiAjZW5kaWYgLyogVVNCX0ZfTUFTU19TVE9S
-QUdFX0ggKi8NCmRpZmYgLS1naXQgYS9kcml2ZXJzL3VzYi9nYWRnZXQvZnVuY3Rpb24vc3RvcmFn
-ZV9jb21tb24uYyBiL2RyaXZlcnMvdXNiL2dhZGdldC9mdW5jdGlvbi9zdG9yYWdlX2NvbW1vbi5j
-DQppbmRleCBmN2U2YzQyNTU4ZWIuLjhmZTk2ZWVkZGYzNSAxMDA2NDQNCi0tLSBhL2RyaXZlcnMv
-dXNiL2dhZGdldC9mdW5jdGlvbi9zdG9yYWdlX2NvbW1vbi5jDQorKysgYi9kcml2ZXJzL3VzYi9n
-YWRnZXQvZnVuY3Rpb24vc3RvcmFnZV9jb21tb24uYw0KQEAgLTQ0MSw2ICs0NDEsMjkgQEAgc3Np
-emVfdCBmc2dfc3RvcmVfZmlsZShzdHJ1Y3QgZnNnX2x1biAqY3VybHVuLCBzdHJ1Y3Qgcndfc2Vt
-YXBob3JlICpmaWxlc2VtLA0KIAkJcmV0dXJuIC1FQlVTWTsJCQkJLyogIkRvb3IgaXMgbG9ja2Vk
-IiAqLw0KIAl9DQogDQorCXByX25vdGljZSgiJXMgZmlsZT0lcywgY291bnQ9JWQsIGN1cmx1bi0+
-Y2Ryb209JWRcbiIsDQorCQkJX19mdW5jX18sIGJ1ZiwgKGludCljb3VudCwgY3VybHVuLT5jZHJv
-bSk7DQorDQorCS8qDQorCSAqIFdPUktBUk9VTkQgZm9yIEFuZHJvaWQ6DQorCSAqICAgVk9MRCB3
-b3VsZCBjbGVhbiB0aGUgZmlsZSBwYXRoIGFmdGVyIHN3aXRjaGluZyB0byBiaWNyLg0KKwkgKiAg
-IFNvIHdoZW4gdGhlIGx1biBpcyBiZWluZyBhIENELVJPTSBhLmsuYS4gQklDUi4NCisJICogICBE
-b24ndCBjbGVhbiB0aGUgZmlsZSBwYXRoIHRvIGVtcHR5Lg0KKwkgKi8NCisJaWYgKGN1cmx1bi0+
-Y2Ryb20gPT0gMSAmJiBjb3VudCA9PSAxKQ0KKwkJcmV0dXJuIGNvdW50Ow0KKw0KKwkvKg0KKwkg
-KiBXT1JLQVJPVU5EOiBTaG91bGQgYmUgY2xvc2VkIHRoZSBmc2cgbHVuIGZvciB2aXJ0dWFsIGNk
-LXJvbSwNCisJICogd2hlbiBzd2l0Y2ggdG8gb3RoZXIgdXNiIGZ1bmN0aW9ucy4NCisJICogVXNl
-IHRoZSBzcGVjaWFsIGtleXdvcmQgIm9mZiIsIGJlY2F1c2UgdGhlIGluaXQgY2FuDQorCSAqIG5v
-dCBwYXJzZSB0aGUgY2hhciAnXG4nIGluIHJjIGZpbGUgYW5kIHdyaXRlIGludG8gdGhlIHN5c2Zz
-Lg0KKwkgKi8NCisJaWYgKGNvdW50ID09IDMgJiYNCisJCQlidWZbMF0gPT0gJ28nICYmIGJ1Zlsx
-XSA9PSAnZicgJiYgYnVmWzJdID09ICdmJyAmJg0KKwkJCWZzZ19sdW5faXNfb3BlbihjdXJsdW4p
-KQ0KKwkJKChjaGFyICopIGJ1ZilbMF0gPSAwOw0KKw0KIAkvKiBSZW1vdmUgYSB0cmFpbGluZyBu
-ZXdsaW5lICovDQogCWlmIChjb3VudCA+IDAgJiYgYnVmW2NvdW50LTFdID09ICdcbicpDQogCQko
-KGNoYXIgKikgYnVmKVtjb3VudC0xXSA9IDA7CQkvKiBVZ2ghICovDQotLSANCjIuMTguMA0K
+
+On 2020/6/10 下午2:07, Michael S. Tsirkin wrote:
+> On Wed, Jun 10, 2020 at 01:49:51PM +0800, Jason Wang wrote:
+>> This patch introduce a vDPA driver for virtio-pci device. It bridges
+>> the virtio-pci control command to the vDPA bus. This will be used for
+>> developing new features for both software vDPA framework and hardware
+>> vDPA feature.
+>>
+>> Compared to vdpa_sim, it has several advantages:
+>>
+>> - it's a real device driver which allow us to play with real hardware
+>>    features
+>> - type independent instead of networking specific
+>>
+>> Note that since virtio specification does not support get/restore
+>> virtqueue state. So we can not use this driver for VM. This can be
+>> addressed by extending the virtio specification.
+>>
+>> Consider the driver is mainly for testing and development for vDPA
+>> features, it can only be bound via dynamic ids to make sure it's not
+>> conflict with the drivers like virtio-pci or IFCVF.
+>>
+>> Signed-off-by: Jason Wang<jasowang@redhat.com>
+> error: sha1 information is lacking or useless (drivers/vdpa/Kconfig).
+>
+> which tree is this on top of?
+
+
+Your vhost.git vhost branch, HEAD is bbea3bcfd1d6 vdpa: fix typos in the 
+comments for __vdpa_alloc_device()
+
+Do I need to use other branch?
+
+Thanks
+
+
+>
 
