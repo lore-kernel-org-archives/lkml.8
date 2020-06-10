@@ -2,106 +2,138 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 103B5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA12DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEE82206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:54:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="nb5YEwRl"
+	by mail.kernel.org (Postfix) with ESMTP id 8E524206F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:55:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729571AbgFJNyh (ORCPT
+        id S1729584AbgFJNzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 09:54:37 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:64836 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726449AbgFJNyg (ORCPT
+        Wed, 10 Jun 2020 09:55:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58322 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726449AbgFJNzH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 09:54:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1591797276; x=1623333276;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   mime-version;
-  bh=y3uoS3vtPPW6TAvUK0hk1JX0cDjoO5vQU6N8mWfeMNE=;
-  b=nb5YEwRlePkfkgZ5IU1YV6B475eNKSObrTa71Onfeai4+A31vibXo7Vd
-   9sQkW7Ve+Mct+RQ5CUUWnr/iJGB6ChVFgGNnvg631QMZNLx9S0TLFxi5t
-   p3Axn8np3JiYN0JR4Kon6zuVSDGm8zTCxeA+niYZZEvQ3fm3uyfp9iJpM
-   8=;
-IronPort-SDR: hmXg5RC6pJzmncT0RzPVAwL4E8gOpKGclSaNQ8/08vfdWnIxHu2d0OW0LqN3jZJr65mqSUYDm9
- 260usWImkgVw==
-X-IronPort-AV: E=Sophos;i="5.73,496,1583193600"; 
-   d="scan'208";a="36876012"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-55156cd4.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 10 Jun 2020 13:54:34 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-55156cd4.us-west-2.amazon.com (Postfix) with ESMTPS id 35D6FA248B;
-        Wed, 10 Jun 2020 13:54:33 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 10 Jun 2020 13:54:32 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.34) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 10 Jun 2020 13:54:26 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     SeongJae Park <sjpark@amazon.com>
-CC:     <akpm@linux-foundation.org>, <apw@canonical.com>,
-        <joe@perches.com>, <jslaby@suse.cz>, <colin.king@canonical.com>,
-        <sj38.park@gmail.com>, <linux-kernel@vger.kernel.org>,
-        SeongJae Park <sjpark@amazon.de>
-Subject: Re: [PATCH v3 2/2] scripts/deprecated_terms: Recommend blocklist/allowlist instead of blacklist/whitelist
-Date:   Wed, 10 Jun 2020 15:54:11 +0200
-Message-ID: <20200610135411.23786-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200610065223.29894-3-sjpark@amazon.com> (raw)
+        Wed, 10 Jun 2020 09:55:07 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCCADC03E96B
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 06:55:06 -0700 (PDT)
+Received: from localhost ([127.0.0.1] helo=vostro)
+        by Galois.linutronix.de with esmtps (TLS1.2:RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1jj1C1-0005zZ-Ex; Wed, 10 Jun 2020 15:55:01 +0200
+From:   John Ogness <john.ogness@linutronix.de>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Paul McKenney <paulmck@kernel.org>
+Subject: Re: blk->id read race: was: [PATCH v2 2/3] printk: add lockless buffer
+References: <20200501094010.17694-1-john.ogness@linutronix.de>
+        <20200501094010.17694-3-john.ogness@linutronix.de>
+        <20200609071030.GA23752@linux-b0ei>
+        <87tuzkuxtw.fsf@vostro.fn.ogness.net>
+        <20200610084248.GA4311@linux-b0ei>
+Date:   Wed, 10 Jun 2020 15:55:00 +0200
+In-Reply-To: <20200610084248.GA4311@linux-b0ei> (Petr Mladek's message of
+        "Wed, 10 Jun 2020 10:42:48 +0200")
+Message-ID: <87k10fowjv.fsf@vostro.fn.ogness.net>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.43.161.34]
-X-ClientProxiedBy: EX13D27UWB003.ant.amazon.com (10.43.161.195) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Based on Jiri's feedback[1], I'm updating the replacement suggestion of blacklist
-from blocklist to denylist, as the previous one might be confused to block
-layer people.  Also, the new recommendation is more short ;)
+On 2020-06-10, Petr Mladek <pmladek@suse.com> wrote:
+>>>> --- /dev/null
+>>>> +++ b/kernel/printk/printk_ringbuffer.c
+>>>> +/*
+>>>> + * Given a data ring (text or dict), put the associated descriptor of each
+>>>> + * data block from @lpos_begin until @lpos_end into the reusable state.
+>>>> + *
+>>>> + * If there is any problem making the associated descriptor reusable, either
+>>>> + * the descriptor has not yet been committed or another writer task has
+>>>> + * already pushed the tail lpos past the problematic data block. Regardless,
+>>>> + * on error the caller can re-load the tail lpos to determine the situation.
+>>>> + */
+>>>> +static bool data_make_reusable(struct printk_ringbuffer *rb,
+>>>> +			       struct prb_data_ring *data_ring,
+>>>> +			       unsigned long lpos_begin,
+>>>> +			       unsigned long lpos_end,
+>>>> +			       unsigned long *lpos_out)
+>>>> +{
+>>>> +	struct prb_desc_ring *desc_ring = &rb->desc_ring;
+>>>> +	struct prb_data_blk_lpos *blk_lpos;
+>>>> +	struct prb_data_block *blk;
+>>>> +	unsigned long tail_lpos;
+>>>> +	enum desc_state d_state;
+>>>> +	struct prb_desc desc;
+>>>> +	unsigned long id;
+>>>> +
+>>>> +	/*
+>>>> +	 * Using the provided @data_ring, point @blk_lpos to the correct
+>>>> +	 * blk_lpos within the local copy of the descriptor.
+>>>> +	 */
+>>>> +	if (data_ring == &rb->text_data_ring)
+>>>> +		blk_lpos = &desc.text_blk_lpos;
+>>>> +	else
+>>>> +		blk_lpos = &desc.dict_blk_lpos;
+>>>> +
+>>>> +	/* Loop until @lpos_begin has advanced to or beyond @lpos_end. */
+>>>> +	while ((lpos_end - lpos_begin) - 1 < DATA_SIZE(data_ring)) {
+>>>> +		blk = to_block(data_ring, lpos_begin);
+>>>> +		id = READ_ONCE(blk->id); /* LMM(data_make_reusable:A) */
+>>>
+>>> This would deserve some comment:
+>
+> I wonder if the comment might look like:
+>
+> /*
+>  * No barrier is needed between reading tail_lpos and the related
+>  * blk->id. Only CPU that modifies tail_lpos via cmpxchg is allowed
+>  * to modify the related blk->id. CPUs that see the moved tail_lpos
+>  * are looking at another block related to the new tail_lpos.
+>  * It does not mater when the previous winner modifies the previous
+>  * block.
+>  */
 
-[1] https://lore.kernel.org/lkml/20200610091655.4682-1-sjpark@amazon.com/
+Sorry, but this comment does not make sense for me. The tail is pushed
+_before_ the block ID is modified. So any kind of barrier here (where we
+read the tail, then the block ID, i.e. the same order) would be
+inappropriate anyway.
 
-================================== >8 =========================================
-From 1376e327de8316ef30c393507b29d70d38bffd05 Mon Sep 17 00:00:00 2001
-From: SeongJae Park <sjpark@amazon.de>
-Date: Wed, 10 Jun 2020 07:23:33 +0200
-Subject: [PATCH v3.1] scripts/deprecated_terms: Recommend denylist/allowlist
- instead of blacklist/whitelist
+Also, this comment only talks about when a new value is seen, but not
+about when the old value is seen. IMO it is seeing the old value that is
+worthy of a comment since that is the only case with a data race.
 
-This commit recommends the patches to replace 'blacklist' and
-'whitelist' with the 'denylist' and 'allowlist', because the new
-suggestions are incontrovertible, doesn't make people hurt, and more
-self-explanatory.
+In preparation for my next version I have added the following comment:
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- scripts/deprecated_terms.txt | 2 ++
- 1 file changed, 2 insertions(+)
+        blk = to_block(data_ring, lpos_begin);
 
-diff --git a/scripts/deprecated_terms.txt b/scripts/deprecated_terms.txt
-index 6faa06451c3d..4512ef5d5ffa 100644
---- a/scripts/deprecated_terms.txt
-+++ b/scripts/deprecated_terms.txt
-@@ -3,3 +3,5 @@
- # The format of each line is:
- # deprecated||suggested
- #
-+blacklist||denylist
-+whitelist||allowlist
--- 
-2.17.1
+        /*
+         * When going from lpos to block pointer, the wrap around
+         * feature of the lpos value is lost. Since another CPU could
+         * invalidate this data area at any time, the data tail must
+         * be re-checked after the block ID has been read.
+         */
 
+        id = blk->id; /* LMM(data_make_reusable:A) */
+
+I think this comment also helps to further clarify "why" the following
+data tail check occurs.
+
+John Ogness
