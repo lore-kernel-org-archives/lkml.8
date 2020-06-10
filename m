@@ -2,115 +2,99 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E08D8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 624C9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:43:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1BD3207F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:42:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591803730;
-	bh=T0g/Y42kJC01OEoFBGhoaN5SHb8YsES7u1KLhw4yYQ4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=TfCpf8mRXGnQOMPDxPjSePSmLBMTxdiYlwU7HS6zFsWWBF6nhoN3nDymsVDBb/VmL
-	 dBYCjfv6V3kNcyno0MeWReFDGZvRjcfxAPWNet6iYI+/hjKPyhLmkpAzM104obS38S
-	 lTZ8F8nwWcJueEMM6niIcW1Vyszd4dTttipacgAg=
+	by mail.kernel.org (Postfix) with ESMTP id 4618C2072F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:43:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730277AbgFJPmJ (ORCPT
+        id S1730271AbgFJPnx convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 11:42:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41718 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726955AbgFJPmI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 11:42:08 -0400
-Received: from PC-kkoz.proceq.com (unknown [213.160.61.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDBF42072F;
-        Wed, 10 Jun 2020 15:42:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591803728;
-        bh=T0g/Y42kJC01OEoFBGhoaN5SHb8YsES7u1KLhw4yYQ4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=tVAv3mcHxoUQwI0t9AS6dDdcA911AilkLa+olqKAf9FYYA7kqQ4ifCb5LSK9hjAYG
-         ZNkXSLGs62J4ZNSGhiDMdbyz7wOxUfd7rRRPTyW7YjhvjzMXE6IhqN+4elBKUpyq7H
-         xchBOhP2nGhV6I4aB1qWTqrXIsH9mF9MLyM6eRG0=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Mark Brown <broonie@kernel.org>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>, stable@vger.kernel.org
-Subject: [PATCH] spi: spi-fsl-dspi: Free DMA memory with matching function
-Date:   Wed, 10 Jun 2020 17:41:57 +0200
-Message-Id: <1591803717-11218-1-git-send-email-krzk@kernel.org>
-X-Mailer: git-send-email 2.7.4
+        Wed, 10 Jun 2020 11:43:53 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:43313 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726955AbgFJPnx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 11:43:53 -0400
+Received: from mail-pg1-f200.google.com ([209.85.215.200])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jj2tL-0003XM-Ff
+        for linux-kernel@vger.kernel.org; Wed, 10 Jun 2020 15:43:51 +0000
+Received: by mail-pg1-f200.google.com with SMTP id x186so1723465pgb.6
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 08:43:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=pIEJ2ejVSoH3NHNxiiH0JO+dQepzCs9hxzeYyLsKYnE=;
+        b=mqCR3i4kxcrOn1yzh+SeT19hXYESrSGU+Z0taf19VfZWjT+fUA76HQRlgDqkkHSzuo
+         lPTLQfITPGPCT5YPXpoiBRu+D8p2/Q8/Z66t0FU3s4zn7X1aBfGQp/Jnj/vO6YpxyB7m
+         jUtm0h1fDTaSLgiT6r2zHpxfELKQDt+td7bJ0Nn/bkbjeGKvzZHQW2kdYwpgDAwj75MP
+         hBHq4tvOIzgQow4FfqmVCRC2jNTh/uGyk3sHqhrbK23CwrZ6M77DWWa9Tord8VgzvnJ6
+         A/LW4sizXpX0Us0odBG0J/NY2pwIDE5UAQRkiRp8r9cbyewugv+V8OYOMsoF7hk4lycI
+         RpbA==
+X-Gm-Message-State: AOAM533xEU3LVxr2Y2JXGIAxcmP/qdejoY71yL63/12gE1v/LZfvoBDg
+        sw3DdyDysmRznRQwz1610ZtmKtmc+WpVOP81yRyLN8Q+Mu+S7Dlt/X2yLjNtOWiUvthxo++EDS/
+        tMAqoG2/249FkA06d7nC5x+cTWYnRrkltvlT+aFn3ng==
+X-Received: by 2002:a65:6446:: with SMTP id s6mr3249826pgv.59.1591803830125;
+        Wed, 10 Jun 2020 08:43:50 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxsEfzhKGoIHjpkOEW5GETqwgNMAaWSKvOESWqkOMSTCehmvPiglPaqM0tVbdoshUenRPFCjw==
+X-Received: by 2002:a65:6446:: with SMTP id s6mr3249805pgv.59.1591803829731;
+        Wed, 10 Jun 2020 08:43:49 -0700 (PDT)
+Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
+        by smtp.gmail.com with ESMTPSA id y23sm230676pgc.78.2020.06.10.08.43.48
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Jun 2020 08:43:49 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH 1/2] xhci: Suspend ports to U3 directly from U1 or U2
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <20200610143220.GC11727@rowland.harvard.edu>
+Date:   Wed, 10 Jun 2020 23:43:46 +0800
+Cc:     Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:USB XHCI DRIVER" <linux-usb@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <591D2A1F-9645-4B0B-896C-99544F06DFAA@canonical.com>
+References: <20200610064231.9454-1-kai.heng.feng@canonical.com>
+ <20200610143220.GC11727@rowland.harvard.edu>
+To:     Alan Stern <stern@rowland.harvard.edu>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Driver allocates DMA memory with dma_alloc_coherent() but frees it with
-dma_unmap_single().
 
-This causes DMA warning during system shutdown (with DMA debugging) on
-Toradex Colibri VF50 module:
 
-    WARNING: CPU: 0 PID: 1 at ../kernel/dma/debug.c:1036 check_unmap+0x3fc/0xb04
-    DMA-API: fsl-edma 40098000.dma-controller: device driver frees DMA memory with wrong function
-      [device address=0x0000000087040000] [size=8 bytes] [mapped as coherent] [unmapped as single]
-    Hardware name: Freescale Vybrid VF5xx/VF6xx (Device Tree)
-      (unwind_backtrace) from [<8010bb34>] (show_stack+0x10/0x14)
-      (show_stack) from [<8011ced8>] (__warn+0xf0/0x108)
-      (__warn) from [<8011cf64>] (warn_slowpath_fmt+0x74/0xb8)
-      (warn_slowpath_fmt) from [<8017d170>] (check_unmap+0x3fc/0xb04)
-      (check_unmap) from [<8017d900>] (debug_dma_unmap_page+0x88/0x90)
-      (debug_dma_unmap_page) from [<80601d68>] (dspi_release_dma+0x88/0x110)
-      (dspi_release_dma) from [<80601e4c>] (dspi_shutdown+0x5c/0x80)
-      (dspi_shutdown) from [<805845f8>] (device_shutdown+0x17c/0x220)
-      (device_shutdown) from [<80143ef8>] (kernel_restart+0xc/0x50)
-      (kernel_restart) from [<801441cc>] (__do_sys_reboot+0x18c/0x210)
-      (__do_sys_reboot) from [<80100060>] (ret_fast_syscall+0x0/0x28)
-    DMA-API: Mapped at:
-     dma_alloc_attrs+0xa4/0x130
-     dspi_probe+0x568/0x7b4
-     platform_drv_probe+0x6c/0xa4
-     really_probe+0x208/0x348
-     driver_probe_device+0x5c/0xb4
+> On Jun 10, 2020, at 22:32, Alan Stern <stern@rowland.harvard.edu> wrote:
+> 
+> On Wed, Jun 10, 2020 at 02:42:30PM +0800, Kai-Heng Feng wrote:
+>> xHCI spec "4.15.1 Port Suspend" states that port can be put to U3 as long
+>> as Enabled bit is set and from U0, U1 or U2 state.
+>> 
+>> Currently only USB_PORT_FEAT_LINK_STATE puts port to U3 directly, let's
+>> do the same for USB_PORT_FEAT_SUSPEND and bus suspend case.
+>> 
+>> This is particularly useful for USB2 devices, which may take a very long
+>> time to switch USB2 LPM on and off.
+> 
+> Have these two patches been tested with a variety of USB-2.0 and USB-2.1 
+> devices?
 
-Fixes: 90ba37033cb9 ("spi: spi-fsl-dspi: Add DMA support for Vybrid")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/spi/spi-fsl-dspi.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+I tested some laptops around and they work fine.
+Only internally connected USB devices like USB Bluetooth and USB Camera have USB2 LPM enabled, so this patch won't affect external connected devices.
 
-diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index a35faced0456..58190c94561f 100644
---- a/drivers/spi/spi-fsl-dspi.c
-+++ b/drivers/spi/spi-fsl-dspi.c
-@@ -588,14 +588,14 @@ static void dspi_release_dma(struct fsl_dspi *dspi)
- 		return;
- 
- 	if (dma->chan_tx) {
--		dma_unmap_single(dma->chan_tx->device->dev, dma->tx_dma_phys,
--				 dma_bufsize, DMA_TO_DEVICE);
-+		dma_free_coherent(dma->chan_tx->device->dev, dma_bufsize,
-+				  dma->tx_dma_buf, dma->tx_dma_phys);
- 		dma_release_channel(dma->chan_tx);
- 	}
- 
- 	if (dma->chan_rx) {
--		dma_unmap_single(dma->chan_rx->device->dev, dma->rx_dma_phys,
--				 dma_bufsize, DMA_FROM_DEVICE);
-+		dma_free_coherent(dma->chan_rx->device->dev, dma_bufsize,
-+				  dma->rx_dma_buf, dma->rx_dma_phys);
- 		dma_release_channel(dma->chan_rx);
- 	}
- }
--- 
-2.7.4
+Kai-Heng
+
+> 
+> Alan Stern
 
