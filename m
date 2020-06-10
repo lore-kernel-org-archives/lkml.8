@@ -2,124 +2,135 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A643C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 024B9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18EAF2072F
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:14:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D27AB20734
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:15:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="cGNV4Jg9"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GhLDgR6t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728159AbgFJKOL (ORCPT
+        id S1728164AbgFJKPG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 06:14:11 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:58991 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726134AbgFJKOK (ORCPT
+        Wed, 10 Jun 2020 06:15:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52362 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726134AbgFJKPG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 06:14:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1591784049; x=1623320049;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   mime-version;
-  bh=CtNLCaD8mW2jfZ6LEQ4ahCDLJNSsZclpIdWVExMRWPo=;
-  b=cGNV4Jg97bQ5pG1Sb9bMuzZ2Ym7uxL82UzlF5SgFBSRfNgamiiGNar8J
-   jMFhY0SS21QQCnYQPpixxS2Q6ASb53YwufvRN0WPZ7GQKhH74uZxrD+m2
-   J7CD/xbXcjlb2yiWs/7AEAyNOf639FVzyXGkrDRvnzZu5FqDjUqn+c4UR
-   8=;
-IronPort-SDR: dke9JTcwLcS6G+n1O6A4GNdauJ4coP5XGtmjnU1489ct9Otf/FYfhQaBHKJ7KquAN5GGblkUrs
- TMi1N1GQCvgw==
-X-IronPort-AV: E=Sophos;i="5.73,495,1583193600"; 
-   d="scan'208";a="35409709"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-37fd6b3d.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 10 Jun 2020 10:14:07 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1d-37fd6b3d.us-east-1.amazon.com (Postfix) with ESMTPS id 8F90B286AD4;
-        Wed, 10 Jun 2020 10:13:57 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 10 Jun 2020 10:13:56 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.53) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 10 Jun 2020 10:13:40 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     SeongJae Park <sjpark@amazon.com>
-CC:     <akpm@linux-foundation.org>, SeongJae Park <sjpark@amazon.de>,
-        <Jonathan.Cameron@Huawei.com>, <aarcange@redhat.com>,
-        <acme@kernel.org>, <alexander.shishkin@linux.intel.com>,
-        <amit@kernel.org>, <benh@kernel.crashing.org>,
-        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
-        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
-        <dwmw@amazon.com>, <foersleo@amazon.de>, <irogers@google.com>,
-        <jolsa@redhat.com>, <kirill@shutemov.name>, <mark.rutland@arm.com>,
-        <mgorman@suse.de>, <minchan@kernel.org>, <mingo@redhat.com>,
-        <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
-        <rostedt@goodmis.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
-        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
-        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <david@redhat.com>, <linux-damon@amazon.com>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v15 04/14] mm/damon: Adaptively adjust regions
-Date:   Wed, 10 Jun 2020 12:13:24 +0200
-Message-ID: <20200610101324.20437-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200608114047.26589-5-sjpark@amazon.com> (raw)
+        Wed, 10 Jun 2020 06:15:06 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F5E2C03E96B;
+        Wed, 10 Jun 2020 03:15:05 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49hjXf4CBYz9sQx;
+        Wed, 10 Jun 2020 20:14:58 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1591784098;
+        bh=8UMlMKyh418ho0oWZQ7XY53wR1BrVLFmXQhMaFHpS/8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=GhLDgR6tTFsJx79L7F+HPXR1BKGomT3NyUwq+blWaXzMoUJ07aAA48sTOeaLZvyAs
+         aGsbEOegaXRMwvQ1qyNYZKn/npM6ZSBdPXX3evuYE/v2FiFRZmQmAxl0XMkKt7G+xG
+         3rV2K24dE69frphNi830pI4xCAbMhcpGyC5NneLifK9sFop6uXwQoUR1QuGcshxWhm
+         qhh2658tSbsP18wH3E4N7L/HcCpxdRD0TxkPCMLhSYOR0DqMEtqhYJKNyNuby6koWx
+         MBNV+7qRBaqtqoNYfvVqxy33unnFyoDelv0muRlt8Fo2bsjsvJvdP4+XwD1W+lq6Ra
+         O6WpKn/YI93Ug==
+Date:   Wed, 10 Jun 2020 20:14:57 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: linux-next: build failure after merge of the akpm-current tree
+Message-ID: <20200610201457.5698b119@canb.auug.org.au>
+In-Reply-To: <20200609210137.e7aaf4efa9f8b9ff0bcdc1dc@linux-foundation.org>
+References: <20200609224252.1704eff3@canb.auug.org.au>
+        <20200610134425.6dd32bf6@canb.auug.org.au>
+        <20200609210137.e7aaf4efa9f8b9ff0bcdc1dc@linux-foundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.162.53]
-X-ClientProxiedBy: EX13D36UWA003.ant.amazon.com (10.43.160.237) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+Content-Type: multipart/signed; boundary="Sig_/BiVkGYbjM6ry4uwpZ9Rrkzi";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 8 Jun 2020 13:40:37 +0200 SeongJae Park <sjpark@amazon.com> wrote:
+--Sig_/BiVkGYbjM6ry4uwpZ9Rrkzi
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> From: SeongJae Park <sjpark@amazon.de>
-> 
-> At the beginning of the monitoring, DAMON constructs the initial regions
-> by evenly splitting the memory mapped address space of the process into
-> the user-specified minimal number of regions.  In this initial state,
-> the assumption of the regions (pages in same region have similar access
-> frequencies) is normally not kept and thus the monitoring quality could
-> be low.  To keep the assumption as much as possible, DAMON adaptively
-> merges and splits each region.
-> 
-> For each ``aggregation interval``, it compares the access frequencies of
-> adjacent regions and merges those if the frequency difference is small.
-> Then, after it reports and clears the aggregated access frequency of
-> each region, it splits each region into two regions if the total number
-> of regions is smaller than the half of the user-specified maximum number
-> of regions.
+Hi Andrew,
 
-I recently realized that only the 'maximum number of regions' is respected,
-meanwhile the 'minimum number of regions' isn't.  In the next spin, I will
-update the code to 1) set new internal variable, 'max_sz_region' as size of
-entire monitoring target regions divided by the 'minimum number of regions',
-and 2) avoid merging regions if it results in region of size larger than that.
+On Tue, 9 Jun 2020 21:01:37 -0700 Andrew Morton <akpm@linux-foundation.org>=
+ wrote:
+>
+> I've sent this in as well:
+>=20
+> From: Andrew Morton <akpm@linux-foundation.org>
+> Subject: arch/sparc/mm/srmmu.c: fix build
+>=20
+> "mm: consolidate pte_index() and pte_offset_*() definitions" was supposed
+> to remove arch/sparc/mm/srmmu.c:pte_offset_kernel().
+>=20
+> Fixes: 974b9b2c68f3d35 ("mm: consolidate pte_index() and pte_offset_*() d=
+efinitions")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Cc: Mike Rapoport <rppt@linux.ibm.com>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+> ---
+>=20
+>  arch/sparc/mm/srmmu.c |   10 ----------
+>  1 file changed, 10 deletions(-)
+>=20
+> --- a/arch/sparc/mm/srmmu.c~arch-sparc-mm-srmmuc-fix-build
+> +++ a/arch/sparc/mm/srmmu.c
+> @@ -140,16 +140,6 @@ void pmd_set(pmd_t *pmdp, pte_t *ptep)
+>  	set_pte((pte_t *)&pmd_val(*pmdp), __pte(SRMMU_ET_PTD | ptp));
+>  }
+> =20
+> -/* Find an entry in the third-level page table.. */
+> -pte_t *pte_offset_kernel(pmd_t *dir, unsigned long address)
+> -{
+> -	void *pte;
+> -
+> -	pte =3D __nocache_va((pmd_val(*dir) & SRMMU_PTD_PMASK) << 4);
+> -	return (pte_t *) pte +
+> -	    ((address >> PAGE_SHIFT) & (PTRS_PER_PTE - 1));
+> -}
+> -
+>  /*
+>   * size: bytes to allocate in the nocache area.
+>   * align: bytes, number to align at.
+> _
+>=20
 
-This change would make DAMON more flexible for special cases.  For example,
-some use cases would need static granularity monitoring.  In such case, users
-will be able to adjust the granularity by controlling the 'minimum number of
-regions', and avoid the split/merge of regions by setting the 'maximum number
-of regions' as same to the 'minimum number of regions'.
+Thanks.
 
+--=20
+Cheers,
+Stephen Rothwell
 
-Thanks,
-SeongJae Park
+--Sig_/BiVkGYbjM6ry4uwpZ9Rrkzi
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-> 
-> In this way, DAMON provides its best-effort quality and minimal overhead
-> while keeping the bounds users set for their trade-off.
-> 
-> Signed-off-by: SeongJae Park <sjpark@amazon.de>
-> Reviewed-by: Leonard Foerster <foersleo@amazon.de>
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7gsqEACgkQAVBC80lX
+0GwGOggAij4ikq4ze7TVxoyBkxNel6dX4MOOaLgfCmNkxOtrWfo49e6p1SbCj+wR
+OlHf/wm5NoZZVLnJJqT4jBc79tcqiDons5kZ9/zd+tsWAbPJob46qYqEOTuGeQoQ
+Wiq3OqLeE6LjwB2fD8R7ydcC36hqDRCyTIYV4wZEX8HgNWvT0vtLeXBKTaEtyyKF
+R2gVI+/U7iMVqkvM5ce1SdZKsv4QiAmrVsfM8ZLFP2Rq8WI4oqmcgG3QkHf0iSOP
+IK9P7jSp8l6HDyz0niDM4B63HFGspNKUD8aAOzVKrVECJqZzNZ3Uc8xM2y7N6vGQ
+vuhtollzg4+J8g4eKslVm2P7vhUAXA==
+=OF1y
+-----END PGP SIGNATURE-----
+
+--Sig_/BiVkGYbjM6ry4uwpZ9Rrkzi--
