@@ -2,103 +2,88 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4D83C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D37FBC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1480206F7
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:14:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="c2zxVuJH"
+	by mail.kernel.org (Postfix) with ESMTP id AD74C2074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:14:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730772AbgFJUOt (ORCPT
+        id S1730780AbgFJUOw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 16:14:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60500 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730588AbgFJUNx (ORCPT
+        Wed, 10 Jun 2020 16:14:52 -0400
+Received: from sender4-op-o15.zoho.com ([136.143.188.15]:17546 "EHLO
+        sender4-op-o15.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730743AbgFJUOn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 16:13:53 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DAD2C00863F;
-        Wed, 10 Jun 2020 13:13:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=034RyJserNfH7yl0tdVgBoooxMtosP1kfL7i1H9r4Ho=; b=c2zxVuJHjKpbwjap05D0eIWUuf
-        So6yrmIFHNfcd0/YkqoqRdNzrSm5Yzhrv3np0BifU/TqiIIU4SlbWEMLjymXH5QOO34gZES0HKd61
-        E/oxVQOxW3v/zbwSh7/B7LoYArFbIbfQQ/L+NI1wKEMnxMpl2E4ZIlupIXkuM+oINJOwpHE3T3bgr
-        5ZuzTR6yEKtesYzttadRPP1DQIX407Hf5FK0hH8mPtF33TIFf5dJl+fHzybXoT8APTDNCSO7+8YmR
-        uLAK8L+MJLGtnBP45zhZXC0IqOid40u31a2mwsAE8VNvUvdyjFQAmKSyedxNSRO4P4/KZFlLXcZG0
-        lL3pO8zA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jj76a-0003X5-Qw; Wed, 10 Jun 2020 20:13:48 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>
-Subject: [PATCH v6 38/51] mm: Fix total_mapcount assumption of page size
-Date:   Wed, 10 Jun 2020 13:13:32 -0700
-Message-Id: <20200610201345.13273-39-willy@infradead.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200610201345.13273-1-willy@infradead.org>
-References: <20200610201345.13273-1-willy@infradead.org>
+        Wed, 10 Jun 2020 16:14:43 -0400
+X-Greylist: delayed 903 seconds by postgrey-1.27 at vger.kernel.org; Wed, 10 Jun 2020 16:14:43 EDT
+ARC-Seal: i=1; a=rsa-sha256; t=1591819175; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=CCM/uK+8z2LgiHjGSaoaqB2YZaB5cL+q75We67/D58WGMSwx7FYzXqiR+4/Vp6F07ZUFnzFj6OxEYE2j5Ls0P6XniBnCPbDqbllCwuISzNkQZBfyrc+QtX4ZSAxz1yPCS0ilAASGOL/KCqMrJ7oyjRFMaHRuSd6mvi0CYjTtK4k=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1591819175; h=Content-Type:Cc:Date:From:MIME-Version:Message-ID:Subject:To; 
+        bh=w0o4OowJsl4iAr761FXtE6DpOWppvwGF0W6F8ylVrDE=; 
+        b=eUo1EnNSUZ2kp67gQ/lzbN3m3rne23/SmR3etvpWrXTmXP15ToY+jnQqpiOMPw3PuZ2TDhvCxLZnFW0oUxdJBPICcYT5Pibg7LfxyM2wz1a1SYiSYSrK6eH4w/wonHPXA6/Xner3a6b2OnTfmgBJV1LYs8KKJDahGmHicwTy5Zo=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        spf=pass  smtp.mailfrom=tyler@shetrompf.com;
+        dmarc=pass header.from=<tyler@shetrompf.com> header.from=<tyler@shetrompf.com>
+Received: from archlinux.localdomain (50-232-53-226-static.hfc.comcastbusiness.net [50.232.53.226]) by mx.zohomail.com
+        with SMTPS id 1591819172538462.68323652810307; Wed, 10 Jun 2020 12:59:32 -0700 (PDT)
+Date:   Wed, 10 Jun 2020 19:59:23 +0000
+From:   Tyler Shetrompf <tyler@shetrompf.com>
+To:     gregkh@linuxfoundation.org
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] Staging: comedi: comedi_fops: fixed a blank line coding
+ style issue
+Message-ID: <20200610195923.GA12602@archlinux.localdomain>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Kirill A. Shutemov" <kirill@shutemov.name>
+Fixed a coding style issue.
 
-File THPs may now be of arbitrary order.
-
-Signed-off-by: Kirill A. Shutemov <kirill@shutemov.name>
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Signed-off-by: Tyler Shetrompf <tyler@shetrompf.com>
 ---
- mm/huge_memory.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/staging/comedi/comedi_fops.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 80fb38e93837..744863aa0374 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -2490,7 +2490,7 @@ static void __split_huge_page(struct page *page, struct list_head *list,
- 
- int total_mapcount(struct page *page)
- {
--	int i, compound, ret;
-+	int i, compound, nr, ret;
- 
- 	VM_BUG_ON_PAGE(PageTail(page), page);
- 
-@@ -2498,16 +2498,17 @@ int total_mapcount(struct page *page)
- 		return atomic_read(&page->_mapcount) + 1;
- 
- 	compound = compound_mapcount(page);
-+	nr = compound_nr(page);
- 	if (PageHuge(page))
- 		return compound;
- 	ret = compound;
--	for (i = 0; i < HPAGE_PMD_NR; i++)
-+	for (i = 0; i < nr; i++)
- 		ret += atomic_read(&page[i]._mapcount) + 1;
- 	/* File pages has compound_mapcount included in _mapcount */
- 	if (!PageAnon(page))
--		return ret - compound * HPAGE_PMD_NR;
-+		return ret - compound * nr;
- 	if (PageDoubleMap(page))
--		ret -= HPAGE_PMD_NR;
-+		ret -= nr;
- 	return ret;
- }
- 
+diff --git a/drivers/staging/comedi/comedi_fops.c b/drivers/staging/comedi/comedi_fops.c
+index e85a99b68f31..3f70e5dfac39 100644
+--- a/drivers/staging/comedi/comedi_fops.c
++++ b/drivers/staging/comedi/comedi_fops.c
+@@ -2169,6 +2169,7 @@ static long comedi_unlocked_ioctl(struct file *file, unsigned int cmd,
+ 		break;
+ 	case COMEDI_CHANINFO: {
+ 		struct comedi_chaninfo it;
++
+ 		if (copy_from_user(&it, (void __user *)arg, sizeof(it)))
+ 			rc = -EFAULT;
+ 		else
+@@ -2177,6 +2178,7 @@ static long comedi_unlocked_ioctl(struct file *file, unsigned int cmd,
+ 	}
+ 	case COMEDI_RANGEINFO: {
+ 		struct comedi_rangeinfo it;
++
+ 		if (copy_from_user(&it, (void __user *)arg, sizeof(it)))
+ 			rc = -EFAULT;
+ 		else
+@@ -2249,6 +2251,7 @@ static long comedi_unlocked_ioctl(struct file *file, unsigned int cmd,
+ 	}
+ 	case COMEDI_INSN: {
+ 		struct comedi_insn insn;
++
+ 		if (copy_from_user(&insn, (void __user *)arg, sizeof(insn)))
+ 			rc = -EFAULT;
+ 		else
 -- 
-2.26.2
+2.27.0
 
