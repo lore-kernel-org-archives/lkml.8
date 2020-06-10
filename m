@@ -2,222 +2,106 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2724C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:41:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D53C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B373020760
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:41:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E97FA20760
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:41:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729370AbgFJNlY (ORCPT
+        id S1729384AbgFJNla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 09:41:24 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:36164 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbgFJNlU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 09:41:20 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: andrzej.p)
-        with ESMTPSA id 4A6BC2A46E5
-Subject: Re: [PATCH v4 0/7] Support inhibiting input devices
-To:     Hans de Goede <hdegoede@redhat.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Samsung SoC <linux-samsung-soc@vger.kernel.org>,
-        linux-input@vger.kernel.org,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        patches@opensource.cirrus.com,
-        ibm-acpi-devel@lists.sourceforge.net,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Barry Song <baohua@kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Nick Dyer <nick@shmanahar.org>,
-        Ferruh Yigit <fery@cypress.com>,
-        Sangwon Jee <jeesw@melfas.com>,
-        Peter Hutterer <peter.hutterer@redhat.com>,
-        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
-        Collabora Kernel ML <kernel@collabora.com>
-References: <2336e15d-ff4b-bbb6-c701-dbf3aa110fcd@redhat.com>
- <20200608112211.12125-1-andrzej.p@collabora.com>
- <964ca07a-3da5-101f-7edf-64bdeec98a4b@redhat.com>
- <CAJZ5v0hB2ra2K=dd9ZjVyy1V2b1PmFHm79uDO2HtHU1D_4YUbw@mail.gmail.com>
- <6136f26c-e090-e025-af55-4c5f3a6aec92@collabora.com>
- <3e61c9c1-b211-da9f-c55b-b44eb6522f2a@redhat.com>
-From:   Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Message-ID: <2d5fd063-66bc-c707-4041-84a17c0a7d04@collabora.com>
-Date:   Wed, 10 Jun 2020 15:41:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 10 Jun 2020 09:41:30 -0400
+Received: from mga01.intel.com ([192.55.52.88]:56158 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726157AbgFJNl0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 09:41:26 -0400
+IronPort-SDR: b80dPNFJxk4WxVaxs9O2nNnv+cqTAKY71mv8fHMAJ4OcDFDFSD+foZhIDDy5FXg54AeIQkddrb
+ gC5HGkb3JNjQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2020 06:41:25 -0700
+IronPort-SDR: XYLLYmsFiGjVgU6b8ruF36UcNxGyRRD7J42f1vvtgfnYb1p5pwcuDnqnmnMNzZ/OkaNTy3L70s
+ 8nvFsasVJgnw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,496,1583222400"; 
+   d="scan'208";a="271249881"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003.jf.intel.com with ESMTP; 10 Jun 2020 06:41:23 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jj0ys-00C9Og-AO; Wed, 10 Jun 2020 16:41:26 +0300
+Date:   Wed, 10 Jun 2020 16:41:26 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v1 2/6] gpio: dwapb: Read GPIO base from snps,gpio-base
+ property
+Message-ID: <20200610134126.GG2428291@smile.fi.intel.com>
+References: <20200608134300.76091-1-andriy.shevchenko@linux.intel.com>
+ <20200608134300.76091-3-andriy.shevchenko@linux.intel.com>
+ <CACRpkdZD5VNxZzycwbFWrzpT1TxkkViBuzAp5P0KQOW4oWjpVw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <3e61c9c1-b211-da9f-c55b-b44eb6522f2a@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZD5VNxZzycwbFWrzpT1TxkkViBuzAp5P0KQOW4oWjpVw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hans,
+On Wed, Jun 10, 2020 at 01:26:59PM +0200, Linus Walleij wrote:
+> On Mon, Jun 8, 2020 at 3:43 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> 
+> > For backward compatibility with some legacy devices, introduce
+> > a new property snps,gpio-base to read GPIO base. Don't advertise
+> > to discourage users from utilizing it.
+> >
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> 
+> I usually have a very negative gut reaction to any attempts to hardcode
+> the heavily deprecated use of the gpio_base for the global GPIO
+> numberspace. The reason is clear from drivers/gpio/TODO I think.
+> 
+> I need a really good explanation why this is needed, the only reason
+> people have been pushing this in the past is "oh we are using the
+> sysfs and we don't wanna change the GPIO numbers in our scripts"
+> which I really want to push back on now that we have the chardev and
+> the libgpiod utils.
 
-W dniu 10.06.2020 o 15:21, Hans de Goede pisze:
-> Hi,
-> 
-> On 6/10/20 3:12 PM, Andrzej Pietrasiewicz wrote:
->> Hi All,
->>
->> W dniu 10.06.2020 o 12:38, Rafael J. Wysocki pisze:
->>> On Wed, Jun 10, 2020 at 11:50 AM Hans de Goede <hdegoede@redhat.com> wrote:
->>>>
->>>> Hi All,
->>>>
->>>> On 6/8/20 1:22 PM, Andrzej Pietrasiewicz wrote:
->>>>> This is a quick respin of v3, with just two small changes, please see
->>>>> the changelog below.
->>>>>
->>>>> Userspace might want to implement a policy to temporarily disregard input
->>>>> from certain devices.
->>>>>
->>>>> An example use case is a convertible laptop, whose keyboard can be folded
->>>>> under the screen to create tablet-like experience. The user then must hold
->>>>> the laptop in such a way that it is difficult to avoid pressing the keyboard
->>>>> keys. It is therefore desirable to temporarily disregard input from the
->>>>> keyboard, until it is folded back. This obviously is a policy which should
->>>>> be kept out of the kernel, but the kernel must provide suitable means to
->>>>> implement such a policy.
->>>>
->>>> First of all sorry to start a somewhat new discussion about this
->>>> while this patch set is also somewhat far along in the review process,
->>>> but I believe what I discuss below needs to be taken into account.
->>>>
->>>> Yesterday I have been looking into why an Asus T101HA would not stay
->>>> suspended when the LID is closed. The cause is that the USB HID multi-touch
->>>> touchpad in the base of the device starts sending events when the screen
->>>> gets close to the touchpad (so when the LID is fully closed) and these
->>>> events are causing a wakeup from suspend. HID multi-touch devices
->>>> do have a way to tell them to fully stop sending events, also disabling
->>>> the USB remote wakeup the device is doing. The question is when to tell
->>>> it to not send events though ...
->>>>
->>>> So now I've been thinking about how to fix this and I believe that there
->>>> is some interaction between this problem and this patch-set.
->>>>
->>>> The problem I'm seeing on the T101HA is about wakeups, so the question
->>>> which I want to discuss is:
->>>>
->>>> 1. How does inhibiting interact with enabling /
->>>> disabling the device as a wakeup source ?
->>>>
->>>> 2. Since we have now made inhibiting equal open/close how does open/close
->>>> interact with a device being a wakeup source ?
->>>>
->>>> And my own initial (to be discussed) answers to these questions:
->>>>
->>>> 1. It seems to me that when a device is inhibited it should not be a
->>>> wakeup source, so where possible a input-device-driver should disable
->>>> a device's wakeup capabilities on suspend if inhibited
->>>
->>> If "inhibit" means "do not generate any events going forward", then
->>> this must also cover wakeup events, so I agree.
->>
->> I agree, too.
->>
->>>
->>>> 2. This one is trickier I don't think we have really clearly specified
->>>> any behavior here. The default behavior of most drivers seems to be
->>>> using something like this in their suspend callback:
->>>>
->>>>           if (device_may_wakeup(dev))
->>>>                   enable_irq_wake(data->irq);
->>>>           else if (input->users)
->>>>                   foo_stop_receiving_events(data);
->>>>
->>>> Since this is what most drivers seem to do I believe we should keep
->>>> this as is and that we should just clearly document that if the
->>>> input_device has users (has been opened) or not does not matter
->>>> for its wakeup behavior.
->>>>
->>>> Combining these 2 answers leads to this new pseudo code template
->>>> for an input-device's suspend method:
->>>>
->>>>          /*
->>>>           * If inhibited we have already disabled events and
->>>>           * we do NOT want to setup the device as wake source.
->>>>           */
->>>>          if (input->inhibited)
->>>>                  return 0;
->>
->> Right, if a device is inhibited it shouldn't become a wakeup source,
->> because that would contradict the purpose of being inhibited.
-> 
-> Ack. Note I do think that we need to document this (and more
-> in general the answer to both questions from above) clearly so
-> that going forward if there are any questions about how this is
-> supposed to work we can just point to the docs.
-> 
-> Can you do a follow-up patch, or include a patch in your next
-> version which documents this (once we agree on what "this"
-> exactly is) ?
+I understand the point, that's why this property is not being advertised.
+The problem here is that on existing (legacy) platform we have to deal with an absolute numbers of GPIOs and those numbers can work if we keep the base
 
-Sure I can. Just need to know when "this" becomes stable enough ;)
-If this series otherwise looks mature enough I would opt for a
-follow-up patch.
+> If this is needed for something driver internal, it should stay in a
+> driver-local
+> variable.
 
-> 
->>>>
->>>>           if (device_may_wakeup(dev))
->>>>                   enable_irq_wake(data->irq);
->>
->> What would it mean to become a wakeup source if there are no users,
->> or nobody has ever opened the device? There are no interested
->> input handlers (users) so what's the point of becoming a wakeup
->> source? Why would the system need to wake up?
-> 
-> Well this is what we have been doing so far, so arguably we
-> need to keep doing it to avoid regressions / breaking our ABI.
-> 
-> Lets for example take a laptop, where when suspended the
-> power-button is the only valid wakeup-source and this is
-> running good old slackware with fvwm2 or windowmaker as
-> "desktop environment", then likely no process will have
-> the power-button input evdev node open.  Still we should
-> wakeup the laptop on the power-button press, otherwise
-> it will never wakeup.
-> 
+It's a cross drivers variable. The purpose of this series is to unify interface
+in the GPIO driver how to deal with device properties (so, be agnostic from
+resource provider at the end).
 
-True, thanks for explaining.
+Everything so far so good, but then we need a mean how not to break the
+platform. Because dropping the base in this case will immediately make a
+regression.
 
-> Note I agree with you that the way this works is not
-> ideal, I just do not think that we can change it.
-> 
+We can re-use 'gpio-base' as gpio-mockup is using it silently. So, in such case
+we won't add any deviation to the property namespace.
 
-Regards,
+Or we can rename above to linux,gpio-base and re-use it here with this name to
+explicitly show that this is not firmware property.
 
-Andrzej
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
