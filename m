@@ -7,57 +7,61 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C75B2C433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A2FC433E1
 	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 05:17:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95B952074B
+	by mail.kernel.org (Postfix) with ESMTP id B99C5207F9
 	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 05:17:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F1yJJaoh"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O5fo03jL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726040AbgFJFR0 (ORCPT
+        id S1726109AbgFJFRa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 01:17:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34576 "EHLO
+        Wed, 10 Jun 2020 01:17:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726038AbgFJFRV (ORCPT
+        with ESMTP id S1726046AbgFJFRW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 01:17:21 -0400
-Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 933EBC03E96B
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 22:17:20 -0700 (PDT)
-Received: by mail-qk1-x749.google.com with SMTP id m29so1031184qkm.17
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 22:17:20 -0700 (PDT)
+        Wed, 10 Jun 2020 01:17:22 -0400
+Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DC49C08C5C2
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 22:17:22 -0700 (PDT)
+Received: by mail-qt1-x849.google.com with SMTP id o11so843421qtm.7
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 22:17:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=bjUzZJaADYRF4NLSKw6448G2+8oa1CjvslyitcA1NeA=;
-        b=F1yJJaohPY6eu44cZvga29SFphG0UBJ5Cxa5rvKvlLQSh/fvT6tTrbxNQogH+vZIc0
-         yIImENMcR7iX4rhLmKzmpwy/oI3GfZJN5yAfoLRGYf9XTZtnhcz8r+I8zwSI/dLSgcGY
-         khVlbQfBAdXXW7OOUzQpoN0t9nMIZ7349gVTJfGbS0d5FKJpxSg8E7IR0ZToeE0PCnsR
-         PEjHSLx8f+cn3hHcPJRdn/E5S8ArwJWrrXLxllTuEgzWAM39R+bMmpoz/2fLLYIviQu/
-         UYAy1zpjikmyMluecEUcVr8KGolhbrZFqrasOKtCM9RMHowMMXUregdJuU5SjPbFmfWK
-         LF6A==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=hz3sSzlwN+wdQHt2gE14qhNHlugfrttGXboZ/LOUn3c=;
+        b=O5fo03jLq4s5KxM6m0KmW+ZOCtGJsL+MIL4vV7mPIoxNGbUImCd9IAjlVMNoHfH6ui
+         M299pKOBGsbNZUZrYWnMxiokTkHGCSau3RZi4LZEvajSAhJXzldFRJ/zW5y38CybHB5+
+         q95nYneo933X4NkwNjkHF0fyjARgcHgpygDIRvS/RYTzlDaPC5Tj0TR6QAix5/UAEvi/
+         Cfac5E7DZUlp8SvXM8ZHqobPMWGaBLxkTdVN61wqVehycqRKQVJn6v5HK2po5MFUfSo8
+         CBACEtqG9VmGG+hdNFdXQRC8eGyKMx81xOMukIZQG4E/cv1PdjP98v9fiYgvQ4CPY07G
+         njVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=bjUzZJaADYRF4NLSKw6448G2+8oa1CjvslyitcA1NeA=;
-        b=djKttOjokYCUnc1McigNDeHaUCk/SJzdpJb/AM0t7cd7vqfoLmcxplPdSXrZMYXV0i
-         sx6n3tDe+CAAH5mqn+CMetkiPGKo9ykvpwWrpdfAnq9zurI3IxanITchoVdRAQmx9rs9
-         PoNAcu/Gi0WxA5l4efZg/AynBlYlGJ1J8rBloKkSPuG4v9q9tEfeR73N/oAjDE0o/dF+
-         0YIu1A1GtahirJ59ZhHkW8IbO7HcmD3jwfD/sjh88Yce42vxRqDIoTfeZ8teUgocTY5J
-         UDUEXnAwPlL8ezidGhki3elsG+d07+aLbnNbTKdtbYBtRrh5y++8lDjpbK7o/Ha2fjeF
-         c9lg==
-X-Gm-Message-State: AOAM531lyRsHpRHNDzEtcysSIkNK7ah/XrH2yt9uYjvc/Ic6tpXFXIZm
-        CQ2TEnMG1vmUhWVnAdqFO1wUCBqSGAxj
-X-Google-Smtp-Source: ABdhPJxdBSfpE747ZAaEyhU8E3zHGyh3p6+B4jW0woylrVVIEuPQeFAbfyo7RsKfcp++zcez40YhXL9eqFz+
-X-Received: by 2002:a0c:d6c1:: with SMTP id l1mr1434290qvi.173.1591766239585;
- Tue, 09 Jun 2020 22:17:19 -0700 (PDT)
-Date:   Tue,  9 Jun 2020 22:17:15 -0700
-Message-Id: <20200610051717.170457-1-irogers@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=hz3sSzlwN+wdQHt2gE14qhNHlugfrttGXboZ/LOUn3c=;
+        b=WICWmXX9BO84nhfVTE3PlXyKsoRWXEZIiBXET6xNBFuXKbcSm7pIrwWAmwoGWundjk
+         fcMIMhpgIMJW9fWo0kI6S+8R7nLAUESrXcCorVO4Ca/OY+YsUY0mva9127G1ZhY0495R
+         jY66fY2zrRUg5xfTmE1M+WSDrXchp75OPwPRTAN7r29s2aPsc2BglDTflqMGhjnmDqyV
+         baGc3RBapEE5H0yyQTFnFs9IC0RDCwKH0w5BfA/q8VIAcJQag4CzZKunhShSNY3HV9v6
+         Yw28W3DqR96GK1Tc5JH4gM5Mk4cl9rJa/04JYzrvyFxWalorGF6ToYymnEAZfYiob3oF
+         L4HQ==
+X-Gm-Message-State: AOAM53172TnDwDFFLmfu9kBHKkHPMfiEiw/0nk9vjyzRLauW+R4ffXgc
+        C8B5bt09XS9QBEEqEC5oRmrIpi3qpL6I
+X-Google-Smtp-Source: ABdhPJywghAMmYjc68TFQFGRSb0liuLUsNi8rSfnb4r89U0RtOW3WNgFro99jXLAP8vCEi3LoD2kTerpHKDR
+X-Received: by 2002:a0c:fa47:: with SMTP id k7mr1490685qvo.132.1591766241662;
+ Tue, 09 Jun 2020 22:17:21 -0700 (PDT)
+Date:   Tue,  9 Jun 2020 22:17:16 -0700
+In-Reply-To: <20200610051717.170457-1-irogers@google.com>
+Message-Id: <20200610051717.170457-2-irogers@google.com>
 Mime-Version: 1.0
+References: <20200610051717.170457-1-irogers@google.com>
 X-Mailer: git-send-email 2.27.0.278.ge193c7cf3a9-goog
-Subject: [PATCH 1/2] perf expr: Add d_ratio operation
+Subject: [PATCH 2/2] perf expr: Add < and > operators
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -79,72 +83,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This simplifies computing ratios in json expressions.
+These are broadly useful and necessary for Intel's top-down analysis.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/expr.l |  1 +
- tools/perf/util/expr.y | 14 ++++++++++++--
- 2 files changed, 13 insertions(+), 2 deletions(-)
+ tools/perf/util/expr.l | 2 ++
+ tools/perf/util/expr.y | 5 ++++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
-index f397bf8b1a48..298d86660a96 100644
+index 298d86660a96..13e5e3c75f56 100644
 --- a/tools/perf/util/expr.l
 +++ b/tools/perf/util/expr.l
-@@ -100,6 +100,7 @@ symbol		({spec}|{sym})+
- 		}
- 	}
- 
-+d_ratio		{ return D_RATIO; }
- max		{ return MAX; }
- min		{ return MIN; }
- if		{ return IF; }
+@@ -111,6 +111,8 @@ else		{ return ELSE; }
+ "|"		{ return '|'; }
+ "^"		{ return '^'; }
+ "&"		{ return '&'; }
++"<"		{ return '<'; }
++">"		{ return '>'; }
+ "-"		{ return '-'; }
+ "+"		{ return '+'; }
+ "*"		{ return '*'; }
 diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-index bf3e898e3055..fe145344bb39 100644
+index fe145344bb39..5fcb98800f9c 100644
 --- a/tools/perf/util/expr.y
 +++ b/tools/perf/util/expr.y
-@@ -10,6 +10,14 @@
- #include "smt.h"
- #include <string.h>
- 
-+static double d_ratio(double val0, double val1)
-+{
-+	if (val1 == 0) {
-+		return 0;
-+	}
-+	return  val0 / val1;
-+}
-+
- %}
- 
- %define api.pure full
-@@ -28,7 +36,7 @@
- %token <num> NUMBER
- %token <str> ID
- %destructor { free ($$); } <str>
--%token MIN MAX IF ELSE SMT_ON
-+%token MIN MAX IF ELSE SMT_ON D_RATIO
- %left MIN MAX IF
+@@ -41,6 +41,7 @@ static double d_ratio(double val0, double val1)
  %left '|'
  %left '^'
-@@ -64,7 +72,8 @@ other: ID
- }
+ %left '&'
++%left '<' '>'
+ %left '-' '+'
+ %left '*' '/' '%'
+ %left NEG NOT
+@@ -73,7 +74,7 @@ other: ID
  |
  MIN | MAX | IF | ELSE | SMT_ON | NUMBER | '|' | '^' | '&' | '-' | '+' | '*' | '/' | '%' | '(' | ')' | ','
--
-+|
-+D_RATIO
+ |
+-D_RATIO
++'<' | '>' | D_RATIO
  
  all_expr: if_expr			{ *final_val = $1; }
  	;
-@@ -105,6 +114,7 @@ expr:	  NUMBER
- 	| MIN '(' expr ',' expr ')' { $$ = $3 < $5 ? $3 : $5; }
- 	| MAX '(' expr ',' expr ')' { $$ = $3 > $5 ? $3 : $5; }
- 	| SMT_ON		 { $$ = smt_on() > 0; }
-+	| D_RATIO '(' expr ',' expr ')' { $$ = d_ratio($3,$5); }
- 	;
- 
- %%
+@@ -94,6 +95,8 @@ expr:	  NUMBER
+ 	| expr '|' expr		{ $$ = (long)$1 | (long)$3; }
+ 	| expr '&' expr		{ $$ = (long)$1 & (long)$3; }
+ 	| expr '^' expr		{ $$ = (long)$1 ^ (long)$3; }
++	| expr '<' expr		{ $$ = $1 < $3; }
++	| expr '>' expr		{ $$ = $1 > $3; }
+ 	| expr '+' expr		{ $$ = $1 + $3; }
+ 	| expr '-' expr		{ $$ = $1 - $3; }
+ 	| expr '*' expr		{ $$ = $1 * $3; }
 -- 
 2.27.0.278.ge193c7cf3a9-goog
 
