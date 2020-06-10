@@ -2,169 +2,121 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B39C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E02BEC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64B2B206F7
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:41:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4129206F7
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:42:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="IR0BTURX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726102AbgFJBlV (ORCPT
+        id S1726122AbgFJBmi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 21:41:21 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:58404 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726016AbgFJBlT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 21:41:19 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 9364C63D51F743076B0C;
-        Wed, 10 Jun 2020 09:41:15 +0800 (CST)
-Received: from [10.133.219.224] (10.133.219.224) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 10 Jun 2020 09:41:11 +0800
-Subject: Re: [RFC 1/2] Eliminate over- and under-counting of io_ticks
-To:     Josh Snyder <joshs@netflix.com>, Jens Axboe <axboe@kernel.dk>,
-        "Mikulas Patocka" <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Josh Snyder <josh@code406.com>
-References: <20200609040724.448519-1-joshs@netflix.com>
- <20200609040724.448519-2-joshs@netflix.com>
-From:   Hou Tao <houtao1@huawei.com>
-Message-ID: <0b7e623e-2146-5e44-f486-ba9e1657f2a3@huawei.com>
-Date:   Wed, 10 Jun 2020 09:41:10 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.8.0
+        Tue, 9 Jun 2020 21:42:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58096 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726016AbgFJBmh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 21:42:37 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 739D2C05BD1E;
+        Tue,  9 Jun 2020 18:42:37 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49hV9N4cvcz9sRW;
+        Wed, 10 Jun 2020 11:42:31 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1591753354;
+        bh=k9OzmdUjrIqcTYRccUZlEpgrdhZAWYi0DaBUdmz31Fo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=IR0BTURX+so10BdJiPFpS/wKwC/OgDQSWUaOkmwJ0IKbiQ/nVoatvjUdguHCYuuFD
+         3FUWucvriLyPdIPdaLHZDa9NgmSQS24hEYsRnRCOYLgLMO4E+qCrLaLzUh+2aLd5Q6
+         UT5ijLSTdAbEtlFkavQHmClY3xG3ssHXS4OBpyKpL5XTgNwxVbIbOTufw8PAh++Cvn
+         Z5OP/6QbO9dcyp53GNdhAOYRYUSUDq5H5f1p4CHycgnnAbEb453pqCpK6m5pxgyw+f
+         TzfKOHcHSbhqQUXpiFpliRMnBVgdF3qFNBfsAE4e0NyPKZioUSeby5nJmBpT7JsxNK
+         JTmV802QYaIkw==
+Date:   Wed, 10 Jun 2020 11:42:27 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Balbir Singh <sblbir@amazon.com>
+Subject: linux-next: manual merge of the tip tree with Linus' tree
+Message-ID: <20200610114227.672fdd24@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200609040724.448519-2-joshs@netflix.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.219.224]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; boundary="Sig_/LrGpezqm66e6jy_WXt=gsb_";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+--Sig_/LrGpezqm66e6jy_WXt=gsb_
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 2020/6/9 12:07, Josh Snyder wrote:
-> Previously, io_ticks could be under-counted. Consider these I/Os along
-> the time axis (in jiffies):
-> 
->   t          012345678
->   io1        |----|
->   io2            |---|
-> 
-> Under the old approach, io_ticks would count up to 6, like so:
-> 
->   t          012345678
->   io1        |----|
->   io2            |---|
->   stamp      0   45  8
->   io_ticks   1   23  6
-> 
-> With this change, io_ticks instead counts to 8, eliminating the
-> under-counting:
-> 
->   t          012345678
->   io1        |----|
->   io2            |---|
->   stamp      0    5  8
->   io_ticks   0    5  8
-> 
-For the following case, the under-counting is still possible if io2 wins cmpxchg():
+Hi all,
 
-  t          0123456
-  io1        |-----|
-  io2           |--|
-  stamp      0     6
-  io_ticks   0     3
+Today's linux-next merge of the tip tree got a conflict in:
 
-However considering patch 2 tries to improve sampling rate to 1 us, the problem will gone.
+  Documentation/admin-guide/hw-vuln/index.rst
 
-> It was also possible for io_ticks to be over-counted. Consider a
-> workload that issues I/Os deterministically at intervals of 8ms (125Hz).
-> If each I/O takes 1ms, then the true utilization is 12.5%. The previous
-> implementation will increment io_ticks once for each jiffy in which an
-> I/O ends. Since the workload issues an I/O reliably for each jiffy, the
-> reported utilization will be 100%. This commit changes the approach such
-> that only I/Os which cross a boundary between jiffies are counted. With
-> this change, the given workload would count an I/O tick on every eighth
-> jiffy, resulting in a (correct) calculated utilization of 12.5%.
-> 
-> Signed-off-by: Josh Snyder <joshs@netflix.com>
-> Fixes: 5b18b5a73760 ("block: delete part_round_stats and switch to less precise counting")
-> ---
->  block/blk-core.c | 20 +++++++++++++-------
->  1 file changed, 13 insertions(+), 7 deletions(-)
-> 
-> diff --git a/block/blk-core.c b/block/blk-core.c
-> index d1b79dfe9540..a0bbd9e099b9 100644
-> --- a/block/blk-core.c
-> +++ b/block/blk-core.c
-> @@ -1396,14 +1396,22 @@ unsigned int blk_rq_err_bytes(const struct request *rq)
->  }
->  EXPORT_SYMBOL_GPL(blk_rq_err_bytes);
->  
-> -static void update_io_ticks(struct hd_struct *part, unsigned long now, bool end)
-> +static void update_io_ticks(struct hd_struct *part, unsigned long now, unsigned long start)
->  {
->  	unsigned long stamp;
-> +	unsigned long elapsed;
->  again:
->  	stamp = READ_ONCE(part->stamp);
->  	if (unlikely(stamp != now)) {
-> -		if (likely(cmpxchg(&part->stamp, stamp, now) == stamp))
-> -			__part_stat_add(part, io_ticks, end ? now - stamp : 1);
-> +		if (likely(cmpxchg(&part->stamp, stamp, now) == stamp)) {
-> +			// stamp denotes the last IO to finish
-> +			// If this IO started before stamp, then there was overlap between this IO
-> +			// and that one. We increment only by the non-overlap time.
-> +			// If not, there was no overlap and we increment by our own time,
-> +			// disregarding stamp.
-> +			elapsed = now - (start < stamp ? stamp : start);
-> +			__part_stat_add(part, io_ticks, elapsed);
-> +		}
->  	}
->  	if (part->partno) {
->  		part = &part_to_disk(part)->part0;
-> @@ -1439,7 +1447,7 @@ void blk_account_io_done(struct request *req, u64 now)
->  		part_stat_lock();
->  		part = req->part;
->  
-> -		update_io_ticks(part, jiffies, true);
-> +		update_io_ticks(part, jiffies, nsecs_to_jiffies(req->start_time_ns));
->  		part_stat_inc(part, ios[sgrp]);
->  		part_stat_add(part, nsecs[sgrp], now - req->start_time_ns);
->  		part_stat_unlock();
-> @@ -1456,7 +1464,6 @@ void blk_account_io_start(struct request *rq)
->  	rq->part = disk_map_sector_rcu(rq->rq_disk, blk_rq_pos(rq));
->  
->  	part_stat_lock();
-> -	update_io_ticks(rq->part, jiffies, false);
->  	part_stat_unlock();
->  }
->  
-> @@ -1468,7 +1475,6 @@ unsigned long disk_start_io_acct(struct gendisk *disk, unsigned int sectors,
->  	unsigned long now = READ_ONCE(jiffies);
->  
->  	part_stat_lock();
-> -	update_io_ticks(part, now, false);
->  	part_stat_inc(part, ios[sgrp]);
->  	part_stat_add(part, sectors[sgrp], sectors);
->  	part_stat_local_inc(part, in_flight[op_is_write(op)]);
-> @@ -1487,7 +1493,7 @@ void disk_end_io_acct(struct gendisk *disk, unsigned int op,
->  	unsigned long duration = now - start_time;
->  
->  	part_stat_lock();
-> -	update_io_ticks(part, now, true);
-> +	update_io_ticks(part, now, start_time);
->  	part_stat_add(part, nsecs[sgrp], jiffies_to_nsecs(duration));
->  	part_stat_local_dec(part, in_flight[op_is_write(op)]);
->  	part_stat_unlock();
-> 
+between commit:
+
+  7222a1b5b874 ("x86/speculation: Add SRBDS vulnerability and mitigation do=
+cumentation")
+
+from Linus' tree and commit:
+
+  0fcfdf55db9e ("Documentation: Add L1D flushing Documentation")
+
+from the tip tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc Documentation/admin-guide/hw-vuln/index.rst
+index ca4dbdd9016d,35633b299d45..000000000000
+--- a/Documentation/admin-guide/hw-vuln/index.rst
++++ b/Documentation/admin-guide/hw-vuln/index.rst
+@@@ -14,4 -14,4 +14,5 @@@ are configurable at compile, boot or ru
+     mds
+     tsx_async_abort
+     multihit.rst
+ +   special-register-buffer-data-sampling.rst
++    l1d_flush
+
+--Sig_/LrGpezqm66e6jy_WXt=gsb_
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7gOoQACgkQAVBC80lX
+0GwaBwf9Hk8O3KQrIRuamE/e5Mbm365BVUhxqd445GhUwx354QKps6FudJuGw4f8
+BtCA+v3crJ/3/SSHXrPsWY68s1QSeZZ9HrEzxsVaPADBAXowHZpM3arWkKa8zKCn
+SgRXxVDbW8usJpA21PE4db42PQzY+gEEbtpc7EfWzNZLiXum6+zopW2MVjo+4AeR
+goXpZaLEbFc8/5/jM7dSRTi3cI9zn+4vXy8fUUWm/lVgbNkkBE42tO5pU8RuiCvj
+hwyqPsB1AVSffginxwEpQuUtjBTRRYXc9yPWxKqbw4PKNqyUkfPn0nmaEjTQ/rW5
+Ponr9V8XZGLnY0ccZT+MAk/+YLbovQ==
+=Bv8y
+-----END PGP SIGNATURE-----
+
+--Sig_/LrGpezqm66e6jy_WXt=gsb_--
