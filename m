@@ -2,118 +2,162 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF6CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ECDEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87E3020734
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:34:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DA05204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:35:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L31SJ0Wm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QF2OTnz9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728500AbgFJLeJ (ORCPT
+        id S1728565AbgFJLfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 07:34:09 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:45024 "EHLO
+        Wed, 10 Jun 2020 07:35:53 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:52300 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728338AbgFJLeJ (ORCPT
+        by vger.kernel.org with ESMTP id S1728338AbgFJLfw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 07:34:09 -0400
+        Wed, 10 Jun 2020 07:35:52 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591788847;
+        s=mimecast20190719; t=1591788950;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ztFqhUudHoU3NNYqFL5POta8Qmquf650y/nl/9Uo0mc=;
-        b=L31SJ0WmX/2p6ulGSebAb22Ofufm5BGModPLE4jXIbqaMxEEjKP0HNXckWpM1isege8QTe
-        gqdMldM6Lp0AMLQKAYluWGSNltWpU+YfFFWeIsieNrj55YWYY3ZMfZ9Ph2nadWpQPxuJZ5
-        c3nqnujtgdgqa+USYAGdy7RLQIkfLBM=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-279-YVpuJXw5NdGL1XItkto8Sg-1; Wed, 10 Jun 2020 07:34:05 -0400
-X-MC-Unique: YVpuJXw5NdGL1XItkto8Sg-1
-Received: by mail-ej1-f70.google.com with SMTP id g9so950101ejs.20
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 04:34:05 -0700 (PDT)
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=K8pYKea34n4xAOJeaGLf5FVVIvqFNqD4hPeT2vvgXYw=;
+        b=QF2OTnz9kxuNasah4u4+KL7oDpaLE1I/forXxt8yF2+vBNNpKWBHG80j0tpIXY1sZpqptQ
+        S5i5fLcweNfEER4kl5D0DL8ts+UN+0HWJLc+zsR5TfFnLo33R9HIQdyZ4PMsoaomRfIyTP
+        Z640UA6RqpCOJbBxRhC8R3RpymGfVmo=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-251-tC6zBoukNHu__7ULv92ccQ-1; Wed, 10 Jun 2020 07:35:48 -0400
+X-MC-Unique: tC6zBoukNHu__7ULv92ccQ-1
+Received: by mail-wm1-f72.google.com with SMTP id a18so334613wmm.3
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 04:35:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ztFqhUudHoU3NNYqFL5POta8Qmquf650y/nl/9Uo0mc=;
-        b=gcfjjGRdtSJ5u4NGz8FBhtUYoatkK+5X5AtyHg7S3OJkmRTiQp2iwOwAsIfGbHCzn8
-         yNLphk9ReCMA1my0KdAhn1Qegjby1gBKr7h2bLP1f32eaVCThXugUIXTdjT/9FcN7xhn
-         fTP4vKnUxEAVgW1cYtbYrE5AA1ti0Nf8Ec3Bkvyp4wSCMAIa/ZMNhnRdtvufaUwF1aM8
-         pfRB2bXBtAmiNoX/a2uB9F968wpLNv+bRobbYE8EOczV/eSKVQ1oZVB+MPCfIF+a87PI
-         Q5c/LX4zUxCseXJ49/EnoopCfMsPUrt+oy9nUYYpp4t7tg3R0jQ2sqa1Qj9JiB2G3VLN
-         GaoQ==
-X-Gm-Message-State: AOAM533j8Nog0nA9Re6fnMpZX3GOhm1c14jejMDN/Zdcndt8PXR39zMf
-        AIFc0Jq5amtnIdmPGAGDOH7dnxi95dmswtKYrdzJCLhgI04B8ve+fGurC77t1A3fAGlgGrFyM5E
-        Ql1dSeXDNNWnhvbavGAUSZuEM
-X-Received: by 2002:a17:907:441c:: with SMTP id om20mr2772957ejb.62.1591788844398;
-        Wed, 10 Jun 2020 04:34:04 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxYfnxO7q4EnVccZRzA4Vkj9BRco2fOIoVOAQFKJPWEKvKv7I1oFGHoz1Ks7Pdc073loFhqzQ==
-X-Received: by 2002:a17:907:441c:: with SMTP id om20mr2772924ejb.62.1591788844144;
-        Wed, 10 Jun 2020 04:34:04 -0700 (PDT)
-Received: from [192.168.178.58] ([151.20.134.4])
-        by smtp.gmail.com with ESMTPSA id e4sm16864342edy.17.2020.06.10.04.34.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jun 2020 04:34:03 -0700 (PDT)
-Subject: Re: [PATCH v2 05/10] KVM: x86: interrupt based APF 'page ready' event
- delivery
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Vivek Goyal <vgoyal@redhat.com>
-Cc:     kvm@vger.kernel.org, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Gavin Shan <gshan@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org
-References: <20200525144125.143875-1-vkuznets@redhat.com>
- <20200525144125.143875-6-vkuznets@redhat.com>
- <20200609191035.GA223235@redhat.com>
- <dcdda87c-cf2f-da6f-3166-e2d0bfefce06@redhat.com>
- <873673b8gc.fsf@vitty.brq.redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <ce34f17a-d444-fdf4-1a1c-e052234c1516@redhat.com>
-Date:   Wed, 10 Jun 2020 13:34:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=K8pYKea34n4xAOJeaGLf5FVVIvqFNqD4hPeT2vvgXYw=;
+        b=g1rKuQQITwmkDokbMVEfG+VqhveeQHbpoNdu2rh0pICWbzYYBCPD15u+rV6pAVX70P
+         /u9HjgGv4GEpbeRxO3G/goCoj3UBDqFxQPbPLtkChF1dUPI/cGOzwa6lV+hp6eSZ1Je4
+         OTQqXDEmHbTOqIZRTWUmG75VBKEhdWkZOmftYBnWPXoiC+tDJwblusvwkoYkJA7P9clv
+         YGRBddiXyMdp+kppvfU1vHG/gWz4B/1aOxsz2LuCrWXItEghiekC39JsT2KfxD888N+7
+         ixOAUAc2ESxpCmSz5hy2FexsRUbTicodakQmgUNnh0+nad/bcL+VjPVpTCbRYXfLjCnY
+         x1iw==
+X-Gm-Message-State: AOAM530vNSOYoFXPy95iuxMT5T/6Z0WMy4+7sawcj0sGkGALF+4/uvlm
+        qy5EY2GiaVwxmVMrldAc+FiRTbsnW7CNkiG4wQ6ZWO6gjNMenqevHrhlIngRXiMcqt1oX1fhVyV
+        Xq6vBgb3pzBOH1zJfEijyjLSU
+X-Received: by 2002:adf:f251:: with SMTP id b17mr3051840wrp.289.1591788947564;
+        Wed, 10 Jun 2020 04:35:47 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyWnKuMQXjtn3IeBKm108U4YQm44aJFvUiXB9xS8f3b+y8TTFsSksejlRPFLR+mhd/ngiqchQ==
+X-Received: by 2002:adf:f251:: with SMTP id b17mr3051819wrp.289.1591788947339;
+        Wed, 10 Jun 2020 04:35:47 -0700 (PDT)
+Received: from redhat.com ([212.92.121.57])
+        by smtp.gmail.com with ESMTPSA id e15sm6864302wme.9.2020.06.10.04.35.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2020 04:35:46 -0700 (PDT)
+Date:   Wed, 10 Jun 2020 07:35:44 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
+        eperezma@redhat.com
+Subject: [PATCH RFC v7 00/14] vhost: ring format independence
+Message-ID: <20200610113515.1497099-1-mst@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <873673b8gc.fsf@vitty.brq.redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email 2.27.0.106.g8ac3dc51b1
+X-Mutt-Fcc: =sent
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/06/20 11:01, Vitaly Kuznetsov wrote:
-> The issue isn't related to the interrupt based APF mechanism, right?
-> 'Page ready' events are always injected (sooner or later). I'll take a
-> look.
+This intentionally leaves "fixup" changes separate - hopefully
+that is enough to fix vhost-net crashes reported here,
+but it helps me keep track of what changed.
+I will naturally squash them later when we are done.
 
-No, it isn't.
 
->>> While setting up async pf, should we keep track whether associated
->>> page_not_present was delivered to guest or not and deliver page_ready
->>> accordingly.
->>
->> Yes, I think so.
-> 
-> Something like this? (not even compile tested yet):
+This adds infrastructure required for supporting
+multiple ring formats.
 
-Pretty much, though I would avoid the reindentation if possible.
+The idea is as follows: we convert descriptors to an
+independent format first, and process that converting to
+iov later.
 
-Paolo
+Used ring is similar: we fetch into an independent struct first,
+convert that to IOV later.
+
+The point is that we have a tight loop that fetches
+descriptors, which is good for cache utilization.
+This will also allow all kind of batching tricks -
+e.g. it seems possible to keep SMAP disabled while
+we are fetching multiple descriptors.
+
+For used descriptors, this allows keeping track of the buffer length
+without need to rescan IOV.
+
+This seems to perform exactly the same as the original
+code based on a microbenchmark.
+Lightly tested.
+More testing would be very much appreciated.
+
+changes from v6:
+	- fixes some bugs introduced in v6 and v5
+
+changes from v5:
+	- addressed comments by Jason: squashed API changes, fixed up discard
+
+changes from v4:
+	- added used descriptor format independence
+	- addressed comments by jason
+	- fixed a crash detected by the lkp robot.
+
+changes from v3:
+        - fixed error handling in case of indirect descriptors
+        - add BUG_ON to detect buffer overflow in case of bugs
+                in response to comment by Jason Wang
+        - minor code tweaks
+
+Changes from v2:
+	- fixed indirect descriptor batching
+                reported by Jason Wang
+
+Changes from v1:
+	- typo fixes
+
+
+Michael S. Tsirkin (14):
+  vhost: option to fetch descriptors through an independent struct
+  fixup! vhost: option to fetch descriptors through an independent
+    struct
+  vhost: use batched get_vq_desc version
+  vhost/net: pass net specific struct pointer
+  vhost: reorder functions
+  vhost: format-independent API for used buffers
+  fixup! vhost: format-independent API for used buffers
+  fixup! vhost: use batched get_vq_desc version
+  vhost/net: convert to new API: heads->bufs
+  vhost/net: avoid iov length math
+  vhost/test: convert to the buf API
+  vhost/scsi: switch to buf APIs
+  vhost/vsock: switch to the buf API
+  vhost: drop head based APIs
+
+ drivers/vhost/net.c   | 174 +++++++++----------
+ drivers/vhost/scsi.c  |  73 ++++----
+ drivers/vhost/test.c  |  22 +--
+ drivers/vhost/vhost.c | 378 +++++++++++++++++++++++++++---------------
+ drivers/vhost/vhost.h |  44 +++--
+ drivers/vhost/vsock.c |  30 ++--
+ 6 files changed, 439 insertions(+), 282 deletions(-)
+
+-- 
+MST
 
