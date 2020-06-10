@@ -2,124 +2,120 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F867C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F309C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2AF120691
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:32:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591752738;
-	bh=dzg/oN10DPBG44cDM1Zt9m1kfbMQP4Z1HCIljURfp1w=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=hcmDVSTYDRmjhqndvmKBtHzRvhP7cQ/AzAu7PnEhA3XymUHuVf0WZwMDoQR06z0LK
-	 YSoPM77zHYAIfpf4M110b5iBgLUJCXZt4+oeBRN+Pe9S86WmWAMU8XsdItYqeOom0S
-	 zPqHRd0VPj9pKOkiSpfBGbAF7Q4a9TJR84nqmAEY=
+	by mail.kernel.org (Postfix) with ESMTP id D6B4120691
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:32:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ROHGXgoE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726042AbgFJBcR (ORCPT
+        id S1726108AbgFJBcj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 21:32:17 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:50001 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725885AbgFJBcQ (ORCPT
+        Tue, 9 Jun 2020 21:32:39 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:5007 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725885AbgFJBch (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 21:32:16 -0400
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 05A1VuWh019158;
-        Wed, 10 Jun 2020 10:31:57 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 05A1VuWh019158
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1591752717;
-        bh=S2EWdblSOOwVEN+VucSLtxUOt416JWBmQq0pLM5fxBM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QUmAu6Ijp6xJjJBHRbB3X6eM4/YR6/nBW7T4EMNh1c15pA91IuduuWkNMFD+YLLsv
-         m+nInATptxjTjWdWF0eaiHm4q6b/y6OjhC1gmCmnKgxp8MkONQ4phjckz7d+sfDnkH
-         ERqm6X6kzWaExk5wGQz4KNmBpW5VIz4Mp1z23y+P/3uIDZgq2vQChN+JIgR7d1MGkq
-         6T08bLyGHiLPnmBFyJmcgQK8bcwJYIUuiPiuKKMKhmi9HLnmzIl398B9eFzRVG6eK7
-         MhhkCDmcyT68dBY7NtZlpJ/KQ+ealeOH6UVrzPT4ODe3LP4SE+F1aGkMXlKp+sBIGA
-         6Eo3NEkrpgKBg==
-X-Nifty-SrcIP: [209.85.222.51]
-Received: by mail-ua1-f51.google.com with SMTP id z47so297710uad.5;
-        Tue, 09 Jun 2020 18:31:57 -0700 (PDT)
-X-Gm-Message-State: AOAM5323t3ovtrjTrRQ0mEFMWY6J2sfGPv+yOL798obK6mNBIniCJJj1
-        t9LkOVaS768fGO7/5sPQrQdbmDBkMfU+N8aiRzc=
-X-Google-Smtp-Source: ABdhPJy0bli/7m5Pe+rVE1l+8VJsyjIWmpq1ORdX2I/8/Dj0gWUTUU2kXTV2+4hH7pdmXatt733/zlN2l3k+sWrNv3o=
-X-Received: by 2002:ab0:7619:: with SMTP id o25mr811983uap.109.1591752715902;
- Tue, 09 Jun 2020 18:31:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200608084117.4563-1-jiping.ma2@windriver.com>
- <CAL_JsqKLfSE5tPEPi1=erqBzCF9fceKKDe4qBkywB4O_JhbjGg@mail.gmail.com>
- <acfc88fc-2a7e-19fe-3dc4-37a03ddabcf9@windriver.com> <CAK7LNAS3xOvkUWZzZcb7Mk2YsWo+A6XTjzTZjxjvkYCjWjQvFg@mail.gmail.com>
- <d76f0e39-e22c-7179-955a-981d42b7bc01@windriver.com> <CAK7LNAQkXiw9cV=Qt5VrpDGd5CPAPS-EBs0AeOhSJd5JbXtkZg@mail.gmail.com>
- <6c5b1422-5b8a-03fe-57ea-567767ed75e2@windriver.com>
-In-Reply-To: <6c5b1422-5b8a-03fe-57ea-567767ed75e2@windriver.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 10 Jun 2020 10:31:19 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASj5nABYN0ukE_V3aK_ys7zuAibn4bzy8x5zGHM59gF1g@mail.gmail.com>
-Message-ID: <CAK7LNASj5nABYN0ukE_V3aK_ys7zuAibn4bzy8x5zGHM59gF1g@mail.gmail.com>
-Subject: Re: [PATCH] dtc: also check <yaml.h> for libyaml
-To:     Jiping Ma <Jiping.Ma2@windriver.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        DTML <devicetree@vger.kernel.org>,
+        Tue, 9 Jun 2020 21:32:37 -0400
+X-UUID: 8eb582d8398a4d0e899051ebeff39a85-20200610
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=qhYvj7zpeWIgmu8J+0ge/AWBJKAFPe78L9ZHRztXi94=;
+        b=ROHGXgoEWsN09MfFNKN7Pr9lh/OwAsSPKvpDbtvC4AyMOq1Y6PJiGT78RFNLpHHkaCsBqW4Wvy/WzTzh3V6SXWss6zjmgUN1Y4VIbLsvBpOIepoyiiZgGxm7K/IZKRKGl5GfE5Sk96e1lGEfsztjU11By/cQIq2lylthK0TEcG8=;
+X-UUID: 8eb582d8398a4d0e899051ebeff39a85-20200610
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <biao.huang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1662716289; Wed, 10 Jun 2020 09:32:33 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by mtkmbs08n1.mediatek.inc
+ (172.21.101.55) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 10 Jun
+ 2020 09:32:31 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 10 Jun 2020 09:32:29 +0800
+Message-ID: <1591752616.29387.26.camel@mhfsdcap03>
+Subject: Re: [PATCH] net: stmmac: Fix RX Coalesce IOC always true issue
+From:   biao huang <biao.huang@mediatek.com>
+To:     Jose Abreu <Jose.Abreu@synopsys.com>
+CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "yt.shen@mediatek.com" <yt.shen@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Wed, 10 Jun 2020 09:30:16 +0800
+In-Reply-To: <BN6PR12MB1779E6EF20FD8F5F3255CCE8D3820@BN6PR12MB1779.namprd12.prod.outlook.com>
+References: <20200609094133.11053-1-biao.huang@mediatek.com>
+         <BN6PR12MB1779E6EF20FD8F5F3255CCE8D3820@BN6PR12MB1779.namprd12.prod.outlook.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 10:12 AM Jiping Ma <Jiping.Ma2@windriver.com> wrote:
->
->
->
-> On 06/10/2020 08:28 AM, Masahiro Yamada wrote:
-> > On Tue, Jun 9, 2020 at 12:08 PM Jiping Ma <Jiping.Ma2@windriver.com> wrote:
-> >>
-> >>
-> >> On 06/09/2020 10:52 AM, Masahiro Yamada wrote:
-> >>> On Tue, Jun 9, 2020 at 10:01 AM Jiping Ma <Jiping.Ma2@windriver.com> wrote:
-> >>>>
-> >>>> On 06/09/2020 03:09 AM, Rob Herring wrote:
-> >>>>> On Mon, Jun 8, 2020 at 2:42 AM Jiping Ma <jiping.ma2@windriver.com> wrote:
-> >>>>>> yamltree.c includes <yaml.h>, If /usr/include/yaml.h does not exist,
-> >>>>>> it fails to build.
-> >>>>> Does this patch fix your issue?:
-> >>>>>
-> >>>>> https://lore.kernel.org/linux-devicetree/20200505100319.741454-1-masahiroy@kernel.org/
-> >>>> No, it did not fix the issue.
-> >>>>
-> >>>> $ pkg-config --cflags yaml-0.1
-> >>>>
-> >>>> $ pkg-config yaml-0.1 --libs
-> >>>> -L/buildarea/jma1/wr-19-0518/19.45/sysroots/aarch64-wrs-linux/usr/lib64
-> >>>> -lyaml
-> >> This issue happened in Yocto,  After completing the SDK build and
-> >> installing it, use a new shell to source the environment and try to
-> >> build the helper scripts.
-> >> export
-> >> SDKTARGETSYSROOT=/buildarea/jma1/wr-19-0518/19.45/sysroots/aarch64-wrs-linux
-> >> export
-> >> PKG_CONFIG_PATH=$SDKTARGETSYSROOT/usr/lib64/pkgconfig:$SDKTARGETSYSROOT/usr/share/pkgconfig
-> >>>
-> >
-> > Probably, this commit:
-> >
-> > https://github.com/yaml/libyaml/commit/3c80be99fb18f3ee18af37221a3b0c4760e8df06
-> >
-> >
-> > Use newer libyaml, and that's fine.
-> This commit already was included in our code.
+T24gVHVlLCAyMDIwLTA2LTA5IGF0IDE0OjIwICswMDAwLCBKb3NlIEFicmV1IHdyb3RlOg0KPiBG
+cm9tOiBCaWFvIEh1YW5nIDxiaWFvLmh1YW5nQG1lZGlhdGVrLmNvbT4NCj4gRGF0ZTogSnVuLzA5
+LzIwMjAsIDEwOjQxOjMzIChVVEMrMDA6MDApDQo+IA0KPiA+IC0JCXJ4X3EtPnJ4X2NvdW50X2Zy
+YW1lcyArPSBwcml2LT5yeF9jb2FsX2ZyYW1lczsNCj4gPiAtCQlpZiAocnhfcS0+cnhfY291bnRf
+ZnJhbWVzID4gcHJpdi0+cnhfY29hbF9mcmFtZXMpDQo+ID4gKwkJaWYgKHJ4X3EtPnJ4X2NvdW50
+X2ZyYW1lcyA+PSBwcml2LT5yeF9jb2FsX2ZyYW1lcykNCj4gDQo+IFRoaXMgaXMgbm8gcmlnaHQu
+IElmIHlvdSB3YW50IHRvIFJYIElDIGJpdCB0byBub3QgYWx3YXlzIGJlIHNldCB5b3UgbmVlZCAN
+Cj4gdG8gY2hhbmdlIGNvYWxlc2NlIHBhcmFtZXRlcnMgdXNpbmcgZXRodG9vbC4NCg0KbGV0J3Mg
+dGFrZSBsb29rIGF0IHRoZXNlIGxpbmVzOg0KDQogCTEuIHJ4X3EtPnJ4X2NvdW50X2ZyYW1lcyAr
+PSBwcml2LT5yeF9jb2FsX2ZyYW1lczsNCgkyLiAJaWYgKHJ4X3EtPnJ4X2NvdW50X2ZyYW1lcyA+
+IHByaXYtPnJ4X2NvYWxfZnJhbWVzKQ0KCTMuIAkJcnhfcS0+cnhfY291bnRfZnJhbWVzID0gMDsN
+Cg0KYmVmb3JlIHRoZSBpZiBjb25kaXRpb24obGluZSAyIGFib3ZlKSwgdGhlcmUgaXMgInJ4X3Et
+PnJ4X2NvdW50X2ZyYW1lcw0KKz0gcHJpdi0+cnhfY29hbF9mcmFtZXMiKGxpbmUgMSBhYm92ZSkg
+c2VudGVuY2U7IHNvIHRoZSBpZiBjb25kaXRpb24NCmFsd2F5cyB0cnVlLCBhbmQgdGhlIGFzc2ln
+bm1lbnQgcnhfcS0+cnhfY291bnRfZnJhbWVzID0gMCBoYXBwZW5zLg0KDQpIZXJlIGlzIHRoZSBy
+ZXN1bHQgb24gb3VyIHBsYXRmb3JtLCBhbGwgZGVzYzNbMzBdID0gMTsgeW91IGNhbiBhbHNvDQpj
+aGVjayBpdCBvbiB5b3VyIHBsYXRmb3JtLiBubyBtYXR0ZXIgd2hhdCByeC1mcmFtZXMgeW91IHNl
+dCB3aXRoDQoiZXRodG9vbCAtQyBldGgwIHJ4LWZyYW1lcyIsIGRlc2MzWzMwXSBhbHdheXMgdHJ1
+ZS4NCg0KIyBldGh0b29sIC1jIGV0aDANCkNvYWxlc2NlIHBhcmFtZXRlcnMgZm9yIGV0aDA6DQpB
+ZGFwdGl2ZSBSWDogb2ZmICBUWDogb2ZmDQpzdGF0cy1ibG9jay11c2VjczogMA0Kc2FtcGxlLWlu
+dGVydmFsOiAwDQpwa3QtcmF0ZS1sb3c6IDANCnBrdC1yYXRlLWhpZ2g6IDANCiANCnJ4LXVzZWNz
+OiAzMDENCnJ4LWZyYW1lczogMjUNCnJ4LXVzZWNzLWlycTogMA0KcngtZnJhbWVzLWlycTogMA0K
+DQojY2QgL3N5cy9rZXJuZWwvZGVidWcvc3RtbWFjZXRoL2V0aDANCiMgY2F0IGRlc2NyaXB0b3Jz
+X3N0YXR1cw0KUlggUXVldWUgMDoNCkRlc2NyaXB0b3IgcmluZzoNCjAgWzB4NTAzOGIwMDBdOiAw
+eGE4NTQxYTgyIDB4MCAweDAgMHhjMTAwMDAwMA0KIA0KMSBbMHg1MDM4YjAxMF06IDB4YTg1NDEy
+MDIgMHgwIDB4MCAweGMxMDAwMDAwDQogDQoyIFsweDUwMzhiMDIwXTogMHhhODU0MDk4MiAweDAg
+MHgwIDB4YzEwMDAwMDANCiANCjMgWzB4NTAzOGIwMzBdOiAweGE4NTQwMTAyIDB4MCAweDAgMHhj
+MTAwMDAwMA0KIA0KNCBbMHg1MDM4YjA0MF06IDB4YTY1OGY4MDIgMHgwIDB4MCAweGMxMDAwMDAw
+DQogDQo1IFsweDUwMzhiMDUwXTogMHhhNjU4ZWY4MiAweDAgMHgwIDB4YzEwMDAwMDANCiANCjYg
+WzB4NTAzOGIwNjBdOiAweGE2NThlNzAyIDB4MCAweDAgMHhjMTAwMDAwMA0KIA0KNyBbMHg1MDM4
+YjA3MF06IDB4YTY1OGRlODIgMHgwIDB4MCAweGMxMDAwMDAwDQogDQo4IFsweDUwMzhiMDgwXTog
+MHhhNjU4ZDYwMiAweDAgMHgwIDB4YzEwMDAwMDANCiANCjkgWzB4NTAzOGIwOTBdOiAweGE2NThj
+ZDgyIDB4MCAweDAgMHhjMTAwMDAwMA0KIA0KMTAgWzB4NTAzOGIwYTBdOiAweGE2NThjNTAyIDB4
+MCAweDAgMHhjMTAwMDAwMA0KIA0KMTEgWzB4NTAzOGIwYjBdOiAweGE2NThiYzgyIDB4MCAweDAg
+MHhjMTAwMDAwMA0KIA0KMTIgWzB4NTAzOGIwYzBdOiAweGE2NThiNDAyIDB4MCAweDAgMHhjMTAw
+MDAwMA0KIA0KMTMgWzB4NTAzOGIwZDBdOiAweGE2NThhYjgyIDB4MCAweDAgMHhjMTAwMDAwMA0K
+IA0KMTQgWzB4NTAzOGIwZTBdOiAweGE2NThhMzAyIDB4MCAweDAgMHhjMTAwMDAwMA0KIA0KMTUg
+WzB4NTAzOGIwZjBdOiAweGE2NTg5YTgyIDB4MCAweDAgMHhjMTAwMDAwMA0KIA0KMTYgWzB4NTAz
+OGIxMDBdOiAweGE2NTg5MjAyIDB4MCAweDAgMHhjMTAwMDAwMA0KIA0KMTcgWzB4NTAzOGIxMTBd
+OiAweGE2NTg4OTgyIDB4MCAweDAgMHhjMTAwMDAwMA0KIA0KMTggWzB4NTAzOGIxMjBdOiAweGE2
+NTg4MTAyIDB4MCAweDAgMHhjMTAwMDAwMA0KIA0KMTkgWzB4NTAzOGIxMzBdOiAweGE0NmRmODAy
+IDB4MCAweDAgMHhjMTAwMDAwMA0KIA0KMjAgWzB4NTAzOGIxNDBdOiAweGE0NmRlZjgyIDB4MCAw
+eDAgMHhjMTAwMDAwMA0KIA0KMjEgWzB4NTAzOGIxNTBdOiAweGE0NmRlNzAyIDB4MCAweDAgMHhj
+MTAwMDAwMA0KIA0KMjIgWzB4NTAzOGIxNjBdOiAweGE0NmRkZTgyIDB4MCAweDAgMHhjMTAwMDAw
+MA0KIA0KMjMgWzB4NTAzOGIxNzBdOiAweGE0NmRkNjAyIDB4MCAweDAgMHhjMTAwMDAwMA0KIA0K
+MjQgWzB4NTAzOGIxODBdOiAweGE0NmRjZDgyIDB4MCAweDAgMHhjMTAwMDAwMA0KIA0KMjUgWzB4
+NTAzOGIxOTBdOiAweGE0NmRjNTAyIDB4MCAweDAgMHhjMTAwMDAwMA0KIA0KMjYgWzB4NTAzOGIx
+YTBdOiAweGE0NmRiYzgyIDB4MCAweDAgMHhjMTAwMDAwMA0KIA0KMjcgWzB4NTAzOGIxYjBdOiAw
+eGE0NmRiNDAyIDB4MCAweDAgMHhjMTAwMDAwMA0KIA0KMjggWzB4NTAzOGIxYzBdOiAweGE0NmRh
+YjgyIDB4MCAweDAgMHhjMTAwMDAwMA0KIA0KMjkgWzB4NTAzOGIxZDBdOiAweGE0NmRhMzAyIDB4
+MCAweDAgMHhjMTAwMDAwMA0KIA0KMzAgWzB4NTAzOGIxZTBdOiAweGE0NmQ5YTgyIDB4MCAweDAg
+MHhjMTAwMDAwMA0KLi4uDQoNCj4gLS0tDQo+IFRoYW5rcywNCj4gSm9zZSBNaWd1ZWwgQWJyZXUN
+Cg0K
 
-
-Then, I have no idea,
-but this is not a problem in the kernel build.
-
-
-
--- 
-Best Regards
-Masahiro Yamada
