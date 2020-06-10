@@ -2,65 +2,69 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78DD5C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D48C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:30:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5226520760
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:30:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EFDD20825
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:30:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591821036;
+	bh=j7JnUzzkBQUS8Cb4iN2Pzvp+rtD8G88Uz7rNrgd+Pb0=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=bIAHC6tfgwiMUWx3v7Ih6K8BnsGr4MRMR0bpnfjm+mMEBbLTh1N5wcs8ZWigrsoD+
+	 EVjCcY1M3llBLV6ItyW+LxJ4IMQ6RRCMXWJFV4p46xx5u8V/Pv6ytVDevAtgm6NiF/
+	 szn/LYf86a7tKQr9UL024jugazJyUeyEp8nl2bRI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729125AbgFJUa3 (ORCPT
+        id S1728107AbgFJUa1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 16:30:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34932 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727083AbgFJUa1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 10 Jun 2020 16:30:27 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90D39C03E96B;
-        Wed, 10 Jun 2020 13:30:26 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
-        id 1jj7MZ-006dAU-Oc; Wed, 10 Jun 2020 20:30:19 +0000
-Date:   Wed, 10 Jun 2020 21:30:19 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [git pull] vfs misc
-Message-ID: <20200610203019.GW23230@ZenIV.linux.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Received: from mail.kernel.org ([198.145.29.99]:40354 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726277AbgFJUaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 16:30:24 -0400
+Subject: Re: [GIT PULL] UML changes for v5.8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591821024;
+        bh=j7JnUzzkBQUS8Cb4iN2Pzvp+rtD8G88Uz7rNrgd+Pb0=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=o6h0V6ggOWx3lPdY8BkpS1JisQxlSwRu0YOlhtpooecPVk5t0IR/fxp9U+bn+WUNZ
+         V/2g453zvKF/SmsYT6vjv1aqkjBYB1kX1sXRMV6GIIHLuEt7PZtnti0FCskIR7pQGX
+         mpkEaG1MYkOxCX1BJDs5WKE3SKJRGvWapzdoVsT8=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <1858220125.350.1591736510906.JavaMail.zimbra@nod.at>
+References: <1858220125.350.1591736510906.JavaMail.zimbra@nod.at>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <1858220125.350.1591736510906.JavaMail.zimbra@nod.at>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rw/uml.git
+ tags/for-linus-5.8-rc1
+X-PR-Tracked-Commit-Id: f6e8c474390be2e6f5bd0b8966e19958214609ff
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 84fc461db99b2dc19e019c0a97725a3653687981
+Message-Id: <159182102423.16227.12145075205238240772.pr-tracker-bot@kernel.org>
+Date:   Wed, 10 Jun 2020 20:30:24 +0000
+To:     Richard Weinberger <richard@nod.at>
+Cc:     torvalds <torvalds@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-um <linux-um@lists.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-	A couple of trivial patches that fell through the cracks last cycle
+The pull request you sent on Tue, 9 Jun 2020 23:01:50 +0200 (CEST):
 
-The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
+> git://git.kernel.org/pub/scm/linux/kernel/git/rw/uml.git tags/for-linus-5.8-rc1
 
-  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/84fc461db99b2dc19e019c0a97725a3653687981
 
-are available in the git repository at:
+Thank you!
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git work.misc
-
-for you to fetch changes up to cc23402c1c2de8b1815212f3924cdbc3cda02b94:
-
-  fs: fix indentation in deactivate_super() (2020-05-29 10:35:25 -0400)
-
-----------------------------------------------------------------
-Nikolay Borisov (1):
-      vfs: Remove duplicated d_mountpoint check in __is_local_mountpoint
-
-Yufen Yu (1):
-      fs: fix indentation in deactivate_super()
-
- fs/namespace.c | 5 +----
- fs/super.c     | 2 +-
- 2 files changed, 2 insertions(+), 5 deletions(-)
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
