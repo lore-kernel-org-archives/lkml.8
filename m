@@ -2,258 +2,177 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A74C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06FE4C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:21:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 236162064C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:21:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D090A2064C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:21:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="B5sA1Vsk"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jKGASy0+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbgFJIVo (ORCPT
+        id S1726739AbgFJIV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 04:21:44 -0400
-Received: from mout.gmx.net ([212.227.15.18]:44721 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726081AbgFJIVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 04:21:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1591777291;
-        bh=x5aadDaqrIihBmmALCfxUeDqFnf5xbDyu5Y5Kyxlrf0=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:References:Date:In-Reply-To;
-        b=B5sA1Vsk/+OAulZdoeee+ek/4UygCrPthihSjj5ipNUaXywJxvgC5QZytJSF+LK8A
-         Kqxb8DseOmwi5komg7Np2NwNubLfucdOshXaLfeW9kZkG8hLeX+dq7UbMv1HhoBZN2
-         R6uIeY+PdAWFNPzFaAOna2+ZGQ/QgZnL0PO0wlzU=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from strobe-jhalfs ([178.9.97.46]) by mail.gmx.com (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MdNY2-1j9bEg3zAu-00ZNp1; Wed, 10
- Jun 2020 10:21:31 +0200
-From:   Stephen Berman <stephen.berman@gmx.net>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: power-off delay/hang due to commit 6d25be57 (mainline)
-References: <87bln7ves7.fsf@gmx.net>
-        <20200506215713.qoo4enq32ckcjmz7@linutronix.de>
-        <87v9l65d2y.fsf@gmx.net>
-        <20200513220428.4nksinis2qs5dtmh@linutronix.de>
-        <87mu6aurfn.fsf@gmx.net>
-        <20200522164012.ynyvrjompv42jtmx@linutronix.de>
-        <87y2owwo2o.fsf@rub.de>
-        <20200609202339.cgy57twm2zdtjhje@linutronix.de>
-Date:   Wed, 10 Jun 2020 10:21:29 +0200
-In-Reply-To: <20200609202339.cgy57twm2zdtjhje@linutronix.de> (Sebastian
-        Andrzej Siewior's message of "Tue, 9 Jun 2020 22:23:39 +0200")
-Message-ID: <87tuzjcovq.fsf@gmx.net>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
+        Wed, 10 Jun 2020 04:21:57 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28918 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726081AbgFJIV5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 04:21:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591777315;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=OI3aCfsDdegeLI3ZNTVz0fiZIXbxW2AX3bbw/1MUDHM=;
+        b=jKGASy0+2eUDcNnvnsxJ59efVtXdEuANsfTcfOkAzYRo8dhKsRoUty5YUHZgdna32QBNxm
+        36bHigOS1JS49f9Iqb/jCkIyoUXEnfNSHB888gtSHcFK9+chX6DYtMNSQUMaPy2WHHCi4t
+        si7W+oASvIJDD7HRqyOodmDz4vxOBEA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-399-6cSuREqVPdadQqwv8jTYFQ-1; Wed, 10 Jun 2020 04:21:51 -0400
+X-MC-Unique: 6cSuREqVPdadQqwv8jTYFQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D946018A8220;
+        Wed, 10 Jun 2020 08:21:49 +0000 (UTC)
+Received: from [10.72.12.51] (ovpn-12-51.pek2.redhat.com [10.72.12.51])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 45A125D9D3;
+        Wed, 10 Jun 2020 08:21:42 +0000 (UTC)
+Subject: Re: [PATCH v2] kexec: Do not verify the signature without the
+ lockdown or mandatory signature
+From:   lijiang <lijiang@redhat.com>
+To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        "ebiederm@xmission.com" <ebiederm@xmission.com>
+Cc:     kexec@lists.infradead.org, ebiederm@xmission.com, jbohac@suse.cz,
+        jmorris@namei.org, mjg59@google.com, dyoung@redhat.com,
+        bhe@redhat.com
+References: <20200602045952.27487-1-lijiang@redhat.com>
+Message-ID: <49d2af1c-bcbf-41d8-071c-93cce024b47b@redhat.com>
+Date:   Wed, 10 Jun 2020 16:21:40 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
+In-Reply-To: <20200602045952.27487-1-lijiang@redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:4YtUnL3jYnMQw82rzAuoCy8SrIuHB1gv82ukl7limmBQx2INjIz
- bnsNob0mWxLX1NoYesMv3btF/HgFmdaaX0LVm1n78cXxgJf6ihqzHYVC5UFjjdECwsa1+WL
- frxgBXMBv5ZLV3ObjA628Q2mf+FW0qYdKbGHixYUh1f46LyxZE+l7FGaTOlRJ+yjSypY8Wr
- KgwBXHzR0BxVTZ0l9mhuA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:w2yE0NrAzdU=:mWdPzH9CdNTCCh9Ov0+hmr
- z+4CfOVojJ/urQmpI2K1Pep2PcHh+k9LwwOl8m7U/YRaH+VuihpLW8I+6eWR4xbkeT2wzKlbt
- +bd0wu6QZXLeidlZ7/6Am/Tk6u5pCOf+QMN+5vQTrqUzjSzwYRPqFLMLgY1Z0/bvpNG1yDrWb
- fc/nrDT/fwnmJrf8PCovl1OjgkbBYOVdEjrQNfkMowW8ldmJSSS0VFgUAeXoKkboDkguEaiEB
- dfbGQRahT9PL5alC4QNhXY817cDK5aKsWaSBoWdUjMsifHrrCMK9gkduOPGCWEMXuCQmYGCZG
- /3iXt7M4T0vDuN/lxJ6rBbKatUojGDJYwlrAnp6ccnKYa+pWrcxyahuQ5O1kLnnCyeNUGih8r
- x3R0bW6GMhzt9xzqf0fj8pOEpDUH/G5yCP31vHnc0mo82w79LY5H9ubQ0AUSLxGHH0MfhXULE
- 17elNwxkJiJWejBourkHma0IRUm4B9eDMEkdlFPbENshHYoSfGOx8x9FXLOvDkFdSe8AdJROi
- /j8qMqY/yRaGCaBVPwR0f2CAsNO5VuocpZ8tbqKRt7rYeQ2+FaIesjePWdumpDm21WvCejAUD
- B8vBtBD2Dwu/O6z09gt3M45SHMAFbBwVf6xdiigHHTDIhzkqNFRN6iOYQaKH0OlRRNFwZugEY
- IC+HDqtzZPJLl2ayRT4nohJ0WPPnl+Dh8lbOx7UZnZVhJzmj/WjFRitgmQEEV+z4L/KmnsaNJ
- owWpCMDAPY8GQtck6qO6ZjwedB5mM/XQ4xpGzyAgUXU0JZdqf2qByBa8uaJ5J2BoZHu1PW11v
- Ibxu7NCeC/v1YxB2SbR6rG0mJx03UnnKdGq/SDklDKt2B3ffrFzYHUSF4x0p4IrjQokQBss/0
- s3UroYE6wPim8q3KiO1hxwEkB0QuiQd0BzBWp0PdIUzPV79M4Ppqf3TjcrYkY69i9utI7Ttx+
- oLeF8/XE/S9P9XYgArTmR0Mxzd/XXLTpOKLEVjrCGedPBYQ1+VXwxNrt3c/gkxzXmwoIsmM1x
- OdlDs/lxqAzr5tCLBqZK7VGIOxcKrq/VriET7x66qjZQbHNoF2owLSB/rdgZegIlZUlD64bnC
- e4qz3fivF141005t1ZpRbvmjnPsxu0OPNvUN8rcPDaBpguowWM5SQ2bjhvBgejcYI3Civzoph
- juVfmZk5HCnsYlOwkuhQiX0RcnOvP4gAtz+VpcoP587tEqZdN1T3guzloV7LHSRlgnKaz/mP9
- JxaQNxii0iqvk2ShI
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(GMX put your email into my spam folder, so I didn't see it before I
-sent my followup about removing the wifi firmware.)
 
-On Tue, 9 Jun 2020 22:23:39 +0200 Sebastian Andrzej Siewior <bigeasy@linutr=
-onix.de> wrote:
+I just noticed that I forgot to add Eric Biederman in cc list, so sorry for this.
 
-> On 2020-06-09 12:06:23 [+0200], Stephen Berman wrote:
->> I recompiled kernel 5.6.4 with the printk() call you suggested, then
->> booted the kernel with "ignore_loglevel initcall_debug" (but leaving the
->> CDROM and wifi intact for now).  After working as I normally do, I
->> called `shutdown -h now', again as usual.  After the "Bringing down the
->> loopback interface" message there were these two messages:
->>=20
->> reboot: __do_sys_reboot(317)CMD: 89abcdef
->> reboot: __do_sys_reboot(317)CMD: 4321fedc
->>=20
->> Then nothing more for two minutes, then, as previously:
->>=20
->> sr 5:0:0:0: tag#10 timing out command, waited 120 seconds.
->>=20
->> Then I did a hard reboot.
->>=20
->> This morning I detached the cables to the CDROM (but left the disk in
->> the box) and again booted 5.6.4 with "ignore_loglevel initcall_debug".
->> After working for a bit, I called `shutdown -h now', and now there were
->> quite a few more messages, but again the machine did not power off.
->> Here is the ouput, which I transcribed carefully, hopefully without
->> error (I omitted the fractional parts of the timestamps and some of the
->> usb1-portX messages):
->
-> If it helps you could delay printks on shutdown (via
-> /proc/sys/kernel/printk_delay) and record a video clip. I could make
-> storage available for an upload.
+Thanks.
+Lianbo
 
-So far this hasn't been necessary, since the new output until the first
-two-minute pause fit on one screen and I could photograph it.
+在 2020年06月02日 12:59, Lianbo Jiang 写道:
+> Signature verification is an important security feature, to protect
+> system from being attacked with a kernel of unknown origin. Kexec
+> rebooting is a way to replace the running kernel, hence need be
+> secured carefully.
+> 
+> In the current code of handling signature verification of kexec kernel,
+> the logic is very twisted. It mixes signature verification, IMA signature
+> appraising and kexec lockdown.
+> 
+> If there is no KEXEC_SIG_FORCE, kexec kernel image doesn't have one of
+> signature, the supported crypto, and key, we don't think this is wrong,
+> Unless kexec lockdown is executed. IMA is considered as another kind of
+> signature appraising method.
+> 
+> If kexec kernel image has signature/crypto/key, it has to go through the
+> signature verification and pass. Otherwise it's seen as verification
+> failure, and won't be loaded.
+> 
+> Seems kexec kernel image with an unqualified signature is even worse than
+> those w/o signature at all, this sounds very unreasonable. E.g. If people
+> get a unsigned kernel to load, or a kernel signed with expired key, which
+> one is more dangerous?
+> 
+> So, here, let's simplify the logic to improve code readability. If the
+> KEXEC_SIG_FORCE enabled or kexec lockdown enabled, signature verification
+> is mandated. Otherwise, we lift the bar for any kernel image.
+> 
+> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+> ---
+> Changes since v1:
+> [1] Modify the log level(suggested by Jiri Bohac)
+> 
+>  kernel/kexec_file.c | 34 ++++++----------------------------
+>  1 file changed, 6 insertions(+), 28 deletions(-)
+> 
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index faa74d5f6941..fae496958a68 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -181,34 +181,19 @@ void kimage_file_post_load_cleanup(struct kimage *image)
+>  static int
+>  kimage_validate_signature(struct kimage *image)
+>  {
+> -	const char *reason;
+>  	int ret;
+>  
+>  	ret = arch_kexec_kernel_verify_sig(image, image->kernel_buf,
+>  					   image->kernel_buf_len);
+> -	switch (ret) {
+> -	case 0:
+> -		break;
+> +	if (ret) {
+>  
+> -		/* Certain verification errors are non-fatal if we're not
+> -		 * checking errors, provided we aren't mandating that there
+> -		 * must be a valid signature.
+> -		 */
+> -	case -ENODATA:
+> -		reason = "kexec of unsigned image";
+> -		goto decide;
+> -	case -ENOPKG:
+> -		reason = "kexec of image with unsupported crypto";
+> -		goto decide;
+> -	case -ENOKEY:
+> -		reason = "kexec of image with unavailable key";
+> -	decide:
+>  		if (IS_ENABLED(CONFIG_KEXEC_SIG_FORCE)) {
+> -			pr_notice("%s rejected\n", reason);
+> +			pr_notice("Enforced kernel signature verification failed (%d).\n", ret);
+>  			return ret;
+>  		}
+>  
+> -		/* If IMA is guaranteed to appraise a signature on the kexec
+> +		/*
+> +		 * If IMA is guaranteed to appraise a signature on the kexec
+>  		 * image, permit it even if the kernel is otherwise locked
+>  		 * down.
+>  		 */
+> @@ -216,17 +201,10 @@ kimage_validate_signature(struct kimage *image)
+>  		    security_locked_down(LOCKDOWN_KEXEC))
+>  			return -EPERM;
+>  
+> -		return 0;
+> -
+> -		/* All other errors are fatal, including nomem, unparseable
+> -		 * signatures and signature check failures - even if signatures
+> -		 * aren't required.
+> -		 */
+> -	default:
+> -		pr_notice("kernel signature verification failed (%d).\n", ret);
+> +		pr_debug("kernel signature verification failed (%d).\n", ret);
+>  	}
+>  
+> -	return ret;
+> +	return 0;
+>  }
+>  #endif
+>  
+> 
 
-> | *   Bringing down the loopback interface...
-> | [1123.***] reboot: __do_sys_reboot(317)CMD: 89abcdef
-> | [1123.***] reboot: __do_sys_reboot(317)CMD: 4321fedc
-> This happens quicker than I expected. Initially I assumed that you are
-> not there yet and userland is still poking at your cdrom. Accordin
-> =E2=80=A6
-> | [1124.***] sd 4:0:0:0: shutdown
-> | [1124.***] sd 4:0:0:0: shutdown [sda] Synchronizing SCSI cache
-> | [1124.***] sd 4:0:0:0: shutdown [sda] Stopping disk
->
-> After this, there shouldn't be any outstanding disk requests.
-> =E2=80=A6
-> | [1125.***] ahci 0000:00:17.0: shutdown
->
-> This disables the ahci controller which means disk/cdrom requests won't
-> be answered by the hardware.
-> =E2=80=A6
-> | [1125.***] ACPI: Preparing to enter system sleep state S5
-> | [1352.***] INFO: task halt:5187 blocked for more than 122 seconds.
-> | [1352.***]                  Not tainted 5.6.4 #4
-> | [1352.***] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables =
-this message
-> | [1352.***] halt            D13856  5187   5186 0x00004000
-> | [1352.***] Call Trace:
-> | [1352.***]  ? __schedule+0x272/0x5b0
-> | [1352.***]  schedule+0x45/0xb0
-> | [1352.***]  schedule_timeout+0x204/0x2f0
-> | [1352.***]  ? acpi_os_release_object+0x5/0x10
-> | [1352.***]  ? acpi_ut_update_object_reference+0x14e/0x1d2
-> | [1352.***]  wait_for_completion+0xa3/0x100
-> | [1352.***]  ? wake_up_q+0x90/0x90
-> | [1352.***]  flush_workqueue+0x130/0x420
->
-> I have no idea where this flush_workqueue() is coming from. The command
->   scripts/decode_stacktrace.sh vmlinux $(pwd)/ kernel_power_off+0x3d/0x70
->
-> should reveal that.
-
-I saved the call trace lines to a file and did this (with `$(pwd)/' the
-script did not run):
-
-steve [ /sources/linux-5.6.4 ]$ ./scripts/decode_stacktrace.sh vmlinux . ke=
-rnel_power_off+0x3d/0x70 < /home/steve/temp/call_trace=20
-[1352.***] Call Trace:
-[1352.***] ? __schedule (core.c:?)=20
-[1352.***] schedule (??:?)=20
-[1352.***] schedule_timeout (??:?)=20
-[1352.***] ? acpi_os_release_object (??:?)=20
-[1352.***] ? acpi_ut_update_object_reference (??:?)=20
-[1352.***] wait_for_completion (??:?)=20
-[1352.***] ? wake_up_q (??:?)=20
-[1352.***] flush_workqueue (??:?)=20
-[1352.***] kernel_power_off (??:?)=20
-[1352.***] __do_sys_reboot (reboot.c:?)=20
-[1352.***] ? do_send_sig_info (??:?)=20
-[1352.***] ? kill_pid_info (??:?)=20
-[1352.***] ? kill_something_info (signal.c:?)=20
-[1352.***] ? __x64_sys_kill (??:?)=20
-[1352.***] do_syscall_64 (??:?)=20
-[1352.***] entry_SYSCALL_64_after_hwframe (??:?)=20
-[1352.***] RIP: 0033:0x7f95dd6992c3
-[1352.***] Code: Bad RIP value.
-objdump: '/tmp/tmp.BlpNDdSQpG.o': No such file
-
-Did I do something wrong or do I need to pass certain compiler flags
-when building the kernel (when I build Emacs I pass CFLAGS=3D'-Og -g3')?
-
-> The cdrom is polled by the kernel every two seconds. I *think* the
-> kernel is blocked for some reason and then the cdrom polled. This can't
-> complete and you see the srX warning. The window is quite small but not
-> impossible.=20
-> I managed to fabricate this case but after=20
-> |[  137.581613] sr 3:0:0:0: tag#1 timing out command, waited 120s
->
-> The system shutdowns. So you are facing something different. I am
-> surprised that the workqueue stall detector did not yell here. The patch
-> at the bottom should get rid of the sr warnings.
-
-But the cdrom seems to have nothing to do with power-off failing, since
-it happens even when the cdrom is detached (and hence there were no sr
-warnings in the log output), or am I misunderstanding you?
-
-> | [1352.***]  kernel_power_off+0x3d/0x70
-> | [1352.***]  __do_sys_reboot+0x140/0x220
-> =E2=80=A6
->
->> After the last message here, the "echo", Call Trace, RIP and register
->> messages were repeated exactly as above.  At this point I did a hard
->> reboot.  A web search found something similar to the above output
->> ("System hangs (bad RIP value) when disk used in pool is removed"), but
->> didn't otherwise seem to be related to the problem I'm having.
->>=20
->> Do you still want me to check whether removing the iwlwifi driver makes
->> a differece?  And with the CDROM still detached, or does that not
->> matter?
->
-> I assumed the wifi driver shuts the AHCI port for some reason. But
-> according to this log it does not happen, the ahci port is shutdown
-> properly. The patch at the bottom should get rid of the sr warning. Then
-> could you please try the other patch so we see which workqueue is
-> blocked? I am curious to see why the system is blocked.
-
-By the other patch do you mean the following?  (This email was also put
-into my spam by GMX and AFAICT has not yet shown up on the vger list.)
-
-From: Hillf Danton <hdanton@sina.com>
-Subject: Re: power-off delay/hang due to commit 6d25be57 (mainline)
-To: Stephen Berman <stephen.berman@gmx.net>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Markus Elfring <Markus.Elfring@web.de>,
-	linux-kernel@vger.kernel.org
-Date: Tue,  9 Jun 2020 23:06:07 +0800
-[...]
-Curious what the workqueue it is blocking halt.
-
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -2826,7 +2826,14 @@ void flush_workqueue(struct workqueue_st
-=20
- 	mutex_unlock(&wq->mutex);
-=20
--	wait_for_completion(&this_flusher.done);
-+	if (system_state =3D=3D SYSTEM_POWER_OFF) {
-+		/*
-+		 * save data before running at warned risk in any form
-+		 */
-+		wait_for_completion_timeout(&this_flusher.done, 2*HZ);
-+		pr_info("workqueue %s 2s since SYSTEM_POWER_OFF\n", wq->name);
-+	} else
-+		wait_for_completion(&this_flusher.done);
-=20
- 	/*
- 	 * Wake-up-and-cascade phase
-
-Steve Berman
