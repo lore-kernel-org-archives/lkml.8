@@ -2,135 +2,250 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47CF4C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B979C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:28:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 169A420734
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:28:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591799296;
-	bh=SssoMY0PrbC8NZYL8hnhXQqlnOAu8G3HtlO7aJa2fL4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yE2m1hXnXUGnGfLghSm60Mbp/Wn3jnKwkqUFQhhC0rTXmZrIpD8iQVE5djzE166tq
-	 Bf/fm1ZT6TiW5dYQzLFujVATjUbdeGRFon6qp35vJrK3v6imNW6jt9vnRnhQrdo4jd
-	 qGzDpgp1Qo8cnDiwt7TsCc//4JCWHljzLjjtx/0Q=
+	by mail.kernel.org (Postfix) with ESMTP id 13A2E2067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:28:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="aBduEYDf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729831AbgFJO2O (ORCPT
+        id S1729842AbgFJO2r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 10:28:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34790 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726157AbgFJO2O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 10:28:14 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EE302067B;
-        Wed, 10 Jun 2020 14:28:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591799293;
-        bh=SssoMY0PrbC8NZYL8hnhXQqlnOAu8G3HtlO7aJa2fL4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cTCwi9MCuyazL5XefSTUHGnMKhLIwl80cvs11td6qe8C3D69DMBkyrYGat8L5dWY9
-         Fa+c8YpHEFZk2f1Dd/kgwiPGzNU4MgYhyISpk8hS8R2+XSwvmAzOLEGjUwXsJyA6DQ
-         2DYELyD9AyVfw1fvQXLrj7qo1gDxAP9j9S2TdN9k=
-Date:   Wed, 10 Jun 2020 15:28:11 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        robh@kernel.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [RFC PATCH 1/2] dt-bindings: tas2562: Add firmware support for
- tas2563
-Message-ID: <20200610142811.GH5005@sirena.org.uk>
-References: <20200609172841.22541-1-dmurphy@ti.com>
- <20200609172841.22541-2-dmurphy@ti.com>
- <20200609173143.GN4583@sirena.org.uk>
- <bb7cff87-f814-1b37-c9eb-e68919e3c077@ti.com>
- <20200609175852.GQ4583@sirena.org.uk>
- <414a2d73-6d09-1e76-59c8-4943c0e8f720@ti.com>
- <20200609184734.GS4583@sirena.org.uk>
- <014b85b5-677b-569a-4eb2-74526d3f00bc@ti.com>
- <20200610102920.GC5005@sirena.org.uk>
- <84a6dd5f-cc3e-adb4-ae94-b4fe389adfd9@ti.com>
+        Wed, 10 Jun 2020 10:28:47 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:65429 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbgFJO2q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 10:28:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1591799326; x=1623335326;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version;
+  bh=+jjSmmvriHDq2IKMDGiGb5G90hNLhZ/epLsZVVJPoYI=;
+  b=aBduEYDfgYPmcRTE8yilLrhEj2/YsDldexRqjdcX5qMazGRMH1bOnXGI
+   ho1ij9Iq8MQY1UFQdumbwtkmNs1+rRsSY+bFjPIqy+BfNku/Yv5qgoJzq
+   /KOtscrplDwuojIp7syoFLHvuiVjkL+rxUZ23D//ucZeJM43AoQEqHwbe
+   4eZuljlN67Uzg3e19gWqRqSDI5CaDt1sulcLEtITzd8mzC7TfDsz8IXrD
+   chJKAqELv1hu5g0lj+jnRJj16e5U9Q4ZRZf5Yxoe+SyoMlSgBeP8O4D4Y
+   abvLm80UBQbg5QTpKq4j1BHlGyq63KGZPNVaU4SjulBmC9aTqgBj4uXvN
+   g==;
+IronPort-SDR: DbPcK9BJ+sH793Gakaw6r8CMko7DoQOwQijlgsU+vYUDcj9oB+fEjURGAKSRL+iFeCx5+pl1Im
+ oQY85aC5hF/r9BaHVrtOpNcme/S/cZytKwJ2Gmz601nqNTejjsDNRciCvhIWcxlMhF1g+yOaiv
+ FwlOYHT03culQphd9lr76c/LewNdHCmGnVqKApoFI0otFgj/bei8mGeG1eIs9dZQEYOlbTopL4
+ X/QjtZMubfBjzcZzVupxgGLt3zStSVIcDN75aRXN/BoauX0TCH2giVXIxK+GwG47udyoHI15JS
+ xg4=
+X-IronPort-AV: E=Sophos;i="5.73,496,1583218800"; 
+   d="scan'208";a="78930383"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Jun 2020 07:28:46 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Wed, 10 Jun 2020 07:28:44 -0700
+Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3
+ via Frontend Transport; Wed, 10 Jun 2020 07:28:42 -0700
+References: <20200513140031.25633-1-lars.povlsen@microchip.com> <20200513140031.25633-6-lars.povlsen@microchip.com> <20200513151811.GL4803@sirena.org.uk> <20200519120519.GE24801@soft-dev15.microsemi.net> <20200602211203.3lad22zvt5yagane@mobilestation>
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+List-Id: <soc.lore.kernel.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>, <devicetree@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        SoC Team <soc@kernel.org>,
+        "Microchip Linux Driver Support" <UNGLinuxDriver@microchip.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 05/10] spi: spi-dw-mmio: Spin off MSCC platforms into spi-dw-mchp
+In-Reply-To: <20200602211203.3lad22zvt5yagane@mobilestation>
+Date:   Wed, 10 Jun 2020 16:28:40 +0200
+Message-ID: <87bllrhu5j.fsf@soft-dev15.microsemi.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="l06SQqiZYCi8rTKz"
-Content-Disposition: inline
-In-Reply-To: <84a6dd5f-cc3e-adb4-ae94-b4fe389adfd9@ti.com>
-X-Cookie: fortune: No such file or directory
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---l06SQqiZYCi8rTKz
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Serge Semin writes:
 
-On Wed, Jun 10, 2020 at 09:12:15AM -0500, Dan Murphy wrote:
-> On 6/10/20 5:29 AM, Mark Brown wrote:
+> On Tue, May 19, 2020 at 02:05:19PM +0200, Lars Povlsen wrote:
+>> On 13/05/20 16:18, Mark Brown wrote:
+>> > Date: Wed, 13 May 2020 16:18:11 +0100
+>> > From: Mark Brown <broonie@kernel.org>
+>> > To: Lars Povlsen <lars.povlsen@microchip.com>
+>> > Cc: SoC Team <soc@kernel.org>, Microchip Linux Driver Support
+>> >  <UNGLinuxDriver@microchip.com>, linux-spi@vger.kernel.org,
+>> >  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+>> >  linux-arm-kernel@lists.infradead.org, Alexandre Belloni
+>> >  <alexandre.belloni@bootlin.com>
+>> > Subject: Re: [PATCH 05/10] spi: spi-dw-mmio: Spin off MSCC platforms into
+>> >  spi-dw-mchp
+>> > User-Agent: Mutt/1.10.1 (2018-07-13)
+>> >
+>> > On Wed, May 13, 2020 at 04:00:26PM +0200, Lars Povlsen wrote:
+>> >
+>> > > +config SPI_DW_MCHP
+>> > > + tristate "Memory-mapped io interface driver using DW SPI core of MSCC SoCs"
+>> > > + default y if ARCH_SPARX5
+>> > > + default y if SOC_VCOREIII
+>> >
+>> > Why the default ys?
+>>
+>> The SoC will typically boot from SPI... But its not a requirement per
+>> se. I will remove it.
+>>
+>> >
+>> > > +++ b/drivers/spi/Makefile
+>> > > @@ -37,6 +37,7 @@ obj-$(CONFIG_SPI_DAVINCI)               += spi-davinci.o
+>> > >  obj-$(CONFIG_SPI_DLN2)                   += spi-dln2.o
+>> > >  obj-$(CONFIG_SPI_DESIGNWARE)             += spi-dw.o
+>> > >  obj-$(CONFIG_SPI_DW_MMIO)                += spi-dw-mmio.o
+>> > > +obj-$(CONFIG_SPI_DW_MCHP)                += spi-dw-mchp.o
+>> > >  obj-$(CONFIG_SPI_DW_PCI)         += spi-dw-midpci.o
+>> > >  spi-dw-midpci-objs                       := spi-dw-pci.o spi-dw-mid.o
+>> > >  obj-$(CONFIG_SPI_EFM32)                  += spi-efm32.o
+>> >
+>> > Please keep the file alphabetically sorted.
+>> >
+>>
+>> Noted.
+>>
+>> > > +++ b/drivers/spi/spi-dw-mchp.c
+>> > > @@ -0,0 +1,232 @@
+>> > > +// SPDX-License-Identifier: GPL-2.0-only
+>> > > +/*
+>> > > + * Memory-mapped interface driver for MSCC SoCs
+>> > > + *
+>> >
+>> > Please make the entire comment a C++ one so things look more
+>> > intentional.
+>>
+>> Sure, I can do that. The presented form matches that of the other
+>> spi-dw-* drivers, but I can see other using // blocks. Ack.
+>>
+>> >
+>> > > +#define MAX_CS           4
+>> >
+>> > This should be namespaced.
+>>
+>> Ack.
+>>
+>
+>> >
+>> > > + rx_sample_dly = 0;
+>> > > + device_property_read_u32(&pdev->dev, "spi-rx-delay-us", &rx_sample_dly);
+>> > > + dws->rx_sample_dly = DIV_ROUND_UP(rx_sample_dly,
+>> > > +                                   (dws->max_freq / 1000000));
+>
+> Perhaps 100000 is better to be replace with macro USEC_PER_SEC...
+>
+> Moreover are you sure the formulae is correct?
+> dws->rx_sample_dly - a number of ssi_clk periods/cycles to delay the Rx-data sample,
+> dws->max_freq - ssi_clk frequency (not period).
+>
+> In real math the formulae would look like:
+> S = d * P [s], where d - number of delay cycles, P - ssi_clk period in seconds,
+> S - requested delay in seconds.
+> In the driver notation: d = dws->rx_sample_dly, P = 1 / dws->max_freq,
+> S = rx_sample_dly ("spi-rx-delay-us" property value).
+>
+> dws->rx_sample_dly * (1 / dws->max_freq) = rx_sample_dly <=>
+> dws->rx_sample_dly = rx_sample_dly * dws->max_freq.
+>
+> Though that's represented in seconds, so if rx_sample_dly is specified in usec,
+> then you'd need to scale it down dividing by USEC_PER_SEC.
+>
+> For example, imagine we need a delay of 1 usec with ssi_clk of 50MHz.
+> By your formulae we'd have: 1 / (50000000 / 1000000) = 0 cycles (actually 1 due
+> to DIV_ROUND_UP, but incorrect anyway),
+> By mine: 1 * (500000000 / 1000000) = 50 cycles. Seems closer to reality.
+>
+> Am I missing something?
 
-> > I'm not *completely* opposed to having the ability to suggest a name in
-> > firmware, the big problem is making use of the DSP completely dependent
-> > on having a DT property or doing some non-standard dance in userspace.
+No, you are perfectly right, the calculation was wrong - and I concur
+the unit should be NS.
 
-> Well from what I see we have 4 options.
+(your example threw me off, you are using 500Mhz, typo I guess)
 
-These are not mutually exclusive approaches.
+I believe the calculation should be:
 
-> 1.=A0 We can have a DT node like RFC'd (Need Rob's comments here)
+  device_property_read_u32(&pdev->dev, "snps,rx-sample-delay-ns", &rx_sample_dly);
+  dws->rx_sample_dly = DIV_ROUND_CLOSEST(rx_sample_dly, NSEC_PER_SEC / dws->max_freq);
+        
+So for your example of 1us = 1000ns, we have a cycle time of 20 ns => 50 cycles.
 
-This is compatible with any hardcoding option.
+And I assume DIV_ROUND_CLOSEST() is the better instead of explicit
+rounding up/down. And I assume its fair to assume that the cycle time is
+not a fraction.
 
-> 2.=A0 We can have a defconfig flag that hard codes the name (This will
-> probably be met with some resistance if not some really bad reactions and=
- I
-> don't prefer to do it this way)
+Ok?
 
-This is even worse than the ALSA control suggestion.
+>
+>> >
+>> > If this is a standard feature of the DesignWare IP why parse it here and
+>> > not in the generic code?
+>>
+>> This is a standard feature of the DesignWare IP, so good suggestion. I
+>> will arrange with Serge.
+>
+> Regarding "spi-rx-delay-us" and the sampling delay the IP supports. Here is what
+> documentation says regarding the register, which is then initialized with this
+> parameter "This register controls the number of ssi_clk cycles that are
+> delayed from the default sample time before the actual sample of the rxd input
+> signal occurs." While the "spi-rx-delay-us" property is described as: "Delay, in
+> microseconds, after a read transfer." I may misunderstand something, but IMO
+> these descriptions don't refer to the same values. The only real use of the
+> "spi-rx-delay-us" property I've found in "./drivers/input/rmi4/rmi_spi.c".
+> That driver gets the value of the property and just sets the delay_usecs
+> of some transfers, which isn't even close to the functionality the RX_SAMPLE_DLY
+> register provides.
+>
+> To be clear the RX_SAMPLE_DLY register can be used to delay the RX-bits sample
+> with respect to the normal Rx sampling timing. The delay is measured in the
+> numbers of the ssi_clk periods. (Note also that the maximum delay is limited
+> with a constant parameter pre-initialized at the IP-core synthesis stage. It can
+> be defined within a range [4, 255]. In our IP it's limited with just 4 periods.)
+>
 
-> 3.=A0 We can hard code the name of the firmware in the c file.
+Yes - I was not aware of the instantiation incurred limit before. Turned
+our IP has up to 100ns worth of fifo depth - 25 cycles.
 
-> 4.=A0 Dynamically derive a file name based on the I2C bus-address-device =
-so it
-> would be expected to be "2_4c_tas2563.bin".=A0 Just need to figure out ho=
-w to
-> get the bus number.
+> As I see it, a better way would be to either define a new vendor-specific
+> property like "snps,rx-sample-delay-ns" (note NS here, since normally the
+> ssi_clk is much higher than 1MHz), or define a new generic SPI property.
+> Mark, Andy?
 
-> Again only option 1 allows us to have different firmware binaries per IC
-> instance and also denotes the use of the DSP.=A0 The DSP is not programmed
+I'll assume "snps,rx-sample-delay-ns" for now, its easy to rename if you
+decide so.
 
-No, this is not the case at all - a per-device generated file allows
-this just as well.
+Thanks again!
 
-> So special audio handling is very explicit in the user space.=A0 More then
-> likely most standard distributions will not even use the DSP for this dev=
-ice
-> it is more of a specialized use case for each product.
+---Lars
 
-People do things like make AOSP derived distributions for phones.
+>
+> -Sergey
+>
+>>
+>> Thank you for your comments!
+>>
+>> ---Lars
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---l06SQqiZYCi8rTKz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7g7foACgkQJNaLcl1U
-h9DkTwf/dnxODE9jlK7rqZaP9/fgmsXcrTn+c5SE7VmNv+ButQXrB22OYVH1AJiv
-p2l0ucEqZtrVD/GJGGgjgkfLgwZxx5byaSfBjyszg80Zgpsc16g1YU9xDAoI0pmv
-rkGPrh9WXHB746szBsc2PA46wKtjSgnRkq6cOvxGciuysAdxagYyKvyVgzFopAO+
-O9ZVXw//Yg0jf9atCfpXWA+0Z4Mza0UitJBP7ydpG0siJzXW5qY5dExlM/jromgk
-Wl5Y3oBYKl04j6Y4Yh3ZG/DbLVTsyHMGoD3lYgm6zp4HFxlKcpzcMS6Mdvh1uny1
-dX3NZZwyD4qjL9eOc/p3x08Dreii9A==
-=Iqc2
------END PGP SIGNATURE-----
-
---l06SQqiZYCi8rTKz--
+-- 
+Lars Povlsen,
+Microchip
