@@ -2,147 +2,137 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 521EBC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA8FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:14:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 240A12074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:13:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2594320734
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:14:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="MnUAft4o"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="VsKltnoR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728960AbgFJMN3 (ORCPT
+        id S1728971AbgFJMOm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 08:13:29 -0400
-Received: from mail-m975.mail.163.com ([123.126.97.5]:53460 "EHLO
-        mail-m975.mail.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728547AbgFJMN2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 08:13:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=JJhsv
-        FYwW+8tEWWr/oiMmbCKVPyMC4y0gNIMmx5KF+c=; b=MnUAft4oj05Sj+PgR67JH
-        pGD5zfdf9iIZRKNMRh683qj4kjFPW5bd6ArAKOtiFbvj9CKn7qcyj9m5K2jowom1
-        amYuhRMaesbgqE5nsAP4LGH54smYx6Pi/qdxLgV39HPh+zz2GVak8ljXHhSLG/24
-        HXmJMXQbrUsrgKYraHkADE=
-Received: from localhost.localdomain (unknown [114.242.249.96])
-        by smtp5 (Coremail) with SMTP id HdxpCgCX2lxNzuBekc1XBw--.277S4;
-        Wed, 10 Jun 2020 20:13:20 +0800 (CST)
-From:   YuanJunQing <yuanjunqing66@163.com>
-To:     tsbogend@alpha.franken.de
-Cc:     yszhou4tech@gmail.com, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, liulichao@loongson.cn,
-        YuanJunQing <yuanjunqing66@163.com>
-Subject: [PATCH] mips/ftrace: Fix stack backtrace in unwind_stack_by_address()
-Date:   Wed, 10 Jun 2020 20:12:54 +0800
-Message-Id: <20200610121254.1780-1-yuanjunqing66@163.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 10 Jun 2020 08:14:42 -0400
+Received: from mout.web.de ([217.72.192.78]:47789 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728544AbgFJMOl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 08:14:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1591791260;
+        bh=pBm5IMHL7FVaD0k0KmA/bqWajr9j4HYNky5AVQf4gnE=;
+        h=X-UI-Sender-Class:Subject:From:To:Cc:References:Date:In-Reply-To;
+        b=VsKltnoR7ptj0X0xAYUMaXnU4I1sLf9Zvi8wM4O0UwbBEWUUHqx3vVQngjJ2JzAYi
+         LzJle0uQb4dDGzLFAT40U2pEO4JVSb1F67zhwcndrHcJ24N7tYsIieuxgqYRgNWMoC
+         8vKaqFMkTgY7bDc/f79qmH70p02q8Cbov9LUS0og=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.133.155.16]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0M0Qkb-1ivYKP2qKr-00uXoz; Wed, 10
+ Jun 2020 14:14:20 +0200
+Subject: Re: exfat: Improving exception handling in two functions
+From:   Markus Elfring <Markus.Elfring@web.de>
+To:     linux-fsdevel@vger.kernel.org,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        Sungjong Seo <sj1557.seo@samsung.com>
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
+        Tetsuhiro Kohada <kohada.t2@gmail.com>,
+        Wei Yongjun <weiyongjun1@huawei.com>
+References: <9b9272fb-b265-010b-0696-4c0579abd841@web.de>
+ <208cba7b-e535-c8e0-5ac7-f15170117a7f@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
+ +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
+ mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
+ lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
+ YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
+ GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
+ rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
+ 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
+ jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
+ BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
+ cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
+ Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
+ g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
+ OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
+ CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
+ LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
+ sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
+ kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
+ i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
+ g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
+ q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
+ NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
+ nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
+ 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
+ 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
+ wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
+ riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
+ DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
+ fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
+ 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
+ xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
+ qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
+ Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
+ Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
+ +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
+ hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
+ /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
+ tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
+ qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
+ Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
+ x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
+ pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
+Message-ID: <4379dad4-8c76-6790-2d5b-91a8fbdffc9f@web.de>
+Date:   Wed, 10 Jun 2020 14:14:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: HdxpCgCX2lxNzuBekc1XBw--.277S4
-X-Coremail-Antispam: 1Uf129KBjvJXoWxAF4xXrWUuFyktFW5CFWDCFg_yoW5Gw18pr
-        ZIk3ZxtrWkXa12kryfur18Wry5JrykZa42kry7Jry5Z3ZxXF13XryI93WDKr1DJrW0ka4f
-        ury7trsrurZ0vaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UmiiDUUUUU=
-X-Originating-IP: [114.242.249.96]
-X-CM-SenderInfo: h1xd0ypxqtx0rjwwqiywtou0bp/xtbBzwA-XFaD7e0wIAAAsp
+In-Reply-To: <208cba7b-e535-c8e0-5ac7-f15170117a7f@web.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:OkKpHaS1U3vQq96DspLBKT9LuRuOOeAzvC/kvsXcf2ICtE4hVVU
+ jFkWuJbwyR9iI3/SGhhNwnicSoWXbeaOWDIOkb3EZDrrCRi4VkR1FtABAfH9DPAOyUGT3Hz
+ RrosBCcVCBwoz1/xTKTN2g6t6Wmj2Z5z4N9ngpZIuleZmGQb+fxfKPydGssILdPo2jXGX7d
+ +Uvdt7AvjCIY+TAsrAIzw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:7867ozUOF0w=:OnLlKXz2d9bpod3W4MdcYb
+ Ijq0DQCyvT1CHCA9egbTbu+XA8CBmjfopy/xmo0Fmhb6f/5AU3Hqw3pWXap2eqTZ8KicHei/M
+ iLmVm+tgDF5TqXFJswlJJr4JRXomhQ5SdJ2DMil6ULi5RnkMDSncu2Inr1RLvVSi+fxRWVLtY
+ Z/eCvF8fNDGhSmaHEWfbVS8nqWmSmZq4eb48ofP/SdMlVE/1Z/dyZAOvC4qO75Ob//7hL5eqx
+ LlCbqYOHS1NDY8P4FZT2NMfcM9u8OgA12w4+9kPfQoj58PwPfaTu/DRBBgxei/7xcMGUktoiy
+ kKSLtCVUt8IVujY6A/cbRekxbi3ZsTNeuduWczLdamqj3uHXaggpUYBYytSjxtQq9dFPzJLWw
+ IdIb/eB3QCCo527etTJi3/HeFTI64fzmhVTcHP26Q4QubasasrQ0MLV0cQ0b7jtk68NW0yguW
+ z6EQrEokkkpYSFEkFncu9gr3gGSgDJSsMnbQI6R1qzNXWzCnk3/kSVnnFGoNE380slqPf3SWX
+ LRTL4TMESRt42FNGxu3FEO3wmJu6bAKgEN7NjAQZK9Zi47N8npVDa1s4zO08rUmGTLmeTWnX4
+ +t6EUhUi27L0IX4GLgDymStf+tZBMcCsBJeZjgjkZi1rBkt9GFvUgfA+82buJsdL78DzDEW/o
+ q5UaAqn2XxmypluB49jLAlJIOZEYNfiCSxTC678H9ZwfxzyHZscSamLkdT6whdpjhyEAqBqtu
+ 41HC+g87oMbJl4mLhiBJXUjnbxc/c0UedzgEEM0+oKW8PiLk9N6wKBmqQBLGnkEl6JBrrOoRo
+ 9FwyiZRHQrHHSyXjslJf+H1+Azwmnl+2MqesErJ3CLuT8ACCfZ2OxjNjRBC0kF1gaVqI6qC5s
+ XrOPhEUxyDyhnsdL+Sn5XhXwzcCrasxDrbvA0mNGk4jO7sGQhAJJhJZHfuH7INHTECikbu1HB
+ I9ZK1iQjYKIpiY3xsdPhgU3woGBdmfuSqIidiCQeSXIfvkegtjShyxAw7DoQ1f1YfwEtPvhr1
+ xqV1YGO3sxGLiRldlFCvY8iwoM1q873wYJINx3D1XNLRDYPmtI9y+CXUC0bVUmvIIxn3+Isky
+ MbjdLFMJ+ifHPiyWfcT+uW0MfozE3RI6O8MZ3Mu8bxc9RmGx8TeLYdcZX3+jV9An6FyY431yP
+ +rHwYUGCGBafyRUPKsfhtuRgaIEYjgE5FrNkcNWx4006bW3t6m5Y347IeO5Q6PT4fVM5y5O7I
+ /TyzYHH1fNQeUrXY/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Calling the unwind_stack_by_address() function for stack backtrace
-will fail, when we use "echo function: stacktrace > set_ftrace_filter".
+> My source code analysis approach pointed implementation details
+> like the following out for further software development considerations.
 
-The stack backtrace as follows:
-           <...>-3102  [001] ...2    63.557737: <stack trace>
- => 0
- => 0
- => 0
- => 0
- => 0
- => 0
- => 0
- => 0
- =>
-          <idle>-0     [000] .N.2    63.558793: <stack trace>
+The clarification of corresponding collateral evolution will be continued
+with the update suggestion =E2=80=9Cexfat: call brelse() on error path=E2=
+=80=9D.
+https://lore.kernel.org/linux-fsdevel/20200610095934.GA35167@mwanda/
+https://lore.kernel.org/patchwork/patch/1254515/
 
-The reason is that when performing stack backtrace, the "ftrace_call"
-and "ftrace_graph_call" global symbols in ftrace_caller() are
-treated as functions.
-
-If CONFIG_FUNCTION_GRAPH_TRACER is defined, the value in the "ra"
-register is the address of ftrace_graph_call when the stack
-backtrace back to ftrace_caller(). ”ftrace_graph_call“ is a global
-symbol, and the value of "ofs" is set to zero when the
-kallsyms_lookup_size_offset() is called. Otherwise, the value
-in the "ra" register is the address of ftrace_call+8. "ftrace_call"
-is the global symbol, and return one when the get_frame_info() is called.
-
-Signed-off-by: YuanJunQing <yuanjunqing66@163.com>
----
- arch/mips/kernel/process.c | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
-
-diff --git a/arch/mips/kernel/process.c b/arch/mips/kernel/process.c
-index b2a797557825..ac4fe79bc5bc 100644
---- a/arch/mips/kernel/process.c
-+++ b/arch/mips/kernel/process.c
-@@ -53,6 +53,8 @@
- #include <asm/inst.h>
- #include <asm/stacktrace.h>
- #include <asm/irq_regs.h>
-+#include <linux/ftrace.h>
-+#include <generated/asm-offsets.h>
- 
- #ifdef CONFIG_HOTPLUG_CPU
- void arch_cpu_idle_dead(void)
-@@ -569,6 +571,13 @@ unsigned long notrace unwind_stack_by_address(unsigned long stack_page,
- 	 * Return ra if an exception occurred at the first instruction
- 	 */
- 	if (unlikely(ofs == 0)) {
-+#ifdef CONFIG_FUNCTION_GRAPH_TRACER
-+		extern void ftrace_graph_call(void);
-+		if ((pc == (unsigned long)ftrace_graph_call)) {
-+			pc = ((unsigned long *)(*sp))[PT_R31/sizeof(long)];
-+			*sp += PT_SIZE;
-+		} else
-+#endif
- 		pc = *ra;
- 		*ra = 0;
- 		return pc;
-@@ -583,16 +592,23 @@ unsigned long notrace unwind_stack_by_address(unsigned long stack_page,
- 	if (*sp < low || *sp + info.frame_size > high)
- 		return 0;
- 
--	if (leaf)
-+	if (leaf) {
- 		/*
- 		 * For some extreme cases, get_frame_info() can
- 		 * consider wrongly a nested function as a leaf
- 		 * one. In that cases avoid to return always the
- 		 * same value.
- 		 */
-+#ifdef CONFIG_DYNAMIC_FTRACE
-+		if (info.func == (void *)ftrace_call) {
-+			pc = ((unsigned long *)(*sp))[PT_R31/sizeof(long)];
-+			info.frame_size = PT_SIZE;
-+		} else
-+#endif
- 		pc = pc != *ra ? *ra : 0;
--	else
-+	} else {
- 		pc = ((unsigned long *)(*sp))[info.pc_offset];
-+	}
- 
- 	*sp += info.frame_size;
- 	*ra = 0;
--- 
-2.17.1
-
+Regards,
+Markus
