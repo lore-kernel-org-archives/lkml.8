@@ -2,113 +2,126 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A37EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:03:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D9ADC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:03:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4D6220801
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:03:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29B8320825
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:03:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mMAGEukT"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="RNjlzi76"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726364AbgFJGDR (ORCPT
+        id S1726312AbgFJGC7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 02:03:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41624 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbgFJGDI (ORCPT
+        Wed, 10 Jun 2020 02:02:59 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:10502 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726264AbgFJGCu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 02:03:08 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D11DCC05BD1E;
-        Tue,  9 Jun 2020 23:03:06 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id x14so812332wrp.2;
-        Tue, 09 Jun 2020 23:03:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=mvokNqexRaegU1modB7NHhGEwXygj1rNSFFDdGJdwa0=;
-        b=mMAGEukTDdiryhtO2yW2E65dypnqCGYbqRrs7w7rKE/V+EEhAhBM27L4eNMIGkYQqd
-         EFkWD7+mPh+dpmN6keyW+8gGZxasZh2CJGRTghTOMp+Vg3YlsI1Cogf6VwyGv5oCQ9eL
-         BznuKmizzvAmZpw4YFSZHDSXMvPUYArmHD50q5r79HngvZ4P/kONZDkm+6lB3b76iBEg
-         6PHxDgbF93E8986oHdtewWko1O8gyekJ+/j/fd81jbb2rL0ICxOgPw3pEmMNDtPRRq+b
-         xPBQOlfwnIYmoMe9wzlyZZsm+UK5bPVow+Yc+d6EA4GN/ElP4+7JDH8ZV5XqI3oi9hGG
-         Sr0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=mvokNqexRaegU1modB7NHhGEwXygj1rNSFFDdGJdwa0=;
-        b=XHP0e1LismEyuhLJjelsltEtnr4wdg4drMOJUXBAtDKNubb/NhrtgSHnyOmxIZ6LvQ
-         y3dgl3nQ0zLbF5CY0uiA95x3UMS/w6w11ZiB1+XHJkubh64Tx4umeyl1GNe2ST+K7z47
-         gDhi6UtNwfZDg3IF6sIzw2hGXY1p08pckvPRe0lW0bNhb1eFh9cC6EMczpevfktwy4oc
-         4sbI0MYec34X7k9MFWa7EU7prG4COihkHIDr5ufReDLUXfc2cG6yQpCVItL5CxIHL4x5
-         UDbmGqgZBrxaxoPKEZvKC1DgPHqK+SbrJdwv7fUBQtO9Yp9Cq543IZt7WZ45MwCm1roJ
-         HTvA==
-X-Gm-Message-State: AOAM532ncCz9/c/d/2Xu5UQrqoB+Nk3224fPS3riQPqxBjiYY5NiBBbk
-        1HsSqze7K57R/DtLxO5yhuD+6okn06M=
-X-Google-Smtp-Source: ABdhPJyWv4V1rxzPNSAS30xkqIspxg9pNDEfhvr6Do6JVCr3W3NNGdGXnItKMO7FLMOxDcCF6HDvXg==
-X-Received: by 2002:a05:6000:1146:: with SMTP id d6mr1639898wrx.400.1591768984735;
-        Tue, 09 Jun 2020 23:03:04 -0700 (PDT)
-Received: from macbook-pro-alvaro.lan (28.red-83-49-61.dynamicip.rima-tde.net. [83.49.61.28])
-        by smtp.gmail.com with ESMTPSA id q5sm6449183wrm.62.2020.06.09.23.03.03
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Jun 2020 23:03:04 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH 1/4] dt-bindings: soc: brcm: add BCM63xx power domain
- binding
-From:   =?utf-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>
-In-Reply-To: <f6cbb9bb-15df-6283-a509-ea8a8b9bdaab@gmail.com>
-Date:   Wed, 10 Jun 2020 08:03:02 +0200
-Cc:     hauke@hauke-m.de, zajec5@gmail.com, tsbogend@alpha.franken.de,
-        robh+dt@kernel.org, Jonas Gorski <jonas.gorski@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <EC84127B-DFF6-4EE3-ABDF-BEFAD6BCDEFB@gmail.com>
-References: <20200609105244.4014823-1-noltari@gmail.com>
- <20200609105244.4014823-2-noltari@gmail.com>
- <f6cbb9bb-15df-6283-a509-ea8a8b9bdaab@gmail.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Wed, 10 Jun 2020 02:02:50 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ee0777c0000>; Tue, 09 Jun 2020 23:02:36 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 09 Jun 2020 23:02:49 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 09 Jun 2020 23:02:49 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 10 Jun
+ 2020 06:02:49 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 10 Jun 2020 06:02:48 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.167.70]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5ee077880000>; Tue, 09 Jun 2020 23:02:48 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
+        <helen.koike@collabora.com>
+CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
+        <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
+Subject: [RFC PATCH v1 09/18] media: tegra-video: Update format lookup to offset based
+Date:   Tue, 9 Jun 2020 23:02:31 -0700
+Message-ID: <1591768960-31648-10-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1591768960-31648-1-git-send-email-skomatineni@nvidia.com>
+References: <1591768960-31648-1-git-send-email-skomatineni@nvidia.com>
+X-NVConfidentiality: public
+MIME-Version: 1.0
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1591768956; bh=5U56MbpoGgbizDY87xBQZF5BWeIIcAyUuev+l62V8Co=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=RNjlzi76Vn2q4JBEfvLU2osE/DD4dy8kMevQ9VmOOUByhQb4Z3inJI2VcMctdQF1I
+         cI4WsINjdLOFjCsf7oPILdi52bjPkGtPpp07PQSlO0Q0wzzrNS5zMMWioBg3GraWs7
+         9e8EmABejoCWgLXwVVWPT9XHdnf8+cG9YNz4PMke7iBJYBQw6655fUcjMWOndthYhw
+         BTRP7V5mP4JpYkHhK3CNxV8G6DGToDA7VCwF8VKWnAgsWbbMtHCeXmYKL9OEYw8ry7
+         gT8xcyNpJ0tVLGsYJiEe0ckE2jdpZeHLcswRU0N9etfrUa0D7AU+gkqspRrQrDQ+Ej
+         yTt1d+IigWoiw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ok, I will send v2 with a separate YAML file.
+Tegra VI supported video formats are more for non TPG and there
+can be multiple pixel formats for the same media bus format.
 
-> El 10 jun 2020, a las 3:15, Florian Fainelli <f.fainelli@gmail.com> =
-escribi=C3=B3:
->=20
->=20
->=20
-> On 6/9/2020 3:52 AM, =C3=81lvaro Fern=C3=A1ndez Rojas wrote:
->> BCM6318, BCM6328, BCM6362 and BCM63268 SoCs have a power domain =
-controller
->> to enable/disable certain components in order to save power.
->>=20
->> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
->> ---
->> .../devicetree/bindings/mips/brcm/soc.txt       | 17 =
-+++++++++++++++++
->=20
-> You should probably create a YAML binding from the beginning that way
-> you get validation for free. This file should ultimately be broken =
-down
-> into separate YAML bindings, but I Have not had the time to do that =
-yet
-> (you are welcome to if you feel like it).
->=20
-> Other than that, the binding definition looks good to me.
-> --=20
-> Florian
+This patch updates the helper function for format lookup based on
+mbus code from pre-defined Tegra supported format list to look from
+the specified list index offset.
+
+Offset based look up is used with sensor device graph (non TPG)
+where format enumeration can list all supported formats for the
+specific sensor mbus codes.
+
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+---
+ drivers/staging/media/tegra-video/vi.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/staging/media/tegra-video/vi.c b/drivers/staging/media/tegra-video/vi.c
+index 0197f4e..52d751f 100644
+--- a/drivers/staging/media/tegra-video/vi.c
++++ b/drivers/staging/media/tegra-video/vi.c
+@@ -53,11 +53,12 @@ to_tegra_channel_buffer(struct vb2_v4l2_buffer *vb)
+ }
+ 
+ static int tegra_get_format_idx_by_code(struct tegra_vi *vi,
+-					unsigned int code)
++					unsigned int code,
++					unsigned int offset)
+ {
+ 	unsigned int i;
+ 
+-	for (i = 0; i < vi->soc->nformats; ++i) {
++	for (i = offset; i < vi->soc->nformats; ++i) {
+ 		if (vi->soc->video_formats[i].code == code)
+ 			return i;
+ 	}
+@@ -598,11 +599,12 @@ static void vi_tpg_fmts_bitmap_init(struct tegra_vi_channel *chan)
+ 	bitmap_zero(chan->tpg_fmts_bitmap, MAX_FORMAT_NUM);
+ 
+ 	index = tegra_get_format_idx_by_code(chan->vi,
+-					     MEDIA_BUS_FMT_SRGGB10_1X10);
++					     MEDIA_BUS_FMT_SRGGB10_1X10, 0);
+ 	bitmap_set(chan->tpg_fmts_bitmap, index, 1);
+ 
+ 	index = tegra_get_format_idx_by_code(chan->vi,
+-					     MEDIA_BUS_FMT_RGB888_1X32_PADHI);
++					     MEDIA_BUS_FMT_RGB888_1X32_PADHI,
++					     0);
+ 	bitmap_set(chan->tpg_fmts_bitmap, index, 1);
+ }
+ 
+-- 
+2.7.4
 
